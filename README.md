@@ -1,2 +1,2 @@
 # vgframework
- VimontGames's DirectX12/Vulkan framework
+ VimontGames' framework is using DirectX12/Vulkan
