@@ -1,0 +1,267 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug_DX12|x64">
+      <Configuration>Debug_DX12</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug_Vulkan|x64">
+      <Configuration>Debug_Vulkan</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release_DX12|x64">
+      <Configuration>Release_DX12</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release_Vulkan|x64">
+      <Configuration>Release_Vulkan</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="CommandList\CommandList.cpp" />
+    <ClCompile Include="CommandPool\CommandPool.cpp" />
+    <ClCompile Include="CommandQueue\CommandQueue.cpp">
+      <PreprocessToFile Condition="'$(Configuration)|$(Platform)'=='Debug_DX12|x64'">false</PreprocessToFile>
+      <PreprocessToFile Condition="'$(Configuration)|$(Platform)'=='Debug_Vulkan|x64'">false</PreprocessToFile>
+      <PreprocessToFile Condition="'$(Configuration)|$(Platform)'=='Release_DX12|x64'">false</PreprocessToFile>
+      <PreprocessToFile Condition="'$(Configuration)|$(Platform)'=='Release_Vulkan|x64'">false</PreprocessToFile>
+    </ClCompile>
+    <ClCompile Include="FrameGraph\FrameGraph.cpp" />
+    <ClInclude Include="FrameGraph\RenderPass.hpp" />
+    <ClCompile Include="Texture\Texture.cpp" />
+    <ClInclude Include="CommandList\CommandList.h" />
+    <ClInclude Include="CommandList\CommandList_consts.h" />
+    <ClInclude Include="CommandList\dx12\CommandList_dx12.h" />
+    <ClInclude Include="CommandList\dx12\CommandList_dx12.hpp" />
+    <ClInclude Include="CommandList\vulkan\CommandList_vulkan.h" />
+    <ClInclude Include="CommandList\vulkan\CommandList_vulkan.hpp" />
+    <ClInclude Include="CommandPool\CommandPool.h" />
+    <ClInclude Include="CommandPool\dx12\CommandPool_dx12.h" />
+    <ClInclude Include="CommandPool\dx12\CommandPool_dx12.hpp" />
+    <ClInclude Include="CommandPool\vulkan\CommandPool_vulkan.h" />
+    <ClInclude Include="CommandPool\vulkan\CommandPool_vulkan.hpp" />
+    <ClInclude Include="CommandQueue\dx12\CommandQueue_dx12.h" />
+    <ClCompile Include="Device\Device.cpp" />
+    <ClCompile Include="Precomp.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug_DX12|x64'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug_Vulkan|x64'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_DX12|x64'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_Vulkan|x64'">Create</PrecompiledHeader>
+    </ClCompile>
+    <ClInclude Include="Device\Device_consts.h" />
+    <ClInclude Include="FrameGraph\dx12\FrameGraph_dx12.h" />
+    <ClInclude Include="FrameGraph\dx12\FrameGraph_dx12.hpp" />
+    <ClInclude Include="FrameGraph\dx12\RenderPass_dx12.h" />
+    <ClInclude Include="FrameGraph\dx12\RenderPass_dx12.hpp" />
+    <ClInclude Include="FrameGraph\dx12\SubPass_dx12.h" />
+    <ClInclude Include="FrameGraph\dx12\SubPass_dx12.hpp" />
+    <ClInclude Include="FrameGraph\FrameGraph.h" />
+    <ClInclude Include="FrameGraph\FrameGraph_consts.h" />
+    <ClInclude Include="FrameGraph\RenderPass.h" />
+    <ClInclude Include="FrameGraph\SubPass.h" />
+    <ClInclude Include="FrameGraph\SubPass.hpp" />
+    <ClInclude Include="FrameGraph\UserPass.h" />
+    <ClInclude Include="FrameGraph\UserPass.hpp" />
+    <ClInclude Include="FrameGraph\vulkan\FrameGraph_vulkan.h" />
+    <ClInclude Include="FrameGraph\vulkan\FrameGraph_vulkan.hpp" />
+    <ClInclude Include="FrameGraph\vulkan\RenderPass_vulkan.h" />
+    <ClInclude Include="FrameGraph\vulkan\RenderPass_vulkan.hpp" />
+    <ClInclude Include="FrameGraph\vulkan\SubPass_vulkan.h" />
+    <ClInclude Include="FrameGraph\vulkan\SubPass_vulkan.hpp" />
+    <ClInclude Include="Texture\dx12\Texture_dx12.h" />
+    <ClInclude Include="Texture\dx12\Texture_dx12.hpp" />
+    <ClInclude Include="Texture\Texture.h" />
+    <ClInclude Include="Texture\Texture_consts.h" />
+    <ClInclude Include="Texture\vulkan\Texture_vulkan.h" />
+    <ClInclude Include="Texture\vulkan\Texture_vulkan.hpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="CommandQueue\CommandQueue.h" />
+    <ClInclude Include="CommandQueue\CommandQueue_consts.h" />
+    <ClInclude Include="CommandQueue\dx12\CommandQueue_dx12.hpp" />
+    <ClInclude Include="CommandQueue\vulkan\CommandQueue_vulkan.h" />
+    <ClInclude Include="CommandQueue\vulkan\CommandQueue_vulkan.hpp" />
+    <ClInclude Include="Device\Device.h" />
+    <ClInclude Include="Device\dx12\Device_dx12.h" />
+    <ClInclude Include="Device\dx12\Device_dx12.hpp" />
+    <ClInclude Include="Device\vulkan\Device_Extensions_vulkan.h" />
+    <ClInclude Include="Device\vulkan\Device_Extensions_vulkan.hpp" />
+    <ClInclude Include="Device\vulkan\Device_vulkan.h" />
+    <ClInclude Include="Device\vulkan\Device_vulkan.hpp" />
+    <ClInclude Include="Device\vulkan\ext\EXT_DebugUtils.h" />
+    <ClInclude Include="Device\vulkan\ext\KHR_Surface.h" />
+    <ClInclude Include="Device\vulkan\ext\KHR_Swapchain.h" />
+    <ClInclude Include="Device\vulkan\ext\KHR_Win32_Surface.h" />
+    <ClInclude Include="IDevice.h" />
+    <ClInclude Include="Precomp.h" />
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <VCProjectVersion>15.0</VCProjectVersion>
+    <ProjectGuid>{51C074CB-0146-4324-9D1E-EB8192BF6673}</ProjectGuid>
+    <RootNamespace>Game</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
+    <ProjectName>driver</ProjectName>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_DX12|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_Vulkan|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_DX12|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_Vulkan|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug_DX12|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug_Vulkan|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release_DX12|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release_Vulkan|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_DX12|x64'">
+    <OutDir>$(SolutionDir)lib\</OutDir>
+    <IntDir>$(SolutionDir)tmp\$(TargetName)\$(Platform)\$(Configuration)\</IntDir>
+    <TargetName>$(ProjectName)_$(Platform)_$(Configuration)</TargetName>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_Vulkan|x64'">
+    <OutDir>$(SolutionDir)lib\</OutDir>
+    <IntDir>$(SolutionDir)tmp\$(TargetName)\$(Platform)\$(Configuration)\</IntDir>
+    <TargetName>$(ProjectName)_$(Platform)_$(Configuration)</TargetName>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_DX12|x64'">
+    <OutDir>$(SolutionDir)lib\</OutDir>
+    <IntDir>$(SolutionDir)tmp\$(TargetName)\$(Platform)\$(Configuration)\</IntDir>
+    <TargetName>$(ProjectName)_$(Platform)_$(Configuration)</TargetName>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_Vulkan|x64'">
+    <OutDir>$(SolutionDir)lib\</OutDir>
+    <IntDir>$(SolutionDir)tmp\$(TargetName)\$(Platform)\$(Configuration)\</IntDir>
+    <TargetName>$(ProjectName)_$(Platform)_$(Configuration)</TargetName>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug_DX12|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <SDLCheck>true</SDLCheck>
+      <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+      <AdditionalIncludeDirectories>$(SolutionDir)src;$(SolutionDir)extern</AdditionalIncludeDirectories>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>graphics/driver/Precomp.h</PrecompiledHeaderFile>
+      <PreprocessorDefinitions>VG_DX12;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <ModuleDefinitionFile>
+      </ModuleDefinitionFile>
+      <AdditionalDependencies>
+      </AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug_Vulkan|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <SDLCheck>true</SDLCheck>
+      <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+      <AdditionalIncludeDirectories>$(SolutionDir)src;$(SolutionDir)extern;$(VK_SDK_PATH)\include</AdditionalIncludeDirectories>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>graphics/driver/Precomp.h</PrecompiledHeaderFile>
+      <PreprocessorDefinitions>VG_VULKAN;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <ModuleDefinitionFile>
+      </ModuleDefinitionFile>
+      <AdditionalDependencies>
+      </AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release_DX12|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+      <AdditionalIncludeDirectories>$(SolutionDir)src;$(SolutionDir)extern</AdditionalIncludeDirectories>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>graphics/driver/Precomp.h</PrecompiledHeaderFile>
+      <PreprocessorDefinitions>VG_DX12;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <ModuleDefinitionFile>
+      </ModuleDefinitionFile>
+      <AdditionalDependencies>
+      </AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release_Vulkan|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+      <AdditionalIncludeDirectories>$(SolutionDir)src;$(SolutionDir)extern;$(VK_SDK_PATH)\include</AdditionalIncludeDirectories>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>graphics/driver/Precomp.h</PrecompiledHeaderFile>
+      <PreprocessorDefinitions>VG_VULKAN;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <ModuleDefinitionFile>
+      </ModuleDefinitionFile>
+      <AdditionalDependencies>
+      </AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+  <ProjectExtensions>
+    <VisualStudio>
+      <UserProperties />
+    </VisualStudio>
+  </ProjectExtensions>
+</Project>

@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="Engine.cpp" />
+    <ClCompile Include="Precomp.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Engine.def" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="IEngine.h" />
+    <ClInclude Include="Engine.h" />
+    <ClInclude Include="Precomp.h" />
+  </ItemGroup>
+</Project>

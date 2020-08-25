@@ -1,0 +1,63 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Math">
+      <UniqueIdentifier>{c45607d6-2a51-4021-a91e-16a99ca699c0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Plugin">
+      <UniqueIdentifier>{73868f18-c665-4057-b031-b0ac830c7585}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Object">
+      <UniqueIdentifier>{86cea616-c5b5-447e-9d0a-730a692e03b5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Types">
+      <UniqueIdentifier>{ef63b212-9758-45a5-a7d5-d2fde904d50f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="CmdLine">
+      <UniqueIdentifier>{9c4af77f-59a8-409d-bcc7-a9c9b55c03a7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Singleton">
+      <UniqueIdentifier>{4a8559af-2b01-473f-bc3f-32857b88bb76}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Math\Math.h">
+      <Filter>Math</Filter>
+    </ClInclude>
+    <ClInclude Include="Precomp.h" />
+    <ClInclude Include="IPlugin.h" />
+    <ClInclude Include="Plugin\Plugin.h">
+      <Filter>Plugin</Filter>
+    </ClInclude>
+    <ClInclude Include="IObject.h" />
+    <ClInclude Include="Object\Object.h">
+      <Filter>Object</Filter>
+    </ClInclude>
+    <ClInclude Include="Types\Types.h">
+      <Filter>Types</Filter>
+    </ClInclude>
+    <ClInclude Include="Core.h" />
+    <ClInclude Include="CmdLine\CmdLine.h">
+      <Filter>CmdLine</Filter>
+    </ClInclude>
+    <ClInclude Include="Singleton\Singleton.h">
+      <Filter>Singleton</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Math\Math.cpp">
+      <Filter>Math</Filter>
+    </ClCompile>
+    <ClCompile Include="Precomp.cpp" />
+    <ClCompile Include="Plugin\Plugin.cpp">
+      <Filter>Plugin</Filter>
+    </ClCompile>
+    <ClCompile Include="Object\Object.cpp">
+      <Filter>Object</Filter>
+    </ClCompile>
+    <ClCompile Include="Core.cpp" />
+    <ClCompile Include="CmdLine\CmdLine.cpp">
+      <Filter>CmdLine</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

@@ -1,0 +1,26 @@
+#pragma once
+
+#include "Core/IPlugin.h"
+#include "core/Types/Types.h"
+
+namespace vg::core
+{
+	class Plugin : public IPlugin
+	{
+		using CreateFunc = IPlugin * (*)();
+
+	public:
+		template <class T> static T *	create(const string & _name, string _suffix = "") { return dynamic_cast<T*>(createInternal(_name, _suffix)); }
+
+		static string					getPlatform		();
+		static string					getConfiguration();
+		static string					getExtension	();
+
+	public:
+										Plugin			();
+										~Plugin			();
+
+	private:
+		static IPlugin *				createInternal	(const string & _name, const string & _suffix);
+	};
+}

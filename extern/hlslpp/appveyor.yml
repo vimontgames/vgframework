@@ -1,0 +1,95 @@
+# version format
+version: 1.0.{build}
+
+# Do not build feature branch with open Pull Requests
+skip_branch_with_pr: true
+
+environment:
+  matrix:
+    - APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu
+      build: off
+      platform: Linux64 GGC
+      configuration: Release
+    - APPVEYOR_BUILD_WORKER_IMAGE: Ubuntu
+      build: off
+      platform: Linux64 Clang
+      configuration: Release
+    - APPVEYOR_BUILD_WORKER_IMAGE: macOS
+      build: off
+      platform: OSX64 Clang
+      configuration: Release
+    - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2015
+      vsversion: 2015
+      platform: MSVC 32
+      configuration: Release
+    - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2015
+      vsversion: 2015
+      platform: MSVC 64
+      configuration: Release      
+    - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
+      vsversion: 2017
+      platform: MSVC 32
+      configuration: Release
+    - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
+      vsversion: 2017
+      platform: MSVC 64 SSE 2
+      configuration: Release
+    - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
+      vsversion: 2017
+      platform: MSVC 64 SSE 4.1
+      configuration: Release
+    - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
+      vsversion: 2017
+      platform: MSVC 64 AVX
+      configuration: Release
+    - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
+      vsversion: 2017
+      platform: LLVM 32
+      configuration: Release
+    - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
+      vsversion: 2017
+      platform: LLVM 64 SSE 2
+      configuration: Release
+    - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
+      vsversion: 2017
+      platform: LLVM 64 SSE 4.1
+      configuration: Release
+    - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
+      vsversion: 2017
+      platform: LLVM 64 AVX
+      configuration: Release
+    - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
+      vsversion: 2017
+      platform: MSVC ARM
+      configuration: Release
+    - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
+      vsversion: 2017
+      platform: MSVC 64 Scalar
+      configuration: Release
+
+install:
+  - cmd: if %vsversion%==2015
+         start /B /W premake/win/premake5 --file=premake.lua vs2015
+  - cmd: if %vsversion%==2017
+         start /B /W premake/win/premake5 --file=premake.lua vs2017
+  - sh: if [[ $APPVEYOR_BUILD_WORKER_IMAGE = Ubuntu ]]; then ./premake/linux/premake5 --file=premake.lua gmake2; fi;
+  - sh: if [[ $APPVEYOR_BUILD_WORKER_IMAGE = macOS ]]; then ./premake/osx/premake5 --file=premake.lua xcode4; fi;
+
+build_script:
+  - sh: if [[ $platform = "Linux64 GGC" ]]; then 
+        pushd workspace/gmake2;
+        make all config=release_linux64_gcc;
+        popd; fi;
+  - sh: if [[ $platform = "Linux64 Clang" ]]; then 
+        pushd workspace/gmake2;
+        make all config=release_linux64_clang;
+        popd; fi;
+  - sh: if [[ $platform = "OSX64 Clang" ]]; then 
+        pushd workspace/xcode4;
+        xcodebuild build -project unit_tests.xcodeproj -configuration Release;
+        popd; fi;
+
+#matrix:
+#  exclude:
+#    - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2015
+#      platform: MSVC ARM64

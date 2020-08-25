@@ -1,0 +1,257 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="Precomp.cpp" />
+    <ClCompile Include="Device\Device.cpp">
+      <Filter>Device</Filter>
+    </ClCompile>
+    <ClCompile Include="CommandQueue\CommandQueue.cpp">
+      <Filter>CommandQueue</Filter>
+    </ClCompile>
+    <ClCompile Include="Texture\Texture.cpp">
+      <Filter>Texture</Filter>
+    </ClCompile>
+    <ClCompile Include="CommandList\CommandList.cpp">
+      <Filter>CommandList</Filter>
+    </ClCompile>
+    <ClCompile Include="CommandPool\CommandPool.cpp">
+      <Filter>CommandPool</Filter>
+    </ClCompile>
+    <ClCompile Include="FrameGraph\FrameGraph.cpp">
+      <Filter>FrameGraph</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Precomp.h" />
+    <ClInclude Include="Device\Device.h">
+      <Filter>Device</Filter>
+    </ClInclude>
+    <ClInclude Include="Device\dx12\Device_dx12.h">
+      <Filter>Device\dx12</Filter>
+    </ClInclude>
+    <ClInclude Include="Device\dx12\Device_dx12.hpp">
+      <Filter>Device\dx12</Filter>
+    </ClInclude>
+    <ClInclude Include="Device\vulkan\Device_vulkan.h">
+      <Filter>Device\vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="Device\vulkan\Device_vulkan.hpp">
+      <Filter>Device\vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="IDevice.h">
+      <Filter>Device</Filter>
+    </ClInclude>
+    <ClInclude Include="CommandQueue\CommandQueue.h">
+      <Filter>CommandQueue</Filter>
+    </ClInclude>
+    <ClInclude Include="CommandQueue\CommandQueue_consts.h">
+      <Filter>CommandQueue</Filter>
+    </ClInclude>
+    <ClInclude Include="CommandQueue\dx12\CommandQueue_dx12.hpp">
+      <Filter>CommandQueue\dx12</Filter>
+    </ClInclude>
+    <ClInclude Include="CommandQueue\vulkan\CommandQueue_vulkan.hpp">
+      <Filter>CommandQueue\vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="CommandQueue\vulkan\CommandQueue_vulkan.h">
+      <Filter>CommandQueue\vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="CommandQueue\dx12\CommandQueue_dx12.h">
+      <Filter>CommandQueue\dx12</Filter>
+    </ClInclude>
+    <ClInclude Include="Device\vulkan\Device_Extensions_vulkan.h">
+      <Filter>Device\vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="Device\vulkan\Device_Extensions_vulkan.hpp">
+      <Filter>Device\vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="Device\vulkan\ext\KHR_Surface.h">
+      <Filter>Device\vulkan\ext</Filter>
+    </ClInclude>
+    <ClInclude Include="Device\vulkan\ext\KHR_Swapchain.h">
+      <Filter>Device\vulkan\ext</Filter>
+    </ClInclude>
+    <ClInclude Include="Device\vulkan\ext\EXT_DebugUtils.h">
+      <Filter>Device\vulkan\ext</Filter>
+    </ClInclude>
+    <ClInclude Include="Device\vulkan\ext\KHR_Win32_Surface.h">
+      <Filter>Device\vulkan\ext</Filter>
+    </ClInclude>
+    <ClInclude Include="Texture\Texture.h">
+      <Filter>Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="Texture\dx12\Texture_dx12.h">
+      <Filter>Texture\dx12</Filter>
+    </ClInclude>
+    <ClInclude Include="Texture\dx12\Texture_dx12.hpp">
+      <Filter>Texture\dx12</Filter>
+    </ClInclude>
+    <ClInclude Include="Texture\vulkan\Texture_vulkan.h">
+      <Filter>Texture\vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="Texture\vulkan\Texture_vulkan.hpp">
+      <Filter>Texture\vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="Texture\Texture_consts.h">
+      <Filter>Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="CommandList\CommandList.h">
+      <Filter>CommandList</Filter>
+    </ClInclude>
+    <ClInclude Include="CommandList\CommandList_consts.h">
+      <Filter>CommandList</Filter>
+    </ClInclude>
+    <ClInclude Include="CommandList\dx12\CommandList_dx12.h">
+      <Filter>CommandList\dx12</Filter>
+    </ClInclude>
+    <ClInclude Include="CommandList\dx12\CommandList_dx12.hpp">
+      <Filter>CommandList\dx12</Filter>
+    </ClInclude>
+    <ClInclude Include="CommandList\vulkan\CommandList_vulkan.h">
+      <Filter>CommandList\vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="CommandList\vulkan\CommandList_vulkan.hpp">
+      <Filter>CommandList\vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="Device\Device_consts.h">
+      <Filter>Device</Filter>
+    </ClInclude>
+    <ClInclude Include="CommandPool\CommandPool.h">
+      <Filter>CommandPool</Filter>
+    </ClInclude>
+    <ClInclude Include="CommandPool\dx12\CommandPool_dx12.h">
+      <Filter>CommandPool\dx12</Filter>
+    </ClInclude>
+    <ClInclude Include="CommandPool\dx12\CommandPool_dx12.hpp">
+      <Filter>CommandPool\dx12</Filter>
+    </ClInclude>
+    <ClInclude Include="CommandPool\vulkan\CommandPool_vulkan.h">
+      <Filter>CommandPool\vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="CommandPool\vulkan\CommandPool_vulkan.hpp">
+      <Filter>CommandPool\vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="FrameGraph\FrameGraph.h">
+      <Filter>FrameGraph</Filter>
+    </ClInclude>
+    <ClInclude Include="FrameGraph\dx12\FrameGraph_dx12.h">
+      <Filter>FrameGraph\dx12</Filter>
+    </ClInclude>
+    <ClInclude Include="FrameGraph\dx12\FrameGraph_dx12.hpp">
+      <Filter>FrameGraph\dx12</Filter>
+    </ClInclude>
+    <ClInclude Include="FrameGraph\vulkan\FrameGraph_vulkan.h">
+      <Filter>FrameGraph\vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="FrameGraph\vulkan\FrameGraph_vulkan.hpp">
+      <Filter>FrameGraph\vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="FrameGraph\FrameGraph_consts.h">
+      <Filter>FrameGraph</Filter>
+    </ClInclude>
+    <ClInclude Include="FrameGraph\RenderPass.h">
+      <Filter>FrameGraph</Filter>
+    </ClInclude>
+    <ClInclude Include="FrameGraph\dx12\RenderPass_dx12.h">
+      <Filter>FrameGraph\dx12</Filter>
+    </ClInclude>
+    <ClInclude Include="FrameGraph\dx12\RenderPass_dx12.hpp">
+      <Filter>FrameGraph\dx12</Filter>
+    </ClInclude>
+    <ClInclude Include="FrameGraph\vulkan\RenderPass_vulkan.h">
+      <Filter>FrameGraph\vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="FrameGraph\vulkan\RenderPass_vulkan.hpp">
+      <Filter>FrameGraph\vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="FrameGraph\UserPass.h">
+      <Filter>FrameGraph</Filter>
+    </ClInclude>
+    <ClInclude Include="FrameGraph\UserPass.hpp">
+      <Filter>FrameGraph</Filter>
+    </ClInclude>
+    <ClInclude Include="FrameGraph\SubPass.h">
+      <Filter>FrameGraph</Filter>
+    </ClInclude>
+    <ClInclude Include="FrameGraph\SubPass.hpp">
+      <Filter>FrameGraph</Filter>
+    </ClInclude>
+    <ClInclude Include="FrameGraph\dx12\SubPass_dx12.h">
+      <Filter>FrameGraph\dx12</Filter>
+    </ClInclude>
+    <ClInclude Include="FrameGraph\dx12\SubPass_dx12.hpp">
+      <Filter>FrameGraph\dx12</Filter>
+    </ClInclude>
+    <ClInclude Include="FrameGraph\RenderPass.hpp">
+      <Filter>FrameGraph</Filter>
+    </ClInclude>
+    <ClInclude Include="FrameGraph\vulkan\SubPass_vulkan.h">
+      <Filter>FrameGraph\vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="FrameGraph\vulkan\SubPass_vulkan.hpp">
+      <Filter>FrameGraph\vulkan</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Device">
+      <UniqueIdentifier>{e70ab1c7-6cbd-4241-9307-7b1e67bf4eee}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Device\dx12">
+      <UniqueIdentifier>{eeff897f-7814-4abf-aa89-d14d957a4b7e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Device\vulkan">
+      <UniqueIdentifier>{6f3ccdba-b189-42e8-baa8-0973bceb6b64}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="CommandQueue">
+      <UniqueIdentifier>{61251c0f-d47d-461f-8899-04bfffe34e71}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="CommandQueue\dx12">
+      <UniqueIdentifier>{e9ef2e16-7592-4431-b1f3-5871b5020dd3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="CommandQueue\vulkan">
+      <UniqueIdentifier>{82fd3313-658a-4e98-8ffe-43dd9766b138}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Device\vulkan\ext">
+      <UniqueIdentifier>{af5affdc-f3df-4359-8148-7a724e26a147}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Texture">
+      <UniqueIdentifier>{6e9e2ef5-89d4-4c2d-ba40-ee3d75c4065b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Buffer">
+      <UniqueIdentifier>{749af0d5-214d-4d70-9342-7cef79d95f74}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Texture\dx12">
+      <UniqueIdentifier>{28e14769-3162-455b-9851-962d0502257c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Texture\vulkan">
+      <UniqueIdentifier>{0465a514-edb0-4567-82ec-b8a61a7f221d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="CommandList">
+      <UniqueIdentifier>{c6b7f7d5-dd16-4fd0-9403-7c65598de5b9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="CommandList\dx12">
+      <UniqueIdentifier>{a37a5103-46ec-4cb5-9a81-6f6384303753}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="CommandList\vulkan">
+      <UniqueIdentifier>{ee6be1ba-68e0-47a4-84b5-1ad19dfad65d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="CommandPool">
+      <UniqueIdentifier>{b5c141cf-81b0-4d4b-b27e-64729908a43e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="CommandPool\dx12">
+      <UniqueIdentifier>{0f23e2ec-67d2-4b77-ad93-eba427a4db48}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="CommandPool\vulkan">
+      <UniqueIdentifier>{58f92f1e-e1a8-4f46-9c55-8052985de07c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="FrameGraph">
+      <UniqueIdentifier>{e77de40f-c75f-4b1f-9074-3a73f2a9878f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="FrameGraph\dx12">
+      <UniqueIdentifier>{866fa237-a7c0-44b7-85d1-56c8ccae5d80}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="FrameGraph\vulkan">
+      <UniqueIdentifier>{7fc7ae77-7ad4-4d16-86ea-b4abe5588bdd}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>
