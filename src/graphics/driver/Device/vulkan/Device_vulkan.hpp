@@ -608,7 +608,7 @@ namespace vg::graphics::driver::vulkan
 		// Prefer non-SRGB formats...
 		for (uint32_t i = 0; i < count; i++) 
 		{
-			const VkFormat format = surfaceFormats[i].format;
+			VkFormat format = surfaceFormats[i].format;
 
 			//if (format == VK_FORMAT_R8G8B8A8_UNORM || format == VK_FORMAT_B8G8R8A8_UNORM ||
 			//	format == VK_FORMAT_A2B10G10R10_UNORM_PACK32 || format == VK_FORMAT_A2R10G10B10_UNORM_PACK32 ||
@@ -617,7 +617,7 @@ namespace vg::graphics::driver::vulkan
 				return surfaceFormats[i];
 		}
 
-		VG_ASSERT(count >= 1, "Could not find requested surface format");
+		VG_ASSERT(false, "Could not find requested surface format, fallbacking to %s", asString(surfaceFormats[0].format).c_str());
 		return surfaceFormats[0];
 	}
 
