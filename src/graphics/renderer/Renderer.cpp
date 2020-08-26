@@ -71,7 +71,7 @@ namespace vg::graphics::renderer
 			FrameGraph::TextureDesc desc;
 									desc.width = backbuffer.width;
 									desc.height = backbuffer.height;
-									desc.format = PixelFormat::R8G8B8A8;
+									desc.format = PixelFormat::R8G8B8A8_unorm;
 									desc.initState = FrameGraph::Resource::InitState::Clear;
 									desc.clearColor = clearColor;
 

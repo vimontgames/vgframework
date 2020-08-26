@@ -43,16 +43,16 @@
 #endif
 
 #if VG_ENABLE_ASSERT
-#define VG_ASSERT(condition, ...)															\
-	do																						\
-	{																						\
-		if (!(condition))																	\
-		{																					\
-			static bool skip = false;														\
-			if (vg::core::assertmsg(#condition, __FILE__, __LINE__, skip, ##__VA_ARGS__))	\
-				__debugbreak();																\
-		}																					\
-	}																						\
+#define VG_ASSERT(condition, ...)															        \
+	do																						        \
+	{																						        \
+		if (!(condition))																	        \
+		{																					        \
+			static bool skip = false;														        \
+			if (vg::core::assertmsg(#condition, __func__, __FILE__, __LINE__, skip, ##__VA_ARGS__))	\
+				__debugbreak();																        \
+		}																					        \
+	}																						        \
 	while(0)
 #define VG_VERIFY(f) VG_ASSERT(f)
 #else

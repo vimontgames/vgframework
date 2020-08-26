@@ -9,6 +9,9 @@ namespace vg::graphics::driver::dx12
 		using super = base::Texture;
 
 	public:
+        static DXGI_FORMAT                  getd3d12PixelFormat (PixelFormat _format);
+        static PixelFormat                  getPixelFormat      (DXGI_FORMAT _d3d12Format);
+
 											Texture				(const TextureDesc & _texDesc, const core::string & _name, void * _initData);
 											~Texture			();
 

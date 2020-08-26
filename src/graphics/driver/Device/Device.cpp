@@ -16,7 +16,8 @@ namespace vg::graphics::driver
 	namespace base
 	{
 		//--------------------------------------------------------------------------------------
-		Device::Device()
+		Device::Device() :
+            m_backbufferFormat(PixelFormat::Unknow)
 		{
 
 		}
@@ -99,7 +100,7 @@ namespace vg::graphics::driver
 				TextureDesc backbufferTexDesc
 				(
 					TextureType::Texture2D,
-					PixelFormat::R8G8B8A8,
+					m_backbufferFormat,
 					TextureFlags::RenderTarget | TextureFlags::Backbuffer | TextureFlags::sRGB,
 					getDeviceParams().resolution.x,
 					getDeviceParams().resolution.y

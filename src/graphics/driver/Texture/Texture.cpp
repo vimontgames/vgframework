@@ -34,7 +34,7 @@ namespace vg::graphics::driver
 					first = false;
 				}
 			}
-
+            int i = 0;
 			VG_DEBUGPRINT(")\n");
 		}
 

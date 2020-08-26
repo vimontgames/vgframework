@@ -576,7 +576,7 @@ namespace vg::graphics::driver::vulkan
 								 swapchain_ci.flags = 0;
 								 swapchain_ci.surface = m_vkSurface;
 								 swapchain_ci.minImageCount = desiredNumOfSwapchainImages;
-								 swapchain_ci.imageFormat = format;
+								 swapchain_ci.imageFormat = Texture::getVulkanPixelFormat(m_backbufferFormat);
 								 swapchain_ci.imageColorSpace = color_space;
 								 swapchain_ci.imageExtent.width = swapchainExtent.width;
 								 swapchain_ci.imageExtent.height = swapchainExtent.height;
@@ -606,20 +606,43 @@ namespace vg::graphics::driver::vulkan
 	static VkSurfaceFormatKHR pick_surface_format(const VkSurfaceFormatKHR *surfaceFormats, uint32_t count) 
 	{
 		// Prefer non-SRGB formats...
-		for (uint32_t i = 0; i < count; i++) 
-		{
-			VkFormat format = surfaceFormats[i].format;
+		
 
-			//if (format == VK_FORMAT_R8G8B8A8_UNORM || format == VK_FORMAT_B8G8R8A8_UNORM ||
-			//	format == VK_FORMAT_A2B10G10R10_UNORM_PACK32 || format == VK_FORMAT_A2R10G10B10_UNORM_PACK32 ||
-			//	format == VK_FORMAT_R16G16B16A16_SFLOAT) {
-            if (format == VK_FORMAT_R8G8B8A8_UNORM)
-				return surfaceFormats[i];
-		}
-
-		VG_ASSERT(false, "Could not find requested surface format, fallbacking to %s", asString(surfaceFormats[0].format).c_str());
 		return surfaceFormats[0];
 	}
+
+    //--------------------------------------------------------------------------------------
+    PixelFormat Device::detectBackbufferFormat()
+    {
+        u32 count;
+        VG_ASSERT_VULKAN(m_KHR_Surface.m_pfnGetPhysicalDeviceSurfaceFormatsKHR(m_vkPhysicalDevice, m_vkSurface, &count, nullptr));
+
+        vector<VkSurfaceFormatKHR> availableSurfaceFormats;
+        availableSurfaceFormats.resize(count);
+
+        VG_ASSERT_VULKAN(m_KHR_Surface.m_pfnGetPhysicalDeviceSurfaceFormatsKHR(m_vkPhysicalDevice, m_vkSurface, &count, availableSurfaceFormats.data()));
+
+        VkSurfaceFormatKHR selectedSurfaceFormat = { VK_FORMAT_UNDEFINED };
+
+        for (const VkSurfaceFormatKHR & curSurfaceFormat : availableSurfaceFormats)
+        {
+            const VkFormat format = curSurfaceFormat.format;
+
+            if (format == VK_FORMAT_R8G8B8A8_UNORM || format == VK_FORMAT_B8G8R8A8_UNORM)
+            {
+                VG_DEBUGPRINT("Backbuffer uses %s format\n", asString(Texture::getPixelFormat(format)).c_str());
+                selectedSurfaceFormat = curSurfaceFormat;
+                break;
+            }
+        }
+
+        VG_ASSERT(VK_FORMAT_UNDEFINED != selectedSurfaceFormat.format, "Could not find compatible backbuffer format");
+            
+        // temp: save colorspace here for now, might add a plaform-agnostic colorspace enum later
+        color_space = selectedSurfaceFormat.colorSpace;
+
+        return Texture::getPixelFormat(selectedSurfaceFormat.format);
+    }
 
 	//--------------------------------------------------------------------------------------
 	void Device::createVulkanDevice()
@@ -666,17 +689,7 @@ namespace vg::graphics::driver::vulkan
 		if (m_useSeparatePresentCommandQueue)
 			auto * presentQueue = createCommandQueue(CommandQueueType::Present);
 
-		// Get the list of VkFormat's that are supported:
-		uint32_t formatCount;
-		VG_ASSERT_VULKAN(m_KHR_Surface.m_pfnGetPhysicalDeviceSurfaceFormatsKHR(m_vkPhysicalDevice, m_vkSurface, &formatCount, nullptr));
-		
-		auto * surfFormats = (VkSurfaceFormatKHR *)malloc(formatCount * sizeof(VkSurfaceFormatKHR));
-		VG_ASSERT_VULKAN(m_KHR_Surface.m_pfnGetPhysicalDeviceSurfaceFormatsKHR(m_vkPhysicalDevice, m_vkSurface, &formatCount, surfFormats));
-
-		VkSurfaceFormatKHR surfaceFormat = pick_surface_format(surfFormats, formatCount);
-		format = surfaceFormat.format;
-		color_space = surfaceFormat.colorSpace;
-		free(surfFormats);
+        m_backbufferFormat = detectBackbufferFormat();
 
 		// Create semaphores to synchronize acquiring presentable buffers before rendering and waiting for drawing to be complete before presenting
 		VkSemaphoreCreateInfo semaphoreCreateInfo;

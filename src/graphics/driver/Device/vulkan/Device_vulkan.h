@@ -34,6 +34,8 @@ namespace vg::graphics::driver::vulkan
 		void							createSwapchain					();
 		void							createCommandQueues				();
 
+        PixelFormat                     detectBackbufferFormat          ();
+
 		static Severity					getSeverity						(VkDebugUtilsMessageSeverityFlagBitsEXT _severity);
 		static const char *				getVulkanObjectTypeName			(VkObjectType _type);
 
@@ -83,7 +85,7 @@ namespace vg::graphics::driver::vulkan
 			VkSemaphore draw_complete_semaphores[max_frame_latency];
 			VkSemaphore image_ownership_semaphores[max_frame_latency];
 
-			VkFormat format;
+			//VkFormat format;
 			VkColorSpaceKHR color_space;
 	};
 }

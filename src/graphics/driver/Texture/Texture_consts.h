@@ -17,7 +17,9 @@ namespace vg::graphics::driver
 
 	enum class PixelFormat : core::u8
 	{
-		R8G8B8A8 = 0
+        Unknow = 0,
+		R8G8B8A8_unorm,
+        B8G8R8A8_unorm
 	};
 
 	enum class TextureFlags : core::u32

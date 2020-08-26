@@ -16,7 +16,7 @@ namespace vg::graphics::driver
 			const TextureDesc & getTexDesc() const { return m_texDesc; }
 			
 		private:
-			const TextureDesc & m_texDesc;
+			const TextureDesc m_texDesc;
 		};
 	}
 }

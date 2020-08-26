@@ -20,7 +20,7 @@ namespace vg::graphics::driver::vulkan
 			VkAttachmentDescription att;
 			
 			att.flags          = (VkAttachmentDescriptionFlags)0;
-			att.format         = VK_FORMAT_R8G8B8A8_UNORM;
+			att.format         = Texture::getVulkanPixelFormat(tex->getTexDesc().format);
 			att.samples        = VK_SAMPLE_COUNT_1_BIT;
 			att.loadOp	       = VK_ATTACHMENT_LOAD_OP_CLEAR;
 			att.storeOp	       = VK_ATTACHMENT_STORE_OP_STORE;

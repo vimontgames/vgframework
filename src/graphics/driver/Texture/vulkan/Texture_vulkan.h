@@ -11,6 +11,9 @@ namespace vg::graphics::driver::vulkan
 		using super = base::Texture;
 
 	public:
+        static VkFormat     getVulkanPixelFormat    (PixelFormat _format);
+        static PixelFormat  getPixelFormat          (VkFormat _vkFormat);
+
 		Texture(const TextureDesc & _texDesc, const core::string & _name, void * _initData);
 		~Texture();
 

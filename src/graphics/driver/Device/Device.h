@@ -23,6 +23,8 @@ namespace vg::graphics::driver
 	class TextureDesc;
 	class Texture;
 
+    enum class PixelFormat : core::u8;
+
 	struct FrameContext
 	{
 		driver::Texture *					backbuffer = nullptr;
@@ -63,6 +65,7 @@ namespace vg::graphics::driver
 			core::vector<driver::CommandQueue*>				m_commandQueues[core::enumCount<CommandQueueType>()];
 			FrameContext									m_frameContext[max_frame_latency];
 			core::uint										m_currentFrameIndex = 0;
+            driver::PixelFormat                             m_backbufferFormat;
 
 		private:
 			DeviceParams 									m_deviceParams;

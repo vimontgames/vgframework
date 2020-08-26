@@ -1,5 +1,33 @@
 namespace vg::graphics::driver::dx12
 {
+    //--------------------------------------------------------------------------------------
+    DXGI_FORMAT Texture::getd3d12PixelFormat(PixelFormat _format)
+    {
+        switch (_format)
+        {
+        case PixelFormat::R8G8B8A8_unorm:
+            return DXGI_FORMAT_R8G8B8A8_UNORM;
+
+        default:
+            VG_ASSERT(false, "Unhandled pixel format \"%s\"", asString(_format).c_str());
+            return DXGI_FORMAT_UNKNOWN;
+        }
+    }
+
+    //--------------------------------------------------------------------------------------
+    PixelFormat getPixelFormat(DXGI_FORMAT _d3d12Format)
+    {
+        switch (_d3d12Format)
+        {
+        case DXGI_FORMAT_R8G8B8A8_UNORM:
+            return PixelFormat::R8G8B8A8_unorm;
+
+        default:
+            VG_ASSERT(false, "Unhandled pixel format \"%s\"", asString(_d3d12Format).c_str());
+            return PixelFormat::Unknow;
+        }
+    }
+
 	//--------------------------------------------------------------------------------------
 	Texture::Texture(const TextureDesc & _texDesc, const core::string & _name, void * _initData) :
 		base::Texture(_texDesc, _name, _initData)
