@@ -2,6 +2,11 @@
 
 #include "graphics/driver/device/Device.h"
 
+namespace D3D12MA
+{
+    class Allocator;
+}
+
 namespace vg::graphics::driver::dx12
 {
 	class Device : public base::Device
@@ -10,6 +15,8 @@ namespace vg::graphics::driver::dx12
 
 		public:
 			ID3D12Device *					getd3d12Device				() const;
+            IDXGIAdapter1 *                 getd3d12Adapter             () const; 
+            D3D12MA::Allocator *            getd3d12MemoryAllocator     () const;
 
 			D3D12_CPU_DESCRIPTOR_HANDLE		allocRenderTargetViewHandle	(core::uint _count = 1);
 			void							freeRenderTargetViewHandle	(D3D12_CPU_DESCRIPTOR_HANDLE & _hRTV);

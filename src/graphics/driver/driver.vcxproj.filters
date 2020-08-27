@@ -20,6 +20,9 @@
     <ClCompile Include="FrameGraph\FrameGraph.cpp">
       <Filter>FrameGraph</Filter>
     </ClCompile>
+    <ClCompile Include="Memory\MemoryAllocator.cpp">
+      <Filter>Memory</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Precomp.h" />
@@ -191,6 +194,21 @@
     <ClInclude Include="FrameGraph\vulkan\SubPass_vulkan.hpp">
       <Filter>FrameGraph\vulkan</Filter>
     </ClInclude>
+    <ClInclude Include="Memory\MemoryAllocator.h">
+      <Filter>Memory</Filter>
+    </ClInclude>
+    <ClInclude Include="Memory\dx12\MemoryAllocator_dx12.h">
+      <Filter>Memory\dx12</Filter>
+    </ClInclude>
+    <ClInclude Include="Memory\dx12\MemoryAllocator_dx12.hpp">
+      <Filter>Memory\dx12</Filter>
+    </ClInclude>
+    <ClInclude Include="Memory\vulkan\MemoryAllocator_vulkan.h">
+      <Filter>Memory\vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="Memory\vulkan\MemoryAllocator_vulkan.hpp">
+      <Filter>Memory\vulkan</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Device">
@@ -252,6 +270,15 @@
     </Filter>
     <Filter Include="FrameGraph\vulkan">
       <UniqueIdentifier>{7fc7ae77-7ad4-4d16-86ea-b4abe5588bdd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Memory">
+      <UniqueIdentifier>{360c37b3-c668-4e2d-abaa-ed53b9c639f4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Memory\dx12">
+      <UniqueIdentifier>{a0086fab-fef2-4f8b-b07d-fe7d5ab9cb23}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Memory\vulkan">
+      <UniqueIdentifier>{5c751df3-ca34-4664-b8d0-afdadd3523ba}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

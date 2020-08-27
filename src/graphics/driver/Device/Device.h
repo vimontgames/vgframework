@@ -22,6 +22,7 @@ namespace vg::graphics::driver
 	class CommandList;
 	class TextureDesc;
 	class Texture;
+    class MemoryAllocator;
 
     enum class PixelFormat : core::u8;
 
@@ -66,6 +67,7 @@ namespace vg::graphics::driver
 			FrameContext									m_frameContext[max_frame_latency];
 			core::uint										m_currentFrameIndex = 0;
             driver::PixelFormat                             m_backbufferFormat;
+            MemoryAllocator *                               m_memoryAllocator = nullptr;
 
 		private:
 			DeviceParams 									m_deviceParams;

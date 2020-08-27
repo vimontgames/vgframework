@@ -46,6 +46,7 @@ namespace vg::graphics::driver::dx12
 					adapter->GetDesc1(&desc);
 
 					m_d3d12device = device;
+                    m_dxgiAdapter = adapter;
 					m_level = levels[l];
 					
 					uint major = (m_level & 0xF000) >> 12;
@@ -55,7 +56,8 @@ namespace vg::graphics::driver::dx12
 					size_t s;
 					wcstombs_s(&s, description, countof(description), desc.Description, wcslen(desc.Description));
 
-					VG_DEBUGPRINT("\nCreate DirectX %u.%u %sdevice using %s\n", major, minor, m_d3d12debug ? "debug " : "", description);
+					VG_DEBUGPRINT("Device : DirectX %u.%u %s\n", major, minor, m_d3d12debug ? "debug " : "");
+                    VG_DEBUGPRINT("Adapter: %s\n", description);
 				}
 			}
 		}
@@ -94,6 +96,8 @@ namespace vg::graphics::driver::dx12
 				infoQueue->Release();
 			}
 		}
+
+        m_memoryAllocator = new driver::MemoryAllocator();
 
 		auto * graphicsQueue = createCommandQueue(CommandQueueType::Graphics);
 		auto * swapChain = created3d12SwapChain((HWND)_params.window, _params.resolution.x, _params.resolution.y);
@@ -210,6 +214,7 @@ namespace vg::graphics::driver::dx12
 		VG_SAFE_RELEASE(m_dxgiFactory);
 		VG_SAFE_RELEASE(m_d3d12debug);
 		VG_SAFE_RELEASE(m_dxgiAdapter);
+        VG_SAFE_RELEASE(m_memoryAllocator);
 		VG_SAFE_RELEASE(m_d3d12device);
 
 		#if 1
@@ -236,6 +241,18 @@ namespace vg::graphics::driver::dx12
 	{
 		return m_d3d12device;
 	}
+
+    //--------------------------------------------------------------------------------------
+    IDXGIAdapter1 * Device::getd3d12Adapter() const
+    {
+        return m_dxgiAdapter;
+    }
+
+    //--------------------------------------------------------------------------------------
+    D3D12MA::Allocator * Device::getd3d12MemoryAllocator() const
+    {
+        return m_memoryAllocator->getd3d12MemoryAllocator();
+    }
 
 	//--------------------------------------------------------------------------------------
 	void Device::beginFrame()

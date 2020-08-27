@@ -29,6 +29,7 @@
     </ClCompile>
     <ClCompile Include="FrameGraph\FrameGraph.cpp" />
     <ClInclude Include="FrameGraph\RenderPass.hpp" />
+    <ClCompile Include="Memory\MemoryAllocator.cpp" />
     <ClCompile Include="Texture\Texture.cpp" />
     <ClInclude Include="CommandList\CommandList.h" />
     <ClInclude Include="CommandList\CommandList_consts.h" />
@@ -69,6 +70,11 @@
     <ClInclude Include="FrameGraph\vulkan\RenderPass_vulkan.hpp" />
     <ClInclude Include="FrameGraph\vulkan\SubPass_vulkan.h" />
     <ClInclude Include="FrameGraph\vulkan\SubPass_vulkan.hpp" />
+    <ClInclude Include="Memory\dx12\MemoryAllocator_dx12.h" />
+    <ClInclude Include="Memory\dx12\MemoryAllocator_dx12.hpp" />
+    <ClInclude Include="Memory\MemoryAllocator.h" />
+    <ClInclude Include="Memory\vulkan\MemoryAllocator_vulkan.h" />
+    <ClInclude Include="Memory\vulkan\MemoryAllocator_vulkan.hpp" />
     <ClInclude Include="Texture\dx12\Texture_dx12.h" />
     <ClInclude Include="Texture\dx12\Texture_dx12.hpp" />
     <ClInclude Include="Texture\Texture.h" />

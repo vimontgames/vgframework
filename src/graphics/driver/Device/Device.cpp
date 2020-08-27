@@ -4,6 +4,7 @@
 #include "graphics/driver/CommandPool/CommandPool.h"
 #include "graphics/driver/CommandList/CommandList.h"
 #include "graphics/driver/Texture/Texture.h"
+#include "graphics/driver/Memory/MemoryAllocator.h"
 
 #include VG_GRAPHICSAPI_IMPLEMENTATION(Device)
 

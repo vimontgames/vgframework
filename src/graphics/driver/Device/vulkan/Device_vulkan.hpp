@@ -254,7 +254,7 @@ namespace vg::graphics::driver::vulkan
 
 		registerExtensions(_params);
 
-		for (uint index  = 0; i < enumCount<CommandQueueType>(); ++index)
+		for (uint index  = 0; index < enumCount<CommandQueueType>(); ++index)
 			m_vkCommandQueueFamilyIndex[index] = s_vkCommandQueueFamilyIndexInvalid;
         
 		bool validationLayer = _params.debugDevice;
