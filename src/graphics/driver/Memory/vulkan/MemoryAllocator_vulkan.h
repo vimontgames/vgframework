@@ -13,7 +13,9 @@ namespace vg::graphics::driver::vulkan
         MemoryAllocator();
         ~MemoryAllocator();
 
+        VmaAllocator & getVulkanMemoryAllocator() { return m_vkAllocator; }
+
     private:
-   
+        VmaAllocator m_vkAllocator;
     };
 }

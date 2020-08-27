@@ -141,12 +141,14 @@ namespace vg::graphics::driver::dx12
 		DXGI_SWAP_CHAIN_DESC1 swapChainDesc;
 		::ZeroMemory(&swapChainDesc, sizeof(swapChainDesc));
 
+        m_backbufferFormat = PixelFormat::R8G8B8A8_unorm;
+
 		const bool fullScreen = false; // TODO
 
 		swapChainDesc.Width = _width;
 		swapChainDesc.Height = _height;
-		swapChainDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
-		swapChainDesc.Stereo = FALSE;
+		swapChainDesc.Format = Texture::getd3d12PixelFormat(m_backbufferFormat);
+		swapChainDesc.Stereo = false;
 		swapChainDesc.Scaling = DXGI_SCALING_STRETCH;
 		swapChainDesc.SampleDesc.Quality = 0;
 		swapChainDesc.SampleDesc.Count = 1;

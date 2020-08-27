@@ -44,7 +44,7 @@ namespace vg::graphics::driver::dx12
 		if (asBool(TextureFlags::RenderTarget & _texDesc.flags))
 		{
 			D3D12_RENDER_TARGET_VIEW_DESC viewDesc;
-										  viewDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
+										  viewDesc.Format = getd3d12PixelFormat(_texDesc.format);
 										  viewDesc.ViewDimension = D3D12_RTV_DIMENSION_TEXTURE2D;
 										  viewDesc.Texture2D.MipSlice = 0;
 										  viewDesc.Texture2D.PlaneSlice = 0;

@@ -684,6 +684,8 @@ namespace vg::graphics::driver::vulkan
 
 		m_deviceExtensionList.onDeviceCreated();
 
+        m_memoryAllocator = new driver::MemoryAllocator();
+
 		auto * graphicsQueue = createCommandQueue(CommandQueueType::Graphics);
 		
 		if (m_useSeparatePresentCommandQueue)
@@ -737,6 +739,8 @@ namespace vg::graphics::driver::vulkan
 
 		for (uint i = 0; i < countof(m_frameContext); ++i)
 			destroyFrameContext(i);
+
+        VG_SAFE_RELEASE(m_memoryAllocator);
 
 		m_instanceExtensionList.deinit();
 		m_deviceExtensionList.deinit();
