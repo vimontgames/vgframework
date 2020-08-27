@@ -254,8 +254,8 @@ namespace vg::graphics::driver::vulkan
 
 		registerExtensions(_params);
 
-		for (const auto index : enumValues<CommandQueueType>())
-			m_vkCommandQueueFamilyIndex[asInteger(index)] = s_vkCommandQueueFamilyIndexInvalid;
+		for (uint index  = 0; i < enumCount<CommandQueueType>(); ++index)
+			m_vkCommandQueueFamilyIndex[index] = s_vkCommandQueueFamilyIndexInvalid;
         
 		bool validationLayer = _params.debugDevice;
         const char * validationLayerName = "VK_LAYER_KHRONOS_validation";
@@ -782,8 +782,8 @@ namespace vg::graphics::driver::vulkan
         for (auto & cmdPool : context.commandPools)
             cmdPool->beginFrame();
 
-        for (auto type : enumValues<CommandListType>())
-            for (auto & cmdList : context.commandLists[asInteger(type)])
+        for (uint type = 0; type < enumCount<CommandListType>(); ++type)
+            for (auto & cmdList : context.commandLists[type])
                 cmdList->reset();
 	}
 
@@ -792,8 +792,8 @@ namespace vg::graphics::driver::vulkan
 	{
         FrameContext & context = getFrameContext(m_currentFrameIndex);
 
-        for (auto type : enumValues<CommandListType>())
-            for (auto & cmdList : context.commandLists[asInteger(type)])
+        for (uint type = 0; type < enumCount<CommandListType>(); ++type)
+            for (auto & cmdList : context.commandLists[type])
                 cmdList->close();
 
         VkPipelineStageFlags pipe_stage_flags = 0;

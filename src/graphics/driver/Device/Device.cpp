@@ -139,9 +139,9 @@ namespace vg::graphics::driver
 				VG_SAFE_RELEASE(pool);
 			pools.clear();
 
-			for (auto type : enumValues<CommandListType>())
+			for (uint type = 0; type < enumCount<CommandListType>(); ++type)
 			{
-				auto & cmdLists = m_frameContext[_frame].commandLists[asInteger(type)];
+				auto & cmdLists = m_frameContext[_frame].commandLists[type];
 				for (auto & cmdList : cmdLists)
 					VG_SAFE_RELEASE(cmdList);
 				cmdLists.clear();
@@ -166,9 +166,9 @@ namespace vg::graphics::driver
 		//--------------------------------------------------------------------------------------
 		void Device::destroyCommandQueues()
 		{
-			for (const auto queueType : enumValues<CommandQueueType>())
+			for (uint queueType = 0; queueType < enumCount<CommandQueueType>(); ++queueType)
 			{
-				auto & queues = m_commandQueues[asInteger(queueType)];
+				auto & queues = m_commandQueues[queueType];
 				for (auto * queue : queues)
 					VG_SAFE_RELEASE(queue);
 				queues.clear();

@@ -249,8 +249,8 @@ namespace vg::graphics::driver::dx12
 		for (auto & cmdPool : context.commandPools)
 			cmdPool->beginFrame();
 
-		for (auto type : enumValues<CommandListType>())
-			for (auto & cmdList : context.commandLists[asInteger(type)])
+		for (uint type = 0; type < enumCount<CommandListType>(); ++type)
+			for (auto & cmdList : context.commandLists[type])
 				cmdList->reset();
 
 		// TODO: cache
