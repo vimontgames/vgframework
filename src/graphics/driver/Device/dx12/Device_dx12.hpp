@@ -1,5 +1,3 @@
-using namespace vg::core;
-
 namespace vg::graphics::driver::dx12
 {
 	//--------------------------------------------------------------------------------------
@@ -96,6 +94,13 @@ namespace vg::graphics::driver::dx12
 				infoQueue->Release();
 			}
 		}
+
+        D3D12_FEATURE_DATA_ROOT_SIGNATURE featureData = {};
+        auto HighestVersion = D3D_ROOT_SIGNATURE_VERSION_1_1;
+        if (FAILED(device->CheckFeatureSupport(D3D12_FEATURE_ROOT_SIGNATURE, &featureData, sizeof(featureData))))
+        {
+            HighestVersion = D3D_ROOT_SIGNATURE_VERSION_1_0;
+        }
 
         m_memoryAllocator = new driver::MemoryAllocator();
 

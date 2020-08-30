@@ -6,6 +6,7 @@
 #include "graphics/driver/FrameGraph/FrameGraph.h"
 #include "graphics/driver/FrameGraph/UserPass.h"
 #include "graphics/driver/Texture/Texture.h"
+#include "graphics/driver/RootSignature/RootSignature.h"
 
 using namespace vg::core;
 using namespace vg::graphics::driver;
@@ -56,15 +57,28 @@ namespace vg::graphics::renderer
 		m_device.deinit();
 	}
 
-	class TestPass : public driver::UserPass
+    //--------------------------------------------------------------------------------------
+    class TestPass : public driver::UserPass
 	{
 	public:
+        TestPass()
+        {
+            auto * device = Device::get();
+
+            RootSignatureDesc rsDesc;
+
+            rsDesc.addRootConstants(ShaderStageFlags::VS | ShaderStageFlags::PS, 0, 4);
+
+            m_rootSignature = device->createRootSignature(rsDesc);
+        }
+
+        ~TestPass()
+        {
+            VG_SAFE_RELEASE(m_rootSignature);
+        }
+
 		void setup() override
 		{
-			static uint frame = 0;
-			const auto clearColor = float4(frame & 1, frame & 2, frame & 4, 0);
-			++frame;
-
 			auto * renderer = Renderer::get();
 			auto & backbuffer = renderer->getBackbuffer()->getTexDesc();
 
@@ -73,15 +87,18 @@ namespace vg::graphics::renderer
 									desc.height = backbuffer.height;
 									desc.format = PixelFormat::R8G8B8A8_unorm;
 									desc.initState = FrameGraph::Resource::InitState::Clear;
-									desc.clearColor = clearColor;
+                                    desc.clearColor = { 1,0,1,0 };
 
 			writeRenderTarget(0, "Backbuffer", desc);
 		}
 
-		void draw(driver::CommandList * _cmdList) const override
+		void draw(CommandList * _cmdList) const override
 		{
 
 		}
+
+    private:
+        RootSignature * m_rootSignature = nullptr;
 	};
 
 	//--------------------------------------------------------------------------------------

@@ -8,14 +8,6 @@
 
 namespace vg::graphics::driver
 {
-	enum class Severity : core::u8
-	{
-		Error = 0,
-		Warning,
-		Info,
-		Verbose
-	};
-
 	class Device;
 	class CommandQueue;
 	class CommandPool;
@@ -23,6 +15,8 @@ namespace vg::graphics::driver
 	class TextureDesc;
 	class Texture;
     class MemoryAllocator;
+    class RootSignature;
+    class RootSignatureDesc;
 
     enum class PixelFormat : core::u8;
 
@@ -90,13 +84,15 @@ namespace vg::graphics::driver
 		using Super = VG_GRAPHICSAPI::Device;
 
 	public:
-		void		init			(const DeviceParams & _params);
-		void		deinit			();
+		void		    init			    (const DeviceParams & _params);
+		void		    deinit			    ();
 
-		void		beginFrame		();
-		void		endFrame		();
+		void		    beginFrame		    ();
+		void		    endFrame		    ();
 
-		Texture *	createTexture	(const TextureDesc & _texDesc, const core::string & _name, void * _initData = nullptr);
+		Texture *	    createTexture	    (const TextureDesc & _texDesc, const core::string & _name, void * _initData = nullptr);
+
+        RootSignature * createRootSignature (const RootSignatureDesc & _desc);
 
 	private:
 	};

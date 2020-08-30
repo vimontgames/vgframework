@@ -5,15 +5,15 @@
 #include "graphics/driver/CommandList/CommandList.h"
 #include "graphics/driver/Texture/Texture.h"
 #include "graphics/driver/Memory/MemoryAllocator.h"
+#include "graphics/driver/RootSignature/RootSignature.h"
+
+using namespace vg::core;
+using namespace vg::graphics;
 
 #include VG_GRAPHICSAPI_IMPLEMENTATION(Device)
 
-using namespace vg::graphics;
-
 namespace vg::graphics::driver
 {
-	using namespace vg::core;
-
 	namespace base
 	{
 		//--------------------------------------------------------------------------------------
@@ -255,4 +255,10 @@ namespace vg::graphics::driver
 	{
 		return new Texture(_texDesc, _name, _initData);
 	}
+
+    //--------------------------------------------------------------------------------------
+    RootSignature * Device::createRootSignature(const RootSignatureDesc & _desc)
+    {
+        return new RootSignature(_desc);
+    }
 }

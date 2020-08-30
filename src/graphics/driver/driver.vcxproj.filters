@@ -23,6 +23,12 @@
     <ClCompile Include="Memory\MemoryAllocator.cpp">
       <Filter>Memory</Filter>
     </ClCompile>
+    <ClCompile Include="PipelineState\PipelineState.cpp">
+      <Filter>PipelineState</Filter>
+    </ClCompile>
+    <ClCompile Include="RootSignature\RootSignature.cpp">
+      <Filter>RootSignature</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Precomp.h" />
@@ -209,6 +215,54 @@
     <ClInclude Include="Memory\vulkan\MemoryAllocator_vulkan.hpp">
       <Filter>Memory\vulkan</Filter>
     </ClInclude>
+    <ClInclude Include="PipelineState\GraphicPipelineState.h">
+      <Filter>PipelineState</Filter>
+    </ClInclude>
+    <ClInclude Include="PipelineState\GraphicPipelineState.hpp">
+      <Filter>PipelineState</Filter>
+    </ClInclude>
+    <ClInclude Include="PipelineState\PipelineState_consts.h">
+      <Filter>PipelineState</Filter>
+    </ClInclude>
+    <ClInclude Include="PipelineState\dx12\GraphicPipelineState_dx12.h">
+      <Filter>PipelineState\dx12</Filter>
+    </ClInclude>
+    <ClInclude Include="PipelineState\dx12\GraphicPipelineState_dx12.hpp">
+      <Filter>PipelineState\dx12</Filter>
+    </ClInclude>
+    <ClInclude Include="PipelineState\vulkan\GraphicPipelineState_vulkan.h">
+      <Filter>PipelineState\vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="PipelineState\vulkan\GraphicPipelineState_vulkan.hpp">
+      <Filter>PipelineState\vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="RootSignature\RootSignature.h">
+      <Filter>RootSignature</Filter>
+    </ClInclude>
+    <ClInclude Include="RootSignature\dx12\RootSignature_dx12.h">
+      <Filter>RootSignature\dx12</Filter>
+    </ClInclude>
+    <ClInclude Include="RootSignature\dx12\RootSignature_dx12.hpp">
+      <Filter>RootSignature\dx12</Filter>
+    </ClInclude>
+    <ClInclude Include="RootSignature\vulkan\RootSignature_vulkan.h">
+      <Filter>RootSignature\vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="RootSignature\vulkan\RootSignature_vulkan.hpp">
+      <Filter>RootSignature\vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="RootSignature\RootSignature_consts.h">
+      <Filter>RootSignature</Filter>
+    </ClInclude>
+    <ClInclude Include="Shader\Shader_consts.h">
+      <Filter>Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="RootSignature\RootSignatureDesc.h">
+      <Filter>RootSignature</Filter>
+    </ClInclude>
+    <ClInclude Include="RootSignature\RootSignatureDesc.hpp">
+      <Filter>RootSignature</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Device">
@@ -279,6 +333,27 @@
     </Filter>
     <Filter Include="Memory\vulkan">
       <UniqueIdentifier>{5c751df3-ca34-4664-b8d0-afdadd3523ba}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="PipelineState">
+      <UniqueIdentifier>{4643ba97-2307-4099-930f-1a171615dd9c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="PipelineState\dx12">
+      <UniqueIdentifier>{e878a4b5-ed58-4d89-9afa-e1b0184f8236}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="PipelineState\vulkan">
+      <UniqueIdentifier>{bca4d625-0750-4389-8cf2-77667cf8edf5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="RootSignature">
+      <UniqueIdentifier>{be3e4404-30c5-45ff-b078-6138e1be3c31}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="RootSignature\dx12">
+      <UniqueIdentifier>{459a1f5b-ef83-4016-a24a-fb8e9719799e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="RootSignature\vulkan">
+      <UniqueIdentifier>{dd000a05-5fe4-49a7-a031-350462af2525}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shader">
+      <UniqueIdentifier>{c5cc49f0-0fbe-4bd3-8e48-d7be82bfa7a0}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
