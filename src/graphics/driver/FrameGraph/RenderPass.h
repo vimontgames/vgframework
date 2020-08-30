@@ -1,6 +1,7 @@
 #pragma once
 
 #include "core/Object/Object.h"
+#include "core/Pool/Pool.h"
 #include "graphics/driver/FrameGraph/FrameGraph.h"
 
 namespace vg::graphics::driver
@@ -15,8 +16,8 @@ namespace vg::graphics::driver
 			RenderPass();
 			virtual ~RenderPass();
 
-			void addSubPass(driver::SubPass * _subPass);
-			const core::vector<driver::SubPass*> & getSubPasses() const;
+            void addSubPass(driver::SubPass * _subPass);
+            const core::vector<driver::SubPass*> & getSubPasses() const;
 			
 		//private:
 			core::vector<driver::SubPass*>		    m_subPasses;
@@ -34,9 +35,15 @@ namespace vg::graphics::driver
 		using super = VG_GRAPHICSAPI::RenderPass;
 
 	public:
+        void * operator new(size_t _size);
+        void operator delete(void * _address);
+
 		RenderPass();
 		~RenderPass();
 
 		void finalize();
+
+    private:
+        static core::Pool<RenderPass> s_memPool;
 	};
 }

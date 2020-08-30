@@ -43,6 +43,7 @@
     <ClInclude Include="Singleton\Singleton.h">
       <Filter>Singleton</Filter>
     </ClInclude>
+    <ClInclude Include="Pool\Pool.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Math\Math.cpp">

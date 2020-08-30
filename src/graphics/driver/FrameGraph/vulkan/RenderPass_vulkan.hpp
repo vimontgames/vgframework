@@ -9,7 +9,10 @@ namespace vg::graphics::driver::vulkan
 	//--------------------------------------------------------------------------------------
 	RenderPass::~RenderPass()
 	{
+        VkDevice & vkDevice = driver::Device::get()->getVulkanDevice();
 
+        vkDestroyRenderPass(vkDevice, m_vkRenderPass, nullptr);
+        vkDestroyFramebuffer(vkDevice, m_vkFrameBuffer, nullptr);
 	}
 
 	//--------------------------------------------------------------------------------------

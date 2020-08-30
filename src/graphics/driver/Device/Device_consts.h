@@ -2,5 +2,5 @@
 
 namespace vg::graphics::driver
 {
-	constexpr auto max_frame_latency = 3;
+	constexpr auto max_frame_latency = 2;
 }

@@ -125,11 +125,13 @@ namespace vg::graphics::driver
 	//--------------------------------------------------------------------------------------
 	FrameGraph::~FrameGraph()
 	{
-		reset();
+        cleanup();
 	}
 
+#define VG_SAFE_RELEASE_ASYNC(p) { auto * device = driver::Device::get(); if (device) device->releaseAsync(p); else p->Release(); }
+
 	//--------------------------------------------------------------------------------------
-	void FrameGraph::reset()
+	void FrameGraph::cleanup()
 	{
 		for (auto & pair : m_subPasses)
 			VG_SAFE_RELEASE(pair.second);
@@ -140,7 +142,7 @@ namespace vg::graphics::driver
 		m_resources.clear();
 
 		for (auto * renderPass : m_renderPasses)
-			VG_SAFE_RELEASE(renderPass);
+			VG_SAFE_RELEASE_ASYNC(renderPass);
 		m_renderPasses.clear();
 	}
 
@@ -198,9 +200,7 @@ namespace vg::graphics::driver
 		{
 			for (auto * renderTarget : subPass->m_renderTargetOut)
 			{
-				//if (renderTarget.)
-				int i;
-				i = 0;
+
 			}
 		}
 	}
@@ -302,5 +302,7 @@ namespace vg::graphics::driver
 			}
 			cmdList->endRenderPass();
 		}
+
+        cleanup();
 	}
 }

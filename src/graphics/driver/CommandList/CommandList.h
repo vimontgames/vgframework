@@ -55,5 +55,8 @@ namespace vg::graphics::driver
 	public:
 		CommandList(driver::CommandListType _type, driver::CommandPool * _cmdPool, core::uint _frame, core::uint _index);
 		~CommandList();
+
+        void    reset();
+        void    close();
 	};
 }

@@ -50,8 +50,7 @@ namespace vg::graphics::driver
 		//--------------------------------------------------------------------------------------
 		void Device::endFrame()
 		{
-			// Take the next back buffer from our chain
-			m_currentFrameIndex = (m_currentFrameIndex + 1) % max_frame_latency;
+            m_frameCounter++;
 		}
 
 		//--------------------------------------------------------------------------------------
@@ -92,9 +91,9 @@ namespace vg::graphics::driver
 		}
 
 		//--------------------------------------------------------------------------------------
-		void Device::createFrameContext(core::uint _frame, void * _surface)
+		void Device::createFrameContext(core::uint _frameContextIndex, void * _surface)
 		{
-			auto & context = getFrameContext(_frame);
+			auto & context = getFrameContext(_frameContextIndex);
 
 			// Create backbuffer texture
 			{
@@ -108,16 +107,16 @@ namespace vg::graphics::driver
 				);
 
 				char backbufferName[13];
-				sprintf_s(backbufferName, "Backbuffer#%u", _frame);
+				sprintf_s(backbufferName, "Backbuffer#%u", _frameContextIndex);
 
-				m_frameContext[_frame].backbuffer = getDevice()->createTexture(backbufferTexDesc, backbufferName, _surface);
+				m_frameContext[_frameContextIndex].backbuffer = getDevice()->createTexture(backbufferTexDesc, backbufferName, _surface);
 			}
 
 			// Create command pools
 			{
 				auto & cmdPools = context.commandPools;
 				const auto index = (uint)cmdPools.size();
-				cmdPools.push_back(new driver::CommandPool(_frame, index));
+				cmdPools.push_back(new driver::CommandPool(_frameContextIndex, index));
 			}
 
 			// Create command lists
@@ -127,42 +126,77 @@ namespace vg::graphics::driver
 					auto & cmdPool = context.commandPools[0];
 					auto & cmdLists = context.commandLists[asInteger(CommandListType::Graphics)];
 					const auto index = (uint)cmdLists.size();
-					cmdLists.push_back(new driver::CommandList(CommandListType::Graphics, cmdPool, _frame, index));
+					cmdLists.push_back(new driver::CommandList(CommandListType::Graphics, cmdPool, _frameContextIndex, index));
 				}
 			}
 		}
 
 		//--------------------------------------------------------------------------------------
-		void Device::destroyFrameContext(core::uint _frame)
+		void Device::destroyFrameContext(core::uint _frameContextIndex)
 		{
-			auto & pools = m_frameContext[_frame].commandPools;
+            auto & frameContext = m_frameContext[_frameContextIndex];
+			auto & pools = frameContext.commandPools;
 			for (auto & pool : pools)
 				VG_SAFE_RELEASE(pool);
 			pools.clear();
 
 			for (uint type = 0; type < enumCount<CommandListType>(); ++type)
 			{
-				auto & cmdLists = m_frameContext[_frame].commandLists[type];
+				auto & cmdLists = frameContext.commandLists[type];
 				for (auto & cmdList : cmdLists)
 					VG_SAFE_RELEASE(cmdList);
 				cmdLists.clear();
 			}
 
-			VG_SAFE_RELEASE(m_frameContext[_frame].backbuffer);
+			VG_SAFE_RELEASE(frameContext.backbuffer);
+
+            for (Object * obj : frameContext.m_objectsToRelease)
+                VG_SAFE_RELEASE(obj);
+            frameContext.m_objectsToRelease.clear();
 		}
 
 		//--------------------------------------------------------------------------------------
-		FrameContext & Device::getFrameContext(uint _frame)
+		FrameContext & Device::getFrameContext(uint _frameContextIndex)
 		{
-			VG_ASSERT(_frame < countof(m_frameContext));
-			return m_frameContext[_frame];
+			VG_ASSERT(_frameContextIndex < countof(m_frameContext));
+			return m_frameContext[_frameContextIndex];
 		}
+
+        //--------------------------------------------------------------------------------------
+        u64 Device::getFrameCounter() const
+        {
+            return m_frameCounter;
+        }
+        //--------------------------------------------------------------------------------------
+        uint Device::getFrameContextIndex() const
+        {
+            return m_frameCounter % max_frame_latency;
+        }
 
 		//--------------------------------------------------------------------------------------
 		FrameContext & Device::getCurrentFrameContext()
 		{
-			return getFrameContext(m_currentFrameIndex);
+			return getFrameContext(getFrameContextIndex());
 		}
+
+        //--------------------------------------------------------------------------------------
+        void Device::releaseAsync(core::Object * _object)
+        {
+            getCurrentFrameContext().m_objectsToRelease.push_back(_object);
+        }
+
+        //--------------------------------------------------------------------------------------
+        void Device::flushReleaseAsync()
+        {
+            auto & frameContext = m_frameContext[getFrameContextIndex()];
+
+            if (frameContext.m_objectsToRelease.size())
+                VG_DEBUGPRINT("Release %u object(s) async [%u]\n", frameContext.m_objectsToRelease.size(), getFrameContextIndex());
+
+            for (Object * obj : frameContext.m_objectsToRelease)
+                VG_SAFE_RELEASE(obj);
+            frameContext.m_objectsToRelease.clear();
+        }
 
 		//--------------------------------------------------------------------------------------
 		void Device::destroyCommandQueues()
@@ -200,13 +234,20 @@ namespace vg::graphics::driver
 	//--------------------------------------------------------------------------------------
 	void Device::beginFrame()
 	{
+        VG_DEBUGPRINT("beginFrame #%u\n{\n", getFrameCounter());
 		Super::beginFrame();
+
+        // It is safe now to release frame (n-max_frame_latency+1) resources as we are now sure they are not in use by the GPU
+        flushReleaseAsync();
+
+        VG_DEBUGPRINT("[...]\n");
 	}
 	
 	//--------------------------------------------------------------------------------------
 	void Device::endFrame()
 	{
 		Super::endFrame();
+        VG_DEBUGPRINT("}\nendFrame #%u\n", getFrameCounter());
 	}
 
 	//--------------------------------------------------------------------------------------

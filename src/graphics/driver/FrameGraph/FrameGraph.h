@@ -116,7 +116,6 @@ namespace vg::graphics::driver
 		FrameGraph();
 		~FrameGraph();
 
-		void reset();
 		void import(const ResourceID & _resID, Texture * _tex);
 		void setGraphOutput(const ResourceID & _destTexResID);
 
@@ -177,6 +176,8 @@ namespace vg::graphics::driver
 		void findDependencies(const UserPass & _renderPassDesc, core::uint _depth);
 		void reverseAndRemoveDuplicates();
 		void allocateResources();
+
+        void cleanup();
 
 	private:
 		core::unordered_map<FrameGraph::RenderPassID, UserPass*>	m_subPasses;

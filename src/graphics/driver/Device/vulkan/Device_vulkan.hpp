@@ -536,7 +536,7 @@ namespace vg::graphics::driver::vulkan
 		// Determine the number of VkImages to use in the swap chain.
 		// Application desires to acquire 3 images at a time for triple
 		// buffering
-		uint32_t desiredNumOfSwapchainImages = 3;
+		uint32_t desiredNumOfSwapchainImages = max_frame_latency;
 		if (desiredNumOfSwapchainImages < surfCapabilities.minImageCount) 
 			desiredNumOfSwapchainImages = surfCapabilities.minImageCount;
 
@@ -775,13 +775,19 @@ namespace vg::graphics::driver::vulkan
 
         VkDevice & vkDevice = getVulkanDevice();
 
+        const auto currentFrameIndex = getFrameContextIndex();
+
         // Ensure no more than max_frame_latency renderings are outstanding
-        vkWaitForFences(vkDevice, 1, &fences[m_currentFrameIndex], VK_TRUE, UINT64_MAX);
-        vkResetFences(vkDevice, 1, &fences[m_currentFrameIndex]);
+        if (m_frameCounter >= max_frame_latency)
+        {
+            VG_DEBUGPRINT("Wait completion of frame %u (fence[%u])\n", m_frameCounter - max_frame_latency, currentFrameIndex);
+            vkWaitForFences(vkDevice, 1, &fences[currentFrameIndex], VK_TRUE, UINT64_MAX);
+        }
+        vkResetFences(vkDevice, 1, &fences[currentFrameIndex]);
 
-        VG_ASSERT_VULKAN(m_KHR_Swapchain.m_pfnAcquireNextImageKHR(vkDevice, m_vkSwapchain, UINT64_MAX, image_acquired_semaphores[m_currentFrameIndex], VK_NULL_HANDLE, &currentBuffer));
+        VG_ASSERT_VULKAN(m_KHR_Swapchain.m_pfnAcquireNextImageKHR(vkDevice, m_vkSwapchain, UINT64_MAX, image_acquired_semaphores[currentFrameIndex], VK_NULL_HANDLE, &currentBuffer));
 
-        auto & context = getFrameContext(m_currentFrameIndex);
+        auto & context = getCurrentFrameContext();
 
         for (auto & cmdPool : context.commandPools)
             cmdPool->beginFrame();
@@ -794,7 +800,8 @@ namespace vg::graphics::driver::vulkan
 	//--------------------------------------------------------------------------------------
 	void Device::endFrame()
 	{
-        FrameContext & context = getFrameContext(m_currentFrameIndex);
+        const auto currentFrameIndex = getFrameContextIndex();
+        FrameContext & context = getCurrentFrameContext();
 
         for (uint type = 0; type < enumCount<CommandListType>(); ++type)
             for (auto & cmdList : context.commandLists[type])
@@ -807,20 +814,21 @@ namespace vg::graphics::driver::vulkan
         submit_info.pWaitDstStageMask = &pipe_stage_flags;
         pipe_stage_flags = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
         submit_info.waitSemaphoreCount = 1;
-        submit_info.pWaitSemaphores = &image_acquired_semaphores[m_currentFrameIndex];
+        submit_info.pWaitSemaphores = &image_acquired_semaphores[currentFrameIndex];
         submit_info.commandBufferCount = 1;
         submit_info.pCommandBuffers = &context.commandLists[asInteger(CommandListType::Graphics)][0]->getVulkanCommandBuffer();
         submit_info.signalSemaphoreCount = 1;
-        submit_info.pSignalSemaphores = &draw_complete_semaphores[m_currentFrameIndex];
-        VG_ASSERT_VULKAN(vkQueueSubmit(m_commandQueues[asInteger(CommandQueueType::Graphics)][0]->m_vkCommandQueue, 1, &submit_info, fences[m_currentFrameIndex]));
+        submit_info.pSignalSemaphores = &draw_complete_semaphores[currentFrameIndex];
+        VG_ASSERT_VULKAN(vkQueueSubmit(m_commandQueues[asInteger(CommandQueueType::Graphics)][0]->m_vkCommandQueue, 1, &submit_info, fences[currentFrameIndex]));
 
+        VG_DEBUGPRINT("Write fence %u\n", currentFrameIndex);
 
         VkPresentInfoKHR present;
 
         present.sType = VK_STRUCTURE_TYPE_PRESENT_INFO_KHR;
         present.pNext = nullptr;
         present.waitSemaphoreCount = 1;
-        present.pWaitSemaphores = &draw_complete_semaphores[m_currentFrameIndex];
+        present.pWaitSemaphores = &draw_complete_semaphores[currentFrameIndex];
         present.swapchainCount = 1;
         present.pSwapchains = &m_vkSwapchain;
         present.pImageIndices = &currentBuffer;

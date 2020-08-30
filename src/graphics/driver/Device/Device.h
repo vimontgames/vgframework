@@ -31,6 +31,7 @@ namespace vg::graphics::driver
 		driver::Texture *					backbuffer = nullptr;
 		core::vector<driver::CommandPool*>	commandPools;
 		core::vector<driver::CommandList*>	commandLists[core::enumCount<CommandListType>()];
+        core::vector<core::Object*>         m_objectsToRelease;
 	};
 
 	namespace base
@@ -38,34 +39,39 @@ namespace vg::graphics::driver
 		class Device : public graphics::driver::IDevice
 		{
 		public:
-															Device					();
-															~Device					();
+															Device					    ();
+															~Device					    ();
 
-			void											init					(const DeviceParams & _params);
-			void											deinit					();
+			void											init					    (const DeviceParams & _params);
+			void											deinit					    ();
 
-			void											beginFrame				();
-			void											endFrame				();
+			void											beginFrame				    ();
+			void											endFrame				    ();
 
-			driver::Device *								getDevice				();
-			const DeviceParams &							getDeviceParams			() const;
+			driver::Device *								getDevice				    ();
+			const DeviceParams &							getDeviceParams			    () const;
 
-			driver::CommandQueue *							createCommandQueue		(CommandQueueType _type);
-			core::vector<driver::CommandQueue*> &			getCommandQueues		(CommandQueueType _type);
-			void											destroyCommandQueues	();
+			driver::CommandQueue *							createCommandQueue		    (CommandQueueType _type);
+			core::vector<driver::CommandQueue*> &			getCommandQueues		    (CommandQueueType _type);
+			void											destroyCommandQueues	    ();
 			
-			void											createFrameContext		(core::uint _frame, void * _backbuffer);
-			void											destroyFrameContext		(core::uint _frame);
-			FrameContext &									getFrameContext			(core::uint _frame);
-			FrameContext &									getCurrentFrameContext	();
+			void											createFrameContext		    (core::uint _frameContextIndex, void * _backbuffer);
+			void											destroyFrameContext		    (core::uint _frameContextIndex);
+			FrameContext &									getFrameContext			    (core::uint _frameContextIndex);
+            core::u64                                       getFrameCounter             () const;
+			core::uint                                      getFrameContextIndex        () const;
+            FrameContext &									getCurrentFrameContext      ();
 
-			core::vector<driver::CommandList*> &			getCommandLists			(CommandListType _type);
-			driver::Texture *								getBackbuffer			();
+			core::vector<driver::CommandList*> &			getCommandLists			    (CommandListType _type);
+			driver::Texture *								getBackbuffer			    ();
+
+            void                                            releaseAsync                (core::Object * _object);
+            void                                            flushReleaseAsync           ();
 
 		protected:
 			core::vector<driver::CommandQueue*>				m_commandQueues[core::enumCount<CommandQueueType>()];
 			FrameContext									m_frameContext[max_frame_latency];
-			core::uint										m_currentFrameIndex = 0;
+			core::u64										m_frameCounter = 0;
             driver::PixelFormat                             m_backbufferFormat;
             MemoryAllocator *                               m_memoryAllocator = nullptr;
 

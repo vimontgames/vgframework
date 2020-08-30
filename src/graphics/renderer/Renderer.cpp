@@ -40,8 +40,8 @@ namespace vg::graphics::renderer
 	//--------------------------------------------------------------------------------------
 	Renderer::~Renderer()
 	{
+        m_frameGraph.release();
 		m_device.release();
-		m_frameGraph.release();
 	}
 
 	//--------------------------------------------------------------------------------------
@@ -89,8 +89,6 @@ namespace vg::graphics::renderer
 	{
 		m_device.beginFrame();
 		{
-			m_frameGraph.reset();
-
 			m_frameGraph.import("Backbuffer", m_device.getBackbuffer());
 			m_frameGraph.setGraphOutput("Backbuffer");
 
@@ -99,7 +97,6 @@ namespace vg::graphics::renderer
 			m_frameGraph.setup();
 			m_frameGraph.build();
 			m_frameGraph.render();
-
 		}
 		m_device.endFrame();
 

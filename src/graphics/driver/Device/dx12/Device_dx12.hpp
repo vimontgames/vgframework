@@ -261,9 +261,15 @@ namespace vg::graphics::driver::dx12
 	{
 		super::beginFrame();
 
-		WaitForFence(m_frameFences[m_currentFrameIndex], m_fenceValues[m_currentFrameIndex], m_frameFenceEvents[m_currentFrameIndex]);
+        const auto currentFrameIndex = getFrameContextIndex();
 
-		auto & context = getFrameContext(m_currentFrameIndex);
+        if (m_fenceValues[currentFrameIndex])
+        {
+            VG_DEBUGPRINT("Wait completion of frame %u (fence[%u] = %u)\n", m_frameCounter - max_frame_latency, currentFrameIndex, m_fenceValues[currentFrameIndex]);
+            WaitForFence(m_frameFences[currentFrameIndex], m_fenceValues[currentFrameIndex], m_frameFenceEvents[currentFrameIndex]);
+        }
+
+		auto & context = getCurrentFrameContext();
 
 		for (auto & cmdPool : context.commandPools)
 			cmdPool->beginFrame();
@@ -272,18 +278,11 @@ namespace vg::graphics::driver::dx12
 			for (auto & cmdList : context.commandLists[type])
 				cmdList->reset();
 
-		// TODO: cache
-		const auto renderTargetViewDescriptorSize = m_d3d12device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
-
-		D3D12_CPU_DESCRIPTOR_HANDLE renderTargetHandle;
-		renderTargetHandle.ptr = m_renderTargetDescriptorHeap->GetCPUDescriptorHandleForHeapStart().ptr + m_currentFrameIndex * renderTargetViewDescriptorSize;
-
 		auto * commandList = context.commandLists[asInteger(CommandListType::Graphics)][0]->getd3d12GraphicsCommandList();
-		//commandList->OMSetRenderTargets(1, &renderTargetHandle, true, nullptr);
 
 		// Transition back buffer
 		D3D12_RESOURCE_BARRIER barrier;
-		barrier.Transition.pResource = m_frameContext[m_currentFrameIndex].backbuffer->getd3d12Resource();
+		barrier.Transition.pResource = m_frameContext[currentFrameIndex].backbuffer->getd3d12Resource();
 		barrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
 		barrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
 		barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_PRESENT;
@@ -302,7 +301,7 @@ namespace vg::graphics::driver::dx12
 
 		// Transition the swap chain back to present
 		D3D12_RESOURCE_BARRIER barrier;
-		barrier.Transition.pResource = m_frameContext[m_currentFrameIndex].backbuffer->getd3d12Resource();
+		barrier.Transition.pResource = context.backbuffer->getd3d12Resource();
 		barrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
 		barrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
 		barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_RENDER_TARGET;
@@ -322,8 +321,12 @@ namespace vg::graphics::driver::dx12
 
 		// Mark the fence for the current frame.
 		const auto fenceValue = m_currentFenceValue;
-		queue->Signal(m_frameFences[m_currentFrameIndex], fenceValue);
-		m_fenceValues[m_currentFrameIndex] = fenceValue;
+        const auto currentFrameIndex = getFrameContextIndex();
+
+        VG_DEBUGPRINT("Write fence %u (fence[%u] = %u)\n", currentFrameIndex, currentFrameIndex, fenceValue);
+
+		queue->Signal(m_frameFences[currentFrameIndex], fenceValue);
+		m_fenceValues[currentFrameIndex] = fenceValue;
 		++m_currentFenceValue;
 
 		super::endFrame();
