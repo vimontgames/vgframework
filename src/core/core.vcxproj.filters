@@ -19,6 +19,9 @@
     <Filter Include="Singleton">
       <UniqueIdentifier>{4a8559af-2b01-473f-bc3f-32857b88bb76}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Container">
+      <UniqueIdentifier>{2f2ceb03-bf06-4251-bae7-e274551c4292}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Math\Math.h">
@@ -44,6 +47,12 @@
       <Filter>Singleton</Filter>
     </ClInclude>
     <ClInclude Include="Pool\Pool.h" />
+    <ClInclude Include="Container\HandleTable.h">
+      <Filter>Container</Filter>
+    </ClInclude>
+    <ClInclude Include="Container\HandleTable.hpp">
+      <Filter>Container</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Math\Math.cpp">

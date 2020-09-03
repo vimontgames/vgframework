@@ -69,12 +69,13 @@ namespace vg::graphics::renderer
 
             rsDesc.addRootConstants(ShaderStageFlags::VS | ShaderStageFlags::PS, 0, 4);
 
-            m_rootSignature = device->createRootSignature(rsDesc);
+            m_rootSignatureHandle = device->addRootSignature(rsDesc);
         }
 
         ~TestPass()
         {
-            VG_SAFE_RELEASE(m_rootSignature);
+            auto * device = Device::get();
+            device->removeRootSignature(m_rootSignatureHandle);
         }
 
 		void setup() override
@@ -98,7 +99,7 @@ namespace vg::graphics::renderer
 		}
 
     private:
-        RootSignature * m_rootSignature = nullptr;
+        RootSignatureHandle m_rootSignatureHandle;
 	};
 
 	//--------------------------------------------------------------------------------------
@@ -116,8 +117,6 @@ namespace vg::graphics::renderer
 			m_frameGraph.render();
 		}
 		m_device.endFrame();
-
-		Sleep(1000);
 	}
 
 	//--------------------------------------------------------------------------------------

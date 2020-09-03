@@ -11,5 +11,11 @@ namespace vg::graphics::driver::vulkan
     public:
         RootSignature(const RootSignatureDesc & _desc);
         ~RootSignature();
+
+        static VkShaderStageFlags getVulkanShaderStageFlags(ShaderStageFlags _shaderStageFlags);
+
+    private:
+        VkPipelineLayout                    m_vkPipelineLayout;
+        core::vector<VkDescriptorSetLayout> m_vkDescriptorSetLayouts;
     };
 }

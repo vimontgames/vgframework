@@ -81,6 +81,7 @@
     <ClInclude Include="PipelineState\dx12\GraphicPipelineState_dx12.hpp" />
     <ClInclude Include="PipelineState\GraphicPipelineState.h" />
     <ClInclude Include="PipelineState\GraphicPipelineState.hpp" />
+    <ClInclude Include="PipelineState\GraphicPipelineStateKey.h" />
     <ClInclude Include="PipelineState\PipelineState_consts.h" />
     <ClInclude Include="PipelineState\vulkan\GraphicPipelineState_vulkan.h" />
     <ClInclude Include="PipelineState\vulkan\GraphicPipelineState_vulkan.hpp" />

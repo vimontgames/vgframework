@@ -5,6 +5,7 @@
 #include "graphics/driver/Device/Device_consts.h"
 #include "graphics/driver/CommandQueue/CommandQueue_consts.h"
 #include "graphics/driver/CommandList/CommandList_consts.h"
+#include "graphics/driver/RootSignature/RootSignature_consts.h"
 
 namespace vg::graphics::driver
 {
@@ -68,9 +69,10 @@ namespace vg::graphics::driver
 			core::u64										m_frameCounter = 0;
             driver::PixelFormat                             m_backbufferFormat;
             MemoryAllocator *                               m_memoryAllocator = nullptr;
-
-		private:
 			DeviceParams 									m_deviceParams;
+
+            RootSignatureTable                              m_rootSignaturesTable;
+
 		};
 	}
 }
@@ -84,15 +86,16 @@ namespace vg::graphics::driver
 		using Super = VG_GRAPHICSAPI::Device;
 
 	public:
-		void		    init			    (const DeviceParams & _params);
-		void		    deinit			    ();
+		void		        init			    (const DeviceParams & _params);
+		void		        deinit			    ();
 
-		void		    beginFrame		    ();
-		void		    endFrame		    ();
+		void		        beginFrame		    ();
+		void		        endFrame		    ();
 
-		Texture *	    createTexture	    (const TextureDesc & _texDesc, const core::string & _name, void * _initData = nullptr);
+		Texture *	        createTexture	    (const TextureDesc & _texDesc, const core::string & _name, void * _initData = nullptr);
 
-        RootSignature * createRootSignature (const RootSignatureDesc & _desc);
+        RootSignatureHandle addRootSignature    (const RootSignatureDesc & _desc);
+        core::uint          removeRootSignature (RootSignatureHandle & _handle);
 
 	private:
 	};

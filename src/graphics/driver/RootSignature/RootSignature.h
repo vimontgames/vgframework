@@ -1,7 +1,7 @@
 #pragma once
 
 #include "core/Object/Object.h"
-#include "RootSignatureDesc.h"
+#include "RootSignature_consts.h"
 
 namespace vg::graphics::driver
 {

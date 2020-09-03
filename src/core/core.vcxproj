@@ -12,6 +12,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CmdLine\CmdLine.h" />
+    <ClInclude Include="Container\HandleTable.h" />
+    <ClInclude Include="Container\HandleTable.hpp" />
     <ClInclude Include="Core.h" />
     <ClInclude Include="IObject.h" />
     <ClInclude Include="IPlugin.h" />

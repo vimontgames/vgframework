@@ -263,6 +263,9 @@
     <ClInclude Include="RootSignature\RootSignatureDesc.hpp">
       <Filter>RootSignature</Filter>
     </ClInclude>
+    <ClInclude Include="PipelineState\GraphicPipelineStateKey.h">
+      <Filter>PipelineState</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Device">

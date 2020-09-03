@@ -257,8 +257,52 @@ namespace vg::graphics::driver
 	}
 
     //--------------------------------------------------------------------------------------
-    RootSignature * Device::createRootSignature(const RootSignatureDesc & _desc)
+    RootSignatureHandle Device::addRootSignature(const RootSignatureDesc & _desc)
     {
-        return new RootSignature(_desc);
+        return m_rootSignaturesTable.add(_desc);
+
+        /*
+        // find existing
+        {
+            uint index = 0;
+            for (auto & pair : m_rootSignatures)
+            {
+                if (pair.first == _desc)
+                {
+                    VG_ASSERT(pair.second);
+                    pair.second->addRef();
+                    return index;
+                }
+                ++index;
+            }
+        }
+
+        // reuse empty slot
+        {
+            uint index = 0;
+            for (auto & pair : m_rootSignatures)
+            {
+                if (nullptr == pair.second)
+                {
+                    pair.first = _desc;
+                    pair.second = new RootSignature(_desc);
+                    return index;
+                }
+                ++index;
+            }
+        }
+
+        // add
+        {
+            uint index = (uint)m_rootSignatures.size();
+            m_rootSignatures.push_back(std::pair<RootSignatureDesc, RootSignature*>(_desc, new RootSignature(_desc)));
+            return index;
+        }*/
+    }
+
+    //--------------------------------------------------------------------------------------
+    uint Device::removeRootSignature(RootSignatureHandle & _handle)
+    {
+        return m_rootSignaturesTable.remove(_handle);
     }
 }

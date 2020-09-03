@@ -4,7 +4,62 @@ namespace vg::graphics::driver::dx12
     RootSignature::RootSignature(const RootSignatureDesc & _desc) :
         super::RootSignature(_desc)
     {
+        vector<D3D12_ROOT_PARAMETER> d3d12rootParams;
+
+        const auto & rootConstants = _desc.getRootConstants();
+        for (uint i = 0; i < rootConstants.size(); ++i)
+        {
+            const RootSignatureDesc::PushConstantParams & rootConstant = rootConstants[i];
+
+            D3D12_ROOT_PARAMETER d3d12RootConstants = {};
+            d3d12RootConstants.ParameterType = D3D12_ROOT_PARAMETER_TYPE_32BIT_CONSTANTS;
+            d3d12RootConstants.ShaderVisibility = getd3d12ShaderStageFlags(rootConstant.m_stages);
+            d3d12RootConstants.Constants.ShaderRegister = rootConstant.m_start;
+            d3d12RootConstants.Constants.Num32BitValues = rootConstant.m_count;
+            d3d12RootConstants.Constants.RegisterSpace = rootConstant.m_space;
+
+            d3d12rootParams.push_back(d3d12RootConstants);
+        }
+
+        const auto & tables = _desc.getTables();
+        for (uint i = 0; i < _desc.getTables().size(); ++i)
+        {
+            // TODO
+            //const auto RootSignatureDesc::Table & table = tables[i];
+            //
+            //const auto & descriptors = table.getDescriptors();
+            //
+            //core::vector<D3D12_DESCRIPTOR_RANGE> d3d12Descriptors;
+            //for (uint j = 0; j < descriptors.size(); ++j)
+            //{
+            //    const auto RootSignatureDesc::Table::Descriptor & descriptor = descriptors[j];
+            //
+            //    D3D12_DESCRIPTOR_RANGE d3d12Descriptor;
+            //
+            //    switch (descriptor.getDescriptorType())
+            //    {
+            //    case RootSignatureDesc::Table::Descriptor::Type::ConstantBuffer:
+            //    {
+            //        d3d12Descriptor.RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_CBV;
+            //
+            //        RootSignatureDesc::Table::Descriptor::ConstantBufferParams & params = descriptor.getConstantBufferParams();
+            //
+            //        d3d12Descriptor.
+            //    }
+            //    break;
+            //    }
+            //
+            //}
+            //
+            //D3D12_ROOT_PARAMETER d3d12Table = {};
+            //
+            //d3d12Table.ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
+            //d3d12Table.DescriptorTable.NumDescriptorRanges = 
+        }       
+
         D3D12_ROOT_SIGNATURE_DESC d3d12Desc = {};
+        d3d12Desc.NumParameters = (uint)d3d12rootParams.size();
+        d3d12Desc.pParameters = d3d12rootParams.data();
 
         ID3DBlob * outBlob = nullptr;
         ID3DBlob * errorBlob = nullptr;
@@ -19,5 +74,22 @@ namespace vg::graphics::driver::dx12
     RootSignature::~RootSignature()
     {
         VG_SAFE_RELEASE(m_d3d12rootSignature);
+    }
+
+    //--------------------------------------------------------------------------------------
+    D3D12_SHADER_VISIBILITY RootSignature::getd3d12ShaderStageFlags(ShaderStageFlags _shaderStageFlags)
+    {
+        if (testAllFlags(_shaderStageFlags, ShaderStageFlags::VS))
+            return D3D12_SHADER_VISIBILITY_VERTEX;
+        else if (testAllFlags(_shaderStageFlags, ShaderStageFlags::HS))
+            return D3D12_SHADER_VISIBILITY_HULL;
+        else if (testAllFlags(_shaderStageFlags, ShaderStageFlags::DS))
+            return D3D12_SHADER_VISIBILITY_DOMAIN;
+        else if (testAllFlags(_shaderStageFlags, ShaderStageFlags::GS))
+            return D3D12_SHADER_VISIBILITY_GEOMETRY;
+        else if (testAllFlags(_shaderStageFlags, ShaderStageFlags::PS))
+            return D3D12_SHADER_VISIBILITY_PIXEL;
+        else
+            return D3D12_SHADER_VISIBILITY_ALL;
     }
 }
