@@ -6,6 +6,10 @@
 https://github.com/GPUOpen-LibrariesAndSDKs/VulkanMemoryAllocator
 - D3D12 Memory Allocator (MIT)
 https://github.com/GPUOpen-LibrariesAndSDKs/D3D12MemoryAllocator
+- hlslpp
+https://github.com/redorav/hlslpp
+- magic_enum
+https://github.com/Neargye/magic_enum
 
 # sdk
 - Win10 SDK 10.0.17763.0
