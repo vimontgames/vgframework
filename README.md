@@ -2,10 +2,12 @@
  VimontGames' framework is using DirectX12/Vulkan
  
 # external
-- Vulkan Memory Allocator (MIT)
-https://github.com/GPUOpen-LibrariesAndSDKs/VulkanMemoryAllocator
-- D3D12 Memory Allocator (MIT)
+- D3D12 Memory Allocator
 https://github.com/GPUOpen-LibrariesAndSDKs/D3D12MemoryAllocator
+- Vulkan Memory Allocator
+https://github.com/GPUOpen-LibrariesAndSDKs/VulkanMemoryAllocator
+- glslang
+https://github.com/KhronosGroup/glslang
 - hlslpp
 https://github.com/redorav/hlslpp
 - magic_enum
