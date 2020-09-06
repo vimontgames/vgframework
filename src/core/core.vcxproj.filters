@@ -25,6 +25,9 @@
     <Filter Include="Pool">
       <UniqueIdentifier>{8e257687-96bf-4347-9402-dcdb033046e1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="File">
+      <UniqueIdentifier>{15812bb8-c946-47dd-8f5a-cd2b9013c178}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Math\Math.h">
@@ -61,6 +64,9 @@
     <ClInclude Include="Container\Blob.h">
       <Filter>Container</Filter>
     </ClInclude>
+    <ClInclude Include="File\File.h">
+      <Filter>File</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Math\Math.cpp">
@@ -76,6 +82,9 @@
     <ClCompile Include="Core.cpp" />
     <ClCompile Include="CmdLine\CmdLine.cpp">
       <Filter>CmdLine</Filter>
+    </ClCompile>
+    <ClCompile Include="File\File.cpp">
+      <Filter>File</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

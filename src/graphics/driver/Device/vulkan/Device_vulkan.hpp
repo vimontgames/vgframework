@@ -216,14 +216,10 @@ namespace vg::graphics::driver::vulkan
     //--------------------------------------------------------------------------------------
     bool Device::enableInstanceLayer(const char * _layerName)
     {
-        core::uint enabled_layer_count = 0;
-        const char * enabled_layers[64];
-
         bool found = false;
      
         core::u32 instance_layer_count = 0;
         VG_ASSERT_VULKAN(vkEnumerateInstanceLayerProperties(&instance_layer_count, nullptr));
-        VG_ASSERT(instance_layer_count <= countof(enabled_layers));
 
         if (instance_layer_count > 0)
         {

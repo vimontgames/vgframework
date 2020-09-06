@@ -78,7 +78,7 @@ namespace vg::core
 
             text += "\n\"Yes\" to break into debugger\n\"No\" to ignore once\n\"Cancel\" to ignore always";
 
-			switch (messageBox(MessageBoxIcon::Error, MessageBoxType::YesNoCancel, text.c_str(), title.c_str()))
+			switch (messageBox(MessageBoxIcon::Error, MessageBoxType::YesNoCancel, title.c_str(), text.c_str()))
 			{
                 default:
                 case MessageBoxResult::Yes:

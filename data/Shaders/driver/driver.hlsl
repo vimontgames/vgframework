@@ -14,8 +14,8 @@ VS_Output_Quad VS_Quad(VS_Input_Quad _input)
 {
     VS_Output_Quad output;
 
-    float2 pos = float2(_input.vertexID & 1, (_input.vertexID & 2) >> 1);
-    output.pos = float4(pos.xy, 0, 1);
+    float2 tmp = float2(_input.vertexID & 1, (_input.vertexID & 2) >> 1);
+    output.pos = float4(tmp.xy*2-1, 0, 1);
 
     return output;
 }
@@ -31,4 +31,6 @@ PS_Output_Quad PS_Quad(VS_Output_Quad _input)
     output.color0 = float4(1, 1, 0, 1);
     return output;
 }
+
+
 

@@ -16,6 +16,7 @@
     <ClInclude Include="Container\HandleTable.h" />
     <ClInclude Include="Container\HandleTable.hpp" />
     <ClInclude Include="Core.h" />
+    <ClInclude Include="File\File.h" />
     <ClInclude Include="IObject.h" />
     <ClInclude Include="IPlugin.h" />
     <ClInclude Include="Math\Math.h" />
@@ -29,6 +30,7 @@
   <ItemGroup>
     <ClCompile Include="CmdLine\CmdLine.cpp" />
     <ClCompile Include="Core.cpp" />
+    <ClCompile Include="File\File.cpp" />
     <ClCompile Include="Math\Math.cpp" />
     <ClCompile Include="Object\Object.cpp" />
     <ClCompile Include="Plugin\Plugin.cpp" />
@@ -89,6 +91,8 @@
       <AdditionalIncludeDirectories>$(SolutionDir)src;$(SolutionDir)extern</AdditionalIncludeDirectories>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>core/Precomp.h</PrecompiledHeaderFile>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <PreprocessorDefinitions>VG_DEBUG;_UNICODE;UNICODE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>

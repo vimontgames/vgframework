@@ -2,10 +2,7 @@
 
 #include "ShaderCompiler.h"
 #include "core/Container/Blob.h"
-
-// TODO: core:File
-#include <iostream>
-#include <fstream>
+#include "core/File/File.h"
 
 using namespace vg::core;
 
