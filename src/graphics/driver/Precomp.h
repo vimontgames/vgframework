@@ -11,8 +11,10 @@
 //--------------------------------------------------------------------------------------
 #ifdef VG_DEBUG
 #define VG_ENABLE_GPU_MARKER 1
+#define VG_ENABLE_SHADER_COMPILATION 1
 #elif defined(VG_RELEASE)
 #define VG_ENABLE_GPU_MARKER 1
+#define VG_ENABLE_SHADER_COMPILATION 1
 #endif
 
 #ifdef VG_DX12
@@ -22,8 +24,13 @@
 #include <d3d12.h>
 #include <DXGI1_5.h>
 #include <dxgidebug.h>
+
 #if VG_ENABLE_GPU_MARKER 
 #include <pix_win.h>
+#endif
+
+#if VG_ENABLE_SHADER_COMPILATION
+#include <dxcapi.h>
 #endif
 
 #define VG_ASSERT_SUCCEEDED(f) { HRESULT hr = f; VG_ASSERT(SUCCEEDED(hr), "%s\n\n%s", #f, std::system_category().message(hr).c_str()); }
@@ -50,19 +57,19 @@
 
 #define VG_STRINGIFY(quoteMe) #quoteMe
 
-#define VG_GRAPHICSAPI_MAKE_HEADER_PATH(filename, api)			VG_STRINGIFY(api##/filename##_##api.h)
-#define VG_GRAPHICSAPI_MAKE_IMPLEMENTATION_PATH(filename, api)	VG_STRINGIFY(api##/filename##_##api.hpp)
+#define VG_GFXAPI_MAKE_HEADER_PATH(filename, api)			VG_STRINGIFY(api##/filename##_##api.h)
+#define VG_GFXAPI_MAKE_IMPLEMENTATION_PATH(filename, api)	VG_STRINGIFY(api##/filename##_##api.hpp)
 
 #ifdef VG_DX12
 
-#define VG_GRAPHICSAPI dx12
-#define VG_GRAPHICSAPI_HEADER(filename) VG_GRAPHICSAPI_MAKE_HEADER_PATH(filename, dx12)
-#define VG_GRAPHICSAPI_IMPLEMENTATION(filename) VG_GRAPHICSAPI_MAKE_IMPLEMENTATION_PATH(filename, dx12)
+#define VG_GFXAPI dx12
+#define VG_GFXAPI_HEADER(filename) VG_GFXAPI_MAKE_HEADER_PATH(filename, dx12)
+#define VG_GFXAPI_IMPL(filename) VG_GFXAPI_MAKE_IMPLEMENTATION_PATH(filename, dx12)
 
 #elif defined(VG_VULKAN)
 
-#define VG_GRAPHICSAPI vulkan
-#define VG_GRAPHICSAPI_HEADER(filename) VG_GRAPHICSAPI_MAKE_HEADER_PATH(filename, vulkan)
-#define VG_GRAPHICSAPI_IMPLEMENTATION(filename) VG_GRAPHICSAPI_MAKE_IMPLEMENTATION_PATH(filename, vulkan)
+#define VG_GFXAPI vulkan
+#define VG_GFXAPI_HEADER(filename) VG_GFXAPI_MAKE_HEADER_PATH(filename, vulkan)
+#define VG_GFXAPI_IMPL(filename) VG_GFXAPI_MAKE_IMPLEMENTATION_PATH(filename, vulkan)
 
 #endif

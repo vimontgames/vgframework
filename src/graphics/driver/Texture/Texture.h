@@ -21,13 +21,13 @@ namespace vg::graphics::driver
 	}
 }
 
-#include VG_GRAPHICSAPI_HEADER(Texture)
+#include VG_GFXAPI_HEADER(Texture)
 
 namespace vg::graphics::driver
 {
-	class Texture : public VG_GRAPHICSAPI::Texture
+	class Texture : public VG_GFXAPI::Texture
 	{
-		using super = VG_GRAPHICSAPI::Texture;
+		using super = VG_GFXAPI::Texture;
 
 	public:
 		Texture(const TextureDesc & _texDesc, const core::string & _name, void * _initData);

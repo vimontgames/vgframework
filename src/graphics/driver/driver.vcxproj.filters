@@ -29,6 +29,9 @@
     <ClCompile Include="RootSignature\RootSignature.cpp">
       <Filter>RootSignature</Filter>
     </ClCompile>
+    <ClCompile Include="Shader\Shader.cpp">
+      <Filter>Shader</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Precomp.h" />
@@ -266,6 +269,54 @@
     <ClInclude Include="PipelineState\GraphicPipelineStateKey.h">
       <Filter>PipelineState</Filter>
     </ClInclude>
+    <ClInclude Include="Shader\Shader.h">
+      <Filter>Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="Shader\ShaderManager.h">
+      <Filter>Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="Shader\ShaderManager.hpp">
+      <Filter>Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="Shader\ShaderCompiler.h">
+      <Filter>Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="Shader\ShaderCompiler.hpp">
+      <Filter>Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="Shader\dx12\Shader_dx12.h">
+      <Filter>Shader\dx12</Filter>
+    </ClInclude>
+    <ClInclude Include="Shader\dx12\Shader_dx12.hpp">
+      <Filter>Shader\dx12</Filter>
+    </ClInclude>
+    <ClInclude Include="Shader\vulkan\Shader_vulkan.h">
+      <Filter>Shader\vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="Shader\vulkan\Shader_vulkan.hpp">
+      <Filter>Shader\vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="Shader\dx12\ShaderCompiler_dx12.h">
+      <Filter>Shader\dx12</Filter>
+    </ClInclude>
+    <ClInclude Include="Shader\dx12\ShaderCompiler_dx12.hpp">
+      <Filter>Shader\dx12</Filter>
+    </ClInclude>
+    <ClInclude Include="Shader\vulkan\ShaderCompiler_vulkan.h">
+      <Filter>Shader\vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="Shader\vulkan\ShaderCompiler_vulkan.hpp">
+      <Filter>Shader\vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="Device\DeviceCaps.h">
+      <Filter>Device</Filter>
+    </ClInclude>
+    <ClInclude Include="Device\dx12\DeviceCaps_dx12.h">
+      <Filter>Device\dx12</Filter>
+    </ClInclude>
+    <ClInclude Include="Device\vulkan\DeviceCaps_vulkan.h">
+      <Filter>Device\vulkan</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Device">
@@ -357,6 +408,12 @@
     </Filter>
     <Filter Include="Shader">
       <UniqueIdentifier>{c5cc49f0-0fbe-4bd3-8e48-d7be82bfa7a0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shader\dx12">
+      <UniqueIdentifier>{749570bf-5452-4e4b-93f5-a3b2f29ff0ea}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shader\vulkan">
+      <UniqueIdentifier>{00be2bcd-0507-471a-a946-6e313c9b45f1}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

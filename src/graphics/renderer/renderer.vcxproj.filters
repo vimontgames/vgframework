@@ -3,6 +3,9 @@
   <ItemGroup>
     <ClCompile Include="Precomp.cpp" />
     <ClCompile Include="Renderer.cpp" />
+    <ClCompile Include="Pass\Pass.cpp">
+      <Filter>Pass</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Renderer.def" />
@@ -11,5 +14,17 @@
     <ClInclude Include="Precomp.h" />
     <ClInclude Include="Renderer.h" />
     <ClInclude Include="IRenderer.h" />
+    <ClInclude Include="Renderer_consts.h" />
+    <ClInclude Include="Pass\TestPass.h">
+      <Filter>Pass</Filter>
+    </ClInclude>
+    <ClInclude Include="Pass\TestPass.hpp">
+      <Filter>Pass</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Pass">
+      <UniqueIdentifier>{922ccb7e-6e89-4930-a933-c1e2f5dfab1a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
 </Project>

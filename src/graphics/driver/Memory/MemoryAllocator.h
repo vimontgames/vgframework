@@ -15,13 +15,13 @@ namespace vg::graphics::driver
     }
 }
 
-#include VG_GRAPHICSAPI_HEADER(MemoryAllocator)
+#include VG_GFXAPI_HEADER(MemoryAllocator)
 
 namespace vg::graphics::driver
 {
-    class MemoryAllocator : public VG_GRAPHICSAPI::MemoryAllocator
+    class MemoryAllocator : public VG_GFXAPI::MemoryAllocator
     {
-        using super = VG_GRAPHICSAPI::MemoryAllocator;
+        using super = VG_GFXAPI::MemoryAllocator;
 
     public:
         MemoryAllocator();

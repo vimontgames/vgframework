@@ -8,7 +8,7 @@
 
 using namespace vg::core;
 
-#include VG_GRAPHICSAPI_IMPLEMENTATION(CommandList)
+#include VG_GFXAPI_IMPL(CommandList)
 
 namespace vg::graphics::driver
 {
@@ -21,7 +21,7 @@ namespace vg::graphics::driver
 			m_index(_index),
 			m_cmdPool(_cmdPool)
 		{
-			string name = asString(_type) + "CmdList#" + std::to_string(_index);
+			string name = asString(_type) + "CmdList#" + to_string(_index);
 			setName(name);
 		}
 

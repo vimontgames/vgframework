@@ -4,7 +4,7 @@
 
 using namespace vg::core;
 
-#include VG_GRAPHICSAPI_IMPLEMENTATION(Texture)
+#include VG_GFXAPI_IMPL(Texture)
 
 namespace vg::graphics::driver
 {

@@ -48,7 +48,7 @@ namespace vg::core
         // add
         {
             uint index = (uint)m_pairs.size();
-            m_pairs.push_back(std::pair<desc_t, object_t*>(_desc, new object_t(_desc)));
+            m_pairs.push_back(pair<desc_t, object_t*>(_desc, new object_t(_desc)));
             return index;
         }
     }

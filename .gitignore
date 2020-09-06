@@ -11,3 +11,4 @@ enc_temp_folder/*
 *.exp
 *.iobj
 *.ipdb
+!dxil.dll

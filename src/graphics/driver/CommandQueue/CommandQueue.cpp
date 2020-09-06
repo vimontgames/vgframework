@@ -2,7 +2,7 @@
 #include "CommandQueue.h"
 #include "graphics/driver/Device/Device.h"
 
-#include VG_GRAPHICSAPI_IMPLEMENTATION(CommandQueue)
+#include VG_GFXAPI_IMPL(CommandQueue)
 
 namespace vg::graphics::driver
 {

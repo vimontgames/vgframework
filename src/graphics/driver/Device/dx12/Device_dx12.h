@@ -14,7 +14,7 @@ namespace vg::graphics::driver::dx12
 		using super = base::Device;
 
 		public:
-			ID3D12Device *					getd3d12Device				() const;
+            D3D12Device *					getd3d12Device				() const;
             IDXGIAdapter1 *                 getd3d12Adapter             () const; 
             D3D12MA::Allocator *            getd3d12MemoryAllocator     () const;
 
@@ -32,7 +32,7 @@ namespace vg::graphics::driver::dx12
 			IDXGISwapChain1 *				created3d12SwapChain		(HWND _winHandle, core::uint _width, core::uint _height);
 
 		private:
-			ID3D12Device *					m_d3d12device				= nullptr;
+            D3D12Device *					m_d3d12device				= nullptr;
 			ID3D12Debug *					m_d3d12debug				= nullptr;
 			D3D_FEATURE_LEVEL				m_level						= (D3D_FEATURE_LEVEL)0;	// TODO: caps struct
 			

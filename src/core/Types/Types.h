@@ -3,6 +3,7 @@
 namespace vg::core
 {
 	using string	= std::string;
+    using wstring   = std::wstring;
 
 	using i8		=  int8_t;
 	using u8		=  uint8_t;
@@ -58,6 +59,8 @@ namespace vg::core
 	using float4x3	= hlslpp::float4x3;
 	using float4x4	= hlslpp::float4x4;
 
+    template <typename T1, typename T2> using pair = std::pair<T1,T2>;
+
 	template <typename T> using atomic = std::atomic<T>;
 	template <typename T> using vector = std::vector<T>;
 
@@ -66,4 +69,9 @@ namespace vg::core
 
 	template <typename T> using set							= std::set<T>;
 	template <typename T> using unordered_set				= std::unordered_set<T>;
+
+    template <typename T> const auto to_string(T _val)
+    {
+        return std::to_string(_val);
+    }
 }

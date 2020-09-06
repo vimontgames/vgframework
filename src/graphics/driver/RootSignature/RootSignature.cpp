@@ -25,7 +25,7 @@ namespace vg::graphics::driver
     }
 }
 
-#include VG_GRAPHICSAPI_IMPLEMENTATION(RootSignature)
+#include VG_GFXAPI_IMPL(RootSignature)
 
 namespace vg::graphics::driver
 {

@@ -123,22 +123,24 @@ namespace vg::graphics::driver
 		void build();
 		void render();
 
-		template <class T> T & addUserPass(const RenderPassID & _renderPassID)
-		{
-			auto it = m_subPasses.find(_renderPassID);
-			if (m_subPasses.end() == it)
-			{
-				T * newPass = new T();
-				m_subPasses[_renderPassID] = newPass;
+		//template <class T> T & addUserPass(const RenderPassID & _renderPassID)
+		//{
+		//	auto it = m_subPasses.find(_renderPassID);
+		//	if (m_subPasses.end() == it)
+		//	{
+		//		T * newPass = new T();
+		//		m_subPasses[_renderPassID] = newPass;
+        //
+		//		newPass->setName(_renderPassID);
+		//		newPass->setFrameGraph(this);
+        //
+		//		return *newPass;
+		//	}
+		//	else
+		//		return static_cast<T&>(*it->second);
+		//}
 
-				newPass->setName(_renderPassID);
-				newPass->setFrameGraph(this);
-
-				return *newPass;
-			}
-			else
-				return static_cast<T&>(*it->second);
-		}
+        bool addUserPass(UserPass * _userPass, const RenderPassID & _renderPassID);
 
 		template <class T> T & addResource(Resource::Type _type, const ResourceID & _resID)
 		{

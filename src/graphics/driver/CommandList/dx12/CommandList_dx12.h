@@ -23,13 +23,13 @@ namespace vg::graphics::driver::dx12
 
 		void								clear(const core::float4 & _color);
 
-		DirectX12GraphicsCommandList *		getd3d12GraphicsCommandList();
+		D3D12GraphicsCommandList *		getd3d12GraphicsCommandList();
 		ID3D12CommandList *					getd3d12CommandList() { return m_d3d12cmdList; }
 
 	private:
 		union
 		{
-			DirectX12GraphicsCommandList *	m_d3d12graphicsCmdList;
+			D3D12GraphicsCommandList *	m_d3d12graphicsCmdList;
 			ID3D12CommandList *				m_d3d12cmdList;
 		};
 	};

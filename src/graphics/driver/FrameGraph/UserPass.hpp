@@ -1,7 +1,7 @@
 #include "graphics/driver/Precomp.h"
 #include "UserPass.h"
 
-#include VG_GRAPHICSAPI_IMPLEMENTATION(SubPass)
+#include VG_GFXAPI_IMPL(SubPass)
 
 using namespace vg::core;
 

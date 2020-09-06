@@ -20,13 +20,13 @@ namespace vg::graphics::driver
 	}
 }
 
-#include VG_GRAPHICSAPI_HEADER(CommandQueue)
+#include VG_GFXAPI_HEADER(CommandQueue)
 
 namespace vg::graphics::driver
 {
-	class CommandQueue : public VG_GRAPHICSAPI::CommandQueue
+	class CommandQueue : public VG_GFXAPI::CommandQueue
 	{
-		using super = VG_GRAPHICSAPI::CommandQueue;
+		using super = VG_GFXAPI::CommandQueue;
 
 	public:
 		CommandQueue(CommandQueueType _type, core::uint _index);

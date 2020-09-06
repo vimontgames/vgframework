@@ -13,7 +13,9 @@ namespace vg::graphics::driver
 
 namespace vg::graphics::renderer
 {
-	class Renderer : public core::Singleton_With_Inheritance<Renderer, IRenderer>
+    class TestPass;
+
+	class Renderer : public IRenderer, public core::Singleton<Renderer>
 	{
 	public:
 		IPlugin::Version		getVersion			() const override;
@@ -31,5 +33,6 @@ namespace vg::graphics::renderer
 	private:
 		driver::Device &		m_device;
 		driver::FrameGraph &	m_frameGraph;
+        TestPass *              m_testPass = nullptr;
 	};
 }

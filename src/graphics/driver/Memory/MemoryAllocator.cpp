@@ -4,7 +4,7 @@
 
 using namespace vg::core;
 
-#include VG_GRAPHICSAPI_IMPLEMENTATION(MemoryAllocator)
+#include VG_GFXAPI_IMPL(MemoryAllocator)
 
 namespace vg::graphics::driver
 {

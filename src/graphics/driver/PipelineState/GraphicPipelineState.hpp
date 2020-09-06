@@ -18,7 +18,7 @@ namespace vg::graphics::driver
     }
 }
 
-#include VG_GRAPHICSAPI_IMPLEMENTATION(GraphicPipelineState)
+#include VG_GFXAPI_IMPL(GraphicPipelineState)
 
 namespace vg::graphics::driver
 {

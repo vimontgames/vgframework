@@ -27,7 +27,7 @@ namespace vg::graphics::driver::dx12
 	}
 
 	//--------------------------------------------------------------------------------------
-	DirectX12GraphicsCommandList * CommandList::getd3d12GraphicsCommandList()
+	D3D12GraphicsCommandList * CommandList::getd3d12GraphicsCommandList()
 	{
 		VG_ASSERT(CommandListType::Graphics == getType());
 		return m_d3d12graphicsCmdList;

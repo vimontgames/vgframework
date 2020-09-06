@@ -1,4 +1,4 @@
-#include VG_GRAPHICSAPI_IMPLEMENTATION(RenderPass)
+#include VG_GFXAPI_IMPL(RenderPass)
 
 namespace vg::graphics::driver
 {

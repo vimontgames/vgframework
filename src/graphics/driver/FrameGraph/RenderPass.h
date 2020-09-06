@@ -26,13 +26,13 @@ namespace vg::graphics::driver
 	}
 }
 
-#include VG_GRAPHICSAPI_HEADER(RenderPass)
+#include VG_GFXAPI_HEADER(RenderPass)
 
 namespace vg::graphics::driver
 {
-	class RenderPass : public VG_GRAPHICSAPI::RenderPass
+	class RenderPass : public VG_GFXAPI::RenderPass
 	{
-		using super = VG_GRAPHICSAPI::RenderPass;
+		using super = VG_GFXAPI::RenderPass;
 
 	public:
         void * operator new(size_t _size);

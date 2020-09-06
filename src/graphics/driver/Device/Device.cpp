@@ -6,11 +6,12 @@
 #include "graphics/driver/Texture/Texture.h"
 #include "graphics/driver/Memory/MemoryAllocator.h"
 #include "graphics/driver/RootSignature/RootSignature.h"
+#include "graphics/driver/Shader/ShaderCompiler.h"
 
 using namespace vg::core;
 using namespace vg::graphics;
 
-#include VG_GRAPHICSAPI_IMPLEMENTATION(Device)
+#include VG_GFXAPI_IMPL(Device)
 
 namespace vg::graphics::driver
 {
@@ -33,12 +34,13 @@ namespace vg::graphics::driver
 		void Device::init(const DeviceParams & _params)
 		{
 			m_deviceParams = _params;
+            m_shaderCompiler = new driver::ShaderCompiler("data/shaders");
 		}
 
 		//--------------------------------------------------------------------------------------
 		void Device::deinit()
 		{
-
+            VG_SAFE_RELEASE(m_shaderCompiler);
 		}
 
 		//--------------------------------------------------------------------------------------
@@ -190,8 +192,10 @@ namespace vg::graphics::driver
         {
             auto & frameContext = m_frameContext[getFrameContextIndex()];
 
+            #if VG_DBG_CPUGPUSYNC
             if (frameContext.m_objectsToRelease.size())
                 VG_DEBUGPRINT("Release %u object(s) async [%u]\n", frameContext.m_objectsToRelease.size(), getFrameContextIndex());
+            #endif
 
             for (Object * obj : frameContext.m_objectsToRelease)
                 VG_SAFE_RELEASE(obj);
@@ -234,20 +238,28 @@ namespace vg::graphics::driver
 	//--------------------------------------------------------------------------------------
 	void Device::beginFrame()
 	{
+        #if VG_DBG_CPUGPUSYNC
         VG_DEBUGPRINT("beginFrame #%u\n{\n", getFrameCounter());
+        #endif
+
 		Super::beginFrame();
 
         // It is safe now to release frame (n-max_frame_latency+1) resources as we are now sure they are not in use by the GPU
         flushReleaseAsync();
 
+        #if VG_DBG_CPUGPUSYNC
         VG_DEBUGPRINT("[...]\n");
+        #endif
 	}
 	
 	//--------------------------------------------------------------------------------------
 	void Device::endFrame()
 	{
 		Super::endFrame();
+
+        #if VG_DBG_CPUGPUSYNC
         VG_DEBUGPRINT("}\nendFrame #%u\n", getFrameCounter());
+        #endif
 	}
 
 	//--------------------------------------------------------------------------------------
@@ -260,44 +272,6 @@ namespace vg::graphics::driver
     RootSignatureHandle Device::addRootSignature(const RootSignatureDesc & _desc)
     {
         return m_rootSignaturesTable.add(_desc);
-
-        /*
-        // find existing
-        {
-            uint index = 0;
-            for (auto & pair : m_rootSignatures)
-            {
-                if (pair.first == _desc)
-                {
-                    VG_ASSERT(pair.second);
-                    pair.second->addRef();
-                    return index;
-                }
-                ++index;
-            }
-        }
-
-        // reuse empty slot
-        {
-            uint index = 0;
-            for (auto & pair : m_rootSignatures)
-            {
-                if (nullptr == pair.second)
-                {
-                    pair.first = _desc;
-                    pair.second = new RootSignature(_desc);
-                    return index;
-                }
-                ++index;
-            }
-        }
-
-        // add
-        {
-            uint index = (uint)m_rootSignatures.size();
-            m_rootSignatures.push_back(std::pair<RootSignatureDesc, RootSignature*>(_desc, new RootSignature(_desc)));
-            return index;
-        }*/
     }
 
     //--------------------------------------------------------------------------------------

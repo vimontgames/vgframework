@@ -5,7 +5,10 @@
 #include "graphics/driver/Device/Device_consts.h"
 #include "graphics/driver/CommandQueue/CommandQueue_consts.h"
 #include "graphics/driver/CommandList/CommandList_consts.h"
+#include "graphics/driver/Device/DeviceCaps.h"
 #include "graphics/driver/RootSignature/RootSignature_consts.h"
+
+//#define VG_DBG_CPUGPUSYNC 1
 
 namespace vg::graphics::driver
 {
@@ -18,6 +21,7 @@ namespace vg::graphics::driver
     class MemoryAllocator;
     class RootSignature;
     class RootSignatureDesc;
+    class ShaderCompiler;
 
     enum class PixelFormat : core::u8;
 
@@ -64,26 +68,27 @@ namespace vg::graphics::driver
             void                                            flushReleaseAsync           ();
 
 		protected:
+            DeviceCaps                                      m_caps;
 			core::vector<driver::CommandQueue*>				m_commandQueues[core::enumCount<CommandQueueType>()];
 			FrameContext									m_frameContext[max_frame_latency];
 			core::u64										m_frameCounter = 0;
             driver::PixelFormat                             m_backbufferFormat;
             MemoryAllocator *                               m_memoryAllocator = nullptr;
 			DeviceParams 									m_deviceParams;
-
+            ShaderCompiler *                                m_shaderCompiler = nullptr;
             RootSignatureTable                              m_rootSignaturesTable;
 
 		};
 	}
 }
 
-#include VG_GRAPHICSAPI_HEADER(Device)
+#include VG_GFXAPI_HEADER(Device)
 
 namespace vg::graphics::driver
 {
-	class Device : public core::Singleton_With_Inheritance<Device, VG_GRAPHICSAPI::Device>
+	class Device : public VG_GFXAPI::Device, public core::Singleton<Device>
 	{
-		using Super = VG_GRAPHICSAPI::Device;
+		using Super = VG_GFXAPI::Device;
 
 	public:
 		void		        init			    (const DeviceParams & _params);

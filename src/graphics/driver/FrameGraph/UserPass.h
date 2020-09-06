@@ -6,6 +6,7 @@
 namespace vg::graphics::driver
 {
 	class CommandList;
+    class Shader;
 
 	//--------------------------------------------------------------------------------------
 	// An API-agnostic Render/Compute pass exposed to the client Renderer

@@ -1,20 +1,15 @@
 #pragma once
 
 #include "core/IPlugin.h"
+#include "Engine_Consts.h"
 
 namespace vg::graphics::renderer
 {
-	struct RendererParams;
 	class IRenderer;
 }
 
 namespace vg::engine
 {
-	struct EngineParams
-	{
-		vg::graphics::renderer::RendererParams & renderer;
-	};
-
 	class IEngine : public core::IPlugin
 	{
 	public:

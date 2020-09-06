@@ -4,7 +4,7 @@
 
 using namespace vg::core;
 
-#include VG_GRAPHICSAPI_IMPLEMENTATION(CommandPool)
+#include VG_GFXAPI_IMPL(CommandPool)
 
 namespace vg::graphics::driver
 {

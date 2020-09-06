@@ -12,6 +12,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CmdLine\CmdLine.h" />
+    <ClInclude Include="Container\Blob.h" />
     <ClInclude Include="Container\HandleTable.h" />
     <ClInclude Include="Container\HandleTable.hpp" />
     <ClInclude Include="Core.h" />

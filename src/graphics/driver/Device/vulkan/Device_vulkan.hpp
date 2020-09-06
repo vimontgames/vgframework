@@ -780,7 +780,10 @@ namespace vg::graphics::driver::vulkan
         // Ensure no more than max_frame_latency renderings are outstanding
         if (m_frameCounter >= max_frame_latency)
         {
+            #if VG_DBG_CPUGPUSYNC
             VG_DEBUGPRINT("Wait completion of frame %u (fence[%u])\n", m_frameCounter - max_frame_latency, currentFrameIndex);
+            #endif
+
             vkWaitForFences(vkDevice, 1, &fences[currentFrameIndex], VK_TRUE, UINT64_MAX);
         }
         vkResetFences(vkDevice, 1, &fences[currentFrameIndex]);
@@ -821,7 +824,9 @@ namespace vg::graphics::driver::vulkan
         submit_info.pSignalSemaphores = &draw_complete_semaphores[currentFrameIndex];
         VG_ASSERT_VULKAN(vkQueueSubmit(m_commandQueues[asInteger(CommandQueueType::Graphics)][0]->m_vkCommandQueue, 1, &submit_info, fences[currentFrameIndex]));
 
+        #if VG_DBG_CPUGPUSYNC
         VG_DEBUGPRINT("Write fence %u\n", currentFrameIndex);
+        #endif
 
         VkPresentInfoKHR present;
 

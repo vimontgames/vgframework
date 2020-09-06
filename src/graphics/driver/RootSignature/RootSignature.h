@@ -19,13 +19,13 @@ namespace vg::graphics::driver
     }
 }
 
-#include VG_GRAPHICSAPI_HEADER(RootSignature)
+#include VG_GFXAPI_HEADER(RootSignature)
 
 namespace vg::graphics::driver
 {
-    class RootSignature : public VG_GRAPHICSAPI::RootSignature
+    class RootSignature : public VG_GFXAPI::RootSignature
     {
-        using super = VG_GRAPHICSAPI::RootSignature;
+        using super = VG_GFXAPI::RootSignature;
 
     public:
         RootSignature(const RootSignatureDesc & _desc);

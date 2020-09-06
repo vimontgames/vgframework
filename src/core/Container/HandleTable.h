@@ -39,7 +39,7 @@ namespace vg::core
         core::u32 remove(Handle & _handle);
 
     private:
-        std::vector<std::pair<desc_t, object_t*>> m_pairs;
+        core::vector<core::pair<desc_t, object_t*>> m_pairs;
     };
 }
 

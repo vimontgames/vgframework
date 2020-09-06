@@ -13,7 +13,7 @@ namespace vg::graphics::driver::base
 	}
 }
 
-#include VG_GRAPHICSAPI_IMPLEMENTATION(SubPass)
+#include VG_GFXAPI_IMPL(SubPass)
 
 namespace vg::graphics::driver
 {

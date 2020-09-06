@@ -2,11 +2,9 @@
 #include "renderer.h"
 
 #include "graphics/driver/device/device.h"
-#include "graphics/driver/CommandList/CommandList.h"
 #include "graphics/driver/FrameGraph/FrameGraph.h"
-#include "graphics/driver/FrameGraph/UserPass.h"
-#include "graphics/driver/Texture/Texture.h"
-#include "graphics/driver/RootSignature/RootSignature.h"
+
+#include "Pass/TestPass.h"
 
 using namespace vg::core;
 using namespace vg::graphics::driver;
@@ -49,58 +47,17 @@ namespace vg::graphics::renderer
 	void Renderer::init(const RendererParams & _params)
 	{
 		m_device.init(_params.device);
+
+        m_testPass = new TestPass();
 	}
 
 	//--------------------------------------------------------------------------------------
 	void Renderer::deinit()
 	{
+        VG_SAFE_DELETE(m_testPass);
+
 		m_device.deinit();
 	}
-
-    //--------------------------------------------------------------------------------------
-    class TestPass : public driver::UserPass
-	{
-	public:
-        TestPass()
-        {
-            auto * device = Device::get();
-
-            RootSignatureDesc rsDesc;
-
-            rsDesc.addRootConstants(ShaderStageFlags::VS | ShaderStageFlags::PS, 0, 4);
-
-            m_rootSignatureHandle = device->addRootSignature(rsDesc);
-        }
-
-        ~TestPass()
-        {
-            auto * device = Device::get();
-            device->removeRootSignature(m_rootSignatureHandle);
-        }
-
-		void setup() override
-		{
-			auto * renderer = Renderer::get();
-			auto & backbuffer = renderer->getBackbuffer()->getTexDesc();
-
-			FrameGraph::TextureDesc desc;
-									desc.width = backbuffer.width;
-									desc.height = backbuffer.height;
-									desc.format = PixelFormat::R8G8B8A8_unorm;
-									desc.initState = FrameGraph::Resource::InitState::Clear;
-                                    desc.clearColor = { 1,0,1,0 };
-
-			writeRenderTarget(0, "Backbuffer", desc);
-		}
-
-		void draw(CommandList * _cmdList) const override
-		{
-
-		}
-
-    private:
-        RootSignatureHandle m_rootSignatureHandle;
-	};
 
 	//--------------------------------------------------------------------------------------
 	void Renderer::runOneFrame()
@@ -109,9 +66,9 @@ namespace vg::graphics::renderer
 		{
 			m_frameGraph.import("Backbuffer", m_device.getBackbuffer());
 			m_frameGraph.setGraphOutput("Backbuffer");
-
-			auto & test = m_frameGraph.addUserPass<TestPass>("testPass");
-
+            
+			m_frameGraph.addUserPass(m_testPass, "test");
+            
 			m_frameGraph.setup();
 			m_frameGraph.build();
 			m_frameGraph.render();

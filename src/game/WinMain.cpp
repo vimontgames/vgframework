@@ -165,10 +165,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
 	auto * engine = core::Plugin::create<engine::IEngine>("engine");
 
-	graphics::driver::DeviceParams deviceParams;
-	graphics::renderer::RendererParams rendererParams = { deviceParams };
-	engine::EngineParams engineParams = { rendererParams };
-						 engineParams.renderer.device.resolution = core::uint2(width, height);
+    engine::EngineParams engineParams;
+                         engineParams.renderer.device.resolution = core::uint2(width, height);
 
 	const core::string * solutionPlatform = cmdLine.find("SolutionPlatform");
 
@@ -180,14 +178,14 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 			engineParams.renderer.device.api = graphics::driver::API::Vulkan;
 	}
 
-#ifdef VG_DEBUG
-	deviceParams.debugDevice = true;
-    deviceParams.breakOnErrors = true;
-    deviceParams.breakOnWarnings = true;
-#endif
+    #ifdef VG_DEBUG
+    engineParams.renderer.device.debugDevice = true;
+    engineParams.renderer.device.breakOnErrors = true;
+    engineParams.renderer.device.breakOnWarnings = true;
+    #endif
 
-	deviceParams.window = g_hWnd;
-	deviceParams.instance = hInstance;
+    engineParams.renderer.device.window = g_hWnd;
+    engineParams.renderer.device.instance = hInstance;
 
 	engine->init(engineParams);
 

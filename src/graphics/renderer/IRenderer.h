@@ -1,19 +1,10 @@
 #pragma once
 
 #include "core/IPlugin.h"
-
-namespace vg::graphics::driver
-{
-	struct DeviceParams;
-}
+#include "Renderer_consts.h"
 
 namespace vg::graphics::renderer
 {
-	struct RendererParams
-	{
-		driver::DeviceParams & device;
-	};
-
 	class IRenderer : public core::IPlugin
 	{
 	public:

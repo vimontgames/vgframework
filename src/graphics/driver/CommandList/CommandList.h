@@ -44,13 +44,13 @@ namespace vg::graphics::driver
 	}
 }
 
-#include VG_GRAPHICSAPI_HEADER(CommandList)
+#include VG_GFXAPI_HEADER(CommandList)
 
 namespace vg::graphics::driver
 {
-	class CommandList : public VG_GRAPHICSAPI::CommandList
+	class CommandList : public VG_GFXAPI::CommandList
 	{
-		using super = VG_GRAPHICSAPI::CommandList;
+		using super = VG_GFXAPI::CommandList;
 
 	public:
 		CommandList(driver::CommandListType _type, driver::CommandPool * _cmdPool, core::uint _frame, core::uint _index);

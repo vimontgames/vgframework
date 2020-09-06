@@ -18,13 +18,13 @@ namespace vg::graphics::driver
 	}
 }
 
-#include VG_GRAPHICSAPI_HEADER(SubPass)
+#include VG_GFXAPI_HEADER(SubPass)
 
 namespace vg::graphics::driver
 {
-	class SubPass : public VG_GRAPHICSAPI::SubPass
+	class SubPass : public VG_GFXAPI::SubPass
 	{
-		using super = VG_GRAPHICSAPI::SubPass;
+		using super = VG_GFXAPI::SubPass;
 
 	public:
 		SubPass();

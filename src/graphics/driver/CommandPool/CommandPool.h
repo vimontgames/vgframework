@@ -19,13 +19,13 @@ namespace vg::graphics::driver
 	}
 }
 
-#include VG_GRAPHICSAPI_HEADER(CommandPool)
+#include VG_GFXAPI_HEADER(CommandPool)
 
 namespace vg::graphics::driver
 {
-	class CommandPool : public VG_GRAPHICSAPI::CommandPool
+	class CommandPool : public VG_GFXAPI::CommandPool
 	{
-		using super = VG_GRAPHICSAPI::CommandPool;
+		using super = VG_GFXAPI::CommandPool;
 
 	public:
 		CommandPool(core::uint _frame, core::uint _index);

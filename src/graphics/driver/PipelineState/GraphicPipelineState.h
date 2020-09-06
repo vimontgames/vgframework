@@ -16,13 +16,13 @@ namespace vg::graphics::driver
     }
 }
 
-#include VG_GRAPHICSAPI_HEADER(GraphicPipelineState)
+#include VG_GFXAPI_HEADER(GraphicPipelineState)
 
 namespace vg::graphics::driver
 {
-    class GraphicPipelineState : public VG_GRAPHICSAPI::GraphicPipelineState
+    class GraphicPipelineState : public VG_GFXAPI::GraphicPipelineState
     {
-        using super = VG_GRAPHICSAPI::GraphicPipelineState;
+        using super = VG_GFXAPI::GraphicPipelineState;
 
     public:
         GraphicPipelineState();

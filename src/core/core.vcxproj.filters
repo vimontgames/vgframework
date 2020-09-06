@@ -22,6 +22,9 @@
     <Filter Include="Container">
       <UniqueIdentifier>{2f2ceb03-bf06-4251-bae7-e274551c4292}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Pool">
+      <UniqueIdentifier>{8e257687-96bf-4347-9402-dcdb033046e1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Math\Math.h">
@@ -46,11 +49,16 @@
     <ClInclude Include="Singleton\Singleton.h">
       <Filter>Singleton</Filter>
     </ClInclude>
-    <ClInclude Include="Pool\Pool.h" />
     <ClInclude Include="Container\HandleTable.h">
       <Filter>Container</Filter>
     </ClInclude>
     <ClInclude Include="Container\HandleTable.hpp">
+      <Filter>Container</Filter>
+    </ClInclude>
+    <ClInclude Include="Pool\Pool.h">
+      <Filter>Pool</Filter>
+    </ClInclude>
+    <ClInclude Include="Container\Blob.h">
       <Filter>Container</Filter>
     </ClInclude>
   </ItemGroup>

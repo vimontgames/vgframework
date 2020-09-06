@@ -205,6 +205,26 @@ namespace vg::graphics::driver
 		}
 	}
 
+    //--------------------------------------------------------------------------------------
+    bool FrameGraph::addUserPass(UserPass * _userPass, const RenderPassID & _renderPassID)
+    {
+        auto it = m_subPasses.find(_renderPassID);
+        
+        if (m_subPasses.end() == it)
+        {
+            _userPass->addRef();
+            _userPass->setName(_renderPassID);
+            _userPass->setFrameGraph(this);
+            m_subPasses[_renderPassID] = _userPass;
+            return true;
+        }
+        else
+        {
+            VG_ASSERT(m_subPasses.end() == it, "Could not add UserPass \"%s\" to FrameGraph as there's already an UserPass with the same identifier", _renderPassID);
+            return false;
+        }
+    }
+
 	//--------------------------------------------------------------------------------------
 	void FrameGraph::setup()
 	{
