@@ -13,7 +13,7 @@ namespace vg::graphics::driver::vulkan
         ~ShaderCompiler();
 
     protected:
-        driver::Shader * compile(const core::string & _file, const core::string & _entryPoint, ShaderStage _stage);
+        driver::Shader * compile(const core::string & _path, const core::string & _entryPoint, ShaderStage _stage);
 
         void initBuiltInResource();
 

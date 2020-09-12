@@ -2,6 +2,7 @@
 
 #include "core/Object/Object.h"
 #include "graphics/driver/FrameGraph/FrameGraph.h"
+#include "graphics/driver/Shader/ShaderKey.h"
 
 namespace vg::graphics::driver
 {
@@ -24,6 +25,12 @@ namespace vg::graphics::driver
 		virtual void	draw		(CommandList * _cmdList) const = 0;
 
 		const core::vector<FrameGraph::TextureResource *> & getRenderTargets() const;
+
+        core::uint getRenderTargetCount() const;
+        const FrameGraph::TextureDesc & getRenderTargetDesc(core::uint _index) const;
+
+        bool hasDepthStencil() const;
+        const FrameGraph::TextureDesc &  getDepthStencilDesc() const;
 
 	protected:
 		void writeRenderTarget(core::uint _slot, const FrameGraph::ResourceID & _resID, const FrameGraph::TextureDesc & _resDesc);

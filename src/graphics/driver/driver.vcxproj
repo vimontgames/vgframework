@@ -83,10 +83,14 @@
     <ClInclude Include="Memory\vulkan\MemoryAllocator_vulkan.hpp" />
     <ClInclude Include="PipelineState\dx12\GraphicPipelineState_dx12.h" />
     <ClInclude Include="PipelineState\dx12\GraphicPipelineState_dx12.hpp" />
+    <ClInclude Include="PipelineState\dx12\RasterizerState_dx12.h" />
+    <ClInclude Include="PipelineState\dx12\RasterizerState_dx12.hpp" />
     <ClInclude Include="PipelineState\GraphicPipelineState.h" />
     <ClInclude Include="PipelineState\GraphicPipelineState.hpp" />
     <ClInclude Include="PipelineState\GraphicPipelineStateKey.h" />
     <ClInclude Include="PipelineState\PipelineState_consts.h" />
+    <ClInclude Include="PipelineState\RasterizerState.h" />
+    <ClInclude Include="PipelineState\RasterizerState.hpp" />
     <ClInclude Include="PipelineState\vulkan\GraphicPipelineState_vulkan.h" />
     <ClInclude Include="PipelineState\vulkan\GraphicPipelineState_vulkan.hpp" />
     <ClInclude Include="RootSignature\dx12\RootSignature_dx12.h" />
@@ -101,9 +105,13 @@
     <ClInclude Include="Shader\dx12\ShaderCompiler_dx12.hpp" />
     <ClInclude Include="Shader\dx12\Shader_dx12.h" />
     <ClInclude Include="Shader\dx12\Shader_dx12.hpp" />
+    <ClInclude Include="Shader\HLSLDesc.h" />
+    <ClInclude Include="Shader\HLSLDesc.hpp" />
     <ClInclude Include="Shader\Shader.h" />
     <ClInclude Include="Shader\ShaderCompiler.h" />
     <ClInclude Include="Shader\ShaderCompiler.hpp" />
+    <ClInclude Include="Shader\ShaderKey.h" />
+    <ClInclude Include="Shader\ShaderKey.hpp" />
     <ClInclude Include="Shader\ShaderManager.h" />
     <ClInclude Include="Shader\ShaderManager.hpp" />
     <ClInclude Include="Shader\Shader_consts.h" />
@@ -217,7 +225,7 @@
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalIncludeDirectories>$(SolutionDir)src;$(SolutionDir)extern</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)src;$(SolutionDir)extern;$(SolutionDir)data</AdditionalIncludeDirectories>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>graphics/driver/Precomp.h</PrecompiledHeaderFile>
       <PreprocessorDefinitions>VG_DEBUG;VG_DX12;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -238,7 +246,7 @@
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalIncludeDirectories>$(SolutionDir)src;$(SolutionDir)extern;$(VK_SDK_PATH)\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)src;$(SolutionDir)extern;$(SolutionDir)data;$(VK_SDK_PATH)\include</AdditionalIncludeDirectories>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>graphics/driver/Precomp.h</PrecompiledHeaderFile>
       <PreprocessorDefinitions>VG_DEBUG;VG_VULKAN;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -261,7 +269,7 @@
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalIncludeDirectories>$(SolutionDir)src;$(SolutionDir)extern</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)src;$(SolutionDir)extern;$(SolutionDir)data</AdditionalIncludeDirectories>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>graphics/driver/Precomp.h</PrecompiledHeaderFile>
       <PreprocessorDefinitions>VG_DX12;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -285,7 +293,7 @@
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalIncludeDirectories>$(SolutionDir)src;$(SolutionDir)extern;$(VK_SDK_PATH)\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)src;$(SolutionDir)extern;$(SolutionDir)data:$(VK_SDK_PATH)\include</AdditionalIncludeDirectories>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>graphics/driver/Precomp.h</PrecompiledHeaderFile>
       <PreprocessorDefinitions>VG_VULKAN;%(PreprocessorDefinitions)</PreprocessorDefinitions>

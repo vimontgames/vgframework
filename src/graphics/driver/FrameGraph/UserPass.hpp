@@ -53,4 +53,28 @@ namespace vg::graphics::driver
 		m_renderTargetIn.push_back(nullptr);
 		m_renderTargetOut.push_back(&res);
 	}
+
+    //--------------------------------------------------------------------------------------
+    core::uint UserPass::getRenderTargetCount() const
+    {
+        return (core::uint)m_renderTargetOut.size();
+    }
+
+    //--------------------------------------------------------------------------------------
+    const FrameGraph::TextureDesc & UserPass::getRenderTargetDesc(core::uint _index) const
+    {
+        return m_renderTargetOut[_index]->getTextureDesc();
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool UserPass::hasDepthStencil() const
+    {
+        return nullptr != m_depthStencilOut;
+    }
+
+    //--------------------------------------------------------------------------------------
+    const FrameGraph::TextureDesc & UserPass::getDepthStencilDesc() const
+    {
+        return m_depthStencilOut->getTextureDesc();
+    }
 }

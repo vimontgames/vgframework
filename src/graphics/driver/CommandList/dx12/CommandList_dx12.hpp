@@ -96,6 +96,53 @@ namespace vg::graphics::driver::dx12
 		super::endSubPass();
 	}
 
+    //--------------------------------------------------------------------------------------
+    void CommandList::bindRootSignature(driver::RootSignature * _rootSig)
+    {
+        auto * d3d12rs = _rootSig->getd3d12RootSignature();
+        m_d3d12graphicsCmdList->SetGraphicsRootSignature(d3d12rs);
+    }
+
+    //--------------------------------------------------------------------------------------
+    void CommandList::bindGraphicPipelineState(driver::GraphicPipelineState * _pso)
+    {
+        auto * d3s12pso = _pso->getd3d12GraphicPipelineState();
+        m_d3d12graphicsCmdList->SetPipelineState(d3s12pso);
+    }
+
+    //--------------------------------------------------------------------------------------
+    void CommandList::bindPrimitiveTopology(PrimitiveTopology _topology)
+    {
+        auto d3d12primitiveTopology = getd3d12PrimitiveTopology(_topology);
+        m_d3d12graphicsCmdList->IASetPrimitiveTopology(d3d12primitiveTopology);
+    }
+
+    //--------------------------------------------------------------------------------------
+    void CommandList::bindViewport(const core::uint4 & _viewport)
+    {
+        D3D12_VIEWPORT d3d12viewport;
+                       d3d12viewport.TopLeftX = (float)_viewport.x;
+                       d3d12viewport.TopLeftY = (float)_viewport.y;
+                       d3d12viewport.Width = (float)_viewport.z;
+                       d3d12viewport.Height = (float)_viewport.w;
+                       d3d12viewport.MinDepth = 0.0f;
+                       d3d12viewport.MaxDepth = 1.0f;
+
+        m_d3d12graphicsCmdList->RSSetViewports(1, &d3d12viewport);
+    }
+
+    //--------------------------------------------------------------------------------------
+    void CommandList::bindScissor(const core::uint4 & _scissor)
+    {
+        D3D12_RECT d3d12scissor;
+                   d3d12scissor.left = _scissor.x;
+                   d3d12scissor.top = _scissor.y;
+                   d3d12scissor.right = _scissor.z;
+                   d3d12scissor.bottom = _scissor.w;
+
+        m_d3d12graphicsCmdList->RSSetScissorRects(1, &d3d12scissor);
+    }
+
 	//--------------------------------------------------------------------------------------
 	void CommandList::clear(const core::float4 & _color)
 	{
@@ -120,4 +167,30 @@ namespace vg::graphics::driver::dx12
 		//	m_d3d12graphicsCmdList->ClearRenderTargetView(handle, clearColor, 0, nullptr);
 		//}
 	}
+
+    //--------------------------------------------------------------------------------------
+    void CommandList::draw(core::uint _vertexCount, core::uint _startOffset)
+    {
+        m_d3d12graphicsCmdList->DrawInstanced(_vertexCount, 1, _startOffset, 0);
+    }
+
+    //--------------------------------------------------------------------------------------
+    D3D12_PRIMITIVE_TOPOLOGY CommandList::getd3d12PrimitiveTopology(PrimitiveTopology _topology)
+    {
+        switch (_topology)
+        {
+        case PrimitiveTopology::PointList:
+            return D3D_PRIMITIVE_TOPOLOGY_POINTLIST;
+        case PrimitiveTopology::LineList:
+            return D3D_PRIMITIVE_TOPOLOGY_LINELIST;
+        default:
+            VG_ASSERT(false, "Unhandled PrimitiveTopology \"%s\" (%u)", asString(_topology), _topology);
+        case PrimitiveTopology::TriangleList:
+            return D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
+        case PrimitiveTopology::LineStrip:
+            return D3D_PRIMITIVE_TOPOLOGY_LINESTRIP;
+        case PrimitiveTopology::TriangleStrip:
+            return D3D_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP;
+        }
+    }
 }

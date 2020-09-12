@@ -44,10 +44,10 @@ namespace vg::graphics::driver::vulkan
     }
 
     //--------------------------------------------------------------------------------------
-    driver::Shader * ShaderCompiler::compile(const core::string & _file, const core::string & _entryPoint, ShaderStage _stage)
+    driver::Shader * ShaderCompiler::compile(const core::string & _path, const core::string & _entryPoint, ShaderStage _stage)
     {
         string source;
-        if (file::read(_file, source))
+        if (file::read(_path, source))
         {
             EShLanguage targetProfile = getVulkanTargetProfile(_stage);
             glslang::TShader tShader(targetProfile);
@@ -67,7 +67,7 @@ namespace vg::graphics::driver::vulkan
             const EShMessages messages = (EShMessages)(EShMsgSpvRules | EShMsgReadHlsl | EShMsgVulkanRules);
 
             DirStackFileIncluder includeHandler;
-            std::string dir = file::getFileDir(_file);
+            std::string dir = file::getFileDir(_path);
             includeHandler.pushExternalLocalDirectory(dir);
 
             std::string preprocessedSource;

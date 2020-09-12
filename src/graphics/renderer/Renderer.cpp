@@ -2,9 +2,12 @@
 #include "renderer.h"
 
 #include "graphics/driver/device/device.h"
+#include "graphics/driver/Shader/ShaderManager.h"
 #include "graphics/driver/FrameGraph/FrameGraph.h"
 
 #include "Pass/TestPass.h"
+
+#include "shaders/driver/driver.hlsl.h"
 
 using namespace vg::core;
 using namespace vg::graphics::driver;
@@ -46,8 +49,14 @@ namespace vg::graphics::renderer
 	//--------------------------------------------------------------------------------------
 	void Renderer::init(const RendererParams & _params)
 	{
+        // Create device
 		m_device.init(_params.device);
 
+        // Register shaders
+        auto * sm = ShaderManager::get();
+        sm->registerHLSL(DriverHLSLDesc());
+
+        // Create passes
         m_testPass = new TestPass();
 	}
 

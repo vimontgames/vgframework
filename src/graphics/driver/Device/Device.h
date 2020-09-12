@@ -21,7 +21,7 @@ namespace vg::graphics::driver
     class MemoryAllocator;
     class RootSignature;
     class RootSignatureDesc;
-    class ShaderCompiler;
+    class ShaderManager;
 
     enum class PixelFormat : core::u8;
 
@@ -75,9 +75,8 @@ namespace vg::graphics::driver
             driver::PixelFormat                             m_backbufferFormat;
             MemoryAllocator *                               m_memoryAllocator = nullptr;
 			DeviceParams 									m_deviceParams;
-            ShaderCompiler *                                m_shaderCompiler = nullptr;
+            ShaderManager *                                 m_shaderManager = nullptr;
             RootSignatureTable                              m_rootSignaturesTable;
-
 		};
 	}
 }
@@ -100,6 +99,7 @@ namespace vg::graphics::driver
 		Texture *	        createTexture	    (const TextureDesc & _texDesc, const core::string & _name, void * _initData = nullptr);
 
         RootSignatureHandle addRootSignature    (const RootSignatureDesc & _desc);
+        RootSignature *     getRootSignature    (const RootSignatureHandle & _handle);
         core::uint          removeRootSignature (RootSignatureHandle & _handle);
 
 	private:

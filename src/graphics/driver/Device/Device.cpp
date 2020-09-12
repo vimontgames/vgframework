@@ -6,7 +6,7 @@
 #include "graphics/driver/Texture/Texture.h"
 #include "graphics/driver/Memory/MemoryAllocator.h"
 #include "graphics/driver/RootSignature/RootSignature.h"
-#include "graphics/driver/Shader/ShaderCompiler.h"
+#include "graphics/driver/Shader/ShaderManager.h"
 
 using namespace vg::core;
 using namespace vg::graphics;
@@ -34,13 +34,13 @@ namespace vg::graphics::driver
 		void Device::init(const DeviceParams & _params)
 		{
 			m_deviceParams = _params;
-            m_shaderCompiler = new driver::ShaderCompiler("data/shaders");
+            m_shaderManager = new driver::ShaderManager("data/shaders");
 		}
 
 		//--------------------------------------------------------------------------------------
 		void Device::deinit()
 		{
-            VG_SAFE_RELEASE(m_shaderCompiler);
+            VG_SAFE_DELETE(m_shaderManager);
 		}
 
 		//--------------------------------------------------------------------------------------
@@ -272,6 +272,12 @@ namespace vg::graphics::driver
     RootSignatureHandle Device::addRootSignature(const RootSignatureDesc & _desc)
     {
         return m_rootSignaturesTable.add(_desc);
+    }
+
+    //--------------------------------------------------------------------------------------
+    RootSignature * Device::getRootSignature(const RootSignatureHandle & _handle)
+    {
+        return m_rootSignaturesTable.get(_handle);
     }
 
     //--------------------------------------------------------------------------------------

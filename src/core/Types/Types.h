@@ -58,17 +58,20 @@ namespace vg::core
 	using float4x2	= hlslpp::float4x2;
 	using float4x3	= hlslpp::float4x3;
 	using float4x4	= hlslpp::float4x4;
+    
+    using size_t = std::size_t;
 
-    template <typename T1, typename T2> using pair = std::pair<T1,T2>;
+    template <typename T> using atomic = std::atomic<T>;
 
-	template <typename T> using atomic = std::atomic<T>;
 	template <typename T> using vector = std::vector<T>;
+    template <typename T1, typename T2> using pair = std::pair<T1, T2>;
+    
+    template <typename T> using hash = std::hash<T>;
+	template <typename K, typename V> using map				            = std::map<K, V>;
+	template <typename K, typename V, typename H> using unordered_map	= std::unordered_map<K, V, H>;
 
-	template <typename K, typename V> using map				= std::map<K, V>;
-	template <typename K, typename V> using unordered_map	= std::unordered_map<K, V>;
-
-	template <typename T> using set							= std::set<T>;
-	template <typename T> using unordered_set				= std::unordered_set<T>;
+	template <typename T> using set							            = std::set<T>;
+	template <typename T> using unordered_set				            = std::unordered_set<T>;
 
     template <typename T> const auto to_string(T _val)
     {

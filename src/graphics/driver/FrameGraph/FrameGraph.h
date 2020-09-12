@@ -15,7 +15,7 @@ namespace vg::graphics::driver
 	class FrameGraph : public core::Object
 	{
 	public:
-		using RenderPassID = core::string;
+		using UserPassID = core::string;
 		using ResourceID = core::string;
 
 		class Resource : public core::Object
@@ -140,7 +140,7 @@ namespace vg::graphics::driver
 		//		return static_cast<T&>(*it->second);
 		//}
 
-        bool addUserPass(UserPass * _userPass, const RenderPassID & _renderPassID);
+        bool addUserPass(UserPass * _userPass, const UserPassID & _renderPassID);
 
 		template <class T> T & addResource(Resource::Type _type, const ResourceID & _resID)
 		{
@@ -182,12 +182,15 @@ namespace vg::graphics::driver
         void cleanup();
 
 	private:
-		core::unordered_map<FrameGraph::RenderPassID, UserPass*>	m_subPasses;
-		core::unordered_map<FrameGraph::ResourceID, Resource*>	m_resources;
+        using userpass_unordered_map = core::unordered_map<FrameGraph::UserPassID, UserPass*, core::hash<FrameGraph::UserPassID>>;
+        using resource_unordered_map = core::unordered_map<FrameGraph::ResourceID, Resource*, core::hash<FrameGraph::ResourceID>>;
 
-		core::vector<const UserPass*>							m_userPassStack;
-		core::vector<RenderPass*>								m_renderPasses;
+        userpass_unordered_map          m_subPasses;
+        resource_unordered_map          m_resources;
 
-		ResourceID												m_outputResID;
+		core::vector<const UserPass*>   m_userPassStack;
+		core::vector<RenderPass*>       m_renderPasses;
+
+		ResourceID                      m_outputResID;
 	};
 }

@@ -57,17 +57,17 @@ namespace vg::graphics::driver::dx12
     }
 
     //--------------------------------------------------------------------------------------
-    driver::Shader * ShaderCompiler::compile(const core::string & _file, const core::string & _entryPoint, ShaderStage _stage)
+    driver::Shader * ShaderCompiler::compile(const core::string & _path, const core::string & _entryPoint, ShaderStage _stage)
     {
         using namespace std;
 
         RETRY:
 
-        VG_DEBUGPRINT("compiling %s shader \"%s\" from \"%s\"\n", asString(_stage).c_str(), _entryPoint.c_str(), _file.c_str());
+        VG_DEBUGPRINT("compiling %s shader \"%s\" from \"%s\"\n", asString(_stage).c_str(), _entryPoint.c_str(), _path.c_str());
 
         string source;
         
-        if (file::read(_file, source))
+        if (file::read(_path, source))
         {
             IDxcBlobEncoding * dxcSource;
             VG_ASSERT_SUCCEEDED(m_d3d12dxcLibrary->CreateBlobWithEncodingFromPinned(source.c_str(), (uint)source.size(), CP_UTF8, &dxcSource));
@@ -75,6 +75,7 @@ namespace vg::graphics::driver::dx12
             const wchar_t * pArgs[] =
             {
                 //L"-WX",
+                L"-Qembed_debug",
             #ifdef VG_DEBUG
                 L"-Zi",
                 L"-Od"
@@ -91,7 +92,7 @@ namespace vg::graphics::driver::dx12
             //    m.Value = defines[i].second.c_str();
             //}
 
-            wstring wfilename = string2wstring(_file);
+            wstring wfilename = string2wstring(_path);
             wstring wEntryPoint = string2wstring(_entryPoint);
 
             wstring wTargetProfile = string2wstring(string(getd3d12TargetProfile(_stage)));
@@ -105,11 +106,12 @@ namespace vg::graphics::driver::dx12
             IDxcBlobEncoding * dxcWarningAndErrors;
             VG_ASSERT_SUCCEEDED(dxcCompileResult->GetErrorBuffer(&dxcWarningAndErrors));
 
-            VG_DEBUGPRINT("%s", dxcWarningAndErrors->GetBufferPointer());
+            if (nullptr != dxcWarningAndErrors->GetBufferPointer())
+                VG_DEBUGPRINT("%s", dxcWarningAndErrors->GetBufferPointer());
 
             if (hrCompilation < 0)
             {
-                const string title = _file;
+                const string title = _path;
                 const string message = "Shader compilation failed:\n\n" + string((char*)dxcWarningAndErrors->GetBufferPointer());
 
                 if (MessageBoxResult::Retry == messageBox(MessageBoxIcon::Error, MessageBoxType::RetryCancel, title, message))

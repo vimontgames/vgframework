@@ -1,0 +1,1 @@
+#include VG_GFXAPI_IMPL(RasterizerState)

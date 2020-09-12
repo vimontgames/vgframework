@@ -206,7 +206,7 @@ namespace vg::graphics::driver
 	}
 
     //--------------------------------------------------------------------------------------
-    bool FrameGraph::addUserPass(UserPass * _userPass, const RenderPassID & _renderPassID)
+    bool FrameGraph::addUserPass(UserPass * _userPass, const UserPassID & _renderPassID)
     {
         auto it = m_subPasses.find(_renderPassID);
         

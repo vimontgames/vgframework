@@ -54,20 +54,38 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
-    template <typename desc_t, class object_t, typename index_t> core::uint HandleTable<desc_t,object_t,index_t>::remove(typename HandleTable<desc_t, object_t, index_t>::Handle & _handle)
+    template <typename desc_t, class object_t, typename index_t> object_t * HandleTable<desc_t, object_t, index_t>::get(const Handle & _handle) const
     {
+        VG_ASSERT(_handle.isValid());
+
         if (_handle.isValid())
         {
             auto & pair = m_pairs[_handle.getIndex()];
-            const auto refCount = pair.second->release();
+            VG_ASSERT(pair.second);
+            return pair.second;
+        }
+ 
+        return nullptr;
+    }
+
+    //--------------------------------------------------------------------------------------
+    template <typename desc_t, class object_t, typename index_t> core::uint HandleTable<desc_t,object_t,index_t>::remove(typename HandleTable<desc_t, object_t, index_t>::Handle & _handle)
+    {
+        VG_ASSERT(_handle.isValid());
+        uint refCount = 0;
+
+        if (_handle.isValid())
+        {
+            auto & pair = m_pairs[_handle.getIndex()];
+            refCount = pair.second->release();
             if (refCount == 0)
             {
                 pair.first = {};
                 pair.second = nullptr;
             }
-            return refCount;
         }
 
-        return 0;
+        _handle.reset();
+        return refCount;
     }
 }

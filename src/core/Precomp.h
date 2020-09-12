@@ -58,6 +58,7 @@
 #define VG_VERIFY(f) f
 #endif
 
+#define VG_STATIC_ASSERT(condition, message) static_assert(condition, message)
 #define VG_ASSERT_NOT_IMPLEMENTED() VG_ASSERT(false, "Function %s is not implemented", __func__)
 
 #define VG_SAFE_FREE(p)	 { if (p) { free(p); p = nullptr;} }
@@ -92,8 +93,8 @@ namespace vg
 {
 	namespace core
 	{
-		template <typename T, std::size_t N>
-        inline constexpr std::size_t countof(T const (&)[N]) noexcept                   { return N; }
+		template <typename T, core::size_t N>
+        inline constexpr core::size_t countof(T const (&)[N]) noexcept                  { return N; }
 
 		template <typename T> inline constexpr uint64_t countBits(T _value)             { return (uint64_t)log2(uint64_t(1) << ((sizeof(_value) << 3) - 1)) + 1; }
 

@@ -13,6 +13,9 @@ namespace vg::graphics::driver
 			SubPass();
 			virtual ~SubPass();
 
+            core::uint getUserPassCount() const;
+            const UserPass * getUserPass(core::uint _index) const;
+
 			core::vector<const UserPass*> m_userPasses;
 		};
 	}

@@ -317,6 +317,30 @@
     <ClInclude Include="Device\vulkan\DeviceCaps_vulkan.h">
       <Filter>Device\vulkan</Filter>
     </ClInclude>
+    <ClInclude Include="Shader\ShaderKey.h">
+      <Filter>Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="Shader\ShaderKey.hpp">
+      <Filter>Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="Shader\HLSLDesc.h">
+      <Filter>Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="Shader\HLSLDesc.hpp">
+      <Filter>Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="PipelineState\RasterizerState.h">
+      <Filter>PipelineState</Filter>
+    </ClInclude>
+    <ClInclude Include="PipelineState\dx12\RasterizerState_dx12.h">
+      <Filter>PipelineState\dx12</Filter>
+    </ClInclude>
+    <ClInclude Include="PipelineState\dx12\RasterizerState_dx12.hpp">
+      <Filter>PipelineState\dx12</Filter>
+    </ClInclude>
+    <ClInclude Include="PipelineState\RasterizerState.hpp">
+      <Filter>PipelineState</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Device">

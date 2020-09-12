@@ -2,8 +2,11 @@
 #include "CommandList.h"
 #include "graphics/driver/CommandPool/CommandPool.h"
 #include "graphics/driver/Device/Device.h"
+#include "graphics/driver/RootSignature/RootSignature.h"
+#include "graphics/driver/PipelineState/GraphicPipelineState.h"
 #include "graphics/driver/FrameGraph/RenderPass.h"
 #include "graphics/driver/FrameGraph/SubPass.h"
+#include "graphics/driver/FrameGraph/UserPass.h"
 #include "graphics/driver/Texture/Texture.h"
 
 using namespace vg::core;
@@ -60,6 +63,24 @@ namespace vg::graphics::driver
 		{
 			m_subPass = _subPass;
 			m_subPassIndex = _subPassIndex;
+
+            const UserPass * pass = _subPass->getUserPass(0);
+
+            const auto renderTargetCount = pass->getRenderTargetCount();
+            for (uint i = 0; i < maxRenderTarget; ++i)
+            {
+                if (i < renderTargetCount)
+                    m_stateCache.graphicPipelineKey.m_colorFormat[i] = pass->getRenderTargetDesc(i).format;
+                else
+                    m_stateCache.graphicPipelineKey.m_colorFormat[i] = PixelFormat::Unknow;
+            }
+            m_stateCache.graphicPipelineKey.m_depthStencilFormat = pass->hasDepthStencil() ? pass->getDepthStencilDesc().format : PixelFormat::Unknow;
+
+            const uint width = pass->getRenderTargetDesc(0).width;
+            const uint height = pass->getRenderTargetDesc(0).height;
+
+            setViewport(uint4(0,0, width, height));
+            setScissor(uint4(0, 0, width, height));
 		}
 
 		//--------------------------------------------------------------------------------------
@@ -80,6 +101,65 @@ namespace vg::graphics::driver
 		{
 			return m_subPassIndex;
 		}
+
+        //--------------------------------------------------------------------------------------
+        void CommandList::setRootSignature(const RootSignatureHandle & _rsHandle)
+        {
+            if (_rsHandle != m_stateCache.graphicPipelineKey.m_rootSignature)
+            {
+                m_stateCache.dirtyFlags |= StateCache::DirtyFlags::RootSignature;
+                m_stateCache.graphicPipelineKey.m_rootSignature = _rsHandle;
+            }
+        }
+
+        //--------------------------------------------------------------------------------------
+        void CommandList::setPrimitiveTopology(PrimitiveTopology _topology)
+        {
+            if (_topology != m_stateCache.primitiveTopology)
+            {
+                m_stateCache.dirtyFlags |= StateCache::DirtyFlags::PrimitiveTopology;
+                m_stateCache.primitiveTopology = _topology;
+            }
+        }
+
+        //--------------------------------------------------------------------------------------
+        void CommandList::setViewport(const core::uint4 & _viewport)
+        {
+            if (any(_viewport != m_stateCache.viewport))
+            {
+                m_stateCache.dirtyFlags |= StateCache::DirtyFlags::Viewport;
+                m_stateCache.viewport = _viewport;
+            }
+        }
+
+        //--------------------------------------------------------------------------------------
+        void CommandList::setScissor(const core::uint4 & _scissor)
+        {
+            if (any(_scissor != m_stateCache.scissor))
+            {
+                m_stateCache.dirtyFlags |= StateCache::DirtyFlags::Scissor;
+                m_stateCache.scissor = _scissor;
+            }
+        }
+        //--------------------------------------------------------------------------------------
+        void CommandList::setShader(const ShaderKey & _key)
+        {
+            if (_key != m_stateCache.graphicPipelineKey.m_shaderKey)
+            {
+                m_stateCache.dirtyFlags |= StateCache::DirtyFlags::GraphicPipelineState;
+                m_stateCache.graphicPipelineKey.m_shaderKey = _key;
+            }
+        }
+
+        //--------------------------------------------------------------------------------------
+        void CommandList::setRasterizerState(const driver::RasterizerState & _rsState)
+        {
+            if (_rsState != m_stateCache.graphicPipelineKey.m_rasterizerState)
+            {
+                m_stateCache.dirtyFlags |= StateCache::DirtyFlags::GraphicPipelineState;
+                m_stateCache.graphicPipelineKey.m_rasterizerState = _rsState;
+            }
+        }
 	}
 
 	//--------------------------------------------------------------------------------------
@@ -92,12 +172,17 @@ namespace vg::graphics::driver
 	//--------------------------------------------------------------------------------------
 	CommandList::~CommandList()
 	{
-
+        for (auto & pair : m_graphicPipelineStateHash)
+            VG_SAFE_RELEASE(pair.second);
+        m_graphicPipelineStateHash.clear();
 	}
 
     //--------------------------------------------------------------------------------------
     void CommandList::reset()
     {
+        m_stateCache.dirtyFlags = (StateCache::DirtyFlags)-1;
+        m_stateCache.primitiveTopology = (PrimitiveTopology)-1;
+        m_stateCache.viewport = uint4(0, 0, 0, 0);
         super::reset();
     }
 
@@ -105,5 +190,51 @@ namespace vg::graphics::driver
     void CommandList::close()
     {
         super::close();
+    }
+
+    //--------------------------------------------------------------------------------------
+    void CommandList::flush()
+    {
+        if (asBool(m_stateCache.dirtyFlags))
+        {
+            auto * device = Device::get();
+
+            if (asBool(StateCache::DirtyFlags::RootSignature & m_stateCache.dirtyFlags))
+                super::bindRootSignature(device->getRootSignature(m_stateCache.graphicPipelineKey.m_rootSignature));
+
+            if (asBool(StateCache::DirtyFlags::GraphicPipelineState & m_stateCache.dirtyFlags))
+            {
+                const auto & key = m_stateCache.graphicPipelineKey;
+            
+                GraphicPipelineState * pso = nullptr;
+            
+                auto it = m_graphicPipelineStateHash.find(key);
+                if (m_graphicPipelineStateHash.end() == it)
+                    m_graphicPipelineStateHash[key] = new GraphicPipelineState(key);
+            
+                pso = m_graphicPipelineStateHash[key];
+                super::bindGraphicPipelineState(pso);
+                m_stateCache.graphicPipelineKey = key;
+            }
+            
+            if (asBool(StateCache::DirtyFlags::PrimitiveTopology & m_stateCache.dirtyFlags))
+                super::bindPrimitiveTopology(m_stateCache.primitiveTopology);
+
+            if (asBool(StateCache::DirtyFlags::Viewport & m_stateCache.dirtyFlags))
+                super::bindViewport(m_stateCache.viewport);
+
+            if (asBool(StateCache::DirtyFlags::Scissor & m_stateCache.dirtyFlags))
+                super::bindScissor(m_stateCache.scissor);
+
+            m_stateCache.dirtyFlags = (StateCache::DirtyFlags)0;
+        }
+    }
+
+    //--------------------------------------------------------------------------------------
+    void CommandList::draw(core::uint _vertexCount, core::uint _startOffset)
+    {
+        flush();
+
+        super::draw(_vertexCount, _startOffset);
     }
 }

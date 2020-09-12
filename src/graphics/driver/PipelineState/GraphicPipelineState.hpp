@@ -4,7 +4,8 @@ namespace vg::graphics::driver
     {
 
         //--------------------------------------------------------------------------------------
-        GraphicPipelineState::GraphicPipelineState()
+        GraphicPipelineState::GraphicPipelineState(const GraphicPipelineStateKey & _key) :
+            m_key(_key)
         {
 
         }
@@ -23,7 +24,8 @@ namespace vg::graphics::driver
 namespace vg::graphics::driver
 {
     //--------------------------------------------------------------------------------------
-    GraphicPipelineState::GraphicPipelineState()
+    GraphicPipelineState::GraphicPipelineState(const GraphicPipelineStateKey & _key) :
+        super(_key)
     {
 
     }

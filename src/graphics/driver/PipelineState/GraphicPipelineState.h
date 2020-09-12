@@ -2,6 +2,7 @@
 
 #include "core/Object/Object.h"
 #include "PipelineState_consts.h"
+#include "GraphicPipelineStateKey.h"
 
 namespace vg::graphics::driver
 {
@@ -10,8 +11,11 @@ namespace vg::graphics::driver
         class GraphicPipelineState : public core::Object
         {
         public:
-            GraphicPipelineState();
+            GraphicPipelineState(const GraphicPipelineStateKey & _key);
             ~GraphicPipelineState();
+
+        private:
+            GraphicPipelineStateKey m_key;
         };
     }
 }
@@ -25,7 +29,7 @@ namespace vg::graphics::driver
         using super = VG_GFXAPI::GraphicPipelineState;
 
     public:
-        GraphicPipelineState();
+        GraphicPipelineState(const GraphicPipelineStateKey & _key);
         ~GraphicPipelineState();
     };
 }

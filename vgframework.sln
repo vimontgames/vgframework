@@ -36,7 +36,9 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "driver", "driver", "{F9214EBF-2727-4CEE-A759-F8154BD904EC}"
 	ProjectSection(SolutionItems) = preProject
 		data\Shaders\driver\driver.hlsl = data\Shaders\driver\driver.hlsl
+		data\Shaders\driver\driver.hlsl.h = data\Shaders\driver\driver.hlsl.h
 		data\Shaders\driver\driver.hlsli = data\Shaders\driver\driver.hlsli
+		data\Shaders\driver\semantics.hlsli = data\Shaders\driver\semantics.hlsli
 	EndProjectSection
 EndProject
 Global

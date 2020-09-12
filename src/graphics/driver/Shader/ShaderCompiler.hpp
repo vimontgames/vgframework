@@ -26,12 +26,9 @@ namespace vg::graphics::driver
     }
 
     //--------------------------------------------------------------------------------------
-    ShaderCompiler::ShaderCompiler(const core::string & _shaderRootPath) :
-        m_shaderRootPath(_shaderRootPath)
+    ShaderCompiler::ShaderCompiler()
     {
-        // Path must end with '\' or '/'
-        if (m_shaderRootPath.back() != '/' && m_shaderRootPath.back() != '\\')
-            m_shaderRootPath += "/";
+
     }
 
     //--------------------------------------------------------------------------------------
@@ -41,10 +38,9 @@ namespace vg::graphics::driver
     }
 
     //--------------------------------------------------------------------------------------
-    Shader * ShaderCompiler::compile(const core::string & _file, const core::string & _entryPoint, ShaderStage _stage)
+    Shader * ShaderCompiler::compile(const core::string & _path, const core::string & _entryPoint, ShaderStage _stage)
     {
-        const string path = m_shaderRootPath + _file;
-        return super::compile(path, _entryPoint, _stage);
+        return super::compile(_path, _entryPoint, _stage);
     }
 }
 

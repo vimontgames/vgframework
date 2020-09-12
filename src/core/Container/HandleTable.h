@@ -18,7 +18,12 @@ namespace vg::core
             inline Handle(index_t _index = (index_t)-1) :
                 index(_index)
             {
+      
+            }
 
+            inline void reset()
+            {
+                index = (index_t)-1;
             }
 
             inline bool isValid() const
@@ -31,11 +36,30 @@ namespace vg::core
                 return index;
             }
 
+            inline bool operator == (const Handle & _other) const
+            {
+                return _other.index == index;
+            }
+
+            inline bool operator != (const Handle & _other) const
+            {
+                return _other.index != index;
+            }
+
+            struct hash
+            {
+                inline core::size_t operator() (const Handle & _handle) const
+                {
+                    return core::hash<index_t>()(_handle.index);
+                }
+            };
+
         private:
             index_t index;
         };
 
         Handle add(const desc_t & _desc);
+        object_t * get(const Handle & _handle) const;
         core::u32 remove(Handle & _handle);
 
     private:

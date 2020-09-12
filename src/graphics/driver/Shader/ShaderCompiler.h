@@ -25,18 +25,18 @@ namespace vg::graphics::driver
 
 namespace vg::graphics::driver
 {
-    class ShaderCompiler : public VG_GFXAPI::ShaderCompiler, public core::Singleton<ShaderCompiler>
+    class ShaderCompiler : public VG_GFXAPI::ShaderCompiler
     {
         using super = VG_GFXAPI::ShaderCompiler;
 
     public:
-        ShaderCompiler(const core::string & _shaderRootPath);
+        ShaderCompiler();
         ~ShaderCompiler();
 
         Shader * compile(const core::string & _file, const core::string & _entryPoint, ShaderStage _stage);
 
     private:
-        core::string m_shaderRootPath;
+
     };
 }
 

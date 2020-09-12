@@ -1,19 +1,20 @@
+#include "shaders/driver/driver.hlsli"
+
 namespace vg::graphics::renderer
 {
+    //--------------------------------------------------------------------------------------
+    // Setup exectuted once, when pass is created
     //--------------------------------------------------------------------------------------
     TestPass::TestPass()
     {
         auto * device = Device::get();
 
         RootSignatureDesc rsDesc;
-
-        rsDesc.addRootConstants(ShaderStageFlags::VS | ShaderStageFlags::PS, 0, 4);
+                          rsDesc.addRootConstants(ShaderStageFlags::VS | ShaderStageFlags::PS, 0, 4);
 
         m_rootSignatureHandle = device->addRootSignature(rsDesc);
 
-        ShaderCompiler * shaderCompiler = ShaderCompiler::get();
-        m_vs = shaderCompiler->compile("driver/driver.hlsl", "VS_Quad", ShaderStage::Vertex);
-        m_ps = shaderCompiler->compile("driver/driver.hlsl", "PS_Quad", ShaderStage::Pixel);
+        m_shaderKey.init("driver/driver.hlsl", "Quad");
     }
 
     //--------------------------------------------------------------------------------------
@@ -21,10 +22,10 @@ namespace vg::graphics::renderer
     {
         auto * device = Device::get();
         device->removeRootSignature(m_rootSignatureHandle);
-        VG_SAFE_RELEASE(m_vs);
-        VG_SAFE_RELEASE(m_ps);
     }
 
+    //--------------------------------------------------------------------------------------
+    // Setup executed each frame, for each pass instance
     //--------------------------------------------------------------------------------------
     void TestPass::setup()
     {
@@ -36,7 +37,7 @@ namespace vg::graphics::renderer
         desc.height = backbuffer.height;
         desc.format = PixelFormat::R8G8B8A8_unorm;
         desc.initState = FrameGraph::Resource::InitState::Clear;
-        desc.clearColor = { 1,0,0,1 };
+        desc.clearColor = { 1, 0, 1, 1 };
 
         writeRenderTarget(0, "Backbuffer", desc);
     }
@@ -44,6 +45,14 @@ namespace vg::graphics::renderer
     //--------------------------------------------------------------------------------------
     void TestPass::draw(CommandList * _cmdList) const
     {
+        RasterizerState rs;
+                        rs.setCullMode(RasterizerState::CullMode::None);
 
+        _cmdList->setRootSignature(m_rootSignatureHandle);
+        _cmdList->setShader(m_shaderKey);
+        _cmdList->setPrimitiveTopology(PrimitiveTopology::TriangleStrip);
+        _cmdList->setRasterizerState(rs);
+
+        _cmdList->draw(4);
     }
 }
