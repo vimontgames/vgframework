@@ -75,13 +75,13 @@ namespace vg::graphics::driver::dx12
             const wchar_t * pArgs[] =
             {
                 //L"-WX",
-                L"-Qembed_debug",
-            #ifdef VG_DEBUG
+                #ifdef VG_DEBUG
+                L"-Od",
                 L"-Zi",
-                L"-Od"
-            #else
+                L"-Qembed_debug",
+                #else
                 L"-O3"
-            #endif
+                #endif
             };
 
             std::vector<DxcDefine> dxcDefines(0/*defines.size()*/);
