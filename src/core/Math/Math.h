@@ -70,24 +70,4 @@ namespace vg::core
     }
 
     #define crc64(str) std::integral_constant<u64, computeCRC64(str, sizeof(str)-1)>::value
-
-    inline bool any(const uint1& i) { return 0 != i.x; }
-    inline bool any(const uint2& i) { return 0 != i.x || 0 != i.y; }
-    inline bool any(const uint3& i) { return 0 != i.x || 0 != i.y || 0 != i.z; }
-    inline bool any(const uint4& i) { return 0 != i.x || 0 != i.y || 0 != i.z || 0 != i.w; }
-
-    inline bool all(const uint1& i) { return 0 != i.x; }
-    inline bool all(const uint2& i) { return 0 != i.x && 0 != i.y; }
-    inline bool all(const uint3& i) { return 0 != i.x && 0 != i.y && 0 != i.z; }
-    inline bool all(const uint4& i) { return 0 != i.x && 0 != i.y && 0 != i.z && 0 != i.w; }
-
-    inline bool any(const int1& i) { return 0 != i.x; }
-    inline bool any(const int2& i) { return 0 != i.x || 0 != i.y; }
-    inline bool any(const int3& i) { return 0 != i.x || 0 != i.y || 0 != i.z; }
-    inline bool any(const int4& i) { return 0 != i.x || 0 != i.y || 0 != i.z || 0 != i.w; }
-
-    inline bool all(const int1& i) { return 0 != i.x; }
-    inline bool all(const int2& i) { return 0 != i.x && 0 != i.y; }
-    inline bool all(const int3& i) { return 0 != i.x && 0 != i.y && 0 != i.z; }
-    inline bool all(const int4& i) { return 0 != i.x && 0 != i.y && 0 != i.z && 0 != i.w; }
 }
