@@ -5,7 +5,8 @@
 namespace vg::graphics::driver::vulkan
 {
 	//--------------------------------------------------------------------------------------
-	SubPass::SubPass()
+	SubPass::SubPass():
+        super::SubPass()
 	{
 
 	}

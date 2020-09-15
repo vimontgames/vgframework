@@ -9,16 +9,19 @@ namespace vg::graphics::driver::vulkan
 		using super = base::RenderPass;
 
 	public:
-		RenderPass();
+		RenderPass(const RenderPassKey & _key);
 		~RenderPass();
 
 		void finalize();
 
-	//private:
+        const VkRenderPassBeginInfo & getVulkanRenderPassBeginInfo() const { return m_vkRenderPassBeginInfo; }
+
+        static VkRenderPass createVulkanRenderPassFromKey(const RenderPassKey & _key);
+
+	private:
         VkFramebuffer                           m_vkFrameBuffer;
-        VkRenderPass							m_vkRenderPass;
+        VkRenderPass 							m_vkRenderPass = nullptr;
         VkRenderPassBeginInfo					m_vkRenderPassBeginInfo;
-		core::vector<VkAttachmentDescription>	m_vkAttachmentDescriptions;
         core::vector<VkSubpassDescription>      m_vkSubPasses;
 	};
 }

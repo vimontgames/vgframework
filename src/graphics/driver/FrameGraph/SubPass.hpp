@@ -13,15 +13,15 @@ namespace vg::graphics::driver::base
 	}
 
     //--------------------------------------------------------------------------------------
-    uint SubPass::getUserPassCount() const
+    void SubPass::addUserPass(const UserPass * _userPass)
     {
-        return (uint)m_userPasses.size();
+        m_userPasses.push_back(_userPass);
     }
 
     //--------------------------------------------------------------------------------------
-    const UserPass * SubPass::getUserPass(uint _index) const
+    const core::vector<const UserPass*> & SubPass::getUserPasses() const
     {
-        return m_userPasses[_index];
+        return m_userPasses;
     }
 }
 
@@ -30,7 +30,8 @@ namespace vg::graphics::driver::base
 namespace vg::graphics::driver
 {
 	//--------------------------------------------------------------------------------------
-	SubPass::SubPass()
+	SubPass::SubPass() :
+        super::SubPass()
 	{
 
 	}

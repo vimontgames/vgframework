@@ -25,6 +25,7 @@ namespace vg::graphics::driver
 		virtual void	draw		(CommandList * _cmdList) const = 0;
 
 		const core::vector<FrameGraph::TextureResource *> & getRenderTargets() const;
+        FrameGraph::TextureResource * getDepthStencil() const;
 
         core::uint getRenderTargetCount() const;
         const FrameGraph::TextureDesc & getRenderTargetDesc(core::uint _index) const;

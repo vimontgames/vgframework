@@ -6,6 +6,8 @@
 #include "graphics/driver/Device/vulkan/ext/KHR_Win32_Surface.h"
 #include "graphics/driver/Device/vulkan/ext/KHR_Swapchain.h"
 
+#include "graphics/driver/FrameGraph/RenderPassKey.h"
+
 namespace vg::graphics::driver::vulkan
 {
 	class Device : public base::Device
@@ -26,8 +28,11 @@ namespace vg::graphics::driver::vulkan
 		bool							onDebugMessage					(VkDebugUtilsMessageSeverityFlagBitsEXT _severity, VkDebugUtilsMessageTypeFlagsEXT _flags, const VkDebugUtilsMessengerCallbackDataEXT * _data);
 
 		core::u32						getVulkanCommandQueueFamilyIndex(CommandQueueType _type) const;
+       
+        VkRenderPass                    getVulkanRenderPass             (const RenderPassKey & _key);
+        core::uint                      releaseVulkanRenderPass         (const RenderPassKey & _key, VkRenderPass & _vkRenderPass);
 
-	private:
+	//private:
 		void							registerExtensions				(const DeviceParams & _params);
 
 		void							createVulkanDevice				();
@@ -40,12 +45,13 @@ namespace vg::graphics::driver::vulkan
 		static const char *				getVulkanObjectTypeName			(VkObjectType _type);
 
         bool                            enableInstanceLayer             (const char * _layerName);
-		
-	private:
+       
+	//private:
 			VkInstance					m_vkInstance;
 			VkDevice					m_vkDevice;
 			VkPhysicalDevice			m_vkPhysicalDevice;
 			VkPhysicalDeviceProperties	m_vkPhysicalDeviceProperties;
+            VkDescriptorPool            m_vkDescriptorPool;
 			VkSurfaceKHR				m_vkSurface;
 
 			static const core::u32		s_vkCommandQueueFamilyIndexInvalid = (core::u32)-1;
@@ -87,5 +93,7 @@ namespace vg::graphics::driver::vulkan
 
 			//VkFormat format;
 			VkColorSpaceKHR color_space;
+
+            core::unordered_map<RenderPassKey, VkRenderPass, RenderPassKey::hash> m_vkRenderPassHash;
 	};
 }

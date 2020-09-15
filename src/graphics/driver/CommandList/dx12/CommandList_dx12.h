@@ -9,31 +9,31 @@ namespace vg::graphics::driver::dx12
 		using super = base::CommandList;
 
 	public:
-											CommandList(driver::CommandListType _type, driver::CommandPool * _cmdPool, core::uint _frame, core::uint _index);
-											~CommandList();
+											CommandList                 (driver::CommandListType _type, driver::CommandPool * _cmdPool, core::uint _frame, core::uint _index);
+											~CommandList                ();
 
-		void								reset();
-		void								close();
+		void								reset                       ();
+		void								close                       ();
 
-		void								beginRenderPass(const driver::RenderPass * _renderPass);
-		void								endRenderPass();
+		void								beginRenderPass             (const driver::RenderPass * _renderPass);
+		void								endRenderPass               ();
 
-		void								beginSubPass(core::uint _subPassIndex, const driver::SubPass * _subPass);
-		void								endSubPass();
+		void								beginSubPass                (core::uint _subPassIndex, const driver::SubPass * _subPass);
+		void								endSubPass                  ();
 
-        void                                bindRootSignature(driver::RootSignature * _rootSig);
-        void                                bindGraphicPipelineState(driver::GraphicPipelineState * _pso);
-        void                                bindPrimitiveTopology(PrimitiveTopology _topology);
-        void                                bindViewport(const core::uint4 & _viewport);
-        void                                bindScissor(const core::uint4 & _scissor);
+        void                                bindRootSignature           (driver::RootSignature * _rootSig);
+        void                                bindGraphicPipelineState    (driver::GraphicPipelineState * _pso);
+        void                                bindPrimitiveTopology       (PrimitiveTopology _topology);
+        void                                bindViewport                (const core::uint4 & _viewport);
+        void                                bindScissor                 (const core::uint4 & _scissor);
 
-		void								clear(const core::float4 & _color);
-        void                                draw(core::uint _vertexCount, core::uint _startOffset);
+		void								clear                       (const core::float4 & _color);
+        void                                draw                        (core::uint _vertexCount, core::uint _startOffset);
 
-		D3D12GraphicsCommandList *		    getd3d12GraphicsCommandList();
-		ID3D12CommandList *					getd3d12CommandList() { return m_d3d12cmdList; }
+		D3D12GraphicsCommandList *		    getd3d12GraphicsCommandList ();
+		ID3D12CommandList *					getd3d12CommandList         () { return m_d3d12cmdList; }
 
-        static D3D12_PRIMITIVE_TOPOLOGY     getd3d12PrimitiveTopology(PrimitiveTopology _topology);
+        static D3D12_PRIMITIVE_TOPOLOGY     getd3d12PrimitiveTopology   (PrimitiveTopology _topology);
 
 	private:
 		union

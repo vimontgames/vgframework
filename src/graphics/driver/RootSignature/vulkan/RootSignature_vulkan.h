@@ -12,6 +12,9 @@ namespace vg::graphics::driver::vulkan
         RootSignature(const RootSignatureDesc & _desc);
         ~RootSignature();
 
+        VkPipelineLayout getVulkanPipelineLayout() const { return m_vkPipelineLayout; }
+        const core::vector<VkDescriptorSetLayout> & getVulkanDescriptorSetLayouts() const { return m_vkDescriptorSetLayouts; }
+
         static VkShaderStageFlags getVulkanShaderStageFlags(ShaderStageFlags _shaderStageFlags);
 
     private:

@@ -6,7 +6,7 @@ namespace vg::graphics::driver::dx12
 {
 	class SubPass : public base::SubPass
 	{
-		using super = base::RenderPass;
+		using super = base::SubPass;
 
 	public:
 		SubPass();

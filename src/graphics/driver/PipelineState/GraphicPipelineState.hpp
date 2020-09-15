@@ -2,7 +2,6 @@ namespace vg::graphics::driver
 {
     namespace base
     {
-
         //--------------------------------------------------------------------------------------
         GraphicPipelineState::GraphicPipelineState(const GraphicPipelineStateKey & _key) :
             m_key(_key)

@@ -7,6 +7,7 @@
 #include "graphics/driver/Memory/MemoryAllocator.h"
 #include "graphics/driver/RootSignature/RootSignature.h"
 #include "graphics/driver/Shader/ShaderManager.h"
+#include "graphics/driver/FrameGraph/RenderPass.h"
 
 using namespace vg::core;
 using namespace vg::graphics;

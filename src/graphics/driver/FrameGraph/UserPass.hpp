@@ -41,6 +41,12 @@ namespace vg::graphics::driver
 		return m_renderTargetOut;
 	}
 
+    //--------------------------------------------------------------------------------------
+    FrameGraph::TextureResource * UserPass::getDepthStencil() const
+    {
+        return m_depthStencilOut;
+    }
+
 	//--------------------------------------------------------------------------------------
 	void UserPass::writeRenderTarget(core::uint _slot, const FrameGraph::ResourceID & _resID, const FrameGraph::TextureDesc & _resDesc)
 	{

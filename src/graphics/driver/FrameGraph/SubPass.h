@@ -1,7 +1,6 @@
 #pragma once
 
 #include "core/Object/Object.h"
-#include "graphics/driver/FrameGraph/FrameGraph.h"
 
 namespace vg::graphics::driver
 {
@@ -13,10 +12,11 @@ namespace vg::graphics::driver
 			SubPass();
 			virtual ~SubPass();
 
-            core::uint getUserPassCount() const;
-            const UserPass * getUserPass(core::uint _index) const;
+            void addUserPass(const UserPass * _userPass);
+            const core::vector<const UserPass*> & getUserPasses() const;
 
-			core::vector<const UserPass*> m_userPasses;
+        private:
+			core::vector<const UserPass*>   m_userPasses;
 		};
 	}
 }

@@ -5,7 +5,8 @@
 namespace vg::graphics::driver::dx12
 {
 	//--------------------------------------------------------------------------------------
-	SubPass::SubPass()
+	SubPass::SubPass() :
+        super::SubPass()
 	{
 
 	}

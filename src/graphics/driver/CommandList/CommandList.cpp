@@ -50,6 +50,9 @@ namespace vg::graphics::driver
 		void CommandList::beginRenderPass(const driver::RenderPass * _renderPass)
 		{
 			m_renderPass = _renderPass;
+
+            const RenderPassKey & key = _renderPass->getRenderPassKey();
+            m_stateCache.graphicPipelineKey.m_renderPassKey = key;
 		}
 
 		//--------------------------------------------------------------------------------------
@@ -64,20 +67,27 @@ namespace vg::graphics::driver
 			m_subPass = _subPass;
 			m_subPassIndex = _subPassIndex;
 
-            const UserPass * pass = _subPass->getUserPass(0);
+            m_stateCache.graphicPipelineKey.m_subPassIndex = _subPassIndex;
+            const SubPassKey & key = m_stateCache.graphicPipelineKey.m_renderPassKey.m_subPassKeys[_subPassIndex];
 
-            const auto renderTargetCount = pass->getRenderTargetCount();
+            uint width = 0, height = 0;
+
             for (uint i = 0; i < maxRenderTarget; ++i)
             {
-                if (i < renderTargetCount)
-                    m_stateCache.graphicPipelineKey.m_colorFormat[i] = pass->getRenderTargetDesc(i).format;
-                else
-                    m_stateCache.graphicPipelineKey.m_colorFormat[i] = PixelFormat::Unknow;
+                const auto flags = key.getRenderTargetFlags(i);
+                if (SubPassKey::Flags::Bind & flags)
+                {
+                    const Texture * tex = m_renderPass->m_attachments[i];
+                    auto & desc = tex->getTexDesc();
+                    width = desc.width;
+                    height = desc.height;
+                }
             }
-            m_stateCache.graphicPipelineKey.m_depthStencilFormat = pass->hasDepthStencil() ? pass->getDepthStencilDesc().format : PixelFormat::Unknow;
 
-            const uint width = pass->getRenderTargetDesc(0).width;
-            const uint height = pass->getRenderTargetDesc(0).height;
+            if (SubPassKey::Flags::Bind & key.getDepthStencilFlags())
+            {
+                VG_ASSERT_NOT_IMPLEMENTED(); // separate depth stencil attachment ?
+            }
 
             setViewport(uint4(0,0, width, height));
             setScissor(uint4(0, 0, width, height));
@@ -141,6 +151,7 @@ namespace vg::graphics::driver
                 m_stateCache.scissor = _scissor;
             }
         }
+
         //--------------------------------------------------------------------------------------
         void CommandList::setShader(const ShaderKey & _key)
         {

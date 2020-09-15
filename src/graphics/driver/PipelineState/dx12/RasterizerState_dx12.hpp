@@ -7,10 +7,10 @@ namespace vg::graphics::driver::dx12
         {
         default:
             VG_ASSERT(false, "Unhandled FillMode \"%s\" (%u)", asString(_fillMode), _fillMode);
-        case RasterizerState::FillMode::Solid:
+        case FillMode::Solid:
             return D3D12_FILL_MODE_SOLID;
 
-        case RasterizerState::FillMode::Wireframe:
+        case FillMode::Wireframe:
             return D3D12_FILL_MODE_WIREFRAME;
         }
     }
@@ -22,13 +22,13 @@ namespace vg::graphics::driver::dx12
         {
         default:
             VG_ASSERT(false, "Unhandled CullMode \"%s\" (%u)", asString(_cullMode), _cullMode);
-        case RasterizerState::CullMode::None:
+        case CullMode::None:
             return D3D12_CULL_MODE_NONE;
 
-        case RasterizerState::CullMode::Back:
+        case CullMode::Back:
             return D3D12_CULL_MODE_BACK;
 
-        case RasterizerState::CullMode::Front:
+        case CullMode::Front:
             return D3D12_CULL_MODE_FRONT;
         }
     }
@@ -38,8 +38,41 @@ namespace vg::graphics::driver::dx12
     {
         D3D12_RASTERIZER_DESC d3d12desc = {};
         
-        d3d12desc.CullMode = getd3d12CullMode(m_cullMode);
-        d3d12desc.FillMode = getd3d12FillMode(m_fillMode);
+        d3d12desc.CullMode = getd3d12CullMode(cullMode);
+        d3d12desc.FillMode = getd3d12FillMode(fillMode);
+
+        d3d12desc.DepthClipEnable = DepthClip::Enable == depthClip ? true : false;
+
+        d3d12desc.FrontCounterClockwise = Orientation::CounterClockWise == orientation ? true : false;
+        
+        switch (depthBias)
+        {
+        default:
+            VG_ASSERT(false, "Unhandled DepthBias \"%s\" (%u)", asString(depthBias), depthBias);
+        case DepthBias::None:
+            d3d12desc.DepthBias = 0;
+            d3d12desc.DepthBiasClamp = 0.0f;
+            d3d12desc.SlopeScaledDepthBias = 0.0f;
+            break;
+
+        //case DepthBias::Small:
+        //    d3d12desc.DepthBias = 0;
+        //    d3d12desc.DepthBiasClamp = 0.0f;
+        //    d3d12desc.SlopeScaledDepthBias = 0.0f;
+        //    break;
+        //
+        //case DepthBias::Medium:
+        //    d3d12desc.DepthBias = 0;
+        //    d3d12desc.DepthBiasClamp = 0.0f;
+        //    d3d12desc.SlopeScaledDepthBias = 0.0f;
+        //    break;
+        //
+        //case DepthBias::Big:
+        //    d3d12desc.DepthBias = 0;
+        //    d3d12desc.DepthBiasClamp = 0.0f;
+        //    d3d12desc.SlopeScaledDepthBias = 0.0f;
+        //    break;
+        }
 
         return d3d12desc;
     }

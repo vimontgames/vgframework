@@ -270,7 +270,7 @@ namespace vg::graphics::driver::vulkan
 			0,
 			"VimontGames framework",
 			0,
-			VK_API_VERSION_1_0
+			VK_API_VERSION_1_1
 		};
 
 		VkInstanceCreateInfo inst_info = 
@@ -358,6 +358,21 @@ namespace vg::graphics::driver::vulkan
 		}
 
 		VG_SAFE_FREE(swapchainImages);
+
+        // test
+        VkDescriptorPoolSize type_counts[1];
+        type_counts[0].type = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER,
+        type_counts[0].descriptorCount = max_frame_latency;
+
+        VkDescriptorPoolCreateInfo descriptor_pool = {};
+
+        descriptor_pool.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;
+        descriptor_pool.pNext = nullptr;
+        descriptor_pool.maxSets = max_frame_latency;
+        descriptor_pool.poolSizeCount = 1;
+        descriptor_pool.pPoolSizes = type_counts;
+    
+        VG_ASSERT_VULKAN(vkCreateDescriptorPool(m_vkDevice, &descriptor_pool, nullptr, &m_vkDescriptorPool));
 	}
 
 	//--------------------------------------------------------------------------------------
@@ -731,6 +746,11 @@ namespace vg::graphics::driver::vulkan
             vkDestroySemaphore(m_vkDevice, draw_complete_semaphores[i], nullptr);
         }
 
+        for (auto & pair : m_vkRenderPassHash)
+            vkDestroyRenderPass(m_vkDevice, pair.second, nullptr);
+
+        m_vkRenderPassHash.clear();
+
 		destroyCommandQueues();
 
 		for (uint i = 0; i < countof(m_frameContext); ++i)
@@ -839,4 +859,28 @@ namespace vg::graphics::driver::vulkan
 
 		super::endFrame();
 	}
+
+    //--------------------------------------------------------------------------------------
+    VkRenderPass Device::getVulkanRenderPass(const RenderPassKey & _key)
+    {
+        VkRenderPass vkRenderPass;
+
+        auto it = m_vkRenderPassHash.find(_key);
+        if (m_vkRenderPassHash.end() == it)
+        {
+            vkRenderPass = RenderPass::createVulkanRenderPassFromKey(_key);
+            m_vkRenderPassHash[_key] = vkRenderPass;
+            return vkRenderPass;
+        }
+        return it->second;
+    }
+
+    //--------------------------------------------------------------------------------------
+    // TODO: increase RefCount on 'get' and release ?
+    //--------------------------------------------------------------------------------------
+    uint Device::releaseVulkanRenderPass(const RenderPassKey & _key, VkRenderPass & _vkRenderPass)
+    {
+        _vkRenderPass = VK_NULL_HANDLE;
+        return (uint)-1;
+    }
 }

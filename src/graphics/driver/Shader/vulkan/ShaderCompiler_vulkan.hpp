@@ -56,8 +56,8 @@ namespace vg::graphics::driver::vulkan
             tShader.setStrings(&src, 1);
 
             const uint inputSemanticsVer = 110;                                                 // #define VULKAN 110
-            const glslang::EShTargetClientVersion clientVersion = glslang::EShTargetVulkan_1_1; // Vulkan 1.1
-            const glslang::EShTargetLanguageVersion targetVersion = glslang::EShTargetSpv_1_1;  // SPIR-V 1.1
+            const glslang::EShTargetClientVersion clientVersion = glslang::EShTargetVulkan_1_1; // Vulkan 1.0
+            const glslang::EShTargetLanguageVersion targetVersion = glslang::EShTargetSpv_1_0;  // SPIR-V 1.0
 
             tShader.setEnvInput(glslang::EShSourceHlsl, targetProfile, glslang::EShClientVulkan, inputSemanticsVer);
             tShader.setEnvClient(glslang::EShClientVulkan, clientVersion);
@@ -97,6 +97,9 @@ namespace vg::graphics::driver::vulkan
                 VG_DEBUGPRINT("%s\n", spvLogger.getAllMessages());
             }
 
+            core::Blob blob(spv.data(), (uint)spv.size());
+            auto * shader = new driver::Shader(blob);
+            return shader;
         }
 
         return nullptr;

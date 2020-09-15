@@ -274,25 +274,56 @@ namespace vg::graphics::driver
 			VG_SAFE_RELEASE(renderPass);
 		m_renderPasses.clear();
 
-		// TEMP: one render pass with one subpass for each userpass (TODO: make pools)
+		// TEMP: one render pass with one subpass for each userPass (TODO: make pools)
 		for (auto * userPass : m_userPassStack)
 		{
-			RenderPass * renderPass = new RenderPass();
-			SubPass * subPass = new SubPass();
+            core::vector<const driver::Texture*> attachments;
+
+            RenderPassKey renderPassKey;
+                          renderPassKey.m_subPassCount = 1;
 			
 			// build all list with attachments from all passes
 			// for (...)
 			{
-				auto * pass = userPass;
-
-				for (auto * res : pass->getRenderTargets())
+                auto & renderTargets = userPass->getRenderTargets();
+				for (uint i = 0; i < renderTargets.size(); ++i)
 				{
-					auto * tex = res->getTexture();
-					renderPass->m_attachments.push_back(tex); // TODO: check if already exist
+                    FrameGraph::TextureResource * res = renderTargets[i];
+                    auto * tex = res->getTexture();
+
+                    renderPassKey.m_colorFormat[i] = res->getTextureDesc().format;
+
+                    // add or get index of attachment
+                    uint attachmentIndex = (uint)-1;
+                    for (uint i = 0; i < attachments.size(); ++i)
+                    {
+                        if (attachments[i] == tex)
+                            attachmentIndex = i;
+                    }
+
+                    if ((uint)-1 == attachmentIndex)
+                    {
+                        attachments.push_back(tex);
+                        attachmentIndex = uint(attachments.size() - 1);
+                    }
+
+                    renderPassKey.m_subPassKeys[0].setRenderTargetFlags(attachmentIndex, SubPassKey::Flags::Bind);
 				}
 			}
 
-			subPass->m_userPasses.push_back(userPass);
+            FrameGraph::TextureResource * depthStencilRes = userPass->getDepthStencil();
+            if (depthStencilRes)
+            {
+                renderPassKey.m_depthStencilFormat = depthStencilRes->getTextureDesc().format;
+                renderPassKey.m_subPassKeys[0].setDepthStencilFlags(SubPassKey::Bind);
+            }
+
+            RenderPass * renderPass = new RenderPass(renderPassKey);
+            renderPass->m_attachments = std::move(attachments);
+
+            SubPass * subPass = new SubPass();
+
+			subPass->addUserPass(userPass);
 			renderPass->addSubPass(subPass);
 			m_renderPasses.push_back(renderPass);
 
@@ -316,7 +347,7 @@ namespace vg::graphics::driver
 				const SubPass * subPass = subPasses[i];
 				cmdList->beginSubPass(i, subPass);
 				{
-					for (auto * userPass : subPass->m_userPasses)
+					for (const UserPass * userPass : subPass->getUserPasses())
 						userPass->draw(cmdList);
 				}cmdList->endSubPass();
 			}

@@ -66,6 +66,7 @@
     <ClInclude Include="FrameGraph\FrameGraph.h" />
     <ClInclude Include="FrameGraph\FrameGraph_consts.h" />
     <ClInclude Include="FrameGraph\RenderPass.h" />
+    <ClInclude Include="FrameGraph\RenderPassKey.h" />
     <ClInclude Include="FrameGraph\SubPass.h" />
     <ClInclude Include="FrameGraph\SubPass.hpp" />
     <ClInclude Include="FrameGraph\UserPass.h" />
@@ -93,6 +94,8 @@
     <ClInclude Include="PipelineState\RasterizerState.hpp" />
     <ClInclude Include="PipelineState\vulkan\GraphicPipelineState_vulkan.h" />
     <ClInclude Include="PipelineState\vulkan\GraphicPipelineState_vulkan.hpp" />
+    <ClInclude Include="PipelineState\vulkan\RasterizerState_vulkan.h" />
+    <ClInclude Include="PipelineState\vulkan\RasterizerState_vulkan.hpp" />
     <ClInclude Include="RootSignature\dx12\RootSignature_dx12.h" />
     <ClInclude Include="RootSignature\dx12\RootSignature_dx12.hpp" />
     <ClInclude Include="RootSignature\RootSignature.h" />

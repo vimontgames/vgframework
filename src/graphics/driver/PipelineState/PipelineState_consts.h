@@ -2,5 +2,5 @@
 
 namespace vg::graphics::driver
 {
-    static const core::uint maxRenderTarget = 8;
+    constexpr core::uint maxRenderTarget = 8;
 }

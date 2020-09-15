@@ -9,7 +9,7 @@ namespace vg::graphics::driver::dx12
 		using super = base::RenderPass;
 
 	public:
-		RenderPass();
+		RenderPass(const RenderPassKey & _key);
 		~RenderPass();
 
 		void finalize();

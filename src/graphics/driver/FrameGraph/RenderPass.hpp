@@ -5,7 +5,8 @@ namespace vg::graphics::driver
 	namespace base
 	{
 		//--------------------------------------------------------------------------------------
-		RenderPass::RenderPass()
+		RenderPass::RenderPass(const RenderPassKey & _key) :
+            m_renderPassKey(_key)
 		{
 
 		}
@@ -46,7 +47,8 @@ namespace vg::graphics::driver
     }
 
 	//--------------------------------------------------------------------------------------
-	RenderPass::RenderPass()
+	RenderPass::RenderPass(const RenderPassKey & _key) :
+        super::RenderPass(_key)
 	{
 
 	}

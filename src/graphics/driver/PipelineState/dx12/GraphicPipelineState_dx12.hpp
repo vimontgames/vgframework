@@ -52,12 +52,17 @@ namespace vg::graphics::driver::dx12
         d3d12graphicPipelineDesc.RasterizerState = _key.m_rasterizerState.getd3d12RasterizerState();
         d3d12graphicPipelineDesc.PrimitiveTopologyType = getd3d12PrimitiveTopologyType(_key.m_primitiveType);
 
+        const auto subPassKey = _key.m_renderPassKey.m_subPassKeys[_key.m_subPassIndex];
+
         uint numRenderTargets = 0;
         for (uint i = 0; i < maxRenderTarget; ++i)
         {
-            if ((PixelFormat::Unknow != _key.m_colorFormat[i]))
+            const auto flags = subPassKey.getRenderTargetFlags(i);
+            if (SubPassKey::Flags::Bind & flags)
             {
-                d3d12graphicPipelineDesc.RTVFormats[i] = Texture::getd3d12PixelFormat(_key.m_colorFormat[i]);
+                const auto format = _key.m_renderPassKey.m_colorFormat[i];
+                VG_ASSERT(PixelFormat::Unknow != format);
+                d3d12graphicPipelineDesc.RTVFormats[numRenderTargets] = Texture::getd3d12PixelFormat(format);
                 ++numRenderTargets;
             }
             else
@@ -67,7 +72,17 @@ namespace vg::graphics::driver::dx12
         }
         d3d12graphicPipelineDesc.NumRenderTargets = numRenderTargets;
 
-        d3d12graphicPipelineDesc.DSVFormat = (PixelFormat::Unknow != _key.m_depthStencilFormat) ?  Texture::getd3d12PixelFormat(_key.m_depthStencilFormat) : DXGI_FORMAT_UNKNOWN;
+        const auto flags = subPassKey.getDepthStencilFlags();
+        if (SubPassKey::Flags::Bind & flags)
+        {
+            const auto format = _key.m_renderPassKey.m_depthStencilFormat;
+            VG_ASSERT(PixelFormat::Unknow != format);
+            d3d12graphicPipelineDesc.DSVFormat = Texture::getd3d12PixelFormat(format);
+        }
+        else
+        {
+            d3d12graphicPipelineDesc.DSVFormat = DXGI_FORMAT_UNKNOWN;
+        }
 
         d3d12graphicPipelineDesc.SampleDesc.Count = 1;
         d3d12graphicPipelineDesc.SampleDesc.Quality = 0;

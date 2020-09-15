@@ -5,6 +5,7 @@
 #include "graphics/driver/PipelineState/RasterizerState.h"
 #include "graphics/driver/Texture/Texture_consts.h"
 #include "graphics/driver/Shader/ShaderKey.h"
+#include "graphics/driver/FrameGraph/RenderPassKey.h"
 
 namespace vg::graphics::driver
 {
@@ -14,27 +15,26 @@ namespace vg::graphics::driver
         Line,
         Triangle,
         Patch
-    };
+    };    
 
     struct GraphicPipelineStateKey
     {
-        GraphicPipelineStateKey() :
-            m_depthStencilFormat(PixelFormat::Unknow)
+        GraphicPipelineStateKey() 
         {
-            for (core::uint i = 0; i < maxRenderTarget; ++i)
-                m_colorFormat[i] = PixelFormat::Unknow;
+           
         }
 
         RootSignatureHandle     m_rootSignature;
         RasterizerState         m_rasterizerState;
         ShaderKey               m_shaderKey;
+        RenderPassKey           m_renderPassKey;
+
+        core::u8                m_subPassIndex = 0;
         PrimitiveType           m_primitiveType = PrimitiveType::Triangle;
-        PixelFormat             m_colorFormat[maxRenderTarget];
-        PixelFormat             m_depthStencilFormat;
 
         bool operator == (const GraphicPipelineStateKey & _other) const
         {
-            return _other.m_rootSignature == m_rootSignature && _other.m_rasterizerState == m_rasterizerState && _other.m_shaderKey == m_shaderKey;
+            return _other.m_rootSignature == m_rootSignature && _other.m_rasterizerState == m_rasterizerState && _other.m_shaderKey == m_shaderKey && _other.m_renderPassKey == m_renderPassKey;
         }
 
         bool operator != (const GraphicPipelineStateKey & _other) const
@@ -49,7 +49,9 @@ namespace vg::graphics::driver
                 return RootSignatureHandle::hash()(_this.m_rootSignature)
                     ^ RasterizerState::hash()(_this.m_rasterizerState)
                     ^ ShaderKey::hash()(_this.m_shaderKey)
-                    ^ core::hash<core::u8>()((core::u8)_this.m_primitiveType);
+                    ^ RenderPassKey::hash()(_this.m_renderPassKey)
+                    ^ core::hash<core::u8>()(_this.m_subPassIndex)
+                    ^ core::hash<std::underlying_type<PrimitiveType>::type>()(std::underlying_type<PrimitiveType>::type(_this.m_primitiveType));
             }
         };
     };

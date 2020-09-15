@@ -13,13 +13,16 @@ namespace vg::graphics::driver
 		class RenderPass : public core::Object
 		{
 		public:
-			RenderPass();
+			RenderPass(const RenderPassKey & _key);
 			virtual ~RenderPass();
 
             void addSubPass(driver::SubPass * _subPass);
             const core::vector<driver::SubPass*> & getSubPasses() const;
+
+            const RenderPassKey & getRenderPassKey() const { return m_renderPassKey; }
 			
 		//private:
+            RenderPassKey                           m_renderPassKey;
 			core::vector<driver::SubPass*>		    m_subPasses;
 			core::vector<const driver::Texture*>    m_attachments;
 		};
@@ -38,7 +41,7 @@ namespace vg::graphics::driver
         void * operator new(size_t _size);
         void operator delete(void * _address);
 
-		RenderPass();
+		RenderPass(const RenderPassKey & _key);
 		~RenderPass();
 
 		void finalize();

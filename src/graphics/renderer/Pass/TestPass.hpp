@@ -35,7 +35,7 @@ namespace vg::graphics::renderer
         FrameGraph::TextureDesc desc;
         desc.width = backbuffer.width;
         desc.height = backbuffer.height;
-        desc.format = PixelFormat::R8G8B8A8_unorm;
+        desc.format = backbuffer.format;
         desc.initState = FrameGraph::Resource::InitState::Clear;
         desc.clearColor = { 1, 0, 1, 1 };
 
@@ -45,8 +45,7 @@ namespace vg::graphics::renderer
     //--------------------------------------------------------------------------------------
     void TestPass::draw(CommandList * _cmdList) const
     {
-        RasterizerState rs;
-                        rs.setCullMode(RasterizerState::CullMode::None);
+        RasterizerState rs(FillMode::Solid, CullMode::Back);
 
         _cmdList->setRootSignature(m_rootSignatureHandle);
         _cmdList->setShader(m_shaderKey);

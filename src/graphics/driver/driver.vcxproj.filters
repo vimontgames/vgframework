@@ -341,6 +341,15 @@
     <ClInclude Include="PipelineState\RasterizerState.hpp">
       <Filter>PipelineState</Filter>
     </ClInclude>
+    <ClInclude Include="PipelineState\vulkan\RasterizerState_vulkan.h">
+      <Filter>PipelineState\vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="PipelineState\vulkan\RasterizerState_vulkan.hpp">
+      <Filter>PipelineState\vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="FrameGraph\RenderPassKey.h">
+      <Filter>FrameGraph</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Device">

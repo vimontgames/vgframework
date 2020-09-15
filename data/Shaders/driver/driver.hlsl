@@ -12,7 +12,7 @@ VS_Output_Quad VS_Quad(uint _vertexID : VertexID)
 
     float2 tmp = float2(_vertexID & 1, (_vertexID & 2) >> 1);
     output.uv = tmp;
-    output.pos = float4(tmp.xy*2-1, 0, 1);
+    output.pos = float4(float2(tmp.x, 1 - tmp.y)*2-1, 0, 1);
 
     return output;
 }

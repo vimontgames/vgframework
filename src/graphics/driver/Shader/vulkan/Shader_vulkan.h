@@ -12,7 +12,7 @@ namespace vg::graphics::driver::vulkan
         Shader(const core::Blob & _bytecode);
         ~Shader();
 
-        const VkShaderModule & getVulkanBytecode() { return m_vkShaderModule; }
+        const VkShaderModule & getVulkanBytecode() const { return m_vkShaderModule; }
 
     private:
         VkShaderModule   m_vkShaderModule;

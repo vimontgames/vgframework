@@ -2,44 +2,59 @@
 
 namespace vg::graphics::driver
 {
+    enum class FillMode : core::u32
+    {
+        Solid = 0,
+        Wireframe
+    };
+
+    enum class CullMode : core::u32
+    {
+        None = 0,
+        Back,
+        Front
+    };
+
+    enum class Orientation : core::u32
+    {
+        ClockWise = 0,
+        CounterClockWise
+    };
+
+    enum class DepthClip : core::u32
+    {
+        Enable = 1,
+        Disable
+    };
+
+    enum class DepthBias : core::u32
+    {
+        None,
+        Small,
+        Medium,
+        Big
+    };
+
     namespace base
     {
         class RasterizerState
         {
         public:
-            RasterizerState() :
+            RasterizerState() : 
                 bits(0)
             {
-                m_fillMode = FillMode::Solid;
-                m_cullMode = CullMode::Back;
             }
-
-            enum class FillMode : core::u32
-            {
-                Solid = 0,
-                Wireframe
-            };
-
-            enum class CullMode : core::u32
-            {
-                None = 0,
-                Back,
-                Front
-            };
-
-            void setFillmode(FillMode _fillMode) { m_fillMode = _fillMode; }
-            FillMode getFillmode() const { return m_fillMode; }
-
-            void setCullMode(CullMode _cullMode) { m_cullMode = _cullMode; }
-            CullMode getCullmode() const { return m_cullMode; }
 
         protected:
             union
             {
                 struct
                 {
-                    FillMode    m_fillMode : 1;
-                    CullMode    m_cullMode : 2;
+                    FillMode    fillMode    : 1;
+                    CullMode    cullMode    : 2;
+                    Orientation orientation : 1;
+                    DepthClip   depthClip   : 1;
+                    DepthBias   depthBias   : 2; 
                 };
                 core::u32 bits;
             };
@@ -56,6 +71,20 @@ namespace vg::graphics::driver
         using super = VG_GFXAPI::RasterizerState;
 
     public:
+
+        RasterizerState(FillMode _fillMode       = FillMode::Solid, 
+                        CullMode _cullMode       = CullMode::Back, 
+                        Orientation _orientation = Orientation::ClockWise, 
+                        DepthClip _depthClip     = DepthClip::Enable,
+                        DepthBias _depthBias     = DepthBias::None)
+            {
+                fillMode    = _fillMode;
+                cullMode    = _cullMode;
+                orientation = _orientation;
+                depthClip   = _depthClip;
+                depthBias   = _depthBias;
+            }
+
         inline bool operator == (const RasterizerState & _other) const
         {
             return _other.bits == bits;
