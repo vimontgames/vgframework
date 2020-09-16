@@ -20,6 +20,8 @@ namespace vg::graphics::driver::vulkan
     {
         switch (_cullMode)
         {
+        default:
+            VG_ASSERT(false, "Unhandled CullMode \"%s\" (%u)", asString(_cullMode), _cullMode);
         case CullMode::None:
             return VK_CULL_MODE_NONE;
 

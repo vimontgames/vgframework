@@ -17,13 +17,15 @@ namespace vg::graphics::driver::dx12
     }
 
     //--------------------------------------------------------------------------------------
-    wstring string2wstring(const string & _string)
+    // TODO: move to a "string" header
+    //--------------------------------------------------------------------------------------
+    wstring wstring_convert(const string & _string)
     {
         wchar_t result[1024];
         VG_ASSERT(_string.length() < countof(result));
         size_t s;
         mbstowcs_s(&s, result, countof(result), _string.c_str(), _string.length());
-        return std::wstring(result);
+        return wstring(result);
     }
 
     //--------------------------------------------------------------------------------------
@@ -57,10 +59,8 @@ namespace vg::graphics::driver::dx12
     }
 
     //--------------------------------------------------------------------------------------
-    driver::Shader * ShaderCompiler::compile(const core::string & _path, const core::string & _entryPoint, ShaderStage _stage)
+    driver::Shader * ShaderCompiler::compile(const core::string & _path, const core::string & _entryPoint, ShaderStage _stage, core::vector<core::pair<core::string, core::uint>> & _macros)
     {
-        using namespace std;
-
         RETRY:
 
         VG_DEBUGPRINT("compiling %s shader \"%s\" from \"%s\"\n", asString(_stage).c_str(), _entryPoint.c_str(), _path.c_str());
@@ -84,21 +84,25 @@ namespace vg::graphics::driver::dx12
                 #endif
             };
 
-            std::vector<DxcDefine> dxcDefines(0/*defines.size()*/);
-            //for (size_t i = 0; i < defines.size(); ++i)
-            //{
-            //    DxcDefine& m = dxcDefines(i);
-            //    m.Name = defines[i].first.c_str();
-            //    m.Value = defines[i].second.c_str();
-            //}
+            _macros.push_back({ "DX12", 1 });
 
-            wstring wfilename = string2wstring(_path);
-            wstring wEntryPoint = string2wstring(_entryPoint);
+            std::vector<DxcDefine> dxcDefines;
+            for (const auto & macro : _macros)
+                dxcDefines.push_back({ _wcsdup(wstring_convert(macro.first).c_str()), _wcsdup(wstring_convert(to_string(macro.second)).c_str()) });
 
-            wstring wTargetProfile = string2wstring(string(getd3d12TargetProfile(_stage)));
+            const wstring wfilename = wstring_convert(_path);
+            const wstring wEntryPoint = wstring_convert(_entryPoint);
+            const wstring wTargetProfile = wstring_convert(string(getd3d12TargetProfile(_stage)));
 
             IDxcOperationResult * dxcCompileResult = nullptr;
             m_d3d12dxcCompiler->Compile(dxcSource, wfilename.c_str(), wEntryPoint.c_str(), wTargetProfile.c_str(), pArgs, (uint)countof(pArgs), dxcDefines.data(), (uint)dxcDefines.size(), m_d3d12dxcIncludeHandler, &dxcCompileResult);
+
+            for (auto & dxcDef : dxcDefines)
+            {
+                free((void*)dxcDef.Name);
+                free((void*)dxcDef.Value);
+            }
+            dxcDefines.clear();
 
             HRESULT hrCompilation;
             VG_ASSERT_SUCCEEDED(dxcCompileResult->GetStatus(&hrCompilation));

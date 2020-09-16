@@ -10,7 +10,7 @@ namespace vg::graphics::renderer
         auto * device = Device::get();
 
         RootSignatureDesc rsDesc;
-                          rsDesc.addRootConstants(ShaderStageFlags::VS | ShaderStageFlags::PS, 0, 4);
+                          rsDesc.addRootConstants(ShaderStageFlags::VS, 0, 8);
 
         m_rootSignatureHandle = device->addRootSignature(rsDesc);
 
@@ -51,6 +51,12 @@ namespace vg::graphics::renderer
         _cmdList->setShader(m_shaderKey);
         _cmdList->setPrimitiveTopology(PrimitiveTopology::TriangleStrip);
         _cmdList->setRasterizerState(rs);
+
+        const float4 posOffetScale = float4(0.25f, 0.25f, 0.5f, 0.5f);
+        _cmdList->setRootConstants(0, (u32*)&posOffetScale, 4);
+
+        const float4 texOffetScale = float4(0.0f, 0.0f, 4.0f, 4.0f);
+        _cmdList->setRootConstants(4, (u32*)&texOffetScale, 4);
 
         _cmdList->draw(4);
     }

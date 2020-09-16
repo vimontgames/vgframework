@@ -119,6 +119,7 @@ namespace vg::graphics::driver
             {
                 m_stateCache.dirtyFlags |= StateCache::DirtyFlags::RootSignature;
                 m_stateCache.graphicPipelineKey.m_rootSignature = _rsHandle;
+                m_currentRootSignature = driver::Device::get()->getRootSignature(_rsHandle);
             }
         }
 
@@ -152,6 +153,20 @@ namespace vg::graphics::driver
             }
         }
 
+        //--------------------------------------------------------------------------------------
+        void CommandList::setRootConstants(core::uint _startOffset, core::u32 * _values, core::uint _count)
+        {
+            VG_ASSERT(_startOffset + _count < countof(m_stateCache.rootConstants));
+            for (uint i = 0; i < _count; ++i)
+            {
+                if (_values[i] != m_stateCache.rootConstants[_startOffset + i])
+                {
+                    m_stateCache.rootConstants[_startOffset + i] = _values[i];
+                    m_stateCache.dirtyFlags |= StateCache::DirtyFlags::RootConstants;
+                }
+            }
+        }
+        
         //--------------------------------------------------------------------------------------
         void CommandList::setShader(const ShaderKey & _key)
         {
@@ -236,6 +251,9 @@ namespace vg::graphics::driver
 
             if (asBool(StateCache::DirtyFlags::Scissor & m_stateCache.dirtyFlags))
                 super::bindScissor(m_stateCache.scissor);
+
+            if (asBool(StateCache::DirtyFlags::RootConstants & m_stateCache.dirtyFlags))
+                super::bindRootConstants(m_stateCache.rootConstants);
 
             m_stateCache.dirtyFlags = (StateCache::DirtyFlags)0;
         }

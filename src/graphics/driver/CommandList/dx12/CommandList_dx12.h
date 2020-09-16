@@ -26,6 +26,7 @@ namespace vg::graphics::driver::dx12
         void                                bindPrimitiveTopology       (PrimitiveTopology _topology);
         void                                bindViewport                (const core::uint4 & _viewport);
         void                                bindScissor                 (const core::uint4 & _scissor);
+        void                                bindRootConstants           (core::uint (& _constants)[max_root_constants]);
 
 		void								clear                       (const core::float4 & _color);
         void                                draw                        (core::uint _vertexCount, core::uint _startOffset);

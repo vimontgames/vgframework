@@ -143,6 +143,17 @@ namespace vg::graphics::driver::dx12
         m_d3d12graphicsCmdList->RSSetScissorRects(1, &d3d12scissor);
     }
 
+    //--------------------------------------------------------------------------------------
+    void CommandList::bindRootConstants(core::uint(&_constants)[max_root_constants])
+    {
+        const auto & rootConstantDesc = m_currentRootSignature->getRootSignatureDesc().getRootConstants();
+        for (uint i = 0; i < rootConstantDesc.size(); ++i)
+        {
+            const RootSignatureDesc::PushConstantParams & param = rootConstantDesc[i];
+            m_d3d12graphicsCmdList->SetGraphicsRoot32BitConstants(i, param.m_count, &_constants[param.m_start], 0);
+        }
+    }
+
 	//--------------------------------------------------------------------------------------
 	void CommandList::clear(const core::float4 & _color)
 	{

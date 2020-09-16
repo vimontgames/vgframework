@@ -44,13 +44,21 @@ namespace vg::graphics::driver::vulkan
     }
 
     //--------------------------------------------------------------------------------------
-    driver::Shader * ShaderCompiler::compile(const core::string & _path, const core::string & _entryPoint, ShaderStage _stage)
+    driver::Shader * ShaderCompiler::compile(const core::string & _path, const core::string & _entryPoint, ShaderStage _stage, vector<pair<string, uint>> & _macros)
     {
         string source;
         if (file::read(_path, source))
         {
             EShLanguage targetProfile = getVulkanTargetProfile(_stage);
             glslang::TShader tShader(targetProfile);
+
+            // Add #define
+            //_macros.push_back({ "VULKAN", 1 }); // 'VULKAN' macro is already defined
+
+            string macros = "";
+            for (auto & macro : _macros)
+                macros = macros + "#define " + macro.first + " " + to_string(macro.second) + "\n";
+            source = macros + source;
 
             const char * src = source.c_str();
             tShader.setStrings(&src, 1);
@@ -68,7 +76,7 @@ namespace vg::graphics::driver::vulkan
 
             DirStackFileIncluder includeHandler;
             std::string dir = file::getFileDir(_path);
-            includeHandler.pushExternalLocalDirectory(dir);
+            includeHandler.pushExternalLocalDirectory(dir);            
 
             std::string preprocessedSource;
             const int defaultVer = 100;

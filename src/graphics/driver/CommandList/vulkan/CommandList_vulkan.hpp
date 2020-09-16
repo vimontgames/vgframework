@@ -94,13 +94,13 @@ namespace vg::graphics::driver::vulkan
             done = true;
         }
 
-        vkCmdBindDescriptorSets(getVulkanCommandBuffer(), VK_PIPELINE_BIND_POINT_GRAPHICS, sig->getVulkanPipelineLayout(), 0, 1, &vkDescriptorSet, 0, nullptr);
+        vkCmdBindDescriptorSets(m_vkCommandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, sig->getVulkanPipelineLayout(), 0, 1, &vkDescriptorSet, 0, nullptr);
     }
     
     //--------------------------------------------------------------------------------------
     void CommandList::bindGraphicPipelineState(driver::GraphicPipelineState * _pso)
     {
-        vkCmdBindPipeline(getVulkanCommandBuffer(), VK_PIPELINE_BIND_POINT_GRAPHICS, _pso->getVulkanPipeline());
+        vkCmdBindPipeline(m_vkCommandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, _pso->getVulkanPipeline());
     }
 
     //--------------------------------------------------------------------------------------
@@ -120,7 +120,7 @@ namespace vg::graphics::driver::vulkan
         vp.minDepth = 0.0f;
         vp.maxDepth = 1.0f;
 
-        vkCmdSetViewport(getVulkanCommandBuffer(), 0, 1, &vp);
+        vkCmdSetViewport(m_vkCommandBuffer, 0, 1, &vp);
     }
 
     //--------------------------------------------------------------------------------------
@@ -132,7 +132,19 @@ namespace vg::graphics::driver::vulkan
         scissor.extent.width = _scissor.z;
         scissor.extent.height = _scissor.w;
 
-        vkCmdSetScissor(getVulkanCommandBuffer(), 0, 1, &scissor);
+        vkCmdSetScissor(m_vkCommandBuffer, 0, 1, &scissor);
+    }
+
+    //--------------------------------------------------------------------------------------
+    void CommandList::bindRootConstants(core::uint(&_constants)[max_root_constants])
+    {
+        const auto vkPipelineLayout = m_currentRootSignature->getVulkanPipelineLayout();
+        const auto & rootConstantDesc = m_currentRootSignature->getRootSignatureDesc().getRootConstants();
+        for (uint i = 0; i < rootConstantDesc.size(); ++i)
+        {
+            const RootSignatureDesc::PushConstantParams & param = rootConstantDesc[i];
+            vkCmdPushConstants(m_vkCommandBuffer, vkPipelineLayout, RootSignature::getVulkanShaderStageFlags(param.m_stages), param.m_start<<2, param.m_count<<2, _constants);
+        }
     }
 
     //--------------------------------------------------------------------------------------
@@ -144,6 +156,6 @@ namespace vg::graphics::driver::vulkan
     //--------------------------------------------------------------------------------------
     void CommandList::draw(core::uint _vertexCount, core::uint _startOffset)
     {
-        vkCmdDraw(getVulkanCommandBuffer(), _vertexCount, 1, _startOffset, 0);
+        vkCmdDraw(m_vkCommandBuffer, _vertexCount, 1, _startOffset, 0);
     }
 }

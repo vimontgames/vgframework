@@ -13,6 +13,8 @@ namespace vg::graphics::driver
             RootSignature(const RootSignatureDesc & _desc);
             ~RootSignature();
 
+            const RootSignatureDesc & getRootSignatureDesc() const { return m_desc; }
+
         private:
             const RootSignatureDesc m_desc;
         };

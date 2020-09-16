@@ -18,11 +18,13 @@ namespace vg::graphics::driver
         TriangleStrip
     };
 
-#ifdef VG_DX12
+    constexpr core::uint max_root_constants = 16;
+
+    #ifdef VG_DX12
     namespace dx12
     {
         using D3D12Device = ID3D12Device5;
         using D3D12GraphicsCommandList = ID3D12GraphicsCommandList4;
     }
-#endif
+    #endif
 }

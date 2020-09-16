@@ -70,8 +70,8 @@ namespace vg::graphics::driver
     }
 
     //--------------------------------------------------------------------------------------
-    Shader * ShaderManager::compile(const core::string & _file, const core::string & _entryPoint, ShaderStage _stage)
+    Shader * ShaderManager::compile(const core::string & _file, const core::string & _entryPoint, ShaderStage _stage, vector<pair<string, uint>> & _macros)
     {
-        return m_shaderCompiler->compile(m_shaderRootPath + _file, _entryPoint, _stage);
+        return m_shaderCompiler->compile(m_shaderRootPath + _file, _entryPoint, _stage, _macros);
     }
 }

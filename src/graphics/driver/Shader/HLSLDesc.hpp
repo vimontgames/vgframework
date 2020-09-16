@@ -67,7 +67,8 @@ namespace vg::graphics::driver
         if (nullptr == pair.second)
         {
             auto * sm = ShaderManager::get();
-            pair.second = sm->compile(m_file, pair.first, _stage);
+            core::vector<core::pair<core::string, core::uint>> macros; // TODO: build macros from shader key flags
+            pair.second = sm->compile(m_file, pair.first, _stage, macros);
         }
         return pair.second;
     }

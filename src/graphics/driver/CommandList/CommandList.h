@@ -39,6 +39,7 @@ namespace vg::graphics::driver
             void                    setPrimitiveTopology(PrimitiveTopology _topology);
             void                    setViewport         (const core::uint4 & _viewport);
             void                    setScissor          (const core::uint4 & _scissor);
+            void                    setRootConstants    (core::uint _startOffset, core::u32 * _values, core::uint _count);
 
 		private:
 			CommandListType			m_type;
@@ -61,15 +62,18 @@ namespace vg::graphics::driver
                     GraphicPipelineState = 0x00000002,
                     PrimitiveTopology    = 0x00000004,
                     Viewport             = 0x00000008,
-                    Scissor              = 0x00000010
+                    Scissor              = 0x00000010,
+                    RootConstants        = 0x00000020,
                 };
                 DirtyFlags              dirtyFlags;
                 GraphicPipelineStateKey graphicPipelineKey;
                 PrimitiveTopology       primitiveTopology;
                 core::uint4             viewport;
                 core::uint4             scissor;
+                core::u32               rootConstants[max_root_constants] = {};
             };
             StateCache              m_stateCache;
+            RootSignature *         m_currentRootSignature = nullptr;
 
             std::unordered_map<driver::GraphicPipelineStateKey, driver::GraphicPipelineState*, driver::GraphicPipelineStateKey::hash> m_graphicPipelineStateHash;
 		};

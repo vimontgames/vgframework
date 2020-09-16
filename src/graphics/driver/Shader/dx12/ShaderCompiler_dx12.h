@@ -13,7 +13,7 @@ namespace vg::graphics::driver::dx12
         ~ShaderCompiler();
 
     protected:
-        driver::Shader * compile(const core::string & _path, const core::string & _entryPoint, ShaderStage _stage);
+        driver::Shader * compile(const core::string & _path, const core::string & _entryPoint, ShaderStage _stage, core::vector<core::pair<core::string, core::uint>> & _macros);
         
     private:
         IDxcLibrary *           m_d3d12dxcLibrary = nullptr;
