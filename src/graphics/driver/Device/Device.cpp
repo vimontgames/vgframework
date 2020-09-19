@@ -69,21 +69,19 @@ namespace vg::graphics::driver
 		}
 
 		//--------------------------------------------------------------------------------------
-		vg::graphics::driver::CommandQueue * Device::createCommandQueue(CommandQueueType _type)
+		driver::CommandQueue * Device::createCommandQueue(CommandQueueType _type)
 		{
-			auto & container = m_commandQueues[asInteger(CommandQueueType::Graphics)];
-			auto * queue = new graphics::driver::CommandQueue(_type, (uint)container.size());
-
-			container.push_back(queue);
-
+            auto *& queue = m_commandQueue[asInteger(_type)];
+            VG_ASSERT(nullptr == queue);
+            queue = new driver::CommandQueue(_type);
 			return queue;
 		}
 
 		//--------------------------------------------------------------------------------------
-		core::vector<graphics::driver::CommandQueue*> & Device::getCommandQueues(CommandQueueType _type)
+		driver::CommandQueue * Device::getCommandQueue(CommandQueueType _type)
 		{
 			VG_ASSERT(isEnumValue(_type));
-			return m_commandQueues[asInteger(_type)];
+			return m_commandQueue[asInteger(_type)];
 		}
 
 		//--------------------------------------------------------------------------------------
@@ -115,21 +113,30 @@ namespace vg::graphics::driver
 				m_frameContext[_frameContextIndex].backbuffer = getDevice()->createTexture(backbufferTexDesc, backbufferName, _surface);
 			}
 
-			// Create command pools
-			{
-				auto & cmdPools = context.commandPools;
-				const auto index = (uint)cmdPools.size();
-				cmdPools.push_back(new driver::CommandPool(_frameContextIndex, index));
-			}
-
 			// Create command lists
 			{
-				// Graphics
+                auto & cmdPools = context.commandPools;
+
+                // Create graphics command list for uploads
+                {
+                    const auto cmdPoolIndex = (uint)cmdPools.size();
+                    cmdPools.push_back(new driver::CommandPool(_frameContextIndex, cmdPoolIndex));
+                    auto & cmdPool = cmdPools.back();
+
+                    auto & cmdLists = context.commandLists[asInteger(CommandListType::Graphics)];
+                    const auto cmdListIndex = (uint)cmdLists.size();
+                    cmdLists.push_back(new driver::CommandList(CommandListType::Graphics, cmdPool, _frameContextIndex, cmdListIndex));
+                }
+
+				// Create default Graphics command list
 				{
-					auto & cmdPool = context.commandPools[0];
+                    const auto cmdPoolIndex = (uint)cmdPools.size();
+                    cmdPools.push_back(new driver::CommandPool(_frameContextIndex, cmdPoolIndex));
+                    auto & cmdPool = cmdPools.back();
+
 					auto & cmdLists = context.commandLists[asInteger(CommandListType::Graphics)];
-					const auto index = (uint)cmdLists.size();
-					cmdLists.push_back(new driver::CommandList(CommandListType::Graphics, cmdPool, _frameContextIndex, index));
+					const auto cmdListIndex = (uint)cmdLists.size();
+					cmdLists.push_back(new driver::CommandList(CommandListType::Graphics, cmdPool, _frameContextIndex, cmdListIndex));
 				}
 			}
 		}
@@ -207,12 +214,7 @@ namespace vg::graphics::driver
 		void Device::destroyCommandQueues()
 		{
 			for (uint queueType = 0; queueType < enumCount<CommandQueueType>(); ++queueType)
-			{
-				auto & queues = m_commandQueues[queueType];
-				for (auto * queue : queues)
-					VG_SAFE_RELEASE(queue);
-				queues.clear();
-			}
+                VG_SAFE_RELEASE(m_commandQueue[queueType]);
 		}
 
 		//--------------------------------------------------------------------------------------

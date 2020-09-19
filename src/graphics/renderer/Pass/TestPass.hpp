@@ -15,6 +15,22 @@ namespace vg::graphics::renderer
         m_rootSignatureHandle = device->addRootSignature(rsDesc);
 
         m_shaderKey.init("driver/driver.hlsl", "Quad");
+
+        TextureDesc texDesc = TextureDesc(TextureType::Texture2D, PixelFormat::R8G8B8A8_unorm, TextureFlags::ShaderResource, 8, 8);
+
+        const u32 texInitData[8][8] =
+        {
+            { 0xFFFFFFFF, 0xFFFFFFFF, 0x00000000, 0x00000000, 0xFFFFFFFF, 0xFFFFFFFF, 0x00000000, 0x00000000 },
+            { 0xFFFFFFFF, 0xFFFFFFFF, 0x00000000, 0x00000000, 0xFFFFFFFF, 0xFFFFFFFF, 0x00000000, 0x00000000 },
+            { 0x00000000, 0x00000000, 0xFFFFFFFF, 0xFFFFFFFF, 0x00000000, 0x00000000, 0xFFFFFFFF, 0xFFFFFFFF },
+            { 0x00000000, 0x00000000, 0xFFFFFFFF, 0xFFFFFFFF, 0x00000000, 0x00000000, 0xFFFFFFFF, 0xFFFFFFFF },
+            { 0xFFFFFFFF, 0xFFFFFFFF, 0x00000000, 0x00000000, 0xFFFFFFFF, 0xFFFFFFFF, 0x00000000, 0x00000000 },
+            { 0xFFFFFFFF, 0xFFFFFFFF, 0x00000000, 0x00000000, 0xFFFFFFFF, 0xFFFFFFFF, 0x00000000, 0x00000000 },
+            { 0x00000000, 0x00000000, 0xFFFFFFFF, 0xFFFFFFFF, 0x00000000, 0x00000000, 0xFFFFFFFF, 0xFFFFFFFF },
+            { 0x00000000, 0x00000000, 0xFFFFFFFF, 0xFFFFFFFF, 0x00000000, 0x00000000, 0xFFFFFFFF, 0xFFFFFFFF },
+        };
+
+        m_texture = device->createTexture(texDesc, "testTex", (void*)texInitData);
     }
 
     //--------------------------------------------------------------------------------------
@@ -22,6 +38,7 @@ namespace vg::graphics::renderer
     {
         auto * device = Device::get();
         device->removeRootSignature(m_rootSignatureHandle);
+        VG_SAFE_RELEASE(m_texture);
     }
 
     //--------------------------------------------------------------------------------------

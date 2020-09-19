@@ -169,7 +169,7 @@ namespace vg::graphics::driver::dx12
 		swapChainDesc.Flags = DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH;
 		swapChainDesc.Flags |= fullScreen ? DXGI_SWAP_CHAIN_FLAG_FULLSCREEN_VIDEO : 0;
 
-		auto * graphicsQueue = getCommandQueues(CommandQueueType::Graphics)[0];
+		auto * graphicsQueue = getCommandQueue(CommandQueueType::Graphics);
 
 		VG_ASSERT_SUCCEEDED(m_dxgiFactory->CreateSwapChainForHwnd(graphicsQueue->getd3d12CommandQueue(), _winHandle, &swapChainDesc, nullptr, nullptr, &m_dxgiSwapChain));
 		return m_dxgiSwapChain;
@@ -308,41 +308,74 @@ namespace vg::graphics::driver::dx12
 	//--------------------------------------------------------------------------------------
 	void Device::endFrame()
 	{
-		auto * queue = getCommandQueues(CommandQueueType::Graphics)[0]->getd3d12CommandQueue();
+        auto & context = getCurrentFrameContext();
 
-		auto & context = getCurrentFrameContext();
+        for (uint q = 0; q < enumCount<CommandQueueType>(); ++q)
+        {
+            const auto cmdQueueType = (CommandQueueType)q;
+            auto * queue = getCommandQueue(cmdQueueType);
+            auto & queueCmdLists = context.commandLists[q];
 
-		// Transition the swap chain back to present
-		D3D12_RESOURCE_BARRIER barrier;
-		barrier.Transition.pResource = context.backbuffer->getd3d12Resource();
-		barrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
-		barrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
-		barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_RENDER_TARGET;
-		barrier.Transition.StateAfter = D3D12_RESOURCE_STATE_PRESENT;
-		barrier.Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
+            vector<ID3D12CommandList*> cmdListsToExecute;
 
-		auto commandList = context.commandLists[asInteger(CommandListType::Graphics)][0]->getd3d12GraphicsCommandList();
-		commandList->ResourceBarrier(1, &barrier);
+            for (uint c = 0; c < queueCmdLists.size(); ++c)
+            {
+                const auto cmdListType = (CommandListType)c;
+                auto * d3d12cmdList = queueCmdLists[c]->getd3d12GraphicsCommandList();
 
-		commandList->Close();
+                // Perform swap after last graphics command list
+                const bool swap = CommandQueueType::Graphics == cmdQueueType && queueCmdLists.size() == c + 1;
 
-		// Execute our commands
-		ID3D12CommandList* commandLists[] = { commandList };
-		queue->ExecuteCommandLists(std::extent<decltype(commandLists)>::value, commandLists);
+                if (swap)
+                {
+                    // Transition the swap chain back to present
+                    D3D12_RESOURCE_BARRIER barrier;
+                    barrier.Transition.pResource = context.backbuffer->getd3d12Resource();
+                    barrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
+                    barrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
+                    barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_RENDER_TARGET;
+                    barrier.Transition.StateAfter = D3D12_RESOURCE_STATE_PRESENT;
+                    barrier.Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
+
+                    d3d12cmdList->ResourceBarrier(1, &barrier);
+                }
+
+                d3d12cmdList->Close();
+                cmdListsToExecute.push_back(d3d12cmdList);
+            }
+
+            if (cmdListsToExecute.size() > 0)
+            {
+                auto * d3d12queue = queue->getd3d12CommandQueue();
+                d3d12queue->ExecuteCommandLists(cmdListsToExecute.size(), cmdListsToExecute.data());
+            }
+        }
 
 		m_dxgiSwapChain->Present(1, 0);
 
-		// Mark the fence for the current frame.
-		const auto fenceValue = m_currentFenceValue;
-        const auto currentFrameIndex = getFrameContextIndex();
+        for (uint q = 0; q < enumCount<CommandQueueType>(); ++q)
+        {
+            const auto cmdQueueType = (CommandQueueType)q;
+            auto * queue = getCommandQueue(cmdQueueType);
 
-        #if VG_DBG_CPUGPUSYNC
-        VG_DEBUGPRINT("Write fence %u (fence[%u] = %u)\n", currentFrameIndex, currentFrameIndex, fenceValue);
-        #endif
+            // TODO: separate fence for each queue ?
+            if (CommandQueueType::Graphics == cmdQueueType)
+            {
+                auto * d3d12queue = queue->getd3d12CommandQueue();
 
-		queue->Signal(m_frameFences[currentFrameIndex], fenceValue);
-		m_fenceValues[currentFrameIndex] = fenceValue;
-		++m_currentFenceValue;
+                // Mark the fence for the current frame.
+                const auto fenceValue = m_currentFenceValue;
+                const auto currentFrameIndex = getFrameContextIndex();
+
+                #if VG_DBG_CPUGPUSYNC
+                VG_DEBUGPRINT("Write fence %u (fence[%u] = %u)\n", currentFrameIndex, currentFrameIndex, fenceValue);
+                #endif
+
+                d3d12queue->Signal(m_frameFences[currentFrameIndex], fenceValue);
+                m_fenceValues[currentFrameIndex] = fenceValue;
+                ++m_currentFenceValue;
+            }
+        }
 
 		super::endFrame();
 	}

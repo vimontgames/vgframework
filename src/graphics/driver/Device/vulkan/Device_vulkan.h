@@ -24,6 +24,7 @@ namespace vg::graphics::driver::vulkan
 		VkInstance &					getVulkanInstance				();
 		VkDevice &						getVulkanDevice					();
 		VkPhysicalDevice &				getVulkanPhysicalDevice			();
+        VmaAllocator &                  getVulkanMemoryAllocator        ();
 
 		bool							onDebugMessage					(VkDebugUtilsMessageSeverityFlagBitsEXT _severity, VkDebugUtilsMessageTypeFlagsEXT _flags, const VkDebugUtilsMessengerCallbackDataEXT * _data);
 

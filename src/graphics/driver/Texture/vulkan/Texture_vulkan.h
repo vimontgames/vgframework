@@ -19,6 +19,7 @@ namespace vg::graphics::driver::vulkan
 
 	//private:
 		VkImage				m_vkImage;
+        VmaAllocation       m_vma_alloc;
 		VkImageView			m_vkImageView;
 	};
 }

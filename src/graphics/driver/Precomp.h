@@ -33,6 +33,8 @@
 #include <dxcapi.h>
 #endif
 
+#include "D3D12MemoryAllocator/src/D3D12MemAlloc.h"
+
 #define VG_ASSERT_SUCCEEDED(f) { HRESULT hr = f; VG_ASSERT(SUCCEEDED(hr), "%s\n\n%s", #f, std::system_category().message(hr).c_str()); }
 
 #endif // VG_DX12
@@ -48,6 +50,8 @@
 #ifdef VG_WINDOWS
 #include <vulkan/vulkan_win32.h>
 #endif
+
+#include "VulkanMemoryAllocator/src/vk_mem_alloc.h"
 
 #define VG_ASSERT_VULKAN(f) { VkResult err = f; VG_ASSERT(err == VK_SUCCESS, "%s\n\n%s", #f, (core::asString(err)).c_str()); }
 

@@ -44,6 +44,26 @@ namespace vg::graphics::driver::vulkan
 		{
 			m_vkImage = *static_cast<VkImage*>(_initData);
 		}
+        else
+        {
+            VkImageCreateInfo imgDesc = {};
+                              imgDesc.sType = VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO;
+                              imgDesc.imageType = VK_IMAGE_TYPE_2D;
+                              imgDesc.format = getVulkanPixelFormat(_texDesc.format);
+                              imgDesc.extent = { _texDesc.width, _texDesc.height, _texDesc.depth };
+                              imgDesc.mipLevels = 1;
+                              imgDesc.arrayLayers = 1;
+                              imgDesc.samples = VK_SAMPLE_COUNT_1_BIT;
+                              imgDesc.tiling = VK_IMAGE_TILING_LINEAR;
+                              imgDesc.usage = VK_IMAGE_USAGE_SAMPLED_BIT;
+                              imgDesc.flags = 0;
+                              imgDesc.initialLayout = VK_IMAGE_LAYOUT_PREINITIALIZED;
+
+            VmaAllocationCreateInfo allocCreateInfo = {};
+                                    allocCreateInfo.usage = VMA_MEMORY_USAGE_GPU_ONLY;
+
+            VG_ASSERT_VULKAN(vmaCreateImage(device->getVulkanMemoryAllocator(), &imgDesc, &allocCreateInfo, &m_vkImage, &m_vma_alloc, nullptr));
+        }
 
 		if (asBool((TextureFlags::Backbuffer|TextureFlags::ShaderResource) & _texDesc.flags))
 		{
@@ -75,9 +95,10 @@ namespace vg::graphics::driver::vulkan
 	//--------------------------------------------------------------------------------------
 	Texture::~Texture()
 	{
-		auto & vkDevice = driver::Device::get()->getVulkanDevice();
+        auto * device = driver::Device::get();
 
-		vkDestroyImageView(vkDevice, m_vkImageView, nullptr);
-		vkDestroyImage(vkDevice, m_vkImage, nullptr);
+		vkDestroyImageView(device->getVulkanDevice(), m_vkImageView, nullptr);
+		vkDestroyImage(device->getVulkanDevice(), m_vkImage, nullptr);
+        vmaFreeMemory(device->getVulkanMemoryAllocator(), m_vma_alloc);
 	}
 }

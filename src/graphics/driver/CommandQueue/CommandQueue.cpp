@@ -11,11 +11,10 @@ namespace vg::graphics::driver
 	namespace base
 	{
 		//--------------------------------------------------------------------------------------
-		CommandQueue::CommandQueue(CommandQueueType _type, core::uint _index) :
-			m_type(_type),
-			m_index(_index)
+		CommandQueue::CommandQueue(CommandQueueType _type) :
+			m_type(_type)
 		{
-			string name = asString(_type) + "CmdQueue#" + std::to_string(_index);
+			string name = asString(_type) + "CmdQueue";
 			setName(name);
 		}
 
@@ -27,8 +26,8 @@ namespace vg::graphics::driver
 	}
 
 	//--------------------------------------------------------------------------------------
-	CommandQueue::CommandQueue(CommandQueueType _type, core::uint _index) :
-		super::CommandQueue(_type, _index)
+	CommandQueue::CommandQueue(CommandQueueType _type) :
+		super::CommandQueue(_type)
 	{
 
 	}

@@ -18,13 +18,12 @@ namespace vg::graphics::driver
 
             auto vsQuad = addVS("VS_Quad");
             auto psQuad = addPS("PS_Quad");
-            auto flags = Flags(0);
 
             auto & quad = addTechnique("Quad");
             {
                 quad.vs = vsQuad;
                 quad.ps = psQuad;
-                quad.flags = flags;
+                quad.flags = (Flags)0;
             }
         }
     };

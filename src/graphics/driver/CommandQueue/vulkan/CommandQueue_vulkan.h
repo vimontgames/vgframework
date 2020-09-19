@@ -9,10 +9,12 @@ namespace vg::graphics::driver::vulkan
 		using super = base::CommandQueue;
 
 	public:
-		CommandQueue(CommandQueueType _type, core::uint _index);
+		CommandQueue(CommandQueueType _type);
 		~CommandQueue();
 
-	//private:
+        VkQueue & getVulkanCommandQueue() { return m_vkCommandQueue; }
+
+	private:
 		VkQueue	m_vkCommandQueue;
 	};
 }

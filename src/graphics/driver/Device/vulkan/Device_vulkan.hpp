@@ -782,6 +782,12 @@ namespace vg::graphics::driver::vulkan
 		return m_vkPhysicalDevice;
 	}
 
+    //--------------------------------------------------------------------------------------
+    VmaAllocator & Device::getVulkanMemoryAllocator() 
+    { 
+        return m_memoryAllocator->getVulkanMemoryAllocator(); 
+    }
+
     u32 currentBuffer;
 
 	//--------------------------------------------------------------------------------------
@@ -822,23 +828,37 @@ namespace vg::graphics::driver::vulkan
         const auto currentFrameIndex = getFrameContextIndex();
         FrameContext & context = getCurrentFrameContext();
 
-        for (uint type = 0; type < enumCount<CommandListType>(); ++type)
-            for (auto & cmdList : context.commandLists[type])
-                cmdList->close();
+        for (uint q = 0; q < enumCount<CommandQueueType>(); ++q)
+        {
+            const auto cmdQueueType = (CommandQueueType)q;
+            auto * queue = getCommandQueue(cmdQueueType);
 
-        VkPipelineStageFlags pipe_stage_flags = 0;
-        VkSubmitInfo submit_info;
-        submit_info.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
-        submit_info.pNext = NULL;
-        submit_info.pWaitDstStageMask = &pipe_stage_flags;
-        pipe_stage_flags = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
-        submit_info.waitSemaphoreCount = 1;
-        submit_info.pWaitSemaphores = &image_acquired_semaphores[currentFrameIndex];
-        submit_info.commandBufferCount = 1;
-        submit_info.pCommandBuffers = &context.commandLists[asInteger(CommandListType::Graphics)][0]->getVulkanCommandBuffer();
-        submit_info.signalSemaphoreCount = 1;
-        submit_info.pSignalSemaphores = &draw_complete_semaphores[currentFrameIndex];
-        VG_ASSERT_VULKAN(vkQueueSubmit(m_commandQueues[asInteger(CommandQueueType::Graphics)][0]->m_vkCommandQueue, 1, &submit_info, fences[currentFrameIndex]));
+            const auto & queueCmdLists = context.commandLists[q];
+            vector<VkCommandBuffer> cmdBuffersToExecute;
+            for (uint c = 0; c < queueCmdLists.size(); ++c)
+            {
+                auto * cmdList = queueCmdLists[c];
+                cmdList->close();
+                VkCommandBuffer & vkCmdBuffer = cmdList->getVulkanCommandBuffer();
+                cmdBuffersToExecute.push_back(vkCmdBuffer);
+            }
+
+            if (cmdBuffersToExecute.size() > 0)
+            {
+                VkPipelineStageFlags pipe_stage_flags = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
+                VkSubmitInfo submit_info = {};
+                submit_info.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
+                submit_info.pWaitDstStageMask = &pipe_stage_flags;
+                submit_info.waitSemaphoreCount = 1;
+                submit_info.pWaitSemaphores = &image_acquired_semaphores[currentFrameIndex];
+                submit_info.commandBufferCount = (uint)cmdBuffersToExecute.size();
+                submit_info.pCommandBuffers = cmdBuffersToExecute.data();
+                submit_info.signalSemaphoreCount = 1;
+                submit_info.pSignalSemaphores = &draw_complete_semaphores[currentFrameIndex];
+
+                VG_ASSERT_VULKAN(vkQueueSubmit(queue->getVulkanCommandQueue(), 1, &submit_info, fences[currentFrameIndex]));
+            }
+        }
 
         #if VG_DBG_CPUGPUSYNC
         VG_DEBUGPRINT("Write fence %u\n", currentFrameIndex);
@@ -855,7 +875,7 @@ namespace vg::graphics::driver::vulkan
         present.pImageIndices = &currentBuffer;
         present.pResults = nullptr;
 
-        VG_ASSERT_VULKAN(m_KHR_Swapchain.m_pfnQueuePresentKHR(m_commandQueues[asInteger(CommandQueueType::Graphics)][0]->m_vkCommandQueue, &present));
+        VG_ASSERT_VULKAN(m_KHR_Swapchain.m_pfnQueuePresentKHR(getCommandQueue(CommandQueueType::Graphics)->getVulkanCommandQueue(), &present));
 
 		super::endFrame();
 	}

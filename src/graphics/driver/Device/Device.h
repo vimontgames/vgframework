@@ -51,7 +51,7 @@ namespace vg::graphics::driver
 			const DeviceParams &							getDeviceParams			    () const;
 
 			driver::CommandQueue *							createCommandQueue		    (CommandQueueType _type);
-			core::vector<driver::CommandQueue*> &			getCommandQueues		    (CommandQueueType _type);
+			driver::CommandQueue * 			                getCommandQueue		        (CommandQueueType _type);
 			void											destroyCommandQueues	    ();
 			
 			void											createFrameContext		    (core::uint _frameContextIndex, void * _backbuffer);
@@ -69,7 +69,7 @@ namespace vg::graphics::driver
 
 		protected:
             DeviceCaps                                      m_caps;
-			core::vector<driver::CommandQueue*>				m_commandQueues[core::enumCount<CommandQueueType>()];
+			driver::CommandQueue*				            m_commandQueue[core::enumCount<CommandQueueType>()];
 			FrameContext									m_frameContext[max_frame_latency];
 			core::u64										m_frameCounter = 0;
             driver::PixelFormat                             m_backbufferFormat;

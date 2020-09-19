@@ -10,12 +10,11 @@ namespace vg::graphics::driver
 		class CommandQueue : public core::Object
 		{
 		public:
-			CommandQueue(CommandQueueType _type, core::uint _index);
+			CommandQueue(CommandQueueType _type);
 			~CommandQueue();
 
 		private:
 			CommandQueueType	m_type;
-			core::uint			m_index;
 		};
 	}
 }
@@ -29,7 +28,7 @@ namespace vg::graphics::driver
 		using super = VG_GFXAPI::CommandQueue;
 
 	public:
-		CommandQueue(CommandQueueType _type, core::uint _index);
+		CommandQueue(CommandQueueType _type);
 		~CommandQueue();
 	};
 }
