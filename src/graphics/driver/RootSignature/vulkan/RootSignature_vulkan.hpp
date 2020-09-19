@@ -28,14 +28,17 @@ namespace vg::graphics::driver::vulkan
             // TODO: add VkDescriptorSetLayoutBinding 
         }
 
-        VkDescriptorSetLayoutCreateInfo vkDescriptorSetLayoutDesc = {};
-        vkDescriptorSetLayoutDesc.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO;
-        vkDescriptorSetLayoutDesc.bindingCount = (uint)vkDescriptorSetLayoutBindings.size();
-        vkDescriptorSetLayoutDesc.pBindings = vkDescriptorSetLayoutBindings.data();
+        if (vkDescriptorSetLayoutBindings.size() > 0)
+        {
+            VkDescriptorSetLayoutCreateInfo vkDescriptorSetLayoutDesc = {};
+            vkDescriptorSetLayoutDesc.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO;
+            vkDescriptorSetLayoutDesc.bindingCount = (uint)vkDescriptorSetLayoutBindings.size();
+            vkDescriptorSetLayoutDesc.pBindings = vkDescriptorSetLayoutBindings.data();
 
-        VkDescriptorSetLayout vkDescriptorSetLayout;
-        VG_ASSERT_VULKAN(vkCreateDescriptorSetLayout(vkDevice, &vkDescriptorSetLayoutDesc, nullptr, &vkDescriptorSetLayout));
-        m_vkDescriptorSetLayouts.push_back(vkDescriptorSetLayout);
+            VkDescriptorSetLayout vkDescriptorSetLayout;
+            VG_ASSERT_VULKAN(vkCreateDescriptorSetLayout(vkDevice, &vkDescriptorSetLayoutDesc, nullptr, &vkDescriptorSetLayout));
+            m_vkDescriptorSetLayouts.push_back(vkDescriptorSetLayout);
+        }
 
         VkPipelineLayoutCreateInfo vkDesc = {};
         vkDesc.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO,

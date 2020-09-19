@@ -37,7 +37,7 @@ namespace vg::graphics::renderer
         desc.height = backbuffer.height;
         desc.format = backbuffer.format;
         desc.initState = FrameGraph::Resource::InitState::Clear;
-        desc.clearColor = { 1, 0, 1, 1 };
+        desc.clearColor = { 0, 0, 0, 0 };
 
         writeRenderTarget(0, "Backbuffer", desc);
     }
@@ -52,10 +52,18 @@ namespace vg::graphics::renderer
         _cmdList->setPrimitiveTopology(PrimitiveTopology::TriangleStrip);
         _cmdList->setRasterizerState(rs);
 
-        const float4 posOffetScale = float4(0.25f, 0.25f, 0.5f, 0.5f);
-        _cmdList->setRootConstants(0, (u32*)&posOffetScale, 4);
+        float4 posOffetScale, texOffetScale;
 
-        const float4 texOffetScale = float4(0.0f, 0.0f, 4.0f, 4.0f);
+        posOffetScale = float4(0.0f, 0.0f, 1.0f, 1.0f);
+        texOffetScale = float4(0.0f, 0.0f, 1.0f, 1.0f);
+        _cmdList->setRootConstants(0, (u32*)&posOffetScale, 4);
+        _cmdList->setRootConstants(4, (u32*)&texOffetScale, 4);
+
+        _cmdList->draw(4);
+
+        posOffetScale = float4(0.25f, 0.25f, 0.5f, 0.5f);
+        texOffetScale = float4(0.0f, 0.0f, 4.0f, 4.0f);
+        _cmdList->setRootConstants(0, (u32*)&posOffetScale, 4);
         _cmdList->setRootConstants(4, (u32*)&texOffetScale, 4);
 
         _cmdList->draw(4);

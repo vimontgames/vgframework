@@ -77,24 +77,11 @@ namespace vg::graphics::driver::vulkan
         auto * device = driver::Device::get();
         auto * sig = device->getRootSignature(m_stateCache.graphicPipelineKey.m_rootSignature);
 
-        // test
-        VkDescriptorSetAllocateInfo alloc_info = {};
-        alloc_info.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
-        alloc_info.pNext = nullptr;
-        alloc_info.descriptorPool = device->m_vkDescriptorPool;
-        alloc_info.descriptorSetCount = 1;
-        alloc_info.pSetLayouts = &sig->getVulkanDescriptorSetLayouts()[0];
-
-        static VkDescriptorSet vkDescriptorSet;
-        static bool done = false;
-
-        if (!done)
+        if (sig->getVulkanDescriptorSetLayouts().size() > 0)
         {
-            vkAllocateDescriptorSets(device->getVulkanDevice(), &alloc_info, &vkDescriptorSet);
-            done = true;
+            // TODO
+            vkCmdBindDescriptorSets(m_vkCommandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, sig->getVulkanPipelineLayout(), 0, 0, nullptr, 0, nullptr);
         }
-
-        vkCmdBindDescriptorSets(m_vkCommandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, sig->getVulkanPipelineLayout(), 0, 1, &vkDescriptorSet, 0, nullptr);
     }
     
     //--------------------------------------------------------------------------------------
