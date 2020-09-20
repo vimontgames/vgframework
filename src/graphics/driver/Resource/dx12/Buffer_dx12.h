@@ -1,11 +1,5 @@
 #pragma once
-
 #include "graphics/driver/Resource/Buffer.h"
-
-namespace D3D12MA
-{
-    class Allocation;
-}
 
 namespace vg::graphics::driver::dx12
 {
