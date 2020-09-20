@@ -1,10 +1,3 @@
-#include "graphics/driver/Precomp.h"
-#include "Texture.h"
-#include "graphics/driver/Device/Device.h"
-#include "graphics/driver/Memory/MemoryAllocator.h"
-
-using namespace vg::core;
-
 #include VG_GFXAPI_IMPL(Texture)
 
 namespace vg::graphics::driver

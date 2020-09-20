@@ -295,7 +295,7 @@ namespace vg::graphics::driver::dx12
 
 		// Transition back buffer
 		D3D12_RESOURCE_BARRIER barrier;
-		barrier.Transition.pResource = m_frameContext[currentFrameIndex].backbuffer->getd3d12Resource();
+		barrier.Transition.pResource = m_frameContext[currentFrameIndex].backbuffer->getResource().getd3d12TextureResource();
 		barrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
 		barrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
 		barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_PRESENT;
@@ -330,7 +330,7 @@ namespace vg::graphics::driver::dx12
                 {
                     // Transition the swap chain back to present
                     D3D12_RESOURCE_BARRIER barrier;
-                    barrier.Transition.pResource = context.backbuffer->getd3d12Resource();
+                    barrier.Transition.pResource = context.backbuffer->getResource().getd3d12TextureResource();
                     barrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
                     barrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
                     barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_RENDER_TARGET;
@@ -347,7 +347,7 @@ namespace vg::graphics::driver::dx12
             if (cmdListsToExecute.size() > 0)
             {
                 auto * d3d12queue = queue->getd3d12CommandQueue();
-                d3d12queue->ExecuteCommandLists(cmdListsToExecute.size(), cmdListsToExecute.data());
+                d3d12queue->ExecuteCommandLists((uint)cmdListsToExecute.size(), cmdListsToExecute.data());
             }
         }
 

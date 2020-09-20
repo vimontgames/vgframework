@@ -42,7 +42,7 @@ namespace vg::graphics::driver::vulkan
 
 		if (asBool(TextureFlags::Backbuffer & _texDesc.flags))
 		{
-			m_vkImage = *static_cast<VkImage*>(_initData);
+            m_resource.setVulkanImage(*static_cast<VkImage*>(_initData), nullptr);
 		}
         else
         {
@@ -62,17 +62,20 @@ namespace vg::graphics::driver::vulkan
             VmaAllocationCreateInfo allocCreateInfo = {};
                                     allocCreateInfo.usage = VMA_MEMORY_USAGE_GPU_ONLY;
 
-            VG_ASSERT_VULKAN(vmaCreateImage(device->getVulkanMemoryAllocator(), &imgDesc, &allocCreateInfo, &m_vkImage, &m_vma_alloc, nullptr));
+            VkImage vkImage;
+            VmaAllocation vmaAlloc;
+            VG_ASSERT_VULKAN(vmaCreateImage(device->getVulkanMemoryAllocator(), &imgDesc, &allocCreateInfo, &vkImage, &vmaAlloc, nullptr));
+            m_resource.setVulkanImage(vkImage, vmaAlloc);
         }
 
-		if (asBool((TextureFlags::Backbuffer|TextureFlags::ShaderResource) & _texDesc.flags))
+		if (asBool(BindFlags::ShaderResource & _texDesc.resource.m_bindFlags) || asBool(TextureFlags::Backbuffer & _texDesc.flags))
 		{
 			VkImageViewCreateInfo imgViewDesc;
 
 			imgViewDesc.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
 			imgViewDesc.pNext = nullptr;
 			imgViewDesc.format = getVulkanPixelFormat(_texDesc.format);
-            imgViewDesc.image = m_vkImage;
+            imgViewDesc.image = m_resource.getVulkanImage();
 
 			imgViewDesc.components.r = VK_COMPONENT_SWIZZLE_R;
 			imgViewDesc.components.g = VK_COMPONENT_SWIZZLE_G;
@@ -96,9 +99,6 @@ namespace vg::graphics::driver::vulkan
 	Texture::~Texture()
 	{
         auto * device = driver::Device::get();
-
 		vkDestroyImageView(device->getVulkanDevice(), m_vkImageView, nullptr);
-		vkDestroyImage(device->getVulkanDevice(), m_vkImage, nullptr);
-        vmaFreeMemory(device->getVulkanMemoryAllocator(), m_vma_alloc);
 	}
 }

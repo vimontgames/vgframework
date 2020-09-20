@@ -3,7 +3,7 @@
 #include "graphics/driver/CommandQueue/CommandQueue.h"
 #include "graphics/driver/CommandPool/CommandPool.h"
 #include "graphics/driver/CommandList/CommandList.h"
-#include "graphics/driver/Texture/Texture.h"
+#include "graphics/driver/Resource/Texture.h"
 #include "graphics/driver/Memory/MemoryAllocator.h"
 #include "graphics/driver/RootSignature/RootSignature.h"
 #include "graphics/driver/Shader/ShaderManager.h"
@@ -100,12 +100,15 @@ namespace vg::graphics::driver
 			{
 				TextureDesc backbufferTexDesc
 				(
+                    Usage::Default,
+                    BindFlags::None,
+                    CPUAccessFlags::None,
 					TextureType::Texture2D,
 					m_backbufferFormat,
 					TextureFlags::RenderTarget | TextureFlags::Backbuffer | TextureFlags::sRGB,
 					getDeviceParams().resolution.x,
 					getDeviceParams().resolution.y
-				);
+                );
 
 				char backbufferName[13];
 				sprintf_s(backbufferName, "Backbuffer#%u", _frameContextIndex);
@@ -222,6 +225,12 @@ namespace vg::graphics::driver
 		{
 			return getCurrentFrameContext().backbuffer;
 		}
+
+        //--------------------------------------------------------------------------------------
+        void Device::uploadTexture(driver::Buffer * _src, driver::Texture * _dst)
+        {
+            m_texturesToUpload.push_back({ _src, _dst });
+        }
 	}
 
 	//--------------------------------------------------------------------------------------

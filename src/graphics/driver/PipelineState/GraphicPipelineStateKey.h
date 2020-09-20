@@ -3,7 +3,7 @@
 #include "graphics/driver/RootSignature/RootSignature_consts.h"
 #include "graphics/driver/PipelineState/PipelineState_consts.h"
 #include "graphics/driver/PipelineState/RasterizerState.h"
-#include "graphics/driver/Texture/Texture_consts.h"
+#include "graphics/driver/Resource/Texture_consts.h"
 #include "graphics/driver/Shader/ShaderKey.h"
 #include "graphics/driver/FrameGraph/RenderPassKey.h"
 

@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Resource_consts.h"
+
 namespace vg::graphics::driver
 {
 	enum class TextureType : core::u8
@@ -25,17 +27,17 @@ namespace vg::graphics::driver
 	enum class TextureFlags : core::u32
 	{
 		None			= 0x00000000,
-		ShaderResource	= 0x00000001,
+        Backbuffer		= 0x00000001,
 		RenderTarget	= 0x00000002,			
-		Backbuffer		= 0x00000010,
-		sRGB			= 0x00000020
+		sRGB			= 0x00000004
 	};
 
 	class TextureDesc
 	{
 	public:
-		TextureDesc(TextureType _type, PixelFormat _format, TextureFlags _flags, core::u16 _width, core::u16 _height, core::u16 _depth = 1, core::u8 _mipmaps = 1) :
-			width(_width),
+		TextureDesc(Usage _usage, BindFlags _bindFlags, CPUAccessFlags _cpuAccessFlags, TextureType _type, PixelFormat _format, TextureFlags _flags, core::u16 _width, core::u16 _height, core::u16 _depth = 1, core::u8 _mipmaps = 1) :
+            resource(_usage, _bindFlags, _cpuAccessFlags),
+            width(_width),
 			height(_height),
 			depth(_depth),
 			mipmaps(_mipmaps),
@@ -46,6 +48,7 @@ namespace vg::graphics::driver
 
 		}
 
+        ResourceDesc    resource;
 		core::u16		width;
 		core::u16		height;
 		core::u16		depth;

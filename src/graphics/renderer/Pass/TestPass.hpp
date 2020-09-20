@@ -16,7 +16,7 @@ namespace vg::graphics::renderer
 
         m_shaderKey.init("driver/driver.hlsl", "Quad");
 
-        TextureDesc texDesc = TextureDesc(TextureType::Texture2D, PixelFormat::R8G8B8A8_unorm, TextureFlags::ShaderResource, 8, 8);
+        TextureDesc texDesc = TextureDesc(Usage::Default, BindFlags::ShaderResource, CPUAccessFlags::None, TextureType::Texture2D, PixelFormat::R8G8B8A8_unorm, TextureFlags::None, 8, 8);
 
         const u32 texInitData[8][8] =
         {

@@ -18,6 +18,8 @@ namespace vg::graphics::driver
 	class CommandList;
 	class TextureDesc;
 	class Texture;
+    class BufferDesc;
+    class Buffer;
     class MemoryAllocator;
     class RootSignature;
     class RootSignatureDesc;
@@ -67,6 +69,8 @@ namespace vg::graphics::driver
             void                                            releaseAsync                (core::Object * _object);
             void                                            flushReleaseAsync           ();
 
+            void                                            uploadTexture               (driver::Buffer * _src, driver::Texture * _dst);
+
 		protected:
             DeviceCaps                                      m_caps;
 			driver::CommandQueue*				            m_commandQueue[core::enumCount<CommandQueueType>()];
@@ -77,6 +81,7 @@ namespace vg::graphics::driver
 			DeviceParams 									m_deviceParams;
             ShaderManager *                                 m_shaderManager = nullptr;
             RootSignatureTable                              m_rootSignaturesTable;
+            core::vector<core::pair<Buffer*,Texture*>>      m_texturesToUpload;
 		};
 	}
 }

@@ -31,8 +31,9 @@ namespace vg::graphics::driver
             public:
                 enum class Type
                 {
-                    ShaderResource = 0,
-                    RWBuffer,
+                    Texture = 0,
+                    Buffer,
+                    UAV,
                     ConstantBuffer,
                     Sampler
                 };
@@ -79,10 +80,10 @@ namespace vg::graphics::driver
                     switch (m_type)
                     {
                         default:VG_ASSERT(false);   return false;
-                        case Type::ShaderResource:  return constantBuffer == _other.constantBuffer;
-                        case Type::RWBuffer:        return constantBuffer == _other.constantBuffer;
+                        //case Type::ShaderResource:  return constantBuffer == _other.constantBuffer;
+                        //case Type::RWBuffer:        return constantBuffer == _other.constantBuffer;
                         case Type::ConstantBuffer:  return constantBuffer == _other.constantBuffer;
-                        case Type::Sampler:         return constantBuffer == _other.constantBuffer;
+                        //case Type::Sampler:         return constantBuffer == _other.constantBuffer;
                     }
 
                     return true;

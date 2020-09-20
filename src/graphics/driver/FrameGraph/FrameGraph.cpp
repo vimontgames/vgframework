@@ -2,7 +2,7 @@
 #include "FrameGraph.h"
 #include "graphics/driver/Device/Device.h"
 #include "graphics/driver/CommandList/CommandList.h"
-#include "graphics/driver/Texture/Texture.h"
+#include "graphics/driver/Resource/Texture.h"
 
 #include "graphics/driver/FrameGraph/RenderPass.h"
 #include "graphics/driver/FrameGraph/SubPass.h"

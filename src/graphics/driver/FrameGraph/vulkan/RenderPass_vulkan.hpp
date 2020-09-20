@@ -114,9 +114,7 @@ namespace vg::graphics::driver::vulkan
 
         core::vector<VkImageView> vkImageViews;
         for (const driver::Texture * tex : m_attachments)
-        {
-            vkImageViews.push_back(tex->m_vkImageView);
-        }
+            vkImageViews.push_back(tex->getVulkanImageView());
 
         VkFramebufferCreateInfo frameBufferInfo;
         frameBufferInfo.sType = VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO;

@@ -1,7 +1,7 @@
 #pragma once
 
 #include "FrameGraph_consts.h"
-#include "graphics/driver/Texture/Texture_consts.h"
+#include "graphics/driver/Resource/Texture_consts.h"
 #include "graphics/driver/PipelineState/PipelineState_consts.h"
 
 namespace vg::graphics::driver

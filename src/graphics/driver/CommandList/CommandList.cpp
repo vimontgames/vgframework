@@ -7,7 +7,7 @@
 #include "graphics/driver/FrameGraph/RenderPass.h"
 #include "graphics/driver/FrameGraph/SubPass.h"
 #include "graphics/driver/FrameGraph/UserPass.h"
-#include "graphics/driver/Texture/Texture.h"
+#include "graphics/driver/Resource/Texture.h"
 
 using namespace vg::core;
 

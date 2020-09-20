@@ -8,9 +8,6 @@
     <ClCompile Include="CommandQueue\CommandQueue.cpp">
       <Filter>CommandQueue</Filter>
     </ClCompile>
-    <ClCompile Include="Texture\Texture.cpp">
-      <Filter>Texture</Filter>
-    </ClCompile>
     <ClCompile Include="CommandList\CommandList.cpp">
       <Filter>CommandList</Filter>
     </ClCompile>
@@ -31,6 +28,9 @@
     </ClCompile>
     <ClCompile Include="Shader\Shader.cpp">
       <Filter>Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="Resource\Resource.cpp">
+      <Filter>Resource</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -88,24 +88,6 @@
     </ClInclude>
     <ClInclude Include="Device\vulkan\ext\KHR_Win32_Surface.h">
       <Filter>Device\vulkan\ext</Filter>
-    </ClInclude>
-    <ClInclude Include="Texture\Texture.h">
-      <Filter>Texture</Filter>
-    </ClInclude>
-    <ClInclude Include="Texture\dx12\Texture_dx12.h">
-      <Filter>Texture\dx12</Filter>
-    </ClInclude>
-    <ClInclude Include="Texture\dx12\Texture_dx12.hpp">
-      <Filter>Texture\dx12</Filter>
-    </ClInclude>
-    <ClInclude Include="Texture\vulkan\Texture_vulkan.h">
-      <Filter>Texture\vulkan</Filter>
-    </ClInclude>
-    <ClInclude Include="Texture\vulkan\Texture_vulkan.hpp">
-      <Filter>Texture\vulkan</Filter>
-    </ClInclude>
-    <ClInclude Include="Texture\Texture_consts.h">
-      <Filter>Texture</Filter>
     </ClInclude>
     <ClInclude Include="CommandList\CommandList.h">
       <Filter>CommandList</Filter>
@@ -350,6 +332,66 @@
     <ClInclude Include="FrameGraph\RenderPassKey.h">
       <Filter>FrameGraph</Filter>
     </ClInclude>
+    <ClInclude Include="Resource\Texture.h">
+      <Filter>Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource\Texture_consts.h">
+      <Filter>Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource\dx12\Texture_dx12.h">
+      <Filter>Resource\dx12</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource\dx12\Texture_dx12.hpp">
+      <Filter>Resource\dx12</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource\vulkan\Texture_vulkan.h">
+      <Filter>Resource\vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource\vulkan\Texture_vulkan.hpp">
+      <Filter>Resource\vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource\Texture.hpp">
+      <Filter>Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource\Buffer.h">
+      <Filter>Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource\Buffer.hpp">
+      <Filter>Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource\Buffer_consts.h">
+      <Filter>Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource\Resource_consts.h">
+      <Filter>Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource\dx12\Buffer_dx12.h">
+      <Filter>Resource\dx12</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource\dx12\Buffer_dx12.hpp">
+      <Filter>Resource\dx12</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource\vulkan\Buffer_vulkan.h">
+      <Filter>Resource\vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource\vulkan\Buffer_vulkan.hpp">
+      <Filter>Resource\vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource\Resource.h">
+      <Filter>Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource\dx12\Resource_dx12.h">
+      <Filter>Resource\dx12</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource\dx12\Resource_dx12.hpp">
+      <Filter>Resource\dx12</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource\vulkan\Resource_vulkan.h">
+      <Filter>Resource\vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource\vulkan\Resource_vulkan.hpp">
+      <Filter>Resource\vulkan</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Device">
@@ -372,18 +414,6 @@
     </Filter>
     <Filter Include="Device\vulkan\ext">
       <UniqueIdentifier>{af5affdc-f3df-4359-8148-7a724e26a147}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Texture">
-      <UniqueIdentifier>{6e9e2ef5-89d4-4c2d-ba40-ee3d75c4065b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Buffer">
-      <UniqueIdentifier>{749af0d5-214d-4d70-9342-7cef79d95f74}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Texture\dx12">
-      <UniqueIdentifier>{28e14769-3162-455b-9851-962d0502257c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Texture\vulkan">
-      <UniqueIdentifier>{0465a514-edb0-4567-82ec-b8a61a7f221d}</UniqueIdentifier>
     </Filter>
     <Filter Include="CommandList">
       <UniqueIdentifier>{c6b7f7d5-dd16-4fd0-9403-7c65598de5b9}</UniqueIdentifier>
@@ -447,6 +477,15 @@
     </Filter>
     <Filter Include="Shader\vulkan">
       <UniqueIdentifier>{00be2bcd-0507-471a-a946-6e313c9b45f1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource">
+      <UniqueIdentifier>{e968749a-39f2-4b2b-b20d-e257661bfc9a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource\dx12">
+      <UniqueIdentifier>{7f4ea5e2-b6de-4310-bf33-5bea81ae6a75}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource\vulkan">
+      <UniqueIdentifier>{294ee736-e2ea-4c0e-a9b8-044f9cd6d30d}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

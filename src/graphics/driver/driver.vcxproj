@@ -34,9 +34,19 @@
     <ClInclude Include="FrameGraph\RenderPass.hpp" />
     <ClCompile Include="Memory\MemoryAllocator.cpp" />
     <ClCompile Include="PipelineState\PipelineState.cpp" />
+    <ClCompile Include="Resource\Resource.cpp" />
+    <ClInclude Include="Resource\Buffer.h" />
+    <ClInclude Include="Resource\Buffer.hpp" />
+    <ClInclude Include="Resource\Buffer_consts.h" />
+    <ClInclude Include="Resource\dx12\Buffer_dx12.h" />
+    <ClInclude Include="Resource\dx12\Buffer_dx12.hpp" />
+    <ClInclude Include="Resource\dx12\Resource_dx12.h" />
+    <ClInclude Include="Resource\dx12\Resource_dx12.hpp" />
+    <ClInclude Include="Resource\Resource.h" />
+    <ClInclude Include="Resource\Resource_consts.h" />
+    <ClInclude Include="Resource\Texture.hpp" />
     <ClCompile Include="RootSignature\RootSignature.cpp" />
     <ClCompile Include="Shader\Shader.cpp" />
-    <ClCompile Include="Texture\Texture.cpp" />
     <ClInclude Include="CommandList\CommandList.h" />
     <ClInclude Include="CommandList\CommandList_consts.h" />
     <ClInclude Include="CommandList\dx12\CommandList_dx12.h" />
@@ -96,6 +106,16 @@
     <ClInclude Include="PipelineState\vulkan\GraphicPipelineState_vulkan.hpp" />
     <ClInclude Include="PipelineState\vulkan\RasterizerState_vulkan.h" />
     <ClInclude Include="PipelineState\vulkan\RasterizerState_vulkan.hpp" />
+    <ClInclude Include="Resource\dx12\Texture_dx12.h" />
+    <ClInclude Include="Resource\dx12\Texture_dx12.hpp" />
+    <ClInclude Include="Resource\Texture.h" />
+    <ClInclude Include="Resource\Texture_consts.h" />
+    <ClInclude Include="Resource\vulkan\Buffer_vulkan.h" />
+    <ClInclude Include="Resource\vulkan\Buffer_vulkan.hpp" />
+    <ClInclude Include="Resource\vulkan\Resource_vulkan.h" />
+    <ClInclude Include="Resource\vulkan\Resource_vulkan.hpp" />
+    <ClInclude Include="Resource\vulkan\Texture_vulkan.h" />
+    <ClInclude Include="Resource\vulkan\Texture_vulkan.hpp" />
     <ClInclude Include="RootSignature\dx12\RootSignature_dx12.h" />
     <ClInclude Include="RootSignature\dx12\RootSignature_dx12.hpp" />
     <ClInclude Include="RootSignature\RootSignature.h" />
@@ -122,12 +142,6 @@
     <ClInclude Include="Shader\vulkan\ShaderCompiler_vulkan.hpp" />
     <ClInclude Include="Shader\vulkan\Shader_vulkan.h" />
     <ClInclude Include="Shader\vulkan\Shader_vulkan.hpp" />
-    <ClInclude Include="Texture\dx12\Texture_dx12.h" />
-    <ClInclude Include="Texture\dx12\Texture_dx12.hpp" />
-    <ClInclude Include="Texture\Texture.h" />
-    <ClInclude Include="Texture\Texture_consts.h" />
-    <ClInclude Include="Texture\vulkan\Texture_vulkan.h" />
-    <ClInclude Include="Texture\vulkan\Texture_vulkan.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CommandQueue\CommandQueue.h" />

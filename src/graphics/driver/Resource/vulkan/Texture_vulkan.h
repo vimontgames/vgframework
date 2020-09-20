@@ -1,6 +1,6 @@
 #pragma once
 
-#include "graphics/driver/Texture/Texture.h"
+#include "graphics/driver/Resource/Texture.h"
 
 class vkDevice;
 
@@ -17,9 +17,9 @@ namespace vg::graphics::driver::vulkan
 		Texture(const TextureDesc & _texDesc, const core::string & _name, void * _initData);
 		~Texture();
 
-	//private:
-		VkImage				m_vkImage;
-        VmaAllocation       m_vma_alloc;
+        VkImageView         getVulkanImageView() const { return m_vkImageView; }
+
+	private:
 		VkImageView			m_vkImageView;
 	};
 }

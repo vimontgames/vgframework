@@ -4,7 +4,7 @@
 #include "graphics/driver/Shader/Shader.h"
 #include "graphics/driver/Shader/HLSLDesc.h"
 #include "graphics/driver/RootSignature/RootSignature.h"
-#include "graphics/driver/Texture/Texture.h"
+#include "graphics/driver/Resource/Texture.h"
 #include "GraphicPipelineState.h"
 
 using namespace vg::core;

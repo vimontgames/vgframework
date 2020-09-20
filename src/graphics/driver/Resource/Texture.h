@@ -2,6 +2,7 @@
 
 #include "Texture_consts.h"
 #include "core/Object/Object.h"
+#include "Resource.h"
 
 namespace vg::graphics::driver
 {
@@ -14,9 +15,11 @@ namespace vg::graphics::driver
 			~Texture();
 
 			const TextureDesc & getTexDesc() const { return m_texDesc; }
+            const driver::Resource & getResource() const { return m_resource; }
 			
-		private:
-			const TextureDesc m_texDesc;
+        protected:
+			const TextureDesc   m_texDesc;
+            driver::Resource    m_resource;
 		};
 	}
 }
