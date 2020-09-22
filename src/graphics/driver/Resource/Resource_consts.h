@@ -5,9 +5,10 @@ namespace vg::graphics::driver
     enum class Usage : core::u8
     {
         Default = 0,
-        Static,
-        Staging,
-        Dynamic
+        Upload,
+        //Static,
+        //Staging,
+        //Dynamic
     };
 
     enum CPUAccessFlags : core::u8

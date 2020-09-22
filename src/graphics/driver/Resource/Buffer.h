@@ -15,8 +15,12 @@ namespace vg::graphics::driver
 
             const BufferDesc & getTexDesc() const { return m_bufDesc; }
 
-        private:
-            const BufferDesc m_bufDesc;
+            const driver::Resource & getResource() const { return m_resource; }
+            driver::Resource & getResource() { return m_resource; }
+
+        protected:
+            const BufferDesc    m_bufDesc;
+            driver::Resource    m_resource;
         };
     }
 }
@@ -30,7 +34,7 @@ namespace vg::graphics::driver
         using super = VG_GFXAPI::Buffer;
 
     public:
-        Buffer(const BufferDesc & _bufDesc, const core::string & _name, void * _initData);
+        Buffer(const BufferDesc & _bufDesc, const core::string & _name, void * _initData = nullptr);
         ~Buffer();
     };
 }

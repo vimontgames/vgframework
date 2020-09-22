@@ -64,8 +64,8 @@ namespace vg::graphics::driver::vulkan
             tShader.setStrings(&src, 1);
 
             const uint inputSemanticsVer = 110;                                                 // #define VULKAN 110
-            const glslang::EShTargetClientVersion clientVersion = glslang::EShTargetVulkan_1_1; // Vulkan 1.0
-            const glslang::EShTargetLanguageVersion targetVersion = glslang::EShTargetSpv_1_0;  // SPIR-V 1.0
+            const glslang::EShTargetClientVersion clientVersion = glslang::EShTargetVulkan_1_2; // Vulkan 1.2
+            const glslang::EShTargetLanguageVersion targetVersion = glslang::EShTargetSpv_1_5;  // SPIR-V 1.5
 
             tShader.setEnvInput(glslang::EShSourceHlsl, targetProfile, glslang::EShClientVulkan, inputSemanticsVer);
             tShader.setEnvClient(glslang::EShClientVulkan, clientVersion);

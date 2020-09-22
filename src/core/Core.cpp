@@ -181,4 +181,10 @@ namespace vg::core
         return messageBox(_icon, _type, _title.c_str(), _message.c_str());
     }
 
+    //--------------------------------------------------------------------------------------
+    uint_ptr alignUp(uint_ptr _adress, u32 _align)
+    {
+        VG_ASSERT((0 != _align) && !(_align & (_align - 1)));
+        return (uint_ptr(_adress + (_align - 1)) & ~(uint_ptr)(_align - 1));
+    }
 }

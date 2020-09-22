@@ -22,39 +22,41 @@ namespace vg::graphics::driver::dx12
         }
 
         const auto & tables = _desc.getTables();
-        for (uint i = 0; i < _desc.getTables().size(); ++i)
+        for (uint i = 0; i < tables.size(); ++i)
         {
-            // TODO
-            //const auto RootSignatureDesc::Table & table = tables[i];
-            //
-            //const auto & descriptors = table.getDescriptors();
-            //
-            //core::vector<D3D12_DESCRIPTOR_RANGE> d3d12Descriptors;
-            //for (uint j = 0; j < descriptors.size(); ++j)
-            //{
-            //    const auto RootSignatureDesc::Table::Descriptor & descriptor = descriptors[j];
-            //
-            //    D3D12_DESCRIPTOR_RANGE d3d12Descriptor;
-            //
-            //    switch (descriptor.getDescriptorType())
-            //    {
-            //    case RootSignatureDesc::Table::Descriptor::Type::ConstantBuffer:
-            //    {
-            //        d3d12Descriptor.RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_CBV;
-            //
-            //        RootSignatureDesc::Table::Descriptor::ConstantBufferParams & params = descriptor.getConstantBufferParams();
-            //
-            //        d3d12Descriptor.
-            //    }
-            //    break;
-            //    }
-            //
-            //}
-            //
-            //D3D12_ROOT_PARAMETER d3d12Table = {};
-            //
-            //d3d12Table.ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
-            //d3d12Table.DescriptorTable.NumDescriptorRanges = 
+            const RootSignatureDesc::Table & table = tables[i];
+            const auto & descriptors = table.getDescriptors();
+            
+            core::vector<D3D12_DESCRIPTOR_RANGE> d3d12Descriptors;
+            for (uint j = 0; j < descriptors.size(); ++j)
+            {
+                const RootSignatureDesc::Table::Descriptor & descriptor = descriptors[j];
+            
+                D3D12_DESCRIPTOR_RANGE d3d12Descriptor;
+
+                switch (descriptor.getDescriptorType())
+                {
+                    case RootSignatureDesc::Table::Descriptor::Type::Texture:
+                    {
+                        const auto & textures = descriptor.getTextures();
+                        
+                        d3d12Descriptor.RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SRV;
+                        d3d12Descriptor.BaseShaderRegister = textures.m_register;
+                        d3d12Descriptor.NumDescriptors = textures.m_count;
+                        d3d12Descriptor.RegisterSpace = textures.m_space;
+                        d3d12Descriptor.OffsetInDescriptorsFromTableStart = textures.m_offset;
+
+                        d3d12Descriptors.push_back(d3d12Descriptor);
+                    }
+                    break;
+                }
+            
+            }
+            
+            D3D12_ROOT_PARAMETER d3d12Table = {};
+            d3d12Table.ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
+            d3d12Table.DescriptorTable.NumDescriptorRanges = (uint)d3d12Descriptors.size();
+            d3d12Table.DescriptorTable.pDescriptorRanges = d3d12Descriptors.data();
         }       
 
         D3D12_ROOT_SIGNATURE_DESC d3d12Desc = {};

@@ -8,6 +8,7 @@
 #include "graphics/driver/FrameGraph/SubPass.h"
 #include "graphics/driver/FrameGraph/UserPass.h"
 #include "graphics/driver/Resource/Texture.h"
+#include "graphics/driver/Resource/Buffer.h"
 
 using namespace vg::core;
 

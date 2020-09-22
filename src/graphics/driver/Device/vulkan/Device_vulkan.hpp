@@ -270,7 +270,7 @@ namespace vg::graphics::driver::vulkan
 			0,
 			"VimontGames framework",
 			0,
-			VK_API_VERSION_1_1
+			VK_API_VERSION_1_2
 		};
 
 		VkInstanceCreateInfo inst_info = 

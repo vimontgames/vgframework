@@ -42,4 +42,31 @@ namespace vg::graphics::driver::vulkan
         m_vkBuffer = _vkBuffer;
         m_vma_alloc = _vmaAlloc;
     }
+
+    //--------------------------------------------------------------------------------------
+    Map Resource::map(core::uint _subResource, Range _read)
+    {
+        Device * device = driver::Device::get();
+        auto * allocator = device->getVulkanMemoryAllocator();
+
+        Map result;
+        VG_ASSERT_VULKAN(vmaMapMemory(allocator, m_vma_alloc, &result.data));
+
+        //if (1) // flush for read
+        //    vmaFlushAllocation(allocator, m_vma_alloc, _read.begin, _read.end - _read.begin);
+
+        return result;
+    }
+
+    //--------------------------------------------------------------------------------------
+    void Resource::unmap(core::uint _subResource, Range _write)
+    {
+        Device * device = driver::Device::get();
+        auto * allocator = device->getVulkanMemoryAllocator();
+
+        //if (1) // flush for write
+        //    vmaFlushAllocation(allocator, m_vma_alloc, _write.begin, _write.end - _write.begin);
+        
+        vmaUnmapMemory(allocator, m_vma_alloc);
+    }
 }

@@ -77,36 +77,6 @@ namespace vg::graphics::driver::dx12
 	{
 		auto * device = driver::Device::get();
         auto * d3d12device = device->getd3d12Device();
-
-        //if (asBool(TextureFlags::Upload & _texDesc.flags))
-        //{
-            //VG_ASSERT(!"create buffer!");
-            //D3D12_RESOURCE_DESC resourceDesc = getd3d12ResourceDesc(_texDesc);
-            //
-            //u64 stagingBufferSize = 0;
-            //d3d12device->GetCopyableFootprints(&resourceDesc, 0, 1, 0, nullptr, nullptr, nullptr, &stagingBufferSize);
-            //
-            //// create staging buffer for texture upload
-            //D3D12_RESOURCE_DESC stagingBufferDesc;
-            //                    stagingBufferDesc.Dimension = D3D12_RESOURCE_DIMENSION_BUFFER;
-            //                    stagingBufferDesc.Alignment = 0;
-            //                    stagingBufferDesc.Width = stagingBufferSize;
-            //                    stagingBufferDesc.Height = 1;
-            //                    stagingBufferDesc.DepthOrArraySize = 1;
-            //                    stagingBufferDesc.MipLevels = 1;
-            //                    stagingBufferDesc.Format = DXGI_FORMAT_UNKNOWN;
-            //                    stagingBufferDesc.SampleDesc.Count = 1;
-            //                    stagingBufferDesc.SampleDesc.Quality = 0;
-            //                    stagingBufferDesc.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
-            //                    stagingBufferDesc.Flags = D3D12_RESOURCE_FLAG_NONE;
-            //
-            //D3D12MA::ALLOCATION_DESC stagingAllocDesc = {};
-            //stagingAllocDesc.Flags = D3D12MA::ALLOCATION_FLAG_NONE;
-            //stagingAllocDesc.HeapType = D3D12_HEAP_TYPE_UPLOAD;
-            //
-            //VG_ASSERT_SUCCEEDED(allocator->CreateResource(&stagingAllocDesc, &stagingBufferDesc, D3D12_RESOURCE_STATE_COPY_DEST, nullptr, &m_d3d12ma_alloc, IID_PPV_ARGS(&m_d3d12resource)));
-        //}
-        //else
         
         if (asBool(TextureFlags::Backbuffer & _texDesc.flags))
         {
@@ -130,12 +100,48 @@ namespace vg::graphics::driver::dx12
 
             if (nullptr != _initData)
             {
+                auto & context = device->getCurrentFrameContext();
+                auto * data = context.m_uploadCur;
+
+                const auto fmtSize = getPixelFormatSize(_texDesc.format);
+
+                // Make a func
+                D3D12_SUBRESOURCE_FOOTPRINT pitchedDesc = {};
+                pitchedDesc.Format = getd3d12PixelFormat(_texDesc.format);
+                pitchedDesc.Width = _texDesc.width;
+                pitchedDesc.Height = _texDesc.height;
+                pitchedDesc.Depth = 1;
+                pitchedDesc.RowPitch = (uint)alignUp(_texDesc.width * fmtSize, D3D12_TEXTURE_DATA_PITCH_ALIGNMENT);
+
+                const u32 offset = (u32)(context.m_uploadCur - context.m_uploadBegin);
+
+                //D3D12_PLACED_SUBRESOURCE_FOOTPRINT placedTexture2D = { 0 };
+                //placedTexture2D.Offset = context.m_uploadCur - context.m_uploadBegin;
+                //placedTexture2D.Footprint = pitchedDesc;
+
                 u64 uploadBufferSize = 0;
                 d3d12device->GetCopyableFootprints(&resourceDesc, 0, 1, 0, nullptr, nullptr, nullptr, &uploadBufferSize);
                 VG_ASSERT((core::u32)uploadBufferSize == uploadBufferSize);
-                BufferDesc bufDesc(Usage::Staging, BindFlags::None, CPUAccessFlags::Write, BufferFlags::None, (u32)uploadBufferSize);
-                auto * uploadBuffer = new driver::Buffer(bufDesc, _name + "_upload", _initData);
-                device->uploadTexture(uploadBuffer, static_cast<driver::Texture*>(this)); // upcast here because we want to deal with uploads in a cross-platform way
+
+                // Copy to upload buffer line by line
+                context.m_uploadCur = (u8*)alignUp((uint_ptr)context.m_uploadCur, D3D12_TEXTURE_DATA_PLACEMENT_ALIGNMENT);
+                
+                for (uint y = 0; y < _texDesc.height; ++y)
+                    memcpy(context.m_uploadCur + y * pitchedDesc.Width, &((u8*)_initData)[y * _texDesc.width * fmtSize], fmtSize * _texDesc.width);
+
+                //D3D12_TEXTURE_COPY_LOCATION dst = {};
+                //dst.Type = D3D12_TEXTURE_COPY_TYPE_SUBRESOURCE_INDEX;
+                //dst.SubresourceIndex = 0;
+                //dst.pResource = getResource().getd3d12TextureResource();
+                //
+                //D3D12_TEXTURE_COPY_LOCATION src = {};
+                //src.Type = D3D12_TEXTURE_COPY_TYPE_PLACED_FOOTPRINT;
+                //src.PlacedFootprint = placedTexture2D;
+                //src.pResource = context.m_uploadBuffer->getResource().getd3d12BufferResource();
+
+                device->upload(static_cast<driver::Texture*>(this), offset);
+
+                context.m_uploadCur += uploadBufferSize;
             }
         }
 

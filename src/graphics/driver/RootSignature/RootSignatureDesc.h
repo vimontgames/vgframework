@@ -26,6 +26,7 @@ namespace vg::graphics::driver
 
         class Table
         {
+        public:
             class Descriptor
             {
             public:
@@ -38,39 +39,77 @@ namespace vg::graphics::driver
                     Sampler
                 };
 
+                enum 
+                {
+                    OffsetAppend = (core::u16)-1
+                };
+
                 Type getDescriptorType() const { return m_type; }
 
-                struct ConstantBufferParams
+                struct DescriptorParameters
                 {
-                    core::u8 m_start;
-                    core::u8 m_count;
+                    DescriptorParameters(core::u8 _register, core::u16 _count, core::u8 _space, core::u16 _offset = OffsetAppend) :
+                        m_register(_register),
+                        m_count(_count),
+                        m_space(_space),
+                        m_offset(_offset)
+                    {
+
+                    }
+
+                    core::u8 m_register;
                     core::u8 m_space;
+                    core::u16 m_count;
+                    core::u16 m_offset;
 
-                    inline bool operator == (const ConstantBufferParams & _other) const
-                    {
-                        return m_start == _other.m_start && m_count == _other.m_count && m_space == _other.m_space;
-                    }
-                    inline bool operator != (const ConstantBufferParams & _other) const { return !(operator == (_other)); }
+                    inline bool operator == (const DescriptorParameters & _other) const { return m_register == _other.m_register && m_count == _other.m_count && m_space == _other.m_space && m_offset == _other.m_offset; }
+                    inline bool operator != (const DescriptorParameters & _other) const { return !(operator == (_other)); }
                 };
-                struct BufferParams
+
+                struct Texture : public DescriptorParameters
                 {
-
-                    inline bool operator == (const ConstantBufferParams & _other) const 
-                    { 
-                        return false; 
-                    }
-                    inline bool operator != (const ConstantBufferParams & _other) const { return !(operator == (_other)); }
-                };
-                struct TextureParams
-                {
-                    inline bool operator == (const TextureParams & _other) const
+                    Texture(core::u8 _register, core::u16 _count, core::u8 _space, core::u16 _offset = OffsetAppend) :
+                        DescriptorParameters(_register, _count, _space, _offset)
                     {
-                        return false;
+
                     }
-                    inline bool operator != (const TextureParams & _other) const { return !(operator == (_other)); }
                 };
 
-                const ConstantBufferParams & getConstantBufferParams() const { VG_ASSERT(Type::ConstantBuffer == m_type); return constantBuffer; }
+                struct Buffer : public DescriptorParameters
+                {
+                    Buffer(core::u8 _register, core::u16 _count, core::u8 _space, core::u16 _offset = OffsetAppend) :
+                        DescriptorParameters(_register, _count, _space, _offset)
+                    {
+
+                    }
+                };
+
+                struct UAV : public DescriptorParameters
+                {
+                    UAV(core::u8 _register, core::u16 _count, core::u8 _space, core::u16 _offset = OffsetAppend) :
+                        DescriptorParameters(_register, _count, _space, _offset)
+                    {
+
+                    }
+                };
+
+                struct ConstantBuffer : public DescriptorParameters
+                {
+                    ConstantBuffer(core::u8 _register, core::u16 _count, core::u8 _space, core::u16 _offset = OffsetAppend) :
+                        DescriptorParameters(_register, _count, _space, _offset)
+                    {
+
+                    }
+                };
+
+                struct Sampler : public DescriptorParameters
+                {
+                    Sampler(core::u8 _register = 0, core::u16 _count = 1, core::u8 _space = 0, core::u16 _offset = OffsetAppend) :
+                        DescriptorParameters(_register, _count, _space, _offset)
+                    {
+
+                    }
+                };
 
                 bool operator == (const Descriptor & _other) const
                 {
@@ -79,33 +118,49 @@ namespace vg::graphics::driver
 
                     switch (m_type)
                     {
-                        default:VG_ASSERT(false);   return false;
-                        //case Type::ShaderResource:  return constantBuffer == _other.constantBuffer;
-                        //case Type::RWBuffer:        return constantBuffer == _other.constantBuffer;
-                        case Type::ConstantBuffer:  return constantBuffer == _other.constantBuffer;
-                        //case Type::Sampler:         return constantBuffer == _other.constantBuffer;
+                        default:VG_ASSERT(false);   
+                            return false;
+                        case Type::Texture:
+                            return texture == _other.texture;
+                        case Type::Buffer:
+                            return buffer == _other.buffer;
+                        case Type::UAV:
+                            return uav == _other.uav;
+                        case Type::ConstantBuffer:
+                            return constantBuffer == _other.constantBuffer;
+                        case Type::Sampler:
+                            return sampler == _other.sampler;
                     }
 
                     return true;
                 }
                 inline bool operator != (const Descriptor & _other) const { return !(operator == (_other)); }
 
+                Descriptor() :
+                    m_type((Type)-1)
+                {
+
+                }
+
+                const Texture & getTextures() const { VG_ASSERT(Type::Texture == m_type); return texture; }
+
             private:
                 Type m_type;
 
                 union
                 {
-                    ConstantBufferParams constantBuffer;
-                    BufferParams buffer;
-                    TextureParams texture;
+                    Texture           texture;
+                    Buffer            buffer;
+                    UAV               uav;
+                    ConstantBuffer    constantBuffer;
+                    Sampler           sampler;
                 };
+
+                friend class Table;
             };
 
         public:
-
-            void    addConstantBuffer();
-            void    addBuffer();
-            void    addTexture();
+            void addTextures(core::u8 _register, core::u16 _count = 1, core::u8 _space = 0, core::u16 _offset = Descriptor::OffsetAppend);
 
             const core::vector<Descriptor> & getDescriptors() const;
 

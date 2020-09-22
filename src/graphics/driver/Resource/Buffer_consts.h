@@ -19,6 +19,8 @@ namespace vg::graphics::driver
 
         }
 
+        core::u32 size() const { return elementSize * elementCount; }
+
         ResourceDesc    resource;
         BufferFlags     flags;
         core::u32		elementSize;

@@ -11,6 +11,8 @@ namespace vg::graphics::driver
 		class Texture : public core::Object
 		{
 		public:
+            static core::u32 getPixelFormatSize(PixelFormat _format);
+
 			Texture(const TextureDesc & _texDesc, const core::string & _name, void * _initData);
 			~Texture();
 
@@ -33,7 +35,7 @@ namespace vg::graphics::driver
 		using super = VG_GFXAPI::Texture;
 
 	public:
-		Texture(const TextureDesc & _texDesc, const core::string & _name, void * _initData);
+		Texture(const TextureDesc & _texDesc, const core::string & _name, void * _initData = nullptr);
 		~Texture();
 	};
 }

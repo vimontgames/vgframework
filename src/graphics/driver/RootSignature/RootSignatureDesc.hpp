@@ -45,7 +45,7 @@ namespace vg::graphics::driver
     //--------------------------------------------------------------------------------------
     bool RootSignatureDesc::Table::isEmpty() const
     {
-        return m_descriptors.size() == 0;
+        return 0 == m_descriptors.size();
     }
 
     //--------------------------------------------------------------------------------------
@@ -63,5 +63,22 @@ namespace vg::graphics::driver
                 return false;
 
         return true;
+    }
+
+    //--------------------------------------------------------------------------------------
+    // RootSignatureDesc::Table
+    //--------------------------------------------------------------------------------------
+    void RootSignatureDesc::Table::addTextures(core::u8 _register, core::u16 _count, core::u8 _space, core::u16 _offset)
+    {
+        RootSignatureDesc::Table::Descriptor descritor;
+        descritor.m_type = Descriptor::Type::Texture;
+        descritor.texture = Descriptor::Texture(_register, _count, _space, _offset);
+        m_descriptors.push_back(descritor);
+    }
+
+    //--------------------------------------------------------------------------------------
+    const core::vector<RootSignatureDesc::Table::Descriptor> & RootSignatureDesc::Table::getDescriptors() const
+    {
+        return m_descriptors;
     }
 }

@@ -29,10 +29,14 @@ namespace vg::graphics::driver
 
 	struct FrameContext
 	{
-		driver::Texture *					backbuffer = nullptr;
-		core::vector<driver::CommandPool*>	commandPools;
-		core::vector<driver::CommandList*>	commandLists[core::enumCount<CommandListType>()];
-        core::vector<core::Object*>         m_objectsToRelease;
+		driver::Texture *					            backbuffer = nullptr;
+		core::vector<driver::CommandPool*>	            commandPools;
+		core::vector<driver::CommandList*>	            commandLists[core::enumCount<CommandListType>()];
+        core::vector<core::Object*>                     m_objectsToRelease;
+        driver::Buffer *                                m_uploadBuffer = nullptr;
+        core::u8 *                                      m_uploadBegin = nullptr;
+        core::u8 *                                      m_uploadCur = nullptr;
+        core::vector<core::pair<Texture*, core::u32>>   m_texturesToUpload;
 	};
 
 	namespace base
@@ -69,7 +73,7 @@ namespace vg::graphics::driver
             void                                            releaseAsync                (core::Object * _object);
             void                                            flushReleaseAsync           ();
 
-            void                                            uploadTexture               (driver::Buffer * _src, driver::Texture * _dst);
+            void                                            upload                      (driver::Texture * _dst, core::u32 _from);
 
 		protected:
             DeviceCaps                                      m_caps;
@@ -81,7 +85,6 @@ namespace vg::graphics::driver
 			DeviceParams 									m_deviceParams;
             ShaderManager *                                 m_shaderManager = nullptr;
             RootSignatureTable                              m_rootSignaturesTable;
-            core::vector<core::pair<Buffer*,Texture*>>      m_texturesToUpload;
 		};
 	}
 }
@@ -102,10 +105,13 @@ namespace vg::graphics::driver
 		void		        endFrame		    ();
 
 		Texture *	        createTexture	    (const TextureDesc & _texDesc, const core::string & _name, void * _initData = nullptr);
+        Buffer *            createBuffer        (const BufferDesc & _bufDesc, const core::string & _name, void * _initData = nullptr);
 
         RootSignatureHandle addRootSignature    (const RootSignatureDesc & _desc);
         RootSignature *     getRootSignature    (const RootSignatureHandle & _handle);
         core::uint          removeRootSignature (RootSignatureHandle & _handle);
+
+        void                flushTextureUploads ();
 
 	private:
 	};

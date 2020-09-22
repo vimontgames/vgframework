@@ -10,7 +10,12 @@ namespace vg::graphics::renderer
         auto * device = Device::get();
 
         RootSignatureDesc rsDesc;
-                          rsDesc.addRootConstants(ShaderStageFlags::VS, 0, 8);
+        rsDesc.addRootConstants(ShaderStageFlags::VS, 0, 8);
+
+        RootSignatureDesc::Table bindlessTable;
+        bindlessTable.addTextures(0, 65535);
+
+        rsDesc.addTable(bindlessTable);
 
         m_rootSignatureHandle = device->addRootSignature(rsDesc);
 

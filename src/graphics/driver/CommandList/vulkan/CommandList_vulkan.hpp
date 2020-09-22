@@ -145,4 +145,23 @@ namespace vg::graphics::driver::vulkan
     {
         vkCmdDraw(m_vkCommandBuffer, _vertexCount, 1, _startOffset, 0);
     }
+
+    //--------------------------------------------------------------------------------------
+    void CommandList::copyTexture(driver::Texture * _dst, core::u32 _from)
+    {
+        auto * device = driver::Device::get();
+        auto & context = device->getCurrentFrameContext();
+
+        const auto & desc = _dst->getTexDesc();
+
+        VkBufferImageCopy vkBufImgCopy = {};
+        vkBufImgCopy.bufferOffset = _from;
+        vkBufImgCopy.bufferRowLength = 0;
+        vkBufImgCopy.bufferImageHeight = 0,
+        vkBufImgCopy.imageSubresource = { VK_IMAGE_ASPECT_COLOR_BIT, 0, 0, 1 },
+        vkBufImgCopy.imageOffset = { 0, 0, 0 },
+        vkBufImgCopy.imageExtent = { desc.width, desc.height, 1 },
+
+        vkCmdCopyBufferToImage(m_vkCommandBuffer, context.m_uploadBuffer->getResource().getVulkanBuffer() , _dst->getResource().getVulkanImage(), VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, 1, &vkBufImgCopy);
+    }
 }

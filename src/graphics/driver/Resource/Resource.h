@@ -4,6 +4,19 @@
 
 namespace vg::graphics::driver
 {
+    struct Map
+    {
+        void * data = nullptr;
+        core::u32 rowPitch = 0;
+        core::u32 slicePitch = 0;
+    };
+
+    struct Range
+    {
+        core::u32 begin = 0;
+        core::u32 end = 0;
+    };
+
     namespace base
     {
         class Resource

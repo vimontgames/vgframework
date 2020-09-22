@@ -23,6 +23,9 @@ namespace vg::graphics::driver::vulkan
         VkImage             getVulkanImage  () const    { VG_ASSERT(ResourceType::Texture == m_resourceType); return m_vkImage; }
         VkBuffer            getVulkanBuffer () const    { VG_ASSERT(ResourceType::Buffer == m_resourceType); return m_vkBuffer; }
 
+        Map                 map             (core::uint _subResource = 0, Range _read = Range());
+        void                unmap           (core::uint _subResource = 0, Range _write = Range());
+
     private:
         union
         {

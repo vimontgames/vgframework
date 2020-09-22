@@ -8,6 +8,9 @@ namespace vg::graphics::driver::dx12
         using super = base::Buffer;
 
     public:
+        static D3D12_RESOURCE_DESC      getd3d12ResourceDesc(const BufferDesc & _bufDesc);
+        static D3D12MA::ALLOCATION_DESC getd3d12AllocationDesc(const BufferDesc & _bufDesc);
+
         Buffer(const BufferDesc & _bufDesc, const core::string & _name, void * _initData);
         ~Buffer();
 

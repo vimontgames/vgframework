@@ -12,6 +12,8 @@ namespace vg::graphics::driver
 	class SubPass;
     class GraphicPipelineState;
     class RasterizerState;
+    class Texture;
+    class Buffer;
 
 	namespace base
 	{

@@ -42,4 +42,20 @@ namespace vg::graphics::driver::dx12
         VG_ASSERT(ResourceType::Buffer == m_resourceType);
         return m_d3d12resource;
     }
+
+    //--------------------------------------------------------------------------------------
+    Map Resource::map(core::uint _subResource, Range _read)
+    {
+        Map result;
+        const D3D12_RANGE readRange = { _read.begin, _read.end };
+        VG_ASSERT_SUCCEEDED(m_d3d12resource->Map(_subResource, &readRange, &result.data));
+        return result;
+    }
+
+    //--------------------------------------------------------------------------------------
+    void Resource::unmap(core::uint _subResource, Range _write)
+    {
+        const D3D12_RANGE writeRange = { _write.begin, _write.end };
+        m_d3d12resource->Unmap(_subResource, &writeRange);
+    }
 }

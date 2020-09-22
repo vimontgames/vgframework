@@ -4,6 +4,7 @@
 #include "graphics/driver/CommandPool/CommandPool.h"
 #include "graphics/driver/CommandList/CommandList.h"
 #include "graphics/driver/Resource/Texture.h"
+#include "graphics/driver/Resource/Buffer.h"
 #include "graphics/driver/Memory/MemoryAllocator.h"
 #include "graphics/driver/RootSignature/RootSignature.h"
 #include "graphics/driver/Shader/ShaderManager.h"
@@ -110,7 +111,7 @@ namespace vg::graphics::driver
 					getDeviceParams().resolution.y
                 );
 
-				char backbufferName[13];
+				char backbufferName[sizeof("Backbuffer")+2];
 				sprintf_s(backbufferName, "Backbuffer#%u", _frameContextIndex);
 
 				m_frameContext[_frameContextIndex].backbuffer = getDevice()->createTexture(backbufferTexDesc, backbufferName, _surface);
@@ -142,6 +143,21 @@ namespace vg::graphics::driver
 					cmdLists.push_back(new driver::CommandList(CommandListType::Graphics, cmdPool, _frameContextIndex, cmdListIndex));
 				}
 			}
+
+            // Buffer for uploads
+            {
+                auto & buffer = context.m_uploadBuffer;
+
+                BufferDesc bufDesc = BufferDesc(Usage::Upload, BindFlags::None, CPUAccessFlags::Write, BufferFlags::None, 4 * 1024);
+                char uploadBufferName[sizeof("Upload")+2];
+                sprintf_s(uploadBufferName, "Upload#%u", _frameContextIndex);
+                buffer = new driver::Buffer(bufDesc, uploadBufferName);
+
+                // keep always mapped
+                Map result = buffer->getResource().map();
+                context.m_uploadBegin = (core::u8*)result.data;
+                context.m_uploadCur = context.m_uploadBegin;
+            }
 		}
 
 		//--------------------------------------------------------------------------------------
@@ -166,6 +182,9 @@ namespace vg::graphics::driver
             for (Object * obj : frameContext.m_objectsToRelease)
                 VG_SAFE_RELEASE(obj);
             frameContext.m_objectsToRelease.clear();
+
+            frameContext.m_uploadBuffer->getResource().unmap();
+            VG_SAFE_RELEASE(frameContext.m_uploadBuffer);
 		}
 
 		//--------------------------------------------------------------------------------------
@@ -227,9 +246,10 @@ namespace vg::graphics::driver
 		}
 
         //--------------------------------------------------------------------------------------
-        void Device::uploadTexture(driver::Buffer * _src, driver::Texture * _dst)
+        void Device::upload(driver::Texture * _dst, core::u32 _from)
         {
-            m_texturesToUpload.push_back({ _src, _dst });
+            auto & context = getCurrentFrameContext();
+            context.m_texturesToUpload.push_back({ _dst, _from });
         }
 	}
 
@@ -256,6 +276,9 @@ namespace vg::graphics::driver
 
 		Super::beginFrame();
 
+        // Copy staging data to GPU textures used for rendering
+        flushTextureUploads();
+
         // It is safe now to release frame (n-max_frame_latency+1) resources as we are now sure they are not in use by the GPU
         flushReleaseAsync();
 
@@ -274,11 +297,34 @@ namespace vg::graphics::driver
         #endif
 	}
 
+    //--------------------------------------------------------------------------------------
+    void Device::flushTextureUploads()
+    {
+        auto & context = getCurrentFrameContext();
+        auto * cmdList = context.commandLists[asInteger(CommandQueueType::Graphics)][0];
+        auto & textures = context.m_texturesToUpload;
+
+        for (uint i = 0; i < textures.size(); ++i)
+        {
+            auto & pair = textures[i];
+            cmdList->copyTexture(pair.first, pair.second);
+        }
+
+        textures.clear();
+        context.m_uploadCur = context.m_uploadBegin;
+    }
+
 	//--------------------------------------------------------------------------------------
 	Texture * Device::createTexture(const TextureDesc & _texDesc, const core::string & _name, void * _initData)
 	{
 		return new Texture(_texDesc, _name, _initData);
 	}
+
+    //--------------------------------------------------------------------------------------
+    Buffer * Device::createBuffer(const BufferDesc & _bufDesc, const core::string & _name, void * _initData)
+    {
+        return new Buffer(_bufDesc, _name, _initData);
+    }
 
     //--------------------------------------------------------------------------------------
     RootSignatureHandle Device::addRootSignature(const RootSignatureDesc & _desc)
