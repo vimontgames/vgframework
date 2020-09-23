@@ -19,10 +19,6 @@ namespace vg::graphics::driver::dx12
     {
         switch (_texType)
         {
-            case TextureType::Texture1D : 
-            case TextureType::Texture1DArray:
-                return D3D12_RESOURCE_DIMENSION_TEXTURE1D;
-
             default:
                 VG_ASSERT(false, "Unhandled TextureType \"%s\"", asString(_texType).c_str());
             case TextureType::Texture2D:
@@ -33,8 +29,40 @@ namespace vg::graphics::driver::dx12
             case TextureType::Texture2DMSArray:
                 return D3D12_RESOURCE_DIMENSION_TEXTURE2D;
 
+            case TextureType::Texture1D:
+            case TextureType::Texture1DArray:
+                return D3D12_RESOURCE_DIMENSION_TEXTURE1D;
+
             case TextureType::Texture3D:
                 return D3D12_RESOURCE_DIMENSION_TEXTURE3D;
+        }
+    }
+
+    //--------------------------------------------------------------------------------------
+    D3D12_SRV_DIMENSION Texture::getd3d12ShaderResourceViewDimension(TextureType _texType)
+    {
+        switch (_texType)
+        {
+            default:
+                VG_ASSERT(false, "Unhandled TextureType \"%s\" (%u)", asString(_texType).c_str(), _texType);
+            case TextureType::Texture2D:
+                return D3D12_SRV_DIMENSION_TEXTURE2D;
+            case TextureType::Texture2DArray:
+                return D3D12_SRV_DIMENSION_TEXTURE2DARRAY;
+            case TextureType::TextureCube:
+                return D3D12_SRV_DIMENSION_TEXTURECUBE;
+            case TextureType::TextureCubeArray:
+                return D3D12_SRV_DIMENSION_TEXTURECUBEARRAY;
+            case TextureType::Texture2DMS:
+                return D3D12_SRV_DIMENSION_TEXTURE2DMS;
+            case TextureType::Texture2DMSArray:
+                return D3D12_SRV_DIMENSION_TEXTURE2DMSARRAY;
+            case TextureType::Texture3D:
+                return D3D12_SRV_DIMENSION_TEXTURE3D;
+            case TextureType::Texture1D:
+                return D3D12_SRV_DIMENSION_TEXTURE1D;
+            case TextureType::Texture1DArray:
+                return D3D12_SRV_DIMENSION_TEXTURE1DARRAY;
         }
     }
 
@@ -47,7 +75,7 @@ namespace vg::graphics::driver::dx12
             return PixelFormat::R8G8B8A8_unorm;
 
         default:
-            VG_ASSERT(false, "Unhandled pixel format \"%s\"", asString(_d3d12Format).c_str());
+            VG_ASSERT(false, "Unhandled pixel format \"%s\" (%u)", asString(_d3d12Format).c_str(), _d3d12Format);
             return PixelFormat::Unknow;
         }
     }
@@ -84,7 +112,7 @@ namespace vg::graphics::driver::dx12
             VG_ASSERT(backbufferResource);
             m_resource.setd3d12TextureResource(backbufferResource, nullptr);
         }
-        else //if (asBool(TextureFlags::ShaderResource & _texDesc.flags))
+        else
         {
             D3D12_RESOURCE_DESC resourceDesc = getd3d12ResourceDesc(_texDesc);
 
@@ -115,10 +143,6 @@ namespace vg::graphics::driver::dx12
 
                 const u32 offset = (u32)(context.m_uploadCur - context.m_uploadBegin);
 
-                //D3D12_PLACED_SUBRESOURCE_FOOTPRINT placedTexture2D = { 0 };
-                //placedTexture2D.Offset = context.m_uploadCur - context.m_uploadBegin;
-                //placedTexture2D.Footprint = pitchedDesc;
-
                 u64 uploadBufferSize = 0;
                 d3d12device->GetCopyableFootprints(&resourceDesc, 0, 1, 0, nullptr, nullptr, nullptr, &uploadBufferSize);
                 VG_ASSERT((core::u32)uploadBufferSize == uploadBufferSize);
@@ -127,17 +151,7 @@ namespace vg::graphics::driver::dx12
                 context.m_uploadCur = (u8*)alignUp((uint_ptr)context.m_uploadCur, D3D12_TEXTURE_DATA_PLACEMENT_ALIGNMENT);
                 
                 for (uint y = 0; y < _texDesc.height; ++y)
-                    memcpy(context.m_uploadCur + y * pitchedDesc.Width, &((u8*)_initData)[y * _texDesc.width * fmtSize], fmtSize * _texDesc.width);
-
-                //D3D12_TEXTURE_COPY_LOCATION dst = {};
-                //dst.Type = D3D12_TEXTURE_COPY_TYPE_SUBRESOURCE_INDEX;
-                //dst.SubresourceIndex = 0;
-                //dst.pResource = getResource().getd3d12TextureResource();
-                //
-                //D3D12_TEXTURE_COPY_LOCATION src = {};
-                //src.Type = D3D12_TEXTURE_COPY_TYPE_PLACED_FOOTPRINT;
-                //src.PlacedFootprint = placedTexture2D;
-                //src.pResource = context.m_uploadBuffer->getResource().getd3d12BufferResource();
+                    memcpy(context.m_uploadCur + y * pitchedDesc.RowPitch, &((u8*)_initData)[y * _texDesc.width * fmtSize], fmtSize * _texDesc.width);
 
                 device->upload(static_cast<driver::Texture*>(this), offset);
 
@@ -145,17 +159,41 @@ namespace vg::graphics::driver::dx12
             }
         }
 
+        if (asBool(BindFlags::ShaderResource & _texDesc.resource.m_bindFlags))
+        {
+            D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc = {};
+            srvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
+            srvDesc.Format = getd3d12PixelFormat(_texDesc.format);
+            srvDesc.ViewDimension = getd3d12ShaderResourceViewDimension(_texDesc.type);
+            
+            switch (_texDesc.type)
+            {
+            default:
+                VG_ASSERT(false, "Unhandled TextureType \"%s\" (%u)", asString(_texDesc.type).c_str(), _texDesc.type);
+
+            case TextureType::Texture2D:
+                srvDesc.Texture2D.MipLevels = 1;
+                srvDesc.Texture2D.MostDetailedMip = 0;
+                srvDesc.Texture2D.PlaneSlice = 0;
+                srvDesc.Texture2D.ResourceMinLODClamp = 0;
+                break;
+            }
+
+            VG_ASSERT(m_resource.getd3d12TextureResource());
+            m_d3d12SRVHandle = device->allocSRVHandle();
+            d3d12device->CreateShaderResourceView(m_resource.getd3d12TextureResource(), &srvDesc, m_d3d12SRVHandle);
+        }
+
         if (asBool(TextureFlags::RenderTarget & _texDesc.flags))
         {
             D3D12_RENDER_TARGET_VIEW_DESC viewDesc;
-                                            viewDesc.Format = getd3d12PixelFormat(_texDesc.format);
-                                            viewDesc.ViewDimension = D3D12_RTV_DIMENSION_TEXTURE2D;
-                                            viewDesc.Texture2D.MipSlice = 0;  // TODO: alloc RTV for every mip available
-                                            viewDesc.Texture2D.PlaneSlice = 0;
-
-            m_d3d12RTVHandle = device->allocRenderTargetViewHandle();
+                                          viewDesc.Format = getd3d12PixelFormat(_texDesc.format);
+                                          viewDesc.ViewDimension = D3D12_RTV_DIMENSION_TEXTURE2D;
+                                          viewDesc.Texture2D.MipSlice = 0;  // TODO: alloc RTV for every mip available
+                                          viewDesc.Texture2D.PlaneSlice = 0;
 
             VG_ASSERT(m_resource.getd3d12TextureResource());
+            m_d3d12RTVHandle = device->allocRTVHandle();
             d3d12device->CreateRenderTargetView(m_resource.getd3d12TextureResource(), &viewDesc, m_d3d12RTVHandle);
         }
 	}
@@ -165,12 +203,21 @@ namespace vg::graphics::driver::dx12
 	{
 		auto * device = driver::Device::get();
 
-		if (s_d3d12invalidRenderTargetViewHandle.ptr != m_d3d12RTVHandle.ptr)
-			device->freeRenderTargetViewHandle(m_d3d12RTVHandle);
+        if (s_d3d12invalidSRVHandle.ptr != m_d3d12SRVHandle.ptr)
+            device->freeSRVHandle(m_d3d12SRVHandle);
+
+		if (s_d3d12invalidRTVHandle.ptr != m_d3d12RTVHandle.ptr)
+			device->freeRTVHandle(m_d3d12RTVHandle);
 
         if (asBool(TextureFlags::Backbuffer & getTexDesc().flags))
             m_resource.setd3d12TextureResource(nullptr, nullptr); // Do not release backbuffer
 	}
+
+    //--------------------------------------------------------------------------------------
+    const D3D12_CPU_DESCRIPTOR_HANDLE & Texture::getd3d12SRVHandle() const
+    {
+        return m_d3d12SRVHandle;
+    }
 
 	//--------------------------------------------------------------------------------------
 	const D3D12_CPU_DESCRIPTOR_HANDLE & Texture::getd3d12RTVHandle() const

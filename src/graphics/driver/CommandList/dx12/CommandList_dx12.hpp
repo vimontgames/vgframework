@@ -46,6 +46,8 @@ namespace vg::graphics::driver::dx12
 				VG_ASSERT_NOT_IMPLEMENTED();
 				break;
 		}
+
+        m_d3d12graphicsCmdList->SetDescriptorHeaps(1, &driver::Device::get()->m_srvGPUDescriptorHeap);
 	}
 
 	//--------------------------------------------------------------------------------------
@@ -182,6 +184,9 @@ namespace vg::graphics::driver::dx12
     //--------------------------------------------------------------------------------------
     void CommandList::draw(core::uint _vertexCount, core::uint _startOffset)
     {
+        // hak
+        m_d3d12graphicsCmdList->SetGraphicsRootDescriptorTable(1, driver::Device::get()->m_srvGPUDescriptorHeap->GetGPUDescriptorHandleForHeapStart());
+
         m_d3d12graphicsCmdList->DrawInstanced(_vertexCount, 1, _startOffset, 0);
     }
 

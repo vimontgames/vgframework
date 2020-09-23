@@ -122,13 +122,26 @@ namespace vg::graphics::driver::dx12
 			device->CreateFence(0, D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(&m_frameFences[i]));
 		}
 
+        // Rendertarget CPU descriptor heap
 		D3D12_DESCRIPTOR_HEAP_DESC heapDesc = {};
 		heapDesc.NumDescriptors = m_renderTargetDescriptorAllocated;
 		heapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_RTV;
 		heapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
-		device->CreateDescriptorHeap(&heapDesc, IID_PPV_ARGS(&m_renderTargetDescriptorHeap));
-
+		VG_ASSERT_SUCCEEDED(device->CreateDescriptorHeap(&heapDesc, IID_PPV_ARGS(&m_renderTargetDescriptorHeap)));
 		m_renderTargetDescriptorSize = device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
+
+        // SRV/CBV/UAV CPU descriptor heap
+        D3D12_DESCRIPTOR_HEAP_DESC srvCPUHeapDesc = {};
+        srvCPUHeapDesc.NumDescriptors = m_srvDescriptorAllocated;
+        srvCPUHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
+        srvCPUHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
+        VG_ASSERT_SUCCEEDED(device->CreateDescriptorHeap(&srvCPUHeapDesc, IID_PPV_ARGS(&m_srvCPUDescriptorHeap)));
+        m_srcDescriptorHeapSize = device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
+
+        // SRV/CBV/UAV GPU descriptor heap
+        D3D12_DESCRIPTOR_HEAP_DESC srvGPUHeapDesc = srvCPUHeapDesc;
+        srvGPUHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
+        VG_ASSERT_SUCCEEDED(device->CreateDescriptorHeap(&srvGPUHeapDesc, IID_PPV_ARGS(&m_srvGPUDescriptorHeap)));
 
 		// For now just create command pools to handle latency
 		// We'll need later to have one per thread recording command buffers
@@ -186,7 +199,7 @@ namespace vg::graphics::driver::dx12
 	}
 
 	//--------------------------------------------------------------------------------------
-	D3D12_CPU_DESCRIPTOR_HANDLE Device::allocRenderTargetViewHandle(core::uint _count)
+	D3D12_CPU_DESCRIPTOR_HANDLE Device::allocRTVHandle(core::uint _count)
 	{
 		VG_ASSERT(m_renderTargetDescriptorUsed + _count <= m_renderTargetDescriptorAllocated);
 		VG_ASSERT(s_invalidRenderTargetDescriptorSize != m_renderTargetDescriptorSize);
@@ -199,10 +212,29 @@ namespace vg::graphics::driver::dx12
 	}
 
 	//--------------------------------------------------------------------------------------
-	void Device::freeRenderTargetViewHandle(D3D12_CPU_DESCRIPTOR_HANDLE & _hRTV)
+	void Device::freeRTVHandle(D3D12_CPU_DESCRIPTOR_HANDLE & _hRTV)
 	{
 		// TODO
 	}
+
+    //--------------------------------------------------------------------------------------
+    D3D12_CPU_DESCRIPTOR_HANDLE Device::allocSRVHandle(core::uint _count)
+    {
+        VG_ASSERT(m_srvDescriptorUsed + _count <= m_renderTargetDescriptorAllocated);
+        VG_ASSERT(s_invalidSrvDescriptorSize != m_srcDescriptorHeapSize);
+
+        D3D12_CPU_DESCRIPTOR_HANDLE handle = { m_srvCPUDescriptorHeap->GetCPUDescriptorHandleForHeapStart() };
+        handle.ptr += m_srvDescriptorUsed * m_srcDescriptorHeapSize;
+        m_srvDescriptorUsed += _count;
+
+        return handle;
+    }
+
+    //--------------------------------------------------------------------------------------
+    void Device::freeSRVHandle(D3D12_CPU_DESCRIPTOR_HANDLE & _hSRV)
+    {
+        // TODO
+    }
 
 	//--------------------------------------------------------------------------------------
 	void Device::deinit()
@@ -215,6 +247,8 @@ namespace vg::graphics::driver::dx12
 			destroyFrameContext(i);
 
 		VG_SAFE_RELEASE(m_renderTargetDescriptorHeap);
+        VG_SAFE_RELEASE(m_srvCPUDescriptorHeap);
+        VG_SAFE_RELEASE(m_srvGPUDescriptorHeap);
 
 		for (uint i = 0; i < max_frame_latency; ++i)
 			VG_SAFE_RELEASE(m_frameFences[i]);
@@ -290,6 +324,14 @@ namespace vg::graphics::driver::dx12
 		for (uint type = 0; type < enumCount<CommandListType>(); ++type)
 			for (auto & cmdList : context.commandLists[type])
 				cmdList->reset();
+
+        // update descriptors
+        if (m_srvDescriptorUsed > 0)
+        {
+            D3D12_CPU_DESCRIPTOR_HANDLE cpuDescriptors = m_srvCPUDescriptorHeap->GetCPUDescriptorHandleForHeapStart();
+            D3D12_CPU_DESCRIPTOR_HANDLE gpuDescriptors = m_srvGPUDescriptorHeap->GetCPUDescriptorHandleForHeapStart();
+            m_d3d12device->CopyDescriptorsSimple(m_srvDescriptorUsed, gpuDescriptors, cpuDescriptors, D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
+        }
 
 		auto * commandList = context.commandLists[asInteger(CommandListType::Graphics)][0]->getd3d12GraphicsCommandList();
 

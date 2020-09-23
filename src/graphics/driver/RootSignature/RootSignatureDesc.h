@@ -168,7 +168,7 @@ namespace vg::graphics::driver
             bool    operator == (const Table & _other) const;
             inline bool operator != (const Table & _other) const { return !(operator == (_other)); }
 
-        private:
+        //private:
             ShaderStageFlags            m_stages = (ShaderStageFlags)0;
             core::vector<Descriptor>    m_descriptors;
         };

@@ -27,7 +27,11 @@
       <PreprocessToFile Condition="'$(Configuration)|$(Platform)'=='Release_DX12|x64'">false</PreprocessToFile>
       <PreprocessToFile Condition="'$(Configuration)|$(Platform)'=='Release_Vulkan|x64'">false</PreprocessToFile>
     </ClCompile>
+    <ClCompile Include="DescriptorTable\DescriptorTable.cpp" />
     <ClCompile Include="FrameGraph\FrameGraph.cpp" />
+    <ClInclude Include="DescriptorTable\DescriptorTable.h" />
+    <ClInclude Include="DescriptorTable\dx12\DescriptorTable_dx12.h" />
+    <ClInclude Include="DescriptorTable\dx12\DescriptorTable_dx12.hpp" />
     <ClInclude Include="Device\DeviceCaps.h" />
     <ClInclude Include="Device\dx12\DeviceCaps_dx12.h" />
     <ClInclude Include="Device\vulkan\DeviceCaps_vulkan.h" />

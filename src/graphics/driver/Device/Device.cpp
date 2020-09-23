@@ -111,10 +111,7 @@ namespace vg::graphics::driver
 					getDeviceParams().resolution.y
                 );
 
-				char backbufferName[sizeof("Backbuffer")+2];
-				sprintf_s(backbufferName, "Backbuffer#%u", _frameContextIndex);
-
-				m_frameContext[_frameContextIndex].backbuffer = getDevice()->createTexture(backbufferTexDesc, backbufferName, _surface);
+				m_frameContext[_frameContextIndex].backbuffer = getDevice()->createTexture(backbufferTexDesc, "Backbuffer#" + to_string(_frameContextIndex), _surface);
 			}
 
 			// Create command lists
@@ -148,10 +145,14 @@ namespace vg::graphics::driver
             {
                 auto & buffer = context.m_uploadBuffer;
 
-                BufferDesc bufDesc = BufferDesc(Usage::Upload, BindFlags::None, CPUAccessFlags::Write, BufferFlags::None, 4 * 1024);
-                char uploadBufferName[sizeof("Upload")+2];
-                sprintf_s(uploadBufferName, "Upload#%u", _frameContextIndex);
-                buffer = new driver::Buffer(bufDesc, uploadBufferName);
+                BufferDesc bufDesc(
+                    Usage::Upload, 
+                    BindFlags::None, 
+                    CPUAccessFlags::Write, 
+                    BufferFlags::None, 
+                    4 * 1024);
+
+                buffer = new driver::Buffer(bufDesc, "Upload#" + to_string(_frameContextIndex));
 
                 // keep always mapped
                 Map result = buffer->getResource().map();

@@ -22,12 +22,15 @@ namespace vg::graphics::driver::dx12
         }
 
         const auto & tables = _desc.getTables();
+        vector<vector<D3D12_DESCRIPTOR_RANGE>> d3d12DescriptorsArray;
+        d3d12DescriptorsArray.resize(tables.size());
+
         for (uint i = 0; i < tables.size(); ++i)
         {
             const RootSignatureDesc::Table & table = tables[i];
             const auto & descriptors = table.getDescriptors();
             
-            core::vector<D3D12_DESCRIPTOR_RANGE> d3d12Descriptors;
+            auto & d3d12Descriptors = d3d12DescriptorsArray[i];
             for (uint j = 0; j < descriptors.size(); ++j)
             {
                 const RootSignatureDesc::Table::Descriptor & descriptor = descriptors[j];
@@ -57,11 +60,23 @@ namespace vg::graphics::driver::dx12
             d3d12Table.ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
             d3d12Table.DescriptorTable.NumDescriptorRanges = (uint)d3d12Descriptors.size();
             d3d12Table.DescriptorTable.pDescriptorRanges = d3d12Descriptors.data();
+            d3d12Table.ShaderVisibility = getd3d12ShaderStageFlags(table.m_stages);
+
+            d3d12rootParams.push_back(d3d12Table);
         }       
 
         D3D12_ROOT_SIGNATURE_DESC d3d12Desc = {};
         d3d12Desc.NumParameters = (uint)d3d12rootParams.size();
         d3d12Desc.pParameters = d3d12rootParams.data();
+
+        D3D12_STATIC_SAMPLER_DESC sampler = {};
+        sampler.AddressU = D3D12_TEXTURE_ADDRESS_MODE_WRAP;
+        sampler.AddressV = D3D12_TEXTURE_ADDRESS_MODE_WRAP;
+        sampler.AddressW = D3D12_TEXTURE_ADDRESS_MODE_WRAP;
+        
+        sampler.ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL;
+        d3d12Desc.NumStaticSamplers = 1;
+        d3d12Desc.pStaticSamplers = &sampler;
 
         ID3DBlob * outBlob = nullptr;
         ID3DBlob * errorBlob = nullptr;
@@ -81,15 +96,15 @@ namespace vg::graphics::driver::dx12
     //--------------------------------------------------------------------------------------
     D3D12_SHADER_VISIBILITY RootSignature::getd3d12ShaderStageFlags(ShaderStageFlags _shaderStageFlags)
     {
-        if (testAllFlags(_shaderStageFlags, ShaderStageFlags::VS))
+        if (ShaderStageFlags::VS == _shaderStageFlags)
             return D3D12_SHADER_VISIBILITY_VERTEX;
-        else if (testAllFlags(_shaderStageFlags, ShaderStageFlags::HS))
+        else if (ShaderStageFlags::HS == _shaderStageFlags)
             return D3D12_SHADER_VISIBILITY_HULL;
-        else if (testAllFlags(_shaderStageFlags, ShaderStageFlags::DS))
+        else if (ShaderStageFlags::DS == _shaderStageFlags)
             return D3D12_SHADER_VISIBILITY_DOMAIN;
-        else if (testAllFlags(_shaderStageFlags, ShaderStageFlags::GS))
+        else if (ShaderStageFlags::GS == _shaderStageFlags)
             return D3D12_SHADER_VISIBILITY_GEOMETRY;
-        else if (testAllFlags(_shaderStageFlags, ShaderStageFlags::PS))
+        else if (ShaderStageFlags::PS == _shaderStageFlags)
             return D3D12_SHADER_VISIBILITY_PIXEL;
         else
             return D3D12_SHADER_VISIBILITY_ALL;

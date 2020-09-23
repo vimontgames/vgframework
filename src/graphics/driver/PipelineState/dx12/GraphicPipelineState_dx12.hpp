@@ -11,7 +11,8 @@ namespace vg::graphics::driver::dx12
         D3D12_GRAPHICS_PIPELINE_STATE_DESC d3d12graphicPipelineDesc = {};
 
         VG_ASSERT(_key.m_rootSignature.isValid(), "Please set a valid RootSignature using CommandList::setRootSignature()");
-        d3d12graphicPipelineDesc.pRootSignature = device->getRootSignature(_key.m_rootSignature)->getd3d12RootSignature();
+        auto * sig = device->getRootSignature(_key.m_rootSignature);
+        d3d12graphicPipelineDesc.pRootSignature = sig->getd3d12RootSignature();
 
         // temp
         auto & rt0 = d3d12graphicPipelineDesc.BlendState.RenderTarget[0];

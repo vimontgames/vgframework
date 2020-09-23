@@ -32,6 +32,9 @@
     <ClCompile Include="Resource\Resource.cpp">
       <Filter>Resource</Filter>
     </ClCompile>
+    <ClCompile Include="DescriptorTable\DescriptorTable.cpp">
+      <Filter>DescriptorTable</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Precomp.h" />
@@ -392,6 +395,15 @@
     <ClInclude Include="Resource\vulkan\Resource_vulkan.hpp">
       <Filter>Resource\vulkan</Filter>
     </ClInclude>
+    <ClInclude Include="DescriptorTable\DescriptorTable.h">
+      <Filter>DescriptorTable</Filter>
+    </ClInclude>
+    <ClInclude Include="DescriptorTable\dx12\DescriptorTable_dx12.h">
+      <Filter>DescriptorTable\dx12</Filter>
+    </ClInclude>
+    <ClInclude Include="DescriptorTable\dx12\DescriptorTable_dx12.hpp">
+      <Filter>DescriptorTable\dx12</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Device">
@@ -486,6 +498,15 @@
     </Filter>
     <Filter Include="Resource\vulkan">
       <UniqueIdentifier>{294ee736-e2ea-4c0e-a9b8-044f9cd6d30d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DescriptorTable">
+      <UniqueIdentifier>{66fb22ee-e036-4f7c-88b8-0c38324bb1a6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DescriptorTable\dx12">
+      <UniqueIdentifier>{14b0b3c0-d4b6-4679-93af-0bf7776cf612}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DescriptorTable\vulkan">
+      <UniqueIdentifier>{6d2c86a7-8838-451d-a8f0-eeb7414013c7}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
