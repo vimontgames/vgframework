@@ -404,6 +404,12 @@
     <ClInclude Include="DescriptorTable\dx12\DescriptorTable_dx12.hpp">
       <Filter>DescriptorTable\dx12</Filter>
     </ClInclude>
+    <ClInclude Include="DescriptorTable\vulkan\DescriptorTable_vulkan.h">
+      <Filter>DescriptorTable\vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="DescriptorTable\vulkan\DescriptorTable_vulkan.hpp">
+      <Filter>DescriptorTable\vulkan</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Device">

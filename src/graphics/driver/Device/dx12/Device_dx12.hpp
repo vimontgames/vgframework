@@ -326,11 +326,13 @@ namespace vg::graphics::driver::dx12
 				cmdList->reset();
 
         // update descriptors
-        if (m_srvDescriptorUsed > 0)
+        static bool update = true;
+        if (update && m_srvDescriptorUsed > 0)
         {
             D3D12_CPU_DESCRIPTOR_HANDLE cpuDescriptors = m_srvCPUDescriptorHeap->GetCPUDescriptorHandleForHeapStart();
             D3D12_CPU_DESCRIPTOR_HANDLE gpuDescriptors = m_srvGPUDescriptorHeap->GetCPUDescriptorHandleForHeapStart();
             m_d3d12device->CopyDescriptorsSimple(m_srvDescriptorUsed, gpuDescriptors, cpuDescriptors, D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
+            update = false; // double-buffer descriptor heap instead ?
         }
 
 		auto * commandList = context.commandLists[asInteger(CommandListType::Graphics)][0]->getd3d12GraphicsCommandList();

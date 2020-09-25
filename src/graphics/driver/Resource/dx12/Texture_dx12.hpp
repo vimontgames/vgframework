@@ -141,15 +141,14 @@ namespace vg::graphics::driver::dx12
                 pitchedDesc.Depth = 1;
                 pitchedDesc.RowPitch = (uint)alignUp(_texDesc.width * fmtSize, D3D12_TEXTURE_DATA_PITCH_ALIGNMENT);
 
-                const u32 offset = (u32)(context.m_uploadCur - context.m_uploadBegin);
-
                 u64 uploadBufferSize = 0;
                 d3d12device->GetCopyableFootprints(&resourceDesc, 0, 1, 0, nullptr, nullptr, nullptr, &uploadBufferSize);
                 VG_ASSERT((core::u32)uploadBufferSize == uploadBufferSize);
 
                 // Copy to upload buffer line by line
                 context.m_uploadCur = (u8*)alignUp((uint_ptr)context.m_uploadCur, D3D12_TEXTURE_DATA_PLACEMENT_ALIGNMENT);
-                
+                const u32 offset = (u32)(context.m_uploadCur - context.m_uploadBegin);
+
                 for (uint y = 0; y < _texDesc.height; ++y)
                     memcpy(context.m_uploadCur + y * pitchedDesc.RowPitch, &((u8*)_initData)[y * _texDesc.width * fmtSize], fmtSize * _texDesc.width);
 

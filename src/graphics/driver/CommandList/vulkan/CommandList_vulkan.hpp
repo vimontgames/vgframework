@@ -79,8 +79,12 @@ namespace vg::graphics::driver::vulkan
 
         if (sig->getVulkanDescriptorSetLayouts().size() > 0)
         {
-            // TODO
-            vkCmdBindDescriptorSets(m_vkCommandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, sig->getVulkanPipelineLayout(), 0, 0, nullptr, 0, nullptr);
+            VkDescriptorSet descriptorSets[] =
+            {
+                device->m_vkSrvDescriptorSet,
+                device->m_vkSamplerDescriptorSet
+            };
+            vkCmdBindDescriptorSets(m_vkCommandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, sig->getVulkanPipelineLayout(), 0, 2, descriptorSets, 0, nullptr);
         }
     }
     
@@ -157,11 +161,49 @@ namespace vg::graphics::driver::vulkan
         VkBufferImageCopy vkBufImgCopy = {};
         vkBufImgCopy.bufferOffset = _from;
         vkBufImgCopy.bufferRowLength = 0;
-        vkBufImgCopy.bufferImageHeight = 0,
-        vkBufImgCopy.imageSubresource = { VK_IMAGE_ASPECT_COLOR_BIT, 0, 0, 1 },
-        vkBufImgCopy.imageOffset = { 0, 0, 0 },
-        vkBufImgCopy.imageExtent = { desc.width, desc.height, 1 },
+        vkBufImgCopy.bufferImageHeight = 0;
+        vkBufImgCopy.imageSubresource = { VK_IMAGE_ASPECT_COLOR_BIT, 0, 0, 1 };
+        vkBufImgCopy.imageOffset = { 0, 0, 0 };
+        vkBufImgCopy.imageExtent = { desc.width, desc.height, 1 };
+
+            //   demo_set_image_layout(demo, demo->textures[i].image, VK_IMAGE_ASPECT_COLOR_BIT, VK_IMAGE_LAYOUT_PREINITIALIZED,
+            //       VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, 0, VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT,
+            //       VK_PIPELINE_STAGE_TRANSFER_BIT);
+
+        VkImageMemoryBarrier image_memory_barrier = {};
+        image_memory_barrier.sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER;
+        image_memory_barrier.pNext = NULL;
+        image_memory_barrier.srcAccessMask = 0;
+        image_memory_barrier.dstAccessMask = VK_ACCESS_TRANSFER_WRITE_BIT;
+        image_memory_barrier.srcQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
+        image_memory_barrier.dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
+        image_memory_barrier.oldLayout = VK_IMAGE_LAYOUT_PREINITIALIZED;
+        image_memory_barrier.newLayout = VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL;
+        image_memory_barrier.image = _dst->getResource().getVulkanImage();
+        image_memory_barrier.subresourceRange = { VK_IMAGE_ASPECT_COLOR_BIT, 0, 1, 0, 1};
+        /* Make sure anything that was copying from this image has completed */
+        image_memory_barrier.dstAccessMask = VK_ACCESS_TRANSFER_WRITE_BIT;
+
+        vkCmdPipelineBarrier(m_vkCommandBuffer, VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT, VK_PIPELINE_STAGE_TRANSFER_BIT, 0, 0, NULL, 0, NULL, 1, &image_memory_barrier);
 
         vkCmdCopyBufferToImage(m_vkCommandBuffer, context.m_uploadBuffer->getResource().getVulkanBuffer() , _dst->getResource().getVulkanImage(), VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, 1, &vkBufImgCopy);
+
+        // demo_set_image_layout(demo, demo->textures[i].image, VK_IMAGE_ASPECT_COLOR_BIT, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
+        //demo->textures[i].imageLayout, VK_ACCESS_TRANSFER_WRITE_BIT, VK_PIPELINE_STAGE_TRANSFER_BIT,
+        //    VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT);
+
+        VkImageMemoryBarrier image_memory_barrier2 = {};
+        image_memory_barrier2.sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER;
+        image_memory_barrier2.pNext = NULL;
+        image_memory_barrier2.srcAccessMask = VK_ACCESS_TRANSFER_WRITE_BIT;
+        image_memory_barrier2.dstAccessMask = VK_ACCESS_SHADER_READ_BIT | VK_ACCESS_INPUT_ATTACHMENT_READ_BIT;
+        image_memory_barrier2.srcQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
+        image_memory_barrier2.dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
+        image_memory_barrier2.oldLayout = VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
+        image_memory_barrier2.newLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL,
+        image_memory_barrier2.image = _dst->getResource().getVulkanImage();
+        image_memory_barrier2.subresourceRange = { VK_IMAGE_ASPECT_COLOR_BIT, 0, 1, 0, 1};
+
+        vkCmdPipelineBarrier(m_vkCommandBuffer, VK_PIPELINE_STAGE_TRANSFER_BIT, VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT, 0, 0, NULL, 0, NULL, 1, &image_memory_barrier2);
     }
 }

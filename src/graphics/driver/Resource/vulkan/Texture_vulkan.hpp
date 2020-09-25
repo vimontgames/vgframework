@@ -55,7 +55,7 @@ namespace vg::graphics::driver::vulkan
                               imgDesc.arrayLayers = 1;
                               imgDesc.samples = VK_SAMPLE_COUNT_1_BIT;
                               imgDesc.tiling = VK_IMAGE_TILING_LINEAR;
-                              imgDesc.usage = VK_IMAGE_USAGE_SAMPLED_BIT;
+                              imgDesc.usage = VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_SAMPLED_BIT;
                               imgDesc.flags = 0;
                               imgDesc.initialLayout = VK_IMAGE_LAYOUT_PREINITIALIZED;
 
@@ -92,6 +92,92 @@ namespace vg::graphics::driver::vulkan
 			imgViewDesc.flags = 0;
 
 			VG_ASSERT_VULKAN(vkCreateImageView(device->getVulkanDevice(), &imgViewDesc, nullptr, &m_vkImageView));
+
+            if (!asBool(TextureFlags::Backbuffer & _texDesc.flags))
+            {
+                static bool first = true;
+
+                if (first)
+                {
+                    for (uint i = 0; i < 65535; ++i)
+                    {
+                        VkDescriptorImageInfo tex_descs = {};
+                        tex_descs.imageView = m_vkImageView;
+                        tex_descs.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+                        tex_descs.sampler = device->vk_immutableSampler;
+
+                        VkWriteDescriptorSet writes = {};
+                        writes.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+                        writes.dstBinding = 0; // register
+                        writes.descriptorCount = 1;
+                        writes.descriptorType = VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE;
+                        writes.pImageInfo = &tex_descs;
+                        writes.dstSet = device->m_vkSrvDescriptorSet;
+                        writes.dstArrayElement = i; // offset
+
+                        vkUpdateDescriptorSets(device->getVulkanDevice(), 1, &writes, 0, nullptr);
+                    }
+                }
+
+                VkDescriptorImageInfo tex_descs = {};
+                tex_descs.imageView = m_vkImageView;
+                tex_descs.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+                tex_descs.sampler = device->vk_immutableSampler;
+
+                VkWriteDescriptorSet writes = {};
+                writes.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+                writes.dstBinding = 0; // register
+                writes.descriptorCount = 1;
+                writes.descriptorType = VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE;
+                writes.pImageInfo = &tex_descs;
+                writes.dstSet = device->m_vkSrvDescriptorSet;
+                writes.dstArrayElement = first ? 0 : 1; // offset
+
+                first = false;
+
+                vkUpdateDescriptorSets(device->getVulkanDevice(), 1, &writes, 0, nullptr);
+
+                VkDescriptorImageInfo samp_descs = {};
+                samp_descs.imageView = VK_NULL_HANDLE;
+                samp_descs.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+                samp_descs.sampler = device->vk_immutableSampler;
+                
+                VkWriteDescriptorSet writeSamplers = {};
+                writeSamplers.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+                writeSamplers.dstBinding = 0; // register
+                writeSamplers.descriptorCount = 1;
+                writeSamplers.descriptorType = VK_DESCRIPTOR_TYPE_SAMPLER;
+                writeSamplers.pImageInfo = &samp_descs;
+                writeSamplers.dstSet = device->m_vkSamplerDescriptorSet;
+                writeSamplers.dstArrayElement = 0; // offset
+                
+                vkUpdateDescriptorSets(device->getVulkanDevice(), 1, &writeSamplers, 0, nullptr);
+
+                if (nullptr != _initData)
+                {
+                    const auto fmtSize = getPixelFormatSize(_texDesc.format);
+
+                    VkMemoryRequirements mem_reqs;
+                    vkGetImageMemoryRequirements(device->getVulkanDevice(), getResource().getVulkanImage(), &mem_reqs);
+
+                    u64 uploadBufferSize = mem_reqs.size;
+
+                    auto & context = device->getCurrentFrameContext();
+
+                    auto * mapped = context.m_uploadBuffer->getResource().m_vmaAllocInfo.pMappedData;
+
+                    // Copy to upload buffer line by line
+                    context.m_uploadCur = (u8*)alignUp((uint_ptr)context.m_uploadCur, mem_reqs.alignment);
+                    const u32 offset = (u32)(context.m_uploadCur - context.m_uploadBegin);
+
+                    for (uint y = 0; y < _texDesc.height; ++y)
+                        memcpy(context.m_uploadCur + y * _texDesc.width * fmtSize, &((u8*)_initData)[y * _texDesc.width * fmtSize], fmtSize * _texDesc.width);
+
+                    device->upload(static_cast<driver::Texture*>(this), offset);
+
+                    context.m_uploadCur += uploadBufferSize;
+                }
+            }
 		}
 	}
 

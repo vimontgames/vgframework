@@ -2,6 +2,7 @@
 #define _DRIVER__HLSLI_
 
 #include "semantics.hlsli"
+#include "samplers.hlsli"
 
 #ifdef DX12
 #define DECL_ROOTCONSTANTS(type, name, reg, s) ConstantBuffer<type> name : register(b##reg, space##s);
@@ -18,9 +19,6 @@ struct RootConstants
 DECL_ROOTCONSTANTS(RootConstants, rootConstants, 0, 0);
 
 Texture2D Texture2DTable[65535] : register(t0, space0);
-
-SamplerState        sampler0        : register(s0);
-
 
 #endif
 

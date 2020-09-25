@@ -36,11 +36,12 @@ namespace vg::graphics::driver::vulkan
     }
 
     //--------------------------------------------------------------------------------------
-    void Resource::setVulkanBuffer(const VkBuffer & _vkBuffer, const VmaAllocation & _vmaAlloc)
+    void Resource::setVulkanBuffer(const VkBuffer & _vkBuffer, const VmaAllocation & _vmaAlloc, const VmaAllocationInfo & _vmaAllocInfo)
     {
         m_resourceType = ResourceType::Buffer;
         m_vkBuffer = _vkBuffer;
         m_vma_alloc = _vmaAlloc;
+        m_vmaAllocInfo = _vmaAllocInfo;
     }
 
     //--------------------------------------------------------------------------------------

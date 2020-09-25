@@ -18,7 +18,7 @@ namespace vg::graphics::driver::vulkan
         ~Resource();
 
         void                setVulkanImage  (const VkImage & _vkImage, const VmaAllocation & _vmaAlloc);
-        void                setVulkanBuffer (const VkBuffer & _vkBuffer, const VmaAllocation & _vmaAlloc);
+        void                setVulkanBuffer (const VkBuffer & _vkBuffer, const VmaAllocation & _vmaAlloc, const VmaAllocationInfo & _vmaAllocInfo);
 
         VkImage             getVulkanImage  () const    { VG_ASSERT(ResourceType::Texture == m_resourceType); return m_vkImage; }
         VkBuffer            getVulkanBuffer () const    { VG_ASSERT(ResourceType::Buffer == m_resourceType); return m_vkBuffer; }
@@ -26,12 +26,13 @@ namespace vg::graphics::driver::vulkan
         Map                 map             (core::uint _subResource = 0, Range _read = Range());
         void                unmap           (core::uint _subResource = 0, Range _write = Range());
 
-    private:
+    //private:
         union
         {
             VkImage				m_vkImage;
             VkBuffer            m_vkBuffer;
         };
         VmaAllocation           m_vma_alloc;
+        VmaAllocationInfo       m_vmaAllocInfo;
     };
 }

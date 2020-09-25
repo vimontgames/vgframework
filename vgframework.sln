@@ -38,6 +38,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "driver", "driver", "{F9214E
 		data\Shaders\driver\driver.hlsl = data\Shaders\driver\driver.hlsl
 		data\Shaders\driver\driver.hlsl.h = data\Shaders\driver\driver.hlsl.h
 		data\Shaders\driver\driver.hlsli = data\Shaders\driver\driver.hlsli
+		data\Shaders\driver\samplers.hlsli = data\Shaders\driver\samplers.hlsli
 		data\Shaders\driver\semantics.hlsli = data\Shaders\driver\semantics.hlsli
 	EndProjectSection
 EndProject

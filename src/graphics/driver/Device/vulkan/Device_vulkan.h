@@ -68,6 +68,10 @@ namespace vg::graphics::driver::vulkan
 			DeviceExtensionList			m_deviceExtensionList;
 			KHR_Swapchain				m_KHR_Swapchain;
 
+            VkDescriptorSet             m_vkSrvDescriptorSet;
+            VkDescriptorSet             m_vkSamplerDescriptorSet;
+            VkSampler                   vk_immutableSampler;
+
 			friend class InstanceExtension;
 			friend class DeviceExtension;
 

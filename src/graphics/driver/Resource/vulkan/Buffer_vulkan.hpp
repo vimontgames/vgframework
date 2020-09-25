@@ -17,12 +17,15 @@ namespace vg::graphics::driver::vulkan
             bufDesc.size = _bufDesc.size();
             
             allocCreateInfo.usage = VMA_MEMORY_USAGE_CPU_ONLY;
+            allocCreateInfo.flags = VMA_ALLOCATION_CREATE_MAPPED_BIT;
         }
 
         VkBuffer vkBuffer;
         VmaAllocation vmaAlloc;
-        VG_ASSERT_VULKAN(vmaCreateBuffer(device->getVulkanMemoryAllocator(), &bufDesc, &allocCreateInfo, &vkBuffer, &vmaAlloc, nullptr));
-        m_resource.setVulkanBuffer(vkBuffer, vmaAlloc);
+        VmaAllocationInfo vmaAllocInfo = {};
+        VG_ASSERT_VULKAN(vmaCreateBuffer(device->getVulkanMemoryAllocator(), &bufDesc, &allocCreateInfo, &vkBuffer, &vmaAlloc, &vmaAllocInfo));
+
+        m_resource.setVulkanBuffer(vkBuffer, vmaAlloc, vmaAllocInfo);
     }
 
     //--------------------------------------------------------------------------------------

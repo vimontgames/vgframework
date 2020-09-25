@@ -32,7 +32,7 @@ PS_Output_Quad PS_Quad(VS_Output_Quad _input)
     float2 uv = frac(_input.uv);
     output.color0 = float4(uv, 0, 1);
 
-    output.color0.rgb = Texture2DTable[0].Sample(sampler0, uv).rgb;
+    output.color0.rgb = Texture2DTable[ asfloat(rootConstants.posOffsetScale.x) > 0 ? 1 : 0 ].Sample(sampler0, uv).rgb;
 
     //#ifdef VULKAN
     //output.color0.b = 1;

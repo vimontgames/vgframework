@@ -15,6 +15,6 @@ namespace vg::graphics::renderer
     private:
         driver::RootSignatureHandle m_rootSignatureHandle;
         driver::ShaderKey           m_shaderKey;
-        driver::Texture *           m_texture = nullptr;
+        driver::Texture *           m_texture[2] = {};
     };
 }

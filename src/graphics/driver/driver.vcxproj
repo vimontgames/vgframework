@@ -32,6 +32,8 @@
     <ClInclude Include="DescriptorTable\DescriptorTable.h" />
     <ClInclude Include="DescriptorTable\dx12\DescriptorTable_dx12.h" />
     <ClInclude Include="DescriptorTable\dx12\DescriptorTable_dx12.hpp" />
+    <ClInclude Include="DescriptorTable\vulkan\DescriptorTable_vulkan.h" />
+    <ClInclude Include="DescriptorTable\vulkan\DescriptorTable_vulkan.hpp" />
     <ClInclude Include="Device\DeviceCaps.h" />
     <ClInclude Include="Device\dx12\DeviceCaps_dx12.h" />
     <ClInclude Include="Device\vulkan\DeviceCaps_vulkan.h" />
