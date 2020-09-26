@@ -27,24 +27,24 @@ namespace vg::graphics::driver::vulkan
 
         for (uint i = 0; i < tables.size(); ++i)
         {
-            const RootSignatureDesc::Table & table = tables[i];
+            const RootSignatureTableDesc & table = tables[i];
             const auto & descriptors = table.getDescriptors();
 
             for (uint j = 0; j < descriptors.size(); ++j)
             {
-                const RootSignatureDesc::Table::Descriptor & descriptor = descriptors[j];
+                const RootSignatureTableDesc::Descriptor & descriptor = descriptors[j];
                     
                 VkDescriptorSetLayoutBinding vkLayoutBinding = {};
 
                 switch (descriptor.getDescriptorType())
                 {
-                    case RootSignatureDesc::Table::Descriptor::Type::Texture:
+                    case RootSignatureTableDesc::Descriptor::Type::Texture:
                     {
                         const auto textures = descriptor.getTextures();
                         vkLayoutBinding.binding = textures.m_register;
                         vkLayoutBinding.descriptorType = VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE;
                         vkLayoutBinding.descriptorCount = textures.m_count;
-                        vkLayoutBinding.stageFlags = getVulkanShaderStageFlags(table.m_stages);
+                        vkLayoutBinding.stageFlags = getVulkanShaderStageFlags(table.getShaderStageFlags());
                         vkLayoutBinding.pImmutableSamplers = nullptr; // &device->vk_immutableSampler;
                     }
                     break;

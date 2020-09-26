@@ -5,6 +5,7 @@
 using namespace vg::core;
 
 #include "RootSignatureDesc.hpp"
+#include "RootSignatureTableDesc.hpp"
 
 namespace vg::graphics::driver
 {

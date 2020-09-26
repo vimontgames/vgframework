@@ -95,11 +95,12 @@ namespace vg::graphics::driver::vulkan
 
             if (!asBool(TextureFlags::Backbuffer & _texDesc.flags))
             {
+                // should be done when creating table
                 static bool first = true;
 
                 if (first)
                 {
-                    for (uint i = 0; i < 65535; ++i)
+                    for (uint i = 0; i < max_bindless_elements; ++i)
                     {
                         VkDescriptorImageInfo tex_descs = {};
                         tex_descs.imageView = m_vkImageView;
@@ -112,7 +113,7 @@ namespace vg::graphics::driver::vulkan
                         writes.descriptorCount = 1;
                         writes.descriptorType = VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE;
                         writes.pImageInfo = &tex_descs;
-                        writes.dstSet = device->m_vkSrvDescriptorSet;
+                        writes.dstSet = device->m_vkbindlessDescriptorSet[0];
                         writes.dstArrayElement = i; // offset
 
                         vkUpdateDescriptorSets(device->getVulkanDevice(), 1, &writes, 0, nullptr);
@@ -130,7 +131,7 @@ namespace vg::graphics::driver::vulkan
                 writes.descriptorCount = 1;
                 writes.descriptorType = VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE;
                 writes.pImageInfo = &tex_descs;
-                writes.dstSet = device->m_vkSrvDescriptorSet;
+                writes.dstSet = device->m_vkbindlessDescriptorSet[0];
                 writes.dstArrayElement = first ? 0 : 1; // offset
 
                 first = false;
@@ -148,7 +149,7 @@ namespace vg::graphics::driver::vulkan
                 writeSamplers.descriptorCount = 1;
                 writeSamplers.descriptorType = VK_DESCRIPTOR_TYPE_SAMPLER;
                 writeSamplers.pImageInfo = &samp_descs;
-                writeSamplers.dstSet = device->m_vkSamplerDescriptorSet;
+                writeSamplers.dstSet = device->m_vkbindlessDescriptorSet[1];
                 writeSamplers.dstArrayElement = 0; // offset
                 
                 vkUpdateDescriptorSets(device->getVulkanDevice(), 1, &writeSamplers, 0, nullptr);
@@ -167,7 +168,7 @@ namespace vg::graphics::driver::vulkan
                     auto * mapped = context.m_uploadBuffer->getResource().m_vmaAllocInfo.pMappedData;
 
                     // Copy to upload buffer line by line
-                    context.m_uploadCur = (u8*)alignUp((uint_ptr)context.m_uploadCur, mem_reqs.alignment);
+                    context.m_uploadCur = (u8*)alignUp((uint_ptr)context.m_uploadCur, (core::u32)mem_reqs.alignment);
                     const u32 offset = (u32)(context.m_uploadCur - context.m_uploadBegin);
 
                     for (uint y = 0; y < _texDesc.height; ++y)

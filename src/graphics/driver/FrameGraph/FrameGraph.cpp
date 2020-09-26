@@ -128,8 +128,6 @@ namespace vg::graphics::driver
         cleanup();
 	}
 
-#define VG_SAFE_RELEASE_ASYNC(p) { auto * device = driver::Device::get(); if (device) device->releaseAsync(p); else p->Release(); }
-
 	//--------------------------------------------------------------------------------------
 	void FrameGraph::cleanup()
 	{

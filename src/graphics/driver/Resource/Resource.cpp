@@ -4,6 +4,7 @@
 #include "Resource.h"
 #include "Buffer.h"
 #include "Texture.h"
+#include "graphics/driver/bindlessTable/BindlessTable.h"
 
 using namespace vg::core;
 

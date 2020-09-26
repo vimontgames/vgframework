@@ -9,6 +9,7 @@
 #include "graphics/driver/RootSignature/RootSignature.h"
 #include "graphics/driver/Shader/ShaderManager.h"
 #include "graphics/driver/FrameGraph/RenderPass.h"
+#include "graphics/driver/BindlessTable/BindlessTable.h"
 
 using namespace vg::core;
 using namespace vg::graphics;
@@ -150,7 +151,7 @@ namespace vg::graphics::driver
                     BindFlags::None, 
                     CPUAccessFlags::Write, 
                     BufferFlags::None, 
-                    4 * 1024);
+                    16 * 1024 * 1024); // 16 Mo
 
                 buffer = new driver::Buffer(bufDesc, "Upload#" + to_string(_frameContextIndex));
 
@@ -252,19 +253,26 @@ namespace vg::graphics::driver
             auto & context = getCurrentFrameContext();
             context.m_texturesToUpload.push_back({ _dst, _from });
         }
+
+        //--------------------------------------------------------------------------------------
+        driver::BindlessTable * Device::getBindlessTable() const
+        {
+            VG_ASSERT(m_bindlessTable);
+            return m_bindlessTable;
+        }
 	}
 
 	//--------------------------------------------------------------------------------------
 	void Device::init(const DeviceParams & _params)
 	{
 		Super::init(_params);
+        m_bindlessTable->init();
 	}
 
 	//--------------------------------------------------------------------------------------
 	void Device::deinit()
 	{
-		// [...]
-
+        waitGPUIdle();
 		Super::deinit();
 	}
 

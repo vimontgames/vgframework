@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="BindlessTable\BindlessTable.cpp" />
     <ClCompile Include="CommandList\CommandList.cpp" />
     <ClCompile Include="CommandPool\CommandPool.cpp" />
     <ClCompile Include="CommandQueue\CommandQueue.cpp">
@@ -27,13 +28,13 @@
       <PreprocessToFile Condition="'$(Configuration)|$(Platform)'=='Release_DX12|x64'">false</PreprocessToFile>
       <PreprocessToFile Condition="'$(Configuration)|$(Platform)'=='Release_Vulkan|x64'">false</PreprocessToFile>
     </ClCompile>
-    <ClCompile Include="DescriptorTable\DescriptorTable.cpp" />
     <ClCompile Include="FrameGraph\FrameGraph.cpp" />
-    <ClInclude Include="DescriptorTable\DescriptorTable.h" />
-    <ClInclude Include="DescriptorTable\dx12\DescriptorTable_dx12.h" />
-    <ClInclude Include="DescriptorTable\dx12\DescriptorTable_dx12.hpp" />
-    <ClInclude Include="DescriptorTable\vulkan\DescriptorTable_vulkan.h" />
-    <ClInclude Include="DescriptorTable\vulkan\DescriptorTable_vulkan.hpp" />
+    <ClInclude Include="BindlessTable\BindlessTable.h" />
+    <ClInclude Include="BindlessTable\BindlessTable_consts.h" />
+    <ClInclude Include="BindlessTable\dx12\BindlessTable_dx12.h" />
+    <ClInclude Include="BindlessTable\dx12\BindlessTable_dx12.hpp" />
+    <ClInclude Include="BindlessTable\vulkan\BindlessTable_vulkan.h" />
+    <ClInclude Include="BindlessTable\vulkan\BindlessTable_vulkan.hpp" />
     <ClInclude Include="Device\DeviceCaps.h" />
     <ClInclude Include="Device\dx12\DeviceCaps_dx12.h" />
     <ClInclude Include="Device\vulkan\DeviceCaps_vulkan.h" />
@@ -127,6 +128,8 @@
     <ClInclude Include="RootSignature\RootSignature.h" />
     <ClInclude Include="RootSignature\RootSignatureDesc.h" />
     <ClInclude Include="RootSignature\RootSignatureDesc.hpp" />
+    <ClInclude Include="RootSignature\RootSignatureTableDesc.h" />
+    <ClInclude Include="RootSignature\RootSignatureTableDesc.hpp" />
     <ClInclude Include="RootSignature\RootSignature_consts.h" />
     <ClInclude Include="RootSignature\vulkan\RootSignature_vulkan.h" />
     <ClInclude Include="RootSignature\vulkan\RootSignature_vulkan.hpp" />

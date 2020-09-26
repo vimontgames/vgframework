@@ -3,7 +3,7 @@
 namespace vg::graphics::renderer
 {
     //--------------------------------------------------------------------------------------
-    // Setup exectuted once, when pass is created
+    // Setup executed once, when pass is created
     //--------------------------------------------------------------------------------------
     TestPass::TestPass()
     {
@@ -12,10 +12,7 @@ namespace vg::graphics::renderer
         RootSignatureDesc rsDesc;
         rsDesc.addRootConstants(ShaderStageFlags::VS | ShaderStageFlags::PS, 0, 8);
 
-        RootSignatureDesc::Table bindlessTable;
-        bindlessTable.m_stages = ShaderStageFlags::PS;
-        bindlessTable.addTextures(0, 65535, 0, 0);
-
+        const RootSignatureTableDesc & bindlessTable = device->getBindlessTable()->getTableDesc();
         rsDesc.addTable(bindlessTable);
 
         m_rootSignatureHandle = device->addRootSignature(rsDesc);
@@ -59,7 +56,7 @@ namespace vg::graphics::renderer
         device->removeRootSignature(m_rootSignatureHandle);
 
         for (auto *& tex : m_texture)
-            VG_SAFE_RELEASE(tex);
+            VG_SAFE_RELEASE_ASYNC(tex);
     }
 
     //--------------------------------------------------------------------------------------

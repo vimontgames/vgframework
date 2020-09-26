@@ -27,19 +27,19 @@ namespace vg::graphics::driver::dx12
 
         for (uint i = 0; i < tables.size(); ++i)
         {
-            const RootSignatureDesc::Table & table = tables[i];
+            const RootSignatureTableDesc & table = tables[i];
             const auto & descriptors = table.getDescriptors();
             
             auto & d3d12Descriptors = d3d12DescriptorsArray[i];
             for (uint j = 0; j < descriptors.size(); ++j)
             {
-                const RootSignatureDesc::Table::Descriptor & descriptor = descriptors[j];
+                const RootSignatureTableDesc::Descriptor & descriptor = descriptors[j];
             
                 D3D12_DESCRIPTOR_RANGE d3d12Descriptor;
 
                 switch (descriptor.getDescriptorType())
                 {
-                    case RootSignatureDesc::Table::Descriptor::Type::Texture:
+                    case RootSignatureTableDesc::Descriptor::Type::Texture:
                     {
                         const auto & textures = descriptor.getTextures();
                         
@@ -60,7 +60,7 @@ namespace vg::graphics::driver::dx12
             d3d12Table.ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
             d3d12Table.DescriptorTable.NumDescriptorRanges = (uint)d3d12Descriptors.size();
             d3d12Table.DescriptorTable.pDescriptorRanges = d3d12Descriptors.data();
-            d3d12Table.ShaderVisibility = getd3d12ShaderStageFlags(table.m_stages);
+            d3d12Table.ShaderVisibility = getd3d12ShaderStageFlags(table.getShaderStageFlags());
 
             d3d12rootParams.push_back(d3d12Table);
         }       

@@ -67,6 +67,9 @@
     <ClInclude Include="File\File.h">
       <Filter>File</Filter>
     </ClInclude>
+    <ClInclude Include="Pool\IndexPool.h">
+      <Filter>Pool</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Math\Math.cpp">

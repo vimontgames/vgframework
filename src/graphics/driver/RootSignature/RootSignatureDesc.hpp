@@ -3,8 +3,6 @@
 namespace vg::graphics::driver
 {
     //--------------------------------------------------------------------------------------
-    // RootSignatureDesc
-    //--------------------------------------------------------------------------------------
     bool RootSignatureDesc::operator == (const RootSignatureDesc & _other) const
     {
         const core::uint pushConstantsCount = (uint)m_pushConstants.size();
@@ -27,7 +25,7 @@ namespace vg::graphics::driver
     }
     
     //--------------------------------------------------------------------------------------
-    uint RootSignatureDesc::addTable(const Table & _table)
+    uint RootSignatureDesc::addTable(const RootSignatureTableDesc & _table)
     {
         m_tables.push_back(_table);
         return (uint)(m_tables.size() - 1);
@@ -38,47 +36,5 @@ namespace vg::graphics::driver
     {
         m_pushConstants.push_back({ _stages, _offset, _count });
         return (uint)(m_pushConstants.size() - 1);
-    }
-
-    //--------------------------------------------------------------------------------------
-    // RootSignatureDesc::Table
-    //--------------------------------------------------------------------------------------
-    bool RootSignatureDesc::Table::isEmpty() const
-    {
-        return 0 == m_descriptors.size();
-    }
-
-    //--------------------------------------------------------------------------------------
-    bool RootSignatureDesc::Table::operator == (const Table & _other) const
-    {
-        if (m_stages != _other.m_stages)
-            return false;
-
-        const uint descriptorCount = (uint)m_descriptors.size();
-        if (descriptorCount != _other.m_descriptors.size())
-            return false;
-
-        for (uint i = 0; i < descriptorCount; ++i)
-            if (m_descriptors[i] != _other.m_descriptors[i])
-                return false;
-
-        return true;
-    }
-
-    //--------------------------------------------------------------------------------------
-    // RootSignatureDesc::Table
-    //--------------------------------------------------------------------------------------
-    void RootSignatureDesc::Table::addTextures(core::u8 _register, core::u16 _count, core::u8 _space, core::u16 _offset)
-    {
-        RootSignatureDesc::Table::Descriptor descritor;
-        descritor.m_type = Descriptor::Type::Texture;
-        descritor.texture = Descriptor::Texture(_register, _count, _space, _offset);
-        m_descriptors.push_back(descritor);
-    }
-
-    //--------------------------------------------------------------------------------------
-    const core::vector<RootSignatureDesc::Table::Descriptor> & RootSignatureDesc::Table::getDescriptors() const
-    {
-        return m_descriptors;
     }
 }

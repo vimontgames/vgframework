@@ -17,6 +17,8 @@
 #define VG_ENABLE_SHADER_COMPILATION 1
 #endif
 
+#define VG_SAFE_RELEASE_ASYNC(p) { auto * device = driver::Device::get(); if (device) device->releaseAsync(p); else p->Release(); }
+
 #ifdef VG_DX12
 //--------------------------------------------------------------------------------------
 // d3d12

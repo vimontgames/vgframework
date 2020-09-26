@@ -3,6 +3,7 @@
 #include "Texture_consts.h"
 #include "core/Object/Object.h"
 #include "Resource.h"
+#include "graphics/driver/BindlessTable/BindlessTable_consts.h"
 
 namespace vg::graphics::driver
 {
@@ -18,10 +19,12 @@ namespace vg::graphics::driver
 
 			const TextureDesc & getTexDesc() const { return m_texDesc; }
             const driver::Resource & getResource() const { return m_resource; }
+            const driver::BindlessTextureHandle getBindlessTextureHandle() const { return m_bindlessTextureHandle; }
 			
         protected:
-			const TextureDesc   m_texDesc;
-            driver::Resource    m_resource;
+			const TextureDesc               m_texDesc;
+            driver::Resource                m_resource;
+            driver::BindlessTextureHandle   m_bindlessTextureHandle = driver::invalidBindlessTextureHandle;
 		};
 	}
 }

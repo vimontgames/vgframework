@@ -32,8 +32,8 @@
     <ClCompile Include="Resource\Resource.cpp">
       <Filter>Resource</Filter>
     </ClCompile>
-    <ClCompile Include="DescriptorTable\DescriptorTable.cpp">
-      <Filter>DescriptorTable</Filter>
+    <ClCompile Include="BindlessTable\BindlessTable.cpp">
+      <Filter>BindlessTable</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -395,20 +395,29 @@
     <ClInclude Include="Resource\vulkan\Resource_vulkan.hpp">
       <Filter>Resource\vulkan</Filter>
     </ClInclude>
-    <ClInclude Include="DescriptorTable\DescriptorTable.h">
-      <Filter>DescriptorTable</Filter>
+    <ClInclude Include="RootSignature\RootSignatureTableDesc.h">
+      <Filter>RootSignature</Filter>
     </ClInclude>
-    <ClInclude Include="DescriptorTable\dx12\DescriptorTable_dx12.h">
-      <Filter>DescriptorTable\dx12</Filter>
+    <ClInclude Include="RootSignature\RootSignatureTableDesc.hpp">
+      <Filter>RootSignature</Filter>
     </ClInclude>
-    <ClInclude Include="DescriptorTable\dx12\DescriptorTable_dx12.hpp">
-      <Filter>DescriptorTable\dx12</Filter>
+    <ClInclude Include="BindlessTable\BindlessTable.h">
+      <Filter>BindlessTable</Filter>
     </ClInclude>
-    <ClInclude Include="DescriptorTable\vulkan\DescriptorTable_vulkan.h">
-      <Filter>DescriptorTable\vulkan</Filter>
+    <ClInclude Include="BindlessTable\dx12\BindlessTable_dx12.h">
+      <Filter>BindlessTable\dx12</Filter>
     </ClInclude>
-    <ClInclude Include="DescriptorTable\vulkan\DescriptorTable_vulkan.hpp">
-      <Filter>DescriptorTable\vulkan</Filter>
+    <ClInclude Include="BindlessTable\dx12\BindlessTable_dx12.hpp">
+      <Filter>BindlessTable\dx12</Filter>
+    </ClInclude>
+    <ClInclude Include="BindlessTable\vulkan\BindlessTable_vulkan.h">
+      <Filter>BindlessTable\vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="BindlessTable\vulkan\BindlessTable_vulkan.hpp">
+      <Filter>BindlessTable\vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="BindlessTable\BindlessTable_consts.h">
+      <Filter>BindlessTable</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -505,13 +514,13 @@
     <Filter Include="Resource\vulkan">
       <UniqueIdentifier>{294ee736-e2ea-4c0e-a9b8-044f9cd6d30d}</UniqueIdentifier>
     </Filter>
-    <Filter Include="DescriptorTable">
+    <Filter Include="BindlessTable">
       <UniqueIdentifier>{66fb22ee-e036-4f7c-88b8-0c38324bb1a6}</UniqueIdentifier>
     </Filter>
-    <Filter Include="DescriptorTable\dx12">
+    <Filter Include="BindlessTable\dx12">
       <UniqueIdentifier>{14b0b3c0-d4b6-4679-93af-0bf7776cf612}</UniqueIdentifier>
     </Filter>
-    <Filter Include="DescriptorTable\vulkan">
+    <Filter Include="BindlessTable\vulkan">
       <UniqueIdentifier>{6d2c86a7-8838-451d-a8f0-eeb7414013c7}</UniqueIdentifier>
     </Filter>
   </ItemGroup>

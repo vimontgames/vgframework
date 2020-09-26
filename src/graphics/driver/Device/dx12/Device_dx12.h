@@ -21,12 +21,14 @@ namespace vg::graphics::driver::dx12
 			D3D12_CPU_DESCRIPTOR_HANDLE		allocRTVHandle	            (core::uint _count = 1);
 			void							freeRTVHandle	            (D3D12_CPU_DESCRIPTOR_HANDLE & _hRTV);
 
-            D3D12_CPU_DESCRIPTOR_HANDLE		allocSRVHandle              (core::uint _count = 1);
-            void							freeSRVHandle               (D3D12_CPU_DESCRIPTOR_HANDLE & _hSRV);
+            //D3D12_CPU_DESCRIPTOR_HANDLE   allocSRVHandle              (core::uint _count = 1);
+            //void							freeSRVHandle               (D3D12_CPU_DESCRIPTOR_HANDLE & _hSRV);
 
 		protected:
 			void							init						(const DeviceParams & _params);
 			void							deinit						();
+
+            void                            waitGPUIdle                 ();
 
 			void							beginFrame					();
 			void							endFrame					();
@@ -34,7 +36,7 @@ namespace vg::graphics::driver::dx12
 		private:
 			IDXGISwapChain1 *				created3d12SwapChain		(HWND _winHandle, core::uint _width, core::uint _height);
 
-        public: //private:
+        private:
             D3D12Device *					m_d3d12device				= nullptr;
 			ID3D12Debug *					m_d3d12debug				= nullptr;
 			D3D_FEATURE_LEVEL				m_level						= (D3D_FEATURE_LEVEL)0;	// TODO: caps struct
@@ -48,13 +50,6 @@ namespace vg::graphics::driver::dx12
 			core::uint						m_renderTargetDescriptorAllocated = 3;
 			core::uint						m_renderTargetDescriptorUsed = 0;
 			core::uint						m_renderTargetDescriptorSize = s_invalidRenderTargetDescriptorSize;
-
-            static const inline core::uint	s_invalidSrvDescriptorSize = (core::uint) - 1;
-            ID3D12DescriptorHeap *          m_srvCPUDescriptorHeap      = nullptr;
-            ID3D12DescriptorHeap *          m_srvGPUDescriptorHeap      = nullptr;
-            core::uint                      m_srvDescriptorAllocated    = 65535;
-            core::uint                      m_srvDescriptorUsed         = 0;
-            core::uint                      m_srcDescriptorHeapSize     = s_invalidSrvDescriptorSize;
 
 			// backbuffer
 			HANDLE							m_frameFenceEvents[max_frame_latency];

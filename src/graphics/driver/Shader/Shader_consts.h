@@ -20,7 +20,8 @@ namespace vg::graphics::driver
         DS = 1 << core::asInteger(ShaderStage::Hull),
         GS = 1 << core::asInteger(ShaderStage::Geometry),
         PS = 1 << core::asInteger(ShaderStage::Pixel),
-  
-        CS = 1 << core::asInteger(ShaderStage::Compute)
+        CS = 1 << core::asInteger(ShaderStage::Compute),
+
+        All = VS | HS | DS | GS | PS | CS
     };
 }

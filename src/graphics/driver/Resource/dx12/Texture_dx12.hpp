@@ -179,8 +179,12 @@ namespace vg::graphics::driver::dx12
             }
 
             VG_ASSERT(m_resource.getd3d12TextureResource());
-            m_d3d12SRVHandle = device->allocSRVHandle();
-            d3d12device->CreateShaderResourceView(m_resource.getd3d12TextureResource(), &srvDesc, m_d3d12SRVHandle);
+
+            BindlessTable * bindlessTable = device->getBindlessTable();
+            m_bindlessTextureHandle = bindlessTable->allocBindlessTextureHandle(static_cast<driver::Texture*>(this));
+
+            D3D12_CPU_DESCRIPTOR_HANDLE d3d12DescriptorHandle = bindlessTable->getd3d12DescriptorHandle(m_bindlessTextureHandle);
+            d3d12device->CreateShaderResourceView(m_resource.getd3d12TextureResource(), &srvDesc, d3d12DescriptorHandle);
         }
 
         if (asBool(TextureFlags::RenderTarget & _texDesc.flags))
@@ -202,9 +206,6 @@ namespace vg::graphics::driver::dx12
 	{
 		auto * device = driver::Device::get();
 
-        if (s_d3d12invalidSRVHandle.ptr != m_d3d12SRVHandle.ptr)
-            device->freeSRVHandle(m_d3d12SRVHandle);
-
 		if (s_d3d12invalidRTVHandle.ptr != m_d3d12RTVHandle.ptr)
 			device->freeRTVHandle(m_d3d12RTVHandle);
 
@@ -213,10 +214,10 @@ namespace vg::graphics::driver::dx12
 	}
 
     //--------------------------------------------------------------------------------------
-    const D3D12_CPU_DESCRIPTOR_HANDLE & Texture::getd3d12SRVHandle() const
-    {
-        return m_d3d12SRVHandle;
-    }
+    //const D3D12_CPU_DESCRIPTOR_HANDLE & Texture::getd3d12SRVHandle() const
+    //{
+    //    return m_d3d12SRVHandle;
+    //}
 
 	//--------------------------------------------------------------------------------------
 	const D3D12_CPU_DESCRIPTOR_HANDLE & Texture::getd3d12RTVHandle() const

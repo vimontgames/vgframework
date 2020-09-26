@@ -21,6 +21,8 @@ namespace vg::graphics::driver::vulkan
 		void							beginFrame						();
 		void							endFrame						();
 
+        void                            waitGPUIdle                     ();
+
 		VkInstance &					getVulkanInstance				();
 		VkDevice &						getVulkanDevice					();
 		VkPhysicalDevice &				getVulkanPhysicalDevice			();
@@ -68,8 +70,7 @@ namespace vg::graphics::driver::vulkan
 			DeviceExtensionList			m_deviceExtensionList;
 			KHR_Swapchain				m_KHR_Swapchain;
 
-            VkDescriptorSet             m_vkSrvDescriptorSet;
-            VkDescriptorSet             m_vkSamplerDescriptorSet;
+            VkDescriptorSet             m_vkbindlessDescriptorSet[2];
             VkSampler                   vk_immutableSampler;
 
 			friend class InstanceExtension;
@@ -100,5 +101,7 @@ namespace vg::graphics::driver::vulkan
 			VkColorSpaceKHR color_space;
 
             core::unordered_map<RenderPassKey, VkRenderPass, RenderPassKey::hash> m_vkRenderPassHash;
+
+            RootSignatureHandle m_bindlessRootSignatureHandle;
 	};
 }

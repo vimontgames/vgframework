@@ -79,12 +79,7 @@ namespace vg::graphics::driver::vulkan
 
         if (sig->getVulkanDescriptorSetLayouts().size() > 0)
         {
-            VkDescriptorSet descriptorSets[] =
-            {
-                device->m_vkSrvDescriptorSet,
-                device->m_vkSamplerDescriptorSet
-            };
-            vkCmdBindDescriptorSets(m_vkCommandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, sig->getVulkanPipelineLayout(), 0, 2, descriptorSets, 0, nullptr);
+            vkCmdBindDescriptorSets(m_vkCommandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, sig->getVulkanPipelineLayout(), 0, 2, device->m_vkbindlessDescriptorSet, 0, nullptr);
         }
     }
     

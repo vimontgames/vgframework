@@ -359,10 +359,12 @@ namespace vg::graphics::driver::vulkan
 
 		VG_SAFE_FREE(swapchainImages);
 
+        m_bindlessTable = new driver::BindlessTable();
+
         // test
         VkDescriptorPoolSize type_counts[2];
         type_counts[0].type = VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE;
-        type_counts[0].descriptorCount = 65535;
+        type_counts[0].descriptorCount = max_bindless_elements;
 
         type_counts[1].type = VK_DESCRIPTOR_TYPE_SAMPLER;
         type_counts[1].descriptorCount = 1;
@@ -372,58 +374,69 @@ namespace vg::graphics::driver::vulkan
         descriptor_pool.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;
         descriptor_pool.pNext = nullptr;
         descriptor_pool.maxSets = max_frame_latency;
-        descriptor_pool.poolSizeCount = countof(type_counts);
+        descriptor_pool.poolSizeCount = (uint)countof(type_counts);
         descriptor_pool.pPoolSizes = type_counts;
     
         VG_ASSERT_VULKAN(vkCreateDescriptorPool(m_vkDevice, &descriptor_pool, nullptr, &m_vkDescriptorPool));
 
         // temp
-        VkDescriptorSetLayoutBinding vkLayoutBinding = {};
+        //VkDescriptorSetLayoutBinding vkLayoutBinding = {};
+        //
+        //vkLayoutBinding.binding = 0;
+        //vkLayoutBinding.descriptorType = VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE;
+        //vkLayoutBinding.descriptorCount = max_bindless_elements;
+        //vkLayoutBinding.stageFlags = VK_SHADER_STAGE_FRAGMENT_BIT;
+        //
+        //VkDescriptorSetLayoutCreateInfo vkDescriptorSetLayoutDesc = {};
+        //vkDescriptorSetLayoutDesc.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO;
+        //vkDescriptorSetLayoutDesc.bindingCount = 1;
+        //vkDescriptorSetLayoutDesc.pBindings = &vkLayoutBinding;
+        //
+        //VkDescriptorSetLayout vkDescriptorSetLayout[2];
+        //VG_ASSERT_VULKAN(vkCreateDescriptorSetLayout(m_vkDevice, &vkDescriptorSetLayoutDesc, nullptr, &vkDescriptorSetLayout[0]));
+        //
+        //VkDescriptorSetLayoutBinding vkLayoutBinding1 = {};
+        //
+        //vkLayoutBinding1.binding = 0;
+        //vkLayoutBinding1.descriptorType = VK_DESCRIPTOR_TYPE_SAMPLER;
+        //vkLayoutBinding1.descriptorCount = 1;
+        //vkLayoutBinding1.stageFlags = VK_SHADER_STAGE_FRAGMENT_BIT;
+        //
+        //VkDescriptorSetLayoutCreateInfo vkDescriptorSetLayoutDesc1 = {};
+        //vkDescriptorSetLayoutDesc1.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO;
+        //vkDescriptorSetLayoutDesc1.bindingCount = 1;
+        //vkDescriptorSetLayoutDesc1.pBindings = &vkLayoutBinding1;
+        //
+        //VG_ASSERT_VULKAN(vkCreateDescriptorSetLayout(m_vkDevice, &vkDescriptorSetLayoutDesc1, nullptr, &vkDescriptorSetLayout[1]));
 
-        vkLayoutBinding.binding = 0;
-        vkLayoutBinding.descriptorType = VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE;
-        vkLayoutBinding.descriptorCount = 65535;
-        vkLayoutBinding.stageFlags = VK_SHADER_STAGE_FRAGMENT_BIT;
+        driver::Device * device = static_cast<driver::Device*>(this);
 
-        VkDescriptorSetLayoutCreateInfo vkDescriptorSetLayoutDesc = {};
-        vkDescriptorSetLayoutDesc.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO;
-        vkDescriptorSetLayoutDesc.bindingCount = 1;
-        vkDescriptorSetLayoutDesc.pBindings = &vkLayoutBinding;
-
-        VkDescriptorSetLayout vkDescriptorSetLayout[2];
-        VG_ASSERT_VULKAN(vkCreateDescriptorSetLayout(m_vkDevice, &vkDescriptorSetLayoutDesc, nullptr, &vkDescriptorSetLayout[0]));
-
-        VkDescriptorSetLayoutBinding vkLayoutBinding1 = {};
-
-        vkLayoutBinding1.binding = 0;
-        vkLayoutBinding1.descriptorType = VK_DESCRIPTOR_TYPE_SAMPLER;
-        vkLayoutBinding1.descriptorCount = 1;
-        vkLayoutBinding1.stageFlags = VK_SHADER_STAGE_FRAGMENT_BIT;
-
-        VkDescriptorSetLayoutCreateInfo vkDescriptorSetLayoutDesc1 = {};
-        vkDescriptorSetLayoutDesc1.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO;
-        vkDescriptorSetLayoutDesc1.bindingCount = 1;
-        vkDescriptorSetLayoutDesc1.pBindings = &vkLayoutBinding1;
-
-        VG_ASSERT_VULKAN(vkCreateDescriptorSetLayout(m_vkDevice, &vkDescriptorSetLayoutDesc1, nullptr, &vkDescriptorSetLayout[1]));
+        RootSignatureDesc rsDesc;
+        rsDesc.addTable(getBindlessTable()->getTableDesc());
+        m_bindlessRootSignatureHandle = device->addRootSignature(rsDesc);
+        RootSignature * rs = device->getRootSignature(m_bindlessRootSignatureHandle);
 
         VkDescriptorSetAllocateInfo alloc_info = {};
         alloc_info.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
         alloc_info.pNext = nullptr;
         alloc_info.descriptorPool = m_vkDescriptorPool;
         alloc_info.descriptorSetCount = 1;
-        alloc_info.pSetLayouts = &vkDescriptorSetLayout[0];
 
-        VG_ASSERT_VULKAN(vkAllocateDescriptorSets(m_vkDevice, &alloc_info, &m_vkSrvDescriptorSet));
+        const auto & bindlessLayouts = rs->getVulkanDescriptorSetLayouts();
+        uint bindlessLayoutIndex = 0;
+        for (auto & layout : bindlessLayouts)
+        {
+            VkDescriptorSetAllocateInfo alloc_info1 = {};
+            alloc_info1.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
+            alloc_info1.pNext = nullptr;
+            alloc_info1.descriptorPool = m_vkDescriptorPool;
+            alloc_info1.descriptorSetCount = 1;
+            alloc_info1.pSetLayouts = &layout;
 
-        VkDescriptorSetAllocateInfo alloc_info1 = {};
-        alloc_info1.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
-        alloc_info1.pNext = nullptr;
-        alloc_info1.descriptorPool = m_vkDescriptorPool;
-        alloc_info1.descriptorSetCount = 1;
-        alloc_info1.pSetLayouts = &vkDescriptorSetLayout[1];
+            VG_ASSERT_VULKAN(vkAllocateDescriptorSets(m_vkDevice, &alloc_info1, &m_vkbindlessDescriptorSet[bindlessLayoutIndex]));
 
-        VG_ASSERT_VULKAN(vkAllocateDescriptorSets(m_vkDevice, &alloc_info1, &m_vkSamplerDescriptorSet));
+            ++bindlessLayoutIndex;
+        }
 
         VkSamplerCreateInfo samplerCreateInfo = {};
         samplerCreateInfo.sType = VK_STRUCTURE_TYPE_SAMPLER_CREATE_INFO;
@@ -801,20 +814,28 @@ namespace vg::graphics::driver::vulkan
 		// Get Memory information and properties
 		vkGetPhysicalDeviceMemoryProperties(m_vkPhysicalDevice, &memory_properties);
 	}
-
-	//--------------------------------------------------------------------------------------
-	void Device::deinit()
-	{
+ 
+    //--------------------------------------------------------------------------------------
+    void Device::waitGPUIdle()
+    {
         vkDeviceWaitIdle(m_vkDevice);
 
         // Wait for fences from present operations
         for (uint i = 0; i < max_frame_latency; i++)
-        {
             vkWaitForFences(m_vkDevice, 1, &fences[i], VK_TRUE, UINT64_MAX);
+    }
+
+	//--------------------------------------------------------------------------------------
+	void Device::deinit()
+	{
+        for (uint i = 0; i < max_frame_latency; i++)
+        {
             vkDestroyFence(m_vkDevice, fences[i], nullptr);
             vkDestroySemaphore(m_vkDevice, image_acquired_semaphores[i], nullptr);
             vkDestroySemaphore(m_vkDevice, draw_complete_semaphores[i], nullptr);
         }
+
+        static_cast<driver::Device*>(this)->removeRootSignature(m_bindlessRootSignatureHandle);
 
         for (auto & pair : m_vkRenderPassHash)
             vkDestroyRenderPass(m_vkDevice, pair.second, nullptr);
@@ -826,6 +847,7 @@ namespace vg::graphics::driver::vulkan
 		for (uint i = 0; i < countof(m_frameContext); ++i)
 			destroyFrameContext(i);
 
+        VG_SAFE_DELETE(m_bindlessTable);
         VG_SAFE_RELEASE(m_memoryAllocator);
 
 		m_instanceExtensionList.deinit();

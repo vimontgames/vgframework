@@ -2,6 +2,10 @@
 
 namespace vg::core
 {
+    //--------------------------------------------------------------------------------------
+    // A pool to be used to allocate memory for objects. 
+    // Used when overriding 'new' as it does not call ctor
+    //--------------------------------------------------------------------------------------
     template <class T> class Pool
     {
     public:
@@ -32,9 +36,9 @@ namespace vg::core
         void dealloc(T * _ptr)
         {
             const T * start = (T*)&m_pages[0].data[0];
-            uint_ptr pageIndex = (uint_ptr(_ptr)-uint_ptr(start)) / sizeof(Page);
-            uint_ptr objIndex = (uint_ptr(_ptr) - uint_ptr(&m_pages[pageIndex])) / sizeof(T);
-            T * ptr = (T*)&m_pages[pageIndex].data[objIndex * sizeof(T)];
+            const uint_ptr pageIndex = (uint_ptr(_ptr)-uint_ptr(start)) / sizeof(Page);
+            const uint_ptr objIndex = (uint_ptr(_ptr) - uint_ptr(&m_pages[pageIndex])) / sizeof(T);
+            const T * ptr = (T*)&m_pages[pageIndex].data[objIndex * sizeof(T)];
             m_pages[pageIndex].mask |= elemMask(1) << objIndex;
         }
 

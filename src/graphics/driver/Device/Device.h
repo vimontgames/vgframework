@@ -24,6 +24,7 @@ namespace vg::graphics::driver
     class RootSignature;
     class RootSignatureDesc;
     class ShaderManager;
+    class BindlessTable;
 
     enum class PixelFormat : core::u8;
 
@@ -75,6 +76,8 @@ namespace vg::graphics::driver
 
             void                                            upload                      (driver::Texture * _dst, core::u32 _from);
 
+            BindlessTable *                                 getBindlessTable            () const;
+
 		protected:
             DeviceCaps                                      m_caps;
 			driver::CommandQueue*				            m_commandQueue[core::enumCount<CommandQueueType>()];
@@ -85,6 +88,7 @@ namespace vg::graphics::driver
 			DeviceParams 									m_deviceParams;
             ShaderManager *                                 m_shaderManager = nullptr;
             RootSignatureTable                              m_rootSignaturesTable;
+            driver::BindlessTable *                         m_bindlessTable = nullptr;
 		};
 	}
 }

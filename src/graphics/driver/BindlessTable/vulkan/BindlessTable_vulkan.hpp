@@ -1,8 +1,8 @@
 namespace vg::graphics::driver::vulkan
 {
     //--------------------------------------------------------------------------------------
-    DescriptorTable::DescriptorTable() :
-        super::DescriptorTable()
+    BindlessTable::BindlessTable() :
+        super::BindlessTable()
     {
         auto * device = driver::Device::get();
         VG_ASSERT(device);
@@ -11,7 +11,7 @@ namespace vg::graphics::driver::vulkan
     }
 
     //--------------------------------------------------------------------------------------
-    DescriptorTable::~DescriptorTable()
+    BindlessTable::~BindlessTable()
     {
 
     }

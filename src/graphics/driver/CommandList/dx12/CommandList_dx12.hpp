@@ -47,7 +47,9 @@ namespace vg::graphics::driver::dx12
 				break;
 		}
 
-        m_d3d12graphicsCmdList->SetDescriptorHeaps(1, &driver::Device::get()->m_srvGPUDescriptorHeap);
+        auto * device = driver::Device::get();
+        ID3D12DescriptorHeap * d3d12descriptorHeap = device->getBindlessTable()->getd3d12GPUDescriptorHeap();
+        m_d3d12graphicsCmdList->SetDescriptorHeaps(1, &d3d12descriptorHeap);
 	}
 
 	//--------------------------------------------------------------------------------------
@@ -184,9 +186,8 @@ namespace vg::graphics::driver::dx12
     //--------------------------------------------------------------------------------------
     void CommandList::draw(core::uint _vertexCount, core::uint _startOffset)
     {
-        // hak
-        m_d3d12graphicsCmdList->SetGraphicsRootDescriptorTable(1, driver::Device::get()->m_srvGPUDescriptorHeap->GetGPUDescriptorHandleForHeapStart());
-
+        // Should be done only once per frame
+        m_d3d12graphicsCmdList->SetGraphicsRootDescriptorTable(1, driver::Device::get()->getBindlessTable()->getd3d12GPUDescriptorHeap()->GetGPUDescriptorHandleForHeapStart());
         m_d3d12graphicsCmdList->DrawInstanced(_vertexCount, 1, _startOffset, 0);
     }
 

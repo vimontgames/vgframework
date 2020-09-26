@@ -22,6 +22,7 @@
     <ClInclude Include="Math\Math.h" />
     <ClInclude Include="Object\Object.h" />
     <ClInclude Include="Plugin\Plugin.h" />
+    <ClInclude Include="Pool\IndexPool.h" />
     <ClInclude Include="Pool\Pool.h" />
     <ClInclude Include="Precomp.h" />
     <ClInclude Include="Singleton\Singleton.h" />
