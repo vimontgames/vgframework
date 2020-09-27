@@ -78,6 +78,6 @@ namespace vg::graphics::driver
                 texInitData[j][i] = ((i>>3) & 1) != ((j>>3) & 1) ? 0xFFFF00FF : 0x7F7F007F;
 
         m_defaultTexture = device->createTexture(texDesc, "testTex", (void*)texInitData);
-        VG_ASSERT(m_defaultTexture->getBindlessTextureHandle() == 0);
+        //VG_ASSERT(m_defaultTexture->getBindlessTextureHandle() == 0);
     }
 }

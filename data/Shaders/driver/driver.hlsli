@@ -18,7 +18,7 @@ struct RootConstants
 };
 DECL_ROOTCONSTANTS(RootConstants, rootConstants, 0, 0);
 
-Texture2D Texture2DTable[65535] : register(t0, space0);
+Texture2D Texture2DTable[] : register(t0, space0);
 
 #endif
 

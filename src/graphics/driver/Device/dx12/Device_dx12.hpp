@@ -119,7 +119,7 @@ namespace vg::graphics::driver::dx12
 		{
 			m_frameFenceEvents[i] = CreateEvent(nullptr, FALSE, FALSE, nullptr);
 			m_fenceValues[i] = 0;
-			device->CreateFence(0, D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(&m_frameFences[i]));
+			VG_ASSERT_SUCCEEDED(device->CreateFence(0, D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(&m_frameFences[i])));
 		}
 
         // Rendertarget CPU descriptor heap
@@ -180,10 +180,23 @@ namespace vg::graphics::driver::dx12
     //--------------------------------------------------------------------------------------
     void WaitForFence(ID3D12Fence* fence, UINT64 completionValue, HANDLE waitEvent)
 	{
+        #if VG_DBG_CPUGPUSYNC
+        VG_DEBUGPRINT("Wait for fence %u ...\n", completionValue);
+        #endif
+
 		if (fence->GetCompletedValue() < completionValue)
 		{
-			fence->SetEventOnCompletion(completionValue, waitEvent);
-			WaitForSingleObject(waitEvent, INFINITE);
+            #if VG_DBG_CPUGPUSYNC
+            VG_DEBUGPRINT("SetEventOnCompletion\n");
+            #endif
+
+			VG_ASSERT_SUCCEEDED(fence->SetEventOnCompletion(completionValue, waitEvent));
+			const auto result = WaitForSingleObject(waitEvent, INFINITE);
+
+            VG_ASSERT(WAIT_ABANDONED != result, "The specified object is a mutex object that was not released by the thread that owned the mutex object before the owning thread terminated. Ownership of the mutex object is granted to the calling thread and the mutex state is set to nonsignaled. If the mutex was protecting persistent state information, you should check it for consistency.");
+            VG_ASSERT(WAIT_TIMEOUT != result, "The time-out interval elapsed, and the object's state is nonsignaled.");
+            VG_ASSERT(WAIT_FAILED != result, "The function has failed. To get extended error information, call GetLastError.");
+            VG_ASSERT(WAIT_OBJECT_0 == result, "The state of the specified should be signaled.");
 		}
 	}
 

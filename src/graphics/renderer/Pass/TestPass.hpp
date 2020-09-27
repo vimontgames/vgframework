@@ -97,7 +97,7 @@ namespace vg::graphics::renderer
 
         float4 posOffetScale, texOffetScale;
 
-        posOffetScale = float4(0.0f, 0.0f, 1.0f, 1.0f);
+        posOffetScale = float4(0.1f, 0.1f, 0.8f, 0.8f);
         texOffetScale = float4(0.0f, 0.0f, 1.0f, 1.0f);
         _cmdList->setRootConstants(0, (u32*)&posOffetScale, 4);
         _cmdList->setRootConstants(4, (u32*)&texOffetScale, 4);
@@ -114,7 +114,7 @@ namespace vg::graphics::renderer
         _cmdList->setRootConstants(0, (u32*)&posOffetScale, 4);
         _cmdList->setRootConstants(4, (u32*)&texOffetScale, 4);
         
-        y += 0.005f;
+        y += 0.01f;
         
         _cmdList->draw(4);
     }

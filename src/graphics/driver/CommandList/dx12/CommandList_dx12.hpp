@@ -242,5 +242,15 @@ namespace vg::graphics::driver::dx12
                                     src.pResource = context.m_uploadBuffer->getResource().getd3d12BufferResource();
 
         m_d3d12graphicsCmdList->CopyTextureRegion( &dst, 0, 0, 0, &src, nullptr);
+
+        D3D12_RESOURCE_BARRIER barrier;
+        barrier.Transition.pResource = _dst->getResource().getd3d12TextureResource();
+        barrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
+        barrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
+        barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_COPY_DEST;
+        barrier.Transition.StateAfter = D3D12_RESOURCE_STATE_GENERIC_READ;
+        barrier.Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
+
+        m_d3d12graphicsCmdList->ResourceBarrier(1, &barrier);
     }
 }
