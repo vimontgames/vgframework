@@ -35,16 +35,16 @@ namespace vg::graphics::driver
     core::Pool<RenderPass> RenderPass::s_memPool;
 
     //--------------------------------------------------------------------------------------
-    void * RenderPass::operator new(size_t _size)
-    {
-        return s_memPool.alloc();
-    }
+    //void * RenderPass::operator new(size_t _size)
+    //{
+    //    return s_memPool.alloc();
+    //}
 
     //--------------------------------------------------------------------------------------
-    void RenderPass::operator delete(void * _address)
-    {
-        s_memPool.dealloc((RenderPass*)_address);
-    }
+    //void RenderPass::operator delete(void * _address)
+    //{
+    //    s_memPool.dealloc((RenderPass*)_address);
+    //}
 
 	//--------------------------------------------------------------------------------------
 	RenderPass::RenderPass(const RenderPassKey & _key) :

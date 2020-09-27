@@ -156,7 +156,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	//_crtBreakAlloc = (505);
 	#endif
 
-	core::uint width = 320, height = 256;
+	core::uint width = 512, height = 256;
 
 	if (!CreateGameWindow(hInstance, lpCmdLine, nCmdShow, width, height))
 		return 1;

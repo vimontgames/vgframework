@@ -34,20 +34,20 @@ namespace vg::graphics::driver::dx12
 			void							endFrame					();
 			
 		private:
-			IDXGISwapChain1 *				created3d12SwapChain		(HWND _winHandle, core::uint _width, core::uint _height);
+			IDXGISwapChain3 *				created3d12SwapChain		(HWND _winHandle, core::uint _width, core::uint _height);
 
         private:
             D3D12Device *					m_d3d12device				= nullptr;
 			ID3D12Debug *					m_d3d12debug				= nullptr;
 			D3D_FEATURE_LEVEL				m_level						= (D3D_FEATURE_LEVEL)0;	// TODO: caps struct
 			
-			IDXGISwapChain1 *               m_dxgiSwapChain				= nullptr;
+			IDXGISwapChain3 *               m_dxgiSwapChain				= nullptr;
 			IDXGIAdapter1 *					m_dxgiAdapter				= nullptr;
 			IDXGIFactory5 *					m_dxgiFactory				= nullptr;
 			
 			static const inline core::uint	s_invalidRenderTargetDescriptorSize = (core::uint) - 1;
 			ID3D12DescriptorHeap *			m_renderTargetDescriptorHeap = nullptr;
-			core::uint						m_renderTargetDescriptorAllocated = 3;
+			core::uint						m_renderTargetDescriptorAllocated = max_frame_latency;
 			core::uint						m_renderTargetDescriptorUsed = 0;
 			core::uint						m_renderTargetDescriptorSize = s_invalidRenderTargetDescriptorSize;
 

@@ -9,7 +9,14 @@ namespace vg::graphics::driver
             m_bufDesc(_bufDesc)
         {
             VG_DEBUGPRINT("Init Buffer \"%s\" (", _name.c_str());
-            VG_DEBUGPRINT("%u", _bufDesc.elementSize);
+
+            if (_bufDesc.elementSize > 1024 * 1024)
+                VG_DEBUGPRINT("%u MB", _bufDesc.elementSize / (1024*1024));
+            else if (_bufDesc.elementSize > 1024)
+                VG_DEBUGPRINT("%u KB", _bufDesc.elementSize/1024);
+            else
+                VG_DEBUGPRINT("%u B", _bufDesc.elementSize);
+
             if (_bufDesc.elementCount > 1)
                 VG_DEBUGPRINT("x%u", _bufDesc.elementCount);
            

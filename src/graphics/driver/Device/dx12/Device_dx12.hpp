@@ -5,15 +5,18 @@ namespace vg::graphics::driver::dx12
 	{
 		super::init(_params);
 
+        uint dxgiFactoryFlags = 0;
 		if (_params.debugDevice)
 		{
 			VG_ASSERT_SUCCEEDED(D3D12GetDebugInterface(IID_PPV_ARGS(&m_d3d12debug)));
 
 			if (m_d3d12debug)
 				m_d3d12debug->EnableDebugLayer();
-		}
 
-		VG_ASSERT_SUCCEEDED(CreateDXGIFactory2(0, IID_PPV_ARGS(&m_dxgiFactory)));
+            dxgiFactoryFlags = DXGI_CREATE_FACTORY_DEBUG;
+		}
+		//VG_ASSERT_SUCCEEDED(CreateDXGIFactory2(dxgiFactoryFlags, IID_PPV_ARGS(&m_dxgiFactory)));
+        VG_ASSERT_SUCCEEDED(CreateDXGIFactory1(IID_PPV_ARGS(&m_dxgiFactory)));
 
 		const D3D_FEATURE_LEVEL levels[] =
 		{
@@ -146,7 +149,7 @@ namespace vg::graphics::driver::dx12
 	}
 
 	//--------------------------------------------------------------------------------------
-	IDXGISwapChain1 * Device::created3d12SwapChain(HWND _winHandle, core::uint _width, core::uint _height)
+	IDXGISwapChain3 * Device::created3d12SwapChain(HWND _winHandle, core::uint _width, core::uint _height)
 	{
 		VG_ASSERT(core::invalidWindowHandle != _winHandle);
 
@@ -173,7 +176,8 @@ namespace vg::graphics::driver::dx12
 
 		auto * graphicsQueue = getCommandQueue(CommandQueueType::Graphics);
 
-		VG_ASSERT_SUCCEEDED(m_dxgiFactory->CreateSwapChainForHwnd(graphicsQueue->getd3d12CommandQueue(), _winHandle, &swapChainDesc, nullptr, nullptr, &m_dxgiSwapChain));
+		VG_ASSERT_SUCCEEDED(m_dxgiFactory->CreateSwapChainForHwnd(graphicsQueue->getd3d12CommandQueue(), _winHandle, &swapChainDesc, nullptr, nullptr, (IDXGISwapChain1**)&m_dxgiSwapChain));
+        VG_ASSERT(getFrameContextIndex() == m_dxgiSwapChain->GetCurrentBackBufferIndex());
 		return m_dxgiSwapChain;
 	}
 
@@ -313,6 +317,8 @@ namespace vg::graphics::driver::dx12
 		super::beginFrame();
 
         const auto currentFrameIndex = getFrameContextIndex();
+        const auto curBackbuffer = m_dxgiSwapChain->GetCurrentBackBufferIndex();
+        VG_ASSERT(curBackbuffer == currentFrameIndex);
 
         if (m_fenceValues[currentFrameIndex])
         {

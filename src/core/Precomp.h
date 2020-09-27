@@ -37,7 +37,7 @@
 #if VG_ENABLE_DEBUGPRINT
 #define VG_DEBUGPRINT(...) vg::core::debugPrint(__VA_ARGS__)
 #else
-#define VG_DEBUGPRINT(...) {}
+#define VG_DEBUGPRINT(...) __noop
 #endif
 
 #if VG_ENABLE_ASSERT
@@ -54,7 +54,7 @@
 	while(0)
 #define VG_VERIFY(f) VG_ASSERT(f)
 #else
-#define VG_ASSERT(condition, ...)	{}
+#define VG_ASSERT(condition, ...) __noop
 #define VG_VERIFY(f) f
 #endif
 

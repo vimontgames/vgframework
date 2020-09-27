@@ -38,8 +38,8 @@ namespace vg::graphics::driver
 		using super = VG_GFXAPI::RenderPass;
 
 	public:
-        void * operator new(size_t _size);
-        void operator delete(void * _address);
+        //void * operator new(size_t _size);
+        //void operator delete(void * _address);
 
 		RenderPass(const RenderPassKey & _key);
 		~RenderPass();
