@@ -52,8 +52,8 @@ namespace vg::graphics::driver
 	//--------------------------------------------------------------------------------------
 	// Texture
 	//--------------------------------------------------------------------------------------
-	Texture::Texture(const TextureDesc & _texDesc, const core::string & _name, void * _initData) :
-		super::Texture(_texDesc, _name, _initData)
+	Texture::Texture(const TextureDesc & _texDesc, const core::string & _name, void * _initData, ReservedSlot _reservedSlot) :
+		super::Texture(_texDesc, _name, _initData, _reservedSlot)
 	{
 
 	}

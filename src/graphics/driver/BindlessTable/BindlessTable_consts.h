@@ -10,7 +10,14 @@ namespace vg::graphics::driver
 
     constexpr core::uint max_bindless_elements = 65536;
 
-    constexpr BindlessHandle invalidBindlessTextureHandle = (BindlessHandle)max_bindless_elements-1;
-    constexpr BindlessHandle invalidBindlessBufferHandle = (BindlessHandle)max_bindless_elements-2;
-    constexpr BindlessHandle invalidBindlessUAVHandle = (BindlessHandle)max_bindless_elements-3;
+    constexpr BindlessHandle invalidBindlessTextureSRVHandle     = 65535;
+    constexpr BindlessHandle invalidBindlessTextureUAVHandle     = 65534;
+    constexpr BindlessHandle invalidBindlessBufferSRVHandle      = 65533;
+    constexpr BindlessHandle invalidBindlessBufferUAVHandle      = 65532;
+    constexpr BindlessHandle invalidBindlessConstantBufferHandle = 65531;
+
+    enum ReservedSlot : core::u32
+    {
+        None = 0x80000000
+    };
 }

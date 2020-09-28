@@ -190,13 +190,16 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
 	engine->init(engineParams);
 
-	const core::string title = "VimontGames framework - " + core::Plugin::getConfiguration() + " - " + core::asString(engineParams.renderer.device.api);
+	core::string title = "VimontGames framework - " + core::Plugin::getConfiguration() + " - " + core::asString(engineParams.renderer.device.api);
+    if (engineParams.renderer.device.debugDevice)
+        title += " (debug)";
+
 	SetWindowTextA(g_hWnd, title.c_str());
 
     core::u64 frame = 0;
 	while (!processSystemMessage())
 	{
-        SetWindowTextA(g_hWnd, (title + "#" + std::to_string(frame)).c_str());
+        SetWindowTextA(g_hWnd, (title + " - Frame " + std::to_string(frame)).c_str());
         frame++;
 		engine->runOneFrame();
 	}

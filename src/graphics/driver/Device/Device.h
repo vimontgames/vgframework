@@ -3,10 +3,11 @@
 #include "core/Types/Types.h"
 #include "graphics/driver/IDevice.h"
 #include "graphics/driver/Device/Device_consts.h"
+#include "graphics/driver/BindlessTable/BindlessTable_consts.h"
 #include "graphics/driver/CommandQueue/CommandQueue_consts.h"
 #include "graphics/driver/CommandList/CommandList_consts.h"
-#include "graphics/driver/Device/DeviceCaps.h"
 #include "graphics/driver/RootSignature/RootSignature_consts.h"
+#include "graphics/driver/Device/DeviceCaps.h"
 
 //#define VG_DBG_CPUGPUSYNC 1
 
@@ -123,8 +124,8 @@ namespace vg::graphics::driver
 		void		        beginFrame		    ();
 		void		        endFrame		    ();
 
-		Texture *	        createTexture	    (const TextureDesc & _texDesc, const core::string & _name, void * _initData = nullptr);
-        Buffer *            createBuffer        (const BufferDesc & _bufDesc, const core::string & _name, void * _initData = nullptr);
+		Texture *	        createTexture	    (const TextureDesc & _texDesc, const core::string & _name, void * _initData = nullptr, ReservedSlot _reservedSlot = ReservedSlot::None);
+        Buffer *            createBuffer        (const BufferDesc & _bufDesc, const core::string & _name, void * _initData = nullptr, ReservedSlot _reservedSlot = ReservedSlot::None);
 
         RootSignatureHandle addRootSignature    (const RootSignatureDesc & _desc);
         RootSignature *     getRootSignature    (const RootSignatureHandle & _handle);

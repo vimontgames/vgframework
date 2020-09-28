@@ -65,7 +65,7 @@ namespace vg::graphics::renderer
     void TestPass::setup()
     {
         auto * renderer = Renderer::get();
-        auto & backbuffer = renderer->getBackbuffer()->getTexDesc();
+        const auto & backbuffer = renderer->getBackbuffer()->getTexDesc();
 
         FrameGraph::TextureDesc desc;
         desc.width = backbuffer.width;
@@ -80,7 +80,7 @@ namespace vg::graphics::renderer
 
         desc.clearColor = { 1, 0, color, 1 };
 
-        color += 1.0f / (float)backbuffer.height;
+        color += 1.0f / 255.0f;
 
         writeRenderTarget(0, "Backbuffer", desc);
     }
@@ -114,7 +114,9 @@ namespace vg::graphics::renderer
         _cmdList->setRootConstants(0, (u32*)&posOffetScale, 4);
         _cmdList->setRootConstants(4, (u32*)&texOffetScale, 4);
         
-        y += 0.01f;
+        auto * renderer = Renderer::get();
+        const auto & backbuffer = renderer->getBackbuffer()->getTexDesc();
+        y += 1.0f/(float)backbuffer.height;
         
         _cmdList->draw(4);
     }

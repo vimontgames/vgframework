@@ -35,7 +35,7 @@ namespace vg::graphics::driver::vulkan
     }
 
 	//--------------------------------------------------------------------------------------
-	Texture::Texture(const TextureDesc & _texDesc, const core::string & _name, void * _initData) :
+	Texture::Texture(const TextureDesc & _texDesc, const core::string & _name, void * _initData, ReservedSlot _reservedSlot) :
 		base::Texture(_texDesc, _name, _initData)
 	{
 		auto * device = driver::Device::get();
@@ -95,35 +95,13 @@ namespace vg::graphics::driver::vulkan
 
             if (!asBool(TextureFlags::Backbuffer & _texDesc.flags))
             {
-                // should be done when creating table
-                static bool first = true;
-
-                if (first)
-                {
-                    for (uint i = 0; i < max_bindless_elements; ++i)
-                    {
-                        VkDescriptorImageInfo tex_descs = {};
-                        tex_descs.imageView = m_vkImageView;
-                        tex_descs.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
-                        tex_descs.sampler = device->vk_immutableSampler;
-
-                        VkWriteDescriptorSet writes = {};
-                        writes.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
-                        writes.dstBinding = 0; // register
-                        writes.descriptorCount = 1;
-                        writes.descriptorType = VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE;
-                        writes.pImageInfo = &tex_descs;
-                        writes.dstSet = device->m_vkbindlessDescriptorSet[0];
-                        writes.dstArrayElement = i; // offset
-
-                        vkUpdateDescriptorSets(device->getVulkanDevice(), 1, &writes, 0, nullptr);
-                    }
-                }
+                BindlessTable * bindlessTable = device->getBindlessTable();
+                m_bindlessTextureHandle = bindlessTable->allocBindlessTextureHandle(static_cast<driver::Texture*>(this), _reservedSlot);
 
                 VkDescriptorImageInfo tex_descs = {};
                 tex_descs.imageView = m_vkImageView;
                 tex_descs.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
-                tex_descs.sampler = device->vk_immutableSampler;
+                tex_descs.sampler = nullptr; // device->vk_immutableSampler;
 
                 VkWriteDescriptorSet writes = {};
                 writes.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
@@ -132,12 +110,11 @@ namespace vg::graphics::driver::vulkan
                 writes.descriptorType = VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE;
                 writes.pImageInfo = &tex_descs;
                 writes.dstSet = device->m_vkbindlessDescriptorSet[0];
-                writes.dstArrayElement = first ? 0 : 1; // offset
-
-                first = false;
+                writes.dstArrayElement = m_bindlessTextureHandle; 
 
                 vkUpdateDescriptorSets(device->getVulkanDevice(), 1, &writes, 0, nullptr);
 
+                // should be done once @ init time, not for every texture !
                 VkDescriptorImageInfo samp_descs = {};
                 samp_descs.imageView = VK_NULL_HANDLE;
                 samp_descs.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;

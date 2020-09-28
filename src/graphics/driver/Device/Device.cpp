@@ -337,15 +337,15 @@ namespace vg::graphics::driver
     }
 
 	//--------------------------------------------------------------------------------------
-	Texture * Device::createTexture(const TextureDesc & _texDesc, const core::string & _name, void * _initData)
+	Texture * Device::createTexture(const TextureDesc & _texDesc, const core::string & _name, void * _initData, ReservedSlot _reservedSlot)
 	{
-		return new Texture(_texDesc, _name, _initData);
+		return new Texture(_texDesc, _name, _initData, _reservedSlot);
 	}
 
     //--------------------------------------------------------------------------------------
-    Buffer * Device::createBuffer(const BufferDesc & _bufDesc, const core::string & _name, void * _initData)
+    Buffer * Device::createBuffer(const BufferDesc & _bufDesc, const core::string & _name, void * _initData, ReservedSlot _reservedSlot)
     {
-        return new Buffer(_bufDesc, _name, _initData);
+        return new Buffer(_bufDesc, _name, _initData, _reservedSlot);
     }
 
     //--------------------------------------------------------------------------------------

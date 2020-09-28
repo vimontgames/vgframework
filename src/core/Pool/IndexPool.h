@@ -31,9 +31,15 @@ namespace vg::core
             return (T)-1;
         }
 
-        void free(T  _index)
+        bool isAvailable(T _index)
         {
-            const T start = 0;
+            const uint pageIndex = _index / pageCount;
+            const uint localIndex = _index - (pageIndex * elemCountPerPage);
+            return (elemMask(1) << localIndex) & m_pages[pageIndex].mask;
+        }
+
+        void free(T _index)
+        {
             const uint pageIndex = _index / pageCount;
             const uint localIndex = _index - (pageIndex * elemCountPerPage);
             m_pages[pageIndex].mask |= elemMask(1) << localIndex;

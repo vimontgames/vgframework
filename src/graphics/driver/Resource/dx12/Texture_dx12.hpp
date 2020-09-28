@@ -100,7 +100,7 @@ namespace vg::graphics::driver::dx12
     }
 
 	//--------------------------------------------------------------------------------------
-	Texture::Texture(const TextureDesc & _texDesc, const core::string & _name, void * _initData) :
+	Texture::Texture(const TextureDesc & _texDesc, const core::string & _name, void * _initData, ReservedSlot _reservedSlot) :
 		base::Texture(_texDesc, _name, _initData)
 	{
 		auto * device = driver::Device::get();
@@ -181,7 +181,7 @@ namespace vg::graphics::driver::dx12
             VG_ASSERT(m_resource.getd3d12TextureResource());
 
             BindlessTable * bindlessTable = device->getBindlessTable();
-            m_bindlessTextureHandle = bindlessTable->allocBindlessTextureHandle(static_cast<driver::Texture*>(this));
+            m_bindlessTextureHandle = bindlessTable->allocBindlessTextureHandle(static_cast<driver::Texture*>(this), _reservedSlot);
 
             D3D12_CPU_DESCRIPTOR_HANDLE d3d12DescriptorHandle = bindlessTable->getd3d12DescriptorHandle(m_bindlessTextureHandle);
             d3d12device->CreateShaderResourceView(m_resource.getd3d12TextureResource(), &srvDesc, d3d12DescriptorHandle);

@@ -24,7 +24,7 @@ namespace vg::graphics::driver
         protected:
 			const TextureDesc               m_texDesc;
             driver::Resource                m_resource;
-            driver::BindlessTextureHandle   m_bindlessTextureHandle = driver::invalidBindlessTextureHandle;
+            driver::BindlessTextureHandle   m_bindlessTextureHandle = driver::invalidBindlessTextureSRVHandle;
 		};
 	}
 }
@@ -38,7 +38,7 @@ namespace vg::graphics::driver
 		using super = VG_GFXAPI::Texture;
 
 	public:
-		Texture(const TextureDesc & _texDesc, const core::string & _name, void * _initData = nullptr);
+		Texture(const TextureDesc & _texDesc, const core::string & _name, void * _initData = nullptr, ReservedSlot _reservedSlot = ReservedSlot::None);
 		~Texture();
 	};
 }

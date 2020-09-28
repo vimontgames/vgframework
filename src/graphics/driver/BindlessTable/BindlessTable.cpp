@@ -25,25 +25,38 @@ namespace vg::graphics::driver
         }
 
         //--------------------------------------------------------------------------------------
-        BindlessTextureHandle BindlessTable::allocBindlessTextureHandle(driver::Texture * _texture)
+        // In case the value of '_reservedSlot' is not ReservedSlot::None then its value casted to 'BindlessTextureHandle' 
+        // will be used (slot must be free)
+        //--------------------------------------------------------------------------------------
+        BindlessTextureHandle BindlessTable::allocBindlessTextureHandle(driver::Texture * _texture, ReservedSlot _reservedSlot)
         {
-            BindlessTextureHandle handle = m_srvIndexPool.alloc();
-            if (invalidBindlessTextureHandle != handle)
+            BindlessTextureHandle handle;
+            
+            if (ReservedSlot::None == _reservedSlot)
+                handle = m_srvIndexPool.alloc();
+            else
+            {
+                VG_ASSERT(m_srvIndexPool.isAvailable((BindlessHandle)_reservedSlot));
+                handle = (BindlessHandle)_reservedSlot;
+            }
+
+            if (invalidBindlessTextureSRVHandle != handle && ReservedSlot::None != _reservedSlot)
             {
                 auto & desc = m_slotDesc[handle];
                 desc.flags = Flags::Texture;
                 desc.texture = _texture;
             }
+
             return handle;
         }
 
         //--------------------------------------------------------------------------------------
         void BindlessTable::freeBindlessTextureHandle(BindlessTextureHandle & _handle)
         {
-            if (invalidBindlessTextureHandle != _handle)
+            if (invalidBindlessTextureSRVHandle != _handle)
             {
                 m_srvIndexPool.free(_handle);
-                _handle = invalidBindlessTextureHandle;
+                _handle = invalidBindlessTextureSRVHandle;
                 auto & desc = m_slotDesc[_handle];
                 desc.flags = (Flags)0;
                 desc.texture = nullptr;
@@ -77,7 +90,13 @@ namespace vg::graphics::driver
             for (u32 i = 0; i < w; ++i)
                 texInitData[j][i] = ((i>>3) & 1) != ((j>>3) & 1) ? 0xFFFF00FF : 0x7F7F007F;
         
-        m_defaultTexture = device->createTexture(texDesc, "testTex", (void*)texInitData);
-        VG_ASSERT(m_defaultTexture->getBindlessTextureHandle() == 0);
+        // create default texture at slot 'invalidBindlessTextureHandle'
+        m_defaultTexture = device->createTexture(texDesc, "testTex", (void*)texInitData, ReservedSlot(invalidBindlessTextureSRVHandle));
+        VG_ASSERT(m_defaultTexture->getBindlessTextureHandle() == invalidBindlessTextureSRVHandle);
+
+        // copy texture to all 'texture' slots
+        for (uint i = 0; i < max_bindless_elements; ++i)
+            if (invalidBindlessTextureSRVHandle != i)
+                copyTextureHandle(i, m_defaultTexture);
     }
 }

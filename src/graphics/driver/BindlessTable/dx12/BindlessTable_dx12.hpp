@@ -34,23 +34,27 @@ namespace vg::graphics::driver::dx12
     //--------------------------------------------------------------------------------------
     void BindlessTable::beginFrame()
     {
-        static bool update = true;
-        if (update)
-        {
-            D3D12_CPU_DESCRIPTOR_HANDLE cpuDescriptors = m_srvCPUDescriptorHeap->GetCPUDescriptorHandleForHeapStart();
-            D3D12_CPU_DESCRIPTOR_HANDLE gpuDescriptors = m_srvGPUDescriptorHeap->GetCPUDescriptorHandleForHeapStart();
-            auto * device = driver::Device::get();
-            device->getd3d12Device()->CopyDescriptorsSimple(max_bindless_elements, gpuDescriptors, cpuDescriptors, D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
-            update = false; // double-buffer descriptor heap instead ?
-        }
+        D3D12_CPU_DESCRIPTOR_HANDLE cpuDescriptors = m_srvCPUDescriptorHeap->GetCPUDescriptorHandleForHeapStart();
+        D3D12_CPU_DESCRIPTOR_HANDLE gpuDescriptors = m_srvGPUDescriptorHeap->GetCPUDescriptorHandleForHeapStart();
+        auto * device = driver::Device::get();
+        device->getd3d12Device()->CopyDescriptorsSimple(max_bindless_elements, gpuDescriptors, cpuDescriptors, D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
     }
 
     //--------------------------------------------------------------------------------------
     D3D12_CPU_DESCRIPTOR_HANDLE BindlessTable::getd3d12DescriptorHandle(BindlessHandle _handle) const
     {
-        VG_ASSERT(invalidBindlessTextureHandle != _handle && invalidBindlessBufferHandle != _handle && invalidBindlessUAVHandle != _handle);
         D3D12_CPU_DESCRIPTOR_HANDLE handle = { m_srvCPUDescriptorHeap->GetCPUDescriptorHandleForHeapStart() };
         handle.ptr += _handle * m_srcDescriptorHeapSize;
         return handle;
+    }
+
+    //--------------------------------------------------------------------------------------
+    void BindlessTable::copyTextureHandle(core::uint _slot, driver::Texture * _texture)
+    {
+        D3D12_CPU_DESCRIPTOR_HANDLE src = getd3d12DescriptorHandle(_texture->getBindlessTextureHandle());
+        D3D12_CPU_DESCRIPTOR_HANDLE dst = getd3d12DescriptorHandle(_slot);
+
+        auto * device = driver::Device::get();
+        device->getd3d12Device()->CopyDescriptorsSimple(1, dst, src, D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
     }
 }

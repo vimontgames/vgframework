@@ -8,7 +8,7 @@ namespace vg::graphics::driver::vulkan
         using super = base::Buffer;
 
     public:
-        Buffer(const BufferDesc & _bufDesc, const core::string & _name, void * _initData);
+        Buffer(const BufferDesc & _bufDesc, const core::string & _name, void * _initData, ReservedSlot _reservedSlot);
         ~Buffer();
 
     private:

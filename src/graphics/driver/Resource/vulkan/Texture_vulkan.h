@@ -14,7 +14,7 @@ namespace vg::graphics::driver::vulkan
         static VkFormat     getVulkanPixelFormat    (PixelFormat _format);
         static PixelFormat  getPixelFormat          (VkFormat _vkFormat);
 
-		Texture(const TextureDesc & _texDesc, const core::string & _name, void * _initData);
+		Texture(const TextureDesc & _texDesc, const core::string & _name, void * _initData, ReservedSlot _reservedSlot);
 		~Texture();
 
         VkImageView         getVulkanImageView() const { return m_vkImageView; }

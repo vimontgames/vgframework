@@ -11,7 +11,7 @@ namespace vg::graphics::driver
         //Dynamic
     };
 
-    enum CPUAccessFlags : core::u8
+    enum class CPUAccessFlags : core::u8
     {
         None                = 0x00,
         Read                = 0x01,

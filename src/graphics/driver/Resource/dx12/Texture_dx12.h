@@ -21,10 +21,9 @@ namespace vg::graphics::driver::dx12
 
         static PixelFormat                  getPixelFormat                      (DXGI_FORMAT _d3d12Format);
        
-											Texture				                (const TextureDesc & _texDesc, const core::string & _name, void * _initData);
+											Texture				                (const TextureDesc & _texDesc, const core::string & _name, void * _initData, ReservedSlot _reservedSlot);
 											~Texture			                ();
 
-        //const D3D12_CPU_DESCRIPTOR_HANDLE & getd3d12SRVHandle                   () const;
 		const D3D12_CPU_DESCRIPTOR_HANDLE & getd3d12RTVHandle	                () const;
 
 	private:

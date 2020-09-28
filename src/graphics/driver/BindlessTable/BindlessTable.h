@@ -20,7 +20,7 @@ namespace vg::graphics::driver
 
             const RootSignatureTableDesc & getTableDesc() const { return m_tableDesc; }
 
-            BindlessTextureHandle allocBindlessTextureHandle(driver::Texture * _texture);
+            BindlessTextureHandle allocBindlessTextureHandle(driver::Texture * _texture, ReservedSlot _reservedSlot);
             void freeBindlessTextureHandle(BindlessTextureHandle & _handle);
 
         private:

@@ -1,7 +1,7 @@
 namespace vg::graphics::driver::vulkan
 {
     //--------------------------------------------------------------------------------------
-    Buffer::Buffer(const BufferDesc & _bufDesc, const core::string & _name, void * _initData) :
+    Buffer::Buffer(const BufferDesc & _bufDesc, const core::string & _name, void * _initData, ReservedSlot _reservedSlot) :
         base::Buffer(_bufDesc, _name, _initData)
     {
         auto * device = driver::Device::get();

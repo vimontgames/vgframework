@@ -10,6 +10,8 @@ namespace vg::graphics::driver::vulkan
         BindlessTable();
         ~BindlessTable();
 
+        void copyTextureHandle(core::uint _slot, driver::Texture * _texture);
+
     private:
 
     };

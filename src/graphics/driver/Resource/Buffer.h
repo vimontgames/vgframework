@@ -34,7 +34,7 @@ namespace vg::graphics::driver
         using super = VG_GFXAPI::Buffer;
 
     public:
-        Buffer(const BufferDesc & _bufDesc, const core::string & _name, void * _initData = nullptr);
+        Buffer(const BufferDesc & _bufDesc, const core::string & _name, void * _initData = nullptr, ReservedSlot _reservedSlot = ReservedSlot::None);
         ~Buffer();
     };
 }
