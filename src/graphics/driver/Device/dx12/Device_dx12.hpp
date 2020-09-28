@@ -13,10 +13,9 @@ namespace vg::graphics::driver::dx12
 			if (m_d3d12debug)
 				m_d3d12debug->EnableDebugLayer();
 
-            dxgiFactoryFlags = DXGI_CREATE_FACTORY_DEBUG;
+            dxgiFactoryFlags = DXGI_CREATE_FACTORY_DEBUG; 
 		}
-		//VG_ASSERT_SUCCEEDED(CreateDXGIFactory2(dxgiFactoryFlags, IID_PPV_ARGS(&m_dxgiFactory)));
-        VG_ASSERT_SUCCEEDED(CreateDXGIFactory1(IID_PPV_ARGS(&m_dxgiFactory)));
+		VG_ASSERT_SUCCEEDED(CreateDXGIFactory2(dxgiFactoryFlags, IID_PPV_ARGS(&m_dxgiFactory)));
 
 		const D3D_FEATURE_LEVEL levels[] =
 		{
@@ -116,14 +115,10 @@ namespace vg::graphics::driver::dx12
 		auto * swapChain = created3d12SwapChain((HWND)_params.window, _params.resolution.x, _params.resolution.y);
 
 		// Create fences for each frame so we can protect resources and wait for any given frame
-		m_currentFenceValue = 1;
-	
-		for (int i = 0; i < max_frame_latency; ++i)
-		{
-			m_frameFenceEvents[i] = CreateEvent(nullptr, FALSE, FALSE, nullptr);
-			m_fenceValues[i] = 0;
-			VG_ASSERT_SUCCEEDED(device->CreateFence(0, D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(&m_frameFences[i])));
-		}
+        mNextFrameFence = 1;
+        m_nextFrameIndex = 0;
+        mFenceEvent = CreateEvent(nullptr, false, false, nullptr);
+        VG_ASSERT_SUCCEEDED(device->CreateFence(0, D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(&mFence)));
 
         // Rendertarget CPU descriptor heap
 		D3D12_DESCRIPTOR_HEAP_DESC heapDesc = {};
@@ -136,14 +131,15 @@ namespace vg::graphics::driver::dx12
 		// For now just create command pools to handle latency
 		// We'll need later to have one per thread recording command buffers
 		for (uint i = 0; i < max_frame_latency; ++i)
-		{
-			ID3D12Resource * d3d12backbufferResource = nullptr;
-			m_dxgiSwapChain->GetBuffer(i, IID_PPV_ARGS(&d3d12backbufferResource));
+			createFrameContext(i);
 
-			createFrameContext(i, d3d12backbufferResource);
-
-			d3d12backbufferResource->Release();
-		}
+        for (uint i = 0; i < max_backbuffer_count; ++i)
+        {
+            ID3D12Resource * d3d12backbufferResource = nullptr;
+            m_dxgiSwapChain->GetBuffer(i, IID_PPV_ARGS(&d3d12backbufferResource));
+            createBackbuffer(i, d3d12backbufferResource);
+            d3d12backbufferResource->Release();
+        }
 
         m_bindlessTable = new driver::BindlessTable();
 	}
@@ -168,41 +164,71 @@ namespace vg::graphics::driver::dx12
 		swapChainDesc.SampleDesc.Quality = 0;
 		swapChainDesc.SampleDesc.Count = 1;
 		swapChainDesc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
-		swapChainDesc.BufferCount = max_frame_latency;
+		swapChainDesc.BufferCount = max_backbuffer_count;
 		swapChainDesc.SwapEffect = DXGI_SWAP_EFFECT_FLIP_DISCARD;
 		swapChainDesc.AlphaMode = DXGI_ALPHA_MODE_UNSPECIFIED;
-		swapChainDesc.Flags = DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH;
+		//swapChainDesc.Flags = DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH | DXGI_SWAP_CHAIN_FLAG_ALLOW_TEARING /*| DXGI_SWAP_CHAIN_FLAG_FRAME_LATENCY_WAITABLE_OBJECT*/;
+        swapChainDesc.Flags |= DXGI_SWAP_CHAIN_FLAG_FRAME_LATENCY_WAITABLE_OBJECT;
 		swapChainDesc.Flags |= fullScreen ? DXGI_SWAP_CHAIN_FLAG_FULLSCREEN_VIDEO : 0;
 
 		auto * graphicsQueue = getCommandQueue(CommandQueueType::Graphics);
 
 		VG_ASSERT_SUCCEEDED(m_dxgiFactory->CreateSwapChainForHwnd(graphicsQueue->getd3d12CommandQueue(), _winHandle, &swapChainDesc, nullptr, nullptr, (IDXGISwapChain1**)&m_dxgiSwapChain));
-        VG_ASSERT(getFrameContextIndex() == m_dxgiSwapChain->GetCurrentBackBufferIndex());
+        
+        VG_ASSERT_SUCCEEDED(m_dxgiFactory->MakeWindowAssociation(_winHandle, DXGI_MWA_NO_WINDOW_CHANGES | DXGI_MWA_NO_ALT_ENTER | DXGI_MWA_NO_PRINT_SCREEN));
+
+        m_currentBackbufferIndex = m_dxgiSwapChain->GetCurrentBackBufferIndex();
+
+        if (swapChainDesc.Flags & DXGI_SWAP_CHAIN_FLAG_FRAME_LATENCY_WAITABLE_OBJECT)
+        {
+            VG_ASSERT_SUCCEEDED(m_dxgiSwapChain->SetMaximumFrameLatency(max_frame_latency));
+            //mSwapEvent = m_dxgiSwapChain->GetFrameLatencyWaitableObject();
+        }
+
 		return m_dxgiSwapChain;
 	}
 
     //--------------------------------------------------------------------------------------
-    void WaitForFence(ID3D12Fence* fence, UINT64 completionValue, HANDLE waitEvent)
-	{
-        #if VG_DBG_CPUGPUSYNC
-        VG_DEBUGPRINT("Wait for fence %u ...\n", completionValue);
-        #endif
+    //void WaitForFence(ID3D12Fence* fence, UINT64 completionValue, HANDLE waitEvent)
+	//{
+    //    #if VG_DBG_CPUGPUSYNC
+    //    VG_DEBUGPRINT("Wait for fence %u ...\n", completionValue);
+    //    #endif
+    //
+    //    const auto completed = fence->GetCompletedValue();
+	//	if (completed < completionValue)
+	//	{
+    //        #if VG_DBG_CPUGPUSYNC
+    //        VG_DEBUGPRINT("SetEventOnCompletion\n");
+    //        #endif
+    //
+	//		VG_ASSERT_SUCCEEDED(fence->SetEventOnCompletion(completionValue, waitEvent));
+	//		const auto result = WaitForSingleObject(waitEvent, INFINITE);
+    //
+    //        VG_ASSERT(WAIT_ABANDONED != result, "The specified object is a mutex object that was not released by the thread that owned the mutex object before the owning thread terminated. Ownership of the mutex object is granted to the calling thread and the mutex state is set to nonsignaled. If the mutex was protecting persistent state information, you should check it for consistency.");
+    //        VG_ASSERT(WAIT_TIMEOUT != result, "The time-out interval elapsed, and the object's state is nonsignaled.");
+    //        VG_ASSERT(WAIT_FAILED != result, "The function has failed. To get extended error information, call GetLastError.");
+    //        VG_ASSERT(WAIT_OBJECT_0 == result, "The state of the specified should be signaled.");
+	//	}
+	//}
 
-		if (fence->GetCompletedValue() < completionValue)
-		{
-            #if VG_DBG_CPUGPUSYNC
-            VG_DEBUGPRINT("SetEventOnCompletion\n");
-            #endif
-
-			VG_ASSERT_SUCCEEDED(fence->SetEventOnCompletion(completionValue, waitEvent));
-			const auto result = WaitForSingleObject(waitEvent, INFINITE);
-
-            VG_ASSERT(WAIT_ABANDONED != result, "The specified object is a mutex object that was not released by the thread that owned the mutex object before the owning thread terminated. Ownership of the mutex object is granted to the calling thread and the mutex state is set to nonsignaled. If the mutex was protecting persistent state information, you should check it for consistency.");
-            VG_ASSERT(WAIT_TIMEOUT != result, "The time-out interval elapsed, and the object's state is nonsignaled.");
-            VG_ASSERT(WAIT_FAILED != result, "The function has failed. To get extended error information, call GetLastError.");
-            VG_ASSERT(WAIT_OBJECT_0 == result, "The state of the specified should be signaled.");
-		}
-	}
+    //--------------------------------------------------------------------------------------
+    UINT64 WaitForFence(ID3D12Fence *Fence, HANDLE FenceEvent, UINT64 WaitValue)
+    {
+        UINT64 CompletedValue;
+        while ((CompletedValue = Fence->GetCompletedValue()) < WaitValue)
+        {
+            if (FenceEvent)
+            {
+                WaitForSingleObject(FenceEvent, INFINITE);
+            }
+            else
+            {
+                Sleep(1);
+            }
+        }
+        return CompletedValue;
+    }
 
 	//--------------------------------------------------------------------------------------
 	D3D12_CPU_DESCRIPTOR_HANDLE Device::allocRTVHandle(core::uint _count)
@@ -247,8 +273,25 @@ namespace vg::graphics::driver::dx12
     //--------------------------------------------------------------------------------------
     void Device::waitGPUIdle()
     {
-        for (int i = 0; i < max_frame_latency; ++i)
-            WaitForFence(m_frameFences[i], m_fenceValues[i], m_frameFenceEvents[i]);     
+        //for (int i = 0; i < max_frame_latency; ++i)
+        //    WaitForFence(m_frameFences[i], m_fenceValues[i], m_frameFenceEvents);   
+
+        for (uint q = 0; q < enumCount<CommandQueueType>(); ++q)
+        {
+            const auto cmdQueueType = (CommandQueueType)q;
+            auto * queue = getCommandQueue(cmdQueueType);
+
+            // TODO: separate fence for each queue ?
+            if (CommandQueueType::Graphics == cmdQueueType)
+            {
+                auto * d3d12queue = queue->getd3d12CommandQueue();
+
+                static UINT64 exit_fence = 0;
+                d3d12queue->Signal(mFence, exit_fence);
+                mFence->SetEventOnCompletion(exit_fence, mFenceEvent);
+                WaitForSingleObject(mFenceEvent, INFINITE);
+            }
+        }
     }
 
 	//--------------------------------------------------------------------------------------
@@ -257,10 +300,15 @@ namespace vg::graphics::driver::dx12
         for (uint i = 0; i < countof(m_frameContext); ++i)
             destroyFrameContext(i);
 
+        for (uint i = 0; i < countof(m_bufferContext); ++i)
+            destroyBackbuffer(i);
+
 		VG_SAFE_RELEASE(m_renderTargetDescriptorHeap);
 
-		for (uint i = 0; i < max_frame_latency; ++i)
-			VG_SAFE_RELEASE(m_frameFences[i]);
+        //for (uint i = 0; i < max_frame_latency; ++i)
+        //	VG_SAFE_RELEASE(m_frameFences[i]);
+
+        VG_SAFE_RELEASE(mFence);
 
 		VG_SAFE_RELEASE(m_dxgiSwapChain);
 
@@ -286,6 +334,7 @@ namespace vg::graphics::driver::dx12
 		if (SUCCEEDED(m_d3d12device->QueryInterface(&debugInterface)))
 		{
 			debugInterface->ReportLiveDeviceObjects(D3D12_RLDO_DETAIL | D3D12_RLDO_IGNORE_INTERNAL);
+            debugInterface->SetEnableSynchronizedCommandQueueValidation(false);
 			debugInterface->Release();
 		}
 		#endif
@@ -316,18 +365,39 @@ namespace vg::graphics::driver::dx12
 	{
 		super::beginFrame();
 
-        const auto currentFrameIndex = getFrameContextIndex();
-        const auto curBackbuffer = m_dxgiSwapChain->GetCurrentBackBufferIndex();
-        VG_ASSERT(curBackbuffer == currentFrameIndex);
+        //if (WAIT_TIMEOUT == WaitForSingleObjectEx(mSwapEvent, 1000, TRUE))
+        //{
+        //    VG_DEBUGPRINT("WaitSwap timeout");
+        //}
 
-        if (m_fenceValues[currentFrameIndex])
-        {
-            #if VG_DBG_CPUGPUSYNC
-            VG_DEBUGPRINT("Wait completion of frame %u (fence[%u] = %u)\n", m_frameCounter - max_frame_latency, currentFrameIndex, m_fenceValues[currentFrameIndex]);
-            #endif
+        // Get/Increment the fence counter
+        UINT64 FrameFence = mNextFrameFence;
+        mNextFrameFence = mNextFrameFence + 1;
 
-            WaitForFence(m_frameFences[currentFrameIndex], m_fenceValues[currentFrameIndex], m_frameFenceEvents[currentFrameIndex]);
-        }
+        // Get/Increment the frame ring-buffer index
+        UINT FrameIndex = m_nextFrameIndex;
+        m_nextFrameIndex = (m_nextFrameIndex + 1) % (UINT)max_frame_latency;
+
+        //const auto currentFrameIndex = getFrameContextIndex();
+        m_currentBackbufferIndex = m_dxgiSwapChain->GetCurrentBackBufferIndex();
+        //VG_ASSERT(curBackbuffer == currentFrameIndex);
+        //
+        //static uint frame = 0;
+        //
+        ////if (m_fenceValues[currentFrameIndex])
+        //{
+        //    #if VG_DBG_CPUGPUSYNC
+        //    VG_DEBUGPRINT("Wait completion of frame %u (fence[%u] = %u)\n", m_frameCounter - max_frame_latency, currentFrameIndex, m_fenceValues[currentFrameIndex]);
+        //    #endif
+        //
+        //    WaitForFence(m_frameFences[currentFrameIndex], m_fenceValues[currentFrameIndex], m_frameFenceEvents);
+        //}
+
+        // Wait for the last frame occupying this slot to be complete
+        FrameContext * Frame = &m_frameContext[FrameIndex];
+        WaitForFence(mFence, mFenceEvent, Frame->mFrameFenceId);
+        Frame->mFrameFenceId = FrameFence;
+        m_currentFrameIndex = FrameIndex;
 
 		auto & context = getCurrentFrameContext();
 
@@ -344,7 +414,7 @@ namespace vg::graphics::driver::dx12
 
 		// Transition back buffer
 		D3D12_RESOURCE_BARRIER barrier;
-		barrier.Transition.pResource = m_frameContext[currentFrameIndex].backbuffer->getResource().getd3d12TextureResource();
+		barrier.Transition.pResource = m_bufferContext[m_currentBackbufferIndex].backbuffer->getResource().getd3d12TextureResource();
 		barrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
 		barrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
 		barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_PRESENT;
@@ -358,6 +428,8 @@ namespace vg::graphics::driver::dx12
 	void Device::endFrame()
 	{
         auto & context = getCurrentFrameContext();
+        const auto curBackbuffer = m_dxgiSwapChain->GetCurrentBackBufferIndex();
+        VG_ASSERT(m_currentBackbufferIndex == curBackbuffer);
 
         for (uint q = 0; q < enumCount<CommandQueueType>(); ++q)
         {
@@ -379,7 +451,7 @@ namespace vg::graphics::driver::dx12
                 {
                     // Transition the swap chain back to present
                     D3D12_RESOURCE_BARRIER barrier;
-                    barrier.Transition.pResource = context.backbuffer->getResource().getd3d12TextureResource();
+                    barrier.Transition.pResource = m_bufferContext[curBackbuffer].backbuffer->getResource().getd3d12TextureResource();
                     barrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
                     barrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
                     barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_RENDER_TARGET;
@@ -400,8 +472,8 @@ namespace vg::graphics::driver::dx12
             }
         }
 
-		VG_ASSERT_SUCCEEDED(m_dxgiSwapChain->Present(1, 0));
-
+        const auto currentFrameIndex = (getFrameContextIndex() + 1) % max_frame_latency; // next frame
+       
         for (uint q = 0; q < enumCount<CommandQueueType>(); ++q)
         {
             const auto cmdQueueType = (CommandQueueType)q;
@@ -413,18 +485,23 @@ namespace vg::graphics::driver::dx12
                 auto * d3d12queue = queue->getd3d12CommandQueue();
 
                 // Mark the fence for the current frame.
-                const auto fenceValue = m_currentFenceValue;
-                const auto currentFrameIndex = getFrameContextIndex();
+                //const auto fenceValue = ++m_currentFenceValue;
+                //
+                //#if VG_DBG_CPUGPUSYNC
+                //VG_DEBUGPRINT("Write fence %u (fence[%u] = %u)\n", currentFrameIndex, currentFrameIndex, fenceValue);
+                //#endif
+                //
+                //d3d12queue->Signal(m_frameFences[currentFrameIndex], fenceValue);
+                //m_fenceValues[currentFrameIndex] = fenceValue;
 
-                #if VG_DBG_CPUGPUSYNC
-                VG_DEBUGPRINT("Write fence %u (fence[%u] = %u)\n", currentFrameIndex, currentFrameIndex, fenceValue);
-                #endif
-
-                d3d12queue->Signal(m_frameFences[currentFrameIndex], fenceValue);
-                m_fenceValues[currentFrameIndex] = fenceValue;
-                ++m_currentFenceValue;
+                // Signal that the frame is complete
+                auto & Frame = getCurrentFrameContext();
+                VG_ASSERT_SUCCEEDED(mFence->SetEventOnCompletion(Frame.mFrameFenceId, mFenceEvent));
+                VG_ASSERT_SUCCEEDED(d3d12queue->Signal(mFence, Frame.mFrameFenceId));
             }
         }
+
+        VG_ASSERT_SUCCEEDED(m_dxgiSwapChain->Present(0, 0));
 
 		super::endFrame();
 	}

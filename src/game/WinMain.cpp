@@ -156,7 +156,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	//_crtBreakAlloc = (505);
 	#endif
 
-	core::uint width = 512, height = 256;
+	core::uint width = 512, height = 512;
 
 	if (!CreateGameWindow(hInstance, lpCmdLine, nCmdShow, width, height))
 		return 1;
@@ -179,9 +179,10 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	}
 
     #ifdef VG_DEBUG
+    // Debug device is disabled by default because it introduces random freezes when using DX12
     engineParams.renderer.device.debugDevice = true;
-    engineParams.renderer.device.breakOnErrors = true;
-    engineParams.renderer.device.breakOnWarnings = true;
+    engineParams.renderer.device.breakOnErrors = false;
+    engineParams.renderer.device.breakOnWarnings = false;
     #endif
 
     engineParams.renderer.device.window = g_hWnd;
@@ -192,8 +193,11 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	const core::string title = "VimontGames framework - " + core::Plugin::getConfiguration() + " - " + core::asString(engineParams.renderer.device.api);
 	SetWindowTextA(g_hWnd, title.c_str());
 
+    core::u64 frame = 0;
 	while (!processSystemMessage())
 	{
+        SetWindowTextA(g_hWnd, (title + "#" + std::to_string(frame)).c_str());
+        frame++;
 		engine->runOneFrame();
 	}
 

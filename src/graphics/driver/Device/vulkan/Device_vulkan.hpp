@@ -352,10 +352,10 @@ namespace vg::graphics::driver::vulkan
 		VG_ASSERT_VULKAN(m_KHR_Swapchain.m_pfnGetSwapchainImagesKHR(m_vkDevice, m_vkSwapchain, &swapchainImageCount, swapchainImages));
 
 		for (uint i = 0; i < max_frame_latency; ++i)
-		{
-			VkImage * vulkanBackbufferResource = &swapchainImages[i];
-			createFrameContext(i, vulkanBackbufferResource);
-		}
+			createFrameContext(i);
+
+        for (uint i = 0; i < max_backbuffer_count; ++i)
+            createBackbuffer(i, &swapchainImages[i]);
 
 		VG_SAFE_FREE(swapchainImages);
 
@@ -630,7 +630,7 @@ namespace vg::graphics::driver::vulkan
 		// Determine the number of VkImages to use in the swap chain.
 		// Application desires to acquire 3 images at a time for triple
 		// buffering
-		uint32_t desiredNumOfSwapchainImages = max_frame_latency;
+		uint32_t desiredNumOfSwapchainImages = max_backbuffer_count;
 		if (desiredNumOfSwapchainImages < surfCapabilities.minImageCount) 
 			desiredNumOfSwapchainImages = surfCapabilities.minImageCount;
 
@@ -809,7 +809,7 @@ namespace vg::graphics::driver::vulkan
 				VG_ASSERT_VULKAN(vkCreateSemaphore(m_vkDevice, &semaphoreCreateInfo, nullptr, &image_ownership_semaphores[i]));
 		}
 
-		frame_index = 0;
+        m_nextFrameIndex = 0;
 
 		// Get Memory information and properties
 		vkGetPhysicalDeviceMemoryProperties(m_vkPhysicalDevice, &memory_properties);
@@ -847,6 +847,9 @@ namespace vg::graphics::driver::vulkan
 		for (uint i = 0; i < countof(m_frameContext); ++i)
 			destroyFrameContext(i);
 
+        for (uint i = 0; i < countof(m_bufferContext); ++i)
+            destroyBackbuffer(i);
+
         VG_SAFE_DELETE(m_bindlessTable);
         VG_SAFE_RELEASE(m_memoryAllocator);
 
@@ -880,8 +883,6 @@ namespace vg::graphics::driver::vulkan
         return m_memoryAllocator->getVulkanMemoryAllocator(); 
     }
 
-    u32 currentBuffer;
-
 	//--------------------------------------------------------------------------------------
 	void Device::beginFrame()
 	{
@@ -889,20 +890,25 @@ namespace vg::graphics::driver::vulkan
 
         VkDevice & vkDevice = getVulkanDevice();
 
-        const auto currentFrameIndex = getFrameContextIndex();
+        // Get/Increment the frame ring-buffer index
+        UINT FrameIndex = m_nextFrameIndex;
+        m_nextFrameIndex = (m_nextFrameIndex + 1) % (UINT)max_frame_latency;
 
         // Ensure no more than max_frame_latency renderings are outstanding
-        if (m_frameCounter >= max_frame_latency)
+        //if (m_frameCounter >= max_frame_latency)
         {
             #if VG_DBG_CPUGPUSYNC
-            VG_DEBUGPRINT("Wait completion of frame %u (fence[%u])\n", m_frameCounter - max_frame_latency, currentFrameIndex);
+            VG_DEBUGPRINT("Wait completion of frame %u (fence[%u])\n", m_frameCounter - max_frame_latency, FrameIndex);
             #endif
 
-            vkWaitForFences(vkDevice, 1, &fences[currentFrameIndex], VK_TRUE, UINT64_MAX);
+            vkWaitForFences(vkDevice, 1, &fences[FrameIndex], VK_TRUE, UINT64_MAX);
         }
-        vkResetFences(vkDevice, 1, &fences[currentFrameIndex]);
+        vkResetFences(vkDevice, 1, &fences[FrameIndex]);
+        m_currentFrameIndex = FrameIndex;
 
-        VG_ASSERT_VULKAN(m_KHR_Swapchain.m_pfnAcquireNextImageKHR(vkDevice, m_vkSwapchain, UINT64_MAX, image_acquired_semaphores[currentFrameIndex], VK_NULL_HANDLE, &currentBuffer));
+        u32 currentBuffer;
+        VG_ASSERT_VULKAN(m_KHR_Swapchain.m_pfnAcquireNextImageKHR(vkDevice, m_vkSwapchain, UINT64_MAX, image_acquired_semaphores[FrameIndex], VK_NULL_HANDLE, &currentBuffer));
+        m_currentBackbufferIndex = currentBuffer;
 
         auto & context = getCurrentFrameContext();
 
@@ -964,7 +970,8 @@ namespace vg::graphics::driver::vulkan
         present.pWaitSemaphores = &draw_complete_semaphores[currentFrameIndex];
         present.swapchainCount = 1;
         present.pSwapchains = &m_vkSwapchain;
-        present.pImageIndices = &currentBuffer;
+        const u32 currentBackbuffer = m_currentBackbufferIndex;
+        present.pImageIndices = &currentBackbuffer;
         present.pResults = nullptr;
 
         VG_ASSERT_VULKAN(m_KHR_Swapchain.m_pfnQueuePresentKHR(getCommandQueue(CommandQueueType::Graphics)->getVulkanCommandQueue(), &present));

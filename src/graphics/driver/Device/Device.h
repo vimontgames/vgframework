@@ -28,9 +28,13 @@ namespace vg::graphics::driver
 
     enum class PixelFormat : core::u8;
 
+    struct BufferContext
+    {
+        driver::Texture *					            backbuffer = nullptr;
+    };
+
 	struct FrameContext
 	{
-		driver::Texture *					            backbuffer = nullptr;
 		core::vector<driver::CommandPool*>	            commandPools;
 		core::vector<driver::CommandList*>	            commandLists[core::enumCount<CommandListType>()];
         core::vector<core::Object*>                     m_objectsToRelease;
@@ -38,6 +42,7 @@ namespace vg::graphics::driver
         core::u8 *                                      m_uploadBegin = nullptr;
         core::u8 *                                      m_uploadCur = nullptr;
         core::vector<core::pair<Texture*, core::u32>>   m_texturesToUpload;
+        UINT64                                          mFrameFenceId;
 	};
 
 	namespace base
@@ -61,12 +66,17 @@ namespace vg::graphics::driver
 			driver::CommandQueue * 			                getCommandQueue		        (CommandQueueType _type);
 			void											destroyCommandQueues	    ();
 			
-			void											createFrameContext		    (core::uint _frameContextIndex, void * _backbuffer);
+            core::u64                                       getFrameCounter() const;
+
+			void											createFrameContext		    (core::uint _frameContextIndex);
 			void											destroyFrameContext		    (core::uint _frameContextIndex);
-			FrameContext &									getFrameContext			    (core::uint _frameContextIndex);
-            core::u64                                       getFrameCounter             () const;
 			core::uint                                      getFrameContextIndex        () const;
             FrameContext &									getCurrentFrameContext      ();
+
+            void											createBackbuffer            (core::uint _backbufferIndex, void * _backbuffer);
+            void											destroyBackbuffer           (core::uint _backbufferIndex);
+            core::uint                                      getBackbufferIndex          () const;
+            BufferContext &									getCurrentBackbuffer        ();
 
 			core::vector<driver::CommandList*> &			getCommandLists			    (CommandListType _type);
 			driver::Texture *								getBackbuffer			    ();
@@ -78,10 +88,11 @@ namespace vg::graphics::driver
 
             BindlessTable *                                 getBindlessTable            () const;
 
-		protected:
+		//protected:
             DeviceCaps                                      m_caps;
 			driver::CommandQueue*				            m_commandQueue[core::enumCount<CommandQueueType>()];
 			FrameContext									m_frameContext[max_frame_latency];
+            BufferContext                                   m_bufferContext[max_backbuffer_count];
 			core::u64										m_frameCounter = 0;
             driver::PixelFormat                             m_backbufferFormat;
             MemoryAllocator *                               m_memoryAllocator = nullptr;
@@ -89,6 +100,10 @@ namespace vg::graphics::driver
             ShaderManager *                                 m_shaderManager = nullptr;
             RootSignatureTable                              m_rootSignaturesTable;
             driver::BindlessTable *                         m_bindlessTable = nullptr;
+
+            core::u8                                        m_currentFrameIndex;        // current frame being rendered
+            core::u8                                        m_nextFrameIndex;
+            core::u8                                        m_currentBackbufferIndex;   // current backbuffer being used
 		};
 	}
 }

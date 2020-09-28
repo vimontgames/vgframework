@@ -2,7 +2,8 @@
 
 namespace vg::graphics::driver
 {
-	constexpr auto max_frame_latency = 2;
+	constexpr auto max_frame_latency = 2;       // The maximum number of “game frames” that will be generated on the CPU before waiting for the earliest one to complete.
+    constexpr auto max_backbuffer_count = 3;    // Can be different or equal than 'max_frame_latency' depending on the GPU/CPU sync mode 
 
     enum class Severity : core::u8
     {

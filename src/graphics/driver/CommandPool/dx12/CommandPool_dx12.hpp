@@ -17,6 +17,6 @@ namespace vg::graphics::driver::dx12
 	//--------------------------------------------------------------------------------------
 	void CommandPool::beginFrame()
 	{
-		m_d3d12cmdAllocator->Reset();
+		VG_ASSERT_SUCCEEDED(m_d3d12cmdAllocator->Reset());
 	}
 }

@@ -68,7 +68,7 @@ namespace vg::graphics::driver
     void BindlessTable::init()
     {
         auto * device = driver::Device::get();
-
+        
         const uint w = 32;
         const uint h = 32;
         TextureDesc texDesc = TextureDesc(Usage::Default, BindFlags::ShaderResource, CPUAccessFlags::None, TextureType::Texture2D, PixelFormat::R8G8B8A8_unorm, TextureFlags::None, w, h);
@@ -76,8 +76,8 @@ namespace vg::graphics::driver
         for (u32 j = 0; j < h; ++j)
             for (u32 i = 0; i < w; ++i)
                 texInitData[j][i] = ((i>>3) & 1) != ((j>>3) & 1) ? 0xFFFF00FF : 0x7F7F007F;
-
+        
         m_defaultTexture = device->createTexture(texDesc, "testTex", (void*)texInitData);
-        //VG_ASSERT(m_defaultTexture->getBindlessTextureHandle() == 0);
+        VG_ASSERT(m_defaultTexture->getBindlessTextureHandle() == 0);
     }
 }

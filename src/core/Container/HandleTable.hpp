@@ -71,7 +71,8 @@ namespace vg::core
     //--------------------------------------------------------------------------------------
     template <typename desc_t, class object_t, typename index_t> core::uint HandleTable<desc_t,object_t,index_t>::remove(typename HandleTable<desc_t, object_t, index_t>::Handle & _handle)
     {
-        VG_ASSERT(_handle.isValid());
+        const char * name = strrchr(typeid(object_t).name(), ':');
+        VG_ASSERT(_handle.isValid(), "Invalid '%s' Handle", name ? name+1 : typeid(object_t).name());
         uint refCount = 0;
 
         if (_handle.isValid())

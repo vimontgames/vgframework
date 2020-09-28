@@ -39,7 +39,7 @@ namespace vg::graphics::driver::dx12
 		switch (getType())
 		{
 			case CommandListType::Graphics:
-				m_d3d12graphicsCmdList->Reset(getCommandPool()->getd3d12CommandAllocator(), nullptr);
+				VG_ASSERT_SUCCEEDED(m_d3d12graphicsCmdList->Reset(getCommandPool()->getd3d12CommandAllocator(), nullptr));
 				break;
 
 			default:

@@ -94,41 +94,26 @@ namespace vg::graphics::driver
 		}
 
 		//--------------------------------------------------------------------------------------
-		void Device::createFrameContext(core::uint _frameContextIndex, void * _surface)
+		void Device::createFrameContext(core::uint _frameContextIndex)
 		{
-			auto & context = getFrameContext(_frameContextIndex);
+			auto & context = m_frameContext[_frameContextIndex];
 
-			// Create backbuffer texture
-			{
-				TextureDesc backbufferTexDesc
-				(
-                    Usage::Default,
-                    BindFlags::None,
-                    CPUAccessFlags::None,
-					TextureType::Texture2D,
-					m_backbufferFormat,
-					TextureFlags::RenderTarget | TextureFlags::Backbuffer | TextureFlags::sRGB,
-					getDeviceParams().resolution.x,
-					getDeviceParams().resolution.y
-                );
-
-				m_frameContext[_frameContextIndex].backbuffer = getDevice()->createTexture(backbufferTexDesc, "Backbuffer#" + to_string(_frameContextIndex), _surface);
-			}
+            context.mFrameFenceId = 0;
 
 			// Create command lists
 			{
                 auto & cmdPools = context.commandPools;
 
                 // Create graphics command list for uploads
-                {
-                    const auto cmdPoolIndex = (uint)cmdPools.size();
-                    cmdPools.push_back(new driver::CommandPool(_frameContextIndex, cmdPoolIndex));
-                    auto & cmdPool = cmdPools.back();
-
-                    auto & cmdLists = context.commandLists[asInteger(CommandListType::Graphics)];
-                    const auto cmdListIndex = (uint)cmdLists.size();
-                    cmdLists.push_back(new driver::CommandList(CommandListType::Graphics, cmdPool, _frameContextIndex, cmdListIndex));
-                }
+                //{
+                //    const auto cmdPoolIndex = (uint)cmdPools.size();
+                //    cmdPools.push_back(new driver::CommandPool(_frameContextIndex, cmdPoolIndex));
+                //    auto & cmdPool = cmdPools.back();
+                //
+                //    auto & cmdLists = context.commandLists[asInteger(CommandListType::Graphics)];
+                //    const auto cmdListIndex = (uint)cmdLists.size();
+                //    cmdLists.push_back(new driver::CommandList(CommandListType::Graphics, cmdPool, _frameContextIndex, cmdListIndex));
+                //}
 
 				// Create default Graphics command list
 				{
@@ -145,16 +130,16 @@ namespace vg::graphics::driver
             // Buffer for uploads
             {
                 auto & buffer = context.m_uploadBuffer;
-
+            
                 BufferDesc bufDesc(
                     Usage::Upload, 
                     BindFlags::None, 
                     CPUAccessFlags::Write, 
                     BufferFlags::None, 
                     16 * 1024 * 1024); // 16 Mo
-
+            
                 buffer = new driver::Buffer(bufDesc, "Upload#" + to_string(_frameContextIndex));
-
+            
                 // keep always mapped
                 Map result = buffer->getResource().map();
                 context.m_uploadBegin = (core::u8*)result.data;
@@ -177,9 +162,7 @@ namespace vg::graphics::driver
 				for (auto & cmdList : cmdLists)
 					VG_SAFE_RELEASE(cmdList);
 				cmdLists.clear();
-			}
-
-			VG_SAFE_RELEASE(frameContext.backbuffer);
+			}			
 
             for (Object * obj : frameContext.m_objectsToRelease)
                 VG_SAFE_RELEASE(obj);
@@ -189,29 +172,59 @@ namespace vg::graphics::driver
             VG_SAFE_RELEASE(frameContext.m_uploadBuffer);
 		}
 
-		//--------------------------------------------------------------------------------------
-		FrameContext & Device::getFrameContext(uint _frameContextIndex)
-		{
-			VG_ASSERT(_frameContextIndex < countof(m_frameContext));
-			return m_frameContext[_frameContextIndex];
-		}
+        //--------------------------------------------------------------------------------------
+        uint Device::getFrameContextIndex() const
+        {
+            return m_currentFrameIndex;
+        }
+
+        //--------------------------------------------------------------------------------------
+        FrameContext & Device::getCurrentFrameContext()
+        {
+            return m_frameContext[m_currentFrameIndex];
+        }
+
+        //--------------------------------------------------------------------------------------
+        void Device::createBackbuffer(core::uint _backbufferIndex, void * _backbuffer)
+        {
+             TextureDesc backbufferTexDesc
+            (
+                Usage::Default,
+                BindFlags::None,
+                CPUAccessFlags::None,
+                TextureType::Texture2D,
+                m_backbufferFormat,
+                TextureFlags::RenderTarget | TextureFlags::Backbuffer | TextureFlags::sRGB,
+                getDeviceParams().resolution.x,
+                getDeviceParams().resolution.y
+            );
+
+            m_bufferContext[_backbufferIndex].backbuffer = getDevice()->createTexture(backbufferTexDesc, "Backbuffer#" + to_string(_backbufferIndex), _backbuffer);
+        }
+
+        //--------------------------------------------------------------------------------------
+        void Device::destroyBackbuffer(core::uint _backbufferIndex)
+        {
+            VG_SAFE_RELEASE(m_bufferContext[_backbufferIndex].backbuffer);
+        }
+
+        //--------------------------------------------------------------------------------------
+        core::uint Device::getBackbufferIndex() const
+        {
+            return m_currentBackbufferIndex;
+        }
+
+        //--------------------------------------------------------------------------------------
+        BufferContext & Device::getCurrentBackbuffer()
+        {
+            return m_bufferContext[m_currentBackbufferIndex];
+        }
 
         //--------------------------------------------------------------------------------------
         u64 Device::getFrameCounter() const
         {
             return m_frameCounter;
         }
-        //--------------------------------------------------------------------------------------
-        uint Device::getFrameContextIndex() const
-        {
-            return m_frameCounter % max_frame_latency;
-        }
-
-		//--------------------------------------------------------------------------------------
-		FrameContext & Device::getCurrentFrameContext()
-		{
-			return getFrameContext(getFrameContextIndex());
-		}
 
         //--------------------------------------------------------------------------------------
         void Device::releaseAsync(core::Object * _object)
@@ -244,7 +257,7 @@ namespace vg::graphics::driver
 		//--------------------------------------------------------------------------------------
 		driver::Texture * Device::getBackbuffer()
 		{
-			return getCurrentFrameContext().backbuffer;
+			return m_bufferContext[m_currentBackbufferIndex].backbuffer;
 		}
 
         //--------------------------------------------------------------------------------------

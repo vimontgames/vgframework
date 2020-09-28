@@ -334,7 +334,7 @@ namespace vg::graphics::driver
 	{
 		// Temp: use graphics command list
 		Device * device = Device::get();
-		CommandList * cmdList = device->getCommandLists(CommandListType::Graphics)[1]; // #1: default command list (#0 is upload command list)
+		CommandList * cmdList = device->getCommandLists(CommandListType::Graphics)[0]; 
 
 		for (const RenderPass * renderPass : m_renderPasses)
 		{

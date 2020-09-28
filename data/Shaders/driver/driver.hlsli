@@ -1,9 +1,6 @@
 #ifndef _DRIVER__HLSLI_
 #define _DRIVER__HLSLI_
 
-#include "semantics.hlsli"
-#include "samplers.hlsli"
-
 #ifdef DX12
 #define DECL_ROOTCONSTANTS(type, name, reg, s) ConstantBuffer<type> name : register(b##reg, space##s);
 #elif defined(VULKAN)
@@ -17,8 +14,6 @@ struct RootConstants
     uint4 uvOffsetScale;
 };
 DECL_ROOTCONSTANTS(RootConstants, rootConstants, 0, 0);
-
-Texture2D Texture2DTable[] : register(t0, space0);
 
 #endif
 

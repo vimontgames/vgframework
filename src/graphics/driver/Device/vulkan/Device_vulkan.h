@@ -91,8 +91,6 @@ namespace vg::graphics::driver::vulkan
 			VkSwapchainKHR m_vkSwapchain;
 			VkPresentModeKHR presentMode;
 			VkFence fences[max_frame_latency];
-			int frame_index;
-
 			VkSemaphore image_acquired_semaphores[max_frame_latency];
 			VkSemaphore draw_complete_semaphores[max_frame_latency];
 			VkSemaphore image_ownership_semaphores[max_frame_latency];
