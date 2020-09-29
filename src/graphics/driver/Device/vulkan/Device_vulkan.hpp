@@ -379,36 +379,6 @@ namespace vg::graphics::driver::vulkan
     
         VG_ASSERT_VULKAN(vkCreateDescriptorPool(m_vkDevice, &descriptor_pool, nullptr, &m_vkDescriptorPool));
 
-        // temp
-        //VkDescriptorSetLayoutBinding vkLayoutBinding = {};
-        //
-        //vkLayoutBinding.binding = 0;
-        //vkLayoutBinding.descriptorType = VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE;
-        //vkLayoutBinding.descriptorCount = max_bindless_elements;
-        //vkLayoutBinding.stageFlags = VK_SHADER_STAGE_FRAGMENT_BIT;
-        //
-        //VkDescriptorSetLayoutCreateInfo vkDescriptorSetLayoutDesc = {};
-        //vkDescriptorSetLayoutDesc.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO;
-        //vkDescriptorSetLayoutDesc.bindingCount = 1;
-        //vkDescriptorSetLayoutDesc.pBindings = &vkLayoutBinding;
-        //
-        //VkDescriptorSetLayout vkDescriptorSetLayout[2];
-        //VG_ASSERT_VULKAN(vkCreateDescriptorSetLayout(m_vkDevice, &vkDescriptorSetLayoutDesc, nullptr, &vkDescriptorSetLayout[0]));
-        //
-        //VkDescriptorSetLayoutBinding vkLayoutBinding1 = {};
-        //
-        //vkLayoutBinding1.binding = 0;
-        //vkLayoutBinding1.descriptorType = VK_DESCRIPTOR_TYPE_SAMPLER;
-        //vkLayoutBinding1.descriptorCount = 1;
-        //vkLayoutBinding1.stageFlags = VK_SHADER_STAGE_FRAGMENT_BIT;
-        //
-        //VkDescriptorSetLayoutCreateInfo vkDescriptorSetLayoutDesc1 = {};
-        //vkDescriptorSetLayoutDesc1.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO;
-        //vkDescriptorSetLayoutDesc1.bindingCount = 1;
-        //vkDescriptorSetLayoutDesc1.pBindings = &vkLayoutBinding1;
-        //
-        //VG_ASSERT_VULKAN(vkCreateDescriptorSetLayout(m_vkDevice, &vkDescriptorSetLayoutDesc1, nullptr, &vkDescriptorSetLayout[1]));
-
         driver::Device * device = static_cast<driver::Device*>(this);
 
         RootSignatureDesc rsDesc;
@@ -751,6 +721,25 @@ namespace vg::graphics::driver::vulkan
 								queues[0].pQueuePriorities = queue_priorities;
 								queues[0].flags = 0;
 
+        VkPhysicalDeviceDescriptorIndexingFeatures descriptorIndexingFeatures{};
+                                                   descriptorIndexingFeatures.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_INDEXING_FEATURES;
+
+        VkPhysicalDeviceFeatures2 supportedFeatures = {};
+                                  supportedFeatures.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2;
+                                  supportedFeatures.pNext = &descriptorIndexingFeatures;
+
+        vkGetPhysicalDeviceFeatures2(m_vkPhysicalDevice, &supportedFeatures);
+
+        VkPhysicalDeviceVulkan12Features vulkan12Features = {};
+                                         vulkan12Features.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_2_FEATURES;
+                                         vulkan12Features.descriptorIndexing = VK_TRUE; // descriptorIndexingFeatures.shaderSampledImageArrayNonUniformIndexing
+                                         vulkan12Features.shaderSampledImageArrayNonUniformIndexing = VK_TRUE;
+                                         //vulkan12Features.shaderInputAttachmentArrayDynamicIndexing = VK_TRUE;
+                                         //vulkan12Features.shaderInputAttachmentArrayNonUniformIndexing = VK_TRUE;
+                                         vulkan12Features.runtimeDescriptorArray = VK_TRUE;
+                                         vulkan12Features.shaderStorageImageArrayNonUniformIndexing = VK_TRUE;
+                                         vulkan12Features.pNext = nullptr;
+
 		VkDeviceCreateInfo deviceCreateInfo; 
 						   deviceCreateInfo.sType = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO;
 						   deviceCreateInfo.pNext = nullptr;
@@ -762,6 +751,7 @@ namespace vg::graphics::driver::vulkan
 						   deviceCreateInfo.enabledExtensionCount = m_deviceExtensionList.getEnabledExtensionCount();
 						   deviceCreateInfo.ppEnabledExtensionNames = m_deviceExtensionList.getEnabledExtensionNames();
 						   deviceCreateInfo.pEnabledFeatures = nullptr;
+                           deviceCreateInfo.pNext = &vulkan12Features;
 
 		if (m_useSeparatePresentCommandQueue)
 		{
@@ -1001,5 +991,97 @@ namespace vg::graphics::driver::vulkan
     {
         _vkRenderPass = VK_NULL_HANDLE;
         return (uint)-1;
+    }
+
+    //--------------------------------------------------------------------------------------
+    const char * Device::getVulkanErrorString(VkResult _vkResult)
+    {
+        switch (_vkResult)
+        {
+            // Success Codes
+            case VK_SUCCESS:
+                return "VK_SUCCESS\nCommand successfully completed.";
+            case VK_NOT_READY:
+                return "VK_NOT_READY\nA fence or query has not yet completed.";
+            case VK_TIMEOUT:
+                return "VK_TIMEOUT\nA wait operation has not completed in the specified time.";
+            case VK_EVENT_SET:
+                return "VK_EVENT_SET\nAn event is signaled.";
+            case VK_EVENT_RESET:
+                return "VK_EVENT_RESET\nAn event is unsignaled.";
+            case VK_INCOMPLETE:
+                return "VK_INCOMPLETE\nA return array was too small for the result.";
+            case VK_THREAD_IDLE_KHR:
+                return "VK_THREAD_IDLE_KHR\nA deferred operation is not complete but there is currently no work for this thread to do at the time of this call..";
+            case VK_THREAD_DONE_KHR:
+                return "VK_THREAD_DONE_KHR\nA deferred operation is not complete but there is no work remaining to assign to additional threads.";
+            case VK_OPERATION_DEFERRED_KHR:
+                return "VK_OPERATION_DEFERRED_KHR\nA deferred operation was requested and at least some of the work was deferred..";
+            case VK_OPERATION_NOT_DEFERRED_KHR:
+                return "VK_OPERATION_NOT_DEFERRED_KHR\nA deferred operation was requested and no operations were deferred..";
+            case VK_PIPELINE_COMPILE_REQUIRED_EXT:
+                return "VK_PIPELINE_COMPILE_REQUIRED_EXT\nA requested pipeline creation would have required compilation, but the application requested compilation to not be performed..";
+
+            // Error codes
+            default:
+            case VK_ERROR_UNKNOWN:
+                return "VK_ERROR_UNKNOWN\nAn unknown error has occurred; either the application has provided invalid input, or an implementation failure has occurred.";
+            case VK_ERROR_OUT_OF_HOST_MEMORY:
+                return "VK_ERROR_OUT_OF_HOST_MEMORY\nA host memory allocation has failed..";
+            case VK_ERROR_OUT_OF_DEVICE_MEMORY:
+                return "VK_ERROR_OUT_OF_DEVICE_MEMORY\nA device memory allocation has failed.";
+            case VK_ERROR_INITIALIZATION_FAILED:
+                return "VK_ERROR_INITIALIZATION_FAILED\nInitialization of an object could not be completed for implementation-specific reasons.";
+            case VK_ERROR_DEVICE_LOST:
+                return "VK_ERROR_DEVICE_LOST\nThe logical or physical device has been lost. See Lost Device.";
+            case VK_ERROR_MEMORY_MAP_FAILED:
+                return "VK_ERROR_MEMORY_MAP_FAILED\nMapping of a memory object has failed.";
+            case VK_ERROR_LAYER_NOT_PRESENT:
+                return "VK_ERROR_LAYER_NOT_PRESENT\nA requested layer is not present or could not be loaded.";
+            case VK_ERROR_EXTENSION_NOT_PRESENT:
+                return "VK_ERROR_EXTENSION_NOT_PRESENT\nA requested extension is not supported.";
+            case VK_ERROR_FEATURE_NOT_PRESENT:
+                return "VK_ERROR_FEATURE_NOT_PRESENT\nA requested feature is not supported.";
+            case VK_ERROR_INCOMPATIBLE_DRIVER:
+                return "VK_ERROR_INCOMPATIBLE_DRIVER\nThe requested version of Vulkan is not supported by the driver or is otherwise incompatible for implementation-specific reasons.";
+            case VK_ERROR_TOO_MANY_OBJECTS:
+                return "VK_ERROR_TOO_MANY_OBJECTS\nToo many objects of the type have already been created.";
+            case VK_ERROR_FORMAT_NOT_SUPPORTED:
+                return "VK_ERROR_FORMAT_NOT_SUPPORTED\nA requested format is not supported on this device.";
+            case VK_ERROR_FRAGMENTED_POOL:
+                return "VK_ERROR_FRAGMENTED_POOL\nA pool allocation has failed due to fragmentation of the pool’s memory. This must only be returned if no attempt to allocate host or device memory was made to accommodate the new allocation. This should be returned in preference to VK_ERROR_OUT_OF_POOL_MEMORY, but only if the implementation is certain that the pool allocation failure was due to fragmentation.";             
+            case VK_ERROR_OUT_OF_POOL_MEMORY:
+                return "VK_ERROR_OUT_OF_POOL_MEMORY\nA pool memory allocation has failed. This must only be returned if no attempt to allocate host or device memory was made to accommodate the new allocation. If the failure was definitely due to fragmentation of the pool, VK_ERROR_FRAGMENTED_POOL should be returned instead.";
+            case VK_ERROR_INVALID_EXTERNAL_HANDLE:
+                return "VK_ERROR_INVALID_EXTERNAL_HANDLE\nAn external handle is not a valid handle of the specified type.";
+            case VK_ERROR_FRAGMENTATION:
+                return "VK_ERROR_FRAGMENTATION\nA descriptor pool creation has failed due to fragmentation.";
+            case VK_ERROR_INVALID_OPAQUE_CAPTURE_ADDRESS:
+                return "VK_ERROR_INVALID_OPAQUE_CAPTURE_ADDRESS\nA buffer creation or memory allocation failed because the requested address is not available. A shader group handle assignment failed because the requested shader group handle information is no longer valid.";
+            case VK_ERROR_SURFACE_LOST_KHR:
+                return "VK_ERROR_SURFACE_LOST_KHR\nA surface is no longer available.";
+            case VK_ERROR_NATIVE_WINDOW_IN_USE_KHR:
+                return "VK_ERROR_NATIVE_WINDOW_IN_USE_KHR\nThe requested window is already in use by Vulkan or another API in a manner which prevents it from being used again.";
+            case VK_SUBOPTIMAL_KHR:
+                return "VK_SUBOPTIMAL_KHR\nA swapchain no longer matches the surface properties exactly, but can still be used to present to the surface successfully.";
+            case VK_ERROR_OUT_OF_DATE_KHR:
+                return "VK_ERROR_OUT_OF_DATE_KHR\nA surface has changed in such a way that it is no longer compatible with the swapchain, and further presentation requests using the swapchain will fail. Applications must query the new surface properties and recreate their swapchain if they wish to continue presenting to the surface.";
+            case VK_ERROR_INCOMPATIBLE_DISPLAY_KHR:
+                return "VK_ERROR_INCOMPATIBLE_DISPLAY_KHR\nThe display used by a swapchain does not use the same presentable image layout, or is incompatible in a way that prevents sharing an image.";
+            case VK_ERROR_VALIDATION_FAILED_EXT:
+                return "VK_ERROR_VALIDATION_FAILED_EXT";
+            case VK_ERROR_INVALID_SHADER_NV:
+                return "VK_ERROR_INVALID_SHADER_NV\nOne or more shaders failed to compile or link. More details are reported back to the application via VK_EXT_debug_report if enabled.";
+            case VK_ERROR_INCOMPATIBLE_VERSION_KHR:
+                return "VK_ERROR_INCOMPATIBLE_VERSION_KHR";
+            case VK_ERROR_INVALID_DRM_FORMAT_MODIFIER_PLANE_LAYOUT_EXT:
+                return "VK_ERROR_INVALID_DRM_FORMAT_MODIFIER_PLANE_LAYOUT_EXT";
+            case VK_ERROR_NOT_PERMITTED_EXT:
+                return "VK_ERROR_NOT_PERMITTED_EXT";
+            case VK_ERROR_FULL_SCREEN_EXCLUSIVE_MODE_LOST_EXT:
+                return "VK_ERROR_FULL_SCREEN_EXCLUSIVE_MODE_LOST_EXT\nAn operation on a swapchain created with VK_FULL_SCREEN_EXCLUSIVE_APPLICATION_CONTROLLED_EXT failed as it did not have exlusive full-screen access. This may occur due to implementation-dependent reasons, outside of the application’s control."; 
+
+
+        }
     }
 }

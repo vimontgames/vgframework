@@ -36,24 +36,11 @@ PS_Output_Quad PS_Quad(VS_Output_Quad _input)
     output.color0 = float4(uv, 0, 1);
 
     float y = asfloat(rootConstants.posOffsetScale.y);
-    uint index;
+    uint index = uint(y * 4);
 
-    if (y > 0.5)
-        index = 65535;
-    else if (y > 0.0)
-        index = 1;
-    else
-        index = 0;
-
+    //output.color0.rgb = Texture1DTable[index].Sample(sampler0, uv.x).rgb;
     output.color0.rgb = Texture2DTable[index].Sample(sampler0, uv).rgb;
-
-    //#ifdef VULKAN
-    //output.color0.b = 1;
-    //#endif
-    //
-    //#ifdef DX12
-    //output.color0.b = 0.5;
-    //#endif
+    //output.color0.rgb = Texture3DTable[index].Sample(sampler0, float3(uv,0)).rgb;
 
     return output;
 }

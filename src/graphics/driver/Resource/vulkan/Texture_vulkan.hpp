@@ -22,15 +22,73 @@ namespace vg::graphics::driver::vulkan
     {
         switch (_vkFormat)
         {
-        case VK_FORMAT_R8G8B8A8_UNORM:
-            return PixelFormat::R8G8B8A8_unorm;
+            default:
+                VG_ASSERT(false, "Unhandled pixel format \"%s\"", asString(_vkFormat).c_str());
+                return PixelFormat::Unknow;
 
-        case VK_FORMAT_B8G8R8A8_UNORM:
-            return PixelFormat::B8G8R8A8_unorm;
+            case VK_FORMAT_R8G8B8A8_UNORM:
+                return PixelFormat::R8G8B8A8_unorm;
 
-        default:
-            VG_ASSERT(false, "Unhandled pixel format \"%s\"", asString(_vkFormat).c_str());
-            return PixelFormat::Unknow;
+            case VK_FORMAT_B8G8R8A8_UNORM:
+                return PixelFormat::B8G8R8A8_unorm;
+        }
+    }
+
+    //--------------------------------------------------------------------------------------
+    VkImageType Texture::getVulkanImageType(TextureType _texType)
+    {
+        switch (_texType)
+        {
+            default:
+                VG_ASSERT(false, "Unhandled TextureType \"%s\"", asString(_texType).c_str());
+
+            case TextureType::Texture1D:
+            case TextureType::Texture1DArray:
+                return VK_IMAGE_TYPE_1D;
+
+            case TextureType::Texture2D:
+            case TextureType::Texture2DArray:
+            case TextureType::Texture2DMS:
+            case TextureType::Texture2DMSArray:
+            case TextureType::TextureCube:
+            case TextureType::TextureCubeArray:
+                return VK_IMAGE_TYPE_2D;
+
+            case TextureType::Texture3D:
+                return VK_IMAGE_TYPE_3D;
+        }
+    }
+
+    //--------------------------------------------------------------------------------------
+    VkImageViewType Texture::getVulkanImageViewType(TextureType _texType)
+    {
+        switch (_texType)
+        {
+            default:
+                VG_ASSERT(false, "Unhandled TextureType \"%s\"", asString(_texType).c_str());
+
+            case TextureType::Texture1D:
+                return VK_IMAGE_VIEW_TYPE_1D;
+
+            case TextureType::Texture1DArray:
+                return VK_IMAGE_VIEW_TYPE_1D_ARRAY;
+
+            case TextureType::Texture2D:
+            case TextureType::Texture2DMS:
+                return VK_IMAGE_VIEW_TYPE_2D;
+
+            case TextureType::Texture2DArray:
+            case TextureType::Texture2DMSArray:
+                return VK_IMAGE_VIEW_TYPE_2D_ARRAY;
+
+            case TextureType::TextureCube:
+                return VK_IMAGE_VIEW_TYPE_CUBE;
+
+            case TextureType::TextureCubeArray:
+                return VK_IMAGE_VIEW_TYPE_CUBE_ARRAY;
+
+            case TextureType::Texture3D:
+                return VK_IMAGE_VIEW_TYPE_3D;
         }
     }
 
@@ -48,7 +106,7 @@ namespace vg::graphics::driver::vulkan
         {
             VkImageCreateInfo imgDesc = {};
                               imgDesc.sType = VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO;
-                              imgDesc.imageType = VK_IMAGE_TYPE_2D;
+                              imgDesc.imageType = getVulkanImageType(_texDesc.type);
                               imgDesc.format = getVulkanPixelFormat(_texDesc.format);
                               imgDesc.extent = { _texDesc.width, _texDesc.height, _texDesc.depth };
                               imgDesc.mipLevels = 1;
@@ -88,7 +146,7 @@ namespace vg::graphics::driver::vulkan
 			imgViewDesc.subresourceRange.baseArrayLayer = 0;
 			imgViewDesc.subresourceRange.layerCount = 1;
 
-			imgViewDesc.viewType = VK_IMAGE_VIEW_TYPE_2D;
+			imgViewDesc.viewType = getVulkanImageViewType(_texDesc.type);
 			imgViewDesc.flags = 0;
 
 			VG_ASSERT_VULKAN(vkCreateImageView(device->getVulkanDevice(), &imgViewDesc, nullptr, &m_vkImageView));

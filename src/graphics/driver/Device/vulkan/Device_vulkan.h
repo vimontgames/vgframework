@@ -35,6 +35,8 @@ namespace vg::graphics::driver::vulkan
         VkRenderPass                    getVulkanRenderPass             (const RenderPassKey & _key);
         core::uint                      releaseVulkanRenderPass         (const RenderPassKey & _key, VkRenderPass & _vkRenderPass);
 
+        static const char *             getVulkanErrorString            (VkResult _vkResult);
+
 	//private:
 		void							registerExtensions				(const DeviceParams & _params);
 

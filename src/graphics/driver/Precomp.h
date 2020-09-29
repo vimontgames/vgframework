@@ -55,7 +55,7 @@
 
 #include "VulkanMemoryAllocator/src/vk_mem_alloc.h"
 
-#define VG_ASSERT_VULKAN(f) { VkResult err = f; VG_ASSERT(err == VK_SUCCESS, "%s\n\n%s", #f, (core::asString(err)).c_str()); }
+#define VG_ASSERT_VULKAN(f) { VkResult err = f; VG_ASSERT(err == VK_SUCCESS, "%s\n\n%s", #f, Device::getVulkanErrorString(err)); }
 
 #endif // VG_VULKAN
 

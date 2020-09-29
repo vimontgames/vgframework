@@ -41,7 +41,7 @@ namespace vg::graphics::driver::vulkan
                     case RootSignatureTableDesc::Descriptor::Type::Texture:
                     {
                         const auto textures = descriptor.getTextures();
-                        vkLayoutBinding.binding = textures.m_register;
+                        vkLayoutBinding.binding = 0;
                         vkLayoutBinding.descriptorType = VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE;
                         vkLayoutBinding.descriptorCount = textures.m_count;
                         vkLayoutBinding.stageFlags = getVulkanShaderStageFlags(table.getShaderStageFlags());
@@ -60,6 +60,14 @@ namespace vg::graphics::driver::vulkan
             vkDescriptorSetLayoutDesc.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO;
             vkDescriptorSetLayoutDesc.bindingCount = (uint)vkDescriptorSetLayoutBindings.size();
             vkDescriptorSetLayoutDesc.pBindings = vkDescriptorSetLayoutBindings.data();
+
+            VkDescriptorBindingFlags flags = VK_DESCRIPTOR_BINDING_VARIABLE_DESCRIPTOR_COUNT_BIT | VK_DESCRIPTOR_BINDING_PARTIALLY_BOUND_BIT;
+            VkDescriptorSetLayoutBindingFlagsCreateInfo binding_flags{};
+            binding_flags.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_BINDING_FLAGS_CREATE_INFO;
+            binding_flags.bindingCount = 1;
+            binding_flags.pBindingFlags = &flags;
+
+            vkDescriptorSetLayoutDesc.pNext = &binding_flags;
 
             VkDescriptorSetLayout vkDescriptorSetLayout;
             VG_ASSERT_VULKAN(vkCreateDescriptorSetLayout(vkDevice, &vkDescriptorSetLayoutDesc, nullptr, &vkDescriptorSetLayout));

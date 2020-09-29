@@ -1,6 +1,7 @@
 #pragma once
 
-#include "Graphics/driver/Shader/Shader_consts.h"
+#include "graphics/driver/Shader/Shader_consts.h"
+#include "graphics/driver/Resource/Texture_consts.h"
 
 namespace vg::graphics::driver
 {
@@ -20,16 +21,16 @@ namespace vg::graphics::driver
                 Sampler
             };
 
-            enum
-            {
-                OffsetAppend = (core::u16) - 1
-            };
-
             Type getDescriptorType() const { return m_type; }
+
+            enum Offset : core::u16
+            {
+                Append = (core::u16)-1
+            };
 
             struct DescriptorParameters
             {
-                DescriptorParameters(core::u8 _register, core::u32 _count, core::u8 _space, core::u16 _offset = OffsetAppend) :
+                DescriptorParameters(core::u8 _register, core::u32 _count, core::u8 _space, core::u16 _offset = Offset::Append) :
                     m_register(_register),
                     m_count(_count),
                     m_space(_space),
@@ -49,16 +50,19 @@ namespace vg::graphics::driver
 
             struct Texture : public DescriptorParameters
             {
-                Texture(core::u8 _register, core::u32 _count, core::u8 _space, core::u16 _offset = OffsetAppend) :
-                    DescriptorParameters(_register, _count, _space, _offset)
+                Texture(TextureType _texType, core::u8 _register, core::u32 _count, core::u8 _space, core::u16 _offset = Offset::Append) :
+                    DescriptorParameters(_register, _count, _space, _offset),
+                    m_texType(_texType)
                 {
 
                 }
+
+                TextureType m_texType;
             };
 
             struct Buffer : public DescriptorParameters
             {
-                Buffer(core::u8 _register, core::u32 _count, core::u8 _space, core::u16 _offset = OffsetAppend) :
+                Buffer(core::u8 _register, core::u32 _count, core::u8 _space, core::u16 _offset = Offset::Append) :
                     DescriptorParameters(_register, _count, _space, _offset)
                 {
 
@@ -67,7 +71,7 @@ namespace vg::graphics::driver
 
             struct UAVTexture : public DescriptorParameters
             {
-                UAVTexture(core::u8 _register, core::u32 _count, core::u8 _space, core::u16 _offset = OffsetAppend) :
+                UAVTexture(core::u8 _register, core::u32 _count, core::u8 _space, core::u16 _offset = Offset::Append) :
                     DescriptorParameters(_register, _count, _space, _offset)
                 {
 
@@ -76,7 +80,7 @@ namespace vg::graphics::driver
 
             struct UAVBuffer : public DescriptorParameters
             {
-                UAVBuffer(core::u8 _register, core::u32 _count, core::u8 _space, core::u16 _offset = OffsetAppend) :
+                UAVBuffer(core::u8 _register, core::u32 _count, core::u8 _space, core::u16 _offset = Offset::Append) :
                     DescriptorParameters(_register, _count, _space, _offset)
                 {
 
@@ -85,7 +89,7 @@ namespace vg::graphics::driver
 
             struct ConstantBuffer : public DescriptorParameters
             {
-                ConstantBuffer(core::u8 _register, core::u32 _count, core::u8 _space, core::u16 _offset = OffsetAppend) :
+                ConstantBuffer(core::u8 _register, core::u32 _count, core::u8 _space, core::u16 _offset = Offset::Append) :
                     DescriptorParameters(_register, _count, _space, _offset)
                 {
 
@@ -94,7 +98,7 @@ namespace vg::graphics::driver
 
             struct Sampler : public DescriptorParameters
             {
-                Sampler(core::u8 _register = 0, core::u32 _count = 1, core::u8 _space = 0, core::u16 _offset = OffsetAppend) :
+                Sampler(core::u8 _register = 0, core::u32 _count = 1, core::u8 _space = 0, core::u16 _offset = Offset::Append) :
                     DescriptorParameters(_register, _count, _space, _offset)
                 {
 
@@ -153,7 +157,7 @@ namespace vg::graphics::driver
         };
 
     public:
-        void addTextures(core::u8 _register, core::u32 _count = 1, core::u8 _space = 0, core::u16 _offset = Descriptor::OffsetAppend);
+        void addTextures(TextureType _texType, core::u8 _register, core::u32 _count = 1, core::u8 _space = 0, core::u16 _offset = Descriptor::Offset::Append);
 
         const core::vector<Descriptor> & getDescriptors() const;
 

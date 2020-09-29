@@ -13,8 +13,8 @@ namespace vg::graphics::renderer
         void draw(driver::CommandList * _cmdList) const override;
 
     private:
-        driver::RootSignatureHandle m_rootSignatureHandle;
-        driver::ShaderKey           m_shaderKey;
-        driver::Texture *           m_texture[2] = {};
+        driver::RootSignatureHandle     m_rootSignatureHandle;
+        driver::ShaderKey               m_shaderKey;
+        core::vector<driver::Texture *> m_texture;
     };
 }

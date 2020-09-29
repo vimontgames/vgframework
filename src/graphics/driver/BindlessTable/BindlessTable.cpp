@@ -2,6 +2,7 @@
 #include "BindlessTable.h"
 #include "graphics/driver/device/Device.h"
 #include "graphics/driver/Resource/Texture.h"
+#include "Shaders/driver/bindless.hlsli"
 
 using namespace vg::core;
 
@@ -15,7 +16,8 @@ namespace vg::graphics::driver
         BindlessTable::BindlessTable()
         {
             m_tableDesc.setShaderStageFlags(ShaderStageFlags::All);
-            m_tableDesc.addTextures(0, max_bindless_elements, 0, 0);
+            m_tableDesc.addTextures(TextureType::Texture2D, 0, max_bindless_elements, 0, 0);
+            //m_tableDesc.addTextures(TextureType::Texture3D, 0, max_bindless_elements, 1, 0);
         }
 
         //--------------------------------------------------------------------------------------

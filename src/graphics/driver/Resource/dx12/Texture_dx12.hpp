@@ -170,6 +170,12 @@ namespace vg::graphics::driver::dx12
             default:
                 VG_ASSERT(false, "Unhandled TextureType \"%s\" (%u)", asString(_texDesc.type).c_str(), _texDesc.type);
 
+            case TextureType::Texture1D:
+                srvDesc.Texture1D.MipLevels = 1;
+                srvDesc.Texture1D.MostDetailedMip = 0;
+                srvDesc.Texture1D.ResourceMinLODClamp = 0;
+                break;
+
             case TextureType::Texture2D:
                 srvDesc.Texture2D.MipLevels = 1;
                 srvDesc.Texture2D.MostDetailedMip = 0;

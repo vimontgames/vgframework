@@ -35,7 +35,7 @@ namespace vg::graphics::driver
 	class TextureDesc
 	{
 	public:
-		TextureDesc(Usage _usage, BindFlags _bindFlags, CPUAccessFlags _cpuAccessFlags, TextureType _type, PixelFormat _format, TextureFlags _flags, core::u16 _width, core::u16 _height, core::u16 _depth = 1, core::u8 _mipmaps = 1) :
+		TextureDesc(Usage _usage, BindFlags _bindFlags, CPUAccessFlags _cpuAccessFlags, TextureType _type, PixelFormat _format, TextureFlags _flags, core::u16 _width, core::u16 _height = 1, core::u16 _depth = 1, core::u8 _mipmaps = 1) :
             resource(_usage, _bindFlags, _cpuAccessFlags),
             width(_width),
 			height(_height),
