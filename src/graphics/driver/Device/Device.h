@@ -43,6 +43,7 @@ namespace vg::graphics::driver
         core::u8 *                                      m_uploadBegin = nullptr;
         core::u8 *                                      m_uploadCur = nullptr;
         core::vector<core::pair<Texture*, core::u32>>   m_texturesToUpload;
+        core::vector<core::pair<Buffer*, core::u32>>    m_buffersToUpload;
         UINT64                                          mFrameFenceId;
 	};
 
@@ -86,6 +87,7 @@ namespace vg::graphics::driver
             void                                            flushReleaseAsync           ();
 
             void                                            upload                      (driver::Texture * _dst, core::u32 _from);
+            void                                            upload                      (driver::Buffer * _dst, core::u32 _from);
 
             BindlessTable *                                 getBindlessTable            () const;
 

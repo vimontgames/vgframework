@@ -52,8 +52,21 @@ namespace vg::graphics::driver::dx12
                         d3d12Descriptors.push_back(d3d12Descriptor);
                     }
                     break;
+
+                    case RootSignatureTableDesc::Descriptor::Type::Buffer:
+                    {
+                        const auto & buffers = descriptor.getBuffers();
+
+                        d3d12Descriptor.RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SRV;
+                        d3d12Descriptor.BaseShaderRegister = buffers.m_register;
+                        d3d12Descriptor.NumDescriptors = buffers.m_count;
+                        d3d12Descriptor.RegisterSpace = buffers.m_space;
+                        d3d12Descriptor.OffsetInDescriptorsFromTableStart = buffers.m_offset;
+
+                        d3d12Descriptors.push_back(d3d12Descriptor);
+                    }
+                    break;
                 }
-            
             }
             
             D3D12_ROOT_PARAMETER d3d12Table = {};

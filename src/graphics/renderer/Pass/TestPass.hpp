@@ -19,8 +19,7 @@ namespace vg::graphics::renderer
         
         m_shaderKey.init("driver/driver.hlsl", "Quad");
         
-        
-        // texture 0
+        //texture 0
         {
             TextureDesc texDesc = TextureDesc(Usage::Default, BindFlags::ShaderResource, CPUAccessFlags::None, TextureType::Texture2D, PixelFormat::R8G8B8A8_unorm, TextureFlags::None, 8, 8);
 
@@ -28,10 +27,10 @@ namespace vg::graphics::renderer
             for (u32 j = 0; j < 8; ++j)
                 for (u32 i = 0; i < 8; ++i)
                     texInitData[j][i] = i << 5 | j << 13 | 0xFF7F0000;
-        
+
             m_texture.push_back(device->createTexture(texDesc, "tex2D #0", (void*)texInitData));
         }
-        
+
         // texture 1
         {
             TextureDesc texDesc = TextureDesc(Usage::Default, BindFlags::ShaderResource, CPUAccessFlags::None, TextureType::Texture2D, PixelFormat::R8G8B8A8_unorm, TextureFlags::None, 8, 8);
@@ -47,11 +46,11 @@ namespace vg::graphics::renderer
                 { 0x00000000, 0x00000000, 0xFFFFFFFF, 0xFFFFFFFF, 0x00000000, 0x00000000, 0xFFFFFFFF, 0xFFFFFFFF },
                 { 0x00000000, 0x00000000, 0xFFFFFFFF, 0xFFFFFFFF, 0x00000000, 0x00000000, 0xFFFFFFFF, 0xFFFFFFFF },
             };
-        
+
             m_texture.push_back(device->createTexture(texDesc, "tex2D #1", (void*)texInitData));
         }
 
-        // texture 3
+        // texture 2
         {
             TextureDesc texDesc = TextureDesc(Usage::Default, BindFlags::ShaderResource, CPUAccessFlags::None, TextureType::Texture1D, PixelFormat::R8G8B8A8_unorm, TextureFlags::None, 4);
 
@@ -62,6 +61,15 @@ namespace vg::graphics::renderer
 
             m_texture.push_back(device->createTexture(texDesc, "tex1D #2", (void*)texInitData));
         }
+
+        // buffer 0
+        //{
+        //    BufferDesc bufDesc = BufferDesc(Usage::Default, BindFlags::ShaderResource, CPUAccessFlags::None, BufferFlags::None, 16, 1);
+        //
+        //    const float4 initData = float4(0.5f, 0.6f, 0.7f, 0.8f);
+        //
+        //    m_buffer.push_back(device->createBuffer(bufDesc, "buf #0", (void*)&initData));
+        //}
     }
 
     //--------------------------------------------------------------------------------------
@@ -73,6 +81,10 @@ namespace vg::graphics::renderer
         for (auto *& tex : m_texture)
             VG_SAFE_RELEASE_ASYNC(tex);
         m_texture.clear();
+
+        for (auto *& buf : m_buffer)
+            VG_SAFE_RELEASE_ASYNC(buf);
+        m_buffer.clear();
     }
 
     //--------------------------------------------------------------------------------------

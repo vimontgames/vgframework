@@ -268,6 +268,13 @@ namespace vg::graphics::driver
         }
 
         //--------------------------------------------------------------------------------------
+        void Device::upload(driver::Buffer * _dst, core::u32 _from)
+        {
+            auto & context = getCurrentFrameContext();
+            context.m_buffersToUpload.push_back({ _dst, _from });
+        }
+
+        //--------------------------------------------------------------------------------------
         driver::BindlessTable * Device::getBindlessTable() const
         {
             VG_ASSERT(m_bindlessTable);
@@ -324,15 +331,23 @@ namespace vg::graphics::driver
     {
         auto & context = getCurrentFrameContext();
         auto * cmdList = context.commandLists[asInteger(CommandQueueType::Graphics)][0];
-        auto & textures = context.m_texturesToUpload;
 
+        auto & buffers = context.m_buffersToUpload;
+        for (uint i = 0; i < buffers.size(); ++i)
+        {
+            auto & pair = buffers[i];
+            cmdList->copyBuffer(pair.first, pair.second);
+        }
+        buffers.clear();
+
+        auto & textures = context.m_texturesToUpload;
         for (uint i = 0; i < textures.size(); ++i)
         {
             auto & pair = textures[i];
             cmdList->copyTexture(pair.first, pair.second);
         }
-
         textures.clear();
+        
         context.m_uploadCur = context.m_uploadBegin;
     }
 

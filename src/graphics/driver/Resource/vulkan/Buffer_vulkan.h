@@ -12,6 +12,6 @@ namespace vg::graphics::driver::vulkan
         ~Buffer();
 
     private:
-
+        VkBufferView    m_vkBufferView;
     };
 }

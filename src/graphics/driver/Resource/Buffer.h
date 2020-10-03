@@ -13,14 +13,16 @@ namespace vg::graphics::driver
             Buffer(const BufferDesc & _bufDesc, const core::string & _name, void * _initData);
             ~Buffer();
 
-            const BufferDesc & getTexDesc() const { return m_bufDesc; }
+            const BufferDesc & getBufDesc() const { return m_bufDesc; }
 
             const driver::Resource & getResource() const { return m_resource; }
             driver::Resource & getResource() { return m_resource; }
+            const driver::BindlessTextureHandle getBindlessSRVHandle() const { return m_bindlessSRVHandle; }
 
         protected:
-            const BufferDesc    m_bufDesc;
-            driver::Resource    m_resource;
+            const BufferDesc                m_bufDesc;
+            driver::Resource                m_resource;
+            driver::BindlessTextureHandle   m_bindlessSRVHandle = driver::invalidBindlessBufferSRVHandle;
         };
     }
 }

@@ -40,12 +40,23 @@ namespace vg::graphics::driver::vulkan
                 {
                     case RootSignatureTableDesc::Descriptor::Type::Texture:
                     {
-                        const auto textures = descriptor.getTextures();
+                        const auto & textures = descriptor.getTextures();
                         vkLayoutBinding.binding = 0;
                         vkLayoutBinding.descriptorType = VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE;
                         vkLayoutBinding.descriptorCount = textures.m_count;
                         vkLayoutBinding.stageFlags = getVulkanShaderStageFlags(table.getShaderStageFlags());
-                        vkLayoutBinding.pImmutableSamplers = nullptr; // &device->vk_immutableSampler;
+                        vkLayoutBinding.pImmutableSamplers = nullptr;
+                    }
+                    break;
+
+                    case RootSignatureTableDesc::Descriptor::Type::Buffer:
+                    {
+                        const auto & buffers = descriptor.getBuffers();
+                        vkLayoutBinding.binding = 0;
+                        vkLayoutBinding.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_TEXEL_BUFFER;
+                        vkLayoutBinding.descriptorCount = buffers.m_count;
+                        vkLayoutBinding.stageFlags = getVulkanShaderStageFlags(table.getShaderStageFlags());
+                        vkLayoutBinding.pImmutableSamplers = nullptr; 
                     }
                     break;
                 }
@@ -61,7 +72,7 @@ namespace vg::graphics::driver::vulkan
             vkDescriptorSetLayoutDesc.bindingCount = (uint)vkDescriptorSetLayoutBindings.size();
             vkDescriptorSetLayoutDesc.pBindings = vkDescriptorSetLayoutBindings.data();
 
-            VkDescriptorBindingFlags flags = VK_DESCRIPTOR_BINDING_VARIABLE_DESCRIPTOR_COUNT_BIT | VK_DESCRIPTOR_BINDING_PARTIALLY_BOUND_BIT;
+            VkDescriptorBindingFlags flags = VK_DESCRIPTOR_BINDING_PARTIALLY_BOUND_BIT;
             VkDescriptorSetLayoutBindingFlagsCreateInfo binding_flags{};
             binding_flags.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_BINDING_FLAGS_CREATE_INFO;
             binding_flags.bindingCount = 1;

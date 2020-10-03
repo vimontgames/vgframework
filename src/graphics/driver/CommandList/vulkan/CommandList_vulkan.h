@@ -31,6 +31,7 @@ namespace vg::graphics::driver::vulkan
         void								clear                       (const core::float4 & _color);
         void                                draw                        (core::uint _vertexCount, core::uint _startOffset);
 
+        void                                copyBuffer                  (driver::Buffer * _dst, core::u32 _from);
         void                                copyTexture                 (driver::Texture * _dst, core::u32 _from);
 
 		VkCommandBuffer &					getVulkanCommandBuffer      () { return m_vkCommandBuffer;  }

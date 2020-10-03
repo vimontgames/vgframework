@@ -23,6 +23,13 @@ namespace vg::graphics::driver
             BindlessTextureHandle allocBindlessTextureHandle(driver::Texture * _texture, ReservedSlot _reservedSlot);
             void freeBindlessTextureHandle(BindlessTextureHandle & _handle);
 
+            BindlessBufferHandle allocBindlessBufferHandle(driver::Buffer * _buffer, ReservedSlot _reservedSlot);
+            void freeBindlessBufferHandle(BindlessBufferHandle & _handle);
+
+        protected:
+            BindlessHandle allocBindlessHandle(ReservedSlot _reservedSlot);
+            void freeBindlessHandle(BindlessBufferHandle & _handle, const BindlessHandle & _invalidHandleValue);
+        
         private:
             enum class Flags : core::u8
             {

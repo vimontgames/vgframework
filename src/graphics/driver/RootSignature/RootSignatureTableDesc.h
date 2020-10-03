@@ -132,13 +132,17 @@ namespace vg::graphics::driver
             }
             inline bool operator != (const Descriptor & _other) const { return !(operator == (_other)); }
 
-            Descriptor() :
+            Descriptor() : 
                 m_type((Type)-1)
             {
-
             }
 
-            const Texture & getTextures() const { VG_ASSERT(Type::Texture == m_type); return texture; }
+            const Texture        & getTextures         () const { VG_ASSERT(Type::Texture        == m_type); return texture; }
+            const Buffer         & getBuffers          () const { VG_ASSERT(Type::Buffer         == m_type); return buffer; }
+            const UAVTexture     & getUAVTextures      () const { VG_ASSERT(Type::UAVTexture     == m_type); return uavTexture; }
+            const UAVBuffer      & getUAVBuffers       () const { VG_ASSERT(Type::UAVBuffer      == m_type); return uavBuffer; }
+            const ConstantBuffer & getConstantBuffers  () const { VG_ASSERT(Type::ConstantBuffer == m_type); return constantBuffer; }
+            const Sampler        & getSamplers         () const { VG_ASSERT(Type::Sampler        == m_type); return sampler; }
 
         private:
             Type m_type;
@@ -158,6 +162,7 @@ namespace vg::graphics::driver
 
     public:
         void addTextures(TextureType _texType, core::u8 _register, core::u32 _count = 1, core::u8 _space = 0, core::u16 _offset = Descriptor::Offset::Append);
+        void addBuffers(core::u8 _register, core::u32 _count = 1, core::u8 _space = 0, core::u16 _offset = Descriptor::Offset::Append);
 
         const core::vector<Descriptor> & getDescriptors() const;
 

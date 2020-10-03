@@ -32,6 +32,7 @@ namespace vg::graphics::driver::dx12
         void                                draw                        (core::uint _vertexCount, core::uint _startOffset);
 
         void                                copyTexture                 (driver::Texture * _dst, core::u32 _from);
+        void                                copyBuffer                  (driver::Buffer * _dst, core::u32 _from);
 
 		D3D12GraphicsCommandList *		    getd3d12GraphicsCommandList ();
 		ID3D12CommandList *					getd3d12CommandList         () { return m_d3d12cmdList; }

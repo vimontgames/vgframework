@@ -115,10 +115,10 @@ namespace vg::graphics::driver::dx12
 		auto * swapChain = created3d12SwapChain((HWND)_params.window, _params.resolution.x, _params.resolution.y);
 
 		// Create fences for each frame so we can protect resources and wait for any given frame
-        mNextFrameFence = 1;
+        m_nextFrameFence = 1;
         m_nextFrameIndex = 0;
-        mFenceEvent = CreateEvent(nullptr, false, false, nullptr);
-        VG_ASSERT_SUCCEEDED(device->CreateFence(0, D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(&mFence)));
+        m_d3d12fenceEvent = CreateEvent(nullptr, false, false, nullptr);
+        VG_ASSERT_SUCCEEDED(device->CreateFence(0, D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(&m_d3d12fence)));
 
         // Rendertarget CPU descriptor heap
 		D3D12_DESCRIPTOR_HEAP_DESC heapDesc = {};
@@ -287,9 +287,9 @@ namespace vg::graphics::driver::dx12
                 auto * d3d12queue = queue->getd3d12CommandQueue();
 
                 static UINT64 exit_fence = 0;
-                d3d12queue->Signal(mFence, exit_fence);
-                mFence->SetEventOnCompletion(exit_fence, mFenceEvent);
-                WaitForSingleObject(mFenceEvent, INFINITE);
+                d3d12queue->Signal(m_d3d12fence, exit_fence);
+                m_d3d12fence->SetEventOnCompletion(exit_fence, m_d3d12fenceEvent);
+                WaitForSingleObject(m_d3d12fenceEvent, INFINITE);
             }
         }
     }
@@ -308,7 +308,7 @@ namespace vg::graphics::driver::dx12
         //for (uint i = 0; i < max_frame_latency; ++i)
         //	VG_SAFE_RELEASE(m_frameFences[i]);
 
-        VG_SAFE_RELEASE(mFence);
+        VG_SAFE_RELEASE(m_d3d12fence);
 
 		VG_SAFE_RELEASE(m_dxgiSwapChain);
 
@@ -365,37 +365,18 @@ namespace vg::graphics::driver::dx12
 	{
 		super::beginFrame();
 
-        //if (WAIT_TIMEOUT == WaitForSingleObjectEx(mSwapEvent, 1000, TRUE))
-        //{
-        //    VG_DEBUGPRINT("WaitSwap timeout");
-        //}
-
         // Get/Increment the fence counter
-        UINT64 FrameFence = mNextFrameFence;
-        mNextFrameFence = mNextFrameFence + 1;
+        const u64 FrameFence = m_nextFrameFence;
+        m_nextFrameFence = m_nextFrameFence + 1;
 
-        // Get/Increment the frame ring-buffer index
-        UINT FrameIndex = m_nextFrameIndex;
+        const uint FrameIndex = m_nextFrameIndex;
         m_nextFrameIndex = (m_nextFrameIndex + 1) % (UINT)max_frame_latency;
 
-        //const auto currentFrameIndex = getFrameContextIndex();
         m_currentBackbufferIndex = m_dxgiSwapChain->GetCurrentBackBufferIndex();
-        //VG_ASSERT(curBackbuffer == currentFrameIndex);
-        //
-        //static uint frame = 0;
-        //
-        ////if (m_fenceValues[currentFrameIndex])
-        //{
-        //    #if VG_DBG_CPUGPUSYNC
-        //    VG_DEBUGPRINT("Wait completion of frame %u (fence[%u] = %u)\n", m_frameCounter - max_frame_latency, currentFrameIndex, m_fenceValues[currentFrameIndex]);
-        //    #endif
-        //
-        //    WaitForFence(m_frameFences[currentFrameIndex], m_fenceValues[currentFrameIndex], m_frameFenceEvents);
-        //}
 
         // Wait for the last frame occupying this slot to be complete
         FrameContext * Frame = &m_frameContext[FrameIndex];
-        WaitForFence(mFence, mFenceEvent, Frame->mFrameFenceId);
+        WaitForFence(m_d3d12fence, m_d3d12fenceEvent, Frame->mFrameFenceId);
         Frame->mFrameFenceId = FrameFence;
         m_currentFrameIndex = FrameIndex;
 
@@ -484,20 +465,10 @@ namespace vg::graphics::driver::dx12
             {
                 auto * d3d12queue = queue->getd3d12CommandQueue();
 
-                // Mark the fence for the current frame.
-                //const auto fenceValue = ++m_currentFenceValue;
-                //
-                //#if VG_DBG_CPUGPUSYNC
-                //VG_DEBUGPRINT("Write fence %u (fence[%u] = %u)\n", currentFrameIndex, currentFrameIndex, fenceValue);
-                //#endif
-                //
-                //d3d12queue->Signal(m_frameFences[currentFrameIndex], fenceValue);
-                //m_fenceValues[currentFrameIndex] = fenceValue;
-
                 // Signal that the frame is complete
                 auto & Frame = getCurrentFrameContext();
-                VG_ASSERT_SUCCEEDED(mFence->SetEventOnCompletion(Frame.mFrameFenceId, mFenceEvent));
-                VG_ASSERT_SUCCEEDED(d3d12queue->Signal(mFence, Frame.mFrameFenceId));
+                VG_ASSERT_SUCCEEDED(m_d3d12fence->SetEventOnCompletion(Frame.mFrameFenceId, m_d3d12fenceEvent));
+                VG_ASSERT_SUCCEEDED(d3d12queue->Signal(m_d3d12fence, Frame.mFrameFenceId));
             }
         }
 

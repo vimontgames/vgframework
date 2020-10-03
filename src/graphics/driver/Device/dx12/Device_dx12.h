@@ -51,15 +51,9 @@ namespace vg::graphics::driver::dx12
 			core::uint						m_renderTargetDescriptorUsed = 0;
 			core::uint						m_renderTargetDescriptorSize = s_invalidRenderTargetDescriptorSize;
 
-			// backbuffer
-			//HANDLE							m_frameFenceEvents;
-			//ID3D12Fence *					m_frameFences[max_frame_latency];
-			//UINT64							m_currentFenceValue;
-			//UINT64							m_fenceValues[max_frame_latency];
-
-            UINT64                          mNextFrameFence;
-            ID3D12Fence *                   mFence;
-            HANDLE                          mFenceEvent;
-            HANDLE                          mSwapEvent;
+            UINT64                          m_nextFrameFence;
+            ID3D12Fence *                   m_d3d12fence;
+            HANDLE                          m_d3d12fenceEvent;
+            HANDLE                          m_d3d12swapEvent;
 	};
 }

@@ -733,9 +733,11 @@ namespace vg::graphics::driver::vulkan
         VkPhysicalDeviceVulkan12Features vulkan12Features = {};
                                          vulkan12Features.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_2_FEATURES;
                                          vulkan12Features.descriptorIndexing = VK_TRUE; // descriptorIndexingFeatures.shaderSampledImageArrayNonUniformIndexing
+                                         vulkan12Features.descriptorBindingPartiallyBound = VK_TRUE;
                                          vulkan12Features.shaderSampledImageArrayNonUniformIndexing = VK_TRUE;
                                          //vulkan12Features.shaderInputAttachmentArrayDynamicIndexing = VK_TRUE;
                                          //vulkan12Features.shaderInputAttachmentArrayNonUniformIndexing = VK_TRUE;
+                                         vulkan12Features.shaderUniformTexelBufferArrayDynamicIndexing = VK_TRUE;
                                          vulkan12Features.runtimeDescriptorArray = VK_TRUE;
                                          vulkan12Features.shaderStorageImageArrayNonUniformIndexing = VK_TRUE;
                                          vulkan12Features.pNext = nullptr;

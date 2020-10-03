@@ -212,6 +212,30 @@ namespace vg::graphics::driver::dx12
     }
 
     //--------------------------------------------------------------------------------------
+    void CommandList::copyBuffer(driver::Buffer * _dst, core::u32 _from)
+    {
+        auto * device = driver::Device::get();
+        auto & context = device->getCurrentFrameContext();
+
+        const auto & bufDesc = _dst->getBufDesc();       
+
+        ID3D12Resource * dst = _dst->getResource().getd3d12BufferResource();
+        ID3D12Resource *  src = context.m_uploadBuffer->getResource().getd3d12BufferResource();
+
+        m_d3d12graphicsCmdList->CopyBufferRegion(dst, 0, src, _from, bufDesc.size());
+
+        D3D12_RESOURCE_BARRIER barrier;
+        barrier.Transition.pResource = _dst->getResource().getd3d12BufferResource();
+        barrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
+        barrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
+        barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_COPY_DEST;
+        barrier.Transition.StateAfter = D3D12_RESOURCE_STATE_GENERIC_READ;
+        barrier.Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
+
+        m_d3d12graphicsCmdList->ResourceBarrier(1, &barrier);
+    }
+
+    //--------------------------------------------------------------------------------------
     void CommandList::copyTexture(driver::Texture * _dst, core::u32 _from)
     {
         auto * device = driver::Device::get();

@@ -62,6 +62,6 @@ namespace vg::graphics::driver
 	Texture::~Texture()
 	{
         auto * device = Device::get();
-        device->getBindlessTable()->freeBindlessTextureHandle(m_bindlessTextureHandle);
+        device->getBindlessTable()->freeBindlessTextureHandle(m_bindlessSRVHandle);
 	}
 }

@@ -51,6 +51,7 @@ namespace vg::graphics::driver
     //--------------------------------------------------------------------------------------
     Buffer::~Buffer()
     {
-
+        auto * device = Device::get();
+        device->getBindlessTable()->freeBindlessBufferHandle(m_bindlessSRVHandle);
     }
 }

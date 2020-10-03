@@ -16,5 +16,6 @@ namespace vg::graphics::renderer
         driver::RootSignatureHandle     m_rootSignatureHandle;
         driver::ShaderKey               m_shaderKey;
         core::vector<driver::Texture *> m_texture;
+        core::vector<driver::Buffer*>   m_buffer;
     };
 }

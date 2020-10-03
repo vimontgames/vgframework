@@ -51,7 +51,7 @@ namespace vg::graphics::driver::dx12
     //--------------------------------------------------------------------------------------
     void BindlessTable::copyTextureHandle(core::uint _slot, driver::Texture * _texture)
     {
-        D3D12_CPU_DESCRIPTOR_HANDLE src = getd3d12DescriptorHandle(_texture->getBindlessTextureHandle());
+        D3D12_CPU_DESCRIPTOR_HANDLE src = getd3d12DescriptorHandle(_texture->getBindlessSRVHandle());
         D3D12_CPU_DESCRIPTOR_HANDLE dst = getd3d12DescriptorHandle(_slot);
 
         auto * device = driver::Device::get();
