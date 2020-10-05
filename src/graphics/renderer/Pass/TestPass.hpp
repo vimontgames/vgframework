@@ -62,14 +62,27 @@ namespace vg::graphics::renderer
             m_texture.push_back(device->createTexture(texDesc, "tex1D #2", (void*)texInitData));
         }
 
+        // texture 3
+        {
+            TextureDesc texDesc = TextureDesc(Usage::Default, BindFlags::ShaderResource, CPUAccessFlags::None, TextureType::Texture2D, PixelFormat::R8G8B8A8_unorm, TextureFlags::None, 2, 2);
+
+            const u32 texInitData[4] =
+            {
+                0xFF0000FF, 0xFF00FF00,
+                0xFFFF0000, 0xFF7F7F7F
+            };
+
+            m_texture.push_back(device->createTexture(texDesc, "tex1D #3", (void*)texInitData));
+        }
+
         // buffer 0
-        //{
-        //    BufferDesc bufDesc = BufferDesc(Usage::Default, BindFlags::ShaderResource, CPUAccessFlags::None, BufferFlags::None, 16, 1);
-        //
-        //    const float4 initData = float4(0.5f, 0.6f, 0.7f, 0.8f);
-        //
-        //    m_buffer.push_back(device->createBuffer(bufDesc, "buf #0", (void*)&initData));
-        //}
+        {
+            BufferDesc bufDesc = BufferDesc(Usage::Default, BindFlags::ShaderResource, CPUAccessFlags::None, BufferFlags::None, 16, 1);
+        
+            const float4 initData = float4(0.5f, 0.6f, 0.7f, 0.8f);
+        
+            m_buffer.push_back(device->createBuffer(bufDesc, "buf #0", (void*)&initData));
+        }
     }
 
     //--------------------------------------------------------------------------------------
@@ -133,18 +146,26 @@ namespace vg::graphics::renderer
         _cmdList->draw(4);
         
         static float y = 0.0f;
-        
-        if (y > 1.0f)
-            y = -0.75f;
-        
+                
         posOffetScale = float4(0.25f, 0.25f + y, 0.5f, 0.5f);
-        texOffetScale = float4(0.0f, 0.0f, 4.0f, 4.0f);
+        texOffetScale = float4(0.0f, 0.0f, 2.0f, 2.0f);
         _cmdList->setRootConstants(0, (u32*)&posOffetScale, 4);
         _cmdList->setRootConstants(4, (u32*)&texOffetScale, 4);
         
         auto * renderer = Renderer::get();
         const auto & backbuffer = renderer->getBackbuffer()->getTexDesc();
-        y += 1.0f/(float)backbuffer.height;
+
+        static bool reverse = false;
+
+        if (y < -0.25)
+            reverse = false;
+        else if (y > 0.25)
+            reverse = true;
+
+        if (reverse)
+            y -= 1.0f / (float)backbuffer.height;
+        else
+            y += 1.0f/(float)backbuffer.height;
         
         _cmdList->draw(4);
     }

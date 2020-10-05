@@ -44,7 +44,7 @@ namespace vg::graphics::driver::dx12
                         const auto & textures = descriptor.getTextures();
                         
                         d3d12Descriptor.RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SRV;
-                        d3d12Descriptor.BaseShaderRegister = textures.m_register;
+                        d3d12Descriptor.BaseShaderRegister = textures.m_offset;// textures.m_register;
                         d3d12Descriptor.NumDescriptors = textures.m_count;
                         d3d12Descriptor.RegisterSpace = textures.m_space;
                         d3d12Descriptor.OffsetInDescriptorsFromTableStart = textures.m_offset;
@@ -58,7 +58,7 @@ namespace vg::graphics::driver::dx12
                         const auto & buffers = descriptor.getBuffers();
 
                         d3d12Descriptor.RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SRV;
-                        d3d12Descriptor.BaseShaderRegister = buffers.m_register;
+                        d3d12Descriptor.BaseShaderRegister = buffers.m_offset; // buffers.m_register;
                         d3d12Descriptor.NumDescriptors = buffers.m_count;
                         d3d12Descriptor.RegisterSpace = buffers.m_space;
                         d3d12Descriptor.OffsetInDescriptorsFromTableStart = buffers.m_offset;
@@ -76,20 +76,22 @@ namespace vg::graphics::driver::dx12
             d3d12Table.ShaderVisibility = getd3d12ShaderStageFlags(table.getShaderStageFlags());
 
             d3d12rootParams.push_back(d3d12Table);
-        }       
+        }    
+
+        // add static samplers
+        vector<D3D12_STATIC_SAMPLER_DESC> d3d12SamplerStates;
+        for (uint i = 0; i < enumCount<Sampler>(); ++i)
+        {
+            D3D12_STATIC_SAMPLER_DESC d3d12SamplerState = SamplerState::getd3d12SamplerState((Sampler)i);
+            d3d12SamplerStates.push_back(d3d12SamplerState);
+        }
 
         D3D12_ROOT_SIGNATURE_DESC d3d12Desc = {};
         d3d12Desc.NumParameters = (uint)d3d12rootParams.size();
         d3d12Desc.pParameters = d3d12rootParams.data();
-
-        D3D12_STATIC_SAMPLER_DESC sampler = {};
-        sampler.AddressU = D3D12_TEXTURE_ADDRESS_MODE_WRAP;
-        sampler.AddressV = D3D12_TEXTURE_ADDRESS_MODE_WRAP;
-        sampler.AddressW = D3D12_TEXTURE_ADDRESS_MODE_WRAP;
         
-        sampler.ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL;
-        d3d12Desc.NumStaticSamplers = 1;
-        d3d12Desc.pStaticSamplers = &sampler;
+        d3d12Desc.NumStaticSamplers = (uint)d3d12SamplerStates.size();
+        d3d12Desc.pStaticSamplers = d3d12SamplerStates.data();
 
         ID3DBlob * outBlob = nullptr;
         ID3DBlob * errorBlob = nullptr;

@@ -32,15 +32,17 @@ struct PS_Output_Quad
 PS_Output_Quad PS_Quad(VS_Output_Quad _input)
 {
     PS_Output_Quad output;
-    float2 uv = frac(_input.uv);
+    float2 uv = _input.uv;
     output.color0 = float4(uv, 0, 1);
 
     float y = asfloat(rootConstants.posOffsetScale.y);
-    uint index = uint((y+1) * 3) % 5;
+    uint index = uint((y+0.25) * 3) % 5;
 
-    //output.color0.rgb = Texture1DTable[index].Sample(sampler0, uv.x).rgb;
-    output.color0.rgb = Texture2DTable[index].Sample(sampler0, uv).rgb;
-    //output.color0.rgb = Texture3DTable[index].Sample(sampler0, float3(uv,0)).rgb;
+    //output.color0.rgb = Texture1DTable[index].Sample(nearestClamp, uv.x).rgb;
+    output.color0.rgb = Texture2DTable[index].Sample(nearestRepeat, uv).rgb;
+    //output.color0.rgb = Texture3DTable[index].Sample(nearestClamp, float3(uv,0)).rgb;
+
+    output.color0 *= asfloat(BufferTable[0].Load(0));
 
     return output;
 }

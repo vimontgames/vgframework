@@ -91,6 +91,8 @@ namespace vg::graphics::driver
 
             BindlessTable *                                 getBindlessTable            () const;
 
+            //SamplerStateDesc
+
 		//protected:
             DeviceCaps                                      m_caps;
 			driver::CommandQueue*				            m_commandQueue[core::enumCount<CommandQueueType>()];

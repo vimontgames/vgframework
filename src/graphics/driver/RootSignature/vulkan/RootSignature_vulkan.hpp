@@ -41,7 +41,7 @@ namespace vg::graphics::driver::vulkan
                     case RootSignatureTableDesc::Descriptor::Type::Texture:
                     {
                         const auto & textures = descriptor.getTextures();
-                        vkLayoutBinding.binding = 0;
+                        vkLayoutBinding.binding = textures.m_space;
                         vkLayoutBinding.descriptorType = VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE;
                         vkLayoutBinding.descriptorCount = textures.m_count;
                         vkLayoutBinding.stageFlags = getVulkanShaderStageFlags(table.getShaderStageFlags());
@@ -52,7 +52,7 @@ namespace vg::graphics::driver::vulkan
                     case RootSignatureTableDesc::Descriptor::Type::Buffer:
                     {
                         const auto & buffers = descriptor.getBuffers();
-                        vkLayoutBinding.binding = 0;
+                        vkLayoutBinding.binding = buffers.m_space;
                         vkLayoutBinding.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_TEXEL_BUFFER;
                         vkLayoutBinding.descriptorCount = buffers.m_count;
                         vkLayoutBinding.stageFlags = getVulkanShaderStageFlags(table.getShaderStageFlags());
@@ -72,11 +72,17 @@ namespace vg::graphics::driver::vulkan
             vkDescriptorSetLayoutDesc.bindingCount = (uint)vkDescriptorSetLayoutBindings.size();
             vkDescriptorSetLayoutDesc.pBindings = vkDescriptorSetLayoutBindings.data();
 
-            VkDescriptorBindingFlags flags = VK_DESCRIPTOR_BINDING_PARTIALLY_BOUND_BIT;
+            vector<VkDescriptorBindingFlags> flagsArray;
+            for (uint i = 0; i < vkDescriptorSetLayoutBindings.size(); ++i)
+            {
+                VkDescriptorBindingFlags flags = VK_DESCRIPTOR_BINDING_PARTIALLY_BOUND_BIT;
+                flagsArray.push_back(flags);
+            }
+
             VkDescriptorSetLayoutBindingFlagsCreateInfo binding_flags{};
             binding_flags.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_BINDING_FLAGS_CREATE_INFO;
-            binding_flags.bindingCount = 1;
-            binding_flags.pBindingFlags = &flags;
+            binding_flags.bindingCount = (uint)flagsArray.size();
+            binding_flags.pBindingFlags = flagsArray.data();
 
             vkDescriptorSetLayoutDesc.pNext = &binding_flags;
 
@@ -90,8 +96,8 @@ namespace vg::graphics::driver::vulkan
             VkDescriptorSetLayoutBinding vkLayoutBinding = {};
             vkLayoutBinding.binding = 0;
             vkLayoutBinding.descriptorType = VK_DESCRIPTOR_TYPE_SAMPLER;
-            vkLayoutBinding.descriptorCount = 1,
-            vkLayoutBinding.stageFlags = getVulkanShaderStageFlags(ShaderStageFlags::PS);
+            vkLayoutBinding.descriptorCount = (uint)enumCount<Sampler>(),
+            vkLayoutBinding.stageFlags = getVulkanShaderStageFlags(ShaderStageFlags::All);
             vkDescriptorSetLayoutBindings.push_back(vkLayoutBinding);
 
             VkDescriptorSetLayoutCreateInfo vkDescriptorSetLayoutDesc = {};

@@ -1,5 +1,6 @@
 #include "graphics/driver/Precomp.h"
 #include "RootSignature.h"
+#include "graphics/driver/PipelineState/SamplerState.h"
 #include "graphics/driver/Device/Device.h"
 
 using namespace vg::core;

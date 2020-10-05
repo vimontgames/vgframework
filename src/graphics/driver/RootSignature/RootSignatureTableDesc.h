@@ -50,14 +50,11 @@ namespace vg::graphics::driver
 
             struct Texture : public DescriptorParameters
             {
-                Texture(TextureType _texType, core::u8 _register, core::u32 _count, core::u8 _space, core::u16 _offset = Offset::Append) :
-                    DescriptorParameters(_register, _count, _space, _offset),
-                    m_texType(_texType)
+                Texture(core::u8 _register, core::u32 _count, core::u8 _space, core::u16 _offset = Offset::Append) :
+                    DescriptorParameters(_register, _count, _space, _offset)
                 {
 
                 }
-
-                TextureType m_texType;
             };
 
             struct Buffer : public DescriptorParameters
@@ -161,7 +158,7 @@ namespace vg::graphics::driver
         };
 
     public:
-        void addTextures(TextureType _texType, core::u8 _register, core::u32 _count = 1, core::u8 _space = 0, core::u16 _offset = Descriptor::Offset::Append);
+        void addTextures(core::u8 _register, core::u32 _count = 1, core::u8 _space = 0, core::u16 _offset = Descriptor::Offset::Append);
         void addBuffers(core::u8 _register, core::u32 _count = 1, core::u8 _space = 0, core::u16 _offset = Descriptor::Offset::Append);
 
         const core::vector<Descriptor> & getDescriptors() const;

@@ -19,7 +19,8 @@ namespace vg::graphics::driver
 
 		//--------------------------------------------------------------------------------------
 		Texture::Texture(const TextureDesc & _texDesc, const core::string & _name, void *_initData) :
-			m_texDesc(_texDesc)
+			m_texDesc(_texDesc),
+            m_bindlessSRVHandle(bindless_texture_invalid)
 		{
 			VG_DEBUGPRINT("Init %s \"%s\" (", asString(_texDesc.type).c_str(), _name.c_str());
 			VG_DEBUGPRINT("%u", _texDesc.width);

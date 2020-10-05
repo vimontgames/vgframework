@@ -19,12 +19,12 @@ namespace vg::graphics::driver
 
 			const TextureDesc & getTexDesc() const { return m_texDesc; }
             const driver::Resource & getResource() const { return m_resource; }
-            const driver::BindlessTextureHandle getBindlessSRVHandle() const { return m_bindlessSRVHandle; }
+            const driver::BindlessTextureSrvHandle getBindlessSRVHandle() const { return m_bindlessSRVHandle; }
 			
         protected:
 			const TextureDesc               m_texDesc;
             driver::Resource                m_resource;
-            driver::BindlessTextureHandle   m_bindlessSRVHandle = driver::invalidBindlessTextureSRVHandle;
+            driver::BindlessTextureSrvHandle   m_bindlessSRVHandle;
 		};
 	}
 }

@@ -42,6 +42,13 @@
     <ClCompile Include="Memory\MemoryAllocator.cpp" />
     <ClCompile Include="PipelineState\PipelineState.cpp" />
     <ClCompile Include="Resource\Resource.cpp" />
+    <ClInclude Include="PipelineState\dx12\SamplerState_dx12.h" />
+    <ClInclude Include="PipelineState\dx12\SamplerState_dx12.hpp" />
+    <ClInclude Include="PipelineState\SamplerState.h" />
+    <ClInclude Include="PipelineState\SamplerState.hpp" />
+    <ClInclude Include="PipelineState\SamplerState_consts.h" />
+    <ClInclude Include="PipelineState\vulkan\SamplerState_vulkan.h" />
+    <ClInclude Include="PipelineState\vulkan\SamplerState_vulkan.hpp" />
     <ClInclude Include="Resource\Buffer.h" />
     <ClInclude Include="Resource\Buffer.hpp" />
     <ClInclude Include="Resource\Buffer_consts.h" />

@@ -10,6 +10,7 @@
 #include "graphics/driver/Shader/ShaderManager.h"
 #include "graphics/driver/FrameGraph/RenderPass.h"
 #include "graphics/driver/BindlessTable/BindlessTable.h"
+#include "graphics/driver/PipelineState/SamplerState.h"
 
 using namespace vg::core;
 using namespace vg::graphics;

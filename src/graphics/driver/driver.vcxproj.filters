@@ -419,6 +419,27 @@
     <ClInclude Include="BindlessTable\BindlessTable_consts.h">
       <Filter>BindlessTable</Filter>
     </ClInclude>
+    <ClInclude Include="PipelineState\SamplerState.h">
+      <Filter>PipelineState</Filter>
+    </ClInclude>
+    <ClInclude Include="PipelineState\dx12\SamplerState_dx12.h">
+      <Filter>PipelineState\dx12</Filter>
+    </ClInclude>
+    <ClInclude Include="PipelineState\dx12\SamplerState_dx12.hpp">
+      <Filter>PipelineState\dx12</Filter>
+    </ClInclude>
+    <ClInclude Include="PipelineState\SamplerState.hpp">
+      <Filter>PipelineState</Filter>
+    </ClInclude>
+    <ClInclude Include="PipelineState\vulkan\SamplerState_vulkan.h">
+      <Filter>PipelineState\vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="PipelineState\vulkan\SamplerState_vulkan.hpp">
+      <Filter>PipelineState\vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="PipelineState\SamplerState_consts.h">
+      <Filter>PipelineState</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Device">

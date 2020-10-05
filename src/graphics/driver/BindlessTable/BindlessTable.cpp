@@ -16,8 +16,9 @@ namespace vg::graphics::driver
         BindlessTable::BindlessTable()
         {
             m_tableDesc.setShaderStageFlags(ShaderStageFlags::All);
-            m_tableDesc.addTextures(TextureType::Texture2D, 0, max_bindless_elements, 0, 0);
-            //m_tableDesc.addBuffers(0, max_bindless_elements, 0, 0);
+
+            m_tableDesc.addTextures(0, bindless_texture_count, 0, bindless_texture_offset);
+            m_tableDesc.addBuffers(0, bindless_buffer_offset, 1, bindless_buffer_count);
         }
 
         //--------------------------------------------------------------------------------------
@@ -27,75 +28,57 @@ namespace vg::graphics::driver
         }
 
         //--------------------------------------------------------------------------------------
-        // In case the value of '_reservedSlot' is not ReservedSlot::None then its value casted to 'BindlessTextureHandle' 
-        // will be used (slot must be free)
-        //--------------------------------------------------------------------------------------
-        BindlessHandle BindlessTable::allocBindlessHandle(ReservedSlot _reservedSlot)
+        template <class T, class P> BindlessHandle BindlessTable::allocBindlessHandle(T * _resource, ReservedSlot _reservedSlot, P & _pool, T ** _resources, uint _offset, uint _invalid)
         {
+            BindlessHandle handle;
+
             if (ReservedSlot::None == _reservedSlot)
-                return m_srvIndexPool.alloc();
+                handle = _pool.alloc() + _offset;
             else
             {
-                VG_ASSERT(m_srvIndexPool.isAvailable((BindlessHandle)_reservedSlot));
-                return (BindlessHandle)_reservedSlot;
+                VG_ASSERT(_pool.isAvailable(_reservedSlot));
+                handle = (BindlessHandle)_reservedSlot;
             }
-        }
 
-        //--------------------------------------------------------------------------------------
-        void BindlessTable::freeBindlessHandle(BindlessBufferHandle & _handle, const BindlessHandle & _invalidHandleValue)
-        {
-            if (_invalidHandleValue != _handle)
-            {
-                m_srvIndexPool.free(_handle);
-                
-                auto & desc = m_slotDesc[_handle];
-                       desc.flags = (Flags)0;
-                       desc.texture = nullptr;
-
-                _handle = _invalidHandleValue;
-            }
-        }
-
-        //--------------------------------------------------------------------------------------
-        BindlessTextureHandle BindlessTable::allocBindlessTextureHandle(driver::Texture * _texture, ReservedSlot _reservedSlot)
-        {
-            BindlessTextureHandle handle = allocBindlessHandle(_reservedSlot);
-            
-            if (invalidBindlessTextureSRVHandle != handle && ReservedSlot::None != _reservedSlot)
-            {
-                auto & desc = m_slotDesc[handle];
-                desc.flags = Flags::Texture;
-                desc.texture = _texture;
-            }
+            if (_invalid != handle && ReservedSlot::None != _reservedSlot)
+                _resources[handle - _offset] = _resource;
 
             return handle;
         }
 
         //--------------------------------------------------------------------------------------
-        void BindlessTable::freeBindlessTextureHandle(BindlessTextureHandle & _handle)
+        template <class T, class P> void BindlessTable::freeBindlessHandle(BindlessHandle & _handle, P & _pool, T ** _resources, uint _offset, uint _invalid)
         {
-            freeBindlessHandle(_handle, invalidBindlessTextureSRVHandle);          
-        }
-
-        //--------------------------------------------------------------------------------------
-        BindlessBufferHandle BindlessTable::allocBindlessBufferHandle(driver::Buffer * _buffer, ReservedSlot _reservedSlot)
-        {
-            BindlessTextureHandle handle = allocBindlessHandle(_reservedSlot);
-
-            if (invalidBindlessTextureSRVHandle != handle && ReservedSlot::None != _reservedSlot)
+            if (_invalid != _handle)
             {
-                auto & desc = m_slotDesc[handle];
-                desc.flags = Flags::Buffer;
-                desc.buffer = _buffer;
+                _pool.free(_handle);
+                _resources[_handle - _offset] = nullptr;
+                _handle = _invalid;
             }
-
-            return handle;
         }
 
         //--------------------------------------------------------------------------------------
-        void BindlessTable::freeBindlessBufferHandle(BindlessBufferHandle & _handle)
+        BindlessTextureSrvHandle BindlessTable::allocBindlessTextureHandle(driver::Texture * _texture, ReservedSlot _reservedSlot)
         {
-            freeBindlessHandle(_handle, invalidBindlessBufferSRVHandle);
+            return allocBindlessHandle(_texture, _reservedSlot, m_textureSrvIndexPool, m_textureSrv, bindless_texture_offset, bindless_texture_invalid);
+        }
+
+        //--------------------------------------------------------------------------------------
+        void BindlessTable::freeBindlessTextureHandle(BindlessTextureSrvHandle & _handle)
+        {
+            freeBindlessHandle(_handle, m_textureSrvIndexPool, m_textureSrv, bindless_texture_offset, bindless_texture_invalid);
+        }
+        
+        //--------------------------------------------------------------------------------------
+        BindlessBufferSrvHandle BindlessTable::allocBindlessBufferHandle(driver::Buffer * _buffer, ReservedSlot _reservedSlot)
+        {
+            return allocBindlessHandle(_buffer, _reservedSlot, m_bufferSrvIndexPool, m_bufferSrv, bindless_buffer_offset, bindless_buffer_invalid);
+        }
+        
+        //--------------------------------------------------------------------------------------
+        void BindlessTable::freeBindlessBufferHandle(BindlessBufferSrvHandle & _handle)
+        {
+            freeBindlessHandle(_handle, m_bufferSrvIndexPool, m_bufferSrv, bindless_buffer_offset, bindless_buffer_invalid);
         }
     }
 
@@ -126,12 +109,12 @@ namespace vg::graphics::driver
                 texInitData[j][i] = ((i>>3) & 1) != ((j>>3) & 1) ? 0xFFFF00FF : 0x7F7F007F;
         
         // create default texture at slot 'invalidBindlessTextureHandle'
-        m_defaultTexture = device->createTexture(texDesc, "testTex", (void*)texInitData, ReservedSlot(invalidBindlessTextureSRVHandle));
-        VG_ASSERT(m_defaultTexture->getBindlessSRVHandle() == invalidBindlessTextureSRVHandle);
+        m_defaultTexture = device->createTexture(texDesc, "testTex", (void*)texInitData, ReservedSlot(bindless_texture_invalid));
+        VG_ASSERT(m_defaultTexture->getBindlessSRVHandle() == bindless_texture_invalid);
         
         // copy texture to all 'texture' slots
-        for (uint i = 0; i < max_bindless_elements; ++i)
-            if (invalidBindlessTextureSRVHandle != i)
+        for (uint i = bindless_texture_offset; i < bindless_texture_count; ++i)
+            if (bindless_texture_invalid != i)
                 copyTextureHandle(i, m_defaultTexture);
     }
 }

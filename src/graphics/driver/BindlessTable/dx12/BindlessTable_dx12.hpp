@@ -9,7 +9,7 @@ namespace vg::graphics::driver::dx12
 
         // SRV/CBV/UAV CPU descriptor heap
         D3D12_DESCRIPTOR_HEAP_DESC srvCPUHeapDesc = {};
-        srvCPUHeapDesc.NumDescriptors = max_bindless_elements;
+        srvCPUHeapDesc.NumDescriptors = bindless_element_count;
         srvCPUHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
         srvCPUHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
         VG_ASSERT_SUCCEEDED(d3d12device->CreateDescriptorHeap(&srvCPUHeapDesc, IID_PPV_ARGS(&m_srvCPUDescriptorHeap)));
@@ -37,7 +37,7 @@ namespace vg::graphics::driver::dx12
         D3D12_CPU_DESCRIPTOR_HANDLE cpuDescriptors = m_srvCPUDescriptorHeap->GetCPUDescriptorHandleForHeapStart();
         D3D12_CPU_DESCRIPTOR_HANDLE gpuDescriptors = m_srvGPUDescriptorHeap->GetCPUDescriptorHandleForHeapStart();
         auto * device = driver::Device::get();
-        device->getd3d12Device()->CopyDescriptorsSimple(max_bindless_elements, gpuDescriptors, cpuDescriptors, D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
+        device->getd3d12Device()->CopyDescriptorsSimple(bindless_element_count, gpuDescriptors, cpuDescriptors, D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
     }
 
     //--------------------------------------------------------------------------------------

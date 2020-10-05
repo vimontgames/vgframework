@@ -6,11 +6,14 @@
 #include "graphics/driver/RootSignature/RootSignature.h"
 #include "graphics/driver/Resource/Texture.h"
 #include "GraphicPipelineState.h"
+#include "RasterizerState.h"
+#include "SamplerState.h"
 
 using namespace vg::core;
 
 #include "GraphicPipelineState.hpp"
 #include "RasterizerState.hpp"
+#include "SamplerState.hpp"
 
 namespace vg::graphics::driver
 {

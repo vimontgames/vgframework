@@ -4,6 +4,7 @@
 #include "core/Pool/IndexPool.h"
 #include "BindlessTable_consts.h"
 #include "graphics/driver/RootSignature/RootSignatureTableDesc.h"
+#include "Shaders/driver/bindless.hlsli"
 
 namespace vg::graphics::driver
 {
@@ -20,45 +21,24 @@ namespace vg::graphics::driver
 
             const RootSignatureTableDesc & getTableDesc() const { return m_tableDesc; }
 
-            BindlessTextureHandle allocBindlessTextureHandle(driver::Texture * _texture, ReservedSlot _reservedSlot);
-            void freeBindlessTextureHandle(BindlessTextureHandle & _handle);
+            BindlessTextureSrvHandle allocBindlessTextureHandle(driver::Texture * _texture, ReservedSlot _reservedSlot);
+            void freeBindlessTextureHandle(BindlessTextureSrvHandle & _handle);
 
-            BindlessBufferHandle allocBindlessBufferHandle(driver::Buffer * _buffer, ReservedSlot _reservedSlot);
-            void freeBindlessBufferHandle(BindlessBufferHandle & _handle);
-
-        protected:
-            BindlessHandle allocBindlessHandle(ReservedSlot _reservedSlot);
-            void freeBindlessHandle(BindlessBufferHandle & _handle, const BindlessHandle & _invalidHandleValue);
-        
+            BindlessBufferSrvHandle allocBindlessBufferHandle(driver::Buffer * _buffer, ReservedSlot _reservedSlot);
+            void freeBindlessBufferHandle(BindlessBufferSrvHandle & _handle);
+            
         private:
-            enum class Flags : core::u8
-            {
-                Texture = 0x01,
-                Buffer  = 0x02,
-                UAV     = 0x04
-            };
+            template <class T, class P> BindlessHandle allocBindlessHandle(T * _resource, ReservedSlot _reservedSlot, P & _pool, T ** _resources, uint _offset, uint _invalid);
+            template <class T, class P> void freeBindlessHandle(BindlessHandle & _handle, P & _pool, T ** _resources, uint _offset, uint _invalid);
 
-            struct SlotDesc
-            {
-                SlotDesc() : 
-                    flags((Flags)0), 
-                    ptr(nullptr)
-                {
+        private:
+            RootSignatureTableDesc                                      m_tableDesc;
 
-                }
+            core::IndexPool<BindlessHandle, bindless_texture_count>     m_textureSrvIndexPool;
+            Texture *                                                   m_textureSrv[bindless_texture_count];
 
-                Flags flags;
-                union
-                {
-                    driver::Texture * texture;
-                    driver::Buffer * buffer;
-                    void * ptr;
-                };
-            };
-
-            RootSignatureTableDesc                                  m_tableDesc;
-            core::IndexPool<BindlessHandle, max_bindless_elements>  m_srvIndexPool;
-            SlotDesc                                                m_slotDesc[max_bindless_elements];
+            core::IndexPool<BindlessHandle, bindless_buffer_count>      m_bufferSrvIndexPool;
+            Buffer *                                                    m_bufferSrv[bindless_buffer_count];
         };
     }
 }

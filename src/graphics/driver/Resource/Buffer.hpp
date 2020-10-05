@@ -6,7 +6,8 @@ namespace vg::graphics::driver
     {
         //--------------------------------------------------------------------------------------
         Buffer::Buffer(const BufferDesc & _bufDesc, const core::string & _name, void * _initData) :
-            m_bufDesc(_bufDesc)
+            m_bufDesc(_bufDesc),
+            m_bindlessSRVHandle(bindless_buffer_invalid)
         {
             VG_DEBUGPRINT("Init Buffer \"%s\" (", _name.c_str());
 

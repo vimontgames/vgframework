@@ -78,7 +78,14 @@ namespace vg::graphics::driver::vulkan
         auto * sig = device->getRootSignature(m_stateCache.graphicPipelineKey.m_rootSignature);
 
         if (sig->getVulkanDescriptorSetLayouts().size() > 0)
-            vkCmdBindDescriptorSets(m_vkCommandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, sig->getVulkanPipelineLayout(), 0, 2, device->m_vkbindlessDescriptorSet, 0, nullptr);
+        {
+            vector<VkDescriptorSet> vkDescriptorSets;
+
+            vkDescriptorSets.push_back(device->m_vkBindlessDescriptors);
+            vkDescriptorSets.push_back(device->m_vkSamplerDescriptors);
+
+            vkCmdBindDescriptorSets(m_vkCommandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, sig->getVulkanPipelineLayout(), 0, (uint)vkDescriptorSets.size(), vkDescriptorSets.data(), 0, nullptr);
+        }
     }
     
     //--------------------------------------------------------------------------------------

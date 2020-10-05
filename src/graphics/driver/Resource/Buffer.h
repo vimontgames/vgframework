@@ -17,12 +17,12 @@ namespace vg::graphics::driver
 
             const driver::Resource & getResource() const { return m_resource; }
             driver::Resource & getResource() { return m_resource; }
-            const driver::BindlessTextureHandle getBindlessSRVHandle() const { return m_bindlessSRVHandle; }
+            const driver::BindlessTextureSrvHandle getBindlessSRVHandle() const { return m_bindlessSRVHandle; }
 
         protected:
             const BufferDesc                m_bufDesc;
             driver::Resource                m_resource;
-            driver::BindlessTextureHandle   m_bindlessSRVHandle = driver::invalidBindlessBufferSRVHandle;
+            driver::BindlessTextureSrvHandle   m_bindlessSRVHandle;
         };
     }
 }

@@ -181,8 +181,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
     #ifdef VG_DEBUG
     // Debug device is disabled by default because it introduces random freezes when using DX12
     engineParams.renderer.device.debugDevice = true;
-    engineParams.renderer.device.breakOnErrors = false;
-    engineParams.renderer.device.breakOnWarnings = false;
+    engineParams.renderer.device.breakOnErrors = true;
+    engineParams.renderer.device.breakOnWarnings = true;
     #endif
 
     engineParams.renderer.device.window = g_hWnd;
@@ -190,7 +190,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
 	engine->init(engineParams);
 
-	core::string title = "VimontGames framework - " + core::Plugin::getConfiguration() + " - " + core::asString(engineParams.renderer.device.api);
+	core::string title = "VG framework - " + core::Plugin::getConfiguration() + " - " + core::asString(engineParams.renderer.device.api);
     if (engineParams.renderer.device.debugDevice)
         title += " (debug)";
 

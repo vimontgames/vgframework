@@ -163,31 +163,14 @@ namespace vg::graphics::driver::vulkan
 
                 VkWriteDescriptorSet writes = {};
                 writes.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
-                writes.dstBinding = 0; // register
+                writes.dstBinding = bindless_texture_binding;
                 writes.descriptorCount = 1;
                 writes.descriptorType = VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE;
                 writes.pImageInfo = &tex_descs;
-                writes.dstSet = device->m_vkbindlessDescriptorSet[0];
-                writes.dstArrayElement = m_bindlessSRVHandle; 
+                writes.dstSet = device->m_vkBindlessDescriptors;
+                writes.dstArrayElement = m_bindlessSRVHandle - bindless_texture_offset;
 
                 vkUpdateDescriptorSets(device->getVulkanDevice(), 1, &writes, 0, nullptr);
-
-                // should be done once @ init time, not for every texture !
-                VkDescriptorImageInfo samp_descs = {};
-                samp_descs.imageView = VK_NULL_HANDLE;
-                samp_descs.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
-                samp_descs.sampler = device->vk_immutableSampler;
-                
-                VkWriteDescriptorSet writeSamplers = {};
-                writeSamplers.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
-                writeSamplers.dstBinding = 0; // register
-                writeSamplers.descriptorCount = 1;
-                writeSamplers.descriptorType = VK_DESCRIPTOR_TYPE_SAMPLER;
-                writeSamplers.pImageInfo = &samp_descs;
-                writeSamplers.dstSet = device->m_vkbindlessDescriptorSet[1];
-                writeSamplers.dstArrayElement = 0; // offset
-                
-                vkUpdateDescriptorSets(device->getVulkanDevice(), 1, &writeSamplers, 0, nullptr);
 
                 if (nullptr != _initData)
                 {

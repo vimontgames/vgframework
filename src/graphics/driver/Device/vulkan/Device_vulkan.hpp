@@ -361,13 +361,69 @@ namespace vg::graphics::driver::vulkan
 
         m_bindlessTable = new driver::BindlessTable();
 
-        // test
-        VkDescriptorPoolSize type_counts[2];
-        type_counts[0].type = VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE;
-        type_counts[0].descriptorCount = max_bindless_elements;
+        driver::Device * device = static_cast<driver::Device*>(this);
 
-        type_counts[1].type = VK_DESCRIPTOR_TYPE_SAMPLER;
-        type_counts[1].descriptorCount = 1;
+        RootSignatureDesc rsDesc;
+                          rsDesc.addTable(getBindlessTable()->getTableDesc());
+        m_bindlessRootSignatureHandle = device->addRootSignature(rsDesc);
+
+        RootSignature * rs = device->getRootSignature(m_bindlessRootSignatureHandle);
+        const auto & bindlessLayouts = rs->getVulkanDescriptorSetLayouts();
+        {
+            // allocate enough descriptors in pool for bindless
+            VkDescriptorPoolSize type_counts[] =
+            {
+                {VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE, bindless_texture_count},
+                {VK_DESCRIPTOR_TYPE_UNIFORM_TEXEL_BUFFER, bindless_buffer_count}
+            };
+
+            VkDescriptorPoolCreateInfo descriptor_pool = {};
+
+            descriptor_pool.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;
+            descriptor_pool.pNext = nullptr;
+            descriptor_pool.maxSets = max_frame_latency;
+            descriptor_pool.poolSizeCount = (uint)countof(type_counts);
+            descriptor_pool.pPoolSizes = type_counts;
+
+            VG_ASSERT_VULKAN(vkCreateDescriptorPool(m_vkDevice, &descriptor_pool, nullptr, &m_vkBindlessDescriptorPool));
+
+            VkDescriptorSetAllocateInfo alloc_info = {};
+            alloc_info.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
+            alloc_info.pNext = nullptr;
+            alloc_info.descriptorPool = m_vkBindlessDescriptorPool;
+            alloc_info.descriptorSetCount = 1;
+
+            // Bindless descriptors (layout 0)
+            {
+                VkDescriptorSetAllocateInfo alloc_info1 = {};
+                alloc_info1.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
+                alloc_info1.pNext = nullptr;
+                alloc_info1.descriptorPool = m_vkBindlessDescriptorPool;
+                alloc_info1.descriptorSetCount = 1;
+                alloc_info1.pSetLayouts = &bindlessLayouts[0];
+
+                VG_ASSERT_VULKAN(vkAllocateDescriptorSets(m_vkDevice, &alloc_info1, &m_vkBindlessDescriptors));
+            }
+        }
+
+        initSamplerStates();
+	}
+
+    //--------------------------------------------------------------------------------------
+    // Use the bindless signature to create sampler states
+    //--------------------------------------------------------------------------------------
+    void Device::initSamplerStates()
+    {
+        driver::Device * device = static_cast<driver::Device*>(this);
+
+        RootSignature * rs = device->getRootSignature(m_bindlessRootSignatureHandle);
+        const auto & bindlessLayouts = rs->getVulkanDescriptorSetLayouts();
+
+        // allocate enough descriptors in pool for bindless
+        VkDescriptorPoolSize type_counts[] =
+        {
+            {VK_DESCRIPTOR_TYPE_SAMPLER, (uint)enumCount<Sampler>()},
+        };
 
         VkDescriptorPoolCreateInfo descriptor_pool = {};
 
@@ -376,57 +432,46 @@ namespace vg::graphics::driver::vulkan
         descriptor_pool.maxSets = max_frame_latency;
         descriptor_pool.poolSizeCount = (uint)countof(type_counts);
         descriptor_pool.pPoolSizes = type_counts;
-    
-        VG_ASSERT_VULKAN(vkCreateDescriptorPool(m_vkDevice, &descriptor_pool, nullptr, &m_vkDescriptorPool));
 
-        driver::Device * device = static_cast<driver::Device*>(this);
+        VG_ASSERT_VULKAN(vkCreateDescriptorPool(m_vkDevice, &descriptor_pool, nullptr, &m_vkSamplerDescriptorPool));
 
-        RootSignatureDesc rsDesc;
-        rsDesc.addTable(getBindlessTable()->getTableDesc());
-        m_bindlessRootSignatureHandle = device->addRootSignature(rsDesc);
-        RootSignature * rs = device->getRootSignature(m_bindlessRootSignatureHandle);
-
-        VkDescriptorSetAllocateInfo alloc_info = {};
-        alloc_info.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
-        alloc_info.pNext = nullptr;
-        alloc_info.descriptorPool = m_vkDescriptorPool;
-        alloc_info.descriptorSetCount = 1;
-
-        const auto & bindlessLayouts = rs->getVulkanDescriptorSetLayouts();
-        uint bindlessLayoutIndex = 0;
-        for (auto & layout : bindlessLayouts)
+        // Sampler descriptors (layout 1)
         {
             VkDescriptorSetAllocateInfo alloc_info1 = {};
             alloc_info1.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
             alloc_info1.pNext = nullptr;
-            alloc_info1.descriptorPool = m_vkDescriptorPool;
+            alloc_info1.descriptorPool = m_vkSamplerDescriptorPool;
             alloc_info1.descriptorSetCount = 1;
-            alloc_info1.pSetLayouts = &layout;
+            alloc_info1.pSetLayouts = &bindlessLayouts[1];
 
-            VG_ASSERT_VULKAN(vkAllocateDescriptorSets(m_vkDevice, &alloc_info1, &m_vkbindlessDescriptorSet[bindlessLayoutIndex]));
-
-            ++bindlessLayoutIndex;
+            VG_ASSERT_VULKAN(vkAllocateDescriptorSets(m_vkDevice, &alloc_info1, &m_vkSamplerDescriptors));
         }
 
-        VkSamplerCreateInfo samplerCreateInfo = {};
-        samplerCreateInfo.sType = VK_STRUCTURE_TYPE_SAMPLER_CREATE_INFO;
-        samplerCreateInfo.magFilter = VK_FILTER_NEAREST;
-        samplerCreateInfo.minFilter = VK_FILTER_NEAREST;
-        samplerCreateInfo.mipmapMode = VK_SAMPLER_MIPMAP_MODE_NEAREST;
-        samplerCreateInfo.addressModeU = VK_SAMPLER_ADDRESS_MODE_REPEAT;
-        samplerCreateInfo.addressModeV = VK_SAMPLER_ADDRESS_MODE_REPEAT;
-        samplerCreateInfo.addressModeW = VK_SAMPLER_ADDRESS_MODE_REPEAT;
-        samplerCreateInfo.mipLodBias = 0.0;
-        samplerCreateInfo.anisotropyEnable = VK_FALSE;
-        samplerCreateInfo.maxAnisotropy = 1;
-        samplerCreateInfo.compareOp = VK_COMPARE_OP_NEVER;
-        samplerCreateInfo.minLod = 0.0;
-        samplerCreateInfo.maxLod = 0.0;
-        samplerCreateInfo.compareEnable = VK_FALSE;
-        samplerCreateInfo.borderColor = VK_BORDER_COLOR_FLOAT_OPAQUE_WHITE;
+        vector<VkDescriptorImageInfo> vkSamplerDescs;
+        for (uint i = 0; i < enumCount<Sampler>(); ++i)
+        {
+            VkSamplerCreateInfo vkSamplerCreateInfo = SamplerState::getVulkanSamplerState((Sampler)i);
+            VG_ASSERT_VULKAN(vkCreateSampler(m_vkDevice, &vkSamplerCreateInfo, nullptr, &m_vkSampler[i]));
 
-        VG_ASSERT_VULKAN(vkCreateSampler(m_vkDevice, &samplerCreateInfo, NULL, &vk_immutableSampler));
-	}
+            VkDescriptorImageInfo vkSamplerDesc = {};
+            vkSamplerDesc.imageView = VK_NULL_HANDLE;
+            vkSamplerDesc.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+            vkSamplerDesc.sampler = device->m_vkSampler[i];
+
+            vkSamplerDescs.push_back(vkSamplerDesc);
+        }
+
+        VkWriteDescriptorSet writeSamplers = {};
+        writeSamplers.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+        writeSamplers.dstBinding = 0;
+        writeSamplers.descriptorType = VK_DESCRIPTOR_TYPE_SAMPLER;
+        writeSamplers.descriptorCount = (uint)vkSamplerDescs.size();
+        writeSamplers.pImageInfo = vkSamplerDescs.data();
+        writeSamplers.dstSet = device->m_vkSamplerDescriptors;
+        writeSamplers.dstArrayElement = 0;
+
+        vkUpdateDescriptorSets(device->getVulkanDevice(), 1, &writeSamplers, 0, nullptr);
+    }
 
 	//--------------------------------------------------------------------------------------
 	core::u32 Device::getVulkanCommandQueueFamilyIndex(CommandQueueType _type) const
@@ -844,6 +889,13 @@ namespace vg::graphics::driver::vulkan
 
         VG_SAFE_DELETE(m_bindlessTable);
         VG_SAFE_RELEASE(m_memoryAllocator);
+
+        vkDestroyDescriptorPool(m_vkDevice, m_vkBindlessDescriptorPool, nullptr);
+
+        for (auto & vkSampler : m_vkSampler)
+            vkDestroySampler(m_vkDevice, vkSampler, nullptr);
+
+        vkDestroyDescriptorPool(m_vkDevice, m_vkSamplerDescriptorPool, nullptr);
 
 		m_instanceExtensionList.deinit();
 		m_deviceExtensionList.deinit();

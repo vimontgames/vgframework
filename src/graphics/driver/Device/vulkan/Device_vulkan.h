@@ -5,7 +5,7 @@
 #include "graphics/driver/Device/vulkan/ext/KHR_Surface.h"
 #include "graphics/driver/Device/vulkan/ext/KHR_Win32_Surface.h"
 #include "graphics/driver/Device/vulkan/ext/KHR_Swapchain.h"
-
+#include "graphics/driver/PipelineState/SamplerState_consts.h"
 #include "graphics/driver/FrameGraph/RenderPassKey.h"
 
 namespace vg::graphics::driver::vulkan
@@ -46,6 +46,8 @@ namespace vg::graphics::driver::vulkan
 
         PixelFormat                     detectBackbufferFormat          ();
 
+        void                            initSamplerStates               ();
+
 		static Severity					getSeverity						(VkDebugUtilsMessageSeverityFlagBitsEXT _severity);
 		static const char *				getVulkanObjectTypeName			(VkObjectType _type);
 
@@ -56,7 +58,6 @@ namespace vg::graphics::driver::vulkan
 			VkDevice					m_vkDevice;
 			VkPhysicalDevice			m_vkPhysicalDevice;
 			VkPhysicalDeviceProperties	m_vkPhysicalDeviceProperties;
-            VkDescriptorPool            m_vkDescriptorPool;
 			VkSurfaceKHR				m_vkSurface;
 
 			static const core::u32		s_vkCommandQueueFamilyIndexInvalid = (core::u32)-1;
@@ -72,8 +73,12 @@ namespace vg::graphics::driver::vulkan
 			DeviceExtensionList			m_deviceExtensionList;
 			KHR_Swapchain				m_KHR_Swapchain;
 
-            VkDescriptorSet             m_vkbindlessDescriptorSet[2];
-            VkSampler                   vk_immutableSampler;
+            VkDescriptorSet             m_vkBindlessDescriptors;
+            VkDescriptorPool            m_vkBindlessDescriptorPool;
+
+            VkDescriptorSet             m_vkSamplerDescriptors;
+            VkDescriptorPool            m_vkSamplerDescriptorPool;
+            VkSampler                   m_vkSampler[core::enumCount<Sampler>()];
 
 			friend class InstanceExtension;
 			friend class DeviceExtension;
