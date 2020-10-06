@@ -12,6 +12,8 @@ https://github.com/KhronosGroup/glslang
 https://github.com/redorav/hlslpp
 - magic_enum
 https://github.com/Neargye/magic_enum
+- Dear ImGui
+https://github.com/ocornut/imgui
 
 # sdk
 - Win10 SDK 10.0.17763.0
