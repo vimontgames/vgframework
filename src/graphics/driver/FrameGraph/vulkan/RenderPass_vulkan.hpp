@@ -25,8 +25,13 @@ namespace vg::graphics::driver::vulkan
         // Add all attachments
         core::vector<VkAttachmentDescription> vkAttachmentDescriptions;
 
+        VG_ASSERT(1 == _key.m_subPassCount);
+        const auto subPassKey = _key.m_subPassKeys[0];
+
         for (uint i = 0; i < maxRenderTarget; ++i)
         {
+            const auto flags = subPassKey.getRenderTargetFlags(i);
+
             const auto format = _key.m_colorFormat[i];
             if (PixelFormat::Unknow != format)
             {
@@ -37,12 +42,31 @@ namespace vg::graphics::driver::vulkan
 
                 // TODO: RenderPassKey flags for initial/final state for each attachment
                 att.samples = VK_SAMPLE_COUNT_1_BIT;
-                att.loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
+
+                if (SubPassKey::Flags::Clear & flags)
+                {
+                    att.loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
+                    att.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
+                    att.finalLayout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
+                }
+                else  if (SubPassKey::Flags::Load & flags)
+                {
+                    att.loadOp = VK_ATTACHMENT_LOAD_OP_LOAD;
+                    att.initialLayout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
+                    att.finalLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
+                }
+                else
+                {
+                    att.loadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
+                    att.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
+                    att.finalLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
+                }
+
                 att.storeOp = VK_ATTACHMENT_STORE_OP_STORE;
                 att.stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
                 att.stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
-                att.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
-                att.finalLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
+                
+                
 
                 vkAttachmentDescriptions.push_back(att);
             }

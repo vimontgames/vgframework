@@ -44,10 +44,7 @@ namespace vg::graphics::driver
 	protected:
 		FrameGraph *								m_frameGraph = nullptr;
 
-		FrameGraph::TextureResource *				m_depthStencilIn;
-		FrameGraph::TextureResource *				m_depthStencilOut;
-
-		core::vector<FrameGraph::TextureResource *>	m_renderTargetIn;
-		core::vector<FrameGraph::TextureResource *>	m_renderTargetOut;
+		FrameGraph::TextureResource *				m_depthStencil;
+		core::vector<FrameGraph::TextureResource *>	m_renderTarget;
 	};
 }

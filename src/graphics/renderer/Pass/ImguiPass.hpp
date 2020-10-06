@@ -18,8 +18,8 @@ namespace vg::graphics::renderer
         desc.initState = FrameGraph::Resource::InitState::Preserve;
         writeRenderTarget(0, "Backbuffer", desc);
 
-        char buffer0[256] = "Would not be a 3D programmer";
-        char buffer1[256] = "framework without imgui :p";
+        char buffer0[256] = "It's \"Dear ImGui\"";
+        char buffer1[256] = "OK I get it ^^";
 
         float f = 3.1417f;
         ImGui::Text("Hello, world %d", 123);

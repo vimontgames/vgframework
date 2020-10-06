@@ -196,7 +196,7 @@ namespace vg::graphics::driver
 	{
 		for (auto * subPass : m_userPassStack)
 		{
-			for (auto * renderTarget : subPass->m_renderTargetOut)
+			for (auto * renderTarget : subPass->m_renderTarget)
 			{
 
 			}
@@ -256,7 +256,7 @@ namespace vg::graphics::driver
 			findDependencies(*subPass, 0);
 
 		// Reverse & remove duplicates
-		reverseAndRemoveDuplicates();
+		//reverseAndRemoveDuplicates();
 
 		// TODO: remove useless passes (output is unused)
 
@@ -305,7 +305,16 @@ namespace vg::graphics::driver
                         attachmentIndex = uint(attachments.size() - 1);
                     }
 
-                    renderPassKey.m_subPassKeys[0].setRenderTargetFlags(attachmentIndex, SubPassKey::Flags::Bind);
+                    SubPassKey::Flags flags = SubPassKey::Flags::Bind;
+
+                    // first pass writing to RT ? 
+                    const auto & writes = res->getWriteAtPass();
+                    if (*writes.begin() == userPass)
+                        flags |= SubPassKey::Flags::Clear | SubPassKey::Flags::Store;
+                    else 
+                        flags |= SubPassKey::Flags::Load;
+
+                    renderPassKey.m_subPassKeys[0].setRenderTargetFlags(attachmentIndex, flags);
 				}
 			}
 

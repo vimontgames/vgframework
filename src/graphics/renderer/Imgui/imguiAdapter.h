@@ -24,6 +24,12 @@ namespace vg::graphics
 
         private:
             driver::BindlessTextureSrvHandle m_fontTexSRVHandle;
+
+            #ifdef VG_DX12
+            #elif defined(VG_VULKAN)
+            VkDescriptorPool m_vkImguiDescriptorPool;
+            VkRenderPass m_vkImguiRenderPass;
+            #endif
         };
     }
 }
