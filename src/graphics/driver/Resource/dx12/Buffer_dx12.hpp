@@ -40,7 +40,7 @@ namespace vg::graphics::driver::dx12
             BindlessTable * bindlessTable = device->getBindlessTable();
             m_bindlessSRVHandle = bindlessTable->allocBindlessBufferHandle(static_cast<driver::Buffer*>(this), _reservedSlot);
 
-            D3D12_CPU_DESCRIPTOR_HANDLE d3d12DescriptorHandle = bindlessTable->getd3d12DescriptorHandle(m_bindlessSRVHandle);
+            D3D12_CPU_DESCRIPTOR_HANDLE d3d12DescriptorHandle = bindlessTable->getd3d12CPUDescriptorHandle(m_bindlessSRVHandle);
             d3d12device->CreateShaderResourceView(m_resource.getd3d12BufferResource(), &srvDesc, d3d12DescriptorHandle);
         }
 

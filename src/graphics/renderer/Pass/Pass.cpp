@@ -14,9 +14,8 @@
 #include "graphics/driver/BindlessTable/BindlessTable.h"
 #include "graphics/renderer/Renderer.h"
 
-#include "TestPass.h"
-
 using namespace vg::core;
 using namespace vg::graphics::driver;
 
 #include "TestPass.hpp"
+#include "ImguiPass.hpp"

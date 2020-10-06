@@ -12,7 +12,7 @@ using namespace vg::engine;
 #define VG_ENGINE_VERSION_MINOR 1
 
 //--------------------------------------------------------------------------------------
-IEngine * Create()
+IEngine * CreateNew()
 {
 	return new Engine();
 }
@@ -25,6 +25,17 @@ namespace vg::engine
 	{
 		return { VG_ENGINE_VERSION_MAJOR, VG_ENGINE_VERSION_MINOR };
 	}
+
+    #ifdef _WIN32
+    //--------------------------------------------------------------------------------------
+    LRESULT CALLBACK Engine::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
+    {
+        if (m_renderer && m_renderer->WndProc(hWnd, message, wParam, lParam))
+            return true;
+
+        return 0;
+    }
+    #endif
 
 	//--------------------------------------------------------------------------------------
 	Engine::Engine()

@@ -21,10 +21,10 @@ namespace vg::graphics::driver
 
             const RootSignatureTableDesc & getTableDesc() const { return m_tableDesc; }
 
-            BindlessTextureSrvHandle allocBindlessTextureHandle(driver::Texture * _texture, ReservedSlot _reservedSlot);
+            BindlessTextureSrvHandle allocBindlessTextureHandle(driver::Texture * _texture, ReservedSlot _reservedSlot = ReservedSlot::None);
             void freeBindlessTextureHandle(BindlessTextureSrvHandle & _handle);
 
-            BindlessBufferSrvHandle allocBindlessBufferHandle(driver::Buffer * _buffer, ReservedSlot _reservedSlot);
+            BindlessBufferSrvHandle allocBindlessBufferHandle(driver::Buffer * _buffer, ReservedSlot _reservedSlot = ReservedSlot::None);
             void freeBindlessBufferHandle(BindlessBufferSrvHandle & _handle);
             
         private:

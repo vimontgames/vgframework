@@ -12,7 +12,9 @@ namespace vg::graphics::driver::dx12
 
         void beginFrame();
 
-        D3D12_CPU_DESCRIPTOR_HANDLE getd3d12DescriptorHandle(BindlessHandle _handle) const;
+        D3D12_CPU_DESCRIPTOR_HANDLE getd3d12CPUDescriptorHandle(BindlessHandle _handle) const;
+        D3D12_GPU_DESCRIPTOR_HANDLE getd3d12GPUDescriptorHandle(BindlessHandle _handle) const;
+
         ID3D12DescriptorHeap * getd3d12GPUDescriptorHeap() const { return m_srvGPUDescriptorHeap; }
 
         void copyTextureHandle(core::uint _slot, driver::Texture * _texture);

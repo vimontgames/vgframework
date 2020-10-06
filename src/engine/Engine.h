@@ -12,6 +12,10 @@ namespace vg::engine
 										Engine		();
 										~Engine		();
 
+        #ifdef _WIN32
+        LRESULT CALLBACK                WndProc     (HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) override;
+        #endif
+
 		void							init		(const EngineParams & _params) override;
 		void							deinit		() override;
 

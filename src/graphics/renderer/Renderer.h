@@ -13,7 +13,10 @@ namespace vg::graphics::driver
 
 namespace vg::graphics::renderer
 {
+    class ImguiAdapter;
+
     class TestPass;
+    class ImguiPass;
 
 	class Renderer : public IRenderer, public core::Singleton<Renderer>
 	{
@@ -30,9 +33,16 @@ namespace vg::graphics::renderer
 
 		driver::Texture *		getBackbuffer		();
 
-	private:
+        #ifdef _WIN32
+        LRESULT CALLBACK        WndProc             (HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) override;
+        #endif
+
+	//private:
 		driver::Device &		m_device;
+        ImguiAdapter *                 m_imgui = nullptr;
 		driver::FrameGraph &	m_frameGraph;
+
         TestPass *              m_testPass = nullptr;
+        ImguiPass *             m_imguiPass = nullptr;
 	};
 }

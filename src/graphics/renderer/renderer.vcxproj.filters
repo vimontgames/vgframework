@@ -6,6 +6,9 @@
     <ClCompile Include="Pass\Pass.cpp">
       <Filter>Pass</Filter>
     </ClCompile>
+    <ClCompile Include="Imgui\imguiAdapter.cpp">
+      <Filter>Imgui</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Renderer.def" />
@@ -21,10 +24,22 @@
     <ClInclude Include="Pass\TestPass.hpp">
       <Filter>Pass</Filter>
     </ClInclude>
+    <ClInclude Include="Pass\ImguiPass.h">
+      <Filter>Pass</Filter>
+    </ClInclude>
+    <ClInclude Include="Pass\ImguiPass.hpp">
+      <Filter>Pass</Filter>
+    </ClInclude>
+    <ClInclude Include="Imgui\imguiAdapter.h">
+      <Filter>Imgui</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Pass">
       <UniqueIdentifier>{922ccb7e-6e89-4930-a933-c1e2f5dfab1a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Imgui">
+      <UniqueIdentifier>{b758ae7b-2873-4568-b6ba-f712c2fcf620}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

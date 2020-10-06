@@ -90,8 +90,7 @@ namespace vg::graphics::driver
             void                                            upload                      (driver::Buffer * _dst, core::u32 _from);
 
             BindlessTable *                                 getBindlessTable            () const;
-
-            //SamplerStateDesc
+            driver::PixelFormat                             getBackbufferFormat         () const { return m_backbufferFormat; }
 
 		//protected:
             DeviceCaps                                      m_caps;

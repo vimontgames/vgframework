@@ -56,7 +56,7 @@ namespace vg::graphics::driver
 		res.setTextureDesc(_resDesc);
 		res.setTextureUsage(FrameGraph::TextureResource::Usage::RenderTarget);
 
-		m_renderTargetIn.push_back(nullptr);
+		//m_renderTargetIn.push_back(nullptr);
 		m_renderTargetOut.push_back(&res);
 	}
 

@@ -1,3 +1,5 @@
+#pragma once
+
 #include "graphics/driver/FrameGraph/UserPass.h"
 
 namespace vg::graphics::renderer

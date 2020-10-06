@@ -39,7 +39,24 @@ namespace vg::graphics::driver::dx12
 
                     if (1)
                     {
-                        renderTargetDesc.BeginningAccess.Type = D3D12_RENDER_PASS_BEGINNING_ACCESS_TYPE_CLEAR;
+                        switch (resourceDesc.initState)
+                        {
+                            default:
+                                VG_ASSERT(false, "Unhandled FrameGraph::Resource::InitState \"%s\" (%u)", asString(resourceDesc.initState), resourceDesc.initState);
+
+                            case FrameGraph::Resource::InitState::Discard:
+                                renderTargetDesc.BeginningAccess.Type = D3D12_RENDER_PASS_BEGINNING_ACCESS_TYPE_DISCARD;
+                                break;
+
+                            case FrameGraph::Resource::InitState::Clear:
+                                renderTargetDesc.BeginningAccess.Type = D3D12_RENDER_PASS_BEGINNING_ACCESS_TYPE_CLEAR;
+                                break;
+
+                            case FrameGraph::Resource::InitState::Preserve:
+                                renderTargetDesc.BeginningAccess.Type = D3D12_RENDER_PASS_BEGINNING_ACCESS_TYPE_PRESERVE;
+                                break;
+                        }
+                        
                         renderTargetDesc.BeginningAccess.Clear.ClearValue.Color[0] = resourceDesc.clearColor.r;
                         renderTargetDesc.BeginningAccess.Clear.ClearValue.Color[1] = resourceDesc.clearColor.g;
                         renderTargetDesc.BeginningAccess.Clear.ClearValue.Color[2] = resourceDesc.clearColor.b;

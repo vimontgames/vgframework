@@ -17,10 +17,14 @@ HINSTANCE hInst;
 HWND g_hWnd;
 
 using namespace vg;
+engine::IEngine * g_engine = nullptr;
 
 //--------------------------------------------------------------------------------------
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
+    if (g_engine && g_engine->WndProc(hWnd, message, wParam, lParam))
+        return true;
+
 	int wmId, wmEvent;
 
 	switch (message)
@@ -163,7 +167,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
 	core::CmdLine cmdLine(lpCmdLine);
 
-	auto * engine = core::Plugin::create<engine::IEngine>("engine");
+    g_engine = core::Plugin::create<engine::IEngine>("engine");
 
     engine::EngineParams engineParams;
                          engineParams.renderer.device.resolution = core::uint2(width, height);
@@ -188,7 +192,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
     engineParams.renderer.device.window = g_hWnd;
     engineParams.renderer.device.instance = hInstance;
 
-	engine->init(engineParams);
+    g_engine->init(engineParams);
 
 	core::string title = "VG framework - " + core::Plugin::getConfiguration() + " - " + core::asString(engineParams.renderer.device.api);
     if (engineParams.renderer.device.debugDevice)
@@ -201,11 +205,11 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	{
         SetWindowTextA(g_hWnd, (title + " - Frame " + std::to_string(frame)).c_str());
         frame++;
-		engine->runOneFrame();
+        g_engine->runOneFrame();
 	}
 
-	engine->deinit();
-	engine->release();
+    g_engine->deinit();
+    VG_SAFE_RELEASE(g_engine);
 
 	return 0;
 }

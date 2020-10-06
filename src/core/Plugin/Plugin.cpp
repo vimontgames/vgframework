@@ -21,7 +21,7 @@ namespace vg::core
 		HMODULE hModule = LoadLibraryExA(filename.c_str(), nullptr, 0);
 		if (hModule)
 		{
-			CreateFunc createFunc = (CreateFunc)GetProcAddress(hModule, "Create");
+			CreateFunc createFunc = (CreateFunc)GetProcAddress(hModule, "CreateNew");
 			if (createFunc)
 				instance = createFunc();
 		}

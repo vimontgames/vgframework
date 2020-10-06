@@ -1,3 +1,4 @@
+#include "TestPass.h"
 #include "shaders/driver/driver.hlsli"
 
 namespace vg::graphics::renderer
@@ -109,10 +110,10 @@ namespace vg::graphics::renderer
         const auto & backbuffer = renderer->getBackbuffer()->getTexDesc();
 
         FrameGraph::TextureDesc desc;
-        desc.width = backbuffer.width;
-        desc.height = backbuffer.height;
-        desc.format = backbuffer.format;
-        desc.initState = FrameGraph::Resource::InitState::Clear;
+                                desc.width = backbuffer.width;
+                                desc.height = backbuffer.height;
+                                desc.format = backbuffer.format;
+                                desc.initState = FrameGraph::Resource::InitState::Clear;
 
         static float color = 0.0f;
 
@@ -130,7 +131,7 @@ namespace vg::graphics::renderer
     void TestPass::draw(CommandList * _cmdList) const
     {
         RasterizerState rs(FillMode::Solid, CullMode::Back);
-
+        
         _cmdList->setRootSignature(m_rootSignatureHandle);
         _cmdList->setShader(m_shaderKey);
         _cmdList->setPrimitiveTopology(PrimitiveTopology::TriangleStrip);
@@ -154,14 +155,14 @@ namespace vg::graphics::renderer
         
         auto * renderer = Renderer::get();
         const auto & backbuffer = renderer->getBackbuffer()->getTexDesc();
-
+        
         static bool reverse = false;
-
+        
         if (y < -0.25)
             reverse = false;
         else if (y > 0.25)
             reverse = true;
-
+        
         if (reverse)
             y -= 1.0f / (float)backbuffer.height;
         else

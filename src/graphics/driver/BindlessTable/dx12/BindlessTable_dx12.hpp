@@ -41,7 +41,7 @@ namespace vg::graphics::driver::dx12
     }
 
     //--------------------------------------------------------------------------------------
-    D3D12_CPU_DESCRIPTOR_HANDLE BindlessTable::getd3d12DescriptorHandle(BindlessHandle _handle) const
+    D3D12_CPU_DESCRIPTOR_HANDLE BindlessTable::getd3d12CPUDescriptorHandle(BindlessHandle _handle) const
     {
         D3D12_CPU_DESCRIPTOR_HANDLE handle = { m_srvCPUDescriptorHeap->GetCPUDescriptorHandleForHeapStart() };
         handle.ptr += _handle * m_srcDescriptorHeapSize;
@@ -49,10 +49,18 @@ namespace vg::graphics::driver::dx12
     }
 
     //--------------------------------------------------------------------------------------
+    D3D12_GPU_DESCRIPTOR_HANDLE BindlessTable::getd3d12GPUDescriptorHandle(BindlessHandle _handle) const
+    {
+        D3D12_GPU_DESCRIPTOR_HANDLE handle = { m_srvGPUDescriptorHeap->GetGPUDescriptorHandleForHeapStart() };
+        handle.ptr += _handle * m_srcDescriptorHeapSize;
+        return handle;
+    }
+
+    //--------------------------------------------------------------------------------------
     void BindlessTable::copyTextureHandle(core::uint _slot, driver::Texture * _texture)
     {
-        D3D12_CPU_DESCRIPTOR_HANDLE src = getd3d12DescriptorHandle(_texture->getBindlessSRVHandle());
-        D3D12_CPU_DESCRIPTOR_HANDLE dst = getd3d12DescriptorHandle(_slot);
+        D3D12_CPU_DESCRIPTOR_HANDLE src = getd3d12CPUDescriptorHandle(_texture->getBindlessSRVHandle());
+        D3D12_CPU_DESCRIPTOR_HANDLE dst = getd3d12CPUDescriptorHandle(_slot);
 
         auto * device = driver::Device::get();
         device->getd3d12Device()->CopyDescriptorsSimple(1, dst, src, D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
