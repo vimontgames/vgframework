@@ -189,30 +189,6 @@ namespace vg::graphics::driver::dx12
 	}
 
     //--------------------------------------------------------------------------------------
-    //void WaitForFence(ID3D12Fence* fence, UINT64 completionValue, HANDLE waitEvent)
-	//{
-    //    #if VG_DBG_CPUGPUSYNC
-    //    VG_DEBUGPRINT("Wait for fence %u ...\n", completionValue);
-    //    #endif
-    //
-    //    const auto completed = fence->GetCompletedValue();
-	//	if (completed < completionValue)
-	//	{
-    //        #if VG_DBG_CPUGPUSYNC
-    //        VG_DEBUGPRINT("SetEventOnCompletion\n");
-    //        #endif
-    //
-	//		VG_ASSERT_SUCCEEDED(fence->SetEventOnCompletion(completionValue, waitEvent));
-	//		const auto result = WaitForSingleObject(waitEvent, INFINITE);
-    //
-    //        VG_ASSERT(WAIT_ABANDONED != result, "The specified object is a mutex object that was not released by the thread that owned the mutex object before the owning thread terminated. Ownership of the mutex object is granted to the calling thread and the mutex state is set to nonsignaled. If the mutex was protecting persistent state information, you should check it for consistency.");
-    //        VG_ASSERT(WAIT_TIMEOUT != result, "The time-out interval elapsed, and the object's state is nonsignaled.");
-    //        VG_ASSERT(WAIT_FAILED != result, "The function has failed. To get extended error information, call GetLastError.");
-    //        VG_ASSERT(WAIT_OBJECT_0 == result, "The state of the specified should be signaled.");
-	//	}
-	//}
-
-    //--------------------------------------------------------------------------------------
     UINT64 WaitForFence(ID3D12Fence *Fence, HANDLE FenceEvent, UINT64 WaitValue)
     {
         UINT64 CompletedValue;
@@ -249,33 +225,11 @@ namespace vg::graphics::driver::dx12
 		// TODO
 	}
 
-    ////--------------------------------------------------------------------------------------
-    //D3D12_CPU_DESCRIPTOR_HANDLE Device::allocSRVHandle(core::uint _count)
-    //{
-    //    VG_ASSERT(m_srvDescriptorUsed + _count <= m_renderTargetDescriptorAllocated);
-    //    VG_ASSERT(s_invalidSrvDescriptorSize != m_srcDescriptorHeapSize);
-    //
-    //    D3D12_CPU_DESCRIPTOR_HANDLE handle = { m_srvCPUDescriptorHeap->GetCPUDescriptorHandleForHeapStart() };
-    //    handle.ptr += m_srvDescriptorUsed * m_srcDescriptorHeapSize;
-    //    m_srvDescriptorUsed += _count;
-    //
-    //    return handle;
-    //}
-    //
-    ////--------------------------------------------------------------------------------------
-    //void Device::freeSRVHandle(D3D12_CPU_DESCRIPTOR_HANDLE & _hSRV)
-    //{
-    //    // TODO
-    //}
-
     //--------------------------------------------------------------------------------------
     // Wait for everything to finish
     //--------------------------------------------------------------------------------------
     void Device::waitGPUIdle()
     {
-        //for (int i = 0; i < max_frame_latency; ++i)
-        //    WaitForFence(m_frameFences[i], m_fenceValues[i], m_frameFenceEvents);   
-
         for (uint q = 0; q < enumCount<CommandQueueType>(); ++q)
         {
             const auto cmdQueueType = (CommandQueueType)q;
@@ -304,12 +258,7 @@ namespace vg::graphics::driver::dx12
             destroyBackbuffer(i);
 
 		VG_SAFE_RELEASE(m_renderTargetDescriptorHeap);
-
-        //for (uint i = 0; i < max_frame_latency; ++i)
-        //	VG_SAFE_RELEASE(m_frameFences[i]);
-
         VG_SAFE_RELEASE(m_d3d12fence);
-
 		VG_SAFE_RELEASE(m_dxgiSwapChain);
 
 		destroyCommandQueues();
@@ -322,22 +271,12 @@ namespace vg::graphics::driver::dx12
         VG_SAFE_RELEASE(m_memoryAllocator);
 		VG_SAFE_RELEASE(m_d3d12device);
 
-		#if 1
 		IDXGIDebug1 * debug = nullptr;
 		if (SUCCEEDED(DXGIGetDebugInterface1(0, IID_PPV_ARGS(&debug))))
 		{
 			debug->ReportLiveObjects(DXGI_DEBUG_ALL, DXGI_DEBUG_RLO_DETAIL | DXGI_DEBUG_RLO_IGNORE_INTERNAL);
 			debug->Release();
 		}
-		#else
-		ID3D12DebugDevice * debugInterface;
-		if (SUCCEEDED(m_d3d12device->QueryInterface(&debugInterface)))
-		{
-			debugInterface->ReportLiveDeviceObjects(D3D12_RLDO_DETAIL | D3D12_RLDO_IGNORE_INTERNAL);
-            debugInterface->SetEnableSynchronizedCommandQueueValidation(false);
-			debugInterface->Release();
-		}
-		#endif
 
 		super::deinit();
 	}

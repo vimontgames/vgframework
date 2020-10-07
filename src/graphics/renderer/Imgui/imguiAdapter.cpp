@@ -133,6 +133,8 @@ namespace vg::graphics::renderer
     {
         driver::Device * device = Device::get();
 
+        device->waitGPUIdle();
+
         BindlessTable * bindlessTable = device->getBindlessTable();
         bindlessTable->freeBindlessTextureHandle(m_fontTexSRVHandle);
 

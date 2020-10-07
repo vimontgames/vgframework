@@ -21,14 +21,13 @@ namespace vg::graphics::driver::dx12
 			D3D12_CPU_DESCRIPTOR_HANDLE		allocRTVHandle	            (core::uint _count = 1);
 			void							freeRTVHandle	            (D3D12_CPU_DESCRIPTOR_HANDLE & _hRTV);
 
-            //D3D12_CPU_DESCRIPTOR_HANDLE   allocSRVHandle              (core::uint _count = 1);
-            //void							freeSRVHandle               (D3D12_CPU_DESCRIPTOR_HANDLE & _hSRV);
+            void                            waitGPUIdle();
 
 		protected:
 			void							init						(const DeviceParams & _params);
 			void							deinit						();
 
-            void                            waitGPUIdle                 ();
+           
 
 			void							beginFrame					();
 			void							endFrame					();
