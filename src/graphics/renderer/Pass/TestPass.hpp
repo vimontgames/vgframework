@@ -130,6 +130,8 @@ namespace vg::graphics::renderer
     //--------------------------------------------------------------------------------------
     void TestPass::draw(CommandList * _cmdList) const
     {
+        VG_PROFILE_GPU("TestPass");
+
         RasterizerState rs(FillMode::Solid, CullMode::Back);
         
         _cmdList->setRootSignature(m_rootSignatureHandle);

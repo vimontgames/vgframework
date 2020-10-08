@@ -192,12 +192,33 @@ namespace vg::graphics::driver::vulkan
 			}
 		}
 
-		VG_DEBUGPRINT(message);
-		VG_SAFE_FREE(message);
+        bool ignore = false;
+        static const char * ignoreList[] =
+        {
+            "UNASSIGNED-CoreValidation-DrawState-QueryNotReset",
+            "VUID-vkCmdResetQueryPool-commandBuffer-recording"
+        };
+        for (uint i = 0; i < countof(ignoreList); ++i)
+        {
+            if (!strcmp(ignoreList[i], _data->pMessageIdName))
+            {
+                ignore = true;
+                break;
+            }
+        }
 
-        if ((Severity::Error == severity && deviceParams.breakOnErrors) || (Severity::Warning == severity && deviceParams.breakOnErrors))
-            DebugBreak();
+        if (ignore)
+        {
+            VG_SAFE_FREE(message);
+        }
+        else
+        {
+            VG_DEBUGPRINT(message);
+            VG_SAFE_FREE(message);
 
+            if ((Severity::Error == severity && deviceParams.breakOnErrors) || (Severity::Warning == severity && deviceParams.breakOnErrors))
+                DebugBreak();
+        }
 		return false;
 	}
 
@@ -1018,7 +1039,7 @@ namespace vg::graphics::driver::vulkan
         present.pImageIndices = &currentBackbuffer;
         present.pResults = nullptr;
 
-        Profiler::swap();
+        VG_PROFILE_GPU_SWAP(this);
 
         VG_ASSERT_VULKAN(m_KHR_Swapchain.m_pfnQueuePresentKHR(getCommandQueue(CommandQueueType::Graphics)->getVulkanCommandQueue(), &present));
 

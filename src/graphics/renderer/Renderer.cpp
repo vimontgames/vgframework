@@ -92,26 +92,26 @@ namespace vg::graphics::renderer
 	//--------------------------------------------------------------------------------------
 	void Renderer::runOneFrame()
 	{
-        OPTICK_UPDATE();
+        OPTICK_FRAME("MainThread");
 
         static bool start = false;
         if (start)
         {
-            OPTICK_START_CAPTURE();
+            VG_PROFILE_START();
             start = false;
         }
 
         static bool stop = false;
         if (stop)
         {
-            OPTICK_STOP_CAPTURE();
+            VG_PROFILE_STOP();
             stop = false;
         }
 
         static bool save = false;
         if (save)
         {
-            OPTICK_SAVE_CAPTURE("test.opt");
+            VG_PROFILE_SAVE();
             save = false;
         }
 

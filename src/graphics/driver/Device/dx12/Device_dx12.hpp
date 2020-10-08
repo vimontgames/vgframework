@@ -411,7 +411,7 @@ namespace vg::graphics::driver::dx12
             }
         }
         
-        Profiler::swap();
+        VG_PROFILE_GPU_SWAP(this);
 
         VG_ASSERT_SUCCEEDED(m_dxgiSwapChain->Present(0, 0));
 

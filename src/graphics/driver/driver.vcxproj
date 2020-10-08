@@ -50,6 +50,7 @@
     <ClInclude Include="PipelineState\SamplerState_consts.h" />
     <ClInclude Include="PipelineState\vulkan\SamplerState_vulkan.h" />
     <ClInclude Include="PipelineState\vulkan\SamplerState_vulkan.hpp" />
+    <ClInclude Include="Profiler\IProfiler.h" />
     <ClInclude Include="Profiler\Profiler.h" />
     <ClInclude Include="Resource\Buffer.h" />
     <ClInclude Include="Resource\Buffer.hpp" />

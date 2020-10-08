@@ -14,7 +14,7 @@ namespace vg::graphics::driver::vulkan
 
         VkQueue & getVulkanCommandQueue() { return m_vkCommandQueue; }
 
-	private:
+	//private:
 		VkQueue	m_vkCommandQueue;
 	};
 }

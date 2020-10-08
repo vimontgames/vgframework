@@ -20,6 +20,7 @@
 #include "graphics/driver/Device/Device.h"
 #include "graphics/driver/CommandQueue/CommandQueue.h"
 #include "graphics/driver/CommandList/CommandList.h"
+#include "core/Plugin/Plugin.h"
 
 using namespace vg::core;
 
@@ -29,6 +30,8 @@ namespace vg::graphics::driver
     void Profiler::init()
     {
         Device * device = Device::get();
+
+        OPTICK_APP("VGFramework");
 
         #ifdef VG_DX12
 
@@ -54,7 +57,7 @@ namespace vg::graphics::driver
         {
             const auto queueType = (CommandQueueType)i;
             CommandQueue * queue = device->getCommandQueue(queueType);
-
+        
             if (queue)
             {
                 vkQueues.push_back(queue->getVulkanCommandQueue());
@@ -63,28 +66,7 @@ namespace vg::graphics::driver
         }
 
         OPTICK_GPU_INIT_VULKAN(&device->getVulkanDevice(), &device->getVulkanPhysicalDevice(),(VkQueue*)vkQueues.data(), vkQueuesFamily.data(), (uint)vkQueues.size(), nullptr);
-        #endif
-    }
 
-    //--------------------------------------------------------------------------------------
-    void Profiler::setCommandList(CommandList * _cmdList)
-    {
-        #ifdef VG_DX12
-        OPTICK_GPU_CONTEXT(_cmdList->getd3d12CommandList());
-        #elif VG_VULKAN
-        OPTICK_GPU_CONTEXT(_cmdList->getVulkanCommandBuffer());
-        #endif
-    }
-
-    //--------------------------------------------------------------------------------------
-    void Profiler::swap()
-    {
-        Device * device = Device::get();
-
-        #ifdef VG_DX12
-        OPTICK_GPU_FLIP(device->getd3d12SwapChain());
-        #elif VG_VULKAN
-        OPTICK_GPU_FLIP(device->getVulkanSwapchain());
         #endif
     }
 
@@ -92,6 +74,14 @@ namespace vg::graphics::driver
     void Profiler::deinit()
     {
         OPTICK_SHUTDOWN();
+    }
+
+    //--------------------------------------------------------------------------------------
+    void Profiler::save()
+    {
+        Device * device = Device::get();
+        string name = "vgframework_" + Plugin::getPlatform() + "_" + Plugin::getConfiguration() + "_" + asString(device->getDeviceParams().api);
+        OPTICK_SAVE_CAPTURE(name.c_str());
     }
 }
 
