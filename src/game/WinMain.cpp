@@ -1,4 +1,4 @@
-#include "Precomp.h"
+#include "game/Precomp.h"
 
 #include "core/Plugin/Plugin.h"
 #include "core/CmdLine/CmdLine.h"
