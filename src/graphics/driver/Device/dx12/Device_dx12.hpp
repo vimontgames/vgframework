@@ -410,6 +410,8 @@ namespace vg::graphics::driver::dx12
                 VG_ASSERT_SUCCEEDED(d3d12queue->Signal(m_d3d12fence, Frame.mFrameFenceId));
             }
         }
+        
+        Profiler::swap();
 
         VG_ASSERT_SUCCEEDED(m_dxgiSwapChain->Present(0, 0));
 

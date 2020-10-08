@@ -347,7 +347,15 @@ namespace vg::graphics::driver
 		Device * device = Device::get();
 		CommandList * cmdList = device->getCommandLists(CommandListType::Graphics)[0]; 
 
-        Profiler::setCommandList(cmdList);
+        //Profiler::setCommandList(cmdList); must be a macro
+
+        #ifdef VG_DX12
+        OPTICK_GPU_CONTEXT(cmdList->getd3d12CommandList());
+        #elif VG_VULKAN
+        OPTICK_GPU_CONTEXT(cmdList->getVulkanCommandBuffer());
+        #endif
+
+        OPTICK_GPU_EVENT("RenderPass");
 
 		for (const RenderPass * renderPass : m_renderPasses)
 		{
@@ -361,7 +369,7 @@ namespace vg::graphics::driver
                     for (const UserPass * userPass : subPass->getUserPasses())
                     {
                         const char * name = userPass->getName().c_str();
-                        OPTICK_GPU_EVENT(name);
+                        OPTICK_GPU_EVENT("UserPass");
                         userPass->draw(cmdList);
                     }
 				}cmdList->endSubPass();

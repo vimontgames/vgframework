@@ -23,6 +23,8 @@ namespace vg::graphics::driver::dx12
 
             void                            waitGPUIdle();
 
+            IDXGISwapChain3 *               getd3d12SwapChain           () const { return m_dxgiSwapChain; }
+
 		protected:
 			void							init						(const DeviceParams & _params);
 			void							deinit						();

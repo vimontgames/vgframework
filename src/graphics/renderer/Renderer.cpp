@@ -92,35 +92,31 @@ namespace vg::graphics::renderer
 	//--------------------------------------------------------------------------------------
 	void Renderer::runOneFrame()
 	{
-        
+        OPTICK_UPDATE();
+
+        static bool start = false;
+        if (start)
+        {
+            OPTICK_START_CAPTURE();
+            start = false;
+        }
+
+        static bool stop = false;
+        if (stop)
+        {
+            OPTICK_STOP_CAPTURE();
+            stop = false;
+        }
+
+        static bool save = false;
+        if (save)
+        {
+            OPTICK_SAVE_CAPTURE("test.opt");
+            save = false;
+        }
 
 		m_device.beginFrame();
 		{
-            OPTICK_FRAME("MainThread");
-
-            static bool start = false;
-            if (start)
-            {
-                OPTICK_START_CAPTURE();
-                start = false;
-            }
-
-            static bool stop = false;
-            if (stop)
-            {
-                OPTICK_STOP_CAPTURE();
-                stop = false;
-            }
-
-            static bool save = false;
-            if (save)
-            {
-                OPTICK_SAVE_CAPTURE("test.opt");
-                save = false;
-            }
-
-            
-
             m_imgui->beginFrame();
 
 			m_frameGraph.import("Backbuffer", m_device.getBackbuffer());

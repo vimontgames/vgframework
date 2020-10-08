@@ -32,7 +32,18 @@ namespace vg::graphics::driver
 
         #ifdef VG_DX12
 
-        OPTICK_GPU_INIT_D3D12(DEVICE, CMD_QUEUES, NUM_CMD_QUEUS);
+        vector<ID3D12CommandQueue*> d3d12Queues;
+
+        for (uint i = 0; i < enumCount<CommandQueueType>(); ++i)
+        {
+            const auto queueType = (CommandQueueType)i;
+            CommandQueue * queue = device->getCommandQueue(queueType);
+
+            if (queue)
+                d3d12Queues.push_back(queue->getd3d12CommandQueue());
+        }
+
+        OPTICK_GPU_INIT_D3D12(device->getd3d12Device(), d3d12Queues.data(), (uint)d3d12Queues.size());
 
         #elif defined(VG_VULKAN)
  
@@ -59,7 +70,7 @@ namespace vg::graphics::driver
     void Profiler::setCommandList(CommandList * _cmdList)
     {
         #ifdef VG_DX12
-        toudou
+        OPTICK_GPU_CONTEXT(_cmdList->getd3d12CommandList());
         #elif VG_VULKAN
         OPTICK_GPU_CONTEXT(_cmdList->getVulkanCommandBuffer());
         #endif
@@ -69,7 +80,12 @@ namespace vg::graphics::driver
     void Profiler::swap()
     {
         Device * device = Device::get();
+
+        #ifdef VG_DX12
+        OPTICK_GPU_FLIP(device->getd3d12SwapChain());
+        #elif VG_VULKAN
         OPTICK_GPU_FLIP(device->getVulkanSwapchain());
+        #endif
     }
 
     //--------------------------------------------------------------------------------------
