@@ -13,9 +13,4 @@
     <ClInclude Include="Precomp.h" />
     <ClInclude Include="Engine_Consts.h" />
   </ItemGroup>
-  <ItemGroup>
-    <Filter Include="Profiler">
-      <UniqueIdentifier>{55ab9926-e76a-47ba-9f36-aac52a11db56}</UniqueIdentifier>
-    </Filter>
-  </ItemGroup>
 </Project>

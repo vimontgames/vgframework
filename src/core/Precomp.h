@@ -4,6 +4,9 @@
 // Platform
 //--------------------------------------------------------------------------------------
 #ifdef _WIN32
+#define _CRT_SECURE_NO_WARNINGS
+#define _SILENCE_CXX17_OLD_ALLOCATOR_MEMBERS_DEPRECATION_WARNING
+#define _SILENCE_ALL_CXX17_DEPRECATION_WARNINGS
 #define VG_WINDOWS 1
 #endif
 
@@ -19,6 +22,7 @@
 //--------------------------------------------------------------------------------------
 #ifdef VG_WINDOWS
 #define NOMINMAX
+#include <winsock2.h> // must be included before <windows.h>
 #include <windows.h>
 #include <system_error>
 #endif

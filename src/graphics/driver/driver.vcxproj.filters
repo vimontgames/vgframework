@@ -35,6 +35,9 @@
     <ClCompile Include="BindlessTable\BindlessTable.cpp">
       <Filter>BindlessTable</Filter>
     </ClCompile>
+    <ClCompile Include="Profiler\Profiler.cpp">
+      <Filter>Profiler</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Precomp.h" />
@@ -440,6 +443,9 @@
     <ClInclude Include="PipelineState\SamplerState_consts.h">
       <Filter>PipelineState</Filter>
     </ClInclude>
+    <ClInclude Include="Profiler\Profiler.h">
+      <Filter>Profiler</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Device">
@@ -543,6 +549,9 @@
     </Filter>
     <Filter Include="BindlessTable\vulkan">
       <UniqueIdentifier>{6d2c86a7-8838-451d-a8f0-eeb7414013c7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Profiler">
+      <UniqueIdentifier>{a4b383a3-0c95-41b3-be7a-cc5749578a2c}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

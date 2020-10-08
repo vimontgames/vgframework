@@ -1018,6 +1018,8 @@ namespace vg::graphics::driver::vulkan
         present.pImageIndices = &currentBackbuffer;
         present.pResults = nullptr;
 
+        Profiler::swap();
+
         VG_ASSERT_VULKAN(m_KHR_Swapchain.m_pfnQueuePresentKHR(getCommandQueue(CommandQueueType::Graphics)->getVulkanCommandQueue(), &present));
 
 		super::endFrame();

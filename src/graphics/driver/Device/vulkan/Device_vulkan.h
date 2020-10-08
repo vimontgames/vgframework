@@ -52,6 +52,8 @@ namespace vg::graphics::driver::vulkan
 		static const char *				getVulkanObjectTypeName			(VkObjectType _type);
 
         bool                            enableInstanceLayer             (const char * _layerName);
+
+        VkSwapchainKHR                  getVulkanSwapchain              () const { return m_vkSwapchain; }
        
 	//private:
 			VkInstance					m_vkInstance;

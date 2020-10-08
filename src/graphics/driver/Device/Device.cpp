@@ -11,6 +11,7 @@
 #include "graphics/driver/FrameGraph/RenderPass.h"
 #include "graphics/driver/BindlessTable/BindlessTable.h"
 #include "graphics/driver/PipelineState/SamplerState.h"
+#include "graphics/driver/Profiler/Profiler.h"
 
 using namespace vg::core;
 using namespace vg::graphics;
@@ -287,6 +288,7 @@ namespace vg::graphics::driver
 	void Device::init(const DeviceParams & _params)
 	{
 		Super::init(_params);
+        Profiler::init();
         m_bindlessTable->init();
 	}
 
@@ -294,6 +296,7 @@ namespace vg::graphics::driver
 	void Device::deinit()
 	{
         waitGPUIdle();
+        Profiler::deinit();
 		Super::deinit();
 	}
 

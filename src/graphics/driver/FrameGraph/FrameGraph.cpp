@@ -8,6 +8,8 @@
 #include "graphics/driver/FrameGraph/SubPass.h"
 #include "graphics/driver/FrameGraph/UserPass.h"
 
+#include "graphics/driver/Profiler/Profiler.h"
+
 using namespace vg::core;
 
 #include "RenderPass.hpp"
@@ -345,6 +347,8 @@ namespace vg::graphics::driver
 		Device * device = Device::get();
 		CommandList * cmdList = device->getCommandLists(CommandListType::Graphics)[0]; 
 
+        Profiler::setCommandList(cmdList);
+
 		for (const RenderPass * renderPass : m_renderPasses)
 		{
 			cmdList->beginRenderPass(renderPass);
@@ -354,8 +358,12 @@ namespace vg::graphics::driver
 				const SubPass * subPass = subPasses[i];
 				cmdList->beginSubPass(i, subPass);
 				{
-					for (const UserPass * userPass : subPass->getUserPasses())
-						userPass->draw(cmdList);
+                    for (const UserPass * userPass : subPass->getUserPasses())
+                    {
+                        const char * name = userPass->getName().c_str();
+                        OPTICK_GPU_EVENT(name);
+                        userPass->draw(cmdList);
+                    }
 				}cmdList->endSubPass();
 			}
 			cmdList->endRenderPass();
