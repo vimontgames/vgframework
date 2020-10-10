@@ -233,6 +233,12 @@ namespace vg::graphics::driver::dx12
         barrier.Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
 
         m_d3d12graphicsCmdList->ResourceBarrier(1, &barrier);
+
+        if (asBool(BindFlags::ShaderResource & bufDesc.resource.m_bindFlags))
+        {
+            auto * bindlessTable = device->getBindlessTable();
+            bindlessTable->setd3d12GPUDescriptorDirty(_dst->getBindlessSRVHandle());
+        }
     }
 
     //--------------------------------------------------------------------------------------
@@ -276,5 +282,11 @@ namespace vg::graphics::driver::dx12
         barrier.Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
 
         m_d3d12graphicsCmdList->ResourceBarrier(1, &barrier);
+
+        if (asBool(BindFlags::ShaderResource & texDesc.resource.m_bindFlags))
+        {
+            auto * bindlessTable = device->getBindlessTable();
+            bindlessTable->setd3d12GPUDescriptorDirty(_dst->getBindlessSRVHandle());
+        }
     }
 }

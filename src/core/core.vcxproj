@@ -19,6 +19,8 @@
     <ClInclude Include="File\File.h" />
     <ClInclude Include="IObject.h" />
     <ClInclude Include="IPlugin.h" />
+    <ClInclude Include="IProfiler.h" />
+    <ClInclude Include="Kernel.h" />
     <ClInclude Include="Math\Math.h" />
     <ClInclude Include="Object\Object.h" />
     <ClInclude Include="Plugin\Plugin.h" />

@@ -36,19 +36,45 @@ namespace vg::graphics::renderer
         // TODO: Fill optional fields of the io structure later.
         // TODO: Load TTF/OTF fonts if you don't want to use the default font.
 
+        io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard | ImGuiConfigFlags_DockingEnable;
+        io.ConfigDockingTransparentPayload = true;
+
+        ImGui::StyleColorsClassic();
+
         #ifdef _WIN32
         ImGui_ImplWin32_Init(_winHandle); 
         #endif
 
-        const PixelFormat fmt = _device.getBackbufferFormat();
         BindlessTable * bindlessTable = _device.getBindlessTable();
         m_fontTexSRVHandle = bindlessTable->allocBindlessTextureHandle((Texture*)nullptr);
 
         #ifdef VG_DX12
+        d3d12Init();
+        #elif defined(VG_VULKAN)
+        vulkanInit();
+        #endif 
+    }
+
+    #ifdef VG_DX12
+    //--------------------------------------------------------------------------------------
+    void ImguiAdapter::d3d12Init()
+    {
+        driver::Device * device = Device::get();
+
+        const PixelFormat fmt = device->getBackbufferFormat();
+        BindlessTable * bindlessTable = device->getBindlessTable();
+
         D3D12_CPU_DESCRIPTOR_HANDLE fontCpuHandle = bindlessTable->getd3d12CPUDescriptorHandle(m_fontTexSRVHandle);
         D3D12_GPU_DESCRIPTOR_HANDLE fontGpuHandle = bindlessTable->getd3d12GPUDescriptorHandle(m_fontTexSRVHandle);
-        ImGui_ImplDX12_Init(_device.getd3d12Device(), max_frame_latency, Texture::getd3d12PixelFormat(fmt), bindlessTable->getd3d12GPUDescriptorHeap(), fontCpuHandle, fontGpuHandle);
-        #elif defined(VG_VULKAN)
+
+        ImGui_ImplDX12_Init(device->getd3d12Device(), max_frame_latency, Texture::getd3d12PixelFormat(fmt), bindlessTable->getd3d12GPUDescriptorHeap(), fontCpuHandle, fontGpuHandle);
+    }
+    #elif defined(VG_VULKAN)
+    //--------------------------------------------------------------------------------------
+    void ImguiAdapter::vulkanInit()
+    {
+        driver::Device * device = Device::get();
+
         VkDescriptorPoolSize imguiDescriptorPoolSizes[] =
         {
             { VK_DESCRIPTOR_TYPE_SAMPLER, 1000 },
@@ -65,13 +91,15 @@ namespace vg::graphics::renderer
         };
 
         VkDescriptorPoolCreateInfo imguiDescriptorDesc = {};
-                                   imguiDescriptorDesc.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;
-                                   imguiDescriptorDesc.pNext = nullptr;
-                                   imguiDescriptorDesc.maxSets = max_frame_latency;
-                                   imguiDescriptorDesc.poolSizeCount = (uint)countof(imguiDescriptorPoolSizes);
-                                   imguiDescriptorDesc.pPoolSizes = imguiDescriptorPoolSizes;
+        imguiDescriptorDesc.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;
+        imguiDescriptorDesc.pNext = nullptr;
+        imguiDescriptorDesc.maxSets = max_frame_latency;
+        imguiDescriptorDesc.poolSizeCount = (uint)countof(imguiDescriptorPoolSizes);
+        imguiDescriptorDesc.pPoolSizes = imguiDescriptorPoolSizes;
 
-        VG_ASSERT_VULKAN(vkCreateDescriptorPool(_device.getVulkanDevice(), &imguiDescriptorDesc, nullptr, &m_vkImguiDescriptorPool));
+        VG_ASSERT_VULKAN(vkCreateDescriptorPool(device->getVulkanDevice(), &imguiDescriptorDesc, nullptr, &m_vkImguiDescriptorPool));
+
+        const PixelFormat fmt = device->getBackbufferFormat();
 
         VkAttachmentDescription attachment = {};
         attachment.format = Texture::getVulkanPixelFormat(fmt);
@@ -109,24 +137,24 @@ namespace vg::graphics::renderer
         info.dependencyCount = 1;
         info.pDependencies = &dependency;
 
-        VG_ASSERT_VULKAN(vkCreateRenderPass(_device.getVulkanDevice(), &info, nullptr, &m_vkImguiRenderPass));
+        VG_ASSERT_VULKAN(vkCreateRenderPass(device->getVulkanDevice(), &info, nullptr, &m_vkImguiRenderPass));
 
         ImGui_ImplVulkan_InitInfo init_info = {};
-                                  init_info.Instance = _device.getVulkanInstance();
-                                  init_info.PhysicalDevice = _device.getVulkanPhysicalDevice();
-                                  init_info.Device = _device.getVulkanDevice();
-                                  init_info.QueueFamily = _device.getVulkanCommandQueueFamilyIndex(CommandListType::Graphics);
-                                  init_info.Queue = _device.getCommandQueue(CommandQueueType::Graphics)->getVulkanCommandQueue();
-                                  init_info.PipelineCache = VK_NULL_HANDLE;
-                                  init_info.DescriptorPool = m_vkImguiDescriptorPool;
-                                  init_info.Allocator = nullptr;
-                                  init_info.MinImageCount = max_frame_latency;
-                                  init_info.ImageCount = max_frame_latency;
-                                  init_info.CheckVkResultFn = nullptr;
+        init_info.Instance = device->getVulkanInstance();
+        init_info.PhysicalDevice = device->getVulkanPhysicalDevice();
+        init_info.Device = device->getVulkanDevice();
+        init_info.QueueFamily = device->getVulkanCommandQueueFamilyIndex(CommandListType::Graphics);
+        init_info.Queue = device->getCommandQueue(CommandQueueType::Graphics)->getVulkanCommandQueue();
+        init_info.PipelineCache = VK_NULL_HANDLE;
+        init_info.DescriptorPool = m_vkImguiDescriptorPool;
+        init_info.Allocator = nullptr;
+        init_info.MinImageCount = max_frame_latency;
+        init_info.ImageCount = max_frame_latency;
+        init_info.CheckVkResultFn = nullptr;
 
         ImGui_ImplVulkan_Init(&init_info, m_vkImguiRenderPass);
-        #endif 
     }
+    #endif
 
     //--------------------------------------------------------------------------------------
     ImguiAdapter::~ImguiAdapter()
@@ -156,18 +184,34 @@ namespace vg::graphics::renderer
     //--------------------------------------------------------------------------------------
     void ImguiAdapter::beginFrame()
     {
+        VG_PROFILE_CPU("Dear Imgui");
+
+        driver::Device * device = Device::get();
+        static bool firstFrame = true;
+
         #ifdef VG_DX12
+
         ImGui_ImplDX12_NewFrame();
-        #elif defined(VG_VULKAN)
-        ImGui_ImplVulkan_NewFrame();
-        static bool once = true;
-        if (once)
+
+        if (firstFrame)
         {
-            driver::Device * device = Device::get();
+            BindlessTable * bindlessTable = device->getBindlessTable();
+            bindlessTable->setd3d12GPUDescriptorDirty(m_fontTexSRVHandle);
+
+            firstFrame = false;
+        }
+
+        #elif defined(VG_VULKAN)
+
+        ImGui_ImplVulkan_NewFrame();
+        
+        if (firstFrame)
+        {
+           
             CommandList * cmdList = device->getCommandLists(CommandListType::Graphics)[0];
             ImGui_ImplVulkan_CreateFontsTexture(cmdList->getVulkanCommandBuffer());
 
-            once = false;
+            firstFrame = false;
         }
         #endif
 

@@ -77,11 +77,61 @@ namespace vg::graphics::driver
     }
 
     //--------------------------------------------------------------------------------------
-    void Profiler::save()
+    void Profiler::beginFrame(const char * _name)
     {
-        Device * device = Device::get();
-        string name = "vgframework_" + Plugin::getPlatform() + "_" + Plugin::getConfiguration() + "_" + asString(device->getDeviceParams().api);
-        OPTICK_SAVE_CAPTURE(name.c_str());
+        OPTICK_FRAME(_name);
+    }
+
+    //--------------------------------------------------------------------------------------
+    void Profiler::start()
+    {
+        VG_DEBUGPRINT("Start profile capture\n");
+        m_isCaptureInProgress = true;
+        OPTICK_START_CAPTURE();
+    }
+
+    //--------------------------------------------------------------------------------------
+    void Profiler::stop()
+    {
+        m_isCaptureInProgress = false;
+        OPTICK_STOP_CAPTURE();
+        VG_DEBUGPRINT("Stop profile capture\n");
+        
+        time_t now = time(0);
+		struct tm tstruct;
+        #if defined(OPTICK_MSVC)
+        localtime_s(&tstruct, &now);
+        #else
+        localtime_r(&now, &tstruct);
+        #endif
+        char timeStr[80] = {};
+		strftime(timeStr, sizeof(timeStr), "%dd%mm%Yy%Hh%Mm%Ss", &tstruct);
+        char filename[256] = {};
+        sprintf(filename, "capture/vgframework_%s_%s_%s_%s.opt", Plugin::getPlatform().c_str(), Plugin::getConfiguration().c_str(), asString(Device::get()->getDeviceParams().api).c_str(), timeStr);
+        system("mkdir capture");
+        OPTICK_SAVE_CAPTURE(filename);
+        VG_DEBUGPRINT("Save and open profile capture \"%s\"\n", filename);
+        char command[256];
+        sprintf(command, "start %s", filename);
+        system(command);
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool Profiler::isCaptureInProgress() const
+    {
+        return m_isCaptureInProgress;
+    }
+
+    //--------------------------------------------------------------------------------------
+    void Profiler::startCpuEvent(const char * _name)
+    {
+        OPTICK_PUSH_DYNAMIC(_name);
+    }
+
+    //--------------------------------------------------------------------------------------
+    void Profiler::stopCpuEvent()
+    {
+        OPTICK_POP();
     }
 }
 

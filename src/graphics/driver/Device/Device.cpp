@@ -288,7 +288,7 @@ namespace vg::graphics::driver
 	void Device::init(const DeviceParams & _params)
 	{
 		Super::init(_params);
-        Profiler::init();
+        VG_PROFILE_INIT();
         m_bindlessTable->init();
 	}
 
@@ -296,13 +296,15 @@ namespace vg::graphics::driver
 	void Device::deinit()
 	{
         waitGPUIdle();
-        Profiler::deinit();
+        VG_PROFILE_DEINIT();
 		Super::deinit();
 	}
 
 	//--------------------------------------------------------------------------------------
 	void Device::beginFrame()
 	{
+        VG_PROFILE_CPU("Device::beginFrame");
+
         #if VG_DBG_CPUGPUSYNC
         VG_DEBUGPRINT("beginFrame #%u\n{\n", getFrameCounter());
         #endif
@@ -323,6 +325,8 @@ namespace vg::graphics::driver
 	//--------------------------------------------------------------------------------------
 	void Device::endFrame()
 	{
+        VG_PROFILE_CPU("Device::endFrame");
+
 		Super::endFrame();
 
         #if VG_DBG_CPUGPUSYNC
@@ -333,6 +337,8 @@ namespace vg::graphics::driver
     //--------------------------------------------------------------------------------------
     void Device::flushTextureUploads()
     {
+        VG_PROFILE_CPU("flushTextureUploads");
+
         auto & context = getCurrentFrameContext();
         auto * cmdList = context.commandLists[asInteger(CommandQueueType::Graphics)][0];
 

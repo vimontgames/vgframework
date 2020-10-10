@@ -446,9 +446,6 @@
     <ClInclude Include="Profiler\Profiler.h">
       <Filter>Profiler</Filter>
     </ClInclude>
-    <ClInclude Include="Profiler\IProfiler.h">
-      <Filter>Profiler</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Device">

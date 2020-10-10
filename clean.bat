@@ -8,7 +8,7 @@ del *.iobj
 del *.exp
 del *.ilk
 del *.pdb
-del *.opt
+rmdir capture /S /Q
 rmdir lib /S /Q
 rmdir tmp /S /Q
 rmdir .vs /S /Q

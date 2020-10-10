@@ -228,6 +228,8 @@ namespace vg::graphics::driver
 	//--------------------------------------------------------------------------------------
 	void FrameGraph::setup()
 	{
+        VG_PROFILE_CPU("setup");
+
 		for (auto & pair : m_subPasses)
 		{
 			UserPass * subPass = pair.second;
@@ -239,6 +241,8 @@ namespace vg::graphics::driver
 	//--------------------------------------------------------------------------------------
 	void FrameGraph::build()
 	{
+        VG_PROFILE_CPU("build");
+
 		auto itBackbuffer = m_resources.find(m_outputResID);
 		VG_ASSERT(m_resources.end() != itBackbuffer, "FrameGraph destination resource not found");
 
@@ -343,12 +347,13 @@ namespace vg::graphics::driver
 	//--------------------------------------------------------------------------------------
 	void FrameGraph::render()
 	{
+        VG_PROFILE_CPU("render");
+
 		// Temp: use graphics command list
 		Device * device = Device::get();
 		CommandList * cmdList = device->getCommandLists(CommandListType::Graphics)[0]; 
 
         VG_PROFILE_GPU_CONTEXT(cmdList);
-        VG_PROFILE_CATEGORY("RenderFrameGraph", Rendering);
 
 		for (const RenderPass * renderPass : m_renderPasses)
 		{

@@ -70,6 +70,8 @@
     <ClInclude Include="Pool\IndexPool.h">
       <Filter>Pool</Filter>
     </ClInclude>
+    <ClInclude Include="IProfiler.h" />
+    <ClInclude Include="Kernel.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Math\Math.cpp">

@@ -32,12 +32,37 @@ namespace vg::graphics::driver::dx12
     }
 
     //--------------------------------------------------------------------------------------
+    void BindlessTable::setd3d12GPUDescriptorDirty(BindlessHandle _handle)
+    {
+        m_dirtyGPUHandle.push_back(_handle);
+    }
+
+    //--------------------------------------------------------------------------------------
     void BindlessTable::beginFrame()
     {
+        VG_PROFILE_CPU("CopyDescriptors");
+
+        auto * device = driver::Device::get();
+
+        #if 1
+        for (const auto & handle : m_dirtyGPUHandle)
+        {
+            D3D12_CPU_DESCRIPTOR_HANDLE cpuDescriptors = m_srvCPUDescriptorHeap->GetCPUDescriptorHandleForHeapStart();
+            D3D12_CPU_DESCRIPTOR_HANDLE gpuDescriptors = m_srvGPUDescriptorHeap->GetCPUDescriptorHandleForHeapStart();
+            
+            cpuDescriptors.ptr += handle * m_srcDescriptorHeapSize;
+            gpuDescriptors.ptr += handle * m_srcDescriptorHeapSize;
+
+            device->getd3d12Device()->CopyDescriptorsSimple(1, gpuDescriptors, cpuDescriptors, D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
+        }
+        #else
         D3D12_CPU_DESCRIPTOR_HANDLE cpuDescriptors = m_srvCPUDescriptorHeap->GetCPUDescriptorHandleForHeapStart();
         D3D12_CPU_DESCRIPTOR_HANDLE gpuDescriptors = m_srvGPUDescriptorHeap->GetCPUDescriptorHandleForHeapStart();
-        auto * device = driver::Device::get();
+    
         device->getd3d12Device()->CopyDescriptorsSimple(bindless_element_count, gpuDescriptors, cpuDescriptors, D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
+        #endif
+
+        m_dirtyGPUHandle.clear();
     }
 
     //--------------------------------------------------------------------------------------
@@ -64,5 +89,7 @@ namespace vg::graphics::driver::dx12
 
         auto * device = driver::Device::get();
         device->getd3d12Device()->CopyDescriptorsSimple(1, dst, src, D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
+
+        setd3d12GPUDescriptorDirty(_slot);
     }
 }

@@ -12,6 +12,7 @@
 #include "graphics/driver/Shader/ShaderManager.h"
 #include "graphics/driver/Shader/Shader.h"
 #include "graphics/driver/BindlessTable/BindlessTable.h"
+#include "graphics/driver/Profiler/Profiler.h"
 #include "graphics/renderer/Renderer.h"
 
 using namespace vg::core;

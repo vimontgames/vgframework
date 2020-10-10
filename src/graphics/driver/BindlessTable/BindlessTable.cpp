@@ -3,6 +3,7 @@
 #include "graphics/driver/device/Device.h"
 #include "graphics/driver/Resource/Texture.h"
 #include "Shaders/driver/bindless.hlsli"
+#include "core/Math/Math.h"
 
 using namespace vg::core;
 

@@ -37,6 +37,8 @@ namespace vg::graphics::renderer
         LRESULT CALLBACK        WndProc             (HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) override;
         #endif
 
+        core::IProfiler *       getProfilerInstance () const override;
+
 	//private:
 		driver::Device &		m_device;
         ImguiAdapter *                 m_imgui = nullptr;

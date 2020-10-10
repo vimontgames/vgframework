@@ -1,11 +1,12 @@
 #include "graphics/renderer/Precomp.h"
 #include "renderer.h"
 
+#include "core/Kernel.h"
 #include "graphics/driver/device/device.h"
 #include "graphics/driver/Shader/ShaderManager.h"
 #include "graphics/driver/FrameGraph/FrameGraph.h"
+#include "graphics/driver/Profiler/Profiler.h"
 #include "graphics/renderer/Imgui/imguiAdapter.h"
-
 #include "graphics/renderer/Pass/TestPass.h"
 #include "graphics/renderer/Pass/ImguiPass.h"
 
@@ -40,6 +41,12 @@ namespace vg::graphics::renderer
     }
     #endif
 
+    //--------------------------------------------------------------------------------------
+    core::IProfiler * Renderer::getProfilerInstance() const
+    {
+        return Kernel::getProfiler();
+    }
+
 	//--------------------------------------------------------------------------------------
 	core::IPlugin::Version Renderer::getVersion() const
 	{
@@ -51,7 +58,7 @@ namespace vg::graphics::renderer
 		m_device(*(new Device())),
 		m_frameGraph(*(new FrameGraph()))
 	{
-
+        Kernel::setProfiler(new Profiler());
 	}
 
 	//--------------------------------------------------------------------------------------
@@ -59,6 +66,8 @@ namespace vg::graphics::renderer
 	{
         m_frameGraph.release();
 		m_device.release();
+        IProfiler * profiler = Kernel::getProfiler();
+        VG_SAFE_DELETE(profiler);
 	}
 
 	//--------------------------------------------------------------------------------------
@@ -92,42 +101,26 @@ namespace vg::graphics::renderer
 	//--------------------------------------------------------------------------------------
 	void Renderer::runOneFrame()
 	{
-        OPTICK_FRAME("MainThread");
-
-        static bool start = false;
-        if (start)
-        {
-            VG_PROFILE_START();
-            start = false;
-        }
-
-        static bool stop = false;
-        if (stop)
-        {
-            VG_PROFILE_STOP();
-            stop = false;
-        }
-
-        static bool save = false;
-        if (save)
-        {
-            VG_PROFILE_SAVE();
-            save = false;
-        }
+        VG_PROFILE_CPU("Renderer");
 
 		m_device.beginFrame();
 		{
             m_imgui->beginFrame();
 
-			m_frameGraph.import("Backbuffer", m_device.getBackbuffer());
-			m_frameGraph.setGraphOutput("Backbuffer");
-            
-            m_frameGraph.addUserPass(m_testPass, "TestPass");
-            m_frameGraph.addUserPass(m_imguiPass, "UIPass");
-            
-			m_frameGraph.setup();
-			m_frameGraph.build();
-			m_frameGraph.render();
+            // Framegraph
+            {
+                VG_PROFILE_CPU("Framegraph");
+
+                m_frameGraph.import("Backbuffer", m_device.getBackbuffer());
+                m_frameGraph.setGraphOutput("Backbuffer");
+
+                m_frameGraph.addUserPass(m_testPass, "TestPass");
+                m_frameGraph.addUserPass(m_imguiPass, "UIPass");
+
+                m_frameGraph.setup();
+                m_frameGraph.build();
+                m_frameGraph.render();
+            }
 		}
 		m_device.endFrame();
 	}
