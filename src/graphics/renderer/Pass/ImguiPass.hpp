@@ -115,40 +115,66 @@ namespace vg::graphics::renderer
                 if (ImGui::Begin("About", &m_isAboutWindowVisible))
                 {
                     ImGui::Text("VGFramework");
-
+                    ImGui::Text("");
+ 
                     ImGui::Separator();
 
-                    ImGui::Columns(2, "mycolumns2", false);  // 2-ways, no border
+                    ImGui::Columns(2, "mycolumns2", false);  
                     ImGui::Text("Author");
                     ImGui::Text("Website");
+                    ImGui::Text("");
 
                     ImGui::NextColumn();
 
                     ImGui::textURL("Benoit Vimont", "https://twitter.com/benoitvimont");
                     ImGui::textURL("github.com/vimontgames/vgframework", "https://github.com/vimontgames/vgframework");
+                    ImGui::Text("");
 
                     ImGui::Separator();
 
                     ImGui::Columns(1);
-                    ImGui::Text("Third-party libraries used:");
-                    ImGui::Columns(2, "mycolumns2", false);  // 2-ways, no border
+                    ImGui::Text("Software development kits:");
+                    ImGui::Text("");
 
-                    ImGui::Text("User interface");
-                    ImGui::Text("C++ enum reflection");
-                    ImGui::Text("C++ hlsl-like math library");
-                    ImGui::Text("Memory (GPU)");
-                    ImGui::Text("Memory (GPU)");
-                    ImGui::Text("Profiler");
+                    ImGui::Columns(2, "mycolumns2", false);
+                    ImGui::SetColumnWidth(0, 200);
+
+                    ImGui::Text("Windows 10 SDK");
+                    ImGui::Text("Vulkan SDK");
+                    ImGui::Text("");
 
                     ImGui::NextColumn();
 
-                    ImGui::textURL("Dear ImGui", "https://github.com/ocornut/imgui");
-                    ImGui::textURL("magic_enum", "https://github.com/Neargye/magic_enum");
-                    ImGui::textURL("hlslpp", "https://github.com/redorav/hlslpp");
-                    ImGui::textURL("D3D12MemoryAllocator", "https://github.com/GPUOpen-LibrariesAndSDKs/D3D12MemoryAllocator");
-                    ImGui::textURL("VulkanMemoryAllocator", "https://github.com/GPUOpen-LibrariesAndSDKs/VulkanMemoryAllocator");
-                    ImGui::textURL("optick", "https://github.com/bombomby/optick");
+                    ImGui::textURL("developer.microsoft.com/fr-fr/windows/downloads/sdk-archive", "https://developer.microsoft.com/fr-fr/windows/downloads/sdk-archive/");
+                    ImGui::textURL("vulkan.lunarg.com/sdk/home", "https://vulkan.lunarg.com/sdk/home");
+                    ImGui::Text("");
+
+                    ImGui::Separator();
+
+                    ImGui::Columns(1);
+                    ImGui::Text("Third-party libraries:");
+                    ImGui::Text("");
+
+                    ImGui::Columns(2, "mycolumns2", false);
                     
+                    ImGui::Text("Dear ImGui");
+                    ImGui::Text("optick");
+                    ImGui::Text("D3D12MemoryAllocator");
+                    ImGui::Text("VulkanMemoryAllocator");
+                    ImGui::Text("hlslpp");
+                    ImGui::Text("magic_enum");
+                    ImGui::Text("");
+
+                    ImGui::NextColumn();
+
+                    ImGui::textURL("github.com/ocornut/imgui", "https://github.com/ocornut/imgui");
+                    ImGui::textURL("github.com/bombomby/optick", "https://github.com/bombomby/optick");
+                    ImGui::textURL("github.com/GPUOpen-LibrariesAndSDKs/D3D12MemoryAllocator", "https://github.com/GPUOpen-LibrariesAndSDKs/D3D12MemoryAllocator");
+                    ImGui::textURL("github.com/GPUOpen-LibrariesAndSDKs/VulkanMemoryAllocator", "https://github.com/GPUOpen-LibrariesAndSDKs/VulkanMemoryAllocator");
+                    ImGui::textURL("github.com/redorav/hlslpp", "https://github.com/redorav/hlslpp");
+                    ImGui::textURL("github.com/Neargye/magic_enum", "https://github.com/Neargye/magic_enum");
+                    //ImGui::Text("");
+
                     ImGui::End();
                 }
             }
