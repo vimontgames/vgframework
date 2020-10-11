@@ -14,6 +14,8 @@ https://github.com/redorav/hlslpp
 https://github.com/Neargye/magic_enum
 - Dear ImGui
 https://github.com/ocornut/imgui
+- stb
+https://github.com/nothings/stb
 
 # sdk
 - Win10 SDK 10.0.17763.0

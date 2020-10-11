@@ -11,7 +11,7 @@ namespace vg::graphics::renderer
         auto * device = Device::get();
         
         RootSignatureDesc rsDesc;
-        rsDesc.addRootConstants(ShaderStageFlags::VS | ShaderStageFlags::PS, 0, 8);
+        rsDesc.addRootConstants(ShaderStageFlags::VS | ShaderStageFlags::PS, 0, sizeof(RootConstants)/sizeof(u32));
         
         const RootSignatureTableDesc & bindlessTable = device->getBindlessTable()->getTableDesc();
         rsDesc.addTable(bindlessTable);
@@ -65,15 +65,7 @@ namespace vg::graphics::renderer
 
         // texture 3
         {
-            TextureDesc texDesc = TextureDesc(Usage::Default, BindFlags::ShaderResource, CPUAccessFlags::None, TextureType::Texture2D, PixelFormat::R8G8B8A8_unorm, TextureFlags::None, 2, 2);
-
-            const u32 texInitData[4] =
-            {
-                0xFF0000FF, 0xFF00FF00,
-                0xFFFF0000, 0xFF7F7F7F
-            };
-
-            m_texture.push_back(device->createTexture(texDesc, "tex1D #3", (void*)texInitData));
+            m_texture.push_back(device->createTexture("data\\textures\\vgframework.tga"));
         }
 
         // buffer 0
@@ -132,7 +124,7 @@ namespace vg::graphics::renderer
     {
         VG_PROFILE_GPU("TestPass");
 
-        RasterizerState rs(FillMode::Solid, CullMode::Back);
+        RasterizerState rs(FillMode::Solid, CullMode::None);
         
         _cmdList->setRootSignature(m_rootSignatureHandle);
         _cmdList->setShader(m_shaderKey);
@@ -140,20 +132,27 @@ namespace vg::graphics::renderer
         _cmdList->setRasterizerState(rs);
         
         float4 posOffetScale, texOffetScale;
-        
+        uint texID;
+
         posOffetScale = float4(0.1f, 0.1f, 0.8f, 0.8f);
         texOffetScale = float4(0.0f, 0.0f, 1.0f, 1.0f);
+        texID = m_texture[0]->getBindlessSRVHandle();
+
         _cmdList->setRootConstants(0, (u32*)&posOffetScale, 4);
         _cmdList->setRootConstants(4, (u32*)&texOffetScale, 4);
+        _cmdList->setRootConstants(8, &texID, 1);
         
         _cmdList->draw(4);
         
         static float y = 0.0f;
                 
-        posOffetScale = float4(0.25f, 0.25f + y, 0.5f, 0.5f);
-        texOffetScale = float4(0.0f, 0.0f, 2.0f, 2.0f);
+        posOffetScale = float4(0.75f, 0.25f + y, 0.25f, 0.25f);
+        texOffetScale = float4(0.0f, 0.0f, 1.0f, 1.0f);
+        texID = m_texture[3]->getBindlessSRVHandle();
+
         _cmdList->setRootConstants(0, (u32*)&posOffetScale, 4);
         _cmdList->setRootConstants(4, (u32*)&texOffetScale, 4);
+        _cmdList->setRootConstants(8, &texID, 1);
         
         auto * renderer = Renderer::get();
         const auto & backbuffer = renderer->getBackbuffer()->getTexDesc();
@@ -162,7 +161,7 @@ namespace vg::graphics::renderer
         
         if (y < -0.25)
             reverse = false;
-        else if (y > 0.25)
+        else if (y > 0.5)
             reverse = true;
         
         if (reverse)

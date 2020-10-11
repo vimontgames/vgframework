@@ -247,7 +247,7 @@ namespace vg::graphics::driver::dx12
         auto * device = driver::Device::get();
         auto & context = device->getCurrentFrameContext();
 
-        const auto & texDesc = _dst->getTexDesc();
+        const TextureDesc & texDesc = _dst->getTexDesc();
         const auto fmtSize = Texture::getPixelFormatSize(texDesc.format);
 
         D3D12_SUBRESOURCE_FOOTPRINT pitchedDesc = {};

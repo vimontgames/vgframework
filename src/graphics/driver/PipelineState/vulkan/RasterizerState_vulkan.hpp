@@ -6,7 +6,7 @@ namespace vg::graphics::driver::vulkan
         switch (_fillMode)
         {
         default:
-            VG_ASSERT(false, "Unhandled FillMode \"%s\" (%u)", asString(_fillMode), _fillMode);
+            VG_ASSERT(false, "Unhandled FillMode \"%s\" (%u)", asString(_fillMode).c_str(), _fillMode);
         case FillMode::Solid:
             return VK_POLYGON_MODE_FILL;
 
@@ -21,7 +21,7 @@ namespace vg::graphics::driver::vulkan
         switch (_cullMode)
         {
         default:
-            VG_ASSERT(false, "Unhandled CullMode \"%s\" (%u)", asString(_cullMode), _cullMode);
+            VG_ASSERT(false, "Unhandled CullMode \"%s\" (%u)", asString(_cullMode).c_str(), _cullMode);
         case CullMode::None:
             return VK_CULL_MODE_NONE;
 

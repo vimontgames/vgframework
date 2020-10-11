@@ -8,7 +8,7 @@ namespace vg::graphics::driver
         switch (_sampler)
         {
             default:
-                VG_ASSERT(false, "Unhandled Sampler \"%s\" (%u)", asString(_sampler));
+                VG_ASSERT(false, "Unhandled Sampler \"%s\" (%u)", asString(_sampler).c_str());
             case Sampler::NearestClamp:
                 *this = SamplerState(Filter::Nearest, Address::Clamp);
                 break;

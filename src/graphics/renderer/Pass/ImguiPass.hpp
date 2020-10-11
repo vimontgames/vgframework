@@ -114,20 +114,19 @@ namespace vg::graphics::renderer
             {
                 if (ImGui::Begin("About", &m_isAboutWindowVisible))
                 {
-                    ImGui::Text("VGFramework");
+                    ImGui::Text("VimontGames Framework:");
                     ImGui::Text("");
  
-                    ImGui::Separator();
-
                     ImGui::Columns(2, "mycolumns2", false);  
-                    ImGui::Text("Author");
+                    
                     ImGui::Text("Website");
+                    ImGui::Text("Author");
                     ImGui::Text("");
 
                     ImGui::NextColumn();
 
-                    ImGui::textURL("Benoit Vimont", "https://twitter.com/benoitvimont");
                     ImGui::textURL("github.com/vimontgames/vgframework", "https://github.com/vimontgames/vgframework");
+                    ImGui::textURL("Benoit Vimont", "https://twitter.com/benoitvimont");
                     ImGui::Text("");
 
                     ImGui::Separator();
@@ -159,20 +158,24 @@ namespace vg::graphics::renderer
                     
                     ImGui::Text("Dear ImGui");
                     ImGui::Text("optick");
-                    ImGui::Text("D3D12MemoryAllocator");
-                    ImGui::Text("VulkanMemoryAllocator");
+                    ImGui::Text("stb_image");
                     ImGui::Text("hlslpp");
                     ImGui::Text("magic_enum");
+                    ImGui::Text("D3D12MemoryAllocator");
+                    ImGui::Text("VulkanMemoryAllocator");
+                    
                     ImGui::Text("");
 
                     ImGui::NextColumn();
 
                     ImGui::textURL("github.com/ocornut/imgui", "https://github.com/ocornut/imgui");
                     ImGui::textURL("github.com/bombomby/optick", "https://github.com/bombomby/optick");
-                    ImGui::textURL("github.com/GPUOpen-LibrariesAndSDKs/D3D12MemoryAllocator", "https://github.com/GPUOpen-LibrariesAndSDKs/D3D12MemoryAllocator");
-                    ImGui::textURL("github.com/GPUOpen-LibrariesAndSDKs/VulkanMemoryAllocator", "https://github.com/GPUOpen-LibrariesAndSDKs/VulkanMemoryAllocator");
+                    ImGui::textURL("github.com/nothings/stb", "https://github.com/nothings/stb");
                     ImGui::textURL("github.com/redorav/hlslpp", "https://github.com/redorav/hlslpp");
                     ImGui::textURL("github.com/Neargye/magic_enum", "https://github.com/Neargye/magic_enum");
+                    ImGui::textURL("github.com/GPUOpen-LibrariesAndSDKs/D3D12MemoryAllocator", "https://github.com/GPUOpen-LibrariesAndSDKs/D3D12MemoryAllocator");
+                    ImGui::textURL("github.com/GPUOpen-LibrariesAndSDKs/VulkanMemoryAllocator", "https://github.com/GPUOpen-LibrariesAndSDKs/VulkanMemoryAllocator");
+
                     //ImGui::Text("");
 
                     ImGui::End();

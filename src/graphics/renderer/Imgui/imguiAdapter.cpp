@@ -46,7 +46,7 @@ namespace vg::graphics::renderer
         #endif
 
         BindlessTable * bindlessTable = _device.getBindlessTable();
-        m_fontTexSRVHandle = bindlessTable->allocBindlessTextureHandle((Texture*)nullptr);
+        m_fontTexSRVHandle = bindlessTable->allocBindlessTextureHandle((Texture*)nullptr, ReservedSlot(bindless_texture_invalid-1));
 
         #ifdef VG_DX12
         d3d12Init();

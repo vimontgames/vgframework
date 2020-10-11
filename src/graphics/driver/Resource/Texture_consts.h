@@ -20,22 +20,25 @@ namespace vg::graphics::driver
 	enum class PixelFormat : core::u8
 	{
         Unknow = 0,
-		R8G8B8A8_unorm,
-        B8G8R8A8_unorm
+		
+        R8G8B8A8_unorm,
+        R8G8B8A8_unorm_sRGB,
+
+        B8G8R8A8_unorm,
+        B8G8R8A8_unorm_sRGB
 	};
 
 	enum class TextureFlags : core::u32
 	{
 		None			= 0x00000000,
         Backbuffer		= 0x00000001,
-		RenderTarget	= 0x00000002,			
-		sRGB			= 0x00000004
+		RenderTarget	= 0x00000002
 	};
 
 	class TextureDesc
 	{
 	public:
-		TextureDesc(Usage _usage, BindFlags _bindFlags, CPUAccessFlags _cpuAccessFlags, TextureType _type, PixelFormat _format, TextureFlags _flags, core::u16 _width, core::u16 _height = 1, core::u16 _depth = 1, core::u8 _mipmaps = 1) :
+		TextureDesc(Usage _usage = Usage::Default, BindFlags _bindFlags = BindFlags::ShaderResource, CPUAccessFlags _cpuAccessFlags = CPUAccessFlags::None, TextureType _type = TextureType::Texture2D, PixelFormat _format = PixelFormat::R8G8B8A8_unorm, TextureFlags _flags = TextureFlags::None, core::u16 _width = 1, core::u16 _height = 1, core::u16 _depth = 1, core::u8 _mipmaps = 1) :
             resource(_usage, _bindFlags, _cpuAccessFlags),
             width(_width),
 			height(_height),
@@ -56,5 +59,10 @@ namespace vg::graphics::driver
 		TextureType		type;
 		PixelFormat		format;
 		TextureFlags	flags;
+
+        inline bool testFlags(TextureFlags _flags) const { return 0 != (std::underlying_type<TextureFlags>::type(_flags) & std::underlying_type<TextureFlags>::type(flags)); }
+
+        inline bool isBackbuffer    () const { return testFlags(TextureFlags::Backbuffer); }
+        inline bool isRenderTarget  () const { return testFlags(TextureFlags::RenderTarget); }
 	};
 }

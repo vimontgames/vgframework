@@ -105,7 +105,7 @@ namespace vg::graphics::driver::vulkan
         switch (_stage)
         {
         default:
-            VG_ASSERT(false, "Unhandled ShaderStage \"%s\" (%u)", asString(_stage), _stage);
+            VG_ASSERT(false, "Unhandled ShaderStage \"%s\" (%u)", asString(_stage).c_str(), _stage);
             return VkShaderStageFlagBits(0);
 
         case ShaderStage::Vertex:

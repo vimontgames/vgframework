@@ -7,14 +7,17 @@
 #define DECL_ROOTCONSTANTS(type, name, reg, s) [[vk::push_constant]] ConstantBuffer<type> name : register(b##reg, space##s);
 #endif
 
-#ifndef __cplusplus
 struct RootConstants
 {
-    uint4 posOffsetScale;
-    uint4 uvOffsetScale;
+    uint2 posOffset;
+    uint2 posScale;
+    uint2 uvOffset;
+    uint2 uvScale;
+    uint  texID;
 };
-DECL_ROOTCONSTANTS(RootConstants, rootConstants, 0, 0);
 
+#ifndef __cplusplus
+DECL_ROOTCONSTANTS(RootConstants, rootConstants, 0, 0);
 #endif
 
 #endif // _DRIVER__HLSLI_

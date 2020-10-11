@@ -12,6 +12,7 @@
 #include "graphics/driver/BindlessTable/BindlessTable.h"
 #include "graphics/driver/PipelineState/SamplerState.h"
 #include "graphics/driver/Profiler/Profiler.h"
+#include "graphics/driver/Importer/TextureImporter.h"
 
 using namespace vg::core;
 using namespace vg::graphics;
@@ -196,7 +197,7 @@ namespace vg::graphics::driver
                 CPUAccessFlags::None,
                 TextureType::Texture2D,
                 m_backbufferFormat,
-                TextureFlags::RenderTarget | TextureFlags::Backbuffer | TextureFlags::sRGB,
+                TextureFlags::RenderTarget | TextureFlags::Backbuffer,
                 getDeviceParams().resolution.x,
                 getDeviceParams().resolution.y
             );
@@ -289,6 +290,7 @@ namespace vg::graphics::driver
 	{
 		Super::init(_params);
         VG_PROFILE_INIT();
+        m_textureImporter = new TextureImporter();
         m_bindlessTable->init();
 	}
 
@@ -296,6 +298,7 @@ namespace vg::graphics::driver
 	void Device::deinit()
 	{
         waitGPUIdle();
+        VG_SAFE_DELETE(m_textureImporter);
         VG_PROFILE_DEINIT();
 		Super::deinit();
 	}
@@ -366,6 +369,17 @@ namespace vg::graphics::driver
 	{
 		return new Texture(_texDesc, _name, _initData, _reservedSlot);
 	}
+
+    //--------------------------------------------------------------------------------------
+    Texture * Device::createTexture(const core::string & _path, ReservedSlot _reservedSlot)
+    {
+        TextureDesc texDesc;
+        u8 * data = nullptr;
+        if (m_textureImporter->importTextureData(_path, texDesc, data))
+            return createTexture(texDesc, _path, data, _reservedSlot);
+        VG_SAFE_FREE(data);
+        return nullptr;
+    }
 
     //--------------------------------------------------------------------------------------
     Buffer * Device::createBuffer(const BufferDesc & _bufDesc, const core::string & _name, void * _initData, ReservedSlot _reservedSlot)

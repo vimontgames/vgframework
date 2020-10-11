@@ -116,6 +116,8 @@ namespace vg::graphics::driver
 
 namespace vg::graphics::driver
 {
+    class TextureImporter;
+
 	class Device : public VG_GFXAPI::Device, public core::Singleton<Device>
 	{
 		using Super = VG_GFXAPI::Device;
@@ -128,6 +130,7 @@ namespace vg::graphics::driver
 		void		        endFrame		    ();
 
 		Texture *	        createTexture	    (const TextureDesc & _texDesc, const core::string & _name, void * _initData = nullptr, ReservedSlot _reservedSlot = ReservedSlot::None);
+        Texture *	        createTexture       (const core::string & _path, ReservedSlot _reservedSlot = ReservedSlot::None);
         Buffer *            createBuffer        (const BufferDesc & _bufDesc, const core::string & _name, void * _initData = nullptr, ReservedSlot _reservedSlot = ReservedSlot::None);
 
         RootSignatureHandle addRootSignature    (const RootSignatureDesc & _desc);
@@ -137,5 +140,6 @@ namespace vg::graphics::driver
         void                flushTextureUploads ();
 
 	private:
+        TextureImporter *   m_textureImporter = nullptr;
 	};
 }

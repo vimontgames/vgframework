@@ -96,7 +96,7 @@ namespace vg::graphics::driver::dx12
         switch (usage)
         {
             default:
-                VG_ASSERT(false, "Unhandled Usage \"%s\" (%u)", asString(usage), usage);
+                VG_ASSERT(false, "Unhandled Usage \"%s\" (%u)", asString(usage).c_str(), usage);
 
             case Usage::Default:
                 allocDesc.Flags = D3D12MA::ALLOCATION_FLAG_NONE;

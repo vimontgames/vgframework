@@ -8,8 +8,14 @@ namespace vg::graphics::driver::vulkan
         case PixelFormat::R8G8B8A8_unorm:
             return VK_FORMAT_R8G8B8A8_UNORM;
 
+        case PixelFormat::R8G8B8A8_unorm_sRGB:
+            return VK_FORMAT_R8G8B8A8_SRGB;
+
         case PixelFormat::B8G8R8A8_unorm:
             return VK_FORMAT_B8G8R8A8_UNORM;
+
+        case PixelFormat::B8G8R8A8_unorm_sRGB:
+            return VK_FORMAT_B8G8R8A8_SRGB;
 
         default:
             VG_ASSERT(false, "Unhandled pixel format \"%s\"", asString(_format).c_str());

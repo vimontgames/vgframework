@@ -109,7 +109,7 @@ namespace vg::graphics::driver::dx12
             return D3D12_PRIMITIVE_TOPOLOGY_TYPE_LINE;
 
         default:
-            VG_ASSERT(false, "Unhandled PrimitiveType \"%s\" (%u)", asString(_primitiveType), _primitiveType);
+            VG_ASSERT(false, "Unhandled PrimitiveType \"%s\" (%u)", asString(_primitiveType).c_str(), _primitiveType);
         case PrimitiveType::Triangle:
             return D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
 

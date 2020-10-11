@@ -11,8 +11,9 @@ namespace vg::graphics::driver
             switch (_format)
             {
                 default:
-                    VG_ASSERT(false, "Unhandled PixelFormat \"%s\" (%u)", asString(_format), _format);
+                    VG_ASSERT(false, "Unhandled PixelFormat \"%s\" (%u)", asString(_format).c_str(), _format);
                 case PixelFormat::R8G8B8A8_unorm:
+                case PixelFormat::R8G8B8A8_unorm_sRGB:
                     return 4;
             }
         }

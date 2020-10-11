@@ -31,7 +31,7 @@ namespace vg::graphics::driver::vulkan
         switch (_filter)
         {
             default:
-                VG_ASSERT(false, "Unhandled Filter \"%s\" (%u)", asString(_filter), _filter);
+                VG_ASSERT(false, "Unhandled Filter \"%s\" (%u)", asString(_filter).c_str(), _filter);
             case Filter::Nearest:
                 return VK_FILTER_NEAREST;
             case Filter::Linear:
@@ -45,7 +45,7 @@ namespace vg::graphics::driver::vulkan
         switch (_filter)
         {
             default:
-                VG_ASSERT(false, "Unhandled Filter \"%s\" (%u)", asString(_filter), _filter);
+                VG_ASSERT(false, "Unhandled Filter \"%s\" (%u)", asString(_filter).c_str(), _filter);
             case Filter::Nearest:
                 return VK_SAMPLER_MIPMAP_MODE_NEAREST;
             case Filter::Linear:
@@ -59,7 +59,7 @@ namespace vg::graphics::driver::vulkan
         switch (_address)
         {
             default:
-                VG_ASSERT(false, "Unhandled Address \"%s\" (%u)", asString(_address), _address);
+                VG_ASSERT(false, "Unhandled Address \"%s\" (%u)", asString(_address).c_str(), _address);
             case Address::Clamp:
                 return VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE;
             case Address::Repeat:

@@ -38,6 +38,9 @@
     <ClCompile Include="Profiler\Profiler.cpp">
       <Filter>Profiler</Filter>
     </ClCompile>
+    <ClCompile Include="Importer\Importer.cpp">
+      <Filter>Importer</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Precomp.h" />
@@ -446,6 +449,16 @@
     <ClInclude Include="Profiler\Profiler.h">
       <Filter>Profiler</Filter>
     </ClInclude>
+    <ClInclude Include="Importer\TextureImporter.h">
+      <Filter>Importer</Filter>
+    </ClInclude>
+    <ClInclude Include="Importer\TextureImporter.hpp">
+      <Filter>Importer</Filter>
+    </ClInclude>
+    <ClInclude Include="Importer\Importer.h">
+      <Filter>Importer</Filter>
+    </ClInclude>
+    <ClInclude Include="IImporter.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Device">
@@ -552,6 +565,9 @@
     </Filter>
     <Filter Include="Profiler">
       <UniqueIdentifier>{a4b383a3-0c95-41b3-be7a-cc5749578a2c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Importer">
+      <UniqueIdentifier>{7ca25846-4d4a-41d2-96a0-dcd3f1af0b27}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

@@ -25,7 +25,7 @@ namespace vg::graphics::driver::dx12
         switch (_filter)
         {
             default:
-                VG_ASSERT(false, "Unhandled Filter \"%s\" (%u)", asString(_filter), _filter);
+                VG_ASSERT(false, "Unhandled Filter \"%s\" (%u)", asString(_filter).c_str(), _filter);
             case Filter::Nearest:
                 return D3D12_FILTER_MIN_MAG_MIP_POINT;
             case Filter::Linear:
@@ -39,7 +39,7 @@ namespace vg::graphics::driver::dx12
         switch (_address)
         {
             default:
-                VG_ASSERT(false, "Unhandled Address \"%s\" (%u)", asString(_address), _address);
+                VG_ASSERT(false, "Unhandled Address \"%s\" (%u)", asString(_address).c_str(), _address);
             case Address::Repeat:
                 return D3D12_TEXTURE_ADDRESS_MODE_WRAP;
             case Address::Clamp:

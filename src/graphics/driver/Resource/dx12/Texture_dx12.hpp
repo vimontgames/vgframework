@@ -5,8 +5,11 @@ namespace vg::graphics::driver::dx12
     {
         switch (_format)
         {
-            case PixelFormat::R8G8B8A8_unorm:
-                return DXGI_FORMAT_R8G8B8A8_UNORM;
+        case PixelFormat::R8G8B8A8_unorm:
+            return DXGI_FORMAT_R8G8B8A8_UNORM;
+
+        case PixelFormat::R8G8B8A8_unorm_sRGB:
+            return DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
 
             default:
                 VG_ASSERT(false, "Unhandled pixel format \"%s\"", asString(_format).c_str());

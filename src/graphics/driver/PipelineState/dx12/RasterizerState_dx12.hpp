@@ -6,7 +6,7 @@ namespace vg::graphics::driver::dx12
         switch (_fillMode)
         {
         default:
-            VG_ASSERT(false, "Unhandled FillMode \"%s\" (%u)", asString(_fillMode), _fillMode);
+            VG_ASSERT(false, "Unhandled FillMode \"%s\" (%u)", asString(_fillMode).c_str(), _fillMode);
         case FillMode::Solid:
             return D3D12_FILL_MODE_SOLID;
 
@@ -21,7 +21,7 @@ namespace vg::graphics::driver::dx12
         switch (_cullMode)
         {
         default:
-            VG_ASSERT(false, "Unhandled CullMode \"%s\" (%u)", asString(_cullMode), _cullMode);
+            VG_ASSERT(false, "Unhandled CullMode \"%s\" (%u)", asString(_cullMode).c_str(), _cullMode);
         case CullMode::None:
             return D3D12_CULL_MODE_NONE;
 
@@ -48,7 +48,7 @@ namespace vg::graphics::driver::dx12
         switch (depthBias)
         {
         default:
-            VG_ASSERT(false, "Unhandled DepthBias \"%s\" (%u)", asString(depthBias), depthBias);
+            VG_ASSERT(false, "Unhandled DepthBias \"%s\" (%u)", asString(depthBias).c_str(), depthBias);
         case DepthBias::None:
             d3d12desc.DepthBias = 0;
             d3d12desc.DepthBiasClamp = 0.0f;
