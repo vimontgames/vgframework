@@ -50,16 +50,7 @@ namespace vg::graphics::renderer
     //--------------------------------------------------------------------------------------
     void ImguiPass::setup()
     {
-        auto * renderer = Renderer::get();
-        const auto & backbuffer = renderer->getBackbuffer()->getTexDesc();
-
-        FrameGraph::TextureDesc desc;
-        desc.width = backbuffer.width;
-        desc.height = backbuffer.height;
-        desc.format = backbuffer.format;
-
-        desc.initState = FrameGraph::Resource::InitState::Preserve;
-        writeRenderTarget(0, "Backbuffer", desc);
+        writeRenderTarget(0, "Backbuffer");
 
         // Dear ImGui
 

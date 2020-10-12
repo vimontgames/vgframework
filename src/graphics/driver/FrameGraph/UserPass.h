@@ -28,13 +28,14 @@ namespace vg::graphics::driver
         FrameGraph::TextureResource * getDepthStencil() const;
 
         core::uint getRenderTargetCount() const;
-        const FrameGraph::TextureDesc & getRenderTargetDesc(core::uint _index) const;
+        const FrameGraph::TextureResourceDesc & getRenderTargetDesc(core::uint _index) const;
 
         bool hasDepthStencil() const;
-        const FrameGraph::TextureDesc &  getDepthStencilDesc() const;
+        const FrameGraph::TextureResourceDesc &  getDepthStencilDesc() const;
 
 	protected:
-		void writeRenderTarget(core::uint _slot, const FrameGraph::ResourceID & _resID, const FrameGraph::TextureDesc & _resDesc);
+        void declareRenderTarget(const FrameGraph::ResourceID & _resID, const FrameGraph::TextureResourceDesc & _resDesc);
+		void writeRenderTarget(core::uint _slot, const FrameGraph::ResourceID & _resID);
 
 	private:
 		friend class FrameGraph;

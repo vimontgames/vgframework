@@ -33,6 +33,12 @@
     <ClInclude Include="Imgui\imguiAdapter.h">
       <Filter>Imgui</Filter>
     </ClInclude>
+    <ClInclude Include="Pass\PostProcessPass.h">
+      <Filter>Pass</Filter>
+    </ClInclude>
+    <ClInclude Include="Pass\PostProcessPass.hpp">
+      <Filter>Pass</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Pass">

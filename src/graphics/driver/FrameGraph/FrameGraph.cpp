@@ -38,6 +38,18 @@ namespace vg::graphics::driver
 		return m_type; 
 	}
 
+    //--------------------------------------------------------------------------------------
+    void FrameGraph::Resource::setName(const core::string & _name)
+    {
+        m_name = _name;
+    }
+
+    //--------------------------------------------------------------------------------------
+    const core::string & FrameGraph::Resource::getName() const
+    {
+        return m_name;
+    }
+
 	//--------------------------------------------------------------------------------------
 	void FrameGraph::Resource::setReadAtPass(const UserPass * _subPass)
 	{
@@ -65,36 +77,19 @@ namespace vg::graphics::driver
 	//--------------------------------------------------------------------------------------
 	// FrameGraph::TextureResource
 	//--------------------------------------------------------------------------------------
-	void FrameGraph::TextureResource::setTextureDesc(const FrameGraph::TextureDesc & _resDesc)
+	void FrameGraph::TextureResource::setTextureResourceDesc(const FrameGraph::TextureResourceDesc & _texResDesc, const Texture * _tex)
 	{
-		m_desc = _resDesc;
+        VG_ASSERT(nullptr == m_texture, "Resource \"%s\" already has a texture", getName().c_str());
+		m_desc = _texResDesc;
+        m_texture = _tex;
 	}
 
-	//--------------------------------------------------------------------------------------
-	void FrameGraph::TextureResource::setTextureUsage(TextureResource::Usage _usage)
-	{
-		m_usage |= _usage;
-	}
-
-	//--------------------------------------------------------------------------------------
-	void FrameGraph::TextureResource::setTexture(const Texture * _texture)
-	{
-		VG_ASSERT(nullptr == m_texture, "Resource \"%s\" already has a texture", getName().c_str());
-		m_texture = _texture;
-	}
-
-	//--------------------------------------------------------------------------------------
-	const FrameGraph::TextureDesc & FrameGraph::TextureResource::getTextureDesc() const
-	{
-		return m_desc;
-	}
-
-	//--------------------------------------------------------------------------------------
-	FrameGraph::TextureResource::Usage FrameGraph::TextureResource::getTextureUsage() const
-	{
-		return m_usage;
-	}
-
+    //--------------------------------------------------------------------------------------
+    const FrameGraph::TextureResourceDesc & FrameGraph::TextureResource::getTextureResourceDesc() const
+    {
+        return m_desc;
+    }
+    
 	//--------------------------------------------------------------------------------------
 	const Texture * FrameGraph::TextureResource::getTexture() const
 	{
@@ -105,15 +100,10 @@ namespace vg::graphics::driver
 	//--------------------------------------------------------------------------------------
 	// FrameGraph::BufferResource
 	//--------------------------------------------------------------------------------------
-	void FrameGraph::BufferResource::setBufferDesc(const FrameGraph::BufferDesc & _resDesc)
+	void FrameGraph::BufferResource::setBufferResourceDesc(const FrameGraph::BufferResourceDesc & _bufResDesc, const Buffer * _buffer)
 	{
-		m_desc = _resDesc;
-	}
-
-	//--------------------------------------------------------------------------------------
-	void FrameGraph::BufferResource::setBufferUsage(BufferResource::Usage _usage)
-	{
-		m_usage |= _usage;
+		m_desc = _bufResDesc;
+        m_buffer = _buffer;
 	}
 
 	//--------------------------------------------------------------------------------------
@@ -138,7 +128,7 @@ namespace vg::graphics::driver
 		m_subPasses.clear();
 
 		for (auto & pair : m_resources)
-			VG_SAFE_RELEASE(pair.second);
+			VG_SAFE_DELETE(pair.second);
 		m_resources.clear();
 
 		for (auto * renderPass : m_renderPasses)
@@ -147,11 +137,77 @@ namespace vg::graphics::driver
 	}
 
 	//--------------------------------------------------------------------------------------
-	void FrameGraph::import(const ResourceID & _resID, Texture * _tex)
+	void FrameGraph::importRenderTarget(const ResourceID & _resID, Texture * _tex, float4 _clearColor, FrameGraph::Resource::InitState _initState)
 	{
-		TextureResource & res = addTextureResource(_resID);
-						  res.setTexture(_tex);
+        const TextureDesc & texDesc = _tex->getTexDesc();
+
+        FrameGraph::TextureResourceDesc desc;
+                                        desc.width = texDesc.width;
+                                        desc.height = texDesc.height;
+                                        desc.format = texDesc.format;
+                                        desc.clearColor = _clearColor;
+                                        desc.initState = _initState;
+
+		TextureResource * res = addTextureResource(_resID, desc, _tex);
+        VG_ASSERT(res);
 	}
+
+    //--------------------------------------------------------------------------------------
+    FrameGraph::TextureResource * FrameGraph::addTextureResource(const ResourceID & _resID, const TextureResourceDesc & _texResDesc, const Texture * _tex)
+    {
+        TextureResource * texRes = getResource<TextureResource>(Resource::Type::Texture, _resID, false);
+        if (texRes)
+            texRes->setTextureResourceDesc(_texResDesc, _tex);
+        return texRes;
+    }
+
+    //--------------------------------------------------------------------------------------
+    FrameGraph::BufferResource * FrameGraph::addBufferResource(const ResourceID & _resID, const BufferResourceDesc & _bufResDesc, const Buffer * _buf)
+    {
+        BufferResource * bufRes = getResource<BufferResource>(Resource::Type::Buffer, _resID, false);
+        if (bufRes)
+            bufRes->setBufferResourceDesc(_bufResDesc, _buf);
+        return bufRes;
+    }
+
+    //--------------------------------------------------------------------------------------
+    FrameGraph::TextureResource * FrameGraph::getTextureResource(const ResourceID & _resID) const
+    {
+        return const_cast<FrameGraph*>(this)->getResource<TextureResource>(Resource::Type::Texture, _resID, true);
+    }
+
+    //--------------------------------------------------------------------------------------
+    FrameGraph::BufferResource * FrameGraph::getBufferResource(const ResourceID & _resID) const
+    {
+        return const_cast<FrameGraph*>(this)->getResource<BufferResource>(Resource::Type::Buffer, _resID, true);
+    }
+
+    //--------------------------------------------------------------------------------------
+    template <class T> T * FrameGraph::getResource(Resource::Type _type, const ResourceID & _resID, bool _mustExist)
+    {
+        auto it = m_resources.find(_resID);
+        if (m_resources.end() == it)
+        {
+            VG_ASSERT(!_mustExist, "%s resource \"%s\" does not exist in FrameGraph", core::asString(_type).c_str(), _resID.c_str());
+            if (!_mustExist)
+            {
+                T * newResource = new T();
+                m_resources[_resID] = newResource;
+
+                newResource->setType(_type);
+                newResource->setName(_resID);
+
+                return newResource;
+            }
+        }
+        else
+        {
+            VG_ASSERT(_type == it->second->getType());
+            return static_cast<T*>(it->second);
+        }
+
+        return false;
+    }
 
 	//--------------------------------------------------------------------------------------
 	void FrameGraph::setGraphOutput(const ResourceID & _destTexResID)
@@ -295,7 +351,7 @@ namespace vg::graphics::driver
                     FrameGraph::TextureResource * res = renderTargets[i];
                     auto * tex = res->getTexture();
 
-                    renderPassKey.m_colorFormat[i] = res->getTextureDesc().format;
+                    renderPassKey.m_colorFormat[i] = res->getTextureResourceDesc().format;
 
                     // add or get index of attachment
                     uint attachmentIndex = (uint)-1;
@@ -327,7 +383,7 @@ namespace vg::graphics::driver
             FrameGraph::TextureResource * depthStencilRes = userPass->getDepthStencil();
             if (depthStencilRes)
             {
-                renderPassKey.m_depthStencilFormat = depthStencilRes->getTextureDesc().format;
+                renderPassKey.m_depthStencilFormat = depthStencilRes->getTextureResourceDesc().format;
                 renderPassKey.m_subPassKeys[0].setDepthStencilFlags(SubPassKey::Bind);
             }
 

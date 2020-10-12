@@ -31,7 +31,7 @@ namespace vg::graphics::driver::dx12
                 {
                     const FrameGraph::TextureResource * res = subPass->getUserPasses()[0]->getRenderTargets()[subPass->m_renderTargetCount]; // Assume subPass attachment order is the same as renderPass order and that we create different subPasses when attachment changes
                     const Texture * tex = res->getTexture();
-                    const FrameGraph::TextureDesc & resourceDesc = res->getTextureDesc();
+                    const FrameGraph::TextureResourceDesc & resourceDesc = res->getTextureResourceDesc();
 
                     auto & renderTargetDesc = subPass->m_d3d12renderPassRenderTargetDesc[i];
 

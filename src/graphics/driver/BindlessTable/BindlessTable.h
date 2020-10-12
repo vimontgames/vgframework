@@ -28,17 +28,17 @@ namespace vg::graphics::driver
             void freeBindlessBufferHandle(BindlessBufferSrvHandle & _handle);
             
         private:
-            template <class T, class P> BindlessHandle allocBindlessHandle(T * _resource, ReservedSlot _reservedSlot, P & _pool, T ** _resources, uint _offset, uint _invalid);
-            template <class T, class P> void freeBindlessHandle(BindlessHandle & _handle, P & _pool, T ** _resources, uint _offset, uint _invalid);
+            template <class H, class T, class P> H allocBindlessHandle(T * _resource, ReservedSlot _reservedSlot, P & _pool, T ** _resources, uint _offset, uint _invalid);
+            template <class H, class T, class P> void freeBindlessHandle(H & _handle, P & _pool, T ** _resources, uint _offset, uint _invalid);
 
         private:
-            RootSignatureTableDesc                                      m_tableDesc;
+            RootSignatureTableDesc                                              m_tableDesc;
 
-            core::IndexPool<BindlessHandle, bindless_texture_count>     m_textureSrvIndexPool;
-            Texture *                                                   m_textureSrv[bindless_texture_count];
+            core::IndexPool<BindlessHandle::Type, bindless_texture_SRV_count>   m_textureSrvIndexPool;
+            Texture *                                                           m_textureSrv[bindless_texture_SRV_count];
 
-            core::IndexPool<BindlessHandle, bindless_buffer_count>      m_bufferSrvIndexPool;
-            Buffer *                                                    m_bufferSrv[bindless_buffer_count];
+            core::IndexPool<BindlessHandle::Type, bindless_buffer_SRV_count>    m_bufferSrvIndexPool;
+            Buffer *                                                            m_bufferSrv[bindless_buffer_SRV_count];
         };
     }
 }

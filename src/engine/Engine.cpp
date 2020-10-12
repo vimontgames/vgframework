@@ -75,11 +75,11 @@ namespace vg::engine
 				break;
 
 			case graphics::driver::API::DirectX12:
-				api = "dx12";
+				api = "DX12";
 				break;
 
 			case graphics::driver::API::Vulkan:
-				api = "vulkan";
+				api = "Vulkan";
 				break;
 		}
 

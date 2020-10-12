@@ -44,16 +44,26 @@ namespace vg::graphics::driver
         return m_depthStencil;
     }
 
+    //--------------------------------------------------------------------------------------
+    // If resource already exist, it must have exactly the same descriptor
+    //--------------------------------------------------------------------------------------
+    void UserPass::declareRenderTarget(const FrameGraph::ResourceID & _resID, const FrameGraph::TextureResourceDesc & _resDesc)
+    {
+        FrameGraph::TextureResource * res = m_frameGraph->addTextureResource(_resID, _resDesc);
+        VG_ASSERT(res);
+    }
+
 	//--------------------------------------------------------------------------------------
-	void UserPass::writeRenderTarget(core::uint _slot, const FrameGraph::ResourceID & _resID, const FrameGraph::TextureDesc & _resDesc)
+    // Resource should be:
+    // - Persistent and already imported in the graph
+    // - Transient and already declared in the graph
+    //--------------------------------------------------------------------------------------
+	void UserPass::writeRenderTarget(core::uint _slot, const FrameGraph::ResourceID & _resID)
 	{
-		FrameGraph::TextureResource & res = m_frameGraph->addTextureResource(_resID);
-
-		res.setWriteAtPass(this);
-		res.setTextureDesc(_resDesc);
-		res.setTextureUsage(FrameGraph::TextureResource::Usage::RenderTarget);
-
-		m_renderTarget.push_back(&res);
+        FrameGraph::TextureResource * res = m_frameGraph->getTextureResource(_resID);
+        VG_ASSERT(res);
+        res->setWriteAtPass(this);
+		m_renderTarget.push_back(res);
 	}
 
     //--------------------------------------------------------------------------------------
@@ -63,9 +73,9 @@ namespace vg::graphics::driver
     }
 
     //--------------------------------------------------------------------------------------
-    const FrameGraph::TextureDesc & UserPass::getRenderTargetDesc(core::uint _index) const
+    const FrameGraph::TextureResourceDesc & UserPass::getRenderTargetDesc(core::uint _index) const
     {
-        return m_renderTarget[_index]->getTextureDesc();
+        return m_renderTarget[_index]->getTextureResourceDesc();
     }
 
     //--------------------------------------------------------------------------------------
@@ -75,8 +85,8 @@ namespace vg::graphics::driver
     }
 
     //--------------------------------------------------------------------------------------
-    const FrameGraph::TextureDesc & UserPass::getDepthStencilDesc() const
+    const FrameGraph::TextureResourceDesc & UserPass::getDepthStencilDesc() const
     {
-        return m_depthStencil->getTextureDesc();
+        return m_depthStencil->getTextureResourceDesc();
     }
 }

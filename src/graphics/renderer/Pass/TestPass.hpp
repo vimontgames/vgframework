@@ -98,25 +98,7 @@ namespace vg::graphics::renderer
     //--------------------------------------------------------------------------------------
     void TestPass::setup()
     {
-        auto * renderer = Renderer::get();
-        const auto & backbuffer = renderer->getBackbuffer()->getTexDesc();
-
-        FrameGraph::TextureDesc desc;
-                                desc.width = backbuffer.width;
-                                desc.height = backbuffer.height;
-                                desc.format = backbuffer.format;
-                                desc.initState = FrameGraph::Resource::InitState::Clear;
-
-        static float color = 0.0f;
-
-        if (color > 1.0f)
-            color -= 1.0f;
-
-        desc.clearColor = { 1, 0, color, 1 };
-
-        color += 1.0f / 255.0f;
-
-        writeRenderTarget(0, "Backbuffer", desc);
+        writeRenderTarget(0, "Backbuffer");
     }
 
     //--------------------------------------------------------------------------------------

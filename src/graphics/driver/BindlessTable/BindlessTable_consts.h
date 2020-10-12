@@ -1,13 +1,38 @@
 #pragma once
 
+#include "Shaders/driver/bindless.hlsli"
+
 namespace vg::graphics::driver
 {
-    using BindlessHandle = core::u16;
+    struct BindlessHandle
+    {
+        using Type = core::u16;
+        BindlessHandle(Type _value) : value(_value) { }
+        operator Type() const { return value; }
 
-    using BindlessTextureSrvHandle = BindlessHandle;
-    using BindlessTextureUAVHandle = BindlessHandle;
-    using BindlessBufferSrvHandle  = BindlessHandle;
-    using BindlessBufferUAVHandle  = BindlessHandle;
+    private:
+        Type value;
+    };
+
+    struct BindlessTextureSrvHandle : public BindlessHandle
+    {
+        BindlessTextureSrvHandle(Type _value = bindless_texture_SRV_invalid) : BindlessHandle(_value) { }
+    };
+
+    struct BindlessTextureUAVHandle : public BindlessHandle
+    {
+        BindlessTextureUAVHandle(Type _value = bindless_texture_UAV_invalid) : BindlessHandle(_value) {  }
+    };
+
+    struct BindlessBufferSrvHandle : public BindlessHandle
+    {
+        BindlessBufferSrvHandle(Type _value = bindless_buffer_SRV_invalid) : BindlessHandle(_value) { }
+    };
+
+    struct BindlessBufferUAVHandle : public BindlessHandle
+    {
+        BindlessBufferUAVHandle(Type _value = bindless_buffer_UAV_invalid) : BindlessHandle(_value) { }
+    };
 
     enum ReservedSlot : core::u32
     {

@@ -18,8 +18,8 @@ namespace vg::graphics::driver
         {
             m_tableDesc.setShaderStageFlags(ShaderStageFlags::All);
 
-            m_tableDesc.addTextures(0, bindless_texture_count, 0, bindless_texture_offset);
-            m_tableDesc.addBuffers(0, bindless_buffer_offset, 1, bindless_buffer_count);
+            m_tableDesc.addTextures(0, bindless_texture_SRV_count, 0, bindless_texture_SRV_offset);
+            m_tableDesc.addBuffers(0, bindless_buffer_SRV_offset, 1, bindless_buffer_SRV_count);
         }
 
         //--------------------------------------------------------------------------------------
@@ -29,16 +29,18 @@ namespace vg::graphics::driver
         }
 
         //--------------------------------------------------------------------------------------
-        template <class T, class P> BindlessHandle BindlessTable::allocBindlessHandle(T * _resource, ReservedSlot _reservedSlot, P & _pool, T ** _resources, uint _offset, uint _invalid)
+        template <class H, class T, class P> H BindlessTable::allocBindlessHandle(T * _resource, ReservedSlot _reservedSlot, P & _pool, T ** _resources, uint _offset, uint _invalid)
         {
-            BindlessHandle handle;
+            H handle;
 
             if (ReservedSlot::None == _reservedSlot)
+            {
                 handle = _pool.alloc() + _offset;
+            }
             else
             {
                 VG_ASSERT(_pool.isAvailable(_reservedSlot));
-                handle = (BindlessHandle)_reservedSlot;
+                handle = _reservedSlot;
             }
 
             if (_invalid != handle && ReservedSlot::None != _reservedSlot)
@@ -48,7 +50,7 @@ namespace vg::graphics::driver
         }
 
         //--------------------------------------------------------------------------------------
-        template <class T, class P> void BindlessTable::freeBindlessHandle(BindlessHandle & _handle, P & _pool, T ** _resources, uint _offset, uint _invalid)
+        template <class H, class T, class P> void BindlessTable::freeBindlessHandle(H & _handle, P & _pool, T ** _resources, uint _offset, uint _invalid)
         {
             if (_invalid != _handle)
             {
@@ -61,25 +63,25 @@ namespace vg::graphics::driver
         //--------------------------------------------------------------------------------------
         BindlessTextureSrvHandle BindlessTable::allocBindlessTextureHandle(driver::Texture * _texture, ReservedSlot _reservedSlot)
         {
-            return allocBindlessHandle(_texture, _reservedSlot, m_textureSrvIndexPool, m_textureSrv, bindless_texture_offset, bindless_texture_invalid);
+            return allocBindlessHandle<BindlessTextureSrvHandle>(_texture, _reservedSlot, m_textureSrvIndexPool, m_textureSrv, bindless_texture_SRV_offset, bindless_texture_SRV_invalid);
         }
 
         //--------------------------------------------------------------------------------------
         void BindlessTable::freeBindlessTextureHandle(BindlessTextureSrvHandle & _handle)
         {
-            freeBindlessHandle(_handle, m_textureSrvIndexPool, m_textureSrv, bindless_texture_offset, bindless_texture_invalid);
+            freeBindlessHandle(_handle, m_textureSrvIndexPool, m_textureSrv, bindless_texture_SRV_offset, bindless_texture_SRV_invalid);
         }
         
         //--------------------------------------------------------------------------------------
         BindlessBufferSrvHandle BindlessTable::allocBindlessBufferHandle(driver::Buffer * _buffer, ReservedSlot _reservedSlot)
         {
-            return allocBindlessHandle(_buffer, _reservedSlot, m_bufferSrvIndexPool, m_bufferSrv, bindless_buffer_offset, bindless_buffer_invalid);
+            return allocBindlessHandle<BindlessBufferSrvHandle>(_buffer, _reservedSlot, m_bufferSrvIndexPool, m_bufferSrv, bindless_buffer_SRV_offset, bindless_buffer_SRV_invalid);
         }
         
         //--------------------------------------------------------------------------------------
         void BindlessTable::freeBindlessBufferHandle(BindlessBufferSrvHandle & _handle)
         {
-            freeBindlessHandle(_handle, m_bufferSrvIndexPool, m_bufferSrv, bindless_buffer_offset, bindless_buffer_invalid);
+            freeBindlessHandle(_handle, m_bufferSrvIndexPool, m_bufferSrv, bindless_buffer_SRV_offset, bindless_buffer_SRV_invalid);
         }
     }
 
@@ -110,12 +112,12 @@ namespace vg::graphics::driver
                 texInitData[j][i] = ((i>>3) & 1) != ((j>>3) & 1) ? 0xFFFF00FF : 0x7F7F007F;
         
         // create default texture at slot 'invalidBindlessTextureHandle'
-        m_defaultTexture = device->createTexture(texDesc, "testTex", (void*)texInitData, ReservedSlot(bindless_texture_invalid));
-        VG_ASSERT(m_defaultTexture->getBindlessSRVHandle() == bindless_texture_invalid);
+        m_defaultTexture = device->createTexture(texDesc, "testTex", (void*)texInitData, ReservedSlot(bindless_texture_SRV_invalid));
+        VG_ASSERT(m_defaultTexture->getBindlessSRVHandle() == bindless_texture_SRV_invalid);
         
         // copy texture to all 'texture' slots
-        for (uint i = bindless_texture_offset; i < bindless_texture_count; ++i)
-            if (bindless_texture_invalid != i)
+        for (uint i = bindless_texture_SRV_offset; i < bindless_texture_SRV_count; ++i)
+            if (bindless_texture_SRV_invalid != i)
                 copyTextureHandle(i, m_defaultTexture);
     }
 }

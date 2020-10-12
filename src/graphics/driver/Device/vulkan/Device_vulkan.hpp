@@ -391,11 +391,12 @@ namespace vg::graphics::driver::vulkan
         RootSignature * rs = device->getRootSignature(m_bindlessRootSignatureHandle);
         const auto & bindlessLayouts = rs->getVulkanDescriptorSetLayouts();
         {
-            // allocate enough descriptors in pool for bindless
             VkDescriptorPoolSize type_counts[] =
             {
-                {VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE, bindless_texture_count},
-                {VK_DESCRIPTOR_TYPE_UNIFORM_TEXEL_BUFFER, bindless_buffer_count}
+                {VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE, bindless_texture_SRV_count},
+                {VK_DESCRIPTOR_TYPE_UNIFORM_TEXEL_BUFFER, bindless_buffer_SRV_count},   // VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER
+                {VK_DESCRIPTOR_TYPE_STORAGE_TEXEL_BUFFER, bindless_texture_UAV_count},
+                {VK_DESCRIPTOR_TYPE_UNIFORM_TEXEL_BUFFER, bindless_buffer_UAV_count}    // VK_DESCRIPTOR_TYPE_STORAGE_BUFFER
             };
 
             VkDescriptorPoolCreateInfo descriptor_pool = {};

@@ -23,5 +23,6 @@ namespace vg::graphics::driver::vulkan
         VkRenderPass 							m_vkRenderPass = nullptr;
         VkRenderPassBeginInfo					m_vkRenderPassBeginInfo;
         core::vector<VkSubpassDescription>      m_vkSubPasses;
+        core::vector<VkClearValue>              m_vkClearValues;
 	};
 }

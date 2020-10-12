@@ -155,18 +155,39 @@ namespace vg::graphics::driver::vulkan
 
         VkRenderPassBeginInfo & vkRenderPassBeginInfo = m_vkRenderPassBeginInfo;
 
-        const auto & desc = m_subPasses[0]->getUserPasses()[0]->getRenderTargets()[0]->getTextureDesc();
-        const auto & clearColor = desc.clearColor;
-  
+        const auto & renderTargets = m_subPasses[0]->getUserPasses()[0]->getRenderTargets();
+        
+        m_vkClearValues.resize(renderTargets.size());
+        u32 width = 0; 
+        u32 height = 0;
+
+        for (uint i = 0; i < renderTargets.size(); ++i)
+        {
+            const auto & desc = renderTargets[i]->getTextureResourceDesc();
+
+            VG_ASSERT(width == 0 || width == desc.width);
+            VG_ASSERT(height == 0 || height == desc.height);
+
+            width = desc.width;
+            height = desc.height;
+
+            VkClearValue vkClearValue;
+            vkClearValue.color.float32[0] = desc.clearColor.x;
+            vkClearValue.color.float32[1] = desc.clearColor.y;
+            vkClearValue.color.float32[2] = desc.clearColor.z;
+            vkClearValue.color.float32[3] = desc.clearColor.w;
+            m_vkClearValues[i] = vkClearValue;
+        }
+        
         vkRenderPassBeginInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO,
         vkRenderPassBeginInfo.pNext = nullptr;
         vkRenderPassBeginInfo.renderPass = m_vkRenderPass;
         vkRenderPassBeginInfo.framebuffer = m_vkFrameBuffer;
         vkRenderPassBeginInfo.renderArea.offset.x = 0;
         vkRenderPassBeginInfo.renderArea.offset.y = 0;
-        vkRenderPassBeginInfo.renderArea.extent.width = desc.width;
-        vkRenderPassBeginInfo.renderArea.extent.height = desc.height;
-        vkRenderPassBeginInfo.clearValueCount = 1;
-        vkRenderPassBeginInfo.pClearValues = (const VkClearValue*)&clearColor;
+        vkRenderPassBeginInfo.renderArea.extent.width = width;
+        vkRenderPassBeginInfo.renderArea.extent.height = height;
+        vkRenderPassBeginInfo.clearValueCount = (uint)m_vkClearValues.size();
+        vkRenderPassBeginInfo.pClearValues = (const VkClearValue*)m_vkClearValues.data();
 	}
 }

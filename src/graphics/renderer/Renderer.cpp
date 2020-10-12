@@ -111,7 +111,7 @@ namespace vg::graphics::renderer
             {
                 VG_PROFILE_CPU("Framegraph");
 
-                m_frameGraph.import("Backbuffer", m_device.getBackbuffer());
+                m_frameGraph.importRenderTarget("Backbuffer", m_device.getBackbuffer(), float4(1,0,0,1), FrameGraph::Resource::InitState::Clear);
                 m_frameGraph.setGraphOutput("Backbuffer");
 
                 m_frameGraph.addUserPass(m_testPass, "TestPass");

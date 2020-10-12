@@ -61,13 +61,13 @@ namespace vg::graphics::driver::vulkan
 
             VkWriteDescriptorSet writes = {};
             writes.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
-            writes.dstBinding = bindless_buffer_binding;
+            writes.dstBinding = bindless_buffer_SRV_binding;
             writes.descriptorCount = 1;
             writes.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_TEXEL_BUFFER;
             writes.pBufferInfo = &vkBufferInfo;
             writes.pTexelBufferView = &m_vkBufferView;
             writes.dstSet = device->m_vkBindlessDescriptors;
-            writes.dstArrayElement = m_bindlessSRVHandle - bindless_buffer_offset;
+            writes.dstArrayElement = m_bindlessSRVHandle - bindless_buffer_SRV_offset;
 
             vkUpdateDescriptorSets(device->getVulkanDevice(), 1, &writes, 0, nullptr);
 

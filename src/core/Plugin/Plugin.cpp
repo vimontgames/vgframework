@@ -25,6 +25,11 @@ namespace vg::core
 			if (createFunc)
 				instance = createFunc();
 		}
+        else
+        {
+            DWORD error = GetLastError();
+            VG_ASSERT(false, "Error 0x%08X (%u)", error);
+        }
 		#endif
 
 		if (instance)

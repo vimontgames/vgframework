@@ -6,7 +6,9 @@
 namespace vg::graphics::driver
 {
 	class Texture;
+    class TextureDesc;
 	class Buffer;
+    class BufferDesc;
 	class UserPass;
 	class RenderPass;
 
@@ -18,7 +20,7 @@ namespace vg::graphics::driver
 		using UserPassID = core::string;
 		using ResourceID = core::string;
 
-		class Resource : public core::Object
+		class Resource
 		{
 		public:
 			enum class Type : core::u8
@@ -35,6 +37,7 @@ namespace vg::graphics::driver
 			};
 
 			Resource();
+
 			virtual ~Resource()
 			{
 				m_read.clear();
@@ -44,6 +47,9 @@ namespace vg::graphics::driver
 			void setType(Type _type);
 			Type getType() const;
 
+            void setName(const core::string & _name);
+            const core::string & getName() const;
+
 			void setReadAtPass(const UserPass * _subPass);
 			void setWriteAtPass(const UserPass * _subPass);
 
@@ -51,12 +57,13 @@ namespace vg::graphics::driver
 			const core::unordered_set<const UserPass *> & getWriteAtPass() const;
 
 		private:
-			Type								m_type;	
+			Type								    m_type;	
+            core::string                            m_name;
 			core::unordered_set<const UserPass*>	m_read;
 			core::unordered_set<const UserPass*>	m_write;
 		};
 
-		struct TextureDesc
+		struct TextureResourceDesc
 		{
 			core::u16			width		= 0;
 			core::u16			height		= 0;
@@ -65,7 +72,7 @@ namespace vg::graphics::driver
 			core::float4		clearColor	= core::float4(0,0,0,0);
 		};
 
-		struct BufferDesc
+		struct BufferResourceDesc
 		{
 			core::u32 size = 0;
 		};
@@ -73,26 +80,13 @@ namespace vg::graphics::driver
 		class TextureResource : public Resource
 		{
 		public:
-
-			enum class Usage : core::u16
-			{
-				None		 = 0x0000,
-				Present		 = 0x0001,
-				RenderTarget = 0x0002
-			};
-
-			void setTextureDesc(const TextureDesc & _resDesc);
-			void setTextureUsage(Usage _usage);
-			void setTexture(const Texture * _texture);
-
-			const TextureDesc & getTextureDesc() const;
-			Usage getTextureUsage() const;
-			const Texture * getTexture() const;
+			void                        setTextureResourceDesc  (const TextureResourceDesc & _texResDesc, const Texture * _tex);
+            const TextureResourceDesc & getTextureResourceDesc  () const;
+			const Texture *             getTexture              () const;
 
 		private:
-			TextureDesc		m_desc;
-			Usage			m_usage;
-			const Texture *	m_texture = nullptr;
+			TextureResourceDesc		    m_desc;
+			const Texture *	            m_texture = nullptr;
 		};
 
 		struct BufferResource : public Resource
@@ -103,77 +97,36 @@ namespace vg::graphics::driver
 				None = 0x0000
 			};
 
-			void setBufferDesc(const BufferDesc & _resDesc);
-			void setBufferUsage(Usage _usage);
-			void setBuffer(const Buffer * _buffer);
+			void                        setBufferResourceDesc   (const BufferResourceDesc & _bufResDesc, const Buffer * _buffer);
+            const BufferResourceDesc &  getBufferResourceDesc   () const;
+            const Buffer *              getBuffer               () const;
 
 		private:
-			BufferDesc		m_desc;
-			Usage			m_usage;
-			const Buffer *	m_buffer = nullptr;
+			BufferResourceDesc		    m_desc;
+			const Buffer *	            m_buffer = nullptr;
 		};
 
 		FrameGraph();
 		~FrameGraph();
 
-		void import(const ResourceID & _resID, Texture * _tex);
+		void importRenderTarget(const ResourceID & _resID, Texture * _tex, core::float4 _clearColor = core::float4(0, 0, 0, 0), FrameGraph::Resource::InitState _initState = FrameGraph::Resource::InitState::Clear);
 		void setGraphOutput(const ResourceID & _destTexResID);
 
 		void setup();
 		void build();
 		void render();
 
-		//template <class T> T & addUserPass(const RenderPassID & _renderPassID)
-		//{
-		//	auto it = m_subPasses.find(_renderPassID);
-		//	if (m_subPasses.end() == it)
-		//	{
-		//		T * newPass = new T();
-		//		m_subPasses[_renderPassID] = newPass;
-        //
-		//		newPass->setName(_renderPassID);
-		//		newPass->setFrameGraph(this);
-        //
-		//		return *newPass;
-		//	}
-		//	else
-		//		return static_cast<T&>(*it->second);
-		//}
-
         bool addUserPass(UserPass * _userPass, const UserPassID & _renderPassID);
 
-		template <class T> T & addResource(Resource::Type _type, const ResourceID & _resID)
-		{
-			auto it = m_resources.find(_resID);
-			if (m_resources.end() == it)
-			{
-				T * newResource = new T();
-				m_resources[_resID] = newResource;
+        template <class T> T * getResource(Resource::Type _type, const ResourceID & _resID, bool _mustExist);
 
-				newResource->setType(_type);
-				newResource->setName(_resID);
+        TextureResource *   getTextureResource  (const ResourceID & _resID) const;
+        BufferResource *    getBufferResource   (const ResourceID & _resID) const;
 
-				return *newResource;
-			}
-			else
-			{
-				VG_ASSERT(_type == it->second->getType());
-				return static_cast<T&>(*it->second);
-			}
-		}
-
-		TextureResource & addTextureResource(const ResourceID & _resID)
-		{
-			return addResource<TextureResource>(Resource::Type::Texture, _resID);
-		}
-
-		BufferResource & addBufferResource(const ResourceID & _resID)
-		{
-			return addResource<BufferResource>(Resource::Type::Buffer, _resID);
-		}
+        TextureResource *   addTextureResource  (const ResourceID & _resID, const TextureResourceDesc & _texResDesc, const Texture * _tex = nullptr);
+        BufferResource *    addBufferResource   (const ResourceID & _resID, const BufferResourceDesc & _bufResDesc, const Buffer * _buf = nullptr);
 
 	private:
-		Resource & addResource(Resource::Type _type, const ResourceID & _resID);
 
 		void findDependencies(const UserPass & _renderPassDesc, core::uint _depth);
 		void reverseAndRemoveDuplicates();
