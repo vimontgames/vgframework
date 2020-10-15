@@ -53,11 +53,11 @@ namespace vg::graphics::driver
 	//--------------------------------------------------------------------------------------
 	void FrameGraph::Resource::setReadAtPass(const UserPass * _subPass)
 	{
-		m_read.insert(_subPass);
+		m_read.push_back(_subPass);
 	}
 
 	//--------------------------------------------------------------------------------------
-	const core::unordered_set<const UserPass*> & FrameGraph::Resource::getReadAtPass() const
+	const core::vector<const UserPass*> & FrameGraph::Resource::getReadAtPass() const
 	{
 		return m_read;
 	}
@@ -65,24 +65,48 @@ namespace vg::graphics::driver
 	//--------------------------------------------------------------------------------------
 	void FrameGraph::Resource::setWriteAtPass(const UserPass * _subPass)
 	{
-		m_write.insert(_subPass);
+		m_write.push_back(_subPass);
 	}
 
 	//--------------------------------------------------------------------------------------
-	const core::unordered_set<const UserPass*> & FrameGraph::Resource::getWriteAtPass() const
+	const core::vector<const UserPass*> & FrameGraph::Resource::getWriteAtPass() const
 	{
 		return m_write;
 	}
 
+    //--------------------------------------------------------------------------------------
+    void FrameGraph::Resource::setCurrentState(ResourceState _state)
+    {
+        m_state = _state;
+    }
+
+    //--------------------------------------------------------------------------------------
+    ResourceState FrameGraph::Resource::getCurrentState() const
+    {
+        return m_state;
+    }
+
 	//--------------------------------------------------------------------------------------
 	// FrameGraph::TextureResource
 	//--------------------------------------------------------------------------------------
-	void FrameGraph::TextureResource::setTextureResourceDesc(const FrameGraph::TextureResourceDesc & _texResDesc, const Texture * _tex)
+	void FrameGraph::TextureResource::setTextureResourceDesc(const FrameGraph::TextureResourceDesc & _texResDesc)
 	{
-        VG_ASSERT(nullptr == m_texture, "Resource \"%s\" already has a texture", getName().c_str());
 		m_desc = _texResDesc;
-        m_texture = _tex;
 	}
+
+    //--------------------------------------------------------------------------------------
+    void FrameGraph::TextureResource::setTexture(Texture * _tex)
+    {
+        VG_ASSERT(nullptr == m_texture, "Resource \"%s\" already has a texture", getName().c_str());
+        m_texture = _tex;
+    }
+
+    //--------------------------------------------------------------------------------------
+    void FrameGraph::TextureResource::resetTexture()
+    {
+        VG_ASSERT(m_desc.transient);
+        m_texture = nullptr;
+    }
 
     //--------------------------------------------------------------------------------------
     const FrameGraph::TextureResourceDesc & FrameGraph::TextureResource::getTextureResourceDesc() const
@@ -91,7 +115,7 @@ namespace vg::graphics::driver
     }
     
 	//--------------------------------------------------------------------------------------
-	const Texture * FrameGraph::TextureResource::getTexture() const
+	Texture * FrameGraph::TextureResource::getTexture() const
 	{
 		VG_ASSERT(nullptr != m_texture, "Resource \"%s\" has not texture", getName().c_str());
 		return m_texture;
@@ -100,11 +124,23 @@ namespace vg::graphics::driver
 	//--------------------------------------------------------------------------------------
 	// FrameGraph::BufferResource
 	//--------------------------------------------------------------------------------------
-	void FrameGraph::BufferResource::setBufferResourceDesc(const FrameGraph::BufferResourceDesc & _bufResDesc, const Buffer * _buffer)
+	void FrameGraph::BufferResource::setBufferResourceDesc(const FrameGraph::BufferResourceDesc & _bufResDesc, Buffer * _buffer)
 	{
 		m_desc = _bufResDesc;
         m_buffer = _buffer;
 	}
+
+    //--------------------------------------------------------------------------------------
+    const FrameGraph::BufferResourceDesc & FrameGraph::BufferResource::getBufferResourceDesc() const
+    {
+        return m_desc;
+    }
+
+    //--------------------------------------------------------------------------------------
+    Buffer * FrameGraph::BufferResource::getBuffer() const
+    {
+        return m_buffer;
+    }
 
 	//--------------------------------------------------------------------------------------
 	// FrameGraph
@@ -118,14 +154,21 @@ namespace vg::graphics::driver
 	FrameGraph::~FrameGraph()
 	{
         cleanup();
+
+        // destroy transient
+        for (SharedTexture & shared : m_sharedTextures)
+        {
+            VG_SAFE_RELEASE(shared.tex);
+        }
+        m_sharedTextures.clear();
 	}
 
 	//--------------------------------------------------------------------------------------
 	void FrameGraph::cleanup()
 	{
-		for (auto & pair : m_subPasses)
-			VG_SAFE_RELEASE(pair.second);
-		m_subPasses.clear();
+        for (auto * pass : m_userPassStack)
+            VG_SAFE_RELEASE(pass);
+        m_userPassStack.clear();
 
 		for (auto & pair : m_resources)
 			VG_SAFE_DELETE(pair.second);
@@ -153,16 +196,19 @@ namespace vg::graphics::driver
 	}
 
     //--------------------------------------------------------------------------------------
-    FrameGraph::TextureResource * FrameGraph::addTextureResource(const ResourceID & _resID, const TextureResourceDesc & _texResDesc, const Texture * _tex)
+    FrameGraph::TextureResource * FrameGraph::addTextureResource(const ResourceID & _resID, const TextureResourceDesc & _texResDesc, Texture * _tex)
     {
         TextureResource * texRes = getResource<TextureResource>(Resource::Type::Texture, _resID, false);
         if (texRes)
-            texRes->setTextureResourceDesc(_texResDesc, _tex);
+        {
+            texRes->setTextureResourceDesc(_texResDesc);
+            texRes->setTexture(_tex);
+        }
         return texRes;
     }
 
     //--------------------------------------------------------------------------------------
-    FrameGraph::BufferResource * FrameGraph::addBufferResource(const ResourceID & _resID, const BufferResourceDesc & _bufResDesc, const Buffer * _buf)
+    FrameGraph::BufferResource * FrameGraph::addBufferResource(const ResourceID & _resID, const BufferResourceDesc & _bufResDesc, Buffer * _buf)
     {
         BufferResource * bufRes = getResource<BufferResource>(Resource::Type::Buffer, _resID, false);
         if (bufRes)
@@ -213,6 +259,7 @@ namespace vg::graphics::driver
 	void FrameGraph::setGraphOutput(const ResourceID & _destTexResID)
 	{
 		m_outputResID = _destTexResID;	
+        m_outputRes = getTextureResource(m_outputResID);
 	}
 
 	//--------------------------------------------------------------------------------------
@@ -222,63 +269,57 @@ namespace vg::graphics::driver
 	}
 
 	//--------------------------------------------------------------------------------------
-	void FrameGraph::reverseAndRemoveDuplicates()
-	{
-		core::vector<const UserPass*> stack;
-		stack.reserve(m_userPassStack.size());
-
-		if (m_userPassStack.size() > 0)
-		{
-			for (int i = (int)(m_userPassStack.size() - 1); i >= 0; --i)
-			{
-				const UserPass * subPass = m_userPassStack[i];
-
-				bool found = false;
-				for (uint j = 0; j < stack.size(); ++j)
-				{
-					if (stack[j] == subPass)
-					{
-						found = true;
-						break;
-					}
-				}
-				if (!found)
-					stack.push_back(subPass);
-			}
-		}
-		m_userPassStack = std::move(stack);
-	}
-
-	//--------------------------------------------------------------------------------------
 	void FrameGraph::allocateResources()
 	{
-		for (auto * subPass : m_userPassStack)
-		{
-			for (auto * renderTarget : subPass->m_renderTarget)
-			{
-
-			}
-		}
+		//for (auto * subPass : m_userPassStack)
+		//{
+        //    // in
+        //    for (FrameGraph::TextureResource * tex : subPass->m_textures)
+        //    {
+        //        const auto & desc = tex->getTextureResourceDesc();
+        //        if (desc.transient)
+        //        {
+        //            const auto & reads = tex->getReadAtPass();
+        //            if (reads[0] == subPass)
+        //            {
+        //                VG_DEBUGPRINT("Transient TextureResource \"%s\" first read during pass \"%s\"\n", tex->getName(), subPass->getName());
+        //            }
+        //            if (reads[reads.size() - 1] == subPass)
+        //            {
+        //                VG_DEBUGPRINT("Transient TextureResource \"%s\" last read during pass \"%s\"\n", tex->getName(), subPass->getName());
+        //            }
+        //        }
+        //    }
+        //
+        //    // out
+        //    for (FrameGraph::TextureResource * renderTarget : subPass->m_renderTarget)
+        //    {
+        //        const auto & desc = renderTarget->getTextureResourceDesc();
+        //        if (desc.transient)
+        //        {
+        //            const auto & writes = renderTarget->getWriteAtPass();
+        //            if (writes[0] == subPass)
+        //            {
+        //                VG_DEBUGPRINT("Transient TextureResource \"%s\" first write during pass \"%s\"\n", renderTarget->getName(), subPass->getName());
+        //            } 
+        //            if (writes[writes.size()-1] == subPass)
+        //            {
+        //                VG_DEBUGPRINT("Transient TextureResource \"%s\" last write during pass \"%s\"\n", renderTarget->getName(), subPass->getName());
+        //            }
+        //        }
+        //    }
+		//}
 	}
 
     //--------------------------------------------------------------------------------------
     bool FrameGraph::addUserPass(UserPass * _userPass, const UserPassID & _renderPassID)
     {
-        auto it = m_subPasses.find(_renderPassID);
-        
-        if (m_subPasses.end() == it)
-        {
-            _userPass->addRef();
-            _userPass->setName(_renderPassID);
-            _userPass->setFrameGraph(this);
-            m_subPasses[_renderPassID] = _userPass;
-            return true;
-        }
-        else
-        {
-            VG_ASSERT(m_subPasses.end() == it, "Could not add UserPass \"%s\" to FrameGraph as there's already an UserPass with the same identifier", _renderPassID);
-            return false;
-        }
+        _userPass->addRef();
+        _userPass->setName(_renderPassID);
+        _userPass->setFrameGraph(this);
+
+        m_userPassStack.push_back(_userPass);
+        return true;
     }
 
 	//--------------------------------------------------------------------------------------
@@ -286,9 +327,8 @@ namespace vg::graphics::driver
 	{
         VG_PROFILE_CPU("setup");
 
-		for (auto & pair : m_subPasses)
+		for (UserPass * subPass : m_userPassStack)
 		{
-			UserPass * subPass = pair.second;
 			subPass->reset();
 			subPass->setup();
 		}
@@ -299,23 +339,23 @@ namespace vg::graphics::driver
 	{
         VG_PROFILE_CPU("build");
 
-		auto itBackbuffer = m_resources.find(m_outputResID);
-		VG_ASSERT(m_resources.end() != itBackbuffer, "FrameGraph destination resource not found");
-
-		Resource * backbufferRes = itBackbuffer->second;
-		const auto backbufferWrites = backbufferRes->getWriteAtPass();
-		VG_ASSERT(!backbufferWrites.empty(), "No RenderPass is writing to the FrameGraph destination");
-
-		m_userPassStack.clear();
-
-		// Add all passes that write to the destination to the stack
-		for (const UserPass * subPass : backbufferWrites)
-			m_userPassStack.push_back(subPass);
-
-		auto tempStack = m_userPassStack;
-
-		for (const UserPass * subPass : tempStack)
-			findDependencies(*subPass, 0);
+		//auto itBackbuffer = m_resources.find(m_outputResID);
+		//VG_ASSERT(m_resources.end() != itBackbuffer, "FrameGraph destination resource not found");
+        //
+		//Resource * backbufferRes = itBackbuffer->second;
+		//const auto backbufferWrites = backbufferRes->getWriteAtPass();
+		//VG_ASSERT(!backbufferWrites.empty(), "No RenderPass is writing to the FrameGraph destination");
+        //
+		//m_userPassStack.clear();
+        //
+		//// Add all passes that write to the destination to the stack
+		//for (const UserPass * subPass : backbufferWrites)
+		//	m_userPassStack.push_back(subPass);
+        //
+		//auto tempStack = m_userPassStack;
+        //
+		//for (const UserPass * subPass : tempStack)
+		//	findDependencies(*subPass, 0);
 
 		// Reverse & remove duplicates
 		//reverseAndRemoveDuplicates();
@@ -334,10 +374,12 @@ namespace vg::graphics::driver
 			VG_SAFE_RELEASE(renderPass);
 		m_renderPasses.clear();
 
+        Device * device = Device::get();
+
 		// TEMP: one render pass with one subpass for each userPass (TODO: make pools)
 		for (auto * userPass : m_userPassStack)
 		{
-            core::vector<const driver::Texture*> attachments;
+            core::vector<TextureResource*> attachments;
 
             RenderPassKey renderPassKey;
                           renderPassKey.m_subPassCount = 1;
@@ -348,47 +390,96 @@ namespace vg::graphics::driver
                 auto & renderTargets = userPass->getRenderTargets();
 				for (uint i = 0; i < renderTargets.size(); ++i)
 				{
-                    FrameGraph::TextureResource * res = renderTargets[i];
-                    auto * tex = res->getTexture();
+                    TextureResource * res = renderTargets[i];
+                    const TextureResourceDesc & textureResourceDesc = res->getTextureResourceDesc();
 
-                    renderPassKey.m_colorFormat[i] = res->getTextureResourceDesc().format;
+                    renderPassKey.m_colorFormat[i] = textureResourceDesc.format;
 
                     // add or get index of attachment
                     uint attachmentIndex = (uint)-1;
                     for (uint i = 0; i < attachments.size(); ++i)
                     {
-                        if (attachments[i] == tex)
+                        if (attachments[i]->getTextureResourceDesc() == textureResourceDesc)
                             attachmentIndex = i;
                     }
 
                     if ((uint)-1 == attachmentIndex)
                     {
-                        attachments.push_back(tex);
+                        VG_ASSERT(textureResourceDesc.transient || res->getTexture());
+                        res->setTextureResourceDesc(textureResourceDesc);
+                        attachments.push_back(res);
                         attachmentIndex = uint(attachments.size() - 1);
                     }
 
-                    SubPassKey::Flags flags = SubPassKey::Flags::Bind;
+                    const ResourceState currentState = res->getCurrentState();
+
+                    SubPassKey::AttachmentFlags flags = SubPassKey::AttachmentFlags::RenderTarget;
+                    ResourceState begin = currentState;
+                    ResourceState end = ResourceState::RenderTarget;
+                    
+                    const auto & reads      = res->getReadAtPass();
+                    const bool firstRead    = reads.size() > 0 && reads[0] == userPass;
+                    const bool lastRead     = reads.size() > 0 && reads[reads.size() - 1] == userPass;
+
+                    const auto & writes     = res->getWriteAtPass();
+                    const bool firstWrite   = writes.size() > 0 && writes[0] == userPass;
+                    const bool lastWrite    = writes.size() > 0 && writes[writes.size() - 1] == userPass;
+
+                    const bool backbuffer = m_outputRes == res;
 
                     // first pass writing to RT ? 
-                    const auto & writes = res->getWriteAtPass();
-                    if (*writes.begin() == userPass)
-                        flags |= SubPassKey::Flags::Clear | SubPassKey::Flags::Store;
+                    if (firstWrite)
+                        flags |= SubPassKey::AttachmentFlags::Clear;
                     else 
-                        flags |= SubPassKey::Flags::Load;
+                        flags |= SubPassKey::AttachmentFlags::Preserve;
 
-                    renderPassKey.m_subPassKeys[0].setRenderTargetFlags(attachmentIndex, flags);
+                    // first pass writing to backbuffer ?
+                    if (firstWrite)
+                    {
+                        flags |= SubPassKey::AttachmentFlags::Clear;
+                    
+                        if (backbuffer)
+                            begin = ResourceState::Undefined;
+                        else
+                            #ifdef VG_VULKAN
+                            begin = ResourceState::Undefined;
+                            #elif defined(VG_DX12)
+                            begin = ResourceState::RenderTarget;
+                            #else
+                            VG_ASSERT_NOT_IMPLEMENTED();
+                            #endif
+                    }
+                    else
+                        flags |= SubPassKey::AttachmentFlags::Preserve;
+
+                    // last pass writing to backbuffer ?
+                    if (lastWrite)
+                    {
+                        if (backbuffer)
+                            flags |= SubPassKey::AttachmentFlags::Present;
+                    }
+
+                    SubPassKey::AttachmentInfo info;
+                                               info.flags = flags;
+                                               info.begin = begin;
+                                               info.end = end;
+
+                    renderPassKey.m_subPassKeys[0].setColorAttachmentInfo(attachmentIndex, info);
+
+                    res->setCurrentState(info.end);
 				}
 			}
 
             FrameGraph::TextureResource * depthStencilRes = userPass->getDepthStencil();
             if (depthStencilRes)
             {
-                renderPassKey.m_depthStencilFormat = depthStencilRes->getTextureResourceDesc().format;
-                renderPassKey.m_subPassKeys[0].setDepthStencilFlags(SubPassKey::Bind);
+                VG_ASSERT(false);
+                //renderPassKey.m_depthStencilFormat = depthStencilRes->getTextureResourceDesc().format;
+                //renderPassKey.m_subPassKeys[0].setDepthStencilFlags(SubPassKey::Flags::RenderTarget);
             }
 
             RenderPass * renderPass = new RenderPass(renderPassKey);
-            renderPass->m_attachments = std::move(attachments);
+            renderPass->m_attachments = std::move(attachments); // transient resources will be lazy allocated before the actuel RenderPass begins
 
             SubPass * subPass = new SubPass();
 
@@ -399,6 +490,63 @@ namespace vg::graphics::driver
 			renderPass->finalize();
 		}
 	}
+
+    //--------------------------------------------------------------------------------------
+    Texture * FrameGraph::createTextureFromPool(const FrameGraph::TextureResourceDesc & _textureResourceDesc)
+    {
+        for (uint i = 0; i < m_sharedTextures.size(); ++i)
+        {
+            auto & slot = m_sharedTextures[i];
+            if (!slot.used)
+            {
+                if (slot.desc == _textureResourceDesc)
+                {
+                    slot.used = true;
+                    VG_ASSERT(slot.tex);
+                    return slot.tex;
+                }
+            }
+        }
+
+        // create if not found
+        Device * device = Device::get();
+       
+        TextureDesc desc;
+                    desc.format = _textureResourceDesc.format;
+                    desc.width = _textureResourceDesc.width;
+                    desc.height = _textureResourceDesc.height;
+                    desc.flags = TextureFlags::RenderTarget;
+                    desc.resource.m_bindFlags = BindFlags::ShaderResource;
+                    desc.resource.m_cpuAccessFlags = CPUAccessFlags::None;
+                    desc.resource.m_usage = Usage::Default;
+
+        string name = "TransientTex#" + to_string(m_sharedTextures.size());
+        
+        SharedTexture sharedTex;
+                      sharedTex.desc = _textureResourceDesc;
+                      sharedTex.tex  = device->createTexture(desc, name.c_str());
+                      sharedTex.used = true;
+
+        m_sharedTextures.push_back(sharedTex);
+        return sharedTex.tex;
+    }
+
+    //--------------------------------------------------------------------------------------
+    void FrameGraph::releaseTextureFromPool(Texture *& _tex)
+    {
+        VG_ASSERT(nullptr != _tex);
+        for (uint i = 0; i < m_sharedTextures.size(); ++i)
+        {
+            auto & slot = m_sharedTextures[i];
+            if (slot.tex == _tex)
+            {
+                slot.used = false;
+                _tex = nullptr;
+                return;
+            }
+        }
+        VG_ASSERT(false, "Could not release texture \"%s\" from pool", _tex->getName());
+    }
 
 	//--------------------------------------------------------------------------------------
 	void FrameGraph::render()
@@ -411,14 +559,43 @@ namespace vg::graphics::driver
 
         VG_PROFILE_GPU_CONTEXT(cmdList);
 
-		for (const RenderPass * renderPass : m_renderPasses)
+		for (RenderPass * renderPass : m_renderPasses)
 		{
+            const auto & subPasses = renderPass->getSubPasses();
+
+            // allocate all transient resources that will be required during the subpasses before beginning the renderpass
+            for (uint i = 0; i < subPasses.size(); ++i)
+            {
+                SubPass * subPass = subPasses[i];
+                const UserPass * userPass = subPass->getUserPasses()[0];
+
+                auto & renderTargets = userPass->getRenderTargets();
+                auto & texturesRead = userPass->getTexturesRead();
+
+                for (uint i = 0; i < renderTargets.size(); ++i)
+                {
+                    TextureResource * res = renderTargets[i];
+                    const TextureResourceDesc & textureResourceDesc = res->getTextureResourceDesc();
+
+                    if (textureResourceDesc.transient)
+                    {
+                        const auto & writes = res->getWriteAtPass();
+                        if (writes[0] == userPass)
+                        {
+                            Texture * tex = createTextureFromPool(textureResourceDesc);
+                            res->setTexture(tex);
+                        }
+                    }
+                }
+            }
+
 			cmdList->beginRenderPass(renderPass);
-			const auto & subPasses = renderPass->getSubPasses();
 			for (uint i = 0; i < subPasses.size(); ++i)
 			{
-				const SubPass * subPass = subPasses[i];
-				cmdList->beginSubPass(i, subPass);
+				SubPass * subPass = subPasses[i];
+                const UserPass * userPass = subPass->getUserPasses()[0];
+
+                cmdList->beginSubPass(i, subPass);
 				{
                     for (const UserPass * userPass : subPass->getUserPasses())
                         userPass->draw(cmdList);
@@ -426,6 +603,51 @@ namespace vg::graphics::driver
                 cmdList->endSubPass();
 			}
 			cmdList->endRenderPass();
+           
+            // release all transient resources that ended up being used during this renderpass
+            for (uint i = 0; i < subPasses.size(); ++i)
+            {
+                SubPass * subPass = subPasses[i];
+                const UserPass * userPass = subPass->getUserPasses()[0];
+
+                auto & renderTargets = userPass->getRenderTargets();
+                auto & texturesRead = userPass->getTexturesRead();
+
+                // TODO: add index in userPasses to be able to release after the later between last write and last read
+                //for (uint i = 0; i < renderTargets.size(); ++i)
+                //{
+                //    TextureResource * res = renderTargets[i];
+                //    const TextureResourceDesc & textureResourceDesc = res->getTextureResourceDesc();
+                //
+                //    if (textureResourceDesc.transient)
+                //    {
+                //        const auto & reads = res->getReadAtPass();
+                //        if (reads[reads.size()-1] == userPass)
+                //        {
+                //            Texture * tex = res->getTexture();
+                //            releaseTextureFromPool(tex);
+                //            res->setTexture(nullptr);
+                //        }
+                //    }
+                //}
+
+                for (uint i = 0; i < texturesRead.size(); ++i)
+                {
+                    TextureResource * res = texturesRead[i];
+                    const TextureResourceDesc & textureResourceDesc = res->getTextureResourceDesc();
+
+                    if (textureResourceDesc.transient)
+                    {
+                        const auto & reads = res->getReadAtPass();
+                        if (reads[reads.size() - 1] == userPass)
+                        {
+                            Texture * tex = res->getTexture();
+                            releaseTextureFromPool(tex);
+                            res->resetTexture();
+                        }
+                    }
+                }
+            }
 		}
 
         cleanup();

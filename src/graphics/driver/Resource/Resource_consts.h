@@ -51,5 +51,7 @@ namespace vg::graphics::driver
             };
             core::u16 bits;
         };
+
+        inline bool isShaderResource() const { return core::u16(BindFlags::ShaderResource) & core::u16(m_bindFlags); }
     };
 }

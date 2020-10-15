@@ -48,7 +48,7 @@ namespace vg::graphics::driver::dx12
 			
 			static const inline core::uint	s_invalidRenderTargetDescriptorSize = (core::uint) - 1;
 			ID3D12DescriptorHeap *			m_renderTargetDescriptorHeap = nullptr;
-			core::uint						m_renderTargetDescriptorAllocated = max_backbuffer_count;
+			core::uint						m_renderTargetDescriptorAllocated = max_backbuffer_count + 1;
 			core::uint						m_renderTargetDescriptorUsed = 0;
 			core::uint						m_renderTargetDescriptorSize = s_invalidRenderTargetDescriptorSize;
 

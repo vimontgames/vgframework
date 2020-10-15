@@ -22,9 +22,9 @@ namespace vg::graphics::driver
             const RenderPassKey & getRenderPassKey() const { return m_renderPassKey; }
 			
 		//private:
-            RenderPassKey                           m_renderPassKey;
-			core::vector<driver::SubPass*>		    m_subPasses;
-			core::vector<const driver::Texture*>    m_attachments;
+            RenderPassKey                               m_renderPassKey;
+			core::vector<driver::SubPass*>		        m_subPasses;
+			core::vector<FrameGraph::TextureResource*>  m_attachments;
 		};
 	}
 }

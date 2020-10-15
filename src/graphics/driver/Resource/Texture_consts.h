@@ -62,7 +62,9 @@ namespace vg::graphics::driver
 
         inline bool testFlags(TextureFlags _flags) const { return 0 != (std::underlying_type<TextureFlags>::type(_flags) & std::underlying_type<TextureFlags>::type(flags)); }
 
-        inline bool isBackbuffer    () const { return testFlags(TextureFlags::Backbuffer); }
-        inline bool isRenderTarget  () const { return testFlags(TextureFlags::RenderTarget); }
+        inline bool isBackbuffer        () const { return testFlags(TextureFlags::Backbuffer); }
+        inline bool isRenderTarget      () const { return testFlags(TextureFlags::RenderTarget); }
+
+        inline bool isShaderResource    () const { return resource.isShaderResource(); }
 	};
 }

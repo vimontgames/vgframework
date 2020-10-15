@@ -53,14 +53,18 @@ namespace vg::graphics::driver
 			void setReadAtPass(const UserPass * _subPass);
 			void setWriteAtPass(const UserPass * _subPass);
 
-			const core::unordered_set<const UserPass *> & getReadAtPass() const;
-			const core::unordered_set<const UserPass *> & getWriteAtPass() const;
+			const core::vector<const UserPass *> & getReadAtPass() const;
+			const core::vector<const UserPass *> & getWriteAtPass() const;
+
+            void setCurrentState(ResourceState _state);
+            ResourceState getCurrentState() const;
 
 		private:
-			Type								    m_type;	
-            core::string                            m_name;
-			core::unordered_set<const UserPass*>	m_read;
-			core::unordered_set<const UserPass*>	m_write;
+			Type                            m_type;	
+            core::string                    m_name;
+			core::vector<const UserPass*>   m_read;
+			core::vector<const UserPass*>	m_write;
+            ResourceState                   m_state = ResourceState::Undefined;
 		};
 
 		struct TextureResourceDesc
@@ -70,6 +74,17 @@ namespace vg::graphics::driver
 			PixelFormat			format		= (PixelFormat)0;
 			Resource::InitState initState	= Resource::InitState::Discard;
 			core::float4		clearColor	= core::float4(0,0,0,0);
+            bool                transient = false;
+
+            bool operator == (const TextureResourceDesc & _other) const
+            {
+                return  width == _other.width
+                    && height == _other.height
+                    && format == _other.format          // TODO: alias textures of the same size but different format (store format, initstate, clear color elsewhere ?)
+                    && initState == _other.initState    
+                    && hlslpp::all(clearColor == _other.clearColor)  
+                    && transient == _other.transient;   
+            }
 		};
 
 		struct BufferResourceDesc
@@ -80,13 +95,15 @@ namespace vg::graphics::driver
 		class TextureResource : public Resource
 		{
 		public:
-			void                        setTextureResourceDesc  (const TextureResourceDesc & _texResDesc, const Texture * _tex);
+			void                        setTextureResourceDesc  (const TextureResourceDesc & _texResDesc);
             const TextureResourceDesc & getTextureResourceDesc  () const;
-			const Texture *             getTexture              () const;
+            void                        setTexture              (Texture * _tex);
+			Texture *                   getTexture              () const;
+            void                        resetTexture            ();
 
 		private:
 			TextureResourceDesc		    m_desc;
-			const Texture *	            m_texture = nullptr;
+			Texture *	                m_texture = nullptr;
 		};
 
 		struct BufferResource : public Resource
@@ -97,13 +114,13 @@ namespace vg::graphics::driver
 				None = 0x0000
 			};
 
-			void                        setBufferResourceDesc   (const BufferResourceDesc & _bufResDesc, const Buffer * _buffer);
+			void                        setBufferResourceDesc   (const BufferResourceDesc & _bufResDesc, Buffer * _buffer = nullptr);
             const BufferResourceDesc &  getBufferResourceDesc   () const;
-            const Buffer *              getBuffer               () const;
+            Buffer *                    getBuffer               () const;
 
 		private:
 			BufferResourceDesc		    m_desc;
-			const Buffer *	            m_buffer = nullptr;
+			Buffer *	                m_buffer = nullptr;
 		};
 
 		FrameGraph();
@@ -123,10 +140,13 @@ namespace vg::graphics::driver
         TextureResource *   getTextureResource  (const ResourceID & _resID) const;
         BufferResource *    getBufferResource   (const ResourceID & _resID) const;
 
-        TextureResource *   addTextureResource  (const ResourceID & _resID, const TextureResourceDesc & _texResDesc, const Texture * _tex = nullptr);
-        BufferResource *    addBufferResource   (const ResourceID & _resID, const BufferResourceDesc & _bufResDesc, const Buffer * _buf = nullptr);
+        TextureResource *   addTextureResource  (const ResourceID & _resID, const TextureResourceDesc & _texResDesc, Texture * _tex = nullptr);
+        BufferResource *    addBufferResource   (const ResourceID & _resID, const BufferResourceDesc & _bufResDesc, Buffer * _buf = nullptr);
 
 	private:
+
+        Texture * createTextureFromPool(const TextureResourceDesc & _textureResourceDesc);
+        void releaseTextureFromPool(Texture *& _tex);
 
 		void findDependencies(const UserPass & _renderPassDesc, core::uint _depth);
 		void reverseAndRemoveDuplicates();
@@ -135,15 +155,21 @@ namespace vg::graphics::driver
         void cleanup();
 
 	private:
-        using userpass_unordered_map = core::unordered_map<FrameGraph::UserPassID, UserPass*, core::hash<FrameGraph::UserPassID>>;
-        using resource_unordered_map = core::unordered_map<FrameGraph::ResourceID, Resource*, core::hash<FrameGraph::ResourceID>>;
-
-        userpass_unordered_map          m_subPasses;
+        using resource_unordered_map = core::unordered_map<FrameGraph::ResourceID, Resource*, core::hash<ResourceID>>;
         resource_unordered_map          m_resources;
 
-		core::vector<const UserPass*>   m_userPassStack;
+		core::vector<UserPass*>         m_userPassStack;
 		core::vector<RenderPass*>       m_renderPasses;
 
+        struct SharedTexture
+        {
+            TextureResourceDesc desc;
+            Texture * tex = nullptr;
+            bool used = false;
+        };
+        core::vector<SharedTexture>     m_sharedTextures;
+
 		ResourceID                      m_outputResID;
+        TextureResource *               m_outputRes = nullptr;
 	};
 }

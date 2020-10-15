@@ -49,7 +49,7 @@ namespace vg::graphics::driver
 		}
 
 		//--------------------------------------------------------------------------------------
-		void CommandList::beginRenderPass(const driver::RenderPass * _renderPass)
+		void CommandList::beginRenderPass(driver::RenderPass * _renderPass)
 		{
 			m_renderPass = _renderPass;
 
@@ -64,7 +64,7 @@ namespace vg::graphics::driver
 		}
 
 		//--------------------------------------------------------------------------------------
-		void CommandList::beginSubPass(core::uint _subPassIndex, const driver::SubPass * _subPass)
+		void CommandList::beginSubPass(core::uint _subPassIndex, driver::SubPass * _subPass)
 		{
 			m_subPass = _subPass;
 			m_subPassIndex = _subPassIndex;
@@ -76,17 +76,19 @@ namespace vg::graphics::driver
 
             for (uint i = 0; i < maxRenderTarget; ++i)
             {
-                const auto flags = key.getRenderTargetFlags(i);
-                if (SubPassKey::Flags::Bind & flags)
+                const auto & info = key.getColorAttachmentInfo(i);
+
+                if (asBool(info.flags & SubPassKey::AttachmentFlags::RenderTarget))
                 {
-                    const Texture * tex = m_renderPass->m_attachments[i];
+                    const Texture * tex = m_renderPass->m_attachments[i]->getTexture();
                     auto & desc = tex->getTexDesc();
                     width = desc.width;
                     height = desc.height;
                 }
             }
 
-            if (SubPassKey::Flags::Bind & key.getDepthStencilFlags())
+            const auto & info = key.getDepthStencilAttachmentInfo();
+            if (asBool(info.flags & SubPassKey::AttachmentFlags::RenderTarget))
             {
                 VG_ASSERT_NOT_IMPLEMENTED(); // separate depth stencil attachment ?
             }
@@ -107,6 +109,12 @@ namespace vg::graphics::driver
 		{
 			return m_renderPass;
 		}
+
+        //--------------------------------------------------------------------------------------
+        const driver::SubPass * CommandList::getSubPass() const
+        {
+            return m_subPass;
+        }
 
 		//--------------------------------------------------------------------------------------
 		const core::uint CommandList::getSubPassIndex() const

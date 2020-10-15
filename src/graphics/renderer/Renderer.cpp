@@ -8,6 +8,7 @@
 #include "graphics/driver/Profiler/Profiler.h"
 #include "graphics/renderer/Imgui/imguiAdapter.h"
 #include "graphics/renderer/Pass/TestPass.h"
+#include "graphics/renderer/Pass/PostProcessPass.h"
 #include "graphics/renderer/Pass/ImguiPass.h"
 
 #include "shaders/driver/driver.hlsl.h"
@@ -64,7 +65,6 @@ namespace vg::graphics::renderer
 	//--------------------------------------------------------------------------------------
 	Renderer::~Renderer()
 	{
-        m_frameGraph.release();
 		m_device.release();
         IProfiler * profiler = Kernel::getProfiler();
         VG_SAFE_DELETE(profiler);
@@ -85,6 +85,7 @@ namespace vg::graphics::renderer
 
         // Create passes
         m_testPass = new TestPass();
+        m_postProcessPass = new PostProcessPass();
         m_imguiPass = new ImguiPass();
 	}
 
@@ -92,8 +93,10 @@ namespace vg::graphics::renderer
 	void Renderer::deinit()
 	{
         VG_SAFE_DELETE(m_testPass);
+        VG_SAFE_DELETE(m_postProcessPass);
         VG_SAFE_DELETE(m_imguiPass);
         VG_SAFE_DELETE(m_imgui);
+        m_frameGraph.release();
 
 		m_device.deinit();
 	}
@@ -115,6 +118,7 @@ namespace vg::graphics::renderer
                 m_frameGraph.setGraphOutput("Backbuffer");
 
                 m_frameGraph.addUserPass(m_testPass, "TestPass");
+                m_frameGraph.addUserPass(m_postProcessPass, "PostProcessPass");
                 m_frameGraph.addUserPass(m_imguiPass, "UIPass");
 
                 m_frameGraph.setup();

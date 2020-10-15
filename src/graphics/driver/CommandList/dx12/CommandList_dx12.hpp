@@ -68,7 +68,7 @@ namespace vg::graphics::driver::dx12
 	}
 
 	//--------------------------------------------------------------------------------------
-	void CommandList::beginRenderPass(const driver::RenderPass * _renderPass)
+	void CommandList::beginRenderPass(driver::RenderPass * _renderPass)
 	{
 		super::beginRenderPass(_renderPass);
 
@@ -84,18 +84,98 @@ namespace vg::graphics::driver::dx12
 	}
 
 	//--------------------------------------------------------------------------------------
-	void CommandList::beginSubPass(core::uint _subPassIndex, const driver::SubPass * _subPass)
+	void CommandList::beginSubPass(core::uint _subPassIndex, driver::SubPass * _subPass)
 	{
 		super::beginSubPass(_subPassIndex, _subPass);
 
-		if (_subPass)
-			m_d3d12graphicsCmdList->BeginRenderPass(_subPass->m_renderTargetCount, _subPass->m_renderTargetCount ? _subPass->m_d3d12renderPassRenderTargetDesc : nullptr, _subPass->m_depthStencilCount? &_subPass->m_d3d12renderPassDepthStencilDesc : nullptr, _subPass->m_d3d12renderPassFlags);
+        if (_subPass)
+        {
+            const RenderPass * renderPass = getRenderPass();
+            const RenderPassKey & renderPasskey = renderPass->getRenderPassKey();
+            const auto index = getSubPassIndex();
+            const SubPassKey & subPassKey = renderPasskey.m_subPassKeys[index];
+            const auto & attachments = renderPass->m_attachments;
+
+            for (uint i = 0; i < _subPass->m_renderTargetCount; ++i)
+            {
+                const SubPassKey::AttachmentInfo & info = subPassKey.getColorAttachmentInfo(i);
+                if (asBool(SubPassKey::AttachmentFlags::RenderTarget & info.flags))
+                {
+                    const FrameGraph::TextureResource * res = _subPass->getUserPasses()[0]->getRenderTargets()[i];
+                    const FrameGraph::TextureResourceDesc & resourceDesc = res->getTextureResourceDesc();
+                    D3D12_RENDER_PASS_RENDER_TARGET_DESC & renderTargetDesc = _subPass->m_d3d12renderPassRenderTargetDesc[i];
+                    const Texture * tex = res->getTexture();
+                    _subPass->m_d3d12renderPassRenderTargetDesc->cpuDescriptor = tex->getd3d12RTVHandle();
+                }
+            }            
+
+            m_d3d12graphicsCmdList->BeginRenderPass(_subPass->m_renderTargetCount, _subPass->m_renderTargetCount ? _subPass->m_d3d12renderPassRenderTargetDesc : nullptr, _subPass->m_depthStencilCount ? &_subPass->m_d3d12renderPassDepthStencilDesc : nullptr, _subPass->m_d3d12renderPassFlags);
+        }
 	}
 
-	//--------------------------------------------------------------------------------------
+    //--------------------------------------------------------------------------------------
+    D3D12_RESOURCE_STATES getd3d12ResourceBarrierType(ResourceState _state)
+    {
+        switch (_state)
+        {
+            default:
+                VG_ASSERT(false, "Unhandled ResourceState \"%s\" (%u)", asString(_state), _state);
+            case ResourceState::Undefined:
+                return D3D12_RESOURCE_STATE_COMMON;
+
+            case ResourceState::RenderTarget:
+                return D3D12_RESOURCE_STATE_RENDER_TARGET;
+
+            case ResourceState::ShaderResource:
+                return D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE | D3D12_RESOURCE_STATE_NON_PIXEL_SHADER_RESOURCE;
+        }
+    }
+
+    //--------------------------------------------------------------------------------------
 	void CommandList::endSubPass()
 	{
 		m_d3d12graphicsCmdList->EndRenderPass();
+
+        const RenderPass * renderPass = getRenderPass();
+        const SubPass * subPass = getSubPass();
+
+        const RenderPassKey & renderPasskey = renderPass->getRenderPassKey();
+        const auto index = getSubPassIndex();
+        const SubPassKey &  subPassKey = renderPasskey.m_subPassKeys[index];
+
+        vector<D3D12_RESOURCE_BARRIER> d3d12barriers;
+
+        for (uint i = 0; i < maxRenderTarget; ++i)
+        {
+            const SubPassKey::AttachmentInfo & info = subPassKey.getColorAttachmentInfo(i);
+
+            if (info.begin != info.end)
+            {
+                const UserPass * userPass = subPass->getUserPasses()[0];
+
+                auto & res = userPass->getRenderTargets()[i];
+                driver::Texture * tex = res->getTexture();
+
+                // skip the 1st and last pass for backbuffer (PRESENT=>RT & RT=>PRESENT) as they are handled by the device itself
+                const auto & writes = res->getWriteAtPass();
+                if (tex->getTexDesc().isBackbuffer() && (writes[0] == userPass || writes[writes.size()-1] == userPass))
+                    continue;
+
+                D3D12_RESOURCE_BARRIER d3d12barrier;
+
+                d3d12barrier.Transition.pResource = tex->getResource().getd3d12TextureResource(); 
+                d3d12barrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
+                d3d12barrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
+                d3d12barrier.Transition.StateBefore = getd3d12ResourceBarrierType(info.begin);
+                d3d12barrier.Transition.StateAfter = getd3d12ResourceBarrierType(info.end);
+                d3d12barrier.Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
+
+                d3d12barriers.push_back(d3d12barrier);
+            }
+        }
+
+        if (d3d12barriers.size() > 0)       
+            m_d3d12graphicsCmdList->ResourceBarrier((uint)d3d12barriers.size(), d3d12barriers.data());
 
 		super::endSubPass();
 	}

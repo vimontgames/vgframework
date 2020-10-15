@@ -99,6 +99,9 @@ namespace vg::graphics::driver::dx12
                             resourceDesc.Layout = D3D12_TEXTURE_LAYOUT_UNKNOWN;
                             resourceDesc.Flags = D3D12_RESOURCE_FLAG_NONE;
 
+        if (asBool(TextureFlags::RenderTarget & _texDesc.flags))
+            resourceDesc.Flags |= D3D12_RESOURCE_FLAG_ALLOW_RENDER_TARGET;
+
         return resourceDesc;
     }
 
@@ -123,10 +126,16 @@ namespace vg::graphics::driver::dx12
             allocDesc.Flags = D3D12MA::ALLOCATION_FLAG_NONE;
             allocDesc.HeapType = D3D12_HEAP_TYPE_DEFAULT;
 
+            D3D12_RESOURCE_STATES initState = D3D12_RESOURCE_STATE_COMMON;
+            if (asBool(TextureFlags::RenderTarget & _texDesc.flags) )
+                initState = D3D12_RESOURCE_STATE_RENDER_TARGET;
+            else if (_initData)
+                initState = D3D12_RESOURCE_STATE_COPY_DEST;
+
             D3D12MA::Allocator * allocator = driver::Device::get()->getd3d12MemoryAllocator();
             ID3D12Resource * resource;
             D3D12MA::Allocation * alloc;
-            VG_ASSERT_SUCCEEDED(allocator->CreateResource(&allocDesc, &resourceDesc, D3D12_RESOURCE_STATE_COPY_DEST, nullptr, &alloc, IID_PPV_ARGS(&resource)));
+            VG_ASSERT_SUCCEEDED(allocator->CreateResource(&allocDesc, &resourceDesc, initState, nullptr, &alloc, IID_PPV_ARGS(&resource)));
             m_resource.setd3d12TextureResource(resource, alloc);
         }
 
@@ -176,6 +185,12 @@ namespace vg::graphics::driver::dx12
             VG_ASSERT(m_resource.getd3d12TextureResource());
             m_d3d12RTVHandle = device->allocRTVHandle();
             d3d12device->CreateRenderTargetView(m_resource.getd3d12TextureResource(), &viewDesc, m_d3d12RTVHandle);
+
+            if (nullptr == _initData && asBool(BindFlags::ShaderResource & _texDesc.resource.m_bindFlags))
+            {
+                auto * bindlessTable = device->getBindlessTable();
+                bindlessTable->setd3d12GPUDescriptorDirty(getBindlessSRVHandle());
+            }
         }
 
         if (nullptr != _initData && !asBool(TextureFlags::Backbuffer & _texDesc.flags))

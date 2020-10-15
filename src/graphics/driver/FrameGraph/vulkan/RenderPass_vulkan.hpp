@@ -30,7 +30,7 @@ namespace vg::graphics::driver::vulkan
 
         for (uint i = 0; i < maxRenderTarget; ++i)
         {
-            const auto flags = subPassKey.getRenderTargetFlags(i);
+            const SubPassKey::AttachmentInfo & info = subPassKey.getColorAttachmentInfo(i);
 
             const auto format = _key.m_colorFormat[i];
             if (PixelFormat::Unknow != format)
@@ -43,30 +43,61 @@ namespace vg::graphics::driver::vulkan
                 // TODO: RenderPassKey flags for initial/final state for each attachment
                 att.samples = VK_SAMPLE_COUNT_1_BIT;
 
-                if (SubPassKey::Flags::Clear & flags)
+                if (asBool(SubPassKey::AttachmentFlags::Clear & info.flags))
                 {
                     att.loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
-                    att.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
-                    att.finalLayout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
+                    //att.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
+                    //att.finalLayout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
                 }
-                else  if (SubPassKey::Flags::Load & flags)
+                else if (asBool(SubPassKey::AttachmentFlags::Preserve & info.flags))
                 {
                     att.loadOp = VK_ATTACHMENT_LOAD_OP_LOAD;
-                    att.initialLayout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
-                    att.finalLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
+                    //att.initialLayout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
+                    //att.finalLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
                 }
                 else
                 {
                     att.loadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
-                    att.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
-                    att.finalLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
+                    //att.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
+                    //att.finalLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
                 }
+
+                switch (info.begin)
+                {
+                case ResourceState::Undefined:
+                    att.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
+                    break;
+
+                case ResourceState::RenderTarget:
+                    att.initialLayout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
+                    break;
+
+                case ResourceState::ShaderResource:
+                    att.initialLayout = VK_IMAGE_LAYOUT_DEPTH_READ_ONLY_OPTIMAL;
+                    break;
+                }
+
+                switch (info.end)
+                {
+                    case ResourceState:: Undefined:
+                        att.finalLayout = VK_IMAGE_LAYOUT_UNDEFINED;
+                        break;
+
+                    case ResourceState::RenderTarget:
+                        att.finalLayout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
+                        break;
+
+                    case ResourceState::ShaderResource:
+                        att.finalLayout = VK_IMAGE_LAYOUT_DEPTH_READ_ONLY_OPTIMAL;
+                        break;
+                }
+
+                if (asBool(info.flags & SubPassKey::AttachmentFlags::Present))
+                    att.finalLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
 
                 att.storeOp = VK_ATTACHMENT_STORE_OP_STORE;
                 att.stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
                 att.stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
-                
-                
 
                 vkAttachmentDescriptions.push_back(att);
             }
@@ -88,9 +119,9 @@ namespace vg::graphics::driver::vulkan
             
             for (uint j = 0; j < maxRenderTarget; ++j) // maxRenderTarget == maxAttachment per subPass ?
             {
-                const auto flags = subPassKey.getRenderTargetFlags(j);
+                const SubPassKey::AttachmentInfo & info = subPassKey.getColorAttachmentInfo(j);
 
-                if (SubPassKey::Flags::Bind & flags)
+                if (asBool(SubPassKey::AttachmentFlags::RenderTarget & info.flags))
                 {
                     VkAttachmentReference colorAttRef = { i, VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL };
                     vkSubPassAttachmentRefs.push_back(colorAttRef);
@@ -134,27 +165,6 @@ namespace vg::graphics::driver::vulkan
         auto * device = driver::Device::get();
         VkDevice & vkDevice = device->getVulkanDevice();
 
-        m_vkRenderPass = device->getVulkanRenderPass(m_renderPassKey);
-
-        core::vector<VkImageView> vkImageViews;
-        for (const driver::Texture * tex : m_attachments)
-            vkImageViews.push_back(tex->getVulkanImageView());
-
-        VkFramebufferCreateInfo frameBufferInfo;
-        frameBufferInfo.sType = VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO;
-        frameBufferInfo.flags = 0;
-        frameBufferInfo.pNext = nullptr;
-        frameBufferInfo.renderPass = m_vkRenderPass;
-        frameBufferInfo.attachmentCount = (uint)vkImageViews.size();
-        frameBufferInfo.pAttachments = vkImageViews.data();
-        frameBufferInfo.width = device->getDeviceParams().resolution.x;
-        frameBufferInfo.height = device->getDeviceParams().resolution.y;
-        frameBufferInfo.layers = 1;
-
-        VG_ASSERT_VULKAN(vkCreateFramebuffer(vkDevice, &frameBufferInfo, nullptr, &m_vkFrameBuffer));
-
-        VkRenderPassBeginInfo & vkRenderPassBeginInfo = m_vkRenderPassBeginInfo;
-
         const auto & renderTargets = m_subPasses[0]->getUserPasses()[0]->getRenderTargets();
         
         m_vkClearValues.resize(renderTargets.size());
@@ -178,16 +188,56 @@ namespace vg::graphics::driver::vulkan
             vkClearValue.color.float32[3] = desc.clearColor.w;
             m_vkClearValues[i] = vkClearValue;
         }
+
+        m_vkRenderPass = device->getVulkanRenderPass(m_renderPassKey);
+        m_vkFrameBufferInfo.sType = VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO;
+        m_vkFrameBufferInfo.flags = 0;
+        m_vkFrameBufferInfo.pNext = nullptr;
+        m_vkFrameBufferInfo.renderPass = m_vkRenderPass;
+
+        m_vkFrameBufferInfo.width = width;
+        m_vkFrameBufferInfo.height = height;
+        m_vkFrameBufferInfo.layers = 1;
         
-        vkRenderPassBeginInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO,
-        vkRenderPassBeginInfo.pNext = nullptr;
-        vkRenderPassBeginInfo.renderPass = m_vkRenderPass;
-        vkRenderPassBeginInfo.framebuffer = m_vkFrameBuffer;
-        vkRenderPassBeginInfo.renderArea.offset.x = 0;
-        vkRenderPassBeginInfo.renderArea.offset.y = 0;
-        vkRenderPassBeginInfo.renderArea.extent.width = width;
-        vkRenderPassBeginInfo.renderArea.extent.height = height;
-        vkRenderPassBeginInfo.clearValueCount = (uint)m_vkClearValues.size();
-        vkRenderPassBeginInfo.pClearValues = (const VkClearValue*)m_vkClearValues.data();
+        m_vkRenderPassBeginInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO,
+        m_vkRenderPassBeginInfo.pNext = nullptr;
+        m_vkRenderPassBeginInfo.renderPass = m_vkRenderPass;
+        m_vkRenderPassBeginInfo.renderArea.offset.x = 0;
+        m_vkRenderPassBeginInfo.renderArea.offset.y = 0;
+        m_vkRenderPassBeginInfo.renderArea.extent.width = width;
+        m_vkRenderPassBeginInfo.renderArea.extent.height = height;
+        m_vkRenderPassBeginInfo.clearValueCount = (uint)m_vkClearValues.size();
+        m_vkRenderPassBeginInfo.pClearValues = (const VkClearValue*)m_vkClearValues.data();
 	}
+
+    //--------------------------------------------------------------------------------------
+    void RenderPass::begin(CommandList * _cmdList)
+    {
+        auto * device = driver::Device::get();
+        VkDevice & vkDevice = device->getVulkanDevice();
+
+        core::vector<VkImageView> vkImageViews;
+        for (const FrameGraph::TextureResource * res : m_attachments)
+            vkImageViews.push_back(res->getTexture()->getVulkanImageView());
+
+        m_vkFrameBufferInfo.attachmentCount = (uint)vkImageViews.size();
+        m_vkFrameBufferInfo.pAttachments = vkImageViews.data();
+
+        VG_ASSERT_VULKAN(vkCreateFramebuffer(vkDevice, &m_vkFrameBufferInfo, nullptr, &m_vkFrameBuffer));
+
+        m_vkRenderPassBeginInfo.framebuffer = m_vkFrameBuffer;
+
+        vkCmdBeginRenderPass(_cmdList->getVulkanCommandBuffer(), &m_vkRenderPassBeginInfo, VK_SUBPASS_CONTENTS_INLINE);
+    }
+
+    //--------------------------------------------------------------------------------------
+    void RenderPass::end(CommandList * _cmdList)
+    {
+        vkCmdEndRenderPass(_cmdList->getVulkanCommandBuffer());
+
+        auto * device = driver::Device::get();
+        VkDevice & vkDevice = device->getVulkanDevice();
+
+        //vkDestroyFramebuffer(vkDevice, m_vkFrameBuffer, nullptr);
+    }
 }

@@ -26,22 +26,23 @@ namespace vg::graphics::driver::dx12
 
             for (uint i = 0; i < m_attachments.size(); ++i)
             {
-                const auto flags = subPassKey.getRenderTargetFlags(i);
-                if (SubPassKey::Flags::Bind & flags)
+                const SubPassKey::AttachmentInfo & info = subPassKey.getColorAttachmentInfo(i);
+                if (asBool(SubPassKey::AttachmentFlags::RenderTarget & info.flags))
                 {
                     const FrameGraph::TextureResource * res = subPass->getUserPasses()[0]->getRenderTargets()[subPass->m_renderTargetCount]; // Assume subPass attachment order is the same as renderPass order and that we create different subPasses when attachment changes
-                    const Texture * tex = res->getTexture();
                     const FrameGraph::TextureResourceDesc & resourceDesc = res->getTextureResourceDesc();
 
                     auto & renderTargetDesc = subPass->m_d3d12renderPassRenderTargetDesc[i];
 
-                    renderTargetDesc.cpuDescriptor = tex->getd3d12RTVHandle();
+                    // will have to set when 'beginPass'
+                    //const Texture * tex = res->getTexture();
+                    //renderTargetDesc.cpuDescriptor = tex->getd3d12RTVHandle();
 
                     if (1)
                     {
-                        if (SubPassKey::Flags::Clear & flags)
+                        if (asBool(SubPassKey::AttachmentFlags::Clear & info.flags))
                             renderTargetDesc.BeginningAccess.Type = D3D12_RENDER_PASS_BEGINNING_ACCESS_TYPE_CLEAR;
-                        else if (SubPassKey::Flags::Load & flags)
+                        else if (asBool(SubPassKey::AttachmentFlags::Preserve & info.flags))
                             renderTargetDesc.BeginningAccess.Type = D3D12_RENDER_PASS_BEGINNING_ACCESS_TYPE_PRESERVE;
                         else
                             renderTargetDesc.BeginningAccess.Type = D3D12_RENDER_PASS_BEGINNING_ACCESS_TYPE_DISCARD;

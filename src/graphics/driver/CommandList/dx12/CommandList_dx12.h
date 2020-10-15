@@ -15,10 +15,10 @@ namespace vg::graphics::driver::dx12
 		void								reset                       ();
 		void								close                       ();
 
-		void								beginRenderPass             (const driver::RenderPass * _renderPass);
+		void								beginRenderPass             (driver::RenderPass * _renderPass);
 		void								endRenderPass               ();
 
-		void								beginSubPass                (core::uint _subPassIndex, const driver::SubPass * _subPass);
+		void								beginSubPass                (core::uint _subPassIndex, driver::SubPass * _subPass);
 		void								endSubPass                  ();
 
         void                                bindRootSignature           (driver::RootSignature * _rootSig);

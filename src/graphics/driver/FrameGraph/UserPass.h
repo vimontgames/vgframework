@@ -33,9 +33,16 @@ namespace vg::graphics::driver
         bool hasDepthStencil() const;
         const FrameGraph::TextureResourceDesc &  getDepthStencilDesc() const;
 
+        const core::vector<FrameGraph::TextureResource *> & getTexturesRead() const { return m_textures; }
+
 	protected:
-        void declareRenderTarget(const FrameGraph::ResourceID & _resID, const FrameGraph::TextureResourceDesc & _resDesc);
+        // setup
+        void createRenderTarget(const FrameGraph::ResourceID & _resID, FrameGraph::TextureResourceDesc & _resDesc);
 		void writeRenderTarget(core::uint _slot, const FrameGraph::ResourceID & _resID);
+        void readRenderTarget(const FrameGraph::ResourceID & _resID);
+
+        // draw
+        Texture * getRenderTarget(const FrameGraph::ResourceID & _resID) const;
 
 	private:
 		friend class FrameGraph;
@@ -45,6 +52,10 @@ namespace vg::graphics::driver
 	protected:
 		FrameGraph *								m_frameGraph = nullptr;
 
+        // Inputs
+        core::vector<FrameGraph::TextureResource *> m_textures;
+
+        // Outputs
 		FrameGraph::TextureResource *				m_depthStencil;
 		core::vector<FrameGraph::TextureResource *>	m_renderTarget;
 	};

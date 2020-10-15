@@ -104,7 +104,7 @@ namespace vg::graphics::driver::vulkan
 	{
 		auto * device = driver::Device::get();
 
-		if (asBool(TextureFlags::Backbuffer & _texDesc.flags))
+		if (_texDesc.isBackbuffer())
 		{
             m_resource.setVulkanImage(*static_cast<VkImage*>(_initData), nullptr);
 		}
@@ -118,10 +118,24 @@ namespace vg::graphics::driver::vulkan
                               imgDesc.mipLevels = 1;
                               imgDesc.arrayLayers = 1;
                               imgDesc.samples = VK_SAMPLE_COUNT_1_BIT;
-                              imgDesc.tiling = VK_IMAGE_TILING_LINEAR;
-                              imgDesc.usage = VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_SAMPLED_BIT;
                               imgDesc.flags = 0;
-                              imgDesc.initialLayout = VK_IMAGE_LAYOUT_PREINITIALIZED;
+                              
+
+            if (_texDesc.isRenderTarget())
+            {
+                imgDesc.tiling = VK_IMAGE_TILING_OPTIMAL;
+                imgDesc.usage = VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT;
+                imgDesc.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
+
+                if (_texDesc.isShaderResource())
+                    imgDesc.usage |= VK_IMAGE_USAGE_SAMPLED_BIT;
+            }
+            else if (_texDesc.isShaderResource())
+            {
+                imgDesc.tiling = VK_IMAGE_TILING_LINEAR;
+                imgDesc.usage = VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_SAMPLED_BIT;
+                imgDesc.initialLayout = VK_IMAGE_LAYOUT_PREINITIALIZED;
+            }
 
             VmaAllocationCreateInfo allocCreateInfo = {};
                                     allocCreateInfo.usage = VMA_MEMORY_USAGE_GPU_ONLY;

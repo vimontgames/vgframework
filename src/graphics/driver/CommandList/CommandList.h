@@ -26,13 +26,14 @@ namespace vg::graphics::driver
 			CommandListType			getType			    () const;
 			CommandPool *			getCommandPool	    ();
 
-			void					beginRenderPass	    (const driver::RenderPass * _renderPass);
+			void					beginRenderPass	    (driver::RenderPass * _renderPass);
 			void					endRenderPass	    ();
 
-			void					beginSubPass	    (core::uint _subPassIndex, const driver::SubPass * _subPass);
+			void					beginSubPass	    (core::uint _subPassIndex, driver::SubPass * _subPass);
 			void					endSubPass		    ();
 
 			const RenderPass *		getRenderPass	    () const;
+            const SubPass *         getSubPass          () const;
 			const core::uint		getSubPassIndex	    () const;
 
             void                    setRootSignature    (const RootSignatureHandle & _rsHandle);
@@ -43,14 +44,14 @@ namespace vg::graphics::driver
             void                    setScissor          (const core::uint4 & _scissor);
             void                    setRootConstants    (core::uint _startOffset, core::u32 * _values, core::uint _count);
 
-		private:
+		protected:
 			CommandListType			m_type;
 			core::u8				m_frame;
 			core::u8				m_index;
 			driver::CommandPool *	m_cmdPool;
 
-			const RenderPass *		m_renderPass   = nullptr;
-			const SubPass *			m_subPass	   = nullptr;
+			RenderPass *		    m_renderPass   = nullptr;
+			SubPass *			    m_subPass	   = nullptr;
 			core::uint				m_subPassIndex = -1;
 
         protected:
@@ -74,8 +75,8 @@ namespace vg::graphics::driver
                 core::uint4             scissor;
                 core::u32               rootConstants[max_root_constants] = {};
             };
-            StateCache              m_stateCache;
-            RootSignature *         m_currentRootSignature = nullptr;
+            StateCache                  m_stateCache;
+            RootSignature *             m_currentRootSignature = nullptr;
 
             std::unordered_map<driver::GraphicPipelineStateKey, driver::GraphicPipelineState*, driver::GraphicPipelineStateKey::hash> m_graphicPipelineStateHash;
 		};

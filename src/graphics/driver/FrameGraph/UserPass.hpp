@@ -22,6 +22,7 @@ namespace vg::graphics::driver
 	//--------------------------------------------------------------------------------------
 	void UserPass::reset()
 	{
+        m_textures.clear();
 		m_depthStencil = nullptr;
 		m_renderTarget.clear();
 	}
@@ -47,8 +48,10 @@ namespace vg::graphics::driver
     //--------------------------------------------------------------------------------------
     // If resource already exist, it must have exactly the same descriptor
     //--------------------------------------------------------------------------------------
-    void UserPass::declareRenderTarget(const FrameGraph::ResourceID & _resID, const FrameGraph::TextureResourceDesc & _resDesc)
+    void UserPass::createRenderTarget(const FrameGraph::ResourceID & _resID, FrameGraph::TextureResourceDesc & _resDesc)
     {
+        _resDesc.transient = true;
+
         FrameGraph::TextureResource * res = m_frameGraph->addTextureResource(_resID, _resDesc);
         VG_ASSERT(res);
     }
@@ -65,6 +68,27 @@ namespace vg::graphics::driver
         res->setWriteAtPass(this);
 		m_renderTarget.push_back(res);
 	}
+
+    //--------------------------------------------------------------------------------------
+    // The pass will read RT '_resID'
+    //--------------------------------------------------------------------------------------
+    void UserPass::readRenderTarget(const FrameGraph::ResourceID & _resID)
+    {
+        FrameGraph::TextureResource * res = m_frameGraph->getTextureResource(_resID);
+        VG_ASSERT(res);
+        res->setReadAtPass(this);
+        m_textures.push_back(res);
+    }
+
+    //--------------------------------------------------------------------------------------
+    // Get RenderTarget '_resID' for read during 'render'
+    //--------------------------------------------------------------------------------------
+    Texture * UserPass::getRenderTarget(const FrameGraph::ResourceID & _resID) const
+    {
+        FrameGraph::TextureResource * res = m_frameGraph->getTextureResource(_resID);
+        VG_ASSERT(res);
+        return res->getTexture();
+    }
 
     //--------------------------------------------------------------------------------------
     core::uint UserPass::getRenderTargetCount() const

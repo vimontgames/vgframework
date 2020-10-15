@@ -14,83 +14,86 @@ namespace vg::graphics::driver
     //--------------------------------------------------------------------------------------
     struct SubPassKey
     {
-        enum Flags
+        enum class AttachmentFlags : core::u8
         {
-            None    = 0x0,
-            Bind    = 0x1,
-            Clear   = 0x2,
-            Load    = 0x4,
-            Store   = 0x8 
+            Discard         = 0x00,
+            Clear           = 0x01,  // clear before use
+            Preserve        = 0x02,  // init with previous contents of attachment
+
+            RenderTarget    = 0x04,  // attachment will be used as a render target during this pass
+            Present         = 0x08,  // attachment will be used for 'Present' right after this pass
         };
 
-        SubPassKey() :
-            color(Flags::None),
-            depth(Flags::None),
-            _pad(0x0000000)
+        struct AttachmentInfo
         {
-
-        }
-
-        union
-        {
-            struct
+            AttachmentInfo(AttachmentFlags _flags = AttachmentFlags::Discard, ResourceState _begin = ResourceState::Undefined, ResourceState _end = ResourceState::Undefined) :
+                flags(_flags),
+                begin(_begin),
+                end(_end)
             {
-                union
+
+            }
+
+            union
+            {
+                struct
                 {
-                    struct
-                    {
-                        Flags color0 : 4;
-                        Flags color1 : 4;
-                        Flags color2 : 4;
-                        Flags color3 : 4;
-                        Flags color4 : 4;
-                        Flags color5 : 4;
-                        Flags color6 : 4;
-                        Flags color7 : 4;
-                    };
-                    Flags color : 32;
+
+                    AttachmentFlags flags   : 4;
+                    ResourceState   begin   : 2;
+                    ResourceState   end     : 2;
                 };
-                Flags depth : 4;
-                core::u32 _pad : 28;
+                core::u8 bits;
             };
-            core::u32 bits;
         };
 
-        inline void setRenderTargetFlags(core::uint _renderTargetIndex, Flags _flags)
+        AttachmentInfo color[maxRenderTarget];
+        AttachmentInfo depth;
+
+        inline void setColorAttachmentInfo(core::uint _index, const AttachmentInfo & _attachmentInfos)
         {
-            color = Flags( color | (_flags << (_renderTargetIndex << 2)));
+            VG_ASSERT(_index < maxRenderTarget);
+            color[_index] = _attachmentInfos;
         }
 
-        inline Flags getRenderTargetFlags(core::uint _renderTargetIndex) const
+        inline const AttachmentInfo & getColorAttachmentInfo(core::uint _index) const
         {
-            return Flags((color << (_renderTargetIndex<<2)) & 0xF);
+            VG_ASSERT(_index < maxRenderTarget);
+            return color[_index];
         }
 
-        inline void setDepthStencilFlags(Flags _flags)
+        inline void setDepthStencilAttachmentInfo(const AttachmentInfo & _attachmentInfos)
         {
-            depth = Flags(depth | _flags);
+            depth = _attachmentInfos;
         }
 
-        inline Flags getDepthStencilFlags() const
+        inline const AttachmentInfo & getDepthStencilAttachmentInfo() const
         {
             return depth;
         }
 
         inline bool operator == (const SubPassKey & _other) const
         {
-            return _other.bits == bits;
+            for (core::uint i = 0; i < maxRenderTarget; ++i)
+                if (color[i].bits != _other.color[i].bits)
+                    return false;
+
+            return _other.depth.bits == depth.bits;
         }
 
         inline bool operator != (const SubPassKey & _other) const
         {
-            return !(_other.bits == bits);
+            return !(_other == *this);
         }
 
         struct hash
         {
             inline core::size_t operator() (const SubPassKey & _this) const
             {
-                return core::hash<core::u32>()(_this.bits);
+                auto ret = core::hash<core::u8>()(core::u8(_this.depth.bits));
+                for (core::uint i = 0; i < maxRenderTarget; ++i)
+                    ret ^= core::hash<core::u8>()(core::u8(_this.color[i].bits));
+                return ret;
             }
         };
     };

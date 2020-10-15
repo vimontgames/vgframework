@@ -42,23 +42,21 @@ namespace vg::graphics::driver::vulkan
 	}
 
 	//--------------------------------------------------------------------------------------
-	void CommandList::beginRenderPass(const driver::RenderPass * _renderPass)
+	void CommandList::beginRenderPass(driver::RenderPass * _renderPass)
 	{
 		super::beginRenderPass(_renderPass);
-
-		vkCmdBeginRenderPass(m_vkCommandBuffer, &_renderPass->getVulkanRenderPassBeginInfo(), VK_SUBPASS_CONTENTS_INLINE);
+        _renderPass->begin(this);	
 	}
 
 	//--------------------------------------------------------------------------------------
 	void CommandList::endRenderPass()
 	{
-		vkCmdEndRenderPass(m_vkCommandBuffer);
-
+        m_renderPass->end(this); 
 		super::endRenderPass();
 	}
 
 	//--------------------------------------------------------------------------------------
-	void CommandList::beginSubPass(core::uint _subPassIndex, const driver::SubPass * _subPass)
+	void CommandList::beginSubPass(core::uint _subPassIndex, driver::SubPass * _subPass)
 	{
         super::beginSubPass(_subPassIndex, _subPass);
 

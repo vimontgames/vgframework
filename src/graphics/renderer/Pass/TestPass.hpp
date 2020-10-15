@@ -98,7 +98,24 @@ namespace vg::graphics::renderer
     //--------------------------------------------------------------------------------------
     void TestPass::setup()
     {
+        auto * device = Device::get();
+
+        const driver::DeviceParams & deviceParams = device->getDeviceParams();
+
+        #if 1
+        FrameGraph::TextureResourceDesc desc;
+                                        desc.format = device->getBackbufferFormat();
+                                        desc.width = deviceParams.resolution.x >> 1;
+                                        desc.height = deviceParams.resolution.y >> 1;
+                                        desc.clearColor = float4(1, 1, 0, 1);
+                                        desc.initState = FrameGraph::Resource::InitState::Clear;
+
+        createRenderTarget("Color", desc);
+
+        writeRenderTarget(0, "Color");
+        #else
         writeRenderTarget(0, "Backbuffer");
+        #endif
     }
 
     //--------------------------------------------------------------------------------------
@@ -116,8 +133,8 @@ namespace vg::graphics::renderer
         float4 posOffetScale, texOffetScale;
         uint texID;
 
-        posOffetScale = float4(0.1f, 0.1f, 0.8f, 0.8f);
-        texOffetScale = float4(0.0f, 0.0f, 1.0f, 1.0f);
+        posOffetScale = float4(0.0f, 0.0f, 1.0f, 1.0f);
+        texOffetScale = float4(0.0f, 0.0f, 16.0f, 16.0f);
         texID = m_texture[0]->getBindlessSRVHandle();
 
         _cmdList->setRootConstants(0, (u32*)&posOffetScale, 4);
