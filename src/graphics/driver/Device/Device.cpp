@@ -323,6 +323,22 @@ namespace vg::graphics::driver
         return any(0 == m_deviceParams.resolution);
     }
 
+    //--------------------------------------------------------------------------------------
+    void Device::resetShaders(ShaderKey::File _file)
+    {
+        waitGPUIdle();
+
+        for (FrameContext & frame : m_frameContext)
+        {
+            for (auto cmdListType = 0; cmdListType < enumCount<CommandListType>(); ++cmdListType)
+            {
+                auto & cmdLists = frame.commandLists[cmdListType];
+                for (auto * cmdList : cmdLists)
+                    cmdList->resetShaders(_file);
+            }
+        }
+    }
+
 	//--------------------------------------------------------------------------------------
 	void Device::beginFrame()
 	{

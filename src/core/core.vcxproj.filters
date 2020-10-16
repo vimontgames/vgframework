@@ -28,6 +28,9 @@
     <Filter Include="File">
       <UniqueIdentifier>{15812bb8-c946-47dd-8f5a-cd2b9013c178}</UniqueIdentifier>
     </Filter>
+    <Filter Include="string">
+      <UniqueIdentifier>{e2d9d690-faaf-46f3-9b6e-eef77e7c2458}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Math\Math.h">
@@ -72,6 +75,9 @@
     </ClInclude>
     <ClInclude Include="IProfiler.h" />
     <ClInclude Include="Kernel.h" />
+    <ClInclude Include="string\string.h">
+      <Filter>string</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Math\Math.cpp">
@@ -90,6 +96,9 @@
     </ClCompile>
     <ClCompile Include="File\File.cpp">
       <Filter>File</Filter>
+    </ClCompile>
+    <ClCompile Include="string\string.cpp">
+      <Filter>string</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

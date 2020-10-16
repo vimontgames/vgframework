@@ -59,15 +59,11 @@ namespace vg::graphics::driver::dx12
     }
 
     //--------------------------------------------------------------------------------------
-    driver::Shader * ShaderCompiler::compile(const core::string & _path, const core::string & _entryPoint, ShaderStage _stage, core::vector<core::pair<core::string, core::uint>> & _macros)
+    driver::Shader * ShaderCompiler::compile(const core::string & _path, const core::string & _entryPoint, ShaderStage _stage, const core::vector<core::pair<core::string, core::uint>> & _macros, string & _warningAndErrors)
     {
-        RETRY:
-
-        VG_DEBUGPRINT("compiling %s shader \"%s\" from \"%s\"\n", asString(_stage).c_str(), _entryPoint.c_str(), _path.c_str());
-
         string source;
         
-        if (file::read(_path, source))
+        if (readFile(_path, source))
         {
             IDxcBlobEncoding * dxcSource;
             VG_ASSERT_SUCCEEDED(m_d3d12dxcLibrary->CreateBlobWithEncodingFromPinned(source.c_str(), (uint)source.size(), CP_UTF8, &dxcSource));
@@ -84,10 +80,12 @@ namespace vg::graphics::driver::dx12
                 #endif
             };
 
-            _macros.push_back({ "DX12", 1 });
+            auto macros = _macros;
+
+            macros.push_back({ "DX12", 1 });
 
             std::vector<DxcDefine> dxcDefines;
-            for (const auto & macro : _macros)
+            for (const auto & macro : macros)
                 dxcDefines.push_back({ _wcsdup(wstring_convert(macro.first).c_str()), _wcsdup(wstring_convert(to_string(macro.second)).c_str()) });
 
             const wstring wfilename = wstring_convert(_path);
@@ -115,17 +113,13 @@ namespace vg::graphics::driver::dx12
 
             if (hrCompilation < 0)
             {
-                const string title = _path;
                 const string message = "Shader compilation failed:\n\n" + string((char*)dxcWarningAndErrors->GetBufferPointer());
 
-                if (MessageBoxResult::Retry == messageBox(MessageBoxIcon::Error, MessageBoxType::RetryCancel, title, message))
-                {
-                    VG_SAFE_RELEASE(dxcSource);
-                    VG_SAFE_RELEASE(dxcCompileResult);
-                    VG_SAFE_RELEASE(dxcWarningAndErrors);
-
-                    goto RETRY;
-                }
+                _warningAndErrors += message;
+                
+                VG_SAFE_RELEASE(dxcSource);
+                VG_SAFE_RELEASE(dxcCompileResult);
+                VG_SAFE_RELEASE(dxcWarningAndErrors);
 
                 return nullptr;
             }

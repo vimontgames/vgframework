@@ -35,14 +35,13 @@ PS_Output_Quad PS_Quad(VS_Output_Quad _input)
     float2 uv = _input.uv;
     output.color0 = float4(uv, 0, 1);
 
-    float y = asfloat(rootConstants.posOffset.y);
-    uint index = uint((y+0.25) * 3) % 5;
-
     //output.color0.rgb = Texture1DTable[index].Sample(nearestClamp, uv.x).rgb;
     output.color0.rgb = Texture2DTable[rootConstants.texID].Sample(nearestRepeat, uv).rgb;
     //output.color0.rgb = Texture3DTable[index].Sample(nearestClamp, float3(uv,0)).rgb;
 
-    //output.color0 *= asfloat(BufferTable[0].Load(0));
+    //output.color0 *= asfloat(BufferTable[0].Load(0)); 
+
+    output.color0.rgb = lerp(dot(output.color0.rgb, 1.0 / 3.0), output.color0.rgb, 1-frac(uv.y));
 
     return output;
 }

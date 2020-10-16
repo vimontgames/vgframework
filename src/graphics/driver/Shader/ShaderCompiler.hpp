@@ -38,9 +38,9 @@ namespace vg::graphics::driver
     }
 
     //--------------------------------------------------------------------------------------
-    Shader * ShaderCompiler::compile(const core::string & _path, const core::string & _entryPoint, ShaderStage _stage, core::vector<core::pair<core::string, core::uint>> & _macros)
+    Shader * ShaderCompiler::compile(const string & _path, const string & _entryPoint, ShaderStage _stage, const core::vector<core::pair<core::string, core::uint>> & _macros, string & _warningAndErrors)
     {
-        auto * shader = super::compile(_path, _entryPoint, _stage, _macros);
+        auto * shader = super::compile(_path, _entryPoint, _stage, _macros,_warningAndErrors);
 
         if (shader)
             shader->setName(_entryPoint);

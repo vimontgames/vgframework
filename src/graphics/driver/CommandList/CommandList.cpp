@@ -229,6 +229,25 @@ namespace vg::graphics::driver
     }
 
     //--------------------------------------------------------------------------------------
+    void CommandList::resetShaders(ShaderKey::File _file)
+    {
+        vector<GraphicPipelineStateKey> keys;
+
+        for (auto & pair : m_graphicPipelineStateHash)
+        {
+            const GraphicPipelineStateKey & key = pair.first;
+            if (key.m_shaderKey.file == _file)
+            {
+                VG_SAFE_RELEASE(pair.second);
+                keys.push_back(key);
+            }
+        }
+
+        for (GraphicPipelineStateKey key : keys)
+            m_graphicPipelineStateHash.erase(key);
+    }
+
+    //--------------------------------------------------------------------------------------
     void CommandList::flush()
     {
         if (asBool(m_stateCache.dirtyFlags))

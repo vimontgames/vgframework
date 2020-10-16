@@ -53,6 +53,11 @@ namespace vg::engine
                     case VK_F1:
                         VG_PROFILE_TRIGGER();   // Start/Stop capture
                         break;
+
+                    case VK_F6:
+                        if (m_renderer)
+                            m_renderer->updateShaders();
+                        break;
                 }
                 break;
         }

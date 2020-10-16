@@ -79,15 +79,22 @@ namespace vg::graphics::renderer
         // UI
         m_imgui = new ImguiAdapter(_params.device.window, m_device);
 
-        // Register shaders
-        auto * sm = ShaderManager::get();
-        sm->registerHLSL(DriverHLSLDesc());
+        registerShaders();
 
         // Create passes
         m_testPass = new TestPass();
         m_postProcessPass = new PostProcessPass();
         m_imguiPass = new ImguiPass();
 	}
+
+    //--------------------------------------------------------------------------------------
+    void Renderer::registerShaders()
+    {
+        auto * sm = ShaderManager::get();
+        sm->registerHLSL(DriverHLSLDesc());
+
+        sm->update();
+    }
 
 	//--------------------------------------------------------------------------------------
 	void Renderer::deinit()
@@ -107,6 +114,12 @@ namespace vg::graphics::renderer
         m_device.waitGPUIdle();
         m_device.resize(_width, _height);
         m_frameGraph.destroyTransientResources();
+    }
+
+    //--------------------------------------------------------------------------------------
+    void Renderer::updateShaders()
+    {
+        m_device.getShaderManager()->update();
     }
 
 	//--------------------------------------------------------------------------------------

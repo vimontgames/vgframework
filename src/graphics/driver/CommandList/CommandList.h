@@ -78,7 +78,7 @@ namespace vg::graphics::driver
             StateCache                  m_stateCache;
             RootSignature *             m_currentRootSignature = nullptr;
 
-            std::unordered_map<driver::GraphicPipelineStateKey, driver::GraphicPipelineState*, driver::GraphicPipelineStateKey::hash> m_graphicPipelineStateHash;
+            std::unordered_map<driver::GraphicPipelineStateKey, driver::GraphicPipelineState*, driver::GraphicPipelineStateKey::hash> m_graphicPipelineStateHash; // PSO should not be in command list !
 		};
 	}
 }
@@ -100,5 +100,7 @@ namespace vg::graphics::driver
 
         void    flush();
         void    draw(core::uint _vertexCount, core::uint _startOffset = 0);
+
+        void    resetShaders(ShaderKey::File _file);
 	};
 }

@@ -3,10 +3,10 @@
 #include <iostream>
 #include <fstream>
 
-namespace vg::core::file
+namespace vg::core
 {
     //--------------------------------------------------------------------------------------
-    bool read(const core::string & _path, core::string & _out)
+    bool readFile(const core::string & _path, core::string & _out)
     {
         using namespace std;
 

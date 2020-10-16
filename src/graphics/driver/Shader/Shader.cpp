@@ -5,6 +5,8 @@
 #include "ShaderManager.h"
 #include "HLSLDesc.h"
 
+using namespace vg::core;
+
 #include "ShaderCompiler.hpp"
 #include "ShaderManager.hpp"
 #include "HLSLDesc.hpp"

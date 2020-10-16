@@ -88,4 +88,14 @@ namespace vg::graphics::driver
     {
         return m_techniques;
     }
+
+    //--------------------------------------------------------------------------------------
+    void HLSLDesc::resetShaders()
+    {
+        for (uint j = 0; j < core::enumCount<ShaderStage>(); ++j)
+        {
+            for (auto & pair : m_shader[j])
+                VG_SAFE_RELEASE(pair.second);
+        }
+    }
 }

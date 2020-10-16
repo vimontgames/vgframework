@@ -40,7 +40,13 @@ namespace vg::graphics::driver
         Technique & addTechnique(const core::string & _name);
         const core::vector<Technique> & getTechniques() const;
 
+        core::u64 getCRC() const { return m_crc; }
+        void setCRC(core::u64 _crc) { m_crc = _crc; }
+
+        void resetShaders();
+
     private:
+        core::u64                                           m_crc = 0;
         core::string                                        m_file;
         core::vector<core::pair<core::string, Shader *>>    m_shader[core::enumCount<ShaderStage>()];
         core::vector<Technique>                             m_techniques;

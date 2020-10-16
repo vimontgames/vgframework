@@ -17,10 +17,10 @@ namespace vg::core
 	}
 
     //--------------------------------------------------------------------------------------
-    constexpr u64 computeCRC64(const char * _string, const size_t _lenght)
+    constexpr u64 computeCRC64(const char * _string, const size_t _length = 0)
     {
         u64 crc = 0;
-        size_t len = _lenght;
+        size_t len = _length;
 
         if (!len)
             len = strlen(_string);
@@ -62,7 +62,7 @@ namespace vg::core
         };
 
         crc = crc ^ 0xFFFFFFFF;
-        for (size_t i = 0; i < _lenght; i++)
+        for (size_t i = 0; i < len; i++)
             crc = table[_string[i] ^ (crc & 0xFF)] ^ (crc >> 8UL);
         crc = crc ^ 0xFFFFFFFF;
 

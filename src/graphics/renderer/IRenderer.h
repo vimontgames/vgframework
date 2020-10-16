@@ -19,6 +19,7 @@ namespace vg
             virtual void	            deinit() = 0;
             virtual void                resize(core::uint _width, core::uint _height) = 0;
             virtual void	            runOneFrame() = 0;
+            virtual void                updateShaders() = 0;
 
             #ifdef _WIN32
             virtual LRESULT CALLBACK    WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) = 0;

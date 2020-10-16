@@ -8,6 +8,7 @@
 #include "graphics/driver/CommandList/CommandList_consts.h"
 #include "graphics/driver/RootSignature/RootSignature_consts.h"
 #include "graphics/driver/Device/DeviceCaps.h"
+#include "graphics/driver/Shader/ShaderKey.h"
 
 //#define VG_DBG_CPUGPUSYNC 1
 
@@ -91,6 +92,7 @@ namespace vg::graphics::driver
 
             BindlessTable *                                 getBindlessTable            () const;
             driver::PixelFormat                             getBackbufferFormat         () const { return m_backbufferFormat; }
+            driver::ShaderManager *                         getShaderManager            () { return m_shaderManager;}
 
 		//protected:
             DeviceCaps                                      m_caps;
@@ -142,6 +144,7 @@ namespace vg::graphics::driver
         void                flushTextureUploads ();
 
         bool                isMinimized         ();
+        void                resetShaders        (ShaderKey::File _file);
 
 	private:
         TextureImporter *   m_textureImporter = nullptr;

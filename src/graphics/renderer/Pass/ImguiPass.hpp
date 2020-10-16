@@ -216,6 +216,11 @@ namespace vg::graphics::renderer
                 }
             }
 
+            if (ImGui::CollapsingHeader("Shaders", ImGuiTreeNodeFlags_DefaultOpen))
+            {
+                ImGui::Text("Press 'F6' to hot reload shaders");
+            }
+
             ImGui::End();
         }
     }

@@ -44,10 +44,10 @@ namespace vg::graphics::driver::vulkan
     }
 
     //--------------------------------------------------------------------------------------
-    driver::Shader * ShaderCompiler::compile(const core::string & _path, const core::string & _entryPoint, ShaderStage _stage, vector<pair<string, uint>> & _macros)
+    driver::Shader * ShaderCompiler::compile(const core::string & _path, const core::string & _entryPoint, ShaderStage _stage, vector<pair<string, uint>> & _macros, core::string & _warningAndErrors)
     {
         string source;
-        if (file::read(_path, source))
+        if (readFile(_path, source))
         {
             EShLanguage targetProfile = getVulkanTargetProfile(_stage);
             glslang::TShader tShader(targetProfile);
@@ -75,19 +75,27 @@ namespace vg::graphics::driver::vulkan
             const EShMessages messages = (EShMessages)(EShMsgSpvRules | EShMsgReadHlsl | EShMsgVulkanRules);
 
             DirStackFileIncluder includeHandler;
-            std::string dir = file::getFileDir(_path);
+            std::string dir = getFileDir(_path);
             includeHandler.pushExternalLocalDirectory(dir);            
 
             std::string preprocessedSource;
             const int defaultVer = 100;
             const bool preprocessOK = tShader.preprocess(&m_builtInResource, defaultVer, ENoProfile, false, false, messages, &preprocessedSource, includeHandler);
-            VG_ASSERT(preprocessOK, "Preprocess failed:\n%s\n%s", tShader.getInfoLog(), tShader.getInfoDebugLog());
+            if (!preprocessOK)
+            {
+                _warningAndErrors += string(tShader.getInfoLog()) + "\n" + string(tShader.getInfoDebugLog());
+                return nullptr;
+            }
 
             const char * preprocessedSrc = preprocessedSource.c_str();
             tShader.setStrings(&preprocessedSrc, 1);
 
             const bool parseOK = tShader.parse(&m_builtInResource, defaultVer, false, messages);
-            VG_ASSERT(parseOK, "Parse failed:\n%s\n%s", tShader.getInfoLog(), tShader.getInfoDebugLog());
+            if (!parseOK)
+            {
+                _warningAndErrors += string(tShader.getInfoLog()) + "\n" + string(tShader.getInfoDebugLog());
+                return nullptr;
+            }
 
             glslang::TProgram tProgram;
             tProgram.addShader(&tShader);
@@ -101,9 +109,7 @@ namespace vg::graphics::driver::vulkan
             glslang::GlslangToSpv(*tProgram.getIntermediate(targetProfile), spv, &spvLogger, &spvOptions);
 
             if (spvLogger.getAllMessages().length() > 0)
-            {
                 VG_DEBUGPRINT("%s\n", spvLogger.getAllMessages());
-            }
 
             core::Blob blob(spv.data(), (uint)spv.size());
             auto * shader = new driver::Shader(blob);

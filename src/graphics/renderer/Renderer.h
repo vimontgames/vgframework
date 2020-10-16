@@ -31,6 +31,8 @@ namespace vg::graphics::renderer
 		void					deinit				() override;
         void                    resize              (core::uint _width, core::uint _height) override;
 		void					runOneFrame			() override;
+        void                    updateShaders       () override;
+
 		driver::Texture *		getBackbuffer		();
         core::IProfiler *       getProfilerInstance () const override;
 
@@ -39,6 +41,9 @@ namespace vg::graphics::renderer
         #ifdef _WIN32
         LRESULT CALLBACK        WndProc             (HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) override;
         #endif        
+
+    private:
+        void                    registerShaders     ();
 
 	private:
 		driver::Device &		m_device;
