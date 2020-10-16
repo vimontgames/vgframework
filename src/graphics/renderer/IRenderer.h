@@ -17,7 +17,7 @@ namespace vg
         public:
             virtual void	            init(const RendererParams & _params) = 0;
             virtual void	            deinit() = 0;
-
+            virtual void                resize(core::uint _width, core::uint _height) = 0;
             virtual void	            runOneFrame() = 0;
 
             #ifdef _WIN32

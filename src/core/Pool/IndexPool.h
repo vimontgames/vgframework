@@ -14,6 +14,7 @@ namespace vg::core
 
         T alloc()
         {
+            m_used++;
             u32 pageIndex = 0;
             for (auto & page : m_pages)
             {
@@ -27,6 +28,7 @@ namespace vg::core
                 ++pageIndex;
             }
 
+            --m_used;
             VG_ASSERT(false);
             return (T)-1;
         }
@@ -43,6 +45,7 @@ namespace vg::core
             const uint pageIndex = _index / pageCount;
             const uint localIndex = _index - (pageIndex * elemCountPerPage);
             m_pages[pageIndex].mask |= elemMask(1) << localIndex;
+            --m_used;
         }
 
         struct Page
@@ -50,7 +53,23 @@ namespace vg::core
             elemMask mask = (elemMask)-1;
         };
 
+        constexpr core::size_t allocated() const
+        {
+            return count;
+        }
+
+        const core::size_t used() const
+        {
+            return m_used;
+        }
+
+        const core::size_t available() const
+        {
+            return count - m_used;
+        }
+
     private:
-        Page    m_pages[pageCount];
+        Page            m_pages[pageCount];
+        core::size_t    m_used = 0;
     };
 }

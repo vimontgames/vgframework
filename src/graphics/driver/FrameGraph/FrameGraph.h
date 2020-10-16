@@ -126,6 +126,8 @@ namespace vg::graphics::driver
 		FrameGraph();
 		~FrameGraph();
 
+        void destroyTransientResources();
+
 		void importRenderTarget(const ResourceID & _resID, Texture * _tex, core::float4 _clearColor = core::float4(0, 0, 0, 0), FrameGraph::Resource::InitState _initState = FrameGraph::Resource::InitState::Clear);
 		void setGraphOutput(const ResourceID & _destTexResID);
 

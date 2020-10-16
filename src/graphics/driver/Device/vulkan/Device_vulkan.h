@@ -18,6 +18,8 @@ namespace vg::graphics::driver::vulkan
 		void							init							(const DeviceParams & _params);
 		void							deinit							();
 
+        void                            resize                          (core::uint _width, core::uint _height);
+
 		void							beginFrame						();
 		void							endFrame						();
 
@@ -53,6 +55,8 @@ namespace vg::graphics::driver::vulkan
 
         bool                            enableInstanceLayer             (const char * _layerName);
 
+        void                            createVulkanBackbuffers         ();
+        void                            destroyVulkanBackbuffers        ();
         VkSwapchainKHR                  getVulkanSwapchain              () const { return m_vkSwapchain; }
        
 	//private:

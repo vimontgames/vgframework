@@ -19,6 +19,7 @@ namespace vg::graphics::driver
 
 			const TextureDesc & getTexDesc() const { return m_texDesc; }
             const driver::Resource & getResource() const { return m_resource; }
+            driver::Resource & getResource() { return m_resource; }
             const driver::BindlessTextureSrvHandle getBindlessSRVHandle() const { return m_bindlessSRVHandle; }
 			
         protected:

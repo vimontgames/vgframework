@@ -101,9 +101,23 @@ namespace vg::graphics::renderer
 		m_device.deinit();
 	}
 
+    //--------------------------------------------------------------------------------------
+    void Renderer::resize(core::uint _width, core::uint _height)
+    {
+        m_device.waitGPUIdle();
+        m_device.resize(_width, _height);
+        m_frameGraph.destroyTransientResources();
+    }
+
 	//--------------------------------------------------------------------------------------
 	void Renderer::runOneFrame()
 	{
+        if (m_device.isMinimized())
+        {
+            Sleep(1);
+            return;
+        }
+
         VG_PROFILE_CPU("Renderer");
 
 		m_device.beginFrame();

@@ -106,7 +106,7 @@ namespace vg::graphics::driver::vulkan
 
 		if (_texDesc.isBackbuffer())
 		{
-            m_resource.setVulkanImage(*static_cast<VkImage*>(_initData), nullptr);
+            m_resource.setVulkanImage(*static_cast<VkImage*>(_initData), VK_NULL_HANDLE);
 		}
         else
         {
@@ -132,7 +132,7 @@ namespace vg::graphics::driver::vulkan
             }
             else if (_texDesc.isShaderResource())
             {
-                imgDesc.tiling = VK_IMAGE_TILING_LINEAR;
+                imgDesc.tiling = VK_IMAGE_TILING_OPTIMAL; // VK_IMAGE_TILING_LINEAR;
                 imgDesc.usage = VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_SAMPLED_BIT;
                 imgDesc.initialLayout = VK_IMAGE_LAYOUT_PREINITIALIZED;
             }
@@ -146,7 +146,7 @@ namespace vg::graphics::driver::vulkan
             m_resource.setVulkanImage(vkImage, vmaAlloc);
         }
 
-		if (asBool(BindFlags::ShaderResource & _texDesc.resource.m_bindFlags) || asBool(TextureFlags::Backbuffer & _texDesc.flags))
+		if (_texDesc.isShaderResource() || _texDesc.isBackbuffer())
 		{
             VkImageViewCreateInfo vkImageViewDesc = {};
 
@@ -171,7 +171,7 @@ namespace vg::graphics::driver::vulkan
 
 			VG_ASSERT_VULKAN(vkCreateImageView(device->getVulkanDevice(), &vkImageViewDesc, nullptr, &m_vkImageView));
 
-            if (!asBool(TextureFlags::Backbuffer & _texDesc.flags))
+            if (!_texDesc.isBackbuffer())
             {
                 BindlessTable * bindlessTable = device->getBindlessTable();
                 m_bindlessSRVHandle = bindlessTable->allocBindlessTextureHandle(static_cast<driver::Texture*>(this), _reservedSlot);

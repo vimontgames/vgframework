@@ -29,6 +29,7 @@ namespace vg::graphics::renderer
 
 		void					init				(const RendererParams & _params) override;
 		void					deinit				() override;
+        void                    resize              (core::uint _width, core::uint _height) override;
 		void					runOneFrame			() override;
 		driver::Texture *		getBackbuffer		();
         core::IProfiler *       getProfilerInstance () const override;

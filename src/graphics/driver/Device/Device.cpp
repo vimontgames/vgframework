@@ -288,7 +288,7 @@ namespace vg::graphics::driver
 	//--------------------------------------------------------------------------------------
 	void Device::init(const DeviceParams & _params)
 	{
-		Super::init(_params);
+		super::init(_params);
         VG_PROFILE_INIT();
         m_textureImporter = new TextureImporter();
         m_bindlessTable->init();
@@ -300,8 +300,28 @@ namespace vg::graphics::driver
         waitGPUIdle();
         VG_SAFE_DELETE(m_textureImporter);
         VG_PROFILE_DEINIT();
-		Super::deinit();
+		super::deinit();
 	}
+
+    //--------------------------------------------------------------------------------------
+    void Device::resize(core::uint _width, core::uint _height)
+    {
+        VG_DEBUGPRINT("resize(%u, %u)\n", _width, _height);
+        m_deviceParams.resolution = uint2(_width, _height);
+
+        if (isMinimized())
+            return;
+
+        super::resize(_width, _height);
+
+        waitGPUIdle();
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool Device::isMinimized()
+    {
+        return any(0 == m_deviceParams.resolution);
+    }
 
 	//--------------------------------------------------------------------------------------
 	void Device::beginFrame()
@@ -312,7 +332,7 @@ namespace vg::graphics::driver
         VG_DEBUGPRINT("beginFrame #%u\n{\n", getFrameCounter());
         #endif
 
-		Super::beginFrame();
+		super::beginFrame();
 
         // Copy staging data to GPU textures used for rendering
         flushTextureUploads();
@@ -330,7 +350,7 @@ namespace vg::graphics::driver
 	{
         VG_PROFILE_CPU("Device::endFrame");
 
-		Super::endFrame();
+		super::endFrame();
 
         #if VG_DBG_CPUGPUSYNC
         VG_DEBUGPRINT("}\nendFrame #%u\n", getFrameCounter());

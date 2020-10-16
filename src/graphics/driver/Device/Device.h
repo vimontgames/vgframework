@@ -120,11 +120,13 @@ namespace vg::graphics::driver
 
 	class Device : public VG_GFXAPI::Device, public core::Singleton<Device>
 	{
-		using Super = VG_GFXAPI::Device;
+		using super = VG_GFXAPI::Device;
 
 	public:
 		void		        init			    (const DeviceParams & _params);
 		void		        deinit			    ();
+
+        void                resize              (core::uint _width, core::uint _height);
 
 		void		        beginFrame		    ();
 		void		        endFrame		    ();
@@ -138,6 +140,8 @@ namespace vg::graphics::driver
         core::uint          removeRootSignature (RootSignatureHandle & _handle);
 
         void                flushTextureUploads ();
+
+        bool                isMinimized         ();
 
 	private:
         TextureImporter *   m_textureImporter = nullptr;

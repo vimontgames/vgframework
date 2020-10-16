@@ -367,18 +367,11 @@ namespace vg::graphics::driver::vulkan
 		createCommandQueues();
 		createVulkanDevice();
 		createSwapchain();
+
+        for (uint i = 0; i < max_frame_latency; ++i)
+            createFrameContext(i);
 		
-		VkImage * swapchainImages = (VkImage *)malloc(swapchainImageCount * sizeof(VkImage));
-		assert(swapchainImages);
-		VG_ASSERT_VULKAN(m_KHR_Swapchain.m_pfnGetSwapchainImagesKHR(m_vkDevice, m_vkSwapchain, &swapchainImageCount, swapchainImages));
-
-		for (uint i = 0; i < max_frame_latency; ++i)
-			createFrameContext(i);
-
-        for (uint i = 0; i < max_backbuffer_count; ++i)
-            createBackbuffer(i, &swapchainImages[i]);
-
-		VG_SAFE_FREE(swapchainImages);
+        createVulkanBackbuffers();
 
         m_bindlessTable = new driver::BindlessTable();
 
@@ -726,19 +719,26 @@ namespace vg::graphics::driver::vulkan
 
 		// If we just re-created an existing swapchain, we should destroy the old swapchain at this point.
 		// Note: destroying the swapchain also cleans up all its associated presentable images once the platform is done with them.
-		if (oldSwapchain != VK_NULL_HANDLE) 
-			m_KHR_Swapchain.m_pfnDestroySwapchainKHR(m_vkDevice, oldSwapchain, nullptr);
+        if (oldSwapchain != VK_NULL_HANDLE)
+        {
+            m_KHR_Swapchain.m_pfnDestroySwapchainKHR(m_vkDevice, oldSwapchain, nullptr);
+        
+            for (uint i = 0; i < countof(m_bufferContext); ++i)
+            {
+                m_bufferContext[i].backbuffer->getResource().setVulkanImage(VK_NULL_HANDLE, VK_NULL_HANDLE);
+                VG_SAFE_RELEASE(m_bufferContext[i].backbuffer);
+            }
+        }
 
 		VG_ASSERT_VULKAN(m_KHR_Swapchain.m_pfnGetSwapchainImagesKHR(m_vkDevice, m_vkSwapchain, &swapchainImageCount, nullptr));
 		
 		VG_SAFE_FREE(presentModes);
 	}
 
-	static VkSurfaceFormatKHR pick_surface_format(const VkSurfaceFormatKHR *surfaceFormats, uint32_t count) 
+    //--------------------------------------------------------------------------------------
+    static VkSurfaceFormatKHR pick_surface_format(const VkSurfaceFormatKHR *surfaceFormats, uint32_t count)
 	{
 		// Prefer non-SRGB formats...
-		
-
 		return surfaceFormats[0];
 	}
 
@@ -884,6 +884,26 @@ namespace vg::graphics::driver::vulkan
             vkWaitForFences(m_vkDevice, 1, &fences[i], VK_TRUE, UINT64_MAX);
     }
 
+    //--------------------------------------------------------------------------------------
+    void Device::createVulkanBackbuffers()
+    {
+        VkImage * swapchainImages = (VkImage *)malloc(swapchainImageCount * sizeof(VkImage));
+        assert(swapchainImages);
+        VG_ASSERT_VULKAN(m_KHR_Swapchain.m_pfnGetSwapchainImagesKHR(m_vkDevice, m_vkSwapchain, &swapchainImageCount, swapchainImages));
+
+        for (uint i = 0; i < max_backbuffer_count; ++i)
+            createBackbuffer(i, &swapchainImages[i]);
+
+        VG_SAFE_FREE(swapchainImages);
+    }
+
+    //--------------------------------------------------------------------------------------
+    void Device::destroyVulkanBackbuffers()
+    {
+        for (uint i = 0; i < countof(m_bufferContext); ++i)
+            destroyBackbuffer(i);
+    }
+
 	//--------------------------------------------------------------------------------------
 	void Device::deinit()
 	{
@@ -906,8 +926,7 @@ namespace vg::graphics::driver::vulkan
 		for (uint i = 0; i < countof(m_frameContext); ++i)
 			destroyFrameContext(i);
 
-        for (uint i = 0; i < countof(m_bufferContext); ++i)
-            destroyBackbuffer(i);
+        destroyVulkanBackbuffers();
 
         VG_SAFE_DELETE(m_bindlessTable);
         VG_SAFE_RELEASE(m_memoryAllocator);
@@ -949,6 +968,13 @@ namespace vg::graphics::driver::vulkan
         return m_memoryAllocator->getVulkanMemoryAllocator(); 
     }
 
+    //--------------------------------------------------------------------------------------
+    void Device::resize(core::uint _width, core::uint _height)
+    {
+        createSwapchain();
+        createVulkanBackbuffers();   
+    }
+
 	//--------------------------------------------------------------------------------------
 	void Device::beginFrame()
 	{
@@ -973,7 +999,22 @@ namespace vg::graphics::driver::vulkan
         m_currentFrameIndex = FrameIndex;
 
         u32 currentBuffer;
-        VG_ASSERT_VULKAN(m_KHR_Swapchain.m_pfnAcquireNextImageKHR(vkDevice, m_vkSwapchain, UINT64_MAX, image_acquired_semaphores[FrameIndex], VK_NULL_HANDLE, &currentBuffer));
+        switch (m_KHR_Swapchain.m_pfnAcquireNextImageKHR(vkDevice, m_vkSwapchain, UINT64_MAX, image_acquired_semaphores[FrameIndex], VK_NULL_HANDLE, &currentBuffer))
+        {
+            default:
+                VG_ASSERT(false);
+
+            case VK_ERROR_OUT_OF_DATE_KHR:
+            case VK_SUBOPTIMAL_KHR:
+            case VK_ERROR_SURFACE_LOST_KHR:
+                //destroyVulkanBackbuffers();
+                //createVulkanBackbuffers();
+                break;
+
+            case VK_SUCCESS:
+                break;
+        }
+
         m_currentBackbufferIndex = currentBuffer;
 
         auto & context = getCurrentFrameContext();

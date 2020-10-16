@@ -154,14 +154,17 @@ namespace vg::graphics::driver
 	FrameGraph::~FrameGraph()
 	{
         cleanup();
-
-        // destroy transient
-        for (SharedTexture & shared : m_sharedTextures)
-        {
-            VG_SAFE_RELEASE(shared.tex);
-        }
-        m_sharedTextures.clear();
+        destroyTransientResources();        
 	}
+
+    //--------------------------------------------------------------------------------------
+    void FrameGraph::destroyTransientResources()
+    {
+        for (SharedTexture & shared : m_sharedTextures)
+            VG_SAFE_RELEASE(shared.tex);
+
+        m_sharedTextures.clear();
+    }
 
 	//--------------------------------------------------------------------------------------
 	void FrameGraph::cleanup()

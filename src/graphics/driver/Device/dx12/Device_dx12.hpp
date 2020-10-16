@@ -122,24 +122,18 @@ namespace vg::graphics::driver::dx12
 
         // Rendertarget CPU descriptor heap
 		D3D12_DESCRIPTOR_HEAP_DESC heapDesc = {};
-		heapDesc.NumDescriptors = m_renderTargetDescriptorAllocated;
+		heapDesc.NumDescriptors = (uint)m_RTVHandleIndexPool.allocated();
 		heapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_RTV;
 		heapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
-		VG_ASSERT_SUCCEEDED(device->CreateDescriptorHeap(&heapDesc, IID_PPV_ARGS(&m_renderTargetDescriptorHeap)));
-		m_renderTargetDescriptorSize = device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
+		VG_ASSERT_SUCCEEDED(device->CreateDescriptorHeap(&heapDesc, IID_PPV_ARGS(&m_RTVDescriptorHeap)));
+		m_RTVDescriptorSize = device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
 
 		// For now just create command pools to handle latency
 		// We'll need later to have one per thread recording command buffers
 		for (uint i = 0; i < max_frame_latency; ++i)
 			createFrameContext(i);
 
-        for (uint i = 0; i < max_backbuffer_count; ++i)
-        {
-            ID3D12Resource * d3d12backbufferResource = nullptr;
-            m_dxgiSwapChain->GetBuffer(i, IID_PPV_ARGS(&d3d12backbufferResource));
-            createBackbuffer(i, d3d12backbufferResource);
-            d3d12backbufferResource->Release();
-        }
+        created3d12Backbuffers();
 
         m_bindlessTable = new driver::BindlessTable();
 	}
@@ -149,37 +143,36 @@ namespace vg::graphics::driver::dx12
 	{
 		VG_ASSERT(core::invalidWindowHandle != _winHandle);
 
-		DXGI_SWAP_CHAIN_DESC1 swapChainDesc;
-		::ZeroMemory(&swapChainDesc, sizeof(swapChainDesc));
+		::ZeroMemory(&m_dxgiSwapChainDesc, sizeof(m_dxgiSwapChainDesc));
 
         m_backbufferFormat = PixelFormat::R8G8B8A8_unorm;
 
 		const bool fullScreen = false; // TODO
 
-		swapChainDesc.Width = _width;
-		swapChainDesc.Height = _height;
-		swapChainDesc.Format = Texture::getd3d12PixelFormat(m_backbufferFormat);
-		swapChainDesc.Stereo = false;
-		swapChainDesc.Scaling = DXGI_SCALING_STRETCH;
-		swapChainDesc.SampleDesc.Quality = 0;
-		swapChainDesc.SampleDesc.Count = 1;
-		swapChainDesc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
-		swapChainDesc.BufferCount = max_backbuffer_count;
-		swapChainDesc.SwapEffect = DXGI_SWAP_EFFECT_FLIP_DISCARD;
-		swapChainDesc.AlphaMode = DXGI_ALPHA_MODE_UNSPECIFIED;
-		//swapChainDesc.Flags = DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH | DXGI_SWAP_CHAIN_FLAG_ALLOW_TEARING /*| DXGI_SWAP_CHAIN_FLAG_FRAME_LATENCY_WAITABLE_OBJECT*/;
-        swapChainDesc.Flags |= DXGI_SWAP_CHAIN_FLAG_FRAME_LATENCY_WAITABLE_OBJECT;
-		swapChainDesc.Flags |= fullScreen ? DXGI_SWAP_CHAIN_FLAG_FULLSCREEN_VIDEO : 0;
+		m_dxgiSwapChainDesc.Width = _width;
+		m_dxgiSwapChainDesc.Height = _height;
+		m_dxgiSwapChainDesc.Format = Texture::getd3d12PixelFormat(m_backbufferFormat);
+		m_dxgiSwapChainDesc.Stereo = false;
+		m_dxgiSwapChainDesc.Scaling = DXGI_SCALING_STRETCH;
+		m_dxgiSwapChainDesc.SampleDesc.Quality = 0;
+		m_dxgiSwapChainDesc.SampleDesc.Count = 1;
+		m_dxgiSwapChainDesc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
+		m_dxgiSwapChainDesc.BufferCount = max_backbuffer_count;
+		m_dxgiSwapChainDesc.SwapEffect = DXGI_SWAP_EFFECT_FLIP_DISCARD;
+		m_dxgiSwapChainDesc.AlphaMode = DXGI_ALPHA_MODE_UNSPECIFIED;
+		//m_dxgiSwapChainDesc.Flags = DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH | DXGI_SWAP_CHAIN_FLAG_ALLOW_TEARING /*| DXGI_SWAP_CHAIN_FLAG_FRAME_LATENCY_WAITABLE_OBJECT*/;
+        m_dxgiSwapChainDesc.Flags |= DXGI_SWAP_CHAIN_FLAG_FRAME_LATENCY_WAITABLE_OBJECT;
+        m_dxgiSwapChainDesc.Flags |= fullScreen ? DXGI_SWAP_CHAIN_FLAG_FULLSCREEN_VIDEO : 0;
 
 		auto * graphicsQueue = getCommandQueue(CommandQueueType::Graphics);
 
-		VG_ASSERT_SUCCEEDED(m_dxgiFactory->CreateSwapChainForHwnd(graphicsQueue->getd3d12CommandQueue(), _winHandle, &swapChainDesc, nullptr, nullptr, (IDXGISwapChain1**)&m_dxgiSwapChain));
+		VG_ASSERT_SUCCEEDED(m_dxgiFactory->CreateSwapChainForHwnd(graphicsQueue->getd3d12CommandQueue(), _winHandle, &m_dxgiSwapChainDesc, nullptr, nullptr, (IDXGISwapChain1**)&m_dxgiSwapChain));
         
         VG_ASSERT_SUCCEEDED(m_dxgiFactory->MakeWindowAssociation(_winHandle, DXGI_MWA_NO_WINDOW_CHANGES | DXGI_MWA_NO_ALT_ENTER | DXGI_MWA_NO_PRINT_SCREEN));
 
         m_currentBackbufferIndex = m_dxgiSwapChain->GetCurrentBackBufferIndex();
 
-        if (swapChainDesc.Flags & DXGI_SWAP_CHAIN_FLAG_FRAME_LATENCY_WAITABLE_OBJECT)
+        if (m_dxgiSwapChainDesc.Flags & DXGI_SWAP_CHAIN_FLAG_FRAME_LATENCY_WAITABLE_OBJECT)
         {
             VG_ASSERT_SUCCEEDED(m_dxgiSwapChain->SetMaximumFrameLatency(max_frame_latency));
             //mSwapEvent = m_dxgiSwapChain->GetFrameLatencyWaitableObject();
@@ -209,12 +202,11 @@ namespace vg::graphics::driver::dx12
 	//--------------------------------------------------------------------------------------
 	D3D12_CPU_DESCRIPTOR_HANDLE Device::allocRTVHandle(core::uint _count)
 	{
-		VG_ASSERT(m_renderTargetDescriptorUsed + _count <= m_renderTargetDescriptorAllocated);
-		VG_ASSERT(s_invalidRenderTargetDescriptorSize != m_renderTargetDescriptorSize);
+		VG_ASSERT(0 != m_RTVDescriptorSize);
 
-		D3D12_CPU_DESCRIPTOR_HANDLE handle = { m_renderTargetDescriptorHeap->GetCPUDescriptorHandleForHeapStart() };
-		handle.ptr += m_renderTargetDescriptorUsed * m_renderTargetDescriptorSize;
-		m_renderTargetDescriptorUsed += _count;
+        const auto index = m_RTVHandleIndexPool.alloc();
+		D3D12_CPU_DESCRIPTOR_HANDLE handle = { m_RTVDescriptorHeap->GetCPUDescriptorHandleForHeapStart() };
+		handle.ptr += index * m_RTVDescriptorSize;
 
 		return handle;
 	}
@@ -222,7 +214,9 @@ namespace vg::graphics::driver::dx12
 	//--------------------------------------------------------------------------------------
 	void Device::freeRTVHandle(D3D12_CPU_DESCRIPTOR_HANDLE & _hRTV)
 	{
-		// TODO
+        D3D12_CPU_DESCRIPTOR_HANDLE start = { m_RTVDescriptorHeap->GetCPUDescriptorHandleForHeapStart() };
+        const auto index = (_hRTV.ptr - start.ptr) / m_RTVDescriptorSize;
+        m_RTVHandleIndexPool.free((u16)index);
 	}
 
     //--------------------------------------------------------------------------------------
@@ -240,7 +234,7 @@ namespace vg::graphics::driver::dx12
             {
                 auto * d3d12queue = queue->getd3d12CommandQueue();
 
-                static UINT64 exit_fence = 0;
+                u64 exit_fence = m_nextFrameFence+1;
                 d3d12queue->Signal(m_d3d12fence, exit_fence);
                 m_d3d12fence->SetEventOnCompletion(exit_fence, m_d3d12fenceEvent);
                 WaitForSingleObject(m_d3d12fenceEvent, INFINITE);
@@ -254,10 +248,9 @@ namespace vg::graphics::driver::dx12
         for (uint i = 0; i < countof(m_frameContext); ++i)
             destroyFrameContext(i);
 
-        for (uint i = 0; i < countof(m_bufferContext); ++i)
-            destroyBackbuffer(i);
+        destroyd3d12Backbuffers();
 
-		VG_SAFE_RELEASE(m_renderTargetDescriptorHeap);
+		VG_SAFE_RELEASE(m_RTVDescriptorHeap);
         VG_SAFE_RELEASE(m_d3d12fence);
 		VG_SAFE_RELEASE(m_dxgiSwapChain);
 
@@ -280,6 +273,38 @@ namespace vg::graphics::driver::dx12
 
 		super::deinit();
 	}
+
+    //--------------------------------------------------------------------------------------
+    void Device::resize(core::uint _width, core::uint _height)
+    {
+        destroyd3d12Backbuffers();
+
+        m_dxgiSwapChainDesc.Width = _width;
+        m_dxgiSwapChainDesc.Height = _height;
+
+        VG_ASSERT_SUCCEEDED(m_dxgiSwapChain->ResizeBuffers(max_backbuffer_count, m_dxgiSwapChainDesc.Width, m_dxgiSwapChainDesc.Height, Texture::getd3d12PixelFormat(m_backbufferFormat), m_dxgiSwapChainDesc.Flags));
+
+        created3d12Backbuffers();
+    }
+
+    //--------------------------------------------------------------------------------------
+    void Device::created3d12Backbuffers()
+    {
+        for (uint i = 0; i < max_backbuffer_count; ++i)
+        {
+            ID3D12Resource * d3d12backbufferResource = nullptr;
+            m_dxgiSwapChain->GetBuffer(i, IID_PPV_ARGS(&d3d12backbufferResource));
+            createBackbuffer(i, d3d12backbufferResource);
+            d3d12backbufferResource->Release();
+        }
+    }
+
+    //--------------------------------------------------------------------------------------
+    void Device::destroyd3d12Backbuffers()
+    {
+        for (uint i = 0; i < countof(m_bufferContext); ++i)
+            destroyBackbuffer(i);
+    }
 
 	//--------------------------------------------------------------------------------------
     D3D12Device * Device::getd3d12Device() const

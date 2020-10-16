@@ -38,6 +38,15 @@ namespace vg::engine
 
         switch (message)
         {
+            case WM_SIZE:
+                if (m_renderer)
+                {
+                    const uint width = uint(lParam & 0xFFFF);
+                    const uint height = uint(lParam >> 16);
+                    m_renderer->resize(width, height);
+                }
+                break;
+
             case WM_KEYDOWN:
                 switch (wParam)
                 {
