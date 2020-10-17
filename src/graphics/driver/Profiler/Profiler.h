@@ -5,11 +5,6 @@
 
 #define VG_ENABLE_OPTICK
 
-// test
-#define OPTICK_GPU_EVENT_DYNAMIC(NAME)	 OPTICK_EVENT_DYNAMIC(NAME); \
-									 ::Optick::EventDescription* OPTICK_CONCAT(gpu_autogen_description_, __LINE__) = ::Optick::EventDescription::CreateShared( NAME, __FILE__, __LINE__); \
-									 ::Optick::GPUEvent OPTICK_CONCAT(gpu_autogen_event_, __LINE__)( *(OPTICK_CONCAT(gpu_autogen_description_, __LINE__)) ); \
-
 #ifdef VG_ENABLE_OPTICK
 #include "optick/src/optick.h"
 

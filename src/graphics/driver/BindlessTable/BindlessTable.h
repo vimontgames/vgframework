@@ -4,7 +4,8 @@
 #include "core/Pool/IndexPool.h"
 #include "BindlessTable_consts.h"
 #include "graphics/driver/RootSignature/RootSignatureTableDesc.h"
-#include "Shaders/driver/bindless.hlsli"
+
+#include "Shaders/system/bindless.hlsli"
 
 namespace vg::graphics::driver
 {

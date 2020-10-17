@@ -353,8 +353,6 @@ namespace vg::graphics::driver::dx12
 			for (auto & cmdList : context.commandLists[type])
 				cmdList->reset();
 
-        m_bindlessTable->beginFrame();
-
 		auto * commandList = context.commandLists[asInteger(CommandListType::Graphics)][0]->getd3d12GraphicsCommandList();
 
 		// Transition back buffer

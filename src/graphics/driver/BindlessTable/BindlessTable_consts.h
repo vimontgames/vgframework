@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Shaders/driver/bindless.hlsli"
+#include "Shaders/system/bindless.hlsli"
 
 namespace vg::graphics::driver
 {

@@ -2,8 +2,9 @@
 #include "BindlessTable.h"
 #include "graphics/driver/device/Device.h"
 #include "graphics/driver/Resource/Texture.h"
-#include "Shaders/driver/bindless.hlsli"
 #include "core/Math/Math.h"
+
+#include "Shaders/system/bindless.hlsli"
 
 using namespace vg::core;
 

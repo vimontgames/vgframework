@@ -35,12 +35,25 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "shaders", "shaders", "{3A24
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "driver", "driver", "{F9214EBF-2727-4CEE-A759-F8154BD904EC}"
 	ProjectSection(SolutionItems) = preProject
-		data\Shaders\driver\bindless.hlsli = data\Shaders\driver\bindless.hlsli
 		data\Shaders\driver\driver.hlsl = data\Shaders\driver\driver.hlsl
 		data\Shaders\driver\driver.hlsl.h = data\Shaders\driver\driver.hlsl.h
 		data\Shaders\driver\driver.hlsli = data\Shaders\driver\driver.hlsli
-		data\Shaders\driver\samplers.hlsli = data\Shaders\driver\samplers.hlsli
-		data\Shaders\driver\semantics.hlsli = data\Shaders\driver\semantics.hlsli
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "background", "background", "{06052575-08B6-41A6-9E38-E1171229FF9C}"
+	ProjectSection(SolutionItems) = preProject
+		data\Shaders\background\background.hlsl = data\Shaders\background\background.hlsl
+		data\Shaders\background\background.hlsl.h = data\Shaders\background\background.hlsl.h
+		data\Shaders\background\background.hlsli = data\Shaders\background\background.hlsli
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "system", "system", "{4506A0AF-27FD-468A-85BB-444584048396}"
+	ProjectSection(SolutionItems) = preProject
+		data\Shaders\system\bindless.hlsli = data\Shaders\system\bindless.hlsli
+		data\Shaders\system\constants.hlsli = data\Shaders\system\constants.hlsli
+		data\Shaders\system\quad.hlsli = data\Shaders\system\quad.hlsli
+		data\Shaders\system\samplers.hlsli = data\Shaders\system\samplers.hlsli
+		data\Shaders\system\semantics.hlsli = data\Shaders\system\semantics.hlsli
 	EndProjectSection
 EndProject
 Global
@@ -100,6 +113,8 @@ Global
 		{51C074CB-0146-4324-9D1E-EB8192BF6673} = {A4E86800-986B-4443-83CF-FC8A5190D8F8}
 		{3A24AFD2-079B-45FC-8488-70058ACACD89} = {AE20161D-322E-4F0C-AC90-8EBDF6B42882}
 		{F9214EBF-2727-4CEE-A759-F8154BD904EC} = {3A24AFD2-079B-45FC-8488-70058ACACD89}
+		{06052575-08B6-41A6-9E38-E1171229FF9C} = {3A24AFD2-079B-45FC-8488-70058ACACD89}
+		{4506A0AF-27FD-468A-85BB-444584048396} = {3A24AFD2-079B-45FC-8488-70058ACACD89}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {B437215B-B736-4FF0-8DA1-E6B35C780CE1}

@@ -1,6 +1,7 @@
-#include "bindless.hlsli"
-#include "semantics.hlsli"
-#include "samplers.hlsli"
+#include "../system/bindless.hlsli"
+#include "../system/semantics.hlsli"
+#include "../system/samplers.hlsli"
+
 #include "driver.hlsli"
 
 struct VS_Output_Quad
@@ -13,13 +14,8 @@ VS_Output_Quad VS_Quad(uint _vertexID : VertexID)
 {
     VS_Output_Quad output;
 
-    float2 tmp = float2(_vertexID & 1, (_vertexID & 2) >> 1);
-    float2 uv = tmp * asfloat(rootConstants.uvScale) + asfloat(rootConstants.uvOffset);
-    output.uv = uv;
-    
-    float2 pos = tmp * asfloat(rootConstants.posScale) + asfloat(rootConstants.posOffset);
-           pos = float2(pos.x, 1 - pos.y);
-    output.pos = float4(pos * 2 - 1, 0, 1);
+    output.uv = rootConstants.quad.getUV0(_vertexID);
+    output.pos = rootConstants.quad.getPosition(_vertexID);
 
     return output;
 }
@@ -41,7 +37,7 @@ PS_Output_Quad PS_Quad(VS_Output_Quad _input)
 
     //output.color0 *= asfloat(BufferTable[0].Load(0)); 
 
-    output.color0.rgb = lerp(dot(output.color0.rgb, 1.0 / 3.0), output.color0.rgb, 1-frac(uv.y));
+   // output.color0.rgb = lerp(dot(output.color0.rgb, 1.0 / 3.0), output.color0.rgb, 1-frac(uv.y));
 
     return output;
 }

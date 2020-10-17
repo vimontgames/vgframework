@@ -196,7 +196,7 @@ namespace vg::graphics::renderer
         if (firstFrame)
         {
             BindlessTable * bindlessTable = device->getBindlessTable();
-            bindlessTable->setd3d12GPUDescriptorDirty(m_fontTexSRVHandle);
+            bindlessTable->updated3d12descriptor(m_fontTexSRVHandle);
 
             firstFrame = false;
         }

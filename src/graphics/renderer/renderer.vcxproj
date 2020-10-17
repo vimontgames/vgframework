@@ -35,6 +35,8 @@
   <ItemGroup>
     <ClInclude Include="Imgui\imguiAdapter.h" />
     <ClInclude Include="IRenderer.h" />
+    <ClInclude Include="Pass\BackgroundPass.h" />
+    <ClInclude Include="Pass\BackgroundPass.hpp" />
     <ClInclude Include="Pass\ImguiPass.h" />
     <ClInclude Include="Pass\ImguiPass.hpp" />
     <ClInclude Include="Pass\PostProcessPass.h" />

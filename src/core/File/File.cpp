@@ -6,7 +6,7 @@
 namespace vg::core
 {
     //--------------------------------------------------------------------------------------
-    bool readFile(const core::string & _path, core::string & _out)
+    bool readFile(const core::string & _path, core::string & _out, bool _mustExist)
     {
         using namespace std;
 
@@ -30,7 +30,7 @@ namespace vg::core
             }
         }
 
-        VG_ASSERT(file.is_open(), "Could not read file \"%s\"", _path.c_str());
+        VG_ASSERT(!_mustExist || file.is_open(), "Could not read file \"%s\"", _path.c_str());
         return false;
     }
 

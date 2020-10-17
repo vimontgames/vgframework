@@ -18,6 +18,7 @@
 using namespace vg::core;
 using namespace vg::graphics::driver;
 
+#include "BackgroundPass.hpp"
 #include "TestPass.hpp"
 #include "PostProcessPass.hpp"
 #include "ImguiPass.hpp"

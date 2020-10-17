@@ -39,6 +39,12 @@
     <ClInclude Include="Pass\PostProcessPass.hpp">
       <Filter>Pass</Filter>
     </ClInclude>
+    <ClInclude Include="Pass\BackgroundPass.h">
+      <Filter>Pass</Filter>
+    </ClInclude>
+    <ClInclude Include="Pass\BackgroundPass.hpp">
+      <Filter>Pass</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Pass">

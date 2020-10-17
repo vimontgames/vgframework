@@ -561,10 +561,9 @@ namespace vg::graphics::driver
         VG_PROFILE_GPU_CONTEXT(cmdList);
         VG_PROFILE_GPU("render");
 
-		for (RenderPass * renderPass : m_renderPasses)
+		for (uint j = 0; j < m_renderPasses.size(); ++j)
 		{
-            //VG_PROFILE_GPU("Pass");
-
+            RenderPass * renderPass = m_renderPasses[j];
             const auto & subPasses = renderPass->getSubPasses();
 
             // allocate all transient resources that will be required during the subpasses before beginning the renderpass

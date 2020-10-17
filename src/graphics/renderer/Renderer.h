@@ -15,6 +15,7 @@ namespace vg::graphics::renderer
 {
     class ImguiAdapter;
 
+    class BackgroundPass;
     class TestPass;
     class PostProcessPass;
     class ImguiPass;
@@ -50,8 +51,9 @@ namespace vg::graphics::renderer
         ImguiAdapter *          m_imgui = nullptr;
 		driver::FrameGraph &	m_frameGraph;
 
-        TestPass *              m_testPass = nullptr;
-        PostProcessPass *       m_postProcessPass = nullptr;
-        ImguiPass *             m_imguiPass = nullptr;
+        BackgroundPass *        m_backgroundPass    = nullptr;
+        TestPass *              m_testPass          = nullptr;
+        PostProcessPass *       m_postProcessPass   = nullptr;
+        ImguiPass *             m_imguiPass         = nullptr;
 	};
 }

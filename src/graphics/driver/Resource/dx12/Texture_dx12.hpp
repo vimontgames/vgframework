@@ -189,7 +189,7 @@ namespace vg::graphics::driver::dx12
             if (nullptr == _initData && asBool(BindFlags::ShaderResource & _texDesc.resource.m_bindFlags))
             {
                 auto * bindlessTable = device->getBindlessTable();
-                bindlessTable->setd3d12GPUDescriptorDirty(getBindlessSRVHandle());
+                bindlessTable->updated3d12descriptor(getBindlessSRVHandle());
             }
         }
 

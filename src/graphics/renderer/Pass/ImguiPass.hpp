@@ -263,7 +263,6 @@ namespace vg::graphics::renderer
     //--------------------------------------------------------------------------------------
     void ImguiPass::draw(driver::CommandList * _cmdList) const
     {
-        //VG_PROFILE_GPU("Dear ImGui");
         Renderer::get()->getImGuiAdapter()->render(_cmdList);
     }
 }
