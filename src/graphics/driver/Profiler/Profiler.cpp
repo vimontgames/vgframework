@@ -26,6 +26,8 @@ using namespace vg::core;
 
 namespace vg::graphics::driver
 {
+    ProfilerContext Profiler::s_contextTLS;
+
     //--------------------------------------------------------------------------------------
     void Profiler::init()
     {
@@ -96,7 +98,6 @@ namespace vg::graphics::driver
         m_isCaptureInProgress = false;
         OPTICK_STOP_CAPTURE();
         VG_DEBUGPRINT("Stop profile capture\n");
-        
         time_t now = time(0);
 		struct tm tstruct;
         #if defined(OPTICK_MSVC)
@@ -107,8 +108,7 @@ namespace vg::graphics::driver
         char timeStr[80] = {};
 		strftime(timeStr, sizeof(timeStr), "%dd%mm%Yy%Hh%Mm%Ss", &tstruct);
         char filename[256] = {};
-        sprintf(filename, "capture/vgframework_%s_%s_%s_%s.opt", Plugin::getPlatform().c_str(), Plugin::getConfiguration().c_str(), asString(Device::get()->getDeviceParams().api).c_str(), timeStr);
-        system("mkdir capture");
+        sprintf(filename, "vgframework_%s_%s_%s_%s.opt", Plugin::getPlatform().c_str(), Plugin::getConfiguration().c_str(), asString(Device::get()->getDeviceParams().api).c_str(), timeStr);
         OPTICK_SAVE_CAPTURE(filename);
         VG_DEBUGPRINT("Save and open profile capture \"%s\"\n", filename);
         char command[256];
@@ -132,6 +132,22 @@ namespace vg::graphics::driver
     void Profiler::stopCpuEvent()
     {
         OPTICK_POP();
+    }
+
+    //--------------------------------------------------------------------------------------
+    void Profiler::startGpuEvent(const char * _name)
+    {
+        #ifdef VG_ENABLE_GPU_MARKER
+        getCommandList()->beginGPUEvent(_name, 0xFFFFFFFF);
+        #endif
+    }
+
+    //--------------------------------------------------------------------------------------
+    void Profiler::stopGpuEvent()
+    {
+        #ifdef VG_ENABLE_GPU_MARKER
+        getCommandList()->endGPUEvent();
+        #endif
     }
 }
 

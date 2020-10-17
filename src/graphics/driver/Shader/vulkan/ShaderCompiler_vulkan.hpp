@@ -44,7 +44,7 @@ namespace vg::graphics::driver::vulkan
     }
 
     //--------------------------------------------------------------------------------------
-    driver::Shader * ShaderCompiler::compile(const core::string & _path, const core::string & _entryPoint, ShaderStage _stage, vector<pair<string, uint>> & _macros, core::string & _warningAndErrors)
+    driver::Shader * ShaderCompiler::compile(const core::string & _path, const core::string & _entryPoint, ShaderStage _stage, const vector<pair<string, uint>> & _macros, core::string & _warningAndErrors)
     {
         string source;
         if (readFile(_path, source))

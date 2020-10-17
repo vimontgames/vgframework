@@ -34,6 +34,9 @@ namespace vg::graphics::driver::vulkan
         void                                copyBuffer                  (driver::Buffer * _dst, core::u32 _from);
         void                                copyTexture                 (driver::Texture * _dst, core::u32 _from);
 
+        void                                beginGPUEvent               (const char * _name, core::u32 _color);
+        void                                endGPUEvent                 ();
+
 		VkCommandBuffer &					getVulkanCommandBuffer      () { return m_vkCommandBuffer;  }
 
 	private:

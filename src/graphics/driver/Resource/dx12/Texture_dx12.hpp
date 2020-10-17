@@ -118,7 +118,7 @@ namespace vg::graphics::driver::dx12
         {
             ID3D12Resource * backbufferResource = static_cast<ID3D12Resource*>(_initData);
             VG_ASSERT(backbufferResource);
-            m_resource.setd3d12TextureResource(backbufferResource, nullptr);
+            m_resource.setd3d12TextureResource(_name, backbufferResource, nullptr);
         }
         else
         {
@@ -136,7 +136,7 @@ namespace vg::graphics::driver::dx12
             ID3D12Resource * resource;
             D3D12MA::Allocation * alloc;
             VG_ASSERT_SUCCEEDED(allocator->CreateResource(&allocDesc, &resourceDesc, initState, nullptr, &alloc, IID_PPV_ARGS(&resource)));
-            m_resource.setd3d12TextureResource(resource, alloc);
+            m_resource.setd3d12TextureResource(_name, resource, alloc);
         }
 
         if (asBool(BindFlags::ShaderResource & _texDesc.resource.m_bindFlags))
@@ -234,14 +234,8 @@ namespace vg::graphics::driver::dx12
 			device->freeRTVHandle(m_d3d12RTVHandle);
 
         if (asBool(TextureFlags::Backbuffer & getTexDesc().flags))
-            m_resource.setd3d12TextureResource(nullptr, nullptr); // Do not release backbuffer
+            m_resource.setd3d12TextureResource("", nullptr, nullptr); // Do not release backbuffer
 	}
-
-    //--------------------------------------------------------------------------------------
-    //const D3D12_CPU_DESCRIPTOR_HANDLE & Texture::getd3d12SRVHandle() const
-    //{
-    //    return m_d3d12SRVHandle;
-    //}
 
 	//--------------------------------------------------------------------------------------
 	const D3D12_CPU_DESCRIPTOR_HANDLE & Texture::getd3d12RTVHandle() const

@@ -15,7 +15,7 @@
 #define VG_PROFILE_TRIGGER()                if (Kernel::getProfiler()->isCaptureInProgress()) VG_PROFILE_STOP(); else VG_PROFILE_START();
 #define VG_PROFILE_CPU_EVENT_START(name)    Kernel::getProfiler()->startCpuEvent(name)
 #define VG_PROFILE_CPU_EVENT_STOP()         Kernel::getProfiler()->stopCpuEvent()
-#define VG_PROFILE_CPU(name)                vg::core::ScopedEvent scopedEvent##__COUNTER__(name)
+#define VG_PROFILE_CPU(name)                vg::core::ScopedCPUEvent scopedCPUEvent##__COUNTER__(name)
 
 #else
 
@@ -45,20 +45,22 @@ namespace vg::core
         virtual bool isCaptureInProgress    () const = 0;
         virtual void startCpuEvent          (const char * _name) = 0;
         virtual void stopCpuEvent           () = 0;
+        virtual void startGpuEvent          (const char * _name) = 0;
+        virtual void stopGpuEvent           () = 0;
 
         virtual ~IProfiler() {}
     };
 
-    class ScopedEvent
+    class ScopedCPUEvent
     {
     public:
-        inline ScopedEvent(const char * _name) :
+        inline ScopedCPUEvent(const char * _name) :
             m_name(_name)
         {
             VG_PROFILE_CPU_EVENT_START(_name);
         }
 
-        inline ~ScopedEvent()
+        inline ~ScopedCPUEvent()
         {
             VG_PROFILE_CPU_EVENT_STOP();
         }

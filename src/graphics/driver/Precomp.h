@@ -24,12 +24,17 @@
 //--------------------------------------------------------------------------------------
 // d3d12
 //--------------------------------------------------------------------------------------
+#if VG_ENABLE_GPU_MARKER 
+#define USE_PIX
+#define PROFILE_BUILD 
+#endif
+
 #include <d3d12.h>
 #include <DXGI1_5.h>
 #include <dxgidebug.h>
 
 #if VG_ENABLE_GPU_MARKER 
-#include <pix_win.h>
+#include "winpixeventruntime\Include\WinPixEventRuntime\pix3.h"
 #endif
 
 #if VG_ENABLE_SHADER_COMPILATION

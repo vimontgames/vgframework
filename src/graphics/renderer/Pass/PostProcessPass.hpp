@@ -39,7 +39,7 @@ namespace vg::graphics::renderer
     //--------------------------------------------------------------------------------------
     void PostProcessPass::draw(CommandList * _cmdList) const
     {
-        VG_PROFILE_GPU("PostProcess");
+        //VG_PROFILE_GPU("PostProcess");
 
         RasterizerState rs(FillMode::Solid, CullMode::None);
 

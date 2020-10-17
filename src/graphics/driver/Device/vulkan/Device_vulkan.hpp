@@ -232,6 +232,7 @@ namespace vg::graphics::driver::vulkan
 		m_instanceExtensionList.registerExtension(m_KHR_Win32_Surface);
 
 		m_deviceExtensionList.registerExtension(m_KHR_Swapchain);
+      
 	}
 
     //--------------------------------------------------------------------------------------
@@ -277,8 +278,9 @@ namespace vg::graphics::driver::vulkan
 		bool validationLayer = _params.debugDevice;
         const char * validationLayerName = "VK_LAYER_KHRONOS_validation";
 
-        if (validationLayer)
-            validationLayer = enableInstanceLayer(validationLayerName);
+        #ifdef VG_ENABLE_GPU_MARKER
+        validationLayer = enableInstanceLayer(validationLayerName);
+        #endif
 
 		// Look for instance extensions 
 		m_instanceExtensionList.init();
@@ -342,8 +344,9 @@ namespace vg::graphics::driver::vulkan
 		// Look for device extensions 	
 		m_deviceExtensionList.init();
 
-		if (validationLayer) 
-			VG_ASSERT_VULKAN(m_EXT_DebugUtils.m_pfnCreateDebugUtilsMessengerEXT(m_vkInstance, &dbg_messenger_create_info, nullptr, &dbg_messenger));
+        #ifdef VG_ENABLE_GPU_MARKER
+        VG_ASSERT_VULKAN(m_EXT_DebugUtils.m_pfnCreateDebugUtilsMessengerEXT(m_vkInstance, &dbg_messenger_create_info, nullptr, &dbg_messenger));
+        #endif
 
 		vkGetPhysicalDeviceProperties(m_vkPhysicalDevice, &m_vkPhysicalDeviceProperties);
 

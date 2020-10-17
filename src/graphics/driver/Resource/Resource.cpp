@@ -1,4 +1,5 @@
 #include "graphics/driver/Precomp.h"
+#include "core/string/string.h"
 #include "graphics/driver/Device/Device.h"
 #include "graphics/driver/Memory/MemoryAllocator.h"
 #include "Resource.h"

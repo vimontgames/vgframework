@@ -105,15 +105,22 @@ namespace vg::graphics::renderer
             {
                 if (ImGui::Begin("About", &m_isAboutWindowVisible))
                 {
+                    float columnWidth[3] = { 256, 128, 512 };
+
                     ImGui::Text("VimontGames Framework:");
                     ImGui::Text("");
  
-                    ImGui::Columns(2, "mycolumns2", false);  
+                    ImGui::Columns(3, "author", false);  
+
+                    ImGui::SetColumnWidth(0, columnWidth[0]);
+                    ImGui::SetColumnWidth(1, columnWidth[1]);
+                    ImGui::SetColumnWidth(2, columnWidth[2]);
                     
                     ImGui::Text("Website");
                     ImGui::Text("Author");
                     ImGui::Text("");
 
+                    ImGui::NextColumn();
                     ImGui::NextColumn();
 
                     ImGui::textURL("github.com/vimontgames/vgframework", "https://github.com/vimontgames/vgframework");
@@ -126,15 +133,27 @@ namespace vg::graphics::renderer
                     ImGui::Text("Software development kits:");
                     ImGui::Text("");
 
-                    ImGui::Columns(2, "mycolumns2", false);
-                    ImGui::SetColumnWidth(0, 200);
+                    ImGui::Columns(3, "SDK", false);
 
+                    ImGui::SetColumnWidth(0, columnWidth[0]);
+                    ImGui::SetColumnWidth(1, columnWidth[1]);
+                    ImGui::SetColumnWidth(2, columnWidth[2]);
+
+                    // name
                     ImGui::Text("Windows 10 SDK");
                     ImGui::Text("Vulkan SDK");
-                    ImGui::Text("");
 
+                    ImGui::Text("");
                     ImGui::NextColumn();
 
+                    // version
+                    ImGui::Text("10.0.17763.0");
+                    ImGui::Text("1.2.148.0");
+
+                    ImGui::Text("");
+                    ImGui::NextColumn();
+
+                    // url
                     ImGui::textURL("developer.microsoft.com/fr-fr/windows/downloads/sdk-archive", "https://developer.microsoft.com/fr-fr/windows/downloads/sdk-archive/");
                     ImGui::textURL("vulkan.lunarg.com/sdk/home", "https://vulkan.lunarg.com/sdk/home");
                     ImGui::Text("");
@@ -145,8 +164,13 @@ namespace vg::graphics::renderer
                     ImGui::Text("Third-party libraries:");
                     ImGui::Text("");
 
-                    ImGui::Columns(2, "mycolumns2", false);
+                    ImGui::Columns(3, "3rdparties", false);
+
+                    ImGui::SetColumnWidth(0, columnWidth[0]);
+                    ImGui::SetColumnWidth(1, columnWidth[1]);
+                    ImGui::SetColumnWidth(2, columnWidth[2]);
                     
+                    // name
                     ImGui::Text("Dear ImGui");
                     ImGui::Text("optick");
                     ImGui::Text("stb_image");
@@ -154,11 +178,23 @@ namespace vg::graphics::renderer
                     ImGui::Text("magic_enum");
                     ImGui::Text("D3D12MemoryAllocator");
                     ImGui::Text("VulkanMemoryAllocator");
+                    ImGui::Text("WinPixEventRuntime");
                     
+                    ImGui::NextColumn();
+
+                    // version
                     ImGui::Text("");
+                    ImGui::Text("");
+                    ImGui::Text("");
+                    ImGui::Text("");
+                    ImGui::Text("");
+                    ImGui::Text("");
+                    ImGui::Text("");
+                    ImGui::Text("1.0.200127001");
 
                     ImGui::NextColumn();
 
+                    // url
                     ImGui::textURL("github.com/ocornut/imgui", "https://github.com/ocornut/imgui");
                     ImGui::textURL("github.com/bombomby/optick", "https://github.com/bombomby/optick");
                     ImGui::textURL("github.com/nothings/stb", "https://github.com/nothings/stb");
@@ -166,8 +202,7 @@ namespace vg::graphics::renderer
                     ImGui::textURL("github.com/Neargye/magic_enum", "https://github.com/Neargye/magic_enum");
                     ImGui::textURL("github.com/GPUOpen-LibrariesAndSDKs/D3D12MemoryAllocator", "https://github.com/GPUOpen-LibrariesAndSDKs/D3D12MemoryAllocator");
                     ImGui::textURL("github.com/GPUOpen-LibrariesAndSDKs/VulkanMemoryAllocator", "https://github.com/GPUOpen-LibrariesAndSDKs/VulkanMemoryAllocator");
-
-                    //ImGui::Text("");
+                    ImGui::textURL("nuget.org/packages/WinPixEventRuntime", "https://www.nuget.org/packages/WinPixEventRuntime");
 
                     ImGui::End();
                 }
@@ -228,7 +263,7 @@ namespace vg::graphics::renderer
     //--------------------------------------------------------------------------------------
     void ImguiPass::draw(driver::CommandList * _cmdList) const
     {
-        VG_PROFILE_GPU("Dear ImGui");
+        //VG_PROFILE_GPU("Dear ImGui");
         Renderer::get()->getImGuiAdapter()->render(_cmdList);
     }
 }

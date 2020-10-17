@@ -369,4 +369,20 @@ namespace vg::graphics::driver::dx12
             bindlessTable->setd3d12GPUDescriptorDirty(_dst->getBindlessSRVHandle());
         }
     }
+
+    //--------------------------------------------------------------------------------------
+    void CommandList::beginGPUEvent(const char * _name, core::u32 _color)
+    {
+        #ifdef VG_ENABLE_GPU_MARKER
+        PIXBeginEvent(getd3d12GraphicsCommandList(), _color, _name);
+        #endif
+    }
+
+    //--------------------------------------------------------------------------------------
+    void CommandList::endGPUEvent()
+    {
+        #ifdef VG_ENABLE_GPU_MARKER
+        PIXEndEvent(getd3d12GraphicsCommandList());
+        #endif
+    }
 }

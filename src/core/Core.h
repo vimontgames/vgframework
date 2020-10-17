@@ -35,4 +35,12 @@ namespace vg::core
     bool assertmsg(const char * _condition, const char * _func, const char * _file, int _line, bool & _skip);
 
     core::uint_ptr alignUp(core::uint_ptr _adress, core::u32 _align);
+
+    #if defined(__clang__) || defined(__GNUC__)
+    #define VG_THREAD_LOCAL __thread
+    #elif defined(_MSC_VER)
+    #define VG_THREAD_LOCAL __declspec(thread)
+    #else
+    #error Can not define VG_THREAD_LOCAL
+    #endif
 }

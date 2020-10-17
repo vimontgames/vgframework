@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Resource_consts.h"
+#include "core/Object/Object.h"
 
 namespace vg::graphics::driver
 {
@@ -19,8 +20,10 @@ namespace vg::graphics::driver
 
     namespace base
     {
-        class Resource
+        class Resource : public core::Object
         {
+            using super = core::Object;
+
         public:
             enum class ResourceType : core::u8
             {

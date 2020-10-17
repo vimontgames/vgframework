@@ -1,4 +1,5 @@
 #include "graphics/driver/Precomp.h"
+#include "core/string/string.h"
 #include "graphics/driver/device/Device.h"
 #include "shader.h"
 #include "ShaderCompiler.h"

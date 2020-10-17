@@ -37,6 +37,9 @@ namespace vg::graphics::driver::dx12
 		D3D12GraphicsCommandList *		    getd3d12GraphicsCommandList ();
 		ID3D12CommandList *					getd3d12CommandList         () { return m_d3d12cmdList; }
 
+        void                                beginGPUEvent               (const char * _name, core::u32 _color);
+        void                                endGPUEvent                 ();
+
         static D3D12_PRIMITIVE_TOPOLOGY     getd3d12PrimitiveTopology   (PrimitiveTopology _topology);
 
 	private:

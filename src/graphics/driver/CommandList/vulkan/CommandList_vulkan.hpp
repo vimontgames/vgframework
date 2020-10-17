@@ -238,4 +238,38 @@ namespace vg::graphics::driver::vulkan
 
         vkCmdPipelineBarrier(m_vkCommandBuffer, VK_PIPELINE_STAGE_TRANSFER_BIT, VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT, 0, 0, NULL, 0, NULL, 1, &image_memory_barrier2);
     }
+
+    //--------------------------------------------------------------------------------------
+    float4 asFloat4(u32 _color)
+    {
+        float4 color = float4((_color & 0xFF), (_color >> 8) & 0xFF, (_color >> 16) & 0xFF, (_color >> 24) & 0xFF);
+        return color / float4(255.0f);
+    }
+
+    //--------------------------------------------------------------------------------------
+    void CommandList::beginGPUEvent(const char * _name, core::u32 _color)
+    {
+        #ifdef VG_ENABLE_GPU_MARKER 
+        VkDebugUtilsLabelEXT markerInfo = {};
+        markerInfo.sType = VK_STRUCTURE_TYPE_DEBUG_UTILS_LABEL_EXT;
+        float4 color = asFloat4(_color);
+        markerInfo.color[0] = color.r;
+        markerInfo.color[1] = color.g;
+        markerInfo.color[2] = color.b;
+        markerInfo.color[3] = color.a;
+        markerInfo.pLabelName = _name;
+
+        auto * device = driver::Device::get();
+        device->m_EXT_DebugUtils.m_pfnCmdBeginDebugUtilsLabelEXT(getVulkanCommandBuffer(), &markerInfo);
+        #endif
+    }
+
+    //--------------------------------------------------------------------------------------
+    void CommandList::endGPUEvent()
+    {
+        #ifdef VG_ENABLE_GPU_MARKER 
+        auto * device = driver::Device::get();
+        device->m_EXT_DebugUtils.m_pfnCmdEndDebugUtilsLabelEXT(getVulkanCommandBuffer());
+        #endif
+    }
 }

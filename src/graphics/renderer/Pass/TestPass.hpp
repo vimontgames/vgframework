@@ -121,7 +121,7 @@ namespace vg::graphics::renderer
     //--------------------------------------------------------------------------------------
     void TestPass::draw(CommandList * _cmdList) const
     {
-        VG_PROFILE_GPU("TestPass");
+        //VG_PROFILE_GPU("TestPass");
 
         RasterizerState rs(FillMode::Solid, CullMode::None);
         

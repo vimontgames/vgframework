@@ -16,6 +16,8 @@ https://github.com/Neargye/magic_enum
 https://github.com/ocornut/imgui
 - stb
 https://github.com/nothings/stb
+- WinPixEventRuntime 1.0.200127001
+https://www.nuget.org/packages/WinPixEventRuntime
 
 # sdk
 - Win10 SDK 10.0.17763.0

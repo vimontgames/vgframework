@@ -14,6 +14,8 @@ namespace vg::graphics::renderer
         void setup() override;
         void draw(driver::CommandList * _cmdList) const override;
 
+        //const core::string & getName() const override { static const core::string name = "PostProcess"; return name; }
+
     private:
         driver::RootSignatureHandle         m_postProcessRootSignature;
         driver::ShaderKey                   m_postProcessShaderKey;

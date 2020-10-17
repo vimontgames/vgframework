@@ -554,24 +554,24 @@ namespace vg::graphics::driver
 	//--------------------------------------------------------------------------------------
 	void FrameGraph::render()
 	{
-        VG_PROFILE_CPU("render");
-
 		// Temp: use graphics command list
 		Device * device = Device::get();
 		CommandList * cmdList = device->getCommandLists(CommandListType::Graphics)[0]; 
 
         VG_PROFILE_GPU_CONTEXT(cmdList);
+        VG_PROFILE_GPU("render");
 
 		for (RenderPass * renderPass : m_renderPasses)
 		{
+            //VG_PROFILE_GPU("Pass");
+
             const auto & subPasses = renderPass->getSubPasses();
 
             // allocate all transient resources that will be required during the subpasses before beginning the renderpass
             for (uint i = 0; i < subPasses.size(); ++i)
             {
                 SubPass * subPass = subPasses[i];
-                const UserPass * userPass = subPass->getUserPasses()[0];
-
+                const UserPass * userPass = subPass->getUserPasses()[0];               
                 auto & renderTargets = userPass->getRenderTargets();
                 auto & texturesRead = userPass->getTexturesRead();
 
@@ -598,10 +598,11 @@ namespace vg::graphics::driver
 				SubPass * subPass = subPasses[i];
                 const UserPass * userPass = subPass->getUserPasses()[0];
 
+                VG_PROFILE_GPU(userPass->getName().c_str());
+
                 cmdList->beginSubPass(i, subPass);
 				{
-                    for (const UserPass * userPass : subPass->getUserPasses())
-                        userPass->draw(cmdList);
+                    userPass->draw(cmdList);
 				}
                 cmdList->endSubPass();
 			}

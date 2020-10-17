@@ -17,18 +17,6 @@ namespace vg::graphics::driver::dx12
     }
 
     //--------------------------------------------------------------------------------------
-    // TODO: move to a "string" header
-    //--------------------------------------------------------------------------------------
-    wstring wstring_convert(const string & _string)
-    {
-        wchar_t result[1024];
-        VG_ASSERT(_string.length() < countof(result));
-        size_t s;
-        mbstowcs_s(&s, result, countof(result), _string.c_str(), _string.length());
-        return wstring(result);
-    }
-
-    //--------------------------------------------------------------------------------------
     // Using the highest profiles dxil.dll can actually validate using Win10 SDK 10.0.17763.0 
     //--------------------------------------------------------------------------------------
     const char * getd3d12TargetProfile(ShaderStage _stage)

@@ -13,3 +13,4 @@ enc_temp_folder/*
 *.ipdb
 *.opt
 !dxil.dll
+!WinPixEventRuntime.dll

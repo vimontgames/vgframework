@@ -14,11 +14,25 @@ namespace vg::graphics::driver::dx12
     }
 
     //--------------------------------------------------------------------------------------
-    void Resource::setd3d12TextureResource(ID3D12Resource * _resource, D3D12MA::Allocation * _alloc)
+    void Resource::setName(const core::string & _name)
+    {
+        super::setName(_name);
+
+        if (m_d3d12resource)
+        {
+            wstring name = wstring_convert(_name);
+            m_d3d12resource->SetName(name.c_str());
+        }
+    }
+
+    //--------------------------------------------------------------------------------------
+    void Resource::setd3d12TextureResource(const string & _name, ID3D12Resource * _resource, D3D12MA::Allocation * _alloc)
     {
         m_resourceType = ResourceType::Texture;
         m_d3d12resource = _resource;
         m_d3d12ma_alloc = _alloc;
+
+        setName(_name);
     }
  
     //--------------------------------------------------------------------------------------
@@ -29,11 +43,13 @@ namespace vg::graphics::driver::dx12
     }
 
     //--------------------------------------------------------------------------------------
-    void Resource::setd3d12BufferResource(ID3D12Resource * _resource, D3D12MA::Allocation * _alloc)
+    void Resource::setd3d12BufferResource(const string & _name, ID3D12Resource * _resource, D3D12MA::Allocation * _alloc)
     {
         m_resourceType = ResourceType::Buffer;
         m_d3d12resource = _resource;
         m_d3d12ma_alloc = _alloc;
+
+        setName(_name);
     }
 
     //--------------------------------------------------------------------------------------
