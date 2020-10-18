@@ -40,35 +40,52 @@ namespace vg::graphics::driver
     }
 
     //--------------------------------------------------------------------------------------
-    Shader * HLSLDesc::getVS(ShaderKey::VS _vs)
+    Shader * HLSLDesc::getVS(API _api, ShaderKey::VS _vs)
     {
-        return getShader(ShaderStage::Vertex, _vs);
+        return getShader(_api, ShaderStage::Vertex, _vs);
     }    
 
     //--------------------------------------------------------------------------------------
-    Shader * HLSLDesc::getPS(ShaderKey::PS _ps)
+    Shader * HLSLDesc::getHS(API _api, ShaderKey::HS _hs)
     {
-        return getShader(ShaderStage::Pixel, _ps);
+        return getShader(_api, ShaderStage::Hull, _hs);
+    }
+
+    //--------------------------------------------------------------------------------------
+    Shader * HLSLDesc::getDS(API _api, ShaderKey::DS _ds)
+    {
+        return getShader(_api, ShaderStage::Domain, _ds);
+    }
+
+    //--------------------------------------------------------------------------------------
+    Shader * HLSLDesc::getGS(API _api, ShaderKey::GS _gs)
+    {
+        return getShader(_api, ShaderStage::Geometry, _gs);
+    }
+
+    //--------------------------------------------------------------------------------------
+    Shader * HLSLDesc::getPS(API _api, ShaderKey::PS _ps)
+    {
+        return getShader(_api, ShaderStage::Pixel, _ps);
     }
 
     //--------------------------------------------------------------------------------------
     core::uint HLSLDesc::addShader(ShaderStage _stage, const core::string & _entryPoint)
     {
         auto & shaders = m_shader[asInteger(_stage)];
-        //VG_ASSERT(shaders.end() == std::find(shaders.begin(), shaders.end(), _entryPoint));
         shaders.push_back(core::pair<core::string, Shader*>(_entryPoint, nullptr));
         return ShaderKey::VS(shaders.size() - 1);
     }
 
     //--------------------------------------------------------------------------------------
-    Shader * HLSLDesc::getShader(ShaderStage _stage, core::uint _index)
+    Shader * HLSLDesc::getShader(API _api, ShaderStage _stage, core::uint _index)
     {
         auto & pair = m_shader[asInteger(_stage)][_index];
         if (nullptr == pair.second)
         {
             auto * sm = ShaderManager::get();
             core::vector<core::pair<core::string, core::uint>> macros; // TODO: build macros from shader key flags
-            pair.second = sm->compile(m_file, pair.first, _stage, macros);
+            pair.second = sm->compile(_api, m_file, pair.first, _stage, macros);
         }
         return pair.second;
     }
@@ -76,7 +93,6 @@ namespace vg::graphics::driver
     //--------------------------------------------------------------------------------------
     HLSLDesc::Technique & HLSLDesc::addTechnique(const core::string & _name)
     {
-        //VG_ASSERT(m_techniques.end() == std::find(m_techniques.begin(), m_techniques.end(), _name));
         m_techniques.push_back({});
         Technique & technique = m_techniques.back();
         technique.name = _name;

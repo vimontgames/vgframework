@@ -1,8 +1,10 @@
 del *.exe
 del *.lib
+ren dxcompiler.dll dxcompiler.dll.bak
 ren dxil.dll dxil.dll.bak
 ren WinPixEventRuntime.dll WinPixEventRuntime.dll.bak
 del *.dll
+ren dxcompiler.dll.bak dxcompiler.dll
 ren dxil.dll.bak dxil.dll
 ren WinPixEventRuntime.dll.bak WinPixEventRuntime.dll
 del *.ipdb

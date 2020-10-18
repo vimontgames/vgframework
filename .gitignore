@@ -12,5 +12,6 @@ enc_temp_folder/*
 *.iobj
 *.ipdb
 *.opt
+!dxcompiler.dll
 !dxil.dll
 !WinPixEventRuntime.dll

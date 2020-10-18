@@ -147,10 +147,10 @@
     <ClInclude Include="RootSignature\RootSignature_consts.h" />
     <ClInclude Include="RootSignature\vulkan\RootSignature_vulkan.h" />
     <ClInclude Include="RootSignature\vulkan\RootSignature_vulkan.hpp" />
-    <ClInclude Include="Shader\dx12\ShaderCompiler_dx12.h" />
-    <ClInclude Include="Shader\dx12\ShaderCompiler_dx12.hpp" />
     <ClInclude Include="Shader\dx12\Shader_dx12.h" />
     <ClInclude Include="Shader\dx12\Shader_dx12.hpp" />
+    <ClInclude Include="Shader\dxc\ShaderCompiler_dxc.h" />
+    <ClInclude Include="Shader\dxc\ShaderCompiler_dxc.hpp" />
     <ClInclude Include="Shader\HLSLDesc.h" />
     <ClInclude Include="Shader\HLSLDesc.hpp" />
     <ClInclude Include="Shader\Shader.h" />
@@ -161,8 +161,6 @@
     <ClInclude Include="Shader\ShaderManager.h" />
     <ClInclude Include="Shader\ShaderManager.hpp" />
     <ClInclude Include="Shader\Shader_consts.h" />
-    <ClInclude Include="Shader\vulkan\ShaderCompiler_vulkan.h" />
-    <ClInclude Include="Shader\vulkan\ShaderCompiler_vulkan.hpp" />
     <ClInclude Include="Shader\vulkan\Shader_vulkan.h" />
     <ClInclude Include="Shader\vulkan\Shader_vulkan.hpp" />
   </ItemGroup>
@@ -269,7 +267,7 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>graphics/driver/Precomp.h</PrecompiledHeaderFile>
       <PreprocessorDefinitions>VG_DEBUG;VG_DX12;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -290,7 +288,7 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>graphics/driver/Precomp.h</PrecompiledHeaderFile>
       <PreprocessorDefinitions>VG_DEBUG;VG_VULKAN;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>

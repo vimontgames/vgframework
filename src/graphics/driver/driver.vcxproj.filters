@@ -287,18 +287,6 @@
     <ClInclude Include="Shader\vulkan\Shader_vulkan.hpp">
       <Filter>Shader\vulkan</Filter>
     </ClInclude>
-    <ClInclude Include="Shader\dx12\ShaderCompiler_dx12.h">
-      <Filter>Shader\dx12</Filter>
-    </ClInclude>
-    <ClInclude Include="Shader\dx12\ShaderCompiler_dx12.hpp">
-      <Filter>Shader\dx12</Filter>
-    </ClInclude>
-    <ClInclude Include="Shader\vulkan\ShaderCompiler_vulkan.h">
-      <Filter>Shader\vulkan</Filter>
-    </ClInclude>
-    <ClInclude Include="Shader\vulkan\ShaderCompiler_vulkan.hpp">
-      <Filter>Shader\vulkan</Filter>
-    </ClInclude>
     <ClInclude Include="Device\DeviceCaps.h">
       <Filter>Device</Filter>
     </ClInclude>
@@ -459,6 +447,12 @@
       <Filter>Importer</Filter>
     </ClInclude>
     <ClInclude Include="IImporter.h" />
+    <ClInclude Include="Shader\dxc\ShaderCompiler_dxc.h">
+      <Filter>Shader\dxc</Filter>
+    </ClInclude>
+    <ClInclude Include="Shader\dxc\ShaderCompiler_dxc.hpp">
+      <Filter>Shader\dxc</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Device">
@@ -568,6 +562,9 @@
     </Filter>
     <Filter Include="Importer">
       <UniqueIdentifier>{7ca25846-4d4a-41d2-96a0-dcd3f1af0b27}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shader\dxc">
+      <UniqueIdentifier>{f02f74c8-fe1d-4c92-9977-c60213733700}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

@@ -131,7 +131,7 @@ namespace vg::graphics::driver::vulkan
     //--------------------------------------------------------------------------------------
     void GraphicPipelineState::addVulkanShader(vector<VkPipelineShaderStageCreateInfo> & _vkStages, HLSLDesc & _hlsl, ShaderStage _stage, uint _index)
     {
-        const Shader * shader = _hlsl.getShader(_stage, _index);
+        const Shader * shader = _hlsl.getShader(API::Vulkan, _stage, _index);
 
         VkPipelineShaderStageCreateInfo vkShaderStage = {};
 

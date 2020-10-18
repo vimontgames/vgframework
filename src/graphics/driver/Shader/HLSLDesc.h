@@ -31,11 +31,14 @@ namespace vg::graphics::driver
         ShaderKey::VS addVS(const core::string & _vsEntryPoint);
         ShaderKey::PS addPS(const core::string & _psEntryPoint);
 
-        Shader * getVS(ShaderKey::VS _vs);
-        Shader * getPS(ShaderKey::PS _ps);
+        Shader * getVS(API _api, ShaderKey::VS _vs);
+        Shader * getHS(API _api, ShaderKey::HS _hs);
+        Shader * getDS(API _api, ShaderKey::DS _ds);
+        Shader * getGS(API _api, ShaderKey::GS _gs);
+        Shader * getPS(API _api, ShaderKey::PS _ps);
 
         core::uint addShader(ShaderStage _stage, const core::string & _entryPoint);
-        Shader * getShader(ShaderStage _stage, core::uint _index);
+        Shader * getShader(API _api, ShaderStage _stage, core::uint _index);
 
         Technique & addTechnique(const core::string & _name);
         const core::vector<Technique> & getTechniques() const;

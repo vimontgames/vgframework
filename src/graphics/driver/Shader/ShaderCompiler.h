@@ -21,19 +21,19 @@ namespace vg::graphics::driver
     }
 }
 
-#include VG_GFXAPI_HEADER(ShaderCompiler)
+#include "dxc/ShaderCompiler_dxc.h"
 
 namespace vg::graphics::driver
 {
-    class ShaderCompiler : public VG_GFXAPI::ShaderCompiler
+    class ShaderCompiler : public dxc::ShaderCompiler
     {
-        using super = VG_GFXAPI::ShaderCompiler;
+        using super = dxc::ShaderCompiler;
 
     public:
         ShaderCompiler();
         ~ShaderCompiler();
 
-        Shader * compile(const core::string & _file, const core::string & _entryPoint, ShaderStage _stage, const core::vector<core::pair<core::string, core::uint>> & _macros, core::string & _warningAndErrors);
+        Shader * compile(API _api, const core::string & _file, const core::string & _entryPoint, ShaderStage _stage, const core::vector<core::pair<core::string, core::uint>> & _macros, core::string & _warningAndErrors);
 
     private:
 

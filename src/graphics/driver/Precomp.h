@@ -20,6 +20,10 @@
 
 #define VG_SAFE_RELEASE_ASYNC(p) { auto * device = driver::Device::get(); if (device) device->releaseAsync(p); else p->Release(); }
 
+#ifdef _WIN32
+#define VG_ASSERT_SUCCEEDED(f) { HRESULT hr = f; VG_ASSERT(SUCCEEDED(hr), "%s\n\n%s", #f, std::system_category().message(hr).c_str()); }
+#endif
+
 #ifdef VG_DX12
 //--------------------------------------------------------------------------------------
 // d3d12
@@ -38,12 +42,10 @@
 #endif
 
 #if VG_ENABLE_SHADER_COMPILATION
-#include <dxcapi.h>
+#include "dxc/inc/dxcapi.h"
 #endif
 
 #include "D3D12MemoryAllocator/src/D3D12MemAlloc.h"
-
-#define VG_ASSERT_SUCCEEDED(f) { HRESULT hr = f; VG_ASSERT(SUCCEEDED(hr), "%s\n\n%s", #f, std::system_category().message(hr).c_str()); }
 
 #endif // VG_DX12
 
@@ -71,19 +73,25 @@
 
 #define VG_STRINGIFY(quoteMe) #quoteMe
 
-#define VG_GFXAPI_MAKE_HEADER_PATH(filename, api)			VG_STRINGIFY(api##/filename##_##api.h)
-#define VG_GFXAPI_MAKE_IMPLEMENTATION_PATH(filename, api)	VG_STRINGIFY(api##/filename##_##api.hpp)
+#define VG_GFXAPI_MAKE_HEADER_PATH(filename, api)			            VG_STRINGIFY(api##/filename##_##api.h)
+#define VG_GFXAPI_MAKE_HEADER_PATH_EXT(filename, version, api)          VG_STRINGIFY(api##/filename##_##version##_##api.h)
+#define VG_GFXAPI_MAKE_IMPLEMENTATION_PATH(filename, api)	            VG_STRINGIFY(api##/filename##_##api.hpp)
+#define VG_GFXAPI_MAKE_IMPLEMENTATION_PATH_EXT(filename, version, api)	VG_STRINGIFY(api##/filename##_##version##_##api.hpp)
 
 #ifdef VG_DX12
 
 #define VG_GFXAPI dx12
-#define VG_GFXAPI_HEADER(filename) VG_GFXAPI_MAKE_HEADER_PATH(filename, dx12)
-#define VG_GFXAPI_IMPL(filename) VG_GFXAPI_MAKE_IMPLEMENTATION_PATH(filename, dx12)
+#define VG_GFXAPI_HEADER(filename)                                      VG_GFXAPI_MAKE_HEADER_PATH(filename, dx12)
+#define VG_GFXAPI_HEADER_EXT(filename, version)                         VG_GFXAPI_MAKE_HEADER_PATH_EXT(filename, version, dx12)
+#define VG_GFXAPI_IMPL(filename)                                        VG_GFXAPI_MAKE_IMPLEMENTATION_PATH(filename, dx12)
+#define VG_GFXAPI_IMPL_EXT(filename, version)                           VG_GFXAPI_MAKE_IMPLEMENTATION_PATH_EXT(filename, version, dx12)
 
 #elif defined(VG_VULKAN)
 
 #define VG_GFXAPI vulkan
-#define VG_GFXAPI_HEADER(filename) VG_GFXAPI_MAKE_HEADER_PATH(filename, vulkan)
-#define VG_GFXAPI_IMPL(filename) VG_GFXAPI_MAKE_IMPLEMENTATION_PATH(filename, vulkan)
+#define VG_GFXAPI_HEADER(filename)                                      VG_GFXAPI_MAKE_HEADER_PATH(filename, vulkan)
+#define VG_GFXAPI_HEADER_EXT(filename, version)                         VG_GFXAPI_MAKE_HEADER_PATH_EXT(filename, version, vulkan)
+#define VG_GFXAPI_IMPL(filename)                                        VG_GFXAPI_MAKE_IMPLEMENTATION_PATH(filename, vulkan)
+#define VG_GFXAPI_IMPL_EXT(filename, version)                           VG_GFXAPI_MAKE_IMPLEMENTATION_PATH_EXT(filename, version, vulkan)
 
 #endif

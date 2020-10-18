@@ -412,8 +412,11 @@ namespace vg::graphics::driver
         TextureDesc texDesc;
         u8 * data = nullptr;
         if (m_textureImporter->importTextureData(_path, texDesc, data))
-            return createTexture(texDesc, _path, data, _reservedSlot);
-        VG_SAFE_FREE(data);
+        {
+            Texture * tex = createTexture(texDesc, _path, data, _reservedSlot);
+            VG_SAFE_FREE(data); 
+            return tex;
+        }
         return nullptr;
     }
 

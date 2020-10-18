@@ -6,7 +6,7 @@
 
 using namespace vg::core;
 
-#include VG_GFXAPI_IMPL(ShaderCompiler)
+#include "dxc/ShaderCompiler_dxc.hpp"
 
 namespace vg::graphics::driver
 {
@@ -38,9 +38,9 @@ namespace vg::graphics::driver
     }
 
     //--------------------------------------------------------------------------------------
-    Shader * ShaderCompiler::compile(const string & _path, const string & _entryPoint, ShaderStage _stage, const core::vector<core::pair<core::string, core::uint>> & _macros, string & _warningAndErrors)
+    Shader * ShaderCompiler::compile(API _api, const string & _path, const string & _entryPoint, ShaderStage _stage, const core::vector<core::pair<core::string, core::uint>> & _macros, string & _warningAndErrors)
     {
-        auto * shader = super::compile(_path, _entryPoint, _stage, _macros,_warningAndErrors);
+        auto * shader = super::compile(_api, _path, _entryPoint, _stage, _macros,_warningAndErrors);
 
         if (shader)
             shader->setName(_entryPoint);

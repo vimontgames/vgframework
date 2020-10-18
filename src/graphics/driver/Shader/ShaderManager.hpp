@@ -75,13 +75,13 @@ namespace vg::graphics::driver
     }
 
     //--------------------------------------------------------------------------------------
-    Shader * ShaderManager::compile(const core::string & _file, const core::string & _entryPoint, ShaderStage _stage, const vector<pair<string, uint>> & _macros)
+    Shader * ShaderManager::compile(API _api, const core::string & _file, const core::string & _entryPoint, ShaderStage _stage, const vector<pair<string, uint>> & _macros)
     {
         RETRY:
 
         string warningAndErrors;
 
-        Shader * shader = m_shaderCompiler->compile(m_shaderRootPath + _file, _entryPoint, _stage, _macros, warningAndErrors);
+        Shader * shader = m_shaderCompiler->compile(_api, m_shaderRootPath + _file, _entryPoint, _stage, _macros, warningAndErrors);
 
         if (!shader)
         {
