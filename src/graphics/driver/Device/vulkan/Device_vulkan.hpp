@@ -391,7 +391,7 @@ namespace vg::graphics::driver::vulkan
             VkDescriptorPoolSize type_counts[] =
             {
                 {VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE, bindless_texture_SRV_count},
-                {VK_DESCRIPTOR_TYPE_UNIFORM_TEXEL_BUFFER, bindless_buffer_SRV_count},   // VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER
+                {VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, bindless_buffer_SRV_count},   
                 {VK_DESCRIPTOR_TYPE_STORAGE_TEXEL_BUFFER, bindless_texture_UAV_count},
                 {VK_DESCRIPTOR_TYPE_UNIFORM_TEXEL_BUFFER, bindless_buffer_UAV_count}    // VK_DESCRIPTOR_TYPE_STORAGE_BUFFER
             };

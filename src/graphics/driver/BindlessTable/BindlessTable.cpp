@@ -20,7 +20,7 @@ namespace vg::graphics::driver
             m_tableDesc.setShaderStageFlags(ShaderStageFlags::All);
 
             m_tableDesc.addTextures(0, bindless_texture_SRV_count, 0, bindless_texture_SRV_offset);
-            m_tableDesc.addBuffers(0, bindless_buffer_SRV_offset, 1, bindless_buffer_SRV_count);
+            m_tableDesc.addBuffers(0, bindless_buffer_SRV_count, 1, bindless_buffer_SRV_offset);
         }
 
         //--------------------------------------------------------------------------------------

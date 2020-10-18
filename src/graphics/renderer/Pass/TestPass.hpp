@@ -72,7 +72,7 @@ namespace vg::graphics::renderer
         {
             BufferDesc bufDesc = BufferDesc(Usage::Default, BindFlags::ShaderResource, CPUAccessFlags::None, BufferFlags::None, 16, 1);
         
-            const float4 initData = float4(0.5f, 0.6f, 0.7f, 0.8f);
+            const float4 initData = float4(1.0f, 1.0f, 0.0f, 1.0f);
         
             m_buffer.push_back(device->createBuffer(bufDesc, "buf #0", (void*)&initData));
         }
