@@ -11,8 +11,8 @@ VS_Output_Quad VS_Background(uint _vertexID : VertexID)
 {
     VS_Output_Quad output;
 
-    output.uv = rootConstants.quad.getUV0(_vertexID);
-    output.pos = rootConstants.quad.getPosition(_vertexID);
+    output.uv = Quad_getUV0(rootConstants.quad, _vertexID);
+    output.pos = Quad_getPosition(rootConstants.quad, _vertexID);
 
     return output;
 }

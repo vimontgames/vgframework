@@ -225,8 +225,9 @@ namespace vg::graphics::driver::vulkan
 	//--------------------------------------------------------------------------------------
 	void Device::registerExtensions(const DeviceParams & _params)
 	{
-		if (_params.debugDevice)
-			m_instanceExtensionList.registerExtension(m_EXT_DebugUtils);
+        #ifdef VG_ENABLE_GPU_MARKER
+        m_instanceExtensionList.registerExtension(m_EXT_DebugUtils);
+        #endif
 
 		m_instanceExtensionList.registerExtension(m_KHR_Surface);
 		m_instanceExtensionList.registerExtension(m_KHR_Win32_Surface);
