@@ -5,7 +5,7 @@
 #include "BindlessTable_consts.h"
 #include "graphics/driver/RootSignature/RootSignatureTableDesc.h"
 
-#include "Shaders/system/bindless.hlsli"
+#include "Shaders/system/bindless.hlsli.h"
 
 namespace vg::graphics::driver
 {

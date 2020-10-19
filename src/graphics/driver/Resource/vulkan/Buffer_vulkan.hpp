@@ -16,7 +16,7 @@ namespace vg::graphics::driver::vulkan
         {
             case Usage::Default:
                 vkBufferCreate.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
-                vkBufferCreate.usage = VK_BUFFER_USAGE_UNIFORM_TEXEL_BUFFER_BIT | VK_BUFFER_USAGE_STORAGE_BUFFER_BIT | VK_BUFFER_USAGE_TRANSFER_DST_BIT;
+                vkBufferCreate.usage = VK_BUFFER_USAGE_UNIFORM_TEXEL_BUFFER_BIT | VK_BUFFER_USAGE_TRANSFER_DST_BIT;
                 vkBufferCreate.size = _bufDesc.size();
                 allocCreateInfo.usage = VMA_MEMORY_USAGE_GPU_ONLY;
                 allocCreateInfo.flags = 0;
@@ -63,7 +63,7 @@ namespace vg::graphics::driver::vulkan
             writes.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
             writes.dstBinding = bindless_buffer_SRV_binding;
             writes.descriptorCount = 1;
-            writes.descriptorType = VK_DESCRIPTOR_TYPE_STORAGE_BUFFER;
+            writes.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_TEXEL_BUFFER;
             writes.pBufferInfo = &vkBufferInfo;
             writes.pTexelBufferView = &m_vkBufferView;
             writes.dstSet = device->m_vkBindlessDescriptors;

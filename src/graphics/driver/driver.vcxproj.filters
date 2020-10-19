@@ -453,6 +453,12 @@
     <ClInclude Include="Shader\dxc\ShaderCompiler_dxc.hpp">
       <Filter>Shader\dxc</Filter>
     </ClInclude>
+    <ClInclude Include="BindlessTable\BindlessHandle.h">
+      <Filter>BindlessTable</Filter>
+    </ClInclude>
+    <ClInclude Include="BindlessTable\BindlessHandle.hpp">
+      <Filter>BindlessTable</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Device">

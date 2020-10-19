@@ -39,12 +39,16 @@ namespace vg::graphics::driver::dx12
 
                 switch (descriptor.getDescriptorType())
                 {
+                    default:
+                    VG_ASSERT(false, "Unhandled Descriptor::Type \"%s\" (%u)", asString(descriptor.getDescriptorType()).c_str(), descriptor.getDescriptorType());
+                    break;
+
                     case RootSignatureTableDesc::Descriptor::Type::Texture:
                     {
                         const auto & textures = descriptor.getTextures();
                         
                         d3d12Descriptor.RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SRV;
-                        d3d12Descriptor.BaseShaderRegister = textures.m_offset;// textures.m_register;
+                        d3d12Descriptor.BaseShaderRegister = textures.m_offset;
                         d3d12Descriptor.NumDescriptors = textures.m_count;
                         d3d12Descriptor.RegisterSpace = textures.m_space;
                         d3d12Descriptor.OffsetInDescriptorsFromTableStart = textures.m_offset;
@@ -58,7 +62,35 @@ namespace vg::graphics::driver::dx12
                         const auto & buffers = descriptor.getBuffers();
 
                         d3d12Descriptor.RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SRV;
-                        d3d12Descriptor.BaseShaderRegister = buffers.m_offset; // buffers.m_register;
+                        d3d12Descriptor.BaseShaderRegister = buffers.m_offset; 
+                        d3d12Descriptor.NumDescriptors = buffers.m_count;
+                        d3d12Descriptor.RegisterSpace = buffers.m_space;
+                        d3d12Descriptor.OffsetInDescriptorsFromTableStart = buffers.m_offset;
+
+                        d3d12Descriptors.push_back(d3d12Descriptor);
+                    }
+                    break;
+
+                    case RootSignatureTableDesc::Descriptor::Type::UAVTexture:
+                    {
+                        const auto & textures = descriptor.getUAVTextures();
+
+                        d3d12Descriptor.RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_UAV;
+                        d3d12Descriptor.BaseShaderRegister = textures.m_offset;
+                        d3d12Descriptor.NumDescriptors = textures.m_count;
+                        d3d12Descriptor.RegisterSpace = textures.m_space;
+                        d3d12Descriptor.OffsetInDescriptorsFromTableStart = textures.m_offset;
+
+                        d3d12Descriptors.push_back(d3d12Descriptor);
+                    }
+                    break;
+
+                    case RootSignatureTableDesc::Descriptor::Type::UAVBuffer:
+                    {
+                        const auto & buffers = descriptor.getUAVBuffers();
+
+                        d3d12Descriptor.RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_UAV;
+                        d3d12Descriptor.BaseShaderRegister = buffers.m_offset;
                         d3d12Descriptor.NumDescriptors = buffers.m_count;
                         d3d12Descriptor.RegisterSpace = buffers.m_space;
                         d3d12Descriptor.OffsetInDescriptorsFromTableStart = buffers.m_offset;

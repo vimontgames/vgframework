@@ -50,6 +50,24 @@ namespace vg::graphics::driver
     }
 
     //--------------------------------------------------------------------------------------
+    void RootSignatureTableDesc::addUAVTextures(core::u8 _register, core::u32 _count, core::u8 _space, core::u16 _offset)
+    {
+        RootSignatureTableDesc::Descriptor descritor;
+        descritor.m_type = Descriptor::Type::UAVTexture;
+        descritor.uavTexture = Descriptor::UAVTexture(_register, _count, _space, _offset);
+        m_descriptors.push_back(descritor);
+    }
+
+    //--------------------------------------------------------------------------------------
+    void RootSignatureTableDesc::addUAVBuffers(core::u8 _register, core::u32 _count, core::u8 _space, core::u16 _offset)
+    {
+        RootSignatureTableDesc::Descriptor descritor;
+        descritor.m_type = Descriptor::Type::UAVBuffer;
+        descritor.uavBuffer = Descriptor::UAVBuffer(_register, _count, _space, _offset);
+        m_descriptors.push_back(descritor);
+    }
+
+    //--------------------------------------------------------------------------------------
     const core::vector<RootSignatureTableDesc::Descriptor> & RootSignatureTableDesc::getDescriptors() const
     {
         return m_descriptors;

@@ -1,46 +1,22 @@
 #ifndef _BINDLESS__HLSLI_
 #define _BINDLESS__HLSLI_
 
-#ifdef __cplusplus
-namespace vg::graphics::driver
-{
-    using namespace vg::core;
-
-    const uint bindless_texture_SRV_offset  = 0;
-    const uint bindless_texture_SRV_count   = 16384;
-    const uint bindless_texture_SRV_invalid = bindless_texture_SRV_offset + bindless_texture_SRV_count - 1;
-    const uint bindless_texture_SRV_binding = 0;
-
-    const uint bindless_buffer_SRV_offset   = 16384;
-    const uint bindless_buffer_SRV_count    = 16384;
-    const uint bindless_buffer_SRV_invalid  = bindless_buffer_SRV_offset + bindless_buffer_SRV_count - 1;
-    const uint bindless_buffer_SRV_binding  = 1;
-
-    const uint bindless_texture_UAV_offset  = 32768;
-    const uint bindless_texture_UAV_count   = 16384;
-    const uint bindless_texture_UAV_invalid = bindless_texture_UAV_offset + bindless_texture_UAV_count - 1;
-    const uint bindless_texture_UAV_binding = 0;
-
-    const uint bindless_buffer_UAV_offset   = 49152;
-    const uint bindless_buffer_UAV_count    = 16384;
-    const uint bindless_buffer_UAV_invalid  = bindless_buffer_UAV_offset + bindless_buffer_UAV_count - 1;
-    const uint bindless_buffer_UAV_binding  = 1;
-
-    const uint bindless_element_count   = bindless_texture_SRV_count + bindless_texture_UAV_offset + bindless_buffer_SRV_count + bindless_buffer_UAV_offset;
-}
+#ifdef DX12
+#define DECL_DESCRIPTOR_RANGE_RO(type, name, bind, offset) type name[] : register(t##offset, space##bind);
+#define DECL_DESCRIPTOR_RANGE_RW(type, name, bind, offset) type name[] : register(u##offset, space##bind);
+#elif defined(VULKAN)
+#define DECL_DESCRIPTOR_RANGE_RO(type, name, bind, offset) [[vk::binding(bind, 0)]] type name[];
+#define DECL_DESCRIPTOR_RANGE_RW(type, name, bind, offset) [[vk::binding(bind, 0)]] type name[];
 #endif
 
-#ifndef __cplusplus
-#ifdef VULKAN
-[[vk::binding(0, 0)]] Texture1D  Texture1DTable[];
-[[vk::binding(0, 0)]] Texture2D  Texture2DTable[];
-[[vk::binding(0, 0)]] Texture3D  Texture3DTable[];
-[[vk::binding(1, 0)]] ByteAddressBuffer  BufferTable[];
-#elif defined(DX12)
-Texture1D         Texture1DTable[] : register(t0, space0);
-Texture2D         Texture2DTable[] : register(t0, space0);
-Texture3D         Texture3DTable[] : register(t0, space0);
-ByteAddressBuffer BufferTable[]    : register(t16384, space1);
-#endif // DX12
-#endif // !__cplusplus
+DECL_DESCRIPTOR_RANGE_RO(Texture1D, Texture1DTable, 0, 0);
+DECL_DESCRIPTOR_RANGE_RO(Texture2D, Texture2DTable, 0, 0);
+DECL_DESCRIPTOR_RANGE_RO(Texture3D, Texture3DTable, 0, 0);
+
+DECL_DESCRIPTOR_RANGE_RO(ByteAddressBuffer, BufferTable, 1, 16384);
+
+DECL_DESCRIPTOR_RANGE_RW(RWTexture2D<float4>, RWTexture2DTable, 2, 32768);
+
+DECL_DESCRIPTOR_RANGE_RW(RWByteAddressBuffer, RWBufferTable, 3, 49152);
+
 #endif // _DRIVER__HLSLI_

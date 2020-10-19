@@ -4,8 +4,6 @@
 #include "graphics/driver/Resource/Texture.h"
 #include "core/Math/Math.h"
 
-#include "Shaders/system/bindless.hlsli"
-
 using namespace vg::core;
 
 #include VG_GFXAPI_IMPL(BindlessTable)
@@ -21,6 +19,8 @@ namespace vg::graphics::driver
 
             m_tableDesc.addTextures(0, bindless_texture_SRV_count, 0, bindless_texture_SRV_offset);
             m_tableDesc.addBuffers(0, bindless_buffer_SRV_count, 1, bindless_buffer_SRV_offset);
+            m_tableDesc.addUAVTextures(0, bindless_texture_UAV_count, 2, bindless_texture_UAV_offset);
+            m_tableDesc.addUAVBuffers(0, bindless_buffer_UAV_count, 3, bindless_buffer_UAV_offset);
         }
 
         //--------------------------------------------------------------------------------------

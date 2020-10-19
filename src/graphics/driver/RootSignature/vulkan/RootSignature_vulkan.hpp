@@ -38,6 +38,10 @@ namespace vg::graphics::driver::vulkan
 
                 switch (descriptor.getDescriptorType())
                 {
+                    default:
+                    VG_ASSERT(false, "Unhandled Descriptor::Type \"%s\" (%u)", asString(descriptor.getDescriptorType()).c_str(), descriptor.getDescriptorType());
+                    break;
+
                     case RootSignatureTableDesc::Descriptor::Type::Texture:
                     {
                         const auto & textures = descriptor.getTextures();
@@ -53,10 +57,32 @@ namespace vg::graphics::driver::vulkan
                     {
                         const auto & buffers = descriptor.getBuffers();
                         vkLayoutBinding.binding = buffers.m_space;
-                        vkLayoutBinding.descriptorType = VK_DESCRIPTOR_TYPE_STORAGE_BUFFER;
+                        vkLayoutBinding.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_TEXEL_BUFFER;
                         vkLayoutBinding.descriptorCount = buffers.m_count;
                         vkLayoutBinding.stageFlags = getVulkanShaderStageFlags(table.getShaderStageFlags());
                         vkLayoutBinding.pImmutableSamplers = nullptr; 
+                    }
+                    break;
+
+                    case RootSignatureTableDesc::Descriptor::Type::UAVTexture:
+                    {
+                        const auto & textures = descriptor.getUAVTextures();
+                        vkLayoutBinding.binding = textures.m_space;
+                        vkLayoutBinding.descriptorType = VK_DESCRIPTOR_TYPE_STORAGE_IMAGE;
+                        vkLayoutBinding.descriptorCount = textures.m_count;
+                        vkLayoutBinding.stageFlags = getVulkanShaderStageFlags(table.getShaderStageFlags());
+                        vkLayoutBinding.pImmutableSamplers = nullptr;
+                    }
+                    break;
+
+                    case RootSignatureTableDesc::Descriptor::Type::UAVBuffer:
+                    {
+                        const auto & buffers = descriptor.getUAVBuffers();
+                        vkLayoutBinding.binding = buffers.m_space;
+                        vkLayoutBinding.descriptorType = VK_DESCRIPTOR_TYPE_STORAGE_BUFFER;
+                        vkLayoutBinding.descriptorCount = buffers.m_count;
+                        vkLayoutBinding.stageFlags = getVulkanShaderStageFlags(table.getShaderStageFlags());
+                        vkLayoutBinding.pImmutableSamplers = nullptr;
                     }
                     break;
                 }

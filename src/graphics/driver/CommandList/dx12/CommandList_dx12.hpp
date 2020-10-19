@@ -119,7 +119,7 @@ namespace vg::graphics::driver::dx12
         switch (_state)
         {
             default:
-                VG_ASSERT(false, "Unhandled ResourceState \"%s\" (%u)", asString(_state), _state);
+                VG_ASSERT(false, "Unhandled ResourceState \"%s\" (%u)", asString(_state).c_str(), _state);
             case ResourceState::Undefined:
                 return D3D12_RESOURCE_STATE_COMMON;
 
@@ -281,7 +281,7 @@ namespace vg::graphics::driver::dx12
         case PrimitiveTopology::LineList:
             return D3D_PRIMITIVE_TOPOLOGY_LINELIST;
         default:
-            VG_ASSERT(false, "Unhandled PrimitiveTopology \"%s\" (%u)", asString(_topology), _topology);
+            VG_ASSERT(false, "Unhandled PrimitiveTopology \"%s\" (%u)", asString(_topology).c_str(), _topology);
         case PrimitiveTopology::TriangleList:
             return D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
         case PrimitiveTopology::LineStrip:
