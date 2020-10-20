@@ -8,7 +8,7 @@ namespace vg::graphics::driver
         Upload,
         //Static,
         //Staging,
-        //Dynamic
+        Dynamic
     };
 
     enum class CPUAccessFlags : core::u8
@@ -52,6 +52,8 @@ namespace vg::graphics::driver
             core::u16 bits;
         };
 
-        inline bool isShaderResource() const { return core::u16(BindFlags::ShaderResource) & core::u16(m_bindFlags); }
+        inline bool isDynamicResource() const   { return core::u16(Usage::Dynamic) & core::u16(m_usage); }
+
+        inline bool isShaderResource() const    { return core::u16(BindFlags::ShaderResource) & core::u16(m_bindFlags); }
     };
 }

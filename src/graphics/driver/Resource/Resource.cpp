@@ -5,6 +5,7 @@
 #include "Resource.h"
 #include "Buffer.h"
 #include "Texture.h"
+#include "UploadBuffer.h"
 #include "graphics/driver/bindlessTable/BindlessTable.h"
 
 using namespace vg::core;
@@ -13,3 +14,4 @@ using namespace vg::core;
 
 #include "Texture.hpp"
 #include "Buffer.hpp"
+#include "UploadBuffer.hpp"

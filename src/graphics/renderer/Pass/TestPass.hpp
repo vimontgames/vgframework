@@ -76,6 +76,13 @@ namespace vg::graphics::renderer
         
             m_buffer.push_back(device->createBuffer(bufDesc, "buf #0", (void*)&initData));
         }
+
+        // cb
+        {
+            BufferDesc bufDesc = BufferDesc(Usage::Dynamic, BindFlags::ConstantBuffer, CPUAccessFlags::None, BufferFlags::None, sizeof(CBConstants), 1);
+
+            m_constantBuffer = device->createBuffer(bufDesc, "cb #0");
+        }
     }
 
     //--------------------------------------------------------------------------------------
@@ -91,6 +98,8 @@ namespace vg::graphics::renderer
         for (auto *& buf : m_buffer)
             VG_SAFE_RELEASE_ASYNC(buf);
         m_buffer.clear();
+            
+        VG_SAFE_RELEASE_ASYNC(m_constantBuffer);
     }
 
     //--------------------------------------------------------------------------------------
@@ -115,6 +124,16 @@ namespace vg::graphics::renderer
         uint texID;
         
         static float y = 0.0f;
+
+        posOffetScale = float4(0.5f, 0.5f, 0.125f, 0.125f);
+        texOffetScale = float4(0.0f, 0.0f, 1.0f, 1.0f);
+        texID = m_texture[0]->getBindlessSRVHandle();
+
+        _cmdList->setRootConstants(0, (u32*)&posOffetScale, 4);
+        _cmdList->setRootConstants(4, (u32*)&texOffetScale, 4);
+        _cmdList->setRootConstants(8, &texID, 1);
+
+        _cmdList->draw(4);
                 
         posOffetScale = float4(0.75f, 0.25f + y, 0.25f, 0.25f);
         texOffetScale = float4(0.0f, 0.0f, 1.0f, 1.0f);

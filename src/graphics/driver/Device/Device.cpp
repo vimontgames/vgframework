@@ -13,6 +13,7 @@
 #include "graphics/driver/PipelineState/SamplerState.h"
 #include "graphics/driver/Profiler/Profiler.h"
 #include "graphics/driver/Importer/TextureImporter.h"
+#include "graphics/driver/Resource/UploadBuffer.h"
 
 using namespace vg::core;
 using namespace vg::graphics;
@@ -132,47 +133,32 @@ namespace vg::graphics::driver
 
             // Buffer for uploads
             {
-                auto & buffer = context.m_uploadBuffer;
-            
-                BufferDesc bufDesc(
-                    Usage::Upload, 
-                    BindFlags::None, 
-                    CPUAccessFlags::Write, 
-                    BufferFlags::None, 
-                    16 * 1024 * 1024); // 16 Mo
-            
-                buffer = new driver::Buffer(bufDesc, "Upload#" + to_string(_frameContextIndex));
-            
-                // keep always mapped
-                Map result = buffer->getResource().map();
-                context.m_uploadBegin = (core::u8*)result.data;
-                context.m_uploadCur = context.m_uploadBegin;
+                context.m_uploadBuffer = new UploadBuffer("Upload#" + to_string(_frameContextIndex), 16 * 1024 * 1024);
             }
 		}
 
 		//--------------------------------------------------------------------------------------
 		void Device::destroyFrameContext(core::uint _frameContextIndex)
 		{
-            auto & frameContext = m_frameContext[_frameContextIndex];
-			auto & pools = frameContext.commandPools;
+            auto & context = m_frameContext[_frameContextIndex];
+			auto & pools = context.commandPools;
 			for (auto & pool : pools)
 				VG_SAFE_RELEASE(pool);
 			pools.clear();
 
 			for (uint type = 0; type < enumCount<CommandListType>(); ++type)
 			{
-				auto & cmdLists = frameContext.commandLists[type];
+				auto & cmdLists = context.commandLists[type];
 				for (auto & cmdList : cmdLists)
 					VG_SAFE_RELEASE(cmdList);
 				cmdLists.clear();
 			}			
 
-            for (Object * obj : frameContext.m_objectsToRelease)
+            for (Object * obj : context.m_objectsToRelease)
                 VG_SAFE_RELEASE(obj);
-            frameContext.m_objectsToRelease.clear();
+            context.m_objectsToRelease.clear();
 
-            frameContext.m_uploadBuffer->getResource().unmap();
-            VG_SAFE_RELEASE(frameContext.m_uploadBuffer);
+            VG_SAFE_DELETE(context.m_uploadBuffer);
 		}
 
         //--------------------------------------------------------------------------------------
@@ -262,20 +248,6 @@ namespace vg::graphics::driver
 		{
 			return m_bufferContext[m_currentBackbufferIndex].backbuffer;
 		}
-
-        //--------------------------------------------------------------------------------------
-        void Device::upload(driver::Texture * _dst, core::u32 _from)
-        {
-            auto & context = getCurrentFrameContext();
-            context.m_texturesToUpload.push_back({ _dst, _from });
-        }
-
-        //--------------------------------------------------------------------------------------
-        void Device::upload(driver::Buffer * _dst, core::u32 _from)
-        {
-            auto & context = getCurrentFrameContext();
-            context.m_buffersToUpload.push_back({ _dst, _from });
-        }
 
         //--------------------------------------------------------------------------------------
         driver::BindlessTable * Device::getBindlessTable() const
@@ -381,23 +353,7 @@ namespace vg::graphics::driver
         auto & context = getCurrentFrameContext();
         auto * cmdList = context.commandLists[asInteger(CommandQueueType::Graphics)][0];
 
-        auto & buffers = context.m_buffersToUpload;
-        for (uint i = 0; i < buffers.size(); ++i)
-        {
-            auto & pair = buffers[i];
-            cmdList->copyBuffer(pair.first, pair.second);
-        }
-        buffers.clear();
-
-        auto & textures = context.m_texturesToUpload;
-        for (uint i = 0; i < textures.size(); ++i)
-        {
-            auto & pair = textures[i];
-            cmdList->copyTexture(pair.first, pair.second);
-        }
-        textures.clear();
-        
-        context.m_uploadCur = context.m_uploadBegin;
+        context.m_uploadBuffer->flush(cmdList);
     }
 
 	//--------------------------------------------------------------------------------------

@@ -202,18 +202,15 @@ namespace vg::graphics::driver::vulkan
                     u64 uploadBufferSize = mem_reqs.size;
 
                     auto & context = device->getCurrentFrameContext();
-                    auto * mapped = context.m_uploadBuffer->getResource().m_vmaAllocInfo.pMappedData;
+
+                    const uint_ptr offset = context.m_uploadBuffer->alloc(uploadBufferSize, (uint)mem_reqs.alignment);
+                    u8 * dst = context.m_uploadBuffer->getBaseAddress() + offset;
 
                     // Copy to upload buffer line by line
-                    context.m_uploadCur = (u8*)alignUp((uint_ptr)context.m_uploadCur, (core::u32)mem_reqs.alignment);
-                    const u32 offset = (u32)(context.m_uploadCur - context.m_uploadBegin);
-
                     for (uint y = 0; y < _texDesc.height; ++y)
-                        memcpy(context.m_uploadCur + y * _texDesc.width * fmtSize, &((u8*)_initData)[y * _texDesc.width * fmtSize], fmtSize * _texDesc.width);
+                        memcpy(dst + y * _texDesc.width * fmtSize, &((u8*)_initData)[y * _texDesc.width * fmtSize], fmtSize * _texDesc.width);
 
-                    device->upload(static_cast<driver::Texture*>(this), offset);
-
-                    context.m_uploadCur += uploadBufferSize;
+                    context.m_uploadBuffer->upload(static_cast<driver::Texture*>(this), offset);
                 }
             }
 		}

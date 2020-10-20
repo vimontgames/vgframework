@@ -133,6 +133,8 @@
     <ClInclude Include="Resource\dx12\Texture_dx12.hpp" />
     <ClInclude Include="Resource\Texture.h" />
     <ClInclude Include="Resource\Texture_consts.h" />
+    <ClInclude Include="Resource\UploadBuffer.h" />
+    <ClInclude Include="Resource\UploadBuffer.hpp" />
     <ClInclude Include="Resource\vulkan\Buffer_vulkan.h" />
     <ClInclude Include="Resource\vulkan\Buffer_vulkan.hpp" />
     <ClInclude Include="Resource\vulkan\Resource_vulkan.h" />

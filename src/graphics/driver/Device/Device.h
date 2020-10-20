@@ -27,6 +27,7 @@ namespace vg::graphics::driver
     class RootSignatureDesc;
     class ShaderManager;
     class BindlessTable;
+    class UploadBuffer;
 
     enum class PixelFormat : core::u8;
 
@@ -40,11 +41,7 @@ namespace vg::graphics::driver
 		core::vector<driver::CommandPool*>	            commandPools;
 		core::vector<driver::CommandList*>	            commandLists[core::enumCount<CommandListType>()];
         core::vector<core::Object*>                     m_objectsToRelease;
-        driver::Buffer *                                m_uploadBuffer = nullptr;
-        core::u8 *                                      m_uploadBegin = nullptr;
-        core::u8 *                                      m_uploadCur = nullptr;
-        core::vector<core::pair<Texture*, core::u32>>   m_texturesToUpload;
-        core::vector<core::pair<Buffer*, core::u32>>    m_buffersToUpload;
+        UploadBuffer *                                  m_uploadBuffer = nullptr;
         UINT64                                          mFrameFenceId;
 	};
 
@@ -86,9 +83,6 @@ namespace vg::graphics::driver
 
             void                                            releaseAsync                (core::Object * _object);
             void                                            flushReleaseAsync           ();
-
-            void                                            upload                      (driver::Texture * _dst, core::u32 _from);
-            void                                            upload                      (driver::Buffer * _dst, core::u32 _from);
 
             BindlessTable *                                 getBindlessTable            () const;
             driver::PixelFormat                             getBackbufferFormat         () const { return m_backbufferFormat; }

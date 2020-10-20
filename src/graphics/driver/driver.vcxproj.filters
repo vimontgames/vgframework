@@ -459,6 +459,12 @@
     <ClInclude Include="BindlessTable\BindlessHandle.hpp">
       <Filter>BindlessTable</Filter>
     </ClInclude>
+    <ClInclude Include="Resource\UploadBuffer.h">
+      <Filter>Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource\UploadBuffer.hpp">
+      <Filter>Resource</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Device">

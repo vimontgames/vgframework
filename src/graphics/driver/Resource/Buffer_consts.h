@@ -4,7 +4,7 @@ namespace vg::graphics::driver
 {
     enum class BufferFlags : core::u16
     {
-        None = 0x0000,
+        None = 0x0000
     };
 
     class BufferDesc
@@ -20,6 +20,9 @@ namespace vg::graphics::driver
         }
 
         core::u32 size() const { return elementSize * elementCount; }
+
+        inline bool isShaderResource() const { return resource.isShaderResource(); }
+        inline bool isDynamicResource() const { return resource.isDynamicResource(); }
 
         ResourceDesc    resource;
         BufferFlags     flags;

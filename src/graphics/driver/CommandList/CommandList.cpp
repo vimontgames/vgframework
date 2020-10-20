@@ -9,6 +9,7 @@
 #include "graphics/driver/FrameGraph/UserPass.h"
 #include "graphics/driver/Resource/Texture.h"
 #include "graphics/driver/Resource/Buffer.h"
+#include "graphics/driver/Resource/UploadBuffer.h"
 #include "graphics/driver/BindlessTable/BindlessTable.h"
 
 using namespace vg::core;

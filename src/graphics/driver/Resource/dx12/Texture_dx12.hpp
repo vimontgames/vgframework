@@ -193,10 +193,9 @@ namespace vg::graphics::driver::dx12
             }
         }
 
-        if (nullptr != _initData && !asBool(TextureFlags::Backbuffer & _texDesc.flags))
+        if (nullptr != _initData && !_texDesc.isBackbuffer())
         {
             auto & context = device->getCurrentFrameContext();
-            auto * data = context.m_uploadCur;
 
             const auto fmtSize = getPixelFormatSize(_texDesc.format);
 
@@ -208,20 +207,18 @@ namespace vg::graphics::driver::dx12
             pitchedDesc.Depth = 1;
             pitchedDesc.RowPitch = (uint)alignUp(_texDesc.width * fmtSize, D3D12_TEXTURE_DATA_PITCH_ALIGNMENT);
 
-            u64 uploadBufferSize = 0;
+            size_t uploadBufferSize = 0;
             d3d12device->GetCopyableFootprints(&resourceDesc, 0, 1, 0, nullptr, nullptr, nullptr, &uploadBufferSize);
             VG_ASSERT((core::u32)uploadBufferSize == uploadBufferSize);
 
             // Copy to upload buffer line by line
-            context.m_uploadCur = (u8*)alignUp((uint_ptr)context.m_uploadCur, D3D12_TEXTURE_DATA_PLACEMENT_ALIGNMENT);
-            const u32 offset = (u32)(context.m_uploadCur - context.m_uploadBegin);
+            core::uint_ptr offset = context.m_uploadBuffer->alloc(uploadBufferSize, D3D12_TEXTURE_DATA_PLACEMENT_ALIGNMENT);
+            core::u8 * dst = context.m_uploadBuffer->getBaseAddress() + offset;
 
             for (uint y = 0; y < _texDesc.height; ++y)
-                memcpy(context.m_uploadCur + y * pitchedDesc.RowPitch, &((u8*)_initData)[y * _texDesc.width * fmtSize], fmtSize * _texDesc.width);
+                memcpy(dst + y * pitchedDesc.RowPitch, &((u8*)_initData)[y * _texDesc.width * fmtSize], fmtSize * _texDesc.width);
 
-            device->upload(static_cast<driver::Texture*>(this), offset);
-
-            context.m_uploadCur += uploadBufferSize;
+            context.m_uploadBuffer->upload(static_cast<driver::Texture*>(this), offset);
         }
 	}
 

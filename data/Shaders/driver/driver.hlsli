@@ -4,6 +4,12 @@
 #include "../system/quad.hlsli"
 #include "../system/constants.hlsli"
 
+struct CBConstants
+{
+    float4 color0;
+    float4 color1;
+};
+
 struct RootConstants
 {
     QuadConstants   quad;

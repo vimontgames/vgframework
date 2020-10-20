@@ -19,5 +19,6 @@ namespace vg::graphics::renderer
         driver::ShaderKey               m_shaderKey;
         core::vector<driver::Texture *> m_texture;
         core::vector<driver::Buffer*>   m_buffer;
+        driver::Buffer *                m_constantBuffer = nullptr;
     };
 }
