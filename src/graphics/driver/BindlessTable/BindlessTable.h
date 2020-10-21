@@ -29,8 +29,8 @@ namespace vg::graphics::driver
             void freeBindlessBufferHandle(BindlessBufferSrvHandle & _handle);
             
         private:
-            template <class H, class T, class P> H allocBindlessHandle(T * _resource, ReservedSlot _reservedSlot, P & _pool, T ** _resources, uint _offset, uint _invalid);
-            template <class H, class T, class P> void freeBindlessHandle(H & _handle, P & _pool, T ** _resources, uint _offset, uint _invalid);
+            template <class H, class T, class P> H allocBindlessHandle(T * _resource, ReservedSlot _reservedSlot, P & _pool, T ** _resources, core::uint _offset, core::uint _invalid);
+            template <class H, class T, class P> void freeBindlessHandle(H & _handle, P & _pool, T ** _resources, core::uint _offset, core::uint _invalid);
 
         private:
             RootSignatureTableDesc                                              m_tableDesc;

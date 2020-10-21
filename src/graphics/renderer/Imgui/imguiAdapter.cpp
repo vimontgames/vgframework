@@ -23,12 +23,13 @@
 #include "graphics/driver/Resource/Texture.h"
 #include "graphics/driver/BindlessTable/BindlessTable.h"
 
+using namespace vg::core;
+using namespace vg::graphics::driver;
+
 namespace vg::graphics::renderer
 {
-    using namespace vg::graphics::driver;
-
     //--------------------------------------------------------------------------------------
-    ImguiAdapter::ImguiAdapter(core::WinHandle _winHandle, Device & _device)
+    ImguiAdapter::ImguiAdapter(WinHandle _winHandle, Device & _device)
     {
         ImGui::CreateContext();
         ImGuiIO & io = ImGui::GetIO();

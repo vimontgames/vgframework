@@ -292,7 +292,7 @@ namespace vg::graphics::driver::dx12
     }
 
     //--------------------------------------------------------------------------------------
-    void CommandList::copyBuffer(driver::Buffer * _dst, core::u32 _from)
+    void CommandList::copyBuffer(driver::Buffer * _dst, core::uint_ptr _from)
     {
         auto * device = driver::Device::get();
         auto & context = device->getCurrentFrameContext();
@@ -322,7 +322,7 @@ namespace vg::graphics::driver::dx12
     }
 
     //--------------------------------------------------------------------------------------
-    void CommandList::copyTexture(driver::Texture * _dst, core::u32 _from)
+    void CommandList::copyTexture(driver::Texture * _dst, core::uint_ptr _from)
     {
         auto * device = driver::Device::get();
         auto & context = device->getCurrentFrameContext();

@@ -21,7 +21,7 @@ namespace vg::graphics::driver
     private:
         driver::Buffer *                                        m_uploadBuffer = nullptr;
         core::u8 *                                              m_uploadBegin = nullptr;
-        atomic<core::uint_ptr>                                  m_offsetCur = 0;
+        core::atomic<core::uint_ptr>                            m_offsetCur = 0;
         core::vector<core::pair<Texture*, core::uint_ptr>>      m_texturesToUpload;
         core::vector<core::pair<Buffer*, core::uint_ptr>>       m_buffersToUpload;
     };
