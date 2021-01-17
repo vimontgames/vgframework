@@ -16,6 +16,8 @@ struct RootConstants
     uint            texID;
 };
 
+#define RootConstantsCount 9
+
 #ifndef __cplusplus
 DECL_ROOTCONSTANTS(RootConstants, rootConstants, 0, 0);
 #endif

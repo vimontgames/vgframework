@@ -11,7 +11,7 @@ namespace vg::graphics::renderer
         auto * device = Device::get();
 
         RootSignatureDesc rsDesc;
-        rsDesc.addRootConstants(ShaderStageFlags::VS | ShaderStageFlags::PS, 0, sizeof(RootConstants) / sizeof(u32));
+        rsDesc.addRootConstants(ShaderStageFlags::VS | ShaderStageFlags::PS, 0, RootConstantsCount/*sizeof(RootConstants)/sizeof(u32)*/);
 
         const RootSignatureTableDesc & bindlessTable = device->getBindlessTable()->getTableDesc();
         rsDesc.addTable(bindlessTable);

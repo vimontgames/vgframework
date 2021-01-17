@@ -1,4 +1,4 @@
-#include "game/Precomp.h"
+#include "Precomp.h"
 
 #include "core/Plugin/Plugin.h"
 #include "core/CmdLine/CmdLine.h"
@@ -194,7 +194,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
     g_engine->init(engineParams);
 
-	core::string title = "VG framework - " + core::Plugin::getConfiguration() + " - " + core::asString(engineParams.renderer.device.api);
+	core::string title = "Super Vimont Brawl - " + core::Plugin::getConfiguration() + " - " + core::asString(engineParams.renderer.device.api);
     if (engineParams.renderer.device.debugDevice)
         title += " (debug)";
 
