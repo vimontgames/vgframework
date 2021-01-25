@@ -3,8 +3,10 @@
   <ItemGroup>
     <ClCompile Include="src\Precomp.cpp" />
     <ClCompile Include="src\WinMain.cpp" />
+    <ClCompile Include="src\SuperVimontBrawl.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Precomp.h" />
+    <ClInclude Include="src\SuperVimontBrawl.h" />
   </ItemGroup>
 </Project>

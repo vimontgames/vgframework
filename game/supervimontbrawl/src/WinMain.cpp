@@ -1,5 +1,11 @@
 #include "Precomp.h"
 
+#if defined(_WIN32)
+#ifdef VG_DEBUG
+#define _CRTDBG_MAP_ALLOC
+#endif
+#endif
+
 #include "core/Plugin/Plugin.h"
 #include "core/CmdLine/CmdLine.h"
 
@@ -7,11 +13,7 @@
 #include "graphics/renderer/IRenderer.h"
 #include "graphics/driver/IDevice.h"
 
-#if defined(_WIN32)
-#ifdef VG_DEBUG
-#define _CRTDBG_MAP_ALLOC
-#endif
-#endif
+#include "SuperVimontBrawl.h"
 
 HINSTANCE hInst;
 HWND g_hWnd;
@@ -194,6 +196,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
     g_engine->init(engineParams);
 
+    SuperVimontBrawlGame * game = new SuperVimontBrawlGame(g_engine);
+
 	core::string title = "Super Vimont Brawl - " + core::Plugin::getConfiguration() + " - " + core::asString(engineParams.renderer.device.api);
     if (engineParams.renderer.device.debugDevice)
         title += " (debug)";
@@ -208,6 +212,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
         g_engine->runOneFrame();
 	}
 
+    VG_SAFE_DELETE(game);
     g_engine->deinit();
     VG_SAFE_RELEASE(g_engine);
 

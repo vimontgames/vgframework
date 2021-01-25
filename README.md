@@ -32,3 +32,8 @@ https://visualstudio.microsoft.com/fr/vs/older-downloads/
 # optional
 - "Solution Configuration Name" plugin for Visual Studio 2017
 https://marketplace.visualstudio.com/items?itemName=ceztko.SolutionConfigurationName
+
+If you are using the "Solution Configuration Name" plugin you can use SolutionPlatform="$(SolutionPlatform)" in Visual Studio's command line to be able to use the DirectX12 or the Vulkan renderer by directly changing the solution platform.
+
+![Screenshot](doc/img/SolutionPlatformName1.png)
+![Screenshot](doc/img/SolutionPlatformName2.png)
