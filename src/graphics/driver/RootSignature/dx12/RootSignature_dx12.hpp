@@ -43,6 +43,20 @@ namespace vg::graphics::driver::dx12
                     VG_ASSERT(false, "Unhandled Descriptor::Type \"%s\" (%u)", asString(descriptor.getDescriptorType()).c_str(), descriptor.getDescriptorType());
                     break;
 
+                    case RootSignatureTableDesc::Descriptor::Type::ConstantBuffer:
+                    {
+                        const auto & constantbuffers = descriptor.getConstantBuffers();
+                        
+                        d3d12Descriptor.RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_CBV;
+                        d3d12Descriptor.BaseShaderRegister = constantbuffers.m_offset;
+                        d3d12Descriptor.NumDescriptors = constantbuffers.m_count;
+                        d3d12Descriptor.RegisterSpace = constantbuffers.m_space;
+                        d3d12Descriptor.OffsetInDescriptorsFromTableStart = constantbuffers.m_offset;
+
+                        d3d12Descriptors.push_back(d3d12Descriptor);
+                    }
+                    break;
+
                     case RootSignatureTableDesc::Descriptor::Type::Texture:
                     {
                         const auto & textures = descriptor.getTextures();

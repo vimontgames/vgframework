@@ -20,26 +20,34 @@ namespace vg::graphics::driver
             BindlessTable();
             ~BindlessTable();
 
+            void beginFrame();
+
             const RootSignatureTableDesc & getTableDesc() const { return m_tableDesc; }
 
-            BindlessTextureSrvHandle allocBindlessTextureHandle(driver::Texture * _texture, ReservedSlot _reservedSlot = ReservedSlot::None);
+            BindlessTextureSrvHandle allocBindlessTextureHandle(const driver::Texture * _texture, ReservedSlot _reservedSlot = ReservedSlot::None);
             void freeBindlessTextureHandle(BindlessTextureSrvHandle & _handle);
 
-            BindlessBufferSrvHandle allocBindlessBufferHandle(driver::Buffer * _buffer, ReservedSlot _reservedSlot = ReservedSlot::None);
+            BindlessBufferSrvHandle allocBindlessBufferHandle(const driver::Buffer * _buffer, ReservedSlot _reservedSlot = ReservedSlot::None);
             void freeBindlessBufferHandle(BindlessBufferSrvHandle & _handle);
+
+            BindlessConstantBufferHandle allocBindlessConstantBufferHandle(const driver::Buffer * _constantbuffer, ReservedSlot _reservedSlot = ReservedSlot::None);
+            void freeBindlessBufferHandle(BindlessConstantBufferHandle & _handle);
             
         private:
-            template <class H, class T, class P> H allocBindlessHandle(T * _resource, ReservedSlot _reservedSlot, P & _pool, T ** _resources, core::uint _offset, core::uint _invalid);
+            template <class H, class T, class P> H allocBindlessHandle(const T * _resource, ReservedSlot _reservedSlot, P & _pool, T ** _resources, core::uint _offset, core::uint _invalid);
             template <class H, class T, class P> void freeBindlessHandle(H & _handle, P & _pool, T ** _resources, core::uint _offset, core::uint _invalid);
 
         private:
-            RootSignatureTableDesc                                              m_tableDesc;
+            RootSignatureTableDesc                                                  m_tableDesc;
 
-            core::IndexPool<BindlessHandle::Type, bindless_texture_SRV_count>   m_textureSrvIndexPool;
-            Texture *                                                           m_textureSrv[bindless_texture_SRV_count];
+            core::IndexPool<BindlessHandle::Type, bindless_texture_SRV_count>       m_textureSrvIndexPool;
+            Texture *                                                               m_textureSrv[bindless_texture_SRV_count];
 
-            core::IndexPool<BindlessHandle::Type, bindless_buffer_SRV_count>    m_bufferSrvIndexPool;
-            Buffer *                                                            m_bufferSrv[bindless_buffer_SRV_count];
+            core::IndexPool<BindlessHandle::Type, bindless_buffer_SRV_count>        m_bufferSrvIndexPool;
+            Buffer *                                                                m_bufferSrv[bindless_buffer_SRV_count];
+
+            core::IndexPool<BindlessHandle::Type, bindless_constantbuffer_count>    m_constantbufferIndexPool;
+            Buffer *                                                                m_constantbuffer[bindless_constantbuffer_count];
         };
     }
 }

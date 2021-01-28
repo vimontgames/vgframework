@@ -1,5 +1,6 @@
 #include "TestPass.h"
 #include "shaders/driver/driver.hlsli"
+#include "Shaders/system/bindless.hlsli"
 
 namespace vg::graphics::renderer
 {
@@ -79,7 +80,7 @@ namespace vg::graphics::renderer
 
         // cb
         {
-            BufferDesc bufDesc = BufferDesc(Usage::Dynamic, BindFlags::ConstantBuffer, CPUAccessFlags::None, BufferFlags::None, sizeof(CBConstants), 1);
+            BufferDesc bufDesc = BufferDesc(Usage::Dynamic, BindFlags::ConstantBuffer, CPUAccessFlags::None, BufferFlags::None, sizeof(UniformBufferTest), 1);
 
             m_constantBuffer = device->createBuffer(bufDesc, "cb #0");
         }
@@ -119,9 +120,27 @@ namespace vg::graphics::renderer
         _cmdList->setShader(m_shaderKey);
         _cmdList->setPrimitiveTopology(PrimitiveTopology::TriangleStrip);
         _cmdList->setRasterizerState(rs);
+
+        static u32 counter = 0;
+
+        UniformBufferTest * cb = (UniformBufferTest*)_cmdList->map(m_constantBuffer);
+        {
+            cb->test = float4(1, 0, 0, 1);
+        }
+        _cmdList->unmap(m_constantBuffer);
+
+        counter++;
+
+        auto * device = Device::get();
+        auto * bindless = device->getBindlessTable();
+
+        //bindless->
+
+        //_cmdList->setConstantBuffer(m_constantBuffer);
         
         float4 posOffetScale, texOffetScale;
         uint texID;
+        uint cbID = 0;
         
         static float y = 0.0f;
 
@@ -132,16 +151,19 @@ namespace vg::graphics::renderer
         _cmdList->setRootConstants(0, (u32*)&posOffetScale, 4);
         _cmdList->setRootConstants(4, (u32*)&texOffetScale, 4);
         _cmdList->setRootConstants(8, &texID, 1);
+        _cmdList->setRootConstants(9, &cbID, 1);
 
         _cmdList->draw(4);
                 
         posOffetScale = float4(0.75f, 0.25f + y, 0.25f, 0.25f);
         texOffetScale = float4(0.0f, 0.0f, 1.0f, 1.0f);
         texID = m_texture[3]->getBindlessSRVHandle();
+        cbID = 1;
 
         _cmdList->setRootConstants(0, (u32*)&posOffetScale, 4);
         _cmdList->setRootConstants(4, (u32*)&texOffetScale, 4);
         _cmdList->setRootConstants(8, &texID, 1);
+        _cmdList->setRootConstants(9, &cbID, 1);
         
         auto * renderer = Renderer::get();
         const auto & backbuffer = renderer->getBackbuffer()->getTexDesc();
@@ -157,6 +179,12 @@ namespace vg::graphics::renderer
             y -= 1.0f / (float)backbuffer.height;
         else
             y += 1.0f/(float)backbuffer.height;
+
+        cb = (UniformBufferTest*)_cmdList->map(m_constantBuffer);
+        {
+            cb->test = float4(0, 1, 0, 1);
+        }
+        _cmdList->unmap(m_constantBuffer);
         
         _cmdList->draw(4);
     }

@@ -16,11 +16,12 @@ namespace vg::graphics::driver
         BindlessTable::BindlessTable()
         {
             m_tableDesc.setShaderStageFlags(ShaderStageFlags::All);
-
+            
             m_tableDesc.addTextures(0, bindless_texture_SRV_count, 0, bindless_texture_SRV_offset);
             m_tableDesc.addBuffers(0, bindless_buffer_SRV_count, 1, bindless_buffer_SRV_offset);
             m_tableDesc.addUAVTextures(0, bindless_texture_UAV_count, 2, bindless_texture_UAV_offset);
             m_tableDesc.addUAVBuffers(0, bindless_buffer_UAV_count, 3, bindless_buffer_UAV_offset);
+            m_tableDesc.addConstantBuffers(0, bindless_constantbuffer_count, 4, bindless_constantbuffer_offset);
         }
 
         //--------------------------------------------------------------------------------------
@@ -30,7 +31,7 @@ namespace vg::graphics::driver
         }
 
         //--------------------------------------------------------------------------------------
-        template <class H, class T, class P> H BindlessTable::allocBindlessHandle(T * _resource, ReservedSlot _reservedSlot, P & _pool, T ** _resources, uint _offset, uint _invalid)
+        template <class H, class T, class P> H BindlessTable::allocBindlessHandle(const T * _resource, ReservedSlot _reservedSlot, P & _pool, T ** _resources, uint _offset, uint _invalid)
         {
             H handle;
 
@@ -45,7 +46,7 @@ namespace vg::graphics::driver
             }
 
             if (_invalid != handle && ReservedSlot::None != _reservedSlot)
-                _resources[handle - _offset] = _resource;
+                _resources[handle - _offset] = (T*)_resource;
 
             return handle;
         }
@@ -62,7 +63,7 @@ namespace vg::graphics::driver
         }
 
         //--------------------------------------------------------------------------------------
-        BindlessTextureSrvHandle BindlessTable::allocBindlessTextureHandle(driver::Texture * _texture, ReservedSlot _reservedSlot)
+        BindlessTextureSrvHandle BindlessTable::allocBindlessTextureHandle(const driver::Texture * _texture, ReservedSlot _reservedSlot)
         {
             return allocBindlessHandle<BindlessTextureSrvHandle>(_texture, _reservedSlot, m_textureSrvIndexPool, m_textureSrv, bindless_texture_SRV_offset, bindless_texture_SRV_invalid);
         }
@@ -74,7 +75,7 @@ namespace vg::graphics::driver
         }
         
         //--------------------------------------------------------------------------------------
-        BindlessBufferSrvHandle BindlessTable::allocBindlessBufferHandle(driver::Buffer * _buffer, ReservedSlot _reservedSlot)
+        BindlessBufferSrvHandle BindlessTable::allocBindlessBufferHandle(const driver::Buffer * _buffer, ReservedSlot _reservedSlot)
         {
             return allocBindlessHandle<BindlessBufferSrvHandle>(_buffer, _reservedSlot, m_bufferSrvIndexPool, m_bufferSrv, bindless_buffer_SRV_offset, bindless_buffer_SRV_invalid);
         }
@@ -83,6 +84,24 @@ namespace vg::graphics::driver
         void BindlessTable::freeBindlessBufferHandle(BindlessBufferSrvHandle & _handle)
         {
             freeBindlessHandle(_handle, m_bufferSrvIndexPool, m_bufferSrv, bindless_buffer_SRV_offset, bindless_buffer_SRV_invalid);
+        }
+
+        //--------------------------------------------------------------------------------------
+        BindlessConstantBufferHandle BindlessTable::allocBindlessConstantBufferHandle(const driver::Buffer * _constantbuffer, ReservedSlot _reservedSlot)
+        {
+            return allocBindlessHandle<BindlessConstantBufferHandle>(_constantbuffer, _reservedSlot, m_constantbufferIndexPool, m_constantbuffer, bindless_constantbuffer_offset, bindless_constantbuffer_invalid);
+        }
+
+        //--------------------------------------------------------------------------------------
+        void BindlessTable::freeBindlessBufferHandle(BindlessConstantBufferHandle & _handle)
+        {
+            freeBindlessHandle(_handle, m_constantbufferIndexPool, m_constantbuffer, bindless_constantbuffer_offset, bindless_constantbuffer_invalid);
+        }
+
+        //--------------------------------------------------------------------------------------
+        void BindlessTable::beginFrame()
+        {
+            m_constantbufferIndexPool.clear();
         }
     }
 

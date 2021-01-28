@@ -238,6 +238,28 @@ namespace vg::graphics::driver::dx12
         }
     }
 
+    //--------------------------------------------------------------------------------------
+    void CommandList::bindConstantBuffers(driver::Buffer*(&_constantbuffers)[max_constant_buffers])
+    {
+        //const auto & tables = m_currentRootSignature->getRootSignatureDesc().getTables();
+        //
+        //for (uint i = 0; i < tables.size(); ++i)
+        //{
+        //    const auto & table = tables[i];
+        //    const auto & descriptors = table.getDescriptors();
+        //    for (uint j = 0; j < descriptors.size(); ++j)
+        //    {
+        //        const auto & descriptor = descriptors[j];
+        //        const auto & type = descriptor.getDescriptorType();
+        //
+        //        if (RootSignatureTableDesc::Descriptor::Type::ConstantBuffer == type)
+        //        {
+        //            m_d3d12graphicsCmdList->SetGraphicsRootConstantBufferView();
+        //        }
+        //    }
+        //}
+    };    
+
 	//--------------------------------------------------------------------------------------
 	void CommandList::clear(const core::float4 & _color)
 	{
@@ -289,6 +311,47 @@ namespace vg::graphics::driver::dx12
         case PrimitiveTopology::TriangleStrip:
             return D3D_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP;
         }
+    }
+
+    //--------------------------------------------------------------------------------------
+    void * CommandList::map(driver::Buffer * _buffer)
+    {
+        auto * device = driver::Device::get();
+        auto * d3d12device = device->getd3d12Device();
+        BindlessTable * bindlessTable = device->getBindlessTable();
+        auto & context = device->getCurrentFrameContext();
+
+        const auto & bufDesc = _buffer->getBufDesc();
+        size_t bufferSize = bufDesc.size();
+
+        // allocate space in upload buffer
+        const uint alignment = 256; // CB size is required to be 256-byte aligned.
+        const uint_ptr offset = context.m_uploadBuffer->alloc(bufferSize, alignment);
+        core::u8 * data = context.m_uploadBuffer->getBaseAddress() + offset;
+
+        // create shader resource view for constant buffer
+        BindlessHandle handle = bindlessTable->allocBindlessConstantBufferHandle(context.m_uploadBuffer->getBuffer());
+        D3D12_CPU_DESCRIPTOR_HANDLE d3d12DescriptorHandle = bindlessTable->getd3d12CPUDescriptorHandle(handle);
+
+        D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc = {};
+        srvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
+        srvDesc.Format = DXGI_FORMAT_UNKNOWN;
+        srvDesc.ViewDimension = D3D12_SRV_DIMENSION_BUFFER;
+        srvDesc.Buffer.FirstElement = offset / alignment;
+        srvDesc.Buffer.NumElements = 1;
+        srvDesc.Buffer.StructureByteStride = (uint)(bufferSize+alignment-1) & ~(alignment-1); 
+        srvDesc.Buffer.Flags = D3D12_BUFFER_SRV_FLAG_NONE;
+        
+        d3d12device->CreateShaderResourceView(context.m_uploadBuffer->getBuffer()->getResource().getd3d12BufferResource(), &srvDesc, d3d12DescriptorHandle);
+        bindlessTable->updated3d12descriptor(handle);
+
+        return data;
+    }
+
+    //--------------------------------------------------------------------------------------
+    void CommandList::unmap(driver::Buffer * _buffer)
+    {
+
     }
 
     //--------------------------------------------------------------------------------------

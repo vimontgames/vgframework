@@ -14,6 +14,9 @@ namespace vg::graphics::driver::dx12
         Buffer(const BufferDesc & _bufDesc, const core::string & _name, void * _initData, ReservedSlot _reservedSlot);
         ~Buffer();
 
+        void map();
+        void unmap();
+
     private:
         
     };

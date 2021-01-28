@@ -285,6 +285,9 @@ namespace vg::graphics::driver
             if (asBool(StateCache::DirtyFlags::RootConstants & m_stateCache.dirtyFlags))
                 super::bindRootConstants(m_stateCache.rootConstants);
 
+            //if (asBool(StateCache::DirtyFlags::ConstantBuffers & m_stateCache.dirtyFlags))
+            //    super::bindConstantBuffers(m_stateCache.constantBuffers);
+
             m_stateCache.dirtyFlags = (StateCache::DirtyFlags)0;
         }
     }

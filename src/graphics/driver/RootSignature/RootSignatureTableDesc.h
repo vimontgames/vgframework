@@ -13,11 +13,11 @@ namespace vg::graphics::driver
         public:
             enum class Type
             {
-                Texture = 0,
+                ConstantBuffer = 0,
+                Texture,
                 Buffer,
                 UAVTexture,
                 UAVBuffer,
-                ConstantBuffer,
                 Sampler
             };
 
@@ -158,6 +158,7 @@ namespace vg::graphics::driver
         };
 
     public:
+        void addConstantBuffers(core::u8 _register, core::u32 _count = 1, core::u8 _space = 0, core::u16 _offset = Descriptor::Offset::Append);
         void addTextures(core::u8 _register, core::u32 _count = 1, core::u8 _space = 0, core::u16 _offset = Descriptor::Offset::Append);
         void addBuffers(core::u8 _register, core::u32 _count = 1, core::u8 _space = 0, core::u16 _offset = Descriptor::Offset::Append);
 

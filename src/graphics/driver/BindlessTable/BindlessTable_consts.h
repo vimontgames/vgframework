@@ -34,6 +34,11 @@ namespace vg::graphics::driver
         BindlessBufferUAVHandle(Type _value = bindless_buffer_UAV_invalid) : BindlessHandle(_value) { }
     };
 
+    struct BindlessConstantBufferHandle : public BindlessHandle
+    {
+        BindlessConstantBufferHandle(Type _value = bindless_constantbuffer_invalid) : BindlessHandle(_value) { }
+    };
+
     enum ReservedSlot : core::u32
     {
         None = 0x80000000

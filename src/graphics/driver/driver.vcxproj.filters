@@ -453,12 +453,6 @@
     <ClInclude Include="Shader\dxc\ShaderCompiler_dxc.hpp">
       <Filter>Shader\dxc</Filter>
     </ClInclude>
-    <ClInclude Include="BindlessTable\BindlessHandle.h">
-      <Filter>BindlessTable</Filter>
-    </ClInclude>
-    <ClInclude Include="BindlessTable\BindlessHandle.hpp">
-      <Filter>BindlessTable</Filter>
-    </ClInclude>
     <ClInclude Include="Resource\UploadBuffer.h">
       <Filter>Resource</Filter>
     </ClInclude>

@@ -28,7 +28,7 @@ namespace vg::graphics::driver
             enum class ResourceType : core::u8
             {
                 Texture = 0,
-                Buffer
+                Buffer,
             };
 
         protected:

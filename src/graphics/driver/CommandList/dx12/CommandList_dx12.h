@@ -27,12 +27,16 @@ namespace vg::graphics::driver::dx12
         void                                bindViewport                (const core::uint4 & _viewport);
         void                                bindScissor                 (const core::uint4 & _scissor);
         void                                bindRootConstants           (core::uint (& _constants)[max_root_constants]);
+        void                                bindConstantBuffers         (driver::Buffer*(&_constantbuffers)[max_constant_buffers]);
 
 		void								clear                       (const core::float4 & _color);
         void                                draw                        (core::uint _vertexCount, core::uint _startOffset);
 
         void                                copyTexture                 (driver::Texture * _dst, core::uint_ptr _from);
         void                                copyBuffer                  (driver::Buffer * _dst, core::uint_ptr _from);
+
+        void *                              map                         (driver::Buffer * _buffer);
+        void                                unmap                       (driver::Buffer * _buffer);
 
 		D3D12GraphicsCommandList *		    getd3d12GraphicsCommandList ();
 		ID3D12CommandList *					getd3d12CommandList         () { return m_d3d12cmdList; }

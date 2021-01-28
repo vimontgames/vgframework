@@ -19,6 +19,7 @@ namespace vg::graphics::driver
     };
 
     constexpr core::uint max_root_constants = 16;
+    constexpr core::uint max_constant_buffers = 1;
 
     #ifdef VG_DX12
     namespace dx12

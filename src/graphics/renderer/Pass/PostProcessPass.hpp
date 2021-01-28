@@ -17,7 +17,7 @@ namespace vg::graphics::renderer
         rsDesc.addTable(bindlessTable);
 
         m_postProcessRootSignature = device->addRootSignature(rsDesc);
-        m_postProcessShaderKey.init("driver/driver.hlsl", "Quad");
+        m_postProcessShaderKey.init("driver/driver.hlsl", "Copy");
     }
 
     //--------------------------------------------------------------------------------------

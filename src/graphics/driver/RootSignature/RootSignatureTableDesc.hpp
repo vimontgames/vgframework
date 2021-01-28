@@ -32,6 +32,15 @@ namespace vg::graphics::driver
     }
 
     //--------------------------------------------------------------------------------------
+    void RootSignatureTableDesc::addConstantBuffers(core::u8 _register, core::u32 _count, core::u8 _space, core::u16 _offset)
+    {
+        RootSignatureTableDesc::Descriptor descritor;
+        descritor.m_type = Descriptor::Type::ConstantBuffer;
+        descritor.constantBuffer = Descriptor::ConstantBuffer(_register, _count, _space, _offset);
+        m_descriptors.push_back(descritor);
+    }
+
+    //--------------------------------------------------------------------------------------
     void RootSignatureTableDesc::addTextures(core::u8 _register, core::u32 _count, core::u8 _space, core::u16 _offset)
     {
         RootSignatureTableDesc::Descriptor descritor;

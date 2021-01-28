@@ -30,7 +30,7 @@ namespace vg::graphics::driver::vulkan
 
                 case Usage::Upload:
                     vkBufferCreate.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
-                    vkBufferCreate.usage = VK_BUFFER_USAGE_TRANSFER_SRC_BIT;
+                    vkBufferCreate.usage = VK_BUFFER_USAGE_UNIFORM_TEXEL_BUFFER_BIT | VK_BUFFER_USAGE_TRANSFER_SRC_BIT;
                     vkBufferCreate.size = _bufDesc.size();
                     allocCreateInfo.usage = VMA_MEMORY_USAGE_CPU_ONLY;
                     allocCreateInfo.flags = VMA_ALLOCATION_CREATE_MAPPED_BIT;

@@ -37,6 +37,9 @@ namespace vg::graphics::driver::vulkan
         void                                beginGPUEvent               (const char * _name, core::u32 _color);
         void                                endGPUEvent                 ();
 
+        void *                              map                         (driver::Buffer * _buffer);
+        void                                unmap                       (driver::Buffer * _buffer);
+
 		VkCommandBuffer &					getVulkanCommandBuffer      () { return m_vkCommandBuffer;  }
 
 	private:

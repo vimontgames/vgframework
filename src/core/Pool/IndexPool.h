@@ -9,7 +9,7 @@ namespace vg::core
     {
     public:
         static constexpr uint elemCountPerPage = 64;
-        static constexpr uint pageCount = count / elemCountPerPage;
+        static constexpr uint pageCount = (count + elemCountPerPage - 1) / elemCountPerPage;
         using elemMask = u64;
 
         T alloc()
@@ -50,6 +50,11 @@ namespace vg::core
 
         struct Page
         {
+            void clear()
+            {
+                mask = (elemMask)-1;
+            }
+
             elemMask mask = (elemMask)-1;
         };
 
@@ -66,6 +71,12 @@ namespace vg::core
         const core::size_t available() const
         {
             return count - m_used;
+        }
+
+        void clear()
+        {
+            for (uint i = 0; i < pageCount; ++i)
+                m_pages[i].clear();
         }
 
     private:

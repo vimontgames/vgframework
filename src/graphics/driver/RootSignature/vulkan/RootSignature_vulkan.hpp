@@ -42,6 +42,17 @@ namespace vg::graphics::driver::vulkan
                     VG_ASSERT(false, "Unhandled Descriptor::Type \"%s\" (%u)", asString(descriptor.getDescriptorType()).c_str(), descriptor.getDescriptorType());
                     break;
 
+                    case RootSignatureTableDesc::Descriptor::Type::ConstantBuffer:
+                    {
+                        const auto & constantbuffers = descriptor.getConstantBuffers();
+                        vkLayoutBinding.binding = constantbuffers.m_space;
+                        vkLayoutBinding.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_TEXEL_BUFFER;
+                        vkLayoutBinding.descriptorCount = constantbuffers.m_count;
+                        vkLayoutBinding.stageFlags = getVulkanShaderStageFlags(table.getShaderStageFlags());
+                        vkLayoutBinding.pImmutableSamplers = nullptr;
+                    }
+                    break;
+
                     case RootSignatureTableDesc::Descriptor::Type::Texture:
                     {
                         const auto & textures = descriptor.getTextures();

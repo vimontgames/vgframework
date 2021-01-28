@@ -67,6 +67,7 @@ namespace vg::graphics::driver
                     Viewport             = 0x00000008,
                     Scissor              = 0x00000010,
                     RootConstants        = 0x00000020,
+                    ConstantBuffers      = 0x00000040
                 };
                 DirtyFlags              dirtyFlags;
                 GraphicPipelineStateKey graphicPipelineKey;
@@ -74,6 +75,7 @@ namespace vg::graphics::driver
                 core::uint4             viewport;
                 core::uint4             scissor;
                 core::u32               rootConstants[max_root_constants] = {};
+                Buffer *                constantBuffers[max_constant_buffers] = {};
             };
             StateCache                  m_stateCache;
             RootSignature *             m_currentRootSignature = nullptr;

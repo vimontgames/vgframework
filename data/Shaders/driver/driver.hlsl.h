@@ -25,6 +25,15 @@ namespace vg::graphics::driver
                 quad.ps = psQuad;
                 quad.flags = (Flags)0;
             }
+
+            auto psCopy = addPS("PS_Copy");
+
+            auto & copy = addTechnique("Copy");
+            {
+                copy.vs = vsQuad;
+                copy.ps = psCopy;
+                copy.flags = (Flags)0;
+            }
         }
     };
 }

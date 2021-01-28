@@ -29,8 +29,6 @@
       <PreprocessToFile Condition="'$(Configuration)|$(Platform)'=='Release_Vulkan|x64'">false</PreprocessToFile>
     </ClCompile>
     <ClCompile Include="FrameGraph\FrameGraph.cpp" />
-    <ClInclude Include="BindlessTable\BindlessHandle.h" />
-    <ClInclude Include="BindlessTable\BindlessHandle.hpp" />
     <ClInclude Include="BindlessTable\BindlessTable.h" />
     <ClInclude Include="BindlessTable\BindlessTable_consts.h" />
     <ClInclude Include="BindlessTable\dx12\BindlessTable_dx12.h" />

@@ -28,7 +28,7 @@ namespace vg::graphics::driver::vulkan
 
         VkWriteDescriptorSet writes = {};
         writes.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
-        writes.dstBinding = 0; // register
+        writes.dstBinding = 0;// 1;
         writes.descriptorCount = 1;
         writes.descriptorType = VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE;
         writes.pImageInfo = &tex_descs;

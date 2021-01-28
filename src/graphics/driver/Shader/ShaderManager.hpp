@@ -57,10 +57,10 @@ namespace vg::graphics::driver
 
                         return true;
                     }
-
-                    VG_ASSERT("Technique \"%s\" not found in file \"%s\"", _technique.c_str(), _file.c_str());
-                    return false;
                 }
+
+                VG_ASSERT(false, "Technique \"%s\" not found in file \"%s\"", _technique.c_str(), _file.c_str());
+                return false;
             }
         }
 
