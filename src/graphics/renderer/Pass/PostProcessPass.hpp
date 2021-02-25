@@ -40,11 +40,13 @@ namespace vg::graphics::renderer
     void PostProcessPass::draw(CommandList * _cmdList) const
     {
         RasterizerState rs(FillMode::Solid, CullMode::None);
+        BlendState bs(BlendFactor::One, BlendFactor::Zero, BlendOp::Add);
 
         _cmdList->setRootSignature(m_postProcessRootSignature);
         _cmdList->setShader(m_postProcessShaderKey);
         _cmdList->setPrimitiveTopology(PrimitiveTopology::TriangleStrip);
         _cmdList->setRasterizerState(rs);
+        _cmdList->setBlendState(bs);
 
         RootConstants root;
 

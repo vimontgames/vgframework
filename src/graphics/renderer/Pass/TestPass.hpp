@@ -112,9 +112,9 @@ namespace vg::graphics::renderer
         const auto & backbuffer = renderer->getBackbuffer()->getTexDesc();
 
         if (m_reverse)
-            m_offset -= _dt * 0.5f / (float)backbuffer.width;
+            m_offset -= (float)_dt * 0.25f / (float)backbuffer.width;
         else
-            m_offset += _dt * 0.5f / (float)backbuffer.width;
+            m_offset += (float)_dt * 0.25f / (float)backbuffer.width;
 
         if (m_offset < 0.25f)
         {
@@ -137,11 +137,13 @@ namespace vg::graphics::renderer
         const auto & backbuffer = renderer->getBackbuffer()->getTexDesc();
 
         RasterizerState rs(FillMode::Solid, CullMode::None);
+        BlendState bs(BlendFactor::SrcAlpha, BlendFactor::OneMinusSrcAlpha, BlendOp::Add);
         
         _cmdList->setRootSignature(m_rootSignatureHandle);
         _cmdList->setShader(m_shaderKey);
         _cmdList->setPrimitiveTopology(PrimitiveTopology::TriangleStrip);
         _cmdList->setRasterizerState(rs);
+        _cmdList->setBlendState(bs);
 
         auto * device = Device::get();
         auto * bindless = device->getBindlessTable();
@@ -176,8 +178,16 @@ namespace vg::graphics::renderer
             float ar = float(backbuffer.width) / float(backbuffer.height);
 
             root.mat = mul(world, viewproj);
-            root.quad.posOffsetScale = float4(m_offset, 0.75f, 0.1f, 0.1f * ar);
-            root.quad.uvOffsetScale = float4(0.0f, 0.0f, 1.0f / float(atlas_width), 1.0f / float(atlas_height));
+            root.quad.posOffsetScale = float4(m_offset, 0.5f, 0.1f, 0.1f * ar);
+
+            const float spriteWidth = 1.0f / float(atlas_width);
+            const float spriteHeight = 1.0f / float(atlas_height);
+
+            if (m_reverse)
+                root.quad.uvOffsetScale = float4(spriteWidth, 0, -spriteWidth, spriteHeight);
+            else
+                root.quad.uvOffsetScale = float4(0.0f, 0.0f, spriteWidth, spriteHeight);
+
             root.texID = m_texture[3]->getBindlessSRVHandle();
 
             _cmdList->setInlineRootConstants(&root, RootConstantsCount);

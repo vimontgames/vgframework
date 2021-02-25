@@ -52,11 +52,13 @@ namespace vg::graphics::renderer
     void BackgroundPass::draw(CommandList * _cmdList) const
     {
         RasterizerState rs(FillMode::Solid, CullMode::None);
+        BlendState bs(BlendFactor::One, BlendFactor::Zero, BlendOp::Add);
 
         _cmdList->setRootSignature(m_backgroundRootSignatureHandle);
         _cmdList->setShader(m_backgroundShaderKey);
         _cmdList->setPrimitiveTopology(PrimitiveTopology::TriangleStrip);
         _cmdList->setRasterizerState(rs);
+        _cmdList->setBlendState(bs);
 
         BackgroundRootConstants root;
 

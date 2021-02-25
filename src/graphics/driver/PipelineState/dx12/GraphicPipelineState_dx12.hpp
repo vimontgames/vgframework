@@ -14,28 +14,7 @@ namespace vg::graphics::driver::dx12
         auto * sig = device->getRootSignature(_key.m_rootSignature);
         d3d12graphicPipelineDesc.pRootSignature = sig->getd3d12RootSignature();
 
-        // temp
-        auto & rt0 = d3d12graphicPipelineDesc.BlendState.RenderTarget[0];
-        rt0.BlendEnable = false;
-        rt0.LogicOpEnable = false;
-        rt0.SrcBlend = D3D12_BLEND_ONE;
-        rt0.DestBlend = D3D12_BLEND_ZERO;
-        rt0.BlendOp = D3D12_BLEND_OP_ADD;
-        rt0.SrcBlendAlpha = D3D12_BLEND_ONE;
-        rt0.DestBlendAlpha = D3D12_BLEND_ZERO;
-        rt0.BlendOpAlpha = D3D12_BLEND_OP_ADD;
-        rt0.LogicOp = D3D12_LOGIC_OP_NOOP;
-        rt0.RenderTargetWriteMask = D3D12_COLOR_WRITE_ENABLE_ALL;
-        
-        //auto & ds = d3d12graphicPipelineDesc.DepthStencilState;
-        //ds.DepthEnable = false;
-        //ds.StencilWriteMask = 0;
-        //ds.DepthFunc = D3D12_COMPARISON_FUNC_ALWAYS;
-        //ds.StencilEnable = false;
-        //ds.StencilWriteMask = 0x0;
-        //ds.StencilReadMask = 0xFF;
-        //ds.FrontFace.StencilFunc = D3D12_COMPARISON_FUNC_ALWAYS;
-        //ds.BackFace.StencilFunc = D3D12_COMPARISON_FUNC_ALWAYS;
+        d3d12graphicPipelineDesc.BlendState = _key.m_blendState.getd3d12BlendState();
 
         d3d12graphicPipelineDesc.SampleMask = 0xFFFFFFFF;
 

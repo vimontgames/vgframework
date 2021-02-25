@@ -195,12 +195,22 @@ namespace vg::graphics::driver
         }
 
         //--------------------------------------------------------------------------------------
-        void CommandList::setRasterizerState(const driver::RasterizerState & _rsState)
+        void CommandList::setRasterizerState(const driver::RasterizerState & _rs)
         {
-            if (_rsState != m_stateCache.graphicPipelineKey.m_rasterizerState)
+            if (_rs != m_stateCache.graphicPipelineKey.m_rasterizerState)
             {
                 m_stateCache.dirtyFlags |= StateCache::DirtyFlags::GraphicPipelineState;
-                m_stateCache.graphicPipelineKey.m_rasterizerState = _rsState;
+                m_stateCache.graphicPipelineKey.m_rasterizerState = _rs;
+            }
+        }
+
+        //--------------------------------------------------------------------------------------
+        void CommandList::setBlendState(const driver::BlendState & _bs)
+        {
+            if (_bs != m_stateCache.graphicPipelineKey.m_blendState)
+            {
+                m_stateCache.dirtyFlags |= StateCache::DirtyFlags::GraphicPipelineState;
+                m_stateCache.graphicPipelineKey.m_blendState = _bs;
             }
         }
 	}

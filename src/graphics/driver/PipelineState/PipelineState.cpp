@@ -7,12 +7,14 @@
 #include "graphics/driver/Resource/Texture.h"
 #include "GraphicPipelineState.h"
 #include "RasterizerState.h"
+#include "BlendState.h"
 #include "SamplerState.h"
 
 using namespace vg::core;
 
 #include "GraphicPipelineState.hpp"
 #include "RasterizerState.hpp"
+#include "BlendState.hpp"
 #include "SamplerState.hpp"
 
 namespace vg::graphics::driver

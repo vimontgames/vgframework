@@ -48,11 +48,17 @@
     <ClInclude Include="Importer\Importer.h" />
     <ClInclude Include="Importer\TextureImporter.h" />
     <ClInclude Include="Importer\TextureImporter.hpp" />
+    <ClInclude Include="PipelineState\BlendState.h" />
+    <ClInclude Include="PipelineState\BlendState.hpp" />
+    <ClInclude Include="PipelineState\dx12\BlendState_dx12.h" />
+    <ClInclude Include="PipelineState\dx12\BlendState_dx12.hpp" />
     <ClInclude Include="PipelineState\dx12\SamplerState_dx12.h" />
     <ClInclude Include="PipelineState\dx12\SamplerState_dx12.hpp" />
     <ClInclude Include="PipelineState\SamplerState.h" />
     <ClInclude Include="PipelineState\SamplerState.hpp" />
     <ClInclude Include="PipelineState\SamplerState_consts.h" />
+    <ClInclude Include="PipelineState\vulkan\BlendState_vulkan.h" />
+    <ClInclude Include="PipelineState\vulkan\BlendState_vulkan.hpp" />
     <ClInclude Include="PipelineState\vulkan\SamplerState_vulkan.h" />
     <ClInclude Include="PipelineState\vulkan\SamplerState_vulkan.hpp" />
     <ClInclude Include="Profiler\Profiler.h" />

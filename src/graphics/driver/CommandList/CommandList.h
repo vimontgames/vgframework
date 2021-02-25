@@ -12,6 +12,7 @@ namespace vg::graphics::driver
 	class SubPass;
     class GraphicPipelineState;
     class RasterizerState;
+    class BlendState;
     class Texture;
     class Buffer;
 
@@ -37,7 +38,8 @@ namespace vg::graphics::driver
 			const core::uint		getSubPassIndex	        () const;
 
             void                    setRootSignature        (const RootSignatureHandle & _rsHandle);
-            void                    setRasterizerState      (const driver::RasterizerState & _rsState);
+            void                    setRasterizerState      (const driver::RasterizerState & _rs);
+            void                    setBlendState           (const driver::BlendState & _bs);
             void                    setShader               (const ShaderKey & _key);
             void                    setPrimitiveTopology    (PrimitiveTopology _topology);
             void                    setViewport             (const core::uint4 & _viewport);

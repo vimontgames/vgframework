@@ -8,6 +8,7 @@
 #include "graphics/driver/Resource/Buffer.h"
 #include "graphics/driver/Resource/Resource_consts.h"
 #include "graphics/driver/PipelineState/RasterizerState.h"
+#include "graphics/driver/PipelineState/BlendState.h"
 #include "graphics/driver/RootSignature/RootSignature.h"
 #include "graphics/driver/Shader/ShaderManager.h"
 #include "graphics/driver/Shader/Shader.h"

@@ -3,6 +3,7 @@
 #include "graphics/driver/RootSignature/RootSignature_consts.h"
 #include "graphics/driver/PipelineState/PipelineState_consts.h"
 #include "graphics/driver/PipelineState/RasterizerState.h"
+#include "graphics/driver/PipelineState/BlendState.h"
 #include "graphics/driver/Resource/Texture_consts.h"
 #include "graphics/driver/Shader/ShaderKey.h"
 #include "graphics/driver/FrameGraph/RenderPassKey.h"
@@ -26,6 +27,7 @@ namespace vg::graphics::driver
 
         RootSignatureHandle     m_rootSignature;
         RasterizerState         m_rasterizerState;
+        BlendState              m_blendState;
         ShaderKey               m_shaderKey;
         RenderPassKey           m_renderPassKey;
 
@@ -34,7 +36,7 @@ namespace vg::graphics::driver
 
         bool operator == (const GraphicPipelineStateKey & _other) const
         {
-            return _other.m_rootSignature == m_rootSignature && _other.m_rasterizerState == m_rasterizerState && _other.m_shaderKey == m_shaderKey && _other.m_renderPassKey == m_renderPassKey;
+            return _other.m_rootSignature == m_rootSignature && _other.m_rasterizerState == m_rasterizerState && _other.m_blendState == m_blendState && _other.m_shaderKey == m_shaderKey && _other.m_renderPassKey == m_renderPassKey;
         }
 
         bool operator != (const GraphicPipelineStateKey & _other) const
@@ -48,6 +50,7 @@ namespace vg::graphics::driver
             {
                 return RootSignatureHandle::hash()(_this.m_rootSignature)
                     ^ RasterizerState::hash()(_this.m_rasterizerState)
+                    ^ BlendState::hash()(_this.m_blendState)
                     ^ ShaderKey::hash()(_this.m_shaderKey)
                     ^ RenderPassKey::hash()(_this.m_renderPassKey)
                     ^ core::hash<core::u8>()(_this.m_subPassIndex)

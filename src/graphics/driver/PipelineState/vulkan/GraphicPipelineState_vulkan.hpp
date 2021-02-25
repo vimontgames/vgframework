@@ -7,6 +7,15 @@ namespace vg::graphics::driver::vulkan
         auto * device = driver::Device::get();
         auto & vkDevice = device->getVulkanDevice();
 
+        uint renderTargetCount = 0;
+        for (uint i = 0; i < maxRenderTarget; ++i)
+        {
+            const auto & passKey = _key.m_renderPassKey;
+            const auto format = passKey.m_colorFormat[i];
+            if (PixelFormat::Unknow != format)
+                ++renderTargetCount;
+        }            
+
         VkPipelineCacheCreateInfo vkPipelineCacheDesc = {};
         vkPipelineCacheDesc.sType = VK_STRUCTURE_TYPE_PIPELINE_CACHE_CREATE_INFO;
         VG_ASSERT_VULKAN(vkCreatePipelineCache(vkDevice, &vkPipelineCacheDesc, nullptr, &m_vkPipelineCache));
@@ -14,13 +23,8 @@ namespace vg::graphics::driver::vulkan
         VkGraphicsPipelineCreateInfo vkPipelineDesc = {};
 
         // Blend state
-        VkPipelineColorBlendStateCreateInfo bs = {};
-        bs.sType = VK_STRUCTURE_TYPE_PIPELINE_COLOR_BLEND_STATE_CREATE_INFO;
-        VkPipelineColorBlendAttachmentState att_state[1] = {};
-        att_state[0].colorWriteMask = 0xf;
-        att_state[0].blendEnable = VK_FALSE;
-        bs.attachmentCount = 1;
-        bs.pAttachments = att_state;
+        VkPipelineColorBlendAttachmentState vkRenderTargets[maxRenderTarget];
+        VkPipelineColorBlendStateCreateInfo bs = _key.m_blendState.getVulkanBlendState(&vkRenderTargets[0], renderTargetCount);
         vkPipelineDesc.pColorBlendState = &bs;
 
         // Vertex input

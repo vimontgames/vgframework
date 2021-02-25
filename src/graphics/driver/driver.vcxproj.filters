@@ -459,6 +459,24 @@
     <ClInclude Include="Resource\UploadBuffer.hpp">
       <Filter>Resource</Filter>
     </ClInclude>
+    <ClInclude Include="PipelineState\BlendState.h">
+      <Filter>PipelineState</Filter>
+    </ClInclude>
+    <ClInclude Include="PipelineState\BlendState.hpp">
+      <Filter>PipelineState</Filter>
+    </ClInclude>
+    <ClInclude Include="PipelineState\dx12\BlendState_dx12.h">
+      <Filter>PipelineState\dx12</Filter>
+    </ClInclude>
+    <ClInclude Include="PipelineState\dx12\BlendState_dx12.hpp">
+      <Filter>PipelineState\dx12</Filter>
+    </ClInclude>
+    <ClInclude Include="PipelineState\vulkan\BlendState_vulkan.h">
+      <Filter>PipelineState\vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="PipelineState\vulkan\BlendState_vulkan.hpp">
+      <Filter>PipelineState\vulkan</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Device">
