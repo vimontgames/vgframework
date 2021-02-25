@@ -31,6 +31,9 @@
     <Filter Include="string">
       <UniqueIdentifier>{e2d9d690-faaf-46f3-9b6e-eef77e7c2458}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Timer">
+      <UniqueIdentifier>{2a06315c-8e0d-4c25-ad72-38fd69c606b2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Math\Math.h">
@@ -78,6 +81,9 @@
     <ClInclude Include="string\string.h">
       <Filter>string</Filter>
     </ClInclude>
+    <ClInclude Include="Timer\Timer.h">
+      <Filter>Timer</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Math\Math.cpp">
@@ -99,6 +105,9 @@
     </ClCompile>
     <ClCompile Include="string\string.cpp">
       <Filter>string</Filter>
+    </ClCompile>
+    <ClCompile Include="Timer\Timer.cpp">
+      <Filter>Timer</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

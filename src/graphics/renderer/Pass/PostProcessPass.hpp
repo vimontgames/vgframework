@@ -30,7 +30,7 @@ namespace vg::graphics::renderer
     //--------------------------------------------------------------------------------------
     // Setup executed each frame, for each pass instance
     //--------------------------------------------------------------------------------------
-    void PostProcessPass::setup()
+    void PostProcessPass::setup(double _dt)
     {
         readRenderTarget("Color");
         writeRenderTarget(0, "Backbuffer");
@@ -46,16 +46,14 @@ namespace vg::graphics::renderer
         _cmdList->setPrimitiveTopology(PrimitiveTopology::TriangleStrip);
         _cmdList->setRasterizerState(rs);
 
-        float4 posOffetScale, texOffetScale;
-        uint texID;
+        RootConstants root;
 
-        posOffetScale = float4(0.0f, 0.0f, 1.0f, 1.0f);
-        texOffetScale = float4(0.0f, 0.0f, 1.0f, 1.0f);
-        texID = getRenderTarget("Color")->getBindlessSRVHandle();
+        root.mat = float4x4::identity();
+        root.quad.posOffsetScale = float4(0.0f, 0.0f, 1.0f, 1.0f);
+        root.quad.uvOffsetScale = float4(0.0f, 0.0f, 1.0f, 1.0f);
+        root.texID = getRenderTarget("Color")->getBindlessSRVHandle();
 
-        _cmdList->setRootConstants(0, (u32*)&posOffetScale, 4);
-        _cmdList->setRootConstants(4, (u32*)&texOffetScale, 4);
-        _cmdList->setRootConstants(8, &texID, 1);
+        _cmdList->setInlineRootConstants(&root, RootConstantsCount);
 
         _cmdList->draw(4);
     }

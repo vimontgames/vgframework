@@ -66,7 +66,7 @@ namespace vg::graphics::renderer
 
         // texture 3
         {
-            m_texture.push_back(device->createTexture("data\\textures\\vgframework.tga"));
+            m_texture.push_back(device->createTexture("game/supervimontbrawl/data/Textures/Sprites.psd"));
         }
 
         // buffer 0
@@ -106,14 +106,36 @@ namespace vg::graphics::renderer
     //--------------------------------------------------------------------------------------
     // Setup executed each frame, for each pass instance
     //--------------------------------------------------------------------------------------
-    void TestPass::setup()
+    void TestPass::setup(double _dt)
     {
+        auto * renderer = Renderer::get();
+        const auto & backbuffer = renderer->getBackbuffer()->getTexDesc();
+
+        if (m_reverse)
+            m_offset -= _dt * 0.5f / (float)backbuffer.width;
+        else
+            m_offset += _dt * 0.5f / (float)backbuffer.width;
+
+        if (m_offset < 0.25f)
+        {
+            m_offset = 0.25f;
+            m_reverse = false;
+        }
+        else if (m_offset > 0.75)
+        {
+            m_offset = 0.75f;
+            m_reverse = true;
+        }
+
         writeRenderTarget(0, "Color");
     }
 
     //--------------------------------------------------------------------------------------
     void TestPass::draw(CommandList * _cmdList) const
     {
+        auto * renderer = Renderer::get();
+        const auto & backbuffer = renderer->getBackbuffer()->getTexDesc();
+
         RasterizerState rs(FillMode::Solid, CullMode::None);
         
         _cmdList->setRootSignature(m_rootSignatureHandle);
@@ -121,71 +143,45 @@ namespace vg::graphics::renderer
         _cmdList->setPrimitiveTopology(PrimitiveTopology::TriangleStrip);
         _cmdList->setRasterizerState(rs);
 
-        static u32 counter = 0;
-
-        UniformBufferTest * cb = (UniformBufferTest*)_cmdList->map(m_constantBuffer);
-        {
-            cb->test = float4(1, 0, 0, 1);
-        }
-        _cmdList->unmap(m_constantBuffer);
-
-        counter++;
-
         auto * device = Device::get();
         auto * bindless = device->getBindlessTable();
-
-        //bindless->
-
-        //_cmdList->setConstantBuffer(m_constantBuffer);
-        
-        float4 posOffetScale, texOffetScale;
-        uint texID;
-        uint cbID = 0;
-        
-        static float y = 0.0f;
-
-        posOffetScale = float4(0.5f, 0.5f, 0.125f, 0.125f);
-        texOffetScale = float4(0.0f, 0.0f, 1.0f, 1.0f);
-        texID = m_texture[0]->getBindlessSRVHandle();
-
-        _cmdList->setRootConstants(0, (u32*)&posOffetScale, 4);
-        _cmdList->setRootConstants(4, (u32*)&texOffetScale, 4);
-        _cmdList->setRootConstants(8, &texID, 1);
-        _cmdList->setRootConstants(9, &cbID, 1);
-
-        _cmdList->draw(4);
                 
-        posOffetScale = float4(0.75f, 0.25f + y, 0.25f, 0.25f);
-        texOffetScale = float4(0.0f, 0.0f, 1.0f, 1.0f);
-        texID = m_texture[3]->getBindlessSRVHandle();
-        cbID = 1;
+        float4x4 proj = float4x4::identity();
+        float4x4 view = float4x4::identity();
+        float4x4 viewproj = view * proj;
+        float4x4 world = float4x4::identity();
 
-        _cmdList->setRootConstants(0, (u32*)&posOffetScale, 4);
-        _cmdList->setRootConstants(4, (u32*)&texOffetScale, 4);
-        _cmdList->setRootConstants(8, &texID, 1);
-        _cmdList->setRootConstants(9, &cbID, 1);
+        float4x4 wvp;
         
-        auto * renderer = Renderer::get();
-        const auto & backbuffer = renderer->getBackbuffer()->getTexDesc();
-        
-        static bool reverse = false;
-        
-        if (y < -0.25)
-            reverse = false;
-        else if (y > 0.5)
-            reverse = true;
-        
-        if (reverse)
-            y -= 1.0f / (float)backbuffer.height;
-        else
-            y += 1.0f/(float)backbuffer.height;
-
-        cb = (UniformBufferTest*)_cmdList->map(m_constantBuffer);
         {
-            cb->test = float4(0, 1, 0, 1);
+            RootConstants root;
+
+            root.mat = world * viewproj;
+            root.quad.posOffsetScale = float4(0.5f, 0.5f, 0.125f, 0.125f);
+            root.quad.uvOffsetScale = float4(0.0f, 0.0f, 1.0f, 1.0f);
+            root.texID = m_texture[0]->getBindlessSRVHandle();
+
+            _cmdList->setInlineRootConstants(&root, RootConstantsCount);
+            _cmdList->draw(4);
         }
-        _cmdList->unmap(m_constantBuffer);
-        
-        _cmdList->draw(4);
+
+        {
+            RootConstants root;
+
+            //world.f32_3[0] += m_offset;
+
+            const uint atlas_width = 16;
+            const uint atlas_height = 16;
+
+            float ar = float(backbuffer.width) / float(backbuffer.height);
+
+            root.mat = mul(world, viewproj);
+            root.quad.posOffsetScale = float4(m_offset, 0.75f, 0.1f, 0.1f * ar);
+            root.quad.uvOffsetScale = float4(0.0f, 0.0f, 1.0f / float(atlas_width), 1.0f / float(atlas_height));
+            root.texID = m_texture[3]->getBindlessSRVHandle();
+
+            _cmdList->setInlineRootConstants(&root, RootConstantsCount);
+            _cmdList->draw(4);
+        }
     }
 }

@@ -177,6 +177,12 @@ namespace vg::graphics::driver
                 }
             }
         }
+
+        //--------------------------------------------------------------------------------------
+        void CommandList::setInlineRootConstants(const void * _value, core::uint _count)
+        {
+            setRootConstants(0, (u32*)_value, _count);
+        }
         
         //--------------------------------------------------------------------------------------
         void CommandList::setShader(const ShaderKey & _key)

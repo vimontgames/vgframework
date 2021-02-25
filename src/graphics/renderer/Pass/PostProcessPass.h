@@ -11,7 +11,7 @@ namespace vg::graphics::renderer
         PostProcessPass();
         ~PostProcessPass();
 
-        void setup() override;
+        void setup(double _dt) override;
         void draw(driver::CommandList * _cmdList) const override;
 
         //const core::string & getName() const override { static const core::string name = "PostProcess"; return name; }

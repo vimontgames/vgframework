@@ -326,14 +326,14 @@ namespace vg::graphics::driver
     }
 
 	//--------------------------------------------------------------------------------------
-	void FrameGraph::setup()
+	void FrameGraph::setup(double _dt)
 	{
         VG_PROFILE_CPU("setup");
 
 		for (UserPass * subPass : m_userPassStack)
 		{
 			subPass->reset();
-			subPass->setup();
+			subPass->setup(_dt);
 		}
 	}
 

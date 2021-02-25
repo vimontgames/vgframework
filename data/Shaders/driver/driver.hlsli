@@ -14,10 +14,10 @@ struct RootConstants
 {
     QuadConstants   quad;
     uint            texID;
-    uint            cbID;
+    float4x4        mat;
 };
 
-#define RootConstantsCount 10
+#define RootConstantsCount sizeof(RootConstants)/sizeof(u32)
 
 #ifndef __cplusplus
 DECL_ROOTCONSTANTS(RootConstants, rootConstants, 0, 0);

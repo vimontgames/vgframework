@@ -23,7 +23,11 @@ namespace vg::engine
 
 		graphics::renderer::IRenderer *	getRenderer	() const override;
 
+    protected:
+        void                            updateDt    ();
+
 	private:
 		graphics::renderer::IRenderer *	m_renderer = nullptr;
+        double                          m_dt = 0.0f;
 	};
 }

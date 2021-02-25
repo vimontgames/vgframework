@@ -33,11 +33,11 @@ DECL_DESCRIPTOR_RANGE_RW(RWByteAddressBuffer, RWBufferTable, 3, 49152);
 // Constant buffers
 //DECL_CONSTANT_BUFFER(name, type)
 
-#ifdef DX12
-ConstantBuffer<UniformBufferTest> ubo[] : register(b65500, space4);
-#else
-[[vk::binding(4, 0)]] ConstantBuffer<UniformBufferTest> ubo[];
-#endif
+//#ifdef DX12
+//ConstantBuffer<UniformBufferTest> ubo[] : register(b65500, space4);
+//#else
+//[[vk::binding(4, 0)]] ConstantBuffer<UniformBufferTest> ubo[];
+//#endif
 
 #endif // _DRIVER__HLSLI_
 

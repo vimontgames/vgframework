@@ -21,7 +21,7 @@ namespace vg::graphics::driver
 
 		void			reset		();
 
-		virtual void	setup		() = 0;
+		virtual void	setup		(double _dt) = 0;
 		virtual void	draw		(CommandList * _cmdList) const = 0;
 
 		const core::vector<FrameGraph::TextureResource *> & getRenderTargets() const;

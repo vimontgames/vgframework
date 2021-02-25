@@ -11,7 +11,7 @@ namespace vg::graphics::renderer
         TestPass();
         ~TestPass();
 
-        void setup() override;
+        void setup(double _dt) override;
         void draw(driver::CommandList * _cmdList) const override;
 
     private:
@@ -20,5 +20,8 @@ namespace vg::graphics::renderer
         core::vector<driver::Texture *> m_texture;
         core::vector<driver::Buffer*>   m_buffer;
         driver::Buffer *                m_constantBuffer = nullptr;
+
+        float                           m_offset = 0.0f;
+        bool                            m_reverse = false;
     };
 }

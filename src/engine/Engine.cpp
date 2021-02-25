@@ -4,6 +4,7 @@
 
 #include "core/Kernel.h"
 #include "core/IProfiler.h"
+#include "core/Timer/Timer.h"
 #include "core/Plugin/Plugin.h"
 #include "graphics/renderer/IRenderer.h"
 #include "graphics/driver/IDevice.h"
@@ -81,6 +82,8 @@ namespace vg::engine
 	//--------------------------------------------------------------------------------------
 	void Engine::init(const EngineParams & _params)
 	{
+        Timer::init();
+
 		string api;
 		switch (_params.renderer.device.api)
 		{
@@ -114,13 +117,27 @@ namespace vg::engine
 		m_renderer->release();
 	}
 
+    //--------------------------------------------------------------------------------------
+    void Engine::updateDt()
+    {
+        static Timer::Tick previous = 0;
+        Timer::Tick current = Timer::getTick();
+        if (previous != 0)
+            m_dt = Timer::getEnlapsedTime(previous, current);
+        previous = current;
+
+        //VG_DEBUGPRINT("dt = %f ms\n", m_dt);
+    }
+
 	//--------------------------------------------------------------------------------------
 	void Engine::runOneFrame()
 	{
         VG_PROFILE_FRAME("Main");
         VG_PROFILE_CPU("Engine");
 
-		m_renderer->runOneFrame();
+        updateDt();
+
+		m_renderer->runOneFrame(m_dt);
 	}
 
 	//--------------------------------------------------------------------------------------

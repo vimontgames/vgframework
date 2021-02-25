@@ -48,7 +48,7 @@ namespace ImGui
 namespace vg::graphics::renderer
 {
     //--------------------------------------------------------------------------------------
-    void ImguiPass::setup()
+    void ImguiPass::setup(double _dt)
     {
         writeRenderTarget(0, "Backbuffer");
 
@@ -208,8 +208,21 @@ namespace vg::graphics::renderer
                 }
             }
 
+            static const uint smoothDtTime = 250; // 0.25s
+
+            m_accum += _dt;
+            m_frame++;
+
+            if (m_accum > (double)smoothDtTime)
+            {
+                m_dt = (float)(m_accum / (float)m_frame);
+                m_fps = (float)smoothDtTime / m_dt;
+                m_accum = 0.0;
+                m_frame = 0;
+            }
+
             if (m_isDebugWindowVisible)
-                displayDebugWindow();            
+                displayDebugWindow(_dt);            
         }
         ImGui::End();
 
@@ -218,7 +231,7 @@ namespace vg::graphics::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    void ImguiPass::displayDebugWindow()
+    void ImguiPass::displayDebugWindow(double _dt)
     {
         if (ImGui::Begin("Debug", &m_isDebugWindowVisible/*, ImGuiWindowFlags_NoTitleBar*/))
         {
@@ -227,8 +240,8 @@ namespace vg::graphics::renderer
                 ImGui::Columns(2, "mycolumns2", false);  // 2-ways, no border
 
                 ImGui::Text("Platform:");
-                ImGui::Text("Configuration");
-                ImGui::Text("Graphics API");
+                ImGui::Text("Configuration:");
+                ImGui::Text("Graphics API:");
                 ImGui::NextColumn();
                 ImGui::Text(Plugin::getPlatform().c_str());
                 ImGui::Text(Plugin::getConfiguration().c_str());
@@ -236,9 +249,17 @@ namespace vg::graphics::renderer
                 ImGui::Columns(1);
             }
 
-            if (ImGui::CollapsingHeader("Profiler", ImGuiTreeNodeFlags_DefaultOpen))
+            if (ImGui::CollapsingHeader("Performance", ImGuiTreeNodeFlags_DefaultOpen))
             {
-                ImGui::Text("Press 'F1' to start/stop capture");
+                ImGui::Columns(2, "mycolumns2", false);  // 2-ways, no border
+                ImGui::Text("FPS: ");
+                ImGui::Text("Framerate: ");
+                ImGui::NextColumn();
+                ImGui::Text("%.0f", m_fps);
+                ImGui::Text("%.4f ms", m_dt);
+
+                ImGui::Columns(1);
+                ImGui::Text("Press 'F1' to start/stop profiler");
 
                 if (VG_PROFILE_CAPTURE_IN_PROGRESS())
                 {

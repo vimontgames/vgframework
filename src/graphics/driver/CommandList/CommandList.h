@@ -23,26 +23,27 @@ namespace vg::graphics::driver
 			CommandList(driver::CommandListType _type, driver::CommandPool * _cmdPool, core::uint _frame, core::uint _index);
 			~CommandList();
 
-			CommandListType			getType			    () const;
-			CommandPool *			getCommandPool	    ();
+			CommandListType			getType			        () const;
+			CommandPool *			getCommandPool	        ();
 
-			void					beginRenderPass	    (driver::RenderPass * _renderPass);
-			void					endRenderPass	    ();
+			void					beginRenderPass	        (driver::RenderPass * _renderPass);
+			void					endRenderPass	        ();
 
-			void					beginSubPass	    (core::uint _subPassIndex, driver::SubPass * _subPass);
-			void					endSubPass		    ();
+			void					beginSubPass	        (core::uint _subPassIndex, driver::SubPass * _subPass);
+			void					endSubPass		        ();
 
-			const RenderPass *		getRenderPass	    () const;
-            const SubPass *         getSubPass          () const;
-			const core::uint		getSubPassIndex	    () const;
+			const RenderPass *		getRenderPass	        () const;
+            const SubPass *         getSubPass              () const;
+			const core::uint		getSubPassIndex	        () const;
 
-            void                    setRootSignature    (const RootSignatureHandle & _rsHandle);
-            void                    setRasterizerState  (const driver::RasterizerState & _rsState);
-            void                    setShader           (const ShaderKey & _key);
-            void                    setPrimitiveTopology(PrimitiveTopology _topology);
-            void                    setViewport         (const core::uint4 & _viewport);
-            void                    setScissor          (const core::uint4 & _scissor);
-            void                    setRootConstants    (core::uint _startOffset, core::u32 * _values, core::uint _count);
+            void                    setRootSignature        (const RootSignatureHandle & _rsHandle);
+            void                    setRasterizerState      (const driver::RasterizerState & _rsState);
+            void                    setShader               (const ShaderKey & _key);
+            void                    setPrimitiveTopology    (PrimitiveTopology _topology);
+            void                    setViewport             (const core::uint4 & _viewport);
+            void                    setScissor              (const core::uint4 & _scissor);
+            void                    setRootConstants        (core::uint _startOffset, core::u32 * _values, core::uint _count);
+            void                    setInlineRootConstants  (const void * _value, core::uint _count);
 
 		protected:
 			CommandListType			m_type;

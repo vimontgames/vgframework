@@ -11,7 +11,7 @@ namespace vg::graphics::renderer
         BackgroundPass();
         ~BackgroundPass();
 
-        void setup() override;
+        void setup(double _dt) override;
         void draw(driver::CommandList * _cmdList) const override;
 
     private:

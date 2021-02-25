@@ -35,8 +35,8 @@ namespace vg::graphics::driver::dx12
         void                                copyTexture                 (driver::Texture * _dst, core::uint_ptr _from);
         void                                copyBuffer                  (driver::Buffer * _dst, core::uint_ptr _from);
 
-        void *                              map                         (driver::Buffer * _buffer);
-        void                                unmap                       (driver::Buffer * _buffer);
+        //void *                              map                         (driver::Buffer * _buffer);
+        //void                                unmap                       (driver::Buffer * _buffer);
 
 		D3D12GraphicsCommandList *		    getd3d12GraphicsCommandList ();
 		ID3D12CommandList *					getd3d12CommandList         () { return m_d3d12cmdList; }

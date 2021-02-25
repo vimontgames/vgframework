@@ -3,19 +3,19 @@
 
 struct QuadConstants
 {
-    uint4 posOffsetScale;
-    uint4 uvOffsetScale;
+    float4 posOffsetScale;
+    float4 uvOffsetScale;
 
     float2 getUV0(uint _vertexID)
     {
         float2 tmp = float2(_vertexID & 1, (_vertexID & 2) >> 1);
-        return tmp * asfloat(uvOffsetScale.zw) + asfloat(uvOffsetScale.xy);
+        return tmp * (uvOffsetScale.zw) + (uvOffsetScale.xy);
     }
 
     float4 getPosition(uint _vertexID)
     {
         float2 tmp = float2(_vertexID & 1, (_vertexID & 2) >> 1);
-        float2 pos = tmp * asfloat(posOffsetScale.zw) + asfloat(posOffsetScale.xy);
+        float2 pos = tmp * (posOffsetScale.zw) + (posOffsetScale.xy);
         pos = float2(pos.x, 1 - pos.y);
 
         return float4(pos * 2 - 1, 0, 1);

@@ -373,6 +373,10 @@ namespace vg::graphics::driver
             VG_SAFE_FREE(data); 
             return tex;
         }
+        else
+        {
+            VG_DEBUGPRINT("Failed to create texture from \"%s\"\n", _path.c_str());
+        }
         return nullptr;
     }
 

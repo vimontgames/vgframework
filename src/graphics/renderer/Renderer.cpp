@@ -128,7 +128,7 @@ namespace vg::graphics::renderer
     }
 
 	//--------------------------------------------------------------------------------------
-	void Renderer::runOneFrame()
+	void Renderer::runOneFrame(double _dt)
 	{
         if (m_device.isMinimized())
         {
@@ -154,7 +154,7 @@ namespace vg::graphics::renderer
                 m_frameGraph.addUserPass(m_postProcessPass, "PostProcessPass");
                 m_frameGraph.addUserPass(m_imguiPass, "UIPass");
 
-                m_frameGraph.setup();
+                m_frameGraph.setup(_dt);
                 m_frameGraph.build();
                 m_frameGraph.render();
             }

@@ -21,7 +21,7 @@ namespace vg::graphics::driver
             m_tableDesc.addBuffers(0, bindless_buffer_SRV_count, 1, bindless_buffer_SRV_offset);
             m_tableDesc.addUAVTextures(0, bindless_texture_UAV_count, 2, bindless_texture_UAV_offset);
             m_tableDesc.addUAVBuffers(0, bindless_buffer_UAV_count, 3, bindless_buffer_UAV_offset);
-            m_tableDesc.addConstantBuffers(0, bindless_constantbuffer_count, 4, bindless_constantbuffer_offset);
+            //m_tableDesc.addConstantBuffers(0, bindless_constantbuffer_count, 4, bindless_constantbuffer_offset);
         }
 
         //--------------------------------------------------------------------------------------
@@ -87,21 +87,21 @@ namespace vg::graphics::driver
         }
 
         //--------------------------------------------------------------------------------------
-        BindlessConstantBufferHandle BindlessTable::allocBindlessConstantBufferHandle(const driver::Buffer * _constantbuffer, ReservedSlot _reservedSlot)
-        {
-            return allocBindlessHandle<BindlessConstantBufferHandle>(_constantbuffer, _reservedSlot, m_constantbufferIndexPool, m_constantbuffer, bindless_constantbuffer_offset, bindless_constantbuffer_invalid);
-        }
-
-        //--------------------------------------------------------------------------------------
-        void BindlessTable::freeBindlessBufferHandle(BindlessConstantBufferHandle & _handle)
-        {
-            freeBindlessHandle(_handle, m_constantbufferIndexPool, m_constantbuffer, bindless_constantbuffer_offset, bindless_constantbuffer_invalid);
-        }
+        //BindlessConstantBufferHandle BindlessTable::allocBindlessConstantBufferHandle(const driver::Buffer * _constantbuffer, ReservedSlot _reservedSlot)
+        //{
+        //    return allocBindlessHandle<BindlessConstantBufferHandle>(_constantbuffer, _reservedSlot, m_constantbufferIndexPool, m_constantbuffer, bindless_constantbuffer_offset, bindless_constantbuffer_invalid);
+        //}
+        //
+        ////--------------------------------------------------------------------------------------
+        //void BindlessTable::freeBindlessBufferHandle(BindlessConstantBufferHandle & _handle)
+        //{
+        //    freeBindlessHandle(_handle, m_constantbufferIndexPool, m_constantbuffer, bindless_constantbuffer_offset, bindless_constantbuffer_invalid);
+        //}
 
         //--------------------------------------------------------------------------------------
         void BindlessTable::beginFrame()
         {
-            m_constantbufferIndexPool.clear();
+            //m_constantbufferIndexPool.clear();
         }
     }
 

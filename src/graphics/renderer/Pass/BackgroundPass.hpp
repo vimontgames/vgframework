@@ -31,7 +31,7 @@ namespace vg::graphics::renderer
     //--------------------------------------------------------------------------------------
     // Setup executed each frame, for each pass instance
     //--------------------------------------------------------------------------------------
-    void BackgroundPass::setup()
+    void BackgroundPass::setup(double _dt)
     {
         auto * device = Device::get();
 
@@ -58,13 +58,12 @@ namespace vg::graphics::renderer
         _cmdList->setPrimitiveTopology(PrimitiveTopology::TriangleStrip);
         _cmdList->setRasterizerState(rs);
 
-        float4 posOffetScale, texOffetScale;
+        BackgroundRootConstants root;
 
-        posOffetScale = float4(0.0f, 0.0f, 1.0f, 1.0f);
-        texOffetScale = float4(0.0f, 0.0f, 1.0f, 1.0f);
+        root.quad.posOffsetScale = float4(0.0f, 0.0f, 1.0f, 1.0f);
+        root.quad.uvOffsetScale = float4(0.0f, 0.0f, 1.0f, 1.0f);
         
-        _cmdList->setRootConstants(0, (u32*)&posOffetScale, 4);
-        _cmdList->setRootConstants(4, (u32*)&texOffetScale, 4);
+        _cmdList->setInlineRootConstants(&root, sizeof(BackgroundRootConstants)/sizeof(u32));
         
         _cmdList->draw(4);
     }

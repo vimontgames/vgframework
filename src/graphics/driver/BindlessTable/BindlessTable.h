@@ -30,8 +30,8 @@ namespace vg::graphics::driver
             BindlessBufferSrvHandle allocBindlessBufferHandle(const driver::Buffer * _buffer, ReservedSlot _reservedSlot = ReservedSlot::None);
             void freeBindlessBufferHandle(BindlessBufferSrvHandle & _handle);
 
-            BindlessConstantBufferHandle allocBindlessConstantBufferHandle(const driver::Buffer * _constantbuffer, ReservedSlot _reservedSlot = ReservedSlot::None);
-            void freeBindlessBufferHandle(BindlessConstantBufferHandle & _handle);
+            //BindlessConstantBufferHandle allocBindlessConstantBufferHandle(const driver::Buffer * _constantbuffer, ReservedSlot _reservedSlot = ReservedSlot::None);
+            //void freeBindlessBufferHandle(BindlessConstantBufferHandle & _handle);
             
         private:
             template <class H, class T, class P> H allocBindlessHandle(const T * _resource, ReservedSlot _reservedSlot, P & _pool, T ** _resources, core::uint _offset, core::uint _invalid);
@@ -46,8 +46,8 @@ namespace vg::graphics::driver
             core::IndexPool<BindlessHandle::Type, bindless_buffer_SRV_count>        m_bufferSrvIndexPool;
             Buffer *                                                                m_bufferSrv[bindless_buffer_SRV_count];
 
-            core::IndexPool<BindlessHandle::Type, bindless_constantbuffer_count>    m_constantbufferIndexPool;
-            Buffer *                                                                m_constantbuffer[bindless_constantbuffer_count];
+            //core::IndexPool<BindlessHandle::Type, bindless_constantbuffer_count>    m_constantbufferIndexPool;
+            //Buffer *                                                                m_constantbuffer[bindless_constantbuffer_count];
         };
     }
 }
