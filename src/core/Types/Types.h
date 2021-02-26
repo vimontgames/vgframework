@@ -63,6 +63,9 @@ namespace vg::core
 
     template <typename T> using atomic = std::atomic<T>;
 
+    using mutex = std::mutex;
+    template <typename T> using lock_guard = std::lock_guard<T>;
+
 	template <typename T> using vector = std::vector<T>;
     template <typename T1, typename T2> using pair = std::pair<T1, T2>;
     

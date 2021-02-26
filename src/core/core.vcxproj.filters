@@ -34,6 +34,9 @@
     <Filter Include="Timer">
       <UniqueIdentifier>{2a06315c-8e0d-4c25-ad72-38fd69c606b2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Scheduler">
+      <UniqueIdentifier>{8d124dbf-4fb9-42c4-aa6e-9b73ac4b4bdd}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Math\Math.h">
@@ -84,6 +87,13 @@
     <ClInclude Include="Timer\Timer.h">
       <Filter>Timer</Filter>
     </ClInclude>
+    <ClInclude Include="Scheduler\Scheduler.h">
+      <Filter>Scheduler</Filter>
+    </ClInclude>
+    <ClInclude Include="IScheduler.h" />
+    <ClInclude Include="Scheduler\Job.h">
+      <Filter>Scheduler</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Math\Math.cpp">
@@ -108,6 +118,12 @@
     </ClCompile>
     <ClCompile Include="Timer\Timer.cpp">
       <Filter>Timer</Filter>
+    </ClCompile>
+    <ClCompile Include="Scheduler\Scheduler.cpp">
+      <Filter>Scheduler</Filter>
+    </ClCompile>
+    <ClCompile Include="Scheduler\Job.cpp">
+      <Filter>Scheduler</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

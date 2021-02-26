@@ -8,7 +8,7 @@ namespace vg::engine
 class SuperVimontBrawlGame
 {
     public:
-        SuperVimontBrawlGame(vg::engine::IEngine * _engine);
+        SuperVimontBrawlGame(vg::engine::IEngine & _engine);
         ~SuperVimontBrawlGame();
 
     private:

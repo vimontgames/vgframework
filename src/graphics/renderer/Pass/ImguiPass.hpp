@@ -216,7 +216,7 @@ namespace vg::graphics::renderer
             if (m_accum > (double)smoothDtTime)
             {
                 m_dt = (float)(m_accum / (float)m_frame);
-                m_fps = (float)smoothDtTime / m_dt;
+                m_fps = (float)1000.0f / m_dt;
                 m_accum = 0.0;
                 m_frame = 0;
             }
@@ -253,9 +253,9 @@ namespace vg::graphics::renderer
             {
                 ImGui::Columns(2, "mycolumns2", false);  // 2-ways, no border
                 ImGui::Text("FPS: ");
-                ImGui::Text("Framerate: ");
+                ImGui::Text("Frame: ");
                 ImGui::NextColumn();
-                ImGui::Text("%.0f", m_fps);
+                ImGui::Text("%.0f img/sec", m_fps);
                 ImGui::Text("%.4f ms", m_dt);
 
                 ImGui::Columns(1);

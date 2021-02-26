@@ -8,6 +8,7 @@ namespace vg
     namespace core
     {
         class IProfiler;
+        struct Singletons;
     }
 
     namespace graphics::renderer
@@ -15,7 +16,7 @@ namespace vg
         class IRenderer : public core::IPlugin
         {
         public:
-            virtual void	            init(const RendererParams & _params) = 0;
+            virtual void	            init(const RendererParams & _params, core::Singletons & _singletons) = 0;
             virtual void	            deinit() = 0;
             virtual void                resize(core::uint _width, core::uint _height) = 0;
             virtual void	            runOneFrame(double _dt) = 0;

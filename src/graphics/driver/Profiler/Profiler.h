@@ -42,6 +42,7 @@ namespace vg::graphics::driver
         void                                    stopCpuEvent            () override;
         void                                    startGpuEvent           (const char * _name) override;
         void                                    stopGpuEvent            () override;
+        void                                    registerThread          (const char * _name) override;
 
         static void                             setCommandList          (CommandList * _cmdList) { s_contextTLS.cmdList = _cmdList; }
         static CommandList *                    getCommandList          () { auto * cmdList = s_contextTLS.cmdList; VG_ASSERT(cmdList); return cmdList; }
@@ -49,6 +50,9 @@ namespace vg::graphics::driver
     private:
         static VG_THREAD_LOCAL ProfilerContext  s_contextTLS;
         bool                                    m_isCaptureInProgress  = false;
+
+        std::mutex                              m_mutex;
+        core::vector<core::string>              m_registeredThreads;
     };
 
     class ScopedGPUEvent

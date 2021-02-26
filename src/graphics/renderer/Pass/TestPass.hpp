@@ -178,15 +178,15 @@ namespace vg::graphics::renderer
             float ar = float(backbuffer.width) / float(backbuffer.height);
 
             root.mat = mul(world, viewproj);
-            root.quad.posOffsetScale = float4(m_offset, 0.5f, 0.1f, 0.1f * ar);
+            root.quad.posOffsetScale = float4(m_offset, 0.5f, 0.1f, 0.1f * ar * 2);
 
             const float spriteWidth = 1.0f / float(atlas_width);
             const float spriteHeight = 1.0f / float(atlas_height);
 
             if (m_reverse)
-                root.quad.uvOffsetScale = float4(spriteWidth, 0, -spriteWidth, spriteHeight);
+                root.quad.uvOffsetScale = float4(spriteWidth, 0, -spriteWidth, spriteHeight*2);
             else
-                root.quad.uvOffsetScale = float4(0.0f, 0.0f, spriteWidth, spriteHeight);
+                root.quad.uvOffsetScale = float4(0.0f, 0, spriteWidth, spriteHeight*2);
 
             root.texID = m_texture[3]->getBindlessSRVHandle();
 

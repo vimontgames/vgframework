@@ -16,6 +16,7 @@
 #define VG_PROFILE_CPU_EVENT_START(name)    Kernel::getProfiler()->startCpuEvent(name)
 #define VG_PROFILE_CPU_EVENT_STOP()         Kernel::getProfiler()->stopCpuEvent()
 #define VG_PROFILE_CPU(name)                vg::core::ScopedCPUEvent scopedCPUEvent##__COUNTER__(name)
+#define VG_PROFILE_REGISTER_THREAD(name)    Kernel::registerThread(name)
 
 #else
 
@@ -29,6 +30,7 @@
 #define VG_PROFILE_CPU_EVENT_START          __noop
 #define VG_PROFILE_CPU_EVENT_STOP           __noop
 #define VG_PROFILE_CPU(name)                __noop
+#define VG_PROFILE_REGISTER_THREAD(name)    __noop
 
 #endif
 
@@ -47,6 +49,7 @@ namespace vg::core
         virtual void stopCpuEvent           () = 0;
         virtual void startGpuEvent          (const char * _name) = 0;
         virtual void stopGpuEvent           () = 0;
+        virtual void registerThread         (const char * _name) = 0;
 
         virtual ~IProfiler() {}
     };

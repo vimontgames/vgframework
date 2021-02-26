@@ -61,6 +61,7 @@ namespace vg::graphics::renderer
 		m_device(*(new Device())),
 		m_frameGraph(*(new FrameGraph()))
 	{
+        // Profiler instance has to be created by the graphic engine so as to profile the GPU too
         Kernel::setProfiler(new Profiler());
 	}
 
@@ -73,8 +74,14 @@ namespace vg::graphics::renderer
 	}
 
 	//--------------------------------------------------------------------------------------
-	void Renderer::init(const RendererParams & _params)
+	void Renderer::init(const RendererParams & _params, core::Singletons & _singletons)
 	{
+        // Singletons created by the renderer
+        _singletons.profiler = Kernel::getProfiler();
+
+        // Singletons used by the renderer
+        Kernel::setScheduler(_singletons.scheduler);
+
         // Create device
 		m_device.init(_params.device);
 

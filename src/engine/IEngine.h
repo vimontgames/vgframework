@@ -3,6 +3,11 @@
 #include "core/IPlugin.h"
 #include "Engine_Consts.h"
 
+namespace vg::core
+{
+    struct Singletons;
+}
+
 namespace vg::graphics::renderer
 {
 	class IRenderer;
@@ -13,7 +18,7 @@ namespace vg::engine
 	class IEngine : public core::IPlugin
 	{
 	public:
-		virtual void							init		(const EngineParams & _params) = 0;
+		virtual void							init		(const EngineParams & _params, core::Singletons & _singletons) = 0;
 		virtual void							deinit		() = 0;
 
         #ifdef _WIN32

@@ -74,6 +74,7 @@
 //--------------------------------------------------------------------------------------
 #include <string>
 #include <atomic>
+#include <mutex>
 #include <vector>
 #include <set>
 #include <unordered_set>

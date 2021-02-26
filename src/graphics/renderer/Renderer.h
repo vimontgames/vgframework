@@ -28,7 +28,7 @@ namespace vg::graphics::renderer
 								Renderer			();
 								~Renderer			();
 
-		void					init				(const RendererParams & _params) override;
+		void					init				(const RendererParams & _params, core::Singletons & _singletons) override;
 		void					deinit				() override;
         void                    resize              (core::uint _width, core::uint _height) override;
 		void					runOneFrame			(double _dt) override;

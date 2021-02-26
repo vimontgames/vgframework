@@ -8,6 +8,7 @@
 
 #include "core/Plugin/Plugin.h"
 #include "core/CmdLine/CmdLine.h"
+#include "core/Kernel.h"
 
 #include "engine/IEngine.h"
 #include "graphics/renderer/IRenderer.h"
@@ -194,9 +195,10 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
     engineParams.renderer.device.window = g_hWnd;
     engineParams.renderer.device.instance = hInstance;
 
-    g_engine->init(engineParams);
+    core::Singletons singletons;
+    g_engine->init(engineParams, singletons);
 
-    SuperVimontBrawlGame * game = new SuperVimontBrawlGame(g_engine);
+    SuperVimontBrawlGame * game = new SuperVimontBrawlGame(*g_engine);
 
 	core::string title = "Super Vimont Brawl - " + core::Plugin::getConfiguration() + " - " + core::asString(engineParams.renderer.device.api);
     if (engineParams.renderer.device.debugDevice)

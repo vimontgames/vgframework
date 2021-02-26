@@ -3,6 +3,13 @@
 namespace vg::core
 {
     class IProfiler;
+    class IScheduler;
+
+    struct Singletons
+    {
+        IProfiler *   profiler = nullptr;
+        IScheduler *  scheduler = nullptr;
+    };
 
     class Kernel
     {
@@ -10,20 +17,36 @@ namespace vg::core
         static void setProfiler(IProfiler * _profiler);
         static IProfiler * getProfiler();
 
+        static void setScheduler(IScheduler * _scheduler);
+        static IScheduler * getScheduler();
+
     private:
-        static inline IProfiler * s_profiler = nullptr;
+        static inline Singletons s_singletons;
     };
 
     //--------------------------------------------------------------------------------------
     inline void Kernel::setProfiler(IProfiler * _profiler)
     {
-        s_profiler = _profiler;
+        s_singletons.profiler = _profiler;
     }
 
     //--------------------------------------------------------------------------------------
     inline IProfiler * Kernel::getProfiler()
     {
-        VG_ASSERT(s_profiler, "Profiler singleton interface pointer is not specified for this executable or dynamic library.");
-        return s_profiler;
+        VG_ASSERT(s_singletons.profiler, "Profiler singleton interface pointer is not specified for this executable or dynamic library.");
+        return s_singletons.profiler;
+    }
+
+    //--------------------------------------------------------------------------------------
+    inline void Kernel::setScheduler(IScheduler * _scheduler)
+    {
+        s_singletons.scheduler = _scheduler;
+    }
+
+    //--------------------------------------------------------------------------------------
+    inline IScheduler * Kernel::getScheduler()
+    {
+        VG_ASSERT(s_singletons.scheduler, "Profiler singleton interface pointer is not specified for this executable or dynamic library.");
+        return s_singletons.scheduler;
     }
 }

@@ -20,6 +20,7 @@
     <ClInclude Include="IObject.h" />
     <ClInclude Include="IPlugin.h" />
     <ClInclude Include="IProfiler.h" />
+    <ClInclude Include="IScheduler.h" />
     <ClInclude Include="Kernel.h" />
     <ClInclude Include="Math\Math.h" />
     <ClInclude Include="Object\Object.h" />
@@ -27,6 +28,8 @@
     <ClInclude Include="Pool\IndexPool.h" />
     <ClInclude Include="Pool\Pool.h" />
     <ClInclude Include="Precomp.h" />
+    <ClInclude Include="Scheduler\Job.h" />
+    <ClInclude Include="Scheduler\Scheduler.h" />
     <ClInclude Include="Singleton\Singleton.h" />
     <ClInclude Include="string\string.h" />
     <ClInclude Include="Timer\Timer.h" />
@@ -43,6 +46,8 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="Scheduler\Job.cpp" />
+    <ClCompile Include="Scheduler\Scheduler.cpp" />
     <ClCompile Include="string\string.cpp" />
     <ClCompile Include="Timer\Timer.cpp" />
   </ItemGroup>

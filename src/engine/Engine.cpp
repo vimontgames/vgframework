@@ -6,6 +6,7 @@
 #include "core/IProfiler.h"
 #include "core/Timer/Timer.h"
 #include "core/Plugin/Plugin.h"
+#include "core/Scheduler/Scheduler.h"
 #include "graphics/renderer/IRenderer.h"
 #include "graphics/driver/IDevice.h"
 
@@ -80,7 +81,7 @@ namespace vg::engine
 	}
 
 	//--------------------------------------------------------------------------------------
-	void Engine::init(const EngineParams & _params)
+	void Engine::init(const EngineParams & _params, Singletons & _singletons)
 	{
         Timer::init();
 
@@ -103,15 +104,24 @@ namespace vg::engine
 		const auto & name = asString(_params.renderer.device.api);
 
 		m_renderer = Plugin::create<graphics::renderer::IRenderer>("renderer", api);
-		m_renderer->init(_params.renderer);
+		m_renderer->init(_params.renderer, _singletons);
 
-        Kernel::setProfiler(m_renderer->getProfilerInstance());
+        // Singletons used by the engine
+        Kernel::setProfiler(_singletons.profiler);
+
+        // Create profiler singleton
+        _singletons.scheduler = new Scheduler();
+        Kernel::setScheduler(_singletons.scheduler);
 	}
 
 	//--------------------------------------------------------------------------------------
 	void Engine::deinit()
 	{
         Kernel::setProfiler(nullptr);
+
+        IScheduler * scheduler = Kernel::getScheduler();
+        VG_SAFE_DELETE(scheduler);
+        Kernel::setScheduler(nullptr);
 
 		m_renderer->deinit();
 		m_renderer->release();
@@ -134,6 +144,9 @@ namespace vg::engine
 	{
         VG_PROFILE_FRAME("Main");
         VG_PROFILE_CPU("Engine");
+
+        // test
+        ((Scheduler*)Kernel::getScheduler())->test();
 
         updateDt();
 

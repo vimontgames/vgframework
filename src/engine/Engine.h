@@ -16,7 +16,7 @@ namespace vg::engine
         LRESULT CALLBACK                WndProc     (HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) override;
         #endif
 
-		void							init		(const EngineParams & _params) override;
+		void							init		(const EngineParams & _params, core::Singletons & _singletons) override;
 		void							deinit		() override;
 
 		void							runOneFrame	() override;
