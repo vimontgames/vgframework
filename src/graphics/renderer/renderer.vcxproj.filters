@@ -18,12 +18,6 @@
     <ClInclude Include="Renderer.h" />
     <ClInclude Include="IRenderer.h" />
     <ClInclude Include="Renderer_consts.h" />
-    <ClInclude Include="Pass\TestPass.h">
-      <Filter>Pass</Filter>
-    </ClInclude>
-    <ClInclude Include="Pass\TestPass.hpp">
-      <Filter>Pass</Filter>
-    </ClInclude>
     <ClInclude Include="Pass\ImguiPass.h">
       <Filter>Pass</Filter>
     </ClInclude>
@@ -43,6 +37,18 @@
       <Filter>Pass</Filter>
     </ClInclude>
     <ClInclude Include="Pass\BackgroundPass.hpp">
+      <Filter>Pass</Filter>
+    </ClInclude>
+    <ClInclude Include="Pass\TestPass2D.hpp">
+      <Filter>Pass</Filter>
+    </ClInclude>
+    <ClInclude Include="Pass\TestPass2D.h">
+      <Filter>Pass</Filter>
+    </ClInclude>
+    <ClInclude Include="Pass\TestPass3D.h">
+      <Filter>Pass</Filter>
+    </ClInclude>
+    <ClInclude Include="Pass\TestPass3D.hpp">
       <Filter>Pass</Filter>
     </ClInclude>
   </ItemGroup>

@@ -41,8 +41,10 @@
     <ClInclude Include="Pass\ImguiPass.hpp" />
     <ClInclude Include="Pass\PostProcessPass.h" />
     <ClInclude Include="Pass\PostProcessPass.hpp" />
-    <ClInclude Include="Pass\TestPass.h" />
-    <ClInclude Include="Pass\TestPass.hpp" />
+    <ClInclude Include="Pass\TestPass2D.h" />
+    <ClInclude Include="Pass\TestPass2D.hpp" />
+    <ClInclude Include="Pass\TestPass3D.h" />
+    <ClInclude Include="Pass\TestPass3D.hpp" />
     <ClInclude Include="Precomp.h" />
     <ClInclude Include="Renderer.h" />
     <ClInclude Include="Renderer_consts.h" />

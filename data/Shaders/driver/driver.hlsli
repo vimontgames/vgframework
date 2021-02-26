@@ -4,23 +4,16 @@
 #include "../system/quad.hlsli"
 #include "../system/constants.hlsli"
 
-struct CBConstants
-{
-    float4 color0;
-    float4 color1;
-};
-
-struct RootConstants
+struct RootConstants2D
 {
     QuadConstants   quad;
     uint            texID;
-    float4x4        mat;
 };
 
-#define RootConstantsCount sizeof(RootConstants)/sizeof(u32)
+#define RootConstants2DCount sizeof(RootConstants2D)/sizeof(u32)
 
 #ifndef __cplusplus
-DECL_ROOTCONSTANTS(RootConstants, rootConstants, 0, 0);
+DECL_ROOTCONSTANTS(RootConstants2D, rootConstants2D, 0, 0);
 #endif
 
 #endif // _DRIVER__HLSLI_

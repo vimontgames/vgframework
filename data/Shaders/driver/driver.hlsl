@@ -14,8 +14,8 @@ VS_Output_Quad VS_Quad(uint _vertexID : VertexID)
 {
     VS_Output_Quad output;
 
-    output.uv = rootConstants.quad.getUV0(_vertexID);
-    output.pos = mul(rootConstants.mat, rootConstants.quad.getPosition(_vertexID));
+    output.uv = rootConstants2D.quad.getUV0(_vertexID);
+    output.pos = rootConstants2D.quad.getPosition(_vertexID); // mul(rootConstants.mat, rootConstants.quad.getPosition(_vertexID));
 
     return output;
 }
@@ -33,7 +33,7 @@ PS_Output_Quad PS_Quad(VS_Output_Quad _input)
 
     // RO texture
     //output.color0.rgb = Texture1DTable[index].Sample(nearestClamp, uv.x).rgb;
-    output.color0.rgba = Texture2DTable[rootConstants.texID].Sample(nearestRepeat, uv).rgba;
+    output.color0.rgba = Texture2DTable[rootConstants2D.texID].Sample(nearestRepeat, uv).rgba;
     //output.color0.rgb = Texture3DTable[index].Sample(nearestClamp, float3(uv,0)).rgb;
 
     // Uniform buffer
@@ -54,7 +54,7 @@ PS_Output_Quad PS_Copy(VS_Output_Quad _input)
     float2 uv = _input.uv;
     output.color0 = float4(uv, 0, 1);
 
-    output.color0.rgba = Texture2DTable[rootConstants.texID].Sample(nearestRepeat, uv).rgba;
+    output.color0.rgba = Texture2DTable[rootConstants2D.texID].Sample(nearestRepeat, uv).rgba;
 
     return output;
 }

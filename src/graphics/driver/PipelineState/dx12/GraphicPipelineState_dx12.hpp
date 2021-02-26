@@ -16,6 +16,8 @@ namespace vg::graphics::driver::dx12
 
         d3d12graphicPipelineDesc.BlendState = _key.m_blendState.getd3d12BlendState();
 
+        d3d12graphicPipelineDesc.DepthStencilState.DepthEnable = false;
+
         d3d12graphicPipelineDesc.SampleMask = 0xFFFFFFFF;
 
         auto * desc = sm->getHLSLDescriptor(_key.m_shaderKey.file);

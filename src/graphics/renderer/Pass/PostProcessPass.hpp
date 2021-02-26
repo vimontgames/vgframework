@@ -11,7 +11,7 @@ namespace vg::graphics::renderer
         auto * device = Device::get();
 
         RootSignatureDesc rsDesc;
-        rsDesc.addRootConstants(ShaderStageFlags::VS | ShaderStageFlags::PS, 0, RootConstantsCount/*sizeof(RootConstants)/sizeof(u32)*/);
+        rsDesc.addRootConstants(ShaderStageFlags::VS | ShaderStageFlags::PS, 0, RootConstants2DCount);
 
         const RootSignatureTableDesc & bindlessTable = device->getBindlessTable()->getTableDesc();
         rsDesc.addTable(bindlessTable);
@@ -48,14 +48,13 @@ namespace vg::graphics::renderer
         _cmdList->setRasterizerState(rs);
         _cmdList->setBlendState(bs);
 
-        RootConstants root;
+        RootConstants2D root2D;
 
-        root.mat = float4x4::identity();
-        root.quad.posOffsetScale = float4(0.0f, 0.0f, 1.0f, 1.0f);
-        root.quad.uvOffsetScale = float4(0.0f, 0.0f, 1.0f, 1.0f);
-        root.texID = getRenderTarget("Color")->getBindlessSRVHandle();
+        root2D.quad.posOffsetScale = float4(0.0f, 0.0f, 1.0f, 1.0f);
+        root2D.quad.uvOffsetScale = float4(0.0f, 0.0f, 1.0f, 1.0f);
+        root2D.texID = getRenderTarget("Color")->getBindlessSRVHandle();
 
-        _cmdList->setInlineRootConstants(&root, RootConstantsCount);
+        _cmdList->setInlineRootConstants(&root2D, RootConstants2DCount);
 
         _cmdList->draw(4);
     }

@@ -61,6 +61,13 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SuperVimontBrawl", "game\su
 		{257A93DC-9206-4770-9560-7A22DFF0AC01} = {257A93DC-9206-4770-9560-7A22DFF0AC01}
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "default", "default", "{73E04AC7-00AE-48F3-8650-73DE5C3A9661}"
+	ProjectSection(SolutionItems) = preProject
+		data\Shaders\default\default.hlsl = data\Shaders\default\default.hlsl
+		data\Shaders\default\default.hlsl.h = data\Shaders\default\default.hlsl.h
+		data\Shaders\default\default.hlsli = data\Shaders\default\default.hlsli
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|PC DX12 = Debug|PC DX12
@@ -118,6 +125,7 @@ Global
 		{06052575-08B6-41A6-9E38-E1171229FF9C} = {3A24AFD2-079B-45FC-8488-70058ACACD89}
 		{4506A0AF-27FD-468A-85BB-444584048396} = {3A24AFD2-079B-45FC-8488-70058ACACD89}
 		{535FA929-A8A5-4E16-8B7E-6496DAA428BF} = {066BBCB0-5A50-4A72-AE31-9C697192ED46}
+		{73E04AC7-00AE-48F3-8650-73DE5C3A9661} = {3A24AFD2-079B-45FC-8488-70058ACACD89}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {B437215B-B736-4FF0-8DA1-E6B35C780CE1}

@@ -35,7 +35,7 @@ namespace vg::core
             
             static volatile uint test = 0;
             uint r = rand() & 0x0FFFF;
-            for (uint i = 0; i < (r<<4); ++i)
+            for (uint i = 0; i < (r<<3); ++i)
                 test += i;
         }
 
@@ -46,9 +46,8 @@ namespace vg::core
     class RegisterProfilerThreadJob : public Job
     {
     public:
-        RegisterProfilerThreadJob(core::uint _index) : 
-            Job(""),
-            m_index(_index)
+        RegisterProfilerThreadJob() : 
+            Job("")
         {
 
         }
@@ -59,7 +58,6 @@ namespace vg::core
         }
 
     private:
-        core::uint m_index;
     };
 
     //--------------------------------------------------------------------------------------
@@ -67,6 +65,8 @@ namespace vg::core
         m_schd(new px_sched::Scheduler())
     {
         px_sched::SchedulerParams params;
+                                  params.max_running_threads = static_cast<uint16_t>(std::thread::hardware_concurrency());
+                                  params.num_threads = params.max_running_threads;
                                   params.thread_sleep_on_idle_in_microseconds = 0;
         m_schd->init(params);
 
@@ -82,10 +82,12 @@ namespace vg::core
     //--------------------------------------------------------------------------------------
     void Scheduler::registerProfilerThreads(core::uint _count)
     {
+        RegisterProfilerThreadJob registerProfilerThreadJob;
+
         px_sched::Sync s;
-        for (uint i = 0; i < _count*_count; ++i)
+        for (uint i = 0; i < _count; ++i)
         {
-            px_sched::Job job{ new RegisterProfilerThreadJob(i) };
+            px_sched::Job job{ &registerProfilerThreadJob };
             m_schd->run(job, &s);
         }
         m_schd->waitFor(s);
@@ -104,13 +106,17 @@ namespace vg::core
         px_sched::Sync s;
 
         VG_PROFILE_CPU("SchedulerTest");
+
+        vector<TestJob*> testJobs;
       
-        for (uint i = 0; i < 32; ++i)
+        for (uint i = 0; i < 16; ++i)
         {
             char jobName[256];
             sprintf_s(jobName, "Job %u", i);
 
-            px_sched::Job job{ new TestJob(jobName) };
+            testJobs.push_back(new TestJob(jobName));
+
+            px_sched::Job job{ testJobs[i] };
             m_schd->run(job, &s);
         }
 
@@ -119,5 +125,10 @@ namespace vg::core
             VG_PROFILE_CPU("SyncJobs");
             m_schd->waitFor(s); 
         }
+
+        // clear
+        for (uint i = 0; i < testJobs.size(); ++i)
+            VG_SAFE_DELETE(testJobs[i]);
+        testJobs.clear();
     }
 }

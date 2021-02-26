@@ -39,8 +39,8 @@ namespace vg::graphics::renderer
 
         FrameGraph::TextureResourceDesc desc;
         desc.format = device->getBackbufferFormat();
-        desc.width = deviceParams.resolution.x >> 1;
-        desc.height = deviceParams.resolution.y >> 1;
+        desc.width = deviceParams.resolution.x;
+        desc.height = deviceParams.resolution.y;
         desc.clearColor = float4(0, 0, 0, 0);
         desc.initState = FrameGraph::Resource::InitState::Clear;
 

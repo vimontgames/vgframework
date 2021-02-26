@@ -1,4 +1,4 @@
-#include "TestPass.h"
+#include "TestPass2D.h"
 #include "shaders/driver/driver.hlsli"
 #include "Shaders/system/bindless.hlsli"
 
@@ -7,12 +7,12 @@ namespace vg::graphics::renderer
     //--------------------------------------------------------------------------------------
     // Setup executed once, when pass is created
     //--------------------------------------------------------------------------------------
-    TestPass::TestPass()
+    TestPass2D::TestPass2D()
     {
         auto * device = Device::get();
         
         RootSignatureDesc rsDesc;
-        rsDesc.addRootConstants(ShaderStageFlags::VS | ShaderStageFlags::PS, 0, RootConstantsCount/*sizeof(RootConstants)/sizeof(u32)*/);
+        rsDesc.addRootConstants(ShaderStageFlags::VS | ShaderStageFlags::PS, 0, RootConstants2DCount);
         
         const RootSignatureTableDesc & bindlessTable = device->getBindlessTable()->getTableDesc();
         rsDesc.addTable(bindlessTable);
@@ -69,25 +69,11 @@ namespace vg::graphics::renderer
             m_texture.push_back(device->createTexture("game/supervimontbrawl/data/Textures/Sprites.psd"));
         }
 
-        // buffer 0
-        {
-            BufferDesc bufDesc = BufferDesc(Usage::Default, BindFlags::ShaderResource, CPUAccessFlags::None, BufferFlags::None, 16, 1);
-        
-            const float4 initData = float4(1.0f, 1.0f, 0.0f, 1.0f);
-        
-            m_buffer.push_back(device->createBuffer(bufDesc, "buf #0", (void*)&initData));
-        }
-
-        // cb
-        {
-            BufferDesc bufDesc = BufferDesc(Usage::Dynamic, BindFlags::ConstantBuffer, CPUAccessFlags::None, BufferFlags::None, sizeof(UniformBufferTest), 1);
-
-            m_constantBuffer = device->createBuffer(bufDesc, "cb #0");
-        }
+        m_testSpriteData[0].offset += 0.15f;
     }
 
     //--------------------------------------------------------------------------------------
-    TestPass::~TestPass()
+    TestPass2D::~TestPass2D()
     {
         auto * device = Device::get();
         device->removeRootSignature(m_rootSignatureHandle);
@@ -95,43 +81,44 @@ namespace vg::graphics::renderer
         for (auto *& tex : m_texture)
             VG_SAFE_RELEASE_ASYNC(tex);
         m_texture.clear();
-
-        for (auto *& buf : m_buffer)
-            VG_SAFE_RELEASE_ASYNC(buf);
-        m_buffer.clear();
-            
-        VG_SAFE_RELEASE_ASYNC(m_constantBuffer);
     }
 
     //--------------------------------------------------------------------------------------
     // Setup executed each frame, for each pass instance
     //--------------------------------------------------------------------------------------
-    void TestPass::setup(double _dt)
+    void TestPass2D::setup(double _dt)
     {
         auto * renderer = Renderer::get();
         const auto & backbuffer = renderer->getBackbuffer()->getTexDesc();
 
-        if (m_reverse)
-            m_offset -= (float)_dt * 0.25f / (float)backbuffer.width;
-        else
-            m_offset += (float)_dt * 0.25f / (float)backbuffer.width;
+        for (uint i = 0; i < countof(m_testSpriteData); ++i)
+        {
+            auto & data = m_testSpriteData[i];
 
-        if (m_offset < 0.25f)
-        {
-            m_offset = 0.25f;
-            m_reverse = false;
-        }
-        else if (m_offset > 0.75)
-        {
-            m_offset = 0.75f;
-            m_reverse = true;
+            const float speed = data.reverse ? 0.3f - i * 0.05f : 0.25f + i * 0.05f;
+
+            if (data.reverse)
+                data.offset -= (float)_dt * speed / (float)backbuffer.width;
+            else
+                data.offset += (float)_dt * speed / (float)backbuffer.width;
+
+            if (data.offset < 0.1f)
+            {
+                data.offset = 0.1f;
+                data.reverse = false;
+            }
+            else if (data.offset > 0.9)
+            {
+                data.offset = 0.9f;
+                data.reverse = true;
+            }
         }
 
         writeRenderTarget(0, "Color");
     }
 
     //--------------------------------------------------------------------------------------
-    void TestPass::draw(CommandList * _cmdList) const
+    void TestPass2D::draw(CommandList * _cmdList) const
     {
         auto * renderer = Renderer::get();
         const auto & backbuffer = renderer->getBackbuffer()->getTexDesc();
@@ -147,50 +134,32 @@ namespace vg::graphics::renderer
 
         auto * device = Device::get();
         auto * bindless = device->getBindlessTable();
-                
-        float4x4 proj = float4x4::identity();
-        float4x4 view = float4x4::identity();
-        float4x4 viewproj = view * proj;
-        float4x4 world = float4x4::identity();
+          
+        const uint atlas_width = 16;
+        const uint atlas_height = 16;
 
-        float4x4 wvp;
-        
+        float ar = float(backbuffer.width) / float(backbuffer.height);
+
+        // draw sprites
+        for (uint i = 0; i < countof(m_testSpriteData); ++i)
         {
-            RootConstants root;
+            const auto & data = m_testSpriteData[i];
 
-            root.mat = world * viewproj;
-            root.quad.posOffsetScale = float4(0.5f, 0.5f, 0.125f, 0.125f);
-            root.quad.uvOffsetScale = float4(0.0f, 0.0f, 1.0f, 1.0f);
-            root.texID = m_texture[0]->getBindlessSRVHandle();
-
-            _cmdList->setInlineRootConstants(&root, RootConstantsCount);
-            _cmdList->draw(4);
-        }
-
-        {
-            RootConstants root;
-
-            //world.f32_3[0] += m_offset;
-
-            const uint atlas_width = 16;
-            const uint atlas_height = 16;
-
-            float ar = float(backbuffer.width) / float(backbuffer.height);
-
-            root.mat = mul(world, viewproj);
-            root.quad.posOffsetScale = float4(m_offset, 0.5f, 0.1f, 0.1f * ar * 2);
+            RootConstants2D root2D;
 
             const float spriteWidth = 1.0f / float(atlas_width);
             const float spriteHeight = 1.0f / float(atlas_height);
 
-            if (m_reverse)
-                root.quad.uvOffsetScale = float4(spriteWidth, 0, -spriteWidth, spriteHeight*2);
+            root2D.quad.posOffsetScale = float4(data.offset, 0.75f + i * 0.1f * ar * 0.5f, 0.1f, 0.1f * ar);
+
+            if (data.reverse)
+                root2D.quad.uvOffsetScale = float4(spriteWidth, spriteHeight*i, -spriteWidth, spriteHeight);
             else
-                root.quad.uvOffsetScale = float4(0.0f, 0, spriteWidth, spriteHeight*2);
+                root2D.quad.uvOffsetScale = float4(0.0f, spriteHeight*i, spriteWidth, spriteHeight);
 
-            root.texID = m_texture[3]->getBindlessSRVHandle();
+            root2D.texID = m_texture[3]->getBindlessSRVHandle();
 
-            _cmdList->setInlineRootConstants(&root, RootConstantsCount);
+            _cmdList->setInlineRootConstants(&root2D, RootConstants2DCount);
             _cmdList->draw(4);
         }
     }

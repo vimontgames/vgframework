@@ -8,11 +8,13 @@
 #include "graphics/driver/Profiler/Profiler.h"
 #include "graphics/renderer/Imgui/imguiAdapter.h"
 #include "graphics/renderer/Pass/BackgroundPass.h"
-#include "graphics/renderer/Pass/TestPass.h"
+#include "graphics/renderer/Pass/TestPass3D.h"
+#include "graphics/renderer/Pass/TestPass2D.h"
 #include "graphics/renderer/Pass/PostProcessPass.h"
 #include "graphics/renderer/Pass/ImguiPass.h"
 
 #include "shaders/driver/driver.hlsl.h"
+#include "shaders/default/default.hlsl.h"
 #include "Shaders/background/background.hlsl.h"
 
 using namespace vg::core;
@@ -92,7 +94,8 @@ namespace vg::graphics::renderer
 
         // Create passes
         m_backgroundPass = new BackgroundPass();
-        m_testPass = new TestPass();
+        m_testPass3D = new TestPass3D();
+        m_testPass2D = new TestPass2D();
         m_postProcessPass = new PostProcessPass();
         m_imguiPass = new ImguiPass();
 	}
@@ -101,7 +104,9 @@ namespace vg::graphics::renderer
     void Renderer::registerShaders()
     {
         auto * sm = ShaderManager::get();
+
         sm->registerHLSL(DriverHLSLDesc());
+        sm->registerHLSL(DefaultHLSLDesc());
         sm->registerHLSL(BackgroundHLSLDesc());
 
         sm->update();
@@ -111,7 +116,8 @@ namespace vg::graphics::renderer
 	void Renderer::deinit()
 	{
         VG_SAFE_DELETE(m_backgroundPass);
-        VG_SAFE_DELETE(m_testPass);
+        VG_SAFE_DELETE(m_testPass3D);
+        VG_SAFE_DELETE(m_testPass2D);
         VG_SAFE_DELETE(m_postProcessPass);
         VG_SAFE_DELETE(m_imguiPass);
         VG_SAFE_DELETE(m_imgui);
@@ -157,7 +163,8 @@ namespace vg::graphics::renderer
                 m_frameGraph.setGraphOutput("Backbuffer");
 
                 m_frameGraph.addUserPass(m_backgroundPass, "BackgroundPass");
-                m_frameGraph.addUserPass(m_testPass, "TestPass");
+                m_frameGraph.addUserPass(m_testPass3D, "TestPass3D");
+                m_frameGraph.addUserPass(m_testPass2D, "TestPass2D");
                 m_frameGraph.addUserPass(m_postProcessPass, "PostProcessPass");
                 m_frameGraph.addUserPass(m_imguiPass, "UIPass");
 

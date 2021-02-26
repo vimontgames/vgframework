@@ -20,6 +20,7 @@ using namespace vg::core;
 using namespace vg::graphics::driver;
 
 #include "BackgroundPass.hpp"
-#include "TestPass.hpp"
+#include "TestPass2D.hpp"
+#include "TestPass3D.hpp"
 #include "PostProcessPass.hpp"
 #include "ImguiPass.hpp"

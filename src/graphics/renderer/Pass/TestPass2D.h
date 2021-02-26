@@ -5,11 +5,11 @@
 namespace vg::graphics::renderer
 {
     //--------------------------------------------------------------------------------------
-    class TestPass : public driver::UserPass
+    class TestPass2D : public driver::UserPass
     {
     public:
-        TestPass();
-        ~TestPass();
+        TestPass2D();
+        ~TestPass2D();
 
         void setup(double _dt) override;
         void draw(driver::CommandList * _cmdList) const override;
@@ -18,10 +18,12 @@ namespace vg::graphics::renderer
         driver::RootSignatureHandle     m_rootSignatureHandle;
         driver::ShaderKey               m_shaderKey;
         core::vector<driver::Texture *> m_texture;
-        core::vector<driver::Buffer*>   m_buffer;
-        driver::Buffer *                m_constantBuffer = nullptr;
 
-        float                           m_offset = 0.0f;
-        bool                            m_reverse = false;
+        struct TestSpriteData
+        {
+            float   offset = 0.0f;
+            bool    reverse = false;
+        };
+        TestSpriteData                  m_testSpriteData[2];
     };
 }
