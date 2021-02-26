@@ -107,7 +107,7 @@ namespace vg::graphics::renderer
                 {
                     float columnWidth[3] = { 256, 128, 512 };
 
-                    ImGui::Text("VimontGames Framework:");
+                    ImGui::Text("VG Framework:");
                     ImGui::Text("");
  
                     ImGui::Columns(3, "author", false);  
@@ -117,7 +117,7 @@ namespace vg::graphics::renderer
                     ImGui::SetColumnWidth(2, columnWidth[2]);
                     
                     ImGui::Text("Website");
-                    ImGui::Text("Author");
+                    ImGui::Text("Twitter");
                     ImGui::Text("");
 
                     ImGui::NextColumn();
@@ -130,7 +130,7 @@ namespace vg::graphics::renderer
                     ImGui::Separator();
 
                     ImGui::Columns(1);
-                    ImGui::Text("Software development kits:");
+                    ImGui::Text("SDKs:");
                     ImGui::Text("");
 
                     ImGui::Columns(3, "SDK", false);
@@ -161,7 +161,7 @@ namespace vg::graphics::renderer
                     ImGui::Separator();
 
                     ImGui::Columns(1);
-                    ImGui::Text("Third-party libraries:");
+                    ImGui::Text("3rd libs:");
                     ImGui::Text("");
 
                     ImGui::Columns(3, "3rdparties", false);
@@ -171,12 +171,13 @@ namespace vg::graphics::renderer
                     ImGui::SetColumnWidth(2, columnWidth[2]);
                     
                     // name
+                    ImGui::Text("D3D12MemoryAllocator");
                     ImGui::Text("Dear ImGui");
-                    ImGui::Text("optick");
-                    ImGui::Text("stb_image");
                     ImGui::Text("hlslpp");
                     ImGui::Text("magic_enum");
-                    ImGui::Text("D3D12MemoryAllocator");
+                    ImGui::Text("optick");
+                    ImGui::Text("px_sched");
+                    ImGui::Text("stb_image");
                     ImGui::Text("VulkanMemoryAllocator");
                     ImGui::Text("WinPixEventRuntime");
                     
@@ -190,17 +191,19 @@ namespace vg::graphics::renderer
                     ImGui::Text("");
                     ImGui::Text("");
                     ImGui::Text("");
+                    ImGui::Text("");
                     ImGui::Text("1.0.200127001");
 
                     ImGui::NextColumn();
 
                     // url
+                    ImGui::textURL("github.com/GPUOpen-LibrariesAndSDKs/D3D12MemoryAllocator", "https://github.com/GPUOpen-LibrariesAndSDKs/D3D12MemoryAllocator");
                     ImGui::textURL("github.com/ocornut/imgui", "https://github.com/ocornut/imgui");
-                    ImGui::textURL("github.com/bombomby/optick", "https://github.com/bombomby/optick");
-                    ImGui::textURL("github.com/nothings/stb", "https://github.com/nothings/stb");
                     ImGui::textURL("github.com/redorav/hlslpp", "https://github.com/redorav/hlslpp");
                     ImGui::textURL("github.com/Neargye/magic_enum", "https://github.com/Neargye/magic_enum");
-                    ImGui::textURL("github.com/GPUOpen-LibrariesAndSDKs/D3D12MemoryAllocator", "https://github.com/GPUOpen-LibrariesAndSDKs/D3D12MemoryAllocator");
+                    ImGui::textURL("github.com/bombomby/optick", "https://github.com/bombomby/optick");
+                    ImGui::textURL("github.com/pplux/px", "https://github.com/pplux/px");
+                    ImGui::textURL("github.com/nothings/stb", "https://github.com/nothings/stb");
                     ImGui::textURL("github.com/GPUOpen-LibrariesAndSDKs/VulkanMemoryAllocator", "https://github.com/GPUOpen-LibrariesAndSDKs/VulkanMemoryAllocator");
                     ImGui::textURL("nuget.org/packages/WinPixEventRuntime", "https://www.nuget.org/packages/WinPixEventRuntime");
 
@@ -208,7 +211,7 @@ namespace vg::graphics::renderer
                 }
             }
 
-            static const uint smoothDtTime = 250; // 0.25s
+            static const uint smoothDtTime = 500; // 0.5s
 
             m_accum += _dt;
             m_frame++;

@@ -1287,7 +1287,10 @@ namespace px_sched {
           if (!schd->ready_tasks_.pop(&task_ref)) {
             PX_SCHED_TRACE_FN("No Task->sleep");
             ttl--;
-            if (ttl_wait) std::this_thread::sleep_for(std::chrono::microseconds(ttl_wait));
+            if (ttl_wait)
+                std::this_thread::sleep_for(std::chrono::microseconds(ttl_wait));
+            else
+                Yield();
             continue;
           }
           ttl = ttl_value;

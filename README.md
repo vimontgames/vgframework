@@ -4,18 +4,18 @@
 # external
 - D3D12 Memory Allocator
 https://github.com/GPUOpen-LibrariesAndSDKs/D3D12MemoryAllocator
-- Vulkan Memory Allocator
-https://github.com/GPUOpen-LibrariesAndSDKs/VulkanMemoryAllocator
-- glslang
-https://github.com/KhronosGroup/glslang
+- Dear ImGui
+https://github.com/ocornut/imgui
 - hlslpp
 https://github.com/redorav/hlslpp
 - magic_enum
 https://github.com/Neargye/magic_enum
-- Dear ImGui
-https://github.com/ocornut/imgui
+- px_sched
+https://github.com/pplux/px
 - stb
 https://github.com/nothings/stb
+- Vulkan Memory Allocator
+https://github.com/GPUOpen-LibrariesAndSDKs/VulkanMemoryAllocator
 - WinPixEventRuntime 1.0.200127001
 https://www.nuget.org/packages/WinPixEventRuntime
 
