@@ -45,6 +45,7 @@ namespace vg::engine
     //--------------------------------------------------------------------------------------
     bool Input::update()
     {
+        VG_PROFILE_CPU("Input");
         return super::update();
     }
 }

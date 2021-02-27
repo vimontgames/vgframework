@@ -164,12 +164,11 @@ namespace vg::engine
         VG_PROFILE_FRAME("Main");
         VG_PROFILE_CPU("Engine");
 
-        // test
-        //((Scheduler*)Kernel::getScheduler())->test();
-
+        updateDt();
         Kernel::getInput()->update();
 
-        updateDt();
+        // test
+        //((Scheduler*)Kernel::getScheduler())->test();
 
 		m_renderer->runOneFrame(m_dt);
 	}

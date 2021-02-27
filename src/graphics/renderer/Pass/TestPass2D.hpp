@@ -97,54 +97,20 @@ namespace vg::graphics::renderer
         {
             auto & data = m_testSpriteData[i];
 
-            if (i == 0)
-            {
-                if (input->isKeyPressed(Key::RIGHT))
-                {
-                    VG_DEBUGPRINT("Player 0 moves right\n");
-                    data.reverse = false;
-                }
-                else if (input->isKeyPressed(Key::LEFT))
-                {
-                    VG_DEBUGPRINT("Player 0 moves left\n");
-                    data.reverse = true;
-                }
-                else
-                    continue;
-            }
-            else
-            {
-                if (input->isButtonJustPressed(MouseButton::Right))
-                {
-                    VG_DEBUGPRINT("Player 1 moves right\n");
-                    data.reverse = false;
-                }
-                else if (input->isButtonJustPressed(MouseButton::Left))
-                {
-                    VG_DEBUGPRINT("Player 1 moves left\n");
-                    data.reverse = true; 
-                }
-                else
-                    continue;
-            }
+            const float2 joyDir = input->getJoyDir(i);
 
-            const float speed = 0.25f;
+            if (joyDir.x > 0)
+                data.reverse = false;
+            else if (joyDir.x < 0)
+                data.reverse = true;
 
-            if (data.reverse)
-                data.offset -= (float)_dt * speed / (float)backbuffer.width;
-            else
-                data.offset += (float)_dt * speed / (float)backbuffer.width;
+            const float speed = 0.25f * joyDir.x;
+            data.offset += (float)_dt * speed / (float)backbuffer.width;
 
-            //if (data.offset < 0.1f)
-            //{
-            //    data.offset = 0.1f;
-            //    data.reverse = false;
-            //}
-            //else if (data.offset > 0.9)
-            //{
-            //    data.offset = 0.9f;
-            //    data.reverse = true;
-            //}
+            if (data.offset < 0.0f)
+                data.offset = 0.0f;
+            else if (data.offset > 0.9)
+                data.offset = 0.9f;
         }
 
         writeRenderTarget(0, "Color");

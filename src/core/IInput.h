@@ -4,27 +4,41 @@ namespace vg::core
 {
     enum class MouseButton : core::u8;
     enum class Key : core::u16;
+    enum class JoyButton : core::u8;
+
+    using JoyID = core::u8;
 
     class IInput
     {
     public:
-        virtual                 ~IInput                 () = default;
+        virtual                 ~IInput                     () = default;
         
-        virtual bool            update                  () = 0;
+        virtual bool            update                      () = 0;
 
-        virtual core::int3      getMouseDelta           () const = 0;
-        virtual core::uint2     getMousePos             () const = 0;
+    #pragma region Mouse
+        virtual core::int3      getMouseDelta               () const = 0;
+        virtual core::uint2     getMousePos                 () const = 0;
+        virtual bool            isMouseButtonPressed        (MouseButton _button) const = 0;
+        virtual bool            isMouseButtonJustPressed    (MouseButton _button) const = 0;
+        virtual bool            IsMouseButtonJustReleased   (MouseButton _button) const = 0;
+        virtual bool            wasMouseButtonPressed       (MouseButton _button) const = 0;
+        virtual bool            isMouseOverWindow           () const = 0;
+    #pragma endregion Mouse
 
-        virtual bool            isButtonPressed         (MouseButton _button) const = 0;
-        virtual bool            isButtonJustPressed     (MouseButton _button) const = 0;
-        virtual bool            IsButtonJustReleased    (MouseButton _button) const = 0;
-        virtual bool            wasButtonPressed        (MouseButton _button) const = 0;
+    #pragma region Keyboard
+        virtual bool            isKeyPressed                (Key _key) const = 0;
+        virtual bool            isKeyJustPressed            (Key _key) const = 0;
+        virtual bool            wasKeyPressed               (Key _key) const = 0;
+    #pragma endregion Keyboard
 
-        virtual bool            isMouseOverWindow       () const = 0;
-
-        virtual bool            isKeyPressed            (Key _key) const = 0;
-        virtual bool            isKeyJustPressed        (Key _key) const = 0;
-        virtual bool            wasKeyPressed           (Key _key) const = 0;
+    #pragma region Joy
+        virtual core::uint      getJoyCount                 () const = 0;
+        virtual core::float2    getJoyDir                   (JoyID _id) const = 0;
+        virtual bool            isJoyButtonPressed          (JoyID _id, JoyButton _button) const = 0;
+        virtual bool            isJoyButtonJustPressed      (JoyID _id, JoyButton _button) const = 0;
+        virtual bool            isJoyButtonJustReleased     (JoyID _id, JoyButton _button) const = 0;
+        virtual bool            wasJoyButtonPressed         (JoyID _id, JoyButton _button) const = 0;
+    #pragma endregion Joy
     };
 
     enum class MouseButton : core::u8
@@ -32,6 +46,14 @@ namespace vg::core
         Left = 0,
         Right,
         Middle
+    };
+
+    enum class JoyButton : core::u8
+    {
+        A = 0,
+        B,
+        X,
+        Y
     };
 
     enum class Key : core::u16

@@ -20,6 +20,13 @@ namespace vg::engine
         char        m_previous[s_buffersize];
     };
 
+    struct JoystickData
+    {
+        core::float2    m_dir;
+        bool            m_pressed[core::enumCount<core::JoyButton>()];
+        bool            m_wasPressed[core::enumCount<core::JoyButton>()];
+    };
+
     namespace base
     {
         class Input : public core::IInput
@@ -31,9 +38,11 @@ namespace vg::engine
             bool update() override;
 
         protected:
-            const core::WinHandle & m_appHandle;
-            MouseData               m_mouseData;
-            KeyboardData            m_keyboardData;
+            const core::WinHandle &     m_appHandle;
+
+            MouseData                   m_mouseData;
+            KeyboardData                m_keyboardData;
+            core::vector<JoystickData>  m_joystickData;
         };
     }
 }

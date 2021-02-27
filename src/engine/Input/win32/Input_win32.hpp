@@ -176,7 +176,7 @@ namespace vg::engine::win32
         // init directInput
         {
             hr = DirectInput8Create(GetModuleHandle(nullptr), DIRECTINPUT_VERSION, IID_IDirectInput8, (LPVOID*)&m_directInputDevice, nullptr);
-            assert(SUCCEEDED(hr) && "Failed to initialize direct input manager");
+            VG_ASSERT(SUCCEEDED(hr) && "Failed to initialize direct input manager");
         }
 
         // init keyboard
@@ -184,13 +184,13 @@ namespace vg::engine::win32
             memset(&m_keyboardData, 0, sizeof(m_keyboardData));
 
             hr = m_directInputDevice->CreateDevice(GUID_SysKeyboard, &m_directInputKeyboard, nullptr);
-            assert(SUCCEEDED(hr) && "Could not create keyboard input device");
+            VG_ASSERT(SUCCEEDED(hr) && "Could not create keyboard input device");
 
             hr = m_directInputKeyboard->SetDataFormat(&c_dfDIKeyboard);
-            assert(SUCCEEDED(hr) && "Error setting keyboard data format");
+            VG_ASSERT(SUCCEEDED(hr) && "Error setting keyboard data format");
 
             hr = m_directInputKeyboard->SetCooperativeLevel(handle, DISCL_FOREGROUND | DISCL_NONEXCLUSIVE);
-            assert(SUCCEEDED(hr) && "Error setting keyboard cooperative level");
+            VG_ASSERT(SUCCEEDED(hr) && "Error setting keyboard cooperative level");
 
             hr = m_directInputKeyboard->Acquire();
         }
@@ -203,12 +203,29 @@ namespace vg::engine::win32
             m_directInputMouse->SetDataFormat(&c_dfDIMouse);
             m_directInputMouse->SetCooperativeLevel(handle, DISCL_NONEXCLUSIVE);
         }
+
+        initJoysticks();
     }
 
     //--------------------------------------------------------------------------------------
     Input::~Input()
     {
+        if (m_directInputKeyboard)
+        {
+            m_directInputKeyboard->Unacquire();
+            m_directInputKeyboard->Release();
+            m_directInputKeyboard = nullptr;
+        }
 
+        if (m_directInputMouse)
+        {
+            m_directInputMouse->Unacquire();
+            m_directInputMouse->Release();
+            m_directInputMouse = nullptr;
+        }
+
+        m_directInputDevice->Release();
+        m_directInputDevice = nullptr;
     }
 
     //--------------------------------------------------------------------------------------
@@ -225,6 +242,8 @@ namespace vg::engine::win32
         {
             // update keyboard
             {
+                VG_PROFILE_CPU("Keyboard");
+
                 HRESULT hr = m_directInputKeyboard->GetDeviceState(m_keyboardData.s_buffersize, &m_keyboardData.m_current);
                 if (FAILED(hr))
                     m_directInputKeyboard->Acquire();
@@ -232,6 +251,8 @@ namespace vg::engine::win32
 
             // update mouse
             {
+                VG_PROFILE_CPU("Mouse");
+
                 DIMOUSESTATE ms;
                 memset(&ms, 0x0, sizeof(ms));
 
@@ -271,11 +292,14 @@ namespace vg::engine::win32
                 for (uint b = 0; b < core::enumCount<core::MouseButton>(); ++b)
                     m_mouseData.m_pressed[b] = 0 != ms.rgbButtons[b];
             }
-
         }
+
+        updateJoysticks();
+        
         return super::update();
     }
 
+#pragma region Mouse
     //--------------------------------------------------------------------------------------
     core::int3 Input::getMouseDelta() const
     {
@@ -289,27 +313,27 @@ namespace vg::engine::win32
     }
 
     //--------------------------------------------------------------------------------------
-    bool Input::isButtonPressed(core::MouseButton _button) const
+    bool Input::isMouseButtonPressed(core::MouseButton _button) const
     {
         return 0 != m_mouseData.m_pressed[core::asInteger(_button)];
     }
 
     //--------------------------------------------------------------------------------------
-    bool Input::wasButtonPressed(core::MouseButton _button) const
+    bool Input::wasMouseButtonPressed(core::MouseButton _button) const
     {
         return 0 != m_mouseData.m_wasPressed[core::asInteger(_button)];
     }
 
     //--------------------------------------------------------------------------------------
-    bool Input::isButtonJustPressed(core::MouseButton _button) const
+    bool Input::isMouseButtonJustPressed(core::MouseButton _button) const
     {
-        return isButtonPressed(_button) && !wasButtonPressed(_button);
+        return isMouseButtonPressed(_button) && !wasMouseButtonPressed(_button);
     }  
 
     //--------------------------------------------------------------------------------------
-    bool Input::IsButtonJustReleased(core::MouseButton _button) const
+    bool Input::IsMouseButtonJustReleased(core::MouseButton _button) const
     {
-        return !isButtonPressed(_button) && wasButtonPressed(_button);
+        return !isMouseButtonPressed(_button) && wasMouseButtonPressed(_button);
     }
 
     //--------------------------------------------------------------------------------------
@@ -317,7 +341,9 @@ namespace vg::engine::win32
     {
         return m_mouseData.m_isOverWindow;
     }
+#pragma endregion Mouse
 
+#pragma region Keyboard
     //--------------------------------------------------------------------------------------
     bool Input::isKeyPressed(core::Key _key) const
     {
@@ -335,4 +361,130 @@ namespace vg::engine::win32
     {
         return isKeyPressed(_key) && !wasKeyPressed(_key);
     }
+#pragma endregion Keyboard
+
+#pragma region Joy
+    //--------------------------------------------------------------------------------------
+    BOOL enumJoysticksCallback(LPCDIDEVICEINSTANCEA _instance, LPVOID _this)
+    {
+        Input * input = (Input*)_this;
+        return input->detectJoystick(_instance);
+    }
+
+    //--------------------------------------------------------------------------------------
+    BOOL setControllerRanges(LPCDIDEVICEOBJECTINSTANCEA _instance, LPVOID _controller)
+    {
+        // the game controller
+        LPDIRECTINPUTDEVICE8 controller = (LPDIRECTINPUTDEVICE8)_controller;
+        controller->Unacquire();
+
+        DIPROPRANGE range;
+                    range.lMin = -100;
+                    range.lMax = 100;
+                    range.diph.dwSize = sizeof(DIPROPRANGE);
+                    range.diph.dwHeaderSize = sizeof(DIPROPHEADER);
+                    range.diph.dwHow = DIPH_BYID;
+                    range.diph.dwObj = _instance->dwType;
+
+        // now set the range for the axis		
+        HRESULT hr = controller->SetProperty(DIPROP_RANGE, &range.diph);
+        VG_ASSERT(SUCCEEDED(hr));
+
+        return DIENUM_CONTINUE;
+    }
+
+    //--------------------------------------------------------------------------------------
+    void Input::initJoysticks()
+    {
+        HRESULT hr = m_directInputDevice->EnumDevices(DI8DEVCLASS_GAMECTRL, &enumJoysticksCallback, this, DIEDFL_ATTACHEDONLY);
+        VG_ASSERT(SUCCEEDED(hr) && "Could not enum joystick input devices");
+    }
+
+    //--------------------------------------------------------------------------------------
+    core::uint Input::detectJoystick(LPCDIDEVICEINSTANCEA _instance)
+    {
+        IDirectInputDevice8A * controller = nullptr;
+
+        HRESULT hr = m_directInputDevice->CreateDevice(_instance->guidInstance, &controller, nullptr);
+
+        if (SUCCEEDED(hr))
+        {
+            hr = controller->SetDataFormat(&c_dfDIJoystick2);
+            VG_ASSERT(SUCCEEDED(hr));
+
+            // set range and dead zone of joystick axes
+            hr = controller->EnumObjects(&setControllerRanges, controller, DIDFT_AXIS);
+            VG_ASSERT(SUCCEEDED(hr));
+
+            m_directInputJoystick.push_back(controller);
+
+            JoystickData joyData = {};
+            m_joystickData.push_back(joyData);
+        }
+
+        return DIENUM_CONTINUE;
+    }
+
+    //--------------------------------------------------------------------------------------
+    void Input::updateJoysticks()
+    {
+        VG_PROFILE_CPU("Joy");
+
+        VG_ASSERT(m_directInputJoystick.size() == m_joystickData.size());
+        for (uint i = 0; i < m_directInputJoystick.size(); ++i)
+        {
+            HRESULT hr;
+
+            DIJOYSTATE2 state;
+            IDirectInputDevice8A * directInputJoy = m_directInputJoystick[i];
+
+            if (FAILED(directInputJoy->Poll()))
+                hr = directInputJoy->Acquire();
+
+            hr = directInputJoy->GetDeviceState(sizeof(state), (void*)&state);
+            VG_ASSERT(SUCCEEDED(hr));
+
+            JoystickData & joy = m_joystickData[i];
+
+            joy.m_dir.x = float(state.lX) / 100.0f;
+            joy.m_dir.y = float(state.lY) / 100.0f;
+        }
+    }
+
+    //--------------------------------------------------------------------------------------
+    core::uint Input::getJoyCount() const
+    {
+        return (core::uint)m_joystickData.size();
+    }
+
+    //--------------------------------------------------------------------------------------
+    core::float2 Input::getJoyDir(core::JoyID _id) const
+    {
+        return m_joystickData[_id].m_dir;
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool Input::isJoyButtonPressed(core::JoyID _id, JoyButton _button) const
+    {
+        return m_joystickData[_id].m_pressed[core::asInteger(_button)];
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool Input::isJoyButtonJustPressed(core::JoyID _id, JoyButton _button) const
+    {
+        return isJoyButtonPressed(_id, _button) && !wasJoyButtonPressed(_id, _button);
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool Input::isJoyButtonJustReleased(core::JoyID _id, JoyButton _button) const
+    {
+        return !isJoyButtonPressed(_id, _button) && wasJoyButtonPressed(_id, _button);
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool Input::wasJoyButtonPressed(core::JoyID _id, JoyButton _button) const 
+    {
+        return m_joystickData[_id].m_wasPressed[core::asInteger(_button)];
+    }
+#pragma endregion Joy
 }
