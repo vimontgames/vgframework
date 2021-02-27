@@ -3,6 +3,9 @@
   <ItemGroup>
     <ClCompile Include="Engine.cpp" />
     <ClCompile Include="Precomp.cpp" />
+    <ClCompile Include="Input\Input.cpp">
+      <Filter>Input</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Engine.def" />
@@ -12,5 +15,22 @@
     <ClInclude Include="Engine.h" />
     <ClInclude Include="Precomp.h" />
     <ClInclude Include="Engine_Consts.h" />
+    <ClInclude Include="Input\Input.h">
+      <Filter>Input</Filter>
+    </ClInclude>
+    <ClInclude Include="Input\win32\Input_win32.h">
+      <Filter>Input\win32</Filter>
+    </ClInclude>
+    <ClInclude Include="Input\win32\Input_win32.hpp">
+      <Filter>Input\win32</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Input">
+      <UniqueIdentifier>{9f34c62f-2350-43f2-a998-3cbe6d25efd7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Input\win32">
+      <UniqueIdentifier>{ce06f9ee-dbe5-471f-be72-5092a2250821}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
 </Project>

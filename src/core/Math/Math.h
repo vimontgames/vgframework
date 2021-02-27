@@ -17,6 +17,12 @@ namespace vg::core
 	}
 
     //--------------------------------------------------------------------------------------
+    template <class T> inline T clamp(T _value, T _min, T _max)
+    {
+        return (_value < _min) ? _min : ((_value > _max) ? _max : _value);
+    }
+
+    //--------------------------------------------------------------------------------------
     constexpr u64 computeCRC64(const char * _string, const size_t _length = 0)
     {
         u64 crc = 0;

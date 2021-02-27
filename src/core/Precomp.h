@@ -85,6 +85,9 @@
 // external includes
 //--------------------------------------------------------------------------------------
 #include "hlslpp/include/hlsl++.h"
+
+#define MAGIC_ENUM_RANGE_MIN 0
+#define MAGIC_ENUM_RANGE_MAX 255
 #include "magic_enum/include/magic_enum.hpp"
 
 //--------------------------------------------------------------------------------------

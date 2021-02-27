@@ -2,6 +2,8 @@
 #include "shaders/driver/driver.hlsli"
 #include "Shaders/system/bindless.hlsli"
 
+#include "core/IInput.h"
+
 namespace vg::graphics::renderer
 {
     //--------------------------------------------------------------------------------------
@@ -68,8 +70,6 @@ namespace vg::graphics::renderer
         {
             m_texture.push_back(device->createTexture("game/supervimontbrawl/data/Textures/Sprites.psd"));
         }
-
-        m_testSpriteData[0].offset += 0.15f;
     }
 
     //--------------------------------------------------------------------------------------
@@ -91,27 +91,60 @@ namespace vg::graphics::renderer
         auto * renderer = Renderer::get();
         const auto & backbuffer = renderer->getBackbuffer()->getTexDesc();
 
+        const auto * input = Kernel::getInput();
+
         for (uint i = 0; i < countof(m_testSpriteData); ++i)
         {
             auto & data = m_testSpriteData[i];
 
-            const float speed = data.reverse ? 0.3f - i * 0.05f : 0.25f + i * 0.05f;
+            if (i == 0)
+            {
+                if (input->isKeyPressed(Key::RIGHT))
+                {
+                    VG_DEBUGPRINT("Player 0 moves right\n");
+                    data.reverse = false;
+                }
+                else if (input->isKeyPressed(Key::LEFT))
+                {
+                    VG_DEBUGPRINT("Player 0 moves left\n");
+                    data.reverse = true;
+                }
+                else
+                    continue;
+            }
+            else
+            {
+                if (input->isButtonJustPressed(MouseButton::Right))
+                {
+                    VG_DEBUGPRINT("Player 1 moves right\n");
+                    data.reverse = false;
+                }
+                else if (input->isButtonJustPressed(MouseButton::Left))
+                {
+                    VG_DEBUGPRINT("Player 1 moves left\n");
+                    data.reverse = true; 
+                }
+                else
+                    continue;
+            }
+
+            const float speed = 0.25f;
 
             if (data.reverse)
                 data.offset -= (float)_dt * speed / (float)backbuffer.width;
             else
                 data.offset += (float)_dt * speed / (float)backbuffer.width;
 
-            if (data.offset < 0.1f)
-            {
-                data.offset = 0.1f;
-                data.reverse = false;
-            }
-            else if (data.offset > 0.9)
-            {
-                data.offset = 0.9f;
-                data.reverse = true;
-            }
+            //if (data.offset < 0.1f)
+            //{
+            //    data.offset = 0.1f;
+            //    data.reverse = false;
+            //}
+            //else if (data.offset > 0.9)
+            //{
+            //    data.offset = 0.9f;
+            //    data.reverse = true;
+            //}
         }
 
         writeRenderTarget(0, "Color");

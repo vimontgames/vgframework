@@ -16,14 +16,18 @@ namespace vg::core
         Scheduler();
         ~Scheduler();
 
+        void registerProfilerThreads() override;
         void test();
 
         static const string getCurrentThreadName();
+
+   
 
     private:
         void registerProfilerThreads(core::uint _count);
 
     private:
         px_sched::Scheduler * m_schd = nullptr;
+        core::uint            m_threadCount = 0;
     };
 }

@@ -83,6 +83,7 @@ namespace vg::graphics::renderer
 
         // Singletons used by the renderer
         Kernel::setScheduler(_singletons.scheduler);
+        Kernel::setInput(_singletons.input);
 
         // Create device
 		m_device.init(_params.device);

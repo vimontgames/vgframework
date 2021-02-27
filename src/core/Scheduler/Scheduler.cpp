@@ -70,13 +70,20 @@ namespace vg::core
                                   params.thread_sleep_on_idle_in_microseconds = 0;
         m_schd->init(params);
 
-        registerProfilerThreads(params.num_threads);
+        // save thread count
+        m_threadCount = params.num_threads;
     }
 
     //--------------------------------------------------------------------------------------
     Scheduler::~Scheduler()
     {
         VG_SAFE_DELETE(m_schd);
+    }
+
+    //--------------------------------------------------------------------------------------
+    void Scheduler::registerProfilerThreads()
+    {
+        registerProfilerThreads(m_threadCount);
     }
 
     //--------------------------------------------------------------------------------------

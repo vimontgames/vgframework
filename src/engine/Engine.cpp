@@ -7,8 +7,11 @@
 #include "core/Timer/Timer.h"
 #include "core/Plugin/Plugin.h"
 #include "core/Scheduler/Scheduler.h"
+
 #include "graphics/renderer/IRenderer.h"
 #include "graphics/driver/IDevice.h"
+
+#include "engine/Input/Input.h"
 
 using namespace vg::core;
 using namespace vg::engine;
@@ -103,15 +106,21 @@ namespace vg::engine
 
 		const auto & name = asString(_params.renderer.device.api);
 
+        // Singletons created by the engine
+        _singletons.scheduler = new Scheduler();
+        Kernel::setScheduler(_singletons.scheduler);
+
+        _singletons.input = new Input(_params.renderer.device.window);
+        Kernel::setInput(_singletons.input);
+
 		m_renderer = Plugin::create<graphics::renderer::IRenderer>("renderer", api);
 		m_renderer->init(_params.renderer, _singletons);
 
-        // Singletons used by the engine
+        // Profiler has to be created by the renderer to be able to also profile the GPU
         Kernel::setProfiler(_singletons.profiler);
 
-        // Create profiler singleton
-        _singletons.scheduler = new Scheduler();
-        Kernel::setScheduler(_singletons.scheduler);
+        // Register threads after profiler creation
+        _singletons.scheduler->registerProfilerThreads();
 	}
 
 	//--------------------------------------------------------------------------------------
@@ -122,6 +131,10 @@ namespace vg::engine
         IScheduler * scheduler = Kernel::getScheduler();
         VG_SAFE_DELETE(scheduler);
         Kernel::setScheduler(nullptr);
+
+        IInput * input = Kernel::getInput();
+        VG_SAFE_DELETE(input);
+        Kernel::setInput(nullptr);
 
 		m_renderer->deinit();
 		m_renderer->release();
@@ -137,6 +150,12 @@ namespace vg::engine
         previous = current;
 
         //VG_DEBUGPRINT("dt = %f ms\n", m_dt);
+
+        // check profiler leak
+        //static uint counter = 0;
+        //if (counter == 1 || counter == 2)
+        //    VG_PROFILE_TRIGGER();
+        //counter++;
     }
 
 	//--------------------------------------------------------------------------------------
@@ -146,7 +165,9 @@ namespace vg::engine
         VG_PROFILE_CPU("Engine");
 
         // test
-        ((Scheduler*)Kernel::getScheduler())->test();
+        //((Scheduler*)Kernel::getScheduler())->test();
+
+        Kernel::getInput()->update();
 
         updateDt();
 

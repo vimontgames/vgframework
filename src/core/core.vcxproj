@@ -17,6 +17,7 @@
     <ClInclude Include="Container\HandleTable.hpp" />
     <ClInclude Include="Core.h" />
     <ClInclude Include="File\File.h" />
+    <ClInclude Include="IInput.h" />
     <ClInclude Include="IObject.h" />
     <ClInclude Include="IPlugin.h" />
     <ClInclude Include="IProfiler.h" />

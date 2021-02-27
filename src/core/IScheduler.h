@@ -6,5 +6,7 @@ namespace vg::core
     {
     public:
         virtual ~IScheduler() = default;
+
+        virtual void registerProfilerThreads() = 0;
     };
 }

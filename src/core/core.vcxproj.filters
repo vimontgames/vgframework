@@ -28,14 +28,14 @@
     <Filter Include="File">
       <UniqueIdentifier>{15812bb8-c946-47dd-8f5a-cd2b9013c178}</UniqueIdentifier>
     </Filter>
-    <Filter Include="string">
-      <UniqueIdentifier>{e2d9d690-faaf-46f3-9b6e-eef77e7c2458}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Timer">
       <UniqueIdentifier>{2a06315c-8e0d-4c25-ad72-38fd69c606b2}</UniqueIdentifier>
     </Filter>
     <Filter Include="Scheduler">
       <UniqueIdentifier>{8d124dbf-4fb9-42c4-aa6e-9b73ac4b4bdd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="String">
+      <UniqueIdentifier>{e2d9d690-faaf-46f3-9b6e-eef77e7c2458}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -82,7 +82,7 @@
     <ClInclude Include="IProfiler.h" />
     <ClInclude Include="Kernel.h" />
     <ClInclude Include="string\string.h">
-      <Filter>string</Filter>
+      <Filter>String</Filter>
     </ClInclude>
     <ClInclude Include="Timer\Timer.h">
       <Filter>Timer</Filter>
@@ -94,6 +94,7 @@
     <ClInclude Include="Scheduler\Job.h">
       <Filter>Scheduler</Filter>
     </ClInclude>
+    <ClInclude Include="IInput.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Math\Math.cpp">
@@ -114,7 +115,7 @@
       <Filter>File</Filter>
     </ClCompile>
     <ClCompile Include="string\string.cpp">
-      <Filter>string</Filter>
+      <Filter>String</Filter>
     </ClCompile>
     <ClCompile Include="Timer\Timer.cpp">
       <Filter>Timer</Filter>
