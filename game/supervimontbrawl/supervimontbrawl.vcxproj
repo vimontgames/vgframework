@@ -11,6 +11,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Entity\Player\PlayerEntity.cpp" />
     <ClCompile Include="src\Precomp.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
     </ClCompile>
@@ -18,6 +19,7 @@
     <ClCompile Include="src\WinMain.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\Entity\Player\PlayerEntity.h" />
     <ClInclude Include="src\Precomp.h" />
     <ClInclude Include="src\SuperVimontBrawl.h" />
   </ItemGroup>

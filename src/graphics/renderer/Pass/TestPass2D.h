@@ -21,8 +21,8 @@ namespace vg::graphics::renderer
 
         struct TestSpriteData
         {
-            float   offset = 0.0f;
-            bool    reverse = false;
+            core::float2    pos = { 0.5f, 0.8f };
+            bool            reverse = false;
         };
         TestSpriteData                  m_testSpriteData[2];
     };

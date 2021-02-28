@@ -246,7 +246,9 @@ namespace vg::graphics::driver
 		//--------------------------------------------------------------------------------------
 		driver::Texture * Device::getBackbuffer()
 		{
-			return m_bufferContext[m_currentBackbufferIndex].backbuffer;
+            auto * backbuffer = m_bufferContext[m_currentBackbufferIndex].backbuffer;
+            VG_ASSERT(backbuffer);
+            return backbuffer;
 		}
 
         //--------------------------------------------------------------------------------------

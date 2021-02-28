@@ -34,8 +34,8 @@
 	#define VG_ENABLE_ASSERT		1
 	#define VG_ENABLE_DEBUGPRINT	1
 #elif defined(VG_RELEASE)
-	//#define VG_ENABLE_ASSERT		1
-	//#define VG_ENABLE_DEBUGPRINT	1
+	#define VG_ENABLE_ASSERT		1
+	#define VG_ENABLE_DEBUGPRINT	1
 #endif
 
 #if VG_ENABLE_DEBUGPRINT
@@ -68,6 +68,8 @@
 #define VG_SAFE_FREE(p)	 { if (p) { free(p); p = nullptr;} }
 #define VG_SAFE_DELETE(p)  { if (p) { delete p; p = nullptr;} }
 #define VG_SAFE_RELEASE(p) { if (p) { p->Release(); p = nullptr; } }
+
+#define VG_SAFE_INCREASE_REFCOUNT(p) { if (p) { p->addRef(); }}
 
 //--------------------------------------------------------------------------------------
 // standard includes

@@ -6,6 +6,12 @@
     <ClCompile Include="Input\Input.cpp">
       <Filter>Input</Filter>
     </ClCompile>
+    <ClCompile Include="Component\Camera\CameraComponent.cpp">
+      <Filter>Component\Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="Entity\FreeCam\FreeCamEntity.cpp">
+      <Filter>Entity\FreeCam</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Engine.def" />
@@ -24,6 +30,12 @@
     <ClInclude Include="Input\win32\Input_win32.hpp">
       <Filter>Input\win32</Filter>
     </ClInclude>
+    <ClInclude Include="Component\Camera\CameraComponent.h">
+      <Filter>Component\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="Entity\FreeCam\FreeCamEntity.h">
+      <Filter>Entity\FreeCam</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Input">
@@ -31,6 +43,18 @@
     </Filter>
     <Filter Include="Input\win32">
       <UniqueIdentifier>{ce06f9ee-dbe5-471f-be72-5092a2250821}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Entity">
+      <UniqueIdentifier>{48829d99-e089-4750-b094-87037cf1b691}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Component">
+      <UniqueIdentifier>{cfb932dd-c48c-4dc0-a1a1-f8b7ed9339c6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Component\Camera">
+      <UniqueIdentifier>{e278ff4d-998c-4fd3-b0a0-1a76bb235bbb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Entity\FreeCam">
+      <UniqueIdentifier>{76d71ff3-fad5-4533-8fff-6141a76e7e9e}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

@@ -7,11 +7,15 @@
 #include "core/Timer/Timer.h"
 #include "core/Plugin/Plugin.h"
 #include "core/Scheduler/Scheduler.h"
+#include "core/Entity/Entity.h"
 
 #include "graphics/renderer/IRenderer.h"
+#include "graphics/renderer/IView.h"
 #include "graphics/driver/IDevice.h"
 
 #include "engine/Input/Input.h"
+#include "engine/Entity/FreeCam/FreeCamEntity.h"
+#include "engine/Component/Camera/CameraComponent.h"
 
 using namespace vg::core;
 using namespace vg::engine;
@@ -121,11 +125,43 @@ namespace vg::engine
 
         // Register threads after profiler creation
         _singletons.scheduler->registerProfilerThreads();
+
+        createEditorView();
 	}
+
+    //--------------------------------------------------------------------------------------
+    void Engine::createEditorView()
+    {
+        graphics::renderer::CreateViewParams params;
+                                             params.offset = { 0,0 };
+                                             params.size = getScreenSize();
+
+        m_editorView = m_renderer->createView(params);
+        m_renderer->setView(m_editorView);
+
+        CameraComponent * cameraComponent = new CameraComponent();
+        m_freeCam = new FreeCamEntity("FreeCam #0");
+        m_freeCam->addComponent(cameraComponent);
+        cameraComponent->setView(m_editorView);
+
+        addEntity(m_freeCam);
+        
+        VG_SAFE_RELEASE(cameraComponent);
+    }
+
+    //--------------------------------------------------------------------------------------
+    void Engine::destroyEditorView()
+    {
+        VG_SAFE_RELEASE(m_freeCam);
+        VG_SAFE_RELEASE(m_editorView);
+    }
 
 	//--------------------------------------------------------------------------------------
 	void Engine::deinit()
 	{
+        destroyEditorView();
+        destroyEntities();
+
         Kernel::setProfiler(nullptr);
 
         IScheduler * scheduler = Kernel::getScheduler();
@@ -158,6 +194,33 @@ namespace vg::engine
         //counter++;
     }
 
+    //--------------------------------------------------------------------------------------
+    void Engine::destroyEntities()
+    {
+        for (uint i = 0; i < m_entities.size(); ++i)
+            VG_SAFE_RELEASE(m_entities[i]);
+
+        m_entities.clear();
+    }
+
+    //--------------------------------------------------------------------------------------
+    void Engine::addEntity(core::Entity * _entity)
+    {
+        VG_ASSERT(_entity);
+        _entity->addRef();
+        m_entities.push_back(_entity);
+    }
+
+    //--------------------------------------------------------------------------------------
+    void Engine::updateEntities(double _dt)
+    {
+        for (uint e = 0; e < m_entities.size(); ++e)
+        {
+            Entity * entity = m_entities[e];
+            entity->update(_dt);
+        }
+    }
+
 	//--------------------------------------------------------------------------------------
 	void Engine::runOneFrame()
 	{
@@ -165,7 +228,10 @@ namespace vg::engine
         VG_PROFILE_CPU("Engine");
 
         updateDt();
+
         Kernel::getInput()->update();
+
+        updateEntities(m_dt);
 
         // test
         //((Scheduler*)Kernel::getScheduler())->test();
@@ -178,4 +244,10 @@ namespace vg::engine
 	{
 		return m_renderer;
 	}
+
+    //--------------------------------------------------------------------------------------
+    core::uint2 Engine::getScreenSize() const
+    {
+        return getRenderer()->getBackbufferSize();
+    }
 }

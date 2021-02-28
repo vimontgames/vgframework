@@ -2,6 +2,8 @@
 #include "shaders/default/default.hlsli"
 #include "Shaders/system/bindless.hlsli"
 
+#include "graphics/renderer/View/View.h"
+
 namespace vg::graphics::renderer
 {
     //--------------------------------------------------------------------------------------
@@ -52,14 +54,14 @@ namespace vg::graphics::renderer
         const float sy = 1.0f / tan(_fov*0.5f);
         const float sx = sy / _ar;
         const float q = _far / (_near - _far);
-        const float fq = _far * q;
+        const float nq = _near * q;
 
         float4x4 mProj
         (
             sx, 0, 0,  0,
             0, sy, 0,  0,
             0, 0,  q, -1,
-            0, 0,  fq,  0
+            0, 0, nq,  0
         );
 
         return mProj;
@@ -73,7 +75,7 @@ namespace vg::graphics::renderer
         auto * device = Device::get();
         const auto & backbuffer = renderer->getBackbuffer()->getTexDesc();
 
-        const float fovY = 3.1417f / 4.0f;
+        const float fovY = pi / 4.0f;
         const float ar = float(backbuffer.width) / float(backbuffer.height);
 
         RasterizerState rs(FillMode::Solid, CullMode::None);
@@ -87,22 +89,16 @@ namespace vg::graphics::renderer
 
         float4x4 proj = setPerspectiveProjectionRH(fovY, ar, 0.001f, 1000.0f);
 
-        static float4x4 view
-        (
-            1.0f, 0.0f, 0.0f, 0.0f, 
-            0.0f, 1.0f, 0.0f, 0.0f,
-            0.0f, 0.0f,-1.0f, 0.0f,
-            0.0f, 0.0f, -5.0f, 1.0f
-        );
-
+        View * view = renderer->getView();
+       
         float4x4 world = float4x4::identity();
 
-        float4x4 viewProj = mul(inverse(view), proj);
+        float4x4 viewProj = mul(view->getViewInvMatrix(), proj);
         float4x4 wvp = mul(world, viewProj);
 
         RootConstants3D root3D;
 
-        root3D.mat = wvp;
+        root3D.mat = transpose(viewProj);
 
         _cmdList->setInlineRootConstants(&root3D, RootConstants3DCount);
         _cmdList->draw(4);

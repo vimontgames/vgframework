@@ -160,7 +160,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 {
 	#ifdef _CRTDBG_MAP_ALLOC
 	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
-	//_crtBreakAlloc = 3799;
+	//_crtBreakAlloc = 1838;
 	#endif
 
 	core::uint width = 1280, height = 720;
@@ -211,7 +211,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	{
         SetWindowTextA(g_hWnd, (title + " - Frame " + std::to_string(frame)).c_str());
         frame++;
-        g_engine->runOneFrame();
+
+        game->update();
 	}
 
     VG_SAFE_DELETE(game);

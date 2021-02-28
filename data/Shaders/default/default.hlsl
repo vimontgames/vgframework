@@ -14,10 +14,10 @@ VS_Output VS_Forward(uint _vertexID : VertexID)
 {
     VS_Output output;
 
-    output.uv = 1;// rootConstants2D.quad.getUV0(_vertexID);
-    //output.pos = 0;// rootConstants2D.quad.getPosition(_vertexID); // mul(rootConstants.mat, rootConstants.quad.getPosition(_vertexID));
-
     float2 tmp = float2(_vertexID & 1, (_vertexID & 2) >> 1);
+
+    output.uv = tmp;
+   
     output.pos = float4(0.25f * (tmp.xy*2.0f-1.0f), 0, 1);
 
     output.pos = mul(output.pos, rootConstants3D.mat);

@@ -104,13 +104,27 @@ namespace vg::graphics::renderer
             else if (joyDir.x < 0)
                 data.reverse = true;
 
-            const float speed = 0.25f * joyDir.x;
-            data.offset += (float)_dt * speed / (float)backbuffer.width;
+            float speed;
 
-            if (data.offset < 0.0f)
-                data.offset = 0.0f;
-            else if (data.offset > 0.9)
-                data.offset = 0.9f;
+            if (input->isJoyButtonPressed(i, JoyButton::A))
+                speed = 0.4f;
+            else if (input->isJoyButtonPressed(i, JoyButton::B))
+                speed = 0.1f;
+            else
+                speed = 0.25f;
+
+            data.pos.x += (float)_dt * speed * joyDir.x / (float)backbuffer.width;
+            data.pos.y += (float)_dt * speed * joyDir.y / (float)backbuffer.height;
+
+            if (data.pos.x < 0.0f)
+                data.pos.x = 0.0f;
+            else if (data.pos.x > 0.9)
+                data.pos.x = 0.9f;
+
+            if (data.pos.y < 0.0f)
+                data.pos.y = 0.0f;
+            else if (data.pos.y > 0.9)
+                data.pos.y = 0.9f;
         }
 
         writeRenderTarget(0, "Color");
@@ -149,7 +163,7 @@ namespace vg::graphics::renderer
             const float spriteWidth = 1.0f / float(atlas_width);
             const float spriteHeight = 1.0f / float(atlas_height);
 
-            root2D.quad.posOffsetScale = float4(data.offset, 0.75f + i * 0.1f * ar * 0.5f, 0.1f, 0.1f * ar);
+            root2D.quad.posOffsetScale = float4(data.pos.x, data.pos.y, 0.2f, 0.2f * ar);
 
             if (data.reverse)
                 root2D.quad.uvOffsetScale = float4(spriteWidth, spriteHeight*i, -spriteWidth, spriteHeight);

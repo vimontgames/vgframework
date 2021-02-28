@@ -6,12 +6,14 @@
 #include "graphics/driver/Shader/ShaderManager.h"
 #include "graphics/driver/FrameGraph/FrameGraph.h"
 #include "graphics/driver/Profiler/Profiler.h"
+#include "graphics/driver/Resource/Texture.h"
 #include "graphics/renderer/Imgui/imguiAdapter.h"
+#include "graphics/renderer/Pass/ImguiPass.h"
 #include "graphics/renderer/Pass/BackgroundPass.h"
 #include "graphics/renderer/Pass/TestPass3D.h"
 #include "graphics/renderer/Pass/TestPass2D.h"
 #include "graphics/renderer/Pass/PostProcessPass.h"
-#include "graphics/renderer/Pass/ImguiPass.h"
+#include "graphics/renderer/View/View.h"
 
 #include "shaders/driver/driver.hlsl.h"
 #include "shaders/default/default.hlsl.h"
@@ -116,12 +118,15 @@ namespace vg::graphics::renderer
 	//--------------------------------------------------------------------------------------
 	void Renderer::deinit()
 	{
+        VG_SAFE_RELEASE(m_view);
+
         VG_SAFE_DELETE(m_backgroundPass);
         VG_SAFE_DELETE(m_testPass3D);
         VG_SAFE_DELETE(m_testPass2D);
         VG_SAFE_DELETE(m_postProcessPass);
         VG_SAFE_DELETE(m_imguiPass);
         VG_SAFE_DELETE(m_imgui);
+
         m_frameGraph.release();
 
 		m_device.deinit();
@@ -133,6 +138,13 @@ namespace vg::graphics::renderer
         m_device.waitGPUIdle();
         m_device.resize(_width, _height);
         m_frameGraph.destroyTransientResources();
+    }
+
+    //--------------------------------------------------------------------------------------
+    core::uint2 Renderer::getBackbufferSize() const
+    {
+        const auto & desc = getBackbuffer()->getTexDesc();
+        return { desc.width, desc.height };
     }
 
     //--------------------------------------------------------------------------------------
@@ -177,9 +189,32 @@ namespace vg::graphics::renderer
 		m_device.endFrame();
 	}
 
+    //--------------------------------------------------------------------------------------
+    View * Renderer::getView() const
+    {
+        return m_view;
+    }
+
 	//--------------------------------------------------------------------------------------
-	Texture * Renderer::getBackbuffer()
+	Texture * Renderer::getBackbuffer() const
 	{
 		return m_device.getBackbuffer();
 	}
+
+    //--------------------------------------------------------------------------------------
+    IView * Renderer::createView(const CreateViewParams & _params)
+    {
+        return new View(_params);
+    }
+
+    //--------------------------------------------------------------------------------------
+    void Renderer::setView(IView * _view)
+    {
+        if (_view != m_view)
+        {
+            VG_SAFE_INCREASE_REFCOUNT(_view);
+            VG_SAFE_RELEASE(m_view);
+            m_view = static_cast<View*>(_view);
+        }
+    }
 }

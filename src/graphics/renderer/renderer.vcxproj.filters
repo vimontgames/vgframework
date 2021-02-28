@@ -9,6 +9,9 @@
     <ClCompile Include="Imgui\imguiAdapter.cpp">
       <Filter>Imgui</Filter>
     </ClCompile>
+    <ClCompile Include="View\View.cpp">
+      <Filter>View</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Renderer.def" />
@@ -51,6 +54,10 @@
     <ClInclude Include="Pass\TestPass3D.hpp">
       <Filter>Pass</Filter>
     </ClInclude>
+    <ClInclude Include="View\View.h">
+      <Filter>View</Filter>
+    </ClInclude>
+    <ClInclude Include="IView.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Pass">
@@ -58,6 +65,15 @@
     </Filter>
     <Filter Include="Imgui">
       <UniqueIdentifier>{b758ae7b-2873-4568-b6ba-f712c2fcf620}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="View">
+      <UniqueIdentifier>{1c2b648a-bdff-4441-8594-a8e7bdc14994}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Entity">
+      <UniqueIdentifier>{d51c33b1-f56b-441e-af2d-c0d132eb331b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Component">
+      <UniqueIdentifier>{43d704ee-f697-448d-9531-b792ec4c07fa}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

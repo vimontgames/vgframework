@@ -4,6 +4,8 @@
 
 namespace vg::core
 {
+    const float pi = 3.14159265359f;
+
 	//--------------------------------------------------------------------------------------
 	template <typename T> T min(const T & _left, const T & _right)
 	{

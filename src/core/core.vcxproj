@@ -12,10 +12,12 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CmdLine\CmdLine.h" />
+    <ClInclude Include="Component\Component.h" />
     <ClInclude Include="Container\Blob.h" />
     <ClInclude Include="Container\HandleTable.h" />
     <ClInclude Include="Container\HandleTable.hpp" />
     <ClInclude Include="Core.h" />
+    <ClInclude Include="Entity\Entity.h" />
     <ClInclude Include="File\File.h" />
     <ClInclude Include="IInput.h" />
     <ClInclude Include="IObject.h" />
@@ -38,7 +40,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CmdLine\CmdLine.cpp" />
+    <ClCompile Include="Component\Component.cpp" />
     <ClCompile Include="Core.cpp" />
+    <ClCompile Include="Entity\Entity.cpp" />
     <ClCompile Include="File\File.cpp" />
     <ClCompile Include="Math\Math.cpp" />
     <ClCompile Include="Object\Object.cpp" />

@@ -111,8 +111,11 @@ Global
 		{535FA929-A8A5-4E16-8B7E-6496DAA428BF}.Debug|PC DX12.ActiveCfg = Debug|x64
 		{535FA929-A8A5-4E16-8B7E-6496DAA428BF}.Debug|PC DX12.Build.0 = Debug|x64
 		{535FA929-A8A5-4E16-8B7E-6496DAA428BF}.Debug|PC Vulkan.ActiveCfg = Debug|x64
+		{535FA929-A8A5-4E16-8B7E-6496DAA428BF}.Debug|PC Vulkan.Build.0 = Debug|x64
 		{535FA929-A8A5-4E16-8B7E-6496DAA428BF}.Release|PC DX12.ActiveCfg = Release|x64
+		{535FA929-A8A5-4E16-8B7E-6496DAA428BF}.Release|PC DX12.Build.0 = Release|x64
 		{535FA929-A8A5-4E16-8B7E-6496DAA428BF}.Release|PC Vulkan.ActiveCfg = Release|x64
+		{535FA929-A8A5-4E16-8B7E-6496DAA428BF}.Release|PC Vulkan.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

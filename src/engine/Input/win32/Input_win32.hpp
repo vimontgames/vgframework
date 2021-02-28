@@ -448,6 +448,14 @@ namespace vg::engine::win32
 
             joy.m_dir.x = float(state.lX) / 100.0f;
             joy.m_dir.y = float(state.lY) / 100.0f;
+
+            for (uint b = 0; b < enumCount<JoyButton>(); ++b)
+            {
+                if (state.rgbButtons[b])
+                    joy.m_pressed[b] = true;
+                else
+                    joy.m_pressed[b] = false;
+            }
         }
     }
 
