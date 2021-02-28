@@ -40,6 +40,9 @@ namespace vg::graphics::driver::vulkan
                     break;
             }
 
+            if (asBool(_bufDesc.resource.m_bindFlags & BindFlags::IndexBuffer))
+                vkBufferCreate.usage |= VK_BUFFER_USAGE_INDEX_BUFFER_BIT;
+
             VkBuffer vkBuffer;
             VmaAllocation vmaAlloc;
             VmaAllocationInfo vmaAllocInfo = {};
@@ -47,7 +50,7 @@ namespace vg::graphics::driver::vulkan
 
             m_resource.setVulkanBuffer(vkBuffer, vmaAlloc, vmaAllocInfo);
 
-            if (_bufDesc.isShaderResource())
+            if (_bufDesc.isShaderResource() || asBool(_bufDesc.resource.m_bindFlags & BindFlags::IndexBuffer))
             {
                 VG_ASSERT(m_resource.getVulkanBuffer());
 

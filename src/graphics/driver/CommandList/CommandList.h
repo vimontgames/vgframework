@@ -46,6 +46,7 @@ namespace vg::graphics::driver
             void                    setScissor              (const core::uint4 & _scissor);
             void                    setRootConstants        (core::uint _startOffset, core::u32 * _values, core::uint _count);
             void                    setInlineRootConstants  (const void * _value, core::uint _count);
+            void                    setIndexBuffer          (driver::Buffer * _ib);
 
 		protected:
 			CommandListType			m_type;
@@ -66,19 +67,17 @@ namespace vg::graphics::driver
                 {
                     RootSignature        = 0x00000001,
                     GraphicPipelineState = 0x00000002,
-                    PrimitiveTopology    = 0x00000004,
-                    Viewport             = 0x00000008,
-                    Scissor              = 0x00000010,
-                    RootConstants        = 0x00000020,
-                    ConstantBuffers      = 0x00000040
+                    Viewport             = 0x00000004,
+                    Scissor              = 0x00000008,
+                    RootConstants        = 0x00000010,
+                    IndexBuffer          = 0x00000020
                 };
                 DirtyFlags              dirtyFlags;
                 GraphicPipelineStateKey graphicPipelineKey;
-                PrimitiveTopology       primitiveTopology;
                 core::uint4             viewport;
                 core::uint4             scissor;
                 core::u32               rootConstants[max_root_constants] = {};
-                Buffer *                constantBuffers[max_constant_buffers] = {};
+                Buffer *                indexBuffer = nullptr;
             };
             StateCache                  m_stateCache;
             RootSignature *             m_currentRootSignature = nullptr;
@@ -104,7 +103,9 @@ namespace vg::graphics::driver
         void    close();
 
         void    flush();
+
         void    draw(core::uint _vertexCount, core::uint _startOffset = 0);
+        void    drawIndexed(core::uint _indexCount, core::uint _startIndex = 0, core::uint _baseVertex = 0);
 
         void    resetShaders(ShaderKey::File _file);
 	};

@@ -21,12 +21,93 @@ namespace vg::graphics::renderer
 
         m_rootSignatureHandle = device->addRootSignature(rsDesc);
 
-        m_shaderKey.init("default/default.hlsl", "Forward");
+        m_forwardShaderKey.init("default/default.hlsl", "Forward");
+        m_wireframeShaderKey.init("default/default.hlsl", "Wireframe");
+
+        u16 ibData[] =
+        {
+            0, 2, 1,
+            1, 2, 3,
+            
+            4, 5, 6,
+            6, 5, 7,
+            
+            8, 9, 10,
+            10, 9, 11,
+
+            12, 14, 13,
+            13, 14, 15,
+
+            16, 18, 17,
+            17, 18, 19,
+
+            20, 21, 22,
+            22, 21, 23
+        };
+        BufferDesc ibDesc(Usage::Default, BindFlags::IndexBuffer, CPUAccessFlags::None, BufferFlags::None, sizeof(ibData[0]), (uint)countof(ibData));
+        m_ib = device->createBuffer(ibDesc, "CubeIB", ibData);
+
+        struct Vertex
+        {
+            float pos[3];
+            float uv[2];
+        };
+
+        Vertex vbData[] =
+        {
+            { {-1.0f,-1.0f,-1.0f}, { 0.0f, 0.0f } },
+            { {-1.0f,+1.0f,-1.0f}, { 0.0f, 1.0f } },
+            { {+1.0f,-1.0f,-1.0f}, { 1.0f, 0.0f } },
+            { {+1.0f,+1.0f,-1.0f}, { 1.0f, 1.0f } },
+                                    
+            { {-1.0f,-1.0f,+1.0f}, { 0.0f, 0.0f } },
+            { {-1.0f,+1.0f,+1.0f}, { 0.0f, 1.0f } },
+            { {+1.0f,-1.0f,+1.0f}, { 1.0f, 0.0f } },
+            { {+1.0f,+1.0f,+1.0f}, { 1.0f, 1.0f } },
+
+            { {-1.0f,-1.0f,-1.0f}, { 1.0f, 0.0f } },
+            { {-1.0f,-1.0f,+1.0f}, { 1.0f, 1.0f } },
+            { {+1.0f,-1.0f,-1.0f}, { 0.0f, 0.0f } },
+            { {+1.0f,-1.0f,+1.0f}, { 0.0f, 1.0f } },
+
+            { {-1.0f,+1.0f,-1.0f}, { 0.0f, 0.0f } },
+            { {-1.0f,+1.0f,+1.0f}, { 0.0f, 1.0f } },
+            { {+1.0f,+1.0f,-1.0f}, { 1.0f, 0.0f } },
+            { {+1.0f,+1.0f,+1.0f}, { 1.0f, 1.0f } },
+
+            { {-1.0f,-1.0f,-1.0f}, { 0.0f, 0.0f } },
+            { {-1.0f,-1.0f,+1.0f}, { 0.0f, 1.0f } },
+            { {-1.0f,+1.0f,-1.0f}, { 1.0f, 0.0f } },
+            { {-1.0f,+1.0f,+1.0f}, { 1.0f, 1.0f } },
+
+            { {+1.0f,-1.0f,-1.0f}, { 1.0f, 0.0f } },
+            { {+1.0f,-1.0f,+1.0f}, { 1.0f, 1.0f } },
+            { {+1.0f,+1.0f,-1.0f}, { 0.0f, 0.0f } },
+            { {+1.0f,+1.0f,+1.0f}, { 0.0f, 1.0f } }
+        };
+
+        BufferDesc vbDesc(Usage::Default, BindFlags::ShaderResource, CPUAccessFlags::None, BufferFlags::None, sizeof(vbData), 1);
+        m_vb = device->createBuffer(vbDesc, "CubeVB", vbData);
+
+        u32 texData[] =
+        {
+            0xFF0000FF,
+            0xFF00FF00,
+            0xFFFF0000,
+            0xFFFFFFFF
+        };
+
+        TextureDesc texDesc(Usage::Default, BindFlags::ShaderResource, CPUAccessFlags::None, TextureType::Texture2D, PixelFormat::R8G8B8A8_unorm, TextureFlags::None, 2, 2, 1, 1);
+        m_texture = device->createTexture("data/Textures/QuestionBox.psd");
     }
 
     //--------------------------------------------------------------------------------------
     TestPass3D::~TestPass3D()
     {
+        VG_SAFE_RELEASE(m_ib);
+        VG_SAFE_RELEASE(m_vb);
+        VG_SAFE_RELEASE(m_texture);
+
         auto * device = Device::get();
         device->removeRootSignature(m_rootSignatureHandle);
     }
@@ -78,12 +159,12 @@ namespace vg::graphics::renderer
         const float fovY = pi / 4.0f;
         const float ar = float(backbuffer.width) / float(backbuffer.height);
 
-        RasterizerState rs(FillMode::Solid, CullMode::None);
+        RasterizerState rs(FillMode::Solid, CullMode::Back);
         BlendState bs(BlendFactor::One, BlendFactor::Zero, BlendOp::Add);
 
         _cmdList->setRootSignature(m_rootSignatureHandle);
-        _cmdList->setShader(m_shaderKey);
-        _cmdList->setPrimitiveTopology(PrimitiveTopology::TriangleStrip);
+        _cmdList->setShader(m_forwardShaderKey);
+        _cmdList->setPrimitiveTopology(PrimitiveTopology::TriangleList);
         _cmdList->setRasterizerState(rs);
         _cmdList->setBlendState(bs);
 
@@ -99,8 +180,16 @@ namespace vg::graphics::renderer
         RootConstants3D root3D;
 
         root3D.mat = transpose(viewProj);
+        root3D.data.x = m_vb->getBindlessSRVHandle();
+        root3D.data.y = m_texture->getBindlessSRVHandle();
 
         _cmdList->setInlineRootConstants(&root3D, RootConstants3DCount);
-        _cmdList->draw(4);
+        _cmdList->setIndexBuffer(m_ib);
+        _cmdList->drawIndexed(m_ib->getBufDesc().elementCount);
+
+        RasterizerState rsWireframe(FillMode::Wireframe, CullMode::None);
+        _cmdList->setShader(m_wireframeShaderKey);
+        _cmdList->setRasterizerState(rsWireframe);
+        _cmdList->drawIndexed(m_ib->getBufDesc().elementCount);
     }
 }

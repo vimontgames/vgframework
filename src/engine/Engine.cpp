@@ -159,6 +159,8 @@ namespace vg::engine
 	//--------------------------------------------------------------------------------------
 	void Engine::deinit()
 	{
+        m_renderer->waitGPUIdle();
+
         destroyEditorView();
         destroyEntities();
 

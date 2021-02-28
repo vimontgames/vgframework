@@ -41,6 +41,7 @@ namespace vg::graphics::renderer
 		void					runOneFrame			(double _dt) override;
 
         void                    updateShaders       () override;
+        void                    waitGPUIdle         () override;
 
         core::IProfiler *       getProfilerInstance () const override;
         

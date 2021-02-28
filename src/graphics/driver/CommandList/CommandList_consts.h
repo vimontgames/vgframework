@@ -9,12 +9,19 @@ namespace vg::graphics::driver
 		Present
 	};
 
+    enum class PrimitiveType : core::u8
+    {
+        Point = 0,
+        Line,
+        Triangle
+    };
+
     enum class PrimitiveTopology : core::u8
     {
         PointList = 0,
         LineList,
-        TriangleList,
         LineStrip,
+        TriangleList,
         TriangleStrip
     };
 

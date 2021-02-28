@@ -41,7 +41,7 @@ namespace vg::graphics::driver::dx12
         }
 
         d3d12graphicPipelineDesc.RasterizerState = _key.m_rasterizerState.getd3d12RasterizerState();
-        d3d12graphicPipelineDesc.PrimitiveTopologyType = getd3d12PrimitiveTopologyType(_key.m_primitiveType);
+        d3d12graphicPipelineDesc.PrimitiveTopologyType = getd3d12PrimitiveTopologyType(_key.getPrimitiveType());
 
         const auto subPassKey = _key.m_renderPassKey.m_subPassKeys[_key.m_subPassIndex];
 
@@ -92,19 +92,20 @@ namespace vg::graphics::driver::dx12
     {
         switch (_primitiveType)
         {
-        case PrimitiveType::Point:
-            return D3D12_PRIMITIVE_TOPOLOGY_TYPE_POINT;
+            default:
+                VG_ASSERT(false, "Unhandled PrimitiveType \"%s\" (%u)", asString(_primitiveType).c_str(), _primitiveType);
 
-        case PrimitiveType::Line:
-            return D3D12_PRIMITIVE_TOPOLOGY_TYPE_LINE;
+            case PrimitiveType::Point:
+                return D3D12_PRIMITIVE_TOPOLOGY_TYPE_POINT;
 
-        default:
-            VG_ASSERT(false, "Unhandled PrimitiveType \"%s\" (%u)", asString(_primitiveType).c_str(), _primitiveType);
-        case PrimitiveType::Triangle:
-            return D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
+            case PrimitiveType::Line:
+                return D3D12_PRIMITIVE_TOPOLOGY_TYPE_LINE;
 
-        case PrimitiveType::Patch:
-            return D3D12_PRIMITIVE_TOPOLOGY_TYPE_PATCH;
+            case PrimitiveType::Triangle:
+                return D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
+
+            //case PrimitiveType::Patch:
+            //    return D3D12_PRIMITIVE_TOPOLOGY_TYPE_PATCH;
         }
     }
 }

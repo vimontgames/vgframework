@@ -28,9 +28,12 @@ namespace vg::graphics::driver::dx12
         void                                bindScissor                 (const core::uint4 & _scissor);
         void                                bindRootConstants           (core::uint (& _constants)[max_root_constants]);
         void                                bindConstantBuffers         (driver::Buffer*(&_constantbuffers)[max_constant_buffers]);
+        void                                bindIndexBuffer             (driver::Buffer * _ib);
 
 		void								clear                       (const core::float4 & _color);
+
         void                                draw                        (core::uint _vertexCount, core::uint _startOffset);
+        void                                drawIndexed                 (core::uint _indexCount, core::uint _startIndex, core::uint _baseVertex);
 
         void                                copyTexture                 (driver::Texture * _dst, core::uint_ptr _from);
         void                                copyBuffer                  (driver::Buffer * _dst, core::uint_ptr _from);

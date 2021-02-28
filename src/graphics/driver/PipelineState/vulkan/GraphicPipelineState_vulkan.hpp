@@ -35,7 +35,7 @@ namespace vg::graphics::driver::vulkan
         // Input Assembly
         VkPipelineInputAssemblyStateCreateInfo ia = {};
         ia.sType = VK_STRUCTURE_TYPE_PIPELINE_INPUT_ASSEMBLY_STATE_CREATE_INFO;
-        ia.topology = VK_PRIMITIVE_TOPOLOGY_TRIANGLE_STRIP; // store topology instead of topology type in key ?
+        ia.topology = getVulkanPrimitiveTopology(_key.m_primitiveTopology); 
         vkPipelineDesc.pInputAssemblyState = &ia;
 
         // PipelineLayout
@@ -129,6 +129,31 @@ namespace vg::graphics::driver::vulkan
 
         case ShaderStage::Compute:
             return VK_SHADER_STAGE_COMPUTE_BIT;
+        }
+    }
+
+    //--------------------------------------------------------------------------------------
+    VkPrimitiveTopology GraphicPipelineState::getVulkanPrimitiveTopology(PrimitiveTopology _topology)
+    {
+        switch (_topology)
+        {
+            default:
+                VG_ASSERT(false, "Unhandled PrimitiveTopology \"%s\" (%u)", asString(_topology).c_str(), _topology);
+
+            case PrimitiveTopology::PointList:
+                return VK_PRIMITIVE_TOPOLOGY_POINT_LIST;
+
+            case PrimitiveTopology::LineList:
+                return VK_PRIMITIVE_TOPOLOGY_LINE_LIST;
+
+            case PrimitiveTopology::LineStrip:
+                return VK_PRIMITIVE_TOPOLOGY_LINE_STRIP;
+
+            case PrimitiveTopology::TriangleList:
+                return VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST;
+
+            case PrimitiveTopology::TriangleStrip:
+                return VK_PRIMITIVE_TOPOLOGY_TRIANGLE_STRIP;
         }
     }
 

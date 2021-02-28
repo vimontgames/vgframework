@@ -120,6 +120,7 @@ namespace vg::graphics::driver::dx12
         {
             default:
                 VG_ASSERT(false, "Unhandled ResourceState \"%s\" (%u)", asString(_state).c_str(), _state);
+
             case ResourceState::Undefined:
                 return D3D12_RESOURCE_STATE_COMMON;
 
@@ -179,6 +180,23 @@ namespace vg::graphics::driver::dx12
 
 		super::endSubPass();
 	}
+
+    //--------------------------------------------------------------------------------------
+    void CommandList::bindIndexBuffer(driver::Buffer * _ib)
+    {
+        D3D12_INDEX_BUFFER_VIEW d3d12IBView = {};
+
+        if (_ib)
+        {
+            const BufferDesc & ibDesc = _ib->getBufDesc();
+
+            d3d12IBView.BufferLocation = _ib->getResource().getd3d12BufferResource()->GetGPUVirtualAddress();
+            d3d12IBView.Format = ibDesc.elementSize == 2 ? DXGI_FORMAT_R16_UINT : DXGI_FORMAT_R32_UINT;
+            d3d12IBView.SizeInBytes = ibDesc.size();
+        }
+
+        m_d3d12graphicsCmdList->IASetIndexBuffer(&d3d12IBView);
+    }
 
     //--------------------------------------------------------------------------------------
     void CommandList::bindRootSignature(driver::RootSignature * _rootSig)
@@ -291,6 +309,14 @@ namespace vg::graphics::driver::dx12
         // Should be done only once per frame
         m_d3d12graphicsCmdList->SetGraphicsRootDescriptorTable(1, driver::Device::get()->getBindlessTable()->getd3d12GPUDescriptorHeap()->GetGPUDescriptorHandleForHeapStart());
         m_d3d12graphicsCmdList->DrawInstanced(_vertexCount, 1, _startOffset, 0);
+    }
+
+    //--------------------------------------------------------------------------------------
+    void CommandList::drawIndexed(core::uint _indexCount, core::uint _startIndex, core::uint _baseVertex)
+    {
+        // Should be done only once per frame
+        m_d3d12graphicsCmdList->SetGraphicsRootDescriptorTable(1, driver::Device::get()->getBindlessTable()->getd3d12GPUDescriptorHeap()->GetGPUDescriptorHandleForHeapStart());
+        m_d3d12graphicsCmdList->DrawIndexedInstanced(_indexCount, 1, _startIndex, _baseVertex, 0);
     }
 
     //--------------------------------------------------------------------------------------

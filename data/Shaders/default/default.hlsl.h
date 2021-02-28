@@ -19,11 +19,20 @@ namespace vg::graphics::driver
             auto vsQuad = addVS("VS_Forward");
             auto psQuad = addPS("PS_Forward");
 
-            auto & quad = addTechnique("Forward");
+            auto & forward = addTechnique("Forward");
             {
-                quad.vs = vsQuad;
-                quad.ps = psQuad;
-                quad.flags = (Flags)0;
+                forward.vs = vsQuad;
+                forward.ps = psQuad;
+                forward.flags = (Flags)0;
+            }
+
+            auto psWire = addPS("PS_Wireframe");
+
+            auto & wire = addTechnique("Wireframe");
+            {
+                wire.vs = vsQuad;
+                wire.ps = psWire;
+                wire.flags = (Flags)0;
             }
         }
     };

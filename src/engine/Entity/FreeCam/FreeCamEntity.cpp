@@ -10,7 +10,7 @@ namespace vg::engine
     //--------------------------------------------------------------------------------------
     FreeCamEntity::FreeCamEntity(const core::string & _name) : 
         core::Entity(_name),
-        m_pitch(pi),
+        m_pitch(-pi*3.0f/4.0f),
         m_yaw(0.0f),
         m_roll(0.0f)
     {
@@ -19,7 +19,7 @@ namespace vg::engine
             1.0f, 0.0f, 0.0f, 0.0f,
             0.0f, 1.0f, 0.0f, 0.0f,
             0.0f, 0.0f, -1.0f, 0.0f,
-            0.0f, 0.0f, -1.0f, 1.0f
+            0.0f, 5.0f, -5.0f, 1.0f
         ));
     }
 
@@ -88,7 +88,7 @@ namespace vg::engine
 
         float mouseSpeedX = 0.001f * pi;
         float mouseSpeedY = 0.001f * pi;
-        float moveSpeed = 0.001f * (float)_dt;
+        float moveSpeed = 0.01f * (float)_dt;
 
         if (input->isMouseButtonPressed(MouseButton::Middle))
         {

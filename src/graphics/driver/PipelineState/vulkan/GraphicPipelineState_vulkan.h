@@ -21,6 +21,8 @@ namespace vg::graphics::driver
             static VkShaderStageFlagBits getVulkanShaderStage(ShaderStage _stage);
 
         private:
+            static VkPrimitiveTopology getVulkanPrimitiveTopology(PrimitiveTopology _topology);
+
             void addVulkanShader(core::vector<VkPipelineShaderStageCreateInfo> & _vkStages, HLSLDesc & _hlsl, ShaderStage _stage, core::uint _index);
 
         private:

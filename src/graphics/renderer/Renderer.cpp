@@ -153,6 +153,12 @@ namespace vg::graphics::renderer
         m_device.getShaderManager()->update();
     }
 
+    //--------------------------------------------------------------------------------------
+    void Renderer::waitGPUIdle()
+    {
+        m_device.waitGPUIdle();
+    }
+
 	//--------------------------------------------------------------------------------------
 	void Renderer::runOneFrame(double _dt)
 	{

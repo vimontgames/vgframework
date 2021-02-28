@@ -477,6 +477,9 @@
     <ClInclude Include="PipelineState\vulkan\BlendState_vulkan.hpp">
       <Filter>PipelineState\vulkan</Filter>
     </ClInclude>
+    <ClInclude Include="PipelineState\GraphicPipelineStateKey.hpp">
+      <Filter>PipelineState</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Device">

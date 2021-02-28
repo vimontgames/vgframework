@@ -13,6 +13,7 @@
 using namespace vg::core;
 
 #include "GraphicPipelineState.hpp"
+#include "GraphicPipelineStateKey.hpp"
 #include "RasterizerState.hpp"
 #include "BlendState.hpp"
 #include "SamplerState.hpp"

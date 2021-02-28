@@ -54,6 +54,7 @@
     <ClInclude Include="PipelineState\dx12\BlendState_dx12.hpp" />
     <ClInclude Include="PipelineState\dx12\SamplerState_dx12.h" />
     <ClInclude Include="PipelineState\dx12\SamplerState_dx12.hpp" />
+    <ClInclude Include="PipelineState\GraphicPipelineStateKey.hpp" />
     <ClInclude Include="PipelineState\SamplerState.h" />
     <ClInclude Include="PipelineState\SamplerState.hpp" />
     <ClInclude Include="PipelineState\SamplerState_consts.h" />

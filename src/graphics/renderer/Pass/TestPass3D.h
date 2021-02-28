@@ -2,6 +2,11 @@
 
 #include "graphics/driver/FrameGraph/UserPass.h"
 
+namespace vg::graphics::driver
+{
+    class Buffer;
+}
+
 namespace vg::graphics::renderer
 {
     //--------------------------------------------------------------------------------------
@@ -16,6 +21,10 @@ namespace vg::graphics::renderer
 
     private:
         driver::RootSignatureHandle     m_rootSignatureHandle;
-        driver::ShaderKey               m_shaderKey;
+        driver::ShaderKey               m_forwardShaderKey;
+        driver::ShaderKey               m_wireframeShaderKey;
+        driver::Texture *               m_texture = nullptr;
+        driver::Buffer *                m_ib = nullptr;
+        driver::Buffer *                m_vb = nullptr;
     };
 }

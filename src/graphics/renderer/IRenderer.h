@@ -27,6 +27,7 @@ namespace vg
             virtual core::uint2         getBackbufferSize   () const = 0;
             virtual void	            runOneFrame         (double _dt) = 0;
             virtual void                updateShaders       () = 0;
+            virtual void                waitGPUIdle         () = 0;
 
             #ifdef _WIN32
             virtual LRESULT CALLBACK    WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) = 0;

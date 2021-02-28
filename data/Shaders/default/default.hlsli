@@ -6,6 +6,7 @@
 struct RootConstants3D
 {
     float4x4 mat;
+    uint4 data;
 };
 
 #define RootConstants3DCount sizeof(RootConstants3D)/sizeof(u32)

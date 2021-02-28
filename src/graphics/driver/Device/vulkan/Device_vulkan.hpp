@@ -815,6 +815,9 @@ namespace vg::graphics::driver::vulkan
                                          vulkan12Features.shaderStorageImageArrayNonUniformIndexing = VK_TRUE;
                                          vulkan12Features.pNext = nullptr;
 
+        VkPhysicalDeviceFeatures enabledFeatures = {};
+                                 enabledFeatures.fillModeNonSolid = VK_TRUE;
+
 		VkDeviceCreateInfo deviceCreateInfo; 
 						   deviceCreateInfo.sType = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO;
 						   deviceCreateInfo.pNext = nullptr;
@@ -825,7 +828,7 @@ namespace vg::graphics::driver::vulkan
 						   deviceCreateInfo.ppEnabledLayerNames = nullptr;
 						   deviceCreateInfo.enabledExtensionCount = m_deviceExtensionList.getEnabledExtensionCount();
 						   deviceCreateInfo.ppEnabledExtensionNames = m_deviceExtensionList.getEnabledExtensionNames();
-						   deviceCreateInfo.pEnabledFeatures = nullptr;
+						   deviceCreateInfo.pEnabledFeatures = &enabledFeatures;
                            deviceCreateInfo.pNext = &vulkan12Features;
 
 		if (m_useSeparatePresentCommandQueue)

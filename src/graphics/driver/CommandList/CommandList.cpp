@@ -137,10 +137,10 @@ namespace vg::graphics::driver
         //--------------------------------------------------------------------------------------
         void CommandList::setPrimitiveTopology(PrimitiveTopology _topology)
         {
-            if (_topology != m_stateCache.primitiveTopology)
+            if (_topology != m_stateCache.graphicPipelineKey.m_primitiveTopology)
             {
-                m_stateCache.dirtyFlags |= StateCache::DirtyFlags::PrimitiveTopology;
-                m_stateCache.primitiveTopology = _topology;
+                m_stateCache.dirtyFlags |= StateCache::DirtyFlags::GraphicPipelineState;
+                m_stateCache.graphicPipelineKey.m_primitiveTopology = _topology;
             }
         }
 
@@ -182,6 +182,17 @@ namespace vg::graphics::driver
         void CommandList::setInlineRootConstants(const void * _value, core::uint _count)
         {
             setRootConstants(0, (u32*)_value, _count);
+        }
+
+        //--------------------------------------------------------------------------------------
+        void CommandList::setIndexBuffer(driver::Buffer * _ib)
+        {
+            if (_ib != m_stateCache.indexBuffer)
+            {
+                VG_ASSERT(!_ib || 2 == _ib->getBufDesc().elementSize || 4 == _ib->getBufDesc().elementSize);
+                m_stateCache.dirtyFlags |= StateCache::DirtyFlags::IndexBuffer;
+                m_stateCache.indexBuffer = _ib;
+            }
         }
         
         //--------------------------------------------------------------------------------------
@@ -234,7 +245,6 @@ namespace vg::graphics::driver
     void CommandList::reset()
     {
         m_stateCache.dirtyFlags = (StateCache::DirtyFlags)-1;
-        m_stateCache.primitiveTopology = (PrimitiveTopology)-1;
         m_stateCache.viewport = uint4(0, 0, 0, 0);
         super::reset();
     }
@@ -274,6 +284,9 @@ namespace vg::graphics::driver
             if (asBool(StateCache::DirtyFlags::RootSignature & m_stateCache.dirtyFlags))
                 super::bindRootSignature(device->getRootSignature(m_stateCache.graphicPipelineKey.m_rootSignature));
 
+            if (asBool(StateCache::DirtyFlags::IndexBuffer & m_stateCache.dirtyFlags))
+                super::bindIndexBuffer(m_stateCache.indexBuffer);
+
             if (asBool(StateCache::DirtyFlags::GraphicPipelineState & m_stateCache.dirtyFlags))
             {
                 const auto & key = m_stateCache.graphicPipelineKey;
@@ -287,10 +300,9 @@ namespace vg::graphics::driver
                 pso = m_graphicPipelineStateHash[key];
                 super::bindGraphicPipelineState(pso);
                 m_stateCache.graphicPipelineKey = key;
+
+                super::bindPrimitiveTopology(m_stateCache.graphicPipelineKey.m_primitiveTopology);
             }
-            
-            if (asBool(StateCache::DirtyFlags::PrimitiveTopology & m_stateCache.dirtyFlags))
-                super::bindPrimitiveTopology(m_stateCache.primitiveTopology);
 
             if (asBool(StateCache::DirtyFlags::Viewport & m_stateCache.dirtyFlags))
                 super::bindViewport(m_stateCache.viewport);
@@ -301,18 +313,23 @@ namespace vg::graphics::driver
             if (asBool(StateCache::DirtyFlags::RootConstants & m_stateCache.dirtyFlags))
                 super::bindRootConstants(m_stateCache.rootConstants);
 
-            //if (asBool(StateCache::DirtyFlags::ConstantBuffers & m_stateCache.dirtyFlags))
-            //    super::bindConstantBuffers(m_stateCache.constantBuffers);
-
             m_stateCache.dirtyFlags = (StateCache::DirtyFlags)0;
         }
     }
 
     //--------------------------------------------------------------------------------------
-    void CommandList::draw(core::uint _vertexCount, core::uint _startOffset)
+    void CommandList::draw(uint _vertexCount, uint _startOffset)
     {
         flush();
 
         super::draw(_vertexCount, _startOffset);
+    }
+
+    //--------------------------------------------------------------------------------------
+    void CommandList::drawIndexed(uint _indexCount, uint _startIndex, uint _baseVertex)
+    {
+        flush();
+
+        super::drawIndexed(_indexCount, _startIndex, _baseVertex);
     }
 }

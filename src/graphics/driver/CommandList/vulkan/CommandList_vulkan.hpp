@@ -95,7 +95,7 @@ namespace vg::graphics::driver::vulkan
     //--------------------------------------------------------------------------------------
     void CommandList::bindPrimitiveTopology(PrimitiveTopology _topology)
     {
-
+        /*ddd*/
     }
 
     //--------------------------------------------------------------------------------------
@@ -137,6 +137,16 @@ namespace vg::graphics::driver::vulkan
     }
 
     //--------------------------------------------------------------------------------------
+    void CommandList::bindIndexBuffer(driver::Buffer * _ib)
+    {
+        if (_ib)
+        {
+            const BufferDesc & ibDesc = _ib->getBufDesc();
+            vkCmdBindIndexBuffer(m_vkCommandBuffer, _ib->getResource().getVulkanBuffer(), 0, ibDesc.elementSize == 2 ? VK_INDEX_TYPE_UINT16 : VK_INDEX_TYPE_UINT32);
+        }
+    }
+
+    //--------------------------------------------------------------------------------------
     void CommandList::clear(const core::float4 & _color)
     {
 
@@ -146,6 +156,12 @@ namespace vg::graphics::driver::vulkan
     void CommandList::draw(core::uint _vertexCount, core::uint _startOffset)
     {
         vkCmdDraw(m_vkCommandBuffer, _vertexCount, 1, _startOffset, 0);
+    }
+
+    //--------------------------------------------------------------------------------------
+    void CommandList::drawIndexed(core::uint _indexCount, core::uint _startIndex, core::uint _baseVertex)
+    {
+        vkCmdDrawIndexed(m_vkCommandBuffer, _indexCount, 1, _startIndex, 0, 0);
     }
 
     //--------------------------------------------------------------------------------------

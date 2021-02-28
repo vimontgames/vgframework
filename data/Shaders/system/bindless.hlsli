@@ -1,11 +1,6 @@
 #ifndef _BINDLESS__HLSLI_
 #define _BINDLESS__HLSLI_
 
-struct UniformBufferTest
-{
-    float4 test;
-};
-
 #ifndef __cplusplus
 
 #ifdef DX12
@@ -16,12 +11,12 @@ struct UniformBufferTest
 #define DECL_DESCRIPTOR_RANGE_RW(type, name, bind, offset) [[vk::binding(bind, 0)]] type name[];
 #endif
 
-// Read-Only textures
+// Read-only textures
 DECL_DESCRIPTOR_RANGE_RO(Texture1D, Texture1DTable, 0, 0);
 DECL_DESCRIPTOR_RANGE_RO(Texture2D, Texture2DTable, 0, 0);
 DECL_DESCRIPTOR_RANGE_RO(Texture3D, Texture3DTable, 0, 0);
 
-// Read-Write textures
+// Read-only buffers
 DECL_DESCRIPTOR_RANGE_RO(ByteAddressBuffer, BufferTable, 1, 16384);
 
 // Read-Only buffers
@@ -38,6 +33,15 @@ DECL_DESCRIPTOR_RANGE_RW(RWByteAddressBuffer, RWBufferTable, 3, 49152);
 //#else
 //[[vk::binding(4, 0)]] ConstantBuffer<UniformBufferTest> ubo[];
 //#endif
+
+//Texture1D<float4> getTexture1D(uint _handle) { return Texture1DTable[_handle]; }
+//Texture2D<float4> getTexture2D(uint _handle) { return Texture2DTable[_handle]; }
+//Texture3D<float4> getTexture3D(uint _handle) { return Texture3DTable[_handle]; }
+
+// use #define here because of a Vulkan shader compiler crash :(
+#define getTexture2D(_handle) Texture2DTable[_handle]
+
+ByteAddressBuffer getBuffer(uint _handle) { return BufferTable[_handle - 16384]; }
 
 #endif // _DRIVER__HLSLI_
 
