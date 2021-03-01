@@ -5,15 +5,18 @@ namespace vg::graphics::driver::dx12
     {
         switch (_format)
         {
-        case PixelFormat::R8G8B8A8_unorm:
-            return DXGI_FORMAT_R8G8B8A8_UNORM;
-
-        case PixelFormat::R8G8B8A8_unorm_sRGB:
-            return DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
-
             default:
                 VG_ASSERT(false, "Unhandled pixel format \"%s\"", asString(_format).c_str());
                 return DXGI_FORMAT_UNKNOWN;
+
+            case PixelFormat::R8G8B8A8_unorm:
+                return DXGI_FORMAT_R8G8B8A8_UNORM;
+
+            case PixelFormat::R8G8B8A8_unorm_sRGB:
+                return DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
+
+            case PixelFormat::Depth32_Stencil8:
+                return DXGI_FORMAT_D32_FLOAT_S8X24_UINT;
         }
     }
 
@@ -24,6 +27,7 @@ namespace vg::graphics::driver::dx12
         {
             default:
                 VG_ASSERT(false, "Unhandled TextureType \"%s\"", asString(_texType).c_str());
+
             case TextureType::Texture2D:
             case TextureType::Texture2DArray:
             case TextureType::TextureCube:
@@ -102,6 +106,9 @@ namespace vg::graphics::driver::dx12
         if (asBool(TextureFlags::RenderTarget & _texDesc.flags))
             resourceDesc.Flags |= D3D12_RESOURCE_FLAG_ALLOW_RENDER_TARGET;
 
+        if (asBool(TextureFlags::DepthStencil & _texDesc.flags))
+            resourceDesc.Flags |= D3D12_RESOURCE_FLAG_ALLOW_DEPTH_STENCIL;
+
         return resourceDesc;
     }
 
@@ -127,8 +134,10 @@ namespace vg::graphics::driver::dx12
             allocDesc.HeapType = D3D12_HEAP_TYPE_DEFAULT;
 
             D3D12_RESOURCE_STATES initState = D3D12_RESOURCE_STATE_COMMON;
-            if (asBool(TextureFlags::RenderTarget & _texDesc.flags) )
+            if (asBool(TextureFlags::RenderTarget & _texDesc.flags))
                 initState = D3D12_RESOURCE_STATE_RENDER_TARGET;
+            else if (asBool(TextureFlags::DepthStencil & _texDesc.flags))
+                initState = D3D12_RESOURCE_STATE_DEPTH_WRITE;
             else if (_initData)
                 initState = D3D12_RESOURCE_STATE_COPY_DEST;
 
@@ -139,7 +148,7 @@ namespace vg::graphics::driver::dx12
             m_resource.setd3d12TextureResource(_name, resource, alloc);
         }
 
-        if (asBool(BindFlags::ShaderResource & _texDesc.resource.m_bindFlags))
+        if (asBool(BindFlags::ShaderResource & _texDesc.resource.m_bindFlags) && !asBool(TextureFlags::DepthStencil & _texDesc.flags)) // TODO: depth texture SRV
         {
             D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc = {};
             srvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
@@ -186,6 +195,26 @@ namespace vg::graphics::driver::dx12
             m_d3d12RTVHandle = device->allocRTVHandle();
             d3d12device->CreateRenderTargetView(m_resource.getd3d12TextureResource(), &viewDesc, m_d3d12RTVHandle);
 
+            // ???
+            if (nullptr == _initData && asBool(BindFlags::ShaderResource & _texDesc.resource.m_bindFlags))
+            {
+                auto * bindlessTable = device->getBindlessTable();
+                bindlessTable->updated3d12descriptor(getBindlessSRVHandle());
+            }
+        }
+        else if (asBool(TextureFlags::DepthStencil & _texDesc.flags))
+        {
+            D3D12_DEPTH_STENCIL_VIEW_DESC depthStencilViewDesc;
+                                          depthStencilViewDesc.Format = getd3d12PixelFormat(_texDesc.format);
+                                          depthStencilViewDesc.Flags = D3D12_DSV_FLAG_NONE;
+                                          depthStencilViewDesc.ViewDimension = D3D12_DSV_DIMENSION_TEXTURE2D;
+                                          depthStencilViewDesc.Texture2D.MipSlice = 0;  // TODO: alloc DSV for every mip available
+
+            VG_ASSERT(m_resource.getd3d12TextureResource());
+            m_d3d12DSVHandle = device->allocDSVHandle();
+            d3d12device->CreateDepthStencilView(m_resource.getd3d12TextureResource(), &depthStencilViewDesc, m_d3d12DSVHandle);
+
+            // ???
             if (nullptr == _initData && asBool(BindFlags::ShaderResource & _texDesc.resource.m_bindFlags))
             {
                 auto * bindlessTable = device->getBindlessTable();
@@ -239,4 +268,10 @@ namespace vg::graphics::driver::dx12
 	{
 		return m_d3d12RTVHandle;
 	}
+
+    //--------------------------------------------------------------------------------------
+    const D3D12_CPU_DESCRIPTOR_HANDLE & Texture::getd3d12DSVHandle() const
+    {
+        return m_d3d12DSVHandle;
+    }
 }

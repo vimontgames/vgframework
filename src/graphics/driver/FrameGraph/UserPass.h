@@ -41,6 +41,10 @@ namespace vg::graphics::driver
 		void writeRenderTarget(core::uint _slot, const FrameGraph::ResourceID & _resID);
         void readRenderTarget(const FrameGraph::ResourceID & _resID);
 
+        void createDepthStencil(const FrameGraph::ResourceID & _resID, FrameGraph::TextureResourceDesc & _resDesc);
+        void writeDepthStencil(const FrameGraph::ResourceID & _resID);
+        void readDepthStencil(const FrameGraph::ResourceID & _resID);
+
         // draw
         Texture * getRenderTarget(const FrameGraph::ResourceID & _resID) const;
 
@@ -57,6 +61,6 @@ namespace vg::graphics::driver
 
         // Outputs
 		FrameGraph::TextureResource *				m_depthStencil;
-		core::vector<FrameGraph::TextureResource *>	m_renderTarget;
+		core::vector<FrameGraph::TextureResource *>	m_renderTarget;              
 	};
 }

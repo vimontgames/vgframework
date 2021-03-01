@@ -23,8 +23,9 @@ namespace vg::graphics::driver
 			
 		//private:
             RenderPassKey                               m_renderPassKey;
-			core::vector<driver::SubPass*>		        m_subPasses;
-			core::vector<FrameGraph::TextureResource*>  m_attachments;
+			core::vector<driver::SubPass *>		        m_subPasses;
+			core::vector<FrameGraph::TextureResource *> m_colorAttachments;
+            FrameGraph::TextureResource *               m_depthStencilAttachment;
 		};
 	}
 }

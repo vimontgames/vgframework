@@ -6,6 +6,7 @@
 #include "graphics/driver/RootSignature/RootSignature.h"
 #include "graphics/driver/Resource/Texture.h"
 #include "GraphicPipelineState.h"
+#include "DepthStencilState.h"
 #include "RasterizerState.h"
 #include "BlendState.h"
 #include "SamplerState.h"
@@ -14,6 +15,7 @@ using namespace vg::core;
 
 #include "GraphicPipelineState.hpp"
 #include "GraphicPipelineStateKey.hpp"
+#include "DepthStencilState.hpp"
 #include "RasterizerState.hpp"
 #include "BlendState.hpp"
 #include "SamplerState.hpp"

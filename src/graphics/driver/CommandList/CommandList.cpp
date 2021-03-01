@@ -81,8 +81,12 @@ namespace vg::graphics::driver
 
                 if (asBool(info.flags & SubPassKey::AttachmentFlags::RenderTarget))
                 {
-                    const Texture * tex = m_renderPass->m_attachments[i]->getTexture();
+                    const Texture * tex = m_renderPass->m_colorAttachments[i]->getTexture();
                     auto & desc = tex->getTexDesc();
+
+                    VG_ASSERT( !width || width  == desc.width);
+                    VG_ASSERT(!height || height == desc.height);
+
                     width = desc.width;
                     height = desc.height;
                 }
@@ -91,7 +95,14 @@ namespace vg::graphics::driver
             const auto & info = key.getDepthStencilAttachmentInfo();
             if (asBool(info.flags & SubPassKey::AttachmentFlags::RenderTarget))
             {
-                VG_ASSERT_NOT_IMPLEMENTED(); // separate depth stencil attachment ?
+                const Texture * tex = m_renderPass->m_depthStencilAttachment->getTexture();
+                auto & desc = tex->getTexDesc();
+
+                VG_ASSERT( !width || width  == desc.width);
+                VG_ASSERT(!height || height == desc.height);
+
+                width = desc.width;
+                height = desc.height;
             }
 
             setViewport(uint4(0,0, width, height));
@@ -212,6 +223,16 @@ namespace vg::graphics::driver
             {
                 m_stateCache.dirtyFlags |= StateCache::DirtyFlags::GraphicPipelineState;
                 m_stateCache.graphicPipelineKey.m_rasterizerState = _rs;
+            }
+        }
+
+        //--------------------------------------------------------------------------------------
+        void CommandList::setDepthStencilState(const driver::DepthStencilState & _ds)
+        {
+            if (_ds != m_stateCache.graphicPipelineKey.m_depthStencilState)
+            {
+                m_stateCache.dirtyFlags |= StateCache::DirtyFlags::GraphicPipelineState;
+                m_stateCache.graphicPipelineKey.m_depthStencilState = _ds;
             }
         }
 

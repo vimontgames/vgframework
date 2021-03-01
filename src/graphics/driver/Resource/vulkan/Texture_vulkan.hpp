@@ -5,21 +5,24 @@ namespace vg::graphics::driver::vulkan
     {
         switch (_format)
         {
-        case PixelFormat::R8G8B8A8_unorm:
-            return VK_FORMAT_R8G8B8A8_UNORM;
+            default:
+                VG_ASSERT(false, "Unhandled pixel format \"%s\"", asString(_format).c_str());
+                return VK_FORMAT_UNDEFINED;
 
-        case PixelFormat::R8G8B8A8_unorm_sRGB:
-            return VK_FORMAT_R8G8B8A8_SRGB;
+            case PixelFormat::R8G8B8A8_unorm:
+                return VK_FORMAT_R8G8B8A8_UNORM;
 
-        case PixelFormat::B8G8R8A8_unorm:
-            return VK_FORMAT_B8G8R8A8_UNORM;
+            case PixelFormat::R8G8B8A8_unorm_sRGB:
+                return VK_FORMAT_R8G8B8A8_SRGB;
 
-        case PixelFormat::B8G8R8A8_unorm_sRGB:
-            return VK_FORMAT_B8G8R8A8_SRGB;
+            case PixelFormat::B8G8R8A8_unorm:
+                return VK_FORMAT_B8G8R8A8_UNORM;
 
-        default:
-            VG_ASSERT(false, "Unhandled pixel format \"%s\"", asString(_format).c_str());
-            return VK_FORMAT_UNDEFINED;
+            case PixelFormat::B8G8R8A8_unorm_sRGB:
+                return VK_FORMAT_B8G8R8A8_SRGB;
+
+            case PixelFormat::Depth32_Stencil8:
+                return VK_FORMAT_D32_SFLOAT_S8_UINT;
         }
     }
 
@@ -126,16 +129,22 @@ namespace vg::graphics::driver::vulkan
                 imgDesc.tiling = VK_IMAGE_TILING_OPTIMAL;
                 imgDesc.usage = VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT;
                 imgDesc.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
-
-                if (_texDesc.isShaderResource())
-                    imgDesc.usage |= VK_IMAGE_USAGE_SAMPLED_BIT;
             }
-            else if (_texDesc.isShaderResource())
+            else if (_texDesc.isDepthStencil())
+            {
+                imgDesc.tiling = VK_IMAGE_TILING_OPTIMAL;
+                imgDesc.usage = VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT;
+                imgDesc.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
+            }
+            else 
             {
                 imgDesc.tiling = VK_IMAGE_TILING_OPTIMAL; // VK_IMAGE_TILING_LINEAR;
-                imgDesc.usage = VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_SAMPLED_BIT;
+                imgDesc.usage = VK_IMAGE_USAGE_TRANSFER_DST_BIT;
                 imgDesc.initialLayout = VK_IMAGE_LAYOUT_PREINITIALIZED;
             }
+
+            if (_texDesc.isShaderResource())
+                imgDesc.usage |= VK_IMAGE_USAGE_SAMPLED_BIT;
 
             VmaAllocationCreateInfo allocCreateInfo = {};
                                     allocCreateInfo.usage = VMA_MEMORY_USAGE_GPU_ONLY;
@@ -160,7 +169,7 @@ namespace vg::graphics::driver::vulkan
 			vkImageViewDesc.components.b = VK_COMPONENT_SWIZZLE_B;
 			vkImageViewDesc.components.a = VK_COMPONENT_SWIZZLE_A;
 
-			vkImageViewDesc.subresourceRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+			vkImageViewDesc.subresourceRange.aspectMask = isDepthStencilFormat(_texDesc.format) ? (VK_IMAGE_ASPECT_DEPTH_BIT/*|VK_IMAGE_ASPECT_STENCIL_BIT*/) : VK_IMAGE_ASPECT_COLOR_BIT; // TODO: create another view for stencil if needed
 			vkImageViewDesc.subresourceRange.baseMipLevel = 0;
 			vkImageViewDesc.subresourceRange.levelCount = 1;
 			vkImageViewDesc.subresourceRange.baseArrayLayer = 0;

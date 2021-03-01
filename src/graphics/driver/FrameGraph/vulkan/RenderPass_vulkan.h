@@ -18,6 +18,9 @@ namespace vg::graphics::driver::vulkan
         void begin(CommandList * _cmdList);
         void end(CommandList * _cmdList);
 
+    private:
+        static bool createVulkanAttachmentDesc(PixelFormat _format, const SubPassKey::AttachmentInfo & _info, VkAttachmentDescription * _att);
+
 	private:
         VkFramebufferCreateInfo                 m_vkFrameBufferInfo;
         VkFramebuffer                           m_vkFrameBuffer;

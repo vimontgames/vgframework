@@ -22,6 +22,9 @@ namespace vg::graphics::driver::dx12
 			D3D12_CPU_DESCRIPTOR_HANDLE		allocRTVHandle	            (core::uint _count = 1);
 			void							freeRTVHandle	            (D3D12_CPU_DESCRIPTOR_HANDLE & _hRTV);
 
+            D3D12_CPU_DESCRIPTOR_HANDLE		allocDSVHandle              (core::uint _count = 1);
+            void							freeDSVHandle               (D3D12_CPU_DESCRIPTOR_HANDLE & _hRTV);
+
             void                            waitGPUIdle();
 
             IDXGISwapChain3 *               getd3d12SwapChain           () const { return m_dxgiSwapChain; }
@@ -53,6 +56,10 @@ namespace vg::graphics::driver::dx12
 			ID3D12DescriptorHeap *			m_RTVDescriptorHeap = nullptr;
             core::IndexPool<core::u16,256>  m_RTVHandleIndexPool;
 			core::uint						m_RTVDescriptorSize = 0;
+
+            ID3D12DescriptorHeap *			m_DSVDescriptorHeap = nullptr;
+            core::IndexPool<core::u16, 16>  m_DSVHandleIndexPool;
+            core::uint						m_DSVDescriptorSize = 0;
 
             UINT64                          m_nextFrameFence;
             ID3D12Fence *                   m_d3d12fence;

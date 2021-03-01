@@ -37,15 +37,26 @@ namespace vg::graphics::renderer
 
         const driver::DeviceParams & deviceParams = device->getDeviceParams();
 
-        FrameGraph::TextureResourceDesc desc;
-        desc.format = device->getBackbufferFormat();
-        desc.width = deviceParams.resolution.x;
-        desc.height = deviceParams.resolution.y;
-        desc.clearColor = float4(0, 0, 0, 0);
-        desc.initState = FrameGraph::Resource::InitState::Clear;
+        FrameGraph::TextureResourceDesc colorDesc;
+                                        colorDesc.format = device->getBackbufferFormat();
+                                        colorDesc.width = deviceParams.resolution.x;
+                                        colorDesc.height = deviceParams.resolution.y;
+                                        colorDesc.clearColor = float4(0, 0, 0, 0);
+                                        colorDesc.initState = FrameGraph::Resource::InitState::Clear;
 
-        createRenderTarget("Color", desc);
+        createRenderTarget("Color", colorDesc);
         writeRenderTarget(0, "Color");
+
+        FrameGraph::TextureResourceDesc depthStencilDesc;
+                                        depthStencilDesc.format = PixelFormat::Depth32_Stencil8;
+                                        depthStencilDesc.width = deviceParams.resolution.x;
+                                        depthStencilDesc.height = deviceParams.resolution.y;
+                                        depthStencilDesc.clearDepth = 1.0f;
+                                        depthStencilDesc.clearStencil = 0x0;
+                                        depthStencilDesc.initState = FrameGraph::Resource::InitState::Clear;
+
+        createRenderTarget("DepthStencil", depthStencilDesc);
+        writeDepthStencil("DepthStencil");
     }
 
     //--------------------------------------------------------------------------------------
@@ -53,12 +64,14 @@ namespace vg::graphics::renderer
     {
         RasterizerState rs(FillMode::Solid, CullMode::None);
         BlendState bs(BlendFactor::One, BlendFactor::Zero, BlendOp::Add);
+        DepthStencilState ds(false);
 
         _cmdList->setRootSignature(m_backgroundRootSignatureHandle);
         _cmdList->setShader(m_backgroundShaderKey);
         _cmdList->setPrimitiveTopology(PrimitiveTopology::TriangleStrip);
         _cmdList->setRasterizerState(rs);
         _cmdList->setBlendState(bs);
+        _cmdList->setDepthStencilState(ds);
 
         BackgroundRootConstants root;
 

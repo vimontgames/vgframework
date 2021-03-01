@@ -94,7 +94,7 @@ namespace vg::graphics::driver::dx12
             const RenderPassKey & renderPasskey = renderPass->getRenderPassKey();
             const auto index = getSubPassIndex();
             const SubPassKey & subPassKey = renderPasskey.m_subPassKeys[index];
-            const auto & attachments = renderPass->m_attachments;
+            const auto & attachments = renderPass->m_colorAttachments;
 
             for (uint i = 0; i < _subPass->m_renderTargetCount; ++i)
             {
@@ -105,9 +105,22 @@ namespace vg::graphics::driver::dx12
                     const FrameGraph::TextureResourceDesc & resourceDesc = res->getTextureResourceDesc();
                     D3D12_RENDER_PASS_RENDER_TARGET_DESC & renderTargetDesc = _subPass->m_d3d12renderPassRenderTargetDesc[i];
                     const Texture * tex = res->getTexture();
-                    _subPass->m_d3d12renderPassRenderTargetDesc->cpuDescriptor = tex->getd3d12RTVHandle();
+                    _subPass->m_d3d12renderPassRenderTargetDesc[i].cpuDescriptor = tex->getd3d12RTVHandle();
                 }
-            }            
+            }      
+
+            if (_subPass->m_depthStencilCount > 0)
+            {
+                const SubPassKey::AttachmentInfo & info = subPassKey.getDepthStencilAttachmentInfo();
+                if (asBool(SubPassKey::AttachmentFlags::RenderTarget & info.flags))
+                {
+                    const FrameGraph::TextureResource * res = _subPass->getUserPasses()[0]->getDepthStencil();
+                    const FrameGraph::TextureResourceDesc & resourceDesc = res->getTextureResourceDesc();
+                    D3D12_RENDER_PASS_DEPTH_STENCIL_DESC & depthStencilDesc = _subPass->m_d3d12renderPassDepthStencilDesc;
+                    const Texture * tex = res->getTexture();
+                    _subPass->m_d3d12renderPassDepthStencilDesc.cpuDescriptor = tex->getd3d12DSVHandle();
+                }
+            }
 
             m_d3d12graphicsCmdList->BeginRenderPass(_subPass->m_renderTargetCount, _subPass->m_renderTargetCount ? _subPass->m_d3d12renderPassRenderTargetDesc : nullptr, _subPass->m_depthStencilCount ? &_subPass->m_d3d12renderPassDepthStencilDesc : nullptr, _subPass->m_d3d12renderPassFlags);
         }

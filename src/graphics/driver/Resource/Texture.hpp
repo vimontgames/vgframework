@@ -18,6 +18,24 @@ namespace vg::graphics::driver
             }
         }
 
+        //--------------------------------------------------------------------------------------
+        bool Texture::isDepthStencilFormat(PixelFormat _format)
+        {
+            switch (_format)
+            {
+                default:
+                    VG_ASSERT(false, "Unhandled PixelFormat \"%s\" (%u)", asString(_format).c_str(), _format);
+                case PixelFormat::R8G8B8A8_unorm:
+                case PixelFormat::R8G8B8A8_unorm_sRGB:
+                case PixelFormat::B8G8R8A8_unorm:
+                case PixelFormat::B8G8R8A8_unorm_sRGB:
+                    return false;
+
+                case PixelFormat::Depth32_Stencil8:
+                    return true;
+            }
+        }
+
 		//--------------------------------------------------------------------------------------
 		Texture::Texture(const TextureDesc & _texDesc, const core::string & _name, void *_initData) :
 			m_texDesc(_texDesc)

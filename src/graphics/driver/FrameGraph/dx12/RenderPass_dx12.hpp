@@ -24,7 +24,7 @@ namespace vg::graphics::driver::dx12
 
             const SubPassKey & subPassKey = m_renderPassKey.m_subPassKeys[i];
 
-            for (uint i = 0; i < m_attachments.size(); ++i)
+            for (uint i = 0; i < m_colorAttachments.size(); ++i)
             {
                 const SubPassKey::AttachmentInfo & info = subPassKey.getColorAttachmentInfo(i);
                 if (asBool(SubPassKey::AttachmentFlags::RenderTarget & info.flags))
@@ -32,7 +32,7 @@ namespace vg::graphics::driver::dx12
                     const FrameGraph::TextureResource * res = subPass->getUserPasses()[0]->getRenderTargets()[subPass->m_renderTargetCount]; // Assume subPass attachment order is the same as renderPass order and that we create different subPasses when attachment changes
                     const FrameGraph::TextureResourceDesc & resourceDesc = res->getTextureResourceDesc();
 
-                    auto & renderTargetDesc = subPass->m_d3d12renderPassRenderTargetDesc[i];
+                    D3D12_RENDER_PASS_RENDER_TARGET_DESC & renderTargetDesc = subPass->m_d3d12renderPassRenderTargetDesc[i];
 
                     // will have to set when 'beginPass'
                     //const Texture * tex = res->getTexture();
@@ -57,6 +57,45 @@ namespace vg::graphics::driver::dx12
                 }
 
                 subPass->m_renderTargetCount++;
+            }
+
+            if (m_depthStencilAttachment)
+            {
+                const SubPassKey::AttachmentInfo & info = subPassKey.getDepthStencilAttachmentInfo();
+                if (asBool(SubPassKey::AttachmentFlags::RenderTarget & info.flags))
+                {
+                    const FrameGraph::TextureResource * res = subPass->getUserPasses()[0]->getDepthStencil();
+                    const FrameGraph::TextureResourceDesc & resourceDesc = res->getTextureResourceDesc();
+
+                    D3D12_RENDER_PASS_DEPTH_STENCIL_DESC & depthStencilDesc = subPass->m_d3d12renderPassDepthStencilDesc;
+
+                    if (1)
+                    {
+                        if (asBool(SubPassKey::AttachmentFlags::Clear & info.flags))
+                        {
+                            depthStencilDesc.DepthBeginningAccess.Type = D3D12_RENDER_PASS_BEGINNING_ACCESS_TYPE_CLEAR;
+                            depthStencilDesc.StencilBeginningAccess.Type = D3D12_RENDER_PASS_BEGINNING_ACCESS_TYPE_CLEAR;
+                        }
+                        else if (asBool(SubPassKey::AttachmentFlags::Preserve & info.flags))
+                        {
+                            depthStencilDesc.DepthBeginningAccess.Type = D3D12_RENDER_PASS_BEGINNING_ACCESS_TYPE_PRESERVE;
+                            depthStencilDesc.StencilBeginningAccess.Type = D3D12_RENDER_PASS_BEGINNING_ACCESS_TYPE_PRESERVE;
+                        }
+                        else
+                        {
+                            depthStencilDesc.DepthBeginningAccess.Type = D3D12_RENDER_PASS_BEGINNING_ACCESS_TYPE_DISCARD;
+                            depthStencilDesc.StencilBeginningAccess.Type = D3D12_RENDER_PASS_BEGINNING_ACCESS_TYPE_DISCARD;
+                        }
+
+                        depthStencilDesc.DepthBeginningAccess.Clear.ClearValue.DepthStencil = { 1.0f,0 };
+                        depthStencilDesc.StencilBeginningAccess.Clear.ClearValue.DepthStencil = { 1.0f,0 };
+                    }
+
+                    depthStencilDesc.DepthEndingAccess.Type = D3D12_RENDER_PASS_ENDING_ACCESS_TYPE_PRESERVE;
+                    depthStencilDesc.StencilEndingAccess.Type = D3D12_RENDER_PASS_ENDING_ACCESS_TYPE_PRESERVE;
+                }
+
+                subPass->m_depthStencilCount = 1;
             }
 		}		
 	}

@@ -56,6 +56,12 @@ namespace vg::graphics::driver
         VG_ASSERT(res);
     }
 
+    //--------------------------------------------------------------------------------------
+    void UserPass::createDepthStencil(const FrameGraph::ResourceID & _resID, FrameGraph::TextureResourceDesc & _resDesc)
+    {
+        createRenderTarget(_resID, _resDesc);
+    }
+
 	//--------------------------------------------------------------------------------------
     // Resource should be:
     // - Persistent and already imported in the graph
@@ -70,9 +76,27 @@ namespace vg::graphics::driver
 	}
 
     //--------------------------------------------------------------------------------------
+    void UserPass::writeDepthStencil(const FrameGraph::ResourceID & _resID)
+    {
+        FrameGraph::TextureResource * res = m_frameGraph->getTextureResource(_resID);
+        VG_ASSERT(res);
+        res->setWriteAtPass(this);
+        m_depthStencil = res;
+    }
+
+    //--------------------------------------------------------------------------------------
     // The pass will read RT '_resID'
     //--------------------------------------------------------------------------------------
     void UserPass::readRenderTarget(const FrameGraph::ResourceID & _resID)
+    {
+        FrameGraph::TextureResource * res = m_frameGraph->getTextureResource(_resID);
+        VG_ASSERT(res);
+        res->setReadAtPass(this);
+        m_textures.push_back(res);
+    }
+
+    //--------------------------------------------------------------------------------------
+    void UserPass::readDepthStencil(const FrameGraph::ResourceID & _resID)
     {
         FrameGraph::TextureResource * res = m_frameGraph->getTextureResource(_resID);
         VG_ASSERT(res);

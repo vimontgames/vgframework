@@ -11,14 +11,23 @@ namespace vg::graphics::driver
             VG_DEBUGPRINT("Init Buffer \"%s\" (", _name.c_str());
 
             if (_bufDesc.elementSize > 1024 * 1024)
-                VG_DEBUGPRINT("%u MB", _bufDesc.elementSize / (1024*1024));
+                VG_DEBUGPRINT("%uMB", _bufDesc.elementSize / (1024*1024));
             else if (_bufDesc.elementSize > 1024)
-                VG_DEBUGPRINT("%u KB", _bufDesc.elementSize/1024);
+                VG_DEBUGPRINT("%uKB", _bufDesc.elementSize/1024);
             else
-                VG_DEBUGPRINT("%u B", _bufDesc.elementSize);
+                VG_DEBUGPRINT("%uB", _bufDesc.elementSize);
 
             if (_bufDesc.elementCount > 1)
-                VG_DEBUGPRINT("x%u", _bufDesc.elementCount);
+            {
+                VG_DEBUGPRINT(" x %u", _bufDesc.elementCount);
+
+                if (_bufDesc.size() > 1024 * 1024)
+                    VG_DEBUGPRINT(" = %uMB", _bufDesc.size() / (1024 * 1024));
+                else if (_bufDesc.size() > 1024)
+                    VG_DEBUGPRINT(" = %uKB", _bufDesc.size() / 1024);
+                else
+                    VG_DEBUGPRINT(" = %uB", _bufDesc.size());
+            }
            
             bool first = true;
             for (uint i = 0; i < countBits(_bufDesc.flags); ++i)

@@ -7,6 +7,7 @@
 #include "graphics/driver/Resource/Texture.h"
 #include "graphics/driver/Resource/Buffer.h"
 #include "graphics/driver/Resource/Resource_consts.h"
+#include "graphics/driver/PipelineState/DepthStencilState.h"
 #include "graphics/driver/PipelineState/RasterizerState.h"
 #include "graphics/driver/PipelineState/BlendState.h"
 #include "graphics/driver/RootSignature/RootSignature.h"

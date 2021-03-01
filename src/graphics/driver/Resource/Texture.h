@@ -13,6 +13,7 @@ namespace vg::graphics::driver
 		{
 		public:
             static core::u32 getPixelFormatSize(PixelFormat _format);
+            static bool isDepthStencilFormat(PixelFormat _format);
 
 			Texture(const TextureDesc & _texDesc, const core::string & _name, void * _initData);
 			~Texture();

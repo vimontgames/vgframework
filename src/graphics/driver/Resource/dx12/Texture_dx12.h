@@ -25,11 +25,14 @@ namespace vg::graphics::driver::dx12
 											~Texture			                ();
 
 		const D3D12_CPU_DESCRIPTOR_HANDLE & getd3d12RTVHandle	                () const;
+        const D3D12_CPU_DESCRIPTOR_HANDLE & getd3d12DSVHandle	                () const;
 
 	private:
         static const inline D3D12_CPU_DESCRIPTOR_HANDLE s_d3d12invalidSRVHandle = { (core::uint)-1 };
 		static const inline D3D12_CPU_DESCRIPTOR_HANDLE s_d3d12invalidRTVHandle = { (core::uint)-1 };
+        static const inline D3D12_CPU_DESCRIPTOR_HANDLE s_d3d12invalidDSVHandle = { (core::uint) - 1 };
         
         D3D12_CPU_DESCRIPTOR_HANDLE			m_d3d12RTVHandle = s_d3d12invalidRTVHandle;
+        D3D12_CPU_DESCRIPTOR_HANDLE			m_d3d12DSVHandle = s_d3d12invalidDSVHandle;
 	};
 }

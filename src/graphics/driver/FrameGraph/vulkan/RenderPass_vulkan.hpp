@@ -20,6 +20,69 @@ namespace vg::graphics::driver::vulkan
 	}
 
     //--------------------------------------------------------------------------------------
+    bool RenderPass::createVulkanAttachmentDesc(PixelFormat _format, const SubPassKey::AttachmentInfo & _info, VkAttachmentDescription * _att)
+    {
+        if (PixelFormat::Unknow == _format)
+            return false;
+
+        const bool isDepthStencil = Texture::isDepthStencilFormat(_format);
+
+        const auto optimalInitialLayout = isDepthStencil ? VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL : VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
+
+        _att->flags = (VkAttachmentDescriptionFlags)0;
+        _att->format = Texture::getVulkanPixelFormat(_format);
+
+        // TODO: RenderPassKey flags for initial/final state for each attachment
+        _att->samples = VK_SAMPLE_COUNT_1_BIT;
+
+        if (asBool(SubPassKey::AttachmentFlags::Clear & _info.flags))
+            _att->loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
+        else if (asBool(SubPassKey::AttachmentFlags::Preserve & _info.flags))
+            _att->loadOp = VK_ATTACHMENT_LOAD_OP_LOAD;
+        else
+            _att->loadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
+
+        switch (_info.begin)
+        {
+            case ResourceState::Undefined:
+                _att->initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
+                break;
+
+            case ResourceState::RenderTarget:
+                _att->initialLayout = optimalInitialLayout;
+                break;
+
+            case ResourceState::ShaderResource:
+                _att->initialLayout = VK_IMAGE_LAYOUT_DEPTH_READ_ONLY_OPTIMAL;
+                break;
+        }
+
+        switch (_info.end)
+        {
+            case ResourceState:: Undefined:
+                _att->finalLayout = VK_IMAGE_LAYOUT_UNDEFINED;
+                break;
+
+            case ResourceState::RenderTarget:
+                _att->finalLayout = optimalInitialLayout;
+                break;
+
+            case ResourceState::ShaderResource:
+                _att->finalLayout = VK_IMAGE_LAYOUT_DEPTH_READ_ONLY_OPTIMAL;
+                break;
+        }
+
+        if (asBool(_info.flags & SubPassKey::AttachmentFlags::Present))
+            _att->finalLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
+
+        _att->storeOp = VK_ATTACHMENT_STORE_OP_STORE;
+        _att->stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
+        _att->stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
+
+        return true;
+    }
+
+    //--------------------------------------------------------------------------------------
     VkRenderPass RenderPass::createVulkanRenderPassFromKey(const RenderPassKey & _key)
     {
         // Add all attachments
@@ -31,83 +94,31 @@ namespace vg::graphics::driver::vulkan
         for (uint i = 0; i < maxRenderTarget; ++i)
         {
             const SubPassKey::AttachmentInfo & info = subPassKey.getColorAttachmentInfo(i);
+            const PixelFormat format = _key.m_colorFormat[i];
+            
+            VkAttachmentDescription att;
 
-            const auto format = _key.m_colorFormat[i];
-            if (PixelFormat::Unknow != format)
-            {
-                VkAttachmentDescription att;
-
-                att.flags = (VkAttachmentDescriptionFlags)0;
-                att.format = Texture::getVulkanPixelFormat(format);
-
-                // TODO: RenderPassKey flags for initial/final state for each attachment
-                att.samples = VK_SAMPLE_COUNT_1_BIT;
-
-                if (asBool(SubPassKey::AttachmentFlags::Clear & info.flags))
-                {
-                    att.loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
-                    //att.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
-                    //att.finalLayout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
-                }
-                else if (asBool(SubPassKey::AttachmentFlags::Preserve & info.flags))
-                {
-                    att.loadOp = VK_ATTACHMENT_LOAD_OP_LOAD;
-                    //att.initialLayout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
-                    //att.finalLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
-                }
-                else
-                {
-                    att.loadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
-                    //att.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
-                    //att.finalLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
-                }
-
-                switch (info.begin)
-                {
-                case ResourceState::Undefined:
-                    att.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
-                    break;
-
-                case ResourceState::RenderTarget:
-                    att.initialLayout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
-                    break;
-
-                case ResourceState::ShaderResource:
-                    att.initialLayout = VK_IMAGE_LAYOUT_DEPTH_READ_ONLY_OPTIMAL;
-                    break;
-                }
-
-                switch (info.end)
-                {
-                    case ResourceState:: Undefined:
-                        att.finalLayout = VK_IMAGE_LAYOUT_UNDEFINED;
-                        break;
-
-                    case ResourceState::RenderTarget:
-                        att.finalLayout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
-                        break;
-
-                    case ResourceState::ShaderResource:
-                        att.finalLayout = VK_IMAGE_LAYOUT_DEPTH_READ_ONLY_OPTIMAL;
-                        break;
-                }
-
-                if (asBool(info.flags & SubPassKey::AttachmentFlags::Present))
-                    att.finalLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
-
-                att.storeOp = VK_ATTACHMENT_STORE_OP_STORE;
-                att.stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
-                att.stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
-
+            if (createVulkanAttachmentDesc(format, info, &att))
                 vkAttachmentDescriptions.push_back(att);
-            }
         }
+
+        // depthstencil
+        const SubPassKey::AttachmentInfo & info = subPassKey.getDepthStencilAttachmentInfo();
+        const PixelFormat format = _key.m_depthStencilFormat;
+
+        VkAttachmentDescription att;
+
+        if (createVulkanAttachmentDesc(format, info, &att))
+            vkAttachmentDescriptions.push_back(att);
 
         // Add subpass descriptions
         vector<VkSubpassDescription> vkSubPasses;
 
         // Foreach subpass we need to say the attachment used
         vector<vector<VkAttachmentReference>> vkAttachmentRefs;
+        vector<VkAttachmentReference> vkDepthStencilAttachmentRefs; // should use only a pointer ?
+
+        // No realloc please
         vkAttachmentRefs.resize(_key.m_subPassCount);
 
         for (uint i = 0; i < _key.m_subPassCount; ++i)
@@ -116,6 +127,8 @@ namespace vg::graphics::driver::vulkan
 
             VkSubpassDescription vkSubPass = {};
             vector<VkAttachmentReference> & vkSubPassAttachmentRefs = vkAttachmentRefs[i];
+
+            uint renderTargetCount = 0;
             
             for (uint j = 0; j < maxRenderTarget; ++j) // maxRenderTarget == maxAttachment per subPass ?
             {
@@ -123,8 +136,27 @@ namespace vg::graphics::driver::vulkan
 
                 if (asBool(SubPassKey::AttachmentFlags::RenderTarget & info.flags))
                 {
+                    const PixelFormat format = _key.m_colorFormat[i];
+
+                    if (Texture::isDepthStencilFormat(format))
+                        continue;
+
                     VkAttachmentReference colorAttRef = { i, VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL };
                     vkSubPassAttachmentRefs.push_back(colorAttRef);
+
+                    ++renderTargetCount;
+                }
+            }
+
+            const SubPassKey::AttachmentInfo & info = subPassKey.getDepthStencilAttachmentInfo();
+            if (asBool(SubPassKey::AttachmentFlags::RenderTarget & info.flags))
+            {
+                const PixelFormat format = _key.m_depthStencilFormat;
+
+                if (Texture::isDepthStencilFormat(format))
+                {
+                    VkAttachmentReference depthStencilAttRef = { renderTargetCount, VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL };
+                    vkDepthStencilAttachmentRefs.push_back(depthStencilAttRef);
                 }
             }
 
@@ -135,7 +167,7 @@ namespace vg::graphics::driver::vulkan
             vkSubPass.colorAttachmentCount = (uint)vkSubPassAttachmentRefs.size();
             vkSubPass.pColorAttachments = vkSubPassAttachmentRefs.data();
             vkSubPass.pResolveAttachments = nullptr;
-            vkSubPass.pDepthStencilAttachment = nullptr;
+            vkSubPass.pDepthStencilAttachment = vkDepthStencilAttachmentRefs.size() > 0 ? &vkDepthStencilAttachmentRefs[0] : nullptr;
             vkSubPass.preserveAttachmentCount = 0;
             vkSubPass.pPreserveAttachments = nullptr;
 
@@ -155,7 +187,7 @@ namespace vg::graphics::driver::vulkan
 
         VkRenderPass vkRenderPass;
         VkDevice & vkDevice = driver::Device::get()->getVulkanDevice();
-        VG_ASSERT_VULKAN(vkCreateRenderPass(vkDevice, &vkRenderPassDesc, nullptr, &vkRenderPass));
+        VG_ASSERT_VULKAN(vkCreateRenderPass(vkDevice, &vkRenderPassDesc, nullptr, &vkRenderPass)); 
         return vkRenderPass;
     }
 
@@ -165,9 +197,11 @@ namespace vg::graphics::driver::vulkan
         auto * device = driver::Device::get();
         VkDevice & vkDevice = device->getVulkanDevice();
 
-        const auto & renderTargets = m_subPasses[0]->getUserPasses()[0]->getRenderTargets();
+        const auto * userPass = m_subPasses[0]->getUserPasses()[0];
+        const auto & renderTargets = userPass->getRenderTargets();
         
-        m_vkClearValues.resize(renderTargets.size());
+        m_vkClearValues.reserve(renderTargets.size() + 1);
+
         u32 width = 0; 
         u32 height = 0;
 
@@ -181,12 +215,28 @@ namespace vg::graphics::driver::vulkan
             width = desc.width;
             height = desc.height;
 
-            VkClearValue vkClearValue;
-            vkClearValue.color.float32[0] = desc.clearColor.x;
-            vkClearValue.color.float32[1] = desc.clearColor.y;
-            vkClearValue.color.float32[2] = desc.clearColor.z;
-            vkClearValue.color.float32[3] = desc.clearColor.w;
-            m_vkClearValues[i] = vkClearValue;
+            VkClearValue vkClearColorValue;
+                         vkClearColorValue.color.float32[0] = desc.clearColor.x;
+                         vkClearColorValue.color.float32[1] = desc.clearColor.y;
+                         vkClearColorValue.color.float32[2] = desc.clearColor.z;
+                         vkClearColorValue.color.float32[3] = desc.clearColor.w;
+
+            m_vkClearValues.push_back(vkClearColorValue);
+        }
+
+        if (userPass->hasDepthStencil())
+        {
+            const auto & depthStencil = userPass->getDepthStencil();
+            const auto & desc = depthStencil->getTextureResourceDesc();
+
+            VG_ASSERT(width == 0 || width == desc.width);
+            VG_ASSERT(height == 0 || height == desc.height);
+
+            VkClearValue vkDepthStencilClearValue;
+                         vkDepthStencilClearValue.depthStencil.depth = desc.clearDepth;
+                         vkDepthStencilClearValue.depthStencil.stencil = desc.clearStencil;
+
+            m_vkClearValues.push_back(vkDepthStencilClearValue);
         }
 
         m_vkRenderPass = device->getVulkanRenderPass(m_renderPassKey);
@@ -217,8 +267,11 @@ namespace vg::graphics::driver::vulkan
         VkDevice & vkDevice = device->getVulkanDevice();
 
         core::vector<VkImageView> vkImageViews;
-        for (const FrameGraph::TextureResource * res : m_attachments)
+        for (const FrameGraph::TextureResource * res : m_colorAttachments)
             vkImageViews.push_back(res->getTexture()->getVulkanImageView());
+
+        if (m_depthStencilAttachment)
+            vkImageViews.push_back(m_depthStencilAttachment->getTexture()->getVulkanImageView());
 
         m_vkFrameBufferInfo.attachmentCount = (uint)vkImageViews.size();
         m_vkFrameBufferInfo.pAttachments = vkImageViews.data();

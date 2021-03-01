@@ -39,6 +39,7 @@ namespace vg::graphics::driver
 
             void                    setRootSignature        (const RootSignatureHandle & _rsHandle);
             void                    setRasterizerState      (const driver::RasterizerState & _rs);
+            void                    setDepthStencilState    (const driver::DepthStencilState & _ds);
             void                    setBlendState           (const driver::BlendState & _bs);
             void                    setShader               (const ShaderKey & _key);
             void                    setPrimitiveTopology    (PrimitiveTopology _topology);

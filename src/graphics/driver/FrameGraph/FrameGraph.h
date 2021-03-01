@@ -69,11 +69,35 @@ namespace vg::graphics::driver
 
 		struct TextureResourceDesc
 		{
+            TextureResourceDesc()
+            {
+
+            }
+
+            TextureResourceDesc(const TextureResourceDesc & _from) :
+                width(_from.width),
+                height(_from.height),
+                format(_from.format),
+                initState(_from.initState),
+                clearColor(_from.clearColor),
+                transient(_from.transient)
+            {
+
+            }
+
 			core::u16			width		= 0;
 			core::u16			height		= 0;
 			PixelFormat			format		= (PixelFormat)0;
 			Resource::InitState initState	= Resource::InitState::Discard;
-			core::float4		clearColor	= core::float4(0,0,0,0);
+            union
+            {
+                core::float4		clearColor = (core::float4)0.0f;
+                struct
+                {
+                    float           clearDepth;
+                    core::u8        clearStencil;
+                };
+            };
             bool                transient = false;
 
             bool operator == (const TextureResourceDesc & _other) const
@@ -147,7 +171,11 @@ namespace vg::graphics::driver
 
 	private:
 
-        Texture * createTextureFromPool(const TextureResourceDesc & _textureResourceDesc);
+        Texture * createRenderTargetFromPool(const TextureResourceDesc & _textureResourceDesc);
+        Texture * createDepthStencilFromPool(const TextureResourceDesc & _textureResourceDesc);
+
+        Texture * createTextureFromPool(const FrameGraph::TextureResourceDesc & _textureResourceDesc, bool _depthStencil);
+
         void releaseTextureFromPool(Texture *& _tex);
 
 		void findDependencies(const UserPass & _renderPassDesc, core::uint _depth);

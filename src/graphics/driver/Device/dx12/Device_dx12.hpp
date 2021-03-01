@@ -121,12 +121,24 @@ namespace vg::graphics::driver::dx12
         VG_ASSERT_SUCCEEDED(device->CreateFence(0, D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(&m_d3d12fence)));
 
         // Rendertarget CPU descriptor heap
-		D3D12_DESCRIPTOR_HEAP_DESC heapDesc = {};
-		heapDesc.NumDescriptors = (uint)m_RTVHandleIndexPool.allocated();
-		heapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_RTV;
-		heapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
-		VG_ASSERT_SUCCEEDED(device->CreateDescriptorHeap(&heapDesc, IID_PPV_ARGS(&m_RTVDescriptorHeap)));
-		m_RTVDescriptorSize = device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
+        {
+            D3D12_DESCRIPTOR_HEAP_DESC heapDesc = {};
+            heapDesc.NumDescriptors = (uint)m_RTVHandleIndexPool.allocated();
+            heapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_RTV;
+            heapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
+            VG_ASSERT_SUCCEEDED(device->CreateDescriptorHeap(&heapDesc, IID_PPV_ARGS(&m_RTVDescriptorHeap)));
+            m_RTVDescriptorSize = device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
+        }
+
+        // DepthStencil CPU descriptor heap
+        {
+            D3D12_DESCRIPTOR_HEAP_DESC heapDesc = {};
+            heapDesc.NumDescriptors = (uint)m_DSVHandleIndexPool.allocated();
+            heapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_DSV;
+            heapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
+            VG_ASSERT_SUCCEEDED(device->CreateDescriptorHeap(&heapDesc, IID_PPV_ARGS(&m_DSVDescriptorHeap)));
+            m_DSVDescriptorSize = device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_DSV);
+        }
 
 		// For now just create command pools to handle latency
 		// We'll need later to have one per thread recording command buffers
@@ -220,6 +232,26 @@ namespace vg::graphics::driver::dx12
 	}
 
     //--------------------------------------------------------------------------------------
+    D3D12_CPU_DESCRIPTOR_HANDLE Device::allocDSVHandle(core::uint _count)
+    {
+        VG_ASSERT(0 != m_DSVDescriptorSize);
+
+        const auto index = m_DSVHandleIndexPool.alloc();
+        D3D12_CPU_DESCRIPTOR_HANDLE handle = { m_DSVDescriptorHeap->GetCPUDescriptorHandleForHeapStart() };
+        handle.ptr += index * m_DSVDescriptorSize;
+
+        return handle;
+    }
+
+    //--------------------------------------------------------------------------------------
+    void Device::freeDSVHandle(D3D12_CPU_DESCRIPTOR_HANDLE & _hDSV)
+    {
+        D3D12_CPU_DESCRIPTOR_HANDLE start = { m_DSVDescriptorHeap->GetCPUDescriptorHandleForHeapStart() };
+        const auto index = (_hDSV.ptr - start.ptr) / m_DSVDescriptorSize;
+        m_DSVHandleIndexPool.free((u16)index);
+    }
+
+    //--------------------------------------------------------------------------------------
     // Wait for everything to finish
     //--------------------------------------------------------------------------------------
     void Device::waitGPUIdle()
@@ -251,6 +283,7 @@ namespace vg::graphics::driver::dx12
         destroyd3d12Backbuffers();
 
 		VG_SAFE_RELEASE(m_RTVDescriptorHeap);
+        VG_SAFE_RELEASE(m_DSVDescriptorHeap);
         VG_SAFE_RELEASE(m_d3d12fence);
 		VG_SAFE_RELEASE(m_dxgiSwapChain);
 

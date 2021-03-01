@@ -25,14 +25,17 @@ namespace vg::graphics::driver
         R8G8B8A8_unorm_sRGB,
 
         B8G8R8A8_unorm,
-        B8G8R8A8_unorm_sRGB
+        B8G8R8A8_unorm_sRGB,
+
+        Depth32_Stencil8
 	};
 
 	enum class TextureFlags : core::u32
 	{
 		None			= 0x00000000,
         Backbuffer		= 0x00000001,
-		RenderTarget	= 0x00000002
+		RenderTarget	= 0x00000002,
+        DepthStencil    = 0x00000004
 	};
 
 	class TextureDesc
@@ -64,6 +67,7 @@ namespace vg::graphics::driver
 
         inline bool isBackbuffer        () const { return testFlags(TextureFlags::Backbuffer); }
         inline bool isRenderTarget      () const { return testFlags(TextureFlags::RenderTarget); }
+        inline bool isDepthStencil      () const { return testFlags(TextureFlags::DepthStencil); }
 
         inline bool isShaderResource    () const { return resource.isShaderResource(); }
 	};

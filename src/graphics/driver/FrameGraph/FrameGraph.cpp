@@ -382,7 +382,7 @@ namespace vg::graphics::driver
 		// TEMP: one render pass with one subpass for each userPass (TODO: make pools)
 		for (auto * userPass : m_userPassStack)
 		{
-            core::vector<TextureResource*> attachments;
+            core::vector<TextureResource*> colorAttachments;
 
             RenderPassKey renderPassKey;
                           renderPassKey.m_subPassCount = 1;
@@ -400,9 +400,9 @@ namespace vg::graphics::driver
 
                     // add or get index of attachment
                     uint attachmentIndex = (uint)-1;
-                    for (uint i = 0; i < attachments.size(); ++i)
+                    for (uint i = 0; i < colorAttachments.size(); ++i)
                     {
-                        if (attachments[i]->getTextureResourceDesc() == textureResourceDesc)
+                        if (colorAttachments[i]->getTextureResourceDesc() == textureResourceDesc)
                             attachmentIndex = i;
                     }
 
@@ -410,14 +410,13 @@ namespace vg::graphics::driver
                     {
                         VG_ASSERT(textureResourceDesc.transient || res->getTexture());
                         res->setTextureResourceDesc(textureResourceDesc);
-                        attachments.push_back(res);
-                        attachmentIndex = uint(attachments.size() - 1);
+                        colorAttachments.push_back(res);
+                        attachmentIndex = uint(colorAttachments.size() - 1);
                     }
 
-                    const ResourceState currentState = res->getCurrentState();
-
                     SubPassKey::AttachmentFlags flags = SubPassKey::AttachmentFlags::RenderTarget;
-                    ResourceState begin = currentState;
+
+                    ResourceState begin = res->getCurrentState();;
                     ResourceState end = ResourceState::RenderTarget;
                     
                     const auto & reads      = res->getReadAtPass();
@@ -473,16 +472,79 @@ namespace vg::graphics::driver
 				}
 			}
 
+            TextureResource * depthStencilAttachment = nullptr;
             FrameGraph::TextureResource * depthStencilRes = userPass->getDepthStencil();
             if (depthStencilRes)
             {
-                VG_ASSERT(false);
                 //renderPassKey.m_depthStencilFormat = depthStencilRes->getTextureResourceDesc().format;
                 //renderPassKey.m_subPassKeys[0].setDepthStencilFlags(SubPassKey::Flags::RenderTarget);
+
+                TextureResource * res = userPass->getDepthStencil();
+
+                const TextureResourceDesc & textureResourceDesc = res->getTextureResourceDesc();
+
+                renderPassKey.m_depthStencilFormat = textureResourceDesc.format;
+
+                SubPassKey::AttachmentFlags flags = SubPassKey::AttachmentFlags::RenderTarget;
+
+                ResourceState begin = res->getCurrentState();;
+                ResourceState end = ResourceState::RenderTarget;
+
+                const auto & reads = res->getReadAtPass();
+                const bool firstRead = reads.size() > 0 && reads[0] == userPass;
+                const bool lastRead = reads.size() > 0 && reads[reads.size() - 1] == userPass;
+
+                const auto & writes = res->getWriteAtPass();
+                const bool firstWrite = writes.size() > 0 && writes[0] == userPass;
+                const bool lastWrite = writes.size() > 0 && writes[writes.size() - 1] == userPass;
+
+                 // first pass writing to RT ? 
+                    if (firstWrite)
+                        flags |= SubPassKey::AttachmentFlags::Clear;
+                    else 
+                        flags |= SubPassKey::AttachmentFlags::Preserve;
+
+                    // first pass writing to backbuffer ?
+                    if (firstWrite)
+                    {
+                        flags |= SubPassKey::AttachmentFlags::Clear;
+                    
+                        //if (backbuffer)
+                        //    begin = ResourceState::Undefined;
+                        //else
+                            #ifdef VG_VULKAN
+                            begin = ResourceState::Undefined;
+                            #elif defined(VG_DX12)
+                            begin = ResourceState::RenderTarget;
+                            #else
+                            VG_ASSERT_NOT_IMPLEMENTED();
+                            #endif
+                    }
+                    else
+                        flags |= SubPassKey::AttachmentFlags::Preserve;
+
+                    // last pass writing to backbuffer ?
+                    //if (lastWrite)
+                    //{
+                    //    if (backbuffer)
+                    //        flags |= SubPassKey::AttachmentFlags::Present;
+                    //}
+
+                    SubPassKey::AttachmentInfo info;
+                                               info.flags = flags;
+                                               info.begin = begin;
+                                               info.end = end;
+
+                    renderPassKey.m_subPassKeys[0].setDepthStencilAttachmentInfo(info);
+
+                    res->setCurrentState(info.end);
+
+                    depthStencilAttachment = res;
             }
 
             RenderPass * renderPass = new RenderPass(renderPassKey);
-            renderPass->m_attachments = std::move(attachments); // transient resources will be lazy allocated before the actuel RenderPass begins
+            renderPass->m_colorAttachments = std::move(colorAttachments); // transient resources will be lazy allocated before the actuel RenderPass begins
+            renderPass->m_depthStencilAttachment = depthStencilAttachment;
 
             SubPass * subPass = new SubPass();
 
@@ -495,7 +557,19 @@ namespace vg::graphics::driver
 	}
 
     //--------------------------------------------------------------------------------------
-    Texture * FrameGraph::createTextureFromPool(const FrameGraph::TextureResourceDesc & _textureResourceDesc)
+    Texture * FrameGraph::createRenderTargetFromPool(const FrameGraph::TextureResourceDesc & _textureResourceDesc)
+    {
+        return createTextureFromPool(_textureResourceDesc, false);
+    }
+
+    //--------------------------------------------------------------------------------------
+    Texture * FrameGraph::createDepthStencilFromPool(const FrameGraph::TextureResourceDesc & _textureResourceDesc)
+    {
+        return createTextureFromPool(_textureResourceDesc, true);
+    }
+
+    //--------------------------------------------------------------------------------------
+    Texture * FrameGraph::createTextureFromPool(const FrameGraph::TextureResourceDesc & _textureResourceDesc, bool _depthStencil)
     {
         for (uint i = 0; i < m_sharedTextures.size(); ++i)
         {
@@ -518,12 +592,12 @@ namespace vg::graphics::driver
                     desc.format = _textureResourceDesc.format;
                     desc.width = _textureResourceDesc.width;
                     desc.height = _textureResourceDesc.height;
-                    desc.flags = TextureFlags::RenderTarget;
+                    desc.flags = _depthStencil ? TextureFlags::DepthStencil : TextureFlags::RenderTarget;
                     desc.resource.m_bindFlags = BindFlags::ShaderResource;
                     desc.resource.m_cpuAccessFlags = CPUAccessFlags::None;
                     desc.resource.m_usage = Usage::Default;
 
-        string name = "TransientTex#" + to_string(m_sharedTextures.size());
+        string name = "Transient#" + to_string(m_sharedTextures.size());
         
         SharedTexture sharedTex;
                       sharedTex.desc = _textureResourceDesc;
@@ -584,7 +658,24 @@ namespace vg::graphics::driver
                         const auto & writes = res->getWriteAtPass();
                         if (writes[0] == userPass)
                         {
-                            Texture * tex = createTextureFromPool(textureResourceDesc);
+                            Texture * tex = createRenderTargetFromPool(textureResourceDesc);
+                            res->setTexture(tex);
+                        }
+                    }
+                }
+
+                TextureResource * depthStencil = userPass->getDepthStencil();
+                if (depthStencil)
+                {
+                    TextureResource * res = depthStencil;
+                    const TextureResourceDesc & textureResourceDesc = res->getTextureResourceDesc();
+
+                    if (textureResourceDesc.transient)
+                    {
+                        const auto & writes = res->getWriteAtPass();
+                        if (writes[0] == userPass)
+                        {
+                            Texture * tex = createDepthStencilFromPool(textureResourceDesc);
                             res->setTexture(tex);
                         }
                     }
@@ -607,32 +698,15 @@ namespace vg::graphics::driver
 			}
 			cmdList->endRenderPass();
            
-            // release all transient resources that ended up being used during this renderpass
+            // release all transient resources that are read or write for the last time during this pass
             for (uint i = 0; i < subPasses.size(); ++i)
             {
                 SubPass * subPass = subPasses[i];
                 const UserPass * userPass = subPass->getUserPasses()[0];
 
                 auto & renderTargets = userPass->getRenderTargets();
-                auto & texturesRead = userPass->getTexturesRead();
 
-                // TODO: add index in userPasses to be able to release after the later between last write and last read
-                //for (uint i = 0; i < renderTargets.size(); ++i)
-                //{
-                //    TextureResource * res = renderTargets[i];
-                //    const TextureResourceDesc & textureResourceDesc = res->getTextureResourceDesc();
-                //
-                //    if (textureResourceDesc.transient)
-                //    {
-                //        const auto & reads = res->getReadAtPass();
-                //        if (reads[reads.size()-1] == userPass)
-                //        {
-                //            Texture * tex = res->getTexture();
-                //            releaseTextureFromPool(tex);
-                //            res->setTexture(nullptr);
-                //        }
-                //    }
-                //}
+                auto & texturesRead = userPass->getTexturesRead();
 
                 for (uint i = 0; i < texturesRead.size(); ++i)
                 {
@@ -642,7 +716,43 @@ namespace vg::graphics::driver
                     if (textureResourceDesc.transient)
                     {
                         const auto & reads = res->getReadAtPass();
-                        if (reads[reads.size() - 1] == userPass)
+                        const auto & writes = res->getWriteAtPass();
+
+                        if (reads.size() > 0 && reads[reads.size() - 1] == userPass)
+                        {
+                            Texture * tex = res->getTexture();
+                            releaseTextureFromPool(tex);
+                            res->resetTexture();
+                        }
+                        else if (writes.size() > 0 && writes[writes.size() - 1] == userPass)
+                        {
+                            Texture * tex = res->getTexture();
+                            releaseTextureFromPool(tex);
+                            res->resetTexture();
+                        }
+                    }
+                }
+
+                // TODO: render targets that would never get read ?
+
+                TextureResource * depthStencil = userPass->getDepthStencil();
+                if (depthStencil)
+                {
+                    TextureResource * res = depthStencil;
+                    const TextureResourceDesc & textureResourceDesc = res->getTextureResourceDesc();
+
+                    if (textureResourceDesc.transient)
+                    {
+                        const auto & reads = res->getReadAtPass();
+                        const auto & writes = res->getWriteAtPass();
+
+                        if (reads.size() > 0 && reads[reads.size() - 1] == userPass)
+                        {
+                            Texture * tex = res->getTexture();
+                            releaseTextureFromPool(tex);
+                            res->resetTexture();
+                        }
+                        else if (writes.size() > 0 && writes[writes.size() - 1] == userPass)
                         {
                             Texture * tex = res->getTexture();
                             releaseTextureFromPool(tex);

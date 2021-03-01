@@ -41,12 +41,14 @@ namespace vg::graphics::renderer
     {
         RasterizerState rs(FillMode::Solid, CullMode::None);
         BlendState bs(BlendFactor::One, BlendFactor::Zero, BlendOp::Add);
+        DepthStencilState ds(false);
 
         _cmdList->setRootSignature(m_postProcessRootSignature);
         _cmdList->setShader(m_postProcessShaderKey);
         _cmdList->setPrimitiveTopology(PrimitiveTopology::TriangleStrip);
         _cmdList->setRasterizerState(rs);
         _cmdList->setBlendState(bs);
+        _cmdList->setDepthStencilState(ds);
 
         RootConstants2D root2D;
 

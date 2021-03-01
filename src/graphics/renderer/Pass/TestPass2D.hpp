@@ -138,12 +138,14 @@ namespace vg::graphics::renderer
 
         RasterizerState rs(FillMode::Solid, CullMode::None);
         BlendState bs(BlendFactor::SrcAlpha, BlendFactor::OneMinusSrcAlpha, BlendOp::Add);
+        DepthStencilState ds(false);
         
         _cmdList->setRootSignature(m_rootSignatureHandle);
         _cmdList->setShader(m_shaderKey);
         _cmdList->setPrimitiveTopology(PrimitiveTopology::TriangleStrip);
         _cmdList->setRasterizerState(rs);
         _cmdList->setBlendState(bs);
+        _cmdList->setDepthStencilState(ds);
 
         auto * device = Device::get();
         auto * bindless = device->getBindlessTable();

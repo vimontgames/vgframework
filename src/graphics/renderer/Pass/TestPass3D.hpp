@@ -86,7 +86,7 @@ namespace vg::graphics::renderer
             { {+1.0f,+1.0f,+1.0f}, { 0.0f, 1.0f } }
         };
 
-        BufferDesc vbDesc(Usage::Default, BindFlags::ShaderResource, CPUAccessFlags::None, BufferFlags::None, sizeof(vbData), 1);
+        BufferDesc vbDesc(Usage::Default, BindFlags::ShaderResource, CPUAccessFlags::None, BufferFlags::None, sizeof(vbData[0]), countof(vbData));
         m_vb = device->createBuffer(vbDesc, "CubeVB", vbData);
 
         u32 texData[] =
@@ -118,6 +118,7 @@ namespace vg::graphics::renderer
     void TestPass3D::setup(double _dt)
     {
         writeRenderTarget(0, "Color");
+        writeDepthStencil("DepthStencil");
     }
 
     //--------------------------------------------------------------------------------------
@@ -161,12 +162,14 @@ namespace vg::graphics::renderer
 
         RasterizerState rs(FillMode::Solid, CullMode::Back);
         BlendState bs(BlendFactor::One, BlendFactor::Zero, BlendOp::Add);
+        DepthStencilState ds(true, true);
 
         _cmdList->setRootSignature(m_rootSignatureHandle);
         _cmdList->setShader(m_forwardShaderKey);
         _cmdList->setPrimitiveTopology(PrimitiveTopology::TriangleList);
         _cmdList->setRasterizerState(rs);
         _cmdList->setBlendState(bs);
+        _cmdList->setDepthStencilState(ds);
 
         float4x4 proj = setPerspectiveProjectionRH(fovY, ar, 0.001f, 1000.0f);
 
@@ -187,9 +190,9 @@ namespace vg::graphics::renderer
         _cmdList->setIndexBuffer(m_ib);
         _cmdList->drawIndexed(m_ib->getBufDesc().elementCount);
 
-        RasterizerState rsWireframe(FillMode::Wireframe, CullMode::None);
-        _cmdList->setShader(m_wireframeShaderKey);
-        _cmdList->setRasterizerState(rsWireframe);
-        _cmdList->drawIndexed(m_ib->getBufDesc().elementCount);
+        //RasterizerState rsWireframe(FillMode::Wireframe, CullMode::None);
+        //_cmdList->setShader(m_wireframeShaderKey);
+        //_cmdList->setRasterizerState(rsWireframe);
+        //_cmdList->drawIndexed(m_ib->getBufDesc().elementCount);
     }
 }

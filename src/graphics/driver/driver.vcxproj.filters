@@ -480,6 +480,24 @@
     <ClInclude Include="PipelineState\GraphicPipelineStateKey.hpp">
       <Filter>PipelineState</Filter>
     </ClInclude>
+    <ClInclude Include="PipelineState\DepthStencilState.h">
+      <Filter>PipelineState</Filter>
+    </ClInclude>
+    <ClInclude Include="PipelineState\DepthStencilState.hpp">
+      <Filter>PipelineState</Filter>
+    </ClInclude>
+    <ClInclude Include="PipelineState\dx12\DepthStencilState_dx12.h">
+      <Filter>PipelineState\dx12</Filter>
+    </ClInclude>
+    <ClInclude Include="PipelineState\dx12\DepthStencilState_dx12.hpp">
+      <Filter>PipelineState\dx12</Filter>
+    </ClInclude>
+    <ClInclude Include="PipelineState\vulkan\DepthStencilState_vulkan.h">
+      <Filter>PipelineState\vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="PipelineState\vulkan\DepthStencilState_vulkan.hpp">
+      <Filter>PipelineState\vulkan</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Device">

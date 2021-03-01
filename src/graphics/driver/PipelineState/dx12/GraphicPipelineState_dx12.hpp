@@ -16,7 +16,27 @@ namespace vg::graphics::driver::dx12
 
         d3d12graphicPipelineDesc.BlendState = _key.m_blendState.getd3d12BlendState();
 
-        d3d12graphicPipelineDesc.DepthStencilState.DepthEnable = false;
+        if (_key.m_depthStencilState.m_depthEnable)
+        {
+            d3d12graphicPipelineDesc.DepthStencilState.DepthEnable = true;
+            d3d12graphicPipelineDesc.DepthStencilState.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ALL;
+            d3d12graphicPipelineDesc.DepthStencilState.DepthFunc = D3D12_COMPARISON_FUNC_LESS;
+            d3d12graphicPipelineDesc.DepthStencilState.StencilEnable = false;
+            d3d12graphicPipelineDesc.DepthStencilState.StencilReadMask = 0x00;
+            d3d12graphicPipelineDesc.DepthStencilState.StencilWriteMask = 0x00;
+            d3d12graphicPipelineDesc.DepthStencilState.FrontFace.StencilFunc = D3D12_COMPARISON_FUNC_ALWAYS;
+            d3d12graphicPipelineDesc.DepthStencilState.FrontFace.StencilPassOp = D3D12_STENCIL_OP_KEEP;
+            d3d12graphicPipelineDesc.DepthStencilState.FrontFace.StencilFailOp = D3D12_STENCIL_OP_KEEP;
+            d3d12graphicPipelineDesc.DepthStencilState.FrontFace.StencilDepthFailOp = D3D12_STENCIL_OP_KEEP;
+            d3d12graphicPipelineDesc.DepthStencilState.BackFace.StencilFunc = D3D12_COMPARISON_FUNC_ALWAYS;
+            d3d12graphicPipelineDesc.DepthStencilState.BackFace.StencilPassOp = D3D12_STENCIL_OP_KEEP;
+            d3d12graphicPipelineDesc.DepthStencilState.BackFace.StencilFailOp = D3D12_STENCIL_OP_KEEP;
+            d3d12graphicPipelineDesc.DepthStencilState.BackFace.StencilDepthFailOp = D3D12_STENCIL_OP_KEEP;
+        }
+        else
+        {
+            d3d12graphicPipelineDesc.DepthStencilState.DepthEnable = false;
+        }
 
         d3d12graphicPipelineDesc.SampleMask = 0xFFFFFFFF;
 
