@@ -9,10 +9,10 @@ namespace vg::graphics::driver::vulkan
         using super = base::DepthStencilState;
 
     public:
-        //D3D12_BLEND_DESC getd3d12BlendState() const;
-        //
-        //static D3D12_BLEND getd3d12Blend(BlendFactor _blend);
-        //static D3D12_BLEND_OP getd3d12BlendOp(BlendOp _blendOp);
+        VkPipelineDepthStencilStateCreateInfo getVulkanDepthStencilState() const;
+
+        static VkCompareOp getVulkanCompareFunc(ComparisonFunc _cmpFunc);
+        static VkStencilOp getVulkanStencilOp(StencilOp _stencilOp);
 
     private:
     };

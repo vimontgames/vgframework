@@ -65,38 +65,7 @@ namespace vg::graphics::driver::vulkan
         VkPipelineRasterizationStateCreateInfo rs = _key.m_rasterizerState.getVulkanRasterizerState();
         vkPipelineDesc.pRasterizationState = &rs;
 
-        VkPipelineDepthStencilStateCreateInfo ds = {};
-                                              ds.sType = VK_STRUCTURE_TYPE_PIPELINE_DEPTH_STENCIL_STATE_CREATE_INFO;
-
-        if (_key.m_depthStencilState.m_depthEnable)
-        {
-            ds.depthTestEnable = _key.m_depthStencilState.m_depthEnable;
-            ds.depthWriteEnable = _key.m_depthStencilState.m_depthWrite;
-            ds.flags = 0x0;
-            ds.depthCompareOp = VK_COMPARE_OP_LESS_OR_EQUAL;
-            ds.depthBoundsTestEnable = false;
-            ds.stencilTestEnable = false;
-
-            ds.front.compareMask = 0x0;
-            ds.front.compareOp = VK_COMPARE_OP_ALWAYS;
-            ds.front.passOp = VK_STENCIL_OP_KEEP;
-            ds.front.depthFailOp = VK_STENCIL_OP_KEEP;
-            ds.front.failOp = VK_STENCIL_OP_KEEP;
-            ds.front.reference = 0x0;
-            ds.front.writeMask = 0x0;
-
-            ds.back.compareMask = 0x0;
-            ds.back.compareOp = VK_COMPARE_OP_ALWAYS;
-            ds.back.passOp = VK_STENCIL_OP_KEEP;
-            ds.back.depthFailOp = VK_STENCIL_OP_KEEP;
-            ds.back.failOp = VK_STENCIL_OP_KEEP;
-            ds.back.reference = 0x0;
-            ds.back.writeMask = 0x0;
-
-            ds.minDepthBounds = 0.0f;
-            ds.maxDepthBounds = 1.0f;
-        }
-
+        VkPipelineDepthStencilStateCreateInfo ds = _key.m_depthStencilState.getVulkanDepthStencilState();
         vkPipelineDesc.pDepthStencilState = &ds;
 
         // Multisample

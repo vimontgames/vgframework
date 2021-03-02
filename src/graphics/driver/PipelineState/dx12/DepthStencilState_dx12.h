@@ -9,10 +9,10 @@ namespace vg::graphics::driver::dx12
         using super = base::DepthStencilState;
 
     public:
-        //D3D12_BLEND_DESC getd3d12BlendState() const;
-        //
-        //static D3D12_BLEND getd3d12Blend(BlendFactor _blend);
-        //static D3D12_BLEND_OP getd3d12BlendOp(BlendOp _blendOp);
+        D3D12_DEPTH_STENCIL_DESC getd3d12DepthStencilState() const;
+        
+        static D3D12_COMPARISON_FUNC getd3d12ComparisonFunc(ComparisonFunc _cmpFunc);
+        static D3D12_STENCIL_OP getd3d12StencilOp(StencilOp _stencilOp);
 
     private:
     };

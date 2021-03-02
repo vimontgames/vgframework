@@ -86,10 +86,10 @@ namespace vg::graphics::renderer
             { {+1.0f,+1.0f,+1.0f}, { 0.0f, 1.0f } }
         };
 
-        BufferDesc vbDesc(Usage::Default, BindFlags::ShaderResource, CPUAccessFlags::None, BufferFlags::None, sizeof(vbData[0]), countof(vbData));
+        BufferDesc vbDesc(Usage::Default, BindFlags::ShaderResource, CPUAccessFlags::None, BufferFlags::None, sizeof(vbData[0]), (uint)countof(vbData));
         m_vb = device->createBuffer(vbDesc, "CubeVB", vbData);
 
-        u32 texData[] =
+        const u32 texData[] =
         {
             0xFF0000FF,
             0xFF00FF00,
@@ -160,9 +160,9 @@ namespace vg::graphics::renderer
         const float fovY = pi / 4.0f;
         const float ar = float(backbuffer.width) / float(backbuffer.height);
 
-        RasterizerState rs(FillMode::Solid, CullMode::Back);
+        RasterizerState rs(FillMode::Solid, CullMode::None);
         BlendState bs(BlendFactor::One, BlendFactor::Zero, BlendOp::Add);
-        DepthStencilState ds(true, true);
+        DepthStencilState ds(true, true, ComparisonFunc::LessEqual);
 
         _cmdList->setRootSignature(m_rootSignatureHandle);
         _cmdList->setShader(m_forwardShaderKey);
