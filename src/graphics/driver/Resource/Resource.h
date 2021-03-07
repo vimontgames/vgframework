@@ -43,5 +43,7 @@ namespace vg::graphics::driver
 {
     class Resource : public VG_GFXAPI::Resource
     {
+    public:
+        const char * getClassName() const final { return "Resource"; }
     };
 }

@@ -29,6 +29,8 @@ namespace vg::graphics::driver
         using super = VG_GFXAPI::Shader;
 
     public:
+        const char * getClassName() const final { return "Shader"; }
+
         Shader(const core::Blob & _bytecode);
         ~Shader();
     };

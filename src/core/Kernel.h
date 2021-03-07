@@ -5,12 +5,14 @@ namespace vg::core
     class IProfiler;
     class IScheduler;
     class IInput;
+    class IObjectFactory;
 
     struct Singletons
     {
-        IProfiler *     profiler  = nullptr;
-        IScheduler *    scheduler = nullptr;
-        IInput *        input     = nullptr;
+        IProfiler *         profiler    = nullptr;
+        IScheduler *        scheduler   = nullptr;
+        IInput *            input       = nullptr;
+        IObjectFactory *    factory     = nullptr;
     };
 
     class Kernel
@@ -25,6 +27,9 @@ namespace vg::core
         static void setInput(IInput * _input);
         static IInput * getInput();
 
+        static void setObjectFactory(IObjectFactory * _factory);
+        static IObjectFactory * getObjectFactory();
+
     private:
         static inline Singletons s_singletons;
     };
@@ -38,7 +43,7 @@ namespace vg::core
     //--------------------------------------------------------------------------------------
     inline IProfiler * Kernel::getProfiler()
     {
-        VG_ASSERT(s_singletons.profiler, "Profiler singleton interface pointer is not specified for this executable or dynamic library.");
+        VG_ASSERT(s_singletons.profiler, "IProfiler interface is not specified for this executable or dynamic library.");
         return s_singletons.profiler;
     }
 
@@ -51,7 +56,7 @@ namespace vg::core
     //--------------------------------------------------------------------------------------
     inline IScheduler * Kernel::getScheduler()
     {
-        VG_ASSERT(s_singletons.scheduler, "Profiler singleton interface pointer is not specified for this executable or dynamic library.");
+        VG_ASSERT(s_singletons.scheduler, "IScheduler interface is not specified for this executable or dynamic library.");
         return s_singletons.scheduler;
     }
 
@@ -64,7 +69,20 @@ namespace vg::core
     //--------------------------------------------------------------------------------------
     inline IInput * Kernel::getInput()
     {
-        VG_ASSERT(s_singletons.input, "Input singleton interface pointer is not specified for this executable or dynamic library.");
+        VG_ASSERT(s_singletons.input, "IInput interface is not specified for this executable or dynamic library.");
         return s_singletons.input;
+    }
+
+    //--------------------------------------------------------------------------------------
+    inline void Kernel::setObjectFactory(IObjectFactory * _factory)
+    {
+        s_singletons.factory = _factory;
+    }
+
+    //--------------------------------------------------------------------------------------
+    inline IObjectFactory * Kernel::getObjectFactory()
+    {
+        VG_ASSERT(s_singletons.factory, "IObjectFactory interface is not specified for this executable or dynamic library.");
+        return s_singletons.factory;
     }
 }

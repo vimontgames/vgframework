@@ -24,6 +24,9 @@ namespace vg::engine
 										Engine		        ();
 										~Engine		        ();
 
+        const char *                    getClassName        () const final { return "Engine"; }
+        bool                            registerClasses     () override;
+
         #ifdef _WIN32
         LRESULT CALLBACK                WndProc             (HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) override;
         #endif

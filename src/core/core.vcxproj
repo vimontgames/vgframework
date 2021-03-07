@@ -24,6 +24,7 @@
     <ClInclude Include="IModel.h" />
     <ClInclude Include="Instance\Instance.h" />
     <ClInclude Include="IObject.h" />
+    <ClInclude Include="IObjectFactory.h" />
     <ClInclude Include="IPlugin.h" />
     <ClInclude Include="IProfiler.h" />
     <ClInclude Include="IScheduler.h" />
@@ -31,6 +32,8 @@
     <ClInclude Include="Math\Math.h" />
     <ClInclude Include="Model\Model.h" />
     <ClInclude Include="Object\Object.h" />
+    <ClInclude Include="Object\ObjectFactory.h" />
+    <ClInclude Include="Object\ObjectFactory.hpp" />
     <ClInclude Include="Plugin\Plugin.h" />
     <ClInclude Include="Pool\IndexPool.h" />
     <ClInclude Include="Pool\Pool.h" />

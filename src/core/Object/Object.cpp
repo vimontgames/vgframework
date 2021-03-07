@@ -1,5 +1,7 @@
 #include "core/Precomp.h"
 #include "Object.h"
+#include "core/Kernel.h"
+#include "ObjectFactory.hpp"
 
 namespace vg::core
 {
@@ -22,6 +24,15 @@ namespace vg::core
 	{
 
 	}
+
+    //--------------------------------------------------------------------------------------
+    const IObjectDescriptor * Object::getClassDesc() const
+    {
+        const auto * factory = Kernel::getObjectFactory();
+        if (factory)
+            return factory->getClassDescriptor(getClassName());
+        return nullptr;
+    }
 
 	//--------------------------------------------------------------------------------------
 	void Object::setName(const string & _name)

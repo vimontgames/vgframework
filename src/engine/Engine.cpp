@@ -8,6 +8,7 @@
 #include "core/Plugin/Plugin.h"
 #include "core/Scheduler/Scheduler.h"
 #include "core/Entity/Entity.h"
+#include "core/Object/ObjectFactory.h"
 
 #include "graphics/renderer/IRenderer.h"
 #include "graphics/renderer/IView.h"
@@ -87,6 +88,12 @@ namespace vg::engine
 
 	}
 
+    //--------------------------------------------------------------------------------------
+    bool Engine::registerClasses()
+    {
+        return false;
+    }
+
 	//--------------------------------------------------------------------------------------
 	void Engine::init(const EngineParams & _params, Singletons & _singletons)
 	{
@@ -117,6 +124,9 @@ namespace vg::engine
         _singletons.input = new Input(_params.renderer.device.window);
         Kernel::setInput(_singletons.input);
 
+        _singletons.factory = new ObjectFactory();
+        Kernel::setObjectFactory(_singletons.factory);
+
 		m_renderer = Plugin::create<graphics::renderer::IRenderer>("renderer", api);
 		m_renderer->init(_params.renderer, _singletons);
 
@@ -126,7 +136,9 @@ namespace vg::engine
         // Register threads after profiler creation
         _singletons.scheduler->registerProfilerThreads();
 
-        createEditorView();
+        registerClasses();
+
+        createEditorView();        
 	}
 
     //--------------------------------------------------------------------------------------
@@ -173,6 +185,10 @@ namespace vg::engine
         IInput * input = Kernel::getInput();
         VG_SAFE_DELETE(input);
         Kernel::setInput(nullptr);
+
+        IObjectFactory * factory = Kernel::getObjectFactory();
+        VG_SAFE_DELETE(factory);
+        Kernel::setObjectFactory(nullptr);
 
 		m_renderer->deinit();
 		m_renderer->release();

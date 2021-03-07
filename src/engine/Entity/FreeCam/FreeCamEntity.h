@@ -9,6 +9,8 @@ namespace vg::engine
         using super = core::Entity;
 
     public:
+        const char * getClassName() const final { return "FreeCamEntity"; }
+
         FreeCamEntity(const core::string & _name);
         ~FreeCamEntity();
 

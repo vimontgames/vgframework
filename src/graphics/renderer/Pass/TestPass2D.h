@@ -8,6 +8,8 @@ namespace vg::graphics::renderer
     class TestPass2D : public driver::UserPass
     {
     public:
+        const char * getClassName() const final { return "TestPass2D"; }
+
         TestPass2D();
         ~TestPass2D();
 

@@ -12,6 +12,8 @@ namespace vg::engine
     class CameraComponent : public vg::core::Component
     {
     public:
+        const char * getClassName() const final { return "CameraComponent"; }
+
         CameraComponent();
         ~CameraComponent();
 

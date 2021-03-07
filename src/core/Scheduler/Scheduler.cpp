@@ -22,6 +22,8 @@ namespace vg::core
     class TestJob : public Job
     {
     public:
+        const char * getClassName() const final { return "TestJob"; }
+
         TestJob(const string & _name) :
             Job(_name)
         {
@@ -46,6 +48,8 @@ namespace vg::core
     class RegisterProfilerThreadJob : public Job
     {
     public:
+        const char * getClassName() const final { return "RegisterProfilerThreadJob"; }
+
         RegisterProfilerThreadJob() : 
             Job("")
         {

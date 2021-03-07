@@ -8,13 +8,17 @@ namespace vg::graphics::renderer
     class ImguiPass : public driver::UserPass
     {
     public:
+        const char * getClassName() const final { return "ImguiPass"; }
+
         void setup(double _dt) override;
         void draw(driver::CommandList * _cmdList) const override;
 
     private:
+        void displayOptionsWindow();
         void displayDebugWindow(double _dt);
 
     private:
+        bool m_isDisplayOptionsWindowsVisible = false;
         bool m_isDebugWindowVisible = true;
         bool m_isAboutWindowVisible = false;
 

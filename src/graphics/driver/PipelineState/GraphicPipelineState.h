@@ -29,6 +29,8 @@ namespace vg::graphics::driver
         using super = VG_GFXAPI::GraphicPipelineState;
 
     public:
+        const char * getClassName() const final { return "GraphicPipelineState"; }
+
         GraphicPipelineState(const GraphicPipelineStateKey & _key);
         ~GraphicPipelineState();
     };

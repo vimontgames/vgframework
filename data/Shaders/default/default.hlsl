@@ -41,7 +41,7 @@ PS_Output PS_Forward(VS_Output _input)
     output.color0.rgba = Texture2DTable[rootConstants3D.data.y].Sample(nearestRepeat, uv).rgba;
 
     //output.color0 = float4(uv, 0, 1);
-    output.color0 = float4(_input.nrm, 1.0f);
+    output.color0 = float4(_input.nrm*0.5f+0.5f, 1.0f);
     
     return output;
 }

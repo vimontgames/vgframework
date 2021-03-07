@@ -18,6 +18,8 @@ namespace vg::graphics::renderer
     class MeshGeometry : public Geometry
     {
     public:
+        const char *                getClassName            () const final { return "MeshGeometry"; }
+
                                     MeshGeometry            (const core::string & _name);
                                     ~MeshGeometry           ();
 

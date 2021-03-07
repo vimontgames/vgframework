@@ -61,6 +61,8 @@ namespace vg::graphics::driver
         using super = VG_GFXAPI::BindlessTable;
 
     public:
+        const char * getClassName() const final { return "BindlessTable"; }
+
         BindlessTable();
         ~BindlessTable();
 

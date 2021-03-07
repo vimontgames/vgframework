@@ -40,6 +40,8 @@ namespace vg::graphics::driver
 		using super = VG_GFXAPI::Texture;
 
 	public:
+        const char * getClassName() const final { return "Texture"; }
+
 		Texture(const TextureDesc & _texDesc, const core::string & _name, void * _initData = nullptr, ReservedSlot _reservedSlot = ReservedSlot::None);
 		~Texture();
 	};

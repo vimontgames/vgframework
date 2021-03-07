@@ -1,5 +1,6 @@
 #include "BackgroundPass.h"
 #include "shaders/background/background.hlsli"
+#include "graphics/renderer/Options/DisplayOptions.h"
 
 namespace vg::graphics::renderer
 {
@@ -77,6 +78,7 @@ namespace vg::graphics::renderer
 
         root.quad.posOffsetScale = float4(0.0f, 0.0f, 1.0f, 1.0f);
         root.quad.uvOffsetScale = float4(0.0f, 0.0f, 1.0f, 1.0f);
+        root.color = DisplayOptions::get()->getBackgroundColor();
         
         _cmdList->setInlineRootConstants(&root, sizeof(BackgroundRootConstants)/sizeof(u32));
         

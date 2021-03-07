@@ -1,6 +1,8 @@
 #include "ImguiPass.h"
 #include "graphics/renderer/imgui/imguiAdapter.h"
+#include "graphics/renderer/Options/DisplayOptions.h"
 #include "core/Plugin/Plugin.h"
+#include "core/IObjectFactory.h"
 
 namespace ImGui
 {
@@ -52,24 +54,25 @@ namespace vg::graphics::renderer
     {
         writeRenderTarget(0, "Backbuffer");
 
-        // Dear ImGui
-
-        ImGuiWindowFlags window_flags = ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoDocking;
-
         ImGuiViewport * viewport = ImGui::GetMainViewport();
-        ImGui::SetNextWindowPos(viewport->GetWorkPos());
-        ImGui::SetNextWindowSize(viewport->GetWorkSize());
+        ImGui::SetNextWindowPos(viewport->WorkPos, ImGuiCond_Appearing, ImVec2(0.0f, 0.0f));
+        ImGui::SetNextWindowSize(viewport->WorkSize, ImGuiCond_FirstUseEver);
         ImGui::SetNextWindowViewport(viewport->ID);
         ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.0f);
         ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
         ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
-        window_flags |= ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove;
-        window_flags |= ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus;
-        window_flags |= ImGuiWindowFlags_NoBackground;
+
+        ImGuiWindowFlags window_flags = ImGuiWindowFlags_MenuBar;
+                         window_flags |= ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove;
+                         window_flags |= ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus;
+                         window_flags |= ImGuiWindowFlags_NoBackground;
 
         ImGuiDockNodeFlags dockspace_flags = ImGuiDockNodeFlags_None | ImGuiDockNodeFlags_PassthruCentralNode;
 
         bool showUI = true;
+
+        //if (m_isDebugWindowVisible)
+        //    displayDebugWindow(_dt);
 
         ImGui::Begin("DockSpace", &showUI, window_flags);
         {
@@ -89,6 +92,9 @@ namespace vg::graphics::renderer
 
                 if (ImGui::BeginMenu("Windows"))
                 {
+                    if (ImGui::MenuItem("Display Options"))
+                        m_isDisplayOptionsWindowsVisible = true;
+
                     if (ImGui::MenuItem("Debug"))
                         m_isDebugWindowVisible = true;
 
@@ -188,7 +194,7 @@ namespace vg::graphics::renderer
 
                     // version
                     ImGui::Text("");
-                    ImGui::Text("");
+                    ImGui::Text("d5a4d53");
                     ImGui::Text("");
                     ImGui::Text("");
                     ImGui::Text("");
@@ -225,14 +231,17 @@ namespace vg::graphics::renderer
                 m_fps = (float)1000.0f / m_dt;
                 m_accum = 0.0;
                 m_frame = 0;
-            }
-
-            if (m_isDebugWindowVisible)
-                displayDebugWindow(_dt);            
+            }          
         }
         ImGui::End();
 
-        //bool showDemo = true;
+        if (m_isDebugWindowVisible)
+            displayDebugWindow(_dt);
+
+        if (m_isDisplayOptionsWindowsVisible)
+            displayOptionsWindow();
+
+        //static bool showDemo = true;
         //ImGui::ShowDemoWindow(&showDemo);
     }
 
@@ -282,9 +291,53 @@ namespace vg::graphics::renderer
             {
                 ImGui::Text("Press 'F6' to hot reload shaders");
             }
-
-            ImGui::End();
         }
+        ImGui::End();
+    }
+
+    
+    //--------------------------------------------------------------------------------------
+    void ImguiPass::displayOptionsWindow()
+    {
+        if (ImGui::Begin("DisplayOptions", &m_isDisplayOptionsWindowsVisible))
+        {
+            core::IObject * displayOptions = DisplayOptions::get();
+
+            const auto * factory = Kernel::getObjectFactory();
+            const auto * classDesc = factory->getClassDescriptor("DisplayOptions");
+
+            for (uint i = 0; i < classDesc->getPropertyCount(); ++i)
+            {
+                const auto & prop = classDesc->getProperty(i);
+                const auto type = prop->getType();
+                const auto name = prop->getName();
+                const auto displayName = prop->getDisplayName();
+                const auto offset = prop->getOffset();
+
+                switch (type)
+                {
+                    default:
+                        VG_ASSERT_ENUM_NOT_IMPLEMENTED(type);
+                        break;
+
+                    case IPropertyDescriptor::Type::Bool:
+                    {
+                        bool * pBool = (bool*)(uint_ptr(displayOptions) + offset);
+                        ImGui::Checkbox(displayName, pBool);
+                    };
+                    break;
+
+                    case IPropertyDescriptor::Type::Float4:
+                    {
+                        float * pFloat4 = (float*)(uint_ptr(displayOptions) + offset);
+                        ImGui::ColorEdit4(displayName, pFloat4);
+                    };
+                    break;
+                }
+            }
+        }
+
+        ImGui::End();
     }
 
     //--------------------------------------------------------------------------------------

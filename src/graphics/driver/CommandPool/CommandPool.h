@@ -28,6 +28,8 @@ namespace vg::graphics::driver
 		using super = VG_GFXAPI::CommandPool;
 
 	public:
+        const char * getClassName() const final { return "CommandPool"; }
+
 		CommandPool(core::uint _frame, core::uint _index);
 		~CommandPool();
 	};

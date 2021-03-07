@@ -121,6 +121,13 @@
     <ClInclude Include="Instance\Instance.h">
       <Filter>Instance</Filter>
     </ClInclude>
+    <ClInclude Include="Object\ObjectFactory.h">
+      <Filter>Object</Filter>
+    </ClInclude>
+    <ClInclude Include="Object\ObjectFactory.hpp">
+      <Filter>Object</Filter>
+    </ClInclude>
+    <ClInclude Include="IObjectFactory.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Math\Math.cpp">

@@ -7,6 +7,7 @@
 struct BackgroundRootConstants
 {
     QuadConstants   quad;
+    float4          color;
 };
 
 #ifndef __cplusplus

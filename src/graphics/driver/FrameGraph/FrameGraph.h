@@ -17,6 +17,8 @@ namespace vg::graphics::driver
 	class FrameGraph : public core::Object
 	{
 	public:
+        const char * getClassName() const final { return "FrameGraph"; }
+
 		using UserPassID = core::string;
 		using ResourceID = core::string;
 

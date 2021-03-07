@@ -15,6 +15,8 @@ namespace vg::graphics::renderer
     class TestPass3D : public driver::UserPass
     {
     public:
+        const char * getClassName() const final { return "TestPass3D"; }
+
         TestPass3D();
         ~TestPass3D();
 

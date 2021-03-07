@@ -31,6 +31,9 @@ namespace vg::graphics::renderer
 								Renderer			();
 								~Renderer			();
 
+        const char *            getClassName        () const final { return "Renderer"; }
+        bool                    registerClasses     () override;
+ 
 		void					init				(const RendererParams & _params, core::Singletons & _singletons) override;
 		void					deinit				() override;
 

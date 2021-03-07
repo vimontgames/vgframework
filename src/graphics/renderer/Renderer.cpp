@@ -17,6 +17,7 @@
 #include "graphics/renderer/Importer/FBX/FBXImporter.h"
 #include "graphics/renderer/Importer/SceneImporterData.h"
 #include "graphics/renderer/Model/Mesh/MeshModel.h"
+#include "graphics/renderer/Options/DisplayOptions.h"
 
 #include "shaders/driver/driver.hlsl.h"
 #include "shaders/default/default.hlsl.h"
@@ -82,6 +83,15 @@ namespace vg::graphics::renderer
         VG_SAFE_DELETE(profiler);
 	}
 
+    //--------------------------------------------------------------------------------------
+    bool Renderer::registerClasses()
+    {
+        core::IObjectFactory * factory = Kernel::getObjectFactory();
+        DisplayOptions::registerClass(*factory);
+
+        return true;
+    }
+
 	//--------------------------------------------------------------------------------------
 	void Renderer::init(const RendererParams & _params, core::Singletons & _singletons)
 	{
@@ -91,6 +101,7 @@ namespace vg::graphics::renderer
         // Singletons used by the renderer
         Kernel::setScheduler(_singletons.scheduler);
         Kernel::setInput(_singletons.input);
+        Kernel::setObjectFactory(_singletons.factory);
 
         // Create device
 		m_device.init(_params.device);
@@ -106,6 +117,10 @@ namespace vg::graphics::renderer
         m_testPass2D = new TestPass2D();
         m_postProcessPass = new PostProcessPass();
         m_imguiPass = new ImguiPass();
+
+        DisplayOptions * displayOptions = new DisplayOptions();
+
+        registerClasses();
 	}
 
     //--------------------------------------------------------------------------------------
@@ -123,6 +138,9 @@ namespace vg::graphics::renderer
 	//--------------------------------------------------------------------------------------
 	void Renderer::deinit()
 	{
+        DisplayOptions * displayOptions = DisplayOptions::get();
+        VG_SAFE_DELETE(displayOptions);
+
         VG_SAFE_RELEASE(m_view);
 
         VG_SAFE_DELETE(m_backgroundPass);

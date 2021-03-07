@@ -1,0 +1,59 @@
+#pragma once
+
+namespace vg::core
+{
+    //--------------------------------------------------------------------------------------
+    // Use these helpers to register classes and class members (MyClass must inherit from core::IObject)
+    //
+    // i.e.: 
+    // static bool MyClass::registerClass(core::IObjectFactory & _factory)
+    // {
+    //     core::IObjectDescriptor & desc = _factory.registerClassHelper(MyClass); 
+    //     desc.registerMemberHelper(MyClass, m_myMember);
+    //     return true;
+    // }
+    //
+    //--------------------------------------------------------------------------------------
+    #define registerClassHelper(c)                      registerClass(#c, [](){ return new c(); })
+    #define registerPropertyHelper(c, m, n)             registerProperty(#m, (&((c*)(nullptr))->m), n)
+
+    class IPropertyDescriptor
+    {
+    public:
+        enum class Type : u32
+        {
+            Undefined = 0,
+            Bool,
+            Float4
+        };
+
+        virtual const char *    getName         () const = 0;
+        virtual const char *    getDisplayName  () const = 0;
+        virtual Type            getType         () const = 0;
+        virtual uint_ptr        getOffset       () const = 0;
+    };
+
+    class IObjectDescriptor
+    {
+    public:
+        virtual                             ~IObjectDescriptor  () {}
+
+        virtual void                        registerProperty    (const char * _propertyName, bool * _offset, const char * _displayName) = 0;
+        virtual void                        registerProperty    (const char * _propertyName, core::float4 * _offset, const char * _displayName) = 0;
+
+        virtual const char *                getClassName        () const = 0;
+        virtual uint                        getPropertyCount    () const = 0;
+        virtual const IPropertyDescriptor * getProperty         (uint _index) const = 0;
+    };
+
+    class IObjectFactory
+    {
+    public:
+        virtual ~IObjectFactory() {}
+
+        using CreateFunc = std::function<Object*()>;
+
+        virtual IObjectDescriptor &         registerClass       (const char * _className, CreateFunc _createFunc) = 0;
+        virtual const IObjectDescriptor *   getClassDescriptor  (const char * _className) const = 0;
+    };
+}

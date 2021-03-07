@@ -28,6 +28,8 @@ namespace vg::graphics::driver
 		using super = VG_GFXAPI::CommandQueue;
 
 	public:
+        const char * getClassName() const final { return "CommandQueue"; }
+
 		CommandQueue(CommandQueueType _type);
 		~CommandQueue();
 	};

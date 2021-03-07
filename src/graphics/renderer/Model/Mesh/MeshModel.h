@@ -16,6 +16,8 @@ namespace vg::graphics::renderer
     class MeshModel : public IMeshModel
     {
     public:
+        const char * getClassName() const final { return "MeshModel"; }
+
         MeshModel(const core::string & _name);
         ~MeshModel();
 

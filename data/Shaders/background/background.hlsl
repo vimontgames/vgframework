@@ -26,7 +26,7 @@ PS_Output_Quad PS_Gradient(VS_Output_Quad _input)
 {
     PS_Output_Quad output;
     float2 uv = _input.uv;
-    output.color0 = float4(uv, 0, 1);
+    output.color0 = rootConstants.color;
     return output;
 }
 

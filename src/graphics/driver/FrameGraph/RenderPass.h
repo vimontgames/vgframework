@@ -39,6 +39,8 @@ namespace vg::graphics::driver
 		using super = VG_GFXAPI::RenderPass;
 
 	public:
+        const char * getClassName() const final { return "RenderPass"; }
+
         //void * operator new(size_t _size);
         //void operator delete(void * _address);
 

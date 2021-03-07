@@ -97,6 +97,8 @@ namespace vg::graphics::driver
 		using super = VG_GFXAPI::CommandList;
 
 	public:
+        const char * getClassName() const final { return "CommandList"; }
+
 		CommandList(driver::CommandListType _type, driver::CommandPool * _cmdPool, core::uint _frame, core::uint _index);
 		~CommandList();
 

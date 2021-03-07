@@ -29,6 +29,6 @@ namespace vg::core
 		void operator=(const Singleton &) = delete;
 
 	public:
-		static inline T * get() { return s_instance; }
+        static inline T * get() { VG_ASSERT(nullptr != s_instance); return s_instance; }
 	};
 }

@@ -30,6 +30,8 @@ namespace vg::graphics::driver
         using super = dxc::ShaderCompiler;
 
     public:
+        const char * getClassName() const final { return "ShaderCompiler"; }
+
         ShaderCompiler();
         ~ShaderCompiler();
 

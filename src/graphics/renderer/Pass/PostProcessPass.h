@@ -8,6 +8,8 @@ namespace vg::graphics::renderer
     class PostProcessPass : public driver::UserPass
     {
     public:
+        const char * getClassName() const final { return "PostProcessPass"; }
+
         PostProcessPass();
         ~PostProcessPass();
 

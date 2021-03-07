@@ -38,11 +38,4 @@ namespace vg::graphics::driver
     // VertexFormat enum to VertexFormat struct traits 
     template <VertexFormat F> struct VertexStorage;
     template <> struct VertexStorage<VertexFormat::Simple> { using type = SimpleVertex;  };
-
-    // template vertex that can support any vertex format
-    template <VertexFormat F> struct Vertex
-    {
-        public:
-            typename VertexStorage<F>::type data;
-    };
 }

@@ -8,6 +8,8 @@ namespace vg::graphics::renderer
     class BackgroundPass : public driver::UserPass
     {
     public:
+        const char * getClassName() const final { return "BackgroundPass"; }
+
         BackgroundPass();
         ~BackgroundPass();
 

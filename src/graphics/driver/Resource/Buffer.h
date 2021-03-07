@@ -38,6 +38,8 @@ namespace vg::graphics::driver
         using super = VG_GFXAPI::Buffer;
 
     public:
+        const char * getClassName() const final { return "Buffer"; }
+
         Buffer(const BufferDesc & _bufDesc, const core::string & _name, void * _initData = nullptr, ReservedSlot _reservedSlot = ReservedSlot::None);
         ~Buffer();
     };

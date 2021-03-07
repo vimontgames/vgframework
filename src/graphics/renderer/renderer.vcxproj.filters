@@ -21,6 +21,9 @@
     <ClCompile Include="Model\Mesh\MeshModel.cpp">
       <Filter>Model\Mesh</Filter>
     </ClCompile>
+    <ClCompile Include="Options\Options.cpp">
+      <Filter>Options</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Renderer.def" />
@@ -87,6 +90,15 @@
     <ClInclude Include="Importer\SceneImporterData.h">
       <Filter>Importer</Filter>
     </ClInclude>
+    <ClInclude Include="Options\DisplayOptions.h">
+      <Filter>Options</Filter>
+    </ClInclude>
+    <ClInclude Include="Options\DisplayOptions.hpp">
+      <Filter>Options</Filter>
+    </ClInclude>
+    <ClInclude Include="Options\Options.h">
+      <Filter>Options</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Pass">
@@ -124,6 +136,9 @@
     </Filter>
     <Filter Include="Model\Mesh">
       <UniqueIdentifier>{eed6b9bd-ce44-472b-b4fc-b64352cb8f67}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Options">
+      <UniqueIdentifier>{a9aacbb9-0638-47b2-b318-6e3c81aef432}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

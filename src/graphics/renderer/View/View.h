@@ -7,6 +7,8 @@ namespace vg::graphics::renderer
     class View : public IView
     {
     public:
+        const char * getClassName() const final { return "View"; }
+
         View(const CreateViewParams & _params);
         ~View();
 

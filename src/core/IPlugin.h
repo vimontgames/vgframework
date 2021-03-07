@@ -12,7 +12,9 @@ namespace vg::core
 			core::u16 major;
 			core::u16 minor;
 		};
-		virtual Version getVersion	() const = 0;
-		virtual			~IPlugin	() {}
+		virtual Version getVersion	    () const = 0;
+		virtual			~IPlugin	    () {}
+
+        virtual bool    registerClasses () = 0;
 	};
 }
