@@ -20,12 +20,16 @@
     <ClInclude Include="Entity\Entity.h" />
     <ClInclude Include="File\File.h" />
     <ClInclude Include="IInput.h" />
+    <ClInclude Include="IInstance.h" />
+    <ClInclude Include="IModel.h" />
+    <ClInclude Include="Instance\Instance.h" />
     <ClInclude Include="IObject.h" />
     <ClInclude Include="IPlugin.h" />
     <ClInclude Include="IProfiler.h" />
     <ClInclude Include="IScheduler.h" />
     <ClInclude Include="Kernel.h" />
     <ClInclude Include="Math\Math.h" />
+    <ClInclude Include="Model\Model.h" />
     <ClInclude Include="Object\Object.h" />
     <ClInclude Include="Plugin\Plugin.h" />
     <ClInclude Include="Pool\IndexPool.h" />
@@ -44,7 +48,9 @@
     <ClCompile Include="Core.cpp" />
     <ClCompile Include="Entity\Entity.cpp" />
     <ClCompile Include="File\File.cpp" />
+    <ClCompile Include="Instance\Instance.cpp" />
     <ClCompile Include="Math\Math.cpp" />
+    <ClCompile Include="Model\Model.cpp" />
     <ClCompile Include="Object\Object.cpp" />
     <ClCompile Include="Plugin\Plugin.cpp" />
     <ClCompile Include="Precomp.cpp">

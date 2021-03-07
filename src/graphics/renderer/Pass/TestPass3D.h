@@ -9,6 +9,8 @@ namespace vg::graphics::driver
 
 namespace vg::graphics::renderer
 {
+    class MeshModel;
+
     //--------------------------------------------------------------------------------------
     class TestPass3D : public driver::UserPass
     {
@@ -24,7 +26,7 @@ namespace vg::graphics::renderer
         driver::ShaderKey               m_forwardShaderKey;
         driver::ShaderKey               m_wireframeShaderKey;
         driver::Texture *               m_texture = nullptr;
-        driver::Buffer *                m_ib = nullptr;
-        driver::Buffer *                m_vb = nullptr;
+        MeshModel *                     m_meshModel = nullptr;
+        MeshModel *                     m_fbxModel = nullptr;
     };
 }

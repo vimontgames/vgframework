@@ -14,6 +14,9 @@
 #include "graphics/renderer/Pass/TestPass2D.h"
 #include "graphics/renderer/Pass/PostProcessPass.h"
 #include "graphics/renderer/View/View.h"
+#include "graphics/renderer/Importer/FBX/FBXImporter.h"
+#include "graphics/renderer/Importer/SceneImporterData.h"
+#include "graphics/renderer/Model/Mesh/MeshModel.h"
 
 #include "shaders/driver/driver.hlsl.h"
 #include "shaders/default/default.hlsl.h"
@@ -63,7 +66,8 @@ namespace vg::graphics::renderer
 	//--------------------------------------------------------------------------------------
 	Renderer::Renderer() :
 		m_device(*(new Device())),
-		m_frameGraph(*(new FrameGraph()))
+		m_frameGraph(*(new FrameGraph())),
+        m_fbxImporter(new FBXImporter())
 	{
         // Profiler instance has to be created by the graphic engine so as to profile the GPU too
         Kernel::setProfiler(new Profiler());
@@ -72,6 +76,7 @@ namespace vg::graphics::renderer
 	//--------------------------------------------------------------------------------------
 	Renderer::~Renderer()
 	{
+        VG_SAFE_DELETE(m_fbxImporter);
 		m_device.release();
         IProfiler * profiler = Kernel::getProfiler();
         VG_SAFE_DELETE(profiler);
@@ -223,4 +228,20 @@ namespace vg::graphics::renderer
             m_view = static_cast<View*>(_view);
         }
     }
+
+    //--------------------------------------------------------------------------------------
+    MeshModel * Renderer::createMeshModel(const core::string & _path)
+    {
+        using namespace driver;
+
+        MeshModel * meshModel = nullptr;
+        SceneImporterData imported;
+        if (FBXImporter::get()->importFBX(_path, imported))
+        {
+            if (imported.meshes.size() > 0)
+                meshModel = MeshModel::createFromImporterData(imported.meshes[0]);
+        }
+
+        return meshModel;
+    }    
 }

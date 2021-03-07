@@ -15,7 +15,7 @@ namespace vg::graphics::driver::dx12
             case PixelFormat::R8G8B8A8_unorm_sRGB:
                 return DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
 
-            case PixelFormat::Depth32_Stencil8:
+            case PixelFormat::D32S8:
                 return DXGI_FORMAT_D32_FLOAT_S8X24_UINT;
         }
     }

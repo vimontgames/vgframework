@@ -1,5 +1,7 @@
 #pragma once
 
+#include "graphics/driver/Resource/Resource_consts.h"
+
 namespace vg::graphics::driver
 {
     enum class BufferFlags : core::u16

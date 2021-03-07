@@ -49,6 +49,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "system", "system", "{4506A0
 		data\Shaders\system\quad.hlsli = data\Shaders\system\quad.hlsli
 		data\Shaders\system\samplers.hlsli = data\Shaders\system\samplers.hlsli
 		data\Shaders\system\semantics.hlsli = data\Shaders\system\semantics.hlsli
+		data\Shaders\system\vertex.hlsl.h = data\Shaders\system\vertex.hlsl.h
+		data\Shaders\system\vertex.hlsli = data\Shaders\system\vertex.hlsli
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "game", "game", "{066BBCB0-5A50-4A72-AE31-9C697192ED46}"

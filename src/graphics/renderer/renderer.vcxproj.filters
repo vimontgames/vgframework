@@ -12,6 +12,15 @@
     <ClCompile Include="View\View.cpp">
       <Filter>View</Filter>
     </ClCompile>
+    <ClCompile Include="Geometry\Geometry.cpp">
+      <Filter>Geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="Importer\FBX\FBXImporter.cpp">
+      <Filter>Importer\FBX</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\Mesh\MeshModel.cpp">
+      <Filter>Model\Mesh</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Renderer.def" />
@@ -58,6 +67,26 @@
       <Filter>View</Filter>
     </ClInclude>
     <ClInclude Include="IView.h" />
+    <ClInclude Include="Geometry\Geometry.h">
+      <Filter>Geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="Importer\FBX\FBXImporter.h">
+      <Filter>Importer\FBX</Filter>
+    </ClInclude>
+    <ClInclude Include="Geometry\Mesh\MeshGeometry.h">
+      <Filter>Geometry\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="Geometry\Mesh\MeshGeometry.hpp">
+      <Filter>Geometry\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\Mesh\MeshModel.h">
+      <Filter>Model\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="IMeshModel.h" />
+    <ClInclude Include="IMeshInstance.h" />
+    <ClInclude Include="Importer\SceneImporterData.h">
+      <Filter>Importer</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Pass">
@@ -74,6 +103,27 @@
     </Filter>
     <Filter Include="Component">
       <UniqueIdentifier>{43d704ee-f697-448d-9531-b792ec4c07fa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Geometry">
+      <UniqueIdentifier>{2a67905f-716e-4686-adce-696ea6fe64ed}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Geometry\Mesh">
+      <UniqueIdentifier>{fcc6c71a-8403-42a5-9fd4-ff15e76e34e0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Importer">
+      <UniqueIdentifier>{f501bfeb-382f-480d-a463-227f43b86ecd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Importer\FBX">
+      <UniqueIdentifier>{5c1945a6-c70c-497f-82cf-6367b05e00a3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Model">
+      <UniqueIdentifier>{c152ceec-f0c2-44cf-a151-c0174f003bf9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Instance">
+      <UniqueIdentifier>{92dfcb89-3b88-45c8-8e2e-538d0c0b0c61}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Model\Mesh">
+      <UniqueIdentifier>{eed6b9bd-ce44-472b-b4fc-b64352cb8f67}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

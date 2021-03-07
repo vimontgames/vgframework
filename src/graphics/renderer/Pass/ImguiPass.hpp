@@ -139,23 +139,26 @@ namespace vg::graphics::renderer
                     ImGui::SetColumnWidth(1, columnWidth[1]);
                     ImGui::SetColumnWidth(2, columnWidth[2]);
 
-                    // name
-                    ImGui::Text("Windows 10 SDK");
+                    // name                        
+                    ImGui::Text("FBX SDK");
                     ImGui::Text("Vulkan SDK");
+                    ImGui::Text("Windows 10 SDK");
 
                     ImGui::Text("");
                     ImGui::NextColumn();
 
                     // version
-                    ImGui::Text("10.0.17763.0");
+                    ImGui::Text("2020.0.1");
                     ImGui::Text("1.2.148.0");
+                    ImGui::Text("10.0.17763.0");
 
                     ImGui::Text("");
                     ImGui::NextColumn();
 
                     // url
-                    ImGui::textURL("developer.microsoft.com/fr-fr/windows/downloads/sdk-archive", "https://developer.microsoft.com/fr-fr/windows/downloads/sdk-archive/");
+                    ImGui::textURL("www.autodesk.com/developer-network/platform-technologies/fbx-sdk-2020-0", "https://www.autodesk.com/developer-network/platform-technologies/fbx-sdk-2020-0");
                     ImGui::textURL("vulkan.lunarg.com/sdk/home", "https://vulkan.lunarg.com/sdk/home");
+                    ImGui::textURL("developer.microsoft.com/fr-fr/windows/downloads/sdk-archive", "https://developer.microsoft.com/fr-fr/windows/downloads/sdk-archive/");
                     ImGui::Text("");
 
                     ImGui::Separator();

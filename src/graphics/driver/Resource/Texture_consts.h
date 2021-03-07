@@ -27,7 +27,7 @@ namespace vg::graphics::driver
         B8G8R8A8_unorm,
         B8G8R8A8_unorm_sRGB,
 
-        Depth32_Stencil8
+        D32S8
 	};
 
 	enum class TextureFlags : core::u32

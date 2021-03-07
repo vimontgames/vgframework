@@ -269,28 +269,6 @@ namespace vg::graphics::driver::dx12
         }
     }
 
-    //--------------------------------------------------------------------------------------
-    void CommandList::bindConstantBuffers(driver::Buffer*(&_constantbuffers)[max_constant_buffers])
-    {
-        //const auto & tables = m_currentRootSignature->getRootSignatureDesc().getTables();
-        //
-        //for (uint i = 0; i < tables.size(); ++i)
-        //{
-        //    const auto & table = tables[i];
-        //    const auto & descriptors = table.getDescriptors();
-        //    for (uint j = 0; j < descriptors.size(); ++j)
-        //    {
-        //        const auto & descriptor = descriptors[j];
-        //        const auto & type = descriptor.getDescriptorType();
-        //
-        //        if (RootSignatureTableDesc::Descriptor::Type::ConstantBuffer == type)
-        //        {
-        //            m_d3d12graphicsCmdList->SetGraphicsRootConstantBufferView();
-        //        }
-        //    }
-        //}
-    };    
-
 	//--------------------------------------------------------------------------------------
 	void CommandList::clear(const core::float4 & _color)
 	{

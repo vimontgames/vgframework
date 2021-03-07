@@ -2,6 +2,8 @@
 
 #include "Buffer_consts.h"
 #include "core/Object/Object.h"
+#include "graphics/driver/Resource/Resource.h"
+#include "graphics/driver/BindlessTable/BindlessTable_consts.h"
 
 namespace vg::graphics::driver
 {

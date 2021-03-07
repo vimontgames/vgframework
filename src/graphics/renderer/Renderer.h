@@ -14,12 +14,14 @@ namespace vg::graphics::driver
 namespace vg::graphics::renderer
 {
     class ImguiAdapter;
+    class FBXImporter;
     class View;
     class BackgroundPass;
     class TestPass3D;
     class TestPass2D;
     class PostProcessPass;
     class ImguiPass;
+    class MeshModel;
 
 	class Renderer : public IRenderer, public core::Singleton<Renderer>
 	{
@@ -44,6 +46,8 @@ namespace vg::graphics::renderer
         void                    waitGPUIdle         () override;
 
         core::IProfiler *       getProfilerInstance () const override;
+
+        MeshModel *             createMeshModel     (const core::string & _path);
         
         #ifdef _WIN32
         LRESULT CALLBACK        WndProc             (HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) override;
@@ -61,6 +65,7 @@ namespace vg::graphics::renderer
 	private:
 		driver::Device &		m_device;
         ImguiAdapter *          m_imgui             = nullptr;
+        FBXImporter *           m_fbxImporter       = nullptr;
 		driver::FrameGraph &	m_frameGraph;
         View *                  m_view              = nullptr;
         BackgroundPass *        m_backgroundPass    = nullptr;

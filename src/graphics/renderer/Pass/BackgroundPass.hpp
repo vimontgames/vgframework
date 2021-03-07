@@ -48,7 +48,7 @@ namespace vg::graphics::renderer
         writeRenderTarget(0, "Color");
 
         FrameGraph::TextureResourceDesc depthStencilDesc;
-                                        depthStencilDesc.format = PixelFormat::Depth32_Stencil8;
+                                        depthStencilDesc.format = PixelFormat::D32S8;
                                         depthStencilDesc.width = deviceParams.resolution.x;
                                         depthStencilDesc.height = deviceParams.resolution.y;
                                         depthStencilDesc.clearDepth = 1.0f;

@@ -10,7 +10,7 @@ namespace vg::engine
     //--------------------------------------------------------------------------------------
     FreeCamEntity::FreeCamEntity(const core::string & _name) : 
         core::Entity(_name),
-        m_pitch(-pi*3.0f/4.0f),
+        m_pitch(-pi*2.0f/4.0f),
         m_yaw(0.0f),
         m_roll(0.0f)
     {
@@ -18,8 +18,8 @@ namespace vg::engine
         (
             1.0f, 0.0f, 0.0f, 0.0f,
             0.0f, 1.0f, 0.0f, 0.0f,
-            0.0f, 0.0f, -1.0f, 0.0f,
-            0.0f, 5.0f, -5.0f, 1.0f
+            0.0f, 0.0f, 1.0f, 0.0f,
+            0.0f, 64.0f, 16.0f, 1.0f
         ));
     }
 
@@ -94,7 +94,7 @@ namespace vg::engine
         {
             const auto delta = input->getMouseDelta();
 
-            m_pitch += clamp((float)delta.y * -mouseSpeedY, -pi, pi);
+            m_pitch += clamp((float)delta.y * mouseSpeedY, -pi, pi);
             m_yaw += clamp((float)delta.x  * mouseSpeedX, -pi, pi);
         }
 
@@ -132,7 +132,7 @@ namespace vg::engine
         J = normalize(float4(mRotXZ.vec1));
         K = normalize(float4(mRotXZ.vec2));
 
-        float4x4 mViewI = float4x4( I, J, K, T );
+        float4x4 mViewI = float4x4( I, -J, K, T );
         
         setMatrix(mViewI);
 

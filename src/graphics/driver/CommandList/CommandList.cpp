@@ -200,7 +200,7 @@ namespace vg::graphics::driver
         {
             if (_ib != m_stateCache.indexBuffer)
             {
-                VG_ASSERT(!_ib || 2 == _ib->getBufDesc().elementSize || 4 == _ib->getBufDesc().elementSize);
+                VG_ASSERT(!_ib || 2 == _ib->getBufDesc().elementSize || 4 == _ib->getBufDesc().elementSize, "Invalid Index Buffer element size %u (should 2 or 4)", _ib->getBufDesc().elementSize);
                 m_stateCache.dirtyFlags |= StateCache::DirtyFlags::IndexBuffer;
                 m_stateCache.indexBuffer = _ib;
             }

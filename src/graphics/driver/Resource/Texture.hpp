@@ -31,7 +31,7 @@ namespace vg::graphics::driver
                 case PixelFormat::B8G8R8A8_unorm_sRGB:
                     return false;
 
-                case PixelFormat::Depth32_Stencil8:
+                case PixelFormat::D32S8:
                     return true;
             }
         }

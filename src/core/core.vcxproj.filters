@@ -43,6 +43,12 @@
     <Filter Include="Component">
       <UniqueIdentifier>{1398f3b5-5831-47e4-a22c-be0860d05535}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Model">
+      <UniqueIdentifier>{78c81c5b-7b3c-43a1-8617-7645a8b2679c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Instance">
+      <UniqueIdentifier>{7270f31e-79ae-442f-a981-38e2184a7ea8}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Math\Math.h">
@@ -107,6 +113,14 @@
     <ClInclude Include="Component\Component.h">
       <Filter>Component</Filter>
     </ClInclude>
+    <ClInclude Include="IModel.h" />
+    <ClInclude Include="IInstance.h" />
+    <ClInclude Include="Model\Model.h">
+      <Filter>Model</Filter>
+    </ClInclude>
+    <ClInclude Include="Instance\Instance.h">
+      <Filter>Instance</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Math\Math.cpp">
@@ -143,6 +157,12 @@
     </ClCompile>
     <ClCompile Include="Component\Component.cpp">
       <Filter>Component</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\Model.cpp">
+      <Filter>Model</Filter>
+    </ClCompile>
+    <ClCompile Include="Instance\Instance.cpp">
+      <Filter>Instance</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

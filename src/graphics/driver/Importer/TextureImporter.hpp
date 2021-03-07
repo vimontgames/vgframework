@@ -16,7 +16,7 @@ namespace vg::graphics::driver
             _data = data;
             _desc.width = width;
             _desc.height = height;
-            _desc.format = PixelFormat::R8G8B8A8_unorm;// R8G8B8A8_unorm_sRGB;
+            _desc.format = _desc.format;
 
             return true;
         }

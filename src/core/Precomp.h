@@ -62,6 +62,8 @@
 #define VG_VERIFY(f) f
 #endif
 
+#define VG_ASSERT_ENUM_NOT_IMPLEMENTED(value) VG_ASSERT(false, "case %s: is not implemented", core::asString(value).c_str());
+
 #define VG_STATIC_ASSERT(condition, message) static_assert(condition, message)
 #define VG_ASSERT_NOT_IMPLEMENTED() VG_ASSERT(false, "Function %s is not implemented", __func__)
 
@@ -96,8 +98,6 @@
 // core
 //--------------------------------------------------------------------------------------
 #include "core.h"
-
-//#define for_enum(ENUM_TYPE, value) for(ENUM_TYPE value = (ENUM_TYPE)0; vg::core::asInteger(value) < vg::core::enumCount<ENUM_TYPE>(); value = ENUM_TYPE(asInteger(value) + 1))
 
 namespace vg
 {

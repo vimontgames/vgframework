@@ -27,7 +27,6 @@ namespace vg::graphics::driver::dx12
         void                                bindViewport                (const core::uint4 & _viewport);
         void                                bindScissor                 (const core::uint4 & _scissor);
         void                                bindRootConstants           (core::uint (& _constants)[max_root_constants]);
-        void                                bindConstantBuffers         (driver::Buffer*(&_constantbuffers)[max_constant_buffers]);
         void                                bindIndexBuffer             (driver::Buffer * _ib);
 
 		void								clear                       (const core::float4 & _color);
