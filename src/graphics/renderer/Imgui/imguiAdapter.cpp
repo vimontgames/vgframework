@@ -41,7 +41,9 @@ namespace vg::graphics::renderer
         io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard | ImGuiConfigFlags_DockingEnable;
         io.ConfigDockingTransparentPayload = true;
 
-        ImGui::StyleColorsClassic();
+        ImGui::StyleColorsDark();
+        //auto & style = ImGui::GetStyle();
+        //style.Colors[ImGuiCol_TitleBg] = ImVec4(1.0f,0.0f,0.0f, 1.0f);
 
         #ifdef _WIN32
         ImGui_ImplWin32_Init(_winHandle); 
