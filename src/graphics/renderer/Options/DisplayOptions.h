@@ -24,8 +24,12 @@ namespace vg::graphics::renderer
 
         core::float4    getBackgroundColor  () { return m_backgroundColor; }
 
+        static bool     load                (IObject * _object);
+        static bool     save                (IObject * _object);
+
     private:
-        core::float4    m_backgroundColor = core::float4(0, 0, 0, 0);
-        bool            m_displayNormals = false;
+        core::float4    m_backgroundColor   = core::float4(0, 0, 0, 0);
+        bool            m_toolMode          = true;
+        bool            m_displayNormals    = false;
     };
 }

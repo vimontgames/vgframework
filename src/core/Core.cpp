@@ -47,6 +47,8 @@ namespace vg::core
 	//--------------------------------------------------------------------------------------
 	bool assertmsg(const char * _condition, const char * _func, const char * _file, int _line, bool & _skip, const char * _format, ...)
 	{
+        const bool isErrorMsg = !strcmp(_condition, "false");
+
 		if (!_skip)
 		{
             string log = string(_file) + " (" + std::to_string(_line) + ")";
@@ -70,15 +72,28 @@ namespace vg::core
 			}
             VG_DEBUGPRINT("\n");
             
-            string title = "Assertion failed in " + string(basename(_file)) + " (" + std::to_string(_line) + ")";
-            string text = string(_condition) + "\n";
+            string title;
+            string text;
+            
+            if (isErrorMsg)
+            {
+                title = "Error in " + string(basename(_file)) + " (" + std::to_string(_line) + ")";
+            }
+            else
+            {
+                title = "Assertion failed in " + string(basename(_file)) + " (" + std::to_string(_line) + ")";
+
+                text = string(_condition) + "\n";
+                if (_format)
+                    text += "\n";
+            }
 
             if (_format)
-                text += "\n" + string(tempBuffer) + "\n";
+                text += string(tempBuffer) + "\n";
 
             text += "\n\"Yes\" to break into debugger\n\"No\" to ignore once\n\"Cancel\" to ignore always";
 
-			switch (messageBox(MessageBoxIcon::Error, MessageBoxType::YesNoCancel, title.c_str(), text.c_str()))
+			switch (messageBox(isErrorMsg ? MessageBoxIcon::Error : MessageBoxIcon::Warning, MessageBoxType::YesNoCancel, title.c_str(), text.c_str()))
 			{
                 default:
                 case MessageBoxResult::Yes:

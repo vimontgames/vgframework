@@ -40,7 +40,7 @@ namespace vg::core
 	//--------------------------------------------------------------------------------------
 	const string * CmdLine::find(const string & _key) const
 	{
-		auto it = m_args.find("SolutionPlatform");
+		auto it = m_args.find(_key);
 		if (m_args.end() != it)
 			return &it->second;
 		else

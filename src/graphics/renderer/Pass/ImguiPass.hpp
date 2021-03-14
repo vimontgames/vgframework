@@ -322,6 +322,8 @@ namespace vg::graphics::renderer
             const auto * factory = Kernel::getObjectFactory();
             const auto * classDesc = factory->getClassDescriptor(className);
 
+            IPropertyDescriptor::Type previous = IPropertyDescriptor::Type::Undefined;
+
             for (uint i = 0; i < classDesc->getPropertyCount(); ++i)
             {
                 const auto & prop = classDesc->getProperty(i);
@@ -330,6 +332,9 @@ namespace vg::graphics::renderer
                 const auto displayName = prop->getDisplayName();
                 const auto offset = prop->getOffset();
                 const auto flags = prop->getFlags();
+
+                if (type == previous)
+                    ImGui::SameLine();
 
                 switch (type)
                 {
@@ -340,6 +345,7 @@ namespace vg::graphics::renderer
                     case IPropertyDescriptor::Type::Bool:
                     {
                         bool * pBool = (bool*)(uint_ptr(_object) + offset);
+
                         ImGui::Checkbox(displayName, pBool);
                     };
                     break;
@@ -370,7 +376,18 @@ namespace vg::graphics::renderer
                         *pString = buffer;
                     }
                     break;
+
+                    case IPropertyDescriptor::Type::Function:
+                    {
+                        IPropertyDescriptor::Func pFunc = (IPropertyDescriptor::Func)offset;
+
+                        if (ImGui::Button(displayName))
+                            pFunc(_object);
+                    }
+                    break;
                 }
+
+                previous = type;
             }
         }
 

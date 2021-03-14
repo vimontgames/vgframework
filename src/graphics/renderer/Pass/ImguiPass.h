@@ -20,7 +20,7 @@ namespace vg::graphics::renderer
         void displayObject(core::IObject * _object, bool * _open);
 
     private:
-        bool m_isDisplayOptionsWindowsVisible = false;
+        bool m_isDisplayOptionsWindowsVisible = true;
         bool m_isDebugWindowVisible = true;
         bool m_isAboutWindowVisible = false;
 

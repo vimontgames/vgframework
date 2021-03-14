@@ -3,13 +3,13 @@
 #include <iostream>
 #include <fstream>
 
+using namespace std;
+
 namespace vg::core
 {
     //--------------------------------------------------------------------------------------
     bool readFile(const core::string & _path, core::string & _out, bool _mustExist)
     {
-        using namespace std;
-
         ifstream file(_path.c_str(), ios::in | ios::binary | ios::ate);
 
         if (file.is_open())
@@ -32,6 +32,20 @@ namespace vg::core
 
         VG_ASSERT(!_mustExist || file.is_open(), "Could not read file \"%s\"", _path.c_str());
         return false;
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool writeFile(const core::string & _path, core::string & _in, bool _mustExist)
+    {
+        ofstream file(_path.c_str(), ios::out | ios::binary);
+
+        if (file.is_open())
+        {
+            file.write(_in.c_str(), _in.size());
+            file.close();
+        }
+
+        return true;
     }
 
     //--------------------------------------------------------------------------------------

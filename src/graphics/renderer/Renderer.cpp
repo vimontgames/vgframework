@@ -119,9 +119,9 @@ namespace vg::graphics::renderer
         m_postProcessPass = new PostProcessPass();
         m_imguiPass = new ImguiPass();
 
-        DisplayOptions * displayOptions = new DisplayOptions();
-
         registerClasses();
+
+        DisplayOptions * displayOptions = new DisplayOptions();
 	}
 
     //--------------------------------------------------------------------------------------
