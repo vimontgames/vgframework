@@ -3,14 +3,19 @@
 #include "core/IPlugin.h"
 #include "Engine_Consts.h"
 
-namespace vg::core
+namespace vg
 {
-    struct Singletons;
-}
+    class IProject;
 
-namespace vg::graphics::renderer
-{
-	class IRenderer;
+    namespace core
+    {
+        struct Singletons;
+    }
+
+    namespace graphics::renderer
+    {
+        class IRenderer;
+    }
 }
 
 namespace vg::engine
@@ -20,6 +25,10 @@ namespace vg::engine
 	public:
 		virtual void							init		    (const EngineParams & _params, core::Singletons & _singletons) = 0;
 		virtual void							deinit		    () = 0;
+
+        virtual bool                            loadProject     (const core::string & _name) = 0;
+        virtual bool                            unloadProject   () = 0;
+        virtual IProject *                      getProject      () const = 0;
 
         virtual core::uint2                     getScreenSize   () const = 0;
 

@@ -2,6 +2,7 @@
 #include "renderer.h"
 
 #include "core/Kernel.h"
+#include "core/IObjectFactory.h"
 #include "graphics/driver/device/device.h"
 #include "graphics/driver/Shader/ShaderManager.h"
 #include "graphics/driver/FrameGraph/FrameGraph.h"
@@ -88,7 +89,18 @@ namespace vg::graphics::renderer
     {
         core::IObjectFactory * factory = Kernel::getObjectFactory();
 
+        core::IObjectDescriptor & desc = factory->registerClassSingletonHelper(Renderer, "Renderer");
+        registerProperties(desc);
+
         DisplayOptions::registerClass(*factory);
+
+        return true;
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool Renderer::registerProperties(IObjectDescriptor & _desc)
+    {
+        super::registerProperties(_desc);
 
         return true;
     }

@@ -219,13 +219,13 @@ namespace vg::graphics::renderer
         _cmdList->setInlineRootConstants(&root3D, RootConstants3DCount);
         _cmdList->setIndexBuffer(ib);
 
-        static bool wireframe = true;
-
         for (uint i = 0; i < batches.size(); ++i)
         {
             const auto & batch = batches[i];
             _cmdList->drawIndexed(batch.count, batch.offset);
         }
+
+        const bool wireframe = DisplayOptions::get()->isWireframeEnabled();
 
         if (wireframe)
         {

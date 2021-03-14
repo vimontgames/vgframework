@@ -14,9 +14,14 @@ namespace vg::core
     // }
     //
     //--------------------------------------------------------------------------------------
-    #define registerClassHelper(className)                                          registerClass(#className, [](){ return new className(); })
+    #define propertyOffset(typeName, className, propertyName)                       (typeName*)&((className*)(nullptr))->propertyName
+
+    #define registerClassHelper(className, displayName)                             registerClass(#className, displayName, IObjectDescriptor::Flags::None, [](){ return new className(); })
+    #define registerClassSingletonHelper(className, displayName)                    registerClass(#className, displayName, IObjectDescriptor::Flags::Singleton, [](){ return className::get(); } )
     #define registerPropertyHelper(className, propertyName, displayName, flags)     registerProperty(#propertyName, (&((className*)(nullptr))->propertyName), displayName, flags)
-    #define registerCallbackHelper(className, funcName, displayName, flags)                    registerProperty(#funcName, funcName, displayName, flags)
+    #define registerCallbackHelper(className, funcName, displayName, flags)         registerProperty(#funcName, funcName, displayName, flags)
+
+    class IResource;
 
     class IPropertyDescriptor
     {
@@ -30,7 +35,9 @@ namespace vg::core
             Bool,
             Float4,
             String,
-            Function,
+            Object,
+            Resource,
+            Function
         };
 
         enum class Flags : u64
@@ -50,16 +57,28 @@ namespace vg::core
     class IObjectDescriptor
     {
     public:
+        using Func = std::function<Object*()>;
+
+        enum class Flags : u64
+        {
+            None        = 0x0000000000000000,
+            Singleton   = 0x0000000000000001
+        };
         virtual                             ~IObjectDescriptor  () {}
 
         virtual void                        registerProperty    (const char * _propertyName, bool * _offset, const char * _displayName, IPropertyDescriptor::Flags _flags) = 0;
         virtual void                        registerProperty    (const char * _propertyName, core::float4 * _offset, const char * _displayName, IPropertyDescriptor::Flags _flags) = 0;
         virtual void                        registerProperty    (const char * _propertyName, core::string * _offset, const char * _displayName, IPropertyDescriptor::Flags _flags) = 0;
+        virtual void                        registerProperty    (const char * _propertyName, core::IResource ** _offset, const char * _displayName, IPropertyDescriptor::Flags _flags) = 0;
+        virtual void                        registerProperty    (const char * _propertyName, core::IObject ** _offset, const char * _displayName = nullptr, IPropertyDescriptor::Flags _flags = IPropertyDescriptor::Flags::None) = 0;
         virtual void                        registerProperty    (const char * _propertyName, IPropertyDescriptor::Func _funcPtr, const char * _displayName, IPropertyDescriptor::Flags _flags) = 0;
 
         virtual const char *                getClassName        () const = 0;
+        virtual const char *                getClassDisplayName () const = 0;
         virtual uint                        getPropertyCount    () const = 0;
         virtual const IPropertyDescriptor * getProperty         (uint _index) const = 0;
+        virtual Func                        getCreateFunc       () const = 0;
+        virtual IObjectDescriptor::Flags    getFlags            () const = 0;
     };
 
     class IObjectFactory
@@ -67,11 +86,10 @@ namespace vg::core
     public:
         virtual ~IObjectFactory() {}
 
-        using CreateFunc = std::function<Object*()>;
-
-        virtual IObjectDescriptor &         registerClass       (const char * _className, CreateFunc _createFunc) = 0;
+        virtual IObjectDescriptor &         registerClass       (const char * _className, const char * _displayName, IObjectDescriptor::Flags _flags, IObjectDescriptor::Func _createFunc) = 0;
         virtual const IObjectDescriptor *   getClassDescriptor  (const char * _className) const = 0;
         virtual bool                        isRegisteredClass   (const char * _className) const = 0;
+        virtual Object *                    getSingleton        (const char * _className) const = 0;
 
         virtual bool                        serializeFromString (IObject * _object, const string & _in) const = 0;
         virtual bool                        serializeToString   (string & _out, const IObject * _object) const = 0;

@@ -41,23 +41,31 @@ namespace vg::core
             void                        registerProperty    (const char * _propertyName, bool * _offset, const char * _displayName, IPropertyDescriptor::Flags _flags) final;
             void                        registerProperty    (const char * _propertyName, core::float4 * _offset, const char * _displayName, IPropertyDescriptor::Flags _flags) final;
             void                        registerProperty    (const char * _propertyName, core::string * _offset, const char * _displayName, IPropertyDescriptor::Flags _flags) final;
+            void                        registerProperty    (const char * _propertyName, core::IResource ** _offset, const char * _displayName, IPropertyDescriptor::Flags _flags) final;
+            void                        registerProperty    (const char * _propertyName, core::IObject ** _offset, const char * _displayName, IPropertyDescriptor::Flags _flags) final;
             void                        registerProperty    (const char * _propertyName, IPropertyDescriptor::Func _funcPtr, const char * _displayName, IPropertyDescriptor::Flags _flags) final;
 
             const char *                getClassName        () const final;
+            const char *                getClassDisplayName () const final;
             uint                        getPropertyCount    () const final;
             const IPropertyDescriptor * getProperty         (uint _index) const final;
+            IObjectDescriptor::Func     getCreateFunc       () const final;
+            IObjectDescriptor::Flags    getFlags            () const final;
 
             const char *                name = nullptr;
-            CreateFunc                  createFunc;
+            const char *                displayName = nullptr;
+            IObjectDescriptor::Flags    flags = IObjectDescriptor::Flags::None;
+            IObjectDescriptor::Func     createFunc;
             vector<ClassProperty>       properties;
 
         private:
             template <typename T> void  registerClassMemberT(const char * _propertyName, T * _offset, const char * _displayName, IPropertyDescriptor::Flags _flags);
         };
 
-        IObjectDescriptor &             registerClass       (const char * _className, CreateFunc _createFunc) final;
+        IObjectDescriptor &             registerClass       (const char * _className, const char * _displayName, IObjectDescriptor::Flags _flags, IObjectDescriptor::Func _createFunc) final;
         const IObjectDescriptor *       getClassDescriptor  (const char * _className) const final;
         bool                            isRegisteredClass   (const char * _className) const final;
+        Object *                        getSingleton        (const char * _className) const final;
 
         bool                            serializeFromString (IObject * _object, const string & _in) const final;
         bool                            serializeToString   (string & _out, const IObject * _object) const final;

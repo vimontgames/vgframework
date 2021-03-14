@@ -9,7 +9,7 @@ class PlayerEntity;
 
 namespace vg
 {
-    class Application
+    class Application 
     {
     public:
         Application(vg::engine::IEngine & _engine);
@@ -18,7 +18,7 @@ namespace vg
         bool update();
 
     private:
-        vg::engine::IEngine &   m_engine;
+        vg::engine::IEngine & m_engine;
     };
 
 }

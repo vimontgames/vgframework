@@ -1,0 +1,15 @@
+#pragma once
+
+#include "Object/Object.h"
+
+namespace vg::core
+{
+    class IResource : public Object
+    {
+    public:
+        virtual ~IResource() {}
+        virtual IObject * get() const = 0;
+        virtual const string & getPath() const = 0;
+        virtual bool setPath(const string & _path) = 0;
+    };
+}

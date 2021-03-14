@@ -55,6 +55,18 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
+    void ObjectFactory::ClassDesc::registerProperty(const char * _propertyName, core::IResource ** _offset, const char * _displayName, IPropertyDescriptor::Flags _flags)
+    {
+        registerClassMemberT(_propertyName, _offset, _displayName, _flags);
+    }
+
+    //--------------------------------------------------------------------------------------
+    void ObjectFactory::ClassDesc::registerProperty(const char * _propertyName, core::IObject ** _offset, const char * _displayName, IPropertyDescriptor::Flags _flags)
+    {
+        registerClassMemberT(_propertyName, _offset, _displayName, _flags);
+    }
+
+    //--------------------------------------------------------------------------------------
     void ObjectFactory::ClassDesc::registerProperty(const char * _propertyName, IPropertyDescriptor::Func _funcPtr, const char * _displayName, IPropertyDescriptor::Flags _flags)
     {
         ClassProperty prop(_propertyName, IPropertyDescriptor::Type::Function, (uint_ptr)_funcPtr, _displayName, _flags);
@@ -66,6 +78,12 @@ namespace vg::core
     const char * ObjectFactory::ClassDesc::getClassName() const
     {
         return name;
+    }
+
+    //--------------------------------------------------------------------------------------
+    const char * ObjectFactory::ClassDesc::getClassDisplayName() const
+    {
+        return displayName;
     }
 
     //--------------------------------------------------------------------------------------
@@ -81,14 +99,28 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
+    IObjectDescriptor::Func ObjectFactory::ClassDesc::getCreateFunc() const
+    {
+        return createFunc;
+    }
+
+    //--------------------------------------------------------------------------------------
+    IObjectDescriptor::Flags ObjectFactory::ClassDesc::getFlags() const
+    {
+        return flags;
+    }
+
+    //--------------------------------------------------------------------------------------
     // Returned pointer shall not be stored but used immediatly ;)
     //--------------------------------------------------------------------------------------
-    IObjectDescriptor & ObjectFactory::registerClass(const char * _className, CreateFunc _createFunc)
+    IObjectDescriptor & ObjectFactory::registerClass(const char * _className, const char * _displayName, IObjectDescriptor::Flags _flags, IObjectDescriptor::Func _createFunc)
     {
         VG_ASSERT(!isRegisteredClass(_className), "Class \"%s\" is already registered", _className);
 
         ClassDesc classDesc;
                   classDesc.name = _className;
+                  classDesc.displayName = _displayName ? _displayName : _className;
+                  classDesc.flags = _flags;
                   classDesc.createFunc = _createFunc;
 
         m_classes.push_back(classDesc);
@@ -99,13 +131,33 @@ namespace vg::core
     //--------------------------------------------------------------------------------------
     bool ObjectFactory::isRegisteredClass(const char * _className) const
     {
-        return nullptr != getClassDescriptor(_className);
+        for (uint i = 0; i < m_classes.size(); ++i)
+        {
+            const auto & classDesc = m_classes[i];
+            if (!strcmp(classDesc.name, _className))
+                return true;
+        }
+        return false;
+    }
+
+    //--------------------------------------------------------------------------------------
+    Object * ObjectFactory::getSingleton(const char * _className) const
+    {
+        const auto * desc = getClassDescriptor(_className);
+        if (desc)
+        {
+            VG_ASSERT(asBool(IObjectDescriptor::Flags::Singleton & desc->getFlags()));
+            return desc->getCreateFunc()();
+        }
+        return nullptr;
     }
 
     template <typename T> struct TypeToEnum;
     template <> struct TypeToEnum<bool>                         { static constexpr auto value = IPropertyDescriptor::Type::Bool; };
     template <> struct TypeToEnum<core::float4>                 { static constexpr auto value = IPropertyDescriptor::Type::Float4; };
     template <> struct TypeToEnum<core::string>                 { static constexpr auto value = IPropertyDescriptor::Type::String; };
+    template <> struct TypeToEnum<IObject*>                     { static constexpr auto value = IPropertyDescriptor::Type::Object; };
+    template <> struct TypeToEnum<IResource*>                   { static constexpr auto value = IPropertyDescriptor::Type::Resource; };
     template <> struct TypeToEnum<IPropertyDescriptor::Func>    { static constexpr auto value = IPropertyDescriptor::Type::Function; };
 
     //--------------------------------------------------------------------------------------
@@ -131,6 +183,8 @@ namespace vg::core
             if (!strcmp(classDesc.name, _className))
                 return &classDesc;
         }
+
+        VG_ASSERT(false, "class \"%s\" has no class descriptor", _className);
         return nullptr;
     }
 

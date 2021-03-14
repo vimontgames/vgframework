@@ -15,7 +15,7 @@ namespace vg::graphics::renderer
     //--------------------------------------------------------------------------------------
     bool DisplayOptions::registerClass(IObjectFactory & _factory)
     {
-        core::IObjectDescriptor & desc = _factory.registerClassHelper(DisplayOptions);
+        core::IObjectDescriptor & desc = _factory.registerClassSingletonHelper(DisplayOptions, "Display Options");
 
         registerProperties(desc);
 
@@ -54,8 +54,9 @@ namespace vg::graphics::renderer
         super::registerProperties(_desc);
 
         _desc.registerPropertyHelper(DisplayOptions, m_toolMode, "Tool mode", IPropertyDescriptor::Flags::None);
-        _desc.registerPropertyHelper(DisplayOptions, m_displayNormals, "Display normals", IPropertyDescriptor::Flags::None);
-        _desc.registerPropertyHelper(DisplayOptions, m_backgroundColor, "Background color", IPropertyDescriptor::Flags::Color);
+        _desc.registerPropertyHelper(DisplayOptions, m_wireframe, "Wireframe", IPropertyDescriptor::Flags::None);
+        _desc.registerPropertyHelper(DisplayOptions, m_displayNormals, "Normals", IPropertyDescriptor::Flags::None);
+        _desc.registerPropertyHelper(DisplayOptions, m_backgroundColor, "Background", IPropertyDescriptor::Flags::Color);
 
         _desc.registerCallbackHelper(DisplayOptions, load, "Load", IPropertyDescriptor::Flags::None);
         _desc.registerCallbackHelper(DisplayOptions, save, "Save", IPropertyDescriptor::Flags::None);

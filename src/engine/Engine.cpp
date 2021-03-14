@@ -9,6 +9,7 @@
 #include "core/Scheduler/Scheduler.h"
 #include "core/Entity/Entity.h"
 #include "core/Object/ObjectFactory.h"
+#include "application/IProject.h"
 
 #include "graphics/renderer/IRenderer.h"
 #include "graphics/renderer/IView.h"
@@ -79,7 +80,7 @@ namespace vg::engine
 	//--------------------------------------------------------------------------------------
 	Engine::Engine()
 	{
-
+        
 	}
 
 	//--------------------------------------------------------------------------------------
@@ -93,7 +94,48 @@ namespace vg::engine
     {
         core::IObjectFactory * factory = Kernel::getObjectFactory();
 
+        Resource::registerClass(*factory);
+
+        core::IObjectDescriptor & desc = factory->registerClassSingletonHelper(Engine, "Engine");
+        registerProperties(desc);
+
         return true;
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool Engine::registerProperties(IObjectDescriptor & _desc)
+    {
+        super::registerProperties(_desc);
+
+        //_desc.registerCallbackHelper(Engine, createProject, "Create Project", IPropertyDescriptor::Flags::None);
+        //_desc.registerCallbackHelper(Engine, loadProject, "Load", IPropertyDescriptor::Flags::None);
+        //_desc.registerCallbackHelper(Engine, saveProject, "Save", IPropertyDescriptor::Flags::None);
+
+        //_desc.registerPropertyHelper(Engine, m_projectPath, "Project", IPropertyDescriptor::Flags::None);
+        //_desc.registerProperty("Project", (IObject**)(&((Engine*)(nullptr))->m_project), "Project", IPropertyDescriptor::Flags::None);
+
+        //_desc.registerPropertyHelper(Engine, m_project, "Project", IPropertyDescriptor::Flags::None);
+        _desc.registerProperty("m_project", (IResource**)(&((Engine*)(nullptr))->m_project), "Project", IPropertyDescriptor::Flags::None);
+
+        return true;
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool Engine::createProject(core::IObject * _engine)
+    {
+        return false;
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool Engine::loadProject(core::IObject * _engine)
+    {
+        return false;
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool Engine::saveProject(core::IObject * _engine)
+    {
+        return false;
     }
 
 	//--------------------------------------------------------------------------------------
@@ -195,6 +237,24 @@ namespace vg::engine
 		m_renderer->deinit();
 		m_renderer->release();
 	}
+
+    //--------------------------------------------------------------------------------------
+    bool Engine::loadProject(const core::string & _name)
+    {
+        return false;
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool Engine::unloadProject()
+    {
+        return false;
+    }
+
+    //--------------------------------------------------------------------------------------
+    IProject * Engine::getProject() const
+    {
+        return dynamic_cast<IProject*>(m_project.get());
+    }
 
     //--------------------------------------------------------------------------------------
     void Engine::updateDt()

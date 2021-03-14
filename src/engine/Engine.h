@@ -1,6 +1,8 @@
 #pragma once
 
 #include "engine/IEngine.h"
+#include "core/Singleton/Singleton.h"
+#include "core/Resource/Resource.h"
 
 namespace vg::core
 {
@@ -16,28 +18,39 @@ namespace vg::engine
 {
     class FreeCamEntity;
 
-	class Engine : public IEngine
+	class Engine : public IEngine, public core::Singleton<Engine>
 	{
 	public:
-		IPlugin::Version				getVersion	        () const override;
+        using super = IEngine;
+
+		IPlugin::Version				getVersion	        () const final;
 
 										Engine		        ();
 										~Engine		        ();
 
         const char *                    getClassName        () const final { return "Engine"; }
         bool                            registerClasses     () override;
+        static bool                     registerProperties  (core::IObjectDescriptor & _desc);
+
+        static bool                     createProject       (core::IObject * _engine);
+        static bool                     loadProject         (core::IObject * _engine);
+        static bool                     saveProject         (core::IObject * _engine);
 
         #ifdef _WIN32
-        LRESULT CALLBACK                WndProc             (HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) override;
+        LRESULT CALLBACK                WndProc             (HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) final;
         #endif
 
-		void							init		        (const EngineParams & _params, core::Singletons & _singletons) override;
+		void							init		        (const EngineParams & _params, core::Singletons & _singletons) final;
 		void							deinit		        () override;
 
-		void							runOneFrame	        () override;
+        bool                            loadProject         (const core::string & _name) final;
+        bool                            unloadProject       () final;
+        IProject *                      getProject          () const final;
 
-        core::uint2                     getScreenSize       () const override;
-		graphics::renderer::IRenderer *	getRenderer	        () const override;
+		void							runOneFrame	        () final;
+
+        core::uint2                     getScreenSize       () const final;
+		graphics::renderer::IRenderer *	getRenderer	        () const final;
 
     public:
         void                            createEditorView    ();
@@ -51,6 +64,8 @@ namespace vg::engine
         void                            updateEntities      (double _dt);
 
 	private:
+        core::Resource                  m_project;
+
 		graphics::renderer::IRenderer *	m_renderer      = nullptr;
         graphics::renderer::IView *     m_editorView    = nullptr;
         FreeCamEntity *                 m_freeCam       = nullptr;

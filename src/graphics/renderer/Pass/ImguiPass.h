@@ -15,13 +15,21 @@ namespace vg::graphics::renderer
 
     private:
         void displayOptionsWindow();
-        void displayDebugWindow(double _dt);
+        void displayEngineWindow();
+        void displayRendererWindow();
+        void displaySceneWindow();
+        void displayPerformanceWindow(double _dt);
 
-        void displayObject(core::IObject * _object, bool * _open);
+        void displayObject(core::IObject * _object);
 
     private:
         bool m_isDisplayOptionsWindowsVisible = true;
-        bool m_isDebugWindowVisible = true;
+
+        bool m_isEngineWindowVisible = true;
+        bool m_isRendererWindowVisible = true;
+        bool m_isPerfWindowVisible = true;
+        bool m_isSceneWindowVisible = true;
+
         bool m_isAboutWindowVisible = false;
 
         core::uint  m_captureFrameCounter = 0;

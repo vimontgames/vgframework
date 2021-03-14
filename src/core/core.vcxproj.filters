@@ -49,6 +49,9 @@
     <Filter Include="Instance">
       <UniqueIdentifier>{7270f31e-79ae-442f-a981-38e2184a7ea8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Resource">
+      <UniqueIdentifier>{749ce279-5f65-497f-9265-66c5e28ef0a6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Math\Math.h">
@@ -128,6 +131,10 @@
       <Filter>Object</Filter>
     </ClInclude>
     <ClInclude Include="IObjectFactory.h" />
+    <ClInclude Include="Resource\Resource.h">
+      <Filter>Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="IResource.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Math\Math.cpp">
@@ -170,6 +177,9 @@
     </ClCompile>
     <ClCompile Include="Instance\Instance.cpp">
       <Filter>Instance</Filter>
+    </ClCompile>
+    <ClCompile Include="Resource\Resource.cpp">
+      <Filter>Resource</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

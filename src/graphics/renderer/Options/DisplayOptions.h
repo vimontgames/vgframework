@@ -22,7 +22,11 @@ namespace vg::graphics::renderer
         static bool     registerClass       (core::IObjectFactory & _factory);
         static bool     registerProperties  (core::IObjectDescriptor & _desc);
 
-        core::float4    getBackgroundColor  () { return m_backgroundColor; }
+        bool            isToolModeEnabled   () const { return m_toolMode; }
+        bool            isWireframeEnabled  () const { return m_wireframe; }
+        bool            isNormalEnabled     () const { return m_displayNormals; }
+
+        core::float4    getBackgroundColor  () const { return m_backgroundColor; }
 
         static bool     load                (IObject * _object);
         static bool     save                (IObject * _object);
@@ -30,6 +34,7 @@ namespace vg::graphics::renderer
     private:
         core::float4    m_backgroundColor   = core::float4(0, 0, 0, 0);
         bool            m_toolMode          = true;
+        bool            m_wireframe         = false;
         bool            m_displayNormals    = false;
     };
 }

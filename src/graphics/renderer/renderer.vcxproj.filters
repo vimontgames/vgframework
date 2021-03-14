@@ -24,6 +24,9 @@
     <ClCompile Include="Options\Options.cpp">
       <Filter>Options</Filter>
     </ClCompile>
+    <ClCompile Include="Pass\ImguiPass.cpp">
+      <Filter>Pass</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Renderer.def" />
@@ -34,9 +37,6 @@
     <ClInclude Include="IRenderer.h" />
     <ClInclude Include="Renderer_consts.h" />
     <ClInclude Include="Pass\ImguiPass.h">
-      <Filter>Pass</Filter>
-    </ClInclude>
-    <ClInclude Include="Pass\ImguiPass.hpp">
       <Filter>Pass</Filter>
     </ClInclude>
     <ClInclude Include="Imgui\imguiAdapter.h">

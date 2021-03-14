@@ -24,4 +24,3 @@ using namespace vg::graphics::driver;
 #include "TestPass2D.hpp"
 #include "TestPass3D.hpp"
 #include "PostProcessPass.hpp"
-#include "ImguiPass.hpp"
