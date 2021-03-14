@@ -54,8 +54,6 @@
 // vulkan
 //--------------------------------------------------------------------------------------
 #include <vulkan/vulkan.h>
-#include <glslang/Public/ShaderLang.h>
-#include <glslang/SPIRV/GlslangToSpv.h>
 
 #ifdef VG_WINDOWS
 #include <vulkan/vulkan_win32.h>
