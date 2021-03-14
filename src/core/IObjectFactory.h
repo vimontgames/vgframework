@@ -14,8 +14,8 @@ namespace vg::core
     // }
     //
     //--------------------------------------------------------------------------------------
-    #define registerClassHelper(c)                      registerClass(#c, [](){ return new c(); })
-    #define registerPropertyHelper(c, m, n)             registerProperty(#m, (&((c*)(nullptr))->m), n)
+    #define registerClassHelper(className)                                          registerClass(#className, [](){ return new className(); })
+    #define registerPropertyHelper(className, propertyName, displayName, flags)     registerProperty(#propertyName, (&((className*)(nullptr))->propertyName), displayName, flags)
 
     class IPropertyDescriptor
     {
@@ -24,12 +24,21 @@ namespace vg::core
         {
             Undefined = 0,
             Bool,
-            Float4
+            Float4,
+            String
+        };
+
+        enum class Flags : u64
+        {
+            None        = 0x0000000000000000,
+            ReadOnly    = 0x0000000000000001,
+            Color       = 0x0000000000000002
         };
 
         virtual const char *    getName         () const = 0;
         virtual const char *    getDisplayName  () const = 0;
         virtual Type            getType         () const = 0;
+        virtual Flags           getFlags        () const = 0;
         virtual uint_ptr        getOffset       () const = 0;
     };
 
@@ -38,8 +47,9 @@ namespace vg::core
     public:
         virtual                             ~IObjectDescriptor  () {}
 
-        virtual void                        registerProperty    (const char * _propertyName, bool * _offset, const char * _displayName) = 0;
-        virtual void                        registerProperty    (const char * _propertyName, core::float4 * _offset, const char * _displayName) = 0;
+        virtual void                        registerProperty    (const char * _propertyName, bool * _offset, const char * _displayName, IPropertyDescriptor::Flags _flags) = 0;
+        virtual void                        registerProperty    (const char * _propertyName, core::float4 * _offset, const char * _displayName, IPropertyDescriptor::Flags _flags) = 0;
+        virtual void                        registerProperty    (const char * _propertyName, core::string * _offset, const char * _displayName, IPropertyDescriptor::Flags _flags) = 0;
 
         virtual const char *                getClassName        () const = 0;
         virtual uint                        getPropertyCount    () const = 0;

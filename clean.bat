@@ -3,10 +3,12 @@ del *.lib
 ren dxcompiler.dll dxcompiler.dll.bak
 ren dxil.dll dxil.dll.bak
 ren WinPixEventRuntime.dll WinPixEventRuntime.dll.bak
+ren libfbxsdk.dll libfbxsdk.dll.bak
 del *.dll
 ren dxcompiler.dll.bak dxcompiler.dll
 ren dxil.dll.bak dxil.dll
 ren WinPixEventRuntime.dll.bak WinPixEventRuntime.dll
+ren libfbxsdk.dll.bak libfbxsdk.dll
 del *.ipdb
 del *.iobj
 del *.exp

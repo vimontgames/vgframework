@@ -28,7 +28,7 @@ namespace vg::core
         else
         {
             DWORD error = GetLastError();
-            VG_ASSERT(false, "Error 0x%08X (%u)", error);
+            VG_ASSERT(false, "Error %u (0x%08X) creating Plugin \"%s\"", error, error, _name.c_str());
         }
 		#endif
 

@@ -91,7 +91,9 @@ namespace vg::engine
     //--------------------------------------------------------------------------------------
     bool Engine::registerClasses()
     {
-        return false;
+        core::IObjectFactory * factory = Kernel::getObjectFactory();
+
+        return true;
     }
 
 	//--------------------------------------------------------------------------------------

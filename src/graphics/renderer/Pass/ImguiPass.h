@@ -17,6 +17,8 @@ namespace vg::graphics::renderer
         void displayOptionsWindow();
         void displayDebugWindow(double _dt);
 
+        void displayObject(core::IObject * _object, bool * _open);
+
     private:
         bool m_isDisplayOptionsWindowsVisible = false;
         bool m_isDebugWindowVisible = true;

@@ -120,7 +120,7 @@ namespace vg::graphics::renderer
         TextureDesc texDesc(Usage::Default, BindFlags::ShaderResource, CPUAccessFlags::None, TextureType::Texture2D, PixelFormat::R8G8B8A8_unorm, TextureFlags::None, 2, 2, 1, 1);
         m_texture = device->createTexture("data/Textures/QuestionBox.psd");
 
-        m_fbxModel = renderer->createMeshModel("data/Model/Teapot.fbx");
+        m_fbxModel = renderer->createMeshModel("data/Models/Teapot.fbx");
         VG_ASSERT(m_fbxModel);
     }
 

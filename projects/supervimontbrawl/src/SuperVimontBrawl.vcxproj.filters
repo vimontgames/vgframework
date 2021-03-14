@@ -1,0 +1,31 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Entity">
+      <UniqueIdentifier>{356de170-2925-4a63-a84a-8f1c72bab929}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Component">
+      <UniqueIdentifier>{2e7c1043-a157-4d3d-80e4-e55080328482}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Entity\Player">
+      <UniqueIdentifier>{9bb2750d-acce-440d-8fce-33caca03ce6d}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Precomp.cpp" />
+    <ClCompile Include="SuperVimontBrawl.cpp" />
+    <ClCompile Include="Entity\Player\PlayerEntity.cpp">
+      <Filter>Entity\Player</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Precomp.h" />
+    <ClInclude Include="SuperVimontBrawl.h" />
+    <ClInclude Include="Entity\Player\PlayerEntity.h">
+      <Filter>Entity\Player</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="SuperVimontBrawl.def" />
+  </ItemGroup>
+</Project>

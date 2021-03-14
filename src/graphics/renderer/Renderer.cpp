@@ -87,6 +87,7 @@ namespace vg::graphics::renderer
     bool Renderer::registerClasses()
     {
         core::IObjectFactory * factory = Kernel::getObjectFactory();
+
         DisplayOptions::registerClass(*factory);
 
         return true;

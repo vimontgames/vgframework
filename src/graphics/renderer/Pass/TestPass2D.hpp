@@ -68,7 +68,7 @@ namespace vg::graphics::renderer
 
         // texture 3
         {
-            m_texture.push_back(device->createTexture("game/supervimontbrawl/data/Textures/Sprites.psd"));
+            m_texture.push_back(device->createTexture("projects/supervimontbrawl/data/Textures/Sprites.psd"));
         }
     }
 

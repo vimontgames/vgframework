@@ -13,10 +13,16 @@ namespace vg::graphics::renderer
     class DisplayOptions : public core::Object, public core::Singleton<DisplayOptions>
     {
     public:
-        const char *    getClassName    () const final { return "DisplayOptions"; }
-        static bool     registerClass   (core::IObjectFactory & _factory);
+        using super = core::Object;
 
-        core::float4    getBackgroundColor() { return m_backgroundColor; }
+                        DisplayOptions      ();
+
+        const char *    getClassName        () const final { return "DisplayOptions"; }
+
+        static bool     registerClass       (core::IObjectFactory & _factory);
+        static bool     registerProperties  (core::IObjectDescriptor & _desc);
+
+        core::float4    getBackgroundColor  () { return m_backgroundColor; }
 
     private:
         core::float4    m_backgroundColor = core::float4(0, 0, 0, 0);

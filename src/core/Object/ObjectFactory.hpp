@@ -24,21 +24,33 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
+    IPropertyDescriptor::Flags ObjectFactory::ClassProperty::getFlags() const
+    {
+        return flags;
+    }
+
+    //--------------------------------------------------------------------------------------
     uint_ptr ObjectFactory::ClassProperty::getOffset() const
     {
         return offset;
     }
 
     //--------------------------------------------------------------------------------------
-    void ObjectFactory::ClassDesc::registerProperty(const char * _propertyName, bool * _offset, const char * _displayName)
+    void ObjectFactory::ClassDesc::registerProperty(const char * _propertyName, bool * _offset, const char * _displayName, IPropertyDescriptor::Flags _flags)
     {
-        registerClassMemberT(_propertyName, _offset, _displayName);
+        registerClassMemberT(_propertyName, _offset, _displayName, _flags);
     }
 
     //--------------------------------------------------------------------------------------
-    void ObjectFactory::ClassDesc::registerProperty(const char * _propertyName, core::float4 * _offset, const char * _displayName)
+    void ObjectFactory::ClassDesc::registerProperty(const char * _propertyName, core::float4 * _offset, const char * _displayName, IPropertyDescriptor::Flags _flags)
     {
-        registerClassMemberT(_propertyName, _offset, _displayName);
+        registerClassMemberT(_propertyName, _offset, _displayName, _flags);
+    }
+
+    //--------------------------------------------------------------------------------------
+    void ObjectFactory::ClassDesc::registerProperty(const char * _propertyName, core::string * _offset, const char * _displayName, IPropertyDescriptor::Flags _flags)
+    {
+        registerClassMemberT(_propertyName, _offset, _displayName, _flags);
     }
 
     //--------------------------------------------------------------------------------------
@@ -78,9 +90,10 @@ namespace vg::core
     template <typename T> struct TypeToEnum;
     template <> struct TypeToEnum<bool>         { static constexpr auto value = IPropertyDescriptor::Type::Bool; };
     template <> struct TypeToEnum<core::float4> { static constexpr auto value = IPropertyDescriptor::Type::Float4; };
+    template <> struct TypeToEnum<core::string> { static constexpr auto value = IPropertyDescriptor::Type::String; };
 
     //--------------------------------------------------------------------------------------
-    template <typename T> void ObjectFactory::ClassDesc::registerClassMemberT(const char * _propertyName, T * _offset, const char * _displayName)
+    template <typename T> void ObjectFactory::ClassDesc::registerClassMemberT(const char * _propertyName, T * _offset, const char * _displayName, IPropertyDescriptor::Flags _flags)
     {
         VG_DEBUGPRINT("offsetof(%s, %s) = %u\n", name, _propertyName, _offset);
 
@@ -90,7 +103,7 @@ namespace vg::core
         const u32 offset = (u32)(_offset);
         #pragma warning( pop )
     
-        ClassProperty prop(_propertyName, TypeToEnum<T>::value, offset, _displayName);
+        ClassProperty prop(_propertyName, TypeToEnum<T>::value, offset, _displayName, _flags);
     
         properties.push_back(prop);        
     }
