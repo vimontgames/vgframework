@@ -8,8 +8,14 @@ https://github.com/GPUOpen-LibrariesAndSDKs/D3D12MemoryAllocator
 Dear ImGui\
 https://github.com/ocornut/imgui
 
+Dirent\
+https://github.com/tronkko/dirent
+
 hlslpp\
 https://github.com/redorav/hlslpp
+
+ImGui-Addons\
+https://github.com/gallickgunner/ImGui-Addons
 
 magic_enum\
 https://github.com/Neargye/magic_enum
