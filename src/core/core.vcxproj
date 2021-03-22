@@ -19,6 +19,7 @@
     <ClInclude Include="Core.h" />
     <ClInclude Include="Entity\Entity.h" />
     <ClInclude Include="File\File.h" />
+    <ClInclude Include="IEntity.h" />
     <ClInclude Include="IInput.h" />
     <ClInclude Include="IInstance.h" />
     <ClInclude Include="IModel.h" />
@@ -28,10 +29,14 @@
     <ClInclude Include="IPlugin.h" />
     <ClInclude Include="IProfiler.h" />
     <ClInclude Include="IResource.h" />
+    <ClInclude Include="IScene.h" />
     <ClInclude Include="IScheduler.h" />
+    <ClInclude Include="ISector.h" />
     <ClInclude Include="Kernel.h" />
     <ClInclude Include="Math\Math.h" />
     <ClInclude Include="Model\Model.h" />
+    <ClInclude Include="Object\AutoRegisterClass.h" />
+    <ClInclude Include="Object\AutoRegisterClass.hpp" />
     <ClInclude Include="Object\Object.h" />
     <ClInclude Include="Object\ObjectFactory.h" />
     <ClInclude Include="Object\ObjectFactory.hpp" />
@@ -40,8 +45,10 @@
     <ClInclude Include="Pool\Pool.h" />
     <ClInclude Include="Precomp.h" />
     <ClInclude Include="Resource\Resource.h" />
+    <ClInclude Include="Scene\Scene.h" />
     <ClInclude Include="Scheduler\Job.h" />
     <ClInclude Include="Scheduler\Scheduler.h" />
+    <ClInclude Include="Sector\Sector.h" />
     <ClInclude Include="Singleton\Singleton.h" />
     <ClInclude Include="string\string.h" />
     <ClInclude Include="Timer\Timer.h" />
@@ -63,8 +70,10 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="Resource\Resource.cpp" />
+    <ClCompile Include="Scene\Scene.cpp" />
     <ClCompile Include="Scheduler\Job.cpp" />
     <ClCompile Include="Scheduler\Scheduler.cpp" />
+    <ClCompile Include="Sector\Sector.cpp" />
     <ClCompile Include="string\string.cpp" />
     <ClCompile Include="Timer\Timer.cpp" />
   </ItemGroup>

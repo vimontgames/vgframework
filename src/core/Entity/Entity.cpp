@@ -1,11 +1,34 @@
 #include "core/Precomp.h"
 #include "Entity.h"
+#include "core/Object/AutoRegisterClass.h"  
 
 namespace vg::core
 {
+    VG_AUTO_REGISTER_CLASS(Entity)
+
+    //--------------------------------------------------------------------------------------
+    bool Entity::registerClass(IObjectFactory & _factory)
+    {
+        core::IObjectDescriptor & desc = _factory.registerClassHelper(Entity, "Entity");
+
+        registerProperties(desc);
+
+        return true;
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool Entity::registerProperties(IObjectDescriptor & _desc)
+    {
+        super::registerProperties(_desc);
+
+        _desc.registerPropertyVectorHelper(Entity, m_components, IObject*, "Components", IPropertyDescriptor::Flags::None);
+
+        return true;
+    }
+
     //--------------------------------------------------------------------------------------
     Entity::Entity(const core::string & _name) :
-        Object(_name)
+        IEntity(_name)
     {
 
     }

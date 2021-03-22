@@ -16,6 +16,11 @@ namespace vg::core
         const IObjectDescriptor *   getClassDesc        () const final;
         static bool                 registerProperties  (IObjectDescriptor & _desc);
 
+        void                        onPropertyChanged   (const IPropertyDescriptor & _prop) override;
+
+        bool                        loadFromFile        (const string & _filename) override;
+        bool                        saveToFile          (const string & _filename) override;
+
 		void					    setName		        (const string & _name) override;
 		const string &			    getName		        () const override;
 

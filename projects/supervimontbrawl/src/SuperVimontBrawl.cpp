@@ -2,10 +2,10 @@
 #include "SuperVimontBrawl.h"
 #include "engine/IEngine.h"
 #include "core/Kernel.h"
-#include "core/IObjectFactory.h"
+#include "core/Object/AutoRegisterClass.h"
 #include "Entity/Player/PlayerEntity.h"
 
-using namespace vg;
+using namespace vg::core;
 
 //--------------------------------------------------------------------------------------
 SuperVimontBrawl * CreateNew()
@@ -33,7 +33,7 @@ SuperVimontBrawl::~SuperVimontBrawl()
 #define SVB_VERSION_MINOR 0
 
 //--------------------------------------------------------------------------------------
-core::IPlugin::Version SuperVimontBrawl::getVersion() const
+IPlugin::Version SuperVimontBrawl::getVersion() const
 {
     return { SVB_VERSION_MAJOR, SVB_VERSION_MINOR };
 }
@@ -41,9 +41,22 @@ core::IPlugin::Version SuperVimontBrawl::getVersion() const
 //--------------------------------------------------------------------------------------
 bool SuperVimontBrawl::registerClasses()
 {
-    core::IObjectFactory * factory = core::Kernel::getObjectFactory();
+    IObjectFactory * factory = Kernel::getObjectFactory();
+
+    // Register classes to auto-register the "Engine" module
+    AutoRegisterClassInfo::registerClasses(*factory);
+
+    IObjectDescriptor & desc = factory->registerClassSingletonHelper(SuperVimontBrawl, "SuperVimontBrawl");
+    registerProperties(desc);
 
     return true;
+}
+
+//--------------------------------------------------------------------------------------
+bool SuperVimontBrawl::unregisterClasses()
+{
+    IObjectFactory * factory = Kernel::getObjectFactory();
+    return AutoRegisterClassInfo::unregisterClasses(*factory);
 }
 
 //--------------------------------------------------------------------------------------
@@ -51,9 +64,13 @@ bool SuperVimontBrawl::registerClasses()
 //--------------------------------------------------------------------------------------
 
 //--------------------------------------------------------------------------------------
-bool SuperVimontBrawl::init(vg::engine::IEngine & _engine)
+bool SuperVimontBrawl::init(vg::engine::IEngine & _engine, Singletons & _singletons)
 {
     m_engine = &_engine;
+
+    Kernel::setSingletons(_singletons);
+
+    registerClasses();
 
     return true;
 }
@@ -61,6 +78,7 @@ bool SuperVimontBrawl::init(vg::engine::IEngine & _engine)
 //--------------------------------------------------------------------------------------
 bool SuperVimontBrawl::deinit()
 {
+    unregisterClasses();
 
     return true;
 }

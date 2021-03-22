@@ -1,6 +1,7 @@
 #pragma once
 
 #include "application/IProject.h"
+#include "core/Singleton/Singleton.h"
 
 namespace vg::engine
 {
@@ -9,7 +10,7 @@ namespace vg::engine
 
 class PlayerEntity;
 
-class SuperVimontBrawl : public vg::IProject
+class SuperVimontBrawl : public vg::IProject, vg::core::Singleton<SuperVimontBrawl>
 {
     public:
                                     SuperVimontBrawl        ();
@@ -21,9 +22,10 @@ class SuperVimontBrawl : public vg::IProject
         // vg::core::IPlugin overrides
         vg::core::IPlugin::Version  getVersion              () const final;
         bool                        registerClasses         () final;
+        bool                        unregisterClasses       ();
 
         // vg::core::IProject overrides
-        bool                        init                    (vg::engine::IEngine & _engine) final;
+        bool                        init                    (vg::engine::IEngine & _engine, vg::core::Singletons & _singletons) final;
         bool                        deinit                  () final;
 
         bool                        update                  () final;

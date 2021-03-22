@@ -1,7 +1,10 @@
 #include "core/Precomp.h"
 #include "Object.h"
 #include "core/Kernel.h"
+#include "core/File/File.h"
+
 #include "ObjectFactory.hpp"
+#include "AutoRegisterClass.hpp"
 
 namespace vg::core
 {
@@ -33,12 +36,44 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
+    void Object::onPropertyChanged(const IPropertyDescriptor & _prop)
+    {
+
+    }
+
+    //--------------------------------------------------------------------------------------
     const IObjectDescriptor * Object::getClassDesc() const
     {
         const auto * factory = Kernel::getObjectFactory();
         if (factory)
             return factory->getClassDescriptor(getClassName());
         return nullptr;
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool Object::loadFromFile(const string & _filename)
+    {
+        const auto * factory = Kernel::getObjectFactory();
+
+        string s;
+        if (readFile(_filename, s, false))
+            if (factory->serializeFromString(this, s))
+                return true;
+
+        return false;
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool Object::saveToFile(const string & _filename)
+    {
+        const auto * factory = Kernel::getObjectFactory();
+
+        string s;
+        if (factory->serializeToString(s, this))
+            if (writeFile(_filename, s))
+                return true;
+
+        return false;
     }
 
 	//--------------------------------------------------------------------------------------

@@ -2,11 +2,32 @@
 #include "CameraComponent.h"
 #include "graphics/renderer/View/View.h"
 #include "core/Entity/Entity.h"
+#include "core/Object/AutoRegisterClass.h"
 
 using namespace vg::core;
 
 namespace vg::engine
 {
+    VG_AUTO_REGISTER_CLASS(CameraComponent)
+
+    //--------------------------------------------------------------------------------------
+    bool CameraComponent::registerClass(IObjectFactory & _factory)
+    {
+        core::IObjectDescriptor & desc = _factory.registerClassHelper(CameraComponent, "Camera Component");
+
+        registerProperties(desc);
+
+        return true;
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool CameraComponent::registerProperties(IObjectDescriptor & _desc)
+    {
+        super::registerProperties(_desc);
+
+        return true;
+    }
+
     //--------------------------------------------------------------------------------------
     CameraComponent::CameraComponent() :
         core::Component("CameraComponent")

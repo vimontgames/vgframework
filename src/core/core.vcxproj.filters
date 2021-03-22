@@ -52,6 +52,12 @@
     <Filter Include="Resource">
       <UniqueIdentifier>{749ce279-5f65-497f-9265-66c5e28ef0a6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Scene">
+      <UniqueIdentifier>{a8e699be-7052-41c2-8310-8e3b55f2d9ab}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sector">
+      <UniqueIdentifier>{3216c643-abe6-4f12-9d27-da7cd5106a91}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Math\Math.h">
@@ -135,6 +141,21 @@
       <Filter>Resource</Filter>
     </ClInclude>
     <ClInclude Include="IResource.h" />
+    <ClInclude Include="IScene.h" />
+    <ClInclude Include="Scene\Scene.h">
+      <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="ISector.h" />
+    <ClInclude Include="IEntity.h" />
+    <ClInclude Include="Sector\Sector.h">
+      <Filter>Sector</Filter>
+    </ClInclude>
+    <ClInclude Include="Object\AutoRegisterClass.h">
+      <Filter>Object</Filter>
+    </ClInclude>
+    <ClInclude Include="Object\AutoRegisterClass.hpp">
+      <Filter>Object</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Math\Math.cpp">
@@ -180,6 +201,12 @@
     </ClCompile>
     <ClCompile Include="Resource\Resource.cpp">
       <Filter>Resource</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene\Scene.cpp">
+      <Filter>Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Sector\Sector.cpp">
+      <Filter>Sector</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

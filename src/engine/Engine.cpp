@@ -9,7 +9,9 @@
 #include "core/Scheduler/Scheduler.h"
 #include "core/Entity/Entity.h"
 #include "core/Object/ObjectFactory.h"
-#include "application/IProject.h"
+#include "core/Object/AutoRegisterClass.h"
+#include "core/Scene/Scene.h"
+#include "core/Sector/Sector.h"
 
 #include "graphics/renderer/IRenderer.h"
 #include "graphics/renderer/IView.h"
@@ -18,6 +20,8 @@
 #include "engine/Input/Input.h"
 #include "engine/Entity/FreeCam/FreeCamEntity.h"
 #include "engine/Component/Camera/CameraComponent.h"
+
+#include "application/IProject.h"
 
 using namespace vg::core;
 using namespace vg::engine;
@@ -94,12 +98,35 @@ namespace vg::engine
     {
         core::IObjectFactory * factory = Kernel::getObjectFactory();
 
-        Resource::registerClass(*factory);
+        // Register classes to auto-register the "Engine" module
+        AutoRegisterClassInfo::registerClasses(*factory);
 
         core::IObjectDescriptor & desc = factory->registerClassSingletonHelper(Engine, "Engine");
         registerProperties(desc);
 
+        load(this);
+        loadProject(m_projectPath);
+
         return true;
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool Engine::unregisterClasses()
+    {
+        IObjectFactory * factory = Kernel::getObjectFactory();
+        return AutoRegisterClassInfo::unregisterClasses(*factory);
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool Engine::load(IObject * _object)
+    {
+        return _object->loadFromFile("engine.ini");
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool Engine::save(IObject * _object)
+    {
+        return _object->saveToFile("engine.ini");
     }
 
     //--------------------------------------------------------------------------------------
@@ -110,14 +137,24 @@ namespace vg::engine
         //_desc.registerCallbackHelper(Engine, createProject, "Create Project", IPropertyDescriptor::Flags::None);
         //_desc.registerCallbackHelper(Engine, loadProject, "Load", IPropertyDescriptor::Flags::None);
         //_desc.registerCallbackHelper(Engine, saveProject, "Save", IPropertyDescriptor::Flags::None);
-
-        //_desc.registerPropertyHelper(Engine, m_projectPath, "Project", IPropertyDescriptor::Flags::None);
         //_desc.registerProperty("Project", (IObject**)(&((Engine*)(nullptr))->m_project), "Project", IPropertyDescriptor::Flags::None);
-
         //_desc.registerPropertyHelper(Engine, m_project, "Project", IPropertyDescriptor::Flags::None);
-        _desc.registerProperty("m_project", (IResource**)(&((Engine*)(nullptr))->m_project), "Project", IPropertyDescriptor::Flags::None);
+        //_desc.registerProperty("m_project", (IResource**)(&((Engine*)(nullptr))->m_project), "Project", IPropertyDescriptor::Flags::None);
+
+        _desc.registerPropertyHelper(Engine, m_projectPath, "Project folder", IPropertyDescriptor::Flags::IsFolder);
+
+        //_desc.registerCallbackHelper(Engine, createProject, "Create Project", IPropertyDescriptor::Flags::None);
+        
+        _desc.registerCallbackHelper(DisplayOptions, load, "Load", IPropertyDescriptor::Flags::None);
+        _desc.registerCallbackHelper(DisplayOptions, save, "Save", IPropertyDescriptor::Flags::None);
 
         return true;
+    }
+
+    //--------------------------------------------------------------------------------------
+    void Engine::onPropertyChanged(const IPropertyDescriptor & _prop)
+    {
+
     }
 
     //--------------------------------------------------------------------------------------
@@ -127,15 +164,45 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
-    bool Engine::loadProject(core::IObject * _engine)
+    bool Engine::loadProject(const string & _path)
     {
+        if (_path.length() > 0)
+        {
+            auto folderNameBegin = _path.find_last_of('/');
+            string projectDllName = _path + _path.substr(folderNameBegin);
+
+            m_project = Plugin::create<IProject>(projectDllName);
+
+            if (nullptr != m_project)
+                m_project->init(*this, Kernel::getSingletons());
+        }
+        return nullptr != m_project;
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool Engine::unloadProject()
+    {
+        if (m_project)
+        {
+            m_project->deinit();
+            VG_SAFE_RELEASE(m_project);
+            m_project = nullptr;
+            return true;
+        }
+
         return false;
     }
 
     //--------------------------------------------------------------------------------------
-    bool Engine::saveProject(core::IObject * _engine)
+    IProject * Engine::getProject() const
     {
-        return false;
+        return m_project;
+    }
+
+    //--------------------------------------------------------------------------------------
+    core::IScene * Engine::getScene() const
+    {
+        return m_scene;
     }
 
 	//--------------------------------------------------------------------------------------
@@ -182,7 +249,19 @@ namespace vg::engine
 
         registerClasses();
 
-        createEditorView();        
+        // test scene
+        m_scene = new Scene();
+        m_scene->setName("Scene");
+
+        // populate scene
+        Sector * rootSector = new Sector();
+        rootSector->setName("Root");
+
+        m_scene->setRoot(rootSector);
+
+        VG_SAFE_RELEASE(rootSector);
+
+        createEditorView();
 	}
 
     //--------------------------------------------------------------------------------------
@@ -200,8 +279,10 @@ namespace vg::engine
         m_freeCam->addComponent(cameraComponent);
         cameraComponent->setView(m_editorView);
 
-        addEntity(m_freeCam);
-        
+        auto * root = m_scene->getRoot();
+
+        root->addEntity(m_freeCam);
+                
         VG_SAFE_RELEASE(cameraComponent);
     }
 
@@ -217,8 +298,13 @@ namespace vg::engine
 	{
         m_renderer->waitGPUIdle();
 
+        VG_SAFE_RELEASE(m_scene);
+
         destroyEditorView();
-        destroyEntities();
+
+        unloadProject();
+
+        unregisterClasses();
 
         Kernel::setProfiler(nullptr);
 
@@ -231,30 +317,13 @@ namespace vg::engine
         Kernel::setInput(nullptr);
 
         IObjectFactory * factory = Kernel::getObjectFactory();
-        VG_SAFE_DELETE(factory);
-        Kernel::setObjectFactory(nullptr);
 
 		m_renderer->deinit();
 		m_renderer->release();
+
+        VG_SAFE_DELETE(factory);
+        Kernel::setObjectFactory(nullptr);
 	}
-
-    //--------------------------------------------------------------------------------------
-    bool Engine::loadProject(const core::string & _name)
-    {
-        return false;
-    }
-
-    //--------------------------------------------------------------------------------------
-    bool Engine::unloadProject()
-    {
-        return false;
-    }
-
-    //--------------------------------------------------------------------------------------
-    IProject * Engine::getProject() const
-    {
-        return dynamic_cast<IProject*>(m_project.get());
-    }
 
     //--------------------------------------------------------------------------------------
     void Engine::updateDt()
@@ -264,40 +333,23 @@ namespace vg::engine
         if (previous != 0)
             m_dt = Timer::getEnlapsedTime(previous, current);
         previous = current;
-
-        //VG_DEBUGPRINT("dt = %f ms\n", m_dt);
-
-        // check profiler leak
-        //static uint counter = 0;
-        //if (counter == 1 || counter == 2)
-        //    VG_PROFILE_TRIGGER();
-        //counter++;
     }
 
     //--------------------------------------------------------------------------------------
-    void Engine::destroyEntities()
+    void Engine::updateEntities(Sector * _sector, double _dt)
     {
-        for (uint i = 0; i < m_entities.size(); ++i)
-            VG_SAFE_RELEASE(m_entities[i]);
-
-        m_entities.clear();
-    }
-
-    //--------------------------------------------------------------------------------------
-    void Engine::addEntity(core::Entity * _entity)
-    {
-        VG_ASSERT(_entity);
-        _entity->addRef();
-        m_entities.push_back(_entity);
-    }
-
-    //--------------------------------------------------------------------------------------
-    void Engine::updateEntities(double _dt)
-    {
-        for (uint e = 0; e < m_entities.size(); ++e)
+        const auto & entities = _sector->getEntities();
+        for (uint e = 0; e < entities.size(); ++e)
         {
-            Entity * entity = m_entities[e];
+            Entity * entity = entities[e];
             entity->update(_dt);
+        }
+
+        const auto & sectors = _sector->getChildSectors();
+        for (uint s = 0; s < sectors.size(); ++s)
+        {
+            Sector * sector = sectors[s];
+            updateEntities(sector, _dt);
         }
     }
 
@@ -311,11 +363,10 @@ namespace vg::engine
 
         Kernel::getInput()->update();
 
-        updateEntities(m_dt);
-
-        // test
-        //((Scheduler*)Kernel::getScheduler())->test();
-
+        Sector * root = (Sector*)m_scene->getRoot();
+        if (root)
+            updateEntities(root, m_dt);
+        
 		m_renderer->runOneFrame(m_dt);
 	}
 

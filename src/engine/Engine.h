@@ -7,6 +7,7 @@
 namespace vg::core
 {
     class Entity;
+    class Sector;
 }
 
 namespace vg::graphics::renderer
@@ -30,7 +31,13 @@ namespace vg::engine
 
         const char *                    getClassName        () const final { return "Engine"; }
         bool                            registerClasses     () override;
+        bool                            unregisterClasses   ();
         static bool                     registerProperties  (core::IObjectDescriptor & _desc);
+        
+        static bool                     load                (IObject * _object);
+        static bool                     save                (IObject * _object);
+
+        void                            onPropertyChanged   (const core::IPropertyDescriptor & _prop) override;
 
         static bool                     createProject       (core::IObject * _engine);
         static bool                     loadProject         (core::IObject * _engine);
@@ -43,9 +50,11 @@ namespace vg::engine
 		void							init		        (const EngineParams & _params, core::Singletons & _singletons) final;
 		void							deinit		        () override;
 
-        bool                            loadProject         (const core::string & _name) final;
+        bool                            loadProject         (const core::string & _path) final;
         bool                            unloadProject       () final;
         IProject *                      getProject          () const final;
+
+        core::IScene *                  getScene            () const final;
 
 		void							runOneFrame	        () final;
 
@@ -56,21 +65,19 @@ namespace vg::engine
         void                            createEditorView    ();
         void                            destroyEditorView   ();
 
-        void                            addEntity           (core::Entity * _entity);
-        void                            destroyEntities     (); 
-
     protected:
         void                            updateDt            ();
-        void                            updateEntities      (double _dt);
+        void                            updateEntities      (core::Sector * _sector, double _dt);
 
 	private:
-        core::Resource                  m_project;
+        core::string                    m_projectPath;
+        IProject *                      m_project           = nullptr;
 
-		graphics::renderer::IRenderer *	m_renderer      = nullptr;
-        graphics::renderer::IView *     m_editorView    = nullptr;
-        FreeCamEntity *                 m_freeCam       = nullptr;
+        core::IScene *                  m_scene             = nullptr;
 
-        core::vector<core::Entity*>     m_entities;
+		graphics::renderer::IRenderer *	m_renderer          = nullptr;
+        graphics::renderer::IView *     m_editorView        = nullptr;
+        FreeCamEntity *                 m_freeCam           = nullptr;
 
         double                          m_dt = 0.0f;
 	};

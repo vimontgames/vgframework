@@ -2,6 +2,12 @@
 
 #include "core/Entity/Entity.h"
 
+namespace vg::core
+{
+    class IObjectFactory;
+    class IObjectDescriptor;
+}
+
 namespace vg::engine
 {
     class FreeCamEntity : public core::Entity
@@ -9,12 +15,15 @@ namespace vg::engine
         using super = core::Entity;
 
     public:
-        const char * getClassName() const final { return "FreeCamEntity"; }
+        static bool     registerClass       (core::IObjectFactory & _factory);
+        static bool     registerProperties  (core::IObjectDescriptor & _desc);
 
-        FreeCamEntity(const core::string & _name);
-        ~FreeCamEntity();
+        const char *    getClassName        () const final { return "FreeCamEntity"; }
 
-        void update(double _dt) override;
+                        FreeCamEntity       (const core::string & _name = "");
+                        ~FreeCamEntity      ();
+
+        void            update              (double _dt) override;
 
     private:
         float m_pitch;

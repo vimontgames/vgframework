@@ -4,6 +4,13 @@
 
 namespace vg::graphics::renderer
 {
+    enum class UIMode
+    {
+        All = 0,
+        Scene,
+        Object
+    };
+
     //--------------------------------------------------------------------------------------
     class ImguiPass : public driver::UserPass
     {
@@ -18,9 +25,13 @@ namespace vg::graphics::renderer
         void displayEngineWindow();
         void displayRendererWindow();
         void displaySceneWindow();
+        void displayCurrentSelectionWindow();
         void displayPerformanceWindow(double _dt);
 
-        void displayObject(core::IObject * _object);
+        void displayObject(core::IObject * _object, UIMode _mode = UIMode::All);
+
+        void updateSelection(core::IObject * _object, UIMode _mode);
+        void setCurrentSelection(core::IObject * _object);
 
     private:
         bool m_isDisplayOptionsWindowsVisible = true;
@@ -29,8 +40,10 @@ namespace vg::graphics::renderer
         bool m_isRendererWindowVisible = true;
         bool m_isPerfWindowVisible = true;
         bool m_isSceneWindowVisible = true;
-
+        bool m_isCurrentSelectionWindowVisible = true;
         bool m_isAboutWindowVisible = false;
+
+        core::IObject * m_selected = nullptr;
 
         core::uint  m_captureFrameCounter = 0;
 

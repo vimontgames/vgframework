@@ -30,6 +30,9 @@ namespace vg::core
         static void setObjectFactory(IObjectFactory * _factory);
         static IObjectFactory * getObjectFactory();
 
+        static void setSingletons(const Singletons & _other);
+        static Singletons & getSingletons();
+
     private:
         static inline Singletons s_singletons;
     };
@@ -84,5 +87,17 @@ namespace vg::core
     {
         VG_ASSERT(s_singletons.factory, "IObjectFactory interface is not specified for this executable or dynamic library.");
         return s_singletons.factory;
+    }
+
+    //--------------------------------------------------------------------------------------
+    inline void Kernel::setSingletons(const Singletons & _other)
+    {
+        s_singletons = _other;
+    }
+
+    //--------------------------------------------------------------------------------------
+    inline Singletons & Kernel::getSingletons()
+    {
+        return s_singletons;
     }
 }

@@ -94,7 +94,7 @@ namespace vg::graphics::renderer
         const auto * input = Kernel::getInput();
 
         const uint joyCount = input->getJoyCount();
-        const uint spriteCount = countof(m_testSpriteData);
+        const uint spriteCount = (uint)countof(m_testSpriteData);
         const uint count = min(spriteCount, joyCount);
         for (uint i = 0; i < count; ++i)
         {

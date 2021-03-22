@@ -9,10 +9,14 @@ namespace vg::graphics::renderer
 
 namespace vg::engine
 {
-    class CameraComponent : public vg::core::Component
+    class CameraComponent : public core::Component
     {
     public:
+        using super = core::Component;
+
         const char * getClassName() const final { return "CameraComponent"; }
+        static bool registerClass(core::IObjectFactory & _factory);
+        static bool registerProperties(core::IObjectDescriptor & _desc);
 
         CameraComponent();
         ~CameraComponent();

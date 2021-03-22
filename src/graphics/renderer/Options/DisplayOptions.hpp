@@ -1,11 +1,12 @@
 #include "DisplayOptions.h"
-#include "core/Object/ObjectFactory.h"
-#include "core/File/File.h"
+#include "core/Object/AutoRegisterClass.h"
 
 using namespace vg::core;
 
 namespace vg::graphics::renderer
 {
+    VG_AUTO_REGISTER_CLASS(DisplayOptions)
+
     //--------------------------------------------------------------------------------------
     DisplayOptions::DisplayOptions()
     {
@@ -25,27 +26,13 @@ namespace vg::graphics::renderer
     //--------------------------------------------------------------------------------------
     bool DisplayOptions::load(IObject * _object)
     {
-        const auto * factory = Kernel::getObjectFactory();
-
-        string s;
-        if (readFile("displayoptions.ini", s))
-            if (factory->serializeFromString(_object, s))
-                return true;
-
-        return false;
+        return _object->loadFromFile("displayoptions.ini");
     }
 
     //--------------------------------------------------------------------------------------
     bool DisplayOptions::save(IObject * _object)
     {
-        const auto * factory = Kernel::getObjectFactory();
-
-        string s;
-        if (factory->serializeToString(s, _object))
-            if (writeFile("displayoptions.ini", s))
-                return true;
-
-        return false;
+        return _object->saveToFile("displayoptions.ini");
     }
 
     //--------------------------------------------------------------------------------------

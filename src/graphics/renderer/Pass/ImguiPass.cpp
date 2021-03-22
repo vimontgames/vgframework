@@ -4,9 +4,11 @@
 #include "graphics/renderer/Renderer.h"
 #include "graphics/renderer/imgui/imguiAdapter.h"
 #include "graphics/renderer/Options/DisplayOptions.h"
+#include "engine/IEngine.h"
 #include "core/Plugin/Plugin.h"
 #include "core/IObjectFactory.h"
 #include "core/IResource.h"
+#include "core/File/File.h"
 #include "ImGui-Addons/FileBrowser/ImGuiFileBrowser.cpp"
 
 using namespace vg::core;
@@ -89,14 +91,7 @@ namespace vg::graphics::renderer
 
             if (ImGui::BeginMenuBar())
             {
-                if (ImGui::BeginMenu("File"))
-                {
-                    ImGui::MenuItem("New");
-
-                    ImGui::EndMenu();
-                }
-
-                if (ImGui::BeginMenu("View"))
+                if (ImGui::BeginMenu("Plugins"))
                 {
                     if (ImGui::MenuItem("Engine"))
                         m_isEngineWindowVisible = true;
@@ -104,11 +99,19 @@ namespace vg::graphics::renderer
                     if (ImGui::MenuItem("Renderer"))
                         m_isRendererWindowVisible = true;
 
+                    ImGui::EndMenu();
+                }
+
+                if (ImGui::BeginMenu("View"))
+                {
                     if (ImGui::MenuItem("Performance"))
                         m_isPerfWindowVisible = true;
 
-                    //if (ImGui::MenuItem("Scene"))
-                    //    m_isSceneWindowVisible = true;
+                    if (ImGui::MenuItem("Scene"))
+                        m_isSceneWindowVisible = true; 
+
+                    if (ImGui::MenuItem("Selection"))
+                        m_isCurrentSelectionWindowVisible = true;
 
                     ImGui::EndMenu();
                 }
@@ -274,6 +277,9 @@ namespace vg::graphics::renderer
         if (m_isSceneWindowVisible)
             displaySceneWindow();
 
+        if (m_isCurrentSelectionWindowVisible)
+            displayCurrentSelectionWindow();
+
         static bool showDemo = false;
         if (showDemo)
             ImGui::ShowDemoWindow(&showDemo);
@@ -344,7 +350,6 @@ namespace vg::graphics::renderer
     //--------------------------------------------------------------------------------------
     void ImguiPass::displayEngineWindow()
     {
-        //if (ImGui::TreeNode("Advanced, with Selectable nodes"))
         if (ImGui::Begin("Engine", &m_isEngineWindowVisible))
         {
             const auto * factory = Kernel::getObjectFactory();
@@ -369,13 +374,7 @@ namespace vg::graphics::renderer
             const auto * factory = Kernel::getObjectFactory();
             Object * renderer = factory->getSingleton("Renderer");
             if (renderer)
-            {
-                const char * className = renderer->getClassName();
-                const auto * classDesc = factory->getClassDescriptor(className);
-                const char * classDisplayName = classDesc->getClassDisplayName();
-
                 displayObject(renderer);
-            }
         }
         ImGui::End();
     }
@@ -383,44 +382,98 @@ namespace vg::graphics::renderer
     //--------------------------------------------------------------------------------------
     void ImguiPass::displaySceneWindow()
     {
+        if (ImGui::Begin("Scene", &m_isSceneWindowVisible))
+        {
+            const auto * factory = Kernel::getObjectFactory();
+            engine::IEngine * engine = (engine::IEngine *)factory->getSingleton("Engine");
+            core::IObject * scene = (core::IObject *)engine->getScene();
 
+            if (scene)
+                displayObject(scene, UIMode::Scene);
+        }
+        ImGui::End();
     }
 
     //--------------------------------------------------------------------------------------
-    void ImguiPass::displayObject(core::IObject * _object)
+    void ImguiPass::displayCurrentSelectionWindow()
     {
+        if (ImGui::Begin("Selection", &m_isCurrentSelectionWindowVisible))
+        {
+            if (m_selected)
+                displayObject(m_selected, UIMode::Object);
+        }
+        ImGui::End();
+    }    
+
+    //--------------------------------------------------------------------------------------
+    void ImguiPass::displayObject(core::IObject * _object, UIMode _mode)
+    {
+        static imgui_addons::ImGuiFileBrowser file_dialog;
+
         const char * className = _object->getClassName();
 
         const auto * factory = Kernel::getObjectFactory();
         const auto * classDesc = factory->getClassDescriptor(className);
+
+        if (!classDesc)
+            return;
+
+        const u32 objectColor = ImGui::GetColorU32(ImGuiCol_Text);
+        const u32 containerColor = objectColor & 0x7FFFFFFF;
+
         const char * classDisplayName = classDesc->getClassDisplayName();
+
+        ImGui::PushItemWidth(196);
 
         IPropertyDescriptor::Type previous = IPropertyDescriptor::Type::Undefined;
 
+        if (UIMode::Scene != _mode)
+            ImGui::TextDisabled(_object->getClassName());
+
         for (uint i = 0; i < classDesc->getPropertyCount(); ++i)
         {
-            const auto & prop = classDesc->getProperty(i);
+            const auto & prop = classDesc->getPropertyByIndex(i);
+
             const auto type = prop->getType();
             const auto name = prop->getName();
             const auto displayName = prop->getDisplayName();
             const auto offset = prop->getOffset();
             const auto flags = prop->getFlags();
 
+            if (UIMode::Scene == _mode)
+            {
+                switch (type)
+                {
+                    case IPropertyDescriptor::Type::Object:
+                    case IPropertyDescriptor::Type::ObjectVector:
+                        break;
+
+                    default:
+                        continue;
+                }
+            }
+
             if (type == previous)
             {
                 switch (type)
                 {
-                    default:
+                    case IPropertyDescriptor::Type::Function:
+                    case IPropertyDescriptor::Type::Bool:
                         ImGui::SameLine();
                         break;
 
+                    default:
                     case IPropertyDescriptor::Type::String:
                     case IPropertyDescriptor::Type::Float4:
+                    case IPropertyDescriptor::Type::Object:
+                    case IPropertyDescriptor::Type::ObjectVector:
                         break;
                 }
             }
 
             ImGuiInputTextFlags imguiInputTextflags = 0;
+
+            bool changed = false;
 
             if (asBool(IPropertyDescriptor::Flags::ReadOnly & flags))
                 imguiInputTextflags = ImGuiInputTextFlags_ReadOnly;
@@ -435,7 +488,18 @@ namespace vg::graphics::renderer
                 {
                     bool * pBool = (bool*)(uint_ptr(_object) + offset);
 
-                    ImGui::Checkbox(displayName, pBool);
+                    changed |= ImGui::Checkbox(displayName, pBool);
+                };
+                break;
+
+                case IPropertyDescriptor::Type::Float:
+                {
+                    float * pFloat = (float*)(uint_ptr(_object) + offset);
+
+                    if (asBool(IPropertyDescriptor::Flags::HasRange & flags))
+                        changed |= ImGui::SliderFloat(displayName, pFloat, prop->getRange().x, prop->getRange().y);
+                    else
+                        changed |= ImGui::InputFloat(displayName, pFloat);
                 };
                 break;
 
@@ -444,20 +508,49 @@ namespace vg::graphics::renderer
                     float * pFloat4 = (float*)(uint_ptr(_object) + offset);
 
                     if (asBool(IPropertyDescriptor::Flags::Color & flags))
-                        ImGui::ColorEdit4(displayName, pFloat4);
+                        changed |= ImGui::ColorEdit4(displayName, pFloat4);
                     else
-                        ImGui::SliderFloat4(displayName, pFloat4, 0.0f, 1.0f);
+                        changed |= ImGui::SliderFloat4(displayName, pFloat4, 0.0f, 1.0f);
                 };
                 break;
 
                 case IPropertyDescriptor::Type::String:
                 {
+                    bool selectPath = false;
+
                     string * pString = (string*)(uint_ptr(_object) + offset);
 
                     char buffer[1024];
                     sprintf_s(buffer, pString->c_str());
-                    ImGui::InputText(displayName, buffer, countof(buffer), imguiInputTextflags);
+                    changed |= ImGui::InputText(displayName, buffer, countof(buffer), imguiInputTextflags);
                     *pString = buffer;
+
+                    if (asBool(IPropertyDescriptor::Flags::IsFolder & flags))
+                    {
+                        ImGui::SameLine();
+                        if (ImGui::Button("Path"))
+                            selectPath = true;
+                    }
+
+                    if (selectPath)
+                    {
+                        ImGui::OpenPopup("Select folder");
+                        selectPath = false;
+                    }
+
+                    if (asBool(IPropertyDescriptor::Flags::IsFolder & flags))
+                    {
+                        if (file_dialog.showFileDialog("Select folder", imgui_addons::ImGuiFileBrowser::DialogMode::SELECT, ImVec2(700, 310)))
+                        {
+                            const string newFolder = getRelativePath(file_dialog.selected_path);
+
+                            if (newFolder != *pString)
+                            {
+                                *pString = newFolder;
+                                changed = true;
+                            }
+                        }
+                    }
                 }
                 break;
 
@@ -470,17 +563,78 @@ namespace vg::graphics::renderer
                 }
                 break;
 
+                case IPropertyDescriptor::Type::ObjectVector:
+                {
+                    vector<IObject*> * vec = (vector<IObject*>*)(uint_ptr(_object) + offset);
+                    const uint count = (uint)vec->size();
+
+                    string treeNodeName = (string)displayName + " (" + to_string(count) + ")";
+
+                    ImGui::PushStyleColor(ImGuiCol_Text, containerColor);
+
+                    if (UIMode::Object != _mode && count > 0 && ImGui::TreeNodeEx(treeNodeName.c_str(), ImGuiTreeNodeFlags_OpenOnArrow))
+                    {
+                        for (uint i = 0; i < count; ++i)
+                        {
+                            IObject * pObject = (*vec)[i];
+
+                            string treeNodeName;
+                            if (pObject)
+                                treeNodeName = pObject->getName();
+                            else
+                                treeNodeName = (string)displayName + "[" + to_string(i) + "]";
+
+                            ImGui::PushStyleColor(ImGuiCol_Text, objectColor);
+
+                            if (ImGui::TreeNodeEx(treeNodeName.c_str(), ImGuiTreeNodeFlags_OpenOnArrow))
+                            {
+                                updateSelection(pObject, _mode);
+
+                                if (pObject)
+                                    displayObject(pObject, _mode);
+                                else
+                                    ImGui::TextDisabled("null");
+
+                                ImGui::TreePop();
+                            }     
+                            else
+                                updateSelection(pObject, _mode);
+
+                            ImGui::PopStyleColor();
+                        }
+
+                        ImGui::TreePop();
+                    }
+
+                    ImGui::PopStyleColor();
+                }
+                break;
+
                 case IPropertyDescriptor::Type::Object:
                 {
                     IObject * pObject = *(IObject**)(uint_ptr(_object) + offset);
 
-                    bool showOpenDialog = false;
+                    string treeNodeName = displayName;
 
-                    if (ImGui::CollapsingHeader(displayName, ImGuiTreeNodeFlags_None))
+                    ImGui::PushStyleColor(ImGuiCol_Text, objectColor);
+
+                    if (UIMode::Object != _mode && ImGui::TreeNodeEx(treeNodeName.c_str(), ImGuiTreeNodeFlags_OpenOnArrow))
                     {
+                        updateSelection(_object, _mode);
+
                         if (pObject)
-                            displayObject(pObject);
+                            displayObject(pObject, _mode);
+                        else
+                            ImGui::TextDisabled("null");
+
+                        ImGui::TreePop();
                     }
+                    else
+                    {
+                        updateSelection(_object, _mode);
+                    }
+
+                    ImGui::PopStyleColor();
                 }
                 break;
 
@@ -499,7 +653,7 @@ namespace vg::graphics::renderer
                         pResource->setPath(buffer);
 
                         ImGui::SameLine();
-                        if (ImGui::Button("Set"))
+                        if (ImGui::Button("File"))
                             open = true;
 
                         //ImGui::SameLine();
@@ -512,27 +666,55 @@ namespace vg::graphics::renderer
 
                     if (open)
                     {
-                        ImGui::OpenPopup("Open File");
+                        ImGui::OpenPopup("Open file");
                         open = false;
                     }
                     //else if (save)
                     //{
-                    //    ImGui::OpenPopup("Save File");
+                    //    ImGui::OpenPopup("Save file");
                     //    save = false;
                     //}
 
-                    static imgui_addons::ImGuiFileBrowser file_dialog;
+                    if (file_dialog.showFileDialog("Open file", imgui_addons::ImGuiFileBrowser::DialogMode::OPEN, ImVec2(700, 310), ".ini"))
+                    {
+                        const string newFilePath = file_dialog.selected_path;
+                        if (pResource->getPath() != newFilePath)
+                        {
+                            pResource->setPath(newFilePath);
+                            changed = true;
+                        }
+                    }
 
-                    if (file_dialog.showFileDialog("Open File", imgui_addons::ImGuiFileBrowser::DialogMode::OPEN, ImVec2(700, 310), ".ini"))
-                        pResource->setPath(file_dialog.selected_path);
-
-                    //if (file_dialog.showFileDialog("Save File", imgui_addons::ImGuiFileBrowser::DialogMode::SAVE, ImVec2(700, 310), ".ini"))
+                    //if (file_dialog.showFileDialog("Save file", imgui_addons::ImGuiFileBrowser::DialogMode::SAVE, ImVec2(700, 310), ".ini"))
                     //    pResource->setPath(file_dialog.selected_path);
                 }
                 break;
             }
 
+            if (changed)
+                _object->onPropertyChanged(*prop);
+
             previous = type;
+        }
+
+        ImGui::PopItemWidth();
+    }
+
+    //--------------------------------------------------------------------------------------
+    void ImguiPass::setCurrentSelection(core::IObject * _object)
+    {
+        m_selected = _object;
+    }
+
+    //--------------------------------------------------------------------------------------
+    void ImguiPass::updateSelection(core::IObject * _object, UIMode _mode)
+    {
+        if (_mode == UIMode::Scene)
+        {
+            //if (ImGui::IsMouseClicked(ImGuiMouseButton_Left))
+                //if (ImGui::IsItemHovered())
+            if (ImGui::IsItemClicked() && (ImGui::GetMousePos().x - ImGui::GetItemRectMin().x) > ImGui::GetTreeNodeToLabelSpacing())
+                    setCurrentSelection(_object);
         }
     }
 

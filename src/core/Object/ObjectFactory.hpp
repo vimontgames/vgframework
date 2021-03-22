@@ -1,8 +1,24 @@
 #include "ObjectFactory.h"
 #include "core/Math/Math.h"
+#include "core/IResource.h"
 
 namespace vg::core
 {
+    //--------------------------------------------------------------------------------------
+    void ObjectFactory::ClassProperty::setRange(float2 _range)
+    {
+        if ((float)_range.x != (float)_range.y)
+            flags |= IPropertyDescriptor::Flags::HasRange;
+
+        range = _range;
+    }
+
+    //--------------------------------------------------------------------------------------
+    float2 ObjectFactory::ClassProperty::getRange() const
+    {
+        return range;
+    }
+
     //--------------------------------------------------------------------------------------
     const char * ObjectFactory::ClassProperty::getName() const
     {
@@ -37,6 +53,24 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
+    bool ObjectFactory::ClassDesc::isRegisteredProperty(const char * _propertyName)
+    {
+        return nullptr != getPropertyByName(_propertyName);
+    }
+
+    //--------------------------------------------------------------------------------------
+    IPropertyDescriptor * ObjectFactory::ClassDesc::getPropertyByName(const char * _propertyName) const
+    {
+        for (uint i = 0; i < properties.size(); ++i)
+        {
+            const auto & prop = properties[i];
+            if (!strcmp(_propertyName, prop.getName()))
+                return (IPropertyDescriptor*)&prop;
+        }
+        return nullptr;
+    }
+
+    //--------------------------------------------------------------------------------------
     void ObjectFactory::ClassDesc::registerProperty(const char * _propertyName, bool * _offset, const char * _displayName, IPropertyDescriptor::Flags _flags)
     {
         registerClassMemberT(_propertyName, _offset, _displayName, _flags);
@@ -44,6 +78,12 @@ namespace vg::core
 
     //--------------------------------------------------------------------------------------
     void ObjectFactory::ClassDesc::registerProperty(const char * _propertyName, core::float4 * _offset, const char * _displayName, IPropertyDescriptor::Flags _flags)
+    {
+        registerClassMemberT(_propertyName, _offset, _displayName, _flags);
+    }
+
+    //--------------------------------------------------------------------------------------
+    void ObjectFactory::ClassDesc::registerProperty(const char * _propertyName, float * _offset, const char * _displayName, IPropertyDescriptor::Flags _flags)
     {
         registerClassMemberT(_propertyName, _offset, _displayName, _flags);
     }
@@ -75,6 +115,12 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
+    void ObjectFactory::ClassDesc::registerProperty(const char * _propertyName, vector<IObject*>* _offset, const char * _displayName, IPropertyDescriptor::Flags _flags)
+    {
+        registerClassMemberT(_propertyName, _offset, _displayName, _flags);
+    }
+
+    //--------------------------------------------------------------------------------------
     const char * ObjectFactory::ClassDesc::getClassName() const
     {
         return name;
@@ -93,7 +139,7 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
-    const IPropertyDescriptor * ObjectFactory::ClassDesc::getProperty(uint _index) const
+    const IPropertyDescriptor * ObjectFactory::ClassDesc::getPropertyByIndex(uint _index) const
     {
         return &properties[_index];
     }
@@ -115,7 +161,15 @@ namespace vg::core
     //--------------------------------------------------------------------------------------
     IObjectDescriptor & ObjectFactory::registerClass(const char * _className, const char * _displayName, IObjectDescriptor::Flags _flags, IObjectDescriptor::Func _createFunc)
     {
-        VG_ASSERT(!isRegisteredClass(_className), "Class \"%s\" is already registered", _className);
+        // Classes declared in shared static libs could be declared more than once at static init
+        for (uint i = 0; i < m_classes.size(); ++i)
+        {
+            ClassDesc & desc = m_classes[i];
+            if (!strcmp(desc.getClassName(), _className))
+                return desc;
+        }
+
+        VG_DEBUGPRINT("[ObjectFactory] Register class \"%s\"\n", _className);
 
         ClassDesc classDesc;
                   classDesc.name = _className;
@@ -154,11 +208,14 @@ namespace vg::core
 
     template <typename T> struct TypeToEnum;
     template <> struct TypeToEnum<bool>                         { static constexpr auto value = IPropertyDescriptor::Type::Bool; };
+    template <> struct TypeToEnum<float>                        { static constexpr auto value = IPropertyDescriptor::Type::Float; };
     template <> struct TypeToEnum<core::float4>                 { static constexpr auto value = IPropertyDescriptor::Type::Float4; };
     template <> struct TypeToEnum<core::string>                 { static constexpr auto value = IPropertyDescriptor::Type::String; };
     template <> struct TypeToEnum<IObject*>                     { static constexpr auto value = IPropertyDescriptor::Type::Object; };
     template <> struct TypeToEnum<IResource*>                   { static constexpr auto value = IPropertyDescriptor::Type::Resource; };
     template <> struct TypeToEnum<IPropertyDescriptor::Func>    { static constexpr auto value = IPropertyDescriptor::Type::Function; };
+
+    template <> struct TypeToEnum<vector<IObject*>>             { static constexpr auto value = IPropertyDescriptor::Type::ObjectVector; };
 
     //--------------------------------------------------------------------------------------
     template <typename T> void ObjectFactory::ClassDesc::registerClassMemberT(const char * _propertyName, T * _offset, const char * _displayName, IPropertyDescriptor::Flags _flags)
@@ -245,7 +302,7 @@ namespace vg::core
 
         for (uint p = 0; p < desc->getPropertyCount(); ++p)
         {
-            const auto & prop = desc->getProperty(p);
+            const auto & prop = desc->getPropertyByIndex(p);
             const auto * name = prop->getName();
             const auto type = prop->getType();
             const auto offset = prop->getOffset();
@@ -256,8 +313,11 @@ namespace vg::core
                 switch (type)
                 {
                     default:
-                        VG_ASSERT_ENUM_NOT_IMPLEMENTED(type);
-                        break;
+                    {
+                        IResource * pResource = (IResource*)(uint_ptr(_object) + offset);
+                        pResource->setPath(it->second.substr(1, it->second.length() - 2));
+                    }
+                    break;
 
                     case IPropertyDescriptor::Type::Function:
                         break;
@@ -319,7 +379,7 @@ namespace vg::core
         
         for (uint p = 0; p < classDesc->getPropertyCount(); ++p)
         {
-            const auto & prop = classDesc->getProperty(p);
+            const auto & prop = classDesc->getPropertyByIndex(p);
 
             const auto name = prop->getName();
             const auto type = prop->getType();
@@ -330,8 +390,11 @@ namespace vg::core
             switch (type)
             {
                 default:
-                    VG_ASSERT_ENUM_NOT_IMPLEMENTED(type);
-                    break;
+                {
+                    IResource * pResource = (IResource*)(uint_ptr(_object) + offset);
+                    value = "\""+ pResource->getPath() + "\"";
+                }
+                break;
 
                 case IPropertyDescriptor::Type::Function:
                     continue;

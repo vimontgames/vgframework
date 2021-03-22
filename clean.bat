@@ -19,3 +19,11 @@ rmdir capture /S /Q
 rmdir lib /S /Q
 rmdir tmp /S /Q
 rmdir .vs /S /Q
+
+cd projects
+cd supervimontbrawl
+del *.dll
+del *.ilk
+del *.pdb
+cd ..
+cd ..

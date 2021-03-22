@@ -10,6 +10,7 @@ namespace vg
     namespace core
     {
         struct Singletons;
+        class IScene;
     }
 
     namespace graphics::renderer
@@ -26,9 +27,11 @@ namespace vg::engine
 		virtual void							init		    (const EngineParams & _params, core::Singletons & _singletons) = 0;
 		virtual void							deinit		    () = 0;
 
-        virtual bool                            loadProject     (const core::string & _name) = 0;
+        virtual bool                            loadProject     (const core::string & _path) = 0;
         virtual bool                            unloadProject   () = 0;
         virtual IProject *                      getProject      () const = 0;
+
+        virtual core::IScene *                  getScene        () const = 0;
 
         virtual core::uint2                     getScreenSize   () const = 0;
 

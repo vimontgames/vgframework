@@ -2,7 +2,7 @@
 #include "renderer.h"
 
 #include "core/Kernel.h"
-#include "core/IObjectFactory.h"
+#include "core/Object/AutoRegisterClass.h"
 #include "graphics/driver/device/device.h"
 #include "graphics/driver/Shader/ShaderManager.h"
 #include "graphics/driver/FrameGraph/FrameGraph.h"
@@ -87,14 +87,22 @@ namespace vg::graphics::renderer
     //--------------------------------------------------------------------------------------
     bool Renderer::registerClasses()
     {
-        core::IObjectFactory * factory = Kernel::getObjectFactory();
+        IObjectFactory * factory = Kernel::getObjectFactory();
 
-        core::IObjectDescriptor & desc = factory->registerClassSingletonHelper(Renderer, "Renderer");
+        // Register classes to auto-register the "Engine" module
+        AutoRegisterClassInfo::registerClasses(*factory);
+
+        IObjectDescriptor & desc = factory->registerClassSingletonHelper(Renderer, "Renderer");
         registerProperties(desc);
 
-        DisplayOptions::registerClass(*factory);
-
         return true;
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool Renderer::unregisterClasses()
+    {
+        IObjectFactory * factory = Kernel::getObjectFactory();
+        return AutoRegisterClassInfo::unregisterClasses(*factory);
     }
 
     //--------------------------------------------------------------------------------------
@@ -151,6 +159,8 @@ namespace vg::graphics::renderer
 	//--------------------------------------------------------------------------------------
 	void Renderer::deinit()
 	{
+        unregisterClasses();
+
         DisplayOptions * displayOptions = DisplayOptions::get();
         VG_SAFE_DELETE(displayOptions);
 

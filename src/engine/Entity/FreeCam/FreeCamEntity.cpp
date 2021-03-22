@@ -2,11 +2,41 @@
 #include "FreeCamEntity.h"
 #include "core/Math/Math.h"
 #include "core/IInput.h"
+#include "core/Object/AutoRegisterClass.h"  
 
 using namespace vg::core;
 
 namespace vg::engine
 {
+    VG_AUTO_REGISTER_CLASS(FreeCamEntity)
+
+    //--------------------------------------------------------------------------------------
+    bool FreeCamEntity::registerClass(IObjectFactory & _factory)
+    {
+        core::IObjectDescriptor & desc = _factory.registerClassHelper(FreeCamEntity, "FreeCamEntity");
+
+        registerProperties(desc);
+
+        return true;
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool FreeCamEntity::registerProperties(IObjectDescriptor & _desc)
+    {
+        super::registerProperties(_desc);
+
+        _desc.registerPropertyHelper(FreeCamEntity, m_pitch, "Pitch", IPropertyDescriptor::Flags::None);
+        _desc.setPropertyRangeHelper(FreeCamEntity, m_pitch, float2(-pi, +pi));
+
+        _desc.registerPropertyHelper(FreeCamEntity, m_yaw, "Yaw", IPropertyDescriptor::Flags::None);
+        _desc.setPropertyRangeHelper(FreeCamEntity, m_yaw, float2(-pi, +pi));
+
+        _desc.registerPropertyHelper(FreeCamEntity, m_roll, "Roll", IPropertyDescriptor::Flags::None);
+        _desc.setPropertyRangeHelper(FreeCamEntity, m_roll, float2(-pi, +pi));
+
+        return true;
+    }
+
     //--------------------------------------------------------------------------------------
     FreeCamEntity::FreeCamEntity(const core::string & _name) : 
         core::Entity(_name),

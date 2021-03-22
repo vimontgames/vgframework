@@ -1,11 +1,11 @@
 #include "core/Precomp.h"
 #include "Resource.h"
-#include "core/IObjectFactory.h"
 #include "core/File/File.h"
+#include "core/Object/AutoRegisterClass.h"
 
 namespace vg::core
 {
-
+    VG_AUTO_REGISTER_CLASS(Resource)
 
     //--------------------------------------------------------------------------------------
     IObject * Resource::get() const 
