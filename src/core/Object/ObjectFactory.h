@@ -61,21 +61,24 @@ namespace vg::core
             IPropertyDescriptor *       getPropertyByName(const char * _propertyName) const final;
             IObjectDescriptor::Func     getCreateFunc           () const final;
             IObjectDescriptor::Flags    getFlags                () const final;
+            u32                         getNextIndex            () const final;
 
             const char *                name = nullptr;
             const char *                displayName = nullptr;
             IObjectDescriptor::Flags    flags = IObjectDescriptor::Flags::None;
             IObjectDescriptor::Func     createFunc;
             vector<ClassProperty>       properties;
+            mutable u32                 count = 0;
 
         private:
             template <typename T> void  registerClassMemberT    (const char * _propertyName, T * _offset, const char * _displayName, IPropertyDescriptor::Flags _flags);
         };
 
-        IObjectDescriptor &             registerClass           (const char * _className, const char * _displayName, IObjectDescriptor::Flags _flags, IObjectDescriptor::Func _createFunc) final;
+        IObjectDescriptor *             registerClass           (const char * _className, const char * _displayName, IObjectDescriptor::Flags _flags, IObjectDescriptor::Func _createFunc) final;
         const IObjectDescriptor *       getClassDescriptor      (const char * _className) const final;
         bool                            isRegisteredClass       (const char * _className) const final;
-        Object *                        getSingleton            (const char * _className) const final;
+        IObject *                       getSingleton            (const char * _className) const final;
+        IObject *                       createObject            (const char * _className, const char * _name = nullptr) const final;
 
         bool                            serializeFromString     (IObject * _object, const string & _in) const final;
         bool                            serializeToString       (string & _out, const IObject * _object) const final;

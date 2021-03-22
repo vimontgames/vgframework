@@ -46,8 +46,8 @@ bool SuperVimontBrawl::registerClasses()
     // Register classes to auto-register the "Engine" module
     AutoRegisterClassInfo::registerClasses(*factory);
 
-    IObjectDescriptor & desc = factory->registerClassSingletonHelper(SuperVimontBrawl, "SuperVimontBrawl");
-    registerProperties(desc);
+    if (IObjectDescriptor * desc = factory->registerClassSingletonHelper(SuperVimontBrawl, "SuperVimontBrawl"))
+        registerProperties(*desc);
 
     return true;
 }

@@ -27,6 +27,9 @@
     <ClCompile Include="Pass\ImguiPass.cpp">
       <Filter>Pass</Filter>
     </ClCompile>
+    <ClCompile Include="Component\Mesh\MeshComponent.cpp">
+      <Filter>Component\Mesh</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Renderer.def" />
@@ -99,6 +102,9 @@
     <ClInclude Include="Options\Options.h">
       <Filter>Options</Filter>
     </ClInclude>
+    <ClInclude Include="Component\Mesh\MeshComponent.h">
+      <Filter>Component\Mesh</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Pass">
@@ -139,6 +145,9 @@
     </Filter>
     <Filter Include="Options">
       <UniqueIdentifier>{a9aacbb9-0638-47b2-b318-6e3c81aef432}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Component\Mesh">
+      <UniqueIdentifier>{7def93ed-0ac1-4681-b811-648dd48b7c3c}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

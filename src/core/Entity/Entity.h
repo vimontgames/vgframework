@@ -30,6 +30,7 @@ namespace vg::core
 
     private:
         float4x4            m_matrix = float4x4::identity();
+        float4              m_color = { 1.0f, 1.0f, 1.0f, 1.0f };
         vector<Component*>  m_components;
     };
 }

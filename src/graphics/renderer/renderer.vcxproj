@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Component\Mesh\MeshComponent.cpp" />
     <ClCompile Include="Geometry\Geometry.cpp" />
     <ClCompile Include="Imgui\imguiAdapter.cpp" />
     <ClCompile Include="Importer\FBX\FBXImporter.cpp" />
@@ -39,6 +40,7 @@
     <None Include="Renderer.def" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Component\Mesh\MeshComponent.h" />
     <ClInclude Include="Geometry\Geometry.h" />
     <ClInclude Include="Geometry\Mesh\MeshGeometry.h" />
     <ClInclude Include="Geometry\Mesh\MeshGeometry.hpp" />

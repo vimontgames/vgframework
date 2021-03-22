@@ -21,7 +21,6 @@ namespace vg::core
             VG_SAFE_RELEASE(m_sectors[i]);
         m_sectors.clear();
 
-        m_entities.clear();
         for (uint i = 0; i < m_entities.size(); ++i)
             VG_SAFE_RELEASE(m_entities[i]);
         m_entities.clear();
@@ -30,9 +29,8 @@ namespace vg::core
     //--------------------------------------------------------------------------------------
     bool Sector::registerClass(IObjectFactory & _factory)
     {
-        core::IObjectDescriptor & desc = _factory.registerClassHelper(Sector, "Sector");
-
-        registerProperties(desc);
+        if (core::IObjectDescriptor * desc = _factory.registerClassHelper(Sector, "Sector"))
+            registerProperties(*desc);
 
         return true;
     }
@@ -79,6 +77,7 @@ namespace vg::core
     void Sector::addEntity(IEntity * _entity)
     {
         VG_ASSERT(m_entities.end() == std::find(m_entities.begin(), m_entities.end(), _entity));
+        _entity->addRef();
         m_entities.push_back((Entity*)_entity);
     }
 

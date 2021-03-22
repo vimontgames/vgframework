@@ -97,6 +97,7 @@ namespace vg::core
         virtual IPropertyDescriptor *       getPropertyByName       (const char * _propertyName) const = 0;
         virtual Func                        getCreateFunc           () const = 0;
         virtual IObjectDescriptor::Flags    getFlags                () const = 0;
+        virtual u32                         getNextIndex            () const = 0;
     };
 
     class IObjectFactory
@@ -104,10 +105,11 @@ namespace vg::core
     public:
         virtual ~IObjectFactory() {}
 
-        virtual IObjectDescriptor &         registerClass           (const char * _className, const char * _displayName, IObjectDescriptor::Flags _flags, IObjectDescriptor::Func _createFunc) = 0;
+        virtual IObjectDescriptor *         registerClass           (const char * _className, const char * _displayName, IObjectDescriptor::Flags _flags, IObjectDescriptor::Func _createFunc) = 0;
         virtual const IObjectDescriptor *   getClassDescriptor      (const char * _className) const = 0;
         virtual bool                        isRegisteredClass       (const char * _className) const = 0;
-        virtual Object *                    getSingleton            (const char * _className) const = 0;
+        virtual IObject *                   getSingleton            (const char * _className) const = 0;
+        virtual IObject *                   createObject            (const char * _className, const char * _name = nullptr) const = 0;
 
         virtual bool                        serializeFromString     (IObject * _object, const string & _in) const = 0;
         virtual bool                        serializeToString       (string & _out, const IObject * _object) const = 0;

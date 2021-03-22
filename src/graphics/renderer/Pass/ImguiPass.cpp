@@ -353,7 +353,7 @@ namespace vg::graphics::renderer
         if (ImGui::Begin("Engine", &m_isEngineWindowVisible))
         {
             const auto * factory = Kernel::getObjectFactory();
-            Object * engine = factory->getSingleton("Engine");
+            IObject * engine = factory->getSingleton("Engine");
             if (engine)
             {
                 const char * className = engine->getClassName();
@@ -372,7 +372,7 @@ namespace vg::graphics::renderer
         if (ImGui::Begin("Renderer", &m_isRendererWindowVisible))
         {
             const auto * factory = Kernel::getObjectFactory();
-            Object * renderer = factory->getSingleton("Renderer");
+            IObject * renderer = factory->getSingleton("Renderer");
             if (renderer)
                 displayObject(renderer);
         }

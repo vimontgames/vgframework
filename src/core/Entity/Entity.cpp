@@ -9,9 +9,8 @@ namespace vg::core
     //--------------------------------------------------------------------------------------
     bool Entity::registerClass(IObjectFactory & _factory)
     {
-        core::IObjectDescriptor & desc = _factory.registerClassHelper(Entity, "Entity");
-
-        registerProperties(desc);
+        if (core::IObjectDescriptor * desc = _factory.registerClassHelper(Entity, "Entity"))
+            registerProperties(*desc);
 
         return true;
     }
@@ -21,6 +20,7 @@ namespace vg::core
     {
         super::registerProperties(_desc);
 
+        _desc.registerPropertyHelper(Entity, m_color, "Color", IPropertyDescriptor::Flags::Color);
         _desc.registerPropertyVectorHelper(Entity, m_components, IObject*, "Components", IPropertyDescriptor::Flags::None);
 
         return true;

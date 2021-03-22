@@ -41,9 +41,8 @@ namespace vg::core
     //--------------------------------------------------------------------------------------
     bool Resource::registerClass(IObjectFactory & _factory)
     {
-        core::IObjectDescriptor & desc = _factory.registerClassHelper(Resource, "Resource");
-
-        registerProperties(desc);
+        if (core::IObjectDescriptor * desc = _factory.registerClassHelper(Resource, "Resource"))
+            registerProperties(*desc);
 
         return true;
     }

@@ -53,6 +53,12 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
+    u32 ObjectFactory::ClassDesc::getNextIndex() const
+    {
+        return count++;
+    }
+
+    //--------------------------------------------------------------------------------------
     bool ObjectFactory::ClassDesc::isRegisteredProperty(const char * _propertyName)
     {
         return nullptr != getPropertyByName(_propertyName);
@@ -159,14 +165,14 @@ namespace vg::core
     //--------------------------------------------------------------------------------------
     // Returned pointer shall not be stored but used immediatly ;)
     //--------------------------------------------------------------------------------------
-    IObjectDescriptor & ObjectFactory::registerClass(const char * _className, const char * _displayName, IObjectDescriptor::Flags _flags, IObjectDescriptor::Func _createFunc)
+    IObjectDescriptor * ObjectFactory::registerClass(const char * _className, const char * _displayName, IObjectDescriptor::Flags _flags, IObjectDescriptor::Func _createFunc)
     {
         // Classes declared in shared static libs could be declared more than once at static init
         for (uint i = 0; i < m_classes.size(); ++i)
         {
             ClassDesc & desc = m_classes[i];
             if (!strcmp(desc.getClassName(), _className))
-                return desc;
+                return nullptr; // already registered
         }
 
         VG_DEBUGPRINT("[ObjectFactory] Register class \"%s\"\n", _className);
@@ -179,7 +185,7 @@ namespace vg::core
 
         m_classes.push_back(classDesc);
 
-        return m_classes.back();
+        return &m_classes.back();
     }
 
     //--------------------------------------------------------------------------------------
@@ -195,13 +201,35 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
-    Object * ObjectFactory::getSingleton(const char * _className) const
+    IObject * ObjectFactory::getSingleton(const char * _className) const
     {
         const auto * desc = getClassDescriptor(_className);
         if (desc)
         {
             VG_ASSERT(asBool(IObjectDescriptor::Flags::Singleton & desc->getFlags()));
             return desc->getCreateFunc()();
+        }
+        return nullptr;
+    }
+
+    //--------------------------------------------------------------------------------------
+    IObject * ObjectFactory::createObject(const char * _className, const char * _name) const
+    {
+        auto * desc = getClassDescriptor(_className);
+
+        if (desc)
+        {
+            VG_ASSERT(!asBool(IObjectDescriptor::Flags::Singleton & desc->getFlags()));
+            IObject * obj = desc->getCreateFunc()();
+
+            const auto index = desc->getNextIndex();
+
+            if (_name)
+                obj->setName(_name);
+            else
+                obj->setName((string)obj->getClassName() + " #" + to_string(index));
+
+            return obj;
         }
         return nullptr;
     }

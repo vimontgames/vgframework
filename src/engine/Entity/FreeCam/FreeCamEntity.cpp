@@ -13,9 +13,8 @@ namespace vg::engine
     //--------------------------------------------------------------------------------------
     bool FreeCamEntity::registerClass(IObjectFactory & _factory)
     {
-        core::IObjectDescriptor & desc = _factory.registerClassHelper(FreeCamEntity, "FreeCamEntity");
-
-        registerProperties(desc);
+        if (core::IObjectDescriptor * desc = _factory.registerClassHelper(FreeCamEntity, "FreeCamEntity"))
+            registerProperties(*desc);
 
         return true;
     }

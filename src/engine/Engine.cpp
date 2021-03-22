@@ -29,6 +29,10 @@ using namespace vg::engine;
 #define VG_ENGINE_VERSION_MAJOR 0
 #define VG_ENGINE_VERSION_MINOR 1
 
+// Avoid stripping code for classes from static lib
+static Scene scene;
+static Sector sector;
+
 //--------------------------------------------------------------------------------------
 IEngine * CreateNew()
 {
@@ -101,8 +105,8 @@ namespace vg::engine
         // Register classes to auto-register the "Engine" module
         AutoRegisterClassInfo::registerClasses(*factory);
 
-        core::IObjectDescriptor & desc = factory->registerClassSingletonHelper(Engine, "Engine");
-        registerProperties(desc);
+        if (core::IObjectDescriptor * desc = factory->registerClassSingletonHelper(Engine, "Engine"))
+            registerProperties(*desc);
 
         load(this);
         loadProject(m_projectPath);
@@ -249,18 +253,6 @@ namespace vg::engine
 
         registerClasses();
 
-        // test scene
-        m_scene = new Scene();
-        m_scene->setName("Scene");
-
-        // populate scene
-        Sector * rootSector = new Sector();
-        rootSector->setName("Root");
-
-        m_scene->setRoot(rootSector);
-
-        VG_SAFE_RELEASE(rootSector);
-
         createEditorView();
 	}
 
@@ -274,22 +266,43 @@ namespace vg::engine
         m_editorView = m_renderer->createView(params);
         m_renderer->setView(m_editorView);
 
-        CameraComponent * cameraComponent = new CameraComponent();
+        // use factor to create objects
+        auto * factory = Kernel::getObjectFactory();
+
+        // create empty scene
+        m_scene = (Scene*)factory->createObject("Scene");
+        m_scene->setName("Scene");
+
+        // add root sector
+        Sector * rootSector = (Sector*)factory->createObject("Sector");
+        rootSector->setName("Root");
+        m_scene->setRoot(rootSector);
+        VG_SAFE_RELEASE(rootSector);
+
+        // add camera entity
+        CameraComponent * cameraComponent = (CameraComponent*)factory->createObject("CameraComponent");
         m_freeCam = new FreeCamEntity("FreeCam #0");
         m_freeCam->addComponent(cameraComponent);
         cameraComponent->setView(m_editorView);
-
         auto * root = m_scene->getRoot();
-
         root->addEntity(m_freeCam);
-                
         VG_SAFE_RELEASE(cameraComponent);
+        VG_SAFE_RELEASE(m_freeCam);
+
+        // add entity with mesh
+        Entity * meshEntity = (Entity*)factory->createObject("Entity");
+        Component * meshComponent = (Component*)factory->createObject("MeshComponent");
+        meshEntity->addComponent(meshComponent);
+        root->addEntity(meshEntity);
+        VG_SAFE_RELEASE(meshComponent);
+        VG_SAFE_RELEASE(meshEntity);
     }
 
     //--------------------------------------------------------------------------------------
     void Engine::destroyEditorView()
     {
         VG_SAFE_RELEASE(m_freeCam);
+        VG_SAFE_RELEASE(m_scene);
         VG_SAFE_RELEASE(m_editorView);
     }
 
@@ -297,8 +310,6 @@ namespace vg::engine
 	void Engine::deinit()
 	{
         m_renderer->waitGPUIdle();
-
-        VG_SAFE_RELEASE(m_scene);
 
         destroyEditorView();
 

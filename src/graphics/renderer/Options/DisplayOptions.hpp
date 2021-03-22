@@ -16,9 +16,8 @@ namespace vg::graphics::renderer
     //--------------------------------------------------------------------------------------
     bool DisplayOptions::registerClass(IObjectFactory & _factory)
     {
-        core::IObjectDescriptor & desc = _factory.registerClassSingletonHelper(DisplayOptions, "Display Options");
-
-        registerProperties(desc);
+        if (core::IObjectDescriptor * desc = _factory.registerClassSingletonHelper(DisplayOptions, "Display Options"))
+            registerProperties(*desc);
 
         return true;
     }

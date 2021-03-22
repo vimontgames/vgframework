@@ -13,9 +13,8 @@ namespace vg::engine
     //--------------------------------------------------------------------------------------
     bool CameraComponent::registerClass(IObjectFactory & _factory)
     {
-        core::IObjectDescriptor & desc = _factory.registerClassHelper(CameraComponent, "Camera Component");
-
-        registerProperties(desc);
+        if (core::IObjectDescriptor * desc = _factory.registerClassHelper(CameraComponent, "Camera Component"))
+            registerProperties(*desc);
 
         return true;
     }

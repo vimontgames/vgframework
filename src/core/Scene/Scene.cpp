@@ -23,9 +23,8 @@ namespace vg::core
     //--------------------------------------------------------------------------------------
     bool Scene::registerClass(IObjectFactory & _factory)
     {
-        core::IObjectDescriptor & desc = _factory.registerClassHelper(Scene, "Scene");
-
-        registerProperties(desc);
+        if (core::IObjectDescriptor * desc = _factory.registerClassHelper(Scene, "Scene"))
+            registerProperties(*desc);
 
         return true;
     }
