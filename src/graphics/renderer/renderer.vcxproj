@@ -19,10 +19,10 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Component\Mesh\MeshComponent.cpp" />
     <ClCompile Include="Geometry\Geometry.cpp" />
     <ClCompile Include="Imgui\imguiAdapter.cpp" />
     <ClCompile Include="Importer\FBX\FBXImporter.cpp" />
+    <ClCompile Include="Instance\Mesh\MeshInstance.cpp" />
     <ClCompile Include="Model\Mesh\MeshModel.cpp" />
     <ClCompile Include="Options\Options.cpp" />
     <ClCompile Include="Pass\ImguiPass.cpp" />
@@ -40,15 +40,17 @@
     <None Include="Renderer.def" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Component\Mesh\MeshComponent.h" />
     <ClInclude Include="Geometry\Geometry.h" />
     <ClInclude Include="Geometry\Mesh\MeshGeometry.h" />
     <ClInclude Include="Geometry\Mesh\MeshGeometry.hpp" />
+    <ClInclude Include="IGraphicInstance.h" />
+    <ClInclude Include="IGraphicModel.h" />
     <ClInclude Include="IMeshInstance.h" />
     <ClInclude Include="IMeshModel.h" />
     <ClInclude Include="Imgui\imguiAdapter.h" />
     <ClInclude Include="Importer\FBX\FBXImporter.h" />
     <ClInclude Include="Importer\SceneImporterData.h" />
+    <ClInclude Include="Instance\Mesh\MeshInstance.h" />
     <ClInclude Include="IRenderer.h" />
     <ClInclude Include="IView.h" />
     <ClInclude Include="Model\Mesh\MeshModel.h" />

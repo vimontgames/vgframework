@@ -30,7 +30,7 @@ namespace vg::graphics::renderer
 
 		IPlugin::Version		getVersion			() const override;
 
-								Renderer			();
+								Renderer			(const core::string & _name, core::IObject * _parent);
 								~Renderer			();
 
         const char *            getClassName        () const final { return "Renderer"; }
@@ -54,7 +54,7 @@ namespace vg::graphics::renderer
 
         core::IProfiler *       getProfilerInstance () const override;
 
-        MeshModel *             createMeshModel     (const core::string & _path);
+        IMeshModel *            createMeshModel     (const core::string & _path) final;
         
         #ifdef _WIN32
         LRESULT CALLBACK        WndProc             (HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) override;

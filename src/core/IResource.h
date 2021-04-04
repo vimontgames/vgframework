@@ -11,5 +11,7 @@ namespace vg::core
         virtual IObject * get() const = 0;
         virtual const string & getPath() const = 0;
         virtual bool setPath(const string & _path) = 0;
+        virtual const vector<string> getExtensions() const = 0;
+        virtual void onPathChanged(IObject * _owner, const string & _oldPath, const string & _newPath) = 0;
     };
 }

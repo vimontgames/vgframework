@@ -18,7 +18,7 @@ namespace vg::graphics::renderer
     public:
         const char * getClassName() const final { return "MeshModel"; }
 
-        MeshModel(const core::string & _name);
+        MeshModel(const core::string & _name, core::IObject * _parent);
         ~MeshModel();
 
         void setGeometry(MeshGeometry * _meshGeometry);

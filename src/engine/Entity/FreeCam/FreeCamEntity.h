@@ -20,7 +20,7 @@ namespace vg::engine
 
         const char *    getClassName        () const final { return "FreeCamEntity"; }
 
-                        FreeCamEntity       (const core::string & _name = "");
+                        FreeCamEntity       (const core::string & _name, core::IObject * _parent);
                         ~FreeCamEntity      ();
 
         void            update              (double _dt) override;

@@ -5,10 +5,10 @@
 
 namespace vg::core
 {
-    VG_AUTO_REGISTER_CLASS(Scene)
+    VG_AUTO_REGISTER_CLASS(Scene);
 
     //--------------------------------------------------------------------------------------
-    Scene::Scene() :
+    Scene::Scene(const string & _name, IObject * _parent) :
         IScene()
     {
 

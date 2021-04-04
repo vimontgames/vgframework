@@ -1,10 +1,11 @@
 #include "core/Precomp.h"
 #include "Entity.h"
+#include "core/Component/Component.h"
 #include "core/Object/AutoRegisterClass.h"  
 
 namespace vg::core
 {
-    VG_AUTO_REGISTER_CLASS(Entity)
+    VG_AUTO_REGISTER_ENTITY(Entity);
 
     //--------------------------------------------------------------------------------------
     bool Entity::registerClass(IObjectFactory & _factory)
@@ -21,14 +22,15 @@ namespace vg::core
         super::registerProperties(_desc);
 
         _desc.registerPropertyHelper(Entity, m_color, "Color", IPropertyDescriptor::Flags::Color);
+        _desc.registerPropertyHelper(Entity, m_matrix, "Matrix", IPropertyDescriptor::Flags::None);
         _desc.registerPropertyVectorHelper(Entity, m_components, IObject*, "Components", IPropertyDescriptor::Flags::None);
 
         return true;
     }
 
     //--------------------------------------------------------------------------------------
-    Entity::Entity(const core::string & _name) :
-        IEntity(_name)
+    Entity::Entity(const core::string & _name, IObject * _parent) :
+        IEntity(_name, _parent)
     {
 
     }
@@ -48,8 +50,14 @@ namespace vg::core
         for (uint i = 0; i < m_components.size(); ++i)
         {
             Component * component = m_components[i];
-            component->update(this, _dt);
+            component->update(_dt);
         }
+    }
+
+    //--------------------------------------------------------------------------------------
+    ISector * Entity::getSector() const
+    {
+        return (ISector*)getParent();
     }
 
     //--------------------------------------------------------------------------------------

@@ -8,7 +8,7 @@ using namespace vg::core;
 
 namespace vg::engine
 {
-    VG_AUTO_REGISTER_CLASS(CameraComponent)
+    VG_AUTO_REGISTER_COMPONENT(CameraComponent);
 
     //--------------------------------------------------------------------------------------
     bool CameraComponent::registerClass(IObjectFactory & _factory)
@@ -28,8 +28,8 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
-    CameraComponent::CameraComponent() :
-        core::Component("CameraComponent")
+    CameraComponent::CameraComponent(const core::string & _name, core::IObject * _parent) :
+        core::Component(_name, _parent)
     {
 
     }
@@ -41,9 +41,9 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
-    void CameraComponent::update(const Entity * _entity, double _dt)
+    void CameraComponent::update(double _dt)
     {
-        const float4x4 & matrix = _entity->getMatrix();
+        const float4x4 & matrix = ((Entity*)getEntity())->getMatrix();
         m_view->setViewInvMatrix(inverse(matrix));
     }
 

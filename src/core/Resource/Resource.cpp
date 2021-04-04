@@ -5,7 +5,31 @@
 
 namespace vg::core
 {
-    VG_AUTO_REGISTER_CLASS(Resource)
+    //--------------------------------------------------------------------------------------
+    bool Resource::registerClass(IObjectFactory & _factory)
+    {
+        return false;
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool Resource::registerProperties(IObjectDescriptor & _desc)
+    {
+        _desc.registerProperty("m_object", (IObject**)(&((Resource*)(nullptr))->m_object), "Object", IPropertyDescriptor::Flags::None);
+        return true;
+    }
+
+    //--------------------------------------------------------------------------------------
+    Resource::Resource(IObject * _owner) :
+        m_owner(_owner)
+    {
+
+    }
+
+    //--------------------------------------------------------------------------------------
+    Resource::~Resource()
+    {
+
+    }
 
     //--------------------------------------------------------------------------------------
     IObject * Resource::get() const 
@@ -27,30 +51,10 @@ namespace vg::core
      
         string oldPath = m_path;
         m_path = getRelativePath(_path);
-        onPathChanged(oldPath, m_path);
+        onPathChanged(m_owner, oldPath, m_path);
 
         return true;
     }
 
-    //--------------------------------------------------------------------------------------
-    void Resource::onPathChanged(const string & _oldPath, const string & _newPath)
-    {
 
-    }
-
-    //--------------------------------------------------------------------------------------
-    bool Resource::registerClass(IObjectFactory & _factory)
-    {
-        if (core::IObjectDescriptor * desc = _factory.registerClassHelper(Resource, "Resource"))
-            registerProperties(*desc);
-
-        return true;
-    }
-
-    //--------------------------------------------------------------------------------------
-    bool Resource::registerProperties(IObjectDescriptor & _desc)
-    {
-        _desc.registerProperty("m_object", (IObject**)(&((Resource*)(nullptr))->m_object), "Object", IPropertyDescriptor::Flags::None);
-        return true;
-    }
 }

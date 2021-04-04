@@ -13,6 +13,12 @@ namespace vg::core
 			core::u16 minor;
 		};
 
+        IPlugin(const core::string & _name, core::IObject * _parent) :
+            core::Object(_name, _parent)
+        {
+
+        }
+
 		virtual Version getVersion	    () const = 0;
 		virtual			~IPlugin	    () {}
 

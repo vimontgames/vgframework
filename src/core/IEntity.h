@@ -4,13 +4,17 @@
 
 namespace vg::core
 {
+    class ISector;
+
     class IEntity : public Object
     {
     public:
-        IEntity(const string & _name) :
-            Object(_name)
+        IEntity(const core::string & _name, IObject * _parent) :
+            Object(_name, _parent)
         {
 
         }
+
+        virtual ISector *   getSector() const = 0;
     };
 }

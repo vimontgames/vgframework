@@ -24,8 +24,8 @@ namespace vg::core
     public:
         const char * getClassName() const final { return "TestJob"; }
 
-        TestJob(const string & _name) :
-            Job(_name)
+        TestJob(const string & _name, IObject * _parent) :
+            Job(_name, _parent)
         {
 
         }
@@ -50,8 +50,8 @@ namespace vg::core
     public:
         const char * getClassName() const final { return "RegisterProfilerThreadJob"; }
 
-        RegisterProfilerThreadJob() : 
-            Job("")
+        RegisterProfilerThreadJob(const string & _name, IObject * _parent) :
+            Job(_name, _parent)
         {
 
         }
@@ -93,7 +93,7 @@ namespace vg::core
     //--------------------------------------------------------------------------------------
     void Scheduler::registerProfilerThreads(core::uint _count)
     {
-        RegisterProfilerThreadJob registerProfilerThreadJob;
+        RegisterProfilerThreadJob registerProfilerThreadJob("RegisterProfilerJob", nullptr);
 
         px_sched::Sync s;
         for (uint i = 0; i < _count; ++i)
@@ -125,7 +125,7 @@ namespace vg::core
             char jobName[256];
             sprintf_s(jobName, "Job %u", i);
 
-            testJobs.push_back(new TestJob(jobName));
+            testJobs.push_back(new TestJob(jobName, nullptr));
 
             px_sched::Job job{ testJobs[i] };
             m_schd->run(job, &s);

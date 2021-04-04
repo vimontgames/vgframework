@@ -8,7 +8,7 @@ using namespace vg::core;
 
 namespace vg::engine
 {
-    VG_AUTO_REGISTER_CLASS(FreeCamEntity)
+    VG_AUTO_REGISTER_ENTITY(FreeCamEntity);
 
     //--------------------------------------------------------------------------------------
     bool FreeCamEntity::registerClass(IObjectFactory & _factory)
@@ -37,8 +37,8 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
-    FreeCamEntity::FreeCamEntity(const core::string & _name) : 
-        core::Entity(_name),
+    FreeCamEntity::FreeCamEntity(const core::string & _name, core::IObject * _parent) :
+        core::Entity(_name, _parent),
         m_pitch(-pi*2.0f/4.0f),
         m_yaw(0.0f),
         m_roll(0.0f)

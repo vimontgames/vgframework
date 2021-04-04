@@ -17,7 +17,12 @@ namespace vg
     class IProject : public core::IPlugin
     {
     public:
-                        IProject    () = default;
+        IProject(const core::string & _name, core::IObject * _parent) :
+            core::IPlugin(_name, _parent)
+        {
+
+        }
+
         virtual         ~IProject   () = default;
 
         virtual bool    init        (engine::IEngine & _engine, core::Singletons & _singletons) = 0;

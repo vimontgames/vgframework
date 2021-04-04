@@ -13,7 +13,7 @@ namespace vg::core
     public:
         using super = IScene;
 
-                        Scene               ();
+                        Scene               (const string & _name, IObject * _parent);
                         ~Scene              ();
 
         const char *    getClassName() const final { return "Scene"; }

@@ -30,13 +30,13 @@ using namespace vg::engine;
 #define VG_ENGINE_VERSION_MINOR 1
 
 // Avoid stripping code for classes from static lib
-static Scene scene;
-static Sector sector;
+static Scene scene("",nullptr);
+static Sector sector("", nullptr);;
 
 //--------------------------------------------------------------------------------------
 IEngine * CreateNew()
 {
-	return new Engine();
+	return new Engine("Engine", nullptr);
 }
 
 //--------------------------------------------------------------------------------------
@@ -86,7 +86,8 @@ namespace vg::engine
     #endif
 
 	//--------------------------------------------------------------------------------------
-	Engine::Engine()
+	Engine::Engine(const core::string & _name, core::IObject * _parent) :
+        IEngine(_name, _parent)
 	{
         
 	}
@@ -274,24 +275,24 @@ namespace vg::engine
         m_scene->setName("Scene");
 
         // add root sector
-        Sector * rootSector = (Sector*)factory->createObject("Sector");
+        Sector * rootSector = (Sector*)factory->createObject("Sector", "Root");
         rootSector->setName("Root");
         m_scene->setRoot(rootSector);
         VG_SAFE_RELEASE(rootSector);
 
         // add camera entity
-        CameraComponent * cameraComponent = (CameraComponent*)factory->createObject("CameraComponent");
-        m_freeCam = new FreeCamEntity("FreeCam #0");
+        auto * root = m_scene->getRoot();
+        m_freeCam = new FreeCamEntity("FreeCam #0", root);
+        CameraComponent * cameraComponent = (CameraComponent*)factory->createObject("CameraComponent", "", m_freeCam);
         m_freeCam->addComponent(cameraComponent);
         cameraComponent->setView(m_editorView);
-        auto * root = m_scene->getRoot();
         root->addEntity(m_freeCam);
         VG_SAFE_RELEASE(cameraComponent);
         VG_SAFE_RELEASE(m_freeCam);
 
         // add entity with mesh
-        Entity * meshEntity = (Entity*)factory->createObject("Entity");
-        Component * meshComponent = (Component*)factory->createObject("MeshComponent");
+        Entity * meshEntity = (Entity*)factory->createObject("Entity", "", root);
+        Component * meshComponent = (Component*)factory->createObject("MeshComponent", "", meshEntity);
         meshEntity->addComponent(meshComponent);
         root->addEntity(meshEntity);
         VG_SAFE_RELEASE(meshComponent);

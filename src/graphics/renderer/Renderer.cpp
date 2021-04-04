@@ -31,7 +31,7 @@ using namespace vg::graphics::renderer;
 //--------------------------------------------------------------------------------------
 IRenderer * CreateNew()
 {
-	return new Renderer();
+	return new Renderer("Renderer", nullptr);
 }
 
 //--------------------------------------------------------------------------------------
@@ -66,7 +66,8 @@ namespace vg::graphics::renderer
 	}
 
 	//--------------------------------------------------------------------------------------
-	Renderer::Renderer() :
+	Renderer::Renderer(const core::string & _name, core::IObject * _parent) :
+        IRenderer(_name, _parent),
 		m_device(*(new Device())),
 		m_frameGraph(*(new FrameGraph())),
         m_fbxImporter(new FBXImporter())
@@ -141,7 +142,7 @@ namespace vg::graphics::renderer
 
         registerClasses();
 
-        DisplayOptions * displayOptions = new DisplayOptions();
+        DisplayOptions * displayOptions = new DisplayOptions("DisplayOptions", this);
 	}
 
     //--------------------------------------------------------------------------------------
@@ -220,6 +221,11 @@ namespace vg::graphics::renderer
 		{
             m_imgui->beginFrame();
 
+            // Culling
+            {
+
+            }
+
             // Framegraph
             {
                 VG_PROFILE_CPU("Framegraph");
@@ -271,11 +277,11 @@ namespace vg::graphics::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    MeshModel * Renderer::createMeshModel(const core::string & _path)
+    IMeshModel * Renderer::createMeshModel(const core::string & _path)
     {
         using namespace driver;
 
-        MeshModel * meshModel = nullptr;
+        IMeshModel * meshModel = nullptr;
         SceneImporterData imported;
         if (FBXImporter::get()->importFBX(_path, imported))
         {

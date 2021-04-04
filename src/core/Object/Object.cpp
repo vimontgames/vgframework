@@ -9,10 +9,11 @@
 namespace vg::core
 {
 	//--------------------------------------------------------------------------------------
-	Object::Object(const string & _name) :
+	Object::Object(const core::string & _name, IObject * _parent) :
 		m_refCount(1)
 	{
 		setName(_name);
+        setParent(_parent);
 	}
 
 	//--------------------------------------------------------------------------------------
@@ -36,7 +37,25 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
+    void Object::setParent(IObject * _parent)
+    {
+        m_parent = (Object*)_parent;
+    }
+
+    //--------------------------------------------------------------------------------------
+    IObject * Object::getParent() const
+    {
+        return (IObject*)m_parent;
+    }
+
+    //--------------------------------------------------------------------------------------
     void Object::onPropertyChanged(const IPropertyDescriptor & _prop)
+    {
+
+    }
+
+    //--------------------------------------------------------------------------------------
+    void Object::onResourceLoaded(IResource * _resource)
     {
 
     }

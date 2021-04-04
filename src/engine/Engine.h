@@ -26,7 +26,7 @@ namespace vg::engine
 
 		IPlugin::Version				getVersion	        () const final;
 
-										Engine		        ();
+										Engine		        (const core::string & _name, core::IObject * _parent);
 										~Engine		        ();
 
         const char *                    getClassName        () const final { return "Engine"; }

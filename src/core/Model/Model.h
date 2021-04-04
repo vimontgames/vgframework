@@ -7,6 +7,6 @@ namespace vg::core
     class Model : public IModel
     {
     public:
-        Model(const string & _name);
+        Model(const string & _name, IObject * _parent);
     };
 }

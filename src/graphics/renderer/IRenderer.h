@@ -13,12 +13,19 @@ namespace vg
 
     namespace graphics::renderer
     {
+        class IMeshModel;
         class IView;
         struct CreateViewParams;
 
         class IRenderer : public core::IPlugin
         {
         public:
+            IRenderer(const core::string & _name, core::IObject * _parent) :
+                core::IPlugin(_name, _parent)
+            {
+
+            }
+
             virtual void	            init                (const RendererParams & _params, core::Singletons & _singletons) = 0;
             virtual void	            deinit              () = 0;
             virtual IView *             createView          (const CreateViewParams & _params) = 0;
@@ -33,7 +40,9 @@ namespace vg
             virtual LRESULT CALLBACK    WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) = 0;
             #endif
 
-            virtual core::IProfiler *   getProfilerInstance() const = 0;
+            virtual core::IProfiler *   getProfilerInstance () const = 0;
+
+            virtual IMeshModel *        createMeshModel     (const core::string & _path) = 0;
         };
     }
 }

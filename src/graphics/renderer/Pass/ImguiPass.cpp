@@ -503,6 +503,18 @@ namespace vg::graphics::renderer
                 };
                 break;
 
+                case IPropertyDescriptor::Type::Matrix44:
+                {
+                    float * pFloat4x4 = (float*)(uint_ptr(_object) + offset);
+
+                    changed |= ImGui::InputFloat4(((string)displayName + ".I").c_str(), pFloat4x4 + 0 , "%.2f");
+                    changed |= ImGui::InputFloat4(((string)displayName + ".J").c_str(), pFloat4x4 + 4 , "%.2f");
+                    changed |= ImGui::InputFloat4(((string)displayName + ".K").c_str(), pFloat4x4 + 8 , "%.2f");
+                    changed |= ImGui::InputFloat4(((string)displayName + ".T").c_str(), pFloat4x4 + 12, "%.2f");
+
+                }
+                break;
+
                 case IPropertyDescriptor::Type::Float4:
                 {
                     float * pFloat4 = (float*)(uint_ptr(_object) + offset);
@@ -614,7 +626,12 @@ namespace vg::graphics::renderer
                 {
                     IObject * pObject = *(IObject**)(uint_ptr(_object) + offset);
 
-                    string treeNodeName = displayName;
+                    string treeNodeName;
+                        
+                    if (pObject)
+                        treeNodeName = pObject->getName();
+                    else
+                        treeNodeName = displayName;
 
                     ImGui::PushStyleColor(ImGuiCol_Text, objectColor);
 
@@ -631,7 +648,7 @@ namespace vg::graphics::renderer
                     }
                     else
                     {
-                        updateSelection(_object, _mode);
+                        updateSelection(pObject, _mode);
                     }
 
                     ImGui::PopStyleColor();
@@ -675,7 +692,21 @@ namespace vg::graphics::renderer
                     //    save = false;
                     //}
 
-                    if (file_dialog.showFileDialog("Open file", imgui_addons::ImGuiFileBrowser::DialogMode::OPEN, ImVec2(700, 310), ".ini"))
+                    // build extension list
+                    string ext = "";
+                    bool first = true;
+                    const auto & extensions = pResource->getExtensions();
+                    for (uint e = 0; e < extensions.size(); ++e)
+                    {
+                        if (!first)
+                            ext += ";";
+                        ext += extensions[e];
+                        first = false;
+                    }
+                    if (ext == "")
+                        ext = "*.*";
+
+                    if (file_dialog.showFileDialog("Open file", imgui_addons::ImGuiFileBrowser::DialogMode::OPEN, ImVec2(700, 310), ext.c_str()))
                     {
                         const string newFilePath = file_dialog.selected_path;
                         if (pResource->getPath() != newFilePath)

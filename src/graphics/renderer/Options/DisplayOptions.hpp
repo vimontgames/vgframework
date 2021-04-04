@@ -5,10 +5,11 @@ using namespace vg::core;
 
 namespace vg::graphics::renderer
 {
-    VG_AUTO_REGISTER_CLASS(DisplayOptions)
+    VG_AUTO_REGISTER_CLASS(DisplayOptions);
 
     //--------------------------------------------------------------------------------------
-    DisplayOptions::DisplayOptions()
+    DisplayOptions::DisplayOptions(const core::string & _name, core::IObject * _parent) :
+        Object(_name, _parent)
     {
         load(this);
     }

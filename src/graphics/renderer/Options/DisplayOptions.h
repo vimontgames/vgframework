@@ -15,7 +15,7 @@ namespace vg::graphics::renderer
     public:
         using super = core::Object;
 
-                        DisplayOptions      ();
+                        DisplayOptions      (const core::string & _name, core::IObject * _parent);
 
         const char *    getClassName        () const final { return "DisplayOptions"; }
 

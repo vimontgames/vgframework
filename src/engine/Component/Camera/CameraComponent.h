@@ -18,10 +18,10 @@ namespace vg::engine
         static bool registerClass(core::IObjectFactory & _factory);
         static bool registerProperties(core::IObjectDescriptor & _desc);
 
-        CameraComponent();
+        CameraComponent(const core::string & _name, core::IObject * _parent);
         ~CameraComponent();
 
-        void update(const core::Entity * _entity, double _dt) override;
+        void update(double _dt) override;
 
     public:
         void setView(graphics::renderer::IView * _view);

@@ -24,6 +24,12 @@ namespace vg::engine
 	class IEngine : public core::IPlugin
 	{
 	public:
+        IEngine(const core::string & _name, core::IObject * _parent) :
+            core::IPlugin(_name, _parent)
+        {
+
+        }
+
 		virtual void							init		    (const EngineParams & _params, core::Singletons & _singletons) = 0;
 		virtual void							deinit		    () = 0;
 

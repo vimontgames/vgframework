@@ -3,8 +3,8 @@
 namespace vg::graphics::renderer
 {
     //--------------------------------------------------------------------------------------
-    MeshGeometry::MeshGeometry(const core::string & _name) : 
-        Geometry(_name)
+    MeshGeometry::MeshGeometry(const core::string & _name, core::IObject * _parent) :
+        Geometry(_name, _parent)
     {
 
     }

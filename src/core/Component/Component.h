@@ -2,18 +2,21 @@
 
 #include "core/Object/Object.h"
 
+#define VG_AUTO_REGISTER_COMPONENT(className) VG_AUTO_REGISTER_CLASS_EX(className, vg::core::IObjectDescriptor::Flags::Component)
+
 namespace vg::core
 {
-    class Entity;
+    class IEntity;
 
     class Component : public core::Object
     {
     public:
-        Component(const core::string & _name);
+        Component(const core::string & _name, IObject * _parent);
+        ~Component();
 
-        virtual void update(const Entity * _entity, double _dt) = 0;
+        virtual void update(double _dt) = 0;
 
-    private:
-        
+        IEntity * getEntity() const;
+
     };
 }

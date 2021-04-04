@@ -89,6 +89,12 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
+    void ObjectFactory::ClassDesc::registerProperty(const char * _propertyName, float4x4 * _offset, const char * _displayName, IPropertyDescriptor::Flags _flags)
+    {
+        registerClassMemberT(_propertyName, _offset, _displayName, _flags);
+    }
+
+    //--------------------------------------------------------------------------------------
     void ObjectFactory::ClassDesc::registerProperty(const char * _propertyName, float * _offset, const char * _displayName, IPropertyDescriptor::Flags _flags)
     {
         registerClassMemberT(_propertyName, _offset, _displayName, _flags);
@@ -157,6 +163,12 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
+    IObjectDescriptor::SingletonFunc ObjectFactory::ClassDesc::getSingletonFunc() const
+    {
+        return createSingletonFunc;
+    }
+
+    //--------------------------------------------------------------------------------------
     IObjectDescriptor::Flags ObjectFactory::ClassDesc::getFlags() const
     {
         return flags;
@@ -189,6 +201,30 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
+    IObjectDescriptor * ObjectFactory::registerSingletonClass(const char * _className, const char * _displayName, IObjectDescriptor::Flags _flags, IObjectDescriptor::SingletonFunc _singletonFunc)
+    {
+        // Classes declared in shared static libs could be declared more than once at static init
+        for (uint i = 0; i < m_classes.size(); ++i)
+        {
+            ClassDesc & desc = m_classes[i];
+            if (!strcmp(desc.getClassName(), _className))
+                return nullptr; // already registered
+        }
+
+        VG_DEBUGPRINT("[ObjectFactory] Register singleton class \"%s\"\n", _className);
+
+        ClassDesc classDesc;
+        classDesc.name = _className;
+        classDesc.displayName = _displayName ? _displayName : _className;
+        classDesc.flags = _flags;
+        classDesc.createSingletonFunc = _singletonFunc;
+
+        m_classes.push_back(classDesc);
+
+        return &m_classes.back();
+    }
+
+    //--------------------------------------------------------------------------------------
     bool ObjectFactory::isRegisteredClass(const char * _className) const
     {
         for (uint i = 0; i < m_classes.size(); ++i)
@@ -207,24 +243,24 @@ namespace vg::core
         if (desc)
         {
             VG_ASSERT(asBool(IObjectDescriptor::Flags::Singleton & desc->getFlags()));
-            return desc->getCreateFunc()();
+            return desc->getSingletonFunc()();
         }
         return nullptr;
     }
 
     //--------------------------------------------------------------------------------------
-    IObject * ObjectFactory::createObject(const char * _className, const char * _name) const
+    IObject * ObjectFactory::createObject(const char * _className, const string & _name, IObject * _parent) const
     {
         auto * desc = getClassDescriptor(_className);
 
         if (desc)
         {
             VG_ASSERT(!asBool(IObjectDescriptor::Flags::Singleton & desc->getFlags()));
-            IObject * obj = desc->getCreateFunc()();
+            IObject * obj = desc->getCreateFunc()(_name, _parent);
 
             const auto index = desc->getNextIndex();
 
-            if (_name)
+            if (_name.length())
                 obj->setName(_name);
             else
                 obj->setName((string)obj->getClassName() + " #" + to_string(index));
@@ -238,6 +274,7 @@ namespace vg::core
     template <> struct TypeToEnum<bool>                         { static constexpr auto value = IPropertyDescriptor::Type::Bool; };
     template <> struct TypeToEnum<float>                        { static constexpr auto value = IPropertyDescriptor::Type::Float; };
     template <> struct TypeToEnum<core::float4>                 { static constexpr auto value = IPropertyDescriptor::Type::Float4; };
+    template <> struct TypeToEnum<core::float4x4>               { static constexpr auto value = IPropertyDescriptor::Type::Matrix44; };
     template <> struct TypeToEnum<core::string>                 { static constexpr auto value = IPropertyDescriptor::Type::String; };
     template <> struct TypeToEnum<IObject*>                     { static constexpr auto value = IPropertyDescriptor::Type::Object; };
     template <> struct TypeToEnum<IResource*>                   { static constexpr auto value = IPropertyDescriptor::Type::Resource; };

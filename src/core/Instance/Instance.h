@@ -6,6 +6,7 @@ namespace vg::core
 {
     class Instance : public IInstance
     {
-
+    public:
+        Instance(const string & _name, IObject * _parent);
     };
 }

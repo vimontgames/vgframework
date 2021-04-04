@@ -5,8 +5,8 @@
 namespace vg::core
 {
     //--------------------------------------------------------------------------------------
-    Job::Job(const string & _name) :
-        Object(_name)
+    Job::Job(const string & _name, IObject * _parent) :
+        Object(_name, _parent)
     {
 
     }

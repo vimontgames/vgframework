@@ -42,43 +42,47 @@ namespace vg::core
 
         struct ClassDesc : public IObjectDescriptor
         {
-            bool                        isRegisteredProperty    (const char * _propertyName) final;
+            bool                                isRegisteredProperty    (const char * _propertyName) final;
 
-            void                        registerProperty        (const char * _propertyName, bool * _offset, const char * _displayName, IPropertyDescriptor::Flags _flags) final;
-            void                        registerProperty        (const char * _propertyName, float * _offset, const char * _displayName, IPropertyDescriptor::Flags _flags) final;
-            void                        registerProperty        (const char * _propertyName, float4 * _offset, const char * _displayName, IPropertyDescriptor::Flags _flags) final;
-            void                        registerProperty        (const char * _propertyName, string * _offset, const char * _displayName, IPropertyDescriptor::Flags _flags) final;
-            void                        registerProperty        (const char * _propertyName, IResource ** _offset, const char * _displayName, IPropertyDescriptor::Flags _flags) final;
-            void                        registerProperty        (const char * _propertyName, IObject ** _offset, const char * _displayName, IPropertyDescriptor::Flags _flags) final;
-            void                        registerProperty        (const char * _propertyName, IPropertyDescriptor::Func _funcPtr, const char * _displayName, IPropertyDescriptor::Flags _flags) final;
+            void                                registerProperty        (const char * _propertyName, bool * _offset, const char * _displayName, IPropertyDescriptor::Flags _flags) final;
+            void                                registerProperty        (const char * _propertyName, float * _offset, const char * _displayName, IPropertyDescriptor::Flags _flags) final;
+            void                                registerProperty        (const char * _propertyName, float4 * _offset, const char * _displayName, IPropertyDescriptor::Flags _flags) final;
+            void                                registerProperty        (const char * _propertyName, float4x4 * _offset, const char * _displayName, IPropertyDescriptor::Flags _flags) final;
+            void                                registerProperty        (const char * _propertyName, string * _offset, const char * _displayName, IPropertyDescriptor::Flags _flags) final;
+            void                                registerProperty        (const char * _propertyName, IResource ** _offset, const char * _displayName, IPropertyDescriptor::Flags _flags) final;
+            void                                registerProperty        (const char * _propertyName, IObject ** _offset, const char * _displayName, IPropertyDescriptor::Flags _flags) final;
+            void                                registerProperty        (const char * _propertyName, IPropertyDescriptor::Func _funcPtr, const char * _displayName, IPropertyDescriptor::Flags _flags) final;
+            
+            void                                registerProperty        (const char * _propertyName, vector<IObject*>* _offset, const char * _displayName = nullptr, IPropertyDescriptor::Flags _flags = IPropertyDescriptor::Flags::None) final;
 
-            void                        registerProperty        (const char * _propertyName, vector<IObject*>* _offset, const char * _displayName = nullptr, IPropertyDescriptor::Flags _flags = IPropertyDescriptor::Flags::None) final;
+            const char *                        getClassName            () const final;
+            const char *                        getClassDisplayName     () const final;
+            uint                                getPropertyCount        () const final;
+            const IPropertyDescriptor *         getPropertyByIndex      (uint _index) const final;
+            IPropertyDescriptor *               getPropertyByName       (const char * _propertyName) const final;
+            IObjectDescriptor::Func             getCreateFunc           () const final;
+            IObjectDescriptor::SingletonFunc    getSingletonFunc        () const final;
+            IObjectDescriptor::Flags            getFlags                () const final;
+            u32                                 getNextIndex            () const final;
 
-            const char *                getClassName            () const final;
-            const char *                getClassDisplayName     () const final;
-            uint                        getPropertyCount        () const final;
-            const IPropertyDescriptor * getPropertyByIndex      (uint _index) const final;
-            IPropertyDescriptor *       getPropertyByName(const char * _propertyName) const final;
-            IObjectDescriptor::Func     getCreateFunc           () const final;
-            IObjectDescriptor::Flags    getFlags                () const final;
-            u32                         getNextIndex            () const final;
-
-            const char *                name = nullptr;
-            const char *                displayName = nullptr;
-            IObjectDescriptor::Flags    flags = IObjectDescriptor::Flags::None;
-            IObjectDescriptor::Func     createFunc;
-            vector<ClassProperty>       properties;
-            mutable u32                 count = 0;
+            const char *                        name = nullptr;
+            const char *                        displayName = nullptr;
+            IObjectDescriptor::Flags            flags = IObjectDescriptor::Flags::None;
+            IObjectDescriptor::Func             createFunc;
+            IObjectDescriptor::SingletonFunc    createSingletonFunc;
+            vector<ClassProperty>               properties;
+            mutable u32                         count = 0;
 
         private:
             template <typename T> void  registerClassMemberT    (const char * _propertyName, T * _offset, const char * _displayName, IPropertyDescriptor::Flags _flags);
         };
 
         IObjectDescriptor *             registerClass           (const char * _className, const char * _displayName, IObjectDescriptor::Flags _flags, IObjectDescriptor::Func _createFunc) final;
+        IObjectDescriptor *             registerSingletonClass  (const char * _className, const char * _displayName, IObjectDescriptor::Flags _flags, IObjectDescriptor::SingletonFunc _createFunc) final;
         const IObjectDescriptor *       getClassDescriptor      (const char * _className) const final;
         bool                            isRegisteredClass       (const char * _className) const final;
         IObject *                       getSingleton            (const char * _className) const final;
-        IObject *                       createObject            (const char * _className, const char * _name = nullptr) const final;
+        IObject *                       createObject            (const char * _className, const string & _name, IObject * _parent = nullptr) const final;
 
         bool                            serializeFromString     (IObject * _object, const string & _in) const final;
         bool                            serializeToString       (string & _out, const IObject * _object) const final;

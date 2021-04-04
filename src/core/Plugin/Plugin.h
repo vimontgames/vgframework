@@ -17,7 +17,7 @@ namespace vg::core
 		static string					getExtension	();
 
 	public:
-										Plugin			();
+										Plugin			(const core::string & _name, core::IObject * _parent);
 										~Plugin			();
 
 	private:

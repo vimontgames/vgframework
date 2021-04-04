@@ -12,8 +12,8 @@ using namespace vg::graphics::driver;
 namespace vg::graphics::renderer
 {
     //--------------------------------------------------------------------------------------
-    MeshModel::MeshModel(const core::string & _name) : 
-        IMeshModel(_name)
+    MeshModel::MeshModel(const core::string & _name, core::IObject * _parent) :
+        IMeshModel(_name, _parent)
     {
 
     }
@@ -89,9 +89,9 @@ namespace vg::graphics::renderer
                 break;
         }
 
-        MeshModel * meshModel = new MeshModel("MeshModel");
+        MeshModel * meshModel = new MeshModel("MeshModel", nullptr);
 
-        MeshGeometry * meshGeometry = new MeshGeometry("MeshGeometry");
+        MeshGeometry * meshGeometry = new MeshGeometry("MeshGeometry", meshModel);
         meshGeometry->setIndexBuffer(ib);
         meshGeometry->setVertexBuffer(vb);
         meshGeometry->addBatch(indexCount, 0);

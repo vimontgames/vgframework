@@ -14,7 +14,8 @@ SuperVimontBrawl * CreateNew()
 }
 
 //--------------------------------------------------------------------------------------
-SuperVimontBrawl::SuperVimontBrawl()
+SuperVimontBrawl::SuperVimontBrawl() : 
+    IProject("", nullptr)
 {
     
 }

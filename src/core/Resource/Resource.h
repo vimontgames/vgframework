@@ -4,7 +4,7 @@
 
 namespace vg::core
 {
-    class Object;
+    class IObject;
     class IObjectFactory;
     class IObjectDescriptor;
 
@@ -13,16 +13,21 @@ namespace vg::core
     public:
         const char *                getClassName        () const override   { return "Resource"; }   
 
-        IObject *                   get                 () const final;      
-        const string &              getPath             () const final;
-        bool                        setPath             (const string & _path) final;
-        void                        onPathChanged       (const string & _oldPath, const string & _newPath);
-
         static bool                 registerClass       (IObjectFactory & _factory);
         static bool                 registerProperties  (IObjectDescriptor & _desc);
 
+                                    Resource            (IObject * _owner);
+                                    ~Resource           ();
+
+        IObject *                   get                 () const final;      
+        const string &              getPath             () const final;
+        bool                        setPath             (const string & _path) final;
+
+
+
     private:
-        string      m_path;
-        Object *    m_object = nullptr;
+        string                      m_path;
+        IObject *                   m_owner = nullptr;
+        IObject *                   m_object = nullptr;
     };
 }

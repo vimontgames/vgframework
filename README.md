@@ -1,5 +1,18 @@
 # vgframework
- VG framework is using DirectX12/Vulkan
+Yes, yet another work-in-progress game and graphic engine project :) \
+Its renderer only uses modern graphics APIs like DirectX12 and Vulkan (I would also like to support Metal the day I got and Apple device) so it can be 100% bindless from the very beginning and do strong choices in that direction:  
+* instanciating and writing into GPU tables is not even exposed: You have to do all the rendering stuff the modern, bindless way. 
+* All the interface is made to encourage using only push constants and one dynamic "instance" buffer, not updating tables constantly as if we were still emulating DX9.
+* You can't access the command lists without using the framegraph that is part of the graphic driver layer. Go framegraph or do not render anything.
+* Apart from the number of root constants, all shaders are sharing the same root signatures
+
+
+ ![Screenshot](doc/img/screenshot.png)
+ 
+ 
+For the engine part, so far I integrated several "must-haves" tools like a CPU/GPU profiler, inputs, a job scheduler and Dear Imgui, and is currently implementing serialization and a basic Entity-Component system.  
+
+Another subject that is very close to my heart is that there is a strong separation between modules as the engine is "physically" split in several DLLs using only pure abstract interfaces.
  
 # external
 D3D12 Memory Allocator\

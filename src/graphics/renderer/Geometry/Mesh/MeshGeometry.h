@@ -20,7 +20,7 @@ namespace vg::graphics::renderer
     public:
         const char *                getClassName            () const final { return "MeshGeometry"; }
 
-                                    MeshGeometry            (const core::string & _name);
+                                    MeshGeometry            (const core::string & _name, core::IObject * _parent);
                                     ~MeshGeometry           ();
 
         void                        setIndexBuffer          (driver::Buffer * _ib, core::u32 _offset = 0);

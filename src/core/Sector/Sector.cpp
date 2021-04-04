@@ -2,14 +2,15 @@
 #include "Sector.h"
 #include "core/Entity/Entity.h"
 #include "core/Object/AutoRegisterClass.h"
+#include "graphics/renderer/IGraphicInstance.h"
 
 namespace vg::core
 {
-    VG_AUTO_REGISTER_CLASS(Sector)
+    VG_AUTO_REGISTER_CLASS(Sector);
 
     //--------------------------------------------------------------------------------------
-    Sector::Sector() :
-        ISector()
+    Sector::Sector(const string & _name, IObject * _parent) :
+        ISector(_name, _parent)
     {
 
     }
@@ -24,6 +25,10 @@ namespace vg::core
         for (uint i = 0; i < m_entities.size(); ++i)
             VG_SAFE_RELEASE(m_entities[i]);
         m_entities.clear();
+
+        for (uint i = 0; i < m_graphicInstances.size(); ++i)
+            VG_SAFE_RELEASE(m_graphicInstances[i]);
+        m_graphicInstances.clear();
     }
 
     //--------------------------------------------------------------------------------------
@@ -86,5 +91,25 @@ namespace vg::core
     {
         VG_ASSERT(_index < getEntityCount());
         return static_cast<IEntity*>(m_entities[_index]);
+    }
+
+    //--------------------------------------------------------------------------------------
+    void Sector::addGraphicInstance(graphics::renderer::IGraphicInstance * _graphicInstance)
+    {
+        VG_ASSERT(m_graphicInstances.end() == std::find(m_graphicInstances.begin(), m_graphicInstances.end(), _graphicInstance));
+        _graphicInstance->addRef();
+        m_graphicInstances.push_back(_graphicInstance);
+    }
+
+    //--------------------------------------------------------------------------------------
+    void Sector::removeGraphicInstance(graphics::renderer::IGraphicInstance * _graphicInstance)
+    {
+        VG_ASSERT_NOT_IMPLEMENTED();
+    }
+
+    //--------------------------------------------------------------------------------------
+    const vector<graphics::renderer::IGraphicInstance*> & Sector::getGraphicInstance() const
+    {
+        return m_graphicInstances;
     }
 }

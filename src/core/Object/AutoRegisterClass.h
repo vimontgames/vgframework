@@ -2,7 +2,8 @@
 
 #include "core/IObjectFactory.h"
 
-#define VG_AUTO_REGISTER_CLASS(className) vg::core::AutoRegisterObjectClassHelper<className> autoRegister(#className, className::registerClass);
+#define VG_AUTO_REGISTER_CLASS_EX(className, flags)     vg::core::AutoRegisterObjectClassHelper<className> autoRegister(#className, className::registerClass, flags)
+#define VG_AUTO_REGISTER_CLASS(className)               VG_AUTO_REGISTER_CLASS_EX(className, vg::core::IObjectDescriptor::Flags::None)
 
 namespace vg::core
 {
@@ -10,8 +11,9 @@ namespace vg::core
     {
         using Func = bool(__cdecl *)(IObjectFactory &);
 
-        const char *    name = nullptr;
-        Func            func = nullptr;
+        const char *                name = nullptr;
+        Func                        func = nullptr;
+        IObjectDescriptor::Flags    flags = IObjectDescriptor::Flags::None;
 
         static bool push(const AutoRegisterClassInfo & _info);
 
@@ -26,10 +28,9 @@ namespace vg::core
     template <class T> class AutoRegisterObjectClassHelper
     {
     public:
-        AutoRegisterObjectClassHelper(const char * _name, AutoRegisterClassInfo::Func _func)
+        AutoRegisterObjectClassHelper(const char * _name, AutoRegisterClassInfo::Func _func, IObjectDescriptor::Flags _flags)
         {
-            //VG_DEBUGPRINT("Auto Register Object class \"%s\"\n", _name);
-            AutoRegisterClassInfo::push({ _name, _func });
+            AutoRegisterClassInfo::push({ _name, _func, _flags });
         }
 
         ~AutoRegisterObjectClassHelper()

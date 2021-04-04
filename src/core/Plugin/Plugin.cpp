@@ -72,7 +72,8 @@ namespace vg::core
 	}
 
 	//--------------------------------------------------------------------------------------
-	Plugin::Plugin()
+	Plugin::Plugin(const core::string & _name, core::IObject * _parent) :
+        core::IPlugin(_name, _parent)
 	{
 
 	}

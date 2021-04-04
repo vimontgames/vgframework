@@ -95,9 +95,9 @@ namespace vg::graphics::renderer
         BufferDesc vbDesc(Usage::Default, BindFlags::ShaderResource, CPUAccessFlags::None, BufferFlags::None, sizeof(vbData[0]), vertexCount);
         Buffer * vb = device->createBuffer(vbDesc, "CubeVB", vbData);
 
-        m_meshModel = new MeshModel("CubeModel");
+        m_meshModel = new MeshModel("CubeModel", this);
 
-        MeshGeometry * meshGeometry = new MeshGeometry("CubeGeometry");
+        MeshGeometry * meshGeometry = new MeshGeometry("CubeGeometry", this);
         meshGeometry->setIndexBuffer(ib);
         meshGeometry->setVertexBuffer(vb);
         meshGeometry->addBatch(indexCount, 0);
@@ -120,7 +120,7 @@ namespace vg::graphics::renderer
         TextureDesc texDesc(Usage::Default, BindFlags::ShaderResource, CPUAccessFlags::None, TextureType::Texture2D, PixelFormat::R8G8B8A8_unorm, TextureFlags::None, 2, 2, 1, 1);
         m_texture = device->createTexture("data/Textures/QuestionBox.psd");
 
-        m_fbxModel = renderer->createMeshModel("data/Models/Teapot.fbx");
+        m_fbxModel = (MeshModel*)renderer->createMeshModel("data/Models/Teapot.fbx");
         VG_ASSERT(m_fbxModel);
     }
 

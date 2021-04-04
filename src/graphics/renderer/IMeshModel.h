@@ -1,14 +1,14 @@
 #pragma once
 
-#include "core/Model/Model.h"
+#include "IGraphicModel.h"
 
 namespace vg::graphics::renderer
 {
-    class IMeshModel : public core::Model
+    class IMeshModel : public IGraphicModel
     {
     public:
-        IMeshModel(const core::string & _name) : 
-            core::Model(_name)
+        IMeshModel(const core::string & _name, core::IObject * _parent) :
+            IGraphicModel(_name, _parent)
         {
 
         }

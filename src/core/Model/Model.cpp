@@ -4,8 +4,8 @@
 namespace vg::core
 {
     //--------------------------------------------------------------------------------------
-    Model::Model(const string & _name) : 
-        core::IModel(_name)
+    Model::Model(const string & _name, IObject * _parent) :
+        core::IModel(_name, _parent)
     {
 
     }

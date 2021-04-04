@@ -12,6 +12,12 @@
     <ClCompile Include="Entity\FreeCam\FreeCamEntity.cpp">
       <Filter>Entity\FreeCam</Filter>
     </ClCompile>
+    <ClCompile Include="Component\Mesh\MeshComponent.cpp">
+      <Filter>Component\Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="Resource\Mesh\MeshResource.cpp">
+      <Filter>Resource\Mesh</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Engine.def" />
@@ -36,6 +42,12 @@
     <ClInclude Include="Entity\FreeCam\FreeCamEntity.h">
       <Filter>Entity\FreeCam</Filter>
     </ClInclude>
+    <ClInclude Include="Component\Mesh\MeshComponent.h">
+      <Filter>Component\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource\Mesh\MeshResource.h">
+      <Filter>Resource\Mesh</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Input">
@@ -55,6 +67,15 @@
     </Filter>
     <Filter Include="Entity\FreeCam">
       <UniqueIdentifier>{76d71ff3-fad5-4533-8fff-6141a76e7e9e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Component\Mesh">
+      <UniqueIdentifier>{62eccf10-4599-4639-a274-4bb08aef8451}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource">
+      <UniqueIdentifier>{08d79f92-a65c-452e-9a79-f7b3f29334d1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource\Mesh">
+      <UniqueIdentifier>{18a600a9-df3c-4aa2-9755-80cc55dd828c}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
