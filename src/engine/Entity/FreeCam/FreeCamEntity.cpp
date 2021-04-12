@@ -43,7 +43,7 @@ namespace vg::engine
         m_yaw(0.0f),
         m_roll(0.0f)
     {
-        setMatrix(float4x4
+        setWorldMatrix(float4x4
         (
             1.0f, 0.0f, 0.0f, 0.0f,
             0.0f, 1.0f, 0.0f, 0.0f,
@@ -107,7 +107,8 @@ namespace vg::engine
     //--------------------------------------------------------------------------------------
     void FreeCamEntity::update(double _dt)
     {
-        const float4x4 & world = getMatrix();
+        const float4x4 & world = getWorldMatrix();
+
         float4 I(world.vec0);
         float4 J(world.vec1);
         float4 K(world.vec2);
@@ -163,7 +164,7 @@ namespace vg::engine
 
         float4x4 mViewI = float4x4( I, -J, K, T );
         
-        setMatrix(mViewI);
+        setWorldMatrix(mViewI);
 
         super::update(_dt);
     }

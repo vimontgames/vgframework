@@ -267,6 +267,8 @@ namespace vg::graphics::driver
     {
         m_stateCache.dirtyFlags = (StateCache::DirtyFlags)-1;
         m_stateCache.viewport = uint4(0, 0, 0, 0);
+        m_stateCache.indexBuffer = nullptr;
+        memset(m_stateCache.rootConstants, 0x00000000, sizeof(m_stateCache.rootConstants));
         super::reset();
     }
 

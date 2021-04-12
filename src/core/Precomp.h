@@ -33,9 +33,17 @@
 #ifdef VG_DEBUG
 	#define VG_ENABLE_ASSERT		1
 	#define VG_ENABLE_DEBUGPRINT	1
+    #define VG_ENABLE_INLINE        0
 #elif defined(VG_RELEASE)
 	#define VG_ENABLE_ASSERT		1
 	#define VG_ENABLE_DEBUGPRINT	1
+    #define VG_ENABLE_INLINE        1
+#endif
+
+#if VG_ENABLE_INLINE
+#define VG_INLINE inline
+#else
+#define VG_INLINE
 #endif
 
 #if VG_ENABLE_DEBUGPRINT

@@ -1,16 +1,16 @@
 #pragma once
 
-#include "core/Object/Object.h"
+#include "core/Instance/Instance.h"
 
 namespace vg::core
 {
     class ISector;
 
-    class IEntity : public Object
+    class IEntity : public Instance
     {
     public:
         IEntity(const core::string & _name, IObject * _parent) :
-            Object(_name, _parent)
+            Instance(_name, _parent)
         {
 
         }

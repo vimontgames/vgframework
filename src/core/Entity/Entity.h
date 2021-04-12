@@ -26,14 +26,10 @@ namespace vg::core
 
         ISector *                   getSector           () const final;
 
-        void                        setMatrix           (const float4x4 _mat44);
-        const float4x4 &            getMatrix           () const;
-
         void                        addComponent        (Component * _component);
         const vector<Component*> &  getComponents       () const;
 
     private:
-        float4x4                    m_matrix = float4x4::identity();
         float4                      m_color = { 1.0f, 1.0f, 1.0f, 1.0f };
         vector<Component*>          m_components;
     };

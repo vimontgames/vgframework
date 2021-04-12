@@ -32,7 +32,7 @@ namespace vg::core
 
         void                                                    addGraphicInstance      (graphics::renderer::IGraphicInstance * _graphicInstance) final;
         void                                                    removeGraphicInstance   (graphics::renderer::IGraphicInstance * _graphicInstance) final;
-        const vector<graphics::renderer::IGraphicInstance*> &   getGraphicInstance      () const;
+        const vector<graphics::renderer::IGraphicInstance*> &   getGraphicInstances     () const final;
 
     private:
         vector<Sector*>                                         m_sectors;

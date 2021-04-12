@@ -77,6 +77,9 @@
     <ClCompile Include="string\string.cpp" />
     <ClCompile Include="Timer\Timer.cpp" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Instance\Instance.inl" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>
     <ProjectGuid>{257A93DC-9206-4770-9560-7A22DFF0AC01}</ProjectGuid>

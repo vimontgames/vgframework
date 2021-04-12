@@ -28,5 +28,6 @@ namespace vg::engine
     private:
         graphics::renderer::IMeshInstance * m_meshInstance = nullptr;
         MeshResource                        m_meshResource;
+        bool                                m_registered = false;
     };
 }

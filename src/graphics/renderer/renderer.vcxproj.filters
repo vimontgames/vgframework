@@ -33,6 +33,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Renderer.def" />
+    <None Include="View\View.inl">
+      <Filter>View</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Precomp.h" />

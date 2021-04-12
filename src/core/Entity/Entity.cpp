@@ -22,7 +22,6 @@ namespace vg::core
         super::registerProperties(_desc);
 
         _desc.registerPropertyHelper(Entity, m_color, "Color", IPropertyDescriptor::Flags::Color);
-        _desc.registerPropertyHelper(Entity, m_matrix, "Matrix", IPropertyDescriptor::Flags::None);
         _desc.registerPropertyVectorHelper(Entity, m_components, IObject*, "Components", IPropertyDescriptor::Flags::None);
 
         return true;
@@ -58,18 +57,6 @@ namespace vg::core
     ISector * Entity::getSector() const
     {
         return (ISector*)getParent();
-    }
-
-    //--------------------------------------------------------------------------------------
-    void Entity::setMatrix(const float4x4 _mat44)
-    {
-        m_matrix = _mat44;
-    }
-
-    //--------------------------------------------------------------------------------------
-    const float4x4 & Entity::getMatrix() const
-    {
-        return m_matrix;
     }
 
     //--------------------------------------------------------------------------------------

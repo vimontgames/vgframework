@@ -209,4 +209,9 @@
       <Filter>Sector</Filter>
     </ClCompile>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Instance\Instance.inl">
+      <Filter>Instance</Filter>
+    </None>
+  </ItemGroup>
 </Project>

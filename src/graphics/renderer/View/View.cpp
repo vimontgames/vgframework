@@ -1,5 +1,10 @@
 #include "graphics/renderer/Precomp.h"
 #include "View.h"
+#include "core/Sector/Sector.h"
+
+#if !VG_ENABLE_INLINE
+#include "View.inl"
+#endif
 
 using namespace vg::core;
 
@@ -21,18 +26,35 @@ namespace vg::graphics::renderer
     //--------------------------------------------------------------------------------------
     View::~View()
     {
-
+        VG_SAFE_RELEASE(m_cameraSector);
     }
 
     //--------------------------------------------------------------------------------------
-    void View::setViewInvMatrix(const core::float4x4 & _viewInv)
+    void View::SetViewInvMatrix(const core::float4x4 & _viewInv)
     {
         m_viewInv = _viewInv;
     }
 
     //--------------------------------------------------------------------------------------
-    const core::float4x4 & View::getViewInvMatrix() const
+    const core::float4x4 & View::GetViewInvMatrix() const
     {
-        return m_viewInv;
+        return getViewInvMatrix();
+    }
+
+    //--------------------------------------------------------------------------------------
+    void View::SetCameraSector(core::ISector * _cameraSector)
+    {
+        if ((core::Sector*)_cameraSector != m_cameraSector)
+        {
+            VG_SAFE_INCREASE_REFCOUNT(_cameraSector);
+            VG_SAFE_RELEASE(m_cameraSector);
+            m_cameraSector = (core::Sector*)_cameraSector;
+        }
+    }
+
+    //--------------------------------------------------------------------------------------
+    core::ISector * View::GetCameraSector() const
+    {
+        return getCameraSector();
     }
 }

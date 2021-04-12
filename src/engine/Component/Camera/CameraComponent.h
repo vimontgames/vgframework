@@ -2,6 +2,11 @@
 
 #include "core/Component/Component.h"
 
+namespace vg::core
+{
+    class ISector;
+}
+
 namespace vg::graphics::renderer
 {
     class IView;
@@ -24,7 +29,7 @@ namespace vg::engine
         void update(double _dt) override;
 
     public:
-        void setView(graphics::renderer::IView * _view);
+        void setView(graphics::renderer::IView * _view, core::ISector * _sector);
 
     private:
         graphics::renderer::IView * m_view = nullptr;

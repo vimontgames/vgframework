@@ -1,10 +1,12 @@
 #include "TestPass3D.h"
+#include "core/Sector/Sector.h"
 #include "shaders/default/default.hlsli"
 #include "Shaders/system/bindless.hlsli"
 #include "graphics/renderer/Geometry/Mesh/MeshGeometry.h"
 #include "graphics/renderer/Model/Mesh/MeshModel.h"
 #include "graphics/renderer/View/View.h"
 #include "graphics/renderer/Importer/FBX/FBXImporter.h"
+#include "graphics/renderer/IGraphicInstance.h"
 
 namespace vg::graphics::renderer
 {
@@ -197,47 +199,56 @@ namespace vg::graphics::renderer
         float4x4 proj = setPerspectiveProjectionRH(fovY, ar, 0.001f, 1000.0f);
 
         View * view = renderer->getView();
-       
-        float4x4 world = float4x4::identity();
+        float4x4 viewProj = mul(view->GetViewInvMatrix(), proj);
 
-        float4x4 viewProj = mul(view->getViewInvMatrix(), proj);
-        float4x4 wvp = mul(world, viewProj);
+        const auto & graphicInstances = view->getCameraSector()->getGraphicInstances();
 
-        const MeshModel * model = m_fbxModel ? m_fbxModel : m_meshModel;
-        const MeshGeometry * geo = model->getGeometry();
-
-        Buffer * vb = geo->getVertexBuffer();
-        Buffer * ib = geo->getIndexBuffer();
-        const auto & batches = geo->batches();
-
-        RootConstants3D root3D;
-
-        root3D.mat = transpose(viewProj);
-        root3D.data.x = vb->getBindlessSRVHandle();
-        root3D.data.y = m_texture->getBindlessSRVHandle();
-
-        _cmdList->setInlineRootConstants(&root3D, RootConstants3DCount);
-        _cmdList->setIndexBuffer(ib);
-
-        for (uint i = 0; i < batches.size(); ++i)
+        for (uint i = 0; i < graphicInstances.size(); ++i)
         {
-            const auto & batch = batches[i];
-            _cmdList->drawIndexed(batch.count, batch.offset);
-        }
+            IGraphicInstance * instance = graphicInstances[i];
 
-        const bool wireframe = DisplayOptions::get()->isWireframeEnabled();
+            const MeshModel * model = (MeshModel *)instance->getModel(Lod::Lod0);
+            if (nullptr == model)
+                model = m_meshModel;
 
-        if (wireframe)
-        {
-            RasterizerState rsWireframe(FillMode::Wireframe, CullMode::None);
-            _cmdList->setShader(m_wireframeShaderKey);
-            _cmdList->setRasterizerState(rsWireframe);
-        
+            const MeshGeometry * geo = model->getGeometry();
+
+            Buffer * vb = geo->getVertexBuffer();
+            Buffer * ib = geo->getIndexBuffer();
+            const auto & batches = geo->batches();
+
+            RootConstants3D root3D;
+
+            float4x4 world = instance->GetWorldMatrix();
+            float4x4 wvp = mul(world, viewProj);
+
+            root3D.mat = transpose(viewProj);
+            root3D.data.x = vb->getBindlessSRVHandle();
+            root3D.data.y = m_texture->getBindlessSRVHandle();
+
+            _cmdList->setInlineRootConstants(&root3D, RootConstants3DCount);
+            _cmdList->setIndexBuffer(ib);
+
             for (uint i = 0; i < batches.size(); ++i)
             {
                 const auto & batch = batches[i];
                 _cmdList->drawIndexed(batch.count, batch.offset);
             }
         }
+
+        //const bool wireframe = DisplayOptions::get()->isWireframeEnabled();
+        //
+        //if (wireframe)
+        //{
+        //    RasterizerState rsWireframe(FillMode::Wireframe, CullMode::None);
+        //    _cmdList->setShader(m_wireframeShaderKey);
+        //    _cmdList->setRasterizerState(rsWireframe);
+        //
+        //    for (uint i = 0; i < batches.size(); ++i)
+        //    {
+        //        const auto & batch = batches[i];
+        //        _cmdList->drawIndexed(batch.count, batch.offset);
+        //    }
+        //}
     }
 }

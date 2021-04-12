@@ -285,7 +285,7 @@ namespace vg::engine
         m_freeCam = new FreeCamEntity("FreeCam #0", root);
         CameraComponent * cameraComponent = (CameraComponent*)factory->createObject("CameraComponent", "", m_freeCam);
         m_freeCam->addComponent(cameraComponent);
-        cameraComponent->setView(m_editorView);
+        cameraComponent->setView(m_editorView, root);
         root->addEntity(m_freeCam);
         VG_SAFE_RELEASE(cameraComponent);
         VG_SAFE_RELEASE(m_freeCam);

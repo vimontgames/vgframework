@@ -108,7 +108,7 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
-    const vector<graphics::renderer::IGraphicInstance*> & Sector::getGraphicInstance() const
+    const vector<graphics::renderer::IGraphicInstance*> & Sector::getGraphicInstances() const
     {
         return m_graphicInstances;
     }

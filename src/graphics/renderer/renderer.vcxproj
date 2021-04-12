@@ -38,6 +38,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Renderer.def" />
+    <None Include="View\View.inl" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Geometry\Geometry.h" />

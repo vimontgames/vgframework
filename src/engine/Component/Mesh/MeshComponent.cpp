@@ -4,6 +4,7 @@
 #include "core/Object/AutoRegisterClass.h"
 #include "core/ISector.h"
 #include "graphics/renderer/IMeshInstance.h"
+#include "graphics/renderer/IMeshModel.h"
 #include "engine/Engine.h"
 #include "graphics/renderer/IRenderer.h"
 
@@ -59,15 +60,16 @@ namespace vg::engine
     void MeshComponent::onResourceLoaded(IResource * _resource)
     {
         IMeshModel * meshModel = m_meshResource.getMeshModel();
-        //m_meshInstance->setModel(meshModel);
+        m_meshInstance->SetModel(Lod::Lod0, meshModel);
 
-        IEntity * entity = getEntity();
-        ISector * sector = entity->getSector();
+        if (false == m_registered)
+        {
+            IEntity * entity = getEntity();
+            ISector * sector = entity->getSector();
 
-        sector->addGraphicInstance(m_meshInstance);
+            sector->addGraphicInstance(m_meshInstance);
 
-        //auto * engine = 
-        //auto * renderer = Engine::get()->getRenderer();
-        //renderer->registerInstance()
+            m_registered = true;
+        }
     }
 }

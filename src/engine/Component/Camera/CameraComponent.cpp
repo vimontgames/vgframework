@@ -43,19 +43,22 @@ namespace vg::engine
     //--------------------------------------------------------------------------------------
     void CameraComponent::update(double _dt)
     {
-        const float4x4 & matrix = ((Entity*)getEntity())->getMatrix();
-        m_view->setViewInvMatrix(inverse(matrix));
+        const float4x4 & matrix = getEntity()->GetWorldMatrix();
+        m_view->SetViewInvMatrix(inverse(matrix));
     }
 
     //--------------------------------------------------------------------------------------
-    void CameraComponent::setView(graphics::renderer::IView * _view)
+    void CameraComponent::setView(graphics::renderer::IView * _view, core::ISector * _sector)
     {
         if (_view != m_view)
         {
-            VG_SAFE_INCREASE_REFCOUNT(_view);
-            VG_SAFE_RELEASE(m_view);
+            //VG_SAFE_INCREASE_REFCOUNT(_view);
+            //VG_SAFE_RELEASE(m_view);
 
             m_view = _view;
         }
+
+        if (nullptr != m_view)
+            m_view->SetCameraSector(_sector);
     }
 }
