@@ -18,6 +18,7 @@
 #include "graphics/driver/IDevice.h"
 
 #include "engine/Input/Input.h"
+#include "engine/Resource/ResourceManager.h"
 #include "engine/Entity/FreeCam/FreeCamEntity.h"
 #include "engine/Component/Camera/CameraComponent.h"
 
@@ -252,6 +253,8 @@ namespace vg::engine
         // Register threads after profiler creation
         _singletons.scheduler->registerProfilerThreads();
 
+        m_resourceManager = new ResourceManager("Resource Manager", this);
+
         registerClasses();
 
         createEditorView();
@@ -333,6 +336,8 @@ namespace vg::engine
 		m_renderer->deinit();
 		m_renderer->release();
 
+        VG_SAFE_DELETE(m_resourceManager);
+
         VG_SAFE_DELETE(factory);
         Kernel::setObjectFactory(nullptr);
 	}
@@ -374,6 +379,8 @@ namespace vg::engine
         updateDt();
 
         Kernel::getInput()->update();
+
+        m_resourceManager->flushLoading();
 
         Sector * root = (Sector*)m_scene->getRoot();
         if (root)

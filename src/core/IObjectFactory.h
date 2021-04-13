@@ -20,11 +20,12 @@ namespace vg::core
     #define registerClassSingletonHelper(className, displayName)                                    registerSingletonClass(#className, displayName, vg::core::IObjectDescriptor::Flags::Singleton, [](){ return className::get(); } )
 
     #define registerPropertyHelper(className, propertyName, displayName, flags)                     registerProperty(#propertyName, (&((className*)(nullptr))->propertyName), displayName, flags)
-    #define registerPropertyVectorHelper(className, propertyName, elementType, displayName, flags)  registerProperty(#propertyName, (vector<elementType>*)&((className*)nullptr)->propertyName, displayName, flags);
+    #define registerPropertyVectorHelper(className, propertyName, elementType, displayName, flags)  registerProperty(#propertyName, (core::vector<elementType>*)&((className*)nullptr)->propertyName, displayName, flags);
     #define registerCallbackHelper(className, funcName, displayName, flags)                         registerProperty(#funcName, funcName, displayName, flags)
 
     #define setPropertyRangeHelper(className, propertyName, range)                                  getPropertyByName(#propertyName)->setRange(range);
 
+    class IObject;
     class IResource;
 
     class IPropertyDescriptor
@@ -70,8 +71,8 @@ namespace vg::core
     class IObjectDescriptor
     {
     public:
-        using Func          = std::function<Object*(const string &, IObject *)>;
-        using SingletonFunc = std::function<Object*()>;
+        using Func          = std::function<IObject*(const string &, IObject *)>;
+        using SingletonFunc = std::function<IObject*()>;
 
         enum class Flags : u64
         {

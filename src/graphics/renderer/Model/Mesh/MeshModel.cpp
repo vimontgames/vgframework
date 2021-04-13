@@ -1,4 +1,5 @@
 #include "graphics/renderer/Precomp.h"
+#include "core/Object/AutoRegisterClass.h"
 #include "MeshModel.h"
 #include "graphics/driver/Device/Device.h"
 #include "graphics/driver/Resource/Buffer.h"
@@ -11,6 +12,26 @@ using namespace vg::graphics::driver;
 
 namespace vg::graphics::renderer
 {
+    VG_AUTO_REGISTER_CLASS(MeshModel);
+
+    //--------------------------------------------------------------------------------------
+    bool MeshModel::registerClass(core::IObjectFactory & _factory)
+    {
+        if (core::IObjectDescriptor * desc = _factory.registerClassHelper(MeshModel, "Mesh Model"))
+            registerProperties(*desc);
+
+        return true;
+    }
+
+
+    //--------------------------------------------------------------------------------------
+    bool MeshModel::registerProperties(core::IObjectDescriptor & _desc)
+    {
+        super::registerProperties(_desc);
+
+        return true;
+    }
+
     //--------------------------------------------------------------------------------------
     MeshModel::MeshModel(const core::string & _name, core::IObject * _parent) :
         IMeshModel(_name, _parent)

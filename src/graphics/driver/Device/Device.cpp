@@ -359,7 +359,7 @@ namespace vg::graphics::driver
     }
 
 	//--------------------------------------------------------------------------------------
-	Texture * Device::createTexture(const TextureDesc & _texDesc, const core::string & _name, void * _initData, ReservedSlot _reservedSlot)
+	Texture * Device::createTexture(const TextureDesc & _texDesc, const core::string & _name, const void * _initData, ReservedSlot _reservedSlot)
 	{
 		return new Texture(_texDesc, _name, _initData, _reservedSlot);
 	}
@@ -383,7 +383,7 @@ namespace vg::graphics::driver
     }
 
     //--------------------------------------------------------------------------------------
-    Buffer * Device::createBuffer(const BufferDesc & _bufDesc, const core::string & _name, void * _initData, ReservedSlot _reservedSlot)
+    Buffer * Device::createBuffer(const BufferDesc & _bufDesc, const core::string & _name, const void * _initData, ReservedSlot _reservedSlot)
     {
         return new Buffer(_bufDesc, _name, _initData, _reservedSlot);
     }

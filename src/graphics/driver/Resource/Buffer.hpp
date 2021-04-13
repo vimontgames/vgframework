@@ -5,7 +5,7 @@ namespace vg::graphics::driver
     namespace base
     {
         //--------------------------------------------------------------------------------------
-        Buffer::Buffer(const BufferDesc & _bufDesc, const core::string & _name, void * _initData) :
+        Buffer::Buffer(const BufferDesc & _bufDesc, const core::string & _name, const void * _initData) :
             m_bufDesc(_bufDesc)
         {
             VG_DEBUGPRINT("Init Buffer \"%s\" (", _name.c_str());
@@ -51,7 +51,7 @@ namespace vg::graphics::driver
     }
 
     //--------------------------------------------------------------------------------------
-    Buffer::Buffer(const BufferDesc & _bufDesc, const core::string & _name, void * _initData, ReservedSlot _reservedSlot) :
+    Buffer::Buffer(const BufferDesc & _bufDesc, const core::string & _name, const void * _initData, ReservedSlot _reservedSlot) :
         super::Buffer(_bufDesc, _name, _initData, _reservedSlot)
     {
 

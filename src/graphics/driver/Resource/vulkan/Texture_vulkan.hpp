@@ -102,7 +102,7 @@ namespace vg::graphics::driver::vulkan
     }
 
 	//--------------------------------------------------------------------------------------
-	Texture::Texture(const TextureDesc & _texDesc, const core::string & _name, void * _initData, ReservedSlot _reservedSlot) :
+	Texture::Texture(const TextureDesc & _texDesc, const core::string & _name, const void * _initData, ReservedSlot _reservedSlot) :
 		base::Texture(_texDesc, _name, _initData)
 	{
 		auto * device = driver::Device::get();

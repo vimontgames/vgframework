@@ -37,7 +37,7 @@ namespace vg::graphics::driver
         }
 
 		//--------------------------------------------------------------------------------------
-		Texture::Texture(const TextureDesc & _texDesc, const core::string & _name, void *_initData) :
+		Texture::Texture(const TextureDesc & _texDesc, const core::string & _name, const void * _initData) :
 			m_texDesc(_texDesc)
 		{
 			VG_DEBUGPRINT("Init %s \"%s\" (", asString(_texDesc.type).c_str(), _name.c_str());
@@ -71,7 +71,7 @@ namespace vg::graphics::driver
 	//--------------------------------------------------------------------------------------
 	// Texture
 	//--------------------------------------------------------------------------------------
-	Texture::Texture(const TextureDesc & _texDesc, const core::string & _name, void * _initData, ReservedSlot _reservedSlot) :
+	Texture::Texture(const TextureDesc & _texDesc, const core::string & _name, const void * _initData, ReservedSlot _reservedSlot) :
 		super::Texture(_texDesc, _name, _initData, _reservedSlot)
 	{
 

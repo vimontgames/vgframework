@@ -53,7 +53,7 @@ namespace vg::engine
     //--------------------------------------------------------------------------------------
     void MeshComponent::update(double _dt)
     {
-       
+        m_meshInstance->setWorldMatrix(getEntity()->getWorldMatrix());
     }
 
     //--------------------------------------------------------------------------------------

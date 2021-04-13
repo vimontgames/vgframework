@@ -30,7 +30,7 @@ namespace vg::core
       
     private:
         float4x4                    m_world = float4x4::identity();
-        Model *                     m_models[enumCount<Lod>()];
+        vector<Model *>             m_models;
     };
 }
 

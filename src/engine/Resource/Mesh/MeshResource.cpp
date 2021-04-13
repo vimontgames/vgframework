@@ -3,6 +3,7 @@
 #include "engine/Engine.h"
 #include "graphics/renderer/IRenderer.h"
 #include "graphics/renderer/IMeshModel.h"
+#include "engine/resource/ResourceManager.h"
 
 using namespace vg::core;
 
@@ -33,15 +34,19 @@ namespace vg::engine
     void MeshResource::onPathChanged(IObject * _owner, const string & _oldPath, const string & _newPath)
     {
         if (_oldPath != _newPath)
-        {
-            auto * engine = Engine::get();
-            auto * renderer = engine->getRenderer();
+            ResourceManager::get()->loadResourceAsync(this, _newPath, _owner);
+    }
 
-            VG_SAFE_RELEASE(m_meshModel);
+    //--------------------------------------------------------------------------------------
+    bool MeshResource::loadResource(const core::string & _path, core::IObject * _owner)
+    {
+        auto * engine = Engine::get();
+        auto * renderer = engine->getRenderer();
 
-            m_meshModel = renderer->createMeshModel(_newPath);
+        VG_SAFE_RELEASE(m_meshModel);
 
-            _owner->onResourceLoaded(this);
-        }
+        m_meshModel = renderer->createMeshModel(_path);
+
+        return nullptr != m_meshModel;
     }
 }

@@ -113,7 +113,7 @@ namespace vg::graphics::driver::dx12
     }
 
 	//--------------------------------------------------------------------------------------
-	Texture::Texture(const TextureDesc & _texDesc, const core::string & _name, void * _initData, ReservedSlot _reservedSlot) :
+	Texture::Texture(const TextureDesc & _texDesc, const core::string & _name, const void * _initData, ReservedSlot _reservedSlot) :
 		base::Texture(_texDesc, _name, _initData)
 	{
 		auto * device = driver::Device::get();
@@ -123,7 +123,7 @@ namespace vg::graphics::driver::dx12
 
         if (asBool(TextureFlags::Backbuffer & _texDesc.flags))
         {
-            ID3D12Resource * backbufferResource = static_cast<ID3D12Resource*>(_initData);
+            ID3D12Resource * backbufferResource = (ID3D12Resource*)_initData;
             VG_ASSERT(backbufferResource);
             m_resource.setd3d12TextureResource(_name, backbufferResource, nullptr);
         }

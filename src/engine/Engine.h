@@ -18,6 +18,7 @@ namespace vg::graphics::renderer
 namespace vg::engine
 {
     class FreeCamEntity;
+    class ResourceManager;
 
 	class Engine : public IEngine, public core::Singleton<Engine>
 	{
@@ -77,6 +78,8 @@ namespace vg::engine
 
 		graphics::renderer::IRenderer *	m_renderer          = nullptr;
         graphics::renderer::IView *     m_editorView        = nullptr;
+        ResourceManager *               m_resourceManager   = nullptr;
+
         FreeCamEntity *                 m_freeCam           = nullptr;
 
         double                          m_dt = 0.0f;

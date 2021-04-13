@@ -23,7 +23,7 @@ namespace vg::core
         const string &              getPath             () const final;
         bool                        setPath             (const string & _path) final;
 
-
+        bool                        loadResource        (const core::string & _path, core::IObject * _owner) = 0;
 
     private:
         string                      m_path;

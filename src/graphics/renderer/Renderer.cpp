@@ -237,7 +237,7 @@ namespace vg::graphics::renderer
 
                 m_frameGraph.addUserPass(m_backgroundPass, "BackgroundPass");
                 m_frameGraph.addUserPass(m_testPass3D, "TestPass3D");
-                m_frameGraph.addUserPass(m_testPass2D, "TestPass2D");
+                //m_frameGraph.addUserPass(m_testPass2D, "TestPass2D");
                 m_frameGraph.addUserPass(m_postProcessPass, "PostProcessPass");
                 m_frameGraph.addUserPass(m_imguiPass, "UIPass");
 

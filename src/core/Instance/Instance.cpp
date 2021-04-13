@@ -13,14 +13,12 @@ namespace vg::core
     Instance::Instance(const string & _name, IObject * _parent) :
         IInstance(_name, _parent)
     {
-        for (uint i = 0; i < enumCount<Lod>(); ++i)
-            m_models[i] = nullptr;
     }
 
     //--------------------------------------------------------------------------------------
     Instance::~Instance()
     {
-        for (uint i = 0; i < enumCount<Lod>(); ++i)
+        for (uint i = 0; i < m_models.size(); ++i)
             VG_SAFE_RELEASE(m_models[i]);
     }
 
@@ -30,6 +28,7 @@ namespace vg::core
         super::registerProperties(_desc);
 
         _desc.registerPropertyHelper(Instance, m_world, "Matrix", IPropertyDescriptor::Flags::None);
+        _desc.registerPropertyVectorHelper(Instance, m_models, IObject*, "Models", IPropertyDescriptor::Flags::None);
 
         return true;
     }
@@ -50,6 +49,9 @@ namespace vg::core
     void Instance::SetModel(Lod _lod, IModel * _model)
     {
         VG_ASSERT(isEnumValue(_lod));
+
+        if (asInteger(_lod) >= m_models.size())
+            m_models.resize(asInteger(_lod) + 1);
 
         auto & model = m_models[asInteger(_lod)];
         if (_model != model)

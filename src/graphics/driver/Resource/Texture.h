@@ -15,7 +15,7 @@ namespace vg::graphics::driver
             static core::u32 getPixelFormatSize(PixelFormat _format);
             static bool isDepthStencilFormat(PixelFormat _format);
 
-			Texture(const TextureDesc & _texDesc, const core::string & _name, void * _initData);
+			Texture(const TextureDesc & _texDesc, const core::string & _name, const void * _initData);
 			~Texture();
 
 			const TextureDesc & getTexDesc() const { return m_texDesc; }
@@ -42,7 +42,7 @@ namespace vg::graphics::driver
 	public:
         const char * getClassName() const final { return "Texture"; }
 
-		Texture(const TextureDesc & _texDesc, const core::string & _name, void * _initData = nullptr, ReservedSlot _reservedSlot = ReservedSlot::None);
+		Texture(const TextureDesc & _texDesc, const core::string & _name, const void * _initData = nullptr, ReservedSlot _reservedSlot = ReservedSlot::None);
 		~Texture();
 	};
 }

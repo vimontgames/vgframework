@@ -29,6 +29,7 @@ namespace vg::graphics::renderer
     {
 
     }
+
     //--------------------------------------------------------------------------------------
     MeshInstance::~MeshInstance()
     {

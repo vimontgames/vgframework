@@ -129,9 +129,9 @@ namespace vg::graphics::driver
 		void		        beginFrame		    ();
 		void		        endFrame		    ();
 
-		Texture *	        createTexture	    (const TextureDesc & _texDesc, const core::string & _name, void * _initData = nullptr, ReservedSlot _reservedSlot = ReservedSlot::None);
+		Texture *	        createTexture	    (const TextureDesc & _texDesc, const core::string & _name, const void * _initData = nullptr, ReservedSlot _reservedSlot = ReservedSlot::None);
         Texture *	        createTexture       (const core::string & _path, ReservedSlot _reservedSlot = ReservedSlot::None);
-        Buffer *            createBuffer        (const BufferDesc & _bufDesc, const core::string & _name, void * _initData = nullptr, ReservedSlot _reservedSlot = ReservedSlot::None);
+        Buffer *            createBuffer        (const BufferDesc & _bufDesc, const core::string & _name, const void * _initData = nullptr, ReservedSlot _reservedSlot = ReservedSlot::None);
 
         RootSignatureHandle addRootSignature    (const RootSignatureDesc & _desc);
         RootSignature *     getRootSignature    (const RootSignatureHandle & _handle);

@@ -18,6 +18,9 @@
     <ClCompile Include="Resource\Mesh\MeshResource.cpp">
       <Filter>Resource\Mesh</Filter>
     </ClCompile>
+    <ClCompile Include="Resource\ResourceManager.cpp">
+      <Filter>Resource</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Engine.def" />
@@ -47,6 +50,9 @@
     </ClInclude>
     <ClInclude Include="Resource\Mesh\MeshResource.h">
       <Filter>Resource\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource\ResourceManager.h">
+      <Filter>Resource</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

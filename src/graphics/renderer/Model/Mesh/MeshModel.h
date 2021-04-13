@@ -15,8 +15,13 @@ namespace vg::graphics::renderer
 
     class MeshModel : public IMeshModel
     {
+        using super = IMeshModel;
+
     public:
         const char * getClassName() const final { return "MeshModel"; }
+
+        static bool registerClass(core::IObjectFactory & _factory);
+        static bool registerProperties(core::IObjectDescriptor & _desc);
 
         MeshModel(const core::string & _name, core::IObject * _parent);
         ~MeshModel();

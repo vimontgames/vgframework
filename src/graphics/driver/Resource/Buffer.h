@@ -12,7 +12,7 @@ namespace vg::graphics::driver
         class Buffer : public core::Object
         {
         public:
-            Buffer(const BufferDesc & _bufDesc, const core::string & _name, void * _initData);
+            Buffer(const BufferDesc & _bufDesc, const core::string & _name, const void * _initData);
             ~Buffer();
 
             const BufferDesc & getBufDesc() const { return m_bufDesc; }
@@ -40,7 +40,7 @@ namespace vg::graphics::driver
     public:
         const char * getClassName() const final { return "Buffer"; }
 
-        Buffer(const BufferDesc & _bufDesc, const core::string & _name, void * _initData = nullptr, ReservedSlot _reservedSlot = ReservedSlot::None);
+        Buffer(const BufferDesc & _bufDesc, const core::string & _name, const void * _initData = nullptr, ReservedSlot _reservedSlot = ReservedSlot::None);
         ~Buffer();
     };
 }

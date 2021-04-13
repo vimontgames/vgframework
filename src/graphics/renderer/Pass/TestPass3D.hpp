@@ -8,6 +8,8 @@
 #include "graphics/renderer/Importer/FBX/FBXImporter.h"
 #include "graphics/renderer/IGraphicInstance.h"
 
+#include "Shaders/system/vertex.hlsl.h"
+
 namespace vg::graphics::renderer
 {
     //--------------------------------------------------------------------------------------
@@ -29,72 +31,66 @@ namespace vg::graphics::renderer
         m_forwardShaderKey.init("default/default.hlsl", "Forward");
         m_wireframeShaderKey.init("default/default.hlsl", "Wireframe");
 
-        u16 ibData[] =
+        const u16 ibData[] =
         {
-            0, 2, 1,
-            1, 2, 3,
+            0, 1, 2,
+            2, 1, 3,
             
-            4, 5, 6,
-            6, 5, 7,
+            4, 6, 5,
+            5, 6, 7,
             
-            8, 9, 10,
-            10, 9, 11,
+            8, 10, 9,
+            9, 10, 11,
 
-            12, 14, 13,
-            13, 14, 15,
+            12, 13, 14,
+            14, 13, 15,
 
-            16, 18, 17,
-            17, 18, 19,
+            16, 17, 18,
+            18, 17, 19,
 
-            20, 21, 22,
-            22, 21, 23
+            20, 22, 21,
+            21, 22, 23
         };
 
         const uint indexCount = (uint)countof(ibData);
         BufferDesc ibDesc(Usage::Default, BindFlags::IndexBuffer, CPUAccessFlags::None, BufferFlags::None, sizeof(ibData[0]), indexCount);
         Buffer * ib = device->createBuffer(ibDesc, "CubeIB", ibData);
 
-        struct Vertex
+        const SimpleVertex vbData[] =
         {
-            float pos[3];
-            float uv[2];
-        };
-
-        Vertex vbData[] =
-        {
-            { {-1.0f,-1.0f,-1.0f}, { 0.0f, 0.0f } },
-            { {-1.0f,+1.0f,-1.0f}, { 0.0f, 1.0f } },
-            { {+1.0f,-1.0f,-1.0f}, { 1.0f, 0.0f } },
-            { {+1.0f,+1.0f,-1.0f}, { 1.0f, 1.0f } },
+            { {-1.0f,-1.0f,-1.0f}, {0.0f, 0.0f, -1.0f}, { 0.0f, 0.0f } },
+            { {-1.0f,+1.0f,-1.0f}, {0.0f, 0.0f, -1.0f}, { 0.0f, 1.0f } },
+            { {+1.0f,-1.0f,-1.0f}, {0.0f, 0.0f, -1.0f}, { 1.0f, 0.0f } },
+            { {+1.0f,+1.0f,-1.0f}, {0.0f, 0.0f, -1.0f}, { 1.0f, 1.0f } },
                                     
-            { {-1.0f,-1.0f,+1.0f}, { 0.0f, 0.0f } },
-            { {-1.0f,+1.0f,+1.0f}, { 0.0f, 1.0f } },
-            { {+1.0f,-1.0f,+1.0f}, { 1.0f, 0.0f } },
-            { {+1.0f,+1.0f,+1.0f}, { 1.0f, 1.0f } },
+            { {-1.0f,-1.0f,+1.0f}, {0.0f, 0.0f, +1.0f}, { 0.0f, 0.0f } },
+            { {-1.0f,+1.0f,+1.0f}, {0.0f, 0.0f, +1.0f}, { 0.0f, 1.0f } },
+            { {+1.0f,-1.0f,+1.0f}, {0.0f, 0.0f, +1.0f}, { 1.0f, 0.0f } },
+            { {+1.0f,+1.0f,+1.0f}, {0.0f, 0.0f, +1.0f}, { 1.0f, 1.0f } },
 
-            { {-1.0f,-1.0f,-1.0f}, { 1.0f, 0.0f } },
-            { {-1.0f,-1.0f,+1.0f}, { 1.0f, 1.0f } },
-            { {+1.0f,-1.0f,-1.0f}, { 0.0f, 0.0f } },
-            { {+1.0f,-1.0f,+1.0f}, { 0.0f, 1.0f } },
+            { {-1.0f,-1.0f,-1.0f}, {0.0f, -1.0f, 0.0f}, { 1.0f, 0.0f } },
+            { {-1.0f,-1.0f,+1.0f}, {0.0f, -1.0f, 0.0f}, { 1.0f, 1.0f } },
+            { {+1.0f,-1.0f,-1.0f}, {0.0f, -1.0f, 0.0f}, { 0.0f, 0.0f } },
+            { {+1.0f,-1.0f,+1.0f}, {0.0f, -1.0f, 0.0f}, { 0.0f, 1.0f } },
 
-            { {-1.0f,+1.0f,-1.0f}, { 0.0f, 0.0f } },
-            { {-1.0f,+1.0f,+1.0f}, { 0.0f, 1.0f } },
-            { {+1.0f,+1.0f,-1.0f}, { 1.0f, 0.0f } },
-            { {+1.0f,+1.0f,+1.0f}, { 1.0f, 1.0f } },
+            { {-1.0f,+1.0f,-1.0f}, {0.0f, +1.0f, 0.0f}, { 0.0f, 0.0f } },
+            { {-1.0f,+1.0f,+1.0f}, {0.0f, +1.0f, 0.0f}, { 0.0f, 1.0f } },
+            { {+1.0f,+1.0f,-1.0f}, {0.0f, +1.0f, 0.0f}, { 1.0f, 0.0f } },
+            { {+1.0f,+1.0f,+1.0f}, {0.0f, +1.0f, 0.0f}, { 1.0f, 1.0f } },
 
-            { {-1.0f,-1.0f,-1.0f}, { 0.0f, 0.0f } },
-            { {-1.0f,-1.0f,+1.0f}, { 0.0f, 1.0f } },
-            { {-1.0f,+1.0f,-1.0f}, { 1.0f, 0.0f } },
-            { {-1.0f,+1.0f,+1.0f}, { 1.0f, 1.0f } },
+            { {-1.0f,-1.0f,-1.0f}, {-1.0f, 0.0f, 0.0f}, { 0.0f, 0.0f } },
+            { {-1.0f,-1.0f,+1.0f}, {-1.0f, 0.0f, 0.0f}, { 0.0f, 1.0f } },
+            { {-1.0f,+1.0f,-1.0f}, {-1.0f, 0.0f, 0.0f}, { 1.0f, 0.0f } },
+            { {-1.0f,+1.0f,+1.0f}, {-1.0f, 0.0f, 0.0f}, { 1.0f, 1.0f } },
 
-            { {+1.0f,-1.0f,-1.0f}, { 1.0f, 0.0f } },
-            { {+1.0f,-1.0f,+1.0f}, { 1.0f, 1.0f } },
-            { {+1.0f,+1.0f,-1.0f}, { 0.0f, 0.0f } },
-            { {+1.0f,+1.0f,+1.0f}, { 0.0f, 1.0f } }
+            { {+1.0f,-1.0f,-1.0f}, {+1.0f, 0.0f, 0.0f}, { 1.0f, 0.0f } },
+            { {+1.0f,-1.0f,+1.0f}, {+1.0f, 0.0f, 0.0f}, { 1.0f, 1.0f } },
+            { {+1.0f,+1.0f,-1.0f}, {+1.0f, 0.0f, 0.0f}, { 0.0f, 0.0f } },
+            { {+1.0f,+1.0f,+1.0f}, {+1.0f, 0.0f, 0.0f}, { 0.0f, 1.0f } }
         };
 
         const uint vertexCount = (uint)countof(vbData);
-        BufferDesc vbDesc(Usage::Default, BindFlags::ShaderResource, CPUAccessFlags::None, BufferFlags::None, sizeof(vbData[0]), vertexCount);
+        BufferDesc vbDesc(Usage::Default, BindFlags::ShaderResource, CPUAccessFlags::None, BufferFlags::None, sizeof(SimpleVertex), vertexCount);
         Buffer * vb = device->createBuffer(vbDesc, "CubeVB", vbData);
 
         m_meshModel = new MeshModel("CubeModel", this);
@@ -222,7 +218,7 @@ namespace vg::graphics::renderer
             float4x4 world = instance->GetWorldMatrix();
             float4x4 wvp = mul(world, viewProj);
 
-            root3D.mat = transpose(viewProj);
+            root3D.mat = transpose(wvp);
             root3D.data.x = vb->getBindlessSRVHandle();
             root3D.data.y = m_texture->getBindlessSRVHandle();
 
