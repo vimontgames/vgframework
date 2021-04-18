@@ -109,7 +109,7 @@ namespace vg::graphics::driver::vulkan
 
 		if (_texDesc.isBackbuffer())
 		{
-            m_resource.setVulkanImage(*static_cast<VkImage*>(_initData), VK_NULL_HANDLE);
+            m_resource.setVulkanImage(*(VkImage*)_initData, VK_NULL_HANDLE);
 		}
         else
         {

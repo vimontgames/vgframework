@@ -29,7 +29,7 @@ namespace vg::graphics::driver::vulkan
 		VkCommandBufferBeginInfo cmdBufBegInfo;
 		cmdBufBegInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
 		cmdBufBegInfo.pNext = nullptr;
-		cmdBufBegInfo.flags = 0;
+		cmdBufBegInfo.flags = VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT;
 		cmdBufBegInfo.pInheritanceInfo = nullptr;
 
 		VG_ASSERT_VULKAN(vkBeginCommandBuffer(m_vkCommandBuffer, &cmdBufBegInfo));
