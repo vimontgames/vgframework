@@ -25,6 +25,8 @@ namespace vg::engine
         void            update              (double _dt) override;
         void            onResourceLoaded    (core::IResource * _resource) override;
 
+        MeshResource &  getMeshResource     () { return m_meshResource; }
+
     private:
         graphics::renderer::IMeshInstance * m_meshInstance = nullptr;
         MeshResource                        m_meshResource;

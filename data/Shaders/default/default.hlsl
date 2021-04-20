@@ -17,7 +17,7 @@ VS_Output VS_Forward(uint _vertexID : VertexID)
     VS_Output output;
 
     Vertex vert;
-           vert.load(getBuffer(rootConstants3D.data.x), _vertexID);
+           vert.load(getBuffer(rootConstants3D.getBuffer()), _vertexID);
 
     output.pos = vert.getPos();
     output.nrm = vert.getNrm();
@@ -38,10 +38,18 @@ PS_Output PS_Forward(VS_Output _input)
     PS_Output output;
     float2 uv = _input.uv;
     
-    output.color0.rgba = Texture2DTable[rootConstants3D.data.y].Sample(nearestRepeat, uv).rgba;
+    float4 baseColor = Texture2DTable[rootConstants3D.getTexture()].Sample(nearestRepeat, uv).rgba;
+
+    // fake shitty lighting
+    float3 fakeDiffuseLighting = dot(_input.nrm, -normalize(float3(-1,-1,-1))) * 0.9f;
+    float3 fakeAmbientLighting = 0.3f;
+
+    output.color0.rgba = float4( baseColor.rgb * (fakeDiffuseLighting + fakeAmbientLighting), 1.0f);
+
+    if (rootConstants3D.getFlags() & DBG_NORMAL)
+        output.color0 = float4(_input.nrm*0.5f+0.5f, 1.0f);
 
     //output.color0 = float4(uv, 0, 1);
-    output.color0 = float4(_input.nrm*0.5f+0.5f, 1.0f);
     
     return output;
 }
@@ -49,6 +57,7 @@ PS_Output PS_Forward(VS_Output _input)
 PS_Output PS_Wireframe(VS_Output _input)
 {
     PS_Output output;
+
     output.color0 = float4(0, 1, 0, 1);
     return output;
 }

@@ -27,8 +27,8 @@ namespace vg::core
     {
         super::registerProperties(_desc);
 
-        _desc.registerPropertyHelper(Instance, m_world, "Matrix", IPropertyDescriptor::Flags::None);
-        _desc.registerPropertyVectorHelper(Instance, m_models, IObject*, "Models", IPropertyDescriptor::Flags::None);
+        _desc.registerPropertyHelper(Instance, m_world, "Matrix", IPropertyDescriptor::Flags::ReadOnly);
+        _desc.registerPropertyVectorHelper(Instance, m_models, IObject*, "Models", IPropertyDescriptor::Flags::ReadOnly);
 
         return true;
     }

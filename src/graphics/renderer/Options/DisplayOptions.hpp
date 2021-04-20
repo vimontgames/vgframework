@@ -17,7 +17,7 @@ namespace vg::graphics::renderer
     //--------------------------------------------------------------------------------------
     bool DisplayOptions::registerClass(IObjectFactory & _factory)
     {
-        if (core::IObjectDescriptor * desc = _factory.registerClassSingletonHelper(DisplayOptions, "Display Options"))
+        if (core::IObjectDescriptor * desc = _factory.registerClassSingletonHelper(DisplayOptions, "Display Options", IObjectDescriptor::Flags::None))
             registerProperties(*desc);
 
         return true;
@@ -41,12 +41,16 @@ namespace vg::graphics::renderer
         super::registerProperties(_desc);
 
         _desc.registerPropertyHelper(DisplayOptions, m_toolMode, "Tool mode", IPropertyDescriptor::Flags::None);
-        _desc.registerPropertyHelper(DisplayOptions, m_wireframe, "Wireframe", IPropertyDescriptor::Flags::None);
+
+        _desc.registerPropertyHelper(DisplayOptions, m_opaque, "Opaque", IPropertyDescriptor::Flags::None);
+        _desc.registerPropertyHelper(DisplayOptions, m_wireframe, "Wireframe", IPropertyDescriptor::Flags::SameLine);
+
         _desc.registerPropertyHelper(DisplayOptions, m_displayNormals, "Normals", IPropertyDescriptor::Flags::None);
+
         _desc.registerPropertyHelper(DisplayOptions, m_backgroundColor, "Background", IPropertyDescriptor::Flags::Color);
 
         _desc.registerCallbackHelper(DisplayOptions, load, "Load", IPropertyDescriptor::Flags::None);
-        _desc.registerCallbackHelper(DisplayOptions, save, "Save", IPropertyDescriptor::Flags::None);
+        _desc.registerCallbackHelper(DisplayOptions, save, "Save", IPropertyDescriptor::Flags::SameLine);
 
         return true;
     }

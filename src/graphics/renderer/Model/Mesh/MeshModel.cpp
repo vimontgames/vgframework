@@ -17,7 +17,7 @@ namespace vg::graphics::renderer
     //--------------------------------------------------------------------------------------
     bool MeshModel::registerClass(core::IObjectFactory & _factory)
     {
-        if (core::IObjectDescriptor * desc = _factory.registerClassHelper(MeshModel, "Mesh Model"))
+        if (core::IObjectDescriptor * desc = _factory.registerClassHelper(MeshModel, "Mesh Model", IObjectDescriptor::Flags::Model))
             registerProperties(*desc);
 
         return true;

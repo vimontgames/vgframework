@@ -13,12 +13,12 @@ using namespace vg::graphics::renderer;
 
 namespace vg::engine
 {
-    VG_AUTO_REGISTER_COMPONENT(MeshComponent);
+    VG_AUTO_REGISTER_CLASS(MeshComponent);
 
     //--------------------------------------------------------------------------------------
     bool MeshComponent::registerClass(IObjectFactory & _factory)
     {
-        if (core::IObjectDescriptor * desc = _factory.registerClassHelper(MeshComponent, "Mesh Component"))
+        if (core::IObjectDescriptor * desc = _factory.registerClassHelper(MeshComponent, "Mesh Component", IObjectDescriptor::Flags::Component))
             registerProperties(*desc);
 
         return true;
@@ -29,7 +29,7 @@ namespace vg::engine
     {
         super::registerProperties(_desc);
 
-        _desc.registerProperty("m_meshResource", (core::IResource**)offsetof(MeshComponent, m_meshResource), "Resource", core::IPropertyDescriptor::Flags::None);
+        _desc.registerProperty("m_meshResource", (core::IResource**)offsetof(MeshComponent, m_meshResource), "Resource", IPropertyDescriptor::Flags::None);
         _desc.registerProperty("m_meshInstance", (IObject**)offsetof(MeshComponent, m_meshInstance), "Instance", IPropertyDescriptor::Flags::None);
 
         return true;
@@ -41,7 +41,7 @@ namespace vg::engine
         m_meshResource(this)
     {
         VG_ASSERT(dynamic_cast<IEntity*>(_parent));
-        m_meshInstance = (graphics::renderer::IMeshInstance*)Kernel::getObjectFactory()->createObject("MeshInstance", _name, this);
+        m_meshInstance = (IMeshInstance*)CreateFactoryObject(MeshInstance, _name, this);
     }
 
     //--------------------------------------------------------------------------------------

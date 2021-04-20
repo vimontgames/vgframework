@@ -16,8 +16,8 @@ namespace vg::core
     //--------------------------------------------------------------------------------------
     #define propertyOffset(typeName, className, propertyName)                                       (typeName*)&((className*)(nullptr))->propertyName
 
-    #define registerClassHelper(className, displayName)                                             registerClass(#className, displayName, vg::core::IObjectDescriptor::Flags::None, [](const vg::core::string & _name, vg::core::IObject * _parent) { return new className(_name, _parent); })
-    #define registerClassSingletonHelper(className, displayName)                                    registerSingletonClass(#className, displayName, vg::core::IObjectDescriptor::Flags::Singleton, [](){ return className::get(); } )
+    #define registerClassHelper(className, displayName, flags)                                      registerClass(#className, displayName, flags, [](const vg::core::string & _name, vg::core::IObject * _parent) { return new className(_name, _parent); })
+    #define registerClassSingletonHelper(className, displayName, flags)                             registerSingletonClass(#className, displayName, flags | vg::core::IObjectDescriptor::Flags::Singleton, [](){ return className::get(); } )
 
     #define registerPropertyHelper(className, propertyName, displayName, flags)                     registerProperty(#propertyName, (&((className*)(nullptr))->propertyName), displayName, flags)
     #define registerPropertyVectorHelper(className, propertyName, elementType, displayName, flags)  registerProperty(#propertyName, (core::vector<elementType>*)&((className*)nullptr)->propertyName, displayName, flags);
@@ -56,6 +56,7 @@ namespace vg::core
             Color       = 0x0000000000000002,   // Type represents a color
             IsFolder    = 0x0000000000000004,   // String is a folder
             HasRange    = 0x0000000000000008,   // Property has [min..max] range
+            SameLine    = 0x0000000000000010,   // Do no end line after this property
         };
 
         virtual void                        setRange                (float2 _range) = 0;
@@ -80,7 +81,10 @@ namespace vg::core
             Singleton   = 0x0000000000000001,
             Entity      = 0x0000000000000002,
             Component   = 0x0000000000000004,
-            Resource    = 0x0000000000000008
+            Model       = 0x0000000000000008,
+            Instance    = 0x0000000000000010,
+            Resource    = 0x0000000000000020,
+            SceneNode   = 0x0000000000000040
         };
         virtual                             ~IObjectDescriptor  () {}
 
@@ -123,4 +127,6 @@ namespace vg::core
         virtual bool                        serializeFromString     (IObject * _object, const string & _in) const = 0;
         virtual bool                        serializeToString       (string & _out, const IObject * _object) const = 0;
     };
+
+    #define CreateFactoryObject(type, name, parent) Kernel::getObjectFactory()->createObject(#type, name, parent)    
 }

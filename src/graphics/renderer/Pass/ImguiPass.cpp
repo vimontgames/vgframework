@@ -453,23 +453,8 @@ namespace vg::graphics::renderer
                 }
             }
 
-            if (type == previous)
-            {
-                switch (type)
-                {
-                    case IPropertyDescriptor::Type::Function:
-                    case IPropertyDescriptor::Type::Bool:
-                        ImGui::SameLine();
-                        break;
-
-                    default:
-                    case IPropertyDescriptor::Type::String:
-                    case IPropertyDescriptor::Type::Float4:
-                    case IPropertyDescriptor::Type::Object:
-                    case IPropertyDescriptor::Type::ObjectVector:
-                        break;
-                }
-            }
+            if (asBool(IPropertyDescriptor::Flags::SameLine & flags))
+                ImGui::SameLine();
 
             ImGuiInputTextFlags imguiInputTextflags = 0;
 
@@ -584,7 +569,7 @@ namespace vg::graphics::renderer
 
                     ImGui::PushStyleColor(ImGuiCol_Text, containerColor);
 
-                    if (UIMode::Object != _mode && count > 0 && ImGui::TreeNodeEx(treeNodeName.c_str(), ImGuiTreeNodeFlags_OpenOnArrow))
+                    if (/*UIMode::Object != _mode &&*/ count > 0 && ImGui::TreeNodeEx(treeNodeName.c_str(), ImGuiTreeNodeFlags_OpenOnArrow))
                     {
                         for (uint i = 0; i < count; ++i)
                         {
@@ -633,9 +618,14 @@ namespace vg::graphics::renderer
                     else
                         treeNodeName = displayName;
 
+                    // Only entities & components in scene treeview
+                    if (UIMode::Scene == _mode)
+                        if (nullptr != pObject && !asBool(pObject->getClassDesc()->getFlags() & (IObjectDescriptor::Flags::Component | IObjectDescriptor::Flags::Entity | IObjectDescriptor::Flags::SceneNode)))
+                            continue;
+
                     ImGui::PushStyleColor(ImGuiCol_Text, objectColor);
 
-                    if (UIMode::Object != _mode && ImGui::TreeNodeEx(treeNodeName.c_str(), ImGuiTreeNodeFlags_OpenOnArrow))
+                    if (/*UIMode::Object != _mode &&*/ ImGui::TreeNodeEx(treeNodeName.c_str(), ImGuiTreeNodeFlags_OpenOnArrow))
                     {
                         updateSelection(_object, _mode);
 

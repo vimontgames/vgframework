@@ -8,12 +8,12 @@ using namespace vg::core;
 
 namespace vg::engine
 {
-    VG_AUTO_REGISTER_ENTITY(FreeCamEntity);
+    VG_AUTO_REGISTER_CLASS(FreeCamEntity);
 
     //--------------------------------------------------------------------------------------
     bool FreeCamEntity::registerClass(IObjectFactory & _factory)
     {
-        if (core::IObjectDescriptor * desc = _factory.registerClassHelper(FreeCamEntity, "FreeCamEntity"))
+        if (core::IObjectDescriptor * desc = _factory.registerClassHelper(FreeCamEntity, "FreeCamEntity", IObjectDescriptor::Flags::Entity))
             registerProperties(*desc);
 
         return true;
@@ -39,16 +39,27 @@ namespace vg::engine
     //--------------------------------------------------------------------------------------
     FreeCamEntity::FreeCamEntity(const core::string & _name, core::IObject * _parent) :
         core::Entity(_name, _parent),
-        m_pitch(-pi*2.0f/4.0f),
-        m_yaw(0.0f),
+        //m_pitch(-pi*2.0f/4.0f),
+        //m_yaw(0.0f),
         m_roll(0.0f)
     {
+        //setWorldMatrix(float4x4
+        //(
+        //    1.0f, 0.0f, 0.0f, 0.0f,
+        //    0.0f, 1.0f, 0.0f, 0.0f,
+        //    0.0f, 0.0f, 1.0f, 0.0f,
+        //    0.0f, 64.0f, 16.0f, 1.0f
+        //));
+
+        m_pitch = -1.34f;
+        m_yaw = -0.14f;
+
         setWorldMatrix(float4x4
         (
             1.0f, 0.0f, 0.0f, 0.0f,
             0.0f, 1.0f, 0.0f, 0.0f,
             0.0f, 0.0f, 1.0f, 0.0f,
-            0.0f, 64.0f, 16.0f, 1.0f
+            0.0f, 229.0f, 72.0f, 1.0f
         ));
     }
 
@@ -118,7 +129,7 @@ namespace vg::engine
 
         float mouseSpeedX = 0.001f * pi;
         float mouseSpeedY = 0.001f * pi;
-        float moveSpeed = 0.01f * (float)_dt;
+        float moveSpeed = 0.1f * (float)_dt;
 
         if (input->isMouseButtonPressed(MouseButton::Middle))
         {

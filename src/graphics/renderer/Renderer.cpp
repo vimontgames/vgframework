@@ -95,7 +95,7 @@ namespace vg::graphics::renderer
         // Register classes to auto-register the "Engine" module
         AutoRegisterClassInfo::registerClasses(*factory);
 
-        if (IObjectDescriptor * desc = factory->registerClassSingletonHelper(Renderer, "Renderer"))
+        if (IObjectDescriptor * desc = factory->registerClassSingletonHelper(Renderer, "Renderer", IObjectDescriptor::Flags::None))
             registerProperties(*desc);
 
         return true;

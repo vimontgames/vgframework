@@ -118,7 +118,7 @@ namespace vg::graphics::renderer
         TextureDesc texDesc(Usage::Default, BindFlags::ShaderResource, CPUAccessFlags::None, TextureType::Texture2D, PixelFormat::R8G8B8A8_unorm, TextureFlags::None, 2, 2, 1, 1);
         m_texture = device->createTexture("data/Textures/QuestionBox.psd");
 
-        m_fbxModel = (MeshModel*)renderer->createMeshModel("data/Models/Teapot.fbx");
+        m_fbxModel = (MeshModel*)renderer->createMeshModel("data/Models/Box.fbx");
         VG_ASSERT(m_fbxModel);
     }
 
@@ -181,70 +181,79 @@ namespace vg::graphics::renderer
         const float fovY = pi / 4.0f;
         const float ar = float(backbuffer.width) / float(backbuffer.height);
 
-        RasterizerState rs(FillMode::Solid, CullMode::Back);
-        BlendState bs(BlendFactor::One, BlendFactor::Zero, BlendOp::Add);
-        DepthStencilState ds(true, true, ComparisonFunc::LessEqual);
-
-        _cmdList->setRootSignature(m_rootSignatureHandle);
-        _cmdList->setShader(m_forwardShaderKey);
-        _cmdList->setPrimitiveTopology(PrimitiveTopology::TriangleList);
-        _cmdList->setRasterizerState(rs);
-        _cmdList->setBlendState(bs);
-        _cmdList->setDepthStencilState(ds);
-
-        float4x4 proj = setPerspectiveProjectionRH(fovY, ar, 0.001f, 1000.0f);
+        float4x4 proj = setPerspectiveProjectionRH(fovY, ar, 0.01f, 1000.0f);
 
         View * view = renderer->getView();
         float4x4 viewProj = mul(view->GetViewInvMatrix(), proj);
 
         const auto & graphicInstances = view->getCameraSector()->getGraphicInstances();
+        
+        BlendState bs(BlendFactor::One, BlendFactor::Zero, BlendOp::Add);
+        DepthStencilState ds(true, true, ComparisonFunc::LessEqual);
 
-        for (uint i = 0; i < graphicInstances.size(); ++i)
+        _cmdList->setRootSignature(m_rootSignatureHandle);
+        _cmdList->setPrimitiveTopology(PrimitiveTopology::TriangleList);
+        _cmdList->setBlendState(bs);
+        _cmdList->setDepthStencilState(ds);
+
+        const auto options = DisplayOptions::get();
+
+        const u16 flags = options->isNormalEnabled() ? DBG_NORMAL : 0x0;
+
+        auto draw = [=]()
         {
-            IGraphicInstance * instance = graphicInstances[i];
-
-            const MeshModel * model = (MeshModel *)instance->getModel(Lod::Lod0);
-            if (nullptr == model)
-                model = m_meshModel;
-
-            const MeshGeometry * geo = model->getGeometry();
-
-            Buffer * vb = geo->getVertexBuffer();
-            Buffer * ib = geo->getIndexBuffer();
-            const auto & batches = geo->batches();
-
-            RootConstants3D root3D;
-
-            float4x4 world = instance->GetWorldMatrix();
-            float4x4 wvp = mul(world, viewProj);
-
-            root3D.mat = transpose(wvp);
-            root3D.data.x = vb->getBindlessSRVHandle();
-            root3D.data.y = m_texture->getBindlessSRVHandle();
-
-            _cmdList->setInlineRootConstants(&root3D, RootConstants3DCount);
-            _cmdList->setIndexBuffer(ib);
-
-            for (uint i = 0; i < batches.size(); ++i)
+            for (uint i = 0; i < graphicInstances.size(); ++i)
             {
-                const auto & batch = batches[i];
-                _cmdList->drawIndexed(batch.count, batch.offset);
+                const IGraphicInstance * instance = graphicInstances[i];
+
+                const MeshModel * model = (MeshModel *)instance->getModel(Lod::Lod0);
+                if (nullptr == model)
+                    model = m_meshModel;
+
+                const MeshGeometry * geo = model->getGeometry();
+
+                Buffer * vb = geo->getVertexBuffer();
+                Buffer * ib = geo->getIndexBuffer();
+                const auto & batches = geo->batches();
+
+                RootConstants3D root3D;
+
+                float4x4 world = instance->GetWorldMatrix();
+                float4x4 wvp = mul(world, viewProj);
+
+                root3D.mat = transpose(wvp);
+                root3D.setBuffer(vb->getBindlessSRVHandle());
+                root3D.setTexture(m_texture->getBindlessSRVHandle());
+                root3D.setFlags(flags);
+
+                _cmdList->setInlineRootConstants(&root3D, RootConstants3DCount);
+                _cmdList->setIndexBuffer(ib);
+
+                for (uint i = 0; i < batches.size(); ++i)
+                {
+                    const auto & batch = batches[i];
+                    _cmdList->drawIndexed(batch.count, batch.offset);
+                }
             }
+        };        
+
+        if (options->isOpaqueEnabled())
+        {
+            RasterizerState rs(FillMode::Solid, CullMode::Back);
+
+            _cmdList->setShader(m_forwardShaderKey);
+            _cmdList->setRasterizerState(rs);
+
+            draw();
         }
 
-        //const bool wireframe = DisplayOptions::get()->isWireframeEnabled();
-        //
-        //if (wireframe)
-        //{
-        //    RasterizerState rsWireframe(FillMode::Wireframe, CullMode::None);
-        //    _cmdList->setShader(m_wireframeShaderKey);
-        //    _cmdList->setRasterizerState(rsWireframe);
-        //
-        //    for (uint i = 0; i < batches.size(); ++i)
-        //    {
-        //        const auto & batch = batches[i];
-        //        _cmdList->drawIndexed(batch.count, batch.offset);
-        //    }
-        //}
+        if (options->isWireframeEnabled())
+        {
+            RasterizerState rs(FillMode::Wireframe, CullMode::None);
+            _cmdList->setShader(m_wireframeShaderKey);
+            _cmdList->setRasterizerState(rs);
+        
+            draw();
+        }
     }
 }

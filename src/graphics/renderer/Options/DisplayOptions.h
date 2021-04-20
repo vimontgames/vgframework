@@ -23,6 +23,7 @@ namespace vg::graphics::renderer
         static bool     registerProperties  (core::IObjectDescriptor & _desc);
 
         bool            isToolModeEnabled   () const { return m_toolMode; }
+        bool            isOpaqueEnabled     () const { return m_opaque; }
         bool            isWireframeEnabled  () const { return m_wireframe; }
         bool            isNormalEnabled     () const { return m_displayNormals; }
 
@@ -34,6 +35,7 @@ namespace vg::graphics::renderer
     private:
         core::float4    m_backgroundColor   = core::float4(0, 0, 0, 0);
         bool            m_toolMode          = true;
+        bool            m_opaque            = true;
         bool            m_wireframe         = false;
         bool            m_displayNormals    = false;
     };

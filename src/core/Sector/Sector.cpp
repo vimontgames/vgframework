@@ -34,7 +34,7 @@ namespace vg::core
     //--------------------------------------------------------------------------------------
     bool Sector::registerClass(IObjectFactory & _factory)
     {
-        if (core::IObjectDescriptor * desc = _factory.registerClassHelper(Sector, "Sector"))
+        if (core::IObjectDescriptor * desc = _factory.registerClassHelper(Sector, "Sector", IObjectDescriptor::Flags::SceneNode))
             registerProperties(*desc);
 
         return true;

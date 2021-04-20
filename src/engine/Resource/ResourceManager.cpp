@@ -12,7 +12,7 @@ namespace vg::engine
     //--------------------------------------------------------------------------------------
     bool ResourceManager::registerClass(IObjectFactory & _factory)
     {
-        if (IObjectDescriptor * desc = _factory.registerClassHelper(ResourceManager, "Resource Manager"))
+        if (IObjectDescriptor * desc = _factory.registerClassHelper(ResourceManager, "Resource Manager", IObjectDescriptor::Flags::None))
             registerProperties(*desc);
 
         return true;

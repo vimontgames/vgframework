@@ -5,12 +5,12 @@
 
 namespace vg::core
 {
-    VG_AUTO_REGISTER_ENTITY(Entity);
+    VG_AUTO_REGISTER_CLASS(Entity);
 
     //--------------------------------------------------------------------------------------
     bool Entity::registerClass(IObjectFactory & _factory)
     {
-        if (core::IObjectDescriptor * desc = _factory.registerClassHelper(Entity, "Entity"))
+        if (core::IObjectDescriptor * desc = _factory.registerClassHelper(Entity, "Entity", IObjectDescriptor::Flags::Entity))
             registerProperties(*desc);
 
         return true;

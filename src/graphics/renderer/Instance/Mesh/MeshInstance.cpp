@@ -9,7 +9,7 @@ namespace vg::graphics::renderer
     //--------------------------------------------------------------------------------------
     bool MeshInstance::registerClass(core::IObjectFactory & _factory)
     {
-        if (core::IObjectDescriptor * desc = _factory.registerClassHelper(MeshInstance, "Mesh Instance"))
+        if (core::IObjectDescriptor * desc = _factory.registerClassHelper(MeshInstance, "Mesh Instance", core::IObjectDescriptor::Flags::Instance))
             registerProperties(*desc);
 
         return true;

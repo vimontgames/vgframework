@@ -21,6 +21,7 @@
 #include "engine/Resource/ResourceManager.h"
 #include "engine/Entity/FreeCam/FreeCamEntity.h"
 #include "engine/Component/Camera/CameraComponent.h"
+#include "engine/Component/Mesh/MeshComponent.h"
 
 #include "application/IProject.h"
 
@@ -107,7 +108,7 @@ namespace vg::engine
         // Register classes to auto-register the "Engine" module
         AutoRegisterClassInfo::registerClasses(*factory);
 
-        if (core::IObjectDescriptor * desc = factory->registerClassSingletonHelper(Engine, "Engine"))
+        if (core::IObjectDescriptor * desc = factory->registerClassSingletonHelper(Engine, "Engine", IObjectDescriptor::Flags::None))
             registerProperties(*desc);
 
         load(this);
@@ -274,11 +275,11 @@ namespace vg::engine
         auto * factory = Kernel::getObjectFactory();
 
         // create empty scene
-        m_scene = (Scene*)factory->createObject("Scene");
+        m_scene = (IScene*)CreateFactoryObject(Scene, "TestScene", this);
         m_scene->setName("Scene");
 
         // add root sector
-        Sector * rootSector = (Sector*)factory->createObject("Sector", "Root");
+        Sector * rootSector = (Sector*)CreateFactoryObject(Sector, "Root", m_scene);
         rootSector->setName("Root");
         m_scene->setRoot(rootSector);
         VG_SAFE_RELEASE(rootSector);
@@ -286,20 +287,43 @@ namespace vg::engine
         // add camera entity
         auto * root = m_scene->getRoot();
         m_freeCam = new FreeCamEntity("FreeCam #0", root);
-        CameraComponent * cameraComponent = (CameraComponent*)factory->createObject("CameraComponent", "", m_freeCam);
+        auto * cameraComponent = (CameraComponent*)CreateFactoryObject(CameraComponent, "", m_freeCam);
         m_freeCam->addComponent(cameraComponent);
         cameraComponent->setView(m_editorView, root);
         root->addEntity(m_freeCam);
         VG_SAFE_RELEASE(cameraComponent);
         VG_SAFE_RELEASE(m_freeCam);
 
-        // add entity with mesh
-        Entity * meshEntity = (Entity*)factory->createObject("Entity", "", root);
-        Component * meshComponent = (Component*)factory->createObject("MeshComponent", "", meshEntity);
-        meshEntity->addComponent(meshComponent);
-        root->addEntity(meshEntity);
-        VG_SAFE_RELEASE(meshComponent);
-        VG_SAFE_RELEASE(meshEntity);
+        // add a few entities with mesh
+        for (int j = 0; j < 3; ++j)
+        {
+            for (int i = 0; i < 3; ++i)
+            {
+                auto * meshEntity = (Entity*)CreateFactoryObject(Entity, "", root);
+                auto * meshComponent = (MeshComponent*)CreateFactoryObject(MeshComponent, "", meshEntity);
+
+                meshComponent->getMeshResource().setPath("data/Models/Teapot.fbx");
+                meshEntity->addComponent(meshComponent);
+
+                root->addEntity(meshEntity);
+
+                const float x = (i - 1) * 64.0f;
+                const float y = (j - 1) * 64.0f;
+
+                const float4x4 m =
+                {
+                    float4(1.0f, 0.0f, 0.0f, (0.0f)),
+                    float4(0.0f, 1.0f, 0.0f, (0.0f)),
+                    float4(0.0f, 0.0f, 1.0f, (0.0f)),
+                    float4(   x,    y, 0.0f, (1.0f)),
+                };
+
+                meshEntity->SetWorldMatrix(m);
+
+                VG_SAFE_RELEASE(meshComponent);
+                VG_SAFE_RELEASE(meshEntity);
+            }
+        }
     }
 
     //--------------------------------------------------------------------------------------

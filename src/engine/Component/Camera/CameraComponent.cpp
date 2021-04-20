@@ -8,12 +8,12 @@ using namespace vg::core;
 
 namespace vg::engine
 {
-    VG_AUTO_REGISTER_COMPONENT(CameraComponent);
+    VG_AUTO_REGISTER_CLASS(CameraComponent);
 
     //--------------------------------------------------------------------------------------
     bool CameraComponent::registerClass(IObjectFactory & _factory)
     {
-        if (core::IObjectDescriptor * desc = _factory.registerClassHelper(CameraComponent, "Camera Component"))
+        if (core::IObjectDescriptor * desc = _factory.registerClassHelper(CameraComponent, "Camera Component", IObjectDescriptor::Flags::Component))
             registerProperties(*desc);
 
         return true;
