@@ -342,7 +342,7 @@ namespace vg::core
 
             while (true)
             {
-                auto keyOffset = _in.find_first_not_of("\n", offset);
+                auto keyOffset = max(_in.find_first_not_of("\r\n", offset), _in.find_first_not_of("\n", offset));
 
                 if (string::npos != keyOffset)
                 {
@@ -350,7 +350,7 @@ namespace vg::core
                     string key = _in.substr(keyOffset, keyEndOffset - keyOffset);
 
                     auto beginOffset = _in.find("=", keyOffset);
-                    auto endOffset = _in.find("\n", beginOffset + 2);
+                    auto endOffset = min(_in.find("\n", beginOffset + 2), _in.find("\r\n", beginOffset + 2));
 
                     if (string::npos != beginOffset && string::npos != endOffset)
                     {
