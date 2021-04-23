@@ -107,7 +107,7 @@ namespace vg::graphics::renderer
                     if (ImGui::MenuItem("Performance"))
                         m_isPerfWindowVisible = true;
 
-                    if (ImGui::MenuItem("Scene"))
+                    if (ImGui::MenuItem("Scenes"))
                         m_isSceneWindowVisible = true; 
 
                     if (ImGui::MenuItem("Selection"))
@@ -382,7 +382,7 @@ namespace vg::graphics::renderer
     //--------------------------------------------------------------------------------------
     void ImguiPass::displaySceneWindow()
     {
-        if (ImGui::Begin("Scene", &m_isSceneWindowVisible))
+        if (ImGui::Begin("Scenes", &m_isSceneWindowVisible))
         {
             const auto * factory = Kernel::getObjectFactory();
             engine::IEngine * engine = (engine::IEngine *)factory->getSingleton("Engine");
@@ -492,10 +492,10 @@ namespace vg::graphics::renderer
                 {
                     float * pFloat4x4 = (float*)(uint_ptr(_object) + offset);
 
-                    changed |= ImGui::InputFloat4(((string)displayName + ".I").c_str(), pFloat4x4 + 0 , "%.2f");
-                    changed |= ImGui::InputFloat4(((string)displayName + ".J").c_str(), pFloat4x4 + 4 , "%.2f");
-                    changed |= ImGui::InputFloat4(((string)displayName + ".K").c_str(), pFloat4x4 + 8 , "%.2f");
-                    changed |= ImGui::InputFloat4(((string)displayName + ".T").c_str(), pFloat4x4 + 12, "%.2f");
+                    changed |= ImGui::InputFloat4(((string)displayName + ".I").c_str(), pFloat4x4 + 0 , "%.2f", imguiInputTextflags);
+                    changed |= ImGui::InputFloat4(((string)displayName + ".J").c_str(), pFloat4x4 + 4 , "%.2f", imguiInputTextflags);
+                    changed |= ImGui::InputFloat4(((string)displayName + ".K").c_str(), pFloat4x4 + 8 , "%.2f", imguiInputTextflags);
+                    changed |= ImGui::InputFloat4(((string)displayName + ".T").c_str(), pFloat4x4 + 12, "%.2f", imguiInputTextflags);
 
                 }
                 break;
