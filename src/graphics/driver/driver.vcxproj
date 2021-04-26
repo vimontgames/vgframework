@@ -36,6 +36,7 @@
     <ClInclude Include="BindlessTable\vulkan\BindlessTable_vulkan.h" />
     <ClInclude Include="BindlessTable\vulkan\BindlessTable_vulkan.hpp" />
     <ClInclude Include="Device\DeviceCaps.h" />
+    <ClInclude Include="Device\DeviceCaps.hpp" />
     <ClInclude Include="Device\dx12\DeviceCaps_dx12.h" />
     <ClInclude Include="Device\vulkan\DeviceCaps_vulkan.h" />
     <ClInclude Include="FrameGraph\RenderPass.hpp" />

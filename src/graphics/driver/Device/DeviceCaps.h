@@ -10,6 +10,8 @@ namespace vg::graphics::driver
     class DeviceCaps : public VG_GFXAPI::DeviceCaps
     {
     public:
+		void init();
+
         bool supportRaytracing = false;
     };
 }

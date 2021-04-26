@@ -93,3 +93,13 @@
 #define VG_GFXAPI_IMPL_EXT(filename, version)                           VG_GFXAPI_MAKE_IMPLEMENTATION_PATH_EXT(filename, version, vulkan)
 
 #endif
+
+//--------------------------------------------------------------------------------------
+// Raytracing
+//--------------------------------------------------------------------------------------
+
+#ifdef VG_DX12
+#define VG_ENABLE_RAYTRACING 1
+#elif defined(VG_VULKAN)
+#define VG_ENABLE_RAYTRACING 0
+#endif

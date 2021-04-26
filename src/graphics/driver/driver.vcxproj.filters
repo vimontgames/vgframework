@@ -498,6 +498,9 @@
     <ClInclude Include="PipelineState\vulkan\DepthStencilState_vulkan.hpp">
       <Filter>PipelineState\vulkan</Filter>
     </ClInclude>
+    <ClInclude Include="Device\DeviceCaps.hpp">
+      <Filter>Device</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Device">

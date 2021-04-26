@@ -102,12 +102,12 @@ namespace vg::graphics::driver::dx12
         if (FAILED(device->CheckFeatureSupport(D3D12_FEATURE_ROOT_SIGNATURE, &featureData, sizeof(featureData))))
             HighestVersion = D3D_ROOT_SIGNATURE_VERSION_1_0;
 
-        D3D12_FEATURE_DATA_D3D12_OPTIONS5 options5 = {};
-        if (!FAILED(device->CheckFeatureSupport(D3D12_FEATURE_D3D12_OPTIONS5, &options5, sizeof(options5))))
-        {
-            m_caps.supportRaytracing = options5.RaytracingTier >= D3D12_RAYTRACING_TIER_1_0;
-            m_caps.d3d12.raytracier_tier = options5.RaytracingTier;
-        }
+		D3D12_FEATURE_DATA_D3D12_OPTIONS5 options5 = {};
+		if (!FAILED(device->CheckFeatureSupport(D3D12_FEATURE_D3D12_OPTIONS5, &options5, sizeof(options5))))
+		{
+			m_caps.supportRaytracing = options5.RaytracingTier >= D3D12_RAYTRACING_TIER_1_0;
+			m_caps.d3d12.raytracier_tier = options5.RaytracingTier;
+		}
 
         m_memoryAllocator = new driver::MemoryAllocator();
 

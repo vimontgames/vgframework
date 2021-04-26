@@ -15,6 +15,8 @@
 #include "graphics/driver/Importer/TextureImporter.h"
 #include "graphics/driver/Resource/UploadBuffer.h"
 
+#include "graphics/driver/Device/DeviceCaps.hpp"
+
 using namespace vg::core;
 using namespace vg::graphics;
 
@@ -263,6 +265,7 @@ namespace vg::graphics::driver
 	void Device::init(const DeviceParams & _params)
 	{
 		super::init(_params);
+		m_caps.init();
         VG_PROFILE_INIT();
         m_textureImporter = new TextureImporter();
         m_bindlessTable->init();
@@ -294,7 +297,7 @@ namespace vg::graphics::driver
     //--------------------------------------------------------------------------------------
     bool Device::isMinimized()
     {
-        return any(0 == m_deviceParams.resolution);
+        return any(0 == m_deviceParams.resolution); 
     }
 
     //--------------------------------------------------------------------------------------
