@@ -575,7 +575,12 @@ namespace vg::graphics::renderer
 
                     ImGui::PushStyleColor(ImGuiCol_Text, containerColor);
 
-                    if (/*UIMode::Object != _mode &&*/ count > 0 && ImGui::TreeNodeEx(treeNodeName.c_str(), ImGuiTreeNodeFlags_OpenOnArrow))
+					auto treeNodeFlags = ImGuiTreeNodeFlags_OpenOnArrow;
+
+					if (UIMode::Scene == _mode)
+						treeNodeFlags |= ImGuiTreeNodeFlags_DefaultOpen;
+
+                    if (/*UIMode::Object != _mode &&*/ count > 0 && ImGui::TreeNodeEx(treeNodeName.c_str(), treeNodeFlags))
                     {
                         for (uint i = 0; i < count; ++i)
                         {
@@ -589,7 +594,17 @@ namespace vg::graphics::renderer
 
                             ImGui::PushStyleColor(ImGuiCol_Text, objectColor);
 
-                            if (ImGui::TreeNodeEx(treeNodeName.c_str(), ImGuiTreeNodeFlags_OpenOnArrow))
+							auto treeNodeFlags = ImGuiTreeNodeFlags_OpenOnArrow;							
+
+							if (nullptr != pObject && asBool(pObject->getClassDesc()->getFlags() & (IObjectDescriptor::Flags::Component)))
+							{
+								treeNodeFlags |= ImGuiTreeNodeFlags_Leaf;
+
+								if (UIMode::Scene == _mode)
+									treeNodeFlags |= ImGuiTreeNodeFlags_DefaultOpen;
+							}
+
+                            if (ImGui::TreeNodeEx(treeNodeName.c_str(), treeNodeFlags))
                             {
                                 updateSelection(pObject, _mode);
 
@@ -631,7 +646,15 @@ namespace vg::graphics::renderer
 
                     ImGui::PushStyleColor(ImGuiCol_Text, objectColor);
 
-                    if (/*UIMode::Object != _mode &&*/ ImGui::TreeNodeEx(treeNodeName.c_str(), ImGuiTreeNodeFlags_OpenOnArrow))
+					auto treeNodeFlags = ImGuiTreeNodeFlags_OpenOnArrow;
+
+					if (UIMode::Scene == _mode)
+						treeNodeFlags |= ImGuiTreeNodeFlags_DefaultOpen;
+
+					if (nullptr != pObject && asBool(pObject->getClassDesc()->getFlags() & (IObjectDescriptor::Flags::Component)))
+						treeNodeFlags |= ImGuiTreeNodeFlags_Leaf;
+
+                    if (/*UIMode::Object != _mode &&*/ ImGui::TreeNodeEx(treeNodeName.c_str(), treeNodeFlags))
                     {
                         updateSelection(_object, _mode);
 

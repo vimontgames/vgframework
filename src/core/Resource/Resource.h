@@ -24,8 +24,9 @@ namespace vg::core
         bool                        setPath             (const string & _path) final;
 
         bool                        loadResource        (const core::string & _path, core::IObject * _owner) = 0;
+		bool						set					(core::IObject * _object) final;
 
-    private:
+	protected:
         string                      m_path;
         IObject *                   m_owner = nullptr;
         IObject *                   m_object = nullptr;

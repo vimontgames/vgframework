@@ -19,9 +19,6 @@ namespace vg::engine
         void                                onPathChanged   (IObject * _owner, const core::string & _oldPath, const core::string & _newPath) final;
         bool                                loadResource    (const core::string & _path, core::IObject * _owner) final override;
 
-        graphics::renderer::IMeshModel *    getMeshModel() const { return m_meshModel; }
-
-    private:
-        graphics::renderer::IMeshModel *    m_meshModel = nullptr;
+        graphics::renderer::IMeshModel *    getMeshModel() const { return (graphics::renderer::IMeshModel*)m_object; }
     };
 }

@@ -7,6 +7,7 @@ namespace vg::core
 {
     class IObjectFactory;
     class IObjectDescriptor;
+	class IModel;
     class Resource;
 }
 
@@ -41,11 +42,12 @@ namespace vg::engine
 
             }
 
-            core::Resource *            m_resource;
-            const core::string &        m_path;
-            core::IObject *             m_owner;
+            core::Resource *															m_resource;
+            const core::string &														m_path;
+            core::IObject *																m_owner;
         };
-        core::vector<ResourceLoadInfo>  m_resourcesToLoad;
-        core::vector<ResourceLoadInfo>  m_resourcesLoaded;
+        core::vector<ResourceLoadInfo>													m_resourcesToLoad;
+        core::vector<ResourceLoadInfo>													m_resourcesLoaded;
+		core::unordered_map<core::string, core::Resource*, core::hash<core::string>>	m_resourcesMap;
     };
 }

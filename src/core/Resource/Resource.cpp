@@ -28,7 +28,7 @@ namespace vg::core
     //--------------------------------------------------------------------------------------
     Resource::~Resource()
     {
-
+		VG_SAFE_RELEASE(m_object);
     }
 
     //--------------------------------------------------------------------------------------
@@ -56,5 +56,18 @@ namespace vg::core
         return true;
     }
 
+	//--------------------------------------------------------------------------------------
+	bool Resource::set(core::IObject * _object)
+	{
+		if (m_object != _object)
+		{
+			VG_SAFE_RELEASE(m_object);
+			VG_SAFE_INCREASE_REFCOUNT(_object);
+			m_object = _object;
 
+			return true;
+		}
+
+		return false;		
+	}
 }

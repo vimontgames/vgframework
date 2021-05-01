@@ -83,7 +83,7 @@ namespace vg::graphics::driver
             StateCache                  m_stateCache;
             RootSignature *             m_currentRootSignature = nullptr;
 
-            std::unordered_map<driver::GraphicPipelineStateKey, driver::GraphicPipelineState*, driver::GraphicPipelineStateKey::hash> m_graphicPipelineStateHash; // PSO should not be in command list !
+            core::unordered_map<driver::GraphicPipelineStateKey, driver::GraphicPipelineState*, driver::GraphicPipelineStateKey::hash> m_graphicPipelineStateHash; // PSO should not be in command list !
 		};
 	}
 }

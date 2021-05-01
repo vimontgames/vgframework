@@ -38,7 +38,8 @@ namespace vg::engine
     //--------------------------------------------------------------------------------------
     ResourceManager::~ResourceManager()
     {
-
+		//for (auto x : umap)
+		//	cout << x.first << " " << x.second << endl;
     }
 
     //--------------------------------------------------------------------------------------
@@ -61,10 +62,20 @@ namespace vg::engine
 
         for (uint i = 0; i < m_resourcesToLoad.size(); ++i)
         {
-            const auto & info = m_resourcesToLoad[i];
-            
-            if (!info.m_resource->loadResource(info.m_path, info.m_owner))
-                VG_DEBUGPRINT("Error loading resource \"%s\"\n", info.m_path.c_str());
+            auto & info = m_resourcesToLoad[i];
+
+			auto it = m_resourcesMap.find(info.m_path);
+			if (m_resourcesMap.end() == it)
+			{
+				if (info.m_resource->loadResource(info.m_path, info.m_owner))
+					m_resourcesMap.insert(make_pair(info.m_path, info.m_resource));
+				else
+					VG_DEBUGPRINT("Error loading resource \"%s\"\n", info.m_path.c_str());
+			}
+			else
+			{
+				info.m_resource->set(it->second->get());
+			}          
 
             m_resourcesLoaded.push_back(info);
         }

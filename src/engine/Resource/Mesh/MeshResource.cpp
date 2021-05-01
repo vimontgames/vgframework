@@ -19,7 +19,7 @@ namespace vg::engine
     //--------------------------------------------------------------------------------------
     MeshResource::~MeshResource()
     {
-        VG_SAFE_RELEASE(m_meshModel);
+	
     }
 
     //--------------------------------------------------------------------------------------
@@ -43,10 +43,10 @@ namespace vg::engine
         auto * engine = Engine::get();
         auto * renderer = engine->getRenderer();
 
-        VG_SAFE_RELEASE(m_meshModel);
+		VG_SAFE_RELEASE(m_object);
 
-        m_meshModel = renderer->createMeshModel(_path);
+		m_object = renderer->createMeshModel(_path);
 
-        return nullptr != m_meshModel;
+		return nullptr != m_object;
     }
 }
