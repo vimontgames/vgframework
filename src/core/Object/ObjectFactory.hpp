@@ -52,6 +52,12 @@ namespace vg::core
         return offset;
     }
 
+	//--------------------------------------------------------------------------------------
+	core::u32 ObjectFactory::ClassProperty::getValue() const
+	{
+		return value;
+	}
+
     //--------------------------------------------------------------------------------------
     u32 ObjectFactory::ClassDesc::getNextIndex() const
     {
@@ -79,49 +85,56 @@ namespace vg::core
     //--------------------------------------------------------------------------------------
     void ObjectFactory::ClassDesc::registerProperty(const char * _propertyName, bool * _offset, const char * _displayName, IPropertyDescriptor::Flags _flags)
     {
-        registerClassMemberT(_propertyName, _offset, _displayName, _flags);
+        registerClassMemberT(_propertyName, _offset, 0, _displayName, _flags);
     }
+
+	//--------------------------------------------------------------------------------------
+	void ObjectFactory::ClassDesc::registerProperty(const char * _propertyName, core::u32 * _offset, core::u32 _value, const char * _displayName, IPropertyDescriptor::Flags _flags)
+	{
+		ClassProperty prop(_propertyName, IPropertyDescriptor::Type::Enum, (uint_ptr)_offset, _value, _displayName, _flags);
+		properties.push_back(prop);
+	}
 
     //--------------------------------------------------------------------------------------
     void ObjectFactory::ClassDesc::registerProperty(const char * _propertyName, core::float4 * _offset, const char * _displayName, IPropertyDescriptor::Flags _flags)
     {
-        registerClassMemberT(_propertyName, _offset, _displayName, _flags);
+        registerClassMemberT(_propertyName, _offset, 0, _displayName, _flags);
     }
 
     //--------------------------------------------------------------------------------------
     void ObjectFactory::ClassDesc::registerProperty(const char * _propertyName, float4x4 * _offset, const char * _displayName, IPropertyDescriptor::Flags _flags)
     {
-        registerClassMemberT(_propertyName, _offset, _displayName, _flags);
+        registerClassMemberT(_propertyName, _offset, 0, _displayName, _flags);
     }
 
     //--------------------------------------------------------------------------------------
     void ObjectFactory::ClassDesc::registerProperty(const char * _propertyName, float * _offset, const char * _displayName, IPropertyDescriptor::Flags _flags)
     {
-        registerClassMemberT(_propertyName, _offset, _displayName, _flags);
+        registerClassMemberT(_propertyName, _offset, 0, _displayName, _flags);
     }
 
     //--------------------------------------------------------------------------------------
     void ObjectFactory::ClassDesc::registerProperty(const char * _propertyName, core::string * _offset, const char * _displayName, IPropertyDescriptor::Flags _flags)
     {
-        registerClassMemberT(_propertyName, _offset, _displayName, _flags);
+        registerClassMemberT(_propertyName, _offset, 0, _displayName, _flags);
     }
 
     //--------------------------------------------------------------------------------------
     void ObjectFactory::ClassDesc::registerProperty(const char * _propertyName, core::IResource ** _offset, const char * _displayName, IPropertyDescriptor::Flags _flags)
     {
-        registerClassMemberT(_propertyName, _offset, _displayName, _flags);
+        registerClassMemberT(_propertyName, _offset, 0, _displayName, _flags);
     }
 
     //--------------------------------------------------------------------------------------
     void ObjectFactory::ClassDesc::registerProperty(const char * _propertyName, core::IObject ** _offset, const char * _displayName, IPropertyDescriptor::Flags _flags)
     {
-        registerClassMemberT(_propertyName, _offset, _displayName, _flags);
+        registerClassMemberT(_propertyName, _offset, 0, _displayName, _flags);
     }
 
     //--------------------------------------------------------------------------------------
     void ObjectFactory::ClassDesc::registerProperty(const char * _propertyName, IPropertyDescriptor::Func _funcPtr, const char * _displayName, IPropertyDescriptor::Flags _flags)
     {
-        ClassProperty prop(_propertyName, IPropertyDescriptor::Type::Function, (uint_ptr)_funcPtr, _displayName, _flags);
+        ClassProperty prop(_propertyName, IPropertyDescriptor::Type::Function, (uint_ptr)_funcPtr, 0, _displayName, _flags);
 
         properties.push_back(prop);
     }
@@ -129,7 +142,7 @@ namespace vg::core
     //--------------------------------------------------------------------------------------
     void ObjectFactory::ClassDesc::registerProperty(const char * _propertyName, vector<IObject*>* _offset, const char * _displayName, IPropertyDescriptor::Flags _flags)
     {
-        registerClassMemberT(_propertyName, _offset, _displayName, _flags);
+        registerClassMemberT(_propertyName, _offset, 0, _displayName, _flags);
     }
 
     //--------------------------------------------------------------------------------------
@@ -283,7 +296,7 @@ namespace vg::core
     template <> struct TypeToEnum<vector<IObject*>>             { static constexpr auto value = IPropertyDescriptor::Type::ObjectVector; };
 
     //--------------------------------------------------------------------------------------
-    template <typename T> void ObjectFactory::ClassDesc::registerClassMemberT(const char * _propertyName, T * _offset, const char * _displayName, IPropertyDescriptor::Flags _flags)
+    template <typename T> void ObjectFactory::ClassDesc::registerClassMemberT(const char * _propertyName, T * _offset, core::u32 _value, const char * _displayName, IPropertyDescriptor::Flags _flags)
     {
         #pragma warning(push)
         #pragma warning (disable: 4302)
@@ -291,7 +304,7 @@ namespace vg::core
         const u32 offset = (u32)(_offset);
         #pragma warning( pop )
     
-        ClassProperty prop(_propertyName, TypeToEnum<T>::value, offset, _displayName, _flags);
+        ClassProperty prop(_propertyName, TypeToEnum<T>::value, offset, _value, _displayName, _flags);
     
         properties.push_back(prop);        
     }

@@ -10,36 +10,42 @@ namespace vg::core
 
 namespace vg::graphics::renderer
 {
+	enum DebugDisplayMode : core::u32
+	{
+		Default = 0,
+		Normal,
+		UV0
+	};
+
     class DisplayOptions : public core::Object, public core::Singleton<DisplayOptions>
     {
     public:
         using super = core::Object;
 
-                        DisplayOptions			(const core::string & _name, core::IObject * _parent);
+							DisplayOptions			(const core::string & _name, core::IObject * _parent);
 
-        const char *    getClassName			() const final { return "DisplayOptions"; }
+        const char *		getClassName			() const final { return "DisplayOptions"; }
 
-        static bool     registerClass			(core::IObjectFactory & _factory);
-        static bool     registerProperties		(core::IObjectDescriptor & _desc);
+        static bool			registerClass			(core::IObjectFactory & _factory);
+        static bool			registerProperties		(core::IObjectDescriptor & _desc);
 
-        bool            isToolModeEnabled		() const { return m_toolMode; }
-        bool            isOpaqueEnabled			() const { return m_opaque; }
-        bool            isWireframeEnabled		() const { return m_wireframe; }
+        bool				isToolModeEnabled		() const { return m_toolMode; }
+        bool				isOpaqueEnabled			() const { return m_opaque; }
+        bool				isWireframeEnabled		() const { return m_wireframe; }
 
-        bool            isDisplayNormalEnabled	() const { return m_displayNormals; }
-		bool            isDisplayUV0Enabled		() const { return m_displayUV0; }
+        bool				isDisplayNormalEnabled	() const { return DebugDisplayMode::Normal == m_debugDisplayMode; }
+		bool				isDisplayUV0Enabled		() const { return DebugDisplayMode::UV0 == m_debugDisplayMode; }
 
-        core::float4    getBackgroundColor		() const { return m_backgroundColor; }
+        core::float4		getBackgroundColor		() const { return m_backgroundColor; }
 
-        static bool     load					(IObject * _object);
-        static bool     save					(IObject * _object);
+        static bool			load					(IObject * _object);
+        static bool			save					(IObject * _object);
 
     private:
-        core::float4    m_backgroundColor   = core::float4(0, 0, 0, 0);
-        bool            m_toolMode          = true;
-        bool            m_opaque            = true;
-        bool            m_wireframe         = false;
-        bool            m_displayNormals    = false;
-		bool			m_displayUV0		= false;
+        core::float4		m_backgroundColor   = core::float4(0, 0, 0, 0);
+        bool				m_toolMode          = true;
+        bool				m_opaque            = true;
+        bool				m_wireframe         = false;
+		DebugDisplayMode	m_debugDisplayMode	= DebugDisplayMode::Default;
     };
 }

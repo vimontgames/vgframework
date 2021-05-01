@@ -472,10 +472,16 @@ namespace vg::graphics::renderer
                 case IPropertyDescriptor::Type::Bool:
                 {
                     bool * pBool = (bool*)(uint_ptr(_object) + offset);
-
-                    changed |= ImGui::Checkbox(displayName, pBool);
+					changed |= ImGui::Checkbox(displayName, pBool);
                 };
                 break;
+
+				case IPropertyDescriptor::Type::Enum:
+				{
+					u32 * pEnum = (u32*)(uint_ptr(_object) + offset);
+					changed |= ImGui::RadioButton(displayName, (int*)pEnum, prop->getValue());
+				};
+				break;
 
                 case IPropertyDescriptor::Type::Float:
                 {
