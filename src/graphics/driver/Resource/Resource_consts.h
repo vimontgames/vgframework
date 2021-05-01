@@ -27,7 +27,8 @@ namespace vg::graphics::driver
         IndexBuffer			= 0x0004,
         VertexBuffer		= 0x0008,
         UnorderedAccess		= 0x0010,
-        IndirectArgsBuffer	= 0x0020
+        IndirectArgsBuffer	= 0x0020,
+		Raytracing			= 0x0040
     };
 
     class ResourceDesc
@@ -52,8 +53,7 @@ namespace vg::graphics::driver
             core::u16 bits;
         };
 
-        inline bool isDynamicResource() const   { return core::u16(Usage::Dynamic) & core::u16(m_usage); }
-
-        inline bool isShaderResource() const    { return core::u16(BindFlags::ShaderResource) & core::u16(m_bindFlags); }
+		inline bool testUsageFlags(Usage _flags) const		{ return std::underlying_type<Usage>::type(_flags) & std::underlying_type<Usage>::type(m_usage); }
+		inline bool testBindFlags(BindFlags _flags) const	{ return std::underlying_type<BindFlags>::type(_flags) & std::underlying_type<BindFlags>::type(m_bindFlags); }
     };
 }

@@ -130,7 +130,7 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow, core::uint _width, core::ui
 	RECT rc = { 0, 0, (LONG)_width, (LONG)_height };
 	AdjustWindowRect(&rc, flags, FALSE);
 
-	g_hWnd = CreateWindow(L"Game", L"VimontGames framework", flags, x, y, rc.right - rc.left, rc.bottom - rc.top, NULL, NULL, hInstance, NULL);
+	g_hWnd = CreateWindow(L"Game", L"VGFramework", flags, x, y, rc.right - rc.left, rc.bottom - rc.top, NULL, NULL, hInstance, NULL);
 
 	if (!g_hWnd)
 	{

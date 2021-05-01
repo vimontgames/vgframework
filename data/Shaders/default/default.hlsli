@@ -3,7 +3,8 @@
 
 #include "../system/constants.hlsli"
 
-#define DBG_NORMAL 0x0001
+#define DBG_NORMAL	0x0001
+#define DBG_UV0		0x0002
 
 struct RootConstants3D
 {

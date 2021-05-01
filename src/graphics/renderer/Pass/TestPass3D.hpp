@@ -198,7 +198,13 @@ namespace vg::graphics::renderer
 
         const auto options = DisplayOptions::get();
 
-        const u16 flags = options->isNormalEnabled() ? DBG_NORMAL : 0x0;
+        u16 flags = 0x0; 
+		
+		if (options->isDisplayNormalEnabled()) 
+			flags |= DBG_NORMAL;
+
+		if (options->isDisplayUV0Enabled())
+			flags |= DBG_UV0;
 
         auto draw = [=]()
         {

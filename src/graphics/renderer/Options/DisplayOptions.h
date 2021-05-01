@@ -15,22 +15,24 @@ namespace vg::graphics::renderer
     public:
         using super = core::Object;
 
-                        DisplayOptions      (const core::string & _name, core::IObject * _parent);
+                        DisplayOptions			(const core::string & _name, core::IObject * _parent);
 
-        const char *    getClassName        () const final { return "DisplayOptions"; }
+        const char *    getClassName			() const final { return "DisplayOptions"; }
 
-        static bool     registerClass       (core::IObjectFactory & _factory);
-        static bool     registerProperties  (core::IObjectDescriptor & _desc);
+        static bool     registerClass			(core::IObjectFactory & _factory);
+        static bool     registerProperties		(core::IObjectDescriptor & _desc);
 
-        bool            isToolModeEnabled   () const { return m_toolMode; }
-        bool            isOpaqueEnabled     () const { return m_opaque; }
-        bool            isWireframeEnabled  () const { return m_wireframe; }
-        bool            isNormalEnabled     () const { return m_displayNormals; }
+        bool            isToolModeEnabled		() const { return m_toolMode; }
+        bool            isOpaqueEnabled			() const { return m_opaque; }
+        bool            isWireframeEnabled		() const { return m_wireframe; }
 
-        core::float4    getBackgroundColor  () const { return m_backgroundColor; }
+        bool            isDisplayNormalEnabled	() const { return m_displayNormals; }
+		bool            isDisplayUV0Enabled		() const { return m_displayUV0; }
 
-        static bool     load                (IObject * _object);
-        static bool     save                (IObject * _object);
+        core::float4    getBackgroundColor		() const { return m_backgroundColor; }
+
+        static bool     load					(IObject * _object);
+        static bool     save					(IObject * _object);
 
     private:
         core::float4    m_backgroundColor   = core::float4(0, 0, 0, 0);
@@ -38,5 +40,6 @@ namespace vg::graphics::renderer
         bool            m_opaque            = true;
         bool            m_wireframe         = false;
         bool            m_displayNormals    = false;
+		bool			m_displayUV0		= false;
     };
 }

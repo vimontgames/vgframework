@@ -46,6 +46,7 @@ namespace vg::graphics::renderer
         _desc.registerPropertyHelper(DisplayOptions, m_wireframe, "Wireframe", IPropertyDescriptor::Flags::SameLine);
 
         _desc.registerPropertyHelper(DisplayOptions, m_displayNormals, "Normals", IPropertyDescriptor::Flags::None);
+		_desc.registerPropertyHelper(DisplayOptions, m_displayUV0, "UV0", IPropertyDescriptor::Flags::SameLine);
 
         _desc.registerPropertyHelper(DisplayOptions, m_backgroundColor, "Background", IPropertyDescriptor::Flags::Color);
 

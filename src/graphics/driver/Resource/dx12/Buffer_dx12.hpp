@@ -9,7 +9,11 @@ namespace vg::graphics::driver::dx12
 
         D3D12_RESOURCE_DESC resourceDesc = getd3d12ResourceDesc(_bufDesc);
 
-        if (!_bufDesc.isDynamicResource())
+		if (_bufDesc.testUsageFlags(Usage::Dynamic))
+		{
+			VG_ASSERT_NOT_IMPLEMENTED();
+		}
+		else
         {
             D3D12MA::ALLOCATION_DESC allocDesc = getd3d12AllocationDesc(_bufDesc);
 
@@ -19,6 +23,9 @@ namespace vg::graphics::driver::dx12
                 resourceState = D3D12_RESOURCE_STATE_GENERIC_READ;
             else
                 resourceState = D3D12_RESOURCE_STATE_COPY_DEST;
+
+			if (_bufDesc.testBindFlags(BindFlags::Raytracing))
+				resourceState = D3D12_RESOURCE_STATE_RAYTRACING_ACCELERATION_STRUCTURE;
 
             D3D12MA::Allocator * allocator = driver::Device::get()->getd3d12MemoryAllocator();
             ID3D12Resource * resource;
@@ -84,6 +91,10 @@ namespace vg::graphics::driver::dx12
         resourceDesc.SampleDesc.Count = 1;
         resourceDesc.SampleDesc.Quality = 0;
         resourceDesc.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
+		resourceDesc.Flags = D3D12_RESOURCE_FLAG_NONE;
+
+		if (_bufDesc.testBindFlags(BindFlags::UnorderedAccess | BindFlags::Raytracing))
+			resourceDesc.Flags |= D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS;
 
         return resourceDesc;
     }

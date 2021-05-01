@@ -23,8 +23,8 @@ namespace vg::graphics::driver
 
         core::u32 size() const { return elementSize * elementCount; }
 
-        inline bool isShaderResource() const { return resource.isShaderResource(); }
-        inline bool isDynamicResource() const { return resource.isDynamicResource(); }
+		inline bool testUsageFlags(Usage _flags) const { return resource.testUsageFlags(_flags); }
+		inline bool testBindFlags(BindFlags _flags) const { return resource.testBindFlags(_flags); }
 
         ResourceDesc    resource;
         BufferFlags     flags;

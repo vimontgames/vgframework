@@ -19,11 +19,9 @@ VS_Output VS_Forward(uint _vertexID : VertexID)
     Vertex vert;
            vert.load(getBuffer(rootConstants3D.getBuffer()), _vertexID);
 
-    output.pos = vert.getPos();
     output.nrm = vert.getNrm();
     output.uv = vert.getUV(0);
-
-    output.pos = mul(float4(output.pos.xyz, 1.0f), rootConstants3D.mat);
+    output.pos = mul(float4(vert.getPos(), 1.0f), rootConstants3D.mat);
 
     return output;
 }
@@ -49,7 +47,8 @@ PS_Output PS_Forward(VS_Output _input)
     if (rootConstants3D.getFlags() & DBG_NORMAL)
         output.color0 = float4(_input.nrm*0.5f+0.5f, 1.0f);
 
-    //output.color0 = float4(uv, 0, 1);
+	if (rootConstants3D.getFlags() & DBG_UV0)
+		output.color0 = float4(uv, 0, 1);
     
     return output;
 }

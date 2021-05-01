@@ -7,7 +7,7 @@ namespace vg::graphics::driver::vulkan
         auto * device = driver::Device::get();
         auto & vkDevice = device->getVulkanDevice();
 
-        if (!_bufDesc.isDynamicResource())
+        if (!_bufDesc.testUsageFlags(Usage::Dynamic))
         {
             VkBufferCreateInfo vkBufferCreate = {};
             vkBufferCreate.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
@@ -50,7 +50,7 @@ namespace vg::graphics::driver::vulkan
 
             m_resource.setVulkanBuffer(vkBuffer, vmaAlloc, vmaAllocInfo);
 
-            if (_bufDesc.isShaderResource() || asBool(_bufDesc.resource.m_bindFlags & BindFlags::IndexBuffer))
+            if (_bufDesc.testBindFlags(BindFlags::ShaderResource | BindFlags::IndexBuffer))
             {
                 VG_ASSERT(m_resource.getVulkanBuffer());
 

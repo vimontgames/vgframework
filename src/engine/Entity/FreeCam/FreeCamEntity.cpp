@@ -127,9 +127,9 @@ namespace vg::engine
 
         IInput * input = Kernel::getInput();
 
-        float mouseSpeedX = 0.001f * pi;
-        float mouseSpeedY = 0.001f * pi;
-        float moveSpeed = 0.1f * (float)_dt;
+		float mouseSpeedX = 0.0005f * pi;
+		float mouseSpeedY = 0.0005f * pi;
+        float moveSpeed = 0.05f * (float)_dt;
 
         if (input->isMouseButtonPressed(MouseButton::Middle))
         {
