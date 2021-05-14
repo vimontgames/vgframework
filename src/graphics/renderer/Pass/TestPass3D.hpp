@@ -186,7 +186,11 @@ namespace vg::graphics::renderer
         View * view = renderer->getView();
         float4x4 viewProj = mul(view->GetViewInvMatrix(), proj);
 
-        const auto & graphicInstances = view->getCameraSector()->getGraphicInstances();
+        const auto * camSector = view->getCameraSector();
+        if (nullptr == camSector)
+            return;
+
+        const auto & graphicInstances = camSector->getGraphicInstances();
         
         BlendState bs(BlendFactor::One, BlendFactor::Zero, BlendOp::Add);
         DepthStencilState ds(true, true, ComparisonFunc::LessEqual);
