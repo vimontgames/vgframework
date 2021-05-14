@@ -378,12 +378,19 @@ namespace vg::core
             }
         }
 
+        uint_ptr curOffset = (uint_ptr)-1;
+
         for (uint p = 0; p < desc->getPropertyCount(); ++p)
         {
             const auto & prop = desc->getPropertyByIndex(p);
             const auto * name = prop->getName();
             const auto type = prop->getType();
             const auto offset = prop->getOffset();
+
+            // if several properties are serialized at the same offset (i.e. bitfields, enums, ...) then only load the first one
+            if (offset == curOffset)
+                continue;
+            curOffset = offset;
 
             auto it = values.find(name);
             if (values.end() != it)
@@ -395,6 +402,32 @@ namespace vg::core
                         IResource * pResource = (IResource*)(uint_ptr(_object) + offset);
                         pResource->setPath(it->second.substr(1, it->second.length() - 2));
                     }
+                    break;
+
+                case IPropertyDescriptor::Type::Enum:
+                {
+                    u32 * pEnum = (u32*)(uint_ptr(_object) + offset);
+
+                    string enumValName = it->second.substr(1, it->second.length() - 2);
+                    u32 enumVal = 0;
+
+                    for (uint q = p; q < desc->getPropertyCount(); ++q)
+                    {
+                        const auto & enumprop = desc->getPropertyByIndex(q);
+
+                        if (offset == enumprop->getOffset())
+                        {
+                            if (enumValName == enumprop->getDisplayName())
+                            {
+                                enumVal = enumprop->getValue();
+                                break;
+                            }
+                        }
+                    }
+
+                    *pEnum = enumVal;
+                }
+                break;
                     break;
 
                     case IPropertyDescriptor::Type::Function:
@@ -454,6 +487,8 @@ namespace vg::core
         _out += (string)"[" + className + "]" + "\n";
 
         const auto * classDesc = getClassDescriptor(className);
+
+        uint_ptr curOffset = (uint_ptr)-1;
         
         for (uint p = 0; p < classDesc->getPropertyCount(); ++p)
         {
@@ -462,6 +497,11 @@ namespace vg::core
             const auto name = prop->getName();
             const auto type = prop->getType();
             const auto offset = prop->getOffset();
+
+            // if several properties are serialized at the same offset (i.e. bitfields, enums, ...) then only write the first one
+            if (offset == curOffset)
+                continue;
+            curOffset = offset;
 
             string value;
         
@@ -476,6 +516,27 @@ namespace vg::core
 
                 case IPropertyDescriptor::Type::Function:
                     continue;
+
+                case IPropertyDescriptor::Type::Enum:
+                {
+                    u32 * pEnum = (u32*)(uint_ptr(_object) + offset);
+
+                    string enumValName = "";
+
+                    for (uint q = p; q < classDesc->getPropertyCount(); ++q)
+                    {
+                        const auto & enumprop = classDesc->getPropertyByIndex(q);
+
+                        if (offset == enumprop->getOffset() && *pEnum == enumprop->getValue())
+                        {
+                            enumValName = enumprop->getDisplayName();
+                            break;
+                        }
+                    }
+
+                    value = "\"" + enumValName + "\"";
+                }
+                break;
 
                 case IPropertyDescriptor::Type::Bool:
                     value = *(bool*)(uint_ptr(_object) + offset) ? "true" : "false";
