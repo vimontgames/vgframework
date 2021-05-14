@@ -4,7 +4,7 @@
 
 namespace vg::core
 {
-    class IResource : public Object
+    class IResource : public ObjectPointer
     {
     public:
         virtual ~IResource() {}

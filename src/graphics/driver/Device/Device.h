@@ -40,7 +40,7 @@ namespace vg::graphics::driver
 	{
 		core::vector<driver::CommandPool*>	            commandPools;
 		core::vector<driver::CommandList*>	            commandLists[core::enumCount<CommandListType>()];
-        core::vector<core::Object*>                     m_objectsToRelease;
+        core::vector<core::ObjectPointer*>                     m_objectsToRelease;
         UploadBuffer *                                  m_uploadBuffer = nullptr;
         UINT64                                          mFrameFenceId;
 	};
@@ -81,7 +81,7 @@ namespace vg::graphics::driver
 			core::vector<driver::CommandList*> &			getCommandLists			    (CommandListType _type);
 			driver::Texture *								getBackbuffer			    ();
 
-            void                                            releaseAsync                (core::Object * _object);
+            void                                            releaseAsync                (core::ObjectPointer * _object);
             void                                            flushReleaseAsync           ();
 
             BindlessTable *                                 getBindlessTable            () const;

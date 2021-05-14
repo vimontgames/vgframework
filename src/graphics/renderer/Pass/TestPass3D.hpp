@@ -202,14 +202,31 @@ namespace vg::graphics::renderer
 
         const auto options = DisplayOptions::get();
 
-        u16 flags = 0x0; 
+        u16 flags = 0x0;
+        u16 mode = 0x0;
+
+        switch (options->getDisplayMode())
+        {
+            default:
+                VG_ASSERT_ENUM_NOT_IMPLEMENTED(options->getDisplayMode());
+
+            case DisplayMode::Default:
+                mode = MODE_DEFAULT;
+                break;
+
+            case DisplayMode::MatID:
+                mode = MODE_MATID;
+                break;
+
+            case DisplayMode::Normal:
+                mode = MODE_NORMAL;
+                break;
+
+            case DisplayMode::UV0:
+                mode = MODE_UV0;
+                break;
+        }
 		
-		if (options->isDisplayNormalEnabled()) 
-			flags |= DBG_NORMAL;
-
-		if (options->isDisplayUV0Enabled())
-			flags |= DBG_UV0;
-
         auto draw = [=]()
         {
             for (uint i = 0; i < graphicInstances.size(); ++i)
@@ -235,13 +252,19 @@ namespace vg::graphics::renderer
                 root3D.setBuffer(vb->getBindlessSRVHandle());
                 root3D.setTexture(m_texture->getBindlessSRVHandle());
                 root3D.setFlags(flags);
-
-                _cmdList->setInlineRootConstants(&root3D, RootConstants3DCount);
+                root3D.setMode(mode);
+                
                 _cmdList->setIndexBuffer(ib);
 
                 for (uint i = 0; i < batches.size(); ++i)
                 {
                     const auto & batch = batches[i];
+
+                    root3D.setMatID(i);
+
+                    uint test = root3D.getMatID();
+
+                    _cmdList->setInlineRootConstants(&root3D, RootConstants3DCount);
                     _cmdList->drawIndexed(batch.count, batch.offset);
                 }
             }

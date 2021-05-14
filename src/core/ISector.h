@@ -11,11 +11,11 @@ namespace vg::core
 {
     class IEntity;
 
-    class ISector : public Object
+    class ISector : public ObjectPointer
     {
     public:
         ISector(const string & _name, IObject * _parent) :
-            Object(_name, _parent)
+            ObjectPointer(_name, _parent)
         {
 
         }

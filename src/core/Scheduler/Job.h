@@ -4,7 +4,7 @@
 
 namespace vg::core
 {
-    class Job : public Object
+    class Job : public ObjectPointer
     {
         public:
             Job(const string & _name, IObject * _parent);

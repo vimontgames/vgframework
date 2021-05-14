@@ -6,7 +6,7 @@ namespace vg::graphics::driver
 {
 	namespace base
 	{
-		class SubPass : public core::Object
+		class SubPass : public core::ObjectPointer
 		{
 		public:
 			SubPass();

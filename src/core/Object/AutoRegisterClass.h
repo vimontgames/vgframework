@@ -2,7 +2,7 @@
 
 #include "core/IObjectFactory.h"
     
-#define VG_AUTO_REGISTER_CLASS(className)               vg::core::AutoRegisterObjectClassHelper<className> autoRegister(#className, className::registerClass)
+#define VG_AUTO_REGISTER_CLASS(className)               vg::core::AutoRegisterObjectClassHelper<className> autoRegister##className(#className, className::registerClass)
 
 namespace vg::core
 {

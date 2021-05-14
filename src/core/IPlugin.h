@@ -4,7 +4,7 @@
 
 namespace vg::core
 {
-	class IPlugin : public core::Object
+	class IPlugin : public core::ObjectPointer
 	{
 	public:
 		struct Version
@@ -14,7 +14,7 @@ namespace vg::core
 		};
 
         IPlugin(const core::string & _name, core::IObject * _parent) :
-            core::Object(_name, _parent)
+            core::ObjectPointer(_name, _parent)
         {
 
         }

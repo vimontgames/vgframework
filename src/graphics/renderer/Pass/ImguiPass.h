@@ -8,7 +8,7 @@ namespace vg::graphics::renderer
     {
         All = 0,
         Scene,
-        Object
+        ObjectPointer
     };
 
     //--------------------------------------------------------------------------------------
@@ -28,6 +28,7 @@ namespace vg::graphics::renderer
         void displayCurrentSelectionWindow();
         void displayPerformanceWindow(double _dt);
 
+        void displayArrayObject(IObject * _object, core::uint _index, core::u32 _color, const char * _name, UIMode _mode = UIMode::All);
         void displayObject(core::IObject * _object, UIMode _mode = UIMode::All);
 
         void updateSelection(core::IObject * _object, UIMode _mode);

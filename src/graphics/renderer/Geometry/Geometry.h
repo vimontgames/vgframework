@@ -4,11 +4,11 @@
 
 namespace vg::graphics::renderer
 {
-    class Geometry : public core::Object
+    class Geometry : public core::ObjectPointer
     {
     public:
         Geometry(const core::string & _name, core::IObject * _parent) :
-            core::Object(_name, _parent)
+            core::ObjectPointer(_name, _parent)
         {
 
         }

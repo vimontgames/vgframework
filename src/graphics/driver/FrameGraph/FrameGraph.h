@@ -14,7 +14,7 @@ namespace vg::graphics::driver
 
 	enum class PixelFormat : core::u8;
 
-	class FrameGraph : public core::Object
+	class FrameGraph : public core::ObjectPointer
 	{
 	public:
         const char * getClassName() const final { return "FrameGraph"; }

@@ -11,7 +11,7 @@ namespace vg::graphics::driver
 {
     namespace base
     {
-        class Shader : public core::Object
+        class Shader : public core::ObjectPointer
         {
         public:
             Shader(const core::Blob & _bytecode);

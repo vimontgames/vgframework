@@ -39,27 +39,17 @@ namespace vg::engine
     //--------------------------------------------------------------------------------------
     FreeCamEntity::FreeCamEntity(const core::string & _name, core::IObject * _parent) :
         core::Entity(_name, _parent),
-        //m_pitch(-pi*2.0f/4.0f),
-        //m_yaw(0.0f),
         m_roll(0.0f)
     {
-        //setWorldMatrix(float4x4
-        //(
-        //    1.0f, 0.0f, 0.0f, 0.0f,
-        //    0.0f, 1.0f, 0.0f, 0.0f,
-        //    0.0f, 0.0f, 1.0f, 0.0f,
-        //    0.0f, 64.0f, 16.0f, 1.0f
-        //));
-
-        m_pitch = -1.34f;
-        m_yaw = -0.14f;
+        m_pitch = -1.00f;
+        m_yaw = -2.5f;
 
         setWorldMatrix(float4x4
         (
-            1.0f, 0.0f, 0.0f, 0.0f,
-            0.0f, 1.0f, 0.0f, 0.0f,
-            0.0f, 0.0f, 1.0f, 0.0f,
-            0.0f, 229.0f, 72.0f, 1.0f
+             -1.0f,   -0.5f,   0.0f, 0.0f,
+             -0.3f,    0.4f,   0.8f, 0.0f,
+              0.5f,   -0.7f,   0.5f, 0.0f,
+            115.0f, -148.0f, 211.0f, 1.0f
         ));
     }
 

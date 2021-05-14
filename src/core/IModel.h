@@ -4,11 +4,11 @@
 
 namespace vg::core
 {
-    class IModel : public Object
+    class IModel : public ObjectPointer
     {
     public:
         IModel(const string & _name, IObject * _parent) :
-            Object(_name, _parent)
+            ObjectPointer(_name, _parent)
         {
 
         }

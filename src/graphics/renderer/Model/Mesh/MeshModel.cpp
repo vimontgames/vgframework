@@ -29,6 +29,8 @@ namespace vg::graphics::renderer
     {
         super::registerProperties(_desc);
 
+        _desc.registerProperty("m_meshGeometry", (core::IObject**)offsetof(MeshModel, m_meshGeometry), "Geometry", IPropertyDescriptor::Flags::None);
+
         return true;
     }
 
@@ -133,7 +135,12 @@ namespace vg::graphics::renderer
         MeshGeometry * meshGeometry = new MeshGeometry("MeshGeometry", meshModel);
         meshGeometry->setIndexBuffer(ib);
         meshGeometry->setVertexBuffer(vb);
-        meshGeometry->addBatch(indexCount, 0);
+
+        for (uint b = 0; b < _data.batches.size(); ++b)
+        {
+            const auto & batch = _data.batches[b];
+            meshGeometry->addBatch(batch.count, batch.offset);
+        }
 
         VG_SAFE_RELEASE(ib);
         VG_SAFE_RELEASE(vb);

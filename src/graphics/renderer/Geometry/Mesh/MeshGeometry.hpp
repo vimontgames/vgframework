@@ -1,7 +1,11 @@
 #include "MeshGeometry.h"
 
+using namespace vg::core;
+
 namespace vg::graphics::renderer
 {
+    VG_AUTO_REGISTER_CLASS(MeshGeometry);
+
     //--------------------------------------------------------------------------------------
     MeshGeometry::MeshGeometry(const core::string & _name, core::IObject * _parent) :
         Geometry(_name, _parent)
@@ -14,7 +18,29 @@ namespace vg::graphics::renderer
     {
         VG_SAFE_RELEASE(m_indexBuffer);
         VG_SAFE_RELEASE(m_vertexBuffer);
-        m_batchs.clear();
+        m_batches.clear();
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool MeshGeometry::registerClass(IObjectFactory & _factory)
+    {
+        if (core::IObjectDescriptor * desc = _factory.registerClassHelper(MeshGeometry, "Mesh Geometry", IObjectDescriptor::Flags::None))
+            registerProperties(*desc);
+
+        return true;
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool MeshGeometry::registerProperties(IObjectDescriptor & _desc)
+    {
+        super::registerProperties(_desc);
+
+        _desc.registerPropertyObjectVectorHelper(MeshGeometry, m_batches, Batch, "Batches", IPropertyDescriptor::Flags::None);
+
+        _desc.registerPropertyHelper(MeshGeometry, m_indexBufferOffset, "IB Offset", IPropertyDescriptor::Flags::ReadOnly);
+        _desc.registerPropertyHelper(MeshGeometry, m_vertexBufferOffset, "VB Offset", IPropertyDescriptor::Flags::ReadOnly);
+
+        return true;
     }
 
     //--------------------------------------------------------------------------------------
@@ -72,14 +98,19 @@ namespace vg::graphics::renderer
     //--------------------------------------------------------------------------------------
     core::u32 MeshGeometry::addBatch(core::u32 _count, core::u32 _offset)
     {
-        const core::u32 count = (core::u32)m_batchs.size();
-        m_batchs.push_back({ _count, _offset });
+        const core::u32 count = (core::u32)m_batches.size();
+
+        Batch batch;
+              batch.count = _count;
+              batch.offset = _offset;
+
+        m_batches.push_back(batch);
         return count;
     }
 
     //--------------------------------------------------------------------------------------
     const core::vector<Batch> & MeshGeometry::batches() const
     {
-        return m_batchs;
+        return m_batches;
     }
 }

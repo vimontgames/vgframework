@@ -108,6 +108,12 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
+    void ObjectFactory::ClassDesc::registerProperty(const char * _propertyName, core::u32 * _offset, const char * _displayName, IPropertyDescriptor::Flags _flags)
+    {
+        registerClassMemberT(_propertyName, _offset, 0, _displayName, _flags);
+    }
+
+    //--------------------------------------------------------------------------------------
     void ObjectFactory::ClassDesc::registerProperty(const char * _propertyName, float * _offset, const char * _displayName, IPropertyDescriptor::Flags _flags)
     {
         registerClassMemberT(_propertyName, _offset, 0, _displayName, _flags);
@@ -135,6 +141,14 @@ namespace vg::core
     void ObjectFactory::ClassDesc::registerProperty(const char * _propertyName, IPropertyDescriptor::Func _funcPtr, const char * _displayName, IPropertyDescriptor::Flags _flags)
     {
         ClassProperty prop(_propertyName, IPropertyDescriptor::Type::Function, (uint_ptr)_funcPtr, 0, _displayName, _flags);
+
+        properties.push_back(prop);
+    }
+
+    //--------------------------------------------------------------------------------------
+    void ObjectFactory::ClassDesc::registerProperty(const char * _propertyName, core::u32 _sizeOf, void * _offset, const char * _displayName, IPropertyDescriptor::Flags _flags)
+    {
+        ClassProperty prop(_propertyName, IPropertyDescriptor::Type::ObjectVector, (uint_ptr) _offset, /*_value,*/_sizeOf, _displayName, _flags);
 
         properties.push_back(prop);
     }
@@ -285,15 +299,15 @@ namespace vg::core
 
     template <typename T> struct TypeToEnum;
     template <> struct TypeToEnum<bool>                         { static constexpr auto value = IPropertyDescriptor::Type::Bool; };
+    template <> struct TypeToEnum<core::u32>                    { static constexpr auto value = IPropertyDescriptor::Type::Uint32; };
     template <> struct TypeToEnum<float>                        { static constexpr auto value = IPropertyDescriptor::Type::Float; };
     template <> struct TypeToEnum<core::float4>                 { static constexpr auto value = IPropertyDescriptor::Type::Float4; };
     template <> struct TypeToEnum<core::float4x4>               { static constexpr auto value = IPropertyDescriptor::Type::Matrix44; };
     template <> struct TypeToEnum<core::string>                 { static constexpr auto value = IPropertyDescriptor::Type::String; };
-    template <> struct TypeToEnum<IObject*>                     { static constexpr auto value = IPropertyDescriptor::Type::Object; };
+    template <> struct TypeToEnum<IObject*>                     { static constexpr auto value = IPropertyDescriptor::Type::ObjectPointer; };
     template <> struct TypeToEnum<IResource*>                   { static constexpr auto value = IPropertyDescriptor::Type::Resource; };
     template <> struct TypeToEnum<IPropertyDescriptor::Func>    { static constexpr auto value = IPropertyDescriptor::Type::Function; };
-
-    template <> struct TypeToEnum<vector<IObject*>>             { static constexpr auto value = IPropertyDescriptor::Type::ObjectVector; };
+    template <> struct TypeToEnum<vector<IObject*>>             { static constexpr auto value = IPropertyDescriptor::Type::ObjectPointerVector; };
 
     //--------------------------------------------------------------------------------------
     template <typename T> void ObjectFactory::ClassDesc::registerClassMemberT(const char * _propertyName, T * _offset, core::u32 _value, const char * _displayName, IPropertyDescriptor::Flags _flags)

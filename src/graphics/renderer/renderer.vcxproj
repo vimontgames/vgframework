@@ -41,6 +41,8 @@
     <None Include="View\View.inl" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Geometry\Batch.h" />
+    <ClInclude Include="Geometry\Batch.hpp" />
     <ClInclude Include="Geometry\Geometry.h" />
     <ClInclude Include="Geometry\Mesh\MeshGeometry.h" />
     <ClInclude Include="Geometry\Mesh\MeshGeometry.hpp" />

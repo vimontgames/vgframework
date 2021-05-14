@@ -4,7 +4,7 @@
 
 namespace vg::core
 {
-    class Object;
+    class ObjectPointer;
 
     class ObjectFactory : public IObjectFactory
     {
@@ -48,6 +48,7 @@ namespace vg::core
             bool                                isRegisteredProperty    (const char * _propertyName) final;
 
             void                                registerProperty        (const char * _propertyName, bool * _offset, const char * _displayName, IPropertyDescriptor::Flags _flags) final;
+            void                                registerProperty        (const char * _propertyName, core::u32 * _offset, const char * _displayName, IPropertyDescriptor::Flags _flags) final;
             void                                registerProperty        (const char * _propertyName, float * _offset, const char * _displayName, IPropertyDescriptor::Flags _flags) final;
             void                                registerProperty        (const char * _propertyName, float4 * _offset, const char * _displayName, IPropertyDescriptor::Flags _flags) final;
             void                                registerProperty        (const char * _propertyName, float4x4 * _offset, const char * _displayName, IPropertyDescriptor::Flags _flags) final;
@@ -55,6 +56,7 @@ namespace vg::core
             void                                registerProperty        (const char * _propertyName, IResource ** _offset, const char * _displayName, IPropertyDescriptor::Flags _flags) final;
             void                                registerProperty        (const char * _propertyName, IObject ** _offset, const char * _displayName, IPropertyDescriptor::Flags _flags) final;
             void                                registerProperty        (const char * _propertyName, IPropertyDescriptor::Func _funcPtr, const char * _displayName, IPropertyDescriptor::Flags _flags) final;
+            void                                registerProperty        (const char * _propertyName, core::u32 _sizeOf, void * _offset, const char * _displayName = nullptr, IPropertyDescriptor::Flags _flags = IPropertyDescriptor::Flags::None) final;
             void                                registerProperty        (const char * _propertyName, vector<IObject*>* _offset, const char * _displayName = nullptr, IPropertyDescriptor::Flags _flags = IPropertyDescriptor::Flags::None) final;
 			void								registerProperty		(const char * _propertyName, core::u32 * _offset, core::u32 _value, const char * _displayName, IPropertyDescriptor::Flags _flags) final;
 

@@ -9,7 +9,7 @@ namespace vg::graphics::driver
 {
 	namespace base
 	{
-		class Texture : public core::Object
+		class Texture : public core::ObjectPointer
 		{
 		public:
             static core::u32 getPixelFormatSize(PixelFormat _format);

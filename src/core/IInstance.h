@@ -14,11 +14,11 @@ namespace vg::core
         Lod3
     };
 
-    class IInstance : public Object
+    class IInstance : public ObjectPointer
     {
     public:
         IInstance(const string & _name, IObject * _parent) :
-            Object(_name, _parent)
+            ObjectPointer(_name, _parent)
         {
 
         }

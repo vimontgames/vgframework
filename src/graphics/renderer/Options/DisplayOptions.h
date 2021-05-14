@@ -10,17 +10,18 @@ namespace vg::core
 
 namespace vg::graphics::renderer
 {
-	enum DebugDisplayMode : core::u32
+	enum DisplayMode : core::u32
 	{
 		Default = 0,
+        MatID,
 		Normal,
 		UV0
 	};
 
-    class DisplayOptions : public core::Object, public core::Singleton<DisplayOptions>
+    class DisplayOptions : public core::ObjectPointer, public core::Singleton<DisplayOptions>
     {
     public:
-        using super = core::Object;
+        using super = core::ObjectPointer;
 
 							DisplayOptions			(const core::string & _name, core::IObject * _parent);
 
@@ -29,13 +30,16 @@ namespace vg::graphics::renderer
         static bool			registerClass			(core::IObjectFactory & _factory);
         static bool			registerProperties		(core::IObjectDescriptor & _desc);
 
+        DisplayMode         getDisplayMode          () const { return m_debugDisplayMode;}
+
         bool				isToolModeEnabled		() const { return m_toolMode; }
         bool				isOpaqueEnabled			() const { return m_opaque; }
         bool				isWireframeEnabled		() const { return m_wireframe; }
 
-        bool				isDisplayNormalEnabled	() const { return DebugDisplayMode::Normal == m_debugDisplayMode; }
-		bool				isDisplayUV0Enabled		() const { return DebugDisplayMode::UV0 == m_debugDisplayMode; }
-
+        bool                isDisplayMatIDEnabled   () const { return DisplayMode::MatID  == m_debugDisplayMode;}
+        bool				isDisplayNormalEnabled	() const { return DisplayMode::Normal == m_debugDisplayMode; }
+		bool				isDisplayUV0Enabled		() const { return DisplayMode::UV0    == m_debugDisplayMode; }
+        
         core::float4		getBackgroundColor		() const { return m_backgroundColor; }
 
         static bool			load					(IObject * _object);
@@ -46,6 +50,6 @@ namespace vg::graphics::renderer
         bool				m_toolMode          = true;
         bool				m_opaque            = true;
         bool				m_wireframe         = false;
-		DebugDisplayMode	m_debugDisplayMode	= DebugDisplayMode::Default;
+		DisplayMode	m_debugDisplayMode	= DisplayMode::Default;
     };
 }

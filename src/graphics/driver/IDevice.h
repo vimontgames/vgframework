@@ -5,7 +5,7 @@
 
 namespace vg::graphics::driver
 {
-	class IDevice : public core::Object
+	class IDevice : public core::ObjectPointer
 	{
 	public:
 		virtual ~IDevice() {}

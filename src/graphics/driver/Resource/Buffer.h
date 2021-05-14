@@ -9,7 +9,7 @@ namespace vg::graphics::driver
 {
     namespace base
     {
-        class Buffer : public core::Object
+        class Buffer : public core::ObjectPointer
         {
         public:
             Buffer(const BufferDesc & _bufDesc, const core::string & _name, const void * _initData);

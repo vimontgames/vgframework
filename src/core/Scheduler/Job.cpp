@@ -6,7 +6,7 @@ namespace vg::core
 {
     //--------------------------------------------------------------------------------------
     Job::Job(const string & _name, IObject * _parent) :
-        Object(_name, _parent)
+        ObjectPointer(_name, _parent)
     {
 
     }

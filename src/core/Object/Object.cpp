@@ -9,7 +9,7 @@
 namespace vg::core
 {
 	//--------------------------------------------------------------------------------------
-	Object::Object(const core::string & _name, IObject * _parent) :
+	ObjectPointer::ObjectPointer(const core::string & _name, IObject * _parent) :
 		m_refCount(1)
 	{
 		setName(_name);
@@ -17,51 +17,51 @@ namespace vg::core
 	}
 
 	//--------------------------------------------------------------------------------------
-	Object::Object() :
+	ObjectPointer::ObjectPointer() :
 		m_refCount(1)
 	{
 		
 	}
 
 	//--------------------------------------------------------------------------------------
-	Object::~Object()
+	ObjectPointer::~ObjectPointer()
 	{
 
 	}
 
     //--------------------------------------------------------------------------------------
-    bool Object::registerProperties(IObjectDescriptor & _desc)
+    bool ObjectPointer::registerProperties(IObjectDescriptor & _desc)
     {
-        _desc.registerPropertyHelper(Object, m_name, "Name", IPropertyDescriptor::Flags::Hidden);
+        _desc.registerPropertyHelper(ObjectPointer, m_name, "Name", IPropertyDescriptor::Flags::Hidden);
         return true;
     }
 
     //--------------------------------------------------------------------------------------
-    void Object::setParent(IObject * _parent)
+    void ObjectPointer::setParent(IObject * _parent)
     {
-        m_parent = (Object*)_parent;
+        m_parent = (ObjectPointer*)_parent;
     }
 
     //--------------------------------------------------------------------------------------
-    IObject * Object::getParent() const
+    IObject * ObjectPointer::getParent() const
     {
         return (IObject*)m_parent;
     }
 
     //--------------------------------------------------------------------------------------
-    void Object::onPropertyChanged(const IPropertyDescriptor & _prop)
+    void ObjectPointer::onPropertyChanged(const IPropertyDescriptor & _prop)
     {
 
     }
 
     //--------------------------------------------------------------------------------------
-    void Object::onResourceLoaded(IResource * _resource)
+    void ObjectPointer::onResourceLoaded(IResource * _resource)
     {
 
     }
 
     //--------------------------------------------------------------------------------------
-    const IObjectDescriptor * Object::getClassDesc() const
+    const IObjectDescriptor * ObjectPointer::getClassDesc() const
     {
         const auto * factory = Kernel::getObjectFactory();
         if (factory)
@@ -70,7 +70,7 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
-    bool Object::loadFromFile(const string & _filename)
+    bool ObjectPointer::loadFromFile(const string & _filename)
     {
         const auto * factory = Kernel::getObjectFactory();
 
@@ -83,7 +83,7 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
-    bool Object::saveToFile(const string & _filename)
+    bool ObjectPointer::saveToFile(const string & _filename)
     {
         const auto * factory = Kernel::getObjectFactory();
 
@@ -96,25 +96,25 @@ namespace vg::core
     }
 
 	//--------------------------------------------------------------------------------------
-	void Object::setName(const string & _name)
+	void ObjectPointer::setName(const string & _name)
 	{
 		m_name = _name;
 	}
 
 	//--------------------------------------------------------------------------------------
-	const string & Object::getName() const
+	const string & ObjectPointer::getName() const
 	{
 		return m_name;
 	}
 
 	//--------------------------------------------------------------------------------------
-	u32 Object::addRef()
+	u32 ObjectPointer::addRef()
 	{
 		return m_refCount.fetch_add(1) + 1;
 	}
 
 	//--------------------------------------------------------------------------------------
-	u32 Object::release()
+	u32 ObjectPointer::release()
 	{
 		const u32 prev = m_refCount.fetch_sub(1);
 		if (1 == prev)
@@ -123,7 +123,7 @@ namespace vg::core
 	}
 
 	//--------------------------------------------------------------------------------------
-	u32 Object::Release()
+	u32 ObjectPointer::Release()
 	{
 		return release();
 	}

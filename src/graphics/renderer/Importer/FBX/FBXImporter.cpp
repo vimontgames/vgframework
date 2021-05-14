@@ -2,6 +2,7 @@
 #include "FBXImporter.h"
 #include "graphics/renderer/importer/SceneImporterData.h"
 #include "core/Timer/Timer.h"
+#include "core/Math/Math.h"
 
 #define FBXSDK_SHARED
 #include <fbxsdk.h>
@@ -336,8 +337,24 @@ namespace vg::graphics::renderer
 
         FbxLayerElementMaterial * matLayer = fbxLayers.size() > 0 ? fbxLayers[0]->GetMaterials() : nullptr;
 
-        vector<u32> indexBuffer;
-                    indexBuffer.reserve(triangleCount * 3);
+        uint maxMatID = 0;
+        // first pass to count how many matID
+        if (nullptr != matLayer)
+        {
+            for (uint t = 0; t < triangleCount; ++t)
+            {
+                // get material ID index
+                const uint matID = matLayer->GetIndexArray().GetAt(t);
+                maxMatID = max(matID, maxMatID);
+            }
+        }
+        const uint maxMaterialCount = maxMatID + 1;
+
+        vector<vector<u32>> indexBuffers;
+                            indexBuffers.resize(maxMaterialCount);
+
+        for (uint b = 0; b < maxMaterialCount; ++b)
+            indexBuffers[b].reserve(triangleCount * 3);
 
         // load triangles
         vector<MeshImporterVertex> vertexBuffer;
@@ -347,6 +364,7 @@ namespace vg::graphics::renderer
         {
             // get material ID index
             const uint matID = matLayer ? matLayer->GetIndexArray().GetAt(t) : 0;
+            auto & indexBuffer = indexBuffers[matID];
 
             for (uint v = 0; v < 3; ++v)
             {
@@ -369,7 +387,39 @@ namespace vg::graphics::renderer
             }
         }
 
-        _data.indices = std::move(indexBuffer);
+        // flatten index buffer
+        vector<u32> flatIndexBuffer;
+                    flatIndexBuffer.reserve(triangleCount * 3);
+
+        vector<Batch> batches;
+                      batches.reserve(maxMaterialCount);
+
+        u32 offset = 0;
+
+        for (uint b = 0; b < maxMaterialCount; ++b)
+        {
+            const auto & indexBuffer = indexBuffers[b];
+            const uint indexCount = (uint)indexBuffer.size();
+            if (indexCount > 0)
+            {
+                for (uint i = 0; i < indexCount; ++i)
+                {
+                    u32 index = indexBuffer[i];
+                    flatIndexBuffer.push_back(index);
+                }
+
+                Batch batch;
+                      batch.count = indexCount;
+                      batch.offset = offset;
+
+                batches.push_back(batch);
+
+                offset += indexCount;
+            }
+        }
+
+        _data.batches = std::move(batches);
+        _data.indices = std::move(flatIndexBuffer);
         _data.vertices = std::move(vertexBuffer);
  
         VG_DEBUGPRINT(" %.2f ms\n", _fbxNode->GetName(), Timer::getEnlapsedTime(start, Timer::getTick()));

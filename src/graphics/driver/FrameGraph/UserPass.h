@@ -13,7 +13,7 @@ namespace vg::graphics::driver
 	// An API-agnostic Render/Compute pass exposed to the client Renderer
 	// It will used to generated the required RenderPasses/SubPasses by the FrameGraph
 	//--------------------------------------------------------------------------------------
-	class UserPass : public core::Object
+	class UserPass : public core::ObjectPointer
 	{
 	public:
 						UserPass	();

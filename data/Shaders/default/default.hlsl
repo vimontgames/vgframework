@@ -31,6 +31,21 @@ struct PS_Output
     float4 color0 : Color0;
 };
 
+float3 getMatIDColor(uint _matID)
+{
+    switch (_matID % 6)
+    {
+        case 0: return float3(1, 0, 0);
+        case 1: return float3(0, 1, 0);
+        case 2: return float3(1, 1, 0);
+        case 3: return float3(0, 0, 1);
+        case 4: return float3(1, 0, 1);
+        case 5: return float3(0, 1, 1);
+    }
+
+    return 0;
+}
+
 PS_Output PS_Forward(VS_Output _input)
 {
     PS_Output output;
@@ -44,11 +59,18 @@ PS_Output PS_Forward(VS_Output _input)
 
     output.color0.rgba = float4( baseColor.rgb * (fakeDiffuseLighting + fakeAmbientLighting), 1.0f);
 
-    if (rootConstants3D.getFlags() & DBG_NORMAL)
-        output.color0 = float4(_input.nrm*0.5f+0.5f, 1.0f);
-
-	if (rootConstants3D.getFlags() & DBG_UV0)
-		output.color0 = float4(uv, 0, 1);
+    switch (rootConstants3D.getMode())
+    {
+        case MODE_MATID:
+            output.color0 = float4(getMatIDColor(rootConstants3D.getMatID()), 1.0f);
+            break;
+        case MODE_NORMAL:
+            output.color0 = float4(_input.nrm*0.5f + 0.5f, 1.0f);
+            break;
+        case MODE_UV0:
+            output.color0 = float4(uv, 0, 1);
+            break;
+    }
     
     return output;
 }

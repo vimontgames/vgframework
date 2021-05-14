@@ -10,7 +10,7 @@ namespace vg::graphics::driver
 
 	namespace base
 	{
-		class RenderPass : public core::Object
+		class RenderPass : public core::ObjectPointer
 		{
 		public:
 			RenderPass(const RenderPassKey & _key);

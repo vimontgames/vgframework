@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Shaders/system/vertex.hlsl.h"
+#include "graphics/renderer/Geometry/Batch.h"
 
 namespace vg::graphics::renderer
 {
@@ -9,6 +10,7 @@ namespace vg::graphics::renderer
     class MeshImporterData
     {
     public:
+        core::vector<Batch>                 batches;
         core::vector<core::u32>             indices;
         core::vector<MeshImporterVertex>    vertices;
     };

@@ -11,9 +11,19 @@
 #include "core/File/File.h"
 #include "ImGui-Addons/FileBrowser/ImGuiFileBrowser.cpp"
 
+#include "graphics/renderer/Geometry/Batch.h"
+
 using namespace vg::core;
 using namespace vg::graphics::driver;
 using namespace vg::graphics::renderer;
+
+namespace vg::core
+{
+    template <size_t S> struct AnonymousStruct
+    {
+        char pad[S];
+    };
+}
 
 namespace ImGui
 {
@@ -400,10 +410,51 @@ namespace vg::graphics::renderer
         if (ImGui::Begin("Selection", &m_isCurrentSelectionWindowVisible))
         {
             if (m_selected)
-                displayObject(m_selected, UIMode::Object);
+                displayObject(m_selected, UIMode::ObjectPointer);
         }
         ImGui::End();
-    }    
+    }   
+
+    //--------------------------------------------------------------------------------------
+    void ImguiPass::displayArrayObject(IObject * _object, core::uint _index, u32 _color, const char * _name, UIMode _mode)
+    {
+        ImGui::PushStyleColor(ImGuiCol_Text, _color);
+
+        string treeNodeName;
+        if (_object)
+            treeNodeName = _object->getName();
+        else
+            treeNodeName = (string)_name + "[" + to_string(_index) + "]";
+
+        auto treeNodeFlags = ImGuiTreeNodeFlags_OpenOnArrow;
+
+        if (nullptr != _object && asBool(_object->getClassDesc()->getFlags() & (IObjectDescriptor::Flags::Component)))
+        {
+            treeNodeFlags |= ImGuiTreeNodeFlags_Leaf;
+
+            if (UIMode::Scene == _mode)
+                treeNodeFlags |= ImGuiTreeNodeFlags_DefaultOpen;
+        }
+
+        if (treeNodeName.length() == 0)
+            treeNodeName = "[" + to_string(_index) + "]";
+
+        if (ImGui::TreeNodeEx(treeNodeName.c_str(), treeNodeFlags))
+        {
+            updateSelection(_object, _mode);
+
+            if (_object)
+                displayObject(_object, _mode);
+            else
+                ImGui::TextDisabled("null");
+
+            ImGui::TreePop();
+        }
+        else
+            updateSelection(_object, _mode);
+
+        ImGui::PopStyleColor();
+    }
 
     //--------------------------------------------------------------------------------------
     void ImguiPass::displayObject(core::IObject * _object, UIMode _mode)
@@ -427,8 +478,8 @@ namespace vg::graphics::renderer
 
         IPropertyDescriptor::Type previous = IPropertyDescriptor::Type::Undefined;
 
-        if (UIMode::Scene != _mode)
-            ImGui::TextDisabled(_object->getClassName());
+        //if (UIMode::Scene != _mode)
+        //    ImGui::TextDisabled(className);
 
         for (uint i = 0; i < classDesc->getPropertyCount(); ++i)
         {
@@ -444,8 +495,8 @@ namespace vg::graphics::renderer
             {
                 switch (type)
                 {
-                    case IPropertyDescriptor::Type::Object:
-                    case IPropertyDescriptor::Type::ObjectVector:
+                    case IPropertyDescriptor::Type::ObjectPointer:
+                    case IPropertyDescriptor::Type::ObjectPointerVector:
                         break;
 
                     default:
@@ -485,6 +536,17 @@ namespace vg::graphics::renderer
 					changed |= ImGui::RadioButton(displayName, (int*)pEnum, prop->getValue());
 				};
 				break;
+
+                case IPropertyDescriptor::Type::Uint32:
+                {
+                    i32 * pU32 = (i32*)(uint_ptr(_object) + offset);
+
+                    if (asBool(IPropertyDescriptor::Flags::HasRange & flags))
+                        changed |= ImGui::SliderInt(displayName, pU32, (int)prop->getRange().x, (int)prop->getRange().y, "%d", imguiInputTextflags);
+                    else
+                        changed |= ImGui::InputInt(displayName, pU32, 1, 16, imguiInputTextflags);
+                };
+                break;
 
                 case IPropertyDescriptor::Type::Float:
                 {
@@ -575,6 +637,53 @@ namespace vg::graphics::renderer
 
                 case IPropertyDescriptor::Type::ObjectVector:
                 {
+                    const uint sizeOf = prop->getValue();
+                    byte * data = nullptr;
+
+                    size_t count = 0;
+                    switch (sizeOf)
+                    {
+                        default:
+                            VG_ASSERT(false, "case \'%u\': is not implemented", sizeOf);
+                            break;
+
+                        case 64:
+                            count = (size_t)((vector<core::AnonymousStruct<64>>*)(uint_ptr(_object) + offset))->size();
+                            data = (byte*)((vector<core::AnonymousStruct<64>>*)(uint_ptr(_object) + offset))->data();
+                            break;
+
+                        case 72: 
+                            count = (size_t)((vector<core::AnonymousStruct<72>>*)(uint_ptr(_object) + offset))->size();
+                            data = (byte*)((vector<core::AnonymousStruct<72>>*)(uint_ptr(_object) + offset))->data();
+                            break;
+                    }
+
+                    string treeNodeName = (string)displayName + " (" + to_string(count) + ")";
+
+                    ImGui::PushStyleColor(ImGuiCol_Text, containerColor);
+
+                    auto treeNodeFlags = ImGuiTreeNodeFlags_OpenOnArrow;
+
+                    if (UIMode::Scene == _mode)
+                        treeNodeFlags |= ImGuiTreeNodeFlags_DefaultOpen;
+
+                    if (count > 0 && ImGui::TreeNodeEx(treeNodeName.c_str(), treeNodeFlags))
+                    {
+                        for (uint i = 0; i < count; ++i)
+                        {
+                            IObject * pObject = (IObject * )(data + sizeOf * i);
+                            displayArrayObject(pObject, i, objectColor, displayName, _mode);
+                        }
+
+                        ImGui::TreePop();
+                    }
+
+                    ImGui::PopStyleColor();
+                }
+                break;
+
+                case IPropertyDescriptor::Type::ObjectPointerVector:
+                {
                     vector<IObject*> * vec = (vector<IObject*>*)(uint_ptr(_object) + offset);
                     const uint count = (uint)vec->size();
 
@@ -587,45 +696,12 @@ namespace vg::graphics::renderer
 					if (UIMode::Scene == _mode)
 						treeNodeFlags |= ImGuiTreeNodeFlags_DefaultOpen;
 
-                    if (/*UIMode::Object != _mode &&*/ count > 0 && ImGui::TreeNodeEx(treeNodeName.c_str(), treeNodeFlags))
+                    if (count > 0 && ImGui::TreeNodeEx(treeNodeName.c_str(), treeNodeFlags))
                     {
                         for (uint i = 0; i < count; ++i)
                         {
                             IObject * pObject = (*vec)[i];
-
-                            string treeNodeName;
-                            if (pObject)
-                                treeNodeName = pObject->getName();
-                            else
-                                treeNodeName = (string)displayName + "[" + to_string(i) + "]";
-
-                            ImGui::PushStyleColor(ImGuiCol_Text, objectColor);
-
-							auto treeNodeFlags = ImGuiTreeNodeFlags_OpenOnArrow;							
-
-							if (nullptr != pObject && asBool(pObject->getClassDesc()->getFlags() & (IObjectDescriptor::Flags::Component)))
-							{
-								treeNodeFlags |= ImGuiTreeNodeFlags_Leaf;
-
-								if (UIMode::Scene == _mode)
-									treeNodeFlags |= ImGuiTreeNodeFlags_DefaultOpen;
-							}
-
-                            if (ImGui::TreeNodeEx(treeNodeName.c_str(), treeNodeFlags))
-                            {
-                                updateSelection(pObject, _mode);
-
-                                if (pObject)
-                                    displayObject(pObject, _mode);
-                                else
-                                    ImGui::TextDisabled("null");
-
-                                ImGui::TreePop();
-                            }     
-                            else
-                                updateSelection(pObject, _mode);
-
-                            ImGui::PopStyleColor();
+                            displayArrayObject(pObject, i, objectColor, displayName, _mode);
                         }
 
                         ImGui::TreePop();
@@ -635,7 +711,7 @@ namespace vg::graphics::renderer
                 }
                 break;
 
-                case IPropertyDescriptor::Type::Object:
+                case IPropertyDescriptor::Type::ObjectPointer:
                 {
                     IObject * pObject = *(IObject**)(uint_ptr(_object) + offset);
 

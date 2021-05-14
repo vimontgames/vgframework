@@ -24,7 +24,7 @@ namespace vg::engine
     {
         super::registerProperties(_desc);
 
-        _desc.registerPropertyVectorHelper(ResourceManager, m_resources, IObject*, "Resources", IPropertyDescriptor::Flags::ReadOnly);
+        _desc.registerPropertyObjectPointerVectorHelper(ResourceManager, m_resources, IObject*, "Resources", IPropertyDescriptor::Flags::ReadOnly);
 
         return true;
     }

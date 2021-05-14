@@ -156,7 +156,7 @@ namespace vg::graphics::driver
 				cmdLists.clear();
 			}			
 
-            for (Object * obj : context.m_objectsToRelease)
+            for (ObjectPointer * obj : context.m_objectsToRelease)
                 VG_SAFE_RELEASE(obj);
             context.m_objectsToRelease.clear();
 
@@ -218,7 +218,7 @@ namespace vg::graphics::driver
         }
 
         //--------------------------------------------------------------------------------------
-        void Device::releaseAsync(core::Object * _object)
+        void Device::releaseAsync(core::ObjectPointer * _object)
         {
             getCurrentFrameContext().m_objectsToRelease.push_back(_object);
         }
@@ -233,7 +233,7 @@ namespace vg::graphics::driver
                 VG_DEBUGPRINT("Release %u object(s) async [%u]\n", frameContext.m_objectsToRelease.size(), getFrameContextIndex());
             #endif
 
-            for (Object * obj : frameContext.m_objectsToRelease)
+            for (ObjectPointer * obj : frameContext.m_objectsToRelease)
                 VG_SAFE_RELEASE(obj);
             frameContext.m_objectsToRelease.clear();
         }

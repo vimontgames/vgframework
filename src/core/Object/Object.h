@@ -6,15 +6,15 @@ namespace vg::core
 {
     class IObjectFactory;
 
-	class Object : public IObject
+	class ObjectPointer : public IObject
 	{
 	public:
         const IObjectDescriptor *   getClassDesc        () const final;
         static bool                 registerProperties  (IObjectDescriptor & _desc);
 
-								    Object		        (const string & _name, IObject * _parent);
-								    Object		        ();
-								    ~Object		        ();
+								    ObjectPointer		        (const string & _name, IObject * _parent);
+								    ObjectPointer		        ();
+								    ~ObjectPointer		        ();
 
         void                        setParent           (IObject * _parent) final;
         IObject *                   getParent           () const final;
@@ -37,6 +37,6 @@ namespace vg::core
 	private:
 		string					    m_name;
 		atomic<u32>				    m_refCount;
-        Object *                    m_parent = nullptr;
+        ObjectPointer *             m_parent = nullptr;
 	};
 }
