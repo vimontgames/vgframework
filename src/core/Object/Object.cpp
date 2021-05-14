@@ -32,7 +32,7 @@ namespace vg::core
     //--------------------------------------------------------------------------------------
     bool Object::registerProperties(IObjectDescriptor & _desc)
     {
-        _desc.registerPropertyHelper(Object, m_name, "Name", IPropertyDescriptor::Flags::None);
+        _desc.registerPropertyHelper(Object, m_name, "Name", IPropertyDescriptor::Flags::Hidden);
         return true;
     }
 

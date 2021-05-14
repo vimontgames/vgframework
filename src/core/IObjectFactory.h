@@ -59,6 +59,7 @@ namespace vg::core
             HasRange    = 0x0000000000000008,   // Property has [min..max] range
             SameLine    = 0x0000000000000010,   // Do no end line after this property
 			Radio		= 0x0000000000000020,   // Part of a radio button group
+            Hidden      = 0x0000000000000040    // Hide property
         };
 
         virtual void                        setRange                (float2 _range) = 0;

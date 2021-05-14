@@ -398,36 +398,39 @@ namespace vg::core
                 switch (type)
                 {
                     default:
+                        VG_ASSERT_ENUM_NOT_IMPLEMENTED(type);
+                    break;
+
+                    case IPropertyDescriptor::Type::Resource:
                     {
                         IResource * pResource = (IResource*)(uint_ptr(_object) + offset);
                         pResource->setPath(it->second.substr(1, it->second.length() - 2));
                     }
                     break;
 
-                case IPropertyDescriptor::Type::Enum:
-                {
-                    u32 * pEnum = (u32*)(uint_ptr(_object) + offset);
-
-                    string enumValName = it->second.substr(1, it->second.length() - 2);
-                    u32 enumVal = 0;
-
-                    for (uint q = p; q < desc->getPropertyCount(); ++q)
+                    case IPropertyDescriptor::Type::Enum:
                     {
-                        const auto & enumprop = desc->getPropertyByIndex(q);
+                        u32 * pEnum = (u32*)(uint_ptr(_object) + offset);
 
-                        if (offset == enumprop->getOffset())
+                        string enumValName = it->second.substr(1, it->second.length() - 2);
+                        u32 enumVal = 0;
+
+                        for (uint q = p; q < desc->getPropertyCount(); ++q)
                         {
-                            if (enumValName == enumprop->getDisplayName())
+                            const auto & enumprop = desc->getPropertyByIndex(q);
+
+                            if (offset == enumprop->getOffset())
                             {
-                                enumVal = enumprop->getValue();
-                                break;
+                                if (enumValName == enumprop->getDisplayName())
+                                {
+                                    enumVal = enumprop->getValue();
+                                    break;
+                                }
                             }
                         }
-                    }
 
-                    *pEnum = enumVal;
-                }
-                break;
+                        *pEnum = enumVal;
+                    }
                     break;
 
                     case IPropertyDescriptor::Type::Function:
@@ -508,6 +511,10 @@ namespace vg::core
             switch (type)
             {
                 default:
+                    VG_ASSERT_ENUM_NOT_IMPLEMENTED(type);
+                    break;
+
+                case IPropertyDescriptor::Type::Resource:
                 {
                     IResource * pResource = (IResource*)(uint_ptr(_object) + offset);
                     value = "\""+ pResource->getPath() + "\"";
