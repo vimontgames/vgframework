@@ -8,7 +8,7 @@ namespace vg::graphics::driver
         Buffer::Buffer(const BufferDesc & _bufDesc, const core::string & _name, const void * _initData) :
             m_bufDesc(_bufDesc)
         {
-            VG_DEBUGPRINT("Init Buffer \"%s\" (", _name.c_str());
+            VG_DEBUGPRINT("[Device] Init Buffer \"%s\" (", _name.c_str());
 
             if (_bufDesc.elementSize > 1024 * 1024)
                 VG_DEBUGPRINT("%uMB", _bufDesc.elementSize / (1024*1024));

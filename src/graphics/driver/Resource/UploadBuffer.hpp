@@ -31,8 +31,10 @@ namespace vg::graphics::driver
     //--------------------------------------------------------------------------------------
     core::uint_ptr UploadBuffer::alloc(size_t _size, size_t _alignment)
     {
-        size_t size_align = (_size + _alignment - 1) & ~(_alignment - 1);
-        return m_offsetCur.fetch_add(size_align);
+        size_t alignedSize = (_size + _alignment - 1) & ~(_alignment - 1);
+        uint_ptr offset = m_offsetCur.fetch_add(alignedSize);
+        VG_ASSERT(offset + alignedSize < m_uploadBuffer->getBufDesc().size(), "Cannot allocate %.2f MB in upload buffer heap (upload heap size is %.2f MB)", float(alignedSize) / (1024.0f*1024.0f), float(m_uploadBuffer->getBufDesc().size()) / (1024.0f*1024.0f));
+        return offset;
     }
 
     //--------------------------------------------------------------------------------------

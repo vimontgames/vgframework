@@ -15,7 +15,7 @@ namespace vg::core
 		
 		IPlugin * instance = nullptr;
 
-		VG_DEBUGPRINT("Loading %s ... ", filename.c_str());
+		VG_DEBUGPRINT("[Plugin] Loading %s ... ", filename.c_str());
 
 		#if VG_WINDOWS
 		HMODULE hModule = LoadLibraryExA(filename.c_str(), nullptr, 0);

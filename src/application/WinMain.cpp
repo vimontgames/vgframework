@@ -187,7 +187,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
     #ifdef VG_DEBUG
     // Debug device is disabled by default because it introduces random freezes when using DX12
-    engineParams.renderer.device.debugDevice = false;
+    engineParams.renderer.device.debugDevice = true;
     engineParams.renderer.device.breakOnErrors = true;
     engineParams.renderer.device.breakOnWarnings = true;
     #endif

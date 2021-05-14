@@ -56,12 +56,11 @@ namespace vg::graphics::driver::dx12
 					size_t s;
 					wcstombs_s(&s, description, countof(description), desc.Description, wcslen(desc.Description));
 
-					VG_DEBUGPRINT("Device : DirectX %u.%u %s\n", major, minor, m_d3d12debug ? "debug " : "");
-                    VG_DEBUGPRINT("Adapter: %s\n", description);
-				}
+                    VG_DEBUGPRINT("[Device] DirectX %u.%u %s - %s\n", major, minor, m_d3d12debug ? "debug " : "", description);
+                }
 			}
 		}
-		VG_ASSERT(device, "Could not create DirectX device\n");
+		VG_ASSERT(device, "[Device] Could not create DirectX device\n");
 
 		if (_params.debugDevice)
 		{

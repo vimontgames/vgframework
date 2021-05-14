@@ -21,10 +21,13 @@ namespace vg::core
         static bool     registerClass       (IObjectFactory & _factory);
         static bool     registerProperties  (IObjectDescriptor & _desc);
 
+        static bool     load                (IObject * _object);
+        static bool     save                (IObject * _object);
+
         void            setRoot             (ISector * _sector) final;
         ISector *       getRoot             () const final;
 
     private:
-        ISector *       m_root  = nullptr;
+        ISector *       m_root              = nullptr;
     };
 }

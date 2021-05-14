@@ -284,6 +284,7 @@ namespace vg::engine
         m_scene->setRoot(rootSector);
         VG_SAFE_RELEASE(rootSector);
 
+
         // add camera entity
         auto * root = m_scene->getRoot();
         m_freeCam = new FreeCamEntity("FreeCam #0", root);
@@ -294,6 +295,27 @@ namespace vg::engine
         VG_SAFE_RELEASE(cameraComponent);
         VG_SAFE_RELEASE(m_freeCam);
 
+#if 1
+        {
+            auto * meshEntity = (Entity*)CreateFactoryObject(Entity, "Human", root);
+            auto * meshComponent = (MeshComponent*)CreateFactoryObject(MeshComponent, "", meshEntity);
+            meshComponent->getMeshResource().setPath("data/Models/human/human.fbx");
+            meshEntity->addComponent(meshComponent);
+            root->addEntity(meshEntity);
+
+            const float4x4 m =
+            {
+                float4(1.0f, 0.0f, 0.0f, (0.0f)),
+                float4(0.0f, 1.0f, 0.0f, (0.0f)),
+                float4(0.0f, 0.0f, 1.0f, (0.0f)),
+                float4(0.0f, 0.0f, 0.0f, (1.0f)),
+            };
+            meshEntity->SetWorldMatrix(m);
+
+            VG_SAFE_RELEASE(meshComponent);
+            VG_SAFE_RELEASE(meshEntity);
+        }
+#else
         // add a few entities with mesh
         for (int j = 0; j < 3; ++j)
         {
@@ -324,6 +346,7 @@ namespace vg::engine
                 VG_SAFE_RELEASE(meshEntity);
             }
         }
+#endif
     }
 
     //--------------------------------------------------------------------------------------

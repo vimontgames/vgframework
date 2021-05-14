@@ -87,13 +87,31 @@ namespace vg::graphics::renderer
         auto * device = Device::get();
 
         const uint indexCount = (uint)_data.indices.size();
-        vector<u16> ib16;
-                    ib16.resize(indexCount);
-        for (uint i = 0; i < indexCount; ++i)
-            ib16[i] = (u16)_data.indices[i];
 
-        BufferDesc ibDesc(Usage::Default, BindFlags::IndexBuffer, CPUAccessFlags::None, BufferFlags::None, sizeof(u16), indexCount);
-        Buffer * ib = device->createBuffer(ibDesc, "IndexBuffer", ib16.data());
+        bool use32BitIndices;
+        if (indexCount < 65536)
+            use32BitIndices = false;
+        else
+            use32BitIndices = true;
+
+        const void * ibData;
+        vector<u16> ib16;
+
+        if (!use32BitIndices)
+        {
+            ib16.resize(indexCount);
+            for (uint i = 0; i < indexCount; ++i)
+                ib16[i] = (u16)_data.indices[i];
+
+            ibData = ib16.data();
+        }
+        else
+        {
+            ibData = _data.indices.data();
+        }
+
+        BufferDesc ibDesc(Usage::Default, BindFlags::IndexBuffer, CPUAccessFlags::None, BufferFlags::None, use32BitIndices ? sizeof(u32) : sizeof(u16), indexCount);
+        Buffer * ib = device->createBuffer(ibDesc, "IndexBuffer", ibData);
 
         Buffer * vb = nullptr;
 

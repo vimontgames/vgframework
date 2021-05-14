@@ -2,6 +2,7 @@
 #include "ResourceManager.h"
 #include "core/Resource/Resource.h"
 #include "core/Object/AutoRegisterClass.h"
+#include "core/Timer/Timer.h"
 
 using namespace vg::core;
 
@@ -38,8 +39,7 @@ namespace vg::engine
     //--------------------------------------------------------------------------------------
     ResourceManager::~ResourceManager()
     {
-		//for (auto x : umap)
-		//	cout << x.first << " " << x.second << endl;
+	
     }
 
     //--------------------------------------------------------------------------------------
@@ -67,8 +67,14 @@ namespace vg::engine
 			auto it = m_resourcesMap.find(info.m_path);
 			if (m_resourcesMap.end() == it)
 			{
-				if (info.m_resource->loadResource(info.m_path, info.m_owner))
-					m_resourcesMap.insert(make_pair(info.m_path, info.m_resource));
+                const auto start = Timer::getTick();
+
+                if (info.m_resource->loadResource(info.m_path, info.m_owner))
+                {
+                    m_resourcesMap.insert(make_pair(info.m_path, info.m_resource));
+                    VG_DEBUGPRINT("[ResourceManager] Resource loaded in %.2f ms\n", Timer::getEnlapsedTime(start, Timer::getTick()));
+
+                }
 				else
 					VG_DEBUGPRINT("Error loading resource \"%s\"\n", info.m_path.c_str());
 			}

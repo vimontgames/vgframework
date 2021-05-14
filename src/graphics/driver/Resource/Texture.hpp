@@ -40,7 +40,7 @@ namespace vg::graphics::driver
 		Texture::Texture(const TextureDesc & _texDesc, const core::string & _name, const void * _initData) :
 			m_texDesc(_texDesc)
 		{
-			VG_DEBUGPRINT("Init %s \"%s\" (", asString(_texDesc.type).c_str(), _name.c_str());
+			VG_DEBUGPRINT("[Device] Init %s \"%s\" (", asString(_texDesc.type).c_str(), _name.c_str());
 			VG_DEBUGPRINT("%u", _texDesc.width);
 			VG_DEBUGPRINT("x%u", _texDesc.height);
 			if (_texDesc.depth > 1)

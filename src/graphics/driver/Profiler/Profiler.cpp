@@ -165,7 +165,7 @@ namespace vg::graphics::driver
             }
         }
 
-        VG_DEBUGPRINT("RegisterProfilerThread \"%s\"\n", _name);
+        VG_DEBUGPRINT("[Profiler] Register Thread \"%s\"\n", _name);
         Optick::RegisterThread(_name);
         m_registeredThreads.push_back(name);
     }

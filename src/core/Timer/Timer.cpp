@@ -24,6 +24,7 @@ namespace vg::core
     //--------------------------------------------------------------------------------------
     double Timer::getEnlapsedTime(Timer::Tick _start, Timer::Tick _end)
     {
+        VG_ASSERT(s_freq > 0.0);
         return double(_end - _start) / s_freq;
     }
 }

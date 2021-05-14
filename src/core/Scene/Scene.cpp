@@ -36,7 +36,22 @@ namespace vg::core
 
         _desc.registerProperty("m_root", (IObject**)(&((Scene*)(nullptr))->m_root), "Root", IPropertyDescriptor::Flags::None);
 
+        _desc.registerCallbackHelper(Scene, load, "Load", IPropertyDescriptor::Flags::None);
+        _desc.registerCallbackHelper(Scene, save, "Save", IPropertyDescriptor::Flags::SameLine);
+
         return true;
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool Scene::load(IObject * _object)
+    {
+        return _object->loadFromFile(_object->getName() + ".scene");
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool Scene::save(IObject * _object)
+    {
+        return _object->saveToFile(_object->getName() + ".scene");
     }
 
     //--------------------------------------------------------------------------------------

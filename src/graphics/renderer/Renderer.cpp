@@ -2,6 +2,7 @@
 #include "renderer.h"
 
 #include "core/Kernel.h"
+#include "core/Timer/Timer.h"
 #include "core/Object/AutoRegisterClass.h"
 #include "core/ISector.h"
 #include "graphics/driver/device/device.h"
@@ -127,6 +128,8 @@ namespace vg::graphics::renderer
 	//--------------------------------------------------------------------------------------
 	void Renderer::init(const RendererParams & _params, core::Singletons & _singletons)
 	{
+        Timer::init();
+
         // Singletons created by the renderer
         _singletons.profiler = Kernel::getProfiler();
 

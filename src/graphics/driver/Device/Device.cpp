@@ -135,7 +135,7 @@ namespace vg::graphics::driver
 
             // Buffer for uploads
             {
-                context.m_uploadBuffer = new UploadBuffer("Upload#" + to_string(_frameContextIndex), 16 * 1024 * 1024);
+                context.m_uploadBuffer = new UploadBuffer("Upload#" + to_string(_frameContextIndex), 32 * 1024 * 1024);
             }
 		}
 
@@ -328,7 +328,7 @@ namespace vg::graphics::driver
 		super::beginFrame();
 
         // Copy staging data to GPU textures used for rendering
-        flushTextureUploads();
+        flushUploadBuffer();
 
         // It is safe now to release frame (n-max_frame_latency+1) resources as we are now sure they are not in use by the GPU
         flushReleaseAsync();
@@ -351,7 +351,7 @@ namespace vg::graphics::driver
 	}
 
     //--------------------------------------------------------------------------------------
-    void Device::flushTextureUploads()
+    void Device::flushUploadBuffer()
     {
         VG_PROFILE_CPU("flushTextureUploads");
 

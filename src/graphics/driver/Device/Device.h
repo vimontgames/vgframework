@@ -137,7 +137,7 @@ namespace vg::graphics::driver
         RootSignature *     getRootSignature    (const RootSignatureHandle & _handle);
         core::uint          removeRootSignature (RootSignatureHandle & _handle);
 
-        void                flushTextureUploads ();
+        void                flushUploadBuffer ();
 
         bool                isMinimized         ();
         void                resetShaders        (ShaderKey::File _file);

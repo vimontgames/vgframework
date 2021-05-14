@@ -1,6 +1,7 @@
 #include "graphics/renderer/Precomp.h"
 #include "FBXImporter.h"
 #include "graphics/renderer/importer/SceneImporterData.h"
+#include "core/Timer/Timer.h"
 
 #define FBXSDK_SHARED
 #include <fbxsdk.h>
@@ -54,6 +55,9 @@ namespace vg::graphics::renderer
 
         FbxIOSettings * ios = m_fbxManager->GetIOSettings();
 
+        const auto start = Timer::getTick();
+        VG_DEBUGPRINT("[FBXImporter] Opening FBX file \"%s\" ...", _path.c_str());
+
         int fbxFileMajor, fbxFileMinor, fbxFileRev;
         const bool fbxImporterStatus = fbxImporter->Initialize(_path.c_str(), -1, ios);
         fbxImporter->GetFileVersion(fbxFileMajor, fbxFileMinor, fbxFileRev);
@@ -88,6 +92,8 @@ namespace vg::graphics::renderer
 
         if (fbxImporter->Import(fbxScene))
         {
+            VG_DEBUGPRINT(" %.2f ms\n", Timer::getEnlapsedTime(start, Timer::getTick()));
+
             success = true;
 
             FbxStatus status;
@@ -293,7 +299,8 @@ namespace vg::graphics::renderer
     //--------------------------------------------------------------------------------------
     bool FBXImporter::loadFBXMesh(FbxNode * _fbxNode, FbxMesh * _fbxMesh, MeshImporterData & _data)
     {
-        VG_DEBUGPRINT("loadFBXMesh \"%s\"\n", _fbxNode->GetName());
+        const auto start = Timer::getTick();
+        VG_DEBUGPRINT("[FBXImporter] Importing FBX Mesh \"%s\" ...", _fbxNode->GetName());
 
         VG_ASSERT(3 == _fbxMesh->GetPolygonSize(0));
 
@@ -365,6 +372,8 @@ namespace vg::graphics::renderer
         _data.indices = std::move(indexBuffer);
         _data.vertices = std::move(vertexBuffer);
  
+        VG_DEBUGPRINT(" %.2f ms\n", _fbxNode->GetName(), Timer::getEnlapsedTime(start, Timer::getTick()));
+
         return true;
     }
 }
