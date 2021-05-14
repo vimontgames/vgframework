@@ -110,6 +110,7 @@
     </ClInclude>
     <ClInclude Include="IGraphicInstance.h" />
     <ClInclude Include="IGraphicModel.h" />
+    <ClInclude Include="IImmediateGUI.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Pass">

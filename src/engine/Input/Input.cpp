@@ -5,6 +5,10 @@
 #include "engine/Input/win32/Input_win32.hpp"
 #endif
 
+#include "engine/Engine.h"
+#include "graphics/renderer/IRenderer.h"
+#include "graphics/renderer/IImmediateGUI.h"
+
 namespace vg::engine
 {
     namespace base
@@ -46,6 +50,10 @@ namespace vg::engine
     bool Input::update()
     {
         VG_PROFILE_CPU("Input");
+
+        if (Engine::get()->getRenderer()->getImmediateGUI()->isFocused())
+            return false;
+
         return super::update();
     }
 }

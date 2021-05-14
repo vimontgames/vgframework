@@ -13,6 +13,7 @@ namespace vg
 
     namespace graphics::renderer
     {
+        class IImmediateGUI;
         class IMeshModel;
         class IView;
         struct CreateViewParams;
@@ -41,6 +42,7 @@ namespace vg
             #endif
 
             virtual core::IProfiler *   getProfilerInstance () const = 0;
+            virtual IImmediateGUI *     getImmediateGUI     () const = 0;
 
             virtual IMeshModel *        createMeshModel     (const core::string & _path) = 0;
         };

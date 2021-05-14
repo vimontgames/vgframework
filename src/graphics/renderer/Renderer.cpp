@@ -22,6 +22,8 @@
 #include "graphics/renderer/Options/DisplayOptions.h"
 #include "graphics/renderer/IGraphicInstance.h"
 
+#include "imgui/imgui.h"
+
 #include "shaders/driver/driver.hlsl.h"
 #include "shaders/default/default.hlsl.h"
 #include "Shaders/background/background.hlsl.h"
@@ -59,6 +61,12 @@ namespace vg::graphics::renderer
     core::IProfiler * Renderer::getProfilerInstance() const
     {
         return Kernel::getProfiler();
+    }
+
+    //--------------------------------------------------------------------------------------
+    IImmediateGUI * Renderer::getImmediateGUI() const
+    {
+        return m_imgui;
     }
 
 	//--------------------------------------------------------------------------------------

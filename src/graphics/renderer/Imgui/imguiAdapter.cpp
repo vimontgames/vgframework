@@ -186,6 +186,16 @@ namespace vg::graphics::renderer
     }
 
     //--------------------------------------------------------------------------------------
+    bool ImguiAdapter::isFocused() const
+    {
+        const ImGuiIO & io = ImGui::GetIO();
+        if (io.WantCaptureKeyboard)
+            return true;
+        else
+            return false;
+    }
+
+    //--------------------------------------------------------------------------------------
     void ImguiAdapter::beginFrame()
     {
         VG_PROFILE_CPU("Dear Imgui");

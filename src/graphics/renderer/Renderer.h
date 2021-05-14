@@ -53,6 +53,7 @@ namespace vg::graphics::renderer
         void                    waitGPUIdle         () override;
 
         core::IProfiler *       getProfilerInstance () const override;
+        IImmediateGUI *         getImmediateGUI     () const override;
 
         IMeshModel *            createMeshModel     (const core::string & _path) final;
         

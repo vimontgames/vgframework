@@ -107,7 +107,7 @@ namespace vg::graphics::renderer
                     if (ImGui::MenuItem("Performance"))
                         m_isPerfWindowVisible = true;
 
-                    if (ImGui::MenuItem("Scenes"))
+                    if (ImGui::MenuItem("Scene"))
                         m_isSceneWindowVisible = true; 
 
                     if (ImGui::MenuItem("Selection"))
@@ -382,7 +382,7 @@ namespace vg::graphics::renderer
     //--------------------------------------------------------------------------------------
     void ImguiPass::displaySceneWindow()
     {
-        if (ImGui::Begin("Scenes", &m_isSceneWindowVisible))
+        if (ImGui::Begin("Scene", &m_isSceneWindowVisible))
         {
             const auto * factory = Kernel::getObjectFactory();
             engine::IEngine * engine = (engine::IEngine *)factory->getSingleton("Engine");
@@ -452,6 +452,9 @@ namespace vg::graphics::renderer
                         continue;
                 }
             }
+
+            if (asBool(IPropertyDescriptor::Flags::Hidden & flags))
+                continue;
 
             if (asBool(IPropertyDescriptor::Flags::SameLine & flags))
                 ImGui::SameLine();
@@ -526,31 +529,35 @@ namespace vg::graphics::renderer
                     char buffer[1024];
                     sprintf_s(buffer, pString->c_str());
                     changed |= ImGui::InputText(displayName, buffer, countof(buffer), imguiInputTextflags);
-                    *pString = buffer;
 
-                    if (asBool(IPropertyDescriptor::Flags::IsFolder & flags))
+                    if (changed)
                     {
-                        ImGui::SameLine();
-                        if (ImGui::Button("Path"))
-                            selectPath = true;
-                    }
+                        *pString = buffer;
 
-                    if (selectPath)
-                    {
-                        ImGui::OpenPopup("Select folder");
-                        selectPath = false;
-                    }
-
-                    if (asBool(IPropertyDescriptor::Flags::IsFolder & flags))
-                    {
-                        if (file_dialog.showFileDialog("Select folder", imgui_addons::ImGuiFileBrowser::DialogMode::SELECT, ImVec2(700, 310)))
+                        if (asBool(IPropertyDescriptor::Flags::IsFolder & flags))
                         {
-                            const string newFolder = getRelativePath(file_dialog.selected_path);
+                            ImGui::SameLine();
+                            if (ImGui::Button("Path"))
+                                selectPath = true;
+                        }
 
-                            if (newFolder != *pString)
+                        if (selectPath)
+                        {
+                            ImGui::OpenPopup("Select folder");
+                            selectPath = false;
+                        }
+
+                        if (asBool(IPropertyDescriptor::Flags::IsFolder & flags))
+                        {
+                            if (file_dialog.showFileDialog("Select folder", imgui_addons::ImGuiFileBrowser::DialogMode::SELECT, ImVec2(700, 310)))
                             {
-                                *pString = newFolder;
-                                changed = true;
+                                const string newFolder = getRelativePath(file_dialog.selected_path);
+
+                                if (newFolder != *pString)
+                                {
+                                    *pString = newFolder;
+                                    changed = true;
+                                }
                             }
                         }
                     }
@@ -654,7 +661,75 @@ namespace vg::graphics::renderer
 					if (nullptr != pObject && asBool(pObject->getClassDesc()->getFlags() & (IObjectDescriptor::Flags::Component)))
 						treeNodeFlags |= ImGuiTreeNodeFlags_Leaf;
 
-                    if (/*UIMode::Object != _mode &&*/ ImGui::TreeNodeEx(treeNodeName.c_str(), treeNodeFlags))
+                    bool treenNodeOpen = /*UIMode::Object != _mode &&*/ ImGui::TreeNodeEx(treeNodeName.c_str(), treeNodeFlags);
+
+                    static int ObjectRightClicMenuIndex = -1;
+                    bool needOpenPopup = false;
+
+                    if (ImGui::BeginPopupContextItem())
+                    {
+                        ImGui::PushID("ObjectRightClicMenu");
+
+                        //if (ImGui::MenuItem("Cut", "Ctrl-X"))
+                        //    ObjectRightClicMenuIndex = 0;
+                        //
+                        //if (ImGui::MenuItem("Copy", "Ctrl-C"))
+                        //    ObjectRightClicMenuIndex = 1;
+                        //
+                        //if (ImGui::MenuItem("Paste", "Ctrl-V"))
+                        //    ObjectRightClicMenuIndex = 2;
+
+                        if (ImGui::MenuItem("Rename", "Ctrl-R"))
+                        {
+                            needOpenPopup = true;
+                            ObjectRightClicMenuIndex = 3;
+                        }
+
+                        ImGui::PopID();
+
+                        ImGui::EndPopup();
+                    }
+
+                    if (ObjectRightClicMenuIndex == 3)
+                    {
+                        static bool isRenamePopopOpened = true;
+
+                        if (needOpenPopup)
+                            ImGui::OpenPopup("Rename");
+
+                        if (ImGui::BeginPopupModal("Rename", &isRenamePopopOpened, ImGuiWindowFlags_AlwaysAutoResize))
+                        {
+                            static char nameTmp[1024] = { '\0' };
+
+                            if (nameTmp[0] == '\0')
+                                strcpy(nameTmp, pObject->getName().c_str());
+
+                            changed |= ImGui::InputText("", nameTmp, countof(nameTmp), ImGuiInputTextFlags_AutoSelectAll);
+
+                            string newName = nameTmp;
+
+                            if (ImGui::Button("Rename", ImVec2(80, 0)))
+                            {
+                                pObject->setName(newName);
+                                ImGui::CloseCurrentPopup();
+                                nameTmp[0] = '\0';
+                                ObjectRightClicMenuIndex = -1;
+                            }
+
+                            ImGui::SameLine();
+
+                            if (ImGui::Button("Cancel", ImVec2(80, 0)))
+                            {
+                                ImGui::CloseCurrentPopup();
+                                nameTmp[0] = '\0';
+                                ObjectRightClicMenuIndex = -1;
+                            }
+
+                            ImGui::EndPopup();
+                        }
+                    }
+
+                    if (treenNodeOpen)
                     {
                         updateSelection(_object, _mode);
 
@@ -685,8 +760,8 @@ namespace vg::graphics::renderer
                     {
                         char buffer[1024];
                         sprintf_s(buffer, pResource->getPath().c_str());
-                        ImGui::InputText(displayName, buffer, countof(buffer), imguiInputTextflags);
-                        pResource->setPath(buffer);
+                        if (ImGui::InputText(displayName, buffer, countof(buffer), imguiInputTextflags))
+                            pResource->setPath(buffer);
 
                         ImGui::SameLine();
                         if (ImGui::Button("File"))
