@@ -8,7 +8,7 @@ namespace vg::core
 {
     class IEntity;
 
-    class Component : public core::ObjectPointer
+    class Component : public core::Object
     {
     public:
         Component(const core::string & _name, IObject * _parent);

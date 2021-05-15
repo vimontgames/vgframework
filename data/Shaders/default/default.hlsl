@@ -50,12 +50,14 @@ PS_Output PS_Forward(VS_Output _input)
 {
     PS_Output output;
     float2 uv = _input.uv;
+
+    uv.y = 1.0f - uv.y;
     
     float4 baseColor = Texture2DTable[rootConstants3D.getTexture()].Sample(nearestRepeat, uv).rgba;
 
     // fake shitty lighting
-    float3 fakeDiffuseLighting = dot(_input.nrm, -normalize(float3(-1,-1,-1))) * 0.9f;
-    float3 fakeAmbientLighting = 0.3f;
+    float3 fakeDiffuseLighting = dot(_input.nrm, -normalize(float3(1,1,-1))) * 0.5f;
+    float3 fakeAmbientLighting = 0.5f;
 
     output.color0.rgba = float4( baseColor.rgb * (fakeDiffuseLighting + fakeAmbientLighting), 1.0f);
 
@@ -69,6 +71,9 @@ PS_Output PS_Forward(VS_Output _input)
             break;
         case MODE_UV0:
             output.color0 = float4(uv, 0, 1);
+            break;
+        case MODE_ALBEDO:
+            output.color0 = float4(baseColor.rgb, 1);
             break;
     }
     

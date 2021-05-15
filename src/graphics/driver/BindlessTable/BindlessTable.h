@@ -14,7 +14,7 @@ namespace vg::graphics::driver
 
     namespace base
     {
-        class BindlessTable : public core::ObjectPointer
+        class BindlessTable : public core::Object
         {
         public:
             BindlessTable();

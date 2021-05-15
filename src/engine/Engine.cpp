@@ -295,11 +295,11 @@ namespace vg::engine
         VG_SAFE_RELEASE(cameraComponent);
         VG_SAFE_RELEASE(m_freeCam);
 
-#if 1
+        auto addMeshToScene = [=](const string & _name, const string & _path, const float4 _position)
         {
-            auto * meshEntity = (Entity*)CreateFactoryObject(Entity, "Human", root);
+            auto * meshEntity = (Entity*)CreateFactoryObject(Entity, _name.c_str(), root);
             auto * meshComponent = (MeshComponent*)CreateFactoryObject(MeshComponent, "", meshEntity);
-            meshComponent->getMeshResource().setPath("data/Models/human/human.fbx");
+            meshComponent->getMeshResource().setPath(_path);
             meshEntity->addComponent(meshComponent);
             root->addEntity(meshEntity);
 
@@ -308,13 +308,17 @@ namespace vg::engine
                 float4(1.0f, 0.0f, 0.0f, (0.0f)),
                 float4(0.0f, 1.0f, 0.0f, (0.0f)),
                 float4(0.0f, 0.0f, 1.0f, (0.0f)),
-                float4(0.0f, 0.0f, 0.0f, (1.0f)),
+                _position,
             };
             meshEntity->SetWorldMatrix(m);
 
             VG_SAFE_RELEASE(meshComponent);
             VG_SAFE_RELEASE(meshEntity);
-        }
+        };
+
+#if 1
+        //addMeshToScene("Box", "data/Models/matIDBox/matIDBox.fbx", float4(0.0f, 0.0f, 1.0f, 1.0f));
+        addMeshToScene("Human", "data/Models/human/human.fbx", float4(0.0f, 0.0f, -1.0f, 1.0f));
 #else
         // add a few entities with mesh
         for (int j = 0; j < 3; ++j)

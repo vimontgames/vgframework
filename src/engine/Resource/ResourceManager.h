@@ -13,10 +13,10 @@ namespace vg::core
 
 namespace vg::engine
 {
-    class ResourceManager : public core::ObjectPointer, public core::Singleton<ResourceManager>
+    class ResourceManager : public core::Object, public core::Singleton<ResourceManager>
     {
     public:
-        using super = core::ObjectPointer;
+        using super = core::Object;
 
         const char *    getClassName() const final { return "ResourceManager"; }
         static bool     registerClass(core::IObjectFactory & _factory);

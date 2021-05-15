@@ -4,9 +4,9 @@
 
 namespace vg::graphics::renderer
 {
-    struct Batch : public core::ObjectPointer
+    struct Batch : public core::Object
     {
-        using super = core::ObjectPointer;
+        using super = core::Object;
 
         const char * getClassName() const final { return "Batch"; }
 

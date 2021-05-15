@@ -6,7 +6,7 @@ namespace vg::graphics::driver
 {
     namespace base
     {
-        class MemoryAllocator : public core::ObjectPointer
+        class MemoryAllocator : public core::Object
         {
         public:
             MemoryAllocator();

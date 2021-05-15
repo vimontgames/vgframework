@@ -17,18 +17,29 @@ namespace vg::core
         static bool                 registerProperties  (IObjectDescriptor & _desc);
 
                                     Resource            (IObject * _owner);
+                                    Resource            (const Resource & _other);
                                     ~Resource           ();
 
-        IObject *                   get                 () const final;      
-        const string &              getPath             () const final;
+        void                        setup               (IObject * _owner, const string & _path, UserData _userData = 0x0) final;
+
+        bool                        setObject           (core::IObject * _object) final;
+        IObject *                   getObject           () const final;
+    
+        void                        setUserData         (UserData _userData) final;
+        UserData                    getUserData         () const final;
+
+        void                        setOwner            (core::IObject * _object) final;
+        core::IObject *             getOwner            () const final;
+
         bool                        setPath             (const string & _path) final;
+        const string &              getPath             () const final;
 
         bool                        loadResource        (const core::string & _path, core::IObject * _owner) = 0;
-		bool						set					(core::IObject * _object) final;
 
 	protected:
         string                      m_path;
         IObject *                   m_owner = nullptr;
         IObject *                   m_object = nullptr;
+        UserData                    m_userData = 0x0;
     };
 }

@@ -6,7 +6,7 @@ namespace vg::core
 {
     class ISector;
 
-    class IScene : public ObjectPointer
+    class IScene : public Object
     {
     public:
         virtual void        setRoot (ISector * _sector) = 0;

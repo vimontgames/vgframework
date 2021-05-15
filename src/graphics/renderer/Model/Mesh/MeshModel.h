@@ -12,29 +12,37 @@ namespace vg::graphics::renderer
 {
     class MeshGeometry;
     class MeshImporterData;
+    class MaterialModel;
 
     class MeshModel : public IMeshModel
     {
         using super = IMeshModel;
 
     public:
-        const char * getClassName() const final { return "MeshModel"; }
+        const char *            getClassName() const final { return "MeshModel"; }
 
-        static bool registerClass(core::IObjectFactory & _factory);
-        static bool registerProperties(core::IObjectDescriptor & _desc);
+        static bool             registerClass(core::IObjectFactory & _factory);
+        static bool             registerProperties(core::IObjectDescriptor & _desc);
 
         MeshModel(const core::string & _name, core::IObject * _parent);
         ~MeshModel();
 
-        void setGeometry(MeshGeometry * _meshGeometry);
-        const MeshGeometry * getGeometry() const;
+        core::uint              GetMaterialCount() const override;
+        IMaterialModel *        GetMaterial(core::uint _index) const override;
 
-        static MeshModel * createFromImporterData(const MeshImporterData & _data);
+        core::uint              getMaterialCount() const { return (core::uint)m_materials.size(); }
+        MaterialModel *         getMaterial(core::uint _index) const { return m_materials[_index]; }
+
+        void                    setGeometry(MeshGeometry * _meshGeometry);
+        const MeshGeometry *    getGeometry() const;
+
+        static MeshModel *      createFromImporterData(const MeshImporterData & _data);
 
     private:
         template <driver::VertexFormat F> static driver::Buffer * createVertexBufferFromImporterData(const MeshImporterData & _data);
 
     private:
-        MeshGeometry *  m_meshGeometry = nullptr;
+        MeshGeometry *                  m_meshGeometry = nullptr;
+        core::vector<MaterialModel*>    m_materials;
     };
 }

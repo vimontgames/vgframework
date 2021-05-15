@@ -25,7 +25,7 @@ namespace vg::core
         VG_INLINE void              setWorldMatrix      (const float4x4 & _world);
         VG_INLINE const float4x4 &  getWorldMatrix      () const;
 
-        //VG_INLINE void              setModel            (Lod _lod, Model * _model);
+        void                        setModel            (Lod _lod, Model * _model);
         VG_INLINE Model *           getModel            (Lod _lod) const;
       
     private:

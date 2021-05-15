@@ -6,7 +6,7 @@ namespace vg::graphics::driver
 {
 	namespace base
 	{
-		class CommandPool : public core::ObjectPointer
+		class CommandPool : public core::Object
 		{
 		public:
 			CommandPool(core::uint _frame, core::uint _index);

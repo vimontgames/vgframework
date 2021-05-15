@@ -15,7 +15,7 @@ namespace vg::graphics::renderer
         core::uint2 size;
     };
 
-    class IView : public core::ObjectPointer
+    class IView : public core::Object
     {
     public:
         IView(const CreateViewParams & _params) {};

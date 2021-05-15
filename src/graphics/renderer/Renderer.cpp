@@ -303,5 +303,12 @@ namespace vg::graphics::renderer
         }
 
         return meshModel;
-    }    
+    }   
+
+    //--------------------------------------------------------------------------------------
+    ITexture * Renderer::createTexture(const core::string & _path)
+    {
+        ITexture * texture = m_device.createTexture(_path);
+        return texture;
+    }
 }

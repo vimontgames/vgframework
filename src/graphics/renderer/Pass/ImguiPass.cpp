@@ -424,7 +424,7 @@ namespace vg::graphics::renderer
         if (_object)
             treeNodeName = _object->getName();
         else
-            treeNodeName = (string)_name + "[" + to_string(_index) + "]";
+            treeNodeName = "[" + to_string(_index) + "]";
 
         auto treeNodeFlags = ImGuiTreeNodeFlags_OpenOnArrow;
 
@@ -828,7 +828,7 @@ namespace vg::graphics::renderer
                 case IPropertyDescriptor::Type::Resource:
                 {
                     IResource * pResource = (IResource*)(uint_ptr(_object) + offset);
-                    IObject * pObject = pResource->get();
+                    IObject * pObject = pResource->getObject();
 
                     bool open = false;// , save = false;
 

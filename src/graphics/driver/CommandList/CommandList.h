@@ -18,7 +18,7 @@ namespace vg::graphics::driver
 
 	namespace base
 	{
-		class CommandList : public core::ObjectPointer
+		class CommandList : public core::Object
 		{
 		public:
 			CommandList(driver::CommandListType _type, driver::CommandPool * _cmdPool, core::uint _frame, core::uint _index);

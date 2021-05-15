@@ -23,6 +23,7 @@
     <ClCompile Include="Imgui\imguiAdapter.cpp" />
     <ClCompile Include="Importer\FBX\FBXImporter.cpp" />
     <ClCompile Include="Instance\Mesh\MeshInstance.cpp" />
+    <ClCompile Include="Model\Material\MaterialModel.cpp" />
     <ClCompile Include="Model\Mesh\MeshModel.cpp" />
     <ClCompile Include="Options\Options.cpp" />
     <ClCompile Include="Pass\ImguiPass.cpp" />
@@ -49,6 +50,7 @@
     <ClInclude Include="IGraphicInstance.h" />
     <ClInclude Include="IGraphicModel.h" />
     <ClInclude Include="IImmediateGUI.h" />
+    <ClInclude Include="IMaterialModel.h" />
     <ClInclude Include="IMeshInstance.h" />
     <ClInclude Include="IMeshModel.h" />
     <ClInclude Include="Imgui\imguiAdapter.h" />
@@ -57,6 +59,9 @@
     <ClInclude Include="Instance\Mesh\MeshInstance.h" />
     <ClInclude Include="IRenderer.h" />
     <ClInclude Include="IView.h" />
+    <ClInclude Include="Model\Material\DefaultMaterial\DefaultMaterialModel.h" />
+    <ClInclude Include="Model\Material\DefaultMaterial\DefaultMaterialModel.hpp" />
+    <ClInclude Include="Model\Material\MaterialModel.h" />
     <ClInclude Include="Model\Mesh\MeshModel.h" />
     <ClInclude Include="Options\DisplayOptions.h" />
     <ClInclude Include="Options\DisplayOptions.hpp" />

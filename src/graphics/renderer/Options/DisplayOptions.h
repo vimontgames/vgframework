@@ -15,13 +15,14 @@ namespace vg::graphics::renderer
 		Default = 0,
         MatID,
 		Normal,
-		UV0
+		UV0,
+        Albedo
 	};
 
-    class DisplayOptions : public core::ObjectPointer, public core::Singleton<DisplayOptions>
+    class DisplayOptions : public core::Object, public core::Singleton<DisplayOptions>
     {
     public:
-        using super = core::ObjectPointer;
+        using super = core::Object;
 
 							DisplayOptions			(const core::string & _name, core::IObject * _parent);
 

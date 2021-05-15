@@ -4,6 +4,8 @@
 
 namespace vg::graphics::renderer
 {
+    class IMaterialModel;
+
     class IGraphicModel : public core::Model
     {
     public:
@@ -12,5 +14,8 @@ namespace vg::graphics::renderer
         {
 
         }
+
+        virtual core::uint GetMaterialCount() const = 0;
+        virtual IMaterialModel * GetMaterial(core::uint _index) const = 0;
     };
 }

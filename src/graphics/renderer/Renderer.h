@@ -56,6 +56,7 @@ namespace vg::graphics::renderer
         IImmediateGUI *         getImmediateGUI     () const override;
 
         IMeshModel *            createMeshModel     (const core::string & _path) final;
+        driver::ITexture *      createTexture       (const core::string & _path) final;
         
         #ifdef _WIN32
         LRESULT CALLBACK        WndProc             (HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) override;

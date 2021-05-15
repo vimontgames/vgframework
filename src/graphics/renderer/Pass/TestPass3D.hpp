@@ -7,6 +7,7 @@
 #include "graphics/renderer/View/View.h"
 #include "graphics/renderer/Importer/FBX/FBXImporter.h"
 #include "graphics/renderer/IGraphicInstance.h"
+#include "graphics/renderer/Model/Material/MaterialModel.h"
 
 #include "Shaders/system/vertex.hlsl.h"
 
@@ -117,15 +118,11 @@ namespace vg::graphics::renderer
 
         TextureDesc texDesc(Usage::Default, BindFlags::ShaderResource, CPUAccessFlags::None, TextureType::Texture2D, PixelFormat::R8G8B8A8_unorm, TextureFlags::None, 2, 2, 1, 1);
         m_texture = device->createTexture("data/Textures/QuestionBox.psd");
-
-        m_fbxModel = (MeshModel*)renderer->createMeshModel("data/Models/Box.fbx");
-        VG_ASSERT(m_fbxModel);
     }
 
     //--------------------------------------------------------------------------------------
     TestPass3D::~TestPass3D()
     {
-        VG_SAFE_RELEASE(m_fbxModel);
         VG_SAFE_RELEASE(m_meshModel);
         VG_SAFE_RELEASE(m_texture);
 
@@ -225,6 +222,10 @@ namespace vg::graphics::renderer
             case DisplayMode::UV0:
                 mode = MODE_UV0;
                 break;
+
+            case DisplayMode::Albedo:
+                mode = MODE_ALBEDO;
+                break;
         }
 		
         auto draw = [=]()
@@ -250,7 +251,6 @@ namespace vg::graphics::renderer
 
                 root3D.mat = transpose(wvp);
                 root3D.setBuffer(vb->getBindlessSRVHandle());
-                root3D.setTexture(m_texture->getBindlessSRVHandle());
                 root3D.setFlags(flags);
                 root3D.setMode(mode);
                 
@@ -260,10 +260,14 @@ namespace vg::graphics::renderer
                 {
                     const auto & batch = batches[i];
 
+                    const auto * material = model->getMaterial(i);
+                    const auto * texture = material->getTexture(asInteger(MaterialTexture::Albedo));
+
+                    texture = texture ? texture : m_texture;
+
+                    root3D.setTexture(texture->getBindlessSRVHandle());
                     root3D.setMatID(i);
-
-                    uint test = root3D.getMatID();
-
+                    
                     _cmdList->setInlineRootConstants(&root3D, RootConstants3DCount);
                     _cmdList->drawIndexed(batch.count, batch.offset);
                 }

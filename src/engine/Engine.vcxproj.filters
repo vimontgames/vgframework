@@ -15,10 +15,7 @@
     <ClCompile Include="Component\Mesh\MeshComponent.cpp">
       <Filter>Component\Mesh</Filter>
     </ClCompile>
-    <ClCompile Include="Resource\Mesh\MeshResource.cpp">
-      <Filter>Resource\Mesh</Filter>
-    </ClCompile>
-    <ClCompile Include="Resource\ResourceManager.cpp">
+    <ClCompile Include="Resource\Resource.cpp">
       <Filter>Resource</Filter>
     </ClCompile>
   </ItemGroup>
@@ -54,6 +51,18 @@
     <ClInclude Include="Resource\ResourceManager.h">
       <Filter>Resource</Filter>
     </ClInclude>
+    <ClInclude Include="Resource\Texture\TextureResource.h">
+      <Filter>Resource\Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource\Texture\TextureResource.hpp">
+      <Filter>Resource\Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource\Mesh\MeshResource.hpp">
+      <Filter>Resource\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource\ResourceManager.hpp">
+      <Filter>Resource</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Input">
@@ -82,6 +91,9 @@
     </Filter>
     <Filter Include="Resource\Mesh">
       <UniqueIdentifier>{18a600a9-df3c-4aa2-9755-80cc55dd828c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource\Texture">
+      <UniqueIdentifier>{14b88f1a-2447-430d-a2f0-87dbf2a85080}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

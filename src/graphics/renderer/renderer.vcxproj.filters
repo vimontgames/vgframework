@@ -30,6 +30,9 @@
     <ClCompile Include="Instance\Mesh\MeshInstance.cpp">
       <Filter>Instance\Mesh</Filter>
     </ClCompile>
+    <ClCompile Include="Model\Material\MaterialModel.cpp">
+      <Filter>Model\Material</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Renderer.def" />
@@ -117,6 +120,16 @@
     <ClInclude Include="Geometry\Batch.hpp">
       <Filter>Geometry</Filter>
     </ClInclude>
+    <ClInclude Include="Model\Material\MaterialModel.h">
+      <Filter>Model\Material</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\Material\DefaultMaterial\DefaultMaterialModel.h">
+      <Filter>Model\Material\DefaultMaterial</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\Material\DefaultMaterial\DefaultMaterialModel.hpp">
+      <Filter>Model\Material\DefaultMaterial</Filter>
+    </ClInclude>
+    <ClInclude Include="IMaterialModel.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Pass">
@@ -160,6 +173,12 @@
     </Filter>
     <Filter Include="Instance\Mesh">
       <UniqueIdentifier>{4ec779bc-84b6-4bc8-8cec-4c16ef4653d6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Model\Material">
+      <UniqueIdentifier>{dd3031f0-9d4f-464a-945f-3a54926ffef4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Model\Material\DefaultMaterial">
+      <UniqueIdentifier>{4f3e414b-d52f-4193-8058-e19c75f3ef01}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

@@ -501,6 +501,7 @@
     <ClInclude Include="Device\DeviceCaps.hpp">
       <Filter>Device</Filter>
     </ClInclude>
+    <ClInclude Include="ITexture.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Device">

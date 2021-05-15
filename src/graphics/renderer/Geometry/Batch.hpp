@@ -30,7 +30,7 @@ namespace vg::graphics::renderer
 
     //--------------------------------------------------------------------------------------
     Batch::Batch(const core::string & _name, core::IObject * _parent) :
-        core::ObjectPointer(_name, _parent)
+        core::Object(_name, _parent)
     {
 
     }

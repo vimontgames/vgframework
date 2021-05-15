@@ -7,7 +7,7 @@ namespace vg::graphics::driver
 {
 	namespace base
 	{
-		class CommandQueue : public core::ObjectPointer
+		class CommandQueue : public core::Object
 		{
 		public:
 			CommandQueue(CommandQueueType _type);

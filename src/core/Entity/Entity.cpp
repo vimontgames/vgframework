@@ -22,7 +22,7 @@ namespace vg::core
         super::registerProperties(_desc);
 
         _desc.registerPropertyHelper(Entity, m_color, "Color", IPropertyDescriptor::Flags::Color);
-        _desc.registerPropertyObjectPointerVectorHelper(Entity, m_components, IObject*, "Components", IPropertyDescriptor::Flags::None);
+        _desc.registerPropertyObjectPointerVectorHelper(Entity, m_components, "Components", IPropertyDescriptor::Flags::None);
 
         return true;
     }

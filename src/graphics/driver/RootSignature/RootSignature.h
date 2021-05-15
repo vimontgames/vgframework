@@ -7,7 +7,7 @@ namespace vg::graphics::driver
 {
     namespace base
     {
-        class RootSignature : public core::ObjectPointer
+        class RootSignature : public core::Object
         {
         public:
             RootSignature(const RootSignatureDesc & _desc);

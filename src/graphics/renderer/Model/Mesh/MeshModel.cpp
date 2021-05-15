@@ -5,6 +5,7 @@
 #include "graphics/driver/Resource/Buffer.h"
 #include "graphics/renderer/Geometry/Mesh/MeshGeometry.h"
 #include "graphics/renderer/Importer/SceneImporterData.h"
+#include "graphics/renderer/Model/Material/MaterialModel.h"
 #include "shaders/system/vertex.hlsl.h"
 
 using namespace vg::core;
@@ -23,14 +24,14 @@ namespace vg::graphics::renderer
         return true;
     }
 
-
     //--------------------------------------------------------------------------------------
     bool MeshModel::registerProperties(core::IObjectDescriptor & _desc)
     {
         super::registerProperties(_desc);
 
-        _desc.registerProperty("m_meshGeometry", (core::IObject**)offsetof(MeshModel, m_meshGeometry), "Geometry", IPropertyDescriptor::Flags::None);
-
+        _desc.registerPropertyObjectPointerVectorHelper(MeshModel, m_materials, "Materials", IPropertyDescriptor::Flags::None);
+        _desc.registerPropertyObjectPointerHelper(MeshModel, m_meshGeometry, "Geometry", IPropertyDescriptor::Flags::None);
+        
         return true;
     }
 
@@ -45,6 +46,11 @@ namespace vg::graphics::renderer
     MeshModel::~MeshModel()
     {
         VG_SAFE_RELEASE(m_meshGeometry);
+
+        for (uint m = 0; m < m_materials.size(); ++m)
+            VG_SAFE_RELEASE(m_materials[m]);
+
+        m_materials.clear();
     }
 
     //--------------------------------------------------------------------------------------
@@ -89,12 +95,7 @@ namespace vg::graphics::renderer
         auto * device = Device::get();
 
         const uint indexCount = (uint)_data.indices.size();
-
-        bool use32BitIndices;
-        if (indexCount < 65536)
-            use32BitIndices = false;
-        else
-            use32BitIndices = true;
+        const bool use32BitIndices = indexCount < 65536 ? false : true;
 
         const void * ibData;
         vector<u16> ib16;
@@ -149,6 +150,25 @@ namespace vg::graphics::renderer
 
         VG_SAFE_RELEASE(meshGeometry);
 
+        const auto matCount = _data.materials.size();
+        for (auto m = 0; m < matCount; ++m)
+        {
+            MaterialModel * matModel = MaterialModel::createFromImporterData(_data.materials[m]);
+            meshModel->m_materials.push_back(matModel);
+        }
+
         return meshModel;
+    }
+
+    //--------------------------------------------------------------------------------------
+    core::uint MeshModel::GetMaterialCount() const
+    {
+        return getMaterialCount();
+    }
+
+    //--------------------------------------------------------------------------------------
+    IMaterialModel * MeshModel::GetMaterial(core::uint _index) const
+    {
+        return getMaterial(_index);
     }
 }

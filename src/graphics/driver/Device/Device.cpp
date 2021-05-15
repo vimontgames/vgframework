@@ -135,7 +135,7 @@ namespace vg::graphics::driver
 
             // Buffer for uploads
             {
-                context.m_uploadBuffer = new UploadBuffer("Upload#" + to_string(_frameContextIndex), 32 * 1024 * 1024);
+                context.m_uploadBuffer = new UploadBuffer("Upload#" + to_string(_frameContextIndex), 128 * 1024 * 1024);
             }
 		}
 
@@ -156,7 +156,7 @@ namespace vg::graphics::driver
 				cmdLists.clear();
 			}			
 
-            for (ObjectPointer * obj : context.m_objectsToRelease)
+            for (Object * obj : context.m_objectsToRelease)
                 VG_SAFE_RELEASE(obj);
             context.m_objectsToRelease.clear();
 
@@ -218,7 +218,7 @@ namespace vg::graphics::driver
         }
 
         //--------------------------------------------------------------------------------------
-        void Device::releaseAsync(core::ObjectPointer * _object)
+        void Device::releaseAsync(core::Object * _object)
         {
             getCurrentFrameContext().m_objectsToRelease.push_back(_object);
         }
@@ -233,7 +233,7 @@ namespace vg::graphics::driver
                 VG_DEBUGPRINT("Release %u object(s) async [%u]\n", frameContext.m_objectsToRelease.size(), getFrameContextIndex());
             #endif
 
-            for (ObjectPointer * obj : frameContext.m_objectsToRelease)
+            for (Object * obj : frameContext.m_objectsToRelease)
                 VG_SAFE_RELEASE(obj);
             frameContext.m_objectsToRelease.clear();
         }
@@ -380,7 +380,7 @@ namespace vg::graphics::driver
         }
         else
         {
-            VG_DEBUGPRINT("Failed to create texture from \"%s\"\n", _path.c_str());
+            VG_DEBUGPRINT("[Device] Failed to create texture from \"%s\"\n", _path.c_str());
         }
         return nullptr;
     }

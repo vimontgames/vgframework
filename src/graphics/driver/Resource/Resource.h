@@ -20,9 +20,9 @@ namespace vg::graphics::driver
 
     namespace base
     {
-        class Resource : public core::ObjectPointer
+        class Resource : public core::Object
         {
-            using super = core::ObjectPointer;
+            using super = core::Object;
 
         public:
             enum class ResourceType : core::u8

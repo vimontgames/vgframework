@@ -20,8 +20,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="Resource\Mesh\MeshResource.cpp" />
-    <ClCompile Include="Resource\ResourceManager.cpp" />
+    <ClCompile Include="Resource\Resource.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Engine.def" />
@@ -38,7 +37,11 @@
     <ClInclude Include="Input\win32\Input_win32.hpp" />
     <ClInclude Include="Precomp.h" />
     <ClInclude Include="Resource\Mesh\MeshResource.h" />
+    <ClInclude Include="Resource\Mesh\MeshResource.hpp" />
     <ClInclude Include="Resource\ResourceManager.h" />
+    <ClInclude Include="Resource\ResourceManager.hpp" />
+    <ClInclude Include="Resource\Texture\TextureResource.h" />
+    <ClInclude Include="Resource\Texture\TextureResource.hpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>

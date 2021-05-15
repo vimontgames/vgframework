@@ -29,6 +29,5 @@ namespace vg::graphics::renderer
         driver::ShaderKey               m_wireframeShaderKey;
         driver::Texture *               m_texture = nullptr;
         MeshModel *                     m_meshModel = nullptr;
-        MeshModel *                     m_fbxModel = nullptr;
     };
 }

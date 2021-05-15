@@ -28,7 +28,7 @@ namespace vg::core
         super::registerProperties(_desc);
 
         _desc.registerPropertyHelper(Instance, m_world, "Matrix", IPropertyDescriptor::Flags::None);
-        _desc.registerPropertyObjectPointerVectorHelper(Instance, m_models, IObject*, "Models", IPropertyDescriptor::Flags::ReadOnly);
+        _desc.registerPropertyObjectPointerVectorHelper(Instance, m_models, "Models", IPropertyDescriptor::Flags::ReadOnly);
 
         return true;
     }
@@ -46,7 +46,7 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
-    void Instance::SetModel(Lod _lod, IModel * _model)
+    void Instance::setModel(Lod _lod, Model * _model)
     {
         VG_ASSERT(isEnumValue(_lod));
 
@@ -58,8 +58,14 @@ namespace vg::core
         {
             VG_SAFE_INCREASE_REFCOUNT(_model);
             VG_SAFE_RELEASE(model);
-            model = (Model*)_model;
+            model = _model;
         }
+    }
+
+    //--------------------------------------------------------------------------------------
+    void Instance::SetModel(Lod _lod, IModel * _model)
+    {
+        setModel(_lod, (Model*)_model);
     }
 
     //--------------------------------------------------------------------------------------

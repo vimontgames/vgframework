@@ -49,6 +49,7 @@
     <ClInclude Include="Importer\Importer.h" />
     <ClInclude Include="Importer\TextureImporter.h" />
     <ClInclude Include="Importer\TextureImporter.hpp" />
+    <ClInclude Include="ITexture.h" />
     <ClInclude Include="PipelineState\BlendState.h" />
     <ClInclude Include="PipelineState\BlendState.hpp" />
     <ClInclude Include="PipelineState\DepthStencilState.h" />

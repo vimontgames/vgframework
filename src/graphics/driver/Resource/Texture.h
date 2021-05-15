@@ -1,16 +1,18 @@
 #pragma once
 
-#include "Texture_consts.h"
-#include "core/Object/Object.h"
 #include "Resource.h"
+#include "Texture_consts.h"
+#include "graphics/driver/ITexture.h"
 #include "graphics/driver/BindlessTable/BindlessTable_consts.h"
 
 namespace vg::graphics::driver
 {
 	namespace base
 	{
-		class Texture : public core::ObjectPointer
+		class Texture : public ITexture
 		{
+            using super = ITexture;
+
 		public:
             static core::u32 getPixelFormatSize(PixelFormat _format);
             static bool isDepthStencilFormat(PixelFormat _format);

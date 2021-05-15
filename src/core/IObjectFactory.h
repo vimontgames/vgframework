@@ -20,8 +20,9 @@ namespace vg::core
     #define registerClassSingletonHelper(className, displayName, flags)											registerSingletonClass(#className, displayName, flags | vg::core::IObjectDescriptor::Flags::Singleton, [](){ return className::get(); } )
 
     #define registerPropertyHelper(className, propertyName, displayName, flags)									registerProperty(#propertyName, (&((className*)(nullptr))->propertyName), displayName, flags)
+    #define registerPropertyObjectPointerHelper(className, propertyName, displayName, flags)                    registerProperty(#propertyName, (core::IObject**)offsetof(className, propertyName), displayName, flags);
     #define registerPropertyObjectVectorHelper(className, propertyName, elementType, displayName, flags)        registerProperty(#propertyName, sizeof(elementType), &((className*)nullptr)->propertyName, displayName, flags);
-    #define registerPropertyObjectPointerVectorHelper(className, propertyName, elementType, displayName, flags) registerProperty(#propertyName, (core::vector<elementType>*)&((className*)nullptr)->propertyName, displayName, flags);
+    #define registerPropertyObjectPointerVectorHelper(className, propertyName, displayName, flags)              registerProperty(#propertyName, (core::vector<IObject*>*)&((className*)nullptr)->propertyName, displayName, flags);
     #define registerCallbackHelper(className, funcName, displayName, flags)										registerProperty(#funcName, funcName, displayName, flags)
 	#define registerPropertyEnumHelper(className, enumClassName, propertyName, enumValue, enumValueName, flags)	registerProperty(#propertyName, (std::underlying_type_t<enumClassName>*)(&((className*)(nullptr))->propertyName), enumValue, enumValueName, flags);
 

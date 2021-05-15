@@ -45,8 +45,8 @@ namespace vg::core
     {
         super::registerProperties(_desc);
         
-        _desc.registerPropertyObjectPointerVectorHelper(Sector, m_entities, IObject*, "Entities", IPropertyDescriptor::Flags::None);
-        _desc.registerPropertyObjectPointerVectorHelper(Sector, m_sectors, IObject*, "Sectors", IPropertyDescriptor::Flags::None);
+        _desc.registerPropertyObjectPointerVectorHelper(Sector, m_entities, "Entities", IPropertyDescriptor::Flags::None);
+        _desc.registerPropertyObjectPointerVectorHelper(Sector, m_sectors, "Sectors", IPropertyDescriptor::Flags::None);
 
         return true;
     }

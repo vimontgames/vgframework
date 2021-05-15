@@ -9,7 +9,7 @@ namespace vg::graphics::renderer
 
     //--------------------------------------------------------------------------------------
     DisplayOptions::DisplayOptions(const core::string & _name, core::IObject * _parent) :
-        ObjectPointer(_name, _parent)
+        Object(_name, _parent)
     {
         load(this);
     }
@@ -49,6 +49,7 @@ namespace vg::graphics::renderer
         _desc.registerPropertyEnumHelper(DisplayOptions, DisplayMode, m_debugDisplayMode, DisplayMode::MatID,   "MatID",   IPropertyDescriptor::Flags::Radio | IPropertyDescriptor::Flags::SameLine);
 		_desc.registerPropertyEnumHelper(DisplayOptions, DisplayMode, m_debugDisplayMode, DisplayMode::Normal,  "Normal",  IPropertyDescriptor::Flags::Radio | IPropertyDescriptor::Flags::SameLine);
 		_desc.registerPropertyEnumHelper(DisplayOptions, DisplayMode, m_debugDisplayMode, DisplayMode::UV0,     "UV0",     IPropertyDescriptor::Flags::Radio | IPropertyDescriptor::Flags::SameLine);
+        _desc.registerPropertyEnumHelper(DisplayOptions, DisplayMode, m_debugDisplayMode, DisplayMode::Albedo,  "Albedo",  IPropertyDescriptor::Flags::Radio | IPropertyDescriptor::Flags::SameLine);
 
         _desc.registerPropertyHelper(DisplayOptions, m_backgroundColor, "Background", IPropertyDescriptor::Flags::Color);
 

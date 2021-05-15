@@ -8,7 +8,7 @@ namespace vg::graphics::driver
 {
     namespace base
     {
-        class GraphicPipelineState : public core::ObjectPointer
+        class GraphicPipelineState : public core::Object
         {
         public:
             GraphicPipelineState(const GraphicPipelineStateKey & _key);

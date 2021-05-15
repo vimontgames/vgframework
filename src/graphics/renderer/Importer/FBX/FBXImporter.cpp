@@ -298,6 +298,73 @@ namespace vg::graphics::renderer
     }
 
     //--------------------------------------------------------------------------------------
+    vector<const char*> materialImporterTextureToFbxProperty(MaterialImporterTexture _slot)
+    {
+        vector<const char*> names;
+
+        switch (_slot)
+        {
+            default:
+                VG_ASSERT_ENUM_NOT_IMPLEMENTED(_slot);
+                break;
+
+            case MaterialImporterTexture::Albedo:
+                names.push_back(FbxSurfaceMaterial::sDiffuse);
+                break;
+
+            case MaterialImporterTexture::Normal:
+                names.push_back(FbxSurfaceMaterial::sNormalMap);
+                names.push_back(FbxSurfaceMaterial::sBump);
+                break;
+        }
+
+        return names;
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool importMaterial(core::uint _index, fbxsdk::FbxNode * _fbxNode, vector<MaterialImporterData> & _materials)
+    {
+        FbxSurfaceMaterial * material = (FbxSurfaceMaterial*)_fbxNode->GetSrcObject<FbxSurfaceMaterial>(_index);
+
+        MaterialImporterData mat;
+
+        if (nullptr != material)
+        {
+            //VG_DEBUGPRINT("\nMaterial #%u: \"%s\"\n", _index, material->GetName());
+
+            mat.name = material->GetName();
+
+            for (uint t = 0; t < enumCount<MaterialImporterTexture>(); ++t)
+            {
+                const auto slot = (MaterialImporterTexture)t;
+                const auto texPropNames = materialImporterTextureToFbxProperty(slot);
+                bool found = false;
+                for (uint n = 0; n < texPropNames.size() && !found; ++n)
+                {
+                    FbxProperty texProp = material->FindProperty(texPropNames[n]);
+                    auto layeredTextureCount = texProp.GetSrcObjectCount<FbxLayeredTexture>();
+                    auto textureCount = texProp.GetSrcObjectCount<FbxTexture>();
+                    if (textureCount > 0)
+                    {
+                        found = true;
+
+                        FbxFileTexture * texture = FbxCast<FbxFileTexture >(texProp.GetSrcObject<FbxFileTexture>(0));
+                        //VG_DEBUGPRINT("name: \"%s\"\n", texture->GetName());
+                        //VG_DEBUGPRINT("prop: \"%s\"\n", texPropNames[n]);
+                        //VG_DEBUGPRINT("path: \"%s\"\n", texture->GetRelativeFileName());
+
+                        mat.texturePath[t] = texture->GetRelativeFileName();
+                    }
+                }
+            }
+        }
+
+        _materials.push_back(mat);
+
+        return true;
+    }
+
+    //--------------------------------------------------------------------------------------
     bool FBXImporter::loadFBXMesh(FbxNode * _fbxNode, FbxMesh * _fbxMesh, MeshImporterData & _data)
     {
         const auto start = Timer::getTick();
@@ -336,6 +403,12 @@ namespace vg::graphics::renderer
         const bool hasUV1 = importFBXLayerElement<FbxLayerElementUV, float2>(uv[1], _fbxMesh, fbxLayers.size() > 1 ? fbxLayers[1]->GetUVs(FbxLayerElement::eTextureDiffuse) : nullptr, triangleCount, float2(0, 0));
 
         FbxLayerElementMaterial * matLayer = fbxLayers.size() > 0 ? fbxLayers[0]->GetMaterials() : nullptr;
+
+        // import materials
+        vector<MaterialImporterData> materials;
+        const auto matCount = _fbxNode->GetSrcObjectCount<FbxSurfaceMaterial>();
+        for (auto m = 0; m < matCount; ++m)
+            importMaterial(m, _fbxNode, materials);
 
         uint maxMatID = 0;
         // first pass to count how many matID
@@ -421,8 +494,9 @@ namespace vg::graphics::renderer
         _data.batches = std::move(batches);
         _data.indices = std::move(flatIndexBuffer);
         _data.vertices = std::move(vertexBuffer);
+        _data.materials = std::move(materials);
  
-        VG_DEBUGPRINT(" %.2f ms\n", _fbxNode->GetName(), Timer::getEnlapsedTime(start, Timer::getTick()));
+        VG_DEBUGPRINT(" %.2f ms\n", Timer::getEnlapsedTime(start, Timer::getTick()));
 
         return true;
     }

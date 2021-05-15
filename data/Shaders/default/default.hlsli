@@ -9,6 +9,7 @@
 #define MODE_MATID      0x0001
 #define MODE_NORMAL	    0x0002
 #define MODE_UV0		0x0003
+#define MODE_ALBEDO     0x0004
 
 struct RootConstants3D
 {

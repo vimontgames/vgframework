@@ -33,7 +33,7 @@ namespace vg::graphics::driver
     {
         size_t alignedSize = (_size + _alignment - 1) & ~(_alignment - 1);
         uint_ptr offset = m_offsetCur.fetch_add(alignedSize);
-        VG_ASSERT(offset + alignedSize < m_uploadBuffer->getBufDesc().size(), "Cannot allocate %.2f MB in upload buffer heap (upload heap size is %.2f MB)", float(alignedSize) / (1024.0f*1024.0f), float(m_uploadBuffer->getBufDesc().size()) / (1024.0f*1024.0f));
+        VG_ASSERT(offset + alignedSize <= m_uploadBuffer->getBufDesc().size(), "Cannot allocate %.2f MB in upload buffer heap (%.2f MB available out of %.2f MB)", float(alignedSize) / (1024.0f*1024.0f), float(m_uploadBuffer->getBufDesc().size()-offset) / (1024.0f*1024.0f), float(m_uploadBuffer->getBufDesc().size()) / (1024.0f*1024.0f));
         return offset;
     }
 

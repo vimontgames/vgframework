@@ -12,7 +12,7 @@ namespace vg::graphics::driver
 
     namespace base
     {
-        class ShaderCompiler : public core::ObjectPointer
+        class ShaderCompiler : public core::Object
         {
         public:
             ShaderCompiler();

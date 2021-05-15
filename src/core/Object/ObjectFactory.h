@@ -4,7 +4,7 @@
 
 namespace vg::core
 {
-    class ObjectPointer;
+    class Object;
 
     class ObjectFactory : public IObjectFactory
     {
