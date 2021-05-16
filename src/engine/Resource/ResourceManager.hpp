@@ -73,7 +73,7 @@ namespace vg::engine
                 if (info.m_resource->loadResource(info.m_path, info.m_owner))
                 {
                     m_resourcesMap.insert(make_pair(info.m_path, info.m_resource));
-                    VG_DEBUGPRINT("[ResourceManager] Resource loaded in %.2f ms\n", Timer::getEnlapsedTime(start, Timer::getTick()));
+                    VG_DEBUGPRINT("[ResourceManager] Resource \"%s\" loaded in %.2f ms\n", info.m_path.c_str(), Timer::getEnlapsedTime(start, Timer::getTick()));
 
                 }
                 else
