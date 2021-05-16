@@ -126,7 +126,7 @@ namespace vg::engine
             const auto delta = input->getMouseDelta();
 
             m_pitch += clamp((float)delta.y * mouseSpeedY, -pi, pi);
-            m_yaw += clamp((float)delta.x  * mouseSpeedX, -pi, pi);
+            m_yaw -= clamp((float)delta.x  * mouseSpeedX, -pi, pi);
         }
 
         if (m_pitch < -pi)
@@ -163,7 +163,7 @@ namespace vg::engine
         J = normalize(float4(mRotXZ.vec1));
         K = normalize(float4(mRotXZ.vec2));
 
-        float4x4 mViewI = float4x4( I, -J, K, T );
+        float4x4 mViewI = float4x4( -I, -J, K, T );
         
         setWorldMatrix(mViewI);
 

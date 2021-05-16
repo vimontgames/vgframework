@@ -443,8 +443,6 @@ namespace vg::graphics::renderer
             {
                 MeshImporterVertex vertex;
 
-                int test = _fbxMesh->GetPolygonVertex(t, v);
-
                 const i32 index = _fbxMesh->mPolygonVertices[_fbxMesh->mPolygons[t].mIndex + v];
 
                 vertex.pos = positions[index];
@@ -452,8 +450,8 @@ namespace vg::graphics::renderer
                 const uint vertexID = t * 3 + v;
 
                 vertex.nrm = normals[vertexID];
-                vertex.uv[0] = uv[0][vertexID];
-                vertex.uv[1] = uv[1][vertexID];
+                vertex.uv[0].xy = { uv[0][vertexID].x, 1.0f - uv[0][vertexID].y };  // Swap FBX v texture coordinates
+                vertex.uv[1].xy = { uv[1][vertexID].x, 1.0f - uv[1][vertexID].y };  // Swap FBX v texture coordinates
 
                 indexBuffer.push_back(vertexID);
                 vertexBuffer.push_back(vertex);
@@ -475,10 +473,14 @@ namespace vg::graphics::renderer
             const uint indexCount = (uint)indexBuffer.size();
             if (indexCount > 0)
             {
-                for (uint i = 0; i < indexCount; ++i)
+                for (uint t = 0; t < indexCount / 3; ++t)
                 {
-                    u32 index = indexBuffer[i];
-                    flatIndexBuffer.push_back(index);
+                    for (uint i = 0; i < 3; ++i)
+                    {
+                        // Swap FBX triangle winding
+                        const u32 index = indexBuffer[3*t + 2 - i];
+                        flatIndexBuffer.push_back(index);
+                    }
                 }
 
                 Batch batch;

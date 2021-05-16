@@ -50,8 +50,6 @@ PS_Output PS_Forward(VS_Output _input)
 {
     PS_Output output;
     float2 uv = _input.uv;
-
-    uv.y = 1.0f - uv.y;
     
     float4 albedo = Texture2DTable[rootConstants3D.getAlbedoMap()].Sample(linearRepeat, uv).rgba;
     float4 normal = Texture2DTable[rootConstants3D.getNormalMap()].Sample(linearRepeat, uv).rgba;
