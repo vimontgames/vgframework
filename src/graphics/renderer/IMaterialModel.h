@@ -11,6 +11,8 @@ namespace vg::graphics
 
     namespace renderer
     {
+        enum class MaterialTextureType : core::u8;
+
         class IMaterialModel : public core::Model
         {
             using super = core::Model;
@@ -23,10 +25,10 @@ namespace vg::graphics
             }
 
             virtual core::uint              GetTextureCount () const = 0;
-            virtual driver::ITexture *      GetTexture      (core::uint _index) const = 0;
-            virtual const core::string &    GetTexturePath  (core::uint _index) const = 0;
+            virtual driver::ITexture *      GetTexture      (MaterialTextureType _type) const = 0;
+            virtual const core::string &    GetTexturePath  (MaterialTextureType _type) const = 0;
 
-            virtual void                    SetTexture      (core::uint _index, driver::ITexture * _texture) = 0;
+            virtual void                    SetTexture      (MaterialTextureType _type, driver::ITexture * _texture) = 0;
         };
     }
 }

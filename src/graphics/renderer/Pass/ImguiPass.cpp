@@ -457,6 +457,16 @@ namespace vg::graphics::renderer
     }
 
     //--------------------------------------------------------------------------------------
+    string getFixedSizeString(const string & _string, uint _size)
+    {
+        const auto spaces = _size - _string.length();
+        VG_ASSERT(spaces >= 0 && spaces <= _size);
+        string result = _string;
+               result.append(spaces, ' ');
+        return result;
+    }
+
+    //--------------------------------------------------------------------------------------
     void ImguiPass::displayObject(core::IObject * _object, UIMode _mode)
     {
         static imgui_addons::ImGuiFileBrowser file_dialog;
@@ -526,14 +536,14 @@ namespace vg::graphics::renderer
                 case IPropertyDescriptor::Type::Bool:
                 {
                     bool * pBool = (bool*)(uint_ptr(_object) + offset);
-					changed |= ImGui::Checkbox(displayName, pBool);
+					changed |= ImGui::Checkbox(getFixedSizeString(displayName, 10).c_str(), pBool);
                 };
                 break;
 
 				case IPropertyDescriptor::Type::Enum:
 				{
 					u32 * pEnum = (u32*)(uint_ptr(_object) + offset);
-					changed |= ImGui::RadioButton(displayName, (int*)pEnum, prop->getValue());
+					changed |= ImGui::RadioButton(getFixedSizeString(displayName, 10).c_str(), (int*)pEnum, prop->getValue());
 				};
 				break;
 

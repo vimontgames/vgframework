@@ -46,10 +46,13 @@ namespace vg::graphics::renderer
         _desc.registerPropertyHelper(DisplayOptions, m_wireframe, "Wireframe", IPropertyDescriptor::Flags::SameLine);
 
 		_desc.registerPropertyEnumHelper(DisplayOptions, DisplayMode, m_debugDisplayMode, DisplayMode::Default, "Default", IPropertyDescriptor::Flags::Radio);
-        _desc.registerPropertyEnumHelper(DisplayOptions, DisplayMode, m_debugDisplayMode, DisplayMode::MatID,   "MatID",   IPropertyDescriptor::Flags::Radio | IPropertyDescriptor::Flags::SameLine);
-		_desc.registerPropertyEnumHelper(DisplayOptions, DisplayMode, m_debugDisplayMode, DisplayMode::Normal,  "Normal",  IPropertyDescriptor::Flags::Radio | IPropertyDescriptor::Flags::SameLine);
-		_desc.registerPropertyEnumHelper(DisplayOptions, DisplayMode, m_debugDisplayMode, DisplayMode::UV0,     "UV0",     IPropertyDescriptor::Flags::Radio | IPropertyDescriptor::Flags::SameLine);
-        _desc.registerPropertyEnumHelper(DisplayOptions, DisplayMode, m_debugDisplayMode, DisplayMode::Albedo,  "Albedo",  IPropertyDescriptor::Flags::Radio | IPropertyDescriptor::Flags::SameLine);
+
+        _desc.registerPropertyEnumHelper(DisplayOptions, DisplayMode, m_debugDisplayMode, DisplayMode::MatID,   "MatID", IPropertyDescriptor::Flags::Radio);
+		_desc.registerPropertyEnumHelper(DisplayOptions, DisplayMode, m_debugDisplayMode, DisplayMode::Normal,  "VS Normal", IPropertyDescriptor::Flags::Radio | IPropertyDescriptor::Flags::SameLine);
+		_desc.registerPropertyEnumHelper(DisplayOptions, DisplayMode, m_debugDisplayMode, DisplayMode::UV0,     "UV0", IPropertyDescriptor::Flags::Radio | IPropertyDescriptor::Flags::SameLine);
+
+        _desc.registerPropertyEnumHelper(DisplayOptions, DisplayMode, m_debugDisplayMode, DisplayMode::AlbedoMap, "Albedo", IPropertyDescriptor::Flags::Radio);
+        _desc.registerPropertyEnumHelper(DisplayOptions, DisplayMode, m_debugDisplayMode, DisplayMode::NormalMap, "Normal", IPropertyDescriptor::Flags::Radio | IPropertyDescriptor::Flags::SameLine);
 
         _desc.registerPropertyHelper(DisplayOptions, m_backgroundColor, "Background", IPropertyDescriptor::Flags::Color);
 

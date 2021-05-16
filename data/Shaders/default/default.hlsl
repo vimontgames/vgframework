@@ -53,13 +53,14 @@ PS_Output PS_Forward(VS_Output _input)
 
     uv.y = 1.0f - uv.y;
     
-    float4 baseColor = Texture2DTable[rootConstants3D.getTexture()].Sample(nearestRepeat, uv).rgba;
+    float4 albedo = Texture2DTable[rootConstants3D.getAlbedoMap()].Sample(linearRepeat, uv).rgba;
+    float4 normal = Texture2DTable[rootConstants3D.getNormalMap()].Sample(linearRepeat, uv).rgba;
 
     // fake shitty lighting
-    float3 fakeDiffuseLighting = dot(_input.nrm, -normalize(float3(1,1,-1))) * 0.5f;
+    float3 fakeDiffuseLighting = dot(_input.nrm, normalize(float3(-1,-2,3))) * 0.5f;
     float3 fakeAmbientLighting = 0.5f;
 
-    output.color0.rgba = float4( baseColor.rgb * (fakeDiffuseLighting + fakeAmbientLighting), 1.0f);
+    output.color0.rgba = float4(albedo.rgb * (fakeDiffuseLighting + fakeAmbientLighting), 1.0f);
 
     switch (rootConstants3D.getMode())
     {
@@ -72,8 +73,11 @@ PS_Output PS_Forward(VS_Output _input)
         case MODE_UV0:
             output.color0 = float4(uv, 0, 1);
             break;
-        case MODE_ALBEDO:
-            output.color0 = float4(baseColor.rgb, 1);
+        case MODE_ALBEDOMAP:
+            output.color0 = float4(albedo.rgb, 1);
+            break;
+        case MODE_NORMALMAP:
+            output.color0 = float4(normal.rgb, 1);
             break;
     }
     

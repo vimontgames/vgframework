@@ -223,8 +223,12 @@ namespace vg::graphics::renderer
                 mode = MODE_UV0;
                 break;
 
-            case DisplayMode::Albedo:
-                mode = MODE_ALBEDO;
+            case DisplayMode::AlbedoMap:
+                mode = MODE_ALBEDOMAP;
+                break;
+
+            case DisplayMode::NormalMap:
+                mode = MODE_NORMALMAP;
                 break;
         }
 		
@@ -261,11 +265,23 @@ namespace vg::graphics::renderer
                     const auto & batch = batches[i];
 
                     const auto * material = model->getMaterial(i);
-                    const auto * texture = material->getTexture(asInteger(MaterialTexture::Albedo));
 
-                    texture = texture ? texture : m_texture;
+                    driver::Texture * albedoMap = nullptr;
+                    driver::Texture * normalMap = nullptr;
 
-                    root3D.setTexture(texture->getBindlessSRVHandle());
+                    if (nullptr != material)
+                    {
+                        albedoMap = material->getTexture(MaterialTextureType::Albedo);
+                        normalMap = material->getTexture(MaterialTextureType::Normal);
+                    }
+                    else
+                    {
+                        albedoMap = renderer->getDefaultTexture(MaterialTextureType::Albedo);
+                        normalMap = renderer->getDefaultTexture(MaterialTextureType::Normal);
+                    }
+
+                    root3D.setAlbedoMap(albedoMap->getBindlessSRVHandle());
+                    root3D.setNormalMap(normalMap->getBindlessSRVHandle());
                     root3D.setMatID(i);
                     
                     _cmdList->setInlineRootConstants(&root3D, RootConstants3DCount);

@@ -31,7 +31,7 @@ namespace vg::graphics::renderer
         IMaterialModel *        GetMaterial(core::uint _index) const override;
 
         core::uint              getMaterialCount() const { return (core::uint)m_materials.size(); }
-        MaterialModel *         getMaterial(core::uint _index) const { return m_materials[_index]; }
+        MaterialModel *         getMaterial(core::uint _index) const { return _index < m_materials.size() ? m_materials[_index] : nullptr; }
 
         void                    setGeometry(MeshGeometry * _meshGeometry);
         const MeshGeometry *    getGeometry() const;

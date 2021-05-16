@@ -135,7 +135,7 @@ namespace vg::graphics::driver
 
             // Buffer for uploads
             {
-                context.m_uploadBuffer = new UploadBuffer("Upload#" + to_string(_frameContextIndex), 128 * 1024 * 1024);
+                context.m_uploadBuffer = new UploadBuffer("Upload#" + to_string(_frameContextIndex), 256 * 1024 * 1024);
             }
 		}
 

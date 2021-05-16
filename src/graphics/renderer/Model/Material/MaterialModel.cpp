@@ -3,6 +3,7 @@
 #include "core/Object/AutoRegisterClass.h"
 #include "graphics/driver/Resource/Texture.h"
 #include "graphics/renderer/Importer/SceneImporterData.h"
+#include "graphics/renderer/Renderer.h"
 
 #include "DefaultMaterial/DefaultMaterialModel.hpp"
 
@@ -41,7 +42,7 @@ namespace vg::graphics::renderer
     //--------------------------------------------------------------------------------------
     MaterialModel::~MaterialModel()
     {
-        for (uint t = 0; t < core::enumCount<MaterialTexture>(); ++t)
+        for (uint t = 0; t < core::enumCount<MaterialTextureType>(); ++t)
             VG_SAFE_RELEASE(m_textureInfos[t].texture);
     }
 
@@ -50,17 +51,27 @@ namespace vg::graphics::renderer
     {
         MaterialModel * matModel = new MaterialModel(_data.name);
 
-        matModel->m_textureInfos[asInteger(MaterialTexture::Albedo)].path = _data.texturePath[asInteger(MaterialImporterTexture::Albedo)];
-        matModel->m_textureInfos[asInteger(MaterialTexture::Normal)].path = _data.texturePath[asInteger(MaterialImporterTexture::Normal)];
+        for (uint t = 0; t < core::enumCount<MaterialTextureType>(); ++t)
+            matModel->m_textureInfos[t].path = _data.texturePath[t];
 
         return matModel;
     }
 
     //--------------------------------------------------------------------------------------
-    driver::ITexture * MaterialModel::GetTexture(core::uint _index) const
+    driver::ITexture * MaterialModel::GetTexture(MaterialTextureType _type) const
     {
-        VG_ASSERT(_index < countof(m_textureInfos));
-        return getTexture(_index);
+        VG_ASSERT(asInteger(_type) < countof(m_textureInfos));
+        return getTexture(_type);
+    }
+
+    //--------------------------------------------------------------------------------------
+    driver::Texture * MaterialModel::getTexture(MaterialTextureType _type) const
+    { 
+        auto * tex = m_textureInfos[asInteger(_type)].texture;
+        if (tex)
+            return tex;
+        else
+            return Renderer::get()->getDefaultTexture(_type);
     }
 
     //--------------------------------------------------------------------------------------
@@ -70,16 +81,16 @@ namespace vg::graphics::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    const core::string & MaterialModel::GetTexturePath(core::uint _index) const
+    const core::string & MaterialModel::GetTexturePath(MaterialTextureType _type) const
     {
-        VG_ASSERT(_index < countof(m_textureInfos));
-        return getTexturePath(_index);
+        VG_ASSERT(asInteger(_type) < countof(m_textureInfos));
+        return getTexturePath(_type);
     }
 
     //--------------------------------------------------------------------------------------
-    void MaterialModel::SetTexture(core::uint _index, driver::ITexture * _texture)
+    void MaterialModel::SetTexture(MaterialTextureType _type, driver::ITexture * _texture)
     {
-        auto & tex = m_textureInfos[_index].texture;
+        auto & tex = m_textureInfos[asInteger(_type)].texture;
 
         if (tex != _texture)
         {

@@ -41,15 +41,15 @@ namespace vg::engine
         core::Entity(_name, _parent),
         m_roll(0.0f)
     {
-        m_pitch = -1.00f;
-        m_yaw = -2.5f;
+        m_pitch = -1.3f;
+        m_yaw = 3.1417f;
 
         setWorldMatrix(float4x4
         (
-             -1.0f,   -0.5f,   0.0f, 0.0f,
-             -0.3f,    0.4f,   0.8f, 0.0f,
-              0.5f,   -0.7f,   0.5f, 0.0f,
-            115.0f, -148.0f, 211.0f, 1.0f
+             -1.0f,   -0.0f,   0.0f, 0.0f,
+             -0.0f,    0.2f,   1.0f, 0.0f,
+              0.0f,   -1.0f,   0.2f, 0.0f,
+              3.0f, -250.0f, 150.0f, 1.0f
         ));
     }
 

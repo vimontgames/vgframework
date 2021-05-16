@@ -23,64 +23,72 @@ namespace vg::graphics::renderer
     class ImguiPass;
     class MeshModel;
 
+    enum class MaterialTextureType : core::u8;
+
 	class Renderer : public IRenderer, public core::Singleton<Renderer>
 	{
 	public:
         using super = IRenderer;
 
-		IPlugin::Version		getVersion			() const override;
+		IPlugin::Version		        getVersion			    () const override;
 
-								Renderer			(const core::string & _name, core::IObject * _parent);
-								~Renderer			();
+								        Renderer			    (const core::string & _name, core::IObject * _parent);
+								        ~Renderer			    ();
 
-        const char *            getClassName        () const final { return "Renderer"; }
-        bool                    registerClasses     () override;
-        bool                    unregisterClasses   ();
-        static bool             registerProperties  (core::IObjectDescriptor & _desc);
+        const char *                    getClassName            () const final { return "Renderer"; }
+        bool                            registerClasses         () override;
+        bool                            unregisterClasses       ();
+        static bool                     registerProperties      (core::IObjectDescriptor & _desc);
  
-		void					init				(const RendererParams & _params, core::Singletons & _singletons) override;
-		void					deinit				() override;
+		void					        init				    (const RendererParams & _params, core::Singletons & _singletons) override;
+		void					        deinit				    () override;
 
-        IView *                 createView          (const CreateViewParams & _params) override;
-        void                    setView             (IView * _view) override;
+        IView *                         createView              (const CreateViewParams & _params) override;
+        void                            setView                 (IView * _view) override;
 
-        void                    resize              (core::uint _width, core::uint _height) override;
-        core::uint2             getBackbufferSize   () const override;
+        void                            resize                  (core::uint _width, core::uint _height) override;
+        core::uint2                     getBackbufferSize       () const override;
 
-		void					runOneFrame			(double _dt) override;
+		void					        runOneFrame			    (double _dt) override;
 
-        void                    updateShaders       () override;
-        void                    waitGPUIdle         () override;
+        void                            updateShaders           () override;
+        void                            waitGPUIdle             () override;
 
-        core::IProfiler *       getProfilerInstance () const override;
-        IImmediateGUI *         getImmediateGUI     () const override;
+        core::IProfiler *               getProfilerInstance     () const override;
+        IImmediateGUI *                 getImmediateGUI         () const override;
 
-        IMeshModel *            createMeshModel     (const core::string & _path) final;
-        driver::ITexture *      createTexture       (const core::string & _path) final;
+        IMeshModel *                    createMeshModel         (const core::string & _path) final;
+        driver::ITexture *              createTexture           (const core::string & _path) final;
+
+        driver::Texture *               getDefaultTexture       (MaterialTextureType _type) const;
         
         #ifdef _WIN32
-        LRESULT CALLBACK        WndProc             (HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) override;
+        LRESULT CALLBACK                WndProc                 (HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) override;
         #endif     
 
     public: // internal
-        View *                  getView             () const;
+        View *                          getView                 () const;
 
-        driver::Texture *		getBackbuffer       () const;
-        ImguiAdapter *          getImGuiAdapter     () const { return m_imgui; }
+        driver::Texture *		        getBackbuffer           () const;
+        ImguiAdapter *                  getImGuiAdapter         () const { return m_imgui; }
 
     private:
-        void                    registerShaders     ();
+        void                            registerShaders         ();
+
+        void                            initDefaultTextures     ();
+        void                            deinitDefaultTextures   ();
 
 	private:
-		driver::Device &		m_device;
-        ImguiAdapter *          m_imgui             = nullptr;
-        FBXImporter *           m_fbxImporter       = nullptr;
-		driver::FrameGraph &	m_frameGraph;
-        View *                  m_view              = nullptr;
-        BackgroundPass *        m_backgroundPass    = nullptr;
-        TestPass3D *            m_testPass3D        = nullptr;
-        TestPass2D *            m_testPass2D        = nullptr;
-        PostProcessPass *       m_postProcessPass   = nullptr;
-        ImguiPass *             m_imguiPass         = nullptr;
+		driver::Device &		        m_device;
+        ImguiAdapter *                  m_imgui                 = nullptr;
+        FBXImporter *                   m_fbxImporter           = nullptr;
+		driver::FrameGraph &	        m_frameGraph;
+        View *                          m_view                  = nullptr;
+        BackgroundPass *                m_backgroundPass        = nullptr;
+        TestPass3D *                    m_testPass3D            = nullptr;
+        TestPass2D *                    m_testPass2D            = nullptr;
+        PostProcessPass *               m_postProcessPass       = nullptr;
+        ImguiPass *                     m_imguiPass             = nullptr;
+        core::vector<driver::Texture*>  m_defaultTextures;       
 	};
 }

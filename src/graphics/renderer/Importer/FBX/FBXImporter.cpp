@@ -298,7 +298,7 @@ namespace vg::graphics::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    vector<const char*> materialImporterTextureToFbxProperty(MaterialImporterTexture _slot)
+    vector<const char*> materialTextureToFbxProperty(MaterialTextureType _slot)
     {
         vector<const char*> names;
 
@@ -308,11 +308,11 @@ namespace vg::graphics::renderer
                 VG_ASSERT_ENUM_NOT_IMPLEMENTED(_slot);
                 break;
 
-            case MaterialImporterTexture::Albedo:
+            case MaterialTextureType::Albedo:
                 names.push_back(FbxSurfaceMaterial::sDiffuse);
                 break;
 
-            case MaterialImporterTexture::Normal:
+            case MaterialTextureType::Normal:
                 names.push_back(FbxSurfaceMaterial::sNormalMap);
                 names.push_back(FbxSurfaceMaterial::sBump);
                 break;
@@ -334,10 +334,10 @@ namespace vg::graphics::renderer
 
             mat.name = material->GetName();
 
-            for (uint t = 0; t < enumCount<MaterialImporterTexture>(); ++t)
+            for (uint t = 0; t < enumCount<MaterialTextureType>(); ++t)
             {
-                const auto slot = (MaterialImporterTexture)t;
-                const auto texPropNames = materialImporterTextureToFbxProperty(slot);
+                const auto slot = (MaterialTextureType)t;
+                const auto texPropNames = materialTextureToFbxProperty(slot);
                 bool found = false;
                 for (uint n = 0; n < texPropNames.size() && !found; ++n)
                 {

@@ -130,6 +130,9 @@
       <Filter>Model\Material\DefaultMaterial</Filter>
     </ClInclude>
     <ClInclude Include="IMaterialModel.h" />
+    <ClInclude Include="Model\Material\MaterialTextureType.h">
+      <Filter>Model\Material</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Pass">

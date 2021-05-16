@@ -16,7 +16,8 @@ namespace vg::graphics::renderer
         MatID,
 		Normal,
 		UV0,
-        Albedo
+        AlbedoMap,
+        NormalMap
 	};
 
     class DisplayOptions : public core::Object, public core::Singleton<DisplayOptions>

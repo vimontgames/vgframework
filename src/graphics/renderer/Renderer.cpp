@@ -156,6 +156,8 @@ namespace vg::graphics::renderer
         registerClasses();
 
         DisplayOptions * displayOptions = new DisplayOptions("DisplayOptions", this);
+
+        initDefaultTextures();
 	}
 
     //--------------------------------------------------------------------------------------
@@ -174,6 +176,8 @@ namespace vg::graphics::renderer
 	void Renderer::deinit()
 	{
         unregisterClasses();
+
+        deinitDefaultTextures();
 
         DisplayOptions * displayOptions = DisplayOptions::get();
         VG_SAFE_DELETE(displayOptions);
@@ -310,5 +314,50 @@ namespace vg::graphics::renderer
     {
         ITexture * texture = m_device.createTexture(_path);
         return texture;
+    }
+
+    //--------------------------------------------------------------------------------------
+    driver::Texture * Renderer::getDefaultTexture(MaterialTextureType _type) const
+    {
+        return m_defaultTextures[asInteger(_type)];
+    }
+
+    //--------------------------------------------------------------------------------------
+    void Renderer::initDefaultTextures()
+    {
+        m_defaultTextures.resize(enumCount<MaterialTextureType>());
+
+        for (uint t = 0; t < m_defaultTextures.size(); ++t)
+        {
+            const auto type = (MaterialTextureType)t;
+            u32 data;
+            switch (type)
+            {
+                default:
+                    VG_ASSERT_ENUM_NOT_IMPLEMENTED(type);
+                    break;
+
+                case MaterialTextureType::Albedo:
+                    data = 0xFFBBBBBB;
+                    break;
+
+                case MaterialTextureType::Normal:
+                    data = 0xFFFF7F7F;
+                    break;
+            }
+
+            TextureDesc texDesc = TextureDesc(Usage::Default, BindFlags::ShaderResource, CPUAccessFlags::None, TextureType::Texture2D, PixelFormat::R8G8B8A8_unorm, TextureFlags::None, 1, 1);
+            string name = "Default_" + asString(type);
+            m_defaultTextures[t] = m_device.createTexture(texDesc, name.c_str(), &data);
+        }        
+    }
+
+    //--------------------------------------------------------------------------------------
+    void Renderer::deinitDefaultTextures()
+    {
+        for (uint t = 0; t < m_defaultTextures.size(); ++t)
+            VG_SAFE_RELEASE(m_defaultTextures[t]);
+
+        m_defaultTextures.clear();
     }
 }

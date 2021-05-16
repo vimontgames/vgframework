@@ -70,7 +70,7 @@ namespace vg::engine
 
                 for (uint t = 0; t < texCount; ++t)
                 {
-                    string matTexPath = matModel->GetTexturePath(t);
+                    string matTexPath = matModel->GetTexturePath((graphics::renderer::MaterialTextureType)t);
                     
                     if (matTexPath.length() > 0)
                     {
@@ -92,7 +92,7 @@ namespace vg::engine
     {
         const auto userData = _resource->getUserData();
         const uint matID =   (userData >> 16) & 0xFFFF;
-        const uint texSlot = userData & 0xFFFF;
+        const auto texSlot = (graphics::renderer::MaterialTextureType)(userData & 0xFFFF);
 
         auto * meshModel = getMeshModel();
         auto * material = meshModel->GetMaterial(matID);

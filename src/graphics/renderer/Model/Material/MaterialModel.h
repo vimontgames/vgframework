@@ -1,6 +1,7 @@
 #pragma once
 
 #include "graphics/renderer/IMaterialModel.h"
+#include "graphics/renderer/Model/Material/MaterialTextureType.h"
 
 namespace vg::graphics
 {
@@ -12,12 +13,6 @@ namespace vg::graphics
     namespace renderer
     {
         class MaterialImporterData;
-
-        enum class MaterialTexture : core::u8
-        {
-            Albedo = 0,
-            Normal
-        };
 
         class MaterialModel : public IMaterialModel
         {
@@ -33,14 +28,14 @@ namespace vg::graphics
             ~MaterialModel();
 
             core::uint              GetTextureCount () const override;
-            driver::ITexture *      GetTexture      (core::uint _index) const override;
-            const core::string &    GetTexturePath  (core::uint _index) const override;
+            driver::ITexture *      GetTexture      (MaterialTextureType _type) const override;
+            const core::string &    GetTexturePath  (MaterialTextureType _type) const override;
 
-            void                    SetTexture      (core::uint _index, driver::ITexture * _texture) final;
+            void                    SetTexture      (MaterialTextureType _type, driver::ITexture * _texture) final;
 
-            core::uint              getTextureCount () const                    { return (core::uint)core::countof(m_textureInfos); }
-            driver::Texture *       getTexture      (core::uint _index) const   { return m_textureInfos[_index].texture; }
-            const core::string &    getTexturePath  (core::uint _index) const   { return m_textureInfos[_index].path; };
+            core::uint              getTextureCount () const                            { return (core::uint)core::countof(m_textureInfos); }
+            driver::Texture *       getTexture      (MaterialTextureType _type) const;
+            const core::string &    getTexturePath  (MaterialTextureType _type) const   { return m_textureInfos[core::asInteger(_type)].path; };
 
             static MaterialModel * createFromImporterData(const MaterialImporterData & _data);
 
@@ -50,7 +45,7 @@ namespace vg::graphics
                 core::string        path;
                 driver::Texture *   texture = nullptr;
             };
-            TextureInfo m_textureInfos[core::enumCount<MaterialTexture>()];
+            TextureInfo m_textureInfos[core::enumCount<MaterialTextureType>()];
         };
     }
 }
