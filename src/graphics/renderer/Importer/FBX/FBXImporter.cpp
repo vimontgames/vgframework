@@ -395,7 +395,15 @@ namespace vg::graphics::renderer
 
         // import normals
         vector<float4> normals;
-        const bool hasNormals = importFBXLayerElement<FbxLayerElementNormal, float4>(normals, _fbxMesh, fbxLayers[0] ? fbxLayers[0]->GetNormals() : nullptr, triangleCount, float4(0, 0, 0, 0));
+        const bool hasNormals = importFBXLayerElement<FbxLayerElementNormal, float4>(normals, _fbxMesh, fbxLayers[0] ? fbxLayers[0]->GetNormals() : nullptr, triangleCount, float4(0, 0, 1, 0));
+
+        // import binormals
+        vector<float4> binormals;
+        const bool hasBinormals = importFBXLayerElement<FbxLayerElementBinormal, float4>(binormals, _fbxMesh, fbxLayers[0] ? fbxLayers[0]->GetBinormals() : nullptr, triangleCount, float4(0, 1, 0, 0));
+
+        // import tangents
+        vector<float4> tangents;
+        const bool hasTangents = importFBXLayerElement<FbxLayerElementTangent, float4>(tangents, _fbxMesh, fbxLayers[0] ? fbxLayers[0]->GetTangents() : nullptr, triangleCount, float4(1, 0, 0, 0));
 
         // import UVs
         vector<float2> uv[2];
@@ -450,6 +458,8 @@ namespace vg::graphics::renderer
                 const uint vertexID = t * 3 + v;
 
                 vertex.nrm = normals[vertexID];
+                vertex.bin = binormals[vertexID];
+                vertex.tan = tangents[vertexID];
                 vertex.uv[0].xy = { uv[0][vertexID].x, 1.0f - uv[0][vertexID].y };  // Swap FBX v texture coordinates
                 vertex.uv[1].xy = { uv[1][vertexID].x, 1.0f - uv[1][vertexID].y };  // Swap FBX v texture coordinates
 

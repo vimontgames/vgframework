@@ -14,10 +14,13 @@ namespace vg::graphics::renderer
 	{
 		Default = 0,
         MatID,
-		Normal,
+		VSNormal,
+        VSTangent,
+        VSBinormal,
 		UV0,
-        AlbedoMap,
-        NormalMap
+        UV1,
+        Albedo,
+        PSNormal
 	};
 
     class DisplayOptions : public core::Object, public core::Singleton<DisplayOptions>
@@ -36,10 +39,12 @@ namespace vg::graphics::renderer
 
         bool				isToolModeEnabled		() const { return m_toolMode; }
         bool				isOpaqueEnabled			() const { return m_opaque; }
+        bool                isAlbedoMapsEnabled     () const { return m_albedoMaps; }
+        bool                isNormalMapsEnabled     () const { return m_normalMaps; }
         bool				isWireframeEnabled		() const { return m_wireframe; }
 
         bool                isDisplayMatIDEnabled   () const { return DisplayMode::MatID  == m_debugDisplayMode;}
-        bool				isDisplayNormalEnabled	() const { return DisplayMode::Normal == m_debugDisplayMode; }
+        bool				isDisplayNormalEnabled	() const { return DisplayMode::VSNormal == m_debugDisplayMode; }
 		bool				isDisplayUV0Enabled		() const { return DisplayMode::UV0    == m_debugDisplayMode; }
         
         core::float4		getBackgroundColor		() const { return m_backgroundColor; }
@@ -51,7 +56,10 @@ namespace vg::graphics::renderer
         core::float4		m_backgroundColor   = core::float4(0, 0, 0, 0);
         bool				m_toolMode          = true;
         bool				m_opaque            = true;
+        bool                m_albedoMaps        = true;
+        bool                m_normalMaps        = true;
         bool				m_wireframe         = false;
+       
 		DisplayMode	m_debugDisplayMode	= DisplayMode::Default;
     };
 }

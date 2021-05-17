@@ -200,12 +200,20 @@ namespace vg::graphics::renderer
         const auto options = DisplayOptions::get();
 
         u16 flags = 0x0;
+        
+        if (options->isAlbedoMapsEnabled())
+            flags |= FLAG_ALBEDOMAPS;
+        
+        if (options->isNormalMapsEnabled())
+            flags |= FLAG_NORMALMAPS;        
+
         u16 mode = 0x0;
 
         switch (options->getDisplayMode())
         {
             default:
                 VG_ASSERT_ENUM_NOT_IMPLEMENTED(options->getDisplayMode());
+                break;
 
             case DisplayMode::Default:
                 mode = MODE_DEFAULT;
@@ -215,20 +223,32 @@ namespace vg::graphics::renderer
                 mode = MODE_MATID;
                 break;
 
-            case DisplayMode::Normal:
-                mode = MODE_NORMAL;
+            case DisplayMode::VSNormal:
+                mode = MODE_VS_NORMAL;
+                break;
+
+            case DisplayMode::VSTangent:
+                mode = MODE_VS_TANGENT;
+                break;
+
+            case DisplayMode::VSBinormal:
+                mode = MODE_VS_BINORMAL;
                 break;
 
             case DisplayMode::UV0:
                 mode = MODE_UV0;
                 break;
 
-            case DisplayMode::AlbedoMap:
-                mode = MODE_ALBEDOMAP;
+            case DisplayMode::UV1:
+                mode = MODE_UV1;
                 break;
 
-            case DisplayMode::NormalMap:
-                mode = MODE_NORMALMAP;
+            case DisplayMode::Albedo:
+                mode = MODE_ALBEDO_MAP;
+                break;
+
+            case DisplayMode::PSNormal:
+                mode = MODE_NORMAL_MAP;
                 break;
         }
 		

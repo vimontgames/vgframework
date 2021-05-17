@@ -527,6 +527,9 @@ namespace vg::graphics::renderer
             if (asBool(IPropertyDescriptor::Flags::ReadOnly & flags))
                 imguiInputTextflags = ImGuiInputTextFlags_ReadOnly;
 
+            const uint boolWidth = 12;
+            const uint enumWidth = 12;
+            
             switch (type)
             {
                 default:
@@ -536,14 +539,14 @@ namespace vg::graphics::renderer
                 case IPropertyDescriptor::Type::Bool:
                 {
                     bool * pBool = (bool*)(uint_ptr(_object) + offset);
-					changed |= ImGui::Checkbox(getFixedSizeString(displayName, 10).c_str(), pBool);
+					changed |= ImGui::Checkbox(getFixedSizeString(displayName, boolWidth).c_str(), pBool);
                 };
                 break;
 
 				case IPropertyDescriptor::Type::Enum:
 				{
 					u32 * pEnum = (u32*)(uint_ptr(_object) + offset);
-					changed |= ImGui::RadioButton(getFixedSizeString(displayName, 10).c_str(), (int*)pEnum, prop->getValue());
+					changed |= ImGui::RadioButton(getFixedSizeString(displayName, enumWidth).c_str(), (int*)pEnum, prop->getValue());
 				};
 				break;
 

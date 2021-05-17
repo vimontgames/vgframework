@@ -4,13 +4,18 @@
 #include "../system/constants.hlsli"
 
 #define FLAG_NONE           0x0000
+#define FLAG_ALBEDOMAPS     0x0001
+#define FLAG_NORMALMAPS     0x0002
 
 #define MODE_DEFAULT        0x0000
 #define MODE_MATID          0x0001
-#define MODE_NORMAL	        0x0002
-#define MODE_UV0		    0x0003
-#define MODE_ALBEDOMAP      0x0004
-#define MODE_NORMALMAP      0x0005
+#define MODE_VS_NORMAL      0x0002
+#define MODE_VS_TANGENT     0x0003
+#define MODE_VS_BINORMAL    0x0004
+#define MODE_UV0		    0x0005
+#define MODE_UV1		    0x0006
+#define MODE_ALBEDO_MAP     0x0007
+#define MODE_NORMAL_MAP     0x0008
 
 struct RootConstants3D
 {
