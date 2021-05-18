@@ -32,11 +32,11 @@ namespace vg::graphics::driver::vulkan
 			{
 				m_enabledExtensionNames[m_enabledExtensionCount++] = _name;
 				VG_ASSERT(m_enabledExtensionCount < countof(m_enabledExtensionNames));
-				VG_DEBUGPRINT("Extension \"%s\" is enabled\n", _name);
+				VG_DEBUGPRINT("[Device] Extension \"%s\" is enabled\n", _name);
 				return true;
 			}
 		}
-		VG_DEBUGPRINT("Extension \"%s\" cound not be enabled\n", _name);
+		VG_DEBUGPRINT("[Device] Extension \"%s\" cound not be enabled\n", _name);
 		return false;
 	}
 

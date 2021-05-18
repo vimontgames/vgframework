@@ -283,7 +283,7 @@ namespace vg::graphics::driver
     //--------------------------------------------------------------------------------------
     void Device::resize(core::uint _width, core::uint _height)
     {
-        VG_DEBUGPRINT("resize(%u, %u)\n", _width, _height);
+        VG_DEBUGPRINT("[Device] resize(%u, %u)\n", _width, _height);
         m_deviceParams.resolution = uint2(_width, _height);
 
         if (isMinimized())

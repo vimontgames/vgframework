@@ -2,6 +2,7 @@
 #include "core/File/File.h"
 #include "core/string/string.h"
 #include "core/Math/Math.h"
+#include "core/Timer/Timer.h"
 
 using namespace vg::core;
 
@@ -90,7 +91,7 @@ namespace vg::graphics::driver
                 header += macro.first + " ";
             header += "\n";
 
-            VG_DEBUGPRINT(warningAndErrors.c_str());
+            VG_DEBUGPRINT("[Shaders] %s", warningAndErrors.c_str());
 
             warningAndErrors = header + warningAndErrors + "\nPress \"Yes\" to retry";
 
@@ -120,12 +121,12 @@ namespace vg::graphics::driver
                 const u64 crc = computeCRC64(contents.c_str());
                 _crc ^= crc;
 
-                if (_depth)
-                    VG_DEBUGPRINT("  + ");
-                else
-                    VG_DEBUGPRINT("#%u: ", _index);
-
-                VG_DEBUGPRINT("\"%s\"\n", fullpath.c_str());
+                //if (_depth)
+                //    VG_DEBUGPRINT("  + ");
+                //else
+                //    VG_DEBUGPRINT("#%u: ", _index);
+                //
+                //VG_DEBUGPRINT("\"%s\"\n", fullpath.c_str());
 
                 size_t cur = 0;
                 auto includeOffset = contents.find("#include", cur);
@@ -158,6 +159,10 @@ namespace vg::graphics::driver
         Device * device = Device::get();
         device->waitGPUIdle();
 
+        const auto start = Timer::getTick();
+
+        uint updated = 0;
+
         for (uint i = 0; i < m_shaderFileDescriptors.size(); ++i)
         {
             vector<string> filenames;
@@ -171,21 +176,22 @@ namespace vg::graphics::driver
 
             if (newCRC != oldCRC)
             {
-                if (0 != oldCRC)
-                {
-                    VG_DEBUGPRINT("File \"%s\" is not up-to-date (old CRC = 0x%016llu, new CRC = 0x%016llu)\n", file.c_str(), oldCRC, newCRC);
+                VG_DEBUGPRINT("[Shaders] File \"%s\" is not up-to-date (old CRC = 0x%016llu, new CRC = 0x%016llu)\n", file.c_str(), oldCRC, newCRC);
                 
-                    // delete the shaders
-                    desc.resetShaders();
+                // delete the shaders
+                desc.resetShaders();
 
-                    // delete the pso (TODO: L1 cache in cmdlist and L2 global cache using mutex)
-                    device->resetShaders(ShaderKey::File(i));
-                }
+                // delete the pso (TODO: L1 cache in cmdlist and L2 global cache using mutex)
+                device->resetShaders(ShaderKey::File(i));
+
+                ++updated;
 
                 desc.setCRC(newCRC);
             }
             else
-                VG_DEBUGPRINT("File \"%s\" is up-to-date (CRC = 0x%016llu)\n", file.c_str(), oldCRC);
+                VG_DEBUGPRINT("[Shaders] File \"%s\" is up-to-date (CRC = 0x%016llu)\n", file.c_str(), oldCRC);
         }
+
+        VG_DEBUGPRINT("[Shaders] %u/%u shaders parsed ... %.2f ms\n", updated, m_shaderFileDescriptors.size(), Timer::getEnlapsedTime(start, Timer::getTick()));
     }
 }

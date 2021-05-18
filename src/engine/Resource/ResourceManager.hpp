@@ -59,32 +59,35 @@ namespace vg::engine
         }
         m_resourcesLoaded.clear();
 
-        auto resourcesToLoad = std::move(m_resourcesToLoad);
-
-        for (uint i = 0; i < resourcesToLoad.size(); ++i)
+        while (m_resourcesToLoad.size() > 0)
         {
-            auto & info = resourcesToLoad[i];
+            auto resourcesToLoad = std::move(m_resourcesToLoad);
 
-            auto it = m_resourcesMap.find(info.m_path);
-            if (m_resourcesMap.end() == it)
+            for (uint i = 0; i < resourcesToLoad.size(); ++i)
             {
-                const auto start = Timer::getTick();
+                auto & info = resourcesToLoad[i];
 
-                if (info.m_resource->loadResource(info.m_path, info.m_owner))
+                auto it = m_resourcesMap.find(info.m_path);
+                if (m_resourcesMap.end() == it)
                 {
-                    m_resourcesMap.insert(make_pair(info.m_path, info.m_resource));
-                    VG_DEBUGPRINT("[ResourceManager] Resource \"%s\" loaded in %.2f ms\n", info.m_path.c_str(), Timer::getEnlapsedTime(start, Timer::getTick()));
+                    const auto start = Timer::getTick();
 
+                    if (info.m_resource->loadResource(info.m_path, info.m_owner))
+                    {
+                        m_resourcesMap.insert(make_pair(info.m_path, info.m_resource));
+                        VG_DEBUGPRINT("[ResourceManager] Resource \"%s\" loaded ... %.2f ms\n", info.m_path.c_str(), Timer::getEnlapsedTime(start, Timer::getTick()));
+
+                    }
+                    else
+                        VG_DEBUGPRINT("[ResourceManager] Error loading resource \"%s\"\n", info.m_path.c_str());
                 }
                 else
-                    VG_DEBUGPRINT("[ResourceManager] Error loading resource \"%s\"\n", info.m_path.c_str());
-            }
-            else
-            {
-                info.m_resource->setObject(it->second->getObject());
-            }
+                {
+                    info.m_resource->setObject(it->second->getObject());
+                }
 
-            m_resourcesLoaded.push_back(info);
+                m_resourcesLoaded.push_back(info);
+            }
         }
     }
 }
