@@ -6,6 +6,8 @@
 
 using namespace vg::core;
 
+#define VG_SHADER_PARSING_VERBOSITY 0
+
 namespace vg::graphics::driver
 {
     //--------------------------------------------------------------------------------------
@@ -113,7 +115,7 @@ namespace vg::graphics::driver
     {
         string contents;
         string fullpath = dir.empty() ? _file : dir + "/" + _file;
-        if (readFile("data/shaders/" + fullpath, contents))
+        if (io::readFile("data/shaders/" + fullpath, contents))
         {
             if (_includes.end() == std::find(_includes.begin(), _includes.end(), fullpath))
             {
@@ -121,12 +123,14 @@ namespace vg::graphics::driver
                 const u64 crc = computeCRC64(contents.c_str());
                 _crc ^= crc;
 
-                //if (_depth)
-                //    VG_DEBUGPRINT("  + ");
-                //else
-                //    VG_DEBUGPRINT("#%u: ", _index);
-                //
-                //VG_DEBUGPRINT("\"%s\"\n", fullpath.c_str());
+                #if VG_SHADER_PARSING_VERBOSITY > 1
+                if (_depth)
+                    VG_DEBUGPRINT("  + ");
+                else
+                    VG_DEBUGPRINT("#%u: ", _index);
+                
+                VG_DEBUGPRINT("\"%s\"\n", fullpath.c_str());
+                #endif
 
                 size_t cur = 0;
                 auto includeOffset = contents.find("#include", cur);
@@ -142,7 +146,7 @@ namespace vg::graphics::driver
                         string path = contents.substr(quoteBeginOffset + 1, quoteEndOffset - quoteBeginOffset - 1);
                         path = tolower(path);
 
-                        string dir = getFileDir(fullpath);
+                        string dir = io::getFileDir(fullpath);
                         parseIncludes(_index, dir, path, _includes, _crc, ++_depth);
 
                         cur = quoteEndOffset;

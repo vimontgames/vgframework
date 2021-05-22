@@ -2,6 +2,7 @@
 #include "core/Resource/Resource.h"
 #include "core/Object/AutoRegisterClass.h"
 #include "core/Timer/Timer.h"
+#include "core/File/File.h"
 
 using namespace vg::core;
 
@@ -52,6 +53,13 @@ namespace vg::engine
     {
         VG_PROFILE_CPU("FlushLoading");
 
+        static u32 skipFrames = 2;
+        if (skipFrames != 0)
+        {
+            --skipFrames;
+            return;
+        }
+
         for (uint i = 0; i < m_resourcesLoaded.size(); ++i)
         {
             const auto & info = m_resourcesLoaded[i];
@@ -70,16 +78,60 @@ namespace vg::engine
                 auto it = m_resourcesMap.find(info.m_path);
                 if (m_resourcesMap.end() == it)
                 {
-                    const auto start = Timer::getTick();
-
-                    if (info.m_resource->loadResource(info.m_path, info.m_owner))
+                    // check for an up-to-date cooked version of the resource
+                    const string cooked = io::getCookedPath(info.m_path);
+                    bool needCook = false;
+                    bool done = false;
+                    while (!done)
                     {
-                        m_resourcesMap.insert(make_pair(info.m_path, info.m_resource));
-                        VG_DEBUGPRINT("[ResourceManager] Resource \"%s\" loaded ... %.2f ms\n", info.m_path.c_str(), Timer::getEnlapsedTime(start, Timer::getTick()));
+                        io::FileAccessTime rawDataLastWrite;
+                        if (io::getLastWriteTime(info.m_path, &rawDataLastWrite))
+                        {
+                            if (io::exists(cooked))
+                            {
+                                io::FileAccessTime cookedFilelastWrite;
+                                if (io::getLastWriteTime(cooked, &cookedFilelastWrite))
+                                {
+                                    if (cookedFilelastWrite != rawDataLastWrite)
+                                        needCook = true;
+                                }
+                            }
+                            else
+                                needCook = true;
+                        }
 
+                        const auto startCook = Timer::getTick();
+                        if (needCook)
+                        {
+                            VG_DEBUGPRINT("[ResourceManager] File \"%s\" is outdated.\n", info.m_path.c_str());
+
+                            if (info.m_resource->cook(info.m_path))
+                            {
+                                if (io::setLastWriteTime(cooked, rawDataLastWrite))
+                                    VG_DEBUGPRINT("[ResourceManager] Cooked \"%s\" successfully ... %.2f ms\n", info.m_path.c_str(), Timer::getEnlapsedTime(startCook, Timer::getTick()));
+                            }
+                        }
+
+                        const auto startLoad = Timer::getTick();
+                        if (info.m_resource->load(info.m_path, info.m_owner))
+                        {
+                            m_resourcesMap.insert(make_pair(info.m_path, info.m_resource));
+                            VG_DEBUGPRINT("[ResourceManager] Resource \"%s\" loaded ... %.2f ms\n", info.m_path.c_str(), Timer::getEnlapsedTime(startLoad, Timer::getTick()));
+                            done = true;
+                        }
+                        else
+                        {
+                            if (!needCook)
+                            {
+                                needCook = true;
+                            }
+                            else
+                            {
+                                VG_DEBUGPRINT("[ResourceManager] Could not load resource \"%s\"\n", info.m_path.c_str());
+                                done = true;
+                            }
+                        }
                     }
-                    else
-                        VG_DEBUGPRINT("[ResourceManager] Error loading resource \"%s\"\n", info.m_path.c_str());
                 }
                 else
                 {

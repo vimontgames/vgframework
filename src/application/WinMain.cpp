@@ -130,7 +130,7 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow, core::uint _width, core::ui
 	RECT rc = { 0, 0, (LONG)_width, (LONG)_height };
 	AdjustWindowRect(&rc, flags, FALSE);
 
-	g_hWnd = CreateWindow(L"Game", L"VGFramework", flags, x, y, rc.right - rc.left, rc.bottom - rc.top, NULL, NULL, hInstance, NULL);
+	g_hWnd = CreateWindow(L"Game", L"VG Framework 0.1", flags, x, y, rc.right - rc.left, rc.bottom - rc.top, NULL, NULL, hInstance, NULL);
 
 	if (!g_hWnd)
 	{
@@ -200,7 +200,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
     Application * game = new Application(*g_engine);
 
-	core::string title = "VGFramework - " + core::Plugin::getConfiguration() + " - " + core::asString(engineParams.renderer.device.api);
+	core::string title = "VGFramework 0.1 - " + core::Plugin::getConfiguration() + " - " + core::asString(engineParams.renderer.device.api);
     if (engineParams.renderer.device.debugDevice)
         title += " (debug device)";
 

@@ -33,6 +33,9 @@
     <ClCompile Include="Model\Material\MaterialModel.cpp">
       <Filter>Model\Material</Filter>
     </ClCompile>
+    <ClCompile Include="Importer\ImporterData.cpp">
+      <Filter>Importer</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Renderer.def" />
@@ -132,6 +135,21 @@
     <ClInclude Include="IMaterialModel.h" />
     <ClInclude Include="Model\Material\MaterialTextureType.h">
       <Filter>Model\Material</Filter>
+    </ClInclude>
+    <ClInclude Include="Importer\MeshImporterData.hpp">
+      <Filter>Importer</Filter>
+    </ClInclude>
+    <ClInclude Include="Importer\MeshImporterData.h">
+      <Filter>Importer</Filter>
+    </ClInclude>
+    <ClInclude Include="Importer\MaterialImporterData.h">
+      <Filter>Importer</Filter>
+    </ClInclude>
+    <ClInclude Include="Importer\SceneImporterData.hpp">
+      <Filter>Importer</Filter>
+    </ClInclude>
+    <ClInclude Include="Importer\MaterialImporterData.hpp">
+      <Filter>Importer</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

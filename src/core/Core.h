@@ -38,7 +38,7 @@ namespace vg::core
 
     #if defined(__clang__) || defined(__GNUC__)
     #define VG_THREAD_LOCAL __thread
-    #elif defined(_MSC_VER)
+    #elif defined(VG_WINDOWS)
     #define VG_THREAD_LOCAL __declspec(thread)
     #else
     #error Can not define VG_THREAD_LOCAL

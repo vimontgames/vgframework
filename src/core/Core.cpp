@@ -17,7 +17,7 @@ namespace vg::core
 			va_list args;
 			va_start(args, _format);
 			vsnprintf_s(tempBuffer, bufferSize -1, _format, args);
-		#ifdef _MSC_VER
+		#ifdef VG_WINDOWS
 			OutputDebugStringA(tempBuffer);
 		#else
 			printf_s(tempBuffer);

@@ -2,16 +2,43 @@
 
 #include "core/Types/Types.h"
 
-namespace vg::core
+namespace vg::core::io
 {
-    bool readFile(const core::string & _path, core::string & _out, bool _mustExist = true);
-    bool writeFile(const core::string & _path, core::string & _in, bool _mustExist = false);
+    class Buffer;
 
-    core::string getFileDir(const core::string & _path);
-    core::string getCurrentWorkingDirectory();
-    core::string getRelativePath(const core::string & _path);
-    core::string cleanPath(const core::string & _path);
-    core::string findAndReplace(const core::string & _string, const core::string & _find, const std::string & _replace);
+    using FileAccessTime = u64;
+    static const FileAccessTime invalidFileTime = (FileAccessTime)0;
+
+    using FileHandle = u64;
+    const FileHandle invalidFileHandle = (FileHandle)0;
+
+    bool getLastWriteTime(const string _file, FileAccessTime * _lastWrite);
+    bool setLastWriteTime(const string & _file, FileAccessTime _filetime);
+
+    bool readFile(const string & _file, string & _out, bool _mustExist = true);
+    bool readFile(const string & _file, Buffer & _out, bool _mustExist = true);
+
+    bool writeFile(const string & _file, const string & _in, bool _mustExist = false);
+    bool writeFile(const string & _file, const Buffer & _in, bool _mustExist = false);
+
+    bool exists(const string & _file);
+    bool createPath(const string & _dir);
+    bool createFolder(const string & _dir);
+    string getFilePath(const string _file);
+
+    bool openFileRead(const string & _file, FileHandle & _fileHandle);
+    bool openFileWrite(const string & _file, FileHandle & _fileHandle, bool _append = false);
+    bool closeFile(FileHandle & _fileHandle);
+
+    bool read(FileHandle _fileHandle, void * _data, size_t _bytes);
+    bool write(FileHandle _fileHandle, const void * _data, size_t _bytes);
+
+    string getCookedPath(const string & _file);
+    string getFileDir(const string & _file);
+    string getCurrentWorkingDirectory();
+    string getRelativePath(const string & _file);
+    string cleanPath(const string & _file);
+    string findAndReplace(const string & _string, const string & _find, const std::string & _replace);
 }
 
 

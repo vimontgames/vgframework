@@ -34,7 +34,8 @@ namespace vg::core
         bool                        setPath             (const string & _path) final;
         const string &              getPath             () const final;
 
-        bool                        loadResource        (const core::string & _path, core::IObject * _owner) = 0;
+        bool                        cook                (const core::string & _file) = 0;
+        bool                        load                (const core::string & _file, core::IObject * _owner) = 0;
 
 	protected:
         string                      m_path;

@@ -95,6 +95,9 @@ namespace vg::graphics::renderer
         auto * device = Device::get();
 
         const uint indexCount = (uint)_data.indices.size();
+        if (0 == indexCount)
+            return nullptr;
+
         const bool use32BitIndices = indexCount < 65536 ? false : true;
 
         const void * ibData;

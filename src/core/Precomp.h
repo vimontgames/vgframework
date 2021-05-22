@@ -71,9 +71,10 @@
 #endif
 
 #define VG_ASSERT_ENUM_NOT_IMPLEMENTED(value) VG_ASSERT(false, "case %s: is not implemented", core::asString(value).c_str());
+#define VG_ASSERT_NOT_IMPLEMENTED() VG_ASSERT(false, "Function %s is not implemented", __func__)
 
 #define VG_STATIC_ASSERT(condition, message) static_assert(condition, message)
-#define VG_ASSERT_NOT_IMPLEMENTED() VG_ASSERT(false, "Function %s is not implemented", __func__)
+#define VG_STATIC_ASSERT_NOT_IMPLEMENTED() VG_STATIC_ASSERT(false, "Function is not implemented")
 
 #define VG_SAFE_FREE(p)	 { if (p) { free(p); p = nullptr;} }
 #define VG_SAFE_DELETE(p)  { if (p) { delete p; p = nullptr;} }

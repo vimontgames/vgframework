@@ -1,4 +1,5 @@
 #include "MeshResource.h"
+#include "core/File/File.h"
 #include "graphics/renderer/IMeshModel.h"
 #include "graphics/renderer/IMaterialModel.h"
 
@@ -23,7 +24,7 @@ namespace vg::engine
     const core::vector<core::string> MeshResource::getExtensions() const
     {
         vector<string> ext;
-        ext.push_back(".fbx");
+                       ext.push_back(".fbx");
         return ext;
     }
 
@@ -35,49 +36,46 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
-    core::string extractFolder(const string & _path)
+    bool MeshResource::cook(const string & _file)
     {
-        auto found = _path.find_last_of('/');
-        if (core::string::npos != found)
-        {
-            string folder = _path.substr(0, found);
-            return folder + "/";
-        }
-        else
-            return _path;
+        auto * renderer = Engine::get()->getRenderer();
+
+        return renderer->cookMeshModel(_file);
     }
 
     //--------------------------------------------------------------------------------------
-    bool MeshResource::loadResource(const core::string & _path, core::IObject * _owner)
+    bool MeshResource::load(const string & _path, IObject * _owner)
     {
-        auto * engine = Engine::get();
-        auto * renderer = engine->getRenderer();
+        auto * renderer = Engine::get()->getRenderer();
 
         VG_SAFE_RELEASE(m_object);
 
-        auto * meshModel = renderer->createMeshModel(_path);
+        auto * meshModel = renderer->loadMeshModel(_path);
 
-        const auto matCount = meshModel->GetMaterialCount();
-        m_materialResources.resize(matCount);
-        for (uint m = 0; m < matCount; ++m)
+        if (nullptr != meshModel)
         {
-            auto * matModel = meshModel->GetMaterial(m);
-            if (nullptr != matModel)
+            const auto matCount = meshModel->GetMaterialCount();
+            m_materialResources.resize(matCount);
+            for (uint m = 0; m < matCount; ++m)
             {
-                const auto texCount = matModel->GetTextureCount();
-                auto & matRes = m_materialResources[m];
-                matRes.m_textureResources.resize(texCount);
-
-                for (uint t = 0; t < texCount; ++t)
+                auto * matModel = meshModel->GetMaterial(m);
+                if (nullptr != matModel)
                 {
-                    string matTexPath = matModel->GetTexturePath((graphics::renderer::MaterialTextureType)t);
-                    
-                    if (matTexPath.length() > 0)
-                    {
-                        matTexPath = extractFolder(_path) + matTexPath;
-                        auto & res = matRes.m_textureResources[t];
+                    const auto texCount = matModel->GetTextureCount();
+                    auto & matRes = m_materialResources[m];
+                    matRes.m_textureResources.resize(texCount);
 
-                        res.setup(this, matTexPath, m << 16 | t);    // will trigger loading because path changed
+                    for (uint t = 0; t < texCount; ++t)
+                    {
+                        string matTexPath = matModel->GetTexturePath((graphics::renderer::MaterialTextureType)t);
+
+                        if (matTexPath.length() > 0)
+                        {
+                            matTexPath = io::getFileDir(_path) + "/" + matTexPath;
+                            auto & res = matRes.m_textureResources[t];
+
+                            res.setup(this, matTexPath, m << 16 | t);    // will trigger loading because path changed
+                        }
                     }
                 }
             }

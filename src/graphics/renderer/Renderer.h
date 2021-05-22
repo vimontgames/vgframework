@@ -57,8 +57,10 @@ namespace vg::graphics::renderer
         core::IProfiler *               getProfilerInstance     () const override;
         IImmediateGUI *                 getImmediateGUI         () const override;
 
-        IMeshModel *                    createMeshModel         (const core::string & _path) final;
-        driver::ITexture *              createTexture           (const core::string & _path) final;
+        bool                            cookMeshModel           (const core::string & _file) final;
+        IMeshModel *                    loadMeshModel           (const core::string & _file) final;
+
+        driver::ITexture *              createTexture           (const core::string & _file) final;
 
         driver::Texture *               getDefaultTexture       (MaterialTextureType _type) const;
         

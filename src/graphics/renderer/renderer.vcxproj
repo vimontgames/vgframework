@@ -22,6 +22,7 @@
     <ClCompile Include="Geometry\Geometry.cpp" />
     <ClCompile Include="Imgui\imguiAdapter.cpp" />
     <ClCompile Include="Importer\FBX\FBXImporter.cpp" />
+    <ClCompile Include="Importer\ImporterData.cpp" />
     <ClCompile Include="Instance\Mesh\MeshInstance.cpp" />
     <ClCompile Include="Model\Material\MaterialModel.cpp" />
     <ClCompile Include="Model\Mesh\MeshModel.cpp" />
@@ -55,7 +56,12 @@
     <ClInclude Include="IMeshModel.h" />
     <ClInclude Include="Imgui\imguiAdapter.h" />
     <ClInclude Include="Importer\FBX\FBXImporter.h" />
+    <ClInclude Include="Importer\MaterialImporterData.h" />
+    <ClInclude Include="Importer\MaterialImporterData.hpp" />
+    <ClInclude Include="Importer\MeshImporterData.h" />
+    <ClInclude Include="Importer\MeshImporterData.hpp" />
     <ClInclude Include="Importer\SceneImporterData.h" />
+    <ClInclude Include="Importer\SceneImporterData.hpp" />
     <ClInclude Include="Instance\Mesh\MeshInstance.h" />
     <ClInclude Include="IRenderer.h" />
     <ClInclude Include="IView.h" />

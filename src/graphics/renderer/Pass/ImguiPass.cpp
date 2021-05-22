@@ -151,7 +151,7 @@ namespace vg::graphics::renderer
                 {
                     float columnWidth[3] = { 256, 128, 512 };
 
-                    ImGui::Text("VG Framework:");
+                    ImGui::Text("VG Framework 0.1");
                     ImGui::Text("");
 
                     ImGui::Columns(3, "author", false);
@@ -626,7 +626,7 @@ namespace vg::graphics::renderer
                         {
                             if (file_dialog.showFileDialog("Select folder", imgui_addons::ImGuiFileBrowser::DialogMode::SELECT, ImVec2(700, 310)))
                             {
-                                const string newFolder = getRelativePath(file_dialog.selected_path);
+                                const string newFolder = io::getRelativePath(file_dialog.selected_path);
 
                                 if (newFolder != *pString)
                                 {

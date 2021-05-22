@@ -51,7 +51,7 @@ namespace vg::graphics::driver::dxc
     {
         string source;
 
-        if (readFile(_path, source))
+        if (io::readFile(_path, source))
         {
             IDxcBlobEncoding * dxcSource;
             VG_ASSERT_SUCCEEDED(m_d3d12dxcLibrary->CreateBlobWithEncodingFromPinned(source.c_str(), (uint)source.size(), CP_UTF8, &dxcSource));

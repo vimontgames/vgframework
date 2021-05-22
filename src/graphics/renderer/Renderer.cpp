@@ -5,6 +5,7 @@
 #include "core/Timer/Timer.h"
 #include "core/Object/AutoRegisterClass.h"
 #include "core/ISector.h"
+#include "core/File/File.h"
 #include "graphics/driver/device/device.h"
 #include "graphics/driver/Shader/ShaderManager.h"
 #include "graphics/driver/FrameGraph/FrameGraph.h"
@@ -292,22 +293,55 @@ namespace vg::graphics::renderer
             m_view = static_cast<View*>(_view);
         }
     }
+    
+    //--------------------------------------------------------------------------------------
+    //IMeshModel * Renderer::createMeshModel(const core::string & _path)
+    //{
+    //    using namespace driver;
+    //
+    //    IMeshModel * meshModel = nullptr;
+    //    SceneImporterData imported;
+    //    if (FBXImporter::get()->importFBX(_path, imported))
+    //    {
+    //        if (imported.meshes.size() > 0)
+    //            meshModel = MeshModel::createFromImporterData(imported.meshes[0]);
+    //    }
+    //
+    //    return meshModel;
+    //}   
 
     //--------------------------------------------------------------------------------------
-    IMeshModel * Renderer::createMeshModel(const core::string & _path)
+    bool Renderer::cookMeshModel(const core::string & _file)
     {
-        using namespace driver;
-
-        IMeshModel * meshModel = nullptr;
         SceneImporterData imported;
-        if (FBXImporter::get()->importFBX(_path, imported))
+
+        if (FBXImporter::get()->importFBX(_file, imported))
         {
             if (imported.meshes.size() > 0)
-                meshModel = MeshModel::createFromImporterData(imported.meshes[0]);
+            {
+                const auto & mesh = imported.meshes[0];
+                mesh.save(io::getCookedPath(_file));
+            }
+
+            return true;
         }
 
-        return meshModel;
-    }   
+        return false;
+    }
+
+    //--------------------------------------------------------------------------------------
+    IMeshModel * Renderer::loadMeshModel(const core::string & _file)
+    {
+        MeshImporterData meshData;
+
+        if (meshData.load(io::getCookedPath(_file)))
+        {
+            IMeshModel * meshModel = MeshModel::createFromImporterData(meshData);
+            return meshModel;
+        }
+
+        return nullptr;
+    }
 
     //--------------------------------------------------------------------------------------
     ITexture * Renderer::createTexture(const core::string & _path)

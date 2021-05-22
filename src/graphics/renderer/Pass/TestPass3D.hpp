@@ -21,111 +21,21 @@ namespace vg::graphics::renderer
         auto * device = Device::get();
         auto * renderer = Renderer::get();
 
-        RootSignatureDesc rsDesc;
-        rsDesc.addRootConstants(ShaderStageFlags::All, 0, RootConstants3DCount);
-
         const RootSignatureTableDesc & bindlessTable = device->getBindlessTable()->getTableDesc();
-        rsDesc.addTable(bindlessTable);
+
+        RootSignatureDesc rsDesc;
+                          rsDesc.addRootConstants(ShaderStageFlags::All, 0, RootConstants3DCount);
+                          rsDesc.addTable(bindlessTable);
 
         m_rootSignatureHandle = device->addRootSignature(rsDesc);
 
         m_forwardShaderKey.init("default/default.hlsl", "Forward");
         m_wireframeShaderKey.init("default/default.hlsl", "Wireframe");
-
-        const u16 ibData[] =
-        {
-            0, 1, 2,
-            2, 1, 3,
-            
-            4, 6, 5,
-            5, 6, 7,
-            
-            8, 10, 9,
-            9, 10, 11,
-
-            12, 13, 14,
-            14, 13, 15,
-
-            16, 17, 18,
-            18, 17, 19,
-
-            20, 22, 21,
-            21, 22, 23
-        };
-
-        const uint indexCount = (uint)countof(ibData);
-        BufferDesc ibDesc(Usage::Default, BindFlags::IndexBuffer, CPUAccessFlags::None, BufferFlags::None, sizeof(ibData[0]), indexCount);
-        Buffer * ib = device->createBuffer(ibDesc, "CubeIB", ibData);
-
-        const SimpleVertex vbData[] =
-        {
-            { {-1.0f,-1.0f,-1.0f}, {0.0f, 0.0f, -1.0f}, { 0.0f, 0.0f } },
-            { {-1.0f,+1.0f,-1.0f}, {0.0f, 0.0f, -1.0f}, { 0.0f, 1.0f } },
-            { {+1.0f,-1.0f,-1.0f}, {0.0f, 0.0f, -1.0f}, { 1.0f, 0.0f } },
-            { {+1.0f,+1.0f,-1.0f}, {0.0f, 0.0f, -1.0f}, { 1.0f, 1.0f } },
-                                    
-            { {-1.0f,-1.0f,+1.0f}, {0.0f, 0.0f, +1.0f}, { 0.0f, 0.0f } },
-            { {-1.0f,+1.0f,+1.0f}, {0.0f, 0.0f, +1.0f}, { 0.0f, 1.0f } },
-            { {+1.0f,-1.0f,+1.0f}, {0.0f, 0.0f, +1.0f}, { 1.0f, 0.0f } },
-            { {+1.0f,+1.0f,+1.0f}, {0.0f, 0.0f, +1.0f}, { 1.0f, 1.0f } },
-
-            { {-1.0f,-1.0f,-1.0f}, {0.0f, -1.0f, 0.0f}, { 1.0f, 0.0f } },
-            { {-1.0f,-1.0f,+1.0f}, {0.0f, -1.0f, 0.0f}, { 1.0f, 1.0f } },
-            { {+1.0f,-1.0f,-1.0f}, {0.0f, -1.0f, 0.0f}, { 0.0f, 0.0f } },
-            { {+1.0f,-1.0f,+1.0f}, {0.0f, -1.0f, 0.0f}, { 0.0f, 1.0f } },
-
-            { {-1.0f,+1.0f,-1.0f}, {0.0f, +1.0f, 0.0f}, { 0.0f, 0.0f } },
-            { {-1.0f,+1.0f,+1.0f}, {0.0f, +1.0f, 0.0f}, { 0.0f, 1.0f } },
-            { {+1.0f,+1.0f,-1.0f}, {0.0f, +1.0f, 0.0f}, { 1.0f, 0.0f } },
-            { {+1.0f,+1.0f,+1.0f}, {0.0f, +1.0f, 0.0f}, { 1.0f, 1.0f } },
-
-            { {-1.0f,-1.0f,-1.0f}, {-1.0f, 0.0f, 0.0f}, { 0.0f, 0.0f } },
-            { {-1.0f,-1.0f,+1.0f}, {-1.0f, 0.0f, 0.0f}, { 0.0f, 1.0f } },
-            { {-1.0f,+1.0f,-1.0f}, {-1.0f, 0.0f, 0.0f}, { 1.0f, 0.0f } },
-            { {-1.0f,+1.0f,+1.0f}, {-1.0f, 0.0f, 0.0f}, { 1.0f, 1.0f } },
-
-            { {+1.0f,-1.0f,-1.0f}, {+1.0f, 0.0f, 0.0f}, { 1.0f, 0.0f } },
-            { {+1.0f,-1.0f,+1.0f}, {+1.0f, 0.0f, 0.0f}, { 1.0f, 1.0f } },
-            { {+1.0f,+1.0f,-1.0f}, {+1.0f, 0.0f, 0.0f}, { 0.0f, 0.0f } },
-            { {+1.0f,+1.0f,+1.0f}, {+1.0f, 0.0f, 0.0f}, { 0.0f, 1.0f } }
-        };
-
-        const uint vertexCount = (uint)countof(vbData);
-        BufferDesc vbDesc(Usage::Default, BindFlags::ShaderResource, CPUAccessFlags::None, BufferFlags::None, sizeof(SimpleVertex), vertexCount);
-        Buffer * vb = device->createBuffer(vbDesc, "CubeVB", vbData);
-
-        m_meshModel = new MeshModel("CubeModel", this);
-
-        MeshGeometry * meshGeometry = new MeshGeometry("CubeGeometry", this);
-        meshGeometry->setIndexBuffer(ib);
-        meshGeometry->setVertexBuffer(vb);
-        meshGeometry->addBatch(indexCount, 0);
-
-        VG_SAFE_RELEASE(ib);
-        VG_SAFE_RELEASE(vb);
-
-        m_meshModel->setGeometry(meshGeometry);
-
-        VG_SAFE_RELEASE(meshGeometry);
-
-        const u32 texData[] =
-        {
-            0xFF0000FF,
-            0xFF00FF00,
-            0xFFFF0000,
-            0xFFFFFFFF
-        };
-
-        TextureDesc texDesc(Usage::Default, BindFlags::ShaderResource, CPUAccessFlags::None, TextureType::Texture2D, PixelFormat::R8G8B8A8_unorm, TextureFlags::None, 2, 2, 1, 1);
-        m_texture = device->createTexture("data/Textures/QuestionBox.psd");
     }
 
     //--------------------------------------------------------------------------------------
     TestPass3D::~TestPass3D()
     {
-        VG_SAFE_RELEASE(m_meshModel);
-        VG_SAFE_RELEASE(m_texture);
-
         auto * device = Device::get();
         device->removeRootSignature(m_rootSignatureHandle);
     }
@@ -260,7 +170,7 @@ namespace vg::graphics::renderer
 
                 const MeshModel * model = (MeshModel *)instance->getModel(Lod::Lod0);
                 if (nullptr == model)
-                    model = m_meshModel;
+                    continue;
 
                 const MeshGeometry * geo = model->getGeometry();
 

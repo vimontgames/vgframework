@@ -27,7 +27,5 @@ namespace vg::graphics::renderer
         driver::RootSignatureHandle     m_rootSignatureHandle;
         driver::ShaderKey               m_forwardShaderKey;
         driver::ShaderKey               m_wireframeShaderKey;
-        driver::Texture *               m_texture = nullptr;
-        MeshModel *                     m_meshModel = nullptr;
     };
 }

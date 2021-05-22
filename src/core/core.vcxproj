@@ -18,7 +18,9 @@
     <ClInclude Include="Container\HandleTable.hpp" />
     <ClInclude Include="Core.h" />
     <ClInclude Include="Entity\Entity.h" />
+    <ClInclude Include="File\Buffer.inl" />
     <ClInclude Include="File\File.h" />
+    <ClInclude Include="File\Buffer.h" />
     <ClInclude Include="IEntity.h" />
     <ClInclude Include="IInput.h" />
     <ClInclude Include="IInstance.h" />

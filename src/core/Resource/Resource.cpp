@@ -92,7 +92,7 @@ namespace vg::core
             return false;
      
         string oldPath = m_path;
-        m_path = getRelativePath(_path);
+        m_path = io::getRelativePath(_path);
         onPathChanged(m_owner, oldPath, m_path);
 
         return true;

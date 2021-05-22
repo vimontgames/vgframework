@@ -156,6 +156,12 @@
     <ClInclude Include="Object\AutoRegisterClass.hpp">
       <Filter>Object</Filter>
     </ClInclude>
+    <ClInclude Include="File\Buffer.h">
+      <Filter>File</Filter>
+    </ClInclude>
+    <ClInclude Include="File\Buffer.inl">
+      <Filter>File</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Math\Math.cpp">

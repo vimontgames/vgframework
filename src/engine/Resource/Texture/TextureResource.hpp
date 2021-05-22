@@ -37,14 +37,20 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
-    bool TextureResource::loadResource(const core::string & _path, core::IObject * _owner)
+    bool TextureResource::cook(const string & _file)
+    {
+        return false;
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool TextureResource::load(const string & _file, IObject * _owner)
     {
         auto * engine = Engine::get();
         auto * renderer = engine->getRenderer();
 
         VG_SAFE_RELEASE(m_object);
 
-        m_object = renderer->createTexture(_path);
+        m_object = renderer->createTexture(_file);
 
         return nullptr != m_object;
     }

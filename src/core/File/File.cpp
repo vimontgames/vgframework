@@ -3,15 +3,91 @@
 #include <iostream>
 #include <fstream>
 #include <filesystem>
+#include "Buffer.h"
 
 using namespace std;
 
-namespace vg::core
+namespace vg::core::io
 {
     //--------------------------------------------------------------------------------------
-    bool readFile(const core::string & _path, core::string & _out, bool _mustExist)
+    bool getLastWriteTime(const core::string _file, FileAccessTime * _lastWrite)
     {
-        ifstream file(_path.c_str(), ios::in | ios::binary | ios::ate);
+        bool succeeded = false;
+
+        #if VG_WINDOWS
+        WIN32_FILE_ATTRIBUTE_DATA fileAttributeData;
+
+        succeeded = ::GetFileAttributesExA(_file.c_str(), GetFileExInfoStandard, &fileAttributeData);
+
+        if (succeeded)
+            *_lastWrite = ((FileAccessTime)(fileAttributeData.ftLastWriteTime.dwHighDateTime) << 32) | fileAttributeData.ftLastWriteTime.dwLowDateTime;
+        else
+            *_lastWrite = invalidFileTime;
+
+        #elif
+        VG_STATIC_ASSERT_NOT_IMPLEMENTED();
+        #endif
+
+        return succeeded;
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool setLastWriteTime(const core::string & _file, FileAccessTime _lastWrite)
+    {
+        bool succeeded = false;
+
+        #if VG_WINDOWS
+        const DWORD fileAttributes = ::GetFileAttributesA(_file.c_str());
+
+        if (DWORD(-1) != fileAttributes)
+            ::SetFileAttributesA(_file.c_str(), fileAttributes & ~FILE_ATTRIBUTE_READONLY);
+
+        const HANDLE file = ::CreateFileA(_file.c_str(), FILE_READ_ATTRIBUTES | FILE_WRITE_ATTRIBUTES, FILE_SHARE_READ | FILE_SHARE_WRITE, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, nullptr);
+
+        if (INVALID_HANDLE_VALUE != file)
+        {
+            FILETIME creation, lastAccess, lastWrite;
+            if (::GetFileTime(file, &creation, &lastAccess, &lastWrite))
+            {
+                FILETIME timeStamp;
+                         timeStamp.dwHighDateTime = DWORD(_lastWrite >> 32);
+                         timeStamp.dwLowDateTime = DWORD(_lastWrite);
+
+                succeeded = ::SetFileTime(file, &creation, &lastAccess, &timeStamp);
+            }
+
+            ::CloseHandle(file);
+        }
+
+        if (DWORD(-1) != fileAttributes)
+            ::SetFileAttributesA(_file.c_str(), fileAttributes);
+
+        #else
+        VG_STATIC_ASSERT_NOT_IMPLEMENTED();
+        #endif
+
+        return succeeded;
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool readFile(const core::string & _file, core::string & _out, bool _mustExist)
+    {
+        Buffer buffer;
+
+        if (readFile(_file, buffer, _mustExist))
+        {
+            _out = string((char*)buffer.data(), buffer.size());
+
+            return true;
+        }
+
+        return false;
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool readFile(const string & _file, Buffer & _out, bool _mustExist)
+    {
+        ifstream file(_file.c_str(), ios::in | ios::binary | ios::ate);
 
         if (file.is_open())
         {
@@ -23,37 +99,121 @@ namespace vg::core
             else
             {
                 file.seekg(0, ios::beg);
-                core::vector<char> bytes(fileSize);
-                file.read(&bytes[0], fileSize);
+                _out.resize(fileSize);
+                file.read((char*)_out.data(), fileSize);
                 file.close();
-                _out = string(&bytes[0], fileSize);
+
                 return true;
             }
         }
 
-        VG_ASSERT(!_mustExist || file.is_open(), "Could not read file \"%s\"", _path.c_str());
+        VG_ASSERT(!_mustExist || file.is_open(), "Could not read file \"%s\"", _file.c_str());
         return false;
     }
 
     //--------------------------------------------------------------------------------------
-    bool writeFile(const core::string & _path, core::string & _in, bool _mustExist)
+    bool writeFile(const core::string & _file, const core::string & _in, bool _mustExist)
     {
-        ofstream file(_path.c_str(), ios::out | ios::binary);
-
-        if (file.is_open())
-        {
-            file.write(_in.c_str(), _in.size());
-            file.close();
-        }
-
-        return true;
+        return writeFile(_file, Buffer((const u8*)_in.c_str(), _in.size()), _mustExist);
     }
 
     //--------------------------------------------------------------------------------------
-    core::string getFileDir(const core::string & _path)
+    bool writeFile(const core::string & _file, const Buffer & _in, bool _mustExist)
     {
-        size_t found = _path.find_last_of("/\\");
-        return _path.substr(0, found);
+        const auto dir = getFileDir(_file);
+
+        if (createPath(getFileDir(_file)))
+        {
+            ofstream file(getFilePath(_file.c_str()), ios::out | ios::binary);
+
+            if (file.is_open())
+            {
+                file.write((const char*)_in.data(), _in.size());
+                file.close();
+
+                return true;
+            }            
+        }
+
+        return false;
+    }
+
+    //--------------------------------------------------------------------------------------
+    string getFilePath(const string _file)
+    {
+        char fullpath[1024];
+        ::GetFullPathNameA((_file).c_str(), (DWORD)countof(fullpath), fullpath, nullptr);
+        return fullpath;
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool openFileWrite(const core::string & _file, FileHandle & _fileHandle, bool _append)
+    {
+        const auto dir = getFileDir(_file);
+
+        if (createPath(getFileDir(_file)))
+        {
+            #if VG_WINDOWS
+            const DWORD creation = _append ? OPEN_ALWAYS : CREATE_ALWAYS;
+            const string fullpath = getFilePath(_file);
+
+            HANDLE handle = CreateFileA(fullpath.c_str(), GENERIC_WRITE, 0, nullptr, creation, 0, nullptr);
+
+            if (INVALID_HANDLE_VALUE != handle)
+            {
+                if (_append)
+                    SetFilePointer(handle, 0, nullptr, FILE_END);
+                _fileHandle = (FileHandle)handle;
+            }
+            else
+                VG_DEBUGPRINT("[IO] Could not open file \"%s\" for write\n", _file.c_str());
+
+            return handle != INVALID_HANDLE_VALUE;
+            #else
+            VG_STATIC_ASSERT_NOT_IMPLEMENTED();
+            #endif
+        }
+
+        return false;
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool closeFile(FileHandle & _fileHandle)
+    {
+        #if VG_WINDOWS
+        if (invalidFileHandle != _fileHandle)
+            return FALSE != CloseHandle((HANDLE)_fileHandle);
+        else
+            return false;
+        #elif
+        VG_STATIC_ASSERT_NOT_IMPLEMENTED();
+        #endif
+    }
+
+    //--------------------------------------------------------------------------------------
+    core::string getFileDir(const core::string & _file)
+    {
+        size_t found = _file.find_last_of("/\\");
+        return _file.substr(0, found);
+    }
+
+    //--------------------------------------------------------------------------------------
+    //core::string getFilePath(const string & _path)
+    //{
+    //    auto found = _path.find_last_of('/');
+    //    if (core::string::npos != found)
+    //    {
+    //        string folder = _path.substr(0, found);
+    //        return folder + "/";
+    //    }
+    //    else
+    //        return _path;
+    //}
+
+    //--------------------------------------------------------------------------------------
+    core::string getCookedPath(const core::string & _file)
+    {
+        return "cache/" + _file + ".bin";
     }
 
     //--------------------------------------------------------------------------------------
@@ -77,9 +237,9 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
-    core::string cleanPath(const core::string & _path)
+    core::string cleanPath(const core::string & _file)
     {
-        return findAndReplace(_path, "\\", "/");
+        return findAndReplace(_file, "\\", "/");
     }
 
     //--------------------------------------------------------------------------------------
@@ -92,15 +252,62 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
-    core::string getRelativePath(const core::string & _path)
+    core::string getRelativePath(const core::string & _file)
     {
-        auto path = cleanPath(_path);
-        const auto cwd = core::getCurrentWorkingDirectory();
+        auto path = cleanPath(_file);
+        const auto cwd = getCurrentWorkingDirectory();
 
         const auto beginOffset = path.find(cwd);
         if (string::npos != beginOffset)
             path = path.substr(cwd.length()+1, path.length() - cwd.length()-1);
 
         return path;
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool exists(const core::string & _file)
+    {
+        #if VG_WINDOWS
+        return INVALID_FILE_ATTRIBUTES != GetFileAttributesA(_file.c_str());
+        #elif
+        VG_STATIC_ASSERT_NOT_IMPLEMENTED();
+        #endif
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool createPath(const core::string & _dir)
+    {
+        string directory = _dir;
+
+        auto slash = directory.find_first_of("/\\");
+        
+        while(string::npos != slash)
+        {
+            string folder = directory.substr(0, slash);
+            if (createFolder(folder))
+                slash = directory.find_first_of("/\\", slash+1);
+            else
+                return false;
+        }
+
+        createFolder(_dir);
+
+        return true;
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool createFolder(const core::string & _dir)
+    {
+        #if VG_WINDOWS
+        if (!CreateDirectoryA(_dir.c_str(), nullptr))
+        {
+            const auto err = GetLastError();
+            if (ERROR_ALREADY_EXISTS != err)
+                return false;
+        }
+        return true;
+        #elif
+        VG_STATIC_ASSERT_NOT_IMPLEMENTED();
+        #endif
     }
 }

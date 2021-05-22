@@ -1,5 +1,6 @@
 #include "Batch.h"
 #include "core/Object/AutoRegisterClass.h"
+#include "core/File/Buffer.h"
 
 using namespace vg::core;
 
@@ -47,5 +48,23 @@ namespace vg::graphics::renderer
     Batch::~Batch()
     {
        
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool Batch::read(io::Buffer & _buffer)
+    {
+        _buffer.read(&offset);
+        _buffer.read(&count);
+
+        return true;
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool Batch::write(io::Buffer & _buffer) const
+    {
+        _buffer.write(offset);
+        _buffer.write(count);
+
+        return true;
     }
 }

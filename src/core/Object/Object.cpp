@@ -75,7 +75,7 @@ namespace vg::core
         const auto * factory = Kernel::getObjectFactory();
 
         string s;
-        if (readFile(_filename, s, false))
+        if (io::readFile(_filename, s, false))
             if (factory->serializeFromString(this, s))
                 return true;
 
@@ -89,7 +89,7 @@ namespace vg::core
 
         string s;
         if (factory->serializeToString(s, this))
-            if (writeFile(_filename, s))
+            if (io::writeFile(_filename, s))
                 return true;
 
         return false;
