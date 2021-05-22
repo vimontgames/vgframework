@@ -281,7 +281,8 @@ namespace vg::graphics::driver::vulkan
         const char * validationLayerName = "VK_LAYER_KHRONOS_validation";
 
         #ifdef VG_ENABLE_GPU_MARKER
-        validationLayer = enableInstanceLayer(validationLayerName);
+        if (_params.debugDevice)
+            validationLayer = enableInstanceLayer(validationLayerName);
         #endif
 
 		// Look for instance extensions 
