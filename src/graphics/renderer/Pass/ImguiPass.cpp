@@ -151,7 +151,9 @@ namespace vg::graphics::renderer
                 {
                     float columnWidth[3] = { 256, 128, 512 };
 
-                    ImGui::Text("VG Framework 0.1");
+                    const auto version = getEngine()->getVersion();
+
+                    ImGui::Text("VG Framework %u.%u", version.major, version.minor);
                     ImGui::Text("");
 
                     ImGui::Columns(3, "author", false);
@@ -252,6 +254,15 @@ namespace vg::graphics::renderer
 
                     for (uint i = 0; i < countof(thirdParties); ++i)
                         ImGui::textURL(thirdParties[i].url + strlen("https://"), thirdParties[i].url);
+
+                    ImGui::Text("");
+
+                    ImGui::Separator();
+
+                    ImGui::Columns(1);
+                    ImGui::Text("Special Thanks:");
+                    ImGui::Text("");
+                    ImGui::Text("Bob, Gigi, Marcel, and Hamilcar.");
 
                     ImGui::End();
                 }
@@ -358,12 +369,19 @@ namespace vg::graphics::renderer
     }
 
     //--------------------------------------------------------------------------------------
+    const vg::engine::IEngine * ImguiPass::getEngine() const
+    {
+        const auto * factory = Kernel::getObjectFactory();
+        return (const vg::engine::IEngine *) factory->getSingleton("Engine");
+    }
+
+    //--------------------------------------------------------------------------------------
     void ImguiPass::displayEngineWindow()
     {
         if (ImGui::Begin("Engine", &m_isEngineWindowVisible))
         {
             const auto * factory = Kernel::getObjectFactory();
-            IObject * engine = factory->getSingleton("Engine");
+            core::IObject * engine = (core::IObject *)getEngine();
             if (engine)
             {
                 const char * className = engine->getClassName();

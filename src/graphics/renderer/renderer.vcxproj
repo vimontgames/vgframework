@@ -62,6 +62,8 @@
     <ClInclude Include="Importer\MeshImporterData.hpp" />
     <ClInclude Include="Importer\SceneImporterData.h" />
     <ClInclude Include="Importer\SceneImporterData.hpp" />
+    <ClInclude Include="Importer\TextureImporterData.h" />
+    <ClInclude Include="Importer\TextureImporterData.hpp" />
     <ClInclude Include="Instance\Mesh\MeshInstance.h" />
     <ClInclude Include="IRenderer.h" />
     <ClInclude Include="IView.h" />

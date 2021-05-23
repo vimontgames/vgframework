@@ -151,6 +151,12 @@
     <ClInclude Include="Importer\MaterialImporterData.hpp">
       <Filter>Importer</Filter>
     </ClInclude>
+    <ClInclude Include="Importer\TextureImporterData.h">
+      <Filter>Importer</Filter>
+    </ClInclude>
+    <ClInclude Include="Importer\TextureImporterData.hpp">
+      <Filter>Importer</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Pass">

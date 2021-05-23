@@ -2,6 +2,11 @@
 
 #include "graphics/driver/FrameGraph/UserPass.h"
 
+namespace vg::engine
+{
+    class IEngine;
+}
+
 namespace vg::graphics::renderer
 {
     enum class UIMode
@@ -21,6 +26,8 @@ namespace vg::graphics::renderer
         void draw(driver::CommandList * _cmdList) const override;
 
     private:
+        const vg::engine::IEngine * getEngine() const;
+
         void displayOptionsWindow();
         void displayEngineWindow();
         void displayRendererWindow();

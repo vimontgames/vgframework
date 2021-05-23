@@ -62,7 +62,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "default", "default", "{73E0
 		data\Shaders\default\default.hlsli = data\Shaders\default\default.hlsli
 	EndProjectSection
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "supervimontbros", "projects\supervimontbrawl\src\SuperVimontBrawl.vcxproj", "{F31ACA84-29B9-4517-80E5-3D625A8AC34B}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "supervimontbrawl", "projects\supervimontbrawl\src\SuperVimontBrawl.vcxproj", "{F31ACA84-29B9-4517-80E5-3D625A8AC34B}"
 	ProjectSection(ProjectDependencies) = postProject
 		{257A93DC-9206-4770-9560-7A22DFF0AC01} = {257A93DC-9206-4770-9560-7A22DFF0AC01}
 	EndProjectSection
@@ -75,6 +75,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "application", "src\applicat
 		{51C074CB-0146-4324-9D1E-EB8192BF6673} = {51C074CB-0146-4324-9D1E-EB8192BF6673}
 		{257A93DC-9206-4770-9560-7A22DFF0AC01} = {257A93DC-9206-4770-9560-7A22DFF0AC01}
 	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{298A7163-51B4-4450-B9A6-14186AA35016}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -39,18 +39,15 @@ namespace vg::engine
     //--------------------------------------------------------------------------------------
     bool TextureResource::cook(const string & _file)
     {
-        return false;
+        return Engine::get()->getRenderer()->cookTexture(_file);
     }
 
     //--------------------------------------------------------------------------------------
     bool TextureResource::load(const string & _file, IObject * _owner)
     {
-        auto * engine = Engine::get();
-        auto * renderer = engine->getRenderer();
-
         VG_SAFE_RELEASE(m_object);
 
-        m_object = renderer->createTexture(_file);
+        m_object = Engine::get()->getRenderer()->loadTexture(_file);
 
         return nullptr != m_object;
     }

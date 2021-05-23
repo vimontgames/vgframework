@@ -37,6 +37,8 @@ namespace vg::graphics::driver
 
 namespace vg::graphics::driver
 {
+    class TextureImporterData;
+
 	class Texture : public VG_GFXAPI::Texture
 	{
 		using super = VG_GFXAPI::Texture;
@@ -46,5 +48,7 @@ namespace vg::graphics::driver
 
 		Texture(const TextureDesc & _texDesc, const core::string & _name, const void * _initData = nullptr, ReservedSlot _reservedSlot = ReservedSlot::None);
 		~Texture();
+
+        static Texture * createFromImporterData(const TextureImporterData & _data);
 	};
 }

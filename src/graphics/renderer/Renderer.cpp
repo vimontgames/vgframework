@@ -11,6 +11,7 @@
 #include "graphics/driver/FrameGraph/FrameGraph.h"
 #include "graphics/driver/Profiler/Profiler.h"
 #include "graphics/driver/Resource/Texture.h"
+#include "graphics/driver/Importer/TextureImporter.h"
 #include "graphics/renderer/Imgui/imguiAdapter.h"
 #include "graphics/renderer/Pass/ImguiPass.h"
 #include "graphics/renderer/Pass/BackgroundPass.h"
@@ -23,6 +24,7 @@
 #include "graphics/renderer/Model/Mesh/MeshModel.h"
 #include "graphics/renderer/Options/DisplayOptions.h"
 #include "graphics/renderer/IGraphicInstance.h"
+#include "graphics/renderer/Importer/TextureImporterData.h"
 
 #include "imgui/imgui.h"
 
@@ -295,22 +297,6 @@ namespace vg::graphics::renderer
     }
     
     //--------------------------------------------------------------------------------------
-    //IMeshModel * Renderer::createMeshModel(const core::string & _path)
-    //{
-    //    using namespace driver;
-    //
-    //    IMeshModel * meshModel = nullptr;
-    //    SceneImporterData imported;
-    //    if (FBXImporter::get()->importFBX(_path, imported))
-    //    {
-    //        if (imported.meshes.size() > 0)
-    //            meshModel = MeshModel::createFromImporterData(imported.meshes[0]);
-    //    }
-    //
-    //    return meshModel;
-    //}   
-
-    //--------------------------------------------------------------------------------------
     bool Renderer::cookMeshModel(const core::string & _file)
     {
         SceneImporterData imported;
@@ -344,10 +330,36 @@ namespace vg::graphics::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    ITexture * Renderer::createTexture(const core::string & _path)
+    bool Renderer::cookTexture(const core::string & _file)
     {
-        ITexture * texture = m_device.createTexture(_path);
-        return texture;
+        TextureImporterData imported;
+        imported.name = _file;
+
+        if (TextureImporter::get()->importTextureData(_file, imported.desc, imported.data))
+        {
+            imported.size = imported.desc.width * imported.desc.height * imported.desc.depth * Texture::getPixelFormatSize(imported.desc.format);
+            imported.save(io::getCookedPath(_file));
+            VG_SAFE_FREE(imported.data);
+
+            return true;
+        }
+
+        return false;
+    }
+
+    //--------------------------------------------------------------------------------------
+    driver::ITexture * Renderer::loadTexture(const core::string & _file)
+    {
+        TextureImporterData textureData;
+
+        if (textureData.load(io::getCookedPath(_file)))
+        {
+            ITexture * texture = m_device.createTexture(textureData.desc, textureData.name, textureData.data);
+            VG_SAFE_FREE(textureData.data);
+            return texture;
+        }
+
+        return nullptr;
     }
 
     //--------------------------------------------------------------------------------------

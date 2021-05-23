@@ -60,7 +60,8 @@ namespace vg::graphics::renderer
         bool                            cookMeshModel           (const core::string & _file) final;
         IMeshModel *                    loadMeshModel           (const core::string & _file) final;
 
-        driver::ITexture *              createTexture           (const core::string & _file) final;
+        bool                            cookTexture             (const core::string & _file) final;
+        driver::ITexture *              loadTexture             (const core::string & _file) final;
 
         driver::Texture *               getDefaultTexture       (MaterialTextureType _type) const;
         

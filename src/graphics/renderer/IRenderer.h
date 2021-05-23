@@ -55,7 +55,8 @@ namespace vg
                 virtual bool                cookMeshModel       (const core::string & _file) = 0;
                 virtual IMeshModel *        loadMeshModel       (const core::string & _file) = 0;
 
-                virtual driver::ITexture *  createTexture       (const core::string & _file) = 0;
+                virtual bool                cookTexture         (const core::string & _file) = 0;
+                virtual driver::ITexture *  loadTexture         (const core::string & _file) = 0;
             };
         }
     }
