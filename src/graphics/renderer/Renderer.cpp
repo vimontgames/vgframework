@@ -335,11 +335,9 @@ namespace vg::graphics::renderer
         TextureImporterData imported;
         imported.name = _file;
 
-        if (TextureImporter::get()->importTextureData(_file, imported.desc, imported.data))
+        if (TextureImporter::get()->importTextureData(_file, imported.desc, imported.mips))
         {
-            imported.size = imported.desc.width * imported.desc.height * imported.desc.depth * Texture::getPixelFormatSize(imported.desc.format);
             imported.save(io::getCookedPath(_file));
-            VG_SAFE_FREE(imported.data);
 
             return true;
         }
@@ -354,8 +352,7 @@ namespace vg::graphics::renderer
 
         if (textureData.load(io::getCookedPath(_file)))
         {
-            ITexture * texture = m_device.createTexture(textureData.desc, textureData.name, textureData.data);
-            VG_SAFE_FREE(textureData.data);
+            ITexture * texture = m_device.createTexture(textureData.desc, textureData.name, textureData.mips[0].buffer.data());
             return texture;
         }
 

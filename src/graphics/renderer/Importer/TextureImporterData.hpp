@@ -12,14 +12,23 @@ namespace vg::graphics::renderer
             u32 version;
             buffer.read(&version);
 
-            if (version == MeshImporterDataVersion)
+            if (version == TextureImporterDataVersion)
             {
                 buffer.read(&name);
                 buffer.read(&desc, sizeof(driver::TextureDesc));
-                buffer.read(&size);
 
-                data = (u8*)malloc(size);
-                buffer.read(data, size);
+                u32 mipCount;
+                buffer.read(&mipCount);
+                mips.resize(mipCount);
+                for (uint i = 0; i < mipCount; ++i)
+                {
+                    auto & mip = mips[i];
+
+                    u32 mipSize;
+                    buffer.read(&mipSize);
+                    mip.buffer.resize(mipSize);
+                    buffer.read(mip.buffer.data(), mipSize);
+                }
 
                 return true;
             }
@@ -37,8 +46,15 @@ namespace vg::graphics::renderer
         buffer.write(name);
         buffer.write(&desc, sizeof(driver::TextureDesc));
 
-        buffer.write((u32)size);
-        buffer.write(data, size);
+        const u32 mipCount = (u32)mips.size();
+        buffer.write(mipCount);
+        for (uint i = 0; i < mipCount; ++i)
+        {
+            const auto & mip = mips[i];
+            const u32 mipSize = (u32)mip.buffer.size();
+            buffer.write(mipSize);
+            buffer.write(mip.buffer.data(), mipSize);
+        }
 
         if (io::writeFile(_file, buffer))
         {

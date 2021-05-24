@@ -371,11 +371,11 @@ namespace vg::graphics::driver
     Texture * Device::createTexture(const core::string & _path, ReservedSlot _reservedSlot)
     {
         TextureDesc texDesc;
-        u8 * data = nullptr;
-        if (m_textureImporter->importTextureData(_path, texDesc, data))
+        core::vector<MipData> mips;
+
+        if (m_textureImporter->importTextureData(_path, texDesc, mips))
         {
-            Texture * tex = createTexture(texDesc, _path, data, _reservedSlot);
-            VG_SAFE_FREE(data); 
+            Texture * tex = createTexture(texDesc, _path, mips[0].buffer.data(), _reservedSlot);
             return tex;
         }
         else

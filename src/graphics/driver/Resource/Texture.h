@@ -16,6 +16,7 @@ namespace vg::graphics::driver
 		public:
             static core::u32 getPixelFormatSize(PixelFormat _format);
             static bool isDepthStencilFormat(PixelFormat _format);
+            static core::u32 computeMaxMipmapCount(const TextureDesc & _texDesc);
 
 			Texture(const TextureDesc & _texDesc, const core::string & _name, const void * _initData);
 			~Texture();
