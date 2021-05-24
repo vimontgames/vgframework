@@ -15,7 +15,7 @@ namespace vg::core
         T alloc()
         {
             m_used++;
-            u32 pageIndex = 0;
+            uint pageIndex = 0;
             for (auto & page : m_pages)
             {
                 if (0 != page.mask)
@@ -35,14 +35,14 @@ namespace vg::core
 
         bool isAvailable(T _index)
         {
-            const uint pageIndex = _index / pageCount;
+            const uint pageIndex = _index / elemCountPerPage;
             const uint localIndex = _index - (pageIndex * elemCountPerPage);
             return (elemMask(1) << localIndex) & m_pages[pageIndex].mask;
         }
 
         void free(T _index)
         {
-            const uint pageIndex = _index / pageCount;
+            const uint pageIndex = _index / elemCountPerPage;
             const uint localIndex = _index - (pageIndex * elemCountPerPage);
             m_pages[pageIndex].mask |= elemMask(1) << localIndex;
             --m_used;
