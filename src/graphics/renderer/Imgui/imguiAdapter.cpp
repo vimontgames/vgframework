@@ -34,7 +34,9 @@ namespace vg::graphics::renderer
         ImGuiStyle & style = ImGui::GetStyle();
         ImVec4 * colors = style.Colors;
 
-        style.PopupRounding = 4;
+        float rounding = 2.0f; // 4.0f
+
+        style.PopupRounding = rounding;
         style.WindowPadding = ImVec2(4, 4);
         style.FramePadding = ImVec2(4, 4);
         style.ItemSpacing = ImVec2(4, 4);
@@ -45,20 +47,20 @@ namespace vg::graphics::renderer
         style.ChildBorderSize = 0;
         style.PopupBorderSize = 0;
         style.FrameBorderSize = 0;
-        style.WindowRounding = 4;
-        style.ChildRounding = 4;
-        style.FrameRounding = 4;
-        style.ScrollbarRounding = 4;
-        style.GrabRounding = 4;
+        style.WindowRounding = rounding;
+        style.ChildRounding = rounding;
+        style.FrameRounding = rounding;
+        style.ScrollbarRounding = rounding;
+        style.GrabRounding = rounding;
         style.Alpha = 1.0f;
 
         #ifdef IMGUI_HAS_DOCK 
         style.TabBorderSize = 0;
-        style.TabRounding = 8;
+        style.TabRounding = rounding;
         #endif
 
-        colors[ImGuiCol_Text]                   = ImVec4(1.00f, 1.00f, 1.00f, 1.00f);
-        colors[ImGuiCol_TextDisabled]           = ImVec4(0.40f, 0.40f, 0.40f, 1.00f);
+        colors[ImGuiCol_Text]                   = ImVec4(1.00f, 1.00f, 1.00f, 0.75f);
+        colors[ImGuiCol_TextDisabled]           = ImVec4(1.00f, 1.00f, 1.00f, 0.50f);
         colors[ImGuiCol_WindowBg]               = ImVec4(0.18f, 0.19f, 0.21f, 1.00f);
         colors[ImGuiCol_ChildBg]                = ImVec4(0.18f, 0.19f, 0.21f, 1.00f);
         colors[ImGuiCol_PopupBg]                = ImVec4(0.18f, 0.19f, 0.21f, 1.00f);
@@ -125,7 +127,8 @@ namespace vg::graphics::renderer
 
         FiftyShadesOfGreyStyle();
 
-        io.Fonts->AddFontFromFileTTF("data/Fonts/ubuntu-mono/UbuntuMono-R.ttf", 16);
+        io.Fonts->AddFontFromFileTTF("data/Fonts/ubuntu/UbuntuMono-R.ttf", 15);
+        //io.Fonts->AddFontFromFileTTF("data/Fonts/roboto/static/RobotoMono-Regular.ttf", 16);
 
         #ifdef _WIN32
         ImGui_ImplWin32_Init(_winHandle); 
