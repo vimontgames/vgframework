@@ -88,6 +88,7 @@ It's mostly a bunch of personal notes, probably incomplete. Feel free to query i
  - input text: access public fields via a non-callback API e.g. InputTextGetState("xxx") that may return NULL if not active.
  - input text: flag to disable live update of the user buffer (also applies to float/int text input) (#701)
  - input text: hover tooltip could show unclamped text
+ - input text: support for INSERT key to toggle overwrite mode. currently disabled because stb_textedit behavior is unsatisfactory on multi-line. (#2863)
  - input text: option to Tab after an Enter validation.
  - input text: add ImGuiInputTextFlags_EnterToApply? (off #218)
  - input text: easier ways to update buffer (from source char*) while owned. preserve some sort of cursor position for multi-line text.
@@ -379,7 +380,7 @@ It's mostly a bunch of personal notes, probably incomplete. Feel free to query i
  - nav/windowing: Resizing window will currently fail with certain types of resizing constraints/callback applied
  - focus: preserve ActiveId/focus stack state, e.g. when opening a menu and close it, previously selected InputText() focus gets restored (#622)
  - focus: SetKeyboardFocusHere() on with >= 0 offset could be done on same frame (else latch and modulate on beginning of next frame)
- - focus: unable to use SetKeyboardFocusHere() on clipped widgets. (#787)
+ - focus: unable to use SetKeyboardFocusHere() on clipped widgets. (#787, #343)
 
  - viewport: make it possible to have no main/hosting viewport
  - viewport: We set ImGuiViewportFlags_NoFocusOnAppearing in a way that is required for GLFW/SDL binding, but could be handled better without

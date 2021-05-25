@@ -127,8 +127,7 @@ namespace vg::graphics::renderer
 
         FiftyShadesOfGreyStyle();
 
-        io.Fonts->AddFontFromFileTTF("data/Fonts/ubuntu/UbuntuMono-R.ttf", 15);
-        //io.Fonts->AddFontFromFileTTF("data/Fonts/roboto/static/RobotoMono-Regular.ttf", 16);
+        io.Fonts->AddFontFromFileTTF("data/Fonts/ubuntu/UbuntuMono-R.ttf", 16);
 
         #ifdef _WIN32
         ImGui_ImplWin32_Init(_winHandle); 

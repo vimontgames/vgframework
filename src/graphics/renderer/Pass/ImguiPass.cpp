@@ -229,7 +229,7 @@ namespace vg::graphics::renderer
                     ThirdPartyInfo thirdParties[] =
                     {
                         { "D3D12MemoryAllocator",   "",                 "https://github.com/GPUOpen-LibrariesAndSDKs/D3D12MemoryAllocator" },
-                        { "Dear ImGui",             "d5a4d53",          "https://github.com/ocornut/imgui" },
+                        { "Dear ImGui",             "1ad1429",          "https://github.com/ocornut/imgui/tree/docking" },
                         { "Dirent",                 "833b692",          "https://github.com/tronkko/dirent" },
                         { "hlslpp",                 "",                 "https://github.com/redorav/hlslpp" },
                         { "ImGui-Addons",           "ea0af59",          "https://github.com/gallickgunner/ImGui-Addons" },
