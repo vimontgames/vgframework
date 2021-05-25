@@ -45,7 +45,7 @@ namespace ImGui
         if (nullptr == _url)
             _url = _text;
 
-        ImGui::PushStyleColor(ImGuiCol_Text, ImGui::GetStyle().Colors[ImGuiCol_ButtonHovered]);
+        ImGui::PushStyleColor(ImGuiCol_Text, ImGui::GetStyle().Colors[ImGuiCol_PlotHistogramHovered]);
         ImGui::Text(_text);
         ImGui::PopStyleColor();
 
@@ -498,16 +498,13 @@ namespace vg::graphics::renderer
             return;
 
         const u32 objectColor = ImGui::GetColorU32(ImGuiCol_Text);
-        const u32 containerColor = objectColor & 0x7FFFFFFF;
+        const u32 containerColor = ImGui::GetColorU32(ImGuiCol_TextDisabled);
 
         const char * classDisplayName = classDesc->getClassDisplayName();
 
         ImGui::PushItemWidth(196);
 
         IPropertyDescriptor::Type previous = IPropertyDescriptor::Type::Undefined;
-
-        //if (UIMode::Scene != _mode)
-        //    ImGui::TextDisabled(className);
 
         for (uint i = 0; i < classDesc->getPropertyCount(); ++i)
         {
