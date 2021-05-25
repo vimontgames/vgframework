@@ -34,7 +34,7 @@ namespace vg::graphics::renderer
         ImGuiStyle & style = ImGui::GetStyle();
         ImVec4 * colors = style.Colors;
 
-        float rounding = 2.0f; // 4.0f
+        float rounding = 3.0f; 
 
         style.PopupRounding = rounding;
         style.WindowPadding = ImVec2(4, 4);
@@ -52,7 +52,7 @@ namespace vg::graphics::renderer
         style.FrameRounding = rounding;
         style.ScrollbarRounding = rounding;
         style.GrabRounding = rounding;
-        style.Alpha = 1.0f;
+        style.Alpha = 0.9f;
 
         #ifdef IMGUI_HAS_DOCK 
         style.TabBorderSize = 0;
@@ -69,7 +69,7 @@ namespace vg::graphics::renderer
         colors[ImGuiCol_FrameBg]                = ImVec4(0.35f, 0.35f, 0.35f, 1.00f);
         colors[ImGuiCol_FrameBgHovered]         = ImVec4(0.42f, 0.42f, 0.42f, 1.00f);
         colors[ImGuiCol_FrameBgActive]          = ImVec4(0.50f, 0.50f, 0.50f, 1.00f);
-        colors[ImGuiCol_TitleBg]                = ImVec4(0.42f, 0.42f, 0.42f, 0.50f);
+        colors[ImGuiCol_TitleBg]                = ImVec4(0.35f, 0.35f, 0.35f, 1.00f);
         colors[ImGuiCol_TitleBgActive]          = ImVec4(0.23f, 0.34f, 0.54f, 1.00f);
         colors[ImGuiCol_TitleBgCollapsed]       = ImVec4(0.13f, 0.13f, 0.15f, 0.50f);
         colors[ImGuiCol_MenuBarBg]              = ImVec4(0.13f, 0.13f, 0.15f, 1.00f);

@@ -44,8 +44,8 @@ namespace vg::graphics::renderer
     private:
         bool m_isDisplayOptionsWindowsVisible = true;
 
-        bool m_isEngineWindowVisible = true;
-        bool m_isRendererWindowVisible = true;
+        bool m_isEngineWindowVisible = false;
+        bool m_isRendererWindowVisible = false;
         bool m_isPerfWindowVisible = true;
         bool m_isSceneWindowVisible = true;
         bool m_isCurrentSelectionWindowVisible = true;
