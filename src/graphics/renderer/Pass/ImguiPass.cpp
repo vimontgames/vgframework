@@ -114,14 +114,20 @@ namespace vg::graphics::renderer
 
                 if (ImGui::BeginMenu("View"))
                 {
-                    if (ImGui::MenuItem("Performance"))
-                        m_isPerfWindowVisible = true;
+                    if (ImGui::MenuItem("Framerate"))
+                        m_isFramerateWindowVisible = true;
+
+                    if (ImGui::MenuItem("Platform"))
+                        m_isPlatformWindowVisible = true;
+
+                    if (ImGui::MenuItem("Selection"))
+                        m_isCurrentSelectionWindowVisible = true;                    
 
                     if (ImGui::MenuItem("Scene"))
                         m_isSceneWindowVisible = true; 
 
-                    if (ImGui::MenuItem("Selection"))
-                        m_isCurrentSelectionWindowVisible = true;
+                    if (ImGui::MenuItem("Shaders"))
+                        m_isShaderWindowVisible = true;
 
                     ImGui::EndMenu();
                 }
@@ -202,9 +208,9 @@ namespace vg::graphics::renderer
                     ImGui::NextColumn();
 
                     // url
-                    ImGui::textURL("www.autodesk.com/developer-network/platform-technologies/fbx-sdk-2020-0", "https://www.autodesk.com/developer-network/platform-technologies/fbx-sdk-2020-0");
-                    ImGui::textURL("vulkan.lunarg.com/sdk/home", "https://vulkan.lunarg.com/sdk/home");
-                    ImGui::textURL("developer.microsoft.com/fr-fr/windows/downloads/sdk-archive", "https://developer.microsoft.com/fr-fr/windows/downloads/sdk-archive/");
+                    ImGui::textURL("www.autodesk.com/developer-network/platform-technologies/fbx-sdk-2020-0",   "https://www.autodesk.com/developer-network/platform-technologies/fbx-sdk-2020-0");
+                    ImGui::textURL("vulkan.lunarg.com/sdk/home",                                                "https://vulkan.lunarg.com/sdk/home");
+                    ImGui::textURL("developer.microsoft.com/fr-fr/windows/downloads/sdk-archive",               "https://developer.microsoft.com/fr-fr/windows/downloads/sdk-archive/");
                     ImGui::Text("");
 
                     ImGui::Separator();
@@ -283,8 +289,14 @@ namespace vg::graphics::renderer
         }
         ImGui::End();
 
-        if (m_isPerfWindowVisible)
-            displayPerformanceWindow(_dt);
+        if (m_isPlatformWindowVisible)
+            displayPlatformWindow();
+
+        if (m_isShaderWindowVisible)
+            displayShaderWindow();
+
+        if (m_isFramerateWindowVisible)
+            displayFramerateWindow(_dt);
 
         if (m_isDisplayOptionsWindowsVisible)
             displayOptionsWindow();
@@ -307,51 +319,58 @@ namespace vg::graphics::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    void ImguiPass::displayPerformanceWindow(double _dt)
+    void ImguiPass::displayPlatformWindow()
     {
-        if (ImGui::Begin("Performance", &m_isPerfWindowVisible))
+        if (ImGui::Begin("Platform", &m_isPlatformWindowVisible))
         {
-            if (ImGui::CollapsingHeader("Target", ImGuiTreeNodeFlags_DefaultOpen))
+            ImGui::Columns(2, "mycolumns2", false);  // 2-ways, no border
+
+            ImGui::Text("Platform:");
+            ImGui::Text("Configuration:");
+            ImGui::Text("Graphics API:");
+            ImGui::NextColumn();
+            ImGui::Text(Plugin::getPlatform().c_str());
+            ImGui::Text(Plugin::getConfiguration().c_str());
+            ImGui::Text(asString(Device::get()->getDeviceParams().api).c_str());
+        }
+        ImGui::End();
+    }
+
+    //--------------------------------------------------------------------------------------
+    void ImguiPass::displayFramerateWindow(double _dt)
+    {
+        if (ImGui::Begin("Framerate", &m_isFramerateWindowVisible))
+        {
+            ImGui::Columns(2, "mycolumns2", false);  // 2-ways, no border
+            ImGui::Text("FPS: ");
+            ImGui::Text("Frame: ");
+            ImGui::NextColumn();
+            ImGui::Text("%.0f img/sec", m_fps);
+            ImGui::Text("%.4f ms", m_dt);
+
+            ImGui::Columns(1);
+            ImGui::Text("");
+            ImGui::Text("Press 'F1' to start/stop profiler");
+
+            if (VG_PROFILE_CAPTURE_IN_PROGRESS())
             {
-                ImGui::Columns(2, "mycolumns2", false);  // 2-ways, no border
-
-                ImGui::Text("Platform:");
-                ImGui::Text("Configuration:");
-                ImGui::Text("Graphics API:");
-                ImGui::NextColumn();
-                ImGui::Text(Plugin::getPlatform().c_str());
-                ImGui::Text(Plugin::getConfiguration().c_str());
-                ImGui::Text(asString(Device::get()->getDeviceParams().api).c_str());
-                ImGui::Columns(1);
+                ImGui::TextColored(ImVec4(1, 0, 0, 1), "Capture in progress ... %u", m_captureFrameCounter);
+                m_captureFrameCounter++;
             }
-
-            if (ImGui::CollapsingHeader("Performance", ImGuiTreeNodeFlags_DefaultOpen))
+            else if (0 != m_captureFrameCounter)
             {
-                ImGui::Columns(2, "mycolumns2", false);  // 2-ways, no border
-                ImGui::Text("FPS: ");
-                ImGui::Text("Frame: ");
-                ImGui::NextColumn();
-                ImGui::Text("%.0f img/sec", m_fps);
-                ImGui::Text("%.4f ms", m_dt);
+                m_captureFrameCounter = 0;
+            }            
+        }
+        ImGui::End();
+    }
 
-                ImGui::Columns(1);
-                ImGui::Text("Press 'F1' to start/stop profiler");
-
-                if (VG_PROFILE_CAPTURE_IN_PROGRESS())
-                {
-                    ImGui::TextColored(ImVec4(1, 0, 0, 1), "Capture in progress ... %u", m_captureFrameCounter);
-                    m_captureFrameCounter++;
-                }
-                else if (0 != m_captureFrameCounter)
-                {
-                    m_captureFrameCounter = 0;
-                }
-            }
-
-            if (ImGui::CollapsingHeader("Shaders", ImGuiTreeNodeFlags_DefaultOpen))
-            {
-                ImGui::Text("Press 'F6' to hot reload shaders");
-            }
+    //--------------------------------------------------------------------------------------
+    void ImguiPass::displayShaderWindow()
+    {
+        if (ImGui::Begin("Shaders", &m_isShaderWindowVisible))
+        {
+            ImGui::Text("Press 'F6' to hot reload shaders");
         }
         ImGui::End();
     }
@@ -364,6 +383,7 @@ namespace vg::graphics::renderer
         {
             if (ImGui::Begin("Display Options", &m_isDisplayOptionsWindowsVisible))
                 displayObject(displayOptions);
+
             ImGui::End();
         }
     }

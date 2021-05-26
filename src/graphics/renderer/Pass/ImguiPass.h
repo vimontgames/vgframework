@@ -33,7 +33,9 @@ namespace vg::graphics::renderer
         void displayRendererWindow();
         void displaySceneWindow();
         void displayCurrentSelectionWindow();
-        void displayPerformanceWindow(double _dt);
+        void displayFramerateWindow(double _dt);
+        void displayPlatformWindow();
+        void displayShaderWindow();
 
         void displayArrayObject(IObject * _object, core::uint _index, core::u32 _color, const char * _name, UIMode _mode = UIMode::All);
         void displayObject(core::IObject * _object, UIMode _mode = UIMode::All);
@@ -46,7 +48,9 @@ namespace vg::graphics::renderer
 
         bool m_isEngineWindowVisible = false;
         bool m_isRendererWindowVisible = false;
-        bool m_isPerfWindowVisible = true;
+        bool m_isFramerateWindowVisible = true;
+        bool m_isPlatformWindowVisible = true;
+        bool m_isShaderWindowVisible = true;
         bool m_isSceneWindowVisible = true;
         bool m_isCurrentSelectionWindowVisible = true;
         bool m_isAboutWindowVisible = false;
