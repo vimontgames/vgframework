@@ -28,10 +28,18 @@ namespace vg::engine
 
         void update(double _dt) override;
 
+        float getFovY() const { return m_fovY; }
+        float getNear() const { return m_near; }
+        float getFar() const { return m_far; }
+
     public:
         void setView(graphics::renderer::IView * _view, core::ISector * _sector);
 
     private:
         graphics::renderer::IView * m_view = nullptr;
+
+        float m_fovY;
+        float m_near;
+        float m_far;
     };
 }

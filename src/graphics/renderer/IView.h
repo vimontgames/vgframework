@@ -21,10 +21,13 @@ namespace vg::graphics::renderer
         IView(const CreateViewParams & _params) {};
         virtual ~IView() = default;
 
-        virtual void SetViewInvMatrix(const core::float4x4 & _viewInv) = 0;
-        virtual const core::float4x4 & GetViewInvMatrix() const = 0;
+        virtual void                    SetupCamera         (const core::float4x4 & _viewInv, core::float2 _nearFar, float _fovY) = 0;
 
-        virtual void SetCameraSector(core::ISector * _cameraSector) = 0;
-        virtual core::ISector * GetCameraSector() const = 0;
+        virtual const core::float4x4 &  GetViewInvMatrix    () const = 0;
+        virtual core::float2            GetCameraNearFar    () const = 0;
+        virtual float                   GetCameraFovY       () const = 0;
+
+        virtual void                    SetCameraSector     (core::ISector * _cameraSector) = 0;
+        virtual core::ISector *         GetCameraSector     () const = 0;
     };
 }

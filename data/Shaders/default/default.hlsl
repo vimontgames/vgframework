@@ -19,7 +19,7 @@ VS_Output VS_Forward(uint _vertexID : VertexID)
     VS_Output output;
 
     Vertex vert;
-           vert.load(getBuffer(rootConstants3D.getBuffer()), _vertexID);
+           vert.load(getBuffer(rootConstants3D.getBuffer()), _vertexID, rootConstants3D.getVertexBufferOffset());
 
     output.nrm = vert.getNrm();
     output.tan = vert.getTan();
@@ -119,7 +119,6 @@ PS_Output PS_Forward(VS_Output _input)
 PS_Output PS_Wireframe(VS_Output _input)
 {
     PS_Output output;
-
-    output.color0 = float4(0, 1, 0, 1);
+    output.color0 = rootConstants3D.getWireframeColor();
     return output;
 }

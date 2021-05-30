@@ -17,9 +17,15 @@ namespace vg::graphics::renderer
         View(const CreateViewParams & _params);
         ~View();
 
-        void SetViewInvMatrix(const core::float4x4 & _viewInv) override;
+        void SetupCamera(const core::float4x4 & _viewInv, core::float2 _nearFar, float _fovY) override;
+
         const core::float4x4 & GetViewInvMatrix() const override;
+        core::float2 GetCameraNearFar() const override;
+        float GetCameraFovY() const override;
+
         VG_INLINE const core::float4x4 & getViewInvMatrix() const;
+        VG_INLINE core::float2 getCameraNearFar() const;
+        VG_INLINE float getCameraFovY() const;
 
         void SetCameraSector(core::ISector * _cameraSector) override;
         core::ISector * GetCameraSector() const override;
@@ -28,6 +34,8 @@ namespace vg::graphics::renderer
     private:
         core::float4x4  m_viewInv = core::float4x4::identity();
         core::Sector *  m_cameraSector = nullptr;
+        core::float2    m_cameraNearFar;
+        float           m_cameraFovY;
     };
 }
 

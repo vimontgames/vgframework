@@ -31,13 +31,80 @@ namespace vg::graphics::renderer
 
         m_forwardShaderKey.init("default/default.hlsl", "Forward");
         m_wireframeShaderKey.init("default/default.hlsl", "Wireframe");
+
+        createGrid();
+        createAxis();
     }
 
     //--------------------------------------------------------------------------------------
     TestPass3D::~TestPass3D()
     {
+        destroyAxis();
+        destroyGrid();
+
         auto * device = Device::get();
         device->removeRootSignature(m_rootSignatureHandle);
+    }
+
+    //--------------------------------------------------------------------------------------
+    void TestPass3D::createGrid()
+    {
+        auto * device = Device::get();
+
+        vector<SimpleVertex> vertices;
+
+        const uint gridSize = 16;
+
+        int begin = -(int)gridSize / 2;
+        int end = (int)gridSize / 2;
+
+        for (int i = begin; i <= end; ++i)
+        {
+            vertices.push_back({ (float)i, (float)begin, 0.0f });
+            vertices.push_back({ (float)i, (float)  end, 0.0f });
+
+            vertices.push_back({ (float)begin, (float)i, 0.0f });
+            vertices.push_back({ (float)  end, (float)i, 0.0f });
+        }
+
+        BufferDesc vbDesc(Usage::Default, BindFlags::ShaderResource, CPUAccessFlags::None, BufferFlags::None, sizeof(SimpleVertex), (u32)vertices.size());
+
+        m_gridVB = device->createBuffer(vbDesc, "GridVB", vertices.data());
+    }
+
+    //--------------------------------------------------------------------------------------
+    void TestPass3D::destroyGrid()
+    {
+        VG_SAFE_RELEASE(m_gridVB);
+    }
+
+    //--------------------------------------------------------------------------------------
+    void TestPass3D::createAxis()
+    {
+        auto * device = Device::get();
+
+        SimpleVertex vertices[6];
+
+        const float eps = 0.0001f;
+
+        vertices[0] = { { 0.0f, 0.0f, eps + 0.0f } };
+        vertices[1] = { { 1.0f, 0.0f, eps + 0.0f } };
+                                   
+        vertices[2] = { { 0.0f, 0.0f, eps + 0.0f } };
+        vertices[3] = { { 0.0f, 1.0f, eps + 0.0f } };
+                                  
+        vertices[4] = { { 0.0f, 0.0f, eps + 0.0f } };
+        vertices[5] = { { 0.0f, 0.0f, eps + 1.0f } };
+
+        BufferDesc vbDesc(Usage::Default, BindFlags::ShaderResource, CPUAccessFlags::None, BufferFlags::None, sizeof(SimpleVertex), (uint)countof(vertices));
+
+        m_axisVB = device->createBuffer(vbDesc, "AxisVB", vertices);
+    }
+
+    //--------------------------------------------------------------------------------------
+    void TestPass3D::destroyAxis()
+    {
+        VG_SAFE_RELEASE(m_axisVB);
     }
 
     //--------------------------------------------------------------------------------------
@@ -85,12 +152,14 @@ namespace vg::graphics::renderer
         auto * device = Device::get();
         const auto & backbuffer = renderer->getBackbuffer()->getTexDesc();
 
-        const float fovY = pi / 4.0f;
+        View * view = renderer->getView();
+
+        const float fovY = view->getCameraFovY();
+        const float2 nearFar = view->getCameraNearFar();
         const float ar = float(backbuffer.width) / float(backbuffer.height);
 
-        float4x4 proj = setPerspectiveProjectionRH(fovY, ar, 1.0f, 4096.0f);
-
-        View * view = renderer->getView();
+        float4x4 proj = setPerspectiveProjectionRH(fovY, ar, nearFar.x, nearFar.y);
+       
         float4x4 viewProj = mul(view->GetViewInvMatrix(), proj);
 
         const auto * camSector = view->getCameraSector();
@@ -162,7 +231,7 @@ namespace vg::graphics::renderer
                 break;
         }
 		
-        auto draw = [=]()
+        auto draw = [=](bool _wireframe = false)
         {
             for (uint i = 0; i < graphicInstances.size(); ++i)
             {
@@ -210,15 +279,23 @@ namespace vg::graphics::renderer
                         normalMap = renderer->getDefaultTexture(MaterialTextureType::Normal);
                     }
 
-                    root3D.setAlbedoMap(albedoMap->getBindlessSRVHandle());
-                    root3D.setNormalMap(normalMap->getBindlessSRVHandle());
+                    if (_wireframe)
+                    {
+                        root3D.setWireframeColor(0xFF00FF00);
+                    }
+                    else
+                    {
+                        root3D.setAlbedoMap(albedoMap->getBindlessSRVHandle());
+                        root3D.setNormalMap(normalMap->getBindlessSRVHandle());
+                    }
+
                     root3D.setMatID(i);
                     
                     _cmdList->setInlineRootConstants(&root3D, RootConstants3DCount);
                     _cmdList->drawIndexed(batch.count, batch.offset);
                 }
             }
-        };        
+        };   
 
         if (options->isOpaqueEnabled())
         {
@@ -235,8 +312,65 @@ namespace vg::graphics::renderer
             RasterizerState rs(FillMode::Wireframe, CullMode::None);
             _cmdList->setShader(m_wireframeShaderKey);
             _cmdList->setRasterizerState(rs);
-        
-            draw();
+
+            draw(true);
         }
+
+        drawGrid(_cmdList, viewProj);
+        drawAxis(_cmdList, viewProj);
+    }
+
+    //--------------------------------------------------------------------------------------
+    void TestPass3D::drawGrid(CommandList * _cmdList, const float4x4 & _viewProj) const
+    {
+        RasterizerState rs(FillMode::Wireframe, CullMode::None);
+
+        const BufferDesc & gridDesc = m_gridVB->getBufDesc();
+
+        RootConstants3D root3D;
+
+        root3D.mat = transpose(_viewProj);
+        root3D.setBuffer(m_gridVB->getBindlessSRVHandle());
+        root3D.setWireframeColor(0xFF0D0D0D);
+
+        _cmdList->setRasterizerState(rs);
+        _cmdList->setShader(m_wireframeShaderKey);
+        _cmdList->setInlineRootConstants(&root3D, RootConstants3DCount);
+        _cmdList->setPrimitiveTopology(PrimitiveTopology::LineList);
+        _cmdList->draw(gridDesc.elementCount);
+    }
+
+    //--------------------------------------------------------------------------------------
+    void TestPass3D::drawAxis(CommandList * _cmdList, const float4x4 & _viewProj) const
+    {
+        RasterizerState rs(FillMode::Wireframe, CullMode::None);
+
+        const BufferDesc & gridDesc = m_axisVB->getBufDesc();
+
+        RootConstants3D root3D;
+
+        root3D.mat = transpose(_viewProj);
+        root3D.setBuffer(m_axisVB->getBindlessSRVHandle());
+
+        _cmdList->setRasterizerState(rs);
+        _cmdList->setShader(m_wireframeShaderKey);
+        _cmdList->setPrimitiveTopology(PrimitiveTopology::LineList);
+
+        const uint stride = sizeof(SimpleVertex)>>2; // u32 stride
+
+        root3D.setWireframeColor(0xFF0000FF);
+        root3D.setVertexBufferOffset(0 * stride);
+        _cmdList->setInlineRootConstants(&root3D, RootConstants3DCount);
+        _cmdList->draw(2);
+
+        root3D.setWireframeColor(0xFF00FF00);
+        root3D.setVertexBufferOffset(2 * stride);
+        _cmdList->setInlineRootConstants(&root3D, RootConstants3DCount);
+        _cmdList->draw(2);
+
+        root3D.setWireframeColor(0xFFFF0000);
+        root3D.setVertexBufferOffset(4 * stride);
+        _cmdList->setInlineRootConstants(&root3D, RootConstants3DCount);
+        _cmdList->draw(2);
     }
 }

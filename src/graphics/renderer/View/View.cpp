@@ -30,15 +30,29 @@ namespace vg::graphics::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    void View::SetViewInvMatrix(const core::float4x4 & _viewInv)
+    void View::SetupCamera(const core::float4x4 & _viewInv, core::float2 _nearFar, float _fovY)
     {
         m_viewInv = _viewInv;
+        m_cameraNearFar = _nearFar;
+        m_cameraFovY = _fovY;
     }
 
     //--------------------------------------------------------------------------------------
     const core::float4x4 & View::GetViewInvMatrix() const
     {
         return getViewInvMatrix();
+    }
+
+    //--------------------------------------------------------------------------------------
+    core::float2 View::GetCameraNearFar() const
+    {
+        return getCameraNearFar();
+    }
+
+    //--------------------------------------------------------------------------------------
+    float View::GetCameraFovY() const
+    {
+        return getCameraFovY();
     }
 
     //--------------------------------------------------------------------------------------

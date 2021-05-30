@@ -24,7 +24,7 @@ namespace vg::graphics::renderer
         bool importFBX(const core::string & _path, SceneImporterData & _data);
 
     private:
-        bool loadFBXMesh(fbxsdk::FbxNode * _fbxNode, fbxsdk::FbxMesh * _fbxMesh, MeshImporterData & _data);
+        bool loadFBXMesh(fbxsdk::FbxNode * _fbxNode, fbxsdk::FbxMesh * _fbxMesh, MeshImporterData & _data, double _scale);
         template <class T, class V> bool importFBXLayerElement(core::vector<V> & _result, const fbxsdk::FbxMesh * _fbxMesh, T * _layerElement, core::uint _triangleCount, V const & _default);
 
     private:

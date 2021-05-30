@@ -17,6 +17,11 @@
 #define MODE_ALBEDO_MAP     0x0007
 #define MODE_NORMAL_MAP     0x0008
 
+float4 unpackRGBA8(uint _value)
+{
+    return float4(_value & 0xFF, (_value >> 8) & 0xFF, (_value >> 16) & 0xFF, (_value >> 24) & 0xFF) / 255.0f;
+}
+
 struct RootConstants3D
 {
     float4x4 mat;
@@ -31,23 +36,30 @@ struct RootConstants3D
     }
     #endif
 
-    void setBuffer(uint _value)     { data.x = (data.x & ~0x0000FFFFUL) | (_value & 0xFFFF); }
-    uint getBuffer()                { return data.x & 0xFFFF; }
+    void setBuffer(uint _value)             { data.x = (data.x & ~0x0000FFFFUL) | (_value & 0xFFFF); }
+    uint getBuffer()                        { return data.x & 0xFFFF; }
 
-    void setAlbedoMap(uint _value)  { data.y = (data.y & ~0x0000FFFFUL) | (_value & 0xFFFF); }
-    uint getAlbedoMap()             { return data.y & 0xFFFF; }
+    void setVertexBufferOffset(uint _value) { data.x = (data.x & ~0xFFFF0000UL) | (_value & 0xFFFF) << 16; }
+    uint getVertexBufferOffset()            { return data.x >> 16; }
 
-    void setNormalMap(uint _value)  { data.y = (data.y & ~0xFFFF0000UL) | (_value & 0xFFFF) << 16; }
-    uint getNormalMap()             { return data.y >> 16; }
+    void setAlbedoMap(uint _value)          { data.y = (data.y & ~0x0000FFFFUL) | (_value & 0xFFFF); }
+    uint getAlbedoMap()                     { return data.y & 0xFFFF; }
 
-    void setFlags(uint _value)      { data.w = (data.w & ~0x0000FFFFUL) | (_value & 0xFFFF); }
-    uint getFlags()                 { return data.w & 0xFFFF; }
+    void setNormalMap(uint _value)          { data.y = (data.y & ~0xFFFF0000UL) | (_value & 0xFFFF) << 16; }
+    uint getNormalMap()                     { return data.y >> 16; }
 
-    void setMode(uint _value)       { data.w = (data.w & ~0x00FF0000UL) | ((_value & 0xFF) << 16); }
-    uint getMode()                  { return (data.w >> 16) & 0xFF; }
+    void setFlags(uint _value)              { data.w = (data.w & ~0x0000FFFFUL) | (_value & 0xFFFF); }
+    uint getFlags()                         { return data.w & 0xFFFF; }
 
-    void setMatID(uint _value)      { data.w = (data.w & ~0xFF000000UL) | ((_value & 0xFF) << 24); }
-    uint getMatID()                 { return (data.w >> 24) & 0xFF; }
+    void setMode(uint _value)               { data.w = (data.w & ~0x00FF0000UL) | ((_value & 0xFF) << 16); }
+    uint getMode()                          { return (data.w >> 16) & 0xFF; }
+
+    void setMatID(uint _value)              { data.w = (data.w & ~0xFF000000UL) | ((_value & 0xFF) << 24); }
+    uint getMatID()                         { return (data.w >> 24) & 0xFF; }
+
+    // Mutually exclusive with albedo/normal map!
+    void setWireframeColor(uint _value)     { data.y = _value; }
+    float4 getWireframeColor()              { return unpackRGBA8(data.y); }
 };
 
 #define RootConstants3DCount sizeof(RootConstants3D)/sizeof(u32)

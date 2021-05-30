@@ -24,6 +24,12 @@ namespace vg::engine
     {
         super::registerProperties(_desc);
 
+        _desc.registerPropertyHelper(FreeCamEntity, m_moveSpeed, "Translation Speed", IPropertyDescriptor::Flags::None);
+        _desc.setPropertyRangeHelper(FreeCamEntity, m_moveSpeed, float2(0.0f, 10.0f));
+
+        _desc.registerPropertyHelper(FreeCamEntity, m_rotSpeed, "Rotation Speed", IPropertyDescriptor::Flags::None);
+        _desc.setPropertyRangeHelper(FreeCamEntity, m_rotSpeed, float2(0.0f, 10.0f));
+
         _desc.registerPropertyHelper(FreeCamEntity, m_pitch, "Pitch", IPropertyDescriptor::Flags::None);
         _desc.setPropertyRangeHelper(FreeCamEntity, m_pitch, float2(-pi, +pi));
 
@@ -39,18 +45,19 @@ namespace vg::engine
     //--------------------------------------------------------------------------------------
     FreeCamEntity::FreeCamEntity(const core::string & _name, core::IObject * _parent) :
         core::Entity(_name, _parent),
-        m_roll(0.0f)
+        m_roll(0.0f),
+        m_pitch(-1.34f),
+        m_yaw(2.85f),
+        m_moveSpeed(1.0f),
+        m_rotSpeed(1.0f)
     {
-        m_pitch = -1.3f;
-        m_yaw = 3.1417f;
-
         setWorldMatrix(float4x4
         (
-             -1.0f,   -0.0f,   0.0f, 0.0f,
-             -0.0f,    0.2f,   1.0f, 0.0f,
-              0.0f,   -1.0f,   0.2f, 0.0f,
-              3.0f, -250.0f, 150.0f, 1.0f
-        ));
+            1.0f,  0.0f,  0.0f, 0.0f,
+            0.0f,  1.0f,  0.0f, 0.0f,
+            0.0f,  0.0f,  1.0f, 0.0f,
+           -1.2f, -3.5f,  1.7f, 1.0f
+        ));       
     }
 
     //--------------------------------------------------------------------------------------
@@ -117,9 +124,9 @@ namespace vg::engine
 
         IInput * input = Kernel::getInput();
 
-		float mouseSpeedX = 0.0005f * pi;
-		float mouseSpeedY = 0.0005f * pi;
-        float moveSpeed = 0.05f * (float)_dt;
+		float mouseSpeedX = m_rotSpeed * 0.001f * pi;
+		float mouseSpeedY = m_rotSpeed * 0.001f * pi;
+        float moveSpeed = m_moveSpeed * 0.001f * (float)_dt;
 
         if (input->isMouseButtonPressed(MouseButton::Middle))
         {

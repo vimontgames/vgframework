@@ -127,10 +127,9 @@ namespace vg::graphics::renderer
             const FbxAxisSystem axisSystem(FbxAxisSystem::eZAxis, FbxAxisSystem::eParityEven, FbxAxisSystem::eRightHanded);
             if (fileAxisSystem != axisSystem)
                 axisSystem.ConvertScene(fbxScene);
-
-            const FbxSystemUnit SceneSystemUnit = fbxScene->GetGlobalSettings().GetSystemUnit();
-            if (1.0f != SceneSystemUnit.GetScaleFactor())
-                FbxSystemUnit::m.ConvertScene(fbxScene);
+            
+            const FbxSystemUnit SceneSystemUnit = fbxScene->GetGlobalSettings().GetSystemUnit(); 
+            const double scale = SceneSystemUnit.m.GetConversionFactorFrom(SceneSystemUnit);
 
             // Convert to triangle mesh
             FbxGeometryConverter geoConverter(m_fbxManager);
@@ -155,7 +154,7 @@ namespace vg::graphics::renderer
                         {
                             MeshImporterData meshImporterData;
 
-                            if (loadFBXMesh(node, static_cast<FbxMesh*>(fbxNodeAttribute), meshImporterData))
+                            if (loadFBXMesh(node, static_cast<FbxMesh*>(fbxNodeAttribute), meshImporterData, scale))
                                 _data.meshes.push_back(meshImporterData);                         
                         }
                         break;
@@ -365,7 +364,7 @@ namespace vg::graphics::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    bool FBXImporter::loadFBXMesh(FbxNode * _fbxNode, FbxMesh * _fbxMesh, MeshImporterData & _data)
+    bool FBXImporter::loadFBXMesh(FbxNode * _fbxNode, FbxMesh * _fbxMesh, MeshImporterData & _data, double _scale)
     {
         const auto start = Timer::getTick();
         VG_DEBUGPRINT("[FBXImporter] Importing FBX Mesh \"%s\" ...", _fbxNode->GetName());
@@ -384,7 +383,7 @@ namespace vg::graphics::renderer
         for (u32 p = 0; p < controlPointCount; p++)
         {
             const double * pPosD = (double*)&points[p];
-            positions[p] = float4((float)pPosD[0], (float)pPosD[1], (float)pPosD[2], (float)pPosD[3]);
+            positions[p] = float4((float)(pPosD[0] * _scale), (float)(pPosD[1] * _scale), (float)(pPosD[2] * _scale), (float)pPosD[3]);
         }
 
         // get layers
