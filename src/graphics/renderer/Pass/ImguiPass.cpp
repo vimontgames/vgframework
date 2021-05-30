@@ -562,8 +562,8 @@ namespace vg::graphics::renderer
             if (asBool(IPropertyDescriptor::Flags::ReadOnly & flags))
                 imguiInputTextflags = ImGuiInputTextFlags_ReadOnly;
 
-            const uint boolWidth = 12;
-            const uint enumWidth = 12;
+            const uint boolWidth = 14;
+            const uint enumWidth = 14;
             
             switch (type)
             {

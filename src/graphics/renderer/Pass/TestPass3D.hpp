@@ -60,11 +60,21 @@ namespace vg::graphics::renderer
 
         for (int i = begin; i <= end; ++i)
         {
-            vertices.push_back({ (float)i, (float)begin, 0.0f });
-            vertices.push_back({ (float)i, (float)  end, 0.0f });
+            auto & v0 = vertices.emplace_back();
+                   v0.setPos({ (float)i, (float)begin, 0.0f });
+                   v0.setColor(0xFF0D0D0D);
 
-            vertices.push_back({ (float)begin, (float)i, 0.0f });
-            vertices.push_back({ (float)  end, (float)i, 0.0f });
+            auto & v1 = vertices.emplace_back();
+                   v1.setPos({ (float)i, (float)end, 0.0f } );
+                   v1.setColor(0xFF0D0D0D);
+
+            auto & h0 = vertices.emplace_back();
+                   h0.setPos({ (float)begin,(float)i, 0.0f } );
+                   h0.setColor(0xFF0D0D0D);
+
+            auto & h1 = vertices.emplace_back();
+                   h1.setPos({ (float)end,(float)i, 0.0f } );
+                   h1.setColor(0xFF0D0D0D);
         }
 
         BufferDesc vbDesc(Usage::Default, BindFlags::ShaderResource, CPUAccessFlags::None, BufferFlags::None, sizeof(SimpleVertex), (u32)vertices.size());
@@ -87,14 +97,20 @@ namespace vg::graphics::renderer
 
         const float eps = 0.0001f;
 
-        vertices[0] = { { 0.0f, 0.0f, eps + 0.0f } };
-        vertices[1] = { { 1.0f, 0.0f, eps + 0.0f } };
-                                   
-        vertices[2] = { { 0.0f, 0.0f, eps + 0.0f } };
-        vertices[3] = { { 0.0f, 1.0f, eps + 0.0f } };
-                                  
-        vertices[4] = { { 0.0f, 0.0f, eps + 0.0f } };
-        vertices[5] = { { 0.0f, 0.0f, eps + 1.0f } };
+        vertices[0].setPos( { 0.0f, 0.0f, eps + 0.0f } );
+        vertices[0].setColor(0xFF0000FF);
+        vertices[1].setPos( { 1.0f, 0.0f, eps + 0.0f } );
+        vertices[1].setColor(0xFF0000FF);
+                                 
+        vertices[2].setPos( { 0.0f, 0.0f, eps + 0.0f } );
+        vertices[2].setColor(0xFF00FF00);
+        vertices[3].setPos( { 0.0f, 1.0f, eps + 0.0f } );
+        vertices[3].setColor(0xFF00FF00);
+                                
+        vertices[4].setPos( { 0.0f, 0.0f, eps + 0.0f } );
+        vertices[4].setColor(0xFFFF0000);
+        vertices[5].setPos( { 0.0f, 0.0f, eps + 1.0f } );
+        vertices[5].setColor(0xFFFF0000);
 
         BufferDesc vbDesc(Usage::Default, BindFlags::ShaderResource, CPUAccessFlags::None, BufferFlags::None, sizeof(SimpleVertex), (uint)countof(vertices));
 
@@ -214,6 +230,10 @@ namespace vg::graphics::renderer
                 mode = MODE_VS_BINORMAL;
                 break;
 
+            case DisplayMode::VSColor:
+                mode = MODE_VS_COLOR;
+                break;
+
             case DisplayMode::UV0:
                 mode = MODE_UV0;
                 break;
@@ -279,15 +299,8 @@ namespace vg::graphics::renderer
                         normalMap = renderer->getDefaultTexture(MaterialTextureType::Normal);
                     }
 
-                    if (_wireframe)
-                    {
-                        root3D.setWireframeColor(0xFF00FF00);
-                    }
-                    else
-                    {
-                        root3D.setAlbedoMap(albedoMap->getBindlessSRVHandle());
-                        root3D.setNormalMap(normalMap->getBindlessSRVHandle());
-                    }
+                    root3D.setAlbedoMap(albedoMap->getBindlessSRVHandle());
+                    root3D.setNormalMap(normalMap->getBindlessSRVHandle());
 
                     root3D.setMatID(i);
                     
@@ -331,10 +344,10 @@ namespace vg::graphics::renderer
 
         root3D.mat = transpose(_viewProj);
         root3D.setBuffer(m_gridVB->getBindlessSRVHandle());
-        root3D.setWireframeColor(0xFF0D0D0D);
+        root3D.setMode(MODE_VS_COLOR);
 
         _cmdList->setRasterizerState(rs);
-        _cmdList->setShader(m_wireframeShaderKey);
+        _cmdList->setShader(m_forwardShaderKey);
         _cmdList->setInlineRootConstants(&root3D, RootConstants3DCount);
         _cmdList->setPrimitiveTopology(PrimitiveTopology::LineList);
         _cmdList->draw(gridDesc.elementCount);
@@ -351,26 +364,13 @@ namespace vg::graphics::renderer
 
         root3D.mat = transpose(_viewProj);
         root3D.setBuffer(m_axisVB->getBindlessSRVHandle());
+        root3D.setMode(MODE_VS_COLOR);
 
         _cmdList->setRasterizerState(rs);
-        _cmdList->setShader(m_wireframeShaderKey);
+        _cmdList->setShader(m_forwardShaderKey);
         _cmdList->setPrimitiveTopology(PrimitiveTopology::LineList);
 
-        const uint stride = sizeof(SimpleVertex)>>2; // u32 stride
-
-        root3D.setWireframeColor(0xFF0000FF);
-        root3D.setVertexBufferOffset(0 * stride);
         _cmdList->setInlineRootConstants(&root3D, RootConstants3DCount);
-        _cmdList->draw(2);
-
-        root3D.setWireframeColor(0xFF00FF00);
-        root3D.setVertexBufferOffset(2 * stride);
-        _cmdList->setInlineRootConstants(&root3D, RootConstants3DCount);
-        _cmdList->draw(2);
-
-        root3D.setWireframeColor(0xFFFF0000);
-        root3D.setVertexBufferOffset(4 * stride);
-        _cmdList->setInlineRootConstants(&root3D, RootConstants3DCount);
-        _cmdList->draw(2);
+        _cmdList->draw(6);
     }
 }

@@ -46,6 +46,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "system", "system", "{4506A0
 		data\Shaders\system\bindless.hlsli = data\Shaders\system\bindless.hlsli
 		data\Shaders\system\bindless.hlsli.h = data\Shaders\system\bindless.hlsli.h
 		data\Shaders\system\constants.hlsli = data\Shaders\system\constants.hlsli
+		data\Shaders\system\packing.hlsli = data\Shaders\system\packing.hlsli
 		data\Shaders\system\quad.hlsli = data\Shaders\system\quad.hlsli
 		data\Shaders\system\samplers.hlsli = data\Shaders\system\samplers.hlsli
 		data\Shaders\system\semantics.hlsli = data\Shaders\system\semantics.hlsli

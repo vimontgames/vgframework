@@ -11,7 +11,8 @@ struct VS_Output
     float3 nrm  : Normal;
     float3 tan  : Tangent;
     float3 bin  : Binormal;
-    float2 uv   : Texcoord0;
+    float4 uv   : Texcoord0;
+    float4 col  : Color;
 };
 
 VS_Output VS_Forward(uint _vertexID : VertexID)
@@ -24,7 +25,8 @@ VS_Output VS_Forward(uint _vertexID : VertexID)
     output.nrm = vert.getNrm();
     output.tan = vert.getTan();
     output.bin = vert.getBin();
-    output.uv = vert.getUV(0);
+    output.uv = float4(vert.getUV(0), vert.getUV(1));
+    output.col = vert.getColor();
     output.pos = mul(float4(vert.getPos(), 1.0f), rootConstants3D.mat);
 
     return output;
@@ -53,10 +55,11 @@ float3 getMatIDColor(uint _matID)
 PS_Output PS_Forward(VS_Output _input)
 {
     PS_Output output;
-    float2 uv = _input.uv;
+    float2 uv0 = _input.uv.xy;
+    float2 uv1 = _input.uv.zw;
     
-    float4 albedo = Texture2DTable[rootConstants3D.getAlbedoMap()].Sample(linearRepeat, uv).rgba;
-    float3 normal = Texture2DTable[rootConstants3D.getNormalMap()].Sample(linearRepeat, uv).rgb*2-1;
+    float4 albedo = Texture2DTable[rootConstants3D.getAlbedoMap()].Sample(linearRepeat, uv0).rgba;
+    float3 normal = Texture2DTable[rootConstants3D.getNormalMap()].Sample(linearRepeat, uv0).rgb*2-1;
 
     if (0 == (rootConstants3D.getFlags() & FLAG_ALBEDOMAPS))
         albedo = pow(0.5, 0.45);
@@ -64,29 +67,17 @@ PS_Output PS_Forward(VS_Output _input)
     if (0 == (rootConstants3D.getFlags() & FLAG_NORMALMAPS))
         normal = float3(0,0,1);
 
-#if 1
     float3 T = normalize(_input.tan);
     float3 B = normalize(_input.bin);
     float3 N = normalize(_input.nrm);
-#else
-    float3 pos = _input.pos.xyz / _input.pos.w;
-    float3 q0 = ddx(pos);
-    float3 q1 = ddy(pos);
-    float2 st0 = ddx(uv.xy);
-    float2 st1 = ddy(uv.xy);
-    
-    float3 T = normalize(-q0 * st1.x + q1 * st0.x);
-    float3 B = normalize( q0 * st1.y - q1 * st0.y);
-    float3 N = _input.nrm;
-#endif
 
     float3 worldNormal = normalize(T * normal.x + B * normal.y + N * normal.z);
 
     // fake shitty lighting
-    float3 fakeDiffuseLighting = dot(worldNormal, normalize(float3(-1, -2, 3))) * 0.5f;
-    float3 fakeAmbientLighting = 0.5f;
+    float3 fakeDiffuseLighting = saturate(dot(worldNormal, normalize(float3(-1, -3, 4))) * 0.78f);
+    float3 fakeAmbientLighting = 0.22f;
 
-    output.color0.rgba = float4(albedo.rgb * (fakeDiffuseLighting + fakeAmbientLighting), 1.0f);
+    output.color0.rgba = float4(albedo.rgb * (fakeDiffuseLighting + fakeAmbientLighting), 1.0f) * _input.col;
 
     switch (rootConstants3D.getMode())
     {
@@ -102,8 +93,14 @@ PS_Output PS_Forward(VS_Output _input)
         case MODE_VS_NORMAL:
             output.color0 = float4(N*0.5f + 0.5f, 1.0f);
             break;
+        case MODE_VS_COLOR:
+            output.color0 = _input.col;
+            break;
         case MODE_UV0:
-            output.color0 = float4(uv, 0, 1);
+            output.color0 = float4(uv0.xy, 0, 1);
+            break;
+        case MODE_UV1:
+            output.color0 = float4(uv1.xy, 0, 1);
             break;
         case MODE_ALBEDO_MAP:
             output.color0 = float4(albedo.rgb, 1);
@@ -119,6 +116,6 @@ PS_Output PS_Forward(VS_Output _input)
 PS_Output PS_Wireframe(VS_Output _input)
 {
     PS_Output output;
-    output.color0 = rootConstants3D.getWireframeColor();
+    output.color0 = float4(0, 1, 0, 1);
     return output;
 }

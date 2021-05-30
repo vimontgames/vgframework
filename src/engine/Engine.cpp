@@ -29,11 +29,11 @@ using namespace vg::core;
 using namespace vg::engine;
 
 #define VG_ENGINE_VERSION_MAJOR 0
-#define VG_ENGINE_VERSION_MINOR 1
+#define VG_ENGINE_VERSION_MINOR 11
 
 // Avoid stripping code for classes from static lib
 static Scene scene("",nullptr);
-static Sector sector("", nullptr);;
+static Sector sector("", nullptr);
 
 //--------------------------------------------------------------------------------------
 IEngine * CreateNew()

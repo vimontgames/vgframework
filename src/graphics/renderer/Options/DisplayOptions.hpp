@@ -47,18 +47,19 @@ namespace vg::graphics::renderer
         _desc.registerPropertyHelper(DisplayOptions, m_normalMaps, "Normal Maps", IPropertyDescriptor::Flags::None);
         _desc.registerPropertyHelper(DisplayOptions, m_albedoMaps, "Albedo Maps", IPropertyDescriptor::Flags::SameLine);
 
-		_desc.registerPropertyEnumHelper(DisplayOptions, DisplayMode, m_debugDisplayMode, DisplayMode::Default,    "Default",   IPropertyDescriptor::Flags::Radio);
-        _desc.registerPropertyEnumHelper(DisplayOptions, DisplayMode, m_debugDisplayMode, DisplayMode::MatID,      "MatID",     IPropertyDescriptor::Flags::Radio | IPropertyDescriptor::Flags::SameLine);
+		_desc.registerPropertyEnumHelper(DisplayOptions, DisplayMode, m_debugDisplayMode, DisplayMode::Default,    "Default",       IPropertyDescriptor::Flags::Radio);
+        _desc.registerPropertyEnumHelper(DisplayOptions, DisplayMode, m_debugDisplayMode, DisplayMode::MatID,      "MatID",         IPropertyDescriptor::Flags::Radio | IPropertyDescriptor::Flags::SameLine);
 
-		_desc.registerPropertyEnumHelper(DisplayOptions, DisplayMode, m_debugDisplayMode, DisplayMode::VSNormal,   "Normal VS", IPropertyDescriptor::Flags::Radio);
-        _desc.registerPropertyEnumHelper(DisplayOptions, DisplayMode, m_debugDisplayMode, DisplayMode::VSTangent,  "Tangent",   IPropertyDescriptor::Flags::Radio | IPropertyDescriptor::Flags::SameLine);
-        _desc.registerPropertyEnumHelper(DisplayOptions, DisplayMode, m_debugDisplayMode, DisplayMode::VSBinormal, "Binormal",  IPropertyDescriptor::Flags::Radio | IPropertyDescriptor::Flags::SameLine);
+		_desc.registerPropertyEnumHelper(DisplayOptions, DisplayMode, m_debugDisplayMode, DisplayMode::VSNormal,   "Vertex Normal", IPropertyDescriptor::Flags::Radio);
+        _desc.registerPropertyEnumHelper(DisplayOptions, DisplayMode, m_debugDisplayMode, DisplayMode::VSTangent,  "Tangent",       IPropertyDescriptor::Flags::Radio | IPropertyDescriptor::Flags::SameLine);
+        _desc.registerPropertyEnumHelper(DisplayOptions, DisplayMode, m_debugDisplayMode, DisplayMode::VSBinormal, "Binormal",      IPropertyDescriptor::Flags::Radio | IPropertyDescriptor::Flags::SameLine);
+                                                                                                                                    
+		_desc.registerPropertyEnumHelper(DisplayOptions, DisplayMode, m_debugDisplayMode, DisplayMode::UV0,        "UV0",           IPropertyDescriptor::Flags::Radio);
+        _desc.registerPropertyEnumHelper(DisplayOptions, DisplayMode, m_debugDisplayMode, DisplayMode::UV1,        "UV1",           IPropertyDescriptor::Flags::Radio | IPropertyDescriptor::Flags::SameLine);
+        _desc.registerPropertyEnumHelper(DisplayOptions, DisplayMode, m_debugDisplayMode, DisplayMode::VSColor,    "Vertex Color",  IPropertyDescriptor::Flags::Radio | IPropertyDescriptor::Flags::SameLine);
                                                                                                                                 
-		_desc.registerPropertyEnumHelper(DisplayOptions, DisplayMode, m_debugDisplayMode, DisplayMode::UV0,        "UV0",       IPropertyDescriptor::Flags::Radio);
-        _desc.registerPropertyEnumHelper(DisplayOptions, DisplayMode, m_debugDisplayMode, DisplayMode::UV1,        "UV1",       IPropertyDescriptor::Flags::Radio | IPropertyDescriptor::Flags::SameLine);
-                                                                                                                                
-        _desc.registerPropertyEnumHelper(DisplayOptions, DisplayMode, m_debugDisplayMode, DisplayMode::Albedo,     "Albedo",    IPropertyDescriptor::Flags::Radio);
-        _desc.registerPropertyEnumHelper(DisplayOptions, DisplayMode, m_debugDisplayMode, DisplayMode::PSNormal,   "Normal PS", IPropertyDescriptor::Flags::Radio | IPropertyDescriptor::Flags::SameLine);
+        _desc.registerPropertyEnumHelper(DisplayOptions, DisplayMode, m_debugDisplayMode, DisplayMode::Albedo,     "Albedo Map",    IPropertyDescriptor::Flags::Radio);
+        _desc.registerPropertyEnumHelper(DisplayOptions, DisplayMode, m_debugDisplayMode, DisplayMode::PSNormal,   "Normal Map",    IPropertyDescriptor::Flags::Radio | IPropertyDescriptor::Flags::SameLine);
 
         _desc.registerPropertyHelper(DisplayOptions, m_backgroundColor, "Background", IPropertyDescriptor::Flags::Color);
 

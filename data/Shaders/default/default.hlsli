@@ -2,6 +2,7 @@
 #define _DEFAULT__HLSLI_
 
 #include "../system/constants.hlsli"
+#include "../system/packing.hlsli"
 
 #define FLAG_NONE           0x0000
 #define FLAG_ALBEDOMAPS     0x0001
@@ -16,11 +17,7 @@
 #define MODE_UV1		    0x0006
 #define MODE_ALBEDO_MAP     0x0007
 #define MODE_NORMAL_MAP     0x0008
-
-float4 unpackRGBA8(uint _value)
-{
-    return float4(_value & 0xFF, (_value >> 8) & 0xFF, (_value >> 16) & 0xFF, (_value >> 24) & 0xFF) / 255.0f;
-}
+#define MODE_VS_COLOR       0x0010
 
 struct RootConstants3D
 {
@@ -56,10 +53,6 @@ struct RootConstants3D
 
     void setMatID(uint _value)              { data.w = (data.w & ~0xFF000000UL) | ((_value & 0xFF) << 24); }
     uint getMatID()                         { return (data.w >> 24) & 0xFF; }
-
-    // Mutually exclusive with albedo/normal map!
-    void setWireframeColor(uint _value)     { data.y = _value; }
-    float4 getWireframeColor()              { return unpackRGBA8(data.y); }
 };
 
 #define RootConstants3DCount sizeof(RootConstants3D)/sizeof(u32)

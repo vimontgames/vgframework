@@ -17,6 +17,7 @@ namespace vg::graphics::renderer
 		VSNormal,
         VSTangent,
         VSBinormal,
+        VSColor,
 		UV0,
         UV1,
         Albedo,

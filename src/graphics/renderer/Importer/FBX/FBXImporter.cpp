@@ -404,6 +404,10 @@ namespace vg::graphics::renderer
         vector<float4> tangents;
         const bool hasTangents = importFBXLayerElement<FbxLayerElementTangent, float4>(tangents, _fbxMesh, fbxLayers[0] ? fbxLayers[0]->GetTangents() : nullptr, triangleCount, float4(1, 0, 0, 0));
 
+        // import vertex color
+        vector<float4> colors;
+        const bool hasColors = importFBXLayerElement<FbxLayerElementVertexColor, float4>(colors, _fbxMesh, fbxLayers[0] ? fbxLayers[0]->GetVertexColors() : nullptr, triangleCount, float4(1, 1, 1, 1));
+
         // import UVs
         vector<float2> uv[2];
         const bool hasUV0 = importFBXLayerElement<FbxLayerElementUV, float2>(uv[0], _fbxMesh, fbxLayers.size() > 0 ? fbxLayers[0]->GetUVs(FbxLayerElement::eTextureDiffuse) : nullptr, triangleCount, float2(0, 0));
@@ -461,6 +465,7 @@ namespace vg::graphics::renderer
                 vertex.tan = tangents[vertexID];
                 vertex.uv[0].xy = { uv[0][vertexID].x, 1.0f - uv[0][vertexID].y };  // Swap FBX v texture coordinates
                 vertex.uv[1].xy = { uv[1][vertexID].x, 1.0f - uv[1][vertexID].y };  // Swap FBX v texture coordinates
+                vertex.color = colors[vertexID];
 
                 indexBuffer.push_back(vertexID);
                 vertexBuffer.push_back(vertex);

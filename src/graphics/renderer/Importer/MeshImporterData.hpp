@@ -2,7 +2,7 @@ using namespace vg::core;
 
 namespace vg::graphics::renderer
 {
-    static const u32 MeshImporterDataVersion = 0;
+    static const u32 MeshImporterDataVersion = 1;
 
     //--------------------------------------------------------------------------------------
     bool MeshImporterData::load(const core::string & _file)

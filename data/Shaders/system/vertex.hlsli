@@ -1,5 +1,6 @@
+#include "packing.hlsli"
 
-#define SimpleVertex_stride (14 * sizeof(float) >> 2)
+#define SimpleVertex_stride (17 * sizeof(float) >> 2)
 
 #if USE_BYTEADDRESSBUFFER 
 float4 LoadBuffer4(ByteAddressBuffer _buffer, uint _offset) { return float4(asfloat(_buffer.Load4(_offset<<2))); }
@@ -23,20 +24,24 @@ struct SimpleVertex
         nrm.xyz = LoadBuffer3(_buffer, vertexOffset + 3);
         bin.xyz = LoadBuffer3(_buffer, vertexOffset + 6);
         tan.xyz = LoadBuffer3(_buffer, vertexOffset + 9);
-        uv.xy   = LoadBuffer2(_buffer, vertexOffset + 12);
+        uv[0].xy = LoadBuffer2(_buffer, vertexOffset + 12);
+        uv[1].xy = LoadBuffer2(_buffer, vertexOffset + 14);
+        color = asuint(LoadBuffer(_buffer, vertexOffset + 16));
     }
 
     float3 getPos()             { return pos; }
     float3 getNrm()             { return nrm; }
     float3 getBin()             { return bin; }
     float3 getTan()             { return tan; }
-    float2 getUV(uint _index)   { return uv; }
+    float2 getUV(uint _index)   { return uv[_index]; }
+    float4 getColor()           { return unpackRGBA8(color); }
 
     float3 pos;
     float3 nrm;
     float3 bin;
     float3 tan;
-    float2 uv;
+    float2 uv[2];
+    uint color;
 };
 
 #define Vertex SimpleVertex
