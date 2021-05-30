@@ -335,7 +335,7 @@ namespace vg::graphics::renderer
         TextureImporterData imported;
         imported.name = _file;
 
-        if (TextureImporter::get()->importTextureData(_file, imported.desc, imported.mips))
+        if (TextureImporter::get()->importTextureData(_file, imported.desc, imported.texels))
         {
             imported.save(io::getCookedPath(_file));
 
@@ -352,7 +352,7 @@ namespace vg::graphics::renderer
 
         if (textureData.load(io::getCookedPath(_file)))
         {
-            ITexture * texture = m_device.createTexture(textureData.desc, textureData.name, textureData.mips[0].buffer.data());
+            ITexture * texture = m_device.createTexture(textureData.desc, textureData.name, textureData.texels.data());
             return texture;
         }
 

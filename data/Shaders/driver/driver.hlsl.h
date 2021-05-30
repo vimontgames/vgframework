@@ -34,6 +34,15 @@ namespace vg::graphics::driver
                 copy.ps = psCopy;
                 copy.flags = (Flags)0;
             }
+
+            auto psGamma = addPS("PS_Gamma");
+
+            auto & gamma = addTechnique("Gamma");
+            {
+                gamma.vs = vsQuad;
+                gamma.ps = psGamma;
+                gamma.flags = (Flags)0;
+            }
         }
     };
 }

@@ -21,6 +21,9 @@ namespace vg::graphics::driver::vulkan
             case PixelFormat::B8G8R8A8_unorm_sRGB:
                 return VK_FORMAT_B8G8R8A8_SRGB;
 
+            case PixelFormat::R16G16B16A16_float:
+                return VK_FORMAT_R16G16B16A16_SFLOAT;
+
             case PixelFormat::D32S8:
                 return VK_FORMAT_D32_SFLOAT_S8_UINT;
         }

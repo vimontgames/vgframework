@@ -39,7 +39,7 @@ namespace vg::graphics::renderer
         const driver::DeviceParams & deviceParams = device->getDeviceParams();
 
         FrameGraph::TextureResourceDesc colorDesc;
-                                        colorDesc.format = device->getBackbufferFormat();
+                                        colorDesc.format = PixelFormat::R16G16B16A16_float;
                                         colorDesc.width = deviceParams.resolution.x;
                                         colorDesc.height = deviceParams.resolution.y;
                                         colorDesc.clearColor = float4(0, 0, 0, 0);

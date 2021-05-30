@@ -7,15 +7,10 @@ namespace vg::graphics::driver
 {
     class TextureDesc;
 
-    struct MipData
-    {
-        core::vector<core::u8> buffer;
-    };
-
     class TextureImporter : public Importer, public core::Singleton<TextureImporter>
     {
     public:
-        bool importTextureData(const core::string & _path, TextureDesc & _desc, core::vector<MipData> & _mips);
-        core::uint generateMipmaps(const core::u8 * _src, const TextureDesc & _desc, core::vector<MipData> & _mips);
+        bool importTextureData(const core::string & _path, TextureDesc & _desc, core::vector<core::u8> & _buffer);
+        core::uint generateMipmaps(const core::u8 * _src, const TextureDesc & _desc, core::vector<core::u8> & _buffer);
     };
 }

@@ -15,6 +15,9 @@ namespace vg::graphics::driver::dx12
             case PixelFormat::R8G8B8A8_unorm_sRGB:
                 return DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
 
+            case PixelFormat::R16G16B16A16_float:
+                return DXGI_FORMAT_R16G16B16A16_FLOAT;
+
             case PixelFormat::D32S8:
                 return DXGI_FORMAT_D32_FLOAT_S8X24_UINT;
         }
@@ -167,7 +170,7 @@ namespace vg::graphics::driver::dx12
                 break;
 
             case TextureType::Texture2D:
-                srvDesc.Texture2D.MipLevels = 1;
+                srvDesc.Texture2D.MipLevels = _texDesc.mipmaps;
                 srvDesc.Texture2D.MostDetailedMip = 0;
                 srvDesc.Texture2D.PlaneSlice = 0;
                 srvDesc.Texture2D.ResourceMinLODClamp = 0;
@@ -228,28 +231,68 @@ namespace vg::graphics::driver::dx12
 
             const auto fmtSize = getPixelFormatSize(_texDesc.format);
 
-            // Make a func
-            D3D12_SUBRESOURCE_FOOTPRINT pitchedDesc = {};
-            pitchedDesc.Format = getd3d12PixelFormat(_texDesc.format);
-            pitchedDesc.Width = _texDesc.width;
-            pitchedDesc.Height = _texDesc.height;
-            pitchedDesc.Depth = 1;
-            pitchedDesc.RowPitch = (uint)alignUp(_texDesc.width * fmtSize, D3D12_TEXTURE_DATA_PITCH_ALIGNMENT);
+            const u32 subResourceCount = _texDesc.mipmaps * _texDesc.depth;
 
-            size_t uploadBufferSize = 0;
-            d3d12device->GetCopyableFootprints(&resourceDesc, 0, 1, 0, nullptr, nullptr, nullptr, &uploadBufferSize);
-            VG_ASSERT((core::u32)uploadBufferSize == uploadBufferSize);
+            vector<D3D12_SUBRESOURCE_DATA> subResource(subResourceCount);
+            vector<D3D12_PLACED_SUBRESOURCE_FOOTPRINT> footprint(subResourceCount);
+            vector<uint> rows(subResourceCount);
+            vector<u64> strides(subResourceCount);
+
+            u8 * mipInitData = (u8*)_initData;
+            u32 index = 0;
+
+            auto w = _texDesc.width;
+            auto h = _texDesc.height;
+
+            for (uint m = 0; m < _texDesc.mipmaps; ++m)
+            {
+                subResource[index].pData = mipInitData;
+                subResource[index].RowPitch = w * Texture::getPixelFormatSize(_texDesc.format);    // TODO: compute pitch in bits>>3 from format and width to handle compressed formats
+                subResource[index].SlicePitch = subResource[index].RowPitch * h;
+
+                mipInitData += subResource[index].SlicePitch;
+
+                w >>= 1;
+                h >>= 1;
+
+                index++;
+            }
+
+            size_t d3d12TotalSizeInBytes = 0;
+            d3d12device->GetCopyableFootprints(&resourceDesc, 0, subResourceCount, 0, footprint.data(), rows.data(), strides.data(), &d3d12TotalSizeInBytes);
+
+            // Save offset to subresource for upload
+            for (uint i = 0; i < subResourceCount; ++i)
+                setSubResourceData(i, footprint[i].Offset);
 
             // Copy to upload buffer line by line
-            core::uint_ptr offset = context.m_uploadBuffer->alloc(uploadBufferSize, D3D12_TEXTURE_DATA_PLACEMENT_ALIGNMENT);
+            core::uint_ptr offset = context.m_uploadBuffer->alloc(d3d12TotalSizeInBytes, D3D12_TEXTURE_DATA_PLACEMENT_ALIGNMENT);
             core::u8 * dst = context.m_uploadBuffer->getBaseAddress() + offset;
 
-            for (uint y = 0; y < _texDesc.height; ++y)
-                memcpy(dst + y * pitchedDesc.RowPitch, &((u8*)_initData)[y * _texDesc.width * fmtSize], fmtSize * _texDesc.width);
+            for (uint i = 0; i < subResourceCount; ++i)
+            {
+                for (uint y = 0; y < rows[i]; ++y)
+                    memcpy(dst + footprint[i].Offset + footprint[i].Footprint.RowPitch * y, (u8*)subResource[i].pData + subResource[i].RowPitch * y, strides[i]);
+            }
 
             context.m_uploadBuffer->upload(static_cast<driver::Texture*>(this), offset);
         }
 	}
+
+    //--------------------------------------------------------------------------------------
+    void Texture::setSubResourceData(uint _index, core::size_t _offset)
+    {
+        if (_index >= m_subResourceData.size())
+            m_subResourceData.resize(_index + 1);
+
+        m_subResourceData[_index] = { _offset };
+    }
+
+    //--------------------------------------------------------------------------------------
+    const SubResourceData & Texture::getSubResourceData(core::uint _index) const
+    {
+        return m_subResourceData[_index];
+    }
 
 	//--------------------------------------------------------------------------------------
 	Texture::~Texture()

@@ -13,6 +13,14 @@ namespace vg::graphics::driver::dx12
         desc.AddressV = getd3d12Adress(samplerState.address);
         desc.AddressW = getd3d12Adress(samplerState.address);
 
+        desc.MaxAnisotropy = 1;
+        desc.MipLODBias = 0;
+        desc.MinLOD = 0;
+        desc.MaxLOD = D3D12_FLOAT32_MAX;
+
+        desc.ComparisonFunc = D3D12_COMPARISON_FUNC_NEVER;
+        desc.BorderColor = D3D12_STATIC_BORDER_COLOR_OPAQUE_BLACK;
+
         desc.ShaderRegister = (uint)_sampler;
         desc.ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL;
 

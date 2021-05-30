@@ -59,5 +59,17 @@ PS_Output_Quad PS_Copy(VS_Output_Quad _input)
     return output;
 }
 
+PS_Output_Quad PS_Gamma(VS_Output_Quad _input)
+{
+    PS_Output_Quad output;
+    float2 uv = _input.uv;
+    output.color0 = float4(uv, 0, 1);
+
+    output.color0.rgba = Texture2DTable[rootConstants2D.texID].Sample(nearestRepeat, uv).rgba;
+    output.color0.rgb = pow(output.color0.rgb, 1.0f/2.2f);
+
+    return output;
+}
+
 
 

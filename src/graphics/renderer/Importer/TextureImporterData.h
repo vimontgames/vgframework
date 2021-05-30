@@ -13,6 +13,6 @@ namespace vg::graphics::renderer
 
         core::string                    name;
         driver::TextureDesc             desc;
-        core::vector<driver::MipData>   mips;
+        core::vector<core::u8>          texels;
     };
 }

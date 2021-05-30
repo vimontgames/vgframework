@@ -88,7 +88,7 @@ namespace vg::graphics::renderer
         const float fovY = pi / 4.0f;
         const float ar = float(backbuffer.width) / float(backbuffer.height);
 
-        float4x4 proj = setPerspectiveProjectionRH(fovY, ar, 0.01f, 1000.0f);
+        float4x4 proj = setPerspectiveProjectionRH(fovY, ar, 1.0f, 4096.0f);
 
         View * view = renderer->getView();
         float4x4 viewProj = mul(view->GetViewInvMatrix(), proj);

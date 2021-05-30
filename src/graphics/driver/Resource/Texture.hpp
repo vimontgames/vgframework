@@ -57,6 +57,7 @@ namespace vg::graphics::driver
                 case PixelFormat::R8G8B8A8_unorm_sRGB:
                 case PixelFormat::B8G8R8A8_unorm:
                 case PixelFormat::B8G8R8A8_unorm_sRGB:
+                case PixelFormat::R16G16B16A16_float:
                     return false;
 
                 case PixelFormat::D32S8:
@@ -69,25 +70,24 @@ namespace vg::graphics::driver
             super(_name, nullptr),
 			m_texDesc(_texDesc)
 		{
-			VG_DEBUGPRINT("[Device] Init %s \"%s\" (", asString(_texDesc.type).c_str(), _name.c_str());
-			VG_DEBUGPRINT("%u", _texDesc.width);
-			VG_DEBUGPRINT("x%u", _texDesc.height);
-			if (_texDesc.depth > 1)
-				VG_DEBUGPRINT("x%u", _texDesc.depth);
-			VG_DEBUGPRINT(" %s", asString(_texDesc.format).c_str());
-
-			bool first = true;
-			for (uint i = 0; i < countBits(_texDesc.flags); ++i)
-			{
-				const TextureFlags flag = TextureFlags(1 << i);
-				if (asBool(_texDesc.flags & flag))
-				{
-					VG_DEBUGPRINT("%c%s", first ? ' ':'|', asString(flag).c_str());
-					first = false;
-				}
-			}
-            int i = 0;
-			VG_DEBUGPRINT(")\n");
+            //VG_DEBUGPRINT("[Device] Init %s \"%s\" (", asString(_texDesc.type).c_str(), _name.c_str());
+            //VG_DEBUGPRINT("%u", _texDesc.width);
+            //VG_DEBUGPRINT("x%u", _texDesc.height);
+            //if (_texDesc.depth > 1)
+            //	VG_DEBUGPRINT("x%u", _texDesc.depth);
+            //VG_DEBUGPRINT(" %s", asString(_texDesc.format).c_str());
+            //
+            //bool first = true;
+            //for (uint i = 0; i < countBits(_texDesc.flags); ++i)
+            //{
+            //	const TextureFlags flag = TextureFlags(1 << i);
+            //	if (asBool(_texDesc.flags & flag))
+            //	{
+            //		VG_DEBUGPRINT("%c%s", first ? ' ':'|', asString(flag).c_str());
+            //		first = false;
+            //	}
+            //}
+            //VG_DEBUGPRINT(")\n");
 		}
 
 		//--------------------------------------------------------------------------------------
