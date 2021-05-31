@@ -70,3 +70,13 @@ Also don't forget to set the *working directory* to **$(SolutionDir)**.
 
 ![Screenshot](doc/img/SolutionPlatformName1.png)
 ![Screenshot](doc/img/SolutionPlatformName2.png)
+
+# models
+Jess Casual Walking 001
+https://www.cgtrader.com/free-3d-models/character/woman/woman-jess-casual-walking-001
+
+3d scan man 1
+https://www.cgtrader.com/free-3d-models/character/man/3d-scan-man
+
+3D Scan Man Summer 016
+https://www.cgtrader.com/free-3d-models/character/man/3d-scan-man-summer-016

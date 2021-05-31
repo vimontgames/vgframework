@@ -11,7 +11,7 @@ namespace vg::graphics::driver
     bool TextureImporter::importTextureData(const core::string & _path, TextureDesc & _desc, vector<u8> & _buffer)
     {
         int width, height, channels;
-        stbi_uc * data = stbi_load(_path.c_str(), &width, &height, &channels, 4);
+        stbi_uc * data = stbi_load(_path.c_str(), &width, &height, &channels, 0);
 
         if (nullptr != data)
         {

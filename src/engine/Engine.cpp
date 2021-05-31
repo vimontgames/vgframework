@@ -318,7 +318,8 @@ namespace vg::engine
 
 #if 1
         //addMeshToScene("Box", "data/Models/matIDBox/matIDBox.fbx", float4(80.0f, 0.0f, 10.0f, 1.0f));
-        addMeshToScene("Human", "data/Models/human/human.fbx", float4(-1.0f, 0.0f, 0.0f, 1.0f));
+        addMeshToScene("3DScanMan001", "data/Models/human/human.fbx", float4(-1.0f, 0.0f, 0.0f, 1.0f));
+        addMeshToScene("3DScanMan016", "data/Models/3DScan_Man_016/3DScan_Man_016.FBX", float4(0.0f, 0.0f, 0.0f, 1.0f));
         addMeshToScene("Jess", "data/Models/jess/jess.fbx", float4(+1.0f, 0.0f, 00.0f, 1.0f));
         //addMeshToScene("Floor", "data/Models/floor/floor.fbx", float4(0.0f, 0.0f, -10.0f, 1.0f));
 #else
