@@ -196,6 +196,7 @@ namespace vg::graphics::driver::vulkan
         static const char * ignoreList[] =
         {
             "VUID-vkCmdResetQueryPool-commandBuffer-recording",
+            "VUID-vkFreeDescriptorSets-pDescriptorSets-00309",
             "UNASSIGNED-CoreValidation-DrawState-QueryNotReset",
             "UNASSIGNED-CoreValidation-Shader-DescriptorTypeMismatch"
         };

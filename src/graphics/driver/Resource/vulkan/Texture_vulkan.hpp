@@ -121,7 +121,7 @@ namespace vg::graphics::driver::vulkan
                               imgDesc.imageType = getVulkanImageType(_texDesc.type);
                               imgDesc.format = getVulkanPixelFormat(_texDesc.format);
                               imgDesc.extent = { _texDesc.width, _texDesc.height, _texDesc.depth };
-                              imgDesc.mipLevels = 1;
+                              imgDesc.mipLevels = _texDesc.mipmaps;
                               imgDesc.arrayLayers = 1;
                               imgDesc.samples = VK_SAMPLE_COUNT_1_BIT;
                               imgDesc.flags = 0;
@@ -174,7 +174,7 @@ namespace vg::graphics::driver::vulkan
 
 			vkImageViewDesc.subresourceRange.aspectMask = isDepthStencilFormat(_texDesc.format) ? (VK_IMAGE_ASPECT_DEPTH_BIT/*|VK_IMAGE_ASPECT_STENCIL_BIT*/) : VK_IMAGE_ASPECT_COLOR_BIT; // TODO: create another view for stencil if needed
 			vkImageViewDesc.subresourceRange.baseMipLevel = 0;
-			vkImageViewDesc.subresourceRange.levelCount = 1;
+			vkImageViewDesc.subresourceRange.levelCount = _texDesc.mipmaps;
 			vkImageViewDesc.subresourceRange.baseArrayLayer = 0;
 			vkImageViewDesc.subresourceRange.layerCount = 1;
 
@@ -189,18 +189,18 @@ namespace vg::graphics::driver::vulkan
                 m_bindlessSRVHandle = bindlessTable->allocBindlessTextureHandle(static_cast<driver::Texture*>(this), _reservedSlot);
 
                 VkDescriptorImageInfo tex_descs = {};
-                tex_descs.imageView = m_vkImageView;
-                tex_descs.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
-                tex_descs.sampler = nullptr;
+                                      tex_descs.imageView = m_vkImageView;
+                                      tex_descs.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+                                      tex_descs.sampler = nullptr;
 
                 VkWriteDescriptorSet writes = {};
-                writes.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
-                writes.dstBinding = bindless_texture_SRV_binding;
-                writes.descriptorCount = 1;
-                writes.descriptorType = VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE;
-                writes.pImageInfo = &tex_descs;
-                writes.dstSet = device->m_vkBindlessDescriptors;
-                writes.dstArrayElement = m_bindlessSRVHandle - bindless_texture_SRV_offset;
+                                     writes.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+                                     writes.dstBinding = bindless_texture_SRV_binding;
+                                     writes.descriptorCount = 1;
+                                     writes.descriptorType = VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE;
+                                     writes.pImageInfo = &tex_descs;
+                                     writes.dstSet = device->m_vkBindlessDescriptors;
+                                     writes.dstArrayElement = m_bindlessSRVHandle - bindless_texture_SRV_offset;
 
                 vkUpdateDescriptorSets(device->getVulkanDevice(), 1, &writes, 0, nullptr);
 
@@ -217,10 +217,19 @@ namespace vg::graphics::driver::vulkan
 
                     const uint_ptr offset = context.m_uploadBuffer->alloc(uploadBufferSize, (uint)mem_reqs.alignment);
                     u8 * dst = context.m_uploadBuffer->getBaseAddress() + offset;
+                    uint_ptr currentOffset = 0;
 
-                    // Copy to upload buffer line by line
-                    for (uint y = 0; y < _texDesc.height; ++y)
-                        memcpy(dst + y * _texDesc.width * fmtSize, &((u8*)_initData)[y * _texDesc.width * fmtSize], fmtSize * _texDesc.width);
+                    for (uint i = 0; i < _texDesc.mipmaps; ++i)
+                    {
+                        const uint w = _texDesc.width >> i;
+                        const uint h = _texDesc.height >> i;
+
+                        // Copy to upload buffer line by line
+                        for (uint y = 0; y < h; ++y)
+                            memcpy(currentOffset + dst + y * w * fmtSize, currentOffset + &((u8*)_initData)[y * w * fmtSize], fmtSize * w);
+
+                        currentOffset += w * h * fmtSize;
+                    }
 
                     context.m_uploadBuffer->upload(static_cast<driver::Texture*>(this), offset);
                 }

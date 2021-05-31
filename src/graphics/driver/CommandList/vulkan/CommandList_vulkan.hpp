@@ -271,31 +271,44 @@ namespace vg::graphics::driver::vulkan
 
         const auto & desc = _dst->getTexDesc();
 
-        VkBufferImageCopy vkBufImgCopy = {};
-        vkBufImgCopy.bufferOffset = _from;
-        vkBufImgCopy.bufferRowLength = 0;
-        vkBufImgCopy.bufferImageHeight = 0;
-        vkBufImgCopy.imageSubresource = { VK_IMAGE_ASPECT_COLOR_BIT, 0, 0, 1 };
-        vkBufImgCopy.imageOffset = { 0, 0, 0 };
-        vkBufImgCopy.imageExtent = { desc.width, desc.height, 1 };
-
         VkImageMemoryBarrier image_memory_barrier = {};
-        image_memory_barrier.sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER;
-        image_memory_barrier.pNext = NULL;
-        image_memory_barrier.srcAccessMask = 0;
-        image_memory_barrier.dstAccessMask = VK_ACCESS_TRANSFER_WRITE_BIT;
-        image_memory_barrier.srcQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
-        image_memory_barrier.dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
-        image_memory_barrier.oldLayout = VK_IMAGE_LAYOUT_PREINITIALIZED;
-        image_memory_barrier.newLayout = VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL;
-        image_memory_barrier.image = _dst->getResource().getVulkanImage();
-        image_memory_barrier.subresourceRange = { VK_IMAGE_ASPECT_COLOR_BIT, 0, 1, 0, 1};
-        // Make sure anything that was copying from this image has completed 
-        image_memory_barrier.dstAccessMask = VK_ACCESS_TRANSFER_WRITE_BIT;
+                             image_memory_barrier.sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER;
+                             image_memory_barrier.pNext = NULL;
+                             image_memory_barrier.srcAccessMask = 0;
+                             image_memory_barrier.dstAccessMask = VK_ACCESS_TRANSFER_WRITE_BIT;
+                             image_memory_barrier.srcQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
+                             image_memory_barrier.dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
+                             image_memory_barrier.oldLayout = VK_IMAGE_LAYOUT_PREINITIALIZED;
+                             image_memory_barrier.newLayout = VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL;
+                             image_memory_barrier.image = _dst->getResource().getVulkanImage();
+                             image_memory_barrier.subresourceRange = { VK_IMAGE_ASPECT_COLOR_BIT, 0, desc.mipmaps, 0, 1 };
+                             // Make sure anything that was copying from this image has completed 
+                             image_memory_barrier.dstAccessMask = VK_ACCESS_TRANSFER_WRITE_BIT;
 
         vkCmdPipelineBarrier(m_vkCommandBuffer, VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT, VK_PIPELINE_STAGE_TRANSFER_BIT, 0, 0, nullptr, 0, nullptr, 1, &image_memory_barrier);
 
-        vkCmdCopyBufferToImage(m_vkCommandBuffer, context.m_uploadBuffer->getBuffer()->getResource().getVulkanBuffer() , _dst->getResource().getVulkanImage(), VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, 1, &vkBufImgCopy);
+        VkDeviceSize currentOffset = _from;
+
+        for (uint i = 0; i < desc.mipmaps; ++i)
+        {
+            const uint w = desc.width >> i;
+            const uint h = desc.height >> i;
+
+            VkBufferImageCopy vkBufImgCopy = {};
+                              vkBufImgCopy.bufferOffset = currentOffset;
+                              vkBufImgCopy.bufferRowLength = 0;
+                              vkBufImgCopy.bufferImageHeight = 0;
+                              vkBufImgCopy.imageSubresource.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+                              vkBufImgCopy.imageSubresource.mipLevel = i;
+                              vkBufImgCopy.imageSubresource.baseArrayLayer = 0;
+                              vkBufImgCopy.imageSubresource.layerCount = 1;
+                              vkBufImgCopy.imageOffset = { 0, 0, 0 };
+                              vkBufImgCopy.imageExtent = { w, h, 1 };
+
+            vkCmdCopyBufferToImage(m_vkCommandBuffer, context.m_uploadBuffer->getBuffer()->getResource().getVulkanBuffer(), _dst->getResource().getVulkanImage(), VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, 1, &vkBufImgCopy);
+
+            currentOffset += w * h * Texture::getPixelFormatSize(desc.format);
+        }
 
         VkImageMemoryBarrier image_memory_barrier2 = {};
         image_memory_barrier2.sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER;
@@ -307,7 +320,7 @@ namespace vg::graphics::driver::vulkan
         image_memory_barrier2.oldLayout = VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
         image_memory_barrier2.newLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL,
         image_memory_barrier2.image = _dst->getResource().getVulkanImage();
-        image_memory_barrier2.subresourceRange = { VK_IMAGE_ASPECT_COLOR_BIT, 0, 1, 0, 1};
+        image_memory_barrier2.subresourceRange = { VK_IMAGE_ASPECT_COLOR_BIT, 0, desc.mipmaps, 0, 1};
 
         vkCmdPipelineBarrier(m_vkCommandBuffer, VK_PIPELINE_STAGE_TRANSFER_BIT, VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT, 0, 0, NULL, 0, NULL, 1, &image_memory_barrier2);
     }

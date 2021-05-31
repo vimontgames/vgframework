@@ -6,21 +6,21 @@ namespace vg::graphics::driver::vulkan
         const driver::SamplerState samplerState(_sampler);
 
         VkSamplerCreateInfo samplerCreateInfo = {};
-        samplerCreateInfo.sType = VK_STRUCTURE_TYPE_SAMPLER_CREATE_INFO;
-        samplerCreateInfo.magFilter = getVulkanFilter(samplerState.filter);             // VK_FILTER_NEAREST;
-        samplerCreateInfo.minFilter = getVulkanFilter(samplerState.filter);             // VK_FILTER_NEAREST;
-        samplerCreateInfo.mipmapMode = getVulkanMipmapMode(samplerState.filter);        // VK_SAMPLER_MIPMAP_MODE_NEAREST;
-        samplerCreateInfo.addressModeU = getVulkanAddressMode(samplerState.address);    // VK_SAMPLER_ADDRESS_MODE_REPEAT;
-        samplerCreateInfo.addressModeV = getVulkanAddressMode(samplerState.address);    // VK_SAMPLER_ADDRESS_MODE_REPEAT;
-        samplerCreateInfo.addressModeW = getVulkanAddressMode(samplerState.address);    // VK_SAMPLER_ADDRESS_MODE_REPEAT;
-        samplerCreateInfo.mipLodBias = 0.0;
-        samplerCreateInfo.anisotropyEnable = VK_FALSE;
-        samplerCreateInfo.maxAnisotropy = 1;
-        samplerCreateInfo.compareOp = VK_COMPARE_OP_NEVER;
-        samplerCreateInfo.minLod = 0.0;
-        samplerCreateInfo.maxLod = 0.0;
-        samplerCreateInfo.compareEnable = VK_FALSE;
-        samplerCreateInfo.borderColor = VK_BORDER_COLOR_FLOAT_OPAQUE_WHITE;
+                            samplerCreateInfo.sType = VK_STRUCTURE_TYPE_SAMPLER_CREATE_INFO;
+                            samplerCreateInfo.magFilter = getVulkanFilter(samplerState.filter);             // VK_FILTER_NEAREST;
+                            samplerCreateInfo.minFilter = getVulkanFilter(samplerState.filter);             // VK_FILTER_NEAREST;
+                            samplerCreateInfo.mipmapMode = getVulkanMipmapMode(samplerState.filter);        // VK_SAMPLER_MIPMAP_MODE_NEAREST;
+                            samplerCreateInfo.addressModeU = getVulkanAddressMode(samplerState.address);    // VK_SAMPLER_ADDRESS_MODE_REPEAT;
+                            samplerCreateInfo.addressModeV = getVulkanAddressMode(samplerState.address);    // VK_SAMPLER_ADDRESS_MODE_REPEAT;
+                            samplerCreateInfo.addressModeW = getVulkanAddressMode(samplerState.address);    // VK_SAMPLER_ADDRESS_MODE_REPEAT;
+                            samplerCreateInfo.mipLodBias = 0.0;
+                            samplerCreateInfo.anisotropyEnable = VK_FALSE;
+                            samplerCreateInfo.maxAnisotropy = 1;
+                            samplerCreateInfo.compareOp = VK_COMPARE_OP_NEVER;
+                            samplerCreateInfo.minLod = 0.0f;
+                            samplerCreateInfo.maxLod = VK_LOD_CLAMP_NONE;
+                            samplerCreateInfo.compareEnable = VK_FALSE;
+                            samplerCreateInfo.borderColor = VK_BORDER_COLOR_FLOAT_OPAQUE_WHITE;
 
         return samplerCreateInfo;
     }
