@@ -7,7 +7,7 @@ Its renderer only uses modern graphics APIs like DirectX12 and Vulkan (I would a
 * Apart from the number of root constants, all shaders are sharing the same root signatures
 
 
-![Screenshot](doc/img/screenshot4.png)
+![Screenshot](doc/img/screenshot5.png)
  
  
 For the engine part, so far I integrated several "must-haves" tools like a CPU/GPU profiler, inputs, a job scheduler and Dear Imgui, and is currently implementing serialization and a basic Entity-Component system.  
@@ -72,11 +72,11 @@ Also don't forget to set the *working directory* to **$(SolutionDir)**.
 ![Screenshot](doc/img/SolutionPlatformName2.png)
 
 # models
-Jess Casual Walking 001
+Jess Casual Walking 001\
 https://www.cgtrader.com/free-3d-models/character/woman/woman-jess-casual-walking-001
 
-3d scan man 1
+3d scan man 1\
 https://www.cgtrader.com/free-3d-models/character/man/3d-scan-man
 
-3D Scan Man Summer 016
+3D Scan Man Summer 016\
 https://www.cgtrader.com/free-3d-models/character/man/3d-scan-man-summer-016
