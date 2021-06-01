@@ -33,8 +33,6 @@ namespace vg::graphics::driver
     {
         Device * device = Device::get();
 
-        OPTICK_APP("VGFramework");
-
         #ifdef VG_DX12
 
         vector<ID3D12CommandQueue*> d3d12Queues;
