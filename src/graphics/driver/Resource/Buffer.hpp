@@ -6,6 +6,7 @@ namespace vg::graphics::driver
     {
         //--------------------------------------------------------------------------------------
         Buffer::Buffer(const BufferDesc & _bufDesc, const core::string & _name, const void * _initData) :
+            super(_name, nullptr),
             m_bufDesc(_bufDesc)
         {
             //VG_DEBUGPRINT("[Device] Init Buffer \"%s\" (", _name.c_str());

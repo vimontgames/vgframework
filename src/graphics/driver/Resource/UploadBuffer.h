@@ -8,7 +8,7 @@ namespace vg::graphics::driver
     class UploadBuffer
     {
     public:
-        UploadBuffer(const core::string & _name, core::uint _size);
+        UploadBuffer(const core::string & _name, core::uint _size, core::uint _index);
         ~UploadBuffer();
 
         core::uint_ptr  alloc           (core::size_t _size, core::size_t _alignment);
@@ -24,5 +24,6 @@ namespace vg::graphics::driver
         core::atomic<core::uint_ptr>                            m_offsetCur = 0;
         core::vector<core::pair<Texture*, core::uint_ptr>>      m_texturesToUpload;
         core::vector<core::pair<Buffer*, core::uint_ptr>>       m_buffersToUpload;
+        core::u8                                                m_index;
     };
 }

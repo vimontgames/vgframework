@@ -85,6 +85,15 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
+    JobSync Scheduler::kickJob(Job * _job)
+    {
+        px_sched::Sync s;
+        px_sched::Job j{ _job };
+        m_schd->run(j, &s);
+        return *reinterpret_cast<JobSync*>(&s);
+    }
+
+    //--------------------------------------------------------------------------------------
     void Scheduler::registerProfilerThreads()
     {
         registerProfilerThreads(m_threadCount);

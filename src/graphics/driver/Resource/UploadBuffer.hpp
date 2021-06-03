@@ -4,7 +4,9 @@
 namespace vg::graphics::driver
 {
     //--------------------------------------------------------------------------------------
-    UploadBuffer::UploadBuffer(const core::string & _name, core::uint _size)
+    UploadBuffer::UploadBuffer(const core::string & _name, core::uint _size, uint _index) :
+        m_index(_index),
+        m_offsetCur(0)
     {
         BufferDesc bufDesc(
             Usage::Upload,
@@ -18,7 +20,6 @@ namespace vg::graphics::driver
         // keep always mapped
         Map result = m_uploadBuffer->getResource().map();
         m_uploadBegin = (core::u8*)result.data;
-        m_offsetCur = 0;
     }
 
     //--------------------------------------------------------------------------------------
@@ -52,18 +53,25 @@ namespace vg::graphics::driver
     //--------------------------------------------------------------------------------------
     void UploadBuffer::upload(driver::Texture * _dst, core::uint_ptr _from)
     {
+        //VG_DEBUGPRINT("[UploadBuffer #%u] upload texture \"%s\" from 0x%016X\n", m_index, _dst->getName().c_str(), _from);
+
         m_texturesToUpload.push_back({ _dst, _from });
     }
 
     //--------------------------------------------------------------------------------------
     void UploadBuffer::upload(driver::Buffer * _dst, core::uint_ptr _from)
     {
+        //VG_DEBUGPRINT("[UploadBuffer #%u] upload buffer \"%s\" from 0x%016X\n", m_index, _dst->getName().c_str(), _from);
+
         m_buffersToUpload.push_back({ _dst, _from });
     }
 
     //--------------------------------------------------------------------------------------
     void UploadBuffer::flush(CommandList * _cmdList)
     {
+        //if (m_buffersToUpload.size() || m_texturesToUpload.size())
+        //    VG_DEBUGPRINT("[UploadBuffer #%u] Flush %u buffer(s) %u texture(s)\n", m_index, m_buffersToUpload.size(), m_texturesToUpload.size());
+
         for (uint i = 0; i < m_buffersToUpload.size(); ++i)
         {
             auto & pair = m_buffersToUpload[i];

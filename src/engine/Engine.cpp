@@ -368,6 +368,7 @@ namespace vg::engine
 	void Engine::deinit()
 	{
         m_renderer->waitGPUIdle();
+        m_resourceManager->flushPendingLoading();
 
         destroyEditorView();
 
@@ -434,7 +435,7 @@ namespace vg::engine
 
         Kernel::getInput()->update();
 
-        m_resourceManager->flushLoading();
+        m_resourceManager->updateLoading();
 
         Sector * root = (Sector*)m_scene->getRoot();
         if (root)

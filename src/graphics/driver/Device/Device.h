@@ -88,6 +88,8 @@ namespace vg::graphics::driver
             driver::PixelFormat                             getBackbufferFormat         () const { return m_backbufferFormat; }
             driver::ShaderManager *                         getShaderManager            () { return m_shaderManager;}
 
+            void                                            upload                      (Buffer * _buffer, core::u8 * _data, core::size_t _size);
+
 		//protected:
             DeviceCaps                                      m_caps;
 			driver::CommandQueue*				            m_commandQueue[core::enumCount<CommandQueueType>()];
@@ -104,6 +106,8 @@ namespace vg::graphics::driver
             core::u8                                        m_currentFrameIndex;        // current frame being rendered
             core::u8                                        m_nextFrameIndex;
             core::u8                                        m_currentBackbufferIndex;   // current backbuffer being used
+
+
 		};
 	}
 }
