@@ -144,6 +144,7 @@ namespace vg::graphics::driver::dx12
 		for (uint i = 0; i < max_frame_latency; ++i)
 			createFrameContext(i);
 
+        createUploadBuffer();
         created3d12Backbuffers();
 
         m_bindlessTable = new driver::BindlessTable();
@@ -276,6 +277,8 @@ namespace vg::graphics::driver::dx12
 	//--------------------------------------------------------------------------------------
 	void Device::deinit()
 	{
+        destroyUploadBuffer();
+
         for (uint i = 0; i < countof(m_frameContext); ++i)
             destroyFrameContext(i);
 

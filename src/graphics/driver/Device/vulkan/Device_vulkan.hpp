@@ -378,6 +378,7 @@ namespace vg::graphics::driver::vulkan
         for (uint i = 0; i < max_frame_latency; ++i)
             createFrameContext(i);
 		
+        createUploadBuffer();
         createVulkanBackbuffers();
 
         m_bindlessTable = new driver::BindlessTable();
@@ -933,6 +934,7 @@ namespace vg::graphics::driver::vulkan
         m_vkRenderPassHash.clear();
 
 		destroyCommandQueues();
+        destroyUploadBuffer();
 
 		for (uint i = 0; i < countof(m_frameContext); ++i)
 			destroyFrameContext(i);

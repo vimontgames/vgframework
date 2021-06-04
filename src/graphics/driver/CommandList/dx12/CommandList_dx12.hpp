@@ -380,7 +380,7 @@ namespace vg::graphics::driver::dx12
         const auto & bufDesc = _dst->getBufDesc();       
 
         ID3D12Resource * dst = _dst->getResource().getd3d12BufferResource();
-        ID3D12Resource *  src = context.m_uploadBuffer->getBuffer()->getResource().getd3d12BufferResource();
+        ID3D12Resource *  src = device->getUploadBuffer()->getBuffer()->getResource().getd3d12BufferResource();
 
         m_d3d12graphicsCmdList->CopyBufferRegion(dst, 0, src, _from, bufDesc.size());
 
@@ -431,7 +431,7 @@ namespace vg::graphics::driver::dx12
             D3D12_TEXTURE_COPY_LOCATION src = {};
                                         src.Type = D3D12_TEXTURE_COPY_TYPE_PLACED_FOOTPRINT;
                                         src.PlacedFootprint = placedTexture2D;
-                                        src.pResource = context.m_uploadBuffer->getBuffer()->getResource().getd3d12BufferResource();
+                                        src.pResource = device->getUploadBuffer()->getBuffer()->getResource().getd3d12BufferResource();
 
                                     
             m_d3d12graphicsCmdList->CopyTextureRegion(&dst, 0, 0, 0, &src, nullptr);

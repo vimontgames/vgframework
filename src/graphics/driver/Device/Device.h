@@ -41,7 +41,6 @@ namespace vg::graphics::driver
 		core::vector<driver::CommandPool*>	            commandPools;
 		core::vector<driver::CommandList*>	            commandLists[core::enumCount<CommandListType>()];
         core::vector<core::Object*>                     m_objectsToRelease;
-        UploadBuffer *                                  m_uploadBuffer = nullptr;
         UINT64                                          mFrameFenceId;
 	};
 
@@ -73,6 +72,10 @@ namespace vg::graphics::driver
 			core::uint                                      getFrameContextIndex        () const;
             FrameContext &									getCurrentFrameContext      ();
 
+            void                                            createUploadBuffer          ();
+            void                                            destroyUploadBuffer         ();
+            UploadBuffer *                                  getUploadBuffer             ();
+
             void											createBackbuffer            (core::uint _backbufferIndex, void * _backbuffer);
             void											destroyBackbuffer           (core::uint _backbufferIndex);
             core::uint                                      getBackbufferIndex          () const;
@@ -88,12 +91,12 @@ namespace vg::graphics::driver
             driver::PixelFormat                             getBackbufferFormat         () const { return m_backbufferFormat; }
             driver::ShaderManager *                         getShaderManager            () { return m_shaderManager;}
 
-            void                                            upload                      (Buffer * _buffer, core::u8 * _data, core::size_t _size);
 
 		//protected:
             DeviceCaps                                      m_caps;
 			driver::CommandQueue*				            m_commandQueue[core::enumCount<CommandQueueType>()];
 			FrameContext									m_frameContext[max_frame_latency];
+            UploadBuffer *                                  m_uploadBuffer = nullptr;
             BufferContext                                   m_bufferContext[max_backbuffer_count];
 			core::u64										m_frameCounter = 0;
             driver::PixelFormat                             m_backbufferFormat;

@@ -99,6 +99,24 @@ namespace vg::graphics::driver
 			return getCurrentFrameContext().commandLists[asInteger(_type)];
 		}
 
+        //--------------------------------------------------------------------------------------
+        void Device::createUploadBuffer()
+        {
+            m_uploadBuffer = new UploadBuffer("Upload", 512 * 1024 * 1024);
+        }
+
+        //--------------------------------------------------------------------------------------
+        void Device::destroyUploadBuffer()
+        {
+            VG_SAFE_DELETE(m_uploadBuffer);
+        }
+
+        //--------------------------------------------------------------------------------------
+        UploadBuffer * Device::getUploadBuffer()
+        {
+            return m_uploadBuffer;
+        }
+
 		//--------------------------------------------------------------------------------------
 		void Device::createFrameContext(core::uint _frameContextIndex)
 		{
@@ -132,11 +150,6 @@ namespace vg::graphics::driver
 					cmdLists.push_back(new driver::CommandList(CommandListType::Graphics, cmdPool, _frameContextIndex, cmdListIndex));
 				}
 			}
-
-            // Buffer for uploads
-            {
-                context.m_uploadBuffer = new UploadBuffer("Upload#" + to_string(_frameContextIndex), 512 * 1024 * 1024, _frameContextIndex);
-            }
 		}
 
 		//--------------------------------------------------------------------------------------
@@ -159,8 +172,6 @@ namespace vg::graphics::driver
             for (Object * obj : context.m_objectsToRelease)
                 VG_SAFE_RELEASE(obj);
             context.m_objectsToRelease.clear();
-
-            VG_SAFE_DELETE(context.m_uploadBuffer);
 		}
 
         //--------------------------------------------------------------------------------------
@@ -358,7 +369,7 @@ namespace vg::graphics::driver
         auto & context = getCurrentFrameContext();
         auto * cmdList = context.commandLists[asInteger(CommandQueueType::Graphics)][0];
 
-        context.m_uploadBuffer->flush(cmdList);
+        m_uploadBuffer->flush(cmdList);
     }
 
 	//--------------------------------------------------------------------------------------

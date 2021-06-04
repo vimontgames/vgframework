@@ -90,15 +90,13 @@ namespace vg::graphics::driver::vulkan
 
                     u64 uploadBufferSize = mem_reqs.size;
 
-                    auto & context = device->getCurrentFrameContext();
-
-                    // Copy to upload buffer
-                    const uint_ptr offset = context.m_uploadBuffer->alloc(uploadBufferSize, (uint)mem_reqs.alignment);
-                    u8 * dst = context.m_uploadBuffer->getBaseAddress() + offset;
-
-                    memcpy(dst, _initData, _bufDesc.size());
-
-                    context.m_uploadBuffer->upload(static_cast<driver::Buffer*>(this), offset);
+                    auto * uploadBuffer = device->getUploadBuffer();
+                    u8 * dst = uploadBuffer->map(uploadBufferSize, (uint)mem_reqs.alignment);
+                    {
+                        // Copy to upload buffer
+                        memcpy(dst, _initData, _bufDesc.size());
+                    }
+                    uploadBuffer->unmap(static_cast<driver::Buffer*>(this), dst);
                 }
             }
         }

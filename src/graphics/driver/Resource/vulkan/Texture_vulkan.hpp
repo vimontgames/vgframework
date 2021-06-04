@@ -213,25 +213,23 @@ namespace vg::graphics::driver::vulkan
 
                     u64 uploadBufferSize = mem_reqs.size;
 
-                    auto & context = device->getCurrentFrameContext();
-
-                    const uint_ptr offset = context.m_uploadBuffer->alloc(uploadBufferSize, (uint)mem_reqs.alignment);
-                    u8 * dst = context.m_uploadBuffer->getBaseAddress() + offset;
-                    uint_ptr currentOffset = 0;
-
-                    for (uint i = 0; i < _texDesc.mipmaps; ++i)
+                    auto * uploadBuffer = device->getUploadBuffer();
+                    u8 * dst = uploadBuffer->map(uploadBufferSize, (uint)mem_reqs.alignment);
                     {
-                        const uint w = _texDesc.width >> i;
-                        const uint h = _texDesc.height >> i;
+                        uint_ptr currentOffset = 0;
+                        for (uint i = 0; i < _texDesc.mipmaps; ++i)
+                        {
+                            const uint w = _texDesc.width >> i;
+                            const uint h = _texDesc.height >> i;
 
-                        // Copy to upload buffer line by line
-                        for (uint y = 0; y < h; ++y)
-                            memcpy(currentOffset + dst + y * w * fmtSize, currentOffset + &((u8*)_initData)[y * w * fmtSize], fmtSize * w);
+                            // Copy to upload buffer line by line
+                            for (uint y = 0; y < h; ++y)
+                                memcpy(currentOffset + dst + y * w * fmtSize, currentOffset + &((u8*)_initData)[y * w * fmtSize], fmtSize * w);
 
-                        currentOffset += w * h * fmtSize;
+                            currentOffset += w * h * fmtSize;
+                        }
                     }
-
-                    context.m_uploadBuffer->upload(static_cast<driver::Texture*>(this), offset);
+                    uploadBuffer->unmap(static_cast<driver::Texture*>(this), dst);
                 }
             }
 		}

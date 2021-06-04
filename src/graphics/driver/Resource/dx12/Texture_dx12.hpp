@@ -266,16 +266,16 @@ namespace vg::graphics::driver::dx12
                 setSubResourceData(i, footprint[i].Offset);
 
             // Copy to upload buffer line by line
-            core::uint_ptr offset = context.m_uploadBuffer->alloc(d3d12TotalSizeInBytes, D3D12_TEXTURE_DATA_PLACEMENT_ALIGNMENT);
-            core::u8 * dst = context.m_uploadBuffer->getBaseAddress() + offset;
-
-            for (uint i = 0; i < subResourceCount; ++i)
+            auto * uploadBuffer = device->getUploadBuffer();
+            core::u8 * dst = uploadBuffer->map(d3d12TotalSizeInBytes, D3D12_TEXTURE_DATA_PLACEMENT_ALIGNMENT);
             {
-                for (uint y = 0; y < rows[i]; ++y)
-                    memcpy(dst + footprint[i].Offset + footprint[i].Footprint.RowPitch * y, (u8*)subResource[i].pData + subResource[i].RowPitch * y, strides[i]);
+                for (uint i = 0; i < subResourceCount; ++i)
+                {
+                    for (uint y = 0; y < rows[i]; ++y)
+                        memcpy(dst + footprint[i].Offset + footprint[i].Footprint.RowPitch * y, (u8*)subResource[i].pData + subResource[i].RowPitch * y, strides[i]);
+                }
             }
-
-            context.m_uploadBuffer->upload(static_cast<driver::Texture*>(this), offset);
+            uploadBuffer->unmap(static_cast<driver::Texture*>(this), dst);
         }
 	}
 

@@ -4,8 +4,7 @@
 namespace vg::graphics::driver
 {
     //--------------------------------------------------------------------------------------
-    UploadBuffer::UploadBuffer(const core::string & _name, core::uint _size, uint _index) :
-        m_index(_index),
+    UploadBuffer::UploadBuffer(const core::string & _name, core::uint _size) :
         m_offsetCur(0)
     {
         BufferDesc bufDesc(
@@ -27,6 +26,30 @@ namespace vg::graphics::driver
     {
         m_uploadBuffer->getResource().unmap();
         VG_SAFE_RELEASE(m_uploadBuffer);
+    }
+
+    //--------------------------------------------------------------------------------------
+    core::u8 * UploadBuffer::map(core::size_t _size, core::size_t _aligment)
+    {
+        m_uploadMutex.lock();
+        core::uint_ptr offset = alloc(_size, _aligment);
+        core::u8 * dst = getBaseAddress() + offset;
+        VG_ASSERT(uint_ptr(dst) + _size < uint_ptr(getBaseAddress()) + m_uploadBuffer->getBufDesc().size());
+        return dst;
+    }
+
+    //--------------------------------------------------------------------------------------
+    void UploadBuffer::unmap(Buffer * _buffer, core::u8 * _dst)
+    {
+        upload(_buffer, _dst - getBaseAddress());
+        m_uploadMutex.unlock();
+    }
+
+    //--------------------------------------------------------------------------------------
+    void UploadBuffer::unmap(Texture * _texture, core::u8 * _dst)
+    {
+        upload(_texture, _dst - getBaseAddress());
+        m_uploadMutex.unlock();
     }
 
     //--------------------------------------------------------------------------------------
@@ -69,6 +92,8 @@ namespace vg::graphics::driver
     //--------------------------------------------------------------------------------------
     void UploadBuffer::flush(CommandList * _cmdList)
     {
+        lock_guard<mutex> lock(m_uploadMutex);
+
         //if (m_buffersToUpload.size() || m_texturesToUpload.size())
         //    VG_DEBUGPRINT("[UploadBuffer #%u] Flush %u buffer(s) %u texture(s)\n", m_index, m_buffersToUpload.size(), m_texturesToUpload.size());
 
@@ -86,6 +111,6 @@ namespace vg::graphics::driver
         }
         m_texturesToUpload.clear();
 
-        m_offsetCur = 0;
+        //m_offsetCur = 0;
     }
 }

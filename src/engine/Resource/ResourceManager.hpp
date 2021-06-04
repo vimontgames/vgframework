@@ -7,7 +7,7 @@
 
 using namespace vg::core;
 
-#define VG_RESOURCE_MANAGER_ASYNC_LOADING 0
+#define VG_RESOURCE_MANAGER_ASYNC_LOADING 1
 
 namespace vg::engine
 {
@@ -71,30 +71,32 @@ namespace vg::engine
     //--------------------------------------------------------------------------------------
     void ResourceManager::updateLoading(bool _async)
     {
-        auto & resourcesToLoad = m_resourcesToLoad;
+        auto resourcesToLoad = std::move(m_resourcesToLoad);
         auto & resourcesLoaded = _async ? m_resourcesLoadedAsync : m_resourcesLoaded;
 
-        while (resourcesToLoad.size() > 0)
+        for (uint i = 0; i < resourcesToLoad.size(); ++i)
         {
-            VG_PROFILE_CPU("loading");
-
-            auto resToLoad = std::move(resourcesToLoad);
-
-            for (uint i = 0; i < resToLoad.size(); ++i)
+            auto & info = resourcesToLoad[0];
+            
+            if (i == 0)
             {
-                auto & info = resToLoad[i];
+                VG_PROFILE_CPU("loading");
 
                 auto it = m_resourcesMap.find(info.m_path);
                 if (m_resourcesMap.end() == it)
                 {
                     loadOneResource(info);
-                    resourcesLoaded.push_back(info);                    
+                    resourcesLoaded.push_back(info);
                 }
                 else
                 {
                     info.m_resource->setObject(it->second->getObject());
                     resourcesLoaded.push_back(info);
                 }
+            }
+            else
+            {
+                m_resourcesToLoad.push_back(resourcesToLoad[i]);
             }
         }
     }

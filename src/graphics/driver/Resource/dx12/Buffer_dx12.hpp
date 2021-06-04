@@ -56,16 +56,14 @@ namespace vg::graphics::driver::dx12
 
             if (nullptr != _initData)
             {
-                auto & context = device->getCurrentFrameContext();
+                const size_t uploadBufferSize = _bufDesc.size();
+                auto * uploadBuffer = device->getUploadBuffer();
 
-                size_t uploadBufferSize = _bufDesc.size();
-
-                const uint_ptr offset = context.m_uploadBuffer->alloc(uploadBufferSize, D3D12_DEFAULT_RESOURCE_PLACEMENT_ALIGNMENT);
-                core::u8 * dst = context.m_uploadBuffer->getBaseAddress() + offset;
-
-                memcpy(dst, _initData, uploadBufferSize);
-
-                context.m_uploadBuffer->upload(static_cast<driver::Buffer*>(this), offset);
+                core::u8 * dst = uploadBuffer->map(uploadBufferSize, D3D12_DEFAULT_RESOURCE_PLACEMENT_ALIGNMENT);
+                {
+                    memcpy(dst, _initData, uploadBufferSize);
+                }
+                uploadBuffer->unmap(static_cast<driver::Buffer*>(this), dst);
             }
         }
     }
