@@ -55,9 +55,13 @@ namespace vg::graphics::driver
     //--------------------------------------------------------------------------------------
     core::uint_ptr UploadBuffer::alloc(size_t _size, size_t _alignment)
     {
-        size_t alignedSize = (_size + _alignment - 1) & ~(_alignment - 1);
-        uint_ptr offset = m_offsetCur.fetch_add(alignedSize);
-        VG_ASSERT(offset + alignedSize <= m_uploadBuffer->getBufDesc().size(), "Cannot allocate %.2f MB in upload buffer heap (%.2f MB available out of %.2f MB)", float(alignedSize) / (1024.0f*1024.0f), float(m_uploadBuffer->getBufDesc().size()-offset) / (1024.0f*1024.0f), float(m_uploadBuffer->getBufDesc().size()) / (1024.0f*1024.0f));
+        const size_t totalSize = m_uploadBuffer->getBufDesc().size();
+        const size_t alignedSize = (_size + _alignment - 1) & ~(_alignment - 1);
+
+        uint_ptr offset = m_offsetCur;
+        VG_ASSERT(offset + alignedSize <= totalSize, "Cannot allocate %.2f MB in upload buffer heap (%.2f MB available out of %.2f MB)", float(alignedSize) / (1024.0f*1024.0f), float(totalSize-offset) / (1024.0f*1024.0f), float(totalSize) / (1024.0f*1024.0f));
+        m_offsetCur += alignedSize;
+
         return offset;
     }
 
@@ -76,7 +80,7 @@ namespace vg::graphics::driver
     //--------------------------------------------------------------------------------------
     void UploadBuffer::upload(driver::Texture * _dst, core::uint_ptr _from)
     {
-        //VG_DEBUGPRINT("[UploadBuffer #%u] upload texture \"%s\" from 0x%016X\n", m_index, _dst->getName().c_str(), _from);
+        VG_DEBUGPRINT("[UploadBuffer #%u] upload texture \"%s\" from 0x%016X\n", m_index, _dst->getName().c_str(), _from);
 
         m_texturesToUpload.push_back({ _dst, _from });
     }
@@ -84,7 +88,7 @@ namespace vg::graphics::driver
     //--------------------------------------------------------------------------------------
     void UploadBuffer::upload(driver::Buffer * _dst, core::uint_ptr _from)
     {
-        //VG_DEBUGPRINT("[UploadBuffer #%u] upload buffer \"%s\" from 0x%016X\n", m_index, _dst->getName().c_str(), _from);
+        VG_DEBUGPRINT("[UploadBuffer #%u] upload buffer \"%s\" from 0x%016X\n", m_index, _dst->getName().c_str(), _from);
 
         m_buffersToUpload.push_back({ _dst, _from });
     }
@@ -94,23 +98,25 @@ namespace vg::graphics::driver
     {
         lock_guard<mutex> lock(m_uploadMutex);
 
-        //if (m_buffersToUpload.size() || m_texturesToUpload.size())
-        //    VG_DEBUGPRINT("[UploadBuffer #%u] Flush %u buffer(s) %u texture(s)\n", m_index, m_buffersToUpload.size(), m_texturesToUpload.size());
-
-        for (uint i = 0; i < m_buffersToUpload.size(); ++i)
+        if (m_buffersToUpload.size() || m_texturesToUpload.size())
         {
-            auto & pair = m_buffersToUpload[i];
-            _cmdList->copyBuffer(pair.first, pair.second);
-        }
-        m_buffersToUpload.clear();
+            VG_DEBUGPRINT("[UploadBuffer #%u] Flush %u buffer(s) %u texture(s)\n", m_index, m_buffersToUpload.size(), m_texturesToUpload.size());
 
-        for (uint i = 0; i < m_texturesToUpload.size(); ++i)
-        {
-            auto & pair = m_texturesToUpload[i];
-            _cmdList->copyTexture(pair.first, pair.second);
-        }
-        m_texturesToUpload.clear();
+            for (uint i = 0; i < m_buffersToUpload.size(); ++i)
+            {
+                auto & pair = m_buffersToUpload[i];
+                _cmdList->copyBuffer(pair.first, pair.second);
+            }
+            m_buffersToUpload.clear();
 
-        //m_offsetCur = 0;
+            for (uint i = 0; i < m_texturesToUpload.size(); ++i)
+            {
+                auto & pair = m_texturesToUpload[i];
+                _cmdList->copyTexture(pair.first, pair.second);
+            }
+            m_texturesToUpload.clear();
+        }
+
+        m_index = (m_index + max_frame_latency - 1) % max_frame_latency;
     }
 }
