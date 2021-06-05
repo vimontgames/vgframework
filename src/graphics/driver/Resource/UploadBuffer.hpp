@@ -100,7 +100,7 @@ namespace vg::graphics::driver
     //--------------------------------------------------------------------------------------
     void UploadBuffer::upload(driver::Texture * _dst, core::uint_ptr _from)
     {
-        VG_DEBUGPRINT("[UploadBuffer #%u] upload texture \"%s\" from 0x%016X\n", m_index, _dst->getName().c_str(), _from);
+        //VG_DEBUGPRINT("[UploadBuffer #%u] upload texture \"%s\" from 0x%016X\n", m_index, _dst->getName().c_str(), _from);
 
         m_texturesToUpload.push_back({ _dst, _from });
     }
@@ -108,7 +108,7 @@ namespace vg::graphics::driver
     //--------------------------------------------------------------------------------------
     void UploadBuffer::upload(driver::Buffer * _dst, core::uint_ptr _from)
     {
-        VG_DEBUGPRINT("[UploadBuffer #%u] upload buffer \"%s\" from 0x%016X\n", m_index, _dst->getName().c_str(), _from);
+        //VG_DEBUGPRINT("[UploadBuffer #%u] upload buffer \"%s\" from 0x%016X\n", m_index, _dst->getName().c_str(), _from);
 
         m_buffersToUpload.push_back({ _dst, _from });
     }
@@ -120,7 +120,7 @@ namespace vg::graphics::driver
 
         if (m_buffersToUpload.size() || m_texturesToUpload.size())
         {
-            VG_DEBUGPRINT("[UploadBuffer #%u] Flush %u buffer(s) %u texture(s)\n", m_index, m_buffersToUpload.size(), m_texturesToUpload.size());
+            //VG_DEBUGPRINT("[UploadBuffer #%u] Flush %u buffer(s) %u texture(s)\n", m_index, m_buffersToUpload.size(), m_texturesToUpload.size());
 
             for (uint i = 0; i < m_buffersToUpload.size(); ++i)
             {

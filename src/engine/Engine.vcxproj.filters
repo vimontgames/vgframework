@@ -63,6 +63,7 @@
     <ClInclude Include="Resource\ResourceManager.hpp">
       <Filter>Resource</Filter>
     </ClInclude>
+    <ClInclude Include="IResourceManager.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Input">

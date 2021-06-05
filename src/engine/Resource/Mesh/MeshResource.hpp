@@ -7,9 +7,28 @@ using namespace vg::core;
 
 namespace vg::engine
 {
+    VG_AUTO_REGISTER_CLASS(MeshResource);
+
     //--------------------------------------------------------------------------------------
-    MeshResource::MeshResource(IObject * _owner) :
-        Resource(_owner)
+    bool MeshResource::registerClass(IObjectFactory & _factory)
+    {
+        if (core::IObjectDescriptor * desc = _factory.registerClassHelper(MeshResource, "Mesh Resource", IObjectDescriptor::Flags::Resource))
+            registerProperties(*desc);
+
+        return true;
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool MeshResource::registerProperties(IObjectDescriptor & _desc)
+    {
+        super::registerProperties(_desc);
+
+        return true;
+    }
+
+    //--------------------------------------------------------------------------------------
+    MeshResource::MeshResource(const core::string & _name, IObject * _parent) :
+        Resource(_name, _parent)
     {
 
     }
@@ -38,7 +57,7 @@ namespace vg::engine
     //--------------------------------------------------------------------------------------
     bool MeshResource::cook(const string & _file)
     {
-        auto * renderer = Engine::get()->getRenderer();
+        auto * renderer = Engine::get()->GetRenderer();
 
         return renderer->cookMeshModel(_file);
     }
@@ -46,7 +65,7 @@ namespace vg::engine
     //--------------------------------------------------------------------------------------
     bool MeshResource::load(const string & _path, IObject * _owner)
     {
-        auto * renderer = Engine::get()->getRenderer();
+        auto * renderer = Engine::get()->GetRenderer();
 
         VG_SAFE_RELEASE(m_object);
 

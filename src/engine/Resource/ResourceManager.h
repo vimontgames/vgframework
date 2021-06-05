@@ -1,7 +1,7 @@
 #pragma once
 
-#include "core/Object/Object.h"
 #include "core/Singleton/Singleton.h"
+#include "engine/IResourceManager.h"
 
 namespace vg::core
 {
@@ -28,10 +28,10 @@ namespace vg::engine
         core::IObject *																m_owner;
     };
 
-    class ResourceManager : public core::Object, public core::Singleton<ResourceManager>
+    class ResourceManager : public IResourceManager, public core::Singleton<ResourceManager>
     {
     public:
-        using super = core::Object;
+        using super = IResourceManager;
 
         const char *    getClassName() const final { return "ResourceManager"; }
         static bool     registerClass(core::IObjectFactory & _factory);
@@ -54,16 +54,14 @@ namespace vg::engine
         void loadOneResource(ResourceLoadInfo & info);
 
     private:
-        std::thread                                                                     m_loadingThread;
-        core::atomic<bool>                                                              m_isLoadingThreadRunning = true;
+        std::thread                         m_loadingThread;
+        core::atomic<bool>                  m_isLoadingThreadRunning = true;
 
-        core::vector<core::Resource*>                                                   m_resources;
+        core::vector<ResourceLoadInfo>      m_resourcesToLoad;
+        core::vector<ResourceLoadInfo>      m_resourcesLoaded;
+		core::dictionary<core::Resource*>   m_resourcesMap;
 
-        core::vector<ResourceLoadInfo>													m_resourcesToLoad;
-        core::vector<ResourceLoadInfo>													m_resourcesLoaded;
-		core::unordered_map<core::string, core::Resource*, core::hash<core::string>>	m_resourcesMap;
-
-        core::mutex                                                                     m_resourceLoadedAsyncMutex;
-        core::vector<ResourceLoadInfo>													m_resourcesLoadedAsync;
+        core::mutex                         m_resourceLoadedAsyncMutex;
+        core::vector<ResourceLoadInfo>      m_resourcesLoadedAsync;
     };
 }

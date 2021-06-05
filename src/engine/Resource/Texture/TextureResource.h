@@ -12,15 +12,20 @@ namespace vg::engine
     class TextureResource : public core::Resource
     {
     public:
-        TextureResource(IObject * _owner = nullptr);
-        ~TextureResource();
+        using super = core::Resource;
+        const char *                        getClassName        () const override { return "TextureResource"; }
+        static bool                         registerClass       (core::IObjectFactory & _factory);
+        static bool                         registerProperties  (core::IObjectDescriptor & _desc);
 
-        const core::vector<core::string>    getExtensions   () const final;
-        void                                onPathChanged   (IObject * _owner, const core::string & _oldPath, const core::string & _newPath) final;
+                                            TextureResource     (const core::string & _name = "", core::IObject * _parent = nullptr);
+                                            ~TextureResource    ();
 
-        bool                                cook            (const core::string & _file) final override;
-        bool                                load            (const core::string & _file, core::IObject * _owner) final override;
+        const core::vector<core::string>    getExtensions       () const final;
+        void                                onPathChanged       (IObject * _owner, const core::string & _oldPath, const core::string & _newPath) final;
 
-        graphics::driver::ITexture *        getTexture      () const { return (graphics::driver::ITexture*)m_object; }
+        bool                                cook                (const core::string & _file) final override;
+        bool                                load                (const core::string & _file, core::IObject * _owner) final override;
+
+        graphics::driver::ITexture *        getTexture          () const { return (graphics::driver::ITexture*)m_object; }
     };
 }

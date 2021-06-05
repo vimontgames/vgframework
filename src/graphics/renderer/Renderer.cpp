@@ -13,7 +13,7 @@
 #include "graphics/driver/Resource/Texture.h"
 #include "graphics/driver/Importer/TextureImporter.h"
 #include "graphics/renderer/Imgui/imguiAdapter.h"
-#include "graphics/renderer/Pass/ImguiPass.h"
+#include "graphics/renderer/Pass/ImguiPass/ImguiPass.h"
 #include "graphics/renderer/Pass/BackgroundPass.h"
 #include "graphics/renderer/Pass/TestPass3D.h"
 #include "graphics/renderer/Pass/TestPass2D.h"

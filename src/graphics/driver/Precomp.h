@@ -6,6 +6,7 @@
 #include "core/Types/Types.h"
 #include "core/Singleton/Singleton.h"
 #include "core/IProfiler.h"
+#include "core/Object/AutoRegisterClass.h" 
 
 //--------------------------------------------------------------------------------------
 // Debug macros

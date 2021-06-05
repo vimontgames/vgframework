@@ -63,7 +63,7 @@ namespace vg::graphics::renderer
         colors[ImGuiCol_TextDisabled]           = ImVec4(1.00f, 1.00f, 1.00f, 0.50f);
         colors[ImGuiCol_WindowBg]               = ImVec4(0.26f, 0.26f, 0.26f, 1.00f);
         colors[ImGuiCol_ChildBg]                = ImVec4(0.26f, 0.26f, 0.26f, 1.00f);
-        colors[ImGuiCol_PopupBg]                = ImVec4(0.26f, 0.26f, 0.26f, 1.00f);
+        colors[ImGuiCol_PopupBg]                = ImVec4(0.13f, 0.13f, 0.15f, 1.00f);
         colors[ImGuiCol_Border]                 = ImVec4(0.13f, 0.13f, 0.14f, 1.00f);
         colors[ImGuiCol_BorderShadow]           = ImVec4(1.00f, 1.00f, 1.00f, 0.06f);
         colors[ImGuiCol_FrameBg]                = ImVec4(0.35f, 0.35f, 0.35f, 1.00f);

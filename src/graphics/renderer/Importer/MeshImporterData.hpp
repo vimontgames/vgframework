@@ -16,6 +16,8 @@ namespace vg::graphics::renderer
 
             if (version == MeshImporterDataVersion)
             {
+                buffer.read(&name);
+
                 u32 batchCount;
                 buffer.read(&batchCount);
                 batches.resize(batchCount);
@@ -44,6 +46,8 @@ namespace vg::graphics::renderer
         io::Buffer buffer;
 
         buffer.write(MeshImporterDataVersion);
+
+        buffer.write(name);
 
         buffer.write((u32)batches.size());
         for (uint i = 0; i < batches.size(); ++i)

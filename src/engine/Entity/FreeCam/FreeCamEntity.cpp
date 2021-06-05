@@ -2,7 +2,6 @@
 #include "FreeCamEntity.h"
 #include "core/Math/Math.h"
 #include "core/IInput.h"
-#include "core/Object/AutoRegisterClass.h"  
 
 using namespace vg::core;
 

@@ -16,7 +16,7 @@ namespace vg::core
         static bool                 registerClass       (IObjectFactory & _factory);
         static bool                 registerProperties  (IObjectDescriptor & _desc);
 
-                                    Resource            (IObject * _owner);
+                                    Resource            (const core::string & _name, IObject * _parent);
                                     Resource            (const Resource & _other);
                                     ~Resource           ();
 

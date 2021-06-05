@@ -27,7 +27,7 @@
     <ClCompile Include="Model\Material\MaterialModel.cpp" />
     <ClCompile Include="Model\Mesh\MeshModel.cpp" />
     <ClCompile Include="Options\Options.cpp" />
-    <ClCompile Include="Pass\ImguiPass.cpp" />
+    <ClCompile Include="Pass\ImguiPass\ImguiPass.cpp" />
     <ClCompile Include="Pass\Pass.cpp" />
     <ClCompile Include="Precomp.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug_DX12|x64'">Create</PrecompiledHeader>
@@ -77,7 +77,10 @@
     <ClInclude Include="Options\Options.h" />
     <ClInclude Include="Pass\BackgroundPass.h" />
     <ClInclude Include="Pass\BackgroundPass.hpp" />
-    <ClInclude Include="Pass\ImguiPass.h" />
+    <ClInclude Include="Pass\ImguiPass\ImguiPass.h" />
+    <ClInclude Include="Pass\ImguiPass\Windows\About.hpp" />
+    <ClInclude Include="Pass\ImguiPass\Windows\DisplayOptions.hpp" />
+    <ClInclude Include="Pass\ImguiPass\Windows\Resources.hpp" />
     <ClInclude Include="Pass\PostProcessPass.h" />
     <ClInclude Include="Pass\PostProcessPass.hpp" />
     <ClInclude Include="Pass\TestPass2D.h" />

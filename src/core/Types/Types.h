@@ -80,4 +80,6 @@ namespace vg::core
     {
         return std::to_string(_val);
     }
+
+    template <typename T> using dictionary = core::unordered_map<core::string, T, core::hash<core::string> >;
 }

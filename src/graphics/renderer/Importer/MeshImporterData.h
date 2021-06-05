@@ -14,6 +14,7 @@ namespace vg::graphics::renderer
         bool load(const core::string & _file);
         bool save(const core::string & _file) const;
 
+        core::string                        name;
         core::vector<Batch>                 batches;
         core::vector<core::u32>             indices;
         core::vector<MeshImporterVertex>    vertices;

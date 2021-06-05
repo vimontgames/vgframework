@@ -2,7 +2,6 @@
 #include "CameraComponent.h"
 #include "graphics/renderer/View/View.h"
 #include "core/Entity/Entity.h"
-#include "core/Object/AutoRegisterClass.h"
 #include "core/Math/Math.h"
 
 using namespace vg::core;

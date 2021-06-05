@@ -369,6 +369,8 @@ namespace vg::graphics::renderer
         const auto start = Timer::getTick();
         VG_DEBUGPRINT("[FBXImporter] Importing FBX Mesh \"%s\" ...", _fbxNode->GetName());
 
+        _data.name = _fbxNode->GetName();
+
         VG_ASSERT(3 == _fbxMesh->GetPolygonSize(0));
 
         const uint controlPointCount = _fbxMesh->GetControlPointsCount();

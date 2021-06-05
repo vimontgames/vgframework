@@ -16,13 +16,15 @@ namespace vg::core
     //--------------------------------------------------------------------------------------
     #define propertyOffset(typeName, className, propertyName)													(typeName*)&((className*)(nullptr))->propertyName
 
+    #define registerClassHelper_NoCTor(className, displayName, flags)											registerClass(#className, displayName, flags, [](const vg::core::string & _name, vg::core::IObject * _parent) { return nullptr; })
     #define registerClassHelper(className, displayName, flags)													registerClass(#className, displayName, flags, [](const vg::core::string & _name, vg::core::IObject * _parent) { return new className(_name, _parent); })
     #define registerClassSingletonHelper(className, displayName, flags)											registerSingletonClass(#className, displayName, flags | vg::core::IObjectDescriptor::Flags::Singleton, [](){ return className::get(); } )
 
     #define registerPropertyHelper(className, propertyName, displayName, flags)									registerProperty(#propertyName, (&((className*)(nullptr))->propertyName), displayName, flags)
     #define registerPropertyObjectPointerHelper(className, propertyName, displayName, flags)                    registerProperty(#propertyName, (core::IObject**)offsetof(className, propertyName), displayName, flags);
     #define registerPropertyObjectVectorHelper(className, propertyName, elementType, displayName, flags)        registerProperty(#propertyName, sizeof(elementType), &((className*)nullptr)->propertyName, displayName, flags);
-    #define registerPropertyObjectPointerVectorHelper(className, propertyName, displayName, flags)              registerProperty(#propertyName, (core::vector<IObject*>*)&((className*)nullptr)->propertyName, displayName, flags);
+    #define registerPropertyObjectPointerVectorHelper(className, propertyName, displayName, flags)              registerProperty(#propertyName, (core::vector<core::IObject*>*)&((className*)nullptr)->propertyName, displayName, flags);
+    #define registerPropertyObjectPointerDictionaryHelper(className, propertyName, displayName, flags)          registerProperty(#propertyName, (core::dictionary<core::IObject*>*)&((className*)nullptr)->propertyName, displayName, flags);
     #define registerCallbackHelper(className, funcName, displayName, flags)										registerProperty(#funcName, funcName, displayName, flags)
 	#define registerPropertyEnumHelper(className, enumClassName, propertyName, enumValue, enumValueName, flags)	registerProperty(#propertyName, (std::underlying_type_t<enumClassName>*)(&((className*)(nullptr))->propertyName), enumValue, enumValueName, flags);
 
@@ -41,6 +43,7 @@ namespace vg::core
         {
             Undefined = 0,
             Bool,
+            Uint16,
             Uint32,
             Float,
             Float4,
@@ -52,6 +55,7 @@ namespace vg::core
 			Enum,
             ObjectVector,
             ObjectPointerVector,
+            ObjectPointerDictionary
         };
 
         enum class Flags : u64
@@ -100,6 +104,7 @@ namespace vg::core
 
         virtual void                        registerProperty        (const char * _propertyName, bool * _offset, const char * _displayName, IPropertyDescriptor::Flags _flags) = 0;
         virtual void                        registerProperty        (const char * _propertyName, core::u32 * _offset, const char * _displayName, IPropertyDescriptor::Flags _flags) = 0;
+        virtual void                        registerProperty        (const char * _propertyName, core::u16 * _offset, const char * _displayName, IPropertyDescriptor::Flags _flags) = 0;
         virtual void                        registerProperty        (const char * _propertyName, float * _offset, const char * _displayName, IPropertyDescriptor::Flags _flags) = 0;
         virtual void                        registerProperty        (const char * _propertyName, float4 * _offset, const char * _displayName, IPropertyDescriptor::Flags _flags) = 0;
         virtual void                        registerProperty        (const char * _propertyName, float4x4 * _offset, const char * _displayName, IPropertyDescriptor::Flags _flags) = 0;
@@ -109,6 +114,7 @@ namespace vg::core
         virtual void                        registerProperty        (const char * _propertyName, IPropertyDescriptor::Func _funcPtr, const char * _displayName, IPropertyDescriptor::Flags _flags) = 0;
         virtual void                        registerProperty        (const char * _propertyName, core::u32 _sizeOf, void * _offset, const char * _displayName = nullptr, IPropertyDescriptor::Flags _flags = IPropertyDescriptor::Flags::None) = 0;
         virtual void                        registerProperty        (const char * _propertyName, vector<IObject*>* _offset, const char * _displayName = nullptr, IPropertyDescriptor::Flags _flags = IPropertyDescriptor::Flags::None) = 0;
+        virtual void                        registerProperty        (const char * _propertyName, core::dictionary<core::IObject*>* _offset, const char * _displayName = nullptr, IPropertyDescriptor::Flags _flags = IPropertyDescriptor::Flags::None) = 0;
 		virtual void                        registerProperty		(const char * _propertyName, core::u32 * _offset, core::u32 _value, const char * _displayName, IPropertyDescriptor::Flags _flags) = 0;
 
         virtual const char *                getClassName            () const = 0;

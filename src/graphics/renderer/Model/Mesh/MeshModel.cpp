@@ -134,7 +134,7 @@ namespace vg::graphics::renderer
                 break;
         }
 
-        MeshModel * meshModel = new MeshModel("MeshModel", nullptr);
+        MeshModel * meshModel = new MeshModel(_data.name, nullptr);
 
         MeshGeometry * meshGeometry = new MeshGeometry("MeshGeometry", meshModel);
         meshGeometry->setIndexBuffer(ib);

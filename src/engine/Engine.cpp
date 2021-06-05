@@ -9,7 +9,6 @@
 #include "core/Scheduler/Scheduler.h"
 #include "core/Entity/Entity.h"
 #include "core/Object/ObjectFactory.h"
-#include "core/Object/AutoRegisterClass.h"
 #include "core/Scene/Scene.h"
 #include "core/Sector/Sector.h"
 
@@ -29,7 +28,7 @@ using namespace vg::core;
 using namespace vg::engine;
 
 #define VG_ENGINE_VERSION_MAJOR 0
-#define VG_ENGINE_VERSION_MINOR 11
+#define VG_ENGINE_VERSION_MINOR 12
 
 // Avoid stripping code for classes from static lib
 static Scene scene("",nullptr);
@@ -445,14 +444,20 @@ namespace vg::engine
 	}
 
 	//--------------------------------------------------------------------------------------
-	graphics::renderer::IRenderer * Engine::getRenderer() const
+	graphics::renderer::IRenderer * Engine::GetRenderer() const
 	{
 		return m_renderer;
 	}
 
     //--------------------------------------------------------------------------------------
+    IResourceManager * Engine::GetResourceManager() const
+    {
+        return m_resourceManager;
+    }
+
+    //--------------------------------------------------------------------------------------
     core::uint2 Engine::getScreenSize() const
     {
-        return getRenderer()->getBackbufferSize();
+        return GetRenderer()->getBackbufferSize();
     }
 }

@@ -5,9 +5,28 @@ using namespace vg::core;
 
 namespace vg::engine
 {
+    VG_AUTO_REGISTER_CLASS(TextureResource);
+
     //--------------------------------------------------------------------------------------
-    TextureResource::TextureResource(IObject * _owner) :
-        Resource(_owner)
+    bool TextureResource::registerClass(IObjectFactory & _factory)
+    {
+        if (core::IObjectDescriptor * desc = _factory.registerClassHelper(TextureResource, "Texture Resource", IObjectDescriptor::Flags::Resource))
+            registerProperties(*desc);
+
+        return true;
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool TextureResource::registerProperties(IObjectDescriptor & _desc)
+    {
+        super::registerProperties(_desc);
+
+        return true;
+    }
+
+    //--------------------------------------------------------------------------------------
+    TextureResource::TextureResource(const core::string & _name, core::IObject * _parent) :
+        Resource(_name, _parent)
     {
 
     }
@@ -39,7 +58,7 @@ namespace vg::engine
     //--------------------------------------------------------------------------------------
     bool TextureResource::cook(const string & _file)
     {
-        return Engine::get()->getRenderer()->cookTexture(_file);
+        return Engine::get()->GetRenderer()->cookTexture(_file);
     }
 
     //--------------------------------------------------------------------------------------
@@ -47,7 +66,7 @@ namespace vg::engine
     {
         VG_SAFE_RELEASE(m_object);
 
-        m_object = Engine::get()->getRenderer()->loadTexture(_file);
+        m_object = Engine::get()->GetRenderer()->loadTexture(_file);
 
         return nullptr != m_object;
     }

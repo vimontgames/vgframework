@@ -24,9 +24,6 @@
     <ClCompile Include="Options\Options.cpp">
       <Filter>Options</Filter>
     </ClCompile>
-    <ClCompile Include="Pass\ImguiPass.cpp">
-      <Filter>Pass</Filter>
-    </ClCompile>
     <ClCompile Include="Instance\Mesh\MeshInstance.cpp">
       <Filter>Instance\Mesh</Filter>
     </ClCompile>
@@ -35,6 +32,9 @@
     </ClCompile>
     <ClCompile Include="Importer\ImporterData.cpp">
       <Filter>Importer</Filter>
+    </ClCompile>
+    <ClCompile Include="Pass\ImguiPass\ImguiPass.cpp">
+      <Filter>Pass\ImguiPass</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -48,9 +48,6 @@
     <ClInclude Include="Renderer.h" />
     <ClInclude Include="IRenderer.h" />
     <ClInclude Include="Renderer_consts.h" />
-    <ClInclude Include="Pass\ImguiPass.h">
-      <Filter>Pass</Filter>
-    </ClInclude>
     <ClInclude Include="Imgui\imguiAdapter.h">
       <Filter>Imgui</Filter>
     </ClInclude>
@@ -157,6 +154,18 @@
     <ClInclude Include="Importer\TextureImporterData.hpp">
       <Filter>Importer</Filter>
     </ClInclude>
+    <ClInclude Include="Pass\ImguiPass\ImguiPass.h">
+      <Filter>Pass\ImguiPass</Filter>
+    </ClInclude>
+    <ClInclude Include="Pass\ImguiPass\Windows\About.hpp">
+      <Filter>Pass\ImguiPass\Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="Pass\ImguiPass\Windows\DisplayOptions.hpp">
+      <Filter>Pass\ImguiPass\Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="Pass\ImguiPass\Windows\Resources.hpp">
+      <Filter>Pass\ImguiPass\Windows</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Pass">
@@ -206,6 +215,12 @@
     </Filter>
     <Filter Include="Model\Material\DefaultMaterial">
       <UniqueIdentifier>{4f3e414b-d52f-4193-8058-e19c75f3ef01}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Pass\ImguiPass">
+      <UniqueIdentifier>{8b35b9c8-be58-45f7-8dc0-089341440032}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Pass\ImguiPass\Windows">
+      <UniqueIdentifier>{94c29c25-51ad-4845-bde4-f8fff9f6afb0}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

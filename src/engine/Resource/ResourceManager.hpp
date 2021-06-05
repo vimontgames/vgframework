@@ -1,6 +1,5 @@
 #include "ResourceManager.h"
 #include "core/Resource/Resource.h"
-#include "core/Object/AutoRegisterClass.h"
 #include "core/Timer/Timer.h"
 #include "core/File/File.h"
 #include "core/Scheduler/Scheduler.h"
@@ -27,7 +26,7 @@ namespace vg::engine
     {
         super::registerProperties(_desc);
 
-        _desc.registerPropertyObjectPointerVectorHelper(ResourceManager, m_resources, "Resources", IPropertyDescriptor::Flags::ReadOnly);
+        _desc.registerPropertyObjectPointerDictionaryHelper(ResourceManager, m_resourcesMap, "Resources", IPropertyDescriptor::Flags::ReadOnly);
 
         return true;
     }

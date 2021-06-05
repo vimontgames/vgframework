@@ -100,7 +100,28 @@ namespace vg::graphics::driver
 	//--------------------------------------------------------------------------------------
 	// Texture
 	//--------------------------------------------------------------------------------------
-	Texture::Texture(const TextureDesc & _texDesc, const core::string & _name, const void * _initData, ReservedSlot _reservedSlot) :
+    VG_AUTO_REGISTER_CLASS(Texture);
+
+    //--------------------------------------------------------------------------------------
+    bool Texture::registerClass(IObjectFactory & _factory)
+    {
+        if (core::IObjectDescriptor * desc = _factory.registerClassHelper_NoCTor(Texture, "Texture", IObjectDescriptor::Flags::Model))
+            registerProperties(*desc);
+
+        return true;
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool Texture::registerProperties(IObjectDescriptor & _desc)
+    {
+        _desc.registerProperty("width", (core::u16*)(&((Texture*)(nullptr))->m_texDesc.width), "Width", IPropertyDescriptor::Flags::ReadOnly);
+        _desc.registerProperty("height", (core::u16*)(&((Texture*)(nullptr))->m_texDesc.height), "Height", IPropertyDescriptor::Flags::ReadOnly);
+
+        return true;
+    }
+
+    //--------------------------------------------------------------------------------------
+    Texture::Texture(const TextureDesc & _texDesc, const core::string & _name, const void * _initData, ReservedSlot _reservedSlot) :
 		super::Texture(_texDesc, _name, _initData, _reservedSlot)
 	{
 

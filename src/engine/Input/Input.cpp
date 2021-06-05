@@ -51,7 +51,7 @@ namespace vg::engine
     {
         VG_PROFILE_CPU("Input");
 
-        if (Engine::get()->getRenderer()->getImmediateGUI()->isFocused())
+        if (Engine::get()->GetRenderer()->getImmediateGUI()->isFocused())
             return false;
 
         return super::update();

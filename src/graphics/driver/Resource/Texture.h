@@ -45,7 +45,9 @@ namespace vg::graphics::driver
 		using super = VG_GFXAPI::Texture;
 
 	public:
-        const char * getClassName() const final { return "Texture"; }
+        const char *    getClassName() const final { return "Texture"; }
+        static bool     registerClass(core::IObjectFactory & _factory);
+        static bool     registerProperties(core::IObjectDescriptor & _desc);
 
 		Texture(const TextureDesc & _texDesc, const core::string & _name, const void * _initData = nullptr, ReservedSlot _reservedSlot = ReservedSlot::None);
 		~Texture();

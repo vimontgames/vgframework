@@ -1,7 +1,6 @@
 #include "engine/Precomp.h"
 #include "MeshComponent.h"
 #include "core/Entity/Entity.h"
-#include "core/Object/AutoRegisterClass.h"
 #include "core/ISector.h"
 #include "graphics/renderer/IMeshInstance.h"
 #include "graphics/renderer/IMeshModel.h"
@@ -38,7 +37,7 @@ namespace vg::engine
     //--------------------------------------------------------------------------------------
     MeshComponent::MeshComponent(const core::string & _name, IObject * _parent) :
         core::Component(_name, _parent),
-        m_meshResource(this)
+        m_meshResource(_name, this)
     {
         VG_ASSERT(dynamic_cast<IEntity*>(_parent));
         m_meshInstance = (IMeshInstance*)CreateFactoryObject(MeshInstance, _name, this);

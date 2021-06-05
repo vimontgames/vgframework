@@ -19,8 +19,8 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
-    Resource::Resource(IObject * _owner) :
-        m_owner(_owner)
+    Resource::Resource(const core::string & _name, IObject * _parent) :
+        m_owner(_parent)
     {
 
     }
