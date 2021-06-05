@@ -92,6 +92,7 @@ namespace vg::graphics::driver::vulkan
 
                     auto * uploadBuffer = device->getUploadBuffer();
                     u8 * dst = uploadBuffer->map(uploadBufferSize, (uint)mem_reqs.alignment);
+                    if (nullptr != dst)
                     {
                         // Copy to upload buffer
                         memcpy(dst, _initData, _bufDesc.size());

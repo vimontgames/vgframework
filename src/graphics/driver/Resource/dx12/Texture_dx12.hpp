@@ -268,6 +268,7 @@ namespace vg::graphics::driver::dx12
             // Copy to upload buffer line by line
             auto * uploadBuffer = device->getUploadBuffer();
             core::u8 * dst = uploadBuffer->map(d3d12TotalSizeInBytes, D3D12_TEXTURE_DATA_PLACEMENT_ALIGNMENT);
+            if (nullptr != dst)
             {
                 for (uint i = 0; i < subResourceCount; ++i)
                 {

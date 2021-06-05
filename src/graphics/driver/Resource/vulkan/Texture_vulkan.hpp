@@ -215,6 +215,7 @@ namespace vg::graphics::driver::vulkan
 
                     auto * uploadBuffer = device->getUploadBuffer();
                     u8 * dst = uploadBuffer->map(uploadBufferSize, (uint)mem_reqs.alignment);
+                    if (nullptr != dst)
                     {
                         uint_ptr currentOffset = 0;
                         for (uint i = 0; i < _texDesc.mipmaps; ++i)

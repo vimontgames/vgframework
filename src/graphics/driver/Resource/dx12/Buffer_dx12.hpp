@@ -60,6 +60,7 @@ namespace vg::graphics::driver::dx12
                 auto * uploadBuffer = device->getUploadBuffer();
 
                 core::u8 * dst = uploadBuffer->map(uploadBufferSize, D3D12_DEFAULT_RESOURCE_PLACEMENT_ALIGNMENT);
+                if (nullptr != dst)
                 {
                     memcpy(dst, _initData, uploadBufferSize);
                 }

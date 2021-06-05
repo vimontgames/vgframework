@@ -102,7 +102,7 @@ namespace vg::graphics::driver
         //--------------------------------------------------------------------------------------
         void Device::createUploadBuffer()
         {
-            m_uploadBuffer = new UploadBuffer("Upload", 512 * 1024 * 1024);
+            m_uploadBuffer = new UploadBuffer("Upload", 256 * 1024 * 1024);
         }
 
         //--------------------------------------------------------------------------------------

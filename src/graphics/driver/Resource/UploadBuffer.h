@@ -27,6 +27,7 @@ namespace vg::graphics::driver
     private:
         core::u8                                                m_index = 0;
         core::uint_ptr                                          m_offsetCur = 0;
+        core::uint_ptr                                          m_offsetStart = 0;
         core::mutex                                             m_uploadMutex;
         driver::Buffer *                                        m_uploadBuffer = nullptr;
         core::u8 *                                              m_uploadBegin = nullptr;

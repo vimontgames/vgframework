@@ -33,22 +33,26 @@ namespace vg::graphics::driver
     {
         m_uploadMutex.lock();
         core::uint_ptr offset = alloc(_size, _aligment);
-        core::u8 * dst = getBaseAddress() + offset;
-        VG_ASSERT(uint_ptr(dst) + _size < uint_ptr(getBaseAddress()) + m_uploadBuffer->getBufDesc().size());
-        return dst;
+
+        if (uint_ptr(-1) != offset)
+            return getBaseAddress() + offset;
+        else
+            return nullptr;
     }
 
     //--------------------------------------------------------------------------------------
     void UploadBuffer::unmap(Buffer * _buffer, core::u8 * _dst)
     {
-        upload(_buffer, _dst - getBaseAddress());
+        if (nullptr != _dst)
+            upload(_buffer, _dst - getBaseAddress());
         m_uploadMutex.unlock();
     }
 
     //--------------------------------------------------------------------------------------
     void UploadBuffer::unmap(Texture * _texture, core::u8 * _dst)
     {
-        upload(_texture, _dst - getBaseAddress());
+        if (nullptr != _dst)
+            upload(_texture, _dst - getBaseAddress());
         m_uploadMutex.unlock();
     }
 
@@ -58,11 +62,27 @@ namespace vg::graphics::driver
         const size_t totalSize = m_uploadBuffer->getBufDesc().size();
         const size_t alignedSize = (_size + _alignment - 1) & ~(_alignment - 1);
 
-        uint_ptr offset = m_offsetCur;
-        VG_ASSERT(offset + alignedSize <= totalSize, "Cannot allocate %.2f MB in upload buffer heap (%.2f MB available out of %.2f MB)", float(alignedSize) / (1024.0f*1024.0f), float(totalSize-offset) / (1024.0f*1024.0f), float(totalSize) / (1024.0f*1024.0f));
-        m_offsetCur += alignedSize;
+        if (m_offsetCur + alignedSize < totalSize)
+        {
+            uint_ptr offset = m_offsetCur;
+            m_offsetCur += alignedSize;
+            return offset;
+        }
+        else if (alignedSize < m_offsetStart)
+        {
+            m_offsetCur = 0;
+            uint_ptr offset = m_offsetCur;
+            m_offsetCur += alignedSize;
+            return offset;
+        }
 
-        return offset;
+        const float size = float(alignedSize) / (1024.0f*1024.0f);
+        const float available = float(max(totalSize - m_offsetCur, m_offsetStart)) / (1024.0f*1024.0f);
+        const float total = float(totalSize) / (1024.0f*1024.0f);
+
+        VG_ASSERT(false, "Cannot allocate %.2f MB for upload because ring buffer is too small (available:%.2f/%.2f MB)", size, available, total);
+
+        return uint_ptr(-1);
     }
 
     //--------------------------------------------------------------------------------------
@@ -118,5 +138,6 @@ namespace vg::graphics::driver
         }
 
         m_index = (m_index + max_frame_latency - 1) % max_frame_latency;
+        m_offsetStart = m_offsetCur;
     }
 }
