@@ -1,0 +1,1 @@
+application_x64_release.exe SolutionPlatform="PC Vulkan"
