@@ -108,6 +108,7 @@ namespace vg::graphics::driver::vulkan
             vkDescriptorSetLayoutDesc.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO;
             vkDescriptorSetLayoutDesc.bindingCount = (uint)vkDescriptorSetLayoutBindings.size();
             vkDescriptorSetLayoutDesc.pBindings = vkDescriptorSetLayoutBindings.data();
+            vkDescriptorSetLayoutDesc.flags = VK_DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT;
 
             vector<VkDescriptorBindingFlags> flagsArray;
             for (uint i = 0; i < vkDescriptorSetLayoutBindings.size(); ++i)

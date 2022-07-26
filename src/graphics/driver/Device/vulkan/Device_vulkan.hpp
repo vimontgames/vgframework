@@ -408,6 +408,7 @@ namespace vg::graphics::driver::vulkan
             descriptor_pool.maxSets = max_frame_latency;
             descriptor_pool.poolSizeCount = (uint)countof(type_counts);
             descriptor_pool.pPoolSizes = type_counts;
+            descriptor_pool.flags = VK_DESCRIPTOR_POOL_CREATE_UPDATE_AFTER_BIND_BIT;
 
             VG_ASSERT_VULKAN(vkCreateDescriptorPool(m_vkDevice, &descriptor_pool, nullptr, &m_vkBindlessDescriptorPool));
 
