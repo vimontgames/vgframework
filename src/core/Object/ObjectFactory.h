@@ -12,13 +12,14 @@ namespace vg::core
         class ClassProperty : public IPropertyDescriptor
         {
         public:
-            ClassProperty(const char * _name, Type _type, uint_ptr _offset, core::u32 _value, const char * _prettyName, Flags _flags) :
+            ClassProperty(const char * _name, Type _type, uint_ptr _offset, core::u32 _value, const char * _prettyName, Flags _flags, const char * _description = nullptr) :
                 name(_name),
                 type(_type),
                 offset(_offset),
 				value(_value),
                 displayName(_prettyName),
-                flags(_flags)
+                flags(_flags),
+                description(_description)
             {
 
             }
@@ -30,17 +31,19 @@ namespace vg::core
             uint_ptr        getOffset       () const final;
 			core::u32		getValue		() const final;
             const char *    getDisplayName  () const final;
+            const char *    getDescription  () const final;
             Flags           getFlags        () const final; 
             float2          getRange        () const final;
 
         private:
-            const char * name           = nullptr;
-            const char * displayName    = nullptr;
-            Type		type			= Type::Undefined;
-            uint_ptr	offset			= (uint_ptr)-1;
-			core::u32	value			= 0x0;
-            Flags		flags			= Flags::None;
-            float2		range			= float2(0.0f, 0.0f);
+            const char *    name            = nullptr;
+            const char *    displayName     = nullptr;
+            const char *    description     = nullptr;
+            Type		    type			= Type::Undefined;
+            uint_ptr	    offset			= (uint_ptr)-1;
+			core::u32	    value			= 0x0;
+            Flags		    flags			= Flags::None;
+            float2		    range			= float2(0.0f, 0.0f);
         };
 
         struct ClassDesc : public IObjectDescriptor
@@ -61,6 +64,7 @@ namespace vg::core
             void                                registerProperty        (const char * _propertyName, vector<IObject*>* _offset, const char * _displayName = nullptr, IPropertyDescriptor::Flags _flags = IPropertyDescriptor::Flags::None) final;
             void                                registerProperty        (const char * _propertyName, dictionary<core::IObject*>* _offset, const char * _displayName = nullptr, IPropertyDescriptor::Flags _flags = IPropertyDescriptor::Flags::None) final;
 			void								registerProperty		(const char * _propertyName, core::u32 * _offset, core::u32 _value, const char * _displayName, IPropertyDescriptor::Flags _flags) final;
+            void								registerEnum            (const char * _propertyName, core::u32 * _offset, core::u32 _value, const char * _displayName, const char * _values, IPropertyDescriptor::Flags _flags) final;
 
             const char *                        getClassName            () const final;
             const char *                        getClassDisplayName     () const final;

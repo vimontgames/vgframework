@@ -14,21 +14,21 @@ namespace vg::core
     // }
     //
     //--------------------------------------------------------------------------------------
-    #define propertyOffset(typeName, className, propertyName)													(typeName*)&((className*)(nullptr))->propertyName
+    #define propertyOffset(typeName, className, propertyName)													            (typeName*)&((className*)(nullptr))->propertyName
 
-    #define registerClassHelper_NoCTor(className, displayName, flags)											registerClass(#className, displayName, flags, [](const vg::core::string & _name, vg::core::IObject * _parent) { return nullptr; })
-    #define registerClassHelper(className, displayName, flags)													registerClass(#className, displayName, flags, [](const vg::core::string & _name, vg::core::IObject * _parent) { return new className(_name, _parent); })
-    #define registerClassSingletonHelper(className, displayName, flags)											registerSingletonClass(#className, displayName, flags | vg::core::IObjectDescriptor::Flags::Singleton, [](){ return className::get(); } )
+    #define registerClassHelper_NoCTor(className, displayName, flags)											            registerClass(#className, displayName, flags, [](const vg::core::string & _name, vg::core::IObject * _parent) { return nullptr; })
+    #define registerClassHelper(className, displayName, flags)													            registerClass(#className, displayName, flags, [](const vg::core::string & _name, vg::core::IObject * _parent) { return new className(_name, _parent); })
+    #define registerClassSingletonHelper(className, displayName, flags)											            registerSingletonClass(#className, displayName, flags | vg::core::IObjectDescriptor::Flags::Singleton, [](){ return className::get(); } )
 
-    #define registerPropertyHelper(className, propertyName, displayName, flags)									registerProperty(#propertyName, (&((className*)(nullptr))->propertyName), displayName, flags)
-    #define registerPropertyObjectPointerHelper(className, propertyName, displayName, flags)                    registerProperty(#propertyName, (core::IObject**)offsetof(className, propertyName), displayName, flags);
-    #define registerPropertyObjectVectorHelper(className, propertyName, elementType, displayName, flags)        registerProperty(#propertyName, sizeof(elementType), &((className*)nullptr)->propertyName, displayName, flags);
-    #define registerPropertyObjectPointerVectorHelper(className, propertyName, displayName, flags)              registerProperty(#propertyName, (core::vector<core::IObject*>*)&((className*)nullptr)->propertyName, displayName, flags);
-    #define registerPropertyObjectPointerDictionaryHelper(className, propertyName, displayName, flags)          registerProperty(#propertyName, (core::dictionary<core::IObject*>*)&((className*)nullptr)->propertyName, displayName, flags);
-    #define registerCallbackHelper(className, funcName, displayName, flags)										registerProperty(#funcName, funcName, displayName, flags)
-	#define registerPropertyEnumHelper(className, enumClassName, propertyName, enumValue, enumValueName, flags)	registerProperty(#propertyName, (std::underlying_type_t<enumClassName>*)(&((className*)(nullptr))->propertyName), enumValue, enumValueName, flags);
+    #define registerPropertyHelper(className, propertyName, displayName, flags)									            registerProperty(#propertyName, (&((className*)(nullptr))->propertyName), displayName, flags)
+    #define registerPropertyObjectPointerHelper(className, propertyName, displayName, flags)                                registerProperty(#propertyName, (core::IObject**)offsetof(className, propertyName), displayName, flags);
+    #define registerPropertyObjectVectorHelper(className, propertyName, elementType, displayName, flags)                    registerProperty(#propertyName, sizeof(elementType), &((className*)nullptr)->propertyName, displayName, flags);
+    #define registerPropertyObjectPointerVectorHelper(className, propertyName, displayName, flags)                          registerProperty(#propertyName, (core::vector<core::IObject*>*)&((className*)nullptr)->propertyName, displayName, flags);
+    #define registerPropertyObjectPointerDictionaryHelper(className, propertyName, displayName, flags)                      registerProperty(#propertyName, (core::dictionary<core::IObject*>*)&((className*)nullptr)->propertyName, displayName, flags);
+    #define registerCallbackHelper(className, funcName, displayName, flags)										            registerProperty(#funcName, funcName, displayName, flags)
+	#define registerPropertyEnumHelper(className, enumClassName, propertyName, enumValue, displayName, enumValues, flags)	registerEnum(#propertyName, (std::underlying_type_t<enumClassName>*)(&((className*)(nullptr))->propertyName), enumValue, displayName, enumValues, flags);
 
-    #define setPropertyRangeHelper(className, propertyName, range)												getPropertyByName(#propertyName)->setRange(range);
+    #define setPropertyRangeHelper(className, propertyName, range)												            getPropertyByName(#propertyName)->setRange(range);
 
     class IObject;
     class IResource;
@@ -74,6 +74,7 @@ namespace vg::core
 
         virtual const char *                getName                 () const = 0;
         virtual const char *                getDisplayName          () const = 0;
+        virtual const char *                getDescription          () const = 0;
         virtual Type                        getType                 () const = 0;
         virtual Flags                       getFlags                () const = 0;
         virtual uint_ptr                    getOffset               () const = 0;
@@ -116,6 +117,7 @@ namespace vg::core
         virtual void                        registerProperty        (const char * _propertyName, vector<IObject*>* _offset, const char * _displayName = nullptr, IPropertyDescriptor::Flags _flags = IPropertyDescriptor::Flags::None) = 0;
         virtual void                        registerProperty        (const char * _propertyName, core::dictionary<core::IObject*>* _offset, const char * _displayName = nullptr, IPropertyDescriptor::Flags _flags = IPropertyDescriptor::Flags::None) = 0;
 		virtual void                        registerProperty		(const char * _propertyName, core::u32 * _offset, core::u32 _value, const char * _displayName, IPropertyDescriptor::Flags _flags) = 0;
+        virtual void                        registerEnum            (const char * _propertyName, core::u32 * _offset, core::u32 _value, const char * _displayName, const char * _values, IPropertyDescriptor::Flags _flags) = 0;
 
         virtual const char *                getClassName            () const = 0;
         virtual const char *                getClassDisplayName     () const = 0;

@@ -41,25 +41,29 @@ namespace vg::graphics::renderer
         super::registerProperties(_desc);
 
         _desc.registerPropertyHelper(DisplayOptions, m_toolMode,   "Tool mode",   IPropertyDescriptor::Flags::None);
-        _desc.registerPropertyHelper(DisplayOptions, m_opaque,     "Opaque",      IPropertyDescriptor::Flags::SameLine);
+
+        _desc.registerPropertyHelper(DisplayOptions, m_opaque,     "Opaque",      IPropertyDescriptor::Flags::None);
         _desc.registerPropertyHelper(DisplayOptions, m_wireframe,  "Wireframe",   IPropertyDescriptor::Flags::SameLine);
 
         _desc.registerPropertyHelper(DisplayOptions, m_normalMaps, "Normal Maps", IPropertyDescriptor::Flags::None);
         _desc.registerPropertyHelper(DisplayOptions, m_albedoMaps, "Albedo Maps", IPropertyDescriptor::Flags::SameLine);
 
-		_desc.registerPropertyEnumHelper(DisplayOptions, DisplayMode, m_debugDisplayMode, DisplayMode::Default,    "Default",       IPropertyDescriptor::Flags::Radio);
-        _desc.registerPropertyEnumHelper(DisplayOptions, DisplayMode, m_debugDisplayMode, DisplayMode::MatID,      "MatID",         IPropertyDescriptor::Flags::Radio | IPropertyDescriptor::Flags::SameLine);
+        static const char * enumValues =
+        {
+            "Default\0"
+            "MatID\0"
+            "VSNormal\0"
+            "VSTangent\0"
+            "VSBinormal\0"
+            "VSColor\0"
+            "UV0\0"
+            "UV1\0"
+            "Albedo\0"
+            "Normal\0"
+            "\0"
+        };
 
-		_desc.registerPropertyEnumHelper(DisplayOptions, DisplayMode, m_debugDisplayMode, DisplayMode::VSNormal,   "Vertex Normal", IPropertyDescriptor::Flags::Radio);
-        _desc.registerPropertyEnumHelper(DisplayOptions, DisplayMode, m_debugDisplayMode, DisplayMode::VSTangent,  "Tangent",       IPropertyDescriptor::Flags::Radio | IPropertyDescriptor::Flags::SameLine);
-        _desc.registerPropertyEnumHelper(DisplayOptions, DisplayMode, m_debugDisplayMode, DisplayMode::VSBinormal, "Binormal",      IPropertyDescriptor::Flags::Radio | IPropertyDescriptor::Flags::SameLine);
-                                                                                                                                    
-		_desc.registerPropertyEnumHelper(DisplayOptions, DisplayMode, m_debugDisplayMode, DisplayMode::UV0,        "UV0",           IPropertyDescriptor::Flags::Radio);
-        _desc.registerPropertyEnumHelper(DisplayOptions, DisplayMode, m_debugDisplayMode, DisplayMode::UV1,        "UV1",           IPropertyDescriptor::Flags::Radio | IPropertyDescriptor::Flags::SameLine);
-        _desc.registerPropertyEnumHelper(DisplayOptions, DisplayMode, m_debugDisplayMode, DisplayMode::VSColor,    "Vertex Color",  IPropertyDescriptor::Flags::Radio | IPropertyDescriptor::Flags::SameLine);
-                                                                                                                                
-        _desc.registerPropertyEnumHelper(DisplayOptions, DisplayMode, m_debugDisplayMode, DisplayMode::Albedo,     "Albedo Map",    IPropertyDescriptor::Flags::Radio);
-        _desc.registerPropertyEnumHelper(DisplayOptions, DisplayMode, m_debugDisplayMode, DisplayMode::PSNormal,   "Normal Map",    IPropertyDescriptor::Flags::Radio | IPropertyDescriptor::Flags::SameLine);
+		_desc.registerPropertyEnumHelper(DisplayOptions, DisplayMode, m_debugDisplayMode, DisplayMode::Default, "Debug Display", enumValues, IPropertyDescriptor::Flags::None);
 
         _desc.registerPropertyHelper(DisplayOptions, m_backgroundColor, "Background", IPropertyDescriptor::Flags::Color);
 

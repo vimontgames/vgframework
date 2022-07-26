@@ -35,6 +35,12 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
+    const char * ObjectFactory::ClassProperty::getDescription() const
+    {
+        return description;
+    }
+
+    //--------------------------------------------------------------------------------------
     IPropertyDescriptor::Type ObjectFactory::ClassProperty::getType() const
     {
         return type;
@@ -170,6 +176,13 @@ namespace vg::core
     void ObjectFactory::ClassDesc::registerProperty(const char * _propertyName, dictionary<core::IObject*>* _offset, const char * _displayName, IPropertyDescriptor::Flags _flags)
     {
         registerClassMemberT(_propertyName, _offset, 0, _displayName, _flags);
+    }
+
+    //--------------------------------------------------------------------------------------
+    void ObjectFactory::ClassDesc::registerEnum(const char * _propertyName, core::u32 * _offset, core::u32 _value, const char * _displayName, const char * _enumValues, IPropertyDescriptor::Flags _flags)
+    {
+        ClassProperty prop(_propertyName, IPropertyDescriptor::Type::Enum, (uint_ptr)_offset, _value, _displayName, _flags, _enumValues);
+        properties.push_back(prop);
     }
 
     //--------------------------------------------------------------------------------------

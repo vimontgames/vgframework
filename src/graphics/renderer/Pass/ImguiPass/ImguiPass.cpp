@@ -468,7 +468,7 @@ namespace vg::graphics::renderer
 				case IPropertyDescriptor::Type::Enum:
 				{
 					u32 * pEnum = (u32*)(uint_ptr(_object) + offset);
-					changed |= ImGui::RadioButton(getFixedSizeString(displayName, enumWidth).c_str(), (int*)pEnum, prop->getValue());
+                    changed |= ImGui::Combo(getFixedSizeString(displayName, enumWidth).c_str(), (int*)pEnum, prop->getDescription());
 				};
 				break;
 
