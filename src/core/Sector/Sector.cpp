@@ -32,21 +32,21 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
-    bool Sector::registerClass(IObjectFactory & _factory)
+    bool Sector::registerClass(IFactory & _factory)
     {
-        if (core::IObjectDescriptor * desc = _factory.registerClassHelper(Sector, "Sector", IObjectDescriptor::Flags::SceneNode))
+        if (core::IClassDesc * desc = _factory.registerClassHelper(Sector, "Sector", IClassDesc::Flags::SceneNode))
             registerProperties(*desc);
 
         return true;
     }
 
     //--------------------------------------------------------------------------------------
-    bool Sector::registerProperties(IObjectDescriptor & _desc)
+    bool Sector::registerProperties(IClassDesc & _desc)
     {
         super::registerProperties(_desc);
         
-        _desc.registerPropertyObjectPointerVectorHelper(Sector, m_entities, "Entities", IPropertyDescriptor::Flags::None);
-        _desc.registerPropertyObjectPointerVectorHelper(Sector, m_sectors, "Sectors", IPropertyDescriptor::Flags::None);
+        _desc.registerPropertyObjectPointerVectorHelper(Sector, m_entities, "Entities", IProperty::Flags::None);
+        _desc.registerPropertyObjectPointerVectorHelper(Sector, m_sectors, "Sectors", IProperty::Flags::None);
 
         return true;
     }

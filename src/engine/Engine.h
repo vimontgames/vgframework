@@ -33,12 +33,12 @@ namespace vg::engine
         const char *                    getClassName        () const final { return "Engine"; }
         bool                            registerClasses     () override;
         bool                            unregisterClasses   ();
-        static bool                     registerProperties  (core::IObjectDescriptor & _desc);
+        static bool                     registerProperties  (core::IClassDesc & _desc);
         
         static bool                     load                (IObject * _object);
         static bool                     save                (IObject * _object);
 
-        void                            onPropertyChanged   (const core::IPropertyDescriptor & _prop) override;
+        void                            onPropertyChanged   (const core::IProperty & _prop) override;
 
         static bool                     createProject       (core::IObject * _engine);
         static bool                     loadProject         (core::IObject * _engine);

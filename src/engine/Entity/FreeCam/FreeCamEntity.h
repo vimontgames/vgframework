@@ -4,8 +4,8 @@
 
 namespace vg::core
 {
-    class IObjectFactory;
-    class IObjectDescriptor;
+    class IFactory;
+    class IClassDesc;
 }
 
 namespace vg::engine
@@ -15,8 +15,8 @@ namespace vg::engine
         using super = core::Entity;
 
     public:
-        static bool     registerClass       (core::IObjectFactory & _factory);
-        static bool     registerProperties  (core::IObjectDescriptor & _desc);
+        static bool     registerClass       (core::IFactory & _factory);
+        static bool     registerProperties  (core::IClassDesc & _desc);
 
         const char *    getClassName        () const final { return "FreeCamEntity"; }
 

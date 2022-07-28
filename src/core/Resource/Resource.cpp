@@ -6,15 +6,15 @@
 namespace vg::core
 {
     //--------------------------------------------------------------------------------------
-    bool Resource::registerClass(IObjectFactory & _factory)
+    bool Resource::registerClass(IFactory & _factory)
     {
         return false;
     }
 
     //--------------------------------------------------------------------------------------
-    bool Resource::registerProperties(IObjectDescriptor & _desc)
+    bool Resource::registerProperties(IClassDesc & _desc)
     {
-        _desc.registerProperty("m_object", (IObject**)(&((Resource*)(nullptr))->m_object), "Object", IPropertyDescriptor::Flags::None);
+        _desc.registerProperty("m_object", (IObject**)(&((Resource*)(nullptr))->m_object), "Object", IProperty::Flags::None);
         return true;
     }
 

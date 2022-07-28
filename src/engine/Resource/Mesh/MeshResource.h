@@ -16,8 +16,8 @@ namespace vg::engine
         using super = core::Resource;
 
         const char *                        getClassName        () const override { return "MeshResource"; }
-        static bool                         registerClass       (core::IObjectFactory & _factory);
-        static bool                         registerProperties  (core::IObjectDescriptor & _desc);
+        static bool                         registerClass       (core::IFactory & _factory);
+        static bool                         registerProperties  (core::IClassDesc & _desc);
 
         MeshResource(const core::string & _name, IObject * _parent);
         ~MeshResource();

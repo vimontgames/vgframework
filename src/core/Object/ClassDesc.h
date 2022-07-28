@@ -1,0 +1,49 @@
+#pragma once
+
+#include "core/IClassDesc.h"
+#include "Property.h"
+
+namespace vg::core
+{
+    struct ClassDesc : public IClassDesc
+    {
+        bool                                isRegisteredProperty(const char * _propertyName) final;
+
+        void                                registerProperty(const char * _propertyName, bool * _offset, const char * _displayName, IProperty::Flags _flags) final;
+        void                                registerProperty(const char * _propertyName, core::u32 * _offset, const char * _displayName, IProperty::Flags _flags) final;
+        void                                registerProperty(const char * _propertyName, core::u16 * _offset, const char * _displayName, IProperty::Flags _flags) final;
+        void                                registerProperty(const char * _propertyName, float * _offset, const char * _displayName, IProperty::Flags _flags) final;
+        void                                registerProperty(const char * _propertyName, float4 * _offset, const char * _displayName, IProperty::Flags _flags) final;
+        void                                registerProperty(const char * _propertyName, float4x4 * _offset, const char * _displayName, IProperty::Flags _flags) final;
+        void                                registerProperty(const char * _propertyName, string * _offset, const char * _displayName, IProperty::Flags _flags) final;
+        void                                registerProperty(const char * _propertyName, IResource ** _offset, const char * _displayName, IProperty::Flags _flags) final;
+        void                                registerProperty(const char * _propertyName, IObject ** _offset, const char * _displayName, IProperty::Flags _flags) final;
+        void                                registerProperty(const char * _propertyName, IProperty::Func _funcPtr, const char * _displayName, IProperty::Flags _flags) final;
+        void                                registerProperty(const char * _propertyName, core::u32 _sizeOf, void * _offset, const char * _displayName = nullptr, IProperty::Flags _flags = IProperty::Flags::None) final;
+        void                                registerProperty(const char * _propertyName, vector<IObject*>* _offset, const char * _displayName = nullptr, IProperty::Flags _flags = IProperty::Flags::None) final;
+        void                                registerProperty(const char * _propertyName, dictionary<core::IObject*>* _offset, const char * _displayName = nullptr, IProperty::Flags _flags = IProperty::Flags::None) final;
+        void								registerProperty(const char * _propertyName, core::u32 * _offset, core::u32 _value, const char * _displayName, IProperty::Flags _flags) final;
+        void								registerEnum(const char * _propertyName, core::u32 * _offset, core::u32 _value, const char * _displayName, const char * _values, IProperty::Flags _flags) final;
+
+        const char *                        getClassName() const final;
+        const char *                        getClassDisplayName() const final;
+        uint                                getPropertyCount() const final;
+        const IProperty *         getPropertyByIndex(uint _index) const final;
+        IProperty *               getPropertyByName(const char * _propertyName) const final;
+        IClassDesc::Func             getCreateFunc() const final;
+        IClassDesc::SingletonFunc    getSingletonFunc() const final;
+        IClassDesc::Flags            getFlags() const final;
+        u32                                 getNextIndex() const final;
+
+        const char *                        name = nullptr;
+        const char *                        displayName = nullptr;
+        IClassDesc::Flags            flags = IClassDesc::Flags::None;
+        IClassDesc::Func             createFunc;
+        IClassDesc::SingletonFunc    createSingletonFunc;
+        vector<Property>               properties;
+        mutable u32                         count = 0;
+
+    private:
+        template <typename T> void  registerClassMemberT(const char * _propertyName, T * _offset, core::u32 _value, const char * _displayName, IProperty::Flags _flags);
+    };
+}

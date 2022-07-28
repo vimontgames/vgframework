@@ -20,8 +20,8 @@ namespace vg::graphics::renderer
                                     MeshGeometry            (const core::string & _name, core::IObject * _parent);
                                     ~MeshGeometry           ();
 
-        static bool                 registerClass           (core::IObjectFactory & _factory);
-        static bool                 registerProperties      (core::IObjectDescriptor & _desc);
+        static bool                 registerClass           (core::IFactory & _factory);
+        static bool                 registerProperties      (core::IClassDesc & _desc);
 
         void                        setIndexBuffer          (driver::Buffer * _ib, core::u32 _offset = 0);
         void                        setVertexBuffer         (driver::Buffer * _vb, core::u32 _offset = 0);

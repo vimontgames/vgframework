@@ -1,6 +1,6 @@
 #pragma once
 
-#include "core/IObjectFactory.h"
+#include "core/IFactory.h"
     
 #define VG_AUTO_REGISTER_CLASS(className)               vg::core::AutoRegisterObjectClassHelper<className> autoRegister##className(#className, className::registerClass)
 
@@ -8,20 +8,20 @@ namespace vg::core
 {
     struct AutoRegisterClassInfo
     {
-        using Func = bool(__cdecl *)(IObjectFactory &);
+        using Func = bool(__cdecl *)(IFactory &);
 
         const char *                name = nullptr;
         Func                        func = nullptr;
 
         static bool push(const AutoRegisterClassInfo & _info);
 
-        static bool registerClasses(IObjectFactory & _factory);
-        static bool unregisterClasses(IObjectFactory & _factory);
+        static bool registerClasses(IFactory & _factory);
+        static bool unregisterClasses(IFactory & _factory);
 
         inline static core::vector<AutoRegisterClassInfo> * s_autoRegisterInfos = nullptr;  // use "construct-on-1st-use" idiom to avoid static initialization fiasco
     };
 
-    class IObjectFactory;
+    class IFactory;
 
     template <class T> class AutoRegisterObjectClassHelper
     {

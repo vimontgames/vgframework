@@ -9,9 +9,9 @@ namespace vg::graphics::renderer
     VG_AUTO_REGISTER_CLASS(Batch);
 
     //--------------------------------------------------------------------------------------
-    bool Batch::registerClass(core::IObjectFactory & _factory)
+    bool Batch::registerClass(core::IFactory & _factory)
     {
-        if (core::IObjectDescriptor * desc = _factory.registerClassHelper(Batch, "Batch", IObjectDescriptor::Flags::None))
+        if (core::IClassDesc * desc = _factory.registerClassHelper(Batch, "Batch", IClassDesc::Flags::None))
             registerProperties(*desc);
 
         return true;
@@ -19,12 +19,12 @@ namespace vg::graphics::renderer
 
 
     //--------------------------------------------------------------------------------------
-    bool Batch::registerProperties(core::IObjectDescriptor & _desc)
+    bool Batch::registerProperties(core::IClassDesc & _desc)
     {
         super::registerProperties(_desc);
 
-        _desc.registerPropertyHelper(Batch, count, "Count", IPropertyDescriptor::Flags::ReadOnly);
-        _desc.registerPropertyHelper(Batch, offset, "Offset", IPropertyDescriptor::Flags::ReadOnly);
+        _desc.registerPropertyHelper(Batch, count, "Count", IProperty::Flags::ReadOnly);
+        _desc.registerPropertyHelper(Batch, offset, "Offset", IProperty::Flags::ReadOnly);
 
         return true;
     }

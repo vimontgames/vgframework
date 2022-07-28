@@ -8,16 +8,16 @@ namespace vg::engine
     VG_AUTO_REGISTER_CLASS(TextureResource);
 
     //--------------------------------------------------------------------------------------
-    bool TextureResource::registerClass(IObjectFactory & _factory)
+    bool TextureResource::registerClass(IFactory & _factory)
     {
-        if (core::IObjectDescriptor * desc = _factory.registerClassHelper(TextureResource, "Texture Resource", IObjectDescriptor::Flags::Resource))
+        if (core::IClassDesc * desc = _factory.registerClassHelper(TextureResource, "Texture Resource", IClassDesc::Flags::Resource))
             registerProperties(*desc);
 
         return true;
     }
 
     //--------------------------------------------------------------------------------------
-    bool TextureResource::registerProperties(IObjectDescriptor & _desc)
+    bool TextureResource::registerProperties(IClassDesc & _desc)
     {
         super::registerProperties(_desc);
 

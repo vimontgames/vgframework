@@ -6,7 +6,7 @@
 #include "graphics/renderer/Options/DisplayOptions.h"
 #include "engine/IEngine.h"
 #include "core/Plugin/Plugin.h"
-#include "core/IObjectFactory.h"
+#include "core/IFactory.h"
 #include "core/IResource.h"
 #include "core/File/File.h"
 #include "core/Math/Math.h"
@@ -275,7 +275,7 @@ namespace vg::graphics::renderer
     //--------------------------------------------------------------------------------------
     const vg::engine::IEngine * ImguiPass::getEngine()
     {
-        const auto * factory = Kernel::getObjectFactory();
+        const auto * factory = Kernel::getFactory();
         return (const vg::engine::IEngine *) factory->getSingleton("Engine");
     }
 
@@ -284,7 +284,7 @@ namespace vg::graphics::renderer
     {
         if (ImGui::Begin("Engine", &m_isEngineWindowVisible))
         {
-            const auto * factory = Kernel::getObjectFactory();
+            const auto * factory = Kernel::getFactory();
             core::IObject * engine = (core::IObject *)getEngine();
             if (engine)
             {
@@ -303,7 +303,7 @@ namespace vg::graphics::renderer
     {
         if (ImGui::Begin("Renderer", &m_isRendererWindowVisible))
         {
-            const auto * factory = Kernel::getObjectFactory();
+            const auto * factory = Kernel::getFactory();
             IObject * renderer = factory->getSingleton("Renderer");
             if (renderer)
                 displayObject(renderer);
@@ -316,7 +316,7 @@ namespace vg::graphics::renderer
     {
         if (ImGui::Begin("Scene", &m_isWindowVisible[asInteger(UIWindow::Scene)]))
         {
-            const auto * factory = Kernel::getObjectFactory();
+            const auto * factory = Kernel::getFactory();
             engine::IEngine * engine = (engine::IEngine *)factory->getSingleton("Engine");
             core::IObject * scene = (core::IObject *)engine->getScene();
 
@@ -353,7 +353,7 @@ namespace vg::graphics::renderer
 
         auto treeNodeFlags = ImGuiTreeNodeFlags_OpenOnArrow;       
 
-        if (nullptr != _object && _object->getClassDesc() && asBool(_object->getClassDesc()->getFlags() & (IObjectDescriptor::Flags::Component)))
+        if (nullptr != _object && _object->getClassDesc() && asBool(_object->getClassDesc()->getFlags() & (IClassDesc::Flags::Component)))
         {
             treeNodeFlags |= ImGuiTreeNodeFlags_Leaf;
 
@@ -398,7 +398,7 @@ namespace vg::graphics::renderer
 
         const char * className = _object->getClassName();
 
-        const auto * factory = Kernel::getObjectFactory();
+        const auto * factory = Kernel::getFactory();
         const auto * classDesc = factory->getClassDescriptor(className);
 
         if (!classDesc)
@@ -411,7 +411,7 @@ namespace vg::graphics::renderer
 
         ImGui::PushItemWidth(196);
 
-        IPropertyDescriptor::Type previous = IPropertyDescriptor::Type::Undefined;
+        IProperty::Type previous = IProperty::Type::Undefined;
 
         for (uint i = 0; i < classDesc->getPropertyCount(); ++i)
         {
@@ -427,8 +427,8 @@ namespace vg::graphics::renderer
             {
                 switch (type)
                 {
-                    case IPropertyDescriptor::Type::ObjectPointer:
-                    case IPropertyDescriptor::Type::ObjectPointerVector:
+                    case IProperty::Type::ObjectPointer:
+                    case IProperty::Type::ObjectPointerVector:
                         break;
 
                     default:
@@ -436,17 +436,17 @@ namespace vg::graphics::renderer
                 }
             }
 
-            if (asBool(IPropertyDescriptor::Flags::Hidden & flags))
+            if (asBool(IProperty::Flags::Hidden & flags))
                 continue;
 
-            if (asBool(IPropertyDescriptor::Flags::SameLine & flags))
+            if (asBool(IProperty::Flags::SameLine & flags))
                 ImGui::SameLine();
 
             ImGuiInputTextFlags imguiInputTextflags = 0;
 
             bool changed = false;
 
-            if (asBool(IPropertyDescriptor::Flags::ReadOnly & flags))
+            if (asBool(IProperty::Flags::ReadOnly & flags))
                 imguiInputTextflags = ImGuiInputTextFlags_ReadOnly;
 
             const uint boolWidth = 14;
@@ -458,38 +458,38 @@ namespace vg::graphics::renderer
                     VG_ASSERT_ENUM_NOT_IMPLEMENTED(type);
                     break;
 
-                case IPropertyDescriptor::Type::Bool:
+                case IProperty::Type::Bool:
                 {
                     bool * pBool = (bool*)(uint_ptr(_object) + offset);
 					changed |= ImGui::Checkbox(getFixedSizeString(displayName, boolWidth).c_str(), pBool);
                 };
                 break;
 
-				case IPropertyDescriptor::Type::Enum:
+				case IProperty::Type::Enum:
 				{
 					u32 * pEnum = (u32*)(uint_ptr(_object) + offset);
                     changed |= ImGui::Combo(getFixedSizeString(displayName, enumWidth).c_str(), (int*)pEnum, prop->getDescription());
 				};
 				break;
 
-                case IPropertyDescriptor::Type::Uint32:
+                case IProperty::Type::Uint32:
                 {
                     i32 * pU32 = (i32*)(uint_ptr(_object) + offset);
 
-                    if (asBool(IPropertyDescriptor::Flags::HasRange & flags))
+                    if (asBool(IProperty::Flags::HasRange & flags))
                         changed |= ImGui::SliderInt(displayName, pU32, max(0,(int)prop->getRange().x), (int)prop->getRange().y, "%d", imguiInputTextflags);
                     else
                         changed |= ImGui::InputInt(displayName, pU32, 1, 16, imguiInputTextflags);
                 };
                 break;
 
-                case IPropertyDescriptor::Type::Uint16:
+                case IProperty::Type::Uint16:
                 {
                     i16 * pU16 = (i16*)(uint_ptr(_object) + offset);
 
                     i32 temp = *pU16;
 
-                    if (asBool(IPropertyDescriptor::Flags::HasRange & flags))
+                    if (asBool(IProperty::Flags::HasRange & flags))
                         changed |= ImGui::SliderInt(displayName, &temp, max((int)0, (int)prop->getRange().x), min((int)65535, (int)prop->getRange().y), "%d", imguiInputTextflags);
                     else
                         changed |= ImGui::InputInt(displayName, &temp, 1, 16, imguiInputTextflags);
@@ -499,18 +499,18 @@ namespace vg::graphics::renderer
                 };
                 break;
 
-                case IPropertyDescriptor::Type::Float:
+                case IProperty::Type::Float:
                 {
                     float * pFloat = (float*)(uint_ptr(_object) + offset);
 
-                    if (asBool(IPropertyDescriptor::Flags::HasRange & flags))
+                    if (asBool(IProperty::Flags::HasRange & flags))
                         changed |= ImGui::SliderFloat(displayName, pFloat, prop->getRange().x, prop->getRange().y);
                     else
                         changed |= ImGui::InputFloat(displayName, pFloat);
                 };
                 break;
 
-                case IPropertyDescriptor::Type::Matrix44:
+                case IProperty::Type::Matrix44:
                 {
                     float * pFloat4x4 = (float*)(uint_ptr(_object) + offset);
 
@@ -522,18 +522,18 @@ namespace vg::graphics::renderer
                 }
                 break;
 
-                case IPropertyDescriptor::Type::Float4:
+                case IProperty::Type::Float4:
                 {
                     float * pFloat4 = (float*)(uint_ptr(_object) + offset);
 
-                    if (asBool(IPropertyDescriptor::Flags::Color & flags))
+                    if (asBool(IProperty::Flags::Color & flags))
                         changed |= ImGui::ColorEdit4(displayName, pFloat4);
                     else
                         changed |= ImGui::SliderFloat4(displayName, pFloat4, 0.0f, 1.0f);
                 };
                 break;
 
-                case IPropertyDescriptor::Type::String:
+                case IProperty::Type::String:
                 {
                     bool selectPath = false;
 
@@ -547,7 +547,7 @@ namespace vg::graphics::renderer
                     {
                         *pString = buffer;
 
-                        if (asBool(IPropertyDescriptor::Flags::IsFolder & flags))
+                        if (asBool(IProperty::Flags::IsFolder & flags))
                         {
                             ImGui::SameLine();
                             if (ImGui::Button("Path"))
@@ -560,7 +560,7 @@ namespace vg::graphics::renderer
                             selectPath = false;
                         }
 
-                        if (asBool(IPropertyDescriptor::Flags::IsFolder & flags))
+                        if (asBool(IProperty::Flags::IsFolder & flags))
                         {
                             if (file_dialog.showFileDialog("Select folder", imgui_addons::ImGuiFileBrowser::DialogMode::SELECT, ImVec2(700, 310)))
                             {
@@ -577,16 +577,16 @@ namespace vg::graphics::renderer
                 }
                 break;
 
-                case IPropertyDescriptor::Type::Function:
+                case IProperty::Type::Function:
                 {
-                    IPropertyDescriptor::Func pFunc = (IPropertyDescriptor::Func)offset;
+                    IProperty::Func pFunc = (IProperty::Func)offset;
 
                     if (ImGui::Button(displayName))
                         pFunc(_object);
                 }
                 break;
 
-                case IPropertyDescriptor::Type::ObjectVector:
+                case IProperty::Type::ObjectVector:
                 {
                     const uint sizeOf = prop->getValue();
                     byte * data = nullptr;
@@ -633,7 +633,7 @@ namespace vg::graphics::renderer
                 }
                 break;
 
-                case IPropertyDescriptor::Type::ObjectPointerVector:
+                case IProperty::Type::ObjectPointerVector:
                 {
                     vector<IObject*> * vec = (vector<IObject*>*)(uint_ptr(_object) + offset);
                     const uint count = (uint)vec->size();
@@ -662,7 +662,7 @@ namespace vg::graphics::renderer
                 }
                 break;
 
-                case IPropertyDescriptor::Type::ObjectPointerDictionary:
+                case IProperty::Type::ObjectPointerDictionary:
                 {
                     dictionary<IObject*> * dic = (dictionary<IObject*>*)(uint_ptr(_object) + offset);
                     const uint count = (uint)dic->size();
@@ -693,7 +693,7 @@ namespace vg::graphics::renderer
                 }
                 break;
 
-                case IPropertyDescriptor::Type::ObjectPointer:
+                case IProperty::Type::ObjectPointer:
                 {
                     IObject * pObject = *(IObject**)(uint_ptr(_object) + offset);
 
@@ -706,7 +706,7 @@ namespace vg::graphics::renderer
 
                     // Only entities & components in scene treeview
                     if (UIMode::Scene == _mode)
-                        if (nullptr != pObject && !asBool(pObject->getClassDesc()->getFlags() & (IObjectDescriptor::Flags::Component | IObjectDescriptor::Flags::Entity | IObjectDescriptor::Flags::SceneNode)))
+                        if (nullptr != pObject && !asBool(pObject->getClassDesc()->getFlags() & (IClassDesc::Flags::Component | IClassDesc::Flags::Entity | IClassDesc::Flags::SceneNode)))
                             continue;
 
                     ImGui::PushStyleColor(ImGuiCol_Text, objectColor);
@@ -716,7 +716,7 @@ namespace vg::graphics::renderer
 					if (UIMode::Scene == _mode)
 						treeNodeFlags |= ImGuiTreeNodeFlags_DefaultOpen;
 
-					if (nullptr != pObject && pObject->getClassDesc() && asBool(pObject->getClassDesc()->getFlags() & (IObjectDescriptor::Flags::Component)))
+					if (nullptr != pObject && pObject->getClassDesc() && asBool(pObject->getClassDesc()->getFlags() & (IClassDesc::Flags::Component)))
 						treeNodeFlags |= ImGuiTreeNodeFlags_Leaf;
 
                     bool treenNodeOpen = /*UIMode::Object != _mode &&*/ ImGui::TreeNodeEx(treeNodeName.c_str(), treeNodeFlags);
@@ -807,7 +807,7 @@ namespace vg::graphics::renderer
                 }
                 break;
 
-                case IPropertyDescriptor::Type::Resource:
+                case IProperty::Type::Resource:
                 {
                     IResource * pResource = (IResource*)(uint_ptr(_object) + offset);
                     IObject * pObject = pResource->getObject();

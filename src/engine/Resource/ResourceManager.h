@@ -5,8 +5,8 @@
 
 namespace vg::core
 {
-    class IObjectFactory;
-    class IObjectDescriptor;
+    class IFactory;
+    class IClassDesc;
 	class IModel;
     class Resource;
 }
@@ -34,8 +34,8 @@ namespace vg::engine
         using super = IResourceManager;
 
         const char *    getClassName() const final { return "ResourceManager"; }
-        static bool     registerClass(core::IObjectFactory & _factory);
-        static bool     registerProperties(core::IObjectDescriptor & _desc);
+        static bool     registerClass(core::IFactory & _factory);
+        static bool     registerProperties(core::IClassDesc & _desc);
 
         ResourceManager(const core::string & _name, IObject * _parent);
         ~ResourceManager();

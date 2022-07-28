@@ -21,8 +21,8 @@ namespace vg::graphics
         public:
             const char * getClassName() const final { return "MaterialModel"; }
 
-            static bool registerClass(core::IObjectFactory & _factory);
-            static bool registerProperties(core::IObjectDescriptor & _desc);
+            static bool registerClass(core::IFactory & _factory);
+            static bool registerProperties(core::IClassDesc & _desc);
 
             MaterialModel(const core::string & _name, core::IObject * _parent = nullptr);
             ~MaterialModel();

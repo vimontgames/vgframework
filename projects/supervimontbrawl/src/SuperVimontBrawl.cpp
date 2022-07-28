@@ -42,12 +42,12 @@ IPlugin::Version SuperVimontBrawl::getVersion() const
 //--------------------------------------------------------------------------------------
 bool SuperVimontBrawl::registerClasses()
 {
-    IObjectFactory * factory = Kernel::getObjectFactory();
+    IFactory * factory = Kernel::getFactory();
 
     // Register classes to auto-register the "Engine" module
     AutoRegisterClassInfo::registerClasses(*factory);
 
-    if (IObjectDescriptor * desc = factory->registerClassSingletonHelper(SuperVimontBrawl, "SuperVimontBrawl", IObjectDescriptor::Flags::None))
+    if (IClassDesc * desc = factory->registerClassSingletonHelper(SuperVimontBrawl, "SuperVimontBrawl", IClassDesc::Flags::None))
         registerProperties(*desc);
 
     return true;
@@ -56,7 +56,7 @@ bool SuperVimontBrawl::registerClasses()
 //--------------------------------------------------------------------------------------
 bool SuperVimontBrawl::unregisterClasses()
 {
-    IObjectFactory * factory = Kernel::getObjectFactory();
+    IFactory * factory = Kernel::getFactory();
     return AutoRegisterClassInfo::unregisterClasses(*factory);
 }
 

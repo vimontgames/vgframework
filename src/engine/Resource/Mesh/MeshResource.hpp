@@ -10,16 +10,16 @@ namespace vg::engine
     VG_AUTO_REGISTER_CLASS(MeshResource);
 
     //--------------------------------------------------------------------------------------
-    bool MeshResource::registerClass(IObjectFactory & _factory)
+    bool MeshResource::registerClass(IFactory & _factory)
     {
-        if (core::IObjectDescriptor * desc = _factory.registerClassHelper(MeshResource, "Mesh Resource", IObjectDescriptor::Flags::Resource))
+        if (core::IClassDesc * desc = _factory.registerClassHelper(MeshResource, "Mesh Resource", IClassDesc::Flags::Resource))
             registerProperties(*desc);
 
         return true;
     }
 
     //--------------------------------------------------------------------------------------
-    bool MeshResource::registerProperties(IObjectDescriptor & _desc)
+    bool MeshResource::registerProperties(IClassDesc & _desc)
     {
         super::registerProperties(_desc);
 

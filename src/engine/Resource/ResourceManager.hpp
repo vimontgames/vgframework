@@ -13,20 +13,20 @@ namespace vg::engine
     VG_AUTO_REGISTER_CLASS(ResourceManager);
 
     //--------------------------------------------------------------------------------------
-    bool ResourceManager::registerClass(IObjectFactory & _factory)
+    bool ResourceManager::registerClass(IFactory & _factory)
     {
-        if (IObjectDescriptor * desc = _factory.registerClassHelper(ResourceManager, "Resource Manager", IObjectDescriptor::Flags::None))
+        if (IClassDesc * desc = _factory.registerClassHelper(ResourceManager, "Resource Manager", IClassDesc::Flags::None))
             registerProperties(*desc);
 
         return true;
     }
 
     //--------------------------------------------------------------------------------------
-    bool ResourceManager::registerProperties(IObjectDescriptor & _desc)
+    bool ResourceManager::registerProperties(IClassDesc & _desc)
     {
         super::registerProperties(_desc);
 
-        _desc.registerPropertyObjectPointerDictionaryHelper(ResourceManager, m_resourcesMap, "Resources", IPropertyDescriptor::Flags::ReadOnly);
+        _desc.registerPropertyObjectPointerDictionaryHelper(ResourceManager, m_resourcesMap, "Resources", IProperty::Flags::ReadOnly);
 
         return true;
     }

@@ -7,16 +7,16 @@ namespace vg::graphics::renderer
     VG_AUTO_REGISTER_CLASS(MeshInstance);
 
     //--------------------------------------------------------------------------------------
-    bool MeshInstance::registerClass(core::IObjectFactory & _factory)
+    bool MeshInstance::registerClass(core::IFactory & _factory)
     {
-        if (core::IObjectDescriptor * desc = _factory.registerClassHelper(MeshInstance, "Mesh Instance", core::IObjectDescriptor::Flags::Instance))
+        if (core::IClassDesc * desc = _factory.registerClassHelper(MeshInstance, "Mesh Instance", core::IClassDesc::Flags::Instance))
             registerProperties(*desc);
 
         return true;
     }
 
     //--------------------------------------------------------------------------------------
-    bool MeshInstance::registerProperties(core::IObjectDescriptor & _desc)
+    bool MeshInstance::registerProperties(core::IClassDesc & _desc)
     {
         super::registerProperties(_desc);
 

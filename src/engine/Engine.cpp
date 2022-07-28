@@ -8,7 +8,7 @@
 #include "core/Plugin/Plugin.h"
 #include "core/Scheduler/Scheduler.h"
 #include "core/Entity/Entity.h"
-#include "core/Object/ObjectFactory.h"
+#include "core/Object/Factory.h"
 #include "core/Scene/Scene.h"
 #include "core/Sector/Sector.h"
 
@@ -102,12 +102,12 @@ namespace vg::engine
     //--------------------------------------------------------------------------------------
     bool Engine::registerClasses()
     {
-        core::IObjectFactory * factory = Kernel::getObjectFactory();
+        core::IFactory * factory = Kernel::getFactory();
 
         // Register classes to auto-register the "Engine" module
         AutoRegisterClassInfo::registerClasses(*factory);
 
-        if (core::IObjectDescriptor * desc = factory->registerClassSingletonHelper(Engine, "Engine", IObjectDescriptor::Flags::None))
+        if (core::IClassDesc * desc = factory->registerClassSingletonHelper(Engine, "Engine", IClassDesc::Flags::None))
             registerProperties(*desc);
 
         load(this);
@@ -119,7 +119,7 @@ namespace vg::engine
     //--------------------------------------------------------------------------------------
     bool Engine::unregisterClasses()
     {
-        IObjectFactory * factory = Kernel::getObjectFactory();
+        IFactory * factory = Kernel::getFactory();
         return AutoRegisterClassInfo::unregisterClasses(*factory);
     }
 
@@ -136,29 +136,29 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
-    bool Engine::registerProperties(IObjectDescriptor & _desc)
+    bool Engine::registerProperties(IClassDesc & _desc)
     {
         super::registerProperties(_desc);
 
-        //_desc.registerCallbackHelper(Engine, createProject, "Create Project", IPropertyDescriptor::Flags::None);
-        //_desc.registerCallbackHelper(Engine, loadProject, "Load", IPropertyDescriptor::Flags::None);
-        //_desc.registerCallbackHelper(Engine, saveProject, "Save", IPropertyDescriptor::Flags::None);
-        //_desc.registerProperty("Project", (IObject**)(&((Engine*)(nullptr))->m_project), "Project", IPropertyDescriptor::Flags::None);
-        //_desc.registerPropertyHelper(Engine, m_project, "Project", IPropertyDescriptor::Flags::None);
-        //_desc.registerProperty("m_project", (IResource**)(&((Engine*)(nullptr))->m_project), "Project", IPropertyDescriptor::Flags::None);
+        //_desc.registerCallbackHelper(Engine, createProject, "Create Project", IProperty::Flags::None);
+        //_desc.registerCallbackHelper(Engine, loadProject, "Load", IProperty::Flags::None);
+        //_desc.registerCallbackHelper(Engine, saveProject, "Save", IProperty::Flags::None);
+        //_desc.registerProperty("Project", (IObject**)(&((Engine*)(nullptr))->m_project), "Project", IProperty::Flags::None);
+        //_desc.registerPropertyHelper(Engine, m_project, "Project", IProperty::Flags::None);
+        //_desc.registerProperty("m_project", (IResource**)(&((Engine*)(nullptr))->m_project), "Project", IProperty::Flags::None);
 
-        _desc.registerPropertyHelper(Engine, m_projectPath, "Project folder", IPropertyDescriptor::Flags::IsFolder);
+        _desc.registerPropertyHelper(Engine, m_projectPath, "Project folder", IProperty::Flags::IsFolder);
 
-        //_desc.registerCallbackHelper(Engine, createProject, "Create Project", IPropertyDescriptor::Flags::None);
+        //_desc.registerCallbackHelper(Engine, createProject, "Create Project", IProperty::Flags::None);
         
-        _desc.registerCallbackHelper(DisplayOptions, load, "Load", IPropertyDescriptor::Flags::None);
-        _desc.registerCallbackHelper(DisplayOptions, save, "Save", IPropertyDescriptor::Flags::SameLine);
+        _desc.registerCallbackHelper(DisplayOptions, load, "Load", IProperty::Flags::None);
+        _desc.registerCallbackHelper(DisplayOptions, save, "Save", IProperty::Flags::SameLine);
 
         return true;
     }
 
     //--------------------------------------------------------------------------------------
-    void Engine::onPropertyChanged(const IPropertyDescriptor & _prop)
+    void Engine::onPropertyChanged(const IProperty & _prop)
     {
 
     }
@@ -241,8 +241,8 @@ namespace vg::engine
         _singletons.input = new Input(_params.renderer.device.window);
         Kernel::setInput(_singletons.input);
 
-        _singletons.factory = new ObjectFactory();
-        Kernel::setObjectFactory(_singletons.factory);
+        _singletons.factory = new Factory();
+        Kernel::setFactory(_singletons.factory);
 
 		m_renderer = Plugin::create<graphics::renderer::IRenderer>("renderer", api);
 		m_renderer->init(_params.renderer, _singletons);
@@ -271,7 +271,7 @@ namespace vg::engine
         m_renderer->setView(m_editorView);
 
         // use factor to create objects
-        auto * factory = Kernel::getObjectFactory();
+        auto * factory = Kernel::getFactory();
 
         // create empty scene
         m_scene = (IScene*)CreateFactoryObject(Scene, "TestScene", this);
@@ -385,7 +385,7 @@ namespace vg::engine
         VG_SAFE_DELETE(input);
         Kernel::setInput(nullptr);
 
-        IObjectFactory * factory = Kernel::getObjectFactory();
+        IFactory * factory = Kernel::getFactory();
 
 		m_renderer->deinit();
 		m_renderer->release();
@@ -393,7 +393,7 @@ namespace vg::engine
         VG_SAFE_DELETE(m_resourceManager);
 
         VG_SAFE_DELETE(factory);
-        Kernel::setObjectFactory(nullptr);
+        Kernel::setFactory(nullptr);
 	}
 
     //--------------------------------------------------------------------------------------

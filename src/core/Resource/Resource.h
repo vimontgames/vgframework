@@ -5,16 +5,16 @@
 namespace vg::core
 {
     class IObject;
-    class IObjectFactory;
-    class IObjectDescriptor;
+    class IFactory;
+    class IClassDesc;
 
     class Resource : public IResource
     {
     public:
         const char *                getClassName        () const override   { return "Resource"; }   
 
-        static bool                 registerClass       (IObjectFactory & _factory);
-        static bool                 registerProperties  (IObjectDescriptor & _desc);
+        static bool                 registerClass       (IFactory & _factory);
+        static bool                 registerProperties  (IClassDesc & _desc);
 
                                     Resource            (const core::string & _name, IObject * _parent);
                                     Resource            (const Resource & _other);

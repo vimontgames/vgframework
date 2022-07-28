@@ -330,7 +330,7 @@ namespace vg::graphics::driver
 	//--------------------------------------------------------------------------------------
 	void Device::beginFrame()
 	{
-        VG_PROFILE_CPU("Device::beginFrame");
+        VG_PROFILE_CPU("BeginFrame");
 
         #if VG_DBG_CPUGPUSYNC
         VG_DEBUGPRINT("beginFrame #%u\n{\n", getFrameCounter());
@@ -352,7 +352,7 @@ namespace vg::graphics::driver
 	//--------------------------------------------------------------------------------------
 	void Device::endFrame()
 	{
-        VG_PROFILE_CPU("Device::endFrame");
+        VG_PROFILE_CPU("EndFrame");
 
 		super::endFrame();
 

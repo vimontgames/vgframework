@@ -102,12 +102,12 @@ namespace vg::graphics::renderer
     //--------------------------------------------------------------------------------------
     bool Renderer::registerClasses()
     {
-        IObjectFactory * factory = Kernel::getObjectFactory();
+        IFactory * factory = Kernel::getFactory();
 
         // Register classes to auto-register the "Engine" module
         AutoRegisterClassInfo::registerClasses(*factory);
 
-        if (IObjectDescriptor * desc = factory->registerClassSingletonHelper(Renderer, "Renderer", IObjectDescriptor::Flags::None))
+        if (IClassDesc * desc = factory->registerClassSingletonHelper(Renderer, "Renderer", IClassDesc::Flags::None))
             registerProperties(*desc);
 
         return true;
@@ -116,12 +116,12 @@ namespace vg::graphics::renderer
     //--------------------------------------------------------------------------------------
     bool Renderer::unregisterClasses()
     {
-        IObjectFactory * factory = Kernel::getObjectFactory();
+        IFactory * factory = Kernel::getFactory();
         return AutoRegisterClassInfo::unregisterClasses(*factory);
     }
 
     //--------------------------------------------------------------------------------------
-    bool Renderer::registerProperties(IObjectDescriptor & _desc)
+    bool Renderer::registerProperties(IClassDesc & _desc)
     {
         super::registerProperties(_desc);
 
@@ -139,7 +139,7 @@ namespace vg::graphics::renderer
         // Singletons used by the renderer
         Kernel::setScheduler(_singletons.scheduler);
         Kernel::setInput(_singletons.input);
-        Kernel::setObjectFactory(_singletons.factory);
+        Kernel::setFactory(_singletons.factory);
 
         // Create device
 		m_device.init(_params.device);

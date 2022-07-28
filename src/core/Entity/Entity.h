@@ -2,13 +2,13 @@
 
 #include "core/IEntity.h"
 
-#define VG_AUTO_REGISTER_ENTITY(e) VG_AUTO_REGISTER_CLASS_EX(e, vg::core::IObjectDescriptor::Flags::Entity)
+#define VG_AUTO_REGISTER_ENTITY(e) VG_AUTO_REGISTER_CLASS_EX(e, vg::core::IClassDesc::Flags::Entity)
 
 namespace vg::core
 {
     class Component;
-    class IObjectFactory;
-    class IObjectDescriptor;
+    class IFactory;
+    class IClassDesc;
 
     class Entity : public IEntity
     {
@@ -16,8 +16,8 @@ namespace vg::core
         using super = IEntity;
 
         const char *                getClassName        () const override { return "Entity"; }
-        static bool                 registerClass       (IObjectFactory & _factory);
-        static bool                 registerProperties  (IObjectDescriptor & _desc);
+        static bool                 registerClass       (IFactory & _factory);
+        static bool                 registerProperties  (IClassDesc & _desc);
 
                                     Entity              (const core::string & _name, IObject * _parent);
         virtual                     ~Entity             ();

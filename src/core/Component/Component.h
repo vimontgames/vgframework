@@ -2,7 +2,7 @@
 
 #include "core/Object/Object.h"
 
-#define VG_AUTO_REGISTER_COMPONENT(className) VG_AUTO_REGISTER_CLASS_EX(className, vg::core::IObjectDescriptor::Flags::Component)
+#define VG_AUTO_REGISTER_COMPONENT(className) VG_AUTO_REGISTER_CLASS_EX(className, vg::core::IClassDesc::Flags::Component)
 
 namespace vg::core
 {

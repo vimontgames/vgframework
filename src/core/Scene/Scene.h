@@ -5,8 +5,8 @@
 namespace vg::core
 {
     class ISector;
-    class IObjectFactory;
-    class IObjectDescriptor;
+    class IFactory;
+    class IClassDesc;
 
     class Scene : public IScene
     {
@@ -18,8 +18,8 @@ namespace vg::core
 
         const char *    getClassName() const final { return "Scene"; }
 
-        static bool     registerClass       (IObjectFactory & _factory);
-        static bool     registerProperties  (IObjectDescriptor & _desc);
+        static bool     registerClass       (IFactory & _factory);
+        static bool     registerProperties  (IClassDesc & _desc);
 
         static bool     load                (IObject * _object);
         static bool     save                (IObject * _object);

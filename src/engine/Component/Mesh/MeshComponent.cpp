@@ -15,21 +15,21 @@ namespace vg::engine
     VG_AUTO_REGISTER_CLASS(MeshComponent);
 
     //--------------------------------------------------------------------------------------
-    bool MeshComponent::registerClass(IObjectFactory & _factory)
+    bool MeshComponent::registerClass(IFactory & _factory)
     {
-        if (core::IObjectDescriptor * desc = _factory.registerClassHelper(MeshComponent, "Mesh Component", IObjectDescriptor::Flags::Component))
+        if (core::IClassDesc * desc = _factory.registerClassHelper(MeshComponent, "Mesh Component", IClassDesc::Flags::Component))
             registerProperties(*desc);
 
         return true;
     }
 
     //--------------------------------------------------------------------------------------
-    bool MeshComponent::registerProperties(IObjectDescriptor & _desc)
+    bool MeshComponent::registerProperties(IClassDesc & _desc)
     {
         super::registerProperties(_desc);
 
-        _desc.registerProperty("m_meshResource", (core::IResource**)offsetof(MeshComponent, m_meshResource), "Resource", IPropertyDescriptor::Flags::None);
-        _desc.registerProperty("m_meshInstance", (IObject**)offsetof(MeshComponent, m_meshInstance), "Instance", IPropertyDescriptor::Flags::None);
+        _desc.registerProperty("m_meshResource", (core::IResource**)offsetof(MeshComponent, m_meshResource), "Resource", IProperty::Flags::None);
+        _desc.registerProperty("m_meshInstance", (IObject**)offsetof(MeshComponent, m_meshInstance), "Instance", IProperty::Flags::None);
 
         return true;
     }

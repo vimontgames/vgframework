@@ -4,15 +4,15 @@
 
 namespace vg::core
 {
-    class IObjectDescriptor;
-    class IPropertyDescriptor;
+    class IClassDesc;
+    class IProperty;
     class IResource;
 
 	class IObject
 	{
 	public:
         virtual const char *                getClassName        () const = 0;
-        virtual const IObjectDescriptor *   getClassDesc        () const = 0;
+        virtual const IClassDesc *   getClassDesc        () const = 0;
 
 										    IObject		        () {}
 		virtual							    ~IObject	        () {}
@@ -20,7 +20,7 @@ namespace vg::core
         virtual void                        setParent           (IObject * _parent) = 0;
         virtual IObject *                   getParent           () const = 0;
 
-        virtual void                        onPropertyChanged   (const IPropertyDescriptor & _prop) = 0;
+        virtual void                        onPropertyChanged   (const IProperty & _prop) = 0;
         virtual void                        onResourceLoaded    (IResource * _resource) = 0;
 
         virtual bool                        loadFromFile        (const string & _filename) = 0;

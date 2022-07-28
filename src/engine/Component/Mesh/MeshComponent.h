@@ -16,8 +16,8 @@ namespace vg::engine
         using super = core::Component;
 
         const char *    getClassName        () const final { return "MeshComponent"; }
-        static bool     registerClass       (core::IObjectFactory & _factory);
-        static bool     registerProperties  (core::IObjectDescriptor & _desc);
+        static bool     registerClass       (core::IFactory & _factory);
+        static bool     registerProperties  (core::IClassDesc & _desc);
 
                         MeshComponent       (const core::string & _name, IObject * _parent);
                         ~MeshComponent      ();

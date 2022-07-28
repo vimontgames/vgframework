@@ -3,7 +3,9 @@
 #include "core/Kernel.h"
 #include "core/File/File.h"
 
-#include "ObjectFactory.hpp"
+#include "Property.hpp"
+#include "ClassDesc.hpp"
+#include "Factory.hpp"
 #include "AutoRegisterClass.hpp"
 
 namespace vg::core
@@ -30,9 +32,9 @@ namespace vg::core
 	}
 
     //--------------------------------------------------------------------------------------
-    bool Object::registerProperties(IObjectDescriptor & _desc)
+    bool Object::registerProperties(IClassDesc & _desc)
     {
-        _desc.registerPropertyHelper(Object, m_name, "Name", IPropertyDescriptor::Flags::Hidden);
+        _desc.registerPropertyHelper(Object, m_name, "Name", IProperty::Flags::Hidden);
         return true;
     }
 
@@ -49,7 +51,7 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
-    void Object::onPropertyChanged(const IPropertyDescriptor & _prop)
+    void Object::onPropertyChanged(const IProperty & _prop)
     {
 
     }
@@ -61,9 +63,9 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
-    const IObjectDescriptor * Object::getClassDesc() const
+    const IClassDesc * Object::getClassDesc() const
     {
-        const auto * factory = Kernel::getObjectFactory();
+        const auto * factory = Kernel::getFactory();
         if (factory)
             return factory->getClassDescriptor(getClassName());
         return nullptr;
@@ -72,7 +74,7 @@ namespace vg::core
     //--------------------------------------------------------------------------------------
     bool Object::loadFromFile(const string & _filename)
     {
-        const auto * factory = Kernel::getObjectFactory();
+        const auto * factory = Kernel::getFactory();
 
         string s;
         if (io::readFile(_filename, s, false))
@@ -85,7 +87,7 @@ namespace vg::core
     //--------------------------------------------------------------------------------------
     bool Object::saveToFile(const string & _filename)
     {
-        const auto * factory = Kernel::getObjectFactory();
+        const auto * factory = Kernel::getFactory();
 
         string s;
         if (factory->serializeToString(s, this))

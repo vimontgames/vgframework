@@ -16,21 +16,21 @@ namespace vg::graphics::renderer
     VG_AUTO_REGISTER_CLASS(MeshModel);
 
     //--------------------------------------------------------------------------------------
-    bool MeshModel::registerClass(core::IObjectFactory & _factory)
+    bool MeshModel::registerClass(core::IFactory & _factory)
     {
-        if (core::IObjectDescriptor * desc = _factory.registerClassHelper(MeshModel, "Mesh Model", IObjectDescriptor::Flags::Model))
+        if (core::IClassDesc * desc = _factory.registerClassHelper(MeshModel, "Mesh Model", IClassDesc::Flags::Model))
             registerProperties(*desc);
 
         return true;
     }
 
     //--------------------------------------------------------------------------------------
-    bool MeshModel::registerProperties(core::IObjectDescriptor & _desc)
+    bool MeshModel::registerProperties(core::IClassDesc & _desc)
     {
         super::registerProperties(_desc);
 
-        _desc.registerPropertyObjectPointerVectorHelper(MeshModel, m_materials, "Materials", IPropertyDescriptor::Flags::None);
-        _desc.registerPropertyObjectPointerHelper(MeshModel, m_meshGeometry, "Geometry", IPropertyDescriptor::Flags::None);
+        _desc.registerPropertyObjectPointerVectorHelper(MeshModel, m_materials, "Materials", IProperty::Flags::None);
+        _desc.registerPropertyObjectPointerHelper(MeshModel, m_meshGeometry, "Geometry", IProperty::Flags::None);
         
         return true;
     }

@@ -5,14 +5,14 @@ namespace vg::core
     class IProfiler;
     class IScheduler;
     class IInput;
-    class IObjectFactory;
+    class IFactory;
 
     struct Singletons
     {
         IProfiler *         profiler    = nullptr;
         IScheduler *        scheduler   = nullptr;
         IInput *            input       = nullptr;
-        IObjectFactory *    factory     = nullptr;
+        IFactory *    factory     = nullptr;
     };
 
     class Kernel
@@ -27,8 +27,8 @@ namespace vg::core
         static void setInput(IInput * _input);
         static IInput * getInput();
 
-        static void setObjectFactory(IObjectFactory * _factory);
-        static IObjectFactory * getObjectFactory();
+        static void setFactory(IFactory * _factory);
+        static IFactory * getFactory();
 
         static void setSingletons(const Singletons & _other);
         static Singletons & getSingletons();
@@ -77,15 +77,15 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
-    inline void Kernel::setObjectFactory(IObjectFactory * _factory)
+    inline void Kernel::setFactory(IFactory * _factory)
     {
         s_singletons.factory = _factory;
     }
 
     //--------------------------------------------------------------------------------------
-    inline IObjectFactory * Kernel::getObjectFactory()
+    inline IFactory * Kernel::getFactory()
     {
-        VG_ASSERT(s_singletons.factory, "IObjectFactory interface is not specified for this executable or dynamic library.");
+        VG_ASSERT(s_singletons.factory, "IFactory interface is not specified for this executable or dynamic library.");
         return s_singletons.factory;
     }
 

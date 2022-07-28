@@ -103,19 +103,19 @@ namespace vg::graphics::driver
     VG_AUTO_REGISTER_CLASS(Texture);
 
     //--------------------------------------------------------------------------------------
-    bool Texture::registerClass(IObjectFactory & _factory)
+    bool Texture::registerClass(IFactory & _factory)
     {
-        if (core::IObjectDescriptor * desc = _factory.registerClassHelper_NoCTor(Texture, "Texture", IObjectDescriptor::Flags::Model))
+        if (core::IClassDesc * desc = _factory.registerClassHelper_NoCTor(Texture, "Texture", IClassDesc::Flags::Model))
             registerProperties(*desc);
 
         return true;
     }
 
     //--------------------------------------------------------------------------------------
-    bool Texture::registerProperties(IObjectDescriptor & _desc)
+    bool Texture::registerProperties(IClassDesc & _desc)
     {
-        _desc.registerProperty("width", (core::u16*)(&((Texture*)(nullptr))->m_texDesc.width), "Width", IPropertyDescriptor::Flags::ReadOnly);
-        _desc.registerProperty("height", (core::u16*)(&((Texture*)(nullptr))->m_texDesc.height), "Height", IPropertyDescriptor::Flags::ReadOnly);
+        _desc.registerProperty("width", (core::u16*)(&((Texture*)(nullptr))->m_texDesc.width), "Width", IProperty::Flags::ReadOnly);
+        _desc.registerProperty("height", (core::u16*)(&((Texture*)(nullptr))->m_texDesc.height), "Height", IProperty::Flags::ReadOnly);
 
         return true;
     }

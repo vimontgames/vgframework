@@ -10,32 +10,32 @@ namespace vg::engine
     VG_AUTO_REGISTER_CLASS(FreeCamEntity);
 
     //--------------------------------------------------------------------------------------
-    bool FreeCamEntity::registerClass(IObjectFactory & _factory)
+    bool FreeCamEntity::registerClass(IFactory & _factory)
     {
-        if (core::IObjectDescriptor * desc = _factory.registerClassHelper(FreeCamEntity, "FreeCamEntity", IObjectDescriptor::Flags::Entity))
+        if (core::IClassDesc * desc = _factory.registerClassHelper(FreeCamEntity, "FreeCamEntity", IClassDesc::Flags::Entity))
             registerProperties(*desc);
 
         return true;
     }
 
     //--------------------------------------------------------------------------------------
-    bool FreeCamEntity::registerProperties(IObjectDescriptor & _desc)
+    bool FreeCamEntity::registerProperties(IClassDesc & _desc)
     {
         super::registerProperties(_desc);
 
-        _desc.registerPropertyHelper(FreeCamEntity, m_moveSpeed, "Translation Speed", IPropertyDescriptor::Flags::None);
+        _desc.registerPropertyHelper(FreeCamEntity, m_moveSpeed, "Translation Speed", IProperty::Flags::None);
         _desc.setPropertyRangeHelper(FreeCamEntity, m_moveSpeed, float2(0.0f, 10.0f));
 
-        _desc.registerPropertyHelper(FreeCamEntity, m_rotSpeed, "Rotation Speed", IPropertyDescriptor::Flags::None);
+        _desc.registerPropertyHelper(FreeCamEntity, m_rotSpeed, "Rotation Speed", IProperty::Flags::None);
         _desc.setPropertyRangeHelper(FreeCamEntity, m_rotSpeed, float2(0.0f, 10.0f));
 
-        _desc.registerPropertyHelper(FreeCamEntity, m_pitch, "Pitch", IPropertyDescriptor::Flags::None);
+        _desc.registerPropertyHelper(FreeCamEntity, m_pitch, "Pitch", IProperty::Flags::None);
         _desc.setPropertyRangeHelper(FreeCamEntity, m_pitch, float2(-pi, +pi));
 
-        _desc.registerPropertyHelper(FreeCamEntity, m_yaw, "Yaw", IPropertyDescriptor::Flags::None);
+        _desc.registerPropertyHelper(FreeCamEntity, m_yaw, "Yaw", IProperty::Flags::None);
         _desc.setPropertyRangeHelper(FreeCamEntity, m_yaw, float2(-pi, +pi));
 
-        _desc.registerPropertyHelper(FreeCamEntity, m_roll, "Roll", IPropertyDescriptor::Flags::None);
+        _desc.registerPropertyHelper(FreeCamEntity, m_roll, "Roll", IProperty::Flags::None);
         _desc.setPropertyRangeHelper(FreeCamEntity, m_roll, float2(-pi, +pi));
 
         return true;

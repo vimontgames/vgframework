@@ -22,23 +22,23 @@ namespace vg::graphics::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    bool MeshGeometry::registerClass(IObjectFactory & _factory)
+    bool MeshGeometry::registerClass(IFactory & _factory)
     {
-        if (core::IObjectDescriptor * desc = _factory.registerClassHelper(MeshGeometry, "Mesh Geometry", IObjectDescriptor::Flags::None))
+        if (core::IClassDesc * desc = _factory.registerClassHelper(MeshGeometry, "Mesh Geometry", IClassDesc::Flags::None))
             registerProperties(*desc);
 
         return true;
     }
 
     //--------------------------------------------------------------------------------------
-    bool MeshGeometry::registerProperties(IObjectDescriptor & _desc)
+    bool MeshGeometry::registerProperties(IClassDesc & _desc)
     {
         super::registerProperties(_desc);
 
-        _desc.registerPropertyObjectVectorHelper(MeshGeometry, m_batches, Batch, "Batches", IPropertyDescriptor::Flags::None);
+        _desc.registerPropertyObjectVectorHelper(MeshGeometry, m_batches, Batch, "Batches", IProperty::Flags::None);
 
-        _desc.registerPropertyHelper(MeshGeometry, m_indexBufferOffset, "IB Offset", IPropertyDescriptor::Flags::ReadOnly);
-        _desc.registerPropertyHelper(MeshGeometry, m_vertexBufferOffset, "VB Offset", IPropertyDescriptor::Flags::ReadOnly);
+        _desc.registerPropertyHelper(MeshGeometry, m_indexBufferOffset, "IB Offset", IProperty::Flags::ReadOnly);
+        _desc.registerPropertyHelper(MeshGeometry, m_vertexBufferOffset, "VB Offset", IProperty::Flags::ReadOnly);
 
         return true;
     }

@@ -15,9 +15,9 @@ namespace vg::graphics::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    bool DisplayOptions::registerClass(IObjectFactory & _factory)
+    bool DisplayOptions::registerClass(IFactory & _factory)
     {
-        if (core::IObjectDescriptor * desc = _factory.registerClassSingletonHelper(DisplayOptions, "Display Options", IObjectDescriptor::Flags::None))
+        if (core::IClassDesc * desc = _factory.registerClassSingletonHelper(DisplayOptions, "Display Options", IClassDesc::Flags::None))
             registerProperties(*desc);
 
         return true;
@@ -36,17 +36,17 @@ namespace vg::graphics::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    bool DisplayOptions::registerProperties(IObjectDescriptor & _desc)
+    bool DisplayOptions::registerProperties(IClassDesc & _desc)
     {
         super::registerProperties(_desc);
 
-        _desc.registerPropertyHelper(DisplayOptions, m_toolMode,   "Tool mode",   IPropertyDescriptor::Flags::None);
+        _desc.registerPropertyHelper(DisplayOptions, m_toolMode,   "Tool mode",   IProperty::Flags::None);
 
-        _desc.registerPropertyHelper(DisplayOptions, m_opaque,     "Opaque",      IPropertyDescriptor::Flags::None);
-        _desc.registerPropertyHelper(DisplayOptions, m_wireframe,  "Wireframe",   IPropertyDescriptor::Flags::SameLine);
+        _desc.registerPropertyHelper(DisplayOptions, m_opaque,     "Opaque",      IProperty::Flags::None);
+        _desc.registerPropertyHelper(DisplayOptions, m_wireframe,  "Wireframe",   IProperty::Flags::SameLine);
 
-        _desc.registerPropertyHelper(DisplayOptions, m_normalMaps, "Normal Maps", IPropertyDescriptor::Flags::None);
-        _desc.registerPropertyHelper(DisplayOptions, m_albedoMaps, "Albedo Maps", IPropertyDescriptor::Flags::SameLine);
+        _desc.registerPropertyHelper(DisplayOptions, m_normalMaps, "Normal Maps", IProperty::Flags::None);
+        _desc.registerPropertyHelper(DisplayOptions, m_albedoMaps, "Albedo Maps", IProperty::Flags::SameLine);
 
         static const char * enumValues =
         {
@@ -63,12 +63,12 @@ namespace vg::graphics::renderer
             "\0"
         };
 
-		_desc.registerPropertyEnumHelper(DisplayOptions, DisplayMode, m_debugDisplayMode, DisplayMode::Default, "Debug Display", enumValues, IPropertyDescriptor::Flags::None);
+		_desc.registerPropertyEnumHelper(DisplayOptions, DisplayMode, m_debugDisplayMode, DisplayMode::Default, "Debug Display", enumValues, IProperty::Flags::None);
 
-        _desc.registerPropertyHelper(DisplayOptions, m_backgroundColor, "Background", IPropertyDescriptor::Flags::Color);
+        _desc.registerPropertyHelper(DisplayOptions, m_backgroundColor, "Background", IProperty::Flags::Color);
 
-        _desc.registerCallbackHelper(DisplayOptions, load, "Load", IPropertyDescriptor::Flags::None);
-        _desc.registerCallbackHelper(DisplayOptions, save, "Save", IPropertyDescriptor::Flags::SameLine);
+        _desc.registerCallbackHelper(DisplayOptions, load, "Load", IProperty::Flags::None);
+        _desc.registerCallbackHelper(DisplayOptions, save, "Save", IProperty::Flags::SameLine);
 
         return true;
     }

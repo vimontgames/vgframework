@@ -16,8 +16,8 @@ namespace vg::core
 
         const char *                                            getClassName            () const final { return "Sector"; }
 
-        static bool                                             registerClass           (IObjectFactory & _factory);
-        static bool                                             registerProperties      (IObjectDescriptor & _desc);
+        static bool                                             registerClass           (IFactory & _factory);
+        static bool                                             registerProperties      (IClassDesc & _desc);
 
         void                                                    addChildSector          (ISector * _sector) override;
         uint                                                    getChildSectorCount     () const override;

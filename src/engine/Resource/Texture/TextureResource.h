@@ -14,8 +14,8 @@ namespace vg::engine
     public:
         using super = core::Resource;
         const char *                        getClassName        () const override { return "TextureResource"; }
-        static bool                         registerClass       (core::IObjectFactory & _factory);
-        static bool                         registerProperties  (core::IObjectDescriptor & _desc);
+        static bool                         registerClass       (core::IFactory & _factory);
+        static bool                         registerProperties  (core::IClassDesc & _desc);
 
                                             TextureResource     (const core::string & _name = "", core::IObject * _parent = nullptr);
                                             ~TextureResource    ();

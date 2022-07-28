@@ -130,13 +130,6 @@
     <ClInclude Include="Instance\Instance.h">
       <Filter>Instance</Filter>
     </ClInclude>
-    <ClInclude Include="Object\ObjectFactory.h">
-      <Filter>Object</Filter>
-    </ClInclude>
-    <ClInclude Include="Object\ObjectFactory.hpp">
-      <Filter>Object</Filter>
-    </ClInclude>
-    <ClInclude Include="IObjectFactory.h" />
     <ClInclude Include="Resource\Resource.h">
       <Filter>Resource</Filter>
     </ClInclude>
@@ -161,6 +154,27 @@
     </ClInclude>
     <ClInclude Include="File\Buffer.inl">
       <Filter>File</Filter>
+    </ClInclude>
+    <ClInclude Include="IProperty.h" />
+    <ClInclude Include="Object\Property.h">
+      <Filter>Object</Filter>
+    </ClInclude>
+    <ClInclude Include="Object\Property.hpp">
+      <Filter>Object</Filter>
+    </ClInclude>
+    <ClInclude Include="IClassDesc.h" />
+    <ClInclude Include="Object\ClassDesc.h">
+      <Filter>Object</Filter>
+    </ClInclude>
+    <ClInclude Include="Object\ClassDesc.hpp">
+      <Filter>Object</Filter>
+    </ClInclude>
+    <ClInclude Include="IFactory.h" />
+    <ClInclude Include="Object\Factory.h">
+      <Filter>Object</Filter>
+    </ClInclude>
+    <ClInclude Include="Object\Factory.hpp">
+      <Filter>Object</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

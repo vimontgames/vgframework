@@ -1007,6 +1007,7 @@ namespace vg::graphics::driver::vulkan
             VG_DEBUGPRINT("Wait completion of frame %u (fence[%u])\n", m_frameCounter - max_frame_latency, FrameIndex);
             #endif
 
+            VG_PROFILE_GPU_SWAP(this);
             vkWaitForFences(vkDevice, 1, &fences[FrameIndex], VK_TRUE, UINT64_MAX);
         }
         vkResetFences(vkDevice, 1, &fences[FrameIndex]);
@@ -1094,8 +1095,6 @@ namespace vg::graphics::driver::vulkan
         const u32 currentBackbuffer = m_currentBackbufferIndex;
         present.pImageIndices = &currentBackbuffer;
         present.pResults = nullptr;
-
-        VG_PROFILE_GPU_SWAP(this);
 
         VG_ASSERT_VULKAN(m_KHR_Swapchain.m_pfnQueuePresentKHR(getCommandQueue(CommandQueueType::Graphics)->getVulkanCommandQueue(), &present));
 

@@ -14,7 +14,7 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
-    bool AutoRegisterClassInfo::registerClasses(IObjectFactory & _factory)
+    bool AutoRegisterClassInfo::registerClasses(IFactory & _factory)
     {
         if (s_autoRegisterInfos)
         {
@@ -32,7 +32,7 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
-    bool AutoRegisterClassInfo::unregisterClasses(IObjectFactory & _factory)
+    bool AutoRegisterClassInfo::unregisterClasses(IFactory & _factory)
     {
         if (s_autoRegisterInfos)
         {

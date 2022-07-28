@@ -4,8 +4,8 @@
 
 namespace vg::core
 {
-    class IObjectFactory;
-    class IObjectDescriptor;
+    class IFactory;
+    class IClassDesc;
 }
 
 namespace vg::graphics::renderer
@@ -20,8 +20,8 @@ namespace vg::graphics::renderer
         MeshInstance(const core::string & _name, core::IObject * _parent);
         ~MeshInstance();
 
-        static bool registerClass(core::IObjectFactory & _factory);
-        static bool registerProperties(core::IObjectDescriptor & _desc);
+        static bool registerClass(core::IFactory & _factory);
+        static bool registerProperties(core::IClassDesc & _desc);
 
     private:
         

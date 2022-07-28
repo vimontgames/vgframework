@@ -14,7 +14,7 @@ namespace vg::core
                                     Instance            (const string & _name, IObject * _parent);
                                     ~Instance           ();
 
-        static bool                 registerProperties  (IObjectDescriptor & _desc);
+        static bool                 registerProperties  (IClassDesc & _desc);
 
         void                        SetWorldMatrix      (const float4x4 & _world) final override;
         const float4x4 &            GetWorldMatrix      () const final override;

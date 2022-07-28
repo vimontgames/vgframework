@@ -21,23 +21,23 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
-    bool Scene::registerClass(IObjectFactory & _factory)
+    bool Scene::registerClass(IFactory & _factory)
     {
-        if (core::IObjectDescriptor * desc = _factory.registerClassHelper(Scene, "Scene", IObjectDescriptor::Flags::SceneNode))
+        if (core::IClassDesc * desc = _factory.registerClassHelper(Scene, "Scene", IClassDesc::Flags::SceneNode))
             registerProperties(*desc);
 
         return true;
     }
 
     //--------------------------------------------------------------------------------------
-    bool Scene::registerProperties(IObjectDescriptor & _desc)
+    bool Scene::registerProperties(IClassDesc & _desc)
     {
         super::registerProperties(_desc);
 
-        _desc.registerProperty("m_root", (IObject**)(&((Scene*)(nullptr))->m_root), "Root", IPropertyDescriptor::Flags::None);
+        _desc.registerProperty("m_root", (IObject**)(&((Scene*)(nullptr))->m_root), "Root", IProperty::Flags::None);
 
-        _desc.registerCallbackHelper(Scene, load, "Load", IPropertyDescriptor::Flags::None);
-        _desc.registerCallbackHelper(Scene, save, "Save", IPropertyDescriptor::Flags::SameLine);
+        _desc.registerCallbackHelper(Scene, load, "Load", IProperty::Flags::None);
+        _desc.registerCallbackHelper(Scene, save, "Save", IProperty::Flags::SameLine);
 
         return true;
     }

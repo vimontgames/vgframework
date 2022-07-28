@@ -21,8 +21,8 @@ namespace vg::graphics::renderer
     public:
         const char *            getClassName() const final { return "MeshModel"; }
 
-        static bool             registerClass(core::IObjectFactory & _factory);
-        static bool             registerProperties(core::IObjectDescriptor & _desc);
+        static bool             registerClass(core::IFactory & _factory);
+        static bool             registerProperties(core::IClassDesc & _desc);
 
         MeshModel(const core::string & _name, core::IObject * _parent);
         ~MeshModel();

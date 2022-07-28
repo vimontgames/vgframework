@@ -5,7 +5,7 @@
 
 namespace vg::core
 {
-    class IObjectFactory;
+    class IFactory;
 }
 
 namespace vg::graphics::renderer
@@ -33,8 +33,8 @@ namespace vg::graphics::renderer
 
         const char *		getClassName			() const final { return "DisplayOptions"; }
 
-        static bool			registerClass			(core::IObjectFactory & _factory);
-        static bool			registerProperties		(core::IObjectDescriptor & _desc);
+        static bool			registerClass			(core::IFactory & _factory);
+        static bool			registerProperties		(core::IClassDesc & _desc);
 
         DisplayMode         getDisplayMode          () const { return m_debugDisplayMode;}
 

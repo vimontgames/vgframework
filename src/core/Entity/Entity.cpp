@@ -8,21 +8,21 @@ namespace vg::core
     VG_AUTO_REGISTER_CLASS(Entity);
 
     //--------------------------------------------------------------------------------------
-    bool Entity::registerClass(IObjectFactory & _factory)
+    bool Entity::registerClass(IFactory & _factory)
     {
-        if (core::IObjectDescriptor * desc = _factory.registerClassHelper(Entity, "Entity", IObjectDescriptor::Flags::Entity))
+        if (core::IClassDesc * desc = _factory.registerClassHelper(Entity, "Entity", IClassDesc::Flags::Entity))
             registerProperties(*desc);
 
         return true;
     }
 
     //--------------------------------------------------------------------------------------
-    bool Entity::registerProperties(IObjectDescriptor & _desc)
+    bool Entity::registerProperties(IClassDesc & _desc)
     {
         super::registerProperties(_desc);
 
-        _desc.registerPropertyHelper(Entity, m_color, "Color", IPropertyDescriptor::Flags::Color);
-        _desc.registerPropertyObjectPointerVectorHelper(Entity, m_components, "Components", IPropertyDescriptor::Flags::None);
+        _desc.registerPropertyHelper(Entity, m_color, "Color", IProperty::Flags::Color);
+        _desc.registerPropertyObjectPointerVectorHelper(Entity, m_components, "Components", IProperty::Flags::None);
 
         return true;
     }

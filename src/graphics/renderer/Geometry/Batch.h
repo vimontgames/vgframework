@@ -15,8 +15,8 @@ namespace vg::graphics::renderer
 
         const char * getClassName() const final { return "Batch"; }
 
-        static bool registerClass(core::IObjectFactory & _factory);
-        static bool registerProperties(core::IObjectDescriptor & _desc);
+        static bool registerClass(core::IFactory & _factory);
+        static bool registerProperties(core::IClassDesc & _desc);
 
         Batch(const core::string & _name = "", core::IObject * _parent = nullptr);
         Batch(const Batch & _other);

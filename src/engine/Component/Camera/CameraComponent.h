@@ -20,8 +20,8 @@ namespace vg::engine
         using super = core::Component;
 
         const char * getClassName() const final { return "CameraComponent"; }
-        static bool registerClass(core::IObjectFactory & _factory);
-        static bool registerProperties(core::IObjectDescriptor & _desc);
+        static bool registerClass(core::IFactory & _factory);
+        static bool registerProperties(core::IClassDesc & _desc);
 
         CameraComponent(const core::string & _name, core::IObject * _parent);
         ~CameraComponent();

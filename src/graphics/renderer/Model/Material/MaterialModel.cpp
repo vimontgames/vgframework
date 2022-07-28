@@ -14,20 +14,20 @@ namespace vg::graphics::renderer
     VG_AUTO_REGISTER_CLASS(MaterialModel);
 
     //--------------------------------------------------------------------------------------
-    bool MaterialModel::registerClass(core::IObjectFactory & _factory)
+    bool MaterialModel::registerClass(core::IFactory & _factory)
     {
-        if (core::IObjectDescriptor * desc = _factory.registerClassHelper(MaterialModel, "Material Model", IObjectDescriptor::Flags::Model))
+        if (core::IClassDesc * desc = _factory.registerClassHelper(MaterialModel, "Material Model", IClassDesc::Flags::Model))
             registerProperties(*desc);
 
         return true;
     }
 
     //--------------------------------------------------------------------------------------
-    bool MaterialModel::registerProperties(core::IObjectDescriptor & _desc)
+    bool MaterialModel::registerProperties(core::IClassDesc & _desc)
     {
         super::registerProperties(_desc);
 
-        //_desc.registerProperty("m_meshGeometry", (core::IObject**)offsetof(MeshModel, m_meshGeometry), "Geometry", IPropertyDescriptor::Flags::None);
+        //_desc.registerProperty("m_meshGeometry", (core::IObject**)offsetof(MeshModel, m_meshGeometry), "Geometry", IProperty::Flags::None);
 
         return true;
     }

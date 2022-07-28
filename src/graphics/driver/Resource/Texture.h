@@ -46,8 +46,8 @@ namespace vg::graphics::driver
 
 	public:
         const char *    getClassName() const final { return "Texture"; }
-        static bool     registerClass(core::IObjectFactory & _factory);
-        static bool     registerProperties(core::IObjectDescriptor & _desc);
+        static bool     registerClass(core::IFactory & _factory);
+        static bool     registerProperties(core::IClassDesc & _desc);
 
 		Texture(const TextureDesc & _texDesc, const core::string & _name, const void * _initData = nullptr, ReservedSlot _reservedSlot = ReservedSlot::None);
 		~Texture();

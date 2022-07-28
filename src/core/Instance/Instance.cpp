@@ -1,6 +1,6 @@
 #include "core/Precomp.h"
 #include "Instance.h"
-#include "core/IObjectFactory.h"
+#include "core/IFactory.h"
 #include "core//Model/Model.h"
 
 #if !VG_ENABLE_INLINE
@@ -23,12 +23,12 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
-    bool Instance::registerProperties(IObjectDescriptor & _desc)
+    bool Instance::registerProperties(IClassDesc & _desc)
     {
         super::registerProperties(_desc);
 
-        _desc.registerPropertyHelper(Instance, m_world, "Matrix", IPropertyDescriptor::Flags::None);
-        _desc.registerPropertyObjectPointerVectorHelper(Instance, m_models, "Models", IPropertyDescriptor::Flags::ReadOnly);
+        _desc.registerPropertyHelper(Instance, m_world, "Matrix", IProperty::Flags::None);
+        _desc.registerPropertyObjectPointerVectorHelper(Instance, m_models, "Models", IProperty::Flags::ReadOnly);
 
         return true;
     }

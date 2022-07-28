@@ -4,13 +4,13 @@
 
 namespace vg::core
 {
-    class IObjectFactory;
+    class IFactory;
 
 	class Object : public IObject
 	{
 	public:
-        const IObjectDescriptor *   getClassDesc        () const final;
-        static bool                 registerProperties  (IObjectDescriptor & _desc);
+        const IClassDesc *   getClassDesc        () const final;
+        static bool                 registerProperties  (IClassDesc & _desc);
 
 								    Object		        (const string & _name, IObject * _parent);
 								    Object		        ();
@@ -19,7 +19,7 @@ namespace vg::core
         void                        setParent           (IObject * _parent) final;
         IObject *                   getParent           () const final;
 
-        void                        onPropertyChanged   (const IPropertyDescriptor & _prop) override;
+        void                        onPropertyChanged   (const IProperty & _prop) override;
         void                        onResourceLoaded    (IResource * _resource) override;
 
         bool                        loadFromFile        (const string & _filename) override;
