@@ -1,5 +1,6 @@
 lib/*
 tmp/*
+cache/*
 .vs/*
 enc_temp_folder/*
 *.user
