@@ -58,6 +58,9 @@
     <Filter Include="Sector">
       <UniqueIdentifier>{3216c643-abe6-4f12-9d27-da7cd5106a91}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Universe">
+      <UniqueIdentifier>{6761ac01-3b2d-4073-b7da-51b6c97941f3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Math\Math.h">
@@ -176,6 +179,13 @@
     <ClInclude Include="Object\Factory.hpp">
       <Filter>Object</Filter>
     </ClInclude>
+    <ClInclude Include="Container\Vector.h">
+      <Filter>Container</Filter>
+    </ClInclude>
+    <ClInclude Include="IUniverse.h" />
+    <ClInclude Include="Universe\Universe.h">
+      <Filter>Universe</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Math\Math.cpp">
@@ -227,6 +237,9 @@
     </ClCompile>
     <ClCompile Include="Sector\Sector.cpp">
       <Filter>Sector</Filter>
+    </ClCompile>
+    <ClCompile Include="Universe\Universe.cpp">
+      <Filter>Universe</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

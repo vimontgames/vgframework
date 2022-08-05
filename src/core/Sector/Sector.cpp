@@ -66,7 +66,7 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
-    const ISector * Sector::getChildSector(uint _index)
+    const ISector * Sector::getChildSector(uint _index) const
     {
         VG_ASSERT(_index < getChildSectorCount());
         return m_sectors[_index];

@@ -4,6 +4,7 @@
 
 #include "core/Kernel.h"
 #include "core/IProfiler.h"
+#include "core/Universe/Universe.h"
 #include "core/Timer/Timer.h"
 #include "core/Plugin/Plugin.h"
 #include "core/Scheduler/Scheduler.h"
@@ -31,7 +32,8 @@ using namespace vg::engine;
 #define VG_ENGINE_VERSION_MINOR 12
 
 // Avoid stripping code for classes from static lib
-static Scene scene("",nullptr);
+static Universe universe("", nullptr);
+static Scene scene("", nullptr);
 static Sector sector("", nullptr);
 
 //--------------------------------------------------------------------------------------
@@ -206,9 +208,9 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
-    core::IScene * Engine::getScene() const
+    core::IUniverse * Engine::getCurrentUniverse() const
     {
-        return m_scene;
+        return m_universe;
     }
 
 	//--------------------------------------------------------------------------------------
@@ -273,35 +275,42 @@ namespace vg::engine
         // use factor to create objects
         auto * factory = Kernel::getFactory();
 
+        // create default universe
+        m_universe = (IUniverse *)CreateFactoryObject(Universe, "DefaultUniverse", this);
+
         // create empty scene
-        m_scene = (IScene*)CreateFactoryObject(Scene, "TestScene", this);
-        m_scene->setName("Scene");
+        IScene * defaultScene = (IScene*)CreateFactoryObject(Scene, "TestScene", this);
+        //
+        m_universe->addScene(defaultScene);
+        defaultScene->release();
 
         // add root sector
-        Sector * rootSector = (Sector*)CreateFactoryObject(Sector, "Root", m_scene);
-        rootSector->setName("Root");
-        m_scene->setRoot(rootSector);
-        VG_SAFE_RELEASE(rootSector);
+        Sector * rootSector = (Sector*)CreateFactoryObject(Sector, "Root", defaultScene);
+        defaultScene->setRoot(rootSector);
+        rootSector->release();
 
-
+        // add child sector
+        Sector * childSector = (Sector*)CreateFactoryObject(Sector, "3DScan", rootSector);
+        rootSector->addChildSector(childSector);
+        childSector->release();
+        
         // add camera entity
-        auto * root = m_scene->getRoot();
-        m_freeCam = new FreeCamEntity("FreeCam #0", root);
+        m_freeCam = new FreeCamEntity("FreeCam #0", rootSector);
         auto * cameraComponent = (CameraComponent*)CreateFactoryObject(CameraComponent, "", m_freeCam);
         m_freeCam->addComponent(cameraComponent);
-        cameraComponent->setView(m_editorView, root);
-        root->addEntity(m_freeCam);
+        cameraComponent->setView(m_editorView, rootSector);
+        rootSector->addEntity(m_freeCam);
         VG_SAFE_RELEASE(cameraComponent);
         VG_SAFE_RELEASE(m_freeCam);
 
-        auto addMeshToScene = [=](const string & _name, const string & _path, const float4 _position)
+        auto addMesh = [=](ISector * sector, const string & _name, const string & _path, const float4 _position)
         {
-            auto * meshEntity = (Entity*)CreateFactoryObject(Entity, _name.c_str(), root);
+            auto * meshEntity = (Entity*)CreateFactoryObject(Entity, _name.c_str(), sector);
             auto * meshComponent = (MeshComponent*)CreateFactoryObject(MeshComponent, "", meshEntity);
             meshComponent->getMeshResource().setPath(_path);
             meshEntity->addComponent(meshComponent);
-            root->addEntity(meshEntity);
-
+            sector->addEntity(meshEntity);
+        
             const float4x4 m =
             {
                 float4(1.0f, 0.0f, 0.0f, (0.0f)),
@@ -310,17 +319,17 @@ namespace vg::engine
                 _position,
             };
             meshEntity->SetWorldMatrix(m);
-
+        
             VG_SAFE_RELEASE(meshComponent);
             VG_SAFE_RELEASE(meshEntity);
         };
 
 #if 1
-        //addMeshToScene("Box", "data/Models/matIDBox/matIDBox.fbx", float4(80.0f, 0.0f, 10.0f, 1.0f));
-        addMeshToScene("3DScanMan001", "data/Models/human/human.fbx", float4(-1.0f, 0.0f, 0.0f, 1.0f));
-        addMeshToScene("3DScanMan016", "data/Models/3DScan_Man_016/3DScan_Man_016.FBX", float4(0.0f, 0.0f, 0.0f, 1.0f));
-        addMeshToScene("Jess", "data/Models/jess/jess.fbx", float4(+1.0f, 0.0f, 00.0f, 1.0f));
-        //addMeshToScene("Floor", "data/Models/floor/floor.fbx", float4(0.0f, 0.0f, -10.0f, 1.0f));
+        //addMesh(rootSector, "Box", "data/Models/matIDBox/matIDBox.fbx", float4(80.0f, 0.0f, 10.0f, 1.0f));
+        addMesh(childSector, "3DScanMan001", "data/Models/human/human.fbx", float4(-1.0f, 0.0f, 0.0f, 1.0f));
+        addMesh(childSector, "3DScanMan016", "data/Models/3DScan_Man_016/3DScan_Man_016.FBX", float4(0.0f, 0.0f, 0.0f, 1.0f));
+        addMesh(rootSector, "Jess", "data/Models/jess/jess.fbx", float4(+1.0f, 0.0f, 00.0f, 1.0f));
+        //addMesh(rootSector, "Floor", "data/Models/floor/floor.fbx", float4(0.0f, 0.0f, -10.0f, 1.0f));
 #else
         // add a few entities with mesh
         for (int j = 0; j < 3; ++j)
@@ -359,7 +368,7 @@ namespace vg::engine
     void Engine::destroyEditorView()
     {
         VG_SAFE_RELEASE(m_freeCam);
-        VG_SAFE_RELEASE(m_scene);
+        VG_SAFE_RELEASE(m_universe);
         VG_SAFE_RELEASE(m_editorView);
     }
 
@@ -370,7 +379,6 @@ namespace vg::engine
         m_resourceManager->flushPendingLoading();
 
         destroyEditorView();
-
         unloadProject();
 
         unregisterClasses();
@@ -436,11 +444,19 @@ namespace vg::engine
 
         m_resourceManager->updateLoading();
 
-        Sector * root = (Sector*)m_scene->getRoot();
-        if (root)
-            updateEntities(root, m_dt);
-        
-		m_renderer->runOneFrame(m_dt);
+        if (m_universe)
+        {
+            const uint sceneCount = m_universe->getSceneCount();
+            for (uint i = 0; i < sceneCount; ++i)
+            {
+                Scene * scene = (Scene*)m_universe->getScene(i);
+                Sector * root = (Sector*)scene->getRoot();
+                if (root)
+                    updateEntities(root, m_dt);
+            }
+
+            m_renderer->runOneFrame(m_dt);
+        }
 	}
 
 	//--------------------------------------------------------------------------------------

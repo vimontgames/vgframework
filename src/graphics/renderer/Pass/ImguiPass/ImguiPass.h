@@ -2,6 +2,11 @@
 
 #include "graphics/driver/FrameGraph/UserPass.h"
 
+namespace vg::core
+{
+    class ISector;
+}
+
 namespace vg::engine
 {
     class IEngine;
@@ -56,7 +61,8 @@ namespace vg::graphics::renderer
 
         void displayAboutWindow();
 
-        void displayArrayObject(IObject * _object, core::uint _index, core::u32 _color, const char * _name, UIMode _mode = UIMode::All);
+        void displaySector(core::ISector * root);
+        void displayArrayObject(core::IObject * _object, core::uint _index, core::u32 _color, const char * _name, UIMode _mode = UIMode::All);
         void displayObject(core::IObject * _object, UIMode _mode = UIMode::All);
 
         void updateSelection(core::IObject * _object, UIMode _mode);

@@ -161,6 +161,17 @@ namespace vg::graphics::renderer
     }
 
     //--------------------------------------------------------------------------------------
+    void addInstanceRecur(vector<const IGraphicInstance*> & list, const ISector * sector)
+    {
+        auto & instances = sector->getGraphicInstances();
+        list.insert(list.begin(), instances.begin(), instances.end());
+        for (uint i = 0; i < sector->getChildSectorCount(); ++i)
+        {
+            addInstanceRecur(list, sector->getChildSector(i));
+        }
+    }
+
+    //--------------------------------------------------------------------------------------
     void TestPass3D::draw(CommandList * _cmdList) const
     {
         auto * renderer = Renderer::get();
@@ -178,11 +189,14 @@ namespace vg::graphics::renderer
        
         float4x4 viewProj = mul(view->GetViewInvMatrix(), proj);
 
+        // #TODO #FIXME Shall pass the root sector instead? 
         const auto * camSector = view->getCameraSector();
         if (nullptr == camSector)
             return;
 
-        const auto & graphicInstances = camSector->getGraphicInstances();
+        // #TODO #TEMPHACK No culling for now just add all instances to the list to draw
+        vector<const IGraphicInstance*> graphicInstances;
+        addInstanceRecur(graphicInstances, camSector);
         
         BlendState bs(BlendFactor::One, BlendFactor::Zero, BlendOp::Add);
         DepthStencilState ds(true, true, ComparisonFunc::LessEqual);

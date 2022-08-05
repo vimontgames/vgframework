@@ -8,6 +8,10 @@
 #include "core/Plugin/Plugin.h"
 #include "core/IFactory.h"
 #include "core/IResource.h"
+#include "core/IUniverse.h"
+#include "core/IScene.h"
+#include "core/ISector.h"
+#include "core/IEntity.h"
 #include "core/File/File.h"
 #include "core/Math/Math.h"
 #include "ImGui-Addons/FileBrowser/ImGuiFileBrowser.cpp"
@@ -246,7 +250,6 @@ namespace vg::graphics::renderer
             ImGui::Text("%.4f ms", m_dt);
 
             ImGui::Columns(1);
-            ImGui::Text("");
             ImGui::Text("Press 'F1' to start/stop profiler");
 
             if (VG_PROFILE_CAPTURE_IN_PROGRESS())
@@ -314,16 +317,57 @@ namespace vg::graphics::renderer
     //--------------------------------------------------------------------------------------
     void ImguiPass::displaySceneWindow()
     {
-        if (ImGui::Begin("Scene", &m_isWindowVisible[asInteger(UIWindow::Scene)]))
+        if (ImGui::Begin("Scenes", &m_isWindowVisible[asInteger(UIWindow::Scene)]))
         {
             const auto * factory = Kernel::getFactory();
             engine::IEngine * engine = (engine::IEngine *)factory->getSingleton("Engine");
-            core::IObject * scene = (core::IObject *)engine->getScene();
+            //core::IObject * scene = (core::IObject *)engine->getActiveScene();
+            //
+            //if (scene)
+            //    displayObject(scene, UIMode::Scene);
 
-            if (scene)
-                displayObject(scene, UIMode::Scene);
+            IUniverse * universe = engine->getCurrentUniverse();
+            if (universe)
+            {
+                for (uint i = 0; i < universe->getSceneCount(); ++i)
+                {
+                    const IScene * scene = universe->getScene(i);
+                    if (nullptr != scene)
+                    {
+                        if (ImGui::TreeNodeEx(scene->getName().c_str(), ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_DefaultOpen))
+                        {
+                            ISector * root = scene->getRoot();
+                            displaySector(root);                            
+                            ImGui::TreePop();
+                        }
+                    }
+                }
+            }
         }
         ImGui::End();
+    }
+
+    //--------------------------------------------------------------------------------------
+    void ImguiPass::displaySector(ISector * root)
+    {
+        for (uint j = 0; j < root->getChildSectorCount(); ++j)
+        {
+            ISector * sector = (ISector*)root->getChildSector(j);
+            if (ImGui::TreeNodeEx(sector->getName().c_str(), ImGuiTreeNodeFlags_None))
+            {
+                displaySector(sector);
+                ImGui::TreePop();
+            }
+        }
+
+        for (uint j = 0; j < root->getEntityCount(); ++j)
+        {
+            IEntity * entity = (IEntity*)root->getEntity(j);
+            if (ImGui::TreeNodeEx(entity->getName().c_str(), ImGuiTreeNodeFlags_Leaf))
+            {
+                ImGui::TreePop();
+            }
+        }
     }
 
     //--------------------------------------------------------------------------------------

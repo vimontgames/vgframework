@@ -16,6 +16,7 @@
     <ClInclude Include="Container\Blob.h" />
     <ClInclude Include="Container\HandleTable.h" />
     <ClInclude Include="Container\HandleTable.hpp" />
+    <ClInclude Include="Container\Vector.h" />
     <ClInclude Include="Core.h" />
     <ClInclude Include="Entity\Entity.h" />
     <ClInclude Include="File\Buffer.inl" />
@@ -36,6 +37,7 @@
     <ClInclude Include="IScene.h" />
     <ClInclude Include="IScheduler.h" />
     <ClInclude Include="ISector.h" />
+    <ClInclude Include="IUniverse.h" />
     <ClInclude Include="Kernel.h" />
     <ClInclude Include="Math\Math.h" />
     <ClInclude Include="Model\Model.h" />
@@ -61,6 +63,7 @@
     <ClInclude Include="string\string.h" />
     <ClInclude Include="Timer\Timer.h" />
     <ClInclude Include="Types\Types.h" />
+    <ClInclude Include="Universe\Universe.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CmdLine\CmdLine.cpp" />
@@ -84,6 +87,7 @@
     <ClCompile Include="Sector\Sector.cpp" />
     <ClCompile Include="string\string.cpp" />
     <ClCompile Include="Timer\Timer.cpp" />
+    <ClCompile Include="Universe\Universe.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Instance\Instance.inl" />

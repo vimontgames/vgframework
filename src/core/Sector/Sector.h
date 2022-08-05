@@ -21,7 +21,7 @@ namespace vg::core
 
         void                                                    addChildSector          (ISector * _sector) override;
         uint                                                    getChildSectorCount     () const override;
-        const ISector *                                         getChildSector          (uint _index) override;
+        const ISector *                                         getChildSector          (uint _index) const override;
 
         void                                                    addEntity               (IEntity * _entity) override;
         uint                                                    getEntityCount          () const override;

@@ -66,7 +66,6 @@ namespace vg::core
     using mutex = std::mutex;
     template <typename T> using lock_guard = std::lock_guard<T>;
 
-	template <typename T> using vector = std::vector<T>;
     template <typename T1, typename T2> using pair = std::pair<T1, T2>;
     
     template <typename T> using hash = std::hash<T>;
@@ -83,3 +82,5 @@ namespace vg::core
 
     template <typename T> using dictionary = core::unordered_map<core::string, T, core::hash<core::string> >;
 }
+
+#include "core/Container/Vector.h"
