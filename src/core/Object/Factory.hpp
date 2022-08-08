@@ -199,7 +199,7 @@ namespace vg::core
                     }
                     break;
 
-                    case IProperty::Type::Enum:
+                    case IProperty::Type::EnumU32:
                     {
                         u32 * pEnum = (u32*)(uint_ptr(_object) + offset);
 
@@ -315,7 +315,7 @@ namespace vg::core
                 case IProperty::Type::Function:
                     continue;
 
-                case IProperty::Type::Enum:
+                case IProperty::Type::EnumU32:
                 {
                     u32 * pEnum = (u32*)(uint_ptr(_object) + offset);
 

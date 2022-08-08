@@ -85,6 +85,9 @@ namespace ImGui
 
 namespace vg::graphics::renderer
 {
+    static const uint boolWidth = 14;
+    static const uint enumWidth = 14;
+
     //--------------------------------------------------------------------------------------
     ImguiPass::ImguiPass()
     {
@@ -436,6 +439,35 @@ namespace vg::graphics::renderer
     }
 
     //--------------------------------------------------------------------------------------
+    template <typename T> bool ImguiPass::displayEnum(core::IObject * _object, const core::IProperty * _prop)
+    {
+        const auto displayName = _prop->getDisplayName();
+        const auto offset = _prop->getOffset();
+        const auto flags = _prop->getFlags();
+
+        const bool readonly = asBool(IProperty::Flags::ReadOnly & flags);
+
+        T * pEnum = (T*)(uint_ptr(_object) + offset);
+        int enumVal = (int)*pEnum;
+
+        char temp[2048] = { '\0' };
+        char * p = temp;
+        for (uint e = 0; e < _prop->getEnumCount(); ++e)
+        {
+            const char * name = _prop->getEnumName(e);
+            for (int c = 0; c < strlen(name); c++)
+                *p++ = name[c];
+            *p++ = '\0';
+        }
+        *p++ = '\0';
+
+        bool changed = ImGui::Combo(getFixedSizeString(displayName, enumWidth).c_str(), &enumVal, temp) && !readonly;
+        if (changed)
+            *pEnum = enumVal;
+        return changed;
+    }
+
+    //--------------------------------------------------------------------------------------
     void ImguiPass::displayObject(core::IObject * _object, UIMode _mode)
     {
         static imgui_addons::ImGuiFileBrowser file_dialog;
@@ -459,7 +491,11 @@ namespace vg::graphics::renderer
 
         for (uint i = 0; i < classDesc->getPropertyCount(); ++i)
         {
-            const auto & prop = classDesc->getPropertyByIndex(i);
+            const IProperty * prop = classDesc->getPropertyByIndex(i);
+
+            VG_ASSERT(nullptr != prop);
+            if (nullptr == prop)
+                continue;
 
             const auto type = prop->getType();
             const auto name = prop->getName();
@@ -492,9 +528,6 @@ namespace vg::graphics::renderer
 
             if (asBool(IProperty::Flags::ReadOnly & flags))
                 imguiInputTextflags = ImGuiInputTextFlags_ReadOnly;
-
-            const uint boolWidth = 14;
-            const uint enumWidth = 14;
             
             switch (type)
             {
@@ -509,11 +542,16 @@ namespace vg::graphics::renderer
                 };
                 break;
 
-				case IProperty::Type::Enum:
-				{
-					u32 * pEnum = (u32*)(uint_ptr(_object) + offset);
-                    changed |= ImGui::Combo(getFixedSizeString(displayName, enumWidth).c_str(), (int*)pEnum, prop->getDescription());
-				};
+                case IProperty::Type::EnumU8:
+                    changed |= displayEnum<u8>(_object, prop);
+                    break;
+
+                case IProperty::Type::EnumU16:
+                    changed |= displayEnum<u16>(_object, prop);
+                    break;
+
+				case IProperty::Type::EnumU32:
+                    changed |= displayEnum<u32>(_object, prop);
 				break;
 
                 case IProperty::Type::Uint32:

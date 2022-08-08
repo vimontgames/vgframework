@@ -33,13 +33,6 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
-    void ClassDesc::registerProperty(const char * _propertyName, core::u32 * _offset, core::u32 _value, const char * _displayName, IProperty::Flags _flags)
-    {
-        Property prop(_propertyName, IProperty::Type::Enum, (uint_ptr)_offset, _value, _displayName, _flags);
-        properties.push_back(prop);
-    }
-
-    //--------------------------------------------------------------------------------------
     void ClassDesc::registerProperty(const char * _propertyName, core::float4 * _offset, const char * _displayName, IProperty::Flags _flags)
     {
         registerClassMemberT(_propertyName, _offset, 0, _displayName, _flags);
@@ -90,17 +83,13 @@ namespace vg::core
     //--------------------------------------------------------------------------------------
     void ClassDesc::registerProperty(const char * _propertyName, IProperty::Func _funcPtr, const char * _displayName, IProperty::Flags _flags)
     {
-        Property prop(_propertyName, IProperty::Type::Function, (uint_ptr)_funcPtr, 0, _displayName, _flags);
-
-        properties.push_back(prop);
+        properties.emplace_back(_propertyName, IProperty::Type::Function, (uint_ptr)_funcPtr, 0, _displayName, _flags);
     }
 
     //--------------------------------------------------------------------------------------
     void ClassDesc::registerProperty(const char * _propertyName, core::u32 _sizeOf, void * _offset, const char * _displayName, IProperty::Flags _flags)
     {
-        Property prop(_propertyName, IProperty::Type::ObjectVector, (uint_ptr)_offset, /*_value,*/_sizeOf, _displayName, _flags);
-
-        properties.push_back(prop);
+        properties.emplace_back(_propertyName, IProperty::Type::ObjectVector, (uint_ptr)_offset, /*_value,*/_sizeOf, _displayName, _flags);
     }
 
     //--------------------------------------------------------------------------------------
@@ -116,10 +105,21 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
-    void ClassDesc::registerEnum(const char * _propertyName, core::u32 * _offset, core::u32 _value, const char * _displayName, const char * _enumValues, IProperty::Flags _flags)
+    void ClassDesc::registerEnum(const char * _propertyName, core::u8 * _offset, const char * _displayName, uint _enumCount, const char * _enumNames, const u8 * _enumValues, IProperty::Flags _flags)
     {
-        Property prop(_propertyName, IProperty::Type::Enum, (uint_ptr)_offset, _value, _displayName, _flags, _enumValues);
-        properties.push_back(prop);
+        properties.emplace_back(_propertyName, IProperty::Type::EnumU8, (uint_ptr)_offset, 0, _displayName, _flags, _enumCount, _enumNames, _enumValues);
+    }
+
+    //--------------------------------------------------------------------------------------
+    void ClassDesc::registerEnum(const char * _propertyName, core::u16 * _offset, const char * _displayName, uint _enumCount, const char * _enumNames, const u16 * _enumValues, IProperty::Flags _flags)
+    {
+        properties.emplace_back(_propertyName, IProperty::Type::EnumU16, (uint_ptr)_offset, 0, _displayName, _flags, _enumCount, _enumNames, _enumValues);
+    }
+
+    //--------------------------------------------------------------------------------------
+    void ClassDesc::registerEnum(const char * _propertyName, core::u32 * _offset, const char * _displayName, uint _enumCount, const char * _enumNames, const u32 * _enumValues, IProperty::Flags _flags)
+    {
+        properties.emplace_back(_propertyName, IProperty::Type::EnumU32, (uint_ptr)_offset, 0, _displayName, _flags, _enumCount, _enumNames, _enumValues);
     }
 
     //--------------------------------------------------------------------------------------
@@ -187,8 +187,6 @@ namespace vg::core
         const u32 offset = (u32)(_offset);
 #pragma warning( pop )
 
-        Property prop(_propertyName, TypeToEnum<T>::value, offset, _value, _displayName, _flags);
-
-        properties.push_back(prop);
+        properties.emplace_back(_propertyName, TypeToEnum<T>::value, offset, _value, _displayName, _flags);
     }
 }

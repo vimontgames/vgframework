@@ -25,7 +25,9 @@ namespace vg::core
             ObjectPointer,
             Resource,
             Function,
-			Enum,
+            EnumU8,
+            EnumU16,
+			EnumU32,
             ObjectVector,
             ObjectPointerVector,
             ObjectPointerDictionary
@@ -47,11 +49,13 @@ namespace vg::core
 
         virtual const char *                getName                 () const = 0;
         virtual const char *                getDisplayName          () const = 0;
-        virtual const char *                getDescription          () const = 0;
         virtual Type                        getType                 () const = 0;
         virtual Flags                       getFlags                () const = 0;
         virtual uint_ptr                    getOffset               () const = 0;
-		virtual core::u32					getValue				() const = 0;
+		virtual u32					        getValue				() const = 0;
         virtual float2                      getRange                () const = 0;
+        virtual u32                         getEnumCount            () const = 0;
+        virtual const char *                getEnumName             (uint index) const = 0;
+        virtual u32                         getEnumValue            (uint index) const = 0;
     }; 
 }

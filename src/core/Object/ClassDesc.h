@@ -22,17 +22,19 @@ namespace vg::core
         void                                registerProperty(const char * _propertyName, core::u32 _sizeOf, void * _offset, const char * _displayName = nullptr, IProperty::Flags _flags = IProperty::Flags::None) final;
         void                                registerProperty(const char * _propertyName, vector<IObject*>* _offset, const char * _displayName = nullptr, IProperty::Flags _flags = IProperty::Flags::None) final;
         void                                registerProperty(const char * _propertyName, dictionary<core::IObject*>* _offset, const char * _displayName = nullptr, IProperty::Flags _flags = IProperty::Flags::None) final;
-        void								registerProperty(const char * _propertyName, core::u32 * _offset, core::u32 _value, const char * _displayName, IProperty::Flags _flags) final;
-        void								registerEnum(const char * _propertyName, core::u32 * _offset, core::u32 _value, const char * _displayName, const char * _values, IProperty::Flags _flags) final;
+        
+        void								registerEnum(const char * _propertyName, core::u8 * _offset, const char * _displayName, u32 _enumCount, const char * _enumNames, const u8 * _enumValues, IProperty::Flags _flags) final;
+        void								registerEnum(const char * _propertyName, core::u16 * _offset, const char * _displayName, u32 _enumCount, const char * _enumNames, const u16 * _enumValues, IProperty::Flags _flags) final;
+        void								registerEnum(const char * _propertyName, core::u32 * _offset, const char * _displayName, u32 _enumCount, const char * _enumNames, const u32 * _enumValues, IProperty::Flags _flags) final;
 
         const char *                        getClassName() const final;
         const char *                        getClassDisplayName() const final;
         uint                                getPropertyCount() const final;
-        const IProperty *         getPropertyByIndex(uint _index) const final;
-        IProperty *               getPropertyByName(const char * _propertyName) const final;
-        IClassDesc::Func             getCreateFunc() const final;
-        IClassDesc::SingletonFunc    getSingletonFunc() const final;
-        IClassDesc::Flags            getFlags() const final;
+        const IProperty *                   getPropertyByIndex(uint _index) const final;
+        IProperty *                         getPropertyByName(const char * _propertyName) const final;
+        IClassDesc::Func                    getCreateFunc() const final;
+        IClassDesc::SingletonFunc           getSingletonFunc() const final;
+        IClassDesc::Flags                   getFlags() const final;
         u32                                 getNextIndex() const final;
 
         const char *                        name = nullptr;

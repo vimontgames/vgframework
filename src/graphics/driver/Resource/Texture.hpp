@@ -1,6 +1,7 @@
 #include VG_GFXAPI_IMPL(Texture)
 
 #include "core/Math/Math.h"
+#include "core/Object/EnumDesc.h"
 
 namespace vg::graphics::driver
 {
@@ -114,6 +115,9 @@ namespace vg::graphics::driver
     //--------------------------------------------------------------------------------------
     bool Texture::registerProperties(IClassDesc & _desc)
     {
+        EnumDesc<PixelFormat> pixelFormatDesc;
+        _desc.registerPropertyEnumHelper(Texture, PixelFormat, m_texDesc.format, "Format", pixelFormatDesc.getCount(), pixelFormatDesc.getNames(), pixelFormatDesc.getValues(), IProperty::Flags::ReadOnly);
+
         _desc.registerProperty("width", (core::u16*)(&((Texture*)(nullptr))->m_texDesc.width), "Width", IProperty::Flags::ReadOnly);
         _desc.registerProperty("height", (core::u16*)(&((Texture*)(nullptr))->m_texDesc.height), "Height", IProperty::Flags::ReadOnly);
 

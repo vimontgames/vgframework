@@ -3,12 +3,96 @@
 namespace vg::core
 {
     //--------------------------------------------------------------------------------------
+    Property::Property(const char * _name, Type _type, uint_ptr _offset, core::u32 _value, const char * _prettyName, Flags _flags, uint _enumCount, const char * _enumNames, const void * _enumValues) :
+        name(_name),
+        type(_type),
+        offset(_offset),
+        value(_value),
+        displayName(_prettyName),
+        flags(_flags)
+    {
+        if (_enumCount > 0)
+        {
+            switch (_type)
+            {
+                case Type::EnumU8:
+                    initEnum<u8>(_enumCount, _enumNames, _enumValues);
+                    break;
+                case Type::EnumU16:
+                    initEnum<u16>(_enumCount, _enumNames, _enumValues);
+                    break;
+                case Type::EnumU32:
+                    initEnum<u32>(_enumCount, _enumNames, _enumValues);
+                    break;
+                default:
+                    VG_ASSERT_ENUM_NOT_IMPLEMENTED(_type);
+                    break;
+            }
+        }
+    }
+
+    //--------------------------------------------------------------------------------------
+    template <typename T> void Property::initEnum(uint _enumCount, const char * _enumNames, const void * _enumValues)
+    {
+        enums.resize(_enumCount);
+        const char * name = _enumNames;
+        for (uint e = 0; e < _enumCount; ++e)
+        {
+            char temp[256] = { '\0' };
+            char * dst = temp;
+            while (*name != '\0')
+                *dst++ = *name++;
+            *dst = '\0';
+            ++name;
+            enums[e].name = temp;
+            enums[e].value = ((T*)_enumValues)[e];
+        }
+    }
+
+    //--------------------------------------------------------------------------------------
+    Property::Property(const Property & other)
+    {
+        name = other.name;
+        displayName = other.displayName;
+        enums = other.enums;
+        type = other.type;
+        offset = other.offset;
+        value = other.value;
+        flags = other.flags;
+        range = other.range;
+    }
+
+    //--------------------------------------------------------------------------------------
+    Property::~Property()
+    {
+        
+    }
+
+    //--------------------------------------------------------------------------------------
     void Property::setRange(float2 _range)
     {
         if ((float)_range.x != (float)_range.y)
             flags |= IProperty::Flags::HasRange;
 
         range = _range;
+    }
+
+    //--------------------------------------------------------------------------------------
+    u32 Property::getEnumCount() const
+    {
+        return enums.count();
+    }
+
+    //--------------------------------------------------------------------------------------
+    const char * Property::getEnumName(uint index) const
+    {
+        return enums[index].name.c_str();
+    }
+
+    //--------------------------------------------------------------------------------------
+    u32 Property::getEnumValue(uint index) const
+    {
+        return enums[index].value;
     }
 
     //--------------------------------------------------------------------------------------
@@ -30,12 +114,6 @@ namespace vg::core
             return displayName;
         else
             return name;
-    }
-
-    //--------------------------------------------------------------------------------------
-    const char * Property::getDescription() const
-    {
-        return description;
     }
 
     //--------------------------------------------------------------------------------------

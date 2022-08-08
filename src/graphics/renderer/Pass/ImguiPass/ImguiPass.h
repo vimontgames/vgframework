@@ -65,6 +65,8 @@ namespace vg::graphics::renderer
         void displayArrayObject(core::IObject * _object, core::uint _index, core::u32 _color, const char * _name, UIMode _mode = UIMode::All);
         void displayObject(core::IObject * _object, UIMode _mode = UIMode::All);
 
+        template <typename T> bool displayEnum(core::IObject * _object, const core::IProperty * _prop);
+
         void updateSelection(core::IObject * _object, UIMode _mode);
         void setCurrentSelection(core::IObject * _object);
 
