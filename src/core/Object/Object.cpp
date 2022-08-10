@@ -20,7 +20,7 @@ namespace vg::core
 
 	//--------------------------------------------------------------------------------------
 	Object::Object() :
-		m_refCount(1)
+        m_refCount(1)
 	{
 		
 	}
@@ -35,6 +35,7 @@ namespace vg::core
     bool Object::registerProperties(IClassDesc & _desc)
     {
         _desc.registerPropertyHelper(Object, m_name, "Name", IProperty::Flags::Hidden);
+
         return true;
     }
 

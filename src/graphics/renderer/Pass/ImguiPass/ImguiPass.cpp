@@ -12,6 +12,7 @@
 #include "core/IScene.h"
 #include "core/ISector.h"
 #include "core/IEntity.h"
+#include "corE/IComponent.h"
 #include "core/File/File.h"
 #include "core/Math/Math.h"
 #include "ImGui-Addons/FileBrowser/ImGuiFileBrowser.cpp"
@@ -211,13 +212,13 @@ namespace vg::graphics::renderer
         if (m_isWindowVisible[asInteger(UIWindow::Scene)])
             displaySceneWindow();
 
-        if (m_isWindowVisible[asInteger(UIWindow::Selection)])
-            displayCurrentSelectionWindow();
+        if (m_isWindowVisible[asInteger(UIWindow::Inspector)])
+            displayInspectorWindow();
 
         if (m_isDisplayOptionsWindowsVisible)
             displayOptionsWindow();
 
-        static bool showDemo = false;
+        static bool showDemo = true;
         if (showDemo)
             ImGui::ShowDemoWindow(&showDemo);
     }
@@ -366,17 +367,17 @@ namespace vg::graphics::renderer
         for (uint j = 0; j < root->getEntityCount(); ++j)
         {
             IEntity * entity = (IEntity*)root->getEntity(j);
-            if (ImGui::TreeNodeEx(entity->getName().c_str(), ImGuiTreeNodeFlags_Leaf))
-            {
-                ImGui::TreePop();
-            }
+            
+            auto size = ImGui::CalcTextSize(entity->getName().c_str());
+            if (ImGui::Selectable(entity->getName().c_str(), entity == m_selected, ImGuiSelectableFlags_SelectOnClick, size))
+                setCurrentSelection(entity);       
         }
     }
 
     //--------------------------------------------------------------------------------------
-    void ImguiPass::displayCurrentSelectionWindow()
+    void ImguiPass::displayInspectorWindow()
     {
-        if (ImGui::Begin("Selection", &m_isWindowVisible[asInteger(UIWindow::Selection)]))
+        if (ImGui::Begin("Inspector", &m_isWindowVisible[asInteger(UIWindow::Inspector)]))
         {
             if (m_selected)
                 displayObject(m_selected, UIMode::Object);
@@ -400,30 +401,30 @@ namespace vg::graphics::renderer
 
         auto treeNodeFlags = ImGuiTreeNodeFlags_OpenOnArrow;       
 
-        if (nullptr != _object && _object->getClassDesc() && asBool(_object->getClassDesc()->getFlags() & (IClassDesc::Flags::Component)))
+        const bool isComponent = nullptr != _object && _object->getClassDesc() && asBool(_object->getClassDesc()->getFlags() & (IClassDesc::Flags::Component));
+        if (isComponent)
         {
-            treeNodeFlags |= ImGuiTreeNodeFlags_Leaf;
-
-            if (UIMode::Scene == _mode)
-                treeNodeFlags |= ImGuiTreeNodeFlags_DefaultOpen;
-        }
-
-        if (treeNodeName.length() == 0)
-            treeNodeName = "[" + to_string(_index) + "]";
-
-        if (ImGui::TreeNodeEx(treeNodeName.c_str(), treeNodeFlags))
-        {
-            updateSelection(_object, _mode);
-
-            if (_object)
-                displayObject(_object, _mode);
-            else
-                ImGui::TextDisabled("null");
-
-            ImGui::TreePop();
+            displayObject(_object, _mode);
         }
         else
-            updateSelection(_object, _mode);
+        {
+            if (treeNodeName.length() == 0)
+                treeNodeName = "[" + to_string(_index) + "]";
+
+            if (ImGui::TreeNodeEx(treeNodeName.c_str(), treeNodeFlags))
+            {
+                updateSelection(_object, _mode);
+
+                if (_object)
+                    displayObject(_object, _mode);
+                else
+                    ImGui::TextDisabled("null");
+
+                ImGui::TreePop();
+            }
+            else
+                updateSelection(_object, _mode);
+        }
 
         ImGui::PopStyleColor();
     }
@@ -431,6 +432,9 @@ namespace vg::graphics::renderer
     //--------------------------------------------------------------------------------------
     string getFixedSizeString(const string & _string, uint _size)
     {
+        if (_string.length() > _size)
+            return _string;
+        
         const auto spaces = _size - _string.length();
         VG_ASSERT(spaces >= 0 && spaces <= _size);
         string result = _string;
@@ -468,6 +472,70 @@ namespace vg::graphics::renderer
     }
 
     //--------------------------------------------------------------------------------------
+    // TODO: move where appropriate
+    //--------------------------------------------------------------------------------------
+    template <typename T> constexpr uint NumBits() 
+    {
+        return sizeof(T) << 3;
+    }
+
+    //--------------------------------------------------------------------------------------
+    template <typename T> bool ImguiPass::displayEnumFlags(core::IObject * _object, const core::IProperty * _prop)
+    {
+        const auto displayName = _prop->getDisplayName();
+        const auto offset = _prop->getOffset();
+        const auto flags = _prop->getFlags();
+
+        const bool readonly = asBool(IProperty::Flags::ReadOnly & flags);
+
+        T * pEnum = (T*)(uint_ptr(_object) + offset);
+        int enumVal = (int)*pEnum;
+
+        bool changed = false;
+        string preview;
+        
+        bool first = true;
+        for (uint e = 0; e < _prop->getEnumCount(); ++e)
+        {
+            if (enumVal & (1 << e))
+            {
+                if (first)
+                    first = false;
+                else
+                    preview += "|";
+
+                preview += _prop->getEnumName(e);
+            }
+        }
+        if (first)
+            preview = "<None>";
+
+        if (ImGui::BeginCombo(getFixedSizeString(displayName, enumWidth).c_str(), preview.c_str(), ImGuiComboFlags_None))
+        {
+            for (uint e = 0; e < _prop->getEnumCount(); ++e)
+            {
+                bool value = ((enumVal >> e) & 1) ? true : false;
+                const char * name = _prop->getEnumName(e);
+                if (ImGui::Checkbox(name, &value))
+                {
+                    if (value)
+                        enumVal |= 1 << e;
+                    else
+                        enumVal &= ~(1 << e);
+
+                    changed = true;
+                }
+            }
+            ImGui::EndCombo();
+
+            if (changed)
+                *pEnum = enumVal;
+        }        
+
+        return changed;      
+    }
+
+    //--------------------------------------------------------------------------------------
     void ImguiPass::displayObject(core::IObject * _object, UIMode _mode)
     {
         static imgui_addons::ImGuiFileBrowser file_dialog;
@@ -495,7 +563,7 @@ namespace vg::graphics::renderer
 
             VG_ASSERT(nullptr != prop);
             if (nullptr == prop)
-                continue;
+                continue;        
 
             const auto type = prop->getType();
             const auto name = prop->getName();
@@ -550,8 +618,20 @@ namespace vg::graphics::renderer
                     changed |= displayEnum<u16>(_object, prop);
                     break;
 
-				case IProperty::Type::EnumU32:
+                case IProperty::Type::EnumU32:
                     changed |= displayEnum<u32>(_object, prop);
+                    break;
+
+                case IProperty::Type::EnumFlagsU8:
+                    changed |= displayEnumFlags<u8>(_object, prop);
+                    break;
+
+                case IProperty::Type::EnumFlagsU16:
+                    changed |= displayEnumFlags<u16>(_object, prop);
+                    break;
+
+				case IProperty::Type::EnumFlagsU32:
+                    changed |= displayEnumFlags<u32>(_object, prop);
 				break;
 
                 case IProperty::Type::Uint32:
@@ -729,15 +809,35 @@ namespace vg::graphics::renderer
 					if (UIMode::Scene == _mode)
 						treeNodeFlags |= ImGuiTreeNodeFlags_DefaultOpen;
 
-                    if (count > 0 && ImGui::TreeNodeEx(treeNodeName.c_str(), treeNodeFlags))
+                    if (count > 0)
                     {
-                        for (uint i = 0; i < count; ++i)
+                        if (!strcmp(displayName, "Components"))
                         {
-                            IObject * pObject = (*vec)[i];
-                            displayArrayObject(pObject, i, objectColor, nullptr, _mode);
+                            for (uint i = 0; i < count; ++i)
+                            {
+                                IComponent * pComponent = (IComponent*)(*vec)[i];
+                                
+                                // Display one component
+                                if (ImGui::CollapsingHeader(pComponent->getClassName(), nullptr, ImGuiTreeNodeFlags_None))
+                                {
+                                    ImGui::Indent();
+                                    displayArrayObject(pComponent, i, objectColor, nullptr, _mode);
+                                    ImGui::Unindent();
+                                }
+                            }
                         }
-
-                        ImGui::TreePop();
+                        else
+                        {
+                            if (ImGui::TreeNodeEx(treeNodeName.c_str(), treeNodeFlags))
+                            {
+                                for (uint i = 0; i < count; ++i)
+                                {
+                                    IObject * pObject = (*vec)[i];
+                                    displayArrayObject(pObject, i, objectColor, nullptr, _mode);
+                                }
+                                ImGui::TreePop();
+                            }
+                        }
                     }
 
                     ImGui::PopStyleColor();
@@ -786,9 +886,9 @@ namespace vg::graphics::renderer
                     else
                         treeNodeName = displayName;
 
-                    // Only entities & components in scene treeview
+                    // Only entities in scene treeview
                     if (UIMode::Scene == _mode)
-                        if (nullptr != pObject && !asBool(pObject->getClassDesc()->getFlags() & (IClassDesc::Flags::Component | IClassDesc::Flags::Entity | IClassDesc::Flags::SceneNode)))
+                        if (nullptr != pObject && !asBool(pObject->getClassDesc()->getFlags() & (IClassDesc::Flags::Entity | IClassDesc::Flags::SceneNode)))
                             continue;
 
                     ImGui::PushStyleColor(ImGuiCol_Text, objectColor);
@@ -900,7 +1000,7 @@ namespace vg::graphics::renderer
                     {
                         char buffer[1024];
                         sprintf_s(buffer, pResource->getPath().c_str());
-                        if (ImGui::InputText(displayName, buffer, countof(buffer), imguiInputTextflags))
+                        if (ImGui::InputText("##File", buffer, countof(buffer), imguiInputTextflags))
                             pResource->setPath(buffer);
 
                         ImGui::SameLine();
@@ -976,10 +1076,8 @@ namespace vg::graphics::renderer
     {
         if (_mode == UIMode::Scene || _mode == UIMode::Resources)
         {
-            //if (ImGui::IsMouseClicked(ImGuiMouseButton_Left))
-                //if (ImGui::IsItemHovered())
             if (ImGui::IsItemClicked() && (ImGui::GetMousePos().x - ImGui::GetItemRectMin().x) > ImGui::GetTreeNodeToLabelSpacing())
-                    setCurrentSelection(_object);
+                setCurrentSelection(_object);
         }
     }
 

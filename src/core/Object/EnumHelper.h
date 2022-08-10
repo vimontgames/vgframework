@@ -2,14 +2,15 @@
 
 namespace vg::core
 {
-    template <typename E> class EnumDesc
+    template <typename E> class EnumHelper
     {
         using T = magic_enum::underlying_type_t<E>;
 
     public:
-        EnumDesc()
+        EnumHelper()
         {
             const auto entries = magic_enum::enum_entries<E>();
+            const auto prout = magic_enum::enum_values<E>();
             m_count = (uint)entries.size();
             m_values = (T*)malloc(sizeof(T)*m_count);
             for (uint e = 0; e < m_count; ++e)
@@ -20,7 +21,7 @@ namespace vg::core
             m_names += '\0';
         }
 
-        ~EnumDesc()
+        ~EnumHelper()
         {
             VG_SAFE_FREE(m_values);
         }

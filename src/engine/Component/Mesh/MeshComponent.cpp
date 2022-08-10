@@ -63,7 +63,7 @@ namespace vg::engine
 
         if (false == m_registered)
         {
-            IEntity * entity = getEntity();
+            const IEntity * entity = getEntity();
             ISector * sector = entity->getSector();
 
             sector->addGraphicInstance(m_meshInstance);

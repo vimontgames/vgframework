@@ -22,6 +22,7 @@
     <ClInclude Include="File\Buffer.inl" />
     <ClInclude Include="File\File.h" />
     <ClInclude Include="File\Buffer.h" />
+    <ClInclude Include="IComponent.h" />
     <ClInclude Include="IEntity.h" />
     <ClInclude Include="IInput.h" />
     <ClInclude Include="IInstance.h" />
@@ -45,7 +46,7 @@
     <ClInclude Include="Object\AutoRegisterClass.hpp" />
     <ClInclude Include="Object\ClassDesc.h" />
     <ClInclude Include="Object\ClassDesc.hpp" />
-    <ClInclude Include="Object\EnumDesc.h" />
+    <ClInclude Include="Object\EnumHelper.h" />
     <ClInclude Include="Object\Property.h" />
     <ClInclude Include="Object\Property.hpp" />
     <ClInclude Include="Object\Object.h" />

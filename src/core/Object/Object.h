@@ -9,7 +9,7 @@ namespace vg::core
 	class Object : public IObject
 	{
 	public:
-        const IClassDesc *   getClassDesc        () const final;
+        const IClassDesc *          getClassDesc        () const final;
         static bool                 registerProperties  (IClassDesc & _desc);
 
 								    Object		        (const string & _name, IObject * _parent);
@@ -32,7 +32,7 @@ namespace vg::core
 		u32						    release		        () override;
 
 		// Added so that we can use the same 'VG_SAFE_RELEASE' macro everywhere
-		u32						    Release		        () final override;
+		u32						    Release		        () final;
 
 	private:
 		string					    m_name;

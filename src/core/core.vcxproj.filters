@@ -186,9 +186,10 @@
     <ClInclude Include="Universe\Universe.h">
       <Filter>Universe</Filter>
     </ClInclude>
-    <ClInclude Include="Object\EnumDesc.h">
+    <ClInclude Include="Object\EnumHelper.h">
       <Filter>Object</Filter>
     </ClInclude>
+    <ClInclude Include="IComponent.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Math\Math.cpp">

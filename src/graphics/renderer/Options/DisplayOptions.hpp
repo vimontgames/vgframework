@@ -1,6 +1,6 @@
 #include "DisplayOptions.h"
 #include "core/Object/AutoRegisterClass.h"
-#include "core/Object/EnumDesc.h"
+#include "core/Object/EnumHelper.h"
 
 using namespace vg::core;
 
@@ -49,8 +49,8 @@ namespace vg::graphics::renderer
         _desc.registerPropertyHelper(DisplayOptions, m_normalMaps, "Normal Maps", IProperty::Flags::None);
         _desc.registerPropertyHelper(DisplayOptions, m_albedoMaps, "Albedo Maps", IProperty::Flags::SameLine);
 
-        EnumDesc<DisplayMode> displayModeDesc;
-        _desc.registerPropertyEnumHelper(DisplayOptions, DisplayMode, m_debugDisplayMode, "Debug Display", displayModeDesc.getCount(), displayModeDesc.getNames(), displayModeDesc.getValues(), IProperty::Flags::None);
+        EnumHelper<DisplayMode> displayModeEnum;
+        _desc.registerPropertyEnumHelper(DisplayOptions, DisplayMode, m_debugDisplayMode, "Debug Display", displayModeEnum.getCount(), displayModeEnum.getNames(), displayModeEnum.getValues(), IProperty::Flags::None);
 
         _desc.registerPropertyHelper(DisplayOptions, m_backgroundColor, "Background", IProperty::Flags::Color);
 

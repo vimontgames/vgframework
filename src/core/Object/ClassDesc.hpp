@@ -107,19 +107,22 @@ namespace vg::core
     //--------------------------------------------------------------------------------------
     void ClassDesc::registerEnum(const char * _propertyName, core::u8 * _offset, const char * _displayName, uint _enumCount, const char * _enumNames, const u8 * _enumValues, IProperty::Flags _flags)
     {
-        properties.emplace_back(_propertyName, IProperty::Type::EnumU8, (uint_ptr)_offset, 0, _displayName, _flags, _enumCount, _enumNames, _enumValues);
+        const bool bitfield = asBool(IProperty::Flags::Bitfield & _flags);
+        properties.emplace_back(_propertyName, bitfield ? IProperty::Type::EnumFlagsU8 : IProperty::Type::EnumU8, (uint_ptr)_offset, 0, _displayName, _flags, _enumCount, _enumNames, _enumValues);
     }
 
     //--------------------------------------------------------------------------------------
     void ClassDesc::registerEnum(const char * _propertyName, core::u16 * _offset, const char * _displayName, uint _enumCount, const char * _enumNames, const u16 * _enumValues, IProperty::Flags _flags)
     {
-        properties.emplace_back(_propertyName, IProperty::Type::EnumU16, (uint_ptr)_offset, 0, _displayName, _flags, _enumCount, _enumNames, _enumValues);
+        const bool bitfield = asBool(IProperty::Flags::Bitfield & _flags);
+        properties.emplace_back(_propertyName, bitfield ? IProperty::Type::EnumFlagsU16 : IProperty::Type::EnumU16, (uint_ptr)_offset, 0, _displayName, _flags, _enumCount, _enumNames, _enumValues);
     }
 
     //--------------------------------------------------------------------------------------
     void ClassDesc::registerEnum(const char * _propertyName, core::u32 * _offset, const char * _displayName, uint _enumCount, const char * _enumNames, const u32 * _enumValues, IProperty::Flags _flags)
     {
-        properties.emplace_back(_propertyName, IProperty::Type::EnumU32, (uint_ptr)_offset, 0, _displayName, _flags, _enumCount, _enumNames, _enumValues);
+        const bool bitfield = asBool(IProperty::Flags::Bitfield & _flags);
+        properties.emplace_back(_propertyName, bitfield ? IProperty::Type::EnumFlagsU32 : IProperty::Type::EnumU32, (uint_ptr)_offset, 0, _displayName, _flags, _enumCount, _enumNames, _enumValues);
     }
 
     //--------------------------------------------------------------------------------------

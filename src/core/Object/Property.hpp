@@ -16,12 +16,15 @@ namespace vg::core
             switch (_type)
             {
                 case Type::EnumU8:
+                case Type::EnumFlagsU8:
                     initEnum<u8>(_enumCount, _enumNames, _enumValues);
                     break;
                 case Type::EnumU16:
+                case Type::EnumFlagsU16:
                     initEnum<u16>(_enumCount, _enumNames, _enumValues);
                     break;
                 case Type::EnumU32:
+                case Type::EnumFlagsU32:
                     initEnum<u32>(_enumCount, _enumNames, _enumValues);
                     break;
                 default:

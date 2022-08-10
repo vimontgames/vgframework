@@ -27,7 +27,10 @@ namespace vg::core
             Function,
             EnumU8,
             EnumU16,
-			EnumU32,
+            EnumU32,
+            EnumFlagsU8,
+            EnumFlagsU16,
+            EnumFlagsU32,
             ObjectVector,
             ObjectPointerVector,
             ObjectPointerDictionary
@@ -42,7 +45,8 @@ namespace vg::core
             HasRange    = 0x0000000000000008,   // Property has [min..max] range
             SameLine    = 0x0000000000000010,   // Do no end line after this property
 			Radio		= 0x0000000000000020,   // Part of a radio button group
-            Hidden      = 0x0000000000000040    // Hide property
+            Hidden      = 0x0000000000000040,   // Hide property
+            Bitfield    = 0x0000000000000080,   // Value displayed as hex, enum as flags
         };
 
         virtual void                        setRange                (float2 _range) = 0;

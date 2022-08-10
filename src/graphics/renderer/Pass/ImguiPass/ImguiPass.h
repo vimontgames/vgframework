@@ -28,7 +28,7 @@ namespace vg::graphics::renderer
         Platform,
         Resources,
         Scene,
-        Selection,
+        Inspector,
         Shaders
     };
 
@@ -51,7 +51,7 @@ namespace vg::graphics::renderer
         void displayRendererWindow();
 
         void displaySceneWindow();
-        void displayCurrentSelectionWindow();
+        void displayInspectorWindow();
         void displayFpsWindow();
         void displayPlatformWindow();
         void displayShadersWindow();
@@ -66,6 +66,7 @@ namespace vg::graphics::renderer
         void displayObject(core::IObject * _object, UIMode _mode = UIMode::All);
 
         template <typename T> bool displayEnum(core::IObject * _object, const core::IProperty * _prop);
+        template <typename T> bool displayEnumFlags(core::IObject * _object, const core::IProperty * _prop);
 
         void updateSelection(core::IObject * _object, UIMode _mode);
         void setCurrentSelection(core::IObject * _object);
