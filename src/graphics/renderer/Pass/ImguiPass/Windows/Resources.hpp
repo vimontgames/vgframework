@@ -12,7 +12,7 @@ namespace vg::graphics::renderer
             {
                 engine::IResourceManager * rm = getEngine()->GetResourceManager();
                 if (nullptr != rm)
-                    displayObject(rm, UIMode::Resources);
+                    displayObject(rm);
             }
 
             ImGui::End();

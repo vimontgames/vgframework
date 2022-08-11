@@ -14,14 +14,6 @@ namespace vg::engine
 
 namespace vg::graphics::renderer
 {
-    enum class UIMode
-    {
-        All = 0,
-        Scene,
-        Resources,
-        Object
-    };
-
     enum class UIWindow
     {
         FPS = 0,
@@ -62,13 +54,15 @@ namespace vg::graphics::renderer
         void displayAboutWindow();
 
         void displaySector(core::ISector * root);
-        void displayArrayObject(core::IObject * _object, core::uint _index, core::u32 _color, const char * _name, UIMode _mode = UIMode::All);
-        void displayObject(core::IObject * _object, UIMode _mode = UIMode::All);
+        void displayArrayObject(core::IObject * _object, core::uint _index, const char * _name);
+        void displayObject(core::IObject * _object);
+
+        void DisplayProperty(const core::IProperty * prop, core::IObject * _object);
 
         template <typename T> bool displayEnum(core::IObject * _object, const core::IProperty * _prop);
         template <typename T> bool displayEnumFlags(core::IObject * _object, const core::IProperty * _prop);
 
-        void updateSelection(core::IObject * _object, UIMode _mode);
+        void updateSelection(core::IObject * _object);
         void setCurrentSelection(core::IObject * _object);
 
     private:

@@ -3,7 +3,8 @@
 namespace vg::core
 {
     //--------------------------------------------------------------------------------------
-    Property::Property(const char * _name, Type _type, uint_ptr _offset, core::u32 _value, const char * _prettyName, Flags _flags, uint _enumCount, const char * _enumNames, const void * _enumValues) :
+    Property::Property(const char * _class, const char * _name, Type _type, uint_ptr _offset, core::u32 _value, const char * _prettyName, Flags _flags, uint _enumCount, const char * _enumNames, const void * _enumValues) :
+        className(_class),
         name(_name),
         type(_type),
         offset(_offset),
@@ -53,19 +54,6 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
-    Property::Property(const Property & other)
-    {
-        name = other.name;
-        displayName = other.displayName;
-        enums = other.enums;
-        type = other.type;
-        offset = other.offset;
-        value = other.value;
-        flags = other.flags;
-        range = other.range;
-    }
-
-    //--------------------------------------------------------------------------------------
     Property::~Property()
     {
         
@@ -108,6 +96,12 @@ namespace vg::core
     const char * Property::getName() const
     {
         return name;
+    }
+
+    //--------------------------------------------------------------------------------------
+    const char * Property::getClassName() const
+    {
+        return className;
     }
 
     //--------------------------------------------------------------------------------------

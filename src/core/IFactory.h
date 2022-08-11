@@ -13,13 +13,13 @@ namespace vg::core
     #define registerClassHelper(className, displayName, flags)													            registerClass(#className, displayName, flags, [](const vg::core::string & _name, vg::core::IObject * _parent) { return new className(_name, _parent); })
     #define registerClassSingletonHelper(className, displayName, flags)											            registerSingletonClass(#className, displayName, flags | vg::core::IClassDesc::Flags::Singleton, [](){ return className::get(); } )
     
-    #define registerPropertyHelper(className, propertyName, displayName, flags)									            registerProperty(#propertyName, (&((className*)(nullptr))->propertyName), displayName, flags)
-    #define registerPropertyObjectPointerHelper(className, propertyName, displayName, flags)                                registerProperty(#propertyName, (core::IObject**)offsetof(className, propertyName), displayName, flags);
-    #define registerPropertyObjectVectorHelper(className, propertyName, elementType, displayName, flags)                    registerProperty(#propertyName, sizeof(elementType), &((className*)nullptr)->propertyName, displayName, flags);
-    #define registerPropertyObjectPointerVectorHelper(className, propertyName, displayName, flags)                          registerProperty(#propertyName, (core::vector<core::IObject*>*)&((className*)nullptr)->propertyName, displayName, flags);
-    #define registerPropertyObjectPointerDictionaryHelper(className, propertyName, displayName, flags)                      registerProperty(#propertyName, (core::dictionary<core::IObject*>*)&((className*)nullptr)->propertyName, displayName, flags);
-    #define registerCallbackHelper(className, funcName, displayName, flags)										            registerProperty(#funcName, funcName, displayName, flags)
-	#define registerPropertyEnumHelper(className, enumClassName, propertyName, displayName, eCount, eNames, eVals, flags)   registerEnum(#propertyName, (std::underlying_type_t<enumClassName>*)(&((className*)(nullptr))->propertyName), displayName, eCount, eNames, eVals, flags);
+    #define registerPropertyHelper(className, propertyName, displayName, flags)									            registerProperty(#className, #propertyName, (&((className*)(nullptr))->propertyName), displayName, flags)
+    #define registerPropertyObjectPointerHelper(className, propertyName, displayName, flags)                                registerProperty(#className, #propertyName, (core::IObject**)offsetof(className, propertyName), displayName, flags);
+    #define registerPropertyObjectVectorHelper(className, propertyName, elementType, displayName, flags)                    registerProperty(#className, #propertyName, sizeof(elementType), &((className*)nullptr)->propertyName, displayName, flags);
+    #define registerPropertyObjectPointerVectorHelper(className, propertyName, displayName, flags)                          registerProperty(#className, #propertyName, (core::vector<core::IObject*>*)&((className*)nullptr)->propertyName, displayName, flags);
+    #define registerPropertyObjectPointerDictionaryHelper(className, propertyName, displayName, flags)                      registerProperty(#className, #propertyName, (core::dictionary<core::IObject*>*)&((className*)nullptr)->propertyName, displayName, flags);
+    #define registerCallbackHelper(className, funcName, displayName, flags)										            registerProperty(#className, #funcName, funcName, displayName, flags)
+	#define registerPropertyEnumHelper(className, enumClassName, propertyName, displayName, eCount, eNames, eVals, flags)   registerEnum(#className, #propertyName, (std::underlying_type_t<enumClassName>*)(&((className*)(nullptr))->propertyName), displayName, eCount, eNames, eVals, flags);
     
     #define setPropertyRangeHelper(className, propertyName, range)												            getPropertyByName(#propertyName)->setRange(range);
 

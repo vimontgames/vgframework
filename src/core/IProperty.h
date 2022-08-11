@@ -52,6 +52,7 @@ namespace vg::core
         virtual void                        setRange                (float2 _range) = 0;
 
         virtual const char *                getName                 () const = 0;
+        virtual const char *                getClassName            () const = 0;
         virtual const char *                getDisplayName          () const = 0;
         virtual Type                        getType                 () const = 0;
         virtual Flags                       getFlags                () const = 0;

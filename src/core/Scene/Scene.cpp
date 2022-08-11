@@ -34,7 +34,7 @@ namespace vg::core
     {
         super::registerProperties(_desc);
 
-        _desc.registerProperty("m_root", (IObject**)(&((Scene*)(nullptr))->m_root), "Root", IProperty::Flags::None);
+        _desc.registerProperty("Scene", "m_root", (IObject**)(&((Scene*)(nullptr))->m_root), "Root", IProperty::Flags::None);
 
         _desc.registerCallbackHelper(Scene, load, "Load", IProperty::Flags::None);
         _desc.registerCallbackHelper(Scene, save, "Save", IProperty::Flags::SameLine);

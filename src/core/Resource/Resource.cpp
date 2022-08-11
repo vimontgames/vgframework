@@ -14,7 +14,7 @@ namespace vg::core
     //--------------------------------------------------------------------------------------
     bool Resource::registerProperties(IClassDesc & _desc)
     {
-        _desc.registerProperty("m_object", (IObject**)(&((Resource*)(nullptr))->m_object), "Object", IProperty::Flags::None);
+        _desc.registerProperty("Resource", "m_object", (IObject**)(&((Resource*)(nullptr))->m_object), "Object", IProperty::Flags::None);
         return true;
     }
 
