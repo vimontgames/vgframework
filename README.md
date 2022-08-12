@@ -1,5 +1,5 @@
 # vgframework
-Yes, yet another work-in-progress game and graphic engine project :) \
+Yes, yet another work-in-progress game and graphic engine project :)
 
 Its renderer only uses modern graphics APIs like DirectX12 and Vulkan (I would also like to support Metal the day I got and Apple device) so it can be 100% bindless from the very beginning and do strong choices in that direction:  
 * instanciating and writing into GPU tables is not even exposed: You have to do all the rendering stuff the modern, bindless way. 
@@ -15,9 +15,7 @@ For the engine part, so far I integrated several "must-haves" tools like a CPU/G
 
 Another subject that is very close to my heart is that there is a strong separation between modules as the engine is "physically" split in several DLLs using only pure abstract interfaces.
 
-# Disclaimer
-Everything is heavily "Work-in-Progress" and 0% in an usable state, and I would not recommend anyone to use it yet.
- 
+
 # external
 D3D12 Memory Allocator\
 https://github.com/GPUOpen-LibrariesAndSDKs/D3D12MemoryAllocator
@@ -84,3 +82,7 @@ https://www.cgtrader.com/free-3d-models/character/man/3d-scan-man
 
 3D Scan Man Summer 016\
 https://www.cgtrader.com/free-3d-models/character/man/3d-scan-man-summer-016
+
+
+# disclaimer
+Everything is heavily "Work-in-Progress" and 0% in an usable state, and I would not recommend anyone to use it yet.
