@@ -92,6 +92,7 @@
     <ClCompile Include="Universe\Universe.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Component\Component.inl" />
     <None Include="Instance\Instance.inl" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

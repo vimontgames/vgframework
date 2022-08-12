@@ -19,10 +19,18 @@ namespace vg::core
         void                update              (double _dt) { };
         const IEntity *     getEntity           () const final;
 
-        Flags               getFlags            () const final;
-        void                setFlags            (Flags flags, bool enabled) final;
+        Flags               GetFlags            () const final;
+        void                SetFlags            (Flags _flags, bool _enabled) final;
+
+    public:
+        VG_INLINE Flags     getFlags            () const;
+        VG_INLINE void      setFlags            (Flags _flags, bool _enabled);
 
     private:
         Flags               m_flags;
     };
 }
+
+#if VG_ENABLE_INLINE
+#include "Component.inl"
+#endif

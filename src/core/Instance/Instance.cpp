@@ -2,6 +2,7 @@
 #include "Instance.h"
 #include "core/IFactory.h"
 #include "core//Model/Model.h"
+#include "core/Object/EnumHelper.h"
 
 #if !VG_ENABLE_INLINE
 #include "Instance.inl"
@@ -11,7 +12,8 @@ namespace vg::core
 {
     //--------------------------------------------------------------------------------------
     Instance::Instance(const string & _name, IObject * _parent) :
-        IInstance(_name, _parent)
+        IInstance(_name, _parent),
+        m_flags(Flags::Enabled)
     {
     }
 
@@ -27,6 +29,9 @@ namespace vg::core
     {
         super::registerProperties(_desc);
 
+        EnumHelper<Flags> flagsEnum;
+        _desc.registerPropertyEnumHelper(Instance, Flags, m_flags, "Flags", flagsEnum.getCount(), flagsEnum.getNames(), flagsEnum.getValues(), IProperty::Flags::Bitfield);
+        _desc.registerPropertyHelper(Instance, m_color, "Color", IProperty::Flags::Color);
         _desc.registerPropertyHelper(Instance, m_world, "Matrix", IProperty::Flags::None);
         _desc.registerPropertyObjectPointerVectorHelper(Instance, m_models, "Models", IProperty::Flags::ReadOnly);
 
@@ -43,6 +48,18 @@ namespace vg::core
     const float4x4 & Instance::GetWorldMatrix() const
     {
         return getWorldMatrix();
+    }
+
+    //--------------------------------------------------------------------------------------
+    IInstance::Flags Instance::GetFlags() const
+    {
+        return getFlags();
+    }
+
+    //--------------------------------------------------------------------------------------
+    void Instance::SetFlags(Flags flags, bool enabled)
+    {
+        setFlags(flags, enabled);
     }
 
     //--------------------------------------------------------------------------------------

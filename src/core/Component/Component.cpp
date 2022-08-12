@@ -6,6 +6,10 @@
 #include "core/IClassDesc.h"
 #include "core/Object/EnumHelper.h"
 
+#if !VG_ENABLE_INLINE
+#include "Component.inl"
+#endif
+
 namespace vg::core
 {
     //--------------------------------------------------------------------------------------
@@ -38,17 +42,14 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
-    IComponent::Flags Component::getFlags() const
+    IComponent::Flags Component::GetFlags() const
     {
-        return m_flags;
+        return getFlags();
     }
 
     //--------------------------------------------------------------------------------------
-    void Component::setFlags(Flags flags, bool enabled)
+    void Component::SetFlags(Flags _flags, bool _enabled)
     {
-        if (enabled)
-            m_flags |= flags;
-        else
-            (u32&)m_flags &= ~(u32)flags;
+        setFlags(_flags, _enabled);
     }
 }

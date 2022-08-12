@@ -250,5 +250,8 @@
     <None Include="Instance\Instance.inl">
       <Filter>Instance</Filter>
     </None>
+    <None Include="Component\Component.inl">
+      <Filter>Component</Filter>
+    </None>
   </ItemGroup>
 </Project>

@@ -19,4 +19,19 @@ namespace vg::core
 
         return m_models[asInteger(_lod)];
     }
+
+    //--------------------------------------------------------------------------------------
+    VG_INLINE void Instance::setFlags(Flags flags, bool enabled)
+    {
+        if (enabled)
+            m_flags |= flags;
+        else
+            (u32&)m_flags &= ~(u32)flags;
+    }
+
+    //--------------------------------------------------------------------------------------
+    VG_INLINE IInstance::Flags Instance::getFlags() const
+    {
+        return m_flags;
+    }
 }

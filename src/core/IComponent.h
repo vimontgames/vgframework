@@ -23,7 +23,7 @@ namespace vg::core
         virtual void            update      (double _dt) = 0;
         virtual const IEntity * getEntity   () const = 0;
 
-        virtual Flags           getFlags    () const = 0;
-        virtual void            setFlags    (Flags flags, bool enabled) = 0;
+        virtual Flags           GetFlags    () const = 0;
+        virtual void            SetFlags    (Flags _flags, bool _enabled) = 0;
     };
 }

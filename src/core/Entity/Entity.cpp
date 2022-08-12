@@ -2,7 +2,6 @@
 #include "Entity.h"
 #include "core/Component/Component.h"
 #include "core/Object/AutoRegisterClass.h"  
-#include "core/Object/EnumHelper.h"
 
 namespace vg::core
 {
@@ -22,10 +21,6 @@ namespace vg::core
     {
         super::registerProperties(_desc);
 
-        EnumHelper<Flags> flagsEnum;
-        _desc.registerPropertyEnumHelper(Entity, Flags, m_flags, "Flags", flagsEnum.getCount(), flagsEnum.getNames(), flagsEnum.getValues(), IProperty::Flags::Bitfield);
-
-        _desc.registerPropertyHelper(Entity, m_color, "Color", IProperty::Flags::Color);
         _desc.registerPropertyObjectPointerVectorHelper(Entity, m_components, "Components", IProperty::Flags::None);
 
         return true;
@@ -33,8 +28,7 @@ namespace vg::core
 
     //--------------------------------------------------------------------------------------
     Entity::Entity(const core::string & _name, IObject * _parent) :
-        IEntity(_name, _parent),
-        m_flags(Flags::Enabled)
+        IEntity(_name, _parent)
     {
 
     }
@@ -46,21 +40,6 @@ namespace vg::core
             VG_SAFE_RELEASE(m_components[i]);
 
         m_components.clear();
-    }
-
-    //--------------------------------------------------------------------------------------
-    IEntity::Flags Entity::getFlags() const
-    {
-        return m_flags;
-    }
-
-    //--------------------------------------------------------------------------------------
-    void Entity::setFlags(Flags flags, bool enabled)
-    {
-        if (enabled)
-            m_flags |= flags;
-        else
-            (u32&)m_flags &= ~(u32)flags;
     }
 
     //--------------------------------------------------------------------------------------

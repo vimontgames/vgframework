@@ -22,9 +22,6 @@ namespace vg::core
                                     Entity              (const core::string & _name, IObject * _parent);
         virtual                     ~Entity             ();
 
-        Flags                       getFlags            () const final;
-        void                        setFlags            (Flags flags, bool enabled) final;
-
         virtual void                update              (double _dt);
         ISector *                   getSector           () const final;
 
@@ -32,8 +29,6 @@ namespace vg::core
         const vector<Component*> &  getComponents       () const;
 
     private:
-        Flags                       m_flags;
-        float4                      m_color = { 1.0f, 1.0f, 1.0f, 1.0f };
         vector<Component*>          m_components;
     };
 }
