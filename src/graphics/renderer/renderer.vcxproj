@@ -28,6 +28,7 @@
     <ClCompile Include="Model\Mesh\MeshModel.cpp" />
     <ClCompile Include="Options\Options.cpp" />
     <ClCompile Include="Pass\ImguiPass\ImguiPass.cpp" />
+    <ClCompile Include="Pass\ImguiPass\Windows\ImguiEditor.cpp" />
     <ClCompile Include="Pass\Pass.cpp" />
     <ClCompile Include="Precomp.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug_DX12|x64'">Create</PrecompiledHeader>
@@ -78,9 +79,23 @@
     <ClInclude Include="Pass\BackgroundPass.h" />
     <ClInclude Include="Pass\BackgroundPass.hpp" />
     <ClInclude Include="Pass\ImguiPass\ImguiPass.h" />
-    <ClInclude Include="Pass\ImguiPass\Windows\About.hpp" />
-    <ClInclude Include="Pass\ImguiPass\Windows\DisplayOptions.hpp" />
-    <ClInclude Include="Pass\ImguiPass\Windows\Resources.hpp" />
+    <ClInclude Include="Pass\ImguiPass\Windows\ImguiAbout.hpp" />
+    <ClInclude Include="Pass\ImguiPass\Windows\ImguiDisplayOptions.hpp" />
+    <ClInclude Include="Pass\ImguiPass\Windows\ImguiAbout.h" />
+    <ClInclude Include="Pass\ImguiPass\Windows\ImguiDisplayOptions.h" />
+    <ClInclude Include="Pass\ImguiPass\Windows\ImguiEditor.h" />
+    <ClInclude Include="Pass\ImguiPass\Windows\ImguiInspector.h" />
+    <ClInclude Include="Pass\ImguiPass\Windows\ImguiInspector.hpp" />
+    <ClInclude Include="Pass\ImguiPass\Windows\ImguiPlatform.h" />
+    <ClInclude Include="Pass\ImguiPass\Windows\ImguiPlatform.hpp" />
+    <ClInclude Include="Pass\ImguiPass\Windows\ImguiResource.h" />
+    <ClInclude Include="Pass\ImguiPass\Windows\ImguiResource.hpp" />
+    <ClInclude Include="Pass\ImguiPass\Windows\ImguiScene.h" />
+    <ClInclude Include="Pass\ImguiPass\Windows\ImguiScene.hpp" />
+    <ClInclude Include="Pass\ImguiPass\Windows\ImguiShader.h" />
+    <ClInclude Include="Pass\ImguiPass\Windows\ImguiShader.hpp" />
+    <ClInclude Include="Pass\ImguiPass\Windows\ImguiTimings.h" />
+    <ClInclude Include="Pass\ImguiPass\Windows\ImguiTimings.hpp" />
     <ClInclude Include="Pass\PostProcessPass.h" />
     <ClInclude Include="Pass\PostProcessPass.hpp" />
     <ClInclude Include="Pass\TestPass2D.h" />

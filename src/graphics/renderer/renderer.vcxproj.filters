@@ -36,6 +36,9 @@
     <ClCompile Include="Pass\ImguiPass\ImguiPass.cpp">
       <Filter>Pass\ImguiPass</Filter>
     </ClCompile>
+    <ClCompile Include="Pass\ImguiPass\Windows\ImguiEditor.cpp">
+      <Filter>Pass\ImguiPass\Windows</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Renderer.def" />
@@ -157,13 +160,55 @@
     <ClInclude Include="Pass\ImguiPass\ImguiPass.h">
       <Filter>Pass\ImguiPass</Filter>
     </ClInclude>
-    <ClInclude Include="Pass\ImguiPass\Windows\About.hpp">
+    <ClInclude Include="Pass\ImguiPass\Windows\ImguiEditor.h">
       <Filter>Pass\ImguiPass\Windows</Filter>
     </ClInclude>
-    <ClInclude Include="Pass\ImguiPass\Windows\DisplayOptions.hpp">
+    <ClInclude Include="Pass\ImguiPass\Windows\ImguiScene.h">
       <Filter>Pass\ImguiPass\Windows</Filter>
     </ClInclude>
-    <ClInclude Include="Pass\ImguiPass\Windows\Resources.hpp">
+    <ClInclude Include="Pass\ImguiPass\Windows\ImguiScene.hpp">
+      <Filter>Pass\ImguiPass\Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="Pass\ImguiPass\Windows\ImguiAbout.h">
+      <Filter>Pass\ImguiPass\Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="Pass\ImguiPass\Windows\ImguiAbout.hpp">
+      <Filter>Pass\ImguiPass\Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="Pass\ImguiPass\Windows\ImguiResource.h">
+      <Filter>Pass\ImguiPass\Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="Pass\ImguiPass\Windows\ImguiResource.hpp">
+      <Filter>Pass\ImguiPass\Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="Pass\ImguiPass\Windows\ImguiDisplayOptions.h">
+      <Filter>Pass\ImguiPass\Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="Pass\ImguiPass\Windows\ImguiDisplayOptions.hpp">
+      <Filter>Pass\ImguiPass\Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="Pass\ImguiPass\Windows\ImguiInspector.h">
+      <Filter>Pass\ImguiPass\Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="Pass\ImguiPass\Windows\ImguiInspector.hpp">
+      <Filter>Pass\ImguiPass\Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="Pass\ImguiPass\Windows\ImguiTimings.h">
+      <Filter>Pass\ImguiPass\Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="Pass\ImguiPass\Windows\ImguiTimings.hpp">
+      <Filter>Pass\ImguiPass\Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="Pass\ImguiPass\Windows\ImguiPlatform.h">
+      <Filter>Pass\ImguiPass\Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="Pass\ImguiPass\Windows\ImguiPlatform.hpp">
+      <Filter>Pass\ImguiPass\Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="Pass\ImguiPass\Windows\ImguiShader.h">
+      <Filter>Pass\ImguiPass\Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="Pass\ImguiPass\Windows\ImguiShader.hpp">
       <Filter>Pass\ImguiPass\Windows</Filter>
     </ClInclude>
   </ItemGroup>

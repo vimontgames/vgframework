@@ -2,6 +2,7 @@
 #include "ImguiPass.h"
 #include "graphics/driver/Device/Device.h"
 #include "graphics/renderer/Renderer.h"
+#include "graphics/renderer/Geometry/Batch.h"
 #include "graphics/renderer/imgui/imguiAdapter.h"
 #include "graphics/renderer/Options/DisplayOptions.h"
 #include "engine/IEngine.h"
@@ -15,89 +16,44 @@
 #include "corE/IComponent.h"
 #include "core/File/File.h"
 #include "core/Math/Math.h"
-#include "ImGui-Addons/FileBrowser/ImGuiFileBrowser.cpp"
-
-#include "graphics/renderer/Geometry/Batch.h"
 
 using namespace vg::core;
 using namespace vg::graphics::driver;
 using namespace vg::graphics::renderer;
 
-namespace ImGui
-{
-    void underLine(ImColor _color);
-    void textURL(const char * _text, const char * _url);
-}
+#include "imgui/imgui.h"
+#include "Windows/ImguiEditor.h"
 
-#include "Windows/Resources.hpp"
-#include "Windows/DisplayOptions.hpp"
-#include "Windows/About.hpp"
+using namespace ImGui;
 
-namespace vg::core
-{
-    template <size_t S> struct AnonymousStruct
-    {
-        char pad[S];
-    };
-}
-
-namespace ImGui
-{
-    //--------------------------------------------------------------------------------------
-    void underLine(ImColor _color)
-    {
-        u32 color = _color;
-        ImVec2 min = ImGui::GetItemRectMin();
-        ImVec2 max = ImGui::GetItemRectMax();
-        min.y = max.y;
-        ImGui::GetWindowDrawList()->AddLine(min, max, color, 1.0f);
-    }
-
-    //--------------------------------------------------------------------------------------
-    // Add web link. Use '_text' as URL if no URL provided.
-    //--------------------------------------------------------------------------------------
-    void textURL(const char * _text, const char * _url = nullptr)
-    {
-        if (nullptr == _url)
-            _url = _text;
-
-        ImGui::PushStyleColor(ImGuiCol_Text, ImGui::GetStyle().Colors[ImGuiCol_PlotHistogramHovered]);
-        ImGui::Text(_text);
-        ImGui::PopStyleColor();
-
-        if (ImGui::IsItemHovered())
-        {
-            underLine(ImGui::GetStyle().Colors[ImGuiCol_ButtonHovered]);
-
-            if (ImGui::IsMouseClicked(0))
-            {
-                char tmp[1024];
-                sprintf(tmp, "start %s", _url);
-                system(tmp);
-            }
-            ImGui::SetTooltip(_url);
-        }
-        else
-        {
-            underLine(ImGui::GetStyle().Colors[ImGuiCol_Button]);
-        }
-    }
-}
+#include "Windows/ImguiScene.hpp"
+#include "Windows/ImguiResource.hpp"
+#include "Windows/ImguiDisplayOptions.hpp"
+#include "Windows/ImguiInspector.hpp"
+#include "Windows/ImguiAbout.hpp"
 
 namespace vg::graphics::renderer
 {
-    static const uint labelWidth = 14;
-
     //--------------------------------------------------------------------------------------
     ImguiPass::ImguiPass()
     {
         for (uint i = 0; i < core::enumCount<UIWindow>(); ++i)
             m_isWindowVisible[i] = true;
+
+        // Add editor windows
+        m_editorWindows.push_back(new ImguiScene("Scenes", ImguiEditor::Flags::StartVisible | ImguiEditor::AddMenuEntry));
+        m_editorWindows.push_back(new ImguiResource("Resources", ImguiEditor::Flags::StartVisible | ImguiEditor::AddMenuEntry));
+        m_editorWindows.push_back(new ImguiInspector("Inspector", ImguiEditor::Flags::StartVisible | ImguiEditor::AddMenuEntry));
+        m_editorWindows.push_back(new ImguiDisplayOptions("Display Options", ImguiEditor::Flags::StartVisible));
+        m_editorWindows.push_back(new ImguiAbout("About", ImguiEditor::Flags::None));
     }
 
     //--------------------------------------------------------------------------------------
     ImguiPass::~ImguiPass()
     {
+        for (uint i = 0; i < m_editorWindows.count(); ++i)
+            VG_SAFE_DELETE(m_editorWindows[i]);
+        m_editorWindows.clear();
     }
     
     //--------------------------------------------------------------------------------------
@@ -150,21 +106,38 @@ namespace vg::graphics::renderer
                             m_isWindowVisible[i] = true;
                     }
 
+                    for (uint i = 0; i < m_editorWindows.count(); ++i)
+                    {
+                        if (asBool(m_editorWindows[i]->getFlags() & ImguiEditor::Flags::AddMenuEntry))
+                        {
+                            if (ImGui::MenuItem(m_editorWindows[i]->getName().c_str()))
+                                m_editorWindows[i]->setVisible(true);
+                        }
+                    }
+
                     ImGui::EndMenu();
                 }
 
                 if (ImGui::BeginMenu("Options"))
                 {
-                    if (ImGui::MenuItem("Display"))
-                        m_isDisplayOptionsWindowsVisible = true;
+                    if (ImGui::MenuItem("Display Options"))
+                    {
+                        ImguiDisplayOptions * displayOptions = getEditorWindow<ImguiDisplayOptions>();
+                        if (nullptr != displayOptions)
+                            displayOptions->setVisible(true);
+                    }
 
                     ImGui::EndMenu();
                 }
 
                 if (ImGui::BeginMenu("Help"))
                 {
-                    if (ImGui::MenuItem("About VG Framework"))
-                        m_isAboutWindowVisible = true;
+                    if (ImGui::MenuItem("About "))
+                    {
+                        ImguiAbout * about = getEditorWindow<ImguiAbout>();
+                        if (nullptr != about)
+                            about->setVisible(true);
+                    }
 
                     ImGui::EndMenu();
                 }
@@ -172,10 +145,7 @@ namespace vg::graphics::renderer
                 ImGui::EndMenuBar();
             }
 
-            if (m_isAboutWindowVisible)
-                displayAboutWindow();
-
-            static const uint smoothDtTime = 500; // 0.5s
+            static const uint smoothDtTime = 1000; // 1.0s
 
             m_accum += _dt;
             m_frame++;
@@ -190,6 +160,12 @@ namespace vg::graphics::renderer
         }
         ImGui::End();
 
+        for (uint i = 0; i < m_editorWindows.count(); ++i)
+        {
+            if (m_editorWindows[i]->isVisible())
+                m_editorWindows[i]->display();
+        }
+
         if (m_isEngineWindowVisible)
             displayEngineWindow();
 
@@ -199,27 +175,26 @@ namespace vg::graphics::renderer
         if (m_isWindowVisible[asInteger(UIWindow::Platform)])
             displayPlatformWindow();
 
-        if (m_isWindowVisible[asInteger(UIWindow::Resources)])
-            displayResourcesWindow();
-
         if (m_isWindowVisible[asInteger(UIWindow::Shaders)])
             displayShadersWindow();
 
         if (m_isWindowVisible[asInteger(UIWindow::FPS)])
             displayFpsWindow();
 
-        if (m_isWindowVisible[asInteger(UIWindow::Scene)])
-            displaySceneWindow();
-
-        if (m_isWindowVisible[asInteger(UIWindow::Inspector)])
-            displayInspectorWindow();
-
-        if (m_isDisplayOptionsWindowsVisible)
-            displayOptionsWindow();
-
         static bool showDemo = false;
         if (showDemo)
             ImGui::ShowDemoWindow(&showDemo);
+    }
+
+    //--------------------------------------------------------------------------------------
+    template <class T> T * ImguiPass::getEditorWindow()
+    {
+        for (uint i = 0; i < m_editorWindows.count(); ++i)
+        {
+            if (dynamic_cast<T*>(m_editorWindows[i]) != nullptr)
+                return (T*)(m_editorWindows[i]);
+        }
+        return nullptr;
     }
 
     //--------------------------------------------------------------------------------------
@@ -298,7 +273,7 @@ namespace vg::graphics::renderer
                 const auto * classDesc = factory->getClassDescriptor(className);
                 const char * classDisplayName = classDesc->getClassDisplayName();
 
-                displayObject(engine);
+                ImguiEditor::displayObject(engine);
             }
         }
         ImGui::End();
@@ -312,788 +287,14 @@ namespace vg::graphics::renderer
             const auto * factory = Kernel::getFactory();
             IObject * renderer = factory->getSingleton("Renderer");
             if (renderer)
-                displayObject(renderer);
+                ImguiEditor::displayObject(renderer);
         }
         ImGui::End();
     }
-
-    //--------------------------------------------------------------------------------------
-    void ImguiPass::displaySceneWindow()
-    {
-        if (ImGui::Begin("Scenes", &m_isWindowVisible[asInteger(UIWindow::Scene)]))
-        {
-            const auto * factory = Kernel::getFactory();
-            engine::IEngine * engine = (engine::IEngine *)factory->getSingleton("Engine");
-
-            IUniverse * universe = engine->getCurrentUniverse();
-            if (universe)
-            {
-                for (uint i = 0; i < universe->getSceneCount(); ++i)
-                {
-                    const IScene * scene = universe->getScene(i);
-                    if (nullptr != scene)
-                    {
-                        if (ImGui::TreeNodeEx(scene->getName().c_str(), ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_DefaultOpen))
-                        {
-                            ISector * root = scene->getRoot();
-                            displaySector(root);                            
-                            ImGui::TreePop();
-                        }
-                    }
-                }
-            }
-        }
-        ImGui::End();
-    }
-
-    //--------------------------------------------------------------------------------------
-    void ImguiPass::displaySector(ISector * root)
-    {
-        for (uint j = 0; j < root->getChildSectorCount(); ++j)
-        {
-            ISector * sector = (ISector*)root->getChildSector(j);
-            if (ImGui::TreeNodeEx(sector->getName().c_str(), ImGuiTreeNodeFlags_None))
-            {
-                displaySector(sector);
-                ImGui::TreePop();
-            }
-        }
-
-        for (uint j = 0; j < root->getEntityCount(); ++j)
-        {
-            IEntity * entity = (IEntity*)root->getEntity(j);
-            
-            auto size = ImGui::CalcTextSize(entity->getName().c_str());
-            if (ImGui::Selectable(entity->getName().c_str(), entity == m_selected, ImGuiSelectableFlags_SelectOnClick, size))
-                setCurrentSelection(entity);       
-        }
-    }
-
-    //--------------------------------------------------------------------------------------
-    void ImguiPass::displayInspectorWindow()
-    {
-        if (ImGui::Begin("Inspector", &m_isWindowVisible[asInteger(UIWindow::Inspector)]))
-        {
-            if (m_selected)
-                displayObject(m_selected);
-        }
-        ImGui::End();
-    }   
-
-    //--------------------------------------------------------------------------------------
-    void ImguiPass::displayArrayObject(IObject * _object, core::uint _index, const char * _name)
-    {
-        ImGui::PushStyleColor(ImGuiCol_Text, ImGui::GetColorU32(ImGuiCol_Text));
-
-        string treeNodeName;
-
-        if (_name)
-            treeNodeName = "[" + string(_name) + "]";
-        else if (_object)
-            treeNodeName = _object->getName();
-        else
-            treeNodeName = "[" + to_string(_index) + "]";
-
-        auto treeNodeFlags = ImGuiTreeNodeFlags_OpenOnArrow;       
-
-        const bool isComponent = nullptr != _object && _object->getClassDesc() && asBool(_object->getClassDesc()->getFlags() & (IClassDesc::Flags::Component));
-        if (isComponent)
-        {
-            displayObject(_object);
-        }
-        else
-        {
-            if (treeNodeName.length() == 0)
-                treeNodeName = "[" + to_string(_index) + "]";
-
-            if (ImGui::TreeNodeEx(treeNodeName.c_str(), treeNodeFlags))
-            {
-                updateSelection(_object);
-
-                if (_object)
-                    displayObject(_object);
-                else
-                    ImGui::TextDisabled("<Null>");
-
-                ImGui::TreePop();
-            }
-            else
-                updateSelection(_object);
-        }
-
-        ImGui::PopStyleColor();
-    }
-
-    //--------------------------------------------------------------------------------------
-    string getFixedSizeString(const string & _string, uint _size)
-    {
-        if (_string.length() > _size)
-            return _string;
-        
-        const auto spaces = _size - _string.length();
-        VG_ASSERT(spaces >= 0 && spaces <= _size);
-        string result = _string;
-               result.append(spaces, ' ');
-        return result;
-    }
-
-    //--------------------------------------------------------------------------------------
-    string getPropertyLabel(const IProperty * _prop)
-    {
-        string name = _prop->getDisplayName();
-        string className = _prop->getClassName();
-
-        if (name.length() < labelWidth)
-        {
-            const auto spaces = labelWidth - name.length();
-            name.append(spaces, ' ');
-        }
-
-        name += "##" + className;
-        return name;
-    }
-
-    //--------------------------------------------------------------------------------------
-    template <typename T> bool ImguiPass::displayEnum(core::IObject * _object, const core::IProperty * _prop)
-    {
-        const auto displayName = _prop->getDisplayName();
-        const auto offset = _prop->getOffset();
-        const auto flags = _prop->getFlags();
-
-        const bool readonly = asBool(IProperty::Flags::ReadOnly & flags);
-
-        T * pEnum = (T*)(uint_ptr(_object) + offset);
-        int enumVal = (int)*pEnum;
-
-        char temp[2048] = { '\0' };
-        char * p = temp;
-        for (uint e = 0; e < _prop->getEnumCount(); ++e)
-        {
-            const char * name = _prop->getEnumName(e);
-            for (int c = 0; c < strlen(name); c++)
-                *p++ = name[c];
-            *p++ = '\0';
-        }
-        *p++ = '\0';
-
-        bool changed = ImGui::Combo(getPropertyLabel(_prop).c_str(), &enumVal, temp) && !readonly;
-        if (changed)
-            *pEnum = enumVal;
-        return changed;
-    }
-
-    //--------------------------------------------------------------------------------------
-    // TODO: move where appropriate
-    //--------------------------------------------------------------------------------------
-    template <typename T> constexpr uint NumBits() 
-    {
-        return sizeof(T) << 3;
-    }
-
-    //--------------------------------------------------------------------------------------
-    template <typename T> bool ImguiPass::displayEnumFlags(core::IObject * _object, const core::IProperty * _prop)
-    {
-        const auto displayName = _prop->getDisplayName();
-        const auto offset = _prop->getOffset();
-        const auto flags = _prop->getFlags();
-
-        const bool readonly = asBool(IProperty::Flags::ReadOnly & flags);
-
-        T * pEnum = (T*)(uint_ptr(_object) + offset);
-        int enumVal = (int)*pEnum;
-
-        bool changed = false;
-        string preview;
-        
-        bool first = true;
-        for (uint e = 0; e < _prop->getEnumCount(); ++e)
-        {
-            if (enumVal & (1 << e))
-            {
-                if (first)
-                    first = false;
-                else
-                    preview += "|";
-
-                preview += _prop->getEnumName(e);
-            }
-        }
-        if (first)
-            preview = "<None>";
-
-        if (ImGui::BeginCombo(getPropertyLabel(_prop).c_str(), preview.c_str(), ImGuiComboFlags_None))
-        {
-            for (uint e = 0; e < _prop->getEnumCount(); ++e)
-            {
-                bool value = ((enumVal >> e) & 1) ? true : false;
-                const char * name = _prop->getEnumName(e);
-                if (ImGui::Checkbox(name, &value))
-                {
-                    if (value)
-                        enumVal |= 1 << e;
-                    else
-                        enumVal &= ~(1 << e);
-
-                    changed = true;
-                }
-            }
-            ImGui::EndCombo();
-
-            if (changed)
-                *pEnum = enumVal;
-        }        
-
-        return changed;      
-    }
-
-    //--------------------------------------------------------------------------------------
-    void ImguiPass::displayObject(core::IObject * _object)
-    {
-        const char * className = _object->getClassName();
-
-        const auto * factory = Kernel::getFactory();
-        const auto * classDesc = factory->getClassDescriptor(className);
-
-        if (!classDesc)
-            return;
-
-        const char * classDisplayName = classDesc->getClassDisplayName();
-
-        ImGui::PushItemWidth(196);
-
-        // Sort top-level properties to display components at the end
-        const IProperty * components = nullptr;
-        const char * curClassName = nullptr;
-        bool visible = false;
-
-        for (uint i = 0; i < classDesc->getPropertyCount(); ++i)
-        {
-            const IProperty * prop = classDesc->getPropertyByIndex(i);
-
-            if (strcmp(prop->getName(), "m_components"))
-            {
-                if (curClassName != prop->getClassName())
-                {
-                    curClassName = prop->getClassName();
-                    visible = true; // ImGui::CollapsingHeader(curClassName, nullptr, ImGuiTreeNodeFlags_DefaultOpen);
-                }
-
-                if (visible)
-                    DisplayProperty(prop, _object);
-            }
-            else
-                components = prop;
-        }
-
-        if (nullptr != components)
-        {
-            if (ImGui::CollapsingHeader("Components", nullptr, ImGuiTreeNodeFlags_DefaultOpen))
-            {
-                ImGui::Indent();
-                DisplayProperty(components, _object);
-
-                //ImGui::Spacing();
-                //if (ImGui::Button("Add Component"))
-                //{
-                //    // TODO
-                //}
-                ImGui::Unindent();
-            }
-        }
-
-        ImGui::PopItemWidth();
-    }
-
-    //--------------------------------------------------------------------------------------
-    void ImguiPass::setCurrentSelection(core::IObject * _object)
-    {
-        m_selected = _object;
-    }
-
-    //--------------------------------------------------------------------------------------
-    void ImguiPass::updateSelection(core::IObject * _object)
-    {
-        if (ImGui::IsItemClicked() && (ImGui::GetMousePos().x - ImGui::GetItemRectMin().x) > ImGui::GetTreeNodeToLabelSpacing())
-            setCurrentSelection(_object);
-    }
-
+    
     //--------------------------------------------------------------------------------------
     void ImguiPass::draw(driver::CommandList * _cmdList) const
     {
         Renderer::get()->getImGuiAdapter()->render(_cmdList);
     }
-
-    //--------------------------------------------------------------------------------------
-    void ImguiPass::DisplayProperty(const IProperty * _prop,core::IObject * _object)
-    {
-        static imgui_addons::ImGuiFileBrowser file_dialog;
-
-        VG_ASSERT(nullptr != _prop);
-
-        const auto type = _prop->getType();
-        const auto name = _prop->getName();
-        const auto displayName = _prop->getDisplayName();
-        const auto offset = _prop->getOffset();
-        const auto flags = _prop->getFlags();
-
-        if (asBool(IProperty::Flags::Hidden & flags))
-            return;
-
-        if (asBool(IProperty::Flags::SameLine & flags))
-            ImGui::SameLine();
-
-        ImGuiInputTextFlags imguiInputTextflags = 0;
-
-        bool changed = false;
-
-        if (asBool(IProperty::Flags::ReadOnly & flags))
-            imguiInputTextflags = ImGuiInputTextFlags_ReadOnly;
-
-        switch (type)
-        {
-        default:
-            VG_ASSERT_ENUM_NOT_IMPLEMENTED(type);
-            break;
-
-        case IProperty::Type::Bool:
-        {
-            bool * pBool = (bool*)(uint_ptr(_object) + offset);
-            changed |= ImGui::Checkbox(getPropertyLabel(_prop).c_str(), pBool);
-        };
-        break;
-
-        case IProperty::Type::EnumU8:
-            changed |= displayEnum<u8>(_object, _prop);
-            break;
-
-        case IProperty::Type::EnumU16:
-            changed |= displayEnum<u16>(_object, _prop);
-            break;
-
-        case IProperty::Type::EnumU32:
-            changed |= displayEnum<u32>(_object, _prop);
-            break;
-
-        case IProperty::Type::EnumFlagsU8:
-            changed |= displayEnumFlags<u8>(_object, _prop);
-            break;
-
-        case IProperty::Type::EnumFlagsU16:
-            changed |= displayEnumFlags<u16>(_object, _prop);
-            break;
-
-        case IProperty::Type::EnumFlagsU32:
-            changed |= displayEnumFlags<u32>(_object, _prop);
-            break;
-
-        case IProperty::Type::Uint32:
-        {
-            i32 * pU32 = (i32*)(uint_ptr(_object) + offset);
-
-            if (asBool(IProperty::Flags::HasRange & flags))
-                changed |= ImGui::SliderInt(displayName, pU32, max(0, (int)_prop->getRange().x), (int)_prop->getRange().y, "%d", imguiInputTextflags);
-            else
-                changed |= ImGui::InputInt(displayName, pU32, 1, 16, imguiInputTextflags);
-        };
-        break;
-
-        case IProperty::Type::Uint16:
-        {
-            i16 * pU16 = (i16*)(uint_ptr(_object) + offset);
-
-            i32 temp = *pU16;
-
-            if (asBool(IProperty::Flags::HasRange & flags))
-                changed |= ImGui::SliderInt(displayName, &temp, max((int)0, (int)_prop->getRange().x), min((int)65535, (int)_prop->getRange().y), "%d", imguiInputTextflags);
-            else
-                changed |= ImGui::InputInt(displayName, &temp, 1, 16, imguiInputTextflags);
-
-            if (changed)
-                *pU16 = temp;
-        };
-        break;
-
-        case IProperty::Type::Float:
-        {
-            float * pFloat = (float*)(uint_ptr(_object) + offset);
-
-            if (asBool(IProperty::Flags::HasRange & flags))
-                changed |= ImGui::SliderFloat(displayName, pFloat, _prop->getRange().x, _prop->getRange().y);
-            else
-                changed |= ImGui::InputFloat(displayName, pFloat);
-        };
-        break;
-
-        case IProperty::Type::Matrix44:
-        {
-            float * pFloat4x4 = (float*)(uint_ptr(_object) + offset);
-
-            changed |= ImGui::InputFloat4(((string)displayName + ".I").c_str(), pFloat4x4 + 0, "%.2f", imguiInputTextflags);
-            changed |= ImGui::InputFloat4(((string)displayName + ".J").c_str(), pFloat4x4 + 4, "%.2f", imguiInputTextflags);
-            changed |= ImGui::InputFloat4(((string)displayName + ".K").c_str(), pFloat4x4 + 8, "%.2f", imguiInputTextflags);
-            changed |= ImGui::InputFloat4(((string)displayName + ".T").c_str(), pFloat4x4 + 12, "%.2f", imguiInputTextflags);
-
-        }
-        break;
-
-        case IProperty::Type::Float4:
-        {
-            float * pFloat4 = (float*)(uint_ptr(_object) + offset);
-
-            if (asBool(IProperty::Flags::Color & flags))
-                changed |= ImGui::ColorEdit4(displayName, pFloat4);
-            else
-                changed |= ImGui::SliderFloat4(displayName, pFloat4, 0.0f, 1.0f);
-        };
-        break;
-
-        case IProperty::Type::String:
-        {
-            bool selectPath = false;
-
-            string * pString = (string*)(uint_ptr(_object) + offset);
-
-            char buffer[1024];
-            sprintf_s(buffer, pString->c_str());
-            changed |= ImGui::InputText(displayName, buffer, countof(buffer), imguiInputTextflags);
-
-            if (changed)
-            {
-                *pString = buffer;
-
-                if (asBool(IProperty::Flags::IsFolder & flags))
-                {
-                    ImGui::SameLine();
-                    if (ImGui::Button("Path"))
-                        selectPath = true;
-                }
-
-                if (selectPath)
-                {
-                    ImGui::OpenPopup("Select folder");
-                    selectPath = false;
-                }
-
-                if (asBool(IProperty::Flags::IsFolder & flags))
-                {
-                    if (file_dialog.showFileDialog("Select folder", imgui_addons::ImGuiFileBrowser::DialogMode::SELECT, ImVec2(700, 310)))
-                    {
-                        const string newFolder = io::getRelativePath(file_dialog.selected_path);
-
-                        if (newFolder != *pString)
-                        {
-                            *pString = newFolder;
-                            changed = true;
-                        }
-                    }
-                }
-            }
-        }
-        break;
-
-        case IProperty::Type::Function:
-        {
-            IProperty::Func pFunc = (IProperty::Func)offset;
-
-            if (ImGui::Button(displayName))
-                pFunc(_object);
-        }
-        break;
-
-        case IProperty::Type::ObjectVector:
-        {
-            const uint sizeOf = _prop->getValue();
-            byte * data = nullptr;
-
-            size_t count = 0;
-            switch (sizeOf)
-            {
-            default:
-                VG_ASSERT(false, "case \'%u\': is not implemented", sizeOf);
-                break;
-
-            case 64:
-                count = (size_t)((vector<core::AnonymousStruct<64>>*)(uint_ptr(_object) + offset))->size();
-                data = (byte*)((vector<core::AnonymousStruct<64>>*)(uint_ptr(_object) + offset))->data();
-                break;
-
-            case 72:
-                count = (size_t)((vector<core::AnonymousStruct<72>>*)(uint_ptr(_object) + offset))->size();
-                data = (byte*)((vector<core::AnonymousStruct<72>>*)(uint_ptr(_object) + offset))->data();
-                break;
-            }
-
-            string treeNodeName = (string)displayName + " (" + to_string(count) + ")";
-
-            ImGui::PushStyleColor(ImGuiCol_Text, ImGui::GetColorU32(ImGuiCol_TextDisabled));
-
-            auto treeNodeFlags = ImGuiTreeNodeFlags_OpenOnArrow;
-
-            if (count > 0 && ImGui::TreeNodeEx(treeNodeName.c_str(), treeNodeFlags))
-            {
-                for (uint i = 0; i < count; ++i)
-                {
-                    IObject * pObject = (IObject *)(data + sizeOf * i);
-                    displayArrayObject(pObject, i, nullptr);
-                }
-
-                ImGui::TreePop();
-            }
-
-            ImGui::PopStyleColor();
-        }
-        break;
-
-        case IProperty::Type::ObjectPointerVector:
-        {
-            vector<IObject*> * vec = (vector<IObject*>*)(uint_ptr(_object) + offset);
-            const uint count = (uint)vec->size();
-
-            string treeNodeName = (string)displayName + " (" + to_string(count) + ")";
-
-            auto treeNodeFlags = ImGuiTreeNodeFlags_OpenOnArrow;
-
-            if (count > 0)
-            {
-                if (!strcmp(displayName, "Components"))
-                {
-                    for (uint i = 0; i < count; ++i)
-                    {
-                        IComponent * pComponent = (IComponent*)(*vec)[i];
-                
-                        // Display one component
-                        string componentShortName = pComponent->getClassName();
-                        auto nPos = componentShortName.find("Component");
-                        if (-1 != nPos)
-                            componentShortName.erase(nPos);
-
-                        if (ImGui::CollapsingHeader(componentShortName.c_str(), nullptr, ImGuiTreeNodeFlags_None))
-                        {
-                            ImGui::Indent();
-                            displayArrayObject(pComponent, i, nullptr);
-                            ImGui::Unindent();
-                        }
-                    }
-                }
-                else
-                {
-                    if (ImGui::TreeNodeEx(treeNodeName.c_str(), treeNodeFlags))
-                    {
-                        for (uint i = 0; i < count; ++i)
-                        {
-                            IObject * pObject = (*vec)[i];
-                            displayArrayObject(pObject, i, nullptr);
-                        }
-                        ImGui::TreePop();
-                    }
-                }
-            }
-        }
-        break;
-
-        case IProperty::Type::ObjectPointerDictionary:
-        {
-            dictionary<IObject*> * dic = (dictionary<IObject*>*)(uint_ptr(_object) + offset);
-            const uint count = (uint)dic->size();
-
-            string treeNodeName = (string)displayName + " (" + to_string(count) + ")";
-
-            ImGui::PushStyleColor(ImGuiCol_Text, ImGui::GetColorU32(ImGuiCol_TextDisabled));
-
-            auto treeNodeFlags = ImGuiTreeNodeFlags_OpenOnArrow;
-
-            if (count > 0 && ImGui::TreeNodeEx(treeNodeName.c_str(), treeNodeFlags))
-            {
-                uint index = 0;
-                for (auto it = dic->begin(); it != dic->end(); ++it)
-                {
-                    IObject * pObject = (*it).second;
-                    displayArrayObject(pObject, index, (*it).first.c_str());
-                    index++;
-                }
-
-                ImGui::TreePop();
-            }
-
-            ImGui::PopStyleColor();
-        }
-        break;
-
-        case IProperty::Type::ObjectPointer:
-        {
-            IObject * pObject = *(IObject**)(uint_ptr(_object) + offset);
-
-            string treeNodeName;
-
-            if (pObject)
-                treeNodeName = pObject->getName();
-            else
-                treeNodeName = displayName;
-
-            ImGui::PushStyleColor(ImGuiCol_Text, ImGui::GetColorU32(ImGuiCol_Text));
-
-            auto treeNodeFlags = ImGuiTreeNodeFlags_OpenOnArrow;
-
-            if (nullptr != pObject && pObject->getClassDesc() && asBool(pObject->getClassDesc()->getFlags() & (IClassDesc::Flags::Component)))
-                treeNodeFlags |= ImGuiTreeNodeFlags_Leaf;
-
-            bool treenNodeOpen = ImGui::TreeNodeEx(treeNodeName.c_str(), treeNodeFlags);
-
-            static int ObjectRightClicMenuIndex = -1;
-            bool needOpenPopup = false;
-
-            if (ImGui::BeginPopupContextItem())
-            {
-                ImGui::PushID("ObjectRightClicMenu");
-
-                //if (ImGui::MenuItem("Cut", "Ctrl-X"))
-                //    ObjectRightClicMenuIndex = 0;
-                //
-                //if (ImGui::MenuItem("Copy", "Ctrl-C"))
-                //    ObjectRightClicMenuIndex = 1;
-                //
-                //if (ImGui::MenuItem("Paste", "Ctrl-V"))
-                //    ObjectRightClicMenuIndex = 2;
-
-                if (ImGui::MenuItem("Rename", "Ctrl-R"))
-                {
-                    needOpenPopup = true;
-                    ObjectRightClicMenuIndex = 3;
-                }
-
-                ImGui::PopID();
-
-                ImGui::EndPopup();
-            }
-
-            if (ObjectRightClicMenuIndex == 3)
-            {
-                static bool isRenamePopopOpened = true;
-
-                if (needOpenPopup)
-                    ImGui::OpenPopup("Rename");
-
-                if (ImGui::BeginPopupModal("Rename", &isRenamePopopOpened, ImGuiWindowFlags_AlwaysAutoResize))
-                {
-                    static char nameTmp[1024] = { '\0' };
-
-                    if (nameTmp[0] == '\0')
-                        strcpy(nameTmp, pObject->getName().c_str());
-
-                    changed |= ImGui::InputText("", nameTmp, countof(nameTmp), ImGuiInputTextFlags_AutoSelectAll);
-
-                    string newName = nameTmp;
-
-                    if (ImGui::Button("Rename", ImVec2(80, 0)))
-                    {
-                        pObject->setName(newName);
-                        ImGui::CloseCurrentPopup();
-                        nameTmp[0] = '\0';
-                        ObjectRightClicMenuIndex = -1;
-                    }
-
-                    ImGui::SameLine();
-
-                    if (ImGui::Button("Cancel", ImVec2(80, 0)))
-                    {
-                        ImGui::CloseCurrentPopup();
-                        nameTmp[0] = '\0';
-                        ObjectRightClicMenuIndex = -1;
-                    }
-
-                    ImGui::EndPopup();
-                }
-            }
-
-            if (treenNodeOpen)
-            {
-                updateSelection(_object);
-
-                if (pObject)
-                    displayObject(pObject);
-                else
-                    ImGui::TextDisabled("null");
-
-                ImGui::TreePop();
-            }
-            else
-            {
-                updateSelection(pObject);
-            }
-
-            ImGui::PopStyleColor();
-        }
-        break;
-
-        case IProperty::Type::Resource:
-        {
-            IResource * pResource = (IResource*)(uint_ptr(_object) + offset);
-            IObject * pObject = pResource->getObject();
-
-            bool open = false;// , save = false;
-
-            //if (ImGui::CollapsingHeader(displayName, ImGuiTreeNodeFlags_None))
-            {
-                char buffer[1024];
-                sprintf_s(buffer, pResource->getPath().c_str());
-                if (ImGui::InputText("##File", buffer, countof(buffer), imguiInputTextflags))
-                    pResource->setPath(buffer);
-
-                ImGui::SameLine();
-                if (ImGui::Button("File"))
-                    open = true;
-
-                //ImGui::SameLine();
-                //if (ImGui::Button("Save"))
-                //    save = true;
-
-                if (pObject)
-                    displayObject(pObject);
-            }
-
-            if (open)
-            {
-                ImGui::OpenPopup("Open file");
-                open = false;
-            }
-            //else if (save)
-            //{
-            //    ImGui::OpenPopup("Save file");
-            //    save = false;
-            //}
-
-            // build extension list
-            string ext = "";
-            bool first = true;
-            const auto & extensions = pResource->getExtensions();
-            for (uint e = 0; e < extensions.size(); ++e)
-            {
-                if (!first)
-                    ext += ";";
-                ext += extensions[e];
-                first = false;
-            }
-            if (ext == "")
-                ext = "*.*";
-
-            if (file_dialog.showFileDialog("Open file", imgui_addons::ImGuiFileBrowser::DialogMode::OPEN, ImVec2(700, 310), ext.c_str()))
-            {
-                const string newFilePath = file_dialog.selected_path;
-                if (pResource->getPath() != newFilePath)
-                {
-                    pResource->setPath(newFilePath);
-                    changed = true;
-                }
-            }
-
-            //if (file_dialog.showFileDialog("Save file", imgui_addons::ImGuiFileBrowser::DialogMode::SAVE, ImVec2(700, 310), ".ini"))
-            //    pResource->setPath(file_dialog.selected_path);
-        }
-        break;
-        }
-
-        if (changed)
-            _object->onPropertyChanged(*_prop);
-    }
-
 }

@@ -18,11 +18,10 @@ namespace vg::graphics::renderer
     {
         FPS = 0,
         Platform,
-        Resources,
-        Scene,
-        Inspector,
         Shaders
     };
+
+    class ImguiEditor;
 
     //--------------------------------------------------------------------------------------
     class ImguiPass : public driver::UserPass
@@ -42,29 +41,12 @@ namespace vg::graphics::renderer
         void displayEngineWindow();
         void displayRendererWindow();
 
-        void displaySceneWindow();
-        void displayInspectorWindow();
         void displayFpsWindow();
         void displayPlatformWindow();
         void displayShadersWindow();
-        void displayResourcesWindow();
 
-        void displayOptionsWindow();
-
-        void displayAboutWindow();
-
-        void displaySector(core::ISector * root);
-        void displayArrayObject(core::IObject * _object, core::uint _index, const char * _name);
-        void displayObject(core::IObject * _object);
-
-        void DisplayProperty(const core::IProperty * prop, core::IObject * _object);
-
-        template <typename T> bool displayEnum(core::IObject * _object, const core::IProperty * _prop);
-        template <typename T> bool displayEnumFlags(core::IObject * _object, const core::IProperty * _prop);
-
-        void updateSelection(core::IObject * _object);
-        void setCurrentSelection(core::IObject * _object);
-
+        template <class T> T * getEditorWindow();
+        
     private:
         // Plugins
         bool m_isEngineWindowVisible = false;
@@ -72,14 +54,8 @@ namespace vg::graphics::renderer
 
         // Windows
         bool m_isWindowVisible[core::enumCount<UIWindow>()];
-
-        // Options
-        bool m_isDisplayOptionsWindowsVisible = true;
+        core::vector<ImguiEditor *> m_editorWindows;
         
-        // About
-        bool m_isAboutWindowVisible = false;
-
-        core::IObject * m_selected = nullptr;
         core::uint  m_captureFrameCounter = 0;
 
         double      m_accum = 0.0f;
