@@ -20,6 +20,7 @@ namespace vg::graphics::renderer
         };
                                                 ImguiEditor         (const core::string & _name, Flags _flags);
 
+        virtual void                            update              (double _dt) {};
         virtual void                            display             () = 0;
 
         bool                                    isVisible           () const;
@@ -29,6 +30,8 @@ namespace vg::graphics::renderer
         Flags                                   getFlags            () const;
 
         static void                             displayObject       (core::IObject * _object);
+
+    protected:
         static void                             underLine           (const ImColor & _color);
         static void                             textURL             (const char * _text, const char * _url);
 
@@ -37,7 +40,6 @@ namespace vg::graphics::renderer
         static core::IObject *                  getSelectedObject   ();
         static void                             setSelectedObject   (core::IObject * _object);
 
-    protected:
         static const vg::engine::IEngine *      getEngine           ();
 
         static void                             displayArrayObject  (core::IObject * _object, core::uint _index, const char * _name);

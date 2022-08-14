@@ -28,7 +28,10 @@ using namespace ImGui;
 
 #include "Windows/ImguiScene.hpp"
 #include "Windows/ImguiResource.hpp"
+#include "Windows/ImguiPlatform.hpp"
 #include "Windows/ImguiDisplayOptions.hpp"
+#include "Windows/ImguiShader.hpp"
+#include "Windows/ImguiFPS.hpp"
 #include "Windows/ImguiInspector.hpp"
 #include "Windows/ImguiAbout.hpp"
 
@@ -37,14 +40,17 @@ namespace vg::graphics::renderer
     //--------------------------------------------------------------------------------------
     ImguiPass::ImguiPass()
     {
-        for (uint i = 0; i < core::enumCount<UIWindow>(); ++i)
-            m_isWindowVisible[i] = true;
-
         // Add editor windows
+        m_editorWindows.push_back(new ImguiPlatform("Platform", ImguiEditor::Flags::StartVisible | ImguiEditor::AddMenuEntry));
+        m_editorWindows.push_back(new ImguiFPS("FPS", ImguiEditor::Flags::StartVisible | ImguiEditor::AddMenuEntry));
+        m_editorWindows.push_back(new ImguiShader("Shaders", ImguiEditor::Flags::StartVisible | ImguiEditor::AddMenuEntry));
+
         m_editorWindows.push_back(new ImguiScene("Scenes", ImguiEditor::Flags::StartVisible | ImguiEditor::AddMenuEntry));
         m_editorWindows.push_back(new ImguiResource("Resources", ImguiEditor::Flags::StartVisible | ImguiEditor::AddMenuEntry));
         m_editorWindows.push_back(new ImguiInspector("Inspector", ImguiEditor::Flags::StartVisible | ImguiEditor::AddMenuEntry));
-        m_editorWindows.push_back(new ImguiDisplayOptions("Display Options", ImguiEditor::Flags::StartVisible));
+
+        m_editorWindows.push_back(new ImguiDisplayOptions("Display", ImguiEditor::Flags::StartVisible));
+
         m_editorWindows.push_back(new ImguiAbout("About", ImguiEditor::Flags::None));
     }
 
@@ -100,12 +106,6 @@ namespace vg::graphics::renderer
 
                 if (ImGui::BeginMenu("Windows"))
                 {
-                    for (uint i = 0; i < enumCount<UIWindow>(); ++i)
-                    {
-                        if (ImGui::MenuItem(asString(UIWindow(i)).c_str()))
-                            m_isWindowVisible[i] = true;
-                    }
-
                     for (uint i = 0; i < m_editorWindows.count(); ++i)
                     {
                         if (asBool(m_editorWindows[i]->getFlags() & ImguiEditor::Flags::AddMenuEntry))
@@ -120,7 +120,7 @@ namespace vg::graphics::renderer
 
                 if (ImGui::BeginMenu("Options"))
                 {
-                    if (ImGui::MenuItem("Display Options"))
+                    if (ImGui::MenuItem("Display"))
                     {
                         ImguiDisplayOptions * displayOptions = getEditorWindow<ImguiDisplayOptions>();
                         if (nullptr != displayOptions)
@@ -144,26 +144,16 @@ namespace vg::graphics::renderer
 
                 ImGui::EndMenuBar();
             }
-
-            static const uint smoothDtTime = 1000; // 1.0s
-
-            m_accum += _dt;
-            m_frame++;
-
-            if (m_accum > (double)smoothDtTime)
-            {
-                m_dt = (float)(m_accum / (float)m_frame);
-                m_fps = (float)1000.0f / m_dt;
-                m_accum = 0.0;
-                m_frame = 0;
-            }
         }
         ImGui::End();
 
         for (uint i = 0; i < m_editorWindows.count(); ++i)
         {
             if (m_editorWindows[i]->isVisible())
+            {
+                m_editorWindows[i]->update(_dt);
                 m_editorWindows[i]->display();
+            }
         }
 
         if (m_isEngineWindowVisible)
@@ -171,15 +161,6 @@ namespace vg::graphics::renderer
 
         if (m_isRendererWindowVisible)
             displayRendererWindow();
-
-        if (m_isWindowVisible[asInteger(UIWindow::Platform)])
-            displayPlatformWindow();
-
-        if (m_isWindowVisible[asInteger(UIWindow::Shaders)])
-            displayShadersWindow();
-
-        if (m_isWindowVisible[asInteger(UIWindow::FPS)])
-            displayFpsWindow();
 
         static bool showDemo = false;
         if (showDemo)
@@ -195,62 +176,6 @@ namespace vg::graphics::renderer
                 return (T*)(m_editorWindows[i]);
         }
         return nullptr;
-    }
-
-    //--------------------------------------------------------------------------------------
-    void ImguiPass::displayPlatformWindow()
-    {
-        if (ImGui::Begin("Platform", &m_isWindowVisible[asInteger(UIWindow::Platform)]))
-        {
-            ImGui::Columns(2, "mycolumns2", false);  // 2-ways, no border
-
-            ImGui::Text("Platform:");
-            ImGui::Text("Configuration:");
-            ImGui::Text("Graphics API:");
-            ImGui::NextColumn();
-            ImGui::Text(Plugin::getPlatform().c_str());
-            ImGui::Text(Plugin::getConfiguration().c_str());
-            ImGui::Text(asString(Device::get()->getDeviceParams().api).c_str());
-        }
-        ImGui::End();
-    }
-
-    //--------------------------------------------------------------------------------------
-    void ImguiPass::displayFpsWindow()
-    {
-        if (ImGui::Begin("FPS", &m_isWindowVisible[asInteger(UIWindow::FPS)]))
-        {
-            ImGui::Columns(2, "mycolumns2", false);  // 2-ways, no border
-            ImGui::Text("FPS: ");
-            ImGui::Text("Frame: ");
-            ImGui::NextColumn();
-            ImGui::Text("%.0f img/sec", m_fps);
-            ImGui::Text("%.4f ms", m_dt);
-
-            ImGui::Columns(1);
-            ImGui::Text("Press 'F1' to start/stop profiler");
-
-            if (VG_PROFILE_CAPTURE_IN_PROGRESS())
-            {
-                ImGui::TextColored(ImVec4(1, 0, 0, 1), "Capture in progress ... %u", m_captureFrameCounter);
-                m_captureFrameCounter++;
-            }
-            else if (0 != m_captureFrameCounter)
-            {
-                m_captureFrameCounter = 0;
-            }            
-        }
-        ImGui::End();
-    }
-
-    //--------------------------------------------------------------------------------------
-    void ImguiPass::displayShadersWindow()
-    {
-        if (ImGui::Begin("Shaders", &m_isWindowVisible[asInteger(UIWindow::Shaders)]))
-        {
-            ImGui::Text("Press 'F6' to hot reload shaders");
-        }
-        ImGui::End();
     }
 
     //--------------------------------------------------------------------------------------

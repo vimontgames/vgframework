@@ -94,8 +94,8 @@
     <ClInclude Include="Pass\ImguiPass\Windows\ImguiScene.hpp" />
     <ClInclude Include="Pass\ImguiPass\Windows\ImguiShader.h" />
     <ClInclude Include="Pass\ImguiPass\Windows\ImguiShader.hpp" />
-    <ClInclude Include="Pass\ImguiPass\Windows\ImguiTimings.h" />
-    <ClInclude Include="Pass\ImguiPass\Windows\ImguiTimings.hpp" />
+    <ClInclude Include="Pass\ImguiPass\Windows\ImguiFPS.h" />
+    <ClInclude Include="Pass\ImguiPass\Windows\ImguiFPS.hpp" />
     <ClInclude Include="Pass\PostProcessPass.h" />
     <ClInclude Include="Pass\PostProcessPass.hpp" />
     <ClInclude Include="Pass\TestPass2D.h" />

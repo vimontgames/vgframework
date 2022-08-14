@@ -193,12 +193,6 @@
     <ClInclude Include="Pass\ImguiPass\Windows\ImguiInspector.hpp">
       <Filter>Pass\ImguiPass\Windows</Filter>
     </ClInclude>
-    <ClInclude Include="Pass\ImguiPass\Windows\ImguiTimings.h">
-      <Filter>Pass\ImguiPass\Windows</Filter>
-    </ClInclude>
-    <ClInclude Include="Pass\ImguiPass\Windows\ImguiTimings.hpp">
-      <Filter>Pass\ImguiPass\Windows</Filter>
-    </ClInclude>
     <ClInclude Include="Pass\ImguiPass\Windows\ImguiPlatform.h">
       <Filter>Pass\ImguiPass\Windows</Filter>
     </ClInclude>
@@ -209,6 +203,12 @@
       <Filter>Pass\ImguiPass\Windows</Filter>
     </ClInclude>
     <ClInclude Include="Pass\ImguiPass\Windows\ImguiShader.hpp">
+      <Filter>Pass\ImguiPass\Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="Pass\ImguiPass\Windows\ImguiFPS.h">
+      <Filter>Pass\ImguiPass\Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="Pass\ImguiPass\Windows\ImguiFPS.hpp">
       <Filter>Pass\ImguiPass\Windows</Filter>
     </ClInclude>
   </ItemGroup>

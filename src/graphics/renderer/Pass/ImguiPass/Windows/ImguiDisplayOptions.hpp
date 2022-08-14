@@ -8,7 +8,7 @@ namespace vg::graphics::renderer
         core::IObject * displayOptions = DisplayOptions::get();
         if (displayOptions)
         {
-            if (ImGui::Begin("Display Options", &m_isVisible))
+            if (ImGui::Begin("Display", &m_isVisible))
                 displayObject(displayOptions);
 
             ImGui::End();

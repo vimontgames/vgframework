@@ -14,13 +14,6 @@ namespace vg::engine
 
 namespace vg::graphics::renderer
 {
-    enum class UIWindow
-    {
-        FPS = 0,
-        Platform,
-        Shaders
-    };
-
     class ImguiEditor;
 
     //--------------------------------------------------------------------------------------
@@ -41,10 +34,6 @@ namespace vg::graphics::renderer
         void displayEngineWindow();
         void displayRendererWindow();
 
-        void displayFpsWindow();
-        void displayPlatformWindow();
-        void displayShadersWindow();
-
         template <class T> T * getEditorWindow();
         
     private:
@@ -52,15 +41,7 @@ namespace vg::graphics::renderer
         bool m_isEngineWindowVisible = false;
         bool m_isRendererWindowVisible = false;
 
-        // Windows
-        bool m_isWindowVisible[core::enumCount<UIWindow>()];
+        // Editor windows
         core::vector<ImguiEditor *> m_editorWindows;
-        
-        core::uint  m_captureFrameCounter = 0;
-
-        double      m_accum = 0.0f;
-        core::uint  m_frame = 0;
-        float       m_dt = 0.0f;
-        float       m_fps = 0.0f;
     };
 }
