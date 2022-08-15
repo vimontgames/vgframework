@@ -11,9 +11,9 @@
 #include "core/IComponent.h"
 #include "imgui/imgui.h"
 #include "ImguiEditor.h"
-#include "graphics/driver/Device\Device.h"
-#include "graphics/driver/BindlessTable/BindlessTable.h"
-#include "graphics/driver/Resource/Texture.h"
+#include "graphics/renderer/Renderer.h"
+#include "graphics/renderer/Imgui/imguiAdapter.h"
+
 #include "ImGui-Addons/FileBrowser/ImGuiFileBrowser.cpp"
 
 // TODO: move to core
@@ -246,16 +246,12 @@ namespace vg::graphics::renderer
         {
             // Texture preview (WIP)
             auto * tex = (driver::Texture*)_object;
-
-            driver::BindlessTable * bindlessTable = driver::Device::get()->getBindlessTable();
-
-            #ifdef VG_DX12
-            auto handle = (void*)bindlessTable->getd3d12GPUDescriptorHandle(tex->getBindlessSRVHandle()).ptr;
-            #elif defined(VG_VULKAN)
-            VkImage handle = tex->getResource().getVulkanImage();
-            #endif
-
-            ImGui::Image(handle, ImVec2(128, 128));
+            auto imGuiAdapter = Renderer::get()->getImGuiAdapter();
+            ImTextureID texID = imGuiAdapter->getImguiTextureID(tex);
+            {
+                ImGui::Image(texID, ImVec2(128, 128));
+            }
+            imGuiAdapter->releaseImguiTextureID(texID);
         }
 
         ImGui::PopItemWidth();

@@ -3,11 +3,14 @@
 #include "graphics/renderer/IImmediateGUI.h"
 #include "graphics/driver/BindlessTable/BindlessTable_consts.h"
 
+typedef void* ImTextureID;
+
 namespace vg::graphics
 {
     namespace driver
     {
         class Device;
+        class Texture;
         class CommandList;
     }
 
@@ -30,12 +33,17 @@ namespace vg::graphics
             void beginFrame();
             void render(driver::CommandList * _cmdList);
 
+            ImTextureID getImguiTextureID(driver::Texture * _tex);
+            void releaseImguiTextureID(ImTextureID _texID);
+
         private:
             driver::BindlessTextureSrvHandle m_fontTexSRVHandle;
 
             #ifdef VG_VULKAN
-            VkDescriptorPool m_vkImguiDescriptorPool;
-            VkRenderPass m_vkImguiRenderPass;
+            VkDescriptorPool                m_vkImguiDescriptorPool;
+            VkRenderPass                    m_vkImguiRenderPass;
+            VkSampler                       m_vkSampler;
+            core::vector<VkDescriptorSet>   m_tempDescriptorSets;
             #endif
         };
     }

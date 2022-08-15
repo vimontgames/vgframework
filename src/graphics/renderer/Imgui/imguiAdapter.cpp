@@ -24,11 +24,15 @@
 #include "graphics/driver/Resource/Texture.h"
 #include "graphics/driver/BindlessTable/BindlessTable.h"
 
+#include "graphics/driver/Device/Device.h"
+
 using namespace vg::core;
 using namespace vg::graphics::driver;
 
 namespace vg::graphics::renderer
 {
+    static uint max_imguitex_displayed_per_frame = 64;
+
     void FiftyShadesOfGreyStyle()
     {
         ImGuiStyle & style = ImGui::GetStyle();
@@ -165,25 +169,26 @@ namespace vg::graphics::renderer
 
         VkDescriptorPoolSize imguiDescriptorPoolSizes[] =
         {
-            { VK_DESCRIPTOR_TYPE_SAMPLER, 1000 },
-            { VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, 1000 },
-            { VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE, 1000 },
-            { VK_DESCRIPTOR_TYPE_STORAGE_IMAGE, 1000 },
-            { VK_DESCRIPTOR_TYPE_UNIFORM_TEXEL_BUFFER, 1000 },
-            { VK_DESCRIPTOR_TYPE_STORAGE_TEXEL_BUFFER, 1000 },
-            { VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, 1000 },
-            { VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, 1000 },
-            { VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC, 1000 },
-            { VK_DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC, 1000 },
-            { VK_DESCRIPTOR_TYPE_INPUT_ATTACHMENT, 1000 }
+            { VK_DESCRIPTOR_TYPE_SAMPLER, 1 },
+            { VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, 1 },
+            { VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE, 1 },
+            { VK_DESCRIPTOR_TYPE_STORAGE_IMAGE, 1 },
+            { VK_DESCRIPTOR_TYPE_UNIFORM_TEXEL_BUFFER, 1 },
+            { VK_DESCRIPTOR_TYPE_STORAGE_TEXEL_BUFFER, 1 },
+            { VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, 1 },
+            { VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, 1 },
+            { VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC, 1 },
+            { VK_DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC, 1 },
+            { VK_DESCRIPTOR_TYPE_INPUT_ATTACHMENT, 1 }
         };
 
         VkDescriptorPoolCreateInfo imguiDescriptorDesc = {};
         imguiDescriptorDesc.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;
         imguiDescriptorDesc.pNext = nullptr;
-        imguiDescriptorDesc.maxSets = max_frame_latency;
+        imguiDescriptorDesc.maxSets = max_frame_latency * max_imguitex_displayed_per_frame;
         imguiDescriptorDesc.poolSizeCount = (uint)countof(imguiDescriptorPoolSizes);
         imguiDescriptorDesc.pPoolSizes = imguiDescriptorPoolSizes;
+        imguiDescriptorDesc.flags = VK_DESCRIPTOR_POOL_CREATE_FREE_DESCRIPTOR_SET_BIT;
 
         VG_ASSERT_VULKAN(vkCreateDescriptorPool(device->getVulkanDevice(), &imguiDescriptorDesc, nullptr, &m_vkImguiDescriptorPool));
 
@@ -241,6 +246,19 @@ namespace vg::graphics::renderer
         init_info.CheckVkResultFn = nullptr;
 
         ImGui_ImplVulkan_Init(&init_info, m_vkImguiRenderPass);
+
+        VkSamplerCreateInfo sampler_info = {};
+        sampler_info.sType = VK_STRUCTURE_TYPE_SAMPLER_CREATE_INFO;
+        sampler_info.magFilter = VK_FILTER_LINEAR;
+        sampler_info.minFilter = VK_FILTER_LINEAR;
+        sampler_info.mipmapMode = VK_SAMPLER_MIPMAP_MODE_LINEAR;
+        sampler_info.addressModeU = VK_SAMPLER_ADDRESS_MODE_REPEAT;
+        sampler_info.addressModeV = VK_SAMPLER_ADDRESS_MODE_REPEAT;
+        sampler_info.addressModeW = VK_SAMPLER_ADDRESS_MODE_REPEAT;
+        sampler_info.minLod = -1000;
+        sampler_info.maxLod = 1000;
+        sampler_info.maxAnisotropy = 1.0f;
+        VG_ASSERT_VULKAN(vkCreateSampler(device->getVulkanDevice(), &sampler_info, nullptr, &m_vkSampler));
     }
     #endif
 
@@ -259,6 +277,7 @@ namespace vg::graphics::renderer
         #elif defined(VG_VULKAN)
         vkDestroyDescriptorPool(device->getVulkanDevice(), m_vkImguiDescriptorPool, nullptr);
         vkDestroyRenderPass(device->getVulkanDevice(), m_vkImguiRenderPass, nullptr);
+        vkDestroySampler(device->getVulkanDevice(), m_vkSampler, nullptr);
         ImGui_ImplVulkan_Shutdown();
         #endif
 
@@ -317,6 +336,16 @@ namespace vg::graphics::renderer
         ImGui_ImplWin32_NewFrame();
         #endif
 
+        // Release user descriptors
+        for (uint i = 0; i < m_tempDescriptorSets.count(); ++i)
+        {
+            auto texId = m_tempDescriptorSets[i];
+            ImGui_ImplVulkan_Data* bd = ImGui::GetCurrentContext() ? (ImGui_ImplVulkan_Data*)ImGui::GetIO().BackendRendererUserData : NULL;
+            ImGui_ImplVulkan_InitInfo* v = &bd->VulkanInitInfo;
+            vkFreeDescriptorSets(device->getVulkanDevice(), v->DescriptorPool, 1, &texId);
+        }
+        m_tempDescriptorSets.clear();
+
         ImGui::NewFrame();
     }
 
@@ -330,5 +359,30 @@ namespace vg::graphics::renderer
         #elif defined(VG_VULKAN)
         ImGui_ImplVulkan_RenderDrawData(ImGui::GetDrawData(), _cmdList->getVulkanCommandBuffer(), nullptr);
         #endif
+    }
+
+    //--------------------------------------------------------------------------------------
+    ImTextureID ImguiAdapter::getImguiTextureID(Texture * _tex)
+    {
+        auto device = driver::Device::get();
+
+#ifdef VG_DX12
+        driver::BindlessTable * bindlessTable = device->getBindlessTable();
+        return (ImTextureID)bindlessTable->getd3d12GPUDescriptorHandle(_tex->getBindlessSRVHandle()).ptr;
+#elif defined(VG_VULKAN)
+        VkDescriptorSet texID = ImGui_ImplVulkan_AddTexture(m_vkSampler, _tex->getVulkanImageView(), VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL);
+        return texID;
+#endif
+    }
+
+    //--------------------------------------------------------------------------------------
+    void ImguiAdapter::releaseImguiTextureID(ImTextureID _texID)
+    {
+#ifdef VG_DX12
+        // Nothing to do
+#elif defined(VG_VULKAN)
+        m_tempDescriptorSets.push_back((VkDescriptorSet)_texID);
+        VG_ASSERT(m_tempDescriptorSets.count() <= max_imguitex_displayed_per_frame);
+#endif
     }
 }
