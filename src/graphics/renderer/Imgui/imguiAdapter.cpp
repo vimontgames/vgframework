@@ -330,11 +330,6 @@ namespace vg::graphics::renderer
 
             firstFrame = false;
         }
-        #endif
-
-        #ifdef _WIN32
-        ImGui_ImplWin32_NewFrame();
-        #endif
 
         // Release user descriptors
         for (uint i = 0; i < m_tempDescriptorSets.count(); ++i)
@@ -345,6 +340,12 @@ namespace vg::graphics::renderer
             vkFreeDescriptorSets(device->getVulkanDevice(), v->DescriptorPool, 1, &texId);
         }
         m_tempDescriptorSets.clear();
+
+        #endif
+
+        #ifdef _WIN32
+        ImGui_ImplWin32_NewFrame();
+        #endif       
 
         ImGui::NewFrame();
     }
