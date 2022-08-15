@@ -340,8 +340,8 @@ namespace vg::graphics::renderer
         for (uint i = 0; i < m_tempDescriptorSets.count(); ++i)
         {
             auto texId = m_tempDescriptorSets[i];
-            ImGui_ImplVulkan_Data* bd = ImGui::GetCurrentContext() ? (ImGui_ImplVulkan_Data*)ImGui::GetIO().BackendRendererUserData : NULL;
-            ImGui_ImplVulkan_InitInfo* v = &bd->VulkanInitInfo;
+            ImGui_ImplVulkan_Data * bd = ImGui_ImplVulkan_GetBackendData();
+            ImGui_ImplVulkan_InitInfo * v = &bd->VulkanInitInfo;
             vkFreeDescriptorSets(device->getVulkanDevice(), v->DescriptorPool, 1, &texId);
         }
         m_tempDescriptorSets.clear();
