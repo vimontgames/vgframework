@@ -43,7 +43,8 @@ namespace vg::graphics::renderer
         static const vg::engine::IEngine *      getEngine           ();
 
         static void                             displayArrayObject  (core::IObject * _object, core::uint _index, const char * _name);
-        static void                             displayProperty     (const core::IProperty * prop, core::IObject * _object);
+        static bool                             displayResource     (core::IResource * _resource);
+        static void                             displayProperty     (const core::IProperty * _prop, core::IObject * _object);
 
         template <typename T> static bool       displayEnum         (core::IObject * _object, const core::IProperty * _prop);
         template <typename T> static bool       displayEnumFlags    (core::IObject * _object, const core::IProperty * _prop);
@@ -52,6 +53,7 @@ namespace vg::graphics::renderer
         static void                             setSelectedObjects  (core::vector<core::IObject*> & _objects);
 
         static core::string                     getPropertyLabel    (const core::IProperty * _prop);
+        static core::string                     getButtonLabel      (core::string _baseName, core::IObject * _object);
 
     protected:
         static core::vector<core::IObject*>     s_selection;

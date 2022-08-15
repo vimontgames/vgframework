@@ -11,6 +11,9 @@
 #include "core/IComponent.h"
 #include "imgui/imgui.h"
 #include "ImguiEditor.h"
+#include "graphics/driver/Device\Device.h"
+#include "graphics/driver/BindlessTable/BindlessTable.h"
+#include "graphics/driver/Resource/Texture.h"
 #include "ImGui-Addons/FileBrowser/ImGuiFileBrowser.cpp"
 
 // TODO: move to core
@@ -27,7 +30,7 @@ using namespace vg::core;
 namespace vg::graphics::renderer
 {
     static const uint labelWidth = 14;
-
+    static imgui_addons::ImGuiFileBrowser file_dialog;
     core::vector<core::IObject*> ImguiEditor::s_selection;
 
     //--------------------------------------------------------------------------------------
@@ -84,6 +87,12 @@ namespace vg::graphics::renderer
 
         name += "##" + className;
         return name;
+    }
+
+    //--------------------------------------------------------------------------------------
+    string ImguiEditor::getButtonLabel(string _baseName, IObject * _object)
+    {
+        return _baseName + "##" + _object->getClassName() + "##" + _object->getName();
     }
 
     //--------------------------------------------------------------------------------------
@@ -195,6 +204,13 @@ namespace vg::graphics::renderer
         {
             const IProperty * prop = classDesc->getPropertyByIndex(i);
 
+            //if (!strcmp(prop->getName(), "m_object"))
+            //{
+            //    IObject * pObject = *(IObject**)(uint_ptr(_object) + prop->getOffset());
+            //    if (pObject == nullptr)
+            //        continue;
+            //}
+
             if (strcmp(prop->getName(), "m_components"))
             {
                 if (curClassName != prop->getClassName())
@@ -224,6 +240,22 @@ namespace vg::graphics::renderer
                 //}
                 ImGui::Unindent();
             }
+        }
+
+        if (!strcmp(_object->getClassName(), "Texture"))
+        {
+            // Texture preview (WIP)
+            auto * tex = (driver::Texture*)_object;
+
+            driver::BindlessTable * bindlessTable = driver::Device::get()->getBindlessTable();
+
+            #ifdef VG_DX12
+            auto handle = (void*)bindlessTable->getd3d12GPUDescriptorHandle(tex->getBindlessSRVHandle()).ptr;
+            #elif defined(VG_VULKAN)
+            VkImage handle = tex->getResource().getVulkanImage();
+            #endif
+
+            ImGui::Image(handle, ImVec2(128, 128));
         }
 
         ImGui::PopItemWidth();
@@ -276,8 +308,6 @@ namespace vg::graphics::renderer
     //--------------------------------------------------------------------------------------
     void ImguiEditor::displayProperty(const IProperty * _prop, core::IObject * _object)
     {
-        static imgui_addons::ImGuiFileBrowser file_dialog;
-
         VG_ASSERT(nullptr != _prop);
 
         const auto type = _prop->getType();
@@ -455,6 +485,7 @@ namespace vg::graphics::renderer
             const uint sizeOf = _prop->getValue();
             byte * data = nullptr;
 
+            // Not great, not terrible
             size_t count = 0;
             switch (sizeOf)
             {
@@ -470,6 +501,16 @@ namespace vg::graphics::renderer
             case 72:
                 count = (size_t)((vector<core::AnonymousStruct<72>>*)(uint_ptr(_object) + offset))->size();
                 data = (byte*)((vector<core::AnonymousStruct<72>>*)(uint_ptr(_object) + offset))->data();
+                break;
+
+            case 128:
+                count = (size_t)((vector<core::AnonymousStruct<128>>*)(uint_ptr(_object) + offset))->size();
+                data = (byte*)((vector<core::AnonymousStruct<128>>*)(uint_ptr(_object) + offset))->data();
+                break;
+
+            case 160:
+                count = (size_t)((vector<core::AnonymousStruct<160>>*)(uint_ptr(_object) + offset))->size();
+                data = (byte*)((vector<core::AnonymousStruct<160>>*)(uint_ptr(_object) + offset))->data();
                 break;
             }
 
@@ -587,7 +628,8 @@ namespace vg::graphics::renderer
             if (nullptr != pObject && pObject->getClassDesc() && asBool(pObject->getClassDesc()->getFlags() & (IClassDesc::Flags::Component)))
                 treeNodeFlags |= ImGuiTreeNodeFlags_Leaf;
 
-            bool treenNodeOpen = ImGui::TreeNodeEx(treeNodeName.c_str(), treeNodeFlags);
+            bool needTreeNode = strcmp(_prop->getName(),"m_object");
+            bool treenNodeOpen = !needTreeNode || ImGui::TreeNodeEx(treeNodeName.c_str(), treeNodeFlags);
 
             static int ObjectRightClicMenuIndex = -1;
             bool needOpenPopup = false;
@@ -664,7 +706,8 @@ namespace vg::graphics::renderer
                 else
                     ImGui::TextDisabled("null");
 
-                ImGui::TreePop();
+                if (needTreeNode)
+                    ImGui::TreePop();
             }
             else
             {
@@ -675,75 +718,138 @@ namespace vg::graphics::renderer
         }
         break;
 
+        case IProperty::Type::ResourceVector:
+        {
+            const uint sizeOf = _prop->getValue();
+            byte * data = nullptr;
+
+            // Not great, not terrible
+            size_t count = 0;
+            switch (sizeOf)
+            {
+            default:
+                VG_ASSERT(false, "case \'%u\': is not implemented", sizeOf);
+                break;
+
+            case 64:
+                count = (size_t)((vector<core::AnonymousStruct<64>>*)(uint_ptr(_object) + offset))->size();
+                data = (byte*)((vector<core::AnonymousStruct<64>>*)(uint_ptr(_object) + offset))->data();
+                break;
+
+            case 72:
+                count = (size_t)((vector<core::AnonymousStruct<72>>*)(uint_ptr(_object) + offset))->size();
+                data = (byte*)((vector<core::AnonymousStruct<72>>*)(uint_ptr(_object) + offset))->data();
+                break;
+
+            case 128:
+                count = (size_t)((vector<core::AnonymousStruct<128>>*)(uint_ptr(_object) + offset))->size();
+                data = (byte*)((vector<core::AnonymousStruct<128>>*)(uint_ptr(_object) + offset))->data();
+                break;
+
+            case 160:
+                count = (size_t)((vector<core::AnonymousStruct<160>>*)(uint_ptr(_object) + offset))->size();
+                data = (byte*)((vector<core::AnonymousStruct<160>>*)(uint_ptr(_object) + offset))->data();
+                break;
+            }
+
+            string treeNodeName = (string)displayName + " (" + to_string(count) + ")";
+
+            ImGui::PushStyleColor(ImGuiCol_Text, ImGui::GetColorU32(ImGuiCol_TextDisabled));
+
+            if (ImGui::CollapsingHeader(treeNodeName.c_str(), nullptr, ImGuiTreeNodeFlags_DefaultOpen))
+            {
+                ImGui::Indent();
+                for (uint i = 0; i < count; ++i)
+                {
+                    IResource * pResource = (IResource *)(data + sizeOf * i);
+
+                    string name = displayName + (string)"[" + to_string(i) + (string)"]";
+                    if (ImGui::TreeNodeEx(name.c_str(), ImGuiTreeNodeFlags_DefaultOpen))
+                    {
+                        ImGui::Indent();
+                        displayResource(pResource);
+                        ImGui::Unindent();
+                        ImGui::TreePop();
+                    }
+
+                    //if (pResource->getObject())
+                    //    displayObject(pResource->getObject());
+                }
+                ImGui::Unindent();
+            }
+
+            ImGui::PopStyleColor();
+        }
+            break;
+
         case IProperty::Type::Resource:
         {
             IResource * pResource = (IResource*)(uint_ptr(_object) + offset);
-            IObject * pObject = pResource->getObject();
-
-            bool open = false;// , save = false;
-
-            //if (ImGui::CollapsingHeader(displayName, ImGuiTreeNodeFlags_None))
-            {
-                char buffer[1024];
-                sprintf_s(buffer, pResource->getPath().c_str());
-                if (ImGui::InputText("##File", buffer, countof(buffer), imguiInputTextflags))
-                    pResource->setPath(buffer);
-
-                ImGui::SameLine();
-                if (ImGui::Button("File"))
-                    open = true;
-
-                //ImGui::SameLine();
-                //if (ImGui::Button("Save"))
-                //    save = true;
-
-                if (pObject)
-                    displayObject(pObject);
-            }
-
-            if (open)
-            {
-                ImGui::OpenPopup("Open file");
-                open = false;
-            }
-            //else if (save)
-            //{
-            //    ImGui::OpenPopup("Save file");
-            //    save = false;
-            //}
-
-            // build extension list
-            string ext = "";
-            bool first = true;
-            const auto & extensions = pResource->getExtensions();
-            for (uint e = 0; e < extensions.size(); ++e)
-            {
-                if (!first)
-                    ext += ";";
-                ext += extensions[e];
-                first = false;
-            }
-            if (ext == "")
-                ext = "*.*";
-
-            if (file_dialog.showFileDialog("Open file", imgui_addons::ImGuiFileBrowser::DialogMode::OPEN, ImVec2(700, 310), ext.c_str()))
-            {
-                const string newFilePath = file_dialog.selected_path;
-                if (pResource->getPath() != newFilePath)
-                {
-                    pResource->setPath(newFilePath);
-                    changed = true;
-                }
-            }
-
-            //if (file_dialog.showFileDialog("Save file", imgui_addons::ImGuiFileBrowser::DialogMode::SAVE, ImVec2(700, 310), ".ini"))
-            //    pResource->setPath(file_dialog.selected_path);
+            changed |= displayResource(pResource);
         }
         break;
         }
 
         if (changed)
             _object->onPropertyChanged(*_prop);
+    }
+
+    static core::IResource * editedResource = nullptr;
+
+    //--------------------------------------------------------------------------------------
+    bool ImguiEditor::displayResource(core::IResource * _resource)
+    {
+        bool changed = false;
+        IObject * pObject = _resource->getObject();
+
+        bool open = false;// , save = false;
+
+        char buffer[1024];
+        sprintf_s(buffer, _resource->getPath().c_str());
+        if (ImGui::InputText("##File", buffer, countof(buffer), (ImGuiInputTextFlags)0))
+            _resource->setPath(buffer);
+
+        string openFileButtonName = getButtonLabel("File", _resource);
+        string openFileDialogName = getButtonLabel("Open file", _resource);
+
+        ImGui::SameLine();
+        if (ImGui::Button(openFileButtonName.c_str()))
+            open = true;        
+
+        if (open)
+        {
+            ImGui::OpenPopup(openFileDialogName.c_str());
+            open = false;
+            editedResource = _resource;
+        }
+
+        // build extension list
+        string ext = "";
+        bool first = true;
+        const auto & extensions = _resource->getExtensions();
+        for (uint e = 0; e < extensions.size(); ++e)
+        {
+            if (!first)
+                ext += ",";
+            ext += extensions[e];
+            first = false;
+        }
+        if (ext == "")
+            ext = "*.*";
+
+        if (file_dialog.showFileDialog(openFileDialogName.c_str(), imgui_addons::ImGuiFileBrowser::DialogMode::OPEN, ImVec2(700, 310), ext.c_str()))
+        {
+            const string newFilePath = file_dialog.selected_path;
+            if (_resource->getPath() != newFilePath)
+            {
+                _resource->setPath(newFilePath);
+                changed = true;
+            }
+        }
+
+        displayObject(_resource);
+
+        return changed;
     }
 
     //--------------------------------------------------------------------------------------

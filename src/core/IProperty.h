@@ -24,6 +24,7 @@ namespace vg::core
             String,
             ObjectPointer,
             Resource,
+            ResourceVector,
             Function,
             EnumU8,
             EnumU16,
@@ -47,6 +48,7 @@ namespace vg::core
 			Radio		= 0x0000000000000020,   // Part of a radio button group
             Hidden      = 0x0000000000000040,   // Hide property
             Bitfield    = 0x0000000000000080,   // Value displayed as hex, enum as flags
+            Resource    = 0x0000000000000100,
         };
 
         virtual void                        setRange                (float2 _range) = 0;

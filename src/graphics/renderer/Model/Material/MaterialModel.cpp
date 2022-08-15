@@ -4,7 +4,7 @@
 #include "graphics/driver/Resource/Texture.h"
 #include "graphics/renderer/Importer/SceneImporterData.h"
 #include "graphics/renderer/Renderer.h"
-
+#include "core/Object/EnumHelper.h"
 #include "DefaultMaterial/DefaultMaterialModel.hpp"
 
 using namespace vg::core;
@@ -27,14 +27,16 @@ namespace vg::graphics::renderer
     {
         super::registerProperties(_desc);
 
-        //_desc.registerProperty("m_meshGeometry", (core::IObject**)offsetof(MeshModel, m_meshGeometry), "Geometry", IProperty::Flags::None);
+        EnumHelper<Flags> flagsEnum;
+        _desc.registerPropertyEnumHelper(MaterialModel, Flags, m_flags, "Flags", flagsEnum.getCount(), flagsEnum.getNames(), flagsEnum.getValues(), IProperty::Flags::Bitfield);
 
         return true;
     }
 
     //--------------------------------------------------------------------------------------
     MaterialModel::MaterialModel(const core::string & _name, core::IObject * _parent) :
-        super(_name, _parent)
+        super(_name, _parent),
+        m_flags((Flags)0x0)
     {
 
     }

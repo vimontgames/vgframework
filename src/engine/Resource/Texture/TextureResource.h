@@ -27,5 +27,8 @@ namespace vg::engine
         bool                                load                (const core::string & _file, core::IObject * _owner) final override;
 
         graphics::driver::ITexture *        getTexture          () const { return (graphics::driver::ITexture*)m_object; }
+
+        core::uint                          getSubResourceCount () const final { return 0;}
+        IResource *                         getSubResource      (core::uint _index) final { return nullptr;}
     };
 }

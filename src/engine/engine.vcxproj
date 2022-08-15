@@ -37,6 +37,8 @@
     <ClInclude Include="Input\win32\Input_win32.hpp" />
     <ClInclude Include="IResourceManager.h" />
     <ClInclude Include="Precomp.h" />
+    <ClInclude Include="Resource\Material\MaterialResource.h" />
+    <ClInclude Include="Resource\Material\MaterialResource.hpp" />
     <ClInclude Include="Resource\Mesh\MeshResource.h" />
     <ClInclude Include="Resource\Mesh\MeshResource.hpp" />
     <ClInclude Include="Resource\ResourceManager.h" />

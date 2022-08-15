@@ -64,6 +64,12 @@
       <Filter>Resource</Filter>
     </ClInclude>
     <ClInclude Include="IResourceManager.h" />
+    <ClInclude Include="Resource\Material\MaterialResource.h">
+      <Filter>Resource\Material</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource\Material\MaterialResource.hpp">
+      <Filter>Resource\Material</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Input">
@@ -95,6 +101,9 @@
     </Filter>
     <Filter Include="Resource\Texture">
       <UniqueIdentifier>{14b88f1a-2447-430d-a2f0-87dbf2a85080}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource\Material">
+      <UniqueIdentifier>{63aec5b5-6a52-4af4-8ebb-c0f5baf4c70d}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

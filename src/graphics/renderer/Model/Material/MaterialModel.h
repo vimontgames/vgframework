@@ -19,6 +19,13 @@ namespace vg::graphics
             using super = IMaterialModel;
 
         public:
+
+            enum Flags : core::u32
+            {
+                AlphaTest   = 0x00000001,
+                AlphaBlend  = 0x00000002
+            };
+
             const char * getClassName() const final { return "MaterialModel"; }
 
             static bool registerClass(core::IFactory & _factory);
@@ -40,6 +47,7 @@ namespace vg::graphics
             static MaterialModel * createFromImporterData(const MaterialImporterData & _data);
 
         private:
+            Flags                   m_flags;
             struct TextureInfo
             {
                 core::string        path;

@@ -89,7 +89,7 @@ namespace vg::core
     //--------------------------------------------------------------------------------------
     void ClassDesc::registerProperty(const char * _className, const char * _propertyName, core::u32 _sizeOf, void * _offset, const char * _displayName, IProperty::Flags _flags)
     {
-        properties.emplace_back(_className, _propertyName, IProperty::Type::ObjectVector, (uint_ptr)_offset, /*_value,*/_sizeOf, _displayName, _flags);
+        properties.emplace_back(_className, _propertyName, asBool(_flags & IProperty::Flags::Resource) ? IProperty::Type::ResourceVector : IProperty::Type::ObjectVector, (uint_ptr)_offset, _sizeOf, _displayName, _flags);
     }
 
     //--------------------------------------------------------------------------------------

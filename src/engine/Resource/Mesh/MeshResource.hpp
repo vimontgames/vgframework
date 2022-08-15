@@ -2,6 +2,7 @@
 #include "core/File/File.h"
 #include "graphics/renderer/IMeshModel.h"
 #include "graphics/renderer/IMaterialModel.h"
+#include "graphics/renderer/Model/Material/MaterialTextureType.h"
 
 using namespace vg::core;
 
@@ -22,6 +23,8 @@ namespace vg::engine
     bool MeshResource::registerProperties(IClassDesc & _desc)
     {
         super::registerProperties(_desc);
+
+        _desc.registerPropertyObjectVectorHelper(MeshResource, m_materialResources, MaterialResource, "Materials", IProperty::Flags::None);
 
         return true;
     }
@@ -65,23 +68,25 @@ namespace vg::engine
     //--------------------------------------------------------------------------------------
     bool MeshResource::load(const string & _path, IObject * _owner)
     {
-        auto * renderer = Engine::get()->GetRenderer();
-
         VG_SAFE_RELEASE(m_object);
 
+        auto * renderer = Engine::get()->GetRenderer();
         auto * meshModel = renderer->loadMeshModel(_path);
 
+        // Request loading of textures used by materials from this model
         if (nullptr != meshModel)
         {
-            const auto matCount = meshModel->GetMaterialCount();
+            const uint matCount = meshModel->GetMaterialCount();
             m_materialResources.resize(matCount);
             for (uint m = 0; m < matCount; ++m)
             {
-                auto * matModel = meshModel->GetMaterial(m);
+                graphics::renderer::IMaterialModel * matModel = meshModel->GetMaterial(m);
                 if (nullptr != matModel)
                 {
                     const auto texCount = matModel->GetTextureCount();
-                    auto & matRes = m_materialResources[m];
+                    MaterialResource & matRes = m_materialResources[m];
+                    matRes.setObject(matModel);
+                    matRes.setName(matModel->getName());
                     matRes.m_textureResources.resize(texCount);
 
                     for (uint t = 0; t < texCount; ++t)
@@ -91,9 +96,11 @@ namespace vg::engine
                         if (matTexPath.length() > 0)
                         {
                             matTexPath = io::getFileDir(_path) + "/" + matTexPath;
-                            auto & res = matRes.m_textureResources[t];
+                            TextureResource & res = matRes.m_textureResources[t];
 
-                            res.setup(this, matTexPath, m << 16 | t);    // will trigger loading because path changed
+                            string name = core::asString((graphics::renderer::MaterialTextureType)t);
+                            res.setName(name.c_str());
+                            res.setup(this, matTexPath, m << 16 | t);    // will trigger loading of textures
                         }
                     }
                 }
@@ -117,5 +124,17 @@ namespace vg::engine
         auto * texRes = (TextureResource*)_resource;
 
         material->SetTexture(texSlot, texRes->getTexture());
+    }
+
+    //--------------------------------------------------------------------------------------
+    uint MeshResource::getSubResourceCount() const
+    {
+        return m_materialResources.count();
+    }
+
+    //--------------------------------------------------------------------------------------
+    IResource * MeshResource::getSubResource(uint _index)
+    {
+        return &m_materialResources[_index];
     }
 }

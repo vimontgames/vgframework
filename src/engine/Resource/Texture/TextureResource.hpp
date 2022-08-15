@@ -10,7 +10,7 @@ namespace vg::engine
     //--------------------------------------------------------------------------------------
     bool TextureResource::registerClass(IFactory & _factory)
     {
-        if (core::IClassDesc * desc = _factory.registerClassHelper(TextureResource, "Texture Resource", IClassDesc::Flags::Resource))
+        if (core::IClassDesc * desc = _factory.registerClassHelper(TextureResource, "Texture", IClassDesc::Flags::Resource))
             registerProperties(*desc);
 
         return true;
