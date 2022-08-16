@@ -8,10 +8,10 @@ Its renderer only uses modern graphics APIs like DirectX12 and Vulkan (I would a
 * Apart from the number of root constants, all shaders are sharing the same root signatures.
 
 
-![Screenshot](doc/img/screenshot6.png)
+![Screenshot](doc/img/screenshot7.png)
  
  
-For the engine part, so far I integrated several "must-haves" tools like a CPU/GPU profiler, inputs, a job scheduler and Dear Imgui, and is currently implementing serialization and a basic Entity-Component system.  
+For the engine part, so far I integrated several "must-haves" tools like a CPU/GPU profiler, inputs, a job scheduler and Dear Imgui. I am currently implementing an Entity/Component system and reflection using ImGui.  
 
 Another subject that is very close to my heart is that there is a strong separation between modules as the engine is "physically" split in several DLLs using only pure abstract interfaces.
 
