@@ -17,6 +17,7 @@ namespace vg::core
                                     ~Property       ();
 
         void                        setRange        (float2 _range) final;
+        void                        setFlags        (Flags _flagsToSet, Flags _flagsToRemove = Flags::None) final;
 
         const char *                getName         () const final;
         const char *                getClassName    () const final;

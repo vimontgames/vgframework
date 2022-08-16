@@ -7,22 +7,25 @@
     <Filter Include="Component">
       <UniqueIdentifier>{2e7c1043-a157-4d3d-80e4-e55080328482}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Entity\Player">
-      <UniqueIdentifier>{9bb2750d-acce-440d-8fce-33caca03ce6d}</UniqueIdentifier>
+    <Filter Include="GameObject">
+      <UniqueIdentifier>{4313e512-a98e-45f1-89e2-931d2abad560}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameObject\Player">
+      <UniqueIdentifier>{66425b0b-525a-47ce-bdb5-81e3956d9515}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Precomp.cpp" />
     <ClCompile Include="SuperVimontBrawl.cpp" />
-    <ClCompile Include="Entity\Player\PlayerEntity.cpp">
-      <Filter>Entity\Player</Filter>
+    <ClCompile Include="GameObject\Player\Player.cpp">
+      <Filter>GameObject\Player</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Precomp.h" />
     <ClInclude Include="SuperVimontBrawl.h" />
-    <ClInclude Include="Entity\Player\PlayerEntity.h">
-      <Filter>Entity\Player</Filter>
+    <ClInclude Include="GameObject\Player\Player.h">
+      <Filter>GameObject\Player</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -12,9 +12,9 @@ namespace vg::graphics::renderer
         {
         }
 
-        virtual void    display         () final;
+        virtual void    display             () final;
 
     private:
-        void            displaySector   (ISector * root);
+        void            displayGameObject   (IGameObject * root);
     };
 }

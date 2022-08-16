@@ -6,8 +6,7 @@
 #include "core/IResource.h"
 #include "core/IUniverse.h"
 #include "core/IScene.h"
-#include "core/ISector.h"
-#include "core/IEntity.h"
+#include "core/IGameObject.h"
 #include "core/IComponent.h"
 #include "imgui/imgui.h"
 #include "ImguiEditor.h"
@@ -15,15 +14,6 @@
 #include "graphics/renderer/Imgui/imguiAdapter.h"
 
 #include "ImGui-Addons/FileBrowser/ImGuiFileBrowser.cpp"
-
-// TODO: move to core
-namespace vg::core
-{
-    template <size_t S> struct AnonymousStruct
-    {
-        char pad[S];
-    };
-}
 
 using namespace vg::core;
 
@@ -431,7 +421,7 @@ namespace vg::graphics::renderer
 
             char buffer[1024];
             sprintf_s(buffer, pString->c_str());
-            changed |= ImGui::InputText(displayName, buffer, countof(buffer), imguiInputTextflags);
+            changed |= ImGui::InputText(getButtonLabel(displayName, _object).c_str(), buffer, countof(buffer), imguiInputTextflags);
 
             if (changed)
             {
@@ -479,36 +469,8 @@ namespace vg::graphics::renderer
         case IProperty::Type::ObjectVector:
         {
             const uint sizeOf = _prop->getValue();
-            byte * data = nullptr;
-
-            // Not great, not terrible
-            size_t count = 0;
-            switch (sizeOf)
-            {
-            default:
-                VG_ASSERT(false, "case \'%u\': is not implemented", sizeOf);
-                break;
-
-            case 64:
-                count = (size_t)((vector<core::AnonymousStruct<64>>*)(uint_ptr(_object) + offset))->size();
-                data = (byte*)((vector<core::AnonymousStruct<64>>*)(uint_ptr(_object) + offset))->data();
-                break;
-
-            case 72:
-                count = (size_t)((vector<core::AnonymousStruct<72>>*)(uint_ptr(_object) + offset))->size();
-                data = (byte*)((vector<core::AnonymousStruct<72>>*)(uint_ptr(_object) + offset))->data();
-                break;
-
-            case 128:
-                count = (size_t)((vector<core::AnonymousStruct<128>>*)(uint_ptr(_object) + offset))->size();
-                data = (byte*)((vector<core::AnonymousStruct<128>>*)(uint_ptr(_object) + offset))->data();
-                break;
-
-            case 160:
-                count = (size_t)((vector<core::AnonymousStruct<160>>*)(uint_ptr(_object) + offset))->size();
-                data = (byte*)((vector<core::AnonymousStruct<160>>*)(uint_ptr(_object) + offset))->data();
-                break;
-            }
+            const size_t count = (((vector<u8>*)(uint_ptr(_object) + offset))->_Mylast() - ((vector<u8>*)(uint_ptr(_object) + offset))->_Myfirst()) / sizeOf;
+            const byte * data = ((vector<u8>*)(uint_ptr(_object) + offset))->data();
 
             string treeNodeName = (string)displayName + " (" + to_string(count) + ")";
 
@@ -717,36 +679,8 @@ namespace vg::graphics::renderer
         case IProperty::Type::ResourceVector:
         {
             const uint sizeOf = _prop->getValue();
-            byte * data = nullptr;
-
-            // Not great, not terrible
-            size_t count = 0;
-            switch (sizeOf)
-            {
-            default:
-                VG_ASSERT(false, "case \'%u\': is not implemented", sizeOf);
-                break;
-
-            case 64:
-                count = (size_t)((vector<core::AnonymousStruct<64>>*)(uint_ptr(_object) + offset))->size();
-                data = (byte*)((vector<core::AnonymousStruct<64>>*)(uint_ptr(_object) + offset))->data();
-                break;
-
-            case 72:
-                count = (size_t)((vector<core::AnonymousStruct<72>>*)(uint_ptr(_object) + offset))->size();
-                data = (byte*)((vector<core::AnonymousStruct<72>>*)(uint_ptr(_object) + offset))->data();
-                break;
-
-            case 128:
-                count = (size_t)((vector<core::AnonymousStruct<128>>*)(uint_ptr(_object) + offset))->size();
-                data = (byte*)((vector<core::AnonymousStruct<128>>*)(uint_ptr(_object) + offset))->data();
-                break;
-
-            case 160:
-                count = (size_t)((vector<core::AnonymousStruct<160>>*)(uint_ptr(_object) + offset))->size();
-                data = (byte*)((vector<core::AnonymousStruct<160>>*)(uint_ptr(_object) + offset))->data();
-                break;
-            }
+            const size_t count = (((vector<u8>*)(uint_ptr(_object) + offset))->_Mylast() - ((vector<u8>*)(uint_ptr(_object) + offset))->_Myfirst()) / sizeOf;
+            const byte * data = ((vector<u8>*)(uint_ptr(_object) + offset))->data();
 
             string treeNodeName = (string)displayName + " (" + to_string(count) + ")";
 

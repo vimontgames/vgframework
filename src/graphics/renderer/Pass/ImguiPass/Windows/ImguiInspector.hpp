@@ -7,8 +7,14 @@ namespace vg::graphics::renderer
     {
         if (ImGui::Begin("Inspector", &m_isVisible))
         {
-            if (ImguiEditor::getSelectedObject() != nullptr)
-                ImguiEditor::displayObject(ImguiEditor::getSelectedObject());
+            auto object = ImguiEditor::getSelectedObject();
+            if (nullptr != object)
+            {
+                if (ImGui::CollapsingHeader(object->getClassName(), nullptr, ImGuiTreeNodeFlags_DefaultOpen))
+                {
+                    ImguiEditor::displayObject(object);
+                }
+            }
         }
         ImGui::End();
     }

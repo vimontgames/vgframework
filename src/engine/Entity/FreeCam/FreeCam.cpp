@@ -1,5 +1,5 @@
 #include "engine/Precomp.h"
-#include "FreeCamEntity.h"
+#include "FreeCam.h"
 #include "core/Math/Math.h"
 #include "core/IInput.h"
 
@@ -7,43 +7,43 @@ using namespace vg::core;
 
 namespace vg::engine
 {
-    VG_AUTO_REGISTER_CLASS(FreeCamEntity);
+    VG_AUTO_REGISTER_CLASS(FreeCam);
 
     //--------------------------------------------------------------------------------------
-    bool FreeCamEntity::registerClass(IFactory & _factory)
+    bool FreeCam::registerClass(IFactory & _factory)
     {
-        if (core::IClassDesc * desc = _factory.registerClassHelper(FreeCamEntity, "FreeCamEntity", IClassDesc::Flags::Entity))
+        if (core::IClassDesc * desc = _factory.registerClassHelper(FreeCam, "FreeCamEntity", IClassDesc::Flags::GameObject))
             registerProperties(*desc);
 
         return true;
     }
 
     //--------------------------------------------------------------------------------------
-    bool FreeCamEntity::registerProperties(IClassDesc & _desc)
+    bool FreeCam::registerProperties(IClassDesc & _desc)
     {
         super::registerProperties(_desc);
 
-        _desc.registerPropertyHelper(FreeCamEntity, m_moveSpeed, "Translation Speed", IProperty::Flags::None);
-        _desc.setPropertyRangeHelper(FreeCamEntity, m_moveSpeed, float2(0.0f, 10.0f));
+        _desc.registerPropertyHelper(FreeCam, m_moveSpeed, "Translation Speed", IProperty::Flags::None);
+        _desc.setPropertyRangeHelper(FreeCam, m_moveSpeed, float2(0.0f, 10.0f));
 
-        _desc.registerPropertyHelper(FreeCamEntity, m_rotSpeed, "Rotation Speed", IProperty::Flags::None);
-        _desc.setPropertyRangeHelper(FreeCamEntity, m_rotSpeed, float2(0.0f, 10.0f));
+        _desc.registerPropertyHelper(FreeCam, m_rotSpeed, "Rotation Speed", IProperty::Flags::None);
+        _desc.setPropertyRangeHelper(FreeCam, m_rotSpeed, float2(0.0f, 10.0f));
 
-        _desc.registerPropertyHelper(FreeCamEntity, m_pitch, "Pitch", IProperty::Flags::None);
-        _desc.setPropertyRangeHelper(FreeCamEntity, m_pitch, float2(-pi, +pi));
+        _desc.registerPropertyHelper(FreeCam, m_pitch, "Pitch", IProperty::Flags::None);
+        _desc.setPropertyRangeHelper(FreeCam, m_pitch, float2(-pi, +pi));
 
-        _desc.registerPropertyHelper(FreeCamEntity, m_yaw, "Yaw", IProperty::Flags::None);
-        _desc.setPropertyRangeHelper(FreeCamEntity, m_yaw, float2(-pi, +pi));
+        _desc.registerPropertyHelper(FreeCam, m_yaw, "Yaw", IProperty::Flags::None);
+        _desc.setPropertyRangeHelper(FreeCam, m_yaw, float2(-pi, +pi));
 
-        _desc.registerPropertyHelper(FreeCamEntity, m_roll, "Roll", IProperty::Flags::None);
-        _desc.setPropertyRangeHelper(FreeCamEntity, m_roll, float2(-pi, +pi));
+        _desc.registerPropertyHelper(FreeCam, m_roll, "Roll", IProperty::Flags::None);
+        _desc.setPropertyRangeHelper(FreeCam, m_roll, float2(-pi, +pi));
 
         return true;
     }
 
     //--------------------------------------------------------------------------------------
-    FreeCamEntity::FreeCamEntity(const core::string & _name, core::IObject * _parent) :
-        core::Entity(_name, _parent),
+    FreeCam::FreeCam(const core::string & _name, core::IObject * _parent) :
+        core::GameObject(_name, _parent),
         m_roll(0.0f),
         m_pitch(-1.34f),
         m_yaw(2.85f),
@@ -60,7 +60,7 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
-    FreeCamEntity::~FreeCamEntity()
+    FreeCam::~FreeCam()
     {
 
     }
@@ -112,7 +112,7 @@ namespace vg::engine
 
 
     //--------------------------------------------------------------------------------------
-    void FreeCamEntity::update(double _dt)
+    void FreeCam::Update(double _dt)
     {
         const float4x4 & world = getWorldMatrix();
 
@@ -173,6 +173,6 @@ namespace vg::engine
         
         setWorldMatrix(mViewI);
 
-        super::update(_dt);
+        super::Update(_dt);
     }
 }

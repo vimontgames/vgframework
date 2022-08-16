@@ -4,12 +4,12 @@
 
 namespace vg::core
 {
-    class ISector;
+    class IGameObject;
 
     class IScene : public Object
     {
     public:
-        virtual void        setRoot (ISector * _sector) = 0;
-        virtual ISector *   getRoot () const  = 0;
+        virtual void            SetRoot (IGameObject * _sector) = 0;
+        virtual IGameObject *   GetRoot () const  = 0;
     };
 }

@@ -11,7 +11,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Entity\Player\PlayerEntity.cpp" />
+    <ClCompile Include="GameObject\Player\Player.cpp" />
     <ClCompile Include="Precomp.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
@@ -19,7 +19,7 @@
     <ClCompile Include="SuperVimontBrawl.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Entity\Player\PlayerEntity.h" />
+    <ClInclude Include="GameObject\Player\Player.h" />
     <ClInclude Include="Precomp.h" />
     <ClInclude Include="SuperVimontBrawl.h" />
   </ItemGroup>

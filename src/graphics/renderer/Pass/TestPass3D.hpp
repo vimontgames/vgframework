@@ -1,5 +1,5 @@
 #include "TestPass3D.h"
-#include "core/Sector/Sector.h"
+#include "core/GameObject/GameObject.h"
 #include "shaders/default/default.hlsli"
 #include "Shaders/system/bindless.hlsli"
 #include "graphics/renderer/Geometry/Mesh/MeshGeometry.h"
@@ -161,14 +161,13 @@ namespace vg::graphics::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    void addInstanceRecur(vector<const IGraphicInstance*> & list, const ISector * sector)
+    void addInstanceRecur(vector<const IGraphicInstance*> & _graphicInstanceList, const GameObject * _gameObject)
     {
-        auto & instances = sector->getGraphicInstances();
-        list.insert(list.begin(), instances.begin(), instances.end());
-        for (uint i = 0; i < sector->getChildSectorCount(); ++i)
-        {
-            addInstanceRecur(list, sector->getChildSector(i));
-        }
+        auto & instances = _gameObject->GetGraphicInstances();
+        _graphicInstanceList.insert(_graphicInstanceList.begin(), instances.begin(), instances.end());
+        auto children = _gameObject->getChildren();
+        for (uint i = 0; i < children.count(); ++i)
+            addInstanceRecur(_graphicInstanceList, children[i]);
     }
 
     //--------------------------------------------------------------------------------------

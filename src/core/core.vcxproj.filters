@@ -37,9 +37,6 @@
     <Filter Include="String">
       <UniqueIdentifier>{e2d9d690-faaf-46f3-9b6e-eef77e7c2458}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Entity">
-      <UniqueIdentifier>{404128dc-c15c-44e1-97c6-6f45d1a0ec1c}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Component">
       <UniqueIdentifier>{1398f3b5-5831-47e4-a22c-be0860d05535}</UniqueIdentifier>
     </Filter>
@@ -60,6 +57,9 @@
     </Filter>
     <Filter Include="Universe">
       <UniqueIdentifier>{6761ac01-3b2d-4073-b7da-51b6c97941f3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameObject">
+      <UniqueIdentifier>{404128dc-c15c-44e1-97c6-6f45d1a0ec1c}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -119,9 +119,6 @@
       <Filter>Scheduler</Filter>
     </ClInclude>
     <ClInclude Include="IInput.h" />
-    <ClInclude Include="Entity\Entity.h">
-      <Filter>Entity</Filter>
-    </ClInclude>
     <ClInclude Include="Component\Component.h">
       <Filter>Component</Filter>
     </ClInclude>
@@ -142,7 +139,6 @@
       <Filter>Scene</Filter>
     </ClInclude>
     <ClInclude Include="ISector.h" />
-    <ClInclude Include="IEntity.h" />
     <ClInclude Include="Sector\Sector.h">
       <Filter>Sector</Filter>
     </ClInclude>
@@ -190,6 +186,10 @@
       <Filter>Object</Filter>
     </ClInclude>
     <ClInclude Include="IComponent.h" />
+    <ClInclude Include="IGameObject.h" />
+    <ClInclude Include="GameObject\GameObject.h">
+      <Filter>GameObject</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Math\Math.cpp">
@@ -221,9 +221,6 @@
     <ClCompile Include="Scheduler\Job.cpp">
       <Filter>Scheduler</Filter>
     </ClCompile>
-    <ClCompile Include="Entity\Entity.cpp">
-      <Filter>Entity</Filter>
-    </ClCompile>
     <ClCompile Include="Component\Component.cpp">
       <Filter>Component</Filter>
     </ClCompile>
@@ -245,6 +242,9 @@
     <ClCompile Include="Universe\Universe.cpp">
       <Filter>Universe</Filter>
     </ClCompile>
+    <ClCompile Include="GameObject\GameObject.cpp">
+      <Filter>GameObject</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Instance\Instance.inl">
@@ -252,6 +252,9 @@
     </None>
     <None Include="Component\Component.inl">
       <Filter>Component</Filter>
+    </None>
+    <None Include="Scene\Scene.inl">
+      <Filter>Scene</Filter>
     </None>
   </ItemGroup>
 </Project>

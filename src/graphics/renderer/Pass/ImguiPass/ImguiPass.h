@@ -2,11 +2,6 @@
 
 #include "graphics/driver/FrameGraph/UserPass.h"
 
-namespace vg::core
-{
-    class ISector;
-}
-
 namespace vg::engine
 {
     class IEngine;

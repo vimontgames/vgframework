@@ -1,5 +1,5 @@
 #pragma once
-
+/*
 #include "core/Object/Object.h"
 
 namespace vg::graphics::renderer
@@ -33,3 +33,4 @@ namespace vg::core
         virtual const vector<graphics::renderer::IGraphicInstance*> &   getGraphicInstances     () const = 0;
     };
 }
+*/

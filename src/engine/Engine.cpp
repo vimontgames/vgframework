@@ -8,10 +8,9 @@
 #include "core/Timer/Timer.h"
 #include "core/Plugin/Plugin.h"
 #include "core/Scheduler/Scheduler.h"
-#include "core/Entity/Entity.h"
 #include "core/Object/Factory.h"
 #include "core/Scene/Scene.h"
-#include "core/Sector/Sector.h"
+#include "core/GameObject/GameObject.h"
 
 #include "graphics/renderer/IRenderer.h"
 #include "graphics/renderer/IView.h"
@@ -19,7 +18,7 @@
 
 #include "engine/Input/Input.h"
 #include "engine/Resource/ResourceManager.h"
-#include "engine/Entity/FreeCam/FreeCamEntity.h"
+#include "engine/Entity/FreeCam/FreeCam.h"
 #include "engine/Component/Camera/CameraComponent.h"
 #include "engine/Component/Mesh/MeshComponent.h"
 
@@ -34,7 +33,7 @@ using namespace vg::engine;
 // Avoid stripping code for classes from static lib
 static Universe universe("", nullptr);
 static Scene scene("", nullptr);
-static Sector sector("", nullptr);
+static GameObject gameObject("", nullptr);
 
 //--------------------------------------------------------------------------------------
 IEngine * CreateNew()
@@ -285,31 +284,31 @@ namespace vg::engine
         defaultScene->release();
 
         // add root sector
-        Sector * rootSector = (Sector*)CreateFactoryObject(Sector, "Root", defaultScene);
-        defaultScene->setRoot(rootSector);
+        GameObject * rootSector = (GameObject*)CreateFactoryObject(GameObject, "Root", defaultScene);
+        defaultScene->SetRoot(rootSector);
         rootSector->release();
 
         // add child sector
-        Sector * childSector = (Sector*)CreateFactoryObject(Sector, "3DScan", rootSector);
-        rootSector->addChildSector(childSector);
+        GameObject * childSector = (GameObject*)CreateFactoryObject(GameObject, "3DScan", rootSector);
+        rootSector->AddChild(childSector);
         childSector->release();
         
         // add camera entity
-        m_freeCam = new FreeCamEntity("FreeCam #0", rootSector);
+        m_freeCam = new FreeCam("Camera", rootSector);
         auto * cameraComponent = (CameraComponent*)CreateFactoryObject(CameraComponent, "", m_freeCam);
         m_freeCam->addComponent(cameraComponent);
         cameraComponent->setView(m_editorView, rootSector);
-        rootSector->addEntity(m_freeCam);
+        rootSector->AddChild(m_freeCam);
         VG_SAFE_RELEASE(cameraComponent);
         VG_SAFE_RELEASE(m_freeCam);
 
-        auto addMesh = [=](ISector * sector, const string & _name, const string & _path, const float4 _position)
+        auto addMesh = [=](GameObject * _parent, const string & _name, const string & _path, const float4 _position)
         {
-            auto * meshEntity = (Entity*)CreateFactoryObject(Entity, _name.c_str(), sector);
-            auto * meshComponent = (MeshComponent*)CreateFactoryObject(MeshComponent, "", meshEntity);
+            auto * meshGO = (GameObject*)CreateFactoryObject(GameObject, _name.c_str(), _parent);
+            auto * meshComponent = (MeshComponent*)CreateFactoryObject(MeshComponent, "", meshGO);
             meshComponent->getMeshResource().setPath(_path);
-            meshEntity->addComponent(meshComponent);
-            sector->addEntity(meshEntity);
+            meshGO->addComponent(meshComponent);
+            _parent->AddChild(meshGO);
         
             const float4x4 m =
             {
@@ -318,10 +317,10 @@ namespace vg::engine
                 float4(0.0f, 0.0f, 1.0f, (0.0f)),
                 _position,
             };
-            meshEntity->SetWorldMatrix(m);
+            meshGO->SetWorldMatrix(m);
         
             VG_SAFE_RELEASE(meshComponent);
-            VG_SAFE_RELEASE(meshEntity);
+            VG_SAFE_RELEASE(meshGO);
         };
 
 #if 1
@@ -414,24 +413,6 @@ namespace vg::engine
         previous = current;
     }
 
-    //--------------------------------------------------------------------------------------
-    void Engine::updateEntities(Sector * _sector, double _dt)
-    {
-        const auto & entities = _sector->getEntities();
-        for (uint e = 0; e < entities.size(); ++e)
-        {
-            Entity * entity = entities[e];
-            entity->update(_dt);
-        }
-
-        const auto & sectors = _sector->getChildSectors();
-        for (uint s = 0; s < sectors.size(); ++s)
-        {
-            Sector * sector = sectors[s];
-            updateEntities(sector, _dt);
-        }
-    }
-
 	//--------------------------------------------------------------------------------------
 	void Engine::runOneFrame()
 	{
@@ -450,9 +431,9 @@ namespace vg::engine
             for (uint i = 0; i < sceneCount; ++i)
             {
                 Scene * scene = (Scene*)m_universe->getScene(i);
-                Sector * root = (Sector*)scene->getRoot();
+                GameObject * root = scene->getRoot();
                 if (root)
-                    updateEntities(root, m_dt);
+                    root->Update(m_dt);
             }
 
             m_renderer->runOneFrame(m_dt);

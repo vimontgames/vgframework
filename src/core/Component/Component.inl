@@ -14,4 +14,10 @@ namespace vg::core
         else
             (u32&)m_flags &= ~(u32)flags;
     }
+
+    //--------------------------------------------------------------------------------------
+    VG_INLINE GameObject * Component::getGameObject() const
+    {
+        return (GameObject *)getParent();
+    }
 }

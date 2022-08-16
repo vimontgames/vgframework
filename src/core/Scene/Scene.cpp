@@ -1,7 +1,11 @@
 #include "core/Precomp.h"
 #include "Scene.h"
-#include "core/Sector/Sector.h"
+#include "core/GameObject/GameObject.h"
 #include "core/Object/AutoRegisterClass.h"
+
+#if !VG_ENABLE_INLINE
+#include "Scene.inl"
+#endif
 
 namespace vg::core
 {
@@ -55,7 +59,13 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
-    void Scene::setRoot(ISector * _sector)
+    void Scene::SetRoot(IGameObject * _sector)
+    {
+        setRoot((GameObject*)_sector);
+    }   
+
+    //--------------------------------------------------------------------------------------
+    void Scene::setRoot(GameObject * _sector)
     {
         if (_sector != m_root)
         {
@@ -66,8 +76,8 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
-    ISector * Scene::getRoot() const
+    IGameObject * Scene::GetRoot() const
     {
-        return m_root;
+        return (IGameObject*)getRoot();
     }
 }

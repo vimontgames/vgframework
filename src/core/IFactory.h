@@ -10,7 +10,7 @@ namespace vg::core
     #define propertyOffset(typeName, className, propertyName)													            (typeName*)&((className*)(nullptr))->propertyName
     
     #define registerClassHelper_NoCTor(className, displayName, flags)											            registerClass(#className, displayName, flags, [](const vg::core::string & _name, vg::core::IObject * _parent) { return nullptr; })
-    #define registerClassHelper(className, displayName, flags)													            registerClass(#className, displayName, flags, [](const vg::core::string & _name, vg::core::IObject * _parent) { return new className(_name, _parent); })
+    #define registerClassHelper(className, displayName, flags)                                                              registerClass(#className, displayName, flags, [](const vg::core::string & _name, vg::core::IObject * _parent) { return new className(_name, _parent); })
     #define registerClassSingletonHelper(className, displayName, flags)											            registerSingletonClass(#className, displayName, flags | vg::core::IClassDesc::Flags::Singleton, [](){ return className::get(); } )
     
     #define registerPropertyHelper(className, propertyName, displayName, flags)									            registerProperty(#className, #propertyName, (&((className*)(nullptr))->propertyName), displayName, flags)

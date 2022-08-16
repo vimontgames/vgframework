@@ -5,7 +5,7 @@ namespace vg::engine
     class IEngine;
 }
 
-class PlayerEntity;
+class Player;
 
 namespace vg
 {

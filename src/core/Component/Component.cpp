@@ -1,7 +1,7 @@
 #include "core/Precomp.h"
 #include "Component.h"
 #include "core/IProperty.h"
-#include "core/IEntity.h"
+#include "core/IGameObject.h"
 #include "core/IFactory.h"
 #include "core/IClassDesc.h"
 #include "core/Object/EnumHelper.h"
@@ -17,7 +17,7 @@ namespace vg::core
         IComponent(_name, _parent),
         m_flags(Flags::Enabled)
     {
-        VG_ASSERT(dynamic_cast<IEntity*>(_parent));
+        VG_ASSERT(dynamic_cast<IGameObject*>(_parent));
     }
 
     //--------------------------------------------------------------------------------------
@@ -27,9 +27,9 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
-    const IEntity * Component:: getEntity() const 
+    const IGameObject * Component::GetGameObject() const 
     { 
-        return (const IEntity*)getParent();
+        return (const IGameObject*)getGameObject();
     }
 
     //--------------------------------------------------------------------------------------

@@ -1,6 +1,6 @@
 #include "engine/Precomp.h"
 #include "MeshComponent.h"
-#include "core/Entity/Entity.h"
+#include "core/GameObject/GameObject.h"
 #include "core/ISector.h"
 #include "graphics/renderer/IMeshInstance.h"
 #include "graphics/renderer/IMeshModel.h"
@@ -39,7 +39,7 @@ namespace vg::engine
         core::Component(_name, _parent),
         m_meshResource(_name, this)
     {
-        VG_ASSERT(dynamic_cast<IEntity*>(_parent));
+        VG_ASSERT(dynamic_cast<IGameObject*>(_parent));
         m_meshInstance = (IMeshInstance*)CreateFactoryObject(MeshInstance, _name, this);
     }
 
@@ -50,9 +50,10 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
-    void MeshComponent::update(double _dt)
+    void MeshComponent::Update(double _dt)
     {
-        m_meshInstance->setWorldMatrix(getEntity()->getWorldMatrix());
+        // TODO: could be done only when GameObject's matrix changes?
+        m_meshInstance->setWorldMatrix(GetGameObject()->getWorldMatrix());
     }
 
     //--------------------------------------------------------------------------------------
@@ -63,10 +64,8 @@ namespace vg::engine
 
         if (false == m_registered)
         {
-            const IEntity * entity = getEntity();
-            ISector * sector = entity->getSector();
-
-            sector->addGraphicInstance(m_meshInstance);
+            GameObject * gameObject = getGameObject();
+            gameObject->AddGraphicInstance(m_meshInstance);
 
             m_registered = true;
         }

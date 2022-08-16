@@ -1,6 +1,6 @@
 #include "graphics/renderer/Precomp.h"
 #include "View.h"
-#include "core/Sector/Sector.h"
+#include "core/GameObject/GameObject.h"
 
 #if !VG_ENABLE_INLINE
 #include "View.inl"
@@ -56,18 +56,18 @@ namespace vg::graphics::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    void View::SetCameraSector(core::ISector * _cameraSector)
+    void View::SetCameraSector(core::IGameObject * _cameraSector)
     {
-        if ((core::Sector*)_cameraSector != m_cameraSector)
+        if ((core::IGameObject*)_cameraSector != m_cameraSector)
         {
             VG_SAFE_INCREASE_REFCOUNT(_cameraSector);
             VG_SAFE_RELEASE(m_cameraSector);
-            m_cameraSector = (core::Sector*)_cameraSector;
+            m_cameraSector = (core::GameObject*)_cameraSector;
         }
     }
 
     //--------------------------------------------------------------------------------------
-    core::ISector * View::GetCameraSector() const
+    core::IGameObject * View::GetCameraSector() const
     {
         return getCameraSector();
     }

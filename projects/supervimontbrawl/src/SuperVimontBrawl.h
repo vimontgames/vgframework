@@ -8,7 +8,7 @@ namespace vg::engine
     class IEngine;
 }
 
-class PlayerEntity;
+class Player;
 
 class SuperVimontBrawl : public vg::IProject, vg::core::Singleton<SuperVimontBrawl>
 {
@@ -34,5 +34,5 @@ class SuperVimontBrawl : public vg::IProject, vg::core::Singleton<SuperVimontBra
 
     private:
         vg::engine::IEngine *       m_engine = nullptr;
-        PlayerEntity *              m_player = nullptr;
+        Player *              m_player = nullptr;
 };

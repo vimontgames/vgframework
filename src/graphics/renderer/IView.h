@@ -4,7 +4,7 @@
 
 namespace vg::core
 {
-    class ISector;
+    class IGameObject;
 }
 
 namespace vg::graphics::renderer
@@ -27,7 +27,7 @@ namespace vg::graphics::renderer
         virtual core::float2            GetCameraNearFar    () const = 0;
         virtual float                   GetCameraFovY       () const = 0;
 
-        virtual void                    SetCameraSector     (core::ISector * _cameraSector) = 0;
-        virtual core::ISector *         GetCameraSector     () const = 0;
+        virtual void                    SetCameraSector     (core::IGameObject * _cameraSector) = 0;
+        virtual core::IGameObject *     GetCameraSector     () const = 0;
     };
 }

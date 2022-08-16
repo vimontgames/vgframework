@@ -18,7 +18,7 @@ namespace vg::core
         {
             None        = 0x0000000000000000,
             Singleton   = 0x0000000000000001,
-            Entity      = 0x0000000000000002,
+            GameObject  = 0x0000000000000002,
             Component   = 0x0000000000000004,
             Model       = 0x0000000000000008,
             Instance    = 0x0000000000000010,

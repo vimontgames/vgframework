@@ -22,7 +22,7 @@ namespace vg::engine
                         MeshComponent       (const core::string & _name, IObject * _parent);
                         ~MeshComponent      ();
 
-        void            update              (double _dt) override;
+        void            Update              (double _dt) override;
         void            onResourceLoaded    (core::IResource * _resource) override;
 
         MeshResource &  getMeshResource     () { return m_meshResource; }

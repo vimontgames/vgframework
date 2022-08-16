@@ -9,14 +9,14 @@
     <ClCompile Include="Component\Camera\CameraComponent.cpp">
       <Filter>Component\Camera</Filter>
     </ClCompile>
-    <ClCompile Include="Entity\FreeCam\FreeCamEntity.cpp">
-      <Filter>Entity\FreeCam</Filter>
-    </ClCompile>
     <ClCompile Include="Component\Mesh\MeshComponent.cpp">
       <Filter>Component\Mesh</Filter>
     </ClCompile>
     <ClCompile Include="Resource\Resource.cpp">
       <Filter>Resource</Filter>
+    </ClCompile>
+    <ClCompile Include="Entity\FreeCam\FreeCam.cpp">
+      <Filter>Entity\FreeCam</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -38,9 +38,6 @@
     </ClInclude>
     <ClInclude Include="Component\Camera\CameraComponent.h">
       <Filter>Component\Camera</Filter>
-    </ClInclude>
-    <ClInclude Include="Entity\FreeCam\FreeCamEntity.h">
-      <Filter>Entity\FreeCam</Filter>
     </ClInclude>
     <ClInclude Include="Component\Mesh\MeshComponent.h">
       <Filter>Component\Mesh</Filter>
@@ -69,6 +66,9 @@
     </ClInclude>
     <ClInclude Include="Resource\Material\MaterialResource.hpp">
       <Filter>Resource\Material</Filter>
+    </ClInclude>
+    <ClInclude Include="Entity\FreeCam\FreeCam.h">
+      <Filter>Entity\FreeCam</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

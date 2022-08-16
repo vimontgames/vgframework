@@ -6,28 +6,29 @@
 
 namespace vg::core
 {
-    class IEntity;
+    class GameObject;
 
     class Component : public IComponent
     {
     public:
-                            Component           (const core::string & _name, IObject * _parent);
-                            ~Component          ();
+                                Component           (const core::string & _name, IObject * _parent);
+                                ~Component          ();
 
-        static bool         registerProperties  (IClassDesc & _desc);
+        static bool             registerProperties  (IClassDesc & _desc);
 
-        void                update              (double _dt) { };
-        const IEntity *     getEntity           () const final;
+        void                    Update              (double _dt) { };
+        const IGameObject *     GetGameObject       () const final;
 
-        Flags               GetFlags            () const final;
-        void                SetFlags            (Flags _flags, bool _enabled) final;
+        Flags                   GetFlags            () const final;
+        void                    SetFlags            (Flags _flags, bool _enabled) final;
 
     public:
-        VG_INLINE Flags     getFlags            () const;
-        VG_INLINE void      setFlags            (Flags _flags, bool _enabled);
+        VG_INLINE Flags         getFlags            () const;
+        VG_INLINE void          setFlags            (Flags _flags, bool _enabled);
+        VG_INLINE GameObject *  getGameObject       () const;
 
     private:
-        Flags               m_flags;
+        Flags                   m_flags;
     };
 }
 

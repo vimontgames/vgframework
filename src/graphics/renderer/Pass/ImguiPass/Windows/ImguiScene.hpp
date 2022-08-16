@@ -20,12 +20,7 @@ namespace vg::graphics::renderer
                     const IScene * scene = universe->getScene(i);
                     if (nullptr != scene)
                     {
-                        if (ImGui::TreeNodeEx(scene->getName().c_str(), ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_DefaultOpen))
-                        {
-                            ISector * root = scene->getRoot();
-                            displaySector(root);
-                            ImGui::TreePop();
-                        }
+                        displayGameObject(scene->GetRoot());
                     }
                 }
             }
@@ -34,25 +29,24 @@ namespace vg::graphics::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    void ImguiScene::displaySector(ISector * root)
+    void ImguiScene::displayGameObject(IGameObject * _gameObject)
     {
-        for (uint j = 0; j < root->getChildSectorCount(); ++j)
+        //auto size = ImGui::CalcTextSize(entity->getName().c_str());
+        //if (ImGui::Selectable(entity->getName().c_str(), entity == getSelectedObject(), ImGuiSelectableFlags_SelectOnClick, size))
+        //    setSelectedObject(entity);
+
+        const auto children = _gameObject->GetChildren();
+
+        if (ImGui::TreeNodeEx(_gameObject->getName().c_str(), children.size() > 0 ? (ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_DefaultOpen) : ImGuiTreeNodeFlags_Leaf))
         {
-            ISector * sector = (ISector*)root->getChildSector(j);
-            if (ImGui::TreeNodeEx(sector->getName().c_str(), ImGuiTreeNodeFlags_None))
+            updateSelection(_gameObject);
+            
+            for (uint j = 0; j < children.size(); ++j)
             {
-                displaySector(sector);
-                ImGui::TreePop();
+                IGameObject * child = children[j];
+                displayGameObject(child);
             }
-        }
-
-        for (uint j = 0; j < root->getEntityCount(); ++j)
-        {
-            IEntity * entity = (IEntity*)root->getEntity(j);
-
-            auto size = ImGui::CalcTextSize(entity->getName().c_str());
-            if (ImGui::Selectable(entity->getName().c_str(), entity == getSelectedObject(), ImGuiSelectableFlags_SelectOnClick, size))
-                setSelectedObject(entity);
-        }
+            ImGui::TreePop();
+        }        
     }
 }

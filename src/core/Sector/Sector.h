@@ -1,5 +1,5 @@
 #pragma once
-
+/*
 #include "core/ISector.h"
 
 namespace vg::core
@@ -40,3 +40,4 @@ namespace vg::core
         vector<graphics::renderer::IGraphicInstance*>           m_graphicInstances;
     };
 }
+*/

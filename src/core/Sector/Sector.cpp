@@ -1,4 +1,5 @@
 #include "core/Precomp.h"
+/*
 #include "Sector.h"
 #include "core/Entity/Entity.h"
 #include "core/Object/AutoRegisterClass.h"
@@ -113,3 +114,4 @@ namespace vg::core
         return m_graphicInstances;
     }
 }
+*/

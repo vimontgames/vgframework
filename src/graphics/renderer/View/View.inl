@@ -19,7 +19,7 @@ namespace vg::graphics::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    VG_INLINE core::Sector * View::getCameraSector() const
+    VG_INLINE core::GameObject * View::getCameraSector() const
     {
         return m_cameraSector;
     }

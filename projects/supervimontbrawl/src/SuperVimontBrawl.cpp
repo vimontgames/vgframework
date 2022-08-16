@@ -3,7 +3,7 @@
 #include "engine/IEngine.h"
 #include "core/Kernel.h"
 #include "core/Object/AutoRegisterClass.h"
-#include "Entity/Player/PlayerEntity.h"
+#include "GameObject/Player/Player.h"
 
 using namespace vg::core;
 

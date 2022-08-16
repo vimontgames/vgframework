@@ -17,7 +17,7 @@ namespace vg::graphics::renderer
 
 namespace vg::engine
 {
-    class FreeCamEntity;
+    class FreeCam;
     class ResourceManager;
 
 	class Engine : public IEngine, public core::Singleton<Engine>
@@ -70,7 +70,6 @@ namespace vg::engine
 
     protected:
         void                                updateDt            ();
-        void                                updateEntities      (core::Sector * _sector, double _dt);
 
 	private:
         core::string                        m_projectPath;
@@ -80,7 +79,7 @@ namespace vg::engine
 		graphics::renderer::IRenderer *	    m_renderer          = nullptr;
         graphics::renderer::IView *         m_editorView        = nullptr;
         ResourceManager *                   m_resourceManager   = nullptr;
-        FreeCamEntity *                     m_freeCam           = nullptr;
+        FreeCam *                           m_freeCam           = nullptr;
 
         double                              m_dt                = 0.0f;
 	};

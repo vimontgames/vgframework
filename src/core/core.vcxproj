@@ -18,12 +18,12 @@
     <ClInclude Include="Container\HandleTable.hpp" />
     <ClInclude Include="Container\Vector.h" />
     <ClInclude Include="Core.h" />
-    <ClInclude Include="Entity\Entity.h" />
     <ClInclude Include="File\Buffer.inl" />
     <ClInclude Include="File\File.h" />
     <ClInclude Include="File\Buffer.h" />
+    <ClInclude Include="GameObject\GameObject.h" />
     <ClInclude Include="IComponent.h" />
-    <ClInclude Include="IEntity.h" />
+    <ClInclude Include="IGameObject.h" />
     <ClInclude Include="IInput.h" />
     <ClInclude Include="IInstance.h" />
     <ClInclude Include="IModel.h" />
@@ -71,8 +71,8 @@
     <ClCompile Include="CmdLine\CmdLine.cpp" />
     <ClCompile Include="Component\Component.cpp" />
     <ClCompile Include="Core.cpp" />
-    <ClCompile Include="Entity\Entity.cpp" />
     <ClCompile Include="File\File.cpp" />
+    <ClCompile Include="GameObject\GameObject.cpp" />
     <ClCompile Include="Instance\Instance.cpp" />
     <ClCompile Include="Math\Math.cpp" />
     <ClCompile Include="Model\Model.cpp" />
@@ -94,6 +94,7 @@
   <ItemGroup>
     <None Include="Component\Component.inl" />
     <None Include="Instance\Instance.inl" />
+    <None Include="Scene\Scene.inl" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>

@@ -4,7 +4,7 @@
 
 namespace vg::core
 {
-    class ISector;
+    class IGameObject;
 }
 
 namespace vg::graphics::renderer
@@ -26,14 +26,14 @@ namespace vg::engine
         CameraComponent(const core::string & _name, core::IObject * _parent);
         ~CameraComponent();
 
-        void update(double _dt) override;
+        void Update(double _dt) override;
 
-        float getFovY() const { return m_fovY; }
-        float getNear() const { return m_near; }
-        float getFar() const { return m_far; }
+        VG_INLINE float getFovY() const { return m_fovY; }
+        VG_INLINE float getNear() const { return m_near; }
+        VG_INLINE float getFar() const { return m_far; }
 
     public:
-        void setView(graphics::renderer::IView * _view, core::ISector * _sector);
+        void setView(graphics::renderer::IView * _view, core::IGameObject * _sector);
 
     private:
         graphics::renderer::IView * m_view = nullptr;

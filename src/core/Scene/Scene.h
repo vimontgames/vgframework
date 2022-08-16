@@ -4,7 +4,7 @@
 
 namespace vg::core
 {
-    class ISector;
+    class GameObject;
     class IFactory;
     class IClassDesc;
 
@@ -13,21 +13,29 @@ namespace vg::core
     public:
         using super = IScene;
 
-                        Scene               (const string & _name, IObject * _parent);
-                        ~Scene              ();
+                                Scene               (const string & _name, IObject * _parent);
+                                ~Scene              ();
 
-        const char *    getClassName() const final { return "Scene"; }
+        const char *            getClassName        () const final { return "Scene"; }
 
-        static bool     registerClass       (IFactory & _factory);
-        static bool     registerProperties  (IClassDesc & _desc);
+        static bool             registerClass       (IFactory & _factory);
+        static bool             registerProperties  (IClassDesc & _desc);
 
-        static bool     load                (IObject * _object);
-        static bool     save                (IObject * _object);
+        static bool             load                (IObject * _object);
+        static bool             save                (IObject * _object);
 
-        void            setRoot             (ISector * _sector) final;
-        ISector *       getRoot             () const final;
+        void                    SetRoot             (IGameObject * _sector) final;
+        IGameObject *           GetRoot             () const final;
+
+    public:
+        void                    setRoot             (GameObject * _sector);
+        VG_INLINE GameObject *  getRoot             () const;
 
     private:
-        ISector *       m_root              = nullptr;
+        GameObject *            m_root              = nullptr;
     };
 }
+
+#if VG_ENABLE_INLINE
+#include "Scene.inl"
+#endif

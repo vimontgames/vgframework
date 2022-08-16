@@ -69,6 +69,12 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
+    void Property::setFlags(Flags _flagsToSet, Flags _flagsToRemove)
+    {
+        flags = (Flags)((std::underlying_type<Flags>::type(flags) & ~std::underlying_type<Flags>::type(_flagsToRemove)) | (std::underlying_type<Flags>::type(_flagsToSet)));
+    }
+
+    //--------------------------------------------------------------------------------------
     u32 Property::getEnumCount() const
     {
         return enums.count();
