@@ -70,39 +70,39 @@ namespace vg::engine
     //--------------------------------------------------------------------------------------
     void ResourceManager::updateLoading(bool _async)
     {
+        lock_guard<recursive_mutex> lock(m_addResourceToLoadRecursiveMutex);
+
         auto resourcesToLoad = std::move(m_resourcesToLoad);
         auto & resourcesLoaded = _async ? m_resourcesLoadedAsync : m_resourcesLoaded;
 
-        for (uint i = 0; i < resourcesToLoad.size(); ++i)
+        // load first resource
+        if (resourcesToLoad.count() > 0)
         {
+            VG_PROFILE_CPU("loading");
             auto & info = resourcesToLoad[0];
-            
-            if (i == 0)
-            {
-                VG_PROFILE_CPU("loading");
 
-                auto it = m_resourcesMap.find(info.m_path);
-                if (m_resourcesMap.end() == it)
-                {
-                    loadOneResource(info);
-                    resourcesLoaded.push_back(info);
-                }
-                else
-                {
-                    info.m_resource->setObject(it->second->getObject());
-                    resourcesLoaded.push_back(info);
-                }
+            auto it = m_resourcesMap.find(info.m_path);
+            if (m_resourcesMap.end() == it)
+            {
+                loadOneResource(info);
+                resourcesLoaded.push_back(info);
             }
             else
             {
-                m_resourcesToLoad.push_back(resourcesToLoad[i]);
+                info.m_resource->setObject(it->second->getObject());
+                resourcesLoaded.push_back(info);
             }
         }
+
+        // load others next frame
+        for (uint i = 1; i < resourcesToLoad.count(); ++i)
+            m_resourcesToLoad.push_back(resourcesToLoad[i]);
     }
 
     //--------------------------------------------------------------------------------------
     void ResourceManager::loadResourceAsync(Resource * _resource, const string & _path, IObject * _owner)
     {
+        lock_guard<recursive_mutex> lock(m_addResourceToLoadRecursiveMutex);
         m_resourcesToLoad.emplace_back(_resource, _path, _owner);
     }
 

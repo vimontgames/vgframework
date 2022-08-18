@@ -80,6 +80,8 @@ namespace vg::graphics::driver
         const float available = float(max(totalSize - m_offsetCur, m_offsetStart)) / (1024.0f*1024.0f);
         const float total = float(totalSize) / (1024.0f*1024.0f);
 
+        VG_DEBUGPRINT("%.2f/%.2f MB available in pool ", available, total);
+
         VG_ASSERT(false, "Cannot allocate %.2f MB for upload because ring buffer is too small (available:%.2f/%.2f MB)", size, available, total);
 
         return uint_ptr(-1);

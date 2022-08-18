@@ -61,6 +61,7 @@ namespace vg::engine
         core::vector<ResourceLoadInfo>      m_resourcesLoaded;
 		core::dictionary<core::Resource*>   m_resourcesMap;
 
+        core::recursive_mutex               m_addResourceToLoadRecursiveMutex;
         core::mutex                         m_resourceLoadedAsyncMutex;
         core::vector<ResourceLoadInfo>      m_resourcesLoadedAsync;
     };
