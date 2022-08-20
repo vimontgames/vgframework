@@ -25,7 +25,7 @@ namespace vg::core
         virtual void                        onResourceLoaded    (IResource * _resource) = 0;
 
         virtual bool                        loadFromFile        (const string & _filename) = 0;
-        virtual bool                        saveToFile          (const string & _filename) = 0;
+        virtual bool                        saveToFile          (const string & _filename) const = 0;
 
 		virtual void					    setName		        (const string & _name) = 0;
 		virtual const string &			    getName		        () const = 0;

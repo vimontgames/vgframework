@@ -66,6 +66,7 @@
     <ClInclude Include="Timer\Timer.h" />
     <ClInclude Include="Types\Types.h" />
     <ClInclude Include="Universe\Universe.h" />
+    <ClInclude Include="XML\XML.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CmdLine\CmdLine.cpp" />
@@ -90,6 +91,7 @@
     <ClCompile Include="string\string.cpp" />
     <ClCompile Include="Timer\Timer.cpp" />
     <ClCompile Include="Universe\Universe.cpp" />
+    <ClCompile Include="XML\XML.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Component\Component.inl" />

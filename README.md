@@ -41,6 +41,9 @@ https://github.com/pplux/px
 stb\
 https://github.com/nothings/stb
 
+tinyXML2\
+https://github.com/leethomason/tinyxml2
+
 Vulkan Memory Allocator\
 https://github.com/GPUOpen-LibrariesAndSDKs/VulkanMemoryAllocator
 
