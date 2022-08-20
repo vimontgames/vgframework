@@ -1,12 +1,12 @@
 <Root>
     <Object class="DisplayOptions">
-        <Property type="String" name="m_name" value="DisplayOptions"/>
+        <Property type="String" name="m_name" value="Default"/>
         <Property type="Bool" name="m_toolMode" value="true"/>
         <Property type="Bool" name="m_opaque" value="true"/>
         <Property type="Bool" name="m_wireframe" value="false"/>
         <Property type="Bool" name="m_normalMaps" value="true"/>
         <Property type="Bool" name="m_albedoMaps" value="true"/>
         <Property type="EnumU32" name="m_debugDisplayMode" value="Default"/>
-        <Property type="Float4" name="m_backgroundColor" x="0.16470589" y="0.16470589" z="0.1627451" w="0"/>
+        <Property type="Float4" name="m_backgroundColor" x="0.12741315" y="0.12741315" z="0.12741315" w="0"/>
     </Object>
 </Root>

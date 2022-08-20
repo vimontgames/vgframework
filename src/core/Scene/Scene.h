@@ -21,9 +21,6 @@ namespace vg::core
         static bool             registerClass       (IFactory & _factory);
         static bool             registerProperties  (IClassDesc & _desc);
 
-        static bool             load                (IObject * _object);
-        static bool             save                (IObject * _object);
-
         void                    SetRoot             (IGameObject * _sector) final;
         IGameObject *           GetRoot             () const final;
 

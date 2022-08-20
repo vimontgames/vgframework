@@ -8,6 +8,8 @@ namespace vg::graphics::renderer
 {
     VG_AUTO_REGISTER_CLASS(DisplayOptions);
 
+    static const char * filename = "DisplayOptions.xml";
+
     //--------------------------------------------------------------------------------------
     DisplayOptions::DisplayOptions(const core::string & _name, core::IObject * _parent) :
         Object(_name, _parent)
@@ -27,13 +29,15 @@ namespace vg::graphics::renderer
     //--------------------------------------------------------------------------------------
     bool DisplayOptions::load(IObject * _object)
     {
-        return _object->loadFromXML("Default.displayoptions");
+        const auto * factory = Kernel::getFactory();
+        return factory->loadFromXML(_object, filename);
     }
 
     //--------------------------------------------------------------------------------------
     bool DisplayOptions::save(IObject * _object)
     {
-        return _object->saveToXML("Default.displayoptions");
+        const auto * factory = Kernel::getFactory();
+        return factory->saveToXML(_object, filename);
     }
 
     //--------------------------------------------------------------------------------------

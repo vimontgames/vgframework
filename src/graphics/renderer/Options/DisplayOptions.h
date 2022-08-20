@@ -29,29 +29,29 @@ namespace vg::graphics::renderer
     public:
         using super = core::Object;
 
-							DisplayOptions			(const core::string & _name, core::IObject * _parent);
+							    DisplayOptions			(const core::string & _name, core::IObject * _parent = nullptr);
 
-        const char *		getClassName			() const final { return "DisplayOptions"; }
+        const char *		    getClassName			() const final { return "DisplayOptions"; }
 
-        static bool			registerClass			(core::IFactory & _factory);
-        static bool			registerProperties		(core::IClassDesc & _desc);
+        static bool			    registerClass			(core::IFactory & _factory);
+        static bool			    registerProperties		(core::IClassDesc & _desc);
 
-        DisplayMode         getDisplayMode          () const { return m_debugDisplayMode;}
+        DisplayMode             getDisplayMode          () const { return m_debugDisplayMode;}
 
-        bool				isToolModeEnabled		() const { return m_toolMode; }
-        bool				isOpaqueEnabled			() const { return m_opaque; }
-        bool                isAlbedoMapsEnabled     () const { return m_albedoMaps; }
-        bool                isNormalMapsEnabled     () const { return m_normalMaps; }
-        bool				isWireframeEnabled		() const { return m_wireframe; }
+        bool				    isToolModeEnabled		() const { return m_toolMode; }
+        bool				    isOpaqueEnabled			() const { return m_opaque; }
+        bool                    isAlbedoMapsEnabled     () const { return m_albedoMaps; }
+        bool                    isNormalMapsEnabled     () const { return m_normalMaps; }
+        bool				    isWireframeEnabled		() const { return m_wireframe; }
 
-        bool                isDisplayMatIDEnabled   () const { return DisplayMode::MatID  == m_debugDisplayMode;}
-        bool				isDisplayNormalEnabled	() const { return DisplayMode::VSNormal == m_debugDisplayMode; }
-		bool				isDisplayUV0Enabled		() const { return DisplayMode::UV0    == m_debugDisplayMode; }
+        bool                    isDisplayMatIDEnabled   () const { return DisplayMode::MatID  == m_debugDisplayMode;}
+        bool				    isDisplayNormalEnabled	() const { return DisplayMode::VSNormal == m_debugDisplayMode; }
+		bool				    isDisplayUV0Enabled		() const { return DisplayMode::UV0    == m_debugDisplayMode; }
         
-        core::float4		getBackgroundColor		() const { return m_backgroundColor; }
+        core::float4		    getBackgroundColor		() const { return m_backgroundColor; }
 
-        static bool			load					(IObject * _object);
-        static bool			save					(IObject * _object);
+        static bool			    load					(IObject * _object);
+        static bool			    save					(IObject * _object);
 
     private:
         core::float4		m_backgroundColor   = core::float4(0, 0, 0, 0);

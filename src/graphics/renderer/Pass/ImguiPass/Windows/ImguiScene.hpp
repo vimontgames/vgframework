@@ -71,7 +71,7 @@ namespace vg::graphics::renderer
                             if (fileBrowser.showFileDialog("Save", imgui_addons::ImGuiFileBrowser::DialogMode::SAVE, ImVec2(860, 400), ".scene"))
                             {
                                 const string newFilePath = fileBrowser.selected_path;
-                                scene->saveToFile(newFilePath);
+                                factory->saveToXML(scene, newFilePath);
                             }
                             break;
                         case Close:

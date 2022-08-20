@@ -22,12 +22,6 @@ namespace vg::core
         void                        onPropertyChanged   (const IProperty & _prop) override;
         void                        onResourceLoaded    (IResource * _resource) override;
 
-        bool                        loadFromFile        (const string & _filename) override;
-        bool                        saveToFile          (const string & _filename) const override;
-
-        bool                        loadFromXML        (const string & _XMLfilename) override;
-        bool                        saveToXML           (const string & _XMLfilename) const override;
-
 		void					    setName		        (const string & _name) override;
 		const string &			    getName		        () const override;
 

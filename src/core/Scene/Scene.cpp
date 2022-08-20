@@ -2,6 +2,7 @@
 #include "Scene.h"
 #include "core/GameObject/GameObject.h"
 #include "core/Object/AutoRegisterClass.h"
+#include "core/Kernel.h"
 
 #if !VG_ENABLE_INLINE
 #include "Scene.inl"
@@ -40,22 +41,7 @@ namespace vg::core
 
         _desc.registerProperty("Scene", "m_root", (IObject**)(&((Scene*)(nullptr))->m_root), "Root", IProperty::Flags::None);
 
-        _desc.registerCallbackHelper(Scene, load, "Load", IProperty::Flags::None);
-        _desc.registerCallbackHelper(Scene, save, "Save", IProperty::Flags::SameLine);
-
         return true;
-    }
-
-    //--------------------------------------------------------------------------------------
-    bool Scene::load(IObject * _object)
-    {
-        return _object->loadFromFile(_object->getName() + ".scene");
-    }
-
-    //--------------------------------------------------------------------------------------
-    bool Scene::save(IObject * _object)
-    {
-        return _object->saveToFile(_object->getName() + ".scene");
     }
 
     //--------------------------------------------------------------------------------------

@@ -1,0 +1,6 @@
+<Root>
+    <Object class="Engine">
+        <Property type="String" name="m_name" value="engine_x64_Debug.dll"/>
+        <Property type="String" name="m_projectPath" value="projects/supervimontbrawl"/>
+    </Object>
+</Root>

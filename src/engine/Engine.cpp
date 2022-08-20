@@ -124,16 +124,20 @@ namespace vg::engine
         return AutoRegisterClassInfo::unregisterClasses(*factory);
     }
 
+    static const char * filename = "Engine.xml";
+
     //--------------------------------------------------------------------------------------
     bool Engine::load(IObject * _object)
     {
-        return _object->loadFromFile("engine.ini");
+        const auto * factory = Kernel::getFactory();
+        return factory->loadFromXML(_object, filename);
     }
 
     //--------------------------------------------------------------------------------------
     bool Engine::save(IObject * _object)
     {
-        return _object->saveToFile("engine.ini");
+        const auto * factory = Kernel::getFactory();
+        return factory->saveToXML(_object, filename);
     }
 
     //--------------------------------------------------------------------------------------

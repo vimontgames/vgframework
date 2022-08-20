@@ -103,6 +103,51 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
+    IObject * Factory::createFromXML(const string & _XMLfilename) const
+    {
+        return nullptr;
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool Factory::loadFromXML(IObject * _object, const string & _XMLfilename) const
+    {
+        const auto startLoad = Timer::getTick();
+        const auto * factory = Kernel::getFactory();
+
+        XMLDoc xmlDoc;
+        if (XMLError::XML_SUCCESS == xmlDoc.LoadFile(_XMLfilename.c_str()))
+        {
+            XMLNode * xmlRoot = xmlDoc.FirstChild();
+            if (xmlRoot != nullptr)
+            {
+                if (factory->serializeFromXML(_object, xmlDoc))
+                {
+                    VG_DEBUGPRINT("[Factory] Load and Parse XML \"%s\" ... %.2f ms\n", _XMLfilename.c_str(), Timer::getEnlapsedTime(startLoad, Timer::getTick()));
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool Factory::saveToXML(const IObject * _object, const string & _xmlFile) const
+    {
+        const auto * factory = Kernel::getFactory();
+
+        XMLDoc xmlDoc;
+        XMLNode * xmlRoot = xmlDoc.NewElement("Root");
+        xmlDoc.InsertFirstChild(xmlRoot);
+
+        if (factory->serializeToXML(_object, xmlDoc))
+            if (xmlDoc.SaveFile(_xmlFile.c_str()))
+                return true;
+
+        return false;
+    }
+
+    //--------------------------------------------------------------------------------------
     const IClassDesc * Factory::getClassDescriptor(const char * _className) const
     {
         for (uint i = 0; i < m_classes.size(); ++i)
@@ -494,7 +539,7 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
-    bool Factory::serializeToXML(XMLDoc & _xmlDoc, const IObject * _object) const
+    bool Factory::serializeToXML(const IObject * _object, XMLDoc & _xmlDoc) const
     {
         auto * parent = _xmlDoc.RootElement();
 
