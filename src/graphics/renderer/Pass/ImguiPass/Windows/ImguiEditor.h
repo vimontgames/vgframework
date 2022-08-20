@@ -2,6 +2,11 @@
 
 struct ImColor;
 
+namespace imgui_addons
+{
+    class ImGuiFileBrowser;
+}
+
 namespace vg::engine
 {
     class IEngine;
@@ -32,6 +37,7 @@ namespace vg::graphics::renderer
         static void                             displayObject       (core::IObject * _object);
 
     protected:
+        static imgui_addons::ImGuiFileBrowser & getFileBrowser      ();
         static void                             underLine           (const ImColor & _color);
         static void                             textURL             (const char * _text, const char * _url);
 

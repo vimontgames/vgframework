@@ -2,7 +2,8 @@
 #include "Object.h"
 #include "core/Kernel.h"
 #include "core/File/File.h"
-
+#include "core/XML/XML.h"
+#include "core/Timer/Timer.h"
 #include "Property.hpp"
 #include "ClassDesc.hpp"
 #include "Factory.hpp"
@@ -86,13 +87,52 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
-    bool Object::saveToFile(const string & _filename)
+    bool Object::saveToFile(const string & _filename) const
     {
         const auto * factory = Kernel::getFactory();
 
         string s;
         if (factory->serializeToString(s, this))
             if (io::writeFile(_filename, s))
+                return true;
+
+        return false;
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool Object::loadFromXML(const string & _XMLfilename)
+    {
+        const auto startLoad = Timer::getTick();
+        const auto * factory = Kernel::getFactory();
+
+        XMLDoc xmlDoc;
+        if (XMLError::XML_SUCCESS == xmlDoc.LoadFile(_XMLfilename.c_str()))
+        {
+            XMLNode * xmlRoot = xmlDoc.FirstChild();
+            if (xmlRoot != nullptr)
+            {
+                if (factory->serializeFromXML(this, xmlDoc))
+                {
+                    VG_DEBUGPRINT("[ResourceManager] XML \"%s\" loaded ... %.2f ms\n", _XMLfilename.c_str(), Timer::getEnlapsedTime(startLoad, Timer::getTick()));
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool Object::saveToXML(const string & _XMLfilename) const
+    {
+        const auto * factory = Kernel::getFactory();
+
+        XMLDoc xmlDoc;
+        XMLNode * xmlRoot = xmlDoc.NewElement("Root");
+        xmlDoc.InsertFirstChild(xmlRoot);
+
+        if (factory->serializeToXML(xmlDoc, this))
+            if (xmlDoc.SaveFile(_XMLfilename.c_str()))
                 return true;
 
         return false;

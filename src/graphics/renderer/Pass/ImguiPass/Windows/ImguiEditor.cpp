@@ -12,7 +12,6 @@
 #include "ImguiEditor.h"
 #include "graphics/renderer/Renderer.h"
 #include "graphics/renderer/Imgui/imguiAdapter.h"
-
 #include "ImGui-Addons/FileBrowser/ImGuiFileBrowser.cpp"
 
 using namespace vg::core;
@@ -20,8 +19,14 @@ using namespace vg::core;
 namespace vg::graphics::renderer
 {
     static const uint labelWidth = 14;
-    static imgui_addons::ImGuiFileBrowser file_dialog;
     core::vector<core::IObject*> ImguiEditor::s_selection;
+
+    //--------------------------------------------------------------------------------------
+    imgui_addons::ImGuiFileBrowser & ImguiEditor::getFileBrowser()
+    {
+        static imgui_addons::ImGuiFileBrowser g_imguiFileBrower;
+        return g_imguiFileBrower;
+    }
 
     //--------------------------------------------------------------------------------------
     ImguiEditor::ImguiEditor(const string & _name, Flags _flags) :
@@ -442,9 +447,10 @@ namespace vg::graphics::renderer
 
                 if (asBool(IProperty::Flags::IsFolder & flags))
                 {
-                    if (file_dialog.showFileDialog("Select folder", imgui_addons::ImGuiFileBrowser::DialogMode::SELECT, ImVec2(700, 310)))
+                    auto & fileBrowser = getFileBrowser();
+                    if (fileBrowser.showFileDialog("Select folder", imgui_addons::ImGuiFileBrowser::DialogMode::SELECT, ImVec2(860, 400)))
                     {
-                        const string newFolder = io::getRelativePath(file_dialog.selected_path);
+                        const string newFolder = io::getRelativePath(fileBrowser.selected_path);
 
                         if (newFolder != *pString)
                         {
@@ -469,7 +475,7 @@ namespace vg::graphics::renderer
         case IProperty::Type::ObjectVector:
         {
             const uint sizeOf = _prop->getValue();
-            const size_t count = (((vector<u8>*)(uint_ptr(_object) + offset))->_Mylast() - ((vector<u8>*)(uint_ptr(_object) + offset))->_Myfirst()) / sizeOf;
+            const size_t count = (((vector<u8>*)(uint_ptr(_object) + offset))->end() - ((vector<u8>*)(uint_ptr(_object) + offset))->begin()) / sizeOf;
             const byte * data = ((vector<u8>*)(uint_ptr(_object) + offset))->data();
 
             string treeNodeName = (string)displayName + " (" + to_string(count) + ")";
@@ -679,7 +685,7 @@ namespace vg::graphics::renderer
         case IProperty::Type::ResourceVector:
         {
             const uint sizeOf = _prop->getValue();
-            const size_t count = (((vector<u8>*)(uint_ptr(_object) + offset))->_Mylast() - ((vector<u8>*)(uint_ptr(_object) + offset))->_Myfirst()) / sizeOf;
+            const size_t count = (((vector<u8>*)(uint_ptr(_object) + offset))->end() - ((vector<u8>*)(uint_ptr(_object) + offset))->begin()) / sizeOf;
             const byte * data = ((vector<u8>*)(uint_ptr(_object) + offset))->data();
 
             string treeNodeName = (string)displayName + " (" + to_string(count) + ")";
@@ -724,8 +730,6 @@ namespace vg::graphics::renderer
             _object->onPropertyChanged(*_prop);
     }
 
-    static core::IResource * editedResource = nullptr;
-
     //--------------------------------------------------------------------------------------
     bool ImguiEditor::displayResource(core::IResource * _resource)
     {
@@ -750,7 +754,6 @@ namespace vg::graphics::renderer
         {
             ImGui::OpenPopup(openFileDialogName.c_str());
             open = false;
-            editedResource = _resource;
         }
 
         // build extension list
@@ -767,9 +770,10 @@ namespace vg::graphics::renderer
         if (ext == "")
             ext = "*.*";
 
-        if (file_dialog.showFileDialog(openFileDialogName.c_str(), imgui_addons::ImGuiFileBrowser::DialogMode::OPEN, ImVec2(700, 310), ext.c_str()))
+        auto & fileBrowser = getFileBrowser();
+        if (fileBrowser.showFileDialog(openFileDialogName.c_str(), imgui_addons::ImGuiFileBrowser::DialogMode::OPEN, ImVec2(860, 400), ext.c_str()))
         {
-            const string newFilePath = file_dialog.selected_path;
+            const string newFilePath = fileBrowser.selected_path;
             if (_resource->getPath() != newFilePath)
             {
                 _resource->setPath(newFilePath);

@@ -1257,4 +1257,14 @@ namespace imgui_addons
             free(real_path);
     }
     #endif // OSWIN
+
+    void ImGuiFileBrowser::setPath(const std::string & _path)
+    {
+        current_path = _path;
+    }
+
+    void ImGuiFileBrowser::setFilename(const std::string & _filename)
+    {
+        strcpy(input_fn, _filename.c_str());
+    }
 }

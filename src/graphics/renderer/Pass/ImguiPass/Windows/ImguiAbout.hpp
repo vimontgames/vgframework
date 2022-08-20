@@ -94,6 +94,7 @@ namespace vg::graphics::renderer
                 { "optick",                 "",                 "https://github.com/bombomby/optick" },
                 { "px_sched",               "",                 "https://github.com/pplux/px" },
                 { "stb_image",              "",                 "https://github.com/nothings/stb" },
+                { "tinyXML2",               "e45d9d1",          "https://github.com/leethomason/tinyxml2" },
                 { "VulkanMemoryAllocator",  "",                 "https://github.com/GPUOpen-LibrariesAndSDKs/VulkanMemoryAllocator" },
                 { "WinPixEventRuntime",     "1.0.200127001",    "https://www.nuget.org/packages/WinPixEventRuntime" },
             };

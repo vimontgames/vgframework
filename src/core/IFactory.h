@@ -1,6 +1,7 @@
 #pragma once
 
 #include "IClassDesc.h"
+#include "XML/XML.h"
 
 namespace vg::core
 {
@@ -41,6 +42,9 @@ namespace vg::core
 
         virtual bool                 serializeFromString     (IObject * _object, const string & _in) const = 0;
         virtual bool                 serializeToString       (string & _out, const IObject * _object) const = 0;
+
+        virtual bool                 serializeFromXML       (IObject * _object, XMLDoc & _xmlDoc) const = 0;
+        virtual bool                 serializeToXML         (XMLDoc & _xmlDoc, const IObject * _object) const = 0;
     };
 
     #define CreateFactoryObject(type, name, parent) Kernel::getFactory()->createObject(#type, name, parent)    

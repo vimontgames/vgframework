@@ -33,6 +33,8 @@ namespace imgui_addons
             std::string selected_path;
             std::string ext;    // Store the saved file extension
 
+            void setPath(const std::string & _path);
+            void setFilename(const std::string & _path);
 
         private:
             struct Info

@@ -21,6 +21,9 @@ namespace vg::core
         bool                    serializeFromString     (IObject * _object, const string & _in) const final;
         bool                    serializeToString       (string & _out, const IObject * _object) const final;
 
+        bool                    serializeFromXML        (IObject * _object, XMLDoc & _xmlDoc) const final;
+        bool                    serializeToXML          (XMLDoc & _xmlDoc, const IObject * _object) const final;
+
     private:
         core::vector<ClassDesc> m_classes;
     };    

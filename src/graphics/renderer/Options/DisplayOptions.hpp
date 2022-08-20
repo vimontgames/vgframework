@@ -27,13 +27,13 @@ namespace vg::graphics::renderer
     //--------------------------------------------------------------------------------------
     bool DisplayOptions::load(IObject * _object)
     {
-        return _object->loadFromFile("displayoptions.ini");
+        return _object->loadFromXML("Default.displayoptions");
     }
 
     //--------------------------------------------------------------------------------------
     bool DisplayOptions::save(IObject * _object)
     {
-        return _object->saveToFile("displayoptions.ini");
+        return _object->saveToXML("Default.displayoptions");
     }
 
     //--------------------------------------------------------------------------------------

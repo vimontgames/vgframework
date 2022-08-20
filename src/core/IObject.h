@@ -27,6 +27,9 @@ namespace vg::core
         virtual bool                        loadFromFile        (const string & _filename) = 0;
         virtual bool                        saveToFile          (const string & _filename) const = 0;
 
+        virtual bool                        loadFromXML         (const string & _XMLfilename) = 0;
+        virtual bool                        saveToXML           (const string & _XMLfilename) const = 0;
+
 		virtual void					    setName		        (const string & _name) = 0;
 		virtual const string &			    getName		        () const = 0;
 
