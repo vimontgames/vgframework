@@ -4,4 +4,5 @@
 namespace vg::core
 {
     using XMLDoc = tinyxml2::XMLDocument;
+    using XMLElem = tinyxml2::XMLElement;
 }

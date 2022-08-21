@@ -23,7 +23,8 @@ namespace vg::core
         super::registerProperties(_desc);
 
         _desc.getPropertyByName("m_name")->setFlags(IProperty::Flags::None, IProperty::Flags::Hidden);
-        _desc.registerPropertyObjectPointerVectorHelper(GameObject, m_components, "Components", IProperty::Flags::None);
+        _desc.registerPropertyObjectRefVectorHelper(GameObject, m_components, "Components", IProperty::Flags::None);
+        _desc.registerPropertyObjectRefVectorHelper(GameObject, m_children, "Children", IProperty::Flags::Hidden);
 
         return true;
     }
@@ -88,6 +89,7 @@ namespace vg::core
         VG_ASSERT(m_children.end() == std::find(m_children.begin(), m_children.end(), _gameObject));
         VG_SAFE_INCREASE_REFCOUNT(_gameObject);
         m_children.push_back((GameObject*)_gameObject);
+        _gameObject->setParent(this);
     }
 
     //--------------------------------------------------------------------------------------

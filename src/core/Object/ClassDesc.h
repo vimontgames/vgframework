@@ -18,7 +18,7 @@ namespace vg::core
         void                                registerProperty(const char * _className, const char * _propertyName, string * _offset, const char * _displayName, IProperty::Flags _flags) final;
         void                                registerProperty(const char * _className, const char * _propertyName, IResource ** _offset, const char * _displayName, IProperty::Flags _flags) final;
         void                                registerProperty(const char * _className, const char * _propertyName, IObject ** _offset, const char * _displayName, IProperty::Flags _flags) final;
-        void                                registerProperty(const char * _className, const char * _propertyName, IProperty::Func _funcPtr, const char * _displayName, IProperty::Flags _flags) final;
+        void                                registerProperty(const char * _className, const char * _propertyName, IProperty::Callback _funcPtr, const char * _displayName, IProperty::Flags _flags) final;
         void                                registerProperty(const char * _className, const char * _propertyName, core::u32 _sizeOf, void * _offset, const char * _displayName = nullptr, IProperty::Flags _flags = IProperty::Flags::None) final;
         void                                registerProperty(const char * _className, const char * _propertyName, vector<IObject*>* _offset, const char * _displayName = nullptr, IProperty::Flags _flags = IProperty::Flags::None) final;
         void                                registerProperty(const char * _className, const char * _propertyName, dictionary<core::IObject*>* _offset, const char * _displayName = nullptr, IProperty::Flags _flags = IProperty::Flags::None) final;

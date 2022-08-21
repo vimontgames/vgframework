@@ -2,11 +2,8 @@
 #include "Object.h"
 #include "core/Kernel.h"
 #include "core/File/File.h"
-#include "core/XML/XML.h"
-#include "core/Timer/Timer.h"
 #include "Property.hpp"
 #include "ClassDesc.hpp"
-#include "Factory.hpp"
 #include "AutoRegisterClass.hpp"
 
 namespace vg::core

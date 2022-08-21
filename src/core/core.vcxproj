@@ -51,7 +51,6 @@
     <ClInclude Include="Object\Property.hpp" />
     <ClInclude Include="Object\Object.h" />
     <ClInclude Include="Object\Factory.h" />
-    <ClInclude Include="Object\Factory.hpp" />
     <ClInclude Include="Plugin\Plugin.h" />
     <ClInclude Include="Pool\IndexPool.h" />
     <ClInclude Include="Pool\Pool.h" />
@@ -60,7 +59,6 @@
     <ClInclude Include="Scene\Scene.h" />
     <ClInclude Include="Scheduler\Job.h" />
     <ClInclude Include="Scheduler\Scheduler.h" />
-    <ClInclude Include="Sector\Sector.h" />
     <ClInclude Include="Singleton\Singleton.h" />
     <ClInclude Include="string\string.h" />
     <ClInclude Include="Timer\Timer.h" />
@@ -77,6 +75,7 @@
     <ClCompile Include="Instance\Instance.cpp" />
     <ClCompile Include="Math\Math.cpp" />
     <ClCompile Include="Model\Model.cpp" />
+    <ClCompile Include="Object\Factory.cpp" />
     <ClCompile Include="Object\Object.cpp" />
     <ClCompile Include="Plugin\Plugin.cpp" />
     <ClCompile Include="Precomp.cpp">
@@ -87,7 +86,6 @@
     <ClCompile Include="Scene\Scene.cpp" />
     <ClCompile Include="Scheduler\Job.cpp" />
     <ClCompile Include="Scheduler\Scheduler.cpp" />
-    <ClCompile Include="Sector\Sector.cpp" />
     <ClCompile Include="string\string.cpp" />
     <ClCompile Include="Timer\Timer.cpp" />
     <ClCompile Include="Universe\Universe.cpp" />

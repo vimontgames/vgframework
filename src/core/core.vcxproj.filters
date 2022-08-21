@@ -52,9 +52,6 @@
     <Filter Include="Scene">
       <UniqueIdentifier>{a8e699be-7052-41c2-8310-8e3b55f2d9ab}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Sector">
-      <UniqueIdentifier>{3216c643-abe6-4f12-9d27-da7cd5106a91}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Universe">
       <UniqueIdentifier>{6761ac01-3b2d-4073-b7da-51b6c97941f3}</UniqueIdentifier>
     </Filter>
@@ -142,9 +139,6 @@
       <Filter>Scene</Filter>
     </ClInclude>
     <ClInclude Include="ISector.h" />
-    <ClInclude Include="Sector\Sector.h">
-      <Filter>Sector</Filter>
-    </ClInclude>
     <ClInclude Include="Object\AutoRegisterClass.h">
       <Filter>Object</Filter>
     </ClInclude>
@@ -173,9 +167,6 @@
     </ClInclude>
     <ClInclude Include="IFactory.h" />
     <ClInclude Include="Object\Factory.h">
-      <Filter>Object</Filter>
-    </ClInclude>
-    <ClInclude Include="Object\Factory.hpp">
       <Filter>Object</Filter>
     </ClInclude>
     <ClInclude Include="Container\Vector.h">
@@ -242,9 +233,6 @@
     <ClCompile Include="Scene\Scene.cpp">
       <Filter>Scene</Filter>
     </ClCompile>
-    <ClCompile Include="Sector\Sector.cpp">
-      <Filter>Sector</Filter>
-    </ClCompile>
     <ClCompile Include="Universe\Universe.cpp">
       <Filter>Universe</Filter>
     </ClCompile>
@@ -253,6 +241,9 @@
     </ClCompile>
     <ClCompile Include="XML\XML.cpp">
       <Filter>XML</Filter>
+    </ClCompile>
+    <ClCompile Include="Object\Factory.cpp">
+      <Filter>Object</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

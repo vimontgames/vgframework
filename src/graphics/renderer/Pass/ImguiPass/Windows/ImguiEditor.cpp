@@ -87,7 +87,7 @@ namespace vg::graphics::renderer
     //--------------------------------------------------------------------------------------
     string ImguiEditor::getButtonLabel(string _baseName, IObject * _object)
     {
-        return _baseName + "##" + _object->getClassName() + "##" + _object->getName();
+        return _baseName + "##" + _object->getClassName() + "##" + to_string((u64)&_object); // TODO: Object GUID?
     }
 
     //--------------------------------------------------------------------------------------
@@ -300,6 +300,7 @@ namespace vg::graphics::renderer
     void ImguiEditor::displayProperty(const IProperty * _prop, core::IObject * _object)
     {
         VG_ASSERT(nullptr != _prop);
+        const auto * factory = Kernel::getFactory();
 
         const auto type = _prop->getType();
         const auto name = _prop->getName();
@@ -328,7 +329,7 @@ namespace vg::graphics::renderer
 
         case IProperty::Type::Bool:
         {
-            bool * pBool = (bool*)(uint_ptr(_object) + offset);
+            bool * pBool = _prop->GetPropertyBool(_object);
             changed |= ImGui::Checkbox(getPropertyLabel(_prop).c_str(), pBool);
         };
         break;
@@ -386,7 +387,7 @@ namespace vg::graphics::renderer
 
         case IProperty::Type::Float:
         {
-            float * pFloat = (float*)(uint_ptr(_object) + offset);
+            float * pFloat = _prop->GetPropertyFloat(_object);
 
             if (asBool(IProperty::Flags::HasRange & flags))
                 changed |= ImGui::SliderFloat(displayName, pFloat, _prop->getRange().x, _prop->getRange().y);
@@ -395,9 +396,20 @@ namespace vg::graphics::renderer
         };
         break;
 
-        case IProperty::Type::Matrix44:
+        case IProperty::Type::Float4:
         {
-            float * pFloat4x4 = (float*)(uint_ptr(_object) + offset);
+            float * pFloat4 = (float*)_prop->GetPropertyFloat4(_object);
+
+            if (asBool(IProperty::Flags::Color & flags))
+                changed |= ImGui::ColorEdit4(displayName, pFloat4);
+            else
+                changed |= ImGui::SliderFloat4(displayName, pFloat4, 0.0f, 1.0f);
+        };
+        break;
+
+        case IProperty::Type::Float4x4:
+        {
+            float * pFloat4x4 = (float*)_prop->GetPropertyFloat4x4(_object);
 
             changed |= ImGui::InputFloat4(((string)displayName + ".I").c_str(), pFloat4x4 + 0, "%.2f", imguiInputTextflags);
             changed |= ImGui::InputFloat4(((string)displayName + ".J").c_str(), pFloat4x4 + 4, "%.2f", imguiInputTextflags);
@@ -407,22 +419,11 @@ namespace vg::graphics::renderer
         }
         break;
 
-        case IProperty::Type::Float4:
-        {
-            float * pFloat4 = (float*)(uint_ptr(_object) + offset);
-
-            if (asBool(IProperty::Flags::Color & flags))
-                changed |= ImGui::ColorEdit4(displayName, pFloat4);
-            else
-                changed |= ImGui::SliderFloat4(displayName, pFloat4, 0.0f, 1.0f);
-        };
-        break;
-
         case IProperty::Type::String:
         {
             bool selectPath = false;
 
-            string * pString = (string*)(uint_ptr(_object) + offset);
+            string * pString = _prop->GetPropertyString(_object);
 
             char buffer[1024];
             sprintf_s(buffer, pString->c_str());
@@ -459,13 +460,15 @@ namespace vg::graphics::renderer
                         }
                     }
                 }
+
+                //ImGui::SetKeyboardFocusHere(-1); // Auto focus previous widget
             }
         }
         break;
 
-        case IProperty::Type::Function:
+        case IProperty::Type::Callback:
         {
-            IProperty::Func pFunc = (IProperty::Func)offset;
+            IProperty::Callback pFunc = _prop->GetPropertyCallback();
 
             if (ImGui::Button(displayName))
                 pFunc(_object);
@@ -474,9 +477,9 @@ namespace vg::graphics::renderer
 
         case IProperty::Type::ObjectVector:
         {
-            const uint sizeOf = _prop->getValue();
-            const size_t count = (((vector<u8>*)(uint_ptr(_object) + offset))->end() - ((vector<u8>*)(uint_ptr(_object) + offset))->begin()) / sizeOf;
-            const byte * data = ((vector<u8>*)(uint_ptr(_object) + offset))->data();
+            const uint sizeOf = _prop->getSizeOf();
+            const size_t count = _prop->GetPropertyObjectVectorCount(_object);
+            const byte * data = _prop->GetPropertyObjectVectorData(_object);
 
             string treeNodeName = (string)displayName + " (" + to_string(count) + ")";
 
@@ -499,10 +502,10 @@ namespace vg::graphics::renderer
         }
         break;
 
-        case IProperty::Type::ObjectPointerVector:
+        case IProperty::Type::ObjectRefVector:
         {
-            vector<IObject*> * vec = (vector<IObject*>*)(uint_ptr(_object) + offset);
-            const uint count = (uint)vec->size();
+            auto * vec = _prop->GetPropertyObjectRefVector(_object);
+            const uint count = vec->count();
 
             string treeNodeName = (string)displayName + " (" + to_string(count) + ")";
 
@@ -546,9 +549,9 @@ namespace vg::graphics::renderer
         }
         break;
 
-        case IProperty::Type::ObjectPointerDictionary:
+        case IProperty::Type::ObjectRefDictionary:
         {
-            dictionary<IObject*> * dic = (dictionary<IObject*>*)(uint_ptr(_object) + offset);
+            dictionary<IObject*> * dic = _prop->GetPropertyObjectRefDictionary(_object);
             const uint count = (uint)dic->size();
 
             string treeNodeName = (string)displayName + " (" + to_string(count) + ")";
@@ -574,9 +577,9 @@ namespace vg::graphics::renderer
         }
         break;
 
-        case IProperty::Type::ObjectPointer:
+        case IProperty::Type::ObjectRef:
         {
-            IObject * pObject = *(IObject**)(uint_ptr(_object) + offset);
+            IObject * pObject = _prop->GetPropertyObjectRef(_object);
 
             string treeNodeName;
 
@@ -684,9 +687,9 @@ namespace vg::graphics::renderer
 
         case IProperty::Type::ResourceVector:
         {
-            const uint sizeOf = _prop->getValue();
-            const size_t count = (((vector<u8>*)(uint_ptr(_object) + offset))->end() - ((vector<u8>*)(uint_ptr(_object) + offset))->begin()) / sizeOf;
-            const byte * data = ((vector<u8>*)(uint_ptr(_object) + offset))->data();
+            const uint sizeOf = _prop->getSizeOf();
+            const size_t count = _prop->GetPropertyResourceVectorCount(_object);
+            const byte * data = _prop->GetPropertyResourceVectorData(_object);
 
             string treeNodeName = (string)displayName + " (" + to_string(count) + ")";
 
@@ -707,9 +710,6 @@ namespace vg::graphics::renderer
                         ImGui::Unindent();
                         ImGui::TreePop();
                     }
-
-                    //if (pResource->getObject())
-                    //    displayObject(pResource->getObject());
                 }
                 ImGui::Unindent();
             }
@@ -736,7 +736,7 @@ namespace vg::graphics::renderer
         bool changed = false;
         IObject * pObject = _resource->getObject();
 
-        bool open = false;// , save = false;
+        bool open = false;
 
         char buffer[1024];
         sprintf_s(buffer, _resource->getPath().c_str());

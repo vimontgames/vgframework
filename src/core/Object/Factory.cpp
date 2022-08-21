@@ -1,6 +1,10 @@
+#include "core/Precomp.h"
 #include "Factory.h"
 #include "core/Math/Math.h"
 #include "core/IResource.h"
+#include "core/XML/XML.h"
+#include "core/Timer/Timer.h"
+#include "core/Kernel.h"
 
 using namespace tinyxml2;
 
@@ -22,10 +26,10 @@ namespace vg::core
         VG_DEBUGPRINT("[ObjectFactory] Register class \"%s\"\n", _className);
 
         ClassDesc classDesc;
-                  classDesc.name = _className;
-                  classDesc.displayName = _displayName ? _displayName : _className;
-                  classDesc.flags = _flags;
-                  classDesc.createFunc = _createFunc;
+        classDesc.name = _className;
+        classDesc.displayName = _displayName ? _displayName : _className;
+        classDesc.flags = _flags;
+        classDesc.createFunc = _createFunc;
 
         m_classes.push_back(classDesc);
 
@@ -235,85 +239,85 @@ namespace vg::core
             {
                 switch (type)
                 {
-                    default:
-                        VG_ASSERT_ENUM_NOT_IMPLEMENTED(type);
+                default:
+                    VG_ASSERT_ENUM_NOT_IMPLEMENTED(type);
                     break;
 
-                    case IProperty::Type::Resource:
+                case IProperty::Type::Resource:
+                {
+                    IResource * pResource = prop->GetPropertyResource(_object);
+                    pResource->setPath(it->second.substr(1, it->second.length() - 2));
+                }
+                break;
+
+                case IProperty::Type::EnumU32:
+                {
+                    u32 * pEnum = prop->GetPropertyUint32(_object);
+
+                    string enumValName = it->second.substr(1, it->second.length() - 2);
+                    u32 enumVal = 0;
+
+                    for (uint q = p; q < desc->getPropertyCount(); ++q)
                     {
-                        IResource * pResource = (IResource*)(uint_ptr(_object) + offset);
-                        pResource->setPath(it->second.substr(1, it->second.length() - 2));
-                    }
-                    break;
+                        const auto & enumprop = desc->getPropertyByIndex(q);
 
-                    case IProperty::Type::EnumU32:
-                    {
-                        u32 * pEnum = (u32*)(uint_ptr(_object) + offset);
-
-                        string enumValName = it->second.substr(1, it->second.length() - 2);
-                        u32 enumVal = 0;
-
-                        for (uint q = p; q < desc->getPropertyCount(); ++q)
+                        if (offset == enumprop->getOffset())
                         {
-                            const auto & enumprop = desc->getPropertyByIndex(q);
-
-                            if (offset == enumprop->getOffset())
+                            if (enumValName == enumprop->getDisplayName())
                             {
-                                if (enumValName == enumprop->getDisplayName())
-                                {
-                                    enumVal = enumprop->getValue();
-                                    break;
-                                }
+                                enumVal = enumprop->getSizeOf();
+                                break;
                             }
                         }
-
-                        *pEnum = enumVal;
                     }
+
+                    *pEnum = enumVal;
+                }
+                break;
+
+                case IProperty::Type::Callback:
                     break;
 
-                    case IProperty::Type::Function:
-                        break;
+                case IProperty::Type::Bool:
+                {
+                    bool * pBool = prop->GetPropertyBool(_object);
+                    *pBool = (!strcmp(it->second.c_str(), "true") || !strcmp(it->second.c_str(), "TRUE") || !strcmp(it->second.c_str(), "1")) ? true : false;
+                }
+                break;
 
-                    case IProperty::Type::Bool:
+                case IProperty::Type::String:
+                {
+                    string * pString = prop->GetPropertyString(_object);
+                    *pString = it->second.substr(1, it->second.length() - 2);
+                }
+                break;
+
+                case IProperty::Type::Float4:
+                {
+                    float4 * pFloat4 = prop->GetPropertyFloat4(_object);
+                    float f[4] = { 0.0f, 0.0f, 0.0f, 0.0f };
+
+                    auto beginFloat4 = _in.find("{", offset);
+                    if (string::npos != beginFloat4)
                     {
-                        bool * pBool = (bool*)(uint_ptr(_object) + offset);
-                        *pBool = (!strcmp(it->second.c_str(), "true") || !strcmp(it->second.c_str(), "TRUE") || !strcmp(it->second.c_str(), "1")) ? true : false;
-                    }
-                    break;
+                        auto cur = beginFloat4;
 
-                    case IProperty::Type::String:
-                    {
-                        string * pString = (string*)(uint_ptr(_object) + offset);
-                        *pString = it->second.substr(1, it->second.length()-2);
-                    }
-                    break;
-
-                    case IProperty::Type::Float4:
-                    {
-                        float4 * pFloat4 = (float4*)(uint_ptr(_object) + offset);
-                        float f[4] = {0.0f, 0.0f, 0.0f, 0.0f};
-
-                        auto beginFloat4 = _in.find("{", offset);
-                        if (string::npos != beginFloat4)
+                        auto endFloat4 = _in.find("}", cur);
+                        if (string::npos != endFloat4)
                         {
-                            auto cur = beginFloat4;
-
-                            auto endFloat4 = _in.find("}", cur);
-                            if (string::npos != endFloat4)
+                            for (uint i = 0; i < 4; ++i)
                             {
-                                for (uint i = 0; i < 4; ++i)
-                                {
-                                    auto endFloat = min(_in.find(",", cur), endFloat4);
-                                    const string val = _in.substr(cur+1, endFloat - cur-1);
-                                    f[i] = stof(val);
-                                    cur = endFloat+1;
-                                }
+                                auto endFloat = min(_in.find(",", cur), endFloat4);
+                                const string val = _in.substr(cur + 1, endFloat - cur - 1);
+                                f[i] = stof(val);
+                                cur = endFloat + 1;
                             }
                         }
-
-                        *pFloat4 = float4(f[0], f[1], f[2], f[3]);
                     }
-                    break;
+
+                    *pFloat4 = float4(f[0], f[1], f[2], f[3]);
+                }
+                break;
                 }
             }
         }
@@ -330,7 +334,7 @@ namespace vg::core
         const auto * classDesc = getClassDescriptor(className);
 
         uint_ptr curOffset = (uint_ptr)-1;
-        
+
         for (uint p = 0; p < classDesc->getPropertyCount(); ++p)
         {
             const auto & prop = classDesc->getPropertyByIndex(p);
@@ -345,72 +349,72 @@ namespace vg::core
             curOffset = offset;
 
             string value;
-        
+
             switch (type)
             {
-                default:
-                    VG_ASSERT_ENUM_NOT_IMPLEMENTED(type);
-                    break;
-
-                case IProperty::Type::ObjectPointer:
-                {
-                    IObject * pObject = *(IObject**)(uint_ptr(_object) + offset);
-                    _out += (string)name + "=";
-                    serializeToString(_out, pObject);
-                }
+            default:
+                VG_ASSERT_ENUM_NOT_IMPLEMENTED(type);
                 break;
 
-                case IProperty::Type::Resource:
+            case IProperty::Type::ObjectRef:
+            {
+                IObject * pObject = prop->GetPropertyObjectRef(_object);
+                _out += (string)name + "=";
+                serializeToString(_out, pObject);
+            }
+            break;
+
+            case IProperty::Type::Resource:
+            {
+                IResource * pResource = prop->GetPropertyResource(_object);
+                value = "\"" + pResource->getPath() + "\"";
+            }
+            break;
+
+            case IProperty::Type::Callback:
+                continue;
+
+            case IProperty::Type::EnumFlagsU32:
+            {
+                u32 * pEnum = prop->GetPropertyUint32(_object);
+                value = to_string(*pEnum);
+            };
+
+            case IProperty::Type::EnumU32:
+            {
+                u32 * pEnum = prop->GetPropertyUint32(_object);
+
+                string enumValName = "";
+
+                for (uint q = p; q < classDesc->getPropertyCount(); ++q)
                 {
-                    IResource * pResource = (IResource*)(uint_ptr(_object) + offset);
-                    value = "\""+ pResource->getPath() + "\"";
-                }
-                break;
+                    const auto & enumprop = classDesc->getPropertyByIndex(q);
 
-                case IProperty::Type::Function:
-                    continue;
-
-                case IProperty::Type::EnumFlagsU32:
-                {
-                    u32 * pEnum = (u32*)(uint_ptr(_object) + offset);
-                    value = to_string(*pEnum);
-                };
-
-                case IProperty::Type::EnumU32:
-                {
-                    u32 * pEnum = (u32*)(uint_ptr(_object) + offset);
-
-                    string enumValName = "";
-
-                    for (uint q = p; q < classDesc->getPropertyCount(); ++q)
+                    if (offset == enumprop->getOffset() && *pEnum == enumprop->getSizeOf())
                     {
-                        const auto & enumprop = classDesc->getPropertyByIndex(q);
-
-                        if (offset == enumprop->getOffset() && *pEnum == enumprop->getValue())
-                        {
-                            enumValName = enumprop->getDisplayName();
-                            break;
-                        }
+                        enumValName = enumprop->getDisplayName();
+                        break;
                     }
-
-                    value = "\"" + enumValName + "\"";
                 }
+
+                value = "\"" + enumValName + "\"";
+            }
+            break;
+
+            case IProperty::Type::Bool:
+                value = *prop->GetPropertyBool(_object) ? "true" : "false";
                 break;
 
-                case IProperty::Type::Bool:
-                    value = *(bool*)(uint_ptr(_object) + offset) ? "true" : "false";
-                    break;
-
-                case IProperty::Type::String:
-                    value = "\"" + *(string*)(uint_ptr(_object) + offset) + "\"";
-                    break;
-
-                case IProperty::Type::Float4:
-                {
-                    float4 * v = (float4*)(uint_ptr(_object) + offset);
-                    value = "{" + to_string(v->x) + ", " + to_string(v->y) + ", " + to_string(v->z) + ", " + to_string(v->w) + "}";
-                }
+            case IProperty::Type::String:
+                value = "\"" + *prop->GetPropertyString(_object) + "\"";
                 break;
+
+            case IProperty::Type::Float4:
+            {
+                float4 * v = prop->GetPropertyFloat4(_object);
+                value = "{" + to_string(v->x) + ", " + to_string(v->y) + ", " + to_string(v->z) + ", " + to_string(v->w) + "}";
+            }
+            break;
             }
 
             _out += (string)name + "=" + value + "\n";
@@ -468,59 +472,59 @@ namespace vg::core
 
                                     switch (type)
                                     {
-                                        default:
-                                            VG_ASSERT_ENUM_NOT_IMPLEMENTED(type);
-                                            break;
-
-                                        case IProperty::Type::String:
-                                        {
-                                            const XMLAttribute * xmlValue = xmlPropElem->FindAttribute("value");
-                                            if (nullptr != xmlValue)
-                                            {
-                                                string * pString = (string*)(uint_ptr(_object) + offset);
-                                                *pString = xmlValue->Value();
-                                            }
-                                        }
+                                    default:
+                                        VG_ASSERT_ENUM_NOT_IMPLEMENTED(type);
                                         break;
 
-                                        case IProperty::Type::Bool:
+                                    case IProperty::Type::String:
+                                    {
+                                        const XMLAttribute * xmlValue = xmlPropElem->FindAttribute("value");
+                                        if (nullptr != xmlValue)
                                         {
-                                            const XMLAttribute * xmlValue = xmlPropElem->FindAttribute("value");
-                                            if (nullptr != xmlValue)
-                                            {
-                                                bool * pBool = (bool*)(uint_ptr(_object) + offset);
-                                                *pBool = xmlValue->BoolValue();
-                                            }
+                                            string * pString = (string*)(uint_ptr(_object) + offset);
+                                            *pString = xmlValue->Value();
                                         }
-                                        break;
+                                    }
+                                    break;
 
-                                        case IProperty::Type::Float4:
+                                    case IProperty::Type::Bool:
+                                    {
+                                        const XMLAttribute * xmlValue = xmlPropElem->FindAttribute("value");
+                                        if (nullptr != xmlValue)
                                         {
-                                            float * pFloat4 = (float*)(uint_ptr(_object) + offset);
-                                            const char * values[] = {"x", "y", "z", "w"};
-                                            for (uint i = 0; i < countof(values); ++i)
-                                            {
-                                                const XMLAttribute * xmlValue = xmlPropElem->FindAttribute(values[i]);
-                                                if (nullptr != xmlValue)
-                                                    pFloat4[i] = xmlValue->FloatValue();                                               
-                                            }
+                                            bool * pBool = (bool*)(uint_ptr(_object) + offset);
+                                            *pBool = xmlValue->BoolValue();
                                         }
-                                        break;
+                                    }
+                                    break;
 
-                                        case IProperty::Type::EnumU32:
+                                    case IProperty::Type::Float4:
+                                    {
+                                        float * pFloat4 = (float*)(uint_ptr(_object) + offset);
+                                        const char * values[] = { "x", "y", "z", "w" };
+                                        for (uint i = 0; i < countof(values); ++i)
                                         {
-                                            u32 * pEnum = (u32*)(uint_ptr(_object) + offset);
-                                            const XMLAttribute * xmlValue = xmlPropElem->FindAttribute("value");
+                                            const XMLAttribute * xmlValue = xmlPropElem->FindAttribute(values[i]);
                                             if (nullptr != xmlValue)
+                                                pFloat4[i] = xmlValue->FloatValue();
+                                        }
+                                    }
+                                    break;
+
+                                    case IProperty::Type::EnumU32:
+                                    {
+                                        u32 * pEnum = (u32*)(uint_ptr(_object) + offset);
+                                        const XMLAttribute * xmlValue = xmlPropElem->FindAttribute("value");
+                                        if (nullptr != xmlValue)
+                                        {
+                                            const u32 val = xmlValue->UnsignedValue();
+                                            for (uint i = 0; i < prop->getEnumCount(); ++i)
                                             {
-                                                const u32 val = xmlValue->UnsignedValue();
-                                                for (uint i = 0; i < prop->getEnumCount(); ++i)
-                                                {
-                                                    if (val == prop->getEnumValue(i))
-                                                        *pEnum = val;
-                                                }
+                                                if (val == prop->getEnumValue(i))
+                                                    *pEnum = val;
                                             }
                                         }
+                                    }
                                     }
                                 }
                                 else
@@ -539,9 +543,9 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
-    bool Factory::serializeToXML(const IObject * _object, XMLDoc & _xmlDoc) const
+    bool Factory::serializeToXML(const IObject * _object, XMLDoc & _xmlDoc, XMLElem * _parent) const
     {
-        auto * parent = _xmlDoc.RootElement();
+        auto * parent = nullptr != _parent ? _parent : _xmlDoc.RootElement();
 
         const char * className = _object->getClassName();
 
@@ -565,51 +569,118 @@ namespace vg::core
 
             switch (type)
             {
-                default:
+            default:
                 VG_ASSERT_ENUM_NOT_IMPLEMENTED(type);
                 skipAttribute = true;
                 break;
 
-                case IProperty::Type::Function:
-                {
-                    skipAttribute = true;
-                }
-                break;
+            case IProperty::Type::Callback:
+            {
+                skipAttribute = true;
+            }
+            break;
 
-                case IProperty::Type::String:
-                {
-                    const string * pString =  (string*)(uint_ptr(_object) + offset);
-                    xmlPropElem->SetAttribute("value", pString->c_str());
-                }
-                break;
+            case IProperty::Type::ObjectRef:
+            {
+                const IObject * pObject = prop->GetPropertyObjectRef(_object);
+                serializeToXML(pObject, _xmlDoc, xmlPropElem);
+            }
+            break;
 
-                case IProperty::Type::Bool:
+            case IProperty::Type::ObjectRefVector:
+            {
+                auto * vector = prop->GetPropertyObjectRefVector(_object);
+                const uint count = vector->count();
+                for (uint i = 0; i < count; ++i)
                 {
-                    bool * pBool = (bool*)(uint_ptr(_object) + offset);
-                    xmlPropElem->SetAttribute("value", *pBool);
+                    serializeToXML((const IObject*)(*vector)[i], _xmlDoc, xmlPropElem);
                 }
-                break;    
+            }
+            break;
 
-                case IProperty::Type::Float4:
-                {
-                    float * pFloat4 = (float*)(uint_ptr(_object) + offset);
-                    xmlPropElem->SetAttribute("x", pFloat4[0]);
-                    xmlPropElem->SetAttribute("y", pFloat4[1]);
-                    xmlPropElem->SetAttribute("z", pFloat4[2]);
-                    xmlPropElem->SetAttribute("w", pFloat4[3]);
-                }
-                break;
+            case IProperty::Type::String:
+            {
+                const string * pString = prop->GetPropertyString(_object);
+                xmlPropElem->SetAttribute("value", pString->c_str());
+            }
+            break;
 
-                case IProperty::Type::EnumU32:
+            case IProperty::Type::Bool:
+            {
+                const bool * pBool = prop->GetPropertyBool(_object);
+                xmlPropElem->SetAttribute("value", *pBool);
+            }
+            break;
+
+            case IProperty::Type::Float:
+            {
+                const float * pFloat = prop->GetPropertyFloat(_object);
+                xmlPropElem->SetAttribute("value", *pFloat);
+            }
+            break;
+
+            case IProperty::Type::Float4:
+            {
+                const float * pFloat4 = (const float*)prop->GetPropertyFloat4(_object);
+                xmlPropElem->SetAttribute("x", pFloat4[0]);
+                xmlPropElem->SetAttribute("y", pFloat4[1]);
+                xmlPropElem->SetAttribute("z", pFloat4[2]);
+                xmlPropElem->SetAttribute("w", pFloat4[3]);
+            }
+            break;
+
+            case IProperty::Type::Float4x4:
+            {
+                const float * pFloat4x4 = (const float*)(uint_ptr(_object) + offset);
+                xmlPropElem->SetAttribute("Ix", pFloat4x4[0+0]);
+                xmlPropElem->SetAttribute("Iy", pFloat4x4[0+1]);
+                xmlPropElem->SetAttribute("Iz", pFloat4x4[0+2]);
+                xmlPropElem->SetAttribute("Iw", pFloat4x4[0+3]);
+                xmlPropElem->SetAttribute("Jx", pFloat4x4[4+0]);
+                xmlPropElem->SetAttribute("Jy", pFloat4x4[4+1]);
+                xmlPropElem->SetAttribute("Jz", pFloat4x4[4+2]);
+                xmlPropElem->SetAttribute("Jw", pFloat4x4[4+3]);
+                xmlPropElem->SetAttribute("Kx", pFloat4x4[8+0]);
+                xmlPropElem->SetAttribute("Ky", pFloat4x4[8+1]);
+                xmlPropElem->SetAttribute("Kz", pFloat4x4[8+2]);
+                xmlPropElem->SetAttribute("Kw", pFloat4x4[8+3]);
+                xmlPropElem->SetAttribute("Tx", pFloat4x4[12+0]);
+                xmlPropElem->SetAttribute("Ty", pFloat4x4[12+1]);
+                xmlPropElem->SetAttribute("Tz", pFloat4x4[12+2]);
+                xmlPropElem->SetAttribute("Tw", pFloat4x4[12+3]);
+            }
+            break;
+
+            case IProperty::Type::EnumFlagsU32:
+            {
+                const u32 * pEnum = (const u32*)(uint_ptr(_object) + offset);
+                string flags;
+                bool first = true;
+                for (uint i = 0; i < prop->getEnumCount(); ++i)
                 {
-                    u32 * pEnum = (u32*)(uint_ptr(_object) + offset);
-                    for (uint i = 0; i < prop->getEnumCount(); ++i)
+                    if (*pEnum == prop->getEnumValue(i))
                     {
-                        if (*pEnum == prop->getEnumValue(i))
-                            xmlPropElem->SetAttribute("value", prop->getEnumName(i));
-                    }                  
+                        if (!first)
+                            flags += "|";
+                        else
+                            first = false;
+                        flags += (string)prop->getEnumName(i);
+                    }
                 }
-                break;
+                xmlPropElem->SetAttribute("value", flags.c_str());
+            }
+            break;
+
+            case IProperty::Type::EnumU32:
+            {
+                const u32 * pEnum = (const u32*)(uint_ptr(_object) + offset);
+                for (uint i = 0; i < prop->getEnumCount(); ++i)
+                {
+                    if (*pEnum == prop->getEnumValue(i))
+                        xmlPropElem->SetAttribute("value", prop->getEnumName(i));
+                }
+            }
+            break;
             }
 
             if (!skipAttribute)

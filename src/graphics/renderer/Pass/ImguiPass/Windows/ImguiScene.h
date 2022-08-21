@@ -15,16 +15,23 @@ namespace vg::graphics::renderer
         virtual void    display             () final;
 
     private:
-        enum ContextMenu
+        enum class SceneMenu
         {
             None = 0,
             Save,
             Close
         };
 
+        enum class GameObjectMenu
+        {
+            None = 0,
+            AddGameObject
+        };
+
         void            displayGameObject   (IGameObject * root);
 
     private:
-        ContextMenu     m_selectedContextMenu = ContextMenu::None;
+        SceneMenu       m_sceneMenu = SceneMenu::None;
+        GameObjectMenu  m_gameObjectMenu = GameObjectMenu::None;
     };
 }

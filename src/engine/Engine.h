@@ -6,8 +6,9 @@
 
 namespace vg::core
 {
+    class Universe;
+    class Scene;
     class Entity;
-    class Sector;
 }
 
 namespace vg::graphics::renderer
@@ -68,6 +69,8 @@ namespace vg::engine
         void                                createEditorView    ();
         void                                destroyEditorView   ();
 
+        core::Scene *                       addEmptyScene       (core::Universe * _universe);
+
     protected:
         void                                updateDt            ();
 
@@ -75,11 +78,10 @@ namespace vg::engine
         core::string                        m_projectPath;
 
         IProject *                          m_project           = nullptr;
-        core::IUniverse *                   m_universe          = nullptr;
+        core::Universe *                    m_universe          = nullptr;
 		graphics::renderer::IRenderer *	    m_renderer          = nullptr;
         graphics::renderer::IView *         m_editorView        = nullptr;
         ResourceManager *                   m_resourceManager   = nullptr;
-        FreeCam *                           m_freeCam           = nullptr;
 
         double                              m_dt                = 0.0f;
 	};

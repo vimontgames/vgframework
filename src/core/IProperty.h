@@ -5,36 +5,44 @@ namespace vg::core
     //--------------------------------------------------------------------------------------
     // Interface to PropertyDescriptor
     //--------------------------------------------------------------------------------------
+    
+    class IObject;
+    class IResource;
 
     class IProperty
     {
     public:
 
-        using Func = bool (__cdecl*)(class IObject*);
+        using Callback = bool (__cdecl*)(class IObject*);
 
         enum class Type : u32
         {
             Undefined = 0,
             Bool,
+            Uint8,
             Uint16,
             Uint32,
             Float,
             Float4,
-            Matrix44,
+            Float4x4,
             String,
-            ObjectPointer,
-            Resource,
-            ResourceVector,
-            Function,
             EnumU8,
             EnumU16,
             EnumU32,
             EnumFlagsU8,
             EnumFlagsU16,
             EnumFlagsU32,
+            Resource,
+            ObjectRef,
+            ObjectRefVector,
+            ObjectRefDictionary,
+
+            // sizeof(element) is unknown
             ObjectVector,
-            ObjectPointerVector,
-            ObjectPointerDictionary
+            ResourceVector,
+
+            // No data, only (IObject*) callback
+            Callback,
         };
 
         enum class Flags : u64
@@ -51,19 +59,39 @@ namespace vg::core
             Resource    = 0x0000000000000100,
         };
 
-        virtual void                        setRange                (float2 _range) = 0;
-        virtual void                        setFlags                (Flags _flagsToSet, Flags _flagsToRemove = Flags::None) = 0;
+        virtual void                        setRange                        (float2 _range) = 0;
+        virtual void                        setFlags                        (Flags _flagsToSet, Flags _flagsToRemove = Flags::None) = 0;
 
-        virtual const char *                getName                 () const = 0;
-        virtual const char *                getClassName            () const = 0;
-        virtual const char *                getDisplayName          () const = 0;
-        virtual Type                        getType                 () const = 0;
-        virtual Flags                       getFlags                () const = 0;
-        virtual uint_ptr                    getOffset               () const = 0;
-		virtual u32					        getValue				() const = 0;
-        virtual float2                      getRange                () const = 0;
-        virtual u32                         getEnumCount            () const = 0;
-        virtual const char *                getEnumName             (uint index) const = 0;
-        virtual u32                         getEnumValue            (uint index) const = 0;
+        virtual const char *                getName                         () const = 0;
+        virtual const char *                getClassName                    () const = 0;
+        virtual const char *                getDisplayName                  () const = 0;
+        virtual Type                        getType                         () const = 0;
+        virtual Flags                       getFlags                        () const = 0;
+        virtual uint_ptr                    getOffset                       () const = 0;
+		virtual u32					        getSizeOf				        () const = 0;
+        virtual float2                      getRange                        () const = 0;
+        virtual u32                         getEnumCount                    () const = 0;
+        virtual const char *                getEnumName                     (uint index) const = 0;
+        virtual u32                         getEnumValue                    (uint index) const = 0;
+
+        virtual bool *                      GetPropertyBool                 (const IObject * _object) const = 0;
+        virtual u8 *                        GetPropertyUint8                (const IObject * _object) const = 0;
+        virtual u16 *                       GetPropertyUint16               (const IObject * _object) const = 0;
+        virtual u32 *                       GetPropertyUint32               (const IObject * _object) const = 0;
+        virtual float *                     GetPropertyFloat                (const IObject * _object) const = 0;
+        virtual float4 *                    GetPropertyFloat4               (const IObject * _object) const = 0;
+        virtual float4x4 *                  GetPropertyFloat4x4             (const IObject * _object) const = 0;
+        virtual string *                    GetPropertyString               (const IObject * _object) const = 0;
+        virtual IResource *                 GetPropertyResource             (const IObject * _object) const = 0;
+        virtual IObject *                   GetPropertyObjectRef            (const IObject * _object) const = 0;
+        virtual vector<IObject*> *          GetPropertyObjectRefVector      (const IObject * _object) const = 0;
+        virtual dictionary<IObject*> *      GetPropertyObjectRefDictionary  (const IObject * _object) const = 0;
+
+        virtual uint                        GetPropertyObjectVectorCount    (const IObject * _object) const = 0;
+        virtual u8 *                        GetPropertyObjectVectorData     (const IObject * _object) const = 0;
+        virtual uint                        GetPropertyResourceVectorCount  (const IObject * _object) const = 0;
+        virtual u8 *                        GetPropertyResourceVectorData   (const IObject * _object) const = 0;
+
+        virtual IProperty::Callback         GetPropertyCallback             () const = 0;
     }; 
 }

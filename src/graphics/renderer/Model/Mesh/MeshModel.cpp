@@ -29,8 +29,8 @@ namespace vg::graphics::renderer
     {
         super::registerProperties(_desc);
 
-        _desc.registerPropertyObjectPointerVectorHelper(MeshModel, m_materials, "Materials", IProperty::Flags::Hidden);
-        _desc.registerPropertyObjectPointerHelper(MeshModel, m_meshGeometry, "Geometry", IProperty::Flags::Hidden);
+        _desc.registerPropertyObjectRefVectorHelper(MeshModel, m_materials, "Materials", IProperty::Flags::Hidden);
+        _desc.registerPropertyObjectRefHelper(MeshModel, m_meshGeometry, "Geometry", IProperty::Flags::Hidden);
         
         return true;
     }

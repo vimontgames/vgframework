@@ -62,6 +62,7 @@ namespace vg::core
     {
         if (nullptr != _scene && !m_scenes.exists((Scene*)_scene))
         {
+            _scene->setParent(this);
             _scene->addRef();
             m_scenes.push_back((Scene*)_scene);
 

@@ -36,18 +36,18 @@ namespace vg::graphics::renderer
                         // Menu
                         if (ImGui::BeginPopupContextItem())
                         {
-                            ImGui::PushID("ImguiSceneContextMenu");
+                            ImGui::PushID("SceneMenu");
                             if (ImGui::MenuItem("Save"))
                             {
                                 openPopup = true;
-                                m_selectedContextMenu = ContextMenu::Save;
+                                m_sceneMenu = SceneMenu::Save;
                                 //fileBrowser.setPath(io::getCurrentWorkingDirectory() + "/data/Scenes");
                                 fileBrowser.setFilename(scene->getName() + ".scene");
                             }
                             if (ImGui::MenuItem("Close"))
                             {
                                 openPopup = true;
-                                m_selectedContextMenu = ContextMenu::Close;
+                                m_sceneMenu = SceneMenu::Close;
                             }
                             ImGui::PopID();
                             ImGui::EndPopup();
@@ -55,27 +55,31 @@ namespace vg::graphics::renderer
 
                         if (open)
                         {
-                            displayGameObject(root);
+                            if (nullptr != root)
+                                displayGameObject(root);
                             ImGui::TreePop();
                         }
 
                         if (openPopup)
                         {
-                            ImGui::OpenPopup(asString(m_selectedContextMenu).c_str());
+                            ImGui::OpenPopup(asString(m_sceneMenu).c_str());
                             openPopup = false;
                         }
 
-                        switch (m_selectedContextMenu)
+                        switch (m_sceneMenu)
                         {
-                        case Save:
+                        case SceneMenu::Save:
                             if (fileBrowser.showFileDialog("Save", imgui_addons::ImGuiFileBrowser::DialogMode::SAVE, ImVec2(860, 400), ".scene"))
                             {
                                 const string newFilePath = fileBrowser.selected_path;
                                 factory->saveToXML(scene, newFilePath);
                             }
                             break;
-                        case Close:
-                            // TODO
+                        case SceneMenu::Close:
+                            {
+                                IUniverse * universe = (IUniverse*)scene->getParent();
+                                universe->removeScene((IScene*)scene);
+                            }
                             break;
                         }
                     }
@@ -90,7 +94,62 @@ namespace vg::graphics::renderer
     {
         const auto children = _gameObject->GetChildren();
 
-        if (ImGui::TreeNodeEx(_gameObject->getName().c_str(), children.size() > 0 ? (ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_DefaultOpen) : ImGuiTreeNodeFlags_Leaf))
+        bool open = ImGui::TreeNodeEx(_gameObject->getName().c_str(), children.size() > 0 ? (ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_DefaultOpen) : ImGuiTreeNodeFlags_Leaf);
+        bool openPopup = false;
+
+        // Menu
+        if (ImGui::BeginPopupContextItem())
+        {
+            ImGui::PushID("GameObjectMenu");
+            if (ImGui::MenuItem("Add Child"))
+            {
+                m_gameObjectMenu = GameObjectMenu::AddGameObject;
+                openPopup = true;
+                //IGameObject * gameObject = (IGameObject*)CreateFactoryObject(GameObject, "new GameObject", _gameObject);
+                //_gameObject->AddChild(gameObject);
+                //gameObject->Release();
+            }
+            ImGui::PopID();
+            ImGui::EndPopup();
+        }
+
+        if (openPopup)
+            ImGui::OpenPopup(asString(m_gameObjectMenu).c_str());
+
+        if (ImGui::BeginPopupModal(asString(m_gameObjectMenu).c_str(), nullptr, ImGuiWindowFlags_AlwaysAutoResize))
+        {
+            static char nameTmp[1024] = { '\0' };
+
+            if (nameTmp[0] == '\0')
+                strcpy(nameTmp, "New GameObject");
+
+            ImGui::InputText("Name", nameTmp, countof(nameTmp), ImGuiInputTextFlags_AutoSelectAll);
+
+            string newName = nameTmp;
+
+            if (ImGui::Button("Add", ImVec2(80, 0)))
+            {
+                IGameObject * gameObject = (IGameObject*)CreateFactoryObject(GameObject, newName.c_str(), _gameObject);
+                _gameObject->AddChild(gameObject);
+                gameObject->Release();
+                ImGui::CloseCurrentPopup();
+                nameTmp[0] = '\0';
+                m_gameObjectMenu = GameObjectMenu::None;
+            }
+            
+            ImGui::SameLine();
+            
+            if (ImGui::Button("Cancel", ImVec2(80, 0)))
+            {
+                ImGui::CloseCurrentPopup();
+                nameTmp[0] = '\0';
+                m_gameObjectMenu = GameObjectMenu::None;
+            }
+
+            ImGui::EndPopup();
+        }
+
+        if (open)
         {
             updateSelection(_gameObject);
             
