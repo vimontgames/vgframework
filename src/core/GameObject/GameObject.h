@@ -26,7 +26,7 @@ namespace vg::core
         const vector<Component*> &                              getComponents           () const;
 
         void                                                    AddChild                (IGameObject * _gameObject) final;
-        void                                                    RemoveChild             (IGameObject * _gameObject) final;
+        bool                                                    RemoveChild             (IGameObject * _gameObject) final;
         const vector<IGameObject*> &                            GetChildren             () const final;
 
         void                                                    AddGraphicInstance      (graphics::renderer::IGraphicInstance * _graphicInstance) final;

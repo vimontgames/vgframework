@@ -36,8 +36,9 @@ namespace vg::graphics::renderer
 
         static void                             displayObject       (core::IObject * _object);
 
-    protected:
         static imgui_addons::ImGuiFileBrowser & getFileBrowser      ();
+
+    protected:
         static void                             underLine           (const ImColor & _color);
         static void                             textURL             (const char * _text, const char * _url);
 

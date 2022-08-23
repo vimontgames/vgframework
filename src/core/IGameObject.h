@@ -19,7 +19,7 @@ namespace vg::core
         }
 
         virtual void                                                    AddChild                (IGameObject * _gameObject) = 0;
-        virtual void                                                    RemoveChild             (IGameObject * _gameObject) = 0;
+        virtual bool                                                    RemoveChild             (IGameObject * _gameObject) = 0;
         virtual const vector<IGameObject*> &                            GetChildren             () const = 0;
 
         virtual void                                                    AddGraphicInstance      (graphics::renderer::IGraphicInstance * _graphicInstance) = 0;

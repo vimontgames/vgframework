@@ -1,6 +1,8 @@
 #pragma once
 
 #include "ImguiEditor.h"
+#include "graphics/renderer/Pass/ImguiPass/Menus/ImguiSceneMenu.h"
+#include "graphics/renderer/Pass/ImguiPass/Menus/ImguiGameObjectMenu.h"
 
 namespace vg::graphics::renderer
 {
@@ -15,23 +17,10 @@ namespace vg::graphics::renderer
         virtual void    display             () final;
 
     private:
-        enum class SceneMenu
-        {
-            None = 0,
-            Save,
-            Close
-        };
-
-        enum class GameObjectMenu
-        {
-            None = 0,
-            AddGameObject
-        };
-
-        void            displayGameObject   (IGameObject * root);
+        void                    displayGameObject   (IGameObject * root);
 
     private:
-        SceneMenu       m_sceneMenu = SceneMenu::None;
-        GameObjectMenu  m_gameObjectMenu = GameObjectMenu::None;
+        ImguiSceneMenu          m_sceneMenu;
+        ImguiGameObjectMenu     m_gameObjectMenu;
     };
 }

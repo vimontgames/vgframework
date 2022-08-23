@@ -28,6 +28,7 @@
     <ClCompile Include="Model\Mesh\MeshModel.cpp" />
     <ClCompile Include="Options\Options.cpp" />
     <ClCompile Include="Pass\ImguiPass\ImguiPass.cpp" />
+    <ClCompile Include="Pass\ImguiPass\Menus\ImguiMenu.cpp" />
     <ClCompile Include="Pass\ImguiPass\Windows\ImguiEditor.cpp" />
     <ClCompile Include="Pass\Pass.cpp" />
     <ClCompile Include="Precomp.cpp">
@@ -79,6 +80,11 @@
     <ClInclude Include="Pass\BackgroundPass.h" />
     <ClInclude Include="Pass\BackgroundPass.hpp" />
     <ClInclude Include="Pass\ImguiPass\ImguiPass.h" />
+    <ClInclude Include="Pass\ImguiPass\Menus\ImguiGameObjectMenu.h" />
+    <ClInclude Include="Pass\ImguiPass\Menus\ImguiGameObjectMenu.hpp" />
+    <ClInclude Include="Pass\ImguiPass\Menus\ImguiMenu.h" />
+    <ClInclude Include="Pass\ImguiPass\Menus\ImguiSceneMenu.h" />
+    <ClInclude Include="Pass\ImguiPass\Menus\ImguiSceneMenu.hpp" />
     <ClInclude Include="Pass\ImguiPass\Windows\ImguiAbout.hpp" />
     <ClInclude Include="Pass\ImguiPass\Windows\ImguiDisplayOptions.hpp" />
     <ClInclude Include="Pass\ImguiPass\Windows\ImguiAbout.h" />

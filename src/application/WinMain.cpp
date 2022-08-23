@@ -160,10 +160,10 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 {
 	#ifdef _CRTDBG_MAP_ALLOC
 	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
-	//_crtBreakAlloc = 4894;
+	//_crtBreakAlloc = 1623;
 	#endif
 
-	core::uint width = 1280, height = 720;
+	core::uint width = 1920, height = 1080;
 
 	if (!CreateGameWindow(hInstance, lpCmdLine, nCmdShow, width, height))
 		return 1;

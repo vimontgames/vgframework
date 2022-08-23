@@ -39,6 +39,9 @@
     <ClCompile Include="Pass\ImguiPass\Windows\ImguiEditor.cpp">
       <Filter>Pass\ImguiPass\Windows</Filter>
     </ClCompile>
+    <ClCompile Include="Pass\ImguiPass\Menus\ImguiMenu.cpp">
+      <Filter>Pass\ImguiPass\Menu</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Renderer.def" />
@@ -211,6 +214,21 @@
     <ClInclude Include="Pass\ImguiPass\Windows\ImguiFPS.hpp">
       <Filter>Pass\ImguiPass\Windows</Filter>
     </ClInclude>
+    <ClInclude Include="Pass\ImguiPass\Menus\ImguiMenu.h">
+      <Filter>Pass\ImguiPass\Menu</Filter>
+    </ClInclude>
+    <ClInclude Include="Pass\ImguiPass\Menus\ImguiGameObjectMenu.h">
+      <Filter>Pass\ImguiPass\Menu</Filter>
+    </ClInclude>
+    <ClInclude Include="Pass\ImguiPass\Menus\ImguiGameObjectMenu.hpp">
+      <Filter>Pass\ImguiPass\Menu</Filter>
+    </ClInclude>
+    <ClInclude Include="Pass\ImguiPass\Menus\ImguiSceneMenu.h">
+      <Filter>Pass\ImguiPass\Menu</Filter>
+    </ClInclude>
+    <ClInclude Include="Pass\ImguiPass\Menus\ImguiSceneMenu.hpp">
+      <Filter>Pass\ImguiPass\Menu</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Pass">
@@ -266,6 +284,9 @@
     </Filter>
     <Filter Include="Pass\ImguiPass\Windows">
       <UniqueIdentifier>{94c29c25-51ad-4845-bde4-f8fff9f6afb0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Pass\ImguiPass\Menu">
+      <UniqueIdentifier>{4b8a65df-4ca7-4af6-a1d4-2be112558138}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

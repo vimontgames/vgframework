@@ -93,9 +93,15 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
-    void GameObject::RemoveChild(IGameObject * _gameObject)
+    bool GameObject::RemoveChild(IGameObject * _gameObject)
     {
-        VG_ASSERT_NOT_IMPLEMENTED();
+        if (m_children.exists((GameObject*)_gameObject))
+        {
+            m_children.remove((GameObject*)_gameObject);
+            return true;
+        }
+
+        return false;
     }
 
     //--------------------------------------------------------------------------------------
