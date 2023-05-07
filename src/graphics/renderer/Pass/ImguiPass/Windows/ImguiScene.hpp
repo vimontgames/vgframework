@@ -14,29 +14,69 @@ namespace vg::graphics::renderer
             IUniverse * universe = engine->getCurrentUniverse();
             if (universe)
             {
-                for (uint i = 0; i < universe->getSceneCount(); ++i)
+                if (ImGui::BeginPopupContextWindow())
                 {
-                    const IScene * scene = universe->getScene(i);
-                    if (nullptr != scene)
+                    ImGui::PushID("ScenesMenu");
+
+                    if (ImGui::MenuItem("Add Scene"))
                     {
-                        IGameObject * root = scene->GetRoot();
-                        auto flags = ImGuiTreeNodeFlags_Framed;
-                        if (nullptr != root)
-                            flags |= ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_DefaultOpen;
-                        else
-                            flags |= ImGuiTreeNodeFlags_Leaf;
 
-                        const bool open = ImGui::TreeNodeEx(scene->getName().c_str(), flags);
+                    }
 
-                        m_sceneMenu.Display((IObject*)scene);
+                    if (ImGui::MenuItem("Load Scene"))
+                    {
 
-                        if (open)
+                    }
+
+                    //if (ImGui::MenuItem("Save"))
+                    //{
+                    //    m_selected = MenuOption::Save;
+                    //    //fileBrowser.setPath(io::getCurrentWorkingDirectory() + "/data/Scenes");
+                    //    fileBrowser.setFilename(scene->getName() + ".scene");
+                    //    m_popup = "Save Scene As ...";
+                    //    openPopup = true;
+                    //}
+                    //if (ImGui::MenuItem("Close"))
+                    //{
+                    //    m_selected = MenuOption::Close;
+                    //    openPopup = true;
+                    //    m_popup = "Close Scene";
+                    //}
+                    ImGui::PopID();
+                    ImGui::EndPopup();
+                }
+
+                //if (ImGui::TreeNodeEx("Scenes", ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_DefaultOpen))
+                {
+                    for (uint i = 0; i < universe->getSceneCount(); ++i)
+                    {
+                        const IScene * scene = universe->getScene(i);
+                        if (nullptr != scene)
                         {
+                            IGameObject * root = scene->GetRoot();
+                            auto flags = ImGuiTreeNodeFlags_Framed;
                             if (nullptr != root)
-                                displayGameObject(root);
-                            ImGui::TreePop();
+                                flags |= ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_DefaultOpen;
+                            else
+                                flags |= ImGuiTreeNodeFlags_Leaf;
+
+                            const bool open = ImGui::TreeNodeEx(scene->getName().c_str(), flags);
+
+                            auto status = m_sceneMenu.Display((IObject*)scene);
+
+                            if (status == ImguiMenu::Status::Removed)
+                                root = nullptr;
+
+                            if (open)
+                            {
+                                if (nullptr != root)
+                                    displayGameObject(root);
+                                ImGui::TreePop();
+                            }
                         }
                     }
+
+                    //ImGui::TreePop();
                 }
             }
         }

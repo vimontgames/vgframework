@@ -145,7 +145,7 @@ namespace vg::core
         xmlDoc.InsertFirstChild(xmlRoot);
 
         if (factory->serializeToXML(_object, xmlDoc))
-            if (xmlDoc.SaveFile(_xmlFile.c_str()))
+            if (XMLError::XML_SUCCESS == xmlDoc.SaveFile(_xmlFile.c_str()))
                 return true;
 
         return false;

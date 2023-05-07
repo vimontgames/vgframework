@@ -14,6 +14,6 @@ namespace vg::graphics::renderer
             Delete
         };
 
-        void Display(core::IObject * _object) final;
+        Status Display(core::IObject * _object) final;
     };
 }

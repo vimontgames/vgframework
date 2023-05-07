@@ -33,6 +33,14 @@ namespace vg::graphics::renderer
 {
     static uint max_imguitex_displayed_per_frame = 64;
 
+    enum GUIStyle
+    {
+        FiftyShadesOfGrey = 0,
+        SlavaUkraini,
+
+        Default = FiftyShadesOfGrey
+    };
+
     void FiftyShadesOfGreyStyle()
     {
         ImGuiStyle & style = ImGui::GetStyle();
@@ -120,6 +128,11 @@ namespace vg::graphics::renderer
         colors[ImGuiCol_ModalWindowDimBg]       = ImVec4(0.80f, 0.80f, 0.80f, 0.35f);
     }
 
+    void SlavaUkrainiStyle()
+    {
+
+    }
+
     //--------------------------------------------------------------------------------------
     ImguiAdapter::ImguiAdapter(WinHandle _winHandle, Device & _device)
     {
@@ -129,7 +142,17 @@ namespace vg::graphics::renderer
         io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard | ImGuiConfigFlags_DockingEnable;
         io.ConfigDockingTransparentPayload = true;
 
-        FiftyShadesOfGreyStyle();
+        switch (GUIStyle::Default)
+        {
+        case FiftyShadesOfGrey:
+            FiftyShadesOfGreyStyle();
+            break;
+
+        case SlavaUkraini:
+            SlavaUkrainiStyle();
+            break;
+        }
+
 
         io.Fonts->AddFontFromFileTTF("data/Fonts/ubuntu/UbuntuMono-R.ttf", 16);
 

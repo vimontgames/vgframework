@@ -6,8 +6,9 @@ using namespace vg::core;
 namespace vg::graphics::renderer
 {
     //--------------------------------------------------------------------------------------
-    void ImguiGameObjectMenu::Display(core::IObject * _object)
+    ImguiMenu::Status ImguiGameObjectMenu::Display(core::IObject * _object)
     {
+        auto status = Status::None;
         IGameObject * gameObject = dynamic_cast<IGameObject*>(_object);
         VG_ASSERT(nullptr != gameObject);
 
@@ -16,14 +17,14 @@ namespace vg::graphics::renderer
         if (ImGui::BeginPopupContextItem())
         {
             ImGui::PushID("GameObjectMenu");
-            if (ImGui::MenuItem("Add"))
+            if (ImGui::MenuItem("Add Child GameObject"))
             {
                 m_selected = MenuOption::AddChild;
                 m_popup = "Add Child GameObject";
                 openPopup = true;
                 ImGui::OpenPopup("Add Child GameObject");
             }
-            if (ImGui::MenuItem("Delete"))
+            if (ImGui::MenuItem("Delete GameObject"))
             {
                 m_selected = MenuOption::Delete;
                 m_popup = "Delete GameObject";
@@ -89,6 +90,7 @@ namespace vg::graphics::renderer
                         if (nullptr != parentGameObject)
                         {
                             parentGameObject->RemoveChild(gameObject);
+                            status = Status::Removed;
                         }
                         ImGui::CloseCurrentPopup();
                     }
@@ -96,15 +98,13 @@ namespace vg::graphics::renderer
                     ImGui::SameLine();
 
                     if (ImGui::Button("No", ImVec2(80, 0)))
-                    {
-
                         ImGui::CloseCurrentPopup();
-                    }
 
                     ImGui::EndPopup();
                 }
             }
             break;
         }
+        return status;
     }
 }

@@ -9,8 +9,9 @@ using namespace vg::core;
 namespace vg::graphics::renderer
 {
     //--------------------------------------------------------------------------------------
-    void ImguiSceneMenu::Display(core::IObject * _object)
+    ImguiMenu::Status ImguiSceneMenu::Display(core::IObject * _object)
     {
+        auto status = Status::None;
         IScene * scene = dynamic_cast<IScene*>(_object);
         VG_ASSERT(nullptr != scene);
 
@@ -22,16 +23,22 @@ namespace vg::graphics::renderer
         if (ImGui::BeginPopupContextItem())
         {
             ImGui::PushID("SceneMenu");
-            if (ImGui::MenuItem("Save"))
+            if (ImGui::MenuItem("Save Scene"))
+            {
+                string existingFilePath = scene->getName() + ".scene";
+                factory->saveToXML(scene, existingFilePath);
+                status = Status::Saved;
+            }
+
+            if (ImGui::MenuItem("Save Scene As ..."))
             {
                 m_selected = MenuOption::Save;
                 //fileBrowser.setPath(io::getCurrentWorkingDirectory() + "/data/Scenes");
                 fileBrowser.setFilename(scene->getName() + ".scene");
                 m_popup = "Save Scene As ...";
                 openPopup = true;
-                
             }
-            if (ImGui::MenuItem("Close"))
+            if (ImGui::MenuItem("Close Scene"))
             {
                 m_selected = MenuOption::Close;
                 openPopup = true;
@@ -54,6 +61,7 @@ namespace vg::graphics::renderer
             {
                 const string newFilePath = fileBrowser.selected_path;
                 factory->saveToXML(scene, newFilePath);
+                status = Status::Saved;
             }
             break;
             case MenuOption::Close:
@@ -68,20 +76,20 @@ namespace vg::graphics::renderer
                         if (nullptr != universe)
                             universe->removeScene((IScene*)scene);
                         ImGui::CloseCurrentPopup();
+                        status = Status::Removed;
                     }
 
                     ImGui::SameLine();
 
                     if (ImGui::Button("No", ImVec2(80, 0)))
-                    {
-
                         ImGui::CloseCurrentPopup();
-                    }
 
                     ImGui::EndPopup();
                 }
             }
             break;
         }
+
+        return status;
     }
 }
