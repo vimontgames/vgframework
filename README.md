@@ -16,7 +16,7 @@ For the engine part, so far I integrated several "must-haves" tools like a CPU/G
 Another subject that is very close to my heart is that there is a strong separation between modules as the engine is "physically" split in several DLLs using only pure abstract interfaces.
 
 
-# external
+# external (already in depot, you don't need to download them)
 D3D12 Memory Allocator\
 https://github.com/GPUOpen-LibrariesAndSDKs/D3D12MemoryAllocator
 
@@ -50,7 +50,7 @@ https://github.com/GPUOpen-LibrariesAndSDKs/VulkanMemoryAllocator
 WinPixEventRuntime 1.0.200127001\
 https://www.nuget.org/packages/WinPixEventRuntime
 
-# sdk
+# sdk (not included, you need to download them)
 FBX SDK 2020.0.1\
 https://www.autodesk.com/developer-network/platform-technologies/fbx-sdk-2020-0  
 **$(FBX_SDK)** should point to the FBX SDK installation dir *(i.e. "C:\SDK\FBX\2020.0.1")*
@@ -76,7 +76,7 @@ Also don't forget to set the *working directory* to **$(SolutionDir)**.
 ![Screenshot](doc/img/SolutionPlatformName1.png)
 ![Screenshot](doc/img/SolutionPlatformName2.png)
 
-# models
+# models (already in depot, you don't need to download them)
 Jess Casual Walking 001\
 https://www.cgtrader.com/free-3d-models/character/woman/woman-jess-casual-walking-001
 
