@@ -16,7 +16,7 @@ For the engine part, so far I integrated several "must-haves" tools like a CPU/G
 Another subject that is very close to my heart is that there is a strong separation between modules as the engine is "physically" split in several DLLs using only pure abstract interfaces.
 
 
-# external (already in depot, you don't need to download them)
+# external (included, you don't need to download them)
 D3D12 Memory Allocator\
 https://github.com/GPUOpen-LibrariesAndSDKs/D3D12MemoryAllocator
 
