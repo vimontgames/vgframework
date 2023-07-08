@@ -93,6 +93,7 @@
 #include <unordered_set>
 #include <map>
 #include <unordered_map>
+#include <functional>
 
 //--------------------------------------------------------------------------------------
 // external includes

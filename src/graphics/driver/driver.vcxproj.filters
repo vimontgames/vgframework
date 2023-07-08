@@ -502,7 +502,6 @@
       <Filter>Device</Filter>
     </ClInclude>
     <ClInclude Include="ITexture.h" />
-    <ClInclude Include="IBuffer.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Device">

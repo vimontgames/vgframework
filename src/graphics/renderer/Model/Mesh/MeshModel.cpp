@@ -77,8 +77,8 @@ namespace vg::graphics::renderer
 
         const uint vertexCount = (uint)_data.vertices.size();
 
-        vector<driver::VertexStorage<F>::type> verts;
-                                               verts.resize(vertexCount);
+        vector<typename driver::VertexStorage<F>::type> verts;
+                                                        verts.resize(vertexCount);
 
         for (uint i = 0; i < vertexCount; ++i)
             verts[i].set(_data.vertices[i]);

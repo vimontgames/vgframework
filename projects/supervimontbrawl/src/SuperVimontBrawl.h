@@ -10,7 +10,7 @@ namespace vg::engine
 
 class Player;
 
-class SuperVimontBrawl : public vg::IProject, vg::core::Singleton<SuperVimontBrawl>
+class SuperVimontBrawl : public vg::IProject, public vg::core::Singleton<SuperVimontBrawl>
 {
     public:
                                     SuperVimontBrawl        ();
