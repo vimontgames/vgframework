@@ -430,12 +430,17 @@ namespace vg::graphics::driver
                     const bool backbuffer = m_outputRes == res;
 
                     // first pass writing to RT ? 
-                    if (firstWrite)
-                        flags |= SubPassKey::AttachmentFlags::Clear;
-                    else 
-                        flags |= SubPassKey::AttachmentFlags::Preserve;
+                    //if (firstWrite)
+                    //{
+                    //    flags |= SubPassKey::AttachmentFlags::Clear;
+                    //
+                    //    if (!backbuffer)
+                    //        begin = ResourceState::ShaderResource;
+                    //}
+                    //else 
+                    //    flags |= SubPassKey::AttachmentFlags::Preserve;
 
-                    // first pass writing to backbuffer ?
+                    // first pass writing to RT/backbuffer ?
                     if (firstWrite)
                     {
                         flags |= SubPassKey::AttachmentFlags::Clear;
@@ -443,6 +448,9 @@ namespace vg::graphics::driver
                         if (backbuffer)
                             begin = ResourceState::Undefined;
                         else
+                        {
+                            flags |= SubPassKey::AttachmentFlags::MakeWritable;
+
                             #ifdef VG_VULKAN
                             begin = ResourceState::Undefined;
                             #elif defined(VG_DX12)
@@ -450,6 +458,7 @@ namespace vg::graphics::driver
                             #else
                             VG_ASSERT_NOT_IMPLEMENTED();
                             #endif
+                            }
                     }
                     else
                         flags |= SubPassKey::AttachmentFlags::Preserve;
@@ -459,6 +468,8 @@ namespace vg::graphics::driver
                     {
                         if (backbuffer)
                             flags |= SubPassKey::AttachmentFlags::Present;
+                        else
+                            end = ResourceState::ShaderResource;
                     }
 
                     SubPassKey::AttachmentInfo info;

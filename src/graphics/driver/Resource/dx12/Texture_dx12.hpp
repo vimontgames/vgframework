@@ -138,7 +138,7 @@ namespace vg::graphics::driver::dx12
 
             D3D12_RESOURCE_STATES initState = D3D12_RESOURCE_STATE_COMMON;
             if (asBool(TextureFlags::RenderTarget & _texDesc.flags))
-                initState = D3D12_RESOURCE_STATE_RENDER_TARGET;
+                initState = D3D12_RESOURCE_STATE_ALL_SHADER_RESOURCE; // D3D12_RESOURCE_STATE_RENDER_TARGET; // Create Render Targets in 'ShaderResource' state, they will transition to the 'RenderTarget' state on first use
             else if (asBool(TextureFlags::DepthStencil & _texDesc.flags))
                 initState = D3D12_RESOURCE_STATE_DEPTH_WRITE;
             else if (_initData)

@@ -22,6 +22,8 @@ namespace vg::graphics::driver
 
             RenderTarget    = 0x04,  // attachment will be used as a render target during this pass
             Present         = 0x08,  // attachment will be used for 'Present' right after this pass
+
+            MakeWritable    = 0x10   // attachment will transition from ShaderResource to RenderTarget/UAV before this pass
         };
 
         struct AttachmentInfo
@@ -31,17 +33,16 @@ namespace vg::graphics::driver
                 begin(_begin),
                 end(_end)
             {
-
+                
             }
 
             union
             {
                 struct
                 {
-
-                    AttachmentFlags flags   : 4;
-                    ResourceState   begin   : 2;
-                    ResourceState   end     : 2;
+                    AttachmentFlags flags   : 8;
+                    ResourceState   begin   : 4;
+                    ResourceState   end     : 4;
                 };
                 core::u8 bits;
             };

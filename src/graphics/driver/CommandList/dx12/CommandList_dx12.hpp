@@ -106,6 +106,19 @@ namespace vg::graphics::driver::dx12
                     D3D12_RENDER_PASS_RENDER_TARGET_DESC & renderTargetDesc = _subPass->m_d3d12renderPassRenderTargetDesc[i];
                     const Texture * tex = res->getTexture();
                     _subPass->m_d3d12renderPassRenderTargetDesc[i].cpuDescriptor = tex->getd3d12RTVHandle();
+
+                    // The texture needs to transition to 'RenderTarget' state before 1st use
+                    if (asBool(SubPassKey::AttachmentFlags::MakeWritable & info.flags))
+                    {
+                        D3D12_RESOURCE_BARRIER barrier;
+                        barrier.Transition.pResource = res->getTexture()->getResource().getd3d12TextureResource(); // m_bufferContext[m_currentBackbufferIndex].backbuffer->getResource().getd3d12TextureResource();
+                        barrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
+                        barrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
+                        barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_ALL_SHADER_RESOURCE;
+                        barrier.Transition.StateAfter = D3D12_RESOURCE_STATE_RENDER_TARGET;
+                        barrier.Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
+                        m_d3d12graphicsCmdList->ResourceBarrier(1, &barrier);
+                    }
                 }
             }      
 
@@ -121,6 +134,23 @@ namespace vg::graphics::driver::dx12
                     _subPass->m_d3d12renderPassDepthStencilDesc.cpuDescriptor = tex->getd3d12DSVHandle();
                 }
             }
+
+            //if (!strcmp(_subPass->getUserPasses()[0]->getName().c_str(), "PostProcessPass"))
+            //{
+            //    auto reads = _subPass->getUserPasses()[0]->getTexturesRead();
+            //    
+            //    if (reads.count() > 0)
+            //    {
+            //        D3D12_RESOURCE_BARRIER barrier;
+            //        barrier.Transition.pResource = reads[0]->getTexture()->getResource().getd3d12TextureResource(); // m_bufferContext[m_currentBackbufferIndex].backbuffer->getResource().getd3d12TextureResource();
+            //        barrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
+            //        barrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
+            //        barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_RENDER_TARGET;
+            //        barrier.Transition.StateAfter = D3D12_RESOURCE_STATE_ALL_SHADER_RESOURCE;
+            //        barrier.Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
+            //        m_d3d12graphicsCmdList->ResourceBarrier(1, &barrier);
+            //    }
+            //}
 
             m_d3d12graphicsCmdList->BeginRenderPass(_subPass->m_renderTargetCount, _subPass->m_renderTargetCount ? _subPass->m_d3d12renderPassRenderTargetDesc : nullptr, _subPass->m_depthStencilCount ? &_subPass->m_d3d12renderPassDepthStencilDesc : nullptr, _subPass->m_d3d12renderPassFlags);
         }
