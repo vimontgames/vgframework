@@ -266,26 +266,26 @@ namespace vg::engine
 	}
 
     //--------------------------------------------------------------------------------------
-    Scene * Engine::addEmptyScene(Universe * _universe)
+    Scene * Engine::addEditorScene(Universe * _universe)
     {
-        Scene * emptyScene = (Scene*)CreateFactoryObject(Scene, "Empty", _universe);
-        _universe->addScene(emptyScene);
-        emptyScene->release();
+        Scene * editor = (Scene*)CreateFactoryObject(Scene, "Editor", _universe);
+        _universe->addScene(editor);
+        editor->release();
 
-        GameObject * rootGameObject = (GameObject*)CreateFactoryObject(GameObject, "Root", emptyScene);
-        emptyScene->SetRoot(rootGameObject);
+        GameObject * rootGameObject = (GameObject*)CreateFactoryObject(GameObject, "Root", editor);
+        editor->SetRoot(rootGameObject);
         rootGameObject->release();
 
         // add camera entity (TODO: editor camera)
         FreeCam * cameraGameObject = new FreeCam("Camera", rootGameObject);
         auto * cameraComponent = (CameraComponent*)CreateFactoryObject(CameraComponent, "", cameraGameObject);
         cameraGameObject->addComponent(cameraComponent);
-        cameraComponent->setView(m_editorView, rootGameObject);
+        cameraComponent->setView(m_editorView, cameraGameObject);
         rootGameObject->AddChild(cameraGameObject);
         VG_SAFE_RELEASE(cameraComponent);
         VG_SAFE_RELEASE(cameraGameObject);
 
-        return emptyScene;
+        return editor;
     }
 
     //--------------------------------------------------------------------------------------
@@ -303,14 +303,39 @@ namespace vg::engine
 
         // create default universe
         m_universe = (Universe *)CreateFactoryObject(Universe, "DefaultUniverse", this);
-        Scene* defaultScene = addEmptyScene(m_universe);
-        GameObject * rootSector = defaultScene->getRoot();
-        
+
+        addEditorScene(m_universe);
+
+        // create empty scene
+        //IScene * defaultScene = (IScene*)CreateFactoryObject(Scene, "TestScene", this);
+        ////
+        //m_universe->addScene(defaultScene);
+        //defaultScene->release();
+        //
+        //// add root sector
+        //GameObject * rootSector = (GameObject*)CreateFactoryObject(GameObject, "Root", defaultScene);
+        //defaultScene->SetRoot(rootSector);
+        //rootSector->release();
+        //
+        //// add child sector
+        //GameObject * childSector = (GameObject*)CreateFactoryObject(GameObject, "3DScan", rootSector);
+        //rootSector->AddChild(childSector);
+        //childSector->release();
+        //
+        //// add camera entity
+        //m_freeCam = new FreeCam("Camera", rootSector);
+        //auto * cameraComponent = (CameraComponent*)CreateFactoryObject(CameraComponent, "", m_freeCam);
+        //m_freeCam->addComponent(cameraComponent);
+        //cameraComponent->setView(m_editorView, rootSector);
+        //rootSector->AddChild(m_freeCam);
+        //VG_SAFE_RELEASE(cameraComponent);
+        //VG_SAFE_RELEASE(m_freeCam);
+
         auto addMesh = [=](GameObject * _parent, const string & _name, const string & _path, const float4 _position)
         {
             auto * meshGO = (GameObject*)CreateFactoryObject(GameObject, _name.c_str(), _parent);
             auto * meshComponent = (MeshComponent*)CreateFactoryObject(MeshComponent, "", meshGO);
-            meshComponent->getMeshResource().setPath(_path);
+            meshComponent->getMeshResource().setResourcePath(_path);
             meshGO->addComponent(meshComponent);
             _parent->AddChild(meshGO);
         
@@ -327,10 +352,10 @@ namespace vg::engine
             VG_SAFE_RELEASE(meshGO);
         };
 
-#if 1
+#if 0
         //addMesh(rootSector, "Box", "data/Models/matIDBox/matIDBox.fbx", float4(80.0f, 0.0f, 10.0f, 1.0f));
-        addMesh(rootSector, "3DScanMan001", "data/Models/human/human.fbx", float4(-1.0f, 0.0f, 0.0f, 1.0f));
-        addMesh(rootSector, "3DScanMan016", "data/Models/3DScan_Man_016/3DScan_Man_016.FBX", float4(0.0f, 0.0f, 0.0f, 1.0f));
+        addMesh(childSector, "3DScanMan001", "data/Models/human/human.fbx", float4(-1.0f, 0.0f, 0.0f, 1.0f));
+        addMesh(childSector, "3DScanMan016", "data/Models/3DScan_Man_016/3DScan_Man_016.FBX", float4(0.0f, 0.0f, 0.0f, 1.0f));
         addMesh(rootSector, "Jess", "data/Models/jess/jess.fbx", float4(+1.0f, 0.0f, 00.0f, 1.0f));
         //addMesh(rootSector, "Floor", "data/Models/floor/floor.fbx", float4(0.0f, 0.0f, -10.0f, 1.0f));
 #elif 0
@@ -342,7 +367,7 @@ namespace vg::engine
                 auto * meshEntity = (Entity*)CreateFactoryObject(Entity, "", root);
                 auto * meshComponent = (MeshComponent*)CreateFactoryObject(MeshComponent, "", meshEntity);
 
-                meshComponent->getMeshResource().setPath("data/Models/Teapot.fbx");
+                meshComponent->getMeshResource().setResourcePath("data/Models/Teapot.fbx");
                 meshEntity->addComponent(meshComponent);
 
                 root->addEntity(meshEntity);

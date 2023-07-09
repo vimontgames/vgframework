@@ -80,6 +80,7 @@
     <ClInclude Include="Pass\BackgroundPass.h" />
     <ClInclude Include="Pass\BackgroundPass.hpp" />
     <ClInclude Include="Pass\ImguiPass\ImguiPass.h" />
+    <ClInclude Include="Pass\ImguiPass\Imgui_Consts.h" />
     <ClInclude Include="Pass\ImguiPass\Menus\ImguiGameObjectMenu.h" />
     <ClInclude Include="Pass\ImguiPass\Menus\ImguiGameObjectMenu.hpp" />
     <ClInclude Include="Pass\ImguiPass\Menus\ImguiMenu.h" />

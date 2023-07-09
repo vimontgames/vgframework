@@ -23,7 +23,7 @@ namespace vg::engine
         ~MaterialResource();
 
         const core::vector<core::string>    getExtensions       () const final;
-        void                                onPathChanged       (IObject * _owner, const core::string & _oldPath, const core::string & _newPath) final;
+        void                                onResourcePathChanged       (IObject * _owner, const core::string & _oldPath, const core::string & _newPath) final;
 
         bool                                cook                (const core::string & _file) final override;
         bool                                load                (const core::string & _path, core::IObject * _owner) final override;

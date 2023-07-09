@@ -55,7 +55,7 @@ namespace vg::graphics::renderer
 
                     string newName = nameTmp;
 
-                    if (ImGui::Button("Add", ImVec2(80, 0)))
+                    if (ImGui::Button("Add", Editor::ButtonSize))
                     {
                         IGameObject * newGameObject = (IGameObject*)CreateFactoryObject(GameObject, newName.c_str(), gameObject);
                         gameObject->AddChild(newGameObject);
@@ -67,7 +67,7 @@ namespace vg::graphics::renderer
 
                     ImGui::SameLine();
 
-                    if (ImGui::Button("Cancel", ImVec2(80, 0)))
+                    if (ImGui::Button("Cancel", Editor::ButtonSize))
                     {
                         ImGui::CloseCurrentPopup();
                         nameTmp[0] = '\0';
@@ -84,7 +84,7 @@ namespace vg::graphics::renderer
                 {
                     ImGui::Text("Are you sure you want to delete \"%s\?", gameObject->getName().c_str());
 
-                    if (ImGui::Button("Yes", ImVec2(80, 0)))
+                    if (ImGui::Button("Yes", Editor::ButtonSize))
                     {
                         IGameObject * parentGameObject = (IGameObject*)gameObject->getParent();
                         if (nullptr != parentGameObject)
@@ -97,7 +97,7 @@ namespace vg::graphics::renderer
 
                     ImGui::SameLine();
 
-                    if (ImGui::Button("No", ImVec2(80, 0)))
+                    if (ImGui::Button("No", Editor::ButtonSize))
                         ImGui::CloseCurrentPopup();
 
                     ImGui::EndPopup();

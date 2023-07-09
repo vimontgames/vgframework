@@ -30,7 +30,7 @@ namespace vg::core
     {
         setName(_other.getName());
 
-        m_path = _other.m_path;
+        m_resourcePath = _other.m_resourcePath;
         m_owner = _other.m_owner;
         m_object = _other.m_object;
         m_userData = _other.m_userData;
@@ -47,7 +47,7 @@ namespace vg::core
     {
         setOwner(_owner);
         setUserData(_userData);
-        setPath(_path);
+        setResourcePath(_path);
     }
 
     //--------------------------------------------------------------------------------------
@@ -84,24 +84,24 @@ namespace vg::core
     }    
 
     //--------------------------------------------------------------------------------------
-    bool Resource::setPath(const string & _path)
+    bool Resource::setResourcePath(const string & _path)
     {
         VG_ASSERT(nullptr != getOwner());
 
-        if (m_path == _path)
+        if (m_resourcePath == _path)
             return false;
      
-        string oldPath = m_path;
-        m_path = io::getRelativePath(_path);
-        onPathChanged(m_owner, oldPath, m_path);
+        string oldPath = m_resourcePath;
+        m_resourcePath = io::getRelativePath(_path);
+        onResourcePathChanged(m_owner, oldPath, m_resourcePath);
 
         return true;
     }
 
     //--------------------------------------------------------------------------------------
-    const string & Resource::getPath() const
+    const string & Resource::getResourcePath() const
     {
-        return m_path;
+        return m_resourcePath;
     }
 
     //--------------------------------------------------------------------------------------

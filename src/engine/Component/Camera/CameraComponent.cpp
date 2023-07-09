@@ -55,6 +55,9 @@ namespace vg::engine
     //--------------------------------------------------------------------------------------
     void CameraComponent::Update(double _dt)
     {
+        if (!m_view)
+            return;
+
         const float4x4 & matrix = GetGameObject()->GetWorldMatrix();
         m_view->SetupCamera(inverse(matrix), float2(m_near, m_far), m_fovY);
     }

@@ -49,7 +49,7 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
-    void TextureResource::onPathChanged(IObject * _owner, const string & _oldPath, const string & _newPath)
+    void TextureResource::onResourcePathChanged(IObject * _owner, const string & _oldPath, const string & _newPath)
     {
         if (_oldPath != _newPath)
             ResourceManager::get()->loadResourceAsync(this, _newPath, _owner);

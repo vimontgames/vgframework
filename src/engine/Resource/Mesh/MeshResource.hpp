@@ -51,7 +51,7 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
-    void MeshResource::onPathChanged(IObject * _owner, const string & _oldPath, const string & _newPath)
+    void MeshResource::onResourcePathChanged(IObject * _owner, const string & _oldPath, const string & _newPath)
     {
         if (_oldPath != _newPath)
             ResourceManager::get()->loadResourceAsync(this, _newPath, _owner);

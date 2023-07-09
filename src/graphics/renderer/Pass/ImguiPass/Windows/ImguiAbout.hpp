@@ -22,16 +22,14 @@ namespace vg::graphics::renderer
 
             Text("Website");
             Text("Twitter");
-            Text("Mastodon");
             Text("");
 
             NextColumn();
             NextColumn();
 
             textURL("github.com/vimontgames/vgframework", "https://github.com/vimontgames/vgframework");
-            textURL("@benoitvimont", "https://twitter.com/benoitvimont");
-            textURL("@benoitvimont@mastodon.gamedev.place", "https://mastodon.gamedev.place/@benoitvimont");
-            Text(""); 
+            textURL("Benoit Vimont", "https://twitter.com/benoitvimont");
+            Text("");
 
             Separator();
 
@@ -122,7 +120,7 @@ namespace vg::graphics::renderer
             Columns(1);
             Text("Special Thanks:");
             Text("");
-            Text("Bob, Guigui, Marcel, Hamilcar, and SlavSquat.");
+            Text("To Bob, Ghighi, Marcel and Hamilcar.");
 
             End();
         }

@@ -50,7 +50,7 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
-    void MaterialResource::onPathChanged(IObject * _owner, const string & _oldPath, const string & _newPath)
+    void MaterialResource::onResourcePathChanged(IObject * _owner, const string & _oldPath, const string & _newPath)
     {
       
     }

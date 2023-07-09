@@ -1,5 +1,7 @@
 #pragma once
 
+#include "graphics/renderer/Pass/ImguiPass/Imgui_Consts.h"
+
 namespace vg::graphics::renderer
 {
     class ImguiMenu

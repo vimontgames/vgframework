@@ -25,6 +25,10 @@ namespace vg::core
 		void					    setName		        (const string & _name) override;
 		const string &			    getName		        () const override;
 
+        bool                        hasFile             () const override;
+        void					    setFile             (const string & _file) override;
+        const string &			    getFile             () const override;
+
 		u32						    addRef		        () override;
 		u32						    release		        () override;
 
@@ -33,6 +37,7 @@ namespace vg::core
 
 	private:
 		string					    m_name;
+        string                      m_file;
 		atomic<u32>				    m_refCount;
         Object *                    m_parent = nullptr;
 	};

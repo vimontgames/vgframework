@@ -31,14 +31,14 @@ namespace vg::core
         void                        setOwner            (core::IObject * _object) final;
         core::IObject *             getOwner            () const final;
 
-        bool                        setPath             (const string & _path) final;
-        const string &              getPath             () const final;
+        bool                        setResourcePath     (const string & _path) final;
+        const string &              getResourcePath     () const final;
 
         bool                        cook                (const core::string & _file) = 0;
         bool                        load                (const core::string & _file, core::IObject * _owner) = 0;
 
 	protected:
-        string                      m_path;
+        string                      m_resourcePath;
         IObject *                   m_owner = nullptr;
         IObject *                   m_object = nullptr;
         UserData                    m_userData = 0x0;

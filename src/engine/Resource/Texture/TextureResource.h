@@ -13,22 +13,23 @@ namespace vg::engine
     {
     public:
         using super = core::Resource;
-        const char *                        getClassName        () const override { return "TextureResource"; }
-        static bool                         registerClass       (core::IFactory & _factory);
-        static bool                         registerProperties  (core::IClassDesc & _desc);
 
-                                            TextureResource     (const core::string & _name = "", core::IObject * _parent = nullptr);
-                                            ~TextureResource    ();
+        const char *                        getClassName            () const override { return "TextureResource"; }
+        static bool                         registerClass           (core::IFactory & _factory);
+        static bool                         registerProperties      (core::IClassDesc & _desc);
 
-        const core::vector<core::string>    getExtensions       () const final;
-        void                                onPathChanged       (IObject * _owner, const core::string & _oldPath, const core::string & _newPath) final;
+                                            TextureResource         (const core::string & _name = "", core::IObject * _parent = nullptr);
+                                            ~TextureResource        ();
 
-        bool                                cook                (const core::string & _file) final override;
-        bool                                load                (const core::string & _file, core::IObject * _owner) final override;
+        const core::vector<core::string>    getExtensions           () const final;
+        void                                onResourcePathChanged   (IObject * _owner, const core::string & _oldPath, const core::string & _newPath) final;
 
-        graphics::driver::ITexture *        getTexture          () const { return (graphics::driver::ITexture*)m_object; }
+        bool                                cook                    (const core::string & _file) final override;
+        bool                                load                    (const core::string & _file, core::IObject * _owner) final override;
 
-        core::uint                          getSubResourceCount () const final { return 0;}
-        IResource *                         getSubResource      (core::uint _index) final { return nullptr;}
+        graphics::driver::ITexture *        getTexture              () const { return (graphics::driver::ITexture*)m_object; }
+
+        core::uint                          getSubResourceCount     () const final { return 0;}
+        IResource *                         getSubResource          (core::uint _index) final { return nullptr;}
     };
 }

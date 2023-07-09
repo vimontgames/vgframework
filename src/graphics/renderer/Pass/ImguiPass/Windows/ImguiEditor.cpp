@@ -12,6 +12,7 @@
 #include "ImguiEditor.h"
 #include "graphics/renderer/Renderer.h"
 #include "graphics/renderer/Imgui/imguiAdapter.h"
+#include "graphics/renderer/Pass/ImguiPass/Imgui_Consts.h"
 #include "ImGui-Addons/FileBrowser/ImGuiFileBrowser.cpp"
 
 using namespace vg::core;
@@ -449,7 +450,7 @@ namespace vg::graphics::renderer
                 if (asBool(IProperty::Flags::IsFolder & flags))
                 {
                     auto & fileBrowser = getFileBrowser();
-                    if (fileBrowser.showFileDialog("Select folder", imgui_addons::ImGuiFileBrowser::DialogMode::SELECT, ImVec2(860, 400)))
+                    if (fileBrowser.showFileDialog("Select folder", imgui_addons::ImGuiFileBrowser::DialogMode::SELECT, Editor::LoadSaveDialogSize))
                     {
                         const string newFolder = io::getRelativePath(fileBrowser.selected_path);
 
@@ -643,7 +644,7 @@ namespace vg::graphics::renderer
 
                     string newName = nameTmp;
 
-                    if (ImGui::Button("Rename", ImVec2(80, 0)))
+                    if (ImGui::Button("Rename", Editor::ButtonSize))
                     {
                         pObject->setName(newName);
                         ImGui::CloseCurrentPopup();
@@ -653,7 +654,7 @@ namespace vg::graphics::renderer
 
                     ImGui::SameLine();
 
-                    if (ImGui::Button("Cancel", ImVec2(80, 0)))
+                    if (ImGui::Button("Cancel", Editor::ButtonSize))
                     {
                         ImGui::CloseCurrentPopup();
                         nameTmp[0] = '\0';
@@ -739,9 +740,9 @@ namespace vg::graphics::renderer
         bool open = false;
 
         char buffer[1024];
-        sprintf_s(buffer, _resource->getPath().c_str());
+        sprintf_s(buffer, _resource->getResourcePath().c_str());
         if (ImGui::InputText("##File", buffer, countof(buffer), (ImGuiInputTextFlags)0))
-            _resource->setPath(buffer);
+            _resource->setResourcePath(buffer);
 
         string openFileButtonName = getButtonLabel("File", _resource);
         string openFileDialogName = getButtonLabel("Open file", _resource);
@@ -771,12 +772,12 @@ namespace vg::graphics::renderer
             ext = "*.*";
 
         auto & fileBrowser = getFileBrowser();
-        if (fileBrowser.showFileDialog(openFileDialogName.c_str(), imgui_addons::ImGuiFileBrowser::DialogMode::OPEN, ImVec2(860, 400), ext.c_str()))
+        if (fileBrowser.showFileDialog(openFileDialogName.c_str(), imgui_addons::ImGuiFileBrowser::DialogMode::OPEN, Editor::LoadSaveDialogSize, ext.c_str()))
         {
             const string newFilePath = fileBrowser.selected_path;
-            if (_resource->getPath() != newFilePath)
+            if (_resource->getResourcePath() != newFilePath)
             {
-                _resource->setPath(newFilePath);
+                _resource->setResourcePath(newFilePath);
                 changed = true;
             }
         }

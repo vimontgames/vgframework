@@ -22,8 +22,10 @@ namespace vg::graphics::renderer
 
         if (ImGui::BeginPopupContextItem())
         {
+            const bool hasPath = scene->hasFile();
+
             ImGui::PushID("SceneMenu");
-            if (ImGui::MenuItem("Save Scene"))
+            if (ImGui::MenuItem("Save Scene", nullptr, false, hasPath))
             {
                 string existingFilePath = scene->getName() + ".scene";
                 factory->saveToXML(scene, existingFilePath);
@@ -57,7 +59,7 @@ namespace vg::graphics::renderer
         switch (m_selected)
         {
             case MenuOption::Save:
-            if (fileBrowser.showFileDialog(m_popup, imgui_addons::ImGuiFileBrowser::DialogMode::SAVE, ImVec2(860, 400), ".scene"))
+            if (fileBrowser.showFileDialog(m_popup, imgui_addons::ImGuiFileBrowser::DialogMode::SAVE, Editor::LoadSaveDialogSize, ".scene"))
             {
                 const string newFilePath = fileBrowser.selected_path;
                 factory->saveToXML(scene, newFilePath);
@@ -70,7 +72,7 @@ namespace vg::graphics::renderer
                 {
                     ImGui::Text("Are you sure you want to close \"%s\?", scene->getName().c_str());
 
-                    if (ImGui::Button("Yes", ImVec2(80, 0)))
+                    if (ImGui::Button("Yes", Editor::ButtonSize))
                     {
                         IUniverse * universe = (IUniverse*)scene->getParent();
                         if (nullptr != universe)
@@ -81,7 +83,7 @@ namespace vg::graphics::renderer
 
                     ImGui::SameLine();
 
-                    if (ImGui::Button("No", ImVec2(80, 0)))
+                    if (ImGui::Button("No", Editor::ButtonSize))
                         ImGui::CloseCurrentPopup();
 
                     ImGui::EndPopup();

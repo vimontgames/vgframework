@@ -9,6 +9,13 @@ namespace vg::graphics::renderer
     class ImguiScene : public ImguiEditor
     {
     public:
+        enum MenuOption
+        {
+            None = 0,
+            AddScene,
+            LoadScene,
+        };
+
         ImguiScene(const string & _name, Flags _flags) :
             ImguiEditor(_name, _flags)
         {

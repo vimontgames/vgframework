@@ -69,7 +69,7 @@ namespace vg::engine
         void                                createEditorView    ();
         void                                destroyEditorView   ();
 
-        core::Scene *                       addEmptyScene       (core::Universe * _universe);
+        core::Scene *                       addEditorScene       (core::Universe * _universe);
 
     protected:
         void                                updateDt            ();

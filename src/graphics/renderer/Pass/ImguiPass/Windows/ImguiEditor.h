@@ -67,5 +67,7 @@ namespace vg::graphics::renderer
         core::string                            m_name;
         Flags                                   m_flags;
         bool                                    m_isVisible = true;
+        core::uint                              m_selected = 0;
+        const char *                            m_popup = nullptr;
     };
 }

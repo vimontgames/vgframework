@@ -1,5 +1,7 @@
 #include "ImguiScene.h"
 #include "imgui/imgui.h"
+#include "core/IGameObject.h"
+#include "ImGui-Addons/FileBrowser/ImGuiFileBrowser.h"
 
 namespace vg::graphics::renderer
 {
@@ -10,73 +12,125 @@ namespace vg::graphics::renderer
         {
             const auto * factory = Kernel::getFactory();
             engine::IEngine * engine = (engine::IEngine *)factory->getSingleton("Engine");
-
+            auto & fileBrowser = ImguiEditor::getFileBrowser();
             IUniverse * universe = engine->getCurrentUniverse();
             if (universe)
             {
+                bool openPopup = false;
+
                 if (ImGui::BeginPopupContextWindow())
                 {
                     ImGui::PushID("ScenesMenu");
 
                     if (ImGui::MenuItem("Add Scene"))
                     {
-
+                        m_selected = MenuOption::AddScene;
+                        openPopup = true;
+                        m_popup = "Add Scene";
                     }
 
                     if (ImGui::MenuItem("Load Scene"))
                     {
-
+                        m_selected = MenuOption::LoadScene;
+                        openPopup = true;
+                        m_popup = "Load Scene";
                     }
 
-                    //if (ImGui::MenuItem("Save"))
-                    //{
-                    //    m_selected = MenuOption::Save;
-                    //    //fileBrowser.setPath(io::getCurrentWorkingDirectory() + "/data/Scenes");
-                    //    fileBrowser.setFilename(scene->getName() + ".scene");
-                    //    m_popup = "Save Scene As ...";
-                    //    openPopup = true;
-                    //}
-                    //if (ImGui::MenuItem("Close"))
-                    //{
-                    //    m_selected = MenuOption::Close;
-                    //    openPopup = true;
-                    //    m_popup = "Close Scene";
-                    //}
                     ImGui::PopID();
                     ImGui::EndPopup();
                 }
 
-                //if (ImGui::TreeNodeEx("Scenes", ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_DefaultOpen))
+                if (openPopup)
                 {
-                    for (uint i = 0; i < universe->getSceneCount(); ++i)
-                    {
-                        const IScene * scene = universe->getScene(i);
-                        if (nullptr != scene)
+                    ImGui::OpenPopup(m_popup);
+                    openPopup = false;
+                }
+                
+                switch (m_selected)
+                {
+                    case MenuOption::AddScene:
+                        if (ImGui::BeginPopupModal(m_popup, nullptr, ImGuiWindowFlags_AlwaysAutoResize))
                         {
-                            IGameObject * root = scene->GetRoot();
-                            auto flags = ImGuiTreeNodeFlags_Framed;
-                            if (nullptr != root)
-                                flags |= ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_DefaultOpen;
-                            else
-                                flags |= ImGuiTreeNodeFlags_Leaf;
+                            static char nameTmp[1024] = { '\0' };
 
-                            const bool open = ImGui::TreeNodeEx(scene->getName().c_str(), flags);
+                            if (nameTmp[0] == '\0')
+                                strcpy(nameTmp, "New Scene");
 
-                            auto status = m_sceneMenu.Display((IObject*)scene);
+                            ImGui::InputText("Name", nameTmp, countof(nameTmp), ImGuiInputTextFlags_AutoSelectAll);
 
-                            if (status == ImguiMenu::Status::Removed)
-                                root = nullptr;
+                            string newName = nameTmp;
 
-                            if (open)
+                            if (ImGui::Button("Add", Editor::ButtonSize))
                             {
-                                if (nullptr != root)
-                                    displayGameObject(root);
-                                ImGui::TreePop();
+                                IScene * newScene = (IScene*)CreateFactoryObject(Scene, newName.c_str(), universe);
+                                universe->addScene(newScene);
+                                IGameObject * rootSector = (IGameObject*)CreateFactoryObject(GameObject, "Root", newScene);
+                                newScene->SetRoot(rootSector);
+                                rootSector->release();
+                                newScene->Release();
+                                ImGui::CloseCurrentPopup();
+                                nameTmp[0] = '\0';
+                                m_selected = MenuOption::None;
+                            }
+
+                            ImGui::SameLine();
+
+                            if (ImGui::Button("Cancel", Editor::ButtonSize))
+                            {
+                                ImGui::CloseCurrentPopup();
+                                nameTmp[0] = '\0';
+                                m_selected = MenuOption::None;
+                            }
+                            ImGui::EndPopup();
+                        }
+                        break;
+
+                    case MenuOption::LoadScene:
+                        if (fileBrowser.showFileDialog(m_popup, imgui_addons::ImGuiFileBrowser::DialogMode::OPEN, Editor::LoadSaveDialogSize, ".scene"))
+                        {
+                            const string path = fileBrowser.selected_path;
+                            IScene* scene = (IScene*)CreateFactoryObject(Scene, "", universe);
+                            if (factory->loadFromXML(scene, path))
+                            {
+                                universe->addScene(scene);
+                                scene->Release();
+
+                                //status = Status::Loaded;
+                            }
+                            else
+                            {
+                                VG_SAFE_DELETE(scene);
                             }
                         }
-                    }
+                        break;
+                }
 
-                    //ImGui::TreePop();
+                for (uint i = 0; i < universe->getSceneCount(); ++i)
+                {
+                    const IScene * scene = universe->getScene(i);
+                    if (nullptr != scene)
+                    {
+                        IGameObject * root = scene->GetRoot();
+                        auto flags = ImGuiTreeNodeFlags_Framed;
+                        if (nullptr != root)
+                            flags |= ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_DefaultOpen;
+                        else
+                            flags |= ImGuiTreeNodeFlags_Leaf;
+
+                        const bool open = ImGui::TreeNodeEx(scene->getName().c_str(), flags);
+
+                        auto status = m_sceneMenu.Display((IObject*)scene);
+
+                        if (status == ImguiMenu::Status::Removed)
+                            root = nullptr;
+
+                        if (open)
+                        {
+                            if (nullptr != root)
+                                displayGameObject(root);
+                            ImGui::TreePop();
+                        }
+                    }
                 }
             }
         }

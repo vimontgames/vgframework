@@ -15,24 +15,24 @@ namespace vg::engine
     public:
         using super = core::Resource;
 
-        const char *                        getClassName        () const override { return "MeshResource"; }
-        static bool                         registerClass       (core::IFactory & _factory);
-        static bool                         registerProperties  (core::IClassDesc & _desc);
+        const char *                        getClassName            () const override { return "MeshResource"; }
+        static bool                         registerClass           (core::IFactory & _factory);
+        static bool                         registerProperties      (core::IClassDesc & _desc);
 
-        MeshResource(const core::string & _name, IObject * _parent);
-        ~MeshResource();
+                                            MeshResource            (const core::string & _name, IObject * _parent);
+                                            ~MeshResource           ();
 
-        const core::vector<core::string>    getExtensions       () const final;
-        void                                onPathChanged       (IObject * _owner, const core::string & _oldPath, const core::string & _newPath) final;
+        const core::vector<core::string>    getExtensions           () const final;
+        void                                onResourcePathChanged   (IObject * _owner, const core::string & _oldPath, const core::string & _newPath) final;
 
-        bool                                cook                (const core::string & _file) final override;
-        bool                                load                (const core::string & _path, core::IObject * _owner) final override;
+        bool                                cook                    (const core::string & _file) final override;
+        bool                                load                    (const core::string & _path, core::IObject * _owner) final override;
 
-        void                                onResourceLoaded    (core::IResource * _resource) final override;
-        graphics::renderer::IMeshModel *    getMeshModel        () const { return (graphics::renderer::IMeshModel*)m_object; } 
+        void                                onResourceLoaded        (core::IResource * _resource) final override;
+        graphics::renderer::IMeshModel *    getMeshModel            () const { return (graphics::renderer::IMeshModel*)m_object; } 
 
-        core::uint                          getSubResourceCount () const final;
-        IResource *                         getSubResource      (core::uint _index) final;
+        core::uint                          getSubResourceCount     () const final;
+        IResource *                         getSubResource          (core::uint _index) final;
 
     private:
         core::vector<MaterialResource>      m_materialResources;

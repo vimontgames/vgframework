@@ -229,6 +229,9 @@
     <ClInclude Include="Pass\ImguiPass\Menus\ImguiSceneMenu.hpp">
       <Filter>Pass\ImguiPass\Menu</Filter>
     </ClInclude>
+    <ClInclude Include="Pass\ImguiPass\Imgui_Consts.h">
+      <Filter>Pass\ImguiPass</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Pass">
