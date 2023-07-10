@@ -11,8 +11,8 @@ namespace vg::core
     {
     public:
 
-        IClassDesc *                registerClass           (const char * _className, const char * _displayName, IClassDesc::Flags _flags, IClassDesc::Func _createFunc) final;
-        IClassDesc *                registerSingletonClass  (const char * _className, const char * _displayName, IClassDesc::Flags _flags, IClassDesc::SingletonFunc _createFunc) final;
+        IClassDesc *                registerClass           (const char * _className, const char * _displayName, IClassDesc::Flags _flags, u32 sizeOf, IClassDesc::Func _createFunc) final;
+        IClassDesc *                registerSingletonClass  (const char * _className, const char * _displayName, IClassDesc::Flags _flags, u32 sizeOf, IClassDesc::SingletonFunc _createFunc) final;
         const IClassDesc *          getClassDescriptor      (const char * _className) const final;
         bool                        isRegisteredClass       (const char * _className) const final;
         IObject *                   getSingleton            (const char * _className) const final;

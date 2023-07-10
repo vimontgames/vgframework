@@ -56,7 +56,7 @@ namespace vg::graphics::driver
         {
             if (_invalid != _handle)
             {
-                _pool.free(_handle);
+                _pool.dealloc(_handle);
                 _resources[_handle - _offset] = nullptr;
                 _handle = _invalid;
             }

@@ -55,6 +55,7 @@ namespace vg::core
         virtual Func                        getCreateFunc           () const = 0;
         virtual SingletonFunc               getSingletonFunc        () const = 0;
         virtual IClassDesc::Flags           getFlags                () const = 0;
+        virtual u32                         getSizeOf               () const = 0;
         virtual u32                         getNextIndex            () const = 0;
     }; 
 }

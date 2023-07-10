@@ -21,12 +21,15 @@ namespace vg::graphics::renderer
             0.0f, 0.0f, -1.0f, 0.0f,
             0.0f, 0.0f, -1.0f, 1.0f
         );
+
+        SetUniverse(_params.universe);
     }
 
     //--------------------------------------------------------------------------------------
     View::~View()
     {
         VG_SAFE_RELEASE(m_cameraSector);
+        //VG_SAFE_RELEASE(m_cameraUniverse);
     }
 
     //--------------------------------------------------------------------------------------
@@ -70,5 +73,28 @@ namespace vg::graphics::renderer
     core::IGameObject * View::GetCameraSector() const
     {
         return getCameraSector();
+    }
+
+    //--------------------------------------------------------------------------------------
+    void View::SetUniverse(core::IUniverse* _universe)
+    {
+        if (_universe != m_cameraUniverse)
+        {
+            //VG_SAFE_RELEASE(m_cameraUniverse);
+            m_cameraUniverse = _universe;
+            //VG_SAFE_INCREASE_REFCOUNT(m_cameraUniverse);
+        }
+    }
+
+    //--------------------------------------------------------------------------------------
+    core::IUniverse* View::GetUniverse() const
+    {
+        return m_cameraUniverse;
+    }
+
+    //--------------------------------------------------------------------------------------
+    u32 View::release()
+    {
+        return IView::release();
     }
 }

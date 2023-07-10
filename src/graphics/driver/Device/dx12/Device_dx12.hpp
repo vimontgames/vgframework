@@ -229,7 +229,7 @@ namespace vg::graphics::driver::dx12
 	{
         D3D12_CPU_DESCRIPTOR_HANDLE start = { m_RTVDescriptorHeap->GetCPUDescriptorHandleForHeapStart() };
         const auto index = (_hRTV.ptr - start.ptr) / m_RTVDescriptorSize;
-        m_RTVHandleIndexPool.free((u16)index);
+        m_RTVHandleIndexPool.dealloc((u16)index);
 	}
 
     //--------------------------------------------------------------------------------------
@@ -249,7 +249,7 @@ namespace vg::graphics::driver::dx12
     {
         D3D12_CPU_DESCRIPTOR_HANDLE start = { m_DSVDescriptorHeap->GetCPUDescriptorHandleForHeapStart() };
         const auto index = (_hDSV.ptr - start.ptr) / m_DSVDescriptorSize;
-        m_DSVHandleIndexPool.free((u16)index);
+        m_DSVHandleIndexPool.dealloc((u16)index);
     }
 
     //--------------------------------------------------------------------------------------

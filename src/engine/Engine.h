@@ -61,6 +61,7 @@ namespace vg::engine
 		void							    runOneFrame	        () final;
 
         core::uint2                         getScreenSize       () const final;
+        graphics::renderer::IView *         getEditorView       () const;
 
 		graphics::renderer::IRenderer *	    GetRenderer	        () const final;
         engine::IResourceManager *          GetResourceManager  () const final;

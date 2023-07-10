@@ -1,11 +1,5 @@
 #include "Precomp.h"
 
-#if defined(_WIN32)
-#ifdef VG_DEBUG
-#define _CRTDBG_MAP_ALLOC
-#endif
-#endif
-
 #include "core/Plugin/Plugin.h"
 #include "core/CmdLine/CmdLine.h"
 #include "core/Kernel.h"
@@ -162,6 +156,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 	//_crtBreakAlloc = 1623;
 	#endif
+
+	//int* leak = new int[42];
 
 	core::uint width = 1920, height = 1080;
 

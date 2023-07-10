@@ -57,6 +57,7 @@ namespace vg::core
             Hidden      = 0x0000000000000040,   // Hide property
             Bitfield    = 0x0000000000000080,   // Value displayed as hex, enum as flags
             Resource    = 0x0000000000000100,
+            NotSaved    = 0x0000000000000200
         };
 
         virtual void                        setRange                        (float2 _range) = 0;

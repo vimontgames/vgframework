@@ -40,7 +40,7 @@ namespace vg::core
             return (elemMask(1) << localIndex) & m_pages[pageIndex].mask;
         }
 
-        void free(T _index)
+        void dealloc(T _index)
         {
             const uint pageIndex = _index / elemCountPerPage;
             const uint localIndex = _index - (pageIndex * elemCountPerPage);

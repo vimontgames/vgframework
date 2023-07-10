@@ -14,7 +14,11 @@ namespace vg::core
     //--------------------------------------------------------------------------------------
     bool Resource::registerProperties(IClassDesc & _desc)
     {
-        _desc.registerProperty("Resource", "m_object", (IObject**)(&((Resource*)(nullptr))->m_object), "Object", IProperty::Flags::None);
+        _desc.registerPropertyHelper(Resource, m_resourcePath, "Path", IProperty::Flags::Hidden);
+
+        // This is used for the inspector but does not need to be serialized
+        _desc.registerProperty("Resource", "m_object", (IObject**)(&((Resource*)(nullptr))->m_object), "Object", IProperty::Flags::NotSaved);
+
         return true;
     }
 

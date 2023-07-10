@@ -1,13 +1,12 @@
 <Root>
     <Object class="Scene">
-        <Property type="String" name="m_name" value="Red"/>
+        <Property type="String" name="m_name" value="OneCharacter"/>
         <Property type="ObjectRef" name="m_root">
             <Object class="GameObject">
                 <Property type="String" name="m_name" value="Root"/>
                 <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
                 <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
                 <Property type="Float4x4" name="m_world" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="0" Ty="0" Tz="0" Tw="1"/>
-                <Property type="ObjectRefVector" name="m_models"/>
                 <Property type="ObjectRefVector" name="m_components"/>
                 <Property type="ObjectRefVector" name="m_children">
                     <Object class="FreeCam">
@@ -15,7 +14,6 @@
                         <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
                         <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
                         <Property type="Float4x4" name="m_world" Ix="0.95778722" Iy="-0.28747809" Iz="-0" Iw="-0" Jx="0.06576141" Jy="0.21909648" Jz="0.97348458" Jw="-0" Kx="-0.27985549" Ky="-0.93239111" Kz="0.22875278" Kw="0" Tx="-1.2" Ty="-3.5" Tz="1.7" Tw="1"/>
-                        <Property type="ObjectRefVector" name="m_models"/>
                         <Property type="ObjectRefVector" name="m_components">
                             <Object class="CameraComponent">
                                 <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
@@ -32,12 +30,28 @@
                         <Property type="Float" name="m_roll" value="0"/>
                     </Object>
                     <Object class="GameObject">
-                        <Property type="String" name="m_name" value="Red"/>
+                        <Property type="String" name="m_name" value="3DScanMan001"/>
                         <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
-                        <Property type="Float4" name="m_color" x="1" y="0" z="0" w="1"/>
-                        <Property type="Float4x4" name="m_world" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="1" Ty="1" Tz="1" Tw="1"/>
-                        <Property type="ObjectRefVector" name="m_models"/>
-                        <Property type="ObjectRefVector" name="m_components"/>
+                        <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
+                        <Property type="Float4x4" name="m_world" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="-1" Ty="0" Tz="0" Tw="1"/>
+                        <Property type="ObjectRefVector" name="m_components">
+                            <Object class="MeshComponent">
+                                <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
+                                <Property type="Resource" name="m_meshResource">
+                                    <Object class="MeshResource">
+                                        <Property type="String" name="m_resourcePath" value="data/Models/human/human.fbx"/>
+                                    </Object>
+                                </Property>
+                                <Property type="ObjectRef" name="m_meshInstance">
+                                    <Object class="MeshInstance">
+                                        <Property type="String" name="m_name" value="MeshInstance #0"/>
+                                        <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
+                                        <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
+                                        <Property type="Float4x4" name="m_world" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="-1" Ty="0" Tz="0" Tw="1"/>
+                                    </Object>
+                                </Property>
+                            </Object>
+                        </Property>
                         <Property type="ObjectRefVector" name="m_children"/>
                     </Object>
                 </Property>

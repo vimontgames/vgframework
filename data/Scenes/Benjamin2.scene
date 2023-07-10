@@ -1,6 +1,6 @@
 <Root>
     <Object class="Scene">
-        <Property type="String" name="m_name" value="Benjamin"/>
+        <Property type="String" name="m_name" value="Benjamin2"/>
         <Property type="ObjectRef" name="m_root">
             <Object class="GameObject">
                 <Property type="String" name="m_name" value="Root"/>
@@ -14,7 +14,7 @@
                         <Property type="String" name="m_name" value="Camera"/>
                         <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
                         <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
-                        <Property type="Float4x4" name="m_world" Ix="0.77213931" Iy="0.63545328" Iz="-0" Iw="-0" Jx="-0.25505126" Jy="0.3099128" Jz="0.91591644" Jw="-0" Kx="0.58202213" Ky="-0.70721507" Kz="0.40136901" Kw="0" Tx="2.0879104" Ty="-1.4472618" Tz="1.3295711" Tw="1"/>
+                        <Property type="Float4x4" name="m_world" Ix="0.6223321" Iy="0.78275335" Iz="-0" Iw="-0" Jx="-0.35857049" Jy="0.28508332" Jz="0.88890648" Jw="-0" Kx="0.69579452" Ky="-0.55319506" Kz="0.45808873" Kw="0" Tx="3" Ty="-1.4472618" Tz="1.3295711" Tw="1"/>
                         <Property type="ObjectRefVector" name="m_models"/>
                         <Property type="ObjectRefVector" name="m_components">
                             <Object class="CameraComponent">
@@ -25,10 +25,10 @@
                             </Object>
                         </Property>
                         <Property type="ObjectRefVector" name="m_children"/>
-                        <Property type="Float" name="m_moveSpeed" value="1"/>
+                        <Property type="Float" name="m_moveSpeed" value="0.94400001"/>
                         <Property type="Float" name="m_rotSpeed" value="1"/>
-                        <Property type="Float" name="m_pitch" value="-1.1577853"/>
-                        <Property type="Float" name="m_yaw" value="-2.4529972"/>
+                        <Property type="Float" name="m_pitch" value="-1.0949525"/>
+                        <Property type="Float" name="m_yaw" value="-2.2425148"/>
                         <Property type="Float" name="m_roll" value="0"/>
                     </Object>
                     <Object class="GameObject">

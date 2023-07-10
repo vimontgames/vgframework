@@ -1,5 +1,6 @@
 #include "TestPass3D.h"
 #include "core/GameObject/GameObject.h"
+#include "core/Scene/Scene.h"
 #include "shaders/default/default.hlsli"
 #include "Shaders/system/bindless.hlsli"
 #include "graphics/renderer/Geometry/Mesh/MeshGeometry.h"
@@ -161,13 +162,16 @@ namespace vg::graphics::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    void addInstanceRecur(vector<const IGraphicInstance*> & _graphicInstanceList, const GameObject * _gameObject)
+    void addInstanceRecur(vector<const IGraphicInstance*> & _graphicInstanceList, const GameObject * _root)
     {
-        auto & instances = _gameObject->GetGraphicInstances();
-        _graphicInstanceList.insert(_graphicInstanceList.begin(), instances.begin(), instances.end());
-        auto children = _gameObject->getChildren();
-        for (uint i = 0; i < children.count(); ++i)
-            addInstanceRecur(_graphicInstanceList, children[i]);
+        if (_root)
+        {
+            auto& instances = _root->GetGraphicInstances();
+            _graphicInstanceList.insert(_graphicInstanceList.begin(), instances.begin(), instances.end());
+            auto children = _root->getChildren();
+            for (uint i = 0; i < children.count(); ++i)
+                addInstanceRecur(_graphicInstanceList, children[i]);
+        }
     }
 
     //--------------------------------------------------------------------------------------
@@ -189,14 +193,22 @@ namespace vg::graphics::renderer
         float4x4 viewProj = mul(view->GetViewInvMatrix(), proj);
 
         // #TODO #FIXME Shall pass the root sector instead? 
-        const auto * camSector = view->getCameraSector();
-        if (nullptr == camSector)
-            return;
+        //const auto * camSector = view->getCameraSector();
+        //if (nullptr == camSector)
+        //    return;
 
         // #TODO #TEMPHACK No culling for now just add all instances to the list to draw
         vector<const IGraphicInstance*> graphicInstances;
-        addInstanceRecur(graphicInstances, camSector);
-        
+        //addInstanceRecur(graphicInstances, camSector);
+
+        auto universe = view->GetUniverse();
+        const auto count = universe->getSceneCount();
+        for (uint i = 0; i < count; ++i)
+        {
+            auto scene = universe->getScene(i);
+            addInstanceRecur(graphicInstances, (GameObject*)scene->GetRoot());
+        }
+
         BlendState bs(BlendFactor::One, BlendFactor::Zero, BlendOp::Add);
         DepthStencilState ds(true, true, ComparisonFunc::LessEqual);
 

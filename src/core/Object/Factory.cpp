@@ -5,6 +5,7 @@
 #include "core/XML/XML.h"
 #include "core/Timer/Timer.h"
 #include "core/Kernel.h"
+#include "engine/IResourceManager.h"
 
 using namespace tinyxml2;
 
@@ -13,7 +14,7 @@ namespace vg::core
     //--------------------------------------------------------------------------------------
     // Returned pointer shall not be stored but used immediatly ;)
     //--------------------------------------------------------------------------------------
-    IClassDesc * Factory::registerClass(const char * _className, const char * _displayName, IClassDesc::Flags _flags, IClassDesc::Func _createFunc)
+    IClassDesc * Factory::registerClass(const char * _className, const char * _displayName, IClassDesc::Flags _flags, u32 sizeOf, IClassDesc::Func _createFunc)
     {
         // Classes declared in shared static libs could be declared more than once at static init
         for (uint i = 0; i < m_classes.size(); ++i)
@@ -29,6 +30,7 @@ namespace vg::core
         classDesc.name = _className;
         classDesc.displayName = _displayName ? _displayName : _className;
         classDesc.flags = _flags;
+        classDesc.sizeOf = sizeOf;
         classDesc.createFunc = _createFunc;
 
         m_classes.push_back(classDesc);
@@ -37,7 +39,7 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
-    IClassDesc * Factory::registerSingletonClass(const char * _className, const char * _displayName, IClassDesc::Flags _flags, IClassDesc::SingletonFunc _singletonFunc)
+    IClassDesc * Factory::registerSingletonClass(const char * _className, const char * _displayName, IClassDesc::Flags _flags, u32 sizeOf, IClassDesc::SingletonFunc _singletonFunc)
     {
         // Classes declared in shared static libs could be declared more than once at static init
         for (uint i = 0; i < m_classes.size(); ++i)
@@ -53,6 +55,7 @@ namespace vg::core
         classDesc.name = _className;
         classDesc.displayName = _displayName ? _displayName : _className;
         classDesc.flags = _flags;
+        classDesc.sizeOf = sizeOf;
         classDesc.createSingletonFunc = _singletonFunc;
 
         m_classes.push_back(classDesc);
@@ -537,8 +540,9 @@ namespace vg::core
                                                 }
                                             }
                                         }
-
+                                        
                                         IObject** ppObjectRef = (IObject**)(uint_ptr(_object) + offset);
+                                        VG_SAFE_RELEASE((*ppObjectRef));
                                         *ppObjectRef = pObjectRef;
                                     }
                                     break;
@@ -550,11 +554,11 @@ namespace vg::core
                                         {
                                             auto * vector = prop->GetPropertyObjectRefVector(_object);
                                             const XMLElement* xmlObjectRef = xmlPropElem->FirstChildElement("Object");
-
+                                        
                                             do
                                             {
                                                 IObject* pObjectRef = nullptr;
-
+                                        
                                                 if (nullptr != xmlObjectRef)
                                                 {
                                                     const XMLAttribute* xmlClassAttrRef = xmlObjectRef->FindAttribute("class");
@@ -572,10 +576,32 @@ namespace vg::core
                                                         }
                                                     }
                                                 }
-
+                                        
                                                 xmlObjectRef = xmlObjectRef->NextSiblingElement("Object");
-
+                                        
                                             } while (xmlObjectRef != nullptr);
+                                        }
+                                    }
+                                    break;
+
+                                    case IProperty::Type::Resource:
+                                    {
+                                        IResource* pResource = (IResource*)(uint_ptr(_object) + offset);
+                                        const IClassDesc* classDescRef = nullptr;
+                                        const XMLElement* xmlObjectRef = xmlPropElem->FirstChildElement("Object");
+                                        if (nullptr != xmlObjectRef)
+                                        {
+                                            const XMLAttribute* xmlClassAttrRef = xmlObjectRef->FindAttribute("class");
+                                            if (nullptr != xmlClassAttrRef)
+                                            {
+                                                const char* classNameRef = xmlClassAttrRef->Value();
+                                                classDescRef = getClassDescriptor(classNameRef);
+                                                if (nullptr != classDescRef)
+                                                {
+                                                    if (serializeFromXML(pResource, xmlObjectRef))
+                                                        pResource->onResourcePathChanged(_object, "", pResource->getResourcePath());
+                                                }
+                                            }
                                         }
                                     }
                                     break;
@@ -687,6 +713,10 @@ namespace vg::core
             const auto name = prop->getName();
             const auto type = prop->getType();
             const auto offset = prop->getOffset();
+            const auto flags = prop->getFlags();
+
+            if (asBool(IProperty::Flags::NotSaved & flags))
+                continue;
 
             XMLElement * xmlPropElem = _xmlDoc.NewElement("Property");
             xmlPropElem->SetAttribute("type", asString(type).c_str());
@@ -703,6 +733,13 @@ namespace vg::core
             case IProperty::Type::Callback:
             {
                 skipAttribute = true;
+            }
+            break;
+
+            case IProperty::Type::Resource:
+            {
+                const IObject* pResource = prop->GetPropertyResource(_object);
+                serializeToXML(pResource, _xmlDoc, xmlPropElem);
             }
             break;
 

@@ -62,6 +62,15 @@ namespace vg::graphics::renderer
             if (fileBrowser.showFileDialog(m_popup, imgui_addons::ImGuiFileBrowser::DialogMode::SAVE, Editor::LoadSaveDialogSize, ".scene"))
             {
                 const string newFilePath = fileBrowser.selected_path;
+
+                size_t lastFolder = newFilePath.find_last_of("/");
+                string name = newFilePath.substr(lastFolder+1);
+
+                size_t lastDot = name.find_last_of(".");
+                name = name.substr(0, lastDot);
+
+                scene->setName(name);
+
                 factory->saveToXML(scene, newFilePath);
                 status = Status::Saved;
             }

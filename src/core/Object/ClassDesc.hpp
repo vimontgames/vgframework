@@ -167,6 +167,12 @@ namespace vg::core
         return flags;
     }
 
+    //--------------------------------------------------------------------------------------
+    u32 ClassDesc::getSizeOf() const
+    {
+        return sizeOf;
+    }
+
     template <typename T> struct TypeToEnum;
     template <> struct TypeToEnum<bool> { static constexpr auto value = IProperty::Type::Bool; };
     template <> struct TypeToEnum<core::u16> { static constexpr auto value = IProperty::Type::Uint16; };

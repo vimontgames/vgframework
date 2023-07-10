@@ -33,7 +33,7 @@ namespace vg::core
         _desc.registerPropertyEnumHelper(Instance, Flags, m_flags, "Flags", flagsEnum.getCount(), flagsEnum.getNames(), flagsEnum.getValues(), IProperty::Flags::Bitfield);
         _desc.registerPropertyHelper(Instance, m_color, "Color", IProperty::Flags::Color);
         _desc.registerPropertyHelper(Instance, m_world, "Matrix", IProperty::Flags::None);
-        _desc.registerPropertyObjectRefVectorHelper(Instance, m_models, "Models", IProperty::Flags::ReadOnly);
+        _desc.registerPropertyObjectRefVectorHelper(Instance, m_models, "Models", IProperty::Flags::ReadOnly | IProperty::Flags::NotSaved);
 
         return true;
     }
