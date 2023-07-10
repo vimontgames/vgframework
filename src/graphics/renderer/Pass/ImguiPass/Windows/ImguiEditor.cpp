@@ -192,7 +192,6 @@ namespace vg::graphics::renderer
         ImGui::PushItemWidth(196);
 
         // Sort top-level properties to display components at the end
-        const IProperty * components = nullptr;
         const char * curClassName = nullptr;
         bool visible = false;
 
@@ -213,19 +212,22 @@ namespace vg::graphics::renderer
                     if (visible)
                         displayProperty(prop, _object);
                 }
-                else
-                    components = prop;
             }
         }
 
-        if (nullptr != components)
+        for (uint i = 0; i < classDesc->getPropertyCount(); ++i)
         {
-            displayProperty(components, _object);
+            const IProperty* prop = classDesc->getPropertyByIndex(i);
 
-            ImGui::Spacing();
-            if (ImGui::Button("Add Component (TODO)"))
+            if (!strcmp(prop->getName(), "m_components"))
             {
-                // TODO
+                displayProperty(prop, _object);
+
+                ImGui::Spacing();
+                if (ImGui::Button("Add Component (TODO)"))
+                {
+                    // TODO
+                }
             }
         }
 

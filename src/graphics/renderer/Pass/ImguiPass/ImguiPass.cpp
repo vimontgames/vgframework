@@ -37,15 +37,18 @@ using namespace ImGui;
 namespace vg::graphics::renderer
 {
     //--------------------------------------------------------------------------------------
+    // In case several windows are docked together, then the last declared will be the default selected
+    //--------------------------------------------------------------------------------------
     ImguiPass::ImguiPass()
     {
         // Add editor windows
         m_editorWindows.push_back(new ImguiPlatform("Platform", ImguiEditor::Flags::StartVisible | ImguiEditor::AddMenuEntry));
-        m_editorWindows.push_back(new ImguiFPS("FPS", ImguiEditor::Flags::StartVisible | ImguiEditor::AddMenuEntry));
         m_editorWindows.push_back(new ImguiShader("Shaders", ImguiEditor::Flags::StartVisible | ImguiEditor::AddMenuEntry));
+        m_editorWindows.push_back(new ImguiFPS("FPS", ImguiEditor::Flags::StartVisible | ImguiEditor::AddMenuEntry));
 
-        m_editorWindows.push_back(new ImguiScene("Scenes", ImguiEditor::Flags::StartVisible | ImguiEditor::AddMenuEntry));
         m_editorWindows.push_back(new ImguiResource("Resources", ImguiEditor::Flags::StartVisible | ImguiEditor::AddMenuEntry));
+        m_editorWindows.push_back(new ImguiScene("Scenes", ImguiEditor::Flags::StartVisible | ImguiEditor::AddMenuEntry));
+
         m_editorWindows.push_back(new ImguiInspector("Inspector", ImguiEditor::Flags::StartVisible | ImguiEditor::AddMenuEntry));
 
         m_editorWindows.push_back(new ImguiDisplayOptions("Display", ImguiEditor::Flags::StartVisible));
