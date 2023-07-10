@@ -124,7 +124,7 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow, core::uint _width, core::ui
 	RECT rc = { 0, 0, (LONG)_width, (LONG)_height };
 	AdjustWindowRect(&rc, flags, FALSE);
 
-	g_hWnd = CreateWindow(L"Game", L"VG Framework (loading)", flags, x, y, rc.right - rc.left, rc.bottom - rc.top, NULL, NULL, hInstance, NULL);
+	g_hWnd = CreateWindow(L"Game", L"VG Framework", flags, x, y, rc.right - rc.left, rc.bottom - rc.top, NULL, NULL, hInstance, NULL);
 
 	if (!g_hWnd)
 	{
@@ -196,18 +196,19 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
     Application * game = new Application(*g_engine);
 
-    const auto version = g_engine->getVersion();
-	core::string title = "VG Framework " + core::to_string(version.major) + "." + core::to_string(version.minor) + " - " + core::Plugin::getConfiguration() + " - " + core::asString(engineParams.renderer.device.api);
+    const auto engineVersion = g_engine->getVersion();
+	const auto rendererVersion = g_engine->GetRenderer()->getVersion();
+	core::string title = "VG Framework " + core::Plugin::getConfiguration() + " - Engine " + core::to_string(engineVersion.major) + "." + core::to_string(engineVersion.minor) + " - " + core::asString(engineParams.renderer.device.api) + " Renderer " + core::to_string(rendererVersion.major) + "." + core::to_string(rendererVersion.minor);
     if (engineParams.renderer.device.debugDevice)
         title += " (debug device)";
 
 	SetWindowTextA(g_hWnd, title.c_str());
 
-    core::u64 frame = 0;
+    //core::u64 frame = 0;
 	while (!processSystemMessage())
 	{
-        SetWindowTextA(g_hWnd, (title + " - Frame " + std::to_string(frame)).c_str());
-        frame++;
+        //SetWindowTextA(g_hWnd, (title + " - Frame " + std::to_string(frame)).c_str());
+        //frame++;
 
         game->update();
 	}

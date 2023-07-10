@@ -28,7 +28,7 @@ using namespace vg::core;
 using namespace vg::engine;
 
 #define VG_ENGINE_VERSION_MAJOR 0
-#define VG_ENGINE_VERSION_MINOR 14
+#define VG_ENGINE_VERSION_MINOR 15
 
 // Avoid stripping code for classes from static lib
 static Universe universe("", nullptr);
