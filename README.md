@@ -15,8 +15,41 @@ For the engine part, so far I integrated several "must-haves" tools like a CPU/G
 
 Another subject that is very close to my heart is that there is a strong separation between modules as the engine is "physically" split in several DLLs using only pure abstract interfaces.
 
+# changelog
 
-# external (included, you don't need to download them)
+## 0.15
+I could finally code for a few hours and the scene loading using reflection is now working. You can open the *.scene files from the "Scenes" tab. Loading is additive, meaning you can load several scenes at once.
+
+![Screenshot](doc/img/0.15.png)
+
+# getting started
+
+- Sync the depot.
+- Install the required SDKs and configure the environment variables.
+- Open the "vgframework.sln" solution in Visual Studio 2022 Community IDE or greater and build.
+
+# ide
+VS Studio 2022 Community\
+https://visualstudio.microsoft.com/fr/vs/community/
+
+You can change the Solution Platform in Visual Studio's command line to toggle between the DirectX12 and the Vulkan renderers.\
+Also don't forget to set the *working directory* to **$(SolutionDir)**.
+
+![Screenshot](doc/img/SolutionPlatformName2.png)
+
+# SDKs
+FBX SDK 2020.0.1\
+https://www.autodesk.com/developer-network/platform-technologies/fbx-sdk-2020-0  
+**$(FBX_SDK)** should point to the FBX SDK installation dir *(i.e. "C:\SDK\FBX\2020.0.1")*
+
+Vulkan SDK 1.2.148.0 (VK)\
+https://vulkan.lunarg.com/sdk/home  
+**$(VK_SDK_PATH)** should point the Vulkan SDK installation dir *(i.e. "C:\SDK\Vulkan\1.2.148.0")*
+
+Win10 SDK 10.0.17763.0\
+https://developer.microsoft.com/fr-fr/windows/downloads/sdk-archive/
+
+# external libs
 D3D12 Memory Allocator\
 https://github.com/GPUOpen-LibrariesAndSDKs/D3D12MemoryAllocator
 
@@ -53,33 +86,8 @@ https://github.com/GPUOpen-LibrariesAndSDKs/VulkanMemoryAllocator
 WinPixEventRuntime 1.0.200127001\
 https://www.nuget.org/packages/WinPixEventRuntime
 
-# sdk (not included, you need to download them)
-FBX SDK 2020.0.1\
-https://www.autodesk.com/developer-network/platform-technologies/fbx-sdk-2020-0  
-**$(FBX_SDK)** should point to the FBX SDK installation dir *(i.e. "C:\SDK\FBX\2020.0.1")*
 
-Vulkan SDK 1.2.148.0 (VK)\
-https://vulkan.lunarg.com/sdk/home  
-**$(VK_SDK_PATH)** should point the Vulkan SDK installation dir *(i.e. "C:\SDK\Vulkan\1.2.148.0")*
-
-Win10 SDK 10.0.17763.0\
-https://developer.microsoft.com/fr-fr/windows/downloads/sdk-archive/
-
-# ide
-VS Studio 2017 Community\
-https://visualstudio.microsoft.com/fr/vs/older-downloads/
-
-# optional
-"Solution Configuration Name" plugin for Visual Studio 2017
-https://marketplace.visualstudio.com/items?itemName=ceztko.SolutionConfigurationName
-
-If you are using the "Solution Configuration Name" plugin you can use SolutionPlatform="$(SolutionPlatform)" in Visual Studio's command line to be able to use the DirectX12 or the Vulkan renderer by directly changing the solution platform.\
-Also don't forget to set the *working directory* to **$(SolutionDir)**.
-
-![Screenshot](doc/img/SolutionPlatformName1.png)
-![Screenshot](doc/img/SolutionPlatformName2.png)
-
-# models (already in depot, you don't need to download them)
+# models
 Jess Casual Walking 001\
 https://www.cgtrader.com/free-3d-models/character/woman/woman-jess-casual-walking-001
 
