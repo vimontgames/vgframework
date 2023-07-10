@@ -5,13 +5,14 @@ namespace vg::graphics::renderer
     //--------------------------------------------------------------------------------------
     void ImguiAbout::display()
     {
-        if (Begin("About", &m_isVisible))
+        if (Begin("About", &m_isVisible, ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_NoCollapse))
         {
             float columnWidth[3] = { 256, 128, 512 };
 
-            const auto version = getEngine()->getVersion();
+            const auto engineVersion = getEngine()->getVersion();
+            const auto rendererVersion = getEngine()->GetRenderer()->getVersion();
 
-            Text("VG Framework %u.%u", version.major, version.minor);
+            Text("VG Framework Engine %u.%u Renderer %u.%u", engineVersion.major, engineVersion.minor, rendererVersion.major, rendererVersion.minor);
             Text("");
 
             Columns(3, "author", false);
@@ -20,15 +21,17 @@ namespace vg::graphics::renderer
             SetColumnWidth(1, columnWidth[1]);
             SetColumnWidth(2, columnWidth[2]);
 
-            Text("Website");
+            Text("GitHub");
             Text("Twitter");
+            Text("Mastodon");
             Text("");
 
             NextColumn();
             NextColumn();
 
             textURL("github.com/vimontgames/vgframework", "https://github.com/vimontgames/vgframework");
-            textURL("Benoit Vimont", "https://twitter.com/benoitvimont");
+            textURL("@benoitbimont", "https://twitter.com/benoitvimont");
+            textURL("@benoitvimont@mastodon.gamedev.place", "https://mastodon.gamedev.place/@benoitvimont");
             Text("");
 
             Separator();
@@ -67,7 +70,7 @@ namespace vg::graphics::renderer
             Separator();
 
             Columns(1);
-            Text("3rd-party libs:");
+            Text("3rd-parties:");
             Text("");
 
             Columns(3, "3rdparties", false);
@@ -120,7 +123,7 @@ namespace vg::graphics::renderer
             Columns(1);
             Text("Special Thanks:");
             Text("");
-            Text("To Bob, Ghighi, Marcel and Hamilcar.");
+            Text("To Bob, Guigui, Marcel, Hamilcar, and SlavSquat.");
 
             End();
         }
