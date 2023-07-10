@@ -91,7 +91,7 @@ namespace vg::graphics::renderer
                 { "hlslpp",                 "",                 "https://github.com/redorav/hlslpp" },
                 { "ImGui-Addons",           "ea0af59",          "https://github.com/gallickgunner/ImGui-Addons" },
                 { "magic_enum",             "",                 "https://github.com/Neargye/magic_enum" },
-                { "optick",                 "",                 "https://github.com/bombomby/optick" },
+                { "optick",                 "1.3.1",            "https://github.com/bombomby/optick" },
                 { "px_sched",               "",                 "https://github.com/pplux/px" },
                 { "stb_image",              "",                 "https://github.com/nothings/stb" },
                 { "tinyXML2",               "e45d9d1",          "https://github.com/leethomason/tinyxml2" },

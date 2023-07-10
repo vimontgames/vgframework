@@ -35,6 +35,9 @@ https://github.com/gallickgunner/ImGui-Addons
 magic_enum\
 https://github.com/Neargye/magic_enum
 
+optick 1.3.1\
+https://github.com/bombomby/optick
+
 px_sched\
 https://github.com/pplux/px
 
