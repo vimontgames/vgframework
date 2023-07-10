@@ -15,8 +15,8 @@
     <ClCompile Include="Resource\Resource.cpp">
       <Filter>Resource</Filter>
     </ClCompile>
-    <ClCompile Include="Entity\FreeCam\FreeCam.cpp">
-      <Filter>Entity\FreeCam</Filter>
+    <ClCompile Include="Component\Camera\FreeCam\FreeCamComponent.cpp">
+      <Filter>Component\Camera\FreeCam</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -67,8 +67,8 @@
     <ClInclude Include="Resource\Material\MaterialResource.hpp">
       <Filter>Resource\Material</Filter>
     </ClInclude>
-    <ClInclude Include="Entity\FreeCam\FreeCam.h">
-      <Filter>Entity\FreeCam</Filter>
+    <ClInclude Include="Component\Camera\FreeCam\FreeCamComponent.h">
+      <Filter>Component\Camera\FreeCam</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -78,17 +78,11 @@
     <Filter Include="Input\win32">
       <UniqueIdentifier>{ce06f9ee-dbe5-471f-be72-5092a2250821}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Entity">
-      <UniqueIdentifier>{48829d99-e089-4750-b094-87037cf1b691}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Component">
       <UniqueIdentifier>{cfb932dd-c48c-4dc0-a1a1-f8b7ed9339c6}</UniqueIdentifier>
     </Filter>
     <Filter Include="Component\Camera">
       <UniqueIdentifier>{e278ff4d-998c-4fd3-b0a0-1a76bb235bbb}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Entity\FreeCam">
-      <UniqueIdentifier>{76d71ff3-fad5-4533-8fff-6141a76e7e9e}</UniqueIdentifier>
     </Filter>
     <Filter Include="Component\Mesh">
       <UniqueIdentifier>{62eccf10-4599-4639-a274-4bb08aef8451}</UniqueIdentifier>
@@ -104,6 +98,9 @@
     </Filter>
     <Filter Include="Resource\Material">
       <UniqueIdentifier>{63aec5b5-6a52-4af4-8ebb-c0f5baf4c70d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Component\Camera\FreeCam">
+      <UniqueIdentifier>{a93ee98e-4866-4079-9834-877b6edbe805}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

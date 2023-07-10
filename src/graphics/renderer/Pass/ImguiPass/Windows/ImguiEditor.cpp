@@ -196,45 +196,36 @@ namespace vg::graphics::renderer
         const char * curClassName = nullptr;
         bool visible = false;
 
-        for (uint i = 0; i < classDesc->getPropertyCount(); ++i)
+        if (strcmp(className, "GameObject") || ImGui::CollapsingHeader("GameObject", nullptr, ImGuiTreeNodeFlags_DefaultOpen))
         {
-            const IProperty * prop = classDesc->getPropertyByIndex(i);
-
-            //if (!strcmp(prop->getName(), "m_object"))
-            //{
-            //    IObject * pObject = *(IObject**)(uint_ptr(_object) + prop->getOffset());
-            //    if (pObject == nullptr)
-            //        continue;
-            //}
-
-            if (strcmp(prop->getName(), "m_components"))
+            for (uint i = 0; i < classDesc->getPropertyCount(); ++i)
             {
-                if (curClassName != prop->getClassName())
-                {
-                    curClassName = prop->getClassName();
-                    visible = true; // ImGui::CollapsingHeader(curClassName, nullptr, ImGuiTreeNodeFlags_DefaultOpen);
-                }
+                const IProperty* prop = classDesc->getPropertyByIndex(i);
 
-                if (visible)
-                    displayProperty(prop, _object);
+                if (strcmp(prop->getName(), "m_components"))
+                {
+                    if (curClassName != prop->getClassName())
+                    {
+                        curClassName = prop->getClassName();
+                        visible = true; // ImGui::CollapsingHeader(curClassName, nullptr, ImGuiTreeNodeFlags_DefaultOpen);
+                    }
+
+                    if (visible)
+                        displayProperty(prop, _object);
+                }
+                else
+                    components = prop;
             }
-            else
-                components = prop;
         }
 
         if (nullptr != components)
         {
-            if (ImGui::CollapsingHeader("Components", nullptr, ImGuiTreeNodeFlags_DefaultOpen))
-            {
-                ImGui::Indent();
-                displayProperty(components, _object);
+            displayProperty(components, _object);
 
-                //ImGui::Spacing();
-                //if (ImGui::Button("Add Component"))
-                //{
-                //    // TODO
-                //}
-                ImGui::Unindent();
+            ImGui::Spacing();
+            if (ImGui::Button("Add Component (TODO)"))
+            {
+                // TODO
             }
         }
 
@@ -527,11 +518,7 @@ namespace vg::graphics::renderer
                             componentShortName.erase(nPos);
 
                         if (ImGui::CollapsingHeader(componentShortName.c_str(), nullptr, ImGuiTreeNodeFlags_None))
-                        {
-                            ImGui::Indent();
                             displayArrayObject(pComponent, i, nullptr);
-                            ImGui::Unindent();
-                        }
                     }
                 }
                 else

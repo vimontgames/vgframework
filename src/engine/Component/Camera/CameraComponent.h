@@ -19,7 +19,7 @@ namespace vg::engine
     public:
         using super = core::Component;
 
-        const char * getClassName() const final { return "CameraComponent"; }
+        const char * getClassName() const override { return "CameraComponent"; }
         static bool registerClass(core::IFactory & _factory);
         static bool registerProperties(core::IClassDesc & _desc);
 

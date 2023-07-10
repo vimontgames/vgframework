@@ -18,8 +18,9 @@
 
 #include "engine/Input/Input.h"
 #include "engine/Resource/ResourceManager.h"
-#include "engine/Entity/FreeCam/FreeCam.h"
-#include "engine/Component/Camera/CameraComponent.h"
+
+// Components
+#include "engine/Component/Camera/FreeCam/FreeCamComponent.h"
 #include "engine/Component/Mesh/MeshComponent.h"
 
 #include "application/IProject.h"
@@ -277,14 +278,21 @@ namespace vg::engine
         rootGameObject->release();
 
         // add camera entity (TODO: editor camera)
-        FreeCam * cameraGameObject = new FreeCam("EditorCamera", rootGameObject);
-        auto * cameraComponent = (CameraComponent*)CreateFactoryObject(CameraComponent, "", cameraGameObject);
-        cameraGameObject->addComponent(cameraComponent);
-        cameraComponent->setView(m_editorView, rootGameObject);
-        rootGameObject->AddChild(cameraGameObject);
+        GameObject * freeCamGO = new GameObject("FreeCam", rootGameObject);
+        auto * freeCamComponent = (FreeCamComponent*)CreateFactoryObject(FreeCamComponent, "FreeCam", freeCamGO);
+        freeCamGO->setWorldMatrix(float4x4
+        (
+            1.0f, 0.0f, 0.0f, 0.0f,
+            0.0f, 1.0f, 0.0f, 0.0f,
+            0.0f, 0.0f, 1.0f, 0.0f,
+            -1.2f, -3.5f, 1.7f, 1.0f
+        ));
+        freeCamGO->addComponent(freeCamComponent);
+        freeCamComponent->setView(m_editorView, rootGameObject);
+        rootGameObject->AddChild(freeCamGO);
         m_editorView->release();
-        VG_SAFE_RELEASE(cameraComponent);
-        VG_SAFE_RELEASE(cameraGameObject);
+        VG_SAFE_RELEASE(freeCamComponent);
+        VG_SAFE_RELEASE(freeCamGO);
 
         return editor;
     }
@@ -310,31 +318,6 @@ namespace vg::engine
 
         IScene * defaultScene = m_universe->getActiveScene();
         IGameObject* rootSector = defaultScene->GetRoot();
-
-        // create empty scene
-        //IScene * defaultScene = (IScene*)CreateFactoryObject(Scene, "TestScene", this);
-        ////
-        //m_universe->addScene(defaultScene);
-        //defaultScene->release();
-        //
-        //// add root sector
-        //GameObject * rootSector = (GameObject*)CreateFactoryObject(GameObject, "Root", defaultScene);
-        //defaultScene->SetRoot(rootSector);
-        //rootSector->release();
-        //
-        //// add child sector
-        //GameObject * childSector = (GameObject*)CreateFactoryObject(GameObject, "3DScan", rootSector);
-        //rootSector->AddChild(childSector);
-        //childSector->release();
-        //
-        //// add camera entity
-        //m_freeCam = new FreeCam("Camera", rootSector);
-        //auto * cameraComponent = (CameraComponent*)CreateFactoryObject(CameraComponent, "", m_freeCam);
-        //m_freeCam->addComponent(cameraComponent);
-        //cameraComponent->setView(m_editorView, rootSector);
-        //rootSector->AddChild(m_freeCam);
-        //VG_SAFE_RELEASE(cameraComponent);
-        //VG_SAFE_RELEASE(m_freeCam);
 
         auto addMesh = [=](IGameObject * _parent, const string & _name, const string & _path, const float4 _position)
         {

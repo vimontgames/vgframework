@@ -10,10 +10,7 @@ namespace vg::graphics::renderer
             auto object = ImguiEditor::getSelectedObject();
             if (nullptr != object)
             {
-                if (ImGui::CollapsingHeader(object->getClassName(), nullptr, ImGuiTreeNodeFlags_DefaultOpen))
-                {
-                    ImguiEditor::displayObject(object);
-                }
+                ImguiEditor::displayObject(object);
             }
         }
         ImGui::End();
