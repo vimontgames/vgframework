@@ -9,26 +9,6 @@
                 <Property type="Float4x4" name="m_world" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="0" Ty="0" Tz="0" Tw="1"/>
                 <Property type="ObjectRefVector" name="m_components"/>
                 <Property type="ObjectRefVector" name="m_children">
-                    <Object class="FreeCam">
-                        <Property type="String" name="m_name" value="Camera"/>
-                        <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
-                        <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
-                        <Property type="Float4x4" name="m_world" Ix="0.95778722" Iy="-0.28747809" Iz="-0" Iw="-0" Jx="0.06576141" Jy="0.21909648" Jz="0.97348458" Jw="-0" Kx="-0.27985549" Ky="-0.93239111" Kz="0.22875278" Kw="0" Tx="-1.2" Ty="-3.5" Tz="1.7" Tw="1"/>
-                        <Property type="ObjectRefVector" name="m_components">
-                            <Object class="CameraComponent">
-                                <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
-                                <Property type="Float" name="m_fovY" value="0.78539819"/>
-                                <Property type="Float" name="m_near" value="0.1"/>
-                                <Property type="Float" name="m_far" value="1024"/>
-                            </Object>
-                        </Property>
-                        <Property type="ObjectRefVector" name="m_children"/>
-                        <Property type="Float" name="m_moveSpeed" value="1"/>
-                        <Property type="Float" name="m_rotSpeed" value="1"/>
-                        <Property type="Float" name="m_pitch" value="-1.34"/>
-                        <Property type="Float" name="m_yaw" value="2.8499999"/>
-                        <Property type="Float" name="m_roll" value="0"/>
-                    </Object>
                     <Object class="GameObject">
                         <Property type="String" name="m_name" value="3DScanMan001"/>
                         <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
