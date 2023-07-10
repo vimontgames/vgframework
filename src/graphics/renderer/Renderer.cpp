@@ -16,7 +16,6 @@
 #include "graphics/renderer/Pass/ImguiPass/ImguiPass.h"
 #include "graphics/renderer/Pass/BackgroundPass.h"
 #include "graphics/renderer/Pass/TestPass3D.h"
-#include "graphics/renderer/Pass/TestPass2D.h"
 #include "graphics/renderer/Pass/PostProcessPass.h"
 #include "graphics/renderer/View/View.h"
 #include "graphics/renderer/Importer/FBX/FBXImporter.h"
@@ -46,7 +45,7 @@ IRenderer * CreateNew()
 namespace vg::graphics::renderer
 {
 	#define VG_RENDERER_VERSION_MAJOR 0
-	#define VG_RENDERER_VERSION_MINOR 1
+	#define VG_RENDERER_VERSION_MINOR 11
 
     #ifdef _WIN32
     //--------------------------------------------------------------------------------------
@@ -152,7 +151,6 @@ namespace vg::graphics::renderer
         // Create passes
         m_backgroundPass = new BackgroundPass();
         m_testPass3D = new TestPass3D();
-        m_testPass2D = new TestPass2D();
         m_postProcessPass = new PostProcessPass();
         m_imguiPass = new ImguiPass();
 
@@ -189,7 +187,6 @@ namespace vg::graphics::renderer
 
         VG_SAFE_DELETE(m_backgroundPass);
         VG_SAFE_DELETE(m_testPass3D);
-        VG_SAFE_DELETE(m_testPass2D);
         VG_SAFE_DELETE(m_postProcessPass);
         VG_SAFE_DELETE(m_imguiPass);
         VG_SAFE_DELETE(m_imgui);
@@ -255,7 +252,6 @@ namespace vg::graphics::renderer
 
                 m_frameGraph.addUserPass(m_backgroundPass, "BackgroundPass");
                 m_frameGraph.addUserPass(m_testPass3D, "TestPass3D");
-                //m_frameGraph.addUserPass(m_testPass2D, "TestPass2D");
                 m_frameGraph.addUserPass(m_postProcessPass, "PostProcessPass");
                 m_frameGraph.addUserPass(m_imguiPass, "UIPass");
 

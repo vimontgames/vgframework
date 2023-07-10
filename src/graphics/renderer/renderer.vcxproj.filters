@@ -69,12 +69,6 @@
     <ClInclude Include="Pass\BackgroundPass.hpp">
       <Filter>Pass</Filter>
     </ClInclude>
-    <ClInclude Include="Pass\TestPass2D.hpp">
-      <Filter>Pass</Filter>
-    </ClInclude>
-    <ClInclude Include="Pass\TestPass2D.h">
-      <Filter>Pass</Filter>
-    </ClInclude>
     <ClInclude Include="Pass\TestPass3D.h">
       <Filter>Pass</Filter>
     </ClInclude>

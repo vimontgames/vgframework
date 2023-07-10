@@ -18,7 +18,6 @@ namespace vg::graphics::renderer
     class View;
     class BackgroundPass;
     class TestPass3D;
-    class TestPass2D;
     class PostProcessPass;
     class ImguiPass;
     class MeshModel;
@@ -89,7 +88,6 @@ namespace vg::graphics::renderer
         View *                          m_view                  = nullptr;
         BackgroundPass *                m_backgroundPass        = nullptr;
         TestPass3D *                    m_testPass3D            = nullptr;
-        TestPass2D *                    m_testPass2D            = nullptr;
         PostProcessPass *               m_postProcessPass       = nullptr;
         ImguiPass *                     m_imguiPass             = nullptr;
         core::vector<driver::Texture*>  m_defaultTextures;       

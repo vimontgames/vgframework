@@ -105,8 +105,6 @@
     <ClInclude Include="Pass\ImguiPass\Windows\ImguiFPS.hpp" />
     <ClInclude Include="Pass\PostProcessPass.h" />
     <ClInclude Include="Pass\PostProcessPass.hpp" />
-    <ClInclude Include="Pass\TestPass2D.h" />
-    <ClInclude Include="Pass\TestPass2D.hpp" />
     <ClInclude Include="Pass\TestPass3D.h" />
     <ClInclude Include="Pass\TestPass3D.hpp" />
     <ClInclude Include="Precomp.h" />
