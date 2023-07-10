@@ -26,7 +26,13 @@ I could finally code for a few hours and the scene loading using reflection is n
 
 - Sync the depot.
 - Install the required SDKs and configure the environment variables.
-- Open the "vgframework.sln" solution in Visual Studio 2022 Community IDE or greater and build.
+- Open the "vgframework.sln" solution in Visual Studio 2022 Community IDE.
+- Build & Run
+
+# keyboard shortcuts
+
+- Press F1 to start/stop profiler capture
+- Press F6 to hot reload shaders
 
 # ide
 VS Studio 2022 Community\
@@ -70,8 +76,8 @@ https://github.com/Neargye/magic_enum
 
 optick 1.3.1\
 https://github.com/bombomby/optick
-You can download the binaries for optick 1.3.1 from https://github.com/bombomby/optick/releases/tag/1.3.1.0
 ![Screenshot](doc/img/Optick.png)
+You can download the binaries for optick 1.3.1 from https://github.com/bombomby/optick/releases/tag/1.3.1.0
 
 px_sched\
 https://github.com/pplux/px
