@@ -139,7 +139,7 @@ namespace vg::engine
                 if (info.m_resource->cook(info.m_path))
                 {
                     if (io::setLastWriteTime(cooked, rawDataLastWrite))
-                        VG_DEBUGPRINT("[ResourceManager] Cooked \"%s\" successfully ... %.2f ms\n", info.m_path.c_str(), Timer::getEnlapsedTime(startCook, Timer::getTick()));
+                        VG_DEBUGPRINT("[ResourceManager] Cooked \"%s\" in %.2f ms\n", info.m_path.c_str(), Timer::getEnlapsedTime(startCook, Timer::getTick()));
                 }
             }
 
@@ -147,7 +147,7 @@ namespace vg::engine
             if (info.m_resource->load(info.m_path, info.m_owner))
             {
                 m_resourcesMap.insert(make_pair(info.m_path, info.m_resource));
-                VG_DEBUGPRINT("[ResourceManager] Resource \"%s\" loaded ... %.2f ms\n", info.m_path.c_str(), Timer::getEnlapsedTime(startLoad, Timer::getTick()));
+                VG_DEBUGPRINT("[ResourceManager] Resource \"%s\" loaded in %.2f ms\n", info.m_path.c_str(), Timer::getEnlapsedTime(startLoad, Timer::getTick()));
                 done = true;
             }
             else

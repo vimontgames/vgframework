@@ -127,9 +127,10 @@ namespace vg::core
             XMLNode * xmlRoot = xmlDoc.FirstChild();
             if (xmlRoot != nullptr)
             {
+                VG_DEBUGPRINT("[Factory] Load \"%s\"\n", _XMLfilename.c_str());
                 if (factory->serializeFromXML(_object, xmlDoc))
                 {
-                    VG_DEBUGPRINT("[Factory] Load and Parse XML \"%s\" ... %.2f ms\n", _XMLfilename.c_str(), Timer::getEnlapsedTime(startLoad, Timer::getTick()));
+                    VG_DEBUGPRINT("[Factory] \"%s\" loaded in %.2f ms\n", _XMLfilename.c_str(), Timer::getEnlapsedTime(startLoad, Timer::getTick()));
                     return true;
                 }
             }
