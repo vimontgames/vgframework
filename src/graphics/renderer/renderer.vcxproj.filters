@@ -226,6 +226,12 @@
     <ClInclude Include="Pass\ImguiPass\Imgui_Consts.h">
       <Filter>Pass\ImguiPass</Filter>
     </ClInclude>
+    <ClInclude Include="Imgui\imguiExtensions.h">
+      <Filter>Imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="Imgui\ImguiExtensions.hpp">
+      <Filter>Imgui</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Pass">

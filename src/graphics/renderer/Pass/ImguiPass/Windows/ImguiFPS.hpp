@@ -22,7 +22,7 @@ namespace vg::graphics::renderer
     //--------------------------------------------------------------------------------------
     void ImguiFPS::display()
     {
-        if (ImGui::Begin("FPS", &m_isVisible))
+        if (ImGui::IconBegin(Editor::Icon::FPS, "FPS", &m_isVisible))
         {
             ImGui::Columns(2, "mycolumns2", false);  // 2-ways, no border
             ImGui::Text("FPS: ");

@@ -5,7 +5,7 @@ namespace vg::graphics::renderer
     //--------------------------------------------------------------------------------------
     void ImguiPlatform::display()
     {
-        if (ImGui::Begin("Platform", &m_isVisible))
+        if (ImGui::IconBegin(Editor::Icon::Platform, "Platform", &m_isVisible))
         {
             ImGui::Columns(2, "mycolumns2", false);  // 2-ways, no border
 

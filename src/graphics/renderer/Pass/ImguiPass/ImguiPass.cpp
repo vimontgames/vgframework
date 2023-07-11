@@ -42,16 +42,16 @@ namespace vg::graphics::renderer
     ImguiPass::ImguiPass()
     {
         // Add editor windows
-        m_editorWindows.push_back(new ImguiPlatform("Platform", ImguiEditor::Flags::StartVisible | ImguiEditor::AddMenuEntry));
-        m_editorWindows.push_back(new ImguiShader("Shaders", ImguiEditor::Flags::StartVisible | ImguiEditor::AddMenuEntry));
-        m_editorWindows.push_back(new ImguiFPS("FPS", ImguiEditor::Flags::StartVisible | ImguiEditor::AddMenuEntry));
+        m_editorWindows.push_back(new ImguiPlatform(IconWithText(Editor::Icon::Platform, "Platform"), ImguiEditor::Flags::StartVisible | ImguiEditor::AddMenuEntry));
+        m_editorWindows.push_back(new ImguiShader(IconWithText(Editor::Icon::Shaders, "Shaders"), ImguiEditor::Flags::StartVisible | ImguiEditor::AddMenuEntry));
+        m_editorWindows.push_back(new ImguiFPS(IconWithText(Editor::Icon::FPS, "FPS"), ImguiEditor::Flags::StartVisible | ImguiEditor::AddMenuEntry));
 
         m_editorWindows.push_back(new ImguiResource("Resources", ImguiEditor::Flags::StartVisible | ImguiEditor::AddMenuEntry));
         m_editorWindows.push_back(new ImguiScene("Scenes", ImguiEditor::Flags::StartVisible | ImguiEditor::AddMenuEntry));
 
-        m_editorWindows.push_back(new ImguiInspector("Inspector", ImguiEditor::Flags::StartVisible | ImguiEditor::AddMenuEntry));
+        m_editorWindows.push_back(new ImguiInspector(IconWithText(Editor::Icon::Inspector, "Inspector"), ImguiEditor::Flags::StartVisible | ImguiEditor::AddMenuEntry));
 
-        m_editorWindows.push_back(new ImguiDisplayOptions("Display", ImguiEditor::Flags::StartVisible));
+        m_editorWindows.push_back(new ImguiDisplayOptions(IconWithText(Editor::Icon::Display, "Display"), ImguiEditor::Flags::StartVisible));
 
         m_editorWindows.push_back(new ImguiAbout("About", ImguiEditor::Flags::None));
     }
@@ -122,7 +122,7 @@ namespace vg::graphics::renderer
 
                 if (ImGui::BeginMenu("Options"))
                 {
-                    if (ImGui::MenuItem("Display"))
+                    if (ImGui::IconMenuItem(Editor::Icon::Display, "Display"))
                     {
                         ImguiDisplayOptions * displayOptions = getEditorWindow<ImguiDisplayOptions>();
                         if (nullptr != displayOptions)
@@ -134,7 +134,7 @@ namespace vg::graphics::renderer
 
                 if (ImGui::BeginMenu("Help"))
                 {
-                    if (ImGui::MenuItem("About "))
+                    if (ImGui::IconMenuItem(Editor::Icon::About, "About"))
                     {
                         ImguiAbout * about = getEditorWindow<ImguiAbout>();
                         if (nullptr != about)

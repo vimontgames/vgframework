@@ -1,7 +1,6 @@
 #include "graphics/renderer/Precomp.h"
 
 #include "imguiAdapter.h"
-
 #include "imgui/imgui.cpp"
 #include "imgui/imgui_demo.cpp"
 #include "imgui/imgui_draw.cpp"
@@ -19,12 +18,14 @@
 #endif
 
 #include "graphics/driver/Device/Device.h"
+#include "graphics/renderer/Pass/ImguiPass/Imgui_Consts.h"
 #include "graphics/driver/CommandList/CommandList.h"
 #include "graphics/driver/CommandQueue/CommandQueue.h"
 #include "graphics/driver/Resource/Texture.h"
 #include "graphics/driver/BindlessTable/BindlessTable.h"
 
 #include "graphics/driver/Device/Device.h"
+#include "ImguiExtensions.hpp"
 
 using namespace vg::core;
 using namespace vg::graphics::driver;
@@ -153,8 +154,18 @@ namespace vg::graphics::renderer
             break;
         }
 
-
         io.Fonts->AddFontFromFileTTF("data/Fonts/ubuntu/UbuntuMono-R.ttf", 16);
+
+        float baseFontSize = 13.0f; // 13.0f is the size of the default font. Change to the font size you use.
+        float iconFontSize = baseFontSize;// *2.0f / 3.0f; // FontAwesome fonts need to have their sizes reduced by 2.0f/3.0f in order to align correctly
+
+        // merge in icons from Font Awesome
+        static const ImWchar icons_ranges[] = { ICON_MIN_FA, ICON_MAX_16_FA, 0 };
+        ImFontConfig icons_config;
+        icons_config.MergeMode = true;
+        icons_config.PixelSnapH = true;
+        icons_config.GlyphMinAdvanceX = iconFontSize;
+        io.Fonts->AddFontFromFileTTF("data/Fonts/Font-Awesome-6.x/" FONT_ICON_FILE_NAME_FAS, iconFontSize, &icons_config, icons_ranges);
 
         #ifdef _WIN32
         ImGui_ImplWin32_Init(_winHandle); 

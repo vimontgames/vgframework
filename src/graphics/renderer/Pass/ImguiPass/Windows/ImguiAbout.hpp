@@ -5,9 +5,9 @@ namespace vg::graphics::renderer
     //--------------------------------------------------------------------------------------
     void ImguiAbout::display()
     {
-        if (Begin("About", &m_isVisible, ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_NoCollapse))
+        if (IconBegin(Editor::Icon::About, "About", &m_isVisible, ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_NoCollapse))
         {
-            float columnWidth[3] = { 256, 128, 512 };
+            float columnWidth[3] = { 256, 128, 620 };
 
             const auto engineVersion = getEngine()->getVersion();
             const auto rendererVersion = getEngine()->GetRenderer()->getVersion();
@@ -91,7 +91,9 @@ namespace vg::graphics::renderer
                 { "D3D12MemoryAllocator",   "",                 "https://github.com/GPUOpen-LibrariesAndSDKs/D3D12MemoryAllocator" },
                 { "Dear ImGui",             "8cbd391",          "https://github.com/ocornut/imgui/tree/docking" },
                 { "Dirent",                 "833b692",          "https://github.com/tronkko/dirent" },
+                { "Font-Awesome",           "6.x ",             "https://github.com/FortAwesome/Font-Awesome/tree/6.x" },
                 { "hlslpp",                 "",                 "https://github.com/redorav/hlslpp" },
+                { "IconFontCppHeaders",     "90da802",          "https://github.com/juliettef/IconFontCppHeaders" },
                 { "ImGui-Addons",           "ea0af59",          "https://github.com/gallickgunner/ImGui-Addons" },
                 { "magic_enum",             "",                 "https://github.com/Neargye/magic_enum" },
                 { "optick",                 "1.3.1",            "https://github.com/bombomby/optick" },

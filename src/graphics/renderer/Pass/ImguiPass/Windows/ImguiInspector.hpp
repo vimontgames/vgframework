@@ -5,7 +5,7 @@ namespace vg::graphics::renderer
     //--------------------------------------------------------------------------------------
     void ImguiInspector::display()
     {
-        if (ImGui::Begin("Inspector", &m_isVisible))
+        if (ImGui::IconBegin(Editor::Icon::Inspector, "Inspector", &m_isVisible))
         {
             auto object = ImguiEditor::getSelectedObject();
             if (nullptr != object)
