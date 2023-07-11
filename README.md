@@ -65,8 +65,14 @@ https://github.com/ocornut/imgui
 Dirent\
 https://github.com/tronkko/dirent
 
+Font-Awesome-6.x\
+https://github.com/FortAwesome/Font-Awesome/tree/6.x
+
 hlslpp\
 https://github.com/redorav/hlslpp
+
+IconFontCppHeaders\
+https://github.com/juliettef/IconFontCppHeaders
 
 ImGui-Addons\
 https://github.com/gallickgunner/ImGui-Addons
