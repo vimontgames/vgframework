@@ -46,8 +46,8 @@ namespace vg::graphics::renderer
         m_editorWindows.push_back(new ImguiShader(IconWithText(Editor::Icon::Shaders, "Shaders"), ImguiEditor::Flags::StartVisible | ImguiEditor::AddMenuEntry));
         m_editorWindows.push_back(new ImguiFPS(IconWithText(Editor::Icon::FPS, "FPS"), ImguiEditor::Flags::StartVisible | ImguiEditor::AddMenuEntry));
 
-        m_editorWindows.push_back(new ImguiResource("Resources", ImguiEditor::Flags::StartVisible | ImguiEditor::AddMenuEntry));
-        m_editorWindows.push_back(new ImguiScene("Scenes", ImguiEditor::Flags::StartVisible | ImguiEditor::AddMenuEntry));
+        m_editorWindows.push_back(new ImguiResource(IconWithText(Editor::Icon::Resource, "Resources"), ImguiEditor::Flags::StartVisible | ImguiEditor::AddMenuEntry));
+        m_editorWindows.push_back(new ImguiScene(IconWithText(Editor::Icon::Scene,"Scenes"), ImguiEditor::Flags::StartVisible | ImguiEditor::AddMenuEntry));
 
         m_editorWindows.push_back(new ImguiInspector(IconWithText(Editor::Icon::Inspector, "Inspector"), ImguiEditor::Flags::StartVisible | ImguiEditor::AddMenuEntry));
 

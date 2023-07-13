@@ -10,14 +10,14 @@ namespace vg::graphics::renderer
         core::IObject * displayOptions = DisplayOptions::get();
         if (displayOptions)
         {
-            if (ImGui::Begin("Resources", &m_isVisible))
+            if (ImGui::IconBegin(Editor::Icon::Resource, "Resources", &m_isVisible))
             {
                 engine::IResourceManager * rm = getEngine()->GetResourceManager();
                 if (nullptr != rm)
-                    displayObject(rm);
-            }
+                    displayObject(rm); 
+            }  
 
-            ImGui::End();
+            ImGui::End();  
         }
     }
 }

@@ -8,7 +8,7 @@ namespace vg::graphics::renderer
     //--------------------------------------------------------------------------------------
     void ImguiScene::display()
     {
-        if (ImGui::Begin("Scenes", &m_isVisible))
+        if (ImGui::IconBegin(Editor::Icon::Scene, "Scenes", &m_isVisible))
         {
             const auto * factory = Kernel::getFactory();
             engine::IEngine * engine = (engine::IEngine *)factory->getSingleton("Engine");

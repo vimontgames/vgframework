@@ -19,6 +19,8 @@ namespace vg::graphics::renderer
             inline static const char * Platform  = ICON_FA_COMPUTER;
             inline static const char * Shaders   = ICON_FA_HAT_WIZARD;
             inline static const char * FPS       = ICON_FA_STOPWATCH;
+            inline static const char * Scene     = ICON_FA_MAP;
+            inline static const char * Resource  = ICON_FA_DATABASE;
         }
     }
 }
