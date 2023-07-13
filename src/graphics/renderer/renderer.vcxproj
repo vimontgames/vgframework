@@ -21,6 +21,8 @@
   <ItemGroup>
     <ClCompile Include="Geometry\Geometry.cpp" />
     <ClCompile Include="Imgui\imguiAdapter.cpp" />
+    <ClCompile Include="Imgui\ObjectHandler\ImGuiObjectHandler.cpp" />
+    <ClCompile Include="Imgui\PropertyHandler\ImGuiPropertyHandler.cpp" />
     <ClCompile Include="Importer\FBX\FBXImporter.cpp" />
     <ClCompile Include="Importer\ImporterData.cpp" />
     <ClCompile Include="Instance\Mesh\MeshInstance.cpp" />
@@ -57,8 +59,13 @@
     <ClInclude Include="IMeshInstance.h" />
     <ClInclude Include="IMeshModel.h" />
     <ClInclude Include="Imgui\imguiAdapter.h" />
+    <ClInclude Include="Imgui\ImGuiCustomHandler.h" />
     <ClInclude Include="Imgui\imguiExtensions.h" />
     <ClInclude Include="Imgui\ImguiExtensions.hpp" />
+    <ClInclude Include="Imgui\ObjectHandler\ImGuiGameObjectHandler.hpp" />
+    <ClInclude Include="Imgui\ObjectHandler\ImGuiObjectHandler.h" />
+    <ClInclude Include="Imgui\ObjectHandler\ImGuiTextureHandler.hpp" />
+    <ClInclude Include="Imgui\PropertyHandler\ImGuiPropertyHandler.h" />
     <ClInclude Include="Importer\FBX\FBXImporter.h" />
     <ClInclude Include="Importer\MaterialImporterData.h" />
     <ClInclude Include="Importer\MaterialImporterData.hpp" />

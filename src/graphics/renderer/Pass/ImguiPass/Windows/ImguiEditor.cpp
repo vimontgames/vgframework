@@ -12,6 +12,8 @@
 #include "ImguiEditor.h"
 #include "graphics/renderer/Renderer.h"
 #include "graphics/renderer/Imgui/imguiAdapter.h"
+#include "graphics/renderer/Imgui/ObjectHandler/ImGuiObjectHandler.h"
+#include "graphics/renderer/Imgui/PropertyHandler/ImGuiPropertyHandler.h"
 #include "graphics/renderer/Pass/ImguiPass/Imgui_Consts.h"
 #include "ImGui-Addons/FileBrowser/ImGuiFileBrowser.cpp"
 
@@ -179,6 +181,10 @@ namespace vg::graphics::renderer
     //--------------------------------------------------------------------------------------
     void ImguiEditor::displayObject(core::IObject * _object)
     {
+        // Custom Object edit
+        if (ImGuiObjectHandler::display(_object))
+            return;
+
         const char * className = _object->getClassName();
 
         const auto * factory = Kernel::getFactory();
@@ -191,56 +197,10 @@ namespace vg::graphics::renderer
 
         ImGui::PushItemWidth(196);
 
-        // Sort top-level properties to display components at the end
-        const char * curClassName = nullptr;
-        bool visible = false;
-
-        if (strcmp(className, "GameObject") || ImGui::CollapsingHeader("GameObject", nullptr, ImGuiTreeNodeFlags_DefaultOpen))
-        {
-            for (uint i = 0; i < classDesc->getPropertyCount(); ++i)
-            {
-                const IProperty* prop = classDesc->getPropertyByIndex(i);
-
-                if (strcmp(prop->getName(), "m_components"))
-                {
-                    if (curClassName != prop->getClassName())
-                    {
-                        curClassName = prop->getClassName();
-                        visible = true; // ImGui::CollapsingHeader(curClassName, nullptr, ImGuiTreeNodeFlags_DefaultOpen);
-                    }
-
-                    if (visible)
-                        displayProperty(prop, _object);
-                }
-            }
-        }
-
         for (uint i = 0; i < classDesc->getPropertyCount(); ++i)
         {
             const IProperty* prop = classDesc->getPropertyByIndex(i);
-
-            if (!strcmp(prop->getName(), "m_components"))
-            {
-                displayProperty(prop, _object);
-
-                ImGui::Spacing();
-                if (ImGui::Button("Add Component (TODO)"))
-                {
-                    // TODO
-                }
-            }
-        }
-
-        if (!strcmp(_object->getClassName(), "Texture"))
-        {
-            // Texture preview (WIP)
-            auto * tex = (driver::Texture*)_object;
-            auto imGuiAdapter = Renderer::get()->getImGuiAdapter();
-            ImTextureID texID = imGuiAdapter->getImguiTextureID(tex);
-            {
-                ImGui::Image(texID, ImVec2(128, 128));
-            }
-            imGuiAdapter->releaseImguiTextureID(texID);
+            ImguiEditor::displayProperty(prop, _object);
         }
 
         ImGui::PopItemWidth();
@@ -295,6 +255,10 @@ namespace vg::graphics::renderer
     {
         VG_ASSERT(nullptr != _prop);
         const auto * factory = Kernel::getFactory();
+
+        // Custom property edit
+        if (ImGuiPropertyHandler::display(_prop, _object))
+            return;
 
         const auto type = _prop->getType();
         const auto name = _prop->getName();

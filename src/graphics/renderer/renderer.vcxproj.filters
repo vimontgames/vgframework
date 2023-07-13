@@ -42,6 +42,12 @@
     <ClCompile Include="Pass\ImguiPass\Menus\ImguiMenu.cpp">
       <Filter>Pass\ImguiPass\Menu</Filter>
     </ClCompile>
+    <ClCompile Include="Imgui\ObjectHandler\ImGuiObjectHandler.cpp">
+      <Filter>Imgui\ObjectHandler</Filter>
+    </ClCompile>
+    <ClCompile Include="Imgui\PropertyHandler\ImGuiPropertyHandler.cpp">
+      <Filter>Imgui\CustomHandler</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Renderer.def" />
@@ -232,6 +238,21 @@
     <ClInclude Include="Imgui\ImguiExtensions.hpp">
       <Filter>Imgui</Filter>
     </ClInclude>
+    <ClInclude Include="Imgui\ObjectHandler\ImGuiGameObjectHandler.hpp">
+      <Filter>Imgui\ObjectHandler</Filter>
+    </ClInclude>
+    <ClInclude Include="Imgui\ObjectHandler\ImGuiObjectHandler.h">
+      <Filter>Imgui\ObjectHandler</Filter>
+    </ClInclude>
+    <ClInclude Include="Imgui\PropertyHandler\ImGuiPropertyHandler.h">
+      <Filter>Imgui\CustomHandler</Filter>
+    </ClInclude>
+    <ClInclude Include="Imgui\ImGuiCustomHandler.h">
+      <Filter>Imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="Imgui\ObjectHandler\ImGuiTextureHandler.hpp">
+      <Filter>Imgui\ObjectHandler</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Pass">
@@ -290,6 +311,12 @@
     </Filter>
     <Filter Include="Pass\ImguiPass\Menu">
       <UniqueIdentifier>{4b8a65df-4ca7-4af6-a1d4-2be112558138}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Imgui\CustomHandler">
+      <UniqueIdentifier>{b20cba03-0ac7-440e-9ccc-6be9142dc94f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Imgui\ObjectHandler">
+      <UniqueIdentifier>{940dc113-0a3b-4b7b-b541-7a67df6c49c4}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
