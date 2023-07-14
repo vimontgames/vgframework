@@ -58,6 +58,7 @@ namespace vg::graphics::renderer
 
         static core::vector<core::IObject*> &   getSelectedObjects  ();
         static void                             setSelectedObjects  (core::vector<core::IObject*> & _objects);
+        static bool                             isSelectedObject    (core::IObject* _object);
 
         static core::string                     getPropertyLabel    (const core::IProperty * _prop);
         static core::string                     getButtonLabel      (core::string _baseName, core::IObject * _object);

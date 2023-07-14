@@ -115,7 +115,7 @@ namespace vg::graphics::renderer
                             flags |= ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_DefaultOpen;
                         else
                             flags |= ImGuiTreeNodeFlags_Leaf;
-
+                        
                         const bool open = ImGui::TreeNodeEx(scene->getName().c_str(), flags);
 
                         auto status = m_sceneMenu.Display((IObject*)scene);
@@ -142,7 +142,16 @@ namespace vg::graphics::renderer
     {
         const auto children = _gameObject->GetChildren();
 
-        bool open = ImGui::TreeNodeEx(_gameObject->getName().c_str(), children.size() > 0 ? (ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_DefaultOpen) : ImGuiTreeNodeFlags_Leaf);
+        ImGuiTreeNodeFlags flags;
+        if (children.size() > 0)
+            flags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_DefaultOpen;
+        else
+            flags = ImGuiTreeNodeFlags_Leaf;
+
+        if (isSelectedObject(_gameObject))
+            flags |= ImGuiTreeNodeFlags_Selected;
+
+        bool open = ImGui::TreeNodeEx(_gameObject->getName().c_str(), flags);
         bool openPopup = false;
 
         m_gameObjectMenu.Display(_gameObject);

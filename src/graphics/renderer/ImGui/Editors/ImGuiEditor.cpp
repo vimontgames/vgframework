@@ -801,6 +801,17 @@ namespace vg::graphics::renderer
     }
 
     //--------------------------------------------------------------------------------------
+    bool ImguiEditor::isSelectedObject(core::IObject * _object)
+    {
+        for (int i = 0; i < s_selection.size(); ++i)
+        {
+            if (_object == s_selection[i])
+                return nullptr != s_selection[i];
+        }
+        return false;
+    }
+
+    //--------------------------------------------------------------------------------------
     void ImguiEditor::underLine(const ImColor & _color)
     {
         u32 color = _color;
