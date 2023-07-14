@@ -10,6 +10,9 @@ namespace vg::graphics::renderer
         enum class Status
         {
             None = 0,
+            Canceled,
+            Success,
+            Failure,
             Opened,
             Saved,
             Removed

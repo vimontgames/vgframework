@@ -20,7 +20,10 @@ namespace vg::core
                                                                 GameObject              (const core::string & _name, IObject * _parent);
         virtual                                                 ~GameObject             ();
 
-        virtual void                                            Update                  (double _dt);
+        void                                                    Update                  (double _dt);
+
+        void                                                    AddComponent            (IComponent * _component) final;
+        const vector<IComponent *> &                            GetComponents           () const final;
 
         void                                                    addComponent            (Component * _component);
         const vector<Component*> &                              getComponents           () const;

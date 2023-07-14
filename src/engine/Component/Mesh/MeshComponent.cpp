@@ -53,7 +53,9 @@ namespace vg::engine
     void MeshComponent::Update(double _dt)
     {
         // TODO: could be done only when GameObject's matrix changes?
-        m_meshInstance->setWorldMatrix(GetGameObject()->getWorldMatrix());
+        GameObject * go = getGameObject();
+        m_meshInstance->setWorldMatrix(go->getWorldMatrix());
+        m_meshInstance->setColor(go->getColor());
     }
 
     //--------------------------------------------------------------------------------------

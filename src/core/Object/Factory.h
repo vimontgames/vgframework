@@ -14,6 +14,7 @@ namespace vg::core
         IClassDesc *                registerClass                   (const char * _className, const char * _displayName, IClassDesc::Flags _flags, u32 sizeOf, IClassDesc::Func _createFunc) final;
         IClassDesc *                registerSingletonClass          (const char * _className, const char * _displayName, IClassDesc::Flags _flags, u32 sizeOf, IClassDesc::SingletonFunc _createFunc) final;
         const IClassDesc *          getClassDescriptor              (const char * _className) const final;
+        const vector<IClassDesc *>  getClassDescriptors             (IClassDesc::Flags _required = (IClassDesc::Flags)-1, IClassDesc::Flags _excluded = (IClassDesc::Flags)0) const final;
         bool                        isRegisteredClass               (const char * _className) const final;
         IObject *                   getSingleton                    (const char * _className) const final;
         IObject *                   createObject                    (const char * _className, const string & _name, IObject * _parent = nullptr) const final;

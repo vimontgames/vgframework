@@ -26,7 +26,7 @@ VS_Output VS_Forward(uint _vertexID : VertexID)
     output.tan = vert.getTan();
     output.bin = vert.getBin();
     output.uv = float4(vert.getUV(0), vert.getUV(1));
-    output.col = vert.getColor();
+    output.col = vert.getColor() * rootConstants3D.color;
     output.pos = mul(float4(vert.getPos(), 1.0f), rootConstants3D.mat);
 
     return output;

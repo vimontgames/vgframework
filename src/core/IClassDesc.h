@@ -17,6 +17,7 @@ namespace vg::core
         enum class Flags : u64
         {
             None        = 0x0000000000000000,
+
             Singleton   = 0x0000000000000001,
             GameObject  = 0x0000000000000002,
             Component   = 0x0000000000000004,

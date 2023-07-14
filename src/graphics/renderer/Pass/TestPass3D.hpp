@@ -301,6 +301,7 @@ namespace vg::graphics::renderer
                 root3D.setBuffer(vb->getBindlessSRVHandle());
                 root3D.setFlags(flags);
                 root3D.setMode(mode);
+                root3D.color = instance->getColor();
                 
                 _cmdList->setIndexBuffer(ib);
 

@@ -13,6 +13,18 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
+    VG_INLINE void Instance::setColor(const float4 & _color)
+    {
+        m_color = _color;
+    }
+
+    //--------------------------------------------------------------------------------------
+    VG_INLINE const float4 & Instance::getColor() const
+    {
+        return m_color;
+    }
+
+    //--------------------------------------------------------------------------------------
     VG_INLINE Model * Instance::getModel(Lod _lod) const
     {
         VG_ASSERT(isEnumValue(_lod));

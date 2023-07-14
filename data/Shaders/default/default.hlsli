@@ -23,6 +23,7 @@ struct RootConstants3D
 {
     float4x4 mat;
     uint4 data;
+    float4 color;
 
     #ifdef __cplusplus
     RootConstants3D() :

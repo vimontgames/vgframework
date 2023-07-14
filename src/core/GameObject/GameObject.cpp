@@ -70,6 +70,17 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
+    void GameObject::AddComponent(IComponent * _component)
+    {
+        addComponent((Component*)_component);
+    }
+    //--------------------------------------------------------------------------------------
+    const vector<IComponent *> & GameObject::GetComponents() const
+    {
+        return (vector<IComponent *> &)getComponents();
+    }
+
+    //--------------------------------------------------------------------------------------
     void GameObject::addComponent(Component * _component)
     {
         VG_ASSERT(_component);

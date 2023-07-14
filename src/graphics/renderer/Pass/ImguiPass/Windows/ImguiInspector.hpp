@@ -5,6 +5,7 @@ namespace vg::graphics::renderer
     //--------------------------------------------------------------------------------------
     void ImguiInspector::display()
     {
+        ImGui::PushID("ImGuiInspector");
         if (ImGui::IconBegin(Editor::Icon::Inspector, "Inspector", &m_isVisible))
         {
             auto object = ImguiEditor::getSelectedObject();
@@ -14,5 +15,6 @@ namespace vg::graphics::renderer
             }
         }
         ImGui::End();
+        ImGui::PopID();
     }
 }

@@ -19,6 +19,9 @@ namespace vg::core
         void                        SetWorldMatrix      (const float4x4 & _world) final;
         const float4x4 &            GetWorldMatrix      () const final override;
 
+        void                        SetColor            (const float4 & _color) final;
+        const float4 &              GetColor            () const final;
+
         void                        SetModel            (Lod _lod, IModel * _model) final;
         IModel *                    GetModel            (Lod _lod) const final;
 
@@ -28,6 +31,9 @@ namespace vg::core
     public:
         VG_INLINE void              setWorldMatrix      (const float4x4 & _world);
         VG_INLINE const float4x4 &  getWorldMatrix      () const;
+
+        VG_INLINE void              setColor            (const float4 & _color);
+        VG_INLINE const float4 &    getColor            () const;
 
         void                        setModel            (Lod _lod, Model * _model);
         VG_INLINE Model *           getModel            (Lod _lod) const;

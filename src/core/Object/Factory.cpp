@@ -170,6 +170,19 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
+    const vector<IClassDesc *> Factory::getClassDescriptors(IClassDesc::Flags _required, IClassDesc::Flags _excluded) const
+    {
+        vector<IClassDesc *> classes;
+        for (uint i = 0; i < m_classes.count(); ++i)
+        {
+            auto & clas = m_classes[i];
+            if (asBool(clas.flags & _required) && !asBool(clas.flags & _excluded))
+                classes.push_back((IClassDesc *) &clas);
+        }
+        return classes;
+    }
+
+    //--------------------------------------------------------------------------------------
     bool Factory::serializeFromString(IObject * _object, const string & _in) const
     {
         string className;

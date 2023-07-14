@@ -50,6 +50,17 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
+    void Instance::SetColor(const float4 & _color)
+    {
+        setColor(_color);
+    }
+    //--------------------------------------------------------------------------------------
+    const float4 & Instance::GetColor() const
+    {
+        return getColor();
+    }
+
+    //--------------------------------------------------------------------------------------
     IInstance::Flags Instance::GetFlags() const
     {
         return getFlags();
