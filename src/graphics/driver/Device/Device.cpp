@@ -419,4 +419,20 @@ namespace vg::graphics::driver
     {
         return m_rootSignaturesTable.remove(_handle);
     }
+
+    //--------------------------------------------------------------------------------------
+    void Device::setVSync(VSync mode)
+    {
+        if (mode != m_VSync)
+        {
+            m_VSync = mode;
+            super::setVSync(mode);
+        }
+    }
+
+    //--------------------------------------------------------------------------------------
+    VSync Device::getVSync() const
+    {
+        return m_VSync;
+    }
 }

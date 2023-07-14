@@ -13,7 +13,7 @@ namespace vg::core
     class Property : public IProperty
     {
     public:
-                                    Property                        (const char * _class, const char * _name, Type _type, uint_ptr _offset, core::u32 _value, const char * _prettyName, Flags _flags, uint _enumCount = 0, const char * _enumNames = nullptr, const void * _enumValues = nullptr);
+                                    Property                        (const char * _class, const char * _name, Type _type, uint_ptr _offset, core::u32 _sizeOf, const char * _prettyName, Flags _flags, uint _enumCount = 0, const char * _enumNames = nullptr, const void * _enumValues = nullptr);
                                     ~Property                       ();
 
         void                        setRange                        (float2 _range) final;
@@ -60,7 +60,7 @@ namespace vg::core
         const char *                displayName     = nullptr;
         Type		                type			= Type::Undefined;
         uint_ptr	                offset			= (uint_ptr)-1;
-		core::u32	                value			= 0x0;
+		core::u32	                sizeOf			= 0x0;
         Flags		                flags			= Flags::None;
         float2		                range			= float2(0.0f, 0.0f);
         vector<EnumDesc>            enums;

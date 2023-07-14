@@ -87,12 +87,21 @@ namespace vg::core
         virtual IObject *                   GetPropertyObjectRef            (const IObject * _object) const = 0;
         virtual vector<IObject*> *          GetPropertyObjectRefVector      (const IObject * _object) const = 0;
         virtual dictionary<IObject*> *      GetPropertyObjectRefDictionary  (const IObject * _object) const = 0;
-
+        
         virtual uint                        GetPropertyObjectVectorCount    (const IObject * _object) const = 0;
         virtual u8 *                        GetPropertyObjectVectorData     (const IObject * _object) const = 0;
         virtual uint                        GetPropertyResourceVectorCount  (const IObject * _object) const = 0;
         virtual u8 *                        GetPropertyResourceVectorData   (const IObject * _object) const = 0;
 
         virtual IProperty::Callback         GetPropertyCallback             () const = 0;
+
+        template <typename E> inline E *    GetPropertyEnum                 (const IObject * _object) const { return (E *)GetPropertyUnderlyingType<std::underlying_type_t<E>>(_object); }
+
+
+    private:
+        template <typename T> inline T *    GetPropertyUnderlyingType       (const IObject * _object) const;
+        template <> inline u8 *             GetPropertyUnderlyingType<u8>   (const IObject * _object) const { return GetPropertyUint8(_object); }
+        template <> inline u16 *            GetPropertyUnderlyingType<u16>  (const IObject * _object) const { return GetPropertyUint16(_object); }
+        template <> inline u32 *            GetPropertyUnderlyingType<u32>  (const IObject * _object) const { return GetPropertyUint32(_object); }
     }; 
 }

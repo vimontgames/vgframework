@@ -49,6 +49,6 @@ namespace vg::core
         mutable u32                         count = 0;
 
     private:
-        template <typename T> void  registerClassMemberT(const char * _className, const char * _propertyName, T * _offset, core::u32 _value, const char * _displayName, IProperty::Flags _flags);
+        template <typename T> void  registerClassMemberT(const char * _className, const char * _propertyName, T * _offset, const char * _displayName, IProperty::Flags _flags);
     };
 }

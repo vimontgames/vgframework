@@ -33,15 +33,15 @@ namespace vg::graphics::driver
 
     struct BufferContext
     {
-        driver::Texture *					            backbuffer = nullptr;
+        driver::Texture *					                backbuffer = nullptr;
     };
 
 	struct FrameContext
 	{
-		core::vector<driver::CommandPool*>	            commandPools;
-		core::vector<driver::CommandList*>	            commandLists[core::enumCount<CommandListType>()];
-        core::vector<core::Object*>                     m_objectsToRelease;
-        UINT64                                          mFrameFenceId;
+		core::vector<driver::CommandPool*>	                commandPools;
+		core::vector<driver::CommandList*>	                commandLists[core::enumCount<CommandListType>()];
+        core::vector<core::Object*>                         m_objectsToRelease;
+        UINT64                                              mFrameFenceId;
 	};
 
 	namespace base
@@ -91,8 +91,7 @@ namespace vg::graphics::driver
             driver::PixelFormat                             getBackbufferFormat         () const { return m_backbufferFormat; }
             driver::ShaderManager *                         getShaderManager            () { return m_shaderManager;}
 
-
-		//protected:
+		protected:
             DeviceCaps                                      m_caps;
 			driver::CommandQueue*				            m_commandQueue[core::enumCount<CommandQueueType>()];
 			FrameContext									m_frameContext[max_frame_latency];
@@ -105,7 +104,7 @@ namespace vg::graphics::driver
             ShaderManager *                                 m_shaderManager = nullptr;
             RootSignatureTable                              m_rootSignaturesTable;
             driver::BindlessTable *                         m_bindlessTable = nullptr;
-
+            VSync                                           m_VSync = VSync::VBL_1;
             core::u8                                        m_currentFrameIndex;        // current frame being rendered
             core::u8                                        m_nextFrameIndex;
             core::u8                                        m_currentBackbufferIndex;   // current backbuffer being used
@@ -148,6 +147,9 @@ namespace vg::graphics::driver
 
         bool                isMinimized         ();
         void                resetShaders        (ShaderKey::File _file);
+
+        void                setVSync            (VSync mode);
+        VSync               getVSync            () const;
 
 	private:
         TextureImporter *   m_textureImporter = nullptr;

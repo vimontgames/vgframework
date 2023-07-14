@@ -199,7 +199,7 @@ namespace vg::graphics::driver::vulkan
                                      writes.descriptorCount = 1;
                                      writes.descriptorType = VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE;
                                      writes.pImageInfo = &tex_descs;
-                                     writes.dstSet = device->m_vkBindlessDescriptors;
+                                     writes.dstSet = device->getVulkanBindlessDescriptors();
                                      writes.dstArrayElement = m_bindlessSRVHandle - bindless_texture_SRV_offset;
 
                 vkUpdateDescriptorSets(device->getVulkanDevice(), 1, &writes, 0, nullptr);

@@ -1,6 +1,7 @@
 <Root>
     <Object class="DisplayOptions">
         <Property type="String" name="m_name" value="Default"/>
+        <Property type="EnumU8" name="m_VSync" value="VBL_1"/>
         <Property type="Bool" name="m_toolMode" value="true"/>
         <Property type="Bool" name="m_opaque" value="true"/>
         <Property type="Bool" name="m_wireframe" value="false"/>

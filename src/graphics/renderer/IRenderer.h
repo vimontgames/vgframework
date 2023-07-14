@@ -45,6 +45,9 @@ namespace vg
                 virtual void                updateShaders       () = 0;
                 virtual void                waitGPUIdle         () = 0;
 
+                virtual void                SetVSync            (driver::VSync mode) = 0;
+                virtual driver::VSync       GetVSync            () const = 0;
+
                 #ifdef _WIN32
                 virtual LRESULT CALLBACK    WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) = 0;
                 #endif

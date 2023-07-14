@@ -349,7 +349,7 @@ namespace vg::graphics::driver::vulkan
 		m_deviceExtensionList.init();
 
         #ifdef VG_ENABLE_GPU_MARKER
-        VG_ASSERT_VULKAN(m_EXT_DebugUtils.m_pfnCreateDebugUtilsMessengerEXT(m_vkInstance, &dbg_messenger_create_info, nullptr, &dbg_messenger));
+        VG_ASSERT_VULKAN(m_EXT_DebugUtils.m_pfnCreateDebugUtilsMessengerEXT(m_vkInstance, &dbg_messenger_create_info, nullptr, &m_vkDebugMessenger));
         #endif
 
 		vkGetPhysicalDeviceProperties(m_vkPhysicalDevice, &m_vkPhysicalDeviceProperties);
@@ -373,6 +373,8 @@ namespace vg::graphics::driver::vulkan
 
 		createCommandQueues();
 		createVulkanDevice();
+
+		m_vkPresentMode = VSyncToVkPresentModeKHR(m_VSync);
 		createSwapchain();
 
         for (uint i = 0; i < max_frame_latency; ++i)
@@ -574,6 +576,35 @@ namespace vg::graphics::driver::vulkan
 		VG_SAFE_FREE(queue_props);
 	}
 
+    //--------------------------------------------------------------------------------------
+    VkPresentModeKHR Device::VSyncToVkPresentModeKHR(VSync mode)
+	{
+		switch (mode)
+		{
+			default:
+			case VSync::None:
+				return VK_PRESENT_MODE_IMMEDIATE_KHR;
+				break;
+
+			case VSync::VBL_1:
+			case VSync::VBL_2:
+			case VSync::VBL_3:
+			case VSync::VBL_4:
+				return VK_PRESENT_MODE_FIFO_KHR;
+		}
+	}
+
+    //--------------------------------------------------------------------------------------
+    void Device::setVSync(VSync mode)
+    {
+		auto vkPresentMode = VSyncToVkPresentModeKHR(m_VSync);
+		if (vkPresentMode != m_vkPresentMode)
+		{
+			m_vkPresentMode = vkPresentMode;
+			m_vkDirtySwapchain = true;
+		}
+    }
+
 	//--------------------------------------------------------------------------------------
 	void Device::createSwapchain()
 	{
@@ -653,19 +684,19 @@ namespace vg::graphics::driver::vulkan
 		// the application wants the late image to be immediately displayed, even
 		// though that may mean some tearing.
 
-		if (presentMode != swapchainPresentMode) 
+		if (m_vkPresentMode != swapchainPresentMode) 
 		{
 			for (size_t i = 0; i < presentModeCount; ++i) 
 			{
-				if (presentModes[i] == presentMode) 
+				if (presentModes[i] == m_vkPresentMode) 
 				{
-					swapchainPresentMode = presentMode;
+					swapchainPresentMode = m_vkPresentMode;
 					break;
 				}
 			}
 		}
 
-		VG_ASSERT(swapchainPresentMode == presentMode, "Present mode specified is not supported");
+		VG_ASSERT(swapchainPresentMode == m_vkPresentMode, "Present mode specified is not supported");
 
 		// Determine the number of VkImages to use in the swap chain.
 		// Application desires to acquire 3 images at a time for triple
@@ -711,7 +742,7 @@ namespace vg::graphics::driver::vulkan
 								 swapchain_ci.surface = m_vkSurface;
 								 swapchain_ci.minImageCount = desiredNumOfSwapchainImages;
 								 swapchain_ci.imageFormat = Texture::getVulkanPixelFormat(m_backbufferFormat);
-								 swapchain_ci.imageColorSpace = color_space;
+								 swapchain_ci.imageColorSpace = m_vkColorSpace;
 								 swapchain_ci.imageExtent.width = swapchainExtent.width;
 								 swapchain_ci.imageExtent.height = swapchainExtent.height;
 								 swapchain_ci.imageUsage = VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT;
@@ -740,7 +771,7 @@ namespace vg::graphics::driver::vulkan
             }
         }
 
-		VG_ASSERT_VULKAN(m_KHR_Swapchain.m_pfnGetSwapchainImagesKHR(m_vkDevice, m_vkSwapchain, &swapchainImageCount, nullptr));
+		VG_ASSERT_VULKAN(m_KHR_Swapchain.m_pfnGetSwapchainImagesKHR(m_vkDevice, m_vkSwapchain, &m_vkSwapchainImageCount, nullptr));
 		
 		VG_SAFE_FREE(presentModes);
 	}
@@ -780,7 +811,7 @@ namespace vg::graphics::driver::vulkan
         VG_ASSERT(VK_FORMAT_UNDEFINED != selectedSurfaceFormat.format, "Could not find compatible backbuffer format");
             
         // temp: save colorspace here for now, might add a plaform-agnostic colorspace enum later
-        color_space = selectedSurfaceFormat.colorSpace;
+        m_vkColorSpace = selectedSurfaceFormat.colorSpace;
 
         return Texture::getPixelFormat(selectedSurfaceFormat.format);
     }
@@ -873,18 +904,18 @@ namespace vg::graphics::driver::vulkan
 
 		for (uint32_t i = 0; i < max_frame_latency; i++)
 		{
-			VG_ASSERT_VULKAN(vkCreateFence(m_vkDevice, &fence_ci, nullptr, &fences[i]));
-			VG_ASSERT_VULKAN(vkCreateSemaphore(m_vkDevice, &semaphoreCreateInfo, nullptr, &image_acquired_semaphores[i]));
-			VG_ASSERT_VULKAN(vkCreateSemaphore(m_vkDevice, &semaphoreCreateInfo, nullptr, &draw_complete_semaphores[i]));
+			VG_ASSERT_VULKAN(vkCreateFence(m_vkDevice, &fence_ci, nullptr, &m_vkFences[i]));
+			VG_ASSERT_VULKAN(vkCreateSemaphore(m_vkDevice, &semaphoreCreateInfo, nullptr, &m_vkImageAcquiredSemaphores[i]));
+			VG_ASSERT_VULKAN(vkCreateSemaphore(m_vkDevice, &semaphoreCreateInfo, nullptr, &m_vkDrawCompleteSemaphores[i]));
 			
 			if (m_useSeparatePresentCommandQueue)
-				VG_ASSERT_VULKAN(vkCreateSemaphore(m_vkDevice, &semaphoreCreateInfo, nullptr, &image_ownership_semaphores[i]));
+				VG_ASSERT_VULKAN(vkCreateSemaphore(m_vkDevice, &semaphoreCreateInfo, nullptr, &m_vkImageOwnershipSemaphores[i]));
 		}
 
         m_nextFrameIndex = 0;
 
 		// Get Memory information and properties
-		vkGetPhysicalDeviceMemoryProperties(m_vkPhysicalDevice, &memory_properties);
+		vkGetPhysicalDeviceMemoryProperties(m_vkPhysicalDevice, &m_vkPhysicalDeviceMemoryProperties);
 	}
  
     //--------------------------------------------------------------------------------------
@@ -894,15 +925,15 @@ namespace vg::graphics::driver::vulkan
 
         // Wait for fences from present operations
         for (uint i = 0; i < max_frame_latency; i++)
-            vkWaitForFences(m_vkDevice, 1, &fences[i], VK_TRUE, UINT64_MAX);
+            vkWaitForFences(m_vkDevice, 1, &m_vkFences[i], VK_TRUE, UINT64_MAX);
     }
 
     //--------------------------------------------------------------------------------------
     void Device::createVulkanBackbuffers()
     {
-        VkImage * swapchainImages = (VkImage *)malloc(swapchainImageCount * sizeof(VkImage));
+        VkImage * swapchainImages = (VkImage *)malloc(m_vkSwapchainImageCount * sizeof(VkImage));
         assert(swapchainImages);
-        VG_ASSERT_VULKAN(m_KHR_Swapchain.m_pfnGetSwapchainImagesKHR(m_vkDevice, m_vkSwapchain, &swapchainImageCount, swapchainImages));
+        VG_ASSERT_VULKAN(m_KHR_Swapchain.m_pfnGetSwapchainImagesKHR(m_vkDevice, m_vkSwapchain, &m_vkSwapchainImageCount, swapchainImages));
 
         for (uint i = 0; i < max_backbuffer_count; ++i)
             createBackbuffer(i, &swapchainImages[i]);
@@ -922,9 +953,9 @@ namespace vg::graphics::driver::vulkan
 	{
         for (uint i = 0; i < max_frame_latency; i++)
         {
-            vkDestroyFence(m_vkDevice, fences[i], nullptr);
-            vkDestroySemaphore(m_vkDevice, image_acquired_semaphores[i], nullptr);
-            vkDestroySemaphore(m_vkDevice, draw_complete_semaphores[i], nullptr);
+            vkDestroyFence(m_vkDevice, m_vkFences[i], nullptr);
+            vkDestroySemaphore(m_vkDevice, m_vkImageAcquiredSemaphores[i], nullptr);
+            vkDestroySemaphore(m_vkDevice, m_vkDrawCompleteSemaphores[i], nullptr);
         }
 
         static_cast<driver::Device*>(this)->removeRootSignature(m_bindlessRootSignatureHandle);
@@ -1008,13 +1039,13 @@ namespace vg::graphics::driver::vulkan
             #endif
 
             VG_PROFILE_GPU_SWAP(this);
-            vkWaitForFences(vkDevice, 1, &fences[FrameIndex], VK_TRUE, UINT64_MAX);
+            vkWaitForFences(vkDevice, 1, &m_vkFences[FrameIndex], VK_TRUE, UINT64_MAX);
         }
-        vkResetFences(vkDevice, 1, &fences[FrameIndex]);
+        vkResetFences(vkDevice, 1, &m_vkFences[FrameIndex]);
         m_currentFrameIndex = FrameIndex;
 
         u32 currentBuffer;
-        switch (m_KHR_Swapchain.m_pfnAcquireNextImageKHR(vkDevice, m_vkSwapchain, UINT64_MAX, image_acquired_semaphores[FrameIndex], VK_NULL_HANDLE, &currentBuffer))
+        switch (m_KHR_Swapchain.m_pfnAcquireNextImageKHR(vkDevice, m_vkSwapchain, UINT64_MAX, m_vkImageAcquiredSemaphores[FrameIndex], VK_NULL_HANDLE, &currentBuffer))
         {
             default:
                 VG_ASSERT(false);
@@ -1070,13 +1101,13 @@ namespace vg::graphics::driver::vulkan
                 submit_info.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
                 submit_info.pWaitDstStageMask = &pipe_stage_flags;
                 submit_info.waitSemaphoreCount = 1;
-                submit_info.pWaitSemaphores = &image_acquired_semaphores[currentFrameIndex];
+                submit_info.pWaitSemaphores = &m_vkImageAcquiredSemaphores[currentFrameIndex];
                 submit_info.commandBufferCount = (uint)cmdBuffersToExecute.size();
                 submit_info.pCommandBuffers = cmdBuffersToExecute.data();
                 submit_info.signalSemaphoreCount = 1;
-                submit_info.pSignalSemaphores = &draw_complete_semaphores[currentFrameIndex];
+                submit_info.pSignalSemaphores = &m_vkDrawCompleteSemaphores[currentFrameIndex];
 
-                VG_ASSERT_VULKAN(vkQueueSubmit(queue->getVulkanCommandQueue(), 1, &submit_info, fences[currentFrameIndex]));
+                VG_ASSERT_VULKAN(vkQueueSubmit(queue->getVulkanCommandQueue(), 1, &submit_info, m_vkFences[currentFrameIndex]));
             }
         }
 
@@ -1089,7 +1120,7 @@ namespace vg::graphics::driver::vulkan
         present.sType = VK_STRUCTURE_TYPE_PRESENT_INFO_KHR;
         present.pNext = nullptr;
         present.waitSemaphoreCount = 1;
-        present.pWaitSemaphores = &draw_complete_semaphores[currentFrameIndex];
+        present.pWaitSemaphores = &m_vkDrawCompleteSemaphores[currentFrameIndex];
         present.swapchainCount = 1;
         present.pSwapchains = &m_vkSwapchain;
         const u32 currentBackbuffer = m_currentBackbufferIndex;
@@ -1097,6 +1128,13 @@ namespace vg::graphics::driver::vulkan
         present.pResults = nullptr;
 
         VG_ASSERT_VULKAN(m_KHR_Swapchain.m_pfnQueuePresentKHR(getCommandQueue(CommandQueueType::Graphics)->getVulkanCommandQueue(), &present));
+
+		if (m_vkDirtySwapchain)
+		{
+            createSwapchain();
+            createVulkanBackbuffers();
+			m_vkDirtySwapchain = false;
+		}
 
 		super::endFrame();
 	}

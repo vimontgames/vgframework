@@ -56,15 +56,18 @@ namespace vg::graphics::renderer
         static bool			    load					(IObject * _object);
         static bool			    save					(IObject * _object);
 
+    protected:
+        void                    ApplyVsync              (const core::IProperty * _prop);
+
     private:
-        core::float4		    m_backgroundColor   = core::float4(0, 0, 0, 0);
-        bool				    m_toolMode          = true;
-        graphics::driver::VSync m_VSync             = graphics::driver::VSync::VBL_1;
-        bool                    m_vsync             = true;
-        bool				    m_opaque            = true;
-        bool                    m_albedoMaps        = true;
-        bool                    m_normalMaps        = true;
-        bool				    m_wireframe         = false;
+        core::float4		    m_backgroundColor       = core::float4(0, 0, 0, 0);
+        bool				    m_toolMode              = true;
+        graphics::driver::VSync m_VSync                 = graphics::driver::VSync::VBL_1;
+        bool                    m_vsync                 = true;
+        bool				    m_opaque                = true;
+        bool                    m_albedoMaps            = true;
+        bool                    m_normalMaps            = true;
+        bool				    m_wireframe             = false;
        
 		DisplayMode	m_debugDisplayMode	= DisplayMode::Default;
     };

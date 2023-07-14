@@ -3,12 +3,12 @@
 namespace vg::core
 {
     //--------------------------------------------------------------------------------------
-    Property::Property(const char * _class, const char * _name, Type _type, uint_ptr _offset, core::u32 _value, const char * _prettyName, Flags _flags, uint _enumCount, const char * _enumNames, const void * _enumValues) :
+    Property::Property(const char * _class, const char * _name, Type _type, uint_ptr _offset, core::u32 _sizeOf, const char * _prettyName, Flags _flags, uint _enumCount, const char * _enumNames, const void * _enumValues) :
         className(_class),
         name(_name),
         type(_type),
         offset(_offset),
-        value(_value),
+        sizeOf(_sizeOf),
         displayName(_prettyName),
         flags(_flags)
     {
@@ -140,7 +140,7 @@ namespace vg::core
     //--------------------------------------------------------------------------------------
     core::u32 Property::getSizeOf() const
     {
-        return value;
+        return sizeOf;
     }
 
     //--------------------------------------------------------------------------------------

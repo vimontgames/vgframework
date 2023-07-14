@@ -24,6 +24,7 @@ namespace vg::graphics::driver::vulkan
 		void							endFrame						();
 
         void                            waitGPUIdle                     ();
+        void							setVSync						(VSync mode);
 
 		VkInstance &					getVulkanInstance				();
 		VkDevice &						getVulkanDevice					();
@@ -58,8 +59,12 @@ namespace vg::graphics::driver::vulkan
         void                            createVulkanBackbuffers         ();
         void                            destroyVulkanBackbuffers        ();
         VkSwapchainKHR                  getVulkanSwapchain              () const { return m_vkSwapchain; }
+
+		VkDescriptorSet					getVulkanBindlessDescriptors	() const { return m_vkBindlessDescriptors;}
+
+		static VkPresentModeKHR			VSyncToVkPresentModeKHR			(VSync mode);
        
-	//private:
+	private:
 			VkInstance					m_vkInstance;
 			VkDevice					m_vkDevice;
 			VkPhysicalDevice			m_vkPhysicalDevice;
@@ -86,33 +91,27 @@ namespace vg::graphics::driver::vulkan
             VkDescriptorPool            m_vkSamplerDescriptorPool;
             VkSampler                   m_vkSampler[core::enumCount<Sampler>()];
 
-			friend class InstanceExtension;
-			friend class DeviceExtension;
+			VkDebugUtilsMessengerEXT	m_vkDebugMessenger;
+			core::uint					m_validationErrors = 0;
 
-			VkDebugUtilsMessengerEXT			dbg_messenger;
-			core::uint							m_validationErrors = 0;
+			VkPhysicalDeviceMemoryProperties m_vkPhysicalDeviceMemoryProperties;
 
-			VkPhysicalDeviceMemoryProperties memory_properties;
-
-
-			PFN_vkGetRefreshCycleDurationGOOGLE				m_pfnGetRefreshCycleDurationGOOGLE;
-			PFN_vkGetPastPresentationTimingGOOGLE			m_pfnGetPastPresentationTimingGOOGLE;
-
-			PFN_vkGetDeviceProcAddr							m_pfnGetDeviceProcAddr;
-
-			uint32_t swapchainImageCount;
-			VkSwapchainKHR m_vkSwapchain;
-			VkPresentModeKHR presentMode;
-			VkFence fences[max_frame_latency];
-			VkSemaphore image_acquired_semaphores[max_frame_latency];
-			VkSemaphore draw_complete_semaphores[max_frame_latency];
-			VkSemaphore image_ownership_semaphores[max_frame_latency];
-
-			//VkFormat format;
-			VkColorSpaceKHR color_space;
+			uint32_t					m_vkSwapchainImageCount;
+			VkSwapchainKHR				m_vkSwapchain;
+			bool						m_vkDirtySwapchain = false;
+			VkPresentModeKHR			m_vkPresentMode;
+			VkFence						m_vkFences[max_frame_latency];
+            VkSemaphore					m_vkImageAcquiredSemaphores[max_frame_latency];
+            VkSemaphore					m_vkDrawCompleteSemaphores[max_frame_latency];
+            VkSemaphore					m_vkImageOwnershipSemaphores[max_frame_latency];
+			VkColorSpaceKHR				m_vkColorSpace;
 
             core::unordered_map<RenderPassKey, VkRenderPass, RenderPassKey::hash> m_vkRenderPassHash;
-
             RootSignatureHandle m_bindlessRootSignatureHandle;
+
+            friend class InstanceExtension;
+            friend class DeviceExtension;
+			friend class BindlessTable;
+			friend class CommandList;
 	};
 }

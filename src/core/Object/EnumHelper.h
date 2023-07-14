@@ -39,7 +39,15 @@ namespace vg::core
                 names += (string)entries[e].second + '\0';
             
             names += '\0';
+
+            Test(names.c_str());
+
             return names;
+        }
+
+        static void Test(const char * s)
+        {
+            VG_DEBUGPRINT(s);
         }
 
         static const vector<T> getStaticValues()

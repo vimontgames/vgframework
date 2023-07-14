@@ -487,197 +487,194 @@ namespace vg::core
 
                                     switch (type)
                                     {
-                                    default:
-                                        VG_ASSERT_ENUM_NOT_IMPLEMENTED(type);
+                                        default:
+                                            VG_ASSERT_ENUM_NOT_IMPLEMENTED(type);
+                                            break;
+
+                                        case IProperty::Type::Float:
+                                        {
+                                            const XMLAttribute* xmlValue = xmlPropElem->FindAttribute("value");
+                                            if (nullptr != xmlValue)
+                                            {
+                                                float* pFloat = (float*)(uint_ptr(_object) + offset);
+                                                *pFloat = xmlValue->FloatValue();
+                                            }
+                                        }
                                         break;
 
-                                    case IProperty::Type::Float:
-                                    {
-                                        const XMLAttribute* xmlValue = xmlPropElem->FindAttribute("value");
-                                        if (nullptr != xmlValue)
+                                        case IProperty::Type::Float4x4:
                                         {
-                                            float* pFloat = (float*)(uint_ptr(_object) + offset);
-                                            *pFloat = xmlValue->FloatValue();
-                                        }
-                                    }
-                                    break;
+                                            float* pFloat4x4 = (float*)(uint_ptr(_object) + offset);
+                                            const char * values[] = 
+                                            { 
+                                                "Ix", "Iy", "Iz", "Iw", 
+                                                "Jx", "Jy", "Jz", "Jw",
+                                                "Kx", "Ky", "Kz", "Kw",
+                                                "Tx", "Ty", "Tz", "Tw",
+                                            };
 
-                                    case IProperty::Type::Float4x4:
-                                    {
-                                        float* pFloat4x4 = (float*)(uint_ptr(_object) + offset);
-                                        const char * values[] = 
-                                        { 
-                                            "Ix", "Iy", "Iz", "Iw", 
-                                            "Jx", "Jy", "Jz", "Jw",
-                                            "Kx", "Ky", "Kz", "Kw",
-                                            "Tx", "Ty", "Tz", "Tw",
-                                        };
-
-                                        for (uint i = 0; i < countof(values); ++i)
-                                        {
-                                            const XMLAttribute* xmlValue = xmlPropElem->FindAttribute(values[i]);
-                                            if (nullptr != xmlValue)
-                                                pFloat4x4[i] = xmlValue->FloatValue();
-                                        }
-                                    }
-                                    break;
-
-                                    case IProperty::Type::ObjectRef:
-                                    {
-                                        IObject* pObjectRef = nullptr;
-                                        const XMLElement* xmlObjectRef = xmlPropElem->FirstChildElement("Object");
-                                        if (nullptr != xmlObjectRef)
-                                        {
-                                            const XMLAttribute* xmlClassAttrRef = xmlObjectRef->FindAttribute("class");
-                                            if (nullptr != xmlClassAttrRef)
+                                            for (uint i = 0; i < countof(values); ++i)
                                             {
-                                                const char* classNameRef = xmlClassAttrRef->Value();
-                                                const auto* classDescRef = getClassDescriptor(classNameRef);
-                                                if (nullptr != classDescRef)
-                                                {
-                                                    pObjectRef = createObject(classNameRef, "", _object);
-                                                    if (!serializeFromXML(pObjectRef, xmlObjectRef))
-                                                        VG_SAFE_DELETE(pObjectRef);
-                                                }
+                                                const XMLAttribute* xmlValue = xmlPropElem->FindAttribute(values[i]);
+                                                if (nullptr != xmlValue)
+                                                    pFloat4x4[i] = xmlValue->FloatValue();
                                             }
                                         }
-                                        
-                                        IObject** ppObjectRef = (IObject**)(uint_ptr(_object) + offset);
-                                        VG_SAFE_RELEASE((*ppObjectRef));
-                                        *ppObjectRef = pObjectRef;
-                                    }
-                                    break;
+                                        break;
 
-                                    case IProperty::Type::ObjectRefVector:
-                                    {
-                                        const XMLElement* xmlObjectRef = xmlPropElem->FirstChildElement("Object");
-                                        if (nullptr != xmlObjectRef)
+                                        case IProperty::Type::ObjectRef:
                                         {
-                                            auto * vector = prop->GetPropertyObjectRefVector(_object);
+                                            IObject* pObjectRef = nullptr;
                                             const XMLElement* xmlObjectRef = xmlPropElem->FirstChildElement("Object");
-                                        
-                                            do
+                                            if (nullptr != xmlObjectRef)
                                             {
-                                                IObject* pObjectRef = nullptr;
-                                        
-                                                if (nullptr != xmlObjectRef)
+                                                const XMLAttribute* xmlClassAttrRef = xmlObjectRef->FindAttribute("class");
+                                                if (nullptr != xmlClassAttrRef)
                                                 {
-                                                    const XMLAttribute* xmlClassAttrRef = xmlObjectRef->FindAttribute("class");
-                                                    if (nullptr != xmlClassAttrRef)
+                                                    const char* classNameRef = xmlClassAttrRef->Value();
+                                                    const auto* classDescRef = getClassDescriptor(classNameRef);
+                                                    if (nullptr != classDescRef)
                                                     {
-                                                        const char* classNameRef = xmlClassAttrRef->Value();
-                                                        const auto* classDescRef = getClassDescriptor(classNameRef);
-                                                        if (nullptr != classDescRef)
-                                                        {
-                                                            pObjectRef = createObject(classNameRef, "", _object);
-                                                            if (serializeFromXML(pObjectRef, xmlObjectRef))
-                                                                vector->push_back(pObjectRef);
-                                                            else
-                                                                VG_SAFE_DELETE(pObjectRef);
-                                                        }
+                                                        pObjectRef = createObject(classNameRef, "", _object);
+                                                        if (!serializeFromXML(pObjectRef, xmlObjectRef))
+                                                            VG_SAFE_DELETE(pObjectRef);
                                                     }
                                                 }
+                                            }
                                         
-                                                xmlObjectRef = xmlObjectRef->NextSiblingElement("Object");
-                                        
-                                            } while (xmlObjectRef != nullptr);
+                                            IObject** ppObjectRef = (IObject**)(uint_ptr(_object) + offset);
+                                            VG_SAFE_RELEASE((*ppObjectRef));
+                                            *ppObjectRef = pObjectRef;
                                         }
-                                    }
-                                    break;
+                                        break;
 
-                                    case IProperty::Type::Resource:
-                                    {
-                                        IResource* pResource = (IResource*)(uint_ptr(_object) + offset);
-                                        const IClassDesc* classDescRef = nullptr;
-                                        const XMLElement* xmlObjectRef = xmlPropElem->FirstChildElement("Object");
-                                        if (nullptr != xmlObjectRef)
+                                        case IProperty::Type::ObjectRefVector:
                                         {
-                                            const XMLAttribute* xmlClassAttrRef = xmlObjectRef->FindAttribute("class");
-                                            if (nullptr != xmlClassAttrRef)
+                                            const XMLElement* xmlObjectRef = xmlPropElem->FirstChildElement("Object");
+                                            if (nullptr != xmlObjectRef)
                                             {
-                                                const char* classNameRef = xmlClassAttrRef->Value();
-                                                classDescRef = getClassDescriptor(classNameRef);
-                                                if (nullptr != classDescRef)
+                                                auto * vector = prop->GetPropertyObjectRefVector(_object);
+                                                const XMLElement* xmlObjectRef = xmlPropElem->FirstChildElement("Object");
+                                        
+                                                do
                                                 {
-                                                    if (serializeFromXML(pResource, xmlObjectRef))
-                                                        pResource->onResourcePathChanged(_object, "", pResource->getResourcePath());
+                                                    IObject* pObjectRef = nullptr;
+                                        
+                                                    if (nullptr != xmlObjectRef)
+                                                    {
+                                                        const XMLAttribute* xmlClassAttrRef = xmlObjectRef->FindAttribute("class");
+                                                        if (nullptr != xmlClassAttrRef)
+                                                        {
+                                                            const char* classNameRef = xmlClassAttrRef->Value();
+                                                            const auto* classDescRef = getClassDescriptor(classNameRef);
+                                                            if (nullptr != classDescRef)
+                                                            {
+                                                                pObjectRef = createObject(classNameRef, "", _object);
+                                                                if (serializeFromXML(pObjectRef, xmlObjectRef))
+                                                                    vector->push_back(pObjectRef);
+                                                                else
+                                                                    VG_SAFE_DELETE(pObjectRef);
+                                                            }
+                                                        }
+                                                    }
+                                        
+                                                    xmlObjectRef = xmlObjectRef->NextSiblingElement("Object");
+                                        
+                                                } while (xmlObjectRef != nullptr);
+                                            }
+                                        }
+                                        break;
+
+                                        case IProperty::Type::Resource:
+                                        {
+                                            IResource* pResource = (IResource*)(uint_ptr(_object) + offset);
+                                            const IClassDesc* classDescRef = nullptr;
+                                            const XMLElement* xmlObjectRef = xmlPropElem->FirstChildElement("Object");
+                                            if (nullptr != xmlObjectRef)
+                                            {
+                                                const XMLAttribute* xmlClassAttrRef = xmlObjectRef->FindAttribute("class");
+                                                if (nullptr != xmlClassAttrRef)
+                                                {
+                                                    const char* classNameRef = xmlClassAttrRef->Value();
+                                                    classDescRef = getClassDescriptor(classNameRef);
+                                                    if (nullptr != classDescRef)
+                                                    {
+                                                        if (serializeFromXML(pResource, xmlObjectRef))
+                                                            pResource->onResourcePathChanged(_object, "", pResource->getResourcePath());
+                                                    }
                                                 }
                                             }
                                         }
-                                    }
-                                    break;
+                                        break;
 
-                                    case IProperty::Type::EnumFlagsU32:
-                                    {
-                                        u32 * pEnum = (u32*)(uint_ptr(_object) + offset);
-                                        u32 enumVal = 0;
-
-                                        const XMLAttribute* xmlValue = xmlPropElem->FindAttribute("value");
-                                        if (nullptr != xmlValue)
+                                        case IProperty::Type::EnumFlagsU32:
                                         {
-                                            auto xmlEnumString = xmlValue->Value();
-                                            for (uint e = 0; e < prop->getEnumCount(); ++e)
-                                            {
-                                                auto name = prop->getEnumName(e);
-                                                auto value = prop->getEnumValue(e);
+                                            u32 * pEnum = (u32*)(uint_ptr(_object) + offset);
+                                            u32 enumVal = 0;
 
-                                                if (!strcmp(name, xmlEnumString))
-                                                    enumVal |= value;
-                                            }
-                                        }
-                                        *pEnum = enumVal;
-                                    }
-                                    break;
-
-                                    case IProperty::Type::String:
-                                    {
-                                        const XMLAttribute * xmlValue = xmlPropElem->FindAttribute("value");
-                                        if (nullptr != xmlValue)
-                                        {
-                                            string * pString = (string*)(uint_ptr(_object) + offset);
-                                            *pString = xmlValue->Value();
-                                        }
-                                    }
-                                    break;
-
-                                    case IProperty::Type::Bool:
-                                    {
-                                        const XMLAttribute * xmlValue = xmlPropElem->FindAttribute("value");
-                                        if (nullptr != xmlValue)
-                                        {
-                                            bool * pBool = (bool*)(uint_ptr(_object) + offset);
-                                            *pBool = xmlValue->BoolValue();
-                                        }
-                                    }
-                                    break;
-
-                                    case IProperty::Type::Float4:
-                                    {
-                                        float * pFloat4 = (float*)(uint_ptr(_object) + offset);
-                                        const char * values[] = { "x", "y", "z", "w" };
-                                        for (uint i = 0; i < countof(values); ++i)
-                                        {
-                                            const XMLAttribute * xmlValue = xmlPropElem->FindAttribute(values[i]);
+                                            const XMLAttribute* xmlValue = xmlPropElem->FindAttribute("value");
                                             if (nullptr != xmlValue)
-                                                pFloat4[i] = xmlValue->FloatValue();
-                                        }
-                                    }
-                                    break;
-
-                                    case IProperty::Type::EnumU32:
-                                    {
-                                        u32 * pEnum = (u32*)(uint_ptr(_object) + offset);
-                                        const XMLAttribute * xmlValue = xmlPropElem->FindAttribute("value");
-                                        if (nullptr != xmlValue)
-                                        {
-                                            const u32 val = xmlValue->UnsignedValue();
-                                            for (uint i = 0; i < prop->getEnumCount(); ++i)
                                             {
-                                                if (val == prop->getEnumValue(i))
-                                                    *pEnum = val;
+                                                auto xmlEnumString = xmlValue->Value();
+                                                for (uint e = 0; e < prop->getEnumCount(); ++e)
+                                                {
+                                                    auto name = prop->getEnumName(e);
+                                                    auto value = prop->getEnumValue(e);
+
+                                                    if (!strcmp(name, xmlEnumString))
+                                                        enumVal |= value;
+                                                }
+                                            }
+                                            *pEnum = enumVal;
+                                        }
+                                        break;
+
+                                        case IProperty::Type::String:
+                                        {
+                                            const XMLAttribute * xmlValue = xmlPropElem->FindAttribute("value");
+                                            if (nullptr != xmlValue)
+                                            {
+                                                string * pString = (string*)(uint_ptr(_object) + offset);
+                                                *pString = xmlValue->Value();
                                             }
                                         }
-                                    }
+                                        break;
+
+                                        case IProperty::Type::Bool:
+                                        {
+                                            const XMLAttribute * xmlValue = xmlPropElem->FindAttribute("value");
+                                            if (nullptr != xmlValue)
+                                            {
+                                                bool * pBool = (bool*)(uint_ptr(_object) + offset);
+                                                *pBool = xmlValue->BoolValue();
+                                            }
+                                        }
+                                        break;
+
+                                        case IProperty::Type::Float4:
+                                        {
+                                            float * pFloat4 = (float*)(uint_ptr(_object) + offset);
+                                            const char * values[] = { "x", "y", "z", "w" };
+                                            for (uint i = 0; i < countof(values); ++i)
+                                            {
+                                                const XMLAttribute * xmlValue = xmlPropElem->FindAttribute(values[i]);
+                                                if (nullptr != xmlValue)
+                                                    pFloat4[i] = xmlValue->FloatValue();
+                                            }
+                                        }
+                                        break;
+
+                                        case IProperty::Type::EnumU8:
+                                            serializeEnumPropertyFromXML<u8>(_object, prop, xmlPropElem);
+                                            break;
+
+                                        case IProperty::Type::EnumU16:
+                                            serializeEnumPropertyFromXML<u16>(_object, prop, xmlPropElem);
+                                            break;
+
+                                        case IProperty::Type::EnumU32:
+                                            serializeEnumPropertyFromXML<u32>(_object, prop, xmlPropElem);
+                                        break;
                                     }
                                 }
                                 else
@@ -726,125 +723,126 @@ namespace vg::core
 
             switch (type)
             {
-            default:
-                VG_ASSERT_ENUM_NOT_IMPLEMENTED(type);
-                skipAttribute = true;
+                default:
+                    VG_ASSERT_ENUM_NOT_IMPLEMENTED(type);
+                    skipAttribute = true;
+                    break;
+
+                case IProperty::Type::Callback:
+                {
+                    skipAttribute = true;
+                }
                 break;
 
-            case IProperty::Type::Callback:
-            {
-                skipAttribute = true;
-            }
-            break;
-
-            case IProperty::Type::Resource:
-            {
-                const IObject* pResource = prop->GetPropertyResource(_object);
-                serializeToXML(pResource, _xmlDoc, xmlPropElem);
-            }
-            break;
-
-            case IProperty::Type::ObjectRef:
-            {
-                const IObject * pObject = prop->GetPropertyObjectRef(_object);
-                serializeToXML(pObject, _xmlDoc, xmlPropElem);
-            }
-            break;
-
-            case IProperty::Type::ObjectRefVector:
-            {
-                auto * vector = prop->GetPropertyObjectRefVector(_object);
-                const uint count = vector->count();
-                for (uint i = 0; i < count; ++i)
+                case IProperty::Type::Resource:
                 {
-                    serializeToXML((const IObject*)(*vector)[i], _xmlDoc, xmlPropElem);
+                    const IObject* pResource = prop->GetPropertyResource(_object);
+                    serializeToXML(pResource, _xmlDoc, xmlPropElem);
                 }
-            }
-            break;
+                break;
 
-            case IProperty::Type::String:
-            {
-                const string * pString = prop->GetPropertyString(_object);
-                xmlPropElem->SetAttribute("value", pString->c_str());
-            }
-            break;
-
-            case IProperty::Type::Bool:
-            {
-                const bool * pBool = prop->GetPropertyBool(_object);
-                xmlPropElem->SetAttribute("value", *pBool);
-            }
-            break;
-
-            case IProperty::Type::Float:
-            {
-                const float * pFloat = prop->GetPropertyFloat(_object);
-                xmlPropElem->SetAttribute("value", *pFloat);
-            }
-            break;
-
-            case IProperty::Type::Float4:
-            {
-                const float * pFloat4 = (const float*)prop->GetPropertyFloat4(_object);
-                xmlPropElem->SetAttribute("x", pFloat4[0]);
-                xmlPropElem->SetAttribute("y", pFloat4[1]);
-                xmlPropElem->SetAttribute("z", pFloat4[2]);
-                xmlPropElem->SetAttribute("w", pFloat4[3]);
-            }
-            break;
-
-            case IProperty::Type::Float4x4:
-            {
-                const float * pFloat4x4 = (const float*)(uint_ptr(_object) + offset);
-                xmlPropElem->SetAttribute("Ix", pFloat4x4[0+0]);
-                xmlPropElem->SetAttribute("Iy", pFloat4x4[0+1]);
-                xmlPropElem->SetAttribute("Iz", pFloat4x4[0+2]);
-                xmlPropElem->SetAttribute("Iw", pFloat4x4[0+3]);
-                xmlPropElem->SetAttribute("Jx", pFloat4x4[4+0]);
-                xmlPropElem->SetAttribute("Jy", pFloat4x4[4+1]);
-                xmlPropElem->SetAttribute("Jz", pFloat4x4[4+2]);
-                xmlPropElem->SetAttribute("Jw", pFloat4x4[4+3]);
-                xmlPropElem->SetAttribute("Kx", pFloat4x4[8+0]);
-                xmlPropElem->SetAttribute("Ky", pFloat4x4[8+1]);
-                xmlPropElem->SetAttribute("Kz", pFloat4x4[8+2]);
-                xmlPropElem->SetAttribute("Kw", pFloat4x4[8+3]);
-                xmlPropElem->SetAttribute("Tx", pFloat4x4[12+0]);
-                xmlPropElem->SetAttribute("Ty", pFloat4x4[12+1]);
-                xmlPropElem->SetAttribute("Tz", pFloat4x4[12+2]);
-                xmlPropElem->SetAttribute("Tw", pFloat4x4[12+3]);
-            }
-            break;
-
-            case IProperty::Type::EnumFlagsU32:
-            {
-                const u32 * pEnum = (const u32*)(uint_ptr(_object) + offset);
-                string flags;
-                bool first = true;
-                for (uint i = 0; i < prop->getEnumCount(); ++i)
+                case IProperty::Type::ObjectRef:
                 {
-                    if (*pEnum == prop->getEnumValue(i))
+                    const IObject * pObject = prop->GetPropertyObjectRef(_object);
+                    serializeToXML(pObject, _xmlDoc, xmlPropElem);
+                }
+                break;
+
+                case IProperty::Type::ObjectRefVector:
+                {
+                    auto * vector = prop->GetPropertyObjectRefVector(_object);
+                    const uint count = vector->count();
+                    for (uint i = 0; i < count; ++i)
                     {
-                        if (!first)
-                            flags += "|";
-                        else
-                            first = false;
-                        flags += (string)prop->getEnumName(i);
+                        serializeToXML((const IObject*)(*vector)[i], _xmlDoc, xmlPropElem);
                     }
                 }
-                xmlPropElem->SetAttribute("value", flags.c_str());
-            }
-            break;
+                break;
 
-            case IProperty::Type::EnumU32:
-            {
-                const u32 * pEnum = (const u32*)(uint_ptr(_object) + offset);
-                for (uint i = 0; i < prop->getEnumCount(); ++i)
+                case IProperty::Type::String:
                 {
-                    if (*pEnum == prop->getEnumValue(i))
-                        xmlPropElem->SetAttribute("value", prop->getEnumName(i));
+                    const string * pString = prop->GetPropertyString(_object);
+                    xmlPropElem->SetAttribute("value", pString->c_str());
                 }
-            }
-            break;
+                break;
+
+                case IProperty::Type::Bool:
+                {
+                    const bool * pBool = prop->GetPropertyBool(_object);
+                    xmlPropElem->SetAttribute("value", *pBool);
+                }
+                break;
+
+                case IProperty::Type::Float:
+                {
+                    const float * pFloat = prop->GetPropertyFloat(_object);
+                    xmlPropElem->SetAttribute("value", *pFloat);
+                }
+                break;
+
+                case IProperty::Type::Float4:
+                {
+                    const float * pFloat4 = (const float*)prop->GetPropertyFloat4(_object);
+                    xmlPropElem->SetAttribute("x", pFloat4[0]);
+                    xmlPropElem->SetAttribute("y", pFloat4[1]);
+                    xmlPropElem->SetAttribute("z", pFloat4[2]);
+                    xmlPropElem->SetAttribute("w", pFloat4[3]);
+                }
+                break;
+
+                case IProperty::Type::Float4x4:
+                {
+                    const float * pFloat4x4 = (const float*)(uint_ptr(_object) + offset);
+                    xmlPropElem->SetAttribute("Ix", pFloat4x4[0+0]);
+                    xmlPropElem->SetAttribute("Iy", pFloat4x4[0+1]);
+                    xmlPropElem->SetAttribute("Iz", pFloat4x4[0+2]);
+                    xmlPropElem->SetAttribute("Iw", pFloat4x4[0+3]);
+                    xmlPropElem->SetAttribute("Jx", pFloat4x4[4+0]);
+                    xmlPropElem->SetAttribute("Jy", pFloat4x4[4+1]);
+                    xmlPropElem->SetAttribute("Jz", pFloat4x4[4+2]);
+                    xmlPropElem->SetAttribute("Jw", pFloat4x4[4+3]);
+                    xmlPropElem->SetAttribute("Kx", pFloat4x4[8+0]);
+                    xmlPropElem->SetAttribute("Ky", pFloat4x4[8+1]);
+                    xmlPropElem->SetAttribute("Kz", pFloat4x4[8+2]);
+                    xmlPropElem->SetAttribute("Kw", pFloat4x4[8+3]);
+                    xmlPropElem->SetAttribute("Tx", pFloat4x4[12+0]);
+                    xmlPropElem->SetAttribute("Ty", pFloat4x4[12+1]);
+                    xmlPropElem->SetAttribute("Tz", pFloat4x4[12+2]);
+                    xmlPropElem->SetAttribute("Tw", pFloat4x4[12+3]);
+                }
+                break;
+
+                case IProperty::Type::EnumFlagsU32:
+                {
+                    const u32 * pEnum = (const u32*)(uint_ptr(_object) + offset);
+                    string flags;
+                    bool first = true;
+                    for (uint i = 0; i < prop->getEnumCount(); ++i)
+                    {
+                        if (*pEnum == prop->getEnumValue(i))
+                        {
+                            if (!first)
+                                flags += "|";
+                            else
+                                first = false;
+                            flags += (string)prop->getEnumName(i);
+                        }
+                    }
+                    xmlPropElem->SetAttribute("value", flags.c_str());
+                }
+                break;
+
+                case IProperty::Type::EnumU8:
+                    serializeEnumPropertyToXML<u8>(_object, prop, xmlPropElem);
+                    break;
+
+                case IProperty::Type::EnumU16:
+                    serializeEnumPropertyToXML<u16>(_object, prop, xmlPropElem);
+                    break;
+
+                case IProperty::Type::EnumU32:
+                    serializeEnumPropertyToXML<u32>(_object, prop, xmlPropElem);
+                break;
             }
 
             if (!skipAttribute)
@@ -853,5 +851,35 @@ namespace vg::core
 
         parent->InsertEndChild(xmlElement);
         return true;
+    }
+
+    //--------------------------------------------------------------------------------------
+    template <typename T> void Factory::serializeEnumPropertyFromXML(IObject * _object, const IProperty * _prop, const XMLElem * _xmlElem) const
+    {
+        T * pEnum = (T *)(uint_ptr(_object) + _prop->getOffset());
+        const XMLAttribute * xmlValue = _xmlElem->FindAttribute("value");
+        if (nullptr != xmlValue)
+        {
+            const auto val = xmlValue->Value();
+            for (uint i = 0; i < _prop->getEnumCount(); ++i)
+            {
+                if (!strcmp(val, _prop->getEnumName(i)))
+                    *pEnum = _prop->getEnumValue(i);
+            }
+        }
+    }
+
+    //--------------------------------------------------------------------------------------
+    template<typename T> void Factory::serializeEnumPropertyToXML(const IObject * _object, const IProperty * _prop, XMLElem * _xmlElem) const
+    {
+        const T * pEnum = (const T *)(uint_ptr(_object) + _prop->getOffset());
+        for (uint i = 0; i < _prop->getEnumCount(); ++i)
+        {
+            if (*pEnum == _prop->getEnumValue(i))
+            {
+                _xmlElem->SetAttribute("value", _prop->getEnumName(i));
+                break;
+            }
+        }
     }
 }

@@ -25,7 +25,8 @@ namespace vg::graphics::driver::dx12
             D3D12_CPU_DESCRIPTOR_HANDLE		allocDSVHandle              (core::uint _count = 1);
             void							freeDSVHandle               (D3D12_CPU_DESCRIPTOR_HANDLE & _hRTV);
 
-            void                            waitGPUIdle();
+            void                            waitGPUIdle					();
+			void							setVSync					(VSync mode);
 
             IDXGISwapChain3 *               getd3d12SwapChain           () const { return m_dxgiSwapChain; }
 

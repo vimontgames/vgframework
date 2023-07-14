@@ -223,6 +223,18 @@ namespace vg::graphics::renderer
         m_device.waitGPUIdle();
     }
 
+    //--------------------------------------------------------------------------------------
+    void Renderer::SetVSync(driver::VSync mode)
+    {
+        m_device.setVSync(mode);
+    }
+
+    //--------------------------------------------------------------------------------------
+    driver::VSync Renderer::GetVSync() const
+    {
+        return m_device.getVSync();
+    }
+
 	//--------------------------------------------------------------------------------------
 	void Renderer::runOneFrame(double _dt)
 	{

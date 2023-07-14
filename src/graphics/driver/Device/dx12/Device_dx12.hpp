@@ -275,6 +275,12 @@ namespace vg::graphics::driver::dx12
         }
     }
 
+    //--------------------------------------------------------------------------------------
+    void Device::setVSync(VSync mode)
+    {
+        // Nothing to do, DirectX12 is convenient API and it will be handled gracefully by 'Present'
+    }
+
 	//--------------------------------------------------------------------------------------
 	void Device::deinit()
 	{
@@ -471,7 +477,7 @@ namespace vg::graphics::driver::dx12
         }
         
         VG_PROFILE_GPU_SWAP(this);
-        VG_ASSERT_SUCCEEDED(m_dxgiSwapChain->Present(m_VBL, 0));
+        VG_ASSERT_SUCCEEDED(m_dxgiSwapChain->Present((uint)m_VSync, 0));
 
 		super::endFrame();
 	}

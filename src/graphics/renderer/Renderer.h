@@ -53,6 +53,9 @@ namespace vg::graphics::renderer
         void                            updateShaders           () override;
         void                            waitGPUIdle             () override;
 
+        void                            SetVSync                (driver::VSync mode) final override;
+        driver::VSync                   GetVSync                () const final override;
+
         core::IProfiler *               getProfilerInstance     () const override;
         IImmediateGUI *                 getImmediateGUI         () const override;
 
