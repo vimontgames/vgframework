@@ -54,7 +54,7 @@ namespace vg::graphics::renderer
         _desc.registerPropertyHelper(DisplayOptions, m_albedoMaps, "Albedo Maps", IProperty::Flags::SameLine);
 
         EnumHelper<DisplayMode> displayModeEnum;
-        _desc.registerPropertyEnumHelper(DisplayOptions, DisplayMode, m_debugDisplayMode, "Debug Display", displayModeEnum.getCount(), displayModeEnum.getNames(), displayModeEnum.getValues(), IProperty::Flags::None);
+        _desc.registerPropertyEnum(DisplayOptions, DisplayMode, m_debugDisplayMode, "Debug Display", IProperty::Flags::None);
 
         _desc.registerPropertyHelper(DisplayOptions, m_backgroundColor, "Background", IProperty::Flags::Color);
 
@@ -62,5 +62,11 @@ namespace vg::graphics::renderer
         _desc.registerCallbackHelper(DisplayOptions, save, "Save", IProperty::Flags::SameLine);
 
         return true;
+    }
+
+    //--------------------------------------------------------------------------------------
+    void DisplayOptions::onPropertyChanged(const core::IProperty & _prop)
+    {
+
     }
 }

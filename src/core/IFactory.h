@@ -20,8 +20,12 @@ namespace vg::core
     #define registerPropertyObjectRefVectorHelper(className, propertyName, displayName, flags)                              registerProperty(#className, #propertyName, (core::vector<core::IObject*>*)&((className*)nullptr)->propertyName, displayName, flags);
     #define registerPropertyObjectRefDictionaryHelper(className, propertyName, displayName, flags)                          registerProperty(#className, #propertyName, (core::dictionary<core::IObject*>*)&((className*)nullptr)->propertyName, displayName, flags);
     #define registerCallbackHelper(className, funcName, displayName, flags)										            registerProperty(#className, #funcName, funcName, displayName, flags)
-	#define registerPropertyEnumHelper(className, enumClassName, propertyName, displayName, eCount, eNames, eVals, flags)   registerEnum(#className, #propertyName, (std::underlying_type_t<enumClassName>*)(&((className*)(nullptr))->propertyName), displayName, eCount, eNames, eVals, flags);
-    
+	
+    //#define registerPropertyEnumHelper(className, enumClassName, propertyName, displayName, eCount, eNames, eVals, flags) registerEnum(#className, #propertyName, (std::underlying_type_t<enumClassName>*)(&((className*)(nullptr))->propertyName), displayName, eCount, eNames, eVals, flags);
+    #define registerPropertyEnumWithFlags(className, enumClassName, propertyName, displayName, flags)                       registerEnum(#className, #propertyName, (std::underlying_type_t<enumClassName>*)(&((className*)(nullptr))->propertyName), displayName, EnumHelper<enumClassName>::getStaticCount(), EnumHelper<enumClassName>::getStaticNames().c_str(), EnumHelper<enumClassName>::getStaticValues().data(), flags);
+    #define registerPropertyEnum(className, enumClassName, propertyName, displayName)                                       registerPropertyEnumWithFlags(className, enumClassName, propertyName, displayName, vg::core::IProperty::Flags::None)
+    #define registerPropertyEnumBitfield(className, enumClassName, propertyName, displayName)                               registerPropertyEnumWithFlags(className, enumClassName, propertyName, displayName, vg::core::IProperty::Flags::Bitfield)
+
     #define setPropertyRangeHelper(className, propertyName, range)												            getPropertyByName(#propertyName)->setRange(range);
 
     class IObject;

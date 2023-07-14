@@ -10,7 +10,6 @@ namespace vg::core
         EnumHelper()
         {
             const auto entries = magic_enum::enum_entries<E>();
-            const auto prout = magic_enum::enum_values<E>();
             m_count = (uint)entries.size();
             m_values = (T*)malloc(sizeof(T)*m_count);
             for (uint e = 0; e < m_count; ++e)
@@ -24,6 +23,34 @@ namespace vg::core
         ~EnumHelper()
         {
             VG_SAFE_FREE(m_values);
+        }
+
+        static const uint getStaticCount()
+        {
+            return (uint)magic_enum::enum_entries<E>().size();
+        }
+
+        static const string getStaticNames()
+        {
+            string names;
+            const auto entries = magic_enum::enum_entries<E>();
+            uint count = (uint)entries.size();
+            for (uint e = 0; e < count; ++e)
+                names += (string)entries[e].second + '\0';
+            
+            names += '\0';
+            return names;
+        }
+
+        static const vector<T> getStaticValues()
+        {
+            vector<T> values;
+            const auto entries = magic_enum::enum_entries<E>();
+            uint count = (uint)entries.size();
+            for (uint e = 0; e < count; ++e)
+                values.push_back((T)entries[e].first);
+
+            return values;
         }
 
         const u32 getCount() const

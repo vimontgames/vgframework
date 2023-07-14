@@ -29,8 +29,7 @@ namespace vg::core
     {
         super::registerProperties(_desc);
 
-        EnumHelper<Flags> flagsEnum;
-        _desc.registerPropertyEnumHelper(Instance, Flags, m_flags, "Flags", flagsEnum.getCount(), flagsEnum.getNames(), flagsEnum.getValues(), IProperty::Flags::Bitfield);
+        _desc.registerPropertyEnumBitfield(Instance, Flags, m_flags, "Flags");
         _desc.registerPropertyHelper(Instance, m_color, "Color", IProperty::Flags::Color);
         _desc.registerPropertyHelper(Instance, m_world, "Matrix", IProperty::Flags::None);
         _desc.registerPropertyObjectRefVectorHelper(Instance, m_models, "Models", IProperty::Flags::ReadOnly | IProperty::Flags::NotSaved);

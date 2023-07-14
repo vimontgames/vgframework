@@ -27,8 +27,7 @@ namespace vg::graphics::renderer
     {
         super::registerProperties(_desc);
 
-        EnumHelper<Flags> flagsEnum;
-        _desc.registerPropertyEnumHelper(MaterialModel, Flags, m_flags, "Flags", flagsEnum.getCount(), flagsEnum.getNames(), flagsEnum.getValues(), IProperty::Flags::Bitfield);
+        _desc.registerPropertyEnumBitfield(MaterialModel, Flags, m_flags, "Flags");
 
         return true;
     }

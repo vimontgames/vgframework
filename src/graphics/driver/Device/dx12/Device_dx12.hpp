@@ -471,7 +471,7 @@ namespace vg::graphics::driver::dx12
         }
         
         VG_PROFILE_GPU_SWAP(this);
-        VG_ASSERT_SUCCEEDED(m_dxgiSwapChain->Present(0, 0));
+        VG_ASSERT_SUCCEEDED(m_dxgiSwapChain->Present(m_VBL, 0));
 
 		super::endFrame();
 	}

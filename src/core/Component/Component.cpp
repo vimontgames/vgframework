@@ -35,8 +35,7 @@ namespace vg::core
     //--------------------------------------------------------------------------------------
     bool Component::registerProperties(IClassDesc & _desc)
     {
-        EnumHelper<Flags> flagsEnum;
-        _desc.registerPropertyEnumHelper(Component, Flags, m_flags, "Flags", flagsEnum.getCount(), flagsEnum.getNames(), flagsEnum.getValues(), IProperty::Flags::Bitfield);
+        _desc.registerPropertyEnum(Component, Flags, m_flags, "Flags");
 
         return true;
     }

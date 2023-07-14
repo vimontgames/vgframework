@@ -207,7 +207,7 @@ namespace vg::graphics::driver::vulkan
     //                         writes.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_TEXEL_BUFFER;
     //                         writes.pBufferInfo = &vkBufferInfo;
     //                         writes.pTexelBufferView = &vkBufferView;;
-    //                         writes.dstSet = device->m_vkBindlessDescriptors;
+    //                         writes.dstSet = device->getVulkanBindlessDescriptors();
     //                         writes.dstArrayElement = handle - bindless_constantbuffer_offset;
     //
     //    vkUpdateDescriptorSets(device->getVulkanDevice(), 1, &writes, 0, nullptr);

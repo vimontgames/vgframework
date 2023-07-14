@@ -2,6 +2,7 @@
 
 #include "core/Object/Object.h"
 #include "core/Singleton/Singleton.h"
+#include "graphics/driver/Device/Device_consts.h"
 
 namespace vg::core
 {
@@ -36,6 +37,8 @@ namespace vg::graphics::renderer
         static bool			    registerClass			(core::IFactory & _factory);
         static bool			    registerProperties		(core::IClassDesc & _desc);
 
+        void                    onPropertyChanged       (const core::IProperty & _prop) final;
+
         DisplayMode             getDisplayMode          () const { return m_debugDisplayMode;}
 
         bool				    isToolModeEnabled		() const { return m_toolMode; }
@@ -54,12 +57,14 @@ namespace vg::graphics::renderer
         static bool			    save					(IObject * _object);
 
     private:
-        core::float4		m_backgroundColor   = core::float4(0, 0, 0, 0);
-        bool				m_toolMode          = true;
-        bool				m_opaque            = true;
-        bool                m_albedoMaps        = true;
-        bool                m_normalMaps        = true;
-        bool				m_wireframe         = false;
+        core::float4		    m_backgroundColor   = core::float4(0, 0, 0, 0);
+        bool				    m_toolMode          = true;
+        graphics::driver::VSync m_VSync             = graphics::driver::VSync::VBL_1;
+        bool                    m_vsync             = true;
+        bool				    m_opaque            = true;
+        bool                    m_albedoMaps        = true;
+        bool                    m_normalMaps        = true;
+        bool				    m_wireframe         = false;
        
 		DisplayMode	m_debugDisplayMode	= DisplayMode::Default;
     };

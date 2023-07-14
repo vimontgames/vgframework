@@ -115,14 +115,10 @@ namespace vg::graphics::driver
     //--------------------------------------------------------------------------------------
     bool Texture::registerProperties(IClassDesc & _desc)
     {
-        EnumHelper<PixelFormat> pixelFormatEnum;
-        _desc.registerPropertyEnumHelper(Texture, PixelFormat, m_texDesc.format, "Format", pixelFormatEnum.getCount(), pixelFormatEnum.getNames(), pixelFormatEnum.getValues(), IProperty::Flags::ReadOnly);
+        _desc.registerPropertyEnumWithFlags(Texture, PixelFormat, m_texDesc.format, "Format", IProperty::Flags::ReadOnly);
         
         _desc.registerProperty("Texture", "width", (core::u16*)(&((Texture*)(nullptr))->m_texDesc.width), "Width", IProperty::Flags::ReadOnly);
         _desc.registerProperty("Texture", "height", (core::u16*)(&((Texture*)(nullptr))->m_texDesc.height), "Height", IProperty::Flags::ReadOnly);
-
-        //_desc.registerPropertyHelper(Texture, m_texDesc.width, "Width", IProperty::Flags::ReadOnly);
-        //_desc.registerPropertyHelper(Texture, m_texDesc.height, "Height", IProperty::Flags::ReadOnly);
 
         return true;
     }
