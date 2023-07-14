@@ -1,6 +1,6 @@
 #pragma once
 
-#include "ImguiMenu.h"
+#include "graphics/renderer/ImGui/Menus/ImguiMenu.h"
 
 namespace vg::graphics::renderer
 {

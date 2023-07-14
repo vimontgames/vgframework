@@ -1,7 +1,7 @@
 #pragma once
 
 #include "imgui/imgui.h"
-#include "graphics/renderer/Pass/ImguiPass/Windows/ImguiEditor.h"
+#include "graphics/renderer/ImGui/Editors/ImguiEditor.h"
 
 namespace vg::graphics::renderer
 {

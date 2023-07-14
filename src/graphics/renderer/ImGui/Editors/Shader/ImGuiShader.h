@@ -1,13 +1,13 @@
 #pragma once
 
-#include "ImguiEditor.h"
+#include "graphics/renderer/ImGui/Editors/ImguiEditor.h"
 
 namespace vg::graphics::renderer
 {
-    class ImguiAbout : public ImguiEditor
+    class ImguiShader : public ImguiEditor
     {
     public:
-        ImguiAbout(const string & _name, Flags _flags) :
+        ImguiShader(const string & _name, Flags _flags) :
             ImguiEditor(_name, _flags)
         {
         }

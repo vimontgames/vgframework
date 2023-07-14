@@ -18,7 +18,7 @@
 #endif
 
 #include "graphics/driver/Device/Device.h"
-#include "graphics/renderer/Pass/ImguiPass/Imgui_Consts.h"
+#include "graphics/renderer/ImGui/Imgui_Consts.h"
 #include "graphics/driver/CommandList/CommandList.h"
 #include "graphics/driver/CommandQueue/CommandQueue.h"
 #include "graphics/driver/Resource/Texture.h"

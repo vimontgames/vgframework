@@ -9,12 +9,12 @@
 #include "core/IGameObject.h"
 #include "core/IComponent.h"
 #include "imgui/imgui.h"
-#include "ImguiEditor.h"
+#include "ImGuiEditor.h"
 #include "graphics/renderer/Renderer.h"
-#include "graphics/renderer/Imgui/imguiAdapter.h"
-#include "graphics/renderer/Imgui/ObjectHandler/ImGuiObjectHandler.h"
-#include "graphics/renderer/Imgui/PropertyHandler/ImGuiPropertyHandler.h"
-#include "graphics/renderer/Pass/ImguiPass/Imgui_Consts.h"
+#include "graphics/renderer/ImGui/imguiAdapter.h"
+#include "graphics/renderer/ImGui/ObjectHandler/ImGuiObjectHandler.h"
+#include "graphics/renderer/ImGui/PropertyHandler/ImGuiPropertyHandler.h"
+#include "graphics/renderer/ImGui/Imgui_Consts.h"
 #include "ImGui-Addons/FileBrowser/ImGuiFileBrowser.cpp"
 
 using namespace vg::core;

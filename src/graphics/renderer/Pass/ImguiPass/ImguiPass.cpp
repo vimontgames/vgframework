@@ -21,18 +21,18 @@ using namespace vg::graphics::driver;
 using namespace vg::graphics::renderer;
 
 #include "imgui/imgui.h"
-#include "Windows/ImguiEditor.h"
+#include "graphics/renderer/ImGui/Editors/ImguiEditor.h"
 
 using namespace ImGui;
 
-#include "Windows/ImguiScene.hpp"
-#include "Windows/ImguiResource.hpp"
-#include "Windows/ImguiPlatform.hpp"
-#include "Windows/ImguiDisplayOptions.hpp"
-#include "Windows/ImguiShader.hpp"
-#include "Windows/ImguiFPS.hpp"
-#include "Windows/ImguiInspector.hpp"
-#include "Windows/ImguiAbout.hpp"
+#include "graphics/renderer/ImGui/Editors/Scene/ImguiScene.hpp"
+#include "graphics/renderer/ImGui/Editors/Resource/ImguiResource.hpp"
+#include "graphics/renderer/ImGui/Editors/Platform/ImguiPlatform.hpp"
+#include "graphics/renderer/ImGui/Editors/DisplayOptions/ImguiDisplayOptions.hpp"
+#include "graphics/renderer/ImGui/Editors/Shader/ImguiShader.hpp"
+#include "graphics/renderer/ImGui/Editors/FPS/ImguiFPS.hpp"
+#include "graphics/renderer/ImGui/Editors/Inspector/ImguiInspector.hpp"
+#include "graphics/renderer/ImGui/Editors/About/ImguiAbout.hpp"
 
 namespace vg::graphics::renderer
 {

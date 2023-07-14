@@ -1,4 +1,4 @@
-#include "ImguiGameObjectMenu.h"
+#include "ImGuiGameObjectSceneEditorMenu.h"
 #include "core/IGameObject.h"
 
 using namespace vg::core;
@@ -6,7 +6,7 @@ using namespace vg::core;
 namespace vg::graphics::renderer
 {
     //--------------------------------------------------------------------------------------
-    ImguiMenu::Status ImguiGameObjectMenu::Display(core::IObject * _object)
+    ImguiMenu::Status ImguiGameObjectSceneEditorMenu::Display(core::IObject * _object)
     {
         auto status = Status::None;
         IGameObject * gameObject = dynamic_cast<IGameObject*>(_object);
@@ -16,18 +16,18 @@ namespace vg::graphics::renderer
 
         if (ImGui::BeginPopupContextItem())
         {
-            ImGui::PushID("GameObjectMenu");
-            if (ImGui::MenuItem("Add Child GameObject"))
+            ImGui::PushID("GameObjectInspectorMenu");
+            if (ImGui::MenuItem("Add GameObject"))
             {
                 m_selected = MenuOption::AddChild;
-                m_popup = "Add Child GameObject";
+                m_popup = "Add GameObject";
                 openPopup = true;
-                ImGui::OpenPopup("Add Child GameObject");
+                ImGui::OpenPopup("Add GameObject");
             }
-            if (ImGui::MenuItem("Delete GameObject"))
+            if (ImGui::MenuItem("Delete"))
             {
                 m_selected = MenuOption::Delete;
-                m_popup = "Delete GameObject";
+                m_popup = "Delete";
                 openPopup = true;
             }
             ImGui::PopID();

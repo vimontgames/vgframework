@@ -1,10 +1,10 @@
 #pragma once
 
-#include "ImguiMenu.h"
+#include "graphics/renderer/ImGui/Menus/ImguiMenu.h"
 
 namespace vg::graphics::renderer
 {
-    class ImguiGameObjectMenu : public ImguiMenu
+    class ImguiGameObjectSceneEditorMenu : public ImguiMenu
     {
     public:
         enum MenuOption
@@ -14,6 +14,6 @@ namespace vg::graphics::renderer
             Delete
         };
 
-        Status Display(core::IObject * _object) final;
+        Status Display(core::IObject * _object) override;
     };
 }

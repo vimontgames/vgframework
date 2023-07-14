@@ -2,7 +2,7 @@
 
 #include "core/IGameObject.h"
 #include "core/IComponent.h"
-#include "graphics/renderer/Pass/ImguiPass/Menus/ImguiMenu.h"
+#include "graphics/renderer/ImGui/Menus/ImguiMenu.h"
 
 using namespace vg::core;
 

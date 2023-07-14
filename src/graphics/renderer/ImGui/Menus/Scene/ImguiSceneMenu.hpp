@@ -1,7 +1,7 @@
 #include "ImguiSceneMenu.h"
 #include "core/IUniverse.h"
 #include "core/IScene.h"
-#include "graphics/renderer/Pass/ImguiPass/Windows/ImguiEditor.h"
+#include "graphics/renderer/ImGui/Editors/ImguiEditor.h"
 #include "ImGui-Addons/FileBrowser/ImGuiFileBrowser.h"
 
 using namespace vg::core;

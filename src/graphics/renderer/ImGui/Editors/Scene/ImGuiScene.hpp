@@ -8,6 +8,8 @@ namespace vg::graphics::renderer
     //--------------------------------------------------------------------------------------
     void ImguiScene::display()
     {
+        ImGui::PushID("ImguiScene");
+
         if (ImGui::IconBegin(Editor::Icon::Scene, "Scenes", &m_isVisible))
         {
             const auto * factory = Kernel::getFactory();
@@ -20,8 +22,6 @@ namespace vg::graphics::renderer
 
                 if (ImGui::BeginPopupContextWindow())
                 {
-                    ImGui::PushID("ScenesMenu");
-
                     if (ImGui::MenuItem("Add Scene"))
                     {
                         m_selected = MenuOption::AddScene;
@@ -36,7 +36,6 @@ namespace vg::graphics::renderer
                         m_popup = "Load Scene";
                     }
 
-                    ImGui::PopID();
                     ImGui::EndPopup();
                 }
 
@@ -135,6 +134,7 @@ namespace vg::graphics::renderer
             }
         }
         ImGui::End();
+        ImGui::PopID();
     }
 
     //--------------------------------------------------------------------------------------
