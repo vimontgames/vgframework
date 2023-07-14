@@ -371,6 +371,7 @@ namespace vg::graphics::renderer
         root3D.mat = transpose(_viewProj);
         root3D.setBuffer(m_gridVB->getBindlessSRVHandle());
         root3D.setMode(MODE_VS_COLOR);
+        root3D.color = float4(1, 1, 1, 1);
 
         _cmdList->setRasterizerState(rs);
         _cmdList->setShader(m_forwardShaderKey);
@@ -391,6 +392,7 @@ namespace vg::graphics::renderer
         root3D.mat = transpose(_viewProj);
         root3D.setBuffer(m_axisVB->getBindlessSRVHandle());
         root3D.setMode(MODE_VS_COLOR);
+        root3D.color = float4(1, 1, 1, 1);
 
         _cmdList->setRasterizerState(rs);
         _cmdList->setShader(m_forwardShaderKey);

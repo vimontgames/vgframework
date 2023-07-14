@@ -105,20 +105,30 @@ namespace vg::graphics::renderer
         T * pEnum = (T*)(uint_ptr(_object) + offset);
         int enumVal = (int)*pEnum;
 
-        char temp[2048] = { '\0' };
-        char * p = temp;
+        string preview = "<Invalid>";
         for (uint e = 0; e < _prop->getEnumCount(); ++e)
         {
-            const char * name = _prop->getEnumName(e);
-            for (int c = 0; c < strlen(name); c++)
-                *p++ = name[c];
-            *p++ = '\0';
+            if (enumVal == _prop->getEnumValue(e))
+            {
+                preview = _prop->getEnumName(e);
+                break;
+            }
         }
-        *p++ = '\0';
 
-        bool changed = ImGui::Combo(getPropertyLabel(_prop).c_str(), &enumVal, temp) && !readonly;
-        if (changed)
-            *pEnum = enumVal;
+        bool changed = false;
+        if (ImGui::BeginCombo(getPropertyLabel(_prop).c_str(), preview.c_str(), ImGuiComboFlags_HeightLarge))
+        {
+            for (uint e = 0; e < _prop->getEnumCount(); ++e)
+            {
+                if (ImGui::Selectable(_prop->getEnumName(e)))
+                {
+                    *pEnum = enumVal;
+                    changed = true;
+                }
+            }
+            ImGui::EndCombo();
+        }
+        
         return changed;
     }
 
@@ -137,11 +147,13 @@ namespace vg::graphics::renderer
         bool changed = false;
         string preview;
 
-        bool first = true;
+        bool first = true, found = false;
         for (uint e = 0; e < _prop->getEnumCount(); ++e)
         {
             if (enumVal & (1 << e))
             {
+                found = true;
+
                 if (first)
                     first = false;
                 else
@@ -150,7 +162,7 @@ namespace vg::graphics::renderer
                 preview += _prop->getEnumName(e);
             }
         }
-        if (first)
+        if (!found)
             preview = "<None>";
 
         if (ImGui::BeginCombo(getPropertyLabel(_prop).c_str(), preview.c_str(), ImGuiComboFlags_None))
@@ -181,10 +193,6 @@ namespace vg::graphics::renderer
     //--------------------------------------------------------------------------------------
     void ImguiEditor::displayObject(core::IObject * _object)
     {
-        // Custom Object edit
-        if (ImGuiObjectHandler::display(_object))
-            return;
-
         const char * className = _object->getClassName();
 
         const auto * factory = Kernel::getFactory();
@@ -193,14 +201,18 @@ namespace vg::graphics::renderer
         if (!classDesc)
             return;
 
-        const char * classDisplayName = classDesc->getClassDisplayName();
-
         ImGui::PushItemWidth(196);
 
-        for (uint i = 0; i < classDesc->getPropertyCount(); ++i)
+        // Custom Object edit
+        if (!ImGuiObjectHandler::display(_object))
         {
-            const IProperty* prop = classDesc->getPropertyByIndex(i);
-            ImguiEditor::displayProperty(prop, _object);
+            const char * classDisplayName = classDesc->getClassDisplayName();
+
+            for (uint i = 0; i < classDesc->getPropertyCount(); ++i)
+            {
+                const IProperty * prop = classDesc->getPropertyByIndex(i);
+                ImguiEditor::displayProperty(prop, _object);
+            }
         }
 
         ImGui::PopItemWidth();
