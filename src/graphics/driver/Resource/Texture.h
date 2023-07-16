@@ -21,6 +21,9 @@ namespace vg::graphics::driver
 			Texture(const TextureDesc & _texDesc, const core::string & _name, const void * _initData);
 			~Texture();
 
+            virtual core::u16 GetWidth() const final override;
+            virtual core::u16 GetHeight() const final override;
+
 			const TextureDesc & getTexDesc() const { return m_texDesc; }
             const driver::Resource & getResource() const { return m_resource; }
             driver::Resource & getResource() { return m_resource; }

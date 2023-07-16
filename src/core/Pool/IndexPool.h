@@ -14,6 +14,7 @@ namespace vg::core
 
         T alloc()
         {
+            VG_ASSERT(available() > 0, "Pool is full (max. %u elements)", count);
             m_used++;
             uint pageIndex = 0;
             for (auto & page : m_pages)

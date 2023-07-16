@@ -25,7 +25,7 @@ namespace vg::graphics::driver
 			~CommandList();
 
 			CommandListType			getType			        () const;
-			CommandPool *			getCommandPool	        ();
+			CommandPool *			getCommandPool	        () const;
 
 			void					beginRenderPass	        (driver::RenderPass * _renderPass);
 			void					endRenderPass	        ();

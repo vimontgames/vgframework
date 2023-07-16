@@ -8,6 +8,18 @@ namespace vg::graphics::driver
 	namespace base
 	{
         //--------------------------------------------------------------------------------------
+        core::u16 Texture::GetWidth() const
+        {
+            return m_texDesc.width;
+        }
+
+        //--------------------------------------------------------------------------------------
+        core::u16 Texture::GetHeight() const
+        {
+            return m_texDesc.height;
+        }
+
+        //--------------------------------------------------------------------------------------
         core::u32 Texture::computeMaxMipmapCount(const TextureDesc & _texDesc)
         {
             switch (_texDesc.type)

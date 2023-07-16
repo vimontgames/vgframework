@@ -375,6 +375,7 @@ namespace vg::graphics::driver
 	//--------------------------------------------------------------------------------------
 	Texture * Device::createTexture(const TextureDesc & _texDesc, const core::string & _name, const void * _initData, ReservedSlot _reservedSlot)
 	{
+        VG_ASSERT(_texDesc.width > 0 && _texDesc.height > 0);
 		return new Texture(_texDesc, _name, _initData, _reservedSlot);
 	}
 

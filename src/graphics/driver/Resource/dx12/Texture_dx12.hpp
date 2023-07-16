@@ -303,6 +303,9 @@ namespace vg::graphics::driver::dx12
 		if (s_d3d12invalidRTVHandle.ptr != m_d3d12RTVHandle.ptr)
 			device->freeRTVHandle(m_d3d12RTVHandle);
 
+        if (s_d3d12invalidDSVHandle.ptr != m_d3d12DSVHandle.ptr)
+            device->freeDSVHandle(m_d3d12DSVHandle);
+
         if (asBool(TextureFlags::Backbuffer & getTexDesc().flags))
             m_resource.setd3d12TextureResource("", nullptr, nullptr); // Do not release backbuffer
 	}

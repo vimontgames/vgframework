@@ -44,7 +44,7 @@ namespace vg::graphics::driver
 		}
 
 		//--------------------------------------------------------------------------------------
-		driver::CommandPool * CommandList::getCommandPool() 
+		driver::CommandPool * CommandList::getCommandPool() const
 		{ 
 			return m_cmdPool; 
 		}

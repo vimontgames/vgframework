@@ -14,5 +14,8 @@ namespace vg::graphics::driver
         {
 
         }
+
+        virtual core::u16 GetWidth() const = 0;
+        virtual core::u16 GetHeight() const = 0;
     };
 }
