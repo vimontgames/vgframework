@@ -1,10 +1,13 @@
 #include "engine/Precomp.h"
 #include "CameraComponent.h"
-#include "graphics/renderer/View/View.h"
+
 #include "core/GameObject/GameObject.h"
 #include "core/Math/Math.h"
-#include "engine/Engine.h"
+
+#include "graphics/driver/IView.h"
 #include "graphics/renderer/IRenderer.h"
+
+#include "engine/Engine.h"
 
 using namespace vg::core;
 
@@ -51,37 +54,19 @@ namespace vg::engine
     //--------------------------------------------------------------------------------------
     CameraComponent::~CameraComponent()
     {
-        VG_SAFE_RELEASE(m_view);
+
     }
 
     //--------------------------------------------------------------------------------------
     void CameraComponent::Update(double _dt)
     {
-        //if (m_view == nullptr)
+        // TEMP: Update all views
+        const auto & views = Engine::get()->GetRenderer()->GetViews();
+        for (uint i = 0; i < views.count(); ++i)
         {
-            if (Engine::get()->GetRenderer()->GetViews().count() > 0)
-                setView(Engine::get()->GetRenderer()->GetViews()[0], nullptr); // Quick hack, TODO: multiview management
-            //VG_SAFE_INCREASE_REFCOUNT(m_view);
-        }
-
-        if (m_view != nullptr)
-        {
+            auto * view = views[i];
             const float4x4 & matrix = getGameObject()->getWorldMatrix();
-            m_view->SetupCamera(inverse(matrix), float2(m_near, m_far), m_fovY);
+            view->SetupCamera(inverse(matrix), float2(m_near, m_far), m_fovY);
         }
-    }
-
-    //--------------------------------------------------------------------------------------
-    void CameraComponent::setView(graphics::renderer::IView * _view, core::IGameObject * _sector)
-    {
-        if (_view != m_view)
-        {
-            VG_SAFE_RELEASE(m_view);
-            m_view = _view;
-            VG_SAFE_INCREASE_REFCOUNT(m_view);
-        }
-
-        if (nullptr != m_view)
-            m_view->SetCameraSector(_sector);
     }
 }

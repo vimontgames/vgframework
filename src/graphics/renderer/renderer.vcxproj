@@ -40,7 +40,7 @@
     <ClCompile Include="Model\Material\MaterialModel.cpp" />
     <ClCompile Include="Model\Mesh\MeshModel.cpp" />
     <ClCompile Include="Options\Options.cpp" />
-    <ClCompile Include="Pass\ImGuiPass\ImGuiPass.cpp" />
+    <ClCompile Include="Pass\ImGui\ImGuiPass.cpp" />
     <ClCompile Include="Pass\Pass.cpp" />
     <ClCompile Include="Precomp.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug_DX12|x64'">Create</PrecompiledHeader>
@@ -53,7 +53,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Renderer.def" />
-    <None Include="View\View.inl" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Geometry\Batch.h" />
@@ -84,6 +83,10 @@
     <ClInclude Include="ImGui\Editors\Scene\ImGuiScene.hpp" />
     <ClInclude Include="ImGui\Editors\Shader\ImGuiShader.h" />
     <ClInclude Include="ImGui\Editors\Shader\ImGuiShader.hpp" />
+    <ClInclude Include="ImGui\Editors\View\EditorView\ImGuiEditorView.h" />
+    <ClInclude Include="ImGui\Editors\View\EditorView\ImGuiEditorView.hpp" />
+    <ClInclude Include="ImGui\Editors\View\GameView\ImGuiGameView.h" />
+    <ClInclude Include="ImGui\Editors\View\GameView\ImGuiGameView.hpp" />
     <ClInclude Include="ImGui\Editors\View\ImGuiView.h" />
     <ClInclude Include="ImGui\Editors\View\ImGuiView.hpp" />
     <ClInclude Include="ImGui\ImGuiCustomHandler.h" />
@@ -108,7 +111,6 @@
     <ClInclude Include="Importer\TextureImporterData.hpp" />
     <ClInclude Include="Instance\Mesh\MeshInstance.h" />
     <ClInclude Include="IRenderer.h" />
-    <ClInclude Include="IView.h" />
     <ClInclude Include="Model\Material\DefaultMaterial\DefaultMaterialModel.h" />
     <ClInclude Include="Model\Material\DefaultMaterial\DefaultMaterialModel.hpp" />
     <ClInclude Include="Model\Material\MaterialModel.h" />
@@ -117,17 +119,18 @@
     <ClInclude Include="Options\DisplayOptions.h" />
     <ClInclude Include="Options\DisplayOptions.hpp" />
     <ClInclude Include="Options\Options.h" />
-    <ClInclude Include="Pass\BackgroundPass.h" />
-    <ClInclude Include="Pass\BackgroundPass.hpp" />
-    <ClInclude Include="Pass\ImGuiPass\ImGuiPass.h" />
-    <ClInclude Include="Pass\PostProcessPass.h" />
-    <ClInclude Include="Pass\PostProcessPass.hpp" />
-    <ClInclude Include="Pass\TestPass3D.h" />
-    <ClInclude Include="Pass\TestPass3D.hpp" />
+    <ClInclude Include="Pass\Background\BackgroundPass.h" />
+    <ClInclude Include="Pass\Background\BackgroundPass.hpp" />
+    <ClInclude Include="Pass\Forward\ForwardPass.hpp" />
+    <ClInclude Include="Pass\Forward\ForwardPass.h" />
+    <ClInclude Include="Pass\ImGui\ImGuiPass.h" />
+    <ClInclude Include="Pass\PostProcess\PostProcessPass.h" />
+    <ClInclude Include="Pass\PostProcess\PostProcessPass.hpp" />
     <ClInclude Include="Precomp.h" />
     <ClInclude Include="Renderer.h" />
     <ClInclude Include="Renderer_consts.h" />
-    <ClInclude Include="View\View.h" />
+    <ClInclude Include="View\Forward\ForwardView.h" />
+    <ClInclude Include="View\Forward\ForwardView.hpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>

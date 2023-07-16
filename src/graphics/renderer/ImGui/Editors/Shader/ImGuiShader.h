@@ -12,6 +12,6 @@ namespace vg::graphics::renderer
         {
         }
 
-        virtual void    display() final;
+        virtual void    display() final override;
     };
 }

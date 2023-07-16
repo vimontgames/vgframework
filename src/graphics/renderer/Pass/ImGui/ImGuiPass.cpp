@@ -34,6 +34,8 @@ using namespace ImGui;
 #include "graphics/renderer/ImGui/Editors/Inspector/ImguiInspector.hpp"
 #include "graphics/renderer/ImGui/Editors/About/ImguiAbout.hpp"
 #include "graphics/renderer/ImGui/Editors/View/ImGuiView.hpp"
+#include "graphics/renderer/ImGui/Editors/View/EditorView/ImGuiEditorView.hpp"
+#include "graphics/renderer/ImGui/Editors/View/GAmeView/ImGuiGameView.hpp"
 
 namespace vg::graphics::renderer
 {
@@ -51,7 +53,8 @@ namespace vg::graphics::renderer
         m_editorWindows.push_back(new ImguiInspector(IconWithText(Editor::Icon::Inspector, "Inspector"), ImguiEditor::Flags::StartVisible | ImguiEditor::AddMenuEntry));
         m_editorWindows.push_back(new ImguiDisplayOptions(IconWithText(Editor::Icon::Display, "Display"), ImguiEditor::Flags::StartVisible));
         m_editorWindows.push_back(new ImguiAbout("About", ImguiEditor::Flags::None));
-        m_editorWindows.push_back(new ImGuiView("View", ImguiEditor::Flags::StartVisible | ImguiEditor::AddMenuEntry));
+        m_editorWindows.push_back(new ImGuiEditorView("Editor View", ImguiEditor::Flags::StartVisible | ImguiEditor::AddMenuEntry));
+        m_editorWindows.push_back(new ImGuiEditorView("Game View", ImguiEditor::Flags::StartVisible));
     }
 
     //--------------------------------------------------------------------------------------
@@ -63,7 +66,7 @@ namespace vg::graphics::renderer
     }
     
     //--------------------------------------------------------------------------------------
-    void ImguiPass::setup(const driver::FrameGraph::RenderContext & _renderContext, double _dt)
+    void ImguiPass::setup(const driver::RenderContext & _renderContext, double _dt)
     {
         writeRenderTarget(0, "Backbuffer");
 
@@ -218,7 +221,7 @@ namespace vg::graphics::renderer
     }
     
     //--------------------------------------------------------------------------------------
-    void ImguiPass::draw(const FrameGraph::RenderContext & _renderContext, driver::CommandList * _cmdList) const
+    void ImguiPass::draw(const RenderContext & _renderContext, driver::CommandList * _cmdList) const
     {
         Renderer::get()->getImGuiAdapter()->render(_cmdList);
     }

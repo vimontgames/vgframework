@@ -32,11 +32,7 @@ namespace vg::engine
         VG_INLINE float getNear() const { return m_near; }
         VG_INLINE float getFar() const { return m_far; }
 
-    public:
-        void setView(graphics::renderer::IView * _view, core::IGameObject * _sector);
-
     private:
-        graphics::renderer::IView * m_view = nullptr;
 
         float m_fovY;
         float m_near;

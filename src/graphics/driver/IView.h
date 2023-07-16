@@ -11,10 +11,7 @@ namespace vg::core
 namespace vg::graphics::driver
 {
     class ITexture;
-}
 
-namespace vg::graphics::renderer
-{
     struct CreateViewParams
     {
         CreateViewParams()
@@ -35,6 +32,8 @@ namespace vg::graphics::renderer
         core::IUniverse * universe = nullptr;
         driver::ITexture * target = nullptr;
     };
+
+    using ViewID = core::u16;
 
     class IView : public core::Object
     {
@@ -62,5 +61,8 @@ namespace vg::graphics::renderer
 
         virtual void                    SetRenderTarget     (driver::ITexture * _renderTarget) = 0;
         virtual driver::ITexture *      GetRenderTarget     () const = 0;
+
+        virtual void                    SetViewID           (ViewID _viewID) = 0;
+        virtual ViewID                  GetViewID           () const = 0;
     };
 }

@@ -1,6 +1,5 @@
 #include "ImguiView.h"
-#include "graphics/renderer/IView.h"
-#include "graphics/driver/ITexture.h"
+#include "graphics/renderer/View/Forward/ForwardView.h"
 
 namespace vg::graphics::renderer
 {
@@ -15,7 +14,13 @@ namespace vg::graphics::renderer
     ImGuiView::~ImGuiView()
     {
         VG_SAFE_RELEASE(m_texture);
-        Renderer::get()->ReleaseView(m_view);
+        if (m_view)
+        {
+            auto viewID = m_view->GetViewID();
+            VG_SAFE_RELEASE(m_view);
+            Renderer::get()->RemoveView(viewID);
+        }
+  
     }
 
     //--------------------------------------------------------------------------------------
@@ -30,7 +35,17 @@ namespace vg::graphics::renderer
         ImGui::SetNextWindowSizeConstraints(ImVec2(256, 256), ImVec2(FLT_MAX, FLT_MAX));
         ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0, 0));
         ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0, 0, 0, 255));
-        if (ImGui::Begin("View", &m_isVisible))
+        
+        // By default, Windows are uniquely identified by their title.
+        // You can use the "##" and "###" markers to manipulate the display/ID.
+        // Using "##" to display same title but have unique identifier.
+        // Using "###" to display a changing title but keep a static identifier "AnimatedTitle"
+        // https://skia.googlesource.com/external/github.com/ocornut/imgui/+/refs/tags/v1.73/imgui_demo.cpp
+
+        const string & name = getName();
+        string title = name + " (" + to_string(m_size.x) + "x" + to_string(m_size.y) + ")###" + name;
+
+        if (ImGui::Begin(title.c_str(), &m_isVisible))
         {
             // Compute Window content size
             ImVec2 vMin = ImGui::GetWindowContentRegionMin();
@@ -47,12 +62,13 @@ namespace vg::graphics::renderer
             if (!m_view)
             {
                 // Create empty view
-                CreateViewParams params;
-                params.size = m_size;
-                params.universe = getEngine()->getCurrentUniverse();
-                params.target = nullptr;
+                driver::CreateViewParams params;
+                                         params.size = m_size;
+                                         params.universe = getEngine()->getCurrentUniverse();
+                                         params.target = nullptr;
 
-                m_view = Renderer::get()->CreateView(params);
+                m_view = new ForwardView(params);
+                Renderer::get()->AddView(m_view);
                 draw = false;
             }
 
@@ -64,7 +80,8 @@ namespace vg::graphics::renderer
                     Device::get()->releaseAsync(m_texture);
 
                 driver::TextureDesc targetDesc = driver::TextureDesc(Usage::Default, BindFlags::ShaderResource, CPUAccessFlags::None, TextureType::Texture2D, PixelFormat::R8G8B8A8_unorm_sRGB, TextureFlags::RenderTarget, m_size.x, m_size.y);
-                m_texture = (driver::ITexture *)Device::get()->createTexture(targetDesc, "Target");
+                string targetName = RenderContext::MakeUniqueName("Dest", m_view->GetViewID());
+                m_texture = (driver::ITexture *)Device::get()->createTexture(targetDesc, targetName);
                 m_view->SetSize(m_size);
                 m_view->SetRenderTarget(m_texture);
 
@@ -83,10 +100,22 @@ namespace vg::graphics::renderer
             }
 
             // Draw Border
-            ImGui::GetForegroundDrawList()->AddRect(vMin, vMax, IM_COL32(0, 255, 0, 255));
+            //ImGui::GetForegroundDrawList()->AddRect(vMin, vMax, IM_COL32(0, 255, 0, 255));
         }
         ImGui::PopStyleColor();
         ImGui::PopStyleVar();
         ImGui::End();
     }
+
+    ////--------------------------------------------------------------------------------------
+    //graphics::renderer::IView * createView()
+    //{
+    //
+    //}
+    //
+    ////--------------------------------------------------------------------------------------
+    //graphics::driver::ITexture * createTarget()
+    //{
+    //
+    //}
 }

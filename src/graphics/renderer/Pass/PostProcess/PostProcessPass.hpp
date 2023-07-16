@@ -30,14 +30,14 @@ namespace vg::graphics::renderer
     //--------------------------------------------------------------------------------------
     // Setup executed each frame, for each pass instance
     //--------------------------------------------------------------------------------------
-    void PostProcessPass::setup(const driver::FrameGraph::RenderContext & _renderContext, double _dt)
+    void PostProcessPass::setup(const driver::RenderContext & _renderContext, double _dt)
     {
-        readRenderTarget("Color");
-        writeRenderTarget(0, "Target" /*"Backbuffer"*/);
+        readRenderTarget(_renderContext.getName("Color"));
+        writeRenderTarget(0, _renderContext.getName("Dest")); // TODO: render to "Backbuffer" in exclusive GameMode?
     }
 
     //--------------------------------------------------------------------------------------
-    void PostProcessPass::draw(const FrameGraph::RenderContext & _renderContext, CommandList * _cmdList) const
+    void PostProcessPass::draw(const RenderContext & _renderContext, CommandList * _cmdList) const
     {
         RasterizerState rs(FillMode::Solid, CullMode::None);
         BlendState bs(BlendFactor::One, BlendFactor::Zero, BlendOp::Add);
@@ -54,7 +54,7 @@ namespace vg::graphics::renderer
 
         root2D.quad.posOffsetScale = float4(0.0f, 0.0f, 1.0f, 1.0f);
         root2D.quad.uvOffsetScale = float4(0.0f, 0.0f, 1.0f, 1.0f);
-        root2D.texID = getRenderTarget("Color")->getBindlessSRVHandle();
+        root2D.texID = getRenderTarget(_renderContext.getName("Color"))->getBindlessSRVHandle();
 
         _cmdList->setInlineRootConstants(&root2D, RootConstants2DCount);
 

@@ -3,6 +3,8 @@
 #include "core/Object/Object.h"
 #include "graphics/driver/FrameGraph/FrameGraph.h"
 #include "graphics/driver/Shader/ShaderKey.h"
+#include "graphics/driver/RootSignature/RootSignature_consts.h"
+#include "graphics/driver/BindlessTable/BindlessTable_consts.h"
 
 namespace vg::graphics::driver
 {
@@ -21,8 +23,8 @@ namespace vg::graphics::driver
 
 		void			reset		();
 
-		virtual void	setup		(const driver::FrameGraph::RenderContext & _renderContext, double _dt) = 0;
-		virtual void	draw		(const FrameGraph::RenderContext & _renderContext, CommandList * _cmdList) const = 0;
+		virtual void	setup		(const RenderContext & _renderContext, double _dt) = 0;
+		virtual void	draw		(const RenderContext & _renderContext, CommandList * _cmdList) const = 0;
 
 		const core::vector<FrameGraph::TextureResource *> & getRenderTargets() const;
         FrameGraph::TextureResource * getDepthStencil() const;

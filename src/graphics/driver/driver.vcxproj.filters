@@ -41,6 +41,9 @@
     <ClCompile Include="Importer\Importer.cpp">
       <Filter>Importer</Filter>
     </ClCompile>
+    <ClCompile Include="View\View.cpp">
+      <Filter>View</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Precomp.h" />
@@ -502,6 +505,10 @@
       <Filter>Device</Filter>
     </ClInclude>
     <ClInclude Include="ITexture.h" />
+    <ClInclude Include="IView.h" />
+    <ClInclude Include="View\View.h">
+      <Filter>View</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Device">
@@ -615,5 +622,13 @@
     <Filter Include="Shader\dxc">
       <UniqueIdentifier>{f02f74c8-fe1d-4c92-9977-c60213733700}</UniqueIdentifier>
     </Filter>
+    <Filter Include="View">
+      <UniqueIdentifier>{4b4a00f8-9edb-4a87-b0ef-a6023040d8f0}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="View\View.inl">
+      <Filter>View</Filter>
+    </None>
   </ItemGroup>
 </Project>

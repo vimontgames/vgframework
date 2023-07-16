@@ -29,6 +29,7 @@
       <PreprocessToFile Condition="'$(Configuration)|$(Platform)'=='Release_Vulkan|x64'">false</PreprocessToFile>
     </ClCompile>
     <ClCompile Include="FrameGraph\FrameGraph.cpp" />
+    <ClCompile Include="View\View.cpp" />
     <ClInclude Include="BindlessTable\BindlessTable.h" />
     <ClInclude Include="BindlessTable\BindlessTable_consts.h" />
     <ClInclude Include="BindlessTable\dx12\BindlessTable_dx12.h" />
@@ -50,6 +51,7 @@
     <ClInclude Include="Importer\TextureImporter.h" />
     <ClInclude Include="Importer\TextureImporter.hpp" />
     <ClInclude Include="ITexture.h" />
+    <ClInclude Include="IView.h" />
     <ClInclude Include="PipelineState\BlendState.h" />
     <ClInclude Include="PipelineState\BlendState.hpp" />
     <ClInclude Include="PipelineState\DepthStencilState.h" />
@@ -180,6 +182,7 @@
     <ClInclude Include="Shader\Shader_consts.h" />
     <ClInclude Include="Shader\vulkan\Shader_vulkan.h" />
     <ClInclude Include="Shader\vulkan\Shader_vulkan.hpp" />
+    <ClInclude Include="View\View.h" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CommandQueue\CommandQueue.h" />
@@ -200,6 +203,9 @@
     <ClInclude Include="Device\vulkan\ext\KHR_Win32_Surface.h" />
     <ClInclude Include="IDevice.h" />
     <ClInclude Include="Precomp.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="View\View.inl" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>

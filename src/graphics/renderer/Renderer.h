@@ -9,16 +9,13 @@ namespace vg::graphics::driver
 	class Texture;
 	class Buffer;
 	class FrameGraph;
+    class View;
 }
 
 namespace vg::graphics::renderer
 {
     class ImguiAdapter;
     class FBXImporter;
-    class View;
-    class BackgroundPass;
-    class TestPass3D;
-    class PostProcessPass;
     class ImguiPass;
     class MeshModel;
 
@@ -29,74 +26,71 @@ namespace vg::graphics::renderer
 	public:
         using super = IRenderer;
 
-		IPlugin::Version		        getVersion			    () const override;
+		IPlugin::Version		                getVersion			    () const override;
 
-								        Renderer			    (const core::string & _name, core::IObject * _parent);
-								        ~Renderer			    ();
+								                Renderer			    (const core::string & _name, core::IObject * _parent);
+								                ~Renderer			    ();
 
-        const char *                    getClassName            () const final { return "Renderer"; }
-        bool                            registerClasses         () override;
-        bool                            unregisterClasses       ();
-        static bool                     registerProperties      (core::IClassDesc & _desc);
+        const char *                            getClassName            () const final { return "Renderer"; }
+        bool                                    registerClasses         () override;
+        bool                                    unregisterClasses       ();
+        static bool                             registerProperties      (core::IClassDesc & _desc);
  
-		void					        init				    (const RendererParams & _params, core::Singletons & _singletons) override;
-		void					        deinit				    () override;
+		void					                init				    (const RendererParams & _params, core::Singletons & _singletons) override;
+		void					                deinit				    () override;
 
-        IView *                         CreateMainView          (core::uint2 _screenSize) final override;
-        IView *                         CreateView              (const CreateViewParams & _params) final override;
-        const core::vector <IView *>    GetViews                () const final override;
-        void                            ReleaseView             (IView *& _view) final override;
+        driver::IView *                         CreateMainView          (core::uint2 _screenSize) final override;
+        driver::ViewID                          AddView                 (driver::IView * _view) final override;
+        void                                    RemoveView              (driver::ViewID _viewID) final override;
+        const core::vector <driver::IView *>    GetViews                () const final override;
 
-        void                            SetResized              () final override;
-        void                            resize                  (core::uint _width, core::uint _height) override;
-        core::uint2                     getBackbufferSize       () const override;
+        void                                    SetResized              () final override;
+        void                                    resize                  (core::uint _width, core::uint _height) override;
+        core::uint2                             getBackbufferSize       () const override;
 
-		void					        runOneFrame			    (double _dt) override;
+		void					                runOneFrame			    (double _dt) override;
 
-        void                            updateShaders           () override;
-        void                            waitGPUIdle             () override;
+        void                                    updateShaders           () override;
+        void                                    waitGPUIdle             () override;
 
-        void                            SetVSync                (driver::VSync mode) final override;
-        driver::VSync                   GetVSync                () const final override;
+        void                                    SetVSync                (driver::VSync mode) final override;
+        driver::VSync                           GetVSync                () const final override;
 
-        core::IProfiler *               getProfilerInstance     () const override;
-        IImmediateGUI *                 getImmediateGUI         () const override;
+        core::IProfiler *                       getProfilerInstance     () const override;
+        IImmediateGUI *                         getImmediateGUI         () const override;
 
-        bool                            cookMeshModel           (const core::string & _file) final;
-        IMeshModel *                    loadMeshModel           (const core::string & _file) final;
+        bool                                    cookMeshModel           (const core::string & _file) final;
+        IMeshModel *                            loadMeshModel           (const core::string & _file) final;
 
-        bool                            cookTexture             (const core::string & _file) final;
-        driver::ITexture *              loadTexture             (const core::string & _file) final;
+        bool                                    cookTexture             (const core::string & _file) final;
+        driver::ITexture *                      loadTexture             (const core::string & _file) final;
 
-        driver::Texture *               getDefaultTexture       (MaterialTextureType _type) const;
+        driver::Texture *                       getDefaultTexture       (MaterialTextureType _type) const;
         
         #ifdef _WIN32
-        LRESULT CALLBACK                WndProc                 (HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) override;
+        LRESULT CALLBACK                        WndProc                 (HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) override;
         #endif     
 
     public: // internal
-        View *                          getMainView                 () const;
+        driver::View *                          getMainView             () const;
 
-        driver::Texture *		        getBackbuffer           () const;
-        ImguiAdapter *                  getImGuiAdapter         () const { return m_imgui; }
+        driver::Texture *		                getBackbuffer           () const;
+        ImguiAdapter *                          getImGuiAdapter         () const { return m_imgui; }
 
     private:
-        void                            registerShaders         ();
+        void                                    registerShaders         ();
 
-        void                            initDefaultTextures     ();
-        void                            deinitDefaultTextures   ();
+        void                                    initDefaultTextures     ();
+        void                                    deinitDefaultTextures   ();
 
 	private:
-		driver::Device &		        m_device;
-        ImguiAdapter *                  m_imgui                 = nullptr;
-        FBXImporter *                   m_fbxImporter           = nullptr;
-		driver::FrameGraph &	        m_frameGraph;
-        View *                          m_mainView              = nullptr;
-        core::vector<View *>            m_views;
-        BackgroundPass *                m_backgroundPass        = nullptr;
-        TestPass3D *                    m_testPass3D            = nullptr;
-        PostProcessPass *               m_postProcessPass       = nullptr;
-        ImguiPass *                     m_imguiPass             = nullptr;
-        core::vector<driver::Texture*>  m_defaultTextures;       
+		driver::Device &		                m_device;
+        ImguiAdapter *                          m_imgui                 = nullptr;
+        FBXImporter *                           m_fbxImporter           = nullptr;
+		driver::FrameGraph &	                m_frameGraph;
+        driver::View *                          m_mainView              = nullptr;
+        core::vector<driver::View *>            m_views;
+        ImguiPass *                             m_imguiPass             = nullptr;
+        core::vector<driver::Texture*>          m_defaultTextures;       
 	};
 }

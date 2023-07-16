@@ -3,12 +3,11 @@
 #include "graphics/driver/Device/Device.h"
 #include "graphics/driver/CommandList/CommandList.h"
 #include "graphics/driver/Resource/Texture.h"
-
 #include "graphics/driver/FrameGraph/RenderPass.h"
 #include "graphics/driver/FrameGraph/SubPass.h"
 #include "graphics/driver/FrameGraph/UserPass.h"
-
 #include "graphics/driver/Profiler/Profiler.h"
+#include "graphics/driver/IView.h"
 
 using namespace vg::core;
 
@@ -185,7 +184,7 @@ namespace vg::graphics::driver
 	//--------------------------------------------------------------------------------------
 	void FrameGraph::importRenderTarget(const ResourceID & _resID, Texture * _tex, float4 _clearColor, FrameGraph::Resource::InitState _initState)
 	{
-        const TextureDesc & texDesc = _tex->getTexDesc();
+        const TextureDesc & texDesc = _tex->getTexDesc(); 
 
         FrameGraph::TextureResourceDesc desc;
                                         desc.width = texDesc.width;
@@ -648,6 +647,10 @@ namespace vg::graphics::driver
         VG_PROFILE_GPU_CONTEXT(cmdList);
         VG_PROFILE_GPU("render");
 
+        // Split events by view
+        auto profiler = core::Kernel::getProfiler();
+        IView * currentView = nullptr;
+
 		for (uint j = 0; j < m_renderPasses.size(); ++j)
 		{
             RenderPass * renderPass = m_renderPasses[j];
@@ -657,7 +660,18 @@ namespace vg::graphics::driver
             for (uint i = 0; i < subPasses.size(); ++i)
             {
                 SubPass * subPass = subPasses[i];
-                const UserPass * userPass = subPass->getUserPassesInfos()[0].m_userPass;               
+                const auto userPassInfo = subPass->getUserPassesInfos()[0];
+
+                if (currentView != userPassInfo.m_renderContext.m_view)
+                {
+                    if (NULL != currentView)
+                        profiler->stopGpuEvent();
+
+                    currentView = userPassInfo.m_renderContext.m_view;
+                    profiler->startGpuEvent(currentView->getName().c_str());
+                }
+
+                const UserPass * userPass = userPassInfo.m_userPass;
                 auto & renderTargets = userPass->getRenderTargets();
                 auto & texturesRead = userPass->getTexturesRead();
 
@@ -775,6 +789,9 @@ namespace vg::graphics::driver
                 }
             }
 		}
+
+        if (NULL != currentView)
+            profiler->stopGpuEvent();
 
         cleanup();
 

@@ -1,7 +1,7 @@
 #include "BackgroundPass.h"
 #include "shaders/background/background.hlsli"
 #include "graphics/renderer/Options/DisplayOptions.h"
-#include "graphics/renderer/IView.h"
+#include "graphics/driver/IView.h"
 
 namespace vg::graphics::renderer
 {
@@ -33,7 +33,7 @@ namespace vg::graphics::renderer
     //--------------------------------------------------------------------------------------
     // Setup executed each frame, for each pass instance
     //--------------------------------------------------------------------------------------
-    void BackgroundPass::setup(const driver::FrameGraph::RenderContext & _renderContext, double _dt)
+    void BackgroundPass::setup(const driver::RenderContext & _renderContext, double _dt)
     {
         auto * device = Device::get();
 
@@ -46,8 +46,8 @@ namespace vg::graphics::renderer
                                         colorDesc.clearColor = float4(0, 0, 0, 0);
                                         colorDesc.initState = FrameGraph::Resource::InitState::Clear;
 
-        createRenderTarget("Color", colorDesc);
-        writeRenderTarget(0, "Color");
+        createRenderTarget(_renderContext.getName("Color"), colorDesc);
+        writeRenderTarget(0, _renderContext.getName("Color"));
 
         FrameGraph::TextureResourceDesc depthStencilDesc;
                                         depthStencilDesc.format = PixelFormat::D32S8;
@@ -57,12 +57,12 @@ namespace vg::graphics::renderer
                                         depthStencilDesc.clearStencil = 0x0;
                                         depthStencilDesc.initState = FrameGraph::Resource::InitState::Clear;
 
-        createRenderTarget("DepthStencil", depthStencilDesc);
-        writeDepthStencil("DepthStencil");
+        createRenderTarget(_renderContext.getName("DepthStencil"), depthStencilDesc);
+        writeDepthStencil(_renderContext.getName("DepthStencil"));
     }
 
     //--------------------------------------------------------------------------------------
-    void BackgroundPass::draw(const FrameGraph::RenderContext & _renderContext, CommandList * _cmdList) const
+    void BackgroundPass::draw(const RenderContext & _renderContext, CommandList * _cmdList) const
     {
         RasterizerState rs(FillMode::Solid, CullMode::None);
         BlendState bs(BlendFactor::One, BlendFactor::Zero, BlendOp::Add);

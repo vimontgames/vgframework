@@ -12,6 +12,11 @@ namespace vg::engine
     class IEngine;
 }
 
+namespace vg::graphics::driver
+{
+    struct RenderContext;
+}
+
 namespace vg::graphics::renderer
 {
     class ImguiEditor

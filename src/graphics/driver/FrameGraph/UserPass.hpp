@@ -7,6 +7,12 @@ using namespace vg::core;
 
 namespace vg::graphics::driver
 {
+    //--------------------------------------------------------------------------------------
+    static string makeUniqueName(const string & _name, const RenderContext _renderContext)
+    {
+        return _name + "-" + _renderContext.m_view->getName();
+    }
+
 	//--------------------------------------------------------------------------------------
 	UserPass::UserPass()
 	{

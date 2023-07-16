@@ -2,12 +2,7 @@
 
 #include "core/Object/Object.h"
 #include "FrameGraph_consts.h"
-
-namespace vg::graphics::renderer
-{
-	// TODO: move IView from 'graphics::Renderer' to 'graphics::Device' to avoid this dirty hack
-	class IView;
-}
+#include "graphics/driver/IView.h"
 
 namespace vg::graphics::driver
 {
@@ -20,14 +15,25 @@ namespace vg::graphics::driver
 
 	enum class PixelFormat : core::u8;
 
+    struct RenderContext
+    {
+        IView * m_view;
+
+		static const core::string MakeUniqueName(const core::string & _name, ViewID _viewID)
+		{
+			return _name + (core::string)"-" + core::to_string(_viewID);
+
+		}
+
+		const core::string getName(const core::string & _name) const
+		{
+			return MakeUniqueName(_name, m_view->GetViewID());
+		}
+    };
+
 	class FrameGraph : public core::Object
 	{
 	public:
-		struct RenderContext
-		{
-			renderer::IView * m_view;
-		};
-
         struct UserPassInfo
         {
             RenderContext	m_renderContext;

@@ -1,23 +1,25 @@
-#include "TestPass3D.h"
+#include "ForwardPass.h"
+
 #include "core/GameObject/GameObject.h"
 #include "core/Scene/Scene.h"
-#include "shaders/default/default.hlsli"
-#include "Shaders/system/bindless.hlsli"
+
 #include "graphics/renderer/Geometry/Mesh/MeshGeometry.h"
 #include "graphics/renderer/Model/Mesh/MeshModel.h"
-#include "graphics/renderer/View/View.h"
+#include "graphics/driver/View/View.h"
 #include "graphics/renderer/Importer/FBX/FBXImporter.h"
 #include "graphics/renderer/IGraphicInstance.h"
 #include "graphics/renderer/Model/Material/MaterialModel.h"
 
 #include "Shaders/system/vertex.hlsl.h"
+#include "shaders/default/default.hlsli"
+#include "Shaders/system/bindless.hlsli"
 
 namespace vg::graphics::renderer
 {
     //--------------------------------------------------------------------------------------
     // Setup executed once, when pass is created
     //--------------------------------------------------------------------------------------
-    TestPass3D::TestPass3D()
+    ForwardPass::ForwardPass()
     {
         auto * device = Device::get();
         auto * renderer = Renderer::get();
@@ -38,7 +40,7 @@ namespace vg::graphics::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    TestPass3D::~TestPass3D()
+    ForwardPass::~ForwardPass()
     {
         destroyAxis();
         destroyGrid();
@@ -48,7 +50,7 @@ namespace vg::graphics::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    void TestPass3D::createGrid()
+    void ForwardPass::createGrid()
     {
         auto * device = Device::get();
 
@@ -84,13 +86,13 @@ namespace vg::graphics::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    void TestPass3D::destroyGrid()
+    void ForwardPass::destroyGrid()
     {
         VG_SAFE_RELEASE(m_gridVB);
     }
 
     //--------------------------------------------------------------------------------------
-    void TestPass3D::createAxis()
+    void ForwardPass::createAxis()
     {
         auto * device = Device::get();
 
@@ -119,7 +121,7 @@ namespace vg::graphics::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    void TestPass3D::destroyAxis()
+    void ForwardPass::destroyAxis()
     {
         VG_SAFE_RELEASE(m_axisVB);
     }
@@ -127,10 +129,10 @@ namespace vg::graphics::renderer
     //--------------------------------------------------------------------------------------
     // Setup executed each frame, for each pass instance
     //--------------------------------------------------------------------------------------
-    void TestPass3D::setup(const driver::FrameGraph::RenderContext & _renderContext, double _dt)
+    void ForwardPass::setup(const driver::RenderContext & _renderContext, double _dt)
     {
-        writeRenderTarget(0, "Color");
-        writeDepthStencil("DepthStencil");
+        writeRenderTarget(0, _renderContext.getName("Color"));
+        writeDepthStencil(_renderContext.getName("DepthStencil"));
     }
 
     //--------------------------------------------------------------------------------------
@@ -175,21 +177,18 @@ namespace vg::graphics::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    void TestPass3D::draw(const FrameGraph::RenderContext & _renderContext, CommandList * _cmdList) const
+    void ForwardPass::draw(const RenderContext & _renderContext, CommandList * _cmdList) const
     {
         auto * renderer = Renderer::get();
 
-        auto * device = Device::get();
-        const auto & backbuffer = renderer->getBackbuffer()->getTexDesc();
-
         View * view = (View *)_renderContext.m_view;
+        const auto size = view->getSize();
 
         const float fovY = view->getCameraFovY();
         const float2 nearFar = view->getCameraNearFar();
-        const float ar = float(backbuffer.width) / float(backbuffer.height);
+        const float ar = float(size.x) / float(size.y);
 
         float4x4 proj = setPerspectiveProjectionRH(fovY, ar, nearFar.x, nearFar.y);
-       
         float4x4 viewProj = mul(view->GetViewInvMatrix(), proj);
 
         // #TODO #FIXME Shall pass the root sector instead? 
@@ -360,7 +359,7 @@ namespace vg::graphics::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    void TestPass3D::drawGrid(CommandList * _cmdList, const float4x4 & _viewProj) const
+    void ForwardPass::drawGrid(CommandList * _cmdList, const float4x4 & _viewProj) const
     {
         RasterizerState rs(FillMode::Wireframe, CullMode::None);
 
@@ -381,7 +380,7 @@ namespace vg::graphics::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    void TestPass3D::drawAxis(CommandList * _cmdList, const float4x4 & _viewProj) const
+    void ForwardPass::drawAxis(CommandList * _cmdList, const float4x4 & _viewProj) const
     {
         RasterizerState rs(FillMode::Wireframe, CullMode::None);
 

@@ -12,16 +12,16 @@ namespace vg::graphics::renderer
     class MeshModel;
 
     //--------------------------------------------------------------------------------------
-    class TestPass3D : public driver::UserPass
+    class ForwardPass : public driver::UserPass
     {
     public:
-        const char * getClassName() const final { return "TestPass3D"; }
+        const char * getClassName() const final { return "ForwardPass"; }
 
-        TestPass3D();
-        ~TestPass3D();
+        ForwardPass();
+        ~ForwardPass();
 
-        void setup(const driver::FrameGraph::RenderContext & _renderContext, double _dt) override;
-        void draw(const driver::FrameGraph::RenderContext & _renderContext, driver::CommandList * _cmdList) const override;
+        void setup(const driver::RenderContext & _renderContext, double _dt) override;
+        void draw(const driver::RenderContext & _renderContext, driver::CommandList * _cmdList) const override;
 
     protected:
         void createGrid();

@@ -12,14 +12,13 @@
 #include "core/Scene/Scene.h"
 #include "core/GameObject/GameObject.h"
 
-#include "graphics/renderer/IRenderer.h"
-#include "graphics/renderer/IView.h"
+#include "graphics/driver/IView.h"
 #include "graphics/driver/IDevice.h"
+
+#include "graphics/renderer/IRenderer.h"
 
 #include "engine/Input/Input.h"
 #include "engine/Resource/ResourceManager.h"
-
-// Components
 #include "engine/Component/Camera/FreeCam/FreeCamComponent.h"
 #include "engine/Component/Mesh/MeshComponent.h"
 
@@ -398,7 +397,7 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
-    graphics::renderer::IView * Engine::getMainView() const
+    graphics::driver::IView * Engine::getMainView() const
     {
         return m_mainView;
     }

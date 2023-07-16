@@ -80,7 +80,10 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "application", "src\applicat
 		{257A93DC-9206-4770-9560-7A22DFF0AC01} = {257A93DC-9206-4770-9560-7A22DFF0AC01}
 	EndProjectSection
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{298A7163-51B4-4450-B9A6-14186AA35016}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Natvis", "Natvis", "{D18557C7-59EB-4E5F-B1A5-68C78127148D}"
+	ProjectSection(SolutionItems) = preProject
+		extern\hlslpp\include\hlsl++.natvis = extern\hlslpp\include\hlsl++.natvis
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

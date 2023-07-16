@@ -6,18 +6,17 @@
 #include "core/Object/AutoRegisterClass.h"
 #include "core/ISector.h"
 #include "core/File/File.h"
+
+#include "graphics/driver/View/View.h"
 #include "graphics/driver/device/device.h"
 #include "graphics/driver/Shader/ShaderManager.h"
 #include "graphics/driver/FrameGraph/FrameGraph.h"
 #include "graphics/driver/Profiler/Profiler.h"
 #include "graphics/driver/Resource/Texture.h"
 #include "graphics/driver/Importer/TextureImporter.h"
+
 #include "graphics/renderer/Imgui/imguiAdapter.h"
-#include "graphics/renderer/Pass/ImguiPass/ImguiPass.h"
-#include "graphics/renderer/Pass/BackgroundPass.h"
-#include "graphics/renderer/Pass/TestPass3D.h"
-#include "graphics/renderer/Pass/PostProcessPass.h"
-#include "graphics/renderer/View/View.h"
+#include "graphics/renderer/Pass/Imgui/ImguiPass.h"
 #include "graphics/renderer/Importer/FBX/FBXImporter.h"
 #include "graphics/renderer/Importer/SceneImporterData.h"
 #include "graphics/renderer/Model/Mesh/MeshModel.h"
@@ -148,10 +147,7 @@ namespace vg::graphics::renderer
 
         registerShaders();
 
-        // Create passes
-        m_backgroundPass = new BackgroundPass();
-        m_testPass3D = new TestPass3D();
-        m_postProcessPass = new PostProcessPass();
+        // Create passes not bound to a View
         m_imguiPass = new ImguiPass();
 
         registerClasses();
@@ -186,11 +182,8 @@ namespace vg::graphics::renderer
         VG_SAFE_RELEASE(m_mainView);
         for (int i = 0; i < m_views.size(); ++i)
             VG_SAFE_RELEASE(m_views[i]);
-        m_views.clear();
+        //m_views.clear();
 
-        VG_SAFE_DELETE(m_backgroundPass);
-        VG_SAFE_DELETE(m_testPass3D);
-        VG_SAFE_DELETE(m_postProcessPass);
         VG_SAFE_DELETE(m_imguiPass);
         VG_SAFE_DELETE(m_imgui);
 
@@ -273,23 +266,14 @@ namespace vg::graphics::renderer
 
                 for (uint i = 0; i < m_views.count(); ++i)
                 {
-                    auto * view = m_views[i];
-                    if (nullptr != view->getUniverse())
+                    auto * view = m_views[i]; // m_views could have holes
+                    if (nullptr != view && nullptr != view->getUniverse())
                     {
-                        FrameGraph::RenderContext viewRenderContext;
-                                                  viewRenderContext.m_view = view;
-
-                        auto * target = view->GetRenderTarget();
-                        if (target)
-                            m_frameGraph.importRenderTarget("Target", (Texture*)target, float4(0, 0, 0, 0), FrameGraph::Resource::InitState::Clear);
-
-                        m_frameGraph.addUserPass(viewRenderContext, m_backgroundPass, "BackgroundPass");
-                        m_frameGraph.addUserPass(viewRenderContext, m_testPass3D, "TestPass3D");
-                        m_frameGraph.addUserPass(viewRenderContext, m_postProcessPass, "PostProcessPass");
+                        view->AddToFrameGraph(m_frameGraph);
                     }
                 }
 
-                FrameGraph::RenderContext mainViewRenderContext;
+                RenderContext mainViewRenderContext;
                                           mainViewRenderContext.m_view = m_mainView;
 
                 m_frameGraph.addUserPass(mainViewRenderContext, m_imguiPass, "UIPass");
@@ -303,7 +287,7 @@ namespace vg::graphics::renderer
 	}
 
     //--------------------------------------------------------------------------------------
-    View * Renderer::getMainView() const
+    driver::View * Renderer::getMainView() const
     {
         return m_mainView;
     }
@@ -315,7 +299,7 @@ namespace vg::graphics::renderer
 	}
 
     //--------------------------------------------------------------------------------------
-    IView * Renderer::CreateMainView(core::uint2 _screenSize)
+    driver::IView * Renderer::CreateMainView(core::uint2 _screenSize)
     {
         auto * mainView = new View(_screenSize);
         if (mainView != m_mainView)
@@ -323,17 +307,33 @@ namespace vg::graphics::renderer
             VG_SAFE_INCREASE_REFCOUNT(mainView);
             VG_SAFE_RELEASE(m_mainView);
             m_mainView = static_cast<View *>(mainView);
+            m_mainView->setName("MainView");
         }
         return mainView;
     }
 
     //--------------------------------------------------------------------------------------
-    IView * Renderer::CreateView(const CreateViewParams & _params)
+    driver::ViewID Renderer::AddView(driver::IView * _view)
     {
-        auto * view = new View(_params);
-        VG_SAFE_INCREASE_REFCOUNT(view);
-        m_views.push_back(view);
-        return view;
+        // Find hole or push_back
+        VG_ASSERT(m_views.size() < (ViewID)-1);
+        VG_SAFE_INCREASE_REFCOUNT(_view);
+
+        for (uint i = 0; i < m_views.size(); ++i)
+        {
+            if (!m_views[i])
+            {
+                m_views[i] = (View*)_view;
+                _view->SetViewID(i);
+                return i;
+            }
+        }
+
+        m_views.push_back((View *)_view);
+        driver::ViewID id = (ViewID)m_views.count();
+        _view->SetViewID(id);
+
+        return id;
     }
 
     //--------------------------------------------------------------------------------------
@@ -343,33 +343,15 @@ namespace vg::graphics::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    void Renderer::ReleaseView(IView *& _view)
+    void Renderer::RemoveView(driver::ViewID _viewID)
     {
-        if (nullptr != _view)
+        // Keep holes so that the ViewID remains valid
+        for (uint i = 0; i < m_views.size(); ++i)
         {
-            auto * temp = _view;
-            if (m_views.remove((View *)temp))
-                VG_SAFE_RELEASE(temp);
-            VG_SAFE_RELEASE(_view);
+            if (m_views[i] && m_views[i]->GetViewID() == _viewID)
+                VG_SAFE_RELEASE(m_views[i]);
         }
     }
-
-    ////--------------------------------------------------------------------------------------
-    //IView * Renderer::createView(const CreateViewParams & _params)
-    //{
-    //    return new View(_params);
-    //}
-    //
-    ////--------------------------------------------------------------------------------------
-    //void Renderer::setView(IView * _view)
-    //{
-    //    if (_view != m_view)
-    //    {
-    //        VG_SAFE_INCREASE_REFCOUNT(_view);
-    //        VG_SAFE_RELEASE(m_view);
-    //        m_view = static_cast<View*>(_view);
-    //    }
-    //}
     
     //--------------------------------------------------------------------------------------
     bool Renderer::cookMeshModel(const core::string & _file)

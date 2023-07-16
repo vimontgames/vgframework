@@ -9,9 +9,6 @@
     <ClCompile Include="ImGui\ImGuiAdapter.cpp">
       <Filter>ImGui</Filter>
     </ClCompile>
-    <ClCompile Include="View\View.cpp">
-      <Filter>View</Filter>
-    </ClCompile>
     <ClCompile Include="Geometry\Geometry.cpp">
       <Filter>Geometry</Filter>
     </ClCompile>
@@ -33,9 +30,6 @@
     <ClCompile Include="Importer\ImporterData.cpp">
       <Filter>Importer</Filter>
     </ClCompile>
-    <ClCompile Include="Pass\ImGuiPass\ImGuiPass.cpp">
-      <Filter>Pass\ImGuiPass</Filter>
-    </ClCompile>
     <ClCompile Include="ImGui\ObjectHandler\ImGuiObjectHandler.cpp">
       <Filter>ImGui\ObjectHandler</Filter>
     </ClCompile>
@@ -48,40 +42,21 @@
     <ClCompile Include="ImGui\Menus\ImguiMenu.cpp">
       <Filter>ImGui\Menus</Filter>
     </ClCompile>
+    <ClCompile Include="View\View.cpp">
+      <Filter>View</Filter>
+    </ClCompile>
+    <ClCompile Include="Pass\ImGui\ImGuiPass.cpp">
+      <Filter>Pass\ImGui</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Renderer.def" />
-    <None Include="View\View.inl">
-      <Filter>View</Filter>
-    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Precomp.h" />
     <ClInclude Include="Renderer.h" />
     <ClInclude Include="IRenderer.h" />
     <ClInclude Include="Renderer_consts.h" />
-    <ClInclude Include="Pass\PostProcessPass.h">
-      <Filter>Pass</Filter>
-    </ClInclude>
-    <ClInclude Include="Pass\PostProcessPass.hpp">
-      <Filter>Pass</Filter>
-    </ClInclude>
-    <ClInclude Include="Pass\BackgroundPass.h">
-      <Filter>Pass</Filter>
-    </ClInclude>
-    <ClInclude Include="Pass\BackgroundPass.hpp">
-      <Filter>Pass</Filter>
-    </ClInclude>
-    <ClInclude Include="Pass\TestPass3D.h">
-      <Filter>Pass</Filter>
-    </ClInclude>
-    <ClInclude Include="Pass\TestPass3D.hpp">
-      <Filter>Pass</Filter>
-    </ClInclude>
-    <ClInclude Include="View\View.h">
-      <Filter>View</Filter>
-    </ClInclude>
-    <ClInclude Include="IView.h" />
     <ClInclude Include="Geometry\Geometry.h">
       <Filter>Geometry</Filter>
     </ClInclude>
@@ -156,9 +131,6 @@
     </ClInclude>
     <ClInclude Include="Importer\TextureImporterData.hpp">
       <Filter>Importer</Filter>
-    </ClInclude>
-    <ClInclude Include="Pass\ImGuiPass\ImGuiPass.h">
-      <Filter>Pass\ImGuiPass</Filter>
     </ClInclude>
     <ClInclude Include="ImGui\ObjectHandler\ImGuiGameObjectHandler.hpp">
       <Filter>ImGui\ObjectHandler</Filter>
@@ -250,6 +222,45 @@
     <ClInclude Include="ImGui\Editors\View\ImGuiView.h">
       <Filter>ImGui\Editors\View</Filter>
     </ClInclude>
+    <ClInclude Include="ImGui\Editors\View\EditorView\ImGuiEditorView.h">
+      <Filter>ImGui\Editors\View\EditorView</Filter>
+    </ClInclude>
+    <ClInclude Include="ImGui\Editors\View\EditorView\ImGuiEditorView.hpp">
+      <Filter>ImGui\Editors\View\EditorView</Filter>
+    </ClInclude>
+    <ClInclude Include="ImGui\Editors\View\GameView\ImGuiGameView.h">
+      <Filter>ImGui\Editors\View\GameView</Filter>
+    </ClInclude>
+    <ClInclude Include="ImGui\Editors\View\GameView\ImGuiGameView.hpp">
+      <Filter>ImGui\Editors\View\GameView</Filter>
+    </ClInclude>
+    <ClInclude Include="View\Forward\ForwardView.h">
+      <Filter>View\ForwardView</Filter>
+    </ClInclude>
+    <ClInclude Include="View\Forward\ForwardView.hpp">
+      <Filter>View\ForwardView</Filter>
+    </ClInclude>
+    <ClInclude Include="Pass\Forward\ForwardPass.hpp">
+      <Filter>Pass\Forward</Filter>
+    </ClInclude>
+    <ClInclude Include="Pass\Forward\ForwardPass.h">
+      <Filter>Pass\Forward</Filter>
+    </ClInclude>
+    <ClInclude Include="Pass\Background\BackgroundPass.h">
+      <Filter>Pass\Background</Filter>
+    </ClInclude>
+    <ClInclude Include="Pass\Background\BackgroundPass.hpp">
+      <Filter>Pass\Background</Filter>
+    </ClInclude>
+    <ClInclude Include="Pass\ImGui\ImGuiPass.h">
+      <Filter>Pass\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="Pass\PostProcess\PostProcessPass.h">
+      <Filter>Pass\PostProcess</Filter>
+    </ClInclude>
+    <ClInclude Include="Pass\PostProcess\PostProcessPass.hpp">
+      <Filter>Pass\PostProcess</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Pass">
@@ -300,9 +311,6 @@
     <Filter Include="Model\Material\DefaultMaterial">
       <UniqueIdentifier>{4f3e414b-d52f-4193-8058-e19c75f3ef01}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Pass\ImGuiPass">
-      <UniqueIdentifier>{8b35b9c8-be58-45f7-8dc0-089341440032}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ImGui\CustomHandler">
       <UniqueIdentifier>{b20cba03-0ac7-440e-9ccc-6be9142dc94f}</UniqueIdentifier>
     </Filter>
@@ -350,6 +358,27 @@
     </Filter>
     <Filter Include="ImGui\Editors\View">
       <UniqueIdentifier>{74035ace-adaf-4108-9991-5d0e1faf1f78}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ImGui\Editors\View\EditorView">
+      <UniqueIdentifier>{1d1eb098-e32f-4040-93d4-c14002303501}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ImGui\Editors\View\GameView">
+      <UniqueIdentifier>{8b83991a-7cec-4892-a545-6760fc543364}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="View\ForwardView">
+      <UniqueIdentifier>{239c8e07-6a74-4972-bd04-c3cc454c7c0e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Pass\PostProcess">
+      <UniqueIdentifier>{a410dac2-fb95-417b-b8f5-bea1d7b98df6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Pass\ImGui">
+      <UniqueIdentifier>{208f36c1-6c04-4c8e-9ce2-3982a8bc9642}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Pass\Background">
+      <UniqueIdentifier>{f5b8cf8d-4230-45b9-868b-e25d2f1f3077}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Pass\Forward">
+      <UniqueIdentifier>{aa5e436c-5253-4537-a11a-12f4bd51cb6c}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
