@@ -153,15 +153,22 @@ namespace vg::graphics::driver
 	FrameGraph::~FrameGraph()
 	{
         cleanup();
-        destroyTransientResources();        
+        destroyTransientResources(true);        
 	}
 
     //--------------------------------------------------------------------------------------
-    void FrameGraph::destroyTransientResources()
+    void FrameGraph::destroyTransientResources(bool _sync)
     {
-        for (SharedTexture & shared : m_sharedTextures)
-            VG_SAFE_RELEASE(shared.tex);
-
+        if (_sync)
+        {
+            for (SharedTexture & shared : m_sharedTextures)
+                VG_SAFE_RELEASE(shared.tex);
+        }
+        else
+        {
+            for (SharedTexture & shared : m_sharedTextures)
+                Device::get()->releaseAsync(shared.tex);
+        }
         m_sharedTextures.clear();
     }
 
@@ -797,10 +804,7 @@ namespace vg::graphics::driver
 
         if (m_resized)
         {
-            //destroyTransientResources();
-            for (SharedTexture & shared : m_sharedTextures)
-                Device::get()->releaseAsync(shared.tex);
-            m_sharedTextures.clear();
+            destroyTransientResources();
             m_resized = false;
         }        
 	}
