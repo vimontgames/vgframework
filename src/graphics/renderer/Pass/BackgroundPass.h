@@ -13,8 +13,8 @@ namespace vg::graphics::renderer
         BackgroundPass();
         ~BackgroundPass();
 
-        void setup(double _dt) override;
-        void draw(driver::CommandList * _cmdList) const override;
+        void setup(const driver::FrameGraph::RenderContext & _renderContext, double _dt) override;
+        void draw(const driver::FrameGraph::RenderContext & _renderContext, driver::CommandList * _cmdList) const override;
 
     private:
         driver::RootSignatureHandle     m_backgroundRootSignatureHandle;

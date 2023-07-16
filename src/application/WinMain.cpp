@@ -154,10 +154,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 {
 	#ifdef _CRTDBG_MAP_ALLOC
 	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
-	//_crtBreakAlloc = 1623;
+	//_crtBreakAlloc = 337;
 	#endif
-
-	//int* leak = new int[42];
 
 	core::uint width = 1920, height = 1080;
 
@@ -182,7 +180,6 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	#endif
 
     #ifdef VG_DEBUG
-    // Debug device is disabled by default because it introduces random freezes when using DX12
     engineParams.renderer.device.debugDevice = false;
     engineParams.renderer.device.breakOnErrors = true;
     engineParams.renderer.device.breakOnWarnings = true;

@@ -20,8 +20,8 @@ namespace vg::graphics::renderer
         ImguiPass();
         ~ImguiPass();
 
-        void setup(double _dt) override;
-        void draw(driver::CommandList * _cmdList) const override;
+        void setup(const driver::FrameGraph::RenderContext & _renderContext, double _dt) override;
+        void draw(const driver::FrameGraph::RenderContext & _renderContext, driver::CommandList * _cmdList) const override;
 
     private:
         static const vg::engine::IEngine * getEngine();

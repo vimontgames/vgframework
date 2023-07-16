@@ -169,9 +169,9 @@ namespace vg::graphics::driver
 	//--------------------------------------------------------------------------------------
 	void FrameGraph::cleanup()
 	{
-        for (auto * pass : m_userPassStack)
-            VG_SAFE_RELEASE(pass);
-        m_userPassStack.clear();
+        for (auto & userPassInfo : m_userPassInfo)
+            VG_SAFE_RELEASE(userPassInfo.m_userPass);
+        m_userPassInfo.clear();
 
 		for (auto & pair : m_resources)
 			VG_SAFE_DELETE(pair.second);
@@ -315,13 +315,13 @@ namespace vg::graphics::driver
 	}
 
     //--------------------------------------------------------------------------------------
-    bool FrameGraph::addUserPass(UserPass * _userPass, const UserPassID & _renderPassID)
+    bool FrameGraph::addUserPass(const RenderContext & _renderContext, UserPass * _userPass, const UserPassID & _renderPassID)
     {
         _userPass->addRef();
         _userPass->setName(_renderPassID);
         _userPass->setFrameGraph(this);
 
-        m_userPassStack.push_back(_userPass);
+        m_userPassInfo.push_back({_renderContext, _userPass});
         return true;
     }
 
@@ -330,10 +330,10 @@ namespace vg::graphics::driver
 	{
         VG_PROFILE_CPU("setup");
 
-		for (UserPass * subPass : m_userPassStack)
+		for (auto & subPassInfo : m_userPassInfo)
 		{
-			subPass->reset();
-			subPass->setup(_dt);
+            subPassInfo.m_userPass->reset();
+            subPassInfo.m_userPass->setup(subPassInfo.m_renderContext, _dt);
 		}
 	}
 
@@ -380,8 +380,10 @@ namespace vg::graphics::driver
         Device * device = Device::get();
 
 		// TEMP: one render pass with one subpass for each userPass (TODO: make pools)
-		for (auto * userPass : m_userPassStack)
+		for (auto & userPassInfo : m_userPassInfo)
 		{
+            const auto * userPass = userPassInfo.m_userPass;
+
             core::vector<TextureResource*> colorAttachments;
 
             RenderPassKey renderPassKey;
@@ -559,7 +561,7 @@ namespace vg::graphics::driver
 
             SubPass * subPass = new SubPass();
 
-			subPass->addUserPass(userPass);
+			subPass->addUserPassInfo(userPassInfo);
 			renderPass->addSubPass(subPass);
 			m_renderPasses.push_back(renderPass);
 
@@ -655,7 +657,7 @@ namespace vg::graphics::driver
             for (uint i = 0; i < subPasses.size(); ++i)
             {
                 SubPass * subPass = subPasses[i];
-                const UserPass * userPass = subPass->getUserPasses()[0];               
+                const UserPass * userPass = subPass->getUserPassesInfos()[0].m_userPass;               
                 auto & renderTargets = userPass->getRenderTargets();
                 auto & texturesRead = userPass->getTexturesRead();
 
@@ -697,13 +699,13 @@ namespace vg::graphics::driver
 			for (uint i = 0; i < subPasses.size(); ++i)
 			{
 				SubPass * subPass = subPasses[i];
-                const UserPass * userPass = subPass->getUserPasses()[0];
+                const auto & userPassInfo = subPass->getUserPassesInfos()[0];
 
-                VG_PROFILE_GPU(userPass->getName().c_str());
+                VG_PROFILE_GPU(userPassInfo.m_userPass->getName().c_str());
 
                 cmdList->beginSubPass(i, subPass);
 				{
-                    userPass->draw(cmdList);
+                    userPassInfo.m_userPass->draw(userPassInfo.m_renderContext, cmdList);
 				}
                 cmdList->endSubPass();
 			}
@@ -713,7 +715,7 @@ namespace vg::graphics::driver
             for (uint i = 0; i < subPasses.size(); ++i)
             {
                 SubPass * subPass = subPasses[i];
-                const UserPass * userPass = subPass->getUserPasses()[0];
+                const UserPass * userPass = subPass->getUserPassesInfos()[0].m_userPass;
 
                 auto & renderTargets = userPass->getRenderTargets();
 
@@ -775,5 +777,20 @@ namespace vg::graphics::driver
 		}
 
         cleanup();
+
+        if (m_resized)
+        {
+            //destroyTransientResources();
+            for (SharedTexture & shared : m_sharedTextures)
+                Device::get()->releaseAsync(shared.tex);
+            m_sharedTextures.clear();
+            m_resized = false;
+        }        
 	}
+
+    //--------------------------------------------------------------------------------------
+    void FrameGraph::setResized()
+    {
+        m_resized = true;
+    }
 }

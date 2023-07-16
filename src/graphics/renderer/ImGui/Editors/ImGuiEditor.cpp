@@ -122,7 +122,7 @@ namespace vg::graphics::renderer
             {
                 if (ImGui::Selectable(_prop->getEnumName(e)))
                 {
-                    *pEnum = enumVal;
+                    *pEnum = e;
                     changed = true;
                 }
             }

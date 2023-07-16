@@ -244,6 +244,12 @@
     <ClInclude Include="ImGui\ImGui_Consts.h">
       <Filter>ImGui</Filter>
     </ClInclude>
+    <ClInclude Include="ImGui\Editors\View\ImGuiView.hpp">
+      <Filter>ImGui\Editors\View</Filter>
+    </ClInclude>
+    <ClInclude Include="ImGui\Editors\View\ImGuiView.h">
+      <Filter>ImGui\Editors\View</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Pass">
@@ -341,6 +347,9 @@
     </Filter>
     <Filter Include="ImGui\Menus\GameObject\SceneEditor">
       <UniqueIdentifier>{7384cfe1-37eb-4e0a-b157-f2921ce36187}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ImGui\Editors\View">
+      <UniqueIdentifier>{74035ace-adaf-4108-9991-5d0e1faf1f78}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

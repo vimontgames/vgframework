@@ -263,23 +263,32 @@ namespace vg::engine
 
         registerClasses();
 
-        createEditorView();
+        // Create main view
+        m_mainView = m_renderer->CreateMainView(getScreenSize());
+
+        createEditorScene();
 	}
 
     //--------------------------------------------------------------------------------------
-    Scene * Engine::addEditorScene(Universe * _universe)
+    void Engine::createEditorScene()
     {
-        Scene * editor = (Scene*)CreateFactoryObject(Scene, "Editor", _universe);
-        _universe->addScene(editor);
+        // use factor to create objects
+        auto* factory = Kernel::getFactory();
+
+        // create default universe
+        m_universe = (Universe*)CreateFactoryObject(Universe, "DefaultUniverse", this);
+
+        Scene * editor = (Scene *)CreateFactoryObject(Scene, "Editor", m_universe);
+        m_universe->addScene(editor);
         editor->release();
 
-        GameObject * rootGameObject = (GameObject*)CreateFactoryObject(GameObject, "Root", editor);
+        GameObject * rootGameObject = (GameObject *)CreateFactoryObject(GameObject, "Root", editor);
         editor->SetRoot(rootGameObject);
         rootGameObject->release();
 
-        // add camera entity (TODO: editor camera)
+        // add FreeCam component (TODO: editor camera)
         GameObject * freeCamGO = new GameObject("FreeCam", rootGameObject);
-        auto * freeCamComponent = (FreeCamComponent*)CreateFactoryObject(FreeCamComponent, "FreeCam", freeCamGO);
+        auto * freeCamComponent = (FreeCamComponent *)CreateFactoryObject(FreeCamComponent, "FreeCam", freeCamGO);
         freeCamGO->setWorldMatrix(float4x4
         (
             1.0f, 0.0f, 0.0f, 0.0f,
@@ -288,102 +297,17 @@ namespace vg::engine
             -1.2f, -3.5f, 1.7f, 1.0f
         ));
         freeCamGO->addComponent(freeCamComponent);
-        freeCamComponent->setView(m_editorView, rootGameObject);
         rootGameObject->AddChild(freeCamGO);
-        m_editorView->release();
         VG_SAFE_RELEASE(freeCamComponent);
         VG_SAFE_RELEASE(freeCamGO);
 
-        return editor;
-    }
-
-    //--------------------------------------------------------------------------------------
-    void Engine::createEditorView()
-    {
-        // use factor to create objects
-        auto* factory = Kernel::getFactory();
-
-        // create default universe
-        m_universe = (Universe*)CreateFactoryObject(Universe, "DefaultUniverse", this);
-
-        graphics::renderer::CreateViewParams params;
-                                             params.offset = { 0,0 };
-                                             params.size = getScreenSize();
-                                             params.universe = m_universe;
-
-        m_editorView = m_renderer->createView(params);
-        m_renderer->setView(m_editorView);
-
-        addEditorScene(m_universe);
-
-        IScene * defaultScene = m_universe->getActiveScene();
-        IGameObject* rootSector = defaultScene->GetRoot();
-
-        auto addMesh = [=](IGameObject * _parent, const string & _name, const string & _path, const float4 _position)
-        {
-            auto * meshGO = (GameObject*)CreateFactoryObject(GameObject, _name.c_str(), _parent);
-            auto * meshComponent = (MeshComponent*)CreateFactoryObject(MeshComponent, "", meshGO);
-            meshComponent->getMeshResource().setResourcePath(_path);
-            meshGO->addComponent(meshComponent);
-            _parent->AddChild(meshGO);
-        
-            const float4x4 m =
-            {
-                float4(1.0f, 0.0f, 0.0f, (0.0f)),
-                float4(0.0f, 1.0f, 0.0f, (0.0f)),
-                float4(0.0f, 0.0f, 1.0f, (0.0f)),
-                _position,
-            };
-            meshGO->SetWorldMatrix(m);
-        
-            VG_SAFE_RELEASE(meshComponent);
-            VG_SAFE_RELEASE(meshGO);
-        };
-
-#if 0
-        addMesh(rootSector, "3DScanMan001", "data/Models/human/human.fbx", float4(-1.0f, 0.0f, 0.0f, 1.0f));
-        addMesh(rootSector, "3DScanMan016", "data/Models/3DScan_Man_016/3DScan_Man_016.FBX", float4(0.0f, 0.0f, 0.0f, 1.0f));
-        addMesh(rootSector, "Jess", "data/Models/jess/jess.fbx", float4(+1.0f, 0.0f, 00.0f, 1.0f));
-#elif 0
-        // add a few entities with mesh
-        for (int j = 0; j < 3; ++j)
-        {
-            for (int i = 0; i < 3; ++i)
-            {
-                auto * meshEntity = (Entity*)CreateFactoryObject(Entity, "", root);
-                auto * meshComponent = (MeshComponent*)CreateFactoryObject(MeshComponent, "", meshEntity);
-
-                meshComponent->getMeshResource().setResourcePath("data/Models/Teapot.fbx");
-                meshEntity->addComponent(meshComponent);
-
-                root->addEntity(meshEntity);
-
-                const float x = (i - 1) * 64.0f;
-                const float y = (j - 1) * 64.0f;
-
-                const float4x4 m =
-                {
-                    float4(1.0f, 0.0f, 0.0f, (0.0f)),
-                    float4(0.0f, 1.0f, 0.0f, (0.0f)),
-                    float4(0.0f, 0.0f, 1.0f, (0.0f)),
-                    float4(   x,    y, 0.0f, (1.0f)),
-                };
-
-                meshEntity->SetWorldMatrix(m);
-
-                VG_SAFE_RELEASE(meshComponent);
-                VG_SAFE_RELEASE(meshEntity);
-            }
-        }
-#endif
     }
 
     //--------------------------------------------------------------------------------------
     void Engine::destroyEditorView()
     {
-        //VG_SAFE_RELEASE(m_freeCam);
         VG_SAFE_RELEASE(m_universe);
-        VG_SAFE_RELEASE(m_editorView);
+        VG_SAFE_RELEASE(m_mainView);
     }
 
 	//--------------------------------------------------------------------------------------
@@ -474,8 +398,8 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
-    graphics::renderer::IView * Engine::getEditorView() const
+    graphics::renderer::IView * Engine::getMainView() const
     {
-        return m_editorView;
+        return m_mainView;
     }
 }

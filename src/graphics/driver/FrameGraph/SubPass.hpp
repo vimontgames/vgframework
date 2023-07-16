@@ -13,15 +13,15 @@ namespace vg::graphics::driver::base
 	}
 
     //--------------------------------------------------------------------------------------
-    void SubPass::addUserPass(const UserPass * _userPass)
+    void SubPass::addUserPassInfo(const FrameGraph::UserPassInfo & _userPassInfo)
     {
-        m_userPasses.push_back(_userPass);
+        m_userPassesInfos.push_back(_userPassInfo);
     }
 
     //--------------------------------------------------------------------------------------
-    const core::vector<const UserPass*> & SubPass::getUserPasses() const
+	const core::vector<FrameGraph::UserPassInfo> & SubPass::getUserPassesInfos() const
     {
-        return m_userPasses;
+        return m_userPassesInfos;
     }
 }
 

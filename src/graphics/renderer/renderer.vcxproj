@@ -84,6 +84,8 @@
     <ClInclude Include="ImGui\Editors\Scene\ImGuiScene.hpp" />
     <ClInclude Include="ImGui\Editors\Shader\ImGuiShader.h" />
     <ClInclude Include="ImGui\Editors\Shader\ImGuiShader.hpp" />
+    <ClInclude Include="ImGui\Editors\View\ImGuiView.h" />
+    <ClInclude Include="ImGui\Editors\View\ImGuiView.hpp" />
     <ClInclude Include="ImGui\ImGuiCustomHandler.h" />
     <ClInclude Include="ImGui\ImGui_Consts.h" />
     <ClInclude Include="ImGui\Menus\GameObject\SceneEditor\ImGuiGameObjectSceneEditorMenu.h" />

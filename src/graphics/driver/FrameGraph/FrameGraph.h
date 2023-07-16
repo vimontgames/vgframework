@@ -3,6 +3,12 @@
 #include "core/Object/Object.h"
 #include "FrameGraph_consts.h"
 
+namespace vg::graphics::renderer
+{
+	// TODO: move IView from 'graphics::Renderer' to 'graphics::Device' to avoid this dirty hack
+	class IView;
+}
+
 namespace vg::graphics::driver
 {
 	class Texture;
@@ -17,6 +23,17 @@ namespace vg::graphics::driver
 	class FrameGraph : public core::Object
 	{
 	public:
+		struct RenderContext
+		{
+			renderer::IView * m_view;
+		};
+
+        struct UserPassInfo
+        {
+            RenderContext	m_renderContext;
+            UserPass *		m_userPass;
+        };
+
         const char * getClassName() const final { return "FrameGraph"; }
 
 		using UserPassID = core::string;
@@ -161,7 +178,7 @@ namespace vg::graphics::driver
 		void build();
 		void render();
 
-        bool addUserPass(UserPass * _userPass, const UserPassID & _renderPassID);
+        bool addUserPass(const RenderContext & _renderContext, UserPass * _userPass, const UserPassID & _renderPassID);
 
         template <class T> T * getResource(Resource::Type _type, const ResourceID & _resID, bool _mustExist);
 
@@ -170,6 +187,8 @@ namespace vg::graphics::driver
 
         TextureResource *   addTextureResource  (const ResourceID & _resID, const TextureResourceDesc & _texResDesc, Texture * _tex = nullptr);
         BufferResource *    addBufferResource   (const ResourceID & _resID, const BufferResourceDesc & _bufResDesc, Buffer * _buf = nullptr);
+
+		void setResized(); 
 
 	private:
 
@@ -188,10 +207,10 @@ namespace vg::graphics::driver
 
 	private:
         using resource_unordered_map = core::unordered_map<FrameGraph::ResourceID, Resource*, core::hash<ResourceID>>;
-        resource_unordered_map          m_resources;
+        resource_unordered_map		m_resources;
 
-		core::vector<UserPass*>         m_userPassStack;
-		core::vector<RenderPass*>       m_renderPasses;
+		core::vector<UserPassInfo>	m_userPassInfo;
+		core::vector<RenderPass*>	m_renderPasses;
 
         struct SharedTexture
         {
@@ -203,5 +222,6 @@ namespace vg::graphics::driver
 
 		ResourceID                      m_outputResID;
         TextureResource *               m_outputRes = nullptr;
+		bool							m_resized = false;
 	};
 }

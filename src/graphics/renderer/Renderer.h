@@ -42,9 +42,12 @@ namespace vg::graphics::renderer
 		void					        init				    (const RendererParams & _params, core::Singletons & _singletons) override;
 		void					        deinit				    () override;
 
-        IView *                         createView              (const CreateViewParams & _params) override;
-        void                            setView                 (IView * _view) override;
+        IView *                         CreateMainView          (core::uint2 _screenSize) final override;
+        IView *                         CreateView              (const CreateViewParams & _params) final override;
+        const core::vector <IView *>    GetViews                () const final override;
+        void                            ReleaseView             (IView *& _view) final override;
 
+        void                            SetResized              () final override;
         void                            resize                  (core::uint _width, core::uint _height) override;
         core::uint2                     getBackbufferSize       () const override;
 
@@ -72,7 +75,7 @@ namespace vg::graphics::renderer
         #endif     
 
     public: // internal
-        View *                          getView                 () const;
+        View *                          getMainView                 () const;
 
         driver::Texture *		        getBackbuffer           () const;
         ImguiAdapter *                  getImGuiAdapter         () const { return m_imgui; }
@@ -88,7 +91,8 @@ namespace vg::graphics::renderer
         ImguiAdapter *                  m_imgui                 = nullptr;
         FBXImporter *                   m_fbxImporter           = nullptr;
 		driver::FrameGraph &	        m_frameGraph;
-        View *                          m_view                  = nullptr;
+        View *                          m_mainView              = nullptr;
+        core::vector<View *>            m_views;
         BackgroundPass *                m_backgroundPass        = nullptr;
         TestPass3D *                    m_testPass3D            = nullptr;
         PostProcessPass *               m_postProcessPass       = nullptr;

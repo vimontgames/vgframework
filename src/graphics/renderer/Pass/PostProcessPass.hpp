@@ -30,14 +30,14 @@ namespace vg::graphics::renderer
     //--------------------------------------------------------------------------------------
     // Setup executed each frame, for each pass instance
     //--------------------------------------------------------------------------------------
-    void PostProcessPass::setup(double _dt)
+    void PostProcessPass::setup(const driver::FrameGraph::RenderContext & _renderContext, double _dt)
     {
         readRenderTarget("Color");
-        writeRenderTarget(0, "Backbuffer");
+        writeRenderTarget(0, "Target" /*"Backbuffer"*/);
     }
 
     //--------------------------------------------------------------------------------------
-    void PostProcessPass::draw(CommandList * _cmdList) const
+    void PostProcessPass::draw(const FrameGraph::RenderContext & _renderContext, CommandList * _cmdList) const
     {
         RasterizerState rs(FillMode::Solid, CullMode::None);
         BlendState bs(BlendFactor::One, BlendFactor::Zero, BlendOp::Add);

@@ -21,8 +21,8 @@ namespace vg::graphics::driver
 
 		void			reset		();
 
-		virtual void	setup		(double _dt) = 0;
-		virtual void	draw		(CommandList * _cmdList) const = 0;
+		virtual void	setup		(const driver::FrameGraph::RenderContext & _renderContext, double _dt) = 0;
+		virtual void	draw		(const FrameGraph::RenderContext & _renderContext, CommandList * _cmdList) const = 0;
 
 		const core::vector<FrameGraph::TextureResource *> & getRenderTargets() const;
         FrameGraph::TextureResource * getDepthStencil() const;

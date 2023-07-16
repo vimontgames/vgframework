@@ -4,6 +4,7 @@
 #include "core/GameObject/GameObject.h"
 #include "core/Math/Math.h"
 #include "engine/Engine.h"
+#include "graphics/renderer/IRenderer.h"
 
 using namespace vg::core;
 
@@ -56,14 +57,18 @@ namespace vg::engine
     //--------------------------------------------------------------------------------------
     void CameraComponent::Update(double _dt)
     {
-        if (m_view == nullptr)
+        //if (m_view == nullptr)
         {
-            m_view = Engine::get()->getEditorView(); // Quick hack, TODO: multiview management
-            VG_SAFE_INCREASE_REFCOUNT(m_view);
+            if (Engine::get()->GetRenderer()->GetViews().count() > 0)
+                setView(Engine::get()->GetRenderer()->GetViews()[0], nullptr); // Quick hack, TODO: multiview management
+            //VG_SAFE_INCREASE_REFCOUNT(m_view);
         }
 
-        const float4x4 & matrix = getGameObject()->getWorldMatrix();
-        m_view->SetupCamera(inverse(matrix), float2(m_near, m_far), m_fovY);
+        if (m_view != nullptr)
+        {
+            const float4x4 & matrix = getGameObject()->getWorldMatrix();
+            m_view->SetupCamera(inverse(matrix), float2(m_near, m_far), m_fovY);
+        }
     }
 
     //--------------------------------------------------------------------------------------

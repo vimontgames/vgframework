@@ -41,9 +41,6 @@ namespace vg::graphics::driver
 	public:
         const char * getClassName() const final { return "RenderPass"; }
 
-        //void * operator new(size_t _size);
-        //void operator delete(void * _address);
-
 		RenderPass(const RenderPassKey & _key);
 		~RenderPass();
 

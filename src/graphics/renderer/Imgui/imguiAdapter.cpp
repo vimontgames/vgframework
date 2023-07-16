@@ -111,7 +111,7 @@ namespace vg::graphics::renderer
         colors[ImGuiCol_TabUnfocused]           = ImVec4(0.54f, 0.54f, 0.54f, 0.19f);
         colors[ImGuiCol_TabUnfocusedActive]     = ImVec4(0.54f, 0.54f, 0.54f, 0.38f);
         colors[ImGuiCol_DockingPreview]         = ImVec4(0.20f, 0.29f, 0.43f, 0.77f);
-        colors[ImGuiCol_DockingEmptyBg]         = ImVec4(0.13f, 0.23f, 0.36f, 0.50f);
+        colors[ImGuiCol_DockingEmptyBg]         = ImVec4(0.13f, 0.13f, 0.15f, 1.00f);
         colors[ImGuiCol_PlotLines]              = ImVec4(0.61f, 0.61f, 0.61f, 1.00f);
         colors[ImGuiCol_PlotLinesHovered]       = ImVec4(1.00f, 0.43f, 0.35f, 1.00f);
         colors[ImGuiCol_PlotHistogram]          = ImVec4(0.90f, 0.70f, 0.00f, 1.00f);

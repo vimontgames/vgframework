@@ -22,6 +22,13 @@
 //--------------------------------------------------------------------------------------
 #ifdef VG_WINDOWS
 #define NOMINMAX
+
+#ifdef VG_DEBUG
+#define _CRTDBG_MAP_ALLOC
+#include <stdlib.h>
+#include <crtdbg.h>
+#endif
+
 #include <winsock2.h> // must be included before <windows.h>
 #include <windows.h>
 #include <system_error>

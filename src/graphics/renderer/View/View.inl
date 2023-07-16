@@ -23,4 +23,34 @@ namespace vg::graphics::renderer
     {
         return m_cameraSector;
     }
+
+    //--------------------------------------------------------------------------------------
+    VG_INLINE core::IUniverse * View::getUniverse() const
+    {
+        return m_cameraUniverse;
+    }
+
+    //--------------------------------------------------------------------------------------
+    VG_INLINE void View::setSize(core::uint2 _size)
+    {
+        m_size = _size;
+    }
+
+    //--------------------------------------------------------------------------------------
+    VG_INLINE core::uint2 View::getSize() const
+    {
+        return m_size;
+    }
+
+    //--------------------------------------------------------------------------------------
+    VG_INLINE void View::setOffset(core::int2 _offset)
+    {
+        m_offset = _offset;
+    }
+
+    //--------------------------------------------------------------------------------------
+    VG_INLINE core::int2 View::getOffset() const
+    {
+        return m_offset;
+    }
 }

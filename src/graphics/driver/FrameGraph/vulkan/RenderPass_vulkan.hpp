@@ -197,7 +197,7 @@ namespace vg::graphics::driver::vulkan
         auto * device = driver::Device::get();
         VkDevice & vkDevice = device->getVulkanDevice();
 
-        const auto * userPass = m_subPasses[0]->getUserPasses()[0];
+        const auto * userPass = m_subPasses[0]->getUserPassesInfos()[0].m_userPass;
         const auto & renderTargets = userPass->getRenderTargets();
         
         m_vkClearValues.reserve(renderTargets.size() + 1);

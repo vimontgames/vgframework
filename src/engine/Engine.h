@@ -61,16 +61,14 @@ namespace vg::engine
 		void							    runOneFrame	        () final;
 
         core::uint2                         getScreenSize       () const final;
-        graphics::renderer::IView *         getEditorView       () const;
+        graphics::renderer::IView *         getMainView         () const;
 
 		graphics::renderer::IRenderer *	    GetRenderer	        () const final;
         engine::IResourceManager *          GetResourceManager  () const final;
 
     public:
-        void                                createEditorView    ();
+        void                                createEditorScene   ();
         void                                destroyEditorView   ();
-
-        core::Scene *                       addEditorScene       (core::Universe * _universe);
 
     protected:
         void                                updateDt            ();
@@ -81,7 +79,7 @@ namespace vg::engine
         IProject *                          m_project           = nullptr;
         core::Universe *                    m_universe          = nullptr;
 		graphics::renderer::IRenderer *	    m_renderer          = nullptr;
-        graphics::renderer::IView *         m_editorView        = nullptr;
+        graphics::renderer::IView *         m_mainView          = nullptr;
         ResourceManager *                   m_resourceManager   = nullptr;
 
         double                              m_dt                = 0.0f;

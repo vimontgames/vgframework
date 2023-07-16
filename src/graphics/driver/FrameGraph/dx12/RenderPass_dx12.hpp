@@ -29,7 +29,7 @@ namespace vg::graphics::driver::dx12
                 const SubPassKey::AttachmentInfo & info = subPassKey.getColorAttachmentInfo(i);
                 if (asBool(SubPassKey::AttachmentFlags::RenderTarget & info.flags))
                 {
-                    const FrameGraph::TextureResource * res = subPass->getUserPasses()[0]->getRenderTargets()[subPass->m_renderTargetCount]; // Assume subPass attachment order is the same as renderPass order and that we create different subPasses when attachment changes
+                    const FrameGraph::TextureResource * res = subPass->getUserPassesInfos()[0].m_userPass->getRenderTargets()[subPass->m_renderTargetCount]; // Assume subPass attachment order is the same as renderPass order and that we create different subPasses when attachment changes
                     const FrameGraph::TextureResourceDesc & resourceDesc = res->getTextureResourceDesc();
 
                     D3D12_RENDER_PASS_RENDER_TARGET_DESC & renderTargetDesc = subPass->m_d3d12renderPassRenderTargetDesc[i];
@@ -64,7 +64,7 @@ namespace vg::graphics::driver::dx12
                 const SubPassKey::AttachmentInfo & info = subPassKey.getDepthStencilAttachmentInfo();
                 if (asBool(SubPassKey::AttachmentFlags::RenderTarget & info.flags))
                 {
-                    const FrameGraph::TextureResource * res = subPass->getUserPasses()[0]->getDepthStencil();
+                    const FrameGraph::TextureResource * res = subPass->getUserPassesInfos()[0].m_userPass->getDepthStencil();
                     const FrameGraph::TextureResourceDesc & resourceDesc = res->getTextureResourceDesc();
 
                     D3D12_RENDER_PASS_DEPTH_STENCIL_DESC & depthStencilDesc = subPass->m_d3d12renderPassDepthStencilDesc;

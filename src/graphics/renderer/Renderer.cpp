@@ -45,7 +45,7 @@ IRenderer * CreateNew()
 namespace vg::graphics::renderer
 {
 	#define VG_RENDERER_VERSION_MAJOR 0
-	#define VG_RENDERER_VERSION_MINOR 11
+	#define VG_RENDERER_VERSION_MINOR 12
 
     #ifdef _WIN32
     //--------------------------------------------------------------------------------------
@@ -183,7 +183,10 @@ namespace vg::graphics::renderer
         DisplayOptions * displayOptions = DisplayOptions::get();
         VG_SAFE_DELETE(displayOptions);
 
-        VG_SAFE_RELEASE(m_view);
+        VG_SAFE_RELEASE(m_mainView);
+        for (int i = 0; i < m_views.size(); ++i)
+            VG_SAFE_RELEASE(m_views[i]);
+        m_views.clear();
 
         VG_SAFE_DELETE(m_backgroundPass);
         VG_SAFE_DELETE(m_testPass3D);
@@ -195,6 +198,12 @@ namespace vg::graphics::renderer
 
 		m_device.deinit();
 	}
+
+    //--------------------------------------------------------------------------------------
+    void Renderer::SetResized()
+    {
+        m_frameGraph.setResized();
+    }
 
     //--------------------------------------------------------------------------------------
     void Renderer::resize(core::uint _width, core::uint _height)
@@ -262,10 +271,28 @@ namespace vg::graphics::renderer
                 m_frameGraph.importRenderTarget("Backbuffer", m_device.getBackbuffer(), float4(0,0,0,0), FrameGraph::Resource::InitState::Clear);
                 m_frameGraph.setGraphOutput("Backbuffer");
 
-                m_frameGraph.addUserPass(m_backgroundPass, "BackgroundPass");
-                m_frameGraph.addUserPass(m_testPass3D, "TestPass3D");
-                m_frameGraph.addUserPass(m_postProcessPass, "PostProcessPass");
-                m_frameGraph.addUserPass(m_imguiPass, "UIPass");
+                for (uint i = 0; i < m_views.count(); ++i)
+                {
+                    auto * view = m_views[i];
+                    if (nullptr != view->getUniverse())
+                    {
+                        FrameGraph::RenderContext viewRenderContext;
+                                                  viewRenderContext.m_view = view;
+
+                        auto * target = view->GetRenderTarget();
+                        if (target)
+                            m_frameGraph.importRenderTarget("Target", (Texture*)target, float4(0, 0, 0, 0), FrameGraph::Resource::InitState::Clear);
+
+                        m_frameGraph.addUserPass(viewRenderContext, m_backgroundPass, "BackgroundPass");
+                        m_frameGraph.addUserPass(viewRenderContext, m_testPass3D, "TestPass3D");
+                        m_frameGraph.addUserPass(viewRenderContext, m_postProcessPass, "PostProcessPass");
+                    }
+                }
+
+                FrameGraph::RenderContext mainViewRenderContext;
+                                          mainViewRenderContext.m_view = m_mainView;
+
+                m_frameGraph.addUserPass(mainViewRenderContext, m_imguiPass, "UIPass");
 
                 m_frameGraph.setup(_dt);
                 m_frameGraph.build();
@@ -276,9 +303,9 @@ namespace vg::graphics::renderer
 	}
 
     //--------------------------------------------------------------------------------------
-    View * Renderer::getView() const
+    View * Renderer::getMainView() const
     {
-        return m_view;
+        return m_mainView;
     }
 
 	//--------------------------------------------------------------------------------------
@@ -288,21 +315,61 @@ namespace vg::graphics::renderer
 	}
 
     //--------------------------------------------------------------------------------------
-    IView * Renderer::createView(const CreateViewParams & _params)
+    IView * Renderer::CreateMainView(core::uint2 _screenSize)
     {
-        return new View(_params);
+        auto * mainView = new View(_screenSize);
+        if (mainView != m_mainView)
+        {
+            VG_SAFE_INCREASE_REFCOUNT(mainView);
+            VG_SAFE_RELEASE(m_mainView);
+            m_mainView = static_cast<View *>(mainView);
+        }
+        return mainView;
     }
 
     //--------------------------------------------------------------------------------------
-    void Renderer::setView(IView * _view)
+    IView * Renderer::CreateView(const CreateViewParams & _params)
     {
-        if (_view != m_view)
+        auto * view = new View(_params);
+        VG_SAFE_INCREASE_REFCOUNT(view);
+        m_views.push_back(view);
+        return view;
+    }
+
+    //--------------------------------------------------------------------------------------
+    const core::vector <IView *> Renderer::GetViews() const
+    {
+        return (const core::vector<IView *>&)m_views;
+    }
+
+    //--------------------------------------------------------------------------------------
+    void Renderer::ReleaseView(IView *& _view)
+    {
+        if (nullptr != _view)
         {
-            VG_SAFE_INCREASE_REFCOUNT(_view);
-            VG_SAFE_RELEASE(m_view);
-            m_view = static_cast<View*>(_view);
+            auto * temp = _view;
+            if (m_views.remove((View *)temp))
+                VG_SAFE_RELEASE(temp);
+            VG_SAFE_RELEASE(_view);
         }
     }
+
+    ////--------------------------------------------------------------------------------------
+    //IView * Renderer::createView(const CreateViewParams & _params)
+    //{
+    //    return new View(_params);
+    //}
+    //
+    ////--------------------------------------------------------------------------------------
+    //void Renderer::setView(IView * _view)
+    //{
+    //    if (_view != m_view)
+    //    {
+    //        VG_SAFE_INCREASE_REFCOUNT(_view);
+    //        VG_SAFE_RELEASE(m_view);
+    //        m_view = static_cast<View*>(_view);
+    //    }
+    //}
     
     //--------------------------------------------------------------------------------------
     bool Renderer::cookMeshModel(const core::string & _file)

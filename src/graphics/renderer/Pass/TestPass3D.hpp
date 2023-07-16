@@ -127,7 +127,7 @@ namespace vg::graphics::renderer
     //--------------------------------------------------------------------------------------
     // Setup executed each frame, for each pass instance
     //--------------------------------------------------------------------------------------
-    void TestPass3D::setup(double _dt)
+    void TestPass3D::setup(const driver::FrameGraph::RenderContext & _renderContext, double _dt)
     {
         writeRenderTarget(0, "Color");
         writeDepthStencil("DepthStencil");
@@ -175,14 +175,14 @@ namespace vg::graphics::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    void TestPass3D::draw(CommandList * _cmdList) const
+    void TestPass3D::draw(const FrameGraph::RenderContext & _renderContext, CommandList * _cmdList) const
     {
         auto * renderer = Renderer::get();
 
         auto * device = Device::get();
         const auto & backbuffer = renderer->getBackbuffer()->getTexDesc();
 
-        View * view = renderer->getView();
+        View * view = (View *)_renderContext.m_view;
 
         const float fovY = view->getCameraFovY();
         const float2 nearFar = view->getCameraNearFar();

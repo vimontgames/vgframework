@@ -13,10 +13,8 @@ namespace vg::graphics::renderer
         PostProcessPass();
         ~PostProcessPass();
 
-        void setup(double _dt) override;
-        void draw(driver::CommandList * _cmdList) const override;
-
-        //const core::string & getName() const override { static const core::string name = "PostProcess"; return name; }
+        void setup(const driver::FrameGraph::RenderContext & _renderContext, double _dt) override;
+        void draw(const driver::FrameGraph::RenderContext & _renderContext, driver::CommandList * _cmdList) const override;
 
     private:
         driver::RootSignatureHandle         m_postProcessRootSignature;

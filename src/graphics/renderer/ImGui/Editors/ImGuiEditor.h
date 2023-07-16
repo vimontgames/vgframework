@@ -24,6 +24,7 @@ namespace vg::graphics::renderer
             AddMenuEntry    = 0x00000002
         };
                                                 ImguiEditor         (const core::string & _name, Flags _flags);
+                                                virtual ~ImguiEditor() {}
 
         virtual void                            update              (double _dt) {};
         virtual void                            display             () = 0;

@@ -33,6 +33,7 @@ using namespace ImGui;
 #include "graphics/renderer/ImGui/Editors/FPS/ImguiFPS.hpp"
 #include "graphics/renderer/ImGui/Editors/Inspector/ImguiInspector.hpp"
 #include "graphics/renderer/ImGui/Editors/About/ImguiAbout.hpp"
+#include "graphics/renderer/ImGui/Editors/View/ImGuiView.hpp"
 
 namespace vg::graphics::renderer
 {
@@ -45,15 +46,12 @@ namespace vg::graphics::renderer
         m_editorWindows.push_back(new ImguiPlatform(IconWithText(Editor::Icon::Platform, "Platform"), ImguiEditor::Flags::StartVisible | ImguiEditor::AddMenuEntry));
         m_editorWindows.push_back(new ImguiShader(IconWithText(Editor::Icon::Shaders, "Shaders"), ImguiEditor::Flags::StartVisible | ImguiEditor::AddMenuEntry));
         m_editorWindows.push_back(new ImguiFPS(IconWithText(Editor::Icon::FPS, "FPS"), ImguiEditor::Flags::StartVisible | ImguiEditor::AddMenuEntry));
-
         m_editorWindows.push_back(new ImguiResource(IconWithText(Editor::Icon::Resource, "Resources"), ImguiEditor::Flags::StartVisible | ImguiEditor::AddMenuEntry));
         m_editorWindows.push_back(new ImguiScene(IconWithText(Editor::Icon::Scene,"Scenes"), ImguiEditor::Flags::StartVisible | ImguiEditor::AddMenuEntry));
-
         m_editorWindows.push_back(new ImguiInspector(IconWithText(Editor::Icon::Inspector, "Inspector"), ImguiEditor::Flags::StartVisible | ImguiEditor::AddMenuEntry));
-
         m_editorWindows.push_back(new ImguiDisplayOptions(IconWithText(Editor::Icon::Display, "Display"), ImguiEditor::Flags::StartVisible));
-
         m_editorWindows.push_back(new ImguiAbout("About", ImguiEditor::Flags::None));
+        m_editorWindows.push_back(new ImGuiView("View", ImguiEditor::Flags::StartVisible | ImguiEditor::AddMenuEntry));
     }
 
     //--------------------------------------------------------------------------------------
@@ -65,7 +63,7 @@ namespace vg::graphics::renderer
     }
     
     //--------------------------------------------------------------------------------------
-    void ImguiPass::setup(double _dt)
+    void ImguiPass::setup(const driver::FrameGraph::RenderContext & _renderContext, double _dt)
     {
         writeRenderTarget(0, "Backbuffer");
 
@@ -73,7 +71,7 @@ namespace vg::graphics::renderer
         ImGui::SetNextWindowPos(viewport->WorkPos, ImGuiCond_Appearing, ImVec2(0.0f, 0.0f));
         ImGui::SetNextWindowSize(viewport->WorkSize, ImGuiCond_None);
         ImGui::SetNextWindowViewport(viewport->ID);
-        ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.0f);
+        ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.5f);
         ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
         ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
 
@@ -82,7 +80,7 @@ namespace vg::graphics::renderer
         window_flags |= ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus;
         window_flags |= ImGuiWindowFlags_NoBackground;
 
-        ImGuiDockNodeFlags dockspace_flags = ImGuiDockNodeFlags_None | ImGuiDockNodeFlags_PassthruCentralNode;
+        ImGuiDockNodeFlags dockspace_flags = ImGuiDockNodeFlags_None | ImGuiDockNodeFlags_PassthruCentralNode /* | ImGuiDockNodeFlags_AutoHideTabBar*/;
 
         bool showUI = true;
 
@@ -164,9 +162,9 @@ namespace vg::graphics::renderer
         if (m_isRendererWindowVisible)
             displayRendererWindow();
 
-        static bool showDemo = false;
-        if (showDemo)
-            ImGui::ShowDemoWindow(&showDemo);
+        static bool demo = false;
+        if (demo)
+            ImGui::ShowDemoWindow(&demo);
     }
 
     //--------------------------------------------------------------------------------------
@@ -220,7 +218,7 @@ namespace vg::graphics::renderer
     }
     
     //--------------------------------------------------------------------------------------
-    void ImguiPass::draw(driver::CommandList * _cmdList) const
+    void ImguiPass::draw(const FrameGraph::RenderContext & _renderContext, driver::CommandList * _cmdList) const
     {
         Renderer::get()->getImGuiAdapter()->render(_cmdList);
     }

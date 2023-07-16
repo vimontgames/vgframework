@@ -13,13 +13,16 @@ namespace vg::graphics::renderer
         public:
             AutoRegister(const char * className)
             {
-                s_ImGuiHandlers.push_back({ className, new T() });
+                m_handler = new T();
+                s_ImGuiHandlers.push_back({ className, m_handler });
             }
 
             ~AutoRegister()
             {
-
+                VG_SAFE_DELETE(m_handler);
             }
+
+            C * m_handler = nullptr;
         };
 
         static C * Find(K key)

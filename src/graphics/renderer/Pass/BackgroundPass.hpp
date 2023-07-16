@@ -1,6 +1,7 @@
 #include "BackgroundPass.h"
 #include "shaders/background/background.hlsli"
 #include "graphics/renderer/Options/DisplayOptions.h"
+#include "graphics/renderer/IView.h"
 
 namespace vg::graphics::renderer
 {
@@ -32,16 +33,16 @@ namespace vg::graphics::renderer
     //--------------------------------------------------------------------------------------
     // Setup executed each frame, for each pass instance
     //--------------------------------------------------------------------------------------
-    void BackgroundPass::setup(double _dt)
+    void BackgroundPass::setup(const driver::FrameGraph::RenderContext & _renderContext, double _dt)
     {
         auto * device = Device::get();
 
-        const driver::DeviceParams & deviceParams = device->getDeviceParams();
+        auto size = _renderContext.m_view->GetSize();
 
         FrameGraph::TextureResourceDesc colorDesc;
                                         colorDesc.format = PixelFormat::R16G16B16A16_float;
-                                        colorDesc.width = deviceParams.resolution.x;
-                                        colorDesc.height = deviceParams.resolution.y;
+                                        colorDesc.width = size.x;
+                                        colorDesc.height = size.y;
                                         colorDesc.clearColor = float4(0, 0, 0, 0);
                                         colorDesc.initState = FrameGraph::Resource::InitState::Clear;
 
@@ -50,8 +51,8 @@ namespace vg::graphics::renderer
 
         FrameGraph::TextureResourceDesc depthStencilDesc;
                                         depthStencilDesc.format = PixelFormat::D32S8;
-                                        depthStencilDesc.width = deviceParams.resolution.x;
-                                        depthStencilDesc.height = deviceParams.resolution.y;
+                                        depthStencilDesc.width = size.x;
+                                        depthStencilDesc.height = size.y;
                                         depthStencilDesc.clearDepth = 1.0f;
                                         depthStencilDesc.clearStencil = 0x0;
                                         depthStencilDesc.initState = FrameGraph::Resource::InitState::Clear;
@@ -61,7 +62,7 @@ namespace vg::graphics::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    void BackgroundPass::draw(CommandList * _cmdList) const
+    void BackgroundPass::draw(const FrameGraph::RenderContext & _renderContext, CommandList * _cmdList) const
     {
         RasterizerState rs(FillMode::Solid, CullMode::None);
         BlendState bs(BlendFactor::One, BlendFactor::Zero, BlendOp::Add);

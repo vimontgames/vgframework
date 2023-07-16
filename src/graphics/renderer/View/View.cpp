@@ -1,6 +1,7 @@
 #include "graphics/renderer/Precomp.h"
 #include "View.h"
 #include "core/GameObject/GameObject.h"
+#include "graphics/driver/ITexture.h"
 
 #if !VG_ENABLE_INLINE
 #include "View.inl"
@@ -14,6 +15,9 @@ namespace vg::graphics::renderer
     View::View(const CreateViewParams & _params) : 
         IView(_params)
     {
+        m_size = _params.size;
+        m_offset = _params.offset;
+
         m_viewInv = float4x4
         (
             1.0f, 0.0f, 0.0f, 0.0f,
@@ -23,13 +27,36 @@ namespace vg::graphics::renderer
         );
 
         SetUniverse(_params.universe);
+
+        if (_params.target)
+        {
+            VG_SAFE_INCREASE_REFCOUNT(_params.target);
+            m_renderTarget = _params.target;
+        }
+    }
+
+    //--------------------------------------------------------------------------------------
+    void View::SetRenderTarget(driver::ITexture * _renderTarget)
+    {
+        if (_renderTarget != m_renderTarget)
+        {
+            VG_SAFE_RELEASE(m_renderTarget);
+            m_renderTarget = _renderTarget;
+            VG_SAFE_INCREASE_REFCOUNT(m_renderTarget);
+        }
+    }
+
+    //--------------------------------------------------------------------------------------
+    driver::ITexture * View::GetRenderTarget() const
+    {
+        return m_renderTarget;
     }
 
     //--------------------------------------------------------------------------------------
     View::~View()
     {
+        VG_SAFE_RELEASE(m_renderTarget);
         VG_SAFE_RELEASE(m_cameraSector);
-        //VG_SAFE_RELEASE(m_cameraUniverse);
     }
 
     //--------------------------------------------------------------------------------------
@@ -89,12 +116,36 @@ namespace vg::graphics::renderer
     //--------------------------------------------------------------------------------------
     core::IUniverse* View::GetUniverse() const
     {
-        return m_cameraUniverse;
+        return getUniverse();
     }
 
     //--------------------------------------------------------------------------------------
     u32 View::release()
     {
         return IView::release();
+    }
+
+    //--------------------------------------------------------------------------------------
+    void View::SetSize(core::uint2 _size)
+    {
+        setSize(_size);
+    }
+
+    //--------------------------------------------------------------------------------------
+    core::uint2 View::GetSize() const
+    {
+        return getSize();
+    }
+
+    //--------------------------------------------------------------------------------------
+    void View::SetOffset(core::int2 _offset)
+    {
+        setOffset(_offset);
+    }
+
+    //--------------------------------------------------------------------------------------
+    core::int2 View::GetOffset() const
+    {
+        return getOffset();
     }
 }

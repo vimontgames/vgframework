@@ -12,11 +12,11 @@ namespace vg::graphics::driver
 			SubPass();
 			virtual ~SubPass();
 
-            void addUserPass(const UserPass * _userPass);
-            const core::vector<const UserPass*> & getUserPasses() const;
+            void addUserPassInfo(const FrameGraph::UserPassInfo & _userPassInfo);
+            const core::vector<FrameGraph::UserPassInfo> & getUserPassesInfos() const;
 
         private:
-			core::vector<const UserPass*>   m_userPasses;
+			core::vector<FrameGraph::UserPassInfo> m_userPassesInfos;
 		};
 	}
 }
