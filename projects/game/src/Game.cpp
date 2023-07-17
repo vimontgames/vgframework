@@ -1,60 +1,59 @@
 #include "Precomp.h"
-#include "SuperVimontBrawl.h"
+#include "Game.h"
 #include "engine/IEngine.h"
 #include "core/Kernel.h"
 #include "core/Object/AutoRegisterClass.h"
-#include "GameObject/Player/Player.h"
 
 using namespace vg::core;
 
 //--------------------------------------------------------------------------------------
-SuperVimontBrawl * CreateNew()
+Game * CreateNew()
 {
-    return new SuperVimontBrawl();
+    return new Game();
 }
 
 //--------------------------------------------------------------------------------------
-SuperVimontBrawl::SuperVimontBrawl() : 
+Game::Game() : 
     IProject("", nullptr)
 {
     
 }
 
 //--------------------------------------------------------------------------------------
-SuperVimontBrawl::~SuperVimontBrawl()
+Game::~Game()
 {
-    VG_SAFE_RELEASE(m_player);
+ 
 }
 
 //--------------------------------------------------------------------------------------
 // vg::core::IPlugin overrides
 //--------------------------------------------------------------------------------------
 
-#define SVB_VERSION_MAJOR 0
-#define SVB_VERSION_MINOR 0
+#define GAME_VERSION_MAJOR 0
+#define GAME_VERSION_MINOR 0
 
 //--------------------------------------------------------------------------------------
-IPlugin::Version SuperVimontBrawl::getVersion() const
+IPlugin::Version Game::getVersion() const
 {
-    return { SVB_VERSION_MAJOR, SVB_VERSION_MINOR };
+    return { GAME_VERSION_MAJOR, GAME_VERSION_MINOR };
 }
 
 //--------------------------------------------------------------------------------------
-bool SuperVimontBrawl::registerClasses()
+bool Game::registerClasses()
 {
     IFactory * factory = Kernel::getFactory();
 
     // Register classes to auto-register the "Engine" module
     AutoRegisterClassInfo::registerClasses(*factory);
 
-    if (IClassDesc * desc = factory->registerClassSingletonHelper(SuperVimontBrawl, "SuperVimontBrawl", IClassDesc::Flags::None))
+    if (IClassDesc * desc = factory->registerClassSingletonHelper(Game, "Game", IClassDesc::Flags::None))
         registerProperties(*desc);
 
     return true;
 }
 
 //--------------------------------------------------------------------------------------
-bool SuperVimontBrawl::unregisterClasses()
+bool Game::unregisterClasses()
 {
     IFactory * factory = Kernel::getFactory();
     return AutoRegisterClassInfo::unregisterClasses(*factory);
@@ -65,7 +64,7 @@ bool SuperVimontBrawl::unregisterClasses()
 //--------------------------------------------------------------------------------------
 
 //--------------------------------------------------------------------------------------
-bool SuperVimontBrawl::init(vg::engine::IEngine & _engine, Singletons & _singletons)
+bool Game::init(vg::engine::IEngine & _engine, Singletons & _singletons)
 {
     m_engine = &_engine;
 
@@ -77,7 +76,7 @@ bool SuperVimontBrawl::init(vg::engine::IEngine & _engine, Singletons & _singlet
 }
 
 //--------------------------------------------------------------------------------------
-bool SuperVimontBrawl::deinit()
+bool Game::deinit()
 {
     unregisterClasses();
 
@@ -85,9 +84,7 @@ bool SuperVimontBrawl::deinit()
 }
 
 //--------------------------------------------------------------------------------------
-bool SuperVimontBrawl::update()
+bool Game::update()
 {
-    m_engine->RunOneFrame();
-
     return true;
 }

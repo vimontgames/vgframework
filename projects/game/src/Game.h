@@ -8,16 +8,14 @@ namespace vg::engine
     class IEngine;
 }
 
-class Player;
-
-class SuperVimontBrawl : public vg::IProject, public vg::core::Singleton<SuperVimontBrawl>
+class Game : public vg::IProject, public vg::core::Singleton<Game>
 {
     public:
-                                    SuperVimontBrawl        ();
-                                    ~SuperVimontBrawl       ();
+                                    Game        ();
+                                    ~Game       ();
 
         // vg::core::IObject overrides
-        const char *                getClassName            () const final { return "SuperVimontBrawl"; }
+        const char *                getClassName            () const final { return "Game"; }
 
         // vg::core::IPlugin overrides
         vg::core::IPlugin::Version  getVersion              () const final;
@@ -34,5 +32,4 @@ class SuperVimontBrawl : public vg::IProject, public vg::core::Singleton<SuperVi
 
     private:
         vg::engine::IEngine *       m_engine = nullptr;
-        Player *              m_player = nullptr;
 };
