@@ -8,7 +8,7 @@ Its renderer only uses modern graphics APIs like DirectX12 and Vulkan (I would a
 * Apart from the number of root constants, all shaders are sharing the same root signatures.
 
 
-![Screenshot](doc/img/screenshot7.png)
+![Screenshot](doc/img/toolbar.jpg)
  
  
 For the engine part, so far I integrated several "must-haves" tools like a CPU/GPU profiler, inputs, a job scheduler and Dear Imgui. I am currently implementing an Entity/Component system and reflection using ImGui.  

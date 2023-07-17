@@ -35,6 +35,13 @@ namespace vg::engine
 		virtual void							    init		        (const EngineParams & _params, core::Singletons & _singletons) = 0;
 		virtual void							    deinit		        () = 0;
 
+        // Play/Pause/Stop
+        virtual bool                                IsPlaying           () const = 0;
+        virtual bool                                IsPaused            () const = 0;
+        virtual void                                Play                () = 0;
+        virtual void                                Pause               () = 0;
+        virtual void                                Stop                () = 0;
+
         virtual bool                                loadProject         (const core::string & _path) = 0;
         virtual bool                                unloadProject       () = 0;
         virtual IProject *                          getProject          () const = 0;
@@ -47,7 +54,7 @@ namespace vg::engine
         virtual LRESULT CALLBACK                    WndProc             (HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) = 0;
         #endif                                      
                                                     
-		virtual void							    runOneFrame	        () = 0;
+		virtual void							    RunOneFrame	        () = 0;
 
 		virtual graphics::renderer::IRenderer *	    GetRenderer	        () const = 0;
         virtual engine::IResourceManager *          GetResourceManager  () const = 0;

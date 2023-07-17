@@ -48,6 +48,9 @@
     <ClCompile Include="Pass\ImGui\ImGuiPass.cpp">
       <Filter>Pass\ImGui</Filter>
     </ClCompile>
+    <ClCompile Include="ImGui\Toolbars\ImGuiToolbar.cpp">
+      <Filter>ImGui\Toolbars</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Renderer.def" />
@@ -132,9 +135,6 @@
     <ClInclude Include="Importer\TextureImporterData.hpp">
       <Filter>Importer</Filter>
     </ClInclude>
-    <ClInclude Include="ImGui\ObjectHandler\ImGuiGameObjectHandler.hpp">
-      <Filter>ImGui\ObjectHandler</Filter>
-    </ClInclude>
     <ClInclude Include="ImGui\ObjectHandler\ImGuiObjectHandler.h">
       <Filter>ImGui\ObjectHandler</Filter>
     </ClInclude>
@@ -143,9 +143,6 @@
     </ClInclude>
     <ClInclude Include="ImGui\ImGuiCustomHandler.h">
       <Filter>ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="ImGui\ObjectHandler\ImGuiTextureHandler.hpp">
-      <Filter>ImGui\ObjectHandler</Filter>
     </ClInclude>
     <ClInclude Include="ImGui\Editors\ImGuiEditor.h">
       <Filter>ImGui\Editors</Filter>
@@ -260,6 +257,21 @@
     </ClInclude>
     <ClInclude Include="Pass\PostProcess\PostProcessPass.hpp">
       <Filter>Pass\PostProcess</Filter>
+    </ClInclude>
+    <ClInclude Include="ImGui\Toolbars\ImGuiToolbar.h">
+      <Filter>ImGui\Toolbars</Filter>
+    </ClInclude>
+    <ClInclude Include="ImGui\ObjectHandler\GameObject\ImGuiGameObjectHandler.hpp">
+      <Filter>ImGui\ObjectHandler\GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="ImGui\ObjectHandler\Texture\ImGuiTextureHandler.hpp">
+      <Filter>ImGui\ObjectHandler\Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="ImGui\Toolbars\Main\ImGuiMainToolbar.h">
+      <Filter>ImGui\Toolbars\Main</Filter>
+    </ClInclude>
+    <ClInclude Include="ImGui\Toolbars\Main\ImGuiMainToolbar.hpp">
+      <Filter>ImGui\Toolbars\Main</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -379,6 +391,18 @@
     </Filter>
     <Filter Include="Pass\Forward">
       <UniqueIdentifier>{aa5e436c-5253-4537-a11a-12f4bd51cb6c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ImGui\Toolbars">
+      <UniqueIdentifier>{13ff0d3b-f7a6-4a9e-91bf-2756fcb7a1d1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ImGui\ObjectHandler\GameObject">
+      <UniqueIdentifier>{8beedc50-a6ec-4560-9773-24604c88ff85}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ImGui\ObjectHandler\Texture">
+      <UniqueIdentifier>{75971b37-e9a6-45df-8624-d4065f69d605}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ImGui\Toolbars\Main">
+      <UniqueIdentifier>{38525143-aa8c-4efb-abc6-e344c8e103fd}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

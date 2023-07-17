@@ -8,6 +8,6 @@
         <Property type="Bool" name="m_normalMaps" value="true"/>
         <Property type="Bool" name="m_albedoMaps" value="true"/>
         <Property type="EnumU32" name="m_debugDisplayMode" value="Default"/>
-        <Property type="Float4" name="m_backgroundColor" x="0.12741315" y="0.12741315" z="0.12741315" w="0"/>
+        <Property type="Float4" name="m_backgroundColor" x="0.1254902" y="0.1254902" z="0.1254902" w="1"/>
     </Object>
 </Root>

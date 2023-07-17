@@ -20,7 +20,7 @@ namespace vg
     //--------------------------------------------------------------------------------------
     bool Application::update()
     {
-        m_engine.runOneFrame();
+        m_engine.RunOneFrame();
 
         return true;
     }

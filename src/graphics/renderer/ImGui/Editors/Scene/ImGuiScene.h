@@ -16,7 +16,7 @@ namespace vg::graphics::renderer
             LoadScene,
         };
 
-        ImguiScene(const string & _name, Flags _flags) :
+        ImguiScene(const core::string & _name, Flags _flags) :
             ImguiEditor(_name, _flags)
         {
         }
@@ -24,10 +24,10 @@ namespace vg::graphics::renderer
         virtual void                    display             () final;
 
     private:
-        void                            displayGameObject   (IGameObject * root);
+        void                            displayGameObject   (core::IGameObject * root);
 
     private:
         ImguiSceneMenu                  m_sceneMenu;
-        ImguiGameObjectSceneEditorMenu    m_gameObjectMenu;
+        ImguiGameObjectSceneEditorMenu  m_gameObjectMenu;
     };
 }

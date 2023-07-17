@@ -1,6 +1,7 @@
 #include "ImguiResource.h"
 #include "imgui/imgui.h"
 #include "engine/IResourceManager.h"
+#include "graphics/renderer/Options/DisplayOptions.h"
 
 namespace vg::graphics::renderer
 {

@@ -54,7 +54,8 @@ namespace vg::graphics::renderer
         static core::IObject *                  getSelectedObject   ();
         static void                             setSelectedObject   (core::IObject * _object);
 
-        static const vg::engine::IEngine *      getEngine           ();
+        const vg::engine::IEngine *             getEngine           () const;
+        vg::engine::IEngine *                   getEngine           ();
 
         static void                             displayArrayObject  (core::IObject * _object, core::uint _index, const char * _name);
         static bool                             displayResource     (core::IResource * _resource);

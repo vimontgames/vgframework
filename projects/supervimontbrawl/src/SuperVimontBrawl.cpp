@@ -87,7 +87,7 @@ bool SuperVimontBrawl::deinit()
 //--------------------------------------------------------------------------------------
 bool SuperVimontBrawl::update()
 {
-    m_engine->runOneFrame();
+    m_engine->RunOneFrame();
 
     return true;
 }

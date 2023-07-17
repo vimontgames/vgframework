@@ -25,17 +25,19 @@ using namespace vg::graphics::renderer;
 
 using namespace ImGui;
 
-#include "graphics/renderer/ImGui/Editors/Scene/ImguiScene.hpp"
-#include "graphics/renderer/ImGui/Editors/Resource/ImguiResource.hpp"
-#include "graphics/renderer/ImGui/Editors/Platform/ImguiPlatform.hpp"
-#include "graphics/renderer/ImGui/Editors/DisplayOptions/ImguiDisplayOptions.hpp"
-#include "graphics/renderer/ImGui/Editors/Shader/ImguiShader.hpp"
-#include "graphics/renderer/ImGui/Editors/FPS/ImguiFPS.hpp"
-#include "graphics/renderer/ImGui/Editors/Inspector/ImguiInspector.hpp"
-#include "graphics/renderer/ImGui/Editors/About/ImguiAbout.hpp"
-#include "graphics/renderer/ImGui/Editors/View/ImGuiView.hpp"
-#include "graphics/renderer/ImGui/Editors/View/EditorView/ImGuiEditorView.hpp"
-#include "graphics/renderer/ImGui/Editors/View/GAmeView/ImGuiGameView.hpp"
+#include "graphics/renderer/ImGui/Editors/Scene/ImguiScene.h"
+#include "graphics/renderer/ImGui/Editors/Resource/ImguiResource.h"
+#include "graphics/renderer/ImGui/Editors/Platform/ImguiPlatform.h"
+#include "graphics/renderer/ImGui/Editors/DisplayOptions/ImguiDisplayOptions.h"
+#include "graphics/renderer/ImGui/Editors/Shader/ImguiShader.h"
+#include "graphics/renderer/ImGui/Editors/FPS/ImguiFPS.h"
+#include "graphics/renderer/ImGui/Editors/Inspector/ImguiInspector.h"
+#include "graphics/renderer/ImGui/Editors/About/ImguiAbout.h"
+#include "graphics/renderer/ImGui/Editors/View/ImGuiView.h"
+#include "graphics/renderer/ImGui/Editors/View/EditorView/ImGuiEditorView.h"
+#include "graphics/renderer/ImGui/Editors/View/GAmeView/ImGuiGameView.h"
+
+#include "graphics/renderer/ImGui/Toolbars/Main/ImGuiMainToolbar.h"
 
 namespace vg::graphics::renderer
 {
@@ -45,25 +47,32 @@ namespace vg::graphics::renderer
     ImguiPass::ImguiPass() :
         driver::UserPass("ImGuiPass")
     {
-        // Add editor windows
-        m_editorWindows.push_back(new ImguiPlatform(IconWithText(Editor::Icon::Platform, "Platform"), ImguiEditor::Flags::StartVisible | ImguiEditor::AddMenuEntry));
-        m_editorWindows.push_back(new ImguiShader(IconWithText(Editor::Icon::Shaders, "Shaders"), ImguiEditor::Flags::StartVisible | ImguiEditor::AddMenuEntry));
-        m_editorWindows.push_back(new ImguiFPS(IconWithText(Editor::Icon::FPS, "FPS"), ImguiEditor::Flags::StartVisible | ImguiEditor::AddMenuEntry));
-        m_editorWindows.push_back(new ImguiResource(IconWithText(Editor::Icon::Resource, "Resources"), ImguiEditor::Flags::StartVisible | ImguiEditor::AddMenuEntry));
-        m_editorWindows.push_back(new ImguiScene(IconWithText(Editor::Icon::Scene,"Scenes"), ImguiEditor::Flags::StartVisible | ImguiEditor::AddMenuEntry));
-        m_editorWindows.push_back(new ImguiInspector(IconWithText(Editor::Icon::Inspector, "Inspector"), ImguiEditor::Flags::StartVisible | ImguiEditor::AddMenuEntry));
-        m_editorWindows.push_back(new ImguiDisplayOptions(IconWithText(Editor::Icon::Display, "Display"), ImguiEditor::Flags::StartVisible));
-        m_editorWindows.push_back(new ImguiAbout("About", ImguiEditor::Flags::None));
-        m_editorWindows.push_back(new ImGuiEditorView(IconWithText(Editor::Icon::EditorView, "Editor View"), ImguiEditor::Flags::StartVisible | ImguiEditor::AddMenuEntry));
-        m_editorWindows.push_back(new ImGuiGameView(IconWithText(Editor::Icon::GameView, "Game View"), ImguiEditor::Flags::StartVisible | ImguiEditor::AddMenuEntry));
+        // Add ImGui editors
+        m_imGuiEditors.push_back(new ImguiPlatform(IconWithText(Editor::Icon::Platform, "Platform"), ImguiEditor::StartVisible | ImguiEditor::AddMenuEntry));
+        m_imGuiEditors.push_back(new ImguiShader(IconWithText(Editor::Icon::Shaders, "Shaders"), ImguiEditor::StartVisible | ImguiEditor::AddMenuEntry));
+        m_imGuiEditors.push_back(new ImguiFPS(IconWithText(Editor::Icon::FPS, "FPS"), ImguiEditor::StartVisible | ImguiEditor::AddMenuEntry));
+        m_imGuiEditors.push_back(new ImguiResource(IconWithText(Editor::Icon::Resource, "Resources"), ImguiEditor::StartVisible | ImguiEditor::AddMenuEntry));
+        m_imGuiEditors.push_back(new ImguiScene(IconWithText(Editor::Icon::Scene,"Scenes"), ImguiEditor::StartVisible | ImguiEditor::AddMenuEntry));
+        m_imGuiEditors.push_back(new ImguiInspector(IconWithText(Editor::Icon::Inspector, "Inspector"), ImguiEditor::StartVisible | ImguiEditor::AddMenuEntry));
+        m_imGuiEditors.push_back(new ImguiDisplayOptions(IconWithText(Editor::Icon::Display, "Display"), ImguiEditor::StartVisible));
+        m_imGuiEditors.push_back(new ImguiAbout("About", ImguiEditor::None));
+        m_imGuiEditors.push_back(new ImGuiEditorView(IconWithText(Editor::Icon::EditorView, "Editor View"), ImguiEditor::StartVisible | ImguiEditor::AddMenuEntry));
+        m_imGuiEditors.push_back(new ImGuiGameView(IconWithText(Editor::Icon::GameView, "Game View"), ImguiEditor::StartVisible | ImguiEditor::AddMenuEntry));
+
+        // Add ImGui toolbars
+        m_imGuiToolbars.push_back(new ImGuiMainToolbar("Main Toolbar", ImguiEditor::StartVisible | ImguiEditor::AddMenuEntry));
     }
 
     //--------------------------------------------------------------------------------------
     ImguiPass::~ImguiPass()
     {
-        for (uint i = 0; i < m_editorWindows.count(); ++i)
-            VG_SAFE_DELETE(m_editorWindows[i]);
-        m_editorWindows.clear();
+        for (uint i = 0; i < m_imGuiEditors.count(); ++i)
+            VG_SAFE_DELETE(m_imGuiEditors[i]);
+        m_imGuiEditors.clear();
+
+        for (uint i = 0; i < m_imGuiToolbars.count(); ++i)
+            VG_SAFE_DELETE(m_imGuiToolbars[i]);
+        m_imGuiToolbars.clear();
     }
     
     //--------------------------------------------------------------------------------------
@@ -91,7 +100,7 @@ namespace vg::graphics::renderer
         window_flags |= ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus;
         window_flags |= ImGuiWindowFlags_NoBackground;
 
-        ImGuiDockNodeFlags dockspace_flags = ImGuiDockNodeFlags_None | ImGuiDockNodeFlags_PassthruCentralNode /* | ImGuiDockNodeFlags_AutoHideTabBar*/;
+        ImGuiDockNodeFlags dockspace_flags = ImGuiDockNodeFlags_None | ImGuiDockNodeFlags_PassthruCentralNode/*  | ImGuiDockNodeFlags_AutoHideTabBar*/;
 
         bool showUI = true;
 
@@ -104,25 +113,31 @@ namespace vg::graphics::renderer
 
             if (ImGui::BeginMenuBar())
             {
-                if (ImGui::BeginMenu("Plugins"))
+                if (ImGui::BeginMenu("File"))
                 {
-                    if (ImGui::MenuItem("Engine"))
-                        m_isEngineWindowVisible = true;
-
-                    if (ImGui::MenuItem("Renderer"))
-                        m_isRendererWindowVisible = true;
 
                     ImGui::EndMenu();
                 }
 
-                if (ImGui::BeginMenu("Windows"))
+                //if (ImGui::BeginMenu("Plugins"))
+                //{
+                //    if (ImGui::MenuItem("Engine"))
+                //        m_isEngineWindowVisible = true;
+                //
+                //    if (ImGui::MenuItem("Renderer"))
+                //        m_isRendererWindowVisible = true;
+                //
+                //    ImGui::EndMenu();
+                //}
+
+                if (ImGui::BeginMenu("Window"))
                 {
-                    for (uint i = 0; i < m_editorWindows.count(); ++i)
+                    for (uint i = 0; i < m_imGuiEditors.count(); ++i)
                     {
-                        if (asBool(m_editorWindows[i]->getFlags() & ImguiEditor::Flags::AddMenuEntry))
+                        if (asBool(m_imGuiEditors[i]->getFlags() & ImguiEditor::Flags::AddMenuEntry))
                         {
-                            if (ImGui::MenuItem(m_editorWindows[i]->getName().c_str()))
-                                m_editorWindows[i]->setVisible(true);
+                            if (ImGui::MenuItem(m_imGuiEditors[i]->getName().c_str()))
+                                m_imGuiEditors[i]->setVisible(true);
                         }
                     }
 
@@ -155,15 +170,27 @@ namespace vg::graphics::renderer
 
                 ImGui::EndMenuBar();
             }
+
+            ImGuiAxis axis = ImGuiAxis_X;
+
         }
         ImGui::End();
 
-        for (uint i = 0; i < m_editorWindows.count(); ++i)
+        for (uint i = 0; i < m_imGuiEditors.size(); ++i)
         {
-            if (m_editorWindows[i]->isVisible())
+            if (m_imGuiEditors[i]->isVisible())
             {
-                m_editorWindows[i]->update(_dt);
-                m_editorWindows[i]->display();
+                m_imGuiEditors[i]->update(_dt);
+                m_imGuiEditors[i]->display();
+            }
+        }
+
+        for (uint i = 0; i < m_imGuiToolbars.size(); ++i)
+        {
+            if (m_imGuiToolbars[i]->isVisible())
+            {
+                m_imGuiToolbars[i]->update(_dt);
+                m_imGuiToolbars[i]->display();
             }
         }
 
@@ -181,10 +208,10 @@ namespace vg::graphics::renderer
     //--------------------------------------------------------------------------------------
     template <class T> T * ImguiPass::getEditorWindow()
     {
-        for (uint i = 0; i < m_editorWindows.count(); ++i)
+        for (uint i = 0; i < m_imGuiEditors.count(); ++i)
         {
-            if (dynamic_cast<T*>(m_editorWindows[i]) != nullptr)
-                return (T*)(m_editorWindows[i]);
+            if (dynamic_cast<T*>(m_imGuiEditors[i]) != nullptr)
+                return (T*)(m_imGuiEditors[i]);
         }
         return nullptr;
     }

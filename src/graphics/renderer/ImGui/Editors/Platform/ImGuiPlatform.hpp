@@ -1,4 +1,5 @@
 #include "ImguiPlatform.h"
+#include "core/Plugin/Plugin.h"
 
 namespace vg::graphics::renderer
 {

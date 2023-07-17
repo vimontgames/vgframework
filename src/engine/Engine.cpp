@@ -24,6 +24,10 @@
 
 #include "application/IProject.h"
 
+#if !VG_ENABLE_INLINE
+#include "Engine.inl"
+#endif
+
 using namespace vg::core;
 using namespace vg::engine;
 
@@ -352,7 +356,7 @@ namespace vg::engine
     }
 
 	//--------------------------------------------------------------------------------------
-	void Engine::runOneFrame()
+	void Engine::RunOneFrame()
 	{
         VG_PROFILE_FRAME("Main");
         VG_PROFILE_CPU("Engine");
@@ -400,5 +404,35 @@ namespace vg::engine
     graphics::driver::IView * Engine::getMainView() const
     {
         return m_mainView;
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool Engine::IsPlaying() const
+    {
+        return isPlaying();
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool Engine::IsPaused() const
+    {
+        return isPaused();
+    }
+
+    //--------------------------------------------------------------------------------------
+    void Engine::Play()
+    {
+        play();
+    }
+
+    //--------------------------------------------------------------------------------------
+    void Engine::Pause()
+    {
+        pause();
+    }
+
+    //--------------------------------------------------------------------------------------
+    void Engine::Stop()
+    {
+        stop();
     }
 }

@@ -10,6 +10,7 @@ namespace vg::engine
 namespace vg::graphics::renderer
 {
     class ImguiEditor;
+    class ImGuiToolbar;
 
     //--------------------------------------------------------------------------------------
     class ImguiPass : public driver::UserPass
@@ -37,6 +38,7 @@ namespace vg::graphics::renderer
         bool m_isRendererWindowVisible = false;
 
         // Editor windows
-        core::vector<ImguiEditor *> m_editorWindows;
+        core::vector<ImguiEditor *> m_imGuiEditors;
+        core::vector<ImGuiToolbar *> m_imGuiToolbars;
     };
 }

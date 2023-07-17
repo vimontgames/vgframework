@@ -24,6 +24,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Engine.def" />
+    <None Include="Engine.inl" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Component\Camera\CameraComponent.h" />

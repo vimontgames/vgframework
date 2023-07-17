@@ -15,9 +15,28 @@
 #include "graphics/renderer/ImGui/ObjectHandler/ImGuiObjectHandler.h"
 #include "graphics/renderer/ImGui/PropertyHandler/ImGuiPropertyHandler.h"
 #include "graphics/renderer/ImGui/Imgui_Consts.h"
+
 #include "ImGui-Addons/FileBrowser/ImGuiFileBrowser.cpp"
 
 using namespace vg::core;
+using namespace vg::graphics::driver;
+using namespace ImGui;
+
+#include "engine/IEngine.h"
+#include "graphics/driver/Device/Device.h"
+#include "graphics/renderer/ImGui/imguiExtensions.h"
+
+#include "graphics/renderer/ImGui/Editors/Scene/ImguiScene.hpp"
+#include "graphics/renderer/ImGui/Editors/Resource/ImguiResource.hpp"
+#include "graphics/renderer/ImGui/Editors/Platform/ImguiPlatform.hpp"
+#include "graphics/renderer/ImGui/Editors/DisplayOptions/ImguiDisplayOptions.hpp"
+#include "graphics/renderer/ImGui/Editors/Shader/ImguiShader.hpp"
+#include "graphics/renderer/ImGui/Editors/FPS/ImguiFPS.hpp"
+#include "graphics/renderer/ImGui/Editors/Inspector/ImguiInspector.hpp"
+#include "graphics/renderer/ImGui/Editors/About/ImguiAbout.hpp"
+#include "graphics/renderer/ImGui/Editors/View/ImGuiView.hpp"
+#include "graphics/renderer/ImGui/Editors/View/EditorView/ImGuiEditorView.hpp"
+#include "graphics/renderer/ImGui/Editors/View/GAmeView/ImGuiGameView.hpp"
 
 namespace vg::graphics::renderer
 {
@@ -41,10 +60,17 @@ namespace vg::graphics::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    const vg::engine::IEngine * ImguiEditor::getEngine()
+    const vg::engine::IEngine * ImguiEditor::getEngine() const
     {
         const auto * factory = Kernel::getFactory();
         return (const vg::engine::IEngine *) factory->getSingleton("Engine");
+    }
+
+    //--------------------------------------------------------------------------------------
+    vg::engine::IEngine * ImguiEditor::getEngine()
+    {
+        const auto * factory = Kernel::getFactory();
+        return (vg::engine::IEngine *)factory->getSingleton("Engine");
     }
 
     //--------------------------------------------------------------------------------------

@@ -19,5 +19,5 @@ namespace vg::graphics::renderer
     }
 }
 
-#include "ImguiGameObjectHandler.hpp"
-#include "ImGuiTextureHandler.hpp"
+#include "GameObject/ImguiGameObjectHandler.hpp"
+#include "Texture/ImGuiTextureHandler.hpp"

@@ -1,5 +1,6 @@
 #include "ImguiView.h"
 #include "graphics/renderer/View/Forward/ForwardView.h"
+#include "graphics/driver/FrameGraph/FrameGraph.h"
 
 namespace vg::graphics::renderer
 {
@@ -27,6 +28,32 @@ namespace vg::graphics::renderer
     void ImGuiView::update(double _dt)
     {
  
+    }
+
+    const float toolbarSize = 50;
+
+    void ToolbarUI()
+    {
+        ImGuiViewport * viewport = ImGui::GetMainViewport();
+        ImGui::SetNextWindowPos(ImVec2(viewport->Pos.x, viewport->Pos.y + 16));
+        ImGui::SetNextWindowSize(ImVec2(viewport->Size.x, toolbarSize));
+        ImGui::SetNextWindowViewport(viewport->ID);
+
+        ImGuiWindowFlags window_flags = 0
+            | ImGuiWindowFlags_NoDocking
+            | ImGuiWindowFlags_NoTitleBar
+            | ImGuiWindowFlags_NoResize
+            | ImGuiWindowFlags_NoMove
+            | ImGuiWindowFlags_NoScrollbar
+            | ImGuiWindowFlags_NoSavedSettings
+            ;
+        ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0);
+        ImGui::Begin("TOOLBAR", NULL, window_flags);
+        ImGui::PopStyleVar();
+
+        ImGui::Button("Toolbar goes here", ImVec2(0, 37));
+
+        ImGui::End();
     }
 
     //--------------------------------------------------------------------------------------
@@ -105,17 +132,7 @@ namespace vg::graphics::renderer
         ImGui::PopStyleColor();
         ImGui::PopStyleVar();
         ImGui::End();
-    }
 
-    ////--------------------------------------------------------------------------------------
-    //graphics::renderer::IView * createView()
-    //{
-    //
-    //}
-    //
-    ////--------------------------------------------------------------------------------------
-    //graphics::driver::ITexture * createTarget()
-    //{
-    //
-    //}
+
+    }
 }

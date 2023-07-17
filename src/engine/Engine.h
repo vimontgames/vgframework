@@ -31,6 +31,12 @@ namespace vg::engine
 										    Engine		        (const core::string & _name, core::IObject * _parent);
 										    ~Engine		        ();
 
+        bool                                IsPlaying           () const final override;
+        bool                                IsPaused            () const final override;
+        void                                Play                () final override;
+        void                                Pause               () final override;
+        void                                Stop                () final override;
+
         const char *                        getClassName        () const final { return "Engine"; }
         bool                                registerClasses     () override;
         bool                                unregisterClasses   ();
@@ -58,7 +64,7 @@ namespace vg::engine
 
         core::IUniverse *                   getCurrentUniverse  () const final;
 
-		void							    runOneFrame	        () final;
+		void							    RunOneFrame	        () final;
 
         core::uint2                         getScreenSize       () const final;
         graphics::driver::IView *           getMainView         () const;
@@ -70,11 +76,20 @@ namespace vg::engine
         void                                createEditorScene   ();
         void                                destroyEditorView   ();
 
+        VG_INLINE bool                      isPlaying           () const;
+        VG_INLINE bool                      isPaused            () const;
+        VG_INLINE void                      play                ();
+        VG_INLINE void                      pause               ();
+        VG_INLINE void                      stop                ();
+
     protected:
         void                                updateDt            ();
 
 	private:
         core::string                        m_projectPath;
+
+        bool                                m_isPlaying         = false;
+        bool                                m_isPaused          = false;
 
         IProject *                          m_project           = nullptr;
         core::Universe *                    m_universe          = nullptr;
@@ -85,3 +100,7 @@ namespace vg::engine
         double                              m_dt                = 0.0f;
 	};
 }
+
+#if VG_ENABLE_INLINE
+#include "Engine.inl"
+#endif

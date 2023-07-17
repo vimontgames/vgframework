@@ -23,6 +23,9 @@ namespace vg::graphics::renderer
             inline static const char * Resource     = ICON_FA_DATABASE;
             inline static const char * EditorView   = ICON_FA_PEN_TO_SQUARE;
             inline static const char * GameView     = ICON_FA_GAMEPAD;
+            inline static const char * Play         = ICON_FA_PLAY;
+            inline static const char * Pause        = ICON_FA_PAUSE;
+            inline static const char * Stop         = ICON_FA_STOP;
         }
     }
 }
