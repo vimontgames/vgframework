@@ -54,8 +54,8 @@ namespace vg::graphics::renderer
         m_editorWindows.push_back(new ImguiInspector(IconWithText(Editor::Icon::Inspector, "Inspector"), ImguiEditor::Flags::StartVisible | ImguiEditor::AddMenuEntry));
         m_editorWindows.push_back(new ImguiDisplayOptions(IconWithText(Editor::Icon::Display, "Display"), ImguiEditor::Flags::StartVisible));
         m_editorWindows.push_back(new ImguiAbout("About", ImguiEditor::Flags::None));
-        m_editorWindows.push_back(new ImGuiEditorView("Editor View", ImguiEditor::Flags::StartVisible | ImguiEditor::AddMenuEntry));
-        m_editorWindows.push_back(new ImGuiGameView("Game View", ImguiEditor::Flags::StartVisible));
+        m_editorWindows.push_back(new ImGuiEditorView(IconWithText(Editor::Icon::EditorView, "Editor View"), ImguiEditor::Flags::StartVisible | ImguiEditor::AddMenuEntry));
+        m_editorWindows.push_back(new ImGuiGameView(IconWithText(Editor::Icon::GameView, "Game View"), ImguiEditor::Flags::StartVisible | ImguiEditor::AddMenuEntry));
     }
 
     //--------------------------------------------------------------------------------------
