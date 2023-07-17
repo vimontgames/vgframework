@@ -14,8 +14,9 @@ namespace vg::graphics::driver
     }
 
 	//--------------------------------------------------------------------------------------
-	UserPass::UserPass()
+	UserPass::UserPass(const core::string & _name)
 	{
+        setName(_name);
 		reset();
 	}
 

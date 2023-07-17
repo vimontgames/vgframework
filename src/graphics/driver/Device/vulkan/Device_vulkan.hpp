@@ -848,6 +848,7 @@ namespace vg::graphics::driver::vulkan
                                          vulkan12Features.shaderUniformTexelBufferArrayDynamicIndexing = VK_TRUE;
                                          vulkan12Features.runtimeDescriptorArray = VK_TRUE;
                                          vulkan12Features.shaderStorageImageArrayNonUniformIndexing = VK_TRUE;
+										 vulkan12Features.descriptorBindingUpdateUnusedWhilePending = VK_TRUE;
                                          vulkan12Features.pNext = nullptr;
 
         VkPhysicalDeviceFeatures enabledFeatures = {};

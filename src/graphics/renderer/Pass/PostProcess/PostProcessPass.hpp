@@ -6,7 +6,8 @@ namespace vg::graphics::renderer
     //--------------------------------------------------------------------------------------
     // Setup executed once, when pass is created
     //--------------------------------------------------------------------------------------
-    PostProcessPass::PostProcessPass()
+    PostProcessPass::PostProcessPass() :
+        driver::UserPass("PostProcessPass")
     {
         auto * device = Device::get();
 

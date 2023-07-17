@@ -222,7 +222,7 @@ namespace vg::graphics::renderer
         imguiDescriptorDesc.maxSets = max_frame_latency * max_imguitex_displayed_per_frame;
         imguiDescriptorDesc.poolSizeCount = (uint)countof(imguiDescriptorPoolSizes);
         imguiDescriptorDesc.pPoolSizes = imguiDescriptorPoolSizes;
-        imguiDescriptorDesc.flags = VK_DESCRIPTOR_POOL_CREATE_FREE_DESCRIPTOR_SET_BIT;
+        imguiDescriptorDesc.flags = VK_DESCRIPTOR_POOL_CREATE_UPDATE_AFTER_BIND_BIT | VK_DESCRIPTOR_POOL_CREATE_FREE_DESCRIPTOR_SET_BIT;
 
         VG_ASSERT_VULKAN(vkCreateDescriptorPool(device->getVulkanDevice(), &imguiDescriptorDesc, nullptr, &m_vkImguiDescriptorPool));
 

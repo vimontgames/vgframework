@@ -8,7 +8,8 @@ namespace vg::graphics::renderer
     //--------------------------------------------------------------------------------------
     // Setup executed once, when pass is created
     //--------------------------------------------------------------------------------------
-    BackgroundPass::BackgroundPass()
+    BackgroundPass::BackgroundPass() :
+        driver::UserPass("BackgroundPass")
     {
         auto * device = Device::get();
 

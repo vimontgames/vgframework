@@ -457,10 +457,12 @@ namespace vg::graphics::driver
                             begin = ResourceState::Undefined;
                         else
                         {
-                            flags |= SubPassKey::AttachmentFlags::MakeWritable;
+                            #ifdef VG_DX12
+                            flags |= SubPassKey::AttachmentFlags::MakeWritable; // dx12-only, used to transition to 'RenderTarget' state before 1st use
+                            #endif
 
                             #ifdef VG_VULKAN
-                            begin = ResourceState::Undefined;
+                            begin = ResourceState::Undefined; //Why not 'RenderTarget'? Because Vulkan.
                             #elif defined(VG_DX12)
                             begin = ResourceState::RenderTarget;
                             #else
@@ -739,7 +741,6 @@ namespace vg::graphics::driver
                 const UserPass * userPass = subPass->getUserPassesInfos()[0].m_userPass;
 
                 auto & renderTargets = userPass->getRenderTargets();
-
                 auto & texturesRead = userPass->getTexturesRead();
 
                 for (uint i = 0; i < texturesRead.size(); ++i)

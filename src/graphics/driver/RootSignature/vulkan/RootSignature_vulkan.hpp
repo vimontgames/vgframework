@@ -113,7 +113,7 @@ namespace vg::graphics::driver::vulkan
             vector<VkDescriptorBindingFlags> flagsArray;
             for (uint i = 0; i < vkDescriptorSetLayoutBindings.size(); ++i)
             {
-                VkDescriptorBindingFlags flags = VK_DESCRIPTOR_BINDING_PARTIALLY_BOUND_BIT;
+                VkDescriptorBindingFlags flags = VK_DESCRIPTOR_BINDING_PARTIALLY_BOUND_BIT | VK_DESCRIPTOR_BINDING_UPDATE_UNUSED_WHILE_PENDING_BIT;// | VK_DESCRIPTOR_BINDING_UPDATE_AFTER_BIND_BIT_EXT;
                 flagsArray.push_back(flags);
             }
 
@@ -143,9 +143,9 @@ namespace vg::graphics::driver::vulkan
             vkDescriptorSetLayoutDesc.bindingCount = 1;
             vkDescriptorSetLayoutDesc.pBindings = &vkLayoutBinding;
 
-            VkDescriptorSetLayout vkDescriptorSetLayout;
-            VG_ASSERT_VULKAN(vkCreateDescriptorSetLayout(vkDevice, &vkDescriptorSetLayoutDesc, nullptr, &vkDescriptorSetLayout));
-            m_vkDescriptorSetLayouts.push_back(vkDescriptorSetLayout);
+            VkDescriptorSetLayout vkSamplerDescriptorSetLayout;
+            VG_ASSERT_VULKAN(vkCreateDescriptorSetLayout(vkDevice, &vkDescriptorSetLayoutDesc, nullptr, &vkSamplerDescriptorSetLayout));
+            m_vkDescriptorSetLayouts.push_back(vkSamplerDescriptorSetLayout);
         }
 
         VkPipelineLayoutCreateInfo vkDesc = {};

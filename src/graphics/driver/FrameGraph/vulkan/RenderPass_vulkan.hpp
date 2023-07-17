@@ -53,7 +53,7 @@ namespace vg::graphics::driver::vulkan
                 break;
 
             case ResourceState::ShaderResource:
-                _att->initialLayout = VK_IMAGE_LAYOUT_DEPTH_READ_ONLY_OPTIMAL;
+                _att->initialLayout = isDepthStencil ? VK_IMAGE_LAYOUT_DEPTH_READ_ONLY_OPTIMAL : VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
                 break;
         }
 
@@ -68,7 +68,7 @@ namespace vg::graphics::driver::vulkan
                 break;
 
             case ResourceState::ShaderResource:
-                _att->finalLayout = VK_IMAGE_LAYOUT_DEPTH_READ_ONLY_OPTIMAL;
+                _att->finalLayout = isDepthStencil ? VK_IMAGE_LAYOUT_DEPTH_READ_ONLY_OPTIMAL : VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;// ; // TODO: Read-only depthstencil using VK_IMAGE_LAYOUT_DEPTH_READ_ONLY_OPTIMAL;
                 break;
         }
 

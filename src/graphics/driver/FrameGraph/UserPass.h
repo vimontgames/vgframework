@@ -18,7 +18,7 @@ namespace vg::graphics::driver
 	class UserPass : public core::Object
 	{
 	public:
-						UserPass	();
+						UserPass	(const core::string & _name);
 		virtual			~UserPass	();
 
 		void			reset		();

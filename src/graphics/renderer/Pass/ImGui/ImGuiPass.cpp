@@ -42,7 +42,8 @@ namespace vg::graphics::renderer
     //--------------------------------------------------------------------------------------
     // In case several windows are docked together, then the last declared will be the default selected
     //--------------------------------------------------------------------------------------
-    ImguiPass::ImguiPass()
+    ImguiPass::ImguiPass() :
+        driver::UserPass("ImGuiPass")
     {
         // Add editor windows
         m_editorWindows.push_back(new ImguiPlatform(IconWithText(Editor::Icon::Platform, "Platform"), ImguiEditor::Flags::StartVisible | ImguiEditor::AddMenuEntry));
@@ -54,7 +55,7 @@ namespace vg::graphics::renderer
         m_editorWindows.push_back(new ImguiDisplayOptions(IconWithText(Editor::Icon::Display, "Display"), ImguiEditor::Flags::StartVisible));
         m_editorWindows.push_back(new ImguiAbout("About", ImguiEditor::Flags::None));
         m_editorWindows.push_back(new ImGuiEditorView("Editor View", ImguiEditor::Flags::StartVisible | ImguiEditor::AddMenuEntry));
-        m_editorWindows.push_back(new ImGuiEditorView("Game View", ImguiEditor::Flags::StartVisible));
+        m_editorWindows.push_back(new ImGuiGameView("Game View", ImguiEditor::Flags::StartVisible));
     }
 
     //--------------------------------------------------------------------------------------
@@ -68,6 +69,13 @@ namespace vg::graphics::renderer
     //--------------------------------------------------------------------------------------
     void ImguiPass::setup(const driver::RenderContext & _renderContext, double _dt)
     {
+        static bool test = false;
+        if (test)
+        {
+            readRenderTarget("Dest-1");
+            readRenderTarget("Dest-2");
+        }
+
         writeRenderTarget(0, "Backbuffer");
 
         ImGuiViewport * viewport = ImGui::GetMainViewport();
@@ -219,6 +227,7 @@ namespace vg::graphics::renderer
         }
         ImGui::End();
     }
+
     
     //--------------------------------------------------------------------------------------
     void ImguiPass::draw(const RenderContext & _renderContext, driver::CommandList * _cmdList) const

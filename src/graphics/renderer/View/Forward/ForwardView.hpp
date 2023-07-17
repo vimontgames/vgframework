@@ -14,7 +14,7 @@ namespace vg::graphics::renderer
         View(_params)
     {
         m_backgroundPass = new BackgroundPass();
-        m_testPass3D = new ForwardPass();
+        m_forwardPass = new ForwardPass();
         m_postProcessPass = new PostProcessPass();
     }
 
@@ -22,7 +22,7 @@ namespace vg::graphics::renderer
     ForwardView::~ForwardView()
     {
         VG_SAFE_RELEASE(m_backgroundPass);
-        VG_SAFE_RELEASE(m_testPass3D);
+        VG_SAFE_RELEASE(m_forwardPass);
         VG_SAFE_RELEASE(m_postProcessPass);
     }
 
@@ -38,7 +38,7 @@ namespace vg::graphics::renderer
             _frameGraph.importRenderTarget(target->getName(), target, float4(0, 0, 0, 0), FrameGraph::Resource::InitState::Clear);
 
         _frameGraph.addUserPass(rc, m_backgroundPass, "BackgroundPass");
-        _frameGraph.addUserPass(rc, m_testPass3D, "TestPass3D");
+        _frameGraph.addUserPass(rc, m_forwardPass, "ForwardPass");
         _frameGraph.addUserPass(rc, m_postProcessPass, "PostProcessPass");
     }
 }

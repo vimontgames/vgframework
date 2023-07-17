@@ -19,7 +19,8 @@ namespace vg::graphics::renderer
     //--------------------------------------------------------------------------------------
     // Setup executed once, when pass is created
     //--------------------------------------------------------------------------------------
-    ForwardPass::ForwardPass()
+    ForwardPass::ForwardPass() :
+        driver::UserPass("ForwardPass")
     {
         auto * device = Device::get();
         auto * renderer = Renderer::get();
