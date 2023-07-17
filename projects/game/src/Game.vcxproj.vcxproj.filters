@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="Precomp.cpp" />
+    <ClCompile Include="Components\PlayerComponent.cpp">
+      <Filter>Component\Player</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Precomp.h" />
+    <ClInclude Include="Components\PlayerComponent.h">
+      <Filter>Component\Player</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Component">
+      <UniqueIdentifier>{e85099fb-866e-4f52-b544-b1476e1ba671}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Component\Player">
+      <UniqueIdentifier>{9b6c7341-66f8-4318-8df6-cf90010fcdf2}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

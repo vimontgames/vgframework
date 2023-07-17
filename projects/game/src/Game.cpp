@@ -1,10 +1,15 @@
 #include "Precomp.h"
 #include "Game.h"
-#include "engine/IEngine.h"
 #include "core/Kernel.h"
 #include "core/Object/AutoRegisterClass.h"
+#include "engine/IEngine.h"
+
+#include "Components/PlayerComponent.h"
 
 using namespace vg::core;
+
+// Avoid stripping code for classes from static lib
+static PlayerComponent playerComponent("", nullptr);
 
 //--------------------------------------------------------------------------------------
 Game * CreateNew()
@@ -13,16 +18,16 @@ Game * CreateNew()
 }
 
 //--------------------------------------------------------------------------------------
-Game::Game() : 
+Game::Game() :
     IProject("", nullptr)
 {
-    
+
 }
 
 //--------------------------------------------------------------------------------------
 Game::~Game()
 {
- 
+
 }
 
 //--------------------------------------------------------------------------------------

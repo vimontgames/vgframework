@@ -11,7 +11,7 @@ namespace vg::core
     #define propertyOffset(typeName, className, propertyName)													            (typeName*)&((className*)(nullptr))->propertyName
     
     #define registerClassHelper_NoCTor(className, displayName, flags)											            registerClass(#className, displayName, flags, sizeof(className), [](const vg::core::string & _name, vg::core::IObject * _parent) { return nullptr; })
-    #define registerClassHelper(className, displayName, flags)                                                              registerClass(#className, displayName, flags, sizeof(className), [](const vg::core::string & _name, vg::core::IObject * _parent) { return new className(_name, _parent); })
+    #define registerClassHelper(className, displayName, flags)                                                              registerClass(#className, displayName, flags, sizeof(className), [](const vg::core::string & _name, vg::core::IObject * _parent) { auto newObj = new className(_name, _parent); VG_ASSERT(nullptr != dynamic_cast<vg::core::IObject*>(newObj)); return dynamic_cast<vg::core::IObject*>(newObj); }) // 'dynamic_cast' should not be necessary but the cast is present to workaround weird Lambda to std::function conversion compilation issue  
     #define registerClassSingletonHelper(className, displayName, flags)											            registerSingletonClass(#className, displayName, flags | vg::core::IClassDesc::Flags::Singleton, sizeof(className), [](){ return className::get(); } )
     
     #define registerPropertyHelper(className, propertyName, displayName, flags)									            registerProperty(#className, #propertyName, (&((className*)(nullptr))->propertyName), displayName, flags)

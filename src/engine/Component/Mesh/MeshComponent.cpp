@@ -17,6 +17,9 @@ namespace vg::engine
     //--------------------------------------------------------------------------------------
     bool MeshComponent::registerClass(IFactory & _factory)
     {
+        auto a = [](const vg::core::string & _name, vg::core::IObject * _parent) { return new MeshComponent(_name, _parent); };
+        IClassDesc::Func f = [](const vg::core::string & _name, vg::core::IObject * _parent) { return new MeshComponent(_name, _parent); };
+
         if (core::IClassDesc * desc = _factory.registerClassHelper(MeshComponent, "Mesh Component", IClassDesc::Flags::Component))
             registerProperties(*desc);
 
