@@ -55,17 +55,21 @@ namespace vg::core
     //--------------------------------------------------------------------------------------
     void GameObject::Update(double _dt)
     {
-        for (uint i = 0; i < m_components.size(); ++i)
+        if (GameObject::Flags::Enabled & getFlags())
         {
-            Component * component = m_components[i];
-            component->Update(_dt);
-        }
+            for (uint i = 0; i < m_components.size(); ++i)
+            {
+                Component * component = m_components[i];
+                if (Component::Flags::Enabled & component->getFlags())
+                    component->Update(_dt);
+            }
 
-        const auto & children = getChildren();
-        for (uint e = 0; e < children.size(); ++e)
-        {
-            auto * child = children[e];
-            child->Update(_dt);
+            const auto & children = getChildren();
+            for (uint e = 0; e < children.size(); ++e)
+            {
+                auto * child = children[e];
+                child->Update(_dt);
+            }
         }
     }
 

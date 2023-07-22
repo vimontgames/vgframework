@@ -30,9 +30,6 @@ namespace vg::graphics::driver
         core::float2                        GetCameraNearFar    () const override;
         float                               GetCameraFovY       () const override;
 
-        void                                SetCameraSector     (core::IGameObject * _cameraSector) override;
-        core::IGameObject *                 GetCameraSector     () const override;
-
         void                                SetUniverse         (core::IUniverse* _universe) override;
         core::IUniverse *                   GetUniverse         () const override;
 
@@ -63,7 +60,6 @@ namespace vg::graphics::driver
         VG_INLINE const core::float4x4 &    getViewInvMatrix    () const;
         VG_INLINE core::float2              getCameraNearFar    () const;
         VG_INLINE float                     getCameraFovY       () const;
-        VG_INLINE core::GameObject *        getCameraSector     () const;
 
         VG_INLINE void                      setViewID           (ViewID _viewID);
         VG_INLINE ViewID                    getViewID           () const;
@@ -72,13 +68,12 @@ namespace vg::graphics::driver
         VG_INLINE driver::Texture *         getRenderTarget     () const;
 
     private:
-        ViewID                              m_viewID = -1;
+        ViewID                              m_viewID = ViewID((ViewType)-1, -1);
         driver::Texture *                   m_renderTarget = nullptr;   // Assume backbuffer if nullptr
         core::uint2                         m_size = core::uint2(0, 0);
         core::int2                          m_offset = core::int2(0, 0);
         core::float4x4                      m_viewInv = core::float4x4::identity();
         core::IUniverse *                   m_cameraUniverse = nullptr;
-        core::GameObject *                  m_cameraSector = nullptr;
         core::float2                        m_cameraNearFar;
         float                               m_cameraFovY;
     };

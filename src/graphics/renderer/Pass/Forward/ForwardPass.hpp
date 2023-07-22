@@ -169,11 +169,17 @@ namespace vg::graphics::renderer
     {
         if (_root)
         {
-            auto& instances = _root->GetGraphicInstances();
-            _graphicInstanceList.insert(_graphicInstanceList.begin(), instances.begin(), instances.end());
-            auto children = _root->getChildren();
-            for (uint i = 0; i < children.count(); ++i)
-                addInstanceRecur(_graphicInstanceList, children[i]);
+            if (GameObject::Flags::Enabled & _root->getFlags())
+            {
+                auto & instances = _root->GetGraphicInstances();
+                _graphicInstanceList.insert(_graphicInstanceList.begin(), instances.begin(), instances.end());
+                auto children = _root->getChildren();
+                for (uint i = 0; i < children.count(); ++i)
+                {
+                    auto & child = children[i];
+                    addInstanceRecur(_graphicInstanceList, child);
+                }
+            }
         }
     }
 
@@ -192,15 +198,8 @@ namespace vg::graphics::renderer
         float4x4 proj = setPerspectiveProjectionRH(fovY, ar, nearFar.x, nearFar.y);
         float4x4 viewProj = mul(view->GetViewInvMatrix(), proj);
 
-        // #TODO #FIXME Shall pass the root sector instead? 
-        //const auto * camSector = view->getCameraSector();
-        //if (nullptr == camSector)
-        //    return;
-
         // #TODO #TEMPHACK No culling for now just add all instances to the list to draw
         vector<const IGraphicInstance*> graphicInstances;
-        //addInstanceRecur(graphicInstances, camSector);
-
         auto universe = view->GetUniverse();
         const auto count = universe->getSceneCount();
         for (uint i = 0; i < count; ++i)

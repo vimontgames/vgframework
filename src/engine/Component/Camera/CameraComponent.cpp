@@ -29,13 +29,17 @@ namespace vg::engine
     {
         super::registerProperties(_desc);
 
-        _desc.registerPropertyHelper(CameraComponent, m_fovY, "Horizontal FOV", IProperty::Flags::None);
+        _desc.registerPropertyEnum(CameraComponent, graphics::driver::ViewType, m_ViewType, "View Type");
+        _desc.registerPropertyHelper(CameraComponent, m_ViewIndex, "View Index");
+        _desc.setPropertyRangeHelper(CameraComponent, m_ViewIndex, float2(0, 15));
+
+        _desc.registerPropertyHelper(CameraComponent, m_fovY, "Horizontal FOV");
         _desc.setPropertyRangeHelper(CameraComponent, m_fovY, float2(pi / 8.0f, pi / 2.0f));
 
-        _desc.registerPropertyHelper(CameraComponent, m_near, "Near", IProperty::Flags::None);
+        _desc.registerPropertyHelper(CameraComponent, m_near, "Near");
         _desc.setPropertyRangeHelper(CameraComponent, m_near, float2(0.0f, 8.0f));
 
-        _desc.registerPropertyHelper(CameraComponent, m_far, "Far", IProperty::Flags::None);
+        _desc.registerPropertyHelper(CameraComponent, m_far, "Far");
         _desc.setPropertyRangeHelper(CameraComponent, m_far, float2(0.0f, 8192.0f));
 
         return true;
@@ -60,11 +64,9 @@ namespace vg::engine
     //--------------------------------------------------------------------------------------
     void CameraComponent::Update(double _dt)
     {
-        // TEMP: Update all views
-        const auto & views = Engine::get()->GetRenderer()->GetViews();
-        for (uint i = 0; i < views.count(); ++i)
+        auto * view = Engine::get()->GetRenderer()->GetView(graphics::driver::ViewID(m_ViewType, m_ViewIndex));
+        if (nullptr != view)
         {
-            auto * view = views[i];
             const float4x4 & matrix = getGameObject()->getWorldMatrix();
             view->SetupCamera(inverse(matrix), float2(m_near, m_far), m_fovY);
         }

@@ -12,28 +12,48 @@ namespace vg::graphics::driver
 {
     class ITexture;
 
+    enum class ViewType : core::u8
+    {
+        Backbuffer  = 0,
+        Game        = 1,
+        Editor      = 2
+    };
+    using ViewIndex = core::u8;
+
+    struct ViewID
+    {
+        ViewID(ViewType _type, ViewIndex _index) :
+            type(_type),
+            index(_index)
+        {
+            
+        }
+        ViewType type   : 2;
+        ViewIndex index : 6;
+    };
+
     struct CreateViewParams
     {
         CreateViewParams()
         {
         }
 
-        CreateViewParams(core::uint2 _size, core::int2 _offset = core::int2(0, 0), core::IUniverse * _universe = nullptr, driver::ITexture * _target = nullptr) :
+        CreateViewParams(ViewType _type, core::uint2 _size, core::int2 _offset = core::int2(0, 0), core::IUniverse * _universe = nullptr, driver::ITexture * _target = nullptr) :
+            type(_type),
             size(_size),
             offset(_offset),
             universe(_universe),
             target(_target)
         {
-
+         
         }
 
+        ViewType type = ViewType::Game;
         core::uint2 size = core::uint2(0, 0);
         core::int2 offset = core::int2(0, 0);
         core::IUniverse * universe = nullptr;
         driver::ITexture * target = nullptr;
     };
-
-    using ViewID = core::u16;
 
     class IView : public core::Object
     {
@@ -55,9 +75,6 @@ namespace vg::graphics::driver
 
         virtual void                    SetOffset           (core::int2) = 0;
         virtual core::int2              GetOffset           () const = 0;
-
-        virtual void                    SetCameraSector     (core::IGameObject * _cameraSector) = 0;
-        virtual core::IGameObject *     GetCameraSector     () const = 0;
 
         virtual void                    SetRenderTarget     (driver::ITexture * _renderTarget) = 0;
         virtual driver::ITexture *      GetRenderTarget     () const = 0;

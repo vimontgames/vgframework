@@ -2,6 +2,7 @@
 
 #include "core/IPlugin.h"
 #include "Renderer_consts.h"
+#include "graphics/driver/IView.h"
 
 namespace vg
 {
@@ -17,7 +18,6 @@ namespace vg
         {
             class ITexture;
             class IView;
-            using ViewID = core::u16;
         }
 
         namespace renderer
@@ -42,6 +42,7 @@ namespace vg
                 virtual driver::IView *                     CreateMainView      (core::uint2 _screenSize) = 0;
                 virtual driver::ViewID                      AddView             (driver::IView * _view) = 0;
                 virtual void                                RemoveView          (driver::ViewID _viewID) = 0;
+                virtual driver::IView *                     GetView             (driver::ViewID _viewID) const = 0;
                 virtual const core::vector<driver::IView *> GetViews            () const = 0;
 
                 virtual void                                SetResized          () = 0;

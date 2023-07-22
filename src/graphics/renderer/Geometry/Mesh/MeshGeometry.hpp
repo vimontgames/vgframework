@@ -37,8 +37,8 @@ namespace vg::graphics::renderer
 
         _desc.registerPropertyObjectVectorHelper(MeshGeometry, m_batches, Batch, "Batches", IProperty::Flags::None);
 
-        _desc.registerPropertyHelper(MeshGeometry, m_indexBufferOffset, "IB Offset", IProperty::Flags::ReadOnly);
-        _desc.registerPropertyHelper(MeshGeometry, m_vertexBufferOffset, "VB Offset", IProperty::Flags::ReadOnly);
+        _desc.registerPropertyHelperEx(MeshGeometry, m_indexBufferOffset, "IB Offset", IProperty::Flags::ReadOnly);
+        _desc.registerPropertyHelperEx(MeshGeometry, m_vertexBufferOffset, "VB Offset", IProperty::Flags::ReadOnly);
 
         return true;
     }

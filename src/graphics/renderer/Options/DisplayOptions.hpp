@@ -57,18 +57,19 @@ namespace vg::graphics::renderer
 
         _desc.registerPropertyEnum(DisplayOptions, graphics::driver::VSync, m_VSync, "VSync");
 
-        _desc.registerPropertyHelper(DisplayOptions, m_toolMode,   "Tool mode",   IProperty::Flags::None);
+        _desc.registerPropertyHelper(DisplayOptions, m_toolMode,   "Tool mode");
 
-        _desc.registerPropertyHelper(DisplayOptions, m_opaque,     "Opaque",      IProperty::Flags::None);
-        _desc.registerPropertyHelper(DisplayOptions, m_wireframe,  "Wireframe",   IProperty::Flags::SameLine);
+        _desc.registerPropertyHelper(DisplayOptions, m_opaque,     "Opaque");
+        _desc.registerPropertyHelperEx(DisplayOptions, m_wireframe,  "Wireframe",   IProperty::Flags::SameLine);
 
-        _desc.registerPropertyHelper(DisplayOptions, m_normalMaps, "Normal Maps", IProperty::Flags::None);
-        _desc.registerPropertyHelper(DisplayOptions, m_albedoMaps, "Albedo Maps", IProperty::Flags::SameLine);
+        _desc.registerPropertyHelper(DisplayOptions, m_normalMaps, "Normal Maps");
+        _desc.registerPropertyHelperEx(DisplayOptions, m_albedoMaps, "Albedo Maps", IProperty::Flags::SameLine);
 
         _desc.registerPropertyEnum(DisplayOptions, DisplayMode, m_debugDisplayMode, "Debug Display");
 
-        _desc.registerPropertyHelper(DisplayOptions, m_backgroundColor, "Background", IProperty::Flags::Color);
+        _desc.registerPropertyHelperEx(DisplayOptions, m_backgroundColor, "Background", IProperty::Flags::Color);
 
+        // TODO: Move to menu instead
         _desc.registerCallbackHelper(DisplayOptions, load, "Load", IProperty::Flags::None);
         _desc.registerCallbackHelper(DisplayOptions, save, "Save", IProperty::Flags::SameLine);
 

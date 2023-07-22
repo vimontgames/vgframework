@@ -42,6 +42,7 @@ namespace vg::graphics::renderer
         driver::IView *                         CreateMainView          (core::uint2 _screenSize) final override;
         driver::ViewID                          AddView                 (driver::IView * _view) final override;
         void                                    RemoveView              (driver::ViewID _viewID) final override;
+        driver::IView *                         GetView                 (driver::ViewID _viewID) const final override;
         const core::vector <driver::IView *>    GetViews                () const final override;
 
         void                                    SetResized              () final override;
@@ -89,7 +90,7 @@ namespace vg::graphics::renderer
         FBXImporter *                           m_fbxImporter           = nullptr;
 		driver::FrameGraph &	                m_frameGraph;
         driver::View *                          m_mainView              = nullptr;
-        core::vector<driver::View *>            m_views;
+        core::vector<driver::View *>            m_views[core::enumCount<driver::ViewType>()];
         ImguiPass *                             m_imguiPass             = nullptr;
         core::vector<driver::Texture*>          m_defaultTextures;       
 	};

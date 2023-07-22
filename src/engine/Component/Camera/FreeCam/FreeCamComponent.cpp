@@ -24,19 +24,19 @@ namespace vg::engine
     {
         super::registerProperties(_desc);
 
-        _desc.registerPropertyHelper(FreeCamComponent, m_moveSpeed, "Translation Speed", IProperty::Flags::None);
+        _desc.registerPropertyHelper(FreeCamComponent, m_moveSpeed, "Translation Speed");
         _desc.setPropertyRangeHelper(FreeCamComponent, m_moveSpeed, float2(0.0f, 10.0f));
 
-        _desc.registerPropertyHelper(FreeCamComponent, m_rotSpeed, "Rotation Speed", IProperty::Flags::None);
+        _desc.registerPropertyHelper(FreeCamComponent, m_rotSpeed, "Rotation Speed");
         _desc.setPropertyRangeHelper(FreeCamComponent, m_rotSpeed, float2(0.0f, 10.0f));
 
-        _desc.registerPropertyHelper(FreeCamComponent, m_pitch, "Pitch", IProperty::Flags::None);
+        _desc.registerPropertyHelper(FreeCamComponent, m_pitch, "Pitch");
         _desc.setPropertyRangeHelper(FreeCamComponent, m_pitch, float2(-pi, +pi));
 
-        _desc.registerPropertyHelper(FreeCamComponent, m_yaw, "Yaw", IProperty::Flags::None);
+        _desc.registerPropertyHelper(FreeCamComponent, m_yaw, "Yaw");
         _desc.setPropertyRangeHelper(FreeCamComponent, m_yaw, float2(-pi, +pi));
 
-        _desc.registerPropertyHelper(FreeCamComponent, m_roll, "Roll", IProperty::Flags::None);
+        _desc.registerPropertyHelper(FreeCamComponent, m_roll, "Roll");
         _desc.setPropertyRangeHelper(FreeCamComponent, m_roll, float2(-pi, +pi));
 
         return true;
@@ -51,7 +51,7 @@ namespace vg::engine
         m_moveSpeed(1.0f),
         m_rotSpeed(1.0f)
     {
-
+        m_ViewType = graphics::driver::ViewType::Editor;
     }
 
     //--------------------------------------------------------------------------------------

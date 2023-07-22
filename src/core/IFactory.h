@@ -2,6 +2,7 @@
 
 #include "IClassDesc.h"
 #include "XML/XML.h"
+#include "core/Object/EnumHelper.h"
 
 namespace vg::core
 {
@@ -14,7 +15,8 @@ namespace vg::core
     #define registerClassHelper(className, displayName, flags)                                                              registerClass(#className, displayName, flags, sizeof(className), [](const vg::core::string & _name, vg::core::IObject * _parent) { auto newObj = new className(_name, _parent); VG_ASSERT(nullptr != dynamic_cast<vg::core::IObject*>(newObj)); return dynamic_cast<vg::core::IObject*>(newObj); }) // 'dynamic_cast' should not be necessary but the cast is present to workaround weird Lambda to std::function conversion compilation issue  
     #define registerClassSingletonHelper(className, displayName, flags)											            registerSingletonClass(#className, displayName, flags | vg::core::IClassDesc::Flags::Singleton, sizeof(className), [](){ return className::get(); } )
     
-    #define registerPropertyHelper(className, propertyName, displayName, flags)									            registerProperty(#className, #propertyName, (&((className*)(nullptr))->propertyName), displayName, flags)
+    #define registerPropertyHelperEx(className, propertyName, displayName, flags)									        registerProperty(#className, #propertyName, (&((className*)(nullptr))->propertyName), displayName, flags)
+    #define registerPropertyHelper(className, propertyName, displayName)									                registerPropertyHelperEx(className, propertyName, displayName, vg::core::IProperty::Flags::None)
     #define registerPropertyObjectRefHelper(className, propertyName, displayName, flags)                                    registerProperty(#className, #propertyName, (core::IObject**)offsetof(className, propertyName), displayName, flags);
     #define registerPropertyObjectVectorHelper(className, propertyName, elementType, displayName, flags)                    registerProperty(#className, #propertyName, sizeof(elementType), &((className*)nullptr)->propertyName, displayName, flags);
     #define registerPropertyObjectRefVectorHelper(className, propertyName, displayName, flags)                              registerProperty(#className, #propertyName, (core::vector<core::IObject*>*)&((className*)nullptr)->propertyName, displayName, flags);
@@ -22,7 +24,7 @@ namespace vg::core
     #define registerCallbackHelper(className, funcName, displayName, flags)										            registerProperty(#className, #funcName, funcName, displayName, flags)
 	
     //#define registerPropertyEnumHelper(className, enumClassName, propertyName, displayName, eCount, eNames, eVals, flags) registerEnum(#className, #propertyName, (std::underlying_type_t<enumClassName>*)(&((className*)(nullptr))->propertyName), displayName, eCount, eNames, eVals, flags);
-    #define registerPropertyEnumWithFlags(className, enumClassName, propertyName, displayName, flags)                       registerEnum(#className, #propertyName, (std::underlying_type_t<enumClassName>*)(&((className*)(nullptr))->propertyName), displayName, EnumHelper<enumClassName>::getStaticCount(), EnumHelper<enumClassName>::getStaticNames().c_str(), EnumHelper<enumClassName>::getStaticValues().data(), flags);
+    #define registerPropertyEnumWithFlags(className, enumClassName, propertyName, displayName, flags)                       registerEnum(#className, #propertyName, (std::underlying_type_t<enumClassName>*)(&((className*)(nullptr))->propertyName), displayName, vg::core::EnumHelper<enumClassName>::getStaticCount(), vg::core::EnumHelper<enumClassName>::getStaticNames().c_str(), vg::core::EnumHelper<enumClassName>::getStaticValues().data(), flags);
     #define registerPropertyEnum(className, enumClassName, propertyName, displayName)                                       registerPropertyEnumWithFlags(className, enumClassName, propertyName, displayName, vg::core::IProperty::Flags::None)
     #define registerPropertyEnumBitfield(className, enumClassName, propertyName, displayName)                               registerPropertyEnumWithFlags(className, enumClassName, propertyName, displayName, vg::core::IProperty::Flags::Bitfield)
 

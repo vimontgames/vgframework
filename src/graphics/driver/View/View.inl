@@ -19,12 +19,6 @@ namespace vg::graphics::driver
     }
 
     //--------------------------------------------------------------------------------------
-    VG_INLINE core::GameObject * View::getCameraSector() const
-    {
-        return m_cameraSector;
-    }
-
-    //--------------------------------------------------------------------------------------
     VG_INLINE core::IUniverse * View::getUniverse() const
     {
         return m_cameraUniverse;

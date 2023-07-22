@@ -180,9 +180,13 @@ namespace vg::graphics::renderer
         VG_SAFE_DELETE(displayOptions);
 
         VG_SAFE_RELEASE(m_mainView);
-        for (int i = 0; i < m_views.size(); ++i)
-            VG_SAFE_RELEASE(m_views[i]);
-        //m_views.clear();
+        for (uint j = 0; j < core::enumCount<driver::ViewType>(); ++j)
+        {
+            auto & views = m_views[j];
+            for (uint i = 0; i < views.size(); ++i)
+                VG_SAFE_RELEASE(views[i]);
+            //views.clear();
+        }
 
         VG_SAFE_DELETE(m_imguiPass);
         VG_SAFE_DELETE(m_imgui);
@@ -264,12 +268,14 @@ namespace vg::graphics::renderer
                 m_frameGraph.importRenderTarget("Backbuffer", m_device.getBackbuffer(), float4(0,0,0,0), FrameGraph::Resource::InitState::Clear);
                 m_frameGraph.setGraphOutput("Backbuffer");
 
-                for (uint i = 0; i < m_views.count(); ++i)
+                for (uint j = 0; j < core::enumCount<driver::ViewType>(); ++j)
                 {
-                    auto * view = m_views[i]; // m_views could have holes
-                    if (nullptr != view && nullptr != view->getUniverse())
+                    auto & views = m_views[j];
+                    for (uint i = 0; i < views.count(); ++i)
                     {
-                        view->AddToFrameGraph(m_frameGraph);
+                        auto * view = views[i];
+                        if (nullptr != view && nullptr != view->getUniverse())
+                            view->AddToFrameGraph(m_frameGraph);
                     }
                 }
 
@@ -301,7 +307,8 @@ namespace vg::graphics::renderer
     //--------------------------------------------------------------------------------------
     driver::IView * Renderer::CreateMainView(core::uint2 _screenSize)
     {
-        auto * mainView = new View(_screenSize);
+        auto _mainViewParams = driver::CreateViewParams(ViewType::Backbuffer, _screenSize);
+        auto * mainView = new View(_mainViewParams);
         if (mainView != m_mainView)
         {
             VG_SAFE_INCREASE_REFCOUNT(mainView);
@@ -315,24 +322,28 @@ namespace vg::graphics::renderer
     //--------------------------------------------------------------------------------------
     driver::ViewID Renderer::AddView(driver::IView * _view)
     {
+        auto type = _view->GetViewID().type;
+        auto & views = m_views[(uint)type];
+
         // Find hole or push_back
-        VG_ASSERT(m_views.size() < (ViewID)-1);
+        VG_ASSERT(views.size() < (ViewIndex)-1);
         VG_SAFE_INCREASE_REFCOUNT(_view);
 
-        for (uint i = 0; i < m_views.size(); ++i)
+        for (uint i = 0; i < views.size(); ++i)
         {
-            if (!m_views[i])
+            if (!views[i])
             {
-                m_views[i] = (View*)_view;
-                _view->SetViewID(i);
-                return i;
+                views[i] = (View*)_view;
+                auto id = ViewID(type, i);
+                _view->SetViewID(id);
+                return id;
             }
         }
 
-        m_views.push_back((View *)_view);
-        driver::ViewID id = (ViewID)m_views.count();
+        views.push_back((View *)_view);
+        auto index = (ViewIndex)views.count();
+        ViewID id = ViewID(type, index);
         _view->SetViewID(id);
-
         return id;
     }
 
@@ -346,11 +357,30 @@ namespace vg::graphics::renderer
     void Renderer::RemoveView(driver::ViewID _viewID)
     {
         // Keep holes so that the ViewID remains valid
-        for (uint i = 0; i < m_views.size(); ++i)
+        for (uint j = 0; j < core::enumCount<driver::ViewType>(); ++j)
         {
-            if (m_views[i] && m_views[i]->GetViewID() == _viewID)
-                VG_SAFE_RELEASE(m_views[i]);
+            auto & views = m_views[j];
+            for (uint i = 0; i < views.size(); ++i)
+            {
+                if (views[i])
+                {
+                    const auto id = views[i]->GetViewID();
+                    VG_ASSERT(id.type == (ViewType)i);
+                    if (id.index == _viewID.index)
+                        VG_SAFE_RELEASE(views[i]);
+                }
+            }
         }
+    }
+
+    //--------------------------------------------------------------------------------------
+    driver::IView * Renderer::GetView(driver::ViewID _viewID) const
+    {
+        const auto & views = m_views[(uint)_viewID.type];
+        if (_viewID.index < views.size())
+            return views[_viewID.index];
+        else
+            return nullptr;
     }
     
     //--------------------------------------------------------------------------------------

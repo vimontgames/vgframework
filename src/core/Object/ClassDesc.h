@@ -10,8 +10,9 @@ namespace vg::core
         bool                                isRegisteredProperty(const char * _propertyName) final;
 
         void                                registerProperty    (const char * _className, const char * _propertyName, bool * _offset, const char * _displayName, IProperty::Flags _flags) final;
-        void                                registerProperty    (const char * _className, const char * _propertyName, core::u32 * _offset, const char * _displayName, IProperty::Flags _flags) final;
+        void                                registerProperty    (const char * _className, const char * _propertyName, core::u8 * _offset, const char * _displayName, IProperty::Flags _flags) final;
         void                                registerProperty    (const char * _className, const char * _propertyName, core::u16 * _offset, const char * _displayName, IProperty::Flags _flags) final;
+        void                                registerProperty    (const char * _className, const char * _propertyName, core::u32 * _offset, const char * _displayName, IProperty::Flags _flags) final;
         void                                registerProperty    (const char * _className, const char * _propertyName, float * _offset, const char * _displayName, IProperty::Flags _flags) final;
         void                                registerProperty    (const char * _className, const char * _propertyName, float4 * _offset, const char * _displayName, IProperty::Flags _flags) final;
         void                                registerProperty    (const char * _className, const char * _propertyName, float4x4 * _offset, const char * _displayName, IProperty::Flags _flags) final;

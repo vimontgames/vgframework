@@ -15,6 +15,8 @@ namespace vg::graphics::driver
     View::View(const CreateViewParams & _params) : 
         IView(_params)
     {
+        m_viewID.type = _params.type;
+
         m_size = _params.size;
         m_offset = _params.offset;
 
@@ -51,7 +53,6 @@ namespace vg::graphics::driver
     View::~View()
     {
         VG_SAFE_RELEASE(m_renderTarget);
-        VG_SAFE_RELEASE(m_cameraSector);
     }
 
     //--------------------------------------------------------------------------------------
@@ -81,31 +82,10 @@ namespace vg::graphics::driver
     }
 
     //--------------------------------------------------------------------------------------
-    void View::SetCameraSector(core::IGameObject * _cameraSector)
-    {
-        if ((core::IGameObject*)_cameraSector != m_cameraSector)
-        {
-            VG_SAFE_INCREASE_REFCOUNT(_cameraSector);
-            VG_SAFE_RELEASE(m_cameraSector);
-            m_cameraSector = (core::GameObject*)_cameraSector;
-        }
-    }
-
-    //--------------------------------------------------------------------------------------
-    core::IGameObject * View::GetCameraSector() const
-    {
-        return getCameraSector();
-    }
-
-    //--------------------------------------------------------------------------------------
     void View::SetUniverse(core::IUniverse* _universe)
     {
         if (_universe != m_cameraUniverse)
-        {
-            //VG_SAFE_RELEASE(m_cameraUniverse);
             m_cameraUniverse = _universe;
-            //VG_SAFE_INCREASE_REFCOUNT(m_cameraUniverse);
-        }
     }
 
     //--------------------------------------------------------------------------------------

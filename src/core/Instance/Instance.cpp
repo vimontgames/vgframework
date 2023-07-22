@@ -30,8 +30,8 @@ namespace vg::core
         super::registerProperties(_desc);
 
         _desc.registerPropertyEnumBitfield(Instance, Flags, m_flags, "Flags");
-        _desc.registerPropertyHelper(Instance, m_color, "Color", IProperty::Flags::Color);
-        _desc.registerPropertyHelper(Instance, m_world, "Matrix", IProperty::Flags::None);
+        _desc.registerPropertyHelperEx(Instance, m_color, "Color", IProperty::Flags::Color);
+        _desc.registerPropertyHelper(Instance, m_world, "Matrix");
         _desc.registerPropertyObjectRefVectorHelper(Instance, m_models, "Models", IProperty::Flags::ReadOnly | IProperty::Flags::NotSaved);
 
         return true;

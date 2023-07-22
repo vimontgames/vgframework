@@ -21,7 +21,7 @@ namespace vg::graphics::driver
 
 		static const core::string MakeUniqueName(const core::string & _name, ViewID _viewID)
 		{
-			return _name + (core::string)"-" + core::to_string(_viewID);
+			return _name + (core::string)"-" + core::asString(_viewID.type) + core::to_string(_viewID.index);
 
 		}
 

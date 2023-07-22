@@ -5,8 +5,9 @@
 namespace vg::graphics::renderer
 {
     //--------------------------------------------------------------------------------------
-    ImGuiView::ImGuiView(const string & _name, Flags _flags) :
-        ImguiEditor(_name, _flags)
+    ImGuiView::ImGuiView(const string & _name, Flags _flags, driver::ViewType _viewType) :
+        ImguiEditor(_name, _flags),
+        m_viewType(_viewType)
     {
         
     }
@@ -91,8 +92,9 @@ namespace vg::graphics::renderer
                 // Create empty view
                 driver::CreateViewParams params;
                                          params.size = m_size;
-                                         params.universe = getEngine()->getCurrentUniverse();
+                                         params.universe = getEngine()->getCurrentUniverse(); // TODO
                                          params.target = nullptr;
+                                         params.type = m_viewType;
 
                 m_view = new ForwardView(params);
                 Renderer::get()->AddView(m_view);

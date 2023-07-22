@@ -354,6 +354,38 @@ namespace vg::graphics::renderer
             changed |= displayEnumFlags<u32>(_object, _prop);
             break;
 
+        case IProperty::Type::Uint8:
+        {
+            i8 * pU8 = (i8 *)(uint_ptr(_object) + offset);
+
+            i32 temp = (u8)*pU8;
+
+            if (asBool(IProperty::Flags::HasRange & flags))
+                changed |= ImGui::SliderInt(displayName, &temp, max((int)0, (int)_prop->getRange().x), min((int)255, (int)_prop->getRange().y), "%d", imguiInputTextflags);
+            else
+                changed |= ImGui::InputInt(displayName, &temp, 1, 16, imguiInputTextflags);
+
+            if (changed)
+                *pU8 = (u8)temp;
+        };
+        break;
+
+        case IProperty::Type::Uint16:
+        {
+            i16 * pU16 = (i16 *)(uint_ptr(_object) + offset);
+
+            i32 temp = (u16)*pU16;
+
+            if (asBool(IProperty::Flags::HasRange & flags))
+                changed |= ImGui::SliderInt(displayName, &temp, max((int)0, (int)_prop->getRange().x), min((int)65535, (int)_prop->getRange().y), "%d", imguiInputTextflags);
+            else
+                changed |= ImGui::InputInt(displayName, &temp, 1, 16, imguiInputTextflags);
+
+            if (changed)
+                *pU16 = (u16)temp;
+        };
+        break;
+
         case IProperty::Type::Uint32:
         {
             i32 * pU32 = (i32*)(uint_ptr(_object) + offset);
@@ -363,23 +395,7 @@ namespace vg::graphics::renderer
             else
                 changed |= ImGui::InputInt(displayName, pU32, 1, 16, imguiInputTextflags);
         };
-        break;
-
-        case IProperty::Type::Uint16:
-        {
-            i16 * pU16 = (i16*)(uint_ptr(_object) + offset);
-
-            i32 temp = *pU16;
-
-            if (asBool(IProperty::Flags::HasRange & flags))
-                changed |= ImGui::SliderInt(displayName, &temp, max((int)0, (int)_prop->getRange().x), min((int)65535, (int)_prop->getRange().y), "%d", imguiInputTextflags);
-            else
-                changed |= ImGui::InputInt(displayName, &temp, 1, 16, imguiInputTextflags);
-
-            if (changed)
-                *pU16 = temp;
-        };
-        break;
+        break;        
 
         case IProperty::Type::Float:
         {
