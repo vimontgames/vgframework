@@ -1,67 +1,69 @@
 #include "engine/Precomp.h"
-#include "FreeCamComponent.h"
+#include "FreeCamBehaviour.h"
 #include "core/GameObject/GameObject.h"
 #include "core/Math/Math.h"
 #include "core/IInput.h"
+#include "graphics/driver/IView.h"
+#include "engine/Component/Camera/CameraComponent.h"
 
 using namespace vg::core;
 
 namespace vg::engine
 {
-    VG_AUTO_REGISTER_CLASS(FreeCamComponent);
+    VG_AUTO_REGISTER_CLASS(FreeCamBehaviour);
 
     //--------------------------------------------------------------------------------------
-    bool FreeCamComponent::registerClass(IFactory& _factory)
+    bool FreeCamBehaviour::registerClass(IFactory& _factory)
     {
-        if (core::IClassDesc* desc = _factory.registerClassHelper(FreeCamComponent, "FreeCam Component", IClassDesc::Flags::Component))
+        if (core::IClassDesc* desc = _factory.registerClassHelper(FreeCamBehaviour, "FreeCam Behaviour", IClassDesc::Flags::Component))
             registerProperties(*desc);
 
         return true;
     }
 
     //--------------------------------------------------------------------------------------
-    bool FreeCamComponent::registerProperties(IClassDesc& _desc)
+    bool FreeCamBehaviour::registerProperties(IClassDesc& _desc)
     {
         super::registerProperties(_desc);
 
-        _desc.registerPropertyHelper(FreeCamComponent, m_moveSpeed, "Translation Speed");
-        _desc.setPropertyRangeHelper(FreeCamComponent, m_moveSpeed, float2(0.0f, 10.0f));
+        _desc.registerPropertyHelper(FreeCamBehaviour, m_moveSpeed, "Translation Speed");
+        _desc.setPropertyRangeHelper(FreeCamBehaviour, m_moveSpeed, float2(0.0f, 10.0f));
 
-        _desc.registerPropertyHelper(FreeCamComponent, m_rotSpeed, "Rotation Speed");
-        _desc.setPropertyRangeHelper(FreeCamComponent, m_rotSpeed, float2(0.0f, 10.0f));
+        _desc.registerPropertyHelper(FreeCamBehaviour, m_rotSpeed, "Rotation Speed");
+        _desc.setPropertyRangeHelper(FreeCamBehaviour, m_rotSpeed, float2(0.0f, 10.0f));
 
-        _desc.registerPropertyHelper(FreeCamComponent, m_pitch, "Pitch");
-        _desc.setPropertyRangeHelper(FreeCamComponent, m_pitch, float2(-pi, +pi));
+        _desc.registerPropertyHelper(FreeCamBehaviour, m_pitch, "Pitch");
+        _desc.setPropertyRangeHelper(FreeCamBehaviour, m_pitch, float2(-pi, +pi));
 
-        _desc.registerPropertyHelper(FreeCamComponent, m_yaw, "Yaw");
-        _desc.setPropertyRangeHelper(FreeCamComponent, m_yaw, float2(-pi, +pi));
+        _desc.registerPropertyHelper(FreeCamBehaviour, m_yaw, "Yaw");
+        _desc.setPropertyRangeHelper(FreeCamBehaviour, m_yaw, float2(-pi, +pi));
 
-        _desc.registerPropertyHelper(FreeCamComponent, m_roll, "Roll");
-        _desc.setPropertyRangeHelper(FreeCamComponent, m_roll, float2(-pi, +pi));
+        _desc.registerPropertyHelper(FreeCamBehaviour, m_roll, "Roll");
+        _desc.setPropertyRangeHelper(FreeCamBehaviour, m_roll, float2(-pi, +pi));
 
         return true;
     }
 
     //--------------------------------------------------------------------------------------
-    FreeCamComponent::FreeCamComponent(const core::string& _name, core::IObject* _parent) :
-        CameraComponent(_name, _parent),
+    FreeCamBehaviour::FreeCamBehaviour(const core::string& _name, core::IObject * _parent) :
+        Behaviour(_name, _parent),
         m_roll(0.0f),
         m_pitch(-1.34f),
         m_yaw(2.85f),
         m_moveSpeed(1.0f),
         m_rotSpeed(1.0f)
     {
-        m_ViewType = graphics::driver::ViewType::Editor;
+        m_camera = getGameObject()->findComponent<CameraComponent>();
     }
 
     //--------------------------------------------------------------------------------------
-    FreeCamComponent::~FreeCamComponent()
+    FreeCamBehaviour::~FreeCamBehaviour()
     {
       
     }
 
     //--------------------------------------------------------------------------------------
-    void FreeCamComponent::Update(double _dt)
+    void FreeCamBehaviour::Update(double _dt)
     {
         auto go = getGameObject();
 
@@ -128,7 +130,7 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
-    float4x4 FreeCamComponent::getRotX(float _alpha)
+    float4x4 FreeCamBehaviour::getRotX(float _alpha)
     {
         float s = sin(_alpha);
         float c = cos(_alpha);
@@ -143,7 +145,7 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
-    float4x4 FreeCamComponent::getRotY(float _alpha)
+    float4x4 FreeCamBehaviour::getRotY(float _alpha)
     {
         float s = sin(_alpha);
         float c = cos(_alpha);
@@ -158,7 +160,7 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
-    float4x4 FreeCamComponent::getRotZ(float _alpha)
+    float4x4 FreeCamBehaviour::getRotZ(float _alpha)
     {
         float s = sin(_alpha);
         float c = cos(_alpha);

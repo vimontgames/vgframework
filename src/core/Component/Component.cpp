@@ -17,7 +17,7 @@ namespace vg::core
         IComponent(_name, _parent),
         m_flags(Flags::Enabled)
     {
-        VG_ASSERT(nullptr == _parent || dynamic_cast<IGameObject*>(_parent));
+        VG_ASSERT(_name.empty() || nullptr != dynamic_cast<IGameObject*>(_parent), "Creating Component without parent is only allowed during static initialization");
     }
 
     //--------------------------------------------------------------------------------------

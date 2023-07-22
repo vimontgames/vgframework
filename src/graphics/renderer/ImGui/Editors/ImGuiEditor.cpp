@@ -531,11 +531,21 @@ namespace vg::graphics::renderer
                     {
                         IComponent * pComponent = (IComponent*)(*vec)[i];
 
-                        // Display one component
                         string componentShortName = pComponent->getClassName();
-                        auto nPos = componentShortName.find("Component");
-                        if (-1 != nPos)
-                            componentShortName.erase(nPos);
+
+                        // Remove "Component" at the end of class name if present
+                        {
+                            auto nPos = componentShortName.find("Component");
+                            if (-1 != nPos)
+                                componentShortName.erase(nPos);
+                        }
+
+                        // Remove "Behaviour" at the end of class name if present
+                        {
+                            auto nPos = componentShortName.find("Behaviour");
+                            if (-1 != nPos)
+                                componentShortName.erase(nPos);
+                        }
 
                         if (ImGui::CollapsingHeader(componentShortName.c_str(), nullptr, ImGuiTreeNodeFlags_None))
                             displayArrayObject(pComponent, i, nullptr);

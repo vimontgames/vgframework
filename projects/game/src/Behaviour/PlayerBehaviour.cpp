@@ -1,38 +1,38 @@
 #include "Precomp.h"
-#include "PlayerComponent.h"
+#include "PlayerBehaviour.h"
 
 using namespace vg::core;
 
-VG_AUTO_REGISTER_CLASS(PlayerComponent);
+VG_AUTO_REGISTER_CLASS(PlayerBehaviour);
 
 //--------------------------------------------------------------------------------------
-PlayerComponent::PlayerComponent(const string & _name, IObject * _parent) :
-    Component("Player", nullptr)
+PlayerBehaviour::PlayerBehaviour(const string & _name, IObject * _parent) :
+    Component(_name, nullptr)
 {
 
 }
 
 //--------------------------------------------------------------------------------------
-PlayerComponent::~PlayerComponent()
+PlayerBehaviour::~PlayerBehaviour()
 {
 
 }
 
 //--------------------------------------------------------------------------------------
-bool PlayerComponent::registerClass(IFactory & _factory)
+bool PlayerBehaviour::registerClass(IFactory & _factory)
 {
-    if (IClassDesc * desc = _factory.registerClassHelper(PlayerComponent, "Player Component", IClassDesc::Flags::Component))
+    if (IClassDesc * desc = _factory.registerClassHelper(PlayerBehaviour, "Player Component", IClassDesc::Flags::Component))
         registerProperties(*desc);
 
     return true;
 }
 
 //--------------------------------------------------------------------------------------
-bool PlayerComponent::registerProperties(IClassDesc & _desc)
+bool PlayerBehaviour::registerProperties(IClassDesc & _desc)
 {
     super::registerProperties(_desc);
 
-    _desc.registerPropertyHelper(PlayerComponent, m_MyFloat, "My Super Float", IProperty::Flags::None);
+    _desc.registerPropertyHelper(PlayerBehaviour, m_MyFloat, "My Super Float");
     
     return true;
 }
@@ -40,7 +40,7 @@ bool PlayerComponent::registerProperties(IClassDesc & _desc)
 
 
 //--------------------------------------------------------------------------------------
-void PlayerComponent::Update(double _dt)
+void PlayerBehaviour::Update(double _dt)
 {
 
 }

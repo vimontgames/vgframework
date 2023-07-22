@@ -61,6 +61,9 @@
     <Filter Include="XML">
       <UniqueIdentifier>{db8e73a8-ebcd-4319-a4cd-a1de341c3c0e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Component\Behaviour">
+      <UniqueIdentifier>{b323f71c-5f58-44dc-8b4f-b6e6a56d527c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Math\Math.h">
@@ -138,7 +141,6 @@
     <ClInclude Include="Scene\Scene.h">
       <Filter>Scene</Filter>
     </ClInclude>
-    <ClInclude Include="ISector.h" />
     <ClInclude Include="Object\AutoRegisterClass.h">
       <Filter>Object</Filter>
     </ClInclude>
@@ -186,6 +188,10 @@
     </ClInclude>
     <ClInclude Include="XML\XML.h">
       <Filter>XML</Filter>
+    </ClInclude>
+    <ClInclude Include="IBehaviour.h" />
+    <ClInclude Include="Component\Behaviour\Behaviour.h">
+      <Filter>Component\Behaviour</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -245,6 +251,9 @@
     <ClCompile Include="Object\Factory.cpp">
       <Filter>Object</Filter>
     </ClCompile>
+    <ClCompile Include="Component\Behaviour\Behaviour.cpp">
+      <Filter>Component\Behaviour</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Instance\Instance.inl">
@@ -255,6 +264,9 @@
     </None>
     <None Include="Scene\Scene.inl">
       <Filter>Scene</Filter>
+    </None>
+    <None Include="Component\Behaviour\Behaviour.inl">
+      <Filter>Component\Behaviour</Filter>
     </None>
   </ItemGroup>
 </Project>

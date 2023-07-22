@@ -9,6 +9,10 @@
 
 #include "engine/Engine.h"
 
+#if !VG_ENABLE_INLINE
+#include "CameraComponent.inl"
+#endif
+
 using namespace vg::core;
 
 namespace vg::engine

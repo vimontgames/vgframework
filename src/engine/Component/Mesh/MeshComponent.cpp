@@ -1,7 +1,6 @@
 #include "engine/Precomp.h"
 #include "MeshComponent.h"
 #include "core/GameObject/GameObject.h"
-#include "core/ISector.h"
 #include "graphics/renderer/IMeshInstance.h"
 #include "graphics/renderer/IMeshModel.h"
 #include "engine/Engine.h"

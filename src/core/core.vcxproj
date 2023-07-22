@@ -12,6 +12,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CmdLine\CmdLine.h" />
+    <ClInclude Include="Component\Behaviour\Behaviour.h" />
     <ClInclude Include="Component\Component.h" />
     <ClInclude Include="Container\Blob.h" />
     <ClInclude Include="Container\HandleTable.h" />
@@ -22,6 +23,7 @@
     <ClInclude Include="File\File.h" />
     <ClInclude Include="File\Buffer.h" />
     <ClInclude Include="GameObject\GameObject.h" />
+    <ClInclude Include="IBehaviour.h" />
     <ClInclude Include="IComponent.h" />
     <ClInclude Include="IGameObject.h" />
     <ClInclude Include="IInput.h" />
@@ -37,7 +39,6 @@
     <ClInclude Include="IResource.h" />
     <ClInclude Include="IScene.h" />
     <ClInclude Include="IScheduler.h" />
-    <ClInclude Include="ISector.h" />
     <ClInclude Include="IUniverse.h" />
     <ClInclude Include="Kernel.h" />
     <ClInclude Include="Math\Math.h" />
@@ -68,6 +69,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CmdLine\CmdLine.cpp" />
+    <ClCompile Include="Component\Behaviour\Behaviour.cpp" />
     <ClCompile Include="Component\Component.cpp" />
     <ClCompile Include="Core.cpp" />
     <ClCompile Include="File\File.cpp" />
@@ -92,6 +94,7 @@
     <ClCompile Include="XML\XML.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Component\Behaviour\Behaviour.inl" />
     <None Include="Component\Component.inl" />
     <None Include="Instance\Instance.inl" />
     <None Include="Scene\Scene.inl" />

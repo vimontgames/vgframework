@@ -11,15 +11,10 @@ namespace vg::core
     class Scene : public IScene
     {
     public:
-        using super = IScene;
+        VG_CLASS_DECL(Scene, IScene);
 
                                 Scene               (const string & _name, IObject * _parent);
                                 ~Scene              ();
-
-        const char *            getClassName        () const final { return "Scene"; }
-
-        static bool             registerClass       (IFactory & _factory);
-        static bool             registerProperties  (IClassDesc & _desc);
 
         void                    SetRoot             (IGameObject * _sector) final;
         IGameObject *           GetRoot             () const final;

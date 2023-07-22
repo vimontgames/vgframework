@@ -18,6 +18,8 @@ namespace vg::core
     //--------------------------------------------------------------------------------------
     VG_INLINE GameObject * Component::getGameObject() const
     {
-        return (GameObject *)getParent();
+        const auto * parent = getParent();
+        VG_ASSERT(nullptr != parent, "Could not find parent GameObject of Component \"%s\"", getClassName());
+        return (GameObject *)parent;
     }
 }

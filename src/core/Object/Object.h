@@ -2,6 +2,13 @@
 
 #include "core/IObject.h"
 
+#define VG_CLASS_DECL(name, parent)	using super = parent;                                                               \
+									static bool registerProperties(vg::core::IClassDesc & _desc);						\
+									static bool registerClass(vg::core::IFactory & _factory);							\
+									static const char * getStaticClassName  () { return #name; }                        \
+									const char * getClassName() const override { return name::getStaticClassName(); }	
+
+
 namespace vg::core
 {
     class IFactory;
@@ -9,8 +16,9 @@ namespace vg::core
 	class Object : public IObject
 	{
 	public:
+		VG_CLASS_DECL(Object, IObject);
+
         const IClassDesc *          getClassDesc        () const final;
-        static bool                 registerProperties  (IClassDesc & _desc);
 
 								    Object		        (const string & _name, IObject * _parent);
 								    Object		        ();

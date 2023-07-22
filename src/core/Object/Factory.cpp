@@ -688,6 +688,22 @@ namespace vg::core
                                         case IProperty::Type::EnumU32:
                                             serializeEnumPropertyFromXML<u32>(_object, prop, xmlPropElem);
                                         break;
+
+                                        case IProperty::Type::Uint8:
+                                            serializeIntegerPropertyFromXML<u8>(_object, prop, xmlPropElem);
+                                        break;
+
+                                        case IProperty::Type::Uint16:
+                                            serializeIntegerPropertyFromXML<u16>(_object, prop, xmlPropElem);
+                                            break;
+
+                                        case IProperty::Type::Uint32:
+                                            serializeIntegerPropertyFromXML<u32>(_object, prop, xmlPropElem);
+                                            break;
+
+                                        case IProperty::Type::Uint64:
+                                            serializeIntegerPropertyFromXML<u64>(_object, prop, xmlPropElem);
+                                            break;
                                     }
                                 }
                                 else
@@ -747,6 +763,22 @@ namespace vg::core
                 }
                 break;
 
+                case IProperty::Type::Uint8:
+                    serializeIntegerPropertyToXML<u8>(_object, prop, xmlPropElem);
+                    break;
+
+                case IProperty::Type::Uint16:
+                    serializeIntegerPropertyToXML<u16>(_object, prop, xmlPropElem);
+                    break;
+
+                case IProperty::Type::Uint32:
+                    serializeIntegerPropertyToXML<u32>(_object, prop, xmlPropElem);
+                break;
+
+                case IProperty::Type::Uint64:
+                    serializeIntegerPropertyToXML<u64>(_object, prop, xmlPropElem);
+                    break;
+
                 case IProperty::Type::Resource:
                 {
                     const IObject* pResource = prop->GetPropertyResource(_object);
@@ -767,7 +799,7 @@ namespace vg::core
                     const uint count = vector->count();
                     for (uint i = 0; i < count; ++i)
                     {
-                        serializeToXML((const IObject*)(*vector)[i], _xmlDoc, xmlPropElem);
+                        serializeToXML((const IObject *)(*vector)[i], _xmlDoc, xmlPropElem);
                     }
                 }
                 break;
@@ -795,7 +827,7 @@ namespace vg::core
 
                 case IProperty::Type::Float4:
                 {
-                    const float * pFloat4 = (const float*)prop->GetPropertyFloat4(_object);
+                    const float * pFloat4 = (const float *)prop->GetPropertyFloat4(_object);
                     xmlPropElem->SetAttribute("x", pFloat4[0]);
                     xmlPropElem->SetAttribute("y", pFloat4[1]);
                     xmlPropElem->SetAttribute("z", pFloat4[2]);
@@ -805,29 +837,29 @@ namespace vg::core
 
                 case IProperty::Type::Float4x4:
                 {
-                    const float * pFloat4x4 = (const float*)(uint_ptr(_object) + offset);
-                    xmlPropElem->SetAttribute("Ix", pFloat4x4[0+0]);
-                    xmlPropElem->SetAttribute("Iy", pFloat4x4[0+1]);
-                    xmlPropElem->SetAttribute("Iz", pFloat4x4[0+2]);
-                    xmlPropElem->SetAttribute("Iw", pFloat4x4[0+3]);
-                    xmlPropElem->SetAttribute("Jx", pFloat4x4[4+0]);
-                    xmlPropElem->SetAttribute("Jy", pFloat4x4[4+1]);
-                    xmlPropElem->SetAttribute("Jz", pFloat4x4[4+2]);
-                    xmlPropElem->SetAttribute("Jw", pFloat4x4[4+3]);
-                    xmlPropElem->SetAttribute("Kx", pFloat4x4[8+0]);
-                    xmlPropElem->SetAttribute("Ky", pFloat4x4[8+1]);
-                    xmlPropElem->SetAttribute("Kz", pFloat4x4[8+2]);
-                    xmlPropElem->SetAttribute("Kw", pFloat4x4[8+3]);
-                    xmlPropElem->SetAttribute("Tx", pFloat4x4[12+0]);
-                    xmlPropElem->SetAttribute("Ty", pFloat4x4[12+1]);
-                    xmlPropElem->SetAttribute("Tz", pFloat4x4[12+2]);
-                    xmlPropElem->SetAttribute("Tw", pFloat4x4[12+3]);
+                    const float * pFloat4x4 = (const float *)(uint_ptr(_object) + offset);
+                    xmlPropElem->SetAttribute("Ix", pFloat4x4[0 + 0]);
+                    xmlPropElem->SetAttribute("Iy", pFloat4x4[0 + 1]);
+                    xmlPropElem->SetAttribute("Iz", pFloat4x4[0 + 2]);
+                    xmlPropElem->SetAttribute("Iw", pFloat4x4[0 + 3]);
+                    xmlPropElem->SetAttribute("Jx", pFloat4x4[4 + 0]);
+                    xmlPropElem->SetAttribute("Jy", pFloat4x4[4 + 1]);
+                    xmlPropElem->SetAttribute("Jz", pFloat4x4[4 + 2]);
+                    xmlPropElem->SetAttribute("Jw", pFloat4x4[4 + 3]);
+                    xmlPropElem->SetAttribute("Kx", pFloat4x4[8 + 0]);
+                    xmlPropElem->SetAttribute("Ky", pFloat4x4[8 + 1]);
+                    xmlPropElem->SetAttribute("Kz", pFloat4x4[8 + 2]);
+                    xmlPropElem->SetAttribute("Kw", pFloat4x4[8 + 3]);
+                    xmlPropElem->SetAttribute("Tx", pFloat4x4[12 + 0]);
+                    xmlPropElem->SetAttribute("Ty", pFloat4x4[12 + 1]);
+                    xmlPropElem->SetAttribute("Tz", pFloat4x4[12 + 2]);
+                    xmlPropElem->SetAttribute("Tw", pFloat4x4[12 + 3]);
                 }
                 break;
 
                 case IProperty::Type::EnumFlagsU32:
                 {
-                    const u32 * pEnum = (const u32*)(uint_ptr(_object) + offset);
+                    const u32 * pEnum = (const u32 *)(uint_ptr(_object) + offset);
                     string flags;
                     bool first = true;
                     for (uint i = 0; i < prop->getEnumCount(); ++i)
@@ -855,7 +887,7 @@ namespace vg::core
 
                 case IProperty::Type::EnumU32:
                     serializeEnumPropertyToXML<u32>(_object, prop, xmlPropElem);
-                break;
+                    break;
             }
 
             if (!skipAttribute)
@@ -864,6 +896,24 @@ namespace vg::core
 
         parent->InsertEndChild(xmlElement);
         return true;
+    }
+
+    //--------------------------------------------------------------------------------------
+    template <typename T> void Factory::serializeIntegerPropertyFromXML(IObject * _object, const IProperty * _prop, const XMLElem * _xmlElem) const
+    {
+        const XMLAttribute * xmlValue = _xmlElem->FindAttribute("value");
+        if (nullptr != xmlValue)
+        {
+            T * p = (T *)(uint_ptr(_object) + _prop->getOffset());
+            *p = (T)xmlValue->Int64Value();
+        }
+    }
+
+    //--------------------------------------------------------------------------------------
+    template <typename T> void Factory::serializeIntegerPropertyToXML(const IObject * _object, const IProperty * _prop, XMLElem * _xmlElem) const
+    {
+        const T * p = (T *)(uint_ptr(_object) + _prop->getOffset());
+        _xmlElem->SetAttribute("value", *p);
     }
 
     //--------------------------------------------------------------------------------------

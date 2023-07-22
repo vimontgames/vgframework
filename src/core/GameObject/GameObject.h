@@ -11,22 +11,23 @@ namespace vg::core
     class GameObject : public IGameObject
     {
     public:
-        using super = IGameObject;
-
-        const char *                                            getClassName            () const override { return "GameObject"; }
-        static bool                                             registerClass           (IFactory & _factory);
-        static bool                                             registerProperties      (IClassDesc & _desc);
+        VG_CLASS_DECL(GameObject, IGameObject);
 
                                                                 GameObject              (const core::string & _name, IObject * _parent);
         virtual                                                 ~GameObject             ();
 
         void                                                    Update                  (double _dt);
 
-        void                                                    AddComponent            (IComponent * _component) final;
-        const vector<IComponent *> &                            GetComponents           () const final;
+        void                                                    AddComponent            (IComponent * _component) final override;
+        const vector<IComponent *> &                            GetComponents           () const final override;
 
         void                                                    addComponent            (Component * _component);
+        Component *                                             addComponent            (const char * _className, const core::string & _name);
+        template <class T> T *                                  addComponent            (const core::string & _name);
         const vector<Component*> &                              getComponents           () const;
+
+        Component *                                             findComponentByType     (const char * _className) const;
+        template <class T> T *                                  findComponent           () const;
 
         void                                                    AddChild                (IGameObject * _gameObject) final;
         bool                                                    RemoveChild             (IGameObject * _gameObject) final;
@@ -39,8 +40,20 @@ namespace vg::core
         VG_INLINE const vector<GameObject*> &                   getChildren             () const { return m_children;}
 
     private:
-        vector<Component*>                                      m_components;
-        vector<GameObject*>                                     m_children;
+        vector<Component *>                                     m_components;
+        vector<GameObject *>                                    m_children;
         vector<graphics::renderer::IGraphicInstance*>           m_graphicInstances;
     };
+
+    //--------------------------------------------------------------------------------------
+    template <class T> T * GameObject::findComponent() const
+    {
+        return static_cast<T *>(findComponentByType(T::getStaticClassName()));
+    }
+
+    //--------------------------------------------------------------------------------------
+    template <class T> T * GameObject::addComponent(const core::string & _name)
+    {
+        return static_cast<T *>(addComponent(T::getStaticClassName(), _name));
+    }
 }

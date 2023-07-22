@@ -16,27 +16,22 @@ namespace vg::graphics::renderer
 
     class MeshModel : public IMeshModel
     {
-        using super = IMeshModel;
-
     public:
-        const char *            getClassName() const final { return "MeshModel"; }
+        VG_CLASS_DECL(MeshModel, IMeshModel);
 
-        static bool             registerClass(core::IFactory & _factory);
-        static bool             registerProperties(core::IClassDesc & _desc);
+                                        MeshModel               (const core::string & _name, core::IObject * _parent);
+                                        ~MeshModel              ();
 
-        MeshModel(const core::string & _name, core::IObject * _parent);
-        ~MeshModel();
+        core::uint                      GetMaterialCount        () const override;
+        IMaterialModel *                GetMaterial             (core::uint _index) const override;
 
-        core::uint              GetMaterialCount() const override;
-        IMaterialModel *        GetMaterial(core::uint _index) const override;
+        core::uint                      getMaterialCount        () const { return (core::uint)m_materials.size(); }
+        MaterialModel *                 getMaterial             (core::uint _index) const { return _index < m_materials.size() ? m_materials[_index] : nullptr; }
 
-        core::uint              getMaterialCount() const { return (core::uint)m_materials.size(); }
-        MaterialModel *         getMaterial(core::uint _index) const { return _index < m_materials.size() ? m_materials[_index] : nullptr; }
+        void                            setGeometry             (MeshGeometry * _meshGeometry);
+        const MeshGeometry *            getGeometry             () const;
 
-        void                    setGeometry(MeshGeometry * _meshGeometry);
-        const MeshGeometry *    getGeometry() const;
-
-        static MeshModel *      createFromImporterData(const MeshImporterData & _data);
+        static MeshModel *              createFromImporterData  (const MeshImporterData & _data);
 
     private:
         template <driver::VertexFormat F> static driver::Buffer * createVertexBufferFromImporterData(const MeshImporterData & _data);

@@ -2,22 +2,30 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClCompile Include="Precomp.cpp" />
-    <ClCompile Include="Components\PlayerComponent.cpp">
-      <Filter>Component\Player</Filter>
+    <ClCompile Include="Game.cpp" />
+    <ClCompile Include="Behaviour\PlayerBehaviour.cpp">
+      <Filter>Behaviour\Player</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Precomp.h" />
-    <ClInclude Include="Components\PlayerComponent.h">
-      <Filter>Component\Player</Filter>
+    <ClInclude Include="Game.h" />
+    <ClInclude Include="Behaviour\PlayerBehaviour.h">
+      <Filter>Behaviour\Player</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Component">
       <UniqueIdentifier>{e85099fb-866e-4f52-b544-b1476e1ba671}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Component\Player">
-      <UniqueIdentifier>{9b6c7341-66f8-4318-8df6-cf90010fcdf2}</UniqueIdentifier>
+    <Filter Include="Behaviour">
+      <UniqueIdentifier>{f22a42c3-1de4-4af1-a237-fd64e93380cf}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Behaviour\Player">
+      <UniqueIdentifier>{cdec89b6-4019-4a02-bb85-3c75afb4edb1}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Game.def" />
   </ItemGroup>
 </Project>

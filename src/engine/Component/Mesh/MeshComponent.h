@@ -13,11 +13,7 @@ namespace vg::engine
     class MeshComponent : public core::Component
     {
     public:
-        using super = core::Component;
-
-        const char *    getClassName        () const final { return "MeshComponent"; }
-        static bool     registerClass       (core::IFactory & _factory);
-        static bool     registerProperties  (core::IClassDesc & _desc);
+        VG_CLASS_DECL(MeshComponent, core::Component);
 
                         MeshComponent       (const core::string & _name, IObject * _parent);
                         ~MeshComponent      ();

@@ -19,7 +19,8 @@
 
 #include "engine/Input/Input.h"
 #include "engine/Resource/ResourceManager.h"
-#include "engine/Component/Camera/FreeCam/FreeCamComponent.h"
+#include "engine/Component/Camera/CameraComponent.h"
+#include "engine/Behaviour/FreeCam/FreeCamBehaviour.h"
 #include "engine/Component/Mesh/MeshComponent.h"
 
 #include "application/IProject.h"
@@ -156,7 +157,7 @@ namespace vg::engine
         //_desc.registerPropertyHelper(Engine, m_project, "Project", IProperty::Flags::None);
         //_desc.registerProperty("m_project", (IResource**)(&((Engine*)(nullptr))->m_project), "Project", IProperty::Flags::None);
 
-        _desc.registerPropertyHelper(Engine, m_projectPath, "Project folder", IProperty::Flags::IsFolder);
+        _desc.registerPropertyHelperEx(Engine, m_projectPath, "Project folder", IProperty::Flags::IsFolder);
 
         //_desc.registerCallbackHelper(Engine, createProject, "Create Project", IProperty::Flags::None);
         
@@ -289,21 +290,26 @@ namespace vg::engine
         editor->SetRoot(rootGameObject);
         rootGameObject->release();
 
-        // add FreeCam component (TODO: editor camera)
-        GameObject * freeCamGO = new GameObject("FreeCam", rootGameObject);
-        auto * freeCamComponent = (FreeCamComponent *)CreateFactoryObject(FreeCamComponent, "FreeCam", freeCamGO);
-        freeCamGO->setWorldMatrix(float4x4
+        // add Camera GameObject
+        GameObject * editorCameraGameObject = new GameObject("Editor Camera", rootGameObject);
+
+        // add Camera component
+        auto * cameraComponent = editorCameraGameObject->addComponent<CameraComponent>("Camera");
+        cameraComponent->setViewType(graphics::driver::ViewType::Editor);
+
+        // add FreeCam behaviour
+        auto * freeCamComponent = editorCameraGameObject->addComponent<FreeCamBehaviour>("FreeCam");
+        editorCameraGameObject->setWorldMatrix(float4x4
         (
             1.0f, 0.0f, 0.0f, 0.0f,
             0.0f, 1.0f, 0.0f, 0.0f,
             0.0f, 0.0f, 1.0f, 0.0f,
             -1.2f, -3.5f, 1.7f, 1.0f
         ));
-        freeCamGO->addComponent(freeCamComponent);
-        rootGameObject->AddChild(freeCamGO);
-        VG_SAFE_RELEASE(freeCamComponent);
-        VG_SAFE_RELEASE(freeCamGO);
 
+        // Add Camera GameObject
+        rootGameObject->AddChild(editorCameraGameObject);
+        VG_SAFE_RELEASE(editorCameraGameObject);
     }
 
     //--------------------------------------------------------------------------------------

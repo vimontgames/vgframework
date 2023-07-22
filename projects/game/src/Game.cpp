@@ -4,12 +4,12 @@
 #include "core/Object/AutoRegisterClass.h"
 #include "engine/IEngine.h"
 
-#include "Components/PlayerComponent.h"
+#include "Behaviour/PlayerBehaviour.h"
 
 using namespace vg::core;
 
 // Avoid stripping code for classes from static lib
-static PlayerComponent playerComponent("", nullptr);
+static PlayerBehaviour playerBehaviour("", nullptr);
 
 //--------------------------------------------------------------------------------------
 Game * CreateNew()

@@ -4,7 +4,6 @@
 #include "core/Kernel.h"
 #include "core/Timer/Timer.h"
 #include "core/Object/AutoRegisterClass.h"
-#include "core/ISector.h"
 #include "core/File/File.h"
 
 #include "graphics/driver/View/View.h"

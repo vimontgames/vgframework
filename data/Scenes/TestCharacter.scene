@@ -84,6 +84,30 @@
                         </Property>
                         <Property type="ObjectRefVector" name="m_children"/>
                     </Object>
+                    <Object class="GameObject">
+                        <Property type="String" name="m_name" value="Game Camera"/>
+                        <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
+                        <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
+                        <Property type="Float4x4" name="m_world" Ix="0.87506658" Iy="-0.48400256" Iz="-0" Iw="-0" Jx="0.14878991" Jy="0.26900908" Jz="0.95157534" Jw="-0" Kx="-0.46056494" Ky="-0.83269185" Kz="0.30741557" Kw="0" Tx="-1.5998604" Ty="-2.1278448" Tz="1.6842859" Tw="1"/>
+                        <Property type="ObjectRefVector" name="m_components">
+                            <Object class="CameraComponent">
+                                <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
+                                <Property type="EnumU8" name="m_ViewType" value="Game"/>
+                                <Property type="Uint8" name="m_ViewIndex" value="0"/>
+                                <Property type="Float" name="m_fovY" value="0.78539819"/>
+                                <Property type="Float" name="m_near" value="0.1"/>
+                                <Property type="Float" name="m_far" value="1024"/>
+                            </Object>
+                            <Object class="FreeCamBehaviour">
+                                <Property type="Float" name="m_moveSpeed" value="1"/>
+                                <Property type="Float" name="m_rotSpeed" value="1"/>
+                                <Property type="Float" name="m_pitch" value="-1.2583205"/>
+                                <Property type="Float" name="m_yaw" value="2.6363697"/>
+                                <Property type="Float" name="m_roll" value="0"/>
+                            </Object>
+                        </Property>
+                        <Property type="ObjectRefVector" name="m_children"/>
+                    </Object>
                 </Property>
             </Object>
         </Property>

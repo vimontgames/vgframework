@@ -35,6 +35,7 @@ namespace vg::core
         u8 *                        GetPropertyUint8                (const IObject * _object) const final;
         u16 *                       GetPropertyUint16               (const IObject * _object) const final;
         u32 *                       GetPropertyUint32               (const IObject * _object) const final;
+        u64 *                       GetPropertyUint64               (const IObject * _object) const final;
         float *                     GetPropertyFloat                (const IObject * _object) const final;
         float4 *                    GetPropertyFloat4               (const IObject * _object) const final;
         float4x4 *                  GetPropertyFloat4x4             (const IObject * _object) const final;

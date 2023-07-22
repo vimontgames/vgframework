@@ -32,6 +32,9 @@ namespace vg::core
     protected:
         bool                        serializeFromXML                (IObject* _object, const XMLElem * _xmlElem) const;
 
+        template <typename T> void  serializeIntegerPropertyFromXML (IObject * _object, const IProperty * _prop, const XMLElem * _xmlElem) const;
+        template <typename T> void  serializeIntegerPropertyToXML   (const IObject * _object, const IProperty * _prop, XMLElem * _xmlElem) const;
+
         template <typename T> void  serializeEnumPropertyFromXML    (IObject * _object, const IProperty * _prop, const XMLElem * _xmlElem) const;
         template <typename T> void  serializeEnumPropertyToXML      (const IObject * _object, const IProperty * _prop, XMLElem * _xmlElem) const;
 

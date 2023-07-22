@@ -176,6 +176,14 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
+    core::u64 * Property::GetPropertyUint64(const IObject * _object) const
+    {
+        VG_ASSERT(nullptr != _object);
+        VG_ASSERT(Type::Uint64 == getType() || Type::EnumU64 == getType() || Type::EnumFlagsU64 == getType());
+        return (u64 *)(uint_ptr(_object) + offset);
+    }
+
+    //--------------------------------------------------------------------------------------
     float * Property::GetPropertyFloat(const IObject * _object) const
     {
         VG_ASSERT(nullptr != _object);

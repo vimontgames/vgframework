@@ -1,5 +1,6 @@
 #include "core/Precomp.h"
 #include "GameObject.h"
+#include "core/Kernel.h"
 #include "core/Component/Component.h"
 #include "core/Object/AutoRegisterClass.h"  
 #include "graphics/renderer/IGraphicInstance.h"
@@ -96,6 +97,31 @@ namespace vg::core
     const vector<Component*> & GameObject::getComponents() const
     {
         return m_components;
+    }
+
+    //--------------------------------------------------------------------------------------
+    Component * GameObject::findComponentByType(const char * _className) const
+    {
+        const auto & components = getComponents();
+        for (uint i = 0; i < components.size(); ++i)
+        {
+            auto * component = components[i];
+            if (component && !strcmp(component->getClassName(), _className)) // TODO: RTTI/inheritance
+                return component;
+        }
+        return nullptr;
+    }
+
+    //--------------------------------------------------------------------------------------
+    Component * GameObject::addComponent(const char * _className, const core::string & _name)
+    {
+        Component * component = (Component *)Kernel::getFactory()->createObject(_className, _name, this);
+        if (component)
+        {
+            addComponent(component);
+            component->release();
+        }
+        return component;
     }
 
     //--------------------------------------------------------------------------------------

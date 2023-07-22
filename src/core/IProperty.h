@@ -34,9 +34,11 @@ namespace vg::core
             EnumU8,
             EnumU16,
             EnumU32,
+            EnumU64,
             EnumFlagsU8,
             EnumFlagsU16,
             EnumFlagsU32,
+            EnumFlagsU64,
             Resource,
             ObjectRef,
             ObjectRefVector,
@@ -84,6 +86,7 @@ namespace vg::core
         virtual u8 *                        GetPropertyUint8                (const IObject * _object) const = 0;
         virtual u16 *                       GetPropertyUint16               (const IObject * _object) const = 0;
         virtual u32 *                       GetPropertyUint32               (const IObject * _object) const = 0;
+        virtual u64 *                       GetPropertyUint64               (const IObject * _object) const = 0;
         virtual float *                     GetPropertyFloat                (const IObject * _object) const = 0;
         virtual float4 *                    GetPropertyFloat4               (const IObject * _object) const = 0;
         virtual float4x4 *                  GetPropertyFloat4x4             (const IObject * _object) const = 0;

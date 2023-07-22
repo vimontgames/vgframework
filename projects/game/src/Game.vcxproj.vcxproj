@@ -11,7 +11,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Components\PlayerComponent.cpp" />
+    <ClCompile Include="Behaviour\PlayerBehaviour.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="Precomp.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
@@ -19,7 +19,7 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Components\PlayerComponent.h" />
+    <ClInclude Include="Behaviour\PlayerBehaviour.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="Precomp.h" />
   </ItemGroup>

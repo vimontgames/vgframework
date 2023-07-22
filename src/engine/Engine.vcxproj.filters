@@ -15,13 +15,16 @@
     <ClCompile Include="Resource\Resource.cpp">
       <Filter>Resource</Filter>
     </ClCompile>
-    <ClCompile Include="Component\Camera\FreeCam\FreeCamComponent.cpp">
-      <Filter>Component\Camera\FreeCam</Filter>
+    <ClCompile Include="Behaviour\FreeCam\FreeCamBehaviour.cpp">
+      <Filter>Behaviour</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Engine.def" />
     <None Include="Engine.inl" />
+    <None Include="Component\Camera\CameraComponent.inl">
+      <Filter>Component\Camera</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="IEngine.h" />
@@ -68,8 +71,8 @@
     <ClInclude Include="Resource\Material\MaterialResource.hpp">
       <Filter>Resource\Material</Filter>
     </ClInclude>
-    <ClInclude Include="Component\Camera\FreeCam\FreeCamComponent.h">
-      <Filter>Component\Camera\FreeCam</Filter>
+    <ClInclude Include="Behaviour\FreeCam\FreeCamBehaviour.h">
+      <Filter>Behaviour</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -100,8 +103,8 @@
     <Filter Include="Resource\Material">
       <UniqueIdentifier>{63aec5b5-6a52-4af4-8ebb-c0f5baf4c70d}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Component\Camera\FreeCam">
-      <UniqueIdentifier>{a93ee98e-4866-4079-9834-877b6edbe805}</UniqueIdentifier>
+    <Filter Include="Behaviour">
+      <UniqueIdentifier>{9d5f0e4c-4aec-4a30-9c45-13d6892072dd}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
