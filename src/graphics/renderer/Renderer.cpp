@@ -339,17 +339,18 @@ namespace vg::graphics::renderer
             }
         }
 
-        views.push_back((View *)_view);
         auto index = (ViewIndex)views.count();
         ViewID id = ViewID(type, index);
+        views.push_back((View *)_view);
         _view->SetViewID(id);
         return id;
     }
 
     //--------------------------------------------------------------------------------------
-    const core::vector <IView *> Renderer::GetViews() const
+    const core::vector <IView *> Renderer::GetViews(driver::ViewType _viewType) const
     {
-        return (const core::vector<IView *>&)m_views;
+        VG_ASSERT(_viewType < (driver::ViewType)core::enumCount<driver::ViewType>());
+        return (const core::vector<IView *>&)m_views[(uint)_viewType];
     }
 
     //--------------------------------------------------------------------------------------

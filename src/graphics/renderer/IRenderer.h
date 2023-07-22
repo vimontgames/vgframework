@@ -43,7 +43,7 @@ namespace vg
                 virtual driver::ViewID                      AddView             (driver::IView * _view) = 0;
                 virtual void                                RemoveView          (driver::ViewID _viewID) = 0;
                 virtual driver::IView *                     GetView             (driver::ViewID _viewID) const = 0;
-                virtual const core::vector<driver::IView *> GetViews            () const = 0;
+                virtual const core::vector<driver::IView *> GetViews            (driver::ViewType _viewType) const = 0;
 
                 virtual void                                SetResized          () = 0;
                 virtual void                                resize              (core::uint _width, core::uint _height) = 0;

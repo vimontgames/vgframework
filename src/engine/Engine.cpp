@@ -304,7 +304,7 @@ namespace vg::engine
             1.0f, 0.0f, 0.0f, 0.0f,
             0.0f, 1.0f, 0.0f, 0.0f,
             0.0f, 0.0f, 1.0f, 0.0f,
-            -1.2f, -3.5f, 1.7f, 1.0f
+            0.0f, -8.0f, 2.0f, 1.0f
         ));
 
         // Add Camera GameObject
@@ -369,7 +369,7 @@ namespace vg::engine
 
         updateDt();
 
-        Kernel::getInput()->update();
+        Kernel::getInput()->Update();
 
         m_resourceManager->updateLoading();
 

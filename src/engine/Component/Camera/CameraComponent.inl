@@ -13,6 +13,12 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
+    VG_INLINE graphics::driver::ViewID CameraComponent::getViewID() const
+    {
+        return graphics::driver::ViewID(m_ViewType, m_ViewIndex);
+    }
+
+    //--------------------------------------------------------------------------------------
     VG_INLINE float CameraComponent::getFovY() const 
     { 
         return m_fovY; 

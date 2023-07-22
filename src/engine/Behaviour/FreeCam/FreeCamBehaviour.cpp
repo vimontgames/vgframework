@@ -5,6 +5,8 @@
 #include "core/IInput.h"
 #include "graphics/driver/IView.h"
 #include "engine/Component/Camera/CameraComponent.h"
+#include "engine/Engine.h"
+#include "graphics/renderer/IRenderer.h"
 
 using namespace vg::core;
 
@@ -47,9 +49,9 @@ namespace vg::engine
     //--------------------------------------------------------------------------------------
     FreeCamBehaviour::FreeCamBehaviour(const core::string& _name, core::IObject * _parent) :
         Behaviour(_name, _parent),
+        m_pitch(-pi / 2.0f),
+        m_yaw(pi),
         m_roll(0.0f),
-        m_pitch(-1.34f),
-        m_yaw(2.85f),
         m_moveSpeed(1.0f),
         m_rotSpeed(1.0f)
     {
@@ -65,6 +67,20 @@ namespace vg::engine
     //--------------------------------------------------------------------------------------
     void FreeCamBehaviour::Update(double _dt)
     {
+        bool update = false;
+
+        if (m_camera)
+        {
+            auto cameraViewID = m_camera->getViewID();
+            auto * view = Engine::get()->GetRenderer()->GetView(cameraViewID);
+
+            if (view && view->IsActive())
+            {
+                if (view->GetViewID() == cameraViewID)
+                    update = true;
+            }
+        }
+
         auto go = getGameObject();
 
         const float4x4 & world = go->getWorldMatrix();
@@ -74,44 +90,47 @@ namespace vg::engine
         float4 K(world.vec2);
         float4 T(world.vec3);
 
-        IInput * input = Kernel::getInput();
-
-        float mouseSpeedX = m_rotSpeed * 0.001f * pi;
-        float mouseSpeedY = m_rotSpeed * 0.001f * pi;
-        float moveSpeed = m_moveSpeed * 0.001f * (float)_dt;
-
-        if (input->isMouseButtonPressed(MouseButton::Middle))
+        if (update)
         {
-            const auto delta = input->getMouseDelta();
+            IInput * input = Kernel::getInput();
 
-            m_pitch += clamp((float)delta.y * mouseSpeedY, -pi, pi);
-            m_yaw -= clamp((float)delta.x * mouseSpeedX, -pi, pi);
+            float mouseSpeedX = m_rotSpeed * 0.001f * pi;
+            float mouseSpeedY = m_rotSpeed * 0.001f * pi;
+            float moveSpeed = m_moveSpeed * 0.001f * (float)_dt;
+
+            if (input->isMouseButtonPressed(MouseButton::Middle))
+            {
+                const auto delta = input->getMouseDelta();
+
+                m_pitch += clamp((float)delta.y * mouseSpeedY, -pi, pi);
+                m_yaw -= clamp((float)delta.x * mouseSpeedX, -pi, pi);
+            }
+
+            if (m_pitch < -pi)
+                m_pitch = 2.0f * pi + m_pitch;
+            else if (m_pitch > pi)
+                m_pitch = m_pitch - 2.0f * pi;
+
+            if (m_yaw < -pi)
+                m_yaw = 2.0f * pi + m_yaw;
+            else if (m_yaw > pi)
+                m_yaw = m_yaw - 2.0f * pi;
+
+            if (input->isKeyPressed(Key::A))
+                T -= moveSpeed * I;
+            else if (input->isKeyPressed(Key::D))
+                T += moveSpeed * I;
+
+            if (input->isKeyPressed(Key::PAGEDOWN))
+                T -= moveSpeed * J;
+            else if (input->isKeyPressed(Key::PAGEUP))
+                T += moveSpeed * J;
+
+            if (input->isKeyPressed(Key::W))
+                T -= moveSpeed * K;
+            else if (input->isKeyPressed(Key::S))
+                T += moveSpeed * K;
         }
-
-        if (m_pitch < -pi)
-            m_pitch = 2.0f * pi + m_pitch;
-        else if (m_pitch > pi)
-            m_pitch = m_pitch - 2.0f * pi;
-
-        if (m_yaw < -pi)
-            m_yaw = 2.0f * pi + m_yaw;
-        else if (m_yaw > pi)
-            m_yaw = m_yaw - 2.0f * pi;
-
-        if (input->isKeyPressed(Key::A))
-            T -= moveSpeed * I;
-        else if (input->isKeyPressed(Key::D))
-            T += moveSpeed * I;
-
-        if (input->isKeyPressed(Key::PAGEDOWN))
-            T -= moveSpeed * J;
-        else if (input->isKeyPressed(Key::PAGEUP))
-            T += moveSpeed * J;
-
-        if (input->isKeyPressed(Key::W))
-            T -= moveSpeed * K;
-        else if (input->isKeyPressed(Key::S))
-            T += moveSpeed * K;
 
         const float4x4 rotX = getRotX(m_pitch);
         const float4x4 rotZ = getRotZ(m_yaw);

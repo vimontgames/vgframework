@@ -27,6 +27,7 @@ namespace vg::engine
 
         VG_INLINE void                          setViewType         (graphics::driver::ViewType _viewType);
         VG_INLINE graphics::driver::ViewType    getViewType         () const;
+        VG_INLINE graphics::driver::ViewID      getViewID           () const;
 
         VG_INLINE float                         getFovY             () const;
         VG_INLINE float                         getNear             () const;

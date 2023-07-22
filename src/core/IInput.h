@@ -8,12 +8,25 @@ namespace vg::core
 
     using JoyID = core::u8;
 
+    enum class InputType : core::u8
+    {
+        Keyboard = 0,
+        Mouse,
+        Joypads
+    };
+
     class IInput
     {
     public:
         virtual                 ~IInput                     () = default;
+
+        virtual void            EnableInput                 (InputType _inputType, bool _enabled) = 0;
+        virtual bool            IsInputEnabled              (InputType _inputType) const = 0;
         
-        virtual bool            update                      () = 0;
+        virtual bool            Update                      () = 0;
+        virtual void            UpdateKeyboard              () = 0;
+        virtual void            UpdateMouse                 () = 0;
+        virtual void            UpdateJoypads               () = 0;
 
     #pragma region Mouse
         virtual core::int3      getMouseDelta               () const = 0;

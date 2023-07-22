@@ -6,6 +6,7 @@ namespace vg::graphics::renderer
     {
     public:
         virtual ~IImmediateGUI() = default;
-        virtual bool isFocused() const = 0;
+        virtual bool IsKeyboardFocused() const = 0;
+        virtual bool IsMouseFocused() const = 0;
     };
 }

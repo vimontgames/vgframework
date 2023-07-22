@@ -28,7 +28,8 @@ namespace vg::graphics
             void vulkanInit();
             #endif
 
-            bool isFocused() const override;
+            bool IsKeyboardFocused() const override;
+            bool IsMouseFocused() const override;
 
             void beginFrame();
             void render(driver::CommandList * _cmdList);

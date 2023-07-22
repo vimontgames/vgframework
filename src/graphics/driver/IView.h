@@ -28,8 +28,19 @@ namespace vg::graphics::driver
         {
             
         }
+
         ViewType type   : 2;
         ViewIndex index : 6;
+
+        inline bool operator == (const ViewID & _other) const
+        {
+            return type == _other.type && index == _other.index;
+        }
+
+        inline bool operator != (const ViewID & _other) const
+        {
+            return !(*this == _other);
+        }
     };
 
     struct CreateViewParams
@@ -81,5 +92,8 @@ namespace vg::graphics::driver
 
         virtual void                    SetViewID           (ViewID _viewID) = 0;
         virtual ViewID                  GetViewID           () const = 0;
+
+        virtual void                    SetActive           (bool _active) = 0;
+        virtual bool                    IsActive            () const = 0;
     };
 }

@@ -22,13 +22,17 @@ namespace vg::graphics::renderer
 
         if (ImGui::BeginPopupContextItem())
         {
-            const bool hasPath = scene->hasFile();
-
             ImGui::PushID("SceneMenu");
-            if (ImGui::MenuItem("Save Scene", nullptr, false, hasPath))
+            if (ImGui::MenuItem("Save Scene", nullptr, false))
             {
-                string existingFilePath = scene->getName() + ".scene";
-                factory->saveToXML(scene, existingFilePath);
+                string filePath;
+
+                if (_object->hasFile())
+                    filePath = scene->getFile();
+                else
+                    filePath = "data/scenes/" + scene->getName() + ".scene";
+
+                factory->saveToXML(scene, filePath);
                 status = Status::Saved;
             }
 

@@ -31,10 +31,11 @@ namespace vg::graphics::renderer
  
     }
 
-    const float toolbarSize = 50;
-
+    //--------------------------------------------------------------------------------------
     void ToolbarUI()
     {
+        const float toolbarSize = 50;
+
         ImGuiViewport * viewport = ImGui::GetMainViewport();
         ImGui::SetNextWindowPos(ImVec2(viewport->Pos.x, viewport->Pos.y + 16));
         ImGui::SetNextWindowSize(ImVec2(viewport->Size.x, toolbarSize));
@@ -73,7 +74,7 @@ namespace vg::graphics::renderer
         const string & name = getName();
         string title = name + " (" + to_string(m_size.x) + "x" + to_string(m_size.y) + ")###" + name;
 
-        if (ImGui::Begin(title.c_str(), &m_isVisible))
+        if (ImGui::Begin(title.c_str(), &m_isVisible, ImGuiWindowFlags_NoFocusOnAppearing))
         {
             // Compute Window content size
             ImVec2 vMin = ImGui::GetWindowContentRegionMin();
@@ -125,6 +126,12 @@ namespace vg::graphics::renderer
                 auto imGuiAdapter = Renderer::get()->getImGuiAdapter();
                 ImTextureID texID = imGuiAdapter->getImguiTextureID((Texture *)m_texture);
                 ImGui::Image(texID, ImVec2((float)m_size.x, (float)m_size.y));
+
+                if (ImGui::IsWindowFocused())
+                    m_view->SetActive(true);
+                else
+                    m_view->SetActive(false);
+
                 imGuiAdapter->releaseImguiTextureID(texID);
             }
 

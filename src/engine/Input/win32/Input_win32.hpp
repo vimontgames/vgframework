@@ -229,74 +229,23 @@ namespace vg::engine::win32
     }
 
     //--------------------------------------------------------------------------------------
-    bool Input::update()
+    bool Input::Update()
     {
-        memcpy(&m_keyboardData.m_previous, &m_keyboardData.m_current, m_keyboardData.s_buffersize);
-
-        // Make sure we reacquire the keyboard if the device was lost 
-        memset(&m_keyboardData.m_current, 0x0, sizeof(m_keyboardData.m_current));
-
         const auto handle = (HWND)m_appHandle;
 
         if (GetActiveWindow() == handle)
         {
-            // update keyboard
-            {
-                VG_PROFILE_CPU("Keyboard");
+            if (IsInputEnabled(InputType::Keyboard))
+                UpdateKeyboard();
 
-                HRESULT hr = m_directInputKeyboard->GetDeviceState(m_keyboardData.s_buffersize, &m_keyboardData.m_current);
-                if (FAILED(hr))
-                    m_directInputKeyboard->Acquire();
-            }
-
-            // update mouse
-            {
-                VG_PROFILE_CPU("Mouse");
-
-                DIMOUSESTATE ms;
-                memset(&ms, 0x0, sizeof(ms));
-
-                HRESULT hr = m_directInputMouse->GetDeviceState(sizeof(ms), &ms);
-                if (FAILED(hr))
-                    m_directInputMouse->Acquire();
-
-                const core::i32 threshold = 1000;
-
-                POINT mousePos;
-                GetCursorPos(&mousePos);
-
-                RECT clientRect;
-                GetClientRect(handle, &clientRect);
-
-                RECT winRect;
-                GetWindowRect(handle, &winRect);
-
-                POINT p;
-                p.x = 0;
-                p.y = 0;
-                ClientToScreen(handle, &p);
-
-                if (mousePos.x - p.x >= clientRect.left && mousePos.x - p.x <= clientRect.right && mousePos.y - p.y >= clientRect.top && mousePos.y - p.y <= clientRect.bottom)
-                    m_mouseData.m_isOverWindow = true;
-                else
-                    m_mouseData.m_isOverWindow = false;
-
-                m_mouseData.m_pos.x = clamp(mousePos.x - p.x, 0L, clientRect.right - clientRect.left);
-                m_mouseData.m_pos.y = clamp(mousePos.y - p.y, 0L, clientRect.bottom - clientRect.top);
-
-                m_mouseData.m_posDelta.x = abs(ms.lX) < threshold ? ms.lX : 0;
-                m_mouseData.m_posDelta.y = abs(ms.lY) < threshold ? ms.lY : 0;
-                m_mouseData.m_posDelta.z = abs(ms.lZ) < threshold ? ms.lZ : 0;
-
-                VG_STATIC_ASSERT(core::enumCount<core::MouseButton>() <= countof(ms.rgbButtons), "Invalid mouse button count");
-                for (uint b = 0; b < core::enumCount<core::MouseButton>(); ++b)
-                    m_mouseData.m_pressed[b] = 0 != ms.rgbButtons[b];
-            }
+            if (IsInputEnabled(InputType::Mouse))
+                UpdateMouse();
         }
 
-        updateJoysticks();
+        if (IsInputEnabled(InputType::Joypads))
+            UpdateJoypads();
         
-        return super::update();
+        return super::Update();
     }
 
 #pragma region Mouse
@@ -341,6 +290,53 @@ namespace vg::engine::win32
     {
         return m_mouseData.m_isOverWindow;
     }
+
+    //--------------------------------------------------------------------------------------
+    void Input::UpdateMouse()
+    {
+        VG_PROFILE_CPU("Mouse");
+
+        const auto handle = (HWND)m_appHandle;
+
+        DIMOUSESTATE ms;
+        memset(&ms, 0x0, sizeof(ms));
+
+        HRESULT hr = m_directInputMouse->GetDeviceState(sizeof(ms), &ms);
+        if (FAILED(hr))
+            m_directInputMouse->Acquire();
+
+        const core::i32 threshold = 1000;
+
+        POINT mousePos;
+        GetCursorPos(&mousePos);
+
+        RECT clientRect;
+        GetClientRect(handle, &clientRect);
+
+        RECT winRect;
+        GetWindowRect(handle, &winRect);
+
+        POINT p;
+        p.x = 0;
+        p.y = 0;
+        ClientToScreen(handle, &p);
+
+        if (mousePos.x - p.x >= clientRect.left && mousePos.x - p.x <= clientRect.right && mousePos.y - p.y >= clientRect.top && mousePos.y - p.y <= clientRect.bottom)
+            m_mouseData.m_isOverWindow = true;
+        else
+            m_mouseData.m_isOverWindow = false;
+
+        m_mouseData.m_pos.x = clamp(mousePos.x - p.x, 0L, clientRect.right - clientRect.left);
+        m_mouseData.m_pos.y = clamp(mousePos.y - p.y, 0L, clientRect.bottom - clientRect.top);
+
+        m_mouseData.m_posDelta.x = abs(ms.lX) < threshold ? ms.lX : 0;
+        m_mouseData.m_posDelta.y = abs(ms.lY) < threshold ? ms.lY : 0;
+        m_mouseData.m_posDelta.z = abs(ms.lZ) < threshold ? ms.lZ : 0;
+
+        VG_STATIC_ASSERT(core::enumCount<core::MouseButton>() <= countof(ms.rgbButtons), "Invalid mouse button count");
+        for (uint b = 0; b < core::enumCount<core::MouseButton>(); ++b)
+            m_mouseData.m_pressed[b] = 0 != ms.rgbButtons[b];
+    }
 #pragma endregion Mouse
 
 #pragma region Keyboard
@@ -361,6 +357,22 @@ namespace vg::engine::win32
     {
         return isKeyPressed(_key) && !wasKeyPressed(_key);
     }
+
+    //--------------------------------------------------------------------------------------
+    void Input::UpdateKeyboard()
+    {
+        VG_PROFILE_CPU("Keyboard");
+
+        memcpy(&m_keyboardData.m_previous, &m_keyboardData.m_current, m_keyboardData.s_buffersize);
+
+        // Make sure we reacquire the keyboard if the device was lost 
+        memset(&m_keyboardData.m_current, 0x0, sizeof(m_keyboardData.m_current));
+
+        HRESULT hr = m_directInputKeyboard->GetDeviceState(m_keyboardData.s_buffersize, &m_keyboardData.m_current);
+        if (FAILED(hr))
+            m_directInputKeyboard->Acquire();
+    }
+
 #pragma endregion Keyboard
 
 #pragma region Joy
@@ -426,7 +438,7 @@ namespace vg::engine::win32
     }
 
     //--------------------------------------------------------------------------------------
-    void Input::updateJoysticks()
+    void Input::UpdateJoypads()
     {
         VG_PROFILE_CPU("Joy");
 

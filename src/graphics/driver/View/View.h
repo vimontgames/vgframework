@@ -45,6 +45,9 @@ namespace vg::graphics::driver
         void                                SetViewID           (ViewID _viewID) override;
         ViewID                              GetViewID           () const override;
 
+        void                                SetActive           (bool _active) override;
+        bool                                IsActive            () const override;
+
         virtual void                        AddToFrameGraph     (FrameGraph & _frameGraph) {} // TODO: implement "MainView" using 'AddToFrameGraph'?
 
         core::u32                           release             () override;
@@ -76,6 +79,7 @@ namespace vg::graphics::driver
         core::IUniverse *                   m_cameraUniverse = nullptr;
         core::float2                        m_cameraNearFar;
         float                               m_cameraFovY;
+        bool                                m_active = false;
     };
 }
 

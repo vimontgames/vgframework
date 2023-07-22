@@ -47,7 +47,6 @@ namespace vg::core
         virtual IObject *                   getSingleton            (const char * _className) const = 0;
         virtual IObject *                   createObject            (const char * _className, const string & _name = "", IObject * _parent = nullptr) const = 0;
 
-        virtual IObject *                   createFromXML           (const string & _XMLfilename) const  = 0;
         virtual bool                        loadFromXML             (IObject * _object, const string & _XMLfilename) const = 0;
         virtual bool                        saveToXML               (const IObject * _object, const string & _xmlFile) const  = 0;
 

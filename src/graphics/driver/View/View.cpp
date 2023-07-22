@@ -135,4 +135,16 @@ namespace vg::graphics::driver
     {
         return getViewID();
     }
+
+    //--------------------------------------------------------------------------------------
+    void View::SetActive(bool _active)
+    {
+        m_active = _active;
+    }
+    
+    //--------------------------------------------------------------------------------------
+    bool View::IsActive() const
+    {
+        return m_active;
+    }
 }

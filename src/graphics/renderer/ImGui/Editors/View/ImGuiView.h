@@ -18,6 +18,5 @@ namespace vg::graphics::renderer
         core::uint2                     m_size = core::uint2(0, 0);
         graphics::driver::IView *       m_view = nullptr;
         graphics::driver::ITexture *    m_texture = nullptr;
-        ImTextureID texID;
     };
 }

@@ -17,7 +17,11 @@ namespace vg::engine::win32
         Input(const vg::core::WinHandle & _appHandle);
         ~Input();
 
-        bool            update                      () override;
+        bool            Update                      () override;
+
+        void            UpdateKeyboard              () final override;
+        void            UpdateMouse                 () final override;
+        void            UpdateJoypads               () final override;
 
     #pragma region Mouse
         core::int3      getMouseDelta               () const override;
@@ -46,7 +50,6 @@ namespace vg::engine::win32
 
     private:
         void            initJoysticks               ();
-        void            updateJoysticks             ();
         core::uint      detectJoystick              (LPCDIDEVICEINSTANCEA _instance);
         friend  BOOL    enumJoysticksCallback       (LPCDIDEVICEINSTANCEA _instance, LPVOID _this);
     #pragma endregion Joy

@@ -43,7 +43,7 @@ namespace vg::graphics::renderer
         driver::ViewID                          AddView                 (driver::IView * _view) final override;
         void                                    RemoveView              (driver::ViewID _viewID) final override;
         driver::IView *                         GetView                 (driver::ViewID _viewID) const final override;
-        const core::vector <driver::IView *>    GetViews                () const final override;
+        const core::vector <driver::IView *>    GetViews                (driver::ViewType _viewType) const final override;
 
         void                                    SetResized              () final override;
         void                                    resize                  (core::uint _width, core::uint _height) override;

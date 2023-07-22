@@ -6,6 +6,7 @@
 #include "core/Timer/Timer.h"
 #include "core/Kernel.h"
 #include "engine/IResourceManager.h"
+#include "core/File/File.h"
 
 using namespace tinyxml2;
 
@@ -110,27 +111,23 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
-    IObject * Factory::createFromXML(const string & _XMLfilename) const
-    {
-        return nullptr;
-    }
-
-    //--------------------------------------------------------------------------------------
     bool Factory::loadFromXML(IObject * _object, const string & _XMLfilename) const
     {
         const auto startLoad = Timer::getTick();
         const auto * factory = Kernel::getFactory();
+        string relativePath = io::getRelativePath(_XMLfilename);
 
         XMLDoc xmlDoc;
-        if (XMLError::XML_SUCCESS == xmlDoc.LoadFile(_XMLfilename.c_str()))
+        if (XMLError::XML_SUCCESS == xmlDoc.LoadFile(relativePath.c_str()))
         {
             XMLNode * xmlRoot = xmlDoc.FirstChild();
             if (xmlRoot != nullptr)
             {
-                VG_DEBUGPRINT("[Factory] Load \"%s\"\n", _XMLfilename.c_str());
+                VG_DEBUGPRINT("[Factory] Load \"%s\"\n", relativePath.c_str());
                 if (factory->serializeFromXML(_object, xmlDoc))
                 {
-                    VG_DEBUGPRINT("[Factory] \"%s\" loaded in %.2f ms\n", _XMLfilename.c_str(), Timer::getEnlapsedTime(startLoad, Timer::getTick()));
+                    VG_DEBUGPRINT("[Factory] \"%s\" loaded in %.2f ms\n", relativePath.c_str(), Timer::getEnlapsedTime(startLoad, Timer::getTick()));
+                    _object->setFile(relativePath.c_str());
                     return true;
                 }
             }

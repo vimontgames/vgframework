@@ -32,14 +32,17 @@ namespace vg::engine
         class Input : public core::IInput
         {
         public:
-            Input(const core::WinHandle &_appHandle);
-            ~Input();
+                                        Input               (const core::WinHandle &_appHandle);
+                                        ~Input              ();
 
-            bool update() override;
+            void                        EnableInput         (core::InputType _inputType, bool _enable) override;
+            bool                        IsInputEnabled      (core::InputType _inputType) const override;
+
+            bool                        Update              () { return true; };
 
         protected:
             const core::WinHandle &     m_appHandle;
-
+            core::u8                    m_inputTypes = 0;
             MouseData                   m_mouseData;
             KeyboardData                m_keyboardData;
             core::vector<JoystickData>  m_joystickData;
@@ -62,7 +65,7 @@ namespace vg::engine
         Input(const vg::core::WinHandle & _appHandle);
         ~Input();
 
-        bool update() override;
+        bool Update() override;
 
     private:
     };

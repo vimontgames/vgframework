@@ -99,7 +99,7 @@ namespace vg::graphics::renderer
         colors[ImGuiCol_Header]                 = ImVec4(0.23f, 0.34f, 0.54f, 0.77f);
         colors[ImGuiCol_HeaderHovered]          = ImVec4(0.23f, 0.34f, 0.54f, 1.00f);
         colors[ImGuiCol_HeaderActive]           = ImVec4(0.33f, 0.42f, 0.60f, 1.00f);
-        colors[ImGuiCol_Separator]              = ImVec4(0.23f, 0.34f, 0.54f, 0.77f);
+        colors[ImGuiCol_Separator]              = ImVec4(0.23f, 0.23f, 0.25f, 1.00f);
         colors[ImGuiCol_SeparatorHovered]       = ImVec4(0.23f, 0.34f, 0.54f, 1.00f);
         colors[ImGuiCol_SeparatorActive]        = ImVec4(0.33f, 0.42f, 0.60f, 1.00f);
         colors[ImGuiCol_ResizeGrip]             = ImVec4(0.23f, 0.34f, 0.54f, 0.50f);
@@ -323,10 +323,20 @@ namespace vg::graphics::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    bool ImguiAdapter::isFocused() const
+    bool ImguiAdapter::IsKeyboardFocused() const
     {
         const ImGuiIO & io = ImGui::GetIO();
         if (io.WantCaptureKeyboard)
+            return true;
+        else
+            return false;
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool ImguiAdapter::IsMouseFocused() const
+    {
+        const ImGuiIO & io = ImGui::GetIO();
+        if (io.WantCaptureMouse)
             return true;
         else
             return false;
