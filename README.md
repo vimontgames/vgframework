@@ -8,7 +8,7 @@ Its renderer only uses modern graphics APIs like DirectX12 and Vulkan (I would a
 * Apart from the number of root constants, all shaders are sharing the same root signatures.
 
 
-![Screenshot](doc/img/toolbar.jpg)
+![Screenshot](doc/img/0.15.png)
  
  
 For the engine part, so far I integrated several "must-haves" tools like a CPU/GPU profiler, inputs, a job scheduler and Dear Imgui. I am currently implementing an Entity/Component system and reflection using ImGui.  
@@ -19,8 +19,6 @@ Another subject that is very close to my heart is that there is a strong separat
 
 ## 0.15
 I could finally code for a few hours and the scene loading using reflection is now working. You can open the *.scene files from the "Scenes" tab. Loading is additive, meaning you can load several scenes at once.
-
-![Screenshot](doc/img/0.15.png)
 
 # getting started
 
