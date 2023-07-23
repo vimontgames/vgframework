@@ -149,23 +149,9 @@ namespace vg::graphics::driver
     }
 
     //--------------------------------------------------------------------------------------
-    void Profiler::registerThread(const char * _name)
+    void Profiler::registerProfilerThread(const char * _name)
     {
-        string name(_name);
-        lock_guard<mutex> lock(m_mutex);
-
-        for (uint i = 0; i < m_registeredThreads.size(); ++i)
-        {
-            if (m_registeredThreads[i] == name)
-            {
-                //VG_DEBUGPRINT("ProfilerThread \"%s\" is already registered\n", _name);
-                return;
-            }
-        }
-
-        VG_DEBUGPRINT("[Profiler] Register Thread \"%s\"\n", _name);
         Optick::RegisterThread(_name);
-        m_registeredThreads.push_back(name);
     }
 }
 

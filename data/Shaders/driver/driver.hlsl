@@ -59,6 +59,44 @@ PS_Output_Quad PS_Copy(VS_Output_Quad _input)
     return output;
 }
 
+#if 1
+
+float3 Linear2sRGB(float3 value)
+{
+    return value <= 0.0031308f ? value * 12.92f : pow(value, 1.0f / 2.4f) * 1.055f - 0.055f;
+}
+
+float3 sRGB2Linear(float3 value)
+{
+    return value <= 0.04045f ? value / 12.92f : pow((value + 0.055f) / 1.055f, 2.4f);
+}
+
+#elif 0
+
+float3 Linear2sRGB(float3 value)
+{
+    return pow(value, 1.0f / 2.2f);
+}
+
+float3 sRGB2Linear(float3 value)
+{
+    return pow(value, 2.2f);
+}
+
+#else
+
+float3 Linear2sRGB(float3 value)
+{
+    return sqrt(value);
+}
+
+float3 sRGB2Linear(float3 value)
+{
+    return value * value;
+}
+
+#endif
+
 PS_Output_Quad PS_Gamma(VS_Output_Quad _input)
 {
     PS_Output_Quad output;
@@ -66,7 +104,8 @@ PS_Output_Quad PS_Gamma(VS_Output_Quad _input)
     output.color0 = float4(uv, 0, 1);
 
     output.color0.rgba = Texture2DTable[rootConstants2D.texID].Sample(nearestRepeat, uv).rgba;
-    output.color0.rgb = pow(output.color0.rgb, 1.0f/2.2f);
+    output.color0.rgb = Linear2sRGB(output.color0.rgb); // pow(output.color0.rgb, 1.0f / 2.2f);
+    output.color0.a = 1; // Should be an option
 
     return output;
 }

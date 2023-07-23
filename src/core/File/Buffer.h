@@ -16,6 +16,18 @@ namespace vg::core::io
         bool read(u32 * _value);
         bool write(u32 _value);
 
+        bool read(float * _value);
+        bool write(const float & _value);
+
+        bool read(float2 * _value);
+        bool write(const float2 & _value);
+
+        bool read(float3 * _value);
+        bool write(const float3 & _value);
+
+        bool read(float4 * _value);
+        bool write(const float4 & _value);
+
         bool read(string * _string);
         bool write(const string & _string);
 

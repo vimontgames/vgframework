@@ -259,9 +259,10 @@ namespace vg::engine
 
         // Profiler has to be created by the renderer to be able to also profile the GPU
         Kernel::setProfiler(_singletons.profiler);
+        _singletons.scheduler->RegisterCurrentThread("Main");
 
-        // Register threads after profiler creation
-        _singletons.scheduler->registerProfilerThreads();
+        // Register worker threads, it will be useful to get worker thread names in profiler
+        _singletons.scheduler->RegisterWorkerThreads();
 
         m_resourceManager = new ResourceManager("Resource Manager", this);
 

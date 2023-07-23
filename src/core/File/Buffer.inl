@@ -42,6 +42,54 @@ namespace vg::core::io
     }
 
     //--------------------------------------------------------------------------------------
+    inline bool Buffer::read(float * _value)
+    {
+        return read(_value, sizeof(float));
+    }
+
+    //--------------------------------------------------------------------------------------
+    inline bool Buffer::write(const float & _value)
+    {
+        return write(&_value, sizeof(float));
+    }
+
+    //--------------------------------------------------------------------------------------
+    inline bool Buffer::read(float2 * _value)
+    {
+        return read(_value, sizeof(float2));
+    }
+
+    //--------------------------------------------------------------------------------------
+    inline bool Buffer::write(const float2 & _value)
+    {
+        return write(&_value, sizeof(float2));
+    }
+
+    //--------------------------------------------------------------------------------------
+    inline bool Buffer::read(float3 * _value)
+    {
+        return read(_value, sizeof(float3));
+    }
+
+    //--------------------------------------------------------------------------------------
+    inline bool Buffer::write(const float3 & _value)
+    {
+        return write(&_value, sizeof(float3));
+    }
+
+    //--------------------------------------------------------------------------------------
+    inline bool Buffer::read(float4 * _value)
+    {
+        return read(_value, sizeof(float4));
+    }
+
+    //--------------------------------------------------------------------------------------
+    inline bool Buffer::write(const float4 & _value)
+    {
+        return write(&_value, sizeof(float4));
+    }
+
+    //--------------------------------------------------------------------------------------
     inline bool Buffer::read(string * _string)
     {
         u32 len;

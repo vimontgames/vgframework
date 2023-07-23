@@ -4,7 +4,10 @@
 
 namespace vg::core
 {
-    const float pi = 3.14159265359f;
+    const float PI = 3.14159265359f;
+
+    const float MIN_FLOAT = FLT_MIN;
+    const float MAX_FLOAT = FLT_MAX;
 
 	//--------------------------------------------------------------------------------------
 	template <typename T> T min(const T & _left, const T & _right)

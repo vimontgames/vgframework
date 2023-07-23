@@ -51,9 +51,21 @@
     <ClCompile Include="ImGui\Toolbars\ImGuiToolbar.cpp">
       <Filter>ImGui\Toolbars</Filter>
     </ClCompile>
+    <ClCompile Include="Job\Job.cpp">
+      <Filter>Job</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Renderer.def" />
+    <None Include="View\View.inl">
+      <Filter>View</Filter>
+    </None>
+    <None Include="Geometry\AABB\AABB.inl">
+      <Filter>Geometry\AABB</Filter>
+    </None>
+    <None Include="Geometry\Geometry.inl">
+      <Filter>Geometry</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Precomp.h" />
@@ -95,12 +107,6 @@
     <ClInclude Include="IGraphicInstance.h" />
     <ClInclude Include="IGraphicModel.h" />
     <ClInclude Include="IImmediateGUI.h" />
-    <ClInclude Include="Geometry\Batch.h">
-      <Filter>Geometry</Filter>
-    </ClInclude>
-    <ClInclude Include="Geometry\Batch.hpp">
-      <Filter>Geometry</Filter>
-    </ClInclude>
     <ClInclude Include="Model\Material\MaterialModel.h">
       <Filter>Model\Material</Filter>
     </ClInclude>
@@ -273,6 +279,27 @@
     <ClInclude Include="ImGui\Toolbars\Main\ImGuiMainToolbar.hpp">
       <Filter>ImGui\Toolbars\Main</Filter>
     </ClInclude>
+    <ClInclude Include="Job\Culling\ViewCullingJob.h">
+      <Filter>Job\Culling</Filter>
+    </ClInclude>
+    <ClInclude Include="View\View.h">
+      <Filter>View</Filter>
+    </ClInclude>
+    <ClInclude Include="Job\Culling\ViewCullingJob.hpp">
+      <Filter>Job\Culling</Filter>
+    </ClInclude>
+    <ClInclude Include="Geometry\AABB\AABB.h">
+      <Filter>Geometry\AABB</Filter>
+    </ClInclude>
+    <ClInclude Include="Geometry\AABB\AABB.hpp">
+      <Filter>Geometry\AABB</Filter>
+    </ClInclude>
+    <ClInclude Include="Geometry\Batch\Batch.hpp">
+      <Filter>Geometry\Batch</Filter>
+    </ClInclude>
+    <ClInclude Include="Geometry\Batch\Batch.h">
+      <Filter>Geometry\Batch</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Pass">
@@ -403,6 +430,18 @@
     </Filter>
     <Filter Include="ImGui\Toolbars\Main">
       <UniqueIdentifier>{38525143-aa8c-4efb-abc6-e344c8e103fd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Job">
+      <UniqueIdentifier>{b3441a69-f331-4236-a21f-8b65dcbde221}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Job\Culling">
+      <UniqueIdentifier>{c2076d77-011d-44ae-95aa-1601b1a1ba70}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Geometry\Batch">
+      <UniqueIdentifier>{6b86f4e5-1632-4b0b-9554-b76cea833b36}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Geometry\AABB">
+      <UniqueIdentifier>{a49bddf0-e594-41e9-9f02-df4bae0dacec}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

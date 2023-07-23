@@ -35,13 +35,13 @@ namespace vg::engine
         _desc.setPropertyRangeHelper(FreeCamBehaviour, m_rotSpeed, float2(0.0f, 10.0f));
 
         _desc.registerPropertyHelper(FreeCamBehaviour, m_pitch, "Pitch");
-        _desc.setPropertyRangeHelper(FreeCamBehaviour, m_pitch, float2(-pi, +pi));
+        _desc.setPropertyRangeHelper(FreeCamBehaviour, m_pitch, float2(-PI, +PI));
 
         _desc.registerPropertyHelper(FreeCamBehaviour, m_yaw, "Yaw");
-        _desc.setPropertyRangeHelper(FreeCamBehaviour, m_yaw, float2(-pi, +pi));
+        _desc.setPropertyRangeHelper(FreeCamBehaviour, m_yaw, float2(-PI, +PI));
 
         _desc.registerPropertyHelper(FreeCamBehaviour, m_roll, "Roll");
-        _desc.setPropertyRangeHelper(FreeCamBehaviour, m_roll, float2(-pi, +pi));
+        _desc.setPropertyRangeHelper(FreeCamBehaviour, m_roll, float2(-PI, +PI));
 
         return true;
     }
@@ -49,8 +49,8 @@ namespace vg::engine
     //--------------------------------------------------------------------------------------
     FreeCamBehaviour::FreeCamBehaviour(const core::string& _name, core::IObject * _parent) :
         Behaviour(_name, _parent),
-        m_pitch(-pi / 2.0f),
-        m_yaw(pi),
+        m_pitch(-PI / 2.0f),
+        m_yaw(PI),
         m_roll(0.0f),
         m_moveSpeed(1.0f),
         m_rotSpeed(1.0f)
@@ -94,27 +94,27 @@ namespace vg::engine
         {
             IInput * input = Kernel::getInput();
 
-            float mouseSpeedX = m_rotSpeed * 0.001f * pi;
-            float mouseSpeedY = m_rotSpeed * 0.001f * pi;
+            float mouseSpeedX = m_rotSpeed * 0.001f * PI;
+            float mouseSpeedY = m_rotSpeed * 0.001f * PI;
             float moveSpeed = m_moveSpeed * 0.001f * (float)_dt;
 
             if (input->isMouseButtonPressed(MouseButton::Middle))
             {
                 const auto delta = input->getMouseDelta();
 
-                m_pitch += clamp((float)delta.y * mouseSpeedY, -pi, pi);
-                m_yaw -= clamp((float)delta.x * mouseSpeedX, -pi, pi);
+                m_pitch += clamp((float)delta.y * mouseSpeedY, -PI, PI);
+                m_yaw -= clamp((float)delta.x * mouseSpeedX, -PI, PI);
             }
 
-            if (m_pitch < -pi)
-                m_pitch = 2.0f * pi + m_pitch;
-            else if (m_pitch > pi)
-                m_pitch = m_pitch - 2.0f * pi;
+            if (m_pitch < -PI)
+                m_pitch = 2.0f * PI + m_pitch;
+            else if (m_pitch > PI)
+                m_pitch = m_pitch - 2.0f * PI;
 
-            if (m_yaw < -pi)
-                m_yaw = 2.0f * pi + m_yaw;
-            else if (m_yaw > pi)
-                m_yaw = m_yaw - 2.0f * pi;
+            if (m_yaw < -PI)
+                m_yaw = 2.0f * PI + m_yaw;
+            else if (m_yaw > PI)
+                m_yaw = m_yaw - 2.0f * PI;
 
             if (input->isKeyPressed(Key::A))
                 T -= moveSpeed * I;

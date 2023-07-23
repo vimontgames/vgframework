@@ -5,8 +5,8 @@
 #include "core/Timer/Timer.h"
 #include "core/Object/AutoRegisterClass.h"
 #include "core/File/File.h"
+#include "core/Scheduler/Scheduler.h"
 
-#include "graphics/driver/View/View.h"
 #include "graphics/driver/device/device.h"
 #include "graphics/driver/Shader/ShaderManager.h"
 #include "graphics/driver/FrameGraph/FrameGraph.h"
@@ -22,6 +22,7 @@
 #include "graphics/renderer/Options/DisplayOptions.h"
 #include "graphics/renderer/IGraphicInstance.h"
 #include "graphics/renderer/Importer/TextureImporterData.h"
+#include "graphics/renderer/View/View.h"
 
 #include "imgui/imgui.h"
 
@@ -255,10 +256,8 @@ namespace vg::graphics::renderer
 		{
             m_imgui->beginFrame();
 
-            // Culling
-            {
-                // TODO:
-            }
+            // Culling all views
+            cullViews();
 
             // Framegraph
             {
@@ -291,8 +290,42 @@ namespace vg::graphics::renderer
 		m_device.endFrame();
 	}
 
+    #pragma optimize("", off)
+
     //--------------------------------------------------------------------------------------
-    driver::View * Renderer::getMainView() const
+    // TODO: create additional views from Views (Shadowmaps, Cubemaps ...)
+    //--------------------------------------------------------------------------------------
+    void Renderer::cullViews()
+    {
+        core::Scheduler * jobScheduler = (core::Scheduler *)Kernel::getScheduler();
+
+        // Perform culling foreach view (might want to split views later)
+        uint jobStartCounter = 0;
+        core::JobSync syncCull;
+        for (uint j = 0; j < core::enumCount<driver::ViewType>(); ++j)
+        {
+            const auto & views = m_views[j];
+            for (uint i = 0; i < views.size(); ++i)
+            {
+                View * view = views[i];
+                if (view)
+                {
+                    auto * job = view->getCullingJob();
+                    jobScheduler->Start(job, &syncCull);
+                    jobStartCounter++;
+                }
+            }
+        }
+
+        if (jobStartCounter > 0)
+        {
+            VG_PROFILE_CPU("syncCull");
+            jobScheduler->Wait(syncCull);
+        }
+    }
+
+    //--------------------------------------------------------------------------------------
+    View * Renderer::getMainView() const
     {
         return m_mainView;
     }

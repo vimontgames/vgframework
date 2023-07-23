@@ -192,6 +192,22 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
+    core::float2 * Property::GetPropertyFloat2(const IObject * _object) const
+    {
+        VG_ASSERT(nullptr != _object);
+        VG_ASSERT(Type::Float2 == getType());
+        return (float2 *)(uint_ptr(_object) + offset);
+    }
+
+    //--------------------------------------------------------------------------------------
+    core::float3 * Property::GetPropertyFloat3(const IObject * _object) const
+    {
+        VG_ASSERT(nullptr != _object);
+        VG_ASSERT(Type::Float3 == getType());
+        return (float3 *)(uint_ptr(_object) + offset);
+    }
+
+    //--------------------------------------------------------------------------------------
     core::float4 * Property::GetPropertyFloat4(const IObject * _object) const
     {
         VG_ASSERT(nullptr != _object);

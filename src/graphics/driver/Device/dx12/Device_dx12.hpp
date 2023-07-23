@@ -381,9 +381,12 @@ namespace vg::graphics::driver::dx12
         m_currentBackbufferIndex = m_dxgiSwapChain->GetCurrentBackBufferIndex();
 
         // Wait for the last frame occupying this slot to be complete
-        FrameContext * Frame = &m_frameContext[FrameIndex];
-        WaitForFence(m_d3d12fence, m_d3d12fenceEvent, Frame->mFrameFenceId);
-        Frame->mFrameFenceId = FrameFence;
+        {
+            VG_PROFILE_CPU("Wait");
+            FrameContext * Frame = &m_frameContext[FrameIndex];
+            WaitForFence(m_d3d12fence, m_d3d12fenceEvent, Frame->mFrameFenceId);
+            Frame->mFrameFenceId = FrameFence;
+        }
         m_currentFrameIndex = FrameIndex;
 
 		auto & context = getCurrentFrameContext();
@@ -476,8 +479,11 @@ namespace vg::graphics::driver::dx12
             }
         }
         
-        VG_PROFILE_GPU_SWAP(this);
-        VG_ASSERT_SUCCEEDED(m_dxgiSwapChain->Present((uint)m_VSync, 0));
+        {
+            VG_PROFILE_CPU("Present");
+            VG_PROFILE_GPU_SWAP(this);
+            VG_ASSERT_SUCCEEDED(m_dxgiSwapChain->Present((uint)m_VSync, 0));
+        }
 
 		super::endFrame();
 	}

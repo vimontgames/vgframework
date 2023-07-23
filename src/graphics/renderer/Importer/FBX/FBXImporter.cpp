@@ -379,13 +379,18 @@ namespace vg::graphics::renderer
         vector<float4> positions;
                        positions.resize(controlPointCount);
 
+        // Bounding Box
+        AABB aabb = AABB((float3)MAX_FLOAT, (float3)MIN_FLOAT);
+
         // import positions
         const FbxVector4 * points = _fbxMesh->GetControlPoints();
 
         for (u32 p = 0; p < controlPointCount; p++)
         {
             const double * pPosD = (double*)&points[p];
-            positions[p] = float4((float)(pPosD[0] * _scale), (float)(pPosD[1] * _scale), (float)(pPosD[2] * _scale), (float)pPosD[3]);
+            float4 pos = float4((float)(pPosD[0] * _scale), (float)(pPosD[1] * _scale), (float)(pPosD[2] * _scale), (float)pPosD[3]);
+            aabb.grow(pos.xyz);
+            positions[p] = pos;
         }
 
         // get layers
@@ -513,6 +518,7 @@ namespace vg::graphics::renderer
         _data.indices = std::move(flatIndexBuffer);
         _data.vertices = std::move(vertexBuffer);
         _data.materials = std::move(materials);
+        _data.aabb = std::move(aabb);
  
         VG_DEBUGPRINT(" %.2f ms\n", Timer::getEnlapsedTime(start, Timer::getTick()));
 

@@ -2,26 +2,33 @@
 
 #include "graphics/driver/IView.h"
 #include "graphics/driver/Resource/Texture.h"
+#include "graphics/renderer/Job/Culling/ViewCullingJob.h"
 
 namespace vg::core
 {
     class GameObject;
+    class Job;
 }
 
 namespace vg::graphics::driver
 {
     class FrameGraph;
+}
 
+namespace vg::graphics::renderer
+{
     //--------------------------------------------------------------------------------------
-    // Base class for user views
+    // Base class for user views.
+    // The 'IView' interface is declared in graphics::driver so that the Framegraph can  
+    // reference a view, but the 'View' base class is defined in graphics::renderer.
     //--------------------------------------------------------------------------------------
 
-    class View : public IView
+    class View : public driver::IView
     {
     public:
         const char *                        getClassName        () const override { return "View"; }
 
-                                            View                (const CreateViewParams & _params);
+                                            View                (const driver::CreateViewParams & _params);
                                             ~View               ();
 
         void                                SetupCamera         (const core::float4x4 & _viewInv, core::float2 _nearFar, float _fovY) override;
@@ -42,13 +49,13 @@ namespace vg::graphics::driver
         void                                SetRenderTarget     (driver::ITexture * _renderTarget) override;
         driver::ITexture *                  GetRenderTarget     () const override;
 
-        void                                SetViewID           (ViewID _viewID) override;
-        ViewID                              GetViewID           () const override;
+        void                                SetViewID           (driver::ViewID _viewID) override;
+        driver::ViewID                      GetViewID           () const override;
 
         void                                SetActive           (bool _active) override;
         bool                                IsActive            () const override;
 
-        virtual void                        AddToFrameGraph     (FrameGraph & _frameGraph) {} // TODO: implement "MainView" using 'AddToFrameGraph'?
+        virtual void                        AddToFrameGraph     (driver::FrameGraph & _frameGraph) {} // TODO: implement "MainView" using 'AddToFrameGraph'?
 
         core::u32                           release             () override;
 
@@ -60,26 +67,37 @@ namespace vg::graphics::driver
         VG_INLINE void                      setOffset           (core::int2 _offset);
         VG_INLINE core::int2                getOffset           () const;
 
+        VG_INLINE const core::float4x4 &    getViewProjMatrix   () const;
         VG_INLINE const core::float4x4 &    getViewInvMatrix    () const;
         VG_INLINE core::float2              getCameraNearFar    () const;
         VG_INLINE float                     getCameraFovY       () const;
 
-        VG_INLINE void                      setViewID           (ViewID _viewID);
-        VG_INLINE ViewID                    getViewID           () const;
+        VG_INLINE void                      setViewID           (driver::ViewID _viewID);
+        VG_INLINE driver::ViewID            getViewID           () const;
 
         VG_INLINE void                      setRenderTarget     (driver::Texture * _renderTarget);
         VG_INLINE driver::Texture *         getRenderTarget     () const;
 
+        VG_INLINE core::Job *               getCullingJob       () const;
+
     private:
-        ViewID                              m_viewID = ViewID((ViewType)-1, -1);
+        static core::float4x4               setPerspectiveProjectionRH(float _fov, float _ar, float _near, float _far);
+
+    private:
+        driver::ViewID                      m_viewID = driver::ViewID((driver::ViewType)-1, -1);
         driver::Texture *                   m_renderTarget = nullptr;   // Assume backbuffer if nullptr
         core::uint2                         m_size = core::uint2(0, 0);
         core::int2                          m_offset = core::int2(0, 0);
         core::float4x4                      m_viewInv = core::float4x4::identity();
+        core::float4x4                      m_viewProj = core::float4x4::identity();
         core::IUniverse *                   m_cameraUniverse = nullptr;
         core::float2                        m_cameraNearFar;
         float                               m_cameraFovY;
         bool                                m_active = false;
+        ViewCullingJob *                    m_cullingJob = nullptr;
+
+    public:
+        ViewCullingJobOutput                m_cullingJobResult;
     };
 }
 

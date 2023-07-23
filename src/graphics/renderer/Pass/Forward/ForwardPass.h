@@ -10,6 +10,7 @@ namespace vg::graphics::driver
 namespace vg::graphics::renderer
 {
     class MeshModel;
+    class AABB;
 
     //--------------------------------------------------------------------------------------
     class ForwardPass : public driver::UserPass
@@ -32,6 +33,10 @@ namespace vg::graphics::renderer
         void destroyAxis();
         void drawAxis(driver::CommandList * _cmdList, const core::float4x4 & _viewProj) const;
 
+        void createUnitBox();
+        void destroyUnitBox();
+        void drawAABB(driver::CommandList * _cmdList, const AABB & _aabb, const core::float4x4 & _world, const core::float4x4 & _viewProj) const;
+
     private:
         driver::RootSignatureHandle     m_rootSignatureHandle;
         driver::ShaderKey               m_forwardShaderKey;
@@ -39,5 +44,8 @@ namespace vg::graphics::renderer
 
         driver::Buffer *                m_gridVB = nullptr;
         driver::Buffer *                m_axisVB = nullptr;
+
+        driver::Buffer *                m_unitBoxIB = nullptr;
+        driver::Buffer *                m_unitBoxVB = nullptr;
     };
 }

@@ -49,7 +49,7 @@ namespace vg::core
         virtual void stopCpuEvent           () = 0;
         virtual void startGpuEvent          (const char * _name) = 0;
         virtual void stopGpuEvent           () = 0;
-        virtual void registerThread         (const char * _name) = 0;
+        virtual void registerProfilerThread (const char * _name) = 0;
 
         virtual ~IProfiler() {}
     };

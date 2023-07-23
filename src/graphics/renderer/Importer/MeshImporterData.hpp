@@ -2,7 +2,7 @@ using namespace vg::core;
 
 namespace vg::graphics::renderer
 {
-    static const u32 MeshImporterDataVersion = 1;
+    static const u32 MeshImporterDataVersion = 2;
 
     //--------------------------------------------------------------------------------------
     bool MeshImporterData::load(const core::string & _file)
@@ -17,6 +17,8 @@ namespace vg::graphics::renderer
             if (version == MeshImporterDataVersion)
             {
                 buffer.read(&name);
+
+                aabb.read(buffer);
 
                 u32 batchCount;
                 buffer.read(&batchCount);
@@ -48,6 +50,7 @@ namespace vg::graphics::renderer
         buffer.write(MeshImporterDataVersion);
 
         buffer.write(name);
+        aabb.write(buffer);
 
         buffer.write((u32)batches.size());
         for (uint i = 0; i < batches.size(); ++i)

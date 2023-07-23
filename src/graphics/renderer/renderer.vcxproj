@@ -38,6 +38,7 @@
     <ClCompile Include="Importer\FBX\FBXImporter.cpp" />
     <ClCompile Include="Importer\ImporterData.cpp" />
     <ClCompile Include="Instance\Mesh\MeshInstance.cpp" />
+    <ClCompile Include="Job\Job.cpp" />
     <ClCompile Include="Model\Material\MaterialModel.cpp" />
     <ClCompile Include="Model\Mesh\MeshModel.cpp" />
     <ClCompile Include="Options\Options.cpp" />
@@ -53,11 +54,16 @@
     <ClCompile Include="View\View.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Geometry\AABB\AABB.inl" />
+    <None Include="Geometry\Geometry.inl" />
     <None Include="Renderer.def" />
+    <None Include="View\View.inl" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Geometry\Batch.h" />
-    <ClInclude Include="Geometry\Batch.hpp" />
+    <ClInclude Include="Geometry\AABB\AABB.h" />
+    <ClInclude Include="Geometry\AABB\AABB.hpp" />
+    <ClInclude Include="Geometry\Batch\Batch.h" />
+    <ClInclude Include="Geometry\Batch\Batch.hpp" />
     <ClInclude Include="Geometry\Geometry.h" />
     <ClInclude Include="Geometry\Mesh\MeshGeometry.h" />
     <ClInclude Include="Geometry\Mesh\MeshGeometry.hpp" />
@@ -115,6 +121,8 @@
     <ClInclude Include="Importer\TextureImporterData.hpp" />
     <ClInclude Include="Instance\Mesh\MeshInstance.h" />
     <ClInclude Include="IRenderer.h" />
+    <ClInclude Include="Job\Culling\ViewCullingJob.h" />
+    <ClInclude Include="Job\Culling\ViewCullingJob.hpp" />
     <ClInclude Include="Model\Material\DefaultMaterial\DefaultMaterialModel.h" />
     <ClInclude Include="Model\Material\DefaultMaterial\DefaultMaterialModel.hpp" />
     <ClInclude Include="Model\Material\MaterialModel.h" />
@@ -135,6 +143,7 @@
     <ClInclude Include="Renderer_consts.h" />
     <ClInclude Include="View\Forward\ForwardView.h" />
     <ClInclude Include="View\Forward\ForwardView.hpp" />
+    <ClInclude Include="View\View.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>

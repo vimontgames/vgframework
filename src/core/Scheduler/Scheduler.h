@@ -12,26 +12,30 @@ namespace vg::core
 {
     class Job;
 
-    using JobSync = u64;
-
     class Scheduler : public IScheduler, public core::Singleton<Scheduler>
     {
     public:
-        Scheduler();
-        ~Scheduler();
+                                    Scheduler                   ();
+                                    ~Scheduler                  ();
 
-        JobSync kickJob(Job * _job);
+        void                        Start                       (Job * _job, JobSync * _sync) final override;
+        JobSync                     Start                       (Job * _job) final override;
 
-        void registerProfilerThreads() override;
-        void test();
+        void                        Wait                        (JobSync _sync) final override;
 
-        static const string getCurrentThreadName();   
+        void                        RegisterWorkerThreads       () final override;
+        virtual void                RegisterCurrentThread       (const core::string & _name) final override;
+
+        ThreadID                    GetCurrentThreadID          () const final override;
+        const string                GetCurrentThreadName        () const final override;
 
     private:
-        void registerProfilerThreads(core::uint _count);
+        void                        test();
 
     private:
-        px_sched::Scheduler * m_schd = nullptr;
-        core::uint            m_threadCount = 0;
+        px_sched::Scheduler *       m_schd = nullptr;
+        core::uint                  m_threadCount = 0;
+        core::unordered_map<ThreadID, const core::string> m_registeredThreads;
+        std::mutex                  m_registerThreadMutex;
     };
 }

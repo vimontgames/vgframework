@@ -38,7 +38,7 @@ namespace vg::engine
         _desc.setPropertyRangeHelper(CameraComponent, m_ViewIndex, float2(0, 15));
 
         _desc.registerPropertyHelper(CameraComponent, m_fovY, "Horizontal FOV");
-        _desc.setPropertyRangeHelper(CameraComponent, m_fovY, float2(pi / 8.0f, pi / 2.0f));
+        _desc.setPropertyRangeHelper(CameraComponent, m_fovY, float2(PI / 8.0f, PI / 2.0f));
 
         _desc.registerPropertyHelper(CameraComponent, m_near, "Near");
         _desc.setPropertyRangeHelper(CameraComponent, m_near, float2(0.0f, 8.0f));
@@ -52,7 +52,7 @@ namespace vg::engine
     //--------------------------------------------------------------------------------------
     CameraComponent::CameraComponent(const core::string & _name, core::IObject * _parent) :
         core::Component(_name, _parent),
-        m_fovY(pi / 4.0f),
+        m_fovY(PI / 4.0f),
         m_near(0.1f),
         m_far(1024.0f)
     {

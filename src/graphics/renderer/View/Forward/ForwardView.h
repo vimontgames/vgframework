@@ -1,5 +1,5 @@
 #pragma once
-#include "graphics/driver/View/View.h"
+#include "graphics/Renderer/View/View.h"
 
 namespace vg::graphics::renderer
 {
@@ -7,7 +7,7 @@ namespace vg::graphics::renderer
     class ForwardPass;
     class PostProcessPass;
 
-    class ForwardView : public driver::View
+    class ForwardView : public View
     {
     public:
         const char *        getClassName    () const final { return "ForwardView"; }

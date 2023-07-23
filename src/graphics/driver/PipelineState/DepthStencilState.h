@@ -30,10 +30,17 @@ namespace vg::graphics::driver
 
     struct StencilState
     {
-        ComparisonFunc  func : 4;           // 3
-        StencilOp       passOp : 4;         // 3
-        StencilOp       failOp : 4;         // 3
-        StencilOp       depthFailOp : 4;    // 3
+        union
+        {
+            struct  
+            {
+                ComparisonFunc  func : 4;           // 3
+                StencilOp       passOp : 4;         // 3
+                StencilOp       failOp : 4;         // 3
+                StencilOp       depthFailOp : 4;    // 3
+            };
+            core::u16 m_bits;
+        };
     };
 
     namespace base
@@ -116,7 +123,7 @@ namespace vg::graphics::driver
 
         inline bool operator == (const DepthStencilState & _other) const
         {
-            return _other.m_depthEnable == m_depthEnable && _other.m_depthWrite == m_depthWrite;
+            return _other.m_bits == m_bits;
         }
 
         inline bool operator != (const DepthStencilState & _other) const

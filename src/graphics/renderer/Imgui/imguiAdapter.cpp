@@ -204,7 +204,7 @@ namespace vg::graphics::renderer
         VkDescriptorPoolSize imguiDescriptorPoolSizes[] =
         {
             { VK_DESCRIPTOR_TYPE_SAMPLER, 1 },
-            { VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, 1 },
+            { VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, 16 },
             { VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE, 1 },
             { VK_DESCRIPTOR_TYPE_STORAGE_IMAGE, 1 },
             { VK_DESCRIPTOR_TYPE_UNIFORM_TEXEL_BUFFER, 1 },
@@ -415,6 +415,7 @@ namespace vg::graphics::renderer
         driver::BindlessTable * bindlessTable = device->getBindlessTable();
         return (ImTextureID)bindlessTable->getd3d12GPUDescriptorHandle(_tex->getBindlessSRVHandle()).ptr;
 #elif defined(VG_VULKAN)
+        // In case of crash increase size of VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER in ImguiAdapter::vulkanInit()
         VkDescriptorSet texID = ImGui_ImplVulkan_AddTexture(m_vkSampler, _tex->getVulkanImageView(), VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL);
         return texID;
 #endif

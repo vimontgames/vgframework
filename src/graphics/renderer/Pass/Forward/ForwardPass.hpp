@@ -5,7 +5,7 @@
 
 #include "graphics/renderer/Geometry/Mesh/MeshGeometry.h"
 #include "graphics/renderer/Model/Mesh/MeshModel.h"
-#include "graphics/driver/View/View.h"
+#include "graphics/renderer/View/View.h"
 #include "graphics/renderer/Importer/FBX/FBXImporter.h"
 #include "graphics/renderer/IGraphicInstance.h"
 #include "graphics/renderer/Model/Material/MaterialModel.h"
@@ -36,8 +36,10 @@ namespace vg::graphics::renderer
         m_forwardShaderKey.init("default/default.hlsl", "Forward");
         m_wireframeShaderKey.init("default/default.hlsl", "Wireframe");
 
+        // TODO: create once and share
         createGrid();
         createAxis();
+        createUnitBox();
     }
 
     //--------------------------------------------------------------------------------------
@@ -45,6 +47,7 @@ namespace vg::graphics::renderer
     {
         destroyAxis();
         destroyGrid();
+        destroyUnitBox();
 
         auto * device = Device::get();
         device->removeRootSignature(m_rootSignatureHandle);
@@ -122,6 +125,69 @@ namespace vg::graphics::renderer
     }
 
     //--------------------------------------------------------------------------------------
+    void ForwardPass::createUnitBox()
+    {
+        auto * device = Device::get();
+
+        SimpleVertex vertices[8];
+
+        vertices[0].setPos({ -1.0f, -1.0f, -1.0f });
+        vertices[0].setColor(0xFFFFFFFF);
+
+        vertices[1].setPos({ +1.0f, -1.0f, -1.0f });
+        vertices[1].setColor(0xFFFFFFFF);
+
+        vertices[2].setPos({ +1.0f, +1.0f, -1.0f });
+        vertices[2].setColor(0xFFFFFFFF);
+
+        vertices[3].setPos({ -1.0f, +1.0f, -1.0f });
+        vertices[3].setColor(0xFFFFFFFF);
+
+        vertices[4].setPos({ -1.0f, -1.0f, +1.0f });
+        vertices[4].setColor(0xFFFFFFFF);
+
+        vertices[5].setPos({ +1.0f, -1.0f, +1.0f });
+        vertices[5].setColor(0xFFFFFFFF);
+
+        vertices[6].setPos({ +1.0f, +1.0f, +1.0f });
+        vertices[6].setColor(0xFFFFFFFF);
+
+        vertices[7].setPos({ -1.0f, +1.0f, +1.0f });
+        vertices[7].setColor(0xFFFFFFFF);
+
+        BufferDesc vbDesc(Usage::Default, BindFlags::ShaderResource, CPUAccessFlags::None, BufferFlags::None, sizeof(SimpleVertex), (uint)countof(vertices));
+        m_unitBoxVB = device->createBuffer(vbDesc, "unitBoxVB", vertices);
+
+        u16 indices[24] =
+        {
+            0,1,
+            1,2,
+            2,3,
+            3,0,
+
+            4,5,
+            5,6,
+            6,7,
+            7,4,
+
+            0,4,
+            3,7,
+            1,5,
+            2,6
+        };
+
+        BufferDesc ibDesc(Usage::Default, BindFlags::IndexBuffer, CPUAccessFlags::None, BufferFlags::None, sizeof(u16), (uint)countof(indices));
+        m_unitBoxIB = device->createBuffer(ibDesc, "unitBoxIB", indices);
+    }
+
+    //--------------------------------------------------------------------------------------
+    void ForwardPass::destroyUnitBox()
+    {
+        VG_SAFE_RELEASE(m_unitBoxIB);
+        VG_SAFE_RELEASE(m_unitBoxVB);
+    }
+
+    //--------------------------------------------------------------------------------------
     void ForwardPass::destroyAxis()
     {
         VG_SAFE_RELEASE(m_axisVB);
@@ -134,34 +200,6 @@ namespace vg::graphics::renderer
     {
         writeRenderTarget(0, _renderContext.getName("Color"));
         writeDepthStencil(_renderContext.getName("DepthStencil"));
-    }
-
-    //--------------------------------------------------------------------------------------
-    // sx = sy/_ar
-    // sy = 1.0f/tan(fov*0.5f)  
-    // q = far / (near - far);
-    //
-    // sx   0    0     0
-    //  0  sy    0     0
-    //  0   0    q    -1
-    //  0   0   zn*q   0
-    //--------------------------------------------------------------------------------------
-    float4x4 setPerspectiveProjectionRH(float _fov, float _ar, float _near, float _far)
-    {
-        const float sy = 1.0f / tan(_fov*0.5f);
-        const float sx = sy / _ar;
-        const float q = _far / (_near - _far);
-        const float nq = _near * q;
-
-        float4x4 mProj
-        (
-            sx, 0, 0,  0,
-            0, sy, 0,  0,
-            0, 0,  q, -1,
-            0, 0, nq,  0
-        );
-
-        return mProj;
     }
 
     //--------------------------------------------------------------------------------------
@@ -188,25 +226,21 @@ namespace vg::graphics::renderer
     {
         auto * renderer = Renderer::get();
 
+        // Get ViewProj from View's Camera
         View * view = (View *)_renderContext.m_view;
-        const auto size = view->getSize();
+        float4x4 viewProj = view->getViewProjMatrix();
 
-        const float fovY = view->getCameraFovY();
-        const float2 nearFar = view->getCameraNearFar();
-        const float ar = float(size.x) / float(size.y);
+        // TODO: No culling for now just add all instances to the list to draw
+        //vector<const IGraphicInstance*> graphicInstances;
+        //auto universe = view->GetUniverse();
+        //const auto count = universe->getSceneCount();
+        //for (uint i = 0; i < count; ++i)
+        //{
+        //    auto scene = universe->getScene(i);
+        //    addInstanceRecur(graphicInstances, (GameObject*)scene->GetRoot());
+        //}
 
-        float4x4 proj = setPerspectiveProjectionRH(fovY, ar, nearFar.x, nearFar.y);
-        float4x4 viewProj = mul(view->GetViewInvMatrix(), proj);
-
-        // #TODO #TEMPHACK No culling for now just add all instances to the list to draw
-        vector<const IGraphicInstance*> graphicInstances;
-        auto universe = view->GetUniverse();
-        const auto count = universe->getSceneCount();
-        for (uint i = 0; i < count; ++i)
-        {
-            auto scene = universe->getScene(i);
-            addInstanceRecur(graphicInstances, (GameObject*)scene->GetRoot());
-        }
+        const auto & graphicInstances = view->m_cullingJobResult.m_visibleGraphicInstances;
 
         BlendState bs(BlendFactor::One, BlendFactor::Zero, BlendOp::Add);
         DepthStencilState ds(true, true, ComparisonFunc::LessEqual);
@@ -293,7 +327,7 @@ namespace vg::graphics::renderer
 
                 RootConstants3D root3D;
 
-                float4x4 world = instance->GetWorldMatrix();
+                float4x4 world = instance->getWorldMatrix();
                 float4x4 wvp = mul(world, viewProj);
 
                 root3D.mat = transpose(wvp);
@@ -348,14 +382,102 @@ namespace vg::graphics::renderer
         if (options->isWireframeEnabled())
         {
             RasterizerState rs(FillMode::Wireframe, CullMode::None);
-            _cmdList->setShader(m_wireframeShaderKey);
             _cmdList->setRasterizerState(rs);
+            _cmdList->setShader(m_wireframeShaderKey);
 
             draw(true);
         }
 
+        if (options->isAABBEnabled())
+        {
+            for (uint i = 0; i < graphicInstances.size(); ++i)
+            {
+                const IGraphicInstance * instance = graphicInstances[i];
+                const MeshModel * model = (MeshModel *)instance->getModel(Lod::Lod0);
+                if (nullptr == model)
+                    continue;
+
+                const MeshGeometry * geo = model->getGeometry();
+                drawAABB(_cmdList, geo->getAABB(), instance->getWorldMatrix(), viewProj);
+            }
+        }
+
         drawGrid(_cmdList, viewProj);
         drawAxis(_cmdList, viewProj);
+    }
+
+    //--------------------------------------------------------------------------------------
+    void ForwardPass::drawAABB(CommandList * _cmdList, const AABB & _aabb, const float4x4 & _world, const float4x4 & _viewProj) const
+    {
+        RasterizerState rs(FillMode::Wireframe, CullMode::None);
+        _cmdList->setRasterizerState(rs);
+
+
+        float3 aabbScale = _aabb.m_max - _aabb.m_min;
+        float3 center = _aabb.m_max + _aabb.m_min;
+        float3 translation = _world._m30_m31_m32 + center * 0.5f;
+
+        float4x4 scale = float4x4(
+            float4(aabbScale.xxx*0.5f, 0),
+            float4(aabbScale.yyy*0.5f, 0),
+            float4(aabbScale.zzz*0.5f, 0),
+            float4(0,0,0, 1)
+        );
+        float4x4 aabbMatrix = scale * _world;
+        aabbMatrix._m30_m31_m32 = translation;
+        float4x4 wvp = mul(aabbMatrix, _viewProj);
+
+        RootConstants3D root3D;
+        {
+            root3D.mat = transpose(wvp);
+            root3D.setBuffer(m_unitBoxVB->getBindlessSRVHandle());
+            root3D.setMode(MODE_VS_COLOR);
+
+        }
+
+        // Root sig
+        _cmdList->setRootSignature(m_rootSignatureHandle);
+
+        // Geometry
+        _cmdList->setIndexBuffer(m_unitBoxIB);
+        _cmdList->setPrimitiveTopology(PrimitiveTopology::LineList);
+
+        // Shader
+        _cmdList->setShader(m_wireframeShaderKey);
+
+        // Draw Alpha
+        {
+            root3D.color = float4(0, 1, 0, 0.125f);
+            _cmdList->setInlineRootConstants(&root3D, RootConstants3DCount);
+
+            // Blend (2)
+            BlendState bsAlpha(BlendFactor::SrcAlpha, BlendFactor::OneMinusSrcAlpha, BlendOp::Add);
+            _cmdList->setBlendState(bsAlpha);
+
+            // DepthStencil (2)
+            DepthStencilState dsAlpha(false, false, ComparisonFunc::Always);
+            _cmdList->setDepthStencilState(dsAlpha);
+
+            // Draw
+            _cmdList->drawIndexed(m_unitBoxIB->getBufDesc().elementCount);
+        }
+
+        // Draw opaque
+        {
+            root3D.color = float4(0, 1, 0, 1.0f);
+            _cmdList->setInlineRootConstants(&root3D, RootConstants3DCount);
+
+            // Blend
+            BlendState bsOpaque(BlendFactor::One, BlendFactor::Zero, BlendOp::Add);
+            _cmdList->setBlendState(bsOpaque);
+
+            // DepthStencil
+            DepthStencilState dsOpaque(true, true, ComparisonFunc::LessEqual);
+            _cmdList->setDepthStencilState(dsOpaque);
+
+            // Draw
+            _cmdList->drawIndexed(m_unitBoxIB->getBufDesc().elementCount);
+        }
     }
 
     //--------------------------------------------------------------------------------------

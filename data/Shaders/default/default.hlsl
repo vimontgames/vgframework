@@ -121,6 +121,6 @@ PS_Output PS_Forward(VS_Output _input)
 PS_Output PS_Wireframe(VS_Output _input)
 {
     PS_Output output;
-    output.color0 = float4(0, 1, 0, 1);
+    output.color0 = _input.col;
     return output;
 }

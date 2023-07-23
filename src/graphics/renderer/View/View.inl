@@ -1,5 +1,11 @@
-namespace vg::graphics::driver
+namespace vg::graphics::renderer
 {
+    //--------------------------------------------------------------------------------------
+    VG_INLINE const core::float4x4 & View::getViewProjMatrix() const
+    {
+        return m_viewProj;
+    }
+
     //--------------------------------------------------------------------------------------
     VG_INLINE const core::float4x4 & View::getViewInvMatrix() const
     {
@@ -49,13 +55,13 @@ namespace vg::graphics::driver
     }
 
     //--------------------------------------------------------------------------------------
-    VG_INLINE void View::setViewID(ViewID _viewID)
+    VG_INLINE void View::setViewID(driver::ViewID _viewID)
     {
         m_viewID = _viewID;
     }
 
     //--------------------------------------------------------------------------------------
-    VG_INLINE ViewID View::getViewID() const
+    VG_INLINE driver::ViewID View::getViewID() const
     {
         return m_viewID;
     }
@@ -75,5 +81,11 @@ namespace vg::graphics::driver
     VG_INLINE driver::Texture * View::getRenderTarget() const
     {
         return m_renderTarget;
+    }
+
+    //--------------------------------------------------------------------------------------
+    VG_INLINE core::Job * View::getCullingJob() const
+    {
+        return m_cullingJob;
     }
 }

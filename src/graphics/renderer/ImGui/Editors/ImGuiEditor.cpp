@@ -408,6 +408,25 @@ namespace vg::graphics::renderer
         };
         break;
 
+        case IProperty::Type::Float2:
+        {
+            float * pFloat2 = (float *)_prop->GetPropertyFloat2(_object);
+
+            changed |= ImGui::InputFloat2(displayName, pFloat2);
+        };
+        break;
+
+        case IProperty::Type::Float3:
+        {
+            float * pFloat4 = (float *)_prop->GetPropertyFloat3(_object);
+
+            if (asBool(IProperty::Flags::Color & flags))
+                changed |= ImGui::ColorEdit3(displayName, pFloat4);
+            else
+                changed |= ImGui::InputFloat3(displayName, pFloat4);
+        };
+        break;
+
         case IProperty::Type::Float4:
         {
             float * pFloat4 = (float*)_prop->GetPropertyFloat4(_object);
@@ -415,7 +434,7 @@ namespace vg::graphics::renderer
             if (asBool(IProperty::Flags::Color & flags))
                 changed |= ImGui::ColorEdit4(displayName, pFloat4);
             else
-                changed |= ImGui::SliderFloat4(displayName, pFloat4, 0.0f, 1.0f);
+                changed |= ImGui::InputFloat4(displayName, pFloat4);
         };
         break;
 
@@ -747,6 +766,11 @@ namespace vg::graphics::renderer
         if (changed)
             _object->onPropertyChanged(*_prop);
     }
+
+    void * allocate(size_t size)
+    {
+        return operator new(size);
+    };
 
     //--------------------------------------------------------------------------------------
     bool ImguiEditor::displayResource(core::IResource * _resource)

@@ -2,7 +2,7 @@
 #include "ImguiPass.h"
 #include "graphics/driver/Device/Device.h"
 #include "graphics/renderer/Renderer.h"
-#include "graphics/renderer/Geometry/Batch.h"
+#include "graphics/renderer/Geometry/Batch/Batch.h"
 #include "graphics/renderer/imgui/imguiAdapter.h"
 #include "graphics/renderer/Options/DisplayOptions.h"
 #include "engine/IEngine.h"

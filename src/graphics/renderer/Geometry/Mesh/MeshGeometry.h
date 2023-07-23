@@ -1,7 +1,7 @@
 #pragma once
 
 #include "graphics/renderer/Geometry/Geometry.h"
-#include "graphics/renderer/Geometry/Batch.h"
+#include "graphics/renderer/Geometry/Batch/Batch.h"
 
 namespace vg::graphics::driver
 {
@@ -12,16 +12,11 @@ namespace vg::graphics::renderer
 {
     class MeshGeometry : public Geometry
     {
-        using super = Geometry;
-
     public:
-        const char *                getClassName            () const final { return "MeshGeometry"; }
+        VG_CLASS_DECL(MeshGeometry, Geometry)
 
                                     MeshGeometry            (const core::string & _name, core::IObject * _parent);
                                     ~MeshGeometry           ();
-
-        static bool                 registerClass           (core::IFactory & _factory);
-        static bool                 registerProperties      (core::IClassDesc & _desc);
 
         void                        setIndexBuffer          (driver::Buffer * _ib, core::u32 _offset = 0);
         void                        setVertexBuffer         (driver::Buffer * _vb, core::u32 _offset = 0);

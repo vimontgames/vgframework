@@ -42,6 +42,7 @@ namespace vg::graphics::renderer
         DisplayMode             getDisplayMode          () const { return m_debugDisplayMode;}
 
         bool				    isToolModeEnabled		() const { return m_toolMode; }
+        bool				    isAABBEnabled           () const { return m_aabb; }
         bool				    isOpaqueEnabled			() const { return m_opaque; }
         bool                    isAlbedoMapsEnabled     () const { return m_albedoMaps; }
         bool                    isNormalMapsEnabled     () const { return m_normalMaps; }
@@ -62,6 +63,7 @@ namespace vg::graphics::renderer
     private:
         core::float4		    m_backgroundColor       = core::float4(0, 0, 0, 0);
         bool				    m_toolMode              = true;
+        bool                    m_aabb                  = false;
         graphics::driver::VSync m_VSync                 = graphics::driver::VSync::VBL_1;
         bool                    m_vsync                 = true;
         bool				    m_opaque                = true;

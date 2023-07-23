@@ -12,7 +12,7 @@
                     <Object class="GameObject">
                         <Property type="String" name="m_name" value="Character"/>
                         <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
-                        <Property type="Float4" name="m_color" x="1" y="0" z="0" w="1"/>
+                        <Property type="Float4" name="m_color" x="1" y="0.99874777" z="0.67567569" w="1"/>
                         <Property type="Float4x4" name="m_world" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="-1" Ty="0" Tz="0" Tw="1"/>
                         <Property type="ObjectRefVector" name="m_components">
                             <Object class="MeshComponent">
@@ -26,7 +26,7 @@
                                     <Object class="MeshInstance">
                                         <Property type="String" name="m_name" value="MeshInstance #0"/>
                                         <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
-                                        <Property type="Float4" name="m_color" x="1" y="0" z="0" w="1"/>
+                                        <Property type="Float4" name="m_color" x="1" y="0.99874777" z="0.67567569" w="1"/>
                                         <Property type="Float4x4" name="m_world" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="-1" Ty="0" Tz="0" Tw="1"/>
                                     </Object>
                                 </Property>

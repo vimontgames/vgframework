@@ -9,7 +9,6 @@ namespace vg::graphics::driver
 	class Texture;
 	class Buffer;
 	class FrameGraph;
-    class View;
 }
 
 namespace vg::graphics::renderer
@@ -18,6 +17,7 @@ namespace vg::graphics::renderer
     class FBXImporter;
     class ImguiPass;
     class MeshModel;
+    class View;
 
     enum class MaterialTextureType : core::u8;
 
@@ -73,7 +73,7 @@ namespace vg::graphics::renderer
         #endif     
 
     public: // internal
-        driver::View *                          getMainView             () const;
+        View *                                  getMainView             () const;
 
         driver::Texture *		                getBackbuffer           () const;
         ImguiAdapter *                          getImGuiAdapter         () const { return m_imgui; }
@@ -84,13 +84,15 @@ namespace vg::graphics::renderer
         void                                    initDefaultTextures     ();
         void                                    deinitDefaultTextures   ();
 
+        void                                    cullViews               ();
+
 	private:
 		driver::Device &		                m_device;
         ImguiAdapter *                          m_imgui                 = nullptr;
         FBXImporter *                           m_fbxImporter           = nullptr;
 		driver::FrameGraph &	                m_frameGraph;
-        driver::View *                          m_mainView              = nullptr;
-        core::vector<driver::View *>            m_views[core::enumCount<driver::ViewType>()];
+        View *                                  m_mainView              = nullptr;
+        core::vector<View *>                    m_views[core::enumCount<driver::ViewType>()];
         ImguiPass *                             m_imguiPass             = nullptr;
         core::vector<driver::Texture*>          m_defaultTextures;       
 	};

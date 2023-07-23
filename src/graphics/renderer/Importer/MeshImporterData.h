@@ -2,7 +2,8 @@
 
 #include "MaterialImporterData.h"
 #include "Shaders/system/vertex.hlsl.h"
-#include "graphics/renderer/Geometry/Batch.h"
+#include "graphics/renderer/Geometry/Batch/Batch.h"
+#include "graphics/renderer/Geometry/AABB/AABB.h"
 
 namespace vg::graphics::renderer
 {
@@ -15,6 +16,7 @@ namespace vg::graphics::renderer
         bool save(const core::string & _file) const;
 
         core::string                        name;
+        AABB                                aabb;
         core::vector<Batch>                 batches;
         core::vector<core::u32>             indices;
         core::vector<MeshImporterVertex>    vertices;

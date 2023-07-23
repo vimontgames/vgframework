@@ -2,6 +2,7 @@
 #include "Scheduler.h"
 #include "Job.h"
 #include "core/IProfiler.h"
+#include "core/string/string.h"
 
 // Job definition must be done before including px_sched.h 
 #define PX_SCHED_CUSTOM_JOB_DEFINITION
@@ -32,7 +33,7 @@ namespace vg::core
 
         void run() override
         {
-            VG_PROFILE_CPU(Scheduler::getCurrentThreadName().c_str());
+            VG_PROFILE_CPU(Kernel::getScheduler()->GetCurrentThreadName().c_str());
             //VG_DEBUGPRINT("Job \"%s\" running on \"%s\"\n", getName().c_str(), Scheduler::getCurrentThreadName().c_str());
             
             static volatile uint test = 0;
@@ -45,12 +46,12 @@ namespace vg::core
         char m_name[256];
     };
 
-    class RegisterProfilerThreadJob : public Job
+    class RegisterWorkerThreadJob : public Job
     {
     public:
-        const char * getClassName() const final { return "RegisterProfilerThreadJob"; }
+        const char * getClassName() const final { return "RegisterWorkerThreadJob"; }
 
-        RegisterProfilerThreadJob(const string & _name, IObject * _parent) :
+        RegisterWorkerThreadJob(const string & _name, IObject * _parent = nullptr) :
             Job(_name, _parent)
         {
 
@@ -58,11 +59,43 @@ namespace vg::core
 
         void run() override
         {
-            Kernel::getProfiler()->registerThread(Scheduler::getCurrentThreadName().c_str());
+            // User name from scheduler to make sure they match (they seem valid at this point)
+            const auto & name = px_sched::Scheduler::current_thread_name(); //  Scheduler::getCurrentThreadName();
+            ((Scheduler*)Kernel::getScheduler())->RegisterCurrentThread(name);
         }
 
     private:
     };
+
+    //--------------------------------------------------------------------------------------
+    ThreadID Scheduler::GetCurrentThreadID() const
+    {
+        return std::this_thread::get_id();
+    }
+
+    //--------------------------------------------------------------------------------------
+    void Scheduler::RegisterCurrentThread(const core::string & _name)
+    {
+        lock_guard<mutex> lock(m_registerThreadMutex);
+
+        // Current thread id
+        ThreadID threadId = GetCurrentThreadID();
+
+        // Check if already registered
+        if (m_registeredThreads.end() != m_registeredThreads.find(threadId))
+            return;  
+
+        VG_DEBUGPRINT("[Profiler] Register Thread \"%s\" (0x%08X)\n", _name.c_str(), threadId);
+
+        // Set thread name for debug
+        SetThreadDescription(GetCurrentThread(), core::wstring_convert((string)_name).c_str());
+
+        // Register for profiler markers
+        Kernel::getProfiler()->registerProfilerThread(_name.c_str());
+
+        // Record
+        m_registeredThreads.insert(std::pair(threadId, _name));
+    }
 
     //--------------------------------------------------------------------------------------
     Scheduler::Scheduler() :
@@ -85,7 +118,14 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
-    JobSync Scheduler::kickJob(Job * _job)
+    void Scheduler::Start(Job * _job, JobSync * _sync)
+    {
+        px_sched::Job job{ _job };
+        m_schd->run(job, reinterpret_cast<px_sched::Sync *>(_sync));
+    }
+
+    //--------------------------------------------------------------------------------------
+    JobSync Scheduler::Start(Job * _job)
     {
         px_sched::Sync s;
         px_sched::Job j{ _job };
@@ -94,29 +134,39 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
-    void Scheduler::registerProfilerThreads()
+    void Scheduler::Wait(JobSync _sync)
     {
-        registerProfilerThreads(m_threadCount);
+        m_schd->waitFor(*reinterpret_cast<px_sched::Sync *>(&_sync));
     }
 
     //--------------------------------------------------------------------------------------
-    void Scheduler::registerProfilerThreads(core::uint _count)
+    void Scheduler::RegisterWorkerThreads()
     {
-        RegisterProfilerThreadJob registerProfilerThreadJob("RegisterProfilerJob", nullptr);
-
+        RegisterWorkerThreadJob registerThreadJob("RegisterWorkerThreads", nullptr);
         px_sched::Sync s;
-        for (uint i = 0; i < _count; ++i)
+        for (uint i = 0; i < m_threadCount; ++i)
         {
-            px_sched::Job job{ &registerProfilerThreadJob };
+            px_sched::Job job{ &registerThreadJob };
             m_schd->run(job, &s);
         }
         m_schd->waitFor(s);
     }
 
     //--------------------------------------------------------------------------------------
-    const string Scheduler::getCurrentThreadName()
+    const string Scheduler::GetCurrentThreadName() const
     {
-        return px_sched::Scheduler::current_thread_name();
+        const ThreadID threadId = GetCurrentThreadID();
+
+        auto it = m_registeredThreads.find(threadId);
+        if (it != m_registeredThreads.end())
+        {
+            return it->second;
+        }
+        else
+        {
+            VG_ASSERT(it != m_registeredThreads.end(), "Thread 0x%08X is not registered\n", threadId);
+            return {};
+        }
     }
 
     //--------------------------------------------------------------------------------------

@@ -57,15 +57,16 @@ namespace vg::graphics::renderer
 
         _desc.registerPropertyEnum(DisplayOptions, graphics::driver::VSync, m_VSync, "VSync");
 
-        _desc.registerPropertyHelper(DisplayOptions, m_toolMode,   "Tool mode");
+        _desc.registerPropertyHelper(DisplayOptions, m_toolMode, "Toolmode");
+        _desc.registerPropertyHelperEx(DisplayOptions, m_aabb, "AABB", IProperty::Flags::SameLine);
 
-        _desc.registerPropertyHelper(DisplayOptions, m_opaque,     "Opaque");
-        _desc.registerPropertyHelperEx(DisplayOptions, m_wireframe,  "Wireframe",   IProperty::Flags::SameLine);
+        _desc.registerPropertyHelper(DisplayOptions, m_opaque, "Opaque");
+        _desc.registerPropertyHelperEx(DisplayOptions, m_wireframe,  "Wireframe", IProperty::Flags::SameLine);
 
         _desc.registerPropertyHelper(DisplayOptions, m_normalMaps, "Normal Maps");
         _desc.registerPropertyHelperEx(DisplayOptions, m_albedoMaps, "Albedo Maps", IProperty::Flags::SameLine);
 
-        _desc.registerPropertyEnum(DisplayOptions, DisplayMode, m_debugDisplayMode, "Debug Display");
+        _desc.registerPropertyEnum(DisplayOptions, DisplayMode, m_debugDisplayMode, "Display");
 
         _desc.registerPropertyHelperEx(DisplayOptions, m_backgroundColor, "Background", IProperty::Flags::Color);
 

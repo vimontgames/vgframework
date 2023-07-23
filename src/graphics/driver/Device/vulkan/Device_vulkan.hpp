@@ -1032,35 +1032,40 @@ namespace vg::graphics::driver::vulkan
         UINT FrameIndex = m_nextFrameIndex;
         m_nextFrameIndex = (m_nextFrameIndex + 1) % (UINT)max_frame_latency;
 
-        // Ensure no more than max_frame_latency renderings are outstanding
-        //if (m_frameCounter >= max_frame_latency)
-        {
-            #if VG_DBG_CPUGPUSYNC
-            VG_DEBUGPRINT("Wait completion of frame %u (fence[%u])\n", m_frameCounter - max_frame_latency, FrameIndex);
-            #endif
+		u32 currentBuffer;
 
-            VG_PROFILE_GPU_SWAP(this);
-            vkWaitForFences(vkDevice, 1, &m_vkFences[FrameIndex], VK_TRUE, UINT64_MAX);
-        }
-        vkResetFences(vkDevice, 1, &m_vkFences[FrameIndex]);
-        m_currentFrameIndex = FrameIndex;
+		// Scope WaitGPU/VSync
+		{
+			VG_PROFILE_CPU("Wait");
+			// Ensure no more than max_frame_latency renderings are outstanding
+			//if (m_frameCounter >= max_frame_latency)
+			{
+				#if VG_DBG_CPUGPUSYNC
+				VG_DEBUGPRINT("Wait completion of frame %u (fence[%u])\n", m_frameCounter - max_frame_latency, FrameIndex);
+				#endif
 
-        u32 currentBuffer;
-        switch (m_KHR_Swapchain.m_pfnAcquireNextImageKHR(vkDevice, m_vkSwapchain, UINT64_MAX, m_vkImageAcquiredSemaphores[FrameIndex], VK_NULL_HANDLE, &currentBuffer))
-        {
-            default:
-                VG_ASSERT(false);
+				VG_PROFILE_GPU_SWAP(this);
+				vkWaitForFences(vkDevice, 1, &m_vkFences[FrameIndex], VK_TRUE, UINT64_MAX);
+			}
+			vkResetFences(vkDevice, 1, &m_vkFences[FrameIndex]);
+			m_currentFrameIndex = FrameIndex;
 
-            case VK_ERROR_OUT_OF_DATE_KHR:
-            case VK_SUBOPTIMAL_KHR:
-            case VK_ERROR_SURFACE_LOST_KHR:
-                //destroyVulkanBackbuffers();
-                //createVulkanBackbuffers();
-                break;
+			switch (m_KHR_Swapchain.m_pfnAcquireNextImageKHR(vkDevice, m_vkSwapchain, UINT64_MAX, m_vkImageAcquiredSemaphores[FrameIndex], VK_NULL_HANDLE, &currentBuffer))
+			{
+				default:
+					VG_ASSERT(false);
 
-            case VK_SUCCESS:
-                break;
-        }
+				case VK_ERROR_OUT_OF_DATE_KHR:
+				case VK_SUBOPTIMAL_KHR:
+				case VK_ERROR_SURFACE_LOST_KHR:
+					//destroyVulkanBackbuffers();
+					//createVulkanBackbuffers();
+					break;
+
+				case VK_SUCCESS:
+					break;
+			}
+		}
 
         m_currentBackbufferIndex = currentBuffer;
 

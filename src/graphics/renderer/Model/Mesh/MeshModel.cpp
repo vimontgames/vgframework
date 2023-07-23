@@ -29,8 +29,8 @@ namespace vg::graphics::renderer
     {
         super::registerProperties(_desc);
 
-        _desc.registerPropertyObjectRefVectorHelper(MeshModel, m_materials, "Materials", IProperty::Flags::Hidden | IProperty::Flags::NotSaved);
-        _desc.registerPropertyObjectRefHelper(MeshModel, m_meshGeometry, "Geometry", IProperty::Flags::Hidden | IProperty::Flags::NotSaved);
+        _desc.registerPropertyObjectRefHelper(MeshModel, m_meshGeometry, "Geometry", IProperty::Flags::NotSaved);
+        //_desc.registerPropertyObjectRefVectorHelper(MeshModel, m_materials, "Materials", IProperty::Flags::NotSaved);
         
         return true;
     }
@@ -137,6 +137,9 @@ namespace vg::graphics::renderer
         MeshModel * meshModel = new MeshModel(_data.name, nullptr);
 
         MeshGeometry * meshGeometry = new MeshGeometry("MeshGeometry", meshModel);
+
+        meshGeometry->setAABB(_data.aabb);
+
         meshGeometry->setIndexBuffer(ib);
         meshGeometry->setVertexBuffer(vb);
 
