@@ -107,7 +107,7 @@ namespace vg::graphics::renderer
                 // As we're executing framegraph we can't fully release the texture right now because it may be still in use
                 //VG_SAFE_RELEASE(m_texture);
                 if (m_texture)
-                    Device::get()->releaseAsync(m_texture);
+                    Renderer::get()->ReleaseAsync(m_texture);
 
                 driver::TextureDesc targetDesc = driver::TextureDesc(Usage::Default, BindFlags::ShaderResource, CPUAccessFlags::None, TextureType::Texture2D, PixelFormat::R8G8B8A8_unorm_sRGB, TextureFlags::RenderTarget, m_size.x, m_size.y);
                 string targetName = RenderContext::MakeUniqueName("Dest", m_view->GetViewID());

@@ -888,6 +888,23 @@ namespace vg::graphics::renderer
     }
 
     //--------------------------------------------------------------------------------------
+    bool ImguiEditor::removeFromSelection(core::IObject * _object)
+    {
+        return s_selection.remove(_object);         
+    }
+    
+    //--------------------------------------------------------------------------------------
+    bool ImguiEditor::addToSelection(core::IObject * _object)
+    {
+        if (!s_selection.exists(_object))
+        {
+            s_selection.push_back(_object);
+            return true;
+        }
+        return false;
+    }
+
+    //--------------------------------------------------------------------------------------
     void ImguiEditor::underLine(const ImColor & _color)
     {
         u32 color = _color;

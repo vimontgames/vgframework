@@ -67,6 +67,8 @@ namespace vg
 
                 virtual bool                                cookTexture         (const core::string & _file) = 0;
                 virtual driver::ITexture *                  loadTexture         (const core::string & _file) = 0;
+
+                virtual void                                ReleaseAsync        (core::IObject * _object) = 0;
             };
         }
     }

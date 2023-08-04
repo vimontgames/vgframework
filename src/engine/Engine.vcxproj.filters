@@ -106,5 +106,8 @@
     <Filter Include="Behaviour">
       <UniqueIdentifier>{9d5f0e4c-4aec-4a30-9c45-13d6892072dd}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Selection">
+      <UniqueIdentifier>{09e27549-60fb-42e8-9cd6-1e95f071143f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
 </Project>

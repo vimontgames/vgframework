@@ -1,5 +1,6 @@
 #include "ImGuiGameObjectSceneEditorMenu.h"
 #include "core/IGameObject.h"
+#include "graphics/renderer/Imgui/Editors/ImGuiEditor.h"
 
 using namespace vg::core;
 
@@ -24,10 +25,10 @@ namespace vg::graphics::renderer
                 openPopup = true;
                 ImGui::OpenPopup("Add GameObject");
             }
-            if (ImGui::MenuItem("Delete"))
+            if (ImGui::MenuItem("Delete GameObject"))
             {
                 m_selected = MenuOption::Delete;
-                m_popup = "Delete";
+                m_popup = "Delete GameObject";
                 openPopup = true;
             }
             ImGui::PopID();
@@ -82,14 +83,17 @@ namespace vg::graphics::renderer
             {
                 if (ImGui::BeginPopupModal(m_popup, nullptr, ImGuiWindowFlags_AlwaysAutoResize))
                 {
-                    ImGui::Text("Are you sure you want to delete \"%s\?", gameObject->getName().c_str());
+                    ImGui::Text("Are you sure you want to delete %s \"%s\"?", gameObject->getClassName(), gameObject->getName().c_str());
 
                     if (ImGui::Button("Yes", Editor::ButtonSize))
                     {
                         IGameObject * parentGameObject = (IGameObject*)gameObject->getParent();
                         if (nullptr != parentGameObject)
                         {
+                            // Unselect if currently selected
+                            ImguiEditor::removeFromSelection(gameObject);
                             parentGameObject->RemoveChild(gameObject);
+                            VG_SAFE_RELEASE(gameObject);
                             status = Status::Removed;
                         }
                         ImGui::CloseCurrentPopup();

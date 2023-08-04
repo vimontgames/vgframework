@@ -48,7 +48,10 @@ namespace vg::engine
     //--------------------------------------------------------------------------------------
     MeshComponent::~MeshComponent()
     {
-        VG_SAFE_RELEASE(m_meshInstance);
+        GameObject * gameObject = getGameObject();
+        gameObject->RemoveGraphicInstance(m_meshInstance);
+        m_registered = false;
+        Engine::get()->GetRenderer()->ReleaseAsync(m_meshInstance);
     }
 
     //--------------------------------------------------------------------------------------

@@ -480,6 +480,12 @@ namespace vg::graphics::renderer
     }
 
     //--------------------------------------------------------------------------------------
+    void Renderer::ReleaseAsync(core::IObject * _object)
+    {
+        m_device.releaseAsync((Object*)_object);
+    }
+
+    //--------------------------------------------------------------------------------------
     driver::Texture * Renderer::getDefaultTexture(MaterialTextureType _type) const
     {
         return m_defaultTextures[asInteger(_type)];

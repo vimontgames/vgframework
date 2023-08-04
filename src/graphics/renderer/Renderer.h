@@ -66,6 +66,8 @@ namespace vg::graphics::renderer
         bool                                    cookTexture             (const core::string & _file) final;
         driver::ITexture *                      loadTexture             (const core::string & _file) final;
 
+        void                                    ReleaseAsync            (core::IObject * _object) final override;
+
         driver::Texture *                       getDefaultTexture       (MaterialTextureType _type) const;
         
         #ifdef _WIN32

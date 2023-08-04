@@ -45,14 +45,21 @@ namespace vg::graphics::renderer
 
         static imgui_addons::ImGuiFileBrowser & getFileBrowser      ();
 
+        // TODO: move to editor DLL
+        static core::IObject *                  getSelectedObject   ();
+        static void                             setSelectedObject   (core::IObject * _object);
+        static core::vector<core::IObject*> &   getSelectedObjects  ();
+        static void                             setSelectedObjects  (core::vector<core::IObject*> & _objects);
+        static bool                             isSelectedObject    (core::IObject* _object);
+        static bool                             removeFromSelection (core::IObject * _object);
+        static bool                             addToSelection      (core::IObject * _object);
+
     protected:
         static void                             underLine           (const ImColor & _color);
         static void                             textURL             (const char * _text, const char * _url);
 
         static bool                             isItemClicked       ();
         static bool                             updateSelection     (core::IObject * _object);
-        static core::IObject *                  getSelectedObject   ();
-        static void                             setSelectedObject   (core::IObject * _object);
 
         const vg::engine::IEngine *             getEngine           () const;
         vg::engine::IEngine *                   getEngine           ();
@@ -62,10 +69,6 @@ namespace vg::graphics::renderer
 
         template <typename T> static bool       displayEnum         (core::IObject * _object, const core::IProperty * _prop);
         template <typename T> static bool       displayEnumFlags    (core::IObject * _object, const core::IProperty * _prop);
-
-        static core::vector<core::IObject*> &   getSelectedObjects  ();
-        static void                             setSelectedObjects  (core::vector<core::IObject*> & _objects);
-        static bool                             isSelectedObject    (core::IObject* _object);
 
         static core::string                     getPropertyLabel    (const core::IProperty * _prop);
         static core::string                     getButtonLabel      (core::string _baseName, core::IObject * _object);

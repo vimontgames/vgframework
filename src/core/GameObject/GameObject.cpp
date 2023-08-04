@@ -162,7 +162,8 @@ namespace vg::core
     //--------------------------------------------------------------------------------------
     void GameObject::RemoveGraphicInstance(graphics::renderer::IGraphicInstance * _graphicInstance)
     {
-        VG_ASSERT_NOT_IMPLEMENTED();
+        if (m_graphicInstances.remove(_graphicInstance))
+            VG_SAFE_RELEASE(_graphicInstance);
     }
 
     //--------------------------------------------------------------------------------------
