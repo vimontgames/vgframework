@@ -78,13 +78,6 @@ namespace vg::graphics::renderer
     //--------------------------------------------------------------------------------------
     void ImguiPass::setup(const driver::RenderContext & _renderContext, double _dt)
     {
-        static bool test = false;
-        if (test)
-        {
-            readRenderTarget("Dest-1");
-            readRenderTarget("Dest-2");
-        }
-
         writeRenderTarget(0, "Backbuffer");
 
         ImGuiViewport * viewport = ImGui::GetMainViewport();
