@@ -38,13 +38,13 @@ Game::~Game()
 #define GAME_VERSION_MINOR 0
 
 //--------------------------------------------------------------------------------------
-IPlugin::Version Game::getVersion() const
+IPlugin::Version Game::GetVersion() const
 {
     return { GAME_VERSION_MAJOR, GAME_VERSION_MINOR };
 }
 
 //--------------------------------------------------------------------------------------
-bool Game::registerClasses()
+bool Game::RegisterClasses()
 {
     IFactory * factory = Kernel::getFactory();
 
@@ -58,7 +58,7 @@ bool Game::registerClasses()
 }
 
 //--------------------------------------------------------------------------------------
-bool Game::unregisterClasses()
+bool Game::UnregisterClasses()
 {
     IFactory * factory = Kernel::getFactory();
     return AutoRegisterClassInfo::unregisterClasses(*factory);
@@ -75,7 +75,7 @@ bool Game::init(vg::engine::IEngine & _engine, Singletons & _singletons)
 
     Kernel::setSingletons(_singletons);
 
-    registerClasses();
+    RegisterClasses();
 
     return true;
 }
@@ -83,7 +83,7 @@ bool Game::init(vg::engine::IEngine & _engine, Singletons & _singletons)
 //--------------------------------------------------------------------------------------
 bool Game::deinit()
 {
-    unregisterClasses();
+    UnregisterClasses();
 
     return true;
 }

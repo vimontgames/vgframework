@@ -193,22 +193,16 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
     Application * game = new Application(*g_engine);
 
-    const auto engineVersion = g_engine->getVersion();
-	const auto rendererVersion = g_engine->GetRenderer()->getVersion();
+    const auto engineVersion = g_engine->GetVersion();
+	const auto rendererVersion = g_engine->GetRenderer()->GetVersion();
 	core::string title = "VG Framework " + core::Plugin::getConfiguration() + " - Engine " + core::to_string(engineVersion.major) + "." + core::to_string(engineVersion.minor) + " - " + core::asString(engineParams.renderer.device.api) + " Renderer " + core::to_string(rendererVersion.major) + "." + core::to_string(rendererVersion.minor);
     if (engineParams.renderer.device.debugDevice)
         title += " (debug device)";
 
 	SetWindowTextA(g_hWnd, title.c_str());
 
-    //core::u64 frame = 0;
 	while (!processSystemMessage())
-	{
-        //SetWindowTextA(g_hWnd, (title + " - Frame " + std::to_string(frame)).c_str());
-        //frame++;
-
         game->update();
-	}
 
     VG_SAFE_DELETE(game);
     g_engine->deinit();

@@ -23,7 +23,7 @@
 #include "engine/Behaviour/FreeCam/FreeCamBehaviour.h"
 #include "engine/Component/Mesh/MeshComponent.h"
 
-//#include "editor/IEditor.h"
+#include "editor/IEditor.h"
 
 #include "application/IProject.h"
 
@@ -52,7 +52,7 @@ IEngine * CreateNew()
 namespace vg::engine
 {
 	//--------------------------------------------------------------------------------------
-	IPlugin::Version Engine::getVersion() const
+	IPlugin::Version Engine::GetVersion() const
 	{
 		return { VG_ENGINE_VERSION_MAJOR, VG_ENGINE_VERSION_MINOR };
 	}
@@ -108,7 +108,7 @@ namespace vg::engine
 	}
 
     //--------------------------------------------------------------------------------------
-    bool Engine::registerClasses()
+    bool Engine::RegisterClasses()
     {
         core::IFactory * factory = Kernel::getFactory();
 
@@ -125,7 +125,7 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
-    bool Engine::unregisterClasses()
+    bool Engine::UnregisterClasses()
     {
         IFactory * factory = Kernel::getFactory();
         return AutoRegisterClassInfo::unregisterClasses(*factory);
@@ -269,11 +269,11 @@ namespace vg::engine
 
         m_resourceManager = new ResourceManager("Resource Manager", this);
 
-        registerClasses();
+        RegisterClasses();
 
         // Load Editor DLL
-        //m_editor = Plugin::create<editor::IEditor>("editor");
-        //m_editor->Init();
+        m_editor = Plugin::create<editor::IEditor>("editor");
+        m_editor->Init(_singletons);
 
         // Create main view
         m_mainView = m_renderer->CreateMainView(getScreenSize());
@@ -336,7 +336,7 @@ namespace vg::engine
         destroyEditorView();
         unloadProject();
 
-        unregisterClasses();
+        UnregisterClasses();
 
         Kernel::setProfiler(nullptr);
 
@@ -350,8 +350,8 @@ namespace vg::engine
 
         IFactory * factory = Kernel::getFactory();
 
-        //m_editor->Deinit();
-        //m_editor->Release();
+        m_editor->Deinit();
+        m_editor->Release();
 
 		m_renderer->deinit();
 		m_renderer->release();

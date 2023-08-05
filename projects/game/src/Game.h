@@ -18,9 +18,9 @@ class Game : public vg::IProject, public vg::core::Singleton<Game>
         const char *                getClassName            () const final { return "Game"; }
 
         // vg::core::IPlugin overrides
-        vg::core::IPlugin::Version  getVersion              () const final;
-        bool                        registerClasses         () final;
-        bool                        unregisterClasses       ();
+        vg::core::IPlugin::Version  GetVersion              () const final override;
+        bool                        RegisterClasses         () final override;
+        bool                        UnregisterClasses       ();
 
         // vg::core::IProject overrides
         bool                        init                    (vg::engine::IEngine & _engine, vg::core::Singletons & _singletons) final;

@@ -26,21 +26,21 @@ namespace vg::renderer
 	public:
         using super = IRenderer;
 
-		IPlugin::Version		                getVersion			    () const override;
+		IPlugin::Version		                GetVersion			    () const override;
 
 								                Renderer			    (const core::string & _name, core::IObject * _parent);
 								                ~Renderer			    ();
 
         const char *                            getClassName            () const final { return "Renderer"; }
-        bool                                    registerClasses         () override;
-        bool                                    unregisterClasses       ();
+        bool                                    RegisterClasses         () override;
+        bool                                    UnregisterClasses       ();
         static bool                             registerProperties      (core::IClassDesc & _desc);
  
 		void					                init				    (const RendererParams & _params, core::Singletons & _singletons) override;
 		void					                deinit				    () override;
 
-        gfx::IView *                         CreateMainView          (core::uint2 _screenSize) final override;
-        gfx::ViewID                          AddView                 (gfx::IView * _view) final override;
+        gfx::IView *                            CreateMainView          (core::uint2 _screenSize) final override;
+        gfx::ViewID                             AddView                 (gfx::IView * _view) final override;
         void                                    RemoveView              (gfx::ViewID _viewID) final override;
         gfx::IView *                         GetView                 (gfx::ViewID _viewID) const final override;
         const core::vector <gfx::IView *>    GetViews                (gfx::ViewType _viewType) const final override;

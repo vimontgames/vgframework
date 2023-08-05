@@ -9,8 +9,8 @@ namespace vg::renderer
         {
             float columnWidth[3] = { 256, 128, 620 };
 
-            const auto engineVersion = getEngine()->getVersion();
-            const auto rendererVersion = getEngine()->GetRenderer()->getVersion();
+            const auto engineVersion = getEngine()->GetVersion();
+            const auto rendererVersion = getEngine()->GetRenderer()->GetVersion();
 
             Text("VG Framework Engine %u.%u Renderer %u.%u", engineVersion.major, engineVersion.minor, rendererVersion.major, rendererVersion.minor);
             Text("");

@@ -16,10 +16,10 @@ namespace vg::gfx
     class IView;
 }
 
-//namespace vg::editor
-//{
-//    class IEditor;
-//}
+namespace vg::editor
+{
+    class IEditor;
+}
 
 namespace vg::engine
 {
@@ -31,7 +31,7 @@ namespace vg::engine
 	public:
         using super = IEngine;
 
-		IPlugin::Version				    getVersion	        () const final;
+		IPlugin::Version				    GetVersion	        () const final override;
 
 										    Engine		        (const core::string & _name, core::IObject * _parent);
 										    ~Engine		        ();
@@ -43,8 +43,8 @@ namespace vg::engine
         void                                Stop                () final override;
 
         const char *                        getClassName        () const final { return "Engine"; }
-        bool                                registerClasses     () override;
-        bool                                unregisterClasses   ();
+        bool                                RegisterClasses     () override;
+        bool                                UnregisterClasses   ();
         static bool                         registerProperties  (core::IClassDesc & _desc);
         
         static bool                         load                (IObject * _object);
@@ -92,17 +92,14 @@ namespace vg::engine
 
 	private:
         core::string                        m_projectPath;
-
         bool                                m_isPlaying         = false;
         bool                                m_isPaused          = false;
-
         IProject *                          m_project           = nullptr;
         core::Universe *                    m_universe          = nullptr;
-        //editor::IEditor *                   m_editor            = nullptr;
-		renderer::IRenderer *	    m_renderer          = nullptr;
-        gfx::IView *           m_mainView          = nullptr;
+        editor::IEditor *                   m_editor            = nullptr;
+		renderer::IRenderer *	            m_renderer          = nullptr;
+        gfx::IView *                        m_mainView          = nullptr;
         ResourceManager *                   m_resourceManager   = nullptr;
-
         double                              m_dt                = 0.0f;
 	};
 }

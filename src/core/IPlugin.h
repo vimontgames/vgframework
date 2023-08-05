@@ -19,9 +19,10 @@ namespace vg::core
 
         }
 
-		virtual Version getVersion	    () const = 0;
-		virtual			~IPlugin	    () {}
+		virtual Version GetVersion			() const = 0;
+		virtual			~IPlugin			() {}
 
-        virtual bool    registerClasses () = 0;
+        virtual bool    RegisterClasses		() = 0;
+		virtual bool    UnregisterClasses	() = 0;
 	};
 }

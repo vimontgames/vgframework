@@ -72,7 +72,7 @@ namespace vg::renderer
     }
 
 	//--------------------------------------------------------------------------------------
-	core::IPlugin::Version Renderer::getVersion() const
+	core::IPlugin::Version Renderer::GetVersion() const
 	{
 		return { VG_RENDERER_VERSION_MAJOR, VG_RENDERER_VERSION_MINOR };
 	}
@@ -98,7 +98,7 @@ namespace vg::renderer
 	}
 
     //--------------------------------------------------------------------------------------
-    bool Renderer::registerClasses()
+    bool Renderer::RegisterClasses()
     {
         IFactory * factory = Kernel::getFactory();
 
@@ -112,7 +112,7 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    bool Renderer::unregisterClasses()
+    bool Renderer::UnregisterClasses()
     {
         IFactory * factory = Kernel::getFactory();
         return AutoRegisterClassInfo::unregisterClasses(*factory);
@@ -150,7 +150,7 @@ namespace vg::renderer
         // Create passes not bound to a View
         m_imguiPass = new ImguiPass();
 
-        registerClasses();
+        RegisterClasses();
 
         DisplayOptions * displayOptions = new DisplayOptions("DisplayOptions", this);
 
@@ -172,7 +172,7 @@ namespace vg::renderer
 	//--------------------------------------------------------------------------------------
 	void Renderer::deinit()
 	{
-        unregisterClasses();
+        UnregisterClasses();
 
         deinitDefaultTextures();
 
