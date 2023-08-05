@@ -2,23 +2,23 @@
 
 #include "core/Math/Math.h"
 
-#include "graphics/driver/Device/Device.h"
-#include "graphics/driver/CommandList/CommandList.h"
-#include "graphics/driver/Resource/Texture.h"
-#include "graphics/driver/Resource/Buffer.h"
-#include "graphics/driver/Resource/Resource_consts.h"
-#include "graphics/driver/PipelineState/DepthStencilState.h"
-#include "graphics/driver/PipelineState/RasterizerState.h"
-#include "graphics/driver/PipelineState/BlendState.h"
-#include "graphics/driver/RootSignature/RootSignature.h"
-#include "graphics/driver/Shader/ShaderManager.h"
-#include "graphics/driver/Shader/Shader.h"
-#include "graphics/driver/BindlessTable/BindlessTable.h"
-#include "graphics/driver/Profiler/Profiler.h"
+#include "gfx/Device/Device.h"
+#include "gfx/CommandList/CommandList.h"
+#include "gfx/Resource/Texture.h"
+#include "gfx/Resource/Buffer.h"
+#include "gfx/Resource/Resource_consts.h"
+#include "gfx/PipelineState/DepthStencilState.h"
+#include "gfx/PipelineState/RasterizerState.h"
+#include "gfx/PipelineState/BlendState.h"
+#include "gfx/RootSignature/RootSignature.h"
+#include "gfx/Shader/ShaderManager.h"
+#include "gfx/Shader/Shader.h"
+#include "gfx/BindlessTable/BindlessTable.h"
+#include "gfx/Profiler/Profiler.h"
 #include "graphics/renderer/Renderer.h"
 
 using namespace vg::core;
-using namespace vg::graphics::driver;
+using namespace vg::gfx;
 
 #include "Background/BackgroundPass.hpp"
 #include "Forward/ForwardPass.hpp"

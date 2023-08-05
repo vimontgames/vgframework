@@ -12,11 +12,11 @@ namespace vg::graphics::renderer
     public:
         const char *        getClassName    () const final { return "ForwardView"; }
 
-                            ForwardView     (const driver::CreateViewParams & _params);
+                            ForwardView     (const gfx::CreateViewParams & _params);
                             ~ForwardView    ();
 
 
-        void                AddToFrameGraph (driver::FrameGraph & _frameGraph) override;
+        void                AddToFrameGraph (gfx::FrameGraph & _frameGraph) override;
 
     private:
         BackgroundPass *    m_backgroundPass = nullptr;

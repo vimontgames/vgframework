@@ -48,7 +48,7 @@ namespace vg::graphics::renderer
         m_output->m_visibleGraphicInstances.clear();
 
         View * view = (View *)getParent();
-        driver::ViewID viewID = view->getViewID();
+        gfx::ViewID viewID = view->getViewID();
         string name = getName() + " " + asString(viewID.type) + " " + to_string(viewID.index);
         VG_PROFILE_CPU(name.c_str());
         //VG_DEBUGPRINT("\"%s\" running on \"%s\" (0x%08X)\n", name.c_str(), Kernel::getScheduler()->GetCurrentThreadName().c_str(), Kernel::getScheduler()->GetCurrentThreadID());

@@ -2,7 +2,7 @@
 #include "core/Object/AutoRegisterClass.h"
 #include "Geometry.h"
 
-#include "graphics/driver/Resource/Buffer.h"
+#include "gfx/Resource/Buffer.h"
 
 #if !VG_ENABLE_INLINE
 #include "Geometry.inl"

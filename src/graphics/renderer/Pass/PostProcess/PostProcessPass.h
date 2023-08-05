@@ -1,11 +1,11 @@
 #pragma once
 
-#include "graphics/driver/FrameGraph/UserPass.h"
+#include "gfx/FrameGraph/UserPass.h"
 
 namespace vg::graphics::renderer
 {
     //--------------------------------------------------------------------------------------
-    class PostProcessPass : public driver::UserPass
+    class PostProcessPass : public gfx::UserPass
     {
     public:
         const char * getClassName() const final { return "PostProcessPass"; }
@@ -13,12 +13,12 @@ namespace vg::graphics::renderer
         PostProcessPass();
         ~PostProcessPass();
 
-        void setup(const driver::RenderContext & _renderContext, double _dt) override;
-        void draw(const driver::RenderContext & _renderContext, driver::CommandList * _cmdList) const override;
+        void setup(const gfx::RenderContext & _renderContext, double _dt) override;
+        void draw(const gfx::RenderContext & _renderContext, gfx::CommandList * _cmdList) const override;
 
     private:
-        driver::RootSignatureHandle         m_postProcessRootSignature;
-        driver::ShaderKey                   m_postProcessShaderKey;
-        driver::BindlessTextureSrvHandle    m_srcTexHandle;
+        gfx::RootSignatureHandle         m_postProcessRootSignature;
+        gfx::ShaderKey                   m_postProcessShaderKey;
+        gfx::BindlessTextureSrvHandle    m_srcTexHandle;
     };
 }

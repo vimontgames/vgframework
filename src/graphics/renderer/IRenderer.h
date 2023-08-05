@@ -2,7 +2,7 @@
 
 #include "core/IPlugin.h"
 #include "Renderer_consts.h"
-#include "graphics/driver/IView.h"
+#include "gfx/IView.h"
 
 namespace vg
 {
@@ -12,14 +12,14 @@ namespace vg
         struct Singletons;
     }
 
+    namespace gfx
+    {
+        class ITexture;
+        class IView;
+    }
+
     namespace graphics
     {
-        namespace driver
-        {
-            class ITexture;
-            class IView;
-        }
-
         namespace renderer
         {
             class IImmediateGUI;
@@ -39,11 +39,11 @@ namespace vg
                 virtual void	                            init                (const RendererParams & _params, core::Singletons & _singletons) = 0;
                 virtual void	                            deinit              () = 0;
 
-                virtual driver::IView *                     CreateMainView      (core::uint2 _screenSize) = 0;
-                virtual driver::ViewID                      AddView             (driver::IView * _view) = 0;
-                virtual void                                RemoveView          (driver::ViewID _viewID) = 0;
-                virtual driver::IView *                     GetView             (driver::ViewID _viewID) const = 0;
-                virtual const core::vector<driver::IView *> GetViews            (driver::ViewType _viewType) const = 0;
+                virtual gfx::IView *                        CreateMainView      (core::uint2 _screenSize) = 0;
+                virtual gfx::ViewID                         AddView             (gfx::IView * _view) = 0;
+                virtual void                                RemoveView          (gfx::ViewID _viewID) = 0;
+                virtual gfx::IView *                        GetView             (gfx::ViewID _viewID) const = 0;
+                virtual const core::vector<gfx::IView *>    GetViews            (gfx::ViewType _viewType) const = 0;
 
                 virtual void                                SetResized          () = 0;
                 virtual void                                resize              (core::uint _width, core::uint _height) = 0;
@@ -52,8 +52,8 @@ namespace vg
                 virtual void                                updateShaders       () = 0;
                 virtual void                                waitGPUIdle         () = 0;
 
-                virtual void                                SetVSync            (driver::VSync mode) = 0;
-                virtual driver::VSync                       GetVSync            () const = 0;
+                virtual void                                SetVSync            (gfx::VSync mode) = 0;
+                virtual gfx::VSync                          GetVSync            () const = 0;
 
                 #ifdef _WIN32
                 virtual LRESULT CALLBACK                    WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) = 0;
@@ -66,7 +66,7 @@ namespace vg
                 virtual IMeshModel *                        loadMeshModel       (const core::string & _file) = 0;
 
                 virtual bool                                cookTexture         (const core::string & _file) = 0;
-                virtual driver::ITexture *                  loadTexture         (const core::string & _file) = 0;
+                virtual gfx::ITexture *                  loadTexture         (const core::string & _file) = 0;
 
                 virtual void                                ReleaseAsync        (core::IObject * _object) = 0;
             };

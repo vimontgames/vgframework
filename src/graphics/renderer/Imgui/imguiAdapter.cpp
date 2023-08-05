@@ -17,18 +17,18 @@
 #include "imgui/backends/imgui_impl_vulkan.cpp"
 #endif
 
-#include "graphics/driver/Device/Device.h"
+#include "gfx/Device/Device.h"
 #include "graphics/renderer/ImGui/Imgui_Consts.h"
-#include "graphics/driver/CommandList/CommandList.h"
-#include "graphics/driver/CommandQueue/CommandQueue.h"
-#include "graphics/driver/Resource/Texture.h"
-#include "graphics/driver/BindlessTable/BindlessTable.h"
+#include "gfx/CommandList/CommandList.h"
+#include "gfx/CommandQueue/CommandQueue.h"
+#include "gfx/Resource/Texture.h"
+#include "gfx/BindlessTable/BindlessTable.h"
 
-#include "graphics/driver/Device/Device.h"
+#include "gfx/Device/Device.h"
 #include "ImguiExtensions.hpp"
 
 using namespace vg::core;
-using namespace vg::graphics::driver;
+using namespace vg::gfx;
 
 namespace vg::graphics::renderer
 {
@@ -185,7 +185,7 @@ namespace vg::graphics::renderer
     //--------------------------------------------------------------------------------------
     void ImguiAdapter::d3d12Init()
     {
-        driver::Device * device = Device::get();
+        gfx::Device * device = Device::get();
 
         const PixelFormat fmt = device->getBackbufferFormat();
         BindlessTable * bindlessTable = device->getBindlessTable();
@@ -199,7 +199,7 @@ namespace vg::graphics::renderer
     //--------------------------------------------------------------------------------------
     void ImguiAdapter::vulkanInit()
     {
-        driver::Device * device = Device::get();
+        gfx::Device * device = Device::get();
 
         VkDescriptorPoolSize imguiDescriptorPoolSizes[] =
         {
@@ -299,7 +299,7 @@ namespace vg::graphics::renderer
     //--------------------------------------------------------------------------------------
     ImguiAdapter::~ImguiAdapter()
     {
-        driver::Device * device = Device::get();
+        gfx::Device * device = Device::get();
 
         device->waitGPUIdle();
 
@@ -347,7 +347,7 @@ namespace vg::graphics::renderer
     {
         VG_PROFILE_CPU("Dear Imgui");
 
-        driver::Device * device = Device::get();
+        gfx::Device * device = Device::get();
         static bool firstFrame = true;
 
         #ifdef VG_DX12
@@ -395,7 +395,7 @@ namespace vg::graphics::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    void ImguiAdapter::render(driver::CommandList * _cmdList)
+    void ImguiAdapter::render(gfx::CommandList * _cmdList)
     {
         ImGui::Render();
 
@@ -409,10 +409,10 @@ namespace vg::graphics::renderer
     //--------------------------------------------------------------------------------------
     ImTextureID ImguiAdapter::getImguiTextureID(Texture * _tex)
     {
-        auto device = driver::Device::get();
+        auto device = gfx::Device::get();
 
 #ifdef VG_DX12
-        driver::BindlessTable * bindlessTable = device->getBindlessTable();
+        gfx::BindlessTable * bindlessTable = device->getBindlessTable();
         return (ImTextureID)bindlessTable->getd3d12GPUDescriptorHandle(_tex->getBindlessSRVHandle()).ptr;
 #elif defined(VG_VULKAN)
         // In case of crash increase size of VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER in ImguiAdapter::vulkanInit()

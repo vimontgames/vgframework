@@ -1,11 +1,11 @@
 #include "ImguiView.h"
 #include "graphics/renderer/View/Forward/ForwardView.h"
-#include "graphics/driver/FrameGraph/FrameGraph.h"
+#include "gfx/FrameGraph/FrameGraph.h"
 
 namespace vg::graphics::renderer
 {
     //--------------------------------------------------------------------------------------
-    ImGuiView::ImGuiView(const string & _name, Flags _flags, driver::ViewType _viewType) :
+    ImGuiView::ImGuiView(const string & _name, Flags _flags, gfx::ViewType _viewType) :
         ImguiEditor(_name, _flags),
         m_viewType(_viewType)
     {
@@ -91,7 +91,7 @@ namespace vg::graphics::renderer
             if (!m_view)
             {
                 // Create empty view
-                driver::CreateViewParams params;
+                gfx::CreateViewParams params;
                                          params.size = m_size;
                                          params.universe = getEngine()->getCurrentUniverse(); // TODO
                                          params.target = nullptr;
@@ -109,9 +109,9 @@ namespace vg::graphics::renderer
                 if (m_texture)
                     Renderer::get()->ReleaseAsync(m_texture);
 
-                driver::TextureDesc targetDesc = driver::TextureDesc(Usage::Default, BindFlags::ShaderResource, CPUAccessFlags::None, TextureType::Texture2D, PixelFormat::R8G8B8A8_unorm_sRGB, TextureFlags::RenderTarget, m_size.x, m_size.y);
+                gfx::TextureDesc targetDesc = gfx::TextureDesc(Usage::Default, BindFlags::ShaderResource, CPUAccessFlags::None, TextureType::Texture2D, PixelFormat::R8G8B8A8_unorm_sRGB, TextureFlags::RenderTarget, m_size.x, m_size.y);
                 string targetName = RenderContext::MakeUniqueName("Dest", m_view->GetViewID());
-                m_texture = (driver::ITexture *)Device::get()->createTexture(targetDesc, targetName);
+                m_texture = (gfx::ITexture *)Device::get()->createTexture(targetDesc, targetName);
                 m_view->SetSize(m_size);
                 m_view->SetRenderTarget(m_texture);
 

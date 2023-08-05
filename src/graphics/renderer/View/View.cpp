@@ -1,7 +1,7 @@
 #include "graphics/renderer/Precomp.h"
 #include "View.h"
 #include "core/GameObject/GameObject.h"
-#include "graphics/driver/ITexture.h"
+#include "gfx/ITexture.h"
 #include "graphics/renderer/Job/Culling/ViewCullingJob.h"
 
 #if !VG_ENABLE_INLINE
@@ -12,7 +12,7 @@
 #include "Forward/ForwardView.hpp"
 
 using namespace vg::core;
-using namespace vg::graphics::driver;
+using namespace vg::gfx;
 
 namespace vg::graphics::renderer
 {

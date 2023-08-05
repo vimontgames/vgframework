@@ -3,57 +3,60 @@
 #include "graphics/renderer/IMaterialModel.h"
 #include "graphics/renderer/Model/Material/MaterialTextureType.h"
 
-namespace vg::graphics
+namespace vg
 {
-    namespace driver
+    namespace gfx
     {
         class Texture;
     }
 
-    namespace renderer
+    namespace graphics
     {
-        class MaterialImporterData;
-
-        class MaterialModel : public IMaterialModel
+        namespace renderer
         {
-            using super = IMaterialModel;
+            class MaterialImporterData;
 
-        public:
-
-            enum Flags : core::u32
+            class MaterialModel : public IMaterialModel
             {
-                AlphaTest   = 0x00000001,
-                AlphaBlend  = 0x00000002
+                using super = IMaterialModel;
+
+            public:
+
+                enum Flags : core::u32
+                {
+                    AlphaTest = 0x00000001,
+                    AlphaBlend = 0x00000002
+                };
+
+                const char *            getClassName            () const final { return "MaterialModel"; }
+
+                static bool             registerClass           (core::IFactory & _factory);
+                static bool             registerProperties      (core::IClassDesc & _desc);
+
+                                        MaterialModel           (const core::string & _name, core::IObject * _parent = nullptr);
+                                        ~MaterialModel          ();
+
+                core::uint              GetTextureCount         () const override;
+                gfx::ITexture *         GetTexture              (MaterialTextureType _type) const override;
+                const core::string &    GetTexturePath          (MaterialTextureType _type) const override;
+
+                void                    SetTexture              (MaterialTextureType _type, gfx::ITexture * _texture) final;
+
+                core::uint              getTextureCount         () const { return (core::uint)core::countof(m_textureInfos); }
+                gfx::Texture *          getTexture              (MaterialTextureType _type) const;
+                const core::string &    getTexturePath          (MaterialTextureType _type) const { return m_textureInfos[core::asInteger(_type)].path; };
+
+                static MaterialModel *  createFromImporterData  (const MaterialImporterData & _data);
+
+            private:
+                Flags                   m_flags;
+                struct TextureInfo
+                {
+                    core::string        path;
+                    gfx::Texture *      texture = nullptr;
+                };
+                TextureInfo m_textureInfos[core::enumCount<MaterialTextureType>()];
             };
-
-            const char * getClassName() const final { return "MaterialModel"; }
-
-            static bool registerClass(core::IFactory & _factory);
-            static bool registerProperties(core::IClassDesc & _desc);
-
-            MaterialModel(const core::string & _name, core::IObject * _parent = nullptr);
-            ~MaterialModel();
-
-            core::uint              GetTextureCount () const override;
-            driver::ITexture *      GetTexture      (MaterialTextureType _type) const override;
-            const core::string &    GetTexturePath  (MaterialTextureType _type) const override;
-
-            void                    SetTexture      (MaterialTextureType _type, driver::ITexture * _texture) final;
-
-            core::uint              getTextureCount () const                            { return (core::uint)core::countof(m_textureInfos); }
-            driver::Texture *       getTexture      (MaterialTextureType _type) const;
-            const core::string &    getTexturePath  (MaterialTextureType _type) const   { return m_textureInfos[core::asInteger(_type)].path; };
-
-            static MaterialModel * createFromImporterData(const MaterialImporterData & _data);
-
-        private:
-            Flags                   m_flags;
-            struct TextureInfo
-            {
-                core::string        path;
-                driver::Texture *   texture = nullptr;
-            };
-            TextureInfo m_textureInfos[core::enumCount<MaterialTextureType>()];
-        };
+        }
     }
 }

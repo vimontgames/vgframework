@@ -1,8 +1,8 @@
 #pragma once
 
-#include "graphics/driver/FrameGraph/UserPass.h"
+#include "gfx/FrameGraph/UserPass.h"
 
-namespace vg::graphics::driver
+namespace vg::gfx
 {
     class Buffer;
 }
@@ -13,7 +13,7 @@ namespace vg::graphics::renderer
     class AABB;
 
     //--------------------------------------------------------------------------------------
-    class ForwardPass : public driver::UserPass
+    class ForwardPass : public gfx::UserPass
     {
     public:
         const char * getClassName() const final { return "ForwardPass"; }
@@ -21,31 +21,31 @@ namespace vg::graphics::renderer
         ForwardPass();
         ~ForwardPass();
 
-        void setup(const driver::RenderContext & _renderContext, double _dt) override;
-        void draw(const driver::RenderContext & _renderContext, driver::CommandList * _cmdList) const override;
+        void setup(const gfx::RenderContext & _renderContext, double _dt) override;
+        void draw(const gfx::RenderContext & _renderContext, gfx::CommandList * _cmdList) const override;
 
     protected:
         void createGrid();
         void destroyGrid();
-        void drawGrid(driver::CommandList * _cmdList, const core::float4x4 & _viewProj) const;
+        void drawGrid(gfx::CommandList * _cmdList, const core::float4x4 & _viewProj) const;
 
         void createAxis();
         void destroyAxis();
-        void drawAxis(driver::CommandList * _cmdList, const core::float4x4 & _viewProj) const;
+        void drawAxis(gfx::CommandList * _cmdList, const core::float4x4 & _viewProj) const;
 
         void createUnitBox();
         void destroyUnitBox();
-        void drawAABB(driver::CommandList * _cmdList, const AABB & _aabb, const core::float4x4 & _world, const core::float4x4 & _viewProj) const;
+        void drawAABB(gfx::CommandList * _cmdList, const AABB & _aabb, const core::float4x4 & _world, const core::float4x4 & _viewProj) const;
 
     private:
-        driver::RootSignatureHandle     m_rootSignatureHandle;
-        driver::ShaderKey               m_forwardShaderKey;
-        driver::ShaderKey               m_wireframeShaderKey;
+        gfx::RootSignatureHandle     m_rootSignatureHandle;
+        gfx::ShaderKey               m_forwardShaderKey;
+        gfx::ShaderKey               m_wireframeShaderKey;
 
-        driver::Buffer *                m_gridVB = nullptr;
-        driver::Buffer *                m_axisVB = nullptr;
+        gfx::Buffer *                m_gridVB = nullptr;
+        gfx::Buffer *                m_axisVB = nullptr;
 
-        driver::Buffer *                m_unitBoxIB = nullptr;
-        driver::Buffer *                m_unitBoxVB = nullptr;
+        gfx::Buffer *                m_unitBoxIB = nullptr;
+        gfx::Buffer *                m_unitBoxVB = nullptr;
     };
 }

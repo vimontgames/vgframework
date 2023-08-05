@@ -1,7 +1,7 @@
 #pragma once
 
-#include "graphics/driver/Resource/Texture_consts.h"
-#include "graphics/driver/Importer/TextureImporter.h"
+#include "gfx/Resource/Texture_consts.h"
+#include "gfx/Importer/TextureImporter.h"
 
 namespace vg::graphics::renderer
 {
@@ -12,7 +12,7 @@ namespace vg::graphics::renderer
         bool save(const core::string & _file) const;
 
         core::string                    name;
-        driver::TextureDesc             desc;
+        gfx::TextureDesc             desc;
         core::vector<core::u8>          texels;
     };
 }

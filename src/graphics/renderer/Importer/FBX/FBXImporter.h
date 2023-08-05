@@ -1,6 +1,6 @@
 #pragma once
 
-#include "graphics/driver/Importer/Importer.h"
+#include "gfx/Importer/Importer.h"
 #include "core/Singleton/Singleton.h"
 
 namespace fbxsdk
@@ -15,7 +15,7 @@ namespace vg::graphics::renderer
     class SceneImporterData;
     class MeshImporterData;
 
-    class FBXImporter : public driver::Importer, public core::Singleton<FBXImporter>
+    class FBXImporter : public gfx::Importer, public core::Singleton<FBXImporter>
     {
     public:
         FBXImporter();

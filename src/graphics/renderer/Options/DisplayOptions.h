@@ -2,7 +2,7 @@
 
 #include "core/Object/Object.h"
 #include "core/Singleton/Singleton.h"
-#include "graphics/driver/Device/Device_consts.h"
+#include "gfx/Device/Device_consts.h"
 
 namespace vg::core
 {
@@ -64,7 +64,7 @@ namespace vg::graphics::renderer
         core::float4		    m_backgroundColor       = core::float4(0, 0, 0, 0);
         bool				    m_toolMode              = true;
         bool                    m_aabb                  = false;
-        graphics::driver::VSync m_VSync                 = graphics::driver::VSync::VBL_1;
+        gfx::VSync m_VSync                 = gfx::VSync::VBL_1;
         bool                    m_vsync                 = true;
         bool				    m_opaque                = true;
         bool                    m_albedoMaps            = true;

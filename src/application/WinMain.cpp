@@ -6,7 +6,7 @@
 
 #include "engine/IEngine.h"
 #include "graphics/renderer/IRenderer.h"
-#include "graphics/driver/IDevice.h"
+#include "gfx/IDevice.h"
 
 #include "application.h"
 
@@ -172,9 +172,9 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	const core::string * solutionPlatform = cmdLine.find("SolutionPlatform");
 
 	#ifdef VG_DX12
-	engineParams.renderer.device.api = graphics::driver::API::DirectX12;
+	engineParams.renderer.device.api = gfx::API::DirectX12;
 	#elif VG_VULKAN
-	engineParams.renderer.device.api = graphics::driver::API::Vulkan;
+	engineParams.renderer.device.api = gfx::API::Vulkan;
 	#elif 
 	#error No GFX API defined
 	#endif

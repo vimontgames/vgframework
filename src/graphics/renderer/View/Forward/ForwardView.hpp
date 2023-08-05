@@ -5,7 +5,7 @@
 #include "graphics/renderer/Pass/PostProcess/PostProcessPass.h"
 
 using namespace vg::core;
-using namespace vg::graphics::driver;
+using namespace vg::gfx;
 
 namespace vg::graphics::renderer
 {
@@ -30,7 +30,7 @@ namespace vg::graphics::renderer
     //--------------------------------------------------------------------------------------
     void ForwardView::AddToFrameGraph(FrameGraph & _frameGraph)
     {
-        driver::RenderContext rc;
+        gfx::RenderContext rc;
                               rc.m_view = this;
 
         auto * target = getRenderTarget();

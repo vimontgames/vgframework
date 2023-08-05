@@ -300,6 +300,9 @@
     <ClInclude Include="Geometry\Batch\Batch.h">
       <Filter>Geometry\Batch</Filter>
     </ClInclude>
+    <ClInclude Include="ImGui\imguiAdapter.h">
+      <Filter>ImGui</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Pass">

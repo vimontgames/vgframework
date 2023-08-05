@@ -3,7 +3,7 @@
 #include "core/math/math.h"
 #include "Shaders/system/packing.hlsli"
 
-namespace vg::graphics::driver
+namespace vg::gfx
 {
     // Imaginary vertex format with all possible attributes unpacked
     // We don't care about packing here as this format will only be used to fill the actual vertex buffers

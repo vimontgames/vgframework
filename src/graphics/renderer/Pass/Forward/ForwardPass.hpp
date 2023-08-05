@@ -20,7 +20,7 @@ namespace vg::graphics::renderer
     // Setup executed once, when pass is created
     //--------------------------------------------------------------------------------------
     ForwardPass::ForwardPass() :
-        driver::UserPass("ForwardPass")
+        gfx::UserPass("ForwardPass")
     {
         auto * device = Device::get();
         auto * renderer = Renderer::get();
@@ -196,7 +196,7 @@ namespace vg::graphics::renderer
     //--------------------------------------------------------------------------------------
     // Setup executed each frame, for each pass instance
     //--------------------------------------------------------------------------------------
-    void ForwardPass::setup(const driver::RenderContext & _renderContext, double _dt)
+    void ForwardPass::setup(const gfx::RenderContext & _renderContext, double _dt)
     {
         writeRenderTarget(0, _renderContext.getName("Color"));
         writeDepthStencil(_renderContext.getName("DepthStencil"));
@@ -344,8 +344,8 @@ namespace vg::graphics::renderer
 
                     const auto * material = model->getMaterial(i);
 
-                    driver::Texture * albedoMap = nullptr;
-                    driver::Texture * normalMap = nullptr;
+                    gfx::Texture * albedoMap = nullptr;
+                    gfx::Texture * normalMap = nullptr;
 
                     if (nullptr != material)
                     {

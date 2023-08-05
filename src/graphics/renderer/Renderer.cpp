@@ -7,12 +7,12 @@
 #include "core/File/File.h"
 #include "core/Scheduler/Scheduler.h"
 
-#include "graphics/driver/device/device.h"
-#include "graphics/driver/Shader/ShaderManager.h"
-#include "graphics/driver/FrameGraph/FrameGraph.h"
-#include "graphics/driver/Profiler/Profiler.h"
-#include "graphics/driver/Resource/Texture.h"
-#include "graphics/driver/Importer/TextureImporter.h"
+#include "gfx/device/device.h"
+#include "gfx/Shader/ShaderManager.h"
+#include "gfx/FrameGraph/FrameGraph.h"
+#include "gfx/Profiler/Profiler.h"
+#include "gfx/Resource/Texture.h"
+#include "gfx/Importer/TextureImporter.h"
 
 #include "graphics/renderer/Imgui/imguiAdapter.h"
 #include "graphics/renderer/Pass/Imgui/ImguiPass.h"
@@ -31,7 +31,7 @@
 #include "Shaders/background/background.hlsl.h"
 
 using namespace vg::core;
-using namespace vg::graphics::driver;
+using namespace vg::gfx;
 using namespace vg::graphics::renderer;
 
 //--------------------------------------------------------------------------------------
@@ -180,7 +180,7 @@ namespace vg::graphics::renderer
         VG_SAFE_DELETE(displayOptions);
 
         VG_SAFE_RELEASE(m_mainView);
-        for (uint j = 0; j < core::enumCount<driver::ViewType>(); ++j)
+        for (uint j = 0; j < core::enumCount<gfx::ViewType>(); ++j)
         {
             auto & views = m_views[j];
             for (uint i = 0; i < views.size(); ++i)
@@ -230,13 +230,13 @@ namespace vg::graphics::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    void Renderer::SetVSync(driver::VSync mode)
+    void Renderer::SetVSync(gfx::VSync mode)
     {
         m_device.setVSync(mode);
     }
 
     //--------------------------------------------------------------------------------------
-    driver::VSync Renderer::GetVSync() const
+    gfx::VSync Renderer::GetVSync() const
     {
         return m_device.getVSync();
     }
@@ -266,7 +266,7 @@ namespace vg::graphics::renderer
                 m_frameGraph.importRenderTarget("Backbuffer", m_device.getBackbuffer(), float4(0,0,0,0), FrameGraph::Resource::InitState::Clear);
                 m_frameGraph.setGraphOutput("Backbuffer");
 
-                for (uint j = 0; j < core::enumCount<driver::ViewType>(); ++j)
+                for (uint j = 0; j < core::enumCount<gfx::ViewType>(); ++j)
                 {
                     auto & views = m_views[j];
                     for (uint i = 0; i < views.count(); ++i)
@@ -302,7 +302,7 @@ namespace vg::graphics::renderer
         // Perform culling foreach view (might want to split views later)
         uint jobStartCounter = 0;
         core::JobSync syncCull;
-        for (uint j = 0; j < core::enumCount<driver::ViewType>(); ++j)
+        for (uint j = 0; j < core::enumCount<gfx::ViewType>(); ++j)
         {
             const auto & views = m_views[j];
             for (uint i = 0; i < views.size(); ++i)
@@ -337,9 +337,9 @@ namespace vg::graphics::renderer
 	}
 
     //--------------------------------------------------------------------------------------
-    driver::IView * Renderer::CreateMainView(core::uint2 _screenSize)
+    gfx::IView * Renderer::CreateMainView(core::uint2 _screenSize)
     {
-        auto _mainViewParams = driver::CreateViewParams(ViewType::Backbuffer, _screenSize);
+        auto _mainViewParams = gfx::CreateViewParams(ViewType::Backbuffer, _screenSize);
         auto * mainView = new View(_mainViewParams);
         if (mainView != m_mainView)
         {
@@ -352,7 +352,7 @@ namespace vg::graphics::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    driver::ViewID Renderer::AddView(driver::IView * _view)
+    gfx::ViewID Renderer::AddView(gfx::IView * _view)
     {
         auto type = _view->GetViewID().type;
         auto & views = m_views[(uint)type];
@@ -380,17 +380,17 @@ namespace vg::graphics::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    const core::vector <IView *> Renderer::GetViews(driver::ViewType _viewType) const
+    const core::vector <IView *> Renderer::GetViews(gfx::ViewType _viewType) const
     {
-        VG_ASSERT(_viewType < (driver::ViewType)core::enumCount<driver::ViewType>());
+        VG_ASSERT(_viewType < (gfx::ViewType)core::enumCount<gfx::ViewType>());
         return (const core::vector<IView *>&)m_views[(uint)_viewType];
     }
 
     //--------------------------------------------------------------------------------------
-    void Renderer::RemoveView(driver::ViewID _viewID)
+    void Renderer::RemoveView(gfx::ViewID _viewID)
     {
         // Keep holes so that the ViewID remains valid
-        for (uint j = 0; j < core::enumCount<driver::ViewType>(); ++j)
+        for (uint j = 0; j < core::enumCount<gfx::ViewType>(); ++j)
         {
             auto & views = m_views[j];
             for (uint i = 0; i < views.size(); ++i)
@@ -407,7 +407,7 @@ namespace vg::graphics::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    driver::IView * Renderer::GetView(driver::ViewID _viewID) const
+    gfx::IView * Renderer::GetView(gfx::ViewID _viewID) const
     {
         const auto & views = m_views[(uint)_viewID.type];
         if (_viewID.index < views.size())
@@ -466,7 +466,7 @@ namespace vg::graphics::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    driver::ITexture * Renderer::loadTexture(const core::string & _file)
+    gfx::ITexture * Renderer::loadTexture(const core::string & _file)
     {
         TextureImporterData textureData;
 
@@ -486,7 +486,7 @@ namespace vg::graphics::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    driver::Texture * Renderer::getDefaultTexture(MaterialTextureType _type) const
+    gfx::Texture * Renderer::getDefaultTexture(MaterialTextureType _type) const
     {
         return m_defaultTextures[asInteger(_type)];
     }

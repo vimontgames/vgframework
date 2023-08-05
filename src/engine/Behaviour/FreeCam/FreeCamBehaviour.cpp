@@ -3,7 +3,7 @@
 #include "core/GameObject/GameObject.h"
 #include "core/Math/Math.h"
 #include "core/IInput.h"
-#include "graphics/driver/IView.h"
+#include "gfx/IView.h"
 #include "engine/Component/Camera/CameraComponent.h"
 #include "engine/Engine.h"
 #include "graphics/renderer/IRenderer.h"

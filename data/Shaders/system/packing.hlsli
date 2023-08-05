@@ -1,7 +1,7 @@
 #pragma once
 
 #ifdef __cplusplus
-namespace vg::graphics::driver
+namespace vg::gfx
 {
     using namespace vg::core;
 #else

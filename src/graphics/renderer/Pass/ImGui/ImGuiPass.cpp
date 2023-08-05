@@ -1,6 +1,6 @@
 #include "graphics/renderer/Precomp.h"
 #include "ImguiPass.h"
-#include "graphics/driver/Device/Device.h"
+#include "gfx/Device/Device.h"
 #include "graphics/renderer/Renderer.h"
 #include "graphics/renderer/Geometry/Batch/Batch.h"
 #include "graphics/renderer/imgui/imguiAdapter.h"
@@ -17,7 +17,7 @@
 #include "core/Math/Math.h"
 
 using namespace vg::core;
-using namespace vg::graphics::driver;
+using namespace vg::gfx;
 using namespace vg::graphics::renderer;
 
 #include "imgui/imgui.h"
@@ -45,7 +45,7 @@ namespace vg::graphics::renderer
     // In case several windows are docked together, then the last declared will be the default selected
     //--------------------------------------------------------------------------------------
     ImguiPass::ImguiPass() :
-        driver::UserPass("ImGuiPass")
+        gfx::UserPass("ImGuiPass")
     {
         // Add ImGui editors
         m_imGuiEditors.push_back(new ImguiPlatform(IconWithText(Editor::Icon::Platform, "Platform"), ImguiEditor::StartVisible | ImguiEditor::AddMenuEntry));
@@ -76,7 +76,7 @@ namespace vg::graphics::renderer
     }
     
     //--------------------------------------------------------------------------------------
-    void ImguiPass::setup(const driver::RenderContext & _renderContext, double _dt)
+    void ImguiPass::setup(const gfx::RenderContext & _renderContext, double _dt)
     {
         writeRenderTarget(0, "Backbuffer");
 
@@ -250,7 +250,7 @@ namespace vg::graphics::renderer
 
     
     //--------------------------------------------------------------------------------------
-    void ImguiPass::draw(const RenderContext & _renderContext, driver::CommandList * _cmdList) const
+    void ImguiPass::draw(const RenderContext & _renderContext, gfx::CommandList * _cmdList) const
     {
         Renderer::get()->getImGuiAdapter()->render(_cmdList);
     }

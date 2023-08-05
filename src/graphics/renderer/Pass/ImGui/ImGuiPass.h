@@ -1,6 +1,6 @@
 #pragma once
 
-#include "graphics/driver/FrameGraph/UserPass.h"
+#include "gfx/FrameGraph/UserPass.h"
 
 namespace vg::engine
 {
@@ -13,7 +13,7 @@ namespace vg::graphics::renderer
     class ImGuiToolbar;
 
     //--------------------------------------------------------------------------------------
-    class ImguiPass : public driver::UserPass
+    class ImguiPass : public gfx::UserPass
     {
     public:
         const char * getClassName() const final { return "ImguiPass"; }
@@ -21,8 +21,8 @@ namespace vg::graphics::renderer
         ImguiPass();
         ~ImguiPass();
 
-        void setup(const driver::RenderContext & _renderContext, double _dt) override;
-        void draw(const driver::RenderContext & _renderContext, driver::CommandList * _cmdList) const override;
+        void setup(const gfx::RenderContext & _renderContext, double _dt) override;
+        void draw(const gfx::RenderContext & _renderContext, gfx::CommandList * _cmdList) const override;
 
     private:
         static const vg::engine::IEngine * getEngine();

@@ -15,7 +15,7 @@ namespace vg::graphics::renderer
             if (version == TextureImporterDataVersion)
             {
                 buffer.read(&name);
-                buffer.read(&desc, sizeof(driver::TextureDesc));
+                buffer.read(&desc, sizeof(gfx::TextureDesc));
 
                 u32 size;
                 buffer.read(&size);
@@ -37,7 +37,7 @@ namespace vg::graphics::renderer
 
         buffer.write(TextureImporterDataVersion);
         buffer.write(name);
-        buffer.write(&desc, sizeof(driver::TextureDesc));
+        buffer.write(&desc, sizeof(gfx::TextureDesc));
 
         const u32 size = (u32)texels.size();
         buffer.write(size);

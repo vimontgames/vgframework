@@ -4,7 +4,7 @@
 #include "core/GameObject/GameObject.h"
 #include "core/Math/Math.h"
 
-#include "graphics/driver/IView.h"
+#include "gfx/IView.h"
 #include "graphics/renderer/IRenderer.h"
 
 #include "engine/Engine.h"
@@ -33,7 +33,7 @@ namespace vg::engine
     {
         super::registerProperties(_desc);
 
-        _desc.registerPropertyEnum(CameraComponent, graphics::driver::ViewType, m_ViewType, "View Type");
+        _desc.registerPropertyEnum(CameraComponent, gfx::ViewType, m_ViewType, "View Type");
         _desc.registerPropertyHelper(CameraComponent, m_ViewIndex, "View Index");
         _desc.setPropertyRangeHelper(CameraComponent, m_ViewIndex, float2(0, 15));
 
@@ -68,7 +68,7 @@ namespace vg::engine
     //--------------------------------------------------------------------------------------
     void CameraComponent::Update(double _dt)
     {
-        auto * view = Engine::get()->GetRenderer()->GetView(graphics::driver::ViewID(m_ViewType, m_ViewIndex));
+        auto * view = Engine::get()->GetRenderer()->GetView(gfx::ViewID(m_ViewType, m_ViewIndex));
         if (nullptr != view)
         {
             const float4x4 & matrix = getGameObject()->getWorldMatrix();

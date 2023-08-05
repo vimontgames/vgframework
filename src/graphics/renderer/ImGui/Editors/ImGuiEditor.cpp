@@ -19,11 +19,11 @@
 #include "ImGui-Addons/FileBrowser/ImGuiFileBrowser.cpp"
 
 using namespace vg::core;
-using namespace vg::graphics::driver;
+using namespace vg::gfx;
 using namespace ImGui;
 
 #include "engine/IEngine.h"
-#include "graphics/driver/Device/Device.h"
+#include "gfx/Device/Device.h"
 #include "graphics/renderer/ImGui/imguiExtensions.h"
 
 #include "graphics/renderer/ImGui/Editors/Scene/ImguiScene.hpp"

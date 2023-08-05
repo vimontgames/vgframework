@@ -1,7 +1,7 @@
 #include "graphics/renderer/Precomp.h"
 #include "MaterialModel.h"
 #include "core/Object/AutoRegisterClass.h"
-#include "graphics/driver/Resource/Texture.h"
+#include "gfx/Resource/Texture.h"
 #include "graphics/renderer/Importer/SceneImporterData.h"
 #include "graphics/renderer/Renderer.h"
 #include "core/Object/EnumHelper.h"
@@ -59,14 +59,14 @@ namespace vg::graphics::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    driver::ITexture * MaterialModel::GetTexture(MaterialTextureType _type) const
+    gfx::ITexture * MaterialModel::GetTexture(MaterialTextureType _type) const
     {
         VG_ASSERT(asInteger(_type) < countof(m_textureInfos));
         return getTexture(_type);
     }
 
     //--------------------------------------------------------------------------------------
-    driver::Texture * MaterialModel::getTexture(MaterialTextureType _type) const
+    gfx::Texture * MaterialModel::getTexture(MaterialTextureType _type) const
     { 
         auto * tex = m_textureInfos[asInteger(_type)].texture;
         if (tex)
@@ -89,7 +89,7 @@ namespace vg::graphics::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    void MaterialModel::SetTexture(MaterialTextureType _type, driver::ITexture * _texture)
+    void MaterialModel::SetTexture(MaterialTextureType _type, gfx::ITexture * _texture)
     {
         auto & tex = m_textureInfos[asInteger(_type)].texture;
 
@@ -97,7 +97,7 @@ namespace vg::graphics::renderer
         {
             VG_SAFE_INCREASE_REFCOUNT(_texture);
             VG_SAFE_RELEASE(tex);
-            tex = (driver::Texture*)_texture;
+            tex = (gfx::Texture*)_texture;
         }
     }
 }

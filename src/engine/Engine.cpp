@@ -12,8 +12,8 @@
 #include "core/Scene/Scene.h"
 #include "core/GameObject/GameObject.h"
 
-#include "graphics/driver/IView.h"
-#include "graphics/driver/IDevice.h"
+#include "gfx/IView.h"
+#include "gfx/IDevice.h"
 
 #include "graphics/renderer/IRenderer.h"
 
@@ -22,6 +22,8 @@
 #include "engine/Component/Camera/CameraComponent.h"
 #include "engine/Behaviour/FreeCam/FreeCamBehaviour.h"
 #include "engine/Component/Mesh/MeshComponent.h"
+
+//#include "editor/IEditor.h"
 
 #include "application/IProject.h"
 
@@ -233,11 +235,11 @@ namespace vg::engine
 				VG_ASSERT(false);
 				break;
 
-			case graphics::driver::API::DirectX12:
+			case gfx::API::DirectX12:
 				api = "DX12";
 				break;
 
-			case graphics::driver::API::Vulkan:
+			case gfx::API::Vulkan:
 				api = "Vulkan";
 				break;
 		}
@@ -254,6 +256,7 @@ namespace vg::engine
         _singletons.factory = new Factory();
         Kernel::setFactory(_singletons.factory);
 
+        // Load Renderer DLL
 		m_renderer = Plugin::create<graphics::renderer::IRenderer>("renderer", api);
 		m_renderer->init(_params.renderer, _singletons);
 
@@ -267,6 +270,10 @@ namespace vg::engine
         m_resourceManager = new ResourceManager("Resource Manager", this);
 
         registerClasses();
+
+        // Load Editor DLL
+        //m_editor = Plugin::create<editor::IEditor>("editor");
+        //m_editor->Init();
 
         // Create main view
         m_mainView = m_renderer->CreateMainView(getScreenSize());
@@ -296,7 +303,7 @@ namespace vg::engine
 
         // add Camera component
         auto * cameraComponent = editorCameraGameObject->addComponent<CameraComponent>("Camera");
-        cameraComponent->setViewType(graphics::driver::ViewType::Editor);
+        cameraComponent->setViewType(gfx::ViewType::Editor);
 
         // add FreeCam behaviour
         auto * freeCamComponent = editorCameraGameObject->addComponent<FreeCamBehaviour>("FreeCam");
@@ -342,6 +349,9 @@ namespace vg::engine
         Kernel::setInput(nullptr);
 
         IFactory * factory = Kernel::getFactory();
+
+        //m_editor->Deinit();
+        //m_editor->Release();
 
 		m_renderer->deinit();
 		m_renderer->release();
@@ -408,7 +418,7 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
-    graphics::driver::IView * Engine::getMainView() const
+    gfx::IView * Engine::getMainView() const
     {
         return m_mainView;
     }

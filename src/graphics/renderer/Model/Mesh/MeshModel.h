@@ -2,7 +2,7 @@
 
 #include "graphics/renderer/IMeshModel.h"
 
-namespace vg::graphics::driver
+namespace vg::gfx
 {
     class Buffer;
     enum class VertexFormat : core::u8;
@@ -34,7 +34,7 @@ namespace vg::graphics::renderer
         static MeshModel *              createFromImporterData  (const MeshImporterData & _data);
 
     private:
-        template <driver::VertexFormat F> static driver::Buffer * createVertexBufferFromImporterData(const MeshImporterData & _data);
+        template <gfx::VertexFormat F> static gfx::Buffer * createVertexBufferFromImporterData(const MeshImporterData & _data);
 
     private:
         MeshGeometry *                  m_meshGeometry = nullptr;

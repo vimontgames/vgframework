@@ -44,7 +44,7 @@ namespace vg::graphics::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    void MeshGeometry::setIndexBuffer(driver::Buffer * _ib, core::u32 _offset)
+    void MeshGeometry::setIndexBuffer(gfx::Buffer * _ib, core::u32 _offset)
     {
         if (_ib != m_indexBuffer)
         {
@@ -58,7 +58,7 @@ namespace vg::graphics::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    void MeshGeometry::setVertexBuffer(driver::Buffer * _vb, core::u32 _offset)
+    void MeshGeometry::setVertexBuffer(gfx::Buffer * _vb, core::u32 _offset)
     {
         if (_vb != m_vertexBuffer)
         {
@@ -72,7 +72,7 @@ namespace vg::graphics::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    driver::Buffer * MeshGeometry::getIndexBuffer() const
+    gfx::Buffer * MeshGeometry::getIndexBuffer() const
     {
         return m_indexBuffer;
     }
@@ -84,7 +84,7 @@ namespace vg::graphics::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    driver::Buffer * MeshGeometry::getVertexBuffer() const
+    gfx::Buffer * MeshGeometry::getVertexBuffer() const
     {
         return m_vertexBuffer;
     }

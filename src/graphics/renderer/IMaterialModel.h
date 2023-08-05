@@ -2,14 +2,14 @@
 
 #include "core/Model/Model.h"
 
-namespace vg::graphics
+namespace vg
 {
-    namespace driver
+    namespace gfx
     {
         class ITexture;
     }
 
-    namespace renderer
+    namespace graphics::renderer
     {
         enum class MaterialTextureType : core::u8;
 
@@ -25,10 +25,10 @@ namespace vg::graphics
             }
 
             virtual core::uint              GetTextureCount () const = 0;
-            virtual driver::ITexture *      GetTexture      (MaterialTextureType _type) const = 0;
+            virtual gfx::ITexture *      GetTexture      (MaterialTextureType _type) const = 0;
             virtual const core::string &    GetTexturePath  (MaterialTextureType _type) const = 0;
 
-            virtual void                    SetTexture      (MaterialTextureType _type, driver::ITexture * _texture) = 0;
+            virtual void                    SetTexture      (MaterialTextureType _type, gfx::ITexture * _texture) = 0;
         };
     }
 }

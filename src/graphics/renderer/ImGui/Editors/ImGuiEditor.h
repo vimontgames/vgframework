@@ -12,7 +12,7 @@ namespace vg::engine
     class IEngine;
 }
 
-namespace vg::graphics::driver
+namespace vg::gfx
 {
     struct RenderContext;
 }

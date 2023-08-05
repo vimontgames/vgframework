@@ -11,10 +11,15 @@ namespace vg::core
     class Entity;
 }
 
-namespace vg::graphics::driver
+namespace vg::gfx
 {
     class IView;
 }
+
+//namespace vg::editor
+//{
+//    class IEditor;
+//}
 
 namespace vg::engine
 {
@@ -67,7 +72,7 @@ namespace vg::engine
 		void							    RunOneFrame	        () final;
 
         core::uint2                         getScreenSize       () const final;
-        graphics::driver::IView *           getMainView         () const;
+        gfx::IView *           getMainView         () const;
 
 		graphics::renderer::IRenderer *	    GetRenderer	        () const final;
         engine::IResourceManager *          GetResourceManager  () const final;
@@ -93,8 +98,9 @@ namespace vg::engine
 
         IProject *                          m_project           = nullptr;
         core::Universe *                    m_universe          = nullptr;
+        //editor::IEditor *                   m_editor            = nullptr;
 		graphics::renderer::IRenderer *	    m_renderer          = nullptr;
-        graphics::driver::IView *           m_mainView          = nullptr;
+        gfx::IView *           m_mainView          = nullptr;
         ResourceManager *                   m_resourceManager   = nullptr;
 
         double                              m_dt                = 0.0f;

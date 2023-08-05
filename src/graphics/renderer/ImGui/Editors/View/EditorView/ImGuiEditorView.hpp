@@ -4,7 +4,7 @@ namespace vg::graphics::renderer
 {
     //--------------------------------------------------------------------------------------
     ImGuiEditorView::ImGuiEditorView(const string & _name, Flags _flags) :
-        ImGuiView(_name, _flags, driver::ViewType::Editor)
+        ImGuiView(_name, _flags, gfx::ViewType::Editor)
     {
 
     }

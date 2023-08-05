@@ -1,6 +1,6 @@
 #pragma once
 
-namespace vg::graphics::driver
+namespace vg::gfx
 {
     const core::uint bindless_texture_SRV_offset    = 0;
     const core::uint bindless_texture_SRV_count     = 16384;

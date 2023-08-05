@@ -1,6 +1,6 @@
 #pragma once
 
-#include "graphics/driver/Resource/Texture.h"
+#include "gfx/Resource/Texture.h"
 #include "graphics/renderer/Renderer.h"
 #include "graphics/renderer/Imgui/imguiAdapter.h"
 
@@ -15,7 +15,7 @@ namespace vg::graphics::renderer
         void displayObject(IObject * _object) final
         {
             // Texture preview (WIP)
-            auto * tex = (driver::Texture *)_object;
+            auto * tex = (gfx::Texture *)_object;
             auto imGuiAdapter = Renderer::get()->getImGuiAdapter();
             ImTextureID texID = imGuiAdapter->getImguiTextureID(tex);
             {

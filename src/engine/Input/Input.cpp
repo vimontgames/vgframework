@@ -66,9 +66,9 @@ namespace vg::engine
 
         bool anyViewActive = false;
 
-        for (uint j = 0; j < enumCount<graphics::driver::ViewType>(); ++j)
+        for (uint j = 0; j < enumCount<gfx::ViewType>(); ++j)
         {
-            const auto & views = renderer->GetViews((graphics::driver::ViewType)j);
+            const auto & views = renderer->GetViews((gfx::ViewType)j);
             for (uint i = 0; i < views.size(); ++i)
             {
                 const auto * view = views[i];

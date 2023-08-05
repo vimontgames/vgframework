@@ -1,15 +1,15 @@
 #include "graphics/renderer/Precomp.h"
 #include "core/Object/AutoRegisterClass.h"
 #include "MeshModel.h"
-#include "graphics/driver/Device/Device.h"
-#include "graphics/driver/Resource/Buffer.h"
+#include "gfx/Device/Device.h"
+#include "gfx/Resource/Buffer.h"
 #include "graphics/renderer/Geometry/Mesh/MeshGeometry.h"
 #include "graphics/renderer/Importer/SceneImporterData.h"
 #include "graphics/renderer/Model/Material/MaterialModel.h"
 #include "shaders/system/vertex.hlsl.h"
 
 using namespace vg::core;
-using namespace vg::graphics::driver;
+using namespace vg::gfx;
 
 namespace vg::graphics::renderer
 {
@@ -77,7 +77,7 @@ namespace vg::graphics::renderer
 
         const uint vertexCount = (uint)_data.vertices.size();
 
-        vector<typename driver::VertexStorage<F>::type> verts;
+        vector<typename gfx::VertexStorage<F>::type> verts;
                                                         verts.resize(vertexCount);
 
         for (uint i = 0; i < vertexCount; ++i)

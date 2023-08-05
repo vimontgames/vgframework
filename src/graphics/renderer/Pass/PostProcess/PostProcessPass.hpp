@@ -7,7 +7,7 @@ namespace vg::graphics::renderer
     // Setup executed once, when pass is created
     //--------------------------------------------------------------------------------------
     PostProcessPass::PostProcessPass() :
-        driver::UserPass("PostProcessPass")
+        gfx::UserPass("PostProcessPass")
     {
         auto * device = Device::get();
 
@@ -31,7 +31,7 @@ namespace vg::graphics::renderer
     //--------------------------------------------------------------------------------------
     // Setup executed each frame, for each pass instance
     //--------------------------------------------------------------------------------------
-    void PostProcessPass::setup(const driver::RenderContext & _renderContext, double _dt)
+    void PostProcessPass::setup(const gfx::RenderContext & _renderContext, double _dt)
     {
         readRenderTarget(_renderContext.getName("Color"));
         writeRenderTarget(0, _renderContext.getName("Dest")); // TODO: render to "Backbuffer" in exclusive GameMode?

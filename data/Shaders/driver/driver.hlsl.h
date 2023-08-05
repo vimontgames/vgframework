@@ -1,8 +1,8 @@
 #pragma once
 
-#include "graphics/driver/Shader/HLSLDesc.h"
+#include "gfx/Shader/HLSLDesc.h"
 
-namespace vg::graphics::driver
+namespace vg::gfx
 {
     class DriverHLSLDesc : public HLSLDesc
     {

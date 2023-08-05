@@ -2,7 +2,7 @@
 
 #include "core/Resource/Resource.h"
 
-namespace vg::graphics::driver
+namespace vg::gfx
 {
     class ITexture;
 }
@@ -27,7 +27,7 @@ namespace vg::engine
         bool                                cook                    (const core::string & _file) final override;
         bool                                load                    (const core::string & _file, core::IObject * _owner) final override;
 
-        graphics::driver::ITexture *        getTexture              () const { return (graphics::driver::ITexture*)m_object; }
+        gfx::ITexture *        getTexture              () const { return (gfx::ITexture*)m_object; }
 
         core::uint                          getSubResourceCount     () const final { return 0;}
         IResource *                         getSubResource          (core::uint _index) final { return nullptr;}

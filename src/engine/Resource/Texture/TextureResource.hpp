@@ -1,5 +1,5 @@
 #include "TextureResource.h"
-#include "graphics/driver/ITexture.h"
+#include "gfx/ITexture.h"
 
 using namespace vg::core;
 

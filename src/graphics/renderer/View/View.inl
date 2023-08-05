@@ -55,19 +55,19 @@ namespace vg::graphics::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    VG_INLINE void View::setViewID(driver::ViewID _viewID)
+    VG_INLINE void View::setViewID(gfx::ViewID _viewID)
     {
         m_viewID = _viewID;
     }
 
     //--------------------------------------------------------------------------------------
-    VG_INLINE driver::ViewID View::getViewID() const
+    VG_INLINE gfx::ViewID View::getViewID() const
     {
         return m_viewID;
     }
 
     //--------------------------------------------------------------------------------------
-    VG_INLINE void View::setRenderTarget(driver::Texture * _renderTarget)
+    VG_INLINE void View::setRenderTarget(gfx::Texture * _renderTarget)
     {
         if (_renderTarget != m_renderTarget)
         {
@@ -78,7 +78,7 @@ namespace vg::graphics::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    VG_INLINE driver::Texture * View::getRenderTarget() const
+    VG_INLINE gfx::Texture * View::getRenderTarget() const
     {
         return m_renderTarget;
     }

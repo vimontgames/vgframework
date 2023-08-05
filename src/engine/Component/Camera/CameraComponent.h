@@ -1,7 +1,7 @@
 #pragma once
 
 #include "core/Component/Component.h"
-#include "graphics/driver/IView.h"
+#include "gfx/IView.h"
 
 namespace vg::core
 {
@@ -25,16 +25,16 @@ namespace vg::engine
 
         void                                    Update              (double _dt) override;
 
-        VG_INLINE void                          setViewType         (graphics::driver::ViewType _viewType);
-        VG_INLINE graphics::driver::ViewType    getViewType         () const;
-        VG_INLINE graphics::driver::ViewID      getViewID           () const;
+        VG_INLINE void                          setViewType         (gfx::ViewType _viewType);
+        VG_INLINE gfx::ViewType    getViewType         () const;
+        VG_INLINE gfx::ViewID      getViewID           () const;
 
         VG_INLINE float                         getFovY             () const;
         VG_INLINE float                         getNear             () const;
         VG_INLINE float                         getFar              () const;
 
     protected:
-        graphics::driver::ViewType              m_ViewType = graphics::driver::ViewType::Game;
+        gfx::ViewType              m_ViewType = gfx::ViewType::Game;
         core::u8                                m_ViewIndex = 0;
         float                                   m_fovY;
         float                                   m_near;

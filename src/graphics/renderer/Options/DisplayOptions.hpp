@@ -55,7 +55,7 @@ namespace vg::graphics::renderer
     {
         super::registerProperties(_desc);
 
-        _desc.registerPropertyEnum(DisplayOptions, graphics::driver::VSync, m_VSync, "VSync");
+        _desc.registerPropertyEnum(DisplayOptions, gfx::VSync, m_VSync, "VSync");
 
         _desc.registerPropertyHelper(DisplayOptions, m_toolMode, "Toolmode");
         _desc.registerPropertyHelperEx(DisplayOptions, m_aabb, "AABB", IProperty::Flags::SameLine);
@@ -89,7 +89,7 @@ namespace vg::graphics::renderer
     {
         if (nullptr != _prop)
         {
-            auto value = *_prop->GetPropertyEnum<driver::VSync>(this);
+            auto value = *_prop->GetPropertyEnum<gfx::VSync>(this);
             Renderer::get()->SetVSync(value);
         }
     }

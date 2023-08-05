@@ -1,7 +1,7 @@
 #include "BackgroundPass.h"
 #include "shaders/background/background.hlsli"
 #include "graphics/renderer/Options/DisplayOptions.h"
-#include "graphics/driver/IView.h"
+#include "gfx/IView.h"
 
 namespace vg::graphics::renderer
 {
@@ -9,7 +9,7 @@ namespace vg::graphics::renderer
     // Setup executed once, when pass is created
     //--------------------------------------------------------------------------------------
     BackgroundPass::BackgroundPass() :
-        driver::UserPass("BackgroundPass")
+        gfx::UserPass("BackgroundPass")
     {
         auto * device = Device::get();
 
@@ -34,7 +34,7 @@ namespace vg::graphics::renderer
     //--------------------------------------------------------------------------------------
     // Setup executed each frame, for each pass instance
     //--------------------------------------------------------------------------------------
-    void BackgroundPass::setup(const driver::RenderContext & _renderContext, double _dt)
+    void BackgroundPass::setup(const gfx::RenderContext & _renderContext, double _dt)
     {
         auto * device = Device::get();
 

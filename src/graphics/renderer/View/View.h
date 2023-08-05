@@ -1,7 +1,7 @@
 #pragma once
 
-#include "graphics/driver/IView.h"
-#include "graphics/driver/Resource/Texture.h"
+#include "gfx/IView.h"
+#include "gfx/Resource/Texture.h"
 #include "graphics/renderer/Job/Culling/ViewCullingJob.h"
 
 namespace vg::core
@@ -10,7 +10,7 @@ namespace vg::core
     class Job;
 }
 
-namespace vg::graphics::driver
+namespace vg::gfx
 {
     class FrameGraph;
 }
@@ -23,12 +23,12 @@ namespace vg::graphics::renderer
     // reference a view, but the 'View' base class is defined in graphics::renderer.
     //--------------------------------------------------------------------------------------
 
-    class View : public driver::IView
+    class View : public gfx::IView
     {
     public:
         const char *                        getClassName        () const override { return "View"; }
 
-                                            View                (const driver::CreateViewParams & _params);
+                                            View                (const gfx::CreateViewParams & _params);
                                             ~View               ();
 
         void                                SetupCamera         (const core::float4x4 & _viewInv, core::float2 _nearFar, float _fovY) override;
@@ -46,16 +46,16 @@ namespace vg::graphics::renderer
         void                                SetOffset           (core::int2) override;
         core::int2                          GetOffset           () const override;
 
-        void                                SetRenderTarget     (driver::ITexture * _renderTarget) override;
-        driver::ITexture *                  GetRenderTarget     () const override;
+        void                                SetRenderTarget     (gfx::ITexture * _renderTarget) override;
+        gfx::ITexture *                  GetRenderTarget     () const override;
 
-        void                                SetViewID           (driver::ViewID _viewID) override;
-        driver::ViewID                      GetViewID           () const override;
+        void                                SetViewID           (gfx::ViewID _viewID) override;
+        gfx::ViewID                      GetViewID           () const override;
 
         void                                SetActive           (bool _active) override;
         bool                                IsActive            () const override;
 
-        virtual void                        AddToFrameGraph     (driver::FrameGraph & _frameGraph) {} // TODO: implement "MainView" using 'AddToFrameGraph'?
+        virtual void                        AddToFrameGraph     (gfx::FrameGraph & _frameGraph) {} // TODO: implement "MainView" using 'AddToFrameGraph'?
 
         core::u32                           release             () override;
 
@@ -72,11 +72,11 @@ namespace vg::graphics::renderer
         VG_INLINE core::float2              getCameraNearFar    () const;
         VG_INLINE float                     getCameraFovY       () const;
 
-        VG_INLINE void                      setViewID           (driver::ViewID _viewID);
-        VG_INLINE driver::ViewID            getViewID           () const;
+        VG_INLINE void                      setViewID           (gfx::ViewID _viewID);
+        VG_INLINE gfx::ViewID            getViewID           () const;
 
-        VG_INLINE void                      setRenderTarget     (driver::Texture * _renderTarget);
-        VG_INLINE driver::Texture *         getRenderTarget     () const;
+        VG_INLINE void                      setRenderTarget     (gfx::Texture * _renderTarget);
+        VG_INLINE gfx::Texture *         getRenderTarget     () const;
 
         VG_INLINE core::Job *               getCullingJob       () const;
 
@@ -84,8 +84,8 @@ namespace vg::graphics::renderer
         static core::float4x4               setPerspectiveProjectionRH(float _fov, float _ar, float _near, float _far);
 
     private:
-        driver::ViewID                      m_viewID = driver::ViewID((driver::ViewType)-1, -1);
-        driver::Texture *                   m_renderTarget = nullptr;   // Assume backbuffer if nullptr
+        gfx::ViewID                      m_viewID = gfx::ViewID((gfx::ViewType)-1, -1);
+        gfx::Texture *                   m_renderTarget = nullptr;   // Assume backbuffer if nullptr
         core::uint2                         m_size = core::uint2(0, 0);
         core::int2                          m_offset = core::int2(0, 0);
         core::float4x4                      m_viewInv = core::float4x4::identity();

@@ -3,7 +3,7 @@
 #include "graphics/renderer/IRenderer.h"
 #include "core/Singleton/Singleton.h"
 
-namespace vg::graphics::driver
+namespace vg::gfx
 {
 	class Device;
 	class Texture;
@@ -39,11 +39,11 @@ namespace vg::graphics::renderer
 		void					                init				    (const RendererParams & _params, core::Singletons & _singletons) override;
 		void					                deinit				    () override;
 
-        driver::IView *                         CreateMainView          (core::uint2 _screenSize) final override;
-        driver::ViewID                          AddView                 (driver::IView * _view) final override;
-        void                                    RemoveView              (driver::ViewID _viewID) final override;
-        driver::IView *                         GetView                 (driver::ViewID _viewID) const final override;
-        const core::vector <driver::IView *>    GetViews                (driver::ViewType _viewType) const final override;
+        gfx::IView *                         CreateMainView          (core::uint2 _screenSize) final override;
+        gfx::ViewID                          AddView                 (gfx::IView * _view) final override;
+        void                                    RemoveView              (gfx::ViewID _viewID) final override;
+        gfx::IView *                         GetView                 (gfx::ViewID _viewID) const final override;
+        const core::vector <gfx::IView *>    GetViews                (gfx::ViewType _viewType) const final override;
 
         void                                    SetResized              () final override;
         void                                    resize                  (core::uint _width, core::uint _height) override;
@@ -54,8 +54,8 @@ namespace vg::graphics::renderer
         void                                    updateShaders           () override;
         void                                    waitGPUIdle             () override;
 
-        void                                    SetVSync                (driver::VSync mode) final override;
-        driver::VSync                           GetVSync                () const final override;
+        void                                    SetVSync                (gfx::VSync mode) final override;
+        gfx::VSync                           GetVSync                () const final override;
 
         core::IProfiler *                       getProfilerInstance     () const override;
         IImmediateGUI *                         getImmediateGUI         () const override;
@@ -64,11 +64,11 @@ namespace vg::graphics::renderer
         IMeshModel *                            loadMeshModel           (const core::string & _file) final;
 
         bool                                    cookTexture             (const core::string & _file) final;
-        driver::ITexture *                      loadTexture             (const core::string & _file) final;
+        gfx::ITexture *                      loadTexture             (const core::string & _file) final;
 
         void                                    ReleaseAsync            (core::IObject * _object) final override;
 
-        driver::Texture *                       getDefaultTexture       (MaterialTextureType _type) const;
+        gfx::Texture *                       getDefaultTexture       (MaterialTextureType _type) const;
         
         #ifdef _WIN32
         LRESULT CALLBACK                        WndProc                 (HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) override;
@@ -77,7 +77,7 @@ namespace vg::graphics::renderer
     public: // internal
         View *                                  getMainView             () const;
 
-        driver::Texture *		                getBackbuffer           () const;
+        gfx::Texture *		                getBackbuffer           () const;
         ImguiAdapter *                          getImGuiAdapter         () const { return m_imgui; }
 
     private:
@@ -89,13 +89,13 @@ namespace vg::graphics::renderer
         void                                    cullViews               ();
 
 	private:
-		driver::Device &		                m_device;
+		gfx::Device &		                m_device;
         ImguiAdapter *                          m_imgui                 = nullptr;
         FBXImporter *                           m_fbxImporter           = nullptr;
-		driver::FrameGraph &	                m_frameGraph;
+		gfx::FrameGraph &	                m_frameGraph;
         View *                                  m_mainView              = nullptr;
-        core::vector<View *>                    m_views[core::enumCount<driver::ViewType>()];
+        core::vector<View *>                    m_views[core::enumCount<gfx::ViewType>()];
         ImguiPass *                             m_imguiPass             = nullptr;
-        core::vector<driver::Texture*>          m_defaultTextures;       
+        core::vector<gfx::Texture*>          m_defaultTextures;       
 	};
 }

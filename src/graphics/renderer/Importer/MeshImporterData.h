@@ -7,7 +7,7 @@
 
 namespace vg::graphics::renderer
 {
-    using MeshImporterVertex = driver::FatVertex;
+    using MeshImporterVertex = gfx::FatVertex;
 
     class MeshImporterData
     {
