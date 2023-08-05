@@ -3,7 +3,7 @@
 #include "core/Resource/Resource.h"
 #include "engine/Resource/Texture/TextureResource.h"
 
-namespace vg::graphics::renderer
+namespace vg::renderer
 {
     class IMaterialModel;
 }
@@ -29,7 +29,7 @@ namespace vg::engine
         bool                                load                (const core::string & _path, core::IObject * _owner) final override;
 
         void                                onResourceLoaded    (core::IResource * _resource) final override;
-        graphics::renderer::IMaterialModel *getMaterialModel    () const { return (graphics::renderer::IMaterialModel*)m_object; }
+        renderer::IMaterialModel *getMaterialModel    () const { return (renderer::IMaterialModel*)m_object; }
 
         core::uint                          getSubResourceCount () const final;
         IResource *                         getSubResource      (core::uint _index) final;

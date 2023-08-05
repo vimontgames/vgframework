@@ -2,7 +2,7 @@
 
 #include "core/Component/Behaviour/Behaviour.h"
 
-namespace vg::graphics::renderer
+namespace vg::renderer
 {
     class IView;
 }

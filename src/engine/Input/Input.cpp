@@ -7,8 +7,8 @@
 #endif
 
 #include "engine/Engine.h"
-#include "graphics/renderer/IRenderer.h"
-#include "graphics/renderer/IImmediateGUI.h"
+#include "renderer/IRenderer.h"
+#include "renderer/IImmediateGUI.h"
 
 namespace vg::engine
 {

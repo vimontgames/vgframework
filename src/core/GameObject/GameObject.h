@@ -33,16 +33,16 @@ namespace vg::core
         bool                                                    RemoveChild             (IGameObject * _gameObject) final;
         const vector<IGameObject*> &                            GetChildren             () const final;
 
-        void                                                    AddGraphicInstance      (graphics::renderer::IGraphicInstance * _graphicInstance) final;
-        void                                                    RemoveGraphicInstance   (graphics::renderer::IGraphicInstance * _graphicInstance) final;
-        const vector<graphics::renderer::IGraphicInstance*> &   GetGraphicInstances     () const final;
+        void                                                    AddGraphicInstance      (renderer::IGraphicInstance * _graphicInstance) final;
+        void                                                    RemoveGraphicInstance   (renderer::IGraphicInstance * _graphicInstance) final;
+        const vector<renderer::IGraphicInstance*> &   GetGraphicInstances     () const final;
 
         VG_INLINE const vector<GameObject*> &                   getChildren             () const { return m_children;}
 
     private:
         vector<Component *>                                     m_components;
         vector<GameObject *>                                    m_children;
-        vector<graphics::renderer::IGraphicInstance*>           m_graphicInstances;
+        vector<renderer::IGraphicInstance*>           m_graphicInstances;
     };
 
     //--------------------------------------------------------------------------------------

@@ -1,8 +1,8 @@
 #include "MeshResource.h"
 #include "core/File/File.h"
-#include "graphics/renderer/IMeshModel.h"
-#include "graphics/renderer/IMaterialModel.h"
-#include "graphics/renderer/Model/Material/MaterialTextureType.h"
+#include "renderer/IMeshModel.h"
+#include "renderer/IMaterialModel.h"
+#include "renderer/Model/Material/MaterialTextureType.h"
 
 using namespace vg::core;
 
@@ -80,7 +80,7 @@ namespace vg::engine
             m_materialResources.resize(matCount);
             for (uint m = 0; m < matCount; ++m)
             {
-                graphics::renderer::IMaterialModel * matModel = meshModel->GetMaterial(m);
+                renderer::IMaterialModel * matModel = meshModel->GetMaterial(m);
                 if (nullptr != matModel)
                 {
                     const auto texCount = matModel->GetTextureCount();
@@ -91,14 +91,14 @@ namespace vg::engine
 
                     for (uint t = 0; t < texCount; ++t)
                     {
-                        string matTexPath = matModel->GetTexturePath((graphics::renderer::MaterialTextureType)t);
+                        string matTexPath = matModel->GetTexturePath((renderer::MaterialTextureType)t);
 
                         if (matTexPath.length() > 0)
                         {
                             matTexPath = io::getFileDir(_path) + "/" + matTexPath;
                             TextureResource & res = matRes.m_textureResources[t];
 
-                            string name = core::asString((graphics::renderer::MaterialTextureType)t);
+                            string name = core::asString((renderer::MaterialTextureType)t);
                             res.setName(name.c_str());
                             res.setup(this, matTexPath, m << 16 | t);    // will trigger loading of textures
                         }
@@ -116,7 +116,7 @@ namespace vg::engine
     {
         const auto userData = _resource->getUserData();
         const uint matID =   (userData >> 16) & 0xFFFF;
-        const auto texSlot = (graphics::renderer::MaterialTextureType)(userData & 0xFFFF);
+        const auto texSlot = (renderer::MaterialTextureType)(userData & 0xFFFF);
 
         auto * meshModel = getMeshModel();
         auto * material = meshModel->GetMaterial(matID);

@@ -15,7 +15,7 @@
 #include "gfx/IView.h"
 #include "gfx/IDevice.h"
 
-#include "graphics/renderer/IRenderer.h"
+#include "renderer/IRenderer.h"
 
 #include "engine/Input/Input.h"
 #include "engine/Resource/ResourceManager.h"
@@ -257,7 +257,7 @@ namespace vg::engine
         Kernel::setFactory(_singletons.factory);
 
         // Load Renderer DLL
-		m_renderer = Plugin::create<graphics::renderer::IRenderer>("renderer", api);
+		m_renderer = Plugin::create<renderer::IRenderer>("renderer", api);
 		m_renderer->init(_params.renderer, _singletons);
 
         // Profiler has to be created by the renderer to be able to also profile the GPU
@@ -400,7 +400,7 @@ namespace vg::engine
 	}
 
 	//--------------------------------------------------------------------------------------
-	graphics::renderer::IRenderer * Engine::GetRenderer() const
+	renderer::IRenderer * Engine::GetRenderer() const
 	{
 		return m_renderer;
 	}

@@ -21,7 +21,9 @@ rmdir tmp /S /Q
 rmdir .vs /S /Q
 
 cd projects
-cd supervimontbrawl
+cd game
+del *.exp
+del *.lib
 del *.dll
 del *.ilk
 del *.pdb

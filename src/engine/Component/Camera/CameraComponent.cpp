@@ -5,7 +5,7 @@
 #include "core/Math/Math.h"
 
 #include "gfx/IView.h"
-#include "graphics/renderer/IRenderer.h"
+#include "renderer/IRenderer.h"
 
 #include "engine/Engine.h"
 

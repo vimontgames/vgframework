@@ -8,7 +8,7 @@ namespace vg::core
     class IGameObject;
 }
 
-namespace vg::graphics::renderer
+namespace vg::renderer
 {
     class IView;
 }

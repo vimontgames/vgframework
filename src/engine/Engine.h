@@ -74,7 +74,7 @@ namespace vg::engine
         core::uint2                         getScreenSize       () const final;
         gfx::IView *           getMainView         () const;
 
-		graphics::renderer::IRenderer *	    GetRenderer	        () const final;
+		renderer::IRenderer *	    GetRenderer	        () const final;
         engine::IResourceManager *          GetResourceManager  () const final;
 
     public:
@@ -99,7 +99,7 @@ namespace vg::engine
         IProject *                          m_project           = nullptr;
         core::Universe *                    m_universe          = nullptr;
         //editor::IEditor *                   m_editor            = nullptr;
-		graphics::renderer::IRenderer *	    m_renderer          = nullptr;
+		renderer::IRenderer *	    m_renderer          = nullptr;
         gfx::IView *           m_mainView          = nullptr;
         ResourceManager *                   m_resourceManager   = nullptr;
 

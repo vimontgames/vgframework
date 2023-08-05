@@ -3,7 +3,7 @@
 #include "core/Kernel.h"
 #include "core/Component/Component.h"
 #include "core/Object/AutoRegisterClass.h"  
-#include "graphics/renderer/IGraphicInstance.h"
+#include "renderer/IGraphicInstance.h"
 
 namespace vg::core
 {
@@ -152,7 +152,7 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
-    void GameObject::AddGraphicInstance(graphics::renderer::IGraphicInstance * _graphicInstance)
+    void GameObject::AddGraphicInstance(renderer::IGraphicInstance * _graphicInstance)
     {
         VG_ASSERT(m_graphicInstances.end() == std::find(m_graphicInstances.begin(), m_graphicInstances.end(), _graphicInstance));
         _graphicInstance->addRef();
@@ -160,14 +160,14 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
-    void GameObject::RemoveGraphicInstance(graphics::renderer::IGraphicInstance * _graphicInstance)
+    void GameObject::RemoveGraphicInstance(renderer::IGraphicInstance * _graphicInstance)
     {
         if (m_graphicInstances.remove(_graphicInstance))
             VG_SAFE_RELEASE(_graphicInstance);
     }
 
     //--------------------------------------------------------------------------------------
-    const vector<graphics::renderer::IGraphicInstance*> & GameObject::GetGraphicInstances() const
+    const vector<renderer::IGraphicInstance*> & GameObject::GetGraphicInstances() const
     {
         return m_graphicInstances;
     }

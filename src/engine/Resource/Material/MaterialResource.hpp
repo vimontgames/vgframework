@@ -1,7 +1,7 @@
 #include "MaterialResource.h"
 #include "core/File/File.h"
-#include "graphics/renderer/IMeshModel.h"
-#include "graphics/renderer/IMaterialModel.h"
+#include "renderer/IMeshModel.h"
+#include "renderer/IMaterialModel.h"
 
 using namespace vg::core;
 

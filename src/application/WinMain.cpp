@@ -5,7 +5,7 @@
 #include "core/Kernel.h"
 
 #include "engine/IEngine.h"
-#include "graphics/renderer/IRenderer.h"
+#include "renderer/IRenderer.h"
 #include "gfx/IDevice.h"
 
 #include "application.h"

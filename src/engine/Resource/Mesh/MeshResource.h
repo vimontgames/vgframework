@@ -3,7 +3,7 @@
 #include "core/Resource/Resource.h"
 #include "engine/Resource/Material/MaterialResource.h"
 
-namespace vg::graphics::renderer
+namespace vg::renderer
 {
     class IMeshModel;
 }
@@ -29,7 +29,7 @@ namespace vg::engine
         bool                                load                    (const core::string & _path, core::IObject * _owner) final override;
 
         void                                onResourceLoaded        (core::IResource * _resource) final override;
-        graphics::renderer::IMeshModel *    getMeshModel            () const { return (graphics::renderer::IMeshModel*)m_object; } 
+        renderer::IMeshModel *    getMeshModel            () const { return (renderer::IMeshModel*)m_object; } 
 
         core::uint                          getSubResourceCount     () const final;
         IResource *                         getSubResource          (core::uint _index) final;

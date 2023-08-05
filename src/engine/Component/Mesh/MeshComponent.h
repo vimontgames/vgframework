@@ -3,7 +3,7 @@
 #include "core/Component/Component.h"
 #include "engine/Resource/Mesh/MeshResource.h"
 
-namespace vg::graphics::renderer
+namespace vg::renderer
 {
     class IMeshInstance;
 }
@@ -24,7 +24,7 @@ namespace vg::engine
         MeshResource &  getMeshResource     () { return m_meshResource; }
 
     private:
-        graphics::renderer::IMeshInstance * m_meshInstance = nullptr;
+        renderer::IMeshInstance * m_meshInstance = nullptr;
         MeshResource                        m_meshResource;
         bool                                m_registered = false;
     };

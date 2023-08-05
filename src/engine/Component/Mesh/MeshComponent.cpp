@@ -1,13 +1,13 @@
 #include "engine/Precomp.h"
 #include "MeshComponent.h"
 #include "core/GameObject/GameObject.h"
-#include "graphics/renderer/IMeshInstance.h"
-#include "graphics/renderer/IMeshModel.h"
+#include "renderer/IMeshInstance.h"
+#include "renderer/IMeshModel.h"
 #include "engine/Engine.h"
-#include "graphics/renderer/IRenderer.h"
+#include "renderer/IRenderer.h"
 
 using namespace vg::core;
-using namespace vg::graphics::renderer;
+using namespace vg::renderer;
 
 namespace vg::engine
 {

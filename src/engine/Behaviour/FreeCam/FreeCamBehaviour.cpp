@@ -6,7 +6,7 @@
 #include "gfx/IView.h"
 #include "engine/Component/Camera/CameraComponent.h"
 #include "engine/Engine.h"
-#include "graphics/renderer/IRenderer.h"
+#include "renderer/IRenderer.h"
 
 using namespace vg::core;
 
