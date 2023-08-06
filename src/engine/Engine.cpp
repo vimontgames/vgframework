@@ -399,6 +399,12 @@ namespace vg::engine
         }
 	}
 
+    //--------------------------------------------------------------------------------------
+    editor::IEditor * Engine::GetEditor() const
+    {
+        return m_editor;
+    }
+
 	//--------------------------------------------------------------------------------------
 	renderer::IRenderer * Engine::GetRenderer() const
 	{

@@ -1,35 +1,17 @@
 #include "editor/Precomp.h"
-
 #include "editor.h"
-
-#include "core/Kernel.h"
-#include "core/IProfiler.h"
-#include "core/Universe/Universe.h"
-#include "core/Timer/Timer.h"
-#include "core/Plugin/Plugin.h"
-#include "core/Scheduler/Scheduler.h"
-#include "core/Object/Factory.h"
-#include "core/Scene/Scene.h"
-#include "core/GameObject/GameObject.h"
-
-#include "gfx/IView.h"
-#include "gfx/IDevice.h"
-
 #include "renderer/IRenderer.h"
-
-#include "engine/Input/Input.h"
-#include "engine/Resource/ResourceManager.h"
-#include "engine/Component/Camera/CameraComponent.h"
-#include "engine/Behaviour/FreeCam/FreeCamBehaviour.h"
-#include "engine/Component/Mesh/MeshComponent.h"
-
-//#include "editor/IEditor.h"
-
-#include "application/IProject.h"
+#include "imgui/imgui.h"
 
 #if !VG_ENABLE_INLINE
 #include "Editor.inl"
 #endif
+
+#include "imgui/imgui.cpp"
+#include "imgui/imgui_demo.cpp"
+#include "imgui/imgui_draw.cpp"
+#include "imgui/imgui_tables.cpp"
+#include "imgui/imgui_widgets.cpp"
 
 using namespace vg::core;
 using namespace vg::editor;
@@ -118,6 +100,7 @@ namespace vg::editor
         Kernel::setScheduler(_singletons.scheduler);
         Kernel::setInput(_singletons.input);
         Kernel::setFactory(_singletons.factory);
+        Kernel::setProfiler(_singletons.profiler);
 
         RegisterClasses();
 	}
@@ -133,9 +116,42 @@ namespace vg::editor
 	}
 
 	//--------------------------------------------------------------------------------------
-	void Editor::RunOneFrame()
+	void Editor::DrawGUI(const GUIContext & _context)
 	{
         VG_PROFILE_FRAME("Editor");
         VG_PROFILE_CPU("Editor");
+
+        auto * imGuiContext = (ImGuiContext*)_context.ptr;
+        ImGui::SetCurrentContext(imGuiContext);
+
+        ImGuiViewport * viewport = ImGui::GetMainViewport();
+        ImGui::SetNextWindowPos(viewport->WorkPos, ImGuiCond_Appearing, ImVec2(0.0f, 0.0f));
+        ImGui::SetNextWindowSize(viewport->WorkSize, ImGuiCond_None);
+        ImGui::SetNextWindowViewport(viewport->ID);
+        ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.5f);
+        ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
+        ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
+
+        ImGuiWindowFlags windowFlags  = ImGuiWindowFlags_MenuBar;
+                         windowFlags |= ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove;
+                         windowFlags |= ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus;
+                         windowFlags |= ImGuiWindowFlags_NoBackground;
+
+        ImGuiDockNodeFlags dockspaceFlags = ImGuiDockNodeFlags_None | ImGuiDockNodeFlags_PassthruCentralNode;
+
+        bool showUI = true;
+
+        ImGui::Begin("EditorDockSpace", &showUI, windowFlags);
+        {
+            ImGui::PopStyleVar(3);
+
+            ImGuiID dockspaceId = ImGui::GetID("EditorDockSpace");
+            ImGui::DockSpace(dockspaceId, ImVec2(0.0f, 0.0f), dockspaceFlags);
+        }
+        ImGui::End();
+
+        static bool demo = false;
+        if (demo)
+            ImGui::ShowDemoWindow(&demo);
 	}
 }

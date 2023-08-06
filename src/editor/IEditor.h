@@ -7,6 +7,11 @@ namespace vg
 {
     namespace editor
     {
+        struct GUIContext
+        {
+            void * ptr = nullptr;
+        };
+
 	    class IEditor : public core::IPlugin
 	    {
 	    public:
@@ -23,7 +28,7 @@ namespace vg
             virtual LRESULT CALLBACK            WndProc             (HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) = 0;
             #endif                              
                                                 
-		    virtual void						RunOneFrame	        () = 0;
+		    virtual void						DrawGUI	            (const GUIContext & _context) = 0;
 	    };
     }
 }

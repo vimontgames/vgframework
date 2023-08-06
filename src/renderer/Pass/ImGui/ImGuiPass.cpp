@@ -39,6 +39,8 @@ using namespace ImGui;
 
 #include "renderer/ImGui/Toolbars/Main/ImGuiMainToolbar.h"
 
+#include "editor/IEditor.h"
+
 namespace vg::renderer
 {
     //--------------------------------------------------------------------------------------
@@ -79,6 +81,15 @@ namespace vg::renderer
     void ImguiPass::setup(const gfx::RenderContext & _renderContext, double _dt)
     {
         writeRenderTarget(0, "Backbuffer");
+
+        editor::IEditor * editor = getEngine()->GetEditor();
+        if (editor)
+        {
+            editor::GUIContext guiContext;
+            guiContext.ptr = ImGui::GetCurrentContext();
+            editor->DrawGUI(guiContext);
+            return;
+        }
 
         ImGuiViewport * viewport = ImGui::GetMainViewport();
         ImGui::SetNextWindowPos(viewport->WorkPos, ImGuiCond_Appearing, ImVec2(0.0f, 0.0f));

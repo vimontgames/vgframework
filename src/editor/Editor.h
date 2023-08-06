@@ -25,7 +25,7 @@ namespace vg::editor
 		void							    Init		        (const core::Singletons & _singletons) final override;
 		void							    Deinit		        () final override;
 
-		void							    RunOneFrame	        () final override;
+		void							    DrawGUI				(const GUIContext & _context) final override;
 	};
 }
 

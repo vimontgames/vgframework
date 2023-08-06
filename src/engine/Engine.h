@@ -72,10 +72,11 @@ namespace vg::engine
 		void							    RunOneFrame	        () final;
 
         core::uint2                         getScreenSize       () const final;
-        gfx::IView *           getMainView         () const;
+        gfx::IView *                        getMainView         () const;
 
-		renderer::IRenderer *	    GetRenderer	        () const final;
-        engine::IResourceManager *          GetResourceManager  () const final;
+        editor::IEditor *                   GetEditor           () const final override;
+		renderer::IRenderer *	            GetRenderer	        () const final override;
+        engine::IResourceManager *          GetResourceManager  () const final override;
 
     public:
         void                                createEditorScene   ();

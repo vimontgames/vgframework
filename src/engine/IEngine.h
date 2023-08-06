@@ -18,6 +18,11 @@ namespace vg
         class IRenderer;
     }
 
+    namespace editor
+    {
+        class IEditor;
+    }
+
     namespace engine
     {
         class IResourceManager;
@@ -55,6 +60,7 @@ namespace vg
                                                 
 		    virtual void						RunOneFrame	        () = 0;
 
+            virtual editor::IEditor *           GetEditor           () const = 0;
 		    virtual renderer::IRenderer *	    GetRenderer	        () const = 0;
             virtual engine::IResourceManager *  GetResourceManager  () const = 0;
 	    };
