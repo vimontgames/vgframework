@@ -12,6 +12,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Editor.cpp" />
+    <ClCompile Include="ImGui\Extensions\FileBrowser\ImGuiFileBrowser.cpp" />
     <ClCompile Include="ImGui\Extensions\ImGuiExtensions.cpp" />
     <ClCompile Include="ImGui\Menu\ImGuiMenu.cpp" />
     <ClCompile Include="ImGui\ObjectHandler\ImGuiObjectHandler.cpp" />

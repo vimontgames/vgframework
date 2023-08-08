@@ -15,7 +15,6 @@
 
 #include "renderer/IRenderer.h"
 
-#include "ImGui-Addons/FileBrowser/ImGuiFileBrowser.cpp"
 #include "imgui/imgui.h"
 #include "ImGuiWindow.h"
 

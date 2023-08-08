@@ -21,6 +21,9 @@
     <ClCompile Include="ImGui\PropertyHandler\ImGuiPropertyHandler.cpp">
       <Filter>ImGui\PropertyHandler</Filter>
     </ClCompile>
+    <ClCompile Include="ImGui\Extensions\FileBrowser\ImGuiFileBrowser.cpp">
+      <Filter>ImGui\Extensions\FileBrowser</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Precomp.h" />
@@ -215,6 +218,9 @@
     </Filter>
     <Filter Include="ImGui\PropertyHandler">
       <UniqueIdentifier>{69ca5e28-65aa-4917-8853-ad680abc06d9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ImGui\Extensions\FileBrowser">
+      <UniqueIdentifier>{5be4fd12-5a28-4ce3-826b-68cf46493571}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
