@@ -3,30 +3,59 @@
 #include "editor/IEditor.h"
 #include "core/Singleton/Singleton.h"
 
-namespace vg::editor
+namespace vg
 {
-	class Editor : public IEditor, public core::Singleton<Editor>
+	namespace core
 	{
-	public:
-        using super = IEditor;
+		class IFactory;
+	}
 
-		IPlugin::Version				    GetVersion	        () const final override;
+	namespace engine
+	{
+		class IEngine;
+	}
 
-										    Editor		        (const core::string & _name, core::IObject * _parent);
-										    ~Editor				();
+	namespace renderer
+	{
+		class IRenderer;
+	}
 
-		bool								RegisterClasses		() final override;
-        bool								UnregisterClasses	() final override;
+	namespace editor
+	{
+		class ImGuiWindow;
 
-        #ifdef _WIN32
-        LRESULT CALLBACK                    WndProc             (HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) final override;
-        #endif
+		class Editor : public IEditor, public core::Singleton<Editor>
+		{
+		public:
+			using super = IEditor;
 
-		void							    Init		        (const core::Singletons & _singletons) final override;
-		void							    Deinit		        () final override;
+			IPlugin::Version				    GetVersion			() const final override;
 
-		void							    DrawGUI				(const GUIContext & _context) final override;
-	};
+												Editor				(const core::string & _name, core::IObject * _parent);
+												~Editor				();
+
+			bool								RegisterClasses		() final override;
+			bool								UnregisterClasses	() final override;
+
+			#ifdef _WIN32
+			LRESULT CALLBACK                    WndProc				(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) final override;
+			#endif
+
+			void							    Init				(const core::Singletons & _singletons) final override;
+			void							    Deinit				() final override;
+
+			void							    DrawGUI				(const GUIContext & _context) final override;
+
+			template <class T> T *				getWindow			() const;
+
+			vg::core::IFactory *				getFactory			();
+			vg::engine::IEngine *				getEngine			();
+			vg::renderer::IRenderer *			getRenderer			();
+
+		private:
+			core::vector<ImGuiWindow *>			m_imGuiWindows;
+		};
+	}
 }
 
 #if VG_ENABLE_INLINE

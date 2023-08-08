@@ -32,4 +32,10 @@ namespace vg::engine
         m_isPlaying = false;
         m_isPaused = false;
     }
+
+    //--------------------------------------------------------------------------------------
+    VG_INLINE const Time & Engine::getTime() const
+    {
+        return m_time;
+    }
 }

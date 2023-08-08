@@ -33,9 +33,9 @@ namespace vg::engine
     {
         super::registerProperties(_desc);
 
-        _desc.registerPropertyEnum(CameraComponent, gfx::ViewType, m_ViewType, "View Type");
-        _desc.registerPropertyHelper(CameraComponent, m_ViewIndex, "View Index");
-        _desc.setPropertyRangeHelper(CameraComponent, m_ViewIndex, float2(0, 15));
+        _desc.registerPropertyEnum(CameraComponent, gfx::ViewTarget, m_target, "Target");
+        _desc.registerPropertyHelper(CameraComponent, m_index, "Index");
+        _desc.setPropertyRangeHelper(CameraComponent, m_index, float2(0, 15));
 
         _desc.registerPropertyHelper(CameraComponent, m_fovY, "Horizontal FOV");
         _desc.setPropertyRangeHelper(CameraComponent, m_fovY, float2(PI / 8.0f, PI / 2.0f));
@@ -68,7 +68,7 @@ namespace vg::engine
     //--------------------------------------------------------------------------------------
     void CameraComponent::Update(double _dt)
     {
-        auto * view = Engine::get()->GetRenderer()->GetView(gfx::ViewID(m_ViewType, m_ViewIndex));
+        auto * view = Engine::get()->GetRenderer()->GetView(gfx::ViewID(m_target, m_index));
         if (nullptr != view)
         {
             const float4x4 & matrix = getGameObject()->getWorldMatrix();

@@ -20,7 +20,7 @@ namespace vg::renderer
     View::View(const CreateViewParams & _params) : 
         IView(_params)
     {
-        m_viewID.type = _params.type;
+        m_viewID.target = _params.target;
 
         m_size = _params.size;
         m_offset = _params.offset;
@@ -35,10 +35,10 @@ namespace vg::renderer
 
         SetUniverse(_params.universe);
 
-        if (_params.target)
+        if (_params.dest)
         {
-            VG_SAFE_INCREASE_REFCOUNT(_params.target);
-            m_renderTarget = (Texture*)_params.target;
+            VG_SAFE_INCREASE_REFCOUNT(_params.dest);
+            m_renderTarget = (Texture*)_params.dest;
         }
 
         m_cullingJob = new ViewCullingJob("ViewCulling", this, &m_cullingJobResult);
@@ -141,12 +141,6 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    u32 View::release()
-    {
-        return IView::release();
-    }
-
-    //--------------------------------------------------------------------------------------
     void View::SetSize(core::uint2 _size)
     {
         setSize(_size);
@@ -192,5 +186,11 @@ namespace vg::renderer
     bool View::IsActive() const
     {
         return m_active;
+    }
+
+    //--------------------------------------------------------------------------------------
+    const core::string View::GetFrameGraphID(const core::string & _name) const
+    {
+        return RenderContext::MakeFrameGraphID(_name, m_viewID);
     }
 }

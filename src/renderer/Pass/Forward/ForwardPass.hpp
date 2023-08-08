@@ -198,8 +198,8 @@ namespace vg::renderer
     //--------------------------------------------------------------------------------------
     void ForwardPass::setup(const gfx::RenderContext & _renderContext, double _dt)
     {
-        writeRenderTarget(0, _renderContext.getName("Color"));
-        writeDepthStencil(_renderContext.getName("DepthStencil"));
+        writeRenderTarget(0, _renderContext.getFrameGraphID("Color"));
+        writeDepthStencil(_renderContext.getFrameGraphID("DepthStencil"));
     }
 
     //--------------------------------------------------------------------------------------

@@ -1,7 +1,6 @@
 #pragma once
 
 #include "Resource.h"
-#include "Texture_consts.h"
 #include "gfx/ITexture.h"
 #include "gfx/BindlessTable/BindlessTable_consts.h"
 

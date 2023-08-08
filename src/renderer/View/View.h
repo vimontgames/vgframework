@@ -47,17 +47,17 @@ namespace vg::renderer
         core::int2                          GetOffset           () const override;
 
         void                                SetRenderTarget     (gfx::ITexture * _renderTarget) override;
-        gfx::ITexture *                  GetRenderTarget     () const override;
+        gfx::ITexture *                     GetRenderTarget     () const override;
 
         void                                SetViewID           (gfx::ViewID _viewID) override;
-        gfx::ViewID                      GetViewID           () const override;
+        gfx::ViewID                         GetViewID           () const override;
 
         void                                SetActive           (bool _active) override;
         bool                                IsActive            () const override;
 
-        virtual void                        AddToFrameGraph     (gfx::FrameGraph & _frameGraph) {} // TODO: implement "MainView" using 'AddToFrameGraph'?
+        const core::string                  GetFrameGraphID     (const core::string & _name) const final override;
 
-        core::u32                           release             () override;
+        virtual void                        AddToFrameGraph     (gfx::FrameGraph & _frameGraph) {} // TODO: implement "MainView" using 'AddToFrameGraph'?
 
         VG_INLINE core::IUniverse *         getUniverse         () const;
 
@@ -73,10 +73,10 @@ namespace vg::renderer
         VG_INLINE float                     getCameraFovY       () const;
 
         VG_INLINE void                      setViewID           (gfx::ViewID _viewID);
-        VG_INLINE gfx::ViewID            getViewID           () const;
+        VG_INLINE gfx::ViewID               getViewID           () const;
 
         VG_INLINE void                      setRenderTarget     (gfx::Texture * _renderTarget);
-        VG_INLINE gfx::Texture *         getRenderTarget     () const;
+        VG_INLINE gfx::Texture *            getRenderTarget     () const;
 
         VG_INLINE core::Job *               getCullingJob       () const;
 
@@ -84,8 +84,8 @@ namespace vg::renderer
         static core::float4x4               setPerspectiveProjectionRH(float _fov, float _ar, float _near, float _far);
 
     private:
-        gfx::ViewID                      m_viewID = gfx::ViewID((gfx::ViewType)-1, -1);
-        gfx::Texture *                   m_renderTarget = nullptr;   // Assume backbuffer if nullptr
+        gfx::ViewID                         m_viewID;
+        gfx::Texture *                      m_renderTarget = nullptr;   // Assume backbuffer if nullptr
         core::uint2                         m_size = core::uint2(0, 0);
         core::int2                          m_offset = core::int2(0, 0);
         core::float4x4                      m_viewInv = core::float4x4::identity();

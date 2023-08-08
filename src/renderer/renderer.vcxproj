@@ -20,21 +20,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Geometry\Geometry.cpp" />
-    <ClCompile Include="ImGui\Editors\ImGuiEditor.cpp" />
-    <ClCompile Include="ImGui\ImGuiAdapter.cpp" />
-    <ClCompile Include="ImGui\Menus\ImGuiMenu.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug_DX12|x64'">
-      </ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug_Vulkan|x64'">
-      </ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_DX12|x64'">
-      </ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_Vulkan|x64'">
-      </ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="ImGui\ObjectHandler\ImGuiObjectHandler.cpp" />
-    <ClCompile Include="ImGui\PropertyHandler\ImGuiPropertyHandler.cpp" />
-    <ClCompile Include="ImGui\Toolbars\ImGuiToolbar.cpp" />
     <ClCompile Include="Importer\FBX\FBXImporter.cpp" />
     <ClCompile Include="Importer\ImporterData.cpp" />
     <ClCompile Include="Instance\Mesh\MeshInstance.cpp" />
@@ -42,6 +27,7 @@
     <ClCompile Include="Model\Material\MaterialModel.cpp" />
     <ClCompile Include="Model\Mesh\MeshModel.cpp" />
     <ClCompile Include="Options\Options.cpp" />
+    <ClCompile Include="Pass\ImGui\imguiAdapter.cpp" />
     <ClCompile Include="Pass\ImGui\ImGuiPass.cpp" />
     <ClCompile Include="Pass\Pass.cpp" />
     <ClCompile Include="Precomp.cpp">
@@ -69,48 +55,10 @@
     <ClInclude Include="Geometry\Mesh\MeshGeometry.hpp" />
     <ClInclude Include="IGraphicInstance.h" />
     <ClInclude Include="IGraphicModel.h" />
-    <ClInclude Include="IImmediateGUI.h" />
+    <ClInclude Include="IImGuiAdapter.h" />
     <ClInclude Include="IMaterialModel.h" />
     <ClInclude Include="IMeshInstance.h" />
     <ClInclude Include="IMeshModel.h" />
-    <ClInclude Include="ImGui\Editors\About\ImGuiAbout.h" />
-    <ClInclude Include="ImGui\Editors\About\ImGuiAbout.hpp" />
-    <ClInclude Include="ImGui\Editors\DisplayOptions\ImGuiDisplayOptions.h" />
-    <ClInclude Include="ImGui\Editors\DisplayOptions\ImGuiDisplayOptions.hpp" />
-    <ClInclude Include="ImGui\Editors\FPS\ImGuiFPS.h" />
-    <ClInclude Include="ImGui\Editors\FPS\ImGuiFPS.hpp" />
-    <ClInclude Include="ImGui\Editors\ImGuiEditor.h" />
-    <ClInclude Include="ImGui\Editors\Inspector\ImGuiInspector.h" />
-    <ClInclude Include="ImGui\Editors\Inspector\ImGuiInspector.hpp" />
-    <ClInclude Include="ImGui\Editors\Platform\ImGuiPlatform.h" />
-    <ClInclude Include="ImGui\Editors\Platform\ImGuiPlatform.hpp" />
-    <ClInclude Include="ImGui\Editors\Resource\ImGuiResource.h" />
-    <ClInclude Include="ImGui\Editors\Resource\ImGuiResource.hpp" />
-    <ClInclude Include="ImGui\Editors\Scene\ImGuiScene.h" />
-    <ClInclude Include="ImGui\Editors\Scene\ImGuiScene.hpp" />
-    <ClInclude Include="ImGui\Editors\Shader\ImGuiShader.h" />
-    <ClInclude Include="ImGui\Editors\Shader\ImGuiShader.hpp" />
-    <ClInclude Include="ImGui\Editors\View\EditorView\ImGuiEditorView.h" />
-    <ClInclude Include="ImGui\Editors\View\EditorView\ImGuiEditorView.hpp" />
-    <ClInclude Include="ImGui\Editors\View\GameView\ImGuiGameView.h" />
-    <ClInclude Include="ImGui\Editors\View\GameView\ImGuiGameView.hpp" />
-    <ClInclude Include="ImGui\Editors\View\ImGuiView.h" />
-    <ClInclude Include="ImGui\Editors\View\ImGuiView.hpp" />
-    <ClInclude Include="ImGui\imguiAdapter.h" />
-    <ClInclude Include="ImGui\ImGuiCustomHandler.h" />
-    <ClInclude Include="ImGui\ImGui_Consts.h" />
-    <ClInclude Include="ImGui\Menus\GameObject\SceneEditor\ImGuiGameObjectSceneEditorMenu.h" />
-    <ClInclude Include="ImGui\Menus\GameObject\SceneEditor\ImGuiGameObjectSceneEditorMenu.hpp" />
-    <ClInclude Include="ImGui\Menus\ImGuiMenu.h" />
-    <ClInclude Include="ImGui\Menus\Scene\ImGuiSceneMenu.h" />
-    <ClInclude Include="ImGui\Menus\Scene\ImGuiSceneMenu.hpp" />
-    <ClInclude Include="ImGui\ObjectHandler\GameObject\ImGuiGameObjectHandler.hpp" />
-    <ClInclude Include="ImGui\ObjectHandler\ImGuiObjectHandler.h" />
-    <ClInclude Include="ImGui\ObjectHandler\Texture\ImGuiTextureHandler.hpp" />
-    <ClInclude Include="ImGui\PropertyHandler\ImGuiPropertyHandler.h" />
-    <ClInclude Include="ImGui\Toolbars\ImGuiToolbar.h" />
-    <ClInclude Include="ImGui\Toolbars\Main\ImGuiMainToolbar.hpp" />
-    <ClInclude Include="ImGui\Toolbars\Main\ImGuiMainToolbar.h" />
     <ClInclude Include="Importer\FBX\FBXImporter.h" />
     <ClInclude Include="Importer\MaterialImporterData.h" />
     <ClInclude Include="Importer\MaterialImporterData.hpp" />
@@ -136,6 +84,7 @@
     <ClInclude Include="Pass\Background\BackgroundPass.hpp" />
     <ClInclude Include="Pass\Forward\ForwardPass.hpp" />
     <ClInclude Include="Pass\Forward\ForwardPass.h" />
+    <ClInclude Include="Pass\ImGui\imguiAdapter.h" />
     <ClInclude Include="Pass\ImGui\ImGuiPass.h" />
     <ClInclude Include="Pass\PostProcess\PostProcessPass.h" />
     <ClInclude Include="Pass\PostProcess\PostProcessPass.hpp" />

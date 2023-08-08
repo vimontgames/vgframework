@@ -12,29 +12,32 @@ namespace vg::gfx
 {
     class ITexture;
 
-    enum class ViewType : core::u8
+    enum class ViewTarget : core::u8
     {
         Backbuffer  = 0,
         Game        = 1,
         Editor      = 2
     };
+    static inline const ViewTarget ViewTargetInvalid = (ViewTarget)-1;
+
     using ViewIndex = core::u8;
+    static inline const ViewIndex ViewIndexInvalid = (ViewIndex)-1;
 
     struct ViewID
     {
-        ViewID(ViewType _type, ViewIndex _index) :
-            type(_type),
+        ViewID(ViewTarget _target = ViewTargetInvalid, ViewIndex _index = ViewIndexInvalid) :
+            target(_target),
             index(_index)
         {
             
         }
 
-        ViewType type   : 2;
-        ViewIndex index : 6;
+        ViewTarget target   : 2;
+        ViewIndex index     : 6;
 
         inline bool operator == (const ViewID & _other) const
         {
-            return type == _other.type && index == _other.index;
+            return target == _other.target && index == _other.index;
         }
 
         inline bool operator != (const ViewID & _other) const
@@ -49,21 +52,21 @@ namespace vg::gfx
         {
         }
 
-        CreateViewParams(ViewType _type, core::uint2 _size, core::int2 _offset = core::int2(0, 0), core::IUniverse * _universe = nullptr, gfx::ITexture * _target = nullptr) :
-            type(_type),
+        CreateViewParams(ViewTarget _target, core::uint2 _size, core::int2 _offset = core::int2(0, 0), core::IUniverse * _universe = nullptr, gfx::ITexture * _dest = nullptr) :
+            target(_target),
             size(_size),
             offset(_offset),
             universe(_universe),
-            target(_target)
+            dest(_dest)
         {
          
         }
 
-        ViewType type = ViewType::Game;
-        core::uint2 size = core::uint2(0, 0);
-        core::int2 offset = core::int2(0, 0);
-        core::IUniverse * universe = nullptr;
-        gfx::ITexture * target = nullptr;
+        ViewTarget          target = ViewTarget::Game;
+        core::uint2         size = core::uint2(0, 0);
+        core::int2          offset = core::int2(0, 0);
+        core::IUniverse *   universe = nullptr;
+        gfx::ITexture *     dest = nullptr;
     };
 
     class IView : public core::Object
@@ -88,12 +91,14 @@ namespace vg::gfx
         virtual core::int2              GetOffset           () const = 0;
 
         virtual void                    SetRenderTarget     (gfx::ITexture * _renderTarget) = 0;
-        virtual gfx::ITexture *      GetRenderTarget     () const = 0;
+        virtual gfx::ITexture *         GetRenderTarget     () const = 0;
 
         virtual void                    SetViewID           (ViewID _viewID) = 0;
         virtual ViewID                  GetViewID           () const = 0;
 
         virtual void                    SetActive           (bool _active) = 0;
         virtual bool                    IsActive            () const = 0;
+
+        virtual const core::string      GetFrameGraphID     (const core::string & _name) const = 0;
     };
 }

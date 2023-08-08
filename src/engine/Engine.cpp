@@ -276,7 +276,8 @@ namespace vg::engine
         m_editor->Init(_singletons);
 
         // Create main view
-        m_mainView = m_renderer->CreateMainView(getScreenSize());
+        auto mainViewParams = gfx::CreateViewParams(gfx::ViewTarget::Backbuffer, getScreenSize());
+        m_mainView = m_renderer->CreateView(mainViewParams, "MainView");
 
         createEditorScene();
 	}
@@ -303,7 +304,7 @@ namespace vg::engine
 
         // add Camera component
         auto * cameraComponent = editorCameraGameObject->addComponent<CameraComponent>("Camera");
-        cameraComponent->setViewType(gfx::ViewType::Editor);
+        cameraComponent->setViewTarget(gfx::ViewTarget::Editor);
 
         // add FreeCam behaviour
         auto * freeCamComponent = editorCameraGameObject->addComponent<FreeCamBehaviour>("FreeCam");
@@ -368,7 +369,7 @@ namespace vg::engine
         static Timer::Tick previous = 0;
         Timer::Tick current = Timer::getTick();
         if (previous != 0)
-            m_dt = Timer::getEnlapsedTime(previous, current);
+            m_time.m_dt = Timer::getEnlapsedTime(previous, current);
         previous = current;
     }
 
@@ -392,10 +393,10 @@ namespace vg::engine
                 Scene * scene = (Scene*)m_universe->getScene(i);
                 GameObject * root = scene->getRoot();
                 if (root)
-                    root->Update(m_dt);
+                    root->Update(m_time.m_dt);
             }
 
-            m_renderer->runOneFrame(m_dt);
+            m_renderer->runOneFrame(m_time.m_dt);
         }
 	}
 
@@ -457,5 +458,11 @@ namespace vg::engine
     void Engine::Stop()
     {
         stop();
+    }
+
+    //--------------------------------------------------------------------------------------
+    const Time & Engine::GetTime() const
+    {
+        return getTime();
     }
 }

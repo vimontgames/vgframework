@@ -29,8 +29,6 @@ namespace vg::renderer
 
         void displayEngineWindow();
         void displayRendererWindow();
-
-        template <class T> T * getEditorWindow();
         
     private:
         // Plugins
@@ -38,7 +36,7 @@ namespace vg::renderer
         bool m_isRendererWindowVisible = false;
 
         // Editor windows
-        core::vector<ImguiEditor *> m_imGuiEditors;
-        core::vector<ImGuiToolbar *> m_imGuiToolbars;
+        //core::vector<ImguiEditor *> m_imGuiEditors;
+        //core::vector<ImGuiToolbar *> m_imGuiToolbars;
     };
 }

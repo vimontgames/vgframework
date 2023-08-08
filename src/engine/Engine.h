@@ -42,6 +42,8 @@ namespace vg::engine
         void                                Pause               () final override;
         void                                Stop                () final override;
 
+        const Time &                        GetTime             () const final override;
+
         const char *                        getClassName        () const final { return "Engine"; }
         bool                                RegisterClasses     () override;
         bool                                UnregisterClasses   ();
@@ -88,6 +90,8 @@ namespace vg::engine
         VG_INLINE void                      pause               ();
         VG_INLINE void                      stop                ();
 
+        VG_INLINE const Time &              getTime             () const;
+
     protected:
         void                                updateDt            ();
 
@@ -101,7 +105,7 @@ namespace vg::engine
 		renderer::IRenderer *	            m_renderer          = nullptr;
         gfx::IView *                        m_mainView          = nullptr;
         ResourceManager *                   m_resourceManager   = nullptr;
-        double                              m_dt                = 0.0f;
+        Time                                m_time;
 	};
 }
 

@@ -27,6 +27,11 @@ namespace vg
     {
         class IResourceManager;
 
+        struct Time
+        {
+            double m_dt = 0.0f;
+        };
+
 	    class IEngine : public core::IPlugin
 	    {
 	    public:
@@ -45,6 +50,8 @@ namespace vg
             virtual void                        Play                () = 0;
             virtual void                        Pause               () = 0;
             virtual void                        Stop                () = 0;
+
+            virtual const Time &                GetTime             () const = 0;
 
             virtual bool                        loadProject         (const core::string & _path) = 0;
             virtual bool                        unloadProject       () = 0;

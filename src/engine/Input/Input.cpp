@@ -8,7 +8,7 @@
 
 #include "engine/Engine.h"
 #include "renderer/IRenderer.h"
-#include "renderer/IImmediateGUI.h"
+#include "renderer/IImGuiAdapter.h"
 
 namespace vg::engine
 {
@@ -62,13 +62,13 @@ namespace vg::engine
         VG_PROFILE_CPU("Input");
 
         const auto & renderer = Engine::get()->GetRenderer();
-        const auto & gui = renderer->getImmediateGUI();
+        const auto & imGuiAdapter = renderer->GetImGuiAdapter();
 
         bool anyViewActive = false;
 
-        for (uint j = 0; j < enumCount<gfx::ViewType>(); ++j)
+        for (uint j = 0; j < enumCount<gfx::ViewTarget>(); ++j)
         {
-            const auto & views = renderer->GetViews((gfx::ViewType)j);
+            const auto & views = renderer->GetViews((gfx::ViewTarget)j);
             for (uint i = 0; i < views.size(); ++i)
             {
                 const auto * view = views[i];
@@ -80,12 +80,12 @@ namespace vg::engine
             }
         }
 
-        if (gui->IsKeyboardFocused() && !anyViewActive)
+        if (imGuiAdapter->IsKeyboardFocused() && !anyViewActive)
             EnableInput(InputType::Keyboard, false);
         else
             EnableInput(InputType::Keyboard, true);
 
-        if (gui->IsMouseFocused() && !anyViewActive)
+        if (imGuiAdapter->IsMouseFocused() && !anyViewActive)
             EnableInput(InputType::Mouse, false);
         else
             EnableInput(InputType::Mouse, true);

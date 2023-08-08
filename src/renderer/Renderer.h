@@ -39,11 +39,16 @@ namespace vg::renderer
 		void					                init				    (const RendererParams & _params, core::Singletons & _singletons) override;
 		void					                deinit				    () override;
 
-        gfx::IView *                            CreateMainView          (core::uint2 _screenSize) final override;
+        const gfx::DeviceParams &               GetDeviceCreationParams () const final override;
+        core::IObject *                         GetDisplayOptions       () final override;
+
+        gfx::ITexture *                         CreateTexture           (const gfx::TextureDesc & _texDesc, const core::string & _name) final override;
+
+        gfx::IView *                            CreateView              (gfx::CreateViewParams _params, const core::string & _name) final override;
         gfx::ViewID                             AddView                 (gfx::IView * _view) final override;
         void                                    RemoveView              (gfx::ViewID _viewID) final override;
-        gfx::IView *                         GetView                 (gfx::ViewID _viewID) const final override;
-        const core::vector <gfx::IView *>    GetViews                (gfx::ViewType _viewType) const final override;
+        gfx::IView *                            GetView                 (gfx::ViewID _viewID) const final override;
+        const core::vector <gfx::IView *>       GetViews                (gfx::ViewTarget _target) const final override;
 
         void                                    SetResized              () final override;
         void                                    resize                  (core::uint _width, core::uint _height) override;
@@ -55,20 +60,20 @@ namespace vg::renderer
         void                                    waitGPUIdle             () override;
 
         void                                    SetVSync                (gfx::VSync mode) final override;
-        gfx::VSync                           GetVSync                () const final override;
+        gfx::VSync                              GetVSync                () const final override;
 
-        core::IProfiler *                       getProfilerInstance     () const override;
-        IImmediateGUI *                         getImmediateGUI         () const override;
+        core::IProfiler *                       GetProfiler             () const override;
+        IImGuiAdapter *                         GetImGuiAdapter         () const override;
 
         bool                                    cookMeshModel           (const core::string & _file) final;
         IMeshModel *                            loadMeshModel           (const core::string & _file) final;
 
         bool                                    cookTexture             (const core::string & _file) final;
-        gfx::ITexture *                      loadTexture             (const core::string & _file) final;
+        gfx::ITexture *                         loadTexture             (const core::string & _file) final;
 
         void                                    ReleaseAsync            (core::IObject * _object) final override;
 
-        gfx::Texture *                       getDefaultTexture       (MaterialTextureType _type) const;
+        gfx::Texture *                          getDefaultTexture       (MaterialTextureType _type) const;
         
         #ifdef _WIN32
         LRESULT CALLBACK                        WndProc                 (HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) override;
@@ -77,7 +82,7 @@ namespace vg::renderer
     public: // internal
         View *                                  getMainView             () const;
 
-        gfx::Texture *		                getBackbuffer           () const;
+        gfx::Texture *		                    getBackbuffer           () const;
         ImguiAdapter *                          getImGuiAdapter         () const { return m_imgui; }
 
     private:
@@ -89,13 +94,13 @@ namespace vg::renderer
         void                                    cullViews               ();
 
 	private:
-		gfx::Device &		                m_device;
+		gfx::Device &		                    m_device;
+        gfx::FrameGraph &                       m_frameGraph;
         ImguiAdapter *                          m_imgui                 = nullptr;
         FBXImporter *                           m_fbxImporter           = nullptr;
-		gfx::FrameGraph &	                m_frameGraph;
         View *                                  m_mainView              = nullptr;
-        core::vector<View *>                    m_views[core::enumCount<gfx::ViewType>()];
-        ImguiPass *                             m_imguiPass             = nullptr;
-        core::vector<gfx::Texture*>          m_defaultTextures;       
+        ImguiPass *                             m_imguiPass             = nullptr; 
+        core::vector<View *>                    m_views[core::enumCount<gfx::ViewTarget>()];
+        core::vector<gfx::Texture *>            m_defaultTextures;
 	};
 }

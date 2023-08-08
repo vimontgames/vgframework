@@ -14,8 +14,8 @@
 #include "gfx/Resource/Texture.h"
 #include "gfx/Importer/TextureImporter.h"
 
-#include "renderer/Imgui/imguiAdapter.h"
 #include "renderer/Pass/Imgui/ImguiPass.h"
+#include "renderer/Pass/Imgui/imguiAdapter.h"
 #include "renderer/Importer/FBX/FBXImporter.h"
 #include "renderer/Importer/SceneImporterData.h"
 #include "renderer/Model/Mesh/MeshModel.h"
@@ -23,6 +23,7 @@
 #include "renderer/IGraphicInstance.h"
 #include "renderer/Importer/TextureImporterData.h"
 #include "renderer/View/View.h"
+#include "renderer/View/Forward/ForwardView.h"
 
 #include "imgui/imgui.h"
 
@@ -60,13 +61,13 @@ namespace vg::renderer
     #endif
 
     //--------------------------------------------------------------------------------------
-    core::IProfiler * Renderer::getProfilerInstance() const
+    core::IProfiler * Renderer::GetProfiler() const
     {
         return Kernel::getProfiler();
     }
 
     //--------------------------------------------------------------------------------------
-    IImmediateGUI * Renderer::getImmediateGUI() const
+    IImGuiAdapter * Renderer::GetImGuiAdapter() const
     {
         return m_imgui;
     }
@@ -180,12 +181,12 @@ namespace vg::renderer
         VG_SAFE_DELETE(displayOptions);
 
         VG_SAFE_RELEASE(m_mainView);
-        for (uint j = 0; j < core::enumCount<gfx::ViewType>(); ++j)
+        for (uint j = 0; j < core::enumCount<gfx::ViewTarget>(); ++j)
         {
             auto & views = m_views[j];
             for (uint i = 0; i < views.size(); ++i)
                 VG_SAFE_RELEASE(views[i]);
-            //views.clear();
+            views.clear();
         }
 
         VG_SAFE_DELETE(m_imguiPass);
@@ -266,7 +267,7 @@ namespace vg::renderer
                 m_frameGraph.importRenderTarget("Backbuffer", m_device.getBackbuffer(), float4(0,0,0,0), FrameGraph::Resource::InitState::Clear);
                 m_frameGraph.setGraphOutput("Backbuffer");
 
-                for (uint j = 0; j < core::enumCount<gfx::ViewType>(); ++j)
+                for (uint j = 0; j < core::enumCount<gfx::ViewTarget>(); ++j)
                 {
                     auto & views = m_views[j];
                     for (uint i = 0; i < views.count(); ++i)
@@ -278,7 +279,7 @@ namespace vg::renderer
                 }
 
                 RenderContext mainViewRenderContext;
-                                          mainViewRenderContext.m_view = m_mainView;
+                              mainViewRenderContext.m_view = m_mainView;
 
                 m_frameGraph.addUserPass(mainViewRenderContext, m_imguiPass, "UIPass");
 
@@ -302,7 +303,7 @@ namespace vg::renderer
         // Perform culling foreach view (might want to split views later)
         uint jobStartCounter = 0;
         core::JobSync syncCull;
-        for (uint j = 0; j < core::enumCount<gfx::ViewType>(); ++j)
+        for (uint j = 0; j < core::enumCount<gfx::ViewTarget>(); ++j)
         {
             const auto & views = m_views[j];
             for (uint i = 0; i < views.size(); ++i)
@@ -337,25 +338,53 @@ namespace vg::renderer
 	}
 
     //--------------------------------------------------------------------------------------
-    gfx::IView * Renderer::CreateMainView(core::uint2 _screenSize)
+    const gfx::DeviceParams & Renderer::GetDeviceCreationParams() const
     {
-        auto _mainViewParams = gfx::CreateViewParams(ViewType::Backbuffer, _screenSize);
-        auto * mainView = new View(_mainViewParams);
-        if (mainView != m_mainView)
+        return m_device.getDeviceParams();
+    }
+
+    //--------------------------------------------------------------------------------------
+    core::IObject * Renderer::GetDisplayOptions()
+    {
+        return DisplayOptions::get();
+    }
+
+    //--------------------------------------------------------------------------------------
+    gfx::ITexture * Renderer::CreateTexture(const gfx::TextureDesc & _texDesc, const core::string & _name)
+    {
+        auto tex = m_device.createTexture(_texDesc, _name);
+        tex->setName(_name);
+        return tex;
+    }
+
+    //--------------------------------------------------------------------------------------
+    gfx::IView * Renderer::CreateView(gfx::CreateViewParams _params, const core::string & _name)
+    {
+        View * view;
+
+        switch (_params.target)
         {
-            VG_SAFE_INCREASE_REFCOUNT(mainView);
-            VG_SAFE_RELEASE(m_mainView);
-            m_mainView = static_cast<View *>(mainView);
-            m_mainView->setName("MainView");
+            default:
+                view = new ForwardView(_params);
+                break;
+
+            case ViewTarget::Backbuffer:
+                view = new View(_params);
+                VG_ASSERT(m_mainView == nullptr, "Only one \"Main\" backbuffer view is supported");
+                m_mainView = static_cast<View *>(view); // This is required for FrameGraph construction
+                VG_SAFE_INCREASE_REFCOUNT(m_mainView);
+                break;
         }
-        return mainView;
+        
+        view->setName(_name);
+        return view;
     }
 
     //--------------------------------------------------------------------------------------
     gfx::ViewID Renderer::AddView(gfx::IView * _view)
     {
-        auto type = _view->GetViewID().type;
-        auto & views = m_views[(uint)type];
+        auto target = _view->GetViewID().target;
+        auto & views = m_views[(uint)target];
 
         // Find hole or push_back
         VG_ASSERT(views.size() < (ViewIndex)-1);
@@ -366,42 +395,38 @@ namespace vg::renderer
             if (!views[i])
             {
                 views[i] = (View*)_view;
-                auto id = ViewID(type, i);
+                auto id = ViewID(target, i);
                 _view->SetViewID(id);
                 return id;
             }
         }
 
         auto index = (ViewIndex)views.count();
-        ViewID id = ViewID(type, index);
+        ViewID id = ViewID(target, index);
         views.push_back((View *)_view);
         _view->SetViewID(id);
         return id;
     }
 
     //--------------------------------------------------------------------------------------
-    const core::vector <IView *> Renderer::GetViews(gfx::ViewType _viewType) const
+    const core::vector <IView *> Renderer::GetViews(gfx::ViewTarget _target) const
     {
-        VG_ASSERT(_viewType < (gfx::ViewType)core::enumCount<gfx::ViewType>());
-        return (const core::vector<IView *>&)m_views[(uint)_viewType];
+        VG_ASSERT(_target < (gfx::ViewTarget)core::enumCount<gfx::ViewTarget>());
+        return (const core::vector<IView *>&)m_views[(uint)_target];
     }
 
     //--------------------------------------------------------------------------------------
     void Renderer::RemoveView(gfx::ViewID _viewID)
     {
         // Keep holes so that the ViewID remains valid
-        for (uint j = 0; j < core::enumCount<gfx::ViewType>(); ++j)
+        auto & views = m_views[(uint)_viewID.target];
+        for (uint i = 0; i < views.size(); ++i)
         {
-            auto & views = m_views[j];
-            for (uint i = 0; i < views.size(); ++i)
+            if (views[i])
             {
-                if (views[i])
-                {
-                    const auto id = views[i]->GetViewID();
-                    VG_ASSERT(id.type == (ViewType)i);
-                    if (id.index == _viewID.index)
-                        VG_SAFE_RELEASE(views[i]);
-                }
+                const auto id = views[i]->GetViewID();
+                if (id.index == _viewID.index)
+                    VG_SAFE_RELEASE(views[i]);
             }
         }
     }
@@ -409,7 +434,7 @@ namespace vg::renderer
     //--------------------------------------------------------------------------------------
     gfx::IView * Renderer::GetView(gfx::ViewID _viewID) const
     {
-        const auto & views = m_views[(uint)_viewID.type];
+        const auto & views = m_views[(uint)_viewID.target];
         if (_viewID.index < views.size())
             return views[_viewID.index];
         else

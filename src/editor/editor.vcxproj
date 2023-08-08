@@ -12,6 +12,12 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Editor.cpp" />
+    <ClCompile Include="ImGui\Extensions\ImGuiExtensions.cpp" />
+    <ClCompile Include="ImGui\Menu\ImGuiMenu.cpp" />
+    <ClCompile Include="ImGui\ObjectHandler\ImGuiObjectHandler.cpp" />
+    <ClCompile Include="ImGui\PropertyHandler\ImGuiPropertyHandler.cpp" />
+    <ClCompile Include="ImGui\Toolbar\ImGuiToolbar.cpp" />
+    <ClCompile Include="ImGui\Window\ImGuiWindow.cpp" />
     <ClCompile Include="Precomp.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
@@ -21,6 +27,43 @@
     <ClInclude Include="Editor.h" />
     <ClInclude Include="Editor_Consts.h" />
     <ClInclude Include="IEditor.h" />
+    <ClInclude Include="ImGui\Extensions\imGuiExtensions.h" />
+    <ClInclude Include="ImGui\ImGuiCustomHandler.h" />
+    <ClInclude Include="ImGui\Menu\GameObject\SceneEditor\ImGuiGameObjectSceneEditorMenu.h" />
+    <ClInclude Include="ImGui\Menu\GameObject\SceneEditor\ImGuiGameObjectSceneEditorMenu.hpp" />
+    <ClInclude Include="ImGui\Menu\ImGuiMenu.h" />
+    <ClInclude Include="ImGui\Menu\Scene\ImGuiSceneMenu.h" />
+    <ClInclude Include="ImGui\Menu\Scene\ImGuiSceneMenu.hpp" />
+    <ClInclude Include="ImGui\ObjectHandler\GameObject\ImGuiGameObjectHandler.hpp" />
+    <ClInclude Include="ImGui\ObjectHandler\ImGuiObjectHandler.h" />
+    <ClInclude Include="ImGui\ObjectHandler\Texture\ImGuiTextureHandler.hpp" />
+    <ClInclude Include="ImGui\PropertyHandler\ImGuiPropertyHandler.h" />
+    <ClInclude Include="ImGui\Toolbar\ImGuiToolbar.h" />
+    <ClInclude Include="ImGui\Toolbar\Main\ImGuiMainToolbar.h" />
+    <ClInclude Include="ImGui\Toolbar\Main\ImGuiMainToolbar.hpp" />
+    <ClInclude Include="ImGui\Window\About\ImGuiAbout.h" />
+    <ClInclude Include="ImGui\Window\About\ImGuiAbout.hpp" />
+    <ClInclude Include="ImGui\Window\DisplayOptions\ImGuiDisplayOptions.h" />
+    <ClInclude Include="ImGui\Window\DisplayOptions\ImGuiDisplayOptions.hpp" />
+    <ClInclude Include="ImGui\Window\FPS\ImGuiFPS.h" />
+    <ClInclude Include="ImGui\Window\FPS\ImGuiFPS.hpp" />
+    <ClInclude Include="ImGui\Window\ImGuiWindow.h" />
+    <ClInclude Include="ImGui\Window\Inspector\ImGuiInspector.h" />
+    <ClInclude Include="ImGui\Window\Inspector\ImGuiInspector.hpp" />
+    <ClInclude Include="ImGui\Window\Platform\ImGuiPlatform.h" />
+    <ClInclude Include="ImGui\Window\Platform\ImGuiPlatform.hpp" />
+    <ClInclude Include="ImGui\Window\Resource\ImGuiResource.h" />
+    <ClInclude Include="ImGui\Window\Resource\ImGuiResource.hpp" />
+    <ClInclude Include="ImGui\Window\Scene\ImGuiScene.h" />
+    <ClInclude Include="ImGui\Window\Scene\ImGuiScene.hpp" />
+    <ClInclude Include="ImGui\Window\Shader\ImGuiShader.h" />
+    <ClInclude Include="ImGui\Window\Shader\ImGuiShader.hpp" />
+    <ClInclude Include="ImGui\Window\View\EditorView\ImGuiEditorView.h" />
+    <ClInclude Include="ImGui\Window\View\EditorView\ImGuiEditorView.hpp" />
+    <ClInclude Include="ImGui\Window\View\GameView\ImGuiGameView.h" />
+    <ClInclude Include="ImGui\Window\View\GameView\ImGuiGameView.hpp" />
+    <ClInclude Include="ImGui\Window\View\ImGuiView.h" />
+    <ClInclude Include="ImGui\Window\View\ImGuiView.hpp" />
     <ClInclude Include="Precomp.h" />
   </ItemGroup>
   <ItemGroup>
@@ -77,7 +120,7 @@
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalIncludeDirectories>$(SolutionDir)src;$(SolutionDir)extern;$(SolutionDir)data</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)src;$(SolutionDir)extern;$(SolutionDir)extern\imgui;$(SolutionDir)data</AdditionalIncludeDirectories>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>editor/Precomp.h</PrecompiledHeaderFile>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
@@ -98,7 +141,7 @@
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalIncludeDirectories>$(SolutionDir)src;$(SolutionDir)extern;$(SolutionDir)data</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)src;$(SolutionDir)extern;$(SolutionDir)extern\imgui;$(SolutionDir)data</AdditionalIncludeDirectories>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>editor/Precomp.h</PrecompiledHeaderFile>
     </ClCompile>

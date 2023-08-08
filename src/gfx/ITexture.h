@@ -1,6 +1,7 @@
 #pragma once
 
 #include "core/Model/Model.h"
+#include "gfx/Resource/Texture_consts.h"
 
 namespace vg::gfx
 {

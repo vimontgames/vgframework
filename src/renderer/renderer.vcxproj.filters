@@ -6,9 +6,6 @@
     <ClCompile Include="Pass\Pass.cpp">
       <Filter>Pass</Filter>
     </ClCompile>
-    <ClCompile Include="ImGui\ImGuiAdapter.cpp">
-      <Filter>ImGui</Filter>
-    </ClCompile>
     <ClCompile Include="Geometry\Geometry.cpp">
       <Filter>Geometry</Filter>
     </ClCompile>
@@ -30,29 +27,17 @@
     <ClCompile Include="Importer\ImporterData.cpp">
       <Filter>Importer</Filter>
     </ClCompile>
-    <ClCompile Include="ImGui\ObjectHandler\ImGuiObjectHandler.cpp">
-      <Filter>ImGui\ObjectHandler</Filter>
-    </ClCompile>
-    <ClCompile Include="ImGui\PropertyHandler\ImGuiPropertyHandler.cpp">
-      <Filter>ImGui\CustomHandler</Filter>
-    </ClCompile>
-    <ClCompile Include="ImGui\Editors\ImGuiEditor.cpp">
-      <Filter>ImGui\Editors</Filter>
-    </ClCompile>
-    <ClCompile Include="ImGui\Menus\ImguiMenu.cpp">
-      <Filter>ImGui\Menus</Filter>
-    </ClCompile>
     <ClCompile Include="View\View.cpp">
       <Filter>View</Filter>
     </ClCompile>
     <ClCompile Include="Pass\ImGui\ImGuiPass.cpp">
       <Filter>Pass\ImGui</Filter>
     </ClCompile>
-    <ClCompile Include="ImGui\Toolbars\ImGuiToolbar.cpp">
-      <Filter>ImGui\Toolbars</Filter>
-    </ClCompile>
     <ClCompile Include="Job\Job.cpp">
       <Filter>Job</Filter>
+    </ClCompile>
+    <ClCompile Include="Pass\ImGui\imguiAdapter.cpp">
+      <Filter>Pass\ImGui</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -106,7 +91,7 @@
     </ClInclude>
     <ClInclude Include="IGraphicInstance.h" />
     <ClInclude Include="IGraphicModel.h" />
-    <ClInclude Include="IImmediateGUI.h" />
+    <ClInclude Include="IImGuiAdapter.h" />
     <ClInclude Include="Model\Material\MaterialModel.h">
       <Filter>Model\Material</Filter>
     </ClInclude>
@@ -141,102 +126,6 @@
     <ClInclude Include="Importer\TextureImporterData.hpp">
       <Filter>Importer</Filter>
     </ClInclude>
-    <ClInclude Include="ImGui\ObjectHandler\ImGuiObjectHandler.h">
-      <Filter>ImGui\ObjectHandler</Filter>
-    </ClInclude>
-    <ClInclude Include="ImGui\PropertyHandler\ImGuiPropertyHandler.h">
-      <Filter>ImGui\CustomHandler</Filter>
-    </ClInclude>
-    <ClInclude Include="ImGui\ImGuiCustomHandler.h">
-      <Filter>ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="ImGui\Editors\ImGuiEditor.h">
-      <Filter>ImGui\Editors</Filter>
-    </ClInclude>
-    <ClInclude Include="ImGui\Editors\About\ImGuiAbout.h">
-      <Filter>ImGui\Editors\About</Filter>
-    </ClInclude>
-    <ClInclude Include="ImGui\Editors\About\ImGuiAbout.hpp">
-      <Filter>ImGui\Editors\About</Filter>
-    </ClInclude>
-    <ClInclude Include="ImGui\Editors\DisplayOptions\ImGuiDisplayOptions.h">
-      <Filter>ImGui\Editors\DisplayOptions</Filter>
-    </ClInclude>
-    <ClInclude Include="ImGui\Editors\DisplayOptions\ImGuiDisplayOptions.hpp">
-      <Filter>ImGui\Editors\DisplayOptions</Filter>
-    </ClInclude>
-    <ClInclude Include="ImGui\Editors\FPS\ImGuiFPS.h">
-      <Filter>ImGui\Editors\FPS</Filter>
-    </ClInclude>
-    <ClInclude Include="ImGui\Editors\FPS\ImGuiFPS.hpp">
-      <Filter>ImGui\Editors\FPS</Filter>
-    </ClInclude>
-    <ClInclude Include="ImGui\Editors\Platform\ImGuiPlatform.h">
-      <Filter>ImGui\Editors\Platform</Filter>
-    </ClInclude>
-    <ClInclude Include="ImGui\Editors\Platform\ImGuiPlatform.hpp">
-      <Filter>ImGui\Editors\Platform</Filter>
-    </ClInclude>
-    <ClInclude Include="ImGui\Editors\Scene\ImGuiScene.hpp">
-      <Filter>ImGui\Editors\Scene</Filter>
-    </ClInclude>
-    <ClInclude Include="ImGui\Editors\Inspector\ImGuiInspector.h">
-      <Filter>ImGui\Editors\Inspector</Filter>
-    </ClInclude>
-    <ClInclude Include="ImGui\Editors\Inspector\ImGuiInspector.hpp">
-      <Filter>ImGui\Editors\Inspector</Filter>
-    </ClInclude>
-    <ClInclude Include="ImGui\Editors\Scene\ImGuiScene.h">
-      <Filter>ImGui\Editors\Scene</Filter>
-    </ClInclude>
-    <ClInclude Include="ImGui\Editors\Shader\ImGuiShader.h">
-      <Filter>ImGui\Editors\Shader</Filter>
-    </ClInclude>
-    <ClInclude Include="ImGui\Editors\Shader\ImGuiShader.hpp">
-      <Filter>ImGui\Editors\Shader</Filter>
-    </ClInclude>
-    <ClInclude Include="ImGui\Editors\Resource\ImGuiResource.h">
-      <Filter>ImGui\Editors\Resource</Filter>
-    </ClInclude>
-    <ClInclude Include="ImGui\Editors\Resource\ImGuiResource.hpp">
-      <Filter>ImGui\Editors\Resource</Filter>
-    </ClInclude>
-    <ClInclude Include="ImGui\Menus\Scene\ImGuiSceneMenu.h">
-      <Filter>ImGui\Menus\Scene</Filter>
-    </ClInclude>
-    <ClInclude Include="ImGui\Menus\Scene\ImGuiSceneMenu.hpp">
-      <Filter>ImGui\Menus\Scene</Filter>
-    </ClInclude>
-    <ClInclude Include="ImGui\Menus\ImguiMenu.h">
-      <Filter>ImGui\Menus</Filter>
-    </ClInclude>
-    <ClInclude Include="ImGui\Menus\GameObject\SceneEditor\ImGuiGameObjectSceneEditorMenu.h">
-      <Filter>ImGui\Menus\GameObject\SceneEditor</Filter>
-    </ClInclude>
-    <ClInclude Include="ImGui\Menus\GameObject\SceneEditor\ImGuiGameObjectSceneEditorMenu.hpp">
-      <Filter>ImGui\Menus\GameObject\SceneEditor</Filter>
-    </ClInclude>
-    <ClInclude Include="ImGui\ImGui_Consts.h">
-      <Filter>ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="ImGui\Editors\View\ImGuiView.hpp">
-      <Filter>ImGui\Editors\View</Filter>
-    </ClInclude>
-    <ClInclude Include="ImGui\Editors\View\ImGuiView.h">
-      <Filter>ImGui\Editors\View</Filter>
-    </ClInclude>
-    <ClInclude Include="ImGui\Editors\View\EditorView\ImGuiEditorView.h">
-      <Filter>ImGui\Editors\View\EditorView</Filter>
-    </ClInclude>
-    <ClInclude Include="ImGui\Editors\View\EditorView\ImGuiEditorView.hpp">
-      <Filter>ImGui\Editors\View\EditorView</Filter>
-    </ClInclude>
-    <ClInclude Include="ImGui\Editors\View\GameView\ImGuiGameView.h">
-      <Filter>ImGui\Editors\View\GameView</Filter>
-    </ClInclude>
-    <ClInclude Include="ImGui\Editors\View\GameView\ImGuiGameView.hpp">
-      <Filter>ImGui\Editors\View\GameView</Filter>
-    </ClInclude>
     <ClInclude Include="View\Forward\ForwardView.h">
       <Filter>View\ForwardView</Filter>
     </ClInclude>
@@ -264,21 +153,6 @@
     <ClInclude Include="Pass\PostProcess\PostProcessPass.hpp">
       <Filter>Pass\PostProcess</Filter>
     </ClInclude>
-    <ClInclude Include="ImGui\Toolbars\ImGuiToolbar.h">
-      <Filter>ImGui\Toolbars</Filter>
-    </ClInclude>
-    <ClInclude Include="ImGui\ObjectHandler\GameObject\ImGuiGameObjectHandler.hpp">
-      <Filter>ImGui\ObjectHandler\GameObject</Filter>
-    </ClInclude>
-    <ClInclude Include="ImGui\ObjectHandler\Texture\ImGuiTextureHandler.hpp">
-      <Filter>ImGui\ObjectHandler\Texture</Filter>
-    </ClInclude>
-    <ClInclude Include="ImGui\Toolbars\Main\ImGuiMainToolbar.h">
-      <Filter>ImGui\Toolbars\Main</Filter>
-    </ClInclude>
-    <ClInclude Include="ImGui\Toolbars\Main\ImGuiMainToolbar.hpp">
-      <Filter>ImGui\Toolbars\Main</Filter>
-    </ClInclude>
     <ClInclude Include="Job\Culling\ViewCullingJob.h">
       <Filter>Job\Culling</Filter>
     </ClInclude>
@@ -300,16 +174,13 @@
     <ClInclude Include="Geometry\Batch\Batch.h">
       <Filter>Geometry\Batch</Filter>
     </ClInclude>
-    <ClInclude Include="ImGui\imguiAdapter.h">
-      <Filter>ImGui</Filter>
+    <ClInclude Include="Pass\ImGui\imguiAdapter.h">
+      <Filter>Pass\ImGui</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Pass">
       <UniqueIdentifier>{922ccb7e-6e89-4930-a933-c1e2f5dfab1a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ImGui">
-      <UniqueIdentifier>{b758ae7b-2873-4568-b6ba-f712c2fcf620}</UniqueIdentifier>
     </Filter>
     <Filter Include="View">
       <UniqueIdentifier>{1c2b648a-bdff-4441-8594-a8e7bdc14994}</UniqueIdentifier>
@@ -353,60 +224,6 @@
     <Filter Include="Model\Material\DefaultMaterial">
       <UniqueIdentifier>{4f3e414b-d52f-4193-8058-e19c75f3ef01}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ImGui\CustomHandler">
-      <UniqueIdentifier>{b20cba03-0ac7-440e-9ccc-6be9142dc94f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ImGui\ObjectHandler">
-      <UniqueIdentifier>{940dc113-0a3b-4b7b-b541-7a67df6c49c4}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ImGui\Editors">
-      <UniqueIdentifier>{4072be22-8fc2-468f-95ae-b2e910d5d1f0}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ImGui\Editors\About">
-      <UniqueIdentifier>{572d40ef-6bef-4570-8a9a-fbda47ea38c4}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ImGui\Editors\DisplayOptions">
-      <UniqueIdentifier>{b8739fcb-cb26-4a51-97af-c781c0ba9a23}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ImGui\Editors\FPS">
-      <UniqueIdentifier>{f258f24c-5de4-4ca7-b512-0edd9434e086}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ImGui\Editors\Platform">
-      <UniqueIdentifier>{20195218-35d0-49d9-a3ad-c36c41953285}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ImGui\Editors\Scene">
-      <UniqueIdentifier>{e550ee24-4b46-42de-9353-4c674676789d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ImGui\Editors\Inspector">
-      <UniqueIdentifier>{78fd56ec-679d-4162-81e0-af373e96ca29}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ImGui\Editors\Resource">
-      <UniqueIdentifier>{29eb5e17-acad-4f38-9c0f-fe35b103fae3}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ImGui\Editors\Shader">
-      <UniqueIdentifier>{d0837559-1763-43c0-ba41-8d5cf5d42de1}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ImGui\Menus">
-      <UniqueIdentifier>{329e74b4-4842-44b0-a44e-57106e137563}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ImGui\Menus\Scene">
-      <UniqueIdentifier>{0d5658ab-1f33-4626-9870-3eef7fa5c1b4}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ImGui\Menus\GameObject">
-      <UniqueIdentifier>{8670fb4b-e808-42bf-b065-5da16fba1701}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ImGui\Menus\GameObject\SceneEditor">
-      <UniqueIdentifier>{7384cfe1-37eb-4e0a-b157-f2921ce36187}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ImGui\Editors\View">
-      <UniqueIdentifier>{74035ace-adaf-4108-9991-5d0e1faf1f78}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ImGui\Editors\View\EditorView">
-      <UniqueIdentifier>{1d1eb098-e32f-4040-93d4-c14002303501}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ImGui\Editors\View\GameView">
-      <UniqueIdentifier>{8b83991a-7cec-4892-a545-6760fc543364}</UniqueIdentifier>
-    </Filter>
     <Filter Include="View\ForwardView">
       <UniqueIdentifier>{239c8e07-6a74-4972-bd04-c3cc454c7c0e}</UniqueIdentifier>
     </Filter>
@@ -421,18 +238,6 @@
     </Filter>
     <Filter Include="Pass\Forward">
       <UniqueIdentifier>{aa5e436c-5253-4537-a11a-12f4bd51cb6c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ImGui\Toolbars">
-      <UniqueIdentifier>{13ff0d3b-f7a6-4a9e-91bf-2756fcb7a1d1}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ImGui\ObjectHandler\GameObject">
-      <UniqueIdentifier>{8beedc50-a6ec-4560-9773-24604c88ff85}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ImGui\ObjectHandler\Texture">
-      <UniqueIdentifier>{75971b37-e9a6-45df-8624-d4065f69d605}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ImGui\Toolbars\Main">
-      <UniqueIdentifier>{38525143-aa8c-4efb-abc6-e344c8e103fd}</UniqueIdentifier>
     </Filter>
     <Filter Include="Job">
       <UniqueIdentifier>{b3441a69-f331-4236-a21f-8b65dcbde221}</UniqueIdentifier>

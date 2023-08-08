@@ -33,8 +33,8 @@ namespace vg::renderer
     //--------------------------------------------------------------------------------------
     void PostProcessPass::setup(const gfx::RenderContext & _renderContext, double _dt)
     {
-        readRenderTarget(_renderContext.getName("Color"));
-        writeRenderTarget(0, _renderContext.getName("Dest")); // TODO: render to "Backbuffer" in exclusive GameMode?
+        readRenderTarget(_renderContext.getFrameGraphID("Color"));
+        writeRenderTarget(0, _renderContext.getFrameGraphID("Dest")); // TODO: render to "Backbuffer" in exclusive GameMode?
     }
 
     //--------------------------------------------------------------------------------------
@@ -55,7 +55,7 @@ namespace vg::renderer
 
         root2D.quad.posOffsetScale = float4(0.0f, 0.0f, 1.0f, 1.0f);
         root2D.quad.uvOffsetScale = float4(0.0f, 0.0f, 1.0f, 1.0f);
-        root2D.texID = getRenderTarget(_renderContext.getName("Color"))->getBindlessSRVHandle();
+        root2D.texID = getRenderTarget(_renderContext.getFrameGraphID("Color"))->getBindlessSRVHandle();
 
         _cmdList->setInlineRootConstants(&root2D, RootConstants2DCount);
 

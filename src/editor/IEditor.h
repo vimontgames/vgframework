@@ -1,7 +1,6 @@
 #pragma once
 
 #include "core/IPlugin.h"
-#include "Editor_Consts.h"
 
 namespace vg
 {

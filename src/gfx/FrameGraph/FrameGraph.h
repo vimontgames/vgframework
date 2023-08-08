@@ -19,15 +19,14 @@ namespace vg::gfx
     {
         IView * m_view;
 
-		static const core::string MakeUniqueName(const core::string & _name, ViewID _viewID)
+		static const core::string MakeFrameGraphID(const core::string & _name, ViewID _viewID)
 		{
-			return _name + (core::string)"-" + core::asString(_viewID.type) + core::to_string(_viewID.index);
-
+			return _name + (core::string)"-" + core::asString(_viewID.target) + core::to_string(_viewID.index);
 		}
 
-		const core::string getName(const core::string & _name) const
+		const core::string getFrameGraphID(const core::string & _name) const
 		{
-			return MakeUniqueName(_name, m_view->GetViewID());
+			return MakeFrameGraphID(_name, m_view->GetViewID());
 		}
     };
 

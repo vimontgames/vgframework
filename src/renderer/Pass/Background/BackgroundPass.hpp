@@ -47,8 +47,9 @@ namespace vg::renderer
                                         colorDesc.clearColor = float4(0, 0, 0, 0);
                                         colorDesc.initState = FrameGraph::Resource::InitState::Clear;
 
-        createRenderTarget(_renderContext.getName("Color"), colorDesc);
-        writeRenderTarget(0, _renderContext.getName("Color"));
+        const auto colorID = _renderContext.getFrameGraphID("Color");
+        createRenderTarget(colorID, colorDesc);
+        writeRenderTarget(0, colorID);
 
         FrameGraph::TextureResourceDesc depthStencilDesc;
                                         depthStencilDesc.format = PixelFormat::D32S8;
@@ -58,8 +59,9 @@ namespace vg::renderer
                                         depthStencilDesc.clearStencil = 0x0;
                                         depthStencilDesc.initState = FrameGraph::Resource::InitState::Clear;
 
-        createRenderTarget(_renderContext.getName("DepthStencil"), depthStencilDesc);
-        writeDepthStencil(_renderContext.getName("DepthStencil"));
+        const auto depthStencilID = _renderContext.getFrameGraphID("DepthStencil");
+        createRenderTarget(depthStencilID, depthStencilDesc);
+        writeDepthStencil(depthStencilID);
     }
 
     //--------------------------------------------------------------------------------------

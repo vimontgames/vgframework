@@ -49,7 +49,7 @@ namespace vg::renderer
 
         View * view = (View *)getParent();
         gfx::ViewID viewID = view->getViewID();
-        string name = getName() + " " + asString(viewID.type) + " " + to_string(viewID.index);
+        string name = getName() + " " + asString(viewID.target) + " " + to_string(viewID.index);
         VG_PROFILE_CPU(name.c_str());
         //VG_DEBUGPRINT("\"%s\" running on \"%s\" (0x%08X)\n", name.c_str(), Kernel::getScheduler()->GetCurrentThreadName().c_str(), Kernel::getScheduler()->GetCurrentThreadID());
 
