@@ -134,7 +134,7 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    ImguiAdapter::ImguiAdapter(WinHandle _winHandle, Device & _device)
+    ImGuiAdapter::ImGuiAdapter(WinHandle _winHandle, Device & _device)
     {
         ImGui::CreateContext();
         ImGuiIO & io = ImGui::GetIO();
@@ -182,7 +182,7 @@ namespace vg::renderer
 
     #ifdef VG_DX12
     //--------------------------------------------------------------------------------------
-    void ImguiAdapter::d3d12Init()
+    void ImGuiAdapter::d3d12Init()
     {
         gfx::Device * device = Device::get();
 
@@ -196,7 +196,7 @@ namespace vg::renderer
     }
     #elif defined(VG_VULKAN)
     //--------------------------------------------------------------------------------------
-    void ImguiAdapter::vulkanInit()
+    void ImGuiAdapter::vulkanInit()
     {
         gfx::Device * device = Device::get();
 
@@ -296,7 +296,7 @@ namespace vg::renderer
     #endif
 
     //--------------------------------------------------------------------------------------
-    ImguiAdapter::~ImguiAdapter()
+    ImGuiAdapter::~ImGuiAdapter()
     {
         gfx::Device * device = Device::get();
 
@@ -322,7 +322,7 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    bool ImguiAdapter::IsKeyboardFocused() const
+    bool ImGuiAdapter::IsKeyboardFocused() const
     {
         const ImGuiIO & io = ImGui::GetIO();
         if (io.WantCaptureKeyboard)
@@ -332,7 +332,7 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    bool ImguiAdapter::IsMouseFocused() const
+    bool ImGuiAdapter::IsMouseFocused() const
     {
         const ImGuiIO & io = ImGui::GetIO();
         if (io.WantCaptureMouse)
@@ -342,19 +342,19 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    ImTextureID ImguiAdapter::GetTextureID(const gfx::ITexture * _texture) const
+    ImTextureID ImGuiAdapter::GetTextureID(const gfx::ITexture * _texture) const
     {
         return getImguiTextureID((Texture*)_texture);
     }
 
     //--------------------------------------------------------------------------------------
-    void ImguiAdapter::ReleaseTextureID(ImTextureID _texID)
+    void ImGuiAdapter::ReleaseTextureID(ImTextureID _texID)
     {
         releaseImguiTextureID(_texID);
     }
 
     //--------------------------------------------------------------------------------------
-    void ImguiAdapter::beginFrame()
+    void ImGuiAdapter::beginFrame()
     {
         VG_PROFILE_CPU("Dear Imgui");
 
@@ -406,7 +406,7 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    void ImguiAdapter::render(gfx::CommandList * _cmdList)
+    void ImGuiAdapter::render(gfx::CommandList * _cmdList)
     {
         ImGui::Render();
 
@@ -418,7 +418,7 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    ImTextureID ImguiAdapter::getImguiTextureID(Texture * _tex) const
+    ImTextureID ImGuiAdapter::getImguiTextureID(Texture * _tex) const
     {
         auto device = gfx::Device::get();
 
@@ -433,7 +433,7 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    void ImguiAdapter::releaseImguiTextureID(ImTextureID _texID)
+    void ImGuiAdapter::releaseImguiTextureID(ImTextureID _texID)
     {
 #ifdef VG_DX12
         // Nothing to do

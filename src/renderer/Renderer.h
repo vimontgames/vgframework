@@ -13,9 +13,9 @@ namespace vg::gfx
 
 namespace vg::renderer
 {
-    class ImguiAdapter;
+    class ImGuiAdapter;
     class FBXImporter;
-    class ImguiPass;
+    class ImGuiPass;
     class MeshModel;
     class View;
 
@@ -83,7 +83,7 @@ namespace vg::renderer
         View *                                  getMainView             () const;
 
         gfx::Texture *		                    getBackbuffer           () const;
-        ImguiAdapter *                          getImGuiAdapter         () const { return m_imgui; }
+        ImGuiAdapter *                          getImGuiAdapter         () const { return m_imgui; }
 
     private:
         void                                    registerShaders         ();
@@ -96,10 +96,10 @@ namespace vg::renderer
 	private:
 		gfx::Device &		                    m_device;
         gfx::FrameGraph &                       m_frameGraph;
-        ImguiAdapter *                          m_imgui                 = nullptr;
+        ImGuiAdapter *                          m_imgui                 = nullptr;
         FBXImporter *                           m_fbxImporter           = nullptr;
         View *                                  m_mainView              = nullptr;
-        ImguiPass *                             m_imguiPass             = nullptr; 
+        ImGuiPass *                             m_imguiPass             = nullptr; 
         core::vector<View *>                    m_views[core::enumCount<gfx::ViewTarget>()];
         core::vector<gfx::Texture *>            m_defaultTextures;
 	};

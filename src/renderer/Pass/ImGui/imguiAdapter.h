@@ -16,11 +16,11 @@ namespace vg
 
     namespace renderer
     {
-        class ImguiAdapter : public IImGuiAdapter
+        class ImGuiAdapter : public IImGuiAdapter
         {
         public:
-                        ImguiAdapter            (core::WinHandle _winHandle, gfx::Device & _device);
-                        ~ImguiAdapter           ();
+                        ImGuiAdapter            (core::WinHandle _winHandle, gfx::Device & _device);
+                        ~ImGuiAdapter           ();
 
             #ifdef VG_DX12
             void        d3d12Init               ();

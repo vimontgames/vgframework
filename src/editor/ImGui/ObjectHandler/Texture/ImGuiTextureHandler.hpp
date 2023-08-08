@@ -9,7 +9,7 @@ namespace vg::editor
 {
     using namespace vg::core;
 
-    class ImguiTextureHandler : public ImGuiObjectHandler
+    class ImGuiTextureHandler : public ImGuiObjectHandler
     {
     public:
         //--------------------------------------------------------------------------------------
@@ -29,7 +29,7 @@ namespace vg::editor
         }
     };
 
-    VG_AUTO_REGISTER_IMGUI_OBJECT_HANDLER(Texture, ImguiTextureHandler);
+    VG_AUTO_REGISTER_IMGUI_OBJECT_HANDLER(Texture, ImGuiTextureHandler);
 }
 
 

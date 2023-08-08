@@ -1,7 +1,7 @@
 #pragma once
 
 #include "editor/ImGui/Window/ImGuiWindow.h"
-#include "editor/ImGui/Menu/Scene/ImguiSceneMenu.h"
+#include "editor/ImGui/Menu/Scene/ImGuiSceneMenu.h"
 #include "editor/ImGui/Menu/GameObject/SceneEditor/ImGuiGameObjectSceneEditorMenu.h"
 
 namespace vg::editor

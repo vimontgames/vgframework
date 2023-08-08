@@ -17,7 +17,7 @@
 #include "editor/ImGui/Window/Platform/ImGuiPlatform.h"
 #include "editor/ImGui/Window/Inspector/ImGuiInspector.h"
 #include "editor/ImGui/Window/DisplayOptions/ImGuiDisplayOptions.h"
-#include "editor/ImGui/Window/About/ImguiAbout.h"
+#include "editor/ImGui/Window/About/ImGuiAbout.h"
 #include "editor/ImGui/Window/Shader/ImGuiShader.h"
 #include "editor/ImGui/Window/Scene/ImGuiScene.h"
 #include "editor/ImGui/Window/Resource/ImGuiResource.h"

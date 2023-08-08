@@ -1,5 +1,5 @@
 #include "renderer/Precomp.h"
-#include "ImguiPass.h"
+#include "ImGuiPass.h"
 #include "gfx/Device/Device.h"
 #include "renderer/Renderer.h"
 #include "renderer/Geometry/Batch/Batch.h"
@@ -28,20 +28,20 @@ namespace vg::renderer
     //--------------------------------------------------------------------------------------
     // In case several windows are docked together, then the last declared will be the default selected
     //--------------------------------------------------------------------------------------
-    ImguiPass::ImguiPass() :
+    ImGuiPass::ImGuiPass() :
         gfx::UserPass("ImGuiPass")
     {
 
     }
 
     //--------------------------------------------------------------------------------------
-    ImguiPass::~ImguiPass()
+    ImGuiPass::~ImGuiPass()
     {
 
     }
     
     //--------------------------------------------------------------------------------------
-    void ImguiPass::setup(const gfx::RenderContext & _renderContext, double _dt)
+    void ImGuiPass::setup(const gfx::RenderContext & _renderContext, double _dt)
     {
         writeRenderTarget(0, "Backbuffer");
 
@@ -55,14 +55,14 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    const vg::engine::IEngine * ImguiPass::getEngine()
+    const vg::engine::IEngine * ImGuiPass::getEngine()
     {
         const auto * factory = Kernel::getFactory();
         return (const vg::engine::IEngine *) factory->getSingleton("Engine");
     }
 
     //--------------------------------------------------------------------------------------
-    void ImguiPass::displayEngineWindow()
+    void ImGuiPass::displayEngineWindow()
     {
         //if (ImGui::Begin("Engine", &m_isEngineWindowVisible))
         //{
@@ -81,7 +81,7 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    void ImguiPass::displayRendererWindow()
+    void ImGuiPass::displayRendererWindow()
     {
         //if (ImGui::Begin("Renderer", &m_isRendererWindowVisible))
         //{
@@ -95,7 +95,7 @@ namespace vg::renderer
 
     
     //--------------------------------------------------------------------------------------
-    void ImguiPass::draw(const RenderContext & _renderContext, gfx::CommandList * _cmdList) const
+    void ImGuiPass::draw(const RenderContext & _renderContext, gfx::CommandList * _cmdList) const
     {
         Renderer::get()->getImGuiAdapter()->render(_cmdList);
     }

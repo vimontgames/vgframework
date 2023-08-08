@@ -2,7 +2,7 @@
 
 #include "core/IGameObject.h"
 #include "core/IComponent.h"
-#include "editor/ImGui/Menu/ImguiMenu.h"
+#include "editor/ImGui/Menu/ImGuiMenu.h"
 #include "editor/ImGui/Window/ImGuiWindow.h"
 
 using namespace vg::core;

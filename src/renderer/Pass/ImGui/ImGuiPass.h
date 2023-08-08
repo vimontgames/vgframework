@@ -13,13 +13,13 @@ namespace vg::renderer
     class ImGuiToolbar;
 
     //--------------------------------------------------------------------------------------
-    class ImguiPass : public gfx::UserPass
+    class ImGuiPass : public gfx::UserPass
     {
     public:
-        const char * getClassName() const final { return "ImguiPass"; }
+        const char * getClassName() const final { return "ImGuiPass"; }
 
-        ImguiPass();
-        ~ImguiPass();
+        ImGuiPass();
+        ~ImGuiPass();
 
         void setup(const gfx::RenderContext & _renderContext, double _dt) override;
         void draw(const gfx::RenderContext & _renderContext, gfx::CommandList * _cmdList) const override;
@@ -34,9 +34,5 @@ namespace vg::renderer
         // Plugins
         bool m_isEngineWindowVisible = false;
         bool m_isRendererWindowVisible = false;
-
-        // Editor windows
-        //core::vector<ImguiEditor *> m_imGuiEditors;
-        //core::vector<ImGuiToolbar *> m_imGuiToolbars;
     };
 }

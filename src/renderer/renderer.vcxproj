@@ -27,7 +27,7 @@
     <ClCompile Include="Model\Material\MaterialModel.cpp" />
     <ClCompile Include="Model\Mesh\MeshModel.cpp" />
     <ClCompile Include="Options\Options.cpp" />
-    <ClCompile Include="Pass\ImGui\imguiAdapter.cpp" />
+    <ClCompile Include="Pass\ImGui\ImGuiAdapter.cpp" />
     <ClCompile Include="Pass\ImGui\ImGuiPass.cpp" />
     <ClCompile Include="Pass\Pass.cpp" />
     <ClCompile Include="Precomp.cpp">
@@ -84,7 +84,7 @@
     <ClInclude Include="Pass\Background\BackgroundPass.hpp" />
     <ClInclude Include="Pass\Forward\ForwardPass.hpp" />
     <ClInclude Include="Pass\Forward\ForwardPass.h" />
-    <ClInclude Include="Pass\ImGui\imguiAdapter.h" />
+    <ClInclude Include="Pass\ImGui\ImGuiAdapter.h" />
     <ClInclude Include="Pass\ImGui\ImGuiPass.h" />
     <ClInclude Include="Pass\PostProcess\PostProcessPass.h" />
     <ClInclude Include="Pass\PostProcess\PostProcessPass.hpp" />

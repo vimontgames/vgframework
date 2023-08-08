@@ -14,8 +14,8 @@
 #include "gfx/Resource/Texture.h"
 #include "gfx/Importer/TextureImporter.h"
 
-#include "renderer/Pass/Imgui/ImguiPass.h"
-#include "renderer/Pass/Imgui/imguiAdapter.h"
+#include "renderer/Pass/ImGui/ImGuiPass.h"
+#include "renderer/Pass/ImGui/imguiAdapter.h"
 #include "renderer/Importer/FBX/FBXImporter.h"
 #include "renderer/Importer/SceneImporterData.h"
 #include "renderer/Model/Mesh/MeshModel.h"
@@ -144,12 +144,12 @@ namespace vg::renderer
 		m_device.init(_params.device);
 
         // UI
-        m_imgui = new ImguiAdapter(_params.device.window, m_device);
+        m_imgui = new ImGuiAdapter(_params.device.window, m_device);
 
         registerShaders();
 
         // Create passes not bound to a View
-        m_imguiPass = new ImguiPass();
+        m_imguiPass = new ImGuiPass();
 
         RegisterClasses();
 

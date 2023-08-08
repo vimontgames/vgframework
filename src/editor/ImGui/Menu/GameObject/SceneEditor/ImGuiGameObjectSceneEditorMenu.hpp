@@ -1,6 +1,6 @@
 #include "ImGuiGameObjectSceneEditorMenu.h"
 #include "core/IGameObject.h"
-#include "editor/Imgui/Window/ImGuiWindow.h"
+#include "editor/ImGui/Window/ImGuiWindow.h"
 
 using namespace vg::core;
 
