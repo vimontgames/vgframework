@@ -36,9 +36,6 @@
     <ClCompile Include="Job\Job.cpp">
       <Filter>Job</Filter>
     </ClCompile>
-    <ClCompile Include="Pass\ImGui\ImGuiAdapter.cpp">
-      <Filter>Pass\ImGui</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Renderer.def" />
@@ -175,6 +172,15 @@
       <Filter>Geometry\Batch</Filter>
     </ClInclude>
     <ClInclude Include="Pass\ImGui\ImGuiAdapter.h">
+      <Filter>Pass\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="Pass\ImGui\ImGui.h">
+      <Filter>Pass\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="Pass\ImGui\ImGuiAdapter.hpp">
+      <Filter>Pass\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="Pass\ImGui\ImGui.hpp">
       <Filter>Pass\ImGui</Filter>
     </ClInclude>
   </ItemGroup>

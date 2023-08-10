@@ -62,8 +62,9 @@ namespace vg::renderer
         void                                    SetVSync                (gfx::VSync mode) final override;
         gfx::VSync                              GetVSync                () const final override;
 
-        core::IProfiler *                       GetProfiler             () const override;
-        IImGuiAdapter *                         GetImGuiAdapter         () const override;
+        core::IProfiler *                       GetProfiler             () const final override;
+        IImGuiAdapter *                         GetImGuiAdapter         () const final override;
+        gfx::IShaderManager *                   GetShaderManager        () const final override;
 
         bool                                    cookMeshModel           (const core::string & _file) final;
         IMeshModel *                            loadMeshModel           (const core::string & _file) final;

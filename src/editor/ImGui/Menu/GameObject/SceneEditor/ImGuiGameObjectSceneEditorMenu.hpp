@@ -1,6 +1,8 @@
 #include "ImGuiGameObjectSceneEditorMenu.h"
 #include "core/IGameObject.h"
+#include "core/string/string.h"
 #include "editor/ImGui/Window/ImGuiWindow.h"
+#include "editor/ImGui/Extensions/imGuiExtensions.h"
 
 using namespace vg::core;
 
@@ -27,9 +29,21 @@ namespace vg::editor
             }
             if (ImGui::MenuItem("Delete GameObject"))
             {
-                m_selected = MenuOption::Delete;
-                m_popup = "Delete GameObject";
-                openPopup = true;
+                ImGui::OnMsgBoxClickedFunc deleteGameObject = [=]() mutable
+                {
+                    IGameObject * parentGameObject = (IGameObject *)gameObject->getParent();
+                    if (nullptr != parentGameObject)
+                    {
+                        ImGuiWindow::removeFromSelection(gameObject);
+                        parentGameObject->RemoveChild(gameObject);
+                        VG_SAFE_RELEASE(gameObject);
+                        status = Status::Removed;
+                    }
+                    return true;
+                };
+
+                string msg = "Are you sure you want to delete " + (string)gameObject->getClassName() + " \"" + gameObject->getName() + "\"";
+                ImGui::MessageBox(MessageBoxType::YesNo, "Delete GameObject", msg.c_str(), deleteGameObject);
             }
             ImGui::PopID();
             ImGui::EndPopup();
@@ -74,36 +88,6 @@ namespace vg::editor
                         nameTmp[0] = '\0';
                         m_selected = MenuOption::None;
                     }
-                    ImGui::EndPopup();
-                }
-            }
-            break;
-
-            case MenuOption::Delete:
-            {
-                if (ImGui::BeginPopupModal(m_popup, nullptr, ImGuiWindowFlags_AlwaysAutoResize))
-                {
-                    ImGui::Text("Are you sure you want to delete %s \"%s\"?", gameObject->getClassName(), gameObject->getName().c_str());
-
-                    if (ImGui::Button("Yes", style::button::Size))
-                    {
-                        IGameObject * parentGameObject = (IGameObject*)gameObject->getParent();
-                        if (nullptr != parentGameObject)
-                        {
-                            // Unselect if currently selected
-                            ImGuiWindow::removeFromSelection(gameObject);
-                            parentGameObject->RemoveChild(gameObject);
-                            VG_SAFE_RELEASE(gameObject);
-                            status = Status::Removed;
-                        }
-                        ImGui::CloseCurrentPopup();
-                    }
-
-                    ImGui::SameLine();
-
-                    if (ImGui::Button("No", style::button::Size))
-                        ImGui::CloseCurrentPopup();
-
                     ImGui::EndPopup();
                 }
             }

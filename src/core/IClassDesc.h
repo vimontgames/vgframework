@@ -21,11 +21,11 @@ namespace vg::core
             Singleton   = 0x0000000000000001,
             GameObject  = 0x0000000000000002,
             Component   = 0x0000000000000004,
-            //Behaviour   = 0x0000000000000008,
             Model       = 0x0000000000000010,
             Instance    = 0x0000000000000020,
             Resource    = 0x0000000000000040,
-            SceneNode   = 0x0000000000000080
+            SceneNode   = 0x0000000000000080,
+            Plugin      = 0x0000000000000100
         };
         virtual                             ~IClassDesc  () {}
 

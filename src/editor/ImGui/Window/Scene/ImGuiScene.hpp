@@ -1,10 +1,30 @@
 #include "ImguiScene.h"
-#include "imgui/imgui.h"
+#include "editor/ImGui/ImGui.h"
 #include "core/IGameObject.h"
 #include "ImGui-Addons/FileBrowser/ImGuiFileBrowser.h"
 
 namespace vg::editor
 {
+    //--------------------------------------------------------------------------------------
+    void DrawRowsBackground(int row_count, float line_height, float x1, float x2, float y_offset, ImU32 col_even, ImU32 col_odd)
+    {
+        ImDrawList * draw_list = ImGui::GetWindowDrawList();
+        float y0 = ImGui::GetCursorScreenPos().y + (float)(int)y_offset;
+
+        int row_display_start;
+        int row_display_end;
+        ImGui::CalcListClipping(row_count, line_height, &row_display_start, &row_display_end);
+        for (int row_n = row_display_start; row_n < row_display_end; row_n++)
+        {
+            ImU32 col = (row_n & 1) ? col_odd : col_even;
+            if ((col & IM_COL32_A_MASK) == 0)
+                continue;
+            float y1 = y0 + (line_height * row_n);
+            float y2 = y1 + line_height;
+            draw_list->AddRectFilled(ImVec2(x1, y1), ImVec2(x2, y2), col);
+        }
+    }
+
     //--------------------------------------------------------------------------------------
     void ImGuiScene::DrawGUI()
     {
@@ -93,8 +113,6 @@ namespace vg::editor
                             {
                                 universe->addScene(scene);
                                 scene->Release();
-
-                                //status = Status::Loaded;
                             }
                             else
                             {
@@ -103,6 +121,12 @@ namespace vg::editor
                         }
                         break;
                 }
+
+                float x1 = ImGui::GetWindowPos().x;
+                float x2 = x1 + ImGui::GetWindowSize().x;
+                float item_spacing_y = ImGui::GetStyle().ItemSpacing.y;
+                float item_offset_y = -item_spacing_y * 0.5f;
+                float line_height = ImGui::GetTextLineHeight() + item_spacing_y;
 
                 for (uint i = 0; i < universe->getSceneCount(); ++i)
                 {
@@ -126,7 +150,17 @@ namespace vg::editor
                         if (open)
                         {
                             if (nullptr != root)
+                            {
+                                // First pass to get child count
+                                uint count = 0;
+                                displayGameObject(root, &count);
+
+                                // Draw background
+                                DrawRowsBackground(count, line_height, x1, x2, item_offset_y, 0, ImGui::GetColorU32(ImVec4(0.4f, 0.4f, 0.4f, 0.5f)));
+
+                                // draw
                                 displayGameObject(root);
+                            }
                             ImGui::TreePop();
                         }
                     }
@@ -138,34 +172,44 @@ namespace vg::editor
     }
 
     //--------------------------------------------------------------------------------------
-    void ImGuiScene::displayGameObject(IGameObject * _gameObject)
+    void ImGuiScene::displayGameObject(IGameObject * _gameObject, uint * _count)
     {
+        const bool counting = (_count != nullptr);
         const auto children = _gameObject->GetChildren();
 
-        ImGuiTreeNodeFlags flags;
-        if (children.size() > 0)
-            flags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_DefaultOpen;
+        bool open = counting;
+        if (counting)
+        {
+            (*_count)++;
+        }
         else
-            flags = ImGuiTreeNodeFlags_Leaf;
+        {
+            ImGuiTreeNodeFlags flags;
+            if (children.size() > 0)
+                flags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_DefaultOpen;
+            else
+                flags = ImGuiTreeNodeFlags_Leaf;
 
-        if (isSelectedObject(_gameObject))
-            flags |= ImGuiTreeNodeFlags_Selected;
+            if (isSelectedObject(_gameObject))
+                flags |= ImGuiTreeNodeFlags_Selected;
 
-        bool open = ImGui::TreeNodeEx(_gameObject->getName().c_str(), flags);
-        bool openPopup = false;
-
-        m_gameObjectMenu.Display(_gameObject);
+            open = ImGui::TreeNodeEx(_gameObject->getName().c_str(), flags);
+            m_gameObjectMenu.Display(_gameObject);
+        }
 
         if (open)
         {
-            updateSelection(_gameObject);
+            if (!counting)
+                updateSelection(_gameObject);
             
             for (uint j = 0; j < children.size(); ++j)
             {
                 IGameObject * child = children[j];
-                displayGameObject(child);
+                displayGameObject(child, _count);
             }
-            ImGui::TreePop();
+
+            if (!counting)
+                ImGui::TreePop();
         }        
     }
 }

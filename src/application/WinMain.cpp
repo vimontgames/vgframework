@@ -127,9 +127,7 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow, core::uint _width, core::ui
 	g_hWnd = CreateWindow(L"Game", L"VG Framework", flags, x, y, rc.right - rc.left, rc.bottom - rc.top, NULL, NULL, hInstance, NULL);
 
 	if (!g_hWnd)
-	{
 		return FALSE;
-	}
 
 	ShowWindow(g_hWnd, nCmdShow);
 	UpdateWindow(g_hWnd);
@@ -191,20 +189,19 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
     core::Singletons singletons;
     g_engine->init(engineParams, singletons);
 
-    Application * game = new Application(*g_engine);
+    Application * app = new Application(*g_engine);
+	const auto version = app->GetVersion();
 
-    const auto engineVersion = g_engine->GetVersion();
-	const auto rendererVersion = g_engine->GetRenderer()->GetVersion();
-	core::string title = "VG Framework " + core::Plugin::getConfiguration() + " - Engine " + core::to_string(engineVersion.major) + "." + core::to_string(engineVersion.minor) + " - " + core::asString(engineParams.renderer.device.api) + " Renderer " + core::to_string(rendererVersion.major) + "." + core::to_string(rendererVersion.minor);
+	core::string title = "VG Framework " + core::to_string(version.major) + "." + core::to_string(version.minor) + " " + core::Plugin::getConfiguration() + " - " + core::asString(engineParams.renderer.device.api);
     if (engineParams.renderer.device.debugDevice)
         title += " (debug device)";
 
 	SetWindowTextA(g_hWnd, title.c_str());
 
-	while (!processSystemMessage())
-        game->update();
+	while (!processSystemMessage() && !g_engine->IsQuitting())
+		app->Update();
 
-    VG_SAFE_DELETE(game);
+    VG_SAFE_DELETE(app);
     g_engine->deinit();
     VG_SAFE_RELEASE(g_engine);
 

@@ -1,21 +1,6 @@
-#include "renderer/Precomp.h"
 
+#include "ImGui.h"
 #include "imguiAdapter.h"
-#include "imgui/imgui.cpp"
-#include "imgui/imgui_demo.cpp"
-#include "imgui/imgui_draw.cpp"
-#include "imgui/imgui_tables.cpp"
-#include "imgui/imgui_widgets.cpp"
-
-#ifdef _WIN32
-#include "imgui/backends/imgui_impl_win32.cpp"
-#endif
-
-#ifdef VG_DX12
-#include "imgui/backends/imgui_impl_dx12.cpp"
-#elif defined(VG_VULKAN)
-#include "imgui/backends/imgui_impl_vulkan.cpp"
-#endif
 
 #include "gfx/Device/Device.h"
 #include "gfx/CommandList/CommandList.h"
@@ -33,7 +18,7 @@ namespace vg::renderer
 {
     static uint max_imguitex_displayed_per_frame = 64;
 
-    enum GUIStyle
+    enum class GUIStyle
     {
         FiftyShadesOfGrey = 0,
         SlavaUkraini,
@@ -46,7 +31,7 @@ namespace vg::renderer
         ImGuiStyle & style = ImGui::GetStyle();
         ImVec4 * colors = style.Colors;
 
-        float rounding = 3.0f; 
+        float rounding = 3.0f;
 
         style.PopupRounding = rounding;
         style.WindowPadding = ImVec2(4, 4);
@@ -71,61 +56,61 @@ namespace vg::renderer
         style.TabRounding = rounding;
         #endif
 
-        colors[ImGuiCol_Text]                   = ImVec4(1.00f, 1.00f, 1.00f, 0.75f);
-        colors[ImGuiCol_TextDisabled]           = ImVec4(1.00f, 1.00f, 1.00f, 0.50f);
-        colors[ImGuiCol_WindowBg]               = ImVec4(0.26f, 0.26f, 0.26f, 1.00f);
-        colors[ImGuiCol_ChildBg]                = ImVec4(0.26f, 0.26f, 0.26f, 1.00f);
-        colors[ImGuiCol_PopupBg]                = ImVec4(0.13f, 0.13f, 0.15f, 1.00f);
-        colors[ImGuiCol_Border]                 = ImVec4(0.13f, 0.13f, 0.14f, 1.00f);
-        colors[ImGuiCol_BorderShadow]           = ImVec4(1.00f, 1.00f, 1.00f, 0.06f);
-        colors[ImGuiCol_FrameBg]                = ImVec4(0.35f, 0.35f, 0.35f, 1.00f);
-        colors[ImGuiCol_FrameBgHovered]         = ImVec4(0.42f, 0.42f, 0.42f, 1.00f);
-        colors[ImGuiCol_FrameBgActive]          = ImVec4(0.50f, 0.50f, 0.50f, 1.00f);
-        colors[ImGuiCol_TitleBg]                = ImVec4(0.35f, 0.35f, 0.35f, 1.00f);
-        colors[ImGuiCol_TitleBgActive]          = ImVec4(0.23f, 0.34f, 0.54f, 1.00f);
-        colors[ImGuiCol_TitleBgCollapsed]       = ImVec4(0.13f, 0.13f, 0.15f, 0.50f);
-        colors[ImGuiCol_MenuBarBg]              = ImVec4(0.13f, 0.13f, 0.15f, 1.00f);
-        colors[ImGuiCol_ScrollbarBg]            = ImVec4(0.26f, 0.26f, 0.26f, 1.00f);
-        colors[ImGuiCol_ScrollbarGrab]          = ImVec4(0.35f, 0.35f, 0.35f, 1.00f);
-        colors[ImGuiCol_ScrollbarGrabHovered]   = ImVec4(0.42f, 0.42f, 0.42f, 1.00f);
-        colors[ImGuiCol_ScrollbarGrabActive]    = ImVec4(0.50f, 0.50f, 0.50f, 1.00f);
-        colors[ImGuiCol_CheckMark]              = ImVec4(1.00f, 1.00f, 1.00f, 0.50f);
-        colors[ImGuiCol_SliderGrab]             = ImVec4(0.50f, 0.50f, 0.50f, 1.00f);
-        colors[ImGuiCol_SliderGrabActive]       = ImVec4(0.33f, 0.42f, 0.60f, 1.00f);
-        colors[ImGuiCol_Button]                 = ImVec4(0.23f, 0.34f, 0.54f, 0.77f);
-        colors[ImGuiCol_ButtonHovered]          = ImVec4(0.23f, 0.34f, 0.54f, 1.00f);
-        colors[ImGuiCol_ButtonActive]           = ImVec4(0.33f, 0.42f, 0.60f, 1.00f);
-        colors[ImGuiCol_Header]                 = ImVec4(0.23f, 0.34f, 0.54f, 0.77f);
-        colors[ImGuiCol_HeaderHovered]          = ImVec4(0.23f, 0.34f, 0.54f, 1.00f);
-        colors[ImGuiCol_HeaderActive]           = ImVec4(0.33f, 0.42f, 0.60f, 1.00f);
-        colors[ImGuiCol_Separator]              = ImVec4(0.23f, 0.23f, 0.25f, 1.00f);
-        colors[ImGuiCol_SeparatorHovered]       = ImVec4(0.23f, 0.34f, 0.54f, 1.00f);
-        colors[ImGuiCol_SeparatorActive]        = ImVec4(0.33f, 0.42f, 0.60f, 1.00f);
-        colors[ImGuiCol_ResizeGrip]             = ImVec4(0.23f, 0.34f, 0.54f, 0.50f);
-        colors[ImGuiCol_ResizeGripHovered]      = ImVec4(0.23f, 0.34f, 0.54f, 0.77f);
-        colors[ImGuiCol_ResizeGripActive]       = ImVec4(0.33f, 0.42f, 0.60f, 0.77f);
-        colors[ImGuiCol_Tab]                    = ImVec4(0.33f, 0.42f, 0.60f, 0.50f);
-        colors[ImGuiCol_TabHovered]             = ImVec4(0.33f, 0.42f, 0.60f, 1.00f);
-        colors[ImGuiCol_TabActive]              = ImVec4(0.33f, 0.42f, 0.60f, 1.00f);
-        colors[ImGuiCol_TabUnfocused]           = ImVec4(0.54f, 0.54f, 0.54f, 0.19f);
-        colors[ImGuiCol_TabUnfocusedActive]     = ImVec4(0.54f, 0.54f, 0.54f, 0.38f);
-        colors[ImGuiCol_DockingPreview]         = ImVec4(0.20f, 0.29f, 0.43f, 0.77f);
-        colors[ImGuiCol_DockingEmptyBg]         = ImVec4(0.13f, 0.13f, 0.15f, 1.00f);
-        colors[ImGuiCol_PlotLines]              = ImVec4(0.61f, 0.61f, 0.61f, 1.00f);
-        colors[ImGuiCol_PlotLinesHovered]       = ImVec4(1.00f, 0.43f, 0.35f, 1.00f);
-        colors[ImGuiCol_PlotHistogram]          = ImVec4(0.90f, 0.70f, 0.00f, 1.00f);
-        colors[ImGuiCol_PlotHistogramHovered]   = ImVec4(1.00f, 0.60f, 0.00f, 1.00f);
-        colors[ImGuiCol_TableHeaderBg]          = ImVec4(0.19f, 0.19f, 0.20f, 1.00f);
-        colors[ImGuiCol_TableBorderStrong]      = ImVec4(0.31f, 0.31f, 0.35f, 1.00f);
-        colors[ImGuiCol_TableBorderLight]       = ImVec4(0.23f, 0.23f, 0.25f, 1.00f);
-        colors[ImGuiCol_TableRowBg]             = ImVec4(0.00f, 0.00f, 0.00f, 0.00f);
-        colors[ImGuiCol_TableRowBgAlt]          = ImVec4(1.00f, 1.00f, 1.00f, 0.06f);
-        colors[ImGuiCol_TextSelectedBg]         = ImVec4(0.73f, 0.73f, 0.73f, 0.35f);
-        colors[ImGuiCol_DragDropTarget]         = ImVec4(1.00f, 1.00f, 0.00f, 0.90f);
-        colors[ImGuiCol_NavHighlight]           = ImVec4(0.26f, 0.59f, 0.98f, 1.00f);
-        colors[ImGuiCol_NavWindowingHighlight]  = ImVec4(1.00f, 1.00f, 1.00f, 0.70f);
-        colors[ImGuiCol_NavWindowingDimBg]      = ImVec4(0.80f, 0.80f, 0.80f, 0.20f);
-        colors[ImGuiCol_ModalWindowDimBg]       = ImVec4(0.80f, 0.80f, 0.80f, 0.35f);
+        colors[ImGuiCol_Text] = ImVec4(1.00f, 1.00f, 1.00f, 0.75f);
+        colors[ImGuiCol_TextDisabled] = ImVec4(1.00f, 1.00f, 1.00f, 0.50f);
+        colors[ImGuiCol_WindowBg] = ImVec4(0.26f, 0.26f, 0.26f, 1.00f);
+        colors[ImGuiCol_ChildBg] = ImVec4(0.26f, 0.26f, 0.26f, 1.00f);
+        colors[ImGuiCol_PopupBg] = ImVec4(0.13f, 0.13f, 0.15f, 1.00f);
+        colors[ImGuiCol_Border] = ImVec4(0.13f, 0.13f, 0.14f, 1.00f);
+        colors[ImGuiCol_BorderShadow] = ImVec4(1.00f, 1.00f, 1.00f, 0.06f);
+        colors[ImGuiCol_FrameBg] = ImVec4(0.35f, 0.35f, 0.35f, 1.00f);
+        colors[ImGuiCol_FrameBgHovered] = ImVec4(0.42f, 0.42f, 0.42f, 1.00f);
+        colors[ImGuiCol_FrameBgActive] = ImVec4(0.50f, 0.50f, 0.50f, 1.00f);
+        colors[ImGuiCol_TitleBg] = ImVec4(0.35f, 0.35f, 0.35f, 1.00f);
+        colors[ImGuiCol_TitleBgActive] = ImVec4(0.23f, 0.34f, 0.54f, 1.00f);
+        colors[ImGuiCol_TitleBgCollapsed] = ImVec4(0.13f, 0.13f, 0.15f, 0.50f);
+        colors[ImGuiCol_MenuBarBg] = ImVec4(0.13f, 0.13f, 0.15f, 1.00f);
+        colors[ImGuiCol_ScrollbarBg] = ImVec4(0.26f, 0.26f, 0.26f, 1.00f);
+        colors[ImGuiCol_ScrollbarGrab] = ImVec4(0.35f, 0.35f, 0.35f, 1.00f);
+        colors[ImGuiCol_ScrollbarGrabHovered] = ImVec4(0.42f, 0.42f, 0.42f, 1.00f);
+        colors[ImGuiCol_ScrollbarGrabActive] = ImVec4(0.50f, 0.50f, 0.50f, 1.00f);
+        colors[ImGuiCol_CheckMark] = ImVec4(1.00f, 1.00f, 1.00f, 0.50f);
+        colors[ImGuiCol_SliderGrab] = ImVec4(0.50f, 0.50f, 0.50f, 1.00f);
+        colors[ImGuiCol_SliderGrabActive] = ImVec4(0.33f, 0.42f, 0.60f, 1.00f);
+        colors[ImGuiCol_Button] = ImVec4(0.23f, 0.34f, 0.54f, 0.77f);
+        colors[ImGuiCol_ButtonHovered] = ImVec4(0.23f, 0.34f, 0.54f, 1.00f);
+        colors[ImGuiCol_ButtonActive] = ImVec4(0.33f, 0.42f, 0.60f, 1.00f);
+        colors[ImGuiCol_Header] = ImVec4(0.23f, 0.34f, 0.54f, 0.77f);
+        colors[ImGuiCol_HeaderHovered] = ImVec4(0.23f, 0.34f, 0.54f, 1.00f);
+        colors[ImGuiCol_HeaderActive] = ImVec4(0.33f, 0.42f, 0.60f, 1.00f);
+        colors[ImGuiCol_Separator] = ImVec4(0.23f, 0.23f, 0.25f, 1.00f);
+        colors[ImGuiCol_SeparatorHovered] = ImVec4(0.23f, 0.34f, 0.54f, 1.00f);
+        colors[ImGuiCol_SeparatorActive] = ImVec4(0.33f, 0.42f, 0.60f, 1.00f);
+        colors[ImGuiCol_ResizeGrip] = ImVec4(0.23f, 0.34f, 0.54f, 0.50f);
+        colors[ImGuiCol_ResizeGripHovered] = ImVec4(0.23f, 0.34f, 0.54f, 0.77f);
+        colors[ImGuiCol_ResizeGripActive] = ImVec4(0.33f, 0.42f, 0.60f, 0.77f);
+        colors[ImGuiCol_Tab] = ImVec4(0.33f, 0.42f, 0.60f, 0.50f);
+        colors[ImGuiCol_TabHovered] = ImVec4(0.33f, 0.42f, 0.60f, 1.00f);
+        colors[ImGuiCol_TabActive] = ImVec4(0.33f, 0.42f, 0.60f, 1.00f);
+        colors[ImGuiCol_TabUnfocused] = ImVec4(0.54f, 0.54f, 0.54f, 0.19f);
+        colors[ImGuiCol_TabUnfocusedActive] = ImVec4(0.54f, 0.54f, 0.54f, 0.38f);
+        colors[ImGuiCol_DockingPreview] = ImVec4(0.20f, 0.29f, 0.43f, 0.77f);
+        colors[ImGuiCol_DockingEmptyBg] = ImVec4(0.13f, 0.13f, 0.15f, 1.00f);
+        colors[ImGuiCol_PlotLines] = ImVec4(0.61f, 0.61f, 0.61f, 1.00f);
+        colors[ImGuiCol_PlotLinesHovered] = ImVec4(1.00f, 0.43f, 0.35f, 1.00f);
+        colors[ImGuiCol_PlotHistogram] = ImVec4(0.90f, 0.70f, 0.00f, 1.00f);
+        colors[ImGuiCol_PlotHistogramHovered] = ImVec4(1.00f, 0.60f, 0.00f, 1.00f);
+        colors[ImGuiCol_TableHeaderBg] = ImVec4(0.19f, 0.19f, 0.20f, 1.00f);
+        colors[ImGuiCol_TableBorderStrong] = ImVec4(0.31f, 0.31f, 0.35f, 1.00f);
+        colors[ImGuiCol_TableBorderLight] = ImVec4(0.23f, 0.23f, 0.25f, 1.00f);
+        colors[ImGuiCol_TableRowBg] = ImVec4(0.00f, 0.00f, 0.00f, 0.00f);
+        colors[ImGuiCol_TableRowBgAlt] = ImVec4(1.00f, 1.00f, 1.00f, 0.06f);
+        colors[ImGuiCol_TextSelectedBg] = ImVec4(0.73f, 0.73f, 0.73f, 0.35f);
+        colors[ImGuiCol_DragDropTarget] = ImVec4(1.00f, 1.00f, 0.00f, 0.90f);
+        colors[ImGuiCol_NavHighlight] = ImVec4(0.26f, 0.59f, 0.98f, 1.00f);
+        colors[ImGuiCol_NavWindowingHighlight] = ImVec4(1.00f, 1.00f, 1.00f, 0.70f);
+        colors[ImGuiCol_NavWindowingDimBg] = ImVec4(0.80f, 0.80f, 0.80f, 0.20f);
+        colors[ImGuiCol_ModalWindowDimBg] = ImVec4(0.80f, 0.80f, 0.80f, 0.35f);
     }
 
     void SlavaUkrainiStyle()
@@ -133,6 +118,8 @@ namespace vg::renderer
 
     }
 
+    //--------------------------------------------------------------------------------------
+    // TODO: move themes to editor?
     //--------------------------------------------------------------------------------------
     ImGuiAdapter::ImGuiAdapter(WinHandle _winHandle, Device & _device)
     {
@@ -144,13 +131,13 @@ namespace vg::renderer
 
         switch (GUIStyle::Default)
         {
-        case FiftyShadesOfGrey:
-            FiftyShadesOfGreyStyle();
-            break;
+            case GUIStyle::FiftyShadesOfGrey:
+                FiftyShadesOfGreyStyle();
+                break;
 
-        case SlavaUkraini:
-            SlavaUkrainiStyle();
-            break;
+            case GUIStyle::SlavaUkraini:
+                SlavaUkrainiStyle();
+                break;
         }
 
         io.Fonts->AddFontFromFileTTF("data/Fonts/ubuntu/UbuntuMono-R.ttf", 16);
@@ -167,11 +154,11 @@ namespace vg::renderer
         io.Fonts->AddFontFromFileTTF("data/Fonts/Font-Awesome-6.x/" FONT_ICON_FILE_NAME_FAS, iconFontSize, &icons_config, icons_ranges);
 
         #ifdef _WIN32
-        ImGui_ImplWin32_Init(_winHandle); 
+        ImGui_ImplWin32_Init(_winHandle);
         #endif
 
         BindlessTable * bindlessTable = _device.getBindlessTable();
-        m_fontTexSRVHandle = bindlessTable->allocBindlessTextureHandle((Texture*)nullptr, ReservedSlot(bindless_texture_SRV_invalid-1));
+        m_fontTexSRVHandle = bindlessTable->allocBindlessTextureHandle((Texture *)nullptr, ReservedSlot(bindless_texture_SRV_invalid - 1));
 
         #ifdef VG_DX12
         d3d12Init();
@@ -344,13 +331,13 @@ namespace vg::renderer
     //--------------------------------------------------------------------------------------
     ImTextureID ImGuiAdapter::GetTextureID(const gfx::ITexture * _texture) const
     {
-        return getImguiTextureID((Texture*)_texture);
+        return getTextureID((Texture *)_texture);
     }
 
     //--------------------------------------------------------------------------------------
     void ImGuiAdapter::ReleaseTextureID(ImTextureID _texID)
     {
-        releaseImguiTextureID(_texID);
+        releaseTextureID(_texID);
     }
 
     //--------------------------------------------------------------------------------------
@@ -376,10 +363,10 @@ namespace vg::renderer
         #elif defined(VG_VULKAN)
 
         ImGui_ImplVulkan_NewFrame();
-        
+
         if (firstFrame)
         {
-           
+
             CommandList * cmdList = device->getCommandLists(CommandListType::Graphics)[0];
             ImGui_ImplVulkan_CreateFontsTexture(cmdList->getVulkanCommandBuffer());
 
@@ -418,28 +405,28 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    ImTextureID ImGuiAdapter::getImguiTextureID(Texture * _tex) const
+    ImTextureID ImGuiAdapter::getTextureID(Texture * _tex) const
     {
         auto device = gfx::Device::get();
 
-#ifdef VG_DX12
+        #ifdef VG_DX12
         gfx::BindlessTable * bindlessTable = device->getBindlessTable();
         return (ImTextureID)bindlessTable->getd3d12GPUDescriptorHandle(_tex->getBindlessSRVHandle()).ptr;
-#elif defined(VG_VULKAN)
+        #elif defined(VG_VULKAN)
         // In case of crash increase size of VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER in ImguiAdapter::vulkanInit()
         VkDescriptorSet texID = ImGui_ImplVulkan_AddTexture(m_vkSampler, _tex->getVulkanImageView(), VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL);
         return texID;
-#endif
+        #endif
     }
 
     //--------------------------------------------------------------------------------------
-    void ImGuiAdapter::releaseImguiTextureID(ImTextureID _texID)
+    void ImGuiAdapter::releaseTextureID(ImTextureID _texID)
     {
-#ifdef VG_DX12
+        #ifdef VG_DX12
         // Nothing to do
-#elif defined(VG_VULKAN)
+        #elif defined(VG_VULKAN)
         m_tempDescriptorSets.push_back((VkDescriptorSet)_texID);
         VG_ASSERT(m_tempDescriptorSets.count() <= max_imguitex_displayed_per_frame);
-#endif
+        #endif
     }
 }

@@ -11,7 +11,7 @@ namespace vg::core
 
 namespace vg::renderer
 {
-	enum DisplayMode : core::u32
+	enum class DisplayMode : core::u32
 	{
 		Default = 0,
         MatID,

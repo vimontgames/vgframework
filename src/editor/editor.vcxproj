@@ -14,6 +14,7 @@
     <ClCompile Include="Editor.cpp" />
     <ClCompile Include="ImGui\Extensions\FileBrowser\ImGuiFileBrowser.cpp" />
     <ClCompile Include="ImGui\Extensions\ImGuiExtensions.cpp" />
+    <ClCompile Include="ImGui\ImGui.cpp" />
     <ClCompile Include="ImGui\Menu\ImGuiMenu.cpp" />
     <ClCompile Include="ImGui\ObjectHandler\ImGuiObjectHandler.cpp" />
     <ClCompile Include="ImGui\PropertyHandler\ImGuiPropertyHandler.cpp" />
@@ -29,6 +30,7 @@
     <ClInclude Include="Editor_Consts.h" />
     <ClInclude Include="IEditor.h" />
     <ClInclude Include="ImGui\Extensions\imGuiExtensions.h" />
+    <ClInclude Include="ImGui\ImGui.h" />
     <ClInclude Include="ImGui\ImGuiCustomHandler.h" />
     <ClInclude Include="ImGui\Menu\GameObject\SceneEditor\ImGuiGameObjectSceneEditorMenu.h" />
     <ClInclude Include="ImGui\Menu\GameObject\SceneEditor\ImGuiGameObjectSceneEditorMenu.hpp" />
@@ -53,6 +55,8 @@
     <ClInclude Include="ImGui\Window\Inspector\ImGuiInspector.hpp" />
     <ClInclude Include="ImGui\Window\Platform\ImGuiPlatform.h" />
     <ClInclude Include="ImGui\Window\Platform\ImGuiPlatform.hpp" />
+    <ClInclude Include="ImGui\Window\Plugin\ImGuiPlugin.h" />
+    <ClInclude Include="ImGui\Window\Plugin\ImGuiPlugin.hpp" />
     <ClInclude Include="ImGui\Window\Resource\ImGuiResource.h" />
     <ClInclude Include="ImGui\Window\Resource\ImGuiResource.hpp" />
     <ClInclude Include="ImGui\Window\Scene\ImGuiScene.h" />

@@ -503,6 +503,7 @@
     </ClInclude>
     <ClInclude Include="ITexture.h" />
     <ClInclude Include="IView.h" />
+    <ClInclude Include="IShaderManager.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Device">

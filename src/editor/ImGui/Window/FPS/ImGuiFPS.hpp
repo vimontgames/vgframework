@@ -18,27 +18,28 @@ namespace vg::editor
             m_frame = 0;
         }
 
+        bool captureInProgress = VG_PROFILE_CAPTURE_IN_PROGRESS();
+
         if (ImGui::IconBegin(style::icon::FPS, "FPS", &m_isVisible))
         {
             ImGui::Columns(2, "mycolumns2", false);  // 2-ways, no border
-            ImGui::Text("FPS: ");
-            ImGui::Text("Frame: ");
-            ImGui::NextColumn();
-            ImGui::Text("%.0f img/sec", m_fps);
-            ImGui::Text("%.4f ms", m_dt);
-
-            ImGui::Columns(1);
-            ImGui::Text("Press 'F1' to start/stop profiler");
-
-            if (!VG_PROFILE_CAPTURE_IN_PROGRESS())
             {
-                if (ImGui::Button("Start Capture (F5)"))
+                ImGui::Text("FPS: ");
+                ImGui::Text("Frame Time: ");
+                ImGui::Text("Capture");
+            }
+            ImGui::NextColumn();
+            {
+                ImGui::Text("%.0f img/sec", m_fps);
+                ImGui::Text("%.4f ms", m_dt);
+
+                if (ImGui::ButtonEx("Start", !captureInProgress, "Press 'F1' to start capture"))
                     VG_PROFILE_START();
-                
                 ImGui::SameLine();
-                if (ImGui::Button("Stop Capture (F5)"))
+                if (ImGui::ButtonEx("Stop", captureInProgress, "Press 'F1' to stop capture"))
                     VG_PROFILE_START();
             }
+            ImGui::Columns(1);
 
             if (VG_PROFILE_CAPTURE_IN_PROGRESS())
             {

@@ -1,11 +1,11 @@
 #pragma once
 
+#include "core/IPlugin.h"
+
 namespace vg::engine
 {
     class IEngine;
 }
-
-class Player;
 
 namespace vg
 {
@@ -15,7 +15,8 @@ namespace vg
         Application(vg::engine::IEngine & _engine);
         ~Application();
 
-        bool update();
+        core::IPlugin::Version GetVersion() const;
+        bool Update();
 
     private:
         vg::engine::IEngine & m_engine;

@@ -1,4 +1,5 @@
 #include "renderer/Precomp.h"
+#include "ImGui.h"
 #include "ImGuiPass.h"
 #include "gfx/Device/Device.h"
 #include "renderer/Renderer.h"
@@ -15,8 +16,10 @@
 #include "corE/IComponent.h"
 #include "core/File/File.h"
 #include "core/Math/Math.h"
-#include "imgui/imgui.h"
 #include "editor/IEditor.h"
+
+#include "ImGui.hpp"
+#include "ImGuiAdapter.hpp"
 
 using namespace vg::core;
 using namespace vg::gfx;

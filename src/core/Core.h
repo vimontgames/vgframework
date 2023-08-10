@@ -13,10 +13,11 @@ namespace vg::core
         Info
     };
 
-    enum class MessageBoxType
+    enum MessageBoxType
     {
-        YesNoCancel = 0,
-        RetryCancel
+        OK = 0,
+        YesNo,
+        YesNoCancel
     };
 
     enum class MessageBoxResult

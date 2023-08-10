@@ -162,13 +162,17 @@ namespace vg::core
             default:
                 VG_ASSERT(false);
 
-            case MessageBoxType::YesNoCancel:
-                type = MB_YESNOCANCEL;
+            case MessageBoxType::OK:
+                type = MB_OK;
                 break;
 
-            case MessageBoxType::RetryCancel:
-                type = MB_RETRYCANCEL;
+            case MessageBoxType::YesNo:
+                type = MB_YESNO;
                 break;
+
+            case MessageBoxType::YesNoCancel:
+                type = MB_YESNOCANCEL;
+                break;  
         }
 
         switch (MessageBoxA(nullptr, _message, _title, type | icon))

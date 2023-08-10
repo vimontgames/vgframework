@@ -28,6 +28,22 @@ namespace vg::gfx
     }
 
     //--------------------------------------------------------------------------------------
+    core::uint ShaderManager::GetShaderCompiledCount() const
+    {
+        return m_compiledCount;
+    }
+    //--------------------------------------------------------------------------------------
+    core::uint ShaderManager::GetShaderWarningCount() const
+    {
+        return m_warningCount;
+    }
+    //--------------------------------------------------------------------------------------
+    core::uint ShaderManager::GetShaderErrorCount() const
+    {
+        return m_errorCount;
+    }
+
+    //--------------------------------------------------------------------------------------
     void ShaderManager::registerHLSL(const HLSLDesc & _hlslDesc)
     {
         m_shaderFileDescriptors.push_back(_hlslDesc);
@@ -86,15 +102,23 @@ namespace vg::gfx
 
         Shader * shader = m_shaderCompiler->compile(_api, m_shaderRootPath + _file, _entryPoint, _stage, _macros, warningAndErrors);
 
+        if (shader)
+            m_compiledCount++;
+        else
+            m_errorCount++;
+        
+        if (!warningAndErrors.empty())
+            m_warningCount++;
+
+        string header = _file + "\n" + _entryPoint + " (" + asString(_stage) + " shader)\n";
+        for (auto & macro : _macros)
+            header += macro.first + " ";
+        header += "\n";
+
+        VG_DEBUGPRINT("[Shaders] %s", warningAndErrors.c_str());
+
         if (!shader)
         {
-            string header = _file + "\n" + _entryPoint + " (" + asString(_stage) + " shader)\n";
-            for (auto & macro : _macros)
-                header += macro.first + " ";
-            header += "\n";
-
-            VG_DEBUGPRINT("[Shaders] %s", warningAndErrors.c_str());
-
             warningAndErrors = header + warningAndErrors + "\nPress \"Yes\" to retry";
 
             switch (messageBox(MessageBoxIcon::Error, MessageBoxType::YesNoCancel, "Shader compilation failed", warningAndErrors.c_str()))
@@ -164,6 +188,10 @@ namespace vg::gfx
         device->waitGPUIdle();
 
         const auto start = Timer::getTick();
+
+        m_compiledCount = 0;
+        m_warningCount = 0;
+        m_errorCount = 0;
 
         uint updated = 0;
 

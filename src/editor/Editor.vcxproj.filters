@@ -24,6 +24,9 @@
     <ClCompile Include="ImGui\Extensions\FileBrowser\ImGuiFileBrowser.cpp">
       <Filter>ImGui\Extensions\FileBrowser</Filter>
     </ClCompile>
+    <ClCompile Include="ImGui\ImGui.cpp">
+      <Filter>ImGui</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Precomp.h" />
@@ -141,6 +144,15 @@
     <ClInclude Include="ImGui\PropertyHandler\ImGuiPropertyHandler.h">
       <Filter>ImGui\PropertyHandler</Filter>
     </ClInclude>
+    <ClInclude Include="ImGui\ImGui.h">
+      <Filter>ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="ImGui\Window\Plugin\ImGuiPlugin.h">
+      <Filter>ImGui\Window\Plugin</Filter>
+    </ClInclude>
+    <ClInclude Include="ImGui\Window\Plugin\ImGuiPlugin.hpp">
+      <Filter>ImGui\Window\Plugin</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Editor.def" />
@@ -221,6 +233,9 @@
     </Filter>
     <Filter Include="ImGui\Extensions\FileBrowser">
       <UniqueIdentifier>{5be4fd12-5a28-4ce3-826b-68cf46493571}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ImGui\Window\Plugin">
+      <UniqueIdentifier>{855e2d63-7d8e-45c9-af65-6961b2818e72}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

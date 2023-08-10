@@ -44,6 +44,9 @@ namespace vg
 		    virtual void						init		        (const EngineParams & _params, core::Singletons & _singletons) = 0;
 		    virtual void						deinit		        () = 0;
 
+            virtual void                        Quit                () = 0;
+            virtual bool                        IsQuitting          () const = 0;
+
             // Play/Pause/Stop
             virtual bool                        IsPlaying           () const = 0;
             virtual bool                        IsPaused            () const = 0;

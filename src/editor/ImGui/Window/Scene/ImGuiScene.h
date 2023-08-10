@@ -24,7 +24,7 @@ namespace vg::editor
         virtual void                    DrawGUI             () final override;
 
     private:
-        void                            displayGameObject   (core::IGameObject * root);
+        void                            displayGameObject   (core::IGameObject * root, core::uint * _count = nullptr);
 
     private:
         ImGuiSceneMenu                  m_sceneMenu;

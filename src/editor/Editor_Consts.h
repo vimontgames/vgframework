@@ -1,6 +1,6 @@
 #pragma once
 
-#include "imgui/imgui.h"
+#include "editor/ImGui/ImGui.h"
 #include "IconFont/IconsFontAwesome6.h"
 
 namespace vg::editor
@@ -38,6 +38,7 @@ namespace vg::editor
             inline static const char * Play         = ICON_FA_PLAY;
             inline static const char * Pause        = ICON_FA_PAUSE;
             inline static const char * Stop         = ICON_FA_STOP;
+            inline static const char * Plugin       = ICON_FA_PLUG;
         }
     }
 }

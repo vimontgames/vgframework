@@ -74,7 +74,7 @@ namespace vg::gfx
     {
         auto & shaders = m_shader[asInteger(_stage)];
         shaders.push_back(core::pair<core::string, Shader*>(_entryPoint, nullptr));
-        return ShaderKey::VS(shaders.size() - 1);
+        return (uint)(shaders.size() - 1);
     }
 
     //--------------------------------------------------------------------------------------

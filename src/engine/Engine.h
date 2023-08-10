@@ -65,6 +65,9 @@ namespace vg::engine
 		void							    init		        (const EngineParams & _params, core::Singletons & _singletons) final;
 		void							    deinit		        () override;
 
+        void                                Quit                () final override;
+        bool                                IsQuitting          () const final override;
+
         bool                                loadProject         (const core::string & _path) final;
         bool                                unloadProject       () final;
         IProject *                          getProject          () const final;
@@ -99,6 +102,7 @@ namespace vg::engine
         core::string                        m_projectPath;
         bool                                m_isPlaying         = false;
         bool                                m_isPaused          = false;
+        bool                                m_quit              = false;
         IProject *                          m_project           = nullptr;
         core::Universe *                    m_universe          = nullptr;
         editor::IEditor *                   m_editor            = nullptr;

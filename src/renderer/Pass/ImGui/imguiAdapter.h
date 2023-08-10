@@ -38,8 +38,8 @@ namespace vg
             void        render                  (gfx::CommandList * _cmdList);
 
         protected:
-            ImTextureID getImguiTextureID       (gfx::Texture * _tex) const;
-            void        releaseImguiTextureID   (ImTextureID _texID);
+            ImTextureID getTextureID            (gfx::Texture * _tex) const;
+            void        releaseTextureID        (ImTextureID _texID);
 
         private:
             gfx::BindlessTextureSrvHandle       m_fontTexSRVHandle;

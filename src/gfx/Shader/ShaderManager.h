@@ -1,6 +1,8 @@
-#include "ShaderKey.h"
-
 #pragma once
+
+#include "ShaderKey.h"
+#include "gfx/IShaderManager.h"
+
 
 namespace vg::gfx
 {
@@ -8,11 +10,17 @@ namespace vg::gfx
     class ShaderCompiler;
     class HLSLDesc;
 
-    class ShaderManager : public core::Singleton<ShaderManager>
+    class ShaderManager : public IShaderManager, public core::Singleton<ShaderManager>
     {
     public:
+        const char * getClassName() const final { return "ShaderManager"; }
+
         ShaderManager(const core::string & _shaderRootPath);
         ~ShaderManager();
+
+        core::uint GetShaderCompiledCount() const final override;
+        core::uint GetShaderWarningCount() const final override;
+        core::uint GetShaderErrorCount() const final override;
 
         void update();
 
@@ -27,5 +35,8 @@ namespace vg::gfx
         core::string            m_shaderRootPath;
         ShaderCompiler *        m_shaderCompiler = nullptr;
         core::vector<HLSLDesc>  m_shaderFileDescriptors;
+        core::uint              m_compiledCount = 0;
+        core::uint              m_warningCount = 0;
+        core::uint              m_errorCount = 0;
     };
 }

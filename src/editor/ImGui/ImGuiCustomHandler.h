@@ -1,6 +1,6 @@
 #pragma once
 
-#include "imgui/imgui.h"
+#include "editor/ImGui/ImGui.h"
 
 namespace vg::editor
 {

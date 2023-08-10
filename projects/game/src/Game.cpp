@@ -35,7 +35,7 @@ Game::~Game()
 //--------------------------------------------------------------------------------------
 
 #define GAME_VERSION_MAJOR 0
-#define GAME_VERSION_MINOR 0
+#define GAME_VERSION_MINOR 1
 
 //--------------------------------------------------------------------------------------
 IPlugin::Version Game::GetVersion() const
@@ -51,7 +51,7 @@ bool Game::RegisterClasses()
     // Register classes to auto-register the "Engine" module
     AutoRegisterClassInfo::registerClasses(*factory);
 
-    if (IClassDesc * desc = factory->registerClassSingletonHelper(Game, "Game", IClassDesc::Flags::None))
+    if (IClassDesc * desc = factory->registerPlugin(Game, "Game"))
         registerProperties(*desc);
 
     return true;

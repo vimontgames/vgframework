@@ -17,6 +17,7 @@ namespace vg
         class ITexture;
         class TextureDesc;
         class IView;
+        class IShaderManager;
     }
 
     namespace renderer
@@ -65,6 +66,7 @@ namespace vg
 
             virtual core::IProfiler *                   GetProfiler             () const = 0;
             virtual IImGuiAdapter *                     GetImGuiAdapter         () const = 0;
+            virtual gfx::IShaderManager *               GetShaderManager        () const = 0;
 
             virtual bool                                cookMeshModel           (const core::string & _file) = 0;
             virtual IMeshModel *                        loadMeshModel           (const core::string & _file) = 0;

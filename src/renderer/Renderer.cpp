@@ -14,6 +14,7 @@
 #include "gfx/Resource/Texture.h"
 #include "gfx/Importer/TextureImporter.h"
 
+#include "renderer/Pass/ImGui/ImGui.h"
 #include "renderer/Pass/ImGui/ImGuiPass.h"
 #include "renderer/Pass/ImGui/imguiAdapter.h"
 #include "renderer/Importer/FBX/FBXImporter.h"
@@ -24,8 +25,6 @@
 #include "renderer/Importer/TextureImporterData.h"
 #include "renderer/View/View.h"
 #include "renderer/View/Forward/ForwardView.h"
-
-#include "imgui/imgui.h"
 
 #include "shaders/driver/driver.hlsl.h"
 #include "shaders/default/default.hlsl.h"
@@ -45,7 +44,7 @@ IRenderer * CreateNew()
 namespace vg::renderer
 {
 	#define VG_RENDERER_VERSION_MAJOR 0
-	#define VG_RENDERER_VERSION_MINOR 12
+	#define VG_RENDERER_VERSION_MINOR 1
 
     #ifdef _WIN32
     //--------------------------------------------------------------------------------------
@@ -70,6 +69,12 @@ namespace vg::renderer
     IImGuiAdapter * Renderer::GetImGuiAdapter() const
     {
         return m_imgui;
+    }
+
+    //--------------------------------------------------------------------------------------
+    gfx::IShaderManager * Renderer::GetShaderManager() const
+    {
+        return ShaderManager::get();
     }
 
 	//--------------------------------------------------------------------------------------
@@ -106,7 +111,7 @@ namespace vg::renderer
         // Register classes to auto-register the "Engine" module
         AutoRegisterClassInfo::registerClasses(*factory);
 
-        if (IClassDesc * desc = factory->registerClassSingletonHelper(Renderer, "Renderer", IClassDesc::Flags::None))
+        if (IClassDesc * desc = factory->registerPlugin(Renderer, "Renderer"))
             registerProperties(*desc);
 
         return true;

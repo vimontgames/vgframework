@@ -15,7 +15,7 @@
 
 #include "renderer/IRenderer.h"
 
-#include "imgui/imgui.h"
+#include "editor/ImGui/ImGui.h"
 #include "ImGuiWindow.h"
 
 using namespace vg::core;
@@ -24,6 +24,7 @@ using namespace ImGui;
 
 #include "editor/Editor.h"
 #include "editor/ImGui/Window/FPS/ImGuiFPS.hpp"
+#include "editor/ImGui/Window/Plugin/ImGuiPlugin.hpp"
 #include "editor/ImGui/Window/Platform/ImGuiPlatform.hpp"
 #include "editor/ImGui/Window/DisplayOptions/ImGuiDisplayOptions.hpp"
 #include "editor/ImGui/Window/About/ImGuiAbout.hpp"

@@ -1,19 +1,15 @@
 #include "editor/Precomp.h"
 #include "editor.h"
 #include "renderer/IRenderer.h"
+#include "engine/IEngine.h"
 
 #if !VG_ENABLE_INLINE
 #include "Editor.inl"
 #endif
 
-#include "imgui/imgui.cpp"
-#include "imgui/imgui_demo.cpp"
-#include "imgui/imgui_draw.cpp"
-#include "imgui/imgui_tables.cpp"
-#include "imgui/imgui_widgets.cpp"
-
 #include "editor/ImGui/Extensions/imguiExtensions.h"
 #include "editor/ImGui/Window/FPS/ImGuiFPS.h"
+#include "editor/ImGui/Window/Plugin/ImGuiPlugin.h"
 #include "editor/ImGui/Window/Platform/ImGuiPlatform.h"
 #include "editor/ImGui/Window/Inspector/ImGuiInspector.h"
 #include "editor/ImGui/Window/DisplayOptions/ImGuiDisplayOptions.h"
@@ -90,6 +86,9 @@ namespace vg::editor
 
         // Add ImGui toolbars
         m_imGuiWindows.push_back(new ImGuiMainToolbar("Main Toolbar", ImGuiWindow::StartVisible));
+
+        // Plugins
+        m_imGuiWindows.push_back(new ImGuiPlugin(IconWithText(style::icon::Plugin, "Plugin")));
 	}
 
 	//--------------------------------------------------------------------------------------
@@ -108,7 +107,7 @@ namespace vg::editor
         // Register classes to auto-register the "Engine" module
         AutoRegisterClassInfo::registerClasses(*factory);
 
-        if (core::IClassDesc * desc = factory->registerClassSingletonHelper(Editor, "Editor", IClassDesc::Flags::None))
+        if (core::IClassDesc * desc = factory->registerPlugin(Editor, "Editor"))
             registerProperties(*desc);
 
         return true;
@@ -185,10 +184,10 @@ namespace vg::editor
         ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
         ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
 
-        ImGuiWindowFlags windowFlags  = ImGuiWindowFlags_MenuBar;
-                         windowFlags |= ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove;
-                         windowFlags |= ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus;
-                         windowFlags |= ImGuiWindowFlags_NoBackground;
+        ImGuiWindowFlags windowFlags = ImGuiWindowFlags_MenuBar;
+        windowFlags |= ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove;
+        windowFlags |= ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus;
+        windowFlags |= ImGuiWindowFlags_NoBackground;
 
         ImGuiDockNodeFlags dockspaceFlags = ImGuiDockNodeFlags_None | ImGuiDockNodeFlags_PassthruCentralNode;
 
@@ -205,20 +204,26 @@ namespace vg::editor
             {
                 if (ImGui::BeginMenu("File"))
                 {
+                    ImGui::Separator();
+
+                    if (ImGui::MenuItem("Quit"))
+                        ImGui::MessageBox(MessageBoxType::YesNo, "Quit", "Are you sure you want to quit program?", []() { Editor::get()->getEngine()->Quit(); return true; });
 
                     ImGui::EndMenu();
                 }
 
-                //if (ImGui::BeginMenu("Plugins"))
-                //{
-                //    if (ImGui::MenuItem("Engine"))
-                //        m_isEngineWindowVisible = true;
-                //
-                //    if (ImGui::MenuItem("Renderer"))
-                //        m_isRendererWindowVisible = true;
-                //
-                //    ImGui::EndMenu();
-                //}
+                if (ImGui::BeginMenu("Plugins"))
+                {
+                    ImGui::Separator();
+
+                    if (ImGui::IconMenuItem(style::icon::Plugin, "Plugins"))
+                    {
+                        auto plugins = getWindow<ImGuiPlugin>();
+                        if (nullptr != plugins)
+                            plugins->setVisible(true);
+                    }
+                    ImGui::EndMenu();
+                }
 
                 if (ImGui::BeginMenu("Window"))
                 {
@@ -261,6 +266,7 @@ namespace vg::editor
                 ImGui::EndMenuBar();
             }
 
+            ProcessMessageBox();
             ImGuiAxis axis = ImGuiAxis_X;
         }
         ImGui::End();
@@ -274,5 +280,7 @@ namespace vg::editor
         static bool demo = false;
         if (demo)
             ImGui::ShowDemoWindow(&demo);
-	}
+    }
+
+    
 }

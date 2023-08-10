@@ -109,13 +109,13 @@ namespace vg::gfx::dxc
             IDxcBlobEncoding * dxcWarningAndErrors;
             VG_ASSERT_SUCCEEDED(dxcCompileResult->GetErrorBuffer(&dxcWarningAndErrors));
 
-            if (nullptr != dxcWarningAndErrors->GetBufferPointer())
-                VG_DEBUGPRINT("%s", dxcWarningAndErrors->GetBufferPointer());
+            const char * warningAndErrorBuffer = (const char*)dxcWarningAndErrors->GetBufferPointer();
+            if (nullptr != warningAndErrorBuffer)
+                VG_DEBUGPRINT("%s", warningAndErrorBuffer);
 
             if (hrCompilation < 0)
             {
-                const string message = "Shader compilation failed:\n\n" + string((char*)dxcWarningAndErrors->GetBufferPointer());
-
+                const string message = "Shader compilation error:\n\n" + string(warningAndErrorBuffer);
                 _warningAndErrors += message;
 
                 VG_SAFE_RELEASE(dxcSource);
@@ -123,6 +123,14 @@ namespace vg::gfx::dxc
                 VG_SAFE_RELEASE(dxcWarningAndErrors);
 
                 return nullptr;
+            }
+            else
+            {
+                if (nullptr != warningAndErrorBuffer)
+                {
+                    const string message = "Shader compilation warning:\n\n" + string(warningAndErrorBuffer);
+                    _warningAndErrors += message;
+                }
             }
 
             IDxcBlob * dxcCompiledBlob = nullptr;

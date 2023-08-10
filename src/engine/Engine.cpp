@@ -35,7 +35,7 @@ using namespace vg::core;
 using namespace vg::engine;
 
 #define VG_ENGINE_VERSION_MAJOR 0
-#define VG_ENGINE_VERSION_MINOR 15
+#define VG_ENGINE_VERSION_MINOR 1
 
 // Avoid stripping code for classes from static lib
 static Universe universe("", nullptr);
@@ -115,7 +115,7 @@ namespace vg::engine
         // Register classes to auto-register the "Engine" module
         AutoRegisterClassInfo::registerClasses(*factory);
 
-        if (core::IClassDesc * desc = factory->registerClassSingletonHelper(Engine, "Engine", IClassDesc::Flags::None))
+        if (core::IClassDesc * desc = factory->registerPlugin(Engine, "Engine"))
             registerProperties(*desc);
 
         load(this);
@@ -362,6 +362,18 @@ namespace vg::engine
         VG_SAFE_DELETE(factory);
         Kernel::setFactory(nullptr);
 	}
+
+    //--------------------------------------------------------------------------------------
+    void Engine::Quit()
+    {
+        m_quit = true;
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool Engine::IsQuitting() const
+    {
+        return m_quit;
+    }
 
     //--------------------------------------------------------------------------------------
     void Engine::updateDt()

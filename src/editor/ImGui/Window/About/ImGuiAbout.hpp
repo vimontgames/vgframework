@@ -7,14 +7,14 @@ namespace vg::editor
     {
         if (IconBegin(style::icon::About, "About", &m_isVisible, ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_NoCollapse))
         {
-            float columnWidth[3] = { 256, 128, 620 };
-
             const auto & engine = Editor::get()->getEngine();
             const auto engineVersion = engine->GetVersion();
             const auto rendererVersion = engine->GetRenderer()->GetVersion();
 
             Text("VG Framework Engine %u.%u Renderer %u.%u", engineVersion.major, engineVersion.minor, rendererVersion.major, rendererVersion.minor);
             Text("");
+
+            float columnWidth[3] = { 256, 128, 620 };
 
             Columns(3, "author", false);
 

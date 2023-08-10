@@ -58,10 +58,10 @@ namespace vg::gfx
 			void											beginFrame				    ();
 			void											endFrame				    ();
 
-			gfx::Device *								getDevice				    ();
+			gfx::Device *								    getDevice				    ();
 			const DeviceParams &							getDeviceParams			    () const;
 
-			gfx::CommandQueue *							createCommandQueue		    (CommandQueueType _type);
+			gfx::CommandQueue *							    createCommandQueue		    (CommandQueueType _type);
 			gfx::CommandQueue * 			                getCommandQueue		        (CommandQueueType _type);
 			void											destroyCommandQueues	    ();
 			
@@ -81,29 +81,29 @@ namespace vg::gfx
             core::uint                                      getBackbufferIndex          () const;
             BufferContext &									getCurrentBackbuffer        ();
 
-			core::vector<gfx::CommandList*> &			getCommandLists			    (CommandListType _type);
-			gfx::Texture *								getBackbuffer			    ();
+			core::vector<gfx::CommandList*> &			    getCommandLists			    (CommandListType _type);
+			gfx::Texture *								    getBackbuffer			    ();
 
             void                                            releaseAsync                (core::Object * _object);
             void                                            flushReleaseAsync           ();
 
             BindlessTable *                                 getBindlessTable            () const;
-            gfx::PixelFormat                             getBackbufferFormat         () const { return m_backbufferFormat; }
-            gfx::ShaderManager *                         getShaderManager            () { return m_shaderManager;}
+            gfx::PixelFormat                                getBackbufferFormat         () const { return m_backbufferFormat; }
+            gfx::ShaderManager *                            getShaderManager            () { return m_shaderManager;}
 
 		protected:
             DeviceCaps                                      m_caps;
-			gfx::CommandQueue*				            m_commandQueue[core::enumCount<CommandQueueType>()];
+			gfx::CommandQueue*				                m_commandQueue[core::enumCount<CommandQueueType>()];
 			FrameContext									m_frameContext[max_frame_latency];
             UploadBuffer *                                  m_uploadBuffer = nullptr;
             BufferContext                                   m_bufferContext[max_backbuffer_count];
 			core::u64										m_frameCounter = 0;
-            gfx::PixelFormat                             m_backbufferFormat;
+            gfx::PixelFormat                                m_backbufferFormat;
             MemoryAllocator *                               m_memoryAllocator = nullptr;
 			DeviceParams 									m_deviceParams;
             ShaderManager *                                 m_shaderManager = nullptr;
             RootSignatureTable                              m_rootSignaturesTable;
-            gfx::BindlessTable *                         m_bindlessTable = nullptr;
+            gfx::BindlessTable *                            m_bindlessTable = nullptr;
             VSync                                           m_VSync = VSync::VBL_1;
             core::u8                                        m_currentFrameIndex;        // current frame being rendered
             core::u8                                        m_nextFrameIndex;
