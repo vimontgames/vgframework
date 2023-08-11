@@ -152,6 +152,13 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
+    bool GameObject::IsRoot() const
+    {
+        const auto parent = getParent();
+        return nullptr == parent || nullptr == dynamic_cast<const GameObject *>(parent);
+    }
+
+    //--------------------------------------------------------------------------------------
     void GameObject::AddGraphicInstance(renderer::IGraphicInstance * _graphicInstance)
     {
         VG_ASSERT(m_graphicInstances.end() == std::find(m_graphicInstances.begin(), m_graphicInstances.end(), _graphicInstance));

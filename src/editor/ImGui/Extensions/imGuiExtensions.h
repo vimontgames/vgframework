@@ -16,4 +16,6 @@ namespace ImGui
     void CustomMessageBox(const vg::core::string & _title, const vg::core::string & _message, const vg::core::string & _label0, OnMsgBoxClickedFunc _onClick0);
     void CustomMessageBox(const vg::core::string & _title, const vg::core::string & _message, const vg::core::string & _label0, OnMsgBoxClickedFunc _onClick0, const vg::core::string & _label1, OnMsgBoxClickedFunc _onClick1);
     bool ProcessMessageBox();
+
+    void DrawRowsBackground(int row_count, ImU32 col_even, ImU32 col_odd = 0);
 }

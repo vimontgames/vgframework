@@ -27,24 +27,33 @@ namespace vg::editor
                 openPopup = true;
                 ImGui::OpenPopup("Add GameObject");
             }
-            if (ImGui::MenuItem("Delete GameObject"))
-            {
-                ImGui::OnMsgBoxClickedFunc deleteGameObject = [=]() mutable
-                {
-                    IGameObject * parentGameObject = (IGameObject *)gameObject->getParent();
-                    if (nullptr != parentGameObject)
-                    {
-                        ImGuiWindow::removeFromSelection(gameObject);
-                        parentGameObject->RemoveChild(gameObject);
-                        VG_SAFE_RELEASE(gameObject);
-                        status = Status::Removed;
-                    }
-                    return true;
-                };
 
-                string msg = "Are you sure you want to delete " + (string)gameObject->getClassName() + " \"" + gameObject->getName() + "\"";
-                ImGui::MessageBox(MessageBoxType::YesNo, "Delete GameObject", msg.c_str(), deleteGameObject);
+            // Root GameObject cannot be deleted
+            const bool isRootGO = gameObject->IsRoot();
+
+            ImGui::BeginDisabled(isRootGO);
+            {
+                if (ImGui::MenuItem("Delete GameObject"))
+                {
+                    ImGui::OnMsgBoxClickedFunc deleteGameObject = [=]() mutable
+                    {
+                        IGameObject * parentGameObject = dynamic_cast<IGameObject *>(gameObject->getParent());
+                        if (nullptr != parentGameObject)
+                        {
+                            ImGuiWindow::removeFromSelection(gameObject);
+                            parentGameObject->RemoveChild(gameObject);
+                            VG_SAFE_RELEASE(gameObject);
+                            status = Status::Removed;
+                        }
+                        return true;
+                    };
+
+                    string msg = "Are you sure you want to delete " + (string)gameObject->getClassName() + " \"" + gameObject->getName() + "\"";
+                    ImGui::MessageBox(MessageBoxType::YesNo, "Delete GameObject", msg.c_str(), deleteGameObject);
+                }
             }
+            ImGui::EndDisabled();
+
             ImGui::PopID();
             ImGui::EndPopup();
         }

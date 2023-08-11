@@ -13,36 +13,37 @@ namespace vg::core
     public:
         VG_CLASS_DECL(GameObject, IGameObject);
 
-                                                                GameObject              (const core::string & _name, IObject * _parent);
-        virtual                                                 ~GameObject             ();
+                                                            GameObject              (const core::string & _name, IObject * _parent);
+        virtual                                             ~GameObject             ();
 
-        void                                                    Update                  (double _dt);
+        void                                                Update                  (double _dt);
 
-        void                                                    AddComponent            (IComponent * _component) final override;
-        const vector<IComponent *> &                            GetComponents           () const final override;
+        void                                                AddComponent            (IComponent * _component) final override;
+        const vector<IComponent *> &                        GetComponents           () const final override;
 
-        void                                                    addComponent            (Component * _component);
-        Component *                                             addComponent            (const char * _className, const core::string & _name);
-        template <class T> T *                                  addComponent            (const core::string & _name);
-        const vector<Component*> &                              getComponents           () const;
+        void                                                addComponent            (Component * _component);
+        Component *                                         addComponent            (const char * _className, const core::string & _name);
+        template <class T> T *                              addComponent            (const core::string & _name);
+        const vector<Component*> &                          getComponents           () const;
 
-        Component *                                             findComponentByType     (const char * _className) const;
-        template <class T> T *                                  findComponent           () const;
+        Component *                                         findComponentByType     (const char * _className) const;
+        template <class T> T *                              findComponent           () const;
 
-        void                                                    AddChild                (IGameObject * _gameObject) final;
-        bool                                                    RemoveChild             (IGameObject * _gameObject) final;
-        const vector<IGameObject*> &                            GetChildren             () const final;
+        void                                                AddChild                (IGameObject * _gameObject) final;
+        bool                                                RemoveChild             (IGameObject * _gameObject) final;
+        const vector<IGameObject*> &                        GetChildren             () const final;
+        bool                                                IsRoot                  () const final;
 
-        void                                                    AddGraphicInstance      (renderer::IGraphicInstance * _graphicInstance) final;
-        void                                                    RemoveGraphicInstance   (renderer::IGraphicInstance * _graphicInstance) final;
-        const vector<renderer::IGraphicInstance*> &   GetGraphicInstances     () const final;
+        void                                                AddGraphicInstance      (renderer::IGraphicInstance * _graphicInstance) final;
+        void                                                RemoveGraphicInstance   (renderer::IGraphicInstance * _graphicInstance) final;
+        const vector<renderer::IGraphicInstance*> &         GetGraphicInstances     () const final;
 
-        VG_INLINE const vector<GameObject*> &                   getChildren             () const { return m_children;}
+        VG_INLINE const vector<GameObject*> &               getChildren             () const { return m_children;}
 
     private:
-        vector<Component *>                                     m_components;
-        vector<GameObject *>                                    m_children;
-        vector<renderer::IGraphicInstance*>           m_graphicInstances;
+        vector<Component *>                                 m_components;
+        vector<GameObject *>                                m_children;
+        vector<renderer::IGraphicInstance*>                 m_graphicInstances;
     };
 
     //--------------------------------------------------------------------------------------
