@@ -107,15 +107,16 @@ namespace vg::gfx
         else
             m_errorCount++;
         
-        if (!warningAndErrors.empty())
-            m_warningCount++;
-
         string header = _file + "\n" + _entryPoint + " (" + asString(_stage) + " shader)\n";
         for (auto & macro : _macros)
             header += macro.first + " ";
         header += "\n";
 
-        VG_DEBUGPRINT("[Shaders] %s", warningAndErrors.c_str());
+        if (!warningAndErrors.empty())
+        {
+            m_warningCount++;
+            VG_DEBUGPRINT("[Shaders] %s", warningAndErrors.c_str());
+        }
 
         if (!shader)
         {
