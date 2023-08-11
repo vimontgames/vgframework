@@ -59,6 +59,10 @@ namespace vg::gfx::dx12
 
                     VG_DEBUGPRINT("[Device] DirectX %u.%u %s - %s\n", major, minor, m_d3d12debug ? "debug " : "", description);
                 }
+                else
+                {
+                    adapter->Release();
+                }
 			}
 		}
 		VG_ASSERT(device, "[Device] Could not create DirectX device\n");
