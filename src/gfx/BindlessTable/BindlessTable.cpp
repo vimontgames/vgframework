@@ -17,11 +17,11 @@ namespace vg::gfx
         {
             m_tableDesc.setShaderStageFlags(ShaderStageFlags::All);
             
-            m_tableDesc.addTextures(0, BINDLESS_TEXTURE_SRV_COUNT, BINDLESS_TEXTURE_SRV_BINDING, BINDLESS_TEXTURE_SRV_OFFSET);
-            m_tableDesc.addBuffers(0, BINDLESS_BUFFER_SRV_COUNT, BINDLESS_BUFFER_SRV_BINDING, BINDLESS_BUFFER_SRV_OFFSET);
-            m_tableDesc.addUAVTextures(0, BINDLESS_TEXTURE_UAV_COUNT, BINDLESS_TEXTURE_UAV_BINDING, BINDLESS_TEXTURE_UAV_OFFSET);
+            m_tableDesc.addTextures(0, BINDLESS_TEXTURE_SRV_COUNT, BINDLESS_TEXTURE_SRV_BINDING, BINDLESS_TEXTURE_SRV_START);
+            m_tableDesc.addBuffers(0, BINDLESS_BUFFER_SRV_COUNT, BINDLESS_BUFFER_SRV_BINDING, BINDLESS_BUFFER_SRV_START);
+            m_tableDesc.addUAVTextures(0, BINDLESS_TEXTURE_UAV_COUNT, BINDLESS_TEXTURE_UAV_BINDING, BINDLESS_TEXTURE_UAV_START);
             m_tableDesc.addUAVBuffers(0, BINDLESS_BUFFER_UAV_COUNT, BINDLESS_BUFFER_UAV_BINDING, BINDLESS_BUFFER_UAV_COUNT);
-            m_tableDesc.addConstantBuffers(0, BINDLESS_CONSTANTBUFFER_COUNT, BINDLESS_CONSTANTBUFFER_BINDING, BINDLESS_CONSTANTBUFFER_OFFSET);
+            m_tableDesc.addConstantBuffers(0, BINDLESS_CONSTANTBUFFER_COUNT, BINDLESS_CONSTANTBUFFER_BINDING, BINDLESS_CONSTANTBUFFER_START);
         }
 
         //--------------------------------------------------------------------------------------
@@ -65,37 +65,37 @@ namespace vg::gfx
         //--------------------------------------------------------------------------------------
         BindlessTextureSrvHandle BindlessTable::allocBindlessTextureHandle(const gfx::Texture * _texture, ReservedSlot _reservedSlot)
         {
-            return allocBindlessHandle<BindlessTextureSrvHandle>(_texture, _reservedSlot, m_textureSrvIndexPool, m_textureSrv, BINDLESS_TEXTURE_SRV_OFFSET, BINDLESS_TEXTURE_SRV_INVALID);
+            return allocBindlessHandle<BindlessTextureSrvHandle>(_texture, _reservedSlot, m_textureSrvIndexPool, m_textureSrv, BINDLESS_TEXTURE_SRV_START, BINDLESS_TEXTURE_SRV_INVALID);
         }
 
         //--------------------------------------------------------------------------------------
         void BindlessTable::freeBindlessTextureHandle(BindlessTextureSrvHandle & _handle)
         {
-            freeBindlessHandle(_handle, m_textureSrvIndexPool, m_textureSrv, BINDLESS_TEXTURE_SRV_OFFSET, BINDLESS_TEXTURE_SRV_INVALID);
+            freeBindlessHandle(_handle, m_textureSrvIndexPool, m_textureSrv, BINDLESS_TEXTURE_SRV_START, BINDLESS_TEXTURE_SRV_INVALID);
         }
         
         //--------------------------------------------------------------------------------------
         BindlessBufferSrvHandle BindlessTable::allocBindlessBufferHandle(const gfx::Buffer * _buffer, ReservedSlot _reservedSlot)
         {
-            return allocBindlessHandle<BindlessBufferSrvHandle>(_buffer, _reservedSlot, m_bufferSrvIndexPool, m_bufferSrv, BINDLESS_BUFFER_SRV_OFFSET, BINDLESS_BUFFER_SRV_INVALID);
+            return allocBindlessHandle<BindlessBufferSrvHandle>(_buffer, _reservedSlot, m_bufferSrvIndexPool, m_bufferSrv, BINDLESS_BUFFER_SRV_START, BINDLESS_BUFFER_SRV_INVALID);
         }
         
         //--------------------------------------------------------------------------------------
         void BindlessTable::freeBindlessBufferHandle(BindlessBufferSrvHandle & _handle)
         {
-            freeBindlessHandle(_handle, m_bufferSrvIndexPool, m_bufferSrv, BINDLESS_BUFFER_SRV_OFFSET, BINDLESS_BUFFER_SRV_INVALID);
+            freeBindlessHandle(_handle, m_bufferSrvIndexPool, m_bufferSrv, BINDLESS_BUFFER_SRV_START, BINDLESS_BUFFER_SRV_INVALID);
         }
 
         //--------------------------------------------------------------------------------------
         BindlessConstantBufferHandle BindlessTable::allocBindlessConstantBufferHandle(const gfx::Buffer * _constantbuffer, ReservedSlot _reservedSlot)
         {
-            return allocBindlessHandle<BindlessConstantBufferHandle>(_constantbuffer, _reservedSlot, m_constantbufferIndexPool, m_constantbuffer, BINDLESS_CONSTANTBUFFER_OFFSET, BINDLESS_CONSTANTBUFFER_INVALID);
+            return allocBindlessHandle<BindlessConstantBufferHandle>(_constantbuffer, _reservedSlot, m_constantbufferIndexPool, m_constantbuffer, BINDLESS_CONSTANTBUFFER_START, BINDLESS_CONSTANTBUFFER_INVALID);
         }
         
         //--------------------------------------------------------------------------------------
         void BindlessTable::freeBindlessConstantBufferHandle(BindlessConstantBufferHandle & _handle)
         {
-            freeBindlessHandle(_handle, m_constantbufferIndexPool, m_constantbuffer, BINDLESS_CONSTANTBUFFER_OFFSET, BINDLESS_CONSTANTBUFFER_INVALID);
+            freeBindlessHandle(_handle, m_constantbufferIndexPool, m_constantbuffer, BINDLESS_CONSTANTBUFFER_START, BINDLESS_CONSTANTBUFFER_INVALID);
         }
 
         //--------------------------------------------------------------------------------------
@@ -136,7 +136,7 @@ namespace vg::gfx
         VG_ASSERT(m_defaultTexture->getBindlessSRVHandle() == BINDLESS_TEXTURE_SRV_INVALID);
         
         // copy texture to all 'texture' slots
-        for (uint i = BINDLESS_TEXTURE_SRV_OFFSET; i < BINDLESS_TEXTURE_SRV_COUNT; ++i)
+        for (uint i = BINDLESS_TEXTURE_SRV_START; i < BINDLESS_TEXTURE_SRV_COUNT; ++i)
             if (BINDLESS_TEXTURE_SRV_INVALID != i)
                 copyTextureHandle(i, m_defaultTexture);
 

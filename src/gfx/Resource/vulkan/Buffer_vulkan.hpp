@@ -79,7 +79,7 @@ namespace vg::gfx::vulkan
                 writes.pBufferInfo = &vkBufferInfo;
                 writes.pTexelBufferView = &m_vkBufferView;
                 writes.dstSet = device->getVulkanBindlessDescriptors();
-                writes.dstArrayElement = m_bindlessSRVHandle - BINDLESS_TEXTURE_SRV_OFFSET;
+                writes.dstArrayElement = m_bindlessSRVHandle - BINDLESS_TEXTURE_SRV_START;
 
                 vkUpdateDescriptorSets(device->getVulkanDevice(), 1, &writes, 0, nullptr);
 

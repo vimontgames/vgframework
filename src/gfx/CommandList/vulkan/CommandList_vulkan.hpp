@@ -208,7 +208,7 @@ namespace vg::gfx::vulkan
     //                         writes.pBufferInfo = &vkBufferInfo;
     //                         writes.pTexelBufferView = &vkBufferView;;
     //                         writes.dstSet = device->getVulkanBindlessDescriptors();
-    //                         writes.dstArrayElement = handle - bindless_constantbuffer_offset;
+    //                         writes.dstArrayElement = handle - BINDLESS_CONSTANTBUFFER_START;
     //
     //    vkUpdateDescriptorSets(device->getVulkanDevice(), 1, &writes, 0, nullptr);
     //
