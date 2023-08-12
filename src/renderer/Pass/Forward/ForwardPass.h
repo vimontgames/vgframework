@@ -37,15 +37,20 @@ namespace vg::renderer
         void destroyUnitBox();
         void drawAABB(gfx::CommandList * _cmdList, const AABB & _aabb, const core::float4x4 & _world, const core::float4x4 & _viewProj) const;
 
+        void createConstantBuffer();
+        void destroyConstantBuffer();
+
     private:
-        gfx::RootSignatureHandle     m_rootSignatureHandle;
-        gfx::ShaderKey               m_forwardShaderKey;
-        gfx::ShaderKey               m_wireframeShaderKey;
+        gfx::RootSignatureHandle    m_rootSignatureHandle;
+        gfx::ShaderKey              m_forwardShaderKey;
+        gfx::ShaderKey              m_wireframeShaderKey;
 
-        gfx::Buffer *                m_gridVB = nullptr;
-        gfx::Buffer *                m_axisVB = nullptr;
+        gfx::Buffer *               m_gridVB = nullptr;
+        gfx::Buffer *               m_axisVB = nullptr;
 
-        gfx::Buffer *                m_unitBoxIB = nullptr;
-        gfx::Buffer *                m_unitBoxVB = nullptr;
+        gfx::Buffer *               m_unitBoxIB = nullptr;
+        gfx::Buffer *               m_unitBoxVB = nullptr;
+
+        gfx::Buffer *               m_constantBuffer = nullptr;
     };
 }

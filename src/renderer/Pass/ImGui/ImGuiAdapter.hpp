@@ -158,7 +158,7 @@ namespace vg::renderer
         #endif
 
         BindlessTable * bindlessTable = _device.getBindlessTable();
-        m_fontTexSRVHandle = bindlessTable->allocBindlessTextureHandle((Texture *)nullptr, ReservedSlot(bindless_texture_SRV_invalid - 1));
+        m_fontTexSRVHandle = bindlessTable->allocBindlessTextureHandle((Texture *)nullptr, ReservedSlot(BINDLESS_TEXTURE_SRV_INVALID - 1)); // Use last texture slot
 
         #ifdef VG_DX12
         d3d12Init();

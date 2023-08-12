@@ -16,28 +16,28 @@ namespace vg::gfx
 
     struct BindlessTextureSrvHandle : public BindlessHandle
     {
-        BindlessTextureSrvHandle(Type _value = bindless_texture_SRV_invalid) : BindlessHandle(_value) { }
+        BindlessTextureSrvHandle(Type _value = BINDLESS_TEXTURE_SRV_INVALID) : BindlessHandle(_value) { }
     };
 
     struct BindlessTextureUAVHandle : public BindlessHandle
     {
-        BindlessTextureUAVHandle(Type _value = bindless_texture_UAV_invalid) : BindlessHandle(_value) {  }
+        BindlessTextureUAVHandle(Type _value = BINDLESS_TEXTURE_UAV_INVALID) : BindlessHandle(_value) {  }
     };
 
     struct BindlessBufferSrvHandle : public BindlessHandle
     {
-        BindlessBufferSrvHandle(Type _value = bindless_buffer_SRV_invalid) : BindlessHandle(_value) { }
+        BindlessBufferSrvHandle(Type _value = BINDLESS_BUFFER_SRV_INVALID) : BindlessHandle(_value) { }
     };
 
     struct BindlessBufferUAVHandle : public BindlessHandle
     {
-        BindlessBufferUAVHandle(Type _value = bindless_buffer_UAV_invalid) : BindlessHandle(_value) { }
+        BindlessBufferUAVHandle(Type _value = BINDLESS_BUFFER_UAV_INVALID) : BindlessHandle(_value) { }
     };
 
-    //struct BindlessConstantBufferHandle : public BindlessHandle
-    //{
-    //    BindlessConstantBufferHandle(Type _value = bindless_constantbuffer_invalid) : BindlessHandle(_value) { }
-    //};
+    struct BindlessConstantBufferHandle : public BindlessHandle
+    {
+        BindlessConstantBufferHandle(Type _value = BINDLESS_CONSTANTBUFFER_INVALID) : BindlessHandle(_value) { }
+    };
 
     enum ReservedSlot : core::u32
     {

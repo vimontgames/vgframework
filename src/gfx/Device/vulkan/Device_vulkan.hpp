@@ -396,11 +396,11 @@ namespace vg::gfx::vulkan
         {
             VkDescriptorPoolSize type_counts[] =
             {
-                //{VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, bindless_constantbuffer_count},
-                {VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE, bindless_texture_SRV_count},
-                {VK_DESCRIPTOR_TYPE_UNIFORM_TEXEL_BUFFER , bindless_buffer_SRV_count},
-                {VK_DESCRIPTOR_TYPE_STORAGE_IMAGE, bindless_texture_UAV_count},
-                {VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, bindless_buffer_UAV_count}
+                {VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE, BINDLESS_TEXTURE_SRV_COUNT},
+                {VK_DESCRIPTOR_TYPE_UNIFORM_TEXEL_BUFFER , BINDLESS_BUFFER_SRV_COUNT},
+                {VK_DESCRIPTOR_TYPE_STORAGE_IMAGE, BINDLESS_TEXTURE_UAV_COUNT},
+                {VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, BINDLESS_BUFFER_UAV_COUNT},
+				{VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, BINDLESS_CONSTANTBUFFER_COUNT},
             };
 
             VkDescriptorPoolCreateInfo descriptor_pool = {};

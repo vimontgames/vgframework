@@ -30,8 +30,8 @@ namespace vg::gfx
             BindlessBufferSrvHandle allocBindlessBufferHandle(const gfx::Buffer * _buffer, ReservedSlot _reservedSlot = ReservedSlot::None);
             void freeBindlessBufferHandle(BindlessBufferSrvHandle & _handle);
 
-            //BindlessConstantBufferHandle allocBindlessConstantBufferHandle(const gfx::Buffer * _constantbuffer, ReservedSlot _reservedSlot = ReservedSlot::None);
-            //void freeBindlessBufferHandle(BindlessConstantBufferHandle & _handle);
+            BindlessConstantBufferHandle allocBindlessConstantBufferHandle(const gfx::Buffer * _constantbuffer, ReservedSlot _reservedSlot = ReservedSlot::None);
+            void freeBindlessConstantBufferHandle(BindlessConstantBufferHandle & _handle);
             
         private:
             template <class H, class T, class P> H allocBindlessHandle(const T * _resource, ReservedSlot _reservedSlot, P & _pool, T ** _resources, core::uint _offset, core::uint _invalid);
@@ -40,14 +40,14 @@ namespace vg::gfx
         private:
             RootSignatureTableDesc                                                  m_tableDesc;
 
-            core::IndexPool<BindlessHandle::Type, bindless_texture_SRV_count>       m_textureSrvIndexPool;
-            Texture *                                                               m_textureSrv[bindless_texture_SRV_count];
+            core::IndexPool<BindlessHandle::Type, BINDLESS_TEXTURE_SRV_COUNT>       m_textureSrvIndexPool;
+            Texture *                                                               m_textureSrv[BINDLESS_TEXTURE_SRV_COUNT];
 
-            core::IndexPool<BindlessHandle::Type, bindless_buffer_SRV_count>        m_bufferSrvIndexPool;
-            Buffer *                                                                m_bufferSrv[bindless_buffer_SRV_count];
+            core::IndexPool<BindlessHandle::Type, BINDLESS_BUFFER_SRV_COUNT>        m_bufferSrvIndexPool;
+            Buffer *                                                                m_bufferSrv[BINDLESS_BUFFER_SRV_COUNT];
 
-            //core::IndexPool<BindlessHandle::Type, bindless_constantbuffer_count>    m_constantbufferIndexPool;
-            //Buffer *                                                                m_constantbuffer[bindless_constantbuffer_count];
+            core::IndexPool<BindlessHandle::Type, BINDLESS_CONSTANTBUFFER_COUNT>    m_constantbufferIndexPool;
+            Buffer *                                                                m_constantbuffer[BINDLESS_CONSTANTBUFFER_COUNT];
         };
     }
 }

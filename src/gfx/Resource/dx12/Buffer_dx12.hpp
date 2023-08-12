@@ -54,6 +54,19 @@ namespace vg::gfx::dx12
                 d3d12device->CreateShaderResourceView(m_resource.getd3d12BufferResource(), &srvDesc, d3d12DescriptorHandle);
             }
 
+            if (asBool(BindFlags::ConstantBuffer & _bufDesc.resource.m_bindFlags))
+            {
+                D3D12_CONSTANT_BUFFER_VIEW_DESC cbViewDesc = {};
+                cbViewDesc.BufferLocation = resource->GetGPUVirtualAddress();
+                cbViewDesc.SizeInBytes = (uint)alignUp(_bufDesc.size(), 256); // CB size is required to be 256-byte aligned.
+
+                BindlessTable * bindlessTable = device->getBindlessTable();
+                m_bindlessCBVHandle = bindlessTable->allocBindlessConstantBufferHandle(static_cast<gfx::Buffer *>(this), _reservedSlot);
+
+                D3D12_CPU_DESCRIPTOR_HANDLE d3d12DescriptorHandle = bindlessTable->getd3d12CPUDescriptorHandle(m_bindlessCBVHandle);
+                d3d12device->CreateConstantBufferView(&cbViewDesc, d3d12DescriptorHandle);
+            }
+
             if (nullptr != _initData)
             {
                 const size_t uploadBufferSize = _bufDesc.size();
@@ -80,9 +93,14 @@ namespace vg::gfx::dx12
     {
         D3D12_RESOURCE_DESC resourceDesc = {};
 
+        auto size = _bufDesc.size();
+
+        if (_bufDesc.testBindFlags(BindFlags::ConstantBuffer))
+            size = (uint)alignUp(size, 256);
+
         resourceDesc.Dimension = D3D12_RESOURCE_DIMENSION_BUFFER;
         resourceDesc.Alignment = 0;
-        resourceDesc.Width = _bufDesc.size();
+        resourceDesc.Width = size;
         resourceDesc.Height = 1;
         resourceDesc.DepthOrArraySize = 1;
         resourceDesc.MipLevels = 1;

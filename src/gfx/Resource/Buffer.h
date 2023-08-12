@@ -21,12 +21,15 @@ namespace vg::gfx
 
             const gfx::Resource & getResource() const { return m_resource; }
             gfx::Resource & getResource() { return m_resource; }
+
             const gfx::BindlessBufferSrvHandle getBindlessSRVHandle() const { return m_bindlessSRVHandle; }
+            const gfx::BindlessConstantBufferHandle getBindlessCBVHandle() const { return m_bindlessCBVHandle; }
 
         protected:
-            const BufferDesc                m_bufDesc;
-            gfx::Resource                m_resource;
-            gfx::BindlessBufferSrvHandle m_bindlessSRVHandle;
+            const BufferDesc                    m_bufDesc;
+            gfx::Resource                       m_resource;
+            gfx::BindlessBufferSrvHandle        m_bindlessSRVHandle;
+            gfx::BindlessConstantBufferHandle   m_bindlessCBVHandle;
         };
     }
 }

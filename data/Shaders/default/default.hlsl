@@ -20,7 +20,7 @@ VS_Output VS_Forward(uint _vertexID : VertexID)
     VS_Output output;
 
     Vertex vert;
-           vert.load(getBuffer(rootConstants3D.getBuffer()), _vertexID, rootConstants3D.getVertexBufferOffset());
+           vert.load(getBuffer(rootConstants3D.getBufferHandle()), _vertexID, rootConstants3D.getVertexBufferOffset());
 
     output.nrm = vert.getNrm();
     output.tan = vert.getTan();
@@ -63,8 +63,8 @@ PS_Output PS_Forward(VS_Output _input)
     float2 uv0 = _input.uv.xy;
     float2 uv1 = _input.uv.zw;
     
-    float4 albedo = Texture2DTable[rootConstants3D.getAlbedoMap()].Sample(linearRepeat, uv0).rgba;
-    float3 normal = Texture2DTable[rootConstants3D.getNormalMap()].Sample(linearRepeat, uv0).rgb*2-1;
+    float4 albedo = getTexture2D( rootConstants3D.getAlbedoTextureHandle() ).Sample(linearRepeat, uv0).rgba;
+    float3 normal = getTexture2D( rootConstants3D.getNormalTextureHandle() ).Sample(linearRepeat, uv0).rgb*2-1;
 
     if (0 == (rootConstants3D.getFlags() & FLAG_ALBEDOMAPS))
         albedo = pow(0.5, 0.45);

@@ -40,6 +40,7 @@ namespace vg::renderer
         createGrid();
         createAxis();
         createUnitBox();
+        createConstantBuffer();
     }
 
     //--------------------------------------------------------------------------------------
@@ -48,6 +49,7 @@ namespace vg::renderer
         destroyAxis();
         destroyGrid();
         destroyUnitBox();
+        destroyConstantBuffer();
 
         auto * device = Device::get();
         device->removeRootSignature(m_rootSignatureHandle);
@@ -194,6 +196,20 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
+    void ForwardPass::createConstantBuffer()
+    {
+        auto * device = Device::get();
+        BufferDesc cbDesc(Usage::Default, BindFlags::ShaderResource | BindFlags::ConstantBuffer, CPUAccessFlags::Write, BufferFlags::None, sizeof(float4), 1);
+        m_constantBuffer = device->createBuffer(cbDesc, "testCB");
+    }
+
+    //--------------------------------------------------------------------------------------
+    void ForwardPass::destroyConstantBuffer()
+    {
+        VG_SAFE_RELEASE(m_constantBuffer);
+    }
+
+    //--------------------------------------------------------------------------------------
     // Setup executed each frame, for each pass instance
     //--------------------------------------------------------------------------------------
     void ForwardPass::setup(const gfx::RenderContext & _renderContext, double _dt)
@@ -331,7 +347,7 @@ namespace vg::renderer
                 float4x4 wvp = mul(world, viewProj);
 
                 root3D.mat = transpose(wvp);
-                root3D.setBuffer(vb->getBindlessSRVHandle());
+                root3D.setBufferHandle(vb->getBindlessSRVHandle());
                 root3D.setFlags(flags);
                 root3D.setMode(mode);
                 root3D.color = instance->getColor();
@@ -358,8 +374,12 @@ namespace vg::renderer
                         normalMap = renderer->getDefaultTexture(MaterialTextureType::Normal);
                     }
 
-                    root3D.setAlbedoMap(albedoMap->getBindlessSRVHandle());
-                    root3D.setNormalMap(normalMap->getBindlessSRVHandle());
+                    // TODO: bind per-material (possibbly per-material instance) constant buffer instead
+                    root3D.setAlbedoTextureHandle(albedoMap->getBindlessSRVHandle());
+                    root3D.setNormalTextureHandle(normalMap->getBindlessSRVHandle());
+
+                    // Test
+                    auto & cb = m_constantBuffer->getBindlessCBVHandle();
 
                     root3D.setMatID(i);
                     
@@ -430,7 +450,7 @@ namespace vg::renderer
         RootConstants3D root3D;
         {
             root3D.mat = transpose(wvp);
-            root3D.setBuffer(m_unitBoxVB->getBindlessSRVHandle());
+            root3D.setBufferHandle(m_unitBoxVB->getBindlessSRVHandle());
             root3D.setMode(MODE_VS_COLOR);
 
         }
@@ -490,7 +510,7 @@ namespace vg::renderer
         RootConstants3D root3D;
 
         root3D.mat = transpose(_viewProj);
-        root3D.setBuffer(m_gridVB->getBindlessSRVHandle());
+        root3D.setBufferHandle(m_gridVB->getBindlessSRVHandle());
         root3D.setMode(MODE_VS_COLOR);
         root3D.color = float4(1, 1, 1, 1);
 
@@ -511,7 +531,7 @@ namespace vg::renderer
         RootConstants3D root3D;
 
         root3D.mat = transpose(_viewProj);
-        root3D.setBuffer(m_axisVB->getBindlessSRVHandle());
+        root3D.setBufferHandle(m_axisVB->getBindlessSRVHandle());
         root3D.setMode(MODE_VS_COLOR);
         root3D.color = float4(1, 1, 1, 1);
 
