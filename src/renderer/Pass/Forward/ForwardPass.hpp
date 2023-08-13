@@ -40,7 +40,6 @@ namespace vg::renderer
         createGrid();
         createAxis();
         createUnitBox();
-        createConstantBuffer();
     }
 
     //--------------------------------------------------------------------------------------
@@ -49,7 +48,6 @@ namespace vg::renderer
         destroyAxis();
         destroyGrid();
         destroyUnitBox();
-        destroyConstantBuffer();
 
         auto * device = Device::get();
         device->removeRootSignature(m_rootSignatureHandle);
@@ -193,20 +191,6 @@ namespace vg::renderer
     void ForwardPass::destroyAxis()
     {
         VG_SAFE_RELEASE(m_axisVB);
-    }
-
-    //--------------------------------------------------------------------------------------
-    void ForwardPass::createConstantBuffer()
-    {
-        auto * device = Device::get();
-        BufferDesc cbDesc(Usage::Default, BindFlags::ShaderResource | BindFlags::ConstantBuffer, CPUAccessFlags::Write, BufferFlags::None, sizeof(float4), 1);
-        m_constantBuffer = device->createBuffer(cbDesc, "testCB");
-    }
-
-    //--------------------------------------------------------------------------------------
-    void ForwardPass::destroyConstantBuffer()
-    {
-        VG_SAFE_RELEASE(m_constantBuffer);
     }
 
     //--------------------------------------------------------------------------------------
@@ -377,9 +361,6 @@ namespace vg::renderer
                     // TODO: bind per-material (possibbly per-material instance) constant buffer instead
                     root3D.setAlbedoTextureHandle(albedoMap->getBindlessSRVHandle());
                     root3D.setNormalTextureHandle(normalMap->getBindlessSRVHandle());
-
-                    // Test
-                    auto & cb = m_constantBuffer->getBindlessCBVHandle();
 
                     root3D.setMatID(i);
                     

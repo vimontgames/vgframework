@@ -63,6 +63,5 @@ namespace vg::gfx
         auto * device = Device::get();
         auto * bindlessTable = device->getBindlessTable();
         bindlessTable->freeBindlessBufferHandle(m_bindlessSRVHandle);
-        bindlessTable->freeBindlessConstantBufferHandle(m_bindlessCBVHandle);
     }
 }

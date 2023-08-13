@@ -20,8 +20,6 @@ namespace vg::gfx
             BindlessTable();
             ~BindlessTable();
 
-            void beginFrame();
-
             const RootSignatureTableDesc & getTableDesc() const { return m_tableDesc; }
 
             BindlessTextureSrvHandle allocBindlessTextureHandle(const gfx::Texture * _texture, ReservedSlot _reservedSlot = ReservedSlot::None);
@@ -29,9 +27,6 @@ namespace vg::gfx
 
             BindlessBufferSrvHandle allocBindlessBufferHandle(const gfx::Buffer * _buffer, ReservedSlot _reservedSlot = ReservedSlot::None);
             void freeBindlessBufferHandle(BindlessBufferSrvHandle & _handle);
-
-            BindlessConstantBufferHandle allocBindlessConstantBufferHandle(const gfx::Buffer * _constantbuffer, ReservedSlot _reservedSlot = ReservedSlot::None);
-            void freeBindlessConstantBufferHandle(BindlessConstantBufferHandle & _handle);
             
         private:
             template <class H, class T, class P> H allocBindlessHandle(const T * _resource, ReservedSlot _reservedSlot, P & _pool, T ** _resources, core::uint _offset, core::uint _invalid);
@@ -45,9 +40,6 @@ namespace vg::gfx
 
             core::IndexPool<BindlessHandle::Type, BINDLESS_BUFFER_SRV_COUNT>        m_bufferSrvIndexPool;
             Buffer *                                                                m_bufferSrv[BINDLESS_BUFFER_SRV_COUNT];
-
-            core::IndexPool<BindlessHandle::Type, BINDLESS_CONSTANTBUFFER_COUNT>    m_constantbufferIndexPool;
-            Buffer *                                                                m_constantbuffer[BINDLESS_CONSTANTBUFFER_COUNT];
         };
     }
 }

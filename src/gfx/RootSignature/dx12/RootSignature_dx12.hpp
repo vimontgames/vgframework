@@ -48,10 +48,10 @@ namespace vg::gfx::dx12
                         const auto & constantbuffers = descriptor.getConstantBuffers();
                         
                         d3d12Descriptor.RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_CBV;
-                        d3d12Descriptor.BaseShaderRegister = constantbuffers.m_offset;
+                        d3d12Descriptor.BaseShaderRegister = constantbuffers.m_register;
                         d3d12Descriptor.NumDescriptors = constantbuffers.m_count;
-                        d3d12Descriptor.RegisterSpace = constantbuffers.m_space;
-                        d3d12Descriptor.OffsetInDescriptorsFromTableStart = constantbuffers.m_offset;
+                        d3d12Descriptor.RegisterSpace = constantbuffers.m_binding;
+                        d3d12Descriptor.OffsetInDescriptorsFromTableStart = constantbuffers.m_register;
 
                         d3d12Descriptors.push_back(d3d12Descriptor);
                     }
@@ -62,10 +62,10 @@ namespace vg::gfx::dx12
                         const auto & textures = descriptor.getTextures();
                         
                         d3d12Descriptor.RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SRV;
-                        d3d12Descriptor.BaseShaderRegister = textures.m_offset;
+                        d3d12Descriptor.BaseShaderRegister = textures.m_register;
                         d3d12Descriptor.NumDescriptors = textures.m_count;
-                        d3d12Descriptor.RegisterSpace = textures.m_space;
-                        d3d12Descriptor.OffsetInDescriptorsFromTableStart = textures.m_offset;
+                        d3d12Descriptor.RegisterSpace = textures.m_binding;
+                        d3d12Descriptor.OffsetInDescriptorsFromTableStart = textures.m_register;
 
                         d3d12Descriptors.push_back(d3d12Descriptor);
                     }
@@ -76,10 +76,10 @@ namespace vg::gfx::dx12
                         const auto & buffers = descriptor.getBuffers();
 
                         d3d12Descriptor.RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SRV;
-                        d3d12Descriptor.BaseShaderRegister = buffers.m_offset; 
+                        d3d12Descriptor.BaseShaderRegister = buffers.m_register;
                         d3d12Descriptor.NumDescriptors = buffers.m_count;
-                        d3d12Descriptor.RegisterSpace = buffers.m_space;
-                        d3d12Descriptor.OffsetInDescriptorsFromTableStart = buffers.m_offset;
+                        d3d12Descriptor.RegisterSpace = buffers.m_binding;
+                        d3d12Descriptor.OffsetInDescriptorsFromTableStart = buffers.m_register;
 
                         d3d12Descriptors.push_back(d3d12Descriptor);
                     }
@@ -90,10 +90,10 @@ namespace vg::gfx::dx12
                         const auto & textures = descriptor.getUAVTextures();
 
                         d3d12Descriptor.RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_UAV;
-                        d3d12Descriptor.BaseShaderRegister = textures.m_offset;
+                        d3d12Descriptor.BaseShaderRegister = textures.m_register;
                         d3d12Descriptor.NumDescriptors = textures.m_count;
-                        d3d12Descriptor.RegisterSpace = textures.m_space;
-                        d3d12Descriptor.OffsetInDescriptorsFromTableStart = textures.m_offset;
+                        d3d12Descriptor.RegisterSpace = textures.m_binding;
+                        d3d12Descriptor.OffsetInDescriptorsFromTableStart = textures.m_register;
 
                         d3d12Descriptors.push_back(d3d12Descriptor);
                     }
@@ -104,10 +104,10 @@ namespace vg::gfx::dx12
                         const auto & buffers = descriptor.getUAVBuffers();
 
                         d3d12Descriptor.RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_UAV;
-                        d3d12Descriptor.BaseShaderRegister = buffers.m_offset;
+                        d3d12Descriptor.BaseShaderRegister = buffers.m_register;
                         d3d12Descriptor.NumDescriptors = buffers.m_count;
-                        d3d12Descriptor.RegisterSpace = buffers.m_space;
-                        d3d12Descriptor.OffsetInDescriptorsFromTableStart = buffers.m_offset;
+                        d3d12Descriptor.RegisterSpace = buffers.m_binding;
+                        d3d12Descriptor.OffsetInDescriptorsFromTableStart = buffers.m_register;
 
                         d3d12Descriptors.push_back(d3d12Descriptor);
                     }
