@@ -25,7 +25,6 @@ namespace vg::gfx
         core::uint_ptr  alloc           (core::size_t _size, core::size_t _alignment);
 
     private:
-        //core::u8                                                m_index = 0;
         core::uint_ptr                                          m_offsetCur = 0;
         core::uint_ptr                                          m_offsetStart = 0;
         core::mutex                                             m_uploadMutex;
