@@ -199,8 +199,8 @@ namespace vg::renderer
     void ForwardPass::createConstantBuffer()
     {
         auto * device = Device::get();
-        BufferDesc cbDesc(Usage::Default, BindFlags::ShaderResource | BindFlags::ConstantBuffer, CPUAccessFlags::Write, BufferFlags::None, sizeof(float4), 1);
-        m_constantBuffer = device->createBuffer(cbDesc, "testCB");
+        BufferDesc cbDesc(Usage::Dynamic, BindFlags::ShaderResource | BindFlags::ConstantBuffer, CPUAccessFlags::Write, BufferFlags::None, sizeof(float4), 1);
+        //m_constantBuffer = device->createBuffer(cbDesc, "m_constantBuffer");
     }
 
     //--------------------------------------------------------------------------------------
@@ -374,12 +374,9 @@ namespace vg::renderer
                         normalMap = renderer->getDefaultTexture(MaterialTextureType::Normal);
                     }
 
-                    // TODO: bind per-material (possibbly per-material instance) constant buffer instead
+                    // TODO: bind per-material (possibly per-material instance) constant buffer instead
                     root3D.setAlbedoTextureHandle(albedoMap->getBindlessSRVHandle());
                     root3D.setNormalTextureHandle(normalMap->getBindlessSRVHandle());
-
-                    // Test
-                    auto & cb = m_constantBuffer->getBindlessCBVHandle();
 
                     root3D.setMatID(i);
                     
