@@ -178,7 +178,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	#endif
 
     #ifdef VG_DEBUG
-    engineParams.renderer.device.debugDevice = false; // D3D debugDevice is freezing laptop after random N frames :/
+    engineParams.renderer.device.debugDevice = true;
     engineParams.renderer.device.breakOnErrors = true;
     engineParams.renderer.device.breakOnWarnings = true;
     #endif
