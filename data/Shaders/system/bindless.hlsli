@@ -46,24 +46,28 @@
 #ifdef DX12
 #define DECL_DESCRIPTOR_RANGE_RO(type, name, bind, offset) type name[] : register(PASTE(t, offset), PASTE(space, bind));
 #define DECL_DESCRIPTOR_RANGE_RW(type, name, bind, offset) type name[] : register(PASTE(u, offset), PASTE(space, bind));
+#define DECL_DESCRIPTOR_RANGE_CB(type, name, bind, offset) type name[] : register(PASTE(b, offset), PASTE(space, bind));
 #elif defined(VULKAN)
 #define DECL_DESCRIPTOR_RANGE_RO(type, name, bind, offset) [[vk::binding(bind, 0)]] type name[];
 #define DECL_DESCRIPTOR_RANGE_RW(type, name, bind, offset) [[vk::binding(bind, 0)]] type name[];
 #endif
 
 // Read-only textures
-DECL_DESCRIPTOR_RANGE_RO(Texture1D, g_Texture1DTable, 0, BINDLESS_TEXTURE_SRV_START);
-DECL_DESCRIPTOR_RANGE_RO(Texture2D, g_Texture2DTable, 0, BINDLESS_TEXTURE_SRV_START);
-DECL_DESCRIPTOR_RANGE_RO(Texture3D, g_Texture3DTable, 0, BINDLESS_TEXTURE_SRV_START);
+DECL_DESCRIPTOR_RANGE_RO(Texture1D, g_Texture1DTable, BINDLESS_TEXTURE_SRV_BINDING, BINDLESS_TEXTURE_SRV_START);
+DECL_DESCRIPTOR_RANGE_RO(Texture2D, g_Texture2DTable, BINDLESS_TEXTURE_SRV_BINDING, BINDLESS_TEXTURE_SRV_START);
+DECL_DESCRIPTOR_RANGE_RO(Texture3D, g_Texture3DTable, BINDLESS_TEXTURE_SRV_BINDING, BINDLESS_TEXTURE_SRV_START);
 
 // Read-only buffers
-DECL_DESCRIPTOR_RANGE_RO(ByteAddressBuffer, g_BufferTable, 1, BINDLESS_BUFFER_SRV_START);
+DECL_DESCRIPTOR_RANGE_RO(ByteAddressBuffer, g_BufferTable, BINDLESS_BUFFER_SRV_BINDING, BINDLESS_BUFFER_SRV_START);
 
 // Read-Only buffers
-DECL_DESCRIPTOR_RANGE_RW(RWTexture2D<float4>, g_RWTexture2DTable, 2, BINDLESS_TEXTURE_UAV_START);
+DECL_DESCRIPTOR_RANGE_RW(RWTexture2D<float4>, g_RWTexture2DTable, BINDLESS_TEXTURE_UAV_BINDING, BINDLESS_TEXTURE_UAV_START);
 
 // Read-Write buffers
-DECL_DESCRIPTOR_RANGE_RW(RWByteAddressBuffer, g_RWBufferTable, 3, BINDLESS_BUFFER_UAV_START);
+DECL_DESCRIPTOR_RANGE_RW(RWByteAddressBuffer, g_RWBufferTable, BINDLESS_BUFFER_UAV_BINDING, BINDLESS_BUFFER_UAV_START);
+
+// Constant buffers
+//DECL_DESCRIPTOR_RANGE_CB(ByteAddressBuffer, g_ConstantBufferTable, BINDLESS_CONSTANTBUFFER_BINDING, BINDLESS_CONSTANTBUFFER_START);
 
 // use #define here because of a Vulkan shader compiler crash :(
 #define getTexture2D(_handle)       (g_Texture2DTable[_handle - BINDLESS_TEXTURE_SRV_START])
