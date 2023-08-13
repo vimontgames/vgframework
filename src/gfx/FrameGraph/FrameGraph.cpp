@@ -261,7 +261,7 @@ namespace vg::gfx
             return static_cast<T*>(it->second);
         }
 
-        return false;
+        return nullptr;
     }
 
 	//--------------------------------------------------------------------------------------
