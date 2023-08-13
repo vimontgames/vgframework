@@ -13,7 +13,7 @@
 #include "gfx/PipelineState/SamplerState.h"
 #include "gfx/Profiler/Profiler.h"
 #include "gfx/Importer/TextureImporter.h"
-#include "gfx/Resource/UploadBuffer.h"
+#include "gfx/RingBuffer/Upload/UploadBuffer.h"
 
 #include "gfx/Device/DeviceCaps.hpp"
 

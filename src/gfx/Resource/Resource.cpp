@@ -5,7 +5,7 @@
 #include "Resource.h"
 #include "Buffer.h"
 #include "Texture.h"
-#include "UploadBuffer.h"
+#include "gfx/RingBuffer/Upload/UploadBuffer.h"
 #include "gfx/bindlessTable/BindlessTable.h"
 
 using namespace vg::core;
@@ -14,4 +14,3 @@ using namespace vg::core;
 
 #include "Texture.hpp"
 #include "Buffer.hpp"
-#include "UploadBuffer.hpp"

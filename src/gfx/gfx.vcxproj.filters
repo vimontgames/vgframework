@@ -41,6 +41,9 @@
     <ClCompile Include="Importer\Importer.cpp">
       <Filter>Importer</Filter>
     </ClCompile>
+    <ClCompile Include="RingBuffer\RingBuffer.cpp">
+      <Filter>RingBuffer</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Precomp.h" />
@@ -453,12 +456,6 @@
     <ClInclude Include="Shader\dxc\ShaderCompiler_dxc.hpp">
       <Filter>Shader\dxc</Filter>
     </ClInclude>
-    <ClInclude Include="Resource\UploadBuffer.h">
-      <Filter>Resource</Filter>
-    </ClInclude>
-    <ClInclude Include="Resource\UploadBuffer.hpp">
-      <Filter>Resource</Filter>
-    </ClInclude>
     <ClInclude Include="PipelineState\BlendState.h">
       <Filter>PipelineState</Filter>
     </ClInclude>
@@ -504,6 +501,21 @@
     <ClInclude Include="ITexture.h" />
     <ClInclude Include="IView.h" />
     <ClInclude Include="IShaderManager.h" />
+    <ClInclude Include="RingBuffer\RingBuffer.h">
+      <Filter>RingBuffer</Filter>
+    </ClInclude>
+    <ClInclude Include="RingBuffer\Upload\UploadBuffer.h">
+      <Filter>RingBuffer\Upload</Filter>
+    </ClInclude>
+    <ClInclude Include="RingBuffer\Upload\UploadBuffer.hpp">
+      <Filter>RingBuffer\Upload</Filter>
+    </ClInclude>
+    <ClInclude Include="RingBuffer\Dynamic\DynamicBuffer.h">
+      <Filter>RingBuffer\Dynamic</Filter>
+    </ClInclude>
+    <ClInclude Include="RingBuffer\Dynamic\DynamicBuffer.hpp">
+      <Filter>RingBuffer\Dynamic</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Device">
@@ -616,6 +628,15 @@
     </Filter>
     <Filter Include="Shader\dxc">
       <UniqueIdentifier>{f02f74c8-fe1d-4c92-9977-c60213733700}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="RingBuffer">
+      <UniqueIdentifier>{65c4e526-f461-483f-b869-7759b4a7cad0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="RingBuffer\Upload">
+      <UniqueIdentifier>{207be679-e64c-4ad4-9fc0-5ae24978b170}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="RingBuffer\Dynamic">
+      <UniqueIdentifier>{bee51690-2c68-4788-9439-22f1682ca4d7}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

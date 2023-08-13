@@ -7,11 +7,7 @@ namespace vg::editor
     {
         if (IconBegin(style::icon::About, "About", &m_isVisible, ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_NoCollapse))
         {
-            const auto & engine = Editor::get()->getEngine();
-            const auto engineVersion = engine->GetVersion();
-            const auto rendererVersion = engine->GetRenderer()->GetVersion();
-
-            Text("VG Framework Engine %u.%u Renderer %u.%u", engineVersion.major, engineVersion.minor, rendererVersion.major, rendererVersion.minor);
+            Text("VG Framework");
             Text("");
 
             float columnWidth[3] = { 256, 128, 620 };
@@ -31,7 +27,7 @@ namespace vg::editor
             NextColumn();
 
             textURL("github.com/vimontgames/vgframework", "https://github.com/vimontgames/vgframework");
-            textURL("@benoitbimont", "https://twitter.com/benoitvimont");
+            textURL("@benoitvimont", "https://twitter.com/benoitvimont");
             textURL("@benoitvimont@mastodon.gamedev.place", "https://mastodon.gamedev.place/@benoitvimont");
             Text("");
 
