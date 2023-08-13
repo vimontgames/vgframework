@@ -100,7 +100,7 @@ namespace vg::gfx
     //--------------------------------------------------------------------------------------
     void UploadBuffer::upload(gfx::Texture * _dst, core::uint_ptr _from)
     {
-        //VG_DEBUGPRINT("[UploadBuffer #%u] upload texture \"%s\" from 0x%016X\n", m_index, _dst->getName().c_str(), _from);
+        //VG_DEBUGPRINT("[UploadBuffer] upload texture \"%s\" from 0x%016X\n", _dst->getName().c_str(), _from);
 
         m_texturesToUpload.push_back({ _dst, _from });
     }
@@ -108,7 +108,7 @@ namespace vg::gfx
     //--------------------------------------------------------------------------------------
     void UploadBuffer::upload(gfx::Buffer * _dst, core::uint_ptr _from)
     {
-        //VG_DEBUGPRINT("[UploadBuffer #%u] upload buffer \"%s\" from 0x%016X\n", m_index, _dst->getName().c_str(), _from);
+        //VG_DEBUGPRINT("[UploadBuffer] upload buffer \"%s\" from 0x%016X\n", _dst->getName().c_str(), _from);
 
         m_buffersToUpload.push_back({ _dst, _from });
     }
@@ -120,7 +120,7 @@ namespace vg::gfx
 
         if (m_buffersToUpload.size() || m_texturesToUpload.size())
         {
-            //VG_DEBUGPRINT("[UploadBuffer #%u] Flush %u buffer(s) %u texture(s)\n", m_index, m_buffersToUpload.size(), m_texturesToUpload.size());
+            //VG_DEBUGPRINT("[UploadBuffer] Flush %u buffer(s) %u texture(s)\n", m_buffersToUpload.size(), m_texturesToUpload.size());
 
             for (uint i = 0; i < m_buffersToUpload.size(); ++i)
             {
@@ -137,7 +137,6 @@ namespace vg::gfx
             m_texturesToUpload.clear();
         }
 
-        m_index = (m_index + max_frame_latency - 1) % max_frame_latency;
         m_offsetStart = m_offsetCur;
     }
 }
