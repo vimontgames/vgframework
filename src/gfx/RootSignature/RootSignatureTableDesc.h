@@ -23,28 +23,35 @@ namespace vg::gfx
 
             Type getDescriptorType() const { return m_type; }
 
+            enum Offset : core::u16
+            {
+                Append = (core::u16)-1
+            };
+
             struct DescriptorParameters
             {
-                DescriptorParameters(core::u8 _binding, core::u16 _register, core::u16 _count = 1) :
-                    m_binding(_binding),
+                DescriptorParameters(core::u8 _register, core::u32 _count, core::u8 _space, core::u16 _offset = Offset::Append) :
                     m_register(_register),
-                    m_count(_count)                    
+                    m_count(_count),
+                    m_space(_space),
+                    m_offset(_offset)
                 {
 
                 }
 
-                core::u8 m_binding;
-                core::u16 m_register;   
-                core::u16 m_count;      
+                core::u8 m_register;
+                core::u8 m_space;
+                core::u16 m_offset;
+                core::u32 m_count;
 
-                inline bool operator == (const DescriptorParameters & _other) const { return m_register == _other.m_register && m_count == _other.m_count && m_binding == _other.m_binding; }
+                inline bool operator == (const DescriptorParameters & _other) const { return m_register == _other.m_register && m_count == _other.m_count && m_space == _other.m_space && m_offset == _other.m_offset; }
                 inline bool operator != (const DescriptorParameters & _other) const { return !(operator == (_other)); }
             };
 
             struct Texture : public DescriptorParameters
             {
-                Texture(core::u8 _binding, core::u16 _register, core::u16 _count = 1) :
-                    DescriptorParameters(_binding, _register, _count)
+                Texture(core::u8 _register, core::u32 _count, core::u8 _space, core::u16 _offset = Offset::Append) :
+                    DescriptorParameters(_register, _count, _space, _offset)
                 {
 
                 }
@@ -52,8 +59,8 @@ namespace vg::gfx
 
             struct Buffer : public DescriptorParameters
             {
-                Buffer(core::u8 _binding, core::u16 _register, core::u16 _count = 1) :
-                    DescriptorParameters(_binding, _register, _count)
+                Buffer(core::u8 _register, core::u32 _count, core::u8 _space, core::u16 _offset = Offset::Append) :
+                    DescriptorParameters(_register, _count, _space, _offset)
                 {
 
                 }
@@ -61,8 +68,8 @@ namespace vg::gfx
 
             struct UAVTexture : public DescriptorParameters
             {
-                UAVTexture(core::u8 _binding, core::u16 _register, core::u16 _count = 1) :
-                    DescriptorParameters(_binding, _register, _count)
+                UAVTexture(core::u8 _register, core::u32 _count, core::u8 _space, core::u16 _offset = Offset::Append) :
+                    DescriptorParameters(_register, _count, _space, _offset)
                 {
 
                 }
@@ -70,8 +77,8 @@ namespace vg::gfx
 
             struct UAVBuffer : public DescriptorParameters
             {
-                UAVBuffer(core::u8 _binding, core::u16 _register, core::u16 _count = 1) :
-                    DescriptorParameters(_binding, _register, _count)
+                UAVBuffer(core::u8 _register, core::u32 _count, core::u8 _space, core::u16 _offset = Offset::Append) :
+                    DescriptorParameters(_register, _count, _space, _offset)
                 {
 
                 }
@@ -79,8 +86,8 @@ namespace vg::gfx
 
             struct ConstantBuffer : public DescriptorParameters
             {
-                ConstantBuffer(core::u8 _binding, core::u16 _register, core::u16 _count = 1) :
-                    DescriptorParameters(_binding, _register, _count)
+                ConstantBuffer(core::u8 _register, core::u32 _count, core::u8 _space, core::u16 _offset = Offset::Append) :
+                    DescriptorParameters(_register, _count, _space, _offset)
                 {
 
                 }
@@ -88,8 +95,8 @@ namespace vg::gfx
 
             struct Sampler : public DescriptorParameters
             {
-                Sampler(core::u8 _binding, core::u16 _register, core::u16 _count = 1) :
-                    DescriptorParameters(_binding, _register, _count)
+                Sampler(core::u8 _register = 0, core::u32 _count = 1, core::u8 _space = 0, core::u16 _offset = Offset::Append) :
+                    DescriptorParameters(_register, _count, _space, _offset)
                 {
 
                 }
@@ -151,12 +158,12 @@ namespace vg::gfx
         };
 
     public:
-        void addConstantBuffers(core::u8 _binding, core::u16 _register, core::u16 _count = 1);
-        void addTextures(core::u8 _binding, core::u16 _register, core::u16 _count = 1);
-        void addBuffers(core::u8 _binding, core::u16 _register, core::u16 _count = 1);
+        void addConstantBuffers(core::u8 _register, core::u32 _count = 1, core::u8 _space = 0, core::u16 _offset = Descriptor::Offset::Append);
+        void addTextures(core::u8 _register, core::u32 _count = 1, core::u8 _space = 0, core::u16 _offset = Descriptor::Offset::Append);
+        void addBuffers(core::u8 _register, core::u32 _count = 1, core::u8 _space = 0, core::u16 _offset = Descriptor::Offset::Append);
 
-        void addUAVTextures(core::u8 _binding, core::u16 _register, core::u16 _count = 1);
-        void addUAVBuffers(core::u8 _binding, core::u16 _register, core::u16 _count = 1);
+        void addUAVTextures(core::u8 _register, core::u32 _count = 1, core::u8 _space = 0, core::u16 _offset = Descriptor::Offset::Append);
+        void addUAVBuffers(core::u8 _register, core::u32 _count = 1, core::u8 _space = 0, core::u16 _offset = Descriptor::Offset::Append);
 
         const core::vector<Descriptor> & getDescriptors() const;
 

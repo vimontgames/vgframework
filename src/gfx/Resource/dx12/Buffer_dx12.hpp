@@ -56,15 +56,15 @@ namespace vg::gfx::dx12
 
             if (asBool(BindFlags::ConstantBuffer & _bufDesc.resource.m_bindFlags))
             {
-                //D3D12_CONSTANT_BUFFER_VIEW_DESC cbViewDesc = {};
-                //cbViewDesc.BufferLocation = resource->GetGPUVirtualAddress();
-                //cbViewDesc.SizeInBytes = (uint)alignUp(_bufDesc.size(), 256); // CB size is required to be 256-byte aligned.
-                //
-                //BindlessTable * bindlessTable = device->getBindlessTable();
-                //m_bindlessCBVHandle = bindlessTable->allocBindlessConstantBufferHandle(static_cast<gfx::Buffer *>(this), _reservedSlot);
-                //
-                //D3D12_CPU_DESCRIPTOR_HANDLE d3d12DescriptorHandle = bindlessTable->getd3d12CPUDescriptorHandle(m_bindlessCBVHandle);
-                //d3d12device->CreateConstantBufferView(&cbViewDesc, d3d12DescriptorHandle);
+                D3D12_CONSTANT_BUFFER_VIEW_DESC cbViewDesc = {};
+                cbViewDesc.BufferLocation = resource->GetGPUVirtualAddress();
+                cbViewDesc.SizeInBytes = (uint)alignUp(_bufDesc.size(), 256); // CB size is required to be 256-byte aligned.
+
+                BindlessTable * bindlessTable = device->getBindlessTable();
+                m_bindlessCBVHandle = bindlessTable->allocBindlessConstantBufferHandle(static_cast<gfx::Buffer *>(this), _reservedSlot);
+
+                D3D12_CPU_DESCRIPTOR_HANDLE d3d12DescriptorHandle = bindlessTable->getd3d12CPUDescriptorHandle(m_bindlessCBVHandle);
+                d3d12device->CreateConstantBufferView(&cbViewDesc, d3d12DescriptorHandle);
             }
 
             if (nullptr != _initData)
