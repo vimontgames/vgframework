@@ -32,47 +32,47 @@ namespace vg::gfx
     }
 
     //--------------------------------------------------------------------------------------
-    void RootSignatureTableDesc::addConstantBuffers(core::u8 _register, core::u32 _count, core::u8 _space, core::u16 _offset)
+    void RootSignatureTableDesc::addConstantBuffers(core::u8 _binding, core::u16 _register, core::u16 _count)
     {
         RootSignatureTableDesc::Descriptor descritor;
         descritor.m_type = Descriptor::Type::ConstantBuffer;
-        descritor.constantBuffer = Descriptor::ConstantBuffer(_register, _count, _space, _offset);
+        descritor.constantBuffer = Descriptor::ConstantBuffer(_binding, _register, _count);
         m_descriptors.push_back(descritor);
     }
 
     //--------------------------------------------------------------------------------------
-    void RootSignatureTableDesc::addTextures(core::u8 _register, core::u32 _count, core::u8 _space, core::u16 _offset)
+    void RootSignatureTableDesc::addTextures(core::u8 _binding, core::u16 _register, core::u16 _count)
     {
         RootSignatureTableDesc::Descriptor descritor;
         descritor.m_type = Descriptor::Type::Texture;
-        descritor.texture = Descriptor::Texture(_register, _count, _space, _offset);
+        descritor.texture = Descriptor::Texture(_binding, _register, _count);
         m_descriptors.push_back(descritor);
     }
 
     //--------------------------------------------------------------------------------------
-    void RootSignatureTableDesc::addBuffers(core::u8 _register, core::u32 _count, core::u8 _space, core::u16 _offset)
+    void RootSignatureTableDesc::addBuffers(core::u8 _binding, core::u16 _register, core::u16 _count)
     {
         RootSignatureTableDesc::Descriptor descritor;
         descritor.m_type = Descriptor::Type::Buffer;
-        descritor.buffer = Descriptor::Buffer(_register, _count, _space, _offset);
+        descritor.buffer = Descriptor::Buffer(_binding, _register, _count);
         m_descriptors.push_back(descritor);
     }
 
     //--------------------------------------------------------------------------------------
-    void RootSignatureTableDesc::addUAVTextures(core::u8 _register, core::u32 _count, core::u8 _space, core::u16 _offset)
+    void RootSignatureTableDesc::addUAVTextures(core::u8 _binding, core::u16 _register, core::u16 _count)
     {
         RootSignatureTableDesc::Descriptor descritor;
         descritor.m_type = Descriptor::Type::UAVTexture;
-        descritor.uavTexture = Descriptor::UAVTexture(_register, _count, _space, _offset);
+        descritor.uavTexture = Descriptor::UAVTexture(_binding, _register, _count);
         m_descriptors.push_back(descritor);
     }
 
     //--------------------------------------------------------------------------------------
-    void RootSignatureTableDesc::addUAVBuffers(core::u8 _register, core::u32 _count, core::u8 _space, core::u16 _offset)
+    void RootSignatureTableDesc::addUAVBuffers(core::u8 _binding, core::u16 _register, core::u16 _count)
     {
         RootSignatureTableDesc::Descriptor descritor;
         descritor.m_type = Descriptor::Type::UAVBuffer;
-        descritor.uavBuffer = Descriptor::UAVBuffer(_register, _count, _space, _offset);
+        descritor.uavBuffer = Descriptor::UAVBuffer(_binding, _register, _count);
         m_descriptors.push_back(descritor);
     }
 

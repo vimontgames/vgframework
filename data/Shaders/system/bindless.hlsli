@@ -1,14 +1,17 @@
 #ifndef _BINDLESS__HLSLI_
 #define _BINDLESS__HLSLI_
 
-// Bindless resource ranges (must be litteral constants)
-#define BINDLESS_TEXTURE_SRV_START      0      // [0..16383]       (14 bits)
-#define BINDLESS_BUFFER_SRV_START       16384  // [16384..32767]   (14 bits)
-#define BINDLESS_TEXTURE_UAV_START      32768  // [32768..40959]   (13 bits)
-#define BINDLESS_BUFFER_UAV_START       40960  // [40960..49151]   (13 bits)
+// Slots 0..15 are reserved for dynamic buffers
+#define DYNAMIC_BUFFER_START            0       // [0..15]
 
-#define BINDLESS_TABLE_RANGE_MIN        0
-#define BINDLESS_TABLE_RANGE_MAX        49152
+// Bindless resource ranges (must be litteral constants)
+#define BINDLESS_TEXTURE_SRV_START      16      // [16..32767]      (15 bits)
+#define BINDLESS_BUFFER_SRV_START       32768   // [32768..49151]   (14 bits)
+#define BINDLESS_TEXTURE_UAV_START      49152   // [49152..57343]   (13 bits)
+#define BINDLESS_BUFFER_UAV_START       57344   // [40960..65535]   (13 bits)
+
+#define BINDLESS_TABLE_RANGE_MIN        16
+#define BINDLESS_TABLE_RANGE_MAX        65536
 #define BINDLESS_TABLE_SIZE             (BINDLESS_TABLE_RANGE_MAX-BINDLESS_TABLE_RANGE_MIN)
 
 // Read-only textures

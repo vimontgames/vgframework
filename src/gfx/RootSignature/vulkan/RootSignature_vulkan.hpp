@@ -45,7 +45,7 @@ namespace vg::gfx::vulkan
                     case RootSignatureTableDesc::Descriptor::Type::ConstantBuffer:
                     {
                         const auto & constantbuffers = descriptor.getConstantBuffers();
-                        vkLayoutBinding.binding = constantbuffers.m_space;
+                        vkLayoutBinding.binding = constantbuffers.m_binding;
                         vkLayoutBinding.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_TEXEL_BUFFER;
                         vkLayoutBinding.descriptorCount = constantbuffers.m_count;
                         vkLayoutBinding.stageFlags = getVulkanShaderStageFlags(table.getShaderStageFlags());
@@ -56,7 +56,7 @@ namespace vg::gfx::vulkan
                     case RootSignatureTableDesc::Descriptor::Type::Texture:
                     {
                         const auto & textures = descriptor.getTextures();
-                        vkLayoutBinding.binding = textures.m_space;
+                        vkLayoutBinding.binding = textures.m_binding;
                         vkLayoutBinding.descriptorType = VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE;
                         vkLayoutBinding.descriptorCount = textures.m_count;
                         vkLayoutBinding.stageFlags = getVulkanShaderStageFlags(table.getShaderStageFlags());
@@ -67,7 +67,7 @@ namespace vg::gfx::vulkan
                     case RootSignatureTableDesc::Descriptor::Type::Buffer:
                     {
                         const auto & buffers = descriptor.getBuffers();
-                        vkLayoutBinding.binding = buffers.m_space;
+                        vkLayoutBinding.binding = buffers.m_binding;
                         vkLayoutBinding.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_TEXEL_BUFFER;
                         vkLayoutBinding.descriptorCount = buffers.m_count;
                         vkLayoutBinding.stageFlags = getVulkanShaderStageFlags(table.getShaderStageFlags());
@@ -78,7 +78,7 @@ namespace vg::gfx::vulkan
                     case RootSignatureTableDesc::Descriptor::Type::UAVTexture:
                     {
                         const auto & textures = descriptor.getUAVTextures();
-                        vkLayoutBinding.binding = textures.m_space;
+                        vkLayoutBinding.binding = textures.m_binding;
                         vkLayoutBinding.descriptorType = VK_DESCRIPTOR_TYPE_STORAGE_IMAGE;
                         vkLayoutBinding.descriptorCount = textures.m_count;
                         vkLayoutBinding.stageFlags = getVulkanShaderStageFlags(table.getShaderStageFlags());
@@ -89,7 +89,7 @@ namespace vg::gfx::vulkan
                     case RootSignatureTableDesc::Descriptor::Type::UAVBuffer:
                     {
                         const auto & buffers = descriptor.getUAVBuffers();
-                        vkLayoutBinding.binding = buffers.m_space;
+                        vkLayoutBinding.binding = buffers.m_binding;
                         vkLayoutBinding.descriptorType = VK_DESCRIPTOR_TYPE_STORAGE_BUFFER;
                         vkLayoutBinding.descriptorCount = buffers.m_count;
                         vkLayoutBinding.stageFlags = getVulkanShaderStageFlags(table.getShaderStageFlags());

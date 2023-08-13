@@ -16,11 +16,10 @@ namespace vg::gfx
         BindlessTable::BindlessTable()
         {
             m_tableDesc.setShaderStageFlags(ShaderStageFlags::All);
-            
-            m_tableDesc.addTextures(0, BINDLESS_TEXTURE_SRV_COUNT, BINDLESS_TEXTURE_SRV_BINDING, BINDLESS_TEXTURE_SRV_START);
-            m_tableDesc.addBuffers(0, BINDLESS_BUFFER_SRV_COUNT, BINDLESS_BUFFER_SRV_BINDING, BINDLESS_BUFFER_SRV_START);
-            m_tableDesc.addUAVTextures(0, BINDLESS_TEXTURE_UAV_COUNT, BINDLESS_TEXTURE_UAV_BINDING, BINDLESS_TEXTURE_UAV_START);
-            m_tableDesc.addUAVBuffers(0, BINDLESS_BUFFER_UAV_COUNT, BINDLESS_BUFFER_UAV_BINDING, BINDLESS_BUFFER_UAV_COUNT);
+            m_tableDesc.addTextures(BINDLESS_TEXTURE_SRV_BINDING, BINDLESS_TEXTURE_SRV_START, BINDLESS_TEXTURE_SRV_COUNT);
+            m_tableDesc.addBuffers(BINDLESS_BUFFER_SRV_BINDING, BINDLESS_BUFFER_SRV_START, BINDLESS_BUFFER_SRV_COUNT);
+            m_tableDesc.addUAVTextures(BINDLESS_TEXTURE_UAV_BINDING, BINDLESS_TEXTURE_UAV_START, BINDLESS_TEXTURE_UAV_COUNT);
+            m_tableDesc.addUAVBuffers(BINDLESS_BUFFER_UAV_BINDING, BINDLESS_BUFFER_UAV_START, BINDLESS_BUFFER_UAV_COUNT);
         }
 
         //--------------------------------------------------------------------------------------
