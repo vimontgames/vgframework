@@ -60,6 +60,7 @@ namespace vg::gfx::dxc
             auto macros = _macros;
 
             //args.push_back(L"-WX"); 
+            args.push_back((wchar_t *)L"-HV 2021");
 
             #ifdef VG_DEBUG
             args.push_back((wchar_t*)L"-Od");

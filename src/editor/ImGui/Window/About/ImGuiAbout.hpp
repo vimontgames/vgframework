@@ -88,6 +88,7 @@ namespace vg::editor
                 { "D3D12MemoryAllocator",   "",                 "https://github.com/GPUOpen-LibrariesAndSDKs/D3D12MemoryAllocator" },
                 { "Dear ImGui",             "8cbd391",          "https://github.com/ocornut/imgui/tree/docking" },
                 { "Dirent",                 "833b692",          "https://github.com/tronkko/dirent" },
+                { "DirectXShaderCompiler",  "v1.7.2212.1",      "https://github.com/microsoft/DirectXShaderCompiler/releases/tag/v1.7.2212.1" },
                 { "Font-Awesome",           "6.x ",             "https://github.com/FortAwesome/Font-Awesome/tree/6.x" },
                 { "hlslpp",                 "",                 "https://github.com/redorav/hlslpp" },
                 { "IconFontCppHeaders",     "90da802",          "https://github.com/juliettef/IconFontCppHeaders" },
@@ -120,9 +121,7 @@ namespace vg::editor
             Separator();
 
             Columns(1);
-            Text("Special Thanks:");
-            Text("");
-            Text("To Bob, Guigui, Marcel, Hamilcar, and SlavSquat.");
+            Text("Special Thanks to SlavSquat, Bob, Guigui, Marcel, Hamilcar and the old guard :)");
 
             End();
         }

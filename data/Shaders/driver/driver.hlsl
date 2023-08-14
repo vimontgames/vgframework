@@ -60,41 +60,17 @@ PS_Output_Quad PS_Copy(VS_Output_Quad _input)
 }
 
 #if 1
-
-float3 Linear2sRGB(float3 value)
-{
-    return value <= 0.0031308f ? value * 12.92f : pow(value, 1.0f / 2.4f) * 1.055f - 0.055f;
-}
-
-float3 sRGB2Linear(float3 value)
-{
-    return value <= 0.04045f ? value / 12.92f : pow((value + 0.055f) / 1.055f, 2.4f);
-}
-
+// Precise gamma
+float3 Linear2sRGB(float3 value)    {  return select(value <= 0.0031308f, value * 12.92f, pow(value, 1.0f / 2.4f) * 1.055f - 0.055f); }
+float3 sRGB2Linear(float3 value)    { return select(value <= 0.04045f, value / 12.92f, pow((value + 0.055f) / 1.055f, 2.4f)); }
 #elif 0
-
-float3 Linear2sRGB(float3 value)
-{
-    return pow(value, 1.0f / 2.2f);
-}
-
-float3 sRGB2Linear(float3 value)
-{
-    return pow(value, 2.2f);
-}
-
+// Average gamma
+float3 Linear2sRGB(float3 value)    { return pow(value, 1.0f / 2.2f); }
+float3 sRGB2Linear(float3 value)    { return pow(value, 2.2f); }
 #else
-
-float3 Linear2sRGB(float3 value)
-{
-    return sqrt(value);
-}
-
-float3 sRGB2Linear(float3 value)
-{
-    return value * value;
-}
-
+// Quick and dirty gamma
+float3 Linear2sRGB(float3 value)    { return sqrt(value); }
+float3 sRGB2Linear(float3 value)    { return value * value; }
 #endif
 
 PS_Output_Quad PS_Gamma(VS_Output_Quad _input)
