@@ -1,18 +1,7 @@
 #include "packing.hlsli"
+#include "buffer.hlsli"
 
 #define SimpleVertex_stride (17 * sizeof(float) >> 2)
-
-#if USE_BYTEADDRESSBUFFER 
-float4 LoadBuffer4(ByteAddressBuffer _buffer, uint _offset) { return float4(asfloat(_buffer.Load4(_offset<<2))); }
-float3 LoadBuffer3(ByteAddressBuffer _buffer, uint _offset) { return float3(asfloat(_buffer.Load3(_offset<<2))); }
-float2 LoadBuffer2(ByteAddressBuffer _buffer, uint _offset) { return float2(asfloat(_buffer.Load2(_offset<<2))); }
-float  LoadBuffer (ByteAddressBuffer _buffer, uint _offset)  { return asfloat(_buffer.Load(_offset<<2)); }
-#else
-float4 LoadBuffer4(Buffer<uint> _buffer, uint _offset)	{ return float4(asfloat(_buffer.Load(_offset)), asfloat(_buffer.Load(_offset + 1)), asfloat(_buffer.Load(_offset + 2)), asfloat( _buffer.Load(_offset + 3)) ); }
-float3 LoadBuffer3(Buffer<uint> _buffer, uint _offset)	{ return float3(asfloat(_buffer.Load(_offset)), asfloat(_buffer.Load(_offset + 1)), asfloat(_buffer.Load(_offset + 2))); }
-float2 LoadBuffer2(Buffer<uint> _buffer, uint _offset)	{ return float2(asfloat(_buffer.Load(_offset)), asfloat(_buffer.Load(_offset + 1)) ); }
-float  LoadBuffer (Buffer<uint> _buffer, uint _offset)	{ return asfloat(_buffer.Load(_offset)); }
-#endif
 
 struct SimpleVertex
 {
@@ -20,13 +9,13 @@ struct SimpleVertex
     {
 		uint vertexOffset = _offset + _vertexID * SimpleVertex_stride;
 
-		pos.xyz = LoadBuffer3(_buffer, vertexOffset);
-        nrm.xyz = LoadBuffer3(_buffer, vertexOffset + 3);
-        bin.xyz = LoadBuffer3(_buffer, vertexOffset + 6);
-        tan.xyz = LoadBuffer3(_buffer, vertexOffset + 9);
-        uv[0].xy = LoadBuffer2(_buffer, vertexOffset + 12);
-        uv[1].xy = LoadBuffer2(_buffer, vertexOffset + 14);
-        color = asuint(LoadBuffer(_buffer, vertexOffset + 16));
+		Load(pos.xyz, _buffer, vertexOffset);
+        Load(nrm.xyz, _buffer, vertexOffset + 3);
+        Load(bin.xyz, _buffer, vertexOffset + 6);
+        Load(tan.xyz, _buffer, vertexOffset + 9);
+        Load(uv[0].xy, _buffer, vertexOffset + 12);
+        Load(uv[1].xy, _buffer, vertexOffset + 14);
+        Load(color, _buffer, vertexOffset + 16);
     }
 
     float3 getPos()             { return pos; }

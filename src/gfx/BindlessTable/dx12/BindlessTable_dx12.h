@@ -25,6 +25,5 @@ namespace vg::gfx::dx12
         ID3D12DescriptorHeap *          m_srvCPUDescriptorHeap     = nullptr;
         ID3D12DescriptorHeap *          m_srvGPUDescriptorHeap     = nullptr;
         core::uint                      m_srcDescriptorHeapSize    = s_invalidSrvDescriptorSize;
-        core::vector<BindlessHandle>    m_dirtyGPUHandle;
     };
 }

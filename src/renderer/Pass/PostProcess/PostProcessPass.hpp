@@ -1,5 +1,5 @@
 #include "PostProcessPass.h"
-#include "shaders/driver/driver.hlsli"
+#include "shaders/system/rootConstants2D.hlsli"
 
 namespace vg::renderer
 {
@@ -11,11 +11,11 @@ namespace vg::renderer
     {
         auto * device = Device::get();
 
-        RootSignatureDesc rsDesc;
-        rsDesc.addRootConstants(ShaderStageFlags::VS | ShaderStageFlags::PS, 0, RootConstants2DCount);
-
         const RootSignatureTableDesc & bindlessTable = device->getBindlessTable()->getTableDesc();
-        rsDesc.addTable(bindlessTable);
+
+        RootSignatureDesc rsDesc;
+                          rsDesc.addRootConstants(ShaderStageFlags::VS | ShaderStageFlags::PS, 0, 0, RootConstants2DCount);
+                          rsDesc.addTable(bindlessTable);
 
         m_postProcessRootSignature = device->addRootSignature(rsDesc);
         m_postProcessShaderKey.init("driver/driver.hlsl", "Gamma");

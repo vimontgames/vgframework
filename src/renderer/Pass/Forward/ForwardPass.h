@@ -5,6 +5,7 @@
 namespace vg::gfx
 {
     class Buffer;
+    class DynamicBuffer;
 }
 
 namespace vg::renderer
@@ -47,5 +48,8 @@ namespace vg::renderer
 
         gfx::Buffer *               m_unitBoxIB = nullptr;
         gfx::Buffer *               m_unitBoxVB = nullptr;
+
+        //gfx::DynamicBuffer *        m_dynamicBuffer = nullptr;
+        //gfx::Buffer *               m_updatedBuffer = nullptr;
     };
 }

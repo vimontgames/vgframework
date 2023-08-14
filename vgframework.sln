@@ -22,7 +22,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "driver", "driver", "{F9214E
 	ProjectSection(SolutionItems) = preProject
 		data\Shaders\driver\driver.hlsl = data\Shaders\driver\driver.hlsl
 		data\Shaders\driver\driver.hlsl.h = data\Shaders\driver\driver.hlsl.h
-		data\Shaders\driver\driver.hlsli = data\Shaders\driver\driver.hlsli
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "background", "background", "{06052575-08B6-41A6-9E38-E1171229FF9C}"
@@ -36,9 +35,12 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "system", "system", "{4506A0
 	ProjectSection(SolutionItems) = preProject
 		data\Shaders\system\bindless.hlsli = data\Shaders\system\bindless.hlsli
 		data\Shaders\system\bindless.hlsli.h = data\Shaders\system\bindless.hlsli.h
+		data\Shaders\system\buffer.hlsli = data\Shaders\system\buffer.hlsli
 		data\Shaders\system\constants.hlsli = data\Shaders\system\constants.hlsli
+		data\Shaders\system\gamma.hlsli = data\Shaders\system\gamma.hlsli
 		data\Shaders\system\packing.hlsli = data\Shaders\system\packing.hlsli
 		data\Shaders\system\quad.hlsli = data\Shaders\system\quad.hlsli
+		data\Shaders\system\rootConstants2D.hlsli = data\Shaders\system\rootConstants2D.hlsli
 		data\Shaders\system\samplers.hlsli = data\Shaders\system\samplers.hlsli
 		data\Shaders\system\semantics.hlsli = data\Shaders\system\semantics.hlsli
 		data\Shaders\system\vertex.hlsl.h = data\Shaders\system\vertex.hlsl.h

@@ -132,7 +132,7 @@ namespace vg::gfx::vulkan
         for (uint i = 0; i < rootConstantDesc.size(); ++i)
         {
             const RootSignatureDesc::PushConstantParams & param = rootConstantDesc[i];
-            vkCmdPushConstants(m_vkCommandBuffer, vkPipelineLayout, RootSignature::getVulkanShaderStageFlags(param.m_stages), param.m_start<<2, param.m_count<<2, _constants);
+            vkCmdPushConstants(m_vkCommandBuffer, vkPipelineLayout, RootSignature::getVulkanShaderStageFlags(param.m_stages), param.m_register<<2, param.m_count<<2, _constants);
         }
     }
 
@@ -222,7 +222,7 @@ namespace vg::gfx::vulkan
     //}
       
     //--------------------------------------------------------------------------------------
-    void CommandList::copyBuffer(gfx::Buffer * _dst, core::uint_ptr _from)
+    void CommandList::copyBuffer(gfx::Buffer * _dst, gfx::Buffer * _src, core::uint_ptr _srcOffset)
     {
         auto * device = gfx::Device::get();
         auto & context = device->getCurrentFrameContext();
@@ -230,7 +230,7 @@ namespace vg::gfx::vulkan
         const auto & desc = _dst->getBufDesc();
 
         VkBufferCopy vkBufferCopy = {};
-        vkBufferCopy.srcOffset = _from; 
+        vkBufferCopy.srcOffset = _srcOffset; 
         vkBufferCopy.dstOffset = 0; 
         vkBufferCopy.size = desc.size();
 
@@ -248,7 +248,7 @@ namespace vg::gfx::vulkan
 
         vkCmdPipelineBarrier(m_vkCommandBuffer, VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT, VK_PIPELINE_STAGE_TRANSFER_BIT, 0, 0, nullptr, 1, &vkBufMemBarrierBefore, 0, nullptr);
 
-        vkCmdCopyBuffer(m_vkCommandBuffer, device->getUploadBuffer()->getBuffer()->getResource().getVulkanBuffer(), _dst->getResource().getVulkanBuffer(), 1, &vkBufferCopy);
+        vkCmdCopyBuffer(m_vkCommandBuffer, _src->getResource().getVulkanBuffer(), _dst->getResource().getVulkanBuffer(), 1, &vkBufferCopy);
 
         VkBufferMemoryBarrier vkBufMemBarrierAfter = {};
         vkBufMemBarrierAfter.sType = VK_STRUCTURE_TYPE_BUFFER_MEMORY_BARRIER;
@@ -264,7 +264,7 @@ namespace vg::gfx::vulkan
     }
 
     //--------------------------------------------------------------------------------------
-    void CommandList::copyTexture(gfx::Texture * _dst, core::uint_ptr _from)
+    void CommandList::copyTexture(gfx::Texture * _dst, gfx::Buffer * _src, core::uint_ptr _srcOffset)
     {
         auto * device = gfx::Device::get();
         auto & context = device->getCurrentFrameContext();
@@ -287,7 +287,7 @@ namespace vg::gfx::vulkan
 
         vkCmdPipelineBarrier(m_vkCommandBuffer, VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT, VK_PIPELINE_STAGE_TRANSFER_BIT, 0, 0, nullptr, 0, nullptr, 1, &image_memory_barrier);
 
-        VkDeviceSize currentOffset = _from;
+        VkDeviceSize currentOffset = _srcOffset;
 
         for (uint i = 0; i < desc.mipmaps; ++i)
         {
@@ -305,7 +305,7 @@ namespace vg::gfx::vulkan
                               vkBufImgCopy.imageOffset = { 0, 0, 0 };
                               vkBufImgCopy.imageExtent = { w, h, 1 };
 
-            vkCmdCopyBufferToImage(m_vkCommandBuffer, device->getUploadBuffer()->getBuffer()->getResource().getVulkanBuffer(), _dst->getResource().getVulkanImage(), VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, 1, &vkBufImgCopy);
+            vkCmdCopyBufferToImage(m_vkCommandBuffer, _src->getResource().getVulkanBuffer(), _dst->getResource().getVulkanImage(), VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, 1, &vkBufImgCopy);
 
             currentOffset += w * h * Texture::getPixelFormatSize(desc.format);
         }

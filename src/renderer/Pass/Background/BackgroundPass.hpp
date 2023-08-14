@@ -13,11 +13,11 @@ namespace vg::renderer
     {
         auto * device = Device::get();
 
-        RootSignatureDesc rsDesc;
-        rsDesc.addRootConstants(ShaderStageFlags::VS | ShaderStageFlags::PS, 0, sizeof(BackgroundRootConstants) / sizeof(u32));
-
         const RootSignatureTableDesc & bindlessTable = device->getBindlessTable()->getTableDesc();
-        rsDesc.addTable(bindlessTable);
+
+        RootSignatureDesc rsDesc;
+                          rsDesc.addRootConstants(ShaderStageFlags::VS | ShaderStageFlags::PS, 0, 0, sizeof(BackgroundRootConstants) / sizeof(u32));
+                          rsDesc.addTable(bindlessTable);        
 
         m_backgroundRootSignatureHandle = device->addRootSignature(rsDesc);
 

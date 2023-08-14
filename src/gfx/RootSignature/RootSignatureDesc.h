@@ -12,20 +12,21 @@ namespace vg::gfx
         {
             inline bool operator == (const PushConstantParams & _other) const
             {
-                return m_stages == _other.m_stages
-                    && m_start  == _other.m_start
-                    && m_count  == _other.m_count
-                    && m_space  == _other.m_space; 
+                return m_stages   == _other.m_stages
+                    && m_binding  == _other.m_binding
+                    && m_register == _other.m_register
+                    && m_count    == _other.m_count; 
             }
             inline bool operator != (const PushConstantParams & _other) const { return !(operator == (_other)); }
 
             ShaderStageFlags    m_stages = (ShaderStageFlags)0;
-            core::u8            m_start = 0;
-            core::u8            m_count = 0;
-            core::u8            m_space = 0;
+            core::u8            m_binding = 0;
+            core::u16           m_register = 0;
+            core::u16           m_count = 0;
+        
         };
 
-        core::uint addRootConstants(ShaderStageFlags _stages, core::u8 _offset, core::u8 _count);
+        core::uint addRootConstants(ShaderStageFlags _stages, core::u8 _binding, core::u16 _register, core::u16 _count);
         core::uint addTable(const RootSignatureTableDesc & _table);
 
         const core::vector<PushConstantParams> & getRootConstants() const { return m_pushConstants; }

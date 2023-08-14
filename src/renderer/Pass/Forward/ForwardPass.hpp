@@ -3,6 +3,8 @@
 #include "core/GameObject/GameObject.h"
 #include "core/Scene/Scene.h"
 
+#include "gfx/RingBuffer/Dynamic/DynamicBuffer.h"
+
 #include "renderer/Geometry/Mesh/MeshGeometry.h"
 #include "renderer/Model/Mesh/MeshModel.h"
 #include "renderer/View/View.h"
@@ -12,7 +14,7 @@
 
 #include "Shaders/system/vertex.hlsl.h"
 #include "shaders/default/default.hlsli"
-#include "Shaders/system/bindless.hlsli"
+#include "shaders/system/bindless.hlsli"
 
 namespace vg::renderer
 {
@@ -28,7 +30,7 @@ namespace vg::renderer
         const RootSignatureTableDesc & bindlessTable = device->getBindlessTable()->getTableDesc();
 
         RootSignatureDesc rsDesc;
-                          rsDesc.addRootConstants(ShaderStageFlags::All, 0, RootConstants3DCount);
+                          rsDesc.addRootConstants(ShaderStageFlags::All, 0, 0, RootConstants3DCount);
                           rsDesc.addTable(bindlessTable);
 
         m_rootSignatureHandle = device->addRootSignature(rsDesc);
@@ -40,11 +42,18 @@ namespace vg::renderer
         createGrid();
         createAxis();
         createUnitBox();
+
+        //m_dynamicBuffer = new DynamicBuffer("m_dynamicBuffer", 1024);
+        //BufferDesc updatedBufferDesc = BufferDesc(Usage::Default, BindFlags::ShaderResource, CPUAccessFlags::None, BufferFlags::None, sizeof(float4));
+        //m_updatedBuffer = device->createBuffer(updatedBufferDesc, "m_updatedBuffer");
     }
 
     //--------------------------------------------------------------------------------------
     ForwardPass::~ForwardPass()
     {
+        //VG_SAFE_RELEASE(m_dynamicBuffer);
+        //VG_SAFE_RELEASE(m_updatedBuffer);
+
         destroyAxis();
         destroyGrid();
         destroyUnitBox();
@@ -200,6 +209,21 @@ namespace vg::renderer
     {
         writeRenderTarget(0, _renderContext.getFrameGraphID("Color"));
         writeDepthStencil(_renderContext.getFrameGraphID("DepthStencil"));
+
+        // test (Can't 'copyBuffer' during RenderPass)
+        //u8 * data = m_dynamicBuffer->map(sizeof(float4), 256);
+        //{
+        //    float4 color = float4(0, 1, 0, 1);
+        //    memcpy(data, &color, sizeof(float4));
+        //}
+        //m_dynamicBuffer->unmap();
+        //
+        //// kwik Haxx
+        //auto * device = Device::get();
+        //CommandList * _cmdList = device->getCommandLists(CommandListType::Graphics)[0];
+        //
+        //// Probably need some syntaxic sugar here
+        //_cmdList->copyBuffer(m_updatedBuffer, m_dynamicBuffer->getBuffer(), data - m_dynamicBuffer->getBaseAddress());
     }
 
     //--------------------------------------------------------------------------------------

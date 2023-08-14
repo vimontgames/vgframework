@@ -231,6 +231,7 @@ namespace vg::gfx::dx12
     {
         auto * d3d12rs = _rootSig->getd3d12RootSignature();
         m_d3d12graphicsCmdList->SetGraphicsRootSignature(d3d12rs);
+        m_d3d12graphicsCmdList->SetGraphicsRootDescriptorTable(1, gfx::Device::get()->getBindlessTable()->getd3d12GPUDescriptorHeap()->GetGPUDescriptorHandleForHeapStart());
     }
 
     //--------------------------------------------------------------------------------------
@@ -280,7 +281,7 @@ namespace vg::gfx::dx12
         for (uint i = 0; i < rootConstantDesc.size(); ++i)
         {
             const RootSignatureDesc::PushConstantParams & param = rootConstantDesc[i];
-            m_d3d12graphicsCmdList->SetGraphicsRoot32BitConstants(i, param.m_count, &_constants[param.m_start], 0);
+            m_d3d12graphicsCmdList->SetGraphicsRoot32BitConstants(i, param.m_count, &_constants[param.m_register], 0);
         }
     }
 
@@ -312,16 +313,12 @@ namespace vg::gfx::dx12
     //--------------------------------------------------------------------------------------
     void CommandList::draw(core::uint _vertexCount, core::uint _startOffset)
     {
-        // Should be done only once per frame
-        m_d3d12graphicsCmdList->SetGraphicsRootDescriptorTable(1, gfx::Device::get()->getBindlessTable()->getd3d12GPUDescriptorHeap()->GetGPUDescriptorHandleForHeapStart());
         m_d3d12graphicsCmdList->DrawInstanced(_vertexCount, 1, _startOffset, 0);
     }
 
     //--------------------------------------------------------------------------------------
     void CommandList::drawIndexed(core::uint _indexCount, core::uint _startIndex, core::uint _baseVertex)
     {
-        // Should be done only once per frame
-        m_d3d12graphicsCmdList->SetGraphicsRootDescriptorTable(1, gfx::Device::get()->getBindlessTable()->getd3d12GPUDescriptorHeap()->GetGPUDescriptorHandleForHeapStart());
         m_d3d12graphicsCmdList->DrawIndexedInstanced(_indexCount, 1, _startIndex, _baseVertex, 0);
     }
 
@@ -387,7 +384,7 @@ namespace vg::gfx::dx12
     //}
 
     //--------------------------------------------------------------------------------------
-    void CommandList::copyBuffer(gfx::Buffer * _dst, core::uint_ptr _from)
+    void CommandList::copyBuffer(gfx::Buffer * _dst, gfx::Buffer * _src, core::uint_ptr _srcOffset)
     {
         auto * device = gfx::Device::get();
         auto & context = device->getCurrentFrameContext();
@@ -395,9 +392,9 @@ namespace vg::gfx::dx12
         const auto & bufDesc = _dst->getBufDesc();       
 
         ID3D12Resource * dst = _dst->getResource().getd3d12BufferResource();
-        ID3D12Resource *  src = device->getUploadBuffer()->getBuffer()->getResource().getd3d12BufferResource();
+        ID3D12Resource * src = _src->getResource().getd3d12BufferResource();
 
-        m_d3d12graphicsCmdList->CopyBufferRegion(dst, 0, src, _from, bufDesc.size());
+        m_d3d12graphicsCmdList->CopyBufferRegion(dst, 0, src, _srcOffset, bufDesc.size());
 
         D3D12_RESOURCE_BARRIER barrier;
         barrier.Transition.pResource = _dst->getResource().getd3d12BufferResource();
@@ -417,7 +414,7 @@ namespace vg::gfx::dx12
     }
 
     //--------------------------------------------------------------------------------------
-    void CommandList::copyTexture(gfx::Texture * _dst, core::uint_ptr _from)
+    void CommandList::copyTexture(gfx::Texture * _dst, gfx::Buffer * _src, core::uint_ptr _srcOffset)
     {
         auto * device = gfx::Device::get();
         auto & context = device->getCurrentFrameContext();
@@ -440,7 +437,7 @@ namespace vg::gfx::dx12
                                         dst.pResource = _dst->getResource().getd3d12TextureResource();
 
             D3D12_PLACED_SUBRESOURCE_FOOTPRINT placedTexture2D = {};
-                                               placedTexture2D.Offset = _from + _dst->getSubResourceData(i).offset;
+                                               placedTexture2D.Offset = _srcOffset + _dst->getSubResourceData(i).offset;
                                                placedTexture2D.Footprint = pitchedDesc; 
 
             D3D12_TEXTURE_COPY_LOCATION src = {};

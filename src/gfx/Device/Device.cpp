@@ -14,6 +14,7 @@
 #include "gfx/Profiler/Profiler.h"
 #include "gfx/Importer/TextureImporter.h"
 #include "gfx/RingBuffer/Upload/UploadBuffer.h"
+#include "gfx/RingBuffer/Dynamic/DynamicBuffer.h"
 
 #include "gfx/Device/DeviceCaps.hpp"
 
@@ -340,6 +341,9 @@ namespace vg::gfx
 
         // Copy staging data to GPU textures used for rendering
         flushUploadBuffer();
+
+        // Flush all dynamic buffers
+        DynamicBuffer::BeginFrame();
 
         // It is safe now to release frame (n-max_frame_latency+1) resources as we are now sure they are not in use by the GPU
         flushReleaseAsync();

@@ -198,7 +198,8 @@ namespace vg::gfx::vulkan
             "VUID-vkCmdResetQueryPool-commandBuffer-recording",
             "VUID-vkFreeDescriptorSets-pDescriptorSets-00309",
             "UNASSIGNED-CoreValidation-DrawState-QueryNotReset",
-            "UNASSIGNED-CoreValidation-Shader-DescriptorTypeMismatch"
+            "UNASSIGNED-CoreValidation-Shader-DescriptorTypeMismatch",
+			"UNASSIGNED-CoreValidation-Shader-OutputNotConsumed"		// This one could eventually output as simple info log but having it as a warning is annoying
         };
         for (uint i = 0; i < countof(ignoreList); ++i)
         {

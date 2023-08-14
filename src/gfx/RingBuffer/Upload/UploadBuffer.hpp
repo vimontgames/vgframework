@@ -67,17 +67,23 @@ namespace vg
             {
                 //VG_DEBUGPRINT("[UploadBuffer] Flush %u buffer(s) %u texture(s)\n", m_buffersToUpload.size(), m_texturesToUpload.size());
 
+                Buffer * src = getBuffer();
+
                 for (uint i = 0; i < m_buffersToUpload.size(); ++i)
                 {
                     auto & pair = m_buffersToUpload[i];
-                    _cmdList->copyBuffer(pair.first, pair.second);
+                    Buffer * dst = pair.first;
+                    uint_ptr srcOffset = pair.second;
+                    _cmdList->copyBuffer(dst, src, srcOffset);
                 }
                 m_buffersToUpload.clear();
 
                 for (uint i = 0; i < m_texturesToUpload.size(); ++i)
                 {
                     auto & pair = m_texturesToUpload[i];
-                    _cmdList->copyTexture(pair.first, pair.second);
+                    Texture * dst = pair.first;
+                    uint_ptr srcOffset = pair.second;
+                    _cmdList->copyTexture(dst, src, srcOffset);
                 }
                 m_texturesToUpload.clear();
             }

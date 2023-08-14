@@ -83,7 +83,7 @@ namespace vg::editor
             {
                 if (ImGui::BeginPopupModal(m_popup, nullptr, ImGuiWindowFlags_AlwaysAutoResize))
                 {
-                    ImGui::Text("Are you sure you want to close \"%s\?", scene->getName().c_str());
+                    ImGui::Text("Are you sure you want to close Scene \"%s\?", scene->getName().c_str());
 
                     if (ImGui::Button("Yes", style::button::Size))
                     {

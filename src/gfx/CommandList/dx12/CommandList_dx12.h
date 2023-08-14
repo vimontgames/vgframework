@@ -34,8 +34,8 @@ namespace vg::gfx::dx12
         void                                draw                        (core::uint _vertexCount, core::uint _startOffset);
         void                                drawIndexed                 (core::uint _indexCount, core::uint _startIndex, core::uint _baseVertex);
 
-        void                                copyTexture                 (gfx::Texture * _dst, core::uint_ptr _from);
-        void                                copyBuffer                  (gfx::Buffer * _dst, core::uint_ptr _from);
+        void                                copyTexture                 (gfx::Texture * _dst, gfx::Buffer * _src, core::uint_ptr _srcOffset);
+        void                                copyBuffer                  (gfx::Buffer * _dst, gfx::Buffer * _src, core::uint_ptr _srcOffset);
 
         //void *                              map                         (gfx::Buffer * _buffer);
         //void                                unmap                       (gfx::Buffer * _buffer);

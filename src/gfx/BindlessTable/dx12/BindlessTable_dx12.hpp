@@ -34,8 +34,6 @@ namespace vg::gfx::dx12
     //--------------------------------------------------------------------------------------
     void BindlessTable::updated3d12descriptor(BindlessHandle _handle)
     {
-        //m_dirtyGPUHandle.push_back(_handle);
-
         auto * device = gfx::Device::get();
 
         D3D12_CPU_DESCRIPTOR_HANDLE cpuDescriptors = m_srvCPUDescriptorHeap->GetCPUDescriptorHandleForHeapStart();

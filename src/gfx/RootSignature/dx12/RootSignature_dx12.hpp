@@ -14,9 +14,9 @@ namespace vg::gfx::dx12
             D3D12_ROOT_PARAMETER d3d12RootConstants = {};
             d3d12RootConstants.ParameterType = D3D12_ROOT_PARAMETER_TYPE_32BIT_CONSTANTS;
             d3d12RootConstants.ShaderVisibility = getd3d12ShaderStageFlags(rootConstant.m_stages);
-            d3d12RootConstants.Constants.ShaderRegister = rootConstant.m_start;
+            d3d12RootConstants.Constants.ShaderRegister = rootConstant.m_register;
             d3d12RootConstants.Constants.Num32BitValues = rootConstant.m_count;
-            d3d12RootConstants.Constants.RegisterSpace = rootConstant.m_space;
+            d3d12RootConstants.Constants.RegisterSpace = rootConstant.m_binding;
 
             d3d12rootParams.push_back(d3d12RootConstants);
         }

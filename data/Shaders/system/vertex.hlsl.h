@@ -1,7 +1,7 @@
 #pragma once
 
 #include "core/math/math.h"
-#include "Shaders/system/packing.hlsli"
+#include "packing.hlsli"
 
 namespace vg::gfx
 {

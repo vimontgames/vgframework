@@ -15,7 +15,7 @@ namespace vg::gfx::vulkan
 
             VkPushConstantRange vkRootConstant;
 
-            vkRootConstant.offset = rootConstant.m_start;
+            vkRootConstant.offset = rootConstant.m_register;
             vkRootConstant.size = rootConstant.m_count * sizeof(u32);
             vkRootConstant.stageFlags = getVulkanShaderStageFlags(rootConstant.m_stages);
 

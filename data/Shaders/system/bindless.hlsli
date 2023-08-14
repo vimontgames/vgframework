@@ -1,5 +1,6 @@
-#ifndef _BINDLESS__HLSLI_
-#define _BINDLESS__HLSLI_
+#pragma once
+
+#include "../system/buffer.hlsli"
 
 // Bindless resource ranges (must be litteral constants)
 #define BINDLESS_TEXTURE_SRV_START      0      // [0..16383]       (14 bits)
@@ -29,13 +30,6 @@
 
 #ifndef __cplusplus
 
-#ifdef VULKAN
-#define USE_BYTEADDRESSBUFFER 0
-#define ByteAddressBuffer Buffer<uint>
-#else
-#define USE_BYTEADDRESSBUFFER 1
-#endif
-
 #define PASTE(a,b) a##b
 
 #ifdef DX12
@@ -61,12 +55,11 @@ DECL_DESCRIPTOR_RANGE_RW(RWTexture2D<float4>, g_RWTexture2DTable, BINDLESS_TEXTU
 DECL_DESCRIPTOR_RANGE_RW(RWByteAddressBuffer, g_RWBufferTable, BINDLESS_BUFFER_UAV_BINDING, BINDLESS_BUFFER_UAV_START);
 
 // use #define here because of a Vulkan shader compiler crash :(
+#define getTexture1D(_handle)       (g_Texture1DTable[_handle - BINDLESS_TEXTURE_SRV_START])
 #define getTexture2D(_handle)       (g_Texture2DTable[_handle - BINDLESS_TEXTURE_SRV_START])
+#define getTexture3D(_handle)       (g_Texture3DTable[_handle - BINDLESS_TEXTURE_SRV_START])
 #define getBuffer(_handle)          (g_BufferTable[_handle - BINDLESS_BUFFER_SRV_START])
-
 #define getRWTexture2D(_handle)     (g_RWTexture2DTable[_handle BINDLESS_TEXTURE_UAV_START])
 #define getRWBuffer(_handle)        (g_RWBufferTable[_handle - BINDLESS_BUFFER_UAV_START])
-
-#endif // _DRIVER__HLSLI_
 
 #endif // __cplusplus

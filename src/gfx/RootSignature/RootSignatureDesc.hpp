@@ -32,9 +32,9 @@ namespace vg::gfx
     }
 
     //--------------------------------------------------------------------------------------
-    uint RootSignatureDesc::addRootConstants(ShaderStageFlags _stages, u8 _offset, u8 _count)
+    uint RootSignatureDesc::addRootConstants(ShaderStageFlags _stages, u8 _binding, u16 _register, u16 _count)
     {
-        m_pushConstants.push_back({ _stages, _offset, _count });
+        m_pushConstants.push_back({ _stages, _binding, _register, _count });
         return (uint)(m_pushConstants.size() - 1);
     }
 }

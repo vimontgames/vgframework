@@ -1,8 +1,8 @@
 #include "../system/bindless.hlsli"
 #include "../system/semantics.hlsli"
 #include "../system/samplers.hlsli"
-
-#include "driver.hlsli"
+#include "../system/gamma.hlsli"
+#include "../system/rootConstants2D.hlsli"
 
 struct VS_Output_Quad
 {
@@ -32,15 +32,12 @@ PS_Output_Quad PS_Quad(VS_Output_Quad _input)
     output.color0 = float4(uv, 0, 1);
 
     // RO texture
-    //output.color0.rgb = Texture1DTable[index].Sample(nearestClamp, uv.x).rgb;
+    //output.color0.rgb = getTexture1D(rootConstants2D.texID).Sample(nearestClamp, uv.x).rgb;
     output.color0.rgba = getTexture2D(rootConstants2D.texID).Sample(nearestRepeat, uv).rgba;
-    //output.color0.rgb = Texture3DTable[index].Sample(nearestClamp, float3(uv,0)).rgb;
+    //output.color0.rgb = getTexture3D(rootConstants2D.texID).Sample(nearestClamp, float3(uv,0)).rgb;
 
     // Uniform buffer
     //output.color0 = asfloat(BufferTable[rootConstants.cbID].Load4(0));
-
-    // Constant buffer
-    //output.color0 = ubo[rootConstants.cbID].test;
 
     // Texture UAV
     //output.color0 = RWTexture2DTable[0].Load(0);
@@ -59,20 +56,6 @@ PS_Output_Quad PS_Copy(VS_Output_Quad _input)
     return output;
 }
 
-#if 1
-// Precise gamma
-float3 Linear2sRGB(float3 value)    {  return select(value <= 0.0031308f, value * 12.92f, pow(value, 1.0f / 2.4f) * 1.055f - 0.055f); }
-float3 sRGB2Linear(float3 value)    { return select(value <= 0.04045f, value / 12.92f, pow((value + 0.055f) / 1.055f, 2.4f)); }
-#elif 0
-// Average gamma
-float3 Linear2sRGB(float3 value)    { return pow(value, 1.0f / 2.2f); }
-float3 sRGB2Linear(float3 value)    { return pow(value, 2.2f); }
-#else
-// Quick and dirty gamma
-float3 Linear2sRGB(float3 value)    { return sqrt(value); }
-float3 sRGB2Linear(float3 value)    { return value * value; }
-#endif
-
 PS_Output_Quad PS_Gamma(VS_Output_Quad _input)
 {
     PS_Output_Quad output;
@@ -80,7 +63,7 @@ PS_Output_Quad PS_Gamma(VS_Output_Quad _input)
     output.color0 = float4(uv, 0, 1);
 
     output.color0.rgba = getTexture2D(rootConstants2D.texID).Sample(nearestRepeat, uv).rgba;
-    output.color0.rgb = Linear2sRGB(output.color0.rgb); // pow(output.color0.rgb, 1.0f / 2.2f);
+    output.color0.rgb = Linear2sRGB(output.color0.rgb);
     output.color0.a = 1; // Should be an option
 
     return output;

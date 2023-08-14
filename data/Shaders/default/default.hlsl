@@ -2,6 +2,7 @@
 #include "../system/semantics.hlsli"
 #include "../system/samplers.hlsli"
 #include "../system/vertex.hlsli"
+#include "../system/gamma.hlsli"
 
 #include "default.hlsli"
 
@@ -52,14 +53,15 @@ float3 getMatIDColor(uint _matID)
     return 0;
 }
 
-float4 LinearOutput(float4 _color)
-{
-    return float4(pow(_color.rgb, 2.2f), _color.a);
-}
-
 PS_Output PS_Forward(VS_Output _input)
 {
     PS_Output output;
+    
+    // test dynamic buffer
+    //Load(test, getBuffer(16393));
+    //output.color0 = test;
+    //return output;
+    
     float2 uv0 = _input.uv.xy;
     float2 uv1 = _input.uv.zw;
     
@@ -87,34 +89,34 @@ PS_Output PS_Forward(VS_Output _input)
     switch (rootConstants3D.getMode())
     {
         case MODE_MATID:
-            output.color0 = LinearOutput(float4(getMatIDColor(rootConstants3D.getMatID()), 1.0f));
+            output.color0 = sRGBA2Linear(float4(getMatIDColor(rootConstants3D.getMatID()), 1.0f));
             break;
         case MODE_VS_TANGENT:
-            output.color0 = LinearOutput(float4(T*0.5f + 0.5f, 1.0f));
+            output.color0 = sRGBA2Linear(float4(T * 0.5f + 0.5f, 1.0f));
             break;
         case MODE_VS_BINORMAL:
-            output.color0 = LinearOutput(float4(B*0.5f + 0.5f, 1.0f));
+            output.color0 = sRGBA2Linear(float4(B * 0.5f + 0.5f, 1.0f));
             break;
         case MODE_VS_NORMAL:
-            output.color0 = LinearOutput(float4(N*0.5f + 0.5f, 1.0f));
+            output.color0 = sRGBA2Linear(float4(N * 0.5f + 0.5f, 1.0f));
             break;
         case MODE_VS_COLOR:
             output.color0 = _input.col;
             break;
         case MODE_UV0:
-            output.color0 = LinearOutput(float4(uv0.xy, 0, 1));
+            output.color0 = sRGBA2Linear(float4(uv0.xy, 0, 1));
             break;
         case MODE_UV1:
-            output.color0 = LinearOutput(float4(uv1.xy, 0, 1));
+            output.color0 = sRGBA2Linear(float4(uv1.xy, 0, 1));
             break;
         case MODE_ALBEDO_MAP:
             output.color0 = float4(albedo.rgb, 1);
             break;
         case MODE_NORMAL_MAP:
-            output.color0 = LinearOutput(float4(normal.rgb*0.5+0.5, 1));
+            output.color0 = sRGBA2Linear(float4(normal.rgb * 0.5 + 0.5, 1));
             break;
     }
-    
+        
     return output;
 }
 
