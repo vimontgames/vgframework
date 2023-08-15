@@ -1,6 +1,7 @@
-#pragma once
+#ifndef _BINDLESS__HLSLI_
+#define _BINDLESS__HLSLI_
 
-#include "../system/buffer.hlsli"
+#include "system/buffer.hlsli"
 
 // Bindless resource ranges (must be litteral constants)
 #define BINDLESS_TEXTURE_SRV_START      0      // [0..16383]       (14 bits)
@@ -63,3 +64,5 @@ DECL_DESCRIPTOR_RANGE_RW(RWByteAddressBuffer, g_RWBufferTable, BINDLESS_BUFFER_U
 #define getRWBuffer(_handle)        (g_RWBufferTable[_handle - BINDLESS_BUFFER_UAV_START])
 
 #endif // __cplusplus
+
+#endif // _BINDLESS__HLSLI_

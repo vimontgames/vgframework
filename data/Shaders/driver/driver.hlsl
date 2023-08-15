@@ -1,8 +1,8 @@
-#include "../system/bindless.hlsli"
-#include "../system/semantics.hlsli"
-#include "../system/samplers.hlsli"
-#include "../system/gamma.hlsli"
-#include "../system/rootConstants2D.hlsli"
+#include "system/bindless.hlsli"
+#include "system/semantics.hlsli"
+#include "system/samplers.hlsli"
+#include "system/gamma.hlsli"
+#include "system/rootConstants2D.hlsli"
 
 struct VS_Output_Quad
 {

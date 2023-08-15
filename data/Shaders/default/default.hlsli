@@ -1,8 +1,8 @@
 #ifndef _DEFAULT__HLSLI_
 #define _DEFAULT__HLSLI_
 
-#include "../system/constants.hlsli"
-#include "../system/packing.hlsli"
+#include "system/constants.hlsli"
+#include "system/packing.hlsli"
 
 #define FLAG_NONE           0x0000
 #define FLAG_ALBEDOMAPS     0x0001

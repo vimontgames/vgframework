@@ -31,12 +31,16 @@ namespace vg::gfx
 
         Shader * compile(API _api, const core::string & _file, const core::string & _entryPoint, ShaderStage _stage, const core::vector<core::pair<core::string, core::uint>> & _macros);
 
+        const core::string &               getShaderRootPath() const { return m_shaderRootPath; }
+        const core::vector<core::string> & getShaderRootFolders() const { return m_shaderRootFolders; }
+
     private:
-        core::string            m_shaderRootPath;
-        ShaderCompiler *        m_shaderCompiler = nullptr;
-        core::vector<HLSLDesc>  m_shaderFileDescriptors;
-        core::uint              m_compiledCount = 0;
-        core::uint              m_warningCount = 0;
-        core::uint              m_errorCount = 0;
+        core::string                m_shaderRootPath;
+        core::vector<core::string>  m_shaderRootFolders;
+        ShaderCompiler *            m_shaderCompiler = nullptr;
+        core::vector<HLSLDesc>      m_shaderFileDescriptors;
+        core::uint                  m_compiledCount = 0;
+        core::uint                  m_warningCount = 0;
+        core::uint                  m_errorCount = 0;
     };
 }

@@ -31,22 +31,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "background", "background", 
 		data\Shaders\background\background.hlsli = data\Shaders\background\background.hlsli
 	EndProjectSection
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "system", "system", "{4506A0AF-27FD-468A-85BB-444584048396}"
-	ProjectSection(SolutionItems) = preProject
-		data\Shaders\system\bindless.hlsli = data\Shaders\system\bindless.hlsli
-		data\Shaders\system\bindless.hlsli.h = data\Shaders\system\bindless.hlsli.h
-		data\Shaders\system\buffer.hlsli = data\Shaders\system\buffer.hlsli
-		data\Shaders\system\constants.hlsli = data\Shaders\system\constants.hlsli
-		data\Shaders\system\gamma.hlsli = data\Shaders\system\gamma.hlsli
-		data\Shaders\system\packing.hlsli = data\Shaders\system\packing.hlsli
-		data\Shaders\system\quad.hlsli = data\Shaders\system\quad.hlsli
-		data\Shaders\system\rootConstants2D.hlsli = data\Shaders\system\rootConstants2D.hlsli
-		data\Shaders\system\samplers.hlsli = data\Shaders\system\samplers.hlsli
-		data\Shaders\system\semantics.hlsli = data\Shaders\system\semantics.hlsli
-		data\Shaders\system\vertex.hlsl.h = data\Shaders\system\vertex.hlsl.h
-		data\Shaders\system\vertex.hlsli = data\Shaders\system\vertex.hlsli
-	EndProjectSection
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "default", "default", "{73E04AC7-00AE-48F3-8650-73DE5C3A9661}"
 	ProjectSection(SolutionItems) = preProject
 		data\Shaders\default\default.hlsl = data\Shaders\default\default.hlsl
@@ -91,6 +75,22 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "editor", "src\editor\editor
 		{257A93DC-9206-4770-9560-7A22DFF0AC01} = {257A93DC-9206-4770-9560-7A22DFF0AC01}
 		{42797D89-56C0-4B42-846D-DEB042288DCF} = {42797D89-56C0-4B42-846D-DEB042288DCF}
 		{F31ACA84-29B9-4517-80E5-3D625A8AC34B} = {F31ACA84-29B9-4517-80E5-3D625A8AC34B}
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "system", "system", "{34ABDEEE-1180-4BD9-9FCC-16C174A96FE8}"
+	ProjectSection(SolutionItems) = preProject
+		data\Shaders\system\bindless.hlsli = data\Shaders\system\bindless.hlsli
+		data\Shaders\system\bindless.hlsli.h = data\Shaders\system\bindless.hlsli.h
+		data\Shaders\system\buffer.hlsli = data\Shaders\system\buffer.hlsli
+		data\Shaders\system\constants.hlsli = data\Shaders\system\constants.hlsli
+		data\Shaders\system\gamma.hlsli = data\Shaders\system\gamma.hlsli
+		data\Shaders\system\packing.hlsli = data\Shaders\system\packing.hlsli
+		data\Shaders\system\quad.hlsli = data\Shaders\system\quad.hlsli
+		data\Shaders\system\rootConstants2D.hlsli = data\Shaders\system\rootConstants2D.hlsli
+		data\Shaders\system\samplers.hlsli = data\Shaders\system\samplers.hlsli
+		data\Shaders\system\semantics.hlsli = data\Shaders\system\semantics.hlsli
+		data\Shaders\system\vertex.hlsl.h = data\Shaders\system\vertex.hlsl.h
+		data\Shaders\system\vertex.hlsli = data\Shaders\system\vertex.hlsli
 	EndProjectSection
 EndProject
 Global
@@ -165,8 +165,8 @@ Global
 		{3A24AFD2-079B-45FC-8488-70058ACACD89} = {AE20161D-322E-4F0C-AC90-8EBDF6B42882}
 		{F9214EBF-2727-4CEE-A759-F8154BD904EC} = {3A24AFD2-079B-45FC-8488-70058ACACD89}
 		{06052575-08B6-41A6-9E38-E1171229FF9C} = {3A24AFD2-079B-45FC-8488-70058ACACD89}
-		{4506A0AF-27FD-468A-85BB-444584048396} = {3A24AFD2-079B-45FC-8488-70058ACACD89}
 		{73E04AC7-00AE-48F3-8650-73DE5C3A9661} = {3A24AFD2-079B-45FC-8488-70058ACACD89}
+		{34ABDEEE-1180-4BD9-9FCC-16C174A96FE8} = {3A24AFD2-079B-45FC-8488-70058ACACD89}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {B437215B-B736-4FF0-8DA1-E6B35C780CE1}

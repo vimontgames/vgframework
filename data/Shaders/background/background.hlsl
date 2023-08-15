@@ -1,4 +1,4 @@
-#include "../system/semantics.hlsli"
+#include "system/semantics.hlsli"
 #include "background.hlsli"
 
 struct VS_Output_Quad

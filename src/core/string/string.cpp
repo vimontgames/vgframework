@@ -23,10 +23,24 @@ namespace vg::core
     //--------------------------------------------------------------------------------------
     wstring wstring_convert(const string & _string)
     {
-        wchar_t result[1024];
-        VG_ASSERT(_string.length() < countof(result));
-        size_t s;
-        mbstowcs_s(&s, result, countof(result), _string.c_str(), _string.length());
-        return wstring(result);
+        int len;
+        int slength = (int)_string.length() + 1;
+        len = MultiByteToWideChar(CP_ACP, 0, _string.c_str(), slength, 0, 0);
+        std::wstring r(len, L'\0');
+        MultiByteToWideChar(CP_ACP, 0, _string.c_str(), slength, &r[0], len);
+        return r;
+    }
+
+    //--------------------------------------------------------------------------------------
+    // convert string to wstring
+    //--------------------------------------------------------------------------------------
+    string string_convert(const wstring & _string)
+    {
+        int len;
+        int slength = (int)_string.length() + 1;
+        len = WideCharToMultiByte(CP_ACP, 0, _string.c_str(), slength, 0, 0, 0, 0);
+        std::string r(len, '\0');
+        WideCharToMultiByte(CP_ACP, 0, _string.c_str(), slength, &r[0], len, 0, 0);
+        return r;
     }
 }

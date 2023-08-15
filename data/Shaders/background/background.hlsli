@@ -1,8 +1,8 @@
 #ifndef _BACKGROUND__HLSLI_
 #define _BACKGROUND__HLSLI_
 
-#include "../system/quad.hlsli"
-#include "../system/constants.hlsli"
+#include "system/quad.hlsli"
+#include "system/constants.hlsli"
 
 struct BackgroundRootConstants
 {

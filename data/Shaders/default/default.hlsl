@@ -1,8 +1,8 @@
-#include "../system/bindless.hlsli"
-#include "../system/semantics.hlsli"
-#include "../system/samplers.hlsli"
-#include "../system/vertex.hlsli"
-#include "../system/gamma.hlsli"
+#include "system/bindless.hlsli"
+#include "system/semantics.hlsli"
+#include "system/samplers.hlsli"
+#include "system/vertex.hlsli"
+#include "system/gamma.hlsli"
 
 #include "default.hlsli"
 

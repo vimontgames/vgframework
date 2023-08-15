@@ -17,6 +17,9 @@ namespace vg::gfx
         // Path must end with '\' or '/'
         if (m_shaderRootPath.back() != '/' && m_shaderRootPath.back() != '\\')
             m_shaderRootPath += "/";
+
+        // TODO: read dir to root folders names used #include ?
+        m_shaderRootFolders.push_back("system");
     
         m_shaderCompiler = new ShaderCompiler();
     }
@@ -138,47 +141,69 @@ namespace vg::gfx
     //--------------------------------------------------------------------------------------
     void parseIncludes(uint _index, string dir, string _file, vector<string> & _includes, u64 & _crc, uint _depth = 0)
     {
-        string contents;
-        string fullpath = dir.empty() ? _file : dir + "/" + _file;
-        if (io::readFile("data/shaders/" + fullpath, contents))
+        vector<string> paths;
+        paths.push_back(_file);             // absolute path
+        paths.push_back("Shaders/" + _file);
+        paths.push_back(dir + "/" + _file); // path relative to current folder
+
+        bool exists = false;
+
+        for (uint i = 0; i < paths.size() && !exists; ++i)
         {
-            if (_includes.end() == std::find(_includes.begin(), _includes.end(), fullpath))
+            string fullpath = paths[i];
+
+            string contents;
+            if (io::readFile("data/" + fullpath, contents, false))
             {
-                _includes.push_back(fullpath);
-                const u64 crc = computeCRC64(contents.c_str());
-                _crc ^= crc;
+                exists = true;
 
-                #if VG_SHADER_PARSING_VERBOSITY > 1
-                if (_depth)
-                    VG_DEBUGPRINT("  + ");
-                else
-                    VG_DEBUGPRINT("#%u: ", _index);
-                
-                VG_DEBUGPRINT("\"%s\"\n", fullpath.c_str());
-                #endif
-
-                size_t cur = 0;
-                auto includeOffset = contents.find("#include", cur);
-
-                while (string::npos != includeOffset)
+                if (_includes.end() == std::find(_includes.begin(), _includes.end(), fullpath))
                 {
-                    auto quoteBeginOffset = contents.find("\"", includeOffset + strlen("#include"));
+                    _includes.push_back(fullpath);
+                    const u64 crc = computeCRC64(contents.c_str());
+                    _crc ^= crc;
 
-                    if (string::npos != quoteBeginOffset)
+                    #if VG_SHADER_PARSING_VERBOSITY > 1
+                    if (_depth)
+                        VG_DEBUGPRINT("  + ");
+                    else
+                        VG_DEBUGPRINT("#%u: ", _index);
+
+                    VG_DEBUGPRINT("\"%s\"\n", fullpath.c_str());
+                    #endif
+
+                    size_t cur = 0;
+                    auto includeOffset = contents.find("#include", cur);
+
+                    while (string::npos != includeOffset)
                     {
-                        auto quoteEndOffset = contents.find("\"", quoteBeginOffset + 1);
+                        auto quoteBeginOffset = contents.find("\"", includeOffset + strlen("#include"));
 
-                        string path = contents.substr(quoteBeginOffset + 1, quoteEndOffset - quoteBeginOffset - 1);
-                        path = tolower(path);
+                        if (string::npos != quoteBeginOffset)
+                        {
+                            auto quoteEndOffset = contents.find("\"", quoteBeginOffset + 1);
 
-                        string dir = io::getFileDir(fullpath);
-                        parseIncludes(_index, dir, path, _includes, _crc, ++_depth);
+                            string path = contents.substr(quoteBeginOffset + 1, quoteEndOffset - quoteBeginOffset - 1);
+                            path = tolower(path);
 
-                        cur = quoteEndOffset;
-                        includeOffset = contents.find("#include", cur);
+                            string dir = io::getFileDir(fullpath);
+                            parseIncludes(_index, dir, path, _includes, _crc, ++_depth);
+
+                            cur = quoteEndOffset;
+                            includeOffset = contents.find("#include", cur);
+                        }
                     }
                 }
             }
+        }
+
+        if (!exists)
+        {
+            string msg = "Could not open file " + _file + " using paths:\n";
+            for (uint i = 0; i < paths.size(); ++i)
+                msg += "paths["+ to_string(i) +"] = \"" + paths[i] + "\";\n";
+
+            VG_ASSERT(exists, msg.c_str());
         }
     }
 
@@ -205,7 +230,7 @@ namespace vg::gfx
 
             u64 oldCRC = desc.getCRC();
             u64 newCRC = 0;
-            parseIncludes(i, "", file, filenames, newCRC);
+            parseIncludes(i, "", "shaders/" + file, filenames, newCRC);
 
             if (newCRC != oldCRC)
             {

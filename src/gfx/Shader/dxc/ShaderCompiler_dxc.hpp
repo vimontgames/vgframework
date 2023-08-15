@@ -1,4 +1,80 @@
 #include "dxc/inc/dxcapi.h"
+#include "gfx/Shader/ShaderManager.h"
+
+#define CUSTOM_DXC_INCLUDE_HANDLER 1
+#if CUSTOM_DXC_INCLUDE_HANDLER
+
+#include <wrl/client.h>
+#include "core/string/string.h"
+
+class CustomIncludeHandler : public IDxcIncludeHandler
+{
+public:
+    HRESULT STDMETHODCALLTYPE LoadSource(_In_ LPCWSTR pFilename, _COM_Outptr_result_maybenull_ IDxcBlob ** ppIncludeSource) override
+    {
+        using namespace Microsoft::WRL;
+        using namespace vg::gfx;
+
+        if (nullptr == m_dxcUtils)
+            VG_ASSERT_SUCCEEDED(DxcCreateInstance(CLSID_DxcUtils, IID_PPV_ARGS(m_dxcUtils.GetAddressOf())));
+
+        ComPtr<IDxcBlobEncoding> pEncoding;
+        std::string path = string_convert(pFilename);
+
+        const auto shaderManager = ShaderManager::get();
+        const auto & shaderFolder = shaderManager->getShaderRootPath();
+        const auto & rootFolders = shaderManager->getShaderRootFolders();
+
+        bool found = false;
+        for (uint i = 0; i < rootFolders.size() && !found; ++i)
+        {
+            const string shaderIncludeFolder = rootFolders[i];
+
+            auto lastShaderFolder = tolower(path).rfind(shaderIncludeFolder);
+            if (string::npos != lastShaderFolder)
+            {
+                lastShaderFolder += shaderIncludeFolder.length() + 1;
+                path = path.substr(lastShaderFolder);
+                path = "./" + shaderFolder + shaderIncludeFolder + "/" + path;
+            }
+        }
+
+        wstring filename = wstring_convert(path);
+
+        HRESULT hr = m_dxcUtils->LoadFile(filename.c_str(), nullptr, pEncoding.GetAddressOf());
+        VG_ASSERT(SUCCEEDED(hr), "CustomIncludeHandler could not open #include file \"%s\"", path.c_str());
+        if (SUCCEEDED(hr))
+        {
+            m_includedFiles.insert(path);
+            *ppIncludeSource = pEncoding.Detach();
+        }
+        return hr;
+    }
+
+    HRESULT STDMETHODCALLTYPE QueryInterface(REFIID riid, _COM_Outptr_ void __RPC_FAR * __RPC_FAR * ppvObject) override { return E_NOINTERFACE; }
+    ULONG STDMETHODCALLTYPE AddRef(void) override 
+    { 
+        return m_refCount.fetch_add(1) + 1;
+    }
+
+    ULONG STDMETHODCALLTYPE Release(void) override 
+    { 
+        const u32 prev = m_refCount.fetch_sub(1);
+        if (1 == prev)
+            delete this;
+        return prev - 1;
+    }
+
+    ~CustomIncludeHandler()
+    {
+        VG_SAFE_RELEASE(m_dxcUtils);
+    }
+
+    atomic<u32>                         m_refCount = 1;
+    std::unordered_set<std::string>     m_includedFiles;
+    Microsoft::WRL::ComPtr<IDxcUtils>   m_dxcUtils;
+};
+#endif
 
 namespace vg::gfx::dxc
 {
@@ -7,7 +83,12 @@ namespace vg::gfx::dxc
     {
         VG_ASSERT_SUCCEEDED(DxcCreateInstance(CLSID_DxcLibrary, IID_PPV_ARGS(&m_d3d12dxcLibrary)));
         VG_ASSERT_SUCCEEDED(DxcCreateInstance(CLSID_DxcCompiler, IID_PPV_ARGS(&m_d3d12dxcCompiler)));
+
+        #if CUSTOM_DXC_INCLUDE_HANDLER
+        m_d3d12dxcIncludeHandler = new CustomIncludeHandler();
+        #else
         VG_ASSERT_SUCCEEDED(m_d3d12dxcLibrary->CreateIncludeHandler(&m_d3d12dxcIncludeHandler));
+        #endif
     }
 
     //--------------------------------------------------------------------------------------

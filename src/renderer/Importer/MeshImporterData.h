@@ -1,7 +1,7 @@
 #pragma once
 
 #include "MaterialImporterData.h"
-#include "Shaders/system/vertex.hlsl.h"
+#include "shaders/system/vertex.hlsl.h"
 #include "renderer/Geometry/Batch/Batch.h"
 #include "renderer/Geometry/AABB/AABB.h"
 

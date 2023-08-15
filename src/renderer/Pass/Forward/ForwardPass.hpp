@@ -12,7 +12,7 @@
 #include "renderer/IGraphicInstance.h"
 #include "renderer/Model/Material/MaterialModel.h"
 
-#include "Shaders/system/vertex.hlsl.h"
+#include "shaders/system/vertex.hlsl.h"
 #include "shaders/default/default.hlsli"
 #include "shaders/system/bindless.hlsli"
 
@@ -382,7 +382,7 @@ namespace vg::renderer
                         normalMap = renderer->getDefaultTexture(MaterialTextureType::Normal);
                     }
 
-                    // TODO: bind per-material (possibbly per-material instance) constant buffer instead
+                    // TODO: bind per-material (possibly per-material instance) constant buffer instead
                     root3D.setAlbedoTextureHandle(albedoMap->getBindlessSRVHandle());
                     root3D.setNormalTextureHandle(normalMap->getBindlessSRVHandle());
 
