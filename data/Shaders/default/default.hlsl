@@ -68,11 +68,13 @@ PS_Output PS_Forward(VS_Output _input)
     float4 albedo = getTexture2D( rootConstants3D.getAlbedoTextureHandle() ).Sample(linearRepeat, uv0).rgba;
     float3 normal = getTexture2D( rootConstants3D.getNormalTextureHandle() ).Sample(linearRepeat, uv0).rgb*2-1;
 
+    #if _TOOLMODE
     if (0 == (rootConstants3D.getFlags() & FLAG_ALBEDOMAPS))
         albedo = pow(0.5, 0.45);
 
     if (0 == (rootConstants3D.getFlags() & FLAG_NORMALMAPS))
         normal = float3(0,0,1);
+    #endif
 
     float3 T = normalize(_input.tan);
     float3 B = normalize(_input.bin);
@@ -86,6 +88,7 @@ PS_Output PS_Forward(VS_Output _input)
 
     output.color0.rgba = float4(albedo.rgb * (fakeDiffuseLighting + fakeAmbientLighting), 1.0f) * _input.col;
 
+    #if _TOOLMODE
     switch (rootConstants3D.getMode())
     {
         case MODE_MATID:
@@ -116,6 +119,7 @@ PS_Output PS_Forward(VS_Output _input)
             output.color0 = sRGBA2Linear(float4(normal.rgb * 0.5 + 0.5, 1));
             break;
     }
+    #endif // _TOOLMODE
         
     return output;
 }

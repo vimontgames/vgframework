@@ -40,14 +40,7 @@ namespace vg::core
             
             names += '\0';
 
-            Test(names.c_str());
-
             return names;
-        }
-
-        static void Test(const char * s)
-        {
-            VG_DEBUGPRINT(s);
         }
 
         static const vector<T> getStaticValues()

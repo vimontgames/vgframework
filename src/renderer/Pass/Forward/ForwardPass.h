@@ -41,6 +41,7 @@ namespace vg::renderer
     private:
         gfx::RootSignatureHandle    m_rootSignatureHandle;
         gfx::ShaderKey              m_forwardShaderKey;
+        gfx::ShaderKey              m_drawGridShaderKey;
         gfx::ShaderKey              m_wireframeShaderKey;
 
         gfx::Buffer *               m_gridVB = nullptr;

@@ -5,12 +5,15 @@ namespace vg::gfx
     class ShaderKey
     {
     public:
-        using File  = core::u8;
-        using VS    = core::u8;
-        using HS    = core::u8;
-        using DS    = core::u8;
-        using GS    = core::u8;
-        using PS    = core::u8;
+        using File = core::u8;
+        using EntryPoint = core::u8;
+
+        using VS = EntryPoint;
+        using HS = EntryPoint;
+        using DS = EntryPoint;
+        using GS = EntryPoint;
+        using PS = EntryPoint;
+
         using Flags = core::u16;
 
         ShaderKey();
@@ -20,17 +23,27 @@ namespace vg::gfx
         void clear();
         void init(const core::string & _file, const core::string & _technique);
 
+        inline void setFlags(core::uint _index, bool _enable = true)
+        {
+            const ShaderKey::Flags value = (ShaderKey::Flags)(1 << _index);
+
+            if (_enable)
+                flags |= value;
+            else
+                flags &= value;
+        }
+
         union
         {
             struct
             {
-                File    file;
-                VS      vs;
-                HS      hs;
-                DS      ds;
-                GS      gs;
-                PS      ps;
-                Flags   flags;
+                File file;
+                VS vs;
+                HS hs;
+                DS ds;
+                GS gs;
+                PS ps;
+                Flags flags;
             };
             core::u64 bits;
         };

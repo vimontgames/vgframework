@@ -81,4 +81,18 @@ namespace vg::core
     }
 
     #define crc64(str) std::integral_constant<u64, computeCRC64(str, sizeof(str)-1)>::value
+
+    template <typename T> inline T countl_zero(T _value);
+
+    //--------------------------------------------------------------------------------------
+    template<> inline u32 countl_zero(u32 _value)
+    {
+        return _lzcnt_u32(_value);
+    }
+
+    //--------------------------------------------------------------------------------------
+    template<> inline u64 countl_zero(u64 _value)
+    {
+        return _lzcnt_u64(_value);
+    }
 }

@@ -9,13 +9,15 @@ namespace vg::gfx
     public:
         struct Technique
         {
-            core::string    name;
-            ShaderKey::VS   vs = (ShaderKey::VS) - 1;
-            ShaderKey::HS   hs = (ShaderKey::HS) - 1;
-            ShaderKey::DS   ds = (ShaderKey::DS) - 1;
-            ShaderKey::GS   gs = (ShaderKey::GS) - 1;
-            ShaderKey::PS   ps = (ShaderKey::PS) - 1;
-            core::u16       flags = 0x0000;
+            core::string     name;
+
+            ShaderKey::VS    vs = (ShaderKey::VS)-1;
+            ShaderKey::HS    hs = (ShaderKey::HS)-1;
+            ShaderKey::DS    ds = (ShaderKey::DS)-1;
+            ShaderKey::GS    gs = (ShaderKey::GS)-1;
+            ShaderKey::PS    ps = (ShaderKey::PS)-1;
+
+            ShaderKey::Flags flags = 0x0000;
 
             bool operator == (const Technique & _other) const
             {
@@ -28,17 +30,19 @@ namespace vg::gfx
         void setFile(const core::string & _file);
         const core::string & getFile() const;
 
+        void addFlag(core::uint _index, ShaderStageFlags _stages, const core::string & _define);
+
         ShaderKey::VS addVS(const core::string & _vsEntryPoint);
         ShaderKey::PS addPS(const core::string & _psEntryPoint);
 
-        Shader * getVS(API _api, ShaderKey::VS _vs);
-        Shader * getHS(API _api, ShaderKey::HS _hs);
-        Shader * getDS(API _api, ShaderKey::DS _ds);
-        Shader * getGS(API _api, ShaderKey::GS _gs);
-        Shader * getPS(API _api, ShaderKey::PS _ps);
+        Shader * getVS(API _api, ShaderKey::VS _vs, ShaderKey::Flags _flags);
+        Shader * getHS(API _api, ShaderKey::HS _hs, ShaderKey::Flags _flags);
+        Shader * getDS(API _api, ShaderKey::DS _ds, ShaderKey::Flags _flags);
+        Shader * getGS(API _api, ShaderKey::GS _gs, ShaderKey::Flags _flags);
+        Shader * getPS(API _api, ShaderKey::PS _ps, ShaderKey::Flags _flags);
 
-        core::uint addShader(ShaderStage _stage, const core::string & _entryPoint);
-        Shader * getShader(API _api, ShaderStage _stage, core::uint _index);
+        ShaderKey::EntryPoint addShader(ShaderStage _stage, const core::string & _entryPoint);
+        Shader * getShader(API _api, ShaderStage _stage, ShaderKey::EntryPoint _index, ShaderKey::Flags _flags);
 
         Technique & addTechnique(const core::string & _name);
         const core::vector<Technique> & getTechniques() const;
@@ -46,12 +50,70 @@ namespace vg::gfx
         core::u64 getCRC() const { return m_crc; }
         void setCRC(core::u64 _crc) { m_crc = _crc; }
 
-        void resetShaders();
+        void reset();
+
+    protected:
+        core::vector<core::pair<core::string, core::uint>> getShaderMacros(ShaderStage _stage, ShaderKey::Flags _flags) const;
 
     private:
-        core::u64                                           m_crc = 0;
-        core::string                                        m_file;
-        core::vector<core::pair<core::string, Shader *>>    m_shader[core::enumCount<ShaderStage>()];
-        core::vector<Technique>                             m_techniques;
+
+        struct VariantKey
+        {
+            inline VariantKey(ShaderStage _stage, ShaderKey::EntryPoint _entryPoint, ShaderKey::Flags _flags) :
+                m_stage(_stage),
+                m_entryPoint(_entryPoint),
+                m_flags(_flags)
+            {
+
+            }
+
+            union
+            {
+                struct
+                {
+                    ShaderStage             m_stage;
+                    ShaderKey::EntryPoint   m_entryPoint;
+                    ShaderKey::Flags        m_flags;
+                };
+                core::u32 m_bits;
+            };
+
+            bool operator < (const VariantKey & other) const
+            {
+                return m_bits < other.m_bits;
+            }
+        };
+
+        using VariantCollection = core::map<VariantKey, Shader *>;
+
+        struct ShaderFlagDesc
+        {
+            inline ShaderFlagDesc()
+            {
+
+            }
+
+            inline ShaderFlagDesc(ShaderStageFlags _stages, const core::string & _define) :
+                m_stages(_stages),
+                m_define(_define)
+            {
+
+            }
+
+            inline void clear()
+            {
+                m_stages = (ShaderStageFlags)0x0;
+            }
+
+            ShaderStageFlags    m_stages = (ShaderStageFlags)0x0;
+            core::string        m_define;
+        };
+
+        core::u64                       m_crc = 0;
+        core::string                    m_file;
+        ShaderFlagDesc                  m_flagDescs[sizeof(ShaderKey::Flags)<<3];
+        core::vector<core::string>      m_entryPoint[core::enumCount<ShaderStage>()];
+        core::vector<Technique>         m_techniques;
+        VariantCollection               m_variants;
     };
 }

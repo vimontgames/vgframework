@@ -101,8 +101,22 @@ namespace vg::gfx
     {
         RETRY:
 
-        string warningAndErrors;
+        string msg = "[Shader] Compile " + asString(_stage) + " Shader \"" + _entryPoint + "\"";
+        if (_macros.size() > 0)
+        {
+            msg += " (";
+            for (uint i = 0; i < _macros.size(); ++i)
+            {
+                if (i > 0)
+                    msg += " | ";
+                msg += _macros[i].first;
+            }
+            msg += ")";
+        }
+        msg += "\n";
+        VG_DEBUGPRINT(msg.c_str());
 
+        string warningAndErrors;
         Shader * shader = m_shaderCompiler->compile(_api, m_shaderRootPath + _file, _entryPoint, _stage, _macros, warningAndErrors);
 
         if (shader)
@@ -118,7 +132,7 @@ namespace vg::gfx
         if (!warningAndErrors.empty())
         {
             m_warningCount++;
-            VG_DEBUGPRINT("[Shaders] %s", warningAndErrors.c_str());
+            VG_DEBUGPRINT("[Shader] %s", warningAndErrors.c_str());
         }
 
         if (!shader)
@@ -234,10 +248,10 @@ namespace vg::gfx
 
             if (newCRC != oldCRC)
             {
-                VG_DEBUGPRINT("[Shaders] File \"%s\" is not up-to-date (old CRC = 0x%016llu, new CRC = 0x%016llu)\n", file.c_str(), oldCRC, newCRC);
+                VG_DEBUGPRINT("[Shader] File \"%s\" is not up-to-date (old CRC = 0x%016llu, new CRC = 0x%016llu)\n", file.c_str(), oldCRC, newCRC);
                 
                 // delete the shaders
-                desc.resetShaders();
+                desc.reset();
 
                 // delete the pso (TODO: L1 cache in cmdlist and L2 global cache using mutex)
                 device->resetShaders(ShaderKey::File(i));
@@ -247,9 +261,9 @@ namespace vg::gfx
                 desc.setCRC(newCRC);
             }
             else
-                VG_DEBUGPRINT("[Shaders] File \"%s\" is up-to-date (CRC = 0x%016llu)\n", file.c_str(), oldCRC);
+                VG_DEBUGPRINT("[Shader] File \"%s\" is up-to-date (CRC = 0x%016llu)\n", file.c_str(), oldCRC);
         }
 
-        VG_DEBUGPRINT("[Shaders] %u/%u shaders parsed ... %.2f ms\n", updated, m_shaderFileDescriptors.size(), Timer::getEnlapsedTime(start, Timer::getTick()));
+        VG_DEBUGPRINT("[Shader] %u/%u shaders parsed ... %.2f ms\n", updated, m_shaderFileDescriptors.size(), Timer::getEnlapsedTime(start, Timer::getTick()));
     }
 }

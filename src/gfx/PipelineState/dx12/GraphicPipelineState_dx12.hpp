@@ -4,6 +4,8 @@ namespace vg::gfx::dx12
     GraphicPipelineState::GraphicPipelineState(const GraphicPipelineStateKey & _key) :
         super::GraphicPipelineState(_key)
     {
+        VG_ASSERT(ShaderKey::VS(-1) != _key.m_shaderKey.vs, "Cannot create GraphicPipelineState because no Vertex Shader is defined");
+
         auto * device = gfx::Device::get();
         auto * d3d12device = device->getd3d12Device();
         auto * sm = ShaderManager::get();
@@ -25,19 +27,19 @@ namespace vg::gfx::dx12
         if (desc)
         {
             if (ShaderKey::VS(-1) != _key.m_shaderKey.vs)
-                d3d12graphicPipelineDesc.VS = desc->getVS(API::DirectX12, _key.m_shaderKey.vs)->getd3d12Bytecode();
+                d3d12graphicPipelineDesc.VS = desc->getVS(API::DirectX12, _key.m_shaderKey.vs, _key.m_shaderKey.flags)->getd3d12Bytecode();
 
             if (ShaderKey::HS(-1) != _key.m_shaderKey.hs)
-                d3d12graphicPipelineDesc.HS = desc->getHS(API::DirectX12, _key.m_shaderKey.hs)->getd3d12Bytecode();
+                d3d12graphicPipelineDesc.HS = desc->getHS(API::DirectX12, _key.m_shaderKey.hs, _key.m_shaderKey.flags)->getd3d12Bytecode();
 
             if (ShaderKey::DS(-1) != _key.m_shaderKey.ds)
-                d3d12graphicPipelineDesc.DS = desc->getDS(API::DirectX12, _key.m_shaderKey.hs)->getd3d12Bytecode();
+                d3d12graphicPipelineDesc.DS = desc->getDS(API::DirectX12, _key.m_shaderKey.hs, _key.m_shaderKey.flags)->getd3d12Bytecode();
 
             if (ShaderKey::GS(-1) != _key.m_shaderKey.gs)
-                d3d12graphicPipelineDesc.GS = desc->getGS(API::DirectX12, _key.m_shaderKey.hs)->getd3d12Bytecode();
+                d3d12graphicPipelineDesc.GS = desc->getGS(API::DirectX12, _key.m_shaderKey.hs, _key.m_shaderKey.flags)->getd3d12Bytecode();
 
             if (ShaderKey::PS(-1) != _key.m_shaderKey.vs)
-                d3d12graphicPipelineDesc.PS = desc->getPS(API::DirectX12, _key.m_shaderKey.ps)->getd3d12Bytecode();
+                d3d12graphicPipelineDesc.PS = desc->getPS(API::DirectX12, _key.m_shaderKey.ps, _key.m_shaderKey.flags)->getd3d12Bytecode();
         }
 
         d3d12graphicPipelineDesc.RasterizerState = _key.m_rasterizerState.getd3d12RasterizerState();

@@ -7,32 +7,27 @@ namespace vg::gfx
     class DefaultHLSLDesc : public HLSLDesc
     {
     public:
+        enum Flags : ShaderKey::Flags
+        {
+            Toolmode = 15
+        };
+
         DefaultHLSLDesc()
         {
-            enum Flags : ShaderKey::Flags
-            {
-
-            };
-
             setFile("default/default.hlsl");
 
-            auto vsQuad = addVS("VS_Forward");
-            auto psQuad = addPS("PS_Forward");
+            addFlag(Toolmode, ShaderStageFlags::VS | ShaderStageFlags::PS, "_TOOLMODE");
 
             auto & forward = addTechnique("Forward");
             {
-                forward.vs = vsQuad;
-                forward.ps = psQuad;
-                forward.flags = (Flags)0;
+                forward.vs = addVS("VS_Forward");
+                forward.ps = addPS("PS_Forward");
             }
-
-            auto psWire = addPS("PS_Wireframe");
 
             auto & wire = addTechnique("Wireframe");
             {
-                wire.vs = vsQuad;
-                wire.ps = psWire;
-                wire.flags = (Flags)0;
+                wire.vs = addVS("VS_Forward");
+                wire.ps = addPS("PS_Wireframe");
             }
         }
     };

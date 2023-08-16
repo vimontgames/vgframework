@@ -5,14 +5,16 @@ namespace vg::gfx
     //--------------------------------------------------------------------------------------
     HLSLDesc::~HLSLDesc()
     {
+        for (uint i = 0; i < countof(m_flagDescs); ++i)
+            m_flagDescs[i].clear();
+
         for (uint i = 0; i < core::enumCount<ShaderStage>(); ++i)
-        {
-            for (auto & pair : m_shader[i])
-                VG_SAFE_RELEASE(pair.second);
-            m_shader[i].clear();
-        }
+            m_entryPoint[i].clear();
 
         m_techniques.clear();
+
+        for (auto & pair : m_variants)
+            VG_SAFE_RELEASE(pair.second);
     }
 
     //--------------------------------------------------------------------------------------
@@ -40,54 +42,110 @@ namespace vg::gfx
     }
 
     //--------------------------------------------------------------------------------------
-    Shader * HLSLDesc::getVS(API _api, ShaderKey::VS _vs)
+    Shader * HLSLDesc::getVS(API _api, ShaderKey::VS _vs, ShaderKey::Flags _flags)
     {
-        return getShader(_api, ShaderStage::Vertex, _vs);
+        return getShader(_api, ShaderStage::Vertex, _vs, _flags);
     }    
 
     //--------------------------------------------------------------------------------------
-    Shader * HLSLDesc::getHS(API _api, ShaderKey::HS _hs)
+    Shader * HLSLDesc::getHS(API _api, ShaderKey::HS _hs, ShaderKey::Flags _flags)
     {
-        return getShader(_api, ShaderStage::Hull, _hs);
+        return getShader(_api, ShaderStage::Hull, _hs, _flags);
     }
 
     //--------------------------------------------------------------------------------------
-    Shader * HLSLDesc::getDS(API _api, ShaderKey::DS _ds)
+    Shader * HLSLDesc::getDS(API _api, ShaderKey::DS _ds, ShaderKey::Flags _flags)
     {
-        return getShader(_api, ShaderStage::Domain, _ds);
+        return getShader(_api, ShaderStage::Domain, _ds, _flags);
     }
 
     //--------------------------------------------------------------------------------------
-    Shader * HLSLDesc::getGS(API _api, ShaderKey::GS _gs)
+    Shader * HLSLDesc::getGS(API _api, ShaderKey::GS _gs, ShaderKey::Flags _flags)
     {
-        return getShader(_api, ShaderStage::Geometry, _gs);
+        return getShader(_api, ShaderStage::Geometry, _gs, _flags);
     }
 
     //--------------------------------------------------------------------------------------
-    Shader * HLSLDesc::getPS(API _api, ShaderKey::PS _ps)
+    Shader * HLSLDesc::getPS(API _api, ShaderKey::PS _ps, ShaderKey::Flags _flags)
     {
-        return getShader(_api, ShaderStage::Pixel, _ps);
+        return getShader(_api, ShaderStage::Pixel, _ps, _flags);
     }
 
     //--------------------------------------------------------------------------------------
-    core::uint HLSLDesc::addShader(ShaderStage _stage, const core::string & _entryPoint)
+    ShaderKey::EntryPoint HLSLDesc::addShader(ShaderStage _stage, const core::string & _entryPoint)
     {
-        auto & shaders = m_shader[asInteger(_stage)];
-        shaders.push_back(core::pair<core::string, Shader*>(_entryPoint, nullptr));
-        return (uint)(shaders.size() - 1);
-    }
-
-    //--------------------------------------------------------------------------------------
-    Shader * HLSLDesc::getShader(API _api, ShaderStage _stage, core::uint _index)
-    {
-        auto & pair = m_shader[asInteger(_stage)][_index];
-        if (nullptr == pair.second)
+        auto & stageEntryPoints = m_entryPoint[asInteger(_stage)];
+        
+        for (uint i = 0; i < stageEntryPoints.size(); ++i)
         {
-            auto * sm = ShaderManager::get();
-            core::vector<core::pair<core::string, core::uint>> macros; // TODO: build macros from shader key flags
-            pair.second = sm->compile(_api, m_file, pair.first, _stage, macros);
+            const auto & entryPoint = stageEntryPoints[i];
+            if (entryPoint == _entryPoint)
+                return (ShaderKey::EntryPoint)i; // Already exists
         }
-        return pair.second;
+
+        stageEntryPoints.push_back(_entryPoint);
+        auto index = (ShaderKey::EntryPoint)(stageEntryPoints.size() - 1);
+
+        VG_DEBUGPRINT("[Shader] \"%s\": Add %s Shader \"%s\" (%u)\n", getFile().c_str(), asString(_stage).c_str(), _entryPoint.c_str(), index);
+
+        return index;
+    }
+
+    //--------------------------------------------------------------------------------------
+    Shader * HLSLDesc::getShader(API _api, ShaderStage _stage, ShaderKey::EntryPoint _index, ShaderKey::Flags _flags)
+    {
+        auto & entryPoint = m_entryPoint[asInteger(_stage)][_index];
+        
+        VariantKey key(_stage, _index, _flags);
+
+        auto it = m_variants.find(key);
+
+        if (m_variants.end() != it)
+        {
+            if (nullptr != it->second)
+                return it->second;
+        }
+
+        auto * sm = ShaderManager::get();
+
+        const auto & macros = getShaderMacros(_stage, _flags);
+
+        auto * shader = sm->compile(_api, m_file, entryPoint, _stage, macros);
+
+        m_variants[key] = shader;
+
+        return shader;
+    }
+
+    //--------------------------------------------------------------------------------------
+    void HLSLDesc::addFlag(uint _index, ShaderStageFlags _stages, const core::string & _define)
+    {
+        VG_ASSERT(_index < countof(m_flagDescs));
+        auto & desc = m_flagDescs[_index];
+        VG_ASSERT((ShaderStageFlags)0x0 == desc.m_stages);
+        desc = ShaderFlagDesc(_stages, _define);
+    }
+
+    //--------------------------------------------------------------------------------------
+    // Build macros from shader key flags
+    //--------------------------------------------------------------------------------------
+    core::vector<core::pair<core::string, core::uint>> HLSLDesc::getShaderMacros(ShaderStage _stage, ShaderKey::Flags _flags) const
+    {
+        core::vector<core::pair<core::string, core::uint>> macros;
+
+        u32 value = (u32)_flags;
+        u32 ctlz = core::countl_zero(value);
+        u32 index = 0;
+        while (ctlz < 32)
+        {
+            index = 32-ctlz-1;
+            const auto & desc = m_flagDescs[index];
+            macros.push_back({ desc.m_define,1 });
+            value &= ~(1<<index);
+            ctlz = core::countl_zero(value);
+        }
+        
+        return macros;
     }
 
     //--------------------------------------------------------------------------------------
@@ -106,12 +164,9 @@ namespace vg::gfx
     }
 
     //--------------------------------------------------------------------------------------
-    void HLSLDesc::resetShaders()
+    void HLSLDesc::reset()
     {
-        for (uint j = 0; j < core::enumCount<ShaderStage>(); ++j)
-        {
-            for (auto & pair : m_shader[j])
-                VG_SAFE_RELEASE(pair.second);
-        }
+        for (auto & pair : m_variants)
+            VG_SAFE_RELEASE(pair.second);
     }
 }

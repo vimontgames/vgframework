@@ -25,7 +25,7 @@ namespace vg::core
                 return nullptr; // already registered
         }
 
-        VG_DEBUGPRINT("[ObjectFactory] Register class \"%s\"\n", _className);
+        VG_DEBUGPRINT("[Factory] Register class \"%s\"\n", _className);
 
         ClassDesc classDesc;
         classDesc.name = _className;
@@ -50,7 +50,7 @@ namespace vg::core
                 return nullptr; // already registered
         }
 
-        VG_DEBUGPRINT("[ObjectFactory] Register singleton class \"%s\"\n", _className);
+        VG_DEBUGPRINT("[Factory] Register singleton class \"%s\"\n", _className);
 
         ClassDesc classDesc;
         classDesc.name = _className;
@@ -705,7 +705,7 @@ namespace vg::core
                                 }
                                 else
                                 {
-                                    VG_DEBUGPRINT("[ObjectFactory] Serialized Object type \"%s\" for Property \"%s\" from class \"%s\" does not match type \"%s\" declared in ClassDesc\n", typeName, name, className, asString(prop->getType()));
+                                    VG_DEBUGPRINT("[Factory] Serialized Object type \"%s\" for Property \"%s\" from class \"%s\" does not match type \"%s\" declared in ClassDesc\n", typeName, name, className, asString(prop->getType()));
                                 }
                             }
                         }

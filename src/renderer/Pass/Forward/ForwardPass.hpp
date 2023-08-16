@@ -12,6 +12,8 @@
 #include "renderer/IGraphicInstance.h"
 #include "renderer/Model/Material/MaterialModel.h"
 
+#include "shaders/default/default.hlsl.h"
+
 #include "shaders/system/vertex.hlsl.h"
 #include "shaders/default/default.hlsli"
 #include "shaders/system/bindless.hlsli"
@@ -35,8 +37,13 @@ namespace vg::renderer
 
         m_rootSignatureHandle = device->addRootSignature(rsDesc);
 
-        m_forwardShaderKey.init("default/default.hlsl", "Forward");
-        m_wireframeShaderKey.init("default/default.hlsl", "Wireframe");
+        m_forwardShaderKey = ShaderKey("default/default.hlsl", "Forward");
+
+        m_drawGridShaderKey = ShaderKey("default/default.hlsl", "Forward");
+        m_drawGridShaderKey.setFlags(DefaultHLSLDesc::Toolmode, true);
+
+        m_wireframeShaderKey = ShaderKey("default/default.hlsl", "Wireframe");
+        m_wireframeShaderKey.setFlags(DefaultHLSLDesc::Toolmode, true);
 
         // TODO: create once and share
         createGrid();
@@ -275,62 +282,65 @@ namespace vg::renderer
         _cmdList->setDepthStencilState(ds);
 
         const auto options = DisplayOptions::get();
+        const bool toolmode = view->getViewID().target == gfx::ViewTarget::Editor || options->isToolModeEnabled();
 
-        u16 flags = 0x0;
-        
-        if (options->isAlbedoMapsEnabled())
-            flags |= FLAG_ALBEDOMAPS;
-        
-        if (options->isNormalMapsEnabled())
-            flags |= FLAG_NORMALMAPS;        
+        u16 flags = 0x0, mode = 0x0;
 
-        u16 mode = 0x0;
-
-        switch (options->getDisplayMode())
+        if (toolmode)
         {
-            default:
-                VG_ASSERT_ENUM_NOT_IMPLEMENTED(options->getDisplayMode());
-                break;
 
-            case DisplayMode::Default:
-                mode = MODE_DEFAULT;
-                break;
+            if (options->isAlbedoMapsEnabled())
+                flags |= FLAG_ALBEDOMAPS;
 
-            case DisplayMode::MatID:
-                mode = MODE_MATID;
-                break;
+            if (options->isNormalMapsEnabled())
+                flags |= FLAG_NORMALMAPS;
 
-            case DisplayMode::VSNormal:
-                mode = MODE_VS_NORMAL;
-                break;
+            switch (options->getDisplayMode())
+            {
+                default:
+                    VG_ASSERT_ENUM_NOT_IMPLEMENTED(options->getDisplayMode());
+                    break;
 
-            case DisplayMode::VSTangent:
-                mode = MODE_VS_TANGENT;
-                break;
+                case DisplayMode::Default:
+                    mode = MODE_DEFAULT;
+                    break;
 
-            case DisplayMode::VSBinormal:
-                mode = MODE_VS_BINORMAL;
-                break;
+                case DisplayMode::MatID:
+                    mode = MODE_MATID;
+                    break;
 
-            case DisplayMode::VSColor:
-                mode = MODE_VS_COLOR;
-                break;
+                case DisplayMode::VSNormal:
+                    mode = MODE_VS_NORMAL;
+                    break;
 
-            case DisplayMode::UV0:
-                mode = MODE_UV0;
-                break;
+                case DisplayMode::VSTangent:
+                    mode = MODE_VS_TANGENT;
+                    break;
 
-            case DisplayMode::UV1:
-                mode = MODE_UV1;
-                break;
+                case DisplayMode::VSBinormal:
+                    mode = MODE_VS_BINORMAL;
+                    break;
 
-            case DisplayMode::Albedo:
-                mode = MODE_ALBEDO_MAP;
-                break;
+                case DisplayMode::VSColor:
+                    mode = MODE_VS_COLOR;
+                    break;
 
-            case DisplayMode::PSNormal:
-                mode = MODE_NORMAL_MAP;
-                break;
+                case DisplayMode::UV0:
+                    mode = MODE_UV0;
+                    break;
+
+                case DisplayMode::UV1:
+                    mode = MODE_UV1;
+                    break;
+
+                case DisplayMode::Albedo:
+                    mode = MODE_ALBEDO_MAP;
+                    break;
+
+                case DisplayMode::PSNormal:
+                    mode = MODE_NORMAL_MAP;
+                    break;
+            }
         }
 		
         auto draw = [=](bool _wireframe = false)
@@ -398,37 +408,48 @@ namespace vg::renderer
         {
             RasterizerState rs(FillMode::Solid, CullMode::Back);
 
-            _cmdList->setShader(m_forwardShaderKey);
+            auto key = m_forwardShaderKey;
+
+            if (toolmode)
+                key.setFlags(gfx::DefaultHLSLDesc::Toolmode, true);
+            else
+                key.setFlags(gfx::DefaultHLSLDesc::Toolmode, false);
+
+            _cmdList->setShader(key);
+
             _cmdList->setRasterizerState(rs);
 
             draw();
         }
 
-        if (options->isWireframeEnabled())
+        if (toolmode)
         {
-            RasterizerState rs(FillMode::Wireframe, CullMode::None);
-            _cmdList->setRasterizerState(rs);
-            _cmdList->setShader(m_wireframeShaderKey);
-
-            draw(true);
-        }
-
-        if (options->isAABBEnabled())
-        {
-            for (uint i = 0; i < graphicInstances.size(); ++i)
+            if (options->isWireframeEnabled())
             {
-                const IGraphicInstance * instance = graphicInstances[i];
-                const MeshModel * model = (MeshModel *)instance->getModel(Lod::Lod0);
-                if (nullptr == model)
-                    continue;
+                RasterizerState rs(FillMode::Wireframe, CullMode::None);
+                _cmdList->setRasterizerState(rs);
+                _cmdList->setShader(m_wireframeShaderKey);
 
-                const MeshGeometry * geo = model->getGeometry();
-                drawAABB(_cmdList, geo->getAABB(), instance->getWorldMatrix(), viewProj);
+                draw(true);
             }
-        }
 
-        drawGrid(_cmdList, viewProj);
-        drawAxis(_cmdList, viewProj);
+            if (options->isAABBEnabled())
+            {
+                for (uint i = 0; i < graphicInstances.size(); ++i)
+                {
+                    const IGraphicInstance * instance = graphicInstances[i];
+                    const MeshModel * model = (MeshModel *)instance->getModel(Lod::Lod0);
+                    if (nullptr == model)
+                        continue;
+
+                    const MeshGeometry * geo = model->getGeometry();
+                    drawAABB(_cmdList, geo->getAABB(), instance->getWorldMatrix(), viewProj);
+                }
+            }
+
+            drawGrid(_cmdList, viewProj);
+            drawAxis(_cmdList, viewProj);
+        }
     }
 
     //--------------------------------------------------------------------------------------
@@ -436,7 +457,6 @@ namespace vg::renderer
     {
         RasterizerState rs(FillMode::Wireframe, CullMode::None);
         _cmdList->setRasterizerState(rs);
-
 
         float3 aabbScale = _aabb.m_max - _aabb.m_min;
         float3 center = _aabb.m_max + _aabb.m_min;
@@ -520,7 +540,7 @@ namespace vg::renderer
         root3D.color = float4(1, 1, 1, 1);
 
         _cmdList->setRasterizerState(rs);
-        _cmdList->setShader(m_forwardShaderKey);
+        _cmdList->setShader(m_drawGridShaderKey);
         _cmdList->setInlineRootConstants(&root3D, RootConstants3DCount);
         _cmdList->setPrimitiveTopology(PrimitiveTopology::LineList);
         _cmdList->draw(gridDesc.elementCount);
@@ -541,7 +561,7 @@ namespace vg::renderer
         root3D.color = float4(1, 1, 1, 1);
 
         _cmdList->setRasterizerState(rs);
-        _cmdList->setShader(m_forwardShaderKey);
+        _cmdList->setShader(m_drawGridShaderKey);
         _cmdList->setPrimitiveTopology(PrimitiveTopology::LineList);
 
         _cmdList->setInlineRootConstants(&root3D, RootConstants3DCount);
