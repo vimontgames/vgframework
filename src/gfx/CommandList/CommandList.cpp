@@ -298,7 +298,7 @@ namespace vg::gfx
     }
 
     //--------------------------------------------------------------------------------------
-    GraphicPipelineState * CommandList::getGraphicPipelineState(const GraphicPipelineStateKey & _key)
+    bool CommandList::getGraphicPipelineState(const GraphicPipelineStateKey & _key, GraphicPipelineState *& _graphicPipelineState)
     {
         GraphicPipelineState * pso = nullptr;
 
@@ -313,7 +313,9 @@ namespace vg::gfx
             m_graphicPipelineStateHash[_key] = pso;
         }
         
-        return pso;
+        _graphicPipelineState = pso;
+
+        return nullptr != pso;
     }
 
     //--------------------------------------------------------------------------------------
@@ -333,7 +335,9 @@ namespace vg::gfx
             {
                 const auto & key = m_stateCache.graphicPipelineKey;
             
-                GraphicPipelineState * pso = getGraphicPipelineState(key);
+                GraphicPipelineState * pso = nullptr;
+                if (!getGraphicPipelineState(key, pso))
+                    return false;
             
                 super::bindGraphicPipelineState(pso);
                 m_stateCache.graphicPipelineKey = key;

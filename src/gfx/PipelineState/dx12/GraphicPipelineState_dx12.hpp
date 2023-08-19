@@ -5,15 +5,24 @@
 namespace vg::gfx::dx12
 {
     //--------------------------------------------------------------------------------------
-    D3D12_SHADER_BYTECODE getd3d3d12Bytecode(HLSLDesc * _desc, ShaderStage _stage, ShaderKey::EntryPoint _entryPoint, ShaderKey::Flags _flags)
+    bool getd3d3d12Bytecode(HLSLDesc * _desc, ShaderStage _stage, ShaderKey::EntryPoint _entryPoint, ShaderKey::Flags _flags, D3D12_SHADER_BYTECODE * _d3d12ShaderBytecode)
     {
         if (ShaderKey::EntryPoint(-1) != _entryPoint)
         {
             const Shader * shader = _desc->getShader(API::DirectX12, _stage, _entryPoint, _flags);
             if (nullptr != shader)
-                return shader->getd3d12Bytecode();
+            {
+                *_d3d12ShaderBytecode = shader->getd3d12Bytecode();
+                return true;
+            }
         }
-        return D3D12_SHADER_BYTECODE{ nullptr,0 };
+        else
+        {
+            *_d3d12ShaderBytecode = D3D12_SHADER_BYTECODE{ nullptr,0 };
+            return true;
+        }
+
+        return false;
     }
 
     //--------------------------------------------------------------------------------------
@@ -70,11 +79,20 @@ namespace vg::gfx::dx12
         VG_ASSERT(desc);
         if (desc)
         {
-            d3d12graphicPipelineDesc.VS = getd3d3d12Bytecode(desc, ShaderStage::Vertex, _key.m_shaderKey.vs, _key.m_shaderKey.flags);
-            d3d12graphicPipelineDesc.HS = getd3d3d12Bytecode(desc, ShaderStage::Hull, _key.m_shaderKey.hs, _key.m_shaderKey.flags);
-            d3d12graphicPipelineDesc.DS = getd3d3d12Bytecode(desc, ShaderStage::Domain, _key.m_shaderKey.ds, _key.m_shaderKey.flags);
-            d3d12graphicPipelineDesc.GS = getd3d3d12Bytecode(desc, ShaderStage::Geometry, _key.m_shaderKey.gs, _key.m_shaderKey.flags);
-            d3d12graphicPipelineDesc.PS = getd3d3d12Bytecode(desc, ShaderStage::Pixel, _key.m_shaderKey.ps, _key.m_shaderKey.flags);
+            if (!getd3d3d12Bytecode(desc, ShaderStage::Vertex, _key.m_shaderKey.vs, _key.m_shaderKey.flags, &d3d12graphicPipelineDesc.VS))
+                return false;
+
+            if (!getd3d3d12Bytecode(desc, ShaderStage::Hull, _key.m_shaderKey.hs, _key.m_shaderKey.flags, &d3d12graphicPipelineDesc.HS))
+                return false;
+            
+            if (!getd3d3d12Bytecode(desc, ShaderStage::Domain, _key.m_shaderKey.ds, _key.m_shaderKey.flags, &d3d12graphicPipelineDesc.DS))
+                return false;
+            
+            if (!getd3d3d12Bytecode(desc, ShaderStage::Geometry, _key.m_shaderKey.gs, _key.m_shaderKey.flags, &d3d12graphicPipelineDesc.GS))
+                return false;
+            
+            if (!getd3d3d12Bytecode(desc, ShaderStage::Pixel, _key.m_shaderKey.ps, _key.m_shaderKey.flags, &d3d12graphicPipelineDesc.PS))
+                return false;
         }
 
         d3d12graphicPipelineDesc.RasterizerState = _key.m_rasterizerState.getd3d12RasterizerState();

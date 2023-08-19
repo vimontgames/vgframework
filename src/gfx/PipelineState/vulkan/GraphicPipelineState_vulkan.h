@@ -24,7 +24,7 @@ namespace vg::gfx
 
         private:
             VG_INLINE static VkPrimitiveTopology getVulkanPrimitiveTopology(PrimitiveTopology _topology);
-            static bool addVulkanShader(core::vector<VkPipelineShaderStageCreateInfo> & _vkStages, HLSLDesc & _hlsl, ShaderStage _stage, core::uint _index, ShaderKey::Flags _flags);
+            static bool addVulkanShader(core::vector<VkPipelineShaderStageCreateInfo> & _vkStages, HLSLDesc & _hlsl, ShaderStage _stage, ShaderKey::EntryPoint _entryPointIndex, ShaderKey::Flags _flags);
 
             VG_INLINE void setVulkanGraphicPipelineState(const VkPipelineCache & _vkPipelineCache, const VkPipeline & _vkPipeline);
             static bool createVulkanGraphicPipelineState(const GraphicPipelineStateKey & _key, VkPipelineCache & _vkPipelineCache, VkPipeline & _vkPipeline);

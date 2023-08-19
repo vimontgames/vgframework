@@ -81,8 +81,8 @@ namespace vg::editor
         m_imGuiWindows.push_back(new ImGuiScene(IconWithText(style::icon::Scene,"Scenes"), ImGuiWindow::StartVisible | ImGuiWindow::AddMenuEntry));
         m_imGuiWindows.push_back(new ImGuiInspector(IconWithText(style::icon::Inspector, "Inspector"), ImGuiWindow::StartVisible | ImGuiWindow::AddMenuEntry));
         m_imGuiWindows.push_back(new ImGuiDisplayOptions(IconWithText(style::icon::Display, "Display"), ImGuiWindow::StartVisible));
-        m_imGuiWindows.push_back(new ImGuiEditorView(IconWithText(style::icon::EditorView, "Editor View"), ImGuiWindow::StartVisible | ImGuiWindow::AddMenuEntry));
-        m_imGuiWindows.push_back(new ImGuiGameView(IconWithText(style::icon::GameView, "Game View"), ImGuiWindow::StartVisible | ImGuiWindow::AddMenuEntry));
+        m_imGuiWindows.push_back(new ImGuiGameView(IconWithText(style::icon::GameView, "Game"), ImGuiWindow::StartVisible | ImGuiWindow::AddMenuEntry));
+        m_imGuiWindows.push_back(new ImGuiEditorView(IconWithText(style::icon::EditorView, "Editor"), ImGuiWindow::StartVisible | ImGuiWindow::AddMenuEntry));
         m_imGuiWindows.push_back(new ImGuiConsole(IconWithText(style::icon::Console, "Console"), ImGuiWindow::StartVisible | ImGuiWindow::AddMenuEntry));
         m_imGuiWindows.push_back(new ImGuiAbout("About", ImGuiWindow::None));
 

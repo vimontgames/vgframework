@@ -113,6 +113,6 @@ namespace vg::gfx
         void                        resetShaders            (ShaderKey::File _file);
 
     private:
-        GraphicPipelineState *      getGraphicPipelineState (const GraphicPipelineStateKey & _key);
+        bool                        getGraphicPipelineState (const GraphicPipelineStateKey & _key, GraphicPipelineState *& _graphicPipelineState);
 	};
 }

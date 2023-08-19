@@ -104,11 +104,11 @@ namespace vg::gfx::vulkan
         auto * sm = ShaderManager::get();
         auto & hlslDesc = *sm->getHLSLDescriptor(_key.m_shaderKey.file);
 
-        if (ShaderKey::VS(-1) != _key.m_shaderKey.vs)
-            addVulkanShader(vkShaderStages, hlslDesc, ShaderStage::Vertex, _key.m_shaderKey.vs, _key.m_shaderKey.flags);
+        if (!addVulkanShader(vkShaderStages, hlslDesc, ShaderStage::Vertex, _key.m_shaderKey.vs, _key.m_shaderKey.flags))
+            return false;
 
-        if (ShaderKey::PS(-1) != _key.m_shaderKey.ps)
-            addVulkanShader(vkShaderStages, hlslDesc, ShaderStage::Pixel, _key.m_shaderKey.ps, _key.m_shaderKey.flags);
+        if (!addVulkanShader(vkShaderStages, hlslDesc, ShaderStage::Pixel, _key.m_shaderKey.ps, _key.m_shaderKey.flags))
+            return false;
 
         vkPipelineDesc.stageCount = (uint)vkShaderStages.size();
         vkPipelineDesc.pStages = vkShaderStages.data();
@@ -165,20 +165,27 @@ namespace vg::gfx::vulkan
     }
 
     //--------------------------------------------------------------------------------------
-    bool GraphicPipelineState::addVulkanShader(vector<VkPipelineShaderStageCreateInfo> & _vkStages, HLSLDesc & _hlsl, ShaderStage _stage, uint _index, ShaderKey::Flags _flags)
+    bool GraphicPipelineState::addVulkanShader(vector<VkPipelineShaderStageCreateInfo> & _vkStages, HLSLDesc & _hlsl, ShaderStage _stage, ShaderKey::EntryPoint _entryPointIndex, ShaderKey::Flags _flags)
     {
-        const Shader * shader = _hlsl.getShader(API::Vulkan, _stage, _index, _flags);
-
-        if (nullptr != shader)
+        if (ShaderKey::EntryPoint(-1) != _entryPointIndex)
         {
-            VkPipelineShaderStageCreateInfo vkShaderStage = {};
+            const Shader * shader = _hlsl.getShader(API::Vulkan, _stage, _entryPointIndex, _flags);
 
-            vkShaderStage.sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
-            vkShaderStage.stage = getVulkanShaderStage(_stage);
-            vkShaderStage.module = shader->getVulkanBytecode();
-            vkShaderStage.pName = shader->getName().c_str();
+            if (nullptr != shader)
+            {
+                VkPipelineShaderStageCreateInfo vkShaderStage = {};
 
-            _vkStages.push_back(vkShaderStage);
+                vkShaderStage.sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
+                vkShaderStage.stage = getVulkanShaderStage(_stage);
+                vkShaderStage.module = shader->getVulkanBytecode();
+                vkShaderStage.pName = shader->getName().c_str();
+
+                _vkStages.push_back(vkShaderStage);
+                return true;
+            }
+        }
+        else
+        {
             return true;
         }
         

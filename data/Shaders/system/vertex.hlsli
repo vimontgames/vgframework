@@ -10,7 +10,7 @@ struct SimpleVertex
 {
     void Load(ByteAddressBuffer _buffer, uint _vertexID, uint _offset = 0)
     {
-		uint vertexOffset = _offset + _vertexID * SimpleVertex_stride;
+		uint vertexOffset = _offset + _vertexID * SimpleVertex_stride; 
 
         pos.xyz = LoadF3(_buffer, vertexOffset);
         nrm.xyz = LoadF3(_buffer, vertexOffset + 3);
