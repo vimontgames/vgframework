@@ -120,10 +120,7 @@ PS_Output PS_Forward(VS_Output _input)
             break;
     }
     #endif // _TOOLMODE
-    
-    output.color0.rgb = float3(0.7,0.7,0.7);
-    output.color0.a = 1;
-        
+            
     return output;
 }
 
