@@ -1,3 +1,6 @@
+#ifndef _VERTEX__HLSLI_
+#define _VERTEX__HLSLI_
+
 #include "packing.hlsli"
 #include "buffer.hlsli"
 
@@ -5,17 +8,17 @@
 
 struct SimpleVertex
 {
-    void load(ByteAddressBuffer _buffer, uint _vertexID, uint _offset = 0)
+    void Load(ByteAddressBuffer _buffer, uint _vertexID, uint _offset = 0)
     {
 		uint vertexOffset = _offset + _vertexID * SimpleVertex_stride;
 
-		Load(pos.xyz, _buffer, vertexOffset);
-        Load(nrm.xyz, _buffer, vertexOffset + 3);
-        Load(bin.xyz, _buffer, vertexOffset + 6);
-        Load(tan.xyz, _buffer, vertexOffset + 9);
-        Load(uv[0].xy, _buffer, vertexOffset + 12);
-        Load(uv[1].xy, _buffer, vertexOffset + 14);
-        Load(color, _buffer, vertexOffset + 16);
+        pos.xyz = LoadF3(_buffer, vertexOffset);
+        nrm.xyz = LoadF3(_buffer, vertexOffset + 3);
+        bin.xyz = LoadF3(_buffer, vertexOffset + 6);
+        tan.xyz = LoadF3(_buffer, vertexOffset + 9);
+        uv[0].xy = LoadF2(_buffer, vertexOffset + 12);
+        uv[1].xy = LoadF2(_buffer, vertexOffset + 14);
+        color = LoadU(_buffer, vertexOffset + 16);
     }
 
     float3 getPos()             { return pos; }
@@ -34,3 +37,5 @@ struct SimpleVertex
 };
 
 #define Vertex SimpleVertex
+
+#endif 

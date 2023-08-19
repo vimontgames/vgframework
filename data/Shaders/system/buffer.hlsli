@@ -10,31 +10,29 @@
 #define USE_BYTEADDRESSBUFFER 1
 #endif
 
-template <typename T> void Load(out T _value, ByteAddressBuffer _buffer, uint _offset = 0);
-
 #if USE_BYTEADDRESSBUFFER 
 
-template<> void Load(out uint4 _value, ByteAddressBuffer _buffer, uint _offset)   { _value = _buffer.Load4(_offset << 2); }
-template<> void Load(out uint3 _value, ByteAddressBuffer _buffer, uint _offset)   { _value = _buffer.Load3(_offset << 2); }
-template<> void Load(out uint2 _value, ByteAddressBuffer _buffer, uint _offset)   { _value = _buffer.Load2(_offset << 2); }
-template<> void Load(out uint  _value, ByteAddressBuffer _buffer, uint _offset)   { _value = _buffer.Load(_offset << 2); }
+uint4 LoadU4    (ByteAddressBuffer _buffer, uint _offset)   { return _buffer.Load4(_offset << 2); }
+uint3 LoadU3    (ByteAddressBuffer _buffer, uint _offset)   { return _buffer.Load3(_offset << 2); }
+uint2 LoadU2    (ByteAddressBuffer _buffer, uint _offset)   { return _buffer.Load2(_offset << 2); }
+uint  LoadU     (ByteAddressBuffer _buffer, uint _offset)   { return _buffer.Load(_offset << 2); }
 
-template<> void Load(out float4 _value, ByteAddressBuffer _buffer, uint _offset)   { _value = float4(asfloat(_buffer.Load4(_offset << 2))); }
-template<> void Load(out float3 _value, ByteAddressBuffer _buffer, uint _offset)   { _value = float3(asfloat(_buffer.Load3(_offset << 2))); }
-template<> void Load(out float2 _value, ByteAddressBuffer _buffer, uint _offset)   { _value = float2(asfloat(_buffer.Load2(_offset << 2))); }
-template<> void Load(out float  _value, ByteAddressBuffer _buffer, uint _offset)   { _value = asfloat(_buffer.Load(_offset << 2)); }
+float4 LoadF4   (ByteAddressBuffer _buffer, uint _offset)   { return float4(  asfloat( _buffer.Load4(_offset << 2) )  ); }
+float3 LoadF3   (ByteAddressBuffer _buffer, uint _offset)   { return float3(  asfloat( _buffer.Load3(_offset << 2) )  ); }
+float2 LoadF2   (ByteAddressBuffer _buffer, uint _offset)   { return float2(  asfloat( _buffer.Load2(_offset << 2) )  ); }
+float  LoadF    (ByteAddressBuffer _buffer, uint _offset)   { return asfloat( _buffer.Load(_offset << 2) ); }
 
 #else
 
-template<> void Load(out uint4 _value, Buffer<uint> _buffer, uint _offset)	        { _value = uint4(_buffer.Load(_offset), _buffer.Load(_offset + 1), _buffer.Load(_offset + 2), _buffer.Load(_offset + 3)); }
-template<> void Load(out uint3 _value, Buffer<uint> _buffer, uint _offset)	        { _value = uint3(_buffer.Load(_offset), _buffer.Load(_offset + 1), _buffer.Load(_offset + 2)); }
-template<> void Load(out uint2 _value, Buffer<uint> _buffer, uint _offset)	        { _value = uint2(_buffer.Load(_offset), _buffer.Load(_offset + 1)); }
-template<> void Load(out uint  _value, Buffer<uint> _buffer, uint _offset)	        { _value = _buffer.Load(_offset); }
+uint4 LoadU4    (Buffer<uint> _buffer, uint _offset)        { return uint4( _buffer.Load(_offset), _buffer.Load(_offset + 1), _buffer.Load(_offset + 2), _buffer.Load(_offset + 3) ); }
+uint3 LoadU3    (Buffer<uint> _buffer, uint _offset)        { return uint3( _buffer.Load(_offset), _buffer.Load(_offset + 1), _buffer.Load(_offset + 2)); }
+uint2 LoadU2    (Buffer<uint> _buffer, uint _offset)        { return uint2( _buffer.Load(_offset), _buffer.Load(_offset + 1)); }
+uint  LoadU     (Buffer<uint> _buffer, uint _offset)        { return _buffer.Load(_offset); }
 
-template<> void Load(out float4 _value, Buffer<uint> _buffer, uint _offset)	        { _value = float4(asfloat(_buffer.Load(_offset)), asfloat(_buffer.Load(_offset + 1)), asfloat(_buffer.Load(_offset + 2)), asfloat( _buffer.Load(_offset + 3)) ); }
-template<> void Load(out float3 _value, Buffer<uint> _buffer, uint _offset)	        { _value = float3(asfloat(_buffer.Load(_offset)), asfloat(_buffer.Load(_offset + 1)), asfloat(_buffer.Load(_offset + 2))); }
-template<> void Load(out float2 _value, Buffer<uint> _buffer, uint _offset)	        { _value = float2(asfloat(_buffer.Load(_offset)), asfloat(_buffer.Load(_offset + 1)) ); }
-template<> void Load(out float  _value, Buffer<uint> _buffer, uint _offset)	        { _value = asfloat(_buffer.Load(_offset)); }
+float4 LoadF4   (Buffer<uint> _buffer, uint _offset)        { return float4(  asfloat(_buffer.Load(_offset) ), asfloat(_buffer.Load(_offset + 1) ), asfloat(_buffer.Load(_offset + 2) ), asfloat( _buffer.Load(_offset + 3) )  ); }
+float3 LoadF3   (Buffer<uint> _buffer, uint _offset)        { return float3(  asfloat(_buffer.Load(_offset) ), asfloat(_buffer.Load(_offset + 1) ), asfloat(_buffer.Load(_offset + 2) )  ); }
+float2 LoadF2   (Buffer<uint> _buffer, uint _offset)        { return float2(  asfloat(_buffer.Load(_offset) ), asfloat(_buffer.Load(_offset + 1) )  ); }
+float  LoadF    (Buffer<uint> _buffer, uint _offset)        { return asfloat( _buffer.Load(_offset) ); }
 #endif
 
 #endif // __cplusplus

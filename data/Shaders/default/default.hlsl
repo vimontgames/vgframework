@@ -21,7 +21,7 @@ VS_Output VS_Forward(uint _vertexID : VertexID)
     VS_Output output;
 
     Vertex vert;
-           vert.load(getBuffer(rootConstants3D.getBufferHandle()), _vertexID, rootConstants3D.getVertexBufferOffset());
+           vert.Load(getBuffer(rootConstants3D.getBufferHandle()), _vertexID, rootConstants3D.getVertexBufferOffset());
 
     output.nrm = vert.getNrm();
     output.tan = vert.getTan();
