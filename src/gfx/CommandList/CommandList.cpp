@@ -288,7 +288,7 @@ namespace vg::gfx
             const GraphicPipelineStateKey & key = pair.first;
             if (key.m_shaderKey.file == _file)
             {
-                VG_SAFE_RELEASE(pair.second);
+                VG_SAFE_RELEASE_ASYNC(pair.second);
                 keys.push_back(key);
             }
         }
@@ -298,7 +298,26 @@ namespace vg::gfx
     }
 
     //--------------------------------------------------------------------------------------
-    void CommandList::flush()
+    GraphicPipelineState * CommandList::getGraphicPipelineState(const GraphicPipelineStateKey & _key)
+    {
+        GraphicPipelineState * pso = nullptr;
+
+        auto it = m_graphicPipelineStateHash.find(_key);
+        if (m_graphicPipelineStateHash.end() != it)
+        {
+            pso = it->second;
+        }
+        else
+        {
+            pso = GraphicPipelineState::createGraphicPipelineState(_key);
+            m_graphicPipelineStateHash[_key] = pso;
+        }
+        
+        return pso;
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool CommandList::flush()
     {
         if (asBool(m_stateCache.dirtyFlags))
         {
@@ -314,13 +333,8 @@ namespace vg::gfx
             {
                 const auto & key = m_stateCache.graphicPipelineKey;
             
-                GraphicPipelineState * pso = nullptr;
+                GraphicPipelineState * pso = getGraphicPipelineState(key);
             
-                auto it = m_graphicPipelineStateHash.find(key);
-                if (m_graphicPipelineStateHash.end() == it)
-                    m_graphicPipelineStateHash[key] = new GraphicPipelineState(key);
-            
-                pso = m_graphicPipelineStateHash[key];
                 super::bindGraphicPipelineState(pso);
                 m_stateCache.graphicPipelineKey = key;
 
@@ -338,21 +352,21 @@ namespace vg::gfx
 
             m_stateCache.dirtyFlags = (StateCache::DirtyFlags)0;
         }
+
+        return true;
     }
 
     //--------------------------------------------------------------------------------------
     void CommandList::draw(uint _vertexCount, uint _startOffset)
     {
-        flush();
-
-        super::draw(_vertexCount, _startOffset);
+        if (flush())
+            super::draw(_vertexCount, _startOffset);
     }
 
     //--------------------------------------------------------------------------------------
     void CommandList::drawIndexed(uint _indexCount, uint _startIndex, uint _baseVertex)
     {
-        flush();
-
-        super::drawIndexed(_indexCount, _startIndex, _baseVertex);
+        if (flush())
+            super::drawIndexed(_indexCount, _startIndex, _baseVertex);
     }
 }

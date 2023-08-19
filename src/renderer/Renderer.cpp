@@ -137,13 +137,11 @@ namespace vg::renderer
 	{
         Timer::init();
 
-        // Singletons created by the renderer
+        // Copy Profiler singleton created by the renderer
         _singletons.profiler = Kernel::getProfiler();
 
-        // Singletons used by the renderer
-        Kernel::setScheduler(_singletons.scheduler);
-        Kernel::setInput(_singletons.input);
-        Kernel::setFactory(_singletons.factory);
+        // Get other Singletons for Renderer
+        Kernel::setSingletons(_singletons);
 
         // Create device
 		m_device.init(_params.device);

@@ -151,6 +151,8 @@ namespace vg::gfx
         void                setVSync            (VSync mode);
         VSync               getVSync            () const;
 
+        void                waitGPUIdle         ();
+
 	private:
         TextureImporter *   m_textureImporter = nullptr;
 	};

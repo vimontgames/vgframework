@@ -1,8 +1,52 @@
+#if !VG_ENABLE_INLINE
+#include "GraphicPipelineState_dx12.inl"
+#endif
+
 namespace vg::gfx::dx12
 {
     //--------------------------------------------------------------------------------------
+    D3D12_SHADER_BYTECODE getd3d3d12Bytecode(HLSLDesc * _desc, ShaderStage _stage, ShaderKey::EntryPoint _entryPoint, ShaderKey::Flags _flags)
+    {
+        if (ShaderKey::EntryPoint(-1) != _entryPoint)
+        {
+            const Shader * shader = _desc->getShader(API::DirectX12, _stage, _entryPoint, _flags);
+            if (nullptr != shader)
+                return shader->getd3d12Bytecode();
+        }
+        return D3D12_SHADER_BYTECODE{ nullptr,0 };
+    }
+
+    //--------------------------------------------------------------------------------------
     GraphicPipelineState::GraphicPipelineState(const GraphicPipelineStateKey & _key) :
         super::GraphicPipelineState(_key)
+    {
+
+    }
+
+    //--------------------------------------------------------------------------------------
+    GraphicPipelineState::~GraphicPipelineState()
+    {
+        VG_SAFE_RELEASE(m_d3d12GraphicPipelineState);
+    }
+
+    //--------------------------------------------------------------------------------------
+    gfx::GraphicPipelineState * GraphicPipelineState::createGraphicPipelineState(const GraphicPipelineStateKey & _key)
+    {
+        ID3D12PipelineState * d3d12GraphicPipelineState = nullptr;
+        
+        if (created3d12GraphicPipelineState(_key, d3d12GraphicPipelineState))
+        {
+            VG_ASSERT(nullptr != d3d12GraphicPipelineState);
+            gfx::GraphicPipelineState * pso = new gfx::GraphicPipelineState(_key);
+            pso->setd3d12GraphicPipelineState(d3d12GraphicPipelineState);
+            return pso;
+        }
+
+        return nullptr;
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool GraphicPipelineState::created3d12GraphicPipelineState(const GraphicPipelineStateKey & _key, ID3D12PipelineState *& _d3d12GraphicPipelineState)
     {
         VG_ASSERT(ShaderKey::VS(-1) != _key.m_shaderKey.vs, "Cannot create GraphicPipelineState because no Vertex Shader is defined");
 
@@ -26,20 +70,11 @@ namespace vg::gfx::dx12
         VG_ASSERT(desc);
         if (desc)
         {
-            if (ShaderKey::VS(-1) != _key.m_shaderKey.vs)
-                d3d12graphicPipelineDesc.VS = desc->getVS(API::DirectX12, _key.m_shaderKey.vs, _key.m_shaderKey.flags)->getd3d12Bytecode();
-
-            if (ShaderKey::HS(-1) != _key.m_shaderKey.hs)
-                d3d12graphicPipelineDesc.HS = desc->getHS(API::DirectX12, _key.m_shaderKey.hs, _key.m_shaderKey.flags)->getd3d12Bytecode();
-
-            if (ShaderKey::DS(-1) != _key.m_shaderKey.ds)
-                d3d12graphicPipelineDesc.DS = desc->getDS(API::DirectX12, _key.m_shaderKey.hs, _key.m_shaderKey.flags)->getd3d12Bytecode();
-
-            if (ShaderKey::GS(-1) != _key.m_shaderKey.gs)
-                d3d12graphicPipelineDesc.GS = desc->getGS(API::DirectX12, _key.m_shaderKey.hs, _key.m_shaderKey.flags)->getd3d12Bytecode();
-
-            if (ShaderKey::PS(-1) != _key.m_shaderKey.vs)
-                d3d12graphicPipelineDesc.PS = desc->getPS(API::DirectX12, _key.m_shaderKey.ps, _key.m_shaderKey.flags)->getd3d12Bytecode();
+            d3d12graphicPipelineDesc.VS = getd3d3d12Bytecode(desc, ShaderStage::Vertex, _key.m_shaderKey.vs, _key.m_shaderKey.flags);
+            d3d12graphicPipelineDesc.HS = getd3d3d12Bytecode(desc, ShaderStage::Hull, _key.m_shaderKey.hs, _key.m_shaderKey.flags);
+            d3d12graphicPipelineDesc.DS = getd3d3d12Bytecode(desc, ShaderStage::Domain, _key.m_shaderKey.ds, _key.m_shaderKey.flags);
+            d3d12graphicPipelineDesc.GS = getd3d3d12Bytecode(desc, ShaderStage::Geometry, _key.m_shaderKey.gs, _key.m_shaderKey.flags);
+            d3d12graphicPipelineDesc.PS = getd3d3d12Bytecode(desc, ShaderStage::Pixel, _key.m_shaderKey.ps, _key.m_shaderKey.flags);
         }
 
         d3d12graphicPipelineDesc.RasterizerState = _key.m_rasterizerState.getd3d12RasterizerState();
@@ -80,34 +115,10 @@ namespace vg::gfx::dx12
         d3d12graphicPipelineDesc.SampleDesc.Count = 1;
         d3d12graphicPipelineDesc.SampleDesc.Quality = 0;
 
-        VG_ASSERT_SUCCEEDED(d3d12device->CreateGraphicsPipelineState(&d3d12graphicPipelineDesc, IID_PPV_ARGS(&m_d3d12GraphicPipelineState)));
-    }
+        ID3D12PipelineState * d3d12GraphicPipelineState = nullptr;
+        VG_ASSERT_SUCCEEDED(d3d12device->CreateGraphicsPipelineState(&d3d12graphicPipelineDesc, IID_PPV_ARGS(&d3d12GraphicPipelineState)));
+        _d3d12GraphicPipelineState = d3d12GraphicPipelineState;
 
-    //--------------------------------------------------------------------------------------
-    GraphicPipelineState::~GraphicPipelineState()
-    {
-        VG_SAFE_RELEASE(m_d3d12GraphicPipelineState);
-    }
-
-    //--------------------------------------------------------------------------------------
-    D3D12_PRIMITIVE_TOPOLOGY_TYPE GraphicPipelineState::getd3d12PrimitiveTopologyType(PrimitiveType _primitiveType)
-    {
-        switch (_primitiveType)
-        {
-            default:
-                VG_ASSERT(false, "Unhandled PrimitiveType \"%s\" (%u)", asString(_primitiveType).c_str(), _primitiveType);
-
-            case PrimitiveType::Point:
-                return D3D12_PRIMITIVE_TOPOLOGY_TYPE_POINT;
-
-            case PrimitiveType::Line:
-                return D3D12_PRIMITIVE_TOPOLOGY_TYPE_LINE;
-
-            case PrimitiveType::Triangle:
-                return D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
-
-            //case PrimitiveType::Patch:
-            //    return D3D12_PRIMITIVE_TOPOLOGY_TYPE_PATCH;
-        }
+        return nullptr != d3d12GraphicPipelineState;
     }
 }

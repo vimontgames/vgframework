@@ -1,3 +1,7 @@
+#if !VG_ENABLE_INLINE
+#include "GraphicPipelineState_vulkan.inl"
+#endif
+
 namespace vg::gfx::vulkan
 {
     //--------------------------------------------------------------------------------------

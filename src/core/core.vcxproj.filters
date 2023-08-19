@@ -64,6 +64,9 @@
     <Filter Include="Component\Behaviour">
       <UniqueIdentifier>{b323f71c-5f58-44dc-8b4f-b6e6a56d527c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Logger">
+      <UniqueIdentifier>{ac882dcd-18b5-40d1-bfbe-dbae9b89f079}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Math\Math.h">
@@ -193,6 +196,10 @@
     <ClInclude Include="Component\Behaviour\Behaviour.h">
       <Filter>Component\Behaviour</Filter>
     </ClInclude>
+    <ClInclude Include="ILogger.h" />
+    <ClInclude Include="Logger\Logger.h">
+      <Filter>Logger</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Math\Math.cpp">
@@ -253,6 +260,9 @@
     </ClCompile>
     <ClCompile Include="Component\Behaviour\Behaviour.cpp">
       <Filter>Component\Behaviour</Filter>
+    </ClCompile>
+    <ClCompile Include="Logger\Logger.cpp">
+      <Filter>Logger</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

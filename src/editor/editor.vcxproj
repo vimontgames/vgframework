@@ -46,6 +46,8 @@
     <ClInclude Include="ImGui\Toolbar\Main\ImGuiMainToolbar.hpp" />
     <ClInclude Include="ImGui\Window\About\ImGuiAbout.h" />
     <ClInclude Include="ImGui\Window\About\ImGuiAbout.hpp" />
+    <ClInclude Include="ImGui\Window\Console\ImGuiConsole.h" />
+    <ClInclude Include="ImGui\Window\Console\ImGuiConsole.hpp" />
     <ClInclude Include="ImGui\Window\DisplayOptions\ImGuiDisplayOptions.h" />
     <ClInclude Include="ImGui\Window\DisplayOptions\ImGuiDisplayOptions.hpp" />
     <ClInclude Include="ImGui\Window\FPS\ImGuiFPS.h" />

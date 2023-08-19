@@ -26,7 +26,7 @@ namespace ImGui
     }
 
     //--------------------------------------------------------------------------------------
-    bool ButtonEx(const string & _label, bool _enabled, const string & _tooltip, ImVec2 _buttonSize)
+    bool ButtonEx(const string & _label, bool _enabled, bool _clickable, const string & _tooltip, ImVec2 _buttonSize)
     {
         bool clicked = false;
 
@@ -34,15 +34,17 @@ namespace ImGui
         ImVec4 buttonColorDisabled = ImVec4(buttonColor.x, buttonColor.y, buttonColor.z, buttonColor.w * 0.5f);
 
         ImVec4 textColor = ImGui::GetStyleColorVec4(ImGuiCol_Text);
-        ImVec4 textColorDisabled = ImVec4(textColor.x, textColor.y, textColor.z, textColor.w * 0.5f);
+        ImVec4 textColorDisabled = ImVec4(textColor.x, textColor.y, textColor.z, 0.25f);
 
         if (!_enabled)
         {
             ImGui::PushStyleColor(ImGuiCol_Button, buttonColorDisabled);
-            ImGui::PushStyleColor(ImGuiCol_Text, textColorDisabled);
+
+            if (_clickable)
+                ImGui::PushStyleColor(ImGuiCol_Text, textColorDisabled);
         }
 
-        if (ImGui::Button(_label.c_str(), _buttonSize) && _enabled)
+        if (ImGui::Button(_label.c_str(), _buttonSize) && _clickable)
         {
             clicked = true;
         }
@@ -51,7 +53,11 @@ namespace ImGui
             ImGui::SetTooltip(_tooltip.c_str());
 
         if (!_enabled)
-            ImGui::PopStyleColor(2);
+        {
+            ImGui::PopStyleColor(); 
+            if (_clickable)
+                ImGui::PopStyleColor();
+        }
 
         return clicked;
     }
@@ -241,5 +247,16 @@ namespace ImGui
             float y2 = y1 + line_height;
             draw_list->AddRectFilled(ImVec2(x1, y1), ImVec2(x2, y2), col);
         }
+    }
+
+    //--------------------------------------------------------------------------------------
+    ImVec2 GetWindowContentRegionSize()
+    {
+        ImVec2 vMin = ImGui::GetWindowContentRegionMin();
+        ImVec2 vMax = ImGui::GetWindowContentRegionMax();
+        vMin.x += ImGui::GetWindowPos().x;
+        vMin.y += ImGui::GetWindowPos().y;
+        vMax.x += ImGui::GetWindowPos().x;
+        return ImVec2(vMax.x - vMin.x, vMax.y - vMin.y);
     }
 }

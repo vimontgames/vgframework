@@ -153,6 +153,12 @@
     <ClInclude Include="ImGui\Window\Plugin\ImGuiPlugin.hpp">
       <Filter>ImGui\Window\Plugin</Filter>
     </ClInclude>
+    <ClInclude Include="ImGui\Window\Console\ImGuiConsole.h">
+      <Filter>ImGui\Window\Console</Filter>
+    </ClInclude>
+    <ClInclude Include="ImGui\Window\Console\ImGuiConsole.hpp">
+      <Filter>ImGui\Window\Console</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Editor.def" />
@@ -236,6 +242,9 @@
     </Filter>
     <Filter Include="ImGui\Window\Plugin">
       <UniqueIdentifier>{855e2d63-7d8e-45c9-af65-6961b2818e72}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ImGui\Window\Console">
+      <UniqueIdentifier>{77f64b19-bd48-4f4f-a785-9aa93f3b8117}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

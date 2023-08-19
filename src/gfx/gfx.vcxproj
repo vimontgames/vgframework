@@ -207,6 +207,10 @@
     <ClInclude Include="IDevice.h" />
     <ClInclude Include="Precomp.h" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="PipelineState\dx12\GraphicPipelineState_dx12.inl" />
+    <None Include="PipelineState\vulkan\GraphicPipelineState_vulkan.inl" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>
     <ProjectGuid>{51C074CB-0146-4324-9D1E-EB8192BF6673}</ProjectGuid>

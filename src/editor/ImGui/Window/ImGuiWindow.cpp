@@ -34,7 +34,8 @@ using namespace ImGui;
 #include "editor/ImGui/Window/Resource/ImGuiResource.hpp"
 #include "editor/ImGui/Window/View/ImGuiView.hpp"
 #include "editor/ImGui/Window/View/EditorView/ImGuiEditorView.hpp"
-#include "editor/ImGui/Window/View/GAmeView/ImGuiGameView.hpp"
+#include "editor/ImGui/Window/View/GameView/ImGuiGameView.hpp"
+#include "editor/ImGui/Window/Console/ImGuiConsole.hpp"
 
 #include "editor/ImGui/ObjectHandler/ImGuiObjectHandler.h"
 

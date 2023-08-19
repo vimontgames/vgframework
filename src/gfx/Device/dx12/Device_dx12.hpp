@@ -57,7 +57,7 @@ namespace vg::gfx::dx12
 					size_t s;
 					wcstombs_s(&s, description, countof(description), desc.Description, wcslen(desc.Description));
 
-                    VG_DEBUGPRINT("[Device] DirectX %u.%u %s - %s\n", major, minor, m_d3d12debug ? "debug " : "", description);
+                    VG_LOG(Level::Info, "[Device] DirectX %u.%u %s - %s", major, minor, m_d3d12debug ? "debug " : "", description);
                 }
                 else
                 {

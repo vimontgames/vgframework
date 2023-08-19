@@ -23,6 +23,7 @@ namespace vg::gfx
         core::uint GetShaderErrorCount() const final override;
 
         void update();
+        void applyUpdate();
 
         void registerHLSL(const HLSLDesc & _hlslDesc);
         bool initShaderKey(ShaderKey & _key, const core::string & _file, const core::string & _technique);
@@ -35,6 +36,7 @@ namespace vg::gfx
         const core::vector<core::string> & getShaderRootFolders() const { return m_shaderRootFolders; }
 
     private:
+        bool                        m_updateNeeded = false;
         core::string                m_shaderRootPath;
         core::vector<core::string>  m_shaderRootFolders;
         ShaderCompiler *            m_shaderCompiler = nullptr;

@@ -7,6 +7,7 @@
 #include "core/Universe/Universe.h"
 #include "core/Timer/Timer.h"
 #include "core/Plugin/Plugin.h"
+#include "core/Logger/Logger.h"
 #include "core/Scheduler/Scheduler.h"
 #include "core/Object/Factory.h"
 #include "core/Scene/Scene.h"
@@ -247,6 +248,9 @@ namespace vg::engine
 		const auto & name = asString(_params.renderer.device.api);
 
         // Singletons created by the engine
+        _singletons.logger = new Logger();
+        Kernel::setLogger(_singletons.logger);
+
         _singletons.scheduler = new Scheduler();
         Kernel::setScheduler(_singletons.scheduler);
 
@@ -361,6 +365,10 @@ namespace vg::engine
 
         VG_SAFE_DELETE(factory);
         Kernel::setFactory(nullptr);
+
+        ILogger * logger = Kernel::getLogger();
+        VG_SAFE_DELETE(logger);
+        Kernel::setLogger(nullptr);
 	}
 
     //--------------------------------------------------------------------------------------

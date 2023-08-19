@@ -32,11 +32,11 @@ namespace vg::gfx::vulkan
 			{
 				m_enabledExtensionNames[m_enabledExtensionCount++] = _name;
 				VG_ASSERT(m_enabledExtensionCount < countof(m_enabledExtensionNames));
-				VG_DEBUGPRINT("[Device] Extension \"%s\" is enabled\n", _name);
+				VG_LOG(Level::Info, "[Device] Extension \"%s\" is enabled", _name);
 				return true;
 			}
 		}
-		VG_DEBUGPRINT("[Device] Extension \"%s\" cound not be enabled\n", _name);
+		VG_LOG(Level::Warning, "[Device] Extension \"%s\" cound not be enabled", _name);
 		return false;
 	}
 

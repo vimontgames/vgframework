@@ -639,4 +639,12 @@
       <UniqueIdentifier>{bee51690-2c68-4788-9439-22f1682ca4d7}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="PipelineState\dx12\GraphicPipelineState_dx12.inl">
+      <Filter>PipelineState\dx12</Filter>
+    </None>
+    <None Include="PipelineState\vulkan\GraphicPipelineState_vulkan.inl">
+      <Filter>PipelineState\vulkan</Filter>
+    </None>
+  </ItemGroup>
 </Project>

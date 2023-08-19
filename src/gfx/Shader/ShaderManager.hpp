@@ -113,8 +113,7 @@ namespace vg::gfx
             }
             msg += ")";
         }
-        msg += "\n";
-        VG_DEBUGPRINT(msg.c_str());
+        VG_LOG(Level::Info, msg.c_str());
 
         string warningAndErrors;
         Shader * shader = m_shaderCompiler->compile(_api, m_shaderRootPath + _file, _entryPoint, _stage, _macros, warningAndErrors);
@@ -132,7 +131,10 @@ namespace vg::gfx
         if (!warningAndErrors.empty())
         {
             m_warningCount++;
-            VG_DEBUGPRINT("[Shader] %s", warningAndErrors.c_str());
+            if (!shader)
+                VG_LOG(Level::Error, "[Shader] %s", warningAndErrors.c_str());
+            else
+                VG_LOG(Level::Warning, "[Shader] %s", warningAndErrors.c_str());
         }
 
         if (!shader)
@@ -224,46 +226,60 @@ namespace vg::gfx
     //--------------------------------------------------------------------------------------
     void ShaderManager::update()
     {
-        Device * device = Device::get();
-        device->waitGPUIdle();
+        m_updateNeeded = true;
+    }
 
-        const auto start = Timer::getTick();
-
-        m_compiledCount = 0;
-        m_warningCount = 0;
-        m_errorCount = 0;
-
-        uint updated = 0;
-
-        for (uint i = 0; i < m_shaderFileDescriptors.size(); ++i)
+    //--------------------------------------------------------------------------------------
+    void ShaderManager::applyUpdate()
+    {
+        if (m_updateNeeded)
         {
-            vector<string> filenames;
+            //VG_LOG(Level::Info, "[Shader] Update Shaders");
 
-            auto & desc = m_shaderFileDescriptors[i];
-            const string & file = desc.getFile();
+            Device * device = Device::get();
 
-            u64 oldCRC = desc.getCRC();
-            u64 newCRC = 0;
-            parseIncludes(i, "", "shaders/" + file, filenames, newCRC);
+            const auto start = Timer::getTick();
 
-            if (newCRC != oldCRC)
+            m_compiledCount = 0;
+            m_warningCount = 0;
+            m_errorCount = 0;
+
+            uint updated = 0;
+
+            for (uint i = 0; i < m_shaderFileDescriptors.size(); ++i)
             {
-                VG_DEBUGPRINT("[Shader] File \"%s\" is not up-to-date (old CRC = 0x%016llu, new CRC = 0x%016llu)\n", file.c_str(), oldCRC, newCRC);
-                
-                // delete the shaders
-                desc.reset();
+                vector<string> filenames;
 
-                // delete the pso (TODO: L1 cache in cmdlist and L2 global cache using mutex)
-                device->resetShaders(ShaderKey::File(i));
+                auto & desc = m_shaderFileDescriptors[i];
+                const string & file = desc.getFile();
 
-                ++updated;
+                u64 oldCRC = desc.getCRC();
+                u64 newCRC = 0;
+                parseIncludes(i, "", "shaders/" + file, filenames, newCRC);
 
-                desc.setCRC(newCRC);
+                if (newCRC != oldCRC)
+                {
+                    VG_LOG(Level::Warning, "[Shader] File \"%s\" is not up-to-date (old CRC = 0x%016llu, new CRC = 0x%016llu)", file.c_str(), oldCRC, newCRC);
+
+                    // delete the shaders
+                    desc.reset();
+                    
+                    // delete the pso (TODO: L1 cache in cmdlist and L2 global cache using mutex)
+                    device->resetShaders(ShaderKey::File(i));
+
+                    ++updated;
+
+                    desc.setCRC(newCRC);
+                }
+                else
+                {
+                    //VG_LOG(Level::Info, "[Shader] File \"%s\" is up-to-date (CRC = 0x%016llu)", file.c_str(), oldCRC);
+                }
             }
-            else
-                VG_DEBUGPRINT("[Shader] File \"%s\" is up-to-date (CRC = 0x%016llu)\n", file.c_str(), oldCRC);
+
+            VG_LOG(Level::Info, "[Shader] %u/%u shader(s) changed", updated, m_shaderFileDescriptors.size());
         }
 
-        VG_DEBUGPRINT("[Shader] %u/%u shaders parsed ... %.2f ms\n", updated, m_shaderFileDescriptors.size(), Timer::getEnlapsedTime(start, Timer::getTick()));
+        m_updateNeeded = false;
     }
 }

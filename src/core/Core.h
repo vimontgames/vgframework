@@ -1,6 +1,7 @@
 #pragma once
 
 #include "core/Types/Types.h"
+#include "core/ILogger.h"
 
 namespace vg::core
 {

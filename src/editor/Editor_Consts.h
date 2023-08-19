@@ -39,6 +39,10 @@ namespace vg::editor
             inline static const char * Pause        = ICON_FA_PAUSE;
             inline static const char * Stop         = ICON_FA_STOP;
             inline static const char * Plugin       = ICON_FA_PLUG;
+            inline static const char * Console      = ICON_FA_TABLE_LIST;
+            inline static const char * Info         = ICON_FA_CIRCLE_INFO;
+            inline static const char * Warning      = ICON_FA_TRIANGLE_EXCLAMATION;
+            inline static const char * Error        = ICON_FA_BUG;
         }
     }
 }

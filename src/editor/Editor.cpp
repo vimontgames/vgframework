@@ -17,8 +17,9 @@
 #include "editor/ImGui/Window/Shader/ImGuiShader.h"
 #include "editor/ImGui/Window/Scene/ImGuiScene.h"
 #include "editor/ImGui/Window/Resource/ImGuiResource.h"
-#include "editor/ImGui/Window/View/EditorView//ImGuiEditorView.h"
-#include "editor/ImGui/Window/View/GameView//ImGuiGameView.h"
+#include "editor/ImGui/Window/View/EditorView/ImGuiEditorView.h"
+#include "editor/ImGui/Window/View/GameView/ImGuiGameView.h"
+#include "editor/ImGui/Window/Console/ImGuiConsole.h"
 #include "editor/ImGui/Toolbar/Main/ImGuiMainToolbar.h"
 
 using namespace vg::core;
@@ -26,7 +27,7 @@ using namespace vg::editor;
 using namespace ImGui;
 
 #define VG_EDITOR_VERSION_MAJOR 0
-#define VG_EDITOR_VERSION_MINOR 1
+#define VG_EDITOR_VERSION_MINOR 11
 
 //--------------------------------------------------------------------------------------
 IEditor * CreateNew()
@@ -82,6 +83,7 @@ namespace vg::editor
         m_imGuiWindows.push_back(new ImGuiDisplayOptions(IconWithText(style::icon::Display, "Display"), ImGuiWindow::StartVisible));
         m_imGuiWindows.push_back(new ImGuiEditorView(IconWithText(style::icon::EditorView, "Editor View"), ImGuiWindow::StartVisible | ImGuiWindow::AddMenuEntry));
         m_imGuiWindows.push_back(new ImGuiGameView(IconWithText(style::icon::GameView, "Game View"), ImGuiWindow::StartVisible | ImGuiWindow::AddMenuEntry));
+        m_imGuiWindows.push_back(new ImGuiConsole(IconWithText(style::icon::Console, "Console"), ImGuiWindow::StartVisible | ImGuiWindow::AddMenuEntry));
         m_imGuiWindows.push_back(new ImGuiAbout("About", ImGuiWindow::None));
 
         // Add ImGui toolbars
@@ -123,11 +125,8 @@ namespace vg::editor
 	//--------------------------------------------------------------------------------------
 	void Editor::Init(const core::Singletons & _singletons)
 	{
-        // Singletons used by the editor DLL
-        Kernel::setScheduler(_singletons.scheduler);
-        Kernel::setInput(_singletons.input);
-        Kernel::setFactory(_singletons.factory);
-        Kernel::setProfiler(_singletons.profiler);
+        // Get existing Singletons
+        Kernel::setSingletons(_singletons);
 
         RegisterClasses();
 	}

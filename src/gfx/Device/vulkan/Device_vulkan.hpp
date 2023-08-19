@@ -802,7 +802,7 @@ namespace vg::gfx::vulkan
 
             if (format == VK_FORMAT_R8G8B8A8_UNORM || format == VK_FORMAT_B8G8R8A8_UNORM)
             {
-                VG_DEBUGPRINT("[Device] Backbuffer uses %s format\n", asString(Texture::getPixelFormat(format)).c_str());
+				VG_LOG(Level::Info, "[Device] Backbuffer uses %s format", asString(Texture::getPixelFormat(format)).c_str());
                 selectedSurfaceFormat = curSurfaceFormat;
                 break;
             }
@@ -1137,6 +1137,7 @@ namespace vg::gfx::vulkan
 
 		if (m_vkDirtySwapchain)
 		{
+			waitGPUIdle();
             createSwapchain();
             createVulkanBackbuffers();
 			m_vkDirtySwapchain = false;

@@ -5,11 +5,11 @@ namespace vg::gfx
 	{
 		#if VG_ENABLE_RAYTRACING
 		if (supportRaytracing)
-			VG_DEBUGPRINT("[Device] Raytracing is supported\n");
+			VG_LOG(core::Level::Info, "[Device] Raytracing is supported");
 		else
-			VG_DEBUGPRINT("[Device] Raytracing is not supported\n");
+			VG_LOG(core::Level::Warning, "[Device] Raytracing is not supported");
 		#else
-			VG_DEBUGPRINT("[Device] Raytracing is disabled. Compile with \"#define VG_ENABLE_RAYTRACING  1\" to enable\n");
+		VG_LOG(Level::Warning, "[Device] Raytracing is disabled. Compile with \"#define VG_ENABLE_RAYTRACING  1\" to enable\n");
 		#endif
 	}
 }

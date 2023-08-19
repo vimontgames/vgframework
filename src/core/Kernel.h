@@ -2,6 +2,7 @@
 
 namespace vg::core
 {
+    class ILogger;
     class IProfiler;
     class IScheduler;
     class IInput;
@@ -9,15 +10,19 @@ namespace vg::core
 
     struct Singletons
     {
-        IProfiler *         profiler    = nullptr;
-        IScheduler *        scheduler   = nullptr;
-        IInput *            input       = nullptr;
-        IFactory *    factory     = nullptr;
+        ILogger *       logger      = nullptr;
+        IProfiler *     profiler    = nullptr;
+        IScheduler *    scheduler   = nullptr;
+        IInput *        input       = nullptr;
+        IFactory *      factory     = nullptr;
     };
 
     class Kernel
     {
     public:
+        static void setLogger(ILogger * _logger);
+        static ILogger * getLogger();
+
         static void setProfiler(IProfiler * _profiler);
         static IProfiler * getProfiler();
 
@@ -36,6 +41,18 @@ namespace vg::core
     private:
         static inline Singletons s_singletons;
     };
+
+    //--------------------------------------------------------------------------------------
+    inline void Kernel::setLogger(ILogger * _logger)
+    {
+        s_singletons.logger = _logger;
+    }
+
+    //--------------------------------------------------------------------------------------
+    inline ILogger * Kernel::getLogger()
+    {
+        return s_singletons.logger;
+    }
 
     //--------------------------------------------------------------------------------------
     inline void Kernel::setProfiler(IProfiler * _profiler)

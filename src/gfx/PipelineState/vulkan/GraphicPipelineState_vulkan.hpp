@@ -4,6 +4,27 @@ namespace vg::gfx::vulkan
     GraphicPipelineState::GraphicPipelineState(const GraphicPipelineStateKey & _key) :
         super::GraphicPipelineState(_key)
     {
+    }
+
+    //--------------------------------------------------------------------------------------
+    gfx::GraphicPipelineState * GraphicPipelineState::createGraphicPipelineState(const GraphicPipelineStateKey & _key)
+    {
+        VkPipelineCache vkPipelineCache = {};
+        VkPipeline vkPipeline = {};
+
+        if (createVulkanGraphicPipelineState(_key, vkPipelineCache, vkPipeline))
+        {
+            gfx::GraphicPipelineState * pso = new gfx::GraphicPipelineState(_key);
+            pso->setVulkanGraphicPipelineState(vkPipelineCache, vkPipeline);
+            return pso;
+        }
+
+        return nullptr;
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool GraphicPipelineState::createVulkanGraphicPipelineState(const GraphicPipelineStateKey & _key, VkPipelineCache & _vkPipelineCache, VkPipeline & _vkPipeline)
+    {
         auto * device = gfx::Device::get();
         auto & vkDevice = device->getVulkanDevice();
 
@@ -16,9 +37,11 @@ namespace vg::gfx::vulkan
                 ++renderTargetCount;
         }            
 
+        VkPipelineCache vkPipelineCache = {};
+
         VkPipelineCacheCreateInfo vkPipelineCacheDesc = {};
         vkPipelineCacheDesc.sType = VK_STRUCTURE_TYPE_PIPELINE_CACHE_CREATE_INFO;
-        VG_ASSERT_VULKAN(vkCreatePipelineCache(vkDevice, &vkPipelineCacheDesc, nullptr, &m_vkPipelineCache));
+        VG_ASSERT_VULKAN(vkCreatePipelineCache(vkDevice, &vkPipelineCacheDesc, nullptr, &vkPipelineCache));
 
         VkGraphicsPipelineCreateInfo vkPipelineDesc = {};
 
@@ -82,10 +105,10 @@ namespace vg::gfx::vulkan
         auto & hlslDesc = *sm->getHLSLDescriptor(_key.m_shaderKey.file);
 
         if (ShaderKey::VS(-1) != _key.m_shaderKey.vs)
-            addVulkanShader(vkShaderStages, hlslDesc, ShaderStage::Vertex, _key.m_shaderKey.vs);
+            addVulkanShader(vkShaderStages, hlslDesc, ShaderStage::Vertex, _key.m_shaderKey.vs, _key.m_shaderKey.flags);
 
         if (ShaderKey::PS(-1) != _key.m_shaderKey.ps)
-            addVulkanShader(vkShaderStages, hlslDesc, ShaderStage::Pixel, _key.m_shaderKey.ps);
+            addVulkanShader(vkShaderStages, hlslDesc, ShaderStage::Pixel, _key.m_shaderKey.ps, _key.m_shaderKey.flags);
 
         vkPipelineDesc.stageCount = (uint)vkShaderStages.size();
         vkPipelineDesc.pStages = vkShaderStages.data();
@@ -94,7 +117,13 @@ namespace vg::gfx::vulkan
         vkPipelineDesc.renderPass = device->getVulkanRenderPass(_key.m_renderPassKey);
         vkPipelineDesc.subpass = _key.m_subPassIndex;
 
-        VG_ASSERT_VULKAN(vkCreateGraphicsPipelines(vkDevice, m_vkPipelineCache, 1, &vkPipelineDesc, nullptr, &m_vkPipeline));
+        VkPipeline vkPipeline = {};
+        VG_ASSERT_VULKAN(vkCreateGraphicsPipelines(vkDevice, vkPipelineCache, 1, &vkPipelineDesc, nullptr, &vkPipeline));
+
+        _vkPipelineCache = vkPipelineCache;
+        _vkPipeline = vkPipeline;
+
+        return true;
     }
 
     //--------------------------------------------------------------------------------------
@@ -136,42 +165,23 @@ namespace vg::gfx::vulkan
     }
 
     //--------------------------------------------------------------------------------------
-    VkPrimitiveTopology GraphicPipelineState::getVulkanPrimitiveTopology(PrimitiveTopology _topology)
+    bool GraphicPipelineState::addVulkanShader(vector<VkPipelineShaderStageCreateInfo> & _vkStages, HLSLDesc & _hlsl, ShaderStage _stage, uint _index, ShaderKey::Flags _flags)
     {
-        switch (_topology)
+        const Shader * shader = _hlsl.getShader(API::Vulkan, _stage, _index, _flags);
+
+        if (nullptr != shader)
         {
-            default:
-                VG_ASSERT(false, "Unhandled PrimitiveTopology \"%s\" (%u)", asString(_topology).c_str(), _topology);
+            VkPipelineShaderStageCreateInfo vkShaderStage = {};
 
-            case PrimitiveTopology::PointList:
-                return VK_PRIMITIVE_TOPOLOGY_POINT_LIST;
+            vkShaderStage.sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
+            vkShaderStage.stage = getVulkanShaderStage(_stage);
+            vkShaderStage.module = shader->getVulkanBytecode();
+            vkShaderStage.pName = shader->getName().c_str();
 
-            case PrimitiveTopology::LineList:
-                return VK_PRIMITIVE_TOPOLOGY_LINE_LIST;
-
-            case PrimitiveTopology::LineStrip:
-                return VK_PRIMITIVE_TOPOLOGY_LINE_STRIP;
-
-            case PrimitiveTopology::TriangleList:
-                return VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST;
-
-            case PrimitiveTopology::TriangleStrip:
-                return VK_PRIMITIVE_TOPOLOGY_TRIANGLE_STRIP;
+            _vkStages.push_back(vkShaderStage);
+            return true;
         }
-    }
-
-    //--------------------------------------------------------------------------------------
-    void GraphicPipelineState::addVulkanShader(vector<VkPipelineShaderStageCreateInfo> & _vkStages, HLSLDesc & _hlsl, ShaderStage _stage, uint _index)
-    {
-        const Shader * shader = _hlsl.getShader(API::Vulkan, _stage, _index);
-
-        VkPipelineShaderStageCreateInfo vkShaderStage = {};
-
-        vkShaderStage.sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
-        vkShaderStage.stage = getVulkanShaderStage(_stage);
-        vkShaderStage.module = shader->getVulkanBytecode();
-        vkShaderStage.pName = shader->getName().c_str();
-
-        _vkStages.push_back(vkShaderStage);
+        
+        return false;
     }
 }

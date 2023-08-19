@@ -13,6 +13,13 @@ namespace vg::editor
     }
 
     //--------------------------------------------------------------------------------------
+    ImVec2 ImGuiToolbar::ComputeButtonSize()
+    {
+        const float font_size = ImGui::GetFontSize();
+        return ImVec2(ImFloor(font_size * 1.5f), ImFloor(font_size * 1.5f));
+    }
+
+    //--------------------------------------------------------------------------------------
     // https://github.com/ocornut/imgui/issues/2648
     //--------------------------------------------------------------------------------------
     void ImGuiToolbar::DrawGUI()
@@ -53,9 +60,8 @@ namespace vg::editor
         const auto name = getName();
 
         // 3. Begin into the window
-        const float font_size = ImGui::GetFontSize();
-        m_buttonSize = ImVec2(ImFloor(font_size * 1.5f), ImFloor(font_size * 1.5f));
-        ImGui::Begin(name.c_str(), &m_isVisible, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoScrollbar);
+        m_buttonSize = ComputeButtonSize();
+        ImGui::Begin(name.c_str(), &m_isVisible, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoScrollbar);        
 
         // 4. Overwrite node size
         ImGuiDockNode * node = ImGui::GetWindowDockNode();
@@ -87,14 +93,9 @@ namespace vg::editor
         //}
 
         // Compute Window content size
-        ImVec2 vMin = ImGui::GetWindowContentRegionMin();
-        ImVec2 vMax = ImGui::GetWindowContentRegionMax();
-        vMin.x += ImGui::GetWindowPos().x;
-        vMin.y += ImGui::GetWindowPos().y;
-        vMax.x += ImGui::GetWindowPos().x;
-        ImVec2 size = ImVec2(vMax.x - vMin.x, vMax.y - vMin.y);
-
+        ImVec2 size = ImGui::GetWindowContentRegionSize();
         ImGuiStyle & style = ImGui::GetStyle();
+
         float buttonSize = ImGui::CalcTextSize(style::icon::GameView).x + style.FramePadding.x*4.0f;
         int buttonCount = 3;
 

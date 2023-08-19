@@ -16,10 +16,10 @@
 #include "gfx/RingBuffer/Upload/UploadBuffer.h"
 #include "gfx/RingBuffer/Dynamic/DynamicBuffer.h"
 
-#include "gfx/Device/DeviceCaps.hpp"
-
 using namespace vg::core;
 using namespace vg::gfx;
+
+#include "gfx/Device/DeviceCaps.hpp"
 
 #include VG_GFXAPI_IMPL(Device)
 
@@ -295,15 +295,15 @@ namespace vg::gfx
     //--------------------------------------------------------------------------------------
     void Device::resize(core::uint _width, core::uint _height)
     {
-        VG_DEBUGPRINT("[Device] resize(%u, %u)\n", _width, _height);
         m_deviceParams.resolution = uint2(_width, _height);
 
         if (isMinimized())
             return;
 
-        super::resize(_width, _height);
+        VG_LOG(Level::Info, "[Device] Resize to %ux%u", _width, _height);
 
         waitGPUIdle();
+        super::resize(_width, _height);
     }
 
     //--------------------------------------------------------------------------------------
@@ -315,8 +315,6 @@ namespace vg::gfx
     //--------------------------------------------------------------------------------------
     void Device::resetShaders(ShaderKey::File _file)
     {
-        waitGPUIdle();
-
         for (FrameContext & frame : m_frameContext)
         {
             for (auto cmdListType = 0; cmdListType < enumCount<CommandListType>(); ++cmdListType)
@@ -360,6 +358,8 @@ namespace vg::gfx
 
 		super::endFrame();
 
+        getShaderManager()->applyUpdate();
+
         #if VG_DBG_CPUGPUSYNC
         VG_DEBUGPRINT("}\nendFrame #%u\n", getFrameCounter());
         #endif
@@ -396,7 +396,7 @@ namespace vg::gfx
         }
         else
         {
-            VG_DEBUGPRINT("[Device] Failed to create texture from \"%s\"\n", _path.c_str());
+            VG_LOG(Level::Error, "[Device] Failed to create texture from \"%s\"", _path.c_str());
         }
         return nullptr;
     }
@@ -439,5 +439,11 @@ namespace vg::gfx
     VSync Device::getVSync() const
     {
         return m_VSync;
+    }
+
+    //--------------------------------------------------------------------------------------
+    void Device::waitGPUIdle()
+    {
+        super::waitGPUIdle();
     }
 }

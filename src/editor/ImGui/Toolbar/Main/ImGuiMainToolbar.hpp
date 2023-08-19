@@ -18,13 +18,12 @@ namespace vg::editor
     {
         IEngine * engine = Editor::get()->getEngine();
 
-        if (ImGui::ButtonEx(style::icon::Play, !engine->IsPlaying(), "Play", getButtonSize()))
-        {
+        if (ImGui::ButtonEx(style::icon::Play, !engine->IsPlaying(), !engine->IsPlaying(), "Play", getButtonSize()))
             engine->Play();
-        }
+
         nextItem();
 
-        if (ImGui::ButtonEx(style::icon::Pause, engine->IsPlaying(), "Pause", getButtonSize()))
+        if (ImGui::ButtonEx(style::icon::Pause, engine->IsPlaying() && engine->IsPaused(), engine->IsPlaying(), "Pause", getButtonSize()))
         {
             if (engine->IsPaused())
                 engine->Play();
@@ -33,10 +32,9 @@ namespace vg::editor
         }
         nextItem();
 
-        if (ImGui::ButtonEx(style::icon::Stop, engine->IsPlaying(), "Stop", getButtonSize()))
-        {
+        if (ImGui::ButtonEx(style::icon::Stop, engine->IsPlaying(), engine->IsPlaying(), "Stop", getButtonSize()))
             engine->Stop();
-        }
+        
         nextItem();
     }
 }

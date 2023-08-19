@@ -97,19 +97,22 @@ namespace vg::gfx
 		using super = VG_GFXAPI::CommandList;
 
 	public:
-        const char * getClassName() const final { return "CommandList"; }
+        const char *                getClassName            () const final { return "CommandList"; }
 
-		CommandList(gfx::CommandListType _type, gfx::CommandPool * _cmdPool, core::uint _frame, core::uint _index);
-		~CommandList();
+		                            CommandList             (gfx::CommandListType _type, gfx::CommandPool * _cmdPool, core::uint _frame, core::uint _index);
+		                            ~CommandList            ();
 
-        void    reset();
-        void    close();
+        void                        reset();
+        void                        close();
 
-        void    flush();
+        bool                        flush();
 
-        void    draw(core::uint _vertexCount, core::uint _startOffset = 0);
-        void    drawIndexed(core::uint _indexCount, core::uint _startIndex = 0, core::uint _baseVertex = 0);
+        void                        draw                    (core::uint _vertexCount, core::uint _startOffset = 0);
+        void                        drawIndexed             (core::uint _indexCount, core::uint _startIndex = 0, core::uint _baseVertex = 0);
 
-        void    resetShaders(ShaderKey::File _file);
+        void                        resetShaders            (ShaderKey::File _file);
+
+    private:
+        GraphicPipelineState *      getGraphicPipelineState (const GraphicPipelineStateKey & _key);
 	};
 }

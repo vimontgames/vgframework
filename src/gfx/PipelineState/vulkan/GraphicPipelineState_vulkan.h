@@ -4,6 +4,7 @@
 
 namespace vg::gfx
 {
+    class GraphicPipelineState;
     class HLSLDesc;
 
     namespace vulkan
@@ -18,16 +19,23 @@ namespace vg::gfx
 
             VkPipeline & getVulkanPipeline() { return m_vkPipeline; }
 
+            static gfx::GraphicPipelineState * createGraphicPipelineState(const GraphicPipelineStateKey & _key);
             static VkShaderStageFlagBits getVulkanShaderStage(ShaderStage _stage);
 
         private:
-            static VkPrimitiveTopology getVulkanPrimitiveTopology(PrimitiveTopology _topology);
+            VG_INLINE static VkPrimitiveTopology getVulkanPrimitiveTopology(PrimitiveTopology _topology);
+            static bool addVulkanShader(core::vector<VkPipelineShaderStageCreateInfo> & _vkStages, HLSLDesc & _hlsl, ShaderStage _stage, core::uint _index, ShaderKey::Flags _flags);
 
-            void addVulkanShader(core::vector<VkPipelineShaderStageCreateInfo> & _vkStages, HLSLDesc & _hlsl, ShaderStage _stage, core::uint _index);
+            VG_INLINE void setVulkanGraphicPipelineState(const VkPipelineCache & _vkPipelineCache, const VkPipeline & _vkPipeline);
+            static bool createVulkanGraphicPipelineState(const GraphicPipelineStateKey & _key, VkPipelineCache & _vkPipelineCache, VkPipeline & _vkPipeline);
 
         private:
             VkPipelineCache m_vkPipelineCache;
-            VkPipeline  m_vkPipeline;
+            VkPipeline      m_vkPipeline;
         };
     }
 }
+
+#if VG_ENABLE_INLINE
+#include "GraphicPipelineState_vulkan.inl"
+#endif
