@@ -27,7 +27,7 @@ using namespace vg::editor;
 using namespace ImGui;
 
 #define VG_EDITOR_VERSION_MAJOR 0
-#define VG_EDITOR_VERSION_MINOR 11
+#define VG_EDITOR_VERSION_MINOR 12
 
 //--------------------------------------------------------------------------------------
 IEditor * CreateNew()
@@ -188,7 +188,7 @@ namespace vg::editor
         windowFlags |= ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus;
         windowFlags |= ImGuiWindowFlags_NoBackground;
 
-        ImGuiDockNodeFlags dockspaceFlags = ImGuiDockNodeFlags_None | ImGuiDockNodeFlags_PassthruCentralNode;
+        ImGuiDockNodeFlags dockspaceFlags = ImGuiDockNodeFlags_None;
 
         bool showUI = true;
 
