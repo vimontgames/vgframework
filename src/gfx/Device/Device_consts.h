@@ -13,7 +13,7 @@ namespace vg::gfx
         Verbose
     };
 
-    enum class API
+    enum class API : core::u8
     {
         DirectX12,
         Vulkan,

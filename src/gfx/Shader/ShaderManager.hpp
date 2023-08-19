@@ -259,7 +259,8 @@ namespace vg::gfx
 
                 if (newCRC != oldCRC)
                 {
-                    VG_LOG(Level::Warning, "[Shader] File \"%s\" is not up-to-date (old CRC = 0x%016llu, new CRC = 0x%016llu)", file.c_str(), oldCRC, newCRC);
+                    if (0 != oldCRC)
+                        VG_LOG(Level::Warning, "[Shader] File \"%s\" updated (old CRC = 0x%016llu, new CRC = 0x%016llu)", file.c_str(), oldCRC, newCRC);
 
                     // delete the shaders
                     desc.reset();

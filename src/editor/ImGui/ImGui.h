@@ -1,3 +1,3 @@
 #pragma once
 
-#include "renderer/Pass/ImGui/ImGui.h"
+#include "renderer/RenderPass/ImGui/ImGui.h"

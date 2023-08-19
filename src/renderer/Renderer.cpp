@@ -14,9 +14,9 @@
 #include "gfx/Resource/Texture.h"
 #include "gfx/Importer/TextureImporter.h"
 
-#include "renderer/Pass/ImGui/ImGui.h"
-#include "renderer/Pass/ImGui/ImGuiPass.h"
-#include "renderer/Pass/ImGui/imguiAdapter.h"
+#include "renderer/RenderPass/ImGui/ImGui.h"
+#include "renderer/RenderPass/ImGui/ImGuiPass.h"
+#include "renderer/RenderPass/ImGui/imguiAdapter.h"
 #include "renderer/Importer/FBX/FBXImporter.h"
 #include "renderer/Importer/SceneImporterData.h"
 #include "renderer/Model/Mesh/MeshModel.h"

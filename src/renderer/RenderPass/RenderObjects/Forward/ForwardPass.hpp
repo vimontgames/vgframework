@@ -24,7 +24,7 @@ namespace vg::renderer
     // Setup executed once, when pass is created
     //--------------------------------------------------------------------------------------
     ForwardPass::ForwardPass() :
-        gfx::UserPass("ForwardPass")
+        RenderObjectsPass("ForwardPass")
     {
         auto * device = Device::get();
         auto * renderer = Renderer::get();

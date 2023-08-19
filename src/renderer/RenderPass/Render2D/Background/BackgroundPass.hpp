@@ -9,7 +9,7 @@ namespace vg::renderer
     // Setup executed once, when pass is created
     //--------------------------------------------------------------------------------------
     BackgroundPass::BackgroundPass() :
-        gfx::UserPass("BackgroundPass")
+        Render2DPass("BackgroundPass")
     {
         auto * device = Device::get();
 

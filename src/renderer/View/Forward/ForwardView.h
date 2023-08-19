@@ -5,7 +5,7 @@ namespace vg::renderer
 {
     class BackgroundPass;
     class ForwardPass;
-    class PostProcessPass;
+    class FinalPostProcessPass;
 
     class ForwardView : public View
     {
@@ -21,6 +21,6 @@ namespace vg::renderer
     private:
         BackgroundPass *    m_backgroundPass = nullptr;
         ForwardPass *       m_forwardPass = nullptr;
-        PostProcessPass *   m_postProcessPass = nullptr;
+        FinalPostProcessPass *   m_postProcessPass = nullptr;
     };
 }

@@ -3,9 +3,6 @@
   <ItemGroup>
     <ClCompile Include="Precomp.cpp" />
     <ClCompile Include="Renderer.cpp" />
-    <ClCompile Include="Pass\Pass.cpp">
-      <Filter>Pass</Filter>
-    </ClCompile>
     <ClCompile Include="Geometry\Geometry.cpp">
       <Filter>Geometry</Filter>
     </ClCompile>
@@ -30,11 +27,14 @@
     <ClCompile Include="View\View.cpp">
       <Filter>View</Filter>
     </ClCompile>
-    <ClCompile Include="Pass\ImGui\ImGuiPass.cpp">
-      <Filter>Pass\ImGui</Filter>
-    </ClCompile>
     <ClCompile Include="Job\Job.cpp">
       <Filter>Job</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderPass\RenderPass.cpp">
+      <Filter>Pass</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderPass\ImGui\ImGuiPass.cpp">
+      <Filter>Pass\ImGui</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -129,27 +129,6 @@
     <ClInclude Include="View\Forward\ForwardView.hpp">
       <Filter>View\ForwardView</Filter>
     </ClInclude>
-    <ClInclude Include="Pass\Forward\ForwardPass.hpp">
-      <Filter>Pass\Forward</Filter>
-    </ClInclude>
-    <ClInclude Include="Pass\Forward\ForwardPass.h">
-      <Filter>Pass\Forward</Filter>
-    </ClInclude>
-    <ClInclude Include="Pass\Background\BackgroundPass.h">
-      <Filter>Pass\Background</Filter>
-    </ClInclude>
-    <ClInclude Include="Pass\Background\BackgroundPass.hpp">
-      <Filter>Pass\Background</Filter>
-    </ClInclude>
-    <ClInclude Include="Pass\ImGui\ImGuiPass.h">
-      <Filter>Pass\ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="Pass\PostProcess\PostProcessPass.h">
-      <Filter>Pass\PostProcess</Filter>
-    </ClInclude>
-    <ClInclude Include="Pass\PostProcess\PostProcessPass.hpp">
-      <Filter>Pass\PostProcess</Filter>
-    </ClInclude>
     <ClInclude Include="Job\Culling\ViewCullingJob.h">
       <Filter>Job\Culling</Filter>
     </ClInclude>
@@ -171,17 +150,54 @@
     <ClInclude Include="Geometry\Batch\Batch.h">
       <Filter>Geometry\Batch</Filter>
     </ClInclude>
-    <ClInclude Include="Pass\ImGui\ImGuiAdapter.h">
+    <ClInclude Include="Pass\Pass.h" />
+    <ClInclude Include="RenderPass\RenderObjects\RenderObjectsPass.h">
+      <Filter>Pass\RenderObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderPass\RenderObjects\Forward\ForwardPass.h">
+      <Filter>Pass\RenderObjects\Forward</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderPass\RenderObjects\Forward\ForwardPass.hpp">
+      <Filter>Pass\RenderObjects\Forward</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderPass\RenderPass.h">
+      <Filter>Pass</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderPass\Render2D\FinalPostProcess\FinalPostProcessPass.h">
+      <Filter>Pass\Render2D\FinalPostProcess</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderPass\Render2D\FinalPostProcess\FinalPostProcessPass.hpp">
+      <Filter>Pass\Render2D\FinalPostProcess</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderPass\Render2D\Background\BackgroundPass.h">
+      <Filter>Pass\Render2D\Background</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderPass\Render2D\Background\BackgroundPass.hpp">
+      <Filter>Pass\Render2D\Background</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderPass\RenderObjects\RenderObjectsPass.hpp">
+      <Filter>Pass\RenderObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderPass\ImGui\ImGui.h">
       <Filter>Pass\ImGui</Filter>
     </ClInclude>
-    <ClInclude Include="Pass\ImGui\ImGui.h">
+    <ClInclude Include="RenderPass\ImGui\ImGui.hpp">
       <Filter>Pass\ImGui</Filter>
     </ClInclude>
-    <ClInclude Include="Pass\ImGui\ImGuiAdapter.hpp">
+    <ClInclude Include="RenderPass\ImGui\imguiAdapter.h">
       <Filter>Pass\ImGui</Filter>
     </ClInclude>
-    <ClInclude Include="Pass\ImGui\ImGui.hpp">
+    <ClInclude Include="RenderPass\ImGui\ImGuiAdapter.hpp">
       <Filter>Pass\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderPass\ImGui\ImGuiPass.h">
+      <Filter>Pass\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderPass\Render2D\Render2DPass.h">
+      <Filter>Pass\Render2D</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderPass\Render2D\Render2DPass.hpp">
+      <Filter>Pass\Render2D</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -233,17 +249,8 @@
     <Filter Include="View\ForwardView">
       <UniqueIdentifier>{239c8e07-6a74-4972-bd04-c3cc454c7c0e}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Pass\PostProcess">
-      <UniqueIdentifier>{a410dac2-fb95-417b-b8f5-bea1d7b98df6}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Pass\ImGui">
       <UniqueIdentifier>{208f36c1-6c04-4c8e-9ce2-3982a8bc9642}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Pass\Background">
-      <UniqueIdentifier>{f5b8cf8d-4230-45b9-868b-e25d2f1f3077}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Pass\Forward">
-      <UniqueIdentifier>{aa5e436c-5253-4537-a11a-12f4bd51cb6c}</UniqueIdentifier>
     </Filter>
     <Filter Include="Job">
       <UniqueIdentifier>{b3441a69-f331-4236-a21f-8b65dcbde221}</UniqueIdentifier>
@@ -256,6 +263,30 @@
     </Filter>
     <Filter Include="Geometry\AABB">
       <UniqueIdentifier>{a49bddf0-e594-41e9-9f02-df4bae0dacec}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Pass\RenderObjects">
+      <UniqueIdentifier>{e653d575-dd5e-4f59-bf96-906fa4b40edd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Pass\RenderObjects\DepthOnly">
+      <UniqueIdentifier>{2ee58acb-5192-4fa0-9d9a-44212975c738}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Pass\RenderObjects\Forward">
+      <UniqueIdentifier>{377e7dd2-c3bc-4994-aceb-8581eb7ff143}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Pass\Render2D">
+      <UniqueIdentifier>{e611e959-73ef-4043-afe7-9ab28ce0e38c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Pass\Render2D\FinalPostProcess">
+      <UniqueIdentifier>{92acb9e4-3a55-4044-b4a4-0f5ef69fe09d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Pass\Render2D\Background">
+      <UniqueIdentifier>{d7f7a87d-93bd-4bf9-9b3e-6dc95248da47}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Pass\RenderObjects\Deferred">
+      <UniqueIdentifier>{c90f923e-91e0-4faf-80b5-f84eb948d565}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Pass\RenderObjects\Shadow">
+      <UniqueIdentifier>{9fc25072-a5c0-49c2-84e8-7a264654e71e}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

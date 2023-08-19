@@ -1,8 +1,8 @@
 #include "ForwardView.h"
 
-#include "renderer/Pass/Background/BackgroundPass.h"
-#include "renderer/Pass/Forward/ForwardPass.h"
-#include "renderer/Pass/PostProcess/PostProcessPass.h"
+#include "renderer/RenderPass/Render2D/Background/BackgroundPass.h"
+#include "renderer/RenderPass/Render2D/FinalPostProcess/FinalPostProcessPass.h"
+#include "renderer/RenderPass/RenderObjects/Forward/ForwardPass.h"
 
 using namespace vg::core;
 using namespace vg::gfx;
@@ -15,7 +15,7 @@ namespace vg::renderer
     {
         m_backgroundPass = new BackgroundPass();
         m_forwardPass = new ForwardPass();
-        m_postProcessPass = new PostProcessPass();
+        m_postProcessPass = new FinalPostProcessPass();
     }
 
     //--------------------------------------------------------------------------------------

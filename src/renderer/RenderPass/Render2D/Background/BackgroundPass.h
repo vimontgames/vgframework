@@ -1,11 +1,11 @@
 #pragma once
 
-#include "gfx/FrameGraph/UserPass.h"
+#include "Renderer/RenderPass/Render2D/Render2DPass.h"
 
 namespace vg::renderer
 {
     //--------------------------------------------------------------------------------------
-    class BackgroundPass : public gfx::UserPass
+    class BackgroundPass : public Render2DPass
     {
     public:
         const char * getClassName() const final { return "BackgroundPass"; }

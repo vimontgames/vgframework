@@ -1,6 +1,6 @@
 #pragma once
 
-#include "gfx/FrameGraph/UserPass.h"
+#include "renderer/RenderPass/RenderObjects/RenderObjectsPass.h"
 
 namespace vg::gfx
 {
@@ -14,7 +14,7 @@ namespace vg::renderer
     class AABB;
 
     //--------------------------------------------------------------------------------------
-    class ForwardPass : public gfx::UserPass
+    class ForwardPass : public RenderObjectsPass
     {
     public:
         const char * getClassName() const final { return "ForwardPass"; }

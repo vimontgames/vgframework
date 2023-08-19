@@ -1,4 +1,4 @@
-#include "PostProcessPass.h"
+#include "FinalPostProcessPass.h"
 #include "shaders/system/rootConstants2D.hlsli"
 
 namespace vg::renderer
@@ -6,8 +6,8 @@ namespace vg::renderer
     //--------------------------------------------------------------------------------------
     // Setup executed once, when pass is created
     //--------------------------------------------------------------------------------------
-    PostProcessPass::PostProcessPass() :
-        gfx::UserPass("PostProcessPass")
+    FinalPostProcessPass::FinalPostProcessPass() :
+        Render2DPass("FinalPostProcessPass")
     {
         auto * device = Device::get();
 
@@ -22,7 +22,7 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    PostProcessPass::~PostProcessPass()
+    FinalPostProcessPass::~FinalPostProcessPass()
     {
         auto * device = Device::get();
         device->removeRootSignature(m_postProcessRootSignature);
@@ -31,14 +31,14 @@ namespace vg::renderer
     //--------------------------------------------------------------------------------------
     // Setup executed each frame, for each pass instance
     //--------------------------------------------------------------------------------------
-    void PostProcessPass::setup(const gfx::RenderContext & _renderContext, double _dt)
+    void FinalPostProcessPass::setup(const gfx::RenderContext & _renderContext, double _dt)
     {
         readRenderTarget(_renderContext.getFrameGraphID("Color"));
         writeRenderTarget(0, _renderContext.getFrameGraphID("Dest")); // TODO: render to "Backbuffer" in exclusive GameMode?
     }
 
     //--------------------------------------------------------------------------------------
-    void PostProcessPass::draw(const RenderContext & _renderContext, CommandList * _cmdList) const
+    void FinalPostProcessPass::draw(const RenderContext & _renderContext, CommandList * _cmdList) const
     {
         RasterizerState rs(FillMode::Solid, CullMode::None);
         BlendState bs(BlendFactor::One, BlendFactor::Zero, BlendOp::Add);

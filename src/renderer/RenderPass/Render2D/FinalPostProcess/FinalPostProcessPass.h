@@ -1,17 +1,17 @@
 #pragma once
 
-#include "gfx/FrameGraph/UserPass.h"
+#include "Renderer/RenderPass/Render2D/Render2DPass.h"
 
 namespace vg::renderer
 {
     //--------------------------------------------------------------------------------------
-    class PostProcessPass : public gfx::UserPass
+    class FinalPostProcessPass : public Render2DPass
     {
     public:
-        const char * getClassName() const final { return "PostProcessPass"; }
+        const char * getClassName() const final { return "FinalPostProcessPass"; }
 
-        PostProcessPass();
-        ~PostProcessPass();
+        FinalPostProcessPass();
+        ~FinalPostProcessPass();
 
         void setup(const gfx::RenderContext & _renderContext, double _dt) override;
         void draw(const gfx::RenderContext & _renderContext, gfx::CommandList * _cmdList) const override;
