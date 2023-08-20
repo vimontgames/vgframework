@@ -12,22 +12,23 @@ namespace vg::gfx
     class BufferDesc;
 	class UserPass;
 	class RenderPass;
+	class FrameGraph;
 
 	enum class PixelFormat : core::u8;
 
-    struct RenderContext
+    struct RenderPassContext
     {
         IView * m_view;
-
-		static const core::string MakeFrameGraphID(const core::string & _name, ViewID _viewID)
-		{
-			return _name + (core::string)"-" + core::asString(_viewID.target) + core::to_string(_viewID.index);
-		}
 
 		const core::string getFrameGraphID(const core::string & _name) const
 		{
 			return MakeFrameGraphID(_name, m_view->GetViewID());
 		}
+
+        static const core::string MakeFrameGraphID(const core::string & _name, ViewID _viewID)
+        {
+            return _name + (core::string)"-" + core::asString(_viewID.target) + core::to_string(_viewID.index);
+        }
     };
 
 	class FrameGraph : public core::Object
@@ -35,8 +36,8 @@ namespace vg::gfx
 	public:
         struct UserPassInfo
         {
-            RenderContext	m_renderContext;
-            UserPass *		m_userPass;
+            RenderPassContext	m_renderContext;
+            UserPass *			m_userPass;
         };
 
         const char * getClassName() const final { return "FrameGraph"; }
@@ -183,7 +184,7 @@ namespace vg::gfx
 		void build();
 		void render();
 
-        bool addUserPass(const RenderContext & _renderContext, UserPass * _userPass, const UserPassID & _renderPassID);
+        bool addUserPass(const RenderPassContext & _renderContext, UserPass * _userPass, const UserPassID & _renderPassID);
 
         template <class T> T * getResource(Resource::Type _type, const ResourceID & _resID, bool _mustExist);
 

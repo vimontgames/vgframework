@@ -29,7 +29,12 @@ namespace vg::renderer
                 IGraphicInstance * instance = instances[i];
 
                 if (0 != (core::Instance::Flags::Enabled & instance->getFlags()))
-                    m_output->m_visibleGraphicInstances.push_back(instance);
+                {
+                    bool visible = true;
+
+                    if (visible)
+                        dispatch(instance);
+                }
             }
 
             const auto & children = _go->getChildren();
@@ -43,9 +48,27 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
+    VG_INLINE void ViewCullingJob::dispatch(const IGraphicInstance * _instance)
+    {
+        add(GraphicInstanceListType::All, _instance);
+
+        if (1) // TODO
+            add(GraphicInstanceListType::Opaque, _instance);
+
+        if (0) // TODO
+            add(GraphicInstanceListType::Transparent, _instance);
+    }
+
+    //--------------------------------------------------------------------------------------
+    VG_INLINE void ViewCullingJob::add(GraphicInstanceListType _type, const IGraphicInstance * _instance)
+    {
+        m_output->m_instanceLists[asInteger(_type)].m_instances.push_back(_instance);
+    }
+
+    //--------------------------------------------------------------------------------------
     void ViewCullingJob::run()
     {
-        m_output->m_visibleGraphicInstances.clear();
+        m_output->clear();
 
         View * view = (View *)getParent();
         gfx::ViewID viewID = view->getViewID();

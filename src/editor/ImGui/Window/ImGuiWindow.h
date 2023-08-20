@@ -19,7 +19,7 @@ namespace vg::renderer
 
 namespace vg::gfx
 {
-    struct RenderContext;
+    struct RenderPassContext;
 }
 
 namespace vg::editor
@@ -34,7 +34,7 @@ namespace vg::editor
             AddMenuEntry    = 0x00000002
         };
                                                 ImGuiWindow         (const core::string & _name, Flags _flags);
-                                                virtual ~ImGuiWindow() {}
+        virtual                                 ~ImGuiWindow        () {}
 
         virtual void                            DrawGUI             () = 0;
 

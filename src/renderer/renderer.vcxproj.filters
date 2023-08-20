@@ -199,6 +199,12 @@
     <ClInclude Include="RenderPass\Render2D\Render2DPass.hpp">
       <Filter>Pass\Render2D</Filter>
     </ClInclude>
+    <ClInclude Include="Job\Culling\GraphicInstanceList.h">
+      <Filter>Job\Culling</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderPass\RenderContext.h">
+      <Filter>Pass\RenderObjects</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Pass">

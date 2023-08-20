@@ -191,6 +191,6 @@ namespace vg::renderer
     //--------------------------------------------------------------------------------------
     const core::string View::GetFrameGraphID(const core::string & _name) const
     {
-        return RenderContext::MakeFrameGraphID(_name, m_viewID);
+        return RenderPassContext::MakeFrameGraphID(_name, m_viewID);
     }
 }

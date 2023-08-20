@@ -2,8 +2,15 @@
 
 #include "core/Instance/Instance.h"
 
+namespace vg::gfx
+{
+    class CommandList;
+}
+
 namespace vg::renderer
 {
+    class RenderContext;
+
     class IGraphicInstance : public core::Instance
     {
     public:
@@ -12,5 +19,7 @@ namespace vg::renderer
         {
 
         }
+
+        virtual void Draw(const RenderContext & _renderContext, gfx::CommandList * _cmdList) const = 0;
     };
 }

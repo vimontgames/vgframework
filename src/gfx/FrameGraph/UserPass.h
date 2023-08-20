@@ -23,8 +23,8 @@ namespace vg::gfx
 
 		void			reset		();
 
-		virtual void	setup		(const RenderContext & _renderContext, double _dt) = 0;
-		virtual void	draw		(const RenderContext & _renderContext, CommandList * _cmdList) const = 0;
+		virtual void	setup		(const RenderPassContext & _renderContext, double _dt) = 0;
+		virtual void	draw		(const RenderPassContext & _renderContext, CommandList * _cmdList) const = 0;
 
 		const core::vector<FrameGraph::TextureResource *> & getRenderTargets() const;
         FrameGraph::TextureResource * getDepthStencil() const;

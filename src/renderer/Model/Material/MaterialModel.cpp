@@ -1,13 +1,26 @@
 #include "renderer/Precomp.h"
 #include "MaterialModel.h"
+
 #include "core/Object/AutoRegisterClass.h"
+#include "core/Object/EnumHelper.h"
+
+#include "gfx/Device/Device.h"
+#include "gfx/CommandList/CommandList.h"
+#include "gfx/BindlessTable/BindlessTable.h"
 #include "gfx/Resource/Texture.h"
+#include "gfx/PipelineState/RasterizerState.h"
+#include "gfx/PipelineState/DepthStencilState.h"
+#include "gfx/PipelineState/BlendState.h"
+
 #include "renderer/Importer/SceneImporterData.h"
 #include "renderer/Renderer.h"
-#include "core/Object/EnumHelper.h"
+
 #include "DefaultMaterial/DefaultMaterialModel.hpp"
 
+#include "shaders/system/rootConstants3D.hlsli"
+
 using namespace vg::core;
+using namespace vg::gfx;
 
 namespace vg::renderer
 {
@@ -37,12 +50,24 @@ namespace vg::renderer
         super(_name, _parent),
         m_flags((Flags)0x0)
     {
+        auto * device = Device::get();
 
+        const RootSignatureTableDesc & bindlessTable = device->getBindlessTable()->getTableDesc();
+
+        RootSignatureDesc rsDesc;
+                          rsDesc.addRootConstants(ShaderStageFlags::All, 0, 0, RootConstants3DCount);
+                          rsDesc.addTable(bindlessTable);
+
+        m_rootSignature = device->addRootSignature(rsDesc);
+        m_shaderKey = ShaderKey("default/default.hlsl", "Forward");
     }
 
     //--------------------------------------------------------------------------------------
     MaterialModel::~MaterialModel()
     {
+        auto * device = Device::get();
+        device->removeRootSignature(m_rootSignature);
+
         for (uint t = 0; t < core::enumCount<MaterialTextureType>(); ++t)
             VG_SAFE_RELEASE(m_textureInfos[t].texture);
     }
@@ -99,5 +124,46 @@ namespace vg::renderer
             VG_SAFE_RELEASE(tex);
             tex = (gfx::Texture*)_texture;
         }
+    }
+
+    //--------------------------------------------------------------------------------------
+    void MaterialModel::Setup(gfx::CommandList * _cmdList, RootConstants3D * _root3D, core::uint _index) const
+    {
+        gfx::Texture * albedoMap = getTexture(MaterialTextureType::Albedo);
+        gfx::Texture * normalMap = getTexture(MaterialTextureType::Normal);
+
+        _root3D->setAlbedoTextureHandle(albedoMap->getBindlessSRVHandle());
+        _root3D->setNormalTextureHandle(normalMap->getBindlessSRVHandle());
+        _root3D->setMatID(_index);
+
+        auto key = m_shaderKey;
+
+        //if (_renderContext.m_toolmode)
+        //{
+        //    if (_renderContext.m_wireframe)
+        //    {
+        //        RasterizerState rs(FillMode::Wireframe, CullMode::None);
+        //        _cmdList->setRasterizerState(rs);
+        //        key = m_debugDrawShaderKey);
+        //    }
+        //}
+
+        RasterizerState rs(FillMode::Solid, CullMode::Back);
+        BlendState bs(BlendFactor::One, BlendFactor::Zero, BlendOp::Add);
+        DepthStencilState ds(true, true, ComparisonFunc::LessEqual);
+
+        _cmdList->setRootSignature(m_rootSignature);
+        _cmdList->setPrimitiveTopology(PrimitiveTopology::TriangleList);
+        _cmdList->setBlendState(bs);
+        _cmdList->setDepthStencilState(ds);        
+
+        // TODO: set from material?
+        //if (renderContext.m_toolmode)
+        //    key.setFlags(gfx::DefaultHLSLDesc::Toolmode, true);
+        //else
+        //    key.setFlags(gfx::DefaultHLSLDesc::Toolmode, false);
+       
+        _cmdList->setRasterizerState(rs);
+        _cmdList->setShader(key);
     }
 }

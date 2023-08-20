@@ -23,6 +23,8 @@ namespace vg::renderer
         static bool registerClass(core::IFactory & _factory);
         static bool registerProperties(core::IClassDesc & _desc);
 
+        void Draw(const RenderContext & _renderContext, gfx::CommandList * _cmdList) const final override;
+
     private:
         
     };

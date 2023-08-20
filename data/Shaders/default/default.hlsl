@@ -123,10 +123,3 @@ PS_Output PS_Forward(VS_Output _input)
             
     return output;
 }
-
-PS_Output PS_Wireframe(VS_Output _input)
-{
-    PS_Output output;
-    output.color0 = _input.col;
-    return output;
-}

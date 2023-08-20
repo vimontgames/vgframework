@@ -321,7 +321,7 @@ namespace vg::gfx
 	}
 
     //--------------------------------------------------------------------------------------
-    bool FrameGraph::addUserPass(const RenderContext & _renderContext, UserPass * _userPass, const UserPassID & _renderPassID)
+    bool FrameGraph::addUserPass(const RenderPassContext & _renderContext, UserPass * _userPass, const UserPassID & _renderPassID)
     {
         _userPass->addRef();
         _userPass->setName(_renderPassID);

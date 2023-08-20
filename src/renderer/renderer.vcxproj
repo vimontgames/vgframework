@@ -69,6 +69,7 @@
     <ClInclude Include="Importer\TextureImporterData.hpp" />
     <ClInclude Include="Instance\Mesh\MeshInstance.h" />
     <ClInclude Include="IRenderer.h" />
+    <ClInclude Include="Job\Culling\GraphicInstanceList.h" />
     <ClInclude Include="Job\Culling\ViewCullingJob.h" />
     <ClInclude Include="Job\Culling\ViewCullingJob.hpp" />
     <ClInclude Include="Model\Material\DefaultMaterial\DefaultMaterialModel.h" />
@@ -94,6 +95,7 @@
     <ClInclude Include="RenderPass\Render2D\FinalPostProcess\FinalPostProcessPass.hpp" />
     <ClInclude Include="RenderPass\Render2D\Render2DPass.h" />
     <ClInclude Include="RenderPass\Render2D\Render2DPass.hpp" />
+    <ClInclude Include="RenderPass\RenderContext.h" />
     <ClInclude Include="RenderPass\RenderObjects\Forward\ForwardPass.h" />
     <ClInclude Include="RenderPass\RenderObjects\Forward\ForwardPass.hpp" />
     <ClInclude Include="RenderPass\RenderObjects\RenderObjectsPass.h" />

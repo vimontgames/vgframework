@@ -44,7 +44,7 @@ namespace vg::renderer
     }
     
     //--------------------------------------------------------------------------------------
-    void ImGuiPass::setup(const gfx::RenderContext & _renderContext, double _dt)
+    void ImGuiPass::setup(const gfx::RenderPassContext & _renderContext, double _dt)
     {
         writeRenderTarget(0, "Backbuffer");
 
@@ -95,10 +95,9 @@ namespace vg::renderer
         //}
         //ImGui::End();
     }
-
     
     //--------------------------------------------------------------------------------------
-    void ImGuiPass::draw(const RenderContext & _renderContext, gfx::CommandList * _cmdList) const
+    void ImGuiPass::draw(const RenderPassContext & _renderContext, gfx::CommandList * _cmdList) const
     {
         Renderer::get()->getImGuiAdapter()->render(_cmdList);
     }

@@ -87,11 +87,19 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "system", "system", "{34ABDE
 		data\Shaders\system\packing.hlsli = data\Shaders\system\packing.hlsli
 		data\Shaders\system\quad.hlsli = data\Shaders\system\quad.hlsli
 		data\Shaders\system\rootConstants2D.hlsli = data\Shaders\system\rootConstants2D.hlsli
+		data\Shaders\system\rootConstants3D.hlsli = data\Shaders\system\rootConstants3D.hlsli
 		data\Shaders\system\samplers.hlsli = data\Shaders\system\samplers.hlsli
 		data\Shaders\system\semantics.hlsli = data\Shaders\system\semantics.hlsli
 		data\Shaders\system\toolmode.hlsli = data\Shaders\system\toolmode.hlsli
 		data\Shaders\system\vertex.hlsl.h = data\Shaders\system\vertex.hlsl.h
 		data\Shaders\system\vertex.hlsli = data\Shaders\system\vertex.hlsli
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "editor", "editor", "{247A9589-663C-452B-9C16-F5E34FEE87D4}"
+	ProjectSection(SolutionItems) = preProject
+		data\Shaders\editor\editor.hlsl = data\Shaders\editor\editor.hlsl
+		data\Shaders\editor\editor.hlsli = data\Shaders\editor\editor.hlsli
+		data\Shaders\editor\editor.hlsl.h = data\Shaders\editor\editor.hlsl.h
 	EndProjectSection
 EndProject
 Global
@@ -168,6 +176,7 @@ Global
 		{06052575-08B6-41A6-9E38-E1171229FF9C} = {3A24AFD2-079B-45FC-8488-70058ACACD89}
 		{73E04AC7-00AE-48F3-8650-73DE5C3A9661} = {3A24AFD2-079B-45FC-8488-70058ACACD89}
 		{34ABDEEE-1180-4BD9-9FCC-16C174A96FE8} = {3A24AFD2-079B-45FC-8488-70058ACACD89}
+		{247A9589-663C-452B-9C16-F5E34FEE87D4} = {3A24AFD2-079B-45FC-8488-70058ACACD89}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {B437215B-B736-4FF0-8DA1-E6B35C780CE1}

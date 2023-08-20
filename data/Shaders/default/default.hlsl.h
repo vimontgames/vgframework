@@ -23,12 +23,6 @@ namespace vg::gfx
                 forward.vs = addVS("VS_Forward");
                 forward.ps = addPS("PS_Forward");
             }
-
-            auto & wire = addTechnique("Wireframe");
-            {
-                wire.vs = addVS("VS_Forward");
-                wire.ps = addPS("PS_Wireframe");
-            }
         }
     };
 }

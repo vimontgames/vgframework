@@ -31,14 +31,14 @@ namespace vg::renderer
     //--------------------------------------------------------------------------------------
     // Setup executed each frame, for each pass instance
     //--------------------------------------------------------------------------------------
-    void FinalPostProcessPass::setup(const gfx::RenderContext & _renderContext, double _dt)
+    void FinalPostProcessPass::setup(const gfx::RenderPassContext & _renderPassContext, double _dt)
     {
-        readRenderTarget(_renderContext.getFrameGraphID("Color"));
-        writeRenderTarget(0, _renderContext.getFrameGraphID("Dest")); // TODO: render to "Backbuffer" in exclusive GameMode?
+        readRenderTarget(_renderPassContext.getFrameGraphID("Color"));
+        writeRenderTarget(0, _renderPassContext.getFrameGraphID("Dest")); // TODO: render to "Backbuffer" in exclusive GameMode?
     }
 
     //--------------------------------------------------------------------------------------
-    void FinalPostProcessPass::draw(const RenderContext & _renderContext, CommandList * _cmdList) const
+    void FinalPostProcessPass::draw(const RenderPassContext & _renderPassContext, CommandList * _cmdList) const
     {
         RasterizerState rs(FillMode::Solid, CullMode::None);
         BlendState bs(BlendFactor::One, BlendFactor::Zero, BlendOp::Add);
@@ -55,7 +55,7 @@ namespace vg::renderer
 
         root2D.quad.posOffsetScale = float4(0.0f, 0.0f, 1.0f, 1.0f);
         root2D.quad.uvOffsetScale = float4(0.0f, 0.0f, 1.0f, 1.0f);
-        root2D.texID = getRenderTarget(_renderContext.getFrameGraphID("Color"))->getBindlessSRVHandle();
+        root2D.texID = getRenderTarget(_renderPassContext.getFrameGraphID("Color"))->getBindlessSRVHandle();
 
         _cmdList->setInlineRootConstants(&root2D, RootConstants2DCount);
 

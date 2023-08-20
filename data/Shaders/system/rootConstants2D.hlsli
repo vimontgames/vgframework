@@ -1,4 +1,5 @@
-#pragma once
+#ifndef _ROOTCONSTANTS2D__HLSLI_
+#define _ROOTCONSTANTS2D__HLSLI_
 
 #include "quad.hlsli"
 #include "constants.hlsli"
@@ -14,3 +15,5 @@ struct RootConstants2D
 #ifndef __cplusplus
 DECL_ROOTCONSTANTS(RootConstants2D, rootConstants2D, 0, 0);
 #endif
+
+#endif // _ROOTCONSTANTS2D__HLSLI_

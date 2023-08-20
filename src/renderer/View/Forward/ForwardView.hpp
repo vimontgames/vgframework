@@ -30,7 +30,7 @@ namespace vg::renderer
     //--------------------------------------------------------------------------------------
     void ForwardView::AddToFrameGraph(FrameGraph & _frameGraph)
     {
-        gfx::RenderContext rc;
+        gfx::RenderPassContext rc;
                               rc.m_view = this;
 
         auto * target = getRenderTarget();

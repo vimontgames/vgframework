@@ -27,6 +27,7 @@
 #include "renderer/View/Forward/ForwardView.h"
 
 #include "shaders/driver/driver.hlsl.h"
+#include "shaders/editor/editor.hlsl.h"
 #include "shaders/default/default.hlsl.h"
 #include "Shaders/background/background.hlsl.h"
 
@@ -166,7 +167,9 @@ namespace vg::renderer
     {
         auto * sm = ShaderManager::get();
 
+        // TODO: register from parsing instead?
         sm->registerHLSL(DriverHLSLDesc());
+        sm->registerHLSL(EditorHLSLDesc());
         sm->registerHLSL(DefaultHLSLDesc());
         sm->registerHLSL(BackgroundHLSLDesc());
 
@@ -281,10 +284,10 @@ namespace vg::renderer
                     }
                 }
 
-                RenderContext mainViewRenderContext;
-                              mainViewRenderContext.m_view = m_mainView;
+                RenderPassContext mainViewRenderPassContext;
+                                  mainViewRenderPassContext.m_view = m_mainView;
 
-                m_frameGraph.addUserPass(mainViewRenderContext, m_imguiPass, "UIPass");
+                m_frameGraph.addUserPass(mainViewRenderPassContext, m_imguiPass, "UIPass");
 
                 m_frameGraph.setup(_dt);
                 m_frameGraph.build();
