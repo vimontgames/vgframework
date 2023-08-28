@@ -3,6 +3,7 @@
 #include "core/IFactory.h"
 #include "core//Model/Model.h"
 #include "core/Object/EnumHelper.h"
+#include "core/Kernel.h"
 
 #if !VG_ENABLE_INLINE
 #include "Instance.inl"
@@ -84,7 +85,7 @@ namespace vg::core
         if (_model != model)
         {
             VG_SAFE_INCREASE_REFCOUNT(_model);
-            VG_SAFE_RELEASE(model);
+            VG_SAFE_RELEASE_ASYNC(model);
             model = _model;
         }
     }

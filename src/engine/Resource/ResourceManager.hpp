@@ -110,7 +110,7 @@ namespace vg::engine
     void ResourceManager::loadOneResource(ResourceLoadInfo & info)
     {
         // check for an up-to-date cooked version of the resource
-        const string cooked = io::getCookedPath(info.m_path);
+        const string cookFile = io::getCookedPath(info.m_path);
         bool needCook = false;
         bool done = false;
         while (!done)
@@ -118,10 +118,10 @@ namespace vg::engine
             io::FileAccessTime rawDataLastWrite;
             if (io::getLastWriteTime(info.m_path, &rawDataLastWrite))
             {
-                if (io::exists(cooked))
+                if (io::exists(cookFile))
                 {
                     io::FileAccessTime cookedFilelastWrite;
-                    if (io::getLastWriteTime(cooked, &cookedFilelastWrite))
+                    if (io::getLastWriteTime(cookFile, &cookedFilelastWrite))
                     {
                         if (cookedFilelastWrite != rawDataLastWrite)
                             needCook = true;
@@ -136,9 +136,12 @@ namespace vg::engine
             {
                 VG_DEBUGPRINT("[ResourceManager] File \"%s\" is outdated.\n", info.m_path.c_str());
 
-                if (info.m_resource->cook(info.m_path))
+                bool isFileCooked = info.m_resource->cook(info.m_path);
+                VG_ASSERT(isFileCooked, "Could not cook file \"%s\"", info.m_path.c_str());
+
+                if (isFileCooked)
                 {
-                    if (io::setLastWriteTime(cooked, rawDataLastWrite))
+                    if (io::setLastWriteTime(cookFile, rawDataLastWrite))
                         VG_DEBUGPRINT("[ResourceManager] Cooked \"%s\" in %.2f ms\n", info.m_path.c_str(), Timer::getEnlapsedTime(startCook, Timer::getTick()));
                 }
             }

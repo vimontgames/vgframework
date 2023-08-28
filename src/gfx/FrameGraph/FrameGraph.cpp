@@ -167,7 +167,7 @@ namespace vg::gfx
         else
         {
             for (SharedTexture & shared : m_sharedTextures)
-                Device::get()->releaseAsync(shared.tex);
+                VG_SAFE_RELEASE_ASYNC(shared.tex);
         }
         m_sharedTextures.clear();
     }

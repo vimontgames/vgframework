@@ -19,8 +19,6 @@
 #define VG_ENABLE_SHADER_COMPILATION 1
 #endif
 
-#define VG_SAFE_RELEASE_ASYNC(p) { auto * device = gfx::Device::get(); if (device) device->releaseAsync(p); else p->Release(); }
-
 #ifdef _WIN32
 #define VG_ASSERT_SUCCEEDED(f) { HRESULT hr = f; VG_ASSERT(SUCCEEDED(hr), "%s\n\n%s", #f, std::system_category().message(hr).c_str()); }
 #endif

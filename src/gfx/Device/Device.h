@@ -40,7 +40,6 @@ namespace vg::gfx
 	{
 		core::vector<gfx::CommandPool*>     commandPools;
 		core::vector<gfx::CommandList*>     commandLists[core::enumCount<CommandListType>()];
-        core::vector<core::Object*>         m_objectsToRelease;
         UINT64                              mFrameFenceId;
 	};
 
@@ -83,9 +82,6 @@ namespace vg::gfx
 
 			core::vector<gfx::CommandList*> &			    getCommandLists			    (CommandListType _type);
 			gfx::Texture *								    getBackbuffer			    ();
-
-            void                                            releaseAsync                (core::Object * _object);
-            void                                            flushReleaseAsync           ();
 
             BindlessTable *                                 getBindlessTable            () const;
             gfx::PixelFormat                                getBackbufferFormat         () const { return m_backbufferFormat; }

@@ -3,6 +3,21 @@
 #include "core/math/math.h"
 #include "packing.hlsli"
 
+namespace vg::core
+{
+    inline core::size_t Hash(const core::float2 & _this)
+    {
+        core::size_t hash = core::hash<float>()(_this.x) ^ 0xc4ceb9fe1a85ec53L ^ core::hash<float>()(_this.y) ^ 0xed558cc4ceb9fe1L;
+        return hash;
+    }
+
+    inline core::size_t Hash(const core::float4 & _this)
+    {
+        core::size_t hash = core::hash<float>()(_this.x) ^ core::hash<float>()(_this.y) ^ 0xff51afd7ed558ccd ^ core::hash<float>()(_this.z) ^ 0xc4ceb9fe1a85ec53L ^ core::hash<float>()(_this.w) ^ 0xed558cc4ceb9fe1L;
+        return hash;
+    }
+}
+
 namespace vg::gfx
 {
     // Imaginary vertex format with all possible attributes unpacked
@@ -15,6 +30,20 @@ namespace vg::gfx
         core::float4    tan;
         core::float4    color;
         core::float2    uv[2];
+
+        struct hash
+        {
+            inline core::size_t operator() (const FatVertex & _this) const
+            {
+                core::size_t hash = core::Hash(_this.pos) ^ core::Hash(_this.nrm) ^ core::Hash(_this.nrm) ^ core::Hash(_this.bin) ^core::Hash(_this.tan) ^ core::Hash(_this.color) ^ core::Hash(_this.uv[0]) ^ core::Hash(_this.uv[1]);
+                return hash;
+            }
+        };
+
+        inline bool operator == (const FatVertex & _other) const
+        {
+            return all(pos == _other.pos) && all(nrm == _other.nrm) && all(bin == _other.bin) && all(tan == _other.tan) && all(color == _other.color) && all(uv[0] == _other.uv[0]) && all(uv[1] == _other.uv[1]);
+        }
     };
 
     // List every vertex format here

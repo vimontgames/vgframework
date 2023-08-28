@@ -19,7 +19,6 @@ namespace vg::editor
             SetColumnWidth(2, columnWidth[2]);
 
             Text("GitHub");
-            Text("Twitter");
             Text("Mastodon");
             Text("");
 
@@ -27,7 +26,6 @@ namespace vg::editor
             NextColumn();
 
             textURL("github.com/vimontgames/vgframework", "https://github.com/vimontgames/vgframework");
-            textURL("@benoitvimont", "https://twitter.com/benoitvimont");
             textURL("@benoitvimont@mastodon.gamedev.place", "https://mastodon.gamedev.place/@benoitvimont");
             Text("");
 
@@ -98,6 +96,7 @@ namespace vg::editor
                 { "px_sched",               "",                 "https://github.com/pplux/px" },
                 { "stb_image",              "",                 "https://github.com/nothings/stb" },
                 { "tinyXML2",               "e45d9d1",          "https://github.com/leethomason/tinyxml2" },
+                { "UFBX",                   "30f035b",          "https://github.com/ufbx/ufbx" },
                 { "VulkanMemoryAllocator",  "",                 "https://github.com/GPUOpen-LibrariesAndSDKs/VulkanMemoryAllocator" },
                 { "WinPixEventRuntime",     "1.0.200127001",    "https://www.nuget.org/packages/WinPixEventRuntime" },
             };

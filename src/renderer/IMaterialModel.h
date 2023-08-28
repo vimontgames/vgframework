@@ -25,7 +25,7 @@ namespace vg
             }
 
             virtual core::uint              GetTextureCount () const = 0;
-            virtual gfx::ITexture *      GetTexture      (MaterialTextureType _type) const = 0;
+            virtual gfx::ITexture *         GetTexture      (MaterialTextureType _type) const = 0;
             virtual const core::string &    GetTexturePath  (MaterialTextureType _type) const = 0;
 
             virtual void                    SetTexture      (MaterialTextureType _type, gfx::ITexture * _texture) = 0;

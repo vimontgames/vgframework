@@ -123,10 +123,10 @@ namespace vg::core
             XMLNode * xmlRoot = xmlDoc.FirstChild();
             if (xmlRoot != nullptr)
             {
-                VG_DEBUGPRINT("[Factory] Load \"%s\"\n", relativePath.c_str());
+                VG_LOG(Level::Info, "[Factory] Load \"%s\"", relativePath.c_str());
                 if (factory->serializeFromXML(_object, xmlDoc))
                 {
-                    VG_DEBUGPRINT("[Factory] \"%s\" loaded in %.2f ms\n", relativePath.c_str(), Timer::getEnlapsedTime(startLoad, Timer::getTick()));
+                    VG_LOG(Level::Info, "[Factory] \"%s\" loaded in %.2f ms", relativePath.c_str(), Timer::getEnlapsedTime(startLoad, Timer::getTick()));
                     _object->setFile(relativePath.c_str());
                     return true;
                 }
@@ -941,5 +941,30 @@ namespace vg::core
                 break;
             }
         }
+    }
+
+    //--------------------------------------------------------------------------------------
+    void Factory::ReleaseAsync(core::IObject * _object)
+    {
+        lock_guard<mutex> lock(m_objectsToReleaseMutex);
+        m_objectsToRelease[m_objectsToReleaseTableIndex].push_back(_object);
+    }
+
+    //--------------------------------------------------------------------------------------
+    void Factory::FlushReleaseAsync()
+    {
+        lock_guard<mutex> lock(m_objectsToReleaseMutex);
+
+        auto & objectsToRelease = m_objectsToRelease[m_objectsToReleaseTableIndex ^ 1];
+
+        if (objectsToRelease.size())
+        {
+            //VG_DEBUGPRINT("Release %u object(s) async\n", objectsToRelease.size());
+            for (IObject * obj : objectsToRelease)
+                VG_SAFE_RELEASE(obj);
+            objectsToRelease.clear();
+        }
+
+        m_objectsToReleaseTableIndex ^= 1;
     }
 }

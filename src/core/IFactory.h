@@ -56,6 +56,9 @@ namespace vg::core
 
         virtual bool                        serializeFromXML        (IObject * _object, XMLDoc & _xmlDoc) const = 0;
         virtual bool                        serializeToXML          (const IObject * _object, XMLDoc & _xmlDoc, XMLElem * _parent = nullptr) const = 0;
+
+        virtual void                        ReleaseAsync            (core::IObject * _object) = 0;
+        virtual void                        FlushReleaseAsync       () = 0;
     };
 
     #define CreateFactoryObject(type, name, parent) Kernel::getFactory()->createObject(#type, name, parent)    

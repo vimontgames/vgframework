@@ -6,9 +6,6 @@
     <ClCompile Include="Geometry\Geometry.cpp">
       <Filter>Geometry</Filter>
     </ClCompile>
-    <ClCompile Include="Importer\FBX\FBXImporter.cpp">
-      <Filter>Importer\FBX</Filter>
-    </ClCompile>
     <ClCompile Include="Model\Mesh\MeshModel.cpp">
       <Filter>Model\Mesh</Filter>
     </ClCompile>
@@ -36,6 +33,12 @@
     <ClCompile Include="RenderPass\ImGui\ImGuiPass.cpp">
       <Filter>Pass\ImGui</Filter>
     </ClCompile>
+    <ClCompile Include="Importer\FBX\FBXSDKImporter\FBXSDKImporter.cpp">
+      <Filter>Importer\FBX\FBXSDKImporter</Filter>
+    </ClCompile>
+    <ClCompile Include="Importer\FBX\UFBXImporter\UFBXImporter.cpp">
+      <Filter>Importer\FBX\UFBXImporter</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Renderer.def" />
@@ -48,6 +51,7 @@
     <None Include="Geometry\Geometry.inl">
       <Filter>Geometry</Filter>
     </None>
+    <None Include="Renderer.inl" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Precomp.h" />
@@ -205,6 +209,12 @@
     <ClInclude Include="RenderPass\RenderContext.h">
       <Filter>Pass\RenderObjects</Filter>
     </ClInclude>
+    <ClInclude Include="Importer\FBX\FBXSDKImporter\FBXSDKImporter.h">
+      <Filter>Importer\FBX\FBXSDKImporter</Filter>
+    </ClInclude>
+    <ClInclude Include="Importer\FBX\UFBXImporter\UFBXImporter.h">
+      <Filter>Importer\FBX\UFBXImporter</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Pass">
@@ -293,6 +303,12 @@
     </Filter>
     <Filter Include="Pass\RenderObjects\Shadow">
       <UniqueIdentifier>{9fc25072-a5c0-49c2-84e8-7a264654e71e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Importer\FBX\FBXSDKImporter">
+      <UniqueIdentifier>{a6a93728-ddf5-4f37-9578-0c86e5d52e7c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Importer\FBX\UFBXImporter">
+      <UniqueIdentifier>{25a0abb5-62e6-44ad-af17-83344db2afb1}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

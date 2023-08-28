@@ -87,10 +87,18 @@ namespace vg::renderer
                 const auto * material = model->getMaterial(i);
                 if (nullptr != material)
                     material->Setup(_cmdList, &root3D, i);
+                else
+                    renderer->getDefaultMaterial()->Setup(_cmdList, &root3D, i);
 
                 _cmdList->setInlineRootConstants(&root3D, RootConstants3DCount);
                 _cmdList->drawIndexed(batch.count, batch.offset);
             }
         }
+    }
+
+    //--------------------------------------------------------------------------------------
+    void setupDefaultMaterial()
+    {
+
     }
 }

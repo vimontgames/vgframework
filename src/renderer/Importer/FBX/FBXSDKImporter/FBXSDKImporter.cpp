@@ -1,5 +1,5 @@
 #include "renderer/Precomp.h"
-#include "FBXImporter.h"
+#include "FBXSDKImporter.h"
 #include "renderer/importer/SceneImporterData.h"
 #include "core/Timer/Timer.h"
 #include "core/Math/Math.h"
@@ -13,13 +13,13 @@ using namespace vg::core;
 namespace vg::renderer
 {
     //--------------------------------------------------------------------------------------
-    FBXImporter::FBXImporter()
+    FBXSDKImporter::FBXSDKImporter()
     {
         m_fbxManager = FbxManager::Create();
         VG_ASSERT(nullptr != m_fbxManager);
         //VG_DEBUGPRINT("Autodesk FBX SDK version %s\n", m_fbxManager->GetVersion());
 
-        FbxIOSettings* ios = FbxIOSettings::Create(m_fbxManager, IOSROOT);
+        FbxIOSettings * ios = FbxIOSettings::Create(m_fbxManager, IOSROOT);
         m_fbxManager->SetIOSettings(ios);
 
         //FbxString lPath = FbxGetApplicationDirectory();
@@ -27,15 +27,15 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    FBXImporter::~FBXImporter()
+    FBXSDKImporter::~FBXSDKImporter()
     {
         //Delete the FBX Manager. All the objects that have been allocated using the FBX Manager and that haven't been explicitly destroyed are also automatically destroyed.
-        if (m_fbxManager) 
+        if (m_fbxManager)
             m_fbxManager->Destroy();
     }
 
     //--------------------------------------------------------------------------------------
-    bool FBXImporter::importFBX(const core::string & _path, SceneImporterData & _data)
+    bool FBXSDKImporter::importFBX(const core::string & _path, SceneImporterData & _data)
     {
         VG_ASSERT(m_fbxManager);
         if (!m_fbxManager)
@@ -57,7 +57,7 @@ namespace vg::renderer
         FbxIOSettings * ios = m_fbxManager->GetIOSettings();
 
         const auto start = Timer::getTick();
-        VG_DEBUGPRINT("[FBXImporter] Opening FBX file \"%s\" ...", _path.c_str());
+        VG_DEBUGPRINT("[FBXSDKImporter] Opening FBX file \"%s\" ...", _path.c_str());
 
         int fbxFileMajor, fbxFileMinor, fbxFileRev;
         const bool fbxImporterStatus = fbxImporter->Initialize(_path.c_str(), -1, ios);
@@ -98,7 +98,7 @@ namespace vg::renderer
             success = true;
 
             FbxStatus status;
-            FbxArray<FbxString*> details;
+            FbxArray<FbxString *> details;
             FbxSceneCheckUtility sceneCheck(fbxScene, &status, &details);
 
             const bool warningOrError = (!sceneCheck.Validate(FbxSceneCheckUtility::eCkeckData) && details.GetCount() > 0) || (FbxStatus::eSuccess != fbxImporter->GetStatus().GetCode());
@@ -112,7 +112,7 @@ namespace vg::renderer
                     for (int i = 0; i < details.GetCount(); i++)
                         VG_DEBUGPRINT("%s\n", details[i]->Buffer());
 
-                    FbxArrayDelete<FbxString*>(details);
+                    FbxArrayDelete<FbxString *>(details);
                 }
 
                 if (FbxStatus::eSuccess != fbxImporter->GetStatus().GetCode())
@@ -127,8 +127,8 @@ namespace vg::renderer
             const FbxAxisSystem axisSystem(FbxAxisSystem::eZAxis, FbxAxisSystem::eParityEven, FbxAxisSystem::eRightHanded);
             if (fileAxisSystem != axisSystem)
                 axisSystem.ConvertScene(fbxScene);
-            
-            const FbxSystemUnit SceneSystemUnit = fbxScene->GetGlobalSettings().GetSystemUnit(); 
+
+            const FbxSystemUnit SceneSystemUnit = fbxScene->GetGlobalSettings().GetSystemUnit();
             const double scale = SceneSystemUnit.m.GetConversionFactorFrom(SceneSystemUnit);
 
             // Convert to triangle mesh
@@ -154,8 +154,8 @@ namespace vg::renderer
                         {
                             MeshImporterData meshImporterData;
 
-                            if (loadFBXMesh(node, static_cast<FbxMesh*>(fbxNodeAttribute), meshImporterData, scale))
-                                _data.meshes.push_back(meshImporterData);                         
+                            if (loadFBXMesh(node, static_cast<FbxMesh *>(fbxNodeAttribute), meshImporterData, scale))
+                                _data.meshes.push_back(meshImporterData);
                         }
                         break;
                     }
@@ -184,7 +184,7 @@ namespace vg::renderer
     template <> uint countOf<float4>() { return 4; }
 
     //--------------------------------------------------------------------------------------
-    template <class T, class V> bool FBXImporter::importFBXLayerElement(vector<V> & _result, const FbxMesh * _fbxMesh, T * _layerElement, uint _triangleCount, V const & _default)
+    template <class T, class V> bool FBXSDKImporter::importFBXLayerElement(vector<V> & _result, const FbxMesh * _fbxMesh, T * _layerElement, uint _triangleCount, V const & _default)
     {
         _result.resize(_triangleCount * 3);
 
@@ -195,8 +195,8 @@ namespace vg::renderer
             return false;
         }
 
-        const double * data = (double*)(_layerElement->mDirectArray->GetLocked(FbxLayerElementArray::eReadLock));
-        const int * indices = (int*)(_layerElement->mIndexArray->GetLocked(FbxLayerElementArray::eReadLock));
+        const double * data = (double *)(_layerElement->mDirectArray->GetLocked(FbxLayerElementArray::eReadLock));
+        const int * indices = (int *)(_layerElement->mIndexArray->GetLocked(FbxLayerElementArray::eReadLock));
 
         FbxLayerElement::EMappingMode mappingMode = _layerElement->GetMappingMode();
         FbxLayerElement::EReferenceMode referenceMode = _layerElement->GetReferenceMode();
@@ -223,7 +223,7 @@ namespace vg::renderer
 
                         for (uint i = 0; i < countof(index); ++i)
                         {
-                            const double * pData = (double*)&data[(index[i])*count];
+                            const double * pData = (double *)&data[(index[i]) * count];
                             _result[p * 3 + i] = store<V>(pData);
                         }
                     }
@@ -242,8 +242,8 @@ namespace vg::renderer
 
                         for (uint i = 0; i < countof(index); ++i)
                         {
-                            const double * pData = (double*)&data[(index[i])*count];
-                            _result[p*3 + i] = store<V>(pData);
+                            const double * pData = (double *)&data[(index[i]) * count];
+                            _result[p * 3 + i] = store<V>(pData);
                         }
                     }
                 }
@@ -263,8 +263,8 @@ namespace vg::renderer
 
                         for (uint i = 0; i < countof(index); ++i)
                         {
-                            const double * pData = (double*)&data[(index[i])*count];
-                            _result[p*3 + i] = store<V>(pData);
+                            const double * pData = (double *)&data[(index[i]) * count];
+                            _result[p * 3 + i] = store<V>(pData);
                         }
                     }
                 }
@@ -282,24 +282,24 @@ namespace vg::renderer
 
                         for (uint i = 0; i < countof(index); ++i)
                         {
-                            const double * pData = (double*)&data[(index[i])*count];
-                            _result[p*3 + i] = store<V>(pData);
+                            const double * pData = (double *)&data[(index[i]) * count];
+                            _result[p * 3 + i] = store<V>(pData);
                         }
                     }
                 }
                 break;
         }
 
-        _layerElement->mDirectArray->Release((void**)(&data));
-        _layerElement->mIndexArray->Release((void**)(&indices));
+        _layerElement->mDirectArray->Release((void **)(&data));
+        _layerElement->mIndexArray->Release((void **)(&indices));
 
         return true;
     }
 
     //--------------------------------------------------------------------------------------
-    vector<const char*> materialTextureToFbxProperty(MaterialTextureType _slot)
+    vector<const char *> materialTextureToFbxProperty(MaterialTextureType _slot)
     {
-        vector<const char*> names;
+        vector<const char *> names;
 
         switch (_slot)
         {
@@ -323,7 +323,7 @@ namespace vg::renderer
     //--------------------------------------------------------------------------------------
     bool importMaterial(core::uint _index, fbxsdk::FbxNode * _fbxNode, vector<MaterialImporterData> & _materials)
     {
-        FbxSurfaceMaterial * material = (FbxSurfaceMaterial*)_fbxNode->GetSrcObject<FbxSurfaceMaterial>(_index);
+        FbxSurfaceMaterial * material = (FbxSurfaceMaterial *)_fbxNode->GetSrcObject<FbxSurfaceMaterial>(_index);
 
         MaterialImporterData mat;
 
@@ -364,10 +364,10 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    bool FBXImporter::loadFBXMesh(FbxNode * _fbxNode, FbxMesh * _fbxMesh, MeshImporterData & _data, double _scale)
+    bool FBXSDKImporter::loadFBXMesh(FbxNode * _fbxNode, FbxMesh * _fbxMesh, MeshImporterData & _data, double _scale)
     {
         const auto start = Timer::getTick();
-        VG_DEBUGPRINT("[FBXImporter] Importing FBX Mesh \"%s\" ...", _fbxNode->GetName());
+        VG_DEBUGPRINT("[FBXSDKImporter] Importing FBX Mesh \"%s\" ...", _fbxNode->GetName());
 
         _data.name = _fbxNode->GetName();
 
@@ -377,7 +377,7 @@ namespace vg::renderer
         const uint triangleCount = (uint)_fbxMesh->GetPolygonCount();
 
         vector<float4> positions;
-                       positions.resize(controlPointCount);
+        positions.resize(controlPointCount);
 
         // Bounding Box
         AABB aabb = AABB((float3)MAX_FLOAT, (float3)MIN_FLOAT);
@@ -387,14 +387,14 @@ namespace vg::renderer
 
         for (u32 p = 0; p < controlPointCount; p++)
         {
-            const double * pPosD = (double*)&points[p];
+            const double * pPosD = (double *)&points[p];
             float4 pos = float4((float)(pPosD[0] * _scale), (float)(pPosD[1] * _scale), (float)(pPosD[2] * _scale), (float)pPosD[3]);
             aabb.grow(pos.xyz);
             positions[p] = pos;
         }
 
         // get layers
-        vector<FbxLayer*> fbxLayers;
+        vector<FbxLayer *> fbxLayers;
         uint i = 0;
         while (nullptr != _fbxMesh->GetLayer(i))
             fbxLayers.push_back(_fbxMesh->GetLayer(i++));
@@ -442,14 +442,14 @@ namespace vg::renderer
         const uint maxMaterialCount = maxMatID + 1;
 
         vector<vector<u32>> indexBuffers;
-                            indexBuffers.resize(maxMaterialCount);
+        indexBuffers.resize(maxMaterialCount);
 
         for (uint b = 0; b < maxMaterialCount; ++b)
             indexBuffers[b].reserve(triangleCount * 3);
 
         // load triangles
         vector<MeshImporterVertex> vertexBuffer;
-                                   vertexBuffer.reserve(triangleCount * 3); // worst case
+        vertexBuffer.reserve(triangleCount * 3); // worst case
 
         for (uint t = 0; t < triangleCount; ++t)
         {
@@ -481,10 +481,10 @@ namespace vg::renderer
 
         // flatten index buffer
         vector<u32> flatIndexBuffer;
-                    flatIndexBuffer.reserve(triangleCount * 3);
+        flatIndexBuffer.reserve(triangleCount * 3);
 
         vector<Batch> batches;
-                      batches.reserve(maxMaterialCount);
+        batches.reserve(maxMaterialCount);
 
         u32 offset = 0;
 
@@ -499,14 +499,14 @@ namespace vg::renderer
                     for (uint i = 0; i < 3; ++i)
                     {
                         // Swap FBX triangle winding
-                        const u32 index = indexBuffer[3*t + 2 - i];
+                        const u32 index = indexBuffer[3 * t + 2 - i];
                         flatIndexBuffer.push_back(index);
                     }
                 }
 
                 Batch batch;
-                      batch.count = indexCount;
-                      batch.offset = offset;
+                batch.count = indexCount;
+                batch.offset = offset;
 
                 batches.push_back(batch);
 
@@ -519,7 +519,7 @@ namespace vg::renderer
         _data.vertices = std::move(vertexBuffer);
         _data.materials = std::move(materials);
         _data.aabb = std::move(aabb);
- 
+
         VG_DEBUGPRINT(" %.2f ms\n", Timer::getEnlapsedTime(start, Timer::getTick()));
 
         return true;

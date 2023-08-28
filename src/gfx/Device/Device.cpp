@@ -170,9 +170,7 @@ namespace vg::gfx
 				cmdLists.clear();
 			}			
 
-            for (Object * obj : context.m_objectsToRelease)
-                VG_SAFE_RELEASE(obj);
-            context.m_objectsToRelease.clear();
+            Kernel::getFactory()->FlushReleaseAsync();
 		}
 
         //--------------------------------------------------------------------------------------
@@ -227,27 +225,6 @@ namespace vg::gfx
         u64 Device::getFrameCounter() const
         {
             return m_frameCounter;
-        }
-
-        //--------------------------------------------------------------------------------------
-        void Device::releaseAsync(core::Object * _object)
-        {
-            getCurrentFrameContext().m_objectsToRelease.push_back(_object);
-        }
-
-        //--------------------------------------------------------------------------------------
-        void Device::flushReleaseAsync()
-        {
-            auto & frameContext = m_frameContext[getFrameContextIndex()];
-
-            #if VG_DBG_CPUGPUSYNC
-            if (frameContext.m_objectsToRelease.size())
-                VG_DEBUGPRINT("Release %u object(s) async [%u]\n", frameContext.m_objectsToRelease.size(), getFrameContextIndex());
-            #endif
-
-            for (Object * obj : frameContext.m_objectsToRelease)
-                VG_SAFE_RELEASE(obj);
-            frameContext.m_objectsToRelease.clear();
         }
 
 		//--------------------------------------------------------------------------------------
@@ -344,7 +321,7 @@ namespace vg::gfx
         DynamicBuffer::BeginFrame();
 
         // It is safe now to release frame (n-max_frame_latency+1) resources as we are now sure they are not in use by the GPU
-        flushReleaseAsync();
+        Kernel::getFactory()->FlushReleaseAsync();
 
         #if VG_DBG_CPUGPUSYNC
         VG_DEBUGPRINT("[...]\n");

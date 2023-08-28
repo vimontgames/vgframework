@@ -139,14 +139,14 @@ namespace vg::renderer
         auto key = m_shaderKey;
 
         //if (_renderContext.m_toolmode)
-        //{
-        //    if (_renderContext.m_wireframe)
-        //    {
-        //        RasterizerState rs(FillMode::Wireframe, CullMode::None);
-        //        _cmdList->setRasterizerState(rs);
-        //        key = m_debugDrawShaderKey);
-        //    }
-        //}
+        {
+            //if (_renderContext.m_wireframe)
+            //{
+            //    RasterizerState rs(FillMode::Wireframe, CullMode::None);
+            //    _cmdList->setRasterizerState(rs);
+            //    key = m_debugDrawShaderKey);
+            //}
+        }
 
         RasterizerState rs(FillMode::Solid, CullMode::Back);
         BlendState bs(BlendFactor::One, BlendFactor::Zero, BlendOp::Add);

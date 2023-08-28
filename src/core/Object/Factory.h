@@ -37,7 +37,14 @@ namespace vg::core
         template <typename T> void  serializeEnumPropertyFromXML    (IObject * _object, const IProperty * _prop, const XMLElem * _xmlElem) const;
         template <typename T> void  serializeEnumPropertyToXML      (const IObject * _object, const IProperty * _prop, XMLElem * _xmlElem) const;
 
+        void                        ReleaseAsync                    (core::IObject * _object);
+        void                        FlushReleaseAsync               ();
+
     private:
         core::vector<ClassDesc>     m_classes;
+
+        mutex                       m_objectsToReleaseMutex;
+        vector<IObject*>            m_objectsToRelease[2];
+        u8                          m_objectsToReleaseTableIndex = 0;
     };    
 }

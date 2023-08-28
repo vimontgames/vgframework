@@ -56,6 +56,7 @@ namespace vg
             static MaterialModel *  createFromImporterData  (const MaterialImporterData & _data);
 
         private:
+
             struct TextureInfo
             {
                 core::string    path;

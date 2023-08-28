@@ -17,7 +17,6 @@
 #include "renderer/RenderPass/ImGui/ImGui.h"
 #include "renderer/RenderPass/ImGui/ImGuiPass.h"
 #include "renderer/RenderPass/ImGui/imguiAdapter.h"
-#include "renderer/Importer/FBX/FBXImporter.h"
 #include "renderer/Importer/SceneImporterData.h"
 #include "renderer/Model/Mesh/MeshModel.h"
 #include "renderer/Options/DisplayOptions.h"
@@ -25,6 +24,11 @@
 #include "renderer/Importer/TextureImporterData.h"
 #include "renderer/View/View.h"
 #include "renderer/View/Forward/ForwardView.h"
+#include "renderer/Model/Material/MaterialModel.h"
+
+#if !VG_ENABLE_INLINE
+#include "Renderer.inl"
+#endif
 
 #include "shaders/driver/driver.hlsl.h"
 #include "shaders/editor/editor.hlsl.h"
@@ -34,6 +38,17 @@
 using namespace vg::core;
 using namespace vg::gfx;
 using namespace vg::renderer;
+
+#define FBX_IMPORTER_SDK    0
+#define FBX_IMPORTER_UFBX   1
+
+#define FBX_IMPORTER FBX_IMPORTER_UFBX
+
+#if FBX_IMPORTER == FBX_IMPORTER_SDK
+#include "renderer/Importer/FBX/FBXSDKImporter/FBXSDKImporter.h"
+#elif FBX_IMPORTER == FBX_IMPORTER_UFBX
+#include "renderer/Importer/FBX/UFBXImporter/UFBXImporter.h"
+#endif
 
 //--------------------------------------------------------------------------------------
 IRenderer * CreateNew()
@@ -89,8 +104,14 @@ namespace vg::renderer
         IRenderer(_name, _parent),
 		m_device(*(new Device())),
 		m_frameGraph(*(new FrameGraph())),
-        m_fbxImporter(new FBXImporter())
+        m_fbxImporter(nullptr)
 	{
+        #if FBX_IMPORTER == FBX_IMPORTER_SDK
+        m_fbxImporter = new FBXSDKImporter();
+        #elif FBX_IMPORTER == FBX_IMPORTER_UFBX
+        m_fbxImporter = new UFBXImporter();
+        #endif
+
         // Profiler instance has to be created by the graphic engine so as to profile the GPU too
         Kernel::setProfiler(new Profiler());
 	}
@@ -160,6 +181,7 @@ namespace vg::renderer
         DisplayOptions * displayOptions = new DisplayOptions("DisplayOptions", this);
 
         initDefaultTextures();
+        initDefaultMaterials();
 	}
 
     //--------------------------------------------------------------------------------------
@@ -181,6 +203,7 @@ namespace vg::renderer
 	{
         UnregisterClasses();
 
+        deinitDefaultMaterials();
         deinitDefaultTextures();
 
         DisplayOptions * displayOptions = DisplayOptions::get();
@@ -452,7 +475,7 @@ namespace vg::renderer
     {
         SceneImporterData imported;
 
-        if (FBXImporter::get()->importFBX(_file, imported))
+        if (m_fbxImporter->importFBX(_file, imported))
         {
             if (imported.meshes.size() > 0)
             {
@@ -513,13 +536,7 @@ namespace vg::renderer
     //--------------------------------------------------------------------------------------
     void Renderer::ReleaseAsync(core::IObject * _object)
     {
-        m_device.releaseAsync((Object*)_object);
-    }
-
-    //--------------------------------------------------------------------------------------
-    gfx::Texture * Renderer::getDefaultTexture(MaterialTextureType _type) const
-    {
-        return m_defaultTextures[asInteger(_type)];
+        VG_SAFE_RELEASE_ASYNC(_object);
     }
 
     //--------------------------------------------------------------------------------------
@@ -559,5 +576,18 @@ namespace vg::renderer
             VG_SAFE_RELEASE(m_defaultTextures[t]);
 
         m_defaultTextures.clear();
+    }
+
+    //--------------------------------------------------------------------------------------
+    void Renderer::initDefaultMaterials()
+    {
+        VG_ASSERT(nullptr == m_defaultMaterial);
+        m_defaultMaterial = new MaterialModel("Default", nullptr);
+    }
+
+    //--------------------------------------------------------------------------------------
+    void Renderer::deinitDefaultMaterials()
+    {
+        VG_SAFE_RELEASE(m_defaultMaterial);
     }
 }

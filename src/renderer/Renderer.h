@@ -17,6 +17,7 @@ namespace vg::renderer
     class FBXImporter;
     class ImGuiPass;
     class MeshModel;
+    class MaterialModel;
     class View;
 
     enum class MaterialTextureType : core::u8;
@@ -74,7 +75,8 @@ namespace vg::renderer
 
         void                                    ReleaseAsync            (core::IObject * _object) final override;
 
-        gfx::Texture *                          getDefaultTexture       (MaterialTextureType _type) const;
+        VG_INLINE gfx::Texture *                 getDefaultTexture       (MaterialTextureType _type) const;
+        VG_INLINE MaterialModel *                getDefaultMaterial      () const;
         
         #ifdef _WIN32
         LRESULT CALLBACK                        WndProc                 (HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) override;
@@ -92,6 +94,9 @@ namespace vg::renderer
         void                                    initDefaultTextures     ();
         void                                    deinitDefaultTextures   ();
 
+        void                                    initDefaultMaterials    ();
+        void                                    deinitDefaultMaterials  ();
+
         void                                    cullViews               ();
 
 	private:
@@ -103,5 +108,10 @@ namespace vg::renderer
         ImGuiPass *                             m_imguiPass             = nullptr; 
         core::vector<View *>                    m_views[core::enumCount<gfx::ViewTarget>()];
         core::vector<gfx::Texture *>            m_defaultTextures;
+        MaterialModel *                         m_defaultMaterial       = nullptr;
 	};
 }
+
+#if VG_ENABLE_INLINE
+#include "Renderer.inl"
+#endif
