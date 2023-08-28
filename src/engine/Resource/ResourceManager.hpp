@@ -107,6 +107,14 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
+    void ResourceManager::unloadResource(core::Resource * _resource)
+    {
+        auto it = m_resourcesMap.find(_resource->getResourcePath());
+        if (m_resourcesMap.end() != it)
+            m_resourcesMap.erase(it);
+    }
+
+    //--------------------------------------------------------------------------------------
     void ResourceManager::loadOneResource(ResourceLoadInfo & info)
     {
         // check for an up-to-date cooked version of the resource

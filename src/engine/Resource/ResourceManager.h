@@ -41,6 +41,7 @@ namespace vg::engine
         ~ResourceManager();
 
         void loadResourceAsync(core::Resource * _resource, const core::string & _path,  core::IObject * _owner);
+        void unloadResource(core::Resource * _resource);
 
         void updateLoading();
         void flushPendingLoading();
