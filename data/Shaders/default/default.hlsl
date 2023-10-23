@@ -88,8 +88,9 @@ PS_Output PS_Forward(VS_Output _input)
 
     output.color0.rgba = float4(albedo.rgb * (fakeDiffuseLighting + fakeAmbientLighting), 1.0f) * _input.col;
 
-    #if _TOOLMODE
-    switch (rootConstants3D.getMode())
+    //#if _TOOLMODE
+    uint mode = rootConstants3D.getMode();
+    switch (mode)
     {
         case MODE_MATID:
             output.color0 = sRGBA2Linear(float4(getMatIDColor(rootConstants3D.getMatID()), 1.0f));
@@ -119,7 +120,7 @@ PS_Output PS_Forward(VS_Output _input)
             output.color0 = sRGBA2Linear(float4(normal.rgb * 0.5 + 0.5, 1));
             break;
     }
-    #endif // _TOOLMODE
+    //#endif // _TOOLMODE
             
     return output;
 }

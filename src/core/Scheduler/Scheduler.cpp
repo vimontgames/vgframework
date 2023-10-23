@@ -85,7 +85,7 @@ namespace vg::core
         if (m_registeredThreads.end() != m_registeredThreads.find(threadId))
             return;  
 
-        VG_DEBUGPRINT("[Profiler] Register Thread \"%s\" (0x%08X)\n", _name.c_str(), threadId);
+        VG_LOG(Level::Info, "[Profiler] Register Thread \"%s\" (0x%08X)", _name.c_str(), threadId);
 
         // Set thread name for debug
         SetThreadDescription(GetCurrentThread(), core::wstring_convert((string)_name).c_str());
@@ -170,35 +170,35 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
-    void Scheduler::test()
-    {
-        // Sync objects can be used later to wait for them
-        px_sched::Sync s;
-
-        VG_PROFILE_CPU("SchedulerTest");
-
-        vector<TestJob*> testJobs;
-      
-        for (uint i = 0; i < 16; ++i)
-        {
-            char jobName[256];
-            sprintf_s(jobName, "Job %u", i);
-
-            testJobs.push_back(new TestJob(jobName, nullptr));
-
-            px_sched::Job job{ testJobs[i] };
-            m_schd->run(job, &s);
-        }
-
-        // wait for all tasks to finish
-        {
-            VG_PROFILE_CPU("SyncJobs");
-            m_schd->waitFor(s); 
-        }
-
-        // clear
-        for (uint i = 0; i < testJobs.size(); ++i)
-            VG_SAFE_DELETE(testJobs[i]);
-        testJobs.clear();
-    }
+    //void Scheduler::test()
+    //{
+    //    // Sync objects can be used later to wait for them
+    //    px_sched::Sync s;
+    //
+    //    VG_PROFILE_CPU("SchedulerTest");
+    //
+    //    vector<TestJob*> testJobs;
+    //  
+    //    for (uint i = 0; i < 16; ++i)
+    //    {
+    //        char jobName[256];
+    //        sprintf_s(jobName, "Job %u", i);
+    //
+    //        testJobs.push_back(new TestJob(jobName, nullptr));
+    //
+    //        px_sched::Job job{ testJobs[i] };
+    //        m_schd->run(job, &s);
+    //    }
+    //
+    //    // wait for all tasks to finish
+    //    {
+    //        VG_PROFILE_CPU("SyncJobs");
+    //        m_schd->waitFor(s); 
+    //    }
+    //
+    //    // clear
+    //    for (uint i = 0; i < testJobs.size(); ++i)
+    //        VG_SAFE_DELETE(testJobs[i]);
+    //    testJobs.clear();
+    //}
 }

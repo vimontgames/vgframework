@@ -2,10 +2,16 @@
 
 #include "renderer/Renderer_consts.h"
 
+namespace vg::core
+{
+    class Logger;
+}
+
 namespace vg::engine
 {
-    struct EngineParams
+    struct EngineCreationParams
     {
-        vg::renderer::RendererParams renderer;
+        vg::renderer::RendererCreationParams renderer;
+        vg::core::Logger * logger = nullptr;
     };
 }

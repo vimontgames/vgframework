@@ -75,10 +75,10 @@ namespace vg::editor
 
         if (ImGui::Begin(title.c_str(), &m_isVisible, ImGuiWindowFlags_NoFocusOnAppearing))
         {
-            if (IsWindowAppearing())
-            {
-                VG_LOG(Level::Info, "[Editor] Window \"%s\" is appearing", title.c_str());
-            }
+            //if (IsWindowAppearing())
+            //{
+            //    VG_LOG(Level::Info, "[Editor] Window \"%s\" is appearing", title.c_str());
+            //}
 
             // Compute Window content size
             ImVec2 vMin = ImGui::GetWindowContentRegionMin();

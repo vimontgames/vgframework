@@ -109,6 +109,7 @@ namespace vg::engine
     //--------------------------------------------------------------------------------------
     void ResourceManager::unloadResource(core::Resource * _resource)
     {
+        VG_SAFE_INCREASE_REFCOUNT(_resource);
         auto it = m_resourcesMap.find(_resource->getResourcePath());
         if (m_resourcesMap.end() != it)
             m_resourcesMap.erase(it);
@@ -142,7 +143,7 @@ namespace vg::engine
             const auto startCook = Timer::getTick();
             if (needCook)
             {
-                VG_DEBUGPRINT("[ResourceManager] File \"%s\" is outdated.\n", info.m_path.c_str());
+                VG_LOG(Level::Warning, "[ResourceManager] File \"%s\" is outdated.\n", info.m_path.c_str());
 
                 bool isFileCooked = info.m_resource->cook(info.m_path);
                 VG_ASSERT(isFileCooked, "Could not cook file \"%s\"", info.m_path.c_str());
@@ -150,7 +151,7 @@ namespace vg::engine
                 if (isFileCooked)
                 {
                     if (io::setLastWriteTime(cookFile, rawDataLastWrite))
-                        VG_DEBUGPRINT("[ResourceManager] Cooked \"%s\" in %.2f ms\n", info.m_path.c_str(), Timer::getEnlapsedTime(startCook, Timer::getTick()));
+                        VG_LOG(Level::Info, "[ResourceManager] Cooked \"%s\" in %.2f ms", info.m_path.c_str(), Timer::getEnlapsedTime(startCook, Timer::getTick()));
                 }
             }
 
@@ -158,7 +159,7 @@ namespace vg::engine
             if (info.m_resource->load(info.m_path, info.m_owner))
             {
                 m_resourcesMap.insert(make_pair(info.m_path, info.m_resource));
-                VG_DEBUGPRINT("[ResourceManager] Resource \"%s\" loaded in %.2f ms\n", info.m_path.c_str(), Timer::getEnlapsedTime(startLoad, Timer::getTick()));
+                VG_LOG(Level::Info, "[ResourceManager] Resource \"%s\" loaded in %.2f ms", info.m_path.c_str(), Timer::getEnlapsedTime(startLoad, Timer::getTick()));
                 done = true;
             }
             else
@@ -169,7 +170,7 @@ namespace vg::engine
                 }
                 else
                 {
-                    VG_DEBUGPRINT("[ResourceManager] Could not load resource \"%s\"\n", info.m_path.c_str());
+                    VG_LOG(Level::Error, "[ResourceManager] Could not load resource \"%s\"", info.m_path.c_str());
                     done = true;
                 }
             }

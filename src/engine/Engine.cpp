@@ -225,7 +225,7 @@ namespace vg::engine
     }
 
 	//--------------------------------------------------------------------------------------
-	void Engine::init(const EngineParams & _params, Singletons & _singletons)
+	void Engine::init(const EngineCreationParams & _params, Singletons & _singletons)
 	{
         Timer::init();
 
@@ -248,7 +248,10 @@ namespace vg::engine
 		const auto & name = asString(_params.renderer.device.api);
 
         // Singletons created by the engine
-        _singletons.logger = new Logger();
+        if (nullptr != _params.logger)
+            _singletons.logger = _params.logger;
+        else
+            _singletons.logger = new Logger();
         Kernel::setLogger(_singletons.logger);
 
         _singletons.scheduler = new Scheduler();

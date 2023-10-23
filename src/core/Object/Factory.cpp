@@ -22,10 +22,13 @@ namespace vg::core
         {
             ClassDesc & desc = m_classes[i];
             if (!strcmp(desc.getClassName(), _className))
-                return nullptr; // already registered
+            {
+                VG_LOG(Level::Warning, "[Factory] Class \"%s\" is already registered", _className);
+                return nullptr; 
+            }
         }
 
-        VG_DEBUGPRINT("[Factory] Register class \"%s\"\n", _className);
+        VG_LOG(Level::Info, "[Factory] Register class \"%s\"", _className);
 
         ClassDesc classDesc;
         classDesc.name = _className;
@@ -47,10 +50,13 @@ namespace vg::core
         {
             ClassDesc & desc = m_classes[i];
             if (!strcmp(desc.getClassName(), _className))
-                return nullptr; // already registered
+            {
+                VG_LOG(Level::Warning, "[Factory] Singleton Class \"%s\" is already registered", _className);
+                return nullptr;
+            }
         }
 
-        VG_DEBUGPRINT("[Factory] Register singleton class \"%s\"\n", _className);
+        VG_LOG(Level::Info, "[Factory] Register singleton class \"%s\"", _className);
 
         ClassDesc classDesc;
         classDesc.name = _className;

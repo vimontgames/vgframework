@@ -155,7 +155,7 @@ namespace vg::renderer
     }
 
 	//--------------------------------------------------------------------------------------
-	void Renderer::init(const RendererParams & _params, core::Singletons & _singletons)
+	void Renderer::init(const RendererCreationParams & _params, core::Singletons & _singletons)
 	{
         Timer::init();
 

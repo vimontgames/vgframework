@@ -49,6 +49,7 @@ namespace vg::core
     //--------------------------------------------------------------------------------------
     void Resource::setup(IObject * _owner, const string & _path, UserData _userData)
     {
+        setObject(nullptr);
         setOwner(_owner);
         setUserData(_userData);
         setResourcePath(_path);

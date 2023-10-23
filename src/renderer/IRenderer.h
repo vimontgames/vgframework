@@ -36,7 +36,7 @@ namespace vg
 
             }
 
-            virtual void	                            init                    (const RendererParams & _params, core::Singletons & _singletons) = 0;
+            virtual void	                            init                    (const RendererCreationParams & _params, core::Singletons & _singletons) = 0;
             virtual void	                            deinit                  () = 0;
 
             virtual const gfx::DeviceParams &           GetDeviceCreationParams () const = 0;

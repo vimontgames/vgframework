@@ -24,6 +24,5 @@ namespace vg::core
     private:
         core::vector<LogEntry>  m_entries;
         core::mutex             m_mutex;
-        bool                    m_locked = false;
     };    
 }

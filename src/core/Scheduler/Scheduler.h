@@ -30,7 +30,7 @@ namespace vg::core
         const string                GetCurrentThreadName        () const final override;
 
     private:
-        void                        test();
+        //void                        test();
 
     private:
         px_sched::Scheduler *       m_schd = nullptr;

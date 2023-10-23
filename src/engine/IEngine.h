@@ -41,7 +41,7 @@ namespace vg
 
             }
 
-		    virtual void						init		        (const EngineParams & _params, core::Singletons & _singletons) = 0;
+		    virtual void						init		        (const EngineCreationParams & _params, core::Singletons & _singletons) = 0;
 		    virtual void						deinit		        () = 0;
 
             virtual void                        Quit                () = 0;

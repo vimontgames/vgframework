@@ -37,7 +37,7 @@ namespace vg::renderer
         bool                                    UnregisterClasses       ();
         static bool                             registerProperties      (core::IClassDesc & _desc);
  
-		void					                init				    (const RendererParams & _params, core::Singletons & _singletons) override;
+		void					                init				    (const RendererCreationParams & _params, core::Singletons & _singletons) override;
 		void					                deinit				    () override;
 
         const gfx::DeviceParams &               GetDeviceCreationParams () const final override;

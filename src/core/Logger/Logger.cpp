@@ -45,30 +45,24 @@ namespace vg::core
     //--------------------------------------------------------------------------------------
     void Logger::Lock()
     {
-        VG_ASSERT(!m_locked);
         m_mutex.lock();
-        m_locked = true;
     }
 
     //--------------------------------------------------------------------------------------
     void Logger::Unlock()
     {
-        VG_ASSERT(m_locked);
-        m_locked = false;
         m_mutex.unlock();
     }
 
     //--------------------------------------------------------------------------------------
     const uint Logger::GetLogCount() const
     {
-        VG_ASSERT(m_locked);
         return (uint)m_entries.size();
     }
 
     //--------------------------------------------------------------------------------------
     const LogEntry & Logger::GetLog(uint _index) const
     {
-        VG_ASSERT(m_locked);
         return m_entries[_index];
     }
 

@@ -4,7 +4,7 @@
 
 namespace vg::renderer
 {
-    struct RendererParams
+    struct RendererCreationParams
     {
         gfx::DeviceParams device;
     };

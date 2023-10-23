@@ -2,6 +2,7 @@
 
 #include "core/Plugin/Plugin.h"
 #include "core/CmdLine/CmdLine.h"
+#include "core/Logger/Logger.h"
 #include "core/Kernel.h"
 
 #include "engine/IEngine.h"
@@ -155,6 +156,10 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	//_crtBreakAlloc = 337;
 	#endif
 
+	// First thing we do is create and set the logger instance
+	auto logger = new core::Logger();
+	core::Kernel::setLogger(logger);
+
 	core::uint width = 1920, height = 1080;
 
 	if (!CreateGameWindow(hInstance, lpCmdLine, nCmdShow, width, height))
@@ -164,8 +169,9 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
     g_engine = core::Plugin::create<engine::IEngine>("engine");
 
-    engine::EngineParams engineParams;
-                         engineParams.renderer.device.resolution = core::uint2(width, height);
+    engine::EngineCreationParams engineParams;
+								 engineParams.renderer.device.resolution = core::uint2(width, height);
+								 engineParams.logger = logger;
 
 	const core::string * solutionPlatform = cmdLine.find("SolutionPlatform");
 
