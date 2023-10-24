@@ -1,7 +1,9 @@
 #ifndef IMGUIFILEBROWSER_H
 #define IMGUIFILEBROWSER_H
 
-#include <imgui.h>
+#define IMGUI_DEFINE_MATH_OPERATORS
+
+#include "imgui.h"
 #include <string>
 #include <vector>
 
