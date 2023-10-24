@@ -100,5 +100,5 @@
 #ifdef VG_DX12
 #define VG_ENABLE_RAYTRACING 1
 #elif defined(VG_VULKAN)
-#define VG_ENABLE_RAYTRACING 0
+#define VG_ENABLE_RAYTRACING 1
 #endif

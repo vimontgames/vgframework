@@ -83,24 +83,6 @@
     <ClInclude Include="CommandQueue\dx12\CommandQueue_dx12.h">
       <Filter>CommandQueue\dx12</Filter>
     </ClInclude>
-    <ClInclude Include="Device\vulkan\Device_Extensions_vulkan.h">
-      <Filter>Device\vulkan</Filter>
-    </ClInclude>
-    <ClInclude Include="Device\vulkan\Device_Extensions_vulkan.hpp">
-      <Filter>Device\vulkan</Filter>
-    </ClInclude>
-    <ClInclude Include="Device\vulkan\ext\KHR_Surface.h">
-      <Filter>Device\vulkan\ext</Filter>
-    </ClInclude>
-    <ClInclude Include="Device\vulkan\ext\KHR_Swapchain.h">
-      <Filter>Device\vulkan\ext</Filter>
-    </ClInclude>
-    <ClInclude Include="Device\vulkan\ext\EXT_DebugUtils.h">
-      <Filter>Device\vulkan\ext</Filter>
-    </ClInclude>
-    <ClInclude Include="Device\vulkan\ext\KHR_Win32_Surface.h">
-      <Filter>Device\vulkan\ext</Filter>
-    </ClInclude>
     <ClInclude Include="CommandList\CommandList.h">
       <Filter>CommandList</Filter>
     </ClInclude>
@@ -516,6 +498,33 @@
     <ClInclude Include="RingBuffer\Dynamic\DynamicBuffer.hpp">
       <Filter>RingBuffer\Dynamic</Filter>
     </ClInclude>
+    <ClInclude Include="Device\vulkan\Extension\ExtensionList_vulkan.h">
+      <Filter>Device\vulkan\Extension</Filter>
+    </ClInclude>
+    <ClInclude Include="Device\vulkan\Extension\ExtensionList_vulkan.hpp">
+      <Filter>Device\vulkan\Extension</Filter>
+    </ClInclude>
+    <ClInclude Include="Device\vulkan\Extension\Device\KHR_Acceleration_Structure.h">
+      <Filter>Device\vulkan\Extension\Device</Filter>
+    </ClInclude>
+    <ClInclude Include="Device\vulkan\Extension\Device\KHR_Swapchain.h">
+      <Filter>Device\vulkan\Extension\Device</Filter>
+    </ClInclude>
+    <ClInclude Include="Device\vulkan\Extension\Instance\EXT_DebugUtils.h">
+      <Filter>Device\vulkan\Extension\Instance</Filter>
+    </ClInclude>
+    <ClInclude Include="Device\vulkan\Extension\Instance\KHR_Surface.h">
+      <Filter>Device\vulkan\Extension\Instance</Filter>
+    </ClInclude>
+    <ClInclude Include="Device\vulkan\Extension\Instance\KHR_Win32_Surface.h">
+      <Filter>Device\vulkan\Extension\Instance</Filter>
+    </ClInclude>
+    <ClInclude Include="Device\vulkan\Extension\Device\KHR_Deferred_Host_Operations.h">
+      <Filter>Device\vulkan\Extension\Device</Filter>
+    </ClInclude>
+    <ClInclude Include="Device\vulkan\Extension\Device\KHR_Ray_Tracing_Pipeline.h">
+      <Filter>Device\vulkan\Extension\Device</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Device">
@@ -535,9 +544,6 @@
     </Filter>
     <Filter Include="CommandQueue\vulkan">
       <UniqueIdentifier>{82fd3313-658a-4e98-8ffe-43dd9766b138}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Device\vulkan\ext">
-      <UniqueIdentifier>{af5affdc-f3df-4359-8148-7a724e26a147}</UniqueIdentifier>
     </Filter>
     <Filter Include="CommandList">
       <UniqueIdentifier>{c6b7f7d5-dd16-4fd0-9403-7c65598de5b9}</UniqueIdentifier>
@@ -637,6 +643,15 @@
     </Filter>
     <Filter Include="RingBuffer\Dynamic">
       <UniqueIdentifier>{bee51690-2c68-4788-9439-22f1682ca4d7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Device\vulkan\Extension">
+      <UniqueIdentifier>{bb34f2eb-a74c-4705-96ce-4e0eb76b249b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Device\vulkan\Extension\Device">
+      <UniqueIdentifier>{dfcaf10a-9046-47a8-8f17-6fd2c403e815}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Device\vulkan\Extension\Instance">
+      <UniqueIdentifier>{d9498003-39ef-41e8-8449-eb8ac66ab9fb}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

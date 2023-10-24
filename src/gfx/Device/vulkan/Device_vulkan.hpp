@@ -1,4 +1,4 @@
-#include "Device_Extensions_vulkan.hpp"
+#include "gfx/Device/vulkan/Extension/ExtensionList_vulkan.hpp"
 
 namespace vg::gfx::vulkan
 {
@@ -235,8 +235,10 @@ namespace vg::gfx::vulkan
 		m_instanceExtensionList.registerExtension(m_KHR_Surface);
 		m_instanceExtensionList.registerExtension(m_KHR_Win32_Surface);
 
-		m_deviceExtensionList.registerExtension(m_KHR_Swapchain);
-      
+		m_deviceExtensionList.registerExtension(m_KHR_Swapchain);    
+		m_deviceExtensionList.registerExtension(m_KHR_Deferred_Host_Operations);
+		m_deviceExtensionList.registerExtension(m_KHR_Acceleration_Structure);
+		m_deviceExtensionList.registerExtension(m_KHR_Ray_Tracing_Pipeline);
 	}
 
     //--------------------------------------------------------------------------------------
@@ -348,6 +350,12 @@ namespace vg::gfx::vulkan
 
 		// Look for device extensions 	
 		m_deviceExtensionList.init();
+
+		// Update device caps according to extensions
+        if (m_KHR_Ray_Tracing_Pipeline.isEnabled())
+            m_caps.supportRaytracing = true;
+        else
+            m_caps.supportRaytracing = false;
 
         #ifdef VG_ENABLE_GPU_MARKER
         VG_ASSERT_VULKAN(m_EXT_DebugUtils.m_pfnCreateDebugUtilsMessengerEXT(m_vkInstance, &dbg_messenger_create_info, nullptr, &m_vkDebugMessenger));
@@ -1249,16 +1257,16 @@ namespace vg::gfx::vulkan
                 return "VK_ERROR_VALIDATION_FAILED_EXT";
             case VK_ERROR_INVALID_SHADER_NV:
                 return "VK_ERROR_INVALID_SHADER_NV\nOne or more shaders failed to compile or link. More details are reported back to the application via VK_EXT_debug_report if enabled.";
-            case VK_ERROR_INCOMPATIBLE_VERSION_KHR:
-                return "VK_ERROR_INCOMPATIBLE_VERSION_KHR";
             case VK_ERROR_INVALID_DRM_FORMAT_MODIFIER_PLANE_LAYOUT_EXT:
                 return "VK_ERROR_INVALID_DRM_FORMAT_MODIFIER_PLANE_LAYOUT_EXT";
             case VK_ERROR_NOT_PERMITTED_EXT:
                 return "VK_ERROR_NOT_PERMITTED_EXT";
             case VK_ERROR_FULL_SCREEN_EXCLUSIVE_MODE_LOST_EXT:
                 return "VK_ERROR_FULL_SCREEN_EXCLUSIVE_MODE_LOST_EXT\nAn operation on a swapchain created with VK_FULL_SCREEN_EXCLUSIVE_APPLICATION_CONTROLLED_EXT failed as it did not have exlusive full-screen access. This may occur due to implementation-dependent reasons, outside of the application’s control."; 
-
-
-        }
+			#if VK_HEADER_VERSION >= 135 && VK_HEADER_VERSION < 162
+			case VK_ERROR_INCOMPATIBLE_VERSION_KHR:
+				return "VK_ERROR_INCOMPATIBLE_VERSION_KHR";
+			#endif
+		}
     }
 }

@@ -1,10 +1,13 @@
 #pragma once
 
 #include "gfx/Device/Device.h"
-#include "gfx/Device/vulkan/ext/EXT_DebugUtils.h"
-#include "gfx/Device/vulkan/ext/KHR_Surface.h"
-#include "gfx/Device/vulkan/ext/KHR_Win32_Surface.h"
-#include "gfx/Device/vulkan/ext/KHR_Swapchain.h"
+#include "gfx/Device/vulkan/Extension/Instance/EXT_DebugUtils.h"
+#include "gfx/Device/vulkan/Extension/Instance/KHR_Surface.h"
+#include "gfx/Device/vulkan/Extension/Instance/KHR_Win32_Surface.h"
+#include "gfx/Device/vulkan/Extension/Device/KHR_Swapchain.h"
+#include "gfx/Device/vulkan/Extension/Device/KHR_Deferred_Host_Operations.h"
+#include "gfx/Device/vulkan/Extension/Device/KHR_Acceleration_Structure.h"
+#include "gfx/Device/vulkan/Extension/Device/KHR_Ray_Tracing_Pipeline.h"
 #include "gfx/PipelineState/SamplerState_consts.h"
 #include "gfx/FrameGraph/RenderPassKey.h"
 
@@ -80,6 +83,9 @@ namespace vg::gfx::vulkan
 			EXT_DebugUtils				m_EXT_DebugUtils;
 			KHR_Surface					m_KHR_Surface;
 			KHR_Win32_Surface			m_KHR_Win32_Surface;
+			KHR_DeferredHostOperations	m_KHR_Deferred_Host_Operations;
+			KHR_Acceleration_Structure	m_KHR_Acceleration_Structure;
+			KHR_RayTracingPipeline		m_KHR_Ray_Tracing_Pipeline;
 
 			DeviceExtensionList			m_deviceExtensionList;
 			KHR_Swapchain				m_KHR_Swapchain;
