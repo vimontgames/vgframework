@@ -49,15 +49,15 @@ namespace ImGui
             clicked = true;
         }
 
-        if (!_tooltip.empty() && ImGui::IsItemHovered(ImGuiHoveredFlags_AllowWhenDisabled))
-            ImGui::SetTooltip(_tooltip.c_str());
-
         if (!_enabled)
         {
             ImGui::PopStyleColor(); 
             if (_clickable)
                 ImGui::PopStyleColor();
         }
+
+        if (!_tooltip.empty() && ImGui::IsItemHovered(ImGuiHoveredFlags_AllowWhenDisabled))
+            ImGui::SetTooltip(_tooltip.c_str());
 
         return clicked;
     }

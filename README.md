@@ -51,9 +51,9 @@ FBX SDK 2020.0.1\
 https://www.autodesk.com/developer-network/platform-technologies/fbx-sdk-2020-0  
 **$(FBX_SDK)** should point to the FBX SDK installation dir *(i.e. "C:\SDK\FBX\2020.0.1")*
 
-Vulkan SDK 1.2.148.0 (VK)\
+Vulkan SDK 1.3.261.1 (VK)\
 https://vulkan.lunarg.com/sdk/home  
-**$(VK_SDK_PATH)** should point the Vulkan SDK installation dir *(i.e. "C:\SDK\Vulkan\1.2.148.0")*
+**$(VK_SDK_PATH)** should point the Vulkan SDK installation dir *(i.e. "C:\SDK\Vulkan\1.3.261.1")*
 
 Win10 SDK 10.0.17763.0\
 https://developer.microsoft.com/fr-fr/windows/downloads/sdk-archive/
@@ -62,8 +62,8 @@ https://developer.microsoft.com/fr-fr/windows/downloads/sdk-archive/
 D3D12 Memory Allocator\
 https://github.com/GPUOpen-LibrariesAndSDKs/D3D12MemoryAllocator
 
-Dear ImGui\
-https://github.com/ocornut/imgui
+Dear ImGui "docking" branch\
+https://github.com/ocornut/imgui/commits/docking
 
 Dirent\
 https://github.com/tronkko/dirent

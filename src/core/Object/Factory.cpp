@@ -23,7 +23,7 @@ namespace vg::core
             ClassDesc & desc = m_classes[i];
             if (!strcmp(desc.getClassName(), _className))
             {
-                VG_LOG(Level::Warning, "[Factory] Class \"%s\" is already registered", _className);
+                VG_LOG(Level::Info, "[Factory] Class \"%s\" is already registered", _className);
                 return nullptr; 
             }
         }
@@ -51,7 +51,7 @@ namespace vg::core
             ClassDesc & desc = m_classes[i];
             if (!strcmp(desc.getClassName(), _className))
             {
-                VG_LOG(Level::Warning, "[Factory] Singleton Class \"%s\" is already registered", _className);
+                VG_LOG(Level::Info, "[Factory] Singleton Class \"%s\" is already registered", _className);
                 return nullptr;
             }
         }

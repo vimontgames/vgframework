@@ -18,12 +18,15 @@ namespace vg::editor
     {
         IEngine * engine = Editor::get()->getEngine();
 
-        if (ImGui::ButtonEx(style::icon::Play, !engine->IsPlaying(), !engine->IsPlaying(), "Play", getButtonSize()))
+        const bool playing = engine->IsPlaying();
+        const bool paused = engine->IsPaused();
+
+        if (ImGui::ButtonEx(style::icon::Play, !playing, !playing, playing ? "Engine is Playing" : "Start Engine", getButtonSize()))
             engine->Play();
 
         nextItem();
 
-        if (ImGui::ButtonEx(style::icon::Pause, engine->IsPlaying() && engine->IsPaused(), engine->IsPlaying(), "Pause", getButtonSize()))
+        if (ImGui::ButtonEx(style::icon::Pause, playing && !paused, playing, playing ? (paused ? "Engine is Paused" : "Pause Engine") : "Engine is not Playing", getButtonSize()))
         {
             if (engine->IsPaused())
                 engine->Play();
@@ -32,7 +35,7 @@ namespace vg::editor
         }
         nextItem();
 
-        if (ImGui::ButtonEx(style::icon::Stop, engine->IsPlaying(), engine->IsPlaying(), "Stop", getButtonSize()))
+        if (ImGui::ButtonEx(style::icon::Stop, playing, playing, playing ? "Stop Engine" : "Engine is not Playing", getButtonSize()))
             engine->Stop();
         
         nextItem();

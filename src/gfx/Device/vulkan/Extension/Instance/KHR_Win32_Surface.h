@@ -1,6 +1,6 @@
 #pragma once
 
-#include "gfx/Device/vulkan/Device_Extensions_vulkan.h"
+#include "gfx/Device/vulkan/Extension/ExtensionList_vulkan.h"
 
 namespace vg::gfx::vulkan
 {

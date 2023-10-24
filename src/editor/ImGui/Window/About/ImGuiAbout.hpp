@@ -51,14 +51,14 @@ namespace vg::editor
 
             // version
             Text("2020.0.1");
-            Text("1.2.148.0");
+            Text("1.3.261.1");
             Text("10.0.17763.0");
 
             Text("");
             NextColumn();
             // url
             textURL("www.autodesk.com/developer-network/platform-technologies/fbx-sdk-2020-0", "https://www.autodesk.com/developer-network/platform-technologies/fbx-sdk-2020-0");
-            textURL("vulkan.lunarg.com/sdk/home", "https://vulkan.lunarg.com/sdk/home");
+            textURL("vulkan.lunarg.com/sdk/home", "https://sdk.lunarg.com/sdk/download/1.3.261.1/windows/VulkanSDK-1.3.261.1-Installer.exe");
             textURL("developer.microsoft.com/fr-fr/windows/downloads/sdk-archive", "https://developer.microsoft.com/fr-fr/windows/downloads/sdk-archive/");
             Text("");
 
@@ -84,7 +84,7 @@ namespace vg::editor
             ThirdPartyInfo thirdParties[] =
             {
                 { "D3D12MemoryAllocator",   "",                 "https://github.com/GPUOpen-LibrariesAndSDKs/D3D12MemoryAllocator" },
-                { "Dear ImGui",             "8cbd391",          "https://github.com/ocornut/imgui/tree/docking" },
+                { "Dear ImGui",             "2a6d7b1",          "https://github.com/ocornut/imgui/tree/docking" },
                 { "Dirent",                 "833b692",          "https://github.com/tronkko/dirent" },
                 { "DirectXShaderCompiler",  "v1.7.2212.1",      "https://github.com/microsoft/DirectXShaderCompiler/releases/tag/v1.7.2212.1" },
                 { "Font-Awesome",           "6.x ",             "https://github.com/FortAwesome/Font-Awesome/tree/6.x" },
