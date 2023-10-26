@@ -785,10 +785,9 @@ namespace vg::gfx::vulkan
 	}
 
     //--------------------------------------------------------------------------------------
-    static VkSurfaceFormatKHR pick_surface_format(const VkSurfaceFormatKHR *surfaceFormats, uint32_t count)
+    void Device::destroySwapchain()
 	{
-		// Prefer non-SRGB formats...
-		return surfaceFormats[0];
+		m_KHR_Swapchain.m_pfnDestroySwapchainKHR(getVulkanDevice(), m_vkSwapchain, nullptr);
 	}
 
     //--------------------------------------------------------------------------------------
@@ -981,6 +980,7 @@ namespace vg::gfx::vulkan
 			destroyFrameContext(i);
 
         destroyVulkanBackbuffers();
+        destroySwapchain();
 
         VG_SAFE_DELETE(m_bindlessTable);
         VG_SAFE_RELEASE(m_memoryAllocator);
@@ -1025,6 +1025,7 @@ namespace vg::gfx::vulkan
     //--------------------------------------------------------------------------------------
     void Device::resize(core::uint _width, core::uint _height)
     {
+		destroyVulkanBackbuffers();
         createSwapchain();
         createVulkanBackbuffers();   
     }

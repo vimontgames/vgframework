@@ -113,6 +113,7 @@ namespace vg::gfx::vulkan
 		if (_texDesc.isBackbuffer())
 		{
             m_resource.setVulkanImage(*(VkImage*)_initData, VK_NULL_HANDLE);
+            m_resource.setResourceFlags(ResourceFlags::Backbuffer);
 		}
         else
         {
@@ -240,6 +241,9 @@ namespace vg::gfx::vulkan
 	Texture::~Texture()
 	{
         auto * device = gfx::Device::get();
-		vkDestroyImageView(device->getVulkanDevice(), m_vkImageView, nullptr);
+
+        // Swapchain must be destroyed using PFN_vkDestroySwapchainKHR
+        if (!getTexDesc().isBackbuffer())
+		    vkDestroyImageView(device->getVulkanDevice(), m_vkImageView, nullptr);
 	}
 }

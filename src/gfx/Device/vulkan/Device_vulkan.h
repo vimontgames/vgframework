@@ -48,6 +48,7 @@ namespace vg::gfx::vulkan
 
 		void							createVulkanDevice				();
 		void							createSwapchain					();
+        void							destroySwapchain				();
 		void							createCommandQueues				();
 
         PixelFormat                     detectBackbufferFormat          ();

@@ -129,6 +129,7 @@ namespace vg::gfx::dx12
             ID3D12Resource * backbufferResource = (ID3D12Resource*)_initData;
             VG_ASSERT(backbufferResource);
             m_resource.setd3d12TextureResource(_name, backbufferResource, nullptr);
+            m_resource.setResourceFlags(ResourceFlags::Backbuffer);
         }
         else
         {

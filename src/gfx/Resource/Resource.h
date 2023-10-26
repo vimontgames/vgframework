@@ -18,6 +18,12 @@ namespace vg::gfx
         core::u32 end = 0;
     };
 
+    enum class ResourceFlags : core::u32
+	{
+		None			= 0x00000000,
+        Backbuffer		= 0x00000001
+	};
+
     namespace base
     {
         class Resource : public core::Object
@@ -31,8 +37,20 @@ namespace vg::gfx
                 Buffer,
             };
 
+            VG_INLINE void setResourceFlags(ResourceFlags _resourceFlags)
+            {
+                m_flags = _resourceFlags;
+            }
+
+            VG_INLINE bool testResourceFlags(ResourceFlags _resourceFlags) const 
+            { 
+                return 0 != (std::underlying_type<ResourceFlags>::type(_resourceFlags) & std::underlying_type<ResourceFlags>::type(m_flags));
+            }
+
+
         protected:
             ResourceType m_resourceType;
+            ResourceFlags m_flags = ResourceFlags::None;
         };
     }
 }

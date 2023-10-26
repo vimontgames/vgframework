@@ -23,13 +23,13 @@ namespace vg::gfx
             virtual core::u16 GetWidth() const final override;
             virtual core::u16 GetHeight() const final override;
 
-			const TextureDesc & getTexDesc() const { return m_texDesc; }
-            const gfx::Resource & getResource() const { return m_resource; }
-            gfx::Resource & getResource() { return m_resource; }
-            const gfx::BindlessTextureSrvHandle getBindlessSRVHandle() const { return m_bindlessSRVHandle; }
+			VG_INLINE const TextureDesc & getTexDesc() const { return m_texDesc; }
+            VG_INLINE const gfx::Resource & getResource() const { return m_resource; }
+            VG_INLINE gfx::Resource & getResource() { return m_resource; }
+            VG_INLINE const gfx::BindlessTextureSrvHandle getBindlessSRVHandle() const { return m_bindlessSRVHandle; }
 			
         protected:
-			const TextureDesc                   m_texDesc;
+			const TextureDesc                m_texDesc;
             gfx::Resource                    m_resource;
             gfx::BindlessTextureSrvHandle    m_bindlessSRVHandle;
 		};

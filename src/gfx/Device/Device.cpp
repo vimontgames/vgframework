@@ -188,7 +188,7 @@ namespace vg::gfx
         //--------------------------------------------------------------------------------------
         void Device::createBackbuffer(core::uint _backbufferIndex, void * _backbuffer)
         {
-             TextureDesc backbufferTexDesc
+            TextureDesc backbufferTexDesc
             (
                 Usage::Default,
                 BindFlags::None,

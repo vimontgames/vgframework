@@ -65,12 +65,12 @@ namespace vg::gfx
 		PixelFormat		format;
 		TextureFlags	flags;
 
-        inline bool testTextureFlags(TextureFlags _flags) const { return 0 != (std::underlying_type<TextureFlags>::type(_flags) & std::underlying_type<TextureFlags>::type(flags)); }
+		VG_INLINE bool testTextureFlags		(TextureFlags _flags) const { return 0 != (std::underlying_type<TextureFlags>::type(_flags) & std::underlying_type<TextureFlags>::type(flags)); }
 
-        inline bool isBackbuffer        () const { return testTextureFlags(TextureFlags::Backbuffer); }
-        inline bool isRenderTarget      () const { return testTextureFlags(TextureFlags::RenderTarget); }
-        inline bool isDepthStencil      () const { return testTextureFlags(TextureFlags::DepthStencil); }
+        VG_INLINE bool isBackbuffer			() const { return testTextureFlags(TextureFlags::Backbuffer); }
+        VG_INLINE bool isRenderTarget		() const { return testTextureFlags(TextureFlags::RenderTarget); }
+        VG_INLINE bool isDepthStencil		() const { return testTextureFlags(TextureFlags::DepthStencil); }
 
-        inline bool isShaderResource    () const { return resource.testBindFlags(BindFlags::ShaderResource); }
+		VG_INLINE bool isShaderResource		() const { return resource.testBindFlags(BindFlags::ShaderResource); }
 	};
 }

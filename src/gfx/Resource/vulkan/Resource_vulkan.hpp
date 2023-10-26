@@ -17,7 +17,8 @@ namespace vg::gfx::vulkan
                 VG_ASSERT(false, "Unhandled ResourceType \"%s\" (%u)", asString(m_resourceType), m_resourceType);
                 break;
             case ResourceType::Texture:
-                vkDestroyImage(device->getVulkanDevice(), m_vkImage, nullptr);
+                if (!testResourceFlags(ResourceFlags::Backbuffer))
+                    vkDestroyImage(device->getVulkanDevice(), m_vkImage, nullptr);
                 break;
             case ResourceType::Buffer:
                 vkDestroyBuffer(device->getVulkanDevice(), m_vkBuffer, nullptr);

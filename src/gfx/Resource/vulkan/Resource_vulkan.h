@@ -26,7 +26,7 @@ namespace vg::gfx::vulkan
         Map                 map             (core::uint _subResource = 0, Range _read = Range());
         void                unmap           (core::uint _subResource = 0, Range _write = Range());
 
-    //private:
+    private:
         union
         {
             VkImage				m_vkImage;
