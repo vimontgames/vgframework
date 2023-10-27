@@ -3,7 +3,7 @@
 #include "core/Object/Object.h"
 #include "CommandList_consts.h"
 #include "gfx/Device/Device_consts.h"
-#include "gfx/PipelineState/GraphicPipelineStateKey.h"
+#include "gfx/PipelineState/Graphic/GraphicPipelineStateKey.h"
 
 namespace vg::gfx
 {

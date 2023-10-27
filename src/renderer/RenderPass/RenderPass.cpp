@@ -8,9 +8,9 @@
 #include "gfx/Resource/Texture.h"
 #include "gfx/Resource/Buffer.h"
 #include "gfx/Resource/Resource_consts.h"
-#include "gfx/PipelineState/DepthStencilState.h"
-#include "gfx/PipelineState/RasterizerState.h"
-#include "gfx/PipelineState/BlendState.h"
+#include "gfx/PipelineState/Graphic/DepthStencilState.h"
+#include "gfx/PipelineState/Graphic/RasterizerState.h"
+#include "gfx/PipelineState/Graphic/BlendState.h"
 #include "gfx/RootSignature/RootSignature.h"
 #include "gfx/Shader/ShaderManager.h"
 #include "gfx/Shader/Shader.h"
@@ -28,6 +28,9 @@ using namespace vg::gfx;
 
 #include "RenderObjects/RenderObjectsPass.hpp"
 #include "RenderObjects/Forward/ForwardPass.hpp"
+
+#include "RayTracing/RayTracingPass.hpp"
+#include "RayTracing/Test/TestRayTracingPass.hpp"
 
 namespace vg::renderer
 {

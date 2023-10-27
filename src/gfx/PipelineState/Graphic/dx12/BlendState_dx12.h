@@ -1,6 +1,6 @@
 #pragma once
 
-#include "gfx/PipelineState/BlendState.h"
+#include "gfx/PipelineState/Graphic/BlendState.h"
 
 namespace vg::gfx::dx12
 {

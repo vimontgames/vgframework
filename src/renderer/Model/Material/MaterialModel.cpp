@@ -8,9 +8,9 @@
 #include "gfx/CommandList/CommandList.h"
 #include "gfx/BindlessTable/BindlessTable.h"
 #include "gfx/Resource/Texture.h"
-#include "gfx/PipelineState/RasterizerState.h"
-#include "gfx/PipelineState/DepthStencilState.h"
-#include "gfx/PipelineState/BlendState.h"
+#include "gfx/PipelineState/Graphic/RasterizerState.h"
+#include "gfx/PipelineState/Graphic/DepthStencilState.h"
+#include "gfx/PipelineState/Graphic/BlendState.h"
 
 #include "renderer/Importer/SceneImporterData.h"
 #include "renderer/Renderer.h"

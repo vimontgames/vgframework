@@ -10,7 +10,7 @@
 #include "gfx/Shader/ShaderManager.h"
 #include "gfx/FrameGraph/RenderPass.h"
 #include "gfx/BindlessTable/BindlessTable.h"
-#include "gfx/PipelineState/SamplerState.h"
+#include "gfx/PipelineState/Graphic/SamplerState.h"
 #include "gfx/Profiler/Profiler.h"
 #include "gfx/Importer/TextureImporter.h"
 #include "gfx/RingBuffer/Upload/UploadBuffer.h"

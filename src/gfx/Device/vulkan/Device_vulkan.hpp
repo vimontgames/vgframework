@@ -774,8 +774,11 @@ namespace vg::gfx::vulkan
         
             for (uint i = 0; i < countof(m_bufferContext); ++i)
             {
-                m_bufferContext[i].backbuffer->getResource().setVulkanImage(VK_NULL_HANDLE, VK_NULL_HANDLE);
-                VG_SAFE_RELEASE(m_bufferContext[i].backbuffer);
+				if (nullptr != m_bufferContext[i].backbuffer)
+				{
+					m_bufferContext[i].backbuffer->getResource().setVulkanImage(VK_NULL_HANDLE, VK_NULL_HANDLE);
+					VG_SAFE_RELEASE(m_bufferContext[i].backbuffer);
+				}
             }
         }
 

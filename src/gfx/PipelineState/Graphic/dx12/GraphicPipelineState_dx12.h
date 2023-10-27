@@ -1,6 +1,6 @@
 #pragma once
 
-#include "gfx/PipelineState/GraphicPipelineState.h"
+#include "gfx/PipelineState/Graphic/GraphicPipelineState.h"
 
 namespace vg::gfx
 {

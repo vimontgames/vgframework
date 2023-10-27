@@ -70,6 +70,8 @@ namespace vg::renderer
 
         _desc.registerPropertyHelperEx(DisplayOptions, m_backgroundColor, "Background", IProperty::Flags::Color);
 
+        _desc.registerPropertyHelper(DisplayOptions, m_raytracing, "Ray Tracing (Experimental)");
+
         // TODO: Move to menu instead
         _desc.registerCallbackHelper(DisplayOptions, load, "Load", IProperty::Flags::None);
         _desc.registerCallbackHelper(DisplayOptions, save, "Save", IProperty::Flags::SameLine);

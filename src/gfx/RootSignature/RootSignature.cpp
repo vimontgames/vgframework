@@ -1,6 +1,6 @@
 #include "gfx/Precomp.h"
 #include "RootSignature.h"
-#include "gfx/PipelineState/SamplerState.h"
+#include "gfx/PipelineState/Graphic/SamplerState.h"
 #include "gfx/Device/Device.h"
 
 using namespace vg::core;

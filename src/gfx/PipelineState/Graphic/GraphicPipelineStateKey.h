@@ -1,10 +1,10 @@
 #pragma once
 
 #include "gfx/RootSignature/RootSignature_consts.h"
-#include "gfx/PipelineState/PipelineState_consts.h"
-#include "gfx/PipelineState/RasterizerState.h"
-#include "gfx/PipelineState/DepthStencilState.h"
-#include "gfx/PipelineState/BlendState.h"
+#include "gfx/PipelineState/Graphic/GraphicPipelineState_consts.h"
+#include "gfx/PipelineState/Graphic/RasterizerState.h"
+#include "gfx/PipelineState/Graphic/DepthStencilState.h"
+#include "gfx/PipelineState/Graphic/BlendState.h"
 #include "gfx/Resource/Texture_consts.h"
 #include "gfx/Shader/ShaderKey.h"
 #include "gfx/FrameGraph/RenderPassKey.h"

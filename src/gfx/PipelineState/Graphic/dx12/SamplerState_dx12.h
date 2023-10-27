@@ -1,6 +1,6 @@
 #pragma once
 
-#include "gfx/PipelineState/SamplerState.h"
+#include "gfx/PipelineState/Graphic/SamplerState.h"
 
 namespace vg::gfx::dx12
 {

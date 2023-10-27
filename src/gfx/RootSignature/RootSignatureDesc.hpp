@@ -37,4 +37,26 @@ namespace vg::gfx
         m_pushConstants.push_back({ _stages, _binding, _register, _count });
         return (uint)(m_pushConstants.size() - 1);
     }
+
+    //--------------------------------------------------------------------------------------
+    // RayTracing RootSignature Layout:
+    //   m_rayTracingOutputUAVCount               : [0..N[
+    //   m_rayTracingAccellerationStructureCount  : [N..M[
+    //--------------------------------------------------------------------------------------
+    core::uint RootSignatureDesc::addRayTracingOutputUAV(core::uint _count)
+    {
+        VG_ASSERT(m_rayTracingOutputUAVCount == 0);
+        m_rayTracingOutputUAVCount = _count;
+
+        return 0;
+    }
+
+    //--------------------------------------------------------------------------------------
+    core::uint RootSignatureDesc::addRayTracingAccelerationStructure(core::uint _count)
+    {
+        VG_ASSERT(m_rayTracingAccellerationStructureCount == 0);
+        m_rayTracingAccellerationStructureCount = _count;
+
+        return m_rayTracingOutputUAVCount;
+    }
 }

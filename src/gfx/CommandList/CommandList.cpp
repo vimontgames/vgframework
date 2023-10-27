@@ -3,7 +3,7 @@
 #include "gfx/CommandPool/CommandPool.h"
 #include "gfx/Device/Device.h"
 #include "gfx/RootSignature/RootSignature.h"
-#include "gfx/PipelineState/GraphicPipelineState.h"
+#include "gfx/PipelineState/Graphic/GraphicPipelineState.h"
 #include "gfx/FrameGraph/RenderPass.h"
 #include "gfx/FrameGraph/SubPass.h"
 #include "gfx/FrameGraph/UserPass.h"

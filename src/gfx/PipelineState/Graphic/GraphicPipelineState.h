@@ -1,7 +1,7 @@
 #pragma once
 
 #include "core/Object/Object.h"
-#include "PipelineState_consts.h"
+#include "GraphicPipelineState_consts.h"
 #include "GraphicPipelineStateKey.h"
 
 namespace vg::gfx

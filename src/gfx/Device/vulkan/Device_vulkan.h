@@ -8,7 +8,7 @@
 #include "gfx/Device/vulkan/Extension/Device/KHR_Deferred_Host_Operations.h"
 #include "gfx/Device/vulkan/Extension/Device/KHR_Acceleration_Structure.h"
 #include "gfx/Device/vulkan/Extension/Device/KHR_Ray_Tracing_Pipeline.h"
-#include "gfx/PipelineState/SamplerState_consts.h"
+#include "gfx/PipelineState/Graphic/SamplerState_consts.h"
 #include "gfx/FrameGraph/RenderPassKey.h"
 
 namespace vg::gfx::vulkan

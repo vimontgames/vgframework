@@ -1,6 +1,6 @@
 #pragma once
 
-#include "gfx/PipelineState/DepthStencilState.h"
+#include "gfx/PipelineState/Graphic/DepthStencilState.h"
 
 namespace vg::gfx::dx12
 {

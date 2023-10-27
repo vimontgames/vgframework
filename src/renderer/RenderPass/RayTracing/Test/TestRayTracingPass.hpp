@@ -1,0 +1,91 @@
+#include "TestRayTracingPass.h"
+#include "Shaders/raytracing/raytracing.hlsli"
+
+namespace vg::renderer
+{
+    //--------------------------------------------------------------------------------------
+    // Setup executed once, when pass is created
+    //--------------------------------------------------------------------------------------
+    TestRayTracingPass::TestRayTracingPass() :
+        RayTracingPass("TestRayTracingPass")
+    {
+        auto * device = Device::get();
+
+        const RootSignatureTableDesc & bindlessTable = device->getBindlessTable()->getTableDesc();
+
+        RootSignatureDesc rsDesc;
+        rsDesc.addRootConstants(ShaderStageFlags::VS | ShaderStageFlags::PS, 0, 0, sizeof(RayTracingRootConstants) / sizeof(u32));
+        rsDesc.addTable(bindlessTable);
+
+        m_testRayTracingGlobalRootSignatureHandle = device->addRootSignature(rsDesc);
+
+        //m_backgroundShaderKey.init("background/background.hlsl", "Gradient");
+    }
+
+    //--------------------------------------------------------------------------------------
+    TestRayTracingPass::~TestRayTracingPass()
+    {
+        auto * device = Device::get();
+        device->removeRootSignature(m_testRayTracingGlobalRootSignatureHandle);
+    }
+
+    //--------------------------------------------------------------------------------------
+    // Setup executed each frame, for each pass instance
+    //--------------------------------------------------------------------------------------
+    void TestRayTracingPass::setup(const gfx::RenderPassContext & _renderContext, double _dt)
+    {
+        //auto * device = Device::get();
+        //
+        //auto size = _renderContext.m_view->GetSize();
+        //
+        //FrameGraph::TextureResourceDesc colorDesc;
+        //colorDesc.format = PixelFormat::R16G16B16A16_float;
+        //colorDesc.width = size.x;
+        //colorDesc.height = size.y;
+        //colorDesc.clearColor = float4(0, 0, 0, 0);
+        //colorDesc.initState = FrameGraph::Resource::InitState::Clear;
+        //
+        //const auto colorID = _renderContext.getFrameGraphID("Color");
+        //createRenderTarget(colorID, colorDesc);
+        //writeRenderTarget(0, colorID);
+        //
+        //FrameGraph::TextureResourceDesc depthStencilDesc;
+        //depthStencilDesc.format = PixelFormat::D32S8;
+        //depthStencilDesc.width = size.x;
+        //depthStencilDesc.height = size.y;
+        //depthStencilDesc.clearDepth = 1.0f;
+        //depthStencilDesc.clearStencil = 0x0;
+        //depthStencilDesc.initState = FrameGraph::Resource::InitState::Clear;
+        //
+        //const auto depthStencilID = _renderContext.getFrameGraphID("DepthStencil");
+        //createRenderTarget(depthStencilID, depthStencilDesc);
+        //writeDepthStencil(depthStencilID);
+    }
+
+    //--------------------------------------------------------------------------------------
+    void TestRayTracingPass::draw(const RenderPassContext & _renderPassContext, CommandList * _cmdList) const
+    {
+        _cmdList->setRootSignature(m_testRayTracingGlobalRootSignatureHandle);
+
+        //RasterizerState rs(FillMode::Solid, CullMode::None);
+        //BlendState bs(BlendFactor::One, BlendFactor::Zero, BlendOp::Add);
+        //DepthStencilState ds(false);
+        //
+        //_cmdList->setRootSignature(m_backgroundRootSignatureHandle);
+        //_cmdList->setShader(m_backgroundShaderKey);
+        //_cmdList->setPrimitiveTopology(PrimitiveTopology::TriangleStrip);
+        //_cmdList->setRasterizerState(rs);
+        //_cmdList->setBlendState(bs);
+        //_cmdList->setDepthStencilState(ds);
+        //
+        //BackgroundRootConstants root;
+        //
+        //root.quad.posOffsetScale = float4(0.0f, 0.0f, 1.0f, 1.0f);
+        //root.quad.uvOffsetScale = float4(0.0f, 0.0f, 1.0f, 1.0f);
+        //root.color = pow(DisplayOptions::get()->getBackgroundColor(), 2.2f);
+        //
+        //_cmdList->setInlineRootConstants(&root, sizeof(BackgroundRootConstants) / sizeof(u32));
+        //
+        //_cmdList->draw(4);
+    }
+}

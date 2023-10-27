@@ -70,11 +70,12 @@ namespace vg::gfx::vulkan
         VkDynamicState dynamicStates[] =
         {
             VK_DYNAMIC_STATE_VIEWPORT,
-            VK_DYNAMIC_STATE_SCISSOR
+            VK_DYNAMIC_STATE_SCISSOR,
+            VK_DYNAMIC_STATE_STENCIL_REFERENCE
         };        
         dynamicState.sType = VK_STRUCTURE_TYPE_PIPELINE_DYNAMIC_STATE_CREATE_INFO;
         dynamicState.pDynamicStates = dynamicStates;
-        dynamicState.dynamicStateCount = 2;
+        dynamicState.dynamicStateCount = (uint)countof(dynamicStates);
         vkPipelineDesc.pDynamicState = &dynamicState;
 
         // Viewport

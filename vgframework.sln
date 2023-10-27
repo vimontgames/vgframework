@@ -98,8 +98,13 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "editor", "editor", "{247A9589-663C-452B-9C16-F5E34FEE87D4}"
 	ProjectSection(SolutionItems) = preProject
 		data\Shaders\editor\editor.hlsl = data\Shaders\editor\editor.hlsl
-		data\Shaders\editor\editor.hlsli = data\Shaders\editor\editor.hlsli
 		data\Shaders\editor\editor.hlsl.h = data\Shaders\editor\editor.hlsl.h
+		data\Shaders\editor\editor.hlsli = data\Shaders\editor\editor.hlsli
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "raytracing", "raytracing", "{5523CE0C-0AA1-4E5F-82C7-85D032949B40}"
+	ProjectSection(SolutionItems) = preProject
+		data\Shaders\raytracing\raytracing.hlsli = data\Shaders\raytracing\raytracing.hlsli
 	EndProjectSection
 EndProject
 Global
@@ -177,6 +182,7 @@ Global
 		{73E04AC7-00AE-48F3-8650-73DE5C3A9661} = {3A24AFD2-079B-45FC-8488-70058ACACD89}
 		{34ABDEEE-1180-4BD9-9FCC-16C174A96FE8} = {3A24AFD2-079B-45FC-8488-70058ACACD89}
 		{247A9589-663C-452B-9C16-F5E34FEE87D4} = {3A24AFD2-079B-45FC-8488-70058ACACD89}
+		{5523CE0C-0AA1-4E5F-82C7-85D032949B40} = {3A24AFD2-079B-45FC-8488-70058ACACD89}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {B437215B-B736-4FF0-8DA1-E6B35C780CE1}

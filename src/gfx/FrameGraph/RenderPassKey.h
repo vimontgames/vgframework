@@ -2,7 +2,7 @@
 
 #include "FrameGraph_consts.h"
 #include "gfx/Resource/Texture_consts.h"
-#include "gfx/PipelineState/PipelineState_consts.h"
+#include "gfx/PipelineState/Graphic/GraphicPipelineState_consts.h"
 
 namespace vg::gfx
 {

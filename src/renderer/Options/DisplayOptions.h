@@ -47,6 +47,7 @@ namespace vg::renderer
         bool                    isAlbedoMapsEnabled     () const { return m_albedoMaps; }
         bool                    isNormalMapsEnabled     () const { return m_normalMaps; }
         bool				    isWireframeEnabled		() const { return m_wireframe; }
+        bool                    isRayTracingEnabled     () const { return m_raytracing; }
 
         bool                    isDisplayMatIDEnabled   () const { return DisplayMode::MatID  == m_debugDisplayMode;}
         bool				    isDisplayNormalEnabled	() const { return DisplayMode::VSNormal == m_debugDisplayMode; }
@@ -64,12 +65,13 @@ namespace vg::renderer
         core::float4		    m_backgroundColor       = core::float4(0, 0, 0, 0);
         bool				    m_toolMode              = true;
         bool                    m_aabb                  = false;
-        gfx::VSync m_VSync                 = gfx::VSync::VBL_1;
+        gfx::VSync m_VSync                              = gfx::VSync::VBL_1;
         bool                    m_vsync                 = true;
         bool				    m_opaque                = true;
         bool                    m_albedoMaps            = true;
         bool                    m_normalMaps            = true;
         bool				    m_wireframe             = false;
+        bool                    m_raytracing            = false;
        
 		DisplayMode	m_debugDisplayMode	= DisplayMode::Default;
     };

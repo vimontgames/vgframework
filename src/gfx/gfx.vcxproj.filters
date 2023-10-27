@@ -20,9 +20,6 @@
     <ClCompile Include="Memory\MemoryAllocator.cpp">
       <Filter>Memory</Filter>
     </ClCompile>
-    <ClCompile Include="PipelineState\PipelineState.cpp">
-      <Filter>PipelineState</Filter>
-    </ClCompile>
     <ClCompile Include="RootSignature\RootSignature.cpp">
       <Filter>RootSignature</Filter>
     </ClCompile>
@@ -43,6 +40,9 @@
     </ClCompile>
     <ClCompile Include="RingBuffer\RingBuffer.cpp">
       <Filter>RingBuffer</Filter>
+    </ClCompile>
+    <ClCompile Include="PipelineState\Graphic\GraphicPipelineState.cpp">
+      <Filter>PipelineState\Graphic</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -194,27 +194,6 @@
     <ClInclude Include="Memory\vulkan\MemoryAllocator_vulkan.hpp">
       <Filter>Memory\vulkan</Filter>
     </ClInclude>
-    <ClInclude Include="PipelineState\GraphicPipelineState.h">
-      <Filter>PipelineState</Filter>
-    </ClInclude>
-    <ClInclude Include="PipelineState\GraphicPipelineState.hpp">
-      <Filter>PipelineState</Filter>
-    </ClInclude>
-    <ClInclude Include="PipelineState\PipelineState_consts.h">
-      <Filter>PipelineState</Filter>
-    </ClInclude>
-    <ClInclude Include="PipelineState\dx12\GraphicPipelineState_dx12.h">
-      <Filter>PipelineState\dx12</Filter>
-    </ClInclude>
-    <ClInclude Include="PipelineState\dx12\GraphicPipelineState_dx12.hpp">
-      <Filter>PipelineState\dx12</Filter>
-    </ClInclude>
-    <ClInclude Include="PipelineState\vulkan\GraphicPipelineState_vulkan.h">
-      <Filter>PipelineState\vulkan</Filter>
-    </ClInclude>
-    <ClInclude Include="PipelineState\vulkan\GraphicPipelineState_vulkan.hpp">
-      <Filter>PipelineState\vulkan</Filter>
-    </ClInclude>
     <ClInclude Include="RootSignature\RootSignature.h">
       <Filter>RootSignature</Filter>
     </ClInclude>
@@ -241,9 +220,6 @@
     </ClInclude>
     <ClInclude Include="RootSignature\RootSignatureDesc.hpp">
       <Filter>RootSignature</Filter>
-    </ClInclude>
-    <ClInclude Include="PipelineState\GraphicPipelineStateKey.h">
-      <Filter>PipelineState</Filter>
     </ClInclude>
     <ClInclude Include="Shader\Shader.h">
       <Filter>Shader</Filter>
@@ -292,24 +268,6 @@
     </ClInclude>
     <ClInclude Include="Shader\HLSLDesc.hpp">
       <Filter>Shader</Filter>
-    </ClInclude>
-    <ClInclude Include="PipelineState\RasterizerState.h">
-      <Filter>PipelineState</Filter>
-    </ClInclude>
-    <ClInclude Include="PipelineState\dx12\RasterizerState_dx12.h">
-      <Filter>PipelineState\dx12</Filter>
-    </ClInclude>
-    <ClInclude Include="PipelineState\dx12\RasterizerState_dx12.hpp">
-      <Filter>PipelineState\dx12</Filter>
-    </ClInclude>
-    <ClInclude Include="PipelineState\RasterizerState.hpp">
-      <Filter>PipelineState</Filter>
-    </ClInclude>
-    <ClInclude Include="PipelineState\vulkan\RasterizerState_vulkan.h">
-      <Filter>PipelineState\vulkan</Filter>
-    </ClInclude>
-    <ClInclude Include="PipelineState\vulkan\RasterizerState_vulkan.hpp">
-      <Filter>PipelineState\vulkan</Filter>
     </ClInclude>
     <ClInclude Include="FrameGraph\RenderPassKey.h">
       <Filter>FrameGraph</Filter>
@@ -398,27 +356,6 @@
     <ClInclude Include="BindlessTable\BindlessTable_consts.h">
       <Filter>BindlessTable</Filter>
     </ClInclude>
-    <ClInclude Include="PipelineState\SamplerState.h">
-      <Filter>PipelineState</Filter>
-    </ClInclude>
-    <ClInclude Include="PipelineState\dx12\SamplerState_dx12.h">
-      <Filter>PipelineState\dx12</Filter>
-    </ClInclude>
-    <ClInclude Include="PipelineState\dx12\SamplerState_dx12.hpp">
-      <Filter>PipelineState\dx12</Filter>
-    </ClInclude>
-    <ClInclude Include="PipelineState\SamplerState.hpp">
-      <Filter>PipelineState</Filter>
-    </ClInclude>
-    <ClInclude Include="PipelineState\vulkan\SamplerState_vulkan.h">
-      <Filter>PipelineState\vulkan</Filter>
-    </ClInclude>
-    <ClInclude Include="PipelineState\vulkan\SamplerState_vulkan.hpp">
-      <Filter>PipelineState\vulkan</Filter>
-    </ClInclude>
-    <ClInclude Include="PipelineState\SamplerState_consts.h">
-      <Filter>PipelineState</Filter>
-    </ClInclude>
     <ClInclude Include="Profiler\Profiler.h">
       <Filter>Profiler</Filter>
     </ClInclude>
@@ -437,45 +374,6 @@
     </ClInclude>
     <ClInclude Include="Shader\dxc\ShaderCompiler_dxc.hpp">
       <Filter>Shader\dxc</Filter>
-    </ClInclude>
-    <ClInclude Include="PipelineState\BlendState.h">
-      <Filter>PipelineState</Filter>
-    </ClInclude>
-    <ClInclude Include="PipelineState\BlendState.hpp">
-      <Filter>PipelineState</Filter>
-    </ClInclude>
-    <ClInclude Include="PipelineState\dx12\BlendState_dx12.h">
-      <Filter>PipelineState\dx12</Filter>
-    </ClInclude>
-    <ClInclude Include="PipelineState\dx12\BlendState_dx12.hpp">
-      <Filter>PipelineState\dx12</Filter>
-    </ClInclude>
-    <ClInclude Include="PipelineState\vulkan\BlendState_vulkan.h">
-      <Filter>PipelineState\vulkan</Filter>
-    </ClInclude>
-    <ClInclude Include="PipelineState\vulkan\BlendState_vulkan.hpp">
-      <Filter>PipelineState\vulkan</Filter>
-    </ClInclude>
-    <ClInclude Include="PipelineState\GraphicPipelineStateKey.hpp">
-      <Filter>PipelineState</Filter>
-    </ClInclude>
-    <ClInclude Include="PipelineState\DepthStencilState.h">
-      <Filter>PipelineState</Filter>
-    </ClInclude>
-    <ClInclude Include="PipelineState\DepthStencilState.hpp">
-      <Filter>PipelineState</Filter>
-    </ClInclude>
-    <ClInclude Include="PipelineState\dx12\DepthStencilState_dx12.h">
-      <Filter>PipelineState\dx12</Filter>
-    </ClInclude>
-    <ClInclude Include="PipelineState\dx12\DepthStencilState_dx12.hpp">
-      <Filter>PipelineState\dx12</Filter>
-    </ClInclude>
-    <ClInclude Include="PipelineState\vulkan\DepthStencilState_vulkan.h">
-      <Filter>PipelineState\vulkan</Filter>
-    </ClInclude>
-    <ClInclude Include="PipelineState\vulkan\DepthStencilState_vulkan.hpp">
-      <Filter>PipelineState\vulkan</Filter>
     </ClInclude>
     <ClInclude Include="Device\DeviceCaps.hpp">
       <Filter>Device</Filter>
@@ -524,6 +422,105 @@
     </ClInclude>
     <ClInclude Include="Device\vulkan\Extension\Device\KHR_Ray_Tracing_Pipeline.h">
       <Filter>Device\vulkan\Extension\Device</Filter>
+    </ClInclude>
+    <ClInclude Include="PipelineState\Graphic\BlendState.h">
+      <Filter>PipelineState\Graphic</Filter>
+    </ClInclude>
+    <ClInclude Include="PipelineState\Graphic\BlendState.hpp">
+      <Filter>PipelineState\Graphic</Filter>
+    </ClInclude>
+    <ClInclude Include="PipelineState\Graphic\DepthStencilState.h">
+      <Filter>PipelineState\Graphic</Filter>
+    </ClInclude>
+    <ClInclude Include="PipelineState\Graphic\DepthStencilState.hpp">
+      <Filter>PipelineState\Graphic</Filter>
+    </ClInclude>
+    <ClInclude Include="PipelineState\Graphic\GraphicPipelineState.h">
+      <Filter>PipelineState\Graphic</Filter>
+    </ClInclude>
+    <ClInclude Include="PipelineState\Graphic\GraphicPipelineState_consts.h">
+      <Filter>PipelineState\Graphic</Filter>
+    </ClInclude>
+    <ClInclude Include="PipelineState\Graphic\GraphicPipelineStateKey.h">
+      <Filter>PipelineState\Graphic</Filter>
+    </ClInclude>
+    <ClInclude Include="PipelineState\Graphic\GraphicPipelineStateKey.hpp">
+      <Filter>PipelineState\Graphic</Filter>
+    </ClInclude>
+    <ClInclude Include="PipelineState\Graphic\RasterizerState.h">
+      <Filter>PipelineState\Graphic</Filter>
+    </ClInclude>
+    <ClInclude Include="PipelineState\Graphic\RasterizerState.hpp">
+      <Filter>PipelineState\Graphic</Filter>
+    </ClInclude>
+    <ClInclude Include="PipelineState\Graphic\SamplerState.h">
+      <Filter>PipelineState\Graphic</Filter>
+    </ClInclude>
+    <ClInclude Include="PipelineState\Graphic\SamplerState.hpp">
+      <Filter>PipelineState\Graphic</Filter>
+    </ClInclude>
+    <ClInclude Include="PipelineState\Graphic\SamplerState_consts.h">
+      <Filter>PipelineState\Graphic</Filter>
+    </ClInclude>
+    <ClInclude Include="PipelineState\Graphic\dx12\BlendState_dx12.h">
+      <Filter>PipelineState\Graphic\dx12</Filter>
+    </ClInclude>
+    <ClInclude Include="PipelineState\Graphic\dx12\BlendState_dx12.hpp">
+      <Filter>PipelineState\Graphic\dx12</Filter>
+    </ClInclude>
+    <ClInclude Include="PipelineState\Graphic\dx12\DepthStencilState_dx12.h">
+      <Filter>PipelineState\Graphic\dx12</Filter>
+    </ClInclude>
+    <ClInclude Include="PipelineState\Graphic\dx12\DepthStencilState_dx12.hpp">
+      <Filter>PipelineState\Graphic\dx12</Filter>
+    </ClInclude>
+    <ClInclude Include="PipelineState\Graphic\dx12\GraphicPipelineState_dx12.h">
+      <Filter>PipelineState\Graphic\dx12</Filter>
+    </ClInclude>
+    <ClInclude Include="PipelineState\Graphic\dx12\GraphicPipelineState_dx12.hpp">
+      <Filter>PipelineState\Graphic\dx12</Filter>
+    </ClInclude>
+    <ClInclude Include="PipelineState\Graphic\dx12\RasterizerState_dx12.h">
+      <Filter>PipelineState\Graphic\dx12</Filter>
+    </ClInclude>
+    <ClInclude Include="PipelineState\Graphic\dx12\RasterizerState_dx12.hpp">
+      <Filter>PipelineState\Graphic\dx12</Filter>
+    </ClInclude>
+    <ClInclude Include="PipelineState\Graphic\dx12\SamplerState_dx12.h">
+      <Filter>PipelineState\Graphic\dx12</Filter>
+    </ClInclude>
+    <ClInclude Include="PipelineState\Graphic\dx12\SamplerState_dx12.hpp">
+      <Filter>PipelineState\Graphic\dx12</Filter>
+    </ClInclude>
+    <ClInclude Include="PipelineState\Graphic\vulkan\BlendState_vulkan.h">
+      <Filter>PipelineState\Graphic\vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="PipelineState\Graphic\vulkan\BlendState_vulkan.hpp">
+      <Filter>PipelineState\Graphic\vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="PipelineState\Graphic\vulkan\DepthStencilState_vulkan.h">
+      <Filter>PipelineState\Graphic\vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="PipelineState\Graphic\vulkan\DepthStencilState_vulkan.hpp">
+      <Filter>PipelineState\Graphic\vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="PipelineState\Graphic\vulkan\GraphicPipelineState_vulkan.h">
+      <Filter>PipelineState\Graphic\vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="PipelineState\Graphic\vulkan\GraphicPipelineState_vulkan.hpp">
+      <Filter>PipelineState\Graphic\vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="PipelineState\Graphic\vulkan\RasterizerState_vulkan.h">
+      <Filter>PipelineState\Graphic\vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="PipelineState\Graphic\vulkan\RasterizerState_vulkan.hpp">
+      <Filter>PipelineState\Graphic\vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="PipelineState\Graphic\vulkan\SamplerState_vulkan.h">
+      <Filter>PipelineState\Graphic\vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="PipelineState\Graphic\vulkan\SamplerState_vulkan.hpp">
+      <Filter>PipelineState\Graphic\vulkan</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -583,12 +580,6 @@
     </Filter>
     <Filter Include="PipelineState">
       <UniqueIdentifier>{4643ba97-2307-4099-930f-1a171615dd9c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="PipelineState\dx12">
-      <UniqueIdentifier>{e878a4b5-ed58-4d89-9afa-e1b0184f8236}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="PipelineState\vulkan">
-      <UniqueIdentifier>{bca4d625-0750-4389-8cf2-77667cf8edf5}</UniqueIdentifier>
     </Filter>
     <Filter Include="RootSignature">
       <UniqueIdentifier>{be3e4404-30c5-45ff-b078-6138e1be3c31}</UniqueIdentifier>
@@ -653,13 +644,28 @@
     <Filter Include="Device\vulkan\Extension\Instance">
       <UniqueIdentifier>{d9498003-39ef-41e8-8449-eb8ac66ab9fb}</UniqueIdentifier>
     </Filter>
+    <Filter Include="PipelineState\RayTracing">
+      <UniqueIdentifier>{4298f49f-26ce-43be-9b13-82433966dcdc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="PipelineState\Compute">
+      <UniqueIdentifier>{3984839b-5177-4391-ae55-fd3f32df5050}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="PipelineState\Graphic">
+      <UniqueIdentifier>{b7f21786-a456-4050-89d5-ded472702db0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="PipelineState\Graphic\dx12">
+      <UniqueIdentifier>{2940264b-c881-4905-ad1e-3388935208bd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="PipelineState\Graphic\vulkan">
+      <UniqueIdentifier>{1083c187-5e08-499d-95de-ee5b66029ef2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <None Include="PipelineState\dx12\GraphicPipelineState_dx12.inl">
-      <Filter>PipelineState\dx12</Filter>
+    <None Include="PipelineState\Graphic\dx12\GraphicPipelineState_dx12.inl">
+      <Filter>PipelineState\Graphic\dx12</Filter>
     </None>
-    <None Include="PipelineState\vulkan\GraphicPipelineState_vulkan.inl">
-      <Filter>PipelineState\vulkan</Filter>
+    <None Include="PipelineState\Graphic\vulkan\GraphicPipelineState_vulkan.inl">
+      <Filter>PipelineState\Graphic\vulkan</Filter>
     </None>
   </ItemGroup>
 </Project>

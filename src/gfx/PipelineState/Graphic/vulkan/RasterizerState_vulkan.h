@@ -1,6 +1,6 @@
 #pragma once
 
-#include "gfx/PipelineState/RasterizerState.h"
+#include "gfx/PipelineState/Graphic/RasterizerState.h"
 
 namespace vg::gfx::vulkan
 {
