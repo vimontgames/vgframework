@@ -277,7 +277,7 @@ namespace vg::gfx
         if (isMinimized())
             return;
 
-        VG_LOG(Level::Info, "[Device] Resize to %ux%u", _width, _height);
+        VG_INFO("[Device] Resize to %ux%u", _width, _height);
 
         waitGPUIdle();
         super::resize(_width, _height);
@@ -373,7 +373,7 @@ namespace vg::gfx
         }
         else
         {
-            VG_LOG(Level::Error, "[Device] Failed to create texture from \"%s\"", _path.c_str());
+            VG_ERROR("[Device] Failed to create texture from \"%s\"", _path.c_str());
         }
         return nullptr;
     }

@@ -809,7 +809,7 @@ namespace vg::gfx::vulkan
 
             if (format == VK_FORMAT_R8G8B8A8_UNORM || format == VK_FORMAT_B8G8R8A8_UNORM)
             {
-				VG_LOG(Level::Info, "[Device] Backbuffer uses %s format", asString(Texture::getPixelFormat(format)).c_str());
+				VG_INFO("[Device] Backbuffer uses %s format", asString(Texture::getPixelFormat(format)).c_str());
                 selectedSurfaceFormat = curSurfaceFormat;
                 break;
             }

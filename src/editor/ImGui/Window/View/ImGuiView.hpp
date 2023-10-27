@@ -78,7 +78,7 @@ namespace vg::editor
         {
             //if (IsWindowAppearing())
             //{
-            //    VG_LOG(Level::Info, "[Editor] Window \"%s\" is appearing", title.c_str());
+            //    VG_INFO("[Editor] Window \"%s\" is appearing", title.c_str());
             //}
 
             // Compute Window content size

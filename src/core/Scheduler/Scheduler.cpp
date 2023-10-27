@@ -85,7 +85,7 @@ namespace vg::core
         if (m_registeredThreads.end() != m_registeredThreads.find(threadId))
             return;  
 
-        VG_LOG(Level::Info, "[Profiler] Register Thread \"%s\" (0x%08X)", _name.c_str(), threadId);
+        VG_INFO("[Profiler] Register Thread \"%s\" (0x%08X)", _name.c_str(), threadId);
 
         // Set thread name for debug
         SetThreadDescription(GetCurrentThread(), core::wstring_convert((string)_name).c_str());

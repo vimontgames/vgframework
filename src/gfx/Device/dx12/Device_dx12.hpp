@@ -57,7 +57,7 @@ namespace vg::gfx::dx12
 					size_t s;
 					wcstombs_s(&s, description, countof(description), desc.Description, wcslen(desc.Description));
 
-                    VG_LOG(Level::Info, "[Device] DirectX %u.%u %s - %s", major, minor, m_d3d12debug ? "debug " : "", description);
+                    VG_INFO("[Device] DirectX %u.%u %s - %s", major, minor, m_d3d12debug ? "debug " : "", description);
                 }
                 else
                 {
@@ -115,6 +115,8 @@ namespace vg::gfx::dx12
 
         m_memoryAllocator = new gfx::MemoryAllocator();
 
+        setStablePowerState();
+
 		auto * graphicsQueue = createCommandQueue(CommandQueueType::Graphics);
 		auto * swapChain = created3d12SwapChain((HWND)_params.window, _params.resolution.x, _params.resolution.y);
 
@@ -154,6 +156,37 @@ namespace vg::gfx::dx12
 
         m_bindlessTable = new gfx::BindlessTable();
 	}
+
+    //--------------------------------------------------------------------------------------
+    // Look in the Windows Registry to determine if Developer Mode is enabled
+    //--------------------------------------------------------------------------------------
+    bool Device::isDeveloperModeEnabled() const
+    {
+        HKEY hKey;
+        LSTATUS result = RegOpenKeyEx(HKEY_LOCAL_MACHINE, L"SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\AppModelUnlock", 0, KEY_READ, &hKey);
+        if (result == ERROR_SUCCESS)
+        {
+            DWORD keyValue, keySize = sizeof(DWORD);
+            result = RegQueryValueEx(hKey, L"AllowDevelopmentWithoutDevLicense", 0, NULL, (byte *)&keyValue, &keySize);
+            if (result == ERROR_SUCCESS && keyValue == 1)
+                return true;
+            RegCloseKey(hKey);
+        }
+        return false;
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool Device::setStablePowerState()
+    {
+        bool devMode = isDeveloperModeEnabled();        
+
+        if (devMode)
+            m_d3d12device->SetStablePowerState(true);
+        else
+            VG_WARNING("[Profiler] Profiling results might be inconsistent when Developer Mode is not enabled");
+
+        return devMode;
+    }
 
 	//--------------------------------------------------------------------------------------
 	IDXGISwapChain3 * Device::created3d12SwapChain(HWND _winHandle, core::uint _width, core::uint _height)

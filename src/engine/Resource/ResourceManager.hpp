@@ -143,7 +143,7 @@ namespace vg::engine
             const auto startCook = Timer::getTick();
             if (needCook)
             {
-                VG_LOG(Level::Warning, "[ResourceManager] File \"%s\" is outdated.\n", info.m_path.c_str());
+                VG_WARNING("[ResourceManager] File \"%s\" is outdated.\n", info.m_path.c_str());
 
                 bool isFileCooked = info.m_resource->cook(info.m_path);
                 VG_ASSERT(isFileCooked, "Could not cook file \"%s\"", info.m_path.c_str());
@@ -151,7 +151,7 @@ namespace vg::engine
                 if (isFileCooked)
                 {
                     if (io::setLastWriteTime(cookFile, rawDataLastWrite))
-                        VG_LOG(Level::Info, "[ResourceManager] Cooked \"%s\" in %.2f ms", info.m_path.c_str(), Timer::getEnlapsedTime(startCook, Timer::getTick()));
+                        VG_INFO("[ResourceManager] Cooked \"%s\" in %.2f ms", info.m_path.c_str(), Timer::getEnlapsedTime(startCook, Timer::getTick()));
                 }
             }
 
@@ -159,7 +159,7 @@ namespace vg::engine
             if (info.m_resource->load(info.m_path, info.m_owner))
             {
                 m_resourcesMap.insert(make_pair(info.m_path, info.m_resource));
-                VG_LOG(Level::Info, "[ResourceManager] Resource \"%s\" loaded in %.2f ms", info.m_path.c_str(), Timer::getEnlapsedTime(startLoad, Timer::getTick()));
+                VG_INFO("[ResourceManager] Resource \"%s\" loaded in %.2f ms", info.m_path.c_str(), Timer::getEnlapsedTime(startLoad, Timer::getTick()));
                 done = true;
             }
             else
@@ -170,7 +170,7 @@ namespace vg::engine
                 }
                 else
                 {
-                    VG_LOG(Level::Error, "[ResourceManager] Could not load resource \"%s\"", info.m_path.c_str());
+                    VG_ERROR("[ResourceManager] Could not load resource \"%s\"", info.m_path.c_str());
                     done = true;
                 }
             }

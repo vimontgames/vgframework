@@ -23,12 +23,12 @@ namespace vg::core
             ClassDesc & desc = m_classes[i];
             if (!strcmp(desc.getClassName(), _className))
             {
-                VG_LOG(Level::Info, "[Factory] Class \"%s\" is already registered", _className);
+                VG_INFO("[Factory] Class \"%s\" is already registered", _className);
                 return nullptr; 
             }
         }
 
-        VG_LOG(Level::Info, "[Factory] Register class \"%s\"", _className);
+        VG_INFO("[Factory] Register class \"%s\"", _className);
 
         ClassDesc classDesc;
         classDesc.name = _className;
@@ -51,12 +51,12 @@ namespace vg::core
             ClassDesc & desc = m_classes[i];
             if (!strcmp(desc.getClassName(), _className))
             {
-                VG_LOG(Level::Info, "[Factory] Singleton Class \"%s\" is already registered", _className);
+                VG_INFO("[Factory] Singleton Class \"%s\" is already registered", _className);
                 return nullptr;
             }
         }
 
-        VG_LOG(Level::Info, "[Factory] Register singleton class \"%s\"", _className);
+        VG_INFO("[Factory] Register singleton class \"%s\"", _className);
 
         ClassDesc classDesc;
         classDesc.name = _className;
@@ -129,10 +129,10 @@ namespace vg::core
             XMLNode * xmlRoot = xmlDoc.FirstChild();
             if (xmlRoot != nullptr)
             {
-                VG_LOG(Level::Info, "[Factory] Load \"%s\"", relativePath.c_str());
+                VG_INFO("[Factory] Load \"%s\"", relativePath.c_str());
                 if (factory->serializeFromXML(_object, xmlDoc))
                 {
-                    VG_LOG(Level::Info, "[Factory] \"%s\" loaded in %.2f ms", relativePath.c_str(), Timer::getEnlapsedTime(startLoad, Timer::getTick()));
+                    VG_INFO("[Factory] \"%s\" loaded in %.2f ms", relativePath.c_str(), Timer::getEnlapsedTime(startLoad, Timer::getTick()));
                     _object->setFile(relativePath.c_str());
                     return true;
                 }

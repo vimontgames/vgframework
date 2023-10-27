@@ -130,17 +130,17 @@ namespace vg::editor
                 //ImGui::SameLine();
                 //
                 //if (ImGui::SmallButton("Add Info"))
-                //    VG_LOG(Level::Info, "[Console] something went wrong");
+                //    VG_INFO("[Console] something went wrong");
                 //
                 //ImGui::SameLine();
                 //
                 //if (ImGui::SmallButton("Add Warning"))
-                //    VG_LOG(Level::Warning, "[Console] something went wrong");
+                //    VG_WARNING("[Console] something went wrong");
                 //
                 //ImGui::SameLine();
                 //
                 //if (ImGui::SmallButton("Add Error")) 
-                //    VG_LOG(Level::Error, "[Console] something went wrong");
+                //    VG_ERROR("[Console] something went wrong");
              
                 ImGui::Separator();
 
@@ -307,7 +307,7 @@ namespace vg::editor
     //--------------------------------------------------------------------------------------
     void ImGuiConsole::execute(const char * command_line)
     {
-        VG_LOG(Level::Info, "# %s", command_line);
+        VG_INFO("# %s", command_line);
 
         // Insert into history. First find match and delete it so it can be pushed to the back.
         // This isn't trying to be smart or optimal.
@@ -328,19 +328,19 @@ namespace vg::editor
         }
         else if (Stricmp(command_line, "HELP") == 0)
         {
-            VG_LOG(Level::Info, "Commands:");
+            VG_INFO("Commands:");
             for (int i = 0; i < m_commands.Size; i++)
-                VG_LOG(Level::Info, "- %s", m_commands[i]);
+                VG_INFO("- %s", m_commands[i]);
         }
         else if (Stricmp(command_line, "HISTORY") == 0)
         {
             int first = m_history.Size - 10;
             for (int i = first > 0 ? first : 0; i < m_history.Size; i++)
-                VG_LOG(Level::Info, "%3d: %s\n", i, m_history[i]);
+                VG_INFO("%3d: %s\n", i, m_history[i]);
         }
         else
         {
-            VG_LOG(Level::Error, "Unknown command: '%s'\n", command_line);
+            VG_ERROR("Unknown command: '%s'\n", command_line);
         }
 
         // On command input, we scroll to bottom even if AutoScroll==false
@@ -386,7 +386,7 @@ namespace vg::editor
                 if (candidates.Size == 0)
                 {
                     // No match
-                    VG_LOG(Level::Info, "No match for \"%.*s\"!\n", (int)(word_end - word_start), word_start);
+                    VG_INFO("No match for \"%.*s\"!\n", (int)(word_end - word_start), word_start);
                 }
                 else if (candidates.Size == 1)
                 {
@@ -421,9 +421,9 @@ namespace vg::editor
                     }
 
                     // List matches
-                    VG_LOG(Level::Info, "Possible matches:\n");
+                    VG_INFO("Possible matches:\n");
                     for (int i = 0; i < candidates.Size; i++)
-                        VG_LOG(Level::Info, "- %s\n", candidates[i]);
+                        VG_INFO("- %s\n", candidates[i]);
                 }
 
                 break;

@@ -44,6 +44,9 @@ namespace vg::gfx::dx12
             void                            created3d12Backbuffers      ();
             void                            destroyd3d12Backbuffers     ();
 
+			bool							isDeveloperModeEnabled		() const;
+			bool							setStablePowerState			();
+
         private:
             D3D12Device *					m_d3d12device				= nullptr;
 			ID3D12Debug *					m_d3d12debug				= nullptr;

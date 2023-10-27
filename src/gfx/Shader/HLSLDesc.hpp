@@ -86,7 +86,7 @@ namespace vg::gfx
         stageEntryPoints.push_back(_entryPoint);
         auto index = (ShaderKey::EntryPoint)(stageEntryPoints.size() - 1);
 
-        VG_LOG(Level::Info, "[Shader] \"%s\": Add %s Shader \"%s\" (%u)", getFile().c_str(), asString(_stage).c_str(), _entryPoint.c_str(), index);
+        VG_INFO("[Shader] \"%s\": Add %s Shader \"%s\" (%u)", getFile().c_str(), asString(_stage).c_str(), _entryPoint.c_str(), index);
 
         return index;
     }

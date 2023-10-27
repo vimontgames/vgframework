@@ -16,7 +16,7 @@ namespace vg::core
 		
 		IPlugin * instance = nullptr;
 
-		VG_LOG(Level::Info, "[Plugin] Loading %s", filename.c_str());
+		VG_INFO("[Plugin] Loading %s", filename.c_str());
 
 		#if VG_WINDOWS
 		HMODULE hModule = LoadLibraryExA(filename.c_str(), nullptr, 0);
@@ -36,7 +36,7 @@ namespace vg::core
 		if (nullptr != instance)
 			instance->setName(filename);
 		else
-			VG_LOG(Level::Error, "Could not create instance of Plugin \"%s\"", _name.c_str());
+			VG_ERROR("Could not create instance of Plugin \"%s\"", _name.c_str());
 
 		return instance;
 	}

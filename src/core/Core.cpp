@@ -71,7 +71,7 @@ namespace vg::core
 			{
 				tempBuffer[0] = '\0';
 			}
-            VG_LOG(Level::Error, "[Assert] %s", msg.c_str());
+            VG_ERROR("[Assert] %s", msg.c_str());
             
             string title;
             string text;

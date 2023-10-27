@@ -10,6 +10,10 @@
 #define VG_LOG(level, ...)    __noop
 #endif
 
+#define VG_INFO(...)    VG_LOG(vg::core::Level::Info, __VA_ARGS__)
+#define VG_WARNING(...) VG_LOG(vg::core::Level::Warning, __VA_ARGS__)
+#define VG_ERROR(...)   VG_LOG(vg::core::Level::Error, __VA_ARGS__)
+
 namespace vg::core
 {
     enum class Level : core::u8

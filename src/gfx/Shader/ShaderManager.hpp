@@ -113,7 +113,7 @@ namespace vg::gfx
             }
             msg += ")";
         }
-        VG_LOG(Level::Info, msg.c_str());
+        VG_INFO(msg.c_str());
 
         string warningAndErrors;
         Shader * shader = m_shaderCompiler->compile(_api, m_shaderRootPath + _file, _entryPoint, _stage, _macros, warningAndErrors);
@@ -132,9 +132,9 @@ namespace vg::gfx
         {
             m_warningCount++;
             if (!shader)
-                VG_LOG(Level::Error, "[Shader] %s", warningAndErrors.c_str());
+                VG_ERROR("[Shader] %s", warningAndErrors.c_str());
             else
-                VG_LOG(Level::Warning, "[Shader] %s", warningAndErrors.c_str());
+                VG_WARNING("[Shader] %s", warningAndErrors.c_str());
         }
 
         if (!shader)
@@ -234,7 +234,7 @@ namespace vg::gfx
     {
         if (m_updateNeeded)
         {
-            //VG_LOG(Level::Info, "[Shader] Update Shaders");
+            //VG_INFO("[Shader] Update Shaders");
 
             Device * device = Device::get();
 
@@ -260,7 +260,7 @@ namespace vg::gfx
                 if (newCRC != oldCRC)
                 {
                     if (0 != oldCRC)
-                        VG_LOG(Level::Warning, "[Shader] File \"%s\" updated (old CRC = 0x%016llu, new CRC = 0x%016llu)", file.c_str(), oldCRC, newCRC);
+                        VG_WARNING("[Shader] File \"%s\" updated (old CRC = 0x%016llu, new CRC = 0x%016llu)", file.c_str(), oldCRC, newCRC);
 
                     // delete the shaders
                     desc.reset();
@@ -274,11 +274,11 @@ namespace vg::gfx
                 }
                 else
                 {
-                    //VG_LOG(Level::Info, "[Shader] File \"%s\" is up-to-date (CRC = 0x%016llu)", file.c_str(), oldCRC);
+                    //VG_INFO("[Shader] File \"%s\" is up-to-date (CRC = 0x%016llu)", file.c_str(), oldCRC);
                 }
             }
 
-            VG_LOG(Level::Info, "[Shader] %u/%u shader(s) changed", updated, m_shaderFileDescriptors.size());
+            VG_INFO("[Shader] %u/%u shader(s) changed", updated, m_shaderFileDescriptors.size());
         }
 
         m_updateNeeded = false;
