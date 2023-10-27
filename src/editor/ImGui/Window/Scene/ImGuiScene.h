@@ -16,10 +16,7 @@ namespace vg::editor
             LoadScene,
         };
 
-        ImGuiScene(const core::string & _name, Flags _flags) :
-            ImGuiWindow(_name, _flags)
-        {
-        }
+        ImGuiScene();
 
         virtual void                    DrawGUI             () final override;
 

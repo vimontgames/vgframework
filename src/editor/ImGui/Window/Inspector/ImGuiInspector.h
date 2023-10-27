@@ -7,10 +7,7 @@ namespace vg::editor
     class ImGuiInspector : public ImGuiWindow
     {
     public:
-        ImGuiInspector(const core::string & _name, Flags _flags) :
-            ImGuiWindow(_name, _flags)
-        {
-        }
+        ImGuiInspector();
 
         virtual void DrawGUI() final override;
     };

@@ -2,14 +2,12 @@
 #include "gfx/ITexture.h"
 #include "renderer/IImGuiAdapter.h"
 #include "gfx/ITexture.h"
-//#include "renderer/View/Forward/ForwardView.h"
-//#include "gfx/FrameGraph/FrameGraph.h"
 
 namespace vg::editor
 {
     //--------------------------------------------------------------------------------------
-    ImGuiView::ImGuiView(const string & _name, Flags _flags, gfx::ViewTarget _target) :
-        ImGuiWindow(_name, _flags),
+    ImGuiView::ImGuiView(const char * _icon, const core::string & _path, const string & _name, Flags _flags, gfx::ViewTarget _target) :
+        ImGuiWindow(_icon, _path, _name, _flags),
         m_target(_target)
     {
         
@@ -70,10 +68,13 @@ namespace vg::editor
         // Using "###" to display a changing title but keep a static identifier "AnimatedTitle"
         // https://skia.googlesource.com/external/github.com/ocornut/imgui/+/refs/tags/v1.73/imgui_demo.cpp
 
-        const string & name = getName();
-        string title = name + " (" + to_string(m_size.x) + "x" + to_string(m_size.y) + ")###" + name;
+        const string & name = getIconizedName();
+        string title = name;
+        
+        //if (any(m_size > 0))
+        //    title = name + " (" + to_string(m_size.x) + "x" + to_string(m_size.y) + ")###" + name;
 
-        if (ImGui::Begin(title.c_str(), &m_isVisible, ImGuiWindowFlags_NoFocusOnAppearing))
+        if (ImGui::Begin((title).c_str(), &m_isVisible, ImGuiWindowFlags_NoFocusOnAppearing))
         {
             //if (IsWindowAppearing())
             //{

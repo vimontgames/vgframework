@@ -4,6 +4,12 @@
 namespace vg::editor
 {
     //--------------------------------------------------------------------------------------
+    ImGuiShader::ImGuiShader() :
+        ImGuiWindow(style::icon::Shaders, "", "Shaders", ImGuiWindow::StartVisible | ImGuiWindow::AddMenuEntry)
+    {
+    }
+
+    //--------------------------------------------------------------------------------------
     void ImGuiShader::DrawGUI()
     {
         IShaderManager * sm = Editor::get()->getRenderer()->GetShaderManager();

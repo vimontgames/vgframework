@@ -33,7 +33,7 @@ namespace vg::editor
             StartVisible    = 0x00000001,
             AddMenuEntry    = 0x00000002
         };
-                                                ImGuiWindow         (const core::string & _name, Flags _flags);
+                                                ImGuiWindow         (const core::string & _icon, const core::string & _path, const core::string & _name, Flags _flags);
         virtual                                 ~ImGuiWindow        () {}
 
         virtual void                            DrawGUI             () = 0;
@@ -41,8 +41,12 @@ namespace vg::editor
         bool                                    isVisible           () const;
         void                                    setVisible          (bool _visible);
 
-        const core::string &                    getName             () const;
-        Flags                                   getFlags            () const;
+        VG_INLINE const core::string &          getIcon             () const;
+        VG_INLINE const core::string &          getPath             () const;
+        VG_INLINE const core::string &          getName             () const;
+        VG_INLINE Flags                         getFlags            () const;
+
+        VG_INLINE const core::string            getIconizedName     () const;
 
         static void                             displayObject       (core::IObject * _object);
         static void                             displayProperty     (const core::IProperty * _prop, core::IObject * _object);
@@ -76,10 +80,16 @@ namespace vg::editor
 
     protected:
         static core::vector<core::IObject*>     s_selection;
+        core::string                            m_icon;
         core::string                            m_name;
+        core::string                            m_path;
         Flags                                   m_flags;
         bool                                    m_isVisible = true;
         core::uint                              m_selected = 0;
         const char *                            m_popup = nullptr;
     };
 }
+
+#if VG_ENABLE_INLINE
+#include "ImGuiWindow.inl"
+#endif

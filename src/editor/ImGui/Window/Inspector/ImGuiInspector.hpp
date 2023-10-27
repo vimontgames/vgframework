@@ -3,10 +3,16 @@
 namespace vg::editor
 {
     //--------------------------------------------------------------------------------------
+    ImGuiInspector::ImGuiInspector() :
+        ImGuiWindow(style::icon::Inspector, "", "Inspector", ImGuiWindow::StartVisible | ImGuiWindow::AddMenuEntry)
+    {
+    }
+
+    //--------------------------------------------------------------------------------------
     void ImGuiInspector::DrawGUI()
     {
         ImGui::PushID("ImGuiInspector");
-        if (ImGui::IconBegin(style::icon::Inspector, "Inspector", &m_isVisible))
+        if (ImGui::IconBegin(style::icon::Inspector, getName().c_str(), &m_isVisible))
         {
             auto * object = ImGuiWindow::getSelectedObject();
             if (nullptr != object)

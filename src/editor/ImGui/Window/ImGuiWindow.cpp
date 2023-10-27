@@ -18,6 +18,10 @@
 #include "editor/ImGui/ImGui.h"
 #include "ImGuiWindow.h"
 
+#if !VG_ENABLE_INLINE
+#include "ImGuiWindow.inl"
+#endif
+
 using namespace vg::core;
 using namespace vg::gfx;
 using namespace ImGui;
@@ -52,7 +56,9 @@ namespace vg::editor
     }
 
     //--------------------------------------------------------------------------------------
-    ImGuiWindow::ImGuiWindow(const string & _name, Flags _flags) :
+    ImGuiWindow::ImGuiWindow(const core::string & _icon, const core::string & _path, const string & _name, Flags _flags) :
+        m_icon(_icon),
+        m_path(_path),
         m_name(_name),
         m_flags(_flags),
         m_isVisible(asBool(_flags & Flags::StartVisible))
@@ -70,18 +76,7 @@ namespace vg::editor
     void ImGuiWindow::setVisible(bool _visible)
     {
         m_isVisible = _visible;
-    }
-
-    //--------------------------------------------------------------------------------------
-    const string & ImGuiWindow::getName() const
-    {
-        return m_name;
-    }
-
-    //--------------------------------------------------------------------------------------
-    ImGuiWindow::Flags ImGuiWindow::getFlags() const
-    {
-        return m_flags;
+        ImGui::SetWindowFocus(getIconizedName().c_str());
     }
 
     //--------------------------------------------------------------------------------------

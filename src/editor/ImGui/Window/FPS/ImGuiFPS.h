@@ -7,10 +7,7 @@ namespace vg::editor
     class ImGuiFPS : public ImGuiWindow
     {
     public:
-        ImGuiFPS(const core::string & _name, Flags _flags) :
-            ImGuiWindow(_name, _flags)
-        {
-        }
+        ImGuiFPS();
 
         virtual void    DrawGUI () final override;
 

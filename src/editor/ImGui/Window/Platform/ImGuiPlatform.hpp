@@ -4,6 +4,12 @@
 namespace vg::editor
 {
     //--------------------------------------------------------------------------------------
+    ImGuiPlatform::ImGuiPlatform() :
+        ImGuiWindow(style::icon::Platform, "", "Platform", ImGuiWindow::StartVisible | ImGuiWindow::AddMenuEntry)
+    {
+    }
+
+    //--------------------------------------------------------------------------------------
     void ImGuiPlatform::DrawGUI()
     {
         if (ImGui::IconBegin(style::icon::Platform, "Platform", &m_isVisible))

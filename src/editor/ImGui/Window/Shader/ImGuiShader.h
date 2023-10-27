@@ -7,10 +7,7 @@ namespace vg::editor
     class ImGuiShader : public ImGuiWindow
     {
     public:
-        ImGuiShader(const core::string & _name, Flags _flags) :
-            ImGuiWindow(_name, _flags)
-        {
-        }
+        ImGuiShader();
 
         virtual void DrawGUI() final override;
     };

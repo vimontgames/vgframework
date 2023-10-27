@@ -7,10 +7,7 @@ namespace vg::editor
     class ImGuiPlatform : public ImGuiWindow
     {
     public:
-        ImGuiPlatform(const core::string & _name, Flags _flags) :
-            ImGuiWindow(_name, _flags)
-        {
-        }
+        ImGuiPlatform();
 
         virtual void DrawGUI() final;
     };

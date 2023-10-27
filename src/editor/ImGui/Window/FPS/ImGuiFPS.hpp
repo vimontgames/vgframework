@@ -3,6 +3,12 @@
 namespace vg::editor
 {
     //--------------------------------------------------------------------------------------
+    ImGuiFPS::ImGuiFPS() :
+        ImGuiWindow(style::icon::FPS, "", "FPS", ImGuiWindow::StartVisible | ImGuiWindow::AddMenuEntry)
+    {
+    }
+
+    //--------------------------------------------------------------------------------------
     void ImGuiFPS::DrawGUI()
     {
         static const uint smoothDtTime = 1000; // 1.0s
@@ -20,7 +26,7 @@ namespace vg::editor
 
         bool captureInProgress = VG_PROFILE_CAPTURE_IN_PROGRESS();
 
-        if (ImGui::IconBegin(style::icon::FPS, "FPS", &m_isVisible))
+        if (ImGui::IconBegin(getIcon().c_str(), "FPS", &m_isVisible))
         {
             ImGui::Columns(2, "mycolumns2", false);  // 2-ways, no border
             {

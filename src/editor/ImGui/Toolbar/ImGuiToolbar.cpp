@@ -7,7 +7,7 @@ namespace vg::editor
 {
     //--------------------------------------------------------------------------------------
     ImGuiToolbar::ImGuiToolbar(const core::string & _name, Flags _flags) :
-        ImGuiWindow(_name, _flags)
+        ImGuiWindow("", "", _name, _flags)
     {
 
     }

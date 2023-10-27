@@ -7,7 +7,7 @@ namespace vg::editor
     class ImGuiConsole : public ImGuiWindow
     {
     public:
-        ImGuiConsole(const core::string & _name, Flags _flags);
+        ImGuiConsole();
         ~ImGuiConsole();
 
         virtual void DrawGUI() final override;

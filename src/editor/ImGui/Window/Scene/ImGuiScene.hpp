@@ -6,6 +6,12 @@
 namespace vg::editor
 {
     //--------------------------------------------------------------------------------------
+    ImGuiScene::ImGuiScene() :
+        ImGuiWindow(style::icon::Scene, "", "Scenes", ImGuiWindow::StartVisible | ImGuiWindow::AddMenuEntry)
+    {
+    }
+
+    //--------------------------------------------------------------------------------------
     void ImGuiScene::DrawGUI()
     {
         ImGui::PushID("ImguiScene");

@@ -5,8 +5,8 @@ namespace vg::editor
 {
 
     //--------------------------------------------------------------------------------------
-    ImGuiConsole::ImGuiConsole(const core::string & _name, Flags _flags) :
-        ImGuiWindow(_name, _flags)
+    ImGuiConsole::ImGuiConsole() :
+        ImGuiWindow(style::icon::Console, "", "Console", ImGuiWindow::StartVisible | ImGuiWindow::AddMenuEntry)
     {
         init();
     }

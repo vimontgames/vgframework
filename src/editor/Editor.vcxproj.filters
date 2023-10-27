@@ -163,6 +163,9 @@
   <ItemGroup>
     <None Include="Editor.def" />
     <None Include="Editor.inl" />
+    <None Include="ImGui\Window\ImGuiWindow.inl">
+      <Filter>ImGui\Window</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="ImGui">

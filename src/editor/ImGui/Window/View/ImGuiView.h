@@ -7,7 +7,7 @@ namespace vg::editor
     class ImGuiView : public ImGuiWindow
     {
     public:
-                            ImGuiView   (const core::string & _name, Flags _flags, gfx::ViewTarget _target);
+                            ImGuiView   (const char * _icon, const core::string & _path, const core::string & _name, Flags _flags, gfx::ViewTarget _target);
                             ~ImGuiView  ();
 
         void                DrawGUI     () final override;

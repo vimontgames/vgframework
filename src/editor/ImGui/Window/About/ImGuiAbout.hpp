@@ -3,6 +3,12 @@
 namespace vg::editor
 {
     //--------------------------------------------------------------------------------------
+    ImGuiAbout::ImGuiAbout() :
+        ImGuiWindow(style::icon::About, "", "About", ImGuiWindow::None)
+    {
+    }
+
+    //--------------------------------------------------------------------------------------
     void ImGuiAbout::DrawGUI()
     {
         if (IconBegin(style::icon::About, "About", &m_isVisible, ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_NoCollapse))

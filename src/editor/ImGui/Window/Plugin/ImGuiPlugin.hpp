@@ -4,9 +4,15 @@
 namespace vg::editor
 {
     //--------------------------------------------------------------------------------------
+    ImGuiPlugin::ImGuiPlugin(const core::string & _name, Flags _flags) :
+        ImGuiWindow(style::icon::Plugin, "", _name, _flags)
+    {
+    }
+
+    //--------------------------------------------------------------------------------------
     void ImGuiPlugin::DrawGUI()
     {
-        if (ImGui::IconBegin(style::icon::Plugin, "Plugins", &m_isVisible))
+        if (ImGui::IconBegin(getIcon().c_str(), "Plugins", &m_isVisible))
         {
             const auto & factory = Editor::get()->getFactory();
             const auto & pluginDescs = factory->getClassDescriptors(IClassDesc::Flags::Plugin);

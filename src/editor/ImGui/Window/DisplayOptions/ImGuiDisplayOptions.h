@@ -7,10 +7,7 @@ namespace vg::editor
     class ImGuiDisplayOptions: public ImGuiWindow
     {
     public:
-        ImGuiDisplayOptions(const core::string & _name, Flags _flags) :
-            ImGuiWindow(_name, _flags)
-        {
-        }
+        ImGuiDisplayOptions();
 
         virtual void DrawGUI() final override;
     };

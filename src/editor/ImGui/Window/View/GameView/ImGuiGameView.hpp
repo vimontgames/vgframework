@@ -3,8 +3,8 @@
 namespace vg::editor
 {
     //--------------------------------------------------------------------------------------
-    ImGuiGameView::ImGuiGameView(const string & _name, Flags _flags) :
-        ImGuiView(_name, _flags, gfx::ViewTarget::Game)
+    ImGuiGameView::ImGuiGameView() :
+        ImGuiView(style::icon::GameView, "View", "Game", ImGuiWindow::StartVisible | ImGuiWindow::AddMenuEntry, gfx::ViewTarget::Game)
     {
 
     }

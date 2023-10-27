@@ -7,10 +7,7 @@ namespace vg::editor
     class ImGuiResource : public ImGuiWindow
     {
     public:
-        ImGuiResource(const core::string & _name, Flags _flags) :
-            ImGuiWindow(_name, _flags)
-        {
-        }
+        ImGuiResource();
 
         virtual void DrawGUI() final;
     };

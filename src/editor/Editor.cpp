@@ -27,7 +27,7 @@ using namespace vg::editor;
 using namespace ImGui;
 
 #define VG_EDITOR_VERSION_MAJOR 0
-#define VG_EDITOR_VERSION_MINOR 12
+#define VG_EDITOR_VERSION_MINOR 13
 
 //--------------------------------------------------------------------------------------
 IEditor * CreateNew()
@@ -74,17 +74,17 @@ namespace vg::editor
         IEditor(_name, _parent)
 	{
         // Add ImGui editors
-        m_imGuiWindows.push_back(new ImGuiPlatform(IconWithText(style::icon::Platform, "Platform"), ImGuiWindow::StartVisible | ImGuiWindow::AddMenuEntry));
-        m_imGuiWindows.push_back(new ImGuiShader(IconWithText(style::icon::Shaders, "Shaders"), ImGuiWindow::StartVisible | ImGuiWindow::AddMenuEntry));
-        m_imGuiWindows.push_back(new ImGuiFPS(IconWithText(style::icon::FPS, "FPS"), ImGuiWindow::StartVisible | ImGuiWindow::AddMenuEntry));
-        m_imGuiWindows.push_back(new ImGuiResource(IconWithText(style::icon::Resource, "Resources"), ImGuiWindow::StartVisible | ImGuiWindow::AddMenuEntry));
-        m_imGuiWindows.push_back(new ImGuiScene(IconWithText(style::icon::Scene,"Scenes"), ImGuiWindow::StartVisible | ImGuiWindow::AddMenuEntry));
-        m_imGuiWindows.push_back(new ImGuiInspector(IconWithText(style::icon::Inspector, "Inspector"), ImGuiWindow::StartVisible | ImGuiWindow::AddMenuEntry));
-        m_imGuiWindows.push_back(new ImGuiDisplayOptions(IconWithText(style::icon::Display, "Display"), ImGuiWindow::StartVisible));
-        m_imGuiWindows.push_back(new ImGuiGameView(IconWithText(style::icon::GameView, "Game"), ImGuiWindow::StartVisible | ImGuiWindow::AddMenuEntry));
-        m_imGuiWindows.push_back(new ImGuiEditorView(IconWithText(style::icon::EditorView, "Editor"), ImGuiWindow::StartVisible | ImGuiWindow::AddMenuEntry));
-        m_imGuiWindows.push_back(new ImGuiConsole(IconWithText(style::icon::Console, "Console"), ImGuiWindow::StartVisible | ImGuiWindow::AddMenuEntry));
-        m_imGuiWindows.push_back(new ImGuiAbout("About", ImGuiWindow::None));
+        m_imGuiWindows.push_back(new ImGuiPlatform());
+        m_imGuiWindows.push_back(new ImGuiShader());
+        m_imGuiWindows.push_back(new ImGuiFPS());
+        m_imGuiWindows.push_back(new ImGuiResource());
+        m_imGuiWindows.push_back(new ImGuiScene());
+        m_imGuiWindows.push_back(new ImGuiInspector());
+        m_imGuiWindows.push_back(new ImGuiDisplayOptions());
+        m_imGuiWindows.push_back(new ImGuiGameView());
+        m_imGuiWindows.push_back(new ImGuiEditorView());
+        m_imGuiWindows.push_back(new ImGuiConsole());
+        m_imGuiWindows.push_back(new ImGuiAbout());
 
         // Add ImGui toolbars
         m_imGuiWindows.push_back(new ImGuiMainToolbar("Main Toolbar", ImGuiWindow::StartVisible));
@@ -226,12 +226,39 @@ namespace vg::editor
 
                 if (ImGui::BeginMenu("Window"))
                 {
-                    for (uint i = 0; i < m_imGuiWindows.count(); ++i)
+                    auto sortedWindows = m_imGuiWindows;
+
+                    sort(sortedWindows.begin(), sortedWindows.end(), [](ImGuiWindow * a, ImGuiWindow * b) 
                     {
-                        if (asBool(m_imGuiWindows[i]->getFlags() & ImGuiWindow::Flags::AddMenuEntry))
+                            if (a->getPath().empty() == b->getPath().empty())
+                                return a->getName() < b->getName();
+                            else if (a->getPath().empty())
+                                return true;
+                            else
+                                return false;
+                    }
+                    );
+
+                    for (uint i = 0; i < sortedWindows.count(); ++i)
+                    {
+                        auto window = sortedWindows[i];
+                        if (asBool(window->getFlags() & ImGuiWindow::Flags::AddMenuEntry))
                         {
-                            if (ImGui::MenuItem(m_imGuiWindows[i]->getName().c_str()))
-                                m_imGuiWindows[i]->setVisible(true);
+                            string folder = window->getPath();
+                            if (!folder.empty())
+                            {
+                                if (ImGui::BeginMenu(folder.c_str()))
+                                {
+                                    if (ImGui::MenuItem(window->getIconizedName().c_str()))
+                                        window->setVisible(true);
+                                    ImGui::EndMenu();
+                                }
+                            }
+                            else
+                            {
+                                if (ImGui::MenuItem(window->getIconizedName().c_str()))
+                                    window->setVisible(true);
+                            }
                         }
                     }
 

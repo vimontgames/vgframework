@@ -21,7 +21,7 @@ namespace vg::renderer
     //--------------------------------------------------------------------------------------
     bool DisplayOptions::registerClass(IFactory & _factory)
     {
-        if (core::IClassDesc * desc = _factory.registerClassSingletonHelper(DisplayOptions, "Display Options", IClassDesc::Flags::None))
+        if (core::IClassDesc * desc = _factory.registerClassSingletonHelper(DisplayOptions, "DisplayOptions", IClassDesc::Flags::None))
             registerProperties(*desc);
 
         return true;
