@@ -142,7 +142,7 @@ namespace vg::renderer
         }
 
         // Root sig
-        _cmdList->setRootSignature(m_debugDrawSignatureHandle);
+        _cmdList->setGraphicRootSignature(m_debugDrawSignatureHandle);
 
         // Geometry
         _cmdList->setIndexBuffer(m_unitBox->getIndexBuffer());
@@ -246,7 +246,7 @@ namespace vg::renderer
         root3D.color = float4(1, 1, 1, 1);
 
         _cmdList->setRasterizerState(rs);
-        _cmdList->setRootSignature(m_debugDrawSignatureHandle);
+        _cmdList->setGraphicRootSignature(m_debugDrawSignatureHandle);
         _cmdList->setShader(m_debugDrawShaderKey);
         _cmdList->setInlineRootConstants(&root3D, EditorRootConstants3DCount);
         _cmdList->setPrimitiveTopology(PrimitiveTopology::LineList);

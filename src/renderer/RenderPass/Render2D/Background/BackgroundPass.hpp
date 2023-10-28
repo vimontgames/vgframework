@@ -71,7 +71,7 @@ namespace vg::renderer
         BlendState bs(BlendFactor::One, BlendFactor::Zero, BlendOp::Add);
         DepthStencilState ds(false);
 
-        _cmdList->setRootSignature(m_backgroundRootSignatureHandle);
+        _cmdList->setGraphicRootSignature(m_backgroundRootSignatureHandle);
         _cmdList->setShader(m_backgroundShaderKey);
         _cmdList->setPrimitiveTopology(PrimitiveTopology::TriangleStrip);
         _cmdList->setRasterizerState(rs);

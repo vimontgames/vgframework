@@ -277,7 +277,7 @@ namespace vg::gfx::dx12
     //--------------------------------------------------------------------------------------
     void CommandList::bindRootConstants(core::uint(&_constants)[max_root_constants])
     {
-        const auto & rootConstantDesc = m_currentRootSignature->getRootSignatureDesc().getRootConstants();
+        const auto & rootConstantDesc = m_currentGraphicRootSignature->getRootSignatureDesc().getRootConstants();
         for (uint i = 0; i < rootConstantDesc.size(); ++i)
         {
             const RootSignatureDesc::PushConstantParams & param = rootConstantDesc[i];

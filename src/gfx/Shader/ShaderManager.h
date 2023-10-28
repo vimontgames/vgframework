@@ -1,6 +1,7 @@
 #pragma once
 
 #include "ShaderKey.h"
+#include "ComputeShaderKey.h"
 #include "gfx/IShaderManager.h"
 
 
@@ -27,6 +28,7 @@ namespace vg::gfx
 
         void registerHLSL(const HLSLDesc & _hlslDesc);
         bool initShaderKey(ShaderKey & _key, const core::string & _file, const core::string & _technique);
+        bool initComputeShaderKey(ComputeShaderKey & _key, const core::string & _file, const core::string & _technique);
 
         HLSLDesc * getHLSLDescriptor(ShaderKey::File _file);
 

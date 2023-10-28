@@ -11,19 +11,21 @@ namespace vg::gfx
     public:
         struct Technique
         {
-            core::string     name;
+            core::string            name;
 
-            ShaderKey::VS    vs = (ShaderKey::VS)-1;
-            ShaderKey::HS    hs = (ShaderKey::HS)-1;
-            ShaderKey::DS    ds = (ShaderKey::DS)-1;
-            ShaderKey::GS    gs = (ShaderKey::GS)-1;
-            ShaderKey::PS    ps = (ShaderKey::PS)-1;
+            ShaderKey::VS           vs = (ShaderKey::VS)-1;
+            ShaderKey::HS           hs = (ShaderKey::HS)-1;
+            ShaderKey::DS           ds = (ShaderKey::DS)-1;
+            ShaderKey::GS           gs = (ShaderKey::GS)-1;
+            ShaderKey::PS           ps = (ShaderKey::PS)-1;
 
-            ShaderKey::Flags flags = 0x0000;
+            ComputeShaderKey::CS    cs = (ComputeShaderKey::CS)-1;
+
+            ShaderKey::Flags        flags = 0x0000;
 
             bool operator == (const Technique & _other) const
             {
-                return vs == _other.vs && hs == _other.hs && ds == _other.ds && gs == _other.gs && ps == _other.ps && !name.compare(_other.name);
+                return vs == _other.vs && hs == _other.hs && ds == _other.ds && gs == _other.gs && ps == _other.ps && _other.cs == cs && !name.compare(_other.name);
             }
         };
 

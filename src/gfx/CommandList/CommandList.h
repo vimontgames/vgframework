@@ -37,7 +37,8 @@ namespace vg::gfx
             const SubPass *         getSubPass              () const;
 			const core::uint		getSubPassIndex	        () const;
 
-            void                    setRootSignature        (const RootSignatureHandle & _rsHandle);
+            void                    setGraphicRootSignature (const RootSignatureHandle & _rsHandle);
+
             void                    setRasterizerState      (const gfx::RasterizerState & _rs);
             void                    setDepthStencilState    (const gfx::DepthStencilState & _ds);
             void                    setBlendState           (const gfx::BlendState & _bs);
@@ -81,7 +82,7 @@ namespace vg::gfx
                 Buffer *                indexBuffer = nullptr;
             };
             StateCache                  m_stateCache;
-            RootSignature *             m_currentRootSignature = nullptr;
+            RootSignature *             m_currentGraphicRootSignature = nullptr;
 
             core::unordered_map<gfx::GraphicPipelineStateKey, gfx::GraphicPipelineState*, gfx::GraphicPipelineStateKey::hash> m_graphicPipelineStateHash; // PSO should not be in command list !
 		};
@@ -97,22 +98,22 @@ namespace vg::gfx
 		using super = VG_GFXAPI::CommandList;
 
 	public:
-        const char *                getClassName            () const final { return "CommandList"; }
+        const char *                getClassName                () const final { return "CommandList"; }
 
-		                            CommandList             (gfx::CommandListType _type, gfx::CommandPool * _cmdPool, core::uint _frame, core::uint _index);
-		                            ~CommandList            ();
+		                            CommandList                 (gfx::CommandListType _type, gfx::CommandPool * _cmdPool, core::uint _frame, core::uint _index);
+		                            ~CommandList                ();
 
         void                        reset();
         void                        close();
 
-        bool                        flush();
+        bool                        applyGraphicPipelineState   ();
 
-        void                        draw                    (core::uint _vertexCount, core::uint _startOffset = 0);
-        void                        drawIndexed             (core::uint _indexCount, core::uint _startIndex = 0, core::uint _baseVertex = 0);
+        void                        draw                        (core::uint _vertexCount, core::uint _startOffset = 0);
+        void                        drawIndexed                 (core::uint _indexCount, core::uint _startIndex = 0, core::uint _baseVertex = 0);
 
-        void                        resetShaders            (ShaderKey::File _file);
+        void                        resetShaders                (ShaderKey::File _file);
 
     private:
-        bool                        getGraphicPipelineState (const GraphicPipelineStateKey & _key, GraphicPipelineState *& _graphicPipelineState);
+        bool                        getGraphicPipelineState     (const GraphicPipelineStateKey & _key, GraphicPipelineState *& _graphicPipelineState);
 	};
 }

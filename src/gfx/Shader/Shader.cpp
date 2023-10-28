@@ -12,6 +12,7 @@ using namespace vg::core;
 #include "ShaderManager.hpp"
 #include "HLSLDesc.hpp"
 #include "ShaderKey.hpp"
+#include "ComputeShaderKey.hpp"
 
 #include VG_GFXAPI_IMPL(Shader)
 

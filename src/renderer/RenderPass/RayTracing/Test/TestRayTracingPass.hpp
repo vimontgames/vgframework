@@ -65,7 +65,7 @@ namespace vg::renderer
     //--------------------------------------------------------------------------------------
     void TestRayTracingPass::draw(const RenderPassContext & _renderPassContext, CommandList * _cmdList) const
     {
-        _cmdList->setRootSignature(m_testRayTracingGlobalRootSignatureHandle);
+        //_cmdList->setRayTracingRootSignature(m_testRayTracingGlobalRootSignatureHandle);
 
         //RasterizerState rs(FillMode::Solid, CullMode::None);
         //BlendState bs(BlendFactor::One, BlendFactor::Zero, BlendOp::Add);

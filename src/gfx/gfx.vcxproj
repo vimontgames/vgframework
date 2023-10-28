@@ -61,6 +61,7 @@
     <ClInclude Include="IShaderManager.h" />
     <ClInclude Include="ITexture.h" />
     <ClInclude Include="IView.h" />
+    <ClInclude Include="PipelineState\Compute\ComputePipelineStateKey.h" />
     <ClInclude Include="PipelineState\Graphic\BlendState.h" />
     <ClInclude Include="PipelineState\Graphic\BlendState.hpp" />
     <ClInclude Include="PipelineState\Graphic\DepthStencilState.h" />
@@ -178,6 +179,8 @@
     <ClInclude Include="RootSignature\RootSignature_consts.h" />
     <ClInclude Include="RootSignature\vulkan\RootSignature_vulkan.h" />
     <ClInclude Include="RootSignature\vulkan\RootSignature_vulkan.hpp" />
+    <ClInclude Include="Shader\ComputeShaderKey.h" />
+    <ClInclude Include="Shader\ComputeShaderKey.hpp" />
     <ClInclude Include="Shader\dx12\Shader_dx12.h" />
     <ClInclude Include="Shader\dx12\Shader_dx12.hpp" />
     <ClInclude Include="Shader\dxc\ShaderCompiler_dxc.h" />

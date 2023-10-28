@@ -81,7 +81,41 @@ namespace vg::gfx
                     }
                 }
 
-                VG_ASSERT(false, "Technique \"%s\" not found in file \"%s\"", _technique.c_str(), _file.c_str());
+                VG_ASSERT(false, "Graphic Technique \"%s\" not found in file \"%s\"", _technique.c_str(), _file.c_str());
+                return false;
+            }
+        }
+
+        VG_ASSERT("File \"%s\" not found", _file.c_str());
+        return false;
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool ShaderManager::initComputeShaderKey(ComputeShaderKey & _key, const core::string & _file, const core::string & _technique)
+    {
+        for (uint i = 0; i < m_shaderFileDescriptors.size(); ++i)
+        {
+            const HLSLDesc & desc = m_shaderFileDescriptors[i];
+
+            if (!_file.compare(desc.getFile()))
+            {
+                _key.file = i;
+
+                const auto & techniques = desc.getTechniques();
+                for (uint j = 0; j < techniques.size(); ++j)
+                {
+                    const auto & technique = techniques[j];
+
+                    if (!_technique.compare(technique.name))
+                    {
+                        _key.cs = technique.cs;
+                        _key.flags = technique.flags;
+
+                        return true;
+                    }
+                }
+
+                VG_ASSERT(false, "Compute Technique \"%s\" not found in file \"%s\"", _technique.c_str(), _file.c_str());
                 return false;
             }
         }

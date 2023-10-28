@@ -152,7 +152,7 @@ namespace vg::renderer
         BlendState bs(BlendFactor::One, BlendFactor::Zero, BlendOp::Add);
         DepthStencilState ds(true, true, ComparisonFunc::LessEqual);
 
-        _cmdList->setRootSignature(m_rootSignature);
+        _cmdList->setGraphicRootSignature(m_rootSignature);
         _cmdList->setPrimitiveTopology(PrimitiveTopology::TriangleList);
         _cmdList->setBlendState(bs);
         _cmdList->setDepthStencilState(ds);        

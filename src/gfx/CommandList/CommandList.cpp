@@ -135,13 +135,13 @@ namespace vg::gfx
 		}
 
         //--------------------------------------------------------------------------------------
-        void CommandList::setRootSignature(const RootSignatureHandle & _rsHandle)
+        void CommandList::setGraphicRootSignature(const RootSignatureHandle & _rsHandle)
         {
             if (_rsHandle != m_stateCache.graphicPipelineKey.m_rootSignature)
             {
                 m_stateCache.dirtyFlags |= StateCache::DirtyFlags::RootSignature;
                 m_stateCache.graphicPipelineKey.m_rootSignature = _rsHandle;
-                m_currentRootSignature = gfx::Device::get()->getRootSignature(_rsHandle);
+                m_currentGraphicRootSignature = gfx::Device::get()->getRootSignature(_rsHandle);
             }
         }
 
@@ -319,7 +319,7 @@ namespace vg::gfx
     }
 
     //--------------------------------------------------------------------------------------
-    bool CommandList::flush()
+    bool CommandList::applyGraphicPipelineState()
     {
         if (asBool(m_stateCache.dirtyFlags))
         {
@@ -363,14 +363,14 @@ namespace vg::gfx
     //--------------------------------------------------------------------------------------
     void CommandList::draw(uint _vertexCount, uint _startOffset)
     {
-        if (flush())
+        if (applyGraphicPipelineState())
             super::draw(_vertexCount, _startOffset);
     }
 
     //--------------------------------------------------------------------------------------
     void CommandList::drawIndexed(uint _indexCount, uint _startIndex, uint _baseVertex)
     {
-        if (flush())
+        if (applyGraphicPipelineState())
             super::drawIndexed(_indexCount, _startIndex, _baseVertex);
     }
 }

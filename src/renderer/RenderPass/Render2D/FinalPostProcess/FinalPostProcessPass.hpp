@@ -44,7 +44,7 @@ namespace vg::renderer
         BlendState bs(BlendFactor::One, BlendFactor::Zero, BlendOp::Add);
         DepthStencilState ds(false);
 
-        _cmdList->setRootSignature(m_postProcessRootSignature);
+        _cmdList->setGraphicRootSignature(m_postProcessRootSignature);
         _cmdList->setShader(m_postProcessShaderKey);
         _cmdList->setPrimitiveTopology(PrimitiveTopology::TriangleStrip);
         _cmdList->setRasterizerState(rs);

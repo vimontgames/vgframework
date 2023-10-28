@@ -522,6 +522,15 @@
     <ClInclude Include="PipelineState\Graphic\vulkan\SamplerState_vulkan.hpp">
       <Filter>PipelineState\Graphic\vulkan</Filter>
     </ClInclude>
+    <ClInclude Include="PipelineState\Compute\ComputePipelineStateKey.h">
+      <Filter>PipelineState\Compute</Filter>
+    </ClInclude>
+    <ClInclude Include="Shader\ComputeShaderKey.h">
+      <Filter>Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="Shader\ComputeShaderKey.hpp">
+      <Filter>Shader</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Device">
