@@ -33,5 +33,5 @@ namespace vg::gfx
 }
 
 #if VG_ENABLE_INLINE
-#include "GraphicPipelineState_vulkan.inl"
+#include "ComputePipelineState_vulkan.inl"
 #endif
