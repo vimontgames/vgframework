@@ -22,7 +22,7 @@ namespace vg::gfx::vulkan
 		void								beginSubPass                (core::uint _subPassIndex, gfx::SubPass * _subPass);
 		void								endSubPass                  ();
 
-        void                                bindRootSignature           (gfx::RootSignature * _rootSig);
+        void                                bindGraphicRootSignature    (gfx::RootSignature * _rootSig);
         void                                bindGraphicPipelineState    (gfx::GraphicPipelineState * _pso);
         void                                bindPrimitiveTopology       (PrimitiveTopology _topology);
         void                                bindViewport                (const core::uint4 & _viewport);

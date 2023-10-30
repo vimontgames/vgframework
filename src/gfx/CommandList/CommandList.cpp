@@ -414,7 +414,7 @@ namespace vg::gfx
             auto * device = Device::get();
 
             if (asBool(GraphicStateCache::DirtyFlags::RootSignature & m_graphicStateCache.m_dirtyFlags))
-                super::bindRootSignature(device->getRootSignature(m_graphicStateCache.m_graphicPipelineKey.m_rootSignature));
+                super::bindGraphicRootSignature(device->getRootSignature(m_graphicStateCache.m_graphicPipelineKey.m_rootSignature));
 
             if (asBool(GraphicStateCache::DirtyFlags::IndexBuffer & m_graphicStateCache.m_dirtyFlags))
                 super::bindIndexBuffer(m_graphicStateCache.m_indexBuffer);

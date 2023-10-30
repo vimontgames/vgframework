@@ -229,7 +229,7 @@ namespace vg::gfx::dx12
     }
 
     //--------------------------------------------------------------------------------------
-    void CommandList::bindRootSignature(gfx::RootSignature * _rootSig)
+    void CommandList::bindGraphicRootSignature(gfx::RootSignature * _rootSig)
     {
         auto * d3d12rs = _rootSig->getd3d12RootSignature();
         m_d3d12graphicsCmdList->SetGraphicsRootSignature(d3d12rs);

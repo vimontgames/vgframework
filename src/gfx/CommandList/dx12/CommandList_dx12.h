@@ -22,7 +22,7 @@ namespace vg::gfx::dx12
 		void								endSubPass                  ();
 
 		// Graphic
-        void                                bindRootSignature           (gfx::RootSignature * _rootSig);
+        void                                bindGraphicRootSignature	(gfx::RootSignature * _rootSig);
         void                                bindGraphicPipelineState    (gfx::GraphicPipelineState * _pso);
         void                                bindPrimitiveTopology       (PrimitiveTopology _topology);
         void                                bindViewport                (const core::uint4 & _viewport);

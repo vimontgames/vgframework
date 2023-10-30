@@ -70,7 +70,7 @@ namespace vg::gfx::vulkan
 	}
 
     //--------------------------------------------------------------------------------------
-    void CommandList::bindRootSignature(gfx::RootSignature * _rootSig)
+    void CommandList::bindGraphicRootSignature(gfx::RootSignature * _rootSig)
     {
         auto * device = gfx::Device::get();
         auto * sig = device->getRootSignature(m_graphicStateCache.m_graphicPipelineKey.m_rootSignature);
