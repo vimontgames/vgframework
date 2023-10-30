@@ -15,6 +15,7 @@ namespace vg::gfx::vulkan
 		void								reset                       ();
 		void								close                       ();
 
+        // Graphic
 		void								beginRenderPass             (gfx::RenderPass * _renderPass);
 		void								endRenderPass               ();
 
@@ -26,14 +27,22 @@ namespace vg::gfx::vulkan
         void                                bindPrimitiveTopology       (PrimitiveTopology _topology);
         void                                bindViewport                (const core::uint4 & _viewport);
         void                                bindScissor                 (const core::uint4 & _scissor);
-        void                                bindRootConstants           (core::uint(&_constants)[max_root_constants]);
+        void                                bindGraphicRootConstants           (core::uint(&_constants)[max_root_constants]);
         void                                bindIndexBuffer             (gfx::Buffer * _ib);
 
         void								clear                       (const core::float4 & _color);
 
         void                                draw                        (core::uint _vertexCount, core::uint _startOffset);
         void                                drawIndexed                 (core::uint _indexCount, core::uint _startIndex, core::uint _baseVertex);
+        
+        // Compute
+        void                                bindComputeRootSignature	(gfx::RootSignature * _rootSig);
+        void                                bindComputePipelineState	(gfx::ComputePipelineState * _pso);
+		void                                bindComputeRootConstants	(core::uint(&_constants)[max_root_constants]);
 
+        void                                dispatch                    (core::uint3 _threadGroupCount);
+
+        // Copy
         void                                copyBuffer                  (gfx::Buffer * _dst, gfx::Buffer * _src, core::uint_ptr _srcOffset);
         void                                copyTexture                 (gfx::Texture * _dst, gfx::Buffer * _src, core::uint_ptr _srcOffset);
 

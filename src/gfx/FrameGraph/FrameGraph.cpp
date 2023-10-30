@@ -53,6 +53,7 @@ namespace vg::gfx
 	void FrameGraph::Resource::setReadAtPass(const UserPass * _subPass)
 	{
 		m_read.push_back(_subPass);
+        m_readWrite.push_back(PassRWAccess(_subPass, RWAccess::Read));
 	}
 
 	//--------------------------------------------------------------------------------------
@@ -65,13 +66,28 @@ namespace vg::gfx
 	void FrameGraph::Resource::setWriteAtPass(const UserPass * _subPass)
 	{
 		m_write.push_back(_subPass);
+        m_readWrite.push_back(PassRWAccess(_subPass, RWAccess::Write));
 	}
+
+    //--------------------------------------------------------------------------------------
+    void FrameGraph::Resource::setReadWriteAtPass(const UserPass * _subPass)
+    {
+        m_read.push_back(_subPass);
+        m_write.push_back(_subPass);
+        m_readWrite.push_back(PassRWAccess(_subPass, RWAccess::Read | RWAccess::Write));
+    }
 
 	//--------------------------------------------------------------------------------------
 	const core::vector<const UserPass*> & FrameGraph::Resource::getWriteAtPass() const
 	{
 		return m_write;
 	}
+
+    //--------------------------------------------------------------------------------------
+    const core::vector<FrameGraph::Resource::PassRWAccess> & FrameGraph::Resource::getReadWriteAccess() const
+    {
+        return m_readWrite;
+    }
 
     //--------------------------------------------------------------------------------------
     void FrameGraph::Resource::setCurrentState(ResourceState _state)
@@ -563,7 +579,7 @@ namespace vg::gfx
                     depthStencilAttachment = res;
             }
 
-            RenderPass * renderPass = new RenderPass(renderPassKey);
+            RenderPass * renderPass = new RenderPass(userPass->getUserPassType(), renderPassKey);
             renderPass->m_colorAttachments = std::move(colorAttachments); // transient resources will be lazy allocated before the actuel RenderPass begins
             renderPass->m_depthStencilAttachment = depthStencilAttachment;
 
@@ -580,17 +596,23 @@ namespace vg::gfx
     //--------------------------------------------------------------------------------------
     Texture * FrameGraph::createRenderTargetFromPool(const FrameGraph::TextureResourceDesc & _textureResourceDesc)
     {
-        return createTextureFromPool(_textureResourceDesc, false);
+        return createTextureFromPool(_textureResourceDesc, false, false);
     }
 
     //--------------------------------------------------------------------------------------
     Texture * FrameGraph::createDepthStencilFromPool(const FrameGraph::TextureResourceDesc & _textureResourceDesc)
     {
-        return createTextureFromPool(_textureResourceDesc, true);
+        return createTextureFromPool(_textureResourceDesc, true, false);
     }
 
     //--------------------------------------------------------------------------------------
-    Texture * FrameGraph::createTextureFromPool(const FrameGraph::TextureResourceDesc & _textureResourceDesc, bool _depthStencil)
+    Texture * FrameGraph::createRWTextureFromPool(const TextureResourceDesc & _textureResourceDesc)
+    {
+        return createTextureFromPool(_textureResourceDesc, false, true);
+    }
+
+    //--------------------------------------------------------------------------------------
+    Texture * FrameGraph::createTextureFromPool(const FrameGraph::TextureResourceDesc & _textureResourceDesc, bool _depthStencil, bool _uav)
     {
         for (uint i = 0; i < m_sharedTextures.size(); ++i)
         {
@@ -614,11 +636,20 @@ namespace vg::gfx
                     desc.width = _textureResourceDesc.width;
                     desc.height = _textureResourceDesc.height;
                     desc.flags = _depthStencil ? TextureFlags::DepthStencil : TextureFlags::RenderTarget;
-                    desc.resource.m_bindFlags = BindFlags::ShaderResource;
+                    
+                    if (_uav)
+                        desc.resource.m_bindFlags = BindFlags::ShaderResource | BindFlags::UnorderedAccess; // What about "UAV-only" textures?
+                    else
+                        desc.resource.m_bindFlags = BindFlags::ShaderResource;
+
                     desc.resource.m_cpuAccessFlags = CPUAccessFlags::None;
                     desc.resource.m_usage = Usage::Default;
 
-        string name = "Transient#" + to_string(m_sharedTextures.size());
+        string name = "Temp#" + to_string(m_sharedTextures.size());
+        if (asBool(BindFlags::ShaderResource & desc.resource.m_bindFlags))
+            name += "_SRV";
+        if (asBool(BindFlags::UnorderedAccess & desc.resource.m_bindFlags))
+            name += "_UAV";
         
         SharedTexture sharedTex;
                       sharedTex.desc = _textureResourceDesc;
@@ -682,6 +713,7 @@ namespace vg::gfx
 
                 const UserPass * userPass = userPassInfo.m_userPass;
                 auto & renderTargets = userPass->getRenderTargets();
+                auto & rwTextures = userPass->getRWTextures();
                 auto & texturesRead = userPass->getTexturesRead();
 
                 for (uint i = 0; i < renderTargets.size(); ++i)
@@ -692,9 +724,25 @@ namespace vg::gfx
                     if (textureResourceDesc.transient)
                     {
                         const auto & writes = res->getWriteAtPass();
-                        if (writes[0] == userPass)
+                        if (writes.size() > 0 && writes[0] == userPass)
                         {
                             Texture * tex = createRenderTargetFromPool(textureResourceDesc);
+                            res->setTexture(tex);
+                        }
+                    }
+                }
+
+                for (uint i = 0; i < rwTextures.size(); ++i)
+                {
+                    TextureResource * res = rwTextures[i];
+                    const TextureResourceDesc & textureResourceDesc = res->getTextureResourceDesc();
+
+                    if (textureResourceDesc.transient)
+                    {
+                        const auto & writes = res->getWriteAtPass();
+                        if (writes.size() > 0 && writes[0] == userPass)
+                        {
+                            Texture * tex = createRWTextureFromPool(textureResourceDesc);
                             res->setTexture(tex);
                         }
                     }
@@ -728,6 +776,7 @@ namespace vg::gfx
 
                 cmdList->beginSubPass(i, subPass);
 				{
+                    VG_ASSERT(isEnumValue(userPassInfo.m_userPass->getUserPassType()), "UserPass \"%s\" has invalid RenderPassType 0x%02X. Valid values are Graphic (0), Compute (1), and Raytrace (2).", userPassInfo.m_userPass->getName().c_str(), userPassInfo.m_userPass->getUserPassType());
                     userPassInfo.m_userPass->draw(userPassInfo.m_renderContext, cmdList);
 				}
                 cmdList->endSubPass();
@@ -738,9 +787,7 @@ namespace vg::gfx
             for (uint i = 0; i < subPasses.size(); ++i)
             {
                 SubPass * subPass = subPasses[i];
-                const UserPass * userPass = subPass->getUserPassesInfos()[0].m_userPass;
-
-                auto & renderTargets = userPass->getRenderTargets();
+                const UserPass * userPass = subPass->getUserPassesInfos()[0].m_userPass;                
                 auto & texturesRead = userPass->getTexturesRead();
 
                 for (uint i = 0; i < texturesRead.size(); ++i)
@@ -750,25 +797,33 @@ namespace vg::gfx
 
                     if (textureResourceDesc.transient)
                     {
-                        const auto & reads = res->getReadAtPass();
-                        const auto & writes = res->getWriteAtPass();
+                        //const auto & reads = res->getReadAtPass();
+                        //const auto & writes = res->getWriteAtPass();
+                        //
+                        //if (reads.size() > 0 && reads[reads.size() - 1] == userPass)
+                        //{
+                        //    Texture * tex = res->getTexture();
+                        //    releaseTextureFromPool(tex);
+                        //    res->resetTexture();
+                        //}
+                        //else if (writes.size() > 0 && writes[writes.size() - 1] == userPass)
+                        //{
+                        //    Texture * tex = res->getTexture();
+                        //    releaseTextureFromPool(tex);
+                        //    res->resetTexture();
+                        //}
 
-                        if (reads.size() > 0 && reads[reads.size() - 1] == userPass)
+                        const auto & readWrites = res->getReadWriteAccess();
+
+                        if (readWrites.size() > 0 && readWrites[readWrites.size() - 1].m_userPass == userPass)
                         {
-                            Texture * tex = res->getTexture();
-                            releaseTextureFromPool(tex);
-                            res->resetTexture();
-                        }
-                        else if (writes.size() > 0 && writes[writes.size() - 1] == userPass)
-                        {
+                            // Last read or writes access
                             Texture * tex = res->getTexture();
                             releaseTextureFromPool(tex);
                             res->resetTexture();
                         }
                     }
                 }
-
-                // TODO: render targets that would never get read ?
 
                 TextureResource * depthStencil = userPass->getDepthStencil();
                 if (depthStencil)
@@ -795,7 +850,44 @@ namespace vg::gfx
                         }
                     }
                 }
-            }
+
+                auto & rwTextures = userPass->getRWTextures();
+
+                for (uint i = 0; i < rwTextures.size(); ++i)
+                {
+                    TextureResource * res = rwTextures[i];
+                    const TextureResourceDesc & textureResourceDesc = res->getTextureResourceDesc();
+
+                    if (textureResourceDesc.transient)
+                    {
+                        //const auto & reads = res->getReadAtPass();
+                        //const auto & writes = res->getWriteAtPass();
+                        //
+                        //if (reads.size() > 0 && reads[reads.size() - 1] == userPass)
+                        //{
+                        //    Texture * tex = res->getTexture();
+                        //    releaseTextureFromPool(tex);
+                        //    res->resetTexture();
+                        //}
+                        //else if (writes.size() > 0 && writes[writes.size() - 1] == userPass)
+                        //{
+                        //    Texture * tex = res->getTexture();
+                        //    releaseTextureFromPool(tex);
+                        //    res->resetTexture();
+                        //}
+
+                        const auto & readWrites = res->getReadWriteAccess();
+
+                        if (readWrites.size() > 0 && readWrites[readWrites.size() - 1].m_userPass == userPass)
+                        {
+                            // Last read or writes access
+                            Texture * tex = res->getTexture();
+                            releaseTextureFromPool(tex);
+                            res->resetTexture();
+                        }
+                    }
+                }
+            }            
 		}
 
         if (NULL != currentView)

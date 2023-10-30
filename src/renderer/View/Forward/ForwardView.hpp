@@ -1,9 +1,10 @@
 #include "ForwardView.h"
 
 #include "renderer/RenderPass/Render2D/Background/BackgroundPass.h"
-#include "renderer/RenderPass/Render2D/FinalPostProcess/FinalPostProcessPass.h"
 #include "renderer/RenderPass/RenderObjects/Forward/ForwardPass.h"
 #include "renderer/RenderPass/RayTracing/Test/TestRayTracingPass.h"
+#include "renderer/RenderPass/Compute/ComputePostProcess/ComputePostProcessPass.h"
+#include "renderer/RenderPass/Render2D/FinalPostProcess/FinalPostProcessPass.h"
 
 #include "renderer/Options/DisplayOptions.h"
 
@@ -18,9 +19,9 @@ namespace vg::renderer
     {
         m_backgroundPass = new BackgroundPass();
         m_forwardPass = new ForwardPass();
-        m_postProcessPass = new FinalPostProcessPass();
-
         m_testRayTracingPass = new TestRayTracingPass();
+        m_computePostProcessPass = new ComputePostProcessPass();
+        m_postProcessPass = new FinalPostProcessPass();        
     }
 
     //--------------------------------------------------------------------------------------
@@ -28,14 +29,13 @@ namespace vg::renderer
     {
         VG_SAFE_RELEASE(m_backgroundPass);
         VG_SAFE_RELEASE(m_forwardPass);
-        VG_SAFE_RELEASE(m_postProcessPass);
-
         VG_SAFE_RELEASE(m_testRayTracingPass);
+        VG_SAFE_RELEASE(m_computePostProcessPass);
+        VG_SAFE_RELEASE(m_postProcessPass);        
     }
 
-
     //--------------------------------------------------------------------------------------
-    void ForwardView::AddToFrameGraph(FrameGraph & _frameGraph)
+    void ForwardView::addToFrameGraph(FrameGraph & _frameGraph)
     {
         gfx::RenderPassContext rc;
                               rc.m_view = this;
@@ -53,6 +53,10 @@ namespace vg::renderer
         {
             _frameGraph.addUserPass(rc, m_backgroundPass, "BackgroundPass");
             _frameGraph.addUserPass(rc, m_forwardPass, "ForwardPass");
+
+            if (options->isComputePostProcessEnabled())
+                _frameGraph.addUserPass(rc, m_computePostProcessPass, "ComputePostProcessPass");
+
             _frameGraph.addUserPass(rc, m_postProcessPass, "PostProcessPass");
         }
     }

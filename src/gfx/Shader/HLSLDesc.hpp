@@ -42,6 +42,12 @@ namespace vg::gfx
     }
 
     //--------------------------------------------------------------------------------------
+    ComputeShaderKey::CS HLSLDesc::addCS(const core::string & _csEntryPoint)
+    {
+        return (ComputeShaderKey::CS)addShader(ShaderStage::Compute, _csEntryPoint);
+    }
+
+    //--------------------------------------------------------------------------------------
     Shader * HLSLDesc::getVS(API _api, ShaderKey::VS _vs, ShaderKey::Flags _flags)
     {
         return getShader(_api, ShaderStage::Vertex, _vs, _flags);

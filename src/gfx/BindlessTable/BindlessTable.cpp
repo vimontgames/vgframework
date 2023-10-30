@@ -84,6 +84,31 @@ namespace vg::gfx
         {
             freeBindlessHandle(_handle, m_bufferSrvIndexPool, m_bufferSrv, BINDLESS_BUFFER_SRV_START, BINDLESS_BUFFER_SRV_INVALID);
         }
+
+        //--------------------------------------------------------------------------------------
+        BindlessTextureUAVHandle BindlessTable::allocBindlessRWTextureHandle(const gfx::Texture * _texture, ReservedSlot _reservedSlot)
+        {
+            return allocBindlessHandle<BindlessTextureUAVHandle>(_texture, _reservedSlot, m_textureUAVIndexPool, m_textureUAV, BINDLESS_TEXTURE_UAV_START, BINDLESS_TEXTURE_UAV_INVALID);
+        }
+
+        //--------------------------------------------------------------------------------------
+        void BindlessTable::freeBindlessRWTextureHandle(BindlessTextureUAVHandle & _handle)
+        {
+            VG_ASSERT(_handle.isValid(), "0x%04X is not a valid RWTexture handle", (u16)_handle);
+            freeBindlessHandle(_handle, m_textureUAVIndexPool, m_textureUAV, BINDLESS_TEXTURE_UAV_START, BINDLESS_TEXTURE_UAV_INVALID);
+        }
+
+        //--------------------------------------------------------------------------------------
+        BindlessBufferUAVHandle BindlessTable::allocBindlessRWBufferHandle(const gfx::Buffer * _buffer, ReservedSlot _reservedSlot)
+        {
+            return allocBindlessHandle<BindlessBufferUAVHandle>(_buffer, _reservedSlot, m_bufferUAVIndexPool, m_bufferUAV, BINDLESS_BUFFER_UAV_START, BINDLESS_BUFFER_UAV_INVALID);
+        }
+
+        //--------------------------------------------------------------------------------------
+        void BindlessTable::freeBindlessRWBufferHandle(BindlessBufferUAVHandle & _handle)
+        {
+            freeBindlessHandle(_handle, m_bufferUAVIndexPool, m_bufferUAV, BINDLESS_BUFFER_UAV_START, BINDLESS_BUFFER_UAV_INVALID);
+        }
     }
 
     //--------------------------------------------------------------------------------------
@@ -104,8 +129,8 @@ namespace vg::gfx
     {
         auto * device = gfx::Device::get();
         
-        const uint w = 32;
-        const uint h = 32;
+        const uint w = 16;
+        const uint h = 16;
         TextureDesc texDesc = TextureDesc(Usage::Default, BindFlags::ShaderResource, CPUAccessFlags::None, TextureType::Texture2D, PixelFormat::R8G8B8A8_unorm, TextureFlags::None, w, h);
         u32 texInitData[h][w];
         for (u32 j = 0; j < h; ++j)
@@ -113,7 +138,7 @@ namespace vg::gfx
                 texInitData[j][i] = ((i>>3) & 1) != ((j>>3) & 1) ? 0xFFFF00FF : 0x7F7F007F;
         
         // create default texture at slot 'invalidBindlessTextureHandle'
-        m_defaultTexture = device->createTexture(texDesc, "testTex", (void*)texInitData, ReservedSlot(BINDLESS_TEXTURE_SRV_INVALID));
+        m_defaultTexture = device->createTexture(texDesc, "DefaultTex2D", (void*)texInitData, ReservedSlot(BINDLESS_TEXTURE_SRV_INVALID));
         VG_ASSERT(m_defaultTexture->getBindlessSRVHandle() == BINDLESS_TEXTURE_SRV_INVALID);
         
         // copy texture to all 'texture' slots

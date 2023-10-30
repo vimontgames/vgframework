@@ -27,6 +27,12 @@ namespace vg::gfx
 
             BindlessBufferSrvHandle allocBindlessBufferHandle(const gfx::Buffer * _buffer, ReservedSlot _reservedSlot = ReservedSlot::None);
             void freeBindlessBufferHandle(BindlessBufferSrvHandle & _handle);
+
+            BindlessTextureUAVHandle allocBindlessRWTextureHandle(const gfx::Texture * _texture, ReservedSlot _reservedSlot = ReservedSlot::None);
+            void freeBindlessRWTextureHandle(BindlessTextureUAVHandle & _handle);
+
+            BindlessBufferUAVHandle allocBindlessRWBufferHandle(const gfx::Buffer * _buffer, ReservedSlot _reservedSlot = ReservedSlot::None);
+            void freeBindlessRWBufferHandle(BindlessBufferUAVHandle & _handle);
             
         private:
             template <class H, class T, class P> H allocBindlessHandle(const T * _resource, ReservedSlot _reservedSlot, P & _pool, T ** _resources, core::uint _offset, core::uint _invalid);
@@ -40,6 +46,12 @@ namespace vg::gfx
 
             core::IndexPool<BindlessHandle::Type, BINDLESS_BUFFER_SRV_COUNT>        m_bufferSrvIndexPool;
             Buffer *                                                                m_bufferSrv[BINDLESS_BUFFER_SRV_COUNT];
+
+            core::IndexPool<BindlessHandle::Type, BINDLESS_TEXTURE_UAV_COUNT>       m_textureUAVIndexPool;
+            Texture *                                                               m_textureUAV[BINDLESS_TEXTURE_UAV_COUNT];
+
+            core::IndexPool<BindlessHandle::Type, BINDLESS_BUFFER_UAV_COUNT>        m_bufferUAVIndexPool;
+            Buffer *                                                                m_bufferUAV[BINDLESS_BUFFER_UAV_COUNT];
         };
     }
 }

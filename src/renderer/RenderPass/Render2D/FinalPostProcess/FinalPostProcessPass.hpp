@@ -33,13 +33,19 @@ namespace vg::renderer
     //--------------------------------------------------------------------------------------
     void FinalPostProcessPass::setup(const gfx::RenderPassContext & _renderPassContext, double _dt)
     {
-        readRenderTarget(_renderPassContext.getFrameGraphID("Color"));
+        const auto options = DisplayOptions::get();
+        if (options->isComputePostProcessEnabled())
+            readRenderTarget(_renderPassContext.getFrameGraphID("PostProcessUAV"));
+        else
+            readRenderTarget(_renderPassContext.getFrameGraphID("Color"));
         writeRenderTarget(0, _renderPassContext.getFrameGraphID("Dest")); // TODO: render to "Backbuffer" in exclusive GameMode?
     }
 
     //--------------------------------------------------------------------------------------
     void FinalPostProcessPass::draw(const RenderPassContext & _renderPassContext, CommandList * _cmdList) const
     {
+        const auto options = DisplayOptions::get();
+
         RasterizerState rs(FillMode::Solid, CullMode::None);
         BlendState bs(BlendFactor::One, BlendFactor::Zero, BlendOp::Add);
         DepthStencilState ds(false);
@@ -55,10 +61,13 @@ namespace vg::renderer
 
         root2D.quad.posOffsetScale = float4(0.0f, 0.0f, 1.0f, 1.0f);
         root2D.quad.uvOffsetScale = float4(0.0f, 0.0f, 1.0f, 1.0f);
-        root2D.texID = getRenderTarget(_renderPassContext.getFrameGraphID("Color"))->getBindlessSRVHandle();
 
-        _cmdList->setInlineRootConstants(&root2D, RootConstants2DCount);
+        if (options->isComputePostProcessEnabled())
+            root2D.texID = getRenderTarget(_renderPassContext.getFrameGraphID("PostProcessUAV"))->getBindlessSRVHandle();
+        else
+            root2D.texID = getRenderTarget(_renderPassContext.getFrameGraphID("Color"))->getBindlessSRVHandle();       
 
+        _cmdList->setGraphicRootConstants(0, (u32*)&root2D, RootConstants2DCount);
         _cmdList->draw(4);
     }
 }

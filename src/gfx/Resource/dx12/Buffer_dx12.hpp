@@ -83,7 +83,7 @@ namespace vg::gfx::dx12
         auto size = _bufDesc.size();
 
         if (_bufDesc.testBindFlags(BindFlags::ConstantBuffer))
-            size = (uint)alignUp(size, 256);
+            size = (uint)alignUp(size, (u32)256);
 
         resourceDesc.Dimension = D3D12_RESOURCE_DIMENSION_BUFFER;
         resourceDesc.Alignment = 0;

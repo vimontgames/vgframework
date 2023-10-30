@@ -1,8 +1,8 @@
 namespace vg::gfx::dx12
 {
 	//--------------------------------------------------------------------------------------
-	RenderPass::RenderPass(const RenderPassKey & _key) :
-        super::RenderPass(_key)
+	RenderPass::RenderPass(RenderPassType _renderPassType, const RenderPassKey & _key) :
+        super::RenderPass(_renderPassType, _key)
 	{
 
 	}

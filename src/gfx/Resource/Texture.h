@@ -27,11 +27,13 @@ namespace vg::gfx
             VG_INLINE const gfx::Resource & getResource() const { return m_resource; }
             VG_INLINE gfx::Resource & getResource() { return m_resource; }
             VG_INLINE const gfx::BindlessTextureSrvHandle getBindlessSRVHandle() const { return m_bindlessSRVHandle; }
+			VG_INLINE const gfx::BindlessTextureUAVHandle getBindlessUAVHandle() const { return m_bindlessRWTextureHandle; }
 			
         protected:
-			const TextureDesc                m_texDesc;
-            gfx::Resource                    m_resource;
-            gfx::BindlessTextureSrvHandle    m_bindlessSRVHandle;
+			const TextureDesc				m_texDesc;
+            gfx::Resource					m_resource;
+            gfx::BindlessTextureSrvHandle	m_bindlessSRVHandle;
+			gfx::BindlessTextureUAVHandle	m_bindlessRWTextureHandle;
 		};
 	}
 }

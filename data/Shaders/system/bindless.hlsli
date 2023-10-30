@@ -60,7 +60,7 @@ DECL_DESCRIPTOR_RANGE_RW(RWByteAddressBuffer, g_RWBufferTable, BINDLESS_BUFFER_U
 #define getTexture2D(_handle)       (g_Texture2DTable[_handle - BINDLESS_TEXTURE_SRV_START])
 #define getTexture3D(_handle)       (g_Texture3DTable[_handle - BINDLESS_TEXTURE_SRV_START])
 #define getBuffer(_handle)          (g_BufferTable[_handle - BINDLESS_BUFFER_SRV_START])
-#define getRWTexture2D(_handle)     (g_RWTexture2DTable[_handle BINDLESS_TEXTURE_UAV_START])
+#define getRWTexture2D(_handle)     (g_RWTexture2DTable[_handle - BINDLESS_TEXTURE_UAV_START])
 #define getRWBuffer(_handle)        (g_RWBufferTable[_handle - BINDLESS_BUFFER_UAV_START])
 
 #endif // __cplusplus

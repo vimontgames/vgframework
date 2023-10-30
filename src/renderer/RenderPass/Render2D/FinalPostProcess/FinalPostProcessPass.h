@@ -19,6 +19,5 @@ namespace vg::renderer
     private:
         gfx::RootSignatureHandle         m_postProcessRootSignature;
         gfx::ShaderKey                   m_postProcessShaderKey;
-        gfx::BindlessTextureSrvHandle    m_srcTexHandle;
     };
 }

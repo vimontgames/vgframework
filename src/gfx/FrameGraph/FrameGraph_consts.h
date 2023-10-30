@@ -10,4 +10,11 @@ namespace vg::gfx
         RenderTarget,
         ShaderResource
     };
+
+    enum class RenderPassType : core::u8
+    {
+        Graphic = 0,
+        Compute,
+        RayTrace
+    };
 }

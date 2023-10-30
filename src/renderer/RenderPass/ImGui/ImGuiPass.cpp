@@ -34,7 +34,7 @@ namespace vg::renderer
     ImGuiPass::ImGuiPass() :
         gfx::UserPass("ImGuiPass")
     {
-
+        setUserPassType(RenderPassType::Graphic);
     }
 
     //--------------------------------------------------------------------------------------
@@ -46,15 +46,7 @@ namespace vg::renderer
     //--------------------------------------------------------------------------------------
     void ImGuiPass::setup(const gfx::RenderPassContext & _renderContext, double _dt)
     {
-        writeRenderTarget(0, "Backbuffer");
-
-        editor::IEditor * editor = getEngine()->GetEditor();
-        if (editor)
-        {
-            editor::GUIContext guiContext;
-            guiContext.ptr = ImGui::GetCurrentContext();
-            editor->DrawGUI(guiContext);
-        }        
+        writeRenderTarget(0, "Backbuffer");       
     }
 
     //--------------------------------------------------------------------------------------
@@ -99,6 +91,14 @@ namespace vg::renderer
     //--------------------------------------------------------------------------------------
     void ImGuiPass::draw(const RenderPassContext & _renderContext, gfx::CommandList * _cmdList) const
     {
+        editor::IEditor * editor = getEngine()->GetEditor();
+        if (editor)
+        {
+            editor::GUIContext guiContext;
+            guiContext.ptr = ImGui::GetCurrentContext();
+            editor->DrawGUI(guiContext);
+        }
+
         Renderer::get()->getImGuiAdapter()->render(_cmdList);
     }
 }

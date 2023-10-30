@@ -86,7 +86,7 @@ namespace vg::gfx
             }
         }
 
-        VG_ASSERT("File \"%s\" not found", _file.c_str());
+        VG_ASSERT(false, "File \"%s\" not found", _file.c_str());
         return false;
     }
 
@@ -120,7 +120,7 @@ namespace vg::gfx
             }
         }
 
-        VG_ASSERT("File \"%s\" not found", _file.c_str());
+        VG_ASSERT(false, "File \"%s\" not found", _file.c_str());
         return false;
     }
 

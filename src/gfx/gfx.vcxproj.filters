@@ -44,6 +44,9 @@
     <ClCompile Include="PipelineState\Graphic\GraphicPipelineState.cpp">
       <Filter>PipelineState\Graphic</Filter>
     </ClCompile>
+    <ClCompile Include="PipelineState\Compute\ComputePipelineState.cpp">
+      <Filter>PipelineState\Compute</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Precomp.h" />
@@ -531,6 +534,27 @@
     <ClInclude Include="Shader\ComputeShaderKey.hpp">
       <Filter>Shader</Filter>
     </ClInclude>
+    <ClInclude Include="PipelineState\Compute\ComputePipelineState.h">
+      <Filter>PipelineState\Compute</Filter>
+    </ClInclude>
+    <ClInclude Include="PipelineState\Compute\dx12\ComputePipelineState_dx12.h">
+      <Filter>PipelineState\Compute\dx12</Filter>
+    </ClInclude>
+    <ClInclude Include="PipelineState\Compute\dx12\ComputePipelineState_dx12.hpp">
+      <Filter>PipelineState\Compute\dx12</Filter>
+    </ClInclude>
+    <ClInclude Include="PipelineState\Compute\vulkan\ComputePipelineState_vulkan.h">
+      <Filter>PipelineState\Compute\vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="PipelineState\Compute\vulkan\ComputePipelineState_vulkan.hpp">
+      <Filter>PipelineState\Compute\vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="PipelineState\Compute\ComputePipelineState_consts.h">
+      <Filter>PipelineState\Compute</Filter>
+    </ClInclude>
+    <ClInclude Include="PipelineState\Compute\ComputePipelineStateKey.hpp">
+      <Filter>PipelineState\Compute</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Device">
@@ -668,6 +692,12 @@
     <Filter Include="PipelineState\Graphic\vulkan">
       <UniqueIdentifier>{1083c187-5e08-499d-95de-ee5b66029ef2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="PipelineState\Compute\dx12">
+      <UniqueIdentifier>{de034106-ce10-43b3-9680-896e0f3767f9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="PipelineState\Compute\vulkan">
+      <UniqueIdentifier>{7ef68ac4-c57b-452e-9f4b-2e28544d6c0a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="PipelineState\Graphic\dx12\GraphicPipelineState_dx12.inl">
@@ -675,6 +705,18 @@
     </None>
     <None Include="PipelineState\Graphic\vulkan\GraphicPipelineState_vulkan.inl">
       <Filter>PipelineState\Graphic\vulkan</Filter>
+    </None>
+    <None Include="FrameGraph\UserPass.inl">
+      <Filter>FrameGraph</Filter>
+    </None>
+    <None Include="CommandList\CommandList.inl">
+      <Filter>CommandList</Filter>
+    </None>
+    <None Include="PipelineState\Compute\dx12\ComputePipelineState_dx12.inl">
+      <Filter>PipelineState\Compute\dx12</Filter>
+    </None>
+    <None Include="PipelineState\Compute\vulkan\ComputePipelineState_vulkan.inl">
+      <Filter>PipelineState\Compute\vulkan</Filter>
     </None>
   </ItemGroup>
 </Project>

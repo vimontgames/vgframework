@@ -61,6 +61,25 @@ namespace vg::gfx
 				Preserve	= 0x02
 			};
 
+			enum class RWAccess : core::u8
+			{
+				Read = 1,
+				Write = 2
+			};
+
+			struct PassRWAccess
+			{
+				PassRWAccess(const UserPass * _userPass, RWAccess _rwAccess) :
+					m_userPass(_userPass),
+					m_rwAccess(_rwAccess)
+				{
+
+				}
+				
+				const UserPass *	m_userPass;
+				RWAccess			m_rwAccess;
+			};
+
 			Resource();
 
 			virtual ~Resource()
@@ -77,9 +96,12 @@ namespace vg::gfx
 
 			void setReadAtPass(const UserPass * _subPass);
 			void setWriteAtPass(const UserPass * _subPass);
+			void setReadWriteAtPass(const UserPass * _subPass);
 
 			const core::vector<const UserPass *> & getReadAtPass() const;
 			const core::vector<const UserPass *> & getWriteAtPass() const;
+
+			const core::vector<PassRWAccess> & getReadWriteAccess() const;
 
             void setCurrentState(ResourceState _state);
             ResourceState getCurrentState() const;
@@ -89,6 +111,7 @@ namespace vg::gfx
             core::string                    m_name;
 			core::vector<const UserPass*>   m_read;
 			core::vector<const UserPass*>	m_write;
+			core::vector<PassRWAccess>		m_readWrite;
             ResourceState                   m_state = ResourceState::Undefined;
 		};
 
@@ -99,13 +122,14 @@ namespace vg::gfx
 
             }
 
-            TextureResourceDesc(const TextureResourceDesc & _from) :
-                width(_from.width),
-                height(_from.height),
-                format(_from.format),
-                initState(_from.initState),
-                clearColor(_from.clearColor),
-                transient(_from.transient)
+			TextureResourceDesc(const TextureResourceDesc & _from) :
+				width(_from.width),
+				height(_from.height),
+				format(_from.format),
+				initState(_from.initState),
+				clearColor(_from.clearColor),
+				transient(_from.transient),
+				uav(_from.uav)
             {
 
             }
@@ -124,6 +148,7 @@ namespace vg::gfx
                 };
             };
             bool                transient = false;
+			bool				uav = false;
 
             bool operator == (const TextureResourceDesc & _other) const
             {
@@ -132,7 +157,8 @@ namespace vg::gfx
                     && format == _other.format          // TODO: alias textures of the same size but different format (store format, initstate, clear color elsewhere ?)
                     && initState == _other.initState    
                     && hlslpp::all(clearColor == _other.clearColor)  
-                    && transient == _other.transient;   
+                    && transient == _other.transient
+					&& uav == _other.uav;   
             }
 		};
 
@@ -200,8 +226,9 @@ namespace vg::gfx
 
         Texture * createRenderTargetFromPool(const TextureResourceDesc & _textureResourceDesc);
         Texture * createDepthStencilFromPool(const TextureResourceDesc & _textureResourceDesc);
+		Texture * createRWTextureFromPool(const TextureResourceDesc & _textureResourceDesc);
 
-        Texture * createTextureFromPool(const FrameGraph::TextureResourceDesc & _textureResourceDesc, bool _depthStencil);
+        Texture * createTextureFromPool(const FrameGraph::TextureResourceDesc & _textureResourceDesc, bool _depthStencil = false, bool _uav = false);
 
         void releaseTextureFromPool(Texture *& _tex);
 

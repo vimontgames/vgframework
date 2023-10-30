@@ -11,7 +11,7 @@ namespace vg::gfx::vulkan
 	public:
         static VkRenderPass createVulkanRenderPassFromKey(const RenderPassKey & _key);
 
-		RenderPass(const RenderPassKey & _key);
+		RenderPass(RenderPassType _renderPassType, const RenderPassKey & _key);
 		~RenderPass();
 
 		void finalize();

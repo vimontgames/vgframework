@@ -4,6 +4,7 @@
 #include "CommandList_consts.h"
 #include "gfx/Device/Device_consts.h"
 #include "gfx/PipelineState/Graphic/GraphicPipelineStateKey.h"
+#include "gfx/PipelineState/Compute/ComputePipelineStateKey.h"
 
 namespace vg::gfx
 {
@@ -12,7 +13,9 @@ namespace vg::gfx
 	class SubPass;
     class GraphicPipelineState;
     class RasterizerState;
+    class DepthStencilState;
     class BlendState;
+    class ComputePipelineState;
     class Texture;
     class Buffer;
 
@@ -27,6 +30,7 @@ namespace vg::gfx
 			CommandListType			getType			        () const;
 			CommandPool *			getCommandPool	        () const;
 
+            // Graphic
 			void					beginRenderPass	        (gfx::RenderPass * _renderPass);
 			void					endRenderPass	        ();
 
@@ -46,45 +50,69 @@ namespace vg::gfx
             void                    setPrimitiveTopology    (PrimitiveTopology _topology);
             void                    setViewport             (const core::uint4 & _viewport);
             void                    setScissor              (const core::uint4 & _scissor);
-            void                    setRootConstants        (core::uint _startOffset, core::u32 * _values, core::uint _count);
-            void                    setInlineRootConstants  (const void * _value, core::uint _count);
+            void                    setGraphicRootConstants (core::uint _startOffset, core::u32 * _values, core::uint _count);
             void                    setIndexBuffer          (gfx::Buffer * _ib);
+
+            // Compute
+            void                    setComputeRootSignature (const RootSignatureHandle & _rsHandle);
+            void                    setComputeShader        (const ComputeShaderKey & _computeKey);
+            void                    setComputeRootConstants (core::uint _startOffset, core::u32 * _values, core::uint _count);
 
 		protected:
 			CommandListType			m_type;
 			core::u8				m_frame;
 			core::u8				m_index;
-			gfx::CommandPool *	m_cmdPool;
+			gfx::CommandPool *	    m_cmdPool;
 
 			RenderPass *		    m_renderPass   = nullptr;
 			SubPass *			    m_subPass	   = nullptr;
 			core::uint				m_subPassIndex = -1;
 
         protected:
+            RenderPassType          m_currentRenderPassType = (RenderPassType)-1;
+
             struct StateCache
             {
-                StateCache() = default;
-
                 enum class DirtyFlags : core::u32
                 {
-                    RootSignature        = 0x00000001,
-                    GraphicPipelineState = 0x00000002,
-                    Viewport             = 0x00000004,
-                    Scissor              = 0x00000008,
-                    RootConstants        = 0x00000010,
-                    IndexBuffer          = 0x00000020
+                    RootSignature   = 0x00000001,
+                    PipelineState   = 0x00000002,
+                    Viewport        = 0x00000004,
+                    Scissor         = 0x00000008,
+                    RootConstants   = 0x00000010,
+                    IndexBuffer     = 0x00000020
                 };
-                DirtyFlags              dirtyFlags;
-                GraphicPipelineStateKey graphicPipelineKey;
-                core::uint4             viewport;
-                core::uint4             scissor;
-                core::u32               rootConstants[max_root_constants] = {};
-                Buffer *                indexBuffer = nullptr;
+
+                DirtyFlags                  m_dirtyFlags;
+                core::u32                   m_rootConstants[max_root_constants] = {};
             };
-            StateCache                  m_stateCache;
+
+            struct GraphicStateCache : public StateCache
+            {
+                GraphicStateCache() = default;
+                
+                GraphicPipelineStateKey m_graphicPipelineKey;
+                core::uint4             m_viewport;
+                core::uint4             m_scissor;
+                Buffer *                m_indexBuffer = nullptr;
+            };
+            GraphicStateCache           m_graphicStateCache;
             RootSignature *             m_currentGraphicRootSignature = nullptr;
 
-            core::unordered_map<gfx::GraphicPipelineStateKey, gfx::GraphicPipelineState*, gfx::GraphicPipelineStateKey::hash> m_graphicPipelineStateHash; // PSO should not be in command list !
+            using GraphicPipelineStateHash = core::unordered_map<gfx::GraphicPipelineStateKey, gfx::GraphicPipelineState *, gfx::GraphicPipelineStateKey::hash>;
+            GraphicPipelineStateHash    m_graphicPipelineStateHash;
+
+            struct ComputeStateCache : public StateCache
+            {
+                ComputeStateCache() = default;
+
+                ComputePipelineStateKey m_computePipelineKey;
+            };
+            ComputeStateCache           m_computeStateCache;
+            RootSignature *             m_currentComputeRootSignature = nullptr;
+
+            using ComputePipelineStateHash = core::unordered_map<gfx::ComputePipelineStateKey, gfx::ComputePipelineState *, gfx::ComputePipelineStateKey::hash>;
+            ComputePipelineStateHash    m_computePipelineStateHash;
 		};
 	}
 }
@@ -106,14 +134,44 @@ namespace vg::gfx
         void                        reset();
         void                        close();
 
+        // Graphic
+        void					    beginRenderPass             (gfx::RenderPass * _renderPass);
+        void					    endRenderPass               ();
+        
+        VG_INLINE void              setGraphicRootSignature     (const RootSignatureHandle & _rsHandle);
+         
+        VG_INLINE void              setRasterizerState          (const gfx::RasterizerState & _rs);
+        VG_INLINE void              setDepthStencilState        (const gfx::DepthStencilState & _ds);
+        VG_INLINE void              setBlendState               (const gfx::BlendState & _bs);
+        VG_INLINE void              setShader                   (const ShaderKey & _key);
+        VG_INLINE void              setPrimitiveTopology        (PrimitiveTopology _topology);
+        VG_INLINE void              setViewport                 (const core::uint4 & _viewport);
+        VG_INLINE void              setScissor                  (const core::uint4 & _scissor);
+        VG_INLINE void              setGraphicRootConstants     (core::uint _startOffset, core::u32 * _values, core::uint _count);
+        VG_INLINE void              setIndexBuffer              (gfx::Buffer * _ib);
+
         bool                        applyGraphicPipelineState   ();
 
         void                        draw                        (core::uint _vertexCount, core::uint _startOffset = 0);
         void                        drawIndexed                 (core::uint _indexCount, core::uint _startIndex = 0, core::uint _baseVertex = 0);
 
+        // Compute
+        VG_INLINE void              setComputeRootSignature     (const RootSignatureHandle & _rsHandle);
+        VG_INLINE void              setComputeShader            (const ComputeShaderKey & _computeKey);
+        VG_INLINE void              setComputeRootConstants     (core::uint _startOffset, core::u32 * _values, core::uint _count);
+
+        bool                        applyComputePipelineState   ();
+
+        void                        dispatch                    (core::uint3 _threadGroupCount);
+
         void                        resetShaders                (ShaderKey::File _file);
 
     private:
         bool                        getGraphicPipelineState     (const GraphicPipelineStateKey & _key, GraphicPipelineState *& _graphicPipelineState);
+        bool                        getComputePipelineState     (const ComputePipelineStateKey & _key, ComputePipelineState *& _computePipelineState);
 	};
 }
+
+#if VG_ENABLE_INLINE
+#include "CommandList.inl"
+#endif

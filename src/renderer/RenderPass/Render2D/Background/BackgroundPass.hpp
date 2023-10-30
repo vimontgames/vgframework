@@ -84,7 +84,7 @@ namespace vg::renderer
         root.quad.uvOffsetScale = float4(0.0f, 0.0f, 1.0f, 1.0f);
         root.color = pow(DisplayOptions::get()->getBackgroundColor(), 2.2f);
         
-        _cmdList->setInlineRootConstants(&root, sizeof(BackgroundRootConstants)/sizeof(u32));
+        _cmdList->setGraphicRootConstants(0, (u32*) &root, sizeof(BackgroundRootConstants) / sizeof(u32));
         
         _cmdList->draw(4);
     }

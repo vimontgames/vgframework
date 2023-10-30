@@ -5,7 +5,8 @@ namespace vg::gfx
 	namespace base
 	{
 		//--------------------------------------------------------------------------------------
-		RenderPass::RenderPass(const RenderPassKey & _key) :
+		RenderPass::RenderPass(RenderPassType _renderPassType, const RenderPassKey & _key) :
+			m_renderPassType(_renderPassType),
             m_renderPassKey(_key)
 		{
 
@@ -19,6 +20,12 @@ namespace vg::gfx
 			m_subPasses.clear();
 		}
 
+        //--------------------------------------------------------------------------------------
+        RenderPassType RenderPass::getRenderPassType() const
+		{
+			return m_renderPassType;
+		}
+
 		//--------------------------------------------------------------------------------------
 		void RenderPass::addSubPass(gfx::SubPass * _subPass)
 		{
@@ -30,13 +37,25 @@ namespace vg::gfx
 		{
 			return m_subPasses;
 		}
+
+        //--------------------------------------------------------------------------------------
+        const core::vector<FrameGraph::TextureResource *> & RenderPass::getColorAttachments() const
+		{
+			return m_colorAttachments;
+		}
+
+        //--------------------------------------------------------------------------------------
+        const FrameGraph::TextureResource * RenderPass::getDepthStencilAttachment() const
+		{
+			return m_depthStencilAttachment;
+		}
 	}
 
     core::Pool<RenderPass> RenderPass::s_memPool;
 
 	//--------------------------------------------------------------------------------------
-	RenderPass::RenderPass(const RenderPassKey & _key) :
-        super::RenderPass(_key)
+	RenderPass::RenderPass(RenderPassType _renderPassType, const RenderPassKey & _key) :
+        super::RenderPass(_renderPassType, _key)
 	{
 
 	}

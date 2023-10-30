@@ -73,7 +73,7 @@ namespace vg::gfx::vulkan
     void CommandList::bindRootSignature(gfx::RootSignature * _rootSig)
     {
         auto * device = gfx::Device::get();
-        auto * sig = device->getRootSignature(m_stateCache.graphicPipelineKey.m_rootSignature);
+        auto * sig = device->getRootSignature(m_graphicStateCache.m_graphicPipelineKey.m_rootSignature);
 
         if (sig->getVulkanDescriptorSetLayouts().size() > 0)
         {
@@ -95,7 +95,7 @@ namespace vg::gfx::vulkan
     //--------------------------------------------------------------------------------------
     void CommandList::bindPrimitiveTopology(PrimitiveTopology _topology)
     {
-        /*ddd*/
+        VG_ASSERT_NOT_IMPLEMENTED();
     }
 
     //--------------------------------------------------------------------------------------
@@ -125,7 +125,7 @@ namespace vg::gfx::vulkan
     }
 
     //--------------------------------------------------------------------------------------
-    void CommandList::bindRootConstants(core::uint(&_constants)[max_root_constants])
+    void CommandList::bindGraphicRootConstants(core::uint(&_constants)[max_root_constants])
     {
         const auto vkPipelineLayout = m_currentGraphicRootSignature->getVulkanPipelineLayout();
         const auto & rootConstantDesc = m_currentGraphicRootSignature->getRootSignatureDesc().getRootConstants();
@@ -357,5 +357,46 @@ namespace vg::gfx::vulkan
         auto * device = gfx::Device::get();
         device->m_EXT_DebugUtils.m_pfnCmdEndDebugUtilsLabelEXT(getVulkanCommandBuffer());
         #endif
+    }
+
+    //--------------------------------------------------------------------------------------
+    void CommandList::bindComputeRootSignature(gfx::RootSignature * _rootSig)
+    {
+        auto * device = gfx::Device::get();
+        auto * sig = device->getRootSignature(m_computeStateCache.m_computePipelineKey.m_computeRootSignature);
+
+        if (sig->getVulkanDescriptorSetLayouts().size() > 0)
+        {
+            vector<VkDescriptorSet> vkDescriptorSets;
+
+            vkDescriptorSets.push_back(device->m_vkBindlessDescriptors);
+            vkDescriptorSets.push_back(device->m_vkSamplerDescriptors);
+
+            vkCmdBindDescriptorSets(m_vkCommandBuffer, VK_PIPELINE_BIND_POINT_COMPUTE, sig->getVulkanPipelineLayout(), 0, (uint)vkDescriptorSets.size(), vkDescriptorSets.data(), 0, nullptr);
+        }
+    }
+
+    //--------------------------------------------------------------------------------------
+    void CommandList::bindComputePipelineState(gfx::ComputePipelineState * _pso)
+    {
+        vkCmdBindPipeline(m_vkCommandBuffer, VK_PIPELINE_BIND_POINT_COMPUTE, _pso->getVulkanComputePipeline());
+    }
+
+    //--------------------------------------------------------------------------------------
+    void CommandList::bindComputeRootConstants(core::uint(&_constants)[max_root_constants])
+    {
+        const auto vkPipelineLayout = m_currentComputeRootSignature->getVulkanPipelineLayout();
+        const auto & rootConstantDesc = m_currentComputeRootSignature->getRootSignatureDesc().getRootConstants();
+        for (uint i = 0; i < rootConstantDesc.size(); ++i)
+        {
+            const RootSignatureDesc::PushConstantParams & param = rootConstantDesc[i];
+            vkCmdPushConstants(m_vkCommandBuffer, vkPipelineLayout, RootSignature::getVulkanShaderStageFlags(param.m_stages), param.m_register << 2, param.m_count << 2, _constants);
+        }
+    }
+
+    //--------------------------------------------------------------------------------------
+    void CommandList::dispatch(core::uint3 _threadGroupCount)
+    {
+        vkCmdDispatch(m_vkCommandBuffer, _threadGroupCount.x, _threadGroupCount.y, _threadGroupCount.z);
     }
 }

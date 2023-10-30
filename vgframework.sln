@@ -107,6 +107,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "raytracing", "raytracing", 
 		data\Shaders\raytracing\raytracing.hlsli = data\Shaders\raytracing\raytracing.hlsli
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "postprocess", "postprocess", "{1E58B5A8-C977-4C9E-9705-CB2089DCFF8C}"
+	ProjectSection(SolutionItems) = preProject
+		data\Shaders\postprocess\postprocess.hlsl = data\Shaders\postprocess\postprocess.hlsl
+		data\Shaders\postprocess\postprocess.hlsl.h = data\Shaders\postprocess\postprocess.hlsl.h
+		data\Shaders\postprocess\postprocess.hlsli = data\Shaders\postprocess\postprocess.hlsli
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|PC DirectX12 = Debug|PC DirectX12
@@ -183,6 +190,7 @@ Global
 		{34ABDEEE-1180-4BD9-9FCC-16C174A96FE8} = {3A24AFD2-079B-45FC-8488-70058ACACD89}
 		{247A9589-663C-452B-9C16-F5E34FEE87D4} = {3A24AFD2-079B-45FC-8488-70058ACACD89}
 		{5523CE0C-0AA1-4E5F-82C7-85D032949B40} = {3A24AFD2-079B-45FC-8488-70058ACACD89}
+		{1E58B5A8-C977-4C9E-9705-CB2089DCFF8C} = {3A24AFD2-079B-45FC-8488-70058ACACD89}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {B437215B-B736-4FF0-8DA1-E6B35C780CE1}

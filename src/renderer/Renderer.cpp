@@ -33,7 +33,8 @@
 #include "shaders/driver/driver.hlsl.h"
 #include "shaders/editor/editor.hlsl.h"
 #include "shaders/default/default.hlsl.h"
-#include "Shaders/background/background.hlsl.h"
+#include "shaders/background/background.hlsl.h"
+#include "shaders/postprocess/postprocess.hlsl.h"
 
 using namespace vg::core;
 using namespace vg::gfx;
@@ -189,11 +190,12 @@ namespace vg::renderer
     {
         auto * sm = ShaderManager::get();
 
-        // TODO: register from parsing instead?
+        // TODO: register from parsing 
         sm->registerHLSL(DriverHLSLDesc());
         sm->registerHLSL(EditorHLSLDesc());
         sm->registerHLSL(DefaultHLSLDesc());
         sm->registerHLSL(BackgroundHLSLDesc());
+        sm->registerHLSL(PostProcessHLSLDesc());
 
         sm->update();
     }
@@ -303,7 +305,7 @@ namespace vg::renderer
                     {
                         auto * view = views[i];
                         if (nullptr != view && nullptr != view->getUniverse())
-                            view->AddToFrameGraph(m_frameGraph);
+                            view->addToFrameGraph(m_frameGraph);
                     }
                 }
 

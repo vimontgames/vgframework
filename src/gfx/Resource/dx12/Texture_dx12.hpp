@@ -145,6 +145,11 @@ namespace vg::gfx::dx12
             else if (_initData)
                 initState = D3D12_RESOURCE_STATE_COPY_DEST;
 
+            if (asBool(BindFlags::UnorderedAccess & _texDesc.resource.m_bindFlags))
+            {
+                resourceDesc.Flags |= D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS;
+            }
+
             D3D12MA::Allocator * allocator = gfx::Device::get()->getd3d12MemoryAllocator();
             ID3D12Resource * resource;
             D3D12MA::Allocation * alloc;
@@ -224,6 +229,32 @@ namespace vg::gfx::dx12
                 auto * bindlessTable = device->getBindlessTable();
                 bindlessTable->updated3d12descriptor(getBindlessSRVHandle());
             }
+        }
+
+        if (asBool(BindFlags::UnorderedAccess & _texDesc.resource.m_bindFlags))
+        {
+            switch (_texDesc.type)
+            {
+                default:
+                    VG_ASSERT_NOT_IMPLEMENTED();
+                    break;
+
+                case TextureType::Texture2D:
+                {
+                    BindlessTable * bindlessTable = device->getBindlessTable();
+                    m_bindlessRWTextureHandle = bindlessTable->allocBindlessRWTextureHandle(static_cast<gfx::Texture *>(this));
+                    D3D12_CPU_DESCRIPTOR_HANDLE d3d12RWTextureDescriptorHandle = bindlessTable->getd3d12CPUDescriptorHandle(m_bindlessRWTextureHandle);
+
+                    D3D12_UNORDERED_ACCESS_VIEW_DESC uavDesc;
+                    uavDesc.Format = getd3d12PixelFormat(_texDesc.format);
+                    uavDesc.ViewDimension = D3D12_UAV_DIMENSION_TEXTURE2D;
+                    uavDesc.Texture2D.MipSlice = 0;
+                    uavDesc.Texture2D.PlaneSlice = 0;
+                    d3d12device->CreateUnorderedAccessView(m_resource.getd3d12TextureResource(), nullptr, &uavDesc, d3d12RWTextureDescriptorHandle);
+                    bindlessTable->updated3d12descriptor(getBindlessUAVHandle());
+                }
+                break;
+            }            
         }
 
         if (nullptr != _initData && !_texDesc.isBackbuffer())

@@ -39,6 +39,8 @@ namespace vg::gfx
         ShaderKey::VS addVS(const core::string & _vsEntryPoint);
         ShaderKey::PS addPS(const core::string & _psEntryPoint);
 
+        ComputeShaderKey::CS addCS(const core::string & _csEntryPoint);
+
         Shader * getVS(API _api, ShaderKey::VS _vs, ShaderKey::Flags _flags);
         Shader * getHS(API _api, ShaderKey::HS _hs, ShaderKey::Flags _flags);
         Shader * getDS(API _api, ShaderKey::DS _ds, ShaderKey::Flags _flags);

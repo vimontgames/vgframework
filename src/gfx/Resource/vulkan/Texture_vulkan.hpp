@@ -150,6 +150,9 @@ namespace vg::gfx::vulkan
             if (_texDesc.isShaderResource())
                 imgDesc.usage |= VK_IMAGE_USAGE_SAMPLED_BIT;
 
+            if (asBool(BindFlags::UnorderedAccess & _texDesc.resource.m_bindFlags))
+                imgDesc.usage |= VK_IMAGE_USAGE_STORAGE_BIT;
+
             VmaAllocationCreateInfo allocCreateInfo = {};
                                     allocCreateInfo.usage = VMA_MEMORY_USAGE_GPU_ONLY;
 
@@ -232,6 +235,27 @@ namespace vg::gfx::vulkan
                         }
                     }
                     uploadBuffer->unmap(static_cast<gfx::Texture*>(this), dst);
+                }
+
+                if (asBool(BindFlags::UnorderedAccess & _texDesc.resource.m_bindFlags))
+                {
+                    m_bindlessRWTextureHandle = bindlessTable->allocBindlessRWTextureHandle(static_cast<gfx::Texture *>(this));
+
+                    VkDescriptorImageInfo tex_descs = {};
+                    tex_descs.imageView = m_vkImageView;
+                    tex_descs.imageLayout = VK_IMAGE_LAYOUT_GENERAL;
+                    tex_descs.sampler = nullptr;
+
+                    VkWriteDescriptorSet writes = {};
+                    writes.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+                    writes.dstBinding = BINDLESS_TEXTURE_UAV_BINDING;
+                    writes.descriptorCount = 1;
+                    writes.descriptorType = VK_DESCRIPTOR_TYPE_STORAGE_IMAGE;
+                    writes.pImageInfo = &tex_descs;
+                    writes.dstSet = device->getVulkanBindlessDescriptors();
+                    writes.dstArrayElement = m_bindlessRWTextureHandle - BINDLESS_TEXTURE_UAV_START;
+
+                    vkUpdateDescriptorSets(device->getVulkanDevice(), 1, &writes, 0, nullptr);
                 }
             }
 		}

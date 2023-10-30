@@ -14,6 +14,8 @@ namespace vg::renderer
     RenderObjectsPass::RenderObjectsPass(const core::string & _name) :
         RenderPass(_name)
     {
+        setUserPassType(RenderPassType::Graphic);
+
         auto * device = Device::get();
         auto * renderer = Renderer::get();
 
@@ -156,7 +158,7 @@ namespace vg::renderer
         // Draw Alpha
         {
             root3D.color = float4(0, 1, 0, 0.125f);
-            _cmdList->setInlineRootConstants(&root3D, EditorRootConstants3DCount);
+            _cmdList->setGraphicRootConstants(0, (u32*)&root3D, EditorRootConstants3DCount);
 
             // Blend (2)
             BlendState bsAlpha(BlendFactor::SrcAlpha, BlendFactor::OneMinusSrcAlpha, BlendOp::Add);
@@ -174,7 +176,7 @@ namespace vg::renderer
         // Draw opaque
         {
             root3D.color = float4(0, 1, 0, 1.0f);
-            _cmdList->setInlineRootConstants(&root3D, EditorRootConstants3DCount);
+            _cmdList->setGraphicRootConstants(0, (u32*)&root3D, EditorRootConstants3DCount);
 
             // Blend
             BlendState bsOpaque(BlendFactor::One, BlendFactor::Zero, BlendOp::Add);
@@ -248,7 +250,7 @@ namespace vg::renderer
         _cmdList->setRasterizerState(rs);
         _cmdList->setGraphicRootSignature(m_debugDrawSignatureHandle);
         _cmdList->setShader(m_debugDrawShaderKey);
-        _cmdList->setInlineRootConstants(&root3D, EditorRootConstants3DCount);
+        _cmdList->setGraphicRootConstants(0, (u32*)&root3D, EditorRootConstants3DCount);
         _cmdList->setPrimitiveTopology(PrimitiveTopology::LineList);
         _cmdList->draw(gridDesc.elementCount);
     }
@@ -305,7 +307,7 @@ namespace vg::renderer
         _cmdList->setShader(m_debugDrawShaderKey);
         _cmdList->setPrimitiveTopology(PrimitiveTopology::LineList);
 
-        _cmdList->setInlineRootConstants(&root3D, EditorRootConstants3DCount);
+        _cmdList->setGraphicRootConstants(0, (u32*)&root3D, EditorRootConstants3DCount);
         _cmdList->draw(6);
     }
 

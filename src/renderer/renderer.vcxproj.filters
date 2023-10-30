@@ -227,6 +227,18 @@
     <ClInclude Include="RenderPass\RayTracing\Test\TestRayTracingPass.hpp">
       <Filter>Pass\RayTracing\Test</Filter>
     </ClInclude>
+    <ClInclude Include="RenderPass\Compute\ComputePostProcess\ComputePostProcessPass.h">
+      <Filter>Pass\Compute\ComputePostProcess</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderPass\Compute\ComputePostProcess\ComputePostProcessPass.hpp">
+      <Filter>Pass\Compute\ComputePostProcess</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderPass\Compute\ComputePass.h">
+      <Filter>Pass\Compute</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderPass\Compute\ComputePass.hpp">
+      <Filter>Pass\Compute</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Pass">
@@ -327,6 +339,12 @@
     </Filter>
     <Filter Include="Pass\RayTracing\Test">
       <UniqueIdentifier>{3122665f-08c1-4d87-817e-747dfe66cffa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Pass\Compute">
+      <UniqueIdentifier>{565f6566-9966-4089-8ceb-e2da39b956a0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Pass\Compute\ComputePostProcess">
+      <UniqueIdentifier>{b77f276c-e523-4a83-ba1f-a9d300086c73}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

@@ -23,7 +23,7 @@ namespace vg::gfx::dx12
 			void							freeRTVHandle	            (D3D12_CPU_DESCRIPTOR_HANDLE & _hRTV);
 
             D3D12_CPU_DESCRIPTOR_HANDLE		allocDSVHandle              (core::uint _count = 1);
-            void							freeDSVHandle               (D3D12_CPU_DESCRIPTOR_HANDLE & _hRTV);
+            void							freeDSVHandle               (D3D12_CPU_DESCRIPTOR_HANDLE & _hRTV);		
 
             void                            waitGPUIdle					();
 			void							setVSync					(VSync mode);

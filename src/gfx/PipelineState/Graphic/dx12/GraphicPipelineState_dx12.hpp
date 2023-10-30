@@ -5,7 +5,7 @@
 namespace vg::gfx::dx12
 {
     //--------------------------------------------------------------------------------------
-    bool getd3d3d12Bytecode(HLSLDesc * _desc, ShaderStage _stage, ShaderKey::EntryPoint _entryPoint, ShaderKey::Flags _flags, D3D12_SHADER_BYTECODE * _d3d12ShaderBytecode)
+    bool GraphicPipelineState::getd3d3d12Bytecode(HLSLDesc * _desc, ShaderStage _stage, ShaderKey::EntryPoint _entryPoint, ShaderKey::Flags _flags, D3D12_SHADER_BYTECODE * _d3d12ShaderBytecode)
     {
         if (ShaderKey::EntryPoint(-1) != _entryPoint)
         {

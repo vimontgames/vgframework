@@ -51,6 +51,7 @@
     <ClInclude Include="FrameGraph\RenderPass.hpp" />
     <ClCompile Include="Importer\Importer.cpp" />
     <ClCompile Include="Memory\MemoryAllocator.cpp" />
+    <ClCompile Include="PipelineState\Compute\ComputePipelineState.cpp" />
     <ClCompile Include="PipelineState\Graphic\GraphicPipelineState.cpp" />
     <ClCompile Include="Profiler\Profiler.cpp" />
     <ClCompile Include="Resource\Resource.cpp" />
@@ -61,7 +62,14 @@
     <ClInclude Include="IShaderManager.h" />
     <ClInclude Include="ITexture.h" />
     <ClInclude Include="IView.h" />
+    <ClInclude Include="PipelineState\Compute\ComputePipelineState.h" />
     <ClInclude Include="PipelineState\Compute\ComputePipelineStateKey.h" />
+    <ClInclude Include="PipelineState\Compute\ComputePipelineStateKey.hpp" />
+    <ClInclude Include="PipelineState\Compute\ComputePipelineState_consts.h" />
+    <ClInclude Include="PipelineState\Compute\dx12\ComputePipelineState_dx12.h" />
+    <ClInclude Include="PipelineState\Compute\dx12\ComputePipelineState_dx12.hpp" />
+    <ClInclude Include="PipelineState\Compute\vulkan\ComputePipelineState_vulkan.h" />
+    <ClInclude Include="PipelineState\Compute\vulkan\ComputePipelineState_vulkan.hpp" />
     <ClInclude Include="PipelineState\Graphic\BlendState.h" />
     <ClInclude Include="PipelineState\Graphic\BlendState.hpp" />
     <ClInclude Include="PipelineState\Graphic\DepthStencilState.h" />
@@ -213,6 +221,10 @@
     <ClInclude Include="Precomp.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="CommandList\CommandList.inl" />
+    <None Include="FrameGraph\UserPass.inl" />
+    <None Include="PipelineState\Compute\dx12\ComputePipelineState_dx12.inl" />
+    <None Include="PipelineState\Compute\vulkan\ComputePipelineState_vulkan.inl" />
     <None Include="PipelineState\Graphic\dx12\GraphicPipelineState_dx12.inl" />
     <None Include="PipelineState\Graphic\vulkan\GraphicPipelineState_vulkan.inl" />
   </ItemGroup>

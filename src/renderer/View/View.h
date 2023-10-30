@@ -57,7 +57,7 @@ namespace vg::renderer
 
         const core::string                  GetFrameGraphID     (const core::string & _name) const final override;
 
-        virtual void                        AddToFrameGraph     (gfx::FrameGraph & _frameGraph) {} // TODO: implement "MainView" using 'AddToFrameGraph'?
+        virtual void                        addToFrameGraph     (gfx::FrameGraph & _frameGraph) {} // TODO: implement "MainView" using 'AddToFrameGraph'?
 
         VG_INLINE core::IUniverse *         getUniverse         () const;
 

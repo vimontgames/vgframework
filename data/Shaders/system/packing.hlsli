@@ -23,6 +23,16 @@ namespace vg::gfx
         return float4(_value & 0xFF, (_value >> 8) & 0xFF, (_value >> 16) & 0xFF, (_value >> 24) & 0xFF) / 255.5f;
     }
 
+    inline uint packUint16(uint2 _value)
+    {
+        return _value.y << 16 | _value.x;
+    }
+
+    inline uint2 unpackUint16(uint _value)
+    {
+        return uint2(0xFFFF & _value, _value >> 16);
+    }
+
 #ifdef __cplusplus
 }
 #endif

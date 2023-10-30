@@ -6,7 +6,7 @@ namespace vg::renderer
     Render2DPass::Render2DPass(const core::string & _name) :
         RenderPass(_name)
     {
-
+        setUserPassType(RenderPassType::Graphic);
     }
 
     //--------------------------------------------------------------------------------------

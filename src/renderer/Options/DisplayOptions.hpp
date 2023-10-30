@@ -66,10 +66,12 @@ namespace vg::renderer
         _desc.registerPropertyHelper(DisplayOptions, m_normalMaps, "Normal Maps");
         _desc.registerPropertyHelperEx(DisplayOptions, m_albedoMaps, "Albedo Maps", IProperty::Flags::SameLine);
 
+        _desc.registerPropertyHelper(DisplayOptions, m_postProcess, "PostProcess");
+
         _desc.registerPropertyEnum(DisplayOptions, DisplayMode, m_debugDisplayMode, "Display");
 
         _desc.registerPropertyHelperEx(DisplayOptions, m_backgroundColor, "Background", IProperty::Flags::Color);
-
+        
         _desc.registerPropertyHelper(DisplayOptions, m_raytracing, "Ray Tracing (Experimental)");
 
         // TODO: Move to menu instead

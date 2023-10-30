@@ -1,8 +1,8 @@
 namespace vg::gfx::vulkan
 {
 	//--------------------------------------------------------------------------------------
-	RenderPass::RenderPass(const RenderPassKey & _key) :
-        super::RenderPass(_key)
+	RenderPass::RenderPass(RenderPassType _renderPassType, const RenderPassKey & _key) :
+        super::RenderPass(_renderPassType, _key)
 	{
 
 	}
@@ -11,10 +11,10 @@ namespace vg::gfx::vulkan
 	RenderPass::~RenderPass()
 	{
         gfx::Device * device = gfx::Device::get();
-        VkDevice & vkDevice = gfx::Device::get()->getVulkanDevice();
+        VkDevice & vkDevice = device->getVulkanDevice();
         
         //vkDestroyRenderPass(vkDevice, m_vkRenderPass, nullptr);
-        device->releaseVulkanRenderPass(m_renderPassKey, m_vkRenderPass);
+        device->releaseVulkanRenderPass(getRenderPassKey(), m_vkRenderPass);
 
         vkDestroyFramebuffer(vkDevice, m_vkFrameBuffer, nullptr);
 	}
@@ -274,31 +274,36 @@ namespace vg::gfx::vulkan
         auto * device = gfx::Device::get();
         VkDevice & vkDevice = device->getVulkanDevice();
 
-        core::vector<VkImageView> vkImageViews;
-        for (const FrameGraph::TextureResource * res : m_colorAttachments)
-            vkImageViews.push_back(res->getTexture()->getVulkanImageView());
+        if (m_colorAttachments.size() > 0)
+        {
+            core::vector<VkImageView> vkImageViews;
+            for (const FrameGraph::TextureResource * res : m_colorAttachments)
+                vkImageViews.push_back(res->getTexture()->getVulkanImageView());
 
-        if (m_depthStencilAttachment)
-            vkImageViews.push_back(m_depthStencilAttachment->getTexture()->getVulkanImageView());
+            if (m_depthStencilAttachment)
+                vkImageViews.push_back(m_depthStencilAttachment->getTexture()->getVulkanImageView());
 
-        m_vkFrameBufferInfo.attachmentCount = (uint)vkImageViews.size();
-        m_vkFrameBufferInfo.pAttachments = vkImageViews.data();
+            m_vkFrameBufferInfo.attachmentCount = (uint)vkImageViews.size();
+            m_vkFrameBufferInfo.pAttachments = vkImageViews.data();
 
-        VG_ASSERT_VULKAN(vkCreateFramebuffer(vkDevice, &m_vkFrameBufferInfo, nullptr, &m_vkFrameBuffer));
+            VG_ASSERT_VULKAN(vkCreateFramebuffer(vkDevice, &m_vkFrameBufferInfo, nullptr, &m_vkFrameBuffer));
 
-        m_vkRenderPassBeginInfo.framebuffer = m_vkFrameBuffer;
+            m_vkRenderPassBeginInfo.framebuffer = m_vkFrameBuffer;
 
-        vkCmdBeginRenderPass(_cmdList->getVulkanCommandBuffer(), &m_vkRenderPassBeginInfo, VK_SUBPASS_CONTENTS_INLINE);
+            vkCmdBeginRenderPass(_cmdList->getVulkanCommandBuffer(), &m_vkRenderPassBeginInfo, VK_SUBPASS_CONTENTS_INLINE);
+        }
     }
 
     //--------------------------------------------------------------------------------------
     void RenderPass::end(CommandList * _cmdList)
     {
-        vkCmdEndRenderPass(_cmdList->getVulkanCommandBuffer());
+        if (m_colorAttachments.size() > 0)
+        {
+            vkCmdEndRenderPass(_cmdList->getVulkanCommandBuffer());
 
-        auto * device = gfx::Device::get();
-        VkDevice & vkDevice = device->getVulkanDevice();
-
-        //vkDestroyFramebuffer(vkDevice, m_vkFrameBuffer, nullptr);
+            //auto * device = gfx::Device::get();
+            //VkDevice & vkDevice = device->getVulkanDevice();
+            //vkDestroyFramebuffer(vkDevice, m_vkFrameBuffer, nullptr);
+        }
     }
 }

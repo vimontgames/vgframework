@@ -5,26 +5,27 @@ namespace vg::renderer
 {
     class BackgroundPass;
     class ForwardPass;
-    class FinalPostProcessPass;
-
     class TestRayTracingPass;
+    class ComputePostProcessPass;
+    class FinalPostProcessPass;
+    
 
     class ForwardView : public View
     {
     public:
-        const char *            getClassName    () const final { return "ForwardView"; }
+        const char *                getClassName    () const final { return "ForwardView"; }
 
-                                ForwardView     (const gfx::CreateViewParams & _params);
-                                ~ForwardView    ();
+                                    ForwardView     (const gfx::CreateViewParams & _params);
+                                    ~ForwardView    ();
 
 
-        void                    AddToFrameGraph (gfx::FrameGraph & _frameGraph) override;
+        void                        addToFrameGraph (gfx::FrameGraph & _frameGraph) override;
 
     private:
-        BackgroundPass *        m_backgroundPass = nullptr;
-        ForwardPass *           m_forwardPass = nullptr;
-        FinalPostProcessPass *  m_postProcessPass = nullptr;
-
-        TestRayTracingPass *    m_testRayTracingPass = nullptr;
+        BackgroundPass *            m_backgroundPass = nullptr;
+        ForwardPass *               m_forwardPass = nullptr;
+        TestRayTracingPass *        m_testRayTracingPass = nullptr;
+        ComputePostProcessPass *    m_computePostProcessPass = nullptr;
+        FinalPostProcessPass *      m_postProcessPass = nullptr;
     };
 }

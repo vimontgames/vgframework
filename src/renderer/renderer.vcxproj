@@ -88,6 +88,10 @@
     <ClInclude Include="Precomp.h" />
     <ClInclude Include="Renderer.h" />
     <ClInclude Include="Renderer_consts.h" />
+    <ClInclude Include="RenderPass\Compute\ComputePass.h" />
+    <ClInclude Include="RenderPass\Compute\ComputePass.hpp" />
+    <ClInclude Include="RenderPass\Compute\ComputePostProcess\ComputePostProcessPass.h" />
+    <ClInclude Include="RenderPass\Compute\ComputePostProcess\ComputePostProcessPass.hpp" />
     <ClInclude Include="RenderPass\ImGui\ImGui.h" />
     <ClInclude Include="RenderPass\ImGui\ImGui.hpp" />
     <ClInclude Include="RenderPass\ImGui\imguiAdapter.h" />

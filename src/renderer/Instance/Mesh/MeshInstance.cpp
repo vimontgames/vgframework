@@ -90,7 +90,7 @@ namespace vg::renderer
                 else
                     renderer->getDefaultMaterial()->Setup(_cmdList, &root3D, i);
 
-                _cmdList->setInlineRootConstants(&root3D, RootConstants3DCount);
+                _cmdList->setGraphicRootConstants(0, (u32*) &root3D, RootConstants3DCount);
                 _cmdList->drawIndexed(batch.count, batch.offset);
             }
         }

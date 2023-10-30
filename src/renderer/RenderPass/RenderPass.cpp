@@ -29,6 +29,9 @@ using namespace vg::gfx;
 #include "RenderObjects/RenderObjectsPass.hpp"
 #include "RenderObjects/Forward/ForwardPass.hpp"
 
+#include "Compute/ComputePass.hpp"
+#include "Compute/ComputePostProcess/ComputePostProcessPass.hpp"
+
 #include "RayTracing/RayTracingPass.hpp"
 #include "RayTracing/Test/TestRayTracingPass.hpp"
 

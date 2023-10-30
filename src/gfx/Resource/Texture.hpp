@@ -146,6 +146,12 @@ namespace vg::gfx
 	Texture::~Texture()
 	{
         auto * device = Device::get();
-        device->getBindlessTable()->freeBindlessTextureHandle(m_bindlessSRVHandle);
+        auto * bindlessTable = device->getBindlessTable();
+
+        if (m_bindlessSRVHandle.isValid())
+            bindlessTable->freeBindlessTextureHandle(m_bindlessSRVHandle);
+
+        if (m_bindlessRWTextureHandle.isValid())
+            bindlessTable->freeBindlessRWTextureHandle(m_bindlessRWTextureHandle);
 	}
 }

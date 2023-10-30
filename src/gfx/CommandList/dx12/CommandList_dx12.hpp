@@ -137,7 +137,8 @@ namespace vg::gfx::dx12
                 }
             }
 
-            m_d3d12graphicsCmdList->BeginRenderPass(_subPass->m_renderTargetCount, _subPass->m_renderTargetCount ? _subPass->m_d3d12renderPassRenderTargetDesc : nullptr, _subPass->m_depthStencilCount ? &_subPass->m_d3d12renderPassDepthStencilDesc : nullptr, _subPass->m_d3d12renderPassFlags);
+            if (RenderPassType::Graphic == m_renderPass->getRenderPassType())
+                m_d3d12graphicsCmdList->BeginRenderPass(_subPass->m_renderTargetCount, _subPass->m_renderTargetCount ? _subPass->m_d3d12renderPassRenderTargetDesc : nullptr, _subPass->m_depthStencilCount ? &_subPass->m_d3d12renderPassDepthStencilDesc : nullptr, _subPass->m_d3d12renderPassFlags);
         }
 	}
 
@@ -163,7 +164,8 @@ namespace vg::gfx::dx12
     //--------------------------------------------------------------------------------------
 	void CommandList::endSubPass()
 	{
-		m_d3d12graphicsCmdList->EndRenderPass();
+        if (RenderPassType::Graphic == m_renderPass->getRenderPassType())
+		    m_d3d12graphicsCmdList->EndRenderPass();
 
         const RenderPass * renderPass = getRenderPass();
         const SubPass * subPass = getSubPass();
@@ -275,7 +277,7 @@ namespace vg::gfx::dx12
     }
 
     //--------------------------------------------------------------------------------------
-    void CommandList::bindRootConstants(core::uint(&_constants)[max_root_constants])
+    void CommandList::bindGraphicRootConstants(core::uint(&_constants)[max_root_constants])
     {
         const auto & rootConstantDesc = m_currentGraphicRootSignature->getRootSignatureDesc().getRootConstants();
         for (uint i = 0; i < rootConstantDesc.size(); ++i)
@@ -429,7 +431,7 @@ namespace vg::gfx::dx12
                                         pitchedDesc.Width = texDesc.width>>i;
                                         pitchedDesc.Height = texDesc.height>>i;
                                         pitchedDesc.Depth = 1;
-                                        pitchedDesc.RowPitch = (uint)alignUp(pitchedDesc.Width * fmtSize, D3D12_TEXTURE_DATA_PITCH_ALIGNMENT);                                      
+                                        pitchedDesc.RowPitch = (uint)alignUp((uint)(pitchedDesc.Width * fmtSize), (uint)D3D12_TEXTURE_DATA_PITCH_ALIGNMENT);
 
             D3D12_TEXTURE_COPY_LOCATION dst = {};
                                         dst.Type = D3D12_TEXTURE_COPY_TYPE_SUBRESOURCE_INDEX;
@@ -464,6 +466,38 @@ namespace vg::gfx::dx12
             auto * bindlessTable = device->getBindlessTable();
             bindlessTable->updated3d12descriptor(_dst->getBindlessSRVHandle());
         }
+    }
+
+    //--------------------------------------------------------------------------------------
+    void CommandList::bindComputeRootSignature(gfx::RootSignature * _rootSig)
+    {
+        auto * d3d12rs = _rootSig->getd3d12RootSignature();
+        m_d3d12graphicsCmdList->SetComputeRootSignature(d3d12rs);
+        m_d3d12graphicsCmdList->SetComputeRootDescriptorTable(1, gfx::Device::get()->getBindlessTable()->getd3d12GPUDescriptorHeap()->GetGPUDescriptorHandleForHeapStart());
+    }
+
+    //--------------------------------------------------------------------------------------
+    void CommandList::bindComputePipelineState(gfx::ComputePipelineState * _pso)
+    {
+        auto * d3s12pso = _pso->getd3d12ComputePipelineState();
+        m_d3d12graphicsCmdList->SetPipelineState(d3s12pso);
+    }
+
+    //--------------------------------------------------------------------------------------
+    void CommandList::bindComputeRootConstants(core::uint(&_constants)[max_root_constants])
+    {
+        const auto & rootConstantDesc = m_currentComputeRootSignature->getRootSignatureDesc().getRootConstants();
+        for (uint i = 0; i < rootConstantDesc.size(); ++i)
+        {
+            const RootSignatureDesc::PushConstantParams & param = rootConstantDesc[i];
+            m_d3d12graphicsCmdList->SetComputeRoot32BitConstants(i, param.m_count, &_constants[param.m_register], 0);
+        }
+    }
+
+    //--------------------------------------------------------------------------------------
+    void CommandList::dispatch(core::uint3 _threadGroupCount)
+    {
+        m_d3d12graphicsCmdList->Dispatch(_threadGroupCount.x, _threadGroupCount.y, _threadGroupCount.z);
     }
 
     //--------------------------------------------------------------------------------------

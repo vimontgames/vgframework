@@ -95,4 +95,11 @@ namespace vg::core
     {
         return _lzcnt_u64(_value);
     }
+
+    //--------------------------------------------------------------------------------------
+    template<typename T> inline T alignUp(T _adress, T _align)
+    {
+        VG_ASSERT((0 != _align) && !(_align & (_align - 1)));
+        return (T(_adress + (_align - 1)) & ~(T)(_align - 1));
+    }
 }

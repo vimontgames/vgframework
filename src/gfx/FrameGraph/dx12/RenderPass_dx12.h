@@ -9,7 +9,7 @@ namespace vg::gfx::dx12
 		using super = base::RenderPass;
 
 	public:
-		RenderPass(const RenderPassKey & _key);
+		RenderPass(RenderPassType _renderPassType, const RenderPassKey & _key);
 		~RenderPass();
 
 		void finalize();
