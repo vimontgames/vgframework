@@ -1,4 +1,4 @@
-#include "FinalPostProcessPass.h"
+#include "FinalBlitPass.h"
 #include "shaders/system/rootConstants2D.hlsli"
 
 namespace vg::renderer
@@ -6,7 +6,7 @@ namespace vg::renderer
     //--------------------------------------------------------------------------------------
     // Setup executed once, when pass is created
     //--------------------------------------------------------------------------------------
-    FinalPostProcessPass::FinalPostProcessPass() :
+    FinalBlitPass::FinalBlitPass() :
         Render2DPass("FinalPostProcessPass")
     {
         auto * device = Device::get();
@@ -22,7 +22,7 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    FinalPostProcessPass::~FinalPostProcessPass()
+    FinalBlitPass::~FinalBlitPass()
     {
         auto * device = Device::get();
         device->removeRootSignature(m_postProcessRootSignature);
@@ -31,7 +31,7 @@ namespace vg::renderer
     //--------------------------------------------------------------------------------------
     // Setup executed each frame, for each pass instance
     //--------------------------------------------------------------------------------------
-    void FinalPostProcessPass::setup(const gfx::RenderPassContext & _renderPassContext, double _dt)
+    void FinalBlitPass::setup(const gfx::RenderPassContext & _renderPassContext, double _dt)
     {
         const auto options = DisplayOptions::get();
         if (options->isComputePostProcessEnabled())
@@ -42,7 +42,7 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    void FinalPostProcessPass::draw(const RenderPassContext & _renderPassContext, CommandList * _cmdList) const
+    void FinalBlitPass::draw(const RenderPassContext & _renderPassContext, CommandList * _cmdList) const
     {
         const auto options = DisplayOptions::get();
 

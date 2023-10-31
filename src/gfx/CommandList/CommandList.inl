@@ -3,7 +3,6 @@ namespace vg::gfx
     //--------------------------------------------------------------------------------------
     VG_INLINE void CommandList::setGraphicRootSignature(const RootSignatureHandle & _rsHandle)
     {
-        m_currentRenderPassType = RenderPassType::Graphic;
         super::setGraphicRootSignature(_rsHandle);
     }
                    
@@ -64,7 +63,6 @@ namespace vg::gfx
     //--------------------------------------------------------------------------------------
     VG_INLINE void CommandList::setComputeRootSignature(const RootSignatureHandle & _rsHandle)
     {
-        m_currentRenderPassType = RenderPassType::Compute;
         super::setComputeRootSignature(_rsHandle);
     }
 

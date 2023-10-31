@@ -53,6 +53,7 @@
     <ClCompile Include="Memory\MemoryAllocator.cpp" />
     <ClCompile Include="PipelineState\Compute\ComputePipelineState.cpp" />
     <ClCompile Include="PipelineState\Graphic\GraphicPipelineState.cpp" />
+    <ClCompile Include="PipelineState\PipelineStateCache.cpp" />
     <ClCompile Include="Profiler\Profiler.cpp" />
     <ClCompile Include="Resource\Resource.cpp" />
     <ClInclude Include="IImporter.h" />
@@ -63,6 +64,8 @@
     <ClInclude Include="ITexture.h" />
     <ClInclude Include="IView.h" />
     <ClInclude Include="PipelineState\Compute\ComputePipelineState.h" />
+    <ClInclude Include="PipelineState\Compute\ComputePipelineStateCache.h" />
+    <ClInclude Include="PipelineState\Compute\ComputePipelineStateCache.hpp" />
     <ClInclude Include="PipelineState\Compute\ComputePipelineStateKey.h" />
     <ClInclude Include="PipelineState\Compute\ComputePipelineStateKey.hpp" />
     <ClInclude Include="PipelineState\Compute\ComputePipelineState_consts.h" />
@@ -85,6 +88,8 @@
     <ClInclude Include="PipelineState\Graphic\dx12\SamplerState_dx12.h" />
     <ClInclude Include="PipelineState\Graphic\dx12\SamplerState_dx12.hpp" />
     <ClInclude Include="PipelineState\Graphic\GraphicPipelineState.h" />
+    <ClInclude Include="PipelineState\Graphic\GraphicPipelineStateCache.h" />
+    <ClInclude Include="PipelineState\Graphic\GraphicPipelineStateCache.hpp" />
     <ClInclude Include="PipelineState\Graphic\GraphicPipelineStateKey.h" />
     <ClInclude Include="PipelineState\Graphic\GraphicPipelineStateKey.hpp" />
     <ClInclude Include="PipelineState\Graphic\GraphicPipelineState_consts.h" />
@@ -103,6 +108,7 @@
     <ClInclude Include="PipelineState\Graphic\vulkan\RasterizerState_vulkan.hpp" />
     <ClInclude Include="PipelineState\Graphic\vulkan\SamplerState_vulkan.h" />
     <ClInclude Include="PipelineState\Graphic\vulkan\SamplerState_vulkan.hpp" />
+    <ClInclude Include="PipelineState\PipelineStateCache.h" />
     <ClInclude Include="Profiler\Profiler.h" />
     <ClInclude Include="Resource\Buffer.h" />
     <ClInclude Include="Resource\Buffer.hpp" />

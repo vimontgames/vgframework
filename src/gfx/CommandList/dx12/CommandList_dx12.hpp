@@ -279,7 +279,7 @@ namespace vg::gfx::dx12
     //--------------------------------------------------------------------------------------
     void CommandList::bindGraphicRootConstants(core::uint(&_constants)[max_root_constants])
     {
-        const auto & rootConstantDesc = m_currentGraphicRootSignature->getRootSignatureDesc().getRootConstants();
+        const auto & rootConstantDesc = m_graphicStateCache.m_rootSignature->getRootSignatureDesc().getRootConstants();
         for (uint i = 0; i < rootConstantDesc.size(); ++i)
         {
             const RootSignatureDesc::PushConstantParams & param = rootConstantDesc[i];
@@ -486,7 +486,7 @@ namespace vg::gfx::dx12
     //--------------------------------------------------------------------------------------
     void CommandList::bindComputeRootConstants(core::uint(&_constants)[max_root_constants])
     {
-        const auto & rootConstantDesc = m_currentComputeRootSignature->getRootSignatureDesc().getRootConstants();
+        const auto & rootConstantDesc = m_computeStateCache.m_rootSignature->getRootSignatureDesc().getRootConstants();
         for (uint i = 0; i < rootConstantDesc.size(); ++i)
         {
             const RootSignatureDesc::PushConstantParams & param = rootConstantDesc[i];

@@ -7,7 +7,7 @@ namespace vg::renderer
     class ForwardPass;
     class TestRayTracingPass;
     class ComputePostProcessPass;
-    class FinalPostProcessPass;
+    class FinalBlitPass;
     
 
     class ForwardView : public View
@@ -26,6 +26,6 @@ namespace vg::renderer
         ForwardPass *               m_forwardPass = nullptr;
         TestRayTracingPass *        m_testRayTracingPass = nullptr;
         ComputePostProcessPass *    m_computePostProcessPass = nullptr;
-        FinalPostProcessPass *      m_postProcessPass = nullptr;
+        FinalBlitPass *             m_finalBlitPass = nullptr;
     };
 }

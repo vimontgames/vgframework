@@ -167,12 +167,6 @@
     <ClInclude Include="RenderPass\RenderPass.h">
       <Filter>Pass</Filter>
     </ClInclude>
-    <ClInclude Include="RenderPass\Render2D\FinalPostProcess\FinalPostProcessPass.h">
-      <Filter>Pass\Render2D\FinalPostProcess</Filter>
-    </ClInclude>
-    <ClInclude Include="RenderPass\Render2D\FinalPostProcess\FinalPostProcessPass.hpp">
-      <Filter>Pass\Render2D\FinalPostProcess</Filter>
-    </ClInclude>
     <ClInclude Include="RenderPass\Render2D\Background\BackgroundPass.h">
       <Filter>Pass\Render2D\Background</Filter>
     </ClInclude>
@@ -238,6 +232,12 @@
     </ClInclude>
     <ClInclude Include="RenderPass\Compute\ComputePass.hpp">
       <Filter>Pass\Compute</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderPass\Render2D\FinalBlit\FinalBlitPass.h">
+      <Filter>Pass\Render2D\FinalBlit</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderPass\Render2D\FinalBlit\FinalBlitPass.hpp">
+      <Filter>Pass\Render2D\FinalBlit</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -316,9 +316,6 @@
     <Filter Include="Pass\Render2D">
       <UniqueIdentifier>{e611e959-73ef-4043-afe7-9ab28ce0e38c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Pass\Render2D\FinalPostProcess">
-      <UniqueIdentifier>{92acb9e4-3a55-4044-b4a4-0f5ef69fe09d}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Pass\Render2D\Background">
       <UniqueIdentifier>{d7f7a87d-93bd-4bf9-9b3e-6dc95248da47}</UniqueIdentifier>
     </Filter>
@@ -345,6 +342,9 @@
     </Filter>
     <Filter Include="Pass\Compute\ComputePostProcess">
       <UniqueIdentifier>{b77f276c-e523-4a83-ba1f-a9d300086c73}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Pass\Render2D\FinalBlit">
+      <UniqueIdentifier>{914bedee-b853-45a3-baf5-e2c44770a738}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

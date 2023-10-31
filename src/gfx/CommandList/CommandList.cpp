@@ -144,9 +144,9 @@ namespace vg::gfx
         {
             if (_rsHandle != m_graphicStateCache.m_graphicPipelineKey.m_rootSignature)
             {
-                m_graphicStateCache.m_dirtyFlags |= GraphicStateCache::DirtyFlags::RootSignature;
+                m_graphicStateCache.m_dirtyFlags |= GraphicPipelineStateCache::DirtyFlags::RootSignature;
                 m_graphicStateCache.m_graphicPipelineKey.m_rootSignature = _rsHandle;
-                m_currentGraphicRootSignature = gfx::Device::get()->getRootSignature(_rsHandle);
+                m_graphicStateCache.m_rootSignature = gfx::Device::get()->getRootSignature(_rsHandle);
             }
         }
 
@@ -155,7 +155,7 @@ namespace vg::gfx
         {
             if (_topology != m_graphicStateCache.m_graphicPipelineKey.m_primitiveTopology)
             {
-                m_graphicStateCache.m_dirtyFlags |= GraphicStateCache::DirtyFlags::PipelineState;
+                m_graphicStateCache.m_dirtyFlags |= GraphicPipelineStateCache::DirtyFlags::PipelineState;
                 m_graphicStateCache.m_graphicPipelineKey.m_primitiveTopology = _topology;
             }
         }
@@ -165,7 +165,7 @@ namespace vg::gfx
         {
             if (any(_viewport != m_graphicStateCache.m_viewport))
             {
-                m_graphicStateCache.m_dirtyFlags |= GraphicStateCache::DirtyFlags::Viewport;
+                m_graphicStateCache.m_dirtyFlags |= GraphicPipelineStateCache::DirtyFlags::Viewport;
                 m_graphicStateCache.m_viewport = _viewport;
             }
         }
@@ -175,7 +175,7 @@ namespace vg::gfx
         {
             if (any(_scissor != m_graphicStateCache.m_scissor))
             {
-                m_graphicStateCache.m_dirtyFlags |= GraphicStateCache::DirtyFlags::Scissor;
+                m_graphicStateCache.m_dirtyFlags |= GraphicPipelineStateCache::DirtyFlags::Scissor;
                 m_graphicStateCache.m_scissor = _scissor;
             }
         }
@@ -189,7 +189,7 @@ namespace vg::gfx
                 if (_values[i] != m_graphicStateCache.m_rootConstants[_startOffset + i])
                 {
                     m_graphicStateCache.m_rootConstants[_startOffset + i] = _values[i];
-                    m_graphicStateCache.m_dirtyFlags |= GraphicStateCache::DirtyFlags::RootConstants;
+                    m_graphicStateCache.m_dirtyFlags |= GraphicPipelineStateCache::DirtyFlags::RootConstants;
                 }
             }
         }
@@ -200,7 +200,7 @@ namespace vg::gfx
             if (_ib != m_graphicStateCache.m_indexBuffer)
             {
                 VG_ASSERT(!_ib || 2 == _ib->getBufDesc().elementSize || 4 == _ib->getBufDesc().elementSize, "Invalid Index Buffer element size %u (should 2 or 4)", _ib->getBufDesc().elementSize);
-                m_graphicStateCache.m_dirtyFlags |= GraphicStateCache::DirtyFlags::IndexBuffer;
+                m_graphicStateCache.m_dirtyFlags |= GraphicPipelineStateCache::DirtyFlags::IndexBuffer;
                 m_graphicStateCache.m_indexBuffer = _ib;
             }
         }
@@ -210,7 +210,7 @@ namespace vg::gfx
         {
             if (_key != m_graphicStateCache.m_graphicPipelineKey.m_shaderKey)
             {
-                m_graphicStateCache.m_dirtyFlags |= GraphicStateCache::DirtyFlags::PipelineState;
+                m_graphicStateCache.m_dirtyFlags |= GraphicPipelineStateCache::DirtyFlags::PipelineState;
                 m_graphicStateCache.m_graphicPipelineKey.m_shaderKey = _key;
             }
         }
@@ -220,7 +220,7 @@ namespace vg::gfx
         {
             if (_rs != m_graphicStateCache.m_graphicPipelineKey.m_rasterizerState)
             {
-                m_graphicStateCache.m_dirtyFlags |= GraphicStateCache::DirtyFlags::PipelineState;
+                m_graphicStateCache.m_dirtyFlags |= GraphicPipelineStateCache::DirtyFlags::PipelineState;
                 m_graphicStateCache.m_graphicPipelineKey.m_rasterizerState = _rs;
             }
         }
@@ -230,7 +230,7 @@ namespace vg::gfx
         {
             if (_ds != m_graphicStateCache.m_graphicPipelineKey.m_depthStencilState)
             {
-                m_graphicStateCache.m_dirtyFlags |= GraphicStateCache::DirtyFlags::PipelineState;
+                m_graphicStateCache.m_dirtyFlags |= GraphicPipelineStateCache::DirtyFlags::PipelineState;
                 m_graphicStateCache.m_graphicPipelineKey.m_depthStencilState = _ds;
             }
         }
@@ -240,7 +240,7 @@ namespace vg::gfx
         {
             if (_bs != m_graphicStateCache.m_graphicPipelineKey.m_blendState)
             {
-                m_graphicStateCache.m_dirtyFlags |= GraphicStateCache::DirtyFlags::PipelineState;
+                m_graphicStateCache.m_dirtyFlags |= GraphicPipelineStateCache::DirtyFlags::PipelineState;
                 m_graphicStateCache.m_graphicPipelineKey.m_blendState = _bs;
             }
         }
@@ -250,9 +250,9 @@ namespace vg::gfx
         {
             if (_rsHandle != m_computeStateCache.m_computePipelineKey.m_computeRootSignature)
             {
-                m_computeStateCache.m_dirtyFlags |= ComputeStateCache::DirtyFlags::RootSignature;
+                m_computeStateCache.m_dirtyFlags |= ComputePipelineStateCache::DirtyFlags::RootSignature;
                 m_computeStateCache.m_computePipelineKey.m_computeRootSignature = _rsHandle;
-                m_currentComputeRootSignature = gfx::Device::get()->getRootSignature(_rsHandle);
+                m_computeStateCache.m_rootSignature = gfx::Device::get()->getRootSignature(_rsHandle);
             }
         }
 
@@ -261,7 +261,7 @@ namespace vg::gfx
         {
             if (_computeKey != m_computeStateCache.m_computePipelineKey.m_computeShaderKey)
             {
-                m_computeStateCache.m_dirtyFlags |= ComputeStateCache::DirtyFlags::PipelineState;
+                m_computeStateCache.m_dirtyFlags |= ComputePipelineStateCache::DirtyFlags::PipelineState;
                 m_computeStateCache.m_computePipelineKey.m_computeShaderKey = _computeKey;
             }
         }
@@ -275,9 +275,30 @@ namespace vg::gfx
                 if (_values[i] != m_computeStateCache.m_rootConstants[_startOffset + i])
                 {
                     m_computeStateCache.m_rootConstants[_startOffset + i] = _values[i];
-                    m_computeStateCache.m_dirtyFlags |= ComputeStateCache::DirtyFlags::RootConstants;
+                    m_computeStateCache.m_dirtyFlags |= ComputePipelineStateCache::DirtyFlags::RootConstants;
                 }
             }
+        }
+
+        //--------------------------------------------------------------------------------------
+        void CommandList::setCurrentRenderPassType(RenderPassType _renderPassType)
+        {
+            switch (_renderPassType)
+            {
+                default:
+                    VG_ASSERT_ENUM_NOT_IMPLEMENTED(_renderPassType);
+                    break;
+
+                case RenderPassType::Graphic:
+                    m_graphicStateCache.m_dirtyFlags = (PipelineStateCache::DirtyFlags)-1;
+                    break;
+
+                case RenderPassType::Compute:
+                    m_computeStateCache.m_dirtyFlags = (PipelineStateCache::DirtyFlags)-1;
+                    break;
+            }
+
+            m_currentRenderPassType = _renderPassType;
         }
 	}
 
@@ -291,27 +312,17 @@ namespace vg::gfx
 	//--------------------------------------------------------------------------------------
 	CommandList::~CommandList()
 	{
-        for (auto & pair : m_graphicPipelineStateHash)
-            VG_SAFE_RELEASE(pair.second);
-        m_graphicPipelineStateHash.clear();
-
-        for (auto & pair : m_computePipelineStateHash)
-            VG_SAFE_RELEASE(pair.second);
-        m_computePipelineStateHash.clear();
+        m_graphicStateCache.clear();
+        m_computeStateCache.clear();
 	}
 
     //--------------------------------------------------------------------------------------
     void CommandList::reset()
     {
-        memset(&m_graphicStateCache.m_graphicPipelineKey, -1, sizeof(GraphicPipelineStateKey));
-        m_graphicStateCache.m_dirtyFlags = (GraphicStateCache::DirtyFlags)-1;
-        m_graphicStateCache.m_viewport = uint4(0, 0, 0, 0);
-        m_graphicStateCache.m_indexBuffer = nullptr;
-        memset(m_graphicStateCache.m_rootConstants, 0x0, sizeof(m_graphicStateCache.m_rootConstants));
+        m_currentRenderPassType = (RenderPassType)-1;
 
-        memset(&m_computeStateCache.m_computePipelineKey, -1, sizeof(ComputePipelineStateKey));
-        m_computeStateCache.m_dirtyFlags = (ComputeStateCache::DirtyFlags)-1;
-        memset(m_computeStateCache.m_rootConstants, 0x0, sizeof(m_computeStateCache.m_rootConstants));
+        m_graphicStateCache.reset();
+        m_computeStateCache.reset();
 
         super::reset();
     }
@@ -325,31 +336,8 @@ namespace vg::gfx
     //--------------------------------------------------------------------------------------
     void CommandList::resetShaders(ShaderKey::File _file)
     {
-        vector<GraphicPipelineStateKey> keys;
-        for (auto & pair : m_graphicPipelineStateHash)
-        {
-            const GraphicPipelineStateKey & key = pair.first;
-            if (key.m_shaderKey.file == _file)
-            {
-                VG_SAFE_RELEASE_ASYNC(pair.second);
-                keys.push_back(key);
-            }
-        }
-        for (GraphicPipelineStateKey key : keys)
-            m_graphicPipelineStateHash.erase(key);
-
-        vector<ComputePipelineStateKey> computeKeys;
-        for (auto & pair : m_computePipelineStateHash)
-        {
-            const ComputePipelineStateKey & computeKey = pair.first;
-            if (computeKey.m_computeShaderKey.file == _file)
-            {
-                VG_SAFE_RELEASE_ASYNC(pair.second);
-                computeKeys.push_back(computeKey);
-            }
-        }
-        for (ComputePipelineStateKey computeKey : computeKeys)
-            m_computePipelineStateHash.erase(computeKey);
+        m_graphicStateCache.resetShaders(_file);
+        m_computeStateCache.resetShaders(_file);
     }
 
     //--------------------------------------------------------------------------------------
@@ -365,66 +353,27 @@ namespace vg::gfx
     }
 
     //--------------------------------------------------------------------------------------
-    bool CommandList::getGraphicPipelineState(const GraphicPipelineStateKey & _key, GraphicPipelineState *& _graphicPipelineState)
-    {
-        GraphicPipelineState * pso = nullptr;
-
-        auto it = m_graphicPipelineStateHash.find(_key);
-        if (m_graphicPipelineStateHash.end() != it)
-        {
-            pso = it->second;
-        }
-        else
-        {
-            pso = GraphicPipelineState::createGraphicPipelineState(_key);
-            m_graphicPipelineStateHash[_key] = pso;
-        }
-        
-        _graphicPipelineState = pso;
-
-        return nullptr != pso;
-    }
-
-    //--------------------------------------------------------------------------------------
-    bool CommandList::getComputePipelineState(const ComputePipelineStateKey & _key, ComputePipelineState *& _computePipelineState)
-    {
-        ComputePipelineState * pso = nullptr;
-
-        auto it = m_computePipelineStateHash.find(_key);
-        if (m_computePipelineStateHash.end() != it)
-        {
-            pso = it->second;
-        }
-        else
-        {
-            pso = ComputePipelineState::createComputePipelineState(_key);
-            m_computePipelineStateHash[_key] = pso;
-        }
-
-        _computePipelineState = pso;
-
-        return nullptr != pso;
-    }
-
-    //--------------------------------------------------------------------------------------
     bool CommandList::applyGraphicPipelineState()
     {
+        if (RenderPassType::Graphic != m_currentRenderPassType)
+            setCurrentRenderPassType(RenderPassType::Graphic);
+
         if (asBool(m_graphicStateCache.m_dirtyFlags))
         {
             auto * device = Device::get();
 
-            if (asBool(GraphicStateCache::DirtyFlags::RootSignature & m_graphicStateCache.m_dirtyFlags))
+            if (asBool(GraphicPipelineStateCache::DirtyFlags::RootSignature & m_graphicStateCache.m_dirtyFlags))
                 super::bindGraphicRootSignature(device->getRootSignature(m_graphicStateCache.m_graphicPipelineKey.m_rootSignature));
 
-            if (asBool(GraphicStateCache::DirtyFlags::IndexBuffer & m_graphicStateCache.m_dirtyFlags))
+            if (asBool(GraphicPipelineStateCache::DirtyFlags::IndexBuffer & m_graphicStateCache.m_dirtyFlags))
                 super::bindIndexBuffer(m_graphicStateCache.m_indexBuffer);
 
-            if (asBool(GraphicStateCache::DirtyFlags::PipelineState & m_graphicStateCache.m_dirtyFlags))
+            if (asBool(GraphicPipelineStateCache::DirtyFlags::PipelineState & m_graphicStateCache.m_dirtyFlags))
             {
                 const auto & key = m_graphicStateCache.m_graphicPipelineKey;
             
                 GraphicPipelineState * pso = nullptr;
-                if (!getGraphicPipelineState(key, pso))
+                if (!m_graphicStateCache.getGraphicPipelineState(key, pso))
                     return false;
             
                 super::bindGraphicPipelineState(pso);
@@ -433,16 +382,16 @@ namespace vg::gfx
                 super::bindPrimitiveTopology(m_graphicStateCache.m_graphicPipelineKey.m_primitiveTopology);
             }
 
-            if (asBool(GraphicStateCache::DirtyFlags::Viewport & m_graphicStateCache.m_dirtyFlags))
+            if (asBool(GraphicPipelineStateCache::DirtyFlags::Viewport & m_graphicStateCache.m_dirtyFlags))
                 super::bindViewport(m_graphicStateCache.m_viewport);
 
-            if (asBool(GraphicStateCache::DirtyFlags::Scissor & m_graphicStateCache.m_dirtyFlags))
+            if (asBool(GraphicPipelineStateCache::DirtyFlags::Scissor & m_graphicStateCache.m_dirtyFlags))
                 super::bindScissor(m_graphicStateCache.m_scissor);
 
-            if (asBool(GraphicStateCache::DirtyFlags::RootConstants & m_graphicStateCache.m_dirtyFlags))
+            if (asBool(GraphicPipelineStateCache::DirtyFlags::RootConstants & m_graphicStateCache.m_dirtyFlags))
                 super::bindGraphicRootConstants(m_graphicStateCache.m_rootConstants);
 
-            m_graphicStateCache.m_dirtyFlags = (GraphicStateCache::DirtyFlags)0;
+            m_graphicStateCache.m_dirtyFlags = (GraphicPipelineStateCache::DirtyFlags)0;
         }
 
         return true;
@@ -465,29 +414,32 @@ namespace vg::gfx
     //--------------------------------------------------------------------------------------
     bool CommandList::applyComputePipelineState()
     {
+        if (RenderPassType::Compute != m_currentRenderPassType)
+            setCurrentRenderPassType(RenderPassType::Compute);
+
         if (asBool(m_computeStateCache.m_dirtyFlags))
         {
             auto * device = Device::get();
 
-            if (asBool(ComputeStateCache::DirtyFlags::RootSignature & m_computeStateCache.m_dirtyFlags))
+            if (asBool(ComputePipelineStateCache::DirtyFlags::RootSignature & m_computeStateCache.m_dirtyFlags))
                 super::bindComputeRootSignature(device->getRootSignature(m_computeStateCache.m_computePipelineKey.m_computeRootSignature));
 
-            if (asBool(ComputeStateCache::DirtyFlags::PipelineState & m_computeStateCache.m_dirtyFlags))
+            if (asBool(ComputePipelineStateCache::DirtyFlags::PipelineState & m_computeStateCache.m_dirtyFlags))
             {
                 const auto & key = m_computeStateCache.m_computePipelineKey;
 
                 ComputePipelineState * pso = nullptr;
-                if (!getComputePipelineState(key, pso))
+                if (!m_computeStateCache.getComputePipelineState(key, pso))
                     return false;
 
                 super::bindComputePipelineState(pso);
                 m_computeStateCache.m_computePipelineKey = key;
             }
 
-            if (asBool(ComputeStateCache::DirtyFlags::RootConstants & m_computeStateCache.m_dirtyFlags))
+            if (asBool(ComputePipelineStateCache::DirtyFlags::RootConstants & m_computeStateCache.m_dirtyFlags))
                 super::bindComputeRootConstants(m_computeStateCache.m_rootConstants);
 
-            m_computeStateCache.m_dirtyFlags = (ComputeStateCache::DirtyFlags)0;
+            m_computeStateCache.m_dirtyFlags = (ComputePipelineStateCache::DirtyFlags)0;
         }
 
         return true;

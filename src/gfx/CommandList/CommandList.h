@@ -3,8 +3,8 @@
 #include "core/Object/Object.h"
 #include "CommandList_consts.h"
 #include "gfx/Device/Device_consts.h"
-#include "gfx/PipelineState/Graphic/GraphicPipelineStateKey.h"
-#include "gfx/PipelineState/Compute/ComputePipelineStateKey.h"
+#include "gfx/PipelineState/Graphic/GraphicPipelineStateCache.h"
+#include "gfx/PipelineState/Compute/ComputePipelineStateCache.h"
 
 namespace vg::gfx
 {
@@ -58,6 +58,8 @@ namespace vg::gfx
             void                    setComputeShader        (const ComputeShaderKey & _computeKey);
             void                    setComputeRootConstants (core::uint _startOffset, core::u32 * _values, core::uint _count);
 
+            void                    setCurrentRenderPassType(RenderPassType _renderPassType);
+
 		protected:
 			CommandListType			m_type;
 			core::u8				m_frame;
@@ -69,50 +71,9 @@ namespace vg::gfx
 			core::uint				m_subPassIndex = -1;
 
         protected:
-            RenderPassType          m_currentRenderPassType = (RenderPassType)-1;
-
-            struct StateCache
-            {
-                enum class DirtyFlags : core::u32
-                {
-                    RootSignature   = 0x00000001,
-                    PipelineState   = 0x00000002,
-                    Viewport        = 0x00000004,
-                    Scissor         = 0x00000008,
-                    RootConstants   = 0x00000010,
-                    IndexBuffer     = 0x00000020
-                };
-
-                DirtyFlags                  m_dirtyFlags;
-                core::u32                   m_rootConstants[max_root_constants] = {};
-            };
-
-            struct GraphicStateCache : public StateCache
-            {
-                GraphicStateCache() = default;
-                
-                GraphicPipelineStateKey m_graphicPipelineKey;
-                core::uint4             m_viewport;
-                core::uint4             m_scissor;
-                Buffer *                m_indexBuffer = nullptr;
-            };
-            GraphicStateCache           m_graphicStateCache;
-            RootSignature *             m_currentGraphicRootSignature = nullptr;
-
-            using GraphicPipelineStateHash = core::unordered_map<gfx::GraphicPipelineStateKey, gfx::GraphicPipelineState *, gfx::GraphicPipelineStateKey::hash>;
-            GraphicPipelineStateHash    m_graphicPipelineStateHash;
-
-            struct ComputeStateCache : public StateCache
-            {
-                ComputeStateCache() = default;
-
-                ComputePipelineStateKey m_computePipelineKey;
-            };
-            ComputeStateCache           m_computeStateCache;
-            RootSignature *             m_currentComputeRootSignature = nullptr;
-
-            using ComputePipelineStateHash = core::unordered_map<gfx::ComputePipelineStateKey, gfx::ComputePipelineState *, gfx::ComputePipelineStateKey::hash>;
-            ComputePipelineStateHash    m_computePipelineStateHash;
+            RenderPassType              m_currentRenderPassType = (RenderPassType)-1;
+            GraphicPipelineStateCache   m_graphicStateCache;
+            ComputePipelineStateCache   m_computeStateCache;
 		};
 	}
 }
@@ -165,10 +126,6 @@ namespace vg::gfx
         void                        dispatch                    (core::uint3 _threadGroupCount);
 
         void                        resetShaders                (ShaderKey::File _file);
-
-    private:
-        bool                        getGraphicPipelineState     (const GraphicPipelineStateKey & _key, GraphicPipelineState *& _graphicPipelineState);
-        bool                        getComputePipelineState     (const ComputePipelineStateKey & _key, ComputePipelineState *& _computePipelineState);
 	};
 }
 

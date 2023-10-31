@@ -24,7 +24,7 @@ using namespace vg::gfx;
 
 #include "Render2D/Render2DPass.hpp"
 #include "Render2D/Background/BackgroundPass.hpp"
-#include "Render2D/FinalPostProcess/FinalPostProcessPass.hpp"
+#include "Render2D/FinalBlit/FinalBlitPass.hpp"
 
 #include "RenderObjects/RenderObjectsPass.hpp"
 #include "RenderObjects/Forward/ForwardPass.hpp"

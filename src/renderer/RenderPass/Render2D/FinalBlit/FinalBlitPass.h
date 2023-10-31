@@ -5,13 +5,15 @@
 namespace vg::renderer
 {
     //--------------------------------------------------------------------------------------
-    class FinalPostProcessPass : public Render2DPass
+    // This pass copies the final image to its editor viewport or backbuffer in fullscreen mode
+    //--------------------------------------------------------------------------------------
+    class FinalBlitPass : public Render2DPass
     {
     public:
-        const char * getClassName() const final { return "FinalPostProcessPass"; }
+        const char * getClassName() const final { return "FinalBlitPass"; }
 
-        FinalPostProcessPass();
-        ~FinalPostProcessPass();
+        FinalBlitPass();
+        ~FinalBlitPass();
 
         void setup(const gfx::RenderPassContext & _renderContext, double _dt) override;
         void draw(const gfx::RenderPassContext & _renderContext, gfx::CommandList * _cmdList) const override;

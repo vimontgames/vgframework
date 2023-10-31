@@ -47,6 +47,9 @@
     <ClCompile Include="PipelineState\Compute\ComputePipelineState.cpp">
       <Filter>PipelineState\Compute</Filter>
     </ClCompile>
+    <ClCompile Include="PipelineState\PipelineStateCache.cpp">
+      <Filter>PipelineState</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Precomp.h" />
@@ -553,6 +556,21 @@
       <Filter>PipelineState\Compute</Filter>
     </ClInclude>
     <ClInclude Include="PipelineState\Compute\ComputePipelineStateKey.hpp">
+      <Filter>PipelineState\Compute</Filter>
+    </ClInclude>
+    <ClInclude Include="PipelineState\PipelineStateCache.h">
+      <Filter>PipelineState</Filter>
+    </ClInclude>
+    <ClInclude Include="PipelineState\Graphic\GraphicPipelineStateCache.h">
+      <Filter>PipelineState\Graphic</Filter>
+    </ClInclude>
+    <ClInclude Include="PipelineState\Compute\ComputePipelineStateCache.h">
+      <Filter>PipelineState\Compute</Filter>
+    </ClInclude>
+    <ClInclude Include="PipelineState\Graphic\GraphicPipelineStateCache.hpp">
+      <Filter>PipelineState\Graphic</Filter>
+    </ClInclude>
+    <ClInclude Include="PipelineState\Compute\ComputePipelineStateCache.hpp">
       <Filter>PipelineState\Compute</Filter>
     </ClInclude>
   </ItemGroup>

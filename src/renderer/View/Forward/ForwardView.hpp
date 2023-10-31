@@ -4,7 +4,7 @@
 #include "renderer/RenderPass/RenderObjects/Forward/ForwardPass.h"
 #include "renderer/RenderPass/RayTracing/Test/TestRayTracingPass.h"
 #include "renderer/RenderPass/Compute/ComputePostProcess/ComputePostProcessPass.h"
-#include "renderer/RenderPass/Render2D/FinalPostProcess/FinalPostProcessPass.h"
+#include "renderer/RenderPass/Render2D/FinalBlit/FinalBlitPass.h"
 
 #include "renderer/Options/DisplayOptions.h"
 
@@ -21,7 +21,7 @@ namespace vg::renderer
         m_forwardPass = new ForwardPass();
         m_testRayTracingPass = new TestRayTracingPass();
         m_computePostProcessPass = new ComputePostProcessPass();
-        m_postProcessPass = new FinalPostProcessPass();        
+        m_finalBlitPass = new FinalBlitPass();        
     }
 
     //--------------------------------------------------------------------------------------
@@ -31,7 +31,7 @@ namespace vg::renderer
         VG_SAFE_RELEASE(m_forwardPass);
         VG_SAFE_RELEASE(m_testRayTracingPass);
         VG_SAFE_RELEASE(m_computePostProcessPass);
-        VG_SAFE_RELEASE(m_postProcessPass);        
+        VG_SAFE_RELEASE(m_finalBlitPass);        
     }
 
     //--------------------------------------------------------------------------------------
@@ -57,7 +57,7 @@ namespace vg::renderer
             if (options->isComputePostProcessEnabled())
                 _frameGraph.addUserPass(rc, m_computePostProcessPass, "ComputePostProcessPass");
 
-            _frameGraph.addUserPass(rc, m_postProcessPass, "PostProcessPass");
+            _frameGraph.addUserPass(rc, m_finalBlitPass, "FinalBlitPass");
         }
     }
 }

@@ -103,8 +103,8 @@
     <ClInclude Include="RenderPass\RayTracing\Test\TestRayTracingPass.hpp" />
     <ClInclude Include="RenderPass\Render2D\Background\BackgroundPass.h" />
     <ClInclude Include="RenderPass\Render2D\Background\BackgroundPass.hpp" />
-    <ClInclude Include="RenderPass\Render2D\FinalPostProcess\FinalPostProcessPass.h" />
-    <ClInclude Include="RenderPass\Render2D\FinalPostProcess\FinalPostProcessPass.hpp" />
+    <ClInclude Include="RenderPass\Render2D\FinalBlit\FinalBlitPass.h" />
+    <ClInclude Include="RenderPass\Render2D\FinalBlit\FinalBlitPass.hpp" />
     <ClInclude Include="RenderPass\Render2D\Render2DPass.h" />
     <ClInclude Include="RenderPass\Render2D\Render2DPass.hpp" />
     <ClInclude Include="RenderPass\RenderContext.h" />

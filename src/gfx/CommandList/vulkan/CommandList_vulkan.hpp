@@ -127,8 +127,8 @@ namespace vg::gfx::vulkan
     //--------------------------------------------------------------------------------------
     void CommandList::bindGraphicRootConstants(core::uint(&_constants)[max_root_constants])
     {
-        const auto vkPipelineLayout = m_currentGraphicRootSignature->getVulkanPipelineLayout();
-        const auto & rootConstantDesc = m_currentGraphicRootSignature->getRootSignatureDesc().getRootConstants();
+        const auto vkPipelineLayout = m_graphicStateCache.m_rootSignature->getVulkanPipelineLayout();
+        const auto & rootConstantDesc = m_graphicStateCache.m_rootSignature->getRootSignatureDesc().getRootConstants();
         for (uint i = 0; i < rootConstantDesc.size(); ++i)
         {
             const RootSignatureDesc::PushConstantParams & param = rootConstantDesc[i];
@@ -385,8 +385,8 @@ namespace vg::gfx::vulkan
     //--------------------------------------------------------------------------------------
     void CommandList::bindComputeRootConstants(core::uint(&_constants)[max_root_constants])
     {
-        const auto vkPipelineLayout = m_currentComputeRootSignature->getVulkanPipelineLayout();
-        const auto & rootConstantDesc = m_currentComputeRootSignature->getRootSignatureDesc().getRootConstants();
+        const auto vkPipelineLayout = m_computeStateCache.m_rootSignature->getVulkanPipelineLayout();
+        const auto & rootConstantDesc = m_computeStateCache.m_rootSignature->getRootSignatureDesc().getRootConstants();
         for (uint i = 0; i < rootConstantDesc.size(); ++i)
         {
             const RootSignatureDesc::PushConstantParams & param = rootConstantDesc[i];
