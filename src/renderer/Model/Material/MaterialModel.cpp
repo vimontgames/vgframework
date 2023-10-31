@@ -11,12 +11,13 @@
 #include "gfx/PipelineState/Graphic/RasterizerState.h"
 #include "gfx/PipelineState/Graphic/DepthStencilState.h"
 #include "gfx/PipelineState/Graphic/BlendState.h"
-
+#include "renderer/RenderPass/RenderContext.h"
 #include "renderer/Importer/SceneImporterData.h"
 #include "renderer/Renderer.h"
 
 #include "DefaultMaterial/DefaultMaterialModel.hpp"
 
+#include "Shaders/default/default.hlsl.h"
 #include "shaders/system/rootConstants3D.hlsli"
 
 using namespace vg::core;
@@ -127,7 +128,7 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    void MaterialModel::Setup(gfx::CommandList * _cmdList, RootConstants3D * _root3D, core::uint _index) const
+    void MaterialModel::Setup(const RenderContext & _renderContext, gfx::CommandList * _cmdList, RootConstants3D * _root3D, core::uint _index) const
     {
         gfx::Texture * albedoMap = getTexture(MaterialTextureType::Albedo);
         gfx::Texture * normalMap = getTexture(MaterialTextureType::Normal);
@@ -158,10 +159,10 @@ namespace vg::renderer
         _cmdList->setDepthStencilState(ds);        
 
         // TODO: set from material?
-        //if (renderContext.m_toolmode)
-        //    key.setFlags(gfx::DefaultHLSLDesc::Toolmode, true);
-        //else
-        //    key.setFlags(gfx::DefaultHLSLDesc::Toolmode, false);
+        if (_renderContext.m_toolmode)
+            key.setFlags(gfx::DefaultHLSLDesc::Toolmode, true);
+        else
+            key.setFlags(gfx::DefaultHLSLDesc::Toolmode, false);
        
         _cmdList->setRasterizerState(rs);
         _cmdList->setShader(key);

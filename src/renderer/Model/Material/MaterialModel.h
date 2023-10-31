@@ -19,6 +19,7 @@ namespace vg
 
     namespace renderer
     {
+        class RenderContext;
         class MaterialImporterData;
 
         class MaterialModel : public IMaterialModel
@@ -41,7 +42,7 @@ namespace vg
                                     MaterialModel           (const core::string & _name, core::IObject * _parent = nullptr);
                                     ~MaterialModel          ();
 
-            void                    Setup                   (gfx::CommandList * _cmdList, RootConstants3D * _root3DConstants, core::uint _index) const;
+            void                    Setup                   (const RenderContext & _renderContext, gfx::CommandList * _cmdList, RootConstants3D * _root3DConstants, core::uint _index) const;
 
             core::uint              GetTextureCount         () const override;
             gfx::ITexture *         GetTexture              (MaterialTextureType _type) const override;

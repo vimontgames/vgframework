@@ -88,7 +88,7 @@ PS_Output PS_Forward(VS_Output _input)
 
     output.color0.rgba = float4(albedo.rgb * (fakeDiffuseLighting + fakeAmbientLighting), 1.0f) * _input.col;
 
-    //#if _TOOLMODE
+    #if _TOOLMODE
     uint mode = rootConstants3D.getMode();
     switch (mode)
     {
@@ -120,7 +120,7 @@ PS_Output PS_Forward(VS_Output _input)
             output.color0 = sRGBA2Linear(float4(normal.rgb * 0.5 + 0.5, 1));
             break;
     }
-    //#endif // _TOOLMODE
+    #endif // _TOOLMODE
             
     return output;
 }

@@ -10,6 +10,8 @@ namespace vg::core
 
 namespace vg::renderer
 {
+    class DisplayOptions;
+
     class MeshInstance : public IMeshInstance
     {
     public:
@@ -24,6 +26,9 @@ namespace vg::renderer
         static bool registerProperties(core::IClassDesc & _desc);
 
         void Draw(const RenderContext & _renderContext, gfx::CommandList * _cmdList) const final override;
+
+        static core::u16 configureToolMode(const DisplayOptions & _options, core::u16 _mode);
+        static core::u16 configureToolModeFlags(const DisplayOptions & _options, core::u16 _flags);
 
     private:
         

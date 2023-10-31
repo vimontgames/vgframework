@@ -5,6 +5,7 @@
 namespace vg::gfx
 {
     enum class API : core::u8;
+    class Shader;
 
     class HLSLDesc
     {
