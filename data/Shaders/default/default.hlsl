@@ -58,7 +58,7 @@ PS_Output PS_Forward(VS_Output _input)
     PS_Output output;
         
     // test dynamic buffer
-    //Load(test, getBuffer(16393));
+    //float4 test = LoadF4(getBuffer(16388), 0);
     //output.color0 = test;
     //return output;
     
@@ -69,10 +69,10 @@ PS_Output PS_Forward(VS_Output _input)
     float3 normal = getTexture2D( rootConstants3D.getNormalTextureHandle() ).Sample(linearRepeat, uv0).rgb*2-1;
 
     #if _TOOLMODE
-    if (0 == (rootConstants3D.getFlags() & FLAG_ALBEDOMAPS))
+    if (0 == (FLAG_ALBEDOMAPS & rootConstants3D.getFlags()))
         albedo = pow(0.5, 0.45);
 
-    if (0 == (rootConstants3D.getFlags() & FLAG_NORMALMAPS))
+    if (0 == (FLAG_NORMALMAPS & rootConstants3D.getFlags()))
         normal = float3(0,0,1);
     #endif
 
@@ -83,8 +83,8 @@ PS_Output PS_Forward(VS_Output _input)
     float3 worldNormal = normalize(T * normal.x + B * normal.y + N * normal.z);
 
     // fake shitty lighting
-    float3 fakeDiffuseLighting = saturate(dot(worldNormal, normalize(float3(-1, -3, 4))) * 0.78f);
-    float3 fakeAmbientLighting = 0.22f;
+    float3 fakeDiffuseLighting = saturate(dot(worldNormal, normalize(float3(-1, -1, 2))) * 0.8f);
+    float3 fakeAmbientLighting = 0.1f;
 
     output.color0.rgba = float4(albedo.rgb * (fakeDiffuseLighting + fakeAmbientLighting), 1.0f) * _input.col;
 
@@ -120,6 +120,10 @@ PS_Output PS_Forward(VS_Output _input)
             output.color0 = sRGBA2Linear(float4(normal.rgb * 0.5 + 0.5, 1));
             break;
     }
+    
+    if (FLAG_WIREFRAME & rootConstants3D.getFlags())
+        output.color0 = float4(0,1,0,1);
+    
     #endif // _TOOLMODE
             
     return output;

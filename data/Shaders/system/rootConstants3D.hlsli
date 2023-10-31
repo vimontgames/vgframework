@@ -10,6 +10,7 @@ using namespace vg::core;
 #define FLAG_NONE           0x0000
 #define FLAG_ALBEDOMAPS     0x0001
 #define FLAG_NORMALMAPS     0x0002
+#define FLAG_WIREFRAME      0x0004
 
 #define MODE_DEFAULT        0x0000
 #define MODE_MATID          0x0001

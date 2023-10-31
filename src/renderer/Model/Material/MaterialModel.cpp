@@ -139,16 +139,6 @@ namespace vg::renderer
 
         auto key = m_shaderKey;
 
-        //if (_renderContext.m_toolmode)
-        {
-            //if (_renderContext.m_wireframe)
-            //{
-            //    RasterizerState rs(FillMode::Wireframe, CullMode::None);
-            //    _cmdList->setRasterizerState(rs);
-            //    key = m_debugDrawShaderKey);
-            //}
-        }
-
         RasterizerState rs(FillMode::Solid, CullMode::Back);
         BlendState bs(BlendFactor::One, BlendFactor::Zero, BlendOp::Add);
         DepthStencilState ds(true, true, ComparisonFunc::LessEqual);
@@ -160,9 +150,16 @@ namespace vg::renderer
 
         // TODO: set from material?
         if (_renderContext.m_toolmode)
+        {
+            if (_renderContext.m_wireframe)
+                rs = RasterizerState(FillMode::Wireframe, CullMode::None);
+
             key.setFlags(gfx::DefaultHLSLDesc::Toolmode, true);
+        }
         else
+        {
             key.setFlags(gfx::DefaultHLSLDesc::Toolmode, false);
+        }
        
         _cmdList->setRasterizerState(rs);
         _cmdList->setShader(key);

@@ -49,8 +49,8 @@ namespace vg::gfx::vulkan
         void                                beginGPUEvent               (const char * _name, core::u32 _color);
         void                                endGPUEvent                 ();
 
-        //void *                              map                         (gfx::Buffer * _buffer);
-        //void                                unmap                       (gfx::Buffer * _buffer);
+        void *                              map                         (gfx::Buffer * _buffer);
+        void                                unmap                       (gfx::Buffer * _buffer, void * _data);
 
 		VkCommandBuffer &					getVulkanCommandBuffer      () { return m_vkCommandBuffer;  }
 

@@ -27,7 +27,9 @@ namespace vg::renderer
 
     private:
 
-        //gfx::DynamicBuffer *        m_dynamicBuffer = nullptr;
-        //gfx::Buffer *               m_updatedBuffer = nullptr;
+        //gfx::DynamicBuffer * m_dynamicBuffer = nullptr;
+        //gfx::Buffer * m_updatedBuffer = nullptr;
+
+        gfx::Buffer * m_constantBuffer = nullptr;
     };
 }

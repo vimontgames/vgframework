@@ -147,6 +147,9 @@ namespace vg::renderer
                 const auto options = DisplayOptions::get();
                 mode = configureToolMode(*options, mode);
                 flags = configureToolModeFlags(*options, flags);
+
+                if (_renderContext.m_wireframe)
+                    flags |= FLAG_WIREFRAME;
             }
             
             root3D.setMode(mode);

@@ -8,6 +8,8 @@
 #include "renderer/Model/Mesh/MeshModel.h"
 #include "renderer/View/View.h"
 
+#include "gfx/RingBuffer/Upload/UploadBuffer.h"
+
 namespace vg::renderer
 {
     //--------------------------------------------------------------------------------------
@@ -16,7 +18,16 @@ namespace vg::renderer
     ForwardPass::ForwardPass() :
         RenderObjectsPass("ForwardPass")
     {
+        auto * device = Device::get();
+        //m_dynamicBuffer = new DynamicBuffer("m_dynamicBuffer", 1024);
+        //BufferDesc updatedBufferDesc = BufferDesc(Usage::Default, BindFlags::ShaderResource, CPUAccessFlags::None, BufferFlags::None, sizeof(float4));
+        //m_updatedBuffer = device->createBuffer(updatedBufferDesc, "m_updatedBuffer");
 
+        BufferDesc constantBufferDesc = BufferDesc(Usage::Default, BindFlags::ShaderResource, CPUAccessFlags::Write, BufferFlags::None, sizeof(float4));
+
+        float4 initData = float4(1, 2, 3, 4);
+
+        m_constantBuffer = device->createBuffer(constantBufferDesc, "m_constantBuffer", &initData);
     }
 
     //--------------------------------------------------------------------------------------
@@ -24,6 +35,8 @@ namespace vg::renderer
     {
         //VG_SAFE_RELEASE(m_dynamicBuffer);
         //VG_SAFE_RELEASE(m_updatedBuffer);
+
+        VG_SAFE_RELEASE(m_constantBuffer);
     }    
 
     //--------------------------------------------------------------------------------------
@@ -34,20 +47,15 @@ namespace vg::renderer
         writeRenderTarget(0, _renderContext.getFrameGraphID("Color"));
         writeDepthStencil(_renderContext.getFrameGraphID("DepthStencil"));
 
-        // test (Can't 'copyBuffer' during RenderPass)
-        //u8 * data = m_dynamicBuffer->map(sizeof(float4), 256);
-        //{
-        //    float4 color = float4(0, 1, 0, 1);
-        //    memcpy(data, &color, sizeof(float4));
-        //}
-        //m_dynamicBuffer->unmap();
-        //
-        //// kwik Haxx
-        //auto * device = Device::get();
-        //CommandList * _cmdList = device->getCommandLists(CommandListType::Graphics)[0];
-        //
-        //// Probably need some syntaxic sugar here
-        //_cmdList->copyBuffer(m_updatedBuffer, m_dynamicBuffer->getBuffer(), data - m_dynamicBuffer->getBaseAddress());
+        auto * device = Device::get();
+        CommandList * _cmdList = device->getCommandLists(CommandListType::Graphics)[0];
+
+        void * data = _cmdList->map(m_constantBuffer);
+        {
+            float4 src = float4(1, 0, 1, 1);
+            memcpy(data, &src, sizeof(float4));
+        }
+        _cmdList->unmap(m_constantBuffer, data);
     }
 
     //--------------------------------------------------------------------------------------
@@ -72,7 +80,8 @@ namespace vg::renderer
         _cmdList->setBlendState(bs);
         _cmdList->setDepthStencilState(ds);
 
-        DrawGraphicInstances(renderContext, _cmdList, allInstances);
+        if (!renderContext.m_toolmode || options->isOpaqueEnabled())
+            DrawGraphicInstances(renderContext, _cmdList, allInstances);
 
         if (renderContext.m_toolmode)
         {
@@ -82,67 +91,6 @@ namespace vg::renderer
                 DrawGraphicInstances(renderContext, _cmdList, allInstances);
             }
         }
-
-        // TODO: create base class "GraphicInstance" for common implementation between all types of instances?
-        // e.g. ConfigureToolmode(&flags, &mode) 
-        //u16 flags = 0x0, mode = 0x0;
-        //
-        //if (toolmode)
-        //{
-        //
-        //    if (options->isAlbedoMapsEnabled())
-        //        flags |= FLAG_ALBEDOMAPS;
-        //
-        //    if (options->isNormalMapsEnabled())
-        //        flags |= FLAG_NORMALMAPS;
-        //
-        //    switch (options->getDisplayMode())
-        //    {
-        //        default:
-        //            VG_ASSERT_ENUM_NOT_IMPLEMENTED(options->getDisplayMode());
-        //            break;
-        //
-        //        case DisplayMode::Default:
-        //            mode = MODE_DEFAULT;
-        //            break;
-        //
-        //        case DisplayMode::MatID:
-        //            mode = MODE_MATID;
-        //            break;
-        //
-        //        case DisplayMode::VSNormal:
-        //            mode = MODE_VS_NORMAL;
-        //            break;
-        //
-        //        case DisplayMode::VSTangent:
-        //            mode = MODE_VS_TANGENT;
-        //            break;
-        //
-        //        case DisplayMode::VSBinormal:
-        //            mode = MODE_VS_BINORMAL;
-        //            break;
-        //
-        //        case DisplayMode::VSColor:
-        //            mode = MODE_VS_COLOR;
-        //            break;
-        //
-        //        case DisplayMode::UV0:
-        //            mode = MODE_UV0;
-        //            break;
-        //
-        //        case DisplayMode::UV1:
-        //            mode = MODE_UV1;
-        //            break;
-        //
-        //        case DisplayMode::Albedo:
-        //            mode = MODE_ALBEDO_MAP;
-        //            break;
-        //
-        //        case DisplayMode::PSNormal:
-        //            mode = MODE_NORMAL_MAP;
-        //            break;
-        //    }
-        //}
 
         if (renderContext.m_toolmode)
         {

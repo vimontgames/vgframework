@@ -168,58 +168,25 @@ namespace vg::gfx::vulkan
     }
 
     //--------------------------------------------------------------------------------------
-    //void * CommandList::map(gfx::Buffer * _buffer)
-    //{
-    //    auto * device = gfx::Device::get();
-    //    BindlessTable * bindlessTable = device->getBindlessTable();
-    //    auto & context = device->getCurrentFrameContext();
-    //
-    //    size_t bufferSize = _buffer->getBufDesc().size();
-    //
-    //    //VkMemoryRequirements mem_reqs;
-    //    //vkGetBufferMemoryRequirements(device->getVulkanDevice(), _buffer->getResource().getVulkanBuffer(), &mem_reqs);
-    //
-    //    // allocate space in upload buffer
-    //    const uint alignment = 256; // CB size is required to be 256-byte aligned.
-    //    const uint_ptr offset = context.m_uploadBuffer->alloc(bufferSize, alignment);
-    //    core::u8 * data = context.m_uploadBuffer->getBaseAddress() + offset;
-    //
-    //    BindlessHandle handle = bindlessTable->allocBindlessConstantBufferHandle(context.m_uploadBuffer->getBuffer());
-    //
-    //    VkDescriptorBufferInfo vkBufferInfo = {};
-    //    vkBufferInfo.buffer = context.m_uploadBuffer->getBuffer()->getResource().getVulkanBuffer();
-    //    vkBufferInfo.offset = offset;
-    //    vkBufferInfo.range = bufferSize;
-    //
-    //    VkBufferViewCreateInfo vkBufferViewDesc = {};
-    //                           vkBufferViewDesc.sType = VK_STRUCTURE_TYPE_BUFFER_VIEW_CREATE_INFO;
-    //                           vkBufferViewDesc.buffer = context.m_uploadBuffer->getBuffer()->getResource().getVulkanBuffer();
-    //                           vkBufferViewDesc.format = VK_FORMAT_R32_UINT;
-    //                           vkBufferViewDesc.range = bufferSize;
-    //
-    //    VkBufferView  * vkBufferView = new VkBufferView();
-    //    VG_ASSERT_VULKAN(vkCreateBufferView(device->getVulkanDevice(), &vkBufferViewDesc, nullptr, &vkBufferView));
-    //
-    //    VkWriteDescriptorSet writes = {};
-    //                         writes.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
-    //                         writes.dstBinding = bindless_constantbuffer_binding;
-    //                         writes.descriptorCount = 1;
-    //                         writes.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_TEXEL_BUFFER;
-    //                         writes.pBufferInfo = &vkBufferInfo;
-    //                         writes.pTexelBufferView = &vkBufferView;;
-    //                         writes.dstSet = device->getVulkanBindlessDescriptors();
-    //                         writes.dstArrayElement = handle - BINDLESS_CONSTANTBUFFER_START;
-    //
-    //    vkUpdateDescriptorSets(device->getVulkanDevice(), 1, &writes, 0, nullptr);
-    //
-    //    return data;
-    //}
+    void * CommandList::map(gfx::Buffer * _buffer)
+    {
+        auto * device = gfx::Device::get();
+        auto uploadBuffer = device->getUploadBuffer();
+
+        VkMemoryRequirements mem_reqs;
+        vkGetBufferMemoryRequirements(device->getVulkanDevice(), _buffer->getResource().getVulkanBuffer(), &mem_reqs);
+
+        return uploadBuffer->map(mem_reqs.size, (uint)mem_reqs.alignment);
+    }
 
     //--------------------------------------------------------------------------------------
-    //void CommandList::unmap(gfx::Buffer * _buffer)
-    //{
-    //
-    //}
+    void CommandList::unmap(gfx::Buffer * _buffer, void * _data)
+    {
+        auto * device = gfx::Device::get();
+        auto uploadBuffer = device->getUploadBuffer();
+        uploadBuffer->unmap(_buffer, (u8 *)_data);
+        uploadBuffer->flush((gfx::CommandList *)this);
+    }
       
     //--------------------------------------------------------------------------------------
     void CommandList::copyBuffer(gfx::Buffer * _dst, gfx::Buffer * _src, core::uint_ptr _srcOffset)
