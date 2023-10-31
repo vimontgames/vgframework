@@ -87,6 +87,10 @@ namespace vg::engine
                         if (m_renderer)
                             m_renderer->updateShaders();
                         break;
+
+                    case VK_F11:
+                        toggleFullscreen();
+                        break;
                 }
                 break;
         }
@@ -394,6 +398,13 @@ namespace vg::engine
         if (previous != 0)
             m_time.m_dt = Timer::getEnlapsedTime(previous, current);
         previous = current;
+    }
+
+    //--------------------------------------------------------------------------------------
+    void Engine::toggleFullscreen()
+    {
+        if (m_renderer)
+            m_renderer->SetFullscreen(!m_renderer->IsFullscreen());
     }
 
 	//--------------------------------------------------------------------------------------

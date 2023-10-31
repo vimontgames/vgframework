@@ -108,6 +108,8 @@ namespace vg::editor
                 draw = false;
             }
 
+            m_view->SetSize(m_size);
+
             if (!m_texture || m_texture->GetWidth() != m_size.x || m_texture->GetHeight() != m_size.y)
             {
                 // As we're executing framegraph we can't fully release the texture right now because it may be still in use

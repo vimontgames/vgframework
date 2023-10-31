@@ -239,6 +239,7 @@ namespace vg::renderer
     {
         m_device.waitGPUIdle();
         m_device.resize(_width, _height);
+        m_mainView->setSize(uint2(_width, _height));
         m_frameGraph.destroyTransientResources();
     }
 
@@ -286,7 +287,8 @@ namespace vg::renderer
 
 		m_device.beginFrame();
 		{
-            m_imgui->beginFrame();
+            if (!m_fullscreen)
+                m_imgui->beginFrame();
 
             // Culling all views
             cullViews();
@@ -300,19 +302,36 @@ namespace vg::renderer
 
                 for (uint j = 0; j < core::enumCount<gfx::ViewTarget>(); ++j)
                 {
+                    auto target = gfx::ViewTarget(j);
+
+                    if (m_fullscreen)
+                    {
+                        if (gfx::ViewTarget::Editor == target)
+                            continue;
+                    }
+
                     auto & views = m_views[j];
                     for (uint i = 0; i < views.count(); ++i)
                     {
                         auto * view = views[i];
                         if (nullptr != view && nullptr != view->getUniverse())
+                        {
+                            if (m_fullscreen)
+                            {
+                                if (gfx::ViewTarget::Game == target)
+                                    view->setSize(m_mainView->getSize());
+                            }
+
                             view->addToFrameGraph(m_frameGraph);
+                        }
                     }
                 }
 
                 RenderPassContext mainViewRenderPassContext;
                                   mainViewRenderPassContext.m_view = m_mainView;
 
-                m_frameGraph.addUserPass(mainViewRenderPassContext, m_imguiPass, "UIPass");
+                if (!m_fullscreen)
+                    m_frameGraph.addUserPass(mainViewRenderPassContext, m_imguiPass, "UIPass");
 
                 m_frameGraph.setup(_dt);
                 m_frameGraph.build();
@@ -591,5 +610,22 @@ namespace vg::renderer
     void Renderer::deinitDefaultMaterials()
     {
         VG_SAFE_RELEASE(m_defaultMaterial);
+    }
+
+    //--------------------------------------------------------------------------------------
+    void Renderer::SetFullscreen(bool _fullscreen)
+    {
+        if (_fullscreen != m_fullscreen)
+        {
+            m_fullscreen = _fullscreen;
+            VG_INFO("[Renderer] Set Fullscreen to '%s'", _fullscreen ? "true" : "false");
+            SetResized();
+        }
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool Renderer::IsFullscreen() const
+    {
+        return m_fullscreen;
     }
 }

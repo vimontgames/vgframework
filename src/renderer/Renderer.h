@@ -75,12 +75,15 @@ namespace vg::renderer
 
         void                                    ReleaseAsync            (core::IObject * _object) final override;
 
-        VG_INLINE gfx::Texture *                 getDefaultTexture       (MaterialTextureType _type) const;
-        VG_INLINE MaterialModel *                getDefaultMaterial      () const;
+        VG_INLINE gfx::Texture *                getDefaultTexture       (MaterialTextureType _type) const;
+        VG_INLINE MaterialModel *               getDefaultMaterial      () const;
         
         #ifdef _WIN32
         LRESULT CALLBACK                        WndProc                 (HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) override;
         #endif     
+
+        void                                    SetFullscreen           (bool _fullscreen) final override;
+        bool                                    IsFullscreen            () const final override;
 
     public: // internal
         View *                                  getMainView             () const;
@@ -109,6 +112,7 @@ namespace vg::renderer
         core::vector<View *>                    m_views[core::enumCount<gfx::ViewTarget>()];
         core::vector<gfx::Texture *>            m_defaultTextures;
         MaterialModel *                         m_defaultMaterial       = nullptr;
+        bool                                    m_fullscreen            = false;
 	};
 }
 

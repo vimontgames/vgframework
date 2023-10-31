@@ -97,6 +97,7 @@ namespace vg::engine
 
     protected:
         void                                updateDt            ();
+        void                                toggleFullscreen    ();
 
 	private:
         core::string                        m_projectPath;

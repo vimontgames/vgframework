@@ -38,7 +38,13 @@ namespace vg::renderer
             readRenderTarget(_renderPassContext.getFrameGraphID("PostProcessUAV"));
         else
             readRenderTarget(_renderPassContext.getFrameGraphID("Color"));
-        writeRenderTarget(0, _renderPassContext.getFrameGraphID("Dest")); // TODO: render to "Backbuffer" in exclusive GameMode?
+
+        const auto * renderer = Renderer::get();
+
+        if (renderer->IsFullscreen())
+            writeRenderTarget(0, "Backbuffer");
+        else
+            writeRenderTarget(0, _renderPassContext.getFrameGraphID("Dest")); 
     }
 
     //--------------------------------------------------------------------------------------

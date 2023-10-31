@@ -277,7 +277,7 @@ namespace vg::gfx
         if (isMinimized())
             return;
 
-        VG_INFO("[Device] Resize to %ux%u", _width, _height);
+        VG_INFO("[Renderer] Resize to %ux%u", _width, _height);
 
         waitGPUIdle();
         super::resize(_width, _height);

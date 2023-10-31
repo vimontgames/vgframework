@@ -75,6 +75,9 @@ namespace vg
             virtual gfx::ITexture *                     loadTexture             (const core::string & _file) = 0;
 
             virtual void                                ReleaseAsync            (core::IObject * _object) = 0;
+
+            virtual void                                SetFullscreen           (bool _fullscreen) = 0;
+            virtual bool                                IsFullscreen            () const = 0;
         };
     }
 }
