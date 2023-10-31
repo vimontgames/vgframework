@@ -95,7 +95,7 @@ namespace vg::gfx::vulkan
     //--------------------------------------------------------------------------------------
     void CommandList::bindPrimitiveTopology(PrimitiveTopology _topology)
     {
-        VG_ASSERT_NOT_IMPLEMENTED();
+        VG_WARNING_ONCE("[CommandList] bindPrimitiveTopology is not implemented");
     }
 
     //--------------------------------------------------------------------------------------
