@@ -1,9 +1,5 @@
 #include "ForwardPass.h"
-
 #include "core/GameObject/GameObject.h"
-
-#include "gfx/RingBuffer/Dynamic/DynamicBuffer.h"
-
 #include "renderer/Geometry/Mesh/MeshGeometry.h"
 #include "renderer/Model/Mesh/MeshModel.h"
 #include "renderer/View/View.h"

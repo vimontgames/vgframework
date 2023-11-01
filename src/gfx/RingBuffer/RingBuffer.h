@@ -24,8 +24,8 @@ namespace vg::gfx
     protected:
         core::uint_ptr  m_offsetCur = 0;
         core::uint_ptr  m_offsetStart = 0;
-        core::mutex     m_uploadMutex;
-        gfx::Buffer *   m_uploadBuffer = nullptr;
-        core::u8 *      m_uploadBegin = nullptr;
+        core::mutex     m_mutex;
+        gfx::Buffer *   m_buffer = nullptr;
+        core::u8 *      m_begin = nullptr;
     };
 }

@@ -396,12 +396,6 @@
     <ClInclude Include="RingBuffer\Upload\UploadBuffer.hpp">
       <Filter>RingBuffer\Upload</Filter>
     </ClInclude>
-    <ClInclude Include="RingBuffer\Dynamic\DynamicBuffer.h">
-      <Filter>RingBuffer\Dynamic</Filter>
-    </ClInclude>
-    <ClInclude Include="RingBuffer\Dynamic\DynamicBuffer.hpp">
-      <Filter>RingBuffer\Dynamic</Filter>
-    </ClInclude>
     <ClInclude Include="Device\vulkan\Extension\ExtensionList_vulkan.h">
       <Filter>Device\vulkan\Extension</Filter>
     </ClInclude>
@@ -682,9 +676,6 @@
     </Filter>
     <Filter Include="RingBuffer\Upload">
       <UniqueIdentifier>{207be679-e64c-4ad4-9fc0-5ae24978b170}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="RingBuffer\Dynamic">
-      <UniqueIdentifier>{bee51690-2c68-4788-9439-22f1682ca4d7}</UniqueIdentifier>
     </Filter>
     <Filter Include="Device\vulkan\Extension">
       <UniqueIdentifier>{bb34f2eb-a74c-4705-96ce-4e0eb76b249b}</UniqueIdentifier>

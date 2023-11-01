@@ -1,7 +1,6 @@
 #include "gfx/Precomp.h"
 
 #include "Upload/UploadBuffer.hpp"
-#include "Dynamic/DynamicBuffer.hpp"
 
 namespace vg::gfx
 {
@@ -16,24 +15,24 @@ namespace vg::gfx
             BufferFlags::None,
             _size);
 
-        m_uploadBuffer = new gfx::Buffer(bufDesc, _name);
+        m_buffer = new gfx::Buffer(bufDesc, _name);
 
         // keep always mapped
-        Map result = m_uploadBuffer->getResource().map();
-        m_uploadBegin = (core::u8 *)result.data;
+        Map result = m_buffer->getResource().map();
+        m_begin = (core::u8 *)result.data;
     }
 
     //--------------------------------------------------------------------------------------
     RingBuffer::~RingBuffer()
     {
-        m_uploadBuffer->getResource().unmap();
-        VG_SAFE_RELEASE(m_uploadBuffer);
+        m_buffer->getResource().unmap();
+        VG_SAFE_RELEASE(m_buffer);
     }
 
     //--------------------------------------------------------------------------------------
     core::u8 * RingBuffer::map(core::size_t _size, core::size_t _aligment)
     {
-        m_uploadMutex.lock();
+        m_mutex.lock();
         core::uint_ptr offset = alloc(_size, _aligment);
 
         if (uint_ptr(-1) != offset)
@@ -45,13 +44,13 @@ namespace vg::gfx
     //--------------------------------------------------------------------------------------
     void RingBuffer::unmap()
     {
-        m_uploadMutex.unlock();
+        m_mutex.unlock();
     }
 
     //--------------------------------------------------------------------------------------
     core::uint_ptr RingBuffer::alloc(size_t _size, size_t _alignment)
     {
-        const size_t totalSize = m_uploadBuffer->getBufDesc().size();
+        const size_t totalSize = m_buffer->getBufDesc().size();
         const size_t alignedSize = (_size + _alignment - 1) & ~(_alignment - 1);
 
         if (m_offsetCur + alignedSize < totalSize)
@@ -80,12 +79,12 @@ namespace vg::gfx
     //--------------------------------------------------------------------------------------
     u8 * RingBuffer::getBaseAddress() const
     {
-        return m_uploadBegin;
+        return m_begin;
     }
 
     //--------------------------------------------------------------------------------------
     Buffer * RingBuffer::getBuffer() const
     {
-        return m_uploadBuffer;
+        return m_buffer;
     }
 }

@@ -5,7 +5,6 @@
 namespace vg::gfx
 {
     class Buffer;
-    class DynamicBuffer;
 }
 
 namespace vg::renderer

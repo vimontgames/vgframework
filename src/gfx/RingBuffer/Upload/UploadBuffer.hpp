@@ -61,7 +61,7 @@ namespace vg
         //--------------------------------------------------------------------------------------
         void UploadBuffer::flush(CommandList * _cmdList)
         {
-            lock_guard<mutex> lock(m_uploadMutex);
+            lock_guard<mutex> lock(m_mutex);
 
             if (m_buffersToUpload.size() || m_texturesToUpload.size())
             {
