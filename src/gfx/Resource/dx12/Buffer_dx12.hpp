@@ -8,64 +8,56 @@ namespace vg::gfx::dx12
         auto * d3d12device = device->getd3d12Device();   
 
         D3D12_RESOURCE_DESC resourceDesc = getd3d12ResourceDesc(_bufDesc);
+        D3D12MA::ALLOCATION_DESC allocDesc = getd3d12AllocationDesc(_bufDesc);
 
-		if (_bufDesc.testUsageFlags(Usage::Dynamic))
-		{
-			VG_ASSERT_NOT_IMPLEMENTED();
-		}
-		else
+        D3D12_RESOURCE_STATES resourceState;
+
+        if (asBool(Usage::Upload & _bufDesc.resource.m_usage))
+            resourceState = D3D12_RESOURCE_STATE_GENERIC_READ;
+        else
+            resourceState = D3D12_RESOURCE_STATE_COPY_DEST;
+
+		if (_bufDesc.testBindFlags(BindFlags::Raytracing))
+			resourceState = D3D12_RESOURCE_STATE_RAYTRACING_ACCELERATION_STRUCTURE;
+
+        D3D12MA::Allocator * allocator = gfx::Device::get()->getd3d12MemoryAllocator();
+        ID3D12Resource * resource;
+        D3D12MA::Allocation * alloc;
+        VG_ASSERT_SUCCEEDED(allocator->CreateResource(&allocDesc, &resourceDesc, resourceState, nullptr, &alloc, IID_PPV_ARGS(&resource)));
+        m_resource.setd3d12BufferResource(_name, resource, alloc);
+
+        if (asBool(BindFlags::ShaderResource & _bufDesc.resource.m_bindFlags))
         {
-            D3D12MA::ALLOCATION_DESC allocDesc = getd3d12AllocationDesc(_bufDesc);
+            D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc = {};
+            srvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
+            srvDesc.Format = DXGI_FORMAT_R32_TYPELESS;// DXGI_FORMAT_UNKNOWN;
 
-            D3D12_RESOURCE_STATES resourceState;
+            srvDesc.ViewDimension = D3D12_SRV_DIMENSION_BUFFER;
+            srvDesc.Buffer.FirstElement = 0;
+            srvDesc.Buffer.NumElements = _bufDesc.size() / sizeof(u32);
+            srvDesc.Buffer.StructureByteStride = 0;// _bufDesc.elementSize;
+            srvDesc.Buffer.Flags = D3D12_BUFFER_SRV_FLAG_RAW; // D3D12_BUFFER_SRV_FLAG_NONE;
 
-            if (asBool(Usage::Upload & _bufDesc.resource.m_usage))
-                resourceState = D3D12_RESOURCE_STATE_GENERIC_READ;
-            else
-                resourceState = D3D12_RESOURCE_STATE_COPY_DEST;
+            VG_ASSERT(m_resource.getd3d12BufferResource());
 
-			if (_bufDesc.testBindFlags(BindFlags::Raytracing))
-				resourceState = D3D12_RESOURCE_STATE_RAYTRACING_ACCELERATION_STRUCTURE;
+            BindlessTable * bindlessTable = device->getBindlessTable();
+            m_bindlessSRVHandle = bindlessTable->allocBindlessBufferHandle(static_cast<gfx::Buffer*>(this), _reservedSlot);
 
-            D3D12MA::Allocator * allocator = gfx::Device::get()->getd3d12MemoryAllocator();
-            ID3D12Resource * resource;
-            D3D12MA::Allocation * alloc;
-            VG_ASSERT_SUCCEEDED(allocator->CreateResource(&allocDesc, &resourceDesc, resourceState, nullptr, &alloc, IID_PPV_ARGS(&resource)));
-            m_resource.setd3d12BufferResource(_name, resource, alloc);
+            D3D12_CPU_DESCRIPTOR_HANDLE d3d12DescriptorHandle = bindlessTable->getd3d12CPUDescriptorHandle(m_bindlessSRVHandle);
+            d3d12device->CreateShaderResourceView(m_resource.getd3d12BufferResource(), &srvDesc, d3d12DescriptorHandle);
+        }
 
-            if (asBool(BindFlags::ShaderResource & _bufDesc.resource.m_bindFlags))
+        if (nullptr != _initData)
+        {
+            const size_t uploadBufferSize = _bufDesc.size();
+            auto * uploadBuffer = device->getUploadBuffer();
+
+            core::u8 * dst = uploadBuffer->map(uploadBufferSize, D3D12_DEFAULT_RESOURCE_PLACEMENT_ALIGNMENT);
+            if (nullptr != dst)
             {
-                D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc = {};
-                srvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
-                srvDesc.Format = DXGI_FORMAT_R32_TYPELESS;// DXGI_FORMAT_UNKNOWN;
-
-                srvDesc.ViewDimension = D3D12_SRV_DIMENSION_BUFFER;
-                srvDesc.Buffer.FirstElement = 0;
-                srvDesc.Buffer.NumElements = _bufDesc.size() / sizeof(u32);
-                srvDesc.Buffer.StructureByteStride = 0;// _bufDesc.elementSize;
-                srvDesc.Buffer.Flags = D3D12_BUFFER_SRV_FLAG_RAW; // D3D12_BUFFER_SRV_FLAG_NONE;
-
-                VG_ASSERT(m_resource.getd3d12BufferResource());
-
-                BindlessTable * bindlessTable = device->getBindlessTable();
-                m_bindlessSRVHandle = bindlessTable->allocBindlessBufferHandle(static_cast<gfx::Buffer*>(this), _reservedSlot);
-
-                D3D12_CPU_DESCRIPTOR_HANDLE d3d12DescriptorHandle = bindlessTable->getd3d12CPUDescriptorHandle(m_bindlessSRVHandle);
-                d3d12device->CreateShaderResourceView(m_resource.getd3d12BufferResource(), &srvDesc, d3d12DescriptorHandle);
+                memcpy(dst, _initData, uploadBufferSize);
             }
-
-            if (nullptr != _initData)
-            {
-                const size_t uploadBufferSize = _bufDesc.size();
-                auto * uploadBuffer = device->getUploadBuffer();
-
-                core::u8 * dst = uploadBuffer->map(uploadBufferSize, D3D12_DEFAULT_RESOURCE_PLACEMENT_ALIGNMENT);
-                if (nullptr != dst)
-                {
-                    memcpy(dst, _initData, uploadBufferSize);
-                }
-                uploadBuffer->unmap(static_cast<gfx::Buffer*>(this), dst);
-            }
+            uploadBuffer->unmap(static_cast<gfx::Buffer*>(this), dst);
         }
     }
 
@@ -123,7 +115,9 @@ namespace vg::gfx::dx12
                 allocDesc.HeapType = D3D12_HEAP_TYPE_UPLOAD;
                 break;
 
-            case Usage::Dynamic:
+            case Usage::Staging:
+                allocDesc.Flags = D3D12MA::ALLOCATION_FLAG_NONE;
+                allocDesc.HeapType = D3D12_HEAP_TYPE_READBACK;
                 break;
         }
 

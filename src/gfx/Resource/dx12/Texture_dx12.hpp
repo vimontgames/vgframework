@@ -146,9 +146,7 @@ namespace vg::gfx::dx12
                 initState = D3D12_RESOURCE_STATE_COPY_DEST;
 
             if (asBool(BindFlags::UnorderedAccess & _texDesc.resource.m_bindFlags))
-            {
                 resourceDesc.Flags |= D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS;
-            }
 
             D3D12MA::Allocator * allocator = gfx::Device::get()->getd3d12MemoryAllocator();
             ID3D12Resource * resource;
@@ -166,21 +164,22 @@ namespace vg::gfx::dx12
             
             switch (_texDesc.type)
             {
-            default:
-                VG_ASSERT(false, "Unhandled TextureType \"%s\" (%u)", asString(_texDesc.type).c_str(), _texDesc.type);
+                default:
+                      VG_ASSERT_ENUM_NOT_IMPLEMENTED(_texDesc.type);
+                      break;
 
-            case TextureType::Texture1D:
-                srvDesc.Texture1D.MipLevels = 1;
-                srvDesc.Texture1D.MostDetailedMip = 0;
-                srvDesc.Texture1D.ResourceMinLODClamp = 0;
-                break;
+                case TextureType::Texture1D:
+                    srvDesc.Texture1D.MipLevels = 1;
+                    srvDesc.Texture1D.MostDetailedMip = 0;
+                    srvDesc.Texture1D.ResourceMinLODClamp = 0;
+                    break;
 
-            case TextureType::Texture2D:
-                srvDesc.Texture2D.MipLevels = _texDesc.mipmaps;
-                srvDesc.Texture2D.MostDetailedMip = 0;
-                srvDesc.Texture2D.PlaneSlice = 0;
-                srvDesc.Texture2D.ResourceMinLODClamp = 0;
-                break;
+                case TextureType::Texture2D:
+                    srvDesc.Texture2D.MipLevels = _texDesc.mipmaps;
+                    srvDesc.Texture2D.MostDetailedMip = 0;
+                    srvDesc.Texture2D.PlaneSlice = 0;
+                    srvDesc.Texture2D.ResourceMinLODClamp = 0;
+                    break;
             }
 
             VG_ASSERT(m_resource.getd3d12TextureResource());
@@ -236,7 +235,7 @@ namespace vg::gfx::dx12
             switch (_texDesc.type)
             {
                 default:
-                    VG_ASSERT_NOT_IMPLEMENTED();
+                    VG_ASSERT_ENUM_NOT_IMPLEMENTED(_texDesc.type);
                     break;
 
                 case TextureType::Texture2D:

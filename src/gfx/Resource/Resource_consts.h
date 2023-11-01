@@ -6,9 +6,7 @@ namespace vg::gfx
     {
         Default = 0,
         Upload,
-        //Static,
-        //Staging,
-        Dynamic
+        Staging
     };
 
     enum class CPUAccessFlags : core::u8
