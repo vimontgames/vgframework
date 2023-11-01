@@ -27,7 +27,7 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    void ComputePostProcessPass::setup(const gfx::RenderPassContext & _renderPassContext, double _dt)
+    void ComputePostProcessPass::Setup(const gfx::RenderPassContext & _renderPassContext, double _dt)
     {
         const auto srcID = _renderPassContext.getFrameGraphID("Color");
         readRenderTarget(srcID);
@@ -49,7 +49,7 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    void ComputePostProcessPass::draw(const gfx::RenderPassContext & _renderPassContext, gfx::CommandList * _cmdList) const
+    void ComputePostProcessPass::Render(const gfx::RenderPassContext & _renderPassContext, gfx::CommandList * _cmdList) const
     {
         auto size = _renderPassContext.m_view->GetSize();
         auto threadGroupSize = uint2(POSTPROCESS_THREADGROUP_SIZE_X, POSTPROCESS_THREADGROUP_SIZE_Y);

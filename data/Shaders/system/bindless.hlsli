@@ -29,6 +29,14 @@
 #define  BINDLESS_BUFFER_UAV_INVALID     (BINDLESS_BUFFER_UAV_START + BINDLESS_BUFFER_UAV_COUNT - 1)
 #define  BINDLESS_BUFFER_UAV_BINDING     3
 
+// Allocate fixed Textures/Buffers SRVs/UAVs slots top-down (dynamic slots are allocated bottom-up)
+
+// Texture SRV
+#define RESERVEDSLOT_TEXSRV_IMGUIFONTTEX       (BINDLESS_TEXTURE_SRV_INVALID - 1)
+
+// Buffer SRV
+#define RESERVEDSLOT_BUFSRV_VIEWCONSTANTS      (BINDLESS_BUFFER_SRV_INVALID - 1)
+
 #ifndef __cplusplus
 
 #define PASTE(a,b) a##b

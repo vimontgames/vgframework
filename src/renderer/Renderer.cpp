@@ -322,7 +322,10 @@ namespace vg::renderer
                                     view->setSize(m_mainView->getSize());
                             }
 
-                            view->addToFrameGraph(m_frameGraph);
+                            gfx::RenderPassContext rc;
+                                                   rc.m_view = view;
+
+                            view->RegisterFrameGraph(rc, m_frameGraph);
                         }
                     }
                 }
@@ -408,7 +411,7 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    gfx::IView * Renderer::CreateView(gfx::CreateViewParams _params, const core::string & _name)
+    gfx::IView * Renderer::CreateView(gfx::CreateViewParams _params, const core::string & _name, IView::Flags _flags)
     {
         View * view;
 
@@ -427,6 +430,7 @@ namespace vg::renderer
         }
         
         view->setName(_name);
+        view->setFlags(_flags);
         return view;
     }
 

@@ -12,11 +12,16 @@ namespace vg::core
 
 namespace vg::gfx
 {
+    struct CreateViewParams;
+    struct RenderPassContext;
     class FrameGraph;
+    class Buffer;
 }
 
 namespace vg::renderer
 {
+    class ViewConstantsUpdatePass;
+
     //--------------------------------------------------------------------------------------
     // Base class for user views.
     // The 'IView' interface is declared in graphics::driver so that the Framegraph can  
@@ -26,65 +31,79 @@ namespace vg::renderer
     class View : public gfx::IView
     {
     public:
-        const char *                        getClassName        () const override { return "View"; }
 
-                                            View                (const gfx::CreateViewParams & _params);
-                                            ~View               ();
+        const char *                        getClassName                () const override { return "View"; }
 
-        void                                SetupCamera         (const core::float4x4 & _viewInv, core::float2 _nearFar, float _fovY) override;
+                                            View                        (const gfx::CreateViewParams & _params);
+                                            ~View                       ();
 
-        const core::float4x4 &              GetViewInvMatrix    () const override;
-        core::float2                        GetCameraNearFar    () const override;
-        float                               GetCameraFovY       () const override;
+        void                                SetupCamera                 (const core::float4x4 & _viewInv, core::float2 _nearFar, float _fovY) override;
 
-        void                                SetUniverse         (core::IUniverse* _universe) override;
-        core::IUniverse *                   GetUniverse         () const override;
+        void                                SetFlags                    (Flags _flagsToSet, Flags _flagsToRemove = (Flags)0) override;
+        Flags                               GetFlags                    () const override;
 
-        void                                SetSize             (core::uint2 _size) override;
-        core::uint2                         GetSize             () const override;
+        const core::float4x4 &              GetViewInvMatrix            () const override;
+        core::float2                        GetCameraNearFar            () const override;
+        float                               GetCameraFovY               () const override;
 
-        void                                SetOffset           (core::int2) override;
-        core::int2                          GetOffset           () const override;
+        void                                SetUniverse                 (core::IUniverse* _universe) override;
+        core::IUniverse *                   GetUniverse                 () const override;
 
-        void                                SetRenderTarget     (gfx::ITexture * _renderTarget) override;
-        gfx::ITexture *                     GetRenderTarget     () const override;
+        void                                SetSize                     (core::uint2 _size) override;
+        core::uint2                         GetSize                     () const override;
 
-        void                                SetViewID           (gfx::ViewID _viewID) override;
-        gfx::ViewID                         GetViewID           () const override;
+        void                                SetOffset                   (core::int2) override;
+        core::int2                          GetOffset                   () const override;
 
-        void                                SetActive           (bool _active) override;
-        bool                                IsActive            () const override;
+        void                                SetRenderTarget             (gfx::ITexture * _renderTarget) override;
+        gfx::ITexture *                     GetRenderTarget             () const override;
 
-        const core::string                  GetFrameGraphID     (const core::string & _name) const final override;
+        void                                SetViewID                   (gfx::ViewID _viewID) override;
+        gfx::ViewID                         GetViewID                   () const override;
 
-        virtual void                        addToFrameGraph     (gfx::FrameGraph & _frameGraph) {} // TODO: implement "MainView" using 'AddToFrameGraph'?
+        void                                SetActive                   (bool _active) override;
+        bool                                IsActive                    () const override;
 
-        VG_INLINE core::IUniverse *         getUniverse         () const;
+        void                                SetMouseOffset              (const core::uint2 & _mouseOffset) override;
+        core::uint2                         GetRelativeMousePos         () const override;
 
-        VG_INLINE void                      setSize             (core::uint2 _size);
-        VG_INLINE core::uint2               getSize             () const;
+        const core::string                  GetFrameGraphID             (const core::string & _name) const final override;
 
-        VG_INLINE void                      setOffset           (core::int2 _offset);
-        VG_INLINE core::int2                getOffset           () const;
+        virtual void                        RegisterFrameGraph          (const gfx::RenderPassContext & _rc, gfx::FrameGraph & _frameGraph);
 
-        VG_INLINE const core::float4x4 &    getViewProjMatrix   () const;
-        VG_INLINE const core::float4x4 &    getViewInvMatrix    () const;
-        VG_INLINE core::float2              getCameraNearFar    () const;
-        VG_INLINE float                     getCameraFovY       () const;
+        VG_INLINE core::IUniverse *         getUniverse                 () const;
 
-        VG_INLINE void                      setViewID           (gfx::ViewID _viewID);
-        VG_INLINE gfx::ViewID               getViewID           () const;
+        VG_INLINE void                      setSize                     (core::uint2 _size);
+        VG_INLINE core::uint2               getSize                     () const;
 
-        VG_INLINE void                      setRenderTarget     (gfx::Texture * _renderTarget);
-        VG_INLINE gfx::Texture *            getRenderTarget     () const;
+        VG_INLINE void                      setOffset                   (core::int2 _offset);
+        VG_INLINE core::int2                getOffset                   () const;
 
-        VG_INLINE core::Job *               getCullingJob       () const;
+        VG_INLINE const core::float4x4 &    getViewProjMatrix           () const;
+        VG_INLINE const core::float4x4 &    getViewInvMatrix            () const;
+        VG_INLINE core::float2              getCameraNearFar            () const;
+        VG_INLINE float                     getCameraFovY               () const;
+
+        VG_INLINE void                      setViewID                   (gfx::ViewID _viewID);
+        VG_INLINE gfx::ViewID               getViewID                   () const;
+
+        VG_INLINE void                      setRenderTarget             (gfx::Texture * _renderTarget);
+        VG_INLINE gfx::Texture *            getRenderTarget             () const;
+
+        VG_INLINE core::Job *               getCullingJob               () const;
+
+        void                                setFlags                    (Flags _flagsToSet, Flags _flagsToRemove = (Flags)0);
+        Flags                               getFlags                    () const;
+
+    protected:
+        void                                initializePickingBuffer     ();
 
     private:
-        static core::float4x4               setPerspectiveProjectionRH(float _fov, float _ar, float _near, float _far);
+        static core::float4x4               setPerspectiveProjectionRH  (float _fov, float _ar, float _near, float _far);
 
     private:
         gfx::ViewID                         m_viewID;
+        Flags                               m_flags = (Flags)0;
         gfx::Texture *                      m_renderTarget = nullptr;   // Assume backbuffer if nullptr
         core::uint2                         m_size = core::uint2(0, 0);
         core::int2                          m_offset = core::int2(0, 0);
@@ -95,6 +114,8 @@ namespace vg::renderer
         float                               m_cameraFovY;
         bool                                m_active = false;
         ViewCullingJob *                    m_cullingJob = nullptr;
+        ViewConstantsUpdatePass *           m_viewConstantsUpdatePass = nullptr;
+        core::uint2                         m_mouseOffset;
 
     public:
         ViewCullingJobOutput                m_cullingJobResult;

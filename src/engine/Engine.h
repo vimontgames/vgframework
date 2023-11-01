@@ -39,8 +39,9 @@ namespace vg::engine
         bool                                IsPlaying           () const final override;
         bool                                IsPaused            () const final override;
         void                                Play                () final override;
-        void                                Pause               () final override;
         void                                Stop                () final override;
+        void                                Pause               () final override;
+        void                                Resume              () final override;
 
         const Time &                        GetTime             () const final override;
 
@@ -88,10 +89,12 @@ namespace vg::engine
         void                                destroyEditorView   ();
 
         VG_INLINE bool                      isPlaying           () const;
-        VG_INLINE bool                      isPaused            () const;
         VG_INLINE void                      play                ();
-        VG_INLINE void                      pause               ();
         VG_INLINE void                      stop                ();
+
+        VG_INLINE bool                      isPaused            () const;
+        VG_INLINE void                      pause               ();
+        VG_INLINE void                      resume              ();
 
         VG_INLINE const Time &              getTime             () const;
 

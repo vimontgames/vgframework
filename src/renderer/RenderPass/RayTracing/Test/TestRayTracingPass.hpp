@@ -32,7 +32,7 @@ namespace vg::renderer
     //--------------------------------------------------------------------------------------
     // Setup executed each frame, for each pass instance
     //--------------------------------------------------------------------------------------
-    void TestRayTracingPass::setup(const gfx::RenderPassContext & _renderContext, double _dt)
+    void TestRayTracingPass::Setup(const gfx::RenderPassContext & _renderContext, double _dt)
     {
         //auto * device = Device::get();
         //
@@ -63,7 +63,7 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    void TestRayTracingPass::draw(const RenderPassContext & _renderPassContext, CommandList * _cmdList) const
+    void TestRayTracingPass::Render(const RenderPassContext & _renderPassContext, CommandList * _cmdList) const
     {
         //_cmdList->setRayTracingRootSignature(m_testRayTracingGlobalRootSignatureHandle);
 

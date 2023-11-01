@@ -34,7 +34,7 @@ namespace vg::renderer
     //--------------------------------------------------------------------------------------
     // Setup executed each frame, for each pass instance
     //--------------------------------------------------------------------------------------
-    void BackgroundPass::setup(const gfx::RenderPassContext & _renderContext, double _dt)
+    void BackgroundPass::Setup(const gfx::RenderPassContext & _renderContext, double _dt)
     {
         auto * device = Device::get();
 
@@ -65,7 +65,7 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    void BackgroundPass::draw(const RenderPassContext & _renderPassContext, CommandList * _cmdList) const
+    void BackgroundPass::Render(const RenderPassContext & _renderPassContext, CommandList * _cmdList) const
     {
         RasterizerState rs(FillMode::Solid, CullMode::None);
         BlendState bs(BlendFactor::One, BlendFactor::Zero, BlendOp::Add);

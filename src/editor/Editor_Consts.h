@@ -43,6 +43,8 @@ namespace vg::editor
             inline static const char * Info         = ICON_FA_CIRCLE_INFO;
             inline static const char * Warning      = ICON_FA_TRIANGLE_EXCLAMATION;
             inline static const char * Error        = ICON_FA_BUG;
+            inline static const char * Minimize     = ICON_FA_MINIMIZE;
+            inline static const char * Maximize     = ICON_FA_MAXIMIZE;
         }
     }
 }

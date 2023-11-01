@@ -43,7 +43,7 @@ namespace vg::editor
                     VG_PROFILE_START();
                 ImGui::SameLine();
                 if (ImGui::ButtonEx("Stop", captureInProgress, "Press 'F1' to stop capture"))
-                    VG_PROFILE_START();
+                    VG_PROFILE_STOP();
             }
             ImGui::Columns(1);
 

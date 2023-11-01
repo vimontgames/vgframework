@@ -88,6 +88,20 @@ namespace vg::engine
                             m_renderer->updateShaders();
                         break;
 
+                    case VK_F5:
+                        if (IsPlaying())
+                            Stop();
+                        else
+                            Play();
+                        break;
+
+                    case VK_PAUSE:
+                        if (isPaused())
+                            Resume();
+                        else
+                            Pause();
+                        break;
+
                     case VK_F11:
                         toggleFullscreen();
                         break;
@@ -410,7 +424,7 @@ namespace vg::engine
 	//--------------------------------------------------------------------------------------
 	void Engine::RunOneFrame()
 	{
-        VG_PROFILE_FRAME("Main");
+        VG_PROFILE_FRAME("Frame");
         VG_PROFILE_CPU("Engine");
 
         updateDt();
@@ -483,15 +497,22 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
+    void Engine::Stop()
+    {
+        stop();
+    }
+
+
+    //--------------------------------------------------------------------------------------
     void Engine::Pause()
     {
         pause();
     }
 
     //--------------------------------------------------------------------------------------
-    void Engine::Stop()
+    void Engine::Resume()
     {
-        stop();
+        resume();
     }
 
     //--------------------------------------------------------------------------------------

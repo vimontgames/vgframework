@@ -1,8 +1,12 @@
 #include "renderer/Precomp.h"
 #include "View.h"
 #include "core/GameObject/GameObject.h"
+#include "core/IInput.h"
 #include "gfx/ITexture.h"
+#include "gfx/Resource/Buffer.h"
+#include "renderer/Renderer.h"
 #include "renderer/Job/Culling/ViewCullingJob.h"
+#include "renderer/RenderPass/Update/ViewConstants/ViewConstantsUpdatePass.h"
 
 #if !VG_ENABLE_INLINE
 #include "View.inl"
@@ -14,8 +18,10 @@
 using namespace vg::core;
 using namespace vg::gfx;
 
+
 namespace vg::renderer
 {
+    
     //--------------------------------------------------------------------------------------
     View::View(const CreateViewParams & _params) : 
         IView(_params)
@@ -42,6 +48,8 @@ namespace vg::renderer
         }
 
         m_cullingJob = new ViewCullingJob("ViewCulling", this, &m_cullingJobResult);
+
+        m_viewConstantsUpdatePass = new ViewConstantsUpdatePass();
     }
 
     //--------------------------------------------------------------------------------------
@@ -49,6 +57,7 @@ namespace vg::renderer
     {
         VG_SAFE_RELEASE(m_renderTarget);
         VG_SAFE_RELEASE(m_cullingJob);
+        VG_SAFE_RELEASE(m_viewConstantsUpdatePass);
     }
 
     //--------------------------------------------------------------------------------------
@@ -107,6 +116,30 @@ namespace vg::renderer
 
         float4x4 proj = setPerspectiveProjectionRH(fovY, ar, nearFar.x, nearFar.y);
         m_viewProj = mul(getViewInvMatrix(), proj);
+    }
+
+    //--------------------------------------------------------------------------------------
+    void View::SetFlags(Flags _flagsToSet, Flags _flagsToRemove)
+    {
+        setFlags(_flagsToSet, _flagsToRemove);
+    }
+
+    //--------------------------------------------------------------------------------------
+    View::Flags View::GetFlags() const
+    {
+        return getFlags();
+    }
+
+    //--------------------------------------------------------------------------------------
+    void View::setFlags(Flags _flagsToSet, Flags _flagsToRemove)
+    {
+        m_flags = (Flags)((std::underlying_type<Flags>::type(m_flags) & ~std::underlying_type<Flags>::type(_flagsToRemove)) | (std::underlying_type<Flags>::type(_flagsToSet)));
+    }
+
+    //--------------------------------------------------------------------------------------
+    View::Flags View::getFlags() const
+    {
+        return m_flags;
     }
 
     //--------------------------------------------------------------------------------------
@@ -189,8 +222,46 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
+    void View::SetMouseOffset(const core::uint2 & _mouseOffset)
+    {
+        m_mouseOffset = _mouseOffset;
+    }
+
+    //--------------------------------------------------------------------------------------
+    core::uint2 View::GetRelativeMousePos() const
+    {
+        auto input = Kernel::getInput();
+        uint2 mousePos = input->getMousePos();
+
+        const auto renderer = Renderer::get();
+        if (renderer->IsFullscreen())
+            return mousePos;
+        else
+            return uint2(mousePos.x - m_mouseOffset.x, mousePos.y - m_mouseOffset.y);
+    }
+
+    //--------------------------------------------------------------------------------------
     const core::string View::GetFrameGraphID(const core::string & _name) const
     {
         return RenderPassContext::MakeFrameGraphID(_name, m_viewID);
+    }
+
+    //--------------------------------------------------------------------------------------
+    void View::RegisterFrameGraph(const gfx::RenderPassContext & _rc, gfx::FrameGraph & _frameGraph)
+    {
+        _frameGraph.addUserPass(_rc, m_viewConstantsUpdatePass, "ViewConstantsUpdatePass");
+
+        //if (asBool(Flags::Picking & getFlags()))
+        //    initializePickingBuffer();
+    }
+
+    //--------------------------------------------------------------------------------------
+    void View::initializePickingBuffer()
+    {
+        //if (nullptr == m_pickingBuffer)
+        //{
+        //    BufferDesc pickingBufferDesc = BufferDesc(Usage::Default, BindFlags::ShaderResource, CPUAccessFlags::Write, BufferFlags::None, sizeof(float4));
+        //    m_pickingBuffer = device->createBuffer(pickingBufferDesc, "PickingBuffer");
+        //}
     }
 }

@@ -44,7 +44,7 @@ namespace vg::renderer
     }
     
     //--------------------------------------------------------------------------------------
-    void ImGuiPass::setup(const gfx::RenderPassContext & _renderContext, double _dt)
+    void ImGuiPass::Setup(const gfx::RenderPassContext & _renderContext, double _dt)
     {
         writeRenderTarget(0, "Backbuffer");       
     }
@@ -89,7 +89,7 @@ namespace vg::renderer
     }
     
     //--------------------------------------------------------------------------------------
-    void ImGuiPass::draw(const RenderPassContext & _renderContext, gfx::CommandList * _cmdList) const
+    void ImGuiPass::Render(const RenderPassContext & _renderContext, gfx::CommandList * _cmdList) const
     {
         editor::IEditor * editor = getEngine()->GetEditor();
         if (editor)

@@ -18,6 +18,7 @@ namespace vg
         class TextureDesc;
         class IView;
         class IShaderManager;
+        struct CreateViewParams;
     }
 
     namespace renderer
@@ -25,7 +26,7 @@ namespace vg
         class IImGuiAdapter;
         class IMeshModel;
 
-        struct CreateViewParams;
+        struct RendererCreationParams;
 
         class IRenderer : public core::IPlugin
         {
@@ -44,7 +45,7 @@ namespace vg
 
             virtual gfx::ITexture *                     CreateTexture           (const gfx::TextureDesc & _texDesc, const core::string & _name) = 0;
 
-            virtual gfx::IView *                        CreateView              (gfx::CreateViewParams _params, const core::string & _name) = 0;
+            virtual gfx::IView *                        CreateView              (gfx::CreateViewParams _params, const core::string & _name, gfx::IView::Flags _flags = (gfx::IView::Flags)0) = 0;
             virtual gfx::ViewID                         AddView                 (gfx::IView * _view) = 0;
             virtual void                                RemoveView              (gfx::ViewID _viewID) = 0;
             virtual gfx::IView *                        GetView                 (gfx::ViewID _viewID) const = 0;

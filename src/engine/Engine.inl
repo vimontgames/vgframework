@@ -15,6 +15,7 @@ namespace vg::engine
     //--------------------------------------------------------------------------------------
     VG_INLINE void Engine::play()
     {
+        VG_INFO("[Engine] Play");
         m_isPlaying = true;
         m_isPaused = false;
     }
@@ -22,13 +23,23 @@ namespace vg::engine
     //--------------------------------------------------------------------------------------
     VG_INLINE void Engine::pause()
     {
+        VG_INFO("[Engine] Pause");
         VG_ASSERT(m_isPlaying);
+        m_isPaused = true;
+    }
+
+    //--------------------------------------------------------------------------------------
+    VG_INLINE void Engine::resume()
+    {
+        VG_INFO("[Engine] Resume");
+        VG_ASSERT(m_isPlaying && m_isPaused);
         m_isPaused = true;
     }
 
     //--------------------------------------------------------------------------------------
     VG_INLINE void Engine::stop()
     {
+        VG_INFO("[Engine] Stop");
         m_isPlaying = false;
         m_isPaused = false;
     }

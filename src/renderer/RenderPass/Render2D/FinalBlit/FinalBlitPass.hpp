@@ -31,7 +31,7 @@ namespace vg::renderer
     //--------------------------------------------------------------------------------------
     // Setup executed each frame, for each pass instance
     //--------------------------------------------------------------------------------------
-    void FinalBlitPass::setup(const gfx::RenderPassContext & _renderPassContext, double _dt)
+    void FinalBlitPass::Setup(const gfx::RenderPassContext & _renderPassContext, double _dt)
     {
         const auto options = DisplayOptions::get();
         if (options->isComputePostProcessEnabled())
@@ -48,7 +48,7 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    void FinalBlitPass::draw(const RenderPassContext & _renderPassContext, CommandList * _cmdList) const
+    void FinalBlitPass::Render(const RenderPassContext & _renderPassContext, CommandList * _cmdList) const
     {
         const auto options = DisplayOptions::get();
 

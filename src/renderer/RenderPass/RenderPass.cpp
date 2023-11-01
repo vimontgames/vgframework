@@ -32,6 +32,9 @@ using namespace vg::gfx;
 #include "Compute/ComputePass.hpp"
 #include "Compute/ComputePostProcess/ComputePostProcessPass.hpp"
 
+#include "Update/UpdatePass.hpp"
+#include "Update/ViewConstants/ViewConstantsUpdatePass.hpp"
+
 #include "RayTracing/RayTracingPass.hpp"
 #include "RayTracing/Test/TestRayTracingPass.hpp"
 

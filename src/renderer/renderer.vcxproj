@@ -113,6 +113,10 @@
     <ClInclude Include="RenderPass\RenderObjects\RenderObjectsPass.h" />
     <ClInclude Include="RenderPass\RenderObjects\RenderObjectsPass.hpp" />
     <ClInclude Include="RenderPass\RenderPass.h" />
+    <ClInclude Include="RenderPass\Update\UpdatePass.h" />
+    <ClInclude Include="RenderPass\Update\UpdatePass.hpp" />
+    <ClInclude Include="RenderPass\Update\ViewConstants\ViewConstantsUpdatePass.h" />
+    <ClInclude Include="RenderPass\Update\ViewConstants\ViewConstantsUpdatePass.hpp" />
     <ClInclude Include="View\Forward\ForwardView.h" />
     <ClInclude Include="View\Forward\ForwardView.hpp" />
     <ClInclude Include="View\View.h" />

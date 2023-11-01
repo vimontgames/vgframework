@@ -1,4 +1,5 @@
 #pragma once
+
 #include "renderer/View/View.h"
 
 namespace vg::renderer
@@ -8,18 +9,19 @@ namespace vg::renderer
     class TestRayTracingPass;
     class ComputePostProcessPass;
     class FinalBlitPass;
-    
 
     class ForwardView : public View
     {
     public:
+        using super = View;
+
         const char *                getClassName    () const final { return "ForwardView"; }
 
                                     ForwardView     (const gfx::CreateViewParams & _params);
                                     ~ForwardView    ();
 
 
-        void                        addToFrameGraph (gfx::FrameGraph & _frameGraph) override;
+        void                        RegisterFrameGraph (const gfx::RenderPassContext & _rc, gfx::FrameGraph & _frameGraph) override;
 
     private:
         BackgroundPass *            m_backgroundPass = nullptr;

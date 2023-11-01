@@ -32,7 +32,7 @@ namespace vg::gfx
         //--------------------------------------------------------------------------------------
         template <class H, class T, class P> H BindlessTable::allocBindlessHandle(const T * _resource, ReservedSlot _reservedSlot, P & _pool, T ** _resources, uint _offset, uint _invalid)
         {
-            H handle;
+            H handle = _invalid;
 
             if (ReservedSlot::None == _reservedSlot)
             {
@@ -40,12 +40,14 @@ namespace vg::gfx
             }
             else
             {
-                VG_ASSERT(_pool.isAvailable(_reservedSlot));
-                handle = _reservedSlot;
+                u16 reservedSlotIndex = (u16)_reservedSlot- _offset;
+                VG_ASSERT(_pool.isAvailable(reservedSlotIndex), "[BindlessTable] ReservedSlot %u is already used", (u16)_reservedSlot);
+                if (_pool.isAvailable(reservedSlotIndex))
+                {
+                    handle = (u16)_reservedSlot;
+                    _resources[handle - _offset] = (T *)_resource;
+                }
             }
-
-            if (_invalid != handle && ReservedSlot::None != _reservedSlot)
-                _resources[handle - _offset] = (T*)_resource;
 
             return handle;
         }
@@ -64,6 +66,7 @@ namespace vg::gfx
         //--------------------------------------------------------------------------------------
         BindlessTextureSrvHandle BindlessTable::allocBindlessTextureHandle(const gfx::Texture * _texture, ReservedSlot _reservedSlot)
         {
+            VG_ASSERT(ReservedSlot::None == _reservedSlot || BindlessTextureSrvHandle((u16)_reservedSlot).isValid(), "Reserved slot %u does not belong to the Texture SRV range [%u;%u[", BindlessTextureSrvHandle::getValidRange().x, BindlessTextureSrvHandle::getValidRange().y);
             return allocBindlessHandle<BindlessTextureSrvHandle>(_texture, _reservedSlot, m_textureSrvIndexPool, m_textureSrv, BINDLESS_TEXTURE_SRV_START, BINDLESS_TEXTURE_SRV_INVALID);
         }
 

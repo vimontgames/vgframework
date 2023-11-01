@@ -2,6 +2,7 @@
 #include "gfx/ITexture.h"
 #include "renderer/IImGuiAdapter.h"
 #include "gfx/ITexture.h"
+#include "core/IInput.h"
 
 namespace vg::editor
 {
@@ -103,7 +104,13 @@ namespace vg::editor
                                       params.dest = nullptr;    // No RenderTarget yet
             
                 string viewName = asString(params.target) + "View";
-                m_view = renderer->CreateView(params, viewName);
+
+                // Create a view with picking for editor views
+                gfx::IView::Flags viewFlags = (gfx::IView::Flags)0;
+                if (params.target == ViewTarget::Editor)
+                    viewFlags |= gfx::IView::Flags::Picking;
+
+                m_view = renderer->CreateView(params, viewName, viewFlags);
                 renderer->AddView(m_view);
                 draw = false;
             }
@@ -128,8 +135,18 @@ namespace vg::editor
 
                 draw = false;
             }
-            
-            if (draw)
+
+            // Set relative mouse pos
+            //ImVec2 mouseOffset = ImGui::GetCursorScreenPos();
+            //auto input = Kernel::getInput();
+            //uint2 mousePos = input->getMousePos();
+            //m_view->SetMousePos(uint2((uint)mousePos.x - mouseOffset.x, (uint)mousePos.y - mouseOffset.y));
+
+            // Set mouse offset
+            ImVec2 mouseOffset = ImGui::GetCursorScreenPos();
+            m_view->SetMouseOffset(uint2(mouseOffset.x, mouseOffset.y));
+
+            if (draw) 
             {
                 auto * imGuiAdapter = renderer->GetImGuiAdapter();
                 ImTextureID texID = imGuiAdapter->GetTextureID(m_texture);

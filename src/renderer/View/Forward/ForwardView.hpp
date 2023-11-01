@@ -35,29 +35,28 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    void ForwardView::addToFrameGraph(FrameGraph & _frameGraph)
+    void ForwardView::RegisterFrameGraph(const gfx::RenderPassContext & _rc, FrameGraph & _frameGraph)
     {
-        gfx::RenderPassContext rc;
-                              rc.m_view = this;
-
         auto * target = getRenderTarget();
         if (target)
             _frameGraph.importRenderTarget(target->getName(), target, float4(0, 0, 0, 0), FrameGraph::Resource::InitState::Clear);
 
+        super::RegisterFrameGraph(_rc, _frameGraph);
+
         const auto options = DisplayOptions::get();
         if (options->isRayTracingEnabled())
         {
-            _frameGraph.addUserPass(rc, m_testRayTracingPass, "TestRayTracingPass");
+            _frameGraph.addUserPass(_rc, m_testRayTracingPass, "TestRayTracingPass");
         }
         else
         {
-            _frameGraph.addUserPass(rc, m_backgroundPass, "BackgroundPass");
-            _frameGraph.addUserPass(rc, m_forwardPass, "ForwardPass");
+            _frameGraph.addUserPass(_rc, m_backgroundPass, "BackgroundPass");
+            _frameGraph.addUserPass(_rc, m_forwardPass, "ForwardPass");
 
             if (options->isComputePostProcessEnabled())
-                _frameGraph.addUserPass(rc, m_computePostProcessPass, "ComputePostProcessPass");
+                _frameGraph.addUserPass(_rc, m_computePostProcessPass, "ComputePostProcessPass");
 
-            _frameGraph.addUserPass(rc, m_finalBlitPass, "FinalBlitPass");
+            _frameGraph.addUserPass(_rc, m_finalBlitPass, "FinalBlitPass");
         }
     }
 }

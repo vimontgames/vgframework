@@ -19,13 +19,22 @@ namespace vg::gfx
 	class UserPass : public core::Object
 	{
 	public:
-						UserPass	(const core::string & _name);
-		virtual			~UserPass	();
+						UserPass		(const core::string & _name);
+		virtual			~UserPass		();
 
-		void			reset		();
+		void			reset			();
 
-		virtual void	setup		(const RenderPassContext & _renderContext, double _dt) = 0;
-		virtual void	draw		(const RenderPassContext & _renderContext, CommandList * _cmdList) const = 0;
+		// Called when building FrameGraph, no access to CommandList
+		virtual void	Setup			(const RenderPassContext & _renderContext, double _dt) = 0;
+
+		// Called before entering RenderPass (e.g. write buffers from CPU to the GPU)
+		virtual void	BeforeRender	(const RenderPassContext & _renderContext, CommandList * _cmdList) {}
+
+		// Called after entering RenderPass for drawing stuff
+		virtual void	Render			(const RenderPassContext & _renderContext, CommandList * _cmdList) const = 0;
+
+        // Called after exiting RenderPass (e.g. read buffer from GPU to the CPU)
+        virtual void	AfterRender		(const RenderPassContext & _renderContext, CommandList * _cmdList) {};
 
 		VG_INLINE const core::vector<FrameGraph::TextureResource *> & getRenderTargets() const;
 		VG_INLINE const core::vector<FrameGraph::TextureResource *> & getRWTextures() const;

@@ -355,7 +355,7 @@ namespace vg::gfx
 		for (auto & subPassInfo : m_userPassInfo)
 		{
             subPassInfo.m_userPass->reset();
-            subPassInfo.m_userPass->setup(subPassInfo.m_renderContext, _dt);
+            subPassInfo.m_userPass->Setup(subPassInfo.m_renderContext, _dt);
 		}
 	}
 
@@ -766,6 +766,13 @@ namespace vg::gfx
                 }
             }
 
+            for (uint i = 0; i < subPasses.size(); ++i)
+            {
+                SubPass * subPass = subPasses[i];
+                const auto & userPassInfo = subPass->getUserPassesInfos()[0];
+                userPassInfo.m_userPass->BeforeRender(userPassInfo.m_renderContext, cmdList);
+            }
+
 			cmdList->beginRenderPass(renderPass);
 			for (uint i = 0; i < subPasses.size(); ++i)
 			{
@@ -777,11 +784,18 @@ namespace vg::gfx
                 cmdList->beginSubPass(i, subPass);
 				{
                     VG_ASSERT(isEnumValue(userPassInfo.m_userPass->getUserPassType()), "UserPass \"%s\" has invalid RenderPassType 0x%02X. Valid values are Graphic (0), Compute (1), and Raytrace (2).", userPassInfo.m_userPass->getName().c_str(), userPassInfo.m_userPass->getUserPassType());
-                    userPassInfo.m_userPass->draw(userPassInfo.m_renderContext, cmdList);
+                    userPassInfo.m_userPass->Render(userPassInfo.m_renderContext, cmdList);
 				}
                 cmdList->endSubPass();
 			}
 			cmdList->endRenderPass();
+
+            for (uint i = 0; i < subPasses.size(); ++i)
+            {
+                SubPass * subPass = subPasses[i];
+                const auto & userPassInfo = subPass->getUserPassesInfos()[0];
+                userPassInfo.m_userPass->AfterRender(userPassInfo.m_renderContext, cmdList);
+            }
            
             // release all transient resources that are read or write for the last time during this pass
             for (uint i = 0; i < subPasses.size(); ++i)

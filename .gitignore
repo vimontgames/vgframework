@@ -13,6 +13,7 @@ enc_temp_folder/*
 *.iobj
 *.ipdb
 *.opt
+*.cap
 !dxcompiler.dll
 !dxcompiler.lib
 !dxil.dll

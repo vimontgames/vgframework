@@ -27,6 +27,12 @@ namespace vg::core
         return (_value < _min) ? _min : ((_value > _max) ? _max : _value);
     }
 
+    //--------------------------------------------------------------------------------------
+    template <typename T> inline bool within(T _value, T _min, T _max)
+    {
+        return _value >= _min && _value <= _max;
+    }
+
     static constexpr u64 table[256] =
     {
         0x000FF1CEBAADDEAD, 0xCAFE0D15EA5EFEED, 0xBAADF00DDEADF00D, 0xF00DDEAD10CC000F, 0xBAADB16B00B5FACE, 0xDEAD000FDEADDEAD, 0xDEAD10CCCAFEBABE, 0xFACEBAADFEED10CC,

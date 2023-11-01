@@ -51,8 +51,9 @@ namespace vg
             virtual bool                        IsPlaying           () const = 0;
             virtual bool                        IsPaused            () const = 0;
             virtual void                        Play                () = 0;
-            virtual void                        Pause               () = 0;
             virtual void                        Stop                () = 0;
+            virtual void                        Pause               () = 0;
+            virtual void                        Resume              () = 0;
 
             virtual const Time &                GetTime             () const = 0;
 

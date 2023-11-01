@@ -72,10 +72,18 @@ namespace vg::gfx
     class IView : public core::Object
     {
     public:
+        enum class Flags : core::u32
+        {
+            Picking = 0x00000001
+        };
+
         IView(const CreateViewParams & _params) {};
         virtual ~IView() = default;
 
         virtual void                    SetupCamera         (const core::float4x4 & _viewInv, core::float2 _nearFar, float _fovY) = 0;
+
+        virtual void                    SetFlags            (Flags _flagsToSet, Flags _flagsToRemove = (Flags)0) = 0;
+        virtual Flags                   GetFlags            () const = 0;
 
         virtual const core::float4x4 &  GetViewInvMatrix    () const = 0;
         virtual core::float2            GetCameraNearFar    () const = 0;
@@ -98,6 +106,9 @@ namespace vg::gfx
 
         virtual void                    SetActive           (bool _active) = 0;
         virtual bool                    IsActive            () const = 0;
+
+        virtual void                    SetMouseOffset      (const core::uint2 & _mouseOffset) = 0;
+        virtual core::uint2             GetRelativeMousePos () const = 0;
 
         virtual const core::string      GetFrameGraphID     (const core::string & _name) const = 0;
     };

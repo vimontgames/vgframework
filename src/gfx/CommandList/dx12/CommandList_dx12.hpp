@@ -373,17 +373,33 @@ namespace vg::gfx::dx12
         ID3D12Resource * dst = _dst->getResource().getd3d12BufferResource();
         ID3D12Resource * src = _src->getResource().getd3d12BufferResource();
 
+        // Generic read to copy dest barrier
+        {
+            D3D12_RESOURCE_BARRIER barrier;
+            barrier.Transition.pResource = _dst->getResource().getd3d12BufferResource();
+            barrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
+            barrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
+            barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_GENERIC_READ;
+            barrier.Transition.StateAfter = D3D12_RESOURCE_STATE_COPY_DEST;
+            barrier.Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
+
+            m_d3d12graphicsCmdList->ResourceBarrier(1, &barrier);
+        }
+
         m_d3d12graphicsCmdList->CopyBufferRegion(dst, 0, src, _srcOffset, bufDesc.size());
 
-        D3D12_RESOURCE_BARRIER barrier;
-        barrier.Transition.pResource = _dst->getResource().getd3d12BufferResource();
-        barrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
-        barrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
-        barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_COPY_DEST;
-        barrier.Transition.StateAfter = D3D12_RESOURCE_STATE_GENERIC_READ;
-        barrier.Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
+        // Copy dest to generic read barrier
+        {
+            D3D12_RESOURCE_BARRIER barrier;
+            barrier.Transition.pResource = _dst->getResource().getd3d12BufferResource();
+            barrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
+            barrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
+            barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_COPY_DEST;
+            barrier.Transition.StateAfter = D3D12_RESOURCE_STATE_GENERIC_READ;
+            barrier.Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
 
-        m_d3d12graphicsCmdList->ResourceBarrier(1, &barrier);
+            m_d3d12graphicsCmdList->ResourceBarrier(1, &barrier);
+        }
 
         if (asBool(BindFlags::ShaderResource & bufDesc.resource.m_bindFlags))
         {

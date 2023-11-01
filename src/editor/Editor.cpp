@@ -169,8 +169,7 @@ namespace vg::editor
 	//--------------------------------------------------------------------------------------
 	void Editor::DrawGUI(const GUIContext & _context)
 	{
-        VG_PROFILE_FRAME("Editor");
-        VG_PROFILE_CPU("Editor");
+        VG_PROFILE_CPU("DrawGUI");
 
         auto * imGuiContext = (ImGuiContext*)_context.ptr;
         ImGui::SetCurrentContext(imGuiContext);

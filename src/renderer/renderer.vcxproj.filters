@@ -239,6 +239,18 @@
     <ClInclude Include="RenderPass\Render2D\FinalBlit\FinalBlitPass.hpp">
       <Filter>Pass\Render2D\FinalBlit</Filter>
     </ClInclude>
+    <ClInclude Include="RenderPass\Update\ViewConstants\ViewConstantsUpdatePass.h">
+      <Filter>Pass\Update\ViewConstants</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderPass\Update\ViewConstants\ViewConstantsUpdatePass.hpp">
+      <Filter>Pass\Update\ViewConstants</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderPass\Update\UpdatePass.h">
+      <Filter>Pass\Update</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderPass\Update\UpdatePass.hpp">
+      <Filter>Pass\Update</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Pass">
@@ -345,6 +357,12 @@
     </Filter>
     <Filter Include="Pass\Render2D\FinalBlit">
       <UniqueIdentifier>{914bedee-b853-45a3-baf5-e2c44770a738}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Pass\Update">
+      <UniqueIdentifier>{51ef53e1-6226-4f1d-9c05-14e9c5607755}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Pass\Update\ViewConstants">
+      <UniqueIdentifier>{4ff90e0d-c3d6-4344-9aef-7cfb05697ff6}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

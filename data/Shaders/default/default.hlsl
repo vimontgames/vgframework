@@ -3,6 +3,7 @@
 #include "system/samplers.hlsli"
 #include "system/vertex.hlsli"
 #include "system/gamma.hlsli"
+#include "system/view.hlsli"
 
 #include "default.hlsli"
 
@@ -53,10 +54,20 @@ float3 getMatIDColor(uint _matID)
     return 0;
 }
 
+float safeLength(float2 a, float2 b)
+{
+    float2 diff = a - b;
+    return all(0 != diff)? length(diff) : 0;
+}
+
 PS_Output PS_Forward(VS_Output _input)
 {
     PS_Output output;
-        
+    
+    // test ReservedConstants slots
+    ViewConstants viewConstants;
+    viewConstants.Load(getBuffer(RESERVEDSLOT_BUFSRV_VIEWCONSTANTS));
+            
     // test dynamic buffer
     //float4 test = LoadF4(getBuffer(16388), 0);
     //output.color0 = test;
@@ -125,6 +136,20 @@ PS_Output PS_Forward(VS_Output _input)
         output.color0 = float4(0,1,0,1);
     
     #endif // _TOOLMODE
+    
+    // Picking test
+    float2 screenSize = viewConstants.getScreenSize();
+    float2 screenPos = _input.pos.xy / screenSize;
+    //output.color0 = float4(frac(16 * screenPos), 0, 1);
+    //return output;
+    
+    uint2 mousePos = viewConstants.getMousePos();
+    float dist = safeLength(mousePos, _input.pos.xy);
+    if (all(dist < 4))
+    {
+        output.color0.rgb = lerp(output.color0.rgb, float3(0, 1, 0), 0.25f);
+        return output;
+    }
             
     return output;
 }

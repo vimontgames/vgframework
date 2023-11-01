@@ -21,8 +21,8 @@ namespace vg::renderer
         ImGuiPass();
         ~ImGuiPass();
 
-        void setup(const gfx::RenderPassContext & _renderContext, double _dt) override;
-        void draw(const gfx::RenderPassContext & _renderContext, gfx::CommandList * _cmdList) const override;
+        void Setup(const gfx::RenderPassContext & _renderContext, double _dt) override;
+        void Render(const gfx::RenderPassContext & _renderContext, gfx::CommandList * _cmdList) const override;
 
     private:
         static const vg::engine::IEngine * getEngine();

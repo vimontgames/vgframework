@@ -18,48 +18,26 @@ namespace vg::renderer
     ForwardPass::ForwardPass() :
         RenderObjectsPass("ForwardPass")
     {
-        auto * device = Device::get();
-        //m_dynamicBuffer = new DynamicBuffer("m_dynamicBuffer", 1024);
-        //BufferDesc updatedBufferDesc = BufferDesc(Usage::Default, BindFlags::ShaderResource, CPUAccessFlags::None, BufferFlags::None, sizeof(float4));
-        //m_updatedBuffer = device->createBuffer(updatedBufferDesc, "m_updatedBuffer");
 
-        BufferDesc constantBufferDesc = BufferDesc(Usage::Default, BindFlags::ShaderResource, CPUAccessFlags::Write, BufferFlags::None, sizeof(float4));
-
-        float4 initData = float4(1, 2, 3, 4);
-
-        m_constantBuffer = device->createBuffer(constantBufferDesc, "m_constantBuffer", &initData);
     }
 
     //--------------------------------------------------------------------------------------
     ForwardPass::~ForwardPass()
     {
-        //VG_SAFE_RELEASE(m_dynamicBuffer);
-        //VG_SAFE_RELEASE(m_updatedBuffer);
-
-        VG_SAFE_RELEASE(m_constantBuffer);
+        
     }    
 
     //--------------------------------------------------------------------------------------
     // Setup executed each frame, for each pass instance
     //--------------------------------------------------------------------------------------
-    void ForwardPass::setup(const gfx::RenderPassContext & _renderContext, double _dt)
+    void ForwardPass::Setup(const gfx::RenderPassContext & _renderContext, double _dt)
     {
         writeRenderTarget(0, _renderContext.getFrameGraphID("Color"));
         writeDepthStencil(_renderContext.getFrameGraphID("DepthStencil"));
-
-        auto * device = Device::get();
-        CommandList * _cmdList = device->getCommandLists(CommandListType::Graphics)[0];
-
-        void * data = _cmdList->map(m_constantBuffer);
-        {
-            float4 src = float4(1, 0, 1, 1);
-            memcpy(data, &src, sizeof(float4));
-        }
-        _cmdList->unmap(m_constantBuffer, data);
     }
 
     //--------------------------------------------------------------------------------------
-    void ForwardPass::draw(const RenderPassContext & _renderPassContext, CommandList * _cmdList) const
+    void ForwardPass::Render(const RenderPassContext & _renderPassContext, CommandList * _cmdList) const
     {
         const View * view = (const View *)_renderPassContext.m_view;
         const auto options = DisplayOptions::get();

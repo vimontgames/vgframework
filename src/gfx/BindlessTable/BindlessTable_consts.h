@@ -1,6 +1,7 @@
 #pragma once
 
 #include "shaders/system/bindless.hlsli.h"
+#include "core/Math/Math.h"
 
 namespace vg::gfx
 {
@@ -11,9 +12,9 @@ namespace vg::gfx
         operator Type() const { return value; }
 
     protected:
-        bool inRange(Type _begin, Type _end) const
+        bool checkValidRange(core::uint2 _range) const
         {
-            return value >= _begin && value < _end;
+            return core::within(value, (core::u16)_range.x, (core::u16)_range.y); // Last value in range stands for 'invalid' value
         }
 
     private:
@@ -23,29 +24,41 @@ namespace vg::gfx
     struct BindlessTextureSrvHandle : public BindlessHandle
     {
         BindlessTextureSrvHandle(Type _value = BINDLESS_TEXTURE_SRV_INVALID) : BindlessHandle(_value) { }
-        bool isValid() const { return inRange(BINDLESS_TEXTURE_SRV_START, (BINDLESS_TEXTURE_SRV_START + BINDLESS_TEXTURE_SRV_COUNT - 1)); }
+        static core::uint2 getValidRange() { return core::uint2(BINDLESS_TEXTURE_SRV_START, (BINDLESS_TEXTURE_SRV_START + BINDLESS_TEXTURE_SRV_COUNT - 1)); }
+        bool isValid() const { return checkValidRange(getValidRange()); }
     };
 
     struct BindlessTextureUAVHandle : public BindlessHandle
     {
         BindlessTextureUAVHandle(Type _value = BINDLESS_TEXTURE_UAV_INVALID) : BindlessHandle(_value) {  }
-        bool isValid() const { return inRange(BINDLESS_TEXTURE_UAV_START, (BINDLESS_TEXTURE_UAV_START + BINDLESS_TEXTURE_UAV_COUNT - 1)); }
+        static core::uint2 getValidRange() { return core::uint2(BINDLESS_TEXTURE_UAV_START, (BINDLESS_TEXTURE_UAV_START + BINDLESS_TEXTURE_UAV_COUNT - 1)); }
+        bool isValid() const { return checkValidRange(getValidRange()); }
     };
 
     struct BindlessBufferSrvHandle : public BindlessHandle
     {
         BindlessBufferSrvHandle(Type _value = BINDLESS_BUFFER_SRV_INVALID) : BindlessHandle(_value) { }
-        bool isValid() const { return inRange(BINDLESS_BUFFER_SRV_START, (BINDLESS_BUFFER_SRV_START + BINDLESS_BUFFER_SRV_COUNT - 1)); }
+        static core::uint2 getValidRange() { return core::uint2(BINDLESS_BUFFER_SRV_START, (BINDLESS_BUFFER_SRV_START + BINDLESS_BUFFER_SRV_COUNT - 1)); }
+        bool isValid() const { return checkValidRange(getValidRange()); }
     };
 
     struct BindlessBufferUAVHandle : public BindlessHandle
     {
         BindlessBufferUAVHandle(Type _value = BINDLESS_BUFFER_UAV_INVALID) : BindlessHandle(_value) { }
-        bool isValid() const { return inRange(BINDLESS_BUFFER_UAV_START, (BINDLESS_BUFFER_UAV_START + BINDLESS_BUFFER_UAV_COUNT - 1)); }
+        static core::uint2 getValidRange() { return core::uint2(BINDLESS_BUFFER_UAV_START, (BINDLESS_BUFFER_UAV_START + BINDLESS_BUFFER_UAV_COUNT - 1)); }
+        bool isValid() const { return checkValidRange(getValidRange()); }
     };
 
-    enum ReservedSlot : core::u32
+    // Allocate fixed Textures/Buffers SRVs/UAVs slots top-down (dynamic slots are allocated bottom-up)
+    enum class ReservedSlot : core::u32
     {
-        None = 0x80000000
+        // Texture SRV
+        ImGuiFontTexSrv         = RESERVEDSLOT_TEXSRV_IMGUIFONTTEX,
+
+        // Buffer SRV
+        ViewConstantsBufSrv     = RESERVEDSLOT_BUFSRV_VIEWCONSTANTS,
+
+        // Dynamic
+        None                    = 0x80000000
     };
 }

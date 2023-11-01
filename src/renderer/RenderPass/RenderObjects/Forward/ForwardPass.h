@@ -22,14 +22,10 @@ namespace vg::renderer
         ForwardPass();
         ~ForwardPass();
 
-        void setup(const gfx::RenderPassContext & _renderContext, double _dt) override;
-        void draw(const gfx::RenderPassContext & _renderContext, gfx::CommandList * _cmdList) const override;
+        void Setup(const gfx::RenderPassContext & _renderContext, double _dt) override;
+        void Render(const gfx::RenderPassContext & _renderContext, gfx::CommandList * _cmdList) const override;
 
     private:
 
-        //gfx::DynamicBuffer * m_dynamicBuffer = nullptr;
-        //gfx::Buffer * m_updatedBuffer = nullptr;
-
-        gfx::Buffer * m_constantBuffer = nullptr;
     };
 }

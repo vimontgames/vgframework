@@ -15,6 +15,7 @@ namespace vg::gfx
     {
         Graphic = 0,
         Compute,
+        Copy,
         RayTrace
     };
 }
