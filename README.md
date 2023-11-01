@@ -3,7 +3,7 @@ Yes, yet another work-in-progress game and graphic engine project :)
 
 Its renderer only uses modern graphics APIs like DirectX12 and Vulkan (I would also like to support Metal the day I got and Apple device) so it can be 100% bindless from the very beginning and do strong choices in that direction:  
 * instanciating and writing into GPU tables is not even exposed: You have to do all the rendering stuff the modern, bindless way. 
-* All the interface is made to encourage using only push constants and one dynamic "instance" buffer, not updating tables constantly as if we were still emulating DX9.
+* All the interface is made to encourage using only push constants and bindless buffers/textures, not updating tables constantly as if we were still emulating DX9.
 * You can't access the command lists without using the framegraph that is part of the graphic driver layer. Go framegraph or do not render anything.
 * Apart from the number of root constants, all shaders are sharing the same root signatures.
 
@@ -35,7 +35,10 @@ Separate DLLs for Engine, Renderer, Editor and Game.
 # keyboard shortcuts
 
 - Press F1 to start/stop profiler capture
+- Press F5 to start/stop engine 
 - Press F6 to hot reload shaders
+- Press F11 for fullscreen
+- Press 'Pause' to pause/resume engine when running
 
 # ide
 VS Studio 2022 Community\
