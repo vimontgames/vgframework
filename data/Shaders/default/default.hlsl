@@ -143,11 +143,13 @@ PS_Output PS_Forward(VS_Output _input)
             output.color0 = sRGBA2Linear(float4(normal.rgb * 0.5 + 0.5, 1));
             break;
     }
-    
-    if (FLAG_WIREFRAME & rootConstants3D.getFlags())
-        output.color0 = float4(0,1,0,1);
-    
     #endif // _TOOLMODE
+    
+    #if _EDITOR
+    // TODO: select editor pass according to root constant flags
+    if (RootConstantsEditorFlags::Wireframe & rootConstants3D.getFlags())
+        output.color0 = float4(0,1,0,1);
+    #endif
     
     // Picking test
     float2 screenSize = viewConstants.getScreenSize();

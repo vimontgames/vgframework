@@ -22,6 +22,13 @@ namespace vg
         class RenderContext;
         class MaterialImporterData;
 
+        enum class ShaderPass : core::u8
+        {
+            ZOnly = 0,
+            Forward,
+            Editor
+        };
+
         class MaterialModel : public IMaterialModel
         {
             using super = IMaterialModel;
@@ -30,8 +37,8 @@ namespace vg
 
             enum Flags : core::u32
             {
-                AlphaTest = 0x00000001,
-                AlphaBlend = 0x00000002
+                AlphaTest   = 0x00000001,
+                AlphaBlend  = 0x00000002
             };
 
             const char *            getClassName            () const final { return "MaterialModel"; }
@@ -67,7 +74,7 @@ namespace vg
             Flags                       m_flags;
             TextureInfo                 m_textureInfos[core::enumCount<MaterialTextureType>()];
             gfx::RootSignatureHandle    m_rootSignature;
-            gfx::ShaderKey              m_shaderKey;
+            gfx::ShaderKey              m_shaderKey[core::enumCount<ShaderPass>()];
         };
     }
 }

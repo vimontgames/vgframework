@@ -60,7 +60,11 @@ namespace vg::renderer
                           rsDesc.addTable(bindlessTable);
 
         m_rootSignature = device->addRootSignature(rsDesc);
-        m_shaderKey = ShaderKey("default/default.hlsl", "Forward");
+
+        const char * shaderFile = "default/default.hlsl";
+        m_shaderKey[asInteger(ShaderPass::ZOnly)] = ShaderKey(shaderFile, "ZOnly");
+        m_shaderKey[asInteger(ShaderPass::Forward)] = ShaderKey(shaderFile, "Forward");
+        m_shaderKey[asInteger(ShaderPass::Editor)] = ShaderKey(shaderFile, "Editor");
     }
 
     //--------------------------------------------------------------------------------------
@@ -137,7 +141,7 @@ namespace vg::renderer
         _root3D->setNormalTextureHandle(normalMap->getTextureHandle());
         _root3D->setMatID(_index);
 
-        auto key = m_shaderKey;
+        auto key = m_shaderKey[asInteger(_renderContext.m_shaderPass)];
 
         RasterizerState rs(FillMode::Solid, CullMode::Back);
         BlendState bs(BlendFactor::One, BlendFactor::Zero, BlendOp::Add);
@@ -148,11 +152,14 @@ namespace vg::renderer
         _cmdList->setBlendState(bs);
         _cmdList->setDepthStencilState(ds);        
 
-        // TODO: set from material?
         if (_renderContext.m_toolmode)
         {
             if (_renderContext.m_wireframe)
+            {
                 rs = RasterizerState(FillMode::Wireframe, CullMode::None);
+                key = m_shaderKey[asInteger(ShaderPass::Editor)];
+                _root3D->setFlags(RootConstantsEditorFlags::Wireframe);
+            }
 
             key.setFlags(gfx::DefaultHLSLDesc::Toolmode, true);
         }

@@ -24,6 +24,12 @@ namespace vg::gfx
 
             ShaderKey::Flags        flags = 0x0000;
 
+            void addFlag(ShaderKey::Flags _flag)
+            {
+                VG_ASSERT(_flag < 16);
+                flags |= 1 << _flag;
+            }
+
             bool operator == (const Technique & _other) const
             {
                 return vs == _other.vs && hs == _other.hs && ds == _other.ds && gs == _other.gs && ps == _other.ps && _other.cs == cs && !name.compare(_other.name);

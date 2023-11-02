@@ -8,8 +8,10 @@
 using namespace vg::core;
 #endif
 
-#define FLAG_NONE           0x0000
-#define FLAG_WIREFRAME      0x0001
+ENUM(RootConstantsEditorFlags, uint)
+{
+    Wireframe = 0x0001
+};
 
 struct RootConstants3D
 {

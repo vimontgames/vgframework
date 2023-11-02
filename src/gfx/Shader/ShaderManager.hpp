@@ -312,7 +312,7 @@ namespace vg::gfx
                 }
             }
 
-            VG_INFO("[Shader] %u/%u shader(s) changed", updated, m_shaderFileDescriptors.size());
+            VG_INFO("[Shader] %u/%u shader file(s) changed", updated, m_shaderFileDescriptors.size());
         }
 
         m_updateNeeded = false;

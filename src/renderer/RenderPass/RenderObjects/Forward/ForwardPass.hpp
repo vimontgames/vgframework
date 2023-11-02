@@ -2,9 +2,8 @@
 #include "core/GameObject/GameObject.h"
 #include "renderer/Geometry/Mesh/MeshGeometry.h"
 #include "renderer/Model/Mesh/MeshModel.h"
+#include "renderer/Model/Material/MaterialModel.h"
 #include "renderer/View/View.h"
-
-#include "gfx/RingBuffer/Upload/UploadBuffer.h"
 
 namespace vg::renderer
 {
@@ -41,6 +40,7 @@ namespace vg::renderer
         RenderContext renderContext;
         renderContext.m_viewProj = view->getViewProjMatrix();
         renderContext.m_toolmode = view->getViewID().target == gfx::ViewTarget::Editor || options->isToolModeEnabled();
+        renderContext.m_shaderPass = ShaderPass::Forward;
 
         const GraphicInstanceList & allInstances = view->m_cullingJobResult.m_instanceLists[asInteger(GraphicInstanceListType::All)];
         
