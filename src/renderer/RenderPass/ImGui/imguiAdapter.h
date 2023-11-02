@@ -42,7 +42,7 @@ namespace vg
             void        releaseTextureID        (ImTextureID _texID);
 
         private:
-            gfx::BindlessTextureSrvHandle       m_fontTexSRVHandle;
+            gfx::BindlessTextureHandle          m_fontTexHandle;
 
             #ifdef VG_VULKAN
             VkDescriptorPool                    m_vkImguiDescriptorPool;

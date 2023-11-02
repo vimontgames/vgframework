@@ -16,8 +16,8 @@ namespace vg::gfx
                 ConstantBuffer = 0,
                 Texture,
                 Buffer,
-                UAVTexture,
-                UAVBuffer,
+                RWTexture,
+                RWBuffer,
                 Sampler
             };
 
@@ -59,18 +59,18 @@ namespace vg::gfx
                 }
             };
 
-            struct UAVTexture : public DescriptorParameters
+            struct RWTexture : public DescriptorParameters
             {
-                UAVTexture(core::u8 _binding, core::u16 _register, core::u16 _count) :
+                RWTexture(core::u8 _binding, core::u16 _register, core::u16 _count) :
                     DescriptorParameters(_binding, _register, _count)
                 {
 
                 }
             };
 
-            struct UAVBuffer : public DescriptorParameters
+            struct RWBuffer : public DescriptorParameters
             {
-                UAVBuffer(core::u8 _binding, core::u16 _register, core::u16 _count) :
+                RWBuffer(core::u8 _binding, core::u16 _register, core::u16 _count) :
                     DescriptorParameters(_binding, _register, _count)
                 {
 
@@ -108,10 +108,10 @@ namespace vg::gfx
                         return texture == _other.texture;
                     case Type::Buffer:
                         return buffer == _other.buffer;
-                    case Type::UAVTexture:
-                        return uavTexture == _other.uavTexture;
-                    case Type::UAVBuffer:
-                        return uavBuffer == _other.uavBuffer;
+                    case Type::RWTexture:
+                        return rwTexture == _other.rwTexture;
+                    case Type::RWBuffer:
+                        return rwBuffer == _other.rwBuffer;
                     case Type::ConstantBuffer:
                         return constantBuffer == _other.constantBuffer;
                     case Type::Sampler:
@@ -127,46 +127,46 @@ namespace vg::gfx
             {
             }
 
-            const Texture        & getTextures         () const { VG_ASSERT(Type::Texture        == m_type); return texture; }
-            const Buffer         & getBuffers          () const { VG_ASSERT(Type::Buffer         == m_type); return buffer; }
-            const UAVTexture     & getUAVTextures      () const { VG_ASSERT(Type::UAVTexture     == m_type); return uavTexture; }
-            const UAVBuffer      & getUAVBuffers       () const { VG_ASSERT(Type::UAVBuffer      == m_type); return uavBuffer; }
-            const ConstantBuffer & getConstantBuffers  () const { VG_ASSERT(Type::ConstantBuffer == m_type); return constantBuffer; }
-            const Sampler        & getSamplers         () const { VG_ASSERT(Type::Sampler        == m_type); return sampler; }
+            const Texture &         getTextures         () const { VG_ASSERT(Type::Texture        == m_type); return texture; }
+            const Buffer &          getBuffers          () const { VG_ASSERT(Type::Buffer         == m_type); return buffer; }
+            const RWTexture &       getRWTextures       () const { VG_ASSERT(Type::RWTexture      == m_type); return rwTexture; }
+            const RWBuffer &        getRWBuffers        () const { VG_ASSERT(Type::RWBuffer       == m_type); return rwBuffer; }
+            const ConstantBuffer &  getConstantBuffers  () const { VG_ASSERT(Type::ConstantBuffer == m_type); return constantBuffer; }
+            const Sampler &         getSamplers         () const { VG_ASSERT(Type::Sampler        == m_type); return sampler; }
 
         private:
             Type m_type;
 
             union
             {
-                Texture           texture;
-                Buffer            buffer;
-                UAVTexture        uavTexture;
-                UAVBuffer         uavBuffer;
-                ConstantBuffer    constantBuffer;
-                Sampler           sampler;
+                ConstantBuffer  constantBuffer;
+                Texture         texture;
+                Buffer          buffer;
+                RWTexture       rwTexture;
+                RWBuffer        rwBuffer;
+                Sampler         sampler;
             };
 
             friend class RootSignatureTableDesc;
         };
 
     public:
-        void addConstantBuffers(core::u8 _binding, core::u16 _register, core::u16 _count);
-        void addTextures(core::u8 _binding, core::u16 _register, core::u16 _count);
-        void addBuffers(core::u8 _binding, core::u16 _register, core::u16 _count);
+        void                                addConstantBuffers  (core::u8 _binding, core::u16 _register, core::u16 _count);
+        void                                addTextures         (core::u8 _binding, core::u16 _register, core::u16 _count);
+        void                                addBuffers          (core::u8 _binding, core::u16 _register, core::u16 _count);
 
-        void addUAVTextures(core::u8 _binding, core::u16 _register, core::u16 _count);
-        void addUAVBuffers(core::u8 _binding, core::u16 _register, core::u16 _count);
+        void                                addRWTextures       (core::u8 _binding, core::u16 _register, core::u16 _count);
+        void                                addRWBuffers        (core::u8 _binding, core::u16 _register, core::u16 _count);
 
-        const core::vector<Descriptor> & getDescriptors() const;
+        const core::vector<Descriptor> &    getDescriptors      () const;
 
-        bool    empty() const;
+        bool                                empty               () const;
 
-        void setShaderStageFlags(ShaderStageFlags _stages);
-        ShaderStageFlags getShaderStageFlags() const { return m_stages; }
+        void                                setShaderStageFlags (ShaderStageFlags _stages);
+        ShaderStageFlags                    getShaderStageFlags () const { return m_stages; }
 
-        bool    operator == (const RootSignatureTableDesc & _other) const;
-        inline bool operator != (const RootSignatureTableDesc & _other) const { return !(operator == (_other)); }
+        bool                                operator ==         (const RootSignatureTableDesc & _other) const;
+        inline bool                         operator !=         (const RootSignatureTableDesc & _other) const { return !(operator == (_other)); }
 
     private:
         ShaderStageFlags            m_stages = (ShaderStageFlags)0;

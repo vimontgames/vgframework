@@ -26,14 +26,14 @@ namespace vg::gfx
 			VG_INLINE const TextureDesc & getTexDesc() const { return m_texDesc; }
             VG_INLINE const gfx::Resource & getResource() const { return m_resource; }
             VG_INLINE gfx::Resource & getResource() { return m_resource; }
-            VG_INLINE const gfx::BindlessTextureSrvHandle getBindlessSRVHandle() const { return m_bindlessSRVHandle; }
-			VG_INLINE const gfx::BindlessTextureUAVHandle getBindlessUAVHandle() const { return m_bindlessRWTextureHandle; }
+            VG_INLINE const gfx::BindlessTextureHandle getTextureHandle() const { return m_textureHandle; }
+			VG_INLINE const gfx::BindlessRWTextureHandle getRWTextureHandle() const { return m_rwTextureHandle; }
 			
         protected:
 			const TextureDesc				m_texDesc;
             gfx::Resource					m_resource;
-            gfx::BindlessTextureSrvHandle	m_bindlessSRVHandle;
-			gfx::BindlessTextureUAVHandle	m_bindlessRWTextureHandle;
+            gfx::BindlessTextureHandle		m_textureHandle;
+			gfx::BindlessRWTextureHandle	m_rwTextureHandle;
 		};
 	}
 }

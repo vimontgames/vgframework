@@ -404,7 +404,7 @@ namespace vg::gfx::dx12
         if (asBool(BindFlags::ShaderResource & bufDesc.resource.m_bindFlags))
         {
             auto * bindlessTable = device->getBindlessTable();
-            bindlessTable->updated3d12descriptor(_dst->getBindlessSRVHandle());
+            bindlessTable->updated3d12descriptor(_dst->getBufferHandle());
         }
     }
 
@@ -457,7 +457,7 @@ namespace vg::gfx::dx12
         if (asBool(BindFlags::ShaderResource & texDesc.resource.m_bindFlags))
         {
             auto * bindlessTable = device->getBindlessTable();
-            bindlessTable->updated3d12descriptor(_dst->getBindlessSRVHandle());
+            bindlessTable->updated3d12descriptor(_dst->getTextureHandle());
         }
     }
 

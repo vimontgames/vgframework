@@ -133,8 +133,8 @@ namespace vg::renderer
         gfx::Texture * albedoMap = getTexture(MaterialTextureType::Albedo);
         gfx::Texture * normalMap = getTexture(MaterialTextureType::Normal);
 
-        _root3D->setAlbedoTextureHandle(albedoMap->getBindlessSRVHandle());
-        _root3D->setNormalTextureHandle(normalMap->getBindlessSRVHandle());
+        _root3D->setAlbedoTextureHandle(albedoMap->getTextureHandle());
+        _root3D->setNormalTextureHandle(normalMap->getTextureHandle());
         _root3D->setMatID(_index);
 
         auto key = m_shaderKey;

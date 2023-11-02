@@ -190,7 +190,7 @@ namespace vg::gfx::vulkan
             if (!_texDesc.isBackbuffer())
             {
                 BindlessTable * bindlessTable = device->getBindlessTable();
-                m_bindlessSRVHandle = bindlessTable->allocBindlessTextureHandle(static_cast<gfx::Texture*>(this), _reservedSlot);
+                m_textureHandle = bindlessTable->allocBindlessTextureHandle(static_cast<gfx::Texture*>(this), _reservedSlot);
 
                 VkDescriptorImageInfo tex_descs = {};
                                       tex_descs.imageView = m_vkImageView;
@@ -199,12 +199,12 @@ namespace vg::gfx::vulkan
 
                 VkWriteDescriptorSet writes = {};
                                      writes.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
-                                     writes.dstBinding = BINDLESS_TEXTURE_SRV_BINDING;
+                                     writes.dstBinding = BINDLESS_TEXTURE_BINDING;
                                      writes.descriptorCount = 1;
                                      writes.descriptorType = VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE;
                                      writes.pImageInfo = &tex_descs;
                                      writes.dstSet = device->getVulkanBindlessDescriptors();
-                                     writes.dstArrayElement = m_bindlessSRVHandle - BINDLESS_TEXTURE_SRV_START;
+                                     writes.dstArrayElement = m_textureHandle - BINDLESS_TEXTURE_START;
 
                 vkUpdateDescriptorSets(device->getVulkanDevice(), 1, &writes, 0, nullptr);
 
@@ -239,7 +239,7 @@ namespace vg::gfx::vulkan
 
                 if (asBool(BindFlags::UnorderedAccess & _texDesc.resource.m_bindFlags))
                 {
-                    m_bindlessRWTextureHandle = bindlessTable->allocBindlessRWTextureHandle(static_cast<gfx::Texture *>(this));
+                    m_rwTextureHandle = bindlessTable->allocBindlessRWTextureHandle(static_cast<gfx::Texture *>(this));
 
                     VkDescriptorImageInfo tex_descs = {};
                     tex_descs.imageView = m_vkImageView;
@@ -248,12 +248,12 @@ namespace vg::gfx::vulkan
 
                     VkWriteDescriptorSet writes = {};
                     writes.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
-                    writes.dstBinding = BINDLESS_TEXTURE_UAV_BINDING;
+                    writes.dstBinding = BINDLESS_RWTEXTURE_BINDING;
                     writes.descriptorCount = 1;
                     writes.descriptorType = VK_DESCRIPTOR_TYPE_STORAGE_IMAGE;
                     writes.pImageInfo = &tex_descs;
                     writes.dstSet = device->getVulkanBindlessDescriptors();
-                    writes.dstArrayElement = m_bindlessRWTextureHandle - BINDLESS_TEXTURE_UAV_START;
+                    writes.dstArrayElement = m_rwTextureHandle - BINDLESS_RWTEXTURE_START;
 
                     vkUpdateDescriptorSets(device->getVulkanDevice(), 1, &writes, 0, nullptr);
                 }

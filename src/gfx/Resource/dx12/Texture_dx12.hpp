@@ -185,9 +185,9 @@ namespace vg::gfx::dx12
             VG_ASSERT(m_resource.getd3d12TextureResource());
 
             BindlessTable * bindlessTable = device->getBindlessTable();
-            m_bindlessSRVHandle = bindlessTable->allocBindlessTextureHandle(static_cast<gfx::Texture*>(this), _reservedSlot);
+            m_textureHandle = bindlessTable->allocBindlessTextureHandle(static_cast<gfx::Texture*>(this), _reservedSlot);
 
-            D3D12_CPU_DESCRIPTOR_HANDLE d3d12DescriptorHandle = bindlessTable->getd3d12CPUDescriptorHandle(m_bindlessSRVHandle);
+            D3D12_CPU_DESCRIPTOR_HANDLE d3d12DescriptorHandle = bindlessTable->getd3d12CPUDescriptorHandle(m_textureHandle);
             d3d12device->CreateShaderResourceView(m_resource.getd3d12TextureResource(), &srvDesc, d3d12DescriptorHandle);
         }
 
@@ -207,7 +207,7 @@ namespace vg::gfx::dx12
             if (nullptr == _initData && asBool(BindFlags::ShaderResource & _texDesc.resource.m_bindFlags))
             {
                 auto * bindlessTable = device->getBindlessTable();
-                bindlessTable->updated3d12descriptor(getBindlessSRVHandle());
+                bindlessTable->updated3d12descriptor(getTextureHandle());
             }
         }
         else if (asBool(TextureFlags::DepthStencil & _texDesc.flags))
@@ -226,7 +226,7 @@ namespace vg::gfx::dx12
             if (nullptr == _initData && asBool(BindFlags::ShaderResource & _texDesc.resource.m_bindFlags))
             {
                 auto * bindlessTable = device->getBindlessTable();
-                bindlessTable->updated3d12descriptor(getBindlessSRVHandle());
+                bindlessTable->updated3d12descriptor(getTextureHandle());
             }
         }
 
@@ -241,8 +241,8 @@ namespace vg::gfx::dx12
                 case TextureType::Texture2D:
                 {
                     BindlessTable * bindlessTable = device->getBindlessTable();
-                    m_bindlessRWTextureHandle = bindlessTable->allocBindlessRWTextureHandle(static_cast<gfx::Texture *>(this));
-                    D3D12_CPU_DESCRIPTOR_HANDLE d3d12RWTextureDescriptorHandle = bindlessTable->getd3d12CPUDescriptorHandle(m_bindlessRWTextureHandle);
+                    m_rwTextureHandle = bindlessTable->allocBindlessRWTextureHandle(static_cast<gfx::Texture *>(this));
+                    D3D12_CPU_DESCRIPTOR_HANDLE d3d12RWTextureDescriptorHandle = bindlessTable->getd3d12CPUDescriptorHandle(m_rwTextureHandle);
 
                     D3D12_UNORDERED_ACCESS_VIEW_DESC uavDesc;
                     uavDesc.Format = getd3d12PixelFormat(_texDesc.format);
@@ -250,7 +250,7 @@ namespace vg::gfx::dx12
                     uavDesc.Texture2D.MipSlice = 0;
                     uavDesc.Texture2D.PlaneSlice = 0;
                     d3d12device->CreateUnorderedAccessView(m_resource.getd3d12TextureResource(), nullptr, &uavDesc, d3d12RWTextureDescriptorHandle);
-                    bindlessTable->updated3d12descriptor(getBindlessUAVHandle());
+                    bindlessTable->updated3d12descriptor(getRWTextureHandle());
                 }
                 break;
             }            

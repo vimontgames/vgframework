@@ -22,36 +22,36 @@ namespace vg::gfx
 
             const RootSignatureTableDesc & getTableDesc() const { return m_tableDesc; }
 
-            BindlessTextureSrvHandle allocBindlessTextureHandle(const gfx::Texture * _texture, ReservedSlot _reservedSlot = ReservedSlot::None);
-            void freeBindlessTextureHandle(BindlessTextureSrvHandle & _handle);
+            BindlessTextureHandle allocBindlessTextureHandle(const gfx::Texture * _texture, ReservedSlot _reservedSlot = ReservedSlot::None);
+            void freeBindlessTextureHandle(BindlessTextureHandle & _handle);
 
-            BindlessBufferSrvHandle allocBindlessBufferHandle(const gfx::Buffer * _buffer, ReservedSlot _reservedSlot = ReservedSlot::None);
-            void freeBindlessBufferHandle(BindlessBufferSrvHandle & _handle);
+            BindlessBufferHandle allocBindlessBufferHandle(const gfx::Buffer * _buffer, ReservedSlot _reservedSlot = ReservedSlot::None);
+            void freeBindlessBufferHandle(BindlessBufferHandle & _handle);
 
-            BindlessTextureUAVHandle allocBindlessRWTextureHandle(const gfx::Texture * _texture, ReservedSlot _reservedSlot = ReservedSlot::None);
-            void freeBindlessRWTextureHandle(BindlessTextureUAVHandle & _handle);
+            BindlessRWTextureHandle allocBindlessRWTextureHandle(const gfx::Texture * _texture, ReservedSlot _reservedSlot = ReservedSlot::None);
+            void freeBindlessRWTextureHandle(BindlessRWTextureHandle & _handle);
 
-            BindlessBufferUAVHandle allocBindlessRWBufferHandle(const gfx::Buffer * _buffer, ReservedSlot _reservedSlot = ReservedSlot::None);
-            void freeBindlessRWBufferHandle(BindlessBufferUAVHandle & _handle);
+            BindlessRWBufferHandle allocBindlessRWBufferHandle(const gfx::Buffer * _buffer, ReservedSlot _reservedSlot = ReservedSlot::None);
+            void freeBindlessRWBufferHandle(BindlessRWBufferHandle & _handle);
             
         private:
             template <class H, class T, class P> H allocBindlessHandle(const T * _resource, ReservedSlot _reservedSlot, P & _pool, T ** _resources, core::uint _offset, core::uint _invalid);
             template <class H, class T, class P> void freeBindlessHandle(H & _handle, P & _pool, T ** _resources, core::uint _offset, core::uint _invalid);
 
         private:
-            RootSignatureTableDesc                                                  m_tableDesc;
+            RootSignatureTableDesc                                          m_tableDesc;
 
-            core::IndexPool<BindlessHandle::Type, BINDLESS_TEXTURE_SRV_COUNT>       m_textureSrvIndexPool;
-            Texture *                                                               m_textureSrv[BINDLESS_TEXTURE_SRV_COUNT];
+            core::IndexPool<BindlessHandle::Type, BINDLESS_TEXTURE_COUNT>   m_textureIndexPool;
+            Texture *                                                       m_textures[BINDLESS_TEXTURE_COUNT];
 
-            core::IndexPool<BindlessHandle::Type, BINDLESS_BUFFER_SRV_COUNT>        m_bufferSrvIndexPool;
-            Buffer *                                                                m_bufferSrv[BINDLESS_BUFFER_SRV_COUNT];
+            core::IndexPool<BindlessHandle::Type, BINDLESS_BUFFER_COUNT>    m_bufferIndexPool;
+            Buffer *                                                        m_buffers[BINDLESS_BUFFER_COUNT];
 
-            core::IndexPool<BindlessHandle::Type, BINDLESS_TEXTURE_UAV_COUNT>       m_textureUAVIndexPool;
-            Texture *                                                               m_textureUAV[BINDLESS_TEXTURE_UAV_COUNT];
+            core::IndexPool<BindlessHandle::Type, BINDLESS_RWTEXTURE_COUNT> m_rwTextureIndexPool;
+            Texture *                                                       m_rwTextures[BINDLESS_RWTEXTURE_COUNT];
 
-            core::IndexPool<BindlessHandle::Type, BINDLESS_BUFFER_UAV_COUNT>        m_bufferUAVIndexPool;
-            Buffer *                                                                m_bufferUAV[BINDLESS_BUFFER_UAV_COUNT];
+            core::IndexPool<BindlessHandle::Type, BINDLESS_RWBUFFER_COUNT>  m_rwBufferIndexPool;
+            Buffer *                                                        m_rwBuffers[BINDLESS_RWBUFFER_COUNT];
         };
     }
 }

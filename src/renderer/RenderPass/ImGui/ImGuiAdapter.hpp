@@ -158,7 +158,7 @@ namespace vg::renderer
         #endif
 
         BindlessTable * bindlessTable = _device.getBindlessTable();
-        m_fontTexSRVHandle = bindlessTable->allocBindlessTextureHandle((Texture *)nullptr, ReservedSlot::ImGuiFontTexSrv); 
+        m_fontTexHandle = bindlessTable->allocBindlessTextureHandle((Texture *)nullptr, ReservedSlot::ImGuiFontTexSrv); 
 
         #ifdef VG_DX12
         d3d12Init();
@@ -176,8 +176,8 @@ namespace vg::renderer
         const PixelFormat fmt = device->getBackbufferFormat();
         BindlessTable * bindlessTable = device->getBindlessTable();
 
-        D3D12_CPU_DESCRIPTOR_HANDLE fontCpuHandle = bindlessTable->getd3d12CPUDescriptorHandle(m_fontTexSRVHandle);
-        D3D12_GPU_DESCRIPTOR_HANDLE fontGpuHandle = bindlessTable->getd3d12GPUDescriptorHandle(m_fontTexSRVHandle);
+        D3D12_CPU_DESCRIPTOR_HANDLE fontCpuHandle = bindlessTable->getd3d12CPUDescriptorHandle(m_fontTexHandle);
+        D3D12_GPU_DESCRIPTOR_HANDLE fontGpuHandle = bindlessTable->getd3d12GPUDescriptorHandle(m_fontTexHandle);
 
         ImGui_ImplDX12_Init(device->getd3d12Device(), max_frame_latency, Texture::getd3d12PixelFormat(fmt), bindlessTable->getd3d12GPUDescriptorHeap(), fontCpuHandle, fontGpuHandle);
     }
@@ -290,7 +290,7 @@ namespace vg::renderer
         device->waitGPUIdle();
 
         BindlessTable * bindlessTable = device->getBindlessTable();
-        bindlessTable->freeBindlessTextureHandle(m_fontTexSRVHandle);
+        bindlessTable->freeBindlessTextureHandle(m_fontTexHandle);
 
         #ifdef VG_DX12
         ImGui_ImplDX12_Shutdown();
@@ -355,7 +355,7 @@ namespace vg::renderer
         if (firstFrame)
         {
             BindlessTable * bindlessTable = device->getBindlessTable();
-            bindlessTable->updated3d12descriptor(m_fontTexSRVHandle);
+            bindlessTable->updated3d12descriptor(m_fontTexHandle);
 
             firstFrame = false;
         }
@@ -411,7 +411,7 @@ namespace vg::renderer
 
         #ifdef VG_DX12
         gfx::BindlessTable * bindlessTable = device->getBindlessTable();
-        return (ImTextureID)bindlessTable->getd3d12GPUDescriptorHandle(_tex->getBindlessSRVHandle()).ptr;
+        return (ImTextureID)bindlessTable->getd3d12GPUDescriptorHandle(_tex->getTextureHandle()).ptr;
         #elif defined(VG_VULKAN)
         // In case of crash increase size of VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER in ImguiAdapter::vulkanInit()
         VkDescriptorSet texID = ImGui_ImplVulkan_AddTexture(m_vkSampler, _tex->getVulkanImageView(), VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL);

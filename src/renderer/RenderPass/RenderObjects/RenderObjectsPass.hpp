@@ -129,7 +129,7 @@ namespace vg::renderer
         EditorRootConstants3D root3D;
         {
             root3D.mat = transpose(wvp);
-            root3D.setBufferHandle(m_unitBox->getVertexBuffer()->getBindlessSRVHandle());
+            root3D.setBufferHandle(m_unitBox->getVertexBuffer()->getBufferHandle());
             root3D.setVertexBufferOffset(m_unitBox->getVertexBufferOffset());
         }
 
@@ -234,7 +234,7 @@ namespace vg::renderer
         EditorRootConstants3D root3D;
 
         root3D.mat = transpose(_viewProj);
-        root3D.setBufferHandle(m_gridVB->getBindlessSRVHandle());
+        root3D.setBufferHandle(m_gridVB->getBufferHandle());
         root3D.color = float4(1, 1, 1, 1);
 
         _cmdList->setRasterizerState(rs);
@@ -290,7 +290,7 @@ namespace vg::renderer
         EditorRootConstants3D root3D;
 
         root3D.mat = transpose(_viewProj);
-        root3D.setBufferHandle(m_axisVB->getBindlessSRVHandle());
+        root3D.setBufferHandle(m_axisVB->getBufferHandle());
         root3D.color = float4(1, 1, 1, 1);
 
         _cmdList->setRasterizerState(rs);

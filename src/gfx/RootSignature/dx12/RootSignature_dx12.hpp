@@ -85,9 +85,9 @@ namespace vg::gfx::dx12
                     }
                     break;
 
-                    case RootSignatureTableDesc::Descriptor::Type::UAVTexture:
+                    case RootSignatureTableDesc::Descriptor::Type::RWTexture:
                     {
-                        const auto & textures = descriptor.getUAVTextures();
+                        const auto & textures = descriptor.getRWTextures();
 
                         d3d12Descriptor.RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_UAV;
                         d3d12Descriptor.BaseShaderRegister = textures.m_register;
@@ -99,9 +99,9 @@ namespace vg::gfx::dx12
                     }
                     break;
 
-                    case RootSignatureTableDesc::Descriptor::Type::UAVBuffer:
+                    case RootSignatureTableDesc::Descriptor::Type::RWBuffer:
                     {
-                        const auto & buffers = descriptor.getUAVBuffers();
+                        const auto & buffers = descriptor.getRWBuffers();
 
                         d3d12Descriptor.RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_UAV;
                         d3d12Descriptor.BaseShaderRegister = buffers.m_register;

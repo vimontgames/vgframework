@@ -59,20 +59,20 @@ namespace vg::gfx
     }
 
     //--------------------------------------------------------------------------------------
-    void RootSignatureTableDesc::addUAVTextures(core::u8 _binding, core::u16 _register, core::u16 _count)
+    void RootSignatureTableDesc::addRWTextures(core::u8 _binding, core::u16 _register, core::u16 _count)
     {
         RootSignatureTableDesc::Descriptor descritor;
-        descritor.m_type = Descriptor::Type::UAVTexture;
-        descritor.uavTexture = Descriptor::UAVTexture(_binding, _register, _count);
+        descritor.m_type = Descriptor::Type::RWTexture;
+        descritor.rwTexture = Descriptor::RWTexture(_binding, _register, _count);
         m_descriptors.push_back(descritor);
     }
 
     //--------------------------------------------------------------------------------------
-    void RootSignatureTableDesc::addUAVBuffers(core::u8 _binding, core::u16 _register, core::u16 _count)
+    void RootSignatureTableDesc::addRWBuffers(core::u8 _binding, core::u16 _register, core::u16 _count)
     {
         RootSignatureTableDesc::Descriptor descritor;
-        descritor.m_type = Descriptor::Type::UAVBuffer;
-        descritor.uavBuffer = Descriptor::UAVBuffer(_binding, _register, _count);
+        descritor.m_type = Descriptor::Type::RWBuffer;
+        descritor.rwBuffer = Descriptor::RWBuffer(_binding, _register, _count);
         m_descriptors.push_back(descritor);
     }
 

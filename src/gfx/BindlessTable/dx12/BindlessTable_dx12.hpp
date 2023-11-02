@@ -65,7 +65,7 @@ namespace vg::gfx::dx12
     //--------------------------------------------------------------------------------------
     void BindlessTable::copyTextureHandle(core::uint _slot, gfx::Texture * _texture)
     {
-        D3D12_CPU_DESCRIPTOR_HANDLE src = getd3d12CPUDescriptorHandle(_texture->getBindlessSRVHandle()); 
+        D3D12_CPU_DESCRIPTOR_HANDLE src = getd3d12CPUDescriptorHandle(_texture->getTextureHandle()); 
         D3D12_CPU_DESCRIPTOR_HANDLE dst = getd3d12CPUDescriptorHandle(_slot);
 
         auto * device = gfx::Device::get();

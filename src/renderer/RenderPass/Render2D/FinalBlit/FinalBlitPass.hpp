@@ -68,10 +68,11 @@ namespace vg::renderer
         root2D.quad.posOffsetScale = float4(0.0f, 0.0f, 1.0f, 1.0f);
         root2D.quad.uvOffsetScale = float4(0.0f, 0.0f, 1.0f, 1.0f);
 
+        // When Compute post-process is enabled then we blit from the PostProcessUAV read as Shader Resource
         if (options->isComputePostProcessEnabled())
-            root2D.texID = getRenderTarget(_renderPassContext.getFrameGraphID("PostProcessUAV"))->getBindlessSRVHandle();
+            root2D.texID = getRenderTarget(_renderPassContext.getFrameGraphID("PostProcessUAV"))->getTextureHandle();
         else
-            root2D.texID = getRenderTarget(_renderPassContext.getFrameGraphID("Color"))->getBindlessSRVHandle();       
+            root2D.texID = getRenderTarget(_renderPassContext.getFrameGraphID("Color"))->getTextureHandle();       
 
         _cmdList->setGraphicRootConstants(0, (u32*)&root2D, RootConstants2DCount);
         _cmdList->draw(4);

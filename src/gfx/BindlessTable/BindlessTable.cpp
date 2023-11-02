@@ -17,10 +17,10 @@ namespace vg::gfx
         {
             m_tableDesc.setShaderStageFlags(ShaderStageFlags::All);
             
-            m_tableDesc.addTextures(BINDLESS_TEXTURE_SRV_BINDING, BINDLESS_TEXTURE_SRV_START, BINDLESS_TEXTURE_SRV_COUNT);
-            m_tableDesc.addBuffers(BINDLESS_BUFFER_SRV_BINDING, BINDLESS_BUFFER_SRV_START, BINDLESS_BUFFER_SRV_COUNT);
-            m_tableDesc.addUAVTextures(BINDLESS_TEXTURE_UAV_BINDING, BINDLESS_TEXTURE_UAV_START, BINDLESS_TEXTURE_UAV_COUNT);
-            m_tableDesc.addUAVBuffers(BINDLESS_BUFFER_UAV_BINDING, BINDLESS_BUFFER_UAV_COUNT, BINDLESS_BUFFER_UAV_COUNT);
+            m_tableDesc.addTextures(BINDLESS_TEXTURE_BINDING, BINDLESS_TEXTURE_START, BINDLESS_TEXTURE_COUNT);
+            m_tableDesc.addBuffers(BINDLESS_BUFFER_BINDING, BINDLESS_BUFFER_START, BINDLESS_BUFFER_COUNT);
+            m_tableDesc.addRWTextures(BINDLESS_RWTEXTURE_BINDING, BINDLESS_RWTEXTURE_START, BINDLESS_RWTEXTURE_COUNT);
+            m_tableDesc.addRWBuffers(BINDLESS_RWBUFFER_BINDING, BINDLESS_RWBUFFER_COUNT, BINDLESS_RWBUFFER_COUNT);
         }
 
         //--------------------------------------------------------------------------------------
@@ -64,53 +64,59 @@ namespace vg::gfx
         }
 
         //--------------------------------------------------------------------------------------
-        BindlessTextureSrvHandle BindlessTable::allocBindlessTextureHandle(const gfx::Texture * _texture, ReservedSlot _reservedSlot)
+        BindlessTextureHandle BindlessTable::allocBindlessTextureHandle(const gfx::Texture * _texture, ReservedSlot _reservedSlot)
         {
-            VG_ASSERT(ReservedSlot::None == _reservedSlot || BindlessTextureSrvHandle((u16)_reservedSlot).isValid(), "Reserved slot %u does not belong to the Texture SRV range [%u;%u[", BindlessTextureSrvHandle::getValidRange().x, BindlessTextureSrvHandle::getValidRange().y);
-            return allocBindlessHandle<BindlessTextureSrvHandle>(_texture, _reservedSlot, m_textureSrvIndexPool, m_textureSrv, BINDLESS_TEXTURE_SRV_START, BINDLESS_TEXTURE_SRV_INVALID);
+            VG_ASSERT(ReservedSlot::None == _reservedSlot || BindlessTextureHandle((u16)_reservedSlot).isValid(), "Reserved slot %u does not belong to the Texture SRV range [%u;%u[", BindlessTextureHandle::getValidRange().x, BindlessTextureHandle::getValidRange().y);
+            return allocBindlessHandle<BindlessTextureHandle>(_texture, _reservedSlot, m_textureIndexPool, m_textures, BINDLESS_TEXTURE_START, BINDLESS_TEXTURE_INVALID);
         }
 
         //--------------------------------------------------------------------------------------
-        void BindlessTable::freeBindlessTextureHandle(BindlessTextureSrvHandle & _handle)
+        void BindlessTable::freeBindlessTextureHandle(BindlessTextureHandle & _handle)
         {
-            freeBindlessHandle(_handle, m_textureSrvIndexPool, m_textureSrv, BINDLESS_TEXTURE_SRV_START, BINDLESS_TEXTURE_SRV_INVALID);
+            VG_ASSERT(_handle.isValid(), "0x%04X is not a valid Texture handle", (u16)_handle);
+            freeBindlessHandle(_handle, m_textureIndexPool, m_textures, BINDLESS_TEXTURE_START, BINDLESS_TEXTURE_INVALID);
         }
         
         //--------------------------------------------------------------------------------------
-        BindlessBufferSrvHandle BindlessTable::allocBindlessBufferHandle(const gfx::Buffer * _buffer, ReservedSlot _reservedSlot)
+        BindlessBufferHandle BindlessTable::allocBindlessBufferHandle(const gfx::Buffer * _buffer, ReservedSlot _reservedSlot)
         {
-            return allocBindlessHandle<BindlessBufferSrvHandle>(_buffer, _reservedSlot, m_bufferSrvIndexPool, m_bufferSrv, BINDLESS_BUFFER_SRV_START, BINDLESS_BUFFER_SRV_INVALID);
+            VG_ASSERT(ReservedSlot::None == _reservedSlot || BindlessBufferHandle((u16)_reservedSlot).isValid(), "Reserved slot %u does not belong to the Buffer SRV range [%u;%u[", BindlessBufferHandle::getValidRange().x, BindlessBufferHandle::getValidRange().y);
+            return allocBindlessHandle<BindlessBufferHandle>(_buffer, _reservedSlot, m_bufferIndexPool, m_buffers, BINDLESS_BUFFER_START, BINDLESS_BUFFER_INVALID);
         }
         
         //--------------------------------------------------------------------------------------
-        void BindlessTable::freeBindlessBufferHandle(BindlessBufferSrvHandle & _handle)
+        void BindlessTable::freeBindlessBufferHandle(BindlessBufferHandle & _handle)
         {
-            freeBindlessHandle(_handle, m_bufferSrvIndexPool, m_bufferSrv, BINDLESS_BUFFER_SRV_START, BINDLESS_BUFFER_SRV_INVALID);
+            VG_ASSERT(_handle.isValid(), "0x%04X is not a valid Buffer handle", (u16)_handle);
+            freeBindlessHandle(_handle, m_bufferIndexPool, m_buffers, BINDLESS_BUFFER_START, BINDLESS_BUFFER_INVALID);
         }
 
         //--------------------------------------------------------------------------------------
-        BindlessTextureUAVHandle BindlessTable::allocBindlessRWTextureHandle(const gfx::Texture * _texture, ReservedSlot _reservedSlot)
+        BindlessRWTextureHandle BindlessTable::allocBindlessRWTextureHandle(const gfx::Texture * _texture, ReservedSlot _reservedSlot)
         {
-            return allocBindlessHandle<BindlessTextureUAVHandle>(_texture, _reservedSlot, m_textureUAVIndexPool, m_textureUAV, BINDLESS_TEXTURE_UAV_START, BINDLESS_TEXTURE_UAV_INVALID);
+            VG_ASSERT(ReservedSlot::None == _reservedSlot || BindlessRWTextureHandle((u16)_reservedSlot).isValid(), "Reserved slot %u does not belong to the RWTexture range [%u;%u[", BindlessRWTextureHandle::getValidRange().x, BindlessRWTextureHandle::getValidRange().y);
+            return allocBindlessHandle<BindlessRWTextureHandle>(_texture, _reservedSlot, m_rwTextureIndexPool, m_rwTextures, BINDLESS_RWTEXTURE_START, BINDLESS_RWTEXTURE_INVALID);
         }
 
         //--------------------------------------------------------------------------------------
-        void BindlessTable::freeBindlessRWTextureHandle(BindlessTextureUAVHandle & _handle)
+        void BindlessTable::freeBindlessRWTextureHandle(BindlessRWTextureHandle & _handle)
         {
             VG_ASSERT(_handle.isValid(), "0x%04X is not a valid RWTexture handle", (u16)_handle);
-            freeBindlessHandle(_handle, m_textureUAVIndexPool, m_textureUAV, BINDLESS_TEXTURE_UAV_START, BINDLESS_TEXTURE_UAV_INVALID);
+            freeBindlessHandle(_handle, m_rwTextureIndexPool, m_rwTextures, BINDLESS_RWTEXTURE_START, BINDLESS_RWTEXTURE_INVALID);
         }
 
         //--------------------------------------------------------------------------------------
-        BindlessBufferUAVHandle BindlessTable::allocBindlessRWBufferHandle(const gfx::Buffer * _buffer, ReservedSlot _reservedSlot)
+        BindlessRWBufferHandle BindlessTable::allocBindlessRWBufferHandle(const gfx::Buffer * _buffer, ReservedSlot _reservedSlot)
         {
-            return allocBindlessHandle<BindlessBufferUAVHandle>(_buffer, _reservedSlot, m_bufferUAVIndexPool, m_bufferUAV, BINDLESS_BUFFER_UAV_START, BINDLESS_BUFFER_UAV_INVALID);
+            VG_ASSERT(ReservedSlot::None == _reservedSlot || BindlessRWBufferHandle((u16)_reservedSlot).isValid(), "Reserved slot %u does not belong to the RWBuffer range [%u;%u[", BindlessRWBufferHandle::getValidRange().x, BindlessRWBufferHandle::getValidRange().y);
+            return allocBindlessHandle<BindlessRWBufferHandle>(_buffer, _reservedSlot, m_rwBufferIndexPool, m_rwBuffers, BINDLESS_RWBUFFER_START, BINDLESS_RWBUFFER_INVALID);
         }
 
         //--------------------------------------------------------------------------------------
-        void BindlessTable::freeBindlessRWBufferHandle(BindlessBufferUAVHandle & _handle)
+        void BindlessTable::freeBindlessRWBufferHandle(BindlessRWBufferHandle & _handle)
         {
-            freeBindlessHandle(_handle, m_bufferUAVIndexPool, m_bufferUAV, BINDLESS_BUFFER_UAV_START, BINDLESS_BUFFER_UAV_INVALID);
+            VG_ASSERT(_handle.isValid(), "0x%04X is not a valid RWBuffer handle", (u16)_handle);
+            freeBindlessHandle(_handle, m_rwBufferIndexPool, m_rwBuffers, BINDLESS_RWBUFFER_START, BINDLESS_RWBUFFER_INVALID);
         }
     }
 
@@ -141,12 +147,12 @@ namespace vg::gfx
                 texInitData[j][i] = ((i>>3) & 1) != ((j>>3) & 1) ? 0xFFFF00FF : 0x7F7F007F;
         
         // create default texture at slot 'invalidBindlessTextureHandle'
-        m_defaultTexture = device->createTexture(texDesc, "DefaultTex2D", (void*)texInitData, ReservedSlot(BINDLESS_TEXTURE_SRV_INVALID));
-        VG_ASSERT(m_defaultTexture->getBindlessSRVHandle() == BINDLESS_TEXTURE_SRV_INVALID);
+        m_defaultTexture = device->createTexture(texDesc, "DefaultTex2D", (void*)texInitData, ReservedSlot(BINDLESS_TEXTURE_INVALID));
+        VG_ASSERT(m_defaultTexture->getTextureHandle() == BINDLESS_TEXTURE_INVALID);
         
         // copy texture to all 'texture' slots
-        for (uint i = BINDLESS_TEXTURE_SRV_START; i < BINDLESS_TEXTURE_SRV_COUNT; ++i)
-            if (BINDLESS_TEXTURE_SRV_INVALID != i)
+        for (uint i = BINDLESS_TEXTURE_START; i < BINDLESS_TEXTURE_COUNT; ++i)
+            if (BINDLESS_TEXTURE_INVALID != i)
                 copyTextureHandle(i, m_defaultTexture);
 
         // TODO: initialize other buffer types?

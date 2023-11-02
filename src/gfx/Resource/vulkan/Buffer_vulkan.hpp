@@ -67,7 +67,7 @@ namespace vg::gfx::vulkan
             VG_ASSERT_VULKAN(vkCreateBufferView(device->getVulkanDevice(), &vkBufferViewDesc, nullptr, &m_vkBufferView));
 
             BindlessTable * bindlessTable = device->getBindlessTable();
-            m_bindlessSRVHandle = bindlessTable->allocBindlessBufferHandle(static_cast<gfx::Buffer*>(this), _reservedSlot);
+            m_bufferHandle = bindlessTable->allocBindlessBufferHandle(static_cast<gfx::Buffer*>(this), _reservedSlot);
 
             VkDescriptorBufferInfo vkBufferInfo = {};
             vkBufferInfo.buffer = m_resource.getVulkanBuffer();
@@ -76,13 +76,13 @@ namespace vg::gfx::vulkan
 
             VkWriteDescriptorSet writes = {};
             writes.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
-            writes.dstBinding = BINDLESS_BUFFER_SRV_BINDING;
+            writes.dstBinding = BINDLESS_BUFFER_BINDING;
             writes.descriptorCount = 1;
             writes.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_TEXEL_BUFFER;
             writes.pBufferInfo = &vkBufferInfo;
             writes.pTexelBufferView = &m_vkBufferView;
             writes.dstSet = device->getVulkanBindlessDescriptors();
-            writes.dstArrayElement = m_bindlessSRVHandle - BINDLESS_BUFFER_SRV_START;
+            writes.dstArrayElement = m_bufferHandle - BINDLESS_BUFFER_START;
 
             vkUpdateDescriptorSets(device->getVulkanDevice(), 1, &writes, 0, nullptr);
 

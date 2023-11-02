@@ -21,31 +21,31 @@ namespace vg::gfx
         Type value;
     };
 
-    struct BindlessTextureSrvHandle : public BindlessHandle
+    struct BindlessTextureHandle : public BindlessHandle
     {
-        BindlessTextureSrvHandle(Type _value = BINDLESS_TEXTURE_SRV_INVALID) : BindlessHandle(_value) { }
-        static core::uint2 getValidRange() { return core::uint2(BINDLESS_TEXTURE_SRV_START, (BINDLESS_TEXTURE_SRV_START + BINDLESS_TEXTURE_SRV_COUNT - 1)); }
+        BindlessTextureHandle(Type _value = BINDLESS_TEXTURE_INVALID) : BindlessHandle(_value) { }
+        static core::uint2 getValidRange() { return core::uint2(BINDLESS_TEXTURE_START, (BINDLESS_TEXTURE_START + BINDLESS_TEXTURE_COUNT - 1)); }
         bool isValid() const { return checkValidRange(getValidRange()); }
     };
 
-    struct BindlessTextureUAVHandle : public BindlessHandle
+    struct BindlessBufferHandle : public BindlessHandle
     {
-        BindlessTextureUAVHandle(Type _value = BINDLESS_TEXTURE_UAV_INVALID) : BindlessHandle(_value) {  }
-        static core::uint2 getValidRange() { return core::uint2(BINDLESS_TEXTURE_UAV_START, (BINDLESS_TEXTURE_UAV_START + BINDLESS_TEXTURE_UAV_COUNT - 1)); }
+        BindlessBufferHandle(Type _value = BINDLESS_BUFFER_INVALID) : BindlessHandle(_value) { }
+        static core::uint2 getValidRange() { return core::uint2(BINDLESS_BUFFER_START, (BINDLESS_BUFFER_START + BINDLESS_BUFFER_COUNT - 1)); }
         bool isValid() const { return checkValidRange(getValidRange()); }
     };
 
-    struct BindlessBufferSrvHandle : public BindlessHandle
+    struct BindlessRWTextureHandle : public BindlessHandle
     {
-        BindlessBufferSrvHandle(Type _value = BINDLESS_BUFFER_SRV_INVALID) : BindlessHandle(_value) { }
-        static core::uint2 getValidRange() { return core::uint2(BINDLESS_BUFFER_SRV_START, (BINDLESS_BUFFER_SRV_START + BINDLESS_BUFFER_SRV_COUNT - 1)); }
+        BindlessRWTextureHandle(Type _value = BINDLESS_RWTEXTURE_INVALID) : BindlessHandle(_value) {  }
+        static core::uint2 getValidRange() { return core::uint2(BINDLESS_RWTEXTURE_START, (BINDLESS_RWTEXTURE_START + BINDLESS_RWTEXTURE_COUNT - 1)); }
         bool isValid() const { return checkValidRange(getValidRange()); }
     };
 
-    struct BindlessBufferUAVHandle : public BindlessHandle
+    struct BindlessRWBufferHandle : public BindlessHandle
     {
-        BindlessBufferUAVHandle(Type _value = BINDLESS_BUFFER_UAV_INVALID) : BindlessHandle(_value) { }
-        static core::uint2 getValidRange() { return core::uint2(BINDLESS_BUFFER_UAV_START, (BINDLESS_BUFFER_UAV_START + BINDLESS_BUFFER_UAV_COUNT - 1)); }
+        BindlessRWBufferHandle(Type _value = BINDLESS_RWBUFFER_INVALID) : BindlessHandle(_value) { }
+        static core::uint2 getValidRange() { return core::uint2(BINDLESS_RWBUFFER_START, (BINDLESS_RWBUFFER_START + BINDLESS_RWBUFFER_COUNT - 1)); }
         bool isValid() const { return checkValidRange(getValidRange()); }
     };
 

@@ -647,9 +647,9 @@ namespace vg::gfx
 
         string name = "Temp#" + to_string(m_sharedTextures.size());
         if (asBool(BindFlags::ShaderResource & desc.resource.m_bindFlags))
-            name += "_SRV";
+            name += "_RO";
         if (asBool(BindFlags::UnorderedAccess & desc.resource.m_bindFlags))
-            name += "_UAV";
+            name += "_RW";
         
         SharedTexture sharedTex;
                       sharedTex.desc = _textureResourceDesc;

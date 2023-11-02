@@ -75,9 +75,9 @@ namespace vg::gfx::vulkan
                     }
                     break;
 
-                    case RootSignatureTableDesc::Descriptor::Type::UAVTexture:
+                    case RootSignatureTableDesc::Descriptor::Type::RWTexture:
                     {
-                        const auto & textures = descriptor.getUAVTextures();
+                        const auto & textures = descriptor.getRWTextures();
                         vkLayoutBinding.binding = textures.m_binding;
                         vkLayoutBinding.descriptorType = VK_DESCRIPTOR_TYPE_STORAGE_IMAGE;
                         vkLayoutBinding.descriptorCount = textures.m_count;
@@ -86,9 +86,9 @@ namespace vg::gfx::vulkan
                     }
                     break;
 
-                    case RootSignatureTableDesc::Descriptor::Type::UAVBuffer:
+                    case RootSignatureTableDesc::Descriptor::Type::RWBuffer:
                     {
-                        const auto & buffers = descriptor.getUAVBuffers();
+                        const auto & buffers = descriptor.getRWBuffers();
                         vkLayoutBinding.binding = buffers.m_binding;
                         vkLayoutBinding.descriptorType = VK_DESCRIPTOR_TYPE_STORAGE_BUFFER;
                         vkLayoutBinding.descriptorCount = buffers.m_count;

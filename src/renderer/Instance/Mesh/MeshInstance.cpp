@@ -136,7 +136,7 @@ namespace vg::renderer
 
             RootConstants3D root3D;
             root3D.mat = transpose(wvp);
-            root3D.setBufferHandle(vb->getBindlessSRVHandle());
+            root3D.setBufferHandle(vb->getBufferHandle());
             root3D.color = getColor();
 
             u16 mode = MODE_DEFAULT;
