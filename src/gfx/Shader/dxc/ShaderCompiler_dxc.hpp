@@ -1,5 +1,6 @@
 #include "dxc/inc/dxcapi.h"
 #include "gfx/Shader/ShaderManager.h"
+#include "core/File/File.h"
 
 #define CUSTOM_DXC_INCLUDE_HANDLER 1
 #if CUSTOM_DXC_INCLUDE_HANDLER
@@ -192,12 +193,10 @@ namespace vg::gfx::dxc
             VG_ASSERT_SUCCEEDED(dxcCompileResult->GetErrorBuffer(&dxcWarningAndErrors));
 
             const char * warningAndErrorBuffer = (const char*)dxcWarningAndErrors->GetBufferPointer();
-            if (nullptr != warningAndErrorBuffer)
-                VG_DEBUGPRINT("%s", warningAndErrorBuffer);
 
             if (hrCompilation < 0)
             {
-                const string message = "Shader compilation error:\n\n" + string(warningAndErrorBuffer);
+                const string message = "Error compiling shader:\n" + core::io::getCurrentWorkingDirectory() + "/" + string(warningAndErrorBuffer);
                 _warningAndErrors += message;
 
                 VG_SAFE_RELEASE(dxcSource);
@@ -210,7 +209,7 @@ namespace vg::gfx::dxc
             {
                 if (nullptr != warningAndErrorBuffer)
                 {
-                    const string message = "Shader compilation warning:\n\n" + string(warningAndErrorBuffer);
+                    const string message = "Warning compiling shader:\n" + core::io::getCurrentWorkingDirectory() + "/" + string(warningAndErrorBuffer);
                     _warningAndErrors += message;
                 }
             }
