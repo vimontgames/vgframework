@@ -27,9 +27,13 @@ namespace vg::renderer
     //--------------------------------------------------------------------------------------
     void ViewConstantsUpdatePass::BeforeRender(const gfx::RenderPassContext & _renderContext, gfx::CommandList * _cmdList)
     {
-        ViewConstants constants;
+        const auto options = DisplayOptions::get();
+
+        ViewConstants constants = {};
         constants.setScreenSize(_renderContext.m_view->GetSize());
         constants.setMousePos(_renderContext.m_view->GetRelativeMousePos());
+        constants.setDisplayMode(options->getDisplayMode());
+        constants.setDisplayFlags(options->getDisplayFlags());
 
         ViewConstants * data = (ViewConstants*)_cmdList->map(s_ViewConstantsBuffer);
         {

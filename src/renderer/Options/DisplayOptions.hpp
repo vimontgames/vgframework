@@ -13,7 +13,9 @@ namespace vg::renderer
 
     //--------------------------------------------------------------------------------------
     DisplayOptions::DisplayOptions(const core::string & _name, core::IObject * _parent) :
-        Object(_name, _parent)
+        Object(_name, _parent),
+        m_debugDisplayMode(DisplayMode::Default),
+        m_displayFlags(DisplayFlags::AlbedoMap | DisplayFlags::NormalMap)
     {
         load(this);
     }
@@ -55,26 +57,23 @@ namespace vg::renderer
     {
         super::registerProperties(_desc);
 
-        _desc.registerPropertyEnum(DisplayOptions, gfx::VSync, m_VSync, "VSync");
+        _desc.registerPropertyHelperEx(DisplayOptions, m_backgroundColor, "Background", IProperty::Flags::Color);
 
         _desc.registerPropertyHelper(DisplayOptions, m_toolMode, "Toolmode");
-        _desc.registerPropertyHelperEx(DisplayOptions, m_aabb, "AABB", IProperty::Flags::SameLine);
 
-        _desc.registerPropertyHelper(DisplayOptions, m_opaque, "Opaque");
+        _desc.registerPropertyEnum(DisplayOptions, DisplayMode, m_debugDisplayMode, "Display Mode");
+        _desc.registerPropertyEnumBitfield(DisplayOptions, DisplayFlags, m_displayFlags, "Display Flags");
+        _desc.registerPropertyEnum(DisplayOptions, gfx::VSync, m_VSync, "VSync");
+
+        _desc.registerPropertyHelperEx(DisplayOptions, m_aabb, "Bounding Box", IProperty::Flags::None);
         _desc.registerPropertyHelperEx(DisplayOptions, m_wireframe,  "Wireframe", IProperty::Flags::SameLine);
 
-        _desc.registerPropertyHelper(DisplayOptions, m_normalMaps, "Normal Maps");
-        _desc.registerPropertyHelperEx(DisplayOptions, m_albedoMaps, "Albedo Maps", IProperty::Flags::SameLine);
+        _desc.registerPropertyHelperEx(DisplayOptions, m_opaque, "Opaque", IProperty::Flags::None);
+        _desc.registerPropertyHelperEx(DisplayOptions, m_postProcess, "PostProcess", IProperty::Flags::SameLine);     
 
-        _desc.registerPropertyHelper(DisplayOptions, m_postProcess, "PostProcess");
-
-        _desc.registerPropertyEnum(DisplayOptions, DisplayMode, m_debugDisplayMode, "Display");
-
-        _desc.registerPropertyHelperEx(DisplayOptions, m_backgroundColor, "Background", IProperty::Flags::Color);
-        
         _desc.registerPropertyHelper(DisplayOptions, m_raytracing, "Ray Tracing (Experimental)");
 
-        // TODO: Move to menu instead
+        // TODO: Move to menu or toolbar instead
         _desc.registerCallbackHelper(DisplayOptions, load, "Load", IProperty::Flags::None);
         _desc.registerCallbackHelper(DisplayOptions, save, "Save", IProperty::Flags::SameLine);
 

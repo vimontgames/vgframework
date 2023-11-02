@@ -80,10 +80,11 @@ PS_Output PS_Forward(VS_Output _input)
     float3 normal = getTexture2D( rootConstants3D.getNormalTextureHandle() ).Sample(linearRepeat, uv0).rgb*2-1;
 
     #if _TOOLMODE
-    if (0 == (FLAG_ALBEDOMAPS & rootConstants3D.getFlags()))
+    DisplayFlags flags = viewConstants.getDisplayFlags();
+    if (0 == (DisplayFlags::AlbedoMap & flags))
         albedo = pow(0.5, 0.45);
 
-    if (0 == (FLAG_NORMALMAPS & rootConstants3D.getFlags()))
+    if (0 == (DisplayFlags::NormalMap & flags))
         normal = float3(0,0,1);
     #endif
 
@@ -100,34 +101,45 @@ PS_Output PS_Forward(VS_Output _input)
     output.color0.rgba = float4(albedo.rgb * (fakeDiffuseLighting + fakeAmbientLighting), 1.0f) * _input.col;
 
     #if _TOOLMODE
-    uint mode = rootConstants3D.getMode();
+    DisplayMode mode = viewConstants.getDisplayMode();
     switch (mode)
     {
-        case MODE_MATID:
+        case DisplayMode::Default:
+            break;
+    
+        case DisplayMode::MatID:
             output.color0 = sRGBA2Linear(float4(getMatIDColor(rootConstants3D.getMatID()), 1.0f));
             break;
-        case MODE_VS_TANGENT:
-            output.color0 = sRGBA2Linear(float4(T * 0.5f + 0.5f, 1.0f));
-            break;
-        case MODE_VS_BINORMAL:
-            output.color0 = sRGBA2Linear(float4(B * 0.5f + 0.5f, 1.0f));
-            break;
-        case MODE_VS_NORMAL:
+    
+        case DisplayMode::VSNormal:
             output.color0 = sRGBA2Linear(float4(N * 0.5f + 0.5f, 1.0f));
             break;
-        case MODE_VS_COLOR:
+    
+        case DisplayMode::VSTangent:
+            output.color0 = sRGBA2Linear(float4(T * 0.5f + 0.5f, 1.0f));
+            break;
+    
+        case DisplayMode::VSBinormal:
+            output.color0 = sRGBA2Linear(float4(B * 0.5f + 0.5f, 1.0f));
+            break;
+
+        case DisplayMode::VSColor:
             output.color0 = _input.col;
             break;
-        case MODE_UV0:
+    
+        case DisplayMode::UV0:
             output.color0 = sRGBA2Linear(float4(uv0.xy, 0, 1));
             break;
-        case MODE_UV1:
+    
+        case DisplayMode::UV1:
             output.color0 = sRGBA2Linear(float4(uv1.xy, 0, 1));
             break;
-        case MODE_ALBEDO_MAP:
+    
+        case DisplayMode::Albedo:
             output.color0 = float4(albedo.rgb, 1);
             break;
-        case MODE_NORMAL_MAP:
+    
+        case DisplayMode::PSNormal:
             output.color0 = sRGBA2Linear(float4(normal.rgb * 0.5 + 0.5, 1));
             break;
     }

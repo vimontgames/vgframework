@@ -54,68 +54,16 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    core::u16 MeshInstance::configureToolModeFlags(const DisplayOptions & _options, core::u16 _flags)
-    {
-        if (false == _options.isAlbedoMapsEnabled())
-            _flags &= ~FLAG_ALBEDOMAPS;
-
-        if (false == _options.isNormalMapsEnabled())
-            _flags &= ~FLAG_NORMALMAPS;
-
-        return _flags;
-    }
-
-    //--------------------------------------------------------------------------------------
-    core::u16 MeshInstance::configureToolMode(const DisplayOptions & _options, core::u16 _mode)
-    {
-        switch (_options.getDisplayMode())
-        {
-            default:
-                VG_ASSERT_ENUM_NOT_IMPLEMENTED(_options.getDisplayMode());
-                break;
-
-            case DisplayMode::Default:
-                _mode = MODE_DEFAULT;
-                break;
-
-            case DisplayMode::MatID:
-                _mode = MODE_MATID;
-                break;
-
-            case DisplayMode::VSNormal:
-                _mode = MODE_VS_NORMAL;
-                break;
-
-            case DisplayMode::VSTangent:
-                _mode = MODE_VS_TANGENT;
-                break;
-
-            case DisplayMode::VSBinormal:
-                _mode = MODE_VS_BINORMAL;
-                break;
-
-            case DisplayMode::VSColor:
-                _mode = MODE_VS_COLOR;
-                break;
-
-            case DisplayMode::UV0:
-                _mode = MODE_UV0;
-                break;
-
-            case DisplayMode::UV1:
-                _mode = MODE_UV1;
-                break;
-
-            case DisplayMode::Albedo:
-                _mode = MODE_ALBEDO_MAP;
-                break;
-
-            case DisplayMode::PSNormal:
-                _mode = MODE_NORMAL_MAP;
-                break;
-        }
-        return _mode;
-    }
+    //core::u16 MeshInstance::configureToolModeFlags(const DisplayOptions & _options, core::u16 _flags)
+    //{
+    //    if (false == _options.isAlbedoMapsEnabled())
+    //        _flags &= ~FLAG_ALBEDOMAPS;
+    //
+    //    if (false == _options.isNormalMapsEnabled())
+    //        _flags &= ~FLAG_NORMALMAPS;
+    //
+    //    return _flags;
+    //}
 
     //--------------------------------------------------------------------------------------
     void MeshInstance::Draw(const RenderContext & _renderContext, gfx::CommandList * _cmdList) const
@@ -139,20 +87,17 @@ namespace vg::renderer
             root3D.setBufferHandle(vb->getBufferHandle());
             root3D.color = getColor();
 
-            u16 mode = MODE_DEFAULT;
-            u16 flags = FLAG_ALBEDOMAPS | FLAG_NORMALMAPS;
+            u16 flags = 0;// FLAG_ALBEDOMAPS | FLAG_NORMALMAPS;
 
             if (_renderContext.m_toolmode)
             {
-                const auto options = DisplayOptions::get();
-                mode = configureToolMode(*options, mode);
-                flags = configureToolModeFlags(*options, flags);
-
-                if (_renderContext.m_wireframe)
-                    flags |= FLAG_WIREFRAME;
+                //const auto options = DisplayOptions::get();
+                //flags = configureToolModeFlags(*options, flags);
+                //
+                //if (_renderContext.m_wireframe)
+                //    flags |= FLAG_WIREFRAME;
             }
             
-            root3D.setMode(mode);
             root3D.setFlags(flags);
 
             _cmdList->setPrimitiveTopology(PrimitiveTopology::TriangleList);

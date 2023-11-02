@@ -2,26 +2,14 @@
 #define _ROOTCONSTANTS3D__HLSLI_
 
 #include "constants.hlsli"
+#include "displayoptions.hlsli"
 
 #ifdef __cplusplus
 using namespace vg::core;
 #endif
 
 #define FLAG_NONE           0x0000
-#define FLAG_ALBEDOMAPS     0x0001
-#define FLAG_NORMALMAPS     0x0002
-#define FLAG_WIREFRAME      0x0004
-
-#define MODE_DEFAULT        0x0000
-#define MODE_MATID          0x0001
-#define MODE_VS_NORMAL      0x0002
-#define MODE_VS_TANGENT     0x0003
-#define MODE_VS_BINORMAL    0x0004
-#define MODE_UV0		    0x0005
-#define MODE_UV1		    0x0006
-#define MODE_ALBEDO_MAP     0x0007
-#define MODE_NORMAL_MAP     0x0008
-#define MODE_VS_COLOR       0x0010
+#define FLAG_WIREFRAME      0x0001
 
 struct RootConstants3D
 {
@@ -81,15 +69,6 @@ struct RootConstants3D
     uint getFlags()
     {
         return data.w & 0xFFFF;
-    }
-
-    void setMode(uint _value)
-    {
-        data.w = (data.w & ~0x00FF0000UL) | ((_value & 0xFF) << 16);
-    }
-    uint getMode()
-    {
-        return (data.w >> 16) & 0xFF;
     }
 
     void setMatID(uint _value)
