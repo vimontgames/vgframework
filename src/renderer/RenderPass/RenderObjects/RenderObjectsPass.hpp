@@ -122,19 +122,9 @@ namespace vg::renderer
         RasterizerState rs(FillMode::Wireframe, CullMode::None);
         _cmdList->setRasterizerState(rs);
 
-        float3 aabbScale = _aabb.m_max - _aabb.m_min;
-        float3 center = _aabb.m_max + _aabb.m_min;
-        float3 translation = _world._m30_m31_m32 + center * 0.5f;
-
-        float4x4 scale = float4x4(
-            float4(aabbScale.xxx * 0.5f, 0),
-            float4(aabbScale.yyy * 0.5f, 0),
-            float4(aabbScale.zzz * 0.5f, 0),
-            float4(0, 0, 0, 1)
-        );
-        float4x4 aabbMatrix = scale * _world;
-        aabbMatrix._m30_m31_m32 = translation;
-        float4x4 wvp = mul(aabbMatrix, _viewProj);
+        // AABB Matrix in world-space
+        float4x4 aabbMatrixWS = mul(_aabb.getLocalSpaceUnitCubeMatrix(), _world);
+        float4x4 wvp = mul(aabbMatrixWS, _viewProj);
 
         EditorRootConstants3D root3D;
         {

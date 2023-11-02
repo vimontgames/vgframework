@@ -17,11 +17,13 @@ namespace vg::renderer
 
         VG_INLINE void grow(const core::float3 & _point);
 
-        core::float3 m_min = core::float3(0, 0, 0);
-        core::float3 m_max = core::float3(0, 0, 0);
+        core::float4x4 getLocalSpaceUnitCubeMatrix() const;
 
         bool read(core::io::Buffer & _buffer);
         bool write(core::io::Buffer & _buffer) const;
+
+        core::float3 m_min = core::float3(0, 0, 0);
+        core::float3 m_max = core::float3(0, 0, 0);
     };
 }
 
