@@ -186,266 +186,6 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
-    bool Factory::serializeFromString(IObject * _object, const string & _in) const
-    {
-        string className;
-        ClassDesc * desc = nullptr;
-        map<string, string> values;
-
-        if (!_in.empty())
-        {
-            size_t offset = 0;
-
-            // get class name
-            auto beginClassName = _in.find("[", offset);
-            if (string::npos != beginClassName)
-            {
-                auto endClassName = _in.find("]", offset);
-                if (string::npos != endClassName)
-                {
-                    className = _in.substr(beginClassName + 1, endClassName - 1);
-                    offset = endClassName + 1;
-                }
-            }
-
-            desc = (ClassDesc*)getClassDescriptor(className.c_str());
-            if (nullptr == desc)
-            {
-                VG_ASSERT(false, "Cannot serialize unknown class \"%s\"", className.c_str());
-                return false;
-            }
-
-            while (true)
-            {
-                auto keyOffset = max(_in.find_first_not_of("\r\n", offset), _in.find_first_not_of("\n", offset));
-
-                if (string::npos != keyOffset)
-                {
-                    auto keyEndOffset = _in.find("=", offset);
-                    string key = _in.substr(keyOffset, keyEndOffset - keyOffset);
-
-                    auto beginOffset = _in.find("=", keyOffset);
-                    auto endOffset = min(_in.find("\n", beginOffset + 2), _in.find("\r\n", beginOffset + 2));
-
-                    if (string::npos != beginOffset && string::npos != endOffset)
-                    {
-                        string value = _in.substr(beginOffset + 1, endOffset - (beginOffset + 1));
-                        values.insert({ key, value });
-
-                        offset = endOffset + 1;
-                    }
-                }
-                else
-                    break;
-            }
-        }
-
-        uint_ptr curOffset = (uint_ptr)-1;
-
-        for (uint p = 0; p < desc->getPropertyCount(); ++p)
-        {
-            const auto & prop = desc->getPropertyByIndex(p);
-            const auto * name = prop->getName();
-            const auto type = prop->getType();
-            const auto offset = prop->getOffset();
-
-            // if several properties are serialized at the same offset (i.e. bitfields, enums, ...) then only load the first one
-            if (offset == curOffset)
-                continue;
-            curOffset = offset;
-
-            auto it = values.find(name);
-            if (values.end() != it)
-            {
-                switch (type)
-                {
-                default:
-                    VG_ASSERT_ENUM_NOT_IMPLEMENTED(type);
-                    break;
-
-                case IProperty::Type::Resource:
-                {
-                    IResource * pResource = prop->GetPropertyResource(_object);
-                    pResource->setResourcePath(it->second.substr(1, it->second.length() - 2));
-                }
-                break;
-
-                case IProperty::Type::EnumU32:
-                {
-                    u32 * pEnum = prop->GetPropertyUint32(_object);
-
-                    string enumValName = it->second.substr(1, it->second.length() - 2);
-                    u32 enumVal = 0;
-
-                    for (uint q = p; q < desc->getPropertyCount(); ++q)
-                    {
-                        const auto & enumprop = desc->getPropertyByIndex(q);
-
-                        if (offset == enumprop->getOffset())
-                        {
-                            if (enumValName == enumprop->getDisplayName())
-                            {
-                                enumVal = enumprop->getSizeOf();
-                                break;
-                            }
-                        }
-                    }
-
-                    *pEnum = enumVal;
-                }
-                break;
-
-                case IProperty::Type::Callback:
-                    break;
-
-                case IProperty::Type::Bool:
-                {
-                    bool * pBool = prop->GetPropertyBool(_object);
-                    *pBool = (!strcmp(it->second.c_str(), "true") || !strcmp(it->second.c_str(), "TRUE") || !strcmp(it->second.c_str(), "1")) ? true : false;
-                }
-                break;
-
-                case IProperty::Type::String:
-                {
-                    string * pString = prop->GetPropertyString(_object);
-                    *pString = it->second.substr(1, it->second.length() - 2);
-                }
-                break;
-
-                case IProperty::Type::Float4:
-                {
-                    float4 * pFloat4 = prop->GetPropertyFloat4(_object);
-                    float f[4] = { 0.0f, 0.0f, 0.0f, 0.0f };
-
-                    auto beginFloat4 = _in.find("{", offset);
-                    if (string::npos != beginFloat4)
-                    {
-                        auto cur = beginFloat4;
-
-                        auto endFloat4 = _in.find("}", cur);
-                        if (string::npos != endFloat4)
-                        {
-                            for (uint i = 0; i < 4; ++i)
-                            {
-                                auto endFloat = min(_in.find(",", cur), endFloat4);
-                                const string val = _in.substr(cur + 1, endFloat - cur - 1);
-                                f[i] = stof(val);
-                                cur = endFloat + 1;
-                            }
-                        }
-                    }
-
-                    *pFloat4 = float4(f[0], f[1], f[2], f[3]);
-                }
-                break;
-                }
-            }
-        }
-
-        return true;
-    }
-
-    //--------------------------------------------------------------------------------------
-    bool Factory::serializeToString(string & _out, const IObject * _object) const
-    {
-        const char * className = _object->getClassName();
-        _out += (string)"<" + className + ">" + "\n";
-
-        const auto * classDesc = getClassDescriptor(className);
-
-        uint_ptr curOffset = (uint_ptr)-1;
-
-        for (uint p = 0; p < classDesc->getPropertyCount(); ++p)
-        {
-            const auto & prop = classDesc->getPropertyByIndex(p);
-
-            const auto name = prop->getName();
-            const auto type = prop->getType();
-            const auto offset = prop->getOffset();
-
-            // if several properties are serialized at the same offset (i.e. bitfields, enums, ...) then only write the first one
-            if (offset == curOffset)
-                continue;
-            curOffset = offset;
-
-            string value;
-
-            switch (type)
-            {
-            default:
-                VG_ASSERT_ENUM_NOT_IMPLEMENTED(type);
-                break;
-
-            case IProperty::Type::ObjectRef:
-            {
-                IObject * pObject = prop->GetPropertyObjectRef(_object);
-                _out += (string)name + "=";
-                serializeToString(_out, pObject);
-            }
-            break;
-
-            case IProperty::Type::Resource:
-            {
-                IResource * pResource = prop->GetPropertyResource(_object);
-                value = "\"" + pResource->getResourcePath() + "\"";
-            }
-            break;
-
-            case IProperty::Type::Callback:
-                continue;
-
-            case IProperty::Type::EnumFlagsU32:
-            {
-                u32 * pEnum = prop->GetPropertyUint32(_object);
-                value = to_string(*pEnum);
-            };
-
-            case IProperty::Type::EnumU32:
-            {
-                u32 * pEnum = prop->GetPropertyUint32(_object);
-
-                string enumValName = "";
-
-                for (uint q = p; q < classDesc->getPropertyCount(); ++q)
-                {
-                    const auto & enumprop = classDesc->getPropertyByIndex(q);
-
-                    if (offset == enumprop->getOffset() && *pEnum == enumprop->getSizeOf())
-                    {
-                        enumValName = enumprop->getDisplayName();
-                        break;
-                    }
-                }
-
-                value = "\"" + enumValName + "\"";
-            }
-            break;
-
-            case IProperty::Type::Bool:
-                value = *prop->GetPropertyBool(_object) ? "true" : "false";
-                break;
-
-            case IProperty::Type::String:
-                value = "\"" + *prop->GetPropertyString(_object) + "\"";
-                break;
-
-            case IProperty::Type::Float4:
-            {
-                float4 * v = prop->GetPropertyFloat4(_object);
-                value = "{" + to_string(v->x) + ", " + to_string(v->y) + ", " + to_string(v->z) + ", " + to_string(v->w) + "}";
-            }
-            break;
-            }
-
-            _out += (string)name + "=" + value + "\n";
-        }
-
-        _out += (string)"</" + className + ">" + "\n";
-
-        return true;
-    }
-
-    //--------------------------------------------------------------------------------------
     template <typename ENUM_TYPE> ENUM_TYPE enumGetValue(const char * _value, ENUM_TYPE _default = (ENUM_TYPE)0)
     {
         for (uint e = 0; e < enumCount<ENUM_TYPE>(); ++e)
@@ -623,27 +363,21 @@ namespace vg::core
                                         }
                                         break;
 
+                                        case IProperty::Type::EnumFlagsU8:
+                                            serializeEnumFlagsPropertyFromXML<u8>(_object, prop, xmlPropElem);
+                                            break;
+
+                                        case IProperty::Type::EnumFlagsU16:
+                                            serializeEnumFlagsPropertyFromXML<u16>(_object, prop, xmlPropElem);
+                                            break;
+
                                         case IProperty::Type::EnumFlagsU32:
-                                        {
-                                            u32 * pEnum = (u32*)(uint_ptr(_object) + offset);
-                                            u32 enumVal = 0;
+                                            serializeEnumFlagsPropertyFromXML<u32>(_object, prop, xmlPropElem);
+                                            break;
 
-                                            const XMLAttribute* xmlValue = xmlPropElem->FindAttribute("value");
-                                            if (nullptr != xmlValue)
-                                            {
-                                                auto xmlEnumString = xmlValue->Value();
-                                                for (uint e = 0; e < prop->getEnumCount(); ++e)
-                                                {
-                                                    auto name = prop->getEnumName(e);
-                                                    auto value = prop->getEnumValue(e);
-
-                                                    if (!strcmp(name, xmlEnumString))
-                                                        enumVal |= value;
-                                                }
-                                            }
-                                            *pEnum = enumVal;
-                                        }
-                                        break;
+                                        case IProperty::Type::EnumFlagsU64:
+                                            serializeEnumFlagsPropertyFromXML<u64>(_object, prop, xmlPropElem);
+                                            break;
 
                                         case IProperty::Type::String:
                                         {
@@ -860,25 +594,21 @@ namespace vg::core
                 }
                 break;
 
+                case IProperty::Type::EnumFlagsU8:
+                    serializeEnumFlagsPropertyToXML<u8>(_object, prop, xmlPropElem);
+                    break;
+
+                case IProperty::Type::EnumFlagsU16:
+                    serializeEnumFlagsPropertyToXML<u16>(_object, prop, xmlPropElem);
+                    break;
+
                 case IProperty::Type::EnumFlagsU32:
-                {
-                    const u32 * pEnum = (const u32 *)(uint_ptr(_object) + offset);
-                    string flags;
-                    bool first = true;
-                    for (uint i = 0; i < prop->getEnumCount(); ++i)
-                    {
-                        if (*pEnum == prop->getEnumValue(i))
-                        {
-                            if (!first)
-                                flags += "|";
-                            else
-                                first = false;
-                            flags += (string)prop->getEnumName(i);
-                        }
-                    }
-                    xmlPropElem->SetAttribute("value", flags.c_str());
-                }
-                break;
+                    serializeEnumFlagsPropertyToXML<u32>(_object, prop, xmlPropElem);
+                    break;
+
+                case IProperty::Type::EnumFlagsU64:
+                    serializeEnumFlagsPropertyToXML<u64>(_object, prop, xmlPropElem);
+                    break;
 
                 case IProperty::Type::EnumU8:
                     serializeEnumPropertyToXML<u8>(_object, prop, xmlPropElem);
@@ -890,6 +620,10 @@ namespace vg::core
 
                 case IProperty::Type::EnumU32:
                     serializeEnumPropertyToXML<u32>(_object, prop, xmlPropElem);
+                    break;
+
+                case IProperty::Type::EnumU64:
+                    serializeEnumPropertyToXML<u64>(_object, prop, xmlPropElem);
                     break;
             }
 
@@ -947,6 +681,67 @@ namespace vg::core
                 break;
             }
         }
+    }
+
+    //--------------------------------------------------------------------------------------
+    template <typename T> void Factory::serializeEnumFlagsPropertyFromXML(IObject * _object, const IProperty * _prop, const XMLElem * _xmlElem) const
+    {
+        T * pEnum = (T *)(uint_ptr(_object) + _prop->getOffset());
+        T enumVal = 0;
+
+        const XMLAttribute * xmlValue = _xmlElem->FindAttribute("value");
+        if (nullptr != xmlValue)
+        {
+            auto xmlEnumString = xmlValue->Value();
+            const char * p = xmlEnumString;
+
+            do
+            {
+                char temp[256];
+                temp[0] = '\0';
+                int index = 0;
+                do
+                {
+                    temp[index] = *p++;
+                    index++;
+                } while ('|' != *p && '\0' != *p);
+                temp[index] = '\0';
+
+                auto xmlEnumString = xmlValue->Value();
+                for (uint e = 0; e < _prop->getEnumCount(); ++e)
+                {
+                    auto name = _prop->getEnumName(e);
+                    auto value = _prop->getEnumValue(e);
+
+                    if (!strcmp(name, temp))
+                    {
+                        enumVal |= value;
+                        break;
+                    }
+                }
+            } while ('\0' != *p++);
+        }
+        *pEnum = enumVal;
+    }
+
+    //--------------------------------------------------------------------------------------
+    template <typename T> void Factory::serializeEnumFlagsPropertyToXML(const IObject * _object, const IProperty * _prop, XMLElem * _xmlElem) const
+    {
+        const u32 * pEnum = (const u32 *)(uint_ptr(_object) + _prop->getOffset());
+        string flags;
+        bool first = true;
+        for (uint i = 0; i < _prop->getEnumCount(); ++i)
+        {
+            if (0 != (*pEnum & _prop->getEnumValue(i)))
+            {
+                if (!first)
+                    flags += "|";
+                else
+                    first = false;
+                flags += (string)_prop->getEnumName(i);
+            }
+        }
+        _xmlElem->SetAttribute("value", flags.c_str());
     }
 
     //--------------------------------------------------------------------------------------

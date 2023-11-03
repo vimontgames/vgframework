@@ -22,9 +22,6 @@ namespace vg::core
         bool                        loadFromXML                     (IObject * _object, const string & _XMLfilename) const final;
         bool                        saveToXML                       (const IObject * _object, const string & _xmlFile) const final;
 
-        bool                        serializeFromString             (IObject * _object, const string & _in) const final;
-        bool                        serializeToString               (string & _out, const IObject * _object) const final;
-
         bool                        serializeFromXML                (IObject * _object, XMLDoc & _xmlDoc) const final;
         bool                        serializeToXML                  (const IObject * _object, XMLDoc & _xmlDoc, XMLElem * _parent = nullptr) const final;
 
@@ -36,6 +33,9 @@ namespace vg::core
 
         template <typename T> void  serializeEnumPropertyFromXML    (IObject * _object, const IProperty * _prop, const XMLElem * _xmlElem) const;
         template <typename T> void  serializeEnumPropertyToXML      (const IObject * _object, const IProperty * _prop, XMLElem * _xmlElem) const;
+
+        template <typename T> void  serializeEnumFlagsPropertyFromXML(IObject * _object, const IProperty * _prop, const XMLElem * _xmlElem) const;
+        template <typename T> void  serializeEnumFlagsPropertyToXML (const IObject * _object, const IProperty * _prop, XMLElem * _xmlElem) const;
 
         void                        ReleaseAsync                    (core::IObject * _object);
         void                        FlushReleaseAsync               ();
