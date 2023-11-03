@@ -1,14 +1,13 @@
 <Root>
     <Object class="DisplayOptions">
         <Property type="String" name="m_name" value="Default"/>
-        <Property type="EnumU8" name="m_VSync" value="VBL_1"/>
         <Property type="Bool" name="m_toolMode" value="true"/>
         <Property type="Bool" name="m_aabb" value="true"/>
-        <Property type="Bool" name="m_opaque" value="true"/>
         <Property type="Bool" name="m_wireframe" value="false"/>
-        <Property type="Bool" name="m_normalMaps" value="true"/>
-        <Property type="Bool" name="m_albedoMaps" value="true"/>
         <Property type="EnumU32" name="m_debugDisplayMode" value="Default"/>
-        <Property type="Float4" name="m_backgroundColor" x="0.1254902" y="0.1254902" z="0.1254902" w="1"/>
+        <Property type="EnumFlagsU32" name="m_displayFlags" value="AlbedoMap|NormalMap"/>
+        <Property type="EnumFlagsU32" name="m_renderPassFlags" value="ZPrepass|Opaque|Transparency|PostProcess"/>
+        <Property type="Float4" name="m_backgroundColor" x="0.18631452" y="0.18631452" z="0.1882353" w="1"/>
+        <Property type="EnumU8" name="m_VSync" value="VBL_1"/>
     </Object>
 </Root>

@@ -18,8 +18,8 @@ namespace vg::renderer
     ForwardView::ForwardView(const CreateViewParams & _params) :
         View(_params)
     {
-        m_backgroundPass = new BackgroundPass();
         m_depthPrePass = new DepthOnlyPass();
+        m_backgroundPass = new BackgroundPass();
         m_forwardPass = new ForwardPass();
         m_testRayTracingPass = new TestRayTracingPass();
         m_computePostProcessPass = new ComputePostProcessPass();
@@ -29,8 +29,8 @@ namespace vg::renderer
     //--------------------------------------------------------------------------------------
     ForwardView::~ForwardView()
     {
-        VG_SAFE_RELEASE(m_backgroundPass);
         VG_SAFE_RELEASE(m_depthPrePass);
+        VG_SAFE_RELEASE(m_backgroundPass);
         VG_SAFE_RELEASE(m_forwardPass);
         VG_SAFE_RELEASE(m_testRayTracingPass);
         VG_SAFE_RELEASE(m_computePostProcessPass);
@@ -56,7 +56,7 @@ namespace vg::renderer
         {
             _frameGraph.addUserPass(_rc, m_backgroundPass, "BackgroundPass");
 
-            if (true)
+            if (options->isZPrepassEnabled())
                 _frameGraph.addUserPass(_rc, m_depthPrePass, "DepthPrepass");
 
             _frameGraph.addUserPass(_rc, m_forwardPass, "ForwardPass");
