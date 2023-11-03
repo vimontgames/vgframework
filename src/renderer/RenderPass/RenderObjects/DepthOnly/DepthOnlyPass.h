@@ -5,13 +5,13 @@
 namespace vg::renderer
 {
     //--------------------------------------------------------------------------------------
-    class ForwardPass : public RenderObjectsPass
+    class DepthOnlyPass : public RenderObjectsPass
     {
     public:
-        const char * getClassName() const final { return "ForwardPass"; }
+        const char * getClassName() const final { return "DepthOnlyPass"; }
 
-        ForwardPass();
-        ~ForwardPass();
+        DepthOnlyPass();
+        ~DepthOnlyPass();
 
         void Setup(const gfx::RenderPassContext & _renderContext, double _dt) override;
         void Render(const gfx::RenderPassContext & _renderContext, gfx::CommandList * _cmdList) const override;

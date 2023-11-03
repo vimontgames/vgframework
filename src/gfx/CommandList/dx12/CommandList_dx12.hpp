@@ -99,12 +99,14 @@ namespace vg::gfx::dx12
             const SubPassKey & subPassKey = renderPasskey.m_subPassKeys[index];
             const auto & attachments = renderPass->m_colorAttachments;
 
+            auto userPass = _subPass->getUserPassesInfos()[0].m_userPass;
+
             for (uint i = 0; i < _subPass->m_renderTargetCount; ++i)
             {
                 const SubPassKey::AttachmentInfo & info = subPassKey.getColorAttachmentInfo(i);
                 if (asBool(SubPassKey::AttachmentFlags::RenderTarget & info.flags))
                 {
-                    const FrameGraph::TextureResource * res = _subPass->getUserPassesInfos()[0].m_userPass->getRenderTargets()[i];
+                    const FrameGraph::TextureResource * res = userPass->getRenderTargets()[i];
                     const FrameGraph::TextureResourceDesc & resourceDesc = res->getTextureResourceDesc();
                     D3D12_RENDER_PASS_RENDER_TARGET_DESC & renderTargetDesc = _subPass->m_d3d12renderPassRenderTargetDesc[i];
                     const Texture * tex = res->getTexture();
@@ -130,13 +132,35 @@ namespace vg::gfx::dx12
                 const SubPassKey::AttachmentInfo & info = subPassKey.getDepthStencilAttachmentInfo();
                 if (asBool(SubPassKey::AttachmentFlags::RenderTarget & info.flags))
                 {
-                    const FrameGraph::TextureResource * res = _subPass->getUserPassesInfos()[0].m_userPass->getDepthStencil();
+                    const FrameGraph::TextureResource * res = userPass->getDepthStencil();
                     const FrameGraph::TextureResourceDesc & resourceDesc = res->getTextureResourceDesc();
                     D3D12_RENDER_PASS_DEPTH_STENCIL_DESC & depthStencilDesc = _subPass->m_d3d12renderPassDepthStencilDesc;
                     const Texture * tex = res->getTexture();
                     _subPass->m_d3d12renderPassDepthStencilDesc.cpuDescriptor = tex->getd3d12DSVHandle();
                 }
             }
+
+            //auto rwTextures = userPass->getRWTextures();
+            //for (uint i = 0; i < rwTextures.size(); ++i)
+            //{
+            //    const FrameGraph::TextureResource * res = rwTextures[i];
+            //
+            //    switch (res->getCurrentState())
+            //    {
+            //        case ResourceState::ShaderResource:
+            //        {
+            //            D3D12_RESOURCE_BARRIER barrier;
+            //            barrier.Transition.pResource = res->getTexture()->getResource().getd3d12TextureResource(); 
+            //            barrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
+            //            barrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
+            //            barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_COMMON;
+            //            barrier.Transition.StateAfter = D3D12_RESOURCE_STATE_ALL_SHADER_RESOURCE;
+            //            barrier.Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
+            //            m_d3d12graphicsCmdList->ResourceBarrier(1, &barrier);
+            //        }
+            //        break;
+            //    }
+            //}
 
             if (RenderPassType::Graphic == m_renderPass->getRenderPassType())
                 m_d3d12graphicsCmdList->BeginRenderPass(_subPass->m_renderTargetCount, _subPass->m_renderTargetCount ? _subPass->m_d3d12renderPassRenderTargetDesc : nullptr, _subPass->m_depthStencilCount ? &_subPass->m_d3d12renderPassDepthStencilDesc : nullptr, _subPass->m_d3d12renderPassFlags);
@@ -175,6 +199,8 @@ namespace vg::gfx::dx12
         const auto index = getSubPassIndex();
         const SubPassKey &  subPassKey = renderPasskey.m_subPassKeys[index];
 
+        auto userPass = subPass->getUserPassesInfos()[0].m_userPass;
+
         vector<D3D12_RESOURCE_BARRIER> d3d12barriers;
 
         for (uint i = 0; i < maxRenderTarget; ++i)
@@ -183,8 +209,6 @@ namespace vg::gfx::dx12
 
             if (info.begin != info.end)
             {
-                const UserPass * userPass = subPass->getUserPassesInfos()[0].m_userPass;
-
                 auto & res = userPass->getRenderTargets()[i];
                 gfx::Texture * tex = res->getTexture();
 
@@ -206,7 +230,44 @@ namespace vg::gfx::dx12
             }
         }
 
-        if (d3d12barriers.size() > 0)       
+        auto rwTextures = userPass->getRWTextures();
+        for (uint i = 0; i < rwTextures.size(); ++i)
+        {
+            const auto & res = rwTextures[i];
+
+            //switch (res->getCurrentState())
+            //{
+            //    case ResourceState::ShaderResource:
+            //    {
+            //        //// UAV barrier
+            //        //{
+            //        //    D3D12_RESOURCE_BARRIER d3d12barrier = {};
+            //        //    d3d12barrier.Transition.pResource = res->getTexture()->getResource().getd3d12TextureResource();
+            //        //    d3d12barrier.Type = D3D12_RESOURCE_BARRIER_TYPE_UAV;
+            //        //    d3d12barrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
+            //        //
+            //        //    d3d12barriers.push_back(d3d12barrier);
+            //        //}
+            //        //
+            //        //// UAV to ShaderResource barrier
+            //        //{
+            //        //    D3D12_RESOURCE_BARRIER d3d12barrier;
+            //        //
+            //        //    d3d12barrier.Transition.pResource = res->getTexture()->getResource().getd3d12TextureResource();
+            //        //    d3d12barrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
+            //        //    d3d12barrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
+            //        //    d3d12barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_UNORDERED_ACCESS;
+            //        //    d3d12barrier.Transition.StateAfter = D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE;
+            //        //    d3d12barrier.Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
+            //        //
+            //        //    d3d12barriers.push_back(d3d12barrier);
+            //        //}                    
+            //    }
+            //    break;
+            //}
+        }
+
+        if (d3d12barriers.size() > 0)
             m_d3d12graphicsCmdList->ResourceBarrier((uint)d3d12barriers.size(), d3d12barriers.data());
 
 		super::endSubPass();

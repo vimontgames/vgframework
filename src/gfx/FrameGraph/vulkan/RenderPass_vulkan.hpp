@@ -210,15 +210,15 @@ namespace vg::gfx::vulkan
         
         m_vkClearValues.reserve(renderTargets.size() + 1);
 
-        u32 width = 0; 
-        u32 height = 0;
+        u32 width = -1; 
+        u32 height = -1;
 
         for (uint i = 0; i < renderTargets.size(); ++i)
         {
             const auto & desc = renderTargets[i]->getTextureResourceDesc();
 
-            VG_ASSERT(width == 0 || width == desc.width);
-            VG_ASSERT(height == 0 || height == desc.height);
+            if (-1 != width || -1 != height)
+                VG_ASSERT(width == desc.width || height == desc.height, "RenderTarget[%u] has a size of %ux%u instead of %ux%u. All bound RenderTargets must have the same dimensions", i, desc.width, desc.height, width, height);
 
             width = desc.width;
             height = desc.height;
@@ -237,8 +237,11 @@ namespace vg::gfx::vulkan
             const auto & depthStencil = userPass->getDepthStencil();
             const auto & desc = depthStencil->getTextureResourceDesc();
 
-            VG_ASSERT(width == 0 || width == desc.width);
-            VG_ASSERT(height == 0 || height == desc.height);
+            if (-1 != width || -1 != height)
+                VG_ASSERT(width == desc.width || height == desc.height, "DepthStencil has a size of %ux%u instead of %ux%u. DepthStencil must have the same dimensions as bound RenderTargets", desc.width, desc.height, width, height);
+
+            width = desc.width;
+            height = desc.height;
 
             VkClearValue vkDepthStencilClearValue;
                          vkDepthStencilClearValue.depthStencil.depth = desc.clearDepth;
@@ -274,9 +277,10 @@ namespace vg::gfx::vulkan
         auto * device = gfx::Device::get();
         VkDevice & vkDevice = device->getVulkanDevice();
 
-        if (m_colorAttachments.size() > 0)
+        if (m_colorAttachments.size() > 0 || nullptr != m_depthStencilAttachment)
         {
             core::vector<VkImageView> vkImageViews;
+
             for (const FrameGraph::TextureResource * res : m_colorAttachments)
                 vkImageViews.push_back(res->getTexture()->getVulkanImageView());
 
@@ -297,7 +301,7 @@ namespace vg::gfx::vulkan
     //--------------------------------------------------------------------------------------
     void RenderPass::end(CommandList * _cmdList)
     {
-        if (m_colorAttachments.size() > 0)
+        if (m_colorAttachments.size() > 0 || nullptr != m_depthStencilAttachment)
         {
             vkCmdEndRenderPass(_cmdList->getVulkanCommandBuffer());
 

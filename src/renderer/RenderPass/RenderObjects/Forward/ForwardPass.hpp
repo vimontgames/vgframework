@@ -42,12 +42,18 @@ namespace vg::renderer
         renderContext.m_toolmode = view->getViewID().target == gfx::ViewTarget::Editor || options->isToolModeEnabled();
         renderContext.m_shaderPass = ShaderPass::Forward;
 
-        const GraphicInstanceList & allInstances = view->m_cullingJobResult.m_instanceLists[asInteger(GraphicInstanceListType::All)];
+        // TODO: transparent forward pass
+        bool opaque = true;
+
+        const GraphicInstanceList & allInstances = view->m_cullingJobResult.m_instanceLists[asInteger(opaque ? GraphicInstanceListType::Opaque : GraphicInstanceListType::Transparent)];
         
         // Default pass states
         RasterizerState rs(FillMode::Solid, CullMode::None);
         BlendState bs(BlendFactor::One, BlendFactor::Zero, BlendOp::Add);
-        DepthStencilState ds(true, true, ComparisonFunc::LessEqual);
+        
+        const bool depthWrite = opaque && options->isZPrepassEnabled() ? false : true;
+
+        DepthStencilState ds(true, depthWrite, ComparisonFunc::LessEqual);
 
         _cmdList->setPrimitiveTopology(PrimitiveTopology::TriangleList);
         _cmdList->setRasterizerState(rs);

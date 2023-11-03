@@ -61,15 +61,9 @@ namespace vg::gfx
 				Preserve	= 0x02
 			};
 
-			enum class RWAccess : core::u8
-			{
-				Read = 1,
-				Write = 2
-			};
-
 			struct PassRWAccess
 			{
-				PassRWAccess(const UserPass * _userPass, RWAccess _rwAccess) :
+				PassRWAccess(const UserPass * _userPass, RWFlags _rwAccess) :
 					m_userPass(_userPass),
 					m_rwAccess(_rwAccess)
 				{
@@ -77,7 +71,7 @@ namespace vg::gfx
 				}
 				
 				const UserPass *	m_userPass;
-				RWAccess			m_rwAccess;
+				RWFlags			m_rwAccess;
 			};
 
 			Resource();

@@ -64,7 +64,6 @@ namespace vg::renderer
         const char * shaderFile = "default/default.hlsl";
         m_shaderKey[asInteger(ShaderPass::ZOnly)] = ShaderKey(shaderFile, "ZOnly");
         m_shaderKey[asInteger(ShaderPass::Forward)] = ShaderKey(shaderFile, "Forward");
-        m_shaderKey[asInteger(ShaderPass::Editor)] = ShaderKey(shaderFile, "Editor");
     }
 
     //--------------------------------------------------------------------------------------
@@ -157,8 +156,7 @@ namespace vg::renderer
             if (_renderContext.m_wireframe)
             {
                 rs = RasterizerState(FillMode::Wireframe, CullMode::None);
-                key = m_shaderKey[asInteger(ShaderPass::Editor)];
-                _root3D->setFlags(RootConstantsEditorFlags::Wireframe);
+                _root3D->setFlags(RootConstantsFlags::Wireframe);
             }
 
             key.setFlags(gfx::DefaultHLSLDesc::Toolmode, true);

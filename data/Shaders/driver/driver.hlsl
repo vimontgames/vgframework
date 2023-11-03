@@ -39,7 +39,7 @@ PS_Output_Quad PS_Quad(VS_Output_Quad _input)
     // Uniform buffer
     //output.color0 = asfloat(BufferTable[rootConstants.cbID].Load4(0));
 
-    // Texture UAV
+    // Read-Write texture
     //output.color0 = RWTexture2DTable[0].Load(0);
 
     return output;

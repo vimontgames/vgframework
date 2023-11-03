@@ -8,7 +8,8 @@ namespace vg::gfx
     {
         Undefined = 0,
         RenderTarget,
-        ShaderResource
+        ShaderResource,
+        UnorderedAccess
     };
 
     enum class RenderPassType : core::u8
@@ -17,5 +18,11 @@ namespace vg::gfx
         Compute,
         Copy,
         RayTrace
+    };
+
+    enum class RWFlags : core::u8
+    {
+        Read    = 0x01,
+        Write   = 0x02
     };
 }

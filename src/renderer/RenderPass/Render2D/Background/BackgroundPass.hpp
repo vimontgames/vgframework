@@ -67,25 +67,32 @@ namespace vg::renderer
     //--------------------------------------------------------------------------------------
     void BackgroundPass::Render(const RenderPassContext & _renderPassContext, CommandList * _cmdList) const
     {
-        RasterizerState rs(FillMode::Solid, CullMode::None);
-        BlendState bs(BlendFactor::One, BlendFactor::Zero, BlendOp::Add);
-        DepthStencilState ds(false);
+        if (0)
+        {
+            //_cmdList->clear();
+        }
+        else
+        {
+            RasterizerState rs(FillMode::Solid, CullMode::None);
+            BlendState bs(BlendFactor::One, BlendFactor::Zero, BlendOp::Add);
+            DepthStencilState ds(false);
 
-        _cmdList->setGraphicRootSignature(m_backgroundRootSignatureHandle);
-        _cmdList->setShader(m_backgroundShaderKey);
-        _cmdList->setPrimitiveTopology(PrimitiveTopology::TriangleStrip);
-        _cmdList->setRasterizerState(rs);
-        _cmdList->setBlendState(bs);
-        _cmdList->setDepthStencilState(ds);
+            _cmdList->setGraphicRootSignature(m_backgroundRootSignatureHandle);
+            _cmdList->setShader(m_backgroundShaderKey);
+            _cmdList->setPrimitiveTopology(PrimitiveTopology::TriangleStrip);
+            _cmdList->setRasterizerState(rs);
+            _cmdList->setBlendState(bs);
+            _cmdList->setDepthStencilState(ds);
 
-        BackgroundRootConstants root;
+            BackgroundRootConstants root;
 
-        root.quad.posOffsetScale = float4(0.0f, 0.0f, 1.0f, 1.0f);
-        root.quad.uvOffsetScale = float4(0.0f, 0.0f, 1.0f, 1.0f);
-        root.color = pow(DisplayOptions::get()->getBackgroundColor(), 2.2f);
-        
-        _cmdList->setGraphicRootConstants(0, (u32*) &root, sizeof(BackgroundRootConstants) / sizeof(u32));
-        
-        _cmdList->draw(4);
+            root.quad.posOffsetScale = float4(0.0f, 0.0f, 1.0f, 1.0f);
+            root.quad.uvOffsetScale = float4(0.0f, 0.0f, 1.0f, 1.0f);
+            root.color = pow(DisplayOptions::get()->getBackgroundColor(), 2.2f);
+
+            _cmdList->setGraphicRootConstants(0, (u32 *)&root, sizeof(BackgroundRootConstants) / sizeof(u32));
+
+            _cmdList->draw(4);
+        }
     }
 }

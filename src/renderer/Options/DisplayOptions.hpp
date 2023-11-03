@@ -15,7 +15,8 @@ namespace vg::renderer
     DisplayOptions::DisplayOptions(const core::string & _name, core::IObject * _parent) :
         Object(_name, _parent),
         m_debugDisplayMode(DisplayMode::Default),
-        m_displayFlags(DisplayFlags::AlbedoMap | DisplayFlags::NormalMap)
+        m_displayFlags(DisplayFlags::AlbedoMap | DisplayFlags::NormalMap),
+        m_renderPassFlags(RenderPassFlags::ZPrepass | RenderPassFlags::Opaque | RenderPassFlags::Transparency | RenderPassFlags::PostProcess)
     {
         load(this);
     }
@@ -57,21 +58,18 @@ namespace vg::renderer
     {
         super::registerProperties(_desc);
 
-        _desc.registerPropertyHelperEx(DisplayOptions, m_backgroundColor, "Background", IProperty::Flags::Color);
-
         _desc.registerPropertyHelper(DisplayOptions, m_toolMode, "Toolmode");
+
+        _desc.registerPropertyHelperEx(DisplayOptions, m_aabb, "Bounding Box", IProperty::Flags::None);
+        _desc.registerPropertyHelperEx(DisplayOptions, m_wireframe, "Wireframe", IProperty::Flags::SameLine);
 
         _desc.registerPropertyEnum(DisplayOptions, DisplayMode, m_debugDisplayMode, "Display Mode");
         _desc.registerPropertyEnumBitfield(DisplayOptions, DisplayFlags, m_displayFlags, "Display Flags");
+        _desc.registerPropertyEnumBitfield(DisplayOptions, RenderPassFlags, m_renderPassFlags, "RenderPass Flags");
+
+        _desc.registerPropertyHelperEx(DisplayOptions, m_backgroundColor, "Background", IProperty::Flags::Color);
+
         _desc.registerPropertyEnum(DisplayOptions, gfx::VSync, m_VSync, "VSync");
-
-        _desc.registerPropertyHelperEx(DisplayOptions, m_aabb, "Bounding Box", IProperty::Flags::None);
-        _desc.registerPropertyHelperEx(DisplayOptions, m_wireframe,  "Wireframe", IProperty::Flags::SameLine);
-
-        _desc.registerPropertyHelperEx(DisplayOptions, m_opaque, "Opaque", IProperty::Flags::None);
-        _desc.registerPropertyHelperEx(DisplayOptions, m_postProcess, "PostProcess", IProperty::Flags::SameLine);     
-
-        _desc.registerPropertyHelper(DisplayOptions, m_raytracing, "Ray Tracing (Experimental)");
 
         // TODO: Move to menu or toolbar instead
         _desc.registerCallbackHelper(DisplayOptions, load, "Load", IProperty::Flags::None);

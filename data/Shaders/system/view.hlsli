@@ -3,15 +3,10 @@
 
 #pragma once
 
+#include "types.hlsli"
 #include "packing.hlsli"
 #include "buffer.hlsli"
 #include "displayoptions.hlsli"
-
-#ifdef __cplusplus
-namespace vg::gfx
-{
-using namespace vg::core;
-#endif
 
 struct ViewConstants
 {
@@ -39,9 +34,5 @@ struct ViewConstants
     uint4           screenSizeAndMousePos;
     uint4           debugDisplay;
 };
-
-#ifdef __cplusplus
-}
-#endif
 
 #endif // _VIEW__HLSLI_

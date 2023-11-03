@@ -146,7 +146,10 @@ namespace vg::gfx::dx12
                 initState = D3D12_RESOURCE_STATE_COPY_DEST;
 
             if (asBool(BindFlags::UnorderedAccess & _texDesc.resource.m_bindFlags))
+            {
+                initState = D3D12_RESOURCE_STATE_UNORDERED_ACCESS;
                 resourceDesc.Flags |= D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS;
+            }
 
             D3D12MA::Allocator * allocator = gfx::Device::get()->getd3d12MemoryAllocator();
             ID3D12Resource * resource;

@@ -1,6 +1,7 @@
 #include "ForwardView.h"
 
 #include "renderer/RenderPass/Render2D/Background/BackgroundPass.h"
+#include "renderer/RenderPass/RenderObjects/DepthOnly/DepthOnlyPass.h"
 #include "renderer/RenderPass/RenderObjects/Forward/ForwardPass.h"
 #include "renderer/RenderPass/RayTracing/Test/TestRayTracingPass.h"
 #include "renderer/RenderPass/Compute/ComputePostProcess/ComputePostProcessPass.h"
@@ -18,6 +19,7 @@ namespace vg::renderer
         View(_params)
     {
         m_backgroundPass = new BackgroundPass();
+        m_depthPrePass = new DepthOnlyPass();
         m_forwardPass = new ForwardPass();
         m_testRayTracingPass = new TestRayTracingPass();
         m_computePostProcessPass = new ComputePostProcessPass();
@@ -28,6 +30,7 @@ namespace vg::renderer
     ForwardView::~ForwardView()
     {
         VG_SAFE_RELEASE(m_backgroundPass);
+        VG_SAFE_RELEASE(m_depthPrePass);
         VG_SAFE_RELEASE(m_forwardPass);
         VG_SAFE_RELEASE(m_testRayTracingPass);
         VG_SAFE_RELEASE(m_computePostProcessPass);
@@ -44,6 +47,7 @@ namespace vg::renderer
         super::RegisterFrameGraph(_rc, _frameGraph);
 
         const auto options = DisplayOptions::get();
+
         if (options->isRayTracingEnabled())
         {
             _frameGraph.addUserPass(_rc, m_testRayTracingPass, "TestRayTracingPass");
@@ -51,9 +55,13 @@ namespace vg::renderer
         else
         {
             _frameGraph.addUserPass(_rc, m_backgroundPass, "BackgroundPass");
+
+            if (true)
+                _frameGraph.addUserPass(_rc, m_depthPrePass, "DepthPrepass");
+
             _frameGraph.addUserPass(_rc, m_forwardPass, "ForwardPass");
 
-            if (options->isComputePostProcessEnabled())
+            if (options->isPostProcessEnabled())
                 _frameGraph.addUserPass(_rc, m_computePostProcessPass, "ComputePostProcessPass");
 
             _frameGraph.addUserPass(_rc, m_finalBlitPass, "FinalBlitPass");

@@ -53,7 +53,7 @@ namespace vg::gfx
 	void FrameGraph::Resource::setReadAtPass(const UserPass * _subPass)
 	{
 		m_read.push_back(_subPass);
-        m_readWrite.push_back(PassRWAccess(_subPass, RWAccess::Read));
+        m_readWrite.push_back(PassRWAccess(_subPass, RWFlags::Read));
 	}
 
 	//--------------------------------------------------------------------------------------
@@ -66,7 +66,7 @@ namespace vg::gfx
 	void FrameGraph::Resource::setWriteAtPass(const UserPass * _subPass)
 	{
 		m_write.push_back(_subPass);
-        m_readWrite.push_back(PassRWAccess(_subPass, RWAccess::Write));
+        m_readWrite.push_back(PassRWAccess(_subPass, RWFlags::Write));
 	}
 
     //--------------------------------------------------------------------------------------
@@ -74,7 +74,7 @@ namespace vg::gfx
     {
         m_read.push_back(_subPass);
         m_write.push_back(_subPass);
-        m_readWrite.push_back(PassRWAccess(_subPass, RWAccess::Read | RWAccess::Write));
+        m_readWrite.push_back(PassRWAccess(_subPass, RWFlags::Read | RWFlags::Write));
     }
 
 	//--------------------------------------------------------------------------------------
@@ -339,12 +339,19 @@ namespace vg::gfx
     //--------------------------------------------------------------------------------------
     bool FrameGraph::addUserPass(const RenderPassContext & _renderContext, UserPass * _userPass, const UserPassID & _renderPassID)
     {
-        _userPass->addRef();
-        _userPass->setName(_renderPassID);
-        _userPass->setFrameGraph(this);
+        VG_ASSERT(nullptr != _userPass, "Adding NULL UserPass to FrameGraph");
 
-        m_userPassInfo.push_back({_renderContext, _userPass});
-        return true;
+        if (nullptr != _userPass)
+        {
+            _userPass->addRef();
+            _userPass->setName(_renderPassID);
+            _userPass->setFrameGraph(this);
+
+            m_userPassInfo.push_back({ _renderContext, _userPass });
+            return true;
+        }
+
+        return false;
     }
 
 	//--------------------------------------------------------------------------------------
@@ -414,6 +421,28 @@ namespace vg::gfx
 			// build all list with attachments from all passes
 			// for (...)
 			{
+                //auto & rwTextures = userPass->getRWTextures();
+                //for (uint i = 0; i < rwTextures.size(); ++i)
+                //{
+                //    TextureResource * res = rwTextures[i];
+                //    const TextureResourceDesc & textureResourceDesc = res->getTextureResourceDesc();
+                //
+                //    const auto & reads = res->getReadAtPass();
+                //    const bool firstRead = reads.size() > 0 && reads[0] == userPass;
+                //    const bool lastRead = reads.size() > 0 && reads[reads.size() - 1] == userPass;
+                //
+                //    const auto & writes = res->getWriteAtPass();
+                //    const bool firstWrite = writes.size() > 0 && writes[0] == userPass;
+                //    const bool lastWrite = writes.size() > 0 && writes[writes.size() - 1] == userPass;
+                //
+                //    // last pass writing UAV? (What if UAV is written/read several times?)
+                //    if (lastWrite)
+                //    {
+                //        ResourceState end = ResourceState::ShaderResource;
+                //        res->setCurrentState(end);
+                //    }
+                //}
+
                 auto & renderTargets = userPass->getRenderTargets();
 				for (uint i = 0; i < renderTargets.size(); ++i)
 				{
@@ -453,17 +482,6 @@ namespace vg::gfx
 
                     const bool backbuffer = m_outputRes == res;
 
-                    // first pass writing to RT ? 
-                    //if (firstWrite)
-                    //{
-                    //    flags |= SubPassKey::AttachmentFlags::Clear;
-                    //
-                    //    if (!backbuffer)
-                    //        begin = ResourceState::ShaderResource;
-                    //}
-                    //else 
-                    //    flags |= SubPassKey::AttachmentFlags::Preserve;
-
                     // first pass writing to RT/backbuffer ?
                     if (firstWrite)
                     {
@@ -478,7 +496,7 @@ namespace vg::gfx
                             #endif
 
                             #ifdef VG_VULKAN
-                            begin = ResourceState::Undefined; //Why not 'RenderTarget'? Because Vulkan.
+                            begin = ResourceState::Undefined; // Why not 'RenderTarget'? Because Vulkan.
                             #elif defined(VG_DX12)
                             begin = ResourceState::RenderTarget;
                             #else

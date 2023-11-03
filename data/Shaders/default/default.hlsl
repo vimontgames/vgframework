@@ -143,27 +143,24 @@ PS_Output PS_Forward(VS_Output _input)
             output.color0 = sRGBA2Linear(float4(normal.rgb * 0.5 + 0.5, 1));
             break;
     }
+    
+    if (RootConstantsFlags::Wireframe & rootConstants3D.getFlags())
+        output.color0 = float4(0,1,0,1);
     #endif // _TOOLMODE
     
-    #if _EDITOR
-    // TODO: select editor pass according to root constant flags
-    if (RootConstantsEditorFlags::Wireframe & rootConstants3D.getFlags())
-        output.color0 = float4(0,1,0,1);
-    #endif
-    
     // Picking test
-    float2 screenSize = viewConstants.getScreenSize();
-    float2 screenPos = _input.pos.xy / screenSize;
-    //output.color0 = float4(frac(16 * screenPos), 0, 1);
-    //return output;
-    
-    uint2 mousePos = viewConstants.getMousePos();
-    float dist = safeLength(mousePos, _input.pos.xy);
-    if (all(dist < 4))
-    {
-        output.color0.rgb = lerp(output.color0.rgb, float3(0, 1, 0), 0.25f);
-        return output;
-    }
+    //float2 screenSize = viewConstants.getScreenSize();
+    //float2 screenPos = _input.pos.xy / screenSize;
+    ////output.color0 = float4(frac(16 * screenPos), 0, 1);
+    ////return output;
+    //
+    //uint2 mousePos = viewConstants.getMousePos();
+    //float dist = safeLength(mousePos, _input.pos.xy);
+    //if (all(dist < 4))
+    //{
+    //    output.color0.rgb = lerp(output.color0.rgb, float3(0, 1, 0), 0.25f);
+    //    return output;
+    //}
             
     return output;
 }

@@ -27,6 +27,7 @@ using namespace vg::gfx;
 #include "Render2D/FinalBlit/FinalBlitPass.hpp"
 
 #include "RenderObjects/RenderObjectsPass.hpp"
+#include "RenderObjects/DepthOnly/DepthOnlyPass.hpp"
 #include "RenderObjects/Forward/ForwardPass.hpp"
 
 #include "Compute/ComputePass.hpp"

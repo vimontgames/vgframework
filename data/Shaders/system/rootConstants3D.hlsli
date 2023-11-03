@@ -4,11 +4,7 @@
 #include "constants.hlsli"
 #include "displayoptions.hlsli"
 
-#ifdef __cplusplus
-using namespace vg::core;
-#endif
-
-ENUM(RootConstantsEditorFlags, uint)
+enum RootConstantsFlags : uint
 {
     Wireframe = 0x0001
 };

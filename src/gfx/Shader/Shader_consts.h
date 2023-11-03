@@ -1,13 +1,5 @@
 #pragma once
 
-//#define ENUMFLAGS(T)    template<class T> inline T   operator ~  (T a)          { return (T)~(std::underlying_type_t<T>)a; } \
-//                        template<class T> inline T   operator |  (T a, T b)     { return (T)((std::underlying_type_t<T>)a | (std::underlying_type_t<T>)b); } \
-//                        template<class T> inline T   operator &  (T a, T b)     { return (T)((std::underlying_type_t<T>)a & (std::underlying_type_t<T>)b); } \
-//                        template<class T> inline T   operator ^  (T a, T b)     { return (T)((std::underlying_type_t<T>)a ^ (std::underlying_type_t<T>)b); } \
-//                        template<class T> inline T & operator |= (T & a, T b)   { return (T &)((std::underlying_type_t<T> &)a |= (std::underlying_type_t<T>)b); } \
-//                        template<class T> inline T & operator &= (T & a, T b)   { return (T &)((std::underlying_type_t<T> &)a &= (std::underlying_type_t<T>)b); } \
-//                        template<class T> inline T & operator ^= (T & a, T b)   { return (T &)((std::underlying_type_t<T> &)a ^= (std::underlying_type_t<T>)b); }
-
 namespace vg::gfx
 {
     enum class ShaderStage : core::u8
@@ -17,7 +9,6 @@ namespace vg::gfx
         Domain,
         Geometry,
         Pixel,
-
         Compute
     };
 
@@ -32,5 +23,4 @@ namespace vg::gfx
 
         All = VS | HS | DS | GS | PS | CS
     };
-    //ENUMFLAGS(ShaderStageFlags);
 }

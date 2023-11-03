@@ -9,9 +9,11 @@ namespace vg::gfx
     public:
         enum Flags : ShaderKey::Flags
         {
-            ZOnly    = 0,
-            Editor   = 14,
-            Toolmode = 15
+            // Flags 0..13 are available
+
+            // Flags 14..15 are reserved and should be common for all shaders             
+            ZOnly       = 14,
+            Toolmode    = 15
         };
 
         DefaultHLSLDesc()
@@ -19,7 +21,6 @@ namespace vg::gfx
             setFile("default/default.hlsl");
 
             addFlag(ZOnly, ShaderStageFlags::VS | ShaderStageFlags::PS, "_ZONLY");
-            addFlag(Editor, ShaderStageFlags::VS | ShaderStageFlags::PS, "_EDITOR");
             addFlag(Toolmode, ShaderStageFlags::VS | ShaderStageFlags::PS, "_TOOLMODE");
 
             auto & zonly = addTechnique("ZOnly");
@@ -33,13 +34,6 @@ namespace vg::gfx
             {
                 forward.vs = addVS("VS_Forward");
                 forward.ps = addPS("PS_Forward");
-            }
-
-            auto & editor = addTechnique("Editor");
-            {
-                editor.vs = addVS("VS_Forward");
-                editor.ps = addPS("PS_Forward");
-                editor.addFlag(Flags::Editor);
             }
         }
     };

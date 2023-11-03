@@ -25,8 +25,7 @@ namespace vg
         enum class ShaderPass : core::u8
         {
             ZOnly = 0,
-            Forward,
-            Editor
+            Forward
         };
 
         class MaterialModel : public IMaterialModel

@@ -251,6 +251,12 @@
     <ClInclude Include="RenderPass\Update\UpdatePass.hpp">
       <Filter>Pass\Update</Filter>
     </ClInclude>
+    <ClInclude Include="RenderPass\RenderObjects\DepthOnly\DepthOnlyPass.h">
+      <Filter>Pass\RenderObjects\DepthOnly</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderPass\RenderObjects\DepthOnly\DepthOnlyPass.hpp">
+      <Filter>Pass\RenderObjects\DepthOnly</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Pass">
@@ -319,9 +325,6 @@
     <Filter Include="Pass\RenderObjects">
       <UniqueIdentifier>{e653d575-dd5e-4f59-bf96-906fa4b40edd}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Pass\RenderObjects\DepthOnly">
-      <UniqueIdentifier>{2ee58acb-5192-4fa0-9d9a-44212975c738}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Pass\RenderObjects\Forward">
       <UniqueIdentifier>{377e7dd2-c3bc-4994-aceb-8581eb7ff143}</UniqueIdentifier>
     </Filter>
@@ -363,6 +366,9 @@
     </Filter>
     <Filter Include="Pass\Update\ViewConstants">
       <UniqueIdentifier>{4ff90e0d-c3d6-4344-9aef-7cfb05697ff6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Pass\RenderObjects\DepthOnly">
+      <UniqueIdentifier>{2ee58acb-5192-4fa0-9d9a-44212975c738}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

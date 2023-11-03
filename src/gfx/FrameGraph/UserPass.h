@@ -36,9 +36,14 @@ namespace vg::gfx
         // Called after exiting RenderPass (e.g. read buffer from GPU to the CPU)
         virtual void	AfterRender		(const RenderPassContext & _renderContext, CommandList * _cmdList) {};
 
+		// Textures being bound as color buffers
 		VG_INLINE const core::vector<FrameGraph::TextureResource *> & getRenderTargets() const;
-		VG_INLINE const core::vector<FrameGraph::TextureResource *> & getRWTextures() const;
-        VG_INLINE FrameGraph::TextureResource * getDepthStencil() const;
+
+		// Texture being bound as depth/stencil buffer
+		VG_INLINE FrameGraph::TextureResource * getDepthStencil() const;
+
+		// RWTextures being written during the pass
+        VG_INLINE const core::vector<FrameGraph::TextureResource *> & getRWTextures() const;
 
         core::uint getRenderTargetCount() const;
         const FrameGraph::TextureResourceDesc & getRenderTargetDesc(core::uint _index) const;
@@ -82,8 +87,10 @@ namespace vg::gfx
 
         // Outputs
 		FrameGraph::TextureResource *				m_depthStencil;
-		core::vector<FrameGraph::TextureResource *>	m_renderTarget;
-		core::vector<FrameGraph::TextureResource *> m_readWriteTexture;
+		core::vector<FrameGraph::TextureResource *>	m_renderTargets;
+
+		// Input and/or output
+		core::vector<FrameGraph::TextureResource *> m_rwTextures;
 	};
 }
 

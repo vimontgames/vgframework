@@ -12,6 +12,15 @@ namespace vg::core
 
 namespace vg::renderer
 {
+    enum class RenderPassFlags : core::u32
+    {
+        ZPrepass        = 0x00000001,
+        Opaque          = 0x00000002,
+        Transparency    = 0x00000004,
+        PostProcess     = 0x00000008,
+        RayTracing      = 0x00000010
+    };
+
     class DisplayOptions : public core::Object, public core::Singleton<DisplayOptions>
     {
     public:
@@ -30,11 +39,14 @@ namespace vg::renderer
         DisplayFlags            getDisplayFlags             () const { return m_displayFlags; }
 
         bool				    isToolModeEnabled		    () const { return m_toolMode; }
+
         bool				    isAABBEnabled               () const { return m_aabb; }
-        bool				    isOpaqueEnabled			    () const { return m_opaque; }
-        bool				    isWireframeEnabled		    () const { return m_wireframe; }
-        bool                    isComputePostProcessEnabled () const { return m_postProcess; }
-        bool                    isRayTracingEnabled         () const { return m_raytracing; }
+        bool				    isWireframeEnabled          () const { return m_wireframe; }
+
+        bool                    isZPrepassEnabled           () const { return core::asBool(RenderPassFlags::ZPrepass & m_renderPassFlags); }
+        bool				    isOpaqueEnabled			    () const { return core::asBool(RenderPassFlags::Opaque & m_renderPassFlags); }
+        bool                    isPostProcessEnabled        () const { return core::asBool(RenderPassFlags::PostProcess & m_renderPassFlags); }
+        bool                    isRayTracingEnabled         () const { return core::asBool(RenderPassFlags::RayTracing & m_renderPassFlags); }
 
         bool                    isDisplayMatIDEnabled       () const { return DisplayMode::MatID    == m_debugDisplayMode;}
         bool				    isDisplayNormalEnabled	    () const { return DisplayMode::VSNormal == m_debugDisplayMode; }
@@ -57,12 +69,10 @@ namespace vg::renderer
         bool                    m_aabb                      = false;
         gfx::VSync m_VSync                                  = gfx::VSync::VBL_1;
         bool                    m_vsync                     = true;
-        bool				    m_opaque                    = true;
         bool				    m_wireframe                 = false;
-        bool                    m_postProcess               = false;
-        bool                    m_raytracing                = false;
        
         DisplayMode	            m_debugDisplayMode;
         DisplayFlags            m_displayFlags;
+        RenderPassFlags         m_renderPassFlags;
     };
 }

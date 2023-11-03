@@ -35,8 +35,8 @@ namespace vg::gfx
 	{
         m_textures.clear();
 		m_depthStencil = nullptr;
-		m_renderTarget.clear();
-        m_readWriteTexture.clear();
+		m_renderTargets.clear();
+        m_rwTextures.clear();
 	}
 
 	//--------------------------------------------------------------------------------------
@@ -81,7 +81,7 @@ namespace vg::gfx
         FrameGraph::TextureResource * res = m_frameGraph->getTextureResource(_resID);
         VG_ASSERT(res);
         res->setWriteAtPass(this);
-		m_renderTarget.push_back(res);
+		m_renderTargets.push_back(res);
 	}
 
     //--------------------------------------------------------------------------------------
@@ -99,7 +99,7 @@ namespace vg::gfx
         FrameGraph::TextureResource * res = m_frameGraph->getTextureResource(_resID);
         VG_ASSERT(res);
         res->setWriteAtPass(this);
-        m_readWriteTexture.push_back(res);
+        m_rwTextures.push_back(res);
     }
 
     //--------------------------------------------------------------------------------------
@@ -128,7 +128,7 @@ namespace vg::gfx
         FrameGraph::TextureResource * res = m_frameGraph->getTextureResource(_resID);
         VG_ASSERT(res);
         res->setReadAtPass(this);
-        m_textures.push_back(res);
+        m_rwTextures.push_back(res);
     }
 
     //--------------------------------------------------------------------------------------
@@ -144,13 +144,13 @@ namespace vg::gfx
     //--------------------------------------------------------------------------------------
     core::uint UserPass::getRenderTargetCount() const
     {
-        return (core::uint)m_renderTarget.size();
+        return (core::uint)m_renderTargets.size();
     }
 
     //--------------------------------------------------------------------------------------
     const FrameGraph::TextureResourceDesc & UserPass::getRenderTargetDesc(core::uint _index) const
     {
-        return m_renderTarget[_index]->getTextureResourceDesc();
+        return m_renderTargets[_index]->getTextureResourceDesc();
     }
 
     //--------------------------------------------------------------------------------------
