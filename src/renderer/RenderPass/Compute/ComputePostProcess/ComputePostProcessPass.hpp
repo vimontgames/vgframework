@@ -53,7 +53,7 @@ namespace vg::renderer
     {
         auto size = _renderPassContext.m_view->GetSize();
         auto threadGroupSize = uint2(POSTPROCESS_THREADGROUP_SIZE_X, POSTPROCESS_THREADGROUP_SIZE_Y);
-        auto threadGroupCount = uint3((size.x + threadGroupSize.x - 1) / threadGroupSize.x, (size.x + threadGroupSize.y - 1) / threadGroupSize.y, 1);
+        auto threadGroupCount = uint3((size.x + threadGroupSize.x - 1) / threadGroupSize.x, (size.y + threadGroupSize.y - 1) / threadGroupSize.y, 1);
 
         _cmdList->setComputeRootSignature(m_computePostProcessRootSignature);
         _cmdList->setComputeShader(m_computePostProcessShaderKey);
