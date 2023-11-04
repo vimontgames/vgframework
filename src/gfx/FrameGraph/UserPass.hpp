@@ -48,22 +48,22 @@ namespace vg::gfx
     //--------------------------------------------------------------------------------------
     // If resource already exist, it must have exactly the same descriptor
     //--------------------------------------------------------------------------------------
-    void UserPass::createRenderTarget(const FrameGraph::ResourceID & _resID, FrameGraph::TextureResourceDesc & _resDesc)
+    void UserPass::createRenderTarget(const FrameGraphResourceID & _resID, FrameGraphTextureResourceDesc & _resDesc)
     {
         _resDesc.transient = true;
 
-        FrameGraph::TextureResource * res = m_frameGraph->addTextureResource(_resID, _resDesc);
+        FrameGraphTextureResource * res = m_frameGraph->addTextureResource(_resID, _resDesc);
         VG_ASSERT(res);
     }
 
     //--------------------------------------------------------------------------------------
-    void UserPass::createDepthStencil(const FrameGraph::ResourceID & _resID, FrameGraph::TextureResourceDesc & _resDesc)
+    void UserPass::createDepthStencil(const FrameGraphResourceID & _resID, FrameGraphTextureResourceDesc & _resDesc)
     {
         createRenderTarget(_resID, _resDesc);
     }
 
     //--------------------------------------------------------------------------------------
-    void UserPass::createRWTexture(const FrameGraph::ResourceID & _resID, FrameGraph::TextureResourceDesc & _resDesc)
+    void UserPass::createRWTexture(const FrameGraphResourceID & _resID, FrameGraphTextureResourceDesc & _resDesc)
     {
         _resDesc.transient = true;
         _resDesc.uav = true;
@@ -76,27 +76,27 @@ namespace vg::gfx
     // - Persistent and already imported in the graph
     // - Transient and already declared in the graph
     //--------------------------------------------------------------------------------------
-	void UserPass::writeRenderTarget(core::uint _slot, const FrameGraph::ResourceID & _resID)
+	void UserPass::writeRenderTarget(core::uint _slot, const FrameGraphResourceID & _resID)
 	{
-        FrameGraph::TextureResource * res = m_frameGraph->getTextureResource(_resID);
+        FrameGraphTextureResource * res = m_frameGraph->getTextureResource(_resID);
         VG_ASSERT(res);
         res->setWriteAtPass(this);
 		m_renderTargets.push_back(res);
 	}
 
     //--------------------------------------------------------------------------------------
-    void UserPass::writeDepthStencil(const FrameGraph::ResourceID & _resID)
+    void UserPass::writeDepthStencil(const FrameGraphResourceID & _resID)
     {
-        FrameGraph::TextureResource * res = m_frameGraph->getTextureResource(_resID);
+        FrameGraphTextureResource * res = m_frameGraph->getTextureResource(_resID);
         VG_ASSERT(res);
         res->setWriteAtPass(this);
         m_depthStencil = res;
     }
 
     //--------------------------------------------------------------------------------------
-    void UserPass::writeRWTexture(core::uint _slot, const FrameGraph::ResourceID & _resID)
+    void UserPass::writeRWTexture(core::uint _slot, const FrameGraphResourceID & _resID)
     {
-        FrameGraph::TextureResource * res = m_frameGraph->getTextureResource(_resID);
+        FrameGraphTextureResource * res = m_frameGraph->getTextureResource(_resID);
         VG_ASSERT(res);
         res->setWriteAtPass(this);
         m_rwTextures.push_back(res);
@@ -105,27 +105,27 @@ namespace vg::gfx
     //--------------------------------------------------------------------------------------
     // The pass will read RT '_resID'
     //--------------------------------------------------------------------------------------
-    void UserPass::readRenderTarget(const FrameGraph::ResourceID & _resID)
+    void UserPass::readRenderTarget(const FrameGraphResourceID & _resID)
     {
-        FrameGraph::TextureResource * res = m_frameGraph->getTextureResource(_resID);
+        FrameGraphTextureResource * res = m_frameGraph->getTextureResource(_resID);
         VG_ASSERT(res);
         res->setReadAtPass(this);
         m_textures.push_back(res);
     }
 
     //--------------------------------------------------------------------------------------
-    void UserPass::readDepthStencil(const FrameGraph::ResourceID & _resID)
+    void UserPass::readDepthStencil(const FrameGraphResourceID & _resID)
     {
-        FrameGraph::TextureResource * res = m_frameGraph->getTextureResource(_resID);
+        FrameGraphTextureResource * res = m_frameGraph->getTextureResource(_resID);
         VG_ASSERT(res);
         res->setReadAtPass(this);
         m_textures.push_back(res);
     }
 
     //--------------------------------------------------------------------------------------
-    void UserPass::readRWTexture(const FrameGraph::ResourceID & _resID)
+    void UserPass::readRWTexture(const FrameGraphResourceID & _resID)
     {
-        FrameGraph::TextureResource * res = m_frameGraph->getTextureResource(_resID);
+        FrameGraphTextureResource * res = m_frameGraph->getTextureResource(_resID);
         VG_ASSERT(res);
         res->setReadAtPass(this);
         m_rwTextures.push_back(res);
@@ -134,9 +134,9 @@ namespace vg::gfx
     //--------------------------------------------------------------------------------------
     // Get RenderTarget '_resID' for read during 'render'
     //--------------------------------------------------------------------------------------
-    Texture * UserPass::getRenderTarget(const FrameGraph::ResourceID & _resID) const
+    Texture * UserPass::getRenderTarget(const FrameGraphResourceID & _resID) const
     {
-        FrameGraph::TextureResource * res = m_frameGraph->getTextureResource(_resID);
+        FrameGraphTextureResource * res = m_frameGraph->getTextureResource(_resID);
         VG_ASSERT(res);
         return res->getTexture();
     }
@@ -148,7 +148,7 @@ namespace vg::gfx
     }
 
     //--------------------------------------------------------------------------------------
-    const FrameGraph::TextureResourceDesc & UserPass::getRenderTargetDesc(core::uint _index) const
+    const FrameGraphTextureResourceDesc & UserPass::getRenderTargetDesc(core::uint _index) const
     {
         return m_renderTargets[_index]->getTextureResourceDesc();
     }
@@ -160,7 +160,7 @@ namespace vg::gfx
     }
 
     //--------------------------------------------------------------------------------------
-    const FrameGraph::TextureResourceDesc & UserPass::getDepthStencilDesc() const
+    const FrameGraphTextureResourceDesc & UserPass::getDepthStencilDesc() const
     {
         return m_depthStencil->getTextureResourceDesc();
     }

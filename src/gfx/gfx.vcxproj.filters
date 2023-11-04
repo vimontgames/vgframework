@@ -567,6 +567,12 @@
     <ClInclude Include="PipelineState\Compute\ComputePipelineStateCache.hpp">
       <Filter>PipelineState\Compute</Filter>
     </ClInclude>
+    <ClInclude Include="FrameGraph\FrameGraphResource.h">
+      <Filter>FrameGraph</Filter>
+    </ClInclude>
+    <ClInclude Include="FrameGraph\FrameGraphResource.hpp">
+      <Filter>FrameGraph</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Device">

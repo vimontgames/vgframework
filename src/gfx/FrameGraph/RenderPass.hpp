@@ -39,13 +39,13 @@ namespace vg::gfx
 		}
 
         //--------------------------------------------------------------------------------------
-        const core::vector<FrameGraph::TextureResource *> & RenderPass::getColorAttachments() const
+        const core::vector<FrameGraphTextureResource *> & RenderPass::getColorAttachments() const
 		{
 			return m_colorAttachments;
 		}
 
         //--------------------------------------------------------------------------------------
-        const FrameGraph::TextureResource * RenderPass::getDepthStencilAttachment() const
+        const FrameGraphTextureResource * RenderPass::getDepthStencilAttachment() const
 		{
 			return m_depthStencilAttachment;
 		}

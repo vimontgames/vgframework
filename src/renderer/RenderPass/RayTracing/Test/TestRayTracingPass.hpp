@@ -38,7 +38,7 @@ namespace vg::renderer
         //
         //auto size = _renderContext.m_view->GetSize();
         //
-        //FrameGraph::TextureResourceDesc colorDesc;
+        //FrameGraphTextureResourceDesc colorDesc;
         //colorDesc.format = PixelFormat::R16G16B16A16_float;
         //colorDesc.width = size.x;
         //colorDesc.height = size.y;
@@ -49,7 +49,7 @@ namespace vg::renderer
         //createRenderTarget(colorID, colorDesc);
         //writeRenderTarget(0, colorID);
         //
-        //FrameGraph::TextureResourceDesc depthStencilDesc;
+        //FrameGraphTextureResourceDesc depthStencilDesc;
         //depthStencilDesc.format = PixelFormat::D32S8;
         //depthStencilDesc.width = size.x;
         //depthStencilDesc.height = size.y;

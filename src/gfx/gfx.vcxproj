@@ -48,6 +48,8 @@
     <ClInclude Include="Device\vulkan\Extension\Instance\EXT_DebugUtils.h" />
     <ClInclude Include="Device\vulkan\Extension\Instance\KHR_Surface.h" />
     <ClInclude Include="Device\vulkan\Extension\Instance\KHR_Win32_Surface.h" />
+    <ClInclude Include="FrameGraph\FrameGraphResource.h" />
+    <ClInclude Include="FrameGraph\FrameGraphResource.hpp" />
     <ClInclude Include="FrameGraph\RenderPass.hpp" />
     <ClCompile Include="Importer\Importer.cpp" />
     <ClCompile Include="Memory\MemoryAllocator.cpp" />

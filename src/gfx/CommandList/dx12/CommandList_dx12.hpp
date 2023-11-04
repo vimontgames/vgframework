@@ -106,8 +106,8 @@ namespace vg::gfx::dx12
                 const ResourceTransitionDesc & info = subPassKey.getColorAttachmentInfo(i);
                 if (asBool(ResourceTransitionFlags::RenderTarget & info.flags))
                 {
-                    const FrameGraph::TextureResource * res = userPass->getRenderTargets()[i];
-                    const FrameGraph::TextureResourceDesc & resourceDesc = res->getTextureResourceDesc();
+                    const FrameGraphTextureResource * res = userPass->getRenderTargets()[i];
+                    const FrameGraphTextureResourceDesc & resourceDesc = res->getTextureResourceDesc();
                     D3D12_RENDER_PASS_RENDER_TARGET_DESC & renderTargetDesc = _subPass->m_d3d12renderPassRenderTargetDesc[i];
                     const Texture * tex = res->getTexture();
                     _subPass->m_d3d12renderPassRenderTargetDesc[i].cpuDescriptor = tex->getd3d12RTVHandle();
@@ -132,8 +132,8 @@ namespace vg::gfx::dx12
                 const ResourceTransitionDesc & info = subPassKey.getDepthStencilAttachmentInfo();
                 if (asBool(ResourceTransitionFlags::RenderTarget & info.flags))
                 {
-                    const FrameGraph::TextureResource * res = userPass->getDepthStencil();
-                    const FrameGraph::TextureResourceDesc & resourceDesc = res->getTextureResourceDesc();
+                    const FrameGraphTextureResource * res = userPass->getDepthStencil();
+                    const FrameGraphTextureResourceDesc & resourceDesc = res->getTextureResourceDesc();
                     D3D12_RENDER_PASS_DEPTH_STENCIL_DESC & depthStencilDesc = _subPass->m_d3d12renderPassDepthStencilDesc;
                     const Texture * tex = res->getTexture();
                     _subPass->m_d3d12renderPassDepthStencilDesc.cpuDescriptor = tex->getd3d12DSVHandle();
@@ -143,7 +143,7 @@ namespace vg::gfx::dx12
             //auto rwTextures = userPass->getRWTextures();
             //for (uint i = 0; i < rwTextures.size(); ++i)
             //{
-            //    const FrameGraph::TextureResource * res = rwTextures[i];
+            //    const FrameGraphTextureResource * res = rwTextures[i];
             //
             //    switch (res->getCurrentState())
             //    {

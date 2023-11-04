@@ -42,7 +42,7 @@ namespace vg::renderer
     {
         auto * target = getRenderTarget();
         if (target)
-            _frameGraph.importRenderTarget(target->getName(), target, float4(0, 0, 0, 0), FrameGraph::Resource::InitState::Clear);
+            _frameGraph.importRenderTarget(target->getName(), target, float4(0, 0, 0, 0), FrameGraphResource::InitState::Clear);
 
         super::RegisterFrameGraph(_rc, _frameGraph);
 

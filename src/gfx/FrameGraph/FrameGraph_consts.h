@@ -4,6 +4,9 @@ namespace vg::gfx
 {
     constexpr core::uint maxSubPassPerRenderPass = 1;
 
+    using FrameGraphUserPassID = core::string;
+    using FrameGraphResourceID = core::string;
+
     enum class ResourceState : core::u8
     {
         Undefined = 0,

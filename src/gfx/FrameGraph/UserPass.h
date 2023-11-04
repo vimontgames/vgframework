@@ -37,41 +37,41 @@ namespace vg::gfx
         virtual void	AfterRender		(const RenderPassContext & _renderContext, CommandList * _cmdList) {};
 
 		// Textures being bound as color buffers
-		VG_INLINE const core::vector<FrameGraph::TextureResource *> & getRenderTargets() const;
+		VG_INLINE const core::vector<FrameGraphTextureResource *> & getRenderTargets() const;
 
 		// Texture being bound as depth/stencil buffer
-		VG_INLINE FrameGraph::TextureResource * getDepthStencil() const;
+		VG_INLINE FrameGraphTextureResource * getDepthStencil() const;
 
 		// RWTextures being written during the pass
-        VG_INLINE const core::vector<FrameGraph::TextureResource *> & getRWTextures() const;
+        VG_INLINE const core::vector<FrameGraphTextureResource *> & getRWTextures() const;
 
         core::uint getRenderTargetCount() const;
-        const FrameGraph::TextureResourceDesc & getRenderTargetDesc(core::uint _index) const;
+        const FrameGraphTextureResourceDesc & getRenderTargetDesc(core::uint _index) const;
 
         bool hasDepthStencil() const;
-        const FrameGraph::TextureResourceDesc &  getDepthStencilDesc() const;
+        const FrameGraphTextureResourceDesc &  getDepthStencilDesc() const;
 
-        const core::vector<FrameGraph::TextureResource *> & getTexturesRead() const { return m_textures; }
+        const core::vector<FrameGraphTextureResource *> & getTexturesRead() const { return m_textures; }
 
 		void setUserPassType(RenderPassType _userPassType);
 		RenderPassType getUserPassType() const;
 
 	protected:
         // setup
-        void createRenderTarget(const FrameGraph::ResourceID & _resID, FrameGraph::TextureResourceDesc & _resDesc);
-		void writeRenderTarget(core::uint _slot, const FrameGraph::ResourceID & _resID);
-        void readRenderTarget(const FrameGraph::ResourceID & _resID);
+        void createRenderTarget(const FrameGraphResourceID & _resID, FrameGraphTextureResourceDesc & _resDesc);
+		void writeRenderTarget(core::uint _slot, const FrameGraphResourceID & _resID);
+        void readRenderTarget(const FrameGraphResourceID & _resID);
 
-        void createDepthStencil(const FrameGraph::ResourceID & _resID, FrameGraph::TextureResourceDesc & _resDesc);
-        void writeDepthStencil(const FrameGraph::ResourceID & _resID);
-        void readDepthStencil(const FrameGraph::ResourceID & _resID);
+        void createDepthStencil(const FrameGraphResourceID & _resID, FrameGraphTextureResourceDesc & _resDesc);
+        void writeDepthStencil(const FrameGraphResourceID & _resID);
+        void readDepthStencil(const FrameGraphResourceID & _resID);
 
-		void createRWTexture(const FrameGraph::ResourceID & _resID, FrameGraph::TextureResourceDesc & _resDesc);
-        void writeRWTexture(core::uint _slot, const FrameGraph::ResourceID & _resID);
-        void readRWTexture(const FrameGraph::ResourceID & _resID);
+		void createRWTexture(const FrameGraphResourceID & _resID, FrameGraphTextureResourceDesc & _resDesc);
+        void writeRWTexture(core::uint _slot, const FrameGraphResourceID & _resID);
+        void readRWTexture(const FrameGraphResourceID & _resID);
 
         // draw
-        Texture * getRenderTarget(const FrameGraph::ResourceID & _resID) const;
+        Texture * getRenderTarget(const FrameGraphResourceID & _resID) const;
 
 	private:
 		friend class FrameGraph;
@@ -83,14 +83,14 @@ namespace vg::gfx
 		RenderPassType								m_userPassType = (RenderPassType)-1;
 
         // Inputs
-        core::vector<FrameGraph::TextureResource *> m_textures;
+        core::vector<FrameGraphTextureResource *>	m_textures;
 
         // Outputs
-		FrameGraph::TextureResource *				m_depthStencil;
-		core::vector<FrameGraph::TextureResource *>	m_renderTargets;
+		FrameGraphTextureResource *					m_depthStencil;
+		core::vector<FrameGraphTextureResource *>	m_renderTargets;
 
 		// Input and/or output
-		core::vector<FrameGraph::TextureResource *> m_rwTextures;
+		core::vector<FrameGraphTextureResource *>	m_rwTextures;
 	};
 }
 

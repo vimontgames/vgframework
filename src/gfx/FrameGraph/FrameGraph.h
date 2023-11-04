@@ -2,6 +2,7 @@
 
 #include "core/Object/Object.h"
 #include "FrameGraph_consts.h"
+#include "FrameGraphResource.h"
 #include "gfx/IView.h"
 
 namespace vg::gfx
@@ -42,187 +43,37 @@ namespace vg::gfx
 
         const char * getClassName() const final { return "FrameGraph"; }
 
-		using UserPassID = core::string;
-		using ResourceID = core::string;
-
-		class Resource
-		{
-		public:
-			enum class Type : core::u8
-			{
-				Buffer = 0,
-				Texture
-			};
-
-			enum class InitState : core::u8
-			{
-				Discard		= 0x00,
-				Clear		= 0x01,
-				Preserve	= 0x02
-			};
-
-			struct PassRWAccess
-			{
-				PassRWAccess(const UserPass * _userPass, RWFlags _rwAccess) :
-					m_userPass(_userPass),
-					m_rwAccess(_rwAccess)
-				{
-
-				}
-				
-				const UserPass *	m_userPass;
-				RWFlags				m_rwAccess;
-			};
-
-			Resource();
-
-			virtual ~Resource()
-			{
-				m_read.clear();
-				m_write.clear();
-			}
-
-			void setType(Type _type);
-			Type getType() const;
-
-            void setName(const core::string & _name);
-            const core::string & getName() const;
-
-			void setReadAtPass(const UserPass * _subPass);
-			void setWriteAtPass(const UserPass * _subPass);
-			void setReadWriteAtPass(const UserPass * _subPass);
-
-			const core::vector<const UserPass *> & getReadAtPass() const;
-			const core::vector<const UserPass *> & getWriteAtPass() const;
-
-			const core::vector<PassRWAccess> & getReadWriteAccess() const;
-
-            void setCurrentState(ResourceState _state);
-            ResourceState getCurrentState() const;
-
-		private:
-			Type                            m_type;	
-            core::string                    m_name;
-			core::vector<const UserPass*>   m_read;
-			core::vector<const UserPass*>	m_write;
-			core::vector<PassRWAccess>		m_readWrite;
-            ResourceState                   m_state = ResourceState::Undefined;
-		};
-
-		struct TextureResourceDesc
-		{
-            TextureResourceDesc()
-            {
-
-            }
-
-			TextureResourceDesc(const TextureResourceDesc & _from) :
-				width(_from.width),
-				height(_from.height),
-				format(_from.format),
-				initState(_from.initState),
-				clearColor(_from.clearColor),
-				transient(_from.transient),
-				uav(_from.uav)
-            {
-
-            }
-
-			core::u16			width		= 0;
-			core::u16			height		= 0;
-			PixelFormat			format		= (PixelFormat)0;
-			Resource::InitState initState	= Resource::InitState::Discard;
-            union
-            {
-                core::float4		clearColor = (core::float4)0.0f;
-                struct
-                {
-                    float           clearDepth;
-                    core::u8        clearStencil;
-                };
-            };
-            bool                transient = false;
-			bool				uav = false;
-
-            bool operator == (const TextureResourceDesc & _other) const
-            {
-                return  width == _other.width
-                    && height == _other.height
-                    && format == _other.format          // TODO: alias textures of the same size but different format (store format, initstate, clear color elsewhere ?)
-                    && initState == _other.initState    
-                    && hlslpp::all(clearColor == _other.clearColor)  
-                    && transient == _other.transient
-					&& uav == _other.uav;   
-            }
-		};
-
-		struct BufferResourceDesc
-		{
-			core::u32 size = 0;
-		};
-
-		class TextureResource : public Resource
-		{
-		public:
-			void                        setTextureResourceDesc  (const TextureResourceDesc & _texResDesc);
-            const TextureResourceDesc & getTextureResourceDesc  () const;
-            void                        setTexture              (Texture * _tex);
-			Texture *                   getTexture              () const;
-            void                        resetTexture            ();
-
-		private:
-			TextureResourceDesc		    m_desc;
-			Texture *	                m_texture = nullptr;
-		};
-
-		struct BufferResource : public Resource
-		{
-		public:
-			enum class Usage : core::u16
-			{
-				None = 0x0000
-			};
-
-			void                        setBufferResourceDesc   (const BufferResourceDesc & _bufResDesc, Buffer * _buffer = nullptr);
-            const BufferResourceDesc &  getBufferResourceDesc   () const;
-            Buffer *                    getBuffer               () const;
-
-		private:
-			BufferResourceDesc		    m_desc;
-			Buffer *	                m_buffer = nullptr;
-		};
-
 		FrameGraph();
 		~FrameGraph();
 
 		void destroyTransientResources(bool _sync = false);
 
-		void importRenderTarget(const ResourceID & _resID, Texture * _tex, core::float4 _clearColor = core::float4(0, 0, 0, 0), FrameGraph::Resource::InitState _initState = FrameGraph::Resource::InitState::Clear);
-		void setGraphOutput(const ResourceID & _destTexResID);
+		void importRenderTarget(const FrameGraphResourceID & _resID, Texture * _tex, core::float4 _clearColor = core::float4(0, 0, 0, 0), FrameGraphResource::InitState _initState = FrameGraphResource::InitState::Clear);
+		void setGraphOutput(const FrameGraphResourceID & _destTexResID);
 
 		void setup(double _dt);
 		void build();
 		void render();
 
-        bool addUserPass(const RenderPassContext & _renderContext, UserPass * _userPass, const UserPassID & _renderPassID);
+        bool addUserPass(const RenderPassContext & _renderContext, UserPass * _userPass, const FrameGraphUserPassID & _renderPassID);
 
-        template <class T> T * getResource(Resource::Type _type, const ResourceID & _resID, bool _mustExist);
+        template <class T> T * getResource(FrameGraphResource::Type _type, const FrameGraphResourceID & _resID, bool _mustExist);
 
-        TextureResource *   getTextureResource  (const ResourceID & _resID) const;
-        BufferResource *    getBufferResource   (const ResourceID & _resID) const;
+        FrameGraphTextureResource *   getTextureResource  (const FrameGraphResourceID & _resID) const;
+        FrameGraphBufferResource *    getBufferResource   (const FrameGraphResourceID & _resID) const;
 
-        TextureResource *   addTextureResource  (const ResourceID & _resID, const TextureResourceDesc & _texResDesc, Texture * _tex = nullptr);
-        BufferResource *    addBufferResource   (const ResourceID & _resID, const BufferResourceDesc & _bufResDesc, Buffer * _buf = nullptr);
+        FrameGraphTextureResource *   addTextureResource  (const FrameGraphResourceID & _resID, const FrameGraphTextureResourceDesc & _texResDesc, Texture * _tex = nullptr);
+        FrameGraphBufferResource *    addBufferResource   (const FrameGraphResourceID & _resID, const FrameGraphBufferResourceDesc & _bufResDesc, Buffer * _buf = nullptr);
 
 		void setResized(); 
 
 	private:
 
-        Texture * createRenderTargetFromPool(const TextureResourceDesc & _textureResourceDesc);
-        Texture * createDepthStencilFromPool(const TextureResourceDesc & _textureResourceDesc);
-		Texture * createRWTextureFromPool(const TextureResourceDesc & _textureResourceDesc);
+        Texture * createRenderTargetFromPool(const FrameGraphTextureResourceDesc & _textureResourceDesc);
+        Texture * createDepthStencilFromPool(const FrameGraphTextureResourceDesc & _textureResourceDesc);
+		Texture * createRWTextureFromPool(const FrameGraphTextureResourceDesc & _textureResourceDesc);
 
-        Texture * createTextureFromPool(const FrameGraph::TextureResourceDesc & _textureResourceDesc, bool _depthStencil = false, bool _uav = false);
+        Texture * createTextureFromPool(const FrameGraphTextureResourceDesc & _textureResourceDesc, bool _depthStencil = false, bool _uav = false);
 
         void releaseTextureFromPool(Texture *& _tex);
 
@@ -233,7 +84,7 @@ namespace vg::gfx
         void cleanup();
 
 	private:
-        using resource_unordered_map = core::unordered_map<FrameGraph::ResourceID, Resource*, core::hash<ResourceID>>;
+        using resource_unordered_map = core::unordered_map<FrameGraphResourceID, FrameGraphResource*, core::hash<FrameGraphResourceID>>;
         resource_unordered_map		m_resources;
 
 		core::vector<UserPassInfo>	m_userPassInfo;
@@ -241,14 +92,14 @@ namespace vg::gfx
 
         struct SharedTexture
         {
-            TextureResourceDesc desc;
+            FrameGraphTextureResourceDesc desc;
             Texture * tex = nullptr;
             bool used = false;
         };
         core::vector<SharedTexture>     m_sharedTextures;
 
-		ResourceID                      m_outputResID;
-        TextureResource *               m_outputRes = nullptr;
+		FrameGraphResourceID            m_outputResID;
+        FrameGraphTextureResource *     m_outputRes = nullptr;
 		bool							m_resized = false;
 	};
 }

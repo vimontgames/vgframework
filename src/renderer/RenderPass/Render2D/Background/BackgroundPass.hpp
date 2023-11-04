@@ -40,24 +40,24 @@ namespace vg::renderer
 
         auto size = _renderContext.m_view->GetSize();
 
-        FrameGraph::TextureResourceDesc colorDesc;
+        FrameGraphTextureResourceDesc colorDesc;
                                         colorDesc.format = PixelFormat::R16G16B16A16_float;
                                         colorDesc.width = size.x;
                                         colorDesc.height = size.y;
                                         colorDesc.clearColor = float4(0, 0, 0, 0);
-                                        colorDesc.initState = FrameGraph::Resource::InitState::Clear;
+                                        colorDesc.initState = FrameGraphResource::InitState::Clear;
 
         const auto colorID = _renderContext.getFrameGraphID("Color");
         createRenderTarget(colorID, colorDesc);
         writeRenderTarget(0, colorID);
 
-        FrameGraph::TextureResourceDesc depthStencilDesc;
-                                        depthStencilDesc.format = PixelFormat::D32S8;
-                                        depthStencilDesc.width = size.x;
-                                        depthStencilDesc.height = size.y;
-                                        depthStencilDesc.clearDepth = 1.0f;
-                                        depthStencilDesc.clearStencil = 0x0;
-                                        depthStencilDesc.initState = FrameGraph::Resource::InitState::Clear;
+        FrameGraphTextureResourceDesc depthStencilDesc;
+                                      depthStencilDesc.format = PixelFormat::D32S8;
+                                      depthStencilDesc.width = size.x;
+                                      depthStencilDesc.height = size.y;
+                                      depthStencilDesc.clearDepth = 1.0f;
+                                      depthStencilDesc.clearStencil = 0x0;
+                                      depthStencilDesc.initState = FrameGraphResource::InitState::Clear;
 
         const auto depthStencilID = _renderContext.getFrameGraphID("DepthStencil");
         createRenderTarget(depthStencilID, depthStencilDesc);

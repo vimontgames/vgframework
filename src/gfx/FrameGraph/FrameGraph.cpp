@@ -11,152 +11,13 @@
 
 using namespace vg::core;
 
+#include "FrameGraphResource.hpp"
 #include "RenderPass.hpp"
 #include "SubPass.hpp"
 #include "UserPass.hpp"
 
 namespace vg::gfx
 {
-	//--------------------------------------------------------------------------------------
-	// FrameGraph::Resource
-	//--------------------------------------------------------------------------------------
-	FrameGraph::Resource::Resource()
-	{
-
-	}
-
-	//--------------------------------------------------------------------------------------
-	void FrameGraph::Resource::setType(Resource::Type _type)
-	{
-		m_type = _type;
-	}
-
-	//--------------------------------------------------------------------------------------
-	FrameGraph::Resource::Type FrameGraph::Resource::getType() const
-	{ 
-		return m_type; 
-	}
-
-    //--------------------------------------------------------------------------------------
-    void FrameGraph::Resource::setName(const core::string & _name)
-    {
-        m_name = _name;
-    }
-
-    //--------------------------------------------------------------------------------------
-    const core::string & FrameGraph::Resource::getName() const
-    {
-        return m_name;
-    }
-
-	//--------------------------------------------------------------------------------------
-	void FrameGraph::Resource::setReadAtPass(const UserPass * _subPass)
-	{
-		m_read.push_back(_subPass);
-        m_readWrite.push_back(PassRWAccess(_subPass, RWFlags::Read));
-	}
-
-	//--------------------------------------------------------------------------------------
-	const core::vector<const UserPass*> & FrameGraph::Resource::getReadAtPass() const
-	{
-		return m_read;
-	}
-
-	//--------------------------------------------------------------------------------------
-	void FrameGraph::Resource::setWriteAtPass(const UserPass * _subPass)
-	{
-		m_write.push_back(_subPass);
-        m_readWrite.push_back(PassRWAccess(_subPass, RWFlags::Write));
-	}
-
-    //--------------------------------------------------------------------------------------
-    void FrameGraph::Resource::setReadWriteAtPass(const UserPass * _subPass)
-    {
-        m_read.push_back(_subPass);
-        m_write.push_back(_subPass);
-        m_readWrite.push_back(PassRWAccess(_subPass, RWFlags::Read | RWFlags::Write));
-    }
-
-	//--------------------------------------------------------------------------------------
-	const core::vector<const UserPass*> & FrameGraph::Resource::getWriteAtPass() const
-	{
-		return m_write;
-	}
-
-    //--------------------------------------------------------------------------------------
-    const core::vector<FrameGraph::Resource::PassRWAccess> & FrameGraph::Resource::getReadWriteAccess() const
-    {
-        return m_readWrite;
-    }
-
-    //--------------------------------------------------------------------------------------
-    void FrameGraph::Resource::setCurrentState(ResourceState _state)
-    {
-        m_state = _state;
-    }
-
-    //--------------------------------------------------------------------------------------
-    ResourceState FrameGraph::Resource::getCurrentState() const
-    {
-        return m_state;
-    }
-
-	//--------------------------------------------------------------------------------------
-	// FrameGraph::TextureResource
-	//--------------------------------------------------------------------------------------
-	void FrameGraph::TextureResource::setTextureResourceDesc(const FrameGraph::TextureResourceDesc & _texResDesc)
-	{
-		m_desc = _texResDesc;
-	}
-
-    //--------------------------------------------------------------------------------------
-    void FrameGraph::TextureResource::setTexture(Texture * _tex)
-    {
-        VG_ASSERT(nullptr == m_texture, "Resource \"%s\" already has a texture", getName().c_str());
-        m_texture = _tex;
-    }
-
-    //--------------------------------------------------------------------------------------
-    void FrameGraph::TextureResource::resetTexture()
-    {
-        VG_ASSERT(m_desc.transient);
-        m_texture = nullptr;
-    }
-
-    //--------------------------------------------------------------------------------------
-    const FrameGraph::TextureResourceDesc & FrameGraph::TextureResource::getTextureResourceDesc() const
-    {
-        return m_desc;
-    }
-    
-	//--------------------------------------------------------------------------------------
-	Texture * FrameGraph::TextureResource::getTexture() const
-	{
-		VG_ASSERT(nullptr != m_texture, "Resource \"%s\" has not texture", getName().c_str());
-		return m_texture;
-	}
-
-	//--------------------------------------------------------------------------------------
-	// FrameGraph::BufferResource
-	//--------------------------------------------------------------------------------------
-	void FrameGraph::BufferResource::setBufferResourceDesc(const FrameGraph::BufferResourceDesc & _bufResDesc, Buffer * _buffer)
-	{
-		m_desc = _bufResDesc;
-        m_buffer = _buffer;
-	}
-
-    //--------------------------------------------------------------------------------------
-    const FrameGraph::BufferResourceDesc & FrameGraph::BufferResource::getBufferResourceDesc() const
-    {
-        return m_desc;
-    }
-
-    //--------------------------------------------------------------------------------------
-    Buffer * FrameGraph::BufferResource::getBuffer() const
-    {
-        return m_buffer;
-    }
-
 	//--------------------------------------------------------------------------------------
 	// FrameGraph
 	//--------------------------------------------------------------------------------------
@@ -205,25 +66,25 @@ namespace vg::gfx
 	}
 
 	//--------------------------------------------------------------------------------------
-	void FrameGraph::importRenderTarget(const ResourceID & _resID, Texture * _tex, float4 _clearColor, FrameGraph::Resource::InitState _initState)
+	void FrameGraph::importRenderTarget(const FrameGraphResourceID & _resID, Texture * _tex, float4 _clearColor, FrameGraphResource::InitState _initState)
 	{
         const TextureDesc & texDesc = _tex->getTexDesc(); 
 
-        FrameGraph::TextureResourceDesc desc;
+        FrameGraphTextureResourceDesc desc;
                                         desc.width = texDesc.width;
                                         desc.height = texDesc.height;
                                         desc.format = texDesc.format;
                                         desc.clearColor = _clearColor;
                                         desc.initState = _initState;
 
-		TextureResource * res = addTextureResource(_resID, desc, _tex);
+		FrameGraphTextureResource * res = addTextureResource(_resID, desc, _tex);
         VG_ASSERT(res);
 	}
 
     //--------------------------------------------------------------------------------------
-    FrameGraph::TextureResource * FrameGraph::addTextureResource(const ResourceID & _resID, const TextureResourceDesc & _texResDesc, Texture * _tex)
+    FrameGraphTextureResource * FrameGraph::addTextureResource(const FrameGraphResourceID & _resID, const FrameGraphTextureResourceDesc & _texResDesc, Texture * _tex)
     {
-        TextureResource * texRes = getResource<TextureResource>(Resource::Type::Texture, _resID, false);
+        FrameGraphTextureResource * texRes = getResource<FrameGraphTextureResource>(FrameGraphResource::Type::Texture, _resID, false);
         if (texRes)
         {
             texRes->setTextureResourceDesc(_texResDesc);
@@ -233,28 +94,28 @@ namespace vg::gfx
     }
 
     //--------------------------------------------------------------------------------------
-    FrameGraph::BufferResource * FrameGraph::addBufferResource(const ResourceID & _resID, const BufferResourceDesc & _bufResDesc, Buffer * _buf)
+    FrameGraphBufferResource * FrameGraph::addBufferResource(const FrameGraphResourceID & _resID, const FrameGraphBufferResourceDesc & _bufResDesc, Buffer * _buf)
     {
-        BufferResource * bufRes = getResource<BufferResource>(Resource::Type::Buffer, _resID, false);
+        FrameGraphBufferResource * bufRes = getResource<FrameGraphBufferResource>(FrameGraphResource::Type::Buffer, _resID, false);
         if (bufRes)
             bufRes->setBufferResourceDesc(_bufResDesc, _buf);
         return bufRes;
     }
 
     //--------------------------------------------------------------------------------------
-    FrameGraph::TextureResource * FrameGraph::getTextureResource(const ResourceID & _resID) const
+    FrameGraphTextureResource * FrameGraph::getTextureResource(const FrameGraphResourceID & _resID) const
     {
-        return const_cast<FrameGraph*>(this)->getResource<TextureResource>(Resource::Type::Texture, _resID, true);
+        return const_cast<FrameGraph*>(this)->getResource<FrameGraphTextureResource>(FrameGraphResource::Type::Texture, _resID, true);
     }
 
     //--------------------------------------------------------------------------------------
-    FrameGraph::BufferResource * FrameGraph::getBufferResource(const ResourceID & _resID) const
+    FrameGraphBufferResource * FrameGraph::getBufferResource(const FrameGraphResourceID & _resID) const
     {
-        return const_cast<FrameGraph*>(this)->getResource<BufferResource>(Resource::Type::Buffer, _resID, true);
+        return const_cast<FrameGraph*>(this)->getResource<FrameGraphBufferResource>(FrameGraphResource::Type::Buffer, _resID, true);
     }
 
     //--------------------------------------------------------------------------------------
-    template <class T> T * FrameGraph::getResource(Resource::Type _type, const ResourceID & _resID, bool _mustExist)
+    template <class T> T * FrameGraph::getResource(FrameGraphResource::Type _type, const FrameGraphResourceID & _resID, bool _mustExist)
     {
         auto it = m_resources.find(_resID);
         if (m_resources.end() == it)
@@ -281,7 +142,7 @@ namespace vg::gfx
     }
 
 	//--------------------------------------------------------------------------------------
-	void FrameGraph::setGraphOutput(const ResourceID & _destTexResID)
+	void FrameGraph::setGraphOutput(const FrameGraphResourceID & _destTexResID)
 	{
 		m_outputResID = _destTexResID;	
         m_outputRes = getTextureResource(m_outputResID);
@@ -299,7 +160,7 @@ namespace vg::gfx
 		//for (auto * subPass : m_userPassStack)
 		//{
         //    // in
-        //    for (FrameGraph::TextureResource * tex : subPass->m_textures)
+        //    for (FrameGraphTextureResource * tex : subPass->m_textures)
         //    {
         //        const auto & desc = tex->getTextureResourceDesc();
         //        if (desc.transient)
@@ -317,7 +178,7 @@ namespace vg::gfx
         //    }
         //
         //    // out
-        //    for (FrameGraph::TextureResource * renderTarget : subPass->m_renderTarget)
+        //    for (FrameGraphTextureResource * renderTarget : subPass->m_renderTarget)
         //    {
         //        const auto & desc = renderTarget->getTextureResourceDesc();
         //        if (desc.transient)
@@ -337,7 +198,7 @@ namespace vg::gfx
 	}
 
     //--------------------------------------------------------------------------------------
-    bool FrameGraph::addUserPass(const RenderPassContext & _renderContext, UserPass * _userPass, const UserPassID & _renderPassID)
+    bool FrameGraph::addUserPass(const RenderPassContext & _renderContext, UserPass * _userPass, const FrameGraphUserPassID & _renderPassID)
     {
         VG_ASSERT(nullptr != _userPass, "Adding NULL UserPass to FrameGraph");
 
@@ -369,7 +230,7 @@ namespace vg::gfx
     //--------------------------------------------------------------------------------------
     // Return 'true' if the pass needs to transition resource to writable state
     //--------------------------------------------------------------------------------------
-    bool needsWriteAtPass(const FrameGraph::TextureResource * _resource, const UserPass * _userPass, bool & _firstWrite, bool & _lastWrite, bool & _nextPassNeedsRead)
+    bool needsWriteAtPass(const FrameGraphTextureResource * _resource, const UserPass * _userPass, bool & _firstWrite, bool & _lastWrite, bool & _nextPassNeedsRead)
     {
         const auto & readWrites = _resource->getReadWriteAccess();
 
@@ -381,7 +242,7 @@ namespace vg::gfx
 
         for (uint i = 0; i < readWrites.size(); ++i)
         {
-            const FrameGraph::Resource::PassRWAccess & readWrite = readWrites[i];
+            const FrameGraphResource::PassRWAccess & readWrite = readWrites[i];
 
             if (asBool(RWFlags::Write & readWrite.m_rwAccess))
             {
@@ -406,7 +267,7 @@ namespace vg::gfx
         {
             for (uint i = 0; i < readWrites.size(); ++i)
             {
-                const FrameGraph::Resource::PassRWAccess & readWrite = readWrites[i];
+                const FrameGraphResource::PassRWAccess & readWrite = readWrites[i];
                 if (_userPass == readWrite.m_userPass)
                 {
                     _firstWrite = (i == first);
@@ -417,7 +278,7 @@ namespace vg::gfx
 
             if (thisWritePassIndex + 1 < readWrites.size())
             {
-                const FrameGraph::Resource::PassRWAccess & readWrite = readWrites[thisWritePassIndex + 1];
+                const FrameGraphResource::PassRWAccess & readWrite = readWrites[thisWritePassIndex + 1];
                 if (asBool(RWFlags::Read & readWrite.m_rwAccess))
                     _nextPassNeedsRead = true;
             }
@@ -473,7 +334,7 @@ namespace vg::gfx
 		{
             const auto * userPass = userPassInfo.m_userPass;
 
-            core::vector<TextureResource*> colorAttachments;
+            core::vector<FrameGraphTextureResource *> colorAttachments;
 
             RenderPassKey renderPassKey;
                           renderPassKey.m_subPassCount = 1;
@@ -486,8 +347,8 @@ namespace vg::gfx
                 auto & rwTextures = userPass->getRWTextures();
                 for (uint i = 0; i < rwTextures.size(); ++i)
                 {
-                    TextureResource * res = rwTextures[i];
-                    const TextureResourceDesc & textureResourceDesc = res->getTextureResourceDesc();
+                    FrameGraphTextureResource * res = rwTextures[i];
+                    const FrameGraphTextureResourceDesc & textureResourceDesc = res->getTextureResourceDesc();
 
                     bool firstWrite, lastWrite, nextPassNeedsRead;
                     bool write = needsWriteAtPass(res, userPass, firstWrite, lastWrite, nextPassNeedsRead);
@@ -523,8 +384,8 @@ namespace vg::gfx
                 auto & renderTargets = userPass->getRenderTargets();
 				for (uint i = 0; i < renderTargets.size(); ++i)
 				{
-                    TextureResource * res = renderTargets[i];
-                    const TextureResourceDesc & textureResourceDesc = res->getTextureResourceDesc();
+                    FrameGraphTextureResource * res = renderTargets[i];
+                    const FrameGraphTextureResourceDesc & textureResourceDesc = res->getTextureResourceDesc();
 
                     renderPassKey.m_colorFormat[i] = textureResourceDesc.format;
 
@@ -624,13 +485,13 @@ namespace vg::gfx
                 //}
 			}
 
-            TextureResource * depthStencilAttachment = nullptr;
-            FrameGraph::TextureResource * depthStencilRes = userPass->getDepthStencil();
+            FrameGraphTextureResource * depthStencilAttachment = nullptr;
+            FrameGraphTextureResource * depthStencilRes = userPass->getDepthStencil();
             if (depthStencilRes)
             {
-                TextureResource * res = userPass->getDepthStencil();
+                FrameGraphTextureResource * res = userPass->getDepthStencil();
 
-                const TextureResourceDesc & textureResourceDesc = res->getTextureResourceDesc();
+                const FrameGraphTextureResourceDesc & textureResourceDesc = res->getTextureResourceDesc();
 
                 renderPassKey.m_depthStencilFormat = textureResourceDesc.format;
 
@@ -695,25 +556,25 @@ namespace vg::gfx
 	}
 
     //--------------------------------------------------------------------------------------
-    Texture * FrameGraph::createRenderTargetFromPool(const FrameGraph::TextureResourceDesc & _textureResourceDesc)
+    Texture * FrameGraph::createRenderTargetFromPool(const FrameGraphTextureResourceDesc & _textureResourceDesc)
     {
         return createTextureFromPool(_textureResourceDesc, false, false);
     }
 
     //--------------------------------------------------------------------------------------
-    Texture * FrameGraph::createDepthStencilFromPool(const FrameGraph::TextureResourceDesc & _textureResourceDesc)
+    Texture * FrameGraph::createDepthStencilFromPool(const FrameGraphTextureResourceDesc & _textureResourceDesc)
     {
         return createTextureFromPool(_textureResourceDesc, true, false);
     }
 
     //--------------------------------------------------------------------------------------
-    Texture * FrameGraph::createRWTextureFromPool(const TextureResourceDesc & _textureResourceDesc)
+    Texture * FrameGraph::createRWTextureFromPool(const FrameGraphTextureResourceDesc & _textureResourceDesc)
     {
         return createTextureFromPool(_textureResourceDesc, false, true);
     }
 
     //--------------------------------------------------------------------------------------
-    Texture * FrameGraph::createTextureFromPool(const FrameGraph::TextureResourceDesc & _textureResourceDesc, bool _depthStencil, bool _uav)
+    Texture * FrameGraph::createTextureFromPool(const FrameGraphTextureResourceDesc & _textureResourceDesc, bool _depthStencil, bool _uav)
     {
         for (uint i = 0; i < m_sharedTextures.size(); ++i)
         {
@@ -819,8 +680,8 @@ namespace vg::gfx
 
                 for (uint i = 0; i < renderTargets.size(); ++i)
                 {
-                    TextureResource * res = renderTargets[i];
-                    const TextureResourceDesc & textureResourceDesc = res->getTextureResourceDesc();
+                    FrameGraphTextureResource * res = renderTargets[i];
+                    const FrameGraphTextureResourceDesc & textureResourceDesc = res->getTextureResourceDesc();
 
                     if (textureResourceDesc.transient)
                     {
@@ -835,8 +696,8 @@ namespace vg::gfx
 
                 for (uint i = 0; i < rwTextures.size(); ++i)
                 {
-                    TextureResource * res = rwTextures[i];
-                    const TextureResourceDesc & textureResourceDesc = res->getTextureResourceDesc();
+                    FrameGraphTextureResource * res = rwTextures[i];
+                    const FrameGraphTextureResourceDesc & textureResourceDesc = res->getTextureResourceDesc();
 
                     if (textureResourceDesc.transient)
                     {
@@ -849,11 +710,11 @@ namespace vg::gfx
                     }
                 }
 
-                TextureResource * depthStencil = userPass->getDepthStencil();
+                FrameGraphTextureResource * depthStencil = userPass->getDepthStencil();
                 if (depthStencil)
                 {
-                    TextureResource * res = depthStencil;
-                    const TextureResourceDesc & textureResourceDesc = res->getTextureResourceDesc();
+                    FrameGraphTextureResource * res = depthStencil;
+                    const FrameGraphTextureResourceDesc & textureResourceDesc = res->getTextureResourceDesc();
 
                     if (textureResourceDesc.transient)
                     {
@@ -907,8 +768,8 @@ namespace vg::gfx
 
                 for (uint i = 0; i < texturesRead.size(); ++i)
                 {
-                    TextureResource * res = texturesRead[i];
-                    const TextureResourceDesc & textureResourceDesc = res->getTextureResourceDesc();
+                    FrameGraphTextureResource * res = texturesRead[i];
+                    const FrameGraphTextureResourceDesc & textureResourceDesc = res->getTextureResourceDesc();
 
                     if (textureResourceDesc.transient)
                     {
@@ -924,11 +785,11 @@ namespace vg::gfx
                     }
                 }
 
-                TextureResource * depthStencil = userPass->getDepthStencil();
+                FrameGraphTextureResource * depthStencil = userPass->getDepthStencil();
                 if (depthStencil)
                 {
-                    TextureResource * res = depthStencil;
-                    const TextureResourceDesc & textureResourceDesc = res->getTextureResourceDesc();
+                    FrameGraphTextureResource * res = depthStencil;
+                    const FrameGraphTextureResourceDesc & textureResourceDesc = res->getTextureResourceDesc();
 
                     if (textureResourceDesc.transient)
                     {
@@ -948,8 +809,8 @@ namespace vg::gfx
 
                 for (uint i = 0; i < rwTextures.size(); ++i)
                 {
-                    TextureResource * res = rwTextures[i];
-                    const TextureResourceDesc & textureResourceDesc = res->getTextureResourceDesc();
+                    FrameGraphTextureResource * res = rwTextures[i];
+                    const FrameGraphTextureResourceDesc & textureResourceDesc = res->getTextureResourceDesc();
 
                     if (textureResourceDesc.transient)
                     {

@@ -281,7 +281,7 @@ namespace vg::gfx::vulkan
         {
             core::vector<VkImageView> vkImageViews;
 
-            for (const FrameGraph::TextureResource * res : m_colorAttachments)
+            for (const FrameGraphTextureResource * res : m_colorAttachments)
                 vkImageViews.push_back(res->getTexture()->getVulkanImageView());
 
             if (m_depthStencilAttachment)

@@ -21,8 +21,8 @@ namespace vg::gfx
             void addSubPass(gfx::SubPass * _subPass);
             const core::vector<gfx::SubPass*> & getSubPasses() const;
 
-			const core::vector<FrameGraph::TextureResource *> & getColorAttachments() const;
-			const FrameGraph::TextureResource * getDepthStencilAttachment() const;
+			const core::vector<FrameGraphTextureResource *> & getColorAttachments() const;
+			const FrameGraphTextureResource * getDepthStencilAttachment() const;
 
             const RenderPassKey & getRenderPassKey() const { return m_renderPassKey; }
 			
@@ -30,8 +30,8 @@ namespace vg::gfx
 			const RenderPassType						m_renderPassType;
             const RenderPassKey							m_renderPassKey;
 			core::vector<gfx::SubPass *>		        m_subPasses;
-			core::vector<FrameGraph::TextureResource *> m_colorAttachments;
-            FrameGraph::TextureResource *               m_depthStencilAttachment;
+			core::vector<FrameGraphTextureResource *> m_colorAttachments;
+            FrameGraphTextureResource *               m_depthStencilAttachment;
 		};
 	}
 }

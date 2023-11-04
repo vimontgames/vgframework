@@ -297,7 +297,7 @@ namespace vg::renderer
             {
                 VG_PROFILE_CPU("Framegraph");
 
-                m_frameGraph.importRenderTarget("Backbuffer", m_device.getBackbuffer(), float4(0,0,0,0), FrameGraph::Resource::InitState::Clear);
+                m_frameGraph.importRenderTarget("Backbuffer", m_device.getBackbuffer(), float4(0,0,0,0), FrameGraphResource::InitState::Clear);
                 m_frameGraph.setGraphOutput("Backbuffer");
 
                 for (uint j = 0; j < core::enumCount<gfx::ViewTarget>(); ++j)
