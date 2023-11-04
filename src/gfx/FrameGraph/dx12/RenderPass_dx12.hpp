@@ -26,8 +26,8 @@ namespace vg::gfx::dx12
 
             for (uint i = 0; i < m_colorAttachments.size(); ++i)
             {
-                const SubPassKey::AttachmentInfo & info = subPassKey.getColorAttachmentInfo(i);
-                if (asBool(SubPassKey::AttachmentFlags::RenderTarget & info.flags))
+                const ResourceTransitionDesc & info = subPassKey.getColorAttachmentInfo(i);
+                if (asBool(ResourceTransitionFlags::RenderTarget & info.flags))
                 {
                     const FrameGraph::TextureResource * res = subPass->getUserPassesInfos()[0].m_userPass->getRenderTargets()[subPass->m_renderTargetCount]; // Assume subPass attachment order is the same as renderPass order and that we create different subPasses when attachment changes
                     const FrameGraph::TextureResourceDesc & resourceDesc = res->getTextureResourceDesc();
@@ -40,9 +40,9 @@ namespace vg::gfx::dx12
 
                     if (1)
                     {
-                        if (asBool(SubPassKey::AttachmentFlags::Clear & info.flags))
+                        if (asBool(ResourceTransitionFlags::Clear & info.flags))
                             renderTargetDesc.BeginningAccess.Type = D3D12_RENDER_PASS_BEGINNING_ACCESS_TYPE_CLEAR;
-                        else if (asBool(SubPassKey::AttachmentFlags::Preserve & info.flags))
+                        else if (asBool(ResourceTransitionFlags::Preserve & info.flags))
                             renderTargetDesc.BeginningAccess.Type = D3D12_RENDER_PASS_BEGINNING_ACCESS_TYPE_PRESERVE;
                         else
                             renderTargetDesc.BeginningAccess.Type = D3D12_RENDER_PASS_BEGINNING_ACCESS_TYPE_DISCARD;
@@ -61,8 +61,8 @@ namespace vg::gfx::dx12
 
             if (m_depthStencilAttachment)
             {
-                const SubPassKey::AttachmentInfo & info = subPassKey.getDepthStencilAttachmentInfo();
-                if (asBool(SubPassKey::AttachmentFlags::RenderTarget & info.flags))
+                const ResourceTransitionDesc & info = subPassKey.getDepthStencilAttachmentInfo();
+                if (asBool(ResourceTransitionFlags::RenderTarget & info.flags))
                 {
                     const FrameGraph::TextureResource * res = subPass->getUserPassesInfos()[0].m_userPass->getDepthStencil();
                     const FrameGraph::TextureResourceDesc & resourceDesc = res->getTextureResourceDesc();
@@ -71,12 +71,12 @@ namespace vg::gfx::dx12
 
                     if (1)
                     {
-                        if (asBool(SubPassKey::AttachmentFlags::Clear & info.flags))
+                        if (asBool(ResourceTransitionFlags::Clear & info.flags))
                         {
                             depthStencilDesc.DepthBeginningAccess.Type = D3D12_RENDER_PASS_BEGINNING_ACCESS_TYPE_CLEAR;
                             depthStencilDesc.StencilBeginningAccess.Type = D3D12_RENDER_PASS_BEGINNING_ACCESS_TYPE_CLEAR;
                         }
-                        else if (asBool(SubPassKey::AttachmentFlags::Preserve & info.flags))
+                        else if (asBool(ResourceTransitionFlags::Preserve & info.flags))
                         {
                             depthStencilDesc.DepthBeginningAccess.Type = D3D12_RENDER_PASS_BEGINNING_ACCESS_TYPE_PRESERVE;
                             depthStencilDesc.StencilBeginningAccess.Type = D3D12_RENDER_PASS_BEGINNING_ACCESS_TYPE_PRESERVE;

@@ -84,7 +84,7 @@ namespace vg::gfx
             {
                 const auto & info = key.getColorAttachmentInfo(i);
 
-                if (asBool(info.flags & SubPassKey::AttachmentFlags::RenderTarget))
+                if (asBool(info.flags & ResourceTransitionFlags::RenderTarget))
                 {
                     const Texture * tex = m_renderPass->m_colorAttachments[i]->getTexture();
                     auto & desc = tex->getTexDesc();
@@ -98,7 +98,7 @@ namespace vg::gfx
             }
 
             const auto & info = key.getDepthStencilAttachmentInfo();
-            if (asBool(info.flags & SubPassKey::AttachmentFlags::RenderTarget))
+            if (asBool(info.flags & ResourceTransitionFlags::RenderTarget))
             {
                 const Texture * tex = m_renderPass->getDepthStencilAttachment()->getTexture();
                 auto & desc = tex->getTexDesc();

@@ -366,6 +366,66 @@ namespace vg::gfx
 		}
 	}
 
+    //--------------------------------------------------------------------------------------
+    // Return 'true' if the pass needs to transition resource to writable state
+    //--------------------------------------------------------------------------------------
+    bool needsWriteAtPass(const FrameGraph::TextureResource * _resource, const UserPass * _userPass, bool & _firstWrite, bool & _lastWrite, bool & _nextPassNeedsRead)
+    {
+        const auto & readWrites = _resource->getReadWriteAccess();
+
+        bool write = false;
+
+        int thisWritePassIndex = -1;
+        int first = -1;
+        int last = -1;
+
+        for (uint i = 0; i < readWrites.size(); ++i)
+        {
+            const FrameGraph::Resource::PassRWAccess & readWrite = readWrites[i];
+
+            if (asBool(RWFlags::Write & readWrite.m_rwAccess))
+            {
+                if (-1 == first)
+                    first = i;
+
+                last = i;
+
+                if (_userPass == readWrite.m_userPass)
+                {
+                    write = true;
+                    thisWritePassIndex = i;
+                }
+            }
+        }
+
+        _firstWrite = false;
+        _lastWrite = false;
+        _nextPassNeedsRead = false;
+
+        if (write)
+        {
+            for (uint i = 0; i < readWrites.size(); ++i)
+            {
+                const FrameGraph::Resource::PassRWAccess & readWrite = readWrites[i];
+                if (_userPass == readWrite.m_userPass)
+                {
+                    _firstWrite = (i == first);
+                    _lastWrite = (i == last);
+                    break;
+                }
+            }
+
+            if (thisWritePassIndex + 1 < readWrites.size())
+            {
+                const FrameGraph::Resource::PassRWAccess & readWrite = readWrites[thisWritePassIndex + 1];
+                if (asBool(RWFlags::Read & readWrite.m_rwAccess))
+                    _nextPassNeedsRead = true;
+            }
+        }
+
+        return write;
+    }
+
 	//--------------------------------------------------------------------------------------
 	void FrameGraph::build()
 	{
@@ -417,31 +477,48 @@ namespace vg::gfx
 
             RenderPassKey renderPassKey;
                           renderPassKey.m_subPassCount = 1;
+
+            vector<ResourceTransitionDesc> manualResourceTransitions;
 			
 			// build all list with attachments from all passes
 			// for (...)
 			{
-                //auto & rwTextures = userPass->getRWTextures();
-                //for (uint i = 0; i < rwTextures.size(); ++i)
-                //{
-                //    TextureResource * res = rwTextures[i];
-                //    const TextureResourceDesc & textureResourceDesc = res->getTextureResourceDesc();
-                //
-                //    const auto & reads = res->getReadAtPass();
-                //    const bool firstRead = reads.size() > 0 && reads[0] == userPass;
-                //    const bool lastRead = reads.size() > 0 && reads[reads.size() - 1] == userPass;
-                //
-                //    const auto & writes = res->getWriteAtPass();
-                //    const bool firstWrite = writes.size() > 0 && writes[0] == userPass;
-                //    const bool lastWrite = writes.size() > 0 && writes[writes.size() - 1] == userPass;
-                //
-                //    // last pass writing UAV? (What if UAV is written/read several times?)
-                //    if (lastWrite)
-                //    {
-                //        ResourceState end = ResourceState::ShaderResource;
-                //        res->setCurrentState(end);
-                //    }
-                //}
+                auto & rwTextures = userPass->getRWTextures();
+                for (uint i = 0; i < rwTextures.size(); ++i)
+                {
+                    TextureResource * res = rwTextures[i];
+                    const TextureResourceDesc & textureResourceDesc = res->getTextureResourceDesc();
+
+                    bool firstWrite, lastWrite, nextPassNeedsRead;
+                    bool write = needsWriteAtPass(res, userPass, firstWrite, lastWrite, nextPassNeedsRead);
+
+                    // RWTextures start in "RW" state
+                    if (nextPassNeedsRead)
+                    {
+                        // UAV needs write in the next pass, mimic the RenderTarget behaviour and resolve to shader resource
+                        ResourceTransitionDesc trans;
+                        trans.flags = ResourceTransitionFlags::Preserve;
+                        trans.begin = ResourceState::UnorderedAccess;
+                        trans.end = ResourceState::ShaderResource;
+
+                        manualResourceTransitions.push_back(trans);
+                    }
+                
+                    //const auto & reads = res->getReadAtPass();
+                    //const bool firstRead = reads.size() > 0 && reads[0] == userPass;
+                    //const bool lastRead = reads.size() > 0 && reads[reads.size() - 1] == userPass;
+                    //
+                    //const auto & writes = res->getWriteAtPass();
+                    //const bool firstWrite = writes.size() > 0 && writes[0] == userPass;
+                    //const bool lastWrite = writes.size() > 0 && writes[writes.size() - 1] == userPass;
+                    //
+                    //// last pass writing UAV? (What if UAV is written/read several times?)
+                    //if (lastWrite)
+                    //{
+                    //    ResourceState end = ResourceState::ShaderResource;
+                    //    res->setCurrentState(end);
+                    //}
+                }
 
                 auto & renderTargets = userPass->getRenderTargets();
 				for (uint i = 0; i < renderTargets.size(); ++i)
@@ -467,56 +544,61 @@ namespace vg::gfx
                         attachmentIndex = uint(colorAttachments.size() - 1);
                     }
 
-                    SubPassKey::AttachmentFlags flags = SubPassKey::AttachmentFlags::RenderTarget;
+                    ResourceTransitionFlags flags = ResourceTransitionFlags::RenderTarget;
 
-                    ResourceState begin = res->getCurrentState();;
+                    ResourceState begin = res->getCurrentState();
                     ResourceState end = ResourceState::RenderTarget;
-                    
-                    const auto & reads      = res->getReadAtPass();
-                    const bool firstRead    = reads.size() > 0 && reads[0] == userPass;
-                    const bool lastRead     = reads.size() > 0 && reads[reads.size() - 1] == userPass;
 
-                    const auto & writes     = res->getWriteAtPass();
-                    const bool firstWrite   = writes.size() > 0 && writes[0] == userPass;
-                    const bool lastWrite    = writes.size() > 0 && writes[writes.size() - 1] == userPass;
-
+                    bool firstWrite, lastWrite, nextPassNeedsRead;
+                    bool write = needsWriteAtPass(res, userPass, firstWrite, lastWrite, nextPassNeedsRead);
+                                        
                     const bool backbuffer = m_outputRes == res;
 
-                    // first pass writing to RT/backbuffer ?
-                    if (firstWrite)
+                    if (write)
                     {
-                        flags |= SubPassKey::AttachmentFlags::Clear;
-                    
-                        if (backbuffer)
-                            begin = ResourceState::Undefined;
+                        if (firstWrite)
+                        {
+                            if (backbuffer)
+                            {
+                                begin = ResourceState::Undefined;
+                            }
+                            else
+                            {
+                                #ifdef VG_DX12
+                                flags |= ResourceTransitionFlags::MakeWritable; // dx12-only, used to transition to 'RenderTarget' state before 1st use
+                                #endif
+
+                                #ifdef VG_VULKAN
+                                begin = ResourceState::Undefined; // Why not 'RenderTarget'? Because Vulkan.
+                                #elif defined(VG_DX12)
+                                begin = ResourceState::RenderTarget;
+                                #else
+                                VG_ASSERT_NOT_IMPLEMENTED();
+                                #endif
+                            }
+
+                            flags |= ResourceTransitionFlags::Clear;
+                        }
                         else
                         {
-                            #ifdef VG_DX12
-                            flags |= SubPassKey::AttachmentFlags::MakeWritable; // dx12-only, used to transition to 'RenderTarget' state before 1st use
-                            #endif
-
-                            #ifdef VG_VULKAN
-                            begin = ResourceState::Undefined; // Why not 'RenderTarget'? Because Vulkan.
-                            #elif defined(VG_DX12)
-                            begin = ResourceState::RenderTarget;
-                            #else
-                            VG_ASSERT_NOT_IMPLEMENTED();
-                            #endif
-                            }
+                            flags |= ResourceTransitionFlags::Preserve;
+                        }
                     }
                     else
-                        flags |= SubPassKey::AttachmentFlags::Preserve;
+                    {
+                        flags |= ResourceTransitionFlags::Preserve;
+                    }
 
-                    // last pass writing to backbuffer ?
+                    // This is not correct in case of Write/Read/Write sequence! We should detect a write (current pass) followed by a read to resolve
                     if (lastWrite)
                     {
                         if (backbuffer)
-                            flags |= SubPassKey::AttachmentFlags::Present;
+                            flags |= ResourceTransitionFlags::Present;
                         else
                             end = ResourceState::ShaderResource;
                     }
 
-                    SubPassKey::AttachmentInfo info;
+                    ResourceTransitionDesc info;
                                                info.flags = flags;
                                                info.begin = begin;
                                                info.end = end;
@@ -525,83 +607,84 @@ namespace vg::gfx
 
                     res->setCurrentState(info.end);
 				}
+
+                //auto & textures = userPass->getTextures();
+                //for (uint i = 0; i < textures.size(); ++i)
+                //{
+                //    TextureResource * res = textures[i];
+                //    const TextureResourceDesc & textureResourceDesc = res->getTextureResourceDesc();
+                //
+                //    bool firstRead, lastRead;
+                //    bool read = needsReadAtPass(res, userPass, firstRead, lastRead);
+                //
+                //    if (read)
+                //    {
+                //
+                //    }
+                //}
 			}
 
             TextureResource * depthStencilAttachment = nullptr;
             FrameGraph::TextureResource * depthStencilRes = userPass->getDepthStencil();
             if (depthStencilRes)
             {
-                //renderPassKey.m_depthStencilFormat = depthStencilRes->getTextureResourceDesc().format;
-                //renderPassKey.m_subPassKeys[0].setDepthStencilFlags(SubPassKey::Flags::RenderTarget);
-
                 TextureResource * res = userPass->getDepthStencil();
 
                 const TextureResourceDesc & textureResourceDesc = res->getTextureResourceDesc();
 
                 renderPassKey.m_depthStencilFormat = textureResourceDesc.format;
 
-                SubPassKey::AttachmentFlags flags = SubPassKey::AttachmentFlags::RenderTarget;
+                ResourceTransitionFlags flags = ResourceTransitionFlags::RenderTarget;
 
                 ResourceState begin = res->getCurrentState();;
                 ResourceState end = ResourceState::RenderTarget;
 
-                const auto & reads = res->getReadAtPass();
-                const bool firstRead = reads.size() > 0 && reads[0] == userPass;
-                const bool lastRead = reads.size() > 0 && reads[reads.size() - 1] == userPass;
-
                 const auto & writes = res->getWriteAtPass();
-                const bool firstWrite = writes.size() > 0 && writes[0] == userPass;
-                const bool lastWrite = writes.size() > 0 && writes[writes.size() - 1] == userPass;
 
-                 // first pass writing to RT ? 
-                    if (firstWrite)
-                        flags |= SubPassKey::AttachmentFlags::Clear;
-                    else 
-                        flags |= SubPassKey::AttachmentFlags::Preserve;
+                bool firstWrite, lastWrite, nextPassNeedsRead;
+                bool write = needsWriteAtPass(res, userPass, firstWrite, lastWrite, nextPassNeedsRead);
 
-                    // first pass writing to backbuffer ?
+                if (write)
+                {
+                    // Clear depthstencil on first write
                     if (firstWrite)
                     {
-                        flags |= SubPassKey::AttachmentFlags::Clear;
-                    
-                        //if (backbuffer)
-                        //    begin = ResourceState::Undefined;
-                        //else
-                            #ifdef VG_VULKAN
-                            begin = ResourceState::Undefined;
-                            #elif defined(VG_DX12)
-                            begin = ResourceState::RenderTarget;
-                            #else
-                            VG_ASSERT_NOT_IMPLEMENTED();
-                            #endif
+                        #ifdef VG_VULKAN
+                        begin = ResourceState::Undefined;
+                        #elif defined(VG_DX12)
+                        begin = ResourceState::RenderTarget;
+                        #endif
+
+                        flags |= ResourceTransitionFlags::Clear;
                     }
                     else
-                        flags |= SubPassKey::AttachmentFlags::Preserve;
+                    {
+                        flags |= ResourceTransitionFlags::Preserve;
+                    }                    
+                }
+                else
+                {
+                    // Use existing depthstencil content
+                    flags |= ResourceTransitionFlags::Preserve;
+                }
 
-                    // last pass writing to backbuffer ?
-                    //if (lastWrite)
-                    //{
-                    //    if (backbuffer)
-                    //        flags |= SubPassKey::AttachmentFlags::Present;
-                    //}
+                ResourceTransitionDesc info;
+                                           info.flags = flags;
+                                           info.begin = begin;
+                                           info.end = end;
 
-                    SubPassKey::AttachmentInfo info;
-                                               info.flags = flags;
-                                               info.begin = begin;
-                                               info.end = end;
+                renderPassKey.m_subPassKeys[0].setDepthStencilAttachmentInfo(info);
 
-                    renderPassKey.m_subPassKeys[0].setDepthStencilAttachmentInfo(info);
+                res->setCurrentState(info.end);
 
-                    res->setCurrentState(info.end);
-
-                    depthStencilAttachment = res;
+                depthStencilAttachment = res;
             }
 
             RenderPass * renderPass = new RenderPass(userPass->getUserPassType(), renderPassKey);
             renderPass->m_colorAttachments = std::move(colorAttachments); // transient resources will be lazy allocated before the actuel RenderPass begins
             renderPass->m_depthStencilAttachment = depthStencilAttachment;
 
-            SubPass * subPass = new SubPass();
+            SubPass * subPass = new SubPass(/*manualResourceTransitions*/);
 
 			subPass->addUserPassInfo(userPassInfo);
 			renderPass->addSubPass(subPass);
@@ -829,27 +912,11 @@ namespace vg::gfx
 
                     if (textureResourceDesc.transient)
                     {
-                        //const auto & reads = res->getReadAtPass();
-                        //const auto & writes = res->getWriteAtPass();
-                        //
-                        //if (reads.size() > 0 && reads[reads.size() - 1] == userPass)
-                        //{
-                        //    Texture * tex = res->getTexture();
-                        //    releaseTextureFromPool(tex);
-                        //    res->resetTexture();
-                        //}
-                        //else if (writes.size() > 0 && writes[writes.size() - 1] == userPass)
-                        //{
-                        //    Texture * tex = res->getTexture();
-                        //    releaseTextureFromPool(tex);
-                        //    res->resetTexture();
-                        //}
-
                         const auto & readWrites = res->getReadWriteAccess();
+                        const bool isLastReadOrWrite = readWrites.size() > 0 && readWrites[readWrites.size() - 1].m_userPass == userPass;
 
-                        if (readWrites.size() > 0 && readWrites[readWrites.size() - 1].m_userPass == userPass)
+                        if (isLastReadOrWrite)
                         {
-                            // Last read or writes access
                             Texture * tex = res->getTexture();
                             releaseTextureFromPool(tex);
                             res->resetTexture();
@@ -865,16 +932,10 @@ namespace vg::gfx
 
                     if (textureResourceDesc.transient)
                     {
-                        const auto & reads = res->getReadAtPass();
-                        const auto & writes = res->getWriteAtPass();
+                        const auto & readWrites = res->getReadWriteAccess();
+                        const bool isLastReadOrWrite = readWrites.size() > 0 && readWrites[readWrites.size() - 1].m_userPass == userPass;
 
-                        if (reads.size() > 0 && reads[reads.size() - 1] == userPass)
-                        {
-                            Texture * tex = res->getTexture();
-                            releaseTextureFromPool(tex);
-                            res->resetTexture();
-                        }
-                        else if (writes.size() > 0 && writes[writes.size() - 1] == userPass)
+                        if (isLastReadOrWrite)
                         {
                             Texture * tex = res->getTexture();
                             releaseTextureFromPool(tex);
@@ -892,27 +953,11 @@ namespace vg::gfx
 
                     if (textureResourceDesc.transient)
                     {
-                        //const auto & reads = res->getReadAtPass();
-                        //const auto & writes = res->getWriteAtPass();
-                        //
-                        //if (reads.size() > 0 && reads[reads.size() - 1] == userPass)
-                        //{
-                        //    Texture * tex = res->getTexture();
-                        //    releaseTextureFromPool(tex);
-                        //    res->resetTexture();
-                        //}
-                        //else if (writes.size() > 0 && writes[writes.size() - 1] == userPass)
-                        //{
-                        //    Texture * tex = res->getTexture();
-                        //    releaseTextureFromPool(tex);
-                        //    res->resetTexture();
-                        //}
-
                         const auto & readWrites = res->getReadWriteAccess();
+                        const bool isLastReadOrWrite = readWrites.size() > 0 && readWrites[readWrites.size() - 1].m_userPass == userPass;
 
-                        if (readWrites.size() > 0 && readWrites[readWrites.size() - 1].m_userPass == userPass)
+                        if (isLastReadOrWrite)
                         {
-                            // Last read or writes access
                             Texture * tex = res->getTexture();
                             releaseTextureFromPool(tex);
                             res->resetTexture();

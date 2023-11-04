@@ -32,7 +32,7 @@ namespace vg::gfx
 	public:
         const char * getClassName() const final { return "SubPass"; }
 
-		SubPass();
+		SubPass(/*const vector<AttachmentInfo> & _resourceTransitions*/);
 		~SubPass();
 	};
 }

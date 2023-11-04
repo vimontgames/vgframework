@@ -20,7 +20,7 @@ namespace vg::gfx::vulkan
 	}
 
     //--------------------------------------------------------------------------------------
-    bool RenderPass::createVulkanAttachmentDesc(PixelFormat _format, const SubPassKey::AttachmentInfo & _info, VkAttachmentDescription * _att)
+    bool RenderPass::createVulkanAttachmentDesc(PixelFormat _format, const ResourceTransitionDesc & _info, VkAttachmentDescription * _att)
     {
         if (PixelFormat::Unknow == _format)
             return false;
@@ -35,9 +35,9 @@ namespace vg::gfx::vulkan
         // TODO: RenderPassKey flags for initial/final state for each attachment
         _att->samples = VK_SAMPLE_COUNT_1_BIT;
 
-        if (asBool(SubPassKey::AttachmentFlags::Clear & _info.flags))
+        if (asBool(ResourceTransitionFlags::Clear & _info.flags))
             _att->loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
-        else if (asBool(SubPassKey::AttachmentFlags::Preserve & _info.flags))
+        else if (asBool(ResourceTransitionFlags::Preserve & _info.flags))
             _att->loadOp = VK_ATTACHMENT_LOAD_OP_LOAD;
         else
             _att->loadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
@@ -72,7 +72,7 @@ namespace vg::gfx::vulkan
                 break;
         }
 
-        if (asBool(_info.flags & SubPassKey::AttachmentFlags::Present))
+        if (asBool(_info.flags & ResourceTransitionFlags::Present))
             _att->finalLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
 
         _att->storeOp = VK_ATTACHMENT_STORE_OP_STORE;
@@ -93,7 +93,7 @@ namespace vg::gfx::vulkan
 
         for (uint i = 0; i < maxRenderTarget; ++i)
         {
-            const SubPassKey::AttachmentInfo & info = subPassKey.getColorAttachmentInfo(i);
+            const ResourceTransitionDesc & info = subPassKey.getColorAttachmentInfo(i);
             const PixelFormat format = _key.m_colorFormat[i];
             
             VkAttachmentDescription att;
@@ -103,7 +103,7 @@ namespace vg::gfx::vulkan
         }
 
         // depthstencil
-        const SubPassKey::AttachmentInfo & info = subPassKey.getDepthStencilAttachmentInfo();
+        const ResourceTransitionDesc & info = subPassKey.getDepthStencilAttachmentInfo();
         const PixelFormat format = _key.m_depthStencilFormat;
 
         VkAttachmentDescription att;
@@ -132,9 +132,9 @@ namespace vg::gfx::vulkan
             
             for (uint j = 0; j < maxRenderTarget; ++j) // maxRenderTarget == maxAttachment per subPass ?
             {
-                const SubPassKey::AttachmentInfo & info = subPassKey.getColorAttachmentInfo(j);
+                const ResourceTransitionDesc & info = subPassKey.getColorAttachmentInfo(j);
 
-                if (asBool(SubPassKey::AttachmentFlags::RenderTarget & info.flags))
+                if (asBool(ResourceTransitionFlags::RenderTarget & info.flags))
                 {
                     const PixelFormat format = _key.m_colorFormat[i];
 
@@ -148,8 +148,8 @@ namespace vg::gfx::vulkan
                 }
             }
 
-            const SubPassKey::AttachmentInfo & info = subPassKey.getDepthStencilAttachmentInfo();
-            if (asBool(SubPassKey::AttachmentFlags::RenderTarget & info.flags))
+            const ResourceTransitionDesc & info = subPassKey.getDepthStencilAttachmentInfo();
+            if (asBool(ResourceTransitionFlags::RenderTarget & info.flags))
             {
                 const PixelFormat format = _key.m_depthStencilFormat;
 

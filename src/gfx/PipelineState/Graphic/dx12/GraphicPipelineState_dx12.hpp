@@ -103,8 +103,8 @@ namespace vg::gfx::dx12
         uint numRenderTargets = 0;
         for (uint i = 0; i < maxRenderTarget; ++i)
         {
-            const SubPassKey::AttachmentInfo & info = subPassKey.getColorAttachmentInfo(i);
-            if (asBool(SubPassKey::AttachmentFlags::RenderTarget & info.flags))
+            const ResourceTransitionDesc & info = subPassKey.getColorAttachmentInfo(i);
+            if (asBool(ResourceTransitionFlags::RenderTarget & info.flags))
             {
                 const auto format = _key.m_renderPassKey.m_colorFormat[i];
                 VG_ASSERT(PixelFormat::Unknow != format);
@@ -118,8 +118,8 @@ namespace vg::gfx::dx12
         }
         d3d12graphicPipelineDesc.NumRenderTargets = numRenderTargets;
 
-        const SubPassKey::AttachmentInfo info = subPassKey.getDepthStencilAttachmentInfo();
-        if (asBool(SubPassKey::AttachmentFlags::RenderTarget & info.flags))
+        const ResourceTransitionDesc info = subPassKey.getDepthStencilAttachmentInfo();
+        if (asBool(ResourceTransitionFlags::RenderTarget & info.flags))
         {
             const auto format = _key.m_renderPassKey.m_depthStencilFormat;
             VG_ASSERT(PixelFormat::Unknow != format);

@@ -7,6 +7,48 @@
 namespace vg::gfx
 {
     //--------------------------------------------------------------------------------------
+    // Flags used in ResourceTransitionDesc to describe a resource transition
+    //--------------------------------------------------------------------------------------
+    enum class ResourceTransitionFlags : core::u8
+    {
+        Discard         = 0x00,
+        Clear           = 0x01,  // clear before use
+        Preserve        = 0x02,  // init with previous contents of attachment
+
+        RenderTarget    = 0x04,  // attachment will be used as a render target during this pass
+        Present         = 0x08,  // attachment will be used for 'Present' right after this pass
+
+        MakeWritable    = 0x10   // attachment will transition from ShaderResource to RenderTarget/UAV before this pass
+    };
+
+    //--------------------------------------------------------------------------------------
+    // Structure used to describe a resource transition : 
+    // It is used as part of RenderPass/SubPass key but also for other resource transitions 
+    // generated during FrameGraph build.
+    //--------------------------------------------------------------------------------------
+    struct ResourceTransitionDesc
+    {
+        ResourceTransitionDesc(ResourceTransitionFlags _flags = ResourceTransitionFlags::Discard, ResourceState _begin = ResourceState::Undefined, ResourceState _end = ResourceState::Undefined) :
+            flags(_flags),
+            begin(_begin),
+            end(_end)
+        {
+                
+        }
+
+        union
+        {
+            struct
+            {
+                ResourceTransitionFlags flags   : 8;
+                ResourceState           begin   : 4;
+                ResourceState           end     : 4;
+            };
+            core::u8 bits;
+        };
+    };
+
+    //--------------------------------------------------------------------------------------
     // Descriptor for a subPass used in RenderPass
     // bits [0..31] used for up to maxRenderTarget (8) render targets
     // bits [32..35] used for depthStencil
@@ -14,61 +56,27 @@ namespace vg::gfx
     //--------------------------------------------------------------------------------------
     struct SubPassKey
     {
-        enum class AttachmentFlags : core::u8
-        {
-            Discard         = 0x00,
-            Clear           = 0x01,  // clear before use
-            Preserve        = 0x02,  // init with previous contents of attachment
+        ResourceTransitionDesc color[maxRenderTarget];
+        ResourceTransitionDesc depth;
 
-            RenderTarget    = 0x04,  // attachment will be used as a render target during this pass
-            Present         = 0x08,  // attachment will be used for 'Present' right after this pass
-
-            MakeWritable    = 0x10   // attachment will transition from ShaderResource to RenderTarget/UAV before this pass
-        };
-
-        struct AttachmentInfo
-        {
-            AttachmentInfo(AttachmentFlags _flags = AttachmentFlags::Discard, ResourceState _begin = ResourceState::Undefined, ResourceState _end = ResourceState::Undefined) :
-                flags(_flags),
-                begin(_begin),
-                end(_end)
-            {
-                
-            }
-
-            union
-            {
-                struct
-                {
-                    AttachmentFlags flags   : 8;
-                    ResourceState   begin   : 4;
-                    ResourceState   end     : 4;
-                };
-                core::u8 bits;
-            };
-        };
-
-        AttachmentInfo color[maxRenderTarget];
-        AttachmentInfo depth;
-
-        inline void setColorAttachmentInfo(core::uint _index, const AttachmentInfo & _attachmentInfos)
+        inline void setColorAttachmentInfo(core::uint _index, const ResourceTransitionDesc & _attachmentInfos)
         {
             VG_ASSERT(_index < maxRenderTarget);
             color[_index] = _attachmentInfos;
         }
 
-        inline const AttachmentInfo & getColorAttachmentInfo(core::uint _index) const
+        inline const ResourceTransitionDesc & getColorAttachmentInfo(core::uint _index) const
         {
             VG_ASSERT(_index < maxRenderTarget);
             return color[_index];
         }
 
-        inline void setDepthStencilAttachmentInfo(const AttachmentInfo & _attachmentInfos)
+        inline void setDepthStencilAttachmentInfo(const ResourceTransitionDesc & _attachmentInfos)
         {
             depth = _attachmentInfos;
         }
 
-        inline const AttachmentInfo & getDepthStencilAttachmentInfo() const
+        inline const ResourceTransitionDesc & getDepthStencilAttachmentInfo() const
         {
             return depth;
         }

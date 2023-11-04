@@ -30,7 +30,7 @@ namespace vg::gfx::base
 namespace vg::gfx
 {
 	//--------------------------------------------------------------------------------------
-	SubPass::SubPass() :
+	SubPass::SubPass(/*const vector<AttachmentInfo> & _resourceTransitions*/) :
         super::SubPass()
 	{
 

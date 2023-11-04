@@ -103,8 +103,8 @@ namespace vg::gfx::dx12
 
             for (uint i = 0; i < _subPass->m_renderTargetCount; ++i)
             {
-                const SubPassKey::AttachmentInfo & info = subPassKey.getColorAttachmentInfo(i);
-                if (asBool(SubPassKey::AttachmentFlags::RenderTarget & info.flags))
+                const ResourceTransitionDesc & info = subPassKey.getColorAttachmentInfo(i);
+                if (asBool(ResourceTransitionFlags::RenderTarget & info.flags))
                 {
                     const FrameGraph::TextureResource * res = userPass->getRenderTargets()[i];
                     const FrameGraph::TextureResourceDesc & resourceDesc = res->getTextureResourceDesc();
@@ -113,7 +113,7 @@ namespace vg::gfx::dx12
                     _subPass->m_d3d12renderPassRenderTargetDesc[i].cpuDescriptor = tex->getd3d12RTVHandle();
 
                     // The texture needs to transition to 'RenderTarget' state before 1st use
-                    if (asBool(SubPassKey::AttachmentFlags::MakeWritable & info.flags))
+                    if (asBool(ResourceTransitionFlags::MakeWritable & info.flags))
                     {
                         D3D12_RESOURCE_BARRIER barrier;
                         barrier.Transition.pResource = res->getTexture()->getResource().getd3d12TextureResource(); // m_bufferContext[m_currentBackbufferIndex].backbuffer->getResource().getd3d12TextureResource();
@@ -129,8 +129,8 @@ namespace vg::gfx::dx12
 
             if (_subPass->m_depthStencilCount > 0)
             {
-                const SubPassKey::AttachmentInfo & info = subPassKey.getDepthStencilAttachmentInfo();
-                if (asBool(SubPassKey::AttachmentFlags::RenderTarget & info.flags))
+                const ResourceTransitionDesc & info = subPassKey.getDepthStencilAttachmentInfo();
+                if (asBool(ResourceTransitionFlags::RenderTarget & info.flags))
                 {
                     const FrameGraph::TextureResource * res = userPass->getDepthStencil();
                     const FrameGraph::TextureResourceDesc & resourceDesc = res->getTextureResourceDesc();
@@ -205,7 +205,7 @@ namespace vg::gfx::dx12
 
         for (uint i = 0; i < maxRenderTarget; ++i)
         {
-            const SubPassKey::AttachmentInfo & info = subPassKey.getColorAttachmentInfo(i);
+            const ResourceTransitionDesc & info = subPassKey.getColorAttachmentInfo(i);
 
             if (info.begin != info.end)
             {

@@ -71,7 +71,7 @@ namespace vg::gfx
 				}
 				
 				const UserPass *	m_userPass;
-				RWFlags			m_rwAccess;
+				RWFlags				m_rwAccess;
 			};
 
 			Resource();
