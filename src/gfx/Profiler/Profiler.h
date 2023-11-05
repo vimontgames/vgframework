@@ -34,7 +34,6 @@ namespace vg::gfx
     public:
         void                                    init                    () override;
         void                                    deinit                  () override;
-        void                                    beginFrame              (const char * _name) override;
         void                                    start                   () override;
         void                                    stop                    () override;
         bool                                    isCaptureInProgress     () const override;

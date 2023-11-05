@@ -77,12 +77,6 @@ namespace vg::gfx
     }
 
     //--------------------------------------------------------------------------------------
-    void Profiler::beginFrame(const char * _name)
-    {
-        OPTICK_FRAME(_name);
-    }
-
-    //--------------------------------------------------------------------------------------
     void Profiler::start()
     {
         VG_DEBUGPRINT("Start profile capture\n");

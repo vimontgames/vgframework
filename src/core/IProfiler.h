@@ -8,7 +8,6 @@
 
 #define VG_PROFILE_INIT()                   Kernel::getProfiler()->init()
 #define VG_PROFILE_DEINIT()                 Kernel::getProfiler()->deinit()
-#define VG_PROFILE_FRAME(name)              Kernel::getProfiler()->beginFrame(name)
 #define VG_PROFILE_START()                  Kernel::getProfiler()->start()
 #define VG_PROFILE_STOP()                   Kernel::getProfiler()->stop()
 #define VG_PROFILE_CAPTURE_IN_PROGRESS()    Kernel::getProfiler()->isCaptureInProgress()
@@ -41,7 +40,6 @@ namespace vg::core
     public:
         virtual void init                   () = 0;
         virtual void deinit                 () = 0;
-        virtual void beginFrame             (const char * _name) = 0;
         virtual void start                  () = 0;
         virtual void stop                   () = 0;
         virtual bool isCaptureInProgress    () const = 0;

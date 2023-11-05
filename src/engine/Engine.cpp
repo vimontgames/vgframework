@@ -424,7 +424,6 @@ namespace vg::engine
 	//--------------------------------------------------------------------------------------
 	void Engine::RunOneFrame()
 	{
-        VG_PROFILE_FRAME("Frame");
         VG_PROFILE_CPU("Engine");
 
         updateDt();
