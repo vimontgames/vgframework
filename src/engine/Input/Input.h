@@ -6,8 +6,8 @@ namespace vg::engine
 {
     struct MouseData
     {
-        core::uint2 m_pos;
-        core::int3  m_posDelta;
+        core::uint2 m_pos = core::uint2(0, 0);
+        core::int3  m_posDelta = core::int3(0, 0, 0);
         bool        m_pressed[core::enumCount<core::MouseButton>()];
         bool        m_wasPressed[core::enumCount<core::MouseButton>()];
         bool        m_isOverWindow : 1;
@@ -22,7 +22,8 @@ namespace vg::engine
 
     struct JoystickData
     {
-        core::float2    m_dir;
+        core::float2    m_leftStickDir = core::uint2(0, 0);
+        core::float2    m_rightStickDir = core::uint2(0, 0);
         bool            m_pressed[core::enumCount<core::JoyButton>()];
         bool            m_wasPressed[core::enumCount<core::JoyButton>()];
     };

@@ -29,28 +29,27 @@ namespace vg::core
         virtual void            UpdateJoypads               () = 0;
 
     #pragma region Mouse
-        virtual core::int3      getMouseDelta               () const = 0;
-        virtual core::uint2     getMousePos                 () const = 0;
-        virtual bool            isMouseButtonPressed        (MouseButton _button) const = 0;
-        virtual bool            isMouseButtonJustPressed    (MouseButton _button) const = 0;
+        virtual core::int3      GetMouseDelta               () const = 0;
+        virtual core::uint2     GetMousePos                 () const = 0;
+        virtual bool            IsMouseButtonPressed        (MouseButton _button) const = 0;
+        virtual bool            IsMouseButtonJustPressed    (MouseButton _button) const = 0;
         virtual bool            IsMouseButtonJustReleased   (MouseButton _button) const = 0;
-        virtual bool            wasMouseButtonPressed       (MouseButton _button) const = 0;
-        virtual bool            isMouseOverWindow           () const = 0;
+        virtual bool            IsMouseOverWindow           () const = 0;
     #pragma endregion Mouse
 
     #pragma region Keyboard
-        virtual bool            isKeyPressed                (Key _key) const = 0;
-        virtual bool            isKeyJustPressed            (Key _key) const = 0;
-        virtual bool            wasKeyPressed               (Key _key) const = 0;
+        virtual bool            IsKeyPressed                (Key _key) const = 0;
+        virtual bool            IsKeyJustPressed            (Key _key) const = 0;
+        virtual bool            IsKeyJustReleased           (Key _key) const = 0;
     #pragma endregion Keyboard
 
     #pragma region Joy
-        virtual core::uint      getJoyCount                 () const = 0;
-        virtual core::float2    getJoyDir                   (JoyID _id) const = 0;
-        virtual bool            isJoyButtonPressed          (JoyID _id, JoyButton _button) const = 0;
-        virtual bool            isJoyButtonJustPressed      (JoyID _id, JoyButton _button) const = 0;
-        virtual bool            isJoyButtonJustReleased     (JoyID _id, JoyButton _button) const = 0;
-        virtual bool            wasJoyButtonPressed         (JoyID _id, JoyButton _button) const = 0;
+        virtual core::uint      GetJoyCount                 () const = 0;
+        virtual core::float2    GetJoyLeftStickDir          (JoyID _id) const = 0;
+        virtual core::float2    GetJoyRightStickDir         (JoyID _id) const = 0;
+        virtual bool            IsJoyButtonPressed          (JoyID _id, JoyButton _button) const = 0;
+        virtual bool            IsJoyButtonJustPressed      (JoyID _id, JoyButton _button) const = 0;
+        virtual bool            IsJoyButtonJustReleased     (JoyID _id, JoyButton _button) const = 0;
     #pragma endregion Joy
     };
 
@@ -66,7 +65,13 @@ namespace vg::core
         A = 0,
         B,
         X,
-        Y
+        Y,
+        LT,
+        RT,
+        Select,
+        Start,
+        LeftStick,
+        RightStick
     };
 
     enum class Key : core::u16

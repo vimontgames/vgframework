@@ -231,7 +231,7 @@ namespace vg::renderer
     core::uint2 View::GetRelativeMousePos() const
     {
         auto input = Kernel::getInput();
-        uint2 mousePos = input->getMousePos();
+        uint2 mousePos = input->GetMousePos();
 
         const auto renderer = Renderer::get();
         if (renderer->IsFullscreen())

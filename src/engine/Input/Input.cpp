@@ -80,12 +80,12 @@ namespace vg::engine
             }
         }
 
-        if (imGuiAdapter->IsKeyboardFocused() && !anyViewActive)
+        if (imGuiAdapter->IsKeyboardFocused() && !anyViewActive && !Engine::get()->isPlaying())
             EnableInput(InputType::Keyboard, false);
         else
             EnableInput(InputType::Keyboard, true);
 
-        if (imGuiAdapter->IsMouseFocused() && !anyViewActive)
+        if (imGuiAdapter->IsMouseFocused() && !anyViewActive && !Engine::get()->isPlaying())
             EnableInput(InputType::Mouse, false);
         else
             EnableInput(InputType::Mouse, true);

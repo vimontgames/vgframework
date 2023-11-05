@@ -33,8 +33,8 @@ namespace vg::editor
             inline static const char * FPS          = ICON_FA_STOPWATCH;
             inline static const char * Scene        = ICON_FA_MAP;
             inline static const char * Resource     = ICON_FA_DATABASE;
-            inline static const char * EditorView   = ICON_FA_PEN_TO_SQUARE;
-            inline static const char * GameView     = ICON_FA_GAMEPAD;
+            inline static const char * EditorView   = ICON_FA_DESKTOP;
+            inline static const char * GameView     = ICON_FA_DISPLAY;
             inline static const char * Play         = ICON_FA_PLAY;
             inline static const char * Pause        = ICON_FA_PAUSE;
             inline static const char * Stop         = ICON_FA_STOP;
@@ -45,6 +45,7 @@ namespace vg::editor
             inline static const char * Error        = ICON_FA_BUG;
             inline static const char * Minimize     = ICON_FA_MINIMIZE;
             inline static const char * Maximize     = ICON_FA_MAXIMIZE;
+            inline static const char * Input        = ICON_FA_GAMEPAD;
         }
     }
 }

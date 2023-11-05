@@ -159,6 +159,12 @@
     <ClInclude Include="ImGui\Window\Console\ImGuiConsole.hpp">
       <Filter>ImGui\Window\Console</Filter>
     </ClInclude>
+    <ClInclude Include="ImGui\Window\Input\ImGuiInput.h">
+      <Filter>ImGui\Window\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="ImGui\Window\Input\ImGuiInput.hpp">
+      <Filter>ImGui\Window\Input</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Editor.def" />
@@ -248,6 +254,9 @@
     </Filter>
     <Filter Include="ImGui\Window\Console">
       <UniqueIdentifier>{77f64b19-bd48-4f4f-a785-9aa93f3b8117}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ImGui\Window\Input">
+      <UniqueIdentifier>{176ee71b-5bfc-4c0e-b570-504432762f00}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

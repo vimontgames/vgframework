@@ -26,15 +26,31 @@ namespace ImGui
     }
 
     //--------------------------------------------------------------------------------------
+    ImVec4 getDisabledButtonColor()
+    {
+        ImVec4 buttonColor = ImGui::GetStyleColorVec4(ImGuiCol_Button);
+        ImVec4 buttonColorDisabled = ImVec4(buttonColor.x, buttonColor.y, buttonColor.z, buttonColor.w * 0.5f);
+        return buttonColorDisabled;
+    }
+
+    //--------------------------------------------------------------------------------------
+    ImVec4 getDisabledTextColor()
+    {
+        ImVec4 textColor = ImGui::GetStyleColorVec4(ImGuiCol_Text);
+        ImVec4 textColorDisabled = ImVec4(textColor.x, textColor.y, textColor.z, 0.25f);
+        return textColorDisabled;
+    }
+
+    //--------------------------------------------------------------------------------------
     bool ButtonEx(const string & _label, bool _enabled, bool _clickable, const string & _tooltip, ImVec2 _buttonSize)
     {
         bool clicked = false;
 
         ImVec4 buttonColor = ImGui::GetStyleColorVec4(ImGuiCol_Button);
-        ImVec4 buttonColorDisabled = ImVec4(buttonColor.x, buttonColor.y, buttonColor.z, buttonColor.w * 0.5f);
+        ImVec4 buttonColorDisabled = getDisabledButtonColor();
 
         ImVec4 textColor = ImGui::GetStyleColorVec4(ImGuiCol_Text);
-        ImVec4 textColorDisabled = ImVec4(textColor.x, textColor.y, textColor.z, 0.25f);
+        ImVec4 textColorDisabled = getDisabledTextColor();
 
         if (!_enabled)
         {

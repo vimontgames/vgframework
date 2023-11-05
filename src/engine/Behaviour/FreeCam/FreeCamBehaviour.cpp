@@ -98,9 +98,9 @@ namespace vg::engine
             float mouseSpeedY = m_rotSpeed * 0.001f * PI;
             float moveSpeed = m_moveSpeed * 0.001f * (float)_dt;
 
-            if (input->isMouseButtonPressed(MouseButton::Middle))
+            if (input->IsMouseButtonPressed(MouseButton::Middle))
             {
-                const auto delta = input->getMouseDelta();
+                const auto delta = input->GetMouseDelta();
 
                 m_pitch += clamp((float)delta.y * mouseSpeedY, -PI, PI);
                 m_yaw -= clamp((float)delta.x * mouseSpeedX, -PI, PI);
@@ -116,19 +116,19 @@ namespace vg::engine
             else if (m_yaw > PI)
                 m_yaw = m_yaw - 2.0f * PI;
 
-            if (input->isKeyPressed(Key::A))
+            if (input->IsKeyPressed(Key::A))
                 T -= moveSpeed * I;
-            else if (input->isKeyPressed(Key::D))
+            else if (input->IsKeyPressed(Key::D))
                 T += moveSpeed * I;
 
-            if (input->isKeyPressed(Key::PAGEDOWN))
+            if (input->IsKeyPressed(Key::PAGEDOWN))
                 T -= moveSpeed * J;
-            else if (input->isKeyPressed(Key::PAGEUP))
+            else if (input->IsKeyPressed(Key::PAGEUP))
                 T += moveSpeed * J;
 
-            if (input->isKeyPressed(Key::W))
+            if (input->IsKeyPressed(Key::W))
                 T -= moveSpeed * K;
-            else if (input->isKeyPressed(Key::S))
+            else if (input->IsKeyPressed(Key::S))
                 T += moveSpeed * K;
         }
 

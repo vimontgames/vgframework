@@ -24,31 +24,39 @@ namespace vg::engine::win32
         void            UpdateJoypads               () final override;
 
     #pragma region Mouse
-        core::int3      getMouseDelta               () const override;
-        core::uint2     getMousePos                 () const override;
-        bool            isMouseButtonPressed        (core::MouseButton _button) const override;
-        bool            isMouseButtonJustPressed    (core::MouseButton _button) const override;
-        bool            IsMouseButtonJustReleased   (core::MouseButton _button) const override;
-        bool            wasMouseButtonPressed       (core::MouseButton _button) const override;
-        bool            isMouseOverWindow           () const override;
+    public:
+        core::int3      GetMouseDelta               () const final override;
+        core::uint2     GetMousePos                 () const final override;
+        bool            IsMouseButtonPressed        (core::MouseButton _button) const final override;
+        bool            IsMouseButtonJustPressed    (core::MouseButton _button) const final override;
+        bool            IsMouseButtonJustReleased   (core::MouseButton _button) const final override;
+        bool            IsMouseOverWindow           () const override;
+
+    private:
+        bool            wasMouseButtonPressed       (core::MouseButton _button) const;
     #pragma endregion Mouse
 
     #pragma region Keyboard
-        bool            isKeyPressed                (core::Key _key) const override;
-        bool            isKeyJustPressed            (core::Key _key) const override;
-        bool            wasKeyPressed               (core::Key _key) const override;
+    public:
+        bool            IsKeyPressed                (core::Key _key) const final override;
+        bool            IsKeyJustPressed            (core::Key _key) const final override;
+        bool            IsKeyJustReleased           (core::Key _key) const final override;
+
+    private:
+        bool            wasKeyPressed               (core::Key _key) const;
     #pragma endregion Keyboard
 
     #pragma region Joy
     public:
-        core::uint      getJoyCount                 () const override;
-        core::float2    getJoyDir                   (core::JoyID _id) const override;
-        bool            isJoyButtonPressed          (core::JoyID _id, core::JoyButton _button) const override;
-        bool            isJoyButtonJustPressed      (core::JoyID _id, core::JoyButton _button) const override;
-        bool            isJoyButtonJustReleased     (core::JoyID _id, core::JoyButton _button) const override;
-        bool            wasJoyButtonPressed         (core::JoyID _id, core::JoyButton _button) const override;
+        core::uint      GetJoyCount                 () const override;
+        core::float2    GetJoyLeftStickDir          (core::JoyID _id) const final override;
+        core::float2    GetJoyRightStickDir         (core::JoyID _id) const final override;
+        bool            IsJoyButtonPressed          (core::JoyID _id, core::JoyButton _button) const final override;
+        bool            IsJoyButtonJustPressed      (core::JoyID _id, core::JoyButton _button) const final override;
+        bool            IsJoyButtonJustReleased     (core::JoyID _id, core::JoyButton _button) const final override;
 
     private:
+        bool            wasJoyButtonPressed         (core::JoyID _id, core::JoyButton _button) const;
         void            initJoysticks               ();
         core::uint      detectJoystick              (LPCDIDEVICEINSTANCEA _instance);
         friend  BOOL    enumJoysticksCallback       (LPCDIDEVICEINSTANCEA _instance, LPVOID _this);

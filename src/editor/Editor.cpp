@@ -20,6 +20,7 @@
 #include "editor/ImGui/Window/View/EditorView/ImGuiEditorView.h"
 #include "editor/ImGui/Window/View/GameView/ImGuiGameView.h"
 #include "editor/ImGui/Window/Console/ImGuiConsole.h"
+#include "editor/ImGui/Window/Input/ImGuiInput.h"
 #include "editor/ImGui/Toolbar/Main/ImGuiMainToolbar.h"
 
 using namespace vg::core;
@@ -84,7 +85,8 @@ namespace vg::editor
         m_imGuiWindows.push_back(new ImGuiGameView());
         m_imGuiWindows.push_back(new ImGuiEditorView());
         m_imGuiWindows.push_back(new ImGuiConsole());
-        m_imGuiWindows.push_back(new ImGuiAbout());
+        m_imGuiWindows.push_back(new ImGuiInput());
+        m_imGuiWindows.push_back(new ImGuiAbout());        
 
         // Add ImGui toolbars
         m_imGuiWindows.push_back(new ImGuiMainToolbar("Main Toolbar", ImGuiWindow::StartVisible));

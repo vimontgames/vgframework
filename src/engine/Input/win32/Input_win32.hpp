@@ -250,19 +250,19 @@ namespace vg::engine::win32
 
 #pragma region Mouse
     //--------------------------------------------------------------------------------------
-    core::int3 Input::getMouseDelta() const
+    core::int3 Input::GetMouseDelta() const
     {
         return m_mouseData.m_posDelta;
     }
 
     //--------------------------------------------------------------------------------------
-    core::uint2 Input::getMousePos() const
+    core::uint2 Input::GetMousePos() const
     {
         return m_mouseData.m_pos;
     }
 
     //--------------------------------------------------------------------------------------
-    bool Input::isMouseButtonPressed(core::MouseButton _button) const
+    bool Input::IsMouseButtonPressed(core::MouseButton _button) const
     {
         return 0 != m_mouseData.m_pressed[core::asInteger(_button)];
     }
@@ -274,19 +274,19 @@ namespace vg::engine::win32
     }
 
     //--------------------------------------------------------------------------------------
-    bool Input::isMouseButtonJustPressed(core::MouseButton _button) const
+    bool Input::IsMouseButtonJustPressed(core::MouseButton _button) const
     {
-        return isMouseButtonPressed(_button) && !wasMouseButtonPressed(_button);
+        return IsMouseButtonPressed(_button) && !wasMouseButtonPressed(_button);
     }  
 
     //--------------------------------------------------------------------------------------
     bool Input::IsMouseButtonJustReleased(core::MouseButton _button) const
     {
-        return !isMouseButtonPressed(_button) && wasMouseButtonPressed(_button);
+        return !IsMouseButtonPressed(_button) && wasMouseButtonPressed(_button);
     }
 
     //--------------------------------------------------------------------------------------
-    bool Input::isMouseOverWindow() const
+    bool Input::IsMouseOverWindow() const
     {
         return m_mouseData.m_isOverWindow;
     }
@@ -341,7 +341,7 @@ namespace vg::engine::win32
 
 #pragma region Keyboard
     //--------------------------------------------------------------------------------------
-    bool Input::isKeyPressed(core::Key _key) const
+    bool Input::IsKeyPressed(core::Key _key) const
     {
         return 0 != m_keyboardData.m_current[keycode[core::asInteger(_key)]];
     }
@@ -353,9 +353,15 @@ namespace vg::engine::win32
     }
 
     //--------------------------------------------------------------------------------------
-    bool Input::isKeyJustPressed(core::Key _key) const
+    bool Input::IsKeyJustPressed(core::Key _key) const
     {
-        return isKeyPressed(_key) && !wasKeyPressed(_key);
+        return IsKeyPressed(_key) && !wasKeyPressed(_key);
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool Input::IsKeyJustReleased(core::Key _key) const
+    {
+        return !IsKeyPressed(_key) && wasKeyPressed(_key);
     }
 
     //--------------------------------------------------------------------------------------
@@ -440,7 +446,7 @@ namespace vg::engine::win32
     //--------------------------------------------------------------------------------------
     void Input::UpdateJoypads()
     {
-        VG_PROFILE_CPU("Joy");
+        VG_PROFILE_CPU("Joypads");
 
         VG_ASSERT(m_directInputJoystick.size() == m_joystickData.size());
         for (uint i = 0; i < m_directInputJoystick.size(); ++i)
@@ -458,47 +464,64 @@ namespace vg::engine::win32
 
             JoystickData & joy = m_joystickData[i];
 
-            joy.m_dir.x = float(state.lX) / 100.0f;
-            joy.m_dir.y = float(state.lY) / 100.0f;
+            joy.m_leftStickDir.x = float(state.lX) / 100.0f;
+            joy.m_leftStickDir.y = float(state.lY) / 100.0f;
+
+            joy.m_rightStickDir.x = float(state.lRx) / 100.0f;
+            joy.m_rightStickDir.y = float(state.lRy) / 100.0f;
 
             for (uint b = 0; b < enumCount<JoyButton>(); ++b)
             {
+                joy.m_wasPressed[b] = joy.m_pressed[b];
+
                 if (state.rgbButtons[b])
                     joy.m_pressed[b] = true;
                 else
                     joy.m_pressed[b] = false;
             }
+
+            for (uint b = (uint)enumCount<JoyButton>(); b < 128; ++b)
+            {
+                if (state.rgbButtons[b])
+                    VG_WARNING("Unknown button %u pressed", b);
+            }
         }
     }
 
     //--------------------------------------------------------------------------------------
-    core::uint Input::getJoyCount() const
+    core::uint Input::GetJoyCount() const
     {
         return (core::uint)m_joystickData.size();
     }
 
     //--------------------------------------------------------------------------------------
-    core::float2 Input::getJoyDir(core::JoyID _id) const
+    core::float2 Input::GetJoyLeftStickDir(core::JoyID _id) const
     {
-        return m_joystickData[_id].m_dir;
+        return m_joystickData[_id].m_leftStickDir;
     }
 
     //--------------------------------------------------------------------------------------
-    bool Input::isJoyButtonPressed(core::JoyID _id, JoyButton _button) const
+    core::float2 Input::GetJoyRightStickDir(core::JoyID _id) const
+    {
+        return m_joystickData[_id].m_rightStickDir;
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool Input::IsJoyButtonPressed(core::JoyID _id, JoyButton _button) const
     {
         return m_joystickData[_id].m_pressed[core::asInteger(_button)];
     }
 
     //--------------------------------------------------------------------------------------
-    bool Input::isJoyButtonJustPressed(core::JoyID _id, JoyButton _button) const
+    bool Input::IsJoyButtonJustPressed(core::JoyID _id, JoyButton _button) const
     {
-        return isJoyButtonPressed(_id, _button) && !wasJoyButtonPressed(_id, _button);
+        return IsJoyButtonPressed(_id, _button) && !wasJoyButtonPressed(_id, _button);
     }
 
     //--------------------------------------------------------------------------------------
-    bool Input::isJoyButtonJustReleased(core::JoyID _id, JoyButton _button) const
+    bool Input::IsJoyButtonJustReleased(core::JoyID _id, JoyButton _button) const
     {
-        return !isJoyButtonPressed(_id, _button) && wasJoyButtonPressed(_id, _button);
+        return !IsJoyButtonPressed(_id, _button) && wasJoyButtonPressed(_id, _button);
     }
 
     //--------------------------------------------------------------------------------------
