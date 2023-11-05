@@ -81,8 +81,30 @@ namespace vg::renderer
     //--------------------------------------------------------------------------------------
     void DisplayOptions::onPropertyChanged(const core::IProperty & _prop)
     {
-        if (!strcmp(_prop.getName(), "m_VSync"))
+        const char * name = _prop.getName();
+        if (!strcmp(name, "m_VSync"))
+        {
             ApplyVsync(&_prop);
+        }
+        else if (!strcmp(name, "m_backgroundColor"))
+        {
+            const auto backgroundColor = m_backgroundColor;
+            m_backgroundColor = (float4)0.0f;
+            setBackgroundColor(backgroundColor);
+        }
+    }
+
+    //--------------------------------------------------------------------------------------
+    // Clear color is part of the RenderTarget descriptor, thus we need to reset the pool when changing it
+    //--------------------------------------------------------------------------------------
+    void DisplayOptions::setBackgroundColor(const core::float4 & _backgroundColor)
+    {
+        if (any(_backgroundColor != m_backgroundColor))
+        {
+            auto * renderer = Renderer::get();
+            renderer->SetResized();
+            m_backgroundColor = _backgroundColor;
+        }
     }
 
     //--------------------------------------------------------------------------------------

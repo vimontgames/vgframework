@@ -72,11 +72,13 @@ namespace vg::gfx
 
         // draw
         Texture * getRenderTarget(const FrameGraphResourceID & _resID) const;
+		Texture * getRWTexture(const FrameGraphResourceID & _resID) const;
 
 	private:
 		friend class FrameGraph;
 
 		void setFrameGraph(FrameGraph * _frameGraph);
+		void createTexture(const FrameGraphResourceID & _resID, FrameGraphTextureResourceDesc & _resDesc);
 
 	protected:
 		FrameGraph *								m_frameGraph = nullptr;

@@ -745,7 +745,7 @@ namespace vg::gfx
 
                 cmdList->beginSubPass(i, subPass);
 				{
-                    VG_ASSERT(isEnumValue(userPassInfo.m_userPass->getUserPassType()), "UserPass \"%s\" has invalid RenderPassType 0x%02X. Valid values are Graphic (0), Compute (1), and Raytrace (2).", userPassInfo.m_userPass->getName().c_str(), userPassInfo.m_userPass->getUserPassType());
+                    VG_ASSERT(isEnumValue(userPassInfo.m_userPass->getUserPassType()), "UserPass \"%s\" has invalid RenderPassType 0x%02X. Valid values are Graphic (0), Compute (1), and Raytrace (2)", userPassInfo.m_userPass->getName().c_str(), userPassInfo.m_userPass->getUserPassType());
                     userPassInfo.m_userPass->Render(userPassInfo.m_renderContext, cmdList);
 				}
                 cmdList->endSubPass();
@@ -778,6 +778,10 @@ namespace vg::gfx
 
                         if (isLastReadOrWrite)
                         {
+                            // Make sure RenderTarget is released in the 'ShaderResource' state
+                            if (ResourceState::ShaderResource != res->getCurrentState())
+                                VG_ERROR_ONCE("[FrameGraph] RenderTarget \"%s\" is released in the '%s' state. RenderTarget should be released in the 'ShaderResource' state", res->getName().c_str(), asString(res->getCurrentState()).c_str());
+
                             Texture * tex = res->getTexture();
                             releaseTextureFromPool(tex);
                             res->resetTexture();
@@ -798,6 +802,10 @@ namespace vg::gfx
 
                         if (isLastReadOrWrite)
                         {
+                            // Make sure DepthStencil is released in the 'RenderTarget' state
+                            if (ResourceState::RenderTarget != res->getCurrentState())
+                                VG_ERROR_ONCE("[FrameGraph] DepthStencil \"%s\" is released in the '%s' state. DepthStencil should be released in the 'ShaderResource' state", res->getName().c_str(), asString(res->getCurrentState()).c_str());
+
                             Texture * tex = res->getTexture();
                             releaseTextureFromPool(tex);
                             res->resetTexture();
@@ -819,6 +827,10 @@ namespace vg::gfx
 
                         if (isLastReadOrWrite)
                         {
+                            // Make sure UAV is released in 'UnorderedAccess' state
+                            if (ResourceState::UnorderedAccess != res->getCurrentState())
+                                VG_ERROR_ONCE("[FrameGraph] RWTexture \"%s\" is released in the '%s' state. RWTextures should be released in the 'UnorderedAccess' state", res->getName().c_str(), asString(res->getCurrentState()).c_str());
+
                             Texture * tex = res->getTexture();
                             releaseTextureFromPool(tex);
                             res->resetTexture();

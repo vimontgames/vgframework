@@ -35,7 +35,7 @@ namespace vg::renderer
     {
         const auto options = DisplayOptions::get();
         if (options->isPostProcessEnabled())
-            readRenderTarget(_renderPassContext.getFrameGraphID("PostProcessUAV"));
+            readRWTexture(_renderPassContext.getFrameGraphID("PostProcessUAV"));
         else
             readRenderTarget(_renderPassContext.getFrameGraphID("Color"));
 
@@ -70,7 +70,7 @@ namespace vg::renderer
 
         // When Compute post-process is enabled then we blit from the PostProcessUAV read as Shader Resource
         if (options->isPostProcessEnabled())
-            root2D.texID = getRenderTarget(_renderPassContext.getFrameGraphID("PostProcessUAV"))->getTextureHandle();
+            root2D.texID = getRWTexture(_renderPassContext.getFrameGraphID("PostProcessUAV"))->getTextureHandle();
         else
             root2D.texID = getRenderTarget(_renderPassContext.getFrameGraphID("Color"))->getTextureHandle();       
 

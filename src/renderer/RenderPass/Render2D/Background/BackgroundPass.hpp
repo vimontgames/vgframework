@@ -32,7 +32,7 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    // Setup executed each frame, for each pass instance
+    // Create main color and depth buffers and prepare for write
     //--------------------------------------------------------------------------------------
     void BackgroundPass::Setup(const gfx::RenderPassContext & _renderContext, double _dt)
     {
@@ -40,11 +40,13 @@ namespace vg::renderer
 
         auto size = _renderContext.m_view->GetSize();
 
+        auto clearColor = m_useFastClear ? pow(DisplayOptions::get()->getBackgroundColor(), 2.2f) : float4(0, 0, 0, 0);
+
         FrameGraphTextureResourceDesc colorDesc;
                                         colorDesc.format = PixelFormat::R16G16B16A16_float;
                                         colorDesc.width = size.x;
                                         colorDesc.height = size.y;
-                                        colorDesc.clearColor = float4(0, 0, 0, 0);
+                                        colorDesc.clearColor = clearColor;
                                         colorDesc.initState = FrameGraphResource::InitState::Clear;
 
         const auto colorID = _renderContext.getFrameGraphID("Color");
@@ -60,18 +62,14 @@ namespace vg::renderer
                                       depthStencilDesc.initState = FrameGraphResource::InitState::Clear;
 
         const auto depthStencilID = _renderContext.getFrameGraphID("DepthStencil");
-        createRenderTarget(depthStencilID, depthStencilDesc);
+        createDepthStencil(depthStencilID, depthStencilDesc);
         writeDepthStencil(depthStencilID);
     }
 
     //--------------------------------------------------------------------------------------
     void BackgroundPass::Render(const RenderPassContext & _renderPassContext, CommandList * _cmdList) const
     {
-        if (0)
-        {
-            //_cmdList->clear();
-        }
-        else
+        if (!m_useFastClear)
         {
             RasterizerState rs(FillMode::Solid, CullMode::None);
             BlendState bs(BlendFactor::One, BlendFactor::Zero, BlendOp::Add);

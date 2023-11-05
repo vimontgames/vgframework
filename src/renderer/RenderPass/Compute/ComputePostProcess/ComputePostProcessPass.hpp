@@ -59,7 +59,7 @@ namespace vg::renderer
         _cmdList->setComputeShader(m_computePostProcessShaderKey);
 
         u16 src = getRenderTarget(_renderPassContext.getFrameGraphID("Color"))->getTextureHandle();
-        u16 dst = getRenderTarget(_renderPassContext.getFrameGraphID("PostProcessUAV"))->getRWTextureHandle();
+        u16 dst = getRWTexture(_renderPassContext.getFrameGraphID("PostProcessUAV"))->getRWTextureHandle();
         
         PostProcessConstants postProcess;
         postProcess.width_height = packUint16(size.xy);

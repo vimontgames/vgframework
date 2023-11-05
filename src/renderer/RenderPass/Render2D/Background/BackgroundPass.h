@@ -17,7 +17,8 @@ namespace vg::renderer
         void Render(const gfx::RenderPassContext & _renderContext, gfx::CommandList * _cmdList) const override;
 
     private:
-        gfx::RootSignatureHandle     m_backgroundRootSignatureHandle;
-        gfx::ShaderKey               m_backgroundShaderKey;
+        gfx::RootSignatureHandle    m_backgroundRootSignatureHandle;
+        gfx::ShaderKey              m_backgroundShaderKey;
+        bool                        m_useFastClear = true;
     };
 }

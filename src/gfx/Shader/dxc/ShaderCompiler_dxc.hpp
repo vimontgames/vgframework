@@ -95,9 +95,9 @@ namespace vg::gfx::dxc
     //--------------------------------------------------------------------------------------
     ShaderCompiler::~ShaderCompiler()
     {
-        VG_SAFE_RELEASE(m_d3d12dxcIncludeHandler);
         VG_SAFE_RELEASE(m_d3d12dxcCompiler);
         VG_SAFE_RELEASE(m_d3d12dxcLibrary);
+        VG_SAFE_RELEASE(m_d3d12dxcIncludeHandler);
     }
 
     //--------------------------------------------------------------------------------------

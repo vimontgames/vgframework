@@ -48,7 +48,7 @@ namespace vg::gfx
     //--------------------------------------------------------------------------------------
     // If resource already exist, it must have exactly the same descriptor
     //--------------------------------------------------------------------------------------
-    void UserPass::createRenderTarget(const FrameGraphResourceID & _resID, FrameGraphTextureResourceDesc & _resDesc)
+    void UserPass::createTexture(const FrameGraphResourceID & _resID, FrameGraphTextureResourceDesc & _resDesc)
     {
         _resDesc.transient = true;
 
@@ -57,18 +57,22 @@ namespace vg::gfx
     }
 
     //--------------------------------------------------------------------------------------
+    void UserPass::createRenderTarget(const FrameGraphResourceID & _resID, FrameGraphTextureResourceDesc & _resDesc)
+    {
+        createTexture(_resID, _resDesc);
+    }
+
+    //--------------------------------------------------------------------------------------
     void UserPass::createDepthStencil(const FrameGraphResourceID & _resID, FrameGraphTextureResourceDesc & _resDesc)
     {
-        createRenderTarget(_resID, _resDesc);
+        createTexture(_resID, _resDesc);
     }
 
     //--------------------------------------------------------------------------------------
     void UserPass::createRWTexture(const FrameGraphResourceID & _resID, FrameGraphTextureResourceDesc & _resDesc)
     {
-        _resDesc.transient = true;
         _resDesc.uav = true;
-
-        createRenderTarget(_resID, _resDesc);
+        createTexture(_resID, _resDesc);
     }
 
 	//--------------------------------------------------------------------------------------
@@ -135,6 +139,16 @@ namespace vg::gfx
     // Get RenderTarget '_resID' for read during 'render'
     //--------------------------------------------------------------------------------------
     Texture * UserPass::getRenderTarget(const FrameGraphResourceID & _resID) const
+    {
+        FrameGraphTextureResource * res = m_frameGraph->getTextureResource(_resID);
+        VG_ASSERT(res);
+        return res->getTexture();
+    }
+
+    //--------------------------------------------------------------------------------------
+    // Get RWTexture '_resID' for read during 'render'
+    //--------------------------------------------------------------------------------------
+    Texture * UserPass::getRWTexture(const FrameGraphResourceID & _resID) const
     {
         FrameGraphTextureResource * res = m_frameGraph->getTextureResource(_resID);
         VG_ASSERT(res);

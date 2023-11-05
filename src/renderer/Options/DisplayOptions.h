@@ -55,6 +55,7 @@ namespace vg::renderer
         bool                    isAlbedoMapsEnabled         () const { return 0 != (DisplayFlags::AlbedoMap & m_debugDisplayMode); }
         bool                    isNormalMapsEnabled         () const { return 0 != (DisplayFlags::NormalMap & m_debugDisplayMode); }
         
+        void                    setBackgroundColor          (const core::float4 & _backgroundColor);
         core::float4		    getBackgroundColor		    () const { return m_backgroundColor; }
 
         static bool			    load					    (IObject * _object);
