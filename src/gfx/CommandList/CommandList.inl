@@ -83,4 +83,10 @@ namespace vg::gfx
     {
         super::transitionResource(_texture, _before, _after);
     }
+
+    //--------------------------------------------------------------------------------------
+    VG_INLINE void CommandList::transitionResource(gfx::Buffer * _buffer, ResourceState _before, ResourceState _after)
+    {
+        super::transitionResource(_buffer, _before, _after);
+    }
 }

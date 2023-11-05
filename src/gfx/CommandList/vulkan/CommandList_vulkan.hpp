@@ -134,6 +134,15 @@ namespace vg::gfx::vulkan
         }        
     }
 
+    //--------------------------------------------------------------------------------------
+    void CommandList::transitionResource(gfx::Buffer * _buffer, ResourceState _before, ResourceState _after)
+    {
+        VG_ASSERT(false);
+
+        //VkMemoryBarrier memoryBarrier;
+        //memoryBarrier.sType = VK_STRUCTURE_TYPE_MEMORY_BARRIER;
+    }
+
 	//--------------------------------------------------------------------------------------
 	void CommandList::beginRenderPass(gfx::RenderPass * _renderPass)
 	{

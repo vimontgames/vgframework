@@ -17,4 +17,10 @@ namespace vg::gfx
     {
         return m_rwTextures;
     }
+
+    //--------------------------------------------------------------------------------------
+    VG_INLINE const core::vector<FrameGraphBufferResource *> & UserPass::getRWBuffers() const
+    {
+        return m_rwBuffers;
+    }
 }

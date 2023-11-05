@@ -37,6 +37,7 @@ namespace vg::gfx
 		m_depthStencil = nullptr;
 		m_renderTargets.clear();
         m_rwTextures.clear();
+        m_rwBuffers.clear();
 	}
 
 	//--------------------------------------------------------------------------------------
@@ -51,7 +52,6 @@ namespace vg::gfx
     void UserPass::createTexture(const FrameGraphResourceID & _resID, FrameGraphTextureResourceDesc & _resDesc)
     {
         _resDesc.transient = true;
-
         FrameGraphTextureResource * res = m_frameGraph->addTextureResource(_resID, _resDesc);
         VG_ASSERT(res);
     }
@@ -75,16 +75,32 @@ namespace vg::gfx
         createTexture(_resID, _resDesc);
     }
 
+    //--------------------------------------------------------------------------------------
+    void UserPass::createBuffer(const FrameGraphResourceID & _resID, FrameGraphBufferResourceDesc & _resDesc)
+    {
+        _resDesc.transient = true;
+        FrameGraphBufferResource * res = m_frameGraph->addBufferResource(_resID, _resDesc);
+        VG_ASSERT(res);
+    }
+
+    //--------------------------------------------------------------------------------------
+    void UserPass::createRWBuffer(const FrameGraphResourceID & _resID, FrameGraphBufferResourceDesc & _resDesc)
+    {
+        _resDesc.uav = true;
+        createBuffer(_resID, _resDesc);
+    }
+    
 	//--------------------------------------------------------------------------------------
     // Resource should be:
     // - Persistent and already imported in the graph
     // - Transient and already declared in the graph
     //--------------------------------------------------------------------------------------
-	void UserPass::writeRenderTarget(core::uint _slot, const FrameGraphResourceID & _resID)
+	void UserPass::writeRenderTarget(uint _slot, const FrameGraphResourceID & _resID)
 	{
         FrameGraphTextureResource * res = m_frameGraph->getTextureResource(_resID);
         VG_ASSERT(res);
         res->setWriteAtPass(this);
+        VG_ASSERT(m_renderTargets.size() == _slot);
 		m_renderTargets.push_back(res);
 	}
 
@@ -98,12 +114,21 @@ namespace vg::gfx
     }
 
     //--------------------------------------------------------------------------------------
-    void UserPass::writeRWTexture(core::uint _slot, const FrameGraphResourceID & _resID)
+    void UserPass::writeRWTexture(const FrameGraphResourceID & _resID)
     {
         FrameGraphTextureResource * res = m_frameGraph->getTextureResource(_resID);
         VG_ASSERT(res);
         res->setWriteAtPass(this);
         m_rwTextures.push_back(res);
+    }
+
+    //--------------------------------------------------------------------------------------
+    void UserPass::writeRWBuffer(const FrameGraphResourceID & _resID)
+    {
+        FrameGraphBufferResource * res = m_frameGraph->getBufferResource(_resID);
+        VG_ASSERT(res);
+        res->setWriteAtPass(this);
+        m_rwBuffers.push_back(res);
     }
 
     //--------------------------------------------------------------------------------------

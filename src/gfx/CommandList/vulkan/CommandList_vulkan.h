@@ -53,6 +53,7 @@ namespace vg::gfx::vulkan
         void                                unmap                       (gfx::Buffer * _buffer, void * _data);
 
         void                                transitionResource          (gfx::Texture * _texture, ResourceState _before, ResourceState _after);
+        void                                transitionResource          (gfx::Buffer * _buffer, ResourceState _before, ResourceState _after);
 
 		VkCommandBuffer &					getVulkanCommandBuffer      () { return m_vkCommandBuffer;  }
 

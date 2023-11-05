@@ -39,8 +39,9 @@ namespace vg::renderer
         auto * device = Device::get();
 
         auto size = _renderContext.m_view->GetSize();
+        const auto options = DisplayOptions::get();
 
-        auto clearColor = m_useFastClear ? pow(DisplayOptions::get()->getBackgroundColor(), 2.2f) : float4(0, 0, 0, 0);
+        auto clearColor = m_useFastClear ? pow(options->getBackgroundColor(), 2.2f) : float4(0, 0, 0, 0);
 
         FrameGraphTextureResourceDesc colorDesc;
                                         colorDesc.format = PixelFormat::R16G16B16A16_float;
@@ -64,6 +65,17 @@ namespace vg::renderer
         const auto depthStencilID = _renderContext.getFrameGraphID("DepthStencil");
         createDepthStencil(depthStencilID, depthStencilDesc);
         writeDepthStencil(depthStencilID);
+
+        //if (options->isToolModeEnabled())
+        //{
+        //    FrameGraphBufferResourceDesc toolmodeRWBufferDesc;
+        //                                 toolmodeRWBufferDesc.elementSize = 16;
+        //                                 toolmodeRWBufferDesc.elementCount = 1;
+        //    
+        //    const auto toolmodeRWBufferID = _renderContext.getFrameGraphID("ToolmodeRWBuffer");
+        //    createRWBuffer(toolmodeRWBufferID, toolmodeRWBufferDesc);
+        //    writeRWBuffer(toolmodeRWBufferID);
+        //}
     }
 
     //--------------------------------------------------------------------------------------

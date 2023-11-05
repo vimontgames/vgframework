@@ -75,10 +75,11 @@ namespace vg::gfx
 		Texture * createRWTextureFromPool(const FrameGraphTextureResourceDesc & _textureResourceDesc);
 
         Texture * createTextureFromPool(const FrameGraphTextureResourceDesc & _textureResourceDesc, bool _depthStencil = false, bool _uav = false);
-
         void releaseTextureFromPool(Texture *& _tex);
 
-		void reverseAndRemoveDuplicates();
+        Buffer * createRWBufferFromPool(const FrameGraphBufferResourceDesc & _bufferResourceDesc);
+        Buffer * createBufferFromPool(const FrameGraphBufferResourceDesc & _bufferResourceDesc, bool _uav);
+        void releaseBufferFromPool(Buffer *& _buffer);
 
         void cleanup();
 
@@ -96,6 +97,14 @@ namespace vg::gfx
             bool used = false;
         };
         core::vector<SharedTexture>     m_sharedTextures;
+
+        struct SharedBuffer
+        {
+            FrameGraphBufferResourceDesc desc;
+            Buffer * buffer = nullptr;
+            bool used = false;
+        };
+        core::vector<SharedBuffer>      m_sharedBuffers;
 
 		FrameGraphResourceID            m_outputResID;
         FrameGraphTextureResource *     m_outputRes = nullptr;

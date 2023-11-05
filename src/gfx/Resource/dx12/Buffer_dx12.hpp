@@ -17,6 +17,12 @@ namespace vg::gfx::dx12
         else
             resourceState = D3D12_RESOURCE_STATE_COPY_DEST;
 
+        if (asBool(BindFlags::UnorderedAccess & _bufDesc.resource.m_bindFlags))
+        {
+            resourceState = D3D12_RESOURCE_STATE_UNORDERED_ACCESS;
+            resourceDesc.Flags |= D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS;
+        }
+
 		if (_bufDesc.testBindFlags(BindFlags::Raytracing))
 			resourceState = D3D12_RESOURCE_STATE_RAYTRACING_ACCELERATION_STRUCTURE;
 

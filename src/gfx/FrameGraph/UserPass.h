@@ -42,8 +42,11 @@ namespace vg::gfx
 		// Texture being bound as depth/stencil buffer
 		VG_INLINE FrameGraphTextureResource * getDepthStencil() const;
 
-		// RWTextures being written during the pass
+		// RWTextures being accessed during the pass
         VG_INLINE const core::vector<FrameGraphTextureResource *> & getRWTextures() const;
+
+		// RWBuffers being accessed during the pass 
+		VG_INLINE const core::vector<FrameGraphBufferResource *> & getRWBuffers() const;
 
         core::uint getRenderTargetCount() const;
         const FrameGraphTextureResourceDesc & getRenderTargetDesc(core::uint _index) const;
@@ -67,8 +70,11 @@ namespace vg::gfx
         void readDepthStencil(const FrameGraphResourceID & _resID);
 
 		void createRWTexture(const FrameGraphResourceID & _resID, FrameGraphTextureResourceDesc & _resDesc);
-        void writeRWTexture(core::uint _slot, const FrameGraphResourceID & _resID);
+        void writeRWTexture(const FrameGraphResourceID & _resID);
         void readRWTexture(const FrameGraphResourceID & _resID);
+
+		void createRWBuffer(const FrameGraphResourceID & _resID, FrameGraphBufferResourceDesc & _resDesc);
+		void writeRWBuffer(const FrameGraphResourceID & _resID);
 
         // draw
         Texture * getRenderTarget(const FrameGraphResourceID & _resID) const;
@@ -79,6 +85,7 @@ namespace vg::gfx
 
 		void setFrameGraph(FrameGraph * _frameGraph);
 		void createTexture(const FrameGraphResourceID & _resID, FrameGraphTextureResourceDesc & _resDesc);
+		void createBuffer(const FrameGraphResourceID & _resID, FrameGraphBufferResourceDesc & _resDesc);
 
 	protected:
 		FrameGraph *								m_frameGraph = nullptr;
@@ -93,6 +100,7 @@ namespace vg::gfx
 
 		// Input and/or output
 		core::vector<FrameGraphTextureResource *>	m_rwTextures;
+		core::vector<FrameGraphBufferResource *>	m_rwBuffers;
 	};
 }
 

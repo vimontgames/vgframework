@@ -126,7 +126,9 @@ namespace vg::gfx
         void                        dispatch                    (core::uint3 _threadGroupCount);
 
         void                        resetShaders                (ShaderKey::File _file);
+
         VG_INLINE void              transitionResource          (gfx::Texture * _texture, ResourceState _before, ResourceState _after);
+        VG_INLINE void              transitionResource          (gfx::Buffer * _buffer, ResourceState _before, ResourceState _after);
 	};
 }
 

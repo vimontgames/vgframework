@@ -279,8 +279,22 @@ namespace vg::gfx
     }
 
     //--------------------------------------------------------------------------------------
+    void FrameGraphBufferResource::setBuffer(Buffer * _buffer)
+    {
+        VG_ASSERT(nullptr == m_buffer, "Resource \"%s\" already has a buffer", getName().c_str());
+        m_buffer = _buffer;
+    }
+
+    //--------------------------------------------------------------------------------------
     Buffer * FrameGraphBufferResource::getBuffer() const
     {
         return m_buffer;
+    }
+
+    //--------------------------------------------------------------------------------------
+    void FrameGraphBufferResource::resetBuffer()
+    {
+        VG_ASSERT(m_desc.transient);
+        m_buffer = nullptr;
     }
 }

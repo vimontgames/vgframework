@@ -45,7 +45,7 @@ namespace vg::renderer
 
         const auto dstID = _renderPassContext.getFrameGraphID("PostProcessUAV");
         createRWTexture(dstID, uavDesc);
-        writeRWTexture(0, dstID);
+        writeRWTexture(dstID);
     }
 
     //--------------------------------------------------------------------------------------

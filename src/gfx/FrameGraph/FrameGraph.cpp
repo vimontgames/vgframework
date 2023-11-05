@@ -3,6 +3,7 @@
 #include "gfx/Device/Device.h"
 #include "gfx/CommandList/CommandList.h"
 #include "gfx/Resource/Texture.h"
+#include "gfx/Resource/Buffer.h"
 #include "gfx/FrameGraph/RenderPass.h"
 #include "gfx/FrameGraph/SubPass.h"
 #include "gfx/FrameGraph/UserPass.h"
@@ -40,13 +41,20 @@ namespace vg::gfx
         {
             for (SharedTexture & shared : m_sharedTextures)
                 VG_SAFE_RELEASE(shared.tex);
+
+            for (SharedBuffer & shared : m_sharedBuffers)
+                VG_SAFE_RELEASE(shared.buffer);
         }
         else
         {
             for (SharedTexture & shared : m_sharedTextures)
                 VG_SAFE_RELEASE_ASYNC(shared.tex);
+
+            for (SharedBuffer & shared : m_sharedBuffers)
+                VG_SAFE_RELEASE_ASYNC(shared.buffer);
         }
         m_sharedTextures.clear();
+        m_sharedBuffers.clear();
     }
 
 	//--------------------------------------------------------------------------------------
@@ -222,24 +230,25 @@ namespace vg::gfx
                         resourceTransitions.push_back(resTrans);
                         res->setCurrentState(ResourceState::ShaderResource);
                     }
+                }
 
-                    //FrameGraphTextureResource * res = rwTextures[i];
-                    //const FrameGraphTextureResourceDesc & textureResourceDesc = res->getTextureResourceDesc();
-                    //
-                    //bool firstWrite, lastWrite, nextPassNeedsRead;
-                    //bool write = needsWriteAtPass(res, userPass, firstWrite, lastWrite, nextPassNeedsRead);
-                    //
-                    //// RWTextures start in "RW" state
-                    //if (nextPassNeedsRead)
-                    //{
-                    //    // UAV needs write in the next pass, mimic the RenderTarget behaviour and resolve to shader resource
-                    //    ResourceTransitionDesc trans;
-                    //    trans.flags = ResourceTransitionFlags::Preserve;
-                    //    trans.begin = ResourceState::UnorderedAccess;
-                    //    trans.end = ResourceState::ShaderResource;
-                    //
-                    //    manualResourceTransitions.push_back(trans);
-                    //}
+                auto & rwBuffers = userPass->getRWBuffers();
+                for (uint i = 0; i < rwBuffers.size(); ++i)
+                {
+                    FrameGraphBufferResource * res = rwBuffers[i];
+                    bool read = res->needsWriteToReadTransition(userPass);
+
+                    if (read)
+                    {
+                        FrameGraphResourceTransitionDesc resTrans;
+                        resTrans.m_resource = res;
+                        resTrans.m_transitionDesc.flags = (ResourceTransitionFlags)0;
+                        resTrans.m_transitionDesc.begin = ResourceState::UnorderedAccess;
+                        resTrans.m_transitionDesc.end = ResourceState::ShaderResource;
+
+                        resourceTransitions.push_back(resTrans);
+                        res->setCurrentState(ResourceState::ShaderResource);
+                    }
                 }
 
                 auto & renderTargets = userPass->getRenderTargets();
@@ -322,21 +331,6 @@ namespace vg::gfx
 
                     res->setCurrentState(info.end);
 				}
-
-                //auto & textures = userPass->getTextures();
-                //for (uint i = 0; i < textures.size(); ++i)
-                //{
-                //    TextureResource * res = textures[i];
-                //    const TextureResourceDesc & textureResourceDesc = res->getTextureResourceDesc();
-                //
-                //    bool firstRead, lastRead;
-                //    bool read = needsReadAtPass(res, userPass, firstRead, lastRead);
-                //
-                //    if (read)
-                //    {
-                //
-                //    }
-                //}
 			}
 
             FrameGraphTextureResource * depthStencilAttachment = nullptr;
@@ -426,6 +420,9 @@ namespace vg::gfx
     //--------------------------------------------------------------------------------------
     Texture * FrameGraph::createTextureFromPool(const FrameGraphTextureResourceDesc & _textureResourceDesc, bool _depthStencil, bool _uav)
     {
+        VG_ASSERT(_depthStencil == Texture::isDepthStencilFormat(_textureResourceDesc.format));
+        VG_ASSERT(_uav == _textureResourceDesc.uav);
+
         for (uint i = 0; i < m_sharedTextures.size(); ++i)
         {
             auto & slot = m_sharedTextures[i];
@@ -451,7 +448,7 @@ namespace vg::gfx
                     
                     if (_uav)
                     {
-                        desc.flags = (TextureFlags)0;
+                        desc.flags = TextureFlags::None;
                         desc.resource.m_bindFlags = BindFlags::ShaderResource | BindFlags::UnorderedAccess; // What about "UAV-only" textures?
                     }
                     else
@@ -460,7 +457,7 @@ namespace vg::gfx
                     desc.resource.m_cpuAccessFlags = CPUAccessFlags::None;
                     desc.resource.m_usage = Usage::Default;
 
-        string name = "Temp#" + to_string(m_sharedTextures.size());
+        string name = "TempTex#" + to_string(m_sharedTextures.size());
         if (asBool(BindFlags::ShaderResource & desc.resource.m_bindFlags))
             name += "_RO";
         if (asBool(BindFlags::UnorderedAccess & desc.resource.m_bindFlags))
@@ -489,7 +486,80 @@ namespace vg::gfx
                 return;
             }
         }
-        VG_ASSERT(false, "Could not release texture \"%s\" from pool", _tex->getName());
+        VG_ASSERT(false, "Could not release Texture \"%s\" from pool", _tex->getName());
+    }
+
+    //--------------------------------------------------------------------------------------
+    Buffer * FrameGraph::createRWBufferFromPool(const FrameGraphBufferResourceDesc & _bufferResourceDesc)
+    {
+        return createBufferFromPool(_bufferResourceDesc, true);
+    }
+
+    //--------------------------------------------------------------------------------------
+    Buffer * FrameGraph::createBufferFromPool(const FrameGraphBufferResourceDesc & _bufferResourceDesc, bool _uav)
+    {
+        VG_ASSERT(_uav == _bufferResourceDesc.uav);
+
+        for (uint i = 0; i < m_sharedBuffers.size(); ++i)
+        {
+            auto & slot = m_sharedBuffers[i];
+            if (!slot.used)
+            {
+                if (slot.desc == _bufferResourceDesc)
+                {
+                    slot.used = true;
+                    VG_ASSERT(slot.buffer);
+                    return slot.buffer;
+                }
+            }
+        }
+
+        // create if not found
+        Device * device = Device::get();
+
+        BufferDesc desc;
+        desc.elementSize = _bufferResourceDesc.elementSize;
+        desc.elementCount = _bufferResourceDesc.elementCount;
+        desc.flags = BufferFlags::None;
+
+        if (_uav)
+            desc.resource.m_bindFlags = BindFlags::ShaderResource | BindFlags::UnorderedAccess; // What about "UAV-only" buffers?
+        else
+            desc.resource.m_bindFlags = BindFlags::ShaderResource;
+
+        desc.resource.m_cpuAccessFlags = CPUAccessFlags::None;
+        desc.resource.m_usage = Usage::Default;
+
+        string name = "TempBuf#" + to_string(m_sharedBuffers.size());
+        if (asBool(BindFlags::ShaderResource & desc.resource.m_bindFlags))
+            name += "_RO";
+        if (asBool(BindFlags::UnorderedAccess & desc.resource.m_bindFlags))
+            name += "_RW";
+
+        SharedBuffer sharedBuf;
+        sharedBuf.desc = _bufferResourceDesc;
+        sharedBuf.buffer = device->createBuffer(desc, name.c_str());
+        sharedBuf.used = true;
+
+        m_sharedBuffers.push_back(sharedBuf);
+        return sharedBuf.buffer;
+    }
+
+    //--------------------------------------------------------------------------------------
+    void FrameGraph::releaseBufferFromPool(Buffer *& _buffer)
+    {
+        VG_ASSERT(nullptr != _buffer);
+        for (uint i = 0; i < m_sharedBuffers.size(); ++i)
+        {
+            auto & slot = m_sharedBuffers[i];
+            if (slot.buffer == _buffer)
+            {
+                slot.used = false;
+                _buffer = nullptr;
+                return;
+            }
+        }
+        VG_ASSERT(false, "Could not release Buffer \"%s\" from pool", _buffer->getName());
     }
 
 	//--------------------------------------------------------------------------------------
@@ -540,6 +610,24 @@ namespace vg::gfx
                         {
                             Texture * tex = createRWTextureFromPool(textureResourceDesc);
                             res->setTexture(tex);
+                            //res->setCurrentState(ResourceState::UnorderedAccess); // Do *NOT* change this state during 'Render' but only during 'Build'
+                        }
+                    }
+                }
+
+                auto & rwBuffers = userPass->getRWBuffers();
+                for (uint i = 0; i < rwBuffers.size(); ++i)
+                {
+                    FrameGraphBufferResource * res = rwBuffers[i];
+                    const FrameGraphBufferResourceDesc & bufferResourceDesc = res->getBufferResourceDesc();
+
+                    if (bufferResourceDesc.transient)
+                    {
+                        if (res->isFirstWrite(userPass))
+                        {
+                            Buffer * buffer = createRWBufferFromPool(bufferResourceDesc);
+                            res->setBuffer(buffer);
+                            //res->setCurrentState(ResourceState::UnorderedAccess);
                         }
                     }
                 }
@@ -556,6 +644,7 @@ namespace vg::gfx
                         {
                             Texture * tex = createRenderTargetFromPool(textureResourceDesc);
                             res->setTexture(tex);
+                            //res->setCurrentState(ResourceState::RenderTarget);
                         }
                     }
                 }
@@ -572,6 +661,7 @@ namespace vg::gfx
                         {
                             Texture * tex = createDepthStencilFromPool(textureResourceDesc);
                             res->setTexture(tex);
+                            //res->setCurrentState(ResourceState::RenderTarget);
                         }
                     }
                 }
@@ -654,7 +744,8 @@ namespace vg::gfx
                     if (isLastReadOrWrite)
                     {
                         // Make sure DepthStencil is released in the 'RenderTarget' state
-                        if (ResourceState::RenderTarget != res->getCurrentState())
+                        const auto current = res->getCurrentState();
+                        if (ResourceState::RenderTarget != current)
                             VG_ERROR_ONCE("[FrameGraph] DepthStencil \"%s\" is released in the '%s' state. DepthStencil should be released in the 'ShaderResource' state", res->getName().c_str(), asString(res->getCurrentState()).c_str());
 
                         if (textureResourceDesc.transient)
@@ -680,7 +771,7 @@ namespace vg::gfx
                     {
                         // Make sure UAV is released in 'UnorderedAccess' state
                         auto current = res->getCurrentState();
-                        if (ResourceState::UnorderedAccess != res->getCurrentState())
+                        if (ResourceState::UnorderedAccess != current)
                         {
                             cmdList->transitionResource(res->getTexture(), current, ResourceState::UnorderedAccess);
                             res->setCurrentState(ResourceState::UnorderedAccess);
@@ -694,6 +785,36 @@ namespace vg::gfx
                         }
                     }
                 }
+
+                auto & rwBuffers = userPass->getRWBuffers();
+
+                for (uint i = 0; i < rwBuffers.size(); ++i)
+                {
+                    FrameGraphBufferResource * res = rwBuffers[i];
+                    const FrameGraphBufferResourceDesc & bufferResourceDesc = res->getBufferResourceDesc();
+
+                    const auto & readWrites = res->getReadWriteAccess();
+                    const bool isLastReadOrWrite = readWrites.size() > 0 && readWrites[readWrites.size() - 1].m_userPass == userPass;
+
+                    if (isLastReadOrWrite)
+                    {
+                        // Make sure UAV is released in 'UnorderedAccess' state
+                        auto current = res->getCurrentState();
+                        if (ResourceState::UnorderedAccess != current)
+                        {
+                            cmdList->transitionResource(res->getBuffer(), current, ResourceState::UnorderedAccess);
+                            res->setCurrentState(ResourceState::UnorderedAccess);
+                        }
+
+                        if (bufferResourceDesc.transient)
+                        {
+                            Buffer * buffer = res->getBuffer();
+                            releaseBufferFromPool(buffer);
+                            res->resetBuffer();
+                        }
+                    }
+                }
+
             }            
 		}
 

@@ -12,7 +12,7 @@ namespace vg::gfx
     class BufferDesc
     {
     public:
-        BufferDesc(Usage _usage, BindFlags _bindFlags, CPUAccessFlags _cpuAccessFlags, BufferFlags _flags, core::u32 _elementSize, core::u32 _elementCount = 1) :
+        BufferDesc(Usage _usage = Usage::Default, BindFlags _bindFlags = BindFlags::ShaderResource, CPUAccessFlags _cpuAccessFlags = CPUAccessFlags::None, BufferFlags _flags = BufferFlags::None, core::u32 _elementSize = 4, core::u32 _elementCount = 1) :
             resource(_usage, _bindFlags, _cpuAccessFlags),
             flags(_flags),
             elementSize(_elementSize),

@@ -80,7 +80,30 @@ namespace vg::gfx
         ResourceState                   m_state = ResourceState::Undefined;
     };
 
-    struct FrameGraphTextureResourceDesc
+    //struct FrameGraphResourceDesc
+    //{
+    //    FrameGraphResourceDesc()
+    //    {
+    //
+    //    }
+    //
+    //    FrameGraphResourceDesc(const FrameGraphResourceDesc & _from) :
+    //        transient(_from.transient),
+    //        uav(_from.uav)
+    //    {
+    //
+    //    }
+    //
+    //    bool    transient = false;
+    //    bool    uav = false;
+    //
+    //    bool operator == (const FrameGraphResourceDesc & _other) const
+    //    {
+    //        return transient == _other.transient && uav == _other.uav;
+    //    }
+    //};
+
+    struct FrameGraphTextureResourceDesc //: public FrameGraphResourceDesc
     {
         FrameGraphTextureResourceDesc()
         {
@@ -88,6 +111,7 @@ namespace vg::gfx
         }
 
         FrameGraphTextureResourceDesc(const FrameGraphTextureResourceDesc & _from) :
+            //FrameGraphResourceDesc(_from),
             width(_from.width),
             height(_from.height),
             format(_from.format),
@@ -99,37 +123,66 @@ namespace vg::gfx
 
         }
 
-        core::u16			width = 0;
-        core::u16			height = 0;
-        PixelFormat			format = (PixelFormat)0;
-        FrameGraphResource::InitState initState = FrameGraphResource::InitState::Discard;
+        core::u16			            width = 0;
+        core::u16			            height = 0;
+        PixelFormat			            format = (PixelFormat)0;
+        FrameGraphResource::InitState   initState = FrameGraphResource::InitState::Discard;
         union
         {
-            core::float4		clearColor = (core::float4)0.0f;
+            core::float4		        clearColor = (core::float4)0.0f;
             struct
             {
-                float           clearDepth;
-                core::u8        clearStencil;
+                float                   clearDepth;
+                core::u8                clearStencil;
             };
         };
-        bool                transient = false;
-        bool				uav = false;
+
+        bool    transient = false;
+        bool    uav = false;
 
         bool operator == (const FrameGraphTextureResourceDesc & _other) const
         {
-            return  width == _other.width
+            //return (FrameGraphResourceDesc&)*this == (FrameGraphResourceDesc&)_other
+            return transient == _other.transient
+                && uav == _other.uav
+                && width == _other.width
                 && height == _other.height
                 && format == _other.format          // TODO: alias textures of the same size but different format (store format, init state, clear color elsewhere ?)
                 && initState == _other.initState
-                && hlslpp::all(clearColor == _other.clearColor)
-                && transient == _other.transient
-                && uav == _other.uav;
+                && hlslpp::all(clearColor == _other.clearColor);
         }
     };
 
-    struct FrameGraphBufferResourceDesc
+    struct FrameGraphBufferResourceDesc //: public FrameGraphResourceDesc
     {
-        core::u32 size = 0;
+        FrameGraphBufferResourceDesc()
+        {
+
+        }
+
+        FrameGraphBufferResourceDesc(const FrameGraphBufferResourceDesc & _from) :
+            //FrameGraphResourceDesc(_from),
+            elementSize(_from.elementSize),
+            elementCount(_from.elementCount),
+            transient(_from.transient),
+            uav(_from.uav)
+        {
+
+        }
+
+        core::u32 elementSize = 0;
+        core::u32 elementCount = 1;
+        bool    transient = false;
+        bool    uav = false;
+
+        bool operator == (const FrameGraphBufferResourceDesc & _other) const
+        {
+            //return  (FrameGraphResourceDesc &)*this == (FrameGraphResourceDesc &)_other 
+            return transient == _other.transient
+                   && uav == _other.uav
+                   && elementSize == _other.elementSize
+                   && elementCount == _other.elementCount;
+        }
     };
 
     class FrameGraphTextureResource : public FrameGraphResource
@@ -156,7 +209,9 @@ namespace vg::gfx
 
         void                                    setBufferResourceDesc(const FrameGraphBufferResourceDesc & _bufResDesc, Buffer * _buffer = nullptr);
         const FrameGraphBufferResourceDesc &    getBufferResourceDesc() const;
+        void                                    setBuffer(Buffer * _buffer);
         Buffer *                                getBuffer() const;
+        void                                    resetBuffer();
 
     private:
         FrameGraphBufferResourceDesc            m_desc;
