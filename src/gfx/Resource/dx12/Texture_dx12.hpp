@@ -205,13 +205,6 @@ namespace vg::gfx::dx12
             VG_ASSERT(m_resource.getd3d12TextureResource());
             m_d3d12RTVHandle = device->allocRTVHandle();
             d3d12device->CreateRenderTargetView(m_resource.getd3d12TextureResource(), &viewDesc, m_d3d12RTVHandle);
-
-            // ???
-            if (nullptr == _initData && asBool(BindFlags::ShaderResource & _texDesc.resource.m_bindFlags))
-            {
-                auto * bindlessTable = device->getBindlessTable();
-                bindlessTable->updated3d12descriptor(getTextureHandle());
-            }
         }
         else if (asBool(TextureFlags::DepthStencil & _texDesc.flags))
         {
@@ -224,13 +217,13 @@ namespace vg::gfx::dx12
             VG_ASSERT(m_resource.getd3d12TextureResource());
             m_d3d12DSVHandle = device->allocDSVHandle();
             d3d12device->CreateDepthStencilView(m_resource.getd3d12TextureResource(), &depthStencilViewDesc, m_d3d12DSVHandle);
+        }
 
-            // ???
-            if (nullptr == _initData && asBool(BindFlags::ShaderResource & _texDesc.resource.m_bindFlags))
-            {
-                auto * bindlessTable = device->getBindlessTable();
-                bindlessTable->updated3d12descriptor(getTextureHandle());
-            }
+        // Update ShaderResource descriptor in bindless table
+        if (nullptr == _initData && asBool(BindFlags::ShaderResource & _texDesc.resource.m_bindFlags))
+        {
+            auto * bindlessTable = device->getBindlessTable();
+            bindlessTable->updated3d12descriptor(getTextureHandle());
         }
 
         if (asBool(BindFlags::UnorderedAccess & _texDesc.resource.m_bindFlags))
