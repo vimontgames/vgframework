@@ -43,8 +43,7 @@ namespace vg::gfx
 
         virtual ~FrameGraphResource()
         {
-            m_read.clear();
-            m_write.clear();
+            m_readWrite.clear();
         }
 
         void setType(Type _type);
@@ -57,8 +56,16 @@ namespace vg::gfx
         void setWriteAtPass(const UserPass * _subPass);
         void setReadWriteAtPass(const UserPass * _subPass);
 
-        const core::vector<const UserPass *> & getReadAtPass() const;
-        const core::vector<const UserPass *> & getWriteAtPass() const;
+        bool isRead(const UserPass * _userPass) const;
+        bool isFirstRead(const UserPass * _userPass) const;
+        bool isLastRead(const UserPass * _userPass) const;
+
+        bool isWrite(const UserPass * _userPass) const;
+        bool isFirstWrite(const UserPass * _userPass) const;
+        bool isLastWrite(const UserPass * _userPass) const;
+
+        bool needsReadToWriteTransition(const UserPass * _userPass) const;
+        bool needsWriteToReadTransition(const UserPass * _userPass) const;
 
         const core::vector<PassRWAccess> & getReadWriteAccess() const;
 
@@ -68,8 +75,6 @@ namespace vg::gfx
     private:
         Type                            m_type;
         core::string                    m_name;
-        core::vector<const UserPass *>   m_read;
-        core::vector<const UserPass *>	m_write;
         core::vector<PassRWAccess>		m_readWrite;
         ResourceState                   m_state = ResourceState::Undefined;
     };

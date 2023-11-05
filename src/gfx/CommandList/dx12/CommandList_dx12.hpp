@@ -213,9 +213,11 @@ namespace vg::gfx::dx12
                 gfx::Texture * tex = res->getTexture();
 
                 // skip the 1st and last pass for backbuffer (PRESENT=>RT & RT=>PRESENT) as they are handled by the device itself
-                const auto & writes = res->getWriteAtPass();
-                if (tex->getTexDesc().isBackbuffer() && (writes[0] == userPass || writes[writes.size()-1] == userPass))
-                    continue;
+                if (tex->getTexDesc().isBackbuffer())
+                {
+                    if (res->isFirstWrite(userPass) || res->isLastWrite(userPass))
+                        continue;
+                }
 
                 D3D12_RESOURCE_BARRIER d3d12barrier;
 

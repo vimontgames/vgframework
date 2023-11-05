@@ -35,35 +35,179 @@ namespace vg::gfx
     //--------------------------------------------------------------------------------------
     void FrameGraphResource::setReadAtPass(const UserPass * _subPass)
     {
-        m_read.push_back(_subPass);
         m_readWrite.push_back(PassRWAccess(_subPass, RWFlags::Read));
-    }
-
-    //--------------------------------------------------------------------------------------
-    const core::vector<const UserPass *> & FrameGraphResource::getReadAtPass() const
-    {
-        return m_read;
     }
 
     //--------------------------------------------------------------------------------------
     void FrameGraphResource::setWriteAtPass(const UserPass * _subPass)
     {
-        m_write.push_back(_subPass);
         m_readWrite.push_back(PassRWAccess(_subPass, RWFlags::Write));
     }
 
     //--------------------------------------------------------------------------------------
     void FrameGraphResource::setReadWriteAtPass(const UserPass * _subPass)
     {
-        m_read.push_back(_subPass);
-        m_write.push_back(_subPass);
         m_readWrite.push_back(PassRWAccess(_subPass, RWFlags::Read | RWFlags::Write));
     }
 
     //--------------------------------------------------------------------------------------
-    const core::vector<const UserPass *> & FrameGraphResource::getWriteAtPass() const
+    bool FrameGraphResource::isRead(const UserPass * _userPass) const
     {
-        return m_write;
+        for (uint i = 0; i < m_readWrite.size(); ++i)
+        {
+            const PassRWAccess & readWrite = m_readWrite[i];
+
+            if (_userPass == readWrite.m_userPass)
+            {
+                if (asBool(RWFlags::Read & readWrite.m_rwAccess))
+                    return true;
+                break;
+            }            
+        }
+        return false;
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool FrameGraphResource::isFirstRead(const UserPass * _userPass) const
+    {
+        for (uint i = 0; i < m_readWrite.size(); ++i)
+        {
+            const PassRWAccess & readWrite = m_readWrite[i];
+            if (asBool(RWFlags::Read & readWrite.m_rwAccess))
+            {
+                if (_userPass == readWrite.m_userPass)
+                    return true;
+                break;
+            }
+        }
+        return false;
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool FrameGraphResource::isLastRead(const UserPass * _userPass) const
+    {
+        if (m_readWrite.size() > 0)
+        {
+            for (int i = (int)m_readWrite.size() - 1; i >= 0; --i)
+            {
+                const PassRWAccess & readWrite = m_readWrite[i];
+                if (asBool(RWFlags::Read & readWrite.m_rwAccess))
+                {
+                    if (_userPass == readWrite.m_userPass)
+                        return true;
+                    break;
+                }
+            }
+        }
+        return false;
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool FrameGraphResource::isWrite(const UserPass * _userPass) const
+    {
+        for (uint i = 0; i < m_readWrite.size(); ++i)
+        {
+            const PassRWAccess & readWrite = m_readWrite[i];
+
+            if (_userPass == readWrite.m_userPass)
+            {
+                if (asBool(RWFlags::Write & readWrite.m_rwAccess))
+                    return true;
+                break;
+            }
+        }
+        return false;
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool FrameGraphResource::isFirstWrite(const UserPass * _userPass) const
+    {
+        for (uint i = 0; i < m_readWrite.size(); ++i)
+        {
+            const PassRWAccess & readWrite = m_readWrite[i];
+            if (asBool(RWFlags::Write & readWrite.m_rwAccess))
+            {
+                if (_userPass == readWrite.m_userPass)
+                    return true;
+                break;
+            }
+        }
+        return false;
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool FrameGraphResource::isLastWrite(const UserPass * _userPass) const
+    {
+        if (m_readWrite.size() > 0)
+        {
+            for (int i = (int)m_readWrite.size() - 1; i >= 0; --i)
+            {
+                const PassRWAccess & readWrite = m_readWrite[i];
+                if (asBool(RWFlags::Write & readWrite.m_rwAccess))
+                {
+                    if (_userPass == readWrite.m_userPass)
+                        return true;
+                    break;
+                }
+            }
+        }
+        return false;
+    }
+
+    //--------------------------------------------------------------------------------------
+    // Previous state was 'read' and new state is 'write'
+    //--------------------------------------------------------------------------------------
+    bool FrameGraphResource::needsReadToWriteTransition(const UserPass * _userPass) const
+    {
+        bool previousRead = false;
+        bool previousWrite = false;
+
+        for (uint i = 0; i < m_readWrite.size(); ++i)
+        {
+            const PassRWAccess & readWrite = m_readWrite[i];
+
+            const bool read = asBool(RWFlags::Read & readWrite.m_rwAccess);
+            const bool write = asBool(RWFlags::Write & readWrite.m_rwAccess);
+
+            if (_userPass == readWrite.m_userPass)
+            {
+                if (previousRead && write)
+                    return true;
+                break;
+            }
+
+            previousRead = read;
+            previousWrite = write;
+        }
+
+        return false;
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool FrameGraphResource::needsWriteToReadTransition(const UserPass * _userPass) const
+    {
+        bool previousRead = false;
+        bool previousWrite = false;
+
+        for (uint i = 0; i < m_readWrite.size(); ++i)
+        {
+            const PassRWAccess & readWrite = m_readWrite[i];
+
+            const bool read = asBool(RWFlags::Read & readWrite.m_rwAccess);
+            const bool write = asBool(RWFlags::Write & readWrite.m_rwAccess);
+
+            if (_userPass == readWrite.m_userPass)
+            {
+                if (previousWrite && read)
+                    return true;
+                break;
+            }
+
+            previousRead = read;
+            previousWrite = write;
+        }
+
+        return false;
     }
 
     //--------------------------------------------------------------------------------------
