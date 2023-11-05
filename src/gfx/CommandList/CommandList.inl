@@ -77,4 +77,10 @@ namespace vg::gfx
     {
         super::setComputeRootConstants(_startOffset, _values, _count);
     }
+
+    //--------------------------------------------------------------------------------------
+    VG_INLINE void CommandList::transitionResource(gfx::Texture * _texture, ResourceState _before, ResourceState _after)
+    {
+        super::transitionResource(_texture, _before, _after);
+    }
 }

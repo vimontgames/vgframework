@@ -55,6 +55,8 @@ namespace vg::gfx::dx12
         void                                beginGPUEvent               (const char * _name, core::u32 _color);
         void                                endGPUEvent                 ();
 
+		void								transitionResource			(gfx::Texture * _texture, ResourceState _before, ResourceState _after);
+
         static D3D12_PRIMITIVE_TOPOLOGY     getd3d12PrimitiveTopology   (PrimitiveTopology _topology);
 
 	private:

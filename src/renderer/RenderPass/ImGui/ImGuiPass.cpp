@@ -46,6 +46,23 @@ namespace vg::renderer
     //--------------------------------------------------------------------------------------
     void ImGuiPass::Setup(const gfx::RenderPassContext & _renderContext, double _dt)
     {
+        // ImGui windows require to read the viewport render targets
+        Renderer * renderer = Renderer::get();
+
+        for (uint j = 0; j < enumCount<gfx::ViewTarget>(); ++j)
+        {
+            const auto & views = renderer->GetViews((gfx::ViewTarget)j);
+            for (uint i = 0; i < views.size(); ++i)
+            {
+                const auto * view = views[i];
+                if (view)
+                {
+                    ITexture * dest = view->GetRenderTarget();
+                    readRenderTarget(dest->getName());
+                }
+            }
+        }
+        
         writeRenderTarget(0, "Backbuffer");       
     }
 

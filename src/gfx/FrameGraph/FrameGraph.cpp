@@ -339,20 +339,20 @@ namespace vg::gfx
                     bool firstWrite = res->isFirstWrite(userPass);
                     bool lastWrite = res->isLastWrite(userPass);
                                         
-                    const bool backbuffer = m_outputRes == res;
+                    const bool isBackbuffer = m_outputRes == res;
 
                     if (write)
                     {
                         if (firstWrite)
                         {
-                            if (backbuffer)
+                            if (isBackbuffer)
                             {
                                 begin = ResourceState::Undefined;
                             }
                             else
                             {
                                 #ifdef VG_DX12
-                                flags |= ResourceTransitionFlags::MakeWritable; // dx12-only, used to transition to 'RenderTarget' state before 1st use
+                                //flags |= ResourceTransitionFlags::MakeWritable; // dx12-only, used to transition to 'RenderTarget' state before 1st use
                                 #endif
 
                                 #ifdef VG_VULKAN
@@ -379,17 +379,13 @@ namespace vg::gfx
                     // This is not correct in case of Write/Read/Write sequence! We should detect a write (current pass) followed by a read to resolve
                     if (lastWrite)
                     {
-                        if (backbuffer)
+                        if (isBackbuffer)
                             flags |= ResourceTransitionFlags::Present;
                         else
                             end = ResourceState::ShaderResource;
                     }
 
-                    ResourceTransitionDesc info;
-                                               info.flags = flags;
-                                               info.begin = begin;
-                                               info.end = end;
-
+                    ResourceTransitionDesc info(flags, begin, end);
                     renderPassKey.m_subPassKeys[0].setColorAttachmentInfo(attachmentIndex, info);
 
                     res->setCurrentState(info.end);
@@ -686,18 +682,22 @@ namespace vg::gfx
                 {
                     FrameGraphTextureResource * res = texturesRead[i];
                     const FrameGraphTextureResourceDesc & textureResourceDesc = res->getTextureResourceDesc();
+                    
+                    const auto & readWrites = res->getReadWriteAccess();
+                    const bool isLastReadOrWrite = readWrites.size() > 0 && readWrites[readWrites.size() - 1].m_userPass == userPass;
 
-                    if (textureResourceDesc.transient)
+                    if (isLastReadOrWrite)
                     {
-                        const auto & readWrites = res->getReadWriteAccess();
-                        const bool isLastReadOrWrite = readWrites.size() > 0 && readWrites[readWrites.size() - 1].m_userPass == userPass;
-
-                        if (isLastReadOrWrite)
+                        // Make sure RenderTarget is set in the 'RenderTarget' state after use by FrameGraph so that's in a predictable state for the next frame
+                        auto current = res->getCurrentState();
+                        if (ResourceState::RenderTarget != current)
                         {
-                            // Make sure RenderTarget is released in the 'ShaderResource' state
-                            if (ResourceState::ShaderResource != res->getCurrentState())
-                                VG_ERROR_ONCE("[FrameGraph] RenderTarget \"%s\" is released in the '%s' state. RenderTarget should be released in the 'ShaderResource' state", res->getName().c_str(), asString(res->getCurrentState()).c_str());
+                            cmdList->transitionResource(res->getTexture(), current, ResourceState::RenderTarget);
+                            res->setCurrentState(ResourceState::RenderTarget);
+                        }
 
+                        if (textureResourceDesc.transient)
+                        {
                             Texture * tex = res->getTexture();
                             releaseTextureFromPool(tex);
                             res->resetTexture();

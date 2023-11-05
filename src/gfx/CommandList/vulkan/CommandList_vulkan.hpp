@@ -41,6 +41,45 @@ namespace vg::gfx::vulkan
 		VG_ASSERT_VULKAN(vkEndCommandBuffer(m_vkCommandBuffer));
 	}
 
+    //--------------------------------------------------------------------------------------
+    void CommandList::transitionResource(gfx::Texture * _texture, ResourceState _before, ResourceState _after)
+    {
+        VkMemoryBarrier memoryBarrier;
+        memoryBarrier.sType = VK_STRUCTURE_TYPE_MEMORY_BARRIER;
+        memoryBarrier.pNext = nullptr;
+
+        switch (_before)
+        {
+            default:
+                VG_ASSERT(false, "transitionResource from '%s' to '%s' is not implemented", asString(_before), asString(_after));
+                break;
+
+            case ResourceState::ShaderResource:
+            {
+                switch (_after)
+                {
+                    default:
+                        VG_ASSERT_ENUM_NOT_IMPLEMENTED(_after);
+                        break;
+
+                    case ResourceState::RenderTarget:
+                    {
+                        // ShaderResource to RenderTarget transition
+                        memoryBarrier.srcAccessMask = VK_ACCESS_SHADER_READ_BIT;
+                        memoryBarrier.dstAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
+
+                        VkPipelineStageFlags srcStageMask = VK_PIPELINE_STAGE_ALL_GRAPHICS_BIT;
+                        VkPipelineStageFlags dstStageMask = VK_PIPELINE_STAGE_ALL_GRAPHICS_BIT;
+                        
+                        vkCmdPipelineBarrier(m_vkCommandBuffer, srcStageMask, dstStageMask, 0, 1, &memoryBarrier, 0, NULL, 0, NULL);
+                    }
+                    break;
+                }
+            }
+            break;
+        }        
+    }
+
 	//--------------------------------------------------------------------------------------
 	void CommandList::beginRenderPass(gfx::RenderPass * _renderPass)
 	{

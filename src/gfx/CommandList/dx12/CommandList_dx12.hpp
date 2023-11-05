@@ -187,6 +187,19 @@ namespace vg::gfx::dx12
     }
 
     //--------------------------------------------------------------------------------------
+    void CommandList::transitionResource(gfx::Texture * _texture, ResourceState _before, ResourceState _after)
+    {
+        D3D12_RESOURCE_BARRIER barrier;
+        barrier.Transition.pResource = _texture->getResource().getd3d12TextureResource();
+        barrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
+        barrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
+        barrier.Transition.StateBefore = getd3d12ResourceBarrierType(_before);
+        barrier.Transition.StateAfter = getd3d12ResourceBarrierType(_after);;
+        barrier.Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
+        m_d3d12graphicsCmdList->ResourceBarrier(1, &barrier);
+    }
+
+    //--------------------------------------------------------------------------------------
 	void CommandList::endSubPass()
 	{
         if (RenderPassType::Graphic == m_renderPass->getRenderPassType())
