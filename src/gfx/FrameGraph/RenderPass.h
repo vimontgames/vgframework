@@ -30,8 +30,8 @@ namespace vg::gfx
 			const RenderPassType						m_renderPassType;
             const RenderPassKey							m_renderPassKey;
 			core::vector<gfx::SubPass *>		        m_subPasses;
-			core::vector<FrameGraphTextureResource *> m_colorAttachments;
-            FrameGraphTextureResource *               m_depthStencilAttachment;
+			core::vector<FrameGraphTextureResource *>	m_colorAttachments;
+            FrameGraphTextureResource *					m_depthStencilAttachment;
 		};
 	}
 }

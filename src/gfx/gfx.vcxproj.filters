@@ -573,6 +573,9 @@
     <ClInclude Include="FrameGraph\FrameGraphResource.hpp">
       <Filter>FrameGraph</Filter>
     </ClInclude>
+    <ClInclude Include="FrameGraph\ResourceTransition.h">
+      <Filter>FrameGraph</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Device">

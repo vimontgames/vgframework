@@ -58,6 +58,7 @@
     <ClCompile Include="PipelineState\PipelineStateCache.cpp" />
     <ClCompile Include="Profiler\Profiler.cpp" />
     <ClCompile Include="Resource\Resource.cpp" />
+    <ClInclude Include="FrameGraph\ResourceTransition.h" />
     <ClInclude Include="IImporter.h" />
     <ClInclude Include="Importer\Importer.h" />
     <ClInclude Include="Importer\TextureImporter.h" />

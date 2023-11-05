@@ -70,6 +70,28 @@ namespace vg::gfx::dx12
 		}
 	}
 
+    //--------------------------------------------------------------------------------------
+    D3D12_RESOURCE_STATES getd3d12ResourceBarrierType(ResourceState _state)
+    {
+        switch (_state)
+        {
+            default:
+                VG_ASSERT(false, "Unhandled ResourceState \"%s\" (%u)", asString(_state).c_str(), _state);
+
+            case ResourceState::Undefined:
+                return D3D12_RESOURCE_STATE_COMMON;
+
+            case ResourceState::UnorderedAccess:
+                return D3D12_RESOURCE_STATE_UNORDERED_ACCESS;
+
+            case ResourceState::RenderTarget:
+                return D3D12_RESOURCE_STATE_RENDER_TARGET;
+
+            case ResourceState::ShaderResource:
+                return D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE | D3D12_RESOURCE_STATE_NON_PIXEL_SHADER_RESOURCE;
+        }
+    }
+
 	//--------------------------------------------------------------------------------------
 	void CommandList::beginRenderPass(gfx::RenderPass * _renderPass)
 	{
@@ -98,8 +120,9 @@ namespace vg::gfx::dx12
             const auto index = getSubPassIndex();
             const SubPassKey & subPassKey = renderPasskey.m_subPassKeys[index];
             const auto & attachments = renderPass->m_colorAttachments;
-
-            auto userPass = _subPass->getUserPassesInfos()[0].m_userPass;
+            
+            auto passInfo = _subPass->getUserPassesInfos()[0];
+            auto userPass = passInfo.m_userPass;
 
             for (uint i = 0; i < _subPass->m_renderTargetCount; ++i)
             {
@@ -111,19 +134,6 @@ namespace vg::gfx::dx12
                     D3D12_RENDER_PASS_RENDER_TARGET_DESC & renderTargetDesc = _subPass->m_d3d12renderPassRenderTargetDesc[i];
                     const Texture * tex = res->getTexture();
                     _subPass->m_d3d12renderPassRenderTargetDesc[i].cpuDescriptor = tex->getd3d12RTVHandle();
-
-                    // The texture needs to transition to 'RenderTarget' state before 1st use
-                    if (asBool(ResourceTransitionFlags::MakeWritable & info.flags))
-                    {
-                        D3D12_RESOURCE_BARRIER barrier;
-                        barrier.Transition.pResource = res->getTexture()->getResource().getd3d12TextureResource(); // m_bufferContext[m_currentBackbufferIndex].backbuffer->getResource().getd3d12TextureResource();
-                        barrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
-                        barrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
-                        barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_ALL_SHADER_RESOURCE;
-                        barrier.Transition.StateAfter = D3D12_RESOURCE_STATE_RENDER_TARGET;
-                        barrier.Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
-                        m_d3d12graphicsCmdList->ResourceBarrier(1, &barrier);
-                    }
                 }
             }      
 
@@ -140,51 +150,42 @@ namespace vg::gfx::dx12
                 }
             }
 
-            //auto rwTextures = userPass->getRWTextures();
-            //for (uint i = 0; i < rwTextures.size(); ++i)
-            //{
-            //    const FrameGraphTextureResource * res = rwTextures[i];
-            //
-            //    switch (res->getCurrentState())
-            //    {
-            //        case ResourceState::ShaderResource:
-            //        {
-            //            D3D12_RESOURCE_BARRIER barrier;
-            //            barrier.Transition.pResource = res->getTexture()->getResource().getd3d12TextureResource(); 
-            //            barrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
-            //            barrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
-            //            barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_COMMON;
-            //            barrier.Transition.StateAfter = D3D12_RESOURCE_STATE_ALL_SHADER_RESOURCE;
-            //            barrier.Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
-            //            m_d3d12graphicsCmdList->ResourceBarrier(1, &barrier);
-            //        }
-            //        break;
-            //    }
-            //}
+            vector<D3D12_RESOURCE_BARRIER> d3d12barriers;
+
+            const auto resourceTransitions = passInfo.m_resourceTransitions;
+            for (uint i = 0; i < resourceTransitions.size(); ++i)
+            {
+                const auto resTrans = resourceTransitions[i];
+
+                D3D12_RESOURCE_BARRIER d3d12barrier;
+
+                const auto resType = resTrans.m_resource->getType();
+                switch (resType)
+                {
+                    default:
+                        VG_ASSERT_ENUM_NOT_IMPLEMENTED(resType);
+                        break;
+
+                    case FrameGraphResource::Type::Texture:
+                        d3d12barrier.Transition.pResource = ((FrameGraphTextureResource*)resTrans.m_resource)->getTexture()->getResource().getd3d12TextureResource();
+                        d3d12barrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
+                        d3d12barrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
+                        d3d12barrier.Transition.StateBefore = getd3d12ResourceBarrierType(resTrans.m_transitionDesc.begin);
+                        d3d12barrier.Transition.StateAfter = getd3d12ResourceBarrierType(resTrans.m_transitionDesc.end);
+                        d3d12barrier.Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
+
+                        d3d12barriers.push_back(d3d12barrier);
+                        break;
+                }
+            }
+
+            if (d3d12barriers.size() > 0)
+                m_d3d12graphicsCmdList->ResourceBarrier((uint)d3d12barriers.size(), d3d12barriers.data());
 
             if (RenderPassType::Graphic == m_renderPass->getRenderPassType())
                 m_d3d12graphicsCmdList->BeginRenderPass(_subPass->m_renderTargetCount, _subPass->m_renderTargetCount ? _subPass->m_d3d12renderPassRenderTargetDesc : nullptr, _subPass->m_depthStencilCount ? &_subPass->m_d3d12renderPassDepthStencilDesc : nullptr, _subPass->m_d3d12renderPassFlags);
         }
 	}
-
-    //--------------------------------------------------------------------------------------
-    D3D12_RESOURCE_STATES getd3d12ResourceBarrierType(ResourceState _state)
-    {
-        switch (_state)
-        {
-            default:
-                VG_ASSERT(false, "Unhandled ResourceState \"%s\" (%u)", asString(_state).c_str(), _state);
-
-            case ResourceState::Undefined:
-                return D3D12_RESOURCE_STATE_COMMON;
-
-            case ResourceState::RenderTarget:
-                return D3D12_RESOURCE_STATE_RENDER_TARGET;
-
-            case ResourceState::ShaderResource:
-                return D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE | D3D12_RESOURCE_STATE_NON_PIXEL_SHADER_RESOURCE;
-        }
-    }
 
     //--------------------------------------------------------------------------------------
     void CommandList::transitionResource(gfx::Texture * _texture, ResourceState _before, ResourceState _after)

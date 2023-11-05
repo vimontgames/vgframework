@@ -148,55 +148,6 @@ namespace vg::gfx
         m_outputRes = getTextureResource(m_outputResID);
 	}
 
-	//--------------------------------------------------------------------------------------
-	void FrameGraph::findDependencies(const UserPass & _renderPassDesc, uint _depth)
-	{
-		//TODO
-	}
-
-	//--------------------------------------------------------------------------------------
-	void FrameGraph::allocateResources()
-	{
-		//for (auto * subPass : m_userPassStack)
-		//{
-        //    // in
-        //    for (FrameGraphTextureResource * tex : subPass->m_textures)
-        //    {
-        //        const auto & desc = tex->getTextureResourceDesc();
-        //        if (desc.transient)
-        //        {
-        //            const auto & reads = tex->getReadAtPass();
-        //            if (reads[0] == subPass)
-        //            {
-        //                VG_DEBUGPRINT("Transient TextureResource \"%s\" first read during pass \"%s\"\n", tex->getName(), subPass->getName());
-        //            }
-        //            if (reads[reads.size() - 1] == subPass)
-        //            {
-        //                VG_DEBUGPRINT("Transient TextureResource \"%s\" last read during pass \"%s\"\n", tex->getName(), subPass->getName());
-        //            }
-        //        }
-        //    }
-        //
-        //    // out
-        //    for (FrameGraphTextureResource * renderTarget : subPass->m_renderTarget)
-        //    {
-        //        const auto & desc = renderTarget->getTextureResourceDesc();
-        //        if (desc.transient)
-        //        {
-        //            const auto & writes = renderTarget->getWriteAtPass();
-        //            if (writes[0] == subPass)
-        //            {
-        //                VG_DEBUGPRINT("Transient TextureResource \"%s\" first write during pass \"%s\"\n", renderTarget->getName(), subPass->getName());
-        //            } 
-        //            if (writes[writes.size()-1] == subPass)
-        //            {
-        //                VG_DEBUGPRINT("Transient TextureResource \"%s\" last write during pass \"%s\"\n", renderTarget->getName(), subPass->getName());
-        //            }
-        //        }
-        //    }
-		//}
-	}
-
     //--------------------------------------------------------------------------------------
     bool FrameGraph::addUserPass(const RenderPassContext & _renderContext, UserPass * _userPass, const FrameGraphUserPassID & _renderPassID)
     {
@@ -232,37 +183,7 @@ namespace vg::gfx
 	{
         VG_PROFILE_CPU("build");
 
-		//auto itBackbuffer = m_resources.find(m_outputResID);
-		//VG_ASSERT(m_resources.end() != itBackbuffer, "FrameGraph destination resource not found");
-        //
-		//Resource * backbufferRes = itBackbuffer->second;
-		//const auto backbufferWrites = backbufferRes->getWriteAtPass();
-		//VG_ASSERT(!backbufferWrites.empty(), "No RenderPass is writing to the FrameGraph destination");
-        //
-		//m_userPassStack.clear();
-        //
-		//// Add all passes that write to the destination to the stack
-		//for (const UserPass * subPass : backbufferWrites)
-		//	m_userPassStack.push_back(subPass);
-        //
-		//auto tempStack = m_userPassStack;
-        //
-		//for (const UserPass * subPass : tempStack)
-		//	findDependencies(*subPass, 0);
-
-		// Reverse & remove duplicates
-		//reverseAndRemoveDuplicates();
-
-		// TODO: remove useless passes (output is unused)
-
-		// TODO: reorder passes
-
-		// TODO: allocate resources
-		allocateResources();
-
-		// TODO: merge adjacent passes when possible
-
-		// TODO: make resources required in only one RenderPass transient
+        // Cleanup
 		for (auto * renderPass : m_renderPasses)
 			VG_SAFE_RELEASE(renderPass);
 		m_renderPasses.clear();
@@ -279,7 +200,7 @@ namespace vg::gfx
             RenderPassKey renderPassKey;
                           renderPassKey.m_subPassCount = 1;
 
-            vector<ResourceTransitionDesc> manualResourceTransitions;
+            vector<FrameGraphResourceTransitionDesc> resourceTransitions;
 			
 			// build all list with attachments from all passes
 			// for (...)
@@ -287,6 +208,21 @@ namespace vg::gfx
                 auto & rwTextures = userPass->getRWTextures();
                 for (uint i = 0; i < rwTextures.size(); ++i)
                 {
+                    FrameGraphTextureResource * res = rwTextures[i];
+                    bool read = res->needsWriteToReadTransition(userPass);
+
+                    if (read)
+                    {
+                        FrameGraphResourceTransitionDesc resTrans;
+                        resTrans.m_resource = res;
+                        resTrans.m_transitionDesc.flags = (ResourceTransitionFlags)0;
+                        resTrans.m_transitionDesc.begin = ResourceState::UnorderedAccess;
+                        resTrans.m_transitionDesc.end = ResourceState::ShaderResource;
+
+                        resourceTransitions.push_back(resTrans);
+                        res->setCurrentState(ResourceState::ShaderResource);
+                    }
+
                     //FrameGraphTextureResource * res = rwTextures[i];
                     //const FrameGraphTextureResourceDesc & textureResourceDesc = res->getTextureResourceDesc();
                     //
@@ -351,10 +287,6 @@ namespace vg::gfx
                             }
                             else
                             {
-                                #ifdef VG_DX12
-                                //flags |= ResourceTransitionFlags::MakeWritable; // dx12-only, used to transition to 'RenderTarget' state before 1st use
-                                #endif
-
                                 #ifdef VG_VULKAN
                                 begin = ResourceState::Undefined; // Why not 'RenderTarget'? Because Vulkan.
                                 #elif defined(VG_DX12)
@@ -461,7 +393,9 @@ namespace vg::gfx
             renderPass->m_colorAttachments = std::move(colorAttachments); // transient resources will be lazy allocated before the actuel RenderPass begins
             renderPass->m_depthStencilAttachment = depthStencilAttachment;
 
-            SubPass * subPass = new SubPass(/*manualResourceTransitions*/);
+            SubPass * subPass = new SubPass();
+
+            userPassInfo.m_resourceTransitions = std::move(resourceTransitions);
 
 			subPass->addUserPassInfo(userPassInfo);
 			renderPass->addSubPass(subPass);
@@ -516,7 +450,10 @@ namespace vg::gfx
                     desc.flags = _depthStencil ? TextureFlags::DepthStencil : TextureFlags::RenderTarget;
                     
                     if (_uav)
+                    {
+                        desc.flags = (TextureFlags)0;
                         desc.resource.m_bindFlags = BindFlags::ShaderResource | BindFlags::UnorderedAccess; // What about "UAV-only" textures?
+                    }
                     else
                         desc.resource.m_bindFlags = BindFlags::ShaderResource;
 
@@ -711,17 +648,17 @@ namespace vg::gfx
                     FrameGraphTextureResource * res = depthStencil;
                     const FrameGraphTextureResourceDesc & textureResourceDesc = res->getTextureResourceDesc();
 
-                    if (textureResourceDesc.transient)
+                    const auto & readWrites = res->getReadWriteAccess();
+                    const bool isLastReadOrWrite = readWrites.size() > 0 && readWrites[readWrites.size() - 1].m_userPass == userPass;
+
+                    if (isLastReadOrWrite)
                     {
-                        const auto & readWrites = res->getReadWriteAccess();
-                        const bool isLastReadOrWrite = readWrites.size() > 0 && readWrites[readWrites.size() - 1].m_userPass == userPass;
+                        // Make sure DepthStencil is released in the 'RenderTarget' state
+                        if (ResourceState::RenderTarget != res->getCurrentState())
+                            VG_ERROR_ONCE("[FrameGraph] DepthStencil \"%s\" is released in the '%s' state. DepthStencil should be released in the 'ShaderResource' state", res->getName().c_str(), asString(res->getCurrentState()).c_str());
 
-                        if (isLastReadOrWrite)
+                        if (textureResourceDesc.transient)
                         {
-                            // Make sure DepthStencil is released in the 'RenderTarget' state
-                            if (ResourceState::RenderTarget != res->getCurrentState())
-                                VG_ERROR_ONCE("[FrameGraph] DepthStencil \"%s\" is released in the '%s' state. DepthStencil should be released in the 'ShaderResource' state", res->getName().c_str(), asString(res->getCurrentState()).c_str());
-
                             Texture * tex = res->getTexture();
                             releaseTextureFromPool(tex);
                             res->resetTexture();
@@ -735,18 +672,22 @@ namespace vg::gfx
                 {
                     FrameGraphTextureResource * res = rwTextures[i];
                     const FrameGraphTextureResourceDesc & textureResourceDesc = res->getTextureResourceDesc();
+                    
+                    const auto & readWrites = res->getReadWriteAccess();
+                    const bool isLastReadOrWrite = readWrites.size() > 0 && readWrites[readWrites.size() - 1].m_userPass == userPass;
 
-                    if (textureResourceDesc.transient)
+                    if (isLastReadOrWrite)
                     {
-                        const auto & readWrites = res->getReadWriteAccess();
-                        const bool isLastReadOrWrite = readWrites.size() > 0 && readWrites[readWrites.size() - 1].m_userPass == userPass;
-
-                        if (isLastReadOrWrite)
+                        // Make sure UAV is released in 'UnorderedAccess' state
+                        auto current = res->getCurrentState();
+                        if (ResourceState::UnorderedAccess != res->getCurrentState())
                         {
-                            // Make sure UAV is released in 'UnorderedAccess' state
-                            if (ResourceState::UnorderedAccess != res->getCurrentState())
-                                VG_ERROR_ONCE("[FrameGraph] RWTexture \"%s\" is released in the '%s' state. RWTextures should be released in the 'UnorderedAccess' state", res->getName().c_str(), asString(res->getCurrentState()).c_str());
+                            cmdList->transitionResource(res->getTexture(), current, ResourceState::UnorderedAccess);
+                            res->setCurrentState(ResourceState::UnorderedAccess);
+                        }
 
+                        if (textureResourceDesc.transient)
+                        {
                             Texture * tex = res->getTexture();
                             releaseTextureFromPool(tex);
                             res->resetTexture();

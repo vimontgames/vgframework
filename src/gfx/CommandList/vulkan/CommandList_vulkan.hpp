@@ -44,34 +44,88 @@ namespace vg::gfx::vulkan
     //--------------------------------------------------------------------------------------
     void CommandList::transitionResource(gfx::Texture * _texture, ResourceState _before, ResourceState _after)
     {
-        VkMemoryBarrier memoryBarrier;
-        memoryBarrier.sType = VK_STRUCTURE_TYPE_MEMORY_BARRIER;
-        memoryBarrier.pNext = nullptr;
+        VkImageMemoryBarrier imageMemoryBarrier;
+        imageMemoryBarrier.sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER;
+        imageMemoryBarrier.pNext = nullptr;
+        imageMemoryBarrier.srcQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
+        imageMemoryBarrier.dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
+        imageMemoryBarrier.image = _texture->getResource().getVulkanImage();
+        imageMemoryBarrier.subresourceRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+        imageMemoryBarrier.subresourceRange.baseMipLevel = 0;
+        imageMemoryBarrier.subresourceRange.levelCount = 1;
+        imageMemoryBarrier.subresourceRange.baseArrayLayer = 0;
+        imageMemoryBarrier.subresourceRange.layerCount = 1;
 
         switch (_before)
         {
             default:
-                VG_ASSERT(false, "transitionResource from '%s' to '%s' is not implemented", asString(_before), asString(_after));
+                VG_ASSERT(false, "transitionResource from '%s' to '%s' is not implemented", asString(_before).c_str(), asString(_after).c_str());
                 break;
+
+            case ResourceState::UnorderedAccess:
+            {
+                switch (_after)
+                {
+                    default:
+                        VG_ASSERT(false, "transitionResource from '%s' to '%s' is not implemented", asString(_before).c_str(), asString(_after).c_str());
+                        break;
+
+                    case ResourceState::ShaderResource:
+                    {
+                        // ShaderResource to RenderTarget transition
+                        imageMemoryBarrier.srcAccessMask = VK_ACCESS_SHADER_WRITE_BIT;
+                        imageMemoryBarrier.dstAccessMask = VK_ACCESS_SHADER_READ_BIT;
+
+                        imageMemoryBarrier.oldLayout = VK_IMAGE_LAYOUT_UNDEFINED;
+                        imageMemoryBarrier.newLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+
+                        VkPipelineStageFlags srcStageMask = VK_PIPELINE_STAGE_ALL_GRAPHICS_BIT;
+                        VkPipelineStageFlags dstStageMask = VK_PIPELINE_STAGE_ALL_GRAPHICS_BIT;
+
+                        vkCmdPipelineBarrier(m_vkCommandBuffer, srcStageMask, dstStageMask, 0, 0, NULL, 0, NULL, 1, &imageMemoryBarrier);
+                    }
+                    break;
+                }
+            }
+            break;
 
             case ResourceState::ShaderResource:
             {
                 switch (_after)
                 {
                     default:
-                        VG_ASSERT_ENUM_NOT_IMPLEMENTED(_after);
+                        VG_ASSERT(false, "transitionResource from '%s' to '%s' is not implemented", asString(_before).c_str(), asString(_after).c_str());
                         break;
+
+                    case ResourceState::UnorderedAccess:
+                    {
+                        // ShaderResource to UnorderedAccess transition
+                        imageMemoryBarrier.srcAccessMask = VK_ACCESS_SHADER_READ_BIT;
+                        imageMemoryBarrier.dstAccessMask = VK_ACCESS_SHADER_WRITE_BIT;
+
+                        imageMemoryBarrier.oldLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+                        imageMemoryBarrier.newLayout = VK_IMAGE_LAYOUT_GENERAL;
+
+                        VkPipelineStageFlags srcStageMask = VK_PIPELINE_STAGE_ALL_GRAPHICS_BIT;
+                        VkPipelineStageFlags dstStageMask = VK_PIPELINE_STAGE_ALL_GRAPHICS_BIT;
+
+                        vkCmdPipelineBarrier(m_vkCommandBuffer, srcStageMask, dstStageMask, 0, 0, NULL, 0, NULL, 1, &imageMemoryBarrier);
+                    }
+                    break;
 
                     case ResourceState::RenderTarget:
                     {
                         // ShaderResource to RenderTarget transition
-                        memoryBarrier.srcAccessMask = VK_ACCESS_SHADER_READ_BIT;
-                        memoryBarrier.dstAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
+                        imageMemoryBarrier.srcAccessMask = VK_ACCESS_SHADER_READ_BIT;
+                        imageMemoryBarrier.dstAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
+
+                        imageMemoryBarrier.oldLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+                        imageMemoryBarrier.newLayout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
 
                         VkPipelineStageFlags srcStageMask = VK_PIPELINE_STAGE_ALL_GRAPHICS_BIT;
                         VkPipelineStageFlags dstStageMask = VK_PIPELINE_STAGE_ALL_GRAPHICS_BIT;
                         
-                        vkCmdPipelineBarrier(m_vkCommandBuffer, srcStageMask, dstStageMask, 0, 1, &memoryBarrier, 0, NULL, 0, NULL);
+                        vkCmdPipelineBarrier(m_vkCommandBuffer, srcStageMask, dstStageMask, 0, 0, NULL, 0, NULL, 1, &imageMemoryBarrier);
                     }
                     break;
                 }
@@ -84,6 +138,28 @@ namespace vg::gfx::vulkan
 	void CommandList::beginRenderPass(gfx::RenderPass * _renderPass)
 	{
 		super::beginRenderPass(_renderPass);
+
+        auto subPass = _renderPass->getSubPasses()[0];
+        auto passInfo = subPass->getUserPassesInfos()[0];
+
+        const auto resourceTransitions = passInfo.m_resourceTransitions;
+
+        for (uint i = 0; i < resourceTransitions.size(); ++i)
+        {
+            const FrameGraphResourceTransitionDesc resTrans = resourceTransitions[i];
+
+            const auto resType = resTrans.m_resource->getType();
+            switch (resType)
+            {
+                default:
+                    VG_ASSERT_ENUM_NOT_IMPLEMENTED(resType);
+
+                case FrameGraphResource::Type::Texture:
+                    transitionResource(((FrameGraphTextureResource *)resTrans.m_resource)->getTexture(), resTrans.m_transitionDesc.begin, resTrans.m_transitionDesc.end);
+                    break;
+            }            
+        }
+
         _renderPass->begin(this);	
 	}
 

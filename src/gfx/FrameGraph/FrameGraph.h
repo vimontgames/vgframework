@@ -37,8 +37,9 @@ namespace vg::gfx
 	public:
         struct UserPassInfo
         {
-            RenderPassContext	m_renderContext;
-            UserPass *			m_userPass;
+            RenderPassContext	                            m_renderContext;
+            UserPass *			                            m_userPass;
+            core::vector<FrameGraphResourceTransitionDesc>  m_resourceTransitions;
         };
 
         const char * getClassName() const final { return "FrameGraph"; }
@@ -77,9 +78,7 @@ namespace vg::gfx
 
         void releaseTextureFromPool(Texture *& _tex);
 
-		void findDependencies(const UserPass & _renderPassDesc, core::uint _depth);
 		void reverseAndRemoveDuplicates();
-		void allocateResources();
 
         void cleanup();
 

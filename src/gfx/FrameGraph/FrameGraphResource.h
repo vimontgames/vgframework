@@ -1,6 +1,7 @@
 #pragma once
 
 #include "FrameGraph_consts.h"
+#include "ResourceTransition.h"
 
 namespace vg::gfx
 {
@@ -160,5 +161,11 @@ namespace vg::gfx
     private:
         FrameGraphBufferResourceDesc            m_desc;
         Buffer *                                m_buffer = nullptr;
+    };
+
+    struct FrameGraphResourceTransitionDesc
+    {
+        FrameGraphResource *    m_resource;
+        ResourceTransitionDesc  m_transitionDesc;
     };
 }

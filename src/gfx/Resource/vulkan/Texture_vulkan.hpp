@@ -140,9 +140,15 @@ namespace vg::gfx::vulkan
                 imgDesc.usage = VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT;
                 imgDesc.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
             }
+            else if (asBool(BindFlags::UnorderedAccess & _texDesc.resource.m_bindFlags))
+            {
+                imgDesc.tiling = VK_IMAGE_TILING_LINEAR;
+                imgDesc.usage = VK_IMAGE_USAGE_TRANSFER_DST_BIT;
+                imgDesc.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
+            }
             else 
             {
-                imgDesc.tiling = VK_IMAGE_TILING_OPTIMAL; // VK_IMAGE_TILING_LINEAR;
+                imgDesc.tiling = VK_IMAGE_TILING_OPTIMAL; 
                 imgDesc.usage = VK_IMAGE_USAGE_TRANSFER_DST_BIT;
                 imgDesc.initialLayout = VK_IMAGE_LAYOUT_PREINITIALIZED;
             }
