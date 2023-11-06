@@ -23,7 +23,6 @@ namespace vg::gfx
 
         core::u32 size() const { return elementSize * elementCount; }
 
-		inline bool testUsageFlags(Usage _flags) const { return resource.testUsageFlags(_flags); }
 		inline bool testBindFlags(BindFlags _flags) const { return resource.testBindFlags(_flags); }
 
         ResourceDesc    resource;

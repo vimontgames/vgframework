@@ -32,9 +32,10 @@ namespace vg::gfx
         return false;
     }
 
-    void *memset32(void *m, uint32_t val, size_t count)
+    //--------------------------------------------------------------------------------------
+    void * memset32(void * m, uint32_t val, size_t count)
     {
-        u32 * __restrict buf = (u32 *__restrict)m;
+        u32 * VG_RESTRICT buf = (u32 * VG_RESTRICT)m;
 
         while (count--) 
             *buf++ = val;

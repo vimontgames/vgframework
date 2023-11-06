@@ -6,6 +6,7 @@
 #ifdef VULKAN
 #define USE_BYTEADDRESSBUFFER 0
 #define ByteAddressBuffer Buffer<uint>
+#define RWByteAddressBuffer RWBuffer<uint>
 #else
 #define USE_BYTEADDRESSBUFFER 1
 #endif

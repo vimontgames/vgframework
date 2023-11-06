@@ -14,9 +14,6 @@ namespace vg::gfx::dx12
         Buffer(const BufferDesc & _bufDesc, const core::string & _name, const void * _initData, ReservedSlot _reservedSlot);
         ~Buffer();
 
-        void map();
-        void unmap();
-
     private:
         
     };

@@ -292,24 +292,46 @@ namespace vg::gfx::vulkan
     }
 
     //--------------------------------------------------------------------------------------
-    void * CommandList::map(gfx::Buffer * _buffer)
+    Map CommandList::map(gfx::Buffer * _buffer)
     {
         auto * device = gfx::Device::get();
         auto uploadBuffer = device->getUploadBuffer();
 
-        VkMemoryRequirements mem_reqs;
-        vkGetBufferMemoryRequirements(device->getVulkanDevice(), _buffer->getResource().getVulkanBuffer(), &mem_reqs);
+        Map result;
 
-        return uploadBuffer->map(mem_reqs.size, (uint)mem_reqs.alignment);
+        if (_buffer->getBufDesc().resource.m_usage == Usage::Staging)
+        {
+            VG_ASSERT_NOT_IMPLEMENTED();
+            result.data = nullptr;
+        }
+        else
+        {
+            VkMemoryRequirements mem_reqs;
+            vkGetBufferMemoryRequirements(device->getVulkanDevice(), _buffer->getResource().getVulkanBuffer(), &mem_reqs);
+            result.data = uploadBuffer->map(mem_reqs.size, (uint)mem_reqs.alignment);
+        }
+        
+        result.rowPitch = 0;
+        result.slicePitch = 0;
+        return result;
     }
 
     //--------------------------------------------------------------------------------------
-    void CommandList::unmap(gfx::Buffer * _buffer, void * _data)
+    void CommandList::unmap(gfx::Buffer * _buffer, void * VG_RESTRICT _data)
     {
-        auto * device = gfx::Device::get();
-        auto uploadBuffer = device->getUploadBuffer();
-        uploadBuffer->unmap(_buffer, (u8 *)_data);
-        uploadBuffer->flush((gfx::CommandList *)this);
+        if (_buffer->getBufDesc().resource.m_usage == Usage::Staging)
+        {
+            VG_ASSERT(nullptr == _data, "The '_data' parameter should be NULL when mapping Staging Resources");
+            VG_ASSERT_NOT_IMPLEMENTED();
+        }
+        else
+        {
+            VG_ASSERT(nullptr != _data, "The '_data' parameter should not be NULL when mapping Resources for Upload");
+            auto * device = gfx::Device::get();
+            auto uploadBuffer = device->getUploadBuffer();
+            uploadBuffer->unmap(_buffer, (u8 *)_data);
+            uploadBuffer->flush((gfx::CommandList *)this);
+        }
     }
       
     //--------------------------------------------------------------------------------------

@@ -839,30 +839,39 @@ namespace vg::gfx::vulkan
 								queues[0].pQueuePriorities = queue_priorities;
 								queues[0].flags = 0;
 
-        VkPhysicalDeviceDescriptorIndexingFeatures descriptorIndexingFeatures{};
-                                                   descriptorIndexingFeatures.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_INDEXING_FEATURES;
+		VkPhysicalDeviceVulkan12Features vulkan12SupportedFeatures = {};
+										 vulkan12SupportedFeatures.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_2_FEATURES;
+
+        VkPhysicalDeviceDescriptorIndexingFeatures descriptorIndexingSupportedFeatures = {};
+                                                   descriptorIndexingSupportedFeatures.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_INDEXING_FEATURES;
+												   descriptorIndexingSupportedFeatures.pNext = &vulkan12SupportedFeatures;
 
         VkPhysicalDeviceFeatures2 supportedFeatures = {};
                                   supportedFeatures.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2;
-                                  supportedFeatures.pNext = &descriptorIndexingFeatures;
+                                  supportedFeatures.pNext = &descriptorIndexingSupportedFeatures;
 
         vkGetPhysicalDeviceFeatures2(m_vkPhysicalDevice, &supportedFeatures);
 
         VkPhysicalDeviceVulkan12Features vulkan12Features = {};
                                          vulkan12Features.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_2_FEATURES;
-                                         vulkan12Features.descriptorIndexing = VK_TRUE; // descriptorIndexingFeatures.shaderSampledImageArrayNonUniformIndexing
-                                         vulkan12Features.descriptorBindingPartiallyBound = VK_TRUE;
-                                         vulkan12Features.shaderSampledImageArrayNonUniformIndexing = VK_TRUE;
-                                         //vulkan12Features.shaderInputAttachmentArrayDynamicIndexing = VK_TRUE;
-                                         //vulkan12Features.shaderInputAttachmentArrayNonUniformIndexing = VK_TRUE;
-                                         vulkan12Features.shaderUniformTexelBufferArrayDynamicIndexing = VK_TRUE;
-                                         vulkan12Features.runtimeDescriptorArray = VK_TRUE;
-                                         vulkan12Features.shaderStorageImageArrayNonUniformIndexing = VK_TRUE;
-										 vulkan12Features.descriptorBindingUpdateUnusedWhilePending = VK_TRUE;
-                                         vulkan12Features.pNext = nullptr;
+										 vulkan12Features.pNext = nullptr;
+
+		#define CheckVulkanFeature(supported, destination, name) VG_ASSERT(supported.name == VK_TRUE, "'%s' is not supported by Vulkan device", #name); destination.name = true;
+
+		CheckVulkanFeature(vulkan12SupportedFeatures, vulkan12Features, descriptorIndexing);
+		CheckVulkanFeature(vulkan12SupportedFeatures, vulkan12Features, descriptorBindingPartiallyBound);
+		CheckVulkanFeature(vulkan12SupportedFeatures, vulkan12Features, shaderSampledImageArrayNonUniformIndexing);
+		//CheckVulkanFeature(vulkan12SupportedFeatures, vulkan12Features, shaderInputAttachmentArrayDynamicIndexing);
+		//CheckVulkanFeature(vulkan12SupportedFeatures, vulkan12Features, shaderInputAttachmentArrayNonUniformIndexing);
+		CheckVulkanFeature(vulkan12SupportedFeatures, vulkan12Features, shaderUniformTexelBufferArrayDynamicIndexing);
+		CheckVulkanFeature(vulkan12SupportedFeatures, vulkan12Features, runtimeDescriptorArray);
+		CheckVulkanFeature(vulkan12SupportedFeatures, vulkan12Features, shaderStorageImageArrayNonUniformIndexing);
+		CheckVulkanFeature(vulkan12SupportedFeatures, vulkan12Features, descriptorBindingUpdateUnusedWhilePending);                           
 
         VkPhysicalDeviceFeatures enabledFeatures = {};
-                                 enabledFeatures.fillModeNonSolid = VK_TRUE;
+		CheckVulkanFeature(supportedFeatures.features, enabledFeatures, fillModeNonSolid);
+		CheckVulkanFeature(supportedFeatures.features, enabledFeatures, fragmentStoresAndAtomics);
+		//CheckVulkanFeature(supportedFeatures.features, enabledFeatures, textureCompressionETC2);
 
 		VkDeviceCreateInfo deviceCreateInfo; 
 						   deviceCreateInfo.sType = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO;

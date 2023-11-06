@@ -146,6 +146,14 @@ PS_Output PS_Forward(VS_Output _input)
     
     if (RootConstantsFlags::Wireframe & rootConstants3D.getFlags())
         output.color0 = float4(0,1,0,1);
+    
+    // test picking
+    uint toolmodeRWBufferID = viewConstants.getToolmodeRWBufferID();
+    if (0xFFFF != toolmodeRWBufferID)
+    {
+        getRWBuffer(viewConstants.getToolmodeRWBufferID())[0] = uint4(viewConstants.getMousePos(),viewConstants.getScreenSize());
+    }
+    
     #endif // _TOOLMODE
     
     // Picking test

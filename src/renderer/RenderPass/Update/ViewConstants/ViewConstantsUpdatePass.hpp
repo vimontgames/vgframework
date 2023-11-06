@@ -27,16 +27,16 @@ namespace vg::renderer
     //--------------------------------------------------------------------------------------
     void ViewConstantsUpdatePass::Setup(const gfx::RenderPassContext & _renderPassContext, double _dt)
     {
-        //if (_renderPassContext.m_view->IsToolmode())
-        //{
-        //    FrameGraphBufferResourceDesc toolmodeRWBufferDesc;
-        //    toolmodeRWBufferDesc.elementSize = 16;
-        //    toolmodeRWBufferDesc.elementCount = 1;
-        //
-        //    const auto toolmodeRWBufferID = _renderPassContext.getFrameGraphID("ToolmodeRWBuffer");
-        //    createRWBuffer(toolmodeRWBufferID, toolmodeRWBufferDesc);
-        //    writeRWBuffer(toolmodeRWBufferID); // declare write because we only want to be able to access the RWBuffer to get its RWBufferHandle 
-        //}
+        if (_renderPassContext.m_view->IsToolmode())
+        {
+            FrameGraphBufferResourceDesc toolmodeRWBufferDesc;
+            toolmodeRWBufferDesc.elementSize = 16;
+            toolmodeRWBufferDesc.elementCount = 1;
+        
+            const auto toolmodeRWBufferID = _renderPassContext.getFrameGraphID("ToolmodeRWBuffer");
+            createRWBuffer(toolmodeRWBufferID, toolmodeRWBufferDesc);
+            writeRWBuffer(toolmodeRWBufferID); // declare write because we only want to be able to access the RWBuffer to get its RWBufferHandle 
+        }
     }
 
     //--------------------------------------------------------------------------------------
@@ -44,22 +44,18 @@ namespace vg::renderer
     {
         const auto options = DisplayOptions::get();
 
-        ViewConstants constants = {};
-        constants.setScreenSize(_renderPassContext.m_view->GetSize());
-        constants.setMousePos(_renderPassContext.m_view->GetRelativeMousePos());
-        constants.setDisplayMode(options->getDisplayMode());
-        constants.setDisplayFlags(options->getDisplayFlags());
+        u16 toolmodeRWBufferID = -1;
+        if (_renderPassContext.m_view->IsToolmode())
+            toolmodeRWBufferID = getRWBuffer(_renderPassContext.getFrameGraphID("ToolmodeRWBuffer"))->getRWBufferHandle();        
 
-        //u16 toolmodeRWBufferID = -1;
-        //if (_renderPassContext.m_view->IsToolmode())
-        //    toolmodeRWBufferID = getRWBuffer(_renderPassContext.getFrameGraphID("ToolmodeRWBuffer"))->getRWBufferHandle();
-        // 
-        //constants.setToolmodeRWBufferID(toolmodeRWBufferID);        
-
-        ViewConstants * data = (ViewConstants*)_cmdList->map(s_ViewConstantsBuffer);
+        ViewConstants * constants = (ViewConstants*)_cmdList->map(s_ViewConstantsBuffer).data;
         {
-            memcpy(data, &constants, sizeof(constants));
+            constants->setScreenSize(_renderPassContext.m_view->GetSize());
+            constants->setMousePos(_renderPassContext.m_view->GetRelativeMousePos());
+            constants->setDisplayMode(options->getDisplayMode());
+            constants->setDisplayFlags(options->getDisplayFlags());
+            constants->setToolmodeRWBufferID(toolmodeRWBufferID);
         }
-        _cmdList->unmap(s_ViewConstantsBuffer, data);
+        _cmdList->unmap(s_ViewConstantsBuffer, constants);
     }
 }

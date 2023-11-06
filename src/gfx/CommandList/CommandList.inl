@@ -89,4 +89,16 @@ namespace vg::gfx
     {
         super::transitionResource(_buffer, _before, _after);
     }
+
+    //--------------------------------------------------------------------------------------
+    VG_INLINE Map CommandList::map(gfx::Buffer * _buffer)
+    {
+        return super::map(_buffer);
+    }
+
+    //--------------------------------------------------------------------------------------
+    VG_INLINE void CommandList::unmap(gfx::Buffer * _buffer, void * VG_RESTRICT _data)
+    {
+        super::unmap(_buffer, _data);
+    }
 }

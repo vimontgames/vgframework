@@ -46,8 +46,8 @@ namespace vg::gfx::dx12
 		void                                copyTexture                 (gfx::Texture * _dst, gfx::Buffer * _src, core::uint_ptr _srcOffset);
         void                                copyBuffer                  (gfx::Buffer * _dst, gfx::Buffer * _src, core::uint_ptr _srcOffset);
 
-        void *                              map                         (gfx::Buffer * _buffer);
-        void                                unmap                       (gfx::Buffer * _buffer, void * _data);
+        Map									map                         (gfx::Buffer * _buffer);
+        void                                unmap                       (gfx::Buffer * _buffer, void * VG_RESTRICT _data);
 
 		D3D12GraphicsCommandList *		    getd3d12GraphicsCommandList ();
 		ID3D12CommandList *					getd3d12CommandList         () { return m_d3d12cmdList; }

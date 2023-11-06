@@ -17,7 +17,7 @@ namespace vg::renderer
     //--------------------------------------------------------------------------------------
     EditorPass::~EditorPass()
     {
-
+        VG_SAFE_DELETE(m_toolmodeRWBufferStaging);
     }
 
     //--------------------------------------------------------------------------------------
@@ -25,7 +25,7 @@ namespace vg::renderer
     {
         writeRenderTarget(0, _renderPassContext.getFrameGraphID("Color"));
         writeDepthStencil(_renderPassContext.getFrameGraphID("DepthStencil"));
-        //writeRWBuffer(_renderPassContext.getFrameGraphID("ToolmodeRWBuffer"));
+        writeRWBuffer(_renderPassContext.getFrameGraphID("ToolmodeRWBuffer"));
     }
 
     //--------------------------------------------------------------------------------------
@@ -79,21 +79,33 @@ namespace vg::renderer
         drawGrid(_cmdList, renderContext.m_viewProj);
         drawAxis(_cmdList, renderContext.m_viewProj);
 
-        //Buffer * toolmodeRWBuffer = getRWBuffer(_renderPassContext.getFrameGraphID("ToolmodeRWBuffer"));
-        //
-        //// allocate staging copy
-        //BufferDesc stagingDesc = toolmodeRWBuffer->getBufDesc();
-        //stagingDesc.resource.m_usage = Usage::Staging;
-        //stagingDesc.resource.m_bindFlags = BindFlags::None;
-        //
-        //auto * device = gfx::Device::get();
-        //Buffer * stagingBuffer = device->createBuffer(stagingDesc, (toolmodeRWBuffer->getName() + "_Staging").c_str());
-        //Map result = stagingBuffer->getResource().map();
-        //{
-        //
-        //}
-        //stagingBuffer->getResource().unmap();
-        //
-        //VG_SAFE_DELETE(stagingBuffer);
+       
+    }
+
+    //--------------------------------------------------------------------------------------
+    void EditorPass::AfterRender(const RenderPassContext & _renderPassContext, CommandList * _cmdList)
+    {
+        Buffer * toolmodeRWBuffer = getRWBuffer(_renderPassContext.getFrameGraphID("ToolmodeRWBuffer"));
+
+        // allocate staging copy
+        BufferDesc stagingDesc = toolmodeRWBuffer->getBufDesc();
+        stagingDesc.resource.m_usage = Usage::Staging;
+        stagingDesc.resource.m_bindFlags = BindFlags::None;
+
+        auto * device = gfx::Device::get();
+        
+        if (m_toolmodeRWBufferStaging == nullptr)
+            m_toolmodeRWBufferStaging = device->createBuffer(stagingDesc, (toolmodeRWBuffer->getName() + "_Staging").c_str());
+
+        // copy to staging
+        _cmdList->copyBuffer(m_toolmodeRWBufferStaging, toolmodeRWBuffer, 0);
+
+        // wait
+
+        Map result = m_toolmodeRWBufferStaging->getResource().map();
+        {
+            VG_INFO("[Picking] ReadBack %u, %u, %u, %u", ((uint *)result.data)[0], ((uint *)result.data)[1], ((uint *)result.data)[2], ((uint *)result.data)[3]);
+        }
+        m_toolmodeRWBufferStaging->getResource().unmap();
     }
 }

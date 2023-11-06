@@ -49,8 +49,8 @@ namespace vg::gfx::vulkan
         void                                beginGPUEvent               (const char * _name, core::u32 _color);
         void                                endGPUEvent                 ();
 
-        void *                              map                         (gfx::Buffer * _buffer);
-        void                                unmap                       (gfx::Buffer * _buffer, void * _data);
+        Map                                 map                         (gfx::Buffer * _buffer);
+        void                                unmap                       (gfx::Buffer * _buffer, void * VG_RESTRICT _data);
 
         void                                transitionResource          (gfx::Texture * _texture, ResourceState _before, ResourceState _after);
         void                                transitionResource          (gfx::Buffer * _buffer, ResourceState _before, ResourceState _after);

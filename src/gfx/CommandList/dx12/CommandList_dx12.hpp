@@ -436,20 +436,43 @@ namespace vg::gfx::dx12
     }
 
     //--------------------------------------------------------------------------------------
-    void * CommandList::map(gfx::Buffer * _buffer)
-    {       
-        auto * device = gfx::Device::get();
-        auto uploadBuffer = device->getUploadBuffer();
-        return uploadBuffer->map(_buffer->getBufDesc().size(), D3D12_DEFAULT_RESOURCE_PLACEMENT_ALIGNMENT);
+    Map CommandList::map(gfx::Buffer * _buffer)
+    {   
+        Map result;
+
+        if (_buffer->getBufDesc().resource.m_usage == Usage::Staging)
+        {
+            VG_ASSERT_NOT_IMPLEMENTED();
+            result.data = nullptr;
+        }
+        else
+        {
+            auto * device = gfx::Device::get();
+            auto uploadBuffer = device->getUploadBuffer();
+            result.data = uploadBuffer->map(_buffer->getBufDesc().size(), D3D12_DEFAULT_RESOURCE_PLACEMENT_ALIGNMENT);
+        }
+
+        result.rowPitch = 0;
+        result.slicePitch = 0;
+        return result;
     }
     
     //--------------------------------------------------------------------------------------
-    void CommandList::unmap(gfx::Buffer * _buffer, void * _data)
+    void CommandList::unmap(gfx::Buffer * _buffer, void * VG_RESTRICT _data)
     {
-        auto * device = gfx::Device::get();
-        auto uploadBuffer = device->getUploadBuffer();
-        uploadBuffer->unmap(_buffer, (u8 *)_data);
-        uploadBuffer->flush((gfx::CommandList*)this);
+        if (_buffer->getBufDesc().resource.m_usage == Usage::Staging)
+        {
+            VG_ASSERT(nullptr == _data, "The '_data' parameter should be NULL when mapping Staging Resources");
+            VG_ASSERT_NOT_IMPLEMENTED();
+        }
+        else
+        {
+            VG_ASSERT(nullptr != _data, "The '_data' parameter should not be NULL when mapping Resources for Upload");
+            auto * device = gfx::Device::get();
+            auto uploadBuffer = device->getUploadBuffer();
+            uploadBuffer->unmap(_buffer, (u8 *)_data);
+            uploadBuffer->flush((gfx::CommandList *)this);
+        }
     }
 
     //--------------------------------------------------------------------------------------
@@ -463,8 +486,25 @@ namespace vg::gfx::dx12
         ID3D12Resource * dst = _dst->getResource().getd3d12BufferResource();
         ID3D12Resource * src = _src->getResource().getd3d12BufferResource();
 
-        // Generic read to copy dest barrier
+        const auto srcUsage = _src->getBufDesc().resource.m_usage;
+        const auto dstUsage = _dst->getBufDesc().resource.m_usage;
+
+        /*if (dstUsage == Usage::Staging)
         {
+            // transition src to copy source state
+            D3D12_RESOURCE_BARRIER barrier;
+            barrier.Transition.pResource = _src->getResource().getd3d12BufferResource();
+            barrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
+            barrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
+            barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_COPY_DEST;
+            barrier.Transition.StateAfter = D3D12_RESOURCE_STATE_COPY_SOURCE;
+            barrier.Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
+            
+            m_d3d12graphicsCmdList->ResourceBarrier(1, &barrier);
+        }
+        else*/ if (srcUsage == Usage::Upload)
+        {
+            // Generic read to copy dest barrier
             D3D12_RESOURCE_BARRIER barrier;
             barrier.Transition.pResource = _dst->getResource().getd3d12BufferResource();
             barrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
@@ -479,6 +519,7 @@ namespace vg::gfx::dx12
         m_d3d12graphicsCmdList->CopyBufferRegion(dst, 0, src, _srcOffset, bufDesc.size());
 
         // Copy dest to generic read barrier
+        if (srcUsage == Usage::Upload)
         {
             D3D12_RESOURCE_BARRIER barrier;
             barrier.Transition.pResource = _dst->getResource().getd3d12BufferResource();

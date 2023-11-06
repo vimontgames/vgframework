@@ -51,7 +51,19 @@ namespace vg::gfx
             core::u16 bits;
         };
 
-		inline bool testUsageFlags(Usage _flags) const		{ return std::underlying_type<Usage>::type(_flags) & std::underlying_type<Usage>::type(m_usage); }
 		inline bool testBindFlags(BindFlags _flags) const	{ return std::underlying_type<BindFlags>::type(_flags) & std::underlying_type<BindFlags>::type(m_bindFlags); }
+    };
+
+    struct Map
+    {
+        void * VG_RESTRICT data = nullptr;
+        core::u32 rowPitch = 0;
+        core::u32 slicePitch = 0;
+    };
+
+    struct Range
+    {
+        core::u32 begin = 0;
+        core::u32 end = 0;
     };
 }

@@ -5,19 +5,6 @@
 
 namespace vg::gfx
 {
-    struct Map
-    {
-        void * data = nullptr;
-        core::u32 rowPitch = 0;
-        core::u32 slicePitch = 0;
-    };
-
-    struct Range
-    {
-        core::u32 begin = 0;
-        core::u32 end = 0;
-    };
-
     enum class ResourceFlags : core::u32
 	{
 		None			= 0x00000000,

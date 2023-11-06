@@ -91,6 +91,8 @@
 
 #define VG_SAFE_RELEASE_ASYNC(p) { auto * factory = vg::core::Kernel::getFactory(); if (factory) factory->ReleaseAsync(p); else p->Release(); }
 
+#define VG_RESTRICT __restrict
+
 //--------------------------------------------------------------------------------------
 // standard includes
 //--------------------------------------------------------------------------------------
