@@ -13,7 +13,7 @@ struct EditorRootConstants3D
     #ifdef __cplusplus
     EditorRootConstants3D() :
         mat(float4x4::identity()),
-        data({0,0,0,0})
+        data(uint4(0,0,0,0))
     {
 
     }

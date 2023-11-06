@@ -74,8 +74,8 @@ https://github.com/tronkko/dirent
 Font-Awesome-6.x\
 https://github.com/FortAwesome/Font-Awesome/tree/6.x
 
-hlslpp\
-https://github.com/redorav/hlslpp
+hlslpp 3.3.1\
+https://github.com/redorav/hlslpp/releases/tag/3.3.1
 
 IconFontCppHeaders\
 https://github.com/juliettef/IconFontCppHeaders

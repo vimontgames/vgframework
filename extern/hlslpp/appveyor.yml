@@ -18,17 +18,29 @@ environment:
       build: off
       platform: OSX64 Clang
       configuration: Release
-    - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2015
-      vsversion: 2015
-      platform: MSVC 32
+    - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2019
+      vsversion: 2019
+      platform: Android ARM
+      configuration: Release
+    - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2019
+      vsversion: 2019
+      platform: Android ARM64
+      configuration: Release
+    - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2019
+      vsversion: 2019
+      platform: MSVC ARM64
       configuration: Release
     - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2015
       vsversion: 2015
-      platform: MSVC 64
-      configuration: Release      
+      platform: MSVC 32 SSE 2
+      configuration: Release
+    - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2015
+      vsversion: 2015
+      platform: MSVC 64 SSE 2
+      configuration: Release
     - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
       vsversion: 2017
-      platform: MSVC 32
+      platform: MSVC 32 SSE 2
       configuration: Release
     - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
       vsversion: 2017
@@ -44,7 +56,7 @@ environment:
       configuration: Release
     - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
       vsversion: 2017
-      platform: LLVM 32
+      platform: LLVM 32 SSE 2
       configuration: Release
     - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
       vsversion: 2017
@@ -72,22 +84,41 @@ install:
          start /B /W premake/win/premake5 --file=premake.lua vs2015
   - cmd: if %vsversion%==2017
          start /B /W premake/win/premake5 --file=premake.lua vs2017
+  - cmd: if %vsversion%==2019
+         start /B /W premake/win/premake5 --file=premake.lua vs2019
   - sh: if [[ $APPVEYOR_BUILD_WORKER_IMAGE = Ubuntu ]]; then ./premake/linux/premake5 --file=premake.lua gmake2; fi;
   - sh: if [[ $APPVEYOR_BUILD_WORKER_IMAGE = macOS ]]; then ./premake/osx/premake5 --file=premake.lua xcode4; fi;
 
 build_script:
+  - cmd: if %vsversion%==2015
+         msbuild "C:\projects\hlslpp\workspace\vs2015\hlsl++.sln" /m /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"
+  - cmd: if %vsversion%==2017
+         msbuild "C:\projects\hlslpp\workspace\vs2017\hlsl++.sln" /m /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"
+  - cmd: if %vsversion%==2019
+         msbuild "C:\projects\hlslpp\workspace\vs2019\hlsl++.sln" /m /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"
   - sh: if [[ $platform = "Linux64 GGC" ]]; then 
         pushd workspace/gmake2;
+        set -e;
         make all config=release_linux64_gcc;
         popd; fi;
   - sh: if [[ $platform = "Linux64 Clang" ]]; then 
         pushd workspace/gmake2;
+        set -e;
         make all config=release_linux64_clang;
         popd; fi;
   - sh: if [[ $platform = "OSX64 Clang" ]]; then 
         pushd workspace/xcode4;
+        set -e;
         xcodebuild build -project unit_tests.xcodeproj -configuration Release;
         popd; fi;
+
+test_script:
+  - cmd: if not "%PLATFORM%"=="Android ARM"
+         if not "%PLATFORM%"=="Android ARM64"
+         if not "%PLATFORM%"=="MSVC ARM"
+         if not "%PLATFORM%"=="MSVC ARM64"
+         if not "%PLATFORM%"=="MSVC ARM"
+         "workspace/vs%vsversion%/bin/%PLATFORM%/%CONFIGURATION%/unit_tests.exe" "unit_tests" "appveyor"
 
 #matrix:
 #  exclude:

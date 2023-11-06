@@ -18,7 +18,7 @@ struct RootConstants3D
     #ifdef __cplusplus
     RootConstants3D() :
         mat(float4x4::identity()),
-        data({0,0,0,0})
+        data(uint4(0,0,0,0))
     {
 
     }

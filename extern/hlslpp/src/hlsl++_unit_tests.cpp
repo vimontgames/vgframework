@@ -3,11 +3,134 @@
 // Hacky but needs FLOAT64
 #include "hlsl++_unit_tests.h"
 
+// For strcmp
+#include <string.h>
+
+// For std::system
+#include <cstdlib>
+
 const float deg2rad = 3.14159265f / 180.0f;
 
 namespace hlslpp_unit
 {
 	using namespace hlslpp;
+
+	Config UnitTestConfig;
+	CurrentTest TestState;
+	CurrentTestCase TestCaseState;
+
+	void BeginTestImpl(const char* testName, const char* filename)
+	{
+		TestState.filename = filename;
+		TestState.name = testName;
+		TestState.testFailureMessages.clear();
+		TestState.testSuccessMessages.clear();
+		TestState.testPassed = true;
+		TestState.testRunning = true;
+	}
+
+	void EndTest()
+	{
+		if (UnitTestConfig.appveyor)
+		{
+			TestState.scratchAppveyorCommand = "powershell -Command \" & { Add-AppveyorTest -Framework Hlslpp";
+
+			TestState.scratchAppveyorCommand += " -Name '";
+			TestState.scratchAppveyorCommand += TestState.name;
+			TestState.scratchAppveyorCommand += "'";
+
+			TestState.scratchAppveyorCommand += " -Filename '";
+			TestState.scratchAppveyorCommand += TestState.filename;
+			TestState.scratchAppveyorCommand += "'";
+
+			if (TestState.testPassed)
+			{
+				TestState.scratchAppveyorCommand += " -Outcome Passed";
+
+				if (!TestState.testSuccessMessages.empty())
+				{
+					TestState.scratchAppveyorCommand += " -StdOut \"";
+
+					TestState.scratchAppveyorCommand += TestState.testSuccessMessages[0];
+
+					for (size_t i = 1; i < TestState.testSuccessMessages.size(); ++i)
+					{
+						TestState.scratchAppveyorCommand += "`n";
+						TestState.scratchAppveyorCommand += TestState.testSuccessMessages[i];
+					}
+
+					TestState.scratchAppveyorCommand += "\"";
+				}
+			}
+			else
+			{
+				UnitTestConfig.anyTestFailed = true;
+
+				TestState.scratchAppveyorCommand += " -Outcome Failed";
+
+				if (!TestState.testFailureMessages.empty())
+				{
+					TestState.scratchAppveyorCommand += " -StdErr (";
+
+					TestState.scratchAppveyorCommand += "'";
+					TestState.scratchAppveyorCommand += TestState.testFailureMessages[0];
+					TestState.scratchAppveyorCommand += "'";
+
+					for (size_t i = 1; i < TestState.testFailureMessages.size(); ++i)
+					{
+						TestState.scratchAppveyorCommand += ",'";
+						TestState.scratchAppveyorCommand += TestState.testFailureMessages[i];
+						TestState.scratchAppveyorCommand += "'";
+					}
+
+					TestState.scratchAppveyorCommand += " | out-string)";
+				}
+			}
+
+			TestState.scratchAppveyorCommand += " } \"";
+
+			printf("%s\n", TestState.scratchAppveyorCommand.c_str());
+			int result = std::system(TestState.scratchAppveyorCommand.c_str());
+		}
+	}
+
+	void BeginTestCase(const char* testString, int lineNumber, const char* filename)
+	{
+		TestCaseState.testString = testString;
+		TestCaseState.lineNumber = lineNumber;
+		TestCaseState.filename = filename;
+		TestCaseState.passed = true;
+		TestCaseState.testFailureMessage.clear();
+	}
+
+	void EndTestCase()
+	{
+		bool testPassed = TestCaseState.passed;
+
+		if (UnitTestConfig.appveyor)
+		{
+			// Register failure and add to the message list
+			if (!testPassed)
+			{
+				TestState.testPassed = false;
+
+				char functionLine[512] = {};
+				sprintf(functionLine, "%s %s(%d)", TestCaseState.testString, TestCaseState.filename, TestCaseState.lineNumber);
+
+				TestState.testFailureMessages.push_back(functionLine);
+				TestState.testFailureMessages.push_back(TestCaseState.testFailureMessage);
+			}
+		}
+		else
+		{
+			if (!testPassed)
+			{
+				printf("%s %s\n", TestCaseState.testString, TestCaseState.testFailureMessage.c_str());
+				fflush(0);
+				assert(false);
+			}
+		}
+	}
 
 	float div(float a, float b)
 	{
@@ -19,272 +142,303 @@ namespace hlslpp_unit
 		return a / b;
 	}
 
-	void eq(float a, float b, float tolerance /*= 0.0f*/)
+	bool eq(float a, float b, float tolerance /*= 0.0f*/)
 	{
 		bool withinTolerance = abs(a - b) <= tolerance;
-		assert(withinTolerance);
+
+		if (!withinTolerance)
+		{
+			char assertMessage[512] = {};
+			sprintf(assertMessage, "Assertion failed! Values are not equal: a = %f, b = %f, tolerance = %f", a, b, tolerance);
+			TestCaseState.testFailureMessage += assertMessage;
+		}
+
+		return withinTolerance;
 	}
 
-	void eq(const float2& v, float x, float y, float tolerance /*= 0.0f*/)
+	bool eq(const float2& v, float x, float y, float tolerance /*= 0.0f*/)
 	{
-		eq(v.x, x, tolerance);
-		eq(v.y, y, tolerance);
+		return eq(v.x, x, tolerance)
+			&& eq(v.y, y, tolerance);
 	}
 
-	void eq(const float3& v, float x, float y, float z, float tolerance /*= 0.0f*/)
+	bool eq(const float3& v, float x, float y, float z, float tolerance /*= 0.0f*/)
 	{
-		eq(v.x, x, tolerance);
-		eq(v.y, y, tolerance);
-		eq(v.z, z, tolerance);
+		return eq(v.x, x, tolerance)
+			&& eq(v.y, y, tolerance)
+			&& eq(v.z, z, tolerance);
 	}
 
-	void eq(const float4& v, float x, float y, float z, float w, float tolerance /*= 0.0f*/)
+	bool eq(const float4& v, float x, float y, float z, float w, float tolerance /*= 0.0f*/)
 	{
-		eq(v.x, x, tolerance);
-		eq(v.y, y, tolerance);
-		eq(v.z, z, tolerance);
-		eq(v.w, w, tolerance);
+		return eq(v.x, x, tolerance)
+			&& eq(v.y, y, tolerance)
+			&& eq(v.z, z, tolerance)
+			&& eq(v.w, w, tolerance);
 	}
 
 #if defined(HLSLPP_FLOAT8)
 
-	void eq(const float8& v, float x, float y, float z, float w, float a, float b, float c, float d, float tolerance /*= 0.0f*/)
+	bool eq(const float8& v, float x, float y, float z, float w, float a, float b, float c, float d, float tolerance /*= 0.0f*/)
 	{
-		eq(v.f32[0], x, tolerance);
-		eq(v.f32[1], y, tolerance);
-		eq(v.f32[2], z, tolerance);
-		eq(v.f32[3], w, tolerance);
-
-		eq(v.f32[4], a, tolerance);
-		eq(v.f32[5], b, tolerance);
-		eq(v.f32[6], c, tolerance);
-		eq(v.f32[7], d, tolerance);
+		return eq(v.f32[0], x, tolerance)
+		&& eq(v.f32[1], y, tolerance)
+		&& eq(v.f32[2], z, tolerance)
+		&& eq(v.f32[3], w, tolerance)
+		&& eq(v.f32[4], a, tolerance)
+		&& eq(v.f32[5], b, tolerance)
+		&& eq(v.f32[6], c, tolerance)
+		&& eq(v.f32[7], d, tolerance);
 	}
 
 #endif
 
-	void eq(double a, double b, double tolerance /*= 0.0*/)
+	bool eq(double a, double b, double tolerance /*= 0.0*/)
 	{
 		bool withinTolerance = abs(a - b) <= tolerance;
-		assert(withinTolerance);
+		return withinTolerance;
 	}
 
 #if defined(HLSLPP_DOUBLE)
 
-	void eq(const double2& v, double x, double y, double tolerance /*= 0.0*/)
+	bool eq(const double2& v, double x, double y, double tolerance /*= 0.0*/)
 	{
-		eq((double)v.x, x, tolerance);
-		eq((double)v.y, y, tolerance);
+		return eq((double)v.x, x, tolerance)
+			&& eq((double)v.y, y, tolerance);
 	}
 
-	void eq(const double3& v, double x, double y, double z, double tolerance /*= 0.0*/)
+	bool eq(const double3& v, double x, double y, double z, double tolerance /*= 0.0*/)
 	{
-		eq((double)v.x, x, tolerance);
-		eq((double)v.y, y, tolerance);
-		eq((double)v.z, z, tolerance);
+		return eq((double)v.x, x, tolerance)
+			&& eq((double)v.y, y, tolerance)
+			&& eq((double)v.z, z, tolerance);
 	}
 
-	void eq(const double4& v, double x, double y, double z, double w, double tolerance /*= 0.0*/)
+	bool eq(const double4& v, double x, double y, double z, double w, double tolerance /*= 0.0*/)
 	{
-		eq((double)v.x, x, tolerance);
-		eq((double)v.y, y, tolerance);
-		eq((double)v.z, z, tolerance);
-		eq((double)v.w, w, tolerance);
+		return eq((double)v.x, x, tolerance)
+			&& eq((double)v.y, y, tolerance)
+			&& eq((double)v.z, z, tolerance)
+			&& eq((double)v.w, w, tolerance);
 	}
 
 #endif
 
-	void eq(float a, bool c)
+	bool eq(float a, bool c)
 	{
 		bool equals = (a != 0.0f ? true : false) == c;
-		assert(equals);
+		return equals;
 	}
 
-	void eq(const float2& v, bool x, bool y)
+	bool eq(const float2& v, bool x, bool y)
 	{
-		eq(v.x, x);
-		eq(v.y, y);
+		return eq(v.x, x)
+			&& eq(v.y, y);
 	}
 
-	void eq(const float3& v, bool x, bool y, bool z)
+	bool eq(const float3& v, bool x, bool y, bool z)
 	{
-		eq(v.x, x);
-		eq(v.y, y);
-		eq(v.z, z);
+		return eq(v.x, x)
+			&& eq(v.y, y)
+			&& eq(v.z, z);
 	}
 
-	void eq(const float4& v, bool x, bool y, bool z, bool w)
+	bool eq(const float4& v, bool x, bool y, bool z, bool w)
 	{
-		eq(v.x, x);
-		eq(v.y, y);
-		eq(v.z, z);
-		eq(v.w, w);
+		return eq(v.x, x)
+			&& eq(v.y, y)
+			&& eq(v.z, z)
+			&& eq(v.w, w);
 	}
 
-	void eq(int32_t a, int32_t b)
+	bool eq(int32_t a, int32_t b)
 	{
-		assert(a == b);
+		return a == b;
 	}
 
-	void eq(const int2& v, int32_t x, int32_t y)
+	bool eq(const int2& v, int32_t x, int32_t y)
 	{
-		eq(v.x, x);
-		eq(v.y, y);
+		return eq(v.x, x)
+			&& eq(v.y, y);
 	}
 
-	void eq(const int3& v, int32_t x, int32_t y, int32_t z)
+	bool eq(const int3& v, int32_t x, int32_t y, int32_t z)
 	{
-		eq(v.x, x);
-		eq(v.y, y);
-		eq(v.z, z);
+		return eq(v.x, x)
+			&& eq(v.y, y)
+			&& eq(v.z, z);
 	}
 
-	void eq(const int4& v, int32_t x, int32_t y, int32_t z, int32_t w)
+	bool eq(const int4& v, int32_t x, int32_t y, int32_t z, int32_t w)
 	{
-		eq(v.x, x);
-		eq(v.y, y);
-		eq(v.z, z);
-		eq(v.w, w);
+		return eq(v.x, x)
+			&& eq(v.y, y)
+			&& eq(v.z, z)
+			&& eq(v.w, w);
 	}
 
-	void eq(bool a, bool c)
+	bool eq(uint32_t a, uint32_t b)
+    {
+		return a == b;
+    }
+
+	bool eq(const uint2& v, uint32_t x, uint32_t y)
+    {
+		return eq(v.x, x)
+			&& eq(v.y, y);
+    }
+
+	bool eq(const uint3& v, uint32_t x, uint32_t y, uint32_t z)
+    {
+		return eq(v.x, x)
+			&& eq(v.y, y)
+			&& eq(v.z, z);
+    }
+
+	bool eq(const uint4& v, uint32_t x, uint32_t y, uint32_t z, uint32_t w)
+    {
+		return eq(v.x, x)
+			&& eq(v.y, y)
+			&& eq(v.z, z)
+			&& eq(v.w, w);
+    }
+
+	bool eq(bool a, bool c)
 	{
-		bool equals = a == c;
-		assert(equals);
+		return a == c;
 	}
 
 
-	void eq(const float1x1& m, float m00, float tolerance /*= 0.0f*/)
+	bool eq(const float1x1& m, float m00, float tolerance /*= 0.0f*/)
 	{
-		eq(m.f32[0], m00, tolerance);
+		return eq(m.f32[0], m00, tolerance);
 	}
 
-	void eq(const float1x2& m, float m00, float m01, float tolerance /*= 0.0f*/)
+	bool eq(const float1x2& m, float m00, float m01, float tolerance /*= 0.0f*/)
 	{
-		eq(m.f32[0], m00, tolerance);
-		eq(m.f32[1], m01, tolerance);
+		return eq(m.f32[0], m00, tolerance)
+			&& eq(m.f32[1], m01, tolerance);
 	}
 
-	void eq(const float1x3& m, float m00, float m01, float m02, float tolerance /*= 0.0f*/)
+	bool eq(const float1x3& m, float m00, float m01, float m02, float tolerance /*= 0.0f*/)
 	{
-		eq(m.f32[0], m00, tolerance);
-		eq(m.f32[1], m01, tolerance);
-		eq(m.f32[2], m02, tolerance);
+		return eq(m.f32[0], m00, tolerance)
+			&& eq(m.f32[1], m01, tolerance)
+			&& eq(m.f32[2], m02, tolerance);
 	}
 	
-	void eq(const float1x4& m, float m00, float m01, float m02, float m03, float tolerance /*= 0.0f*/)
+	bool eq(const float1x4& m, float m00, float m01, float m02, float m03, float tolerance /*= 0.0f*/)
 	{
-		eq(m.f32[0], m00, tolerance);
-		eq(m.f32[1], m01, tolerance);
-		eq(m.f32[2], m02, tolerance);
-		eq(m.f32[3], m03, tolerance);
+		return eq(m.f32[0], m00, tolerance)
+			&& eq(m.f32[1], m01, tolerance)
+			&& eq(m.f32[2], m02, tolerance)
+			&& eq(m.f32[3], m03, tolerance);
 	}
 
-	void eq(const float2x1& m, float m00, float m01, float tolerance /*= 0.0f*/)
+	bool eq(const float2x1& m, float m00, float m01, float tolerance /*= 0.0f*/)
 	{
-		eq(m.f32[0], m00, tolerance);
-		eq(m.f32[1], m01, tolerance);
+		return eq(m.f32[0], m00, tolerance)
+			&& eq(m.f32[1], m01, tolerance);
 	}
 
-	void eq(const float2x2& m, float m00, float m01, float m10, float m11, float tolerance /*= 0.0f*/)
+	bool eq(const float2x2& m, float m00, float m01, float m10, float m11, float tolerance /*= 0.0f*/)
 	{
-		eq(m.f32[0], m00, tolerance);
-		eq(m.f32[1], m01, tolerance);
-
-		eq(m.f32[2], m10, tolerance);
-		eq(m.f32[3], m11, tolerance);
+		return eq(m.f32[0], m00, tolerance)
+			&& eq(m.f32[1], m01, tolerance)
+			&& eq(m.f32[2], m10, tolerance)
+			&& eq(m.f32[3], m11, tolerance);
 	}
 
-	void eq(const float2x3& m, float m00, float m01, float m02, float m10, float m11, float m12, float tolerance /*= 0.0f*/)
+	bool eq(const float2x3& m, float m00, float m01, float m02, float m10, float m11, float m12, float tolerance /*= 0.0f*/)
 	{
-		eq(m.f32_0[0], m00, tolerance);
-		eq(m.f32_0[1], m01, tolerance);
-		eq(m.f32_0[2], m02, tolerance);
+		return eq(m.f32_0[0], m00, tolerance)
+			&& eq(m.f32_0[1], m01, tolerance)
+			&& eq(m.f32_0[2], m02, tolerance)
 
-		eq(m.f32_1[0], m10, tolerance);
-		eq(m.f32_1[1], m11, tolerance);
-		eq(m.f32_1[2], m12, tolerance);
+			&& eq(m.f32_1[0], m10, tolerance)
+			&& eq(m.f32_1[1], m11, tolerance)
+			&& eq(m.f32_1[2], m12, tolerance);
 	}
 
-	void eq(const float2x4& m, float m00, float m01, float m02, float m03, float m10, float m11, float m12, float m13, float tolerance /*= 0.0f*/)
+	bool eq(const float2x4& m, float m00, float m01, float m02, float m03, float m10, float m11, float m12, float m13, float tolerance /*= 0.0f*/)
 	{
-		eq(m.f32_0[0], m00, tolerance);
-		eq(m.f32_0[1], m01, tolerance);
-		eq(m.f32_0[2], m02, tolerance);
-		eq(m.f32_0[3], m03, tolerance);
+		return eq(m.f32_0[0], m00, tolerance)
+			&& eq(m.f32_0[1], m01, tolerance)
+			&& eq(m.f32_0[2], m02, tolerance)
+			&& eq(m.f32_0[3], m03, tolerance)
 
-		eq(m.f32_1[0], m10, tolerance);
-		eq(m.f32_1[1], m11, tolerance);
-		eq(m.f32_1[2], m12, tolerance);
-		eq(m.f32_1[3], m13, tolerance);
+			&& eq(m.f32_1[0], m10, tolerance)
+			&& eq(m.f32_1[1], m11, tolerance)
+			&& eq(m.f32_1[2], m12, tolerance)
+			&& eq(m.f32_1[3], m13, tolerance);
 	}
 
-	void eq(const float3x1& m, float m00, float m01, float m02, float tolerance /*= 0.0f*/)
+	bool eq(const float3x1& m, float m00, float m01, float m02, float tolerance /*= 0.0f*/)
 	{
-		eq(m.f32[0], m00, tolerance);
-		eq(m.f32[1], m01, tolerance);
-		eq(m.f32[2], m02, tolerance);
+		return eq(m.f32[0], m00, tolerance)
+			&& eq(m.f32[1], m01, tolerance)
+			&& eq(m.f32[2], m02, tolerance);
 	}
 
-	void eq(const float3x2& m, float m00, float m01, float m10, float m11, float m20, float m21, float tolerance /*= 0.0f*/)
+	bool eq(const float3x2& m, float m00, float m01, float m10, float m11, float m20, float m21, float tolerance /*= 0.0f*/)
 	{
-		eq(m.f32_0[0], m00, tolerance); eq(m.f32_1[0], m01, tolerance);
-		eq(m.f32_0[1], m10, tolerance); eq(m.f32_1[1], m11, tolerance);
-		eq(m.f32_0[2], m20, tolerance); eq(m.f32_1[2], m21, tolerance);
+		return eq(m.f32_0[0], m00, tolerance); eq(m.f32_1[0], m01, tolerance)
+			&& eq(m.f32_0[1], m10, tolerance); eq(m.f32_1[1], m11, tolerance)
+			&& eq(m.f32_0[2], m20, tolerance); eq(m.f32_1[2], m21, tolerance);
 	}
 
-	void eq(const float3x3& m, float m00, float m01, float m02, float m10, float m11, float m12, float m20, float m21, float m22, float tolerance /*= 0.0f*/)
+	bool eq(const float3x3& m, float m00, float m01, float m02, float m10, float m11, float m12, float m20, float m21, float m22, float tolerance /*= 0.0f*/)
 	{
-		eq(m._m00, m00, tolerance); eq(m._m01, m01, tolerance); eq(m._m02, m02, tolerance);
-		eq(m._m10, m10, tolerance); eq(m._m11, m11, tolerance); eq(m._m12, m12, tolerance);
-		eq(m._m20, m20, tolerance); eq(m._m21, m21, tolerance); eq(m._m22, m22, tolerance);
+		return eq(m._m00, m00, tolerance) && eq(m._m01, m01, tolerance) && eq(m._m02, m02, tolerance)
+			&& eq(m._m10, m10, tolerance) && eq(m._m11, m11, tolerance) && eq(m._m12, m12, tolerance)
+			&& eq(m._m20, m20, tolerance) && eq(m._m21, m21, tolerance) && eq(m._m22, m22, tolerance);
 	}
 
-	void eq(const float3x4& m, float m00, float m01, float m02, float m03, float m10, float m11, float m12, float m13, float m20, float m21, float m22, float m23, float tolerance /*= 0.0f*/)
+	bool eq(const float3x4& m, float m00, float m01, float m02, float m03, float m10, float m11, float m12, float m13, float m20, float m21, float m22, float m23, float tolerance /*= 0.0f*/)
 	{
-		eq(m.f32_0[0], m00, tolerance); eq(m.f32_0[1], m01, tolerance); eq(m.f32_0[2], m02, tolerance); eq(m.f32_0[3], m03, tolerance);
-		eq(m.f32_1[0], m10, tolerance); eq(m.f32_1[1], m11, tolerance); eq(m.f32_1[2], m12, tolerance); eq(m.f32_1[3], m13, tolerance);
-		eq(m.f32_2[0], m20, tolerance); eq(m.f32_2[1], m21, tolerance); eq(m.f32_2[2], m22, tolerance); eq(m.f32_2[3], m23, tolerance);
+		return eq(m.f32_0[0], m00, tolerance) && eq(m.f32_0[1], m01, tolerance) && eq(m.f32_0[2], m02, tolerance) && eq(m.f32_0[3], m03, tolerance)
+			&& eq(m.f32_1[0], m10, tolerance) && eq(m.f32_1[1], m11, tolerance) && eq(m.f32_1[2], m12, tolerance) && eq(m.f32_1[3], m13, tolerance)
+			&& eq(m.f32_2[0], m20, tolerance) && eq(m.f32_2[1], m21, tolerance) && eq(m.f32_2[2], m22, tolerance) && eq(m.f32_2[3], m23, tolerance);
 	}
 
-	void eq(const float4x1& m, float m00, float m01, float m02, float m03, float tolerance /*= 0.0f*/)
+	bool eq(const float4x1& m, float m00, float m01, float m02, float m03, float tolerance /*= 0.0f*/)
 	{
-		eq(m.f32[0], m00, tolerance);
-		eq(m.f32[1], m01, tolerance);
-		eq(m.f32[2], m02, tolerance);
-		eq(m.f32[3], m03, tolerance);
+		return eq(m.f32[0], m00, tolerance)
+			&& eq(m.f32[1], m01, tolerance)
+			&& eq(m.f32[2], m02, tolerance)
+			&& eq(m.f32[3], m03, tolerance);
 	}
 
-	void eq(const float4x2& m, 
+	bool eq(const float4x2& m,
 		float m00, float m01, 
 		float m10, float m11,
 		float m20, float m21,
 		float m30, float m31, float tolerance /*= 0.0f*/)
 	{
-		eq(m.f32_0[0], m00, tolerance); eq(m.f32_1[0], m01, tolerance);
-		eq(m.f32_0[1], m10, tolerance); eq(m.f32_1[1], m11, tolerance);
-		eq(m.f32_0[2], m20, tolerance); eq(m.f32_1[2], m21, tolerance);
-		eq(m.f32_0[3], m30, tolerance); eq(m.f32_1[3], m31, tolerance);
+		return eq(m.f32_0[0], m00, tolerance) && eq(m.f32_1[0], m01, tolerance)
+			&& eq(m.f32_0[1], m10, tolerance) && eq(m.f32_1[1], m11, tolerance)
+			&& eq(m.f32_0[2], m20, tolerance) && eq(m.f32_1[2], m21, tolerance)
+			&& eq(m.f32_0[3], m30, tolerance) && eq(m.f32_1[3], m31, tolerance);
 	}
 
-	void eq(const float4x3& m,
+	bool eq(const float4x3& m,
 		float m00, float m01, float m02, 
 		float m10, float m11, float m12, 
 		float m20, float m21, float m22,
 		float m30, float m31, float m32, float tolerance /*= 0.0f*/)
 	{
-		eq(m.f32_0[0], m00, tolerance); eq(m.f32_1[0], m01, tolerance); eq(m.f32_2[0], m02, tolerance);
-		eq(m.f32_0[1], m10, tolerance); eq(m.f32_1[1], m11, tolerance); eq(m.f32_2[1], m12, tolerance);
-		eq(m.f32_0[2], m20, tolerance); eq(m.f32_1[2], m21, tolerance); eq(m.f32_2[2], m22, tolerance);
-		eq(m.f32_0[3], m30, tolerance); eq(m.f32_1[3], m31, tolerance); eq(m.f32_2[3], m32, tolerance);
+		return eq(m.f32_0[0], m00, tolerance) && eq(m.f32_1[0], m01, tolerance) && eq(m.f32_2[0], m02, tolerance)
+			&& eq(m.f32_0[1], m10, tolerance) && eq(m.f32_1[1], m11, tolerance) && eq(m.f32_2[1], m12, tolerance)
+			&& eq(m.f32_0[2], m20, tolerance) && eq(m.f32_1[2], m21, tolerance) && eq(m.f32_2[2], m22, tolerance)
+			&& eq(m.f32_0[3], m30, tolerance) && eq(m.f32_1[3], m31, tolerance) && eq(m.f32_2[3], m32, tolerance);
 	}
 
-	void eq(const float4x4& m, float m00, float m01, float m02, float m03, float m10, float m11, float m12, float m13, float m20, float m21, float m22, float m23, float m30, float m31, float m32, float m33, float tolerance /*= 0.0f*/)
+	bool eq(const float4x4& m, float m00, float m01, float m02, float m03, float m10, float m11, float m12, float m13, float m20, float m21, float m22, float m23, float m30, float m31, float m32, float m33, float tolerance /*= 0.0f*/)
 	{
-		eq(m._m00, m00, tolerance); eq(m._m01, m01, tolerance); eq(m._m02, m02, tolerance); eq(m._m03, m03, tolerance);
-		eq(m._m10, m10, tolerance); eq(m._m11, m11, tolerance); eq(m._m12, m12, tolerance); eq(m._m13, m13, tolerance);
-		eq(m._m20, m20, tolerance); eq(m._m21, m21, tolerance); eq(m._m22, m22, tolerance); eq(m._m23, m23, tolerance);
-		eq(m._m30, m30, tolerance); eq(m._m31, m31, tolerance); eq(m._m32, m32, tolerance); eq(m._m33, m33, tolerance);
+		return eq(m._m00, m00, tolerance) && eq(m._m01, m01, tolerance) && eq(m._m02, m02, tolerance) && eq(m._m03, m03, tolerance)
+			&& eq(m._m10, m10, tolerance) && eq(m._m11, m11, tolerance) && eq(m._m12, m12, tolerance) && eq(m._m13, m13, tolerance)
+			&& eq(m._m20, m20, tolerance) && eq(m._m21, m21, tolerance) && eq(m._m22, m22, tolerance) && eq(m._m23, m23, tolerance)
+			&& eq(m._m30, m30, tolerance) && eq(m._m31, m31, tolerance) && eq(m._m32, m32, tolerance) && eq(m._m33, m33, tolerance);
 	}
 
 	int32_t shift_left(int32_t a, int32_t b)
@@ -456,11 +610,9 @@ void RunExperiments()
 	float4 nan = float4(1.0f) / float4(0.0f);
 	float4 subtractNan = float4(1.0f) - nan;
 
-	quaternion q1 = euler(float3(90.0f * deg2rad, 45.0f * deg2rad, 0.0f * deg2rad));
-	quaternion q2 = euler(float3(180.0f * deg2rad, 0.0f * deg2rad, 0.0f * deg2rad));
-	quaternion fax = axisangle(float3(0.0f, 1.0f, 0.0f), 1.57f);
-
-	quaternion q3 = q1 * q2;
+	quaternion q1 = quaternion::rotation_euler_zxy(float3(90.0f * deg2rad, 45.0f * deg2rad, 0.0f * deg2rad));
+	quaternion q2 = quaternion::rotation_euler_zxy(float3(180.0f * deg2rad, 0.0f * deg2rad, 0.0f * deg2rad));
+	quaternion fax = quaternion::rotation_axis(float3(0.0f, 1.0f, 0.0f), 1.57f);
 
 	quaternion slerp1 = slerp(q1, q2, 0.0f);
 	quaternion slerp2 = slerp(q1, q2, 1.0f);
@@ -472,12 +624,10 @@ void RunExperiments()
 	float3x3 matSlerp(testq);
 
 	// Quaternion vector tests
-	quaternion qEuler = euler(float3(0.0f * deg2rad, 90 * deg2rad, 0 * deg2rad));
+	quaternion qEuler = quaternion::rotation_euler_zxy(float3(0.0f * deg2rad, 90 * deg2rad, 0 * deg2rad));
 	quaternion qPure = quaternion(1.0f, 0.0f, 0.0f, 0.0f);
 
 	float3 vector = float3(1, 0, 0);
-
-	quaternion normalMultiply = qEuler * qPure;
 
 	float3 rotatedVector = mul(qEuler, vector);
 
@@ -486,9 +636,6 @@ void RunExperiments()
 	float2 a;
 
 	float3 lorry(1, 2, 3);
-
-	//float3 perry;
-	//perry.x *= 0.5f;
 
 	float3 intTexCoord = float3(1, 2, 3);
 
@@ -517,11 +664,15 @@ void RunExperiments()
 
 void RunUnitTestsMatrixFloat();
 
+void RunUnitTestsMatrixTransform();
+
 void RunUnitTestsVectorFloat();
 
 void RunUnitTestsVectorInt();
 
 void RunUnitTestsVectorDouble();
+
+void RunUnitTestsQuaternion();
 
 void RunUnitTests()
 {
@@ -540,15 +691,19 @@ void RunUnitTests()
 
 	RunUnitTestsMatrixFloat();
 
+	RunUnitTestsQuaternion();
+
+	RunUnitTestsMatrixTransform();
+
 	// Quaternion tests
 
 	quaternion q1 = quaternion::identity();
 	quaternion q2 = quaternion(0.0f, 1.0f, 1.0f, 1.0f);
 
-	quaternion qeuler1 = euler(float3(90.0f * deg2rad, 45.0f * deg2rad, 0.0f * deg2rad));
-	quaternion qeuler2 = euler(float3(180.0f * deg2rad, 0.0f * deg2rad, 0.0f * deg2rad));
+	quaternion qeuler1 = quaternion::rotation_euler_zxy(float3(90.0f * deg2rad, 45.0f * deg2rad, 0.0f * deg2rad));
+	quaternion qeuler2 = quaternion::rotation_euler_zxy(float3(180.0f * deg2rad, 0.0f * deg2rad, 0.0f * deg2rad));
 
-	quaternion qaxisangle = axisangle(float3(0.0f, 1.0f, 0.0f), 1.57f);
+	quaternion qaxisangle = quaternion::rotation_axis(float3(0.0f, 1.0f, 0.0f), 1.57f);
 
 	quaternion slerp1 = slerp(q1, q2, 0.0f);
 	quaternion slerp2 = slerp(q1, q2, 1.0f);
@@ -606,6 +761,8 @@ void RunPerformanceTests()
 	float4 v4_3(f3);
 	float4 v4_4(f4);
 
+	float3x3 m3x3_1(f1, f2, f3, f4, f5, f6, f7, f8, f9);
+
 	float3x4 m3x4_1;
 
 	float4x4 m4x4_1(f1, f2, f3, f4, f5, f6, f7, f8, f9, f10, f11, f12, f13, f14, f15, f16);
@@ -625,30 +782,28 @@ void RunPerformanceTests()
 	quaternion q1 = quaternion(f1, f2, f3, f4);
 	quaternion q2 = quaternion(f4, f1, f3, f2);
 
-	float4x4 mat_foo_4x4 = float4x4(10, 20, 1, 1,
-		78, 5, 2, 8,
-		14, 5, 5, 6,
-		8, 4, 5, 6);
-
 	float1 t1_1 = f1;
 	float1 t1_2 = f2;
 	float1 t1_3 = f3;
 
 	const long int iter = 100000000;
 
-	//printf("float4: %f, %f, %f, %f = %f\n", (float)v4.x, (float)v4.y, (float)v4.z, (float)v4.w, time);
-	//printf("Vector4: %f, %f, %f, %f\n\n", (float)v4f.x, (float)v4f.y, (float)v4f.z, (float)v4f.w);
-	//printf("float4x4: %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f\n\n", 
-	//	(float)mat_foo_4x4._m00, (float)mat_foo_4x4._m01, (float)mat_foo_4x4._m02, (float)mat_foo_4x4._m03,
-	//	(float)mat_foo_4x4._m10, (float)mat_foo_4x4._m11, (float)mat_foo_4x4._m12, (float)mat_foo_4x4._m13,
-	//	(float)mat_foo_4x4._m20, (float)mat_foo_4x4._m21, (float)mat_foo_4x4._m22, (float)mat_foo_4x4._m23,
-	//	(float)mat_foo_4x4._m30, (float)mat_foo_4x4._m31, (float)mat_foo_4x4._m32, (float)mat_foo_4x4._m33);
-	//printf("Result: %f, Cycles/Loop: %f, Elapsed: %f\n", (float)dp.x, cyclesPerOperation, time);
+	float3x3 m = float3x3::rotation_y(3.1415f / 2.0f);
 
 	benchmark<float4x4, iter>("m4x4 add", [&]() -> float4x4 { m4x4_1 = m4x4_1 + m4x4_2; return m4x4_1; });
-	benchmark<float4x4, iter>("m4x4 div", [&]() -> float4x4 { m4x4_1 = mul(m4x4_1, m4x4_2); return m4x4_1; });
-	benchmark<float1, iter>("m4x4 det", [&]() -> float1 { v1_1 = determinant(m4x4_1); m4x4_1 = m4x4_1 + v1_1; return v1_1; });
+	benchmark<quaternion, iter>("rotation_euler_zxy", [&]() -> quaternion { q1 = quaternion::rotation_euler_zxy(q1.xyz); return q1; });
+	benchmark<float3x3, iter>("m3x3 inverse", [&]() -> float3x3 { m3x3_1 = inverse(m3x3_1); return m3x3_1; });
 	benchmark<float4x4, iter>("m4x4 inverse", [&]() -> float4x4 { m4x4_1 = inverse(m4x4_1); return m4x4_1; });
+	benchmark<quaternion, iter>("rotation_axis_cosangle", [&]() -> quaternion { q1 = quaternion::rotation_axis_cosangle(q1.xyz, f1, 1.0f); return q1; });
+	benchmark<quaternion, iter>("rotation_axis", [&]() -> quaternion { q1 = quaternion::rotation_axis(q1.xyz, t1_1); return q1; });
+	benchmark<quaternion, iter>("conjugate", [&]() -> quaternion { q1 = conjugate(q1); return q1; });
+	benchmark<quaternion, iter>("slerp", [&]() -> quaternion { q1 = slerp(q1, q2, t1_1); return q1; });
+	benchmark<quaternion, iter>("quaternion(m3x3)", [&]() -> quaternion { q1 = quaternion(m); return q1; });
+
+	benchmark<float4x4, iter>("m4x4 add", [&]() -> float4x4 { m4x4_1 = m4x4_1 + m4x4_2; return m4x4_1; });
+	benchmark<float4x4, iter>("m4x4 div", [&]() -> float4x4 { m4x4_1 = m4x4_1 / m4x4_2; return m4x4_1; });
+	benchmark<float1, iter>("m4x4 det", [&]() -> float1 { v1_1 = determinant(m4x4_1); m4x4_1 = m4x4_1 + v1_1; return v1_1; });
+
 	benchmark<float4x4, iter>("m4x4 transp", [&]() -> float4x4 { m4x4_1 = transpose(m4x4_1); return m4x4_1; });
 	benchmark<float3x4, iter>("mul(m3x4, m4x4)", [&]() -> float3x4 { m3x4_1 = mul(m3x4_1, m4x4_1); return m3x4_1; });
 	benchmark<float4x4, iter>("mul(m4x4, m4x4)", [&]() -> float4x4 { m4x4_1 = mul(m4x4_1, m4x4_2); return m4x4_1; });
@@ -658,7 +813,7 @@ void RunPerformanceTests()
 
 	//benchmark<float4x4, iter>("f4x1 x f1x4", [&]() -> float4x4 { m4x4_1 = transpose(m4x4_1); return m4x4_1; });
 	benchmark<float1, iter>("m4x4 trace", [&]() -> float1 { v1_1 = trace(m4x4_1) + v1_1; return v1_1; });
-	benchmark<float4x4, iter>("m4x4 quaternion", [&]() -> float4x4 { m4x4_1 = float4x4(q1); return m4x4_1; });
+	benchmark<float4x4, iter>("m4x4(quaternion)", [&]() -> float4x4 { m4x4_1 = float4x4(q1); return m4x4_1; });
 
 	benchmark<float4, iter>("wzyx", [&]() -> float4 { v4_1 = v4_1.wzyx; return v4_1; });
 
@@ -670,6 +825,7 @@ void RunPerformanceTests()
 	benchmark<float4, iter>("any", [&]() -> float4 { v4_1 = any(v4_1); return v4_1; });
 	benchmark<float4, iter>("asin", [&]() -> float4 { v4_1 = asin(v4_1); return v4_1; });
 	benchmark<float4, iter>("atan", [&]() -> float4 { v4_1 = atan(v4_1); return v4_1; });
+	benchmark<float4, iter>("atan2", [&]() -> float4 { v4_1 = atan2(v4_1, v4_2); return v4_1; });
 	benchmark<float4, iter>("ceil", [&]() -> float4 { v4_1 = ceil(v4_1); return v4_1; });
 	benchmark<float4, iter>("clamp", [&]() -> float4 { v4_1 = clamp(v4_1, v4_2, v4_3); return v4_1; });
 	benchmark<float4, iter>("cos", [&]() -> float4 { v4_1 = cos(v4_1); return v4_1; });
@@ -716,11 +872,6 @@ void RunPerformanceTests()
 	benchmark<float4, iter>("mul", [&]() -> float4 { v4_1 = v4_1 * v4_2; return v4_1; });
 	benchmark<float4, iter>("div", [&]() -> float4 { v4_1 = v4_1 / v4_2; return v4_1; });
 	
-	benchmark<quaternion, iter>("axisangle", [&]() -> quaternion { q1 = axisangle(q1.xyz, t1_1); return q1; });
-	benchmark<quaternion, iter>("euler", [&]() -> quaternion { q1 = euler(q1.xyz); return q1; });
-	benchmark<quaternion, iter>("conjugate", [&]() -> quaternion { q1 = conjugate(q1); return q1; });
-	benchmark<quaternion, iter>("slerp", [&]() -> quaternion { q1 = slerp(q1, q2, t1_1); return q1; });
-
 	printf("Performance tests completed\n\n");
 }
 
@@ -736,15 +887,73 @@ void android_main(struct android_app* app)
 
 #else
 
-int main(int /*argc*/, char** /*argv*/)
+int main(int argc, char** argv)
 
 #endif
 {
-	RunExperiments();
-	RunUnitTests();
-	RunPerformanceTests();
+	bool runExperiments = true;
+	bool runUnitTests = true;
+	bool runPerformanceTests = true;
+	bool appveyor = false;
 
-	getchar();
+#if !defined(__ANDROID__)
+	if (argc > 1)
+	{
+		runUnitTests = false;
+		runExperiments = false;
+		runPerformanceTests = false;
+
+		for (int i = 1; i < argc; ++i)
+		{
+			if (strcmp(argv[i], "experiments") == 0)
+			{
+				runExperiments = true;
+			}
+			else if (strcmp(argv[i], "unit_tests") == 0)
+			{
+				runUnitTests = true;
+			}
+			else if (strcmp(argv[i], "perf_tests") == 0)
+			{
+				runPerformanceTests = true;
+			}
+			else if (strcmp(argv[i], "appveyor") == 0)
+			{
+				appveyor = true;
+			}
+		}
+}
+#endif
+
+	hlslpp_unit::UnitTestConfig.appveyor = appveyor;
+
+	if (runExperiments)
+	{
+		RunExperiments();
+	}
+
+	if (runUnitTests)
+	{
+		RunUnitTests();
+	}
+
+	if (runPerformanceTests)
+	{
+		RunPerformanceTests();
+	}
+
+#if !defined(__ANDROID__)
+
+	if (hlslpp_unit::UnitTestConfig.anyTestFailed)
+	{
+		return -1;
+	}
+	else
+	{
+		return 0;
+	}
+
+#endif
 }
 
 #if defined(__ANDROID__)

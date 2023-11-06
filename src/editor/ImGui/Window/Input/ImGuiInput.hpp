@@ -80,10 +80,7 @@ namespace vg::editor
 
                 const uint2 mousePos = input->GetMousePos();
 
-                const uint mouseX = mousePos.x;
-                const uint mouseY = mousePos.y;
-
-                Text("(%u, %u)", mouseX, mouseY);
+                Text("(%u, %u)", (uint)mousePos.x, (uint)mousePos.y);
 
                 for (uint b = 0; b < enumCount<core::MouseButton>(); ++b)
                 {
@@ -137,14 +134,10 @@ namespace vg::editor
                     NextColumn();
 
                     const float2 & joyLeftDir = input->GetJoyLeftStickDir(id);
-                    float leftStickX = joyLeftDir.x;
-                    float leftStickY = joyLeftDir.y;
-                    Text("(%.2f, %.2f)", leftStickX, leftStickY);
+                    Text("(%.2f, %.2f)", (float)joyLeftDir.x, (float)joyLeftDir.y);
 
                     const float2 & joyRightDir = input->GetJoyRightStickDir(id);
-                    float rightStickX = joyRightDir.x;
-                    float rightStickY = joyRightDir.y;
-                    Text("(%.2f, %.2f)", rightStickX, rightStickY);
+                    Text("(%.2f, %.2f)", (float)joyRightDir.x, (float)joyRightDir.y);
 
                     for (uint b = 0; b < enumCount<core::JoyButton>(); ++b)
                     {

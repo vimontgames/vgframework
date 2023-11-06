@@ -1,3 +1,7 @@
+#pragma once
+
+#include "hlsl++_config.h"
+
 namespace hlslpp
 {
 	//----------------
@@ -6,7 +10,7 @@ namespace hlslpp
 
 	const n128 f4_0           = _hlslpp_set1_ps(0.0f);
 	const n128 f4_1           = _hlslpp_set1_ps(1.0f);
-	const n128 f4minusOne     = _hlslpp_set1_ps(-1.0f);
+	const n128 f4_minus1      = _hlslpp_set1_ps(-1.0f);
 	const n128 f4_05          = _hlslpp_set1_ps(0.5f);
 	const n128 f4_minus05     = _hlslpp_set1_ps(-0.5f);
 	const n128 f4_2           = _hlslpp_set1_ps(2.0f);
@@ -52,7 +56,6 @@ namespace hlslpp
 	const n128i i4_1           = _hlslpp_set1_epi32(1);
 
 	const n128i i4negativeMask = _hlslpp_set1_epi32(negMask.i);
-	const n128i i4absMask      = _hlslpp_set1_epi32(absMask.i);
 	const n128i i4fffMask      = _hlslpp_set1_epi32(fffMask.i);
 	const n128i i4negMask      = _hlslpp_set1_epi32(negMask.i);
 
@@ -118,38 +121,38 @@ namespace hlslpp
 
 	// Auxiliary templates for disambiguation with standard header functions
 
-	#define hlslpp_enable_if_return(T, R) typename std::enable_if<std::is_arithmetic<T>::value, R>::type
+	#define hlslpp_enable_if_return(T, R) typename hlslpp::enable_if<hlslpp::is_arithmetic<T>::value, R>::type
 	
-	#define hlslpp_enable_if_number(T) typename std::enable_if<std::is_arithmetic<T>::value, void*>::type = nullptr
+	#define hlslpp_enable_if_number(T) typename hlslpp::enable_if<hlslpp::is_arithmetic<T>::value, void*>::type = nullptr
 	
 	#define hlslpp_enable_if_number_2(T1, T2) \
-			typename std::enable_if< \
-			std::is_arithmetic<T1>::value * \
-			std::is_arithmetic<T2>::value, void*>::type = nullptr
+			typename hlslpp::enable_if< \
+			hlslpp::is_arithmetic<T1>::value * \
+			hlslpp::is_arithmetic<T2>::value, void*>::type = nullptr
 	
 	#define hlslpp_enable_if_number_3(T1, T2, T3) \
-			typename std::enable_if< \
-			std::is_arithmetic<T1>::value * \
-			std::is_arithmetic<T2>::value * \
-			std::is_arithmetic<T3>::value, void*>::type = nullptr
+			typename hlslpp::enable_if< \
+			hlslpp::is_arithmetic<T1>::value * \
+			hlslpp::is_arithmetic<T2>::value * \
+			hlslpp::is_arithmetic<T3>::value, void*>::type = nullptr
 	
 	#define hlslpp_enable_if_number_4(T1, T2, T3, T4) \
-			typename std::enable_if< \
-			std::is_arithmetic<T1>::value * \
-			std::is_arithmetic<T2>::value * \
-			std::is_arithmetic<T3>::value * \
-			std::is_arithmetic<T4>::value, void*>::type = nullptr
+			typename hlslpp::enable_if< \
+			hlslpp::is_arithmetic<T1>::value * \
+			hlslpp::is_arithmetic<T2>::value * \
+			hlslpp::is_arithmetic<T3>::value * \
+			hlslpp::is_arithmetic<T4>::value, void*>::type = nullptr
 
 	#define hlslpp_enable_if_number_8(T1, T2, T3, T4, T5, T6, T7, T8) \
-			typename std::enable_if< \
-			std::is_arithmetic<T1>::value * \
-			std::is_arithmetic<T2>::value * \
-			std::is_arithmetic<T3>::value * \
-			std::is_arithmetic<T4>::value * \
-			std::is_arithmetic<T5>::value * \
-			std::is_arithmetic<T6>::value * \
-			std::is_arithmetic<T7>::value * \
-			std::is_arithmetic<T8>::value, void*>::type = nullptr
+			typename hlslpp::enable_if< \
+			hlslpp::is_arithmetic<T1>::value * \
+			hlslpp::is_arithmetic<T2>::value * \
+			hlslpp::is_arithmetic<T3>::value * \
+			hlslpp::is_arithmetic<T4>::value * \
+			hlslpp::is_arithmetic<T5>::value * \
+			hlslpp::is_arithmetic<T6>::value * \
+			hlslpp::is_arithmetic<T7>::value * \
+			hlslpp::is_arithmetic<T8>::value, void*>::type = nullptr
 
 	// Helper intrinsics
 
@@ -218,7 +221,9 @@ namespace hlslpp
 	#define _hlslpp_shuf_ywwy_ps(x, y)	_hlslpp_shuffle_ps((x), (y), HLSLPP_SHUFFLE_MASK(MaskY, MaskW, MaskW, MaskY))
 	#define _hlslpp_shuf_yxwz_ps(x, y)	_hlslpp_shuffle_ps((x), (y), HLSLPP_SHUFFLE_MASK(MaskY, MaskX, MaskW, MaskZ))
 	#define _hlslpp_shuf_zzxx_ps(x, y)	_hlslpp_shuffle_ps((x), (y), HLSLPP_SHUFFLE_MASK(MaskZ, MaskZ, MaskX, MaskX))
+	#define _hlslpp_shuf_zzzz_ps(x, y)	_hlslpp_shuffle_ps((x), (y), HLSLPP_SHUFFLE_MASK(MaskZ, MaskZ, MaskZ, MaskZ))
 	#define _hlslpp_shuf_zwxx_ps(x, y)	_hlslpp_shuffle_ps((x), (y), HLSLPP_SHUFFLE_MASK(MaskZ, MaskW, MaskX, MaskX))
+	#define _hlslpp_shuf_wwww_ps(x, y)	_hlslpp_shuffle_ps((x), (y), HLSLPP_SHUFFLE_MASK(MaskW, MaskW, MaskW, MaskW))
 	
 	#define _hlslpp256_perm_xxxx_xxxx_ps(x) _hlslpp256_perm_ps(x, MaskX, MaskX, MaskX, MaskX, MaskX, MaskX, MaskX, MaskX)
 	#define _hlslpp256_perm_xxxx_yyyy_ps(x) _hlslpp256_perm_ps(x, MaskX, MaskX, MaskX, MaskX, MaskY, MaskY, MaskY, MaskY)
@@ -245,8 +250,22 @@ namespace hlslpp
 
 	#define _hlslpp256_perm_aaaa_xxxx_ps(x) _hlslpp256_perm_ps(x, MaskA, MaskA, MaskA, MaskA, MaskX, MaskX, MaskX, MaskX)
 
+#if defined(HLSLPP_DOUBLE)
+
+	#define _hlslpp_perm_xx_pd(x)				_hlslpp_perm_pd((x), HLSLPP_SHUFFLE_MASK_PD(MaskX, MaskX))
+	#define _hlslpp_perm_xy_pd(x)				_hlslpp_perm_pd((x), HLSLPP_SHUFFLE_MASK_PD(MaskX, MaskY))
+	#define _hlslpp_perm_yx_pd(x)				_hlslpp_perm_pd((x), HLSLPP_SHUFFLE_MASK_PD(MaskY, MaskX))
+	#define _hlslpp_perm_yy_pd(x)				_hlslpp_perm_pd((x), HLSLPP_SHUFFLE_MASK_PD(MaskY, MaskY))
+
+	#define _hlslpp_shuf_xx_pd(x, y)			_hlslpp_shuffle_pd((x), (y), HLSLPP_SHUFFLE_MASK_PD(MaskX, MaskX))
+	#define _hlslpp_shuf_xy_pd(x, y)			_hlslpp_shuffle_pd((x), (y), HLSLPP_SHUFFLE_MASK_PD(MaskX, MaskY))
+	#define _hlslpp_shuf_yx_pd(x, y)			_hlslpp_shuffle_pd((x), (y), HLSLPP_SHUFFLE_MASK_PD(MaskY, MaskX))
+	#define _hlslpp_shuf_yy_pd(x, y)			_hlslpp_shuffle_pd((x), (y), HLSLPP_SHUFFLE_MASK_PD(MaskY, MaskY))
+
+#endif
+
 	// Reference http://www.liranuna.com/sse-intrinsics-optimizations-in-popular-compilers/
-	#define _hlslpp_sign_ps(val)				_hlslpp_and_ps(_hlslpp_or_ps(_hlslpp_and_ps((val), f4minusOne), f4_1), _hlslpp_cmpneq_ps((val), f4_0))
+	#define _hlslpp_sign_ps(val)				_hlslpp_and_ps(_hlslpp_or_ps(_hlslpp_and_ps((val), f4_minus1), f4_1), _hlslpp_cmpneq_ps((val), f4_0))
 	
 	#define _hlslpp_cmpneq1_ps(val1, val2)		_hlslpp_and_ps(_hlslpp_cmpneq_ps((val1), (val2)), f4_1)
 	#define _hlslpp_cmpeq1_ps(val1, val2)		_hlslpp_and_ps(_hlslpp_cmpeq_ps((val1), (val2)), f4_1)
@@ -274,6 +293,15 @@ namespace hlslpp
 	
 	#define _hlslpp_cmplt1_epi32(val1, val2)	_hlslpp_and_si128(_hlslpp_cmplt_epi32((val1), (val2)), i4_1)
 	#define _hlslpp_cmple1_epi32(val1, val2)	_hlslpp_and_si128(_hlslpp_cmple_epi32((val1), (val2)), i4_1)
+
+	#define _hlslpp_cmpneq1_epu32(val1, val2)	_hlslpp_and_si128(_hlslpp_cmpneq_epu32((val1), (val2)), u4_1)
+	#define _hlslpp_cmpeq1_epu32(val1, val2)	_hlslpp_and_si128(_hlslpp_cmpeq_epu32((val1), (val2)), u4_1)
+
+	#define _hlslpp_cmpgt1_epu32(val1, val2)	_hlslpp_and_si128(_hlslpp_cmpgt_epu32((val1), (val2)), u4_1)
+	#define _hlslpp_cmpge1_epu32(val1, val2)	_hlslpp_and_si128(_hlslpp_cmpge_epu32((val1), (val2)), u4_1)
+
+	#define _hlslpp_cmplt1_epu32(val1, val2)	_hlslpp_and_si128(_hlslpp_cmplt_epu32((val1), (val2)), u4_1)
+	#define _hlslpp_cmple1_epu32(val1, val2)	_hlslpp_and_si128(_hlslpp_cmple_epu32((val1), (val2)), u4_1)
 
 	#define _hlslpp256_sign_ps(val)				_hlslpp256_and_ps(_hlslpp256_or_ps(_hlslpp256_and_ps((val), f8minusOne), f8_1), _hlslpp256_cmpneq_ps((val), f8_0))
 

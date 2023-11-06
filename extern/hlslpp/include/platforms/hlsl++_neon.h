@@ -257,12 +257,14 @@ hlslpp_inline float32x4_t vrndq_f32(float32x4_t x)
 }
 #endif
 
+#if !defined(vsqrtq_f32)
 hlslpp_inline float32x4_t vsqrtq_f32(float32x4_t x)
 {
 	uint32x4_t cmpZero = vceqq_f32(x, vmovq_n_f32(0.0f));							// Sqrt of 0 is NaN (since we use rsqrt to compute it) which is incorrect but we still want it to go NaN on negatives
 	float32x4_t sqrt = vmulq_f32(x, vrsqrtq_f32(x));								// Multiply by x to get x * rqsrt(x)
 	return vreinterpretq_f32_u32(vbicq_u32(vreinterpretq_u32_f32(sqrt), cmpZero));	// Select 0 if input is 0
 }
+#endif
 
 #endif
 
@@ -279,14 +281,14 @@ hlslpp_inline float32x4_t vdivq_f32(float32x4_t x, float32x4_t y)
 
 #endif
 
-hlslpp_inline int32x4_t vdivq_s32(int32x4_t x, int32x4_t y)
+inline int32x4_t vdivq_s32(int32x4_t x, int32x4_t y)
 {
-	return (int32x4_t)vdivq_f32((float32x4_t)x, (float32x4_t)y);
+	return vcvtq_s32_f32(vdivq_f32(vcvtq_f32_s32(x), vcvtq_f32_s32(y)));
 }
 
 hlslpp_inline uint32x4_t vdivq_u32(uint32x4_t x, uint32x4_t y)
 {
-	return (uint32x4_t)vdivq_f32((float32x4_t)x, (float32x4_t)y);
+	return vcvtq_u32_f32(vdivq_f32(vcvtq_f32_u32(x), vcvtq_f32_u32(y)));
 }
 
 hlslpp_inline float32x4_t vrcpq_f32(float32x4_t x)
@@ -345,7 +347,7 @@ hlslpp_inline float32x4_t vrcpq_f32(float32x4_t x)
 
 // We decompose the mask and turn it into 4 floats
 // The input mask follows the format for SSE
-#define _hlslpp_blend_ps(x, y, mask)			vbslq_f32(vmov4q_n_u32((mask & 1) * 0xffffffff, ((mask >> 1) & 1) * 0xffffffff, ((mask >> 2) & 1) * 0xffffffff, ((mask >> 3) & 1) * 0xffffffff), (y), (x))
+#define _hlslpp_blend_ps(x, y, mask)			vbslq_f32(vmov4q_n_u32(((mask) & 1) * 0xffffffff, (((mask) >> 1) & 1) * 0xffffffff, (((mask) >> 2) & 1) * 0xffffffff, (((mask) >> 3) & 1) * 0xffffffff), (y), (x))
 
 #define _hlslpp_trunc_ps(x)						vcvtq_f32_s32(vcvtq_s32_f32(x))
 #define _hlslpp_floor_ps(x)						vrndmq_f32((x))
@@ -373,8 +375,8 @@ hlslpp_inline float32x4_t vrcpq_f32(float32x4_t x)
 // SSE: Duplicate odd-indexed single-precision (32-bit) floating-point elements from a, and store the results in dst.
 #define _hlslpp_movehdup_ps(x)					vcombine_f32(vdup_lane_f32(vget_low_f32(x), 1), vdup_lane_f32(vget_high_f32(x), 1))
 
-#define _hlslpp_perm_ps(x, mask)				vpermq_f32((x), mask & 3, (mask >> 2) & 3, (mask >> 4) & 3, (mask >> 6) & 3)
-#define _hlslpp_shuffle_ps(x, y, mask)			vshufq_f32((x), (y), mask & 3, (mask >> 2) & 3, (mask >> 4) & 3, (mask >> 6) & 3)
+#define _hlslpp_perm_ps(x, mask)				vpermq_f32((x), (mask) & 3, ((mask) >> 2) & 3, ((mask) >> 4) & 3, ((mask) >> 6) & 3)
+#define _hlslpp_shuffle_ps(x, y, mask)			vshufq_f32((x), (y), (mask) & 3, ((mask) >> 2) & 3, ((mask) >> 4) & 3, ((mask) >> 6) & 3)
 
 #define _hlslpp_unpacklo_ps(x, y)				vzipq_f32(x, y).val[0]
 #define _hlslpp_unpackhi_ps(x, y)				vzipq_f32(x, y).val[1]
@@ -400,9 +402,9 @@ hlslpp_inline n128 _hlslpp_dot4_ps(n128 x, n128 y)
 #define _hlslpp_all3_ps(x)						_hlslpp_all3_epi32(vreinterpretq_u32_f32(x))
 #define _hlslpp_all4_ps(x)						_hlslpp_all4_epi32(vreinterpretq_u32_f32(x))
 
-//--------
-// Storing
-//--------
+//-----------------
+// Float Store/Load
+//-----------------
 
 hlslpp_inline void _hlslpp_store1_ps(float* p, n128 x)
 {
@@ -512,6 +514,9 @@ hlslpp_inline void _hlslpp_load4x4_ps(float* p, n128& x0, n128& x1, n128& x2, n1
 #define _hlslpp_max_epi32(x, y)					vmaxq_s32((x), (y))
 #define _hlslpp_min_epi32(x, y)					vminq_s32((x), (y))
 
+#define _hlslpp_sel_epi32(x, y, mask)			vbslq_s32((mask), (y), (x))
+#define _hlslpp_blend_epi32(x, y, mask)			vbslq_s32(vmov4q_n_u32(~(((mask) & 1) * 0xffffffff), ~((((mask) >> 1) & 1) * 0xffffffff), ~((((mask) >> 2) & 1) * 0xffffffff), ~((((mask) >> 3) & 1) * 0xffffffff)), (x), (y))
+
 #define _hlslpp_clamp_epi32(x, minx, maxx)		vmaxq_s32(vminq_s32((x), (maxx)), (minx))
 #define _hlslpp_sat_epi32(x)					vmaxq_s32(vminq_s32((x), i4_1), i4_0)
 
@@ -521,15 +526,13 @@ hlslpp_inline void _hlslpp_load4x4_ps(float* p, n128& x0, n128& x1, n128& x2, n1
 #define _hlslpp_or_si128(x, y)					vorrq_s32((x), (y))
 #define _hlslpp_xor_si128(x, y)					veorq_s32((x), (y))
 
-#define _hlslpp_perm_epi32(x, mask)				vpermq_s32((x), mask & 3, (mask >> 2) & 3, (mask >> 4) & 3, (mask >> 6) & 3)
-#define _hlslpp_shuffle_epi32(x, y, mask)		vshufq_s32((x), (y), mask & 3, (mask >> 2) & 3, (mask >> 4) & 3, (mask >> 6) & 3)
-
-#define _hlslpp_blend_epi32(x, y, mask)			vbslq_s32(vmov4q_n_u32(~((mask & 1) * 0xffffffff), ~(((mask >> 1) & 1) * 0xffffffff), ~(((mask >> 2) & 1) * 0xffffffff), ~(((mask >> 3) & 1) * 0xffffffff)), (x), (y))
+#define _hlslpp_perm_epi32(x, mask)				vpermq_s32((x), (mask) & 3, ((mask) >> 2) & 3, ((mask) >> 4) & 3, ((mask) >> 6) & 3)
+#define _hlslpp_shuffle_epi32(x, y, mask)		vshufq_s32((x), (y), (mask) & 3, ((mask) >> 2) & 3, ((mask) >> 4) & 3, ((mask) >> 6) & 3)
 
 #define _hlslpp_castps_si128(x)					vreinterpretq_s32_f32((x))
 #define _hlslpp_castsi128_ps(x)					vreinterpretq_f32_s32((x))
 
-#define _hlslpp_cvtps_epi32(x)					vcvtq_s32_f32((x))
+#define _hlslpp_cvttps_epi32(x)					vcvtq_s32_f32((x))
 #define _hlslpp_cvtepi32_ps(x)					vcvtq_f32_s32((x))
 
 #define _hlslpp_slli_epi32(x, y)				vshlq_n_s32((x), (y))
@@ -603,6 +606,54 @@ hlslpp_inline bool _hlslpp_all4_epi32(n128i x)
 #endif
 }
 
+//-------------------
+// Integer Store/Load
+//-------------------
+
+hlslpp_inline void _hlslpp_store1_epi32(int32_t* p, n128i x)
+{
+	vst1q_lane_s32(p, x, 0);
+}
+
+hlslpp_inline void _hlslpp_store2_epi32(int32_t* p, n128i x)
+{
+	vst1_s32(p, vget_low_s32(x));
+}
+
+hlslpp_inline void _hlslpp_store3_epi32(int32_t* p, n128i x)
+{
+	vst1_s32(p, vget_low_s32(x));
+	vst1q_lane_s32(p + 2, x, 2);
+}
+
+hlslpp_inline void _hlslpp_store4_epi32(int32_t* p, n128i x)
+{
+	vst1q_s32(p, x);
+}
+
+hlslpp_inline void _hlslpp_load1_epi32(int32_t* p, n128i& x)
+{
+	x = vld1q_lane_s32(p, x, 0);
+}
+
+hlslpp_inline void _hlslpp_load2_epi32(int32_t* p, n128i& x)
+{
+	int32x2_t t = vld1_s32(p); // Load the two values
+	x = vcombine_s32(t, t); // Replicate in the other two to create a float32x4_t
+}
+
+hlslpp_inline void _hlslpp_load3_epi32(int32_t* p, n128i& x)
+{
+	int32x2_t t = vld1_s32(p); // Load the two values
+	x = vcombine_s32(t, t); // Replicate in the other two to create a float32x4_t
+	x = vld1q_lane_s32(p + 2, x, 2);
+}
+
+hlslpp_inline void _hlslpp_load4_epi32(int32_t* p, n128i& x)
+{
+	x = vld1q_s32(p);
+}
+
 //-----------------
 // Unsigned Integer
 //-----------------
@@ -632,10 +683,13 @@ hlslpp_inline bool _hlslpp_all4_epi32(n128i x)
 #define _hlslpp_max_epu32(x, y)					vmaxq_u32((x), (y))
 #define _hlslpp_min_epu32(x, y)					vminq_u32((x), (y))
 
+#define _hlslpp_sel_epu32(x, y, mask)			vbslq_u32((mask), (y), (x))
+#define _hlslpp_blend_epu32(x, y, mask)			vbslq_u32(vmov4q_n_u32(~(((mask) & 1) * 0xffffffff), ~((((mask) >> 1) & 1) * 0xffffffff), ~((((mask) >> 2) & 1) * 0xffffffff), ~((((mask) >> 3) & 1) * 0xffffffff)), (x), (y))
+
 #define _hlslpp_clamp_epu32(x, minx, maxx)		vmaxq_u32(vminq_u32((x), (maxx)), (minx))
 #define _hlslpp_sat_epu32(x)					vmaxq_u32(vminq_u32((x), i4_1), i4_0)
 
-#define _hlslpp_cvtps_epu32(x)					vcvtq_u32_f32((x))
+#define _hlslpp_cvttps_epu32(x)					vcvtq_u32_f32((x))
 #define _hlslpp_cvtepu32_ps(x)					vcvtq_f32_u32((x))
 
 #define _hlslpp_slli_epu32(x, y)				vshlq_n_u32((x), (y))
@@ -654,6 +708,55 @@ hlslpp_inline bool _hlslpp_all4_epi32(n128i x)
 #define _hlslpp_all2_epu32(x)					_hlslpp_all2_epi32(x)
 #define _hlslpp_all3_epu32(x)					_hlslpp_all3_epi32(x)
 #define _hlslpp_all4_epu32(x)					_hlslpp_all4_epi32(x)
+
+//----------------------------
+// Unsigned Integer Store/Load
+//----------------------------
+
+
+hlslpp_inline void _hlslpp_store1_epu32(uint32_t* p, n128u x)
+{
+	vst1q_lane_u32(p, x, 0);
+}
+
+hlslpp_inline void _hlslpp_store2_epu32(uint32_t* p, n128u x)
+{
+	vst1_u32(p, vget_low_u32(x));
+}
+
+hlslpp_inline void _hlslpp_store3_epu32(uint32_t* p, n128u x)
+{
+	vst1_u32(p, vget_low_u32(x));
+	vst1q_lane_u32(p + 2, x, 2);
+}
+
+hlslpp_inline void _hlslpp_store4_epu32(uint32_t* p, n128u x)
+{
+	vst1q_u32(p, x);
+}
+
+hlslpp_inline void _hlslpp_load1_epu32(uint32_t* p, n128u& x)
+{
+	x = vld1q_lane_u32(p, x, 0);
+}
+
+hlslpp_inline void _hlslpp_load2_epu32(uint32_t* p, n128u& x)
+{
+	int32x2_t t = vld1_u32(p); // Load the two values
+	x = vcombine_u32(t, t); // Replicate in the other two to create a float32x4_t
+}
+
+hlslpp_inline void _hlslpp_load3_epu32(uint32_t* p, n128u& x)
+{
+	int32x2_t t = vld1_u32(p); // Load the two values
+	x = vcombine_u32(t, t); // Replicate in the other two to create a float32x4_t
+	x = vld1q_lane_u32(p + 2, x, 2);
+}
+
+hlslpp_inline void _hlslpp_load4_epu32(uint32_t* p, n128u& x)
+{
+	x = vld1q_u32(p);
+}
 
 #if defined(HLSLPP_DOUBLE)
 
@@ -728,7 +831,7 @@ hlslpp_inline float64x2_t vrsqrtq_f64(float64x2_t x)
 #define _hlslpp_add_pd(x, y)					vaddq_f64((x), (y))
 #define _hlslpp_sub_pd(x, y)					vsubq_f64((x), (y))
 #define _hlslpp_mul_pd(x, y)					vmulq_f64((x), (y))
-#define _hlslpp_div_pd(x, y)					vdivq_f64(x, y)
+#define _hlslpp_div_pd(x, y)					vdivq_f64((x), (y))
 
 #define _hlslpp_rcp_pd(x)						vrcpq_f64(x)
 
@@ -771,13 +874,13 @@ hlslpp_inline float64x2_t vrsqrtq_f64(float64x2_t x)
 #define _hlslpp_or_pd(x, y)						vreinterpretq_f64_u64(vorrq_u64(vreinterpretq_u64_f64((x)), vreinterpretq_u64_f64((y))))
 #define _hlslpp_xor_pd(x, y)					vreinterpretq_f64_u64(veorq_u64(vreinterpretq_u64_f64((x)), vreinterpretq_u64_f64((y))))
 
-#define _hlslpp_perm_pd(x, mask)				vpermq_f64((x), mask & 1, (mask >> 1) & 1)
-#define _hlslpp_shuffle_pd(x, y, mask)			vshufq_f64((x), (y), mask & 1, (mask >> 1) & 1)
+#define _hlslpp_perm_pd(x, mask)				vpermq_f64((x), (mask) & 1, ((mask) >> 1) & 1)
+#define _hlslpp_shuffle_pd(x, y, mask)			vshufq_f64((x), (y), (mask) & 1, ((mask) >> 1) & 1)
 
 // Bit-select x and y based on the contents of the mask
 #define _hlslpp_sel_pd(x, y, mask)				vbslq_f64((mask), (y), (x))
 
-#define _hlslpp_blend_pd(x, y, mask)			vbslq_f64(vmov2q_n_u64((mask & 1) * 0xffffffffffffffff, ((mask >> 1) & 1) * 0xffffffffffffffff), (y), (x))
+#define _hlslpp_blend_pd(x, y, mask)			vbslq_f64(vmov2q_n_u64(((mask) & 1) * 0xffffffffffffffff, (((mask) >> 1) & 1) * 0xffffffffffffffff), (y), (x))
 
 hlslpp_inline bool _hlslpp_any1_pd(n128d x)
 {

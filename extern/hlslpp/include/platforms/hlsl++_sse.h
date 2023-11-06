@@ -34,7 +34,8 @@
 
 	#endif
 
-	#include <immintrin.h>
+	// https://github.com/p12tic/libsimdpp/issues/33
+	#include <intrin.h>
 
 #endif
 
@@ -78,8 +79,8 @@ typedef __m256i n256i;
 #define _hlslpp_rcp_ps(x)						_mm_rcp_ps((x))
 
 // The following are alternatives but have been measured to be slower
-// _mm_sub_ps(f4zero, x);			// Slowest
-// _mm_mul_ps(f4minusOne, x);		// Slower
+// _mm_sub_ps(f4_0, x);			// Slowest
+// _mm_mul_ps(f4_minus1, x);	// Slower
 #define _hlslpp_neg_ps(x)						_mm_xor_ps((x), f4negativeMask)
 
 #if defined(__FMA__)
@@ -186,8 +187,13 @@ hlslpp_inline n128 _hlslpp_round_ps(n128 x)
 #define _hlslpp_or_ps(x, y)						_mm_or_ps((x), (y))
 #define _hlslpp_xor_ps(x, y)					_mm_xor_ps((x), (y))
 
+// Equivalent to shuffle(x, y, X, Y, X, Y)
 #define _hlslpp_movelh_ps(x, y)					_mm_movelh_ps((x), (y))
+
+// Equivalent to shuffle(y, x, Z, W, Z, W)
 #define _hlslpp_movehl_ps(x, y)					_mm_movehl_ps((x), (y))
+
+// Equivalent to shuffle(x, x, Y, Y, W, W)
 #define _hlslpp_movehdup_ps(x)					_mm_movehdup_ps((x))
 
 #if defined(__AVX__)
@@ -216,9 +222,9 @@ hlslpp_inline n128 _hlslpp_dot4_ps(n128 x, n128 y)
 	
 	#else
 	
-		n128 multi  = _mm_mul_ps(x, y);         // Multiply components
-		n128 shuf   = _hlslpp_perm_ps(multi, HLSLPP_SHUFFLE_MASK(1, 0, 3, 0));  // Move y into x, and w into z (ignore the rest)
-		n128 add    = _mm_add_ps(shuf, multi);  // Contains x+y, _, z+w, _
+		n128 mul    = _mm_mul_ps(x, y);         // Multiply components
+		n128 shuf   = _hlslpp_perm_ps(mul, HLSLPP_SHUFFLE_MASK(1, 0, 3, 0));  // Move y into x, and w into z (ignore the rest)
+		n128 add    = _mm_add_ps(shuf, mul);  // Contains x+y, _, z+w, _
 		shuf        = _mm_movehl_ps(shuf, add); // Move (z + w) into x
 		n128 result = _mm_add_ss(add, shuf);    // Contains x+y+z+w, _, _, _
 	
@@ -278,14 +284,12 @@ hlslpp_inline void _hlslpp_store1_ps(float* p, n128 x)
 
 hlslpp_inline void _hlslpp_store2_ps(float* p, n128 x)
 {
-	_mm_store_ss(p, x);
-	_mm_store_ss(p + 1, _hlslpp_perm_ps(x, HLSLPP_SHUFFLE_MASK(1, 1, 1, 1)));
+	_mm_storel_epi64((__m128i*)p, *(n128i*)&x);
 }
 
 hlslpp_inline void _hlslpp_store3_ps(float* p, n128 x)
 {
-	_mm_store_ss(p, x);
-	_mm_store_ss(p + 1, _hlslpp_perm_ps(x, HLSLPP_SHUFFLE_MASK(1, 1, 1, 1)));
+	_mm_storel_epi64((__m128i*)p, *(n128i*)&x);
 	_mm_store_ss(p + 2, _hlslpp_perm_ps(x, HLSLPP_SHUFFLE_MASK(2, 2, 2, 2)));
 }
 
@@ -294,12 +298,14 @@ hlslpp_inline void _hlslpp_store4_ps(float* p, n128 x)
 	_mm_storeu_ps(p, x);
 }
 
-// Store first 3, store second 3, store last 3, stomping one of the previous values but making sure it's the same
+// Store first 3, store second 3, store last 2 and then the last one
+// We need to do it this way to avoid stomping memory outside the provided buffer
 hlslpp_inline void _hlslpp_store3x3_ps(float* p, n128 x0, n128 x1, n128 x2)
 {
 	_mm_storeu_ps(p, x0);
 	_mm_storeu_ps(p + 3, x1);
-	_mm_storeu_ps(p + 5, _hlslpp_blend_ps(_hlslpp_perm_ps(x1, HLSLPP_SHUFFLE_MASK(2, 2, 2, 2)), _hlslpp_perm_ps(x2, HLSLPP_SHUFFLE_MASK(3, 0, 1, 2)), HLSLPP_BLEND_MASK(1, 0, 0, 0)));
+	_mm_storel_epi64((__m128i*)(p + 6), *(n128i*)&x2);
+	_mm_store_ss(p + 8, _hlslpp_perm_ps(x2, HLSLPP_SHUFFLE_MASK(2, 2, 2, 2)));
 }
 
 hlslpp_inline void _hlslpp_store4x4_ps(float* p, const n128& x0, const n128& x1, const n128& x2, const n128& x3)
@@ -318,12 +324,12 @@ hlslpp_inline void _hlslpp_load1_ps(float* p, n128& x)
 // http://fastcpp.blogspot.com/2011/03/loading-3d-vector-into-sse-register.html
 hlslpp_inline void _hlslpp_load2_ps(float* p, n128& x)
 {
-	x = _mm_castsi128_ps(_mm_loadl_epi64(reinterpret_cast<__m128i*>(p)));
+	x = _mm_castsi128_ps(_mm_loadl_epi64((__m128i*)p));
 }
 
 hlslpp_inline void _hlslpp_load3_ps(float* p, n128& x)
 {
-	x = _mm_movelh_ps(_mm_castsi128_ps(_mm_loadl_epi64(reinterpret_cast<__m128i*>(p))), _mm_load_ss(p + 2));
+	x = _mm_movelh_ps(_mm_castsi128_ps(_mm_loadl_epi64((__m128i*)p)), _mm_load_ss(p + 2));
 }
 
 hlslpp_inline void _hlslpp_load4_ps(float* p, n128& x)
@@ -497,7 +503,7 @@ hlslpp_inline n256 _hlslpp256_dot8_ps(n256 x, n256 y)
 
 hlslpp_inline bool _hlslpp256_any8_ps(n256 x)
 {
-	return _mm256_movemask_ps(_mm256_cmp_ps(x, _mm256_setzero_ps(), _CMP_EQ_OQ)) != 0xf;
+	return _mm256_movemask_ps(_mm256_cmp_ps(x, _mm256_setzero_ps(), _CMP_EQ_OQ)) != 0xff;
 }
 
 hlslpp_inline bool _hlslpp256_all8_ps(n256 x)
@@ -556,7 +562,7 @@ hlslpp_inline n128i _hlslpp_mul_epi32(n128i x, n128i y)
 
 #endif
 
-#define _hlslpp_div_epi32(x, y)					_mm_cvtps_epi32(_mm_div_ps(_mm_cvtepi32_ps(x), _mm_cvtepi32_ps(y)))
+#define _hlslpp_div_epi32(x, y)					_mm_cvttps_epi32(_mm_div_ps(_mm_cvtepi32_ps(x), _mm_cvtepi32_ps(y)))
 
 #if defined(__SSSE3__)
 #define _hlslpp_neg_epi32(x)					_mm_sign_epi32((x), _mm_set1_epi32(-1))
@@ -578,7 +584,19 @@ hlslpp_inline n128i _hlslpp_mul_epi32(n128i x, n128i y)
 
 #endif
 
-#define _hlslpp_abs_epi32(x)					_mm_and_si128(i4absMask, (x))
+#if defined(__SSSE3__)
+	#define _hlslpp_abs_epi32(x)				_mm_abs_epi32((x))
+#else
+
+	// https://graphics.stanford.edu/~seander/bithacks.html#IntegerAbs
+	hlslpp_inline n128i _hlslpp_abs_epi32(n128i x)
+	{
+		n128i mask = _mm_srai_epi32(x, 31);
+		n128i sum = _mm_add_epi32(x, mask);
+		return _mm_xor_si128(sum, mask);
+	}
+
+#endif
 
 #define _hlslpp_cmpeq_epi32(x, y)				_mm_cmpeq_epi32((x), (y))
 #define _hlslpp_cmpneq_epi32(x, y)				_mm_andnot_si128(_mm_cmpeq_epi32((x), (y)), i4fffMask)
@@ -614,19 +632,6 @@ hlslpp_inline n128i _hlslpp_min_epi32(n128i x, n128i y)
 
 #endif
 
-#define _hlslpp_clamp_epi32(x, minx, maxx)		_mm_max_epi32(_mm_min_epi32((x), (maxx)), (minx))
-#define _hlslpp_sat_epi32(x)					_mm_max_epi32(_mm_min_epi32((x), i4_1), i4_0)
-
-#define _hlslpp_and_si128(x, y)					_mm_and_si128((x), (y))
-#define _hlslpp_andnot_si128(x, y)				_mm_andnot_si128((x), (y))
-#define _hlslpp_not_si128(x)					_mm_andnot_si128((x), i4fffMask)
-#define _hlslpp_or_si128(x, y)					_mm_or_si128((x), (y))
-#define _hlslpp_xor_si128(x, y)					_mm_xor_si128((x), (y))
-
-// https://stackoverflow.com/questions/13153584/mm-shuffle-ps-equivalent-for-integer-vectors-m128i
-#define _hlslpp_perm_epi32(x, mask)				_mm_shuffle_epi32((x), (mask))
-#define _hlslpp_shuffle_epi32(x, y, mask)		_mm_castps_si128(_mm_shuffle_ps(_mm_castsi128_ps(x), _mm_castsi128_ps(y), (mask)))
-
 // SSE2 alternative https://markplusplus.wordpress.com/2007/03/14/fast-sse-select-operation/
 // Bit-select val1 and val2 based on the contents of the mask
 #if defined(__SSE4_1__)
@@ -658,12 +663,26 @@ hlslpp_inline n128i _hlslpp_blend_epi32(n128i x, n128i y, int mask)
 
 #endif
 
+#define _hlslpp_clamp_epi32(x, minx, maxx)		_mm_max_epi32(_mm_min_epi32((x), (maxx)), (minx))
+#define _hlslpp_sat_epi32(x)					_mm_max_epi32(_mm_min_epi32((x), i4_1), i4_0)
+
+#define _hlslpp_and_si128(x, y)					_mm_and_si128((x), (y))
+#define _hlslpp_andnot_si128(x, y)				_mm_andnot_si128((x), (y))
+#define _hlslpp_not_si128(x)					_mm_andnot_si128((x), i4fffMask)
+#define _hlslpp_or_si128(x, y)					_mm_or_si128((x), (y))
+#define _hlslpp_xor_si128(x, y)					_mm_xor_si128((x), (y))
+
+// https://stackoverflow.com/questions/13153584/mm-shuffle-ps-equivalent-for-integer-vectors-m128i
+#define _hlslpp_perm_epi32(x, mask)				_mm_shuffle_epi32((x), (mask))
+#define _hlslpp_shuffle_epi32(x, y, mask)		_mm_castps_si128(_mm_shuffle_ps(_mm_castsi128_ps(x), _mm_castsi128_ps(y), (mask)))
+
 #define _hlslpp_castps_si128(x)					_mm_castps_si128((x))
 #define _hlslpp_castsi128_ps(x)					_mm_castsi128_ps((x))
 
 #define _hlslpp_cvtepi32_ps(x)					_mm_cvtepi32_ps((x))
-#define _hlslpp_cvtps_epi32(x)					_mm_cvtps_epi32((x))
+#define _hlslpp_cvttps_epi32(x)					_mm_cvttps_epi32((x))
 
+// Shift left/right while shifting in zeroes
 #define _hlslpp_slli_epi32(x, y)				_mm_slli_epi32((x), (y))
 #define _hlslpp_srli_epi32(x, y)				_mm_srli_epi32((x), (y))
 
@@ -762,6 +781,52 @@ hlslpp_inline bool _hlslpp_all3_epi32(n128i x)
 hlslpp_inline bool _hlslpp_all4_epi32(n128i x)
 {
 	return (_mm_movemask_epi8(_mm_cmpeq_epi32(x, _mm_setzero_si128())) & 0xffff) == 0;
+}
+
+//-------------------
+// Integer Store/Load
+//-------------------
+
+hlslpp_inline void _hlslpp_store1_epi32(int32_t* p, n128i x)
+{
+	_mm_store_ss((float*)p, *(n128*)&x);
+}
+
+hlslpp_inline void _hlslpp_store2_epi32(int32_t* p, n128i x)
+{
+	_mm_storel_epi64((__m128i*)p, x);
+}
+
+hlslpp_inline void _hlslpp_store3_epi32(int32_t* p, n128i x)
+{
+	_mm_storel_epi64((__m128i*)p, x);
+	_mm_store_ss((float*)p + 2, _mm_castsi128_ps(_hlslpp_perm_epi32(x, HLSLPP_SHUFFLE_MASK(2, 2, 2, 2))));
+}
+
+hlslpp_inline void _hlslpp_store4_epi32(int32_t* p, n128i x)
+{
+	_mm_storeu_si128((__m128i*)p, x);
+}
+
+hlslpp_inline void _hlslpp_load1_epi32(int32_t* p, n128i& x)
+{
+	x = _mm_castps_si128(_mm_load_ss((float*)p));
+}
+
+// http://fastcpp.blogspot.com/2011/03/loading-3d-vector-into-sse-register.html
+hlslpp_inline void _hlslpp_load2_epi32(int32_t* p, n128i& x)
+{
+	x = _mm_loadl_epi64((__m128i*)p);
+}
+
+hlslpp_inline void _hlslpp_load3_epi32(int32_t* p, n128i& x)
+{
+	x = _mm_castps_si128(_mm_movelh_ps(_mm_castsi128_ps(_mm_loadl_epi64((__m128i*)p)), _mm_load_ss((float*) + 2)));
+}
+
+hlslpp_inline void _hlslpp_load4_epi32(int32_t* p, n128i& x)
+{
+	x = _mm_castps_si128(_mm_loadu_ps((float*)p));
 }
 
 //------------
@@ -871,13 +936,13 @@ hlslpp_inline n256i _hlslpp256_or_si128(n256i x, n256i y)
 //#define _hlslpp256_perm_epi32(x, mask)				_mm_shuffle_epi32((x), (mask))
 //#define _hlslpp256_shuffle_epi32(x, y, mask)		_mm_castps_si128(_mm_shuffle_ps(_mm_castsi128_ps(x), _mm_castsi128_ps(y), (mask)))
 
-#define _hlslpp256_blend_epi32(x, y, mask)				_mm256_blend_epi32((x), (y), mask)
+#define _hlslpp256_blend_epi32(x, y, mask)				_mm256_blend_epi32((x), (y), (mask))
 
 #define _hlslpp256_castps_si256(x)						_mm256_castps_si256((x))
 #define _hlslpp256_castsi256_ps(x)						_mm256_castsi256_ps((x))
 
 #define _hlslpp256_cvtepi32_ps(x)						_mm256_cvtepi32_ps((x))
-#define _hlslpp256_cvtps_epi32(x)						_mm256_cvtps_epi32((x))
+#define _hlslpp256_cvtps_epi32(x)						_mm256_cvttps_epi32((x))
 
 #if defined(__AVX2__)
 
@@ -962,10 +1027,13 @@ hlslpp_inline n128i _hlslpp_min_epu32(n128u x, n128u y)
 
 #endif
 
+#define _hlslpp_sel_epu32(x, y, mask)			_hlslpp_sel_epi32((x), (y), (mask))
+#define _hlslpp_blend_epu32(x, y, mask)			_hlslpp_blend_epi32((x), (y), (mask))
+
 #define _hlslpp_clamp_epu32(x, minx, maxx)		_hlslpp_max_epu32(_hlslpp_min_epu32((x), (maxx)), (minx))
 #define _hlslpp_sat_epu32(x)					_hlslpp_max_epu32(_hlslpp_min_epu32((x), i4_1), i4_0)
 
-#define _hlslpp_cvtps_epu32(x)					_hlslpp_cvtps_epi32((x))
+#define _hlslpp_cvttps_epu32(x)					_hlslpp_cvttps_epi32((x))
 #define _hlslpp_cvtepu32_ps(x)					_hlslpp_cvtepi32_ps((x))
 
 #define _hlslpp_slli_epu32(x, y)				_hlslpp_slli_epi32((x), (y))
@@ -983,6 +1051,19 @@ hlslpp_inline n128i _hlslpp_min_epu32(n128u x, n128u y)
 #define _hlslpp_all2_epu32(x)					_hlslpp_all2_epi32(x)
 #define _hlslpp_all3_epu32(x)					_hlslpp_all3_epi32(x)
 #define _hlslpp_all4_epu32(x)					_hlslpp_all4_epi32(x)
+
+//----------------------------
+// Unsigned Integer Store/Load
+//----------------------------
+
+hlslpp_inline void _hlslpp_store1_epu32(uint32_t* p, n128u x) { _hlslpp_store1_epi32((int32_t*)p, x); }
+hlslpp_inline void _hlslpp_store2_epu32(uint32_t* p, n128u x) { _hlslpp_store2_epi32((int32_t*)p, x); }
+hlslpp_inline void _hlslpp_store3_epu32(uint32_t* p, n128u x) { _hlslpp_store3_epi32((int32_t*)p, x); }
+hlslpp_inline void _hlslpp_store4_epu32(uint32_t* p, n128u x) { _hlslpp_store4_epi32((int32_t*)p, x); }
+hlslpp_inline void _hlslpp_load1_epu32(uint32_t* p, n128u& x) { _hlslpp_load1_epi32((int32_t*)p, x); }
+hlslpp_inline void _hlslpp_load2_epu32(uint32_t* p, n128u& x) { _hlslpp_load2_epi32((int32_t*)p, x); }
+hlslpp_inline void _hlslpp_load3_epu32(uint32_t* p, n128u& x) { _hlslpp_load3_epi32((int32_t*)p, x); }
+hlslpp_inline void _hlslpp_load4_epu32(uint32_t* p, n128u& x) { _hlslpp_load4_epi32((int32_t*)p, x); }
 
 //-------
 // Double
@@ -1048,7 +1129,7 @@ hlslpp_inline n128i _hlslpp_min_epu32(n128u x, n128u y)
 
 hlslpp_inline n128d _hlslpp_blend_pd(n128d x, n128d y, int mask)
 {
-	n128d mask128 = _mm_castsi128_pd(_mm_set_epi64x(((mask >> 1) & 1) * 0xffffffffffffffff, (mask & 1) * 0xffffffffffffffff));
+	n128d mask128 = _mm_castsi128_pd(_mm_set_epi64x((((mask) >> 1) & 1) * 0xffffffffffffffff, ((mask) & 1) * 0xffffffffffffffff));
 	return _hlslpp_sel_pd(x, y, mask128);
 }
 
@@ -1212,19 +1293,19 @@ hlslpp_inline void _hlslpp_load1_pd(double* p, n128d& x)
 // http://fastcpp.blogspot.com/2011/03/loading-3d-vector-into-sse-register.html
 hlslpp_inline void _hlslpp_load2_pd(double* p, n128d& x)
 {
-	x = _mm_load_pd(p);
+	x = _mm_loadu_pd(p);
 }
 
 hlslpp_inline void _hlslpp_load3_pd(double* p, n128d& x0, n128d& x1)
 {
-	x0 = _mm_load_pd(p);
+	x0 = _mm_loadu_pd(p);
 	x1 = _mm_load1_pd(p + 2);
 }
 
 hlslpp_inline void _hlslpp_load4_pd(double* p, n128d& x0, n128d& x1)
 {
-	x0 = _mm_load_pd(p);
-	x1 = _mm_load_pd(p + 2);
+	x0 = _mm_loadu_pd(p);
+	x1 = _mm_loadu_pd(p + 2);
 }
 
 //-----------

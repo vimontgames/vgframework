@@ -3,13 +3,13 @@
 
 # HLSL++
 
-Small header-only math library for C++ with the same syntax as the hlsl shading language. It supports any SSE (x86/x64 devices like PC, Mac, PS4, Xbox One) and NEON (ARM devices like Android, iOS, Switch) platforms. It features swizzling and all the operators and functions from the [hlsl documentation](https://docs.microsoft.com/en-us/windows/desktop/direct3dhlsl/dx-graphics-hlsl-reference). The library is aimed mainly at game developers as it's meant to ease the C++ to shader bridge by providing common syntax, but can be used for any application requiring fast, portable math. It also adds some functionality that hlsl doesn't natively provide, such as convenient matrix functions, quaternions and extended vectors such as float8 (8-component float) that take advantage of wide SSE registers.
+Small header-only math library for C++ with the same syntax as the hlsl shading language. It supports any SSE (x86/x64 devices like PC, Mac, PS4/5, Xbox One/Series) and NEON (ARM devices like Android, iOS, Switch) platforms. It features swizzling and all the operators and functions from the [hlsl documentation](https://docs.microsoft.com/en-us/windows/desktop/direct3dhlsl/dx-graphics-hlsl-reference). The library is aimed mainly at game developers as it's meant to ease the C++ to shader bridge by providing common syntax, but can be used for any application requiring fast, portable math. It also adds some functionality that hlsl doesn't natively provide, such as convenient matrix functions, quaternions and extended vectors such as float8 (8-component float) that take advantage of wide SSE registers.
 
 ## Example
 
 hlsl++ allows you to be as expressive in C++ as when programming in the shader language. Constructs such as the following are possible.
 
-```cpp
+```hlsl
 float4 foo4 = float4(1, 2, 3, 4);
 float3 bar3 = foo4.xzy;
 float2 logFoo2 = log(bar3.xz);
@@ -43,10 +43,23 @@ The only required features are a C++ compiler supporting anonymous unions, and S
 ## How to use
 
 ```cpp
+// The quickest way, expensive in compile times but good for fast iteration
 #include "hlsl++.h"
+
+// If you care about your compile times in your cpp files
+#include "hlsl++_vector_float.h"
+#include "hlsl++_matrix_float.h"
+
+// If you only need type information (e.g. in header files) and don't use any functions
+#include "hlsl++_vector_float_type.h"
+#include "hlsl++_quaternion_type.h"
 ```
 
-Remember to also add an include path to "hlslpp/include". hlsl++.h pulls in other headers that live in the same folder. To force the scalar version of the library, define HLSLPP_SCALAR.
+* Remember to add an include path to ```"hlslpp/include"```
+* Windows has defines for min and max so if you're using this library and the <windows.h> header remember to #define NOMINMAX before including it.
+* To force the scalar version of the library, define ```HLSLPP_SCALAR``` globally
+* To enable the transforms feature, define ```HLSLPP_FEATURE_TRANSFORM``` globally
+* The f32 members of float4 and the [ ] operators make use of the union directly, so the generated code is up to the compiler. Use with care
 
 ## Features
 
@@ -61,13 +74,12 @@ Remember to also add an include path to "hlslpp/include". hlsl++.h pulls in othe
 * Efficient swizzling for all vector types
 * Basic operators +, *, -, / for all vector and matrix types
 * Per-component comparison operators ==, !=, >, <, >=, <= (no ternary operator as overloading is disallowed in C++)
-* hlsl vector functions: abs, acos, all, any, asin, atan, ceil, clamp, cos, cosh, cross, degrees, dot, floor, fmod, frac, exp, exp2, isfinite, isinf, isnan, length, lerp, log, log2, log10, max, mad, min, modf, normalize, pow, radians, reflect, refract, round, rsqrt, saturate, sign, sin, sincos, sinh, smoothstep, sqrt, step, trunc, tan, tanh
+* hlsl vector functions: abs, acos, all, any, asin, atan, atan2, ceil, clamp, cos, cosh, cross, degrees, dot, floor, fmod, frac, exp, exp2, isfinite, isinf, isnan, length, lerp, log, log2, log10, max, mad, min, modf, normalize, pow, radians, reflect, refract, round, rsqrt, saturate, sign, sin, sincos, sinh, smoothstep, sqrt, step, trunc, tan, tanh
 * Additional matrix functions: determinant, transpose, inverse (not in hlsl but very useful)
 * Matrix multiplication for all NxM matrix combinations
+* Transformation matrices for scale, rotation and translation, as well as world-to-view look_at and view-to-projection orthographic/perspective coordinate transformations. These static functions are optionally available for matrix types float2x2, float3x3, float4x4 when hlsl++.h is compiled with HLSLPP_FEATURE_TRANSFORM definition.
 * Native visualizers for Visual Studio (.natvis files) which correctly parse with both MSVC and Clang in Windows
 
 Missing/planned:
 
-* hlsl functions: atan2
-* floatNxM _m00_m01 style swizzling (rows implemented but missing columns)
 * boolN types

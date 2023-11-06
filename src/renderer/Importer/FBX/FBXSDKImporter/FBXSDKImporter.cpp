@@ -470,8 +470,8 @@ namespace vg::renderer
                 vertex.nrm = normals[vertexID];
                 vertex.bin = binormals[vertexID];
                 vertex.tan = tangents[vertexID];
-                vertex.uv[0].xy = { uv[0][vertexID].x, 1.0f - uv[0][vertexID].y };  // Swap FBX v texture coordinates
-                vertex.uv[1].xy = { uv[1][vertexID].x, 1.0f - uv[1][vertexID].y };  // Swap FBX v texture coordinates
+                vertex.uv[0].xy = float2(uv[0][vertexID].x, 1.0f - uv[0][vertexID].y);  // Swap FBX v texture coordinates
+                vertex.uv[1].xy = float2(uv[1][vertexID].x, 1.0f - uv[1][vertexID].y);  // Swap FBX v texture coordinates
                 vertex.color = colors[vertexID];
 
                 indexBuffer.push_back(vertexID);

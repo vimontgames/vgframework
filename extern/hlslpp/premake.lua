@@ -6,6 +6,7 @@ Workspace = "workspace/".._ACTION
 -- Compilers
 
 -- x86/x64
+PlatformMSVC64AVX2		= "MSVC 64 AVX2"
 PlatformMSVC64AVX		= "MSVC 64 AVX"
 PlatformMSVC64SSE41		= "MSVC 64 SSE 4.1"
 PlatformMSVC64SSE2		= "MSVC 64 SSE 2"
@@ -35,6 +36,7 @@ AndroidProject = "hlsl++_android"
 isMacBuild = _ACTION == "xcode4"
 isLinuxBuild = _ACTION == "gmake2"
 isWindowsBuild = not isMacBuild and not isLinuxBuild
+supportsARMBuild = _ACTION == "vs2017" or _ACTION == "vs2019" or _ACTION == "vs2022"
 
 -- Directories
 srcDir = "src"
@@ -89,6 +91,7 @@ workspace("hlsl++")
 	
 		platforms
 		{
+			PlatformMSVC64AVX2,
 			PlatformMSVC64AVX,
 			PlatformMSVC64SSE41,
 			PlatformMSVC64SSE2,
@@ -99,23 +102,38 @@ workspace("hlsl++")
 			PlatformLLVM64SSE41,
 			PlatformLLVM64SSE2,
 			PlatformLLVM32SSE2, 
-			
-			PlatformARM, 
-			PlatformARM64, 
-			PlatformAndroidARM, 
-			PlatformAndroidARM64, 
+
 			Platform360
 		}
+
+		if(supportsARMBuild) then
+
+			platforms
+			{
+				PlatformARM, 
+				PlatformARM64, 
+				PlatformAndroidARM, 
+				PlatformAndroidARM64
+			}
+
+		end
 	
 		local llvmToolset;
 		
 		if (_ACTION == "vs2015") then
 			llvmToolset = "msc-llvm-vs2014";
-		else
+		elseif(_ACTION == "vs2017") then
 			llvmToolset = "msc-llvm";
+		else
+			llvmToolset = "msc-clangcl";
 		end
 		
 		startproject(UnitTestProject)
+		
+		filter { "platforms:"..PlatformMSVC64AVX2 }
+			toolset("msc")
+			architecture("x64")
+			vectorextensions("avx2")
 		
 		filter { "platforms:"..PlatformMSVC64AVX }
 			toolset("msc")
@@ -135,6 +153,7 @@ workspace("hlsl++")
 			
 		filter { "platforms:"..PlatformMSVC64Scalar }
 			toolset("msc")
+			architecture("x64")
 			defines { "HLSLPP_SCALAR" }
 		
 		filter { "platforms:"..PlatformMSVC32SSE2 }
@@ -193,17 +212,14 @@ workspace("hlsl++")
 		filter{}
 	end
 	
-	--defines { "HLSLPP_SCALAR" }
-	
-	configuration "Debug"
+	filter { "configurations:Debug" }
 		defines { "DEBUG" }
-		symbols "full"
+		symbols ("full")
 		inlining("auto") -- hlslpp relies on inlining for speed, big gains in debug builds without losing legibility
 		optimize("debug")
 		
-	configuration "Release"
+	filter { "configurations:Release" }
 		defines { "NDEBUG" }
-		optimize "on"
 		inlining("auto")
 		optimize("speed")
 
@@ -225,6 +241,8 @@ project (UnitTestProject)
 		srcDir.."/*.h",
 	}
 	
+	defines { "HLSLPP_FEATURE_TRANSFORM" }
+	
 	filter { "platforms:"..PlatformAndroidARM.." or ".. PlatformAndroidARM64}
 		kind("sharedlib")
 		files
@@ -240,7 +258,7 @@ project (UnitTestProject)
 		srcDir.."/**.h"
 	}
 
-if (isWindowsBuild) then
+if (supportsARMBuild) then
 
 project (AndroidProject)
 	removeplatforms("*")

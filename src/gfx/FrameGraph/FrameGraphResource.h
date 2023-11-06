@@ -80,47 +80,36 @@ namespace vg::gfx
         ResourceState                   m_state = ResourceState::Undefined;
     };
 
-    //struct FrameGraphResourceDesc
-    //{
-    //    FrameGraphResourceDesc()
-    //    {
-    //
-    //    }
-    //
-    //    FrameGraphResourceDesc(const FrameGraphResourceDesc & _from) :
-    //        transient(_from.transient),
-    //        uav(_from.uav)
-    //    {
-    //
-    //    }
-    //
-    //    bool    transient = false;
-    //    bool    uav = false;
-    //
-    //    bool operator == (const FrameGraphResourceDesc & _other) const
-    //    {
-    //        return transient == _other.transient && uav == _other.uav;
-    //    }
-    //};
-
-    struct FrameGraphTextureResourceDesc //: public FrameGraphResourceDesc
+    struct FrameGraphTextureResourceDesc 
     {
         FrameGraphTextureResourceDesc()
         {
 
         }
 
-        FrameGraphTextureResourceDesc(const FrameGraphTextureResourceDesc & _from) :
-            //FrameGraphResourceDesc(_from),
-            width(_from.width),
-            height(_from.height),
-            format(_from.format),
-            initState(_from.initState),
-            clearColor(_from.clearColor),
-            transient(_from.transient),
-            uav(_from.uav)
+        FrameGraphTextureResourceDesc(const FrameGraphTextureResourceDesc & _other) :
+            width(_other.width),
+            height(_other.height),
+            format(_other.format),
+            initState(_other.initState),
+            clearColor(_other.clearColor),
+            transient(_other.transient),
+            uav(_other.uav)
         {
 
+        }
+
+        FrameGraphTextureResourceDesc & operator=(const FrameGraphTextureResourceDesc & _other)
+        {
+            width = _other.width;
+            height = _other.height;
+            format = _other.format;
+            initState = _other.initState;
+            clearColor = _other.clearColor;
+            transient = _other.transient;
+            uav = _other.uav;
+
+            return *this;
         }
 
         core::u16			            width = 0;
@@ -142,7 +131,6 @@ namespace vg::gfx
 
         bool operator == (const FrameGraphTextureResourceDesc & _other) const
         {
-            //return (FrameGraphResourceDesc&)*this == (FrameGraphResourceDesc&)_other
             return transient == _other.transient
                 && uav == _other.uav
                 && width == _other.width
@@ -153,19 +141,18 @@ namespace vg::gfx
         }
     };
 
-    struct FrameGraphBufferResourceDesc //: public FrameGraphResourceDesc
+    struct FrameGraphBufferResourceDesc
     {
         FrameGraphBufferResourceDesc()
         {
 
         }
 
-        FrameGraphBufferResourceDesc(const FrameGraphBufferResourceDesc & _from) :
-            //FrameGraphResourceDesc(_from),
-            elementSize(_from.elementSize),
-            elementCount(_from.elementCount),
-            transient(_from.transient),
-            uav(_from.uav)
+        FrameGraphBufferResourceDesc(const FrameGraphBufferResourceDesc & _other) :
+            elementSize(_other.elementSize),
+            elementCount(_other.elementCount),
+            transient(_other.transient),
+            uav(_other.uav)
         {
 
         }
@@ -177,7 +164,6 @@ namespace vg::gfx
 
         bool operator == (const FrameGraphBufferResourceDesc & _other) const
         {
-            //return  (FrameGraphResourceDesc &)*this == (FrameGraphResourceDesc &)_other 
             return transient == _other.transient
                    && uav == _other.uav
                    && elementSize == _other.elementSize

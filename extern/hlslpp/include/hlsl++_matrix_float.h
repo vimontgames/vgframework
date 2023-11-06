@@ -1,3 +1,10 @@
+#pragma once
+
+#include "hlsl++_common.h"
+#include "hlsl++_vector_float.h"
+
+#include "transform/hlsl++_transform_common.h"
+
 //--------------//
 // Float Matrix //
 //--------------//
@@ -6,14 +13,22 @@ namespace hlslpp
 {
 	struct hlslpp_nodiscard float1x1
 	{
-		hlslpp_inline float1x1() : vec(_hlslpp_setzero_ps()) {}
+		hlslpp_inline float1x1() hlslpp_noexcept : vec(_hlslpp_setzero_ps()) {}
+		hlslpp_inline float1x1(const float1x1& m) hlslpp_noexcept : vec(m.vec) {}
 
-		explicit hlslpp_inline float1x1(n128 vec) : vec(vec) {}
+		explicit hlslpp_inline float1x1(n128 vec) hlslpp_noexcept : vec(vec) {}
 
 		template<typename T>
-		explicit hlslpp_inline float1x1(T f, hlslpp_enable_if_number(T)) : vec(_hlslpp_set_ps(float(f), 0.0f, 0.0f, 0.0f)) {}
+		explicit hlslpp_inline float1x1(T f, hlslpp_enable_if_number(T)) hlslpp_noexcept : vec(_hlslpp_set_ps(float(f), 0.0f, 0.0f, 0.0f)) {}
 
-		explicit hlslpp_inline float1x1(const float1& f) : vec(f.vec) {}
+		explicit hlslpp_inline float1x1(const float1& f) hlslpp_noexcept : vec(f.vec) {}
+
+		explicit hlslpp_inline float1x1(const float2x2& m) hlslpp_noexcept;
+
+		hlslpp_inline float1x1& operator = (const float1x1& m) hlslpp_noexcept { vec = m.vec; return *this; }
+
+		hlslpp_inline float1x1(float1x1&& m) hlslpp_noexcept : vec(m.vec) {}
+		hlslpp_inline float1x1& operator = (float1x1&& m) hlslpp_noexcept { vec = m.vec; return *this; }
     
 		union
 		{
@@ -25,16 +40,22 @@ namespace hlslpp
 
 	struct hlslpp_nodiscard float1x2
 	{
-		hlslpp_inline float1x2() : vec(_hlslpp_setzero_ps()) {}
+		hlslpp_inline float1x2() hlslpp_noexcept : vec(_hlslpp_setzero_ps()) {}
+		hlslpp_inline float1x2(const float1x2& m) hlslpp_noexcept : vec(m.vec) {}
 
-		explicit hlslpp_inline float1x2(n128 vec) : vec(vec) {}
+		explicit hlslpp_inline float1x2(n128 vec) hlslpp_noexcept : vec(vec) {}
 
 		template<typename T>
-		explicit hlslpp_inline float1x2(T f, hlslpp_enable_if_number(T)) : vec(_hlslpp_set_ps(float(f), float(f), 0.0f, 0.0f)) {}
+		explicit hlslpp_inline float1x2(T f, hlslpp_enable_if_number(T)) hlslpp_noexcept : vec(_hlslpp_set_ps(float(f), float(f), 0.0f, 0.0f)) {}
 
-		explicit hlslpp_inline float1x2(float f0, float f1) : vec(_hlslpp_set_ps(f0, f1, 0.0f, 0.0f)) {}
+		explicit hlslpp_inline float1x2(float f0, float f1) hlslpp_noexcept : vec(_hlslpp_set_ps(f0, f1, 0.0f, 0.0f)) {}
 
-		hlslpp_inline float1x2(const float2& f) : vec(f.vec) {}
+		hlslpp_inline float1x2(const float2& f) hlslpp_noexcept : vec(f.vec) {}
+
+		hlslpp_inline float1x2& operator = (const float1x2& m) hlslpp_noexcept { vec = m.vec; return *this; }
+
+		hlslpp_inline float1x2(float1x2&& m) hlslpp_noexcept : vec(m.vec) {}
+		hlslpp_inline float1x2& operator = (float1x2&& m) hlslpp_noexcept { vec = m.vec; return *this; }
 
 		union
 		{
@@ -46,16 +67,22 @@ namespace hlslpp
 
 	struct hlslpp_nodiscard float2x1
 	{
-		hlslpp_inline float2x1() : vec(_hlslpp_setzero_ps()) {}
+		hlslpp_inline float2x1() hlslpp_noexcept : vec(_hlslpp_setzero_ps()) {}
+		hlslpp_inline float2x1(const float2x1& m) hlslpp_noexcept : vec(m.vec) {}
 
-		explicit hlslpp_inline float2x1(n128 vec) : vec(vec) {}
+		explicit hlslpp_inline float2x1(n128 vec) hlslpp_noexcept : vec(vec) {}
 
 		template<typename T>
-		explicit hlslpp_inline float2x1(T f, hlslpp_enable_if_number(T)) : vec(_hlslpp_set_ps(float(f), float(f), 0.0f, 0.0f)) {}
+		explicit hlslpp_inline float2x1(T f, hlslpp_enable_if_number(T)) hlslpp_noexcept : vec(_hlslpp_set_ps(float(f), float(f), 0.0f, 0.0f)) {}
 
-		explicit hlslpp_inline float2x1(float f0, float f1) : vec(_hlslpp_set_ps(f0, f1, 0.0f, 0.0f)) {}
+		explicit hlslpp_inline float2x1(float f0, float f1) hlslpp_noexcept : vec(_hlslpp_set_ps(f0, f1, 0.0f, 0.0f)) {}
 
-		hlslpp_inline float2x1(const float2& f) : vec(f.vec) {}
+		hlslpp_inline float2x1(const float2& f) hlslpp_noexcept : vec(f.vec) {}
+
+		hlslpp_inline float2x1& operator = (const float2x1& m) hlslpp_noexcept { vec = m.vec; return *this; }
+
+		hlslpp_inline float2x1(float2x1&& m) hlslpp_noexcept : vec(m.vec) {}
+		hlslpp_inline float2x1& operator = (float2x1&& m) hlslpp_noexcept { vec = m.vec; return *this; }
 
 		union
 		{
@@ -66,16 +93,22 @@ namespace hlslpp
 
 	struct hlslpp_nodiscard float1x3
 	{
-		float1x3() : vec(_hlslpp_setzero_ps()) {}
+		hlslpp_inline float1x3() hlslpp_noexcept : vec(_hlslpp_setzero_ps()) {}
+		hlslpp_inline float1x3(const float1x3& m) hlslpp_noexcept : vec(m.vec) {}
 
-		explicit hlslpp_inline float1x3(n128 vec) : vec(vec) {}
+		explicit hlslpp_inline float1x3(n128 vec) hlslpp_noexcept : vec(vec) {}
 
 		template<typename T>
-		explicit hlslpp_inline float1x3(T f, hlslpp_enable_if_number(T)) : vec(_hlslpp_set_ps(float(f), float(f), float(f), 0.0f)) {}
+		explicit hlslpp_inline float1x3(T f, hlslpp_enable_if_number(T)) hlslpp_noexcept : vec(_hlslpp_set_ps(float(f), float(f), float(f), 0.0f)) {}
 
-		explicit hlslpp_inline float1x3(float f0, float f1, float f2) : vec(_hlslpp_set_ps(f0, f1, f2, 0.0f)) {}
+		explicit hlslpp_inline float1x3(float f0, float f1, float f2) hlslpp_noexcept : vec(_hlslpp_set_ps(f0, f1, f2, 0.0f)) {}
 
-		hlslpp_inline float1x3(const float3& f) : vec(f.vec) {}
+		hlslpp_inline float1x3(const float3& f) hlslpp_noexcept : vec(f.vec) {}
+
+		hlslpp_inline float1x3& operator = (const float1x3& m) hlslpp_noexcept { vec = m.vec; return *this; }
+
+		hlslpp_inline float1x3(float1x3&& m) hlslpp_noexcept : vec(m.vec) {}
+		hlslpp_inline float1x3& operator = (float1x3&& m) hlslpp_noexcept { vec = m.vec; return *this; }
 
 		union
 		{
@@ -86,16 +119,22 @@ namespace hlslpp
 
 	struct hlslpp_nodiscard float3x1
 	{
-		hlslpp_inline float3x1() : vec(_hlslpp_setzero_ps()) {}
+		hlslpp_inline float3x1() hlslpp_noexcept : vec(_hlslpp_setzero_ps()) {}
+		hlslpp_inline float3x1(const float3x1& m) hlslpp_noexcept : vec(m.vec) {}
 
-		explicit hlslpp_inline float3x1(n128 vec) : vec(vec) {}
+		explicit hlslpp_inline float3x1(n128 vec) hlslpp_noexcept : vec(vec) {}
 
 		template<typename T>
-		explicit hlslpp_inline float3x1(T f, hlslpp_enable_if_number(T)) : vec(_hlslpp_set_ps(float(f), float(f), float(f), 0.0f)) {}
+		explicit hlslpp_inline float3x1(T f, hlslpp_enable_if_number(T)) hlslpp_noexcept : vec(_hlslpp_set_ps(float(f), float(f), float(f), 0.0f)) {}
 
-		explicit hlslpp_inline float3x1(float f0, float f1, float f2) : vec(_hlslpp_set_ps(f0, f1, f2, 0.0f)) {}
+		explicit hlslpp_inline float3x1(float f0, float f1, float f2) hlslpp_noexcept : vec(_hlslpp_set_ps(f0, f1, f2, 0.0f)) {}
 
-		hlslpp_inline float3x1(const float3& f) : vec(f.vec) {}
+		hlslpp_inline float3x1(const float3& f) hlslpp_noexcept : vec(f.vec) {}
+
+		hlslpp_inline float3x1& operator = (const float3x1& m) hlslpp_noexcept { vec = m.vec; return *this; }
+
+		hlslpp_inline float3x1(float3x1&& m) hlslpp_noexcept : vec(m.vec) {}
+		hlslpp_inline float3x1& operator = (float3x1&& m) hlslpp_noexcept { vec = m.vec; return *this; }
 
 		union
 		{
@@ -106,16 +145,22 @@ namespace hlslpp
 
 	struct hlslpp_nodiscard float1x4
 	{
-		hlslpp_inline float1x4() : vec(_hlslpp_setzero_ps()) {}
+		hlslpp_inline float1x4() hlslpp_noexcept : vec(_hlslpp_setzero_ps()) {}
+		hlslpp_inline float1x4(const float1x4& m) hlslpp_noexcept : vec(m.vec) {}
 
-		explicit hlslpp_inline float1x4(n128 vec) : vec(vec) {}
+		explicit hlslpp_inline float1x4(n128 vec) hlslpp_noexcept : vec(vec) {}
 
 		template<typename T>
-		explicit hlslpp_inline float1x4(T f, hlslpp_enable_if_number(T)) : vec(_hlslpp_set1_ps(float(f))) {}
+		explicit hlslpp_inline float1x4(T f, hlslpp_enable_if_number(T)) hlslpp_noexcept : vec(_hlslpp_set1_ps(float(f))) {}
 
-		explicit hlslpp_inline float1x4(float f0, float f1, float f2, float f3) : vec(_hlslpp_set_ps(f0, f1, f2, f3)) {}
+		explicit hlslpp_inline float1x4(float f0, float f1, float f2, float f3) hlslpp_noexcept : vec(_hlslpp_set_ps(f0, f1, f2, f3)) {}
 
-		hlslpp_inline float1x4(const float4& f) : vec(f.vec) {}
+		hlslpp_inline float1x4(const float4& f) hlslpp_noexcept : vec(f.vec) {}
+
+		hlslpp_inline float1x4& operator = (const float1x4& m) hlslpp_noexcept { vec = m.vec; return *this; }
+
+		hlslpp_inline float1x4(float1x4&& m) hlslpp_noexcept : vec(m.vec) {}
+		hlslpp_inline float1x4& operator = (float1x4&& m) hlslpp_noexcept { vec = m.vec; return *this; }
 
 		union
 		{
@@ -126,16 +171,22 @@ namespace hlslpp
 
 	struct hlslpp_nodiscard float4x1
 	{
-		hlslpp_inline float4x1() : vec(_hlslpp_setzero_ps()) {}
+		hlslpp_inline float4x1() hlslpp_noexcept : vec(_hlslpp_setzero_ps()) {}
+		hlslpp_inline float4x1(const float4x1& m) hlslpp_noexcept : vec(m.vec) {}
 
-		explicit hlslpp_inline float4x1(n128 vec) : vec(vec) {}
+		explicit hlslpp_inline float4x1(n128 vec) hlslpp_noexcept : vec(vec) {}
 
 		template<typename T>
-		explicit hlslpp_inline float4x1(T f, hlslpp_enable_if_number(T)) : vec(_hlslpp_set1_ps(float(f))) {}
+		explicit hlslpp_inline float4x1(T f, hlslpp_enable_if_number(T)) hlslpp_noexcept : vec(_hlslpp_set1_ps(float(f))) {}
 
-		explicit hlslpp_inline float4x1(float f0, float f1, float f2, float f3) : vec(_hlslpp_set_ps(f0, f1, f2, f3)) {}
+		explicit hlslpp_inline float4x1(float f0, float f1, float f2, float f3) hlslpp_noexcept : vec(_hlslpp_set_ps(f0, f1, f2, f3)) {}
 
-		hlslpp_inline float4x1(const float4& f) : vec(f.vec) {}
+		hlslpp_inline float4x1(const float4& f) hlslpp_noexcept : vec(f.vec) {}
+
+		hlslpp_inline float4x1& operator = (const float4x1& m) hlslpp_noexcept { vec = m.vec; return *this; }
+
+		hlslpp_inline float4x1(float4x1&& m) hlslpp_noexcept : vec(m.vec) {}
+		hlslpp_inline float4x1& operator = (float4x1&& m) hlslpp_noexcept { vec = m.vec; return *this; }
 
 		union
 		{
@@ -146,18 +197,27 @@ namespace hlslpp
 
 	struct hlslpp_nodiscard float2x2
 	{
-		hlslpp_inline float2x2() : vec(_hlslpp_setzero_ps()) {}
+		hlslpp_inline float2x2() hlslpp_noexcept : vec(_hlslpp_setzero_ps()) {}
+		hlslpp_inline float2x2(const float2x2& m) hlslpp_noexcept : vec(m.vec) {}
 
-		explicit hlslpp_inline float2x2(n128 vec) : vec(vec) {}
+		explicit hlslpp_inline float2x2(n128 vec) hlslpp_noexcept : vec(vec) {}
 
-		explicit hlslpp_inline float2x2(float f00, float f01,
-		                  float f10, float f11) : vec(_hlslpp_set_ps(f00, f01, f10, f11)) {}
+		explicit hlslpp_inline float2x2(
+		    float f00, float f01,
+		    float f10, float f11) hlslpp_noexcept : vec(_hlslpp_set_ps(f00, f01, f10, f11)) {}
 
-		explicit hlslpp_inline float2x2(float f) : vec(_hlslpp_set1_ps(f)) {}
+		explicit hlslpp_inline float2x2(float f) hlslpp_noexcept : vec(_hlslpp_set1_ps(f)) {}
 
-		hlslpp_inline float2x2(const float2& f1, const float2& f2) : vec(_hlslpp_shuf_xyxy_ps(f1.vec, f2.vec)) {}
+		explicit hlslpp_inline float2x2(const float3x3& m) hlslpp_noexcept;
 
-		hlslpp_inline float2x2(const float2x2& m) : vec(m.vec) {}
+		hlslpp_inline float2x2(const float2& f1, const float2& f2) hlslpp_noexcept : vec(_hlslpp_shuf_xyxy_ps(f1.vec, f2.vec)) {}
+
+		hlslpp_inline float2x2& operator = (const float2x2& m) hlslpp_noexcept { vec = m.vec; return *this; }
+
+		hlslpp_inline float2x2(float2x2&& m) hlslpp_noexcept : vec(m.vec) {}
+		hlslpp_inline float2x2& operator = (float2x2&& m) hlslpp_noexcept { vec = m.vec; return *this; }
+
+		#include "transform/hlsl++_transform_float2x2.h"
 
 		union
 		{
@@ -168,16 +228,22 @@ namespace hlslpp
 
 	struct hlslpp_nodiscard float2x3
 	{
-		hlslpp_inline float2x3() : vec0(_hlslpp_setzero_ps()), vec1(_hlslpp_setzero_ps()) {}
+		hlslpp_inline float2x3() hlslpp_noexcept : vec0(_hlslpp_setzero_ps()), vec1(_hlslpp_setzero_ps()) {}
+		hlslpp_inline float2x3(const float2x3& m) hlslpp_noexcept : vec0(m.vec0), vec1(m.vec1) {}
 
-		explicit hlslpp_inline float2x3(n128 vec0, n128 vec1) : vec0(vec0), vec1(vec1) {}
+		explicit hlslpp_inline float2x3(n128 vec0, n128 vec1) hlslpp_noexcept : vec0(vec0), vec1(vec1) {}
 
-		explicit hlslpp_inline float2x3(float f) : vec0(_hlslpp_set_ps(f, f, f, 0.0f)), vec1(_hlslpp_set_ps(f, f, f, 0.0f)) {}
+		explicit hlslpp_inline float2x3(float f) hlslpp_noexcept : vec0(_hlslpp_set_ps(f, f, f, 0.0f)), vec1(_hlslpp_set_ps(f, f, f, 0.0f)) {}
 
-		explicit hlslpp_inline float2x3(float f00, float f01, float f02,
-		                  float f10, float f11, float f12) : vec0(_hlslpp_set_ps(f00, f01, f02, 0.0f)), vec1(_hlslpp_set_ps(f10, f11, f12, 0.0f)) {}
+		explicit hlslpp_inline float2x3(
+		    float f00, float f01, float f02,
+		    float f10, float f11, float f12) hlslpp_noexcept 
+			: vec0(_hlslpp_set_ps(f00, f01, f02, 0.0f)), vec1(_hlslpp_set_ps(f10, f11, f12, 0.0f)) {}
 
-		hlslpp_inline float2x3(const float2x3& m) : vec0(m.vec0), vec1(m.vec1) {}
+		hlslpp_inline float2x3& operator = (const float2x3& m) hlslpp_noexcept { vec0 = m.vec0; vec1 = m.vec1; return *this; }
+
+		hlslpp_inline float2x3(float2x3&& m) hlslpp_noexcept : vec0(m.vec0), vec1(m.vec1) {}
+		hlslpp_inline float2x3& operator = (float2x3&& m) hlslpp_noexcept { vec0 = m.vec0; vec1 = m.vec1; return *this; }
 
 		union
 		{
@@ -194,17 +260,21 @@ namespace hlslpp
 
 	struct hlslpp_nodiscard float3x2
 	{
-		hlslpp_inline float3x2() : vec0(_hlslpp_setzero_ps()), vec1(_hlslpp_setzero_ps()) {}
+		hlslpp_inline float3x2() hlslpp_noexcept : vec0(_hlslpp_setzero_ps()), vec1(_hlslpp_setzero_ps()) {}
+		hlslpp_inline float3x2(const float3x2& m) hlslpp_noexcept : vec0(m.vec0), vec1(m.vec1) {}
 
-		explicit hlslpp_inline float3x2(n128 vec0, n128 vec1) : vec0(vec0), vec1(vec1) {}
+		explicit hlslpp_inline float3x2(n128 vec0, n128 vec1) hlslpp_noexcept : vec0(vec0), vec1(vec1) {}
 
-		explicit hlslpp_inline float3x2(float f) : vec0(_hlslpp_set_ps(f, f, f, 0.0f)), vec1(_hlslpp_set_ps(f, f, f, 0.0f)) {}
+		explicit hlslpp_inline float3x2(float f) hlslpp_noexcept : vec0(_hlslpp_set_ps(f, f, f, 0.0f)), vec1(_hlslpp_set_ps(f, f, f, 0.0f)) {}
 
 		explicit hlslpp_inline float3x2(float f00, float f01,
 		                  float f10, float f11,
-		                  float f20, float f21) : vec0(_hlslpp_set_ps(f00, f10, f20, 0.0f)), vec1(_hlslpp_set_ps(f01, f11, f21, 0.0f)) {}
+		                  float f20, float f21) hlslpp_noexcept : vec0(_hlslpp_set_ps(f00, f10, f20, 0.0f)), vec1(_hlslpp_set_ps(f01, f11, f21, 0.0f)) {}
 
-		hlslpp_inline float3x2(const float3x2& m) : vec0(m.vec0), vec1(m.vec1) {}
+		hlslpp_inline float3x2& operator = (const float3x2& m) hlslpp_noexcept { vec0 = m.vec0; vec1 = m.vec1; return *this; }
+
+		hlslpp_inline float3x2(float3x2&& m) hlslpp_noexcept : vec0(m.vec0), vec1(m.vec1) {}
+		hlslpp_inline float3x2& operator = (float3x2&& m) hlslpp_noexcept { vec0 = m.vec0; vec1 = m.vec1; return *this; }
 
 		union
 		{
@@ -221,17 +291,22 @@ namespace hlslpp
 
 	struct hlslpp_nodiscard float2x4
 	{
-		hlslpp_inline float2x4() : vec0(_hlslpp_setzero_ps()), vec1(_hlslpp_setzero_ps()) {}
+		hlslpp_inline float2x4() hlslpp_noexcept : vec0(_hlslpp_setzero_ps()), vec1(_hlslpp_setzero_ps()) {}
+		hlslpp_inline float2x4(const float2x4& m) hlslpp_noexcept : vec0(m.vec0), vec1(m.vec1) {}
 
-		explicit hlslpp_inline float2x4(n128 vec0, n128 vec1) : vec0(vec0), vec1(vec1) {}
+		explicit hlslpp_inline float2x4(n128 vec0, n128 vec1) hlslpp_noexcept : vec0(vec0), vec1(vec1) {}
 
 		explicit hlslpp_inline float2x4(
 			float f00, float f01, float f02, float f03,
-		    float f10, float f11, float f12, float f13) : vec0(_hlslpp_set_ps(f00, f01, f02, f03)), vec1(_hlslpp_set_ps(f10, f11, f12, f13)) {}
+		    float f10, float f11, float f12, float f13)
+			hlslpp_noexcept : vec0(_hlslpp_set_ps(f00, f01, f02, f03)), vec1(_hlslpp_set_ps(f10, f11, f12, f13)) {}
 
-		explicit hlslpp_inline float2x4(float f) : vec0(_hlslpp_set_ps(f, f, f, f)), vec1(_hlslpp_set_ps(f, f, f, f)) {}
+		explicit hlslpp_inline float2x4(float f) hlslpp_noexcept : vec0(_hlslpp_set_ps(f, f, f, f)), vec1(_hlslpp_set_ps(f, f, f, f)) {}
 
-		hlslpp_inline float2x4(const float2x4& m) : vec0(m.vec0), vec1(m.vec1) {}
+		hlslpp_inline float2x4& operator = (const float2x4& m) hlslpp_noexcept { vec0 = m.vec0; vec1 = m.vec1; return *this; }
+
+		hlslpp_inline float2x4(float2x4&& m) hlslpp_noexcept : vec0(m.vec0), vec1(m.vec1) {}
+		hlslpp_inline float2x4& operator = (float2x4&& m) hlslpp_noexcept { vec0 = m.vec0; vec1 = m.vec1; return *this; }
 
 		union
 		{
@@ -248,19 +323,23 @@ namespace hlslpp
 
 	struct hlslpp_nodiscard float4x2
 	{
-		hlslpp_inline float4x2() : vec0(_hlslpp_setzero_ps()), vec1(_hlslpp_setzero_ps()) {}
+		hlslpp_inline float4x2() hlslpp_noexcept : vec0(_hlslpp_setzero_ps()), vec1(_hlslpp_setzero_ps()) {}
+		hlslpp_inline float4x2(const float4x2& m) hlslpp_noexcept : vec0(m.vec0), vec1(m.vec1) {}
 
-		explicit hlslpp_inline float4x2(n128 vec0, n128 vec1) : vec0(vec0), vec1(vec1) {}
+		explicit hlslpp_inline float4x2(n128 vec0, n128 vec1) hlslpp_noexcept : vec0(vec0), vec1(vec1) {}
 
 		explicit hlslpp_inline float4x2(
 			float f00, float f01,
 			float f10, float f11,
 			float f20, float f21,
-			float f30, float f31) : vec0(_hlslpp_set_ps(f00, f10, f20, f30)), vec1(_hlslpp_set_ps(f01, f11, f21, f31)) {}
+			float f30, float f31) hlslpp_noexcept : vec0(_hlslpp_set_ps(f00, f10, f20, f30)), vec1(_hlslpp_set_ps(f01, f11, f21, f31)) {}
 
-		explicit hlslpp_inline float4x2(float f) : vec0(_hlslpp_set_ps(f, f, f, f)), vec1(_hlslpp_set_ps(f, f, f, f)) {}
+		explicit hlslpp_inline float4x2(float f) hlslpp_noexcept : vec0(_hlslpp_set_ps(f, f, f, f)), vec1(_hlslpp_set_ps(f, f, f, f)) {}
 
-		hlslpp_inline float4x2(const float4x2& m) : vec0(m.vec0), vec1(m.vec1) {}
+		hlslpp_inline float4x2& operator = (const float4x2& m) hlslpp_noexcept { vec0 = m.vec0; vec1 = m.vec1; return *this; }
+
+		hlslpp_inline float4x2(float4x2&& m) hlslpp_noexcept : vec0(m.vec0), vec1(m.vec1) {}
+		hlslpp_inline float4x2& operator = (float4x2&& m) hlslpp_noexcept { vec0 = m.vec0; vec1 = m.vec1; return *this; }
 
 		union
 		{
@@ -279,28 +358,50 @@ namespace hlslpp
 
 	struct hlslpp_nodiscard float3x3
 	{
-		hlslpp_inline float3x3() : vec0(_hlslpp_setzero_ps()), vec1(_hlslpp_setzero_ps()), vec2(_hlslpp_setzero_ps()) {}
+		hlslpp_inline float3x3() hlslpp_noexcept : vec0(_hlslpp_setzero_ps()), vec1(_hlslpp_setzero_ps()), vec2(_hlslpp_setzero_ps()) {}
+		hlslpp_inline float3x3(const float3x3& m) hlslpp_noexcept : vec0(m.vec0), vec1(m.vec1), vec2(m.vec2) {}
 
-		explicit hlslpp_inline float3x3(const n128 vec0, const n128 vec1, const n128 vec2) : vec0(vec0), vec1(vec1), vec2(vec2) {}
+		explicit hlslpp_inline float3x3(const n128 vec0, const n128 vec1, const n128 vec2) hlslpp_noexcept : vec0(vec0), vec1(vec1), vec2(vec2) {}
 
-		explicit hlslpp_inline float3x3(float f00, float f01, float f02,
+		explicit hlslpp_inline float3x3(
+			              float f00, float f01, float f02,
 		                  float f10, float f11, float f12,
-		                  float f20, float f21, float f22) : vec0(_hlslpp_set_ps(f00, f01, f02, 0.0f)), vec1(_hlslpp_set_ps(f10, f11, f12, 0.0f)), vec2(_hlslpp_set_ps(f20, f21, f22, 0.0f)) {}
+		                  float f20, float f21, float f22)
+			hlslpp_noexcept : vec0(_hlslpp_set_ps(f00, f01, f02, 0.0f)), vec1(_hlslpp_set_ps(f10, f11, f12, 0.0f)), vec2(_hlslpp_set_ps(f20, f21, f22, 0.0f)) {}
 
-		hlslpp_inline float3x3(const quaternion& q);
+		explicit hlslpp_inline float3x3(const quaternion& q) hlslpp_noexcept;
+		explicit hlslpp_inline float3x3(const float4x4& m) hlslpp_noexcept;
 
-		explicit hlslpp_inline float3x3(float f) : vec0(_hlslpp_set1_ps(f)), vec1(_hlslpp_set1_ps(f)), vec2(_hlslpp_set1_ps(f)) {}
+		explicit hlslpp_inline float3x3(float f) hlslpp_noexcept : vec0(_hlslpp_set1_ps(f)), vec1(_hlslpp_set1_ps(f)), vec2(_hlslpp_set1_ps(f)) {}
 
-		hlslpp_inline float3x3(const float3x3& m) : vec0(m.vec0), vec1(m.vec1), vec2(m.vec2) {}
+		hlslpp_inline float3x3(const float3& f1, const float3& f2, const float3& f3) hlslpp_noexcept : vec0(f1.vec), vec1(f2.vec), vec2(f3.vec) {}
 
-		hlslpp_inline float3x3(const float3& f1, const float3& f2, const float3& f3) : vec0(f1.vec), vec1(f2.vec), vec2(f3.vec) {}
+		hlslpp_inline float3x3& operator = (const float3x3& m) hlslpp_noexcept { vec0 = m.vec0; vec1 = m.vec1; vec2 = m.vec2; return *this; }
+
+		hlslpp_inline float3x3(float3x3&& m) hlslpp_noexcept : vec0(m.vec0), vec1(m.vec1), vec2(m.vec2) {}
+		hlslpp_inline float3x3& operator = (float3x3&& m) hlslpp_noexcept { vec0 = m.vec0; vec1 = m.vec1; vec2 = m.vec2; return *this; }
 
 		static const float3x3& identity() { static const float3x3 iden = float3x3(1, 0, 0, 0, 1, 0, 0, 0, 1); return iden; }
+
+		#include "transform/hlsl++_transform_float3x3.h"
+
+		float3& operator[](int N)
+		{
+			hlslpp_assert(N >= 0 && N <= 2);
+			return *(&reinterpret_cast<float3&>(vec0) + N);
+		}
+
+		const float3& operator[](int N) const
+		{
+			hlslpp_assert(N >= 0 && N <= 2);
+			return *(&reinterpret_cast<const float3&>(vec0) + N);
+		}
 
 		union
 		{
 			n128 vec0;
-			float f32_0[4];
+			float f32_0[3];
+			//float3 row0;
 			#include "swizzle/hlsl++_matrix_row0_1.h"
 			#include "swizzle/hlsl++_matrix_row0_2.h"
 			#include "swizzle/hlsl++_matrix_row0_3.h"
@@ -309,7 +410,7 @@ namespace hlslpp
 		union
 		{
 			n128 vec1;
-			float f32_1[4];
+			float f32_1[3];
 			#include "swizzle/hlsl++_matrix_row1_1.h"
 			#include "swizzle/hlsl++_matrix_row1_2.h"
 			#include "swizzle/hlsl++_matrix_row1_3.h"
@@ -318,7 +419,7 @@ namespace hlslpp
 		union
 		{
 			n128 vec2;
-			float f32_2[4];
+			float f32_2[3];
 			#include "swizzle/hlsl++_matrix_row2_1.h"
 			#include "swizzle/hlsl++_matrix_row2_2.h"
 			#include "swizzle/hlsl++_matrix_row2_3.h"
@@ -327,19 +428,23 @@ namespace hlslpp
 
 	struct hlslpp_nodiscard float3x4
 	{
-		hlslpp_inline float3x4() : vec0(_hlslpp_setzero_ps()), vec1(_hlslpp_setzero_ps()), vec2(_hlslpp_setzero_ps()) {}
+		hlslpp_inline float3x4() hlslpp_noexcept : vec0(_hlslpp_setzero_ps()), vec1(_hlslpp_setzero_ps()), vec2(_hlslpp_setzero_ps()) {}
+		hlslpp_inline float3x4(const float3x4& m) hlslpp_noexcept : vec0(m.vec0), vec1(m.vec1), vec2(m.vec2) {}
 
-		explicit hlslpp_inline float3x4(n128 vec0, n128 vec1, n128 vec2) : vec0(vec0), vec1(vec1), vec2(vec2) {}
+		explicit hlslpp_inline float3x4(n128 vec0, n128 vec1, n128 vec2) hlslpp_noexcept : vec0(vec0), vec1(vec1), vec2(vec2) {}
 
 		explicit hlslpp_inline float3x4(float f00, float f01, float f02, float f03,
 		                  float f10, float f11, float f12, float f13,
 		                  float f20, float f21, float f22, float f23) 
-			: vec0(_hlslpp_set_ps(f00, f01, f02, f03)), vec1(_hlslpp_set_ps(f10, f11, f12, f13)), vec2(_hlslpp_set_ps(f20, f21, f22, f23)) {}
+			hlslpp_noexcept : vec0(_hlslpp_set_ps(f00, f01, f02, f03)), vec1(_hlslpp_set_ps(f10, f11, f12, f13)), vec2(_hlslpp_set_ps(f20, f21, f22, f23)) {}
 
-		explicit hlslpp_inline float3x4(float f) : vec0(_hlslpp_set1_ps(f)), vec1(_hlslpp_set1_ps(f)), vec2(_hlslpp_set1_ps(f)) {}
+		explicit hlslpp_inline float3x4(float f) hlslpp_noexcept : vec0(_hlslpp_set1_ps(f)), vec1(_hlslpp_set1_ps(f)), vec2(_hlslpp_set1_ps(f)) {}
 
-		hlslpp_inline float3x4(const float3x4& m) : vec0(m.vec0), vec1(m.vec1), vec2(m.vec2) {}
-		
+		hlslpp_inline float3x4& operator = (const float3x4& m) hlslpp_noexcept { vec0 = m.vec0; vec1 = m.vec1; vec2 = m.vec2; return *this; }
+
+		hlslpp_inline float3x4(float3x4&& m) hlslpp_noexcept : vec0(m.vec0), vec1(m.vec1), vec2(m.vec2) {}
+		hlslpp_inline float3x4& operator = (float3x4&& m) hlslpp_noexcept { vec0 = m.vec0; vec1 = m.vec1; vec2 = m.vec2; return *this; }
+
 		union
 		{
 			n128 vec0;
@@ -361,19 +466,23 @@ namespace hlslpp
 
 	struct hlslpp_nodiscard float4x3
 	{
-		hlslpp_inline float4x3() : vec0(_hlslpp_setzero_ps()), vec1(_hlslpp_setzero_ps()), vec2(_hlslpp_setzero_ps()) {}
+		hlslpp_inline float4x3() hlslpp_noexcept : vec0(_hlslpp_setzero_ps()), vec1(_hlslpp_setzero_ps()), vec2(_hlslpp_setzero_ps()) {}
+		hlslpp_inline float4x3(const float4x3& m) hlslpp_noexcept : vec0(m.vec0), vec1(m.vec1), vec2(m.vec2) {}
 
-		explicit hlslpp_inline float4x3(n128 vec0, n128 vec1, n128 vec2) : vec0(vec0), vec1(vec1), vec2(vec2) {}
+		explicit hlslpp_inline float4x3(n128 vec0, n128 vec1, n128 vec2) hlslpp_noexcept : vec0(vec0), vec1(vec1), vec2(vec2) {}
 
 		explicit hlslpp_inline float4x3(float f00, float f01, float f02,
 		                  float f10, float f11, float f12,
 		                  float f20, float f21, float f22,
 		                  float f30, float f31, float f32)
-			: vec0(_hlslpp_set_ps(f00, f10, f20, f30)), vec1(_hlslpp_set_ps(f01, f11, f21, f31)), vec2(_hlslpp_set_ps(f02, f12, f22, f32)) {}
+			hlslpp_noexcept : vec0(_hlslpp_set_ps(f00, f10, f20, f30)), vec1(_hlslpp_set_ps(f01, f11, f21, f31)), vec2(_hlslpp_set_ps(f02, f12, f22, f32)) {}
 
-		explicit hlslpp_inline float4x3(float f) : vec0(_hlslpp_set1_ps(f)), vec1(_hlslpp_set1_ps(f)), vec2(_hlslpp_set1_ps(f)) {}
+		explicit hlslpp_inline float4x3(float f) hlslpp_noexcept : vec0(_hlslpp_set1_ps(f)), vec1(_hlslpp_set1_ps(f)), vec2(_hlslpp_set1_ps(f)) {}
 		
-		hlslpp_inline float4x3(const float4x3& m) : vec0(m.vec0), vec1(m.vec1), vec2(m.vec2) {}
+		hlslpp_inline float4x3& operator = (const float4x3& m) hlslpp_noexcept { vec0 = m.vec0; vec1 = m.vec1; vec2 = m.vec2; return *this; }
+
+		hlslpp_inline float4x3(float4x3&& m) hlslpp_noexcept : vec0(m.vec0), vec1(m.vec1), vec2(m.vec2) {}
+		hlslpp_inline float4x3& operator = (float4x3&& m) hlslpp_noexcept { vec0 = m.vec0; vec1 = m.vec1; vec2 = m.vec2; return *this; }
 
 		union
 		{
@@ -394,32 +503,75 @@ namespace hlslpp
 		};
 	};
 
+	hlslpp_inline float4x4 transpose(const float4x4& m);
+
 	struct hlslpp_nodiscard float4x4
 	{
 #if defined(HLSLPP_SIMD_REGISTER_FLOAT8)
 
-		hlslpp_inline float4x4() : vec0(_hlslpp256_setzero_ps()), vec1(_hlslpp256_setzero_ps()) {}
+		hlslpp_inline float4x4() hlslpp_noexcept : vec0(_hlslpp256_setzero_ps()), vec1(_hlslpp256_setzero_ps()) {}
+		hlslpp_inline float4x4(const float4x4& m) hlslpp_noexcept : vec0(m.vec0), vec1(m.vec1) {}
 
-		explicit hlslpp_inline float4x4(const n256& vec0, const n256& vec1) : vec0(vec0), vec1(vec1) {}
+		explicit hlslpp_inline float4x4(const n256& vec0, const n256& vec1) hlslpp_noexcept : vec0(vec0), vec1(vec1) {}
 
 		explicit hlslpp_inline float4x4(
 			float f00, float f01, float f02, float f03,
 			float f10, float f11, float f12, float f13,
 			float f20, float f21, float f22, float f23,
 			float f30, float f31, float f32, float f33)
-			: vec0(_hlslpp256_set_ps(f00, f01, f02, f03, f10, f11, f12, f13)), vec1(_hlslpp256_set_ps(f20, f21, f22, f23, f30, f31, f32, f33)) {}
+			hlslpp_noexcept : vec0(_hlslpp256_set_ps(f00, f01, f02, f03, f10, f11, f12, f13)), vec1(_hlslpp256_set_ps(f20, f21, f22, f23, f30, f31, f32, f33)) {}
 
-		explicit hlslpp_inline float4x4(float f) : vec0(_hlslpp256_set1_ps(f)), vec1(_hlslpp256_set1_ps(f)) {}
+		explicit hlslpp_inline float4x4(float f) hlslpp_noexcept : vec0(_hlslpp256_set1_ps(f)), vec1(_hlslpp256_set1_ps(f)) {}
 
 		hlslpp_inline float4x4(const float4& f1, const float4& f2, const float4& f3, const float4& f4) 
-			: vec0(_hlslpp256_set128_ps(f1.vec, f2.vec)), vec1(_hlslpp256_set128_ps(f3.vec, f4.vec)) {}
+			hlslpp_noexcept : vec0(_hlslpp256_set128_ps(f1.vec, f2.vec)), vec1(_hlslpp256_set128_ps(f3.vec, f4.vec)) {}
 
-		hlslpp_inline float4x4(const float4x4& m) : vec0(m.vec0), vec1(m.vec1) {}
+		hlslpp_inline float4x4& operator = (const float4x4& m) hlslpp_noexcept { vec0 = m.vec0; vec1 = m.vec1; return *this; }
+
+		hlslpp_inline float4x4(float4x4&& m) hlslpp_noexcept : vec0(m.vec0), vec1(m.vec1) {}
+		hlslpp_inline float4x4& operator = (float4x4&& m) hlslpp_noexcept { vec0 = m.vec0; vec1 = m.vec1; return *this; }
+
+		hlslpp_inline void build(const float3x3& m, const float4& v) hlslpp_noexcept
+		{
+			vec0 = _hlslpp256_and_ps(
+				_hlslpp256_set128_ps(m.vec0, m.vec1),
+				_hlslpp256_set_ps(fffMask.f, fffMask.f, fffMask.f, 0.0f, fffMask.f, fffMask.f, fffMask.f, 0.0f));
+
+			vec1 = _hlslpp256_and_ps(
+				_hlslpp256_set128_ps(m.vec2, v.vec),
+				_hlslpp256_set_ps(fffMask.f, fffMask.f, fffMask.f, 0.0f, fffMask.f, fffMask.f, fffMask.f, fffMask.f));
+		}
+
+		hlslpp_inline void build(const float3x4& m, const float4& v) hlslpp_noexcept
+		{
+			vec0 = _hlslpp256_set128_ps(m.vec0, m.vec1);
+			vec1 = _hlslpp256_set128_ps(m.vec2, v.vec);
+		}
+
+		hlslpp_inline void build(const float4x3& m, const float4& v) hlslpp_noexcept
+		{
+			vec0 = _hlslpp256_set128_ps(m.vec0, m.vec1);
+			vec1 = _hlslpp256_set128_ps(m.vec2, v.vec);
+			*this = transpose(*this); // Copy over as rows, then transpose
+		}
+
+		float4& operator[](int N)
+		{
+			hlslpp_assert(N >= 0 && N <= 3);
+			return *(&row0 + N);
+		}
+
+		const float4& operator[](int N) const
+		{
+			hlslpp_assert(N >= 0 && N <= 3);
+			return *(&row0 + N);
+		}
 
 		union
 		{
 			n256 vec0;
-			float f32_0[8];
+			float f32_256_0[8];
+			float4 row0;
 
 			HLSLPP_WARNING_ANONYMOUS_STRUCT_UNION_BEGIN
 			struct
@@ -446,7 +598,7 @@ namespace hlslpp
 		union
 		{
 			n256 vec1;
-			float f32_1[8];
+			float f32_256_1[8];
 
 			HLSLPP_WARNING_ANONYMOUS_STRUCT_UNION_BEGIN
 			struct
@@ -469,30 +621,72 @@ namespace hlslpp
 			};
 			HLSLPP_WARNING_ANONYMOUS_STRUCT_UNION_END
 		};
-
 #else
 
-		hlslpp_inline float4x4() : vec0(_hlslpp_setzero_ps()), vec1(_hlslpp_setzero_ps()), vec2(_hlslpp_setzero_ps()), vec3(_hlslpp_setzero_ps()) {}
+		hlslpp_inline float4x4() hlslpp_noexcept 
+			: vec0(_hlslpp_setzero_ps()), vec1(_hlslpp_setzero_ps()), vec2(_hlslpp_setzero_ps()), vec3(_hlslpp_setzero_ps()) {}
 
-		explicit hlslpp_inline float4x4(const n128& vec0, const n128& vec1, const n128& vec2, const n128& vec3) : vec0(vec0), vec1(vec1), vec2(vec2), vec3(vec3) {}
+		hlslpp_inline float4x4(const float4x4& m) hlslpp_noexcept : vec0(m.vec0), vec1(m.vec1), vec2(m.vec2), vec3(m.vec3) {}
+
+		explicit hlslpp_inline float4x4(const n128& vec0, const n128& vec1, const n128& vec2, const n128& vec3) hlslpp_noexcept 
+			: vec0(vec0), vec1(vec1), vec2(vec2), vec3(vec3) {}
 
 		explicit hlslpp_inline float4x4(
 			float f00, float f01, float f02, float f03,
 			float f10, float f11, float f12, float f13,
 			float f20, float f21, float f22, float f23,
 			float f30, float f31, float f32, float f33)
-			: vec0(_hlslpp_set_ps(f00, f01, f02, f03)), vec1(_hlslpp_set_ps(f10, f11, f12, f13)), vec2(_hlslpp_set_ps(f20, f21, f22, f23)), vec3(_hlslpp_set_ps(f30, f31, f32, f33)) {}
+			hlslpp_noexcept : vec0(_hlslpp_set_ps(f00, f01, f02, f03)), vec1(_hlslpp_set_ps(f10, f11, f12, f13)), 
+			                  vec2(_hlslpp_set_ps(f20, f21, f22, f23)), vec3(_hlslpp_set_ps(f30, f31, f32, f33)) {}
 
-		explicit hlslpp_inline float4x4(float f) : vec0(_hlslpp_set1_ps(f)), vec1(_hlslpp_set1_ps(f)), vec2(_hlslpp_set1_ps(f)), vec3(_hlslpp_set1_ps(f)) {}
+		explicit hlslpp_inline float4x4(float f) hlslpp_noexcept 
+			: vec0(_hlslpp_set1_ps(f)), vec1(_hlslpp_set1_ps(f)), vec2(_hlslpp_set1_ps(f)), vec3(_hlslpp_set1_ps(f)) {}
 
-		hlslpp_inline float4x4(const float4& f1, const float4& f2, const float4& f3, const float4& f4) : vec0(f1.vec), vec1(f2.vec), vec2(f3.vec), vec3(f4.vec) {}
+		hlslpp_inline float4x4(const float4& f1, const float4& f2, const float4& f3, const float4& f4) hlslpp_noexcept 
+			: vec0(f1.vec), vec1(f2.vec), vec2(f3.vec), vec3(f4.vec) {}
 
-		hlslpp_inline float4x4(const float4x4& m) : vec0(m.vec0), vec1(m.vec1), vec2(m.vec2), vec3(m.vec3) {}
+		hlslpp_inline float4x4& operator = (const float4x4& m) hlslpp_noexcept 
+		{ vec0 = m.vec0; vec1 = m.vec1; vec2 = m.vec2; vec3 = m.vec3; return *this; }
+
+		hlslpp_inline float4x4(float4x4&& m) hlslpp_noexcept : vec0(m.vec0), vec1(m.vec1), vec2(m.vec2), vec3(m.vec3) {}
+		hlslpp_inline float4x4& operator = (float4x4&& m) hlslpp_noexcept { vec0 = m.vec0; vec1 = m.vec1; vec2 = m.vec2; vec3 = m.vec3; return *this; }
+
+		hlslpp_inline void build(const float3x3& m, const float4& v) hlslpp_noexcept
+		{
+			vec0 = _hlslpp_and_ps(m.vec0, _hlslpp_set_ps(fffMask.f, fffMask.f, fffMask.f, 0.0f));
+			vec1 = _hlslpp_and_ps(m.vec1, _hlslpp_set_ps(fffMask.f, fffMask.f, fffMask.f, 0.0f));
+			vec2 = _hlslpp_and_ps(m.vec2, _hlslpp_set_ps(fffMask.f, fffMask.f, fffMask.f, 0.0f));
+			vec3 = v.vec;
+		}
+
+		hlslpp_inline void build(const float3x4& m, const float4& v) hlslpp_noexcept
+		{
+			vec0 = m.vec0; vec1 = m.vec1; vec2 = m.vec2; vec3 = v.vec;
+		}
+
+		hlslpp_inline void build(const float4x3& m, const float4& v) hlslpp_noexcept
+		{
+			vec0 = m.vec0; vec1 = m.vec1; vec2 = m.vec2;
+			*this = transpose(*this); // Copy over as rows, then transpose
+			vec3 = v.vec;
+		}
+
+		float4& operator[](int N)
+		{
+			hlslpp_assert(N >= 0 && N <= 3);
+			return *(&reinterpret_cast<float4&>(vec0) + N);
+		}
+
+		const float4& operator[](int N) const
+		{
+			hlslpp_assert(N >= 0 && N <= 3);
+			return *(&reinterpret_cast<const float4&>(vec0) + N);
+		}
 
 		union
 		{
 			n128 vec0;
-			float f32_0[4];
+			float f32_128_0[4];
 			#include "swizzle/hlsl++_matrix_row0_1.h"
 			#include "swizzle/hlsl++_matrix_row0_2.h"
 			#include "swizzle/hlsl++_matrix_row0_3.h"
@@ -502,7 +696,7 @@ namespace hlslpp
 		union
 		{
 			n128 vec1;
-			float f32_1[4];
+			float f32_128_1[4];
 			#include "swizzle/hlsl++_matrix_row1_1.h"
 			#include "swizzle/hlsl++_matrix_row1_2.h"
 			#include "swizzle/hlsl++_matrix_row1_3.h"
@@ -512,7 +706,7 @@ namespace hlslpp
 		union
 		{
 			n128 vec2;
-			float f32_2[4];
+			float f32_128_2[4];
 			#include "swizzle/hlsl++_matrix_row2_1.h"
 			#include "swizzle/hlsl++_matrix_row2_2.h"
 			#include "swizzle/hlsl++_matrix_row2_3.h"
@@ -522,7 +716,7 @@ namespace hlslpp
 		union
 		{
 			n128 vec3;
-			float f32_3[4];
+			float f32_128_3[4];
 			#include "swizzle/hlsl++_matrix_row3_1.h"
 			#include "swizzle/hlsl++_matrix_row3_2.h"
 			#include "swizzle/hlsl++_matrix_row3_3.h"
@@ -530,9 +724,20 @@ namespace hlslpp
 		};
 #endif
 
-		explicit hlslpp_inline float4x4(const quaternion& q);
+		// Conversion from lower-dimension matrices
+		explicit hlslpp_inline float4x4(const float3x3& m, const float4& v) hlslpp_noexcept { build(m, v); }
+		explicit hlslpp_inline float4x4(const float3x3& m) hlslpp_noexcept { build(m, float4(_hlslpp_setzero_ps())); }
+		
+		explicit hlslpp_inline float4x4(const float3x4& m, const float4& v) hlslpp_noexcept { build(m, v); }
+		explicit hlslpp_inline float4x4(const float3x4& m) hlslpp_noexcept { build(m, float4(_hlslpp_setzero_ps())); }
+
+		explicit hlslpp_inline float4x4(const float4x3& m) hlslpp_noexcept { build(m, float4(_hlslpp_setzero_ps())); }
+
+		explicit hlslpp_inline float4x4(const quaternion& q) hlslpp_noexcept;
 
 		static const float4x4& identity() { static const float4x4 iden = float4x4(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1); return iden; };
+
+		#include "transform/hlsl++_transform_float4x4.h"
 	};
 
 	//-----------------
@@ -602,16 +807,23 @@ namespace hlslpp
 		n128 tmp_row_2 = _hlslpp_msub_ps(tmp_shuf_yzx_0, tmp_shuf_zxy_1, _hlslpp_mul_ps(tmp_shuf_zxy_0, tmp_shuf_yzx_1));
 
 		// Transpose the matrix
-		n128 tmp_transp_row_0, tmp_transp_row_1, tmp_transp_row_2;
-		_hlslpp_transpose_3x3_ps(tmp_row_0, tmp_row_1, tmp_row_2, tmp_transp_row_0, tmp_transp_row_1, tmp_transp_row_2);
+		n128 shuf_tmp_0 = _hlslpp_shuf_xyxy_ps(tmp_row_0, tmp_row_1);
+		n128 shuf_tmp_1 = _hlslpp_shuf_yzyz_ps(tmp_row_0, tmp_row_1);
+
+		n128 transp_row_0 = _hlslpp_shuf_xzxw_ps(shuf_tmp_0, tmp_row_2);
+		n128 transp_row_1 = _hlslpp_shuf_ywyw_ps(shuf_tmp_0, tmp_row_2);
+		n128 transp_row_2 = _hlslpp_shuf_ywzw_ps(shuf_tmp_1, tmp_row_2);
 
 		// Compute the determinant and divide all results by it
-		n128 det = _hlslpp_perm_xxxx_ps(_hlslpp_det_3x3_ps(vec0, vec1, vec2));
+		n128 prod = _hlslpp_mul_ps(tmp_shuf_yzx_1, vec2);
+		n128 sub = _hlslpp_msub_ps(vec1, tmp_shuf_yzx_2, prod);
+
+		n128 det = _hlslpp_perm_xxxx_ps(_hlslpp_dot3_ps(vec0, _hlslpp_perm_yzxw_ps(sub)));
 		n128 invDet = _hlslpp_div_ps(f4_1, det);
 
-		o_vec0 = _hlslpp_mul_ps(tmp_transp_row_0, invDet);
-		o_vec1 = _hlslpp_mul_ps(tmp_transp_row_1, invDet);
-		o_vec2 = _hlslpp_mul_ps(tmp_transp_row_2, invDet);
+		o_vec0 = _hlslpp_mul_ps(transp_row_0, invDet);
+		o_vec1 = _hlslpp_mul_ps(transp_row_1, invDet);
+		o_vec2 = _hlslpp_mul_ps(transp_row_2, invDet);
 	}
 
 	// https://gist.github.com/runestubbe/466ffdde670e6a697affe4a899bcf3a3
@@ -666,14 +878,16 @@ namespace hlslpp
 		o_vec3 = _hlslpp_mul_ps(minors3, rcp_denom_ppnn);
 	}
 
+	// Puts trace in first element
 	hlslpp_inline n128 _hlslpp_trace_2x2_ps(const n128 m)
 	{
-		return _hlslpp_add_ps(_hlslpp_perm_xxxx_ps(m), _hlslpp_perm_wwww_ps(m));
+		return _hlslpp_add_ps(m, _hlslpp_perm_wwww_ps(m));
 	}
 
+	// Puts trace in first element
 	hlslpp_inline n128 _hlslpp_trace_3x3_ps(const n128 vec0, const n128 vec1, const n128 vec2)
 	{
-		return _hlslpp_add_ps(_hlslpp_add_ps(_hlslpp_perm_xxxx_ps(vec0), _hlslpp_perm_yyyy_ps(vec1)), _hlslpp_perm_zzzz_ps(vec2));
+		return _hlslpp_add_ps(_hlslpp_add_ps(vec0, _hlslpp_perm_yyyy_ps(vec1)), _hlslpp_perm_zzzz_ps(vec2));
 	}
 
 	inline n128 _hlslpp_mul_1x2_2x1_ps(n128 m1_vec, n128 m2_vec)
@@ -872,40 +1086,22 @@ namespace hlslpp
 		o_vec1 = _hlslpp_blend_ps(dpx1, _hlslpp_shuf_xxxx_ps(dpy1, dpz1), HLSLPP_BLEND_MASK(1, 0, 0, 1));
 	}
 
-	inline void _hlslpp_mul_3x3_3x3_ps(const n128& m1_vec0, const n128& m1_vec1, const n128& m1_vec2, const n128& m2_vec0, const n128& m2_vec1, const n128& m2_vec2, n128& o_vec0, n128& o_vec1, n128& o_vec2)
-	{
-		// First row
-		n128 mul1x = _hlslpp_mul_ps(m1_vec0, _hlslpp_perm_xxxx_ps(m2_vec0));
-		n128 mad1y = _hlslpp_madd_ps(m1_vec1, _hlslpp_perm_yyyy_ps(m2_vec0), mul1x);
-		o_vec0 = _hlslpp_madd_ps(m1_vec2, _hlslpp_perm_zzzz_ps(m2_vec0), mad1y);
-
-		// Second row
-		n128 mul2x = _hlslpp_mul_ps(m1_vec0, _hlslpp_perm_xxxx_ps(m2_vec1));
-		n128 mad2y = _hlslpp_madd_ps(m1_vec1, _hlslpp_perm_yyyy_ps(m2_vec1), mul2x);
-		o_vec1 = _hlslpp_madd_ps(m1_vec2, _hlslpp_perm_zzzz_ps(m2_vec1), mad2y);
-
-		// Third row
-		n128 mul3x = _hlslpp_mul_ps(m1_vec0, _hlslpp_perm_xxxx_ps(m2_vec2));
-		n128 mad3y = _hlslpp_madd_ps(m1_vec1, _hlslpp_perm_yyyy_ps(m2_vec2), mul3x);
-		o_vec2 = _hlslpp_madd_ps(m1_vec2, _hlslpp_perm_zzzz_ps(m2_vec2), mad3y);
-	}
-
 	inline void _hlslpp_mul_3x3_3x4_ps(const n128& m1_vec0, const n128& m1_vec1, const n128& m1_vec2, const n128& m2_vec0, const n128& m2_vec1, const n128& m2_vec2, n128& o_vec0, n128& o_vec1, n128& o_vec2)
 	{
 		// First row
 		n128 mul1x = _hlslpp_mul_ps(_hlslpp_perm_xxxx_ps(m1_vec0), m2_vec0);
 		n128 mad1y = _hlslpp_madd_ps(_hlslpp_perm_yyyy_ps(m1_vec0), m2_vec1, mul1x);
-		o_vec0 = _hlslpp_madd_ps(_hlslpp_perm_zzzz_ps(m1_vec0), m2_vec2, mad1y);
+		o_vec0     = _hlslpp_madd_ps(_hlslpp_perm_zzzz_ps(m1_vec0), m2_vec2, mad1y);
 
 		// Second row
 		n128 mul2x = _hlslpp_mul_ps(_hlslpp_perm_xxxx_ps(m1_vec1), m2_vec0);
 		n128 mad2y = _hlslpp_madd_ps(_hlslpp_perm_yyyy_ps(m1_vec1), m2_vec1, mul2x);
-		o_vec1 = _hlslpp_madd_ps(_hlslpp_perm_zzzz_ps(m1_vec1), m2_vec2, mad2y);
+		o_vec1     = _hlslpp_madd_ps(_hlslpp_perm_zzzz_ps(m1_vec1), m2_vec2, mad2y);
 
 		// Third row
 		n128 mul3x = _hlslpp_mul_ps(_hlslpp_perm_xxxx_ps(m1_vec2), m2_vec0);
 		n128 mad3y = _hlslpp_madd_ps(_hlslpp_perm_yyyy_ps(m1_vec2), m2_vec1, mul3x);
-		o_vec2 = _hlslpp_madd_ps(_hlslpp_perm_zzzz_ps(m1_vec2), m2_vec2, mad3y);
+		o_vec2     = _hlslpp_madd_ps(_hlslpp_perm_zzzz_ps(m1_vec2), m2_vec2, mad3y);
 	}
 
 	inline n128 _hlslpp_mul_3x4_4x1_ps(const n128& m1_vec0, const n128& m1_vec1, const n128& m1_vec2, const n128& m2_vec)
@@ -1287,7 +1483,7 @@ namespace hlslpp
 	hlslpp_inline float3x3 mul(const float3x3& m1, const float3x3& m2)
 	{
 		n128 vec0, vec1, vec2;
-		_hlslpp_mul_3x3_3x3_ps(m1.vec0, m1.vec1, m1.vec2, m2.vec0, m2.vec1, m2.vec2, vec0, vec1, vec2);
+		_hlslpp_mul_3x3_3x4_ps(m1.vec0, m1.vec1, m1.vec2, m2.vec0, m2.vec1, m2.vec2, vec0, vec1, vec2);
 		return float3x3(vec0, vec1, vec2);
 	}
 
@@ -1317,7 +1513,7 @@ namespace hlslpp
 		return float3x3(vec0, vec1, vec2);
 	}
 
-	hlslpp_inline float3x4 mul(const float3x4& m1, const float4x4& m2)
+	inline float3x4 mul(const float3x4& m1, const float4x4& m2)
 	{
 #if defined(HLSLPP_SIMD_REGISTER_FLOAT8)
 
@@ -1378,7 +1574,7 @@ namespace hlslpp
 		return float4x3(vec0, vec1, vec2);
 	}
 
-	hlslpp_inline float4x4 mul(const float4x3& m1, const float3x4& m2)
+	inline float4x4 mul(const float4x3& m1, const float3x4& m2)
 	{
 		// First row
 		n128 mul0x = _hlslpp_mul_ps(_hlslpp_perm_xxxx_ps(m1.vec0), m2.vec0);
@@ -1412,7 +1608,7 @@ namespace hlslpp
 #endif
 	}
 
-	hlslpp_inline float4x1 mul(const float4x4& m1, const float4x1& m2)
+	inline float4x1 mul(const float4x4& m1, const float4x1& m2)
 	{
 #if defined(HLSLPP_SIMD_REGISTER_FLOAT8)
 
@@ -1440,7 +1636,7 @@ namespace hlslpp
 #endif
 	}
 
-	hlslpp_inline float4x2 mul(const float4x4& m1, const float4x2& m2)
+	inline float4x2 mul(const float4x4& m1, const float4x2& m2)
 	{
 #if defined(HLSLPP_SIMD_REGISTER_FLOAT8)
 
@@ -1486,7 +1682,7 @@ namespace hlslpp
 #endif
 	}
 
-	hlslpp_inline float4x3 mul(const float4x4& m1, const float4x3& m2)
+	inline float4x3 mul(const float4x4& m1, const float4x3& m2)
 	{
 #if defined(HLSLPP_SIMD_REGISTER_FLOAT8)
 
@@ -1547,7 +1743,7 @@ namespace hlslpp
 #endif
 	}
 
-	hlslpp_inline float4x4 mul(const float4x4& m1, const float4x4& m2)
+	inline float4x4 mul(const float4x4& m1, const float4x4& m2)
 	{
 #if defined(HLSLPP_SIMD_REGISTER_FLOAT8)
 
@@ -1632,22 +1828,22 @@ namespace hlslpp
 #endif
 	}
 
-	hlslpp_inline float1x1 operator += (float1x1& m1, const float1x1& m2) { m1 = m1 + m2; return m1; }
-	hlslpp_inline float1x2 operator += (float1x2& m1, const float1x2& m2) { m1 = m1 + m2; return m1; }
-	hlslpp_inline float1x3 operator += (float1x3& m1, const float1x3& m2) { m1 = m1 + m2; return m1; }
-	hlslpp_inline float1x4 operator += (float1x4& m1, const float1x4& m2) { m1 = m1 + m2; return m1; }
-	hlslpp_inline float2x1 operator += (float2x1& m1, const float2x1& m2) { m1 = m1 + m2; return m1; }
-	hlslpp_inline float3x1 operator += (float3x1& m1, const float3x1& m2) { m1 = m1 + m2; return m1; }
-	hlslpp_inline float4x1 operator += (float4x1& m1, const float4x1& m2) { m1 = m1 + m2; return m1; }
-	hlslpp_inline float2x2 operator += (float2x2& m1, const float2x2& m2) { m1 = m1 + m2; return m1; }
-	hlslpp_inline float2x3 operator += (float2x3& m1, const float2x3& m2) { m1 = m1 + m2; return m1; }
-	hlslpp_inline float2x4 operator += (float2x4& m1, const float2x4& m2) { m1 = m1 + m2; return m1; }
-	hlslpp_inline float3x2 operator += (float3x2& m1, const float3x2& m2) { m1 = m1 + m2; return m1; }
-	hlslpp_inline float4x2 operator += (float4x2& m1, const float4x2& m2) { m1 = m1 + m2; return m1; }
-	hlslpp_inline float3x3 operator += (float3x3& m1, const float3x3& m2) { m1 = m1 + m2; return m1; }
-	hlslpp_inline float3x4 operator += (float3x4& m1, const float3x4& m2) { m1 = m1 + m2; return m1; }
-	hlslpp_inline float4x3 operator += (float4x3& m1, const float4x3& m2) { m1 = m1 + m2; return m1; }
-	hlslpp_inline float4x4 operator += (float4x4& m1, const float4x4& m2) { m1 = m1 + m2; return m1; }
+	hlslpp_inline float1x1& operator += (float1x1& m1, const float1x1& m2) { m1 = m1 + m2; return m1; }
+	hlslpp_inline float1x2& operator += (float1x2& m1, const float1x2& m2) { m1 = m1 + m2; return m1; }
+	hlslpp_inline float1x3& operator += (float1x3& m1, const float1x3& m2) { m1 = m1 + m2; return m1; }
+	hlslpp_inline float1x4& operator += (float1x4& m1, const float1x4& m2) { m1 = m1 + m2; return m1; }
+	hlslpp_inline float2x1& operator += (float2x1& m1, const float2x1& m2) { m1 = m1 + m2; return m1; }
+	hlslpp_inline float3x1& operator += (float3x1& m1, const float3x1& m2) { m1 = m1 + m2; return m1; }
+	hlslpp_inline float4x1& operator += (float4x1& m1, const float4x1& m2) { m1 = m1 + m2; return m1; }
+	hlslpp_inline float2x2& operator += (float2x2& m1, const float2x2& m2) { m1 = m1 + m2; return m1; }
+	hlslpp_inline float2x3& operator += (float2x3& m1, const float2x3& m2) { m1 = m1 + m2; return m1; }
+	hlslpp_inline float2x4& operator += (float2x4& m1, const float2x4& m2) { m1 = m1 + m2; return m1; }
+	hlslpp_inline float3x2& operator += (float3x2& m1, const float3x2& m2) { m1 = m1 + m2; return m1; }
+	hlslpp_inline float4x2& operator += (float4x2& m1, const float4x2& m2) { m1 = m1 + m2; return m1; }
+	hlslpp_inline float3x3& operator += (float3x3& m1, const float3x3& m2) { m1 = m1 + m2; return m1; }
+	hlslpp_inline float3x4& operator += (float3x4& m1, const float3x4& m2) { m1 = m1 + m2; return m1; }
+	hlslpp_inline float4x3& operator += (float4x3& m1, const float4x3& m2) { m1 = m1 + m2; return m1; }
+	hlslpp_inline float4x4& operator += (float4x4& m1, const float4x4& m2) { m1 = m1 + m2; return m1; }
 
 	hlslpp_inline float1x1 operator - (const float1x1& m1, const float1x1& m2) { return float1x1(_hlslpp_sub_ps(m1.vec, m2.vec)); }
 	hlslpp_inline float1x2 operator - (const float1x2& m1, const float1x2& m2) { return float1x2(_hlslpp_sub_ps(m1.vec, m2.vec)); }
@@ -1673,22 +1869,22 @@ namespace hlslpp
 #endif
 	}
 
-	hlslpp_inline float1x1 operator -= (float1x1& m1, const float1x1& m2) { m1 = m1 - m2; return m1; }
-	hlslpp_inline float1x2 operator -= (float1x2& m1, const float1x2& m2) { m1 = m1 - m2; return m1; }
-	hlslpp_inline float1x3 operator -= (float1x3& m1, const float1x3& m2) { m1 = m1 - m2; return m1; }
-	hlslpp_inline float1x4 operator -= (float1x4& m1, const float1x4& m2) { m1 = m1 - m2; return m1; }
-	hlslpp_inline float2x1 operator -= (float2x1& m1, const float2x1& m2) { m1 = m1 - m2; return m1; }
-	hlslpp_inline float3x1 operator -= (float3x1& m1, const float3x1& m2) { m1 = m1 - m2; return m1; }
-	hlslpp_inline float4x1 operator -= (float4x1& m1, const float4x1& m2) { m1 = m1 - m2; return m1; }
-	hlslpp_inline float2x2 operator -= (float2x2& m1, const float2x2& m2) { m1 = m1 - m2; return m1; }
-	hlslpp_inline float2x3 operator -= (float2x3& m1, const float2x3& m2) { m1 = m1 - m2; return m1; }
-	hlslpp_inline float2x4 operator -= (float2x4& m1, const float2x4& m2) { m1 = m1 - m2; return m1; }
-	hlslpp_inline float3x2 operator -= (float3x2& m1, const float3x2& m2) { m1 = m1 - m2; return m1; }
-	hlslpp_inline float4x2 operator -= (float4x2& m1, const float4x2& m2) { m1 = m1 - m2; return m1; }
-	hlslpp_inline float3x3 operator -= (float3x3& m1, const float3x3& m2) { m1 = m1 - m2; return m1; }
-	hlslpp_inline float3x4 operator -= (float3x4& m1, const float3x4& m2) { m1 = m1 - m2; return m1; }
-	hlslpp_inline float4x3 operator -= (float4x3& m1, const float4x3& m2) { m1 = m1 - m2; return m1; }
-	hlslpp_inline float4x4 operator -= (float4x4& m1, const float4x4& m2) { m1 = m1 - m2; return m1; }
+	hlslpp_inline float1x1& operator -= (float1x1& m1, const float1x1& m2) { m1 = m1 - m2; return m1; }
+	hlslpp_inline float1x2& operator -= (float1x2& m1, const float1x2& m2) { m1 = m1 - m2; return m1; }
+	hlslpp_inline float1x3& operator -= (float1x3& m1, const float1x3& m2) { m1 = m1 - m2; return m1; }
+	hlslpp_inline float1x4& operator -= (float1x4& m1, const float1x4& m2) { m1 = m1 - m2; return m1; }
+	hlslpp_inline float2x1& operator -= (float2x1& m1, const float2x1& m2) { m1 = m1 - m2; return m1; }
+	hlslpp_inline float3x1& operator -= (float3x1& m1, const float3x1& m2) { m1 = m1 - m2; return m1; }
+	hlslpp_inline float4x1& operator -= (float4x1& m1, const float4x1& m2) { m1 = m1 - m2; return m1; }
+	hlslpp_inline float2x2& operator -= (float2x2& m1, const float2x2& m2) { m1 = m1 - m2; return m1; }
+	hlslpp_inline float2x3& operator -= (float2x3& m1, const float2x3& m2) { m1 = m1 - m2; return m1; }
+	hlslpp_inline float2x4& operator -= (float2x4& m1, const float2x4& m2) { m1 = m1 - m2; return m1; }
+	hlslpp_inline float3x2& operator -= (float3x2& m1, const float3x2& m2) { m1 = m1 - m2; return m1; }
+	hlslpp_inline float4x2& operator -= (float4x2& m1, const float4x2& m2) { m1 = m1 - m2; return m1; }
+	hlslpp_inline float3x3& operator -= (float3x3& m1, const float3x3& m2) { m1 = m1 - m2; return m1; }
+	hlslpp_inline float3x4& operator -= (float3x4& m1, const float3x4& m2) { m1 = m1 - m2; return m1; }
+	hlslpp_inline float4x3& operator -= (float4x3& m1, const float4x3& m2) { m1 = m1 - m2; return m1; }
+	hlslpp_inline float4x4& operator -= (float4x4& m1, const float4x4& m2) { m1 = m1 - m2; return m1; }
 
 	hlslpp_inline float1x1 operator * (const float1x1& m1, const float1x1& m2) { return float1x1(_hlslpp_mul_ps(m1.vec, m2.vec)); }
 	hlslpp_inline float1x2 operator * (const float1x2& m1, const float1x2& m2) { return float1x2(_hlslpp_mul_ps(m1.vec, m2.vec)); }
@@ -1714,22 +1910,22 @@ namespace hlslpp
 #endif
 	}
 
-	hlslpp_inline float1x1 operator *= (float1x1& m1, const float1x1& m2) { m1 = m1 * m2; return m1; }
-	hlslpp_inline float1x2 operator *= (float1x2& m1, const float1x2& m2) { m1 = m1 * m2; return m1; }
-	hlslpp_inline float1x3 operator *= (float1x3& m1, const float1x3& m2) { m1 = m1 * m2; return m1; }
-	hlslpp_inline float1x4 operator *= (float1x4& m1, const float1x4& m2) { m1 = m1 * m2; return m1; }
-	hlslpp_inline float2x1 operator *= (float2x1& m1, const float2x1& m2) { m1 = m1 * m2; return m1; }
-	hlslpp_inline float3x1 operator *= (float3x1& m1, const float3x1& m2) { m1 = m1 * m2; return m1; }
-	hlslpp_inline float4x1 operator *= (float4x1& m1, const float4x1& m2) { m1 = m1 * m2; return m1; }
-	hlslpp_inline float2x2 operator *= (float2x2& m1, const float2x2& m2) { m1 = m1 * m2; return m1; }
-	hlslpp_inline float2x3 operator *= (float2x3& m1, const float2x3& m2) { m1 = m1 * m2; return m1; }
-	hlslpp_inline float2x4 operator *= (float2x4& m1, const float2x4& m2) { m1 = m1 * m2; return m1; }
-	hlslpp_inline float3x2 operator *= (float3x2& m1, const float3x2& m2) { m1 = m1 * m2; return m1; }
-	hlslpp_inline float4x2 operator *= (float4x2& m1, const float4x2& m2) { m1 = m1 * m2; return m1; }
-	hlslpp_inline float3x3 operator *= (float3x3& m1, const float3x3& m2) { m1 = m1 * m2; return m1; }
-	hlslpp_inline float3x4 operator *= (float3x4& m1, const float3x4& m2) { m1 = m1 * m2; return m1; }
-	hlslpp_inline float4x3 operator *= (float4x3& m1, const float4x3& m2) { m1 = m1 * m2; return m1; }
-	hlslpp_inline float4x4 operator *= (float4x4& m1, const float4x4& m2) { m1 = m1 * m2; return m1; }
+	hlslpp_inline float1x1& operator *= (float1x1& m1, const float1x1& m2) { m1 = m1 * m2; return m1; }
+	hlslpp_inline float1x2& operator *= (float1x2& m1, const float1x2& m2) { m1 = m1 * m2; return m1; }
+	hlslpp_inline float1x3& operator *= (float1x3& m1, const float1x3& m2) { m1 = m1 * m2; return m1; }
+	hlslpp_inline float1x4& operator *= (float1x4& m1, const float1x4& m2) { m1 = m1 * m2; return m1; }
+	hlslpp_inline float2x1& operator *= (float2x1& m1, const float2x1& m2) { m1 = m1 * m2; return m1; }
+	hlslpp_inline float3x1& operator *= (float3x1& m1, const float3x1& m2) { m1 = m1 * m2; return m1; }
+	hlslpp_inline float4x1& operator *= (float4x1& m1, const float4x1& m2) { m1 = m1 * m2; return m1; }
+	hlslpp_inline float2x2& operator *= (float2x2& m1, const float2x2& m2) { m1 = m1 * m2; return m1; }
+	hlslpp_inline float2x3& operator *= (float2x3& m1, const float2x3& m2) { m1 = m1 * m2; return m1; }
+	hlslpp_inline float2x4& operator *= (float2x4& m1, const float2x4& m2) { m1 = m1 * m2; return m1; }
+	hlslpp_inline float3x2& operator *= (float3x2& m1, const float3x2& m2) { m1 = m1 * m2; return m1; }
+	hlslpp_inline float4x2& operator *= (float4x2& m1, const float4x2& m2) { m1 = m1 * m2; return m1; }
+	hlslpp_inline float3x3& operator *= (float3x3& m1, const float3x3& m2) { m1 = m1 * m2; return m1; }
+	hlslpp_inline float3x4& operator *= (float3x4& m1, const float3x4& m2) { m1 = m1 * m2; return m1; }
+	hlslpp_inline float4x3& operator *= (float4x3& m1, const float4x3& m2) { m1 = m1 * m2; return m1; }
+	hlslpp_inline float4x4& operator *= (float4x4& m1, const float4x4& m2) { m1 = m1 * m2; return m1; }
 
 	hlslpp_inline float1x1 operator / (const float1x1& m1, const float1x1& m2) { return float1x1(_hlslpp_div_ps(m1.vec, m2.vec)); }
 	hlslpp_inline float1x2 operator / (const float1x2& m1, const float1x2& m2) { return float1x2(_hlslpp_div_ps(m1.vec, m2.vec)); }
@@ -1755,22 +1951,22 @@ namespace hlslpp
 #endif
 	}
 
-	hlslpp_inline float1x1 operator /= (float1x1& m1, const float1x1& m2) { m1 = m1 / m2; return m1; }
-	hlslpp_inline float1x2 operator /= (float1x2& m1, const float1x2& m2) { m1 = m1 / m2; return m1; }
-	hlslpp_inline float1x3 operator /= (float1x3& m1, const float1x3& m2) { m1 = m1 / m2; return m1; }
-	hlslpp_inline float1x4 operator /= (float1x4& m1, const float1x4& m2) { m1 = m1 / m2; return m1; }
-	hlslpp_inline float2x1 operator /= (float2x1& m1, const float2x1& m2) { m1 = m1 / m2; return m1; }
-	hlslpp_inline float3x1 operator /= (float3x1& m1, const float3x1& m2) { m1 = m1 / m2; return m1; }
-	hlslpp_inline float4x1 operator /= (float4x1& m1, const float4x1& m2) { m1 = m1 / m2; return m1; }
-	hlslpp_inline float2x2 operator /= (float2x2& m1, const float2x2& m2) { m1 = m1 / m2; return m1; }
-	hlslpp_inline float2x3 operator /= (float2x3& m1, const float2x3& m2) { m1 = m1 / m2; return m1; }
-	hlslpp_inline float2x4 operator /= (float2x4& m1, const float2x4& m2) { m1 = m1 / m2; return m1; }
-	hlslpp_inline float3x2 operator /= (float3x2& m1, const float3x2& m2) { m1 = m1 / m2; return m1; }
-	hlslpp_inline float4x2 operator /= (float4x2& m1, const float4x2& m2) { m1 = m1 / m2; return m1; }
-	hlslpp_inline float3x3 operator /= (float3x3& m1, const float3x3& m2) { m1 = m1 / m2; return m1; }
-	hlslpp_inline float3x4 operator /= (float3x4& m1, const float3x4& m2) { m1 = m1 / m2; return m1; }
-	hlslpp_inline float4x3 operator /= (float4x3& m1, const float4x3& m2) { m1 = m1 / m2; return m1; }
-	hlslpp_inline float4x4 operator /= (float4x4& m1, const float4x4& m2) { m1 = m1 / m2; return m1; }
+	hlslpp_inline float1x1& operator /= (float1x1& m1, const float1x1& m2) { m1 = m1 / m2; return m1; }
+	hlslpp_inline float1x2& operator /= (float1x2& m1, const float1x2& m2) { m1 = m1 / m2; return m1; }
+	hlslpp_inline float1x3& operator /= (float1x3& m1, const float1x3& m2) { m1 = m1 / m2; return m1; }
+	hlslpp_inline float1x4& operator /= (float1x4& m1, const float1x4& m2) { m1 = m1 / m2; return m1; }
+	hlslpp_inline float2x1& operator /= (float2x1& m1, const float2x1& m2) { m1 = m1 / m2; return m1; }
+	hlslpp_inline float3x1& operator /= (float3x1& m1, const float3x1& m2) { m1 = m1 / m2; return m1; }
+	hlslpp_inline float4x1& operator /= (float4x1& m1, const float4x1& m2) { m1 = m1 / m2; return m1; }
+	hlslpp_inline float2x2& operator /= (float2x2& m1, const float2x2& m2) { m1 = m1 / m2; return m1; }
+	hlslpp_inline float2x3& operator /= (float2x3& m1, const float2x3& m2) { m1 = m1 / m2; return m1; }
+	hlslpp_inline float2x4& operator /= (float2x4& m1, const float2x4& m2) { m1 = m1 / m2; return m1; }
+	hlslpp_inline float3x2& operator /= (float3x2& m1, const float3x2& m2) { m1 = m1 / m2; return m1; }
+	hlslpp_inline float4x2& operator /= (float4x2& m1, const float4x2& m2) { m1 = m1 / m2; return m1; }
+	hlslpp_inline float3x3& operator /= (float3x3& m1, const float3x3& m2) { m1 = m1 / m2; return m1; }
+	hlslpp_inline float3x4& operator /= (float3x4& m1, const float3x4& m2) { m1 = m1 / m2; return m1; }
+	hlslpp_inline float4x3& operator /= (float4x3& m1, const float4x3& m2) { m1 = m1 / m2; return m1; }
+	hlslpp_inline float4x4& operator /= (float4x4& m1, const float4x4& m2) { m1 = m1 / m2; return m1; }
 
 	// Scalar operators
 
@@ -1882,6 +2078,30 @@ namespace hlslpp
 #endif
 	}
 
+	hlslpp_inline float1x1 operator - (const float1x1& m) { return float1x1(_hlslpp_neg_ps(m.vec)); }
+	hlslpp_inline float1x2 operator - (const float1x2& m) { return float1x2(_hlslpp_neg_ps(m.vec)); }
+	hlslpp_inline float1x3 operator - (const float1x3& m) { return float1x3(_hlslpp_neg_ps(m.vec)); }
+	hlslpp_inline float1x4 operator - (const float1x4& m) { return float1x4(_hlslpp_neg_ps(m.vec)); }
+	hlslpp_inline float2x1 operator - (const float2x1& m) { return float2x1(_hlslpp_neg_ps(m.vec)); }
+	hlslpp_inline float3x1 operator - (const float3x1& m) { return float3x1(_hlslpp_neg_ps(m.vec)); }
+	hlslpp_inline float4x1 operator - (const float4x1& m) { return float4x1(_hlslpp_neg_ps(m.vec)); }
+	hlslpp_inline float2x2 operator - (const float2x2& m) { return float2x2(_hlslpp_neg_ps(m.vec)); }
+	hlslpp_inline float2x3 operator - (const float2x3& m) { return float2x3(_hlslpp_neg_ps(m.vec0), _hlslpp_neg_ps(m.vec1)); }
+	hlslpp_inline float3x2 operator - (const float3x2& m) { return float3x2(_hlslpp_neg_ps(m.vec0), _hlslpp_neg_ps(m.vec1)); }
+	hlslpp_inline float2x4 operator - (const float2x4& m) { return float2x4(_hlslpp_neg_ps(m.vec0), _hlslpp_neg_ps(m.vec1)); }
+	hlslpp_inline float4x2 operator - (const float4x2& m) { return float4x2(_hlslpp_neg_ps(m.vec0), _hlslpp_neg_ps(m.vec1)); }
+	hlslpp_inline float3x3 operator - (const float3x3& m) { return float3x3(_hlslpp_neg_ps(m.vec0), _hlslpp_neg_ps(m.vec1), _hlslpp_neg_ps(m.vec2)); }
+	hlslpp_inline float3x4 operator - (const float3x4& m) { return float3x4(_hlslpp_neg_ps(m.vec0), _hlslpp_neg_ps(m.vec1), _hlslpp_neg_ps(m.vec2)); }
+	hlslpp_inline float4x3 operator - (const float4x3& m) { return float4x3(_hlslpp_neg_ps(m.vec0), _hlslpp_neg_ps(m.vec1), _hlslpp_neg_ps(m.vec2)); }
+	hlslpp_inline float4x4 operator - (const float4x4& m)
+	{
+#if defined(HLSLPP_SIMD_REGISTER_FLOAT8)
+		return float4x4(_hlslpp256_neg_ps(m.vec0), _hlslpp256_neg_ps(m.vec1));
+#else
+		return float4x4(_hlslpp_neg_ps(m.vec0), _hlslpp_neg_ps(m.vec1), _hlslpp_neg_ps(m.vec2), _hlslpp_neg_ps(m.vec3));
+#endif
+	}
+
 	// Pre-increment
 
 	hlslpp_inline float1x1& operator ++ (float1x1& f) { f = f + float1x1(1.0f); return f; }
@@ -1953,6 +2173,94 @@ namespace hlslpp
 	hlslpp_inline float3x4 operator -- (float3x4& f, int) { float3x4 tmp = f; f = f - float3x4(1.0f); return tmp; }
 	hlslpp_inline float4x3 operator -- (float4x3& f, int) { float4x3 tmp = f; f = f - float4x3(1.0f); return tmp; }
 	hlslpp_inline float4x4 operator -- (float4x4& f, int) { float4x4 tmp = f; f = f - float4x4(1.0f); return tmp; }
+	
+	hlslpp_inline float2x2 operator == (const float2x2& f1, const float2x2& f2) { return float2x2(_hlslpp_cmpeq1_ps(f1.vec, f2.vec)); }
+	hlslpp_inline float3x3 operator == (const float3x3& f1, const float3x3& f2) { return float3x3(_hlslpp_cmpeq1_ps(f1.vec0, f2.vec0), _hlslpp_cmpeq1_ps(f1.vec1, f2.vec1), _hlslpp_cmpeq1_ps(f1.vec2, f2.vec2)); }
+	hlslpp_inline float4x4 operator == (const float4x4& f1, const float4x4& f2)
+	{
+#if defined(HLSLPP_SIMD_REGISTER_FLOAT8)
+		return float4x4(_hlslpp256_cmpeq1_ps(f1.vec0, f2.vec0), _hlslpp256_cmpeq1_ps(f1.vec1, f2.vec1));
+#else
+		return float4x4(_hlslpp_cmpeq1_ps(f1.vec0, f2.vec0), _hlslpp_cmpeq1_ps(f1.vec1, f2.vec1), _hlslpp_cmpeq1_ps(f1.vec2, f2.vec2), _hlslpp_cmpeq1_ps(f1.vec3, f2.vec3));
+#endif
+	}
+
+	hlslpp_inline float2x2 operator != (const float2x2& f1, const float2x2& f2) { return float2x2(_hlslpp_cmpneq1_ps(f1.vec, f2.vec)); }
+	hlslpp_inline float3x3 operator != (const float3x3& f1, const float3x3& f2) { return float3x3(_hlslpp_cmpneq1_ps(f1.vec0, f2.vec0), _hlslpp_cmpneq1_ps(f1.vec1, f2.vec1), _hlslpp_cmpneq1_ps(f1.vec2, f2.vec2)); }
+	hlslpp_inline float4x4 operator != (const float4x4& f1, const float4x4& f2)
+	{
+#if defined(HLSLPP_SIMD_REGISTER_FLOAT8)
+		return float4x4(_hlslpp256_cmpneq1_ps(f1.vec0, f2.vec0), _hlslpp256_cmpneq1_ps(f1.vec1, f2.vec1));
+#else
+		return float4x4(_hlslpp_cmpneq1_ps(f1.vec0, f2.vec0), _hlslpp_cmpneq1_ps(f1.vec1, f2.vec1), _hlslpp_cmpneq1_ps(f1.vec2, f2.vec2), _hlslpp_cmpneq1_ps(f1.vec3, f2.vec3));
+#endif
+	}
+
+	hlslpp_inline float2x2 operator > (const float2x2& f1, const float2x2& f2) { return float2x2(_hlslpp_cmpgt1_ps(f1.vec, f2.vec)); }
+	hlslpp_inline float3x3 operator > (const float3x3& f1, const float3x3& f2) { return float3x3(_hlslpp_cmpgt1_ps(f1.vec0, f2.vec0), _hlslpp_cmpgt1_ps(f1.vec1, f2.vec1), _hlslpp_cmpgt1_ps(f1.vec2, f2.vec2)); }
+	hlslpp_inline float4x4 operator > (const float4x4& f1, const float4x4& f2)
+	{
+#if defined(HLSLPP_SIMD_REGISTER_FLOAT8)
+		return float4x4(_hlslpp256_cmpgt1_ps(f1.vec0, f2.vec0), _hlslpp256_cmpgt1_ps(f1.vec1, f2.vec1));
+#else
+		return float4x4(_hlslpp_cmpgt1_ps(f1.vec0, f2.vec0), _hlslpp_cmpgt1_ps(f1.vec1, f2.vec1), _hlslpp_cmpgt1_ps(f1.vec2, f2.vec2), _hlslpp_cmpgt1_ps(f1.vec3, f2.vec3));
+#endif
+	}
+
+	hlslpp_inline float2x2 operator >= (const float2x2& f1, const float2x2& f2) { return float2x2(_hlslpp_cmpge1_ps(f1.vec, f2.vec)); }
+	hlslpp_inline float3x3 operator >= (const float3x3& f1, const float3x3& f2) { return float3x3(_hlslpp_cmpge1_ps(f1.vec0, f2.vec0), _hlslpp_cmpge1_ps(f1.vec1, f2.vec1), _hlslpp_cmpge1_ps(f1.vec2, f2.vec2)); }
+	hlslpp_inline float4x4 operator >= (const float4x4& f1, const float4x4& f2)
+	{
+#if defined(HLSLPP_SIMD_REGISTER_FLOAT8)
+		return float4x4(_hlslpp256_cmpge1_ps(f1.vec0, f2.vec0), _hlslpp256_cmpge1_ps(f1.vec1, f2.vec1));
+#else
+		return float4x4(_hlslpp_cmpge1_ps(f1.vec0, f2.vec0), _hlslpp_cmpge1_ps(f1.vec1, f2.vec1), _hlslpp_cmpge1_ps(f1.vec2, f2.vec2), _hlslpp_cmpge1_ps(f1.vec3, f2.vec3));
+#endif
+	}
+
+	hlslpp_inline float2x2 operator < (const float2x2& f1, const float2x2& f2) { return float2x2(_hlslpp_cmplt1_ps(f1.vec, f2.vec)); }
+	hlslpp_inline float3x3 operator < (const float3x3& f1, const float3x3& f2) { return float3x3(_hlslpp_cmplt1_ps(f1.vec0, f2.vec0), _hlslpp_cmplt1_ps(f1.vec1, f2.vec1), _hlslpp_cmplt1_ps(f1.vec2, f2.vec2)); }
+	hlslpp_inline float4x4 operator < (const float4x4& f1, const float4x4& f2)
+	{
+#if defined(HLSLPP_SIMD_REGISTER_FLOAT8)
+		return float4x4(_hlslpp256_cmplt1_ps(f1.vec0, f2.vec0), _hlslpp256_cmplt1_ps(f1.vec1, f2.vec1));
+#else
+		return float4x4(_hlslpp_cmplt1_ps(f1.vec0, f2.vec0), _hlslpp_cmplt1_ps(f1.vec1, f2.vec1), _hlslpp_cmplt1_ps(f1.vec2, f2.vec2), _hlslpp_cmplt1_ps(f1.vec3, f2.vec3));
+#endif
+	}
+
+	hlslpp_inline float2x2 operator <= (const float2x2& f1, const float2x2& f2) { return float2x2(_hlslpp_cmple1_ps(f1.vec, f2.vec)); }
+	hlslpp_inline float3x3 operator <= (const float3x3& f1, const float3x3& f2)	{ return float3x3(_hlslpp_cmple1_ps(f1.vec0, f2.vec0), _hlslpp_cmple1_ps(f1.vec1, f2.vec1), _hlslpp_cmple1_ps(f1.vec2, f2.vec2)); }
+	hlslpp_inline float4x4 operator <= (const float4x4& f1, const float4x4& f2)
+	{
+#if defined(HLSLPP_SIMD_REGISTER_FLOAT8)
+		return float4x4(_hlslpp256_cmple1_ps(f1.vec0, f2.vec0), _hlslpp256_cmple1_ps(f1.vec1, f2.vec1));
+#else
+		return float4x4(_hlslpp_cmple1_ps(f1.vec0, f2.vec0), _hlslpp_cmple1_ps(f1.vec1, f2.vec1), _hlslpp_cmple1_ps(f1.vec2, f2.vec2), _hlslpp_cmple1_ps(f1.vec3, f2.vec3));
+#endif
+	}
+
+	hlslpp_inline bool all(const float2x2& f) { return _hlslpp_all4_ps(f.vec); }
+	hlslpp_inline bool all(const float3x3& f) { return _hlslpp_all3_ps(f.vec0) && _hlslpp_all3_ps(f.vec1) && _hlslpp_all3_ps(f.vec2); }
+	hlslpp_inline bool all(const float4x4& f)
+	{
+#if defined(HLSLPP_SIMD_REGISTER_FLOAT8)
+		return _hlslpp256_all8_ps(f.vec0) && _hlslpp256_all8_ps(f.vec1);
+#else
+		return _hlslpp_all4_ps(f.vec0) && _hlslpp_all4_ps(f.vec1) && _hlslpp_all4_ps(f.vec2) && _hlslpp_all4_ps(f.vec3);
+#endif
+	}
+
+	hlslpp_inline bool any(const float2x2& f) { return _hlslpp_any4_ps(f.vec); }
+	hlslpp_inline bool any(const float3x3& f) { return _hlslpp_any3_ps(f.vec0) || _hlslpp_any3_ps(f.vec1) || _hlslpp_any3_ps(f.vec2); }
+	hlslpp_inline bool any(const float4x4& f)
+	{
+#if defined(HLSLPP_SIMD_REGISTER_FLOAT8)
+		return _hlslpp256_any8_ps(f.vec0) || _hlslpp256_any8_ps(f.vec1);
+#else
+		return _hlslpp_any4_ps(f.vec0) || _hlslpp_any4_ps(f.vec1) || _hlslpp_any4_ps(f.vec2) || _hlslpp_any4_ps(f.vec3);
+#endif
+	}
 
 	hlslpp_inline float1 trace(const float2x2& m)
 	{
@@ -1964,7 +2272,7 @@ namespace hlslpp
 		return float1(_hlslpp_trace_3x3_ps(m.vec0, m.vec1, m.vec2));
 	}
 
-	hlslpp_inline float1 trace(const float4x4& m)
+	inline float1 trace(const float4x4& m)
 	{
 #if defined(HLSLPP_SIMD_REGISTER_FLOAT8)
 
@@ -2001,7 +2309,7 @@ namespace hlslpp
 		return float3x3(vec0, vec1, vec2);
 	}
 
-	hlslpp_inline float4x4 transpose(const float4x4& m)
+	inline float4x4 transpose(const float4x4& m)
 	{
 #if defined(HLSLPP_SIMD_REGISTER_FLOAT8)
 
@@ -2180,7 +2488,7 @@ namespace hlslpp
 		return float3x3(vec0, vec1, vec2);
 	}
 
-	hlslpp_inline  float4x4 inverse(const float4x4& m)
+	hlslpp_inline float4x4 inverse(const float4x4& m)
 	{
 		// For AVX, trying to convert the SSE implementation results in many wide shuffles and combinations
 		// that result in a slower algorithm. In fact, this straightforward approach is actually faster than
@@ -2202,73 +2510,8 @@ namespace hlslpp
 
 #endif
 
-		n128 r0y_r1y_r0x_r1x = _hlslpp_movelh_ps(m_vec1, m_vec0);
-		n128 r0z_r1z_r0w_r1w = _hlslpp_movelh_ps(m_vec2, m_vec3);
-		n128 r2y_r3y_r2x_r3x = _hlslpp_movehl_ps(m_vec0, m_vec1);
-		n128 r2z_r3z_r2w_r3w = _hlslpp_movehl_ps(m_vec3, m_vec2);
-
-		n128 r1y_r2y_r1x_r2x = _hlslpp_shuf_yzyz_ps(m_vec1, m_vec0);
-		n128 r1z_r2z_r1w_r2w = _hlslpp_shuf_yzyz_ps(m_vec2, m_vec3);
-		n128 r3y_r0y_r3x_r0x = _hlslpp_shuf_wxwx_ps(m_vec1, m_vec0);
-		n128 r3z_r0z_r3w_r0w = _hlslpp_shuf_wxwx_ps(m_vec2, m_vec3);
-
-		n128 inner12_23 = _hlslpp_sub_ps(_hlslpp_mul_ps(r1y_r2y_r1x_r2x, r2z_r3z_r2w_r3w), _hlslpp_mul_ps(r1z_r2z_r1w_r2w, r2y_r3y_r2x_r3x));
-		n128 inner02_13 = _hlslpp_sub_ps(_hlslpp_mul_ps(r0y_r1y_r0x_r1x, r2z_r3z_r2w_r3w), _hlslpp_mul_ps(r0z_r1z_r0w_r1w, r2y_r3y_r2x_r3x));
-		n128 inner30_01 = _hlslpp_sub_ps(_hlslpp_mul_ps(r3z_r0z_r3w_r0w, r0y_r1y_r0x_r1x), _hlslpp_mul_ps(r3y_r0y_r3x_r0x, r0z_r1z_r0w_r1w));
-
-		n128 inner12 = _hlslpp_shuf_xzzx_ps(inner12_23, inner12_23);
-		n128 inner23 = _hlslpp_shuf_ywwy_ps(inner12_23, inner12_23);
-
-		n128 inner02 = _hlslpp_shuf_xzzx_ps(inner02_13, inner02_13);
-		n128 inner13 = _hlslpp_shuf_ywwy_ps(inner02_13, inner02_13);
-
-		n128 inner30 = _hlslpp_shuf_xzzx_ps(inner30_01, inner30_01);
-		n128 inner01 = _hlslpp_shuf_ywwy_ps(inner30_01, inner30_01);
-
-		n128 r0_wzyx = _hlslpp_shuf_zxxz_ps(r0z_r1z_r0w_r1w, r0y_r1y_r0x_r1x);
-		n128 r1_wzyx = _hlslpp_shuf_wyyw_ps(r0z_r1z_r0w_r1w, r0y_r1y_r0x_r1x);
-		n128 r2_wzyx = _hlslpp_shuf_zxxz_ps(r2z_r3z_r2w_r3w, r2y_r3y_r2x_r3x);
-		n128 r3_wzyx = _hlslpp_shuf_wyyw_ps(r2z_r3z_r2w_r3w, r2y_r3y_r2x_r3x);
-		n128 r0_xyzw = _hlslpp_shuf_zxxz_ps(r0y_r1y_r0x_r1x, r0z_r1z_r0w_r1w);
-
-		n128 minors0 = 
-			_hlslpp_add_ps(
-				_hlslpp_sub_ps(
-					_hlslpp_mul_ps(r3_wzyx, inner12), 
-					_hlslpp_mul_ps(r2_wzyx, inner13)),
-					_hlslpp_mul_ps(r1_wzyx, inner23));
-
-		n128 minors1 = 
-			_hlslpp_sub_ps(
-			_hlslpp_sub_ps(
-				_hlslpp_mul_ps(r2_wzyx, inner30), 
-				_hlslpp_mul_ps(r0_wzyx, inner23)), 
-				_hlslpp_mul_ps(r3_wzyx, inner02));
-
-		n128 minors2 = 
-			_hlslpp_sub_ps(
-			_hlslpp_sub_ps(
-				_hlslpp_mul_ps(r0_wzyx, inner13), 
-				_hlslpp_mul_ps(r1_wzyx, inner30)), 
-				_hlslpp_mul_ps(r3_wzyx, inner01));
-
-		n128 minors3 = 
-			_hlslpp_add_ps(
-			_hlslpp_sub_ps(
-				_hlslpp_mul_ps(r1_wzyx, inner02),
-				_hlslpp_mul_ps(r0_wzyx, inner12)), 
-				_hlslpp_mul_ps(r2_wzyx, inner01));
-
-		n128 denom = _hlslpp_mul_ps(r0_xyzw, minors0);
-		denom = _hlslpp_add_ps(denom, _hlslpp_shuf_yxwz_ps(denom, denom));	// x+y		x+y			z+w			z+w
-		denom = _hlslpp_sub_ps(denom, _hlslpp_shuf_zzxx_ps(denom, denom));	// x+y-z-w  x+y-z-w		z+w-x-y		z+w-x-y
-
-		n128 rcp_denom_ppnn = _hlslpp_div_ps(f4_1, denom);
-
-		n128 vec0 = _hlslpp_mul_ps(minors0, rcp_denom_ppnn);
-		n128 vec1 = _hlslpp_mul_ps(minors1, rcp_denom_ppnn);
-		n128 vec2 = _hlslpp_mul_ps(minors2, rcp_denom_ppnn);
-		n128 vec3 = _hlslpp_mul_ps(minors3, rcp_denom_ppnn);
+		n128 vec0, vec1, vec2, vec3;
+		_hlslpp_inv_4x4_ps(m_vec0, m_vec1, m_vec2, m_vec3, vec0, vec1, vec2, vec3);
 
 #if defined(HLSLPP_SIMD_REGISTER_FLOAT8)
 
@@ -2281,9 +2524,60 @@ namespace hlslpp
 #endif
 	}
 
+	hlslpp_inline void store(const float1x1& m, float* f) { _hlslpp_store1_ps(f, m.vec); }
+	hlslpp_inline void store(const float1x2& m, float* f) { _hlslpp_store2_ps(f, m.vec); }
+	hlslpp_inline void store(const float2x1& m, float* f) { _hlslpp_store2_ps(f, m.vec); }
+	hlslpp_inline void store(const float1x3& m, float* f) { _hlslpp_store3_ps(f, m.vec); }
+	hlslpp_inline void store(const float3x1& m, float* f) { _hlslpp_store3_ps(f, m.vec); }
+	hlslpp_inline void store(const float1x4& m, float* f) { _hlslpp_store4_ps(f, m.vec); }
+	hlslpp_inline void store(const float4x1& m, float* f) { _hlslpp_store4_ps(f, m.vec); }
+
+	hlslpp_inline void store(const float2x2& m, float* f) { _hlslpp_store4_ps(f, m.vec); }
+	hlslpp_inline void store(const float2x3& m, float* f)
+	{
+		_hlslpp_store3_ps(f + 0, m.vec0);
+		_hlslpp_store3_ps(f + 3, m.vec1);
+	}
+	hlslpp_inline void store(const float2x4& m, float* f)
+	{
+		_hlslpp_store4_ps(f + 0, m.vec0);
+		_hlslpp_store4_ps(f + 4, m.vec1);
+	}
+
+	hlslpp_inline void store(const float3x2& m, float* f)
+	{
+		_hlslpp_store4_ps(f, _hlslpp_unpacklo_ps(m.vec0, m.vec1));
+		_hlslpp_store2_ps(f, _hlslpp_unpackhi_ps(m.vec0, m.vec1));
+	}
+
+	hlslpp_inline void store(const float4x2& m, float* f)
+	{
+		_hlslpp_store4_ps(f, _hlslpp_unpacklo_ps(m.vec0, m.vec1));
+		_hlslpp_store4_ps(f, _hlslpp_unpackhi_ps(m.vec0, m.vec1));
+	}
+
 	hlslpp_inline void store(const float3x3& m, float* f)
 	{
 		_hlslpp_store3x3_ps(f, m.vec0, m.vec1, m.vec2);
+	}
+
+	hlslpp_inline void store(const float3x4& m, float* f)
+	{
+		_hlslpp_store4_ps(f, m.vec0);
+		_hlslpp_store4_ps(f + 4, m.vec1);
+		_hlslpp_store4_ps(f + 8, m.vec2);
+	}
+
+	hlslpp_inline void store(const float4x3& m, float* f)
+	{
+		float tmp[12];
+		_hlslpp_store4_ps(tmp + 0, m.vec0);
+		_hlslpp_store4_ps(tmp + 4, m.vec1);
+		_hlslpp_store4_ps(tmp + 8, m.vec2);
+		f[0] = tmp[0]; f[ 1] = tmp[4]; f[ 2] = tmp[8];
+		f[3] = tmp[1]; f[ 4] = tmp[5]; f[ 5] = tmp[9];
+		f[6] = tmp[2]; f[ 7] = tmp[6]; f[ 8] = tmp[10];
+		f[9] = tmp[3]; f[10] = tmp[7]; f[11] = tmp[11];
 	}
 
 	hlslpp_inline void store(const float4x4& m, float* f)
