@@ -36,9 +36,11 @@ namespace vg::gfx
             {
                 ResourceTransitionFlags flags : 8;
                 ResourceState           begin : 4;
-                ResourceState           end : 4;
+                ResourceState           end   : 4;
             };
-            core::u8 bits;
+            core::u16 bits;
         };
     };
+
+    VG_STATIC_ASSERT(sizeof(ResourceTransitionDesc) == sizeof(core::u16), "Invalid sizeof(ResourceTransitionDesc)");
 }
