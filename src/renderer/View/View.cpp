@@ -61,6 +61,15 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
+    // Toolmode is always enabled for editor views
+    //--------------------------------------------------------------------------------------
+    bool View::isToolmode() const
+    {
+        const auto options = DisplayOptions::get();
+        return getViewID().target == gfx::ViewTarget::Editor || options->isToolModeEnabled();
+    }
+
+    //--------------------------------------------------------------------------------------
     void View::SetRenderTarget(ITexture * _renderTarget)
     {
         setRenderTarget((Texture*)_renderTarget);
@@ -244,6 +253,12 @@ namespace vg::renderer
     const core::string View::GetFrameGraphID(const core::string & _name) const
     {
         return RenderPassContext::MakeFrameGraphID(_name, m_viewID);
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool View::IsToolmode() const 
+    {
+        return isToolmode();
     }
 
     //--------------------------------------------------------------------------------------

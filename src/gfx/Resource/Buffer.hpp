@@ -1,5 +1,9 @@
 #include VG_GFXAPI_IMPL(Buffer)
 
+#if !VG_ENABLE_INLINE
+#include "Buffer.inl"
+#endif
+
 namespace vg::gfx
 {
     namespace base
@@ -62,6 +66,11 @@ namespace vg::gfx
     {
         auto * device = Device::get();
         auto * bindlessTable = device->getBindlessTable();
-        bindlessTable->freeBindlessBufferHandle(m_bufferHandle);
+
+        if (m_bufferHandle.isValid())
+            bindlessTable->freeBindlessBufferHandle(m_bufferHandle);
+
+        if (m_rwBufferHandle.isValid())
+            bindlessTable->freeBindlessRWBufferHandle(m_rwBufferHandle);
     }
 }

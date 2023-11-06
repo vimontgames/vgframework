@@ -736,5 +736,11 @@
     <None Include="PipelineState\Compute\vulkan\ComputePipelineState_vulkan.inl">
       <Filter>PipelineState\Compute\vulkan</Filter>
     </None>
+    <None Include="Resource\Buffer.inl">
+      <Filter>Resource</Filter>
+    </None>
+    <None Include="Resource\Texture.inl">
+      <Filter>Resource</Filter>
+    </None>
   </ItemGroup>
 </Project>

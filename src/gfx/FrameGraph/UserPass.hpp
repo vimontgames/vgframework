@@ -49,23 +49,26 @@ namespace vg::gfx
     //--------------------------------------------------------------------------------------
     // If resource already exist, it must have exactly the same descriptor
     //--------------------------------------------------------------------------------------
-    void UserPass::createTexture(const FrameGraphResourceID & _resID, FrameGraphTextureResourceDesc & _resDesc)
+    FrameGraphTextureResource * UserPass::createTexture(const FrameGraphResourceID & _resID, FrameGraphTextureResourceDesc & _resDesc)
     {
         _resDesc.transient = true;
         FrameGraphTextureResource * res = m_frameGraph->addTextureResource(_resID, _resDesc);
         VG_ASSERT(res);
+        return res;
     }
 
     //--------------------------------------------------------------------------------------
     void UserPass::createRenderTarget(const FrameGraphResourceID & _resID, FrameGraphTextureResourceDesc & _resDesc)
     {
-        createTexture(_resID, _resDesc);
+        FrameGraphTextureResource * res = createTexture(_resID, _resDesc);
+        res->setCurrentState(ResourceState::RenderTarget);
     }
 
     //--------------------------------------------------------------------------------------
     void UserPass::createDepthStencil(const FrameGraphResourceID & _resID, FrameGraphTextureResourceDesc & _resDesc)
     {
-        createTexture(_resID, _resDesc);
+        FrameGraphTextureResource * res = createTexture(_resID, _resDesc);
+        res->setCurrentState(ResourceState::RenderTarget);
     }
 
     //--------------------------------------------------------------------------------------
@@ -76,18 +79,20 @@ namespace vg::gfx
     }
 
     //--------------------------------------------------------------------------------------
-    void UserPass::createBuffer(const FrameGraphResourceID & _resID, FrameGraphBufferResourceDesc & _resDesc)
+    FrameGraphBufferResource * UserPass::createBuffer(const FrameGraphResourceID & _resID, FrameGraphBufferResourceDesc & _resDesc)
     {
         _resDesc.transient = true;
         FrameGraphBufferResource * res = m_frameGraph->addBufferResource(_resID, _resDesc);
         VG_ASSERT(res);
+        return res;
     }
 
     //--------------------------------------------------------------------------------------
     void UserPass::createRWBuffer(const FrameGraphResourceID & _resID, FrameGraphBufferResourceDesc & _resDesc)
     {
         _resDesc.uav = true;
-        createBuffer(_resID, _resDesc);
+        FrameGraphBufferResource * res = createBuffer(_resID, _resDesc);
+        res->setCurrentState(ResourceState::UnorderedAccess);
     }
     
 	//--------------------------------------------------------------------------------------
@@ -166,7 +171,8 @@ namespace vg::gfx
     Texture * UserPass::getRenderTarget(const FrameGraphResourceID & _resID) const
     {
         FrameGraphTextureResource * res = m_frameGraph->getTextureResource(_resID);
-        VG_ASSERT(res);
+        VG_ASSERT(res, "RenderTarget \"%s\" does not exist in FrameGraph", _resID.c_str());
+        VG_ASSERT(res->getTexture(), "RenderTarget \"%s\" exists in FrameGraph but is not allocated", _resID.c_str());
         return res->getTexture();
     }
 
@@ -176,8 +182,18 @@ namespace vg::gfx
     Texture * UserPass::getRWTexture(const FrameGraphResourceID & _resID) const
     {
         FrameGraphTextureResource * res = m_frameGraph->getTextureResource(_resID);
-        VG_ASSERT(res);
+        VG_ASSERT(res, "RWTexture \"%s\" does not exist in FrameGraph", _resID.c_str());
+        VG_ASSERT(res->getTexture(), "RWTexture \"%s\" exists in FrameGraph but is not allocated", _resID.c_str());
         return res->getTexture();
+    }
+
+    //--------------------------------------------------------------------------------------
+    Buffer * UserPass::getRWBuffer(const FrameGraphResourceID & _resID) const
+    {
+        FrameGraphBufferResource * res = m_frameGraph->getBufferResource(_resID);
+        VG_ASSERT(res,"RWBuffer \"%s\" does not exist in FrameGraph", _resID.c_str());
+        VG_ASSERT(res->getBuffer(), "RWBuffer \"%s\" exists in FrameGraph but is not allocated", _resID.c_str());
+        return res->getBuffer();
     }
 
     //--------------------------------------------------------------------------------------

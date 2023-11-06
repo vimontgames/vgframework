@@ -3,6 +3,10 @@
 #include "core/Math/Math.h"
 #include "core/Object/EnumHelper.h"
 
+#if !VG_ENABLE_INLINE
+#include "Texture.inl"
+#endif
+
 namespace vg::gfx
 {
 	namespace base

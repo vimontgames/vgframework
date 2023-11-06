@@ -110,6 +110,8 @@
     <ClInclude Include="RenderPass\RenderContext.h" />
     <ClInclude Include="RenderPass\RenderObjects\DepthOnly\DepthOnlyPass.h" />
     <ClInclude Include="RenderPass\RenderObjects\DepthOnly\DepthOnlyPass.hpp" />
+    <ClInclude Include="RenderPass\RenderObjects\Editor\EditorPass.h" />
+    <ClInclude Include="RenderPass\RenderObjects\Editor\EditorPass.hpp" />
     <ClInclude Include="RenderPass\RenderObjects\Forward\ForwardPass.h" />
     <ClInclude Include="RenderPass\RenderObjects\Forward\ForwardPass.hpp" />
     <ClInclude Include="RenderPass\RenderObjects\RenderObjectsPass.h" />

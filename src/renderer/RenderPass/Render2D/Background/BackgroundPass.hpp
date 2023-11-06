@@ -65,17 +65,6 @@ namespace vg::renderer
         const auto depthStencilID = _renderContext.getFrameGraphID("DepthStencil");
         createDepthStencil(depthStencilID, depthStencilDesc);
         writeDepthStencil(depthStencilID);
-
-        //if (options->isToolModeEnabled())
-        //{
-        //    FrameGraphBufferResourceDesc toolmodeRWBufferDesc;
-        //                                 toolmodeRWBufferDesc.elementSize = 16;
-        //                                 toolmodeRWBufferDesc.elementCount = 1;
-        //    
-        //    const auto toolmodeRWBufferID = _renderContext.getFrameGraphID("ToolmodeRWBuffer");
-        //    createRWBuffer(toolmodeRWBufferID, toolmodeRWBufferDesc);
-        //    writeRWBuffer(toolmodeRWBufferID);
-        //}
     }
 
     //--------------------------------------------------------------------------------------

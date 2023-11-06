@@ -17,17 +17,17 @@ namespace vg::gfx
             Buffer(const BufferDesc & _bufDesc, const core::string & _name, const void * _initData);
             ~Buffer();
 
-            const BufferDesc & getBufDesc() const { return m_bufDesc; }
-
-            const gfx::Resource & getResource() const { return m_resource; }
-            gfx::Resource & getResource() { return m_resource; }
-
-            const gfx::BindlessBufferHandle getBufferHandle() const { return m_bufferHandle; }
+            VG_INLINE const BufferDesc &                getBufDesc          () const;
+            VG_INLINE const gfx::Resource &             getResource         () const;
+            VG_INLINE gfx::Resource &                   getResource         ();
+            VG_INLINE const gfx::BindlessBufferHandle   getBufferHandle     () const;
+            VG_INLINE const gfx::BindlessRWBufferHandle getRWBufferHandle   () const;
 
         protected:
-            const BufferDesc                    m_bufDesc;
-            gfx::Resource                       m_resource;
-            gfx::BindlessBufferHandle           m_bufferHandle;
+            const BufferDesc                            m_bufDesc;
+            gfx::Resource                               m_resource;
+            gfx::BindlessBufferHandle                   m_bufferHandle;
+            gfx::BindlessRWBufferHandle                 m_rwBufferHandle;
         };
     }
 }
@@ -47,3 +47,7 @@ namespace vg::gfx
         ~Buffer();
     };
 }
+
+#if VG_ENABLE_INLINE
+#include "Buffer.inl"
+#endif

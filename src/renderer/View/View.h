@@ -68,6 +68,7 @@ namespace vg::renderer
         core::uint2                         GetRelativeMousePos         () const override;
 
         const core::string                  GetFrameGraphID             (const core::string & _name) const final override;
+        bool                                IsToolmode                  () const override;
 
         virtual void                        RegisterFrameGraph          (const gfx::RenderPassContext & _rc, gfx::FrameGraph & _frameGraph);
 
@@ -94,6 +95,8 @@ namespace vg::renderer
 
         void                                setFlags                    (Flags _flagsToSet, Flags _flagsToRemove = (Flags)0);
         Flags                               getFlags                    () const;
+
+        bool                                isToolmode                  () const;
 
     protected:
         void                                initializePickingBuffer     ();

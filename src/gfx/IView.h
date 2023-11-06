@@ -111,5 +111,6 @@ namespace vg::gfx
         virtual core::uint2             GetRelativeMousePos () const = 0;
 
         virtual const core::string      GetFrameGraphID     (const core::string & _name) const = 0;
+        virtual bool                    IsToolmode          () const = 0;
     };
 }

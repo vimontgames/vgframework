@@ -19,17 +19,20 @@ struct ViewConstants
     }
     #endif
     
-    void            setScreenSize   (uint2 _screenSize)     { screenSizeAndMousePos.xy = _screenSize; }
-    uint2           getScreenSize   ()                      { return screenSizeAndMousePos.xy; }
+    void            setScreenSize           (uint2 _screenSize)     { screenSizeAndMousePos.xy = _screenSize; }
+    uint2           getScreenSize           ()                      { return screenSizeAndMousePos.xy; }
     
-    void            setMousePos     (uint2 _mousePos)       { screenSizeAndMousePos.zw = _mousePos; }
-    uint2           getMousePos     ()                      { return screenSizeAndMousePos.zw; }
+    void            setMousePos             (uint2 _mousePos)       { screenSizeAndMousePos.zw = _mousePos; }
+    uint2           getMousePos             ()                      { return screenSizeAndMousePos.zw; }
     
-    void            setDisplayMode  (DisplayMode _mode)     { debugDisplay.x = (uint)_mode; }
-    DisplayMode     getDisplayMode  ()                      { return (DisplayMode)uint(debugDisplay.x); }
+    void            setDisplayMode          (DisplayMode _mode)     { debugDisplay.x = (uint)_mode; }
+    DisplayMode     getDisplayMode          ()                      { return (DisplayMode)uint(debugDisplay.x); }
     
-    void            setDisplayFlags (DisplayFlags _flags)   { debugDisplay.y = (uint)_flags; }
-    DisplayFlags    getDisplayFlags ()                      { return (DisplayFlags)uint(debugDisplay.y); }
+    void            setDisplayFlags         (DisplayFlags _flags)   { debugDisplay.y = (uint)_flags; }
+    DisplayFlags    getDisplayFlags         ()                      { return (DisplayFlags)uint(debugDisplay.y); }
+    
+    void            setToolmodeRWBufferID   (uint _id)              { debugDisplay.z = (debugDisplay.z & ~0x0000FFFF) | _id; }
+    uint            getToolmodeRWBufferID   ()                      { return debugDisplay.z & 0x0000FFFF; }
     
     uint4           screenSizeAndMousePos;
     uint4           debugDisplay;

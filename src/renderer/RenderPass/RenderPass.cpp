@@ -29,6 +29,7 @@ using namespace vg::gfx;
 #include "RenderObjects/RenderObjectsPass.hpp"
 #include "RenderObjects/DepthOnly/DepthOnlyPass.hpp"
 #include "RenderObjects/Forward/ForwardPass.hpp"
+#include "RenderObjects/Editor/EditorPass.hpp"
 
 #include "Compute/ComputePass.hpp"
 #include "Compute/ComputePostProcess/ComputePostProcessPass.hpp"

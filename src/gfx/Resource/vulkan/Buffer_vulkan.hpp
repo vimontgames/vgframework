@@ -46,6 +46,9 @@ namespace vg::gfx::vulkan
         if (asBool(_bufDesc.resource.m_bindFlags & BindFlags::IndexBuffer))
             vkBufferCreate.usage |= VK_BUFFER_USAGE_INDEX_BUFFER_BIT;
 
+        if (asBool(_bufDesc.resource.m_bindFlags & BindFlags::UnorderedAccess))
+            vkBufferCreate.usage |= VK_BUFFER_USAGE_STORAGE_TEXEL_BUFFER_BIT;
+
         VkBuffer vkBuffer;
         VmaAllocation vmaAlloc;
         VmaAllocationInfo vmaAllocInfo = {};
@@ -67,7 +70,7 @@ namespace vg::gfx::vulkan
             VG_ASSERT_VULKAN(vkCreateBufferView(device->getVulkanDevice(), &vkBufferViewDesc, nullptr, &m_vkBufferView));
 
             BindlessTable * bindlessTable = device->getBindlessTable();
-            m_bufferHandle = bindlessTable->allocBindlessBufferHandle(static_cast<gfx::Buffer*>(this), _reservedSlot);
+            m_bufferHandle = bindlessTable->allocBindlessBufferHandle(static_cast<gfx::Buffer *>(this), _reservedSlot);
 
             VkDescriptorBufferInfo vkBufferInfo = {};
             vkBufferInfo.buffer = m_resource.getVulkanBuffer();
@@ -102,6 +105,29 @@ namespace vg::gfx::vulkan
                 }
                 uploadBuffer->unmap(static_cast<gfx::Buffer*>(this), dst);
             }
+        }
+
+        if (asBool(BindFlags::UnorderedAccess & _bufDesc.resource.m_bindFlags))
+        {
+            BindlessTable * bindlessTable = device->getBindlessTable();
+            m_rwBufferHandle = bindlessTable->allocBindlessRWBufferHandle(static_cast<gfx::Buffer *>(this));
+
+            VkDescriptorBufferInfo vkBufferInfo = {};
+            vkBufferInfo.buffer = m_resource.getVulkanBuffer();
+            vkBufferInfo.offset = 0;
+            vkBufferInfo.range = _bufDesc.size();
+
+            VkWriteDescriptorSet writes = {};
+            writes.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+            writes.dstBinding = BINDLESS_RWBUFFER_BINDING;
+            writes.descriptorCount = 1;
+            writes.descriptorType = VK_DESCRIPTOR_TYPE_STORAGE_TEXEL_BUFFER;
+            writes.pBufferInfo = &vkBufferInfo;
+            writes.pTexelBufferView = &m_vkBufferView;
+            writes.dstSet = device->getVulkanBindlessDescriptors();
+            writes.dstArrayElement = m_rwBufferHandle - BINDLESS_RWBUFFER_START;
+
+            vkUpdateDescriptorSets(device->getVulkanDevice(), 1, &writes, 0, nullptr);
         }
     }
 

@@ -49,6 +49,8 @@ namespace vg::gfx
         };
     };
 
+    VG_STATIC_ASSERT(sizeof(RenderTargetBlend) == sizeof(core::u32), "Invalid sizeof(RenderTargetBlend)");
+
     enum class BlendStateFlags : core::u32
     {
         None                = 0x00000000,

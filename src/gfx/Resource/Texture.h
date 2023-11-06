@@ -13,27 +13,27 @@ namespace vg::gfx
             using super = ITexture;
 
 		public:
-            static core::u32 getPixelFormatSize(PixelFormat _format);
-            static bool isDepthStencilFormat(PixelFormat _format);
-            static core::u32 computeMaxMipmapCount(const TextureDesc & _texDesc);
-
 			Texture(const TextureDesc & _texDesc, const core::string & _name, const void * _initData);
 			~Texture();
 
-            virtual core::u16 GetWidth() const final override;
-            virtual core::u16 GetHeight() const final override;
+            virtual core::u16								GetWidth				() const final override;
+            virtual core::u16								GetHeight				() const final override;
 
-			VG_INLINE const TextureDesc & getTexDesc() const { return m_texDesc; }
-            VG_INLINE const gfx::Resource & getResource() const { return m_resource; }
-            VG_INLINE gfx::Resource & getResource() { return m_resource; }
-            VG_INLINE const gfx::BindlessTextureHandle getTextureHandle() const { return m_textureHandle; }
-			VG_INLINE const gfx::BindlessRWTextureHandle getRWTextureHandle() const { return m_rwTextureHandle; }
+			VG_INLINE const TextureDesc &					getTexDesc				() const;
+			VG_INLINE const gfx::Resource &					getResource				() const;
+			VG_INLINE gfx::Resource &						getResource				();
+			VG_INLINE const gfx::BindlessTextureHandle		getTextureHandle		() const;
+			VG_INLINE const gfx::BindlessRWTextureHandle	getRWTextureHandle		() const;
+
+            static core::u32								getPixelFormatSize		(PixelFormat _format);
+            static bool										isDepthStencilFormat	(PixelFormat _format);
+            static core::u32								computeMaxMipmapCount	(const TextureDesc & _texDesc);
 			
         protected:
-			const TextureDesc				m_texDesc;
-            gfx::Resource					m_resource;
-            gfx::BindlessTextureHandle		m_textureHandle;
-			gfx::BindlessRWTextureHandle	m_rwTextureHandle;
+			const TextureDesc								m_texDesc;
+            gfx::Resource									m_resource;
+            gfx::BindlessTextureHandle						m_textureHandle;
+			gfx::BindlessRWTextureHandle					m_rwTextureHandle;
 		};
 	}
 }
@@ -59,3 +59,7 @@ namespace vg::gfx
         static Texture * createFromImporterData(const TextureImporterData & _data);
 	};
 }
+
+#if VG_ENABLE_INLINE
+#include "Texture.inl"
+#endif

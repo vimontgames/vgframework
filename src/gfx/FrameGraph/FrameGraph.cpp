@@ -142,7 +142,7 @@ namespace vg::gfx
         }
         else
         {
-            VG_ASSERT(_type == it->second->getType());
+            VG_ASSERT(_type == it->second->getType(), "Resource \"%s\" has type \"%s\" but \"%s\" is requested", _resID.c_str(), asString(it->second->getType()).c_str(), asString(_type).c_str());
             return static_cast<T*>(it->second);
         }
 
@@ -610,7 +610,6 @@ namespace vg::gfx
                         {
                             Texture * tex = createRWTextureFromPool(textureResourceDesc);
                             res->setTexture(tex);
-                            //res->setCurrentState(ResourceState::UnorderedAccess); // Do *NOT* change this state during 'Render' but only during 'Build'
                         }
                     }
                 }
@@ -627,7 +626,6 @@ namespace vg::gfx
                         {
                             Buffer * buffer = createRWBufferFromPool(bufferResourceDesc);
                             res->setBuffer(buffer);
-                            //res->setCurrentState(ResourceState::UnorderedAccess);
                         }
                     }
                 }
@@ -644,7 +642,6 @@ namespace vg::gfx
                         {
                             Texture * tex = createRenderTargetFromPool(textureResourceDesc);
                             res->setTexture(tex);
-                            //res->setCurrentState(ResourceState::RenderTarget);
                         }
                     }
                 }

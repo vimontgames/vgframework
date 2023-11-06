@@ -42,7 +42,7 @@ namespace vg::gfx::dx12
             srvDesc.Buffer.FirstElement = 0;
             srvDesc.Buffer.NumElements = _bufDesc.size() / sizeof(u32);
             srvDesc.Buffer.StructureByteStride = 0;// _bufDesc.elementSize;
-            srvDesc.Buffer.Flags = D3D12_BUFFER_SRV_FLAG_RAW; // D3D12_BUFFER_SRV_FLAG_NONE;
+            srvDesc.Buffer.Flags = D3D12_BUFFER_SRV_FLAG_RAW;
 
             VG_ASSERT(m_resource.getd3d12BufferResource());
 
@@ -51,6 +51,23 @@ namespace vg::gfx::dx12
 
             D3D12_CPU_DESCRIPTOR_HANDLE d3d12DescriptorHandle = bindlessTable->getd3d12CPUDescriptorHandle(m_bufferHandle);
             d3d12device->CreateShaderResourceView(m_resource.getd3d12BufferResource(), &srvDesc, d3d12DescriptorHandle);
+        }
+
+        if (asBool(BindFlags::UnorderedAccess & _bufDesc.resource.m_bindFlags))
+        {
+            BindlessTable * bindlessTable = device->getBindlessTable();
+            m_rwBufferHandle = bindlessTable->allocBindlessRWBufferHandle(static_cast<gfx::Buffer *>(this));
+            D3D12_CPU_DESCRIPTOR_HANDLE d3d12RWBufferDescriptorHandle = bindlessTable->getd3d12CPUDescriptorHandle(m_rwBufferHandle);
+
+            D3D12_UNORDERED_ACCESS_VIEW_DESC uavDesc = {};
+            uavDesc.Format = DXGI_FORMAT_R32_TYPELESS;
+            uavDesc.ViewDimension = D3D12_UAV_DIMENSION_BUFFER;
+            uavDesc.Buffer.FirstElement = 0;
+            uavDesc.Buffer.NumElements = _bufDesc.size() / sizeof(u32);
+            uavDesc.Buffer.StructureByteStride = 0;
+            uavDesc.Buffer.Flags = D3D12_BUFFER_UAV_FLAG_RAW;
+            d3d12device->CreateUnorderedAccessView(m_resource.getd3d12BufferResource(), nullptr, &uavDesc, d3d12RWBufferDescriptorHandle);
+            bindlessTable->updated3d12descriptor(getRWBufferHandle());
         }
 
         if (nullptr != _initData)

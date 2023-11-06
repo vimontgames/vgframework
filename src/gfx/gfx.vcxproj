@@ -234,6 +234,8 @@
     <None Include="PipelineState\Compute\vulkan\ComputePipelineState_vulkan.inl" />
     <None Include="PipelineState\Graphic\dx12\GraphicPipelineState_dx12.inl" />
     <None Include="PipelineState\Graphic\vulkan\GraphicPipelineState_vulkan.inl" />
+    <None Include="Resource\Buffer.inl" />
+    <None Include="Resource\Texture.inl" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>
