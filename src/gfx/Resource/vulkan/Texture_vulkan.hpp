@@ -142,7 +142,7 @@ namespace vg::gfx::vulkan
             }
             else if (asBool(BindFlags::UnorderedAccess & _texDesc.resource.m_bindFlags))
             {
-                imgDesc.tiling = VK_IMAGE_TILING_LINEAR;
+                imgDesc.tiling = VK_IMAGE_TILING_OPTIMAL;
                 imgDesc.usage = VK_IMAGE_USAGE_TRANSFER_DST_BIT;
                 imgDesc.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
             }
