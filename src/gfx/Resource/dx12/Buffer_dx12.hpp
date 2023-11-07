@@ -12,10 +12,22 @@ namespace vg::gfx::dx12
 
         D3D12_RESOURCE_STATES resourceState;
 
-        if (asBool(Usage::Upload & _bufDesc.resource.m_usage))
-            resourceState = D3D12_RESOURCE_STATE_GENERIC_READ;
-        else
-            resourceState = D3D12_RESOURCE_STATE_COPY_DEST;
+        const auto usage = _bufDesc.resource.m_usage;
+        switch (usage)
+        {
+            case Usage::Upload:
+                resourceState = D3D12_RESOURCE_STATE_GENERIC_READ;
+                break;
+
+            case Usage::Default:
+                resourceState = D3D12_RESOURCE_STATE_GENERIC_READ;
+                break;
+
+            case Usage::Staging:
+                resourceState = D3D12_RESOURCE_STATE_COPY_DEST;
+                break;
+
+        }
 
         if (asBool(BindFlags::UnorderedAccess & _bufDesc.resource.m_bindFlags))
         {

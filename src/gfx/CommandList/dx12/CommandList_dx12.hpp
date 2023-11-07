@@ -489,20 +489,7 @@ namespace vg::gfx::dx12
         const auto srcUsage = _src->getBufDesc().resource.m_usage;
         const auto dstUsage = _dst->getBufDesc().resource.m_usage;
 
-        /*if (dstUsage == Usage::Staging)
-        {
-            // transition src to copy source state
-            D3D12_RESOURCE_BARRIER barrier;
-            barrier.Transition.pResource = _src->getResource().getd3d12BufferResource();
-            barrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
-            barrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
-            barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_COPY_DEST;
-            barrier.Transition.StateAfter = D3D12_RESOURCE_STATE_COPY_SOURCE;
-            barrier.Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
-            
-            m_d3d12graphicsCmdList->ResourceBarrier(1, &barrier);
-        }
-        else*/ if (srcUsage == Usage::Upload)
+        if (srcUsage == Usage::Upload)
         {
             // Generic read to copy dest barrier
             D3D12_RESOURCE_BARRIER barrier;

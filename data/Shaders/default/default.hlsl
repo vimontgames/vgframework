@@ -150,25 +150,11 @@ PS_Output PS_Forward(VS_Output _input)
     // test picking
     uint toolmodeRWBufferID = viewConstants.getToolmodeRWBufferID();
     if (0xFFFF != toolmodeRWBufferID)
-    {
-        getRWBuffer(viewConstants.getToolmodeRWBufferID())[0] = uint4(viewConstants.getMousePos(),viewConstants.getScreenSize());
+    {   
+        StoreU4( getRWBuffer(viewConstants.getToolmodeRWBufferID()), 0, uint4(viewConstants.getMousePos(),viewConstants.getScreenSize()) );
     }
     
     #endif // _TOOLMODE
-    
-    // Picking test
-    //float2 screenSize = viewConstants.getScreenSize();
-    //float2 screenPos = _input.pos.xy / screenSize;
-    ////output.color0 = float4(frac(16 * screenPos), 0, 1);
-    ////return output;
-    //
-    //uint2 mousePos = viewConstants.getMousePos();
-    //float dist = safeLength(mousePos, _input.pos.xy);
-    //if (all(dist < 4))
-    //{
-    //    output.color0.rgb = lerp(output.color0.rgb, float3(0, 1, 0), 0.25f);
-    //    return output;
-    //}
-            
+                
     return output;
 }

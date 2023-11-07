@@ -23,6 +23,11 @@ float3 LoadF3   (ByteAddressBuffer _buffer, uint _offset)   { return float3(  as
 float2 LoadF2   (ByteAddressBuffer _buffer, uint _offset)   { return float2(  asfloat( _buffer.Load2(_offset << 2) )  ); }
 float  LoadF    (ByteAddressBuffer _buffer, uint _offset)   { return asfloat( _buffer.Load(_offset << 2) ); }
 
+void StoreU     (RWByteAddressBuffer _rwBuffer, uint _offset, uint _value)      { _rwBuffer.Store (_offset, _value); }
+void StoreU2    (RWByteAddressBuffer _rwBuffer, uint _offset, uint2 _value)     { _rwBuffer.Store2(_offset, _value); }
+void StoreU3    (RWByteAddressBuffer _rwBuffer, uint _offset, uint3 _value)     { _rwBuffer.Store3(_offset, _value); }
+void StoreU4    (RWByteAddressBuffer _rwBuffer, uint _offset, uint4 _value)     { _rwBuffer.Store4(_offset, _value); }
+
 #else
 
 uint4 LoadU4    (Buffer<uint> _buffer, uint _offset)        { return uint4( _buffer.Load(_offset), _buffer.Load(_offset + 1), _buffer.Load(_offset + 2), _buffer.Load(_offset + 3) ); }
@@ -34,6 +39,12 @@ float4 LoadF4   (Buffer<uint> _buffer, uint _offset)        { return float4(  as
 float3 LoadF3   (Buffer<uint> _buffer, uint _offset)        { return float3(  asfloat(_buffer.Load(_offset) ), asfloat(_buffer.Load(_offset + 1) ), asfloat(_buffer.Load(_offset + 2) )  ); }
 float2 LoadF2   (Buffer<uint> _buffer, uint _offset)        { return float2(  asfloat(_buffer.Load(_offset) ), asfloat(_buffer.Load(_offset + 1) )  ); }
 float  LoadF    (Buffer<uint> _buffer, uint _offset)        { return asfloat( _buffer.Load(_offset) ); }
+
+void StoreU     (RWBuffer<uint> _rwBuffer, uint _offset, uint _value)       { _rwBuffer[_offset + 0] = _value.x; }
+void StoreU2    (RWBuffer<uint> _rwBuffer, uint _offset, uint2 _value)      { _rwBuffer[_offset + 0] = _value.x; _rwBuffer[_offset + 1] = _value.y; }
+void StoreU3    (RWBuffer<uint> _rwBuffer, uint _offset, uint3 _value)      { _rwBuffer[_offset + 0] = _value.x; _rwBuffer[_offset + 1] = _value.y; _rwBuffer[_offset + 2] = _value.z; }
+void StoreU4    (RWBuffer<uint> _rwBuffer, uint _offset, uint4 _value)      { _rwBuffer[_offset + 0] = _value.x; _rwBuffer[_offset + 1] = _value.y; _rwBuffer[_offset + 2] = _value.z; _rwBuffer[_offset + 3] = _value.w; }
+
 #endif
 
 #endif // __cplusplus
