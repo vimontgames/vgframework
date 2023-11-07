@@ -481,7 +481,8 @@ namespace vg::gfx::dx12
         auto * device = gfx::Device::get();
         auto & context = device->getCurrentFrameContext();
 
-        const auto & bufDesc = _dst->getBufDesc();
+		const auto & srcBufferDesc = _src->getBufDesc();
+        const auto & dstBufferDesc = _dst->getBufDesc();
 
         ID3D12Resource * dst = _dst->getResource().getd3d12BufferResource();
         ID3D12Resource * src = _src->getResource().getd3d12BufferResource();
@@ -489,7 +490,7 @@ namespace vg::gfx::dx12
         const auto srcUsage = _src->getBufDesc().resource.m_usage;
         const auto dstUsage = _dst->getBufDesc().resource.m_usage;
 
-        if (srcUsage == Usage::Upload)
+        if (srcBufferDesc.resource.m_usage == Usage::Upload)
         {
             // Generic read to copy dest barrier
             D3D12_RESOURCE_BARRIER barrier;
@@ -502,11 +503,24 @@ namespace vg::gfx::dx12
 
             m_d3d12graphicsCmdList->ResourceBarrier(1, &barrier);
         }
+		else if (asBool(BindFlags::UnorderedAccess & srcBufferDesc.resource.m_bindFlags))
+		{
+			// Generic read to copy dest barrier
+			D3D12_RESOURCE_BARRIER barrier;
+			barrier.Transition.pResource = _src->getResource().getd3d12BufferResource();
+			barrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
+			barrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
+			barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_UNORDERED_ACCESS;
+			barrier.Transition.StateAfter = D3D12_RESOURCE_STATE_COPY_SOURCE;
+			barrier.Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
 
-        m_d3d12graphicsCmdList->CopyBufferRegion(dst, 0, src, _srcOffset, bufDesc.size());
+			m_d3d12graphicsCmdList->ResourceBarrier(1, &barrier);
+		}
+
+        m_d3d12graphicsCmdList->CopyBufferRegion(dst, 0, src, _srcOffset, dstBufferDesc.size());
 
         // Copy dest to generic read barrier
-        if (srcUsage == Usage::Upload)
+        if (srcBufferDesc.resource.m_usage == Usage::Upload)
         {
             D3D12_RESOURCE_BARRIER barrier;
             barrier.Transition.pResource = _dst->getResource().getd3d12BufferResource();
@@ -518,8 +532,21 @@ namespace vg::gfx::dx12
 
             m_d3d12graphicsCmdList->ResourceBarrier(1, &barrier);
         }
+		else if (asBool(BindFlags::UnorderedAccess & srcBufferDesc.resource.m_bindFlags))
+		{
+			// Generic read to copy dest barrier
+			D3D12_RESOURCE_BARRIER barrier;
+			barrier.Transition.pResource = _src->getResource().getd3d12BufferResource();
+			barrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
+			barrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
+			barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_COPY_SOURCE;
+			barrier.Transition.StateAfter = D3D12_RESOURCE_STATE_UNORDERED_ACCESS;
+			barrier.Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
 
-        if (asBool(BindFlags::ShaderResource & bufDesc.resource.m_bindFlags))
+			m_d3d12graphicsCmdList->ResourceBarrier(1, &barrier);
+		}
+
+        if (asBool(BindFlags::ShaderResource & dstBufferDesc.resource.m_bindFlags))
         {
             auto * bindlessTable = device->getBindlessTable();
             bindlessTable->updated3d12descriptor(_dst->getBufferHandle());
