@@ -98,13 +98,17 @@ namespace vg::renderer
             m_toolmodeRWBufferStaging = device->createBuffer(stagingDesc, (toolmodeRWBuffer->getName() + "_Staging").c_str());
 
         // copy to staging
-        _cmdList->copyBuffer(m_toolmodeRWBufferStaging, toolmodeRWBuffer, 0);
+        _cmdList->copyBuffer(m_toolmodeRWBufferStaging, toolmodeRWBuffer);
 
         // wait
 
         Map result = m_toolmodeRWBufferStaging->getResource().map();
         {
-            //VG_INFO("[Picking] ReadBack %u, %u, %u, %u", ((uint *)result.data)[0], ((uint *)result.data)[1], ((uint *)result.data)[2], ((uint *)result.data)[3]);
+            uint4 header = ((uint4 *)result.data)[0];
+            if (all(header != 0x0))
+            {
+                VG_INFO("[Picking] %u, %u, %u, %u", (uint)header.x, (uint)header.y, (uint)header.z, (uint)header.w);
+            }
         }
         m_toolmodeRWBufferStaging->getResource().unmap();
     }

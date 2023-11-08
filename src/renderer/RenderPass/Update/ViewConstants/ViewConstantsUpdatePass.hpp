@@ -49,7 +49,7 @@ namespace vg::renderer
         {
             Buffer * toolmodeRWBuffer = getRWBuffer(_renderPassContext.getFrameGraphID("ToolmodeRWBuffer"));
             toolmodeRWBufferID = toolmodeRWBuffer->getRWBufferHandle();
-            _cmdList->clearRWBuffer(toolmodeRWBuffer, 0xFFFFFFFF);
+            _cmdList->clearRWBuffer(toolmodeRWBuffer, 0x0);
         }
 
         ViewConstants * constants = (ViewConstants*)_cmdList->map(s_ViewConstantsBuffer).data;
