@@ -639,6 +639,26 @@ namespace vg::gfx::dx12
     }
 
     //--------------------------------------------------------------------------------------
+    void CommandList::clearRWBuffer(gfx::Buffer * _buffer, core::uint _clearValue)
+    {
+        auto * device = gfx::Device::get();
+        BindlessTable * bindlessTable = device->getBindlessTable();
+
+        D3D12_GPU_DESCRIPTOR_HANDLE rwBufferGpuHandle = bindlessTable->getd3d12GPUDescriptorHandle(_buffer->getRWBufferHandle());
+        D3D12_CPU_DESCRIPTOR_HANDLE rwBufferCpuHandle = bindlessTable->getd3d12CPUDescriptorHandle(_buffer->getRWBufferHandle());
+
+        UINT values[4] =
+        {
+            _clearValue,
+            _clearValue,
+            _clearValue,
+            _clearValue
+        };
+
+        m_d3d12graphicsCmdList->ClearUnorderedAccessViewUint(rwBufferGpuHandle, rwBufferCpuHandle, _buffer->getResource().getd3d12BufferResource(), values, 0, nullptr);
+    }
+
+    //--------------------------------------------------------------------------------------
     void CommandList::beginGPUEvent(const char * _name, core::u32 _color)
     {
         #ifdef VG_ENABLE_GPU_MARKER

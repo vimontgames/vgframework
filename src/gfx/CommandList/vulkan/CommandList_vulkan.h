@@ -46,14 +46,17 @@ namespace vg::gfx::vulkan
         void                                copyBuffer                  (gfx::Buffer * _dst, gfx::Buffer * _src, core::uint_ptr _srcOffset);
         void                                copyTexture                 (gfx::Texture * _dst, gfx::Buffer * _src, core::uint_ptr _srcOffset);
 
-        void                                beginGPUEvent               (const char * _name, core::u32 _color);
-        void                                endGPUEvent                 ();
-
+        // Misc
         Map                                 map                         (gfx::Buffer * _buffer);
         void                                unmap                       (gfx::Buffer * _buffer, void * VG_RESTRICT _data);
 
         void                                transitionResource          (gfx::Texture * _texture, ResourceState _before, ResourceState _after);
         void                                transitionResource          (gfx::Buffer * _buffer, ResourceState _before, ResourceState _after);
+
+        void								clearRWBuffer               (gfx::Buffer * _buffer, core::uint _clearValue);
+
+        void                                beginGPUEvent(const char * _name, core::u32 _color);
+        void                                endGPUEvent();
 
 		VkCommandBuffer &					getVulkanCommandBuffer      () { return m_vkCommandBuffer;  }
 

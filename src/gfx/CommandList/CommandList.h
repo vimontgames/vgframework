@@ -125,13 +125,19 @@ namespace vg::gfx
 
         void                            dispatch                    (core::uint3 _threadGroupCount);
 
-        void                            resetShaders                (ShaderKey::File _file);
+        // Copy
+        VG_INLINE void                  copyTexture                 (gfx::Texture * _dst, gfx::Buffer * _src, core::uint_ptr _srcOffset = 0);
+        VG_INLINE void                  copyBuffer                  (gfx::Buffer * _dst, gfx::Buffer * _src, core::uint_ptr _srcOffset = 0);
 
         VG_INLINE void                  transitionResource          (gfx::Texture * _texture, ResourceState _before, ResourceState _after);
         VG_INLINE void                  transitionResource          (gfx::Buffer * _buffer, ResourceState _before, ResourceState _after);
 
         VG_INLINE Map                   map                         (gfx::Buffer * _buffer);
         VG_INLINE void                  unmap                       (gfx::Buffer * _buffer, void * VG_RESTRICT _data = nullptr);
+
+        // Misc
+        VG_INLINE void                  clearRWBuffer               (Buffer * _buffer, core::uint _clearValue);
+        void                            resetShaders                (ShaderKey::File _file);
 	};
 }
 

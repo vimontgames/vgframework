@@ -46,7 +46,11 @@ namespace vg::renderer
 
         u16 toolmodeRWBufferID = -1;
         if (_renderPassContext.m_view->IsToolmode())
-            toolmodeRWBufferID = getRWBuffer(_renderPassContext.getFrameGraphID("ToolmodeRWBuffer"))->getRWBufferHandle();        
+        {
+            Buffer * toolmodeRWBuffer = getRWBuffer(_renderPassContext.getFrameGraphID("ToolmodeRWBuffer"));
+            toolmodeRWBufferID = toolmodeRWBuffer->getRWBufferHandle();
+            _cmdList->clearRWBuffer(toolmodeRWBuffer, 0xFFFFFFFF);
+        }
 
         ViewConstants * constants = (ViewConstants*)_cmdList->map(s_ViewConstantsBuffer).data;
         {

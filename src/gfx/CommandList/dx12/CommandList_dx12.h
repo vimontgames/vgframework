@@ -49,6 +49,9 @@ namespace vg::gfx::dx12
         Map									map                         (gfx::Buffer * _buffer);
         void                                unmap                       (gfx::Buffer * _buffer, void * VG_RESTRICT _data);
 
+        // Misc
+		void								clearRWBuffer				(gfx::Buffer * _buffer, core::uint _clearValue);
+
 		D3D12GraphicsCommandList *		    getd3d12GraphicsCommandList ();
 		ID3D12CommandList *					getd3d12CommandList         () { return m_d3d12cmdList; }
 

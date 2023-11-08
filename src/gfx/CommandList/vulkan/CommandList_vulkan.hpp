@@ -137,10 +137,16 @@ namespace vg::gfx::vulkan
     //--------------------------------------------------------------------------------------
     void CommandList::transitionResource(gfx::Buffer * _buffer, ResourceState _before, ResourceState _after)
     {
-        VG_ASSERT(false);
+        VG_ASSERT_NOT_IMPLEMENTED();
 
         //VkMemoryBarrier memoryBarrier;
         //memoryBarrier.sType = VK_STRUCTURE_TYPE_MEMORY_BARRIER;
+    }
+
+    //--------------------------------------------------------------------------------------
+    void CommandList::clearRWBuffer(gfx::Buffer * _buffer, core::uint _clearValue)
+    {
+        vkCmdFillBuffer(m_vkCommandBuffer, _buffer->getResource().getVulkanBuffer(), 0, VK_WHOLE_SIZE, _clearValue);
     }
 
 	//--------------------------------------------------------------------------------------
