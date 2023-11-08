@@ -92,7 +92,7 @@ namespace vg::editor
                 { "D3D12MemoryAllocator",   "",                 "https://github.com/GPUOpen-LibrariesAndSDKs/D3D12MemoryAllocator" },
                 { "Dear ImGui",             "2a6d7b1",          "https://github.com/ocornut/imgui/tree/docking" },
                 { "Dirent",                 "833b692",          "https://github.com/tronkko/dirent" },
-                { "DirectXShaderCompiler",  "v1.7.2212.1",      "https://github.com/microsoft/DirectXShaderCompiler/releases/tag/v1.7.2212.1" },
+                { "DirectXShaderCompiler",  "v1.7.2308",        "https://github.com/microsoft/DirectXShaderCompiler/releases/tag/v1.7.2308" },
                 { "Font-Awesome",           "6.x ",             "https://github.com/FortAwesome/Font-Awesome/tree/6.x" },
                 { "hlslpp",                 "3.3.1",            "https://github.com/redorav/hlslpp/releases/tag/3.3.1" },
                 { "IconFontCppHeaders",     "90da802",          "https://github.com/juliettef/IconFontCppHeaders" },
