@@ -104,7 +104,7 @@ namespace vg::renderer
 
         Map result = m_toolmodeRWBufferStaging->getResource().map();
         {
-            VG_INFO("[Picking] ReadBack %u, %u, %u, %u", ((uint *)result.data)[0], ((uint *)result.data)[1], ((uint *)result.data)[2], ((uint *)result.data)[3]);
+            //VG_INFO("[Picking] ReadBack %u, %u, %u, %u", ((uint *)result.data)[0], ((uint *)result.data)[1], ((uint *)result.data)[2], ((uint *)result.data)[3]);
         }
         m_toolmodeRWBufferStaging->getResource().unmap();
     }

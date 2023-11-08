@@ -12,21 +12,41 @@ namespace vg::gfx::vulkan
 	}
 
 	//--------------------------------------------------------------------------------------
-	Severity Device::getSeverity(VkDebugUtilsMessageSeverityFlagBitsEXT _severity)
+	Severity Device::getSeverity(VkDebugUtilsMessageSeverityFlagBitsEXT _severity, const VkDebugUtilsMessengerCallbackDataEXT * _data)
 	{
+		Severity severity = Severity::Verbose;
+
 		 if (VK_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT & _severity)
-			return Severity::Error;
+			 severity = Severity::Error;
 		 else if (VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT & _severity)
-			return Severity::Warning;
+			 severity = Severity::Warning;
 		 else if (VK_DEBUG_UTILS_MESSAGE_SEVERITY_INFO_BIT_EXT & _severity)
-			 return Severity::Info;
+			 severity = Severity::Info;
 		 else if (VK_DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT & _severity)
-			 return Severity::Verbose;
-		 else
+			 severity = Severity::Verbose;
+
+		 if (nullptr != _data)
 		 {
-			 VG_ASSERT(false);
-			 return Severity::Verbose;
+			 // These messages are annoying but should really be errors so treat them as if they were warnings
+			 if (Severity::Error == severity)
+			 {
+				 static const char * errorAsWarningList[] =
+				 {
+					 "UNASSIGNED-CoreValidation-Shader-OutputNotConsumed",
+					 "VUID-VkGraphicsPipelineCreateInfo-layout-07990"
+				 };
+				 for (uint i = 0; i < countof(errorAsWarningList); ++i)
+				 {
+					 if (!strcmp(errorAsWarningList[i], _data->pMessageIdName))
+					 {
+						 severity = Severity::Warning;
+						 break;
+					 }
+				 }
+			 }
 		 }
+
+		 return severity;
 	}
 
 	//--------------------------------------------------------------------------------------
@@ -121,7 +141,7 @@ namespace vg::gfx::vulkan
 
 		const DeviceParams & deviceParams = getDeviceParams();
 
-		const Severity severity = getSeverity(_severity);
+		const Severity severity = getSeverity(_severity, _data);
 		switch (severity)
 		{
 			case Severity::Verbose:
@@ -199,8 +219,7 @@ namespace vg::gfx::vulkan
             "VUID-vkCmdResetQueryPool-commandBuffer-recording",
             "VUID-vkFreeDescriptorSets-pDescriptorSets-00309",
             "UNASSIGNED-CoreValidation-DrawState-QueryNotReset",
-            "UNASSIGNED-CoreValidation-Shader-DescriptorTypeMismatch",
-			"UNASSIGNED-CoreValidation-Shader-OutputNotConsumed"		// This one could eventually output as simple info log but having it as a warning is annoying
+            "UNASSIGNED-CoreValidation-Shader-DescriptorTypeMismatch"
         };
         for (uint i = 0; i < countof(ignoreList); ++i)
         {
@@ -217,10 +236,28 @@ namespace vg::gfx::vulkan
         }
         else
         {
-            VG_DEBUGPRINT(message);
+			switch (severity)
+			{
+				case Severity::Error:
+					VG_ERROR("[Device] %s", message);
+					break;
+
+				case Severity::Warning:
+					VG_WARNING("[Device] %s", message);
+					break;
+
+				case Severity::Info:
+					VG_INFO("[Device] %s", message);
+					break;
+
+				case Severity::Verbose:
+					VG_DEBUGPRINT("[Device] %s", message);
+					break;
+			}
+
             VG_SAFE_FREE(message);
 
-            if ((Severity::Error == severity && deviceParams.breakOnErrors) || (Severity::Warning == severity && deviceParams.breakOnErrors))
+            if ((Severity::Error == severity && deviceParams.breakOnErrors) || (Severity::Warning == severity && deviceParams.breakOnWarnings))
                 DebugBreak();
         }
 		return false;
@@ -301,7 +338,7 @@ namespace vg::gfx::vulkan
 			0,
 			"VimontGames framework",
 			0,
-			VK_API_VERSION_1_2
+			VK_API_VERSION_1_3
 		};
 
 		VkInstanceCreateInfo inst_info = 

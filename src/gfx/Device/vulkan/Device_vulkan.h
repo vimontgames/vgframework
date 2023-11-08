@@ -55,7 +55,7 @@ namespace vg::gfx::vulkan
 
         void                            initSamplerStates               ();
 
-		static Severity					getSeverity						(VkDebugUtilsMessageSeverityFlagBitsEXT _severity);
+		static Severity					getSeverity						(VkDebugUtilsMessageSeverityFlagBitsEXT _severity, const VkDebugUtilsMessengerCallbackDataEXT * _data = nullptr);
 		static const char *				getVulkanObjectTypeName			(VkObjectType _type);
 
         bool                            enableInstanceLayer             (const char * _layerName);

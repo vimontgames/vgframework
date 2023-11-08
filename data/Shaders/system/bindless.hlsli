@@ -3,7 +3,6 @@
 #ifdef __cplusplus
 #error bindless.hlsli should not be included from C++
 #else
-
 #include "table.hlsli"
 #include "system/buffer.hlsli"
 
@@ -13,8 +12,10 @@
 #define DECL_DESCRIPTOR_RANGE_RO(type, name, bind, offset) type name[] : register(PASTE(t, offset), PASTE(space, bind));
 #define DECL_DESCRIPTOR_RANGE_RW(type, name, bind, offset) type name[] : register(PASTE(u, offset), PASTE(space, bind));
 #elif defined(VG_VULKAN)
-#define DECL_DESCRIPTOR_RANGE_RO(type, name, bind, offset) [[vk::binding(bind, 0)]] type name[];
-#define DECL_DESCRIPTOR_RANGE_RW(type, name, bind, offset) [[vk::binding(bind, 0)]] type name[];
+//#define DECL_DESCRIPTOR_RANGE_RO(type, name, bind, offset) [[vk::binding(bind)]] type name[];
+//#define DECL_DESCRIPTOR_RANGE_RW(type, name, bind, offset) [[vk::binding(bind)]] type name[];
+#define DECL_DESCRIPTOR_RANGE_RO(type, name, bind, offset) type name[] : register(PASTE(t, bind));
+#define DECL_DESCRIPTOR_RANGE_RW(type, name, bind, offset) type name[] : register(PASTE(u, bind));
 #endif
 
 // Read-only textures

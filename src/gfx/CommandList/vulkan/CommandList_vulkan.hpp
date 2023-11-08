@@ -219,7 +219,7 @@ namespace vg::gfx::vulkan
     //--------------------------------------------------------------------------------------
     void CommandList::bindPrimitiveTopology(PrimitiveTopology _topology)
     {
-        VG_WARNING_ONCE("[CommandList] bindPrimitiveTopology is not implemented");
+        VG_WARNING_ONCE("[Device] bindPrimitiveTopology is not implemented");
     }
 
     //--------------------------------------------------------------------------------------
