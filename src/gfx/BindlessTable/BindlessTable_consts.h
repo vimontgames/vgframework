@@ -1,6 +1,6 @@
 #pragma once
 
-#include "shaders/system/bindless.hlsli.h"
+#include "shaders/system/table.hlsl.h"
 #include "core/Math/Math.h"
 
 namespace vg::gfx

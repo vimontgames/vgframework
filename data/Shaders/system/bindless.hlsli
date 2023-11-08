@@ -1,42 +1,10 @@
-#ifndef _BINDLESS__HLSLI_
-#define _BINDLESS__HLSLI_
+#pragma once
 
-// Bindless resource ranges (must be litteral constants)
-#define BINDLESS_TEXTURE_START      0      // [0..16383]       (14 bits)
-#define BINDLESS_BUFFER_START       16384  // [16384..32767]   (14 bits)
-#define BINDLESS_RWTEXTURE_START    32768  // [32768..40959]   (13 bits)
-#define BINDLESS_RWBUFFER_START     40960  // [40960..49151]   (13 bits)
+#ifdef __cplusplus
+#error bindless.hlsli should not be included from C++
+#else
 
-#define BINDLESS_TABLE_RANGE_MIN    0
-#define BINDLESS_TABLE_RANGE_MAX    49152
-#define BINDLESS_TABLE_SIZE         (BINDLESS_TABLE_RANGE_MAX-BINDLESS_TABLE_RANGE_MIN)
-
-#define  BINDLESS_TEXTURE_COUNT      (BINDLESS_BUFFER_START - BINDLESS_TABLE_RANGE_MIN)
-#define  BINDLESS_TEXTURE_INVALID    (BINDLESS_TEXTURE_START + BINDLESS_TEXTURE_COUNT - 1)
-#define  BINDLESS_TEXTURE_BINDING    0
-
-#define  BINDLESS_BUFFER_COUNT      (BINDLESS_RWTEXTURE_START - BINDLESS_BUFFER_START)
-#define  BINDLESS_BUFFER_INVALID    (BINDLESS_BUFFER_START + BINDLESS_BUFFER_COUNT - 1)
-#define  BINDLESS_BUFFER_BINDING    1
-
-#define  BINDLESS_RWTEXTURE_COUNT   (BINDLESS_RWBUFFER_START - BINDLESS_RWTEXTURE_START)
-#define  BINDLESS_RWTEXTURE_INVALID (BINDLESS_RWTEXTURE_START + BINDLESS_RWTEXTURE_COUNT - 1)
-#define  BINDLESS_RWTEXTURE_BINDING 2
-
-#define  BINDLESS_RWBUFFER_COUNT    (BINDLESS_TABLE_RANGE_MAX - BINDLESS_RWBUFFER_START)
-#define  BINDLESS_RWBUFFER_INVALID  (BINDLESS_RWBUFFER_START + BINDLESS_RWBUFFER_COUNT - 1)
-#define  BINDLESS_RWBUFFER_BINDING  3
-
-// Allocate fixed Textures/Buffers SRVs/UAVs slots top-down (dynamic slots are allocated bottom-up)
-
-// Texture SRV
-#define RESERVEDSLOT_TEXSRV_IMGUIFONTTEX       (BINDLESS_TEXTURE_INVALID - 1)
-
-// Buffer SRV
-#define RESERVEDSLOT_BUFSRV_VIEWCONSTANTS      (BINDLESS_BUFFER_INVALID - 1)
-
-#ifndef __cplusplus
-
+#include "table.hlsli"
 #include "system/buffer.hlsli"
 
 #define PASTE(a,b) a##b
@@ -72,5 +40,3 @@ DECL_DESCRIPTOR_RANGE_RW(RWByteAddressBuffer, g_RWBufferTable, BINDLESS_RWBUFFER
 #define getRWBuffer(_handle)        (g_RWBufferTable[_handle - BINDLESS_RWBUFFER_START])
 
 #endif // __cplusplus
-
-#endif // _BINDLESS__HLSLI_

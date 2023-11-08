@@ -5,8 +5,6 @@
 #include "BindlessTable_consts.h"
 #include "gfx/RootSignature/RootSignatureTableDesc.h"
 
-#include "shaders/system/bindless.hlsli.h"
-
 namespace vg::gfx
 {
     class Texture;
