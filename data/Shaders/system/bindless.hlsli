@@ -1,8 +1,6 @@
 #ifndef _BINDLESS__HLSLI_
 #define _BINDLESS__HLSLI_
 
-#include "system/buffer.hlsli"
-
 // Bindless resource ranges (must be litteral constants)
 #define BINDLESS_TEXTURE_START      0      // [0..16383]       (14 bits)
 #define BINDLESS_BUFFER_START       16384  // [16384..32767]   (14 bits)
@@ -39,12 +37,14 @@
 
 #ifndef __cplusplus
 
+#include "system/buffer.hlsli"
+
 #define PASTE(a,b) a##b
 
-#ifdef DX12
+#ifdef VG_DX12
 #define DECL_DESCRIPTOR_RANGE_RO(type, name, bind, offset) type name[] : register(PASTE(t, offset), PASTE(space, bind));
 #define DECL_DESCRIPTOR_RANGE_RW(type, name, bind, offset) type name[] : register(PASTE(u, offset), PASTE(space, bind));
-#elif defined(VULKAN)
+#elif defined(VG_VULKAN)
 #define DECL_DESCRIPTOR_RANGE_RO(type, name, bind, offset) [[vk::binding(bind, 0)]] type name[];
 #define DECL_DESCRIPTOR_RANGE_RW(type, name, bind, offset) [[vk::binding(bind, 0)]] type name[];
 #endif

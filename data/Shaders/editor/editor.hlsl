@@ -12,11 +12,15 @@ struct VS_Output
 
 VS_Output VS_DebugDraw(uint _vertexID : VertexID)
 {
-    VS_Output output;
+    VS_Output output = (VS_Output) 0;
 
+    ByteAddressBuffer buf = getBuffer(rootConstants3D.getBufferHandle());
+    
+    //output.pos = buf.Load<uint>(0);
+    
     Vertex vert;
-           vert.Load(getBuffer(rootConstants3D.getBufferHandle()), _vertexID, rootConstants3D.getVertexBufferOffset());
-
+           vert.Load(buf, _vertexID, rootConstants3D.getVertexBufferOffset());
+    
     output.col = vert.getColor() * rootConstants3D.color;
     output.pos = mul(float4(vert.getPos(), 1.0f), rootConstants3D.mat);
 

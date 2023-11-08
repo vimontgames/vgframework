@@ -141,7 +141,7 @@ namespace vg::gfx::dxc
             vector<wchar_t*> args;
             auto macros = _macros;
 
-            //args.push_back(L"-WX"); 
+            args.push_back((wchar_t *)L"-WX");
             args.push_back((wchar_t *)L"-HV 2021");
 
             #ifdef VG_DEBUG
@@ -155,12 +155,12 @@ namespace vg::gfx::dxc
             switch (_api)
             {
                 case API::Vulkan:
-                    macros.push_back({ "VULKAN", 1 });
+                    macros.push_back({ "VG_VULKAN", 1 });
                     args.push_back((wchar_t*)L"-spirv");
                     break;
 
                 case API::DirectX12:
-                    macros.push_back({ "DX12", 1 });
+                    macros.push_back({ "VG_DX12", 1 });
                     break;
                 default:
 

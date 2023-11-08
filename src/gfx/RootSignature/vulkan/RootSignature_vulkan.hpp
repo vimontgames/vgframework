@@ -1,3 +1,5 @@
+#include "Shaders/system/buffer.hlsli"
+
 namespace vg::gfx::vulkan
 {
     //--------------------------------------------------------------------------------------
@@ -46,8 +48,8 @@ namespace vg::gfx::vulkan
                     {
                         const auto & constantbuffers = descriptor.getConstantBuffers();
                         vkLayoutBinding.binding = constantbuffers.m_binding;
-                        vkLayoutBinding.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_TEXEL_BUFFER;
-                        vkLayoutBinding.descriptorCount = constantbuffers.m_count;
+                        vkLayoutBinding.descriptorType = VK_DESCRIPTOR_TYPE_BYTEADDRESSBUFFER;
+                         vkLayoutBinding.descriptorCount = constantbuffers.m_count;
                         vkLayoutBinding.stageFlags = getVulkanShaderStageFlags(table.getShaderStageFlags());
                         vkLayoutBinding.pImmutableSamplers = nullptr;
                     }
@@ -68,7 +70,7 @@ namespace vg::gfx::vulkan
                     {
                         const auto & buffers = descriptor.getBuffers();
                         vkLayoutBinding.binding = buffers.m_binding;
-                        vkLayoutBinding.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_TEXEL_BUFFER;
+                        vkLayoutBinding.descriptorType = VK_DESCRIPTOR_TYPE_BYTEADDRESSBUFFER;
                         vkLayoutBinding.descriptorCount = buffers.m_count;
                         vkLayoutBinding.stageFlags = getVulkanShaderStageFlags(table.getShaderStageFlags());
                         vkLayoutBinding.pImmutableSamplers = nullptr; 
@@ -90,7 +92,7 @@ namespace vg::gfx::vulkan
                     {
                         const auto & buffers = descriptor.getRWBuffers();
                         vkLayoutBinding.binding = buffers.m_binding;
-                        vkLayoutBinding.descriptorType = VK_DESCRIPTOR_TYPE_STORAGE_TEXEL_BUFFER;
+                        vkLayoutBinding.descriptorType = VK_DESCRIPTOR_TYPE_RWBYTEADDRESSBUFFER;
                         vkLayoutBinding.descriptorCount = buffers.m_count;
                         vkLayoutBinding.stageFlags = getVulkanShaderStageFlags(table.getShaderStageFlags());
                         vkLayoutBinding.pImmutableSamplers = nullptr;

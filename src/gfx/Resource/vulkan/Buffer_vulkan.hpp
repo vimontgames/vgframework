@@ -1,3 +1,5 @@
+#include "Shaders/system/buffer.hlsli"
+
 namespace vg::gfx::vulkan
 {
     //--------------------------------------------------------------------------------------
@@ -20,7 +22,7 @@ namespace vg::gfx::vulkan
 
             case Usage::Default:
                 vkBufferCreate.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
-                vkBufferCreate.usage = VK_BUFFER_USAGE_UNIFORM_TEXEL_BUFFER_BIT | VK_BUFFER_USAGE_TRANSFER_SRC_BIT | VK_BUFFER_USAGE_TRANSFER_DST_BIT;
+                vkBufferCreate.usage = VK_BUFFER_USAGE_UNIFORM_TEXEL_BUFFER_BIT | VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT | VK_BUFFER_USAGE_TRANSFER_SRC_BIT | VK_BUFFER_USAGE_TRANSFER_DST_BIT;
                 vkBufferCreate.size = _bufDesc.size();
                 allocCreateInfo.usage = VMA_MEMORY_USAGE_GPU_ONLY;
                 allocCreateInfo.flags = 0;
@@ -28,7 +30,7 @@ namespace vg::gfx::vulkan
 
             case Usage::Upload:
                 vkBufferCreate.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
-                vkBufferCreate.usage = VK_BUFFER_USAGE_UNIFORM_TEXEL_BUFFER_BIT | VK_BUFFER_USAGE_TRANSFER_SRC_BIT;
+                vkBufferCreate.usage = VK_BUFFER_USAGE_UNIFORM_TEXEL_BUFFER_BIT | VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT | VK_BUFFER_USAGE_TRANSFER_SRC_BIT;
                 vkBufferCreate.size = _bufDesc.size();
                 allocCreateInfo.usage = VMA_MEMORY_USAGE_CPU_ONLY;
                 allocCreateInfo.flags = VMA_ALLOCATION_CREATE_MAPPED_BIT;
@@ -36,7 +38,7 @@ namespace vg::gfx::vulkan
 
             case Usage::Staging:
                 vkBufferCreate.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
-                vkBufferCreate.usage = VK_BUFFER_USAGE_UNIFORM_TEXEL_BUFFER_BIT | VK_BUFFER_USAGE_TRANSFER_DST_BIT;
+                vkBufferCreate.usage = VK_BUFFER_USAGE_UNIFORM_TEXEL_BUFFER_BIT | VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT | VK_BUFFER_USAGE_TRANSFER_DST_BIT;
                 vkBufferCreate.size = _bufDesc.size();
                 allocCreateInfo.usage = VMA_MEMORY_USAGE_CPU_ONLY;
                 allocCreateInfo.flags = VMA_ALLOCATION_CREATE_MAPPED_BIT;
@@ -47,7 +49,7 @@ namespace vg::gfx::vulkan
             vkBufferCreate.usage |= VK_BUFFER_USAGE_INDEX_BUFFER_BIT;
 
         if (asBool(_bufDesc.resource.m_bindFlags & BindFlags::UnorderedAccess))
-            vkBufferCreate.usage |= VK_BUFFER_USAGE_STORAGE_TEXEL_BUFFER_BIT;
+            vkBufferCreate.usage |= VK_BUFFER_USAGE_STORAGE_BUFFER_BIT | VK_BUFFER_USAGE_STORAGE_TEXEL_BUFFER_BIT;
 
         VkBuffer vkBuffer;
         VmaAllocation vmaAlloc;
@@ -81,7 +83,7 @@ namespace vg::gfx::vulkan
             writes.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
             writes.dstBinding = BINDLESS_BUFFER_BINDING;
             writes.descriptorCount = 1;
-            writes.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_TEXEL_BUFFER;
+            writes.descriptorType = VK_DESCRIPTOR_TYPE_BYTEADDRESSBUFFER;
             writes.pBufferInfo = &vkBufferInfo;
             writes.pTexelBufferView = &m_vkBufferView;
             writes.dstSet = device->getVulkanBindlessDescriptors();
@@ -121,7 +123,7 @@ namespace vg::gfx::vulkan
             writes.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
             writes.dstBinding = BINDLESS_RWBUFFER_BINDING;
             writes.descriptorCount = 1;
-            writes.descriptorType = VK_DESCRIPTOR_TYPE_STORAGE_TEXEL_BUFFER;
+            writes.descriptorType = VK_DESCRIPTOR_TYPE_RWBYTEADDRESSBUFFER;
             writes.pBufferInfo = &vkBufferInfo;
             writes.pTexelBufferView = &m_vkBufferView;
             writes.dstSet = device->getVulkanBindlessDescriptors();

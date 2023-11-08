@@ -1,4 +1,5 @@
 #include "gfx/Device/vulkan/Extension/ExtensionList_vulkan.hpp"
+#include "Shaders/system/buffer.hlsli"
 
 namespace vg::gfx::vulkan
 {
@@ -405,10 +406,10 @@ namespace vg::gfx::vulkan
         {
             VkDescriptorPoolSize type_counts[] =
             {
-                {VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE, BINDLESS_TEXTURE_COUNT},
-                {VK_DESCRIPTOR_TYPE_UNIFORM_TEXEL_BUFFER , BINDLESS_BUFFER_COUNT},
-                {VK_DESCRIPTOR_TYPE_STORAGE_IMAGE, BINDLESS_RWTEXTURE_COUNT},
-                {VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, BINDLESS_RWBUFFER_COUNT}
+                { VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE, BINDLESS_TEXTURE_COUNT },
+				{ VK_DESCRIPTOR_TYPE_BYTEADDRESSBUFFER, BINDLESS_BUFFER_COUNT },
+                { VK_DESCRIPTOR_TYPE_STORAGE_IMAGE, BINDLESS_RWTEXTURE_COUNT },
+				{ VK_DESCRIPTOR_TYPE_RWBYTEADDRESSBUFFER, BINDLESS_RWBUFFER_COUNT }
             };
 
             VkDescriptorPoolCreateInfo descriptor_pool = {};
