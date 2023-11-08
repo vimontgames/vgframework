@@ -10,9 +10,7 @@ void CS_PostProcessMain(int2 dispatchThreadID : SV_DispatchThreadID)
     
     int2 coords = dispatchThreadID;
     float2 uv = dispatchThreadID.xy / (float2)width_height;
-    getRWTexture2D(src_dst.y)[coords] = getTexture2D(src_dst.x).SampleLevel(nearestRepeat, uv, 0);
-    
+    //getRWTexture2D(src_dst.y)[coords] = getTexture2D(src_dst.x).SampleLevel(nearestRepeat, uv, 0);
     getRWTexture2D(src_dst.y)[coords] = getTexture2D(src_dst.x).Load(int3(dispatchThreadID.xy, 0));
-    
     //getRWTexture2D(src_dst.y)[coords] = float4(frac(dispatchThreadID.x / (float) POSTPROCESS_THREADGROUP_SIZE_X), frac(dispatchThreadID.y / (float) POSTPROCESS_THREADGROUP_SIZE_Y), 0, 1);
 }
