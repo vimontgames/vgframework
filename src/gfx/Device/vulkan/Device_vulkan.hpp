@@ -230,6 +230,14 @@ namespace vg::gfx::vulkan
             }
         }
 
+		// Hack to ignore false positive in this very specific case
+		// Generated SPIR-V code is a ByteAddressBuffer but validation layers says shader is expecting a texel buffer
+		if (!strcmp("VUID-VkGraphicsPipelineCreateInfo-layout-07990", _data->pMessageIdName))
+		{
+			if (strstr(message, "uses type VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER but expected (VK_DESCRIPTOR_TYPE_STORAGE_BUFFER or VK_DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC)"))
+				ignore = true;
+		}
+
         if (ignore)
         {
             VG_SAFE_FREE(message);
