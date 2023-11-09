@@ -5,6 +5,7 @@
 #include "renderer/IMeshModel.h"
 #include "engine/Engine.h"
 #include "renderer/IRenderer.h"
+#include "renderer/IPicking.h"
 
 using namespace vg::core;
 using namespace vg::renderer;
@@ -42,12 +43,16 @@ namespace vg::engine
         m_meshResource(_name, this)
     {
         VG_ASSERT(dynamic_cast<IGameObject*>(_parent));
-        m_meshInstance = (IMeshInstance*)CreateFactoryObject(MeshInstance, _name, this);
+        m_meshInstance = (IMeshInstance *)CreateFactoryObject(MeshInstance, _name, this);
     }
 
     //--------------------------------------------------------------------------------------
     MeshComponent::~MeshComponent()
     {
+        auto * picking = Engine::get()->GetRenderer()->GetPicking();
+        PickingID id = picking->GetPickingID(this);
+        picking->ReleasePickingID(id);
+
         GameObject * gameObject = getGameObject();
         gameObject->RemoveGraphicInstance(m_meshInstance);
         m_registered = false;
@@ -59,8 +64,12 @@ namespace vg::engine
     {
         // TODO: could be done only when GameObject's matrix changes?
         GameObject * go = getGameObject();
-        m_meshInstance->setWorldMatrix(go->getWorldMatrix());
-        m_meshInstance->setColor(go->getColor());
+
+        if (nullptr != m_meshInstance)
+        {
+            m_meshInstance->setWorldMatrix(go->getWorldMatrix());
+            m_meshInstance->setColor(go->getColor());
+        }
     }
 
     //--------------------------------------------------------------------------------------
@@ -71,6 +80,10 @@ namespace vg::engine
 
         if (false == m_registered)
         {
+            auto * picking = Engine::get()->GetRenderer()->GetPicking();
+            PickingID id = picking->GetPickingID(this);
+            m_meshInstance->setPickingID(id);
+
             GameObject * gameObject = getGameObject();
             gameObject->AddGraphicInstance(m_meshInstance);
 

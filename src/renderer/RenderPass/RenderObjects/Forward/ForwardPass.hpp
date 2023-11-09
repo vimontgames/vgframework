@@ -62,37 +62,5 @@ namespace vg::renderer
 
         if (!renderContext.m_toolmode || options->isOpaqueEnabled())
             DrawGraphicInstances(renderContext, _cmdList, allInstances);
-
-        if (0)
-        {
-            if (renderContext.m_toolmode)
-            {
-                if (options->isWireframeEnabled())
-                {
-                    renderContext.m_wireframe = true;
-                    DrawGraphicInstances(renderContext, _cmdList, allInstances);
-                }
-            }
-
-            if (renderContext.m_toolmode)
-            {
-                if (options->isAABBEnabled())
-                {
-                    for (uint i = 0; i < allInstances.m_instances.size(); ++i)
-                    {
-                        const IGraphicInstance * instance = allInstances.m_instances[i];
-                        const MeshModel * model = (MeshModel *)instance->getModel(Lod::Lod0);
-                        if (nullptr == model)
-                            continue;
-
-                        const MeshGeometry * geo = model->getGeometry();
-                        drawAABB(_cmdList, geo->getAABB(), instance->getWorldMatrix(), renderContext.m_viewProj);
-                    }
-                }
-
-                drawGrid(_cmdList, renderContext.m_viewProj);
-                drawAxis(_cmdList, renderContext.m_viewProj);
-            }
-        }
     }   
 }

@@ -13,7 +13,9 @@ enum DisplayMode : uint
 	UV0,
     UV1,
     Albedo,
-    PSNormal
+    PSNormal,
+    WorldPos,
+    ScreenPos
 };
 
 enum DisplayFlags : uint

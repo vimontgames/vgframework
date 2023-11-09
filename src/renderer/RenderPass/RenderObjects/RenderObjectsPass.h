@@ -20,9 +20,9 @@ namespace vg::renderer
     protected:
         virtual void    DrawGraphicInstances    (const RenderContext & _renderContext, gfx::CommandList * _cmdList, const GraphicInstanceList & _graphicInstancesList) const;
 
-        void            drawAABB                (gfx::CommandList * _cmdList, const AABB & _aabb, const core::float4x4 & _world, const core::float4x4 & _viewProj) const;
-        void            drawGrid                (gfx::CommandList * _cmdList, const core::float4x4 & _viewProj) const;
-        void            drawAxis                (gfx::CommandList * _cmdList, const core::float4x4 & _viewProj) const;
+        void            drawAABB                (gfx::CommandList * _cmdList, const AABB & _aabb, const core::float4x4 & _world) const;
+        void            drawGrid                (gfx::CommandList * _cmdList) const;
+        void            drawAxis                (gfx::CommandList * _cmdList) const;
 
     private:
         void            createUnitBox           ();

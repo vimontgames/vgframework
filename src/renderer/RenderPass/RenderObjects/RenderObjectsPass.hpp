@@ -117,18 +117,17 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    void RenderObjectsPass::drawAABB(CommandList * _cmdList, const AABB & _aabb, const float4x4 & _world, const float4x4 & _viewProj) const
+    void RenderObjectsPass::drawAABB(CommandList * _cmdList, const AABB & _aabb, const float4x4 & _world) const
     {
         RasterizerState rs(FillMode::Wireframe, CullMode::None);
         _cmdList->setRasterizerState(rs);
 
         // AABB Matrix in world-space
         float4x4 aabbMatrixWS = mul(_aabb.getLocalSpaceUnitCubeMatrix(), _world);
-        float4x4 wvp = mul(aabbMatrixWS, _viewProj);
 
         EditorRootConstants3D root3D;
         {
-            root3D.mat = transpose(wvp);
+            root3D.mat = transpose(aabbMatrixWS);
             root3D.setBufferHandle(m_unitBox->getVertexBuffer()->getBufferHandle());
             root3D.setVertexBufferOffset(m_unitBox->getVertexBufferOffset());
         }
@@ -225,7 +224,7 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    void RenderObjectsPass::drawGrid(CommandList * _cmdList, const float4x4 & _viewProj) const
+    void RenderObjectsPass::drawGrid(CommandList * _cmdList) const
     {
         RasterizerState rs(FillMode::Wireframe, CullMode::None);
 
@@ -233,7 +232,7 @@ namespace vg::renderer
 
         EditorRootConstants3D root3D;
 
-        root3D.mat = transpose(_viewProj);
+        root3D.mat = /*transpose*/(float4x4::identity());
         root3D.setBufferHandle(m_gridVB->getBufferHandle());
         root3D.color = float4(1, 1, 1, 1);
 
@@ -281,7 +280,7 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    void RenderObjectsPass::drawAxis(CommandList * _cmdList, const float4x4 & _viewProj) const
+    void RenderObjectsPass::drawAxis(CommandList * _cmdList) const
     {
         RasterizerState rs(FillMode::Wireframe, CullMode::None);
 
@@ -289,7 +288,7 @@ namespace vg::renderer
 
         EditorRootConstants3D root3D;
 
-        root3D.mat = transpose(_viewProj);
+        root3D.mat = /*transpose*/(float4x4::identity());
         root3D.setBufferHandle(m_axisVB->getBufferHandle());
         root3D.color = float4(1, 1, 1, 1);
 

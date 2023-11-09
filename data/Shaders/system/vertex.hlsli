@@ -2,9 +2,8 @@
 #define _VERTEX__HLSLI_
 
 #include "packing.hlsli"
-#include "buffer.hlsli"
 
-#define SimpleVertex_stride (17 * sizeof(float) >> 2)
+#define SimpleVertex_stride (17 * sizeof(float))
 
 struct SimpleVertex
 {
@@ -12,13 +11,13 @@ struct SimpleVertex
     {
 		uint vertexOffset = _offset + _vertexID * SimpleVertex_stride; 
 
-        pos.xyz = LoadF3(_buffer, vertexOffset);
-        nrm.xyz = LoadF3(_buffer, vertexOffset + 3);
-        bin.xyz = LoadF3(_buffer, vertexOffset + 6);
-        tan.xyz = LoadF3(_buffer, vertexOffset + 9);
-        uv[0].xy = LoadF2(_buffer, vertexOffset + 12);
-        uv[1].xy = LoadF2(_buffer, vertexOffset + 14);
-        color = LoadU(_buffer, vertexOffset + 16);
+        pos.xyz     = _buffer.Load<float3>(vertexOffset + 0);
+        nrm.xyz     = _buffer.Load<float3>(vertexOffset + 12);
+        bin.xyz     = _buffer.Load<float3>(vertexOffset + 24);
+        tan.xyz     = _buffer.Load<float3>(vertexOffset + 36);
+        uv[0].xy    = _buffer.Load<float2>(vertexOffset + 48);
+        uv[1].xy    = _buffer.Load<float2>(vertexOffset + 56);
+        color       = _buffer.Load<uint>(vertexOffset + 64);
     }
 
     float3 getPos()             { return pos; }

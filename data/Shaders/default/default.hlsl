@@ -4,12 +4,14 @@
 #include "system/vertex.hlsli"
 #include "system/gamma.hlsli"
 #include "system/view.hlsli"
+#include "system/picking.hlsl"
 
 #include "default.hlsli"
 
 struct VS_Output
 {
     float4 pos  : Position;
+    float3 wpos : WorldPos;
     float3 nrm  : Normal;
     float3 tan  : Tangent;
     float3 bin  : Binormal;
@@ -24,12 +26,20 @@ VS_Output VS_Forward(uint _vertexID : VertexID)
     Vertex vert;
            vert.Load(getBuffer(rootConstants3D.getBufferHandle()), _vertexID, rootConstants3D.getVertexBufferOffset());
 
+    ViewConstants viewConstants;
+    viewConstants.Load(getBuffer(RESERVEDSLOT_BUFSRV_VIEWCONSTANTS));
+    float4x4 viewProj = viewConstants.getViewProj();
+    
     output.nrm = vert.getNrm();
     output.tan = vert.getTan();
     output.bin = vert.getBin();
     output.uv = float4(vert.getUV(0), vert.getUV(1));
     output.col = vert.getColor() * rootConstants3D.color;
-    output.pos = mul(float4(vert.getPos(), 1.0f), rootConstants3D.mat);
+    
+    float4 modelPos = float4(vert.getPos(), 1.0f);
+    float4 worldPos = mul(modelPos, rootConstants3D.mat);
+    output.wpos = worldPos.xyz;
+    output.pos = mul(worldPos, viewProj);
 
     return output;
 }
@@ -54,24 +64,16 @@ float3 getMatIDColor(uint _matID)
     return 0;
 }
 
-float safeLength(float2 a, float2 b)
-{
-    float2 diff = a - b;
-    return all(0 != diff)? length(diff) : 0;
-}
-
 PS_Output PS_Forward(VS_Output _input)
 {
     PS_Output output;
     
-    // test ReservedConstants slots
     ViewConstants viewConstants;
     viewConstants.Load(getBuffer(RESERVEDSLOT_BUFSRV_VIEWCONSTANTS));
-            
-    // test dynamic buffer
-    //float4 test = LoadF4(getBuffer(16388), 0);
-    //output.color0 = test;
-    //return output;
+    
+    uint2 screenSize = viewConstants.getScreenSize();
+    float2 screenPos = _input.pos.xy / (float2)screenSize;
+    float3 worldPos = _input.wpos.xyz;
     
     float2 uv0 = _input.uv.xy;
     float2 uv1 = _input.uv.zw;
@@ -99,7 +101,7 @@ PS_Output PS_Forward(VS_Output _input)
     float3 fakeAmbientLighting = 0.1f;
 
     output.color0.rgba = float4(albedo.rgb * (fakeDiffuseLighting + fakeAmbientLighting), 1.0f) * _input.col;
-
+    
     #if _TOOLMODE
     DisplayMode mode = viewConstants.getDisplayMode();
     switch (mode)
@@ -142,27 +144,30 @@ PS_Output PS_Forward(VS_Output _input)
         case DisplayMode::PSNormal:
             output.color0 = sRGBA2Linear(float4(normal.rgb * 0.5 + 0.5, 1));
             break;
+    
+     case DisplayMode::WorldPos:
+            output.color0 = sRGBA2Linear(float4(frac(worldPos.xyz), 1));
+            break;
+    
+    case DisplayMode::ScreenPos:
+            output.color0 = sRGBA2Linear(float4(screenPos.xy, 0, 1));
+            break;
     }
     
     if (RootConstantsFlags::Wireframe & rootConstants3D.getFlags())
         output.color0 = float4(0,1,0,1);
-    
-    // test picking
-    uint toolmodeRWBufferID = viewConstants.getToolmodeRWBufferID();
-    if (0xFFFF != toolmodeRWBufferID)
-    {   
-        // Picking test
-        float2 screenSize = viewConstants.getScreenSize();
-        float2 screenPos = _input.pos.xy / screenSize;
         
-        uint2 mousePos = viewConstants.getMousePos();
-        float dist = safeLength(mousePos, _input.pos.xy);
-        if (all(dist < 4) && all(mousePos.xy >= 0) && all(mousePos.xy < screenSize))
-        {
-            StoreU4( getRWBuffer(viewConstants.getToolmodeRWBufferID()), 0, uint4(viewConstants.getMousePos(),viewConstants.getScreenSize()) );
-            output.color0.rgb = lerp(output.color0.rgb, float3(0, 1, 0), 0.25f);
-        }
+    // Picking
+    uint toolmodeRWBufferID = viewConstants.getToolmodeRWBufferID();
+    uint2 inputPos = _input.pos.xy;
+    uint2 mousePos = viewConstants.getMousePos();
+    uint4 pickingID = uint4(rootConstants3D.getPickingID(), 0, 0, 0);
+    
+    if (ProcessPicking(toolmodeRWBufferID, 0, inputPos, worldPos, mousePos, screenSize, pickingID))
+    {
+        output.color0 = lerp(output.color0, float4(0,1,0,1), 0.25f);
     }
+
     #endif // _TOOLMODE
                 
     return output;

@@ -14,10 +14,13 @@ namespace vg::renderer
         float3 size = m_max - m_min;
         float3 center = m_max + m_min;
 
+        // Boost scale so that the bounding box of a box is visible
+        float s = 0.5f * 1.001f;
+
         float4x4 matLS = float4x4(
-            float4(size.x * 0.5f, 0, 0, 0),
-            float4(0, size.y * 0.5f, 0, 0),
-            float4(0, 0, size.z * 0.5f, 0),
+            float4(size.x * s, 0, 0, 0),
+            float4(0, size.y * s, 0, 0),
+            float4(0, 0, size.z * s, 0),
             float4(center * 0.5f, 1)
         );
         return matLS;

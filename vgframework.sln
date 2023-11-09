@@ -85,6 +85,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "system", "system", "{34ABDE
 		data\Shaders\system\displayoptions.hlsli = data\Shaders\system\displayoptions.hlsli
 		data\Shaders\system\gamma.hlsli = data\Shaders\system\gamma.hlsli
 		data\Shaders\system\packing.hlsli = data\Shaders\system\packing.hlsli
+		data\Shaders\system\picking.hlsl = data\Shaders\system\picking.hlsl
+		data\Shaders\system\picking.hlsli = data\Shaders\system\picking.hlsli
 		data\Shaders\system\quad.hlsli = data\Shaders\system\quad.hlsli
 		data\Shaders\system\rootConstants2D.hlsli = data\Shaders\system\rootConstants2D.hlsli
 		data\Shaders\system\rootConstants3D.hlsli = data\Shaders\system\rootConstants3D.hlsli
@@ -92,6 +94,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "system", "system", "{34ABDE
 		data\Shaders\system\semantics.hlsli = data\Shaders\system\semantics.hlsli
 		data\Shaders\system\table.hlsl.h = data\Shaders\system\table.hlsl.h
 		data\Shaders\system\table.hlsli = data\Shaders\system\table.hlsli
+		data\Shaders\system\toolmode.hlsli = data\Shaders\system\toolmode.hlsli
+		data\Shaders\system\toolmode.hlsl.h = data\Shaders\system\toolmode.hlsl.h
 		data\Shaders\system\types.hlsli = data\Shaders\system\types.hlsli
 		data\Shaders\system\vertex.hlsl.h = data\Shaders\system\vertex.hlsl.h
 		data\Shaders\system\vertex.hlsli = data\Shaders\system\vertex.hlsli
@@ -103,7 +107,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "editor", "editor", "{247A95
 		data\Shaders\editor\editor.hlsl = data\Shaders\editor\editor.hlsl
 		data\Shaders\editor\editor.hlsl.h = data\Shaders\editor\editor.hlsl.h
 		data\Shaders\editor\editor.hlsli = data\Shaders\editor\editor.hlsli
-		data\Shaders\editor\picking.hlsli = data\Shaders\editor\picking.hlsli
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "raytracing", "raytracing", "{5523CE0C-0AA1-4E5F-82C7-85D032949B40}"
@@ -116,11 +119,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "postprocess", "postprocess"
 		data\Shaders\postprocess\postprocess.hlsl = data\Shaders\postprocess\postprocess.hlsl
 		data\Shaders\postprocess\postprocess.hlsl.h = data\Shaders\postprocess\postprocess.hlsl.h
 		data\Shaders\postprocess\postprocess.hlsli = data\Shaders\postprocess\postprocess.hlsli
-	EndProjectSection
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "forward", "forward", "{7FCD3CEF-E9FE-48D8-9ED4-2C2735F76AC7}"
-	ProjectSection(SolutionItems) = preProject
-		data\Shaders\forward\forwardPassConstants.hlsli = data\Shaders\forward\forwardPassConstants.hlsli
 	EndProjectSection
 EndProject
 Global
@@ -200,7 +198,6 @@ Global
 		{247A9589-663C-452B-9C16-F5E34FEE87D4} = {3A24AFD2-079B-45FC-8488-70058ACACD89}
 		{5523CE0C-0AA1-4E5F-82C7-85D032949B40} = {3A24AFD2-079B-45FC-8488-70058ACACD89}
 		{1E58B5A8-C977-4C9E-9705-CB2089DCFF8C} = {3A24AFD2-079B-45FC-8488-70058ACACD89}
-		{7FCD3CEF-E9FE-48D8-9ED4-2C2735F76AC7} = {3A24AFD2-079B-45FC-8488-70058ACACD89}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {B437215B-B736-4FF0-8DA1-E6B35C780CE1}

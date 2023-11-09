@@ -54,18 +54,6 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    //core::u16 MeshInstance::configureToolModeFlags(const DisplayOptions & _options, core::u16 _flags)
-    //{
-    //    if (false == _options.isAlbedoMapsEnabled())
-    //        _flags &= ~FLAG_ALBEDOMAPS;
-    //
-    //    if (false == _options.isNormalMapsEnabled())
-    //        _flags &= ~FLAG_NORMALMAPS;
-    //
-    //    return _flags;
-    //}
-
-    //--------------------------------------------------------------------------------------
     void MeshInstance::Draw(const RenderContext & _renderContext, gfx::CommandList * _cmdList) const
     {
         auto * renderer = Renderer::get();
@@ -76,29 +64,21 @@ namespace vg::renderer
             const MeshGeometry * geo = model->getGeometry();
                         
             const float4x4 world = getWorldMatrix();
-            const float4x4 wvp = mul(world, _renderContext.m_viewProj);
             
             Buffer * vb = geo->getVertexBuffer();
             Buffer * ib = geo->getIndexBuffer();
             _cmdList->setIndexBuffer(ib);
 
             RootConstants3D root3D;
-            root3D.mat = transpose(wvp);
+            root3D.mat = transpose(world); 
             root3D.setBufferHandle(vb->getBufferHandle());
             root3D.color = getColor();
 
-            u16 flags = 0;// FLAG_ALBEDOMAPS | FLAG_NORMALMAPS;
-
-            if (_renderContext.m_toolmode)
-            {
-                //const auto options = DisplayOptions::get();
-                //flags = configureToolModeFlags(*options, flags);
-                //
-                //if (_renderContext.m_wireframe)
-                //    flags |= FLAG_WIREFRAME;
-            }
-            
+            u16 flags = 0;          
             root3D.setFlags(flags);
+
+            auto pickingID = getPickingID();
+            root3D.setPickingID(pickingID);
 
             _cmdList->setPrimitiveTopology(PrimitiveTopology::TriangleList);
             

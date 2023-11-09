@@ -39,6 +39,9 @@
     <ClCompile Include="Importer\FBX\UFBXImporter\UFBXImporter.cpp">
       <Filter>Importer\FBX\UFBXImporter</Filter>
     </ClCompile>
+    <ClCompile Include="Picking\PickingManager.cpp">
+      <Filter>Picking</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Renderer.def" />
@@ -263,6 +266,10 @@
     <ClInclude Include="RenderPass\RenderObjects\Editor\EditorPass.hpp">
       <Filter>Pass\RenderObjects\Editor</Filter>
     </ClInclude>
+    <ClInclude Include="Picking\PickingManager.h">
+      <Filter>Picking</Filter>
+    </ClInclude>
+    <ClInclude Include="IPicking.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Pass">
@@ -378,6 +385,9 @@
     </Filter>
     <Filter Include="Pass\RenderObjects\Editor">
       <UniqueIdentifier>{fb8491fc-94a5-4e36-8588-02e6d75d7dbc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Picking">
+      <UniqueIdentifier>{7ea72328-a267-469b-b644-0bdb6dfb6f7b}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

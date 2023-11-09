@@ -25,6 +25,7 @@
 #include "renderer/View/View.h"
 #include "renderer/View/Forward/ForwardView.h"
 #include "renderer/Model/Material/MaterialModel.h"
+#include "renderer/Picking/PickingManager.h"
 
 #if !VG_ENABLE_INLINE
 #include "Renderer.inl"
@@ -169,6 +170,9 @@ namespace vg::renderer
         // Create device
 		m_device.init(_params.device);
 
+        // Picking
+        m_picking = new PickingManager();
+
         // UI
         m_imgui = new ImGuiAdapter(_params.device.window, m_device);
 
@@ -226,6 +230,8 @@ namespace vg::renderer
         m_frameGraph.release();
 
 		m_device.deinit();
+
+        VG_SAFE_RELEASE(m_picking);
 	}
 
     //--------------------------------------------------------------------------------------
@@ -631,5 +637,11 @@ namespace vg::renderer
     bool Renderer::IsFullscreen() const
     {
         return m_fullscreen;
+    }
+
+    //--------------------------------------------------------------------------------------
+    IPicking * Renderer::GetPicking() const
+    {
+        return m_picking;
     }
 }

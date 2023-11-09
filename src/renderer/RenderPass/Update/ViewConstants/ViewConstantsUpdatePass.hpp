@@ -1,5 +1,6 @@
 #include "ViewConstantsUpdatePass.h"
 #include "shaders/system/view.hlsli"
+#include "Shaders/system/toolmode.hlsl.h"
 
 namespace vg::renderer
 {
@@ -30,7 +31,7 @@ namespace vg::renderer
         if (_renderPassContext.m_view->IsToolmode())
         {
             FrameGraphBufferResourceDesc toolmodeRWBufferDesc;
-            toolmodeRWBufferDesc.elementSize = 16;
+            toolmodeRWBufferDesc.elementSize = sizeof(ToolmodeRWBufferData);
             toolmodeRWBufferDesc.elementCount = 1;
         
             const auto toolmodeRWBufferID = _renderPassContext.getFrameGraphID("ToolmodeRWBuffer");
@@ -52,13 +53,16 @@ namespace vg::renderer
             _cmdList->clearRWBuffer(toolmodeRWBuffer, 0x0);
         }
 
+        View * view = (View *)_renderPassContext.m_view;
+
         ViewConstants * constants = (ViewConstants*)_cmdList->map(s_ViewConstantsBuffer).data;
         {
-            constants->setScreenSize(_renderPassContext.m_view->GetSize());
-            constants->setMousePos(_renderPassContext.m_view->GetRelativeMousePos());
+            constants->setScreenSize(view->getSize());
+            constants->setMousePos(view->GetRelativeMousePos());
             constants->setDisplayMode(options->getDisplayMode());
             constants->setDisplayFlags(options->getDisplayFlags());
             constants->setToolmodeRWBufferID(toolmodeRWBufferID);
+            constants->setViewProj(view->getViewProjMatrix());
         }
         _cmdList->unmap(s_ViewConstantsBuffer, constants);
     }

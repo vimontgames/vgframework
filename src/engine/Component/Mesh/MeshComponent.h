@@ -24,7 +24,7 @@ namespace vg::engine
         MeshResource &  getMeshResource     () { return m_meshResource; }
 
     private:
-        renderer::IMeshInstance * m_meshInstance = nullptr;
+        renderer::IMeshInstance *           m_meshInstance = nullptr;
         MeshResource                        m_meshResource;
         bool                                m_registered = false;
     };

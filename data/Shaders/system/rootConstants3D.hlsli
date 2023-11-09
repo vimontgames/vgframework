@@ -11,8 +11,8 @@ enum RootConstantsFlags : uint
 
 struct RootConstants3D
 {
-    float4x4 mat;
     uint4 data;
+    float4x4 mat;
     float4 color;
 
     #ifdef __cplusplus
@@ -24,6 +24,9 @@ struct RootConstants3D
     }
     #endif
 
+    // data.x 
+    // uint BufferHandle        : 16;
+    // uint VertexBufferOffset  : 16
     void setBufferHandle(uint _value)
     {
         data.x = (data.x & ~0x0000FFFFUL) | (_value & 0xFFFF);
@@ -32,7 +35,6 @@ struct RootConstants3D
     {
         return data.x & 0xFFFF;
     }
-
     void setVertexBufferOffset(uint _value)
     {
         data.x = (data.x & ~0xFFFF0000UL) | (_value & 0xFFFF) << 16;
@@ -42,6 +44,9 @@ struct RootConstants3D
         return data.x >> 16;
     }
 
+    // data.y 
+    // uint AlbedoTex : 16
+    // uint NormalTex : 16
     void setAlbedoTextureHandle(uint _value)
     {
         data.y = (data.y & ~0x0000FFFFUL) | (_value & 0xFFFF);
@@ -50,7 +55,6 @@ struct RootConstants3D
     {
         return data.y & 0xFFFF;
     }
-
     void setNormalTextureHandle(uint _value)
     {
         data.y = (data.y & ~0xFFFF0000UL) | (_value & 0xFFFF) << 16;
@@ -59,7 +63,23 @@ struct RootConstants3D
     {
         return data.y >> 16;
     }
+    
+    // data.z
+    // uint pickingID : 32
+    void setPickingID(uint _value)
+    {
+        data.z = _value;
+    }
+    
+    uint getPickingID()
+    {
+        return data.z;
+    }
 
+    // data.w
+    // uint flags   : 16 (unused)
+    // uint matID   : 8 
+    // uint _pad    : 8 (unused)
     void setFlags(uint _value)
     {
         data.w = (data.w & ~0x0000FFFFUL) | (_value & 0xFFFF);
@@ -68,7 +88,6 @@ struct RootConstants3D
     {
         return data.w & 0xFFFF;
     }
-
     void setMatID(uint _value)
     {
         data.w = (data.w & ~0xFF000000UL) | ((_value & 0xFF) << 24);

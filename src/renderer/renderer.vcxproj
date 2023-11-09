@@ -28,6 +28,7 @@
     <ClCompile Include="Model\Material\MaterialModel.cpp" />
     <ClCompile Include="Model\Mesh\MeshModel.cpp" />
     <ClCompile Include="Options\Options.cpp" />
+    <ClCompile Include="Picking\PickingManager.cpp" />
     <ClCompile Include="Precomp.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug_DX12|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug_Vulkan|x64'">Create</PrecompiledHeader>
@@ -72,6 +73,7 @@
     <ClInclude Include="Importer\TextureImporterData.h" />
     <ClInclude Include="Importer\TextureImporterData.hpp" />
     <ClInclude Include="Instance\Mesh\MeshInstance.h" />
+    <ClInclude Include="IPicking.h" />
     <ClInclude Include="IRenderer.h" />
     <ClInclude Include="Job\Culling\GraphicInstanceList.h" />
     <ClInclude Include="Job\Culling\ViewCullingJob.h" />
@@ -85,6 +87,7 @@
     <ClInclude Include="Options\DisplayOptions.hpp" />
     <ClInclude Include="Options\Options.h" />
     <ClInclude Include="Pass\Pass.h" />
+    <ClInclude Include="Picking\PickingManager.h" />
     <ClInclude Include="Precomp.h" />
     <ClInclude Include="Renderer.h" />
     <ClInclude Include="Renderer_consts.h" />

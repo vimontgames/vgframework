@@ -1,5 +1,3 @@
-#include "Shaders/system/buffer.hlsli"
-
 namespace vg::gfx::vulkan
 {
     //--------------------------------------------------------------------------------------
@@ -83,7 +81,7 @@ namespace vg::gfx::vulkan
             writes.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
             writes.dstBinding = BINDLESS_BUFFER_BINDING;
             writes.descriptorCount = 1;
-            writes.descriptorType = VK_DESCRIPTOR_TYPE_BYTEADDRESSBUFFER;
+            writes.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
             writes.pBufferInfo = &vkBufferInfo;
             writes.pTexelBufferView = &m_vkBufferView;
             writes.dstSet = device->getVulkanBindlessDescriptors();
@@ -123,7 +121,7 @@ namespace vg::gfx::vulkan
             writes.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
             writes.dstBinding = BINDLESS_RWBUFFER_BINDING;
             writes.descriptorCount = 1;
-            writes.descriptorType = VK_DESCRIPTOR_TYPE_RWBYTEADDRESSBUFFER;
+            writes.descriptorType = VK_DESCRIPTOR_TYPE_STORAGE_BUFFER;
             writes.pBufferInfo = &vkBufferInfo;
             writes.pTexelBufferView = &m_vkBufferView;
             writes.dstSet = device->getVulkanBindlessDescriptors();

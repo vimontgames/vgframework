@@ -4,7 +4,6 @@
 #error bindless.hlsli should not be included from C++
 #else
 #include "table.hlsli"
-#include "system/buffer.hlsli"
 
 #define PASTE(a,b) a##b
 

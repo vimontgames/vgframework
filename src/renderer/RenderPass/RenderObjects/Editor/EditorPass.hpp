@@ -4,6 +4,9 @@
 #include "renderer/Model/Mesh/MeshModel.h"
 #include "renderer/Model/Material/MaterialModel.h"
 #include "renderer/View/View.h"
+#include "renderer/Picking/PickingManager.h"
+
+#include "Shaders/system/toolmode.hlsl.h"
 
 namespace vg::renderer
 {
@@ -67,19 +70,17 @@ namespace vg::renderer
             for (uint i = 0; i < allInstances.m_instances.size(); ++i)
             {
                 const IGraphicInstance * instance = allInstances.m_instances[i];
-                const MeshModel * model = (MeshModel *)instance->getModel(Lod::Lod0);
+                const MeshModel * model = (MeshModel *)instance->getModel(Lod::Lod0); // TODO: get LoD from culling result
                 if (nullptr == model)
                     continue;
 
                 const MeshGeometry * geo = model->getGeometry();
-                drawAABB(_cmdList, geo->getAABB(), instance->getWorldMatrix(), renderContext.m_viewProj);
+                drawAABB(_cmdList, geo->getAABB(), instance->getWorldMatrix());
             }
         }
 
-        drawGrid(_cmdList, renderContext.m_viewProj);
-        drawAxis(_cmdList, renderContext.m_viewProj);
-
-       
+        drawGrid(_cmdList);
+        drawAxis(_cmdList);       
     }
 
     //--------------------------------------------------------------------------------------
@@ -100,14 +101,16 @@ namespace vg::renderer
         // copy to staging
         _cmdList->copyBuffer(m_toolmodeRWBufferStaging, toolmodeRWBuffer);
 
-        // wait
-
+        // TODO: wait or make sure the IDs remain valid even for deleted objects
         Map result = m_toolmodeRWBufferStaging->getResource().map();
         {
-            uint4 header = ((uint4 *)result.data)[0];
-            if (all(header != 0x0))
+            const ToolmodeRWBufferData * data = (ToolmodeRWBufferData *)result.data;
+            const PickingData * pickingData = &data->m_picking;
+            const uint4 id = pickingData->m_id;
+            if (0 != id.x)
             {
-                VG_INFO("[Picking] %u, %u, %u, %u", (uint)header.x, (uint)header.y, (uint)header.z, (uint)header.w);
+                auto * picking = Renderer::get()->GetPicking();
+                picking->ProcessPickingData(pickingData);
             }
         }
         m_toolmodeRWBufferStaging->getResource().unmap();

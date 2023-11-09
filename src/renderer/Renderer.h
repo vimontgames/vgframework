@@ -66,6 +66,7 @@ namespace vg::renderer
         core::IProfiler *                       GetProfiler             () const final override;
         IImGuiAdapter *                         GetImGuiAdapter         () const final override;
         gfx::IShaderManager *                   GetShaderManager        () const final override;
+        IPicking *                              GetPicking              () const final override;
 
         bool                                    cookMeshModel           (const core::string & _file) final;
         IMeshModel *                            loadMeshModel           (const core::string & _file) final;
@@ -110,6 +111,7 @@ namespace vg::renderer
         View *                                  m_mainView              = nullptr;
         ImGuiPass *                             m_imguiPass             = nullptr; 
         core::vector<View *>                    m_views[core::enumCount<gfx::ViewTarget>()];
+        IPicking *                              m_picking               = nullptr;
         core::vector<gfx::Texture *>            m_defaultTextures;
         MaterialModel *                         m_defaultMaterial       = nullptr;
         bool                                    m_fullscreen            = false;
