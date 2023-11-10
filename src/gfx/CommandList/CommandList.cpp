@@ -377,9 +377,6 @@ namespace vg::gfx
                     return false;
             
                 super::bindGraphicPipelineState(pso);
-                m_graphicStateCache.m_graphicPipelineKey = key;
-
-                super::bindPrimitiveTopology(m_graphicStateCache.m_graphicPipelineKey.m_primitiveTopology);
             }
 
             if (asBool(GraphicPipelineStateCache::DirtyFlags::Viewport & m_graphicStateCache.m_dirtyFlags))

@@ -14,6 +14,8 @@ namespace vg::gfx
             GraphicPipelineState(const GraphicPipelineStateKey & _key);
             ~GraphicPipelineState();
 
+            const GraphicPipelineStateKey & getGraphicPipelineStateKey() const { return m_key; }
+
         private:
             GraphicPipelineStateKey m_key;
         };

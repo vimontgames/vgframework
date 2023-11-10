@@ -332,12 +332,8 @@ namespace vg::gfx::dx12
     {
         auto * d3s12pso = _pso->getd3d12GraphicPipelineState();
         m_d3d12graphicsCmdList->SetPipelineState(d3s12pso);
-    }
 
-    //--------------------------------------------------------------------------------------
-    void CommandList::bindPrimitiveTopology(PrimitiveTopology _topology)
-    {
-        auto d3d12primitiveTopology = getd3d12PrimitiveTopology(_topology);
+        auto d3d12primitiveTopology = getd3d12PrimitiveTopology(_pso->getGraphicPipelineStateKey().m_primitiveTopology);
         m_d3d12graphicsCmdList->IASetPrimitiveTopology(d3d12primitiveTopology);
     }
 

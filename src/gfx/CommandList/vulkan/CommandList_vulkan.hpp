@@ -223,12 +223,6 @@ namespace vg::gfx::vulkan
     }
 
     //--------------------------------------------------------------------------------------
-    void CommandList::bindPrimitiveTopology(PrimitiveTopology _topology)
-    {
-        // PrimitiveTopology is already part the of the GraphicPipeline in Vulkan, nothing to do
-    }
-
-    //--------------------------------------------------------------------------------------
     void CommandList::bindViewport(const core::uint4 & _viewport)
     {
         VkViewport vp;

@@ -24,7 +24,6 @@ namespace vg::gfx::dx12
 		// Graphic
         void                                bindGraphicRootSignature	(gfx::RootSignature * _rootSig);
         void                                bindGraphicPipelineState    (gfx::GraphicPipelineState * _pso);
-        void                                bindPrimitiveTopology       (PrimitiveTopology _topology);
         void                                bindViewport                (const core::uint4 & _viewport);
         void                                bindScissor                 (const core::uint4 & _scissor);
         void                                bindGraphicRootConstants	(core::uint (& _constants)[max_root_constants]);
