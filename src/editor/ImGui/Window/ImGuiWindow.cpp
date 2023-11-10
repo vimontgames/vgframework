@@ -834,9 +834,21 @@ namespace vg::editor
     //--------------------------------------------------------------------------------------
     bool ImGuiWindow::updateSelection(core::IObject * _object)
     {
+        ISelection * selection = getSelection();
         if (isItemClicked())
         {
-            getSelection()->SetSelectedObject(_object);
+            if (ImGui::IsKeyDown(ImGuiMod_Ctrl))
+            {
+                if (selection->IsSelectedObject(_object))
+                    selection->Remove(_object);
+                else
+                    selection->Add(_object);
+            }
+            else
+            {
+                selection->Clear();
+                selection->Add(_object);
+            }
             return true;
         }
         return false;

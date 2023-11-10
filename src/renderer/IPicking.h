@@ -4,6 +4,11 @@
 
 struct PickingData;
 
+namespace vg::gfx
+{
+    class IView;
+}
+
 namespace vg::renderer
 {
     using PickingID = core::uint;
@@ -13,8 +18,9 @@ namespace vg::renderer
     public:
         virtual ~IPicking() {}
 
-        virtual PickingID   GetPickingID        (core::IObject * _object) = 0;
-        virtual void        ReleasePickingID    (PickingID _id) = 0;
-        virtual void        ProcessPickingData  (const PickingData * _pickingData) = 0;
+        virtual PickingID           GetPickingID        (core::IObject * _object) = 0;
+        virtual void                ReleasePickingID    (PickingID _id) = 0;
+
+        virtual void                Update              (const gfx::IView * _view) = 0;
     };
 }

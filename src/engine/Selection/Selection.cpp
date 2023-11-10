@@ -1,5 +1,7 @@
 #include "engine/Precomp.h"
 #include "Selection.h"
+#include "renderer/IGraphicInstance.h"
+#include "core/GameObject/GameObject.h"
 
 using namespace vg::core;
 
@@ -17,20 +19,23 @@ namespace vg::engine
     //--------------------------------------------------------------------------------------
     void Selection::SetSelectedObject(core::IObject * _object)
     {
-        m_selection.clear();
-        m_selection.push_back(_object);
+        clear();
+        add(_object);
     }
 
     //--------------------------------------------------------------------------------------
-    ISelection::ObjectList & Selection::GetSelectedObjects()
+    core::vector<core::IObject *> & Selection::GetSelectedObjects()
     {
         return m_selection;
     }
 
     //--------------------------------------------------------------------------------------
-    void Selection::SetSelectedObjects(const ObjectList & _objects)
+    void Selection::SetSelectedObjects(const core::vector<core::IObject *> & _objects)
     {
-        m_selection = _objects;
+        clear();
+
+        for (uint i = 0; i < _objects.size(); ++i)
+            add(_objects[i]);
     }
 
     //--------------------------------------------------------------------------------------
@@ -45,19 +50,81 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
-    bool Selection::RemoveFromSelection(core::IObject * _object)
+    bool Selection::Remove(core::IObject * _object)
     {
+        return remove(_object);
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool Selection::Add(core::IObject * _object)
+    {
+        return add(_object);
+    }
+
+    //--------------------------------------------------------------------------------------
+    void Selection::Clear()
+    {
+        clear();
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool Selection::add(core::IObject * _object)
+    {
+        if (!m_selection.exists(_object))
+        {
+            setSelected(_object, true);
+            m_selection.push_back(_object);
+
+            GameObject * go = dynamic_cast<GameObject *>(_object);
+            if (nullptr != go)
+            {
+                auto children = go->getChildren();
+                for (uint j = 0; j < children.size(); ++j)
+                    add(children[j]);
+            }
+
+            return true;
+        }
+        return false;
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool Selection::remove(core::IObject * _object)
+    {
+        GameObject * go = dynamic_cast<GameObject *>(_object);
+        if (nullptr != go)
+        {
+            auto children = go->getChildren();
+            for (uint j = 0; j < children.size(); ++j)
+                remove(children[j]);
+        }
+
+        setSelected(_object, false);
         return m_selection.remove(_object);
     }
 
     //--------------------------------------------------------------------------------------
-    bool Selection::AddToSelection(core::IObject * _object)
+    void Selection::setSelected(core::IObject * _object, bool _selected)
     {
-        if (!m_selection.exists(_object))
+        GameObject * go = dynamic_cast<GameObject *>(_object);
+        if (nullptr != go)
         {
-            m_selection.push_back(_object);
-            return true;
+            go->SetFlags(IInstance::Selected, _selected);
+
+            auto graphicInstances = go->GetGraphicInstances();
+            for (uint i = 0; i < graphicInstances.size(); ++i)
+            {
+                auto instance = graphicInstances[i];
+                instance->SetFlags(IInstance::Selected, _selected);
+            }
         }
-        return false;
+    }
+
+    //--------------------------------------------------------------------------------------
+    void Selection::clear()
+    {
+        for (uint i = 0; i < m_selection.size(); ++i)
+            setSelected(m_selection[i], false);
+        m_selection.clear();
     }
 }

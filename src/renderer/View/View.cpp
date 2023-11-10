@@ -50,6 +50,8 @@ namespace vg::renderer
         m_cullingJob = new ViewCullingJob("ViewCulling", this, &m_cullingJobResult);
 
         m_viewConstantsUpdatePass = new ViewConstantsUpdatePass();
+
+        memset(&m_pickingData, 0x0, sizeof(m_pickingData));
     }
 
     //--------------------------------------------------------------------------------------
@@ -265,18 +267,21 @@ namespace vg::renderer
     void View::RegisterFrameGraph(const gfx::RenderPassContext & _rc, gfx::FrameGraph & _frameGraph)
     {
         _frameGraph.addUserPass(_rc, m_viewConstantsUpdatePass, "ViewConstantsUpdatePass");
-
-        //if (asBool(Flags::Picking & getFlags()))
-        //    initializePickingBuffer();
     }
 
     //--------------------------------------------------------------------------------------
-    void View::initializePickingBuffer()
+    void View::SetPickingData(const PickingData & _pickingData)
     {
-        //if (nullptr == m_pickingBuffer)
-        //{
-        //    BufferDesc pickingBufferDesc = BufferDesc(Usage::Default, BindFlags::ShaderResource, CPUAccessFlags::Write, BufferFlags::None, sizeof(float4));
-        //    m_pickingBuffer = device->createBuffer(pickingBufferDesc, "PickingBuffer");
-        //}
+        m_pickingData = _pickingData;
+
+        //const uint4 id = m_pickingData.m_id;
+        //const float4 pos = m_pickingData.m_pos;
+        //VG_INFO("[Picking] View \"%s\" id = %u, %u, %u, %u pos = %.2f, %.2f, %.2f, %.2f", getName().c_str(), (uint)id.x, (uint)id.y, (uint)id.z, (uint)id.w, (float)pos.x, (float)pos.y, (float)pos.z, (float)pos.w);
+    }
+
+    //--------------------------------------------------------------------------------------
+    const PickingData & View::GetPickingData() const
+    {
+        return m_pickingData;
     }
 }

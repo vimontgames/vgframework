@@ -3,6 +3,7 @@
 #include "gfx/IView.h"
 #include "gfx/Resource/Texture.h"
 #include "renderer/Job/Culling/ViewCullingJob.h"
+#include "shaders/system/picking.hlsli"         
 
 namespace vg::core
 {
@@ -70,6 +71,9 @@ namespace vg::renderer
         const core::string                  GetFrameGraphID             (const core::string & _name) const final override;
         bool                                IsToolmode                  () const override;
 
+        void                                SetPickingData              (const PickingData & _pickingData) override;
+        const PickingData &                 GetPickingData              () const override;
+
         virtual void                        RegisterFrameGraph          (const gfx::RenderPassContext & _rc, gfx::FrameGraph & _frameGraph);
 
         VG_INLINE core::IUniverse *         getUniverse                 () const;
@@ -98,9 +102,6 @@ namespace vg::renderer
 
         bool                                isToolmode                  () const;
 
-    protected:
-        void                                initializePickingBuffer     ();
-
     private:
         static core::float4x4               setPerspectiveProjectionRH  (float _fov, float _ar, float _near, float _far);
 
@@ -119,6 +120,7 @@ namespace vg::renderer
         ViewCullingJob *                    m_cullingJob = nullptr;
         ViewConstantsUpdatePass *           m_viewConstantsUpdatePass = nullptr;
         core::uint2                         m_mouseOffset;
+        PickingData                         m_pickingData;
 
     public:
         ViewCullingJobOutput                m_cullingJobResult;

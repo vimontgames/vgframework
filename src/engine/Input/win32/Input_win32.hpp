@@ -335,7 +335,10 @@ namespace vg::engine::win32
 
         VG_STATIC_ASSERT(core::enumCount<core::MouseButton>() <= countof(ms.rgbButtons), "Invalid mouse button count");
         for (uint b = 0; b < core::enumCount<core::MouseButton>(); ++b)
+        {
+            m_mouseData.m_wasPressed[b] = m_mouseData.m_pressed[b];
             m_mouseData.m_pressed[b] = 0 != ms.rgbButtons[b];
+        }
     }
 #pragma endregion Mouse
 

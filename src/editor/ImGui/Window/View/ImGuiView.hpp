@@ -1,6 +1,7 @@
 #include "ImguiView.h"
 #include "gfx/ITexture.h"
 #include "renderer/IImGuiAdapter.h"
+#include "renderer/IPicking.h"
 #include "gfx/ITexture.h"
 #include "core/IInput.h"
 
@@ -25,33 +26,6 @@ namespace vg::editor
             Editor::get()->getRenderer()->RemoveView(viewID);
         }
   
-    }
-
-    //--------------------------------------------------------------------------------------
-    void ToolbarUI()
-    {
-        const float toolbarSize = 50;
-
-        ImGuiViewport * viewport = ImGui::GetMainViewport();
-        ImGui::SetNextWindowPos(ImVec2(viewport->Pos.x, viewport->Pos.y + 16));
-        ImGui::SetNextWindowSize(ImVec2(viewport->Size.x, toolbarSize));
-        ImGui::SetNextWindowViewport(viewport->ID);
-
-        ImGuiWindowFlags window_flags = 0
-            | ImGuiWindowFlags_NoDocking
-            | ImGuiWindowFlags_NoTitleBar
-            | ImGuiWindowFlags_NoResize
-            | ImGuiWindowFlags_NoMove
-            | ImGuiWindowFlags_NoScrollbar
-            | ImGuiWindowFlags_NoSavedSettings
-            ;
-        ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0);
-        ImGui::Begin("TOOLBAR", NULL, window_flags);
-        ImGui::PopStyleVar();
-
-        ImGui::Button("Toolbar goes here", ImVec2(0, 37));
-
-        ImGui::End();
     }
 
     //--------------------------------------------------------------------------------------
@@ -162,11 +136,13 @@ namespace vg::editor
 
             // Draw Border
             //ImGui::GetForegroundDrawList()->AddRect(vMin, vMax, IM_COL32(0, 255, 0, 255));
+
+            // Update picking
+            auto picking = renderer->GetPicking();
+            picking->Update(m_view);
         }
         ImGui::PopStyleColor();
         ImGui::PopStyleVar();
         ImGui::End();
-
-
     }
 }

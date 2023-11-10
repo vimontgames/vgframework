@@ -304,10 +304,18 @@ namespace vg::renderer
     void RenderObjectsPass::DrawGraphicInstances(const RenderContext & _renderContext, CommandList * _cmdList, const GraphicInstanceList & _graphicInstancesList) const
     {
         const auto & list = _graphicInstancesList.m_instances;
+        bool wireframeSelection = true; // TODO: expose option for selection
 
         for (uint i = 0; i < list.size(); ++i)
         {
             const IGraphicInstance * instance = list[i];
+
+            if (_renderContext.m_wireframe && wireframeSelection)
+            {
+                if (!asBool(IInstance::Flags::Selected & instance->getFlags()))
+                    continue;
+            }
+
             instance->Draw(_renderContext, _cmdList);
         }
     }

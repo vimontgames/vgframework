@@ -1,6 +1,11 @@
 #include "renderer/Precomp.h"
 #include "PickingManager.h"
-
+#include "core/IInput.h"
+#include "core/ISelection.h"
+#include "core/IInstance.h"
+#include "core/IComponent.h"
+#include "core/IGameObject.h"
+#include "gfx/IView.h"
 #include "Shaders/system/toolmode.hlsl.h"
 
 using namespace vg::core;
@@ -51,12 +56,59 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    void PickingManager::ProcessPickingData(const PickingData * _pickingData)
+    void PickingManager::Update(const gfx::IView * _view)
     {
-        const uint4 id = _pickingData->m_id;
-        const float4 pos = _pickingData->m_pos;
+        const PickingData & pickingData = _view->GetPickingData();
+        const uint4 id = pickingData.m_id;
+        const float4 pos = pickingData.m_pos;
 
-        VG_INFO("[Picking] id = %u, %u, %u, %u pos = %.2f, %.2f, %.2f, %.2f", (uint)id.x, (uint)id.y, (uint)id.z, (uint)id.w, (float)pos.x, (float)pos.y, (float)pos.z, (float)pos.w);
+        const auto mousePos = _view->GetRelativeMousePos();
+        const auto viewSize = _view->GetSize();
 
+        if (all(mousePos.xy >= 0) && all(mousePos.xy < viewSize.xy))
+        {
+            auto input = Kernel::getInput();
+            const bool ctrl = input->IsKeyPressed(Key::LCONTROL) || input->IsKeyPressed(Key::LCONTROL);
+
+            if (input->IsMouseButtonJustPressed(MouseButton::Left))
+            {
+                auto selection = Kernel::getSelection();
+
+                if (0 != id.x && id.x < m_pickingID.size())
+                {
+                    IObject * object = m_pickingID[id.x];
+                    if (nullptr != object)
+                    {
+                        IComponent * component = dynamic_cast<IComponent *>(object);
+
+                        if (nullptr != component)
+                        {
+                            IObject * parent = component->getParent();
+                            IGameObject * go = dynamic_cast<IGameObject *>(parent);
+                            if (nullptr != go)
+                            {
+                                if (ctrl)
+                                {
+                                    if (selection->IsSelectedObject(go))
+                                        selection->Remove(go);
+                                    else
+                                        selection->Add(go);
+                                }
+                                else
+                                {
+                                    selection->Clear();
+                                    selection->Add(go);
+                                }
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    if (!ctrl)
+                        selection->Clear();
+                }
+            }
+        }
     }
 }

@@ -44,7 +44,7 @@ namespace vg::core
         // Remove GameObject from selection when deleted
         ISelection * selection = Kernel::getSelection(false);
         if (nullptr != selection)
-            selection->RemoveFromSelection(this);
+            selection->Remove(this);
 
         for (uint i = 0; i < m_children.size(); ++i)
             VG_SAFE_RELEASE(m_children[i]);

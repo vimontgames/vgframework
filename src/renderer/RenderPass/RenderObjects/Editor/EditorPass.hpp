@@ -59,7 +59,8 @@ namespace vg::renderer
         _cmdList->setBlendState(bs);
         _cmdList->setDepthStencilState(ds);
 
-        if (options->isWireframeEnabled())
+        bool wireframeSelection = true; // TODO: expose option for selection
+        if (options->isWireframeEnabled() || wireframeSelection)
         {
             renderContext.m_wireframe = true;
             DrawGraphicInstances(renderContext, _cmdList, allInstances);
@@ -106,12 +107,7 @@ namespace vg::renderer
         {
             const ToolmodeRWBufferData * data = (ToolmodeRWBufferData *)result.data;
             const PickingData * pickingData = &data->m_picking;
-            const uint4 id = pickingData->m_id;
-            if (0 != id.x)
-            {
-                auto * picking = Renderer::get()->GetPicking();
-                picking->ProcessPickingData(pickingData);
-            }
+            _renderPassContext.m_view->SetPickingData(*pickingData);
         }
         m_toolmodeRWBufferStaging->getResource().unmap();
     }

@@ -3,6 +3,8 @@
 #include "core/Object/Object.h"
 #include "core/IUniverse.h"
 
+struct PickingData;
+
 namespace vg::core
 {
     class IGameObject;
@@ -112,5 +114,8 @@ namespace vg::gfx
 
         virtual const core::string      GetFrameGraphID     (const core::string & _name) const = 0;
         virtual bool                    IsToolmode          () const = 0;
+      
+        virtual void                    SetPickingData      (const PickingData & _pickingData) = 0;
+        virtual const PickingData &     GetPickingData      () const = 0;
     };
 }
