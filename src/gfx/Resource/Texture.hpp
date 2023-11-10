@@ -24,22 +24,29 @@ namespace vg::gfx
         }
 
         //--------------------------------------------------------------------------------------
+        core::u16 computeMaxMip(core::uint _dim)
+        {
+            auto count = log2((float)_dim)+1;
+            return (core::uint)count;
+        }
+
+        //--------------------------------------------------------------------------------------
         core::u32 Texture::computeMaxMipmapCount(const TextureDesc & _texDesc)
         {
             switch (_texDesc.type)
             {
                 case TextureType::Texture1D:
                 case TextureType::Texture1DArray:
-                    return (core::u32)(1 + floor(log10((float)_texDesc.width) / log10(2.0)));
+                    return computeMaxMip(_texDesc.width);
 
                 case TextureType::Texture2D:
                 case TextureType::TextureCube:
                 case TextureType::Texture2DArray:
                 case TextureType::TextureCubeArray:
-                    return (core::u32)(1 + floor(log10((float)max(_texDesc.width, _texDesc.height)) / log10(2.0)));
+                    return computeMaxMip(min(_texDesc.width, _texDesc.height));
 
                 case TextureType::Texture3D:
-                    return (core::u32)(1 + floor(log10((float)max( max(_texDesc.width, _texDesc.height), _texDesc.depth)) / log10(2.0)));
+                    return computeMaxMip(min(min(_texDesc.width, _texDesc.height), _texDesc.depth));
 
                 default:
                     VG_ASSERT_ENUM_NOT_IMPLEMENTED(_texDesc.type);
