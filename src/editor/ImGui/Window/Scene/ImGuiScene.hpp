@@ -170,7 +170,7 @@ namespace vg::editor
             else
                 flags |= ImGuiTreeNodeFlags_Leaf;
 
-            if (isSelectedObject(_gameObject))
+            if (getSelection()->IsSelectedObject(_gameObject))
             {
                 //const auto selColor = ImGui::GetStyleColorVec4(ImGuiCol_Header); 
                 //DrawRowsBackground(1, GetColorU32(selColor));

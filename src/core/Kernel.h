@@ -7,6 +7,7 @@ namespace vg::core
     class IScheduler;
     class IInput;
     class IFactory;
+    class ISelection;
 
     struct Singletons
     {
@@ -15,6 +16,7 @@ namespace vg::core
         IScheduler *    scheduler   = nullptr;
         IInput *        input       = nullptr;
         IFactory *      factory     = nullptr;
+        ISelection *    selection   = nullptr;
     };
 
     class Kernel
@@ -34,6 +36,9 @@ namespace vg::core
 
         static void setFactory(IFactory * _factory);
         static IFactory * getFactory();
+
+        static void setSelection(ISelection * _selection);
+        static ISelection * getSelection(bool _mustExist = true);
 
         static void setSingletons(const Singletons & _other);
         static Singletons & getSingletons();
@@ -104,6 +109,19 @@ namespace vg::core
     {
         VG_ASSERT(s_singletons.factory, "IFactory interface is not specified for this executable or dynamic library.");
         return s_singletons.factory;
+    }
+
+    //--------------------------------------------------------------------------------------
+    inline void Kernel::setSelection(ISelection * _selection)
+    {
+        s_singletons.selection = _selection;
+    }
+
+    //--------------------------------------------------------------------------------------
+    inline ISelection * Kernel::getSelection(bool _mustExist)
+    {
+        VG_ASSERT(!_mustExist || s_singletons.selection, "ISelection interface is not specified for this executable or dynamic library.");
+        return s_singletons.selection;
     }
 
     //--------------------------------------------------------------------------------------

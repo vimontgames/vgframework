@@ -20,6 +20,7 @@
 
 #include "engine/Input/Input.h"
 #include "engine/Resource/ResourceManager.h"
+#include "engine/Selection/Selection.h"
 #include "engine/Component/Camera/CameraComponent.h"
 #include "engine/Behaviour/FreeCam/FreeCamBehaviour.h"
 #include "engine/Component/Mesh/MeshComponent.h"
@@ -281,6 +282,10 @@ namespace vg::engine
         _singletons.factory = new Factory();
         Kernel::setFactory(_singletons.factory);
 
+        m_selection = new Selection();
+        _singletons.selection = m_selection;
+        Kernel::setSelection(_singletons.selection);
+
         // Load Renderer DLL
 		m_renderer = Plugin::create<renderer::IRenderer>("renderer", api);
 		m_renderer->init(_params.renderer, _singletons);
@@ -390,6 +395,9 @@ namespace vg::engine
         ILogger * logger = Kernel::getLogger();
         VG_SAFE_DELETE(logger);
         Kernel::setLogger(nullptr);
+
+        VG_SAFE_RELEASE(m_selection);
+        Kernel::setSelection(nullptr);
 	}
 
     //--------------------------------------------------------------------------------------
@@ -463,6 +471,12 @@ namespace vg::engine
     IResourceManager * Engine::GetResourceManager() const
     {
         return m_resourceManager;
+    }
+
+    //--------------------------------------------------------------------------------------
+    core::ISelection * Engine::GetSelection() const
+    {
+        return m_selection;
     }
 
     //--------------------------------------------------------------------------------------

@@ -14,7 +14,7 @@ namespace vg::editor
         ImGui::PushID("ImGuiInspector");
         if (ImGui::IconBegin(style::icon::Inspector, getName().c_str(), &m_isVisible))
         {
-            auto * object = ImGuiWindow::getSelectedObject();
+            auto * object = getSelection()->GetSelectedObject();
             if (nullptr != object)
             {
                 ImGuiWindow::displayObject(object);

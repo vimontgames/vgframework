@@ -8,6 +8,7 @@
 #include "core/IScene.h"
 #include "core/IGameObject.h"
 #include "core/IComponent.h"
+#include "core/ISelection.h"
 
 #include "engine/IEngine.h"
 #include "editor/Editor_Consts.h"
@@ -46,14 +47,23 @@ using namespace ImGui;
 
 namespace vg::editor
 {
-    // TODO: move to Editor
-    core::vector<core::IObject*> ImGuiWindow::s_selection;
-
     //--------------------------------------------------------------------------------------
     imgui_addons::ImGuiFileBrowser & ImGuiWindow::getFileBrowser()
     {
         static imgui_addons::ImGuiFileBrowser g_imguiFileBrower;
         return g_imguiFileBrower;
+    }
+
+    //--------------------------------------------------------------------------------------
+    engine::IEngine * ImGuiWindow::getEngine()
+    {
+        return Editor::get()->getEngine();
+    }
+
+    //--------------------------------------------------------------------------------------
+    core::ISelection * ImGuiWindow::getSelection()
+    {
+        return Editor::get()->getEngine()->GetSelection();
     }
 
     //--------------------------------------------------------------------------------------
@@ -826,67 +836,11 @@ namespace vg::editor
     {
         if (isItemClicked())
         {
-            setSelectedObject(_object);
+            getSelection()->SetSelectedObject(_object);
             return true;
         }
         return false;
-    }
-
-    //--------------------------------------------------------------------------------------
-    IObject * ImGuiWindow::getSelectedObject()
-    {
-        if (s_selection.count() > 0)
-            return s_selection[0];
-        else
-            return nullptr;
-    }
-
-    //--------------------------------------------------------------------------------------
-    void ImGuiWindow::setSelectedObject(core::IObject * _object)
-    {
-        s_selection.clear();
-        s_selection.push_back(_object);
-    }
-
-    //--------------------------------------------------------------------------------------
-    vector<IObject*> & ImGuiWindow::getSelectedObjects()
-    {
-        return s_selection;
-    }
-
-    //--------------------------------------------------------------------------------------
-    void ImGuiWindow::setSelectedObjects(core::vector<core::IObject*> & _objects)
-    {
-        s_selection = _objects;
-    }
-
-    //--------------------------------------------------------------------------------------
-    bool ImGuiWindow::isSelectedObject(core::IObject * _object)
-    {
-        for (int i = 0; i < s_selection.size(); ++i)
-        {
-            if (_object == s_selection[i])
-                return nullptr != s_selection[i];
-        }
-        return false;
-    }
-
-    //--------------------------------------------------------------------------------------
-    bool ImGuiWindow::removeFromSelection(core::IObject * _object)
-    {
-        return s_selection.remove(_object);         
-    }
-    
-    //--------------------------------------------------------------------------------------
-    bool ImGuiWindow::addToSelection(core::IObject * _object)
-    {
-        if (!s_selection.exists(_object))
-        {
-            s_selection.push_back(_object);
-            return true;
-        }
-        return false;
-    }
+    }    
 
     //--------------------------------------------------------------------------------------
     void ImGuiWindow::underLine(const ImColor & _color)

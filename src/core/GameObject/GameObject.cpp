@@ -3,6 +3,7 @@
 #include "core/Kernel.h"
 #include "core/Component/Component.h"
 #include "core/Object/AutoRegisterClass.h"  
+#include "core/ISelection.h"
 #include "renderer/IGraphicInstance.h"
 
 namespace vg::core
@@ -40,6 +41,11 @@ namespace vg::core
     //--------------------------------------------------------------------------------------
     GameObject::~GameObject()
     {
+        // Remove GameObject from selection when deleted
+        ISelection * selection = Kernel::getSelection(false);
+        if (nullptr != selection)
+            selection->RemoveFromSelection(this);
+
         for (uint i = 0; i < m_children.size(); ++i)
             VG_SAFE_RELEASE(m_children[i]);
         m_children.clear();

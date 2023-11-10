@@ -18,6 +18,9 @@
     <ClCompile Include="Behaviour\FreeCam\FreeCamBehaviour.cpp">
       <Filter>Behaviour</Filter>
     </ClCompile>
+    <ClCompile Include="Selection\Selection.cpp">
+      <Filter>Selection</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Engine.def" />
@@ -73,6 +76,10 @@
     </ClInclude>
     <ClInclude Include="Behaviour\FreeCam\FreeCamBehaviour.h">
       <Filter>Behaviour</Filter>
+    </ClInclude>
+    <ClInclude Include="ISelection.h" />
+    <ClInclude Include="Selection\Selection.h">
+      <Filter>Selection</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

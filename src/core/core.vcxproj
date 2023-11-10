@@ -40,6 +40,7 @@
     <ClInclude Include="IResource.h" />
     <ClInclude Include="IScene.h" />
     <ClInclude Include="IScheduler.h" />
+    <ClInclude Include="ISelection.h" />
     <ClInclude Include="IUniverse.h" />
     <ClInclude Include="Kernel.h" />
     <ClInclude Include="Logger\Logger.h" />

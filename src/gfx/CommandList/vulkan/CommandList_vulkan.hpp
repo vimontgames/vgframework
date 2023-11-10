@@ -225,7 +225,7 @@ namespace vg::gfx::vulkan
     //--------------------------------------------------------------------------------------
     void CommandList::bindPrimitiveTopology(PrimitiveTopology _topology)
     {
-        VG_WARNING_ONCE("[Device] bindPrimitiveTopology is not implemented");
+        // PrimitiveTopology is already part the of the GraphicPipeline in Vulkan, nothing to do
     }
 
     //--------------------------------------------------------------------------------------

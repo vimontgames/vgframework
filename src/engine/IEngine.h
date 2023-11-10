@@ -11,6 +11,7 @@ namespace vg
     {
         struct Singletons;
         class IUniverse;
+        class ISelection;
     }
 
     namespace renderer
@@ -74,6 +75,7 @@ namespace vg
             virtual editor::IEditor *           GetEditor           () const = 0;
 		    virtual renderer::IRenderer *	    GetRenderer	        () const = 0;
             virtual engine::IResourceManager *  GetResourceManager  () const = 0;
+            virtual core::ISelection *          GetSelection        () const = 0;
 	    };
     }
 }

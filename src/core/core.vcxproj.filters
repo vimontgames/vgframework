@@ -200,6 +200,7 @@
     <ClInclude Include="Logger\Logger.h">
       <Filter>Logger</Filter>
     </ClInclude>
+    <ClInclude Include="ISelection.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Math\Math.cpp">

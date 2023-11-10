@@ -25,6 +25,7 @@ namespace vg::engine
 {
     class FreeCam;
     class ResourceManager;
+    class Selection;
 
 	class Engine : public IEngine, public core::Singleton<Engine>
 	{
@@ -83,6 +84,7 @@ namespace vg::engine
         editor::IEditor *                   GetEditor           () const final override;
 		renderer::IRenderer *	            GetRenderer	        () const final override;
         engine::IResourceManager *          GetResourceManager  () const final override;
+        core::ISelection *                  GetSelection        () const final override;
 
     public:
         void                                createEditorScene   ();
@@ -113,6 +115,7 @@ namespace vg::engine
 		renderer::IRenderer *	            m_renderer          = nullptr;
         gfx::IView *                        m_mainView          = nullptr;
         ResourceManager *                   m_resourceManager   = nullptr;
+        Selection *                         m_selection         = nullptr;
         Time                                m_time;
 	};
 }

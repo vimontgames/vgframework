@@ -1,8 +1,11 @@
 #include "ImGuiGameObjectSceneEditorMenu.h"
 #include "core/IGameObject.h"
+#include "core/ISelection.h"
 #include "core/string/string.h"
+#include "engine/IEngine.h"
 #include "editor/ImGui/Window/ImGuiWindow.h"
 #include "editor/ImGui/Extensions/imGuiExtensions.h"
+#include "editor/Editor.h"
 
 using namespace vg::core;
 
@@ -40,7 +43,10 @@ namespace vg::editor
                         IGameObject * parentGameObject = dynamic_cast<IGameObject *>(gameObject->getParent());
                         if (nullptr != parentGameObject)
                         {
-                            ImGuiWindow::removeFromSelection(gameObject);
+                            // Deleting the object will remove it from selection
+                            //auto * selection = Editor::get()->getEngine()->GetSelection();
+                            //selection->RemoveFromSelection(gameObject);
+
                             parentGameObject->RemoveChild(gameObject);
                             VG_SAFE_RELEASE(gameObject);
                             status = Status::Removed;
