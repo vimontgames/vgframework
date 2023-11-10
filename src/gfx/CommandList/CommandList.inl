@@ -1,3 +1,6 @@
+#include "gfx/Resource/Buffer.h"
+#include "gfx/Resource/Texture.h"
+
 namespace vg::gfx
 {
     //--------------------------------------------------------------------------------------
