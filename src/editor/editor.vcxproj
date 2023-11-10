@@ -35,6 +35,10 @@
     <ClInclude Include="ImGui\Menu\GameObject\SceneEditor\ImGuiGameObjectSceneEditorMenu.h" />
     <ClInclude Include="ImGui\Menu\GameObject\SceneEditor\ImGuiGameObjectSceneEditorMenu.hpp" />
     <ClInclude Include="ImGui\Menu\ImGuiMenu.h" />
+    <ClInclude Include="ImGui\Menu\Inspector\Component\ImGuiComponentInspectorMenu.h" />
+    <ClInclude Include="ImGui\Menu\Inspector\Component\ImGuiComponentInspectorMenu.hpp" />
+    <ClInclude Include="ImGui\Menu\Inspector\GameObject\ImGuiGameObjectInspectorMenu.h" />
+    <ClInclude Include="ImGui\Menu\Inspector\GameObject\ImGuiGameObjectInspectorMenu.hpp" />
     <ClInclude Include="ImGui\Menu\Scene\ImGuiSceneMenu.h" />
     <ClInclude Include="ImGui\Menu\Scene\ImGuiSceneMenu.hpp" />
     <ClInclude Include="ImGui\ObjectHandler\GameObject\ImGuiGameObjectHandler.hpp" />

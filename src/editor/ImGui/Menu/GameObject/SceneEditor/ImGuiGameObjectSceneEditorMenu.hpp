@@ -43,10 +43,6 @@ namespace vg::editor
                         IGameObject * parentGameObject = dynamic_cast<IGameObject *>(gameObject->getParent());
                         if (nullptr != parentGameObject)
                         {
-                            // Deleting the object will remove it from selection
-                            //auto * selection = Editor::get()->getEngine()->GetSelection();
-                            //selection->RemoveFromSelection(gameObject);
-
                             parentGameObject->RemoveChild(gameObject);
                             VG_SAFE_RELEASE(gameObject);
                             status = Status::Removed;
@@ -54,7 +50,7 @@ namespace vg::editor
                         return true;
                     };
 
-                    string msg = "Are you sure you want to delete " + (string)gameObject->getClassName() + " \"" + gameObject->getName() + "\"";
+                    string msg = "Are you sure you want to delete " + (string)gameObject->getClassName() + " \"" + gameObject->getName() + "\"?";
                     ImGui::MessageBox(MessageBoxType::YesNo, "Delete GameObject", msg.c_str(), deleteGameObject);
                 }
             }

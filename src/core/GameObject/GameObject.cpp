@@ -85,6 +85,19 @@ namespace vg::core
     {
         addComponent((Component*)_component);
     }
+
+    //--------------------------------------------------------------------------------------
+    bool GameObject::RemoveComponent(IComponent * _component)
+    {
+        if (m_components.exists((Component *)_component))
+        {
+            m_components.remove((Component *)_component);
+            return true;
+        }
+
+        return false;
+    }
+
     //--------------------------------------------------------------------------------------
     const vector<IComponent *> & GameObject::GetComponents() const
     {

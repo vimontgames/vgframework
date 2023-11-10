@@ -44,6 +44,7 @@ using namespace ImGui;
 #include "editor/ImGui/Window/Console/ImGuiConsole.hpp"
 
 #include "editor/ImGui/ObjectHandler/ImGuiObjectHandler.h"
+#include "editor/ImGui/Menu/Inspector/Component/ImGuiComponentInspectorMenu.h"
 
 namespace vg::editor
 {
@@ -559,8 +560,12 @@ namespace vg::editor
                             if (-1 != nPos)
                                 componentShortName.erase(nPos);
                         }
+                        const bool open = ImGui::CollapsingHeader(componentShortName.c_str(), nullptr, ImGuiTreeNodeFlags_None);
+                        
+                        ImGuiComponentInspectorMenu componentInspectorMenu;
+                        componentInspectorMenu.Display(pComponent);
 
-                        if (ImGui::CollapsingHeader(componentShortName.c_str(), nullptr, ImGuiTreeNodeFlags_None))
+                        if (open)
                             displayArrayObject(pComponent, i, nullptr);
                     }
                 }

@@ -2,110 +2,14 @@
 
 #include "core/IGameObject.h"
 #include "core/IComponent.h"
-#include "editor/ImGui/Menu/ImGuiMenu.h"
+#include "editor/ImGui/Menu/Inspector/GameObject/ImGuiGameObjectInspectorMenu.h"
 #include "editor/ImGui/Window/ImGuiWindow.h"
+#include "editor/ImGui/Extensions/imGuiExtensions.h"
 
 using namespace vg::core;
 
 namespace vg::editor
 {
-    class ImGuiGameObjectInspectorMenu : public ImGuiMenu
-    {
-    public:
-        enum MenuOption
-        {
-            None = 0,
-            AddComponent
-        };
-
-        //--------------------------------------------------------------------------------------
-        Status Display(IObject * _object) final
-        {
-            auto status = Status::None;
-
-            IGameObject * gameObject = dynamic_cast<IGameObject *>(_object);
-            VG_ASSERT(nullptr != gameObject);
-
-            bool openPopup = false;
-
-            if (ImGui::BeginPopupContextWindow())
-            {
-                if (ImGui::MenuItem("Add Component"))
-                {
-                    m_selected = MenuOption::AddComponent;
-                    m_popup = "Add Component";
-                    openPopup = true;
-                    ImGui::OpenPopup("Add Component");
-                }
-
-                ImGui::EndPopup();
-            }
-
-            if (openPopup)
-            {
-                ImGui::OpenPopup(m_popup);
-                openPopup = false;
-            }
-
-            switch (m_selected)
-            {
-                case MenuOption::AddComponent:
-                    if (ImGui::BeginPopupModal(m_popup, nullptr, ImGuiWindowFlags_AlwaysAutoResize))
-                    {
-                        // List the available components
-                        auto factory = Kernel::getFactory();
-                        auto componentClassDescs = factory->getClassDescriptors(IClassDesc::Flags::Component);
-
-                        if (ImGui::BeginCombo("Components", m_selectedClassName, ImGuiComboFlags_HeightLarge))
-                        {
-                            for (uint i = 0; i < componentClassDescs.count(); ++i)
-                            {
-                                auto * classDesc = componentClassDescs[i];
-                                auto * className = classDesc->getClassName();
-                                if (ImGui::Selectable(className))
-                                    m_selectedClassName = className;
-                            }
-                            ImGui::EndCombo();
-                        }
-
-                        if (ImGui::Button("Create", style::button::Size))
-                        {
-                            status = Status::Failure;
-
-                            if (m_selectedClassName)
-                            {
-                                IComponent * comp = (IComponent *)Kernel::getFactory()->createObject(m_selectedClassName, "New " + (string)m_selectedClassName, _object);
-                                if (comp)
-                                {
-                                    gameObject->AddComponent(comp);
-                                    comp->release();
-                                    status = Status::Success;
-                                }
-                            }
-
-                            ImGui::CloseCurrentPopup();
-                        }
-
-                        ImGui::SameLine();
-
-                        if (ImGui::Button("Cancel", style::button::Size))
-                        {
-                            status = Status::Canceled;
-                            ImGui::CloseCurrentPopup();
-                        }
-
-                        ImGui::EndPopup();
-                    }
-                    break;
-            }
-
-            return status;
-        }
-
-    private:
-        const char * m_selectedClassName = nullptr;
-    };
-
     class ImGuiGameObjectHandler : public ImGuiObjectHandler
     {
     public:
@@ -119,9 +23,13 @@ namespace vg::editor
             const char * curClassName = nullptr;
             bool visible = false;
 
+            ImGui::PushID("DisplayObject");
+
+            bool open = ImGui::CollapsingHeader("GameObject", nullptr, ImGuiTreeNodeFlags_DefaultOpen);
+
             m_gameObjectInspectorMenu.Display(_object);
 
-            if (ImGui::CollapsingHeader("GameObject", nullptr, ImGuiTreeNodeFlags_DefaultOpen))
+            if (open)
             {
                 for (uint i = 0; i < classDesc->getPropertyCount(); ++i)
                 {
@@ -132,11 +40,13 @@ namespace vg::editor
                         if (curClassName != prop->getClassName())
                         {
                             curClassName = prop->getClassName();
-                            visible = true; // ImGui::CollapsingHeader(curClassName, nullptr, ImGuiTreeNodeFlags_DefaultOpen);
+                            visible = true;
                         }
                 
                         if (visible)
+                        {
                             ImGuiWindow::displayProperty(prop, _object);
+                        }
                     }
                 }
             }
@@ -146,8 +56,12 @@ namespace vg::editor
                 const IProperty * prop = classDesc->getPropertyByIndex(i);
             
                 if (!strcmp(prop->getName(), "m_components"))
+                {
                     ImGuiWindow::displayProperty(prop, _object);
+                }
             }
+
+            ImGui::PopID();
         }
 
     private:

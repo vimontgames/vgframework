@@ -19,6 +19,7 @@ namespace vg::core
         void                                                Update                  (double _dt);
 
         void                                                AddComponent            (IComponent * _component) final override;
+        bool                                                RemoveComponent         (IComponent * _component) final override;
         const vector<IComponent *> &                        GetComponents           () const final override;
 
         void                                                addComponent            (Component * _component);

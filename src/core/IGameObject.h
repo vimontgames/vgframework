@@ -26,6 +26,7 @@ namespace vg::core
         virtual bool                                        IsRoot                  () const = 0;
 
         virtual void                                        AddComponent            (IComponent * _component) = 0;
+        virtual bool                                        RemoveComponent         (IComponent * _component) = 0;
         virtual const vector<IComponent *> &                GetComponents           () const = 0;
 
         virtual void                                        AddGraphicInstance      (renderer::IGraphicInstance * _graphicInstance) = 0;

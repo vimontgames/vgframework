@@ -165,6 +165,18 @@
     <ClInclude Include="ImGui\Window\Input\ImGuiInput.hpp">
       <Filter>ImGui\Window\Input</Filter>
     </ClInclude>
+    <ClInclude Include="ImGui\Menu\Inspector\GameObject\ImGuiGameObjectInspectorMenu.h">
+      <Filter>ImGui\Menu\Inspector\GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="ImGui\Menu\Inspector\GameObject\ImGuiGameObjectInspectorMenu.hpp">
+      <Filter>ImGui\Menu\Inspector\GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="ImGui\Menu\Inspector\Component\ImGuiComponentInspectorMenu.h">
+      <Filter>ImGui\Menu\Inspector\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="ImGui\Menu\Inspector\Component\ImGuiComponentInspectorMenu.hpp">
+      <Filter>ImGui\Menu\Inspector\Component</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Editor.def" />
@@ -257,6 +269,15 @@
     </Filter>
     <Filter Include="ImGui\Window\Input">
       <UniqueIdentifier>{176ee71b-5bfc-4c0e-b570-504432762f00}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ImGui\Menu\Inspector">
+      <UniqueIdentifier>{dd5e64fb-c8b8-4129-9e74-6cfa9da026fe}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ImGui\Menu\Inspector\GameObject">
+      <UniqueIdentifier>{6e851185-ce46-4aa1-84b2-34a6b7fb1df8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ImGui\Menu\Inspector\Component">
+      <UniqueIdentifier>{d66790a1-3e2f-4211-a3eb-67e13e43f3a4}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
