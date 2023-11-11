@@ -16,10 +16,8 @@ namespace vg::editor
 
         if (ImGui::IconBegin(style::icon::Shaders, "Shaders", &m_isVisible))
         {
-            ImGui::Text("Press 'F6' to ");
-            ImGui::SameLine();
-            renderer::IRenderer * renderer = Editor::get()->getRenderer();
-            if (ImGui::ButtonEx("Update Shaders", renderer != nullptr, "Compile all modified shaders"))
+             renderer::IRenderer * renderer = Editor::get()->getRenderer();
+            if (ImGui::TextButton("Press 'F6' to", "Reload Shaders", renderer != nullptr, "Compile all modified shaders"))
                 renderer->updateShaders();
         }
         ImGui::End();

@@ -42,7 +42,7 @@ namespace ImGui
     }
 
     //--------------------------------------------------------------------------------------
-    bool ButtonEx(const string & _label, bool _enabled, bool _clickable, const string & _tooltip, ImVec2 _buttonSize)
+    bool ButtonInternal(const vg::core::string & _textLabel, const vg::core::string & _buttonLabel, bool _enabled = true, bool _clickable = true, const vg::core::string & _tooltip = {}, ImVec2 _buttonSize = ImVec2(0, 0))
     {
         bool clicked = false;
 
@@ -60,7 +60,16 @@ namespace ImGui
                 ImGui::PushStyleColor(ImGuiCol_Text, textColorDisabled);
         }
 
-        if (ImGui::Button(_label.c_str(), _buttonSize) && _clickable)
+        if (!_textLabel.empty())
+        {
+            auto y = ImGui::GetCursorPosY();
+            ImGui::SetCursorPosY(y + 4);
+            ImGui::Text(_textLabel.c_str());
+            ImGui::SameLine();
+            ImGui::SetCursorPosY(y);
+        }
+
+        if (ImGui::Button(_buttonLabel.c_str(), _buttonSize) && _clickable)
         {
             clicked = true;
         }
@@ -76,6 +85,18 @@ namespace ImGui
         }
 
         return clicked;
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool TooltipButton(const string & _label, bool _enabled, bool _clickable, const string & _tooltip, ImVec2 _buttonSize)
+    {
+        return ButtonInternal("", _label, _enabled, _clickable, _tooltip, _buttonSize);
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool TextButton(const vg::core::string & _textLabel, const vg::core::string & _buttonLabel, bool _enabled, const vg::core::string & _tooltip)
+    {
+        return ButtonInternal(_textLabel, _buttonLabel, _enabled, _enabled, _tooltip);
     }
 
     //--------------------------------------------------------------------------------------

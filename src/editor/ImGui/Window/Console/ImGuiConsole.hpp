@@ -112,17 +112,17 @@ namespace vg::editor
                 {
                     ImGui::SetCursorPosX(offset);
     
-                    if (ImGui::ButtonEx(infoLabel, m_showInfo, true, "Show Infos"))
+                    if (ImGui::TooltipButton(infoLabel, m_showInfo, true, "Show Infos"))
                         m_showInfo = !m_showInfo;
 
                     ImGui::SameLine();
     
-                    if (ImGui::ButtonEx(warningLabel, m_showWarnings, true, "Show Warnings"))
+                    if (ImGui::TooltipButton(warningLabel, m_showWarnings, true, "Show Warnings"))
                         m_showWarnings = !m_showWarnings;
 
                     ImGui::SameLine();
                   
-                    if (ImGui::ButtonEx(errorLabel, m_showErrors, true, "Show Errors"))
+                    if (ImGui::TooltipButton(errorLabel, m_showErrors, true, "Show Errors"))
                         m_showErrors = !m_showErrors;
                 }
                 PopStyleVar();
