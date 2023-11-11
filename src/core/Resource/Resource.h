@@ -31,8 +31,11 @@ namespace vg::core
         void                        setOwner            (core::IObject * _object) final;
         core::IObject *             getOwner            () const final;
 
-        bool                        setResourcePath     (const string & _path) final;
-        const string &              getResourcePath     () const final;
+        bool                        Reimport            () final;
+
+        bool                        ClearResourcePath   () final;
+        bool                        SetResourcePath     (const string & _path) final;
+        const string &              GetResourcePath     () const final;
 
         bool                        cook                (const core::string & _file) = 0;
         bool                        load                (const core::string & _file, core::IObject * _owner) = 0;

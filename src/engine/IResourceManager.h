@@ -14,6 +14,14 @@ namespace vg::engine
         {
 
         }
+
+        // Return 'true' if any resource is currently loading 
+        virtual bool HasResourceLoading() const = 0;
         
+        // Get number of registered resources
+        virtual core::uint GetResourceCount() const = 0;
+
+        // Reimport modified resources
+        virtual core::uint UpdateResources() = 0;
     };
 }

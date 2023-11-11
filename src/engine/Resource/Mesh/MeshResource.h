@@ -29,7 +29,7 @@ namespace vg::engine
         bool                                load                    (const core::string & _path, core::IObject * _owner) final override;
 
         void                                onResourceLoaded        (core::IResource * _resource) final override;
-        renderer::IMeshModel *    getMeshModel            () const { return (renderer::IMeshModel*)m_object; } 
+        renderer::IMeshModel *              getMeshModel            () const { return (renderer::IMeshModel*)m_object; } 
 
         core::uint                          getSubResourceCount     () const final;
         IResource *                         getSubResource          (core::uint _index) final;

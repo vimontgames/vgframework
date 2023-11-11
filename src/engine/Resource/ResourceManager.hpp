@@ -46,6 +46,40 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
+    bool ResourceManager::HasResourceLoading() const
+    {
+        return m_resourcesToLoad.size() != 0;
+    }
+
+    //--------------------------------------------------------------------------------------
+    uint ResourceManager::GetResourceCount() const
+    {
+        return (uint)m_resourcesMap.size();
+    }
+
+    //--------------------------------------------------------------------------------------
+    uint ResourceManager::UpdateResources()
+    {
+        uint count = 0;
+        for (auto pair : m_resourcesMap)
+        {
+            const string path = pair.first;
+            Resource * res = pair.second;
+            const string resPath = res->GetResourcePath();
+            if (needsCook(resPath))
+            {
+                VG_INFO("[Resource] File \"%s\" has been modified", resPath.c_str());
+                res->Reimport();
+                count++;
+            }
+        }
+
+        VG_INFO("[Resource] %u Resource files have been modified", count);
+
+        return count;
+    }
+
+    //--------------------------------------------------------------------------------------
     void ResourceManager::flushPendingLoading()
     {
         if (true == m_isLoadingThreadRunning.exchange(false))
@@ -103,55 +137,76 @@ namespace vg::engine
     void ResourceManager::loadResourceAsync(Resource * _resource, const string & _path, IObject * _owner)
     {
         lock_guard<recursive_mutex> lock(m_addResourceToLoadRecursiveMutex);
+
+        // TODO: return existing resource if it already exist!
+        auto it = m_resourcesMap.find(_resource->GetResourcePath());
+        if (m_resourcesMap.end() != it)
+        {
+            VG_ASSERT(false);
+        }
+
         m_resourcesToLoad.emplace_back(_resource, _path, _owner);
     }
 
     //--------------------------------------------------------------------------------------
     void ResourceManager::unloadResource(core::Resource * _resource)
     {
+        // TODO: release resource if it is not the last client!
+
         VG_SAFE_INCREASE_REFCOUNT(_resource);
-        auto it = m_resourcesMap.find(_resource->getResourcePath());
+        auto it = m_resourcesMap.find(_resource->GetResourcePath());
         if (m_resourcesMap.end() != it)
             m_resourcesMap.erase(it);
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool ResourceManager::needsCook(const core::string & _resourcePath)
+    {
+        const string cookedPath = io::getCookedPath(_resourcePath);
+
+        io::FileAccessTime rawDataLastWrite;
+        if (io::getLastWriteTime(_resourcePath, &rawDataLastWrite))
+        {
+            if (io::exists(cookedPath))
+            {
+                io::FileAccessTime cookedFilelastWrite;
+                if (io::getLastWriteTime(cookedPath, &cookedFilelastWrite))
+                {
+                    if (cookedFilelastWrite != rawDataLastWrite)
+                        return true;
+                }
+            }
+        }
+        return false;
     }
 
     //--------------------------------------------------------------------------------------
     void ResourceManager::loadOneResource(ResourceLoadInfo & info)
     {
         // check for an up-to-date cooked version of the resource
-        const string cookFile = io::getCookedPath(info.m_path);
         bool needCook = false;
         bool done = false;
         while (!done)
         {
-            io::FileAccessTime rawDataLastWrite;
-            if (io::getLastWriteTime(info.m_path, &rawDataLastWrite))
-            {
-                if (io::exists(cookFile))
-                {
-                    io::FileAccessTime cookedFilelastWrite;
-                    if (io::getLastWriteTime(cookFile, &cookedFilelastWrite))
-                    {
-                        if (cookedFilelastWrite != rawDataLastWrite)
-                            needCook = true;
-                    }
-                }
-                else
-                    needCook = true;
-            }
+            needCook = needsCook(info.m_path);
 
             const auto startCook = Timer::getTick();
             if (needCook)
             {
-                VG_WARNING("[ResourceManager] File \"%s\" is outdated.\n", info.m_path.c_str());
+                VG_WARNING("[Resource] File \"%s\" needs cook.\n", info.m_path.c_str());
 
                 bool isFileCooked = info.m_resource->cook(info.m_path);
                 VG_ASSERT(isFileCooked, "Could not cook file \"%s\"", info.m_path.c_str());
 
                 if (isFileCooked)
                 {
+                    const string cookFile = io::getCookedPath(info.m_path);
+
+                    io::FileAccessTime rawDataLastWrite;
+                    VG_VERIFY(io::getLastWriteTime(info.m_path, &rawDataLastWrite));
+
                     if (io::setLastWriteTime(cookFile, rawDataLastWrite))
-                        VG_INFO("[ResourceManager] Cooked \"%s\" in %.2f ms", info.m_path.c_str(), Timer::getEnlapsedTime(startCook, Timer::getTick()));
+                        VG_INFO("[Resource] Cook \"%s\" in %.2f ms", info.m_path.c_str(), Timer::getEnlapsedTime(startCook, Timer::getTick()));
                 }
             }
 
@@ -159,7 +214,7 @@ namespace vg::engine
             if (info.m_resource->load(info.m_path, info.m_owner))
             {
                 m_resourcesMap.insert(make_pair(info.m_path, info.m_resource));
-                VG_INFO("[ResourceManager] Resource \"%s\" loaded in %.2f ms", info.m_path.c_str(), Timer::getEnlapsedTime(startLoad, Timer::getTick()));
+                VG_INFO("[Resource] Resource \"%s\" loaded in %.2f ms", info.m_path.c_str(), Timer::getEnlapsedTime(startLoad, Timer::getTick()));
                 done = true;
             }
             else
@@ -170,7 +225,7 @@ namespace vg::engine
                 }
                 else
                 {
-                    VG_ERROR("[ResourceManager] Could not load resource \"%s\"", info.m_path.c_str());
+                    VG_ERROR("[Resource] Could not load resource \"%s\"", info.m_path.c_str());
                     done = true;
                 }
             }

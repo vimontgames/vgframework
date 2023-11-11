@@ -25,8 +25,11 @@ namespace vg::core
         virtual void                setOwner                (core::IObject * _object) = 0;
         virtual core::IObject *     getOwner                () const = 0;
 
-        virtual bool                setResourcePath         (const string & _path) = 0;
-        virtual const string &      getResourcePath         () const = 0;
+        virtual bool                Reimport                () = 0;
+
+        virtual bool                ClearResourcePath       () = 0;
+        virtual bool                SetResourcePath         (const string & _path) = 0;
+        virtual const string &      GetResourcePath         () const = 0;
        
         virtual const vector<string> getExtensions          () const = 0;
 

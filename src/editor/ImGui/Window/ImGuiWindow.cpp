@@ -780,11 +780,12 @@ namespace vg::editor
         bool open = false;
 
         char buffer[1024];
-        sprintf_s(buffer, _resource->getResourcePath().c_str());
+        sprintf_s(buffer, _resource->GetResourcePath().c_str());
         if (ImGui::InputText("##File", buffer, countof(buffer), (ImGuiInputTextFlags)0))
-            _resource->setResourcePath(buffer);
+            _resource->SetResourcePath(buffer);
 
         string openFileButtonName = getButtonLabel("File", _resource);
+        string clearFileButtonName = getButtonLabel("Clear", _resource);
         string openFileDialogName = getButtonLabel("Open file", _resource);
 
         ImGui::SameLine();
@@ -796,6 +797,10 @@ namespace vg::editor
             ImGui::OpenPopup(openFileDialogName.c_str());
             open = false;
         }
+
+        ImGui::SameLine();
+        if (ImGui::Button(clearFileButtonName.c_str()))
+            _resource->ClearResourcePath();
 
         // build extension list
         string ext = "";
@@ -815,9 +820,9 @@ namespace vg::editor
         if (fileBrowser.showFileDialog(openFileDialogName.c_str(), imgui_addons::ImGuiFileBrowser::DialogMode::OPEN, style::dialog::Size, ext.c_str()))
         {
             const string newFilePath = fileBrowser.selected_path;
-            if (_resource->getResourcePath() != newFilePath)
+            if (_resource->GetResourcePath() != newFilePath)
             {
-                _resource->setResourcePath(newFilePath);
+                _resource->SetResourcePath(newFilePath);
                 changed = true;
             }
         }

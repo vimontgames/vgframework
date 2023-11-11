@@ -33,37 +33,42 @@ namespace vg::engine
     public:
         using super = IResourceManager;
 
-        const char *    getClassName() const final { return "ResourceManager"; }
-        static bool     registerClass(core::IFactory & _factory);
-        static bool     registerProperties(core::IClassDesc & _desc);
+        const char *    getClassName            () const final { return "ResourceManager"; }
+        static bool     registerClass           (core::IFactory & _factory);
+        static bool     registerProperties      (core::IClassDesc & _desc);
 
         ResourceManager(const core::string & _name, IObject * _parent);
         ~ResourceManager();
 
-        void loadResourceAsync(core::Resource * _resource, const core::string & _path,  core::IObject * _owner);
-        void unloadResource(core::Resource * _resource);
+        bool            HasResourceLoading      () const final override;
+        core::uint      GetResourceCount        () const final override;
+        core::uint      UpdateResources         () final override;
 
-        void updateLoading();
-        void flushPendingLoading();
+        void            loadResourceAsync       (core::Resource * _resource, const core::string & _path,  core::IObject * _owner);
+        void            unloadResource          (core::Resource * _resource);
 
-        bool isLoadingThreadRunning() const { return m_isLoadingThreadRunning; }
+        void            updateLoading           ();
+        void            flushPendingLoading     ();
+
+        bool            isLoadingThreadRunning  () const { return m_isLoadingThreadRunning; }
 
     protected:
-        static void loading(ResourceManager * _this);
+        static void     loading                 (ResourceManager * _this);
+        static bool     needsCook               (const core::string & _resourcePath);
 
-        void updateLoading(bool _async);
-        void loadOneResource(ResourceLoadInfo & info);
+        void            updateLoading           (bool _async);
+        void            loadOneResource         (ResourceLoadInfo & info);
 
     private:
-        std::thread                         m_loadingThread;
-        core::atomic<bool>                  m_isLoadingThreadRunning = true;
+        std::thread                             m_loadingThread;
+        core::atomic<bool>                      m_isLoadingThreadRunning = true;
 
-        core::vector<ResourceLoadInfo>      m_resourcesToLoad;
-        core::vector<ResourceLoadInfo>      m_resourcesLoaded;
-		core::dictionary<core::Resource*>   m_resourcesMap;
+        core::vector<ResourceLoadInfo>          m_resourcesToLoad;
+        core::vector<ResourceLoadInfo>          m_resourcesLoaded;
+		core::dictionary<core::Resource*>       m_resourcesMap;
 
-        core::recursive_mutex               m_addResourceToLoadRecursiveMutex;
-        core::mutex                         m_resourceLoadedAsyncMutex;
-        core::vector<ResourceLoadInfo>      m_resourcesLoadedAsync;
+        core::recursive_mutex                   m_addResourceToLoadRecursiveMutex;
+        core::mutex                             m_resourceLoadedAsyncMutex;
+        core::vector<ResourceLoadInfo>          m_resourcesLoadedAsync;
     };
 }

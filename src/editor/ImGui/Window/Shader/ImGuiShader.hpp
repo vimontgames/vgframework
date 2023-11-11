@@ -16,7 +16,7 @@ namespace vg::editor
 
         if (ImGui::IconBegin(style::icon::Shaders, "Shaders", &m_isVisible))
         {
-             renderer::IRenderer * renderer = Editor::get()->getRenderer();
+            renderer::IRenderer * renderer = Editor::get()->getRenderer();
             if (ImGui::TextButton("Press 'F6' to", "Reload Shaders", renderer != nullptr, "Compile all modified shaders"))
                 renderer->updateShaders();
         }

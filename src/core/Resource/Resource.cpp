@@ -52,7 +52,7 @@ namespace vg::core
         setObject(nullptr);
         setOwner(_owner);
         setUserData(_userData);
-        setResourcePath(_path);
+        SetResourcePath(_path);
     }
 
     //--------------------------------------------------------------------------------------
@@ -89,7 +89,21 @@ namespace vg::core
     }    
 
     //--------------------------------------------------------------------------------------
-    bool Resource::setResourcePath(const string & _path)
+    bool Resource::Reimport()
+    {
+        VG_ASSERT_NOT_IMPLEMENTED();
+        return false;
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool Resource::ClearResourcePath()
+    {
+        VG_ASSERT_NOT_IMPLEMENTED();
+        return false;
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool Resource::SetResourcePath(const string & _path)
     {
         VG_ASSERT(nullptr != getOwner());
 
@@ -104,7 +118,7 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
-    const string & Resource::getResourcePath() const
+    const string & Resource::GetResourcePath() const
     {
         return m_resourcePath;
     }
