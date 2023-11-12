@@ -61,20 +61,41 @@ namespace vg::engine
     uint ResourceManager::UpdateResources()
     {
         uint count = 0;
-        //for (auto pair : m_resourcesMap)
-        //{
-        //    const string path = pair.first;
-        //    Resource * res = pair.second;
-        //    const string resPath = res->GetResourcePath();
-        //    if (needsCook(resPath))
-        //    {
-        //        VG_INFO("[Resource] File \"%s\" has been modified", resPath.c_str());
-        //        res->Reimport();
-        //        count++;
-        //    }
-        //}
-        //
-        //VG_INFO("[Resource] %u Resource files have been modified", count);
+
+        // Unloading resources will remove entries in the resourceMap so we need to copy the existing resources to iterate over
+        vector<SharedResource*> allSharedResources;
+        for (auto pair : m_resourcesMap)
+        {
+            VG_SAFE_INCREASE_REFCOUNT(pair.second);
+            allSharedResources.push_back(pair.second);
+        }
+
+        for (auto shared : allSharedResources)
+        {
+            if (needsCook(shared->m_path))
+            {
+                // Setting resource path to null will remove clients so we need to copy
+                vector<core::IResource *> clients = shared->m_clients;
+                for (auto client : clients)
+                    VG_SAFE_INCREASE_REFCOUNT(client);
+
+                for (uint i = 0; i < clients.size(); ++i)
+                    clients[i]->SetResourcePath("");
+                
+                for (uint i = 0; i < clients.size(); ++i)
+                    clients[i]->SetResourcePath(shared->m_path);
+
+                for (auto client : clients)
+                    VG_SAFE_RELEASE(client);
+
+                count++;
+            }
+        }
+
+        VG_INFO("[Resource] %u Resource files have been modified", count);
+
+        for (auto shared : allSharedResources)
+            VG_SAFE_RELEASE(shared);
 
         return count;
     }
@@ -132,8 +153,8 @@ namespace vg::engine
     //--------------------------------------------------------------------------------------
     void ResourceManager::loadResourceAsync(Resource * _resource, const core::string & _oldPath, const string & _newPath)
     {
-        VG_ASSERT(_resource->getOwner() != nullptr);
-
+        VG_ASSERT(_resource->getOwner() != nullptr); 
+        VG_ASSERT(_resource->GetResourcePath() == _newPath); // TODO: get rid of the '_newPath' parameter?
         lock_guard<recursive_mutex> lock(m_addResourceToLoadRecursiveMutex);
 
         if (io::exists(_newPath))
@@ -149,7 +170,7 @@ namespace vg::engine
 
                 if (loaded.m_object != nullptr)
                 {
-                    // already loaded? Add to resource to update
+                    // already loaded? Add to resource to update BUT is several clients requested the resource at the same frame it could be not ready yet and dropped :(
                     m_resourcesLoadedAsync.push_back(_resource);
                 }
             }
@@ -168,6 +189,9 @@ namespace vg::engine
         }
         else
         {
+            if (!_newPath.empty())
+                VG_WARNING("[Resource] Could not find file \"%s\"", _newPath.c_str());
+
             unloadResource(_resource, _oldPath);
         }
     }
@@ -190,8 +214,10 @@ namespace vg::engine
                 VG_SAFE_RELEASE(shared->m_object);
                 m_resourcesMap.erase(it);
                 VG_SAFE_RELEASE(shared);
+                _resource->unload(_path);
             }
-
+            
+            _resource->unloadSubResources();
             _resource->getOwner()->onResourceUnloaded(_resource);
             _resource->setObject(nullptr);                
         }
@@ -221,18 +247,16 @@ namespace vg::engine
     //--------------------------------------------------------------------------------------
     void ResourceManager::loadOneResource(SharedResource & _shared)
     {
-        // check for an up-to-date cooked version of the resource
-        bool needCook = false;
-        bool done = false;
-
         // get shared resource info
         auto & clients = _shared.m_clients;
         const string path = _shared.m_path;
 
+        // check for an up-to-date cooked version of the resource
+        bool needCook = needsCook(_shared.m_path);
+        bool done = false;
+
         while (!done)
         {
-            needCook = needsCook(_shared.m_path);
-
             const auto startCook = Timer::getTick();
             if (needCook)
             {
@@ -251,7 +275,7 @@ namespace vg::engine
                     VG_VERIFY(io::getLastWriteTime(path, &rawDataLastWrite));
 
                     if (io::setLastWriteTime(cookFile, rawDataLastWrite))
-                        VG_INFO("[Resource] Cook \"%s\" in %.2f ms", path.c_str(), Timer::getEnlapsedTime(startCook, Timer::getTick()));
+                        VG_INFO("[Resource] File \"%s\" cooked in %.2f ms", path.c_str(), Timer::getEnlapsedTime(startCook, Timer::getTick()));
                 }
             }
 
@@ -262,11 +286,13 @@ namespace vg::engine
             string path = client0->GetResourcePath();
 
             VG_ASSERT(!path.empty());
+
+            // Cooked file may seem up to date but format version actually changed
             _shared.m_object = client0->load(path);
 
             if (nullptr != _shared.m_object)
             {
-                VG_INFO("[Resource] Resource \"%s\" loaded in %.2f ms", path.c_str(), Timer::getEnlapsedTime(startLoad, Timer::getTick()));
+                VG_INFO("[Resource] File \"%s\" loaded in %.2f ms", path.c_str(), Timer::getEnlapsedTime(startLoad, Timer::getTick()));
                 done = true;
             }
             else
@@ -325,9 +351,30 @@ namespace vg::engine
 
             // Set Shared Resource Object and Notify owner
             res->setObject(shared->m_object);
+            res->loadSubResources();
             res->getOwner()->onResourceLoaded(res);
         }
         m_resourcesLoaded.clear();
+
+        // Update null entries in resources (e.g. several requests for the same resource object)
+        for (auto pair : m_resourcesMap)
+        {
+            SharedResource * shared = pair.second;
+            auto & clients = shared->m_clients;
+            for (uint i = 0; i < clients.size(); ++i)
+            {
+                auto & res = clients[i];
+                if (res->getObject() == nullptr)
+                {
+                    if (nullptr != shared->m_object)
+                    {
+                        res->setObject(shared->m_object);
+                        res->loadSubResources();
+                        res->getOwner()->onResourceLoaded(res);
+                    }
+                }
+            }
+        }
 
         #if !VG_RESOURCE_MANAGER_ASYNC_LOADING
         updateLoading(false);

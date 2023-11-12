@@ -100,6 +100,7 @@ namespace vg::engine
         {
             auto * picking = Engine::get()->GetRenderer()->GetPicking();
             picking->ReleasePickingID(m_meshInstance->getPickingID());
+            m_meshInstance->resetPickingID();
             GameObject * gameObject = getGameObject();
             gameObject->RemoveGraphicInstance(m_meshInstance);
 

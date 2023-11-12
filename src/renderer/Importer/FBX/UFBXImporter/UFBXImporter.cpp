@@ -2,6 +2,7 @@
 #include "UFBXImporter.h"
 #include "core/Timer/Timer.h"
 #include "renderer/Importer/SceneImporterData.h"
+#include "core/File/File.h"
 #include "ufbx/ufbx.c"
 
 using namespace vg::core;
@@ -209,8 +210,8 @@ namespace vg::renderer
                     const auto & albedo = UFbxMeshMat->material->pbr.maps[UFBX_MATERIAL_PBR_BASE_COLOR];
                     const auto & normal = UFbxMeshMat->material->pbr.maps[UFBX_MATERIAL_PBR_NORMAL_MAP];
 
-                    matImportData.texturePath[(int)MaterialTextureType::Albedo] = albedo.texture ? albedo.texture->relative_filename.data : "";
-                    matImportData.texturePath[(int)MaterialTextureType::Normal] = normal.texture ? normal.texture->relative_filename.data : "";
+                    matImportData.texturePath[(int)MaterialTextureType::Albedo] = io::cleanPath(albedo.texture ? albedo.texture->filename.data : "");
+                    matImportData.texturePath[(int)MaterialTextureType::Normal] = io::cleanPath(normal.texture ? normal.texture->filename.data : "");
 
                     materials.push_back(matImportData);
                 }

@@ -36,6 +36,11 @@ namespace vg::core
         virtual void                onResourcePathChanged   (const string & _oldPath, const string & _newPath) = 0;
 
         virtual bool                cook                    (const core::string & _file) const = 0;
+
         virtual core::IObject *     load                    (const core::string & _file) = 0;
+        virtual void                unload                  (const core::string & _file) = 0;
+
+        virtual void                loadSubResources        () = 0;
+        virtual void                unloadSubResources      () = 0;
     };
 }

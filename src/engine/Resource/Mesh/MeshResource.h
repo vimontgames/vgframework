@@ -26,9 +26,16 @@ namespace vg::engine
         void                                onResourcePathChanged   (const core::string & _oldPath, const core::string & _newPath) final;
 
         bool                                cook                    (const core::string & _file) const final override;
+
         core::IObject *                     load                    (const core::string & _path) override;
+        void                                unload                  (const core::string & _path) override;
+
+        void                                loadSubResources        () override;
+        void                                unloadSubResources      () override;
 
         void                                onResourceLoaded        (core::IResource * _resource) final override;
+        void                                onResourceUnloaded      (core::IResource * _resource) final override;
+
         renderer::IMeshModel *              getMeshModel            () const { return (renderer::IMeshModel*)m_object; } 
 
     private:

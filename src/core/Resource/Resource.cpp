@@ -2,6 +2,7 @@
 #include "Resource.h"
 #include "core/File/File.h"
 #include "core/Object/AutoRegisterClass.h"
+#include "core/Kernel.h"
 
 namespace vg::core
 {
@@ -91,7 +92,9 @@ namespace vg::core
     //--------------------------------------------------------------------------------------
     bool Resource::Reimport()
     {
-        VG_ASSERT_NOT_IMPLEMENTED();
+        string path = GetResourcePath();
+        ClearResourcePath();
+        SetResourcePath(path);
         return false;
     }
 
@@ -104,10 +107,10 @@ namespace vg::core
     //--------------------------------------------------------------------------------------
     bool Resource::SetResourcePath(const string & _path)
     {
-        VG_ASSERT(nullptr != getOwner());
-
         if (m_resourcePath == _path)
             return false;
+
+        VG_ASSERT(nullptr != getOwner());
      
         string oldPath = m_resourcePath;
         m_resourcePath = io::getRelativePath(_path);
@@ -132,5 +135,23 @@ namespace vg::core
     core::IObject * Resource::getOwner() const
     {
         return m_owner;
+    }
+
+    //--------------------------------------------------------------------------------------
+    void Resource::unload(const core::string & _file)
+    {
+        //VG_INFO("[Resource] Unload %s \"%s\"", getClassName(), _file.c_str());
+    }
+
+    //--------------------------------------------------------------------------------------
+    void Resource::loadSubResources()
+    {
+        
+    }
+
+    //--------------------------------------------------------------------------------------
+    void Resource::unloadSubResources()
+    {
+        
     }
 }

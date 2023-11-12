@@ -84,16 +84,21 @@ namespace vg::engine
                         VG_PROFILE_TRIGGER();   // Start/Stop capture
                         break;
 
-                    case VK_F6:
-                        if (m_renderer)
-                            m_renderer->updateShaders();
-                        break;
-
                     case VK_F5:
                         if (IsPlaying())
                             Stop();
                         else
                             Play();
+                        break;
+
+                    case VK_F6:
+                        if (m_renderer)
+                            m_renderer->updateShaders();
+                        break;
+
+                    case VK_F7:
+                        if (m_resourceManager)
+                            m_resourceManager->UpdateResources();
                         break;
 
                     case VK_PAUSE:

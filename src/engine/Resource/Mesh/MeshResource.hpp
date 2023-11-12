@@ -39,6 +39,7 @@ namespace vg::engine
     //--------------------------------------------------------------------------------------
     MeshResource::~MeshResource()
     {
+        // unload this
         ResourceManager::get()->unloadResource(this, GetResourcePath());
     }
 
@@ -68,10 +69,42 @@ namespace vg::engine
     core::IObject * MeshResource::load(const string & _path)
     {
         auto * renderer = Engine::get()->GetRenderer();
-        auto * meshModel = renderer->loadMeshModel(_path);
+        auto * meshModel = renderer->loadMeshModel(_path);    
+        return meshModel;
+    }
+
+    //--------------------------------------------------------------------------------------
+    void MeshResource::unload(const core::string & _path)
+    {
+        super::unload(_path);
+    }
+
+    //--------------------------------------------------------------------------------------
+    void MeshResource::onResourceLoaded(core::IResource * _resource)
+    {
+        const auto userData = _resource->getUserData();
+        const uint matID = (userData >> 16) & 0xFFFF;
+        const auto texSlot = (renderer::MaterialTextureType)(userData & 0xFFFF);
+
+        auto * meshModel = getMeshModel();
+        auto * material = meshModel->GetMaterial(matID);
+        auto * texRes = (TextureResource *)_resource;
+
+        material->SetTexture(texSlot, texRes->getTexture());
+    }
+
+    //--------------------------------------------------------------------------------------
+    void MeshResource::onResourceUnloaded(core::IResource * _resource)
+    {
+        _resource->ClearResourcePath();
+    }
+
+    //--------------------------------------------------------------------------------------
+    void MeshResource::loadSubResources()
+    {
+        auto * meshModel = dynamic_cast<renderer::IMeshModel *>(getObject());
         VG_ASSERT(nullptr != meshModel);
-        
-        // Request loading of textures used by materials from this model
+
         if (nullptr != meshModel)
         {
             const uint matCount = meshModel->GetMaterialCount();
@@ -93,7 +126,7 @@ namespace vg::engine
 
                         if (matTexPath.length() > 0)
                         {
-                            matTexPath = io::getFileDir(_path) + "/" + matTexPath;
+                            matTexPath = matTexPath;
                             TextureResource & res = matRes.m_textureResources[t];
 
                             string name = core::asString((renderer::MaterialTextureType)t);
@@ -104,22 +137,31 @@ namespace vg::engine
                 }
             }
         }
-
-        return meshModel;
     }
 
     //--------------------------------------------------------------------------------------
-    void MeshResource::onResourceLoaded(core::IResource * _resource)
+    // Textures are currently SubResources from MeshResources (In the future, textures should be SubResources of MaterialResources, and Materials should be SubResources of MeshResources)
+    // When a MeshResource (<=> a handle to shared MeshModel data) is unloaded we "detach" the associated Texture Resources
+    //--------------------------------------------------------------------------------------
+    void MeshResource::unloadSubResources()
     {
-        const auto userData = _resource->getUserData();
-        const uint matID = (userData >> 16) & 0xFFFF;
-        const auto texSlot = (renderer::MaterialTextureType)(userData & 0xFFFF);
+        auto * meshModel = dynamic_cast<renderer::IMeshModel *>(getObject());
+        VG_ASSERT(nullptr != meshModel);
 
-        auto * meshModel = getMeshModel();
-        auto * material = meshModel->GetMaterial(matID);
-
-        auto * texRes = (TextureResource *)_resource;
-
-        material->SetTexture(texSlot, texRes->getTexture());
+        if (nullptr != meshModel)
+        {
+            const uint matCount = meshModel->GetMaterialCount();
+            for (uint m = 0; m < m_materialResources.size(); ++m)
+            {
+                MaterialResource & matRes = m_materialResources[m];
+            
+                for (uint t = 0; t < matRes.m_textureResources.size(); ++t)
+                {
+                    TextureResource & res = matRes.m_textureResources[t];
+                    res.ClearResourcePath(); 
+                }
+            }
+        }
+        m_materialResources.clear();
     }
 }

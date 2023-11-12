@@ -18,14 +18,19 @@ namespace vg::renderer
         IGraphicInstance(const core::string & _name, core::IObject * _parent) :
             core::Instance(_name, _parent)
         {
-
+            resetPickingID();
         }
 
         virtual void Draw(const RenderContext & _renderContext, gfx::CommandList * _cmdList) const = 0;
 
+        void resetPickingID()
+        {
+            m_pickingID = (PickingID)0;
+        }
+
         void setPickingID(PickingID _id)
         {
-            VG_ASSERT((PickingID)0 == m_pickingID, "IGraphicInstance \"%s\" already uses PickingID %u", getName(), m_pickingID);
+            VG_ASSERT((PickingID)0 == m_pickingID, "IGraphicInstance \"%s\" already uses PickingID %u", getName().c_str(), m_pickingID);
             m_pickingID = _id;
         }
 
@@ -35,6 +40,6 @@ namespace vg::renderer
         }
 
     private:
-        PickingID m_pickingID = (PickingID)0;
+        PickingID m_pickingID;
     };
 }

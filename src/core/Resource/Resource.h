@@ -38,7 +38,12 @@ namespace vg::core
         const string &              GetResourcePath     () const final;
 
         bool                        cook                (const core::string & _file) const = 0;
+
         core::IObject *             load                (const core::string & _file) = 0;
+        void                        unload              (const core::string & _file);
+
+        void                        loadSubResources    () override;
+        void                        unloadSubResources  () override;
 
 	protected:
         string                      m_resourcePath;
