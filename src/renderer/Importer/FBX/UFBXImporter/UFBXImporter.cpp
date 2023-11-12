@@ -210,8 +210,11 @@ namespace vg::renderer
                     const auto & albedo = UFbxMeshMat->material->pbr.maps[UFBX_MATERIAL_PBR_BASE_COLOR];
                     const auto & normal = UFbxMeshMat->material->pbr.maps[UFBX_MATERIAL_PBR_NORMAL_MAP];
 
-                    matImportData.texturePath[(int)MaterialTextureType::Albedo] = io::cleanPath(albedo.texture ? albedo.texture->filename.data : "");
-                    matImportData.texturePath[(int)MaterialTextureType::Normal] = io::cleanPath(normal.texture ? normal.texture->filename.data : "");
+                    matImportData.texturePath[(int)MaterialTextureType::Albedo] = io::cleanPath(albedo.texture ? albedo.texture->absolute_filename.data : "");
+                    matImportData.texturePath[(int)MaterialTextureType::Albedo] = io::getRelativePath(matImportData.texturePath[(int)MaterialTextureType::Albedo]);
+
+                    matImportData.texturePath[(int)MaterialTextureType::Normal] = io::cleanPath(normal.texture ? normal.texture->absolute_filename.data : "");
+                    matImportData.texturePath[(int)MaterialTextureType::Normal] = io::getRelativePath(matImportData.texturePath[(int)MaterialTextureType::Normal]);
 
                     materials.push_back(matImportData);
                 }

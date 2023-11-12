@@ -7,4 +7,9 @@ namespace vg::renderer
         Albedo = 0,
         Normal
     };
+
+    //enum class MaterialColorType : core::u8
+    //{
+    //    BaseColor = 0
+    //};
 }

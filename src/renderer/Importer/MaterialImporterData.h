@@ -1,6 +1,6 @@
 #pragma once
 
-#include "renderer/Model/Material/MaterialTextureType.h"
+#include "renderer/Model/Material/Material_Consts.h"
 
 namespace vg::core::io
 {

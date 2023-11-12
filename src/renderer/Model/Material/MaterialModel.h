@@ -4,7 +4,7 @@
 #include "gfx/Shader/ShaderKey.h"
 
 #include "renderer/IMaterialModel.h"
-#include "renderer/Model/Material/MaterialTextureType.h"
+#include "renderer/Model/Material/Material_Consts.h"
 
 struct RootConstants3D;
 
@@ -72,6 +72,7 @@ namespace vg
 
             Flags                       m_flags;
             TextureInfo                 m_textureInfos[core::enumCount<MaterialTextureType>()];
+            //core::float4                m_colors[core::enumCount<MaterialColorType>()];
             gfx::RootSignatureHandle    m_rootSignature;
             gfx::ShaderKey              m_shaderKey[core::enumCount<ShaderPass>()];
         };

@@ -240,6 +240,10 @@ namespace vg::engine
                         return true;
                 }
             }
+            else
+            {
+                return true;
+            }
         }
         return false;
     }

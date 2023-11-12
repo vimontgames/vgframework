@@ -106,7 +106,7 @@
       <Filter>Model\Material\DefaultMaterial</Filter>
     </ClInclude>
     <ClInclude Include="IMaterialModel.h" />
-    <ClInclude Include="Model\Material\MaterialTextureType.h">
+    <ClInclude Include="Model\Material\Material_Consts.h">
       <Filter>Model\Material</Filter>
     </ClInclude>
     <ClInclude Include="Importer\MeshImporterData.hpp">

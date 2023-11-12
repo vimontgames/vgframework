@@ -2,7 +2,7 @@
 #include "core/File/File.h"
 #include "renderer/IMeshModel.h"
 #include "renderer/IMaterialModel.h"
-#include "renderer/Model/Material/MaterialTextureType.h"
+#include "renderer/Model/Material/Material_Consts.h"
 
 using namespace vg::core;
 

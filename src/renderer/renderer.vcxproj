@@ -81,7 +81,7 @@
     <ClInclude Include="Model\Material\DefaultMaterial\DefaultMaterialModel.h" />
     <ClInclude Include="Model\Material\DefaultMaterial\DefaultMaterialModel.hpp" />
     <ClInclude Include="Model\Material\MaterialModel.h" />
-    <ClInclude Include="Model\Material\MaterialTextureType.h" />
+    <ClInclude Include="Model\Material\Material_Consts.h" />
     <ClInclude Include="Model\Mesh\MeshModel.h" />
     <ClInclude Include="Options\DisplayOptions.h" />
     <ClInclude Include="Options\DisplayOptions.hpp" />
