@@ -64,7 +64,7 @@ namespace vg::gfx::vulkan
 
             vkBufferViewDesc.sType = VK_STRUCTURE_TYPE_BUFFER_VIEW_CREATE_INFO;
             vkBufferViewDesc.buffer = m_resource.getVulkanBuffer();
-            vkBufferViewDesc.format = VK_FORMAT_R32_UINT;
+            vkBufferViewDesc.format = (_bufDesc.testBindFlags(BindFlags::IndexBuffer) & (_bufDesc.elementSize == 2)) ? VK_FORMAT_R16_UINT : VK_FORMAT_R32_UINT;
             vkBufferViewDesc.range = _bufDesc.size();
 
             VG_ASSERT_VULKAN(vkCreateBufferView(device->getVulkanDevice(), &vkBufferViewDesc, nullptr, &m_vkBufferView));
