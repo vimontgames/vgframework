@@ -37,8 +37,8 @@ namespace vg::core
         bool                        SetResourcePath     (const string & _path) final;
         const string &              GetResourcePath     () const final;
 
-        bool                        cook                (const core::string & _file) = 0;
-        bool                        load                (const core::string & _file, core::IObject * _owner) = 0;
+        bool                        cook                (const core::string & _file) const = 0;
+        core::IObject *             load                (const core::string & _file) = 0;
 
 	protected:
         string                      m_resourcePath;

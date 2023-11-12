@@ -37,6 +37,7 @@ Separate DLLs for Engine, Renderer, Editor and Game.
 - Press F1 to start/stop profiler capture
 - Press F5 to start/stop engine 
 - Press F6 to hot reload shaders
+- Press F7 to hot reload resources
 - Press F11 for fullscreen
 - Press 'Pause' to pause/resume engine when running
 

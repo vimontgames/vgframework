@@ -62,6 +62,12 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
+    void Object::onResourceUnloaded(IResource * _resource)
+    {
+
+    }
+
+    //--------------------------------------------------------------------------------------
     const IClassDesc * Object::getClassDesc() const
     {
         const auto * factory = Kernel::getFactory();

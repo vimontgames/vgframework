@@ -39,7 +39,7 @@ namespace vg::engine
     //--------------------------------------------------------------------------------------
     MeshResource::~MeshResource()
     {
-        ResourceManager::get()->unloadResource(this);
+        ResourceManager::get()->unloadResource(this, GetResourcePath());
     }
 
     //--------------------------------------------------------------------------------------
@@ -51,28 +51,26 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
-    void MeshResource::onResourcePathChanged(IObject * _owner, const string & _oldPath, const string & _newPath)
+    void MeshResource::onResourcePathChanged(const string & _oldPath, const string & _newPath)
     {
         if (_oldPath != _newPath)
-            ResourceManager::get()->loadResourceAsync(this, _newPath, _owner);
+            ResourceManager::get()->loadResourceAsync(this, _oldPath, _newPath);
     }
 
     //--------------------------------------------------------------------------------------
-    bool MeshResource::cook(const string & _file)
+    bool MeshResource::cook(const string & _file) const
     {
         auto * renderer = Engine::get()->GetRenderer();
-
         return renderer->cookMeshModel(_file);
     }
 
     //--------------------------------------------------------------------------------------
-    bool MeshResource::load(const string & _path, IObject * _owner)
+    core::IObject * MeshResource::load(const string & _path)
     {
-        VG_SAFE_RELEASE(m_object);
-
         auto * renderer = Engine::get()->GetRenderer();
         auto * meshModel = renderer->loadMeshModel(_path);
-
+        VG_ASSERT(nullptr != meshModel);
+        
         // Request loading of textures used by materials from this model
         if (nullptr != meshModel)
         {
@@ -107,34 +105,21 @@ namespace vg::engine
             }
         }
 
-        m_object = meshModel;
-        return nullptr != m_object;
+        return meshModel;
     }
 
     //--------------------------------------------------------------------------------------
     void MeshResource::onResourceLoaded(core::IResource * _resource)
     {
         const auto userData = _resource->getUserData();
-        const uint matID =   (userData >> 16) & 0xFFFF;
+        const uint matID = (userData >> 16) & 0xFFFF;
         const auto texSlot = (renderer::MaterialTextureType)(userData & 0xFFFF);
 
         auto * meshModel = getMeshModel();
         auto * material = meshModel->GetMaterial(matID);
 
-        auto * texRes = (TextureResource*)_resource;
+        auto * texRes = (TextureResource *)_resource;
 
         material->SetTexture(texSlot, texRes->getTexture());
-    }
-
-    //--------------------------------------------------------------------------------------
-    uint MeshResource::getSubResourceCount() const
-    {
-        return m_materialResources.count();
-    }
-
-    //--------------------------------------------------------------------------------------
-    IResource * MeshResource::getSubResource(uint _index)
-    {
-        return &m_materialResources[_index];
     }
 }

@@ -47,6 +47,8 @@
     <ClInclude Include="Resource\Mesh\MeshResource.hpp" />
     <ClInclude Include="Resource\ResourceManager.h" />
     <ClInclude Include="Resource\ResourceManager.hpp" />
+    <ClInclude Include="Resource\SharedResource.h" />
+    <ClInclude Include="Resource\SharedResource.hpp" />
     <ClInclude Include="Resource\Texture\TextureResource.h" />
     <ClInclude Include="Resource\Texture\TextureResource.hpp" />
     <ClInclude Include="Selection\Selection.h" />

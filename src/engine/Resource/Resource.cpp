@@ -6,4 +6,5 @@
 #include "Texture/TextureResource.hpp"
 #include "Material/MaterialResource.hpp"
 #include "Mesh/MeshResource.hpp"
+#include "SharedResource.hpp"
 #include "ResourceManager.hpp"

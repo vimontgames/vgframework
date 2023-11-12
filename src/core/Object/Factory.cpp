@@ -356,7 +356,7 @@ namespace vg::core
                                                     if (nullptr != classDescRef)
                                                     {
                                                         if (serializeFromXML(pResource, xmlObjectRef))
-                                                            pResource->onResourcePathChanged(_object, "", pResource->GetResourcePath());
+                                                            pResource->onResourcePathChanged("", pResource->GetResourcePath());
                                                     }
                                                 }
                                             }

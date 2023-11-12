@@ -81,6 +81,12 @@
     <ClInclude Include="Selection\Selection.h">
       <Filter>Selection</Filter>
     </ClInclude>
+    <ClInclude Include="Resource\SharedResource.h">
+      <Filter>Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource\SharedResource.hpp">
+      <Filter>Resource</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Input">

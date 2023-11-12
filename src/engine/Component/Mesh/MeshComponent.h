@@ -20,6 +20,7 @@ namespace vg::engine
 
         void            Update              (double _dt) override;
         void            onResourceLoaded    (core::IResource * _resource) override;
+        void            onResourceUnloaded  (core::IResource * _resource) override;
 
         MeshResource &  getMeshResource     () { return m_meshResource; }
 

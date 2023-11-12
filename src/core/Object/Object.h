@@ -29,6 +29,7 @@ namespace vg::core
 
         void                        onPropertyChanged   (const IProperty & _prop) override;
         void                        onResourceLoaded    (IResource * _resource) override;
+		void                        onResourceUnloaded	(IResource * _resource) override;
 
 		void					    setName		        (const string & _name) override;
 		const string &			    getName		        () const override;

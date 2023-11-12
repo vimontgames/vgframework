@@ -90,4 +90,20 @@ namespace vg::engine
             m_registered = true;
         }
     }
+
+    //--------------------------------------------------------------------------------------
+    void MeshComponent::onResourceUnloaded(core::IResource * _resource)
+    {
+        m_meshInstance->SetModel(Lod::Lod0, nullptr);
+
+        if (m_registered)
+        {
+            auto * picking = Engine::get()->GetRenderer()->GetPicking();
+            picking->ReleasePickingID(m_meshInstance->getPickingID());
+            GameObject * gameObject = getGameObject();
+            gameObject->RemoveGraphicInstance(m_meshInstance);
+
+            m_registered = false;
+        }
+    }
 }

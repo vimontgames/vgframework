@@ -35,6 +35,7 @@ namespace vg::core::io
 
     string getCookedPath(const string & _file);
     string getFileDir(const string & _file);
+    string getFileName(const string & _file);
     string getCurrentWorkingDirectory();
     string getRelativePath(const string & _file);
     string cleanPath(const string & _file);

@@ -384,10 +384,11 @@ namespace vg::engine
         m_editor->Deinit();
         m_editor->Release();
 
+        // Resource Manager should be deleted before renderer because the shared resource must be released to avoid GPU memory leak checked in gfx::Device deinit
+        VG_SAFE_DELETE(m_resourceManager);
+
 		m_renderer->deinit();
 		m_renderer->release();
-
-        VG_SAFE_DELETE(m_resourceManager);
 
         VG_SAFE_DELETE(factory);
         Kernel::setFactory(nullptr);

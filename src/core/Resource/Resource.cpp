@@ -98,8 +98,7 @@ namespace vg::core
     //--------------------------------------------------------------------------------------
     bool Resource::ClearResourcePath()
     {
-        VG_ASSERT_NOT_IMPLEMENTED();
-        return false;
+        return SetResourcePath("");
     }
 
     //--------------------------------------------------------------------------------------
@@ -112,7 +111,7 @@ namespace vg::core
      
         string oldPath = m_resourcePath;
         m_resourcePath = io::getRelativePath(_path);
-        onResourcePathChanged(m_owner, oldPath, m_resourcePath);
+        onResourcePathChanged(oldPath, m_resourcePath);
 
         return true;
     }

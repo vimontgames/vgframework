@@ -38,7 +38,7 @@ namespace vg::engine
     //--------------------------------------------------------------------------------------
     MaterialResource::~MaterialResource()
     {
-        ResourceManager::get()->unloadResource(this);
+        ResourceManager::get()->unloadResource(this, GetResourcePath());
     }
 
     //--------------------------------------------------------------------------------------
@@ -50,38 +50,40 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
-    void MaterialResource::onResourcePathChanged(IObject * _owner, const string & _oldPath, const string & _newPath)
+    void MaterialResource::onResourcePathChanged(const string & _oldPath, const string & _newPath)
     {
-      
+        VG_ASSERT_NOT_IMPLEMENTED();
     }
 
     //--------------------------------------------------------------------------------------
-    bool MaterialResource::cook(const string & _file)
+    bool MaterialResource::cook(const string & _file) const
     {
+        VG_ASSERT_NOT_IMPLEMENTED();
         return true;
     }
 
     //--------------------------------------------------------------------------------------
-    bool MaterialResource::load(const string & _path, IObject * _owner)
+    core::IObject * MaterialResource::load(const string & _path)
     {
-        return true;
+        VG_ASSERT_NOT_IMPLEMENTED();
+        return nullptr;
     }
 
     //--------------------------------------------------------------------------------------
     void MaterialResource::onResourceLoaded(core::IResource * _resource)
     {
-        
+        VG_ASSERT_NOT_IMPLEMENTED();
     }
 
     //--------------------------------------------------------------------------------------
-    uint MaterialResource::getSubResourceCount() const
-    {
-        return m_textureResources.count();
-    }
-
-    //--------------------------------------------------------------------------------------
-    IResource * MaterialResource::getSubResource(uint _index)
-    {
-        return &m_textureResources[_index];
-    }
+    //uint MaterialResource::getSubResourceCount() const
+    //{
+    //    return m_textureResources.count();
+    //}
+    //
+    ////--------------------------------------------------------------------------------------
+    //IResource * MaterialResource::getSubResource(uint _index)
+    //{
+    //    return &m_textureResources[_index];
+    //}
 }

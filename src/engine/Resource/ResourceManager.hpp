@@ -61,20 +61,20 @@ namespace vg::engine
     uint ResourceManager::UpdateResources()
     {
         uint count = 0;
-        for (auto pair : m_resourcesMap)
-        {
-            const string path = pair.first;
-            Resource * res = pair.second;
-            const string resPath = res->GetResourcePath();
-            if (needsCook(resPath))
-            {
-                VG_INFO("[Resource] File \"%s\" has been modified", resPath.c_str());
-                res->Reimport();
-                count++;
-            }
-        }
-
-        VG_INFO("[Resource] %u Resource files have been modified", count);
+        //for (auto pair : m_resourcesMap)
+        //{
+        //    const string path = pair.first;
+        //    Resource * res = pair.second;
+        //    const string resPath = res->GetResourcePath();
+        //    if (needsCook(resPath))
+        //    {
+        //        VG_INFO("[Resource] File \"%s\" has been modified", resPath.c_str());
+        //        res->Reimport();
+        //        count++;
+        //    }
+        //}
+        //
+        //VG_INFO("[Resource] %u Resource files have been modified", count);
 
         return count;
     }
@@ -96,7 +96,7 @@ namespace vg::engine
         while (_this->isLoadingThreadRunning())
         {
             _this->updateLoading(true);
-            Sleep(0);
+            Sleep(1);
         }
         #endif
     }
@@ -113,19 +113,15 @@ namespace vg::engine
         if (resourcesToLoad.count() > 0)
         {
             VG_PROFILE_CPU("loading");
-            auto & info = resourcesToLoad[0];
+            IResource * res = resourcesToLoad[0];
+            string resPath = res->GetResourcePath();
 
-            auto it = m_resourcesMap.find(info.m_path);
-            if (m_resourcesMap.end() == it)
-            {
-                loadOneResource(info);
-                resourcesLoaded.push_back(info);
-            }
-            else
-            {
-                info.m_resource->setObject(it->second->getObject());
-                resourcesLoaded.push_back(info);
-            }
+            auto it = m_resourcesMap.find(resPath);
+            VG_ASSERT(m_resourcesMap.end() != it);
+            auto & shared = it->second;
+            VG_ASSERT(shared->m_object == nullptr);
+            loadOneResource(*shared);
+            resourcesLoaded.push_back(res);
         }
 
         // load others next frame
@@ -134,29 +130,71 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
-    void ResourceManager::loadResourceAsync(Resource * _resource, const string & _path, IObject * _owner)
+    void ResourceManager::loadResourceAsync(Resource * _resource, const core::string & _oldPath, const string & _newPath)
     {
+        VG_ASSERT(_resource->getOwner() != nullptr);
+
         lock_guard<recursive_mutex> lock(m_addResourceToLoadRecursiveMutex);
 
-        // TODO: return existing resource if it already exist!
-        auto it = m_resourcesMap.find(_resource->GetResourcePath());
-        if (m_resourcesMap.end() != it)
+        if (io::exists(_newPath))
         {
-            VG_ASSERT(false);
-        }
+            // Reuse existing object if it's already loaded
+            auto it = m_resourcesMap.find(_resource->GetResourcePath());
+            if (m_resourcesMap.end() != it)
+            {
+                SharedResource & loaded = *it->second;
 
-        m_resourcesToLoad.emplace_back(_resource, _path, _owner);
+                // Add to client list
+                loaded.m_clients.push_back(_resource);
+
+                if (loaded.m_object != nullptr)
+                {
+                    // already loaded? Add to resource to update
+                    m_resourcesLoadedAsync.push_back(_resource);
+                }
+            }
+            else
+            {
+                // Create entry in ResourceMap
+                string name = io::getFileName(_resource->GetResourcePath());
+                SharedResource * shared = new SharedResource(name);
+                shared->m_clients.push_back(_resource);
+                shared->m_path = _newPath;
+                shared->m_object = nullptr;
+
+                m_resourcesMap.insert(make_pair(_newPath, shared));
+                m_resourcesToLoad.emplace_back(_resource);
+            }
+        }
+        else
+        {
+            unloadResource(_resource, _oldPath);
+        }
     }
 
     //--------------------------------------------------------------------------------------
-    void ResourceManager::unloadResource(core::Resource * _resource)
+    // Resource Shared Object is released after the last client is unloaded
+    //--------------------------------------------------------------------------------------
+    void ResourceManager::unloadResource(core::Resource * _resource, const core::string & _path)
     {
-        // TODO: release resource if it is not the last client!
-
         VG_SAFE_INCREASE_REFCOUNT(_resource);
-        auto it = m_resourcesMap.find(_resource->GetResourcePath());
+        auto it = m_resourcesMap.find(_path);
         if (m_resourcesMap.end() != it)
-            m_resourcesMap.erase(it);
+        {
+            SharedResource * shared = it->second;
+            VG_VERIFY(shared->m_clients.remove(_resource));
+
+            // Resource has no more owners, delete it
+            if (shared->m_clients.size() == 0)
+            {
+                VG_SAFE_RELEASE(shared->m_object);
+                m_resourcesMap.erase(it);
+                VG_SAFE_RELEASE(shared);
+            }
+
+            _resource->getOwner()->onResourceUnloaded(_resource);
+            _resource->setObject(nullptr);                
+        }
     }
 
     //--------------------------------------------------------------------------------------
@@ -181,40 +219,54 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
-    void ResourceManager::loadOneResource(ResourceLoadInfo & info)
+    void ResourceManager::loadOneResource(SharedResource & _shared)
     {
         // check for an up-to-date cooked version of the resource
         bool needCook = false;
         bool done = false;
+
+        // get shared resource info
+        auto & clients = _shared.m_clients;
+        const string path = _shared.m_path;
+
         while (!done)
         {
-            needCook = needsCook(info.m_path);
+            needCook = needsCook(_shared.m_path);
 
             const auto startCook = Timer::getTick();
             if (needCook)
             {
-                VG_WARNING("[Resource] File \"%s\" needs cook.\n", info.m_path.c_str());
+                VG_WARNING("[Resource] File \"%s\" needs cook.\n", path.c_str());
 
-                bool isFileCooked = info.m_resource->cook(info.m_path);
-                VG_ASSERT(isFileCooked, "Could not cook file \"%s\"", info.m_path.c_str());
+                // HACK: use 1st client to cook
+                bool isFileCooked = clients[0]->cook(path);
+
+                VG_ASSERT(isFileCooked, "Could not cook file \"%s\"", path.c_str());
 
                 if (isFileCooked)
                 {
-                    const string cookFile = io::getCookedPath(info.m_path);
+                    const string cookFile = io::getCookedPath(path);
 
                     io::FileAccessTime rawDataLastWrite;
-                    VG_VERIFY(io::getLastWriteTime(info.m_path, &rawDataLastWrite));
+                    VG_VERIFY(io::getLastWriteTime(path, &rawDataLastWrite));
 
                     if (io::setLastWriteTime(cookFile, rawDataLastWrite))
-                        VG_INFO("[Resource] Cook \"%s\" in %.2f ms", info.m_path.c_str(), Timer::getEnlapsedTime(startCook, Timer::getTick()));
+                        VG_INFO("[Resource] Cook \"%s\" in %.2f ms", path.c_str(), Timer::getEnlapsedTime(startCook, Timer::getTick()));
                 }
             }
 
+            auto client0 = clients[0];
             const auto startLoad = Timer::getTick();
-            if (info.m_resource->load(info.m_path, info.m_owner))
+
+            VG_ASSERT(_shared.m_object == nullptr);
+            string path = client0->GetResourcePath();
+
+            VG_ASSERT(!path.empty());
+            _shared.m_object = client0->load(path);
+
+            if (nullptr != _shared.m_object)
             {
-                m_resourcesMap.insert(make_pair(info.m_path, info.m_resource));
-                VG_INFO("[Resource] Resource \"%s\" loaded in %.2f ms", info.m_path.c_str(), Timer::getEnlapsedTime(startLoad, Timer::getTick()));
+                VG_INFO("[Resource] Resource \"%s\" loaded in %.2f ms", path.c_str(), Timer::getEnlapsedTime(startLoad, Timer::getTick()));
                 done = true;
             }
             else
@@ -225,17 +277,11 @@ namespace vg::engine
                 }
                 else
                 {
-                    VG_ERROR("[Resource] Could not load resource \"%s\"", info.m_path.c_str());
+                    VG_ERROR("[Resource] Could not load resource \"%s\"", path.c_str());
                     done = true;
                 }
             }
-        }
-
-        // Add resources that were loaded async during previous frames
-        {
-            lock_guard<mutex> lock(m_resourceLoadedAsyncMutex);
-            m_resourcesLoadedAsync.push_back(info);
-        }        
+        }       
     }
 
     //--------------------------------------------------------------------------------------
@@ -272,8 +318,14 @@ namespace vg::engine
         // Sync point to notify resource loaded last frame
         for (uint i = 0; i < m_resourcesLoaded.size(); ++i)
         {
-            const auto & info = m_resourcesLoaded[i];
-            info.m_owner->onResourceLoaded(info.m_resource);
+            const auto & res = m_resourcesLoaded[i];
+
+            auto it = m_resourcesMap.find(res->GetResourcePath());
+            auto & shared = it->second;
+
+            // Set Shared Resource Object and Notify owner
+            res->setObject(shared->m_object);
+            res->getOwner()->onResourceLoaded(res);
         }
         m_resourcesLoaded.clear();
 

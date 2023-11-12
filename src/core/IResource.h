@@ -33,12 +33,9 @@ namespace vg::core
        
         virtual const vector<string> getExtensions          () const = 0;
 
-        virtual void                onResourcePathChanged   (IObject * _owner, const string & _oldPath, const string & _newPath) = 0;
+        virtual void                onResourcePathChanged   (const string & _oldPath, const string & _newPath) = 0;
 
-        virtual bool                cook                    (const core::string & _file) = 0;
-        virtual bool                load                    (const core::string & _file, IObject * _owner) = 0;
-
-        virtual uint                getSubResourceCount     () const = 0;
-        virtual IResource *         getSubResource          (uint _index) = 0;
+        virtual bool                cook                    (const core::string & _file) const = 0;
+        virtual core::IObject *     load                    (const core::string & _file) = 0;
     };
 }

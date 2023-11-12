@@ -23,6 +23,7 @@ namespace vg::core
 
         virtual void                        onPropertyChanged   (const IProperty & _prop) = 0;
         virtual void                        onResourceLoaded    (IResource * _resource) = 0;
+        virtual void                        onResourceUnloaded  (IResource * _resource) = 0;
 
 		virtual void					    setName		        (const string & _name) = 0;
 		virtual const string &			    getName		        () const = 0;

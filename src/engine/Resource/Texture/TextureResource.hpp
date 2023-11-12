@@ -34,7 +34,7 @@ namespace vg::engine
     //--------------------------------------------------------------------------------------
     TextureResource::~TextureResource()
     {
-        ResourceManager::get()->unloadResource(this);
+        ResourceManager::get()->unloadResource(this, GetResourcePath());
     }
 
     //--------------------------------------------------------------------------------------
@@ -49,25 +49,23 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
-    void TextureResource::onResourcePathChanged(IObject * _owner, const string & _oldPath, const string & _newPath)
+    void TextureResource::onResourcePathChanged(const string & _oldPath, const string & _newPath)
     {
         if (_oldPath != _newPath)
-            ResourceManager::get()->loadResourceAsync(this, _newPath, _owner);
+            ResourceManager::get()->loadResourceAsync(this, _oldPath, _newPath);
     }
 
     //--------------------------------------------------------------------------------------
-    bool TextureResource::cook(const string & _file)
+    bool TextureResource::cook(const string & _file) const
     {
         return Engine::get()->GetRenderer()->cookTexture(_file);
     }
 
     //--------------------------------------------------------------------------------------
-    bool TextureResource::load(const string & _file, IObject * _owner)
+    core::IObject * TextureResource::load(const string & _file)
     {
-        VG_SAFE_RELEASE(m_object);
-
-        m_object = Engine::get()->GetRenderer()->loadTexture(_file);
-
-        return nullptr != m_object;
+        gfx::ITexture * texture = Engine::get()->GetRenderer()->loadTexture(_file);
+        VG_ASSERT(nullptr != texture);
+        return texture;
     }
 }

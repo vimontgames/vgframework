@@ -198,17 +198,17 @@ namespace vg::core::io
     }
 
     //--------------------------------------------------------------------------------------
-    //core::string getFilePath(const string & _path)
-    //{
-    //    auto found = _path.find_last_of('/');
-    //    if (core::string::npos != found)
-    //    {
-    //        string folder = _path.substr(0, found);
-    //        return folder + "/";
-    //    }
-    //    else
-    //        return _path;
-    //}
+    string getFileName(const string & _file)
+    {
+        auto found = _file.find_last_of('/');
+        if (core::string::npos != found)
+        {
+            string name = _file.substr(found+1);
+            return name;
+        }
+        else
+            return _file;
+    }
 
     //--------------------------------------------------------------------------------------
     core::string getCookedPath(const core::string & _file)

@@ -23,16 +23,13 @@ namespace vg::engine
                                             ~MeshResource           ();
 
         const core::vector<core::string>    getExtensions           () const final;
-        void                                onResourcePathChanged   (IObject * _owner, const core::string & _oldPath, const core::string & _newPath) final;
+        void                                onResourcePathChanged   (const core::string & _oldPath, const core::string & _newPath) final;
 
-        bool                                cook                    (const core::string & _file) final override;
-        bool                                load                    (const core::string & _path, core::IObject * _owner) final override;
+        bool                                cook                    (const core::string & _file) const final override;
+        core::IObject *                     load                    (const core::string & _path) override;
 
         void                                onResourceLoaded        (core::IResource * _resource) final override;
         renderer::IMeshModel *              getMeshModel            () const { return (renderer::IMeshModel*)m_object; } 
-
-        core::uint                          getSubResourceCount     () const final;
-        IResource *                         getSubResource          (core::uint _index) final;
 
     private:
         core::vector<MaterialResource>      m_materialResources;

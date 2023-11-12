@@ -2,6 +2,7 @@
 
 #include "core/Singleton/Singleton.h"
 #include "engine/IResourceManager.h"
+#include "core/Object/Object.h"
 
 namespace vg::core
 {
@@ -13,20 +14,7 @@ namespace vg::core
 
 namespace vg::engine
 {
-    struct ResourceLoadInfo
-    {
-        ResourceLoadInfo(core::Resource * _resource, const core::string & _path, core::IObject * _owner) :
-            m_resource(_resource),
-            m_path(_path),
-            m_owner(_owner)
-        {
-
-        }
-
-        core::Resource *															m_resource;
-        const core::string &														m_path;
-        core::IObject *																m_owner;
-    };
+    class SharedResource;
 
     class ResourceManager : public IResourceManager, public core::Singleton<ResourceManager>
     {
@@ -44,8 +32,8 @@ namespace vg::engine
         core::uint      GetResourceCount        () const final override;
         core::uint      UpdateResources         () final override;
 
-        void            loadResourceAsync       (core::Resource * _resource, const core::string & _path,  core::IObject * _owner);
-        void            unloadResource          (core::Resource * _resource);
+        void            loadResourceAsync       (core::Resource * _resource, const core::string & _oldPath, const core::string & _path);
+        void            unloadResource          (core::Resource * _resource, const core::string & _path);
 
         void            updateLoading           ();
         void            flushPendingLoading     ();
@@ -57,18 +45,20 @@ namespace vg::engine
         static bool     needsCook               (const core::string & _resourcePath);
 
         void            updateLoading           (bool _async);
-        void            loadOneResource         (ResourceLoadInfo & info);
+        void            loadOneResource         (SharedResource & _shared);
 
     private:
         std::thread                             m_loadingThread;
         core::atomic<bool>                      m_isLoadingThreadRunning = true;
 
-        core::vector<ResourceLoadInfo>          m_resourcesToLoad;
-        core::vector<ResourceLoadInfo>          m_resourcesLoaded;
-		core::dictionary<core::Resource*>       m_resourcesMap;
+        core::dictionary<SharedResource*>       m_resourcesMap;
+
+        core::vector<core::IResource*>          m_resourcesToLoad;
+        core::vector<core::IResource*>          m_resourcesLoaded;
+        core::vector<core::IResource *>         m_resourcesLoadedAsync;
 
         core::recursive_mutex                   m_addResourceToLoadRecursiveMutex;
         core::mutex                             m_resourceLoadedAsyncMutex;
-        core::vector<ResourceLoadInfo>          m_resourcesLoadedAsync;
+        
     };
 }
