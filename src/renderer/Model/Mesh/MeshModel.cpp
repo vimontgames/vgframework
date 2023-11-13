@@ -156,12 +156,12 @@ namespace vg::renderer
 
         VG_SAFE_RELEASE(meshGeometry);
 
-        const auto matCount = _data.materials.size();
-        for (auto m = 0; m < matCount; ++m)
-        {
-            MaterialModel * matModel = MaterialModel::createFromImporterData(_data.materials[m]);
-            meshModel->m_materials.push_back(matModel);
-        }
+        //const auto matCount = _data.materials.size();
+        //for (auto m = 0; m < matCount; ++m)
+        //{
+        //    MaterialModel * matModel = MaterialModel::createFromImporterData(_data.materials[m]);
+        //    meshModel->m_materials.push_back(matModel);
+        //}
 
         return meshModel;
     }

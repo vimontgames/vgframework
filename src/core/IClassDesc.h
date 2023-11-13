@@ -43,6 +43,7 @@ namespace vg::core
         virtual void                        registerProperty        (const char * _className, const char * _propertyName, float4x4 * _offset, const char * _displayName, IProperty::Flags _flags) = 0;
         virtual void                        registerProperty        (const char * _className, const char * _propertyName, string * _offset, const char * _displayName, IProperty::Flags _flags) = 0;
         virtual void                        registerProperty        (const char * _className, const char * _propertyName, IResource ** _offset, const char * _displayName, IProperty::Flags _flags) = 0;
+        virtual void                        registerProperty        (const char * _className, const char * _propertyName, IObject * _offset, const char * _displayName, IProperty::Flags _flags) = 0;
         virtual void                        registerProperty        (const char * _className, const char * _propertyName, IObject ** _offset, const char * _displayName = nullptr, IProperty::Flags _flags = IProperty::Flags::None) = 0;
         virtual void                        registerProperty        (const char * _className, const char * _propertyName, IProperty::Callback _funcPtr, const char * _displayName, IProperty::Flags _flags) = 0;
         virtual void                        registerProperty        (const char * _className, const char * _propertyName, u32 _sizeOf, void * _offset, const char * _displayName = nullptr, IProperty::Flags _flags = IProperty::Flags::None) = 0;
@@ -54,6 +55,7 @@ namespace vg::core
         virtual void                        registerEnum            (const char * _className, const char * _propertyName, u32 * _offset, const char * _displayName, uint _enumCount, const char * _enumNames, const u32 * _enumValues, IProperty::Flags _flags) = 0;
 
         virtual void                        registerEnumArray       (const char * _className, const char * _propertyName, float4 * _offset, const char * _displayName, uint _enumCount, uint _enumSize, const char * _enumNames, const void * _enumValues, IProperty::Flags _flags) = 0;
+        virtual void                        registerEnumArray       (const char * _className, const char * _propertyName, IObject * _offset, const char * _displayName, uint _enumCount, uint _enumSize, const char * _enumNames, const void * _enumValues, IProperty::Flags _flags) = 0;
         virtual void                        registerEnumArray       (const char * _className, const char * _propertyName, IObject ** _offset, const char * _displayName, uint _enumCount, uint _enumSize, const char * _enumNames, const void * _enumValues, IProperty::Flags _flags) = 0;
 
         virtual const char *                getClassName            () const = 0;

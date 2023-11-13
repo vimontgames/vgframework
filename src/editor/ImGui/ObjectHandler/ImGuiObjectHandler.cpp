@@ -22,3 +22,5 @@ namespace vg::editor
 
 #include "GameObject/ImGuiGameObjectHandler.hpp"
 #include "Texture/ImGuiTextureHandler.hpp"
+#include "Texture/ImGuiTextureHandler.hpp"
+#include "Material/ImGuiMaterialResourceListHandler.hpp"

@@ -2,6 +2,7 @@
 
 #include "core/Resource/Resource.h"
 #include "engine/Resource/Texture/TextureResource.h"
+#include "renderer/Model/Material/Material_Consts.h"
 
 namespace vg::renderer
 {
@@ -32,6 +33,8 @@ namespace vg::engine
         renderer::IMaterialModel *          getMaterialModel        () const { return (renderer::IMaterialModel*)m_object; }
 
     //private:
-        core::vector<TextureResource>       m_textureResources;
+        renderer::MaterialFlags             m_flags = (renderer::MaterialFlags)0;
+        core::float4                        m_colors[core::enumCount<renderer::MaterialColorType>()];
+        TextureResource                     m_textures[core::enumCount<renderer::MaterialTextureType>()];
     };
 }

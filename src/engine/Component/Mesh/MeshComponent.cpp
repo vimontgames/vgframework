@@ -7,6 +7,8 @@
 #include "renderer/IRenderer.h"
 #include "renderer/IPicking.h"
 
+#include "MaterialResourceList.hpp"
+
 using namespace vg::core;
 using namespace vg::renderer;
 
@@ -32,6 +34,8 @@ namespace vg::engine
         super::registerProperties(_desc);
 
         _desc.registerProperty("MeshComponent", "m_meshResource", (core::IResource**)offsetof(MeshComponent, m_meshResource), "Resource", IProperty::Flags::None);
+        _desc.registerPropertyObjectHelper(MeshComponent, m_meshMaterials, "Materials", IProperty::Flags::None);
+
         //_desc.registerProperty("MeshComponent", "m_meshInstance", (IObject**)offsetof(MeshComponent, m_meshInstance), "Instance", IProperty::Flags::Hidden);
 
         return true;
@@ -40,7 +44,8 @@ namespace vg::engine
     //--------------------------------------------------------------------------------------
     MeshComponent::MeshComponent(const core::string & _name, IObject * _parent) :
         core::Component(_name, _parent),
-        m_meshResource(_name, this)
+        m_meshResource(_name, this),
+        m_meshMaterials(_name, this)
     {
         VG_ASSERT(dynamic_cast<IGameObject*>(_parent));
         m_meshInstance = (IMeshInstance *)CreateFactoryObject(MeshInstance, _name, this);

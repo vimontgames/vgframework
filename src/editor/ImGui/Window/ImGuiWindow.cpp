@@ -532,14 +532,13 @@ namespace vg::editor
 
             auto treeNodeFlags = ImGuiTreeNodeFlags_OpenOnArrow;
 
-            if (count > 0 && ImGui::TreeNodeEx(treeNodeName.c_str(), treeNodeFlags))
+            if (ImGui::TreeNodeEx(treeNodeName.c_str(), treeNodeFlags))
             {
                 for (uint i = 0; i < count; ++i)
                 {
                     IObject * pObject = (IObject *)(data + sizeOf * i);
                     displayArrayObject(pObject, i, nullptr);
                 }
-
                 ImGui::TreePop();
             }
 
@@ -632,9 +631,11 @@ namespace vg::editor
         }
         break;
 
+        case IProperty::Type::Object:
         case IProperty::Type::ObjectRef:
         {
-            IObject * pObject = _prop->GetPropertyObjectRef(_object);
+            bool ref = (type == IProperty::Type::ObjectRef);
+            IObject * pObject =  ref ? _prop->GetPropertyObjectRef(_object) : _prop->GetPropertyObject(_object);
 
             string treeNodeName;
             auto treeNodeFlags = ImGuiTreeNodeFlags_OpenOnArrow;
@@ -652,7 +653,7 @@ namespace vg::editor
                 {
                     for (uint e = 0; e < _prop->getEnumCount(); ++e)
                     {
-                        pObject = _prop->GetPropertyObjectRef(_object, e);
+                        pObject = ref ? _prop->GetPropertyObjectRef(_object, e) : _prop->GetPropertyObject(_object, e);
 
                         if (ImGui::TreeNodeEx(_prop->getEnumName(e), treeNodeFlags | ImGuiTreeNodeFlags_DefaultOpen))
                         {
@@ -671,7 +672,7 @@ namespace vg::editor
                 if (nullptr != pObject && pObject->getClassDesc() && asBool(pObject->getClassDesc()->getFlags() & (IClassDesc::Flags::Component)))
                     treeNodeFlags |= ImGuiTreeNodeFlags_Leaf;
 
-                bool needTreeNode = strcmp(_prop->getName(), "m_object");
+                bool needTreeNode = strcmp(_prop->getName(), "m_object") && ref;
                 bool treenNodeOpen = !needTreeNode || ImGui::TreeNodeEx(treeNodeName.c_str(), treeNodeFlags);
 
                 static int ObjectRightClicMenuIndex = -1;

@@ -42,9 +42,10 @@ namespace vg::core
             EnumFlagsU32,
             EnumFlagsU64,
             Resource,
-            ObjectRef,
-            ObjectRefVector,
-            ObjectRefDictionary,
+            Object,                 // Embedded IObject
+            ObjectRef,              // Pointer to IObject
+            ObjectRefVector,        // Vector of pointers to IObject
+            ObjectRefDictionary,    // Dictionnary of pointers to IObject
 
             // sizeof(element) is unknown
             ObjectVector,
@@ -97,7 +98,8 @@ namespace vg::core
         virtual float4x4 *                  GetPropertyFloat4x4             (const IObject * _object) const = 0;
         virtual string *                    GetPropertyString               (const IObject * _object) const = 0;
         virtual IResource *                 GetPropertyResource             (const IObject * _object) const = 0;
-        virtual IObject *                   GetPropertyObjectRef            (const IObject * _object, uint _arrayIndex = 0) const = 0;
+        virtual IObject *                   GetPropertyObject               (const IObject * _object, uint _index = 0) const = 0;
+        virtual IObject *                   GetPropertyObjectRef            (const IObject * _object, uint _index = 0) const = 0;
         virtual vector<IObject*> *          GetPropertyObjectRefVector      (const IObject * _object) const = 0;
         virtual dictionary<IObject*> *      GetPropertyObjectRefDictionary  (const IObject * _object) const = 0;
         

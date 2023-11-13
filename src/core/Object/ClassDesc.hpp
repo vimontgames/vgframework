@@ -87,6 +87,12 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
+    void ClassDesc::registerProperty(const char * _className, const char * _propertyName, core::IObject * _offset, const char * _displayName, IProperty::Flags _flags)
+    {
+        registerClassMemberT(_className, _propertyName, _offset, _displayName, _flags);
+    }
+
+    //--------------------------------------------------------------------------------------
     void ClassDesc::registerProperty(const char * _className, const char * _propertyName, core::IObject ** _offset, const char * _displayName, IProperty::Flags _flags)
     {
         registerClassMemberT(_className, _propertyName, _offset, _displayName, _flags);
@@ -197,6 +203,7 @@ namespace vg::core
     template <> struct TypeToEnum<core::float4> { static constexpr auto value = IProperty::Type::Float4; };
     template <> struct TypeToEnum<core::float4x4> { static constexpr auto value = IProperty::Type::Float4x4; };
     template <> struct TypeToEnum<core::string> { static constexpr auto value = IProperty::Type::String; };
+    template <> struct TypeToEnum<IObject> { static constexpr auto value = IProperty::Type::Object; };
     template <> struct TypeToEnum<IObject*> { static constexpr auto value = IProperty::Type::ObjectRef; };
     template <> struct TypeToEnum<IResource*> { static constexpr auto value = IProperty::Type::Resource; };
     template <> struct TypeToEnum<IProperty::Callback> { static constexpr auto value = IProperty::Type::Callback; };
@@ -222,8 +229,15 @@ namespace vg::core
         properties.emplace_back(_className, _propertyName, TypeToEnum<T>::value, (uint_ptr)_offset, _enumSize, _displayName, IProperty::Flags::EnumArray | _flags, _enumCount, _enumNames, _enumValues);
     }
 
+
     //--------------------------------------------------------------------------------------
     void ClassDesc::registerEnumArray(const char * _className, const char * _propertyName, core::float4 * _offset, const char * _displayName, uint _enumCount, uint _enumSize, const char * _enumNames, const void * _enumValues, IProperty::Flags _flags)
+    {
+        registerEnumArrayT(_className, _propertyName, _offset, _displayName, _enumCount, _enumSize, _enumNames, _enumValues, _flags);
+    }
+
+    //--------------------------------------------------------------------------------------
+    void ClassDesc::registerEnumArray(const char * _className, const char * _propertyName, IObject * _offset, const char * _displayName, uint _enumCount, uint _enumSize, const char * _enumNames, const void * _enumValues, IProperty::Flags _flags)
     {
         registerEnumArrayT(_className, _propertyName, _offset, _displayName, _enumCount, _enumSize, _enumNames, _enumValues, _flags);
     }

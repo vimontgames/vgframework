@@ -87,6 +87,13 @@
     <ClInclude Include="Resource\SharedResource.hpp">
       <Filter>Resource</Filter>
     </ClInclude>
+    <ClInclude Include="Component\Mesh\MaterialResourceList.h">
+      <Filter>Component\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="Component\Mesh\MaterialResourceList.hpp">
+      <Filter>Component\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="IMaterialList.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Input">

@@ -18,6 +18,7 @@ namespace vg::core
 
     #define registerPropertyHelperEx(className, propertyName, displayName, flags)									        registerProperty(#className, #propertyName, (&((className*)(nullptr))->propertyName), displayName, flags)
     #define registerPropertyHelper(className, propertyName, displayName)									                registerPropertyHelperEx(className, propertyName, displayName, vg::core::IProperty::Flags::None)
+    #define registerPropertyObjectHelper(className, propertyName, displayName, flags)                                       registerProperty(#className, #propertyName, (core::IObject*)offsetof(className, propertyName), displayName, flags);
     #define registerPropertyObjectRefHelper(className, propertyName, displayName, flags)                                    registerProperty(#className, #propertyName, (core::IObject**)offsetof(className, propertyName), displayName, flags);
     #define registerPropertyObjectVectorHelper(className, propertyName, elementType, displayName, flags)                    registerProperty(#className, #propertyName, sizeof(elementType), &((className*)nullptr)->propertyName, displayName, flags);
     #define registerPropertyObjectRefVectorHelper(className, propertyName, displayName, flags)                              registerProperty(#className, #propertyName, (core::vector<core::IObject*>*)&((className*)nullptr)->propertyName, displayName, flags);

@@ -41,9 +41,9 @@ namespace vg::renderer
     {
         super::registerProperties(_desc);
 
-        _desc.registerPropertyEnumBitfield(MaterialModel, Flags, m_flags, "Flags");
-        _desc.registerPropertyEnumArray(MaterialModel, core::float4, MaterialColorType, m_colors, "Colors", IProperty::Flags::Color);
-        _desc.registerPropertyEnumArray(MaterialModel, core::IObject*, MaterialTextureType, m_textures, "Textures", IProperty::Flags::None);
+        _desc.registerPropertyEnumBitfield(MaterialModel, MaterialFlags, m_flags, "Flags");
+        _desc.registerPropertyEnumArray(MaterialModel, core::float4, MaterialColorType, m_colors, "Colors", IProperty::Flags::Color | IProperty::Flags::NotSaved);
+        _desc.registerPropertyEnumArray(MaterialModel, core::IObject*, MaterialTextureType, m_textures, "Textures", IProperty::Flags::None | IProperty::Flags::NotSaved);
 
         return true;
     }
@@ -51,7 +51,7 @@ namespace vg::renderer
     //--------------------------------------------------------------------------------------
     MaterialModel::MaterialModel(const core::string & _name, core::IObject * _parent) :
         super(_name, _parent),
-        m_flags((Flags)0x0)
+        m_flags((MaterialFlags)0x0)
     {
         auto * device = Device::get();
 

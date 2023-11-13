@@ -24,7 +24,7 @@ namespace vg::engine
     {
         super::registerProperties(_desc);
 
-        _desc.registerPropertyObjectVectorHelper(MeshResource, m_materialResources, MaterialResource, "Materials", IProperty::Flags::NotSaved | IProperty::Flags::ReadOnly);
+        //_desc.registerPropertyObjectVectorHelper(MeshResource, m_materialResources, MaterialResource, "Materials", IProperty::Flags::NotSaved | IProperty::Flags::ReadOnly);
 
         return true;
     }
@@ -112,7 +112,7 @@ namespace vg::engine
         auto * meshModel = dynamic_cast<renderer::IMeshModel *>(getObject());
         VG_ASSERT(nullptr != meshModel);
 
-        if (nullptr != meshModel)
+        /*if (nullptr != meshModel)
         {
             const uint matCount = meshModel->GetMaterialCount();
             m_materialResources.resize(matCount);
@@ -143,7 +143,7 @@ namespace vg::engine
                     }
                 }
             }
-        }
+        }*/
     }
 
     //--------------------------------------------------------------------------------------
@@ -155,7 +155,7 @@ namespace vg::engine
         auto * meshModel = dynamic_cast<renderer::IMeshModel *>(getObject());
         VG_ASSERT(nullptr != meshModel);
 
-        if (nullptr != meshModel)
+        /*if (nullptr != meshModel)
         {
             const uint matCount = meshModel->GetMaterialCount();
             for (uint m = 0; m < m_materialResources.size(); ++m)
@@ -169,6 +169,6 @@ namespace vg::engine
                 }
             }
         }
-        m_materialResources.clear();
+        m_materialResources.clear();*/
     }
 }

@@ -13,7 +13,7 @@ namespace vg::core
     class Property : public IProperty
     {
     public:
-                                    Property                        (const char * _class, const char * _name, Type _type, uint_ptr _offset, core::u32 _sizeOf, const char * _prettyName, Flags _flags, uint _enumCount = 0, const char * _enumNames = nullptr, const void * _enumValues = nullptr);
+                                    Property                        (const char * _class, const char * _name, Type _type, uint_ptr _offset, core::u32 _sizeOf, const char * _prettyName, Flags _flags, uint _enumCount = 0, const char * _enumNames = nullptr, const void * _enumValues = nullptr, uint _enumSizeOf = -1);
                                     ~Property                       ();
 
         void                        setRange                        (float2 _range) final;
@@ -43,7 +43,8 @@ namespace vg::core
         float4x4 *                  GetPropertyFloat4x4             (const IObject * _object) const final;
         string *                    GetPropertyString               (const IObject * _object) const final;
         IResource *                 GetPropertyResource             (const IObject * _object) const final;
-        IObject *                   GetPropertyObjectRef            (const IObject * _object, uint _arrayIndex = 0) const final;
+        IObject *                   GetPropertyObject               (const IObject * _object, uint _index = 0) const final;
+        IObject *                   GetPropertyObjectRef            (const IObject * _object, uint _index = 0) const final;
         vector<IObject*> *          GetPropertyObjectRefVector      (const IObject * _object) const final;
         dictionary<IObject*> *      GetPropertyObjectRefDictionary  (const IObject * _object) const final;
 
@@ -56,7 +57,8 @@ namespace vg::core
 
     protected:
         template <typename T> void  initEnum                        (uint _enumCount, const char * _enumNames, const void * _enumValues);
-
+        void                        checkPropertyType               (Type _type) const;
+        
     private:
         const char *                name            = nullptr;
         const char *                className       = nullptr;

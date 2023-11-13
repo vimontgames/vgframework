@@ -23,8 +23,9 @@ namespace vg::engine
     {
         super::registerProperties(_desc);
 
-        _desc.registerPropertyObjectVectorHelper(MaterialResource, m_textureResources, TextureResource, "Textures", IProperty::Flags::Resource);
-
+        _desc.registerPropertyEnumArray(MaterialResource, core::float4, renderer::MaterialColorType, m_colors, "Colors", IProperty::Flags::Color);
+        _desc.registerPropertyEnumArray(MaterialResource, core::IObject, renderer::MaterialTextureType, m_textures, "Textures", IProperty::Flags::None);
+        
         return true;
     }
 

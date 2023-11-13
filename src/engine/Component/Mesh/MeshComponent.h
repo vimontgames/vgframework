@@ -2,6 +2,7 @@
 
 #include "core/Component/Component.h"
 #include "engine/Resource/Mesh/MeshResource.h"
+#include "MaterialResourceList.h"
 
 namespace vg::renderer
 {
@@ -27,6 +28,7 @@ namespace vg::engine
     private:
         renderer::IMeshInstance *           m_meshInstance = nullptr;
         MeshResource                        m_meshResource;
+        MaterialResourceList                m_meshMaterials;
         bool                                m_registered = false;
     };
 }

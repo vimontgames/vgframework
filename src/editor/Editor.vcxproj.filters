@@ -177,6 +177,9 @@
     <ClInclude Include="ImGui\Menu\Inspector\Component\ImGuiComponentInspectorMenu.hpp">
       <Filter>ImGui\Menu\Inspector\Component</Filter>
     </ClInclude>
+    <ClInclude Include="ImGui\ObjectHandler\Material\ImGuiMaterialResourceListHandler.hpp">
+      <Filter>ImGui\ObjectHandler\Material</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Editor.def" />
@@ -278,6 +281,9 @@
     </Filter>
     <Filter Include="ImGui\Menu\Inspector\Component">
       <UniqueIdentifier>{d66790a1-3e2f-4211-a3eb-67e13e43f3a4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ImGui\ObjectHandler\Material">
+      <UniqueIdentifier>{2aa8b6b2-85d1-4b33-bd2d-88228a072fd3}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

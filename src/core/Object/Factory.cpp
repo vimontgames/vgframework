@@ -13,7 +13,7 @@ using namespace tinyxml2;
 namespace vg::core
 {
     //--------------------------------------------------------------------------------------
-    // Returned pointer shall not be stored but used immediatly ;)
+    // Returned pointer shall not be stored but used immediately
     //--------------------------------------------------------------------------------------
     IClassDesc * Factory::registerClass(const char * _className, const char * _displayName, IClassDesc::Flags _flags, u32 sizeOf, IClassDesc::Func _createFunc)
     {
@@ -206,6 +206,11 @@ namespace vg::core
         return serializeFromXML(_object, xmlObject);
     }
 
+    template <uint N> class AliasType
+    {
+        u8 data[N>>3];
+    };
+
     //--------------------------------------------------------------------------------------
     bool Factory::serializeFromXML(IObject * _object, const XMLElem * xmlObject) const
     {
@@ -278,6 +283,33 @@ namespace vg::core
                                         }
                                         break;
 
+                                        case IProperty::Type::Object:
+                                        {
+                                            IObject * pObjectRef = nullptr;
+                                            const XMLElement * xmlObjectRef = xmlPropElem->FirstChildElement("Object");
+                                            if (nullptr != xmlObjectRef)
+                                            {
+                                                const XMLAttribute * xmlClassAttrRef = xmlObjectRef->FindAttribute("class");
+                                                if (nullptr != xmlClassAttrRef)
+                                                {
+                                                    const char * classNameRef = xmlClassAttrRef->Value();
+                                                    const auto * classDescRef = getClassDescriptor(classNameRef);
+                                                    if (nullptr != classDescRef)
+                                                    {
+                                                        pObjectRef = createObject(classNameRef, "", _object);
+                                                        if (!serializeFromXML(pObjectRef, xmlObjectRef))
+                                                            VG_SAFE_DELETE(pObjectRef);
+                                                    }
+                                                }
+                                            }
+
+                                            // Create "in-place"
+                                            IObject * pDstObject = (IObject *)(uint_ptr(_object) + offset);
+                                            pDstObject->~IObject();
+                                            memcpy(pDstObject, pObjectRef, prop->getSizeOf());
+                                        }
+                                        break;
+
                                         case IProperty::Type::ObjectRef:
                                         {
                                             IObject* pObjectRef = nullptr;
@@ -340,6 +372,78 @@ namespace vg::core
                                             }
                                         }
                                         break;
+
+                                        //case IProperty::Type::ObjectVector:
+                                        //{
+                                        //    const XMLElement * xmlObjectRef = xmlPropElem->FirstChildElement("Object");
+                                        //    if (nullptr != xmlObjectRef)
+                                        //    {
+                                        //        //auto * vector = prop->GetPropertyObjectRefVector(_object);
+                                        //        const XMLElement * xmlObjectRef = xmlPropElem->FirstChildElement("Object");
+                                        //
+                                        //        const uint sizeOf = prop->getSizeOf();
+                                        //        const size_t count = prop->GetPropertyObjectVectorCount(_object);
+                                        //        const byte * data = prop->GetPropertyObjectVectorData(_object);
+                                        //
+                                        //        //for (uint i = 0; i < count; ++i)
+                                        //        //{
+                                        //        //    IObject * pObject = (IObject *)(data + sizeOf * i);
+                                        //        //    serializeToXML((const IObject *)(pObject), _xmlDoc, xmlPropElem);
+                                        //        //}
+                                        //
+                                        //        int i = 0;
+                                        //        do
+                                        //        {
+                                        //            IObject * pObjectRef = nullptr;
+                                        //
+                                        //            if (nullptr != xmlObjectRef)
+                                        //            {
+                                        //                const XMLAttribute * xmlClassAttrRef = xmlObjectRef->FindAttribute("class");
+                                        //                if (nullptr != xmlClassAttrRef)
+                                        //                {
+                                        //                    const char * classNameRef = xmlClassAttrRef->Value();
+                                        //                    const auto * classDescRef = getClassDescriptor(classNameRef);
+                                        //                    if (nullptr != classDescRef)
+                                        //                    {
+                                        //                        pObjectRef = createObject(classNameRef, "", _object);
+                                        //                        if (serializeFromXML(pObjectRef, xmlObjectRef))
+                                        //                        {
+                                        //                            //// Create "in-place" CANT RESIZE ARRAY!!?
+                                        //                            //IObject * pDstObject = (IObject *)(data + sizeOf * i);
+                                        //                            //if (nullptr != pDstObject)
+                                        //                            //    pDstObject->~IObject();
+                                        //                            //memcpy(pDstObject, pObjectRef, prop->getSizeOf());
+                                        //
+                                        //                            // a bit of a hack ...
+                                        //                            switch (prop->getSizeOf())
+                                        //                            {
+                                        //                                default:
+                                        //                                {
+                                        //                                    VG_ASSERT_NOT_IMPLEMENTED();
+                                        //                                }
+                                        //                                break;
+                                        //
+                                        //                                case 232:
+                                        //                                {
+                                        //                                    auto aliasVector = (core::vector<AliasType<232>>*)data;
+                                        //                                    uint size = aliasVector->size();
+                                        //                                    if (count != size)
+                                        //                                        aliasVector->resize(count);
+                                        //                                }
+                                        //                                break;
+                                        //                            }
+                                        //                        }
+                                        //                    }
+                                        //                }
+                                        //            }
+                                        //
+                                        //            xmlObjectRef = xmlObjectRef->NextSiblingElement("Object");
+                                        //
+                                        //            ++i;
+                                        //        } while (xmlObjectRef != nullptr);
+                                        //    }
+                                        //}
+                                        //break;
 
                                         case IProperty::Type::Resource:
                                         {
@@ -523,12 +627,47 @@ namespace vg::core
                 }
                 break;
 
+                case IProperty::Type::ResourceVector:
+                {
+                    const uint sizeOf = prop->getSizeOf();
+                    const size_t count = prop->GetPropertyObjectVectorCount(_object);
+                    const byte * data = prop->GetPropertyObjectVectorData(_object);
+
+                    for (uint i = 0; i < count; ++i)
+                    {
+                        IObject * pObject = (IObject *)(data + sizeOf * i);
+                        serializeToXML((const IObject *)(pObject), _xmlDoc, xmlPropElem);
+                    }
+                }
+                break;
+
+                case IProperty::Type::Object:
+                {
+                    const IObject * pObject = prop->GetPropertyObject(_object);
+                    serializeToXML(pObject, _xmlDoc, xmlPropElem);
+                }
+                break;
+
                 case IProperty::Type::ObjectRef:
                 {
                     const IObject * pObject = prop->GetPropertyObjectRef(_object);
                     serializeToXML(pObject, _xmlDoc, xmlPropElem);
                 }
                 break;
+
+                //case IProperty::Type::ObjectVector:
+                //{
+                //    const uint sizeOf = prop->getSizeOf();
+                //    const size_t count = prop->GetPropertyObjectVectorCount(_object);
+                //    const byte * data = prop->GetPropertyObjectVectorData(_object);
+                //
+                //    for (uint i = 0; i < count; ++i)
+                //    {
+                //        IObject * pObject = (IObject *)(data + sizeOf * i);
+                //        serializeToXML((const IObject *)(pObject), _xmlDoc, xmlPropElem);
+                //    }
+                //}
+                //break;
 
                 case IProperty::Type::ObjectRefVector:
                 {

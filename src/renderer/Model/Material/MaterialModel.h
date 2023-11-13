@@ -34,12 +34,6 @@ namespace vg
 
         public:
 
-            enum Flags : core::u32
-            {
-                AlphaTest   = 0x00000001,
-                AlphaBlend  = 0x00000002
-            };
-
             const char *            getClassName            () const final { return "MaterialModel"; }
 
             static bool             registerClass           (core::IFactory & _factory);
@@ -64,10 +58,10 @@ namespace vg
 
         private:
 
-            Flags                       m_flags;
+            MaterialFlags               m_flags;
+            core::float4                m_colors[core::enumCount<MaterialColorType>()];
             core::string                m_texturePaths[core::enumCount<MaterialTextureType>()];
             gfx::Texture *              m_textures[core::enumCount<MaterialTextureType>()];
-            core::float4                m_colors[core::enumCount<MaterialColorType>()];
             gfx::RootSignatureHandle    m_rootSignature;
             gfx::ShaderKey              m_shaderKey[core::enumCount<ShaderPass>()];
         };

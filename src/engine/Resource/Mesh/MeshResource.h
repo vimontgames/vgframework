@@ -39,6 +39,6 @@ namespace vg::engine
         renderer::IMeshModel *              getMeshModel            () const { return (renderer::IMeshModel*)m_object; } 
 
     private:
-        core::vector<MaterialResource>      m_materialResources;
+        //core::vector<MaterialResource>      m_materialResources;
     };
 }
