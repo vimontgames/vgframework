@@ -214,4 +214,23 @@ namespace vg::core
 
         properties.emplace_back(_className, _propertyName, TypeToEnum<T>::value, offset, (u32)sizeof(T), _displayName, _flags);
     }
+
+    //--------------------------------------------------------------------------------------
+    template <typename T> void ClassDesc::registerEnumArrayT(const char * _className, const char * _propertyName, T * _offset, const char * _displayName, uint _enumCount, uint _enumSize, const char * _enumNames, const void * _enumValues, IProperty::Flags _flags)
+    {
+        VG_ASSERT(!asBool(IProperty::Flags::Bitfield & _flags));
+        properties.emplace_back(_className, _propertyName, TypeToEnum<T>::value, (uint_ptr)_offset, _enumSize, _displayName, IProperty::Flags::EnumArray | _flags, _enumCount, _enumNames, _enumValues);
+    }
+
+    //--------------------------------------------------------------------------------------
+    void ClassDesc::registerEnumArray(const char * _className, const char * _propertyName, core::float4 * _offset, const char * _displayName, uint _enumCount, uint _enumSize, const char * _enumNames, const void * _enumValues, IProperty::Flags _flags)
+    {
+        registerEnumArrayT(_className, _propertyName, _offset, _displayName, _enumCount, _enumSize, _enumNames, _enumValues, _flags);
+    }
+
+    //--------------------------------------------------------------------------------------
+    void ClassDesc::registerEnumArray(const char * _className, const char * _propertyName, IObject ** _offset, const char * _displayName, uint _enumCount, uint _enumSize, const char * _enumNames, const void * _enumValues, IProperty::Flags _flags)
+    {
+        registerEnumArrayT(_className, _propertyName, _offset, _displayName, _enumCount, _enumSize, _enumNames, _enumValues, _flags);
+    }
 }

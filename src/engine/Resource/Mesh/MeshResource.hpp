@@ -24,7 +24,7 @@ namespace vg::engine
     {
         super::registerProperties(_desc);
 
-        _desc.registerPropertyObjectVectorHelper(MeshResource, m_materialResources, MaterialResource, "Materials", IProperty::Flags::NotSaved);
+        _desc.registerPropertyObjectVectorHelper(MeshResource, m_materialResources, MaterialResource, "Materials", IProperty::Flags::NotSaved | IProperty::Flags::ReadOnly);
 
         return true;
     }
@@ -96,7 +96,14 @@ namespace vg::engine
     //--------------------------------------------------------------------------------------
     void MeshResource::onResourceUnloaded(core::IResource * _resource)
     {
-        _resource->ClearResourcePath();
+        const auto userData = _resource->getUserData();
+        const uint matID = (userData >> 16) & 0xFFFF;
+        const auto texSlot = (renderer::MaterialTextureType)(userData & 0xFFFF);
+
+        auto * meshModel = getMeshModel();
+        auto * material = meshModel->GetMaterial(matID);
+
+        material->SetTexture(texSlot, nullptr);
     }
 
     //--------------------------------------------------------------------------------------

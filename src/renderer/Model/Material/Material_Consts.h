@@ -8,8 +8,8 @@ namespace vg::renderer
         Normal
     };
 
-    //enum class MaterialColorType : core::u8
-    //{
-    //    BaseColor = 0
-    //};
+    enum class MaterialColorType : core::u8
+    {
+        BaseColor = 0
+    };
 }

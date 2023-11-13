@@ -56,17 +56,18 @@ namespace vg::core
 
         enum class Flags : u64
         {
-            None        = 0x0000000000000000,
-            ReadOnly    = 0x0000000000000001,   // Cannot edit from GUI
-            Color       = 0x0000000000000002,   // Type represents a color
-            IsFolder    = 0x0000000000000004,   // String is a folder
-            HasRange    = 0x0000000000000008,   // Property has [min..max] range
-            SameLine    = 0x0000000000000010,   // Do no end line after this property
-			Radio		= 0x0000000000000020,   // Part of a radio button group
-            Hidden      = 0x0000000000000040,   // Hide property
-            Bitfield    = 0x0000000000000080,   // Value displayed as hex, enum as flags
-            Resource    = 0x0000000000000100,
-            NotSaved    = 0x0000000000000200
+            None            = 0x0000000000000000,
+            ReadOnly        = 0x0000000000000001,   // Cannot edit from GUI
+            Color           = 0x0000000000000002,   // Type represents a color (e.g. float4 or u32)
+            IsFolder        = 0x0000000000000004,   // String is a folder
+            HasRange        = 0x0000000000000008,   // Property has [min..max] range
+            SameLine        = 0x0000000000000010,   // Do no end line after this property
+			Radio		    = 0x0000000000000020,   // Part of a radio button group
+            Hidden          = 0x0000000000000040,   // Hide property
+            Bitfield        = 0x0000000000000080,   // Value displayed as hex, enum as flags
+            Resource        = 0x0000000000000100,
+            NotSaved        = 0x0000000000000200,
+            EnumArray       = 0x0000000000000400    // Property is fixed-size C array with element count the size of the enum
         };
 
         virtual void                        setRange                        (float2 _range) = 0;
@@ -82,7 +83,7 @@ namespace vg::core
         virtual float2                      getRange                        () const = 0;
         virtual u32                         getEnumCount                    () const = 0;
         virtual const char *                getEnumName                     (uint index) const = 0;
-        virtual u32                         getEnumValue                    (uint index) const = 0;
+        virtual u64                         getEnumValue                    (uint index) const = 0;
 
         virtual bool *                      GetPropertyBool                 (const IObject * _object) const = 0;
         virtual u8 *                        GetPropertyUint8                (const IObject * _object) const = 0;
@@ -96,7 +97,7 @@ namespace vg::core
         virtual float4x4 *                  GetPropertyFloat4x4             (const IObject * _object) const = 0;
         virtual string *                    GetPropertyString               (const IObject * _object) const = 0;
         virtual IResource *                 GetPropertyResource             (const IObject * _object) const = 0;
-        virtual IObject *                   GetPropertyObjectRef            (const IObject * _object) const = 0;
+        virtual IObject *                   GetPropertyObjectRef            (const IObject * _object, uint _arrayIndex = 0) const = 0;
         virtual vector<IObject*> *          GetPropertyObjectRefVector      (const IObject * _object) const = 0;
         virtual dictionary<IObject*> *      GetPropertyObjectRefDictionary  (const IObject * _object) const = 0;
         

@@ -30,7 +30,7 @@ namespace vg::renderer
         super::registerProperties(_desc);
 
         _desc.registerPropertyObjectRefHelper(MeshModel, m_meshGeometry, "Geometry", IProperty::Flags::NotSaved);
-        //_desc.registerPropertyObjectRefVectorHelper(MeshModel, m_materials, "Materials", IProperty::Flags::NotSaved);
+        _desc.registerPropertyObjectRefVectorHelper(MeshModel, m_materials, "Materials", IProperty::Flags::NotSaved);
         
         return true;
     }

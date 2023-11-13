@@ -29,6 +29,9 @@ namespace vg::core
         void								registerEnum        (const char * _className, const char * _propertyName, core::u16 * _offset, const char * _displayName, u32 _enumCount, const char * _enumNames, const u16 * _enumValues, IProperty::Flags _flags) final;
         void								registerEnum        (const char * _className, const char * _propertyName, core::u32 * _offset, const char * _displayName, u32 _enumCount, const char * _enumNames, const u32 * _enumValues, IProperty::Flags _flags) final;
 
+        void                                registerEnumArray   (const char * _className, const char * _propertyName, core::float4 * _offset, const char * _displayName, uint _enumCount, uint _enumSize, const char * _enumNames, const void * _enumValues, IProperty::Flags _flags) final;
+        void                                registerEnumArray   (const char * _className, const char * _propertyName, IObject ** _offset, const char * _displayName, uint _enumCount, uint _enumSize, const char * _enumNames, const void * _enumValues, IProperty::Flags _flags) final;
+
         const char *                        getClassName        () const final;
         const char *                        getClassDisplayName () const final;
         uint                                getPropertyCount    () const final;
@@ -51,6 +54,8 @@ namespace vg::core
         mutable u32                         count = 0;
 
     private:
-        template <typename T> void  registerClassMemberT(const char * _className, const char * _propertyName, T * _offset, const char * _displayName, IProperty::Flags _flags);
+        template <typename T> void  registerClassMemberT    (const char * _className, const char * _propertyName, T * _offset, const char * _displayName, IProperty::Flags _flags);
+        template <typename T> void  registerEnumArrayT      (const char * _className, const char * _propertyName, T * _offset, const char * _displayName, uint _enumCount, uint _enumSize, const char * _enumNames, const void * _enumValues, IProperty::Flags _flags);
+
     };
 }

@@ -42,6 +42,8 @@ namespace vg::renderer
         super::registerProperties(_desc);
 
         _desc.registerPropertyEnumBitfield(MaterialModel, Flags, m_flags, "Flags");
+        _desc.registerPropertyEnumArray(MaterialModel, core::float4, MaterialColorType, m_colors, "Colors", IProperty::Flags::Color);
+        _desc.registerPropertyEnumArray(MaterialModel, core::IObject*, MaterialTextureType, m_textures, "Textures", IProperty::Flags::None);
 
         return true;
     }
@@ -65,8 +67,8 @@ namespace vg::renderer
         m_shaderKey[asInteger(ShaderPass::ZOnly)] = ShaderKey(shaderFile, "ZOnly");
         m_shaderKey[asInteger(ShaderPass::Forward)] = ShaderKey(shaderFile, "Forward");
 
-        //for (auto & color : m_colors)
-        //    color = float4(1, 1, 1, 1);
+        for (auto & color : m_colors)
+            color = float4(1, 1, 1, 1);
     }
 
     //--------------------------------------------------------------------------------------
@@ -76,7 +78,10 @@ namespace vg::renderer
         device->removeRootSignature(m_rootSignature);
 
         for (uint t = 0; t < core::enumCount<MaterialTextureType>(); ++t)
-            VG_SAFE_RELEASE(m_textureInfos[t].texture);
+        {
+            m_texturePaths[t] = "";
+            VG_SAFE_RELEASE(m_textures[t]);
+        }
     }
 
     //--------------------------------------------------------------------------------------
@@ -85,7 +90,7 @@ namespace vg::renderer
         MaterialModel * matModel = new MaterialModel(_data.name);
 
         for (uint t = 0; t < core::enumCount<MaterialTextureType>(); ++t)
-            matModel->m_textureInfos[t].path = _data.texturePath[t];
+            matModel->m_texturePaths[t] = _data.texturePath[t];
 
         return matModel;
     }
@@ -93,14 +98,14 @@ namespace vg::renderer
     //--------------------------------------------------------------------------------------
     gfx::ITexture * MaterialModel::GetTexture(MaterialTextureType _type) const
     {
-        VG_ASSERT(asInteger(_type) < countof(m_textureInfos));
+        VG_ASSERT(asInteger(_type) < countof(m_textures));
         return getTexture(_type);
     }
 
     //--------------------------------------------------------------------------------------
     gfx::Texture * MaterialModel::getTexture(MaterialTextureType _type) const
     { 
-        auto * tex = m_textureInfos[asInteger(_type)].texture;
+        auto * tex = m_textures[asInteger(_type)];
         if (tex)
             return tex;
         else
@@ -116,14 +121,14 @@ namespace vg::renderer
     //--------------------------------------------------------------------------------------
     const core::string & MaterialModel::GetTexturePath(MaterialTextureType _type) const
     {
-        VG_ASSERT(asInteger(_type) < countof(m_textureInfos));
+        VG_ASSERT(asInteger(_type) < countof(m_texturePaths));
         return getTexturePath(_type);
     }
 
     //--------------------------------------------------------------------------------------
     void MaterialModel::SetTexture(MaterialTextureType _type, gfx::ITexture * _texture)
     {
-        auto & tex = m_textureInfos[asInteger(_type)].texture;
+        auto & tex = m_textures[asInteger(_type)];
 
         if (tex != _texture)
         {

@@ -56,23 +56,18 @@ namespace vg
 
             void                    SetTexture              (MaterialTextureType _type, gfx::ITexture * _texture) final;
 
-            core::uint              getTextureCount         () const { return (core::uint)core::countof(m_textureInfos); }
+            core::uint              getTextureCount         () const { return (core::uint)core::enumCount<MaterialTextureType>(); }
             gfx::Texture *          getTexture              (MaterialTextureType _type) const;
-            const core::string &    getTexturePath          (MaterialTextureType _type) const { return m_textureInfos[core::asInteger(_type)].path; };
+            const core::string &    getTexturePath          (MaterialTextureType _type) const { return m_texturePaths[core::asInteger(_type)]; };
 
             static MaterialModel *  createFromImporterData  (const MaterialImporterData & _data);
 
         private:
 
-            struct TextureInfo
-            {
-                core::string    path;
-                gfx::Texture *  texture = nullptr;
-            };
-
             Flags                       m_flags;
-            TextureInfo                 m_textureInfos[core::enumCount<MaterialTextureType>()];
-            //core::float4                m_colors[core::enumCount<MaterialColorType>()];
+            core::string                m_texturePaths[core::enumCount<MaterialTextureType>()];
+            gfx::Texture *              m_textures[core::enumCount<MaterialTextureType>()];
+            core::float4                m_colors[core::enumCount<MaterialColorType>()];
             gfx::RootSignatureHandle    m_rootSignature;
             gfx::ShaderKey              m_shaderKey[core::enumCount<ShaderPass>()];
         };

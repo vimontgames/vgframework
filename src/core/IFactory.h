@@ -29,6 +29,8 @@ namespace vg::core
     #define registerPropertyEnum(className, enumClassName, propertyName, displayName)                                       registerPropertyEnumWithFlags(className, enumClassName, propertyName, displayName, vg::core::IProperty::Flags::None)
     #define registerPropertyEnumBitfield(className, enumClassName, propertyName, displayName)                               registerPropertyEnumWithFlags(className, enumClassName, propertyName, displayName, vg::core::IProperty::Flags::Bitfield)
 
+    #define registerPropertyEnumArray(className, type, enumClassName, propertyName, displayName, flags)                     registerEnumArray(#className, #propertyName, (type*)(&((className*)(nullptr))->propertyName[0]), displayName, vg::core::EnumHelper<enumClassName>::getStaticCount(), vg::core::EnumHelper<enumClassName>::getSizeOfUnderlyingType(), vg::core::EnumHelper<enumClassName>::getStaticNames().c_str(), (void*)vg::core::EnumHelper<enumClassName>::getStaticValues().data(), flags);
+
     #define setPropertyRangeHelper(className, propertyName, range)												            getPropertyByName(#propertyName)->setRange(range);
 
     class IObject;

@@ -271,8 +271,8 @@ namespace vg::editor
 
                 if (_object)
                     displayObject(_object);
-                else
-                    ImGui::TextDisabled("<Null>");
+                //else
+                //    ImGui::TextDisabled("<Null>");
 
                 ImGui::TreePop();
             }
@@ -426,10 +426,29 @@ namespace vg::editor
         {
             float * pFloat4 = (float*)_prop->GetPropertyFloat4(_object);
 
-            if (asBool(IProperty::Flags::Color & flags))
-                changed |= ImGui::ColorEdit4(displayName, pFloat4);
+            if (asBool(IProperty::Flags::EnumArray & flags))
+            {
+                char label[1024];
+                sprintf_s(label, "%s (%u)", displayName, _prop->getEnumCount());
+                if (ImGui::TreeNodeEx(label, ImGuiTreeNodeFlags_OpenOnArrow))
+                {
+                    for (uint e = 0; e < _prop->getEnumCount(); ++e)
+                    {
+                        if (asBool(IProperty::Flags::Color & flags))
+                            changed |= ImGui::ColorEdit4(_prop->getEnumName(e), pFloat4 + e * 4);
+                        else
+                            changed |= ImGui::InputFloat4(_prop->getEnumName(e), pFloat4 + e * 4);
+                    }
+                    ImGui::TreePop();
+                }
+            }
             else
-                changed |= ImGui::InputFloat4(displayName, pFloat4);
+            {
+                if (asBool(IProperty::Flags::Color & flags))
+                    changed |= ImGui::ColorEdit4(displayName, pFloat4);
+                else
+                    changed |= ImGui::InputFloat4(displayName, pFloat4);
+            }
         };
         break;
 
@@ -509,7 +528,7 @@ namespace vg::editor
 
             string treeNodeName = (string)displayName + " (" + to_string(count) + ")";
 
-            ImGui::PushStyleColor(ImGuiCol_Text, ImGui::GetColorU32(ImGuiCol_TextDisabled));
+            //ImGui::PushStyleColor(ImGuiCol_Text, ImGui::GetColorU32(ImGuiCol_TextDisabled));
 
             auto treeNodeFlags = ImGuiTreeNodeFlags_OpenOnArrow;
 
@@ -524,7 +543,7 @@ namespace vg::editor
                 ImGui::TreePop();
             }
 
-            ImGui::PopStyleColor();
+            //ImGui::PopStyleColor();
         }
         break;
 
@@ -592,7 +611,7 @@ namespace vg::editor
 
             string treeNodeName = (string)displayName + " (" + to_string(count) + ")";
 
-            ImGui::PushStyleColor(ImGuiCol_Text, ImGui::GetColorU32(ImGuiCol_TextDisabled));
+            //ImGui::PushStyleColor(ImGuiCol_Text, ImGui::GetColorU32(ImGuiCol_TextDisabled));
 
             auto treeNodeFlags = ImGuiTreeNodeFlags_OpenOnArrow;
 
@@ -609,7 +628,7 @@ namespace vg::editor
                 ImGui::TreePop();
             }
 
-            ImGui::PopStyleColor();
+            //ImGui::PopStyleColor();
         }
         break;
 
@@ -618,106 +637,128 @@ namespace vg::editor
             IObject * pObject = _prop->GetPropertyObjectRef(_object);
 
             string treeNodeName;
-
-            if (pObject)
-                treeNodeName = pObject->getName();
-            else
-                treeNodeName = displayName;
-
-            ImGui::PushStyleColor(ImGuiCol_Text, ImGui::GetColorU32(ImGuiCol_Text));
-
             auto treeNodeFlags = ImGuiTreeNodeFlags_OpenOnArrow;
 
-            if (nullptr != pObject && pObject->getClassDesc() && asBool(pObject->getClassDesc()->getFlags() & (IClassDesc::Flags::Component)))
-                treeNodeFlags |= ImGuiTreeNodeFlags_Leaf;
+            //if (pObject)
+            //    treeNodeName = pObject->getName();
+            //else
+                treeNodeName = displayName;
 
-            bool needTreeNode = strcmp(_prop->getName(),"m_object");
-            bool treenNodeOpen = !needTreeNode || ImGui::TreeNodeEx(treeNodeName.c_str(), treeNodeFlags);
-
-            static int ObjectRightClicMenuIndex = -1;
-            bool needOpenPopup = false;
-
-            if (ImGui::BeginPopupContextItem())
+            if (asBool(IProperty::Flags::EnumArray & flags))
             {
-                ImGui::PushID("ObjectRightClicMenu");
-
-                //if (ImGui::MenuItem("Cut", "Ctrl-X"))
-                //    ObjectRightClicMenuIndex = 0;
-                //
-                //if (ImGui::MenuItem("Copy", "Ctrl-C"))
-                //    ObjectRightClicMenuIndex = 1;
-                //
-                //if (ImGui::MenuItem("Paste", "Ctrl-V"))
-                //    ObjectRightClicMenuIndex = 2;
-
-                if (ImGui::MenuItem("Rename", "Ctrl-R"))
+                char label[1024];
+                sprintf_s(label, "%s (%u)", displayName, _prop->getEnumCount());
+                if (ImGui::TreeNodeEx(label, treeNodeFlags))
                 {
-                    needOpenPopup = true;
-                    ObjectRightClicMenuIndex = 3;
+                    for (uint e = 0; e < _prop->getEnumCount(); ++e)
+                    {
+                        pObject = _prop->GetPropertyObjectRef(_object, e);
+
+                        if (ImGui::TreeNodeEx(_prop->getEnumName(e), treeNodeFlags | ImGuiTreeNodeFlags_DefaultOpen))
+                        {
+                            if (nullptr != pObject)
+                                displayObject(pObject);
+                            ImGui::TreePop();
+                        }
+                    }
+                    ImGui::TreePop();
                 }
-
-                ImGui::PopID();
-
-                ImGui::EndPopup();
             }
-
-            if (ObjectRightClicMenuIndex == 3)
+            else
             {
-                static bool isRenamePopopOpened = true;
+                ImGui::PushStyleColor(ImGuiCol_Text, ImGui::GetColorU32(ImGuiCol_Text));
 
-                if (needOpenPopup)
-                    ImGui::OpenPopup("Rename");
+                if (nullptr != pObject && pObject->getClassDesc() && asBool(pObject->getClassDesc()->getFlags() & (IClassDesc::Flags::Component)))
+                    treeNodeFlags |= ImGuiTreeNodeFlags_Leaf;
 
-                if (ImGui::BeginPopupModal("Rename", &isRenamePopopOpened, ImGuiWindowFlags_AlwaysAutoResize))
+                bool needTreeNode = strcmp(_prop->getName(), "m_object");
+                bool treenNodeOpen = !needTreeNode || ImGui::TreeNodeEx(treeNodeName.c_str(), treeNodeFlags);
+
+                static int ObjectRightClicMenuIndex = -1;
+                bool needOpenPopup = false;
+
+                if (ImGui::BeginPopupContextItem())
                 {
-                    static char nameTmp[1024] = { '\0' };
+                    ImGui::PushID("ObjectRightClicMenu");
 
-                    if (nameTmp[0] == '\0')
-                        strcpy(nameTmp, pObject->getName().c_str());
+                    //if (ImGui::MenuItem("Cut", "Ctrl-X"))
+                    //    ObjectRightClicMenuIndex = 0;
+                    //
+                    //if (ImGui::MenuItem("Copy", "Ctrl-C"))
+                    //    ObjectRightClicMenuIndex = 1;
+                    //
+                    //if (ImGui::MenuItem("Paste", "Ctrl-V"))
+                    //    ObjectRightClicMenuIndex = 2;
 
-                    changed |= ImGui::InputText("", nameTmp, countof(nameTmp), ImGuiInputTextFlags_AutoSelectAll);
-
-                    string newName = nameTmp;
-
-                    if (ImGui::Button("Rename", style::button::Size))
+                    if (ImGui::MenuItem("Rename", "Ctrl-R"))
                     {
-                        pObject->setName(newName);
-                        ImGui::CloseCurrentPopup();
-                        nameTmp[0] = '\0';
-                        ObjectRightClicMenuIndex = -1;
+                        needOpenPopup = true;
+                        ObjectRightClicMenuIndex = 3;
                     }
 
-                    ImGui::SameLine();
-
-                    if (ImGui::Button("Cancel", style::button::Size))
-                    {
-                        ImGui::CloseCurrentPopup();
-                        nameTmp[0] = '\0';
-                        ObjectRightClicMenuIndex = -1;
-                    }
+                    ImGui::PopID();
 
                     ImGui::EndPopup();
                 }
-            }
 
-            if (treenNodeOpen)
-            {
-                updateSelection(_object);
+                if (ObjectRightClicMenuIndex == 3)
+                {
+                    static bool isRenamePopopOpened = true;
 
-                if (pObject)
-                    displayObject(pObject);
+                    if (needOpenPopup)
+                        ImGui::OpenPopup("Rename");
+
+                    if (ImGui::BeginPopupModal("Rename", &isRenamePopopOpened, ImGuiWindowFlags_AlwaysAutoResize))
+                    {
+                        static char nameTmp[1024] = { '\0' };
+
+                        if (nameTmp[0] == '\0')
+                            strcpy(nameTmp, pObject->getName().c_str());
+
+                        changed |= ImGui::InputText("", nameTmp, countof(nameTmp), ImGuiInputTextFlags_AutoSelectAll);
+
+                        string newName = nameTmp;
+
+                        if (ImGui::Button("Rename", style::button::Size))
+                        {
+                            pObject->setName(newName);
+                            ImGui::CloseCurrentPopup();
+                            nameTmp[0] = '\0';
+                            ObjectRightClicMenuIndex = -1;
+                        }
+
+                        ImGui::SameLine();
+
+                        if (ImGui::Button("Cancel", style::button::Size))
+                        {
+                            ImGui::CloseCurrentPopup();
+                            nameTmp[0] = '\0';
+                            ObjectRightClicMenuIndex = -1;
+                        }
+
+                        ImGui::EndPopup();
+                    }
+                }
+
+                if (treenNodeOpen)
+                {
+                    updateSelection(_object);
+
+                    if (pObject)
+                        displayObject(pObject);
+                    //else
+                    //    ImGui::TextDisabled("null");
+
+                    if (needTreeNode)
+                        ImGui::TreePop();
+                }
                 else
-                    ImGui::TextDisabled("null");
+                {
+                    updateSelection(pObject);
+                }
 
-                if (needTreeNode)
-                    ImGui::TreePop();
+                ImGui::PopStyleColor();
             }
-            else
-            {
-                updateSelection(pObject);
-            }
-
-            ImGui::PopStyleColor();
         }
         break;
 
@@ -729,7 +770,7 @@ namespace vg::editor
 
             string treeNodeName = (string)displayName + " (" + to_string(count) + ")";
 
-            ImGui::PushStyleColor(ImGuiCol_Text, ImGui::GetColorU32(ImGuiCol_TextDisabled));
+            //ImGui::PushStyleColor(ImGuiCol_Text, ImGui::GetColorU32(ImGuiCol_TextDisabled));
 
             if (ImGui::CollapsingHeader(treeNodeName.c_str(), nullptr, ImGuiTreeNodeFlags_DefaultOpen))
             {
@@ -750,7 +791,7 @@ namespace vg::editor
                 ImGui::Unindent();
             }
 
-            ImGui::PopStyleColor();
+            //ImGui::PopStyleColor();
         }
             break;
 

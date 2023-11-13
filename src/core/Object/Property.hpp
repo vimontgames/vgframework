@@ -28,8 +28,37 @@ namespace vg::core
                 case Type::EnumFlagsU32:
                     initEnum<u32>(_enumCount, _enumNames, _enumValues);
                     break;
+                case Type::EnumU64:
+                case Type::EnumFlagsU64:
+                    initEnum<u64>(_enumCount, _enumNames, _enumValues);
+                    break;
                 default:
-                    VG_ASSERT_ENUM_NOT_IMPLEMENTED(_type);
+                    if (asBool(IProperty::Flags::EnumArray & _flags))
+                    {
+                        switch (_sizeOf)
+                        {
+                            default:
+                                VG_ASSERT_ENUM_NOT_IMPLEMENTED(_type);
+                                break;
+
+                            case 1:
+                                initEnum<u8>(_enumCount, _enumNames, _enumValues);
+                                break;
+                            case 2:
+                                initEnum<u16>(_enumCount, _enumNames, _enumValues);
+                                break;
+                            case 4:
+                                initEnum<u32>(_enumCount, _enumNames, _enumValues);
+                                break;
+                            case 8:
+                                initEnum<u64>(_enumCount, _enumNames, _enumValues);
+                                break;
+                        }
+                    }
+                    else
+                    {
+                        VG_ASSERT(false, "[Property] EnumArray not implemented for type \"%s\"", _type);
+                    }
                     break;
             }
         }
@@ -87,7 +116,7 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
-    u32 Property::getEnumValue(uint index) const
+    u64 Property::getEnumValue(uint index) const
     {
         return enums[index].value;
     }
@@ -240,11 +269,12 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
-    IObject * Property::GetPropertyObjectRef(const IObject * _object) const
+    IObject * Property::GetPropertyObjectRef(const IObject * _object, uint _arrayIndex) const
     {
         VG_ASSERT(nullptr != _object);
         VG_ASSERT(Type::ObjectRef == getType());
-        return *(IObject**)(uint_ptr(_object) + offset);
+        VG_ASSERT(0 == _arrayIndex || asBool(Flags::EnumArray & flags));
+        return *(IObject**)(uint_ptr(_object) + offset + _arrayIndex * sizeof(IObject*));
     }
 
     //--------------------------------------------------------------------------------------

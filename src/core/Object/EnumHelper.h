@@ -30,6 +30,11 @@ namespace vg::core
             return (uint)magic_enum::enum_entries<E>().size();
         }
 
+        static const uint getSizeOfUnderlyingType()
+        {
+            return sizeof(std::underlying_type_t<E>);
+        }
+
         static const string getStaticNames()
         {
             string names;

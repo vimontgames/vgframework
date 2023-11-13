@@ -664,7 +664,7 @@ namespace vg::core
             for (uint i = 0; i < _prop->getEnumCount(); ++i)
             {
                 if (!strcmp(val, _prop->getEnumName(i)))
-                    *pEnum = _prop->getEnumValue(i);
+                    *pEnum = (T)_prop->getEnumValue(i); 
             }
         }
     }

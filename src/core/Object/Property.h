@@ -7,7 +7,7 @@ namespace vg::core
     struct EnumDesc 
     {
         string name;
-        uint value = 0x0;
+        u64 value = 0x0;
     };
 
     class Property : public IProperty
@@ -29,7 +29,7 @@ namespace vg::core
         float2                      getRange                        () const final;
         u32                         getEnumCount                    () const final;
         const char *                getEnumName                     (uint index) const final;
-        u32                         getEnumValue                    (uint index) const final;
+        u64                         getEnumValue                    (uint index) const final;
 
         bool *                      GetPropertyBool                 (const IObject * _object) const final;
         u8 *                        GetPropertyUint8                (const IObject * _object) const final;
@@ -43,7 +43,7 @@ namespace vg::core
         float4x4 *                  GetPropertyFloat4x4             (const IObject * _object) const final;
         string *                    GetPropertyString               (const IObject * _object) const final;
         IResource *                 GetPropertyResource             (const IObject * _object) const final;
-        IObject *                   GetPropertyObjectRef            (const IObject * _object) const final;
+        IObject *                   GetPropertyObjectRef            (const IObject * _object, uint _arrayIndex = 0) const final;
         vector<IObject*> *          GetPropertyObjectRefVector      (const IObject * _object) const final;
         dictionary<IObject*> *      GetPropertyObjectRefDictionary  (const IObject * _object) const final;
 
