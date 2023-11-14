@@ -1,6 +1,6 @@
 // Licensed under the MIT License <http://opensource.org/licenses/MIT>.
 // SPDX-License-Identifier: MIT
-// Copyright (c) 2019 - 2020 Daniil Goncharov <neargye@gmail.com>.
+// Copyright (c) 2019 - 2023 Daniil Goncharov <neargye@gmail.com>.
 //
 // Permission is hereby  granted, free of charge, to any  person obtaining a copy
 // of this software and associated  documentation files (the "Software"), to deal
@@ -23,6 +23,7 @@
 #include <iostream>
 
 #include <magic_enum.hpp>
+#include <magic_enum_iostream.hpp>
 
 enum class Color : int { RED = -10, BLUE = 0, GREEN = 10 };
 
@@ -39,9 +40,9 @@ int main() {
   std::cout << c1_name << std::endl; // RED
 
   // String enum name sequence.
-  constexpr auto color_names = magic_enum::enum_names<Color>();
+  constexpr auto names = magic_enum::enum_names<Color>();
   std::cout << "Color names:";
-  for (auto n : color_names) {
+  for (const auto& n : names) {
     std::cout << " " << n;
   }
   std::cout << std::endl;
@@ -49,46 +50,50 @@ int main() {
 
   // String name to enum value.
   auto c2 = magic_enum::enum_cast<Color>("BLUE");
-  if (c2.has_value() && c2.value() == Color::BLUE) {
+  if (c2.has_value()) {
+    std::cout << "BLUE = " << to_integer(c2.value()) << std::endl; // BLUE = 0
+  }
+
+  // Case insensitive enum_cast.
+  c2 = magic_enum::enum_cast<Color>("blue", magic_enum::case_insensitive);
+  if (c2.has_value()) {
     std::cout << "BLUE = " << to_integer(c2.value()) << std::endl; // BLUE = 0
   }
 
   // Integer value to enum value.
   auto c3 = magic_enum::enum_cast<Color>(10);
-  if (c3.has_value() && c3.value() == Color::GREEN) {
+  if (c3.has_value()) {
     std::cout << "GREEN = " << magic_enum::enum_integer(c3.value()) << std::endl; // GREEN = 10
   }
 
   // Enum value to integer value.
-  auto color_integer = magic_enum::enum_integer(c1);
-  if (color_integer == to_integer(Color::RED)) {
-    std::cout << "RED = " << color_integer << std::endl; // RED = -10
-  }
+  auto c4_integer = magic_enum::enum_integer(Color::RED);
+  std::cout << "RED = " << c4_integer << std::endl; // RED = -10
 
   using namespace magic_enum::ostream_operators; // out-of-the-box ostream operator for all enums.
-  // ostream operator for enum.
+  // Ostream operator for enum.
   std::cout << "Color: " << c1 << " " << c2 << " " << c3 << std::endl; // Color: RED BLUE GREEN
 
   // Number of enum values.
-  std::cout << "Color enum size: " << magic_enum::enum_count<Color>() << std::endl; // Color enum size: 3
+  std::cout << "Color enum size: " << magic_enum::enum_count<Color>() << std::endl; // Color size: 3
 
   // Indexed access to enum value.
   std::cout << "Color[0] = " << magic_enum::enum_value<Color>(0) << std::endl; // Color[0] = RED
 
   // Enum value sequence.
-  constexpr auto colors = magic_enum::enum_values<Color>();
-  std::cout << "Colors sequence:";
-  for (Color c : colors) {
-    std::cout << " " << c; // ostream operator for enum.
+  constexpr auto values = magic_enum::enum_values<Color>();
+  std::cout << "Colors values:";
+  for (const auto c : values) {
+    std::cout << " " << c; // Ostream operator for enum.
   }
   std::cout << std::endl;
-  // Color sequence: RED BLUE GREEN
+  // Color values: RED BLUE GREEN
 
   enum class Flags { A = 1, B = 2, C = 4, D = 8 };
   using namespace magic_enum::bitwise_operators; // out-of-the-box bitwise operators for all enums.
   // Support operators: ~, |, &, ^, |=, &=, ^=.
-  Flags flags = Flags::A | Flags::C;
-  std::cout << flags << std::endl;
+  Flags flag = Flags::A | Flags::C;
+  std::cout << flag << std::endl; // 5
 
   enum color { red, green, blue };
 
@@ -103,9 +108,9 @@ int main() {
   static_assert(magic_enum::is_scoped_enum_v<Flags>);
 
   // Enum pair (value enum, string enum name) sequence.
-  constexpr auto color_entries = magic_enum::enum_entries<Color>();
+  constexpr auto entries = magic_enum::enum_entries<Color>();
   std::cout << "Colors entries:";
-  for (auto e : color_entries) {
+  for (const auto& e : entries) {
     std::cout << " "  << e.second << " = " << static_cast<int>(e.first);
   }
   std::cout << std::endl;

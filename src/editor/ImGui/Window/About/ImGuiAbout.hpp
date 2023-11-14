@@ -97,7 +97,7 @@ namespace vg::editor
                 { "hlslpp",                 "3.3.1",            "https://github.com/redorav/hlslpp/releases/tag/3.3.1" },
                 { "IconFontCppHeaders",     "90da802",          "https://github.com/juliettef/IconFontCppHeaders" },
                 { "ImGui-Addons",           "ea0af59",          "https://github.com/gallickgunner/ImGui-Addons" },
-                { "magic_enum",             "",                 "https://github.com/Neargye/magic_enum" },
+                { "magic_enum",             "0.9.4",            "https://github.com/Neargye/magic_enum/releases/tag/v0.9.4" },
                 { "optick",                 "1.3.1",            "https://github.com/bombomby/optick" },
                 { "px_sched",               "",                 "https://github.com/pplux/px" },
                 { "stb_image",              "",                 "https://github.com/nothings/stb" },
