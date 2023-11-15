@@ -35,7 +35,7 @@ namespace vg::engine
         m_colors[asInteger(renderer::MaterialColorType::EmissiveColor)] = float4(0, 0, 0, 0);
 
         for (auto & tex : m_textures)
-            tex.setOwner(this);
+            tex.setParent(this);
     }
 
     //--------------------------------------------------------------------------------------

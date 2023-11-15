@@ -31,9 +31,6 @@ namespace vg::core
         void                        setUserData         (UserData _userData) final;
         UserData                    getUserData         () const final;
 
-        void                        setOwner            (core::IObject * _object) override;
-        core::IObject *             getOwner            () const final;
-
         bool                        Reimport            () final;
 
         bool                        ClearResourcePath   () final;
@@ -50,7 +47,6 @@ namespace vg::core
 
 	protected:
         string                      m_resourcePath;
-        IObject *                   m_owner = nullptr;
         IObject *                   m_object = nullptr;
         UserData                    m_userData = 0x0;
     };

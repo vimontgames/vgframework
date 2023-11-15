@@ -36,10 +36,6 @@ namespace vg::engine
     {
         super::registerProperties(_desc);
         
-        //_desc.registerPropertyEnumBitfield(MaterialResource, renderer::MaterialFlags, m_flags, "Flags");
-        //_desc.registerPropertyEnumArray(MaterialResource, core::float4, renderer::MaterialColorType, m_colors, "Colors", IProperty::Flags::Color);
-        //_desc.registerPropertyEnumArray(MaterialResource, TextureResource, renderer::MaterialTextureType, m_textures, "Textures", IProperty::Flags::Resource);
-
         _desc.registerResizeVectorFunc(MaterialResource, ResizeMaterialResourceVector);
         
         return true;
@@ -49,8 +45,7 @@ namespace vg::engine
     MaterialResource::MaterialResource(const core::string & _name, IObject * _parent) :
         Resource(_name, _parent)
     {
-        //for (auto & texRes : m_textures)
-        //    texRes.setOwner(this);
+
     }
 
     //--------------------------------------------------------------------------------------
@@ -65,13 +60,6 @@ namespace vg::engine
         vector<string> ext;
         ext.push_back(".mat");
         return ext;
-    }
-
-    //--------------------------------------------------------------------------------------
-    void MaterialResource::setOwner(core::IObject * _object)
-    {
-        VG_ASSERT(nullptr != dynamic_cast<MaterialResourceList *>(_object));
-        m_owner = _object;
     }
 
     //--------------------------------------------------------------------------------------
@@ -118,10 +106,10 @@ namespace vg::engine
     //--------------------------------------------------------------------------------------
     void MaterialResource::onResourceLoaded(core::IResource * _resource)
     {
-        IObject * owner = getOwner();
-        VG_ASSERT(nullptr != owner, "Resource \"%s\" of type '%s' has no owner", GetResourcePath().c_str(), getClassName());
-        if (nullptr != owner)
-            owner->onResourceLoaded(_resource);
+        IObject * parent = getParent();
+        VG_ASSERT(nullptr != parent, "Resource \"%s\" of type '%s' has no parent", GetResourcePath().c_str(), getClassName());
+        if (nullptr != parent)
+            parent->onResourceLoaded(_resource);
     }
 
     //--------------------------------------------------------------------------------------

@@ -26,7 +26,6 @@ namespace vg::engine
         ~MaterialResource                   ();
 
         const core::vector<core::string>    getExtensions           () const final;
-        void                                setOwner                (core::IObject * _object) final;
         void                                onResourcePathChanged   (const core::string & _oldPath, const core::string & _newPath) final;
 
         bool                                cook                    (const core::string & _file) const final override;
@@ -36,10 +35,5 @@ namespace vg::engine
 
         bool                                CreateFile              (const core::string & _path);
         bool                                SaveFile                (const core::string & _path) const override;
-
-    //private:
-        //renderer::MaterialFlags             m_flags = (renderer::MaterialFlags)0;
-        //core::float4                        m_colors[core::enumCount<renderer::MaterialColorType>()];
-        //TextureResource                     m_textures[core::enumCount<renderer::MaterialTextureType>()];
     };
 }

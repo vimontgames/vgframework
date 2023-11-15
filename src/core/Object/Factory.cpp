@@ -335,7 +335,7 @@ namespace vg::core
                                                         {
                                                             if (serializeFromXML(_resource, xmlObjectRef))
                                                             {
-                                                                _resource->setOwner(_object);
+                                                                _resource->setParent(_object);
                                                                 _resource->onResourcePathChanged("", _resource->GetResourcePath());
                                                             }
                                                         }
@@ -422,7 +422,7 @@ namespace vg::core
                                                             IResource * pResource = (IResource *)(uint_ptr(data) + index * elemSize);
                                                             if (serializeFromXML(pResource, xmlObjectRef))
                                                             {
-                                                                pResource->setOwner(_object);
+                                                                pResource->setParent(_object);
                                                                 pResource->onResourcePathChanged("", pResource->GetResourcePath());
                                                             }
                                                             index++;

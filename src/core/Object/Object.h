@@ -21,6 +21,7 @@ namespace vg::core
         const IClassDesc *          getClassDesc        () const final;
 
 								    Object		        (const string & _name, IObject * _parent = nullptr);
+									Object				(const Object & _other);
 								    Object		        ();
 								    ~Object		        ();
 

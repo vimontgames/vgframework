@@ -17,26 +17,25 @@ namespace vg::core
     {
         _desc.registerPropertyHelperEx(Resource, m_resourcePath, "Path", IProperty::Flags::Hidden);
 
-        // This is used for the inspector but does not need to be serialized
+        // This is used for the inspector but not serialized
         _desc.registerProperty("Resource", "m_object", (IObject**)(&((Resource*)(nullptr))->m_object), "Object", IProperty::Flags::NotSaved);
 
         return true;
     }
 
     //--------------------------------------------------------------------------------------
-    Resource::Resource(const core::string & _name, IObject * _parent) :
-        m_owner(_parent)
+    Resource::Resource(const core::string & _name, IObject * _parent) : 
+        IResource(_name, _parent)
     {
 
     }
 
     //--------------------------------------------------------------------------------------
-    Resource::Resource(const Resource & _other)
+    Resource::Resource(const Resource & _other) : IResource(_other)
     {
         setName(_other.getName());
 
         m_resourcePath = _other.m_resourcePath;
-        m_owner = _other.m_owner;
         m_object = _other.m_object;
         m_userData = _other.m_userData;
     }
@@ -65,7 +64,7 @@ namespace vg::core
     void Resource::setup(IObject * _owner, const string & _path, UserData _userData)
     {
         setObject(nullptr);
-        setOwner(_owner);
+        setParent(_owner);
         setUserData(_userData);
         SetResourcePath(_path);
     }
@@ -124,31 +123,25 @@ namespace vg::core
         if (m_resourcePath == _path)
             return false;
 
-        VG_ASSERT(nullptr != getOwner());
-     
-        string oldPath = m_resourcePath;
-        m_resourcePath = io::getRelativePath(_path);
-        onResourcePathChanged(oldPath, m_resourcePath);
+        IObject * parent = getParent();
+        
+        if (nullptr != parent)
+        {
+            string oldPath = m_resourcePath;
+            m_resourcePath = io::getRelativePath(_path);
+            onResourcePathChanged(oldPath, m_resourcePath);
 
-        return true;
+            return true;
+        }
+
+        VG_ASSERT(nullptr != parent, "Resource has no parent");
+        return false;
     }
 
     //--------------------------------------------------------------------------------------
     const string & Resource::GetResourcePath() const
     {
         return m_resourcePath;
-    }
-
-    //--------------------------------------------------------------------------------------
-    void Resource::setOwner(core::IObject * _object)
-    {
-        m_owner = _object;
-    }
-
-    //--------------------------------------------------------------------------------------
-    core::IObject * Resource::getOwner() const
-    {
-        return m_owner;
     }
 
     //--------------------------------------------------------------------------------------

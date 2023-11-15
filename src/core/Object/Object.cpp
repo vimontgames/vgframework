@@ -23,6 +23,15 @@ namespace vg::core
 		
 	}
 
+    //--------------------------------------------------------------------------------------
+    Object::Object(const Object & _other)
+    {
+        m_name = _other.m_name;
+        m_file = _other.m_file;
+        m_refCount.store(_other.m_refCount.load());
+        m_parent = _other.m_parent;
+    }
+
 	//--------------------------------------------------------------------------------------
 	Object::~Object()
 	{

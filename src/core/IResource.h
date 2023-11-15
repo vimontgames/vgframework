@@ -12,7 +12,9 @@ namespace vg::core
     public:
         using UserData = core::u64;
 
-        virtual ~IResource() {}
+        IResource(const string & _name = "", IObject * _parent = nullptr) : Object(_name, _parent) { }
+        IResource(const IResource & _other) : Object(_other) { }
+        virtual ~IResource() = default;
 
         virtual bool                CreateFile              (const string & _path) = 0;
         virtual bool                SaveFile                (const string & _path) const = 0;
@@ -24,9 +26,6 @@ namespace vg::core
 
         virtual void                setUserData             (UserData _userData) = 0;
         virtual UserData            getUserData             () const = 0;
-
-        virtual void                setOwner                (core::IObject * _object) = 0;
-        virtual core::IObject *     getOwner                () const = 0;
 
         virtual bool                Reimport                () = 0;
 

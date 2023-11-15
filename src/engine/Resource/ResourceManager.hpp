@@ -153,7 +153,7 @@ namespace vg::engine
     //--------------------------------------------------------------------------------------
     void ResourceManager::loadResourceAsync(Resource * _resource, const core::string & _oldPath, const string & _newPath)
     {
-        VG_ASSERT(_resource->getOwner() != nullptr); 
+        VG_ASSERT(_resource->getParent() != nullptr); 
         VG_ASSERT(_resource->GetResourcePath() == _newPath); // TODO: get rid of the '_newPath' parameter?
         lock_guard<recursive_mutex> lock(m_addResourceToLoadRecursiveMutex);
 
@@ -218,7 +218,7 @@ namespace vg::engine
             }
             
             _resource->unloadSubResources();
-            _resource->getOwner()->onResourceUnloaded(_resource);
+            _resource->getParent()->onResourceUnloaded(_resource);
             _resource->setObject(nullptr);                
         }
     }
@@ -356,7 +356,7 @@ namespace vg::engine
             // Set Shared Resource Object and Notify owner
             res->setObject(shared->m_object);
             res->loadSubResources();
-            IObject * resOwner = res->getOwner();
+            IObject * resOwner = res->getParent();
             VG_ASSERT(nullptr != resOwner);
             if (nullptr != resOwner)
                 resOwner->onResourceLoaded(res);
@@ -377,7 +377,7 @@ namespace vg::engine
                     {
                         res->setObject(shared->m_object);
                         res->loadSubResources();
-                        res->getOwner()->onResourceLoaded(res);
+                        res->getParent()->onResourceLoaded(res);
                     }
                 }
             }
