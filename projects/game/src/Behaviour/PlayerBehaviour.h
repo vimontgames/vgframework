@@ -1,7 +1,7 @@
 #pragma once
 #include "core/Component/Behaviour/Behaviour.h"
 
-class PlayerBehaviour : vg::core::Component
+class PlayerBehaviour : public vg::core::Component
 {
 public:
     VG_CLASS_DECL(PlayerBehaviour, vg::core::Behaviour);

@@ -18,7 +18,7 @@ namespace vg::core
         _desc.registerPropertyHelperEx(Resource, m_resourcePath, "Path", IProperty::Flags::Hidden);
 
         // This is used for the inspector but does not need to be serialized
-        //_desc.registerProperty("Resource", "m_object", (IObject**)(&((Resource*)(nullptr))->m_object), "Object", IProperty::Flags::NotSaved);
+        _desc.registerProperty("Resource", "m_object", (IObject**)(&((Resource*)(nullptr))->m_object), "Object", IProperty::Flags::NotSaved);
 
         return true;
     }
@@ -45,6 +45,20 @@ namespace vg::core
     Resource::~Resource()
     {
 		VG_SAFE_RELEASE(m_object);
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool Resource::CreateFile(const string & _path)
+    {
+        VG_ASSERT_NOT_IMPLEMENTED();
+        return false;
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool Resource::SaveFile(const string & _path) const
+    {
+        VG_ASSERT_NOT_IMPLEMENTED();
+        return false;
     }
 
     //--------------------------------------------------------------------------------------

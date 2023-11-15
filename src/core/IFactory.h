@@ -18,21 +18,29 @@ namespace vg::core
 
     #define registerPropertyHelperEx(className, propertyName, displayName, flags)									        registerProperty(#className, #propertyName, (&((className*)(nullptr))->propertyName), displayName, flags)
     #define registerPropertyHelper(className, propertyName, displayName)									                registerPropertyHelperEx(className, propertyName, displayName, vg::core::IProperty::Flags::None)
+    
     #define registerPropertyObjectHelper(className, propertyName, displayName, flags)                                       registerProperty(#className, #propertyName, (core::IObject*)offsetof(className, propertyName), displayName, flags);
     #define registerPropertyObjectRefHelper(className, propertyName, displayName, flags)                                    registerProperty(#className, #propertyName, (core::IObject**)offsetof(className, propertyName), displayName, flags);
     #define registerPropertyObjectVectorHelper(className, propertyName, elementType, displayName, flags)                    registerProperty(#className, #propertyName, sizeof(elementType), &((className*)nullptr)->propertyName, displayName, flags);
     #define registerPropertyObjectRefVectorHelper(className, propertyName, displayName, flags)                              registerProperty(#className, #propertyName, (core::vector<core::IObject*>*)&((className*)nullptr)->propertyName, displayName, flags);
     #define registerPropertyObjectRefDictionaryHelper(className, propertyName, displayName, flags)                          registerProperty(#className, #propertyName, (core::dictionary<core::IObject*>*)&((className*)nullptr)->propertyName, displayName, flags);
+    
+    #define registerPropertyResourceHelper(className, propertyName, displayName, flags)                                     registerPropertyResource(#className, #propertyName, (core::IResource*) offsetof(className, propertyName), displayName, flags | vg::core::IProperty::Flags::Resource);
+    #define registerPropertyResourceRefHelper(className, propertyName, displayName, flags)                                  registerPropertyResourcePtr(#className, #propertyName, (core::IResource**)offsetof(className, propertyName), displayName, flags | vg::core::IProperty::Flags::Resource);
+    //#define registerPropertyResourceVectorHelper(className, propertyName, elementType, displayName, flags)                  registerPropertyResourceVector(#className, #propertyName, sizeof(elementType), &((className*)nullptr)->propertyName, displayName, flags);
+
     #define registerCallbackHelper(className, funcName, displayName, flags)										            registerProperty(#className, #funcName, funcName, displayName, flags)
-	
+    
     //#define registerPropertyEnumHelper(className, enumClassName, propertyName, displayName, eCount, eNames, eVals, flags) registerEnum(#className, #propertyName, (std::underlying_type_t<enumClassName>*)(&((className*)(nullptr))->propertyName), displayName, eCount, eNames, eVals, flags);
     #define registerPropertyEnumWithFlags(className, enumClassName, propertyName, displayName, flags)                       registerEnum(#className, #propertyName, (std::underlying_type_t<enumClassName>*)(&((className*)(nullptr))->propertyName), displayName, vg::core::EnumHelper<enumClassName>::getStaticCount(), vg::core::EnumHelper<enumClassName>::getStaticNames().c_str(), vg::core::EnumHelper<enumClassName>::getStaticValues().data(), flags);
     #define registerPropertyEnum(className, enumClassName, propertyName, displayName)                                       registerPropertyEnumWithFlags(className, enumClassName, propertyName, displayName, vg::core::IProperty::Flags::None)
     #define registerPropertyEnumBitfield(className, enumClassName, propertyName, displayName)                               registerPropertyEnumWithFlags(className, enumClassName, propertyName, displayName, vg::core::IProperty::Flags::Bitfield)
 
-    #define registerPropertyEnumArray(className, type, enumClassName, propertyName, displayName, flags)                     registerEnumArray(#className, #propertyName, (type*)(&((className*)(nullptr))->propertyName[0]), displayName, vg::core::EnumHelper<enumClassName>::getStaticCount(), vg::core::EnumHelper<enumClassName>::getSizeOfUnderlyingType(), vg::core::EnumHelper<enumClassName>::getStaticNames().c_str(), (void*)vg::core::EnumHelper<enumClassName>::getStaticValues().data(), flags);
+    #define registerPropertyEnumArray(className, elementType, enumClassName, propertyName, displayName, flags)              registerEnumArray(#className, #propertyName, (elementType*)(&((className*)(nullptr))->propertyName[0]), displayName, vg::core::EnumHelper<enumClassName>::getStaticCount(), sizeof(elementType), vg::core::EnumHelper<enumClassName>::getStaticNames().c_str(), (void*)vg::core::EnumHelper<enumClassName>::getStaticValues().data(), flags, vg::core::EnumHelper<enumClassName>::getSizeOfUnderlyingType());
 
     #define setPropertyRangeHelper(className, propertyName, range)												            getPropertyByName(#propertyName)->setRange(range);
+
+    #define registerResizeVectorFunc(className, resizeVectorFunc)                                                           RegisterResizeVectorFunc(#className, resizeVectorFunc);
 
     class IObject;
     class IClassDesc;
@@ -43,22 +51,22 @@ namespace vg::core
     public:
         virtual ~IFactory() {}
 
-        virtual IClassDesc *                registerClass           (const char * _className, const char * _displayName, IClassDesc::Flags _flags, u32 sizeOf, IClassDesc::Func _createFunc) = 0;
-        virtual IClassDesc *                registerSingletonClass  (const char * _className, const char * _displayName, IClassDesc::Flags _flags, u32 sizeOf, IClassDesc::SingletonFunc _createFunc) = 0;
-        virtual const IClassDesc *          getClassDescriptor      (const char * _className) const = 0;
-        virtual const vector<IClassDesc *>  getClassDescriptors     (IClassDesc::Flags _required = (IClassDesc::Flags)-1, IClassDesc::Flags _excluded = (IClassDesc::Flags)0) const = 0;
-        virtual bool                        isRegisteredClass       (const char * _className) const = 0;
-        virtual IObject *                   getSingleton            (const char * _className) const = 0;
-        virtual IObject *                   createObject            (const char * _className, const string & _name = "", IObject * _parent = nullptr) const = 0;
+        virtual IClassDesc *                registerClass               (const char * _className, const char * _displayName, IClassDesc::Flags _flags, u32 sizeOf, IClassDesc::Func _createFunc) = 0;
+        virtual IClassDesc *                registerSingletonClass      (const char * _className, const char * _displayName, IClassDesc::Flags _flags, u32 sizeOf, IClassDesc::SingletonFunc _createFunc) = 0;
+        virtual const IClassDesc *          getClassDescriptor          (const char * _className) const = 0;
+        virtual const vector<IClassDesc *>  getClassDescriptors         (IClassDesc::Flags _required = (IClassDesc::Flags)-1, IClassDesc::Flags _excluded = (IClassDesc::Flags)0) const = 0;
+        virtual bool                        isRegisteredClass           (const char * _className) const = 0;
+        virtual IObject *                   getSingleton                (const char * _className) const = 0;
+        virtual IObject *                   createObject                (const char * _className, const string & _name = "", IObject * _parent = nullptr) const = 0;
 
-        virtual bool                        loadFromXML             (IObject * _object, const string & _XMLfilename) const = 0;
-        virtual bool                        saveToXML               (const IObject * _object, const string & _xmlFile) const  = 0;
+        virtual bool                        loadFromXML                 (IObject * _object, const string & _XMLfilename) const = 0;
+        virtual bool                        saveToXML                   (const IObject * _object, const string & _xmlFile) const  = 0;
 
-        virtual bool                        serializeFromXML        (IObject * _object, XMLDoc & _xmlDoc) const = 0;
-        virtual bool                        serializeToXML          (const IObject * _object, XMLDoc & _xmlDoc, XMLElem * _parent = nullptr) const = 0;
+        virtual bool                        serializeFromXML            (IObject * _object, XMLDoc & _xmlDoc) const = 0;
+        virtual bool                        serializeToXML              (const IObject * _object, XMLDoc & _xmlDoc, XMLElem * _parent = nullptr) const = 0;
 
-        virtual void                        ReleaseAsync            (core::IObject * _object) = 0;
-        virtual void                        FlushReleaseAsync       () = 0;
+        virtual void                        ReleaseAsync                (core::IObject * _object) = 0;
+        virtual void                        FlushReleaseAsync           () = 0;
     };
 
     #define CreateFactoryObject(type, name, parent) Kernel::getFactory()->createObject(#type, name, parent)    

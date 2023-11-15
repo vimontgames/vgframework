@@ -39,10 +39,11 @@ namespace vg::core
         float *                     GetPropertyFloat                (const IObject * _object) const final;
         float2 *                    GetPropertyFloat2               (const IObject * _object) const final;
         float3 *                    GetPropertyFloat3               (const IObject * _object) const final;
-        float4 *                    GetPropertyFloat4               (const IObject * _object) const final;
+        float4 *                    GetPropertyFloat4               (const IObject * _object, uint _index = 0) const final;
         float4x4 *                  GetPropertyFloat4x4             (const IObject * _object) const final;
         string *                    GetPropertyString               (const IObject * _object) const final;
-        IResource *                 GetPropertyResource             (const IObject * _object) const final;
+        IResource *                 GetPropertyResource             (const IObject * _object, uint _index = 0) const final;
+        IResource *                 GetPropertyResourceRef          (const IObject * _object, uint _index = 0) const final;
         IObject *                   GetPropertyObject               (const IObject * _object, uint _index = 0) const final;
         IObject *                   GetPropertyObjectRef            (const IObject * _object, uint _index = 0) const final;
         vector<IObject*> *          GetPropertyObjectRefVector      (const IObject * _object) const final;
@@ -50,8 +51,11 @@ namespace vg::core
 
         uint                        GetPropertyObjectVectorCount    (const IObject * _object) const final;
         u8 *                        GetPropertyObjectVectorData     (const IObject * _object) const final;
+        IObject *                   GetPropertyObjectVectorElement  (const IObject * _object, uint _index) const final;
+
         uint                        GetPropertyResourceVectorCount  (const IObject * _object) const final;
         u8 *                        GetPropertyResourceVectorData   (const IObject * _object) const final;
+        IResource *                 GetPropertyResourceVectorElement(const IObject * _object, uint _index) const final;
 
         IProperty::Callback         GetPropertyCallback             () const final;
 

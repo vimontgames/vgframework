@@ -14,6 +14,9 @@ namespace vg::core
 
         virtual ~IResource() {}
 
+        virtual bool                CreateFile              (const string & _path) = 0;
+        virtual bool                SaveFile                (const string & _path) const = 0;
+
         virtual void                setup                   (IObject * _owner, const string & _path, UserData _userData = 0x0) = 0;
 
         virtual bool                setObject               (core::IObject * _object) = 0;

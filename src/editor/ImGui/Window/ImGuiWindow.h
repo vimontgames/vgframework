@@ -54,6 +54,7 @@ namespace vg::editor
         VG_INLINE const core::string            getIconizedName     () const;
 
         static void                             displayObject       (core::IObject * _object);
+        static bool                             displayResource     (core::IResource * _resource);
         static void                             displayProperty     (const core::IProperty * _prop, core::IObject * _object);
 
         static imgui_addons::ImGuiFileBrowser & getFileBrowser      ();
@@ -68,7 +69,6 @@ namespace vg::editor
         static bool                             updateSelection     (core::IObject * _object);
 
         static void                             displayArrayObject  (core::IObject * _object, core::uint _index, const char * _name);
-        static bool                             displayResource     (core::IResource * _resource);
 
         template <typename T> static bool       displayEnum         (core::IObject * _object, const core::IProperty * _prop);
         template <typename T> static bool       displayEnumFlags    (core::IObject * _object, const core::IProperty * _prop);

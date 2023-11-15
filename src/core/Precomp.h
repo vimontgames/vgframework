@@ -78,7 +78,7 @@
 #endif
 
 #define VG_ASSERT_ENUM_NOT_IMPLEMENTED(value) VG_ASSERT(false, "case %s: is not implemented", core::asString(value).c_str());
-#define VG_ASSERT_NOT_IMPLEMENTED() VG_ASSERT(false, "Function %s is not implemented", __func__)
+#define VG_ASSERT_NOT_IMPLEMENTED() VG_ASSERT(false, "Function %s not implemented for class '%s'", __func__, getClassName())
 
 #define VG_STATIC_ASSERT(condition, message) static_assert(condition, message)
 #define VG_STATIC_ASSERT_NOT_IMPLEMENTED() VG_STATIC_ASSERT(false, "Function is not implemented")

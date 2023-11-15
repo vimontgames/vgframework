@@ -94,6 +94,12 @@
       <Filter>Component\Mesh</Filter>
     </ClInclude>
     <ClInclude Include="IMaterialList.h" />
+    <ClInclude Include="Resource\Material\MaterialResourceData.h">
+      <Filter>Resource\Material</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource\Material\MaterialResourceData.hpp">
+      <Filter>Resource\Material</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Input">

@@ -16,47 +16,40 @@ namespace vg::editor
             const auto * classDesc = factory->getClassDescriptor(_object->getClassName());
             auto list = dynamic_cast<engine::IMaterialList *>(_object);
 
-            ImGui::PushID(_object);
-            string label = (string)"Materials###" + to_string((uint_ptr)_object);
-
-            bool open = ImGui::CollapsingHeader(label.c_str(), ImGuiTreeNodeFlags_DefaultOpen);
-
-            if (ImGui::BeginPopupContextItem())
+            uint materialCount = 0;
+            for (uint i = 0; i < classDesc->getPropertyCount(); ++i)
             {
-                if (ImGui::MenuItem("Add Material"))
-                {
-                    list->AddMaterial();
-                }
-                if (ImGui::MenuItem("Remove Material"))
-                {
-                    list->RemoveMaterial();
-                }
-                ImGui::EndPopup();
+                const IProperty * prop = classDesc->getPropertyByIndex(i);
+                if (!strcmp(prop->getName(), "m_materialResources"))
+                    materialCount = prop->GetPropertyResourceVectorCount(_object);
             }
+
+            ImGui::PushID(_object);
+            string label = (string)"Materials (" + to_string(materialCount) + (string)")###" + to_string((uint_ptr)_object);
+
+            bool open = ImGui::TreeNodeEx(label.c_str(), ImGuiTreeNodeFlags_DefaultOpen);
+            bool remove = false;
 
             if (open)
             {
-                ImGui::Indent();
                 for (uint i = 0; i < classDesc->getPropertyCount(); ++i)
                 {
                     const IProperty * prop = classDesc->getPropertyByIndex(i);
 
                     if (!strcmp(prop->getName(), "m_materialResources"))
                     {
-                        uint count = prop->GetPropertyObjectVectorCount(_object);
-                        //uint count = prop->getEnumCount();
+                        materialCount = prop->GetPropertyResourceVectorCount(_object);
+                        const uint sizeOf = prop->getSizeOf();
 
-                        for (uint i = 0; i < count; ++i)
+                        for (uint i = 0; i < materialCount; ++i)
                         {
                             ImGui::PushID(i);
+                            auto obj = (IResource *)(prop->GetPropertyResourceVectorData(_object) + i * sizeOf);
 
-                            IObject * obj = (IObject *)prop->GetPropertyObjectVectorData(_object);
-                            //IObject * obj = prop->GetPropertyObject(_object, i);
-
-                            string materialLabel = (string)"ID " + to_string(i) + "###" + to_string((uint_ptr)_object);
+                            string materialLabel = (string)"MatID " + to_string(i) + "###" + to_string((uint_ptr)_object);
                             if (ImGui::TreeNodeEx(materialLabel.c_str(), ImGuiTreeNodeFlags_DefaultOpen))
                             {
-                                ImGuiWindow::displayObject(obj);
+                                ImGuiWindow::displayResource(obj);
                                 ImGui::TreePop();
                             }
 
@@ -78,62 +71,23 @@ namespace vg::editor
                     list->AddMaterial();
                 }
                 ImGui::SameLine();
-                if (ImGui::Button("Remove Material"))
-                {
-                    list->RemoveMaterial();
-                }
 
-                ImGui::Unindent();
+                ImGui::BeginDisabled(materialCount == 0);
+                {
+                    if (ImGui::Button("Remove Material"))
+                    {
+                        // Can't remove while iterating the list ;)
+                        remove = true;
+                    }
+                }
+                ImGui::EndDisabled();
+
+                ImGui::TreePop();
             }
             ImGui::PopID();
 
-            /*
-            const auto * factory = Kernel::getFactory();
-            const auto * classDesc = factory->getClassDescriptor(_object->getClassName());
-
-            // Sort top-level properties to display components at the end
-            const char * curClassName = nullptr;
-            bool visible = false;
-
-            ImGui::PushID("DisplayObject");
-
-            bool open = ImGui::CollapsingHeader("GameObject", nullptr, ImGuiTreeNodeFlags_DefaultOpen);
-
-            m_gameObjectInspectorMenu.Display(_object);
-
-            if (open)
-            {
-                for (uint i = 0; i < classDesc->getPropertyCount(); ++i)
-                {
-                    const IProperty * prop = classDesc->getPropertyByIndex(i);
-
-                    if (strcmp(prop->getName(), "m_components"))
-                    {
-                        if (curClassName != prop->getClassName())
-                        {
-                            curClassName = prop->getClassName();
-                            visible = true;
-                        }
-
-                        if (visible)
-                        {
-                            ImGuiWindow::displayProperty(prop, _object);
-                        }
-                    }
-                }
-            }
-
-            for (uint i = 0; i < classDesc->getPropertyCount(); ++i)
-            {
-                const IProperty * prop = classDesc->getPropertyByIndex(i);
-
-                if (!strcmp(prop->getName(), "m_components"))
-                {
-                    ImGuiWindow::displayProperty(prop, _object);
-                }
-            }
-
-            ImGui::PopID();*/
+            if (remove)
+                list->RemoveMaterial();
         }
     };
 

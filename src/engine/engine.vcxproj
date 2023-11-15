@@ -46,6 +46,8 @@
     <ClInclude Include="Precomp.h" />
     <ClInclude Include="Resource\Material\MaterialResource.h" />
     <ClInclude Include="Resource\Material\MaterialResource.hpp" />
+    <ClInclude Include="Resource\Material\MaterialResourceData.h" />
+    <ClInclude Include="Resource\Material\MaterialResourceData.hpp" />
     <ClInclude Include="Resource\Mesh\MeshResource.h" />
     <ClInclude Include="Resource\Mesh\MeshResource.hpp" />
     <ClInclude Include="Resource\ResourceManager.h" />

@@ -312,6 +312,8 @@ namespace vg::editor
         if (asBool(IProperty::Flags::ReadOnly & flags))
             imguiInputTextflags = ImGuiInputTextFlags_ReadOnly;
 
+        const bool isEnumArray = asBool(IProperty::Flags::EnumArray & flags);
+
         switch (type)
         {
         default:
@@ -320,37 +322,46 @@ namespace vg::editor
 
         case IProperty::Type::Bool:
         {
+            VG_ASSERT(!isEnumArray, "Display of EnumArray property not implemented for type '%s'", asString(type).c_str());
             bool * pBool = _prop->GetPropertyBool(_object);
             changed |= ImGui::Checkbox(getPropertyLabel(_prop).c_str(), pBool);
         };
         break;
 
         case IProperty::Type::EnumU8:
+            VG_ASSERT(!isEnumArray, "Display of EnumArray property not implemented for type '%s'", asString(type).c_str());
             changed |= displayEnum<u8>(_object, _prop);
             break;
 
         case IProperty::Type::EnumU16:
+            VG_ASSERT(!isEnumArray, "Display of EnumArray property not implemented for type '%s'", asString(type).c_str());
             changed |= displayEnum<u16>(_object, _prop);
             break;
 
         case IProperty::Type::EnumU32:
+            VG_ASSERT(!isEnumArray, "Display of EnumArray property not implemented for type '%s'", asString(type).c_str());
             changed |= displayEnum<u32>(_object, _prop);
             break;
 
         case IProperty::Type::EnumFlagsU8:
+            VG_ASSERT(!isEnumArray, "Display of EnumArray property not implemented for type '%s'", asString(type).c_str());
             changed |= displayEnumFlags<u8>(_object, _prop);
             break;
 
         case IProperty::Type::EnumFlagsU16:
+            VG_ASSERT(!isEnumArray, "Display of EnumArray property not implemented for type '%s'", asString(type).c_str());
             changed |= displayEnumFlags<u16>(_object, _prop);
             break;
 
         case IProperty::Type::EnumFlagsU32:
+            VG_ASSERT(!isEnumArray, "Display of EnumArray property not implemented for type '%s'", asString(type).c_str());
             changed |= displayEnumFlags<u32>(_object, _prop);
             break;
 
         case IProperty::Type::Uint8:
         {
+            VG_ASSERT(!isEnumArray, "Display of EnumArray property not implemented for type '%s'", asString(type).c_str());
+
             i8 * pU8 = (i8 *)(uint_ptr(_object) + offset);
 
             i32 temp = (u8)*pU8;
@@ -367,6 +378,8 @@ namespace vg::editor
 
         case IProperty::Type::Uint16:
         {
+            VG_ASSERT(!isEnumArray, "Display of EnumArray property not implemented for type '%s'", asString(type).c_str());
+
             i16 * pU16 = (i16 *)(uint_ptr(_object) + offset);
 
             i32 temp = (u16)*pU16;
@@ -383,6 +396,8 @@ namespace vg::editor
 
         case IProperty::Type::Uint32:
         {
+            VG_ASSERT(!isEnumArray, "Display of EnumArray property not implemented for type '%s'", asString(type).c_str());
+
             i32 * pU32 = (i32*)(uint_ptr(_object) + offset);
 
             if (asBool(IProperty::Flags::HasRange & flags))
@@ -394,6 +409,8 @@ namespace vg::editor
 
         case IProperty::Type::Float:
         {
+            VG_ASSERT(!isEnumArray, "Display of EnumArray property not implemented for type '%s'", asString(type).c_str());
+
             float * pFloat = _prop->GetPropertyFloat(_object);
 
             if (asBool(IProperty::Flags::HasRange & flags))
@@ -405,6 +422,8 @@ namespace vg::editor
 
         case IProperty::Type::Float2:
         {
+            VG_ASSERT(!isEnumArray, "Display of EnumArray property not implemented for type '%s'", asString(type).c_str());
+
             float * pFloat2 = (float *)_prop->GetPropertyFloat2(_object);
 
             changed |= ImGui::InputFloat2(displayName, pFloat2);
@@ -413,6 +432,8 @@ namespace vg::editor
 
         case IProperty::Type::Float3:
         {
+            VG_ASSERT(!isEnumArray, "Display of EnumArray property not implemented for type '%s'", asString(type).c_str());
+
             float * pFloat4 = (float *)_prop->GetPropertyFloat3(_object);
 
             if (asBool(IProperty::Flags::Color & flags))
@@ -426,7 +447,7 @@ namespace vg::editor
         {
             float * pFloat4 = (float*)_prop->GetPropertyFloat4(_object);
 
-            if (asBool(IProperty::Flags::EnumArray & flags))
+            if (isEnumArray)
             {
                 char label[1024];
                 sprintf_s(label, "%s (%u)", displayName, _prop->getEnumCount());
@@ -454,6 +475,8 @@ namespace vg::editor
 
         case IProperty::Type::Float4x4:
         {
+            VG_ASSERT(!isEnumArray, "Display of EnumArray property not implemented for type '%s'", asString(type).c_str());
+
             float * pFloat4x4 = (float*)_prop->GetPropertyFloat4x4(_object);
 
             changed |= ImGui::InputFloat4(((string)displayName + ".I").c_str(), pFloat4x4 + 0, "%.2f", imguiInputTextflags);
@@ -466,6 +489,8 @@ namespace vg::editor
 
         case IProperty::Type::String:
         {
+            VG_ASSERT(!isEnumArray, "Display of EnumArray property not implemented for type '%s'", asString(type).c_str());
+
             bool selectPath = false;
 
             string * pString = _prop->GetPropertyString(_object);
@@ -513,6 +538,8 @@ namespace vg::editor
 
         case IProperty::Type::Callback:
         {
+            VG_ASSERT(!isEnumArray, "Display of EnumArray property not implemented for type '%s'", asString(type).c_str());
+
             IProperty::Callback pFunc = _prop->GetPropertyCallback();
 
             if (ImGui::Button(displayName))
@@ -522,13 +549,13 @@ namespace vg::editor
 
         case IProperty::Type::ObjectVector:
         {
+            VG_ASSERT(!isEnumArray, "Display of EnumArray property not implemented for type '%s'", asString(type).c_str());
+
             const uint sizeOf = _prop->getSizeOf();
             const size_t count = _prop->GetPropertyObjectVectorCount(_object);
             const byte * data = _prop->GetPropertyObjectVectorData(_object);
 
             string treeNodeName = (string)displayName + " (" + to_string(count) + ")";
-
-            //ImGui::PushStyleColor(ImGuiCol_Text, ImGui::GetColorU32(ImGuiCol_TextDisabled));
 
             auto treeNodeFlags = ImGuiTreeNodeFlags_OpenOnArrow;
 
@@ -541,13 +568,13 @@ namespace vg::editor
                 }
                 ImGui::TreePop();
             }
-
-            //ImGui::PopStyleColor();
         }
         break;
 
         case IProperty::Type::ObjectRefVector:
         {
+            VG_ASSERT(!isEnumArray, "Display of EnumArray property not implemented for type '%s'", asString(type).c_str());
+
             auto * vec = _prop->GetPropertyObjectRefVector(_object);
             const uint count = vec->count();
 
@@ -605,12 +632,12 @@ namespace vg::editor
 
         case IProperty::Type::ObjectRefDictionary:
         {
+            VG_ASSERT(!isEnumArray, "Display of EnumArray property not implemented for type '%s'", asString(type).c_str());
+
             dictionary<IObject*> * dic = _prop->GetPropertyObjectRefDictionary(_object);
             const uint count = (uint)dic->size();
 
             string treeNodeName = (string)displayName + " (" + to_string(count) + ")";
-
-            //ImGui::PushStyleColor(ImGuiCol_Text, ImGui::GetColorU32(ImGuiCol_TextDisabled));
 
             auto treeNodeFlags = ImGuiTreeNodeFlags_OpenOnArrow;
 
@@ -626,8 +653,6 @@ namespace vg::editor
 
                 ImGui::TreePop();
             }
-
-            //ImGui::PopStyleColor();
         }
         break;
 
@@ -645,7 +670,7 @@ namespace vg::editor
             //else
                 treeNodeName = displayName;
 
-            if (asBool(IProperty::Flags::EnumArray & flags))
+            if (isEnumArray)
             {
                 char label[1024];
                 sprintf_s(label, "%s (%u)", displayName, _prop->getEnumCount());
@@ -659,6 +684,7 @@ namespace vg::editor
                         {
                             if (nullptr != pObject)
                                 displayObject(pObject);
+                                
                             ImGui::TreePop();
                         }
                     }
@@ -669,8 +695,13 @@ namespace vg::editor
             {
                 ImGui::PushStyleColor(ImGuiCol_Text, ImGui::GetColorU32(ImGuiCol_Text));
 
-                if (nullptr != pObject && pObject->getClassDesc() && asBool(pObject->getClassDesc()->getFlags() & (IClassDesc::Flags::Component)))
-                    treeNodeFlags |= ImGuiTreeNodeFlags_Leaf;
+                if (nullptr != pObject)
+                {
+                    auto classDesc = pObject->getClassDesc();
+                    VG_ASSERT(classDesc);
+                    if (classDesc && asBool(IClassDesc::Flags::Component & classDesc->getFlags()))
+                        treeNodeFlags |= ImGuiTreeNodeFlags_Leaf;
+                }
 
                 bool needTreeNode = strcmp(_prop->getName(), "m_object") && ref;
                 bool treenNodeOpen = !needTreeNode || ImGui::TreeNodeEx(treeNodeName.c_str(), treeNodeFlags);
@@ -678,68 +709,66 @@ namespace vg::editor
                 static int ObjectRightClicMenuIndex = -1;
                 bool needOpenPopup = false;
 
-                if (ImGui::BeginPopupContextItem())
-                {
-                    ImGui::PushID("ObjectRightClicMenu");
-
-                    //if (ImGui::MenuItem("Cut", "Ctrl-X"))
-                    //    ObjectRightClicMenuIndex = 0;
-                    //
-                    //if (ImGui::MenuItem("Copy", "Ctrl-C"))
-                    //    ObjectRightClicMenuIndex = 1;
-                    //
-                    //if (ImGui::MenuItem("Paste", "Ctrl-V"))
-                    //    ObjectRightClicMenuIndex = 2;
-
-                    if (ImGui::MenuItem("Rename", "Ctrl-R"))
-                    {
-                        needOpenPopup = true;
-                        ObjectRightClicMenuIndex = 3;
-                    }
-
-                    ImGui::PopID();
-
-                    ImGui::EndPopup();
-                }
-
-                if (ObjectRightClicMenuIndex == 3)
-                {
-                    static bool isRenamePopopOpened = true;
-
-                    if (needOpenPopup)
-                        ImGui::OpenPopup("Rename");
-
-                    if (ImGui::BeginPopupModal("Rename", &isRenamePopopOpened, ImGuiWindowFlags_AlwaysAutoResize))
-                    {
-                        static char nameTmp[1024] = { '\0' };
-
-                        if (nameTmp[0] == '\0')
-                            strcpy(nameTmp, pObject->getName().c_str());
-
-                        changed |= ImGui::InputText("", nameTmp, countof(nameTmp), ImGuiInputTextFlags_AutoSelectAll);
-
-                        string newName = nameTmp;
-
-                        if (ImGui::Button("Rename", style::button::Size))
-                        {
-                            pObject->setName(newName);
-                            ImGui::CloseCurrentPopup();
-                            nameTmp[0] = '\0';
-                            ObjectRightClicMenuIndex = -1;
-                        }
-
-                        ImGui::SameLine();
-
-                        if (ImGui::Button("Cancel", style::button::Size))
-                        {
-                            ImGui::CloseCurrentPopup();
-                            nameTmp[0] = '\0';
-                            ObjectRightClicMenuIndex = -1;
-                        }
-
-                        ImGui::EndPopup();
-                    }
-                }
+                //ImGui::PushID("ObjectRightClicMenu");
+                //if (ImGui::BeginPopupContextItem())
+                //{
+                //    //if (ImGui::MenuItem("Cut", "Ctrl-X"))
+                //    //    ObjectRightClicMenuIndex = 0;
+                //    //
+                //    //if (ImGui::MenuItem("Copy", "Ctrl-C"))
+                //    //    ObjectRightClicMenuIndex = 1;
+                //    //
+                //    //if (ImGui::MenuItem("Paste", "Ctrl-V"))
+                //    //    ObjectRightClicMenuIndex = 2;
+                //
+                //    if (ImGui::MenuItem("Rename", "Ctrl-R"))
+                //    {
+                //        needOpenPopup = true;
+                //        ObjectRightClicMenuIndex = 3;
+                //    }
+                //
+                //    ImGui::EndPopup();
+                //}
+                //ImGui::PopID();
+                //
+                //if (ObjectRightClicMenuIndex == 3)
+                //{
+                //    static bool isRenamePopopOpened = true;
+                //
+                //    if (needOpenPopup)
+                //        ImGui::OpenPopup("Rename");
+                //
+                //    if (ImGui::BeginPopupModal("Rename", &isRenamePopopOpened, ImGuiWindowFlags_AlwaysAutoResize))
+                //    {
+                //        static char nameTmp[1024] = { '\0' };
+                //
+                //        if (nameTmp[0] == '\0')
+                //            strcpy(nameTmp, pObject->getName().c_str());
+                //
+                //        changed |= ImGui::InputText("", nameTmp, countof(nameTmp), ImGuiInputTextFlags_AutoSelectAll);
+                //
+                //        string newName = nameTmp;
+                //
+                //        if (ImGui::Button("Rename", style::button::Size))
+                //        {
+                //            pObject->setName(newName);
+                //            ImGui::CloseCurrentPopup();
+                //            nameTmp[0] = '\0';
+                //            ObjectRightClicMenuIndex = -1;
+                //        }
+                //
+                //        ImGui::SameLine();
+                //
+                //        if (ImGui::Button("Cancel", style::button::Size))
+                //        {
+                //            ImGui::CloseCurrentPopup();
+                //            nameTmp[0] = '\0';
+                //            ObjectRightClicMenuIndex = -1;
+                //        }
+                //
+                //        ImGui::EndPopup();
+                //    }
+                //}
 
                 if (treenNodeOpen)
                 {
@@ -765,13 +794,13 @@ namespace vg::editor
 
         case IProperty::Type::ResourceVector:
         {
+            VG_ASSERT(!isEnumArray, "Display of EnumArray property not implemented for type '%s'", asString(type).c_str());
+
             const uint sizeOf = _prop->getSizeOf();
             const size_t count = _prop->GetPropertyResourceVectorCount(_object);
             const byte * data = _prop->GetPropertyResourceVectorData(_object);
 
             string treeNodeName = (string)displayName + " (" + to_string(count) + ")";
-
-            //ImGui::PushStyleColor(ImGuiCol_Text, ImGui::GetColorU32(ImGuiCol_TextDisabled));
 
             if (ImGui::CollapsingHeader(treeNodeName.c_str(), nullptr, ImGuiTreeNodeFlags_DefaultOpen))
             {
@@ -791,15 +820,42 @@ namespace vg::editor
                 }
                 ImGui::Unindent();
             }
-
-            //ImGui::PopStyleColor();
         }
             break;
 
         case IProperty::Type::Resource:
+        case IProperty::Type::ResourceRef:
         {
-            IResource * pResource = (IResource*)(uint_ptr(_object) + offset);
-            changed |= displayResource(pResource);
+            const bool ref = type == IProperty::Type::ResourceRef;
+
+            if (isEnumArray)
+            {
+                char label[1024];
+                sprintf_s(label, "%s (%u)", displayName, _prop->getEnumCount());
+                if (ImGui::TreeNodeEx(label, ImGuiTreeNodeFlags_OpenOnArrow))
+                {
+                    for (uint e = 0; e < _prop->getEnumCount(); ++e)
+                    {
+                        auto pResource = ref ? _prop->GetPropertyResourceRef(_object, e) : _prop->GetPropertyResource(_object, e);
+
+                        if (ImGui::TreeNodeEx(_prop->getEnumName(e), ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_DefaultOpen))
+                        {
+                            if (nullptr != pResource)
+                            {
+                                changed |= displayResource(pResource);
+                            }
+
+                            ImGui::TreePop();
+                        }
+                    }
+                    ImGui::TreePop();
+                }
+            }
+            else
+            {
+                IResource * pResource = ref ? _prop->GetPropertyResourceRef(_object) : _prop->GetPropertyResource(_object);
+                changed |= displayResource(pResource);
+            }
         }
         break;
         }
@@ -819,30 +875,41 @@ namespace vg::editor
         bool changed = false;
         IObject * pObject = _resource->getObject();
 
-        bool open = false;
-
         char buffer[1024];
         sprintf_s(buffer, _resource->GetResourcePath().c_str());
-        if (ImGui::InputText("##File", buffer, countof(buffer), (ImGuiInputTextFlags)0))
+        if (ImGui::InputText("##File", buffer, countof(buffer), ImGuiInputTextFlags_EnterReturnsTrue))
             _resource->SetResourcePath(buffer);
 
-        string openFileButtonName = getButtonLabel("File", _resource);
+        string newFileButtonName = getButtonLabel("New", _resource);
+        string openFileButtonName = getButtonLabel("Open", _resource);
         string clearFileButtonName = getButtonLabel("Clear", _resource);
+        string saveFileButtonName = getButtonLabel("Save", _resource);
+
         string openFileDialogName = getButtonLabel("Open file", _resource);
 
         ImGui::SameLine();
-        if (ImGui::Button(openFileButtonName.c_str()))
-            open = true;        
-
-        if (open)
-        {
-            ImGui::OpenPopup(openFileDialogName.c_str());
-            open = false;
-        }
+        if (ImGui::Button(newFileButtonName.c_str()))
+            ImGui::OpenPopup(newFileButtonName.c_str());
 
         ImGui::SameLine();
-        if (ImGui::Button(clearFileButtonName.c_str()))
-            _resource->ClearResourcePath();
+        if (ImGui::Button(openFileButtonName.c_str()))
+            ImGui::OpenPopup(openFileDialogName.c_str());
+
+        ImGui::SameLine();
+        ImGui::BeginDisabled(_resource->GetResourcePath().empty());
+        {
+            if (ImGui::Button(clearFileButtonName.c_str()))
+                _resource->ClearResourcePath();
+        }
+        ImGui::EndDisabled();
+
+        ImGui::SameLine();
+        ImGui::BeginDisabled(nullptr == _resource->getObject());
+        {
+            if (ImGui::Button(saveFileButtonName.c_str()))
+                ImGui::OpenPopup(saveFileButtonName.c_str());
+        }
+        ImGui::EndDisabled();
 
         // build extension list
         string ext = "";
@@ -859,6 +926,19 @@ namespace vg::editor
             ext = "*.*";
 
         auto & fileBrowser = getFileBrowser();
+
+        // Create new file
+        if (fileBrowser.showFileDialog(newFileButtonName.c_str(), imgui_addons::ImGuiFileBrowser::DialogMode::SAVE, style::dialog::Size, ext.c_str()))
+        {
+            const string newFilePath = fileBrowser.selected_path;
+            if (_resource->CreateFile(newFilePath))
+            {
+                _resource->SetResourcePath(newFilePath);
+                changed = true;
+            }
+        }
+
+        // Open existing file
         if (fileBrowser.showFileDialog(openFileDialogName.c_str(), imgui_addons::ImGuiFileBrowser::DialogMode::OPEN, style::dialog::Size, ext.c_str()))
         {
             const string newFilePath = fileBrowser.selected_path;
@@ -867,6 +947,14 @@ namespace vg::editor
                 _resource->SetResourcePath(newFilePath);
                 changed = true;
             }
+        }
+
+        // Save existing file
+        if (fileBrowser.showFileDialog(saveFileButtonName.c_str(), imgui_addons::ImGuiFileBrowser::DialogMode::SAVE, style::dialog::Size, ext.c_str()))
+        {
+            const string newFilePath = fileBrowser.selected_path;
+            if (_resource->SaveFile(newFilePath))
+                changed = true;
         }
 
         displayObject(_resource);

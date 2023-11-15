@@ -7,6 +7,20 @@ namespace vg::engine
     VG_AUTO_REGISTER_CLASS(MaterialResourceList);
 
     //--------------------------------------------------------------------------------------
+    MaterialResourceList::MaterialResourceList(const core::string & _name, core::IObject * _parent) :
+        IMaterialList(_name, _parent)
+    {
+        // resize of vector not supported because owner changes its address
+        m_materialResources.reserve(256);
+    }
+
+    //--------------------------------------------------------------------------------------
+    MaterialResourceList::~MaterialResourceList()
+    {
+
+    }
+
+    //--------------------------------------------------------------------------------------
     bool MaterialResourceList::registerClass(vg::core::IFactory & _factory)
     {
         if (core::IClassDesc * desc = _factory.registerClassHelper(MaterialResourceList, "Material Resource List", IClassDesc::Flags::None))
@@ -20,7 +34,7 @@ namespace vg::engine
     {
         super::registerProperties(_desc);
 
-        _desc.registerPropertyObjectVectorHelper(MaterialResourceList, m_materialResources, MaterialResource, "Materials", IProperty::Flags::None);
+        _desc.registerPropertyObjectVectorHelper(MaterialResourceList, m_materialResources, MaterialResource, "Material List", IProperty::Flags::Resource);
 
         return true;
     }
@@ -29,6 +43,11 @@ namespace vg::engine
     bool MaterialResourceList::AddMaterial()
     {
         m_materialResources.push_back({});
+
+        // Update resource owners
+        for (auto & matRes : m_materialResources)
+            matRes.setOwner(this);
+
         return true;
     }
 
@@ -38,20 +57,20 @@ namespace vg::engine
         if (m_materialResources.size() > 0)
         {
             m_materialResources.pop_back();
+
+            // Update resource owners
+            for (auto & matRes : m_materialResources)
+                matRes.setOwner(this);
+
             return true;
         }
         return false;
     }
 
     //--------------------------------------------------------------------------------------
-    MaterialResourceList::MaterialResourceList(const core::string & _name, core::IObject * _parent)
+    void MaterialResourceList::onResourceLoaded(IResource * _resource)
     {
-
-    }
-
-    //--------------------------------------------------------------------------------------
-    MaterialResourceList::~MaterialResourceList()
-    {
-
+        IObject * parent = getParent();
+        parent->onResourceLoaded(_resource);
     }
 }

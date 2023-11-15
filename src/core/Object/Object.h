@@ -44,6 +44,8 @@ namespace vg::core
 		// Added so that we can use the same 'VG_SAFE_RELEASE' macro everywhere
 		u32						    Release		        () final;
 
+		static bool					resizeVector		(core::IObject * _parent, core::uint _offset, core::uint _count, void ** _data);
+
 	private:
 		string					    m_name;
         string                      m_file;

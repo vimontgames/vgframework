@@ -16,6 +16,8 @@ namespace vg::engine
         bool AddMaterial() final override;
         bool RemoveMaterial() final override;
 
+        void onResourceLoaded(core::IResource * _resource) final override;
+
     private:
         core::vector<MaterialResource> m_materialResources;
     };

@@ -16,6 +16,7 @@ namespace vg::renderer
 
     enum class MaterialColorType : core::u8
     {
-        BaseColor = 0
+        BaseColor = 0,
+        EmissiveColor
     };
 }

@@ -16,6 +16,10 @@ namespace vg::core
         {
             switch (_type)
             {
+                default:
+                    VG_ASSERT(_enumCount == 0, "Property of Type \"%s\" does not support Enum/EnumArray", asString(_type).c_str());
+                    break;
+
                 case Type::EnumU8:
                 case Type::EnumFlagsU8:
                     initEnum<u8>(_enumCount, _enumNames, _enumValues);
@@ -32,7 +36,10 @@ namespace vg::core
                 case Type::EnumFlagsU64:
                     initEnum<u64>(_enumCount, _enumNames, _enumValues);
                     break;
-                default:
+
+                // Types that support enumArray
+                case Type::Resource:
+                case Type::Float4:
                     if (asBool(IProperty::Flags::EnumArray & _flags))
                     {
                         switch (_enumSizeOf)
@@ -237,11 +244,12 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
-    core::float4 * Property::GetPropertyFloat4(const IObject * _object) const
+    core::float4 * Property::GetPropertyFloat4(const IObject * _object, uint _index) const
     {
         VG_ASSERT(nullptr != _object);
         checkPropertyType(Type::Float4);
-        return (float4*)(uint_ptr(_object) + offset);
+        VG_ASSERT(0 == _index || asBool(Flags::EnumArray & flags));
+        return (float4*)(uint_ptr(_object) + offset + _index * sizeof(float4));
     }
 
     //--------------------------------------------------------------------------------------
@@ -261,11 +269,21 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
-    IResource * Property::GetPropertyResource(const IObject * _object) const
+    IResource * Property::GetPropertyResource(const IObject * _object, uint _index) const
     {
         VG_ASSERT(nullptr != _object);
-        checkPropertyType(Type::Resource );
-        return (IResource*)(uint_ptr(_object) + offset);
+        checkPropertyType(Type::Resource);
+        VG_ASSERT(0 == _index || asBool(Flags::EnumArray & flags));
+        return (IResource*)(uint_ptr(_object) + offset + _index * this->getSizeOf());
+    }
+
+    //--------------------------------------------------------------------------------------
+    IResource * Property::GetPropertyResourceRef(const IObject * _object, uint _index) const
+    {
+        VG_ASSERT(nullptr != _object);
+        checkPropertyType(Type::ResourceRef);
+        VG_ASSERT(0 == _index || asBool(Flags::EnumArray & flags));
+        return *(IResource **)(uint_ptr(_object) + offset + _index * sizeof(IResource *));
     }
 
     //--------------------------------------------------------------------------------------
@@ -325,6 +343,13 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
+    IObject * Property::GetPropertyObjectVectorElement(const IObject * _object, uint _index) const
+    {
+        VG_ASSERT(_index<GetPropertyObjectVectorCount(_object)); 
+        return (IObject *)(GetPropertyObjectVectorData(_object) + sizeOf * _index * getSizeOf());
+    }
+
+    //--------------------------------------------------------------------------------------
     uint Property::GetPropertyResourceVectorCount(const IObject * _object) const
     {
         VG_ASSERT(nullptr != _object);
@@ -338,6 +363,13 @@ namespace vg::core
         VG_ASSERT(nullptr != _object);
         checkPropertyType(Type::ResourceVector);
         return ((vector<u8>*)(uint_ptr(_object) + offset))->data();
+    }
+
+    //--------------------------------------------------------------------------------------
+    IResource * Property::GetPropertyResourceVectorElement(const IObject * _object, uint _index) const
+    {
+        VG_ASSERT(_index < GetPropertyResourceVectorCount(_object));
+        return (IResource *)(GetPropertyResourceVectorData(_object) + sizeOf * _index * getSizeOf());
     }
 
     //--------------------------------------------------------------------------------------

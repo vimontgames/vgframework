@@ -211,6 +211,11 @@ namespace vg::core
         u8 data[N>>3];
     };
 
+    template <uint N> struct UnknownElement
+    {
+        u8 m_data[N>>3];
+    };
+
     //--------------------------------------------------------------------------------------
     bool Factory::serializeFromXML(IObject * _object, const XMLElem * xmlObject) const
     {
@@ -242,6 +247,8 @@ namespace vg::core
                             const auto * prop = classDesc->getPropertyByName(name);
                             if (nullptr != prop)
                             {
+                                const bool isEnumArray = asBool(IProperty::Flags::EnumArray & prop->getFlags());
+
                                 if (prop->getType() == type)
                                 {
                                     const auto offset = prop->getOffset();
@@ -254,6 +261,7 @@ namespace vg::core
 
                                         case IProperty::Type::Float:
                                         {
+                                            VG_ASSERT(!isEnumArray, "EnumArray serialization from XML not implemented for type '%s'", asString(type).c_str());
                                             const XMLAttribute* xmlValue = xmlPropElem->FindAttribute("value");
                                             if (nullptr != xmlValue)
                                             {
@@ -265,6 +273,7 @@ namespace vg::core
 
                                         case IProperty::Type::Float4x4:
                                         {
+                                            VG_ASSERT(!isEnumArray, "EnumArray serialization from XML not implemented for type '%s'", asString(type).c_str());
                                             float* pFloat4x4 = (float*)(uint_ptr(_object) + offset);
                                             const char * values[] = 
                                             { 
@@ -285,7 +294,8 @@ namespace vg::core
 
                                         case IProperty::Type::Object:
                                         {
-                                            IObject * pObjectRef = nullptr;
+                                            VG_ASSERT(!isEnumArray, "EnumArray serialization from XML not implemented for type '%s'", asString(type).c_str());
+                                            IObject * pObjectRef = (IObject *)(uint_ptr(_object) + offset);
                                             const XMLElement * xmlObjectRef = xmlPropElem->FirstChildElement("Object");
                                             if (nullptr != xmlObjectRef)
                                             {
@@ -296,22 +306,140 @@ namespace vg::core
                                                     const auto * classDescRef = getClassDescriptor(classNameRef);
                                                     if (nullptr != classDescRef)
                                                     {
-                                                        pObjectRef = createObject(classNameRef, "", _object);
-                                                        if (!serializeFromXML(pObjectRef, xmlObjectRef))
-                                                            VG_SAFE_DELETE(pObjectRef);
+                                                        // TODO: clear contents?
+                                                        VG_VERIFY(serializeFromXML(pObjectRef, xmlObjectRef));
+                                                        pObjectRef->setParent(_object);
                                                     }
                                                 }
                                             }
+                                        }
+                                        break;
 
-                                            // Create "in-place"
-                                            IObject * pDstObject = (IObject *)(uint_ptr(_object) + offset);
-                                            pDstObject->~IObject();
-                                            memcpy(pDstObject, pObjectRef, prop->getSizeOf());
+                                        case IProperty::Type::Resource:
+                                        case IProperty::Type::ResourceRef:
+                                        {
+                                            const bool ref = type == IProperty::Type::ResourceRef;
+
+                                            auto serializeResourceFromXML = [=](IResource * _resource, const XMLElement * _xmlElement)
+                                            {
+                                                const IClassDesc * classDescRef = nullptr;
+                                                const XMLElement * xmlObjectRef = _xmlElement->FirstChildElement("Object");
+                                                if (nullptr != xmlObjectRef)
+                                                {
+                                                    const XMLAttribute * xmlClassAttrRef = xmlObjectRef->FindAttribute("class");
+                                                    if (nullptr != xmlClassAttrRef)
+                                                    {
+                                                        const char * classNameRef = xmlClassAttrRef->Value();
+                                                        classDescRef = getClassDescriptor(classNameRef);
+                                                        if (nullptr != classDescRef)
+                                                        {
+                                                            if (serializeFromXML(_resource, xmlObjectRef))
+                                                            {
+                                                                _resource->setOwner(_object);
+                                                                _resource->onResourcePathChanged("", _resource->GetResourcePath());
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            };
+
+                                            if (isEnumArray)
+                                            {
+                                                const XMLElement * xmlPropElemValue = xmlPropElem->FirstChildElement("Value");
+                                                if (nullptr != xmlPropElemValue)
+                                                {
+                                                    do
+                                                    {
+                                                        const XMLAttribute * xmlValueName = xmlPropElemValue->FindAttribute("name");
+                                                        if (nullptr != xmlValueName)
+                                                        {
+                                                            for (uint i = 0; i < prop->getEnumCount(); ++i)
+                                                            {
+                                                                if (!strcmp(xmlValueName->Value(), prop->getEnumName(i)))
+                                                                {
+                                                                    IResource * pResource = ref ? prop->GetPropertyResourceRef(_object, i) : prop->GetPropertyResource(_object, i);
+                                                                    serializeResourceFromXML(pResource, xmlPropElemValue);
+                                                                    break;
+                                                                }
+                                                            }
+                                                        }
+
+                                                        xmlPropElemValue = xmlPropElemValue->NextSiblingElement("Value");
+                                                    } while (nullptr != xmlPropElemValue);
+                                                }
+                                            }
+                                            else
+                                            {
+                                                IResource * pResource = ref ? prop->GetPropertyResourceRef(_object) : prop->GetPropertyResource(_object);
+                                                serializeResourceFromXML(pResource, xmlPropElem);
+                                            }
+                                        }
+                                        break;
+
+                                        case IProperty::Type::ResourceVector:
+                                        {
+                                            VG_ASSERT(!isEnumArray, "EnumArray serialization from XML not implemented for type '%s'", asString(type).c_str());
+                                            const XMLElement * const xmlObjectRefStart = xmlPropElem->FirstChildElement("Object");
+                                            if (nullptr != xmlObjectRefStart)
+                                            {
+                                                // first loop to get type and element count
+                                                auto xmlObjectRef = xmlObjectRefStart;
+                                                uint count = 0;
+                                                const IClassDesc * classDesc = nullptr;
+                                                do
+                                                {
+                                                    const XMLAttribute * xmlClassAttrRef = xmlObjectRef->FindAttribute("class");
+                                                    if (nullptr != xmlClassAttrRef)
+                                                    {
+                                                        const char * classNameRef = xmlClassAttrRef->Value();
+                                                        const auto * classDescRef = getClassDescriptor(classNameRef);
+                                                        if (nullptr != classDescRef)
+                                                        {
+                                                            count++;
+                                                            VG_ASSERT(classDesc == nullptr || classDesc == classDescRef);
+                                                            classDesc = classDescRef;
+                                                        }
+                                                    }
+                                                    xmlObjectRef = xmlObjectRef->NextSiblingElement("Object");
+
+                                                } while (xmlObjectRef != nullptr);
+
+                                                uint elemSize = 0;
+                                                void * data = classDesc->ResizeVector(_object, (uint)offset, count, elemSize);
+
+                                                // second pass to populate array
+                                                xmlObjectRef = xmlObjectRefStart;
+                                                uint index = 0;
+                                                do
+                                                {                                          
+                                                    const XMLAttribute * xmlClassAttrRef = xmlObjectRef->FindAttribute("class");
+                                                    if (nullptr != xmlClassAttrRef)
+                                                    {
+                                                        const char * classNameRef = xmlClassAttrRef->Value();
+                                                        const auto * classDescRef = getClassDescriptor(classNameRef);
+                                                        if (nullptr != classDescRef)
+                                                        {
+                                                            IResource * pResource = (IResource *)(uint_ptr(data) + index * elemSize);
+                                                            if (serializeFromXML(pResource, xmlObjectRef))
+                                                            {
+                                                                pResource->setOwner(_object);
+                                                                pResource->onResourcePathChanged("", pResource->GetResourcePath());
+                                                            }
+                                                            index++;
+                                                        }
+                                                    }
+                                                
+                                                    xmlObjectRef = xmlObjectRef->NextSiblingElement("Object");
+                                                
+                                                } while (xmlObjectRef != nullptr);
+                                                VG_ASSERT(index == count);
+                                            }
                                         }
                                         break;
 
                                         case IProperty::Type::ObjectRef:
                                         {
+                                            VG_ASSERT(!isEnumArray, "EnumArray serialization from XML not implemented for type '%s'", asString(type).c_str());
                                             IObject* pObjectRef = nullptr;
                                             const XMLElement* xmlObjectRef = xmlPropElem->FirstChildElement("Object");
                                             if (nullptr != xmlObjectRef)
@@ -338,6 +466,7 @@ namespace vg::core
 
                                         case IProperty::Type::ObjectRefVector:
                                         {
+                                            VG_ASSERT(!isEnumArray, "EnumArray serialization from XML not implemented for type '%s'", asString(type).c_str());
                                             const XMLElement* xmlObjectRef = xmlPropElem->FirstChildElement("Object");
                                             if (nullptr != xmlObjectRef)
                                             {
@@ -373,118 +502,29 @@ namespace vg::core
                                         }
                                         break;
 
-                                        //case IProperty::Type::ObjectVector:
-                                        //{
-                                        //    const XMLElement * xmlObjectRef = xmlPropElem->FirstChildElement("Object");
-                                        //    if (nullptr != xmlObjectRef)
-                                        //    {
-                                        //        //auto * vector = prop->GetPropertyObjectRefVector(_object);
-                                        //        const XMLElement * xmlObjectRef = xmlPropElem->FirstChildElement("Object");
-                                        //
-                                        //        const uint sizeOf = prop->getSizeOf();
-                                        //        const size_t count = prop->GetPropertyObjectVectorCount(_object);
-                                        //        const byte * data = prop->GetPropertyObjectVectorData(_object);
-                                        //
-                                        //        //for (uint i = 0; i < count; ++i)
-                                        //        //{
-                                        //        //    IObject * pObject = (IObject *)(data + sizeOf * i);
-                                        //        //    serializeToXML((const IObject *)(pObject), _xmlDoc, xmlPropElem);
-                                        //        //}
-                                        //
-                                        //        int i = 0;
-                                        //        do
-                                        //        {
-                                        //            IObject * pObjectRef = nullptr;
-                                        //
-                                        //            if (nullptr != xmlObjectRef)
-                                        //            {
-                                        //                const XMLAttribute * xmlClassAttrRef = xmlObjectRef->FindAttribute("class");
-                                        //                if (nullptr != xmlClassAttrRef)
-                                        //                {
-                                        //                    const char * classNameRef = xmlClassAttrRef->Value();
-                                        //                    const auto * classDescRef = getClassDescriptor(classNameRef);
-                                        //                    if (nullptr != classDescRef)
-                                        //                    {
-                                        //                        pObjectRef = createObject(classNameRef, "", _object);
-                                        //                        if (serializeFromXML(pObjectRef, xmlObjectRef))
-                                        //                        {
-                                        //                            //// Create "in-place" CANT RESIZE ARRAY!!?
-                                        //                            //IObject * pDstObject = (IObject *)(data + sizeOf * i);
-                                        //                            //if (nullptr != pDstObject)
-                                        //                            //    pDstObject->~IObject();
-                                        //                            //memcpy(pDstObject, pObjectRef, prop->getSizeOf());
-                                        //
-                                        //                            // a bit of a hack ...
-                                        //                            switch (prop->getSizeOf())
-                                        //                            {
-                                        //                                default:
-                                        //                                {
-                                        //                                    VG_ASSERT_NOT_IMPLEMENTED();
-                                        //                                }
-                                        //                                break;
-                                        //
-                                        //                                case 232:
-                                        //                                {
-                                        //                                    auto aliasVector = (core::vector<AliasType<232>>*)data;
-                                        //                                    uint size = aliasVector->size();
-                                        //                                    if (count != size)
-                                        //                                        aliasVector->resize(count);
-                                        //                                }
-                                        //                                break;
-                                        //                            }
-                                        //                        }
-                                        //                    }
-                                        //                }
-                                        //            }
-                                        //
-                                        //            xmlObjectRef = xmlObjectRef->NextSiblingElement("Object");
-                                        //
-                                        //            ++i;
-                                        //        } while (xmlObjectRef != nullptr);
-                                        //    }
-                                        //}
-                                        //break;
-
-                                        case IProperty::Type::Resource:
-                                        {
-                                            IResource* pResource = (IResource*)(uint_ptr(_object) + offset);
-                                            const IClassDesc* classDescRef = nullptr;
-                                            const XMLElement* xmlObjectRef = xmlPropElem->FirstChildElement("Object");
-                                            if (nullptr != xmlObjectRef)
-                                            {
-                                                const XMLAttribute* xmlClassAttrRef = xmlObjectRef->FindAttribute("class");
-                                                if (nullptr != xmlClassAttrRef)
-                                                {
-                                                    const char* classNameRef = xmlClassAttrRef->Value();
-                                                    classDescRef = getClassDescriptor(classNameRef);
-                                                    if (nullptr != classDescRef)
-                                                    {
-                                                        if (serializeFromXML(pResource, xmlObjectRef))
-                                                            pResource->onResourcePathChanged("", pResource->GetResourcePath());
-                                                    }
-                                                }
-                                            }
-                                        }
-                                        break;
-
                                         case IProperty::Type::EnumFlagsU8:
+                                            VG_ASSERT(!isEnumArray, "EnumArray serialization from XML not implemented for type '%s'", asString(type).c_str());
                                             serializeEnumFlagsPropertyFromXML<u8>(_object, prop, xmlPropElem);
                                             break;
 
                                         case IProperty::Type::EnumFlagsU16:
+                                            VG_ASSERT(!isEnumArray, "EnumArray serialization from XML not implemented for type '%s'", asString(type).c_str());
                                             serializeEnumFlagsPropertyFromXML<u16>(_object, prop, xmlPropElem);
                                             break;
 
                                         case IProperty::Type::EnumFlagsU32:
+                                            VG_ASSERT(!isEnumArray, "EnumArray serialization from XML not implemented for type '%s'", asString(type).c_str());
                                             serializeEnumFlagsPropertyFromXML<u32>(_object, prop, xmlPropElem);
                                             break;
 
                                         case IProperty::Type::EnumFlagsU64:
+                                            VG_ASSERT(!isEnumArray, "EnumArray serialization from XML not implemented for type '%s'", asString(type).c_str());
                                             serializeEnumFlagsPropertyFromXML<u64>(_object, prop, xmlPropElem);
                                             break;
 
                                         case IProperty::Type::String:
                                         {
+                                            VG_ASSERT(!isEnumArray, "EnumArray serialization from XML not implemented for type '%s'", asString(type).c_str());
                                             const XMLAttribute * xmlValue = xmlPropElem->FindAttribute("value");
                                             if (nullptr != xmlValue)
                                             {
@@ -496,6 +536,7 @@ namespace vg::core
 
                                         case IProperty::Type::Bool:
                                         {
+                                            VG_ASSERT(!isEnumArray, "EnumArray serialization from XML not implemented for type '%s'", asString(type).c_str());
                                             const XMLAttribute * xmlValue = xmlPropElem->FindAttribute("value");
                                             if (nullptr != xmlValue)
                                             {
@@ -507,49 +548,90 @@ namespace vg::core
 
                                         case IProperty::Type::Float4:
                                         {
-                                            float * pFloat4 = (float*)(uint_ptr(_object) + offset);
-                                            const char * values[] = { "x", "y", "z", "w" };
-                                            for (uint i = 0; i < countof(values); ++i)
+                                            auto serializeFloat4FromXML = [](float4 * _value, const XMLElement * _xmlElement)
                                             {
-                                                const XMLAttribute * xmlValue = xmlPropElem->FindAttribute(values[i]);
-                                                if (nullptr != xmlValue)
-                                                    pFloat4[i] = xmlValue->FloatValue();
+                                                float * pFloat = (float *)_value;
+                                                const char * values[] = { "x", "y", "z", "w" };
+                                                for (uint i = 0; i < countof(values); ++i)
+                                                {
+                                                    const XMLAttribute * xmlValue = _xmlElement->FindAttribute(values[i]);
+                                                    if (nullptr != xmlValue)
+                                                        pFloat[i] = xmlValue->FloatValue();
+                                                }
+                                            };
+
+                                            if (isEnumArray)
+                                            {
+                                                const XMLElement * xmlPropElemValue = xmlPropElem->FirstChildElement("Value");
+                                                if (nullptr != xmlPropElemValue)
+                                                {
+                                                    do
+                                                    {
+                                                        const XMLAttribute * xmlValueName = xmlPropElemValue->FindAttribute("name");
+                                                        if (nullptr != xmlValueName)
+                                                        {
+                                                            for (uint i = 0; i < prop->getEnumCount(); ++i)
+                                                            {
+                                                                if (!strcmp(xmlValueName->Value(), prop->getEnumName(i)))
+                                                                {
+                                                                    float4 * pFloat4 = prop->GetPropertyFloat4(_object, i);
+                                                                    serializeFloat4FromXML(pFloat4, xmlPropElemValue);
+                                                                    break;
+                                                                }
+                                                            }
+                                                        }
+
+                                                        xmlPropElemValue = xmlPropElemValue->NextSiblingElement("Value");
+                                                    } while (nullptr != xmlPropElemValue);
+                                                }
+                                            }
+                                            else
+                                            {
+                                                float4 * pFloat4 = prop->GetPropertyFloat4(_object);
+                                                serializeFloat4FromXML(pFloat4, xmlPropElem);
                                             }
                                         }
                                         break;
 
                                         case IProperty::Type::EnumU8:
+                                            VG_ASSERT(!isEnumArray, "EnumArray serialization from XML not implemented for type '%s'", asString(type).c_str());
                                             serializeEnumPropertyFromXML<u8>(_object, prop, xmlPropElem);
                                             break;
 
                                         case IProperty::Type::EnumU16:
+                                            VG_ASSERT(!isEnumArray, "EnumArray serialization from XML not implemented for type '%s'", asString(type).c_str());
                                             serializeEnumPropertyFromXML<u16>(_object, prop, xmlPropElem);
                                             break;
 
                                         case IProperty::Type::EnumU32:
+                                            VG_ASSERT(!isEnumArray, "EnumArray serialization from XML not implemented for type '%s'", asString(type).c_str());
                                             serializeEnumPropertyFromXML<u32>(_object, prop, xmlPropElem);
                                         break;
 
                                         case IProperty::Type::Uint8:
+                                            VG_ASSERT(!isEnumArray, "EnumArray serialization from XML not implemented for type '%s'", asString(type).c_str());
                                             serializeIntegerPropertyFromXML<u8>(_object, prop, xmlPropElem);
                                         break;
 
                                         case IProperty::Type::Uint16:
+                                            VG_ASSERT(!isEnumArray, "EnumArray serialization from XML not implemented for type '%s'", asString(type).c_str());
                                             serializeIntegerPropertyFromXML<u16>(_object, prop, xmlPropElem);
                                             break;
 
                                         case IProperty::Type::Uint32:
+                                            VG_ASSERT(!isEnumArray, "EnumArray serialization from XML not implemented for type '%s'", asString(type).c_str());
                                             serializeIntegerPropertyFromXML<u32>(_object, prop, xmlPropElem);
                                             break;
 
                                         case IProperty::Type::Uint64:
+                                            VG_ASSERT(!isEnumArray, "EnumArray serialization from XML not implemented for type '%s'", asString(type).c_str());
                                             serializeIntegerPropertyFromXML<u64>(_object, prop, xmlPropElem);
                                             break;
                                     }
                                 }
                                 else
                                 {
-                                    VG_DEBUGPRINT("[Factory] Serialized Object type \"%s\" for Property \"%s\" from class \"%s\" does not match type \"%s\" declared in ClassDesc\n", typeName, name, className, asString(prop->getType()));
+                                    VG_WARNING("[Factory] Serialized Object type \"%s\" for Property \"%s\" from class \"%s\" does not match type \"%s\" declared in ClassDesc\n", typeName, name, className, asString(prop->getType()));
                                 }
                             }
                         }
@@ -589,7 +671,17 @@ namespace vg::core
             XMLElement * xmlPropElem = _xmlDoc.NewElement("Property");
             xmlPropElem->SetAttribute("type", asString(type).c_str());
             xmlPropElem->SetAttribute("name", name);
+
+            string flagsString = "";
+            if (asBool(flags))
+            {
+                flagsString += asString(flags);
+                xmlPropElem->SetAttribute("flags", flagsString.c_str());
+            }
+
             bool skipAttribute = false;
+
+            const bool isEnumArray = asBool(IProperty::Flags::EnumArray & prop->getFlags());
 
             switch (type)
             {
@@ -605,33 +697,59 @@ namespace vg::core
                 break;
 
                 case IProperty::Type::Uint8:
+                    VG_ASSERT(!isEnumArray, "EnumArray serialization to XML not implemented for type '%s'", asString(type).c_str());
                     serializeIntegerPropertyToXML<u8>(_object, prop, xmlPropElem);
                     break;
 
                 case IProperty::Type::Uint16:
+                    VG_ASSERT(!isEnumArray, "EnumArray serialization to XML not implemented for type '%s'", asString(type).c_str());
                     serializeIntegerPropertyToXML<u16>(_object, prop, xmlPropElem);
                     break;
 
                 case IProperty::Type::Uint32:
+                    VG_ASSERT(!isEnumArray, "EnumArray serialization to XML not implemented for type '%s'", asString(type).c_str());
                     serializeIntegerPropertyToXML<u32>(_object, prop, xmlPropElem);
                 break;
 
                 case IProperty::Type::Uint64:
+                    VG_ASSERT(!isEnumArray, "EnumArray serialization to XML not implemented for type '%s'", asString(type).c_str());
                     serializeIntegerPropertyToXML<u64>(_object, prop, xmlPropElem);
                     break;
 
                 case IProperty::Type::Resource:
+                case IProperty::Type::ResourceRef:
                 {
-                    const IObject* pResource = prop->GetPropertyResource(_object);
-                    serializeToXML(pResource, _xmlDoc, xmlPropElem);
+                    const bool ref = type == IProperty::Type::ResourceRef;
+
+                    if (isEnumArray)
+                    {
+                        const uint count = prop->getEnumCount();
+                        for (uint i = 0; i < count; ++i)
+                        {
+                            XMLElement * xmlPropElemChild = _xmlDoc.NewElement("Value");
+                            {
+                                auto enumValueName = prop->getEnumName(i);
+                                xmlPropElemChild->SetAttribute("name", enumValueName);
+                                const IObject * pResource = ref ? prop->GetPropertyResourceRef(_object, i) : prop->GetPropertyResource(_object, i);
+                                serializeToXML(pResource, _xmlDoc, xmlPropElemChild);
+                            }
+                            xmlPropElem->InsertEndChild(xmlPropElemChild);
+                        }
+                    }
+                    else
+                    {
+                        const IObject * pResource = ref ? prop->GetPropertyResourceRef(_object) : prop->GetPropertyResource(_object);
+                        serializeToXML(pResource, _xmlDoc, xmlPropElem);
+                    }
                 }
                 break;
 
                 case IProperty::Type::ResourceVector:
                 {
+                    VG_ASSERT(!isEnumArray, "EnumArray serialization to XML not implemented for type '%s'", asString(type).c_str());
                     const uint sizeOf = prop->getSizeOf();
-                    const size_t count = prop->GetPropertyObjectVectorCount(_object);
-                    const byte * data = prop->GetPropertyObjectVectorData(_object);
+                    const size_t count = prop->GetPropertyResourceVectorCount(_object);
+                    const byte * data = prop->GetPropertyResourceVectorData(_object);
 
                     for (uint i = 0; i < count; ++i)
                     {
@@ -643,6 +761,7 @@ namespace vg::core
 
                 case IProperty::Type::Object:
                 {
+                    VG_ASSERT(!isEnumArray, "EnumArray serialization to XML not implemented for type '%s'", asString(type).c_str());
                     const IObject * pObject = prop->GetPropertyObject(_object);
                     serializeToXML(pObject, _xmlDoc, xmlPropElem);
                 }
@@ -650,6 +769,7 @@ namespace vg::core
 
                 case IProperty::Type::ObjectRef:
                 {
+                    VG_ASSERT(!isEnumArray, "EnumArray serialization to XML not implemented for type '%s'", asString(type).c_str());
                     const IObject * pObject = prop->GetPropertyObjectRef(_object);
                     serializeToXML(pObject, _xmlDoc, xmlPropElem);
                 }
@@ -657,6 +777,7 @@ namespace vg::core
 
                 //case IProperty::Type::ObjectVector:
                 //{
+                //    VG_ASSERT(!isEnumArray, "EnumArray serialization to XML not implemented for type '%s'", asString(type).c_str());
                 //    const uint sizeOf = prop->getSizeOf();
                 //    const size_t count = prop->GetPropertyObjectVectorCount(_object);
                 //    const byte * data = prop->GetPropertyObjectVectorData(_object);
@@ -671,6 +792,7 @@ namespace vg::core
 
                 case IProperty::Type::ObjectRefVector:
                 {
+                    VG_ASSERT(!isEnumArray, "EnumArray serialization to XML not implemented for type '%s'", asString(type).c_str());
                     auto * vector = prop->GetPropertyObjectRefVector(_object);
                     const uint count = vector->count();
                     for (uint i = 0; i < count; ++i)
@@ -682,6 +804,7 @@ namespace vg::core
 
                 case IProperty::Type::String:
                 {
+                    VG_ASSERT(!isEnumArray, "EnumArray serialization to XML not implemented for type '%s'", asString(type).c_str());
                     const string * pString = prop->GetPropertyString(_object);
                     xmlPropElem->SetAttribute("value", pString->c_str());
                 }
@@ -689,6 +812,7 @@ namespace vg::core
 
                 case IProperty::Type::Bool:
                 {
+                    VG_ASSERT(!isEnumArray, "EnumArray serialization to XML not implemented for type '%s'", asString(type).c_str());
                     const bool * pBool = prop->GetPropertyBool(_object);
                     xmlPropElem->SetAttribute("value", *pBool);
                 }
@@ -696,6 +820,7 @@ namespace vg::core
 
                 case IProperty::Type::Float:
                 {
+                    VG_ASSERT(!isEnumArray, "EnumArray serialization to XML not implemented for type '%s'", asString(type).c_str());
                     const float * pFloat = prop->GetPropertyFloat(_object);
                     xmlPropElem->SetAttribute("value", *pFloat);
                 }
@@ -703,16 +828,42 @@ namespace vg::core
 
                 case IProperty::Type::Float4:
                 {
-                    const float * pFloat4 = (const float *)prop->GetPropertyFloat4(_object);
-                    xmlPropElem->SetAttribute("x", pFloat4[0]);
-                    xmlPropElem->SetAttribute("y", pFloat4[1]);
-                    xmlPropElem->SetAttribute("z", pFloat4[2]);
-                    xmlPropElem->SetAttribute("w", pFloat4[3]);
+                    auto serializeFloat4ToXML = [](XMLElement * _xmlElement, const float4 * _value)
+                    {
+                        const auto pFloat = (const float *)_value;
+                        _xmlElement->SetAttribute("x", pFloat[0]);
+                        _xmlElement->SetAttribute("y", pFloat[1]);
+                        _xmlElement->SetAttribute("z", pFloat[2]);
+                        _xmlElement->SetAttribute("w", pFloat[3]);
+                    };
+
+                    if (isEnumArray)
+                    {
+                        const uint count = prop->getEnumCount();
+                        for (uint i = 0; i < count; ++i)
+                        {
+                            XMLElement * xmlPropElemChild = _xmlDoc.NewElement("Value");
+                            {
+                                auto enumValueName = prop->getEnumName(i);
+                                xmlPropElemChild->SetAttribute("name", enumValueName);
+                                const auto value = prop->GetPropertyFloat4(_object, i);
+                                serializeFloat4ToXML(xmlPropElemChild, value);
+                            }
+                            xmlPropElem->InsertEndChild(xmlPropElemChild);
+                        }
+                    }
+                    else
+                    {
+                        const auto value = prop->GetPropertyFloat4(_object);
+                        serializeFloat4ToXML(xmlPropElem, value);
+                    }
                 }
                 break;
 
                 case IProperty::Type::Float4x4:
                 {
+                    VG_ASSERT(!isEnumArray, "EnumArray serialization to XML not implemented for type '%s'", asString(type).c_str());
+
                     const float * pFloat4x4 = (const float *)(uint_ptr(_object) + offset);
                     xmlPropElem->SetAttribute("Ix", pFloat4x4[0 + 0]);
                     xmlPropElem->SetAttribute("Iy", pFloat4x4[0 + 1]);
@@ -734,34 +885,42 @@ namespace vg::core
                 break;
 
                 case IProperty::Type::EnumFlagsU8:
+                    VG_ASSERT(!isEnumArray, "EnumArray serialization to XML not implemented for type '%s'", asString(type).c_str());
                     serializeEnumFlagsPropertyToXML<u8>(_object, prop, xmlPropElem);
                     break;
 
                 case IProperty::Type::EnumFlagsU16:
+                    VG_ASSERT(!isEnumArray, "EnumArray serialization to XML not implemented for type '%s'", asString(type).c_str());
                     serializeEnumFlagsPropertyToXML<u16>(_object, prop, xmlPropElem);
                     break;
 
                 case IProperty::Type::EnumFlagsU32:
+                    VG_ASSERT(!isEnumArray, "EnumArray serialization to XML not implemented for type '%s'", asString(type).c_str());
                     serializeEnumFlagsPropertyToXML<u32>(_object, prop, xmlPropElem);
                     break;
 
                 case IProperty::Type::EnumFlagsU64:
+                    VG_ASSERT(!isEnumArray, "EnumArray serialization to XML not implemented for type '%s'", asString(type).c_str());
                     serializeEnumFlagsPropertyToXML<u64>(_object, prop, xmlPropElem);
                     break;
 
                 case IProperty::Type::EnumU8:
+                    VG_ASSERT(!isEnumArray, "EnumArray serialization to XML not implemented for type '%s'", asString(type).c_str());
                     serializeEnumPropertyToXML<u8>(_object, prop, xmlPropElem);
                     break;
 
                 case IProperty::Type::EnumU16:
+                    VG_ASSERT(!isEnumArray, "EnumArray serialization to XML not implemented for type '%s'", asString(type).c_str());
                     serializeEnumPropertyToXML<u16>(_object, prop, xmlPropElem);
                     break;
 
                 case IProperty::Type::EnumU32:
+                    VG_ASSERT(!isEnumArray, "EnumArray serialization to XML not implemented for type '%s'", asString(type).c_str());
                     serializeEnumPropertyToXML<u32>(_object, prop, xmlPropElem);
                     break;
 
                 case IProperty::Type::EnumU64:
+                    VG_ASSERT(!isEnumArray, "EnumArray serialization to XML not implemented for type '%s'", asString(type).c_str());
                     serializeEnumPropertyToXML<u64>(_object, prop, xmlPropElem);
                     break;
             }

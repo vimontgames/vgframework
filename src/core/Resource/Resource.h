@@ -20,6 +20,9 @@ namespace vg::core
                                     Resource            (const Resource & _other);
                                     ~Resource           ();
 
+        bool                        CreateFile          (const string & _path) override;
+        bool                        SaveFile            (const string & _path) const override;
+
         void                        setup               (IObject * _owner, const string & _path, UserData _userData = 0x0) final;
 
         bool                        setObject           (core::IObject * _object) final;
@@ -28,7 +31,7 @@ namespace vg::core
         void                        setUserData         (UserData _userData) final;
         UserData                    getUserData         () const final;
 
-        void                        setOwner            (core::IObject * _object) final;
+        void                        setOwner            (core::IObject * _object) override;
         core::IObject *             getOwner            () const final;
 
         bool                        Reimport            () final;

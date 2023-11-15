@@ -2,6 +2,9 @@
 #include "core/File/File.h"
 #include "renderer/IMeshModel.h"
 #include "renderer/IMaterialModel.h"
+#include "engine/Component/Mesh/MaterialResourceList.h"
+
+#include "MaterialResourceData.hpp"
 
 using namespace vg::core;
 
@@ -19,21 +22,35 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
+    void * ResizeMaterialResourceVector(IObject * _parent, uint _offset, uint _count, uint & _elementSize)
+    {
+        auto vec = (core::vector<MaterialResource> *)(uint_ptr(_parent) + _offset);
+        vec->clear();
+        vec->resize(_count);
+        _elementSize = sizeof(MaterialResource);
+        return vec->data();
+    }
+
+    //--------------------------------------------------------------------------------------
     bool MaterialResource::registerProperties(IClassDesc & _desc)
     {
         super::registerProperties(_desc);
+        
+        //_desc.registerPropertyEnumBitfield(MaterialResource, renderer::MaterialFlags, m_flags, "Flags");
+        //_desc.registerPropertyEnumArray(MaterialResource, core::float4, renderer::MaterialColorType, m_colors, "Colors", IProperty::Flags::Color);
+        //_desc.registerPropertyEnumArray(MaterialResource, TextureResource, renderer::MaterialTextureType, m_textures, "Textures", IProperty::Flags::Resource);
 
-        _desc.registerPropertyEnumArray(MaterialResource, core::float4, renderer::MaterialColorType, m_colors, "Colors", IProperty::Flags::Color);
-        _desc.registerPropertyEnumArray(MaterialResource, core::IObject, renderer::MaterialTextureType, m_textures, "Textures", IProperty::Flags::None);
+        _desc.registerResizeVectorFunc(MaterialResource, ResizeMaterialResourceVector);
         
         return true;
-    }
+    }   
 
     //--------------------------------------------------------------------------------------
     MaterialResource::MaterialResource(const core::string & _name, IObject * _parent) :
         Resource(_name, _parent)
     {
-
+        //for (auto & texRes : m_textures)
+        //    texRes.setOwner(this);
     }
 
     //--------------------------------------------------------------------------------------
@@ -51,40 +68,90 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
+    void MaterialResource::setOwner(core::IObject * _object)
+    {
+        VG_ASSERT(nullptr != dynamic_cast<MaterialResourceList *>(_object));
+        m_owner = _object;
+    }
+
+    //--------------------------------------------------------------------------------------
     void MaterialResource::onResourcePathChanged(const string & _oldPath, const string & _newPath)
     {
-        VG_ASSERT_NOT_IMPLEMENTED();
+        if (_oldPath != _newPath)
+            ResourceManager::get()->loadResourceAsync(this, _oldPath, _newPath);
     }
 
     //--------------------------------------------------------------------------------------
     bool MaterialResource::cook(const string & _file) const
     {
-        VG_ASSERT_NOT_IMPLEMENTED();
-        return true;
+        // Cooked file is same format as source file for now
+        const string cookedPath = io::getCookedPath(_file);
+
+        string data;
+        if (io::readFile(_file, data))
+        {
+            if (io::writeFile(cookedPath, data))
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     //--------------------------------------------------------------------------------------
     core::IObject * MaterialResource::load(const string & _path)
     {
-        VG_ASSERT_NOT_IMPLEMENTED();
+        IFactory * factory = Kernel::getFactory();
+        IObject * object = factory->createObject("MaterialResourceData");
+        object->setParent(this);
+
+        if (object)
+        {
+            factory->loadFromXML(object, _path);
+            return object;
+        }
+
         return nullptr;
     }
 
     //--------------------------------------------------------------------------------------
     void MaterialResource::onResourceLoaded(core::IResource * _resource)
     {
-        VG_ASSERT_NOT_IMPLEMENTED();
+        IObject * owner = getOwner();
+        VG_ASSERT(nullptr != owner, "Resource \"%s\" of type '%s' has no owner", GetResourcePath().c_str(), getClassName());
+        if (nullptr != owner)
+            owner->onResourceLoaded(_resource);
     }
 
     //--------------------------------------------------------------------------------------
-    //uint MaterialResource::getSubResourceCount() const
-    //{
-    //    return m_textureResources.count();
-    //}
-    //
-    ////--------------------------------------------------------------------------------------
-    //IResource * MaterialResource::getSubResource(uint _index)
-    //{
-    //    return &m_textureResources[_index];
-    //}
+    // a .mat file is an XML file that serializes a MaterialResourceData Object
+    //--------------------------------------------------------------------------------------
+    bool MaterialResource::CreateFile(const core::string & _path)
+    {
+        const auto * factory = Kernel::getFactory();
+        
+        IObject * resData = factory->createObject("MaterialResourceData");
+        if (nullptr != resData)
+        {
+            factory->saveToXML(resData, _path);
+            VG_SAFE_RELEASE(resData);
+            return true;
+        }
+
+        return false;
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool MaterialResource::SaveFile(const string & _path) const
+    {
+        IObject * object = getObject();
+        VG_ASSERT(!object || dynamic_cast<MaterialResourceData *>(object));
+        if (nullptr != object)
+        {
+            const auto * factory = Kernel::getFactory();
+            return factory->saveToXML(object, _path);
+        }
+        return false;
+    }
 }

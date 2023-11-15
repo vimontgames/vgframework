@@ -22,7 +22,7 @@ namespace vg::engine
         super::registerProperties(_desc);
 
         // Display texture
-        _desc.registerProperty("Resource", "m_object", (IObject **)offsetof(TextureResource, m_object), "Object", IProperty::Flags::NotSaved);
+        //_desc.registerProperty("Resource", "m_object", (IObject **)offsetof(TextureResource, m_object), "Object", IProperty::Flags::NotSaved);
 
         return true;
     }

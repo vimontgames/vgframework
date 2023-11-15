@@ -58,13 +58,13 @@ namespace vg::core
     //--------------------------------------------------------------------------------------
     void Object::onResourceLoaded(IResource * _resource)
     {
-
+        VG_ASSERT_NOT_IMPLEMENTED();
     }
 
     //--------------------------------------------------------------------------------------
     void Object::onResourceUnloaded(IResource * _resource)
     {
-
+        VG_ASSERT_NOT_IMPLEMENTED();
     }
 
     //--------------------------------------------------------------------------------------
@@ -126,4 +126,11 @@ namespace vg::core
 	{
 		return release();
 	}
+
+    //--------------------------------------------------------------------------------------
+    bool Object::resizeVector(core::IObject * _parent, core::uint _offset, core::uint _count, void ** _data)
+    {
+        VG_ASSERT(false);
+        return false;
+    }
 }

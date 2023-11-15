@@ -147,7 +147,7 @@ namespace vg::renderer
                     switch (fbxNodeAttribute->GetAttributeType())
                     {
                         default:
-                            VG_ASSERT_NOT_IMPLEMENTED();
+                            VG_ASSERT(false);
                             break;
 
                         case FbxNodeAttribute::eMesh:

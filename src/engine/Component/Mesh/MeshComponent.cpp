@@ -33,7 +33,8 @@ namespace vg::engine
     {
         super::registerProperties(_desc);
 
-        _desc.registerProperty("MeshComponent", "m_meshResource", (core::IResource**)offsetof(MeshComponent, m_meshResource), "Resource", IProperty::Flags::None);
+        //_desc.registerProperty("MeshComponent", "m_meshResource", (core::IResource**)offsetof(MeshComponent, m_meshResource), "Resource", IProperty::Flags::None);
+        _desc.registerPropertyResourceHelper(MeshComponent, m_meshResource, "Resource", IProperty::Flags::Resource);
         _desc.registerPropertyObjectHelper(MeshComponent, m_meshMaterials, "Materials", IProperty::Flags::None);
 
         //_desc.registerProperty("MeshComponent", "m_meshInstance", (IObject**)offsetof(MeshComponent, m_meshInstance), "Instance", IProperty::Flags::Hidden);
@@ -80,36 +81,42 @@ namespace vg::engine
     //--------------------------------------------------------------------------------------
     void MeshComponent::onResourceLoaded(IResource * _resource)
     {
-        IMeshModel * meshModel = m_meshResource.getMeshModel();
-        m_meshInstance->SetModel(Lod::Lod0, meshModel);
-
-        if (false == m_registered)
+        if (_resource == &m_meshResource)
         {
-            auto * picking = Engine::get()->GetRenderer()->GetPicking();
-            PickingID id = picking->GetPickingID(this);
-            m_meshInstance->setPickingID(id);
+            IMeshModel * meshModel = m_meshResource.getMeshModel();
+            m_meshInstance->SetModel(Lod::Lod0, meshModel);
 
-            GameObject * gameObject = getGameObject();
-            gameObject->AddGraphicInstance(m_meshInstance);
+            if (false == m_registered)
+            {
+                auto * picking = Engine::get()->GetRenderer()->GetPicking();
+                PickingID id = picking->GetPickingID(this);
+                m_meshInstance->setPickingID(id);
 
-            m_registered = true;
+                GameObject * gameObject = getGameObject();
+                gameObject->AddGraphicInstance(m_meshInstance);
+
+                m_registered = true;
+            }
         }
     }
 
     //--------------------------------------------------------------------------------------
     void MeshComponent::onResourceUnloaded(core::IResource * _resource)
     {
-        m_meshInstance->SetModel(Lod::Lod0, nullptr);
-
-        if (m_registered)
+        if (_resource == &m_meshResource)
         {
-            auto * picking = Engine::get()->GetRenderer()->GetPicking();
-            picking->ReleasePickingID(m_meshInstance->getPickingID());
-            m_meshInstance->resetPickingID();
-            GameObject * gameObject = getGameObject();
-            gameObject->RemoveGraphicInstance(m_meshInstance);
+            m_meshInstance->SetModel(Lod::Lod0, nullptr);
 
-            m_registered = false;
+            if (m_registered)
+            {
+                auto * picking = Engine::get()->GetRenderer()->GetPicking();
+                picking->ReleasePickingID(m_meshInstance->getPickingID());
+                m_meshInstance->resetPickingID();
+                GameObject * gameObject = getGameObject();
+                gameObject->RemoveGraphicInstance(m_meshInstance);
+
+                m_registered = false;
+            }
         }
     }
 }
