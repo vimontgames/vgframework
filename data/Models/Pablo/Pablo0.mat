@@ -1,0 +1,22 @@
+<Root>
+    <Object class="MaterialResourceData">
+        <Property type="String" name="m_name" flags="Hidden" value="MaterialResourceData #0"/>
+        <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="AlphaBlend"/>
+        <Property type="Float4" name="m_colors" flags="Color|EnumArray">
+            <Value name="BaseColor" x="1" y="0" z="0" w="1"/>
+            <Value name="EmissiveColor" x="0" y="1" z="0" w="1"/>
+        </Property>
+        <Property type="Resource" name="m_textures" flags="Resource|EnumArray">
+            <Value name="Albedo">
+                <Object class="TextureResource">
+                    <Property type="String" name="m_resourcePath" flags="Hidden" value="data/Textures/vgframework.tga"/>
+                </Object>
+            </Value>
+            <Value name="Normal">
+                <Object class="TextureResource">
+                    <Property type="String" name="m_resourcePath" flags="Hidden" value="data/Textures/QuestionBox.psd"/>
+                </Object>
+            </Value>
+        </Property>
+    </Object>
+</Root>
