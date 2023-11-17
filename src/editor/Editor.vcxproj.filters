@@ -180,6 +180,9 @@
     <ClInclude Include="ImGui\ObjectHandler\Material\ImGuiMaterialResourceListHandler.hpp">
       <Filter>ImGui\ObjectHandler\Material</Filter>
     </ClInclude>
+    <ClInclude Include="ImGui\ObjectHandler\Material\ImGuiMaterialModelTypeHandler.hpp">
+      <Filter>ImGui\ObjectHandler\Material</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Editor.def" />

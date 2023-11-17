@@ -59,21 +59,24 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
-    void Object::onPropertyChanged(const IProperty & _prop)
+    void Object::onPropertyChanged(IObject * _object, const IProperty & _prop)
     {
-
+        if (nullptr != m_parent)
+            m_parent->onPropertyChanged(_object, _prop);
     }
 
     //--------------------------------------------------------------------------------------
     void Object::onResourceLoaded(IResource * _resource)
     {
-        VG_ASSERT_NOT_IMPLEMENTED();
+        if (nullptr != m_parent)
+            m_parent->onResourceLoaded(_resource);
     }
 
     //--------------------------------------------------------------------------------------
     void Object::onResourceUnloaded(IResource * _resource)
     {
-        VG_ASSERT_NOT_IMPLEMENTED();
+        if (nullptr != m_parent)
+            m_parent->onResourceUnloaded(_resource);
     }
 
     //--------------------------------------------------------------------------------------

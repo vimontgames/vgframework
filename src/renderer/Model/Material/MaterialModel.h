@@ -34,27 +34,26 @@ namespace vg
 
         public:
 
-            const char *            getClassName            () const final { return "MaterialModel"; }
+            const char *                getClassName            () const = 0;
 
-            static bool             registerClass           (core::IFactory & _factory);
-            static bool             registerProperties      (core::IClassDesc & _desc);
+            static bool                 registerProperties      (core::IClassDesc & _desc);
 
-                                    MaterialModel           (const core::string & _name, core::IObject * _parent = nullptr);
-                                    ~MaterialModel          ();
+                                        MaterialModel           (const core::string & _name, core::IObject * _parent = nullptr);
+                                        ~MaterialModel          ();
 
-            void                    Setup                   (const RenderContext & _renderContext, gfx::CommandList * _cmdList, RootConstants3D * _root3DConstants, core::uint _index) const;
+            virtual void                Setup                   (const RenderContext & _renderContext, gfx::CommandList * _cmdList, RootConstants3D * _root3DConstants, core::uint _index) const;
 
-            core::uint              GetTextureCount         () const override;
-            gfx::ITexture *         GetTexture              (MaterialTextureType _type) const override;
-            const core::string &    GetTexturePath          (MaterialTextureType _type) const override;
+            core::uint                  GetTextureCount         () const override;
+            gfx::ITexture *             GetTexture              (MaterialTextureType _type) const override;
+            const core::string &        GetTexturePath          (MaterialTextureType _type) const override;
 
-            void                    SetTexture              (MaterialTextureType _type, gfx::ITexture * _texture) final;
+            void                        SetTexture              (MaterialTextureType _type, gfx::ITexture * _texture) final;
 
-            core::uint              getTextureCount         () const { return (core::uint)core::enumCount<MaterialTextureType>(); }
-            gfx::Texture *          getTexture              (MaterialTextureType _type) const;
-            const core::string &    getTexturePath          (MaterialTextureType _type) const { return m_texturePaths[core::asInteger(_type)]; };
+            core::uint                  getTextureCount         () const { return (core::uint)core::enumCount<MaterialTextureType>(); }
+            gfx::Texture *              getTexture              (MaterialTextureType _type) const;
+            const core::string &        getTexturePath          (MaterialTextureType _type) const { return m_texturePaths[core::asInteger(_type)]; };
 
-            static MaterialModel *  createFromImporterData  (const MaterialImporterData & _data);
+            static MaterialModel *      createFromImporterData  (const MaterialImporterData & _data);
 
         private:
 

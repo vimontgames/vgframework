@@ -6,6 +6,7 @@
 #include "engine/Engine.h"
 #include "renderer/IRenderer.h"
 #include "renderer/IPicking.h"
+#include "engine/Resource/Material/MaterialResourceData.h"
 
 #include "MaterialResourceList.hpp"
 
@@ -79,10 +80,18 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
+    void MeshComponent::onPropertyChanged(IObject * _object, const IProperty & _prop)
+    {
+        // TODO : handle material property changes
+        super::onPropertyChanged(_object, _prop);
+    }
+
+    //--------------------------------------------------------------------------------------
     void MeshComponent::onResourceLoaded(IResource * _resource)
     {
         if (_resource == &m_meshResource)
         {
+            // Mesh loaded
             IMeshModel * meshModel = m_meshResource.getMeshModel();
             m_meshInstance->SetModel(Lod::Lod0, meshModel);
 
@@ -98,6 +107,42 @@ namespace vg::engine
                 m_registered = true;
             }
         }
+        else if (auto matRes = dynamic_cast<MaterialResource *>(_resource))
+        {
+            // Material resource loaded
+            const auto & matResources = m_meshMaterials.getMaterialResources();
+            for (uint i = 0; i < matResources.size(); ++i)
+            {
+                if (&matResources[i] == matRes)
+                {
+                    VG_INFO("[MeshComponent] Material %u needs update", i);
+                    break;
+                }
+            }
+        }
+        else if (auto texRes = dynamic_cast<TextureResource *>(_resource))
+        {
+            // Texture loaded
+            const auto & matResources = m_meshMaterials.getMaterialResources();
+            for (uint i = 0; i < matResources.size(); ++i)
+            {
+                const auto & matRes = matResources[i];
+                const auto matResData = (MaterialResourceData*)matRes.getObject();
+                if (nullptr != matResData)
+                {
+                    const auto textures = matResData->m_textures;
+                    for (uint j = 0; j < core::enumCount<renderer::MaterialTextureType>(); ++j)
+                    {
+                        const auto & tex = textures[j];
+                        if (&tex == texRes)
+                        {
+                            VG_INFO("[MeshComponent] Texture %u from Material %u needs update", j,i);
+                            break;
+                        }
+                    }
+                }
+            }
+        }
     }
 
     //--------------------------------------------------------------------------------------
@@ -105,6 +150,7 @@ namespace vg::engine
     {
         if (_resource == &m_meshResource)
         {
+            // Mesh unloaded
             m_meshInstance->SetModel(Lod::Lod0, nullptr);
 
             if (m_registered)
@@ -117,6 +163,14 @@ namespace vg::engine
 
                 m_registered = false;
             }
+        }
+        else if (auto matRes = dynamic_cast<MaterialResource *>(_resource))
+        {
+            // Material resource unloaded
+        }
+        else if (auto texRes = dynamic_cast<TextureResource *>(_resource))
+        {
+            // Texture unloaded
         }
     }
 }

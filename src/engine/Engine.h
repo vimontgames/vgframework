@@ -54,7 +54,7 @@ namespace vg::engine
         static bool                         load                (IObject * _object);
         static bool                         save                (IObject * _object);
 
-        void                                onPropertyChanged   (const core::IProperty & _prop) override;
+        void                                onPropertyChanged   (IObject * _object, const core::IProperty & _prop) override;
 
         static bool                         createProject       (core::IObject * _engine);
         static bool                         loadProject         (core::IObject * _engine);

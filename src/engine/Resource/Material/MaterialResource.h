@@ -31,8 +31,6 @@ namespace vg::engine
         bool                                cook                    (const core::string & _file) const final override;
         core::IObject *                     load                    (const core::string & _path) final override;
 
-        void                                onResourceLoaded        (core::IResource * _resource) final override;
-
         bool                                CreateFile              (const core::string & _path);
         bool                                SaveFile                (const core::string & _path) const override;
     };

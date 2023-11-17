@@ -4,21 +4,23 @@
 
 namespace vg::engine
 {
+    class MaterialModelType : public core::Object
+    {
+    public:
+        VG_CLASS_DECL(MaterialModelType, core::Object);
+        MaterialModelType(const core::string & _name = "", core::IObject * _parent = nullptr) : core::Object(_name, _parent) {}
+        core::string m_materialModelName = "Default";
+    };
+
     class MaterialResourceData : public core::Object
     {
     public:
-        using super = core::Object;
-
-        const char *                        getClassName        () const override { return "MaterialResourceData"; }
-        static bool                         registerClass       (core::IFactory & _factory);
-        static bool                         registerProperties  (core::IClassDesc & _desc);
+        VG_CLASS_DECL(MaterialResourceData, core::Object);
 
         MaterialResourceData(const core::string & _name = "", IObject * _parent = nullptr);
         ~MaterialResourceData();
 
-        void                                onResourceLoaded    (core::IResource * _resource) final override;
-        void                                onResourceUnloaded  (IResource * _resource) final override;
-
+        MaterialModelType                   m_shader;
         renderer::MaterialFlags             m_flags = (renderer::MaterialFlags)0;
         core::float4                        m_colors[core::enumCount<renderer::MaterialColorType>()];
         TextureResource                     m_textures[core::enumCount<renderer::MaterialTextureType>()];

@@ -66,11 +66,4 @@ namespace vg::engine
         }
         return false;
     }
-
-    //--------------------------------------------------------------------------------------
-    void MaterialResourceList::onResourceLoaded(IResource * _resource)
-    {
-        IObject * parent = getParent();
-        parent->onResourceLoaded(_resource);
-    }
 }

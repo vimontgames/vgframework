@@ -104,15 +104,6 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
-    void MaterialResource::onResourceLoaded(core::IResource * _resource)
-    {
-        IObject * parent = getParent();
-        VG_ASSERT(nullptr != parent, "Resource \"%s\" of type '%s' has no parent", GetResourcePath().c_str(), getClassName());
-        if (nullptr != parent)
-            parent->onResourceLoaded(_resource);
-    }
-
-    //--------------------------------------------------------------------------------------
     // a .mat file is an XML file that serializes a MaterialResourceData Object
     //--------------------------------------------------------------------------------------
     bool MaterialResource::CreateFile(const core::string & _path)

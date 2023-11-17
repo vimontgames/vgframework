@@ -24,7 +24,7 @@
 #include "renderer/Importer/TextureImporterData.h"
 #include "renderer/View/View.h"
 #include "renderer/View/Forward/ForwardView.h"
-#include "renderer/Model/Material/MaterialModel.h"
+#include "renderer/Model/Material/DefaultMaterial/DefaultMaterialModel.h"
 #include "renderer/Picking/PickingManager.h"
 
 #if !VG_ENABLE_INLINE
@@ -613,7 +613,7 @@ namespace vg::renderer
     void Renderer::initDefaultMaterials()
     {
         VG_ASSERT(nullptr == m_defaultMaterial);
-        m_defaultMaterial = new MaterialModel("Default", nullptr);
+        m_defaultMaterial = new DefaultMaterialModel("Default Material", this);
     }
 
     //--------------------------------------------------------------------------------------

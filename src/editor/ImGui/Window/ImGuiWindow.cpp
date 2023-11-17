@@ -861,7 +861,7 @@ namespace vg::editor
         }
 
         if (changed)
-            _object->onPropertyChanged(*_prop);
+            _object->onPropertyChanged(_object, *_prop);
     }
 
     void * allocate(size_t size)

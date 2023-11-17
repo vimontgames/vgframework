@@ -33,7 +33,7 @@ namespace vg::renderer
         static bool			    registerClass			    (core::IFactory & _factory);
         static bool			    registerProperties		    (core::IClassDesc & _desc);
 
-        void                    onPropertyChanged           (const core::IProperty & _prop) final;
+        void                    onPropertyChanged           (IObject * _object, const core::IProperty & _prop) final override;
 
         DisplayMode             getDisplayMode              () const { return m_debugDisplayMode; }
         DisplayFlags            getDisplayFlags             () const { return m_displayFlags; }

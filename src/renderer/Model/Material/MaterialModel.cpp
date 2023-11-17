@@ -25,17 +25,6 @@ using namespace vg::gfx;
 
 namespace vg::renderer
 {
-    VG_AUTO_REGISTER_CLASS(MaterialModel);
-
-    //--------------------------------------------------------------------------------------
-    bool MaterialModel::registerClass(core::IFactory & _factory)
-    {
-        if (core::IClassDesc * desc = _factory.registerClassHelper(MaterialModel, "Material Model", IClassDesc::Flags::Model))
-            registerProperties(*desc);
-
-        return true;
-    }
-
     //--------------------------------------------------------------------------------------
     bool MaterialModel::registerProperties(core::IClassDesc & _desc)
     {
@@ -85,15 +74,15 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    MaterialModel * MaterialModel::createFromImporterData(const MaterialImporterData & _data)
-    {
-        MaterialModel * matModel = new MaterialModel(_data.name);
-
-        for (uint t = 0; t < core::enumCount<MaterialTextureType>(); ++t)
-            matModel->m_texturePaths[t] = _data.texturePath[t];
-
-        return matModel;
-    }
+    //MaterialModel * MaterialModel::createFromImporterData(const MaterialImporterData & _data)
+    //{
+    //    MaterialModel * matModel = new MaterialModel(_data.name);
+    //
+    //    for (uint t = 0; t < core::enumCount<MaterialTextureType>(); ++t)
+    //        matModel->m_texturePaths[t] = _data.texturePath[t];
+    //
+    //    return matModel;
+    //}
 
     //--------------------------------------------------------------------------------------
     gfx::ITexture * MaterialModel::GetTexture(MaterialTextureType _type) const
