@@ -45,7 +45,7 @@ namespace vg::renderer
     //--------------------------------------------------------------------------------------
     bool GraphicInstance::setMaterial(core::uint _index, MaterialModel * _materialModel)
     {
-        if (_index < m_materials.size() + 1)
+        if (m_materials.size() < _index + 1)
             m_materials.resize(_index + 1);
 
         if (m_materials[_index] != _materialModel)
