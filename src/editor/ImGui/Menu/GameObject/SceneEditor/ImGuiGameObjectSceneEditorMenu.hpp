@@ -77,11 +77,15 @@ namespace vg::editor
                     if (nameTmp[0] == '\0')
                         strcpy(nameTmp, "New GameObject");
 
-                    ImGui::InputText("Name", nameTmp, countof(nameTmp), ImGuiInputTextFlags_AutoSelectAll);
+                    if (ImGui::IsWindowFocused(ImGuiFocusedFlags_RootAndChildWindows) && !ImGui::IsAnyItemActive() && !ImGui::IsMouseClicked(0))
+                        ImGui::SetKeyboardFocusHere(0);
+
+                    bool enterPressed = ImGui::InputText("Name", nameTmp, countof(nameTmp), ImGuiInputTextFlags_AutoSelectAll | ImGuiInputTextFlags_EnterReturnsTrue);
 
                     string newName = nameTmp;
+          
 
-                    if (ImGui::Button("Add", style::button::Size))
+                    if (ImGui::Button("Add", style::button::SizeMedium) || enterPressed)
                     {
                         IGameObject * newGameObject = (IGameObject*)CreateFactoryObject(GameObject, newName.c_str(), gameObject);
                         gameObject->AddChild(newGameObject);
@@ -93,7 +97,7 @@ namespace vg::editor
 
                     ImGui::SameLine();
 
-                    if (ImGui::Button("Cancel", style::button::Size))
+                    if (ImGui::Button("Cancel", style::button::SizeMedium))
                     {
                         ImGui::CloseCurrentPopup();
                         nameTmp[0] = '\0';

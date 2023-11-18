@@ -45,6 +45,9 @@ namespace vg::core
         void                        loadSubResources    () override;
         void                        unloadSubResources  () override;
 
+        bool                        CanCreateFile       () const override { return false; }
+        bool                        CanSaveFile         () const override { return false; }
+
 	protected:
         string                      m_resourcePath;
         IObject *                   m_object = nullptr;

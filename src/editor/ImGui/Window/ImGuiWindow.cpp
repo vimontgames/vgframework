@@ -308,7 +308,7 @@ namespace vg::editor
 
         bool changed = false;
 
-        ImGuiInputTextFlags imguiInputTextflags = 0;
+        ImGuiInputTextFlags imguiInputTextflags = ImGuiInputTextFlags_EnterReturnsTrue;
         if (asBool(IProperty::Flags::ReadOnly & flags))
             imguiInputTextflags = ImGuiInputTextFlags_ReadOnly;
 
@@ -884,7 +884,7 @@ namespace vg::editor
         sprintf_s(buffer, _resource->GetResourcePath().c_str());
         string label = (string)"###" + to_string(uint_ptr(_resource));
 
-        const float buttonWidth = style::button::Size.x;
+        const float buttonWidth = style::button::SizeSmall.x;
 
         auto availableWidth = GetContentRegionAvail().x;
         ImGui::PushItemWidth(availableWidth - style::label::PixelWidth - buttonWidth);
@@ -913,7 +913,7 @@ namespace vg::editor
         string buttonLabel = (string)style::icon::File;// +(string)" " + (string)_prop->getDisplayName();
      
         ImGui::SetCursorPosX(x-4);
-        if (ImGui::Button(buttonLabel.c_str(), style::button::Size))
+        if (ImGui::Button(buttonLabel.c_str(), style::button::SizeSmall))
         {
             //openExistingFile = true;
         }
@@ -921,28 +921,35 @@ namespace vg::editor
         
         if (ImGui::BeginPopupContextItem(nullptr, ImGuiPopupFlags_MouseButtonLeft))
         {
-            if (ImGui::MenuItem(newFileButtonName.c_str()))
-                createNewFile = true;
+            if (_resource->CanCreateFile())
+            {
+                if (ImGui::MenuItem(newFileButtonName.c_str()))
+                    createNewFile = true;
+            }
 
             if (ImGui::MenuItem(openFileButtonName.c_str()))
                 openExistingFile = true;                
 
             ImGui::Separator();
 
-            ImGui::BeginDisabled(nullptr == _resource->getObject());
+            if (_resource->CanSaveFile())
             {
-                if (ImGui::MenuItem(saveFileButtonName.c_str()))
+
+                ImGui::BeginDisabled(nullptr == _resource->getObject());
                 {
-                    if (_resource->SaveFile(_resource->GetResourcePath()))
-                        changed = true;
+                    if (ImGui::MenuItem(saveFileButtonName.c_str()))
+                    {
+                        if (_resource->SaveFile(_resource->GetResourcePath()))
+                            changed = true;
+                    }
+
+                    if (ImGui::MenuItem(saveAsFileButtonName.c_str()))
+                        saveAsFile = true;
                 }
+                ImGui::EndDisabled();
 
-                if (ImGui::MenuItem(saveAsFileButtonName.c_str()))
-                    saveAsFile = true;
+                ImGui::Separator();
             }
-            ImGui::EndDisabled();
-
-            ImGui::Separator();
 
             ImGui::BeginDisabled(_resource->GetResourcePath().empty());
             {

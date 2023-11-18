@@ -61,11 +61,11 @@ namespace vg::editor
                             if (nameTmp[0] == '\0')
                                 strcpy(nameTmp, "New Scene");
 
-                            ImGui::InputText("Name", nameTmp, countof(nameTmp), ImGuiInputTextFlags_AutoSelectAll);
+                            ImGui::InputText("Name", nameTmp, countof(nameTmp), ImGuiInputTextFlags_EnterReturnsTrue | ImGuiInputTextFlags_AutoSelectAll);
 
                             string newName = nameTmp;
 
-                            if (ImGui::Button("Add", style::button::Size))
+                            if (ImGui::Button("Add", style::button::SizeMedium))
                             {
                                 IScene * newScene = (IScene*)CreateFactoryObject(Scene, newName.c_str(), universe);
                                 universe->addScene(newScene);
@@ -80,7 +80,7 @@ namespace vg::editor
 
                             ImGui::SameLine();
 
-                            if (ImGui::Button("Cancel", style::button::Size))
+                            if (ImGui::Button("Cancel", style::button::SizeMedium))
                             {
                                 ImGui::CloseCurrentPopup();
                                 nameTmp[0] = '\0';

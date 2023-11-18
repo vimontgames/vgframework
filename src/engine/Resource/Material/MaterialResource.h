@@ -31,5 +31,8 @@ namespace vg::engine
 
         bool                                CreateFile              (const core::string & _path);
         bool                                SaveFile                (const core::string & _path) const override;
+
+        bool                                CanCreateFile           () const final override { return true; };
+        bool                                CanSaveFile             () const final override { return true; };
     };
 }

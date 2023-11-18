@@ -14,7 +14,8 @@ namespace vg::editor
 
         namespace button
         {
-            inline static const ImVec2 Size = ImVec2(24, 0);
+            inline static const ImVec2 SizeSmall = ImVec2(24, 0);
+            inline static const ImVec2 SizeMedium = ImVec2(64, 0);
         }
 
         namespace label

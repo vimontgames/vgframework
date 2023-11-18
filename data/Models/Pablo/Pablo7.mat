@@ -16,7 +16,7 @@
                         <Property type="String" name="m_resourcePath" flags="Hidden" value=""/>
                     </Object>
                 </Property>
-                <Property type="Float4" name="m_albedoColor" flags="Color" x="0.10232405" y="0.38019252" z="0.55212355" w="1"/>
+                <Property type="Float4" name="m_albedoColor" flags="Color" x="0.98841697" y="0.026713956" z="0.026713956" w="1"/>
                 <Property type="Resource" name="m_normalMap" flags="Resource">
                     <Object class="TextureResource">
                         <Property type="String" name="m_resourcePath" flags="Hidden" value=""/>

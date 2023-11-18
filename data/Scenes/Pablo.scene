@@ -56,6 +56,9 @@
                                             <Object class="MaterialResource">
                                                 <Property type="String" name="m_resourcePath" flags="Hidden" value="data/Models/Pablo/Pablo7.mat"/>
                                             </Object>
+                                            <Object class="MaterialResource">
+                                                <Property type="String" name="m_resourcePath" flags="Hidden" value="data/Models/Pablo/Pablo10.mat"/>
+                                            </Object>
                                         </Property>
                                     </Object>
                                 </Property>
@@ -67,7 +70,7 @@
                         <Property type="String" name="m_name" value="Camera"/>
                         <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
                         <Property type="Float4" name="m_color" flags="Color" x="1" y="1" z="1" w="1"/>
-                        <Property type="Float4x4" name="m_world" Ix="0.94710112" Iy="-0.32093525" Iz="-0" Iw="-0" Jx="0.093402356" Jy="0.27563652" Jz="0.95671344" Jw="-0" Kx="-0.30704305" Ky="-0.90610433" Kz="0.29103175" Kw="0" Tx="-0.70724916" Ty="-2.1509676" Tz="1.4459081" Tw="1"/>
+                        <Property type="Float4x4" name="m_world" Ix="0.94608867" Iy="-0.32390776" Iz="-0" Iw="-0" Jx="0.11828951" Jy="0.34550688" Jz="0.93093103" Jw="-0" Kx="-0.30153579" Ky="-0.88074332" Kz="0.36519504" Kw="0" Tx="-0.60347778" Ty="-2.2303851" Tz="1.3917834" Tw="1"/>
                         <Property type="ObjectRefVector" name="m_components">
                             <Object class="CameraComponent">
                                 <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
@@ -80,8 +83,8 @@
                             <Object class="FreeCamBehaviour">
                                 <Property type="Float" name="m_moveSpeed" flags="HasRange" value="1"/>
                                 <Property type="Float" name="m_rotSpeed" flags="HasRange" value="1"/>
-                                <Property type="Float" name="m_pitch" flags="HasRange" value="-1.2754912"/>
-                                <Property type="Float" name="m_yaw" flags="HasRange" value="2.8148758"/>
+                                <Property type="Float" name="m_pitch" flags="HasRange" value="-1.196954"/>
+                                <Property type="Float" name="m_yaw" flags="HasRange" value="2.8117356"/>
                                 <Property type="Float" name="m_roll" flags="HasRange" value="0"/>
                             </Object>
                         </Property>

@@ -89,6 +89,8 @@ PS_Output PS_Forward(VS_Output _input)
     if (0 == (DisplayFlags::NormalMap & flags))
         normal = float3(0,0,1);
     #endif
+    
+    albedo *= _input.col;
 
     float3 T = normalize(_input.tan);
     float3 B = normalize(_input.bin);
@@ -100,7 +102,7 @@ PS_Output PS_Forward(VS_Output _input)
     float3 fakeDiffuseLighting = saturate(dot(worldNormal, normalize(float3(-1, -1, 2))) * 0.8f);
     float3 fakeAmbientLighting = 0.1f;
 
-    output.color0.rgba = float4(albedo.rgb * (fakeDiffuseLighting + fakeAmbientLighting), 1.0f) * _input.col;
+    output.color0.rgba = float4(albedo.rgb * (fakeDiffuseLighting + fakeAmbientLighting), 1.0f);
     
     #if _TOOLMODE
     DisplayMode mode = viewConstants.getDisplayMode();
@@ -161,7 +163,7 @@ PS_Output PS_Forward(VS_Output _input)
     uint toolmodeRWBufferID = viewConstants.getToolmodeRWBufferID();
     uint2 inputPos = _input.pos.xy;
     uint2 mousePos = viewConstants.getMousePos();
-    uint4 pickingID = uint4(rootConstants3D.getPickingID(), 0, 0, 0);
+    uint4 pickingID = uint4(rootConstants3D.getPickingID(), rootConstants3D.getMatID(), 0, 0);
     
     if (ProcessPicking(toolmodeRWBufferID, 0, inputPos, worldPos, mousePos, screenSize, pickingID))
     {

@@ -85,7 +85,7 @@ namespace vg::editor
                 {
                     ImGui::Text("Are you sure you want to close Scene \"%s\?", scene->getName().c_str());
 
-                    if (ImGui::Button("Yes", style::button::Size))
+                    if (ImGui::Button("Yes", style::button::SizeMedium))
                     {
                         IUniverse * universe = (IUniverse*)scene->getParent();
                         if (nullptr != universe)
@@ -96,7 +96,7 @@ namespace vg::editor
 
                     ImGui::SameLine();
 
-                    if (ImGui::Button("No", style::button::Size))
+                    if (ImGui::Button("No", style::button::SizeMedium))
                         ImGui::CloseCurrentPopup();
 
                     ImGui::EndPopup();

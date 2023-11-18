@@ -45,7 +45,8 @@ namespace vg::editor
                             ImGui::PushID(i);
                             auto obj = prop->GetPropertyResourceVectorElement(_object, i);
 
-                            string materialLabel = (string)"MatID " + to_string(i) + "###" + to_string((uint_ptr)_object);
+                            //string materialLabel = (string)"MatID " + to_string(i) + "###" + to_string((uint_ptr)_object);
+                            string materialLabel = obj->getName() + "###" + to_string((uint_ptr)_object);
                             if (ImGui::TreeNodeEx(materialLabel.c_str(), ImGuiTreeNodeFlags_DefaultOpen))
                             {
                                 ImGuiWindow::displayResource(obj, prop, i);

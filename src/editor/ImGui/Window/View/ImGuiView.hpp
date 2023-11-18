@@ -139,7 +139,13 @@ namespace vg::editor
 
             // Update picking
             auto picking = renderer->GetPicking();
-            picking->Update(m_view);
+
+            bool showTooltip = Kernel::getInput()->IsKeyPressed(Key::LSHIFT); // ImGui::IsKeyPressed(ImGuiKey_LeftShift);
+            string tooltipMsg;
+            picking->Update(m_view, showTooltip, tooltipMsg);
+
+            if (showTooltip && !tooltipMsg.empty())
+                ImGui::SetTooltip(tooltipMsg.c_str());
         }
         ImGui::PopStyleColor();
         ImGui::PopStyleVar();

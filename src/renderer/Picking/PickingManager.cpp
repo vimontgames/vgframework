@@ -7,6 +7,7 @@
 #include "core/IGameObject.h"
 #include "gfx/IView.h"
 #include "Shaders/system/toolmode.hlsl.h"
+#include "renderer/IMeshInstance.h"
 
 using namespace vg::core;
 
@@ -56,7 +57,7 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    void PickingManager::Update(const gfx::IView * _view)
+    void PickingManager::Update(const gfx::IView * _view, bool & _showTooltip, core::string & _tooltipMsg)
     {
         const PickingData & pickingData = _view->GetPickingData();
         const uint4 id = pickingData.m_id;
@@ -70,22 +71,29 @@ namespace vg::renderer
             auto input = Kernel::getInput();
             const bool ctrl = input->IsKeyPressed(Key::LCONTROL) || input->IsKeyPressed(Key::LCONTROL);
 
-            if (input->IsMouseButtonJustPressed(MouseButton::Left))
+            auto selection = Kernel::getSelection();
+
+            if (0 != id.x && id.x < m_pickingID.size())
             {
-                auto selection = Kernel::getSelection();
-
-                if (0 != id.x && id.x < m_pickingID.size())
+                IObject * object = m_pickingID[id.x];
+                if (nullptr != object)
                 {
-                    IObject * object = m_pickingID[id.x];
-                    if (nullptr != object)
-                    {
-                        IComponent * component = dynamic_cast<IComponent *>(object);
+                    IComponent * component = dynamic_cast<IComponent *>(object);
 
-                        if (nullptr != component)
+                    if (nullptr != component)
+                    {
+                        IObject * parent = component->getParent();
+                        IGameObject * go = dynamic_cast<IGameObject *>(parent);
+                        if (nullptr != go)
                         {
-                            IObject * parent = component->getParent();
-                            IGameObject * go = dynamic_cast<IGameObject *>(parent);
-                            if (nullptr != go)
+                            if (_showTooltip)
+                            {
+                                char temp[256];
+                                sprintf_s(temp, "GameObject \"%s\"\n%s \"%s\" (ID %u)\nSubID = %u", go->getName().c_str(), component->getClassName(), component->getName().c_str(), (uint)id.x, (uint)id.y);
+                                _tooltipMsg = temp;
+                            }
+
+                            if (input->IsMouseButtonJustPressed(MouseButton::Left))
                             {
                                 if (ctrl)
                                 {
@@ -103,12 +111,19 @@ namespace vg::renderer
                         }
                     }
                 }
-                else
+            }
+            else
+            {
+                if (input->IsMouseButtonJustPressed(MouseButton::Left))
                 {
                     if (!ctrl)
                         selection->Clear();
                 }
             }
+        }
+        else
+        {
+            _showTooltip = false;
         }
     }
 }

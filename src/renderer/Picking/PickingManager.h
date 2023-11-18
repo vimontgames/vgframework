@@ -13,7 +13,7 @@ namespace vg::renderer
         PickingID           GetPickingID        (core::IObject * _object) final override;
         void                ReleasePickingID    (PickingID _id) final override;
         
-        void                Update              (const gfx::IView * _view) final override;
+        void                Update              (const gfx::IView * _view, bool & _showTooltip, core::string & _tooltipMsg) final override;
 
     private:
         core::vector<core::IObject*>    m_pickingID;

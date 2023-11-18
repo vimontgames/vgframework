@@ -61,7 +61,7 @@ namespace vg::editor
 
                     ImGui::BeginDisabled(m_selectedClassName == nullptr);
                     {
-                        if (ImGui::Button("Create", style::button::Size))
+                        if (ImGui::Button("Create", style::button::SizeMedium))
                         {
                             status = Status::Failure;
 
@@ -83,7 +83,7 @@ namespace vg::editor
 
                     ImGui::SameLine();
 
-                    if (ImGui::Button("Cancel", style::button::Size))
+                    if (ImGui::Button("Cancel", style::button::SizeMedium))
                     {
                         status = Status::Canceled;
                         ImGui::CloseCurrentPopup();

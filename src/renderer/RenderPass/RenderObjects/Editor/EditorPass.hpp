@@ -59,18 +59,23 @@ namespace vg::renderer
         _cmdList->setBlendState(bs);
         _cmdList->setDepthStencilState(ds);
 
-        bool wireframeSelection = true; // TODO: expose option for selection
+        bool wireframeSelection = false; // TODO: expose option for selection
         if (options->isWireframeEnabled() || wireframeSelection)
         {
             renderContext.m_wireframe = true;
             DrawGraphicInstances(renderContext, _cmdList, allInstances);
         }
 
-        if (options->isAABBEnabled())
+        bool boudingBoxSelection = true;
+        if (options->isAABBEnabled() || boudingBoxSelection)
         {
             for (uint i = 0; i < allInstances.m_instances.size(); ++i)
             {
                 const IGraphicInstance * instance = allInstances.m_instances[i];
+
+                if (boudingBoxSelection && !asBool(IInstance::Flags::Selected & instance->getFlags()))
+                    continue;
+
                 const MeshModel * model = (MeshModel *)instance->getModel(Lod::Lod0); // TODO: get LoD from culling result
                 if (nullptr == model)
                     continue;
