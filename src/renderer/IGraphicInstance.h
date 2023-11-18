@@ -9,6 +9,7 @@ namespace vg::gfx
 
 namespace vg::renderer
 {
+    class IMaterialModel;
     class RenderContext;
     using PickingID = core::uint;
 
@@ -21,7 +22,10 @@ namespace vg::renderer
             resetPickingID();
         }
 
-        virtual void Draw(const RenderContext & _renderContext, gfx::CommandList * _cmdList) const = 0;
+        virtual void                Draw        (const RenderContext & _renderContext, gfx::CommandList * _cmdList) const = 0;
+
+        virtual bool                SetMaterial (core::uint _index, IMaterialModel * _materialModel) = 0;
+        virtual IMaterialModel *    GetMaterial (core::uint _index) const = 0;
 
         void resetPickingID()
         {

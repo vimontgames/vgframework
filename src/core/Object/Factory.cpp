@@ -771,7 +771,8 @@ namespace vg::core
                 {
                     VG_ASSERT(!isEnumArray, "EnumArray serialization to XML not implemented for type '%s'", asString(type).c_str());
                     const IObject * pObject = prop->GetPropertyObjectRef(_object);
-                    serializeToXML(pObject, _xmlDoc, xmlPropElem);
+                    if (nullptr != pObject)
+                        serializeToXML(pObject, _xmlDoc, xmlPropElem);
                 }
                 break;
 

@@ -16,13 +16,19 @@ namespace vg::editor
             {
                 auto models = getMaterialModels();
 
-                if (ImGui::BeginCombo("Shader", matModel->m_materialModelName.c_str(), ImGuiComboFlags_HeightLarge))
+                if (ImGui::BeginCombo("Shader", matModel->m_shader.c_str(), ImGuiComboFlags_HeightLarge))
                 {
                     for (uint i = 0; i < models.size(); ++i)
                     {
                         auto model = models[i];
                         if (ImGui::Selectable(model->getClassDisplayName()))
-                            matModel->m_materialModelName = model->getClassDisplayName();
+                        {
+                            matModel->m_shader = model->getClassDisplayName();
+                            IFactory * factory = Kernel::getFactory();
+                            const auto * prop = _object->getClassDesc()->getPropertyByName("m_shader");
+                            if (nullptr != prop)
+                                _object->onPropertyChanged(_object, *prop);
+                        }
                     }
                     ImGui::EndCombo();
                 }

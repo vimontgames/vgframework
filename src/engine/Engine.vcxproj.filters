@@ -100,6 +100,24 @@
     <ClInclude Include="Resource\Material\MaterialResourceData.hpp">
       <Filter>Resource\Material</Filter>
     </ClInclude>
+    <ClInclude Include="Resource\Material\Default\DefaultMaterialData.h">
+      <Filter>Resource\Material\Default</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource\Material\Default\DefaultMaterialData.hpp">
+      <Filter>Resource\Material\Default</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource\Material\MaterialData.h">
+      <Filter>Resource\Material</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource\Material\MaterialData.hpp">
+      <Filter>Resource\Material</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource\Material\MaterialModelType.h">
+      <Filter>Resource\Material</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource\Material\MaterialModelType.hpp">
+      <Filter>Resource\Material</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Input">
@@ -134,6 +152,9 @@
     </Filter>
     <Filter Include="Selection">
       <UniqueIdentifier>{09e27549-60fb-42e8-9cd6-1e95f071143f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource\Material\Default">
+      <UniqueIdentifier>{8787ab5a-6f3b-41aa-a4a5-90e82ab7fc6c}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

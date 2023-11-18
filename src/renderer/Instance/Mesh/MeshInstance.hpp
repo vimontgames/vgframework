@@ -42,7 +42,7 @@ namespace vg::renderer
 
     //--------------------------------------------------------------------------------------
     MeshInstance::MeshInstance(const core::string & _name, core::IObject * _parent) :
-        IMeshInstance(_name, _parent)
+        super(_name, _parent)
     {
 
     }
@@ -62,39 +62,40 @@ namespace vg::renderer
         if (nullptr != model)
         {
             const MeshGeometry * geo = model->getGeometry();
-                        
+
             const float4x4 world = getWorldMatrix();
-            
+
             Buffer * vb = geo->getVertexBuffer();
             Buffer * ib = geo->getIndexBuffer();
             _cmdList->setIndexBuffer(ib);
 
             RootConstants3D root3D;
-            root3D.mat = transpose(world); 
+            root3D.mat = transpose(world);
             root3D.setBufferHandle(vb->getBufferHandle());
-            root3D.color = getColor();
-
-            u16 flags = 0;          
+            
+            u16 flags = 0;
             root3D.setFlags(flags);
 
             auto pickingID = getPickingID();
             root3D.setPickingID(pickingID);
 
             _cmdList->setPrimitiveTopology(PrimitiveTopology::TriangleList);
-            
+
             const auto & batches = geo->batches();
             for (uint i = 0; i < batches.size(); ++i)
             {
                 const auto & batch = batches[i];
 
                 // Setup material 
-                const auto * material = model->getMaterial(i);
+                const MaterialModel * material = getMaterial(i);
                 if (nullptr != material)
                     material->Setup(_renderContext, _cmdList, &root3D, i);
                 else
                     renderer->getDefaultMaterial()->Setup(_renderContext, _cmdList, &root3D, i);
 
-                _cmdList->setGraphicRootConstants(0, (u32*) &root3D, RootConstants3DCount);
+                root3D.color *= getColor();
+
+                _cmdList->setGraphicRootConstants(0, (u32 *)&root3D, RootConstants3DCount);
                 _cmdList->drawIndexed(batch.count, batch.offset);
             }
         }

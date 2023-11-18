@@ -63,9 +63,9 @@ namespace vg::renderer
         _desc.registerPropertyHelperEx(DisplayOptions, m_aabb, "Bounding Box", IProperty::Flags::None);
         _desc.registerPropertyHelperEx(DisplayOptions, m_wireframe, "Wireframe", IProperty::Flags::SameLine);
 
-        _desc.registerPropertyEnum(DisplayOptions, DisplayMode, m_debugDisplayMode, "Display Mode");
-        _desc.registerPropertyEnumBitfield(DisplayOptions, DisplayFlags, m_displayFlags, "Display Flags");
-        _desc.registerPropertyEnumBitfield(DisplayOptions, RenderPassFlags, m_renderPassFlags, "RenderPass Flags");
+        _desc.registerPropertyEnum(DisplayOptions, DisplayMode, m_debugDisplayMode, "Mode");
+        _desc.registerPropertyEnumBitfield(DisplayOptions, DisplayFlags, m_displayFlags, "Flags");
+        _desc.registerPropertyEnumBitfield(DisplayOptions, RenderPassFlags, m_renderPassFlags, "Render Passes");
 
         _desc.registerPropertyHelperEx(DisplayOptions, m_backgroundColor, "Background", IProperty::Flags::Color);
 

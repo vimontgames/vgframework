@@ -44,6 +44,12 @@
     <ClInclude Include="IResourceManager.h" />
     <ClInclude Include="ISelection.h" />
     <ClInclude Include="Precomp.h" />
+    <ClInclude Include="Resource\Material\Default\DefaultMaterialData.h" />
+    <ClInclude Include="Resource\Material\Default\DefaultMaterialData.hpp" />
+    <ClInclude Include="Resource\Material\MaterialData.h" />
+    <ClInclude Include="Resource\Material\MaterialData.hpp" />
+    <ClInclude Include="Resource\Material\MaterialModelType.h" />
+    <ClInclude Include="Resource\Material\MaterialModelType.hpp" />
     <ClInclude Include="Resource\Material\MaterialResource.h" />
     <ClInclude Include="Resource\Material\MaterialResource.hpp" />
     <ClInclude Include="Resource\Material\MaterialResourceData.h" />

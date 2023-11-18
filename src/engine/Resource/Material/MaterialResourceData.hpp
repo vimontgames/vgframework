@@ -1,30 +1,8 @@
 #include "MaterialResourceData.h"
+#include "default/DefaultMaterialData.h"    // TODO : abstract factory for material data types
+#include "renderer/IMaterialModel.h"
 
 using namespace vg::core;
-
-namespace vg::engine
-{
-    VG_AUTO_REGISTER_CLASS(MaterialModelType);
-
-    //--------------------------------------------------------------------------------------
-    bool MaterialModelType::registerClass(IFactory & _factory)
-    {
-        if (core::IClassDesc * desc = _factory.registerClassHelper(MaterialModelType, "Material Shader", IClassDesc::Flags::None))
-            registerProperties(*desc);
-
-        return true;
-    }
-
-    //--------------------------------------------------------------------------------------
-    bool MaterialModelType::registerProperties(IClassDesc & _desc)
-    {
-        super::registerProperties(_desc);
-
-        _desc.registerPropertyHelper(MaterialModelType, m_materialModelName, "Shader");
-
-        return true;
-    }
-}
 
 namespace vg::engine
 {
@@ -44,10 +22,8 @@ namespace vg::engine
     {
         super::registerProperties(_desc);
 
-        _desc.registerPropertyObjectHelper(MaterialResourceData, m_shader, "Shader", IProperty::Flags::None);
-        _desc.registerPropertyEnumBitfield(MaterialResourceData, renderer::MaterialFlags, m_flags, "Flags");
-        _desc.registerPropertyEnumArray(MaterialResourceData, core::float4, renderer::MaterialColorType, m_colors, "Colors", IProperty::Flags::Color);
-        _desc.registerPropertyEnumArray(MaterialResourceData, TextureResource, renderer::MaterialTextureType, m_textures, "Textures", IProperty::Flags::Resource);
+        _desc.registerPropertyObjectHelper(MaterialResourceData, m_materialModelType, "Material Model", IProperty::Flags::None);
+        _desc.registerPropertyObjectRefHelper(MaterialResourceData, m_data, "Material Data", IProperty::Flags::Flatten);
 
         return true;
     }
@@ -56,16 +32,43 @@ namespace vg::engine
     MaterialResourceData::MaterialResourceData(const core::string & _name, IObject * _parent) :
         Object(_name, _parent)
     {
-        m_colors[asInteger(renderer::MaterialColorType::BaseColor)] = float4(1, 1, 1, 1);
-        m_colors[asInteger(renderer::MaterialColorType::EmissiveColor)] = float4(0, 0, 0, 0);
-
-        for (auto & tex : m_textures)
-            tex.setParent(this);
+        
     }
 
     //--------------------------------------------------------------------------------------
     MaterialResourceData::~MaterialResourceData()
     {
-        
+        VG_SAFE_RELEASE(m_data);
+        VG_SAFE_RELEASE(m_materialModel);
+    }
+
+    //--------------------------------------------------------------------------------------
+    void MaterialResourceData::CreateRendererMaterial()
+    {
+        if (m_data)
+        {
+            VG_SAFE_RELEASE(m_materialModel);
+            m_materialModel = m_data->CreateRendererMaterialModel();
+        }
+    }
+
+    //--------------------------------------------------------------------------------------
+    void MaterialResourceData::onPropertyChanged(IObject * _object, const IProperty & _prop)
+    {
+        // When shader template changes, alloc the new structure
+        if (!strcmp(_prop.getName(), "m_shader"))
+        {
+            VG_SAFE_RELEASE(m_data);
+
+            const string * shader = _prop.GetPropertyString(_object);
+            if (nullptr != shader)
+            {
+                // TODO : abstract factory using 'shader' string
+                m_data = new DefaultMaterialData("Default", this); 
+                CreateRendererMaterial();
+            }
+        }
+
+        super::onPropertyChanged(_object, _prop);
     }
 }

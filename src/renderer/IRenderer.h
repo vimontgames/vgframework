@@ -26,6 +26,7 @@ namespace vg
         class IImGuiAdapter;
         class IMeshModel;
         class IPicking;
+        class IMaterialData;
 
         struct RendererCreationParams;
 

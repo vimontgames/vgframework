@@ -369,7 +369,7 @@ namespace vg::core
     IResource * Property::GetPropertyResourceVectorElement(const IObject * _object, uint _index) const
     {
         VG_ASSERT(_index < GetPropertyResourceVectorCount(_object));
-        return (IResource *)(GetPropertyResourceVectorData(_object) + sizeOf * _index * getSizeOf());
+        return (IResource *)(GetPropertyResourceVectorData(_object) + _index * getSizeOf());
     }
 
     //--------------------------------------------------------------------------------------

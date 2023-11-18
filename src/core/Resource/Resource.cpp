@@ -134,7 +134,7 @@ namespace vg::core
             return true;
         }
 
-        VG_ASSERT(nullptr != parent, "Resource has no parent");
+        VG_ASSERT(nullptr != parent, "Resource \"%s\" has no parent", _path.c_str());
         return false;
     }
 

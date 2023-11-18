@@ -1,6 +1,6 @@
 <Root>
     <Object class="MaterialResourceData">
-        <Property type="String" name="m_name" flags="Hidden" value="MaterialResourceData #4"/>
+        <Property type="String" name="m_name" flags="Hidden" value="MaterialResourceData #5"/>
         <Property type="Object" name="m_materialModelType">
             <Object class="MaterialModelType">
                 <Property type="String" name="m_name" flags="Hidden" value=""/>
@@ -16,7 +16,7 @@
                         <Property type="String" name="m_resourcePath" flags="Hidden" value=""/>
                     </Object>
                 </Property>
-                <Property type="Float4" name="m_albedoColor" flags="Color" x="1" y="0.71764708" z="0.37254903" w="0"/>
+                <Property type="Float4" name="m_albedoColor" flags="Color" x="0.25868726" y="0.1178845" z="0.034957733" w="0"/>
                 <Property type="Resource" name="m_normalMap" flags="Resource">
                     <Object class="TextureResource">
                         <Property type="String" name="m_resourcePath" flags="Hidden" value=""/>

@@ -83,13 +83,13 @@
 #define VG_STATIC_ASSERT(condition, message) static_assert(condition, message)
 #define VG_STATIC_ASSERT_NOT_IMPLEMENTED() VG_STATIC_ASSERT(false, "Function is not implemented")
 
-#define VG_SAFE_FREE(p)	 { if (p) { free((void*)p); p = nullptr;} }
-#define VG_SAFE_DELETE(p)  { if (p) { delete p; p = nullptr;} }
-#define VG_SAFE_RELEASE(p) { if (p) { p->Release(); p = nullptr; } }
+#define VG_SAFE_FREE(p)	 { if (p) { free((void*)(p)); (p) = nullptr;} }
+#define VG_SAFE_DELETE(p)  { if (p) { delete (p); (p) = nullptr;} }
+#define VG_SAFE_RELEASE(p) { if (p) { (p)->Release(); (p) = nullptr; } }
 
 #define VG_SAFE_INCREASE_REFCOUNT(p) { if (p) { p->addRef(); }}
 
-#define VG_SAFE_RELEASE_ASYNC(p) { auto * factory = vg::core::Kernel::getFactory(); if (factory) factory->ReleaseAsync(p); else p->Release(); }
+#define VG_SAFE_RELEASE_ASYNC(p) { auto * factory = vg::core::Kernel::getFactory(); if (factory) factory->ReleaseAsync(p); else (p)->Release(); }
 
 #define VG_RESTRICT __restrict
 

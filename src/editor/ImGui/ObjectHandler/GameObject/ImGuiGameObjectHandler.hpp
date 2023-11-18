@@ -44,9 +44,7 @@ namespace vg::editor
                         }
                 
                         if (visible)
-                        {
-                            ImGuiWindow::displayProperty(prop, _object);
-                        }
+                            ImGuiWindow::displayProperty(_object, prop);
                     }
                 }
             }
@@ -56,9 +54,7 @@ namespace vg::editor
                 const IProperty * prop = classDesc->getPropertyByIndex(i);
             
                 if (!strcmp(prop->getName(), "m_components"))
-                {
-                    ImGuiWindow::displayProperty(prop, _object);
-                }
+                    ImGuiWindow::displayProperty(_object, prop);
             }
 
             ImGui::PopID();

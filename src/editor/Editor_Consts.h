@@ -14,12 +14,13 @@ namespace vg::editor
 
         namespace button
         {
-            inline static const ImVec2 Size = ImVec2(0, 0);
+            inline static const ImVec2 Size = ImVec2(24, 0);
         }
 
         namespace label
         {
-            inline static const core::uint Width = 14;
+            inline static const float PixelWidth = 128.0f;
+            inline static const core::uint TextLength = 14;
         }
 
         // from https://fontawesome.com/v6/search?m=free
@@ -46,6 +47,7 @@ namespace vg::editor
             inline static const char * Minimize     = ICON_FA_MINIMIZE;
             inline static const char * Maximize     = ICON_FA_MAXIMIZE;
             inline static const char * Input        = ICON_FA_GAMEPAD;
+            inline static const char * File         = ICON_FA_FILE;
         }
     }
 }

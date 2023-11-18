@@ -96,7 +96,7 @@ namespace vg::editor
     {
         string name = _prop->getDisplayName();
         string className = _prop->getClassName();
-        const auto width = style::label::Width;
+        const auto width = style::label::TextLength;
 
         if (name.length() < width)
         {
@@ -222,7 +222,8 @@ namespace vg::editor
         if (!classDesc)
             return;
 
-        ImGui::PushItemWidth(196);
+        auto availableWidth = GetContentRegionAvail().x;
+        ImGui::PushItemWidth(availableWidth - style::label::PixelWidth);
 
         // TODO: Custom Object edit
         if (!ImGuiObjectHandler::display(_object))
@@ -232,7 +233,7 @@ namespace vg::editor
             for (uint i = 0; i < classDesc->getPropertyCount(); ++i)
             {
                 const IProperty * prop = classDesc->getPropertyByIndex(i);
-                ImGuiWindow::displayProperty(prop, _object);
+                ImGuiWindow::displayProperty(_object, prop);
             }
         }
 
@@ -284,7 +285,7 @@ namespace vg::editor
     }
 
     //--------------------------------------------------------------------------------------
-    void ImGuiWindow::displayProperty(const IProperty * _prop, core::IObject * _object)
+    void ImGuiWindow::displayProperty(core::IObject * _object, const IProperty * _prop)
     {
         VG_ASSERT(nullptr != _prop);
         const auto * factory = Kernel::getFactory();
@@ -305,12 +306,15 @@ namespace vg::editor
         if (asBool(IProperty::Flags::SameLine & flags))
             ImGui::SameLine();
 
-        ImGuiInputTextFlags imguiInputTextflags = 0;
-
         bool changed = false;
 
+        ImGuiInputTextFlags imguiInputTextflags = 0;
         if (asBool(IProperty::Flags::ReadOnly & flags))
             imguiInputTextflags = ImGuiInputTextFlags_ReadOnly;
+
+        bool flatten = false;
+        if (asBool(IProperty::Flags::Flatten & flags))
+            flatten = true;
 
         const bool isEnumArray = asBool(IProperty::Flags::EnumArray & flags);
 
@@ -703,7 +707,7 @@ namespace vg::editor
                         treeNodeFlags |= ImGuiTreeNodeFlags_Leaf;
                 }
 
-                bool needTreeNode = strcmp(_prop->getName(), "m_object") && ref;
+                bool needTreeNode = strcmp(_prop->getName(), "m_object") && ref && !flatten;
                 bool treenNodeOpen = !needTreeNode || ImGui::TreeNodeEx(treeNodeName.c_str(), treeNodeFlags);
 
                 static int ObjectRightClicMenuIndex = -1;
@@ -772,7 +776,7 @@ namespace vg::editor
 
                 if (treenNodeOpen)
                 {
-                    updateSelection(_object);
+                    //updateSelection(_object);
 
                     if (pObject)
                         displayObject(pObject);
@@ -784,7 +788,7 @@ namespace vg::editor
                 }
                 else
                 {
-                    updateSelection(pObject);
+                    //updateSelection(pObject);
                 }
 
                 ImGui::PopStyleColor();
@@ -813,7 +817,7 @@ namespace vg::editor
                     if (ImGui::TreeNodeEx(name.c_str(), ImGuiTreeNodeFlags_DefaultOpen))
                     {
                         ImGui::Indent();
-                        displayResource(pResource);
+                        displayResource(pResource, _prop);
                         ImGui::Unindent();
                         ImGui::TreePop();
                     }
@@ -842,7 +846,7 @@ namespace vg::editor
                         {
                             if (nullptr != pResource)
                             {
-                                changed |= displayResource(pResource);
+                                changed |= displayResource(pResource, _prop, e);
                             }
 
                             ImGui::TreePop();
@@ -854,7 +858,7 @@ namespace vg::editor
             else
             {
                 IResource * pResource = ref ? _prop->GetPropertyResourceRef(_object) : _prop->GetPropertyResource(_object);
-                changed |= displayResource(pResource);
+                changed |= displayResource(pResource, _prop);
             }
         }
         break;
@@ -870,46 +874,94 @@ namespace vg::editor
     };
 
     //--------------------------------------------------------------------------------------
-    bool ImGuiWindow::displayResource(core::IResource * _resource)
+    // Display Resource Object
+    //--------------------------------------------------------------------------------------
+    bool ImGuiWindow::displayResource(core::IResource * _resource, const core::IProperty * _prop, core::uint _index)
     {
         bool changed = false;
-        IObject * pObject = _resource->getObject();
 
         char buffer[1024];
         sprintf_s(buffer, _resource->GetResourcePath().c_str());
-        if (ImGui::InputText("##File", buffer, countof(buffer), ImGuiInputTextFlags_EnterReturnsTrue))
+        string label = (string)"###" + to_string(uint_ptr(_resource));
+
+        const float buttonWidth = style::button::Size.x;
+
+        auto availableWidth = GetContentRegionAvail().x;
+        ImGui::PushItemWidth(availableWidth - style::label::PixelWidth - buttonWidth);
+        if (ImGui::InputText(label.c_str(), buffer, countof(buffer), ImGuiInputTextFlags_EnterReturnsTrue))
             _resource->SetResourcePath(buffer);
+        ImGui::PopItemWidth();
 
         string newFileButtonName = getButtonLabel("New", _resource);
         string openFileButtonName = getButtonLabel("Open", _resource);
-        string clearFileButtonName = getButtonLabel("Clear", _resource);
+        string clearFileButtonName = getButtonLabel("Remove", _resource);
         string saveFileButtonName = getButtonLabel("Save", _resource);
+        string saveAsFileButtonName = getButtonLabel("Save As", _resource);
 
-        string openFileDialogName = getButtonLabel("Open file", _resource);
+        bool createNewFile = false;
+        bool openExistingFile = false;
+        bool saveAsFile = false;
+        bool saveFile = false;
 
+        ImGui::PushID(_resource);
         ImGui::SameLine();
-        if (ImGui::Button(newFileButtonName.c_str()))
+        auto x = ImGui::GetCursorPosX();
+        ImGui::SetCursorPosX(x + buttonWidth);
+        ImGui::Text(_prop->getDisplayName());
+        auto x2 = ImGui::GetCursorPosX();
+        ImGui::SameLine();
+        string buttonLabel = (string)style::icon::File;// +(string)" " + (string)_prop->getDisplayName();
+     
+        ImGui::SetCursorPosX(x-4);
+        if (ImGui::Button(buttonLabel.c_str(), style::button::Size))
+        {
+            //openExistingFile = true;
+        }
+        //ImGui::SetCursorPosX(x+24);
+        
+        if (ImGui::BeginPopupContextItem(nullptr, ImGuiPopupFlags_MouseButtonLeft))
+        {
+            if (ImGui::MenuItem(newFileButtonName.c_str()))
+                createNewFile = true;
+
+            if (ImGui::MenuItem(openFileButtonName.c_str()))
+                openExistingFile = true;                
+
+            ImGui::Separator();
+
+            ImGui::BeginDisabled(nullptr == _resource->getObject());
+            {
+                if (ImGui::MenuItem(saveFileButtonName.c_str()))
+                {
+                    if (_resource->SaveFile(_resource->GetResourcePath()))
+                        changed = true;
+                }
+
+                if (ImGui::MenuItem(saveAsFileButtonName.c_str()))
+                    saveAsFile = true;
+            }
+            ImGui::EndDisabled();
+
+            ImGui::Separator();
+
+            ImGui::BeginDisabled(_resource->GetResourcePath().empty());
+            {
+                if (ImGui::MenuItem(clearFileButtonName.c_str()))
+                    _resource->ClearResourcePath();
+            }
+            ImGui::EndDisabled();
+
+            ImGui::EndPopup();
+        }
+
+        //ImGui::SeparatorEx(ImGuiSeparatorFlags_Horizontal, 4);
+
+        if (createNewFile)
             ImGui::OpenPopup(newFileButtonName.c_str());
-
-        ImGui::SameLine();
-        if (ImGui::Button(openFileButtonName.c_str()))
-            ImGui::OpenPopup(openFileDialogName.c_str());
-
-        ImGui::SameLine();
-        ImGui::BeginDisabled(_resource->GetResourcePath().empty());
-        {
-            if (ImGui::Button(clearFileButtonName.c_str()))
-                _resource->ClearResourcePath();
-        }
-        ImGui::EndDisabled();
-
-        ImGui::SameLine();
-        ImGui::BeginDisabled(nullptr == _resource->getObject());
-        {
-            if (ImGui::Button(saveFileButtonName.c_str()))
-                ImGui::OpenPopup(saveFileButtonName.c_str());
-        }
-        ImGui::EndDisabled();
+        else if (openExistingFile)
+            ImGui::OpenPopup(openFileButtonName.c_str());
+        else if (saveAsFile)
+            ImGui::OpenPopup(saveAsFileButtonName.c_str());
 
         // build extension list
         string ext = "";
@@ -939,7 +991,7 @@ namespace vg::editor
         }
 
         // Open existing file
-        if (fileBrowser.showFileDialog(openFileDialogName.c_str(), imgui_addons::ImGuiFileBrowser::DialogMode::OPEN, style::dialog::Size, ext.c_str()))
+        if (fileBrowser.showFileDialog(openFileButtonName.c_str(), imgui_addons::ImGuiFileBrowser::DialogMode::OPEN, style::dialog::Size, ext.c_str()))
         {
             const string newFilePath = fileBrowser.selected_path;
             if (_resource->GetResourcePath() != newFilePath)
@@ -950,14 +1002,24 @@ namespace vg::editor
         }
 
         // Save existing file
-        if (fileBrowser.showFileDialog(saveFileButtonName.c_str(), imgui_addons::ImGuiFileBrowser::DialogMode::SAVE, style::dialog::Size, ext.c_str()))
+        if (fileBrowser.showFileDialog(saveAsFileButtonName.c_str(), imgui_addons::ImGuiFileBrowser::DialogMode::SAVE, style::dialog::Size, ext.c_str()))
         {
             const string newFilePath = fileBrowser.selected_path;
             if (_resource->SaveFile(newFilePath))
-                changed = true;
+            {
+                if (_resource->GetResourcePath() != newFilePath)
+                {
+                    _resource->SetResourcePath(newFilePath);
+                    changed = true;
+                }
+            }
         }
 
+        //ImGui::Indent();
         displayObject(_resource);
+        //ImGui::Unindent();
+
+        ImGui::PopID();
 
         return changed;
     }

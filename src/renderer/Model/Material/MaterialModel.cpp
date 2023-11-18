@@ -15,10 +15,9 @@
 #include "renderer/Importer/SceneImporterData.h"
 #include "renderer/Renderer.h"
 
+#include "shaders/system/rootConstants3D.hlsli"
 #include "DefaultMaterial/DefaultMaterialModel.hpp"
 
-#include "Shaders/default/default.hlsl.h"
-#include "shaders/system/rootConstants3D.hlsli"
 
 using namespace vg::core;
 using namespace vg::gfx;
@@ -31,8 +30,8 @@ namespace vg::renderer
         super::registerProperties(_desc);
 
         _desc.registerPropertyEnumBitfield(MaterialModel, MaterialFlags, m_flags, "Flags");
-        _desc.registerPropertyEnumArray(MaterialModel, core::float4, MaterialColorType, m_colors, "Colors", IProperty::Flags::Color | IProperty::Flags::NotSaved);
-        _desc.registerPropertyEnumArray(MaterialModel, core::IObject*, MaterialTextureType, m_textures, "Textures", IProperty::Flags::None | IProperty::Flags::NotSaved);
+        //_desc.registerPropertyEnumArray(MaterialModel, core::float4, MaterialColorType, m_colors, "Colors", IProperty::Flags::Color | IProperty::Flags::NotSaved);
+        //_desc.registerPropertyEnumArray(MaterialModel, core::IObject*, MaterialTextureType, m_textures, "Textures", IProperty::Flags::None | IProperty::Flags::NotSaved);
 
         return true;
     }
@@ -55,9 +54,6 @@ namespace vg::renderer
         const char * shaderFile = "default/default.hlsl";
         m_shaderKey[asInteger(ShaderPass::ZOnly)] = ShaderKey(shaderFile, "ZOnly");
         m_shaderKey[asInteger(ShaderPass::Forward)] = ShaderKey(shaderFile, "Forward");
-
-        for (auto & color : m_colors)
-            color = float4(1, 1, 1, 1);
     }
 
     //--------------------------------------------------------------------------------------
@@ -65,105 +61,5 @@ namespace vg::renderer
     {
         auto * device = Device::get();
         device->removeRootSignature(m_rootSignature);
-
-        for (uint t = 0; t < core::enumCount<MaterialTextureType>(); ++t)
-        {
-            m_texturePaths[t] = "";
-            VG_SAFE_RELEASE(m_textures[t]);
-        }
-    }
-
-    //--------------------------------------------------------------------------------------
-    //MaterialModel * MaterialModel::createFromImporterData(const MaterialImporterData & _data)
-    //{
-    //    MaterialModel * matModel = new MaterialModel(_data.name);
-    //
-    //    for (uint t = 0; t < core::enumCount<MaterialTextureType>(); ++t)
-    //        matModel->m_texturePaths[t] = _data.texturePath[t];
-    //
-    //    return matModel;
-    //}
-
-    //--------------------------------------------------------------------------------------
-    gfx::ITexture * MaterialModel::GetTexture(MaterialTextureType _type) const
-    {
-        VG_ASSERT(asInteger(_type) < countof(m_textures));
-        return getTexture(_type);
-    }
-
-    //--------------------------------------------------------------------------------------
-    gfx::Texture * MaterialModel::getTexture(MaterialTextureType _type) const
-    { 
-        auto * tex = m_textures[asInteger(_type)];
-        if (tex)
-            return tex;
-        else
-            return Renderer::get()->getDefaultTexture(_type);
-    }
-
-    //--------------------------------------------------------------------------------------
-    core::uint MaterialModel::GetTextureCount() const
-    {
-        return getTextureCount();
-    }
-
-    //--------------------------------------------------------------------------------------
-    const core::string & MaterialModel::GetTexturePath(MaterialTextureType _type) const
-    {
-        VG_ASSERT(asInteger(_type) < countof(m_texturePaths));
-        return getTexturePath(_type);
-    }
-
-    //--------------------------------------------------------------------------------------
-    void MaterialModel::SetTexture(MaterialTextureType _type, gfx::ITexture * _texture)
-    {
-        auto & tex = m_textures[asInteger(_type)];
-
-        if (tex != _texture)
-        {
-            VG_SAFE_INCREASE_REFCOUNT(_texture);
-            VG_SAFE_RELEASE(tex);
-            tex = (gfx::Texture*)_texture;
-        }
-    }
-
-    //--------------------------------------------------------------------------------------
-    void MaterialModel::Setup(const RenderContext & _renderContext, gfx::CommandList * _cmdList, RootConstants3D * _root3D, core::uint _index) const
-    {
-        gfx::Texture * albedoMap = getTexture(MaterialTextureType::Albedo);
-        gfx::Texture * normalMap = getTexture(MaterialTextureType::Normal);
-
-        _root3D->setAlbedoTextureHandle(albedoMap->getTextureHandle());
-        _root3D->setNormalTextureHandle(normalMap->getTextureHandle());
-        _root3D->setMatID(_index);
-
-        auto key = m_shaderKey[asInteger(_renderContext.m_shaderPass)];
-
-        RasterizerState rs(FillMode::Solid, CullMode::Back);
-        BlendState bs(BlendFactor::One, BlendFactor::Zero, BlendOp::Add);
-        DepthStencilState ds(true, true, ComparisonFunc::LessEqual);
-
-        _cmdList->setGraphicRootSignature(m_rootSignature);
-        _cmdList->setPrimitiveTopology(PrimitiveTopology::TriangleList);
-        _cmdList->setBlendState(bs);
-        _cmdList->setDepthStencilState(ds);        
-
-        if (_renderContext.m_toolmode)
-        {
-            if (_renderContext.m_wireframe)
-            {
-                rs = RasterizerState(FillMode::Wireframe, CullMode::None);
-                _root3D->setFlags(RootConstantsFlags::Wireframe);
-            }
-
-            key.setFlags(gfx::DefaultHLSLDesc::Toolmode, true);
-        }
-        else
-        {
-            key.setFlags(gfx::DefaultHLSLDesc::Toolmode, false);
-        }
-       
-        _cmdList->setRasterizerState(rs);
-        _cmdList->setShader(key);
     }
 }

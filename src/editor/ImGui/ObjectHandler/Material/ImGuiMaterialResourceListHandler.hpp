@@ -39,17 +39,16 @@ namespace vg::editor
                     if (!strcmp(prop->getName(), "m_materialResources"))
                     {
                         materialCount = prop->GetPropertyResourceVectorCount(_object);
-                        const uint sizeOf = prop->getSizeOf();
 
                         for (uint i = 0; i < materialCount; ++i)
                         {
                             ImGui::PushID(i);
-                            auto obj = (IResource *)(prop->GetPropertyResourceVectorData(_object) + i * sizeOf);
+                            auto obj = prop->GetPropertyResourceVectorElement(_object, i);
 
                             string materialLabel = (string)"MatID " + to_string(i) + "###" + to_string((uint_ptr)_object);
                             if (ImGui::TreeNodeEx(materialLabel.c_str(), ImGuiTreeNodeFlags_DefaultOpen))
                             {
-                                ImGuiWindow::displayResource(obj);
+                                ImGuiWindow::displayResource(obj, prop, i);
                                 ImGui::TreePop();
                             }
 
@@ -58,7 +57,7 @@ namespace vg::editor
                     }
                     else
                     {
-                        ImGuiWindow::displayProperty(prop, _object);
+                        ImGuiWindow::displayProperty(_object, prop);
                     }
                 }
 

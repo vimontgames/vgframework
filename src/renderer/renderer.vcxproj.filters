@@ -12,9 +12,6 @@
     <ClCompile Include="Options\Options.cpp">
       <Filter>Options</Filter>
     </ClCompile>
-    <ClCompile Include="Instance\Mesh\MeshInstance.cpp">
-      <Filter>Instance\Mesh</Filter>
-    </ClCompile>
     <ClCompile Include="Model\Material\MaterialModel.cpp">
       <Filter>Model\Material</Filter>
     </ClCompile>
@@ -41,6 +38,9 @@
     </ClCompile>
     <ClCompile Include="Picking\PickingManager.cpp">
       <Filter>Picking</Filter>
+    </ClCompile>
+    <ClCompile Include="Instance\GraphicInstance.cpp">
+      <Filter>Instance</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -270,6 +270,12 @@
       <Filter>Picking</Filter>
     </ClInclude>
     <ClInclude Include="IPicking.h" />
+    <ClInclude Include="Instance\GraphicInstance.h">
+      <Filter>Instance</Filter>
+    </ClInclude>
+    <ClInclude Include="Instance\Mesh\MeshInstance.hpp">
+      <Filter>Instance\Mesh</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Pass">

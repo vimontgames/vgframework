@@ -14,8 +14,5 @@ namespace vg::renderer
         {
 
         }
-
-        virtual core::uint GetMaterialCount() const = 0;
-        virtual IMaterialModel * GetMaterial(core::uint _index) const = 0;
     };
 }

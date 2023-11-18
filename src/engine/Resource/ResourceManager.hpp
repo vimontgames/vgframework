@@ -218,8 +218,8 @@ namespace vg::engine
             }
             
             _resource->unloadSubResources();
-            _resource->getParent()->onResourceUnloaded(_resource);
-            _resource->setObject(nullptr);                
+            _resource->setObject(nullptr);
+            _resource->getParent()->onResourceUnloaded(_resource);  
         }
     }
 

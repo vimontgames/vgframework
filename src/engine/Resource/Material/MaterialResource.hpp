@@ -4,8 +4,6 @@
 #include "renderer/IMaterialModel.h"
 #include "engine/Component/Mesh/MaterialResourceList.h"
 
-#include "MaterialResourceData.hpp"
-
 using namespace vg::core;
 
 namespace vg::engine
@@ -91,13 +89,17 @@ namespace vg::engine
     core::IObject * MaterialResource::load(const string & _path)
     {
         IFactory * factory = Kernel::getFactory();
-        IObject * object = factory->createObject("MaterialResourceData");
-        object->setParent(this);
-
-        if (object)
+        MaterialResourceData * object = (MaterialResourceData*)factory->createObject("MaterialResourceData");
+        if (nullptr != object)
         {
-            factory->loadFromXML(object, _path);
-            return object;
+            object->setParent(this);
+
+            if (factory->loadFromXML(object, _path))
+            {
+                // Create the material, textures aren't loaded yet
+                object->CreateRendererMaterial();
+                return object;
+            }
         }
 
         return nullptr;
@@ -109,7 +111,7 @@ namespace vg::engine
     bool MaterialResource::CreateFile(const core::string & _path)
     {
         const auto * factory = Kernel::getFactory();
-        
+
         IObject * resData = factory->createObject("MaterialResourceData");
         if (nullptr != resData)
         {
@@ -125,7 +127,6 @@ namespace vg::engine
     bool MaterialResource::SaveFile(const string & _path) const
     {
         IObject * object = getObject();
-        VG_ASSERT(!object || dynamic_cast<MaterialResourceData *>(object));
         if (nullptr != object)
         {
             const auto * factory = Kernel::getFactory();

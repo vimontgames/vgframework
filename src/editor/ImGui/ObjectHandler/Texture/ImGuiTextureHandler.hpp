@@ -22,7 +22,13 @@ namespace vg::editor
                 auto imGuiAdapter = Editor::get()->getRenderer()->GetImGuiAdapter();
                 ImTextureID texID = imGuiAdapter->GetTextureID(tex);
                 {
-                    ImGui::Image(texID, ImVec2(128, 128));
+                    auto availableWidth = ImGui::GetContentRegionAvail().x;
+                    auto texturePreviewSize = ImVec2(availableWidth - style::label::PixelWidth, availableWidth - style::label::PixelWidth);
+                    ImGui::PushItemWidth(availableWidth);
+                    {
+                        ImGui::Image(texID, texturePreviewSize);
+                    }
+                    ImGui::PopItemWidth();
                 }
                 imGuiAdapter->ReleaseTextureID(texID);
             }

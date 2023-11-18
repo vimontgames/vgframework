@@ -96,6 +96,14 @@ struct RootConstants3D
     {
         return (data.w >> 24) & 0xFF;
     }
+    void setColor(float4 _color)
+    {
+        color = _color;
+    }
+    float4 getColor()
+    {
+        return color;
+    }
 };
 
 #define RootConstants3DCount sizeof(RootConstants3D)/sizeof(u32)

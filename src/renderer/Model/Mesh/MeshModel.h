@@ -22,12 +22,6 @@ namespace vg::renderer
                                         MeshModel               (const core::string & _name, core::IObject * _parent);
                                         ~MeshModel              ();
 
-        core::uint                      GetMaterialCount        () const override;
-        IMaterialModel *                GetMaterial             (core::uint _index) const override;
-
-        core::uint                      getMaterialCount        () const { return (core::uint)m_materials.size(); }
-        MaterialModel *                 getMaterial             (core::uint _index) const { return _index < m_materials.size() ? m_materials[_index] : nullptr; }
-
         void                            setGeometry             (MeshGeometry * _meshGeometry);
         const MeshGeometry *            getGeometry             () const;
 
@@ -38,6 +32,5 @@ namespace vg::renderer
 
     private:
         MeshGeometry *                  m_meshGeometry = nullptr;
-        core::vector<MaterialModel*>    m_materials;
     };
 }

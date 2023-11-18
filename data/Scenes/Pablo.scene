@@ -29,6 +29,33 @@
                                             <Object class="MaterialResource">
                                                 <Property type="String" name="m_resourcePath" flags="Hidden" value="data/Models/Pablo/Pablo0.mat"/>
                                             </Object>
+                                            <Object class="MaterialResource">
+                                                <Property type="String" name="m_resourcePath" flags="Hidden" value="data/Models/Pablo/Pablo1.mat"/>
+                                            </Object>
+                                            <Object class="MaterialResource">
+                                                <Property type="String" name="m_resourcePath" flags="Hidden" value="data/Models/Pablo/Pablo2.mat"/>
+                                            </Object>
+                                            <Object class="MaterialResource">
+                                                <Property type="String" name="m_resourcePath" flags="Hidden" value="data/Models/Pablo/Pablo3.mat"/>
+                                            </Object>
+                                            <Object class="MaterialResource">
+                                                <Property type="String" name="m_resourcePath" flags="Hidden" value="data/Models/Pablo/Pablo4.mat"/>
+                                            </Object>
+                                            <Object class="MaterialResource">
+                                                <Property type="String" name="m_resourcePath" flags="Hidden" value="data/Models/Pablo/Pablo5.mat"/>
+                                            </Object>
+                                            <Object class="MaterialResource">
+                                                <Property type="String" name="m_resourcePath" flags="Hidden" value="data/Models/Pablo/Pablo6.mat"/>
+                                            </Object>
+                                            <Object class="MaterialResource">
+                                                <Property type="String" name="m_resourcePath" flags="Hidden" value="data/Models/Pablo/Pablo7.mat"/>
+                                            </Object>
+                                            <Object class="MaterialResource">
+                                                <Property type="String" name="m_resourcePath" flags="Hidden" value="data/Models/Pablo/Pablo8.mat"/>
+                                            </Object>
+                                            <Object class="MaterialResource">
+                                                <Property type="String" name="m_resourcePath" flags="Hidden" value="data/Models/Pablo/Pablo7.mat"/>
+                                            </Object>
                                         </Property>
                                     </Object>
                                 </Property>
@@ -40,7 +67,7 @@
                         <Property type="String" name="m_name" value="Camera"/>
                         <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
                         <Property type="Float4" name="m_color" flags="Color" x="1" y="1" z="1" w="1"/>
-                        <Property type="Float4x4" name="m_world" Ix="0.89802647" Iy="0.43994141" Iz="-0" Iw="-0" Jx="-0.19972825" Jy="0.40769351" Jz="0.89100766" Jw="-0" Kx="0.39199117" Ky="-0.80014849" Kz="0.45398828" Kw="0" Tx="1.0748221" Ty="-2.1873562" Tz="1.8615972" Tw="1"/>
+                        <Property type="Float4x4" name="m_world" Ix="0.94710112" Iy="-0.32093525" Iz="-0" Iw="-0" Jx="0.093402356" Jy="0.27563652" Jz="0.95671344" Jw="-0" Kx="-0.30704305" Ky="-0.90610433" Kz="0.29103175" Kw="0" Tx="-0.70724916" Ty="-2.1509676" Tz="1.4459081" Tw="1"/>
                         <Property type="ObjectRefVector" name="m_components">
                             <Object class="CameraComponent">
                                 <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
@@ -53,8 +80,8 @@
                             <Object class="FreeCamBehaviour">
                                 <Property type="Float" name="m_moveSpeed" flags="HasRange" value="1"/>
                                 <Property type="Float" name="m_rotSpeed" flags="HasRange" value="1"/>
-                                <Property type="Float" name="m_pitch" flags="HasRange" value="-1.0995599"/>
-                                <Property type="Float" name="m_yaw" flags="HasRange" value="-2.6860592"/>
+                                <Property type="Float" name="m_pitch" flags="HasRange" value="-1.2754912"/>
+                                <Property type="Float" name="m_yaw" flags="HasRange" value="2.8148758"/>
                                 <Property type="Float" name="m_roll" flags="HasRange" value="0"/>
                             </Object>
                         </Property>

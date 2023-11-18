@@ -86,11 +86,11 @@ namespace vg::engine
         const uint matID = (userData >> 16) & 0xFFFF;
         const auto texSlot = (renderer::MaterialTextureType)(userData & 0xFFFF);
 
-        auto * meshModel = getMeshModel();
-        auto * material = meshModel->GetMaterial(matID);
-        auto * texRes = (TextureResource *)_resource;
+        //auto * meshModel = getMeshModel();
+        //auto * material = meshModel->GetMaterial(matID);
+        //auto * texRes = (TextureResource *)_resource;
 
-        material->SetTexture(texSlot, texRes->getTexture());
+        //material->SetTexture(texSlot, texRes->getTexture());
     }
 
     //--------------------------------------------------------------------------------------
@@ -100,10 +100,10 @@ namespace vg::engine
         const uint matID = (userData >> 16) & 0xFFFF;
         const auto texSlot = (renderer::MaterialTextureType)(userData & 0xFFFF);
 
-        auto * meshModel = getMeshModel();
-        auto * material = meshModel->GetMaterial(matID);
+        //auto * meshModel = getMeshModel();
+        //auto * material = meshModel->GetMaterial(matID);
 
-        material->SetTexture(texSlot, nullptr);
+        //material->SetTexture(texSlot, nullptr);
     }
 
     //--------------------------------------------------------------------------------------
@@ -111,39 +111,6 @@ namespace vg::engine
     {
         auto * meshModel = dynamic_cast<renderer::IMeshModel *>(getObject());
         VG_ASSERT(nullptr != meshModel);
-
-        /*if (nullptr != meshModel)
-        {
-            const uint matCount = meshModel->GetMaterialCount();
-            m_materialResources.resize(matCount);
-            for (uint m = 0; m < matCount; ++m)
-            {
-                renderer::IMaterialModel * matModel = meshModel->GetMaterial(m);
-                if (nullptr != matModel)
-                {
-                    const auto texCount = matModel->GetTextureCount();
-                    MaterialResource & matRes = m_materialResources[m];
-                    matRes.setObject(matModel);
-                    matRes.setName(matModel->getName());
-                    matRes.m_textureResources.resize(texCount);
-
-                    for (uint t = 0; t < texCount; ++t)
-                    {
-                        string matTexPath = matModel->GetTexturePath((renderer::MaterialTextureType)t);
-
-                        if (matTexPath.length() > 0)
-                        {
-                            matTexPath = matTexPath;
-                            TextureResource & res = matRes.m_textureResources[t];
-
-                            string name = core::asString((renderer::MaterialTextureType)t);
-                            res.setName(name.c_str());
-                            res.setup(this, matTexPath, m << 16 | t);    // will trigger loading of textures
-                        }
-                    }
-                }
-            }
-        }*/
     }
 
     //--------------------------------------------------------------------------------------
@@ -154,21 +121,5 @@ namespace vg::engine
     {
         auto * meshModel = dynamic_cast<renderer::IMeshModel *>(getObject());
         VG_ASSERT(nullptr != meshModel);
-
-        /*if (nullptr != meshModel)
-        {
-            const uint matCount = meshModel->GetMaterialCount();
-            for (uint m = 0; m < m_materialResources.size(); ++m)
-            {
-                MaterialResource & matRes = m_materialResources[m];
-            
-                for (uint t = 0; t < matRes.m_textureResources.size(); ++t)
-                {
-                    TextureResource & res = matRes.m_textureResources[t];
-                    res.ClearResourcePath(); 
-                }
-            }
-        }
-        m_materialResources.clear();*/
     }
 }

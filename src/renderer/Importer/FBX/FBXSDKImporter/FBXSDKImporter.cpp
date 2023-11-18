@@ -331,7 +331,7 @@ namespace vg::renderer
         {
             //VG_DEBUGPRINT("\nMaterial #%u: \"%s\"\n", _index, material->GetName());
 
-            mat.name = material->GetName();
+            mat.m_name = material->GetName();
 
             for (uint t = 0; t < enumCount<MaterialTextureType>(); ++t)
             {
@@ -352,7 +352,7 @@ namespace vg::renderer
                         //VG_DEBUGPRINT("prop: \"%s\"\n", texPropNames[n]);
                         //VG_DEBUGPRINT("path: \"%s\"\n", texture->GetRelativeFileName());
 
-                        mat.texturePath[t] = texture->GetRelativeFileName();
+                        mat.m_texturePath[t] = texture->GetRelativeFileName();
                     }
                 }
             }

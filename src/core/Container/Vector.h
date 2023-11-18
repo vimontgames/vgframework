@@ -38,5 +38,12 @@ namespace vg::core
             }
             return false;
         }
+
+        //--------------------------------------------------------------------------------------
+        T & push_empty()
+        {
+            this->emplace_back();
+            return this->back();
+        }
     };
 }

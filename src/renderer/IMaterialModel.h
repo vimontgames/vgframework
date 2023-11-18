@@ -11,8 +11,6 @@ namespace vg
 
     namespace renderer
     {
-        enum class MaterialTextureType : core::u8;
-
         class IMaterialModel : public core::Model
         {
             using super = core::Model;
@@ -24,11 +22,8 @@ namespace vg
 
             }
 
-            virtual core::uint              GetTextureCount () const = 0;
-            virtual gfx::ITexture *         GetTexture      (MaterialTextureType _type) const = 0;
-            virtual const core::string &    GetTexturePath  (MaterialTextureType _type) const = 0;
-
-            virtual void                    SetTexture      (MaterialTextureType _type, gfx::ITexture * _texture) = 0;
+            virtual void SetColor(const core::string & _name, core::float4 _value) = 0;
+            virtual void SetTexture(const core::string & _name, gfx::ITexture * _value) = 0;
         };
     }
 }

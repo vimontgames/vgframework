@@ -1,4 +1,5 @@
 #include "MaterialResourceList.h"
+#include "engine/Resource/Material/MaterialResourceData.h"
 
 using namespace vg::core;
 
@@ -34,7 +35,7 @@ namespace vg::engine
     {
         super::registerProperties(_desc);
 
-        _desc.registerPropertyObjectVectorHelper(MaterialResourceList, m_materialResources, MaterialResource, "Material List", IProperty::Flags::Resource);
+        _desc.registerPropertyObjectVectorHelper(MaterialResourceList, m_materialResources, MaterialResource, "Material", IProperty::Flags::Resource);
 
         return true;
     }
@@ -42,7 +43,7 @@ namespace vg::engine
     //--------------------------------------------------------------------------------------
     bool MaterialResourceList::AddMaterial()
     {
-        m_materialResources.push_back({});
+        MaterialResource & matRes = m_materialResources.push_empty();
 
         // Update resource owners
         for (auto & matRes : m_materialResources)

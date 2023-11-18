@@ -69,7 +69,8 @@ namespace vg::core
             Bitfield        = 0x0000000000000080,   // Value displayed as hex, enum as flags
             Resource        = 0x0000000000000100,
             NotSaved        = 0x0000000000000200,
-            EnumArray       = 0x0000000000000400    // Property is fixed-size C array with element count the size of the enum
+            EnumArray       = 0x0000000000000400,   // Property is fixed-size C array with element count the size of the enum
+            Flatten         = 0x0000000000000800    // Do not open TreeNode to display object of this type
         };
 
         virtual void                        setRange                        (float2 _range) = 0;

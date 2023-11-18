@@ -11,8 +11,6 @@ namespace vg::renderer
 
 namespace vg::engine
 {
-    class MaterialResourceData;
-
     class MaterialResource : public core::Resource
     {
     public:

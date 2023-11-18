@@ -30,7 +30,6 @@ namespace vg::renderer
         super::registerProperties(_desc);
 
         _desc.registerPropertyObjectRefHelper(MeshModel, m_meshGeometry, "Geometry", IProperty::Flags::NotSaved);
-        _desc.registerPropertyObjectRefVectorHelper(MeshModel, m_materials, "Materials", IProperty::Flags::NotSaved);
         
         return true;
     }
@@ -45,12 +44,7 @@ namespace vg::renderer
     //--------------------------------------------------------------------------------------
     MeshModel::~MeshModel()
     {
-        VG_SAFE_RELEASE(m_meshGeometry);
-
-        for (uint m = 0; m < m_materials.size(); ++m)
-            VG_SAFE_RELEASE(m_materials[m]);
-
-        m_materials.clear();
+        VG_SAFE_RELEASE(m_meshGeometry);        
     }
 
     //--------------------------------------------------------------------------------------
@@ -164,17 +158,5 @@ namespace vg::renderer
         //}
 
         return meshModel;
-    }
-
-    //--------------------------------------------------------------------------------------
-    core::uint MeshModel::GetMaterialCount() const
-    {
-        return getMaterialCount();
-    }
-
-    //--------------------------------------------------------------------------------------
-    IMaterialModel * MeshModel::GetMaterial(core::uint _index) const
-    {
-        return getMaterial(_index);
     }
 }

@@ -54,8 +54,8 @@ namespace vg::editor
         VG_INLINE const core::string            getIconizedName     () const;
 
         static void                             displayObject       (core::IObject * _object);
-        static bool                             displayResource     (core::IResource * _resource);
-        static void                             displayProperty     (const core::IProperty * _prop, core::IObject * _object);
+        static void                             displayProperty     (core::IObject * _object, const core::IProperty * _prop);
+        static bool                             displayResource     (core::IResource * _resource, const core::IProperty * _prop, core::uint _index = 0);
 
         static imgui_addons::ImGuiFileBrowser & getFileBrowser      ();
         static engine::IEngine *                getEngine           ();

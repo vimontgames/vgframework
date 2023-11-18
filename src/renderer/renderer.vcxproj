@@ -23,7 +23,7 @@
     <ClCompile Include="Importer\FBX\FBXSDKImporter\FBXSDKImporter.cpp" />
     <ClCompile Include="Importer\FBX\UFBXImporter\UFBXImporter.cpp" />
     <ClCompile Include="Importer\ImporterData.cpp" />
-    <ClCompile Include="Instance\Mesh\MeshInstance.cpp" />
+    <ClCompile Include="Instance\GraphicInstance.cpp" />
     <ClCompile Include="Job\Job.cpp" />
     <ClCompile Include="Model\Material\MaterialModel.cpp" />
     <ClCompile Include="Model\Mesh\MeshModel.cpp" />
@@ -72,7 +72,9 @@
     <ClInclude Include="Importer\SceneImporterData.hpp" />
     <ClInclude Include="Importer\TextureImporterData.h" />
     <ClInclude Include="Importer\TextureImporterData.hpp" />
+    <ClInclude Include="Instance\GraphicInstance.h" />
     <ClInclude Include="Instance\Mesh\MeshInstance.h" />
+    <ClInclude Include="Instance\Mesh\MeshInstance.hpp" />
     <ClInclude Include="IPicking.h" />
     <ClInclude Include="IRenderer.h" />
     <ClInclude Include="Job\Culling\GraphicInstanceList.h" />
