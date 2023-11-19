@@ -29,47 +29,47 @@
                                         <Property type="ResourceVector" name="m_materialResources" flags="Resource">
                                             <Object class="MaterialResource">
                                                 <Property type="String" name="m_name" flags="Hidden" value="test"/>
-                                                <Property type="String" name="m_resourcePath" flags="Hidden" value="data/Models/Pablo/Pablo0.mat"/>
+                                                <Property type="String" name="m_resourcePath" flags="Hidden" value="data/Models/Pablo/Skin.mat"/>
                                             </Object>
                                             <Object class="MaterialResource">
                                                 <Property type="String" name="m_name" flags="Hidden" value=""/>
-                                                <Property type="String" name="m_resourcePath" flags="Hidden" value="data/Models/Pablo/Pablo1.mat"/>
+                                                <Property type="String" name="m_resourcePath" flags="Hidden" value="data/Models/Pablo/Mouth.mat"/>
                                             </Object>
                                             <Object class="MaterialResource">
                                                 <Property type="String" name="m_name" flags="Hidden" value=""/>
-                                                <Property type="String" name="m_resourcePath" flags="Hidden" value="data/Models/Pablo/Pablo2.mat"/>
+                                                <Property type="String" name="m_resourcePath" flags="Hidden" value="data/Models/Pablo/Iris.mat"/>
                                             </Object>
                                             <Object class="MaterialResource">
                                                 <Property type="String" name="m_name" flags="Hidden" value=""/>
-                                                <Property type="String" name="m_resourcePath" flags="Hidden" value="data/Models/Pablo/Pablo3.mat"/>
+                                                <Property type="String" name="m_resourcePath" flags="Hidden" value="data/Models/Pablo/Shirt.mat"/>
                                             </Object>
                                             <Object class="MaterialResource">
                                                 <Property type="String" name="m_name" flags="Hidden" value=""/>
-                                                <Property type="String" name="m_resourcePath" flags="Hidden" value="data/Models/Pablo/Pablo4.mat"/>
+                                                <Property type="String" name="m_resourcePath" flags="Hidden" value="data/Models/Pablo/Glove.mat"/>
                                             </Object>
                                             <Object class="MaterialResource">
                                                 <Property type="String" name="m_name" flags="Hidden" value=""/>
-                                                <Property type="String" name="m_resourcePath" flags="Hidden" value="data/Models/Pablo/Pablo5.mat"/>
+                                                <Property type="String" name="m_resourcePath" flags="Hidden" value="data/Models/Pablo/Logo.mat"/>
                                             </Object>
                                             <Object class="MaterialResource">
                                                 <Property type="String" name="m_name" flags="Hidden" value=""/>
-                                                <Property type="String" name="m_resourcePath" flags="Hidden" value="data/Models/Pablo/Pablo6.mat"/>
+                                                <Property type="String" name="m_resourcePath" flags="Hidden" value="data/Models/Pablo/Hair.mat"/>
                                             </Object>
                                             <Object class="MaterialResource">
                                                 <Property type="String" name="m_name" flags="Hidden" value=""/>
-                                                <Property type="String" name="m_resourcePath" flags="Hidden" value="data/Models/Pablo/Pablo7.mat"/>
+                                                <Property type="String" name="m_resourcePath" flags="Hidden" value="data/Models/Pablo/Trouser.mat"/>
                                             </Object>
                                             <Object class="MaterialResource">
                                                 <Property type="String" name="m_name" flags="Hidden" value=""/>
-                                                <Property type="String" name="m_resourcePath" flags="Hidden" value="data/Models/Pablo/Pablo8.mat"/>
+                                                <Property type="String" name="m_resourcePath" flags="Hidden" value="data/Models/Pablo/Shoe.mat"/>
                                             </Object>
                                             <Object class="MaterialResource">
                                                 <Property type="String" name="m_name" flags="Hidden" value=""/>
-                                                <Property type="String" name="m_resourcePath" flags="Hidden" value="data/Models/Pablo/Pablo7.mat"/>
+                                                <Property type="String" name="m_resourcePath" flags="Hidden" value="data/Models/Pablo/Trouser.mat"/>
                                             </Object>
                                             <Object class="MaterialResource">
                                                 <Property type="String" name="m_name" flags="Hidden" value=""/>
-                                                <Property type="String" name="m_resourcePath" flags="Hidden" value="data/Models/Pablo/Pablo10.mat"/>
+                                                <Property type="String" name="m_resourcePath" flags="Hidden" value="data/Models/Pablo/Button.mat"/>
                                             </Object>
                                         </Property>
                                     </Object>
