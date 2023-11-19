@@ -16,7 +16,7 @@ Another subject that is very close to my heart is that there is a strong separat
 # changelog
 
 ## 0.12
-Mesh (FBX), Material & Texture hot-reload
+Mesh (FBX), Material & Texture hot-reload\
 GPU Picking
 
 ![Screenshot](doc/img/0.12.png)
