@@ -119,7 +119,7 @@ https://www.cgtrader.com/free-3d-models/character/man/3d-scan-man
 https://www.cgtrader.com/free-3d-models/character/man/3d-scan-man-summer-016
 
 Pablo model\
-https://www.turbosquid.com/Search/Index.cfm?file_type=159&keyword=luigi&max_price=0&media_typeid=2&min_price=0 (modified)
+https://www.turbosquid.com/3d-models/luigi-super-model-1308288 (modified)
 
 
 # disclaimer
