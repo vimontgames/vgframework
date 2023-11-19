@@ -124,6 +124,9 @@ https://www.cgtrader.com/free-3d-models/character/man/3d-scan-man
 3D Scan Man Summer 016\
 https://www.cgtrader.com/free-3d-models/character/man/3d-scan-man-summer-016
 
+Pablo model\
+https://www.turbosquid.com/3d-models/luigi-super-model-1308288 (modified)
+
 
 # disclaimer
 Everything is heavily "Work-in-Progress" and 0% in an usable state, and I would not recommend anyone to use it yet.
