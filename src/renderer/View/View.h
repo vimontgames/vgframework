@@ -72,7 +72,10 @@ namespace vg::renderer
         bool                                IsToolmode                  () const override;
 
         void                                SetPickingData              (const PickingData & _pickingData) override;
-        const PickingData &                 GetPickingData              () const override;
+        virtual const PickingHit &          GetPickingHit               (core::uint _index) const override;
+        virtual core::uint                  GetPickingHitCount          () const override;
+        virtual core::uint                  GetPickingRequestedHitCount () const override;
+        const PickingHit &                  GetPickingClosestHit        () const override;
 
         virtual void                        RegisterFrameGraph          (const gfx::RenderPassContext & _rc, gfx::FrameGraph & _frameGraph);
 
@@ -120,7 +123,8 @@ namespace vg::renderer
         ViewCullingJob *                    m_cullingJob = nullptr;
         ViewConstantsUpdatePass *           m_viewConstantsUpdatePass = nullptr;
         core::uint2                         m_mouseOffset;
-        PickingData                         m_pickingData;
+        PickingData                         m_rawPickingData;
+        core::vector<PickingHit>            m_pickingHits;
 
     public:
         ViewCullingJobOutput                m_cullingJobResult;

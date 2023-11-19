@@ -72,7 +72,7 @@ PS_Output PS_Forward(VS_Output _input)
     viewConstants.Load(getBuffer(RESERVEDSLOT_BUFSRV_VIEWCONSTANTS));
     
     uint2 screenSize = viewConstants.getScreenSize();
-    float2 screenPos = _input.pos.xy / (float2)screenSize;
+    float3 screenPos = _input.pos.xyz / float3(screenSize.xy, 1);
     float3 worldPos = _input.wpos.xyz;
     
     float2 uv0 = _input.uv.xy;
@@ -104,7 +104,7 @@ PS_Output PS_Forward(VS_Output _input)
 
     output.color0.rgba = float4(albedo.rgb * (fakeDiffuseLighting + fakeAmbientLighting), 1.0f);
     
-    #if _TOOLMODE
+    #if _TOOLMODE && !_ZONLY
     DisplayMode mode = viewConstants.getDisplayMode();
     switch (mode)
     {
@@ -162,10 +162,11 @@ PS_Output PS_Forward(VS_Output _input)
     // Picking
     uint toolmodeRWBufferID = viewConstants.getToolmodeRWBufferID();
     uint2 inputPos = _input.pos.xy;
+    float depth = _input.pos.z;
     uint2 mousePos = viewConstants.getMousePos();
     uint4 pickingID = uint4(rootConstants3D.getPickingID(), rootConstants3D.getMatID(), 0, 0);
     
-    if (ProcessPicking(toolmodeRWBufferID, 0, inputPos, worldPos, mousePos, screenSize, pickingID))
+    if (ProcessPicking(toolmodeRWBufferID, 0, inputPos, depth, worldPos, mousePos, screenSize, pickingID))
     {
         output.color0 = lerp(output.color0, float4(0,1,0,1), 0.25f);
     }

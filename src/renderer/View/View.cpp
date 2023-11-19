@@ -51,7 +51,7 @@ namespace vg::renderer
 
         m_viewConstantsUpdatePass = new ViewConstantsUpdatePass();
 
-        memset(&m_pickingData, 0x0, sizeof(m_pickingData));
+        memset(&m_rawPickingData, 0x0, sizeof(m_rawPickingData));
     }
 
     //--------------------------------------------------------------------------------------
@@ -223,7 +223,15 @@ namespace vg::renderer
     //--------------------------------------------------------------------------------------
     void View::SetActive(bool _active)
     {
-        m_active = _active;
+        if (m_active != _active)
+        {
+            m_active = _active;
+
+            if (m_active)
+                VG_INFO("[View] View \"%s\" is now active", getName().c_str());
+            else
+                VG_INFO("[View] View \"%s\" is now inactive", getName().c_str());
+        }
     }
     
     //--------------------------------------------------------------------------------------
@@ -272,16 +280,49 @@ namespace vg::renderer
     //--------------------------------------------------------------------------------------
     void View::SetPickingData(const PickingData & _pickingData)
     {
-        m_pickingData = _pickingData;
+        // Copy last picking results
+        m_rawPickingData = _pickingData;
 
-        //const uint4 id = m_pickingData.m_id;
-        //const float4 pos = m_pickingData.m_pos;
-        //VG_INFO("[Picking] View \"%s\" id = %u, %u, %u, %u pos = %.2f, %.2f, %.2f, %.2f", getName().c_str(), (uint)id.x, (uint)id.y, (uint)id.z, (uint)id.w, (float)pos.x, (float)pos.y, (float)pos.z, (float)pos.w);
+        // Save hits
+        const uint counter = m_rawPickingData.m_counter.x;
+        m_pickingHits.clear();
+        for (uint i = 0; i < counter; ++i)
+            m_pickingHits.push_back(m_rawPickingData.m_hits[i]);
+
+        // Sort hits by depth stored in pos.w
+        sort(m_pickingHits.begin(), m_pickingHits.end(), [](PickingHit & a, PickingHit & b)
+        {
+            if (a.m_pos.w < b.m_pos.w)
+                return true;
+            else
+                return false;
+        }
+        );
+     }
+
+    //--------------------------------------------------------------------------------------
+    const PickingHit & View::GetPickingClosestHit() const
+    {
+        VG_ASSERT(GetPickingHitCount() > 0);
+        return m_pickingHits[0];
     }
 
     //--------------------------------------------------------------------------------------
-    const PickingData & View::GetPickingData() const
+    const PickingHit & View::GetPickingHit(uint _index) const
     {
-        return m_pickingData;
+        return m_pickingHits[_index];
+    }
+
+    //--------------------------------------------------------------------------------------
+    uint View::GetPickingHitCount() const
+    {
+        VG_ASSERT(m_pickingHits.size() <= PICKING_MAX_HITS);
+        return (uint)m_pickingHits.size();
+    }
+
+    //--------------------------------------------------------------------------------------
+    uint View::GetPickingRequestedHitCount() const
+    {
+        return (uint)m_rawPickingData.m_counter.x;
     }
 }

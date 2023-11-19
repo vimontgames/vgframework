@@ -59,10 +59,6 @@ namespace vg::renderer
     //--------------------------------------------------------------------------------------
     void PickingManager::Update(const gfx::IView * _view, bool & _showTooltip, core::string & _tooltipMsg)
     {
-        const PickingData & pickingData = _view->GetPickingData();
-        const uint4 id = pickingData.m_id;
-        const float4 pos = pickingData.m_pos;
-
         const auto mousePos = _view->GetRelativeMousePos();
         const auto viewSize = _view->GetSize();
 
@@ -70,49 +66,61 @@ namespace vg::renderer
         {
             auto input = Kernel::getInput();
             const bool ctrl = input->IsKeyPressed(Key::LCONTROL) || input->IsKeyPressed(Key::LCONTROL);
-
             auto selection = Kernel::getSelection();
+            
+            bool isValidPicking = false;
 
-            if (0 != id.x && id.x < m_pickingID.size())
+            if (_view->GetPickingHitCount() > 0)
             {
-                IObject * object = m_pickingID[id.x];
-                if (nullptr != object)
+                const PickingHit & pickingHit = _view->GetPickingHit(0);
+
+                const uint4 id = pickingHit.m_id;
+                const float4 pos = pickingHit.m_pos;
+
+                if (0 != id.x && id.x < m_pickingID.size())
                 {
-                    IComponent * component = dynamic_cast<IComponent *>(object);
-
-                    if (nullptr != component)
+                    IObject * object = m_pickingID[id.x];
+                    if (nullptr != object)
                     {
-                        IObject * parent = component->getParent();
-                        IGameObject * go = dynamic_cast<IGameObject *>(parent);
-                        if (nullptr != go)
-                        {
-                            if (_showTooltip)
-                            {
-                                char temp[256];
-                                sprintf_s(temp, "GameObject \"%s\"\n%s \"%s\" (ID %u)\nSubID = %u", go->getName().c_str(), component->getClassName(), component->getName().c_str(), (uint)id.x, (uint)id.y);
-                                _tooltipMsg = temp;
-                            }
+                        IComponent * component = dynamic_cast<IComponent *>(object);
 
-                            if (input->IsMouseButtonJustPressed(MouseButton::Left))
+                        if (nullptr != component)
+                        {
+                            IObject * parent = component->getParent();
+                            IGameObject * go = dynamic_cast<IGameObject *>(parent);
+                            if (nullptr != go)
                             {
-                                if (ctrl)
+                                if (_showTooltip)
                                 {
-                                    if (selection->IsSelectedObject(go))
-                                        selection->Remove(go);
-                                    else
-                                        selection->Add(go);
+                                    char temp[256];
+                                    sprintf_s(temp, "GameObject \"%s\"\n%s \"%s\" (ID %u)\nSubID = %u\nCounter = %u\nWorldPos = (%.2f, %.2f, %.2f) Depth = %f", go->getName().c_str(), component->getClassName(), component->getName().c_str(), (uint)id.x, (uint)id.y, _view->GetPickingRequestedHitCount(), (float)pos.x, (float)pos.y, (float)pos.z, (float)pos.w);
+                                    _tooltipMsg = temp;
                                 }
-                                else
+
+                                if (input->IsMouseButtonJustPressed(MouseButton::Left))
                                 {
-                                    selection->Clear();
-                                    selection->Add(go);
+                                    isValidPicking = true;
+
+                                    if (ctrl)
+                                    {
+                                        if (selection->IsSelectedObject(go))
+                                            selection->Remove(go);
+                                        else
+                                            selection->Add(go);
+                                    }
+                                    else
+                                    {
+                                        selection->Clear();
+                                        selection->Add(go);
+                                    }
                                 }
                             }
                         }
                     }
                 }
             }
-            else
+
+            if (!isValidPicking)
             {
                 if (input->IsMouseButtonJustPressed(MouseButton::Left))
                 {
