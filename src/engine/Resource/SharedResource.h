@@ -16,8 +16,9 @@ namespace vg::engine
 
         SharedResource(const string & _name, IObject * _parent = nullptr);
 
-        core::IObject *                     m_object = nullptr; // The shared object
-        core::string                        m_path;             // Path of the source data for the shared object
-        core::vector<core::IResource *>     m_clients;          // Clients (Resource handles) using the shared object
+        core::IObject *                     m_object = nullptr;         // The shared object
+        core::string                        m_path;                     // Path of the source data for the shared object
+        core::vector<core::IResource *>     m_clients;                  // Clients (Resource handles) using the shared object
+        bool                                m_forceReimport = false;    // For reimport of resource on next load
     };
 }

@@ -10,13 +10,15 @@
 #include "core/IComponent.h"
 #include "core/ISelection.h"
 
+#include "renderer/IRenderer.h"
+
 #include "engine/IEngine.h"
+#include "engine/IResourceManager.h"
+
+#include "editor/ImGui/ImGui.h"
 #include "editor/Editor_Consts.h"
 #include "editor/imgui/Extensions/imGuiExtensions.h"
 
-#include "renderer/IRenderer.h"
-
-#include "editor/ImGui/ImGui.h"
 #include "ImGuiWindow.h"
 
 #if !VG_ENABLE_INLINE
@@ -894,9 +896,12 @@ namespace vg::editor
 
         string newFileButtonName = getButtonLabel("New", _resource);
         string openFileButtonName = getButtonLabel("Open", _resource);
-        string clearFileButtonName = getButtonLabel("Remove", _resource);
+        
         string saveFileButtonName = getButtonLabel("Save", _resource);
         string saveAsFileButtonName = getButtonLabel("Save As", _resource);
+
+        string clearFileButtonName = getButtonLabel("Remove", _resource);
+        string reimportFileButtonName = getButtonLabel("Reimport", _resource);
 
         bool createNewFile = false;
         bool openExistingFile = false;
@@ -955,6 +960,12 @@ namespace vg::editor
             {
                 if (ImGui::MenuItem(clearFileButtonName.c_str()))
                     _resource->ClearResourcePath();
+
+                if (ImGui::MenuItem(reimportFileButtonName.c_str()))
+                {
+                    auto rm = getEngine()->GetResourceManager();
+                    rm->Reimport(_resource);
+                }
             }
             ImGui::EndDisabled();
 

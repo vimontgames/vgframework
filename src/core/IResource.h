@@ -27,8 +27,6 @@ namespace vg::core
         virtual void                    setUserData             (UserData _userData) = 0;
         virtual UserData                getUserData             () const = 0;
 
-        virtual bool                    Reimport                () = 0;
-
         virtual bool                    ClearResourcePath       () = 0;
         virtual bool                    SetResourcePath         (const string & _path) = 0;
         virtual const string &          GetResourcePath         () const = 0;

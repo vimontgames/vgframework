@@ -101,6 +101,52 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
+    void ResourceManager::Reimport(core::IResource * _res)
+    {
+        // Unloading resources will remove entries in the resourceMap so we need to copy the existing resources to iterate over
+        vector<SharedResource *> allSharedResources;
+        for (auto pair : m_resourcesMap)
+        {
+            VG_SAFE_INCREASE_REFCOUNT(pair.second);
+            allSharedResources.push_back(pair.second);
+        }
+
+        for (auto shared : allSharedResources)
+        {
+            const string path = shared->m_path;
+            if (!path.empty() && path == _res->GetResourcePath())
+            {
+                VG_INFO("[Resource] Reimport \"%s\" (%u clients)", path.c_str(), shared->m_clients.size());
+
+                // Setting resource path to null will remove clients so we need to copy
+                vector<core::IResource *> clients = shared->m_clients;
+                for (auto client : clients)
+                    VG_SAFE_INCREASE_REFCOUNT(client);
+
+                for (uint i = 0; i < clients.size(); ++i)
+                    clients[i]->SetResourcePath("");
+
+                for (uint i = 0; i < clients.size(); ++i)
+                    clients[i]->SetResourcePath(path);
+
+                auto it = m_resourcesMap.find(path);
+                VG_ASSERT(m_resourcesMap.end() != it);
+                if (m_resourcesMap.end() != it)
+                {
+                    SharedResource * shared = it->second;
+                    shared->m_forceReimport = true;
+                }
+
+                for (auto client : clients)
+                    VG_SAFE_RELEASE(client);
+            }
+        }
+
+        for (auto shared : allSharedResources)
+            VG_SAFE_RELEASE(shared);
+    }
+
+    //--------------------------------------------------------------------------------------
     void ResourceManager::flushPendingLoading()
     {
         if (true == m_isLoadingThreadRunning.exchange(false))
@@ -256,7 +302,11 @@ namespace vg::engine
         const string path = _shared.m_path;
 
         // check for an up-to-date cooked version of the resource
-        bool needCook = needsCook(_shared.m_path);
+        bool needCook = _shared.m_forceReimport || needsCook(_shared.m_path);
+
+        // Reimport is forced only once
+        _shared.m_forceReimport = false;
+
         bool done = false;
 
         while (!done)

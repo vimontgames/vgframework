@@ -2,6 +2,11 @@
 
 #include "core/Object/Object.h"
 
+namespace vg::core
+{
+    class IResource;
+}
+
 namespace vg::engine
 {
     class IResourceManager : public core::Object
@@ -23,5 +28,8 @@ namespace vg::engine
 
         // Reimport modified resources
         virtual core::uint UpdateResources() = 0;
+
+        // Force reimport specific resource
+        virtual void Reimport(core::IResource * _res) = 0;
     };
 }

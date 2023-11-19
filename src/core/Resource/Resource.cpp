@@ -105,15 +105,6 @@ namespace vg::core
     }    
 
     //--------------------------------------------------------------------------------------
-    bool Resource::Reimport()
-    {
-        string path = GetResourcePath();
-        ClearResourcePath();
-        SetResourcePath(path);
-        return false;
-    }
-
-    //--------------------------------------------------------------------------------------
     bool Resource::ClearResourcePath()
     {
         return SetResourcePath("");

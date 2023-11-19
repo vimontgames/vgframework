@@ -130,36 +130,13 @@ namespace vg::engine
             {
                 if (&matResources[i] == matRes)
                 {
-                    VG_INFO("[MeshComponent] Material %u loaded", i);
+                    //VG_INFO("[MeshComponent] Material %u loaded", i);
                     MaterialResourceData * matResData = dynamic_cast<MaterialResourceData *>(matRes->getObject());
                     m_meshInstance->SetMaterial(i, matResData ? matResData->m_materialModel : nullptr);
                     break;
                 }
             }
         }
-        //else if (auto texRes = dynamic_cast<TextureResource *>(_resource))
-        //{
-        //    // Texture loaded
-        //    const auto & matResources = m_meshMaterials.getMaterialResources();
-        //    for (uint i = 0; i < matResources.size(); ++i)
-        //    {
-        //        const auto & matRes = matResources[i];
-        //        const auto matResData = (MaterialResourceData*)matRes.getObject();
-        //        if (nullptr != matResData)
-        //        {
-        //            const auto textures = matResData->m_textures;
-        //            for (uint j = 0; j < core::enumCount<renderer::MaterialTextureType>(); ++j)
-        //            {
-        //                const auto & tex = textures[j];
-        //                if (&tex == texRes)
-        //                {
-        //                    VG_INFO("[MeshComponent] Texture %u from Material %u needs update", j,i);
-        //                    break;
-        //                }
-        //            }
-        //        }
-        //    }
-        //}
     }
 
     //--------------------------------------------------------------------------------------
@@ -189,20 +166,12 @@ namespace vg::engine
             {
                 if (&matResources[i] == matRes)
                 {
-                    VG_INFO("[MeshComponent] Material %u unloaded", i);
+                    //VG_INFO("[MeshComponent] Material %u unloaded", i);
                     MaterialResourceData * matResData = dynamic_cast<MaterialResourceData *>(matRes->getObject());
                     m_meshInstance->SetMaterial(i, nullptr);
                     break;
                 }
             }
         }
-        //else if (auto matRes = dynamic_cast<MaterialResource *>(_resource))
-        //{
-        //    // Material resource unloaded
-        //}
-        //else if (auto texRes = dynamic_cast<TextureResource *>(_resource))
-        //{
-        //    // Texture unloaded
-        //}
     }
 }

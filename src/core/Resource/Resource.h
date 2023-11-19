@@ -28,8 +28,6 @@ namespace vg::core
         void                        setUserData         (UserData _userData) final;
         UserData                    getUserData         () const final;
 
-        bool                        Reimport            () final;
-
         bool                        ClearResourcePath   () final;
         bool                        SetResourcePath     (const string & _path) final;
         const string &              GetResourcePath     () const final;

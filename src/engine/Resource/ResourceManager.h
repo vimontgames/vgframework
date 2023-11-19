@@ -31,6 +31,7 @@ namespace vg::engine
         bool            HasResourceLoading          () const final override;
         core::uint      GetResourceCount            () const final override;
         core::uint      UpdateResources             () final override;
+        void            Reimport                    (core::IResource * _res) override;
 
         void            loadResourceAsync           (core::Resource * _resource, const core::string & _oldPath, const core::string & _path);
         void            unloadResource              (core::Resource * _resource, const core::string & _path);
