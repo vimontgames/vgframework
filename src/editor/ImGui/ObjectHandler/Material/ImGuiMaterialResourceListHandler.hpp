@@ -1,6 +1,7 @@
 #pragma once
 
 #include "engine/Component/Mesh/MaterialResourceList.h"
+#include "core/File/File.h"
 
 using namespace vg::core;
 
@@ -45,8 +46,26 @@ namespace vg::editor
                             ImGui::PushID(i);
                             auto obj = prop->GetPropertyResourceVectorElement(_object, i);
 
-                            //string materialLabel = (string)"MatID " + to_string(i) + "###" + to_string((uint_ptr)_object);
-                            string materialLabel = obj->getName() + "###" + to_string((uint_ptr)_object);
+                            // Edit material name
+                            //ImGui::PushItemWidth(availableWidth - style::label::PixelWidth);
+                            //if (1)
+                            //{
+                            //    char buffer[1024];
+                            //    strcpy(buffer, obj->getName().c_str());
+                            //    if (ImGui::InputText("Name", buffer, countof(buffer), ImGuiInputTextFlags_EnterReturnsTrue | ImGuiInputTextFlags_AutoSelectAll))
+                            //        obj->setName(buffer);
+                            //}
+                            //ImGui::PopItemWidth();                               
+
+                            string materialLabel = (string)"ID " + to_string(i);
+
+                            string materialName = obj->GetResourcePath();
+                            if (!materialName.empty())
+                                materialLabel += (string)" (" + io::getFileName(materialName) + (string)")";
+
+                            materialLabel +="###" + to_string((uint_ptr)obj);
+                            
+                            //string materialLabel = materialName + "###" + to_string((uint_ptr)_object);
                             if (ImGui::TreeNodeEx(materialLabel.c_str(), ImGuiTreeNodeFlags_DefaultOpen))
                             {
                                 ImGuiWindow::displayResource(obj, prop, i);

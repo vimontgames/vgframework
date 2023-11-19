@@ -11,10 +11,7 @@ namespace vg::core
     class Resource : public IResource
     {
     public:
-        const char *                getClassName        () const override   { return "Resource"; }   
-
-        static bool                 registerClass       (IFactory & _factory);
-        static bool                 registerProperties  (IClassDesc & _desc);
+        VG_CLASS_DECL(Resource, IResource);
 
                                     Resource            (const core::string & _name, IObject * _parent);
                                     Resource            (const Resource & _other);

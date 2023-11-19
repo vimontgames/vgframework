@@ -19,6 +19,7 @@
                                 <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
                                 <Property type="Resource" name="m_meshResource" flags="Resource">
                                     <Object class="MeshResource">
+                                        <Property type="String" name="m_name" flags="Hidden" value=""/>
                                         <Property type="String" name="m_resourcePath" flags="Hidden" value="data/Models/Pablo/Pablo.fbx"/>
                                     </Object>
                                 </Property>
@@ -27,36 +28,47 @@
                                         <Property type="String" name="m_name" flags="Hidden" value=""/>
                                         <Property type="ResourceVector" name="m_materialResources" flags="Resource">
                                             <Object class="MaterialResource">
+                                                <Property type="String" name="m_name" flags="Hidden" value="test"/>
                                                 <Property type="String" name="m_resourcePath" flags="Hidden" value="data/Models/Pablo/Pablo0.mat"/>
                                             </Object>
                                             <Object class="MaterialResource">
+                                                <Property type="String" name="m_name" flags="Hidden" value=""/>
                                                 <Property type="String" name="m_resourcePath" flags="Hidden" value="data/Models/Pablo/Pablo1.mat"/>
                                             </Object>
                                             <Object class="MaterialResource">
+                                                <Property type="String" name="m_name" flags="Hidden" value=""/>
                                                 <Property type="String" name="m_resourcePath" flags="Hidden" value="data/Models/Pablo/Pablo2.mat"/>
                                             </Object>
                                             <Object class="MaterialResource">
+                                                <Property type="String" name="m_name" flags="Hidden" value=""/>
                                                 <Property type="String" name="m_resourcePath" flags="Hidden" value="data/Models/Pablo/Pablo3.mat"/>
                                             </Object>
                                             <Object class="MaterialResource">
+                                                <Property type="String" name="m_name" flags="Hidden" value=""/>
                                                 <Property type="String" name="m_resourcePath" flags="Hidden" value="data/Models/Pablo/Pablo4.mat"/>
                                             </Object>
                                             <Object class="MaterialResource">
+                                                <Property type="String" name="m_name" flags="Hidden" value=""/>
                                                 <Property type="String" name="m_resourcePath" flags="Hidden" value="data/Models/Pablo/Pablo5.mat"/>
                                             </Object>
                                             <Object class="MaterialResource">
+                                                <Property type="String" name="m_name" flags="Hidden" value=""/>
                                                 <Property type="String" name="m_resourcePath" flags="Hidden" value="data/Models/Pablo/Pablo6.mat"/>
                                             </Object>
                                             <Object class="MaterialResource">
+                                                <Property type="String" name="m_name" flags="Hidden" value=""/>
                                                 <Property type="String" name="m_resourcePath" flags="Hidden" value="data/Models/Pablo/Pablo7.mat"/>
                                             </Object>
                                             <Object class="MaterialResource">
+                                                <Property type="String" name="m_name" flags="Hidden" value=""/>
                                                 <Property type="String" name="m_resourcePath" flags="Hidden" value="data/Models/Pablo/Pablo8.mat"/>
                                             </Object>
                                             <Object class="MaterialResource">
+                                                <Property type="String" name="m_name" flags="Hidden" value=""/>
                                                 <Property type="String" name="m_resourcePath" flags="Hidden" value="data/Models/Pablo/Pablo7.mat"/>
                                             </Object>
                                             <Object class="MaterialResource">
+                                                <Property type="String" name="m_name" flags="Hidden" value=""/>
                                                 <Property type="String" name="m_resourcePath" flags="Hidden" value="data/Models/Pablo/Pablo10.mat"/>
                                             </Object>
                                         </Property>

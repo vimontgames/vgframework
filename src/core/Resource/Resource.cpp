@@ -15,6 +15,8 @@ namespace vg::core
     //--------------------------------------------------------------------------------------
     bool Resource::registerProperties(IClassDesc & _desc)
     {
+        super::registerProperties(_desc);
+
         _desc.registerPropertyHelperEx(Resource, m_resourcePath, "Path", IProperty::Flags::Hidden);
 
         // This is used for the inspector but not serialized

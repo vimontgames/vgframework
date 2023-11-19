@@ -28,7 +28,7 @@ using namespace vg::editor;
 using namespace ImGui;
 
 #define VG_EDITOR_VERSION_MAJOR 0
-#define VG_EDITOR_VERSION_MINOR 13
+#define VG_EDITOR_VERSION_MINOR 14
 
 //--------------------------------------------------------------------------------------
 IEditor * CreateNew()

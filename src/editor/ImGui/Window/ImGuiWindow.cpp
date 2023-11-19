@@ -1022,6 +1022,17 @@ namespace vg::editor
             }
         }
 
+        // Edit resource name
+        //ImGui::PushItemWidth(availableWidth - style::label::PixelWidth);
+        //if (1)
+        //{
+        //    char buffer[1024];
+        //    strcpy(buffer, _resource->getName().c_str());
+        //    if (ImGui::InputText("Name", buffer, countof(buffer), ImGuiInputTextFlags_EnterReturnsTrue | ImGuiInputTextFlags_AutoSelectAll))
+        //        _resource->setName(buffer);
+        //}
+        //ImGui::PopItemWidth();
+
         //ImGui::Indent();
         displayObject(_resource);
         //ImGui::Unindent();

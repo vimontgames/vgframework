@@ -82,8 +82,7 @@ namespace vg::editor
 
                     bool enterPressed = ImGui::InputText("Name", nameTmp, countof(nameTmp), ImGuiInputTextFlags_AutoSelectAll | ImGuiInputTextFlags_EnterReturnsTrue);
 
-                    string newName = nameTmp;
-          
+                    string newName = nameTmp;          
 
                     if (ImGui::Button("Add", style::button::SizeMedium) || enterPressed)
                     {

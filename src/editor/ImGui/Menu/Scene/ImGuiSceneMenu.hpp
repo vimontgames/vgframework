@@ -23,7 +23,7 @@ namespace vg::editor
         if (ImGui::BeginPopupContextItem())
         {
             ImGui::PushID("SceneMenu");
-            if (ImGui::MenuItem("Save Scene", nullptr, false))
+            if (ImGui::MenuItem("Save", nullptr, false))
             {
                 string filePath;
 
@@ -36,7 +36,7 @@ namespace vg::editor
                 status = Status::Saved;
             }
 
-            if (ImGui::MenuItem("Save Scene As ..."))
+            if (ImGui::MenuItem("Save As"))
             {
                 m_selected = MenuOption::Save;
                 //fileBrowser.setPath(io::getCurrentWorkingDirectory() + "/data/Scenes");
