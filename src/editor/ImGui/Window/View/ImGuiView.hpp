@@ -146,7 +146,18 @@ namespace vg::editor
 
             if (showTooltip && !tooltipMsg.empty())
                 ImGui::SetTooltip(tooltipMsg.c_str());
+
+            m_view->SetVisible(true);
         }
+        else
+        {
+            if (m_view)
+            {
+                m_view->SetActive(false);
+                m_view->SetVisible(false);
+            }
+        }
+
         ImGui::PopStyleColor();
         ImGui::PopStyleVar();
         ImGui::End();

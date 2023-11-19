@@ -110,6 +110,9 @@ namespace vg::gfx
         virtual void                    SetActive                   (bool _active) = 0;
         virtual bool                    IsActive                    () const = 0;
 
+        virtual void                    SetVisible                  (bool _visible) = 0;
+        virtual bool                    IsVisible                   () const = 0;
+
         virtual void                    SetMouseOffset              (const core::uint2 & _mouseOffset) = 0;
         virtual core::uint2             GetRelativeMousePos         () const = 0;
 

@@ -57,6 +57,9 @@ namespace vg::renderer
                 const auto * view = views[i];
                 if (view)
                 {
+                    if (!view->IsVisible())
+                        continue;
+
                     ITexture * dest = view->GetRenderTarget();
                     readRenderTarget(dest->getName());
                 }

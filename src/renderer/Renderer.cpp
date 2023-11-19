@@ -325,8 +325,15 @@ namespace vg::renderer
                             if (m_fullscreen)
                             {
                                 if (gfx::ViewTarget::Game == target)
+                                {
                                     view->setSize(m_mainView->getSize());
+                                    view->SetActive(true);
+                                    view->SetVisible(true);
+                                }
                             }
+
+                            if (!view->IsVisible())
+                                continue;
 
                             gfx::RenderPassContext rc;
                                                    rc.m_view = view;

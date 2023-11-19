@@ -230,7 +230,7 @@ namespace vg::renderer
             if (m_active)
                 VG_INFO("[View] View \"%s\" is now active", getName().c_str());
             else
-                VG_INFO("[View] View \"%s\" is now inactive", getName().c_str());
+                VG_INFO("[View] View \"%s\" is no more active", getName().c_str());
         }
     }
     
@@ -238,6 +238,26 @@ namespace vg::renderer
     bool View::IsActive() const
     {
         return m_active;
+    }
+
+    //--------------------------------------------------------------------------------------
+    void View::SetVisible(bool _visible)
+    {
+        if (m_visible != _visible)
+        {
+            m_visible = _visible;
+
+            if (m_visible)
+                VG_INFO("[View] View \"%s\" is now visible", getName().c_str());
+            else
+                VG_INFO("[View] View \"%s\" is no more visible", getName().c_str());
+        }
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool View::IsVisible() const
+    {
+        return m_visible;
     }
 
     //--------------------------------------------------------------------------------------

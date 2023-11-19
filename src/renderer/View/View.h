@@ -65,6 +65,9 @@ namespace vg::renderer
         void                                SetActive                   (bool _active) override;
         bool                                IsActive                    () const override;
 
+        void                                SetVisible                  (bool _visible) override;
+        bool                                IsVisible                   () const override;
+
         void                                SetMouseOffset              (const core::uint2 & _mouseOffset) override;
         core::uint2                         GetRelativeMousePos         () const override;
 
@@ -120,6 +123,7 @@ namespace vg::renderer
         core::float2                        m_cameraNearFar;
         float                               m_cameraFovY;
         bool                                m_active = false;
+        bool                                m_visible = false;
         ViewCullingJob *                    m_cullingJob = nullptr;
         ViewConstantsUpdatePass *           m_viewConstantsUpdatePass = nullptr;
         core::uint2                         m_mouseOffset;
