@@ -55,6 +55,9 @@
     <ClInclude Include="Geometry\Geometry.h" />
     <ClInclude Include="Geometry\Mesh\MeshGeometry.h" />
     <ClInclude Include="Geometry\Mesh\MeshGeometry.hpp" />
+    <ClInclude Include="Geometry\Vertex\DefaultVertex.h" />
+    <ClInclude Include="Geometry\Vertex\SkinningVertex.h" />
+    <ClInclude Include="Geometry\Vertex\VertexFormat.h" />
     <ClInclude Include="IGraphicInstance.h" />
     <ClInclude Include="IGraphicModel.h" />
     <ClInclude Include="IImGuiAdapter.h" />

@@ -4,9 +4,9 @@
 #include "gfx/Device/Device.h"
 #include "gfx/Resource/Buffer.h"
 #include "renderer/Geometry/Mesh/MeshGeometry.h"
+#include "renderer/Geometry/Vertex/VertexFormat.h"
 #include "renderer/Importer/SceneImporterData.h"
 #include "renderer/Model/Material/MaterialModel.h"
-#include "shaders/system/vertex.hlsl.h"
 
 using namespace vg::core;
 using namespace vg::gfx;
@@ -71,8 +71,8 @@ namespace vg::renderer
 
         const uint vertexCount = (uint)_data.vertices.size();
 
-        vector<typename gfx::VertexStorage<F>::type> verts;
-                                                        verts.resize(vertexCount);
+        vector<typename VertexStorage<F>::type> verts;
+                                                verts.resize(vertexCount);
 
         for (uint i = 0; i < vertexCount; ++i)
             verts[i].set(_data.vertices[i]);
@@ -115,16 +115,36 @@ namespace vg::renderer
 
         Buffer * vb = nullptr;
 
-        // TODO: select appropriate vertex format
-        VertexFormat vtxFmt = VertexFormat::Simple;
+        // Select vertex format
+        VertexFormat vtxFmt;
+
+        if (_data.skinningBonesCount > 0)
+        {
+            switch (_data.skinningBonesCount)
+            {
+                default:
+                VG_ASSERT(_data.skinningBonesCount == 4);
+                break;
+        
+                case 4:
+                vtxFmt = VertexFormat::Skinning_4Bones;
+                break;
+            }
+        }
+        else
+            vtxFmt = VertexFormat::Default;
 
         switch (vtxFmt)
         {
             default:
                 VG_ASSERT_ENUM_NOT_IMPLEMENTED(vtxFmt);
 
-            case VertexFormat::Simple:
-                vb = createVertexBufferFromImporterData<VertexFormat::Simple>(_data);
+            case VertexFormat::Default:
+                vb = createVertexBufferFromImporterData<VertexFormat::Default>(_data);
+                break;
+
+            case VertexFormat::Skinning_4Bones:
+                vb = createVertexBufferFromImporterData<VertexFormat::Skinning_4Bones>(_data);
                 break;
         }
 
@@ -133,7 +153,7 @@ namespace vg::renderer
         MeshGeometry * meshGeometry = new MeshGeometry("MeshGeometry", meshModel);
 
         meshGeometry->setAABB(_data.aabb);
-
+        meshGeometry->setVertexFormat(vtxFmt);
         meshGeometry->setIndexBuffer(ib);
         meshGeometry->setVertexBuffer(vb);
 

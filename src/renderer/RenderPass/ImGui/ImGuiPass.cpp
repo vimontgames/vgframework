@@ -15,7 +15,6 @@
 #include "core/IGameObject.h"
 #include "corE/IComponent.h"
 #include "core/File/File.h"
-#include "core/Math/Math.h"
 #include "editor/IEditor.h"
 
 #include "ImGui.hpp"

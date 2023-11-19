@@ -24,7 +24,7 @@ VS_Output VS_Forward(uint _vertexID : VertexID)
     VS_Output output;
 
     Vertex vert;
-           vert.Load(getBuffer(rootConstants3D.getBufferHandle()), _vertexID, rootConstants3D.getVertexBufferOffset());
+           vert.Load(getBuffer(rootConstants3D.getBufferHandle()), (VertexFormat)rootConstants3D.getVertexFormat(), _vertexID, rootConstants3D.getVertexBufferOffset());
 
     ViewConstants viewConstants;
     viewConstants.Load(getBuffer(RESERVEDSLOT_BUFSRV_VIEWCONSTANTS));

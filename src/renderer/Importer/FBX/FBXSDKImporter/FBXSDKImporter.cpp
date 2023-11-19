@@ -2,7 +2,6 @@
 #include "FBXSDKImporter.h"
 #include "renderer/importer/SceneImporterData.h"
 #include "core/Timer/Timer.h"
-#include "core/Math/Math.h"
 
 #define FBXSDK_SHARED
 #include <fbxsdk.h>

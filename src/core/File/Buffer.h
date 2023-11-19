@@ -13,8 +13,17 @@ namespace vg::core::io
         size_t size() const;
         void resize(size_t _size);
 
+        bool read(u8 * _value);
+        bool write(u8 _value);
+
+        bool read(u16 * _value);
+        bool write(u16 _value);
+
         bool read(u32 * _value);
         bool write(u32 _value);
+
+        bool read(u64 * _value);
+        bool write(u64 _value);
 
         bool read(float * _value);
         bool write(const float & _value);

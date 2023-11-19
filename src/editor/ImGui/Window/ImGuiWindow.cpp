@@ -145,8 +145,11 @@ namespace vg::editor
             {
                 if (ImGui::Selectable(_prop->getEnumName(e)))
                 {
-                    *pEnum = e;
-                    changed = true;
+                    if (!readonly)
+                    {
+                        *pEnum = e;
+                        changed = true;
+                    }
                 }
             }
             ImGui::EndCombo();
@@ -196,11 +199,13 @@ namespace vg::editor
                 const char * name = _prop->getEnumName(e);
                 if (ImGui::Checkbox(name, &value))
                 {
-                    if (value)
-                        enumVal |= 1 << e;
-                    else
-                        enumVal &= ~(1 << e);
-
+                    if (!readonly)
+                    {
+                        if (value)
+                            enumVal |= 1 << e;
+                        else
+                            enumVal &= ~(1 << e);
+                    }
                     changed = true;
                 }
             }
@@ -294,7 +299,7 @@ namespace vg::editor
 
         // TODO: Custom property edit
         //if (ImGuiPropertyHandler::display(_prop, _object))
-        //    return;
+        //    return; 
 
         const auto type = _prop->getType();
         const auto name = _prop->getName();
@@ -310,561 +315,564 @@ namespace vg::editor
 
         bool changed = false;
 
+        const bool readOnly = asBool(IProperty::Flags::ReadOnly & flags);
+
         ImGuiInputTextFlags imguiInputTextflags = ImGuiInputTextFlags_EnterReturnsTrue;
-        if (asBool(IProperty::Flags::ReadOnly & flags))
+        if (readOnly)
             imguiInputTextflags = ImGuiInputTextFlags_ReadOnly;
 
-        bool flatten = false;
-        if (asBool(IProperty::Flags::Flatten & flags))
-            flatten = true;
-
+        const bool flatten = asBool(IProperty::Flags::Flatten & flags);
         const bool isEnumArray = asBool(IProperty::Flags::EnumArray & flags);
 
-        switch (type)
+        //ImGui::BeginDisabled(readOnly);
         {
-        default:
-            VG_ASSERT_ENUM_NOT_IMPLEMENTED(type);
-            break;
-
-        case IProperty::Type::Bool:
-        {
-            VG_ASSERT(!isEnumArray, "Display of EnumArray property not implemented for type '%s'", asString(type).c_str());
-            bool * pBool = _prop->GetPropertyBool(_object);
-            changed |= ImGui::Checkbox(getPropertyLabel(_prop).c_str(), pBool);
-        };
-        break;
-
-        case IProperty::Type::EnumU8:
-            VG_ASSERT(!isEnumArray, "Display of EnumArray property not implemented for type '%s'", asString(type).c_str());
-            changed |= displayEnum<u8>(_object, _prop);
-            break;
-
-        case IProperty::Type::EnumU16:
-            VG_ASSERT(!isEnumArray, "Display of EnumArray property not implemented for type '%s'", asString(type).c_str());
-            changed |= displayEnum<u16>(_object, _prop);
-            break;
-
-        case IProperty::Type::EnumU32:
-            VG_ASSERT(!isEnumArray, "Display of EnumArray property not implemented for type '%s'", asString(type).c_str());
-            changed |= displayEnum<u32>(_object, _prop);
-            break;
-
-        case IProperty::Type::EnumFlagsU8:
-            VG_ASSERT(!isEnumArray, "Display of EnumArray property not implemented for type '%s'", asString(type).c_str());
-            changed |= displayEnumFlags<u8>(_object, _prop);
-            break;
-
-        case IProperty::Type::EnumFlagsU16:
-            VG_ASSERT(!isEnumArray, "Display of EnumArray property not implemented for type '%s'", asString(type).c_str());
-            changed |= displayEnumFlags<u16>(_object, _prop);
-            break;
-
-        case IProperty::Type::EnumFlagsU32:
-            VG_ASSERT(!isEnumArray, "Display of EnumArray property not implemented for type '%s'", asString(type).c_str());
-            changed |= displayEnumFlags<u32>(_object, _prop);
-            break;
-
-        case IProperty::Type::Uint8:
-        {
-            VG_ASSERT(!isEnumArray, "Display of EnumArray property not implemented for type '%s'", asString(type).c_str());
-
-            i8 * pU8 = (i8 *)(uint_ptr(_object) + offset);
-
-            i32 temp = (u8)*pU8;
-
-            if (asBool(IProperty::Flags::HasRange & flags))
-                changed |= ImGui::SliderInt(displayName, &temp, max((int)0, (int)_prop->getRange().x), min((int)255, (int)_prop->getRange().y), "%d", imguiInputTextflags);
-            else
-                changed |= ImGui::InputInt(displayName, &temp, 1, 16, imguiInputTextflags);
-
-            if (changed)
-                *pU8 = (u8)temp;
-        };
-        break;
-
-        case IProperty::Type::Uint16:
-        {
-            VG_ASSERT(!isEnumArray, "Display of EnumArray property not implemented for type '%s'", asString(type).c_str());
-
-            i16 * pU16 = (i16 *)(uint_ptr(_object) + offset);
-
-            i32 temp = (u16)*pU16;
-
-            if (asBool(IProperty::Flags::HasRange & flags))
-                changed |= ImGui::SliderInt(displayName, &temp, max((int)0, (int)_prop->getRange().x), min((int)65535, (int)_prop->getRange().y), "%d", imguiInputTextflags);
-            else
-                changed |= ImGui::InputInt(displayName, &temp, 1, 16, imguiInputTextflags);
-
-            if (changed)
-                *pU16 = (u16)temp;
-        };
-        break;
-
-        case IProperty::Type::Uint32:
-        {
-            VG_ASSERT(!isEnumArray, "Display of EnumArray property not implemented for type '%s'", asString(type).c_str());
-
-            i32 * pU32 = (i32*)(uint_ptr(_object) + offset);
-
-            if (asBool(IProperty::Flags::HasRange & flags))
-                changed |= ImGui::SliderInt(displayName, pU32, max(0, (int)_prop->getRange().x), (int)_prop->getRange().y, "%d", imguiInputTextflags);
-            else
-                changed |= ImGui::InputInt(displayName, pU32, 1, 16, imguiInputTextflags);
-        };
-        break;        
-
-        case IProperty::Type::Float:
-        {
-            VG_ASSERT(!isEnumArray, "Display of EnumArray property not implemented for type '%s'", asString(type).c_str());
-
-            float * pFloat = _prop->GetPropertyFloat(_object);
-
-            if (asBool(IProperty::Flags::HasRange & flags))
-                changed |= ImGui::SliderFloat(displayName, pFloat, _prop->getRange().x, _prop->getRange().y);
-            else
-                changed |= ImGui::InputFloat(displayName, pFloat);
-        };
-        break;
-
-        case IProperty::Type::Float2:
-        {
-            VG_ASSERT(!isEnumArray, "Display of EnumArray property not implemented for type '%s'", asString(type).c_str());
-
-            float * pFloat2 = (float *)_prop->GetPropertyFloat2(_object);
-
-            changed |= ImGui::InputFloat2(displayName, pFloat2);
-        };
-        break;
-
-        case IProperty::Type::Float3:
-        {
-            VG_ASSERT(!isEnumArray, "Display of EnumArray property not implemented for type '%s'", asString(type).c_str());
-
-            float * pFloat4 = (float *)_prop->GetPropertyFloat3(_object);
-
-            if (asBool(IProperty::Flags::Color & flags))
-                changed |= ImGui::ColorEdit3(displayName, pFloat4);
-            else
-                changed |= ImGui::InputFloat3(displayName, pFloat4);
-        };
-        break;
-
-        case IProperty::Type::Float4:
-        {
-            float * pFloat4 = (float*)_prop->GetPropertyFloat4(_object);
-
-            if (isEnumArray)
+            switch (type)
             {
-                char label[1024];
-                sprintf_s(label, "%s (%u)", displayName, _prop->getEnumCount());
-                if (ImGui::TreeNodeEx(label, ImGuiTreeNodeFlags_OpenOnArrow))
+                default:
+                    VG_ASSERT_ENUM_NOT_IMPLEMENTED(type);
+                    break;
+
+                case IProperty::Type::Bool:
                 {
-                    for (uint e = 0; e < _prop->getEnumCount(); ++e)
+                    VG_ASSERT(!isEnumArray, "Display of EnumArray property not implemented for type '%s'", asString(type).c_str());
+                    bool * pBool = _prop->GetPropertyBool(_object);
+                    changed |= ImGui::Checkbox(getPropertyLabel(_prop).c_str(), pBool);
+                };
+                break;
+
+                case IProperty::Type::EnumU8:
+                    VG_ASSERT(!isEnumArray, "Display of EnumArray property not implemented for type '%s'", asString(type).c_str());
+                    changed |= displayEnum<u8>(_object, _prop);
+                    break;
+
+                case IProperty::Type::EnumU16:
+                    VG_ASSERT(!isEnumArray, "Display of EnumArray property not implemented for type '%s'", asString(type).c_str());
+                    changed |= displayEnum<u16>(_object, _prop);
+                    break;
+
+                case IProperty::Type::EnumU32:
+                    VG_ASSERT(!isEnumArray, "Display of EnumArray property not implemented for type '%s'", asString(type).c_str());
+                    changed |= displayEnum<u32>(_object, _prop);
+                    break;
+
+                case IProperty::Type::EnumFlagsU8:
+                    VG_ASSERT(!isEnumArray, "Display of EnumArray property not implemented for type '%s'", asString(type).c_str());
+                    changed |= displayEnumFlags<u8>(_object, _prop);
+                    break;
+
+                case IProperty::Type::EnumFlagsU16:
+                    VG_ASSERT(!isEnumArray, "Display of EnumArray property not implemented for type '%s'", asString(type).c_str());
+                    changed |= displayEnumFlags<u16>(_object, _prop);
+                    break;
+
+                case IProperty::Type::EnumFlagsU32:
+                    VG_ASSERT(!isEnumArray, "Display of EnumArray property not implemented for type '%s'", asString(type).c_str());
+                    changed |= displayEnumFlags<u32>(_object, _prop);
+                    break;
+
+                case IProperty::Type::Uint8:
+                {
+                    VG_ASSERT(!isEnumArray, "Display of EnumArray property not implemented for type '%s'", asString(type).c_str());
+
+                    i8 * pU8 = (i8 *)(uint_ptr(_object) + offset);
+
+                    i32 temp = (u8)*pU8;
+
+                    if (asBool(IProperty::Flags::HasRange & flags))
+                        changed |= ImGui::SliderInt(displayName, &temp, max((int)0, (int)_prop->getRange().x), min((int)255, (int)_prop->getRange().y), "%d", imguiInputTextflags);
+                    else
+                        changed |= ImGui::InputInt(displayName, &temp, 1, 16, imguiInputTextflags);
+
+                    if (changed)
+                        *pU8 = (u8)temp;
+                };
+                break;
+
+                case IProperty::Type::Uint16:
+                {
+                    VG_ASSERT(!isEnumArray, "Display of EnumArray property not implemented for type '%s'", asString(type).c_str());
+
+                    i16 * pU16 = (i16 *)(uint_ptr(_object) + offset);
+
+                    i32 temp = (u16)*pU16;
+
+                    if (asBool(IProperty::Flags::HasRange & flags))
+                        changed |= ImGui::SliderInt(displayName, &temp, max((int)0, (int)_prop->getRange().x), min((int)65535, (int)_prop->getRange().y), "%d", imguiInputTextflags);
+                    else
+                        changed |= ImGui::InputInt(displayName, &temp, 1, 16, imguiInputTextflags);
+
+                    if (changed)
+                        *pU16 = (u16)temp;
+                };
+                break;
+
+                case IProperty::Type::Uint32:
+                {
+                    VG_ASSERT(!isEnumArray, "Display of EnumArray property not implemented for type '%s'", asString(type).c_str());
+
+                    i32 * pU32 = (i32 *)(uint_ptr(_object) + offset);
+
+                    if (asBool(IProperty::Flags::HasRange & flags))
+                        changed |= ImGui::SliderInt(displayName, pU32, max(0, (int)_prop->getRange().x), (int)_prop->getRange().y, "%d", imguiInputTextflags);
+                    else
+                        changed |= ImGui::InputInt(displayName, pU32, 1, 16, imguiInputTextflags);
+                };
+                break;
+
+                case IProperty::Type::Float:
+                {
+                    VG_ASSERT(!isEnumArray, "Display of EnumArray property not implemented for type '%s'", asString(type).c_str());
+
+                    float * pFloat = _prop->GetPropertyFloat(_object);
+
+                    if (asBool(IProperty::Flags::HasRange & flags))
+                        changed |= ImGui::SliderFloat(displayName, pFloat, _prop->getRange().x, _prop->getRange().y);
+                    else
+                        changed |= ImGui::InputFloat(displayName, pFloat);
+                };
+                break;
+
+                case IProperty::Type::Float2:
+                {
+                    VG_ASSERT(!isEnumArray, "Display of EnumArray property not implemented for type '%s'", asString(type).c_str());
+
+                    float * pFloat2 = (float *)_prop->GetPropertyFloat2(_object);
+
+                    changed |= ImGui::InputFloat2(displayName, pFloat2);
+                };
+                break;
+
+                case IProperty::Type::Float3:
+                {
+                    VG_ASSERT(!isEnumArray, "Display of EnumArray property not implemented for type '%s'", asString(type).c_str());
+
+                    float * pFloat4 = (float *)_prop->GetPropertyFloat3(_object);
+
+                    if (asBool(IProperty::Flags::Color & flags))
+                        changed |= ImGui::ColorEdit3(displayName, pFloat4);
+                    else
+                        changed |= ImGui::InputFloat3(displayName, pFloat4);
+                };
+                break;
+
+                case IProperty::Type::Float4:
+                {
+                    float * pFloat4 = (float *)_prop->GetPropertyFloat4(_object);
+
+                    if (isEnumArray)
+                    {
+                        char label[1024];
+                        sprintf_s(label, "%s (%u)", displayName, _prop->getEnumCount());
+                        if (ImGui::TreeNodeEx(label, ImGuiTreeNodeFlags_OpenOnArrow))
+                        {
+                            for (uint e = 0; e < _prop->getEnumCount(); ++e)
+                            {
+                                if (asBool(IProperty::Flags::Color & flags))
+                                    changed |= ImGui::ColorEdit4(_prop->getEnumName(e), pFloat4 + e * 4);
+                                else
+                                    changed |= ImGui::InputFloat4(_prop->getEnumName(e), pFloat4 + e * 4);
+                            }
+                            ImGui::TreePop();
+                        }
+                    }
+                    else
                     {
                         if (asBool(IProperty::Flags::Color & flags))
-                            changed |= ImGui::ColorEdit4(_prop->getEnumName(e), pFloat4 + e * 4);
+                            changed |= ImGui::ColorEdit4(displayName, pFloat4);
                         else
-                            changed |= ImGui::InputFloat4(_prop->getEnumName(e), pFloat4 + e * 4);
+                            changed |= ImGui::InputFloat4(displayName, pFloat4);
                     }
-                    ImGui::TreePop();
-                }
-            }
-            else
-            {
-                if (asBool(IProperty::Flags::Color & flags))
-                    changed |= ImGui::ColorEdit4(displayName, pFloat4);
-                else
-                    changed |= ImGui::InputFloat4(displayName, pFloat4);
-            }
-        };
-        break;
+                };
+                break;
 
-        case IProperty::Type::Float4x4:
-        {
-            VG_ASSERT(!isEnumArray, "Display of EnumArray property not implemented for type '%s'", asString(type).c_str());
-
-            float * pFloat4x4 = (float*)_prop->GetPropertyFloat4x4(_object);
-
-            changed |= ImGui::InputFloat4(((string)displayName + ".I").c_str(), pFloat4x4 + 0, "%.2f", imguiInputTextflags);
-            changed |= ImGui::InputFloat4(((string)displayName + ".J").c_str(), pFloat4x4 + 4, "%.2f", imguiInputTextflags);
-            changed |= ImGui::InputFloat4(((string)displayName + ".K").c_str(), pFloat4x4 + 8, "%.2f", imguiInputTextflags);
-            changed |= ImGui::InputFloat4(((string)displayName + ".T").c_str(), pFloat4x4 + 12, "%.2f", imguiInputTextflags);
-
-        }
-        break;
-
-        case IProperty::Type::String:
-        {
-            VG_ASSERT(!isEnumArray, "Display of EnumArray property not implemented for type '%s'", asString(type).c_str());
-
-            bool selectPath = false;
-
-            string * pString = _prop->GetPropertyString(_object);
-
-            char buffer[1024];
-            sprintf_s(buffer, pString->c_str());
-            changed |= ImGui::InputText(getButtonLabel(displayName, _object).c_str(), buffer, countof(buffer), imguiInputTextflags);
-
-            if (changed)
-            {
-                *pString = buffer;
-
-                if (asBool(IProperty::Flags::IsFolder & flags))
+                case IProperty::Type::Float4x4:
                 {
-                    ImGui::SameLine();
-                    if (ImGui::Button("Path"))
-                        selectPath = true;
-                }
+                    VG_ASSERT(!isEnumArray, "Display of EnumArray property not implemented for type '%s'", asString(type).c_str());
 
-                if (selectPath)
-                {
-                    ImGui::OpenPopup("Select folder");
-                    selectPath = false;
-                }
+                    float * pFloat4x4 = (float *)_prop->GetPropertyFloat4x4(_object);
 
-                if (asBool(IProperty::Flags::IsFolder & flags))
+                    changed |= ImGui::InputFloat4(((string)displayName + ".I").c_str(), pFloat4x4 + 0, "%.2f", imguiInputTextflags);
+                    changed |= ImGui::InputFloat4(((string)displayName + ".J").c_str(), pFloat4x4 + 4, "%.2f", imguiInputTextflags);
+                    changed |= ImGui::InputFloat4(((string)displayName + ".K").c_str(), pFloat4x4 + 8, "%.2f", imguiInputTextflags);
+                    changed |= ImGui::InputFloat4(((string)displayName + ".T").c_str(), pFloat4x4 + 12, "%.2f", imguiInputTextflags);
+
+                }
+                break;
+
+                case IProperty::Type::String:
                 {
-                    auto & fileBrowser = getFileBrowser();
-                    if (fileBrowser.showFileDialog("Select folder", imgui_addons::ImGuiFileBrowser::DialogMode::SELECT, style::dialog::Size))
+                    VG_ASSERT(!isEnumArray, "Display of EnumArray property not implemented for type '%s'", asString(type).c_str());
+
+                    bool selectPath = false;
+
+                    string * pString = _prop->GetPropertyString(_object);
+
+                    char buffer[1024];
+                    sprintf_s(buffer, pString->c_str());
+                    changed |= ImGui::InputText(getButtonLabel(displayName, _object).c_str(), buffer, countof(buffer), imguiInputTextflags);
+
+                    if (changed)
                     {
-                        const string newFolder = io::getRelativePath(fileBrowser.selected_path);
+                        *pString = buffer;
 
-                        if (newFolder != *pString)
+                        if (asBool(IProperty::Flags::IsFolder & flags))
                         {
-                            *pString = newFolder;
-                            changed = true;
+                            ImGui::SameLine();
+                            if (ImGui::Button("Path"))
+                                selectPath = true;
                         }
+
+                        if (selectPath)
+                        {
+                            ImGui::OpenPopup("Select folder");
+                            selectPath = false;
+                        }
+
+                        if (asBool(IProperty::Flags::IsFolder & flags))
+                        {
+                            auto & fileBrowser = getFileBrowser();
+                            if (fileBrowser.showFileDialog("Select folder", imgui_addons::ImGuiFileBrowser::DialogMode::SELECT, style::dialog::Size))
+                            {
+                                const string newFolder = io::getRelativePath(fileBrowser.selected_path);
+
+                                if (newFolder != *pString)
+                                {
+                                    *pString = newFolder;
+                                    changed = true;
+                                }
+                            }
+                        }
+
+                        //ImGui::SetKeyboardFocusHere(-1); // Auto focus previous widget
                     }
                 }
+                break;
 
-                //ImGui::SetKeyboardFocusHere(-1); // Auto focus previous widget
-            }
-        }
-        break;
-
-        case IProperty::Type::Callback:
-        {
-            VG_ASSERT(!isEnumArray, "Display of EnumArray property not implemented for type '%s'", asString(type).c_str());
-
-            IProperty::Callback pFunc = _prop->GetPropertyCallback();
-
-            if (ImGui::Button(displayName))
-                pFunc(_object);
-        }
-        break;
-
-        case IProperty::Type::ObjectVector:
-        {
-            VG_ASSERT(!isEnumArray, "Display of EnumArray property not implemented for type '%s'", asString(type).c_str());
-
-            const uint sizeOf = _prop->getSizeOf();
-            const size_t count = _prop->GetPropertyObjectVectorCount(_object);
-            const byte * data = _prop->GetPropertyObjectVectorData(_object);
-
-            string treeNodeName = (string)displayName + " (" + to_string(count) + ")";
-
-            auto treeNodeFlags = ImGuiTreeNodeFlags_OpenOnArrow;
-
-            if (ImGui::TreeNodeEx(treeNodeName.c_str(), treeNodeFlags))
-            {
-                for (uint i = 0; i < count; ++i)
+                case IProperty::Type::Callback:
                 {
-                    IObject * pObject = (IObject *)(data + sizeOf * i);
-                    displayArrayObject(pObject, i, nullptr);
+                    VG_ASSERT(!isEnumArray, "Display of EnumArray property not implemented for type '%s'", asString(type).c_str());
+
+                    IProperty::Callback pFunc = _prop->GetPropertyCallback();
+
+                    if (ImGui::Button(displayName))
+                        pFunc(_object);
                 }
-                ImGui::TreePop();
-            }
-        }
-        break;
+                break;
 
-        case IProperty::Type::ObjectRefVector:
-        {
-            VG_ASSERT(!isEnumArray, "Display of EnumArray property not implemented for type '%s'", asString(type).c_str());
-
-            auto * vec = _prop->GetPropertyObjectRefVector(_object);
-            const uint count = vec->count();
-
-            string treeNodeName = (string)displayName + " (" + to_string(count) + ")";
-
-            auto treeNodeFlags = ImGuiTreeNodeFlags_OpenOnArrow;
-
-            if (count > 0)
-            {
-                if (!strcmp(displayName, "Components"))
+                case IProperty::Type::ObjectVector:
                 {
-                    for (uint i = 0; i < count; ++i)
-                    {
-                        IComponent * pComponent = (IComponent*)(*vec)[i];
+                    VG_ASSERT(!isEnumArray, "Display of EnumArray property not implemented for type '%s'", asString(type).c_str());
 
-                        string componentShortName = pComponent->getClassName();
+                    const uint sizeOf = _prop->getSizeOf();
+                    const size_t count = _prop->GetPropertyObjectVectorCount(_object);
+                    const byte * data = _prop->GetPropertyObjectVectorData(_object);
 
-                        // Remove "Component" at the end of class name if present
-                        {
-                            auto nPos = componentShortName.find("Component");
-                            if (-1 != nPos)
-                                componentShortName.erase(nPos);
-                        }
+                    string treeNodeName = (string)displayName + " (" + to_string(count) + ")";
 
-                        // Remove "Behaviour" at the end of class name if present
-                        {
-                            auto nPos = componentShortName.find("Behaviour");
-                            if (-1 != nPos)
-                                componentShortName.erase(nPos);
-                        }
-                        const bool open = ImGui::CollapsingHeader(componentShortName.c_str(), nullptr, ImGuiTreeNodeFlags_None);
-                        
-                        ImGuiComponentInspectorMenu componentInspectorMenu;
-                        componentInspectorMenu.Display(pComponent);
+                    auto treeNodeFlags = ImGuiTreeNodeFlags_OpenOnArrow;
 
-                        if (open)
-                            displayArrayObject(pComponent, i, nullptr);
-                    }
-                }
-                else
-                {
                     if (ImGui::TreeNodeEx(treeNodeName.c_str(), treeNodeFlags))
                     {
                         for (uint i = 0; i < count; ++i)
                         {
-                            IObject * pObject = (*vec)[i];
+                            IObject * pObject = (IObject *)(data + sizeOf * i);
                             displayArrayObject(pObject, i, nullptr);
                         }
                         ImGui::TreePop();
                     }
                 }
-            }
-        }
-        break;
+                break;
 
-        case IProperty::Type::ObjectRefDictionary:
-        {
-            VG_ASSERT(!isEnumArray, "Display of EnumArray property not implemented for type '%s'", asString(type).c_str());
-
-            dictionary<IObject*> * dic = _prop->GetPropertyObjectRefDictionary(_object);
-            const uint count = (uint)dic->size();
-
-            string treeNodeName = (string)displayName + " (" + to_string(count) + ")";
-
-            auto treeNodeFlags = ImGuiTreeNodeFlags_OpenOnArrow;
-
-            if (count > 0 && ImGui::TreeNodeEx(treeNodeName.c_str(), treeNodeFlags))
-            {
-                uint index = 0;
-                for (auto it = dic->begin(); it != dic->end(); ++it)
+                case IProperty::Type::ObjectRefVector:
                 {
-                    IObject * pObject = (*it).second;
-                    displayArrayObject(pObject, index, (*it).first.c_str());
-                    index++;
-                }
+                    VG_ASSERT(!isEnumArray, "Display of EnumArray property not implemented for type '%s'", asString(type).c_str());
 
-                ImGui::TreePop();
-            }
-        }
-        break;
+                    auto * vec = _prop->GetPropertyObjectRefVector(_object);
+                    const uint count = vec->count();
 
-        case IProperty::Type::Object:
-        case IProperty::Type::ObjectRef:
-        {
-            bool ref = (type == IProperty::Type::ObjectRef);
-            IObject * pObject =  ref ? _prop->GetPropertyObjectRef(_object) : _prop->GetPropertyObject(_object);
+                    string treeNodeName = (string)displayName + " (" + to_string(count) + ")";
 
-            string treeNodeName;
-            auto treeNodeFlags = ImGuiTreeNodeFlags_OpenOnArrow;
+                    auto treeNodeFlags = ImGuiTreeNodeFlags_OpenOnArrow;
 
-            //if (pObject)
-            //    treeNodeName = pObject->getName();
-            //else
-                treeNodeName = displayName;
-
-            if (isEnumArray)
-            {
-                char label[1024];
-                sprintf_s(label, "%s (%u)", displayName, _prop->getEnumCount());
-                if (ImGui::TreeNodeEx(label, treeNodeFlags))
-                {
-                    for (uint e = 0; e < _prop->getEnumCount(); ++e)
+                    if (count > 0)
                     {
-                        pObject = ref ? _prop->GetPropertyObjectRef(_object, e) : _prop->GetPropertyObject(_object, e);
-
-                        if (ImGui::TreeNodeEx(_prop->getEnumName(e), treeNodeFlags | ImGuiTreeNodeFlags_DefaultOpen))
+                        if (!strcmp(displayName, "Components"))
                         {
-                            if (nullptr != pObject)
-                                displayObject(pObject);
-                                
+                            for (uint i = 0; i < count; ++i)
+                            {
+                                IComponent * pComponent = (IComponent *)(*vec)[i];
+
+                                string componentShortName = pComponent->getClassName();
+
+                                // Remove "Component" at the end of class name if present
+                                {
+                                    auto nPos = componentShortName.find("Component");
+                                    if (-1 != nPos)
+                                        componentShortName.erase(nPos);
+                                }
+
+                                // Remove "Behaviour" at the end of class name if present
+                                {
+                                    auto nPos = componentShortName.find("Behaviour");
+                                    if (-1 != nPos)
+                                        componentShortName.erase(nPos);
+                                }
+                                const bool open = ImGui::CollapsingHeader(componentShortName.c_str(), nullptr, ImGuiTreeNodeFlags_None);
+
+                                ImGuiComponentInspectorMenu componentInspectorMenu;
+                                componentInspectorMenu.Display(pComponent);
+
+                                if (open)
+                                    displayArrayObject(pComponent, i, nullptr);
+                            }
+                        }
+                        else
+                        {
+                            if (ImGui::TreeNodeEx(treeNodeName.c_str(), treeNodeFlags))
+                            {
+                                for (uint i = 0; i < count; ++i)
+                                {
+                                    IObject * pObject = (*vec)[i];
+                                    displayArrayObject(pObject, i, nullptr);
+                                }
+                                ImGui::TreePop();
+                            }
+                        }
+                    }
+                }
+                break;
+
+                case IProperty::Type::ObjectRefDictionary:
+                {
+                    VG_ASSERT(!isEnumArray, "Display of EnumArray property not implemented for type '%s'", asString(type).c_str());
+
+                    dictionary<IObject *> * dic = _prop->GetPropertyObjectRefDictionary(_object);
+                    const uint count = (uint)dic->size();
+
+                    string treeNodeName = (string)displayName + " (" + to_string(count) + ")";
+
+                    auto treeNodeFlags = ImGuiTreeNodeFlags_OpenOnArrow;
+
+                    if (count > 0 && ImGui::TreeNodeEx(treeNodeName.c_str(), treeNodeFlags))
+                    {
+                        uint index = 0;
+                        for (auto it = dic->begin(); it != dic->end(); ++it)
+                        {
+                            IObject * pObject = (*it).second;
+                            displayArrayObject(pObject, index, (*it).first.c_str());
+                            index++;
+                        }
+
+                        ImGui::TreePop();
+                    }
+                }
+                break;
+
+                case IProperty::Type::Object:
+                case IProperty::Type::ObjectRef:
+                {
+                    bool ref = (type == IProperty::Type::ObjectRef);
+                    IObject * pObject = ref ? _prop->GetPropertyObjectRef(_object) : _prop->GetPropertyObject(_object);
+
+                    string treeNodeName;
+                    auto treeNodeFlags = ImGuiTreeNodeFlags_OpenOnArrow;
+
+                    //if (pObject)
+                    //    treeNodeName = pObject->getName();
+                    //else
+                    treeNodeName = displayName;
+
+                    if (isEnumArray)
+                    {
+                        char label[1024];
+                        sprintf_s(label, "%s (%u)", displayName, _prop->getEnumCount());
+                        if (ImGui::TreeNodeEx(label, treeNodeFlags))
+                        {
+                            for (uint e = 0; e < _prop->getEnumCount(); ++e)
+                            {
+                                pObject = ref ? _prop->GetPropertyObjectRef(_object, e) : _prop->GetPropertyObject(_object, e);
+
+                                if (ImGui::TreeNodeEx(_prop->getEnumName(e), treeNodeFlags | ImGuiTreeNodeFlags_DefaultOpen))
+                                {
+                                    if (nullptr != pObject)
+                                        displayObject(pObject);
+
+                                    ImGui::TreePop();
+                                }
+                            }
                             ImGui::TreePop();
                         }
                     }
-                    ImGui::TreePop();
+                    else
+                    {
+                        ImGui::PushStyleColor(ImGuiCol_Text, ImGui::GetColorU32(ImGuiCol_Text));
+
+                        if (nullptr != pObject)
+                        {
+                            auto classDesc = pObject->getClassDesc();
+                            VG_ASSERT(classDesc);
+                            if (classDesc && asBool(IClassDesc::Flags::Component & classDesc->getFlags()))
+                                treeNodeFlags |= ImGuiTreeNodeFlags_Leaf;
+                        }
+
+                        bool needTreeNode = strcmp(_prop->getName(), "m_object") && ref && !flatten;
+                        bool treenNodeOpen = !needTreeNode || ImGui::TreeNodeEx(treeNodeName.c_str(), treeNodeFlags);
+
+                        static int ObjectRightClicMenuIndex = -1;
+                        bool needOpenPopup = false;
+
+                        //ImGui::PushID("ObjectRightClicMenu");
+                        //if (ImGui::BeginPopupContextItem())
+                        //{
+                        //    //if (ImGui::MenuItem("Cut", "Ctrl-X"))
+                        //    //    ObjectRightClicMenuIndex = 0;
+                        //    //
+                        //    //if (ImGui::MenuItem("Copy", "Ctrl-C"))
+                        //    //    ObjectRightClicMenuIndex = 1;
+                        //    //
+                        //    //if (ImGui::MenuItem("Paste", "Ctrl-V"))
+                        //    //    ObjectRightClicMenuIndex = 2;
+                        //
+                        //    if (ImGui::MenuItem("Rename", "Ctrl-R"))
+                        //    {
+                        //        needOpenPopup = true;
+                        //        ObjectRightClicMenuIndex = 3;
+                        //    }
+                        //
+                        //    ImGui::EndPopup();
+                        //}
+                        //ImGui::PopID();
+                        //
+                        //if (ObjectRightClicMenuIndex == 3)
+                        //{
+                        //    static bool isRenamePopopOpened = true;
+                        //
+                        //    if (needOpenPopup)
+                        //        ImGui::OpenPopup("Rename");
+                        //
+                        //    if (ImGui::BeginPopupModal("Rename", &isRenamePopopOpened, ImGuiWindowFlags_AlwaysAutoResize))
+                        //    {
+                        //        static char nameTmp[1024] = { '\0' };
+                        //
+                        //        if (nameTmp[0] == '\0')
+                        //            strcpy(nameTmp, pObject->getName().c_str());
+                        //
+                        //        changed |= ImGui::InputText("", nameTmp, countof(nameTmp), ImGuiInputTextFlags_AutoSelectAll);
+                        //
+                        //        string newName = nameTmp;
+                        //
+                        //        if (ImGui::Button("Rename", style::button::Size))
+                        //        {
+                        //            pObject->setName(newName);
+                        //            ImGui::CloseCurrentPopup();
+                        //            nameTmp[0] = '\0';
+                        //            ObjectRightClicMenuIndex = -1;
+                        //        }
+                        //
+                        //        ImGui::SameLine();
+                        //
+                        //        if (ImGui::Button("Cancel", style::button::Size))
+                        //        {
+                        //            ImGui::CloseCurrentPopup();
+                        //            nameTmp[0] = '\0';
+                        //            ObjectRightClicMenuIndex = -1;
+                        //        }
+                        //
+                        //        ImGui::EndPopup();
+                        //    }
+                        //}
+
+                        if (treenNodeOpen)
+                        {
+                            //updateSelection(_object);
+
+                            if (pObject)
+                                displayObject(pObject);
+                            //else
+                            //    ImGui::TextDisabled("null");
+
+                            if (needTreeNode)
+                                ImGui::TreePop();
+                        }
+                        else
+                        {
+                            //updateSelection(pObject);
+                        }
+
+                        ImGui::PopStyleColor();
+                    }
                 }
-            }
-            else
-            {
-                ImGui::PushStyleColor(ImGuiCol_Text, ImGui::GetColorU32(ImGuiCol_Text));
+                break;
 
-                if (nullptr != pObject)
+                case IProperty::Type::ResourceVector:
                 {
-                    auto classDesc = pObject->getClassDesc();
-                    VG_ASSERT(classDesc);
-                    if (classDesc && asBool(IClassDesc::Flags::Component & classDesc->getFlags()))
-                        treeNodeFlags |= ImGuiTreeNodeFlags_Leaf;
-                }
+                    VG_ASSERT(!isEnumArray, "Display of EnumArray property not implemented for type '%s'", asString(type).c_str());
 
-                bool needTreeNode = strcmp(_prop->getName(), "m_object") && ref && !flatten;
-                bool treenNodeOpen = !needTreeNode || ImGui::TreeNodeEx(treeNodeName.c_str(), treeNodeFlags);
+                    const uint sizeOf = _prop->getSizeOf();
+                    const size_t count = _prop->GetPropertyResourceVectorCount(_object);
+                    const byte * data = _prop->GetPropertyResourceVectorData(_object);
 
-                static int ObjectRightClicMenuIndex = -1;
-                bool needOpenPopup = false;
+                    string treeNodeName = (string)displayName + " (" + to_string(count) + ")";
 
-                //ImGui::PushID("ObjectRightClicMenu");
-                //if (ImGui::BeginPopupContextItem())
-                //{
-                //    //if (ImGui::MenuItem("Cut", "Ctrl-X"))
-                //    //    ObjectRightClicMenuIndex = 0;
-                //    //
-                //    //if (ImGui::MenuItem("Copy", "Ctrl-C"))
-                //    //    ObjectRightClicMenuIndex = 1;
-                //    //
-                //    //if (ImGui::MenuItem("Paste", "Ctrl-V"))
-                //    //    ObjectRightClicMenuIndex = 2;
-                //
-                //    if (ImGui::MenuItem("Rename", "Ctrl-R"))
-                //    {
-                //        needOpenPopup = true;
-                //        ObjectRightClicMenuIndex = 3;
-                //    }
-                //
-                //    ImGui::EndPopup();
-                //}
-                //ImGui::PopID();
-                //
-                //if (ObjectRightClicMenuIndex == 3)
-                //{
-                //    static bool isRenamePopopOpened = true;
-                //
-                //    if (needOpenPopup)
-                //        ImGui::OpenPopup("Rename");
-                //
-                //    if (ImGui::BeginPopupModal("Rename", &isRenamePopopOpened, ImGuiWindowFlags_AlwaysAutoResize))
-                //    {
-                //        static char nameTmp[1024] = { '\0' };
-                //
-                //        if (nameTmp[0] == '\0')
-                //            strcpy(nameTmp, pObject->getName().c_str());
-                //
-                //        changed |= ImGui::InputText("", nameTmp, countof(nameTmp), ImGuiInputTextFlags_AutoSelectAll);
-                //
-                //        string newName = nameTmp;
-                //
-                //        if (ImGui::Button("Rename", style::button::Size))
-                //        {
-                //            pObject->setName(newName);
-                //            ImGui::CloseCurrentPopup();
-                //            nameTmp[0] = '\0';
-                //            ObjectRightClicMenuIndex = -1;
-                //        }
-                //
-                //        ImGui::SameLine();
-                //
-                //        if (ImGui::Button("Cancel", style::button::Size))
-                //        {
-                //            ImGui::CloseCurrentPopup();
-                //            nameTmp[0] = '\0';
-                //            ObjectRightClicMenuIndex = -1;
-                //        }
-                //
-                //        ImGui::EndPopup();
-                //    }
-                //}
-
-                if (treenNodeOpen)
-                {
-                    //updateSelection(_object);
-
-                    if (pObject)
-                        displayObject(pObject);
-                    //else
-                    //    ImGui::TextDisabled("null");
-
-                    if (needTreeNode)
-                        ImGui::TreePop();
-                }
-                else
-                {
-                    //updateSelection(pObject);
-                }
-
-                ImGui::PopStyleColor();
-            }
-        }
-        break;
-
-        case IProperty::Type::ResourceVector:
-        {
-            VG_ASSERT(!isEnumArray, "Display of EnumArray property not implemented for type '%s'", asString(type).c_str());
-
-            const uint sizeOf = _prop->getSizeOf();
-            const size_t count = _prop->GetPropertyResourceVectorCount(_object);
-            const byte * data = _prop->GetPropertyResourceVectorData(_object);
-
-            string treeNodeName = (string)displayName + " (" + to_string(count) + ")";
-
-            if (ImGui::CollapsingHeader(treeNodeName.c_str(), nullptr, ImGuiTreeNodeFlags_DefaultOpen))
-            {
-                ImGui::Indent();
-                for (uint i = 0; i < count; ++i)
-                {
-                    IResource * pResource = (IResource *)(data + sizeOf * i);
-
-                    string name = displayName + (string)"[" + to_string(i) + (string)"]";
-                    if (ImGui::TreeNodeEx(name.c_str(), ImGuiTreeNodeFlags_DefaultOpen))
+                    if (ImGui::CollapsingHeader(treeNodeName.c_str(), nullptr, ImGuiTreeNodeFlags_DefaultOpen))
                     {
                         ImGui::Indent();
-                        displayResource(pResource, _prop);
+                        for (uint i = 0; i < count; ++i)
+                        {
+                            IResource * pResource = (IResource *)(data + sizeOf * i);
+
+                            string name = displayName + (string)"[" + to_string(i) + (string)"]";
+                            if (ImGui::TreeNodeEx(name.c_str(), ImGuiTreeNodeFlags_DefaultOpen))
+                            {
+                                ImGui::Indent();
+                                displayResource(pResource, _prop);
+                                ImGui::Unindent();
+                                ImGui::TreePop();
+                            }
+                        }
                         ImGui::Unindent();
-                        ImGui::TreePop();
                     }
                 }
-                ImGui::Unindent();
-            }
-        }
-            break;
+                break;
 
-        case IProperty::Type::Resource:
-        case IProperty::Type::ResourceRef:
-        {
-            const bool ref = type == IProperty::Type::ResourceRef;
-
-            if (isEnumArray)
-            {
-                char label[1024];
-                sprintf_s(label, "%s (%u)", displayName, _prop->getEnumCount());
-                if (ImGui::TreeNodeEx(label, ImGuiTreeNodeFlags_OpenOnArrow))
+                case IProperty::Type::Resource:
+                case IProperty::Type::ResourceRef:
                 {
-                    for (uint e = 0; e < _prop->getEnumCount(); ++e)
+                    const bool ref = type == IProperty::Type::ResourceRef;
+
+                    if (isEnumArray)
                     {
-                        auto pResource = ref ? _prop->GetPropertyResourceRef(_object, e) : _prop->GetPropertyResource(_object, e);
-
-                        if (ImGui::TreeNodeEx(_prop->getEnumName(e), ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_DefaultOpen))
+                        char label[1024];
+                        sprintf_s(label, "%s (%u)", displayName, _prop->getEnumCount());
+                        if (ImGui::TreeNodeEx(label, ImGuiTreeNodeFlags_OpenOnArrow))
                         {
-                            if (nullptr != pResource)
+                            for (uint e = 0; e < _prop->getEnumCount(); ++e)
                             {
-                                changed |= displayResource(pResource, _prop, e);
-                            }
+                                auto pResource = ref ? _prop->GetPropertyResourceRef(_object, e) : _prop->GetPropertyResource(_object, e);
 
+                                if (ImGui::TreeNodeEx(_prop->getEnumName(e), ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_DefaultOpen))
+                                {
+                                    if (nullptr != pResource)
+                                    {
+                                        changed |= displayResource(pResource, _prop, e);
+                                    }
+
+                                    ImGui::TreePop();
+                                }
+                            }
                             ImGui::TreePop();
                         }
                     }
-                    ImGui::TreePop();
+                    else
+                    {
+                        IResource * pResource = ref ? _prop->GetPropertyResourceRef(_object) : _prop->GetPropertyResource(_object);
+                        changed |= displayResource(pResource, _prop);
+                    }
                 }
-            }
-            else
-            {
-                IResource * pResource = ref ? _prop->GetPropertyResourceRef(_object) : _prop->GetPropertyResource(_object);
-                changed |= displayResource(pResource, _prop);
+                break;
             }
         }
-        break;
-        }
+        //ImGui::EndDisabled();
 
         if (changed)
             _object->onPropertyChanged(_object, *_prop);

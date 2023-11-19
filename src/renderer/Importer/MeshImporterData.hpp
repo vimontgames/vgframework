@@ -2,7 +2,7 @@ using namespace vg::core;
 
 namespace vg::renderer
 {
-    static const u32 MeshImporterDataVersion = 4;
+    static const u32 MeshImporterDataVersion = 5;
 
     //--------------------------------------------------------------------------------------
     bool MeshImporterData::load(const core::string & _file)
@@ -25,6 +25,8 @@ namespace vg::renderer
                 batches.resize(batchCount);
                 for (uint i = 0; i < batchCount; ++i)
                     batches[i].read(buffer);
+
+                buffer.read((u8*)&skinningBonesCount);
 
                 buffer.read(&indices);
                 buffer.read(&vertices);
@@ -56,6 +58,8 @@ namespace vg::renderer
         for (uint i = 0; i < batches.size(); ++i)
             batches[i].write(buffer);
 
+        buffer.write((u8)skinningBonesCount);
+
         buffer.write(indices);
         buffer.write(vertices);
 
@@ -64,9 +68,7 @@ namespace vg::renderer
             materials[i].write(buffer);
 
         if (io::writeFile(_file, buffer))
-        {
             return true;
-        }
 
         return false;
     }

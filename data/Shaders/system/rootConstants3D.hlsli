@@ -78,8 +78,8 @@ struct RootConstants3D
 
     // data.w
     // uint flags   : 16 (unused)
+    // uint format  : 8 
     // uint matID   : 8 
-    // uint _pad    : 8 (unused)
     void setFlags(uint _value)
     {
         data.w = (data.w & ~0x0000FFFFUL) | (_value & 0xFFFF);
@@ -87,6 +87,14 @@ struct RootConstants3D
     uint getFlags()
     {
         return data.w & 0xFFFF;
+    }
+    void setVertexFormat(VertexFormat _value)
+    {
+        data.w = (data.w & ~0x00FF0000UL) | ((((uint) _value) & 0xFF) << 16);
+    }
+    VertexFormat getVertexFormat()
+    {
+        return (VertexFormat)((data.w >> 16) & 0xFF);
     }
     void setMatID(uint _value)
     {
@@ -96,6 +104,7 @@ struct RootConstants3D
     {
         return (data.w >> 24) & 0xFF;
     }
+    
     void setColor(float4 _color)
     {
         color = _color;

@@ -1,8 +1,6 @@
 #include "renderer/Precomp.h"
 #include "RenderPass.h"
 
-#include "core/Math/Math.h"
-
 #include "gfx/Device/Device.h"
 #include "gfx/CommandList/CommandList.h"
 #include "gfx/Resource/Texture.h"

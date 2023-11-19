@@ -1,15 +1,34 @@
-#ifndef _VERTEX__HLSLI_
-#define _VERTEX__HLSLI_
+#pragma once
 
+#include "types.hlsli"
 #include "packing.hlsli"
 
-#define SimpleVertex_stride (17 * sizeof(float))
-
-struct SimpleVertex
+// List every vertex format here (max 255 because it's serialized as u8 and 0xFF stands for "invalid vertex format")
+enum class VertexFormat : uint
 {
-    void Load(ByteAddressBuffer _buffer, uint _vertexID, uint _offset = 0)
+    Default         = 0,
+    Skinning_4Bones = 1
+};
+
+struct Vertex
+{
+    uint getVertexFormatStride(VertexFormat _format)
     {
-		uint vertexOffset = _offset + _vertexID * SimpleVertex_stride; 
+        switch (_format)
+        {
+            default:            
+            case VertexFormat::Default:
+                return 68;
+            
+            case VertexFormat::Skinning_4Bones:
+                return 100;
+        }
+    }
+    
+#ifndef __cplusplus
+    void Load(ByteAddressBuffer _buffer, VertexFormat _format, uint _vertexID, uint _offset = 0)
+    {
+        uint vertexOffset = _offset + _vertexID * getVertexFormatStride(_format);
 
         pos.xyz     = _buffer.Load<float3>(vertexOffset + 0);
         nrm.xyz     = _buffer.Load<float3>(vertexOffset + 12);
@@ -19,6 +38,7 @@ struct SimpleVertex
         uv[1].xy    = _buffer.Load<float2>(vertexOffset + 56);
         color       = _buffer.Load<uint>(vertexOffset + 64);
     }
+    #endif
 
     float3 getPos()             { return pos; }
     float3 getNrm()             { return nrm; }
@@ -34,7 +54,3 @@ struct SimpleVertex
     float2 uv[2];
     uint color;
 };
-
-#define Vertex SimpleVertex
-
-#endif 

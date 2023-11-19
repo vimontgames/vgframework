@@ -1,11 +1,11 @@
 #include "RenderObjectsPass.h"
 #include "renderer/Geometry/AABB/AABB.h"
 #include "renderer/Geometry/Mesh/MeshGeometry.h"
+#include "renderer/Geometry/Vertex/VertexFormat.h"
 #include "renderer/Job/Culling/GraphicInstanceList.h"
 #include "renderer/View/View.h"
 #include "renderer/IGraphicInstance.h"
 
-#include "shaders/system/vertex.hlsl.h"
 #include "shaders/editor/editor.hlsli"
 
 namespace vg::renderer
@@ -50,7 +50,7 @@ namespace vg::renderer
     {
         auto * device = Device::get();
 
-        SimpleVertex vertices[8];
+        DefaultVertex vertices[8];
 
         vertices[0].setPos({ -1.0f, -1.0f, -1.0f });
         vertices[0].setColor(0xFFFFFFFF);
@@ -76,7 +76,7 @@ namespace vg::renderer
         vertices[7].setPos({ -1.0f, +1.0f, +1.0f });
         vertices[7].setColor(0xFFFFFFFF);
 
-        BufferDesc vbDesc(Usage::Default, BindFlags::ShaderResource, CPUAccessFlags::None, BufferFlags::None, sizeof(SimpleVertex), (uint)countof(vertices));
+        BufferDesc vbDesc(Usage::Default, BindFlags::ShaderResource, CPUAccessFlags::None, BufferFlags::None, sizeof(DefaultVertex), (uint)countof(vertices));
         Buffer * vb = device->createBuffer(vbDesc, "unitBoxVB", vertices);
 
         u16 indices[24] =
@@ -186,7 +186,7 @@ namespace vg::renderer
     {
         auto * device = Device::get();
 
-        vector<SimpleVertex> vertices;
+        vector<DefaultVertex> vertices;
 
         const uint gridSize = 16;
 
@@ -212,7 +212,7 @@ namespace vg::renderer
             h1.setColor(0xFF0D0D0D);
         }
 
-        BufferDesc vbDesc(Usage::Default, BindFlags::ShaderResource, CPUAccessFlags::None, BufferFlags::None, sizeof(SimpleVertex), (u32)vertices.size());
+        BufferDesc vbDesc(Usage::Default, BindFlags::ShaderResource, CPUAccessFlags::None, BufferFlags::None, sizeof(DefaultVertex), (u32)vertices.size());
 
         m_gridVB = device->createBuffer(vbDesc, "GridVB", vertices.data());
     }
@@ -249,7 +249,7 @@ namespace vg::renderer
     {
         auto * device = Device::get();
 
-        SimpleVertex vertices[6];
+        DefaultVertex vertices[6];
 
         const float eps = 0.0001f;
 
@@ -268,7 +268,7 @@ namespace vg::renderer
         vertices[5].setPos({ 0.0f, 0.0f, eps + 1.0f });
         vertices[5].setColor(0xFFFF0000);
 
-        BufferDesc vbDesc(Usage::Default, BindFlags::ShaderResource, CPUAccessFlags::None, BufferFlags::None, sizeof(SimpleVertex), (uint)countof(vertices));
+        BufferDesc vbDesc(Usage::Default, BindFlags::ShaderResource, CPUAccessFlags::None, BufferFlags::None, sizeof(DefaultVertex), (uint)countof(vertices));
 
         m_axisVB = device->createBuffer(vbDesc, "AxisVB", vertices);
     }

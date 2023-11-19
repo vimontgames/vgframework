@@ -306,7 +306,9 @@ namespace vg::renderer
         // Save hits
         const uint counter = m_rawPickingData.m_counter.x;
         m_pickingHits.clear();
-        for (uint i = 0; i < counter; ++i)
+
+        // Atomic counter is incremented for every possible hit, do not overread
+        for (uint i = 0; i < min(counter, (uint)PICKING_MAX_HITS); ++i)
             m_pickingHits.push_back(m_rawPickingData.m_hits[i]);
 
         // Sort hits by depth stored in pos.w

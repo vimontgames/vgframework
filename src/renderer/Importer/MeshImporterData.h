@@ -1,13 +1,13 @@
 #pragma once
 
 #include "MaterialImporterData.h"
-#include "shaders/system/vertex.hlsl.h"
 #include "renderer/Geometry/Batch/Batch.h"
 #include "renderer/Geometry/AABB/AABB.h"
+#include "renderer/Geometry/Vertex/VertexFormat.h"
 
 namespace vg::renderer
 {
-    using MeshImporterVertex = gfx::FatVertex;
+    using MeshImporterVertex = renderer::FatVertex;
 
     class MeshImporterData
     {
@@ -21,5 +21,6 @@ namespace vg::renderer
         core::vector<core::u32>             indices;
         core::vector<MeshImporterVertex>    vertices;
         core::vector<MaterialImporterData>  materials;
+        u8                                  skinningBonesCount;
     };
 }

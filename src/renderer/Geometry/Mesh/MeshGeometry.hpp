@@ -35,12 +35,25 @@ namespace vg::renderer
     {
         super::registerProperties(_desc);
 
-        _desc.registerPropertyObjectVectorHelper(MeshGeometry, m_batches, Batch, "Batches", IProperty::Flags::None);
-
-        _desc.registerPropertyHelperEx(MeshGeometry, m_indexBufferOffset, "IB Offset", IProperty::Flags::ReadOnly);
-        _desc.registerPropertyHelperEx(MeshGeometry, m_vertexBufferOffset, "VB Offset", IProperty::Flags::ReadOnly);
+        _desc.registerPropertyEnumWithFlags(MeshGeometry, VertexFormat, m_vertexFormat, "Vertex Format", IProperty::Flags::ReadOnly);
+        _desc.registerPropertyHelperEx(MeshGeometry, m_indexBufferOffset, "IB Offset", IProperty::Flags::ReadOnly | IProperty::Flags::Hidden);
+        _desc.registerPropertyHelperEx(MeshGeometry, m_vertexBufferOffset, "VB Offset", IProperty::Flags::ReadOnly | IProperty::Flags::Hidden);
+        _desc.registerPropertyObjectVectorHelper(MeshGeometry, m_batches, Batch, "Batches", IProperty::Flags::ReadOnly);
 
         return true;
+    }
+
+    //--------------------------------------------------------------------------------------
+    void MeshGeometry::setVertexFormat(VertexFormat _vtxFmt)
+    {
+        m_vertexFormat = _vtxFmt;
+    }
+
+    //--------------------------------------------------------------------------------------
+    VertexFormat MeshGeometry::getVertexFormat() const
+    {
+        VG_ASSERT(m_vertexFormat != (VertexFormat)-1);
+        return m_vertexFormat;
     }
 
     //--------------------------------------------------------------------------------------

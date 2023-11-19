@@ -276,6 +276,15 @@
     <ClInclude Include="Instance\Mesh\MeshInstance.hpp">
       <Filter>Instance\Mesh</Filter>
     </ClInclude>
+    <ClInclude Include="Geometry\Vertex\VertexFormat.h">
+      <Filter>Geometry\Vertex</Filter>
+    </ClInclude>
+    <ClInclude Include="Geometry\Vertex\DefaultVertex.h">
+      <Filter>Geometry\Vertex</Filter>
+    </ClInclude>
+    <ClInclude Include="Geometry\Vertex\SkinningVertex.h">
+      <Filter>Geometry\Vertex</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Pass">
@@ -394,6 +403,9 @@
     </Filter>
     <Filter Include="Picking">
       <UniqueIdentifier>{7ea72328-a267-469b-b644-0bdb6dfb6f7b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Geometry\Vertex">
+      <UniqueIdentifier>{c4754495-8f40-4850-824b-e885795b531b}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

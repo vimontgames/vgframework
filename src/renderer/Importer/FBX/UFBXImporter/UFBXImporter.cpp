@@ -122,6 +122,16 @@ namespace vg::renderer
             }
         }
 
+        ufbx_skin_deformer * UFbxSkin = nullptr;
+        bool skinned = false;
+
+        if (_UFbxMesh->skin_deformers.count > 0)
+        {
+            UFbxSkin = _UFbxMesh->skin_deformers[0];
+            skinned = (nullptr != UFbxSkin);
+            _data.skinningBonesCount = 4;
+        }        
+
         // Reserve IB, VB and materials
         vector<u32> indexBuffer;
         indexBuffer.reserve(totalTriangleCount * 3);
@@ -159,7 +169,6 @@ namespace vg::renderer
                 for (uint k = 0; k < triangleCount * 3; k++)
                 {
                     uint index = triangleIndexTmp[2 - k];
-                    //uint ix = _UFbxMesh->vertex_indices.data[index]; 
 
                     const auto pos = getUFBXAttribute(index, _UFbxMesh->vertex_position, float3(0, 0, 0));
                     const auto nrm = getUFBXAttribute(index, _UFbxMesh->vertex_normal,   float3(1, 0, 0));

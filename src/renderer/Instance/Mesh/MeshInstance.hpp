@@ -76,6 +76,9 @@ namespace vg::renderer
             u16 flags = 0;
             root3D.setFlags(flags);
 
+            VertexFormat vertexFormat = geo->getVertexFormat();
+            root3D.setVertexFormat(vertexFormat);
+
             auto pickingID = getPickingID();
             root3D.setPickingID(pickingID);
 

@@ -108,4 +108,25 @@ namespace vg::core
         VG_ASSERT((0 != _align) && !(_align & (_align - 1)));
         return (T(_adress + (_align - 1)) & ~(T)(_align - 1));
     }
+
+    //--------------------------------------------------------------------------------------
+    inline core::size_t Hash(const core::float2 & _this)
+    {
+        core::size_t hash = core::hash<float>()(_this.x) ^ 0xc4ceb9fe1a85ec53L ^ core::hash<float>()(_this.y) ^ 0xed558cc4ceb9fe1L;
+        return hash;
+    }
+
+    //--------------------------------------------------------------------------------------
+    inline core::size_t Hash(const core::float3 & _this)
+    {
+        core::size_t hash = core::hash<float>()(_this.x) ^ 0xff51afd7ed558ccd ^core::hash<float>()(_this.y) ^ 0xc4ceb9fe1a85ec53L ^ core::hash<float>()(_this.z) ^ 0xed558cc4ceb9fe1L;
+        return hash;
+    }
+    
+    //--------------------------------------------------------------------------------------
+    inline core::size_t Hash(const core::float4 & _this)
+    {
+        core::size_t hash = core::hash<float>()(_this.x) ^ core::hash<float>()(_this.y) ^ 0xff51afd7ed558ccd ^ core::hash<float>()(_this.z) ^ 0xc4ceb9fe1a85ec53L ^ core::hash<float>()(_this.w) ^ 0xed558cc4ceb9fe1L;
+        return hash;
+    }
 }

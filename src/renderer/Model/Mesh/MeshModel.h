@@ -1,11 +1,11 @@
 #pragma once
 
 #include "renderer/IMeshModel.h"
+#include "shaders/system/vertex.hlsli"
 
 namespace vg::gfx
 {
     class Buffer;
-    enum class VertexFormat : core::u8;
 }
 
 namespace vg::renderer
@@ -28,7 +28,7 @@ namespace vg::renderer
         static MeshModel *              createFromImporterData  (const MeshImporterData & _data);
 
     private:
-        template <gfx::VertexFormat F> static gfx::Buffer * createVertexBufferFromImporterData(const MeshImporterData & _data);
+        template <VertexFormat F> static gfx::Buffer * createVertexBufferFromImporterData(const MeshImporterData & _data);
 
     private:
         MeshGeometry *                  m_meshGeometry = nullptr;
