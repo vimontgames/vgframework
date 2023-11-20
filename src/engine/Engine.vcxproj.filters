@@ -21,6 +21,9 @@
     <ClCompile Include="Selection\Selection.cpp">
       <Filter>Selection</Filter>
     </ClCompile>
+    <ClCompile Include="Component\Animation\AnimationComponent.cpp">
+      <Filter>Component\Animation</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Engine.def" />
@@ -93,7 +96,7 @@
     <ClInclude Include="Component\Mesh\MaterialResourceList.hpp">
       <Filter>Component\Mesh</Filter>
     </ClInclude>
-    <ClInclude Include="IMaterialList.h" />
+    <ClInclude Include="IResourceList.h" />
     <ClInclude Include="Resource\Material\MaterialResourceData.h">
       <Filter>Resource\Material</Filter>
     </ClInclude>
@@ -117,6 +120,21 @@
     </ClInclude>
     <ClInclude Include="Resource\Material\MaterialModelType.hpp">
       <Filter>Resource\Material</Filter>
+    </ClInclude>
+    <ClInclude Include="Component\Animation\AnimationComponent.h">
+      <Filter>Component\Animation</Filter>
+    </ClInclude>
+    <ClInclude Include="Component\Animation\AnimationResourceList.h">
+      <Filter>Component\Animation</Filter>
+    </ClInclude>
+    <ClInclude Include="Component\Animation\AnimationResourceList.hpp">
+      <Filter>Component\Animation</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource\Animation\AnimationResource.h">
+      <Filter>Resource\Animation</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource\Animation\AnimationResource.hpp">
+      <Filter>Resource\Animation</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -155,6 +173,12 @@
     </Filter>
     <Filter Include="Resource\Material\Default">
       <UniqueIdentifier>{8787ab5a-6f3b-41aa-a4a5-90e82ab7fc6c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Component\Animation">
+      <UniqueIdentifier>{2d607e98-8727-4b7b-861e-955d22445f37}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource\Animation">
+      <UniqueIdentifier>{9b381dc0-b084-43fd-ad56-c267870c1610}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

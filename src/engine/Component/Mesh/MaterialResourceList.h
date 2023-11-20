@@ -1,11 +1,11 @@
 #pragma once
 
-#include "engine/IMaterialList.h"
+#include "engine/IResourceList.h"
 #include "engine/Resource/Material/MaterialResource.h"
 
 namespace vg::engine
 {
-    class MaterialResourceList : public IMaterialList
+    class MaterialResourceList : public IResourceList
     {
     public:
         VG_CLASS_DECL(MaterialResourceList, core::Object);
@@ -13,8 +13,8 @@ namespace vg::engine
         MaterialResourceList(const core::string & _name, core::IObject * _parent);
         ~MaterialResourceList();
 
-        bool AddMaterial() final override;
-        bool RemoveMaterial() final override;
+        bool Add() final override;
+        bool Remove() final override;
 
         const core::vector<MaterialResource> & getMaterialResources() const { return m_materialResources; }
 

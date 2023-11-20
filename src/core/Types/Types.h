@@ -58,6 +58,8 @@ namespace vg::core
 	using float4x2	= hlslpp::float4x2;
 	using float4x3	= hlslpp::float4x3;
 	using float4x4	= hlslpp::float4x4;
+
+	using quaternion = hlslpp::quaternion;
     
     using size_t = std::size_t;
 

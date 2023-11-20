@@ -357,7 +357,7 @@ namespace vg::engine
                 }
                 else
                 {
-                    VG_ERROR("[Resource] Could not load resource \"%s\"", path.c_str());
+                    VG_ERROR("[Resource] Could not load File \"%s\"", path.c_str());
                     done = true;
                 }
             }

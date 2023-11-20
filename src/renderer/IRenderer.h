@@ -27,6 +27,7 @@ namespace vg
         class IMeshModel;
         class IPicking;
         class IMaterialData;
+        class IAnimation;
 
         struct RendererCreationParams;
 
@@ -77,6 +78,9 @@ namespace vg
 
             virtual bool                                cookTexture             (const core::string & _file) = 0;
             virtual gfx::ITexture *                     loadTexture             (const core::string & _file) = 0;
+
+            virtual bool                                cookAnimation           (const core::string & _file) = 0;
+            virtual IAnimation *                        loadAnimation           (const core::string & _file) = 0;
 
             virtual void                                ReleaseAsync            (core::IObject * _object) = 0;
 

@@ -10,9 +10,9 @@ namespace vg::gfx
 
 namespace vg::renderer
 {
-    class MeshGeometry;
     class MeshImporterData;
-    class MaterialModel;
+    class MeshGeometry;
+    class Skeleton;
 
     class MeshModel : public IMeshModel
     {
@@ -22,8 +22,11 @@ namespace vg::renderer
                                         MeshModel               (const core::string & _name, core::IObject * _parent);
                                         ~MeshModel              ();
 
-        void                            setGeometry             (MeshGeometry * _meshGeometry);
+        void                            setGeometry             (MeshGeometry * _geometry);
         const MeshGeometry *            getGeometry             () const;
+
+        void                            setSkeleton             (Skeleton * _skeleton);
+        const Skeleton *                getSkeleton             () const;
 
         static MeshModel *              createFromImporterData  (const MeshImporterData & _data);
 
@@ -31,6 +34,7 @@ namespace vg::renderer
         template <VertexFormat F> static gfx::Buffer * createVertexBufferFromImporterData(const MeshImporterData & _data);
 
     private:
-        MeshGeometry *                  m_meshGeometry = nullptr;
+        MeshGeometry *                  m_geometry = nullptr;
+        Skeleton *                      m_skeleton = nullptr;
     };
 }

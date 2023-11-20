@@ -183,6 +183,12 @@
     <ClInclude Include="ImGui\ObjectHandler\Material\ImGuiMaterialModelTypeHandler.hpp">
       <Filter>ImGui\ObjectHandler\Material</Filter>
     </ClInclude>
+    <ClInclude Include="ImGui\ObjectHandler\Animation\ImGuiAnimationResourceListHandler.hpp">
+      <Filter>ImGui\ObjectHandler\Animation</Filter>
+    </ClInclude>
+    <ClInclude Include="ImGui\ObjectHandler\ImGuiResourceListHandler.hpp">
+      <Filter>ImGui\ObjectHandler</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Editor.def" />
@@ -287,6 +293,9 @@
     </Filter>
     <Filter Include="ImGui\ObjectHandler\Material">
       <UniqueIdentifier>{2aa8b6b2-85d1-4b33-bd2d-88228a072fd3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ImGui\ObjectHandler\Animation">
+      <UniqueIdentifier>{8f62b045-9705-4a30-86e2-21c836952a69}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

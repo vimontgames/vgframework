@@ -40,12 +40,19 @@ namespace vg::renderer
         if (nullptr != scene)
         {
             const auto meshCount = (uint)scene->meshes.count;
-
-            for (uint i = 0; i < meshCount; i++)
+            for (uint i = 0; i < meshCount; ++i)
             {
                 MeshImporterData meshImporterData;
                 if (loadFBXMesh(scene->meshes[i], meshImporterData, scene->settings.unit_meters))
                     _data.meshes.push_back(meshImporterData);
+            }
+
+            const auto animCount = (uint)scene->anim_stacks.count;
+            for (uint i = 0; i < animCount; ++i)
+            {
+                AnimImporterData animImporterData;
+                if (loadFBXAnim(scene, scene->anim_stacks[i], animImporterData))
+                    _data.anims.push_back(animImporterData);
             }
 
             ufbx_free_scene(scene);
@@ -99,6 +106,30 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
+    float4x4 UFBXMatrixToFloat4x3(const ufbx_matrix & _m)
+    {
+        return float4x4
+        (
+            (float)_m.m00, (float)_m.m01, (float)_m.m02, (float)_m.m03,
+            (float)_m.m10, (float)_m.m11, (float)_m.m12, (float)_m.m13,
+            (float)_m.m20, (float)_m.m21, (float)_m.m22, (float)_m.m23,
+                     0.0f,          0.0f,          0.0f,          1.0f
+        );
+    }
+
+    //--------------------------------------------------------------------------------------
+    float3 UFBXVec3ToFloat3(ufbx_vec3 v)
+    { 
+        return float3((float)v.x, (float)v.y, (float)v.z);
+    }
+
+    //--------------------------------------------------------------------------------------
+    core::quaternion UFBXQuatToQuat(ufbx_quat q)
+    { 
+        return core::quaternion((float)q.x, (float)q.y, (float)q.z, (float)q.w);
+    }
+
+    //--------------------------------------------------------------------------------------
     bool UFBXImporter::loadFBXMesh(const ufbx_mesh * _UFbxMesh, MeshImporterData & _data, double _scale)
     {
         const auto start = Timer::getTick();
@@ -125,11 +156,78 @@ namespace vg::renderer
         ufbx_skin_deformer * UFbxSkin = nullptr;
         bool skinned = false;
 
+        vector<SkinVertex<4/*MAXBONESPERVERTEX*/>> meshSkinVertices;
+
         if (_UFbxMesh->skin_deformers.count > 0)
         {
             UFbxSkin = _UFbxMesh->skin_deformers[0];
             skinned = (nullptr != UFbxSkin);
-            _data.skinningBonesCount = 4;
+            _data.maxBonesCountPerVertex = 4;
+
+            uint boneCount = 0;
+            for (uint i = 0; i < UFbxSkin->clusters.count; i++)
+            {
+                ufbx_skin_cluster * cluster = UFbxSkin->clusters.data[i];
+
+                _data.bonesIndices.push_back(cluster->bone_node->typed_id);
+                _data.bonesMatrices.push_back(UFBXMatrixToFloat4x3(cluster->geometry_to_bone));
+
+                boneCount++;
+            }
+
+            // TODO : template by max bone count
+            VG_ASSERT(_data.maxBonesCountPerVertex == 4);
+            constexpr uint MAXBONESPERVERTEX = 4; // _data.maxBonesCountPerVertex;
+
+            meshSkinVertices.reserve(totalTriangleCount * 3);
+
+            // Precalculate skinned vertex bones/weights for each vertex
+            for (uint i = 0; i < _UFbxMesh->num_vertices; i++)
+            {
+                size_t weightIndex = 0;
+                float weightTotal = 0.0f;
+
+                float weights[MAXBONESPERVERTEX] = { 0.0f };
+                u8 clusters[MAXBONESPERVERTEX] = { 0 };
+
+                // `ufbx_skin_vertex` contains the offset and number of weights that deform the vertex in a descending weight order
+                ufbx_skin_vertex vertex_weights = UFbxSkin->vertices.data[i];
+                const uint weightCount = min(vertex_weights.num_weights, MAXBONESPERVERTEX);
+                for (uint j = 0; j < weightCount; j++)
+                {
+                    ufbx_skin_weight weight = UFbxSkin->weights.data[vertex_weights.weight_begin + j];
+
+                    weightTotal += (float)weight.weight;
+                    clusters[weightIndex] = (uint8_t)weight.cluster_index;
+                    weights[weightIndex] = (float)weight.weight;
+                    weightIndex++;
+                }
+
+                SkinVertex<MAXBONESPERVERTEX> & skinVertex = meshSkinVertices.push_empty();
+
+                // Normalize weights
+                if (weightTotal > 0.0f)
+                {
+                    uint32_t quantized_sum = 0;
+                    for (uint j = 0; j < MAXBONESPERVERTEX; j++)
+                    {
+                        u8 quantized_weight = (u8)((float)weights[j] / weightTotal * 255.0f);
+                        quantized_sum += quantized_weight;
+
+                        skinVertex.bone_index[j] = clusters[j];
+                        skinVertex.bone_weight[j] = quantized_weight;
+                    }
+                    skinVertex.bone_weight[0] += 255 - quantized_sum;
+                }
+                else
+                {
+                    for (uint j = 0; j < MAXBONESPERVERTEX; j++)
+                    {
+                        skinVertex.bone_index[j] = -1;
+                        skinVertex.bone_weight[j] = 0;
+                    }
+                }
+            }
         }        
 
         // Reserve IB, VB and materials
@@ -186,6 +284,18 @@ namespace vg::renderer
                     vertex.color = float4(col.x, col.y, col.z, col.w);
                     vertex.uv[0] = float2(uv0.x, 1.0f-uv0.y);
                     vertex.uv[1] = float2(0,1.0f - 0); // TODO: Support UV1+
+
+                    // The skinning vertex stream is pre-calculated above so we just need to copy the right one by the vertex index.
+                    if (skinned)
+                    {
+                        auto & skinVertex = meshSkinVertices[_UFbxMesh->vertex_indices.data[index]];
+
+                        for (uint l = 0; l < 4; ++l)
+                        {
+                            vertex.indices[l] = skinVertex.bone_index[l];
+                            vertex.weights[l] = skinVertex.bone_weight[l];
+                        }
+                    }
 
                     vertexBuffer.push_back(vertex);
                     indexBuffer.push_back(vertexIndex);
@@ -289,6 +399,95 @@ namespace vg::renderer
         VG_SAFE_DELETE(triangleIndexTmp);
 
         VG_DEBUGPRINT(" %.2f ms\n", Timer::getEnlapsedTime(start, Timer::getTick()));
+        return true;
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool UFBXImporter::loadFBXAnim(const ufbx_scene * _UFBXScene, const ufbx_anim_stack * _UFBXAnimStack, AnimImporterData & _animData)
+    {
+        const float target_framerate = 60.0f;
+        const uint max_frames = 65535;
+
+        // Sample the animation evenly at `target_framerate` if possible while limiting the maximum
+        // number of frames to `max_frames` by potentially dropping FPS.
+        float duration = (float)_UFBXAnimStack->time_end - (float)_UFBXAnimStack->time_begin;
+        uint num_frames = clamp(uint(duration * target_framerate), (uint)2, (uint)max_frames);
+        float framerate = (float)(num_frames - 1) / duration;
+
+        _animData.name = _UFBXAnimStack->name.data;
+        _animData.time_begin = (float)_UFBXAnimStack->time_begin;
+        _animData.time_end = (float)_UFBXAnimStack->time_end;
+        _animData.framerate = framerate;
+        _animData.num_frames = num_frames;
+
+        // Sample the animations of all nodes and blend channels in the stack
+        for (size_t i = 0; i < _UFBXScene->nodes.count; i++)
+        {
+            AnimNodeData animNodeData;
+
+            if (loadFBXAnimNode(_UFBXAnimStack, _UFBXScene->nodes.data[i], _animData, animNodeData))
+                _animData.animNodes.push_back(animNodeData);
+        }
+
+        return true;
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool UFBXImporter::loadFBXAnimNode(const ufbx_anim_stack * _UFBXAnimStack, const ufbx_node * _UFBXNode, const AnimImporterData & _animData, AnimNodeData & _animNodeData)
+    {
+        _animNodeData.rot.reserve(_animData.num_frames);
+        _animNodeData.pos.reserve(_animData.num_frames);
+        _animNodeData.scale.reserve(_animData.num_frames);
+
+        bool const_rot = true, const_pos = true, const_scale = true;
+
+        // Sample the node's transform evenly for animation duration
+        for (size_t i = 0; i < _animData.num_frames; i++)
+        {
+            double time = _UFBXAnimStack->time_begin + (double)i / _animData.framerate;
+        
+            ufbx_transform transform = ufbx_evaluate_transform(&_UFBXAnimStack->anim, _UFBXNode, time);
+        
+            _animNodeData.rot.push_back(UFBXQuatToQuat(transform.rotation));
+            _animNodeData.pos.push_back(UFBXVec3ToFloat3(transform.translation));
+            _animNodeData.scale.push_back(UFBXVec3ToFloat3(transform.scale));
+        
+            if (i > 0)
+            {
+                // Flip the quaternion if necessary
+                if (dot(_animNodeData.rot[i], _animNodeData.rot[i - 1]).x < 0.0f)
+                    _animNodeData.rot[i] = -_animNodeData.rot[i];
+
+                // Keep track of constant channels
+                if (any(_animNodeData.rot[i] != _animNodeData.rot[i - 1]))
+                    const_rot = false;
+
+                if (any(_animNodeData.pos[i] != _animNodeData.pos[i - 1]))
+                    const_pos = false;
+
+                if (any(_animNodeData.scale[i] != _animNodeData.scale[i - 1]))
+                    const_scale = false;
+            }
+        }
+
+        if (const_rot) 
+        { 
+            _animNodeData.const_rot = _animNodeData.rot[0];
+            _animNodeData.rot.clear();
+        }
+
+        if (const_pos)
+        {
+            _animNodeData.const_pos = _animNodeData.pos[0];
+            _animNodeData.pos.clear();
+        }
+
+        if (const_scale)
+        {
+            _animNodeData.const_scale = _animNodeData.scale[0];
+            _animNodeData.scale.clear();
+        }
+
         return true;
     }
 }

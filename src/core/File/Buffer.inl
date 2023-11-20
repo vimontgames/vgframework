@@ -128,8 +128,11 @@ namespace vg::core::io
         u32 count;
         if (read(&count))
         {
-            _vector->resize(count);
-            read(_vector->data(), count * sizeof(T));
+            if (count > 0)
+            {
+                _vector->resize(count);
+                read(_vector->data(), count * sizeof(T));
+            }
             return true;
         }
 
@@ -141,17 +144,26 @@ namespace vg::core::io
     {
         const u32 count = (u32)_vector.size();
         write(count);
-        write(_vector.data(), count * sizeof(T));
+        if (count > 0)
+            write(_vector.data(), count * sizeof(T));
         return true;
     }
 
     //--------------------------------------------------------------------------------------
     inline bool Buffer::read(void * _data, core::size_t _size)
     {
-        memcpy(_data, &m_data[m_read], _size);
-        m_read += _size;
+        if (m_read < m_data.size())
+        {
+            memcpy(_data, &m_data[m_read], _size);
+            m_read += _size;
 
-        return true;
+            return true;
+        }
+        else
+        {
+            VG_ASSERT(m_read < m_data.size());
+            return false;
+        }
     }
 
     //--------------------------------------------------------------------------------------

@@ -7,92 +7,13 @@ using namespace vg::core;
 
 namespace vg::editor
 {
-    class ImGuiMaterialResourceListHandler : public ImGuiObjectHandler
+    class ImGuiMaterialResourceListHandler : public ImGuiResourceListHandler
     {
     public:
         //--------------------------------------------------------------------------------------
         void displayObject(IObject * _object) final
         {
-            const auto * factory = Kernel::getFactory();
-            const auto * classDesc = factory->getClassDescriptor(_object->getClassName());
-            auto list = dynamic_cast<engine::IMaterialList *>(_object);
-
-            uint materialCount = 0;
-            for (uint i = 0; i < classDesc->getPropertyCount(); ++i)
-            {
-                const IProperty * prop = classDesc->getPropertyByIndex(i);
-                if (!strcmp(prop->getName(), "m_materialResources"))
-                    materialCount = prop->GetPropertyResourceVectorCount(_object);
-            }
-
-            ImGui::PushID(_object);
-            string label = (string)"Materials (" + to_string(materialCount) + (string)")###" + to_string((uint_ptr)_object);
-
-            bool open = ImGui::TreeNodeEx(label.c_str(), ImGuiTreeNodeFlags_DefaultOpen);
-            bool remove = false;
-
-            if (open)
-            {
-                for (uint i = 0; i < classDesc->getPropertyCount(); ++i)
-                {
-                    const IProperty * prop = classDesc->getPropertyByIndex(i);
-
-                    if (!strcmp(prop->getName(), "m_materialResources"))
-                    {
-                        materialCount = prop->GetPropertyResourceVectorCount(_object);
-
-                        for (uint i = 0; i < materialCount; ++i)
-                        {
-                            ImGui::PushID(i);
-                            auto obj = prop->GetPropertyResourceVectorElement(_object, i);
-                         
-                            string materialLabel = (string)"ID " + to_string(i);
-                            string materialName = obj->GetResourcePath();
-                            if (!materialName.empty())
-                                materialLabel += (string)" (" + io::getFileName(materialName) + (string)")";
-                            materialLabel +="###" + to_string((uint_ptr)obj);
-                            
-                            if (ImGui::TreeNodeEx(materialLabel.c_str(), ImGuiTreeNodeFlags_DefaultOpen))
-                            {
-                                ImGuiWindow::displayResource(obj, prop, i);
-                                ImGui::TreePop();
-                            }
-
-                            ImGui::PopID();
-                        }                     
-                    }
-                    else
-                    {
-                        ImGuiWindow::displayProperty(_object, prop);
-                    }
-                }
-
-                ImGui::Spacing();
-
-                string addMaterialLabel = "Add###" + to_string((uint_ptr)_object);
-                string removeMaterialLabel = "Remove###" + to_string((uint_ptr)_object);
-                if (ImGui::Button("Add Material"))
-                {
-                    list->AddMaterial();
-                }
-                ImGui::SameLine();
-
-                ImGui::BeginDisabled(materialCount == 0);
-                {
-                    if (ImGui::Button("Remove Material"))
-                    {
-                        // Can't remove while iterating the list ;)
-                        remove = true;
-                    }
-                }
-                ImGui::EndDisabled();
-
-                ImGui::TreePop();
-            }
-            ImGui::PopID();
-
-            if (remove)
-                list->RemoveMaterial();
+            displayObjectImpl(_object, "Material", "m_materialResources");
         }
     };
 

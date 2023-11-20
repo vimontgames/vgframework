@@ -75,6 +75,24 @@
                                     </Object>
                                 </Property>
                             </Object>
+                            <Object class="AnimationComponent">
+                                <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
+                                <Property type="Object" name="m_animations">
+                                    <Object class="AnimationResourceList">
+                                        <Property type="String" name="m_name" flags="Hidden" value="New AnimationComponent"/>
+                                        <Property type="ResourceVector" name="m_animationResources" flags="Resource">
+                                            <Object class="AnimationResource">
+                                                <Property type="String" name="m_name" flags="Hidden" value=""/>
+                                                <Property type="String" name="m_resourcePath" flags="Hidden" value=""/>
+                                            </Object>
+                                            <Object class="AnimationResource">
+                                                <Property type="String" name="m_name" flags="Hidden" value=""/>
+                                                <Property type="String" name="m_resourcePath" flags="Hidden" value=""/>
+                                            </Object>
+                                        </Property>
+                                    </Object>
+                                </Property>
+                            </Object>
                         </Property>
                         <Property type="ObjectRefVector" name="m_children" flags="Hidden"/>
                     </Object>

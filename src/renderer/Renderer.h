@@ -68,11 +68,14 @@ namespace vg::renderer
         gfx::IShaderManager *                   GetShaderManager        () const final override;
         IPicking *                              GetPicking              () const final override;
 
-        bool                                    cookMeshModel           (const core::string & _file) final;
-        IMeshModel *                            loadMeshModel           (const core::string & _file) final;
+        bool                                    cookMeshModel           (const core::string & _file) final override;
+        IMeshModel *                            loadMeshModel           (const core::string & _file) final override;
 
-        bool                                    cookTexture             (const core::string & _file) final;
-        gfx::ITexture *                         loadTexture             (const core::string & _file) final;
+        bool                                    cookTexture             (const core::string & _file) final override;
+        gfx::ITexture *                         loadTexture             (const core::string & _file) final override;
+
+        bool                                    cookAnimation           (const core::string & _file) final override;
+        IAnimation *                            loadAnimation           (const core::string & _file) final override;
 
         void                                    ReleaseAsync            (core::IObject * _object) final override;
 

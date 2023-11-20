@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Animation\Animation.cpp" />
     <ClCompile Include="Geometry\Geometry.cpp" />
     <ClCompile Include="Importer\FBX\FBXSDKImporter\FBXSDKImporter.cpp" />
     <ClCompile Include="Importer\FBX\UFBXImporter\UFBXImporter.cpp" />
@@ -48,6 +49,10 @@
     <None Include="View\View.inl" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Animation\Skeleton.h" />
+    <ClInclude Include="Animation\SkeletalAnimation.h" />
+    <ClInclude Include="Animation\SkeletalAnimation.hpp" />
+    <ClInclude Include="Animation\Skeleton.hpp" />
     <ClInclude Include="Geometry\AABB\AABB.h" />
     <ClInclude Include="Geometry\AABB\AABB.hpp" />
     <ClInclude Include="Geometry\Batch\Batch.h" />
@@ -62,6 +67,7 @@
     <ClInclude Include="IGraphicModel.h" />
     <ClInclude Include="IImGuiAdapter.h" />
     <ClInclude Include="IMaterialModel.h" />
+    <ClInclude Include="IAnimation.h" />
     <ClInclude Include="IMeshInstance.h" />
     <ClInclude Include="IMeshModel.h" />
     <ClInclude Include="Importer\FBX\FBXImporter.h" />
@@ -80,6 +86,7 @@
     <ClInclude Include="Instance\Mesh\MeshInstance.hpp" />
     <ClInclude Include="IPicking.h" />
     <ClInclude Include="IRenderer.h" />
+    <ClInclude Include="ISkeletalAnimation.h" />
     <ClInclude Include="Job\Culling\GraphicInstanceList.h" />
     <ClInclude Include="Job\Culling\ViewCullingJob.h" />
     <ClInclude Include="Job\Culling\ViewCullingJob.hpp" />

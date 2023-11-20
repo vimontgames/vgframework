@@ -572,6 +572,20 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
+    bool Renderer::cookAnimation(const core::string & _file)
+    {
+        VG_ASSERT_NOT_IMPLEMENTED();
+        return false;
+    }
+
+    //--------------------------------------------------------------------------------------
+    IAnimation * Renderer::loadAnimation(const core::string & _file) 
+    {
+        VG_ASSERT_NOT_IMPLEMENTED();
+        return nullptr;
+    }
+
+    //--------------------------------------------------------------------------------------
     void Renderer::ReleaseAsync(core::IObject * _object)
     {
         VG_SAFE_RELEASE_ASYNC(_object);

@@ -6,7 +6,7 @@
 #include "renderer/Geometry/Mesh/MeshGeometry.h"
 #include "renderer/Geometry/Vertex/VertexFormat.h"
 #include "renderer/Importer/SceneImporterData.h"
-#include "renderer/Model/Material/MaterialModel.h"
+#include "renderer/Animation/Skeleton.h"
 
 using namespace vg::core;
 using namespace vg::gfx;
@@ -29,7 +29,8 @@ namespace vg::renderer
     {
         super::registerProperties(_desc);
 
-        _desc.registerPropertyObjectRefHelper(MeshModel, m_meshGeometry, "Geometry", IProperty::Flags::NotSaved);
+        _desc.registerPropertyObjectRefHelper(MeshModel, m_geometry, "Geometry", IProperty::Flags::NotSaved);
+        _desc.registerPropertyObjectRefHelper(MeshModel, m_skeleton, "Skeleton", IProperty::Flags::NotSaved);
         
         return true;
     }
@@ -44,24 +45,42 @@ namespace vg::renderer
     //--------------------------------------------------------------------------------------
     MeshModel::~MeshModel()
     {
-        VG_SAFE_RELEASE(m_meshGeometry);        
+        VG_SAFE_RELEASE(m_geometry); 
+        VG_SAFE_RELEASE(m_skeleton);
     }
 
     //--------------------------------------------------------------------------------------
-    void MeshModel::setGeometry(MeshGeometry * _meshGeometry)
+    void MeshModel::setGeometry(MeshGeometry * _geometry)
     {
-        if (_meshGeometry != m_meshGeometry)
+        if (_geometry != m_geometry)
         {
-            VG_SAFE_INCREASE_REFCOUNT(_meshGeometry);
-            VG_SAFE_RELEASE(m_meshGeometry);
-            m_meshGeometry = _meshGeometry;
+            VG_SAFE_INCREASE_REFCOUNT(_geometry);
+            VG_SAFE_RELEASE(m_geometry);
+            m_geometry = _geometry;
         }
     }
 
     //--------------------------------------------------------------------------------------
     const MeshGeometry * MeshModel::getGeometry() const
     {
-        return m_meshGeometry;
+        return m_geometry;
+    }
+
+    //--------------------------------------------------------------------------------------
+    void MeshModel::setSkeleton(Skeleton * _skeleton)
+    {
+        if (_skeleton != m_skeleton)
+        {
+            VG_SAFE_INCREASE_REFCOUNT(_skeleton);
+            VG_SAFE_RELEASE(m_skeleton);
+            m_skeleton = _skeleton;
+        }
+    }
+
+    //--------------------------------------------------------------------------------------
+    const Skeleton * MeshModel::getSkeleton() const
+    {
+        return m_skeleton;
     }
 
     //--------------------------------------------------------------------------------------
@@ -118,12 +137,12 @@ namespace vg::renderer
         // Select vertex format
         VertexFormat vtxFmt;
 
-        if (_data.skinningBonesCount > 0)
+        if (_data.bonesIndices.size() > 0)
         {
-            switch (_data.skinningBonesCount)
+            switch (_data.maxBonesCountPerVertex)
             {
                 default:
-                VG_ASSERT(_data.skinningBonesCount == 4);
+                VG_ASSERT(_data.maxBonesCountPerVertex == 4);
                 break;
         
                 case 4:
@@ -167,8 +186,17 @@ namespace vg::renderer
         VG_SAFE_RELEASE(vb);
 
         meshModel->setGeometry(meshGeometry);
-
         VG_SAFE_RELEASE(meshGeometry);
+
+        Skeleton * meshSkeleton = nullptr;
+        if (_data.bonesIndices.size() > 0)
+        {
+            meshSkeleton = new Skeleton("Skeleton", meshModel);
+            meshSkeleton->setBoneIndices(_data.bonesIndices);
+            meshSkeleton->setBoneMatrices(_data.bonesMatrices);
+        }
+        meshModel->setSkeleton(meshSkeleton);
+        VG_SAFE_RELEASE(meshSkeleton);
 
         //const auto matCount = _data.materials.size();
         //for (auto m = 0; m < matCount; ++m)

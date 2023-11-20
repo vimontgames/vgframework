@@ -46,6 +46,23 @@ namespace vg::core::io
         bool read(void * _data, size_t _size);
         bool write(const void * _data, size_t _size);
 
+        //template <typename T> bool read(core::vector<T> & _data)
+        //{
+        //    core::u32 size;
+        //    read(&size);
+        //    _data.resize(size);
+        //    for (core::u32 i = 0; i < size; ++i)
+        //        _data[i].read(*this);
+        //}
+        //
+        //template <typename T> bool write(const core::vector<T> & _data)
+        //{
+        //    VG_ASSERT(_data.size() < (core::u32)-1);
+        //    write((core::u32)_data.size());
+        //    for (core::u32 i = 0; i < _data.size(); ++i)
+        //        _data[i].write(*this);
+        //}
+
     private:
         size_t              m_read = 0;
         size_t              m_write = 0;

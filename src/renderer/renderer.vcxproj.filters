@@ -42,6 +42,9 @@
     <ClCompile Include="Instance\GraphicInstance.cpp">
       <Filter>Instance</Filter>
     </ClCompile>
+    <ClCompile Include="Animation\Animation.cpp">
+      <Filter>Animation</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Renderer.def" />
@@ -285,6 +288,20 @@
     <ClInclude Include="Geometry\Vertex\SkinningVertex.h">
       <Filter>Geometry\Vertex</Filter>
     </ClInclude>
+    <ClInclude Include="IAnimation.h" />
+    <ClInclude Include="ISkeletalAnimation.h" />
+    <ClInclude Include="Animation\SkeletalAnimation.h">
+      <Filter>Animation</Filter>
+    </ClInclude>
+    <ClInclude Include="Animation\SkeletalAnimation.hpp">
+      <Filter>Animation</Filter>
+    </ClInclude>
+    <ClInclude Include="Animation\Skeleton.h">
+      <Filter>Animation</Filter>
+    </ClInclude>
+    <ClInclude Include="Animation\Skeleton.hpp">
+      <Filter>Animation</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Pass">
@@ -406,6 +423,9 @@
     </Filter>
     <Filter Include="Geometry\Vertex">
       <UniqueIdentifier>{c4754495-8f40-4850-824b-e885795b531b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Animation">
+      <UniqueIdentifier>{e18ec344-2222-4a47-b18f-add9d9c5af7d}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

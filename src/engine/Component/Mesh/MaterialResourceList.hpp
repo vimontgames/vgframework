@@ -9,7 +9,7 @@ namespace vg::engine
 
     //--------------------------------------------------------------------------------------
     MaterialResourceList::MaterialResourceList(const core::string & _name, core::IObject * _parent) :
-        IMaterialList(_name, _parent)
+        IResourceList(_name, _parent)
     {
         // resize of vector not supported because owner changes its address
         m_materialResources.reserve(256);
@@ -41,7 +41,7 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
-    bool MaterialResourceList::AddMaterial()
+    bool MaterialResourceList::Add()
     {
         MaterialResource & matRes = m_materialResources.push_empty();
 
@@ -53,7 +53,7 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
-    bool MaterialResourceList::RemoveMaterial()
+    bool MaterialResourceList::Remove()
     {
         if (m_materialResources.size() > 0)
         {

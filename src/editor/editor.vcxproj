@@ -41,10 +41,12 @@
     <ClInclude Include="ImGui\Menu\Inspector\GameObject\ImGuiGameObjectInspectorMenu.hpp" />
     <ClInclude Include="ImGui\Menu\Scene\ImGuiSceneMenu.h" />
     <ClInclude Include="ImGui\Menu\Scene\ImGuiSceneMenu.hpp" />
+    <ClInclude Include="ImGui\ObjectHandler\Animation\ImGuiAnimationResourceListHandler.hpp" />
     <ClInclude Include="ImGui\ObjectHandler\GameObject\ImGuiGameObjectHandler.hpp" />
     <ClInclude Include="ImGui\ObjectHandler\ImGuiObjectHandler.h" />
     <ClInclude Include="ImGui\ObjectHandler\Material\ImGuiMaterialModelTypeHandler.hpp" />
     <ClInclude Include="ImGui\ObjectHandler\Material\ImGuiMaterialResourceListHandler.hpp" />
+    <ClInclude Include="ImGui\ObjectHandler\ImGuiResourceListHandler.hpp" />
     <ClInclude Include="ImGui\ObjectHandler\Texture\ImGuiTextureHandler.hpp" />
     <ClInclude Include="ImGui\PropertyHandler\ImGuiPropertyHandler.h" />
     <ClInclude Include="ImGui\Toolbar\ImGuiToolbar.h" />

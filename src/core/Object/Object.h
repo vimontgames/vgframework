@@ -2,13 +2,22 @@
 
 #include "core/IObject.h"
 
-#define VG_CLASS_DECL(name, parent)	using super = parent;                                                               \
-									static bool registerProperties(vg::core::IClassDesc & _desc);						\
-									static bool registerClass(vg::core::IFactory & _factory);							\
-									static const char * getStaticClassName  () { return #name; }                        \
-									const char * getClassName() const override { return name::getStaticClassName(); }	
+#define VG_CLASS_PROPERTIES(name, parent)		using super = parent;																\
+												static bool registerProperties(vg::core::IClassDesc & _desc);						\
+												static bool registerClass(vg::core::IFactory & _factory);							\
+												static const char * getStaticClassName  () { return #name; }						\
+												const char * getClassName() const override { return name::getStaticClassName(); }	
 
+#define VG_CLASS_CTOR_HEADER_IMPL(name, parent)	name(const core::string & _name, IObject * _parent) :								\
+												parent(_name, _parent)																\
+												{																					\
+												}
 
+#define VG_CLASS_DECL(name, parent)				VG_CLASS_PROPERTIES(name, parent)	
+
+#define VG_CLASS_DECL_PASSTHROUGH(name, parent)	VG_CLASS_PROPERTIES(name, parent)													\
+												VG_CLASS_CTOR_HEADER_IMPL(name, parent)
+												
 namespace vg::core
 {
     class IFactory;

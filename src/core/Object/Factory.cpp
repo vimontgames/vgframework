@@ -129,10 +129,10 @@ namespace vg::core
             XMLNode * xmlRoot = xmlDoc.FirstChild();
             if (xmlRoot != nullptr)
             {
-                VG_INFO("[Factory] Load \"%s\"", relativePath.c_str());
+                //VG_INFO("[Factory] Load \"%s\"", relativePath.c_str());
                 if (factory->serializeFromXML(_object, xmlDoc))
                 {
-                    VG_INFO("[Factory] \"%s\" loaded in %.2f ms", relativePath.c_str(), Timer::getEnlapsedTime(startLoad, Timer::getTick()));
+                    VG_INFO("[Factory] \"%s\" loaded from XML in %.2f ms", relativePath.c_str(), Timer::getEnlapsedTime(startLoad, Timer::getTick()));
                     _object->setFile(relativePath.c_str());
                     return true;
                 }
@@ -406,33 +406,37 @@ namespace vg::core
 
                                                 uint elemSize = 0;
                                                 void * data = classDesc->ResizeVector(_object, (uint)offset, count, elemSize);
+                                                VG_ASSERT(nullptr != data);
 
-                                                // second pass to populate array
-                                                xmlObjectRef = xmlObjectRefStart;
-                                                uint index = 0;
-                                                do
-                                                {                                          
-                                                    const XMLAttribute * xmlClassAttrRef = xmlObjectRef->FindAttribute("class");
-                                                    if (nullptr != xmlClassAttrRef)
+                                                if (nullptr != data)
+                                                {
+                                                    // second pass to populate array
+                                                    xmlObjectRef = xmlObjectRefStart;
+                                                    uint index = 0;
+                                                    do
                                                     {
-                                                        const char * classNameRef = xmlClassAttrRef->Value();
-                                                        const auto * classDescRef = getClassDescriptor(classNameRef);
-                                                        if (nullptr != classDescRef)
+                                                        const XMLAttribute * xmlClassAttrRef = xmlObjectRef->FindAttribute("class");
+                                                        if (nullptr != xmlClassAttrRef)
                                                         {
-                                                            IResource * pResource = (IResource *)(uint_ptr(data) + index * elemSize);
-                                                            if (serializeFromXML(pResource, xmlObjectRef))
+                                                            const char * classNameRef = xmlClassAttrRef->Value();
+                                                            const auto * classDescRef = getClassDescriptor(classNameRef);
+                                                            if (nullptr != classDescRef)
                                                             {
-                                                                pResource->setParent(_object);
-                                                                pResource->onResourcePathChanged("", pResource->GetResourcePath());
+                                                                IResource * pResource = (IResource *)(uint_ptr(data) + index * elemSize);
+                                                                if (serializeFromXML(pResource, xmlObjectRef))
+                                                                {
+                                                                    pResource->setParent(_object);
+                                                                    pResource->onResourcePathChanged("", pResource->GetResourcePath());
+                                                                }
+                                                                index++;
                                                             }
-                                                            index++;
                                                         }
-                                                    }
-                                                
-                                                    xmlObjectRef = xmlObjectRef->NextSiblingElement("Object");
-                                                
-                                                } while (xmlObjectRef != nullptr);
-                                                VG_ASSERT(index == count);
+
+                                                        xmlObjectRef = xmlObjectRef->NextSiblingElement("Object");
+
+                                                    } while (xmlObjectRef != nullptr);
+                                                    VG_ASSERT(index == count);
+                                                }
                                             }
                                         }
                                         break;
