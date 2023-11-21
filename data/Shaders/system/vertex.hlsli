@@ -26,9 +26,9 @@ struct Vertex
     }
     
 #ifndef __cplusplus
-    void Load(ByteAddressBuffer _buffer, VertexFormat _format, uint _vertexID, uint _offset = 0)
+    void Load(ByteAddressBuffer _buffer, uint _format, uint _vertexID, uint _offset = 0)
     {
-        uint vertexOffset = _offset + _vertexID * getVertexFormatStride(_format);
+        uint vertexOffset = _offset + _vertexID * getVertexFormatStride((VertexFormat)_format);
 
         pos.xyz     = _buffer.Load<float3>(vertexOffset + 0);
         nrm.xyz     = _buffer.Load<float3>(vertexOffset + 12);
