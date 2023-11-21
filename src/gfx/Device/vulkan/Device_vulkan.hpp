@@ -32,7 +32,7 @@ namespace vg::gfx::vulkan
 				 static const char * errorAsWarningList[] =
 				 {
 					 "UNASSIGNED-CoreValidation-Shader-OutputNotConsumed",
-					 "VUID-VkGraphicsPipelineCreateInfo-layout-07990"
+					 //"VUID-VkGraphicsPipelineCreateInfo-layout-07990"
 				 };
 				 for (uint i = 0; i < countof(errorAsWarningList); ++i)
 				 {
@@ -451,7 +451,7 @@ namespace vg::gfx::vulkan
             VkDescriptorPoolSize type_counts[] =
             {
                 { VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE, BINDLESS_TEXTURE_COUNT },
-				{ VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, BINDLESS_BUFFER_COUNT },
+				{ VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, BINDLESS_BUFFER_COUNT },
                 { VK_DESCRIPTOR_TYPE_STORAGE_IMAGE, BINDLESS_RWTEXTURE_COUNT },
 				{ VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, BINDLESS_RWBUFFER_COUNT }
             };

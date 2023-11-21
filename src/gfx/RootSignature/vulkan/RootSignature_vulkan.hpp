@@ -68,7 +68,7 @@ namespace vg::gfx::vulkan
                     {
                         const auto & buffers = descriptor.getBuffers();
                         vkLayoutBinding.binding = buffers.m_binding;
-                        vkLayoutBinding.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+                        vkLayoutBinding.descriptorType = VK_DESCRIPTOR_TYPE_STORAGE_BUFFER;
                         vkLayoutBinding.descriptorCount = buffers.m_count;
                         vkLayoutBinding.stageFlags = getVulkanShaderStageFlags(table.getShaderStageFlags());
                         vkLayoutBinding.pImmutableSamplers = nullptr; 
