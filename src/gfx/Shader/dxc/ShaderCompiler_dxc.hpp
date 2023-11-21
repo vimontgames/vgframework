@@ -1,6 +1,8 @@
 #include "dxc/inc/dxcapi.h"
 #include "gfx/Shader/ShaderManager.h"
 #include "core/File/File.h"
+#include "atlbase.h"
+#include "atlcomcli.h"
 
 #define CUSTOM_DXC_INCLUDE_HANDLER 1
 #if CUSTOM_DXC_INCLUDE_HANDLER
@@ -85,6 +87,29 @@ namespace vg::gfx::dxc
         VG_ASSERT_SUCCEEDED(DxcCreateInstance(CLSID_DxcLibrary, IID_PPV_ARGS(&m_d3d12dxcLibrary)));
         VG_ASSERT_SUCCEEDED(DxcCreateInstance(CLSID_DxcCompiler, IID_PPV_ARGS(&m_d3d12dxcCompiler)));
 
+		CComPtr<IDxcVersionInfo3> pCompilerVersion3;
+		m_d3d12dxcCompiler->QueryInterface(&pCompilerVersion3);
+
+		if (nullptr != pCompilerVersion3)
+		{
+			CComHeapPtr<char> VersionString;
+			VG_ASSERT_SUCCEEDED(pCompilerVersion3->GetCustomVersionString(&VersionString));
+			VG_INFO("DXC Shader Compiler Version %s", VersionString);
+		}
+		else
+		{
+			CComPtr<IDxcVersionInfo> pCompilerVersion;
+			m_d3d12dxcCompiler->QueryInterface(&pCompilerVersion);
+
+			if (pCompilerVersion)
+			{
+				UINT32 uCompilerMajor = 0;
+				UINT32 uCompilerMinor = 0;
+				VG_ASSERT_SUCCEEDED(pCompilerVersion->GetVersion(&uCompilerMajor, &uCompilerMinor));
+				VG_INFO("DXC Shader Compiler Version %u.%u ", uCompilerMajor, uCompilerMinor);
+			}
+		}		
+
         #if CUSTOM_DXC_INCLUDE_HANDLER
         m_d3d12dxcIncludeHandler = new CustomIncludeHandler();
         #else
@@ -143,6 +168,7 @@ namespace vg::gfx::dxc
 
             //args.push_back((wchar_t *)L"-WX");
             args.push_back((wchar_t *)L"-HV 2021");
+			//args.push_back((wchar_t *)L"–version");
 
             #ifdef VG_DEBUG
             args.push_back((wchar_t*)L"-Od");
