@@ -13,7 +13,7 @@ namespace vg::editor
         //--------------------------------------------------------------------------------------
         void displayObject(IObject * _object) final
         {
-            displayObjectImpl(_object, "Animation", "m_animationResources");
+            displayResourceList(_object, "Animation", "m_animationResources");
         }
     };
 

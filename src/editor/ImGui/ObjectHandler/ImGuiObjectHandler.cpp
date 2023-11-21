@@ -28,3 +28,4 @@ namespace vg::editor
 #include "ImGuiResourceListHandler.hpp"
 #include "Material/ImGuiMaterialResourceListHandler.hpp"
 #include "Animation/ImGuiAnimationResourceListHandler.hpp"
+#include "Animation/ImGuiSkeletonObjectHandler.hpp"

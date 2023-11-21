@@ -14,7 +14,7 @@ namespace vg::editor
         void displayObject(IObject * _object) = 0;
 
         //--------------------------------------------------------------------------------------
-        void displayObjectImpl(IObject * _object, const core::string & _label, const core::string & _vectorPropName)
+        void displayResourceList(IObject * _object, const core::string & _label, const core::string & _vectorPropName)
         {
             const auto * factory = Kernel::getFactory();
             const auto * classDesc = factory->getClassDescriptor(_object->getClassName());

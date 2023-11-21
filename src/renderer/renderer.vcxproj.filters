@@ -58,6 +58,9 @@
       <Filter>Geometry</Filter>
     </None>
     <None Include="Renderer.inl" />
+    <None Include="Animation\Skeleton.inl">
+      <Filter>Animation</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Precomp.h" />

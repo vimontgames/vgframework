@@ -42,6 +42,7 @@
     <ClCompile Include="View\View.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Animation\Skeleton.inl" />
     <None Include="Geometry\AABB\AABB.inl" />
     <None Include="Geometry\Geometry.inl" />
     <None Include="Renderer.def" />

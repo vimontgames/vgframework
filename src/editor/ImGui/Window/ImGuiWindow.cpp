@@ -488,14 +488,7 @@ namespace vg::editor
                 case IProperty::Type::Float4x4:
                 {
                     VG_ASSERT(!isEnumArray, "Display of EnumArray property not implemented for type '%s'", asString(type).c_str());
-
-                    float * pFloat4x4 = (float *)_prop->GetPropertyFloat4x4(_object);
-
-                    changed |= ImGui::InputFloat4(((string)displayName + ".I").c_str(), pFloat4x4 + 0, "%.2f", imguiInputTextflags);
-                    changed |= ImGui::InputFloat4(((string)displayName + ".J").c_str(), pFloat4x4 + 4, "%.2f", imguiInputTextflags);
-                    changed |= ImGui::InputFloat4(((string)displayName + ".K").c_str(), pFloat4x4 + 8, "%.2f", imguiInputTextflags);
-                    changed |= ImGui::InputFloat4(((string)displayName + ".T").c_str(), pFloat4x4 + 12, "%.2f", imguiInputTextflags);
-
+                    changed |= displayFloat4x4(displayName, _prop->GetPropertyFloat4x4(_object));
                 }
                 break;
 
@@ -715,89 +708,24 @@ namespace vg::editor
                                 treeNodeFlags |= ImGuiTreeNodeFlags_Leaf;
                         }
 
-                        bool needTreeNode = strcmp(_prop->getName(), "m_object") && ref && !flatten;
-                        bool treenNodeOpen = !needTreeNode || ImGui::TreeNodeEx(treeNodeName.c_str(), treeNodeFlags);
-
-                        static int ObjectRightClicMenuIndex = -1;
-                        bool needOpenPopup = false;
-
-                        //ImGui::PushID("ObjectRightClicMenu");
-                        //if (ImGui::BeginPopupContextItem())
-                        //{
-                        //    //if (ImGui::MenuItem("Cut", "Ctrl-X"))
-                        //    //    ObjectRightClicMenuIndex = 0;
-                        //    //
-                        //    //if (ImGui::MenuItem("Copy", "Ctrl-C"))
-                        //    //    ObjectRightClicMenuIndex = 1;
-                        //    //
-                        //    //if (ImGui::MenuItem("Paste", "Ctrl-V"))
-                        //    //    ObjectRightClicMenuIndex = 2;
-                        //
-                        //    if (ImGui::MenuItem("Rename", "Ctrl-R"))
-                        //    {
-                        //        needOpenPopup = true;
-                        //        ObjectRightClicMenuIndex = 3;
-                        //    }
-                        //
-                        //    ImGui::EndPopup();
-                        //}
-                        //ImGui::PopID();
-                        //
-                        //if (ObjectRightClicMenuIndex == 3)
-                        //{
-                        //    static bool isRenamePopopOpened = true;
-                        //
-                        //    if (needOpenPopup)
-                        //        ImGui::OpenPopup("Rename");
-                        //
-                        //    if (ImGui::BeginPopupModal("Rename", &isRenamePopopOpened, ImGuiWindowFlags_AlwaysAutoResize))
-                        //    {
-                        //        static char nameTmp[1024] = { '\0' };
-                        //
-                        //        if (nameTmp[0] == '\0')
-                        //            strcpy(nameTmp, pObject->getName().c_str());
-                        //
-                        //        changed |= ImGui::InputText("", nameTmp, countof(nameTmp), ImGuiInputTextFlags_AutoSelectAll);
-                        //
-                        //        string newName = nameTmp;
-                        //
-                        //        if (ImGui::Button("Rename", style::button::Size))
-                        //        {
-                        //            pObject->setName(newName);
-                        //            ImGui::CloseCurrentPopup();
-                        //            nameTmp[0] = '\0';
-                        //            ObjectRightClicMenuIndex = -1;
-                        //        }
-                        //
-                        //        ImGui::SameLine();
-                        //
-                        //        if (ImGui::Button("Cancel", style::button::Size))
-                        //        {
-                        //            ImGui::CloseCurrentPopup();
-                        //            nameTmp[0] = '\0';
-                        //            ObjectRightClicMenuIndex = -1;
-                        //        }
-                        //
-                        //        ImGui::EndPopup();
-                        //    }
-                        //}
-
-                        if (treenNodeOpen)
+                        ImGui::BeginDisabled(pObject == nullptr);
                         {
-                            //updateSelection(_object);
+                            bool needTreeNode = strcmp(_prop->getName(), "m_object") && ref && !flatten;
+                            bool treenNodeOpen = !needTreeNode || ImGui::TreeNodeEx(treeNodeName.c_str(), treeNodeFlags);
 
-                            if (pObject)
-                                displayObject(pObject);
-                            //else
-                            //    ImGui::TextDisabled("null");
+                            static int ObjectRightClicMenuIndex = -1;
+                            bool needOpenPopup = false;
 
-                            if (needTreeNode)
-                                ImGui::TreePop();
+                            if (treenNodeOpen)
+                            {
+                                if (pObject)
+                                    displayObject(pObject);
+
+                                if (needTreeNode)
+                                    ImGui::TreePop();
+                            }
                         }
-                        else
-                        {
-                            //updateSelection(pObject);
-                        }
+                        ImGui::EndDisabled();
 
                         ImGui::PopStyleColor();
                     }
@@ -1115,6 +1043,19 @@ namespace vg::editor
         {
             underLine(ImGui::GetStyle().Colors[ImGuiCol_Button]);
         }
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool ImGuiWindow::displayFloat4x4(const core::string & _label, core::float4x4 * _pFloat4x4)
+    {
+        bool changed = false;
+
+        changed |= ImGui::InputFloat4(((string)_label + ".I").c_str(), (float*)_pFloat4x4 + 0, "%.2f", ImGuiInputTextFlags_EnterReturnsTrue);
+        changed |= ImGui::InputFloat4(((string)_label + ".J").c_str(), (float*)_pFloat4x4 + 4, "%.2f", ImGuiInputTextFlags_EnterReturnsTrue);
+        changed |= ImGui::InputFloat4(((string)_label + ".K").c_str(), (float*)_pFloat4x4 + 8, "%.2f", ImGuiInputTextFlags_EnterReturnsTrue);
+        changed |= ImGui::InputFloat4(((string)_label + ".T").c_str(), (float*)_pFloat4x4 + 12, "%.2f", ImGuiInputTextFlags_EnterReturnsTrue);
+
+        return changed;
     }
 
 }

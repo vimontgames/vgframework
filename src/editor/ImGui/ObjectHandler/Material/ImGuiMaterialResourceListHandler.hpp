@@ -13,7 +13,7 @@ namespace vg::editor
         //--------------------------------------------------------------------------------------
         void displayObject(IObject * _object) final
         {
-            displayObjectImpl(_object, "Material", "m_materialResources");
+            displayResourceList(_object, "Material", "m_materialResources");
         }
     };
 

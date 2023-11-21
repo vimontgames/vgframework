@@ -189,6 +189,9 @@
     <ClInclude Include="ImGui\ObjectHandler\ImGuiResourceListHandler.hpp">
       <Filter>ImGui\ObjectHandler</Filter>
     </ClInclude>
+    <ClInclude Include="ImGui\ObjectHandler\Animation\ImGuiSkeletonObjectHandler.hpp">
+      <Filter>ImGui\ObjectHandler\Animation</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Editor.def" />
