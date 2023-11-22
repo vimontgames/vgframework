@@ -4,12 +4,12 @@
 
 namespace vg::gfx
 {
-    class EditorHLSLDesc : public HLSLDesc
+    class DebugDrawHLSLDesc : public HLSLDesc
     {
     public:
-        EditorHLSLDesc()
+        DebugDrawHLSLDesc()
         {
-            setFile("editor/editor.hlsl");
+            setFile("debugdraw/debugdraw.hlsl");
 
             auto & debugDraw = addTechnique("DebugDraw");
             {

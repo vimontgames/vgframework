@@ -19,6 +19,7 @@ namespace vg::renderer
     class MeshModel;
     class MaterialModel;
     class View;
+    class DebugDraw;
 
     enum class MaterialTextureType : core::u8;
 
@@ -67,6 +68,7 @@ namespace vg::renderer
         IImGuiAdapter *                         GetImGuiAdapter         () const final override;
         gfx::IShaderManager *                   GetShaderManager        () const final override;
         IPicking *                              GetPicking              () const final override;
+        IDebugDraw *                            GetDebugDraw            () const final override;
 
         bool                                    cookMeshModel           (const core::string & _file) final override;
         IMeshModel *                            loadMeshModel           (const core::string & _file) final override;
@@ -81,6 +83,7 @@ namespace vg::renderer
 
         VG_INLINE gfx::Texture *                getDefaultTexture       (MaterialTextureType _type) const;
         VG_INLINE MaterialModel *               getDefaultMaterial      () const;
+        DebugDraw *                             getDebugDraw            () const;
         
         #ifdef _WIN32
         LRESULT CALLBACK                        WndProc                 (HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) override;

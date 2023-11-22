@@ -27,8 +27,8 @@ namespace vg::renderer
                 for (uint i = 0; i < batchCount; ++i)
                     batches[i].read(buffer);
 
-                buffer.read(&indices);
-                buffer.read(&vertices);
+                buffer.readVector(&indices);
+                buffer.readVector(&vertices);
 
                 u32 matCount;
                 buffer.read(&matCount);
@@ -38,8 +38,8 @@ namespace vg::renderer
 
                 buffer.read((u8 *)&maxBonesCountPerVertex);
 
-                buffer.read(&bonesIndices);
-                buffer.read(&bonesMatrices);
+                buffer.readVector(&bonesIndices);
+                buffer.readVector(&bonesMatrices);
 
                 return true;
             }
@@ -62,8 +62,8 @@ namespace vg::renderer
         for (uint i = 0; i < batches.size(); ++i)
             batches[i].write(buffer);
 
-        buffer.write(indices);
-        buffer.write(vertices);
+        buffer.writeVector(indices);
+        buffer.writeVector(vertices);
 
         buffer.write((u32)materials.size());
         for (uint i = 0; i < materials.size(); ++i)
@@ -71,8 +71,8 @@ namespace vg::renderer
 
         buffer.write((u8)maxBonesCountPerVertex);
 
-        buffer.write(bonesIndices);
-        buffer.write(bonesMatrices);
+        buffer.writeVector(bonesIndices);
+        buffer.writeVector(bonesMatrices);
 
         if (io::writeFile(_file, buffer))
             return true;

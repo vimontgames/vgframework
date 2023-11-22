@@ -40,3 +40,4 @@ namespace vg::renderer
 // Include all vertex format headers here
 #include "DefaultVertex.h"
 #include "SkinningVertex.h"
+#include "DebugDrawVertex.h"

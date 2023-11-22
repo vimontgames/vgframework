@@ -19,6 +19,7 @@
 #include "renderer/RenderPass/ImGui/imguiAdapter.h"
 #include "renderer/Importer/SceneImporterData.h"
 #include "renderer/Model/Mesh/MeshModel.h"
+#include "renderer/Animation/SkeletalAnimation.h"
 #include "renderer/Options/DisplayOptions.h"
 #include "renderer/IGraphicInstance.h"
 #include "renderer/Importer/TextureImporterData.h"
@@ -26,13 +27,14 @@
 #include "renderer/View/Forward/ForwardView.h"
 #include "renderer/Model/Material/DefaultMaterial/DefaultMaterialModel.h"
 #include "renderer/Picking/PickingManager.h"
+#include "renderer/DebugDraw/DebugDraw.h"
 
 #if !VG_ENABLE_INLINE
 #include "Renderer.inl"
 #endif
 
 #include "shaders/driver/driver.hlsl.h"
-#include "shaders/editor/editor.hlsl.h"
+#include "shaders/debugdraw/debugdraw.hlsl.h"
 #include "shaders/default/default.hlsl.h"
 #include "shaders/background/background.hlsl.h"
 #include "shaders/postprocess/postprocess.hlsl.h"
@@ -178,6 +180,9 @@ namespace vg::renderer
 
         registerShaders();
 
+        // Debug draw (singleton)
+        DebugDraw * dbgDraw = new DebugDraw();
+
         // Create passes not bound to a View
         m_imguiPass = new ImGuiPass();
 
@@ -196,7 +201,7 @@ namespace vg::renderer
 
         // TODO: register from parsing 
         sm->registerHLSL(DriverHLSLDesc());
-        sm->registerHLSL(EditorHLSLDesc());
+        sm->registerHLSL(DebugDrawHLSLDesc());
         sm->registerHLSL(DefaultHLSLDesc());
         sm->registerHLSL(BackgroundHLSLDesc());
         sm->registerHLSL(PostProcessHLSLDesc());
@@ -214,6 +219,9 @@ namespace vg::renderer
 
         DisplayOptions * displayOptions = DisplayOptions::get();
         VG_SAFE_DELETE(displayOptions);
+
+        DebugDraw * dbgDraw = getDebugDraw();
+        VG_SAFE_RELEASE(dbgDraw);
 
         VG_SAFE_RELEASE(m_mainView);
         for (uint j = 0; j < core::enumCount<gfx::ViewTarget>(); ++j)
@@ -574,14 +582,33 @@ namespace vg::renderer
     //--------------------------------------------------------------------------------------
     bool Renderer::cookAnimation(const core::string & _file)
     {
-        VG_ASSERT_NOT_IMPLEMENTED();
+        SceneImporterData imported;
+
+        if (m_fbxImporter->importFBX(_file, imported))
+        {
+            if (imported.anims.size() > 0)
+            {
+                const auto & anim = imported.anims[0];
+                anim.save(io::getCookedPath(_file));
+            }
+
+            return true;
+        }
+
         return false;
     }
 
     //--------------------------------------------------------------------------------------
     IAnimation * Renderer::loadAnimation(const core::string & _file) 
     {
-        VG_ASSERT_NOT_IMPLEMENTED();
+        AnimImporterData animData;
+
+        if (animData.load(io::getCookedPath(_file)))
+        {
+            IAnimation * animation = SkeletalAnimation::createFromImporterData(animData);
+            return animation;
+        }
+
         return nullptr;
     }
 
@@ -664,5 +691,17 @@ namespace vg::renderer
     IPicking * Renderer::GetPicking() const
     {
         return m_picking;
+    }
+
+    //--------------------------------------------------------------------------------------
+    IDebugDraw * Renderer::GetDebugDraw() const
+    {
+        return getDebugDraw();
+    }
+
+    //--------------------------------------------------------------------------------------
+    DebugDraw * Renderer::getDebugDraw() const
+    {
+        return DebugDraw::get();
     }
 }

@@ -37,14 +37,20 @@ namespace vg::core::io
         bool read(float4 * _value);
         bool write(const float4 & _value);
 
+        bool read(quaternion * _value);
+        bool write(const quaternion & _value);
+
         bool read(string * _string);
         bool write(const string & _string);
 
-        template <typename T> bool read(vector<T> * _vector);
-        template <typename T> bool write(const vector<T> & _vector);
+        template <typename T> bool readVector(vector<T> * _vector);
+        template <typename T> bool writeVector(const vector<T> & _vector);
 
         bool read(void * _data, size_t _size);
         bool write(const void * _data, size_t _size);
+
+        template <typename T> bool read(T * _value);
+        template <typename T> bool write(const T * _value);
 
         //template <typename T> bool read(core::vector<T> & _data)
         //{

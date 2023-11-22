@@ -3,7 +3,7 @@
 #include "system/vertex.hlsli"
 #include "system/view.hlsli"
 
-#include "editor.hlsli"
+#include "debugdraw.hlsli"
 
 struct VS_Output
 {
@@ -18,7 +18,7 @@ VS_Output VS_DebugDraw(uint _vertexID : VertexID)
     ByteAddressBuffer buf = getBuffer(rootConstants3D.getBufferHandle());
         
     Vertex vert;
-           vert.Load(buf, (uint)0, _vertexID, rootConstants3D.getVertexBufferOffset());
+           vert.Load(buf, rootConstants3D.getVertexFormat(), _vertexID, rootConstants3D.getVertexBufferOffset());
     
     ViewConstants viewConstants;
     viewConstants.Load(getBuffer(RESERVEDSLOT_BUFSRV_VIEWCONSTANTS));

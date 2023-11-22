@@ -101,13 +101,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "system", "system", "{34ABDE
 		data\Shaders\system\view.hlsli = data\Shaders\system\view.hlsli
 	EndProjectSection
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "editor", "editor", "{247A9589-663C-452B-9C16-F5E34FEE87D4}"
-	ProjectSection(SolutionItems) = preProject
-		data\Shaders\editor\editor.hlsl = data\Shaders\editor\editor.hlsl
-		data\Shaders\editor\editor.hlsl.h = data\Shaders\editor\editor.hlsl.h
-		data\Shaders\editor\editor.hlsli = data\Shaders\editor\editor.hlsli
-	EndProjectSection
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "raytracing", "raytracing", "{5523CE0C-0AA1-4E5F-82C7-85D032949B40}"
 	ProjectSection(SolutionItems) = preProject
 		data\Shaders\raytracing\raytracing.hlsli = data\Shaders\raytracing\raytracing.hlsli
@@ -118,6 +111,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "postprocess", "postprocess"
 		data\Shaders\postprocess\postprocess.hlsl = data\Shaders\postprocess\postprocess.hlsl
 		data\Shaders\postprocess\postprocess.hlsl.h = data\Shaders\postprocess\postprocess.hlsl.h
 		data\Shaders\postprocess\postprocess.hlsli = data\Shaders\postprocess\postprocess.hlsli
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DebugDraw", "DebugDraw", "{A78F21EC-5A7B-4D8A-AF8F-6E8D9B36EBCE}"
+	ProjectSection(SolutionItems) = preProject
+		data\Shaders\debugdraw\debugdraw.hlsl = data\Shaders\debugdraw\debugdraw.hlsl
+		data\Shaders\debugdraw\debugdraw.hlsl.h = data\Shaders\debugdraw\debugdraw.hlsl.h
+		data\Shaders\debugdraw\debugdraw.hlsli = data\Shaders\debugdraw\debugdraw.hlsli
 	EndProjectSection
 EndProject
 Global
@@ -194,9 +194,9 @@ Global
 		{06052575-08B6-41A6-9E38-E1171229FF9C} = {3A24AFD2-079B-45FC-8488-70058ACACD89}
 		{73E04AC7-00AE-48F3-8650-73DE5C3A9661} = {3A24AFD2-079B-45FC-8488-70058ACACD89}
 		{34ABDEEE-1180-4BD9-9FCC-16C174A96FE8} = {3A24AFD2-079B-45FC-8488-70058ACACD89}
-		{247A9589-663C-452B-9C16-F5E34FEE87D4} = {3A24AFD2-079B-45FC-8488-70058ACACD89}
 		{5523CE0C-0AA1-4E5F-82C7-85D032949B40} = {3A24AFD2-079B-45FC-8488-70058ACACD89}
 		{1E58B5A8-C977-4C9E-9705-CB2089DCFF8C} = {3A24AFD2-079B-45FC-8488-70058ACACD89}
+		{A78F21EC-5A7B-4D8A-AF8F-6E8D9B36EBCE} = {3A24AFD2-079B-45FC-8488-70058ACACD89}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {B437215B-B736-4FF0-8DA1-E6B35C780CE1}

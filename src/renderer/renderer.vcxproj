@@ -20,6 +20,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Animation\Animation.cpp" />
+    <ClCompile Include="DebugDraw\DebugDraw.cpp" />
     <ClCompile Include="Geometry\Geometry.cpp" />
     <ClCompile Include="Importer\FBX\FBXSDKImporter\FBXSDKImporter.cpp" />
     <ClCompile Include="Importer\FBX\UFBXImporter\UFBXImporter.cpp" />
@@ -54,6 +55,7 @@
     <ClInclude Include="Animation\SkeletalAnimation.h" />
     <ClInclude Include="Animation\SkeletalAnimation.hpp" />
     <ClInclude Include="Animation\Skeleton.hpp" />
+    <ClInclude Include="DebugDraw\DebugDraw.h" />
     <ClInclude Include="Geometry\AABB\AABB.h" />
     <ClInclude Include="Geometry\AABB\AABB.hpp" />
     <ClInclude Include="Geometry\Batch\Batch.h" />
@@ -61,9 +63,11 @@
     <ClInclude Include="Geometry\Geometry.h" />
     <ClInclude Include="Geometry\Mesh\MeshGeometry.h" />
     <ClInclude Include="Geometry\Mesh\MeshGeometry.hpp" />
+    <ClInclude Include="Geometry\Vertex\DebugDrawVertex.h" />
     <ClInclude Include="Geometry\Vertex\DefaultVertex.h" />
     <ClInclude Include="Geometry\Vertex\SkinningVertex.h" />
     <ClInclude Include="Geometry\Vertex\VertexFormat.h" />
+    <ClInclude Include="IDebugDraw.h" />
     <ClInclude Include="IGraphicInstance.h" />
     <ClInclude Include="IGraphicModel.h" />
     <ClInclude Include="IImGuiAdapter.h" />
@@ -71,6 +75,8 @@
     <ClInclude Include="IAnimation.h" />
     <ClInclude Include="IMeshInstance.h" />
     <ClInclude Include="IMeshModel.h" />
+    <ClInclude Include="Importer\AnimImporterData.h" />
+    <ClInclude Include="Importer\AnimImporterData.hpp" />
     <ClInclude Include="Importer\FBX\FBXImporter.h" />
     <ClInclude Include="Importer\FBX\FBXSDKImporter\FBXSDKImporter.h" />
     <ClInclude Include="Importer\FBX\UFBXImporter\UFBXImporter.h" />

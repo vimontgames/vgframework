@@ -102,6 +102,18 @@ namespace vg::core::io
     }
 
     //--------------------------------------------------------------------------------------
+    inline bool Buffer::read(quaternion * _value)
+    {
+        return read(_value, sizeof(quaternion));
+    }
+
+    //--------------------------------------------------------------------------------------
+    inline bool Buffer::write(const quaternion & _value)
+    {
+        return write(&_value, sizeof(quaternion));
+    }
+
+    //--------------------------------------------------------------------------------------
     inline bool Buffer::read(string * _string)
     {
         u32 len;
@@ -123,7 +135,7 @@ namespace vg::core::io
     }
 
     //--------------------------------------------------------------------------------------
-    template <typename T> inline bool Buffer::read(vector<T> * _vector)
+    template <typename T> inline bool Buffer::readVector(vector<T> * _vector)
     {
         u32 count;
         if (read(&count))
@@ -140,13 +152,25 @@ namespace vg::core::io
     }
 
     //--------------------------------------------------------------------------------------
-    template <typename T> inline bool Buffer::write(const vector<T> & _vector)
+    template <typename T> inline bool Buffer::writeVector(const vector<T> & _vector)
     {
         const u32 count = (u32)_vector.size();
         write(count);
         if (count > 0)
             write(_vector.data(), count * sizeof(T));
         return true;
+    }
+
+    //--------------------------------------------------------------------------------------
+    template <typename T> bool Buffer::read(T * _value)
+    {
+        return read(_value, sizeof(T));
+    }
+
+    //--------------------------------------------------------------------------------------
+    template <typename T> bool Buffer::write(const T * _value)
+    {
+        return write(_value, sizeof(T));
     }
 
     //--------------------------------------------------------------------------------------

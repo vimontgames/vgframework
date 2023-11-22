@@ -7,36 +7,164 @@
 enum class VertexFormat : uint
 {
     Default         = 0,
-    Skinning_4Bones = 1
+    Skinning_4Bones = 1,
+    DebugDraw       = 2,
 };
 
-struct Vertex
+inline uint getVertexFormatStride(VertexFormat _format)
 {
-    uint getVertexFormatStride(VertexFormat _format)
+    switch (_format)
     {
-        switch (_format)
-        {
-            default:            
-            case VertexFormat::Default:
-                return 68;
+        case VertexFormat::DebugDraw:
+            return 16;
+        
+        default:
+        case VertexFormat::Default:
+            return 68;
             
-            case VertexFormat::Skinning_4Bones:
-                return 100;
-        }
+        case VertexFormat::Skinning_4Bones:
+            return 100;
     }
-    
-#ifndef __cplusplus
-    void Load(ByteAddressBuffer _buffer, uint _format, uint _vertexID, uint _offset = 0)
-    {
-        uint vertexOffset = _offset + _vertexID * getVertexFormatStride((VertexFormat)_format);
+}
 
-        pos.xyz     = _buffer.Load<float3>(vertexOffset + 0);
-        nrm.xyz     = _buffer.Load<float3>(vertexOffset + 12);
-        bin.xyz     = _buffer.Load<float3>(vertexOffset + 24);
-        tan.xyz     = _buffer.Load<float3>(vertexOffset + 36);
-        uv[0].xy    = _buffer.Load<float2>(vertexOffset + 48);
-        uv[1].xy    = _buffer.Load<float2>(vertexOffset + 56);
-        color       = _buffer.Load<uint>(vertexOffset + 64);
+inline bool hasNormal(VertexFormat _format)
+{
+    switch (_format)
+    {
+        case VertexFormat::Default:
+        case VertexFormat::Skinning_4Bones:
+            return true;
+        
+        default:
+        case VertexFormat::DebugDraw:
+            return false;
+    }
+}
+
+inline bool hasBinormal(VertexFormat _format)
+{
+    switch (_format)
+    {
+        case VertexFormat::Default:
+        case VertexFormat::Skinning_4Bones:
+            return true;
+        
+        default:
+        case VertexFormat::DebugDraw:
+            return false;
+    }
+}
+
+inline bool hasTangent(VertexFormat _format)
+{
+    switch (_format)
+    {
+        case VertexFormat::Default:
+        case VertexFormat::Skinning_4Bones:
+            return true;
+        
+        default:
+        case VertexFormat::DebugDraw:
+            return false;
+    }
+}
+
+inline bool hasUV0(VertexFormat _format)
+{
+    switch (_format)
+    {
+        case VertexFormat::Default:
+        case VertexFormat::Skinning_4Bones:
+            return true;
+        
+        default:
+        case VertexFormat::DebugDraw:
+            return false;
+    }
+}
+
+inline bool hasUV1(VertexFormat _format)
+{
+    switch (_format)
+    {
+        case VertexFormat::Default:
+        case VertexFormat::Skinning_4Bones:
+            return true;
+        
+        default:
+        case VertexFormat::DebugDraw:
+            return false;
+    }
+}
+
+inline bool hasColor(VertexFormat _format)
+{
+    switch (_format)
+    {
+        case VertexFormat::Default:
+        case VertexFormat::Skinning_4Bones:
+        case VertexFormat::DebugDraw:
+            return true;
+        
+        default:
+            return false;
+    }
+}
+
+struct Vertex
+{    
+#ifndef __cplusplus
+    void Load(ByteAddressBuffer _buffer, VertexFormat _format, uint _vertexID, uint _offset = 0)
+    {
+        uint offset = _offset + _vertexID * getVertexFormatStride(_format);
+        
+        // "memset"
+        pos = float3(0, 0, 0);
+        nrm = float3(0, 0, 1);
+        bin = float3(0, 1, 0);
+        tan = float3(1, 0, 0);
+        uv[0] = float2(0, 0);
+        uv[1] = float2(1, 1);
+        color = 0xFFFFFFFF;
+
+        pos.xyz = _buffer.Load<float3>(offset); 
+        offset += 3 * sizeof(float);
+        
+        if (hasNormal(_format))
+        {
+            nrm.xyz = _buffer.Load<float3>(offset);
+            offset += 3 * sizeof(float);
+        }
+        
+        if (hasBinormal(_format))
+        {
+            bin.xyz = _buffer.Load<float3>(offset);
+            offset += 3 * sizeof(float);
+        }
+        
+        if (hasTangent(_format))
+        {
+            tan.xyz = _buffer.Load<float3>(offset);
+            offset += 3 * sizeof(float);
+        }
+        
+        if (hasUV0(_format))
+        {
+            uv[0].xy= _buffer.Load<float2>(offset);
+            offset += 2 * sizeof(float);
+        }
+        
+        if (hasUV1(_format))
+        {
+            uv[1].xy    = _buffer.Load<float2>(offset);
+            offset += 2 * sizeof(float);
+        }
+        
+        if (hasColor(_format))
+        {
+            color = _buffer.Load<uint>(offset);
+            offset += 4;
+        }
     }
     #endif
 

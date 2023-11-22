@@ -1,3 +1,5 @@
+#include "TextureImporterData.h"
+
 namespace vg::renderer
 {
     static const u32 TextureImporterDataVersion = 1;

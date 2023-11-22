@@ -5,6 +5,7 @@
 #include "renderer/Model/Material/MaterialModel.h"
 #include "renderer/View/View.h"
 #include "renderer/Picking/PickingManager.h"
+#include "renderer/DebugDraw/DebugDraw.h"
 
 #include "Shaders/system/toolmode.hlsl.h"
 
@@ -32,6 +33,17 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
+    void EditorPass::BeforeRender(const gfx::RenderPassContext & _renderPassContext, gfx::CommandList * _cmdList)
+    {
+        // test
+        //auto dbgDraw = DebugDraw::get();
+        //dbgDraw->AddLine(float3(0, 0, 0), float3(1, 1, 1), 0xFF00FFFF);
+        //dbgDraw->AddLine(float3(1, 1, 1), float3(2, 1, 1), 0xFFFF00FF);
+
+        DebugDraw::get()->update(_cmdList);
+    }
+
+    //--------------------------------------------------------------------------------------
     void EditorPass::Render(const RenderPassContext & _renderPassContext, CommandList * _cmdList) const
     {
         const View * view = (const View *)_renderPassContext.m_view;
@@ -41,6 +53,9 @@ namespace vg::renderer
         renderContext.m_viewProj = view->getViewProjMatrix();
         renderContext.m_toolmode = view->isToolmode();
         renderContext.m_shaderPass = ShaderPass::Forward;
+
+        DebugDraw * dbgDraw = DebugDraw::get();
+        dbgDraw->render(_cmdList);
 
         bool opaque = true;
 
@@ -77,16 +92,16 @@ namespace vg::renderer
                     continue;
 
                 const MeshModel * model = (MeshModel *)instance->getModel(Lod::Lod0); // TODO: get LoD from culling result
-                if (nullptr == model)
-                    continue;
-
-                const MeshGeometry * geo = model->getGeometry();
-                drawAABB(_cmdList, geo->getAABB(), instance->getWorldMatrix());
+                if (nullptr != model)
+                {
+                    const MeshGeometry * geo = model->getGeometry();
+                    dbgDraw->drawAABB(_cmdList, geo->getAABB(), instance->getWorldMatrix());
+                }
             }
         }
 
-        drawGrid(_cmdList);
-        drawAxis(_cmdList);       
+        dbgDraw->drawGrid(_cmdList);
+        dbgDraw->drawAxis(_cmdList);       
     }
 
     //--------------------------------------------------------------------------------------

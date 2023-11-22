@@ -4,7 +4,7 @@
 
 namespace vg::renderer
 {
-    class ISkeletalAnimation : IAnimation
+    class ISkeletalAnimation : public IAnimation
     {
     public:
         VG_CLASS_DECL_PASSTHROUGH(ISkeletalAnimation, IAnimation)

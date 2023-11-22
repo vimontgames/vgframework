@@ -3,6 +3,7 @@ using namespace vg::core;
 
 namespace vg::renderer
 {
+    //--------------------------------------------------------------------------------------
     MaterialImporterData::MaterialImporterData()
     {
         for (uint i = 0; i < enumCount<MaterialColorType>(); ++i)

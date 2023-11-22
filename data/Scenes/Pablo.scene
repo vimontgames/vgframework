@@ -20,7 +20,7 @@
                                 <Property type="Resource" name="m_meshResource" flags="Resource">
                                     <Object class="MeshResource">
                                         <Property type="String" name="m_name" flags="Hidden" value=""/>
-                                        <Property type="String" name="m_resourcePath" flags="Hidden" value="data/Models/Pablo/Pablo.fbx"/>
+                                        <Property type="String" name="m_resourcePath" flags="Hidden" value="data/Models/Pablo/Pablo_rig.fbx"/>
                                     </Object>
                                 </Property>
                                 <Property type="Object" name="m_meshMaterials">
@@ -83,11 +83,7 @@
                                         <Property type="ResourceVector" name="m_animationResources" flags="Resource">
                                             <Object class="AnimationResource">
                                                 <Property type="String" name="m_name" flags="Hidden" value=""/>
-                                                <Property type="String" name="m_resourcePath" flags="Hidden" value=""/>
-                                            </Object>
-                                            <Object class="AnimationResource">
-                                                <Property type="String" name="m_name" flags="Hidden" value=""/>
-                                                <Property type="String" name="m_resourcePath" flags="Hidden" value=""/>
+                                                <Property type="String" name="m_resourcePath" flags="Hidden" value="data/Models/Pablo/Pablo_idle_anim.fbx"/>
                                             </Object>
                                         </Property>
                                     </Object>

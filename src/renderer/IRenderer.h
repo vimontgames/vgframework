@@ -28,6 +28,7 @@ namespace vg
         class IPicking;
         class IMaterialData;
         class IAnimation;
+        class IDebugDraw;
 
         struct RendererCreationParams;
 
@@ -72,6 +73,7 @@ namespace vg
             virtual IImGuiAdapter *                     GetImGuiAdapter         () const = 0;
             virtual gfx::IShaderManager *               GetShaderManager        () const = 0;
             virtual IPicking *                          GetPicking              () const = 0;
+            virtual IDebugDraw *                        GetDebugDraw            () const = 0;
 
             virtual bool                                cookMeshModel           (const core::string & _file) = 0;
             virtual IMeshModel *                        loadMeshModel           (const core::string & _file) = 0;

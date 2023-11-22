@@ -14,6 +14,7 @@ namespace vg::renderer
         ~EditorPass();
 
         void    Setup       (const gfx::RenderPassContext & _renderPassContext, double _dt) override;
+        void	BeforeRender(const gfx::RenderPassContext & _renderPassContext, gfx::CommandList * _cmdList) override;
         void    Render      (const gfx::RenderPassContext & _renderPassContext, gfx::CommandList * _cmdList) const override;
         void	AfterRender (const gfx::RenderPassContext & _renderPassContext, gfx::CommandList * _cmdList) override;
 

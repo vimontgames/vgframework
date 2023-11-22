@@ -1,6 +1,7 @@
 #pragma once
 
 #include "MeshImporterData.h"
+#include "AnimImporterData.h"
 
 namespace vg::renderer
 {

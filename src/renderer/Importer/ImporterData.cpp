@@ -1,12 +1,11 @@
 #include "renderer/Precomp.h"
 #include "core/File/File.h"
 #include "core/File/Buffer.h"
-#include "SceneImporterData.h"
-#include "TextureImporterData.h"
 
 using namespace vg::core;
 
+#include "SceneImporterData.hpp"
 #include "MaterialImporterData.hpp"
 #include "MeshImporterData.hpp"
-#include "SceneImporterData.hpp"
+#include "AnimImporterData.hpp"
 #include "TextureImporterData.hpp"
