@@ -28,8 +28,10 @@ namespace vg::core
     VG_INLINE Model * Instance::getModel(Lod _lod) const
     {
         VG_ASSERT(isEnumValue(_lod));
-
-        return m_models[asInteger(_lod)];
+        if (asInteger(_lod) < m_models.size())
+            return m_models[asInteger(_lod)];
+        else
+            return nullptr;
     }
 
     //--------------------------------------------------------------------------------------

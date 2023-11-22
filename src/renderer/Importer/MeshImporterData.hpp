@@ -3,7 +3,33 @@ using namespace vg::core;
 namespace vg::renderer
 {
     // Cooked mesh version
-    static const u32 MeshImporterDataVersion = 6;
+    static const u32 MeshImporterDataVersion = 7;
+
+    //--------------------------------------------------------------------------------------
+    //bool MeshImporterNode::read(core::io::Buffer & _buffer)
+    //{
+    //    _buffer.read(&parent_index);
+    //    _buffer.read(&geometry_to_node);
+    //    _buffer.read(&node_to_parent);
+    //    _buffer.read(&node_to_world);
+    //    _buffer.read(&geometry_to_world);
+    //    _buffer.read(&normal_to_world);
+    //
+    //    return true;
+    //}
+    //
+    ////--------------------------------------------------------------------------------------
+    //bool MeshImporterNode::write(core::io::Buffer & _buffer) const
+    //{
+    //    _buffer.write(parent_index);
+    //    _buffer.write(geometry_to_node);
+    //    _buffer.write(node_to_parent);
+    //    _buffer.write(node_to_world);
+    //    _buffer.write(geometry_to_world);
+    //    _buffer.write(normal_to_world);
+    //
+    //    return true;
+    //}
 
     //--------------------------------------------------------------------------------------
     bool MeshImporterData::load(const core::string & _file)
@@ -27,8 +53,8 @@ namespace vg::renderer
                 for (uint i = 0; i < batchCount; ++i)
                     batches[i].read(buffer);
 
-                buffer.readVector(&indices);
-                buffer.readVector(&vertices);
+                buffer.read(&indices);
+                buffer.read(&vertices);
 
                 u32 matCount;
                 buffer.read(&matCount);
@@ -36,10 +62,10 @@ namespace vg::renderer
                 for (uint i = 0; i < matCount; ++i)
                     materials[i].read(buffer);
 
-                buffer.read((u8 *)&maxBonesCountPerVertex);
-
-                buffer.readVector(&bonesIndices);
-                buffer.readVector(&bonesMatrices);
+                buffer.read(&maxBonesCountPerVertex);
+                buffer.read(&nodes);
+                buffer.read(&bonesIndices);
+                buffer.read(&bonesMatrices);
 
                 return true;
             }
@@ -62,17 +88,17 @@ namespace vg::renderer
         for (uint i = 0; i < batches.size(); ++i)
             batches[i].write(buffer);
 
-        buffer.writeVector(indices);
-        buffer.writeVector(vertices);
+        buffer.write(indices);
+        buffer.write(vertices);
 
         buffer.write((u32)materials.size());
         for (uint i = 0; i < materials.size(); ++i)
             materials[i].write(buffer);
 
-        buffer.write((u8)maxBonesCountPerVertex);
-
-        buffer.writeVector(bonesIndices);
-        buffer.writeVector(bonesMatrices);
+        buffer.write(maxBonesCountPerVertex);
+        buffer.write(nodes);
+        buffer.write(bonesIndices);
+        buffer.write(bonesMatrices);
 
         if (io::writeFile(_file, buffer))
             return true;

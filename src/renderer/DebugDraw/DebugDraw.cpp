@@ -15,7 +15,7 @@ namespace vg::renderer
 {
     //--------------------------------------------------------------------------------------
     DebugDraw::DebugDraw() :
-        m_debugDrawVBSize(16*1024)
+        m_debugDrawVBSize(1024*1024)
     {
         auto * device = Device::get();
         const RootSignatureTableDesc & bindlessTable = device->getBindlessTable()->getTableDesc();
@@ -294,9 +294,10 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    void DebugDraw::AddLine(const core::float3 & _beginPos, const core::float3 & _endPos, core::u32 _color)
+    void DebugDraw::AddLine(const core::float3 & _beginPos, const core::float3 & _endPos, core::u32 _color, const core::float4x4 & _world)
     {
         DebugDrawLineData & line = m_lines.push_empty();
+        line.world = _world;
         line.beginPos = _beginPos;
         line.beginColor = _color;
         line.endPos = _endPos;
@@ -304,8 +305,36 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
+    void DebugDraw::AddWireframeBox(const core::float3 & _minPos, const core::float3 & _maxPos, core::u32 _color, const core::float4x4 & _world)
+    {
+        //DebugDrawBoxData & box = m_wireframeBoxes.push_empty();
+        //box.minPos = _minPos;
+        //box.maxPos = _maxPos;
+        //box.world = _world;
+        //box.color = _color;
+
+        AddLine(float3(_minPos.x, _minPos.y, _minPos.z), float3(_maxPos.x, _minPos.y, _minPos.z), _color, _world);
+        AddLine(float3(_maxPos.x, _minPos.y, _minPos.z), float3(_maxPos.x, _maxPos.y, _minPos.z), _color, _world);
+        AddLine(float3(_maxPos.x, _maxPos.y, _minPos.z), float3(_minPos.x, _maxPos.y, _minPos.z), _color, _world);
+        AddLine(float3(_minPos.x, _maxPos.y, _minPos.z), float3(_minPos.x, _minPos.y, _minPos.z), _color, _world);
+        
+        AddLine(float3(_minPos.x, _minPos.y, _minPos.z), float3(_minPos.x, _minPos.y, _maxPos.z), _color, _world);
+        AddLine(float3(_maxPos.x, _minPos.y, _minPos.z), float3(_maxPos.x, _minPos.y, _maxPos.z), _color, _world);
+        AddLine(float3(_maxPos.x, _maxPos.y, _minPos.z), float3(_maxPos.x, _maxPos.y, _maxPos.z), _color, _world);
+        AddLine(float3(_minPos.x, _maxPos.y, _minPos.z), float3(_minPos.x, _maxPos.y, _maxPos.z), _color, _world);
+        
+        AddLine(float3(_minPos.x, _minPos.y, _maxPos.z), float3(_maxPos.x, _minPos.y, _maxPos.z), _color, _world);
+        AddLine(float3(_maxPos.x, _minPos.y, _maxPos.z), float3(_maxPos.x, _maxPos.y, _maxPos.z), _color, _world);
+        AddLine(float3(_maxPos.x, _maxPos.y, _maxPos.z), float3(_minPos.x, _maxPos.y, _maxPos.z), _color, _world);
+        AddLine(float3(_minPos.x, _maxPos.y, _maxPos.z), float3(_minPos.x, _minPos.y, _maxPos.z), _color, _world);
+    }
+
+    //--------------------------------------------------------------------------------------
     void DebugDraw::update(gfx::CommandList * _cmdList)
     {
+        // reset
+        m_linesToDraw = 0;
+
         uint_ptr offset = 0;
 
         uint_ptr lineStartOffset = offset;
@@ -315,23 +344,54 @@ namespace vg::renderer
         {
             for (uint i = 0; i < m_lines.size(); ++i)
             {
-                VG_ASSERT(uint_ptr(offset + 2 * sizeof(DebugDrawVertex)) < m_debugDrawVBSize);
+                VG_ASSERT(offset + 2 * sizeof(DebugDrawVertex) < m_debugDrawVBSize);
 
                 if (uint_ptr(offset + 2 * sizeof(DebugDrawVertex)) < m_debugDrawVBSize)
                 {
                     const auto & line = m_lines[i];
+
                     DebugDrawVertex * v0 = ((DebugDrawVertex *)(dbgDrawData + offset));
-                    memcpy(v0->pos, &line.beginPos, sizeof(float) * 3);
+                    float3 pos0 = mul(float4(line.beginPos.xyz,1), line.world).xyz;
+                    memcpy(v0->pos, &pos0, sizeof(float) * 3);
                     v0->color = line.beginColor;
                     offset += sizeof(DebugDrawVertex);
 
                     DebugDrawVertex * v1 = ((DebugDrawVertex *)(dbgDrawData + offset));
-                    memcpy(v1->pos, &line.endPos, sizeof(float) * 3);
+                    float3 pos1 = mul(float4(line.endPos.xyz, 1), line.world).xyz;
+                    memcpy(v1->pos, &pos1, sizeof(float) * 3);
                     v1->color = line.endColor;
                     offset += sizeof(DebugDrawVertex);
 
                     lineCount++;
                 }
+            }
+
+            for (uint i = 0; i < m_wireframeBoxes.size(); ++i)
+            {
+                //VG_ASSERT(offset + 12 * sizeof(DebugDrawVertex) < m_debugDrawVBSize);
+                //
+                //if (offset + 12 * sizeof(DebugDrawVertex) < m_debugDrawVBSize)
+                //{
+                //    const auto & box = m_wireframeBoxes[i];
+                //
+                //    DebugDrawVertex * v0 = ((DebugDrawVertex *)(dbgDrawData + offset));
+                //    float3 pos0 = float3(box.minPos.x, box.minPos.y, box.minPos.z);
+                //    memcpy(v0->pos, &pos0, sizeof(float) * 3);
+                //    v0->color = box.color;
+                //    offset += sizeof(DebugDrawVertex);
+                //
+                //    DebugDrawVertex * v1 = ((DebugDrawVertex *)(dbgDrawData + offset));
+                //    float3 pos1 = float3(box.maxPos.x, box.minPos.y, box.minPos.z);
+                //    memcpy(v1->pos, &pos1, sizeof(float) * 3);
+                //    v1->color = box.color;
+                //    offset += sizeof(DebugDrawVertex);
+                //
+                //    DebugDrawVertex * v2 = ((DebugDrawVertex *)(dbgDrawData + offset));
+                //    float3 pos2 = float3(box.minPos.x, box.minPos.y, box.minPos.z);
+                //    memcpy(v1->pos, &pos1, sizeof(float) * 3);
+                //    v1->color = box.color;
+                //    offset += sizeof(DebugDrawVertex);
+                //}
             }
         }
         _cmdList->unmap(m_debugDrawVB, dbgDrawData);
@@ -366,10 +426,33 @@ namespace vg::renderer
             _cmdList->setShader(m_debugDrawShaderKey);
             _cmdList->setPrimitiveTopology(PrimitiveTopology::LineList);
 
-            _cmdList->setGraphicRootConstants(0, (u32 *)&root3D, DebugDrawRootConstants3DCount);
-            _cmdList->draw(m_linesToDraw<<1);
+            // transparent 
+            {
+                root3D.color = float4(1, 1, 1, 0.125f);
+                _cmdList->setGraphicRootConstants(0, (u32 *)&root3D, DebugDrawRootConstants3DCount);
 
-            m_linesToDraw = 0;
+                BlendState bsAlpha(BlendFactor::SrcAlpha, BlendFactor::OneMinusSrcAlpha, BlendOp::Add);
+                _cmdList->setBlendState(bsAlpha);
+
+                DepthStencilState dsAlpha(false, false, ComparisonFunc::Always);
+                _cmdList->setDepthStencilState(dsAlpha);
+
+                _cmdList->draw(m_linesToDraw << 1); 
+            }
+
+            // opaque
+            {
+                root3D.color = float4(1, 1, 1, 1.0f);
+                _cmdList->setGraphicRootConstants(0, (u32 *)&root3D, DebugDrawRootConstants3DCount);
+
+                BlendState bsOpaque(BlendFactor::One, BlendFactor::Zero, BlendOp::Add);
+                _cmdList->setBlendState(bsOpaque);
+
+                DepthStencilState dsOpaque(true, true, ComparisonFunc::LessEqual);
+                _cmdList->setDepthStencilState(dsOpaque);
+
+                _cmdList->draw(m_linesToDraw << 1);
+            }
         }
     }
 }

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "core/Object/Object.h"
+#include "renderer/Importer/MeshImporterData.h"
 
 namespace vg::renderer
 {
@@ -9,15 +10,18 @@ namespace vg::renderer
     public:
         VG_CLASS_DECL_PASSTHROUGH(Skeleton, core::Object)
 
-        void                                            setBoneIndices      (const core::vector<core::u32> & _bonesIndices);
-        void                                            setBoneMatrices     (const core::vector<core::float4x4> & _bonesMatrices);
+        void                                                        setNodes            (const core::vector<MeshImporterNode> & _nodes);
+        void                                                        setBoneIndices      (const core::vector<core::u32> & _bonesIndices);
+        void                                                        setBoneMatrices     (const core::vector<core::float4x4> & _bonesMatrices);
 
-        /*VG_INLINE*/ inline const core::vector<core::u32> &       getBoneIndices      () const;
-        /*VG_INLINE*/ inline const core::vector<core::float4x4> &  getBoneMatrices     () const;
+        /*VG_INLINE*/ inline const core::vector<MeshImporterNode> & getNodes            () const;
+        /*VG_INLINE*/ inline const core::vector<core::u32> &        getBoneIndices      () const;
+        /*VG_INLINE*/ inline const core::vector<core::float4x4> &   getBoneMatrices     () const;
 
-    private:
-        core::vector<core::u32>                         m_boneIndices;
-        core::vector<core::float4x4>                    m_boneMatrices;
+    //private:
+        core::vector<MeshImporterNode>                              m_nodes;
+        core::vector<core::u32>                                     m_boneIndices;
+        core::vector<core::float4x4>                                m_boneMatrices;
     };
 }
 

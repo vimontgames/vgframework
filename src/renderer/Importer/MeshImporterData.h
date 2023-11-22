@@ -1,5 +1,6 @@
 #pragma once
 
+#include "core/Math/Math.h"
 #include "MaterialImporterData.h"
 #include "renderer/Geometry/Batch/Batch.h"
 #include "renderer/Geometry/AABB/AABB.h"
@@ -8,6 +9,21 @@
 namespace vg::renderer
 {
     using MeshImporterVertex = renderer::FatVertex;
+
+    class MeshImporterNode 
+    {
+    public:
+        // Not needed for POD
+        //bool read(core::io::Buffer & _buffer);
+        //bool write(core::io::Buffer & _buffer) const;
+
+        core::u32 parent_index;
+        core::float4x4 geometry_to_node;
+        core::float4x4 node_to_parent;
+        core::float4x4 node_to_world;
+        core::float4x4 geometry_to_world;
+        core::float4x4 normal_to_world;
+    };
 
     class MeshImporterData
     {
@@ -22,6 +38,7 @@ namespace vg::renderer
         core::vector<MeshImporterVertex>    vertices;
         core::vector<MaterialImporterData>  materials;
         u8                                  maxBonesCountPerVertex;
+        core::vector<MeshImporterNode>      nodes;
         core::vector<core::u32>             bonesIndices;
         core::vector<core::float4x4>        bonesMatrices;
     };

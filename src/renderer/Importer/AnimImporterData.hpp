@@ -15,9 +15,9 @@ namespace vg::renderer
         _buffer.read(&const_rot);
         _buffer.read(&const_pos);
         _buffer.read(&const_scale);
-        _buffer.readVector(&rot);
-        _buffer.readVector(&pos);
-        _buffer.readVector(&scale);
+        _buffer.read(&rot);
+        _buffer.read(&pos);
+        _buffer.read(&scale);
 
         return true;
     }
@@ -32,9 +32,9 @@ namespace vg::renderer
         _buffer.write(const_rot);
         _buffer.write(const_pos);
         _buffer.write(const_scale);
-        _buffer.writeVector(rot);
-        _buffer.writeVector(pos);
-        _buffer.writeVector(scale);
+        _buffer.write(rot);
+        _buffer.write(pos);
+        _buffer.write(scale);
 
         return true;
     }

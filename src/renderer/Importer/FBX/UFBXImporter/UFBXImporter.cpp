@@ -43,7 +43,7 @@ namespace vg::renderer
             for (uint i = 0; i < meshCount; ++i)
             {
                 MeshImporterData meshImporterData;
-                if (loadFBXMesh(scene->meshes[i], meshImporterData, scene->settings.unit_meters))
+                if (loadFBXMesh(scene, scene->meshes[i], meshImporterData, scene->settings.unit_meters))
                     _data.meshes.push_back(meshImporterData);
             }
 
@@ -130,7 +130,7 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    bool UFBXImporter::loadFBXMesh(const ufbx_mesh * _UFbxMesh, MeshImporterData & _data, double _scale)
+    bool UFBXImporter::loadFBXMesh(const ufbx_scene * _UFBXScene, const ufbx_mesh * _UFbxMesh, MeshImporterData & _data, double _scale)
     {
         const auto start = Timer::getTick();
 
@@ -160,6 +160,20 @@ namespace vg::renderer
 
         if (_UFbxMesh->skin_deformers.count > 0)
         {
+            _data.nodes.reserve(_UFBXScene->nodes.count);
+            for (uint i = 0; i < _UFBXScene->nodes.count; i++)
+            {
+                const ufbx_node * UFBXNode = _UFBXScene->nodes.data[i];
+                MeshImporterNode & node = _data.nodes.push_empty();
+
+                node.parent_index = UFBXNode->parent ? UFBXNode->parent->typed_id : 0xFFFFFFFF;
+                node.node_to_parent = UFBXMatrixToFloat4x3(UFBXNode->node_to_parent);
+                node.node_to_world = UFBXMatrixToFloat4x3(UFBXNode->node_to_world);
+                node.geometry_to_node = UFBXMatrixToFloat4x3(UFBXNode->geometry_to_node);
+                node.geometry_to_world = UFBXMatrixToFloat4x3(UFBXNode->geometry_to_world);
+                node.normal_to_world = UFBXMatrixToFloat4x3(ufbx_matrix_for_normals(&UFBXNode->geometry_to_world));
+            }
+
             UFbxSkin = _UFbxMesh->skin_deformers[0];
             skinned = (nullptr != UFbxSkin);
             _data.maxBonesCountPerVertex = 4;

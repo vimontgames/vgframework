@@ -37,9 +37,18 @@ namespace vg::renderer
     {
         // test
         //auto dbgDraw = DebugDraw::get();
-        //dbgDraw->AddLine(float3(0, 0, 0), float3(1, 1, 1), 0xFF00FFFF);
-        //dbgDraw->AddLine(float3(1, 1, 1), float3(2, 1, 1), 0xFFFF00FF);
+        //
+        //float4x4 world(1, 0, 0, 0,
+        //    0, 1, 0, 0,
+        //    0, 0, 1, 0,
+        //    0, 0, 0, 1);
+        //
+        //dbgDraw->AddLine(float3(0, 0, 0), float3(1, 1, 1), 0xFFFFFFFF);
+        //dbgDraw->AddLine(float3(1, 1, 1), float3(2, 1, 1), 0xFF7F7F7F);
 
+        //dbgDraw->AddWireframeBox(float3(0.0, 0.0, 0.0), float3(1.0f, 1.0f, 1.0f), 0xFF0000FF);
+
+        // Debugdraw should update once
         DebugDraw::get()->update(_cmdList);
     }
 
@@ -95,7 +104,9 @@ namespace vg::renderer
                 if (nullptr != model)
                 {
                     const MeshGeometry * geo = model->getGeometry();
+                    const AABB & aabb = geo->getAABB();
                     dbgDraw->drawAABB(_cmdList, geo->getAABB(), instance->getWorldMatrix());
+                    //dbgDraw->AddWireframeBox(aabb.m_min, aabb.m_max, 0xFF00FF00, instance->getWorldMatrix());
                 }
             }
         }

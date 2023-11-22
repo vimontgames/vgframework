@@ -135,7 +135,7 @@ namespace vg::core::io
     }
 
     //--------------------------------------------------------------------------------------
-    template <typename T> inline bool Buffer::readVector(vector<T> * _vector)
+    template <typename T> inline bool Buffer::read(vector<T> * _vector)
     {
         u32 count;
         if (read(&count))
@@ -152,7 +152,7 @@ namespace vg::core::io
     }
 
     //--------------------------------------------------------------------------------------
-    template <typename T> inline bool Buffer::writeVector(const vector<T> & _vector)
+    template <typename T> inline bool Buffer::write(const vector<T> & _vector)
     {
         const u32 count = (u32)_vector.size();
         write(count);
@@ -168,9 +168,9 @@ namespace vg::core::io
     }
 
     //--------------------------------------------------------------------------------------
-    template <typename T> bool Buffer::write(const T * _value)
+    template <typename T> bool Buffer::write(const T & _value)
     {
-        return write(_value, sizeof(T));
+        return write(&_value, sizeof(T));
     }
 
     //--------------------------------------------------------------------------------------

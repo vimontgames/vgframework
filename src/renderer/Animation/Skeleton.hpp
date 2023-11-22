@@ -28,6 +28,12 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
+    void Skeleton::setNodes(const core::vector<MeshImporterNode> & _nodes)
+    {
+        m_nodes = _nodes;
+    }
+
+    //--------------------------------------------------------------------------------------
     void Skeleton::setBoneIndices(const core::vector<core::u32> & _bonesIndices)
     {
         m_boneIndices = _bonesIndices;

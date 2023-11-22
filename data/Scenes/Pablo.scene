@@ -17,6 +17,7 @@
                         <Property type="ObjectRefVector" name="m_components">
                             <Object class="MeshComponent">
                                 <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
+                                <Property type="Bool" name="m_displayBones" value="true"/>
                                 <Property type="Resource" name="m_meshResource" flags="Resource">
                                     <Object class="MeshResource">
                                         <Property type="String" name="m_name" flags="Hidden" value=""/>

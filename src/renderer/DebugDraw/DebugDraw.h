@@ -22,7 +22,8 @@ namespace vg::renderer
         DebugDraw();
         ~DebugDraw();
 
-        void    AddLine                 (const core::float3 & _beginPos, const core::float3 & _endPos, core::u32 _color) final override;
+        void    AddLine                 (const core::float3 & _beginPos, const core::float3 & _endPos, core::u32 _color, const core::float4x4 & _world = core::float4x4::identity()) final override;
+        void    AddWireframeBox         (const core::float3 & _minPos, const core::float3 & _maxPos, core::u32 _color, const core::float4x4 & _world = core::float4x4::identity()) final override;
 
         void    update                  (gfx::CommandList * _cmdList);
         void    render                  (gfx::CommandList * _cmdList);
@@ -44,15 +45,26 @@ namespace vg::renderer
 
         struct DebugDrawLineData
         {
+            core::float4x4 world;
             core::float3 beginPos;
             core::u32 beginColor;
             core::float3 endPos;
             core::u32 endColor;
         };
-
         core::vector<DebugDrawLineData> m_lines;
-        core::u32                       m_linesVBOffset = 0;
+        core::u32                       m_linesVBOffset;
         core::u32                       m_linesToDraw = 0;
+
+        struct DebugDrawBoxData
+        {
+            core::float4x4 world;
+            core::float3 minPos;
+            core::float3 maxPos;
+            core::u32 color;
+        };
+        core::vector<DebugDrawBoxData>  m_wireframeBoxes;
+        core::u32                       m_wireframeBoxesOffset;
+        core::u32                       m_wireframeBoxesCount = 0;
 
         gfx::RootSignatureHandle        m_debugDrawSignatureHandle;
         gfx::ShaderKey                  m_debugDrawShaderKey;

@@ -245,7 +245,11 @@ namespace vg::core
                             const char * typeName = xmlType->Value();
                             auto type = enumGetValue<IProperty::Type>(typeName);
                             const auto * prop = classDesc->getPropertyByName(name);
-                            if (nullptr != prop)
+                            if (nullptr == prop)
+                            {
+                                VG_WARNING("[Factory] Class \"%s\" has no property \"%s\" of type '%s'", className, name, typeName);
+                            }
+                            else
                             {
                                 const bool isEnumArray = asBool(IProperty::Flags::EnumArray & prop->getFlags());
 

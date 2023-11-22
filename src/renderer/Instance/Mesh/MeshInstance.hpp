@@ -12,7 +12,9 @@
 #include "renderer/Model/Mesh/MeshModel.h"
 #include "renderer/Model/Material/MaterialModel.h"
 #include "renderer/Geometry/Mesh/MeshGeometry.h"
+#include "renderer/Animation/Skeleton.h"
 #include "renderer/RenderPass/RenderContext.h"
+#include "renderer/DebugDraw/DebugDraw.h"
 
 #include "shaders/system/rootConstants3D.hlsli"
 
@@ -105,8 +107,37 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    void setupDefaultMaterial()
+    bool MeshInstance::ShowSkeleton() const
     {
+        VG_PROFILE_CPU("ShowSkeleton");
 
+        DebugDraw * dbgDraw = DebugDraw::get();
+        const MeshModel * model = (MeshModel *)getModel(Lod::Lod0);
+        if (nullptr != model)
+        {
+            Skeleton * skeleton = model->m_skeleton;
+            if (nullptr != skeleton)
+            {
+                auto & nodes = skeleton->m_nodes;
+                for (uint i = 0; i < nodes.size(); ++i)
+                {
+                    MeshImporterNode & node = nodes[i];
+                    //if (0xFFFFFFFF != node.parent_index)
+                    //    node.node_to_world = mul(nodes[node.parent_index].node_to_world, node.node_to_world);
+                    //else
+                    //    node.node_to_world = node.node_to_parent;
+
+                    float4x4 boneMatrix = transpose(node.node_to_world);
+                    float3 posYUp = boneMatrix[3].xyz;
+                    float3 posZUp = float3(posYUp.x, -posYUp.z, posYUp.y);
+                    float3 boxSize = float3(0.01f, 0.01f, 0.01f);
+                    dbgDraw->AddWireframeBox(posZUp - boxSize, posZUp + boxSize, 0xFF00FF00, getWorldMatrix());
+                }
+
+                return true;
+            }
+        }
+
+        return false;
     }
 }

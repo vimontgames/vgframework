@@ -1,6 +1,6 @@
 #pragma once
 
-#include "renderer/Instance/GraphicInstance.h"
+#include "renderer/IMeshInstance.h"
 
 namespace vg::core
 {
@@ -12,10 +12,10 @@ namespace vg::renderer
 {
     class DisplayOptions;
 
-    class MeshInstance : public GraphicInstance
+    class MeshInstance : public IMeshInstance
     {
     public:
-        using super = GraphicInstance;
+        using super = IMeshInstance;
 
         const char * getClassName() const final { return "MeshInstance"; }
 
@@ -24,6 +24,8 @@ namespace vg::renderer
 
         static bool registerClass(core::IFactory & _factory);
         static bool registerProperties(core::IClassDesc & _desc);
+
+        bool ShowSkeleton() const final override;
 
         void Draw(const RenderContext & _renderContext, gfx::CommandList * _cmdList) const final override;
 

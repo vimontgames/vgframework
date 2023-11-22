@@ -11,4 +11,10 @@ namespace vg::renderer
     {
         return m_boneMatrices;
     }
+
+    //--------------------------------------------------------------------------------------
+    VG_INLINE const core::vector<MeshImporterNode> & Skeleton::getNodes() const
+    {
+        return m_nodes;
+    }
 }

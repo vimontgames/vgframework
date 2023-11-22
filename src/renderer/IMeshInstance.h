@@ -1,16 +1,18 @@
 #pragma once
 
-#include "IGraphicInstance.h"
+#include "renderer/Instance/GraphicInstance.h"
 
 namespace vg::renderer
 {
-    class IMeshInstance : public IGraphicInstance
+    class IMeshInstance : public GraphicInstance
     {
     public:
         IMeshInstance(const core::string & _name, core::IObject * _parent) :
-            IGraphicInstance(_name, _parent)
+            GraphicInstance(_name, _parent)
         {
-
+            
         }
+
+        virtual bool ShowSkeleton() const = 0;
     };
 }
