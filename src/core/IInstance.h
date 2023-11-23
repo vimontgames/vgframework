@@ -6,7 +6,7 @@ namespace vg::core
 {
     class IModel;
 
-    enum class Lod
+    enum class Lod : core::u8
     {
         Lod0 = 0,
         Lod1,

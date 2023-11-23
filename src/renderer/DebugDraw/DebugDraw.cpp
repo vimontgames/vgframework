@@ -14,8 +14,7 @@ using namespace vg::gfx;
 namespace vg::renderer
 {
     //--------------------------------------------------------------------------------------
-    DebugDraw::DebugDraw() :
-        m_debugDrawVBSize(1024*1024)
+    DebugDraw::DebugDraw()
     {
         auto * device = Device::get();
         const RootSignatureTableDesc & bindlessTable = device->getBindlessTable()->getTableDesc();
@@ -30,7 +29,6 @@ namespace vg::renderer
         createBoxPrimitive();
         createGrid();
         createAxis();
-        createDebugDrawBuffer();
     }
 
     //--------------------------------------------------------------------------------------
@@ -38,17 +36,42 @@ namespace vg::renderer
     {
         Device::get()->removeRootSignature(m_debugDrawSignatureHandle);
 
-        VG_SAFE_RELEASE(m_debugDrawVB);
+        clearDrawData();
+
         VG_SAFE_RELEASE(m_box);
         VG_SAFE_RELEASE(m_gridVB);
         VG_SAFE_RELEASE(m_axisVB);
     }
 
     //--------------------------------------------------------------------------------------
-    void DebugDraw::createDebugDrawBuffer()
+    void DebugDraw::clearDrawData()
     {
-        BufferDesc vbDesc(Usage::Default, BindFlags::ShaderResource, CPUAccessFlags::None, BufferFlags::None, m_debugDrawVBSize>>2, 4);
-        m_debugDrawVB = Device::get()->createBuffer(vbDesc, "debugDrawVB");
+        for (auto & pair : m_drawData)
+        {
+            DrawData & drawData = pair.second;
+            VG_SAFE_RELEASE(drawData.m_debugDrawVB);
+        }
+        m_drawData.clear();
+    }
+
+    //--------------------------------------------------------------------------------------
+    DebugDraw::DrawData & DebugDraw::getDrawData(const View * _view)
+    {
+        auto it = m_drawData.find(_view);
+
+        if (it == m_drawData.end())
+        {
+            DrawData drawData;
+            drawData.m_debugDrawVBSize = 1024 * 1024;
+
+            BufferDesc vbDesc(Usage::Default, BindFlags::ShaderResource, CPUAccessFlags::None, BufferFlags::None, drawData.m_debugDrawVBSize >> 2, 4);
+            drawData.m_debugDrawVB = Device::get()->createBuffer(vbDesc, "debugDrawVB");
+
+            m_drawData.insert(std::pair(_view, drawData));
+            it = m_drawData.find(_view);
+        }
+
+        return it->second;
     }
 
     //--------------------------------------------------------------------------------------
@@ -330,23 +353,41 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    void DebugDraw::update(gfx::CommandList * _cmdList)
+    void DebugDraw::endFrame()
     {
+        m_lines.clear();
+        m_wireframeBoxes.clear();
+    }
+
+    //--------------------------------------------------------------------------------------
+    void DebugDraw::reset()
+    {
+        clearDrawData();
+    }
+
+    //--------------------------------------------------------------------------------------
+    void DebugDraw::update(const View * _view, gfx::CommandList * _cmdList)
+    {
+        VG_PROFILE_CPU("DebugDrawUpdate");
+
+        DrawData & drawData = getDrawData(_view);
+
         // reset
-        m_linesToDraw = 0;
+        drawData.m_linesToDraw = 0;
+        drawData.m_wireframeBoxesToDraw = 0;
 
         uint_ptr offset = 0;
 
         uint_ptr lineStartOffset = offset;
         uint lineCount = 0;
 
-        u8 * dbgDrawData = (u8 *)_cmdList->map(m_debugDrawVB).data;
+        u8 * dbgDrawData = (u8 *)_cmdList->map(drawData.m_debugDrawVB).data;
         {
             for (uint i = 0; i < m_lines.size(); ++i)
             {
-                VG_ASSERT(offset + 2 * sizeof(DebugDrawVertex) < m_debugDrawVBSize);
+                VG_ASSERT(offset + 2 * sizeof(DebugDrawVertex) < drawData.m_debugDrawVBSize);
 
-                if (uint_ptr(offset + 2 * sizeof(DebugDrawVertex)) < m_debugDrawVBSize)
+                if (uint_ptr(offset + 2 * sizeof(DebugDrawVertex)) < drawData.m_debugDrawVBSize)
                 {
                     const auto & line = m_lines[i];
 
@@ -394,22 +435,29 @@ namespace vg::renderer
                 //}
             }
         }
-        _cmdList->unmap(m_debugDrawVB, dbgDrawData);
+        _cmdList->unmap(drawData.m_debugDrawVB, dbgDrawData);
 
-        m_linesVBOffset = (u32)lineStartOffset;
-        m_linesToDraw = lineCount;
-        m_lines.clear();
+        drawData.m_linesVBOffset = (u32)lineStartOffset;
+        drawData.m_linesToDraw = lineCount;
+
+        //m_lines.clear();
     }
 
     //--------------------------------------------------------------------------------------
-    void DebugDraw::render(gfx::CommandList * _cmdList)
+    void DebugDraw::render(const View * _view, gfx::CommandList * _cmdList)
     {
+        VG_PROFILE_GPU("DebugDraw");
+
+        const DrawData & drawData = getDrawData(_view);
+
         // draw lines
-        if (m_linesToDraw > 0)
+        if (drawData.m_linesToDraw > 0)
         {
+            VG_PROFILE_GPU("DebugDrawLines");
+
             RasterizerState rs(FillMode::Wireframe, CullMode::None);
 
-            VG_ASSERT(nullptr != m_debugDrawVB);
+            VG_ASSERT(nullptr != drawData.m_debugDrawVB);
 
             // Root sig
             _cmdList->setGraphicRootSignature(m_debugDrawSignatureHandle);
@@ -417,8 +465,8 @@ namespace vg::renderer
             // Root constants
             DebugDrawRootConstants3D root3D;
             root3D.mat = /*transpose*/(float4x4::identity());
-            root3D.setBufferHandle(m_debugDrawVB->getBufferHandle());
-            root3D.setVertexBufferOffset(m_linesVBOffset);
+            root3D.setBufferHandle(drawData.m_debugDrawVB->getBufferHandle());
+            root3D.setVertexBufferOffset(drawData.m_linesVBOffset);
             root3D.setVertexFormat(VertexFormat::DebugDraw);
             root3D.color = float4(1, 1, 1, 1);
 
@@ -437,7 +485,7 @@ namespace vg::renderer
                 DepthStencilState dsAlpha(false, false, ComparisonFunc::Always);
                 _cmdList->setDepthStencilState(dsAlpha);
 
-                _cmdList->draw(m_linesToDraw << 1); 
+                _cmdList->draw(drawData.m_linesToDraw << 1);
             }
 
             // opaque
@@ -451,7 +499,7 @@ namespace vg::renderer
                 DepthStencilState dsOpaque(true, true, ComparisonFunc::LessEqual);
                 _cmdList->setDepthStencilState(dsOpaque);
 
-                _cmdList->draw(m_linesToDraw << 1);
+                _cmdList->draw(drawData.m_linesToDraw << 1);
             }
         }
     }

@@ -22,8 +22,8 @@ namespace vg::core
         void                        SetColor            (const float4 & _color) final;
         const float4 &              GetColor            () const final;
 
-        void                        SetModel            (Lod _lod, IModel * _model) final;
-        IModel *                    GetModel            (Lod _lod) const final;
+        void                        SetModel            (Lod _lod, IModel * _model) override;
+        IModel *                    GetModel            (Lod _lod) const override;
 
         Flags                       GetFlags            () const final;
         void                        SetFlags            (Flags flags, bool enabled) final;

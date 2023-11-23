@@ -110,6 +110,7 @@
 //--------------------------------------------------------------------------------------
 // external includes
 //--------------------------------------------------------------------------------------
+#define HLSLPP_FEATURE_TRANSFORM
 #include "hlslpp/include/hlsl++.h"
 
 #define MAGIC_ENUM_RANGE_MIN 0

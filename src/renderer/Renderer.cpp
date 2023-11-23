@@ -255,6 +255,7 @@ namespace vg::renderer
         m_device.resize(_width, _height);
         m_mainView->setSize(uint2(_width, _height));
         m_frameGraph.destroyTransientResources();
+        DebugDraw::get()->reset();
     }
 
     //--------------------------------------------------------------------------------------
@@ -360,12 +361,13 @@ namespace vg::renderer
                 m_frameGraph.setup(_dt);
                 m_frameGraph.build();
                 m_frameGraph.render();
+
+                // reset debug draw after last render
+                DebugDraw::get()->endFrame();
             }
 		}
 		m_device.endFrame();
 	}
-
-    #pragma optimize("", off)
 
     //--------------------------------------------------------------------------------------
     // TODO: create additional views from Views (Shadowmaps, Cubemaps ...)

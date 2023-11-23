@@ -18,6 +18,9 @@
 
 #include "shaders/system/rootConstants3D.hlsli"
 
+#define HLSLPP_FEATURE_TRANSFORM
+#include "D:\GitHub\vimontgames\vgframework\extern\hlslpp\include\transform\hlsl++_transform_float4x4.h"
+
 using namespace vg::core;
 using namespace vg::gfx;
 
@@ -52,7 +55,7 @@ namespace vg::renderer
     //--------------------------------------------------------------------------------------
     MeshInstance::~MeshInstance()
     {
-
+        VG_SAFE_RELEASE(m_instanceSkeleton);
     }
 
     //--------------------------------------------------------------------------------------
@@ -107,31 +110,92 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
+    void MeshInstance::SetModel(Lod _lod, IModel * _model)
+    {
+        MeshModel * meshModel = dynamic_cast<MeshModel *>(_model);
+        VG_ASSERT(nullptr == _model || nullptr != meshModel);
+
+        super::SetModel(_lod, (Model *)_model);
+
+        // Copy skeleton if any
+        if (nullptr != meshModel)
+        {
+            const Skeleton * modelSkeleton = meshModel->getSkeleton();
+            if (m_instanceSkeleton != modelSkeleton)
+                setInstanceSkeleton(modelSkeleton);
+        }
+        else
+        {
+            setInstanceSkeleton(nullptr);
+        }
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool MeshInstance::setInstanceSkeleton(const Skeleton * _skeleton)
+    {
+        if (nullptr == m_instanceSkeleton && nullptr == _skeleton)
+            return false;
+
+        VG_SAFE_RELEASE(m_instanceSkeleton);
+
+        if (nullptr != _skeleton)
+        {
+            m_instanceSkeleton = new Skeleton("InstanceSkeleton", this);
+            m_instanceSkeleton->m_nodes = _skeleton->getNodes();
+            m_instanceSkeleton->m_boneIndices = _skeleton->getBoneIndices();
+            m_instanceSkeleton->m_boneMatrices = _skeleton->getBoneMatrices();                
+        }
+
+        return true;
+    }
+
+    //--------------------------------------------------------------------------------------
+    const Skeleton * MeshInstance::getInstanceSkeleton() const
+    {
+        return m_instanceSkeleton;
+    }
+
+    //float3 getBonePosition()
+
+    //--------------------------------------------------------------------------------------
     bool MeshInstance::ShowSkeleton() const
     {
         VG_PROFILE_CPU("ShowSkeleton");
 
         DebugDraw * dbgDraw = DebugDraw::get();
-        const MeshModel * model = (MeshModel *)getModel(Lod::Lod0);
-        if (nullptr != model)
+        //const MeshModel * model = (MeshModel *)getModel(Lod::Lod0);
+        //if (nullptr != model)
         {
-            Skeleton * skeleton = model->m_skeleton;
+            const Skeleton * skeleton = getInstanceSkeleton(); // model->m_skeleton;
             if (nullptr != skeleton)
             {
-                auto & nodes = skeleton->m_nodes;
-                for (uint i = 0; i < nodes.size(); ++i)
+                const auto & nodes = skeleton->m_nodes;
+                const auto & boneIndices = skeleton->m_boneIndices;
+                for (uint j = 0; j < boneIndices.size(); ++j)
                 {
-                    MeshImporterNode & node = nodes[i];
+                    int i = boneIndices[j];
+
+                    const MeshImporterNode & node = nodes[i];
                     //if (0xFFFFFFFF != node.parent_index)
                     //    node.node_to_world = mul(nodes[node.parent_index].node_to_world, node.node_to_world);
                     //else
                     //    node.node_to_world = node.node_to_parent;
 
-                    float4x4 boneMatrix = transpose(node.node_to_world);
-                    float3 posYUp = boneMatrix[3].xyz;
-                    float3 posZUp = float3(posYUp.x, -posYUp.z, posYUp.y);
+                    // YUp skeleton displayed as ZUp
+                    float4x4 boneMatrix = mul(transpose(node.node_to_world), float4x4::rotation_x(PI / 2.0f));
+                             boneMatrix = mul(getWorldMatrix(), boneMatrix);
+                    
                     float3 boxSize = float3(0.01f, 0.01f, 0.01f);
-                    dbgDraw->AddWireframeBox(posZUp - boxSize, posZUp + boxSize, 0xFF00FF00, getWorldMatrix());
+                    dbgDraw->AddWireframeBox( -boxSize, boxSize, 0xFF00FF00, boneMatrix);
+
+                    if (0xFFFFFFFF != node.parent_index)
+                    {
+                        const MeshImporterNode & parentNode = nodes[node.parent_index];
+                        float4x4 parentBoneMatrix = mul(transpose(parentNode.node_to_world), float4x4::rotation_x(PI / 2.0f));
+                                 parentBoneMatrix = mul(getWorldMatrix(), parentBoneMatrix);
+
+                        dbgDraw->AddLine(boneMatrix[3].xyz, parentBoneMatrix[3].xyz, 0xFF00FF00);
+                    }
                 }
 
                 return true;

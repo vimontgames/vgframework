@@ -48,8 +48,7 @@ namespace vg::renderer
 
         //dbgDraw->AddWireframeBox(float3(0.0, 0.0, 0.0), float3(1.0f, 1.0f, 1.0f), 0xFF0000FF);
 
-        // Debugdraw should update once
-        DebugDraw::get()->update(_cmdList);
+        DebugDraw::get()->update((View*)_renderPassContext.m_view, _cmdList);
     }
 
     //--------------------------------------------------------------------------------------
@@ -64,7 +63,7 @@ namespace vg::renderer
         renderContext.m_shaderPass = ShaderPass::Forward;
 
         DebugDraw * dbgDraw = DebugDraw::get();
-        dbgDraw->render(_cmdList);
+        dbgDraw->render((View*)_renderPassContext.m_view, _cmdList);
 
         bool opaque = true;
 
