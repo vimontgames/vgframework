@@ -18,9 +18,6 @@
 
 #include "shaders/system/rootConstants3D.hlsli"
 
-#define HLSLPP_FEATURE_TRANSFORM
-#include "D:\GitHub\vimontgames\vgframework\extern\hlslpp\include\transform\hlsl++_transform_float4x4.h"
-
 using namespace vg::core;
 using namespace vg::gfx;
 
