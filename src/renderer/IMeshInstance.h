@@ -4,6 +4,8 @@
 
 namespace vg::renderer
 {
+    class ISkeletalAnimation;
+
     class IMeshInstance : public GraphicInstance
     {
     public:
@@ -14,5 +16,8 @@ namespace vg::renderer
         }
 
         virtual bool ShowSkeleton() const = 0;
+
+        virtual bool AddAnimation(ISkeletalAnimation * _animation) = 0;
+        virtual bool RemoveAnimation(ISkeletalAnimation * _animation) = 0;
     };
 }

@@ -14,6 +14,7 @@ namespace vg::renderer
 {
     class DisplayOptions;
     class Skeleton;
+    class SkeletalAnimation;
 
     class MeshInstance : public IMeshInstance
     {
@@ -26,12 +27,18 @@ namespace vg::renderer
         void                SetModel            (core::Lod _lod, core::IModel * _model) final override;
         bool                ShowSkeleton        () const final override;
 
+        bool                AddAnimation        (ISkeletalAnimation * _animation) final override;
+        bool                RemoveAnimation     (ISkeletalAnimation * _animation) final override;
+
         void                Draw                (const RenderContext & _renderContext, gfx::CommandList * _cmdList) const final override;
 
         bool                setInstanceSkeleton (const Skeleton * _skeleton);
-        const Skeleton *    getInstanceSkeleton() const;
+        const Skeleton *    getInstanceSkeleton () const;
+
+        bool                updateSkeleton      ();
 
     private:
         Skeleton *          m_instanceSkeleton = nullptr;
+        SkeletalAnimation * m_animation        = nullptr;
     };
 }

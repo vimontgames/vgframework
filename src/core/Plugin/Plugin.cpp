@@ -29,7 +29,7 @@ namespace vg::core
         else
         {
             DWORD error = GetLastError();
-            VG_ASSERT(false, "Error %u (0x%08X) creating Plugin \"%s\"", error, error, _name.c_str());
+			VG_ASSERT(false, "Error %u (0x%08X) loading %s Plugin \"%s\"", error, error, _name.c_str(), filename.c_str());
         }
 		#endif
 

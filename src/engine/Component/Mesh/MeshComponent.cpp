@@ -168,7 +168,6 @@ namespace vg::engine
                 if (&matResources[i] == matRes)
                 {
                     //VG_INFO("[MeshComponent] Material %u unloaded", i);
-                    MaterialResourceData * matResData = dynamic_cast<MaterialResourceData *>(matRes->getObject());
                     m_meshInstance->SetMaterial(i, nullptr);
                     break;
                 }

@@ -6,30 +6,32 @@ namespace vg::renderer
     static const u32 MeshImporterDataVersion = 7;
 
     //--------------------------------------------------------------------------------------
-    //bool MeshImporterNode::read(core::io::Buffer & _buffer)
-    //{
-    //    _buffer.read(&parent_index);
-    //    _buffer.read(&geometry_to_node);
-    //    _buffer.read(&node_to_parent);
-    //    _buffer.read(&node_to_world);
-    //    _buffer.read(&geometry_to_world);
-    //    _buffer.read(&normal_to_world);
-    //
-    //    return true;
-    //}
-    //
-    ////--------------------------------------------------------------------------------------
-    //bool MeshImporterNode::write(core::io::Buffer & _buffer) const
-    //{
-    //    _buffer.write(parent_index);
-    //    _buffer.write(geometry_to_node);
-    //    _buffer.write(node_to_parent);
-    //    _buffer.write(node_to_world);
-    //    _buffer.write(geometry_to_world);
-    //    _buffer.write(normal_to_world);
-    //
-    //    return true;
-    //}
+    bool MeshImporterNode::read(core::io::Buffer & _buffer)
+    {
+        _buffer.read(&name);
+        _buffer.read(&parent_index);
+        _buffer.read(&geometry_to_node);
+        _buffer.read(&node_to_parent);
+        _buffer.read(&node_to_world);
+        _buffer.read(&geometry_to_world);
+        _buffer.read(&normal_to_world);
+
+        return true;
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool MeshImporterNode::write(core::io::Buffer & _buffer) const
+    {
+        _buffer.write(name);
+        _buffer.write(parent_index);
+        _buffer.write(geometry_to_node);
+        _buffer.write(node_to_parent);
+        _buffer.write(node_to_world);
+        _buffer.write(geometry_to_world);
+        _buffer.write(normal_to_world);
+
+        return true;
+    }
 
     //--------------------------------------------------------------------------------------
     bool MeshImporterData::load(const core::string & _file)
@@ -63,7 +65,13 @@ namespace vg::renderer
                     materials[i].read(buffer);
 
                 buffer.read(&maxBonesCountPerVertex);
-                buffer.read(&nodes);
+                
+                u32 nodeCount;
+                buffer.read(&nodeCount);
+                nodes.resize(nodeCount);
+                for (uint i = 0; i < nodeCount; ++i)
+                    nodes[i].read(buffer);
+
                 buffer.read(&bonesIndices);
                 buffer.read(&bonesMatrices);
 
@@ -96,7 +104,11 @@ namespace vg::renderer
             materials[i].write(buffer);
 
         buffer.write(maxBonesCountPerVertex);
-        buffer.write(nodes);
+        
+        buffer.write((u32)nodes.size());
+        for (uint i = 0; i < nodes.size(); ++i)
+            nodes[i].write(buffer);
+        
         buffer.write(bonesIndices);
         buffer.write(bonesMatrices);
 

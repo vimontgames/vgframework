@@ -28,11 +28,11 @@ namespace vg::engine
 
         MeshResource &  getMeshResource     () { return m_meshResource; }
 
-    private:
-        bool                                m_displayBones = false;
+    //private:
         renderer::IMeshInstance *           m_meshInstance = nullptr;
         MeshResource                        m_meshResource;
         MaterialResourceList                m_meshMaterials;
+        bool                                m_displayBones = false;
         bool                                m_registered = false;
     };
 }

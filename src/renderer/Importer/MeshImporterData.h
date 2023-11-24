@@ -13,10 +13,10 @@ namespace vg::renderer
     class MeshImporterNode 
     {
     public:
-        // Not needed for POD
-        //bool read(core::io::Buffer & _buffer);
-        //bool write(core::io::Buffer & _buffer) const;
+        bool read(core::io::Buffer & _buffer);
+        bool write(core::io::Buffer & _buffer) const;
 
+        core::string name;
         core::u32 parent_index;
         core::float4x4 geometry_to_node;
         core::float4x4 node_to_parent;

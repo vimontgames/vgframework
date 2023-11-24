@@ -15,7 +15,7 @@ namespace vg::renderer
 
         static IAnimation * createFromImporterData(const AnimImporterData & _data);
 
-    private:
+    //private:
         AnimImporterData m_animData;    
     };
 }

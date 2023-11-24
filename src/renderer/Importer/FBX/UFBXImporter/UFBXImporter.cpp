@@ -166,6 +166,9 @@ namespace vg::renderer
                 const ufbx_node * UFBXNode = _UFBXScene->nodes.data[i];
                 MeshImporterNode & node = _data.nodes.push_empty();
 
+                VG_DEBUGPRINT("Skin Node %u : %s\n", i, UFBXNode->name.data);
+
+                node.name = UFBXNode->name.data;
                 node.parent_index = UFBXNode->parent ? UFBXNode->parent->typed_id : 0xFFFFFFFF;
                 node.node_to_parent = UFBXMatrixToFloat4x3(UFBXNode->node_to_parent);
                 node.node_to_world = UFBXMatrixToFloat4x3(UFBXNode->node_to_world);
@@ -437,6 +440,8 @@ namespace vg::renderer
         // Sample the animations of all nodes and blend channels in the stack
         for (size_t i = 0; i < _UFBXScene->nodes.count; i++)
         {
+            VG_DEBUGPRINT("Anim Node %u : %s\n", i, _UFBXScene->nodes.data[i]->name.data);
+
             AnimNodeData animNodeData;
 
             if (loadFBXAnimNode(_UFBXAnimStack, _UFBXScene->nodes.data[i], _animData, animNodeData))

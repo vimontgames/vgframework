@@ -203,6 +203,13 @@ namespace vg::engine
         VG_ASSERT(_resource->GetResourcePath() == _newPath); // TODO: get rid of the '_newPath' parameter?
         lock_guard<recursive_mutex> lock(m_addResourceToLoadRecursiveMutex);
 
+        // unload previous
+        {
+            auto it = m_resourcesMap.find(_oldPath);
+            if (m_resourcesMap.end() != it)
+                unloadResource(_resource, _oldPath);
+        }
+
         if (io::exists(_newPath))
         {
             // Reuse existing object if it's already loaded
@@ -237,8 +244,6 @@ namespace vg::engine
         {
             if (!_newPath.empty())
                 VG_WARNING("[Resource] Could not find file \"%s\"", _newPath.c_str());
-
-            unloadResource(_resource, _oldPath);
         }
     }
 
@@ -264,8 +269,8 @@ namespace vg::engine
             }
             
             _resource->unloadSubResources();
-            _resource->setObject(nullptr);
             _resource->getParent()->onResourceUnloaded(_resource);  
+            _resource->setObject(nullptr);
         }
     }
 

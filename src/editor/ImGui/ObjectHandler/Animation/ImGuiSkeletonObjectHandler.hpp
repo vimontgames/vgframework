@@ -34,25 +34,37 @@ namespace vg::editor
                     ImGuiWindow::displayProperty(_object, prop);
                 }
 
-                const auto indices = skeleton->getBoneIndices(); 
-                const auto matrices = skeleton->getBoneMatrices();
-                const uint boneCount = (uint)indices.size();
-                VG_ASSERT(indices.size() == matrices.size());
+                const auto nodes = skeleton->getNodes();
+                const uint nodeCount = nodes.size();
+
+                //const auto indices = skeleton->getBoneIndices(); 
+                //const auto matrices = skeleton->getBoneMatrices();
+                //const uint boneCount = (uint)indices.size();
+
+                //VG_ASSERT(indices.size() == matrices.size());
                 char treeNodeLabel[256];
-                sprintf_s(treeNodeLabel, "Bones (%u)", boneCount);
+                sprintf_s(treeNodeLabel, "Nodes (%u)", nodeCount);
                 if (ImGui::TreeNode(treeNodeLabel))
                 {
-                    for (uint i = 0; i < boneCount; ++i)
+                    for (uint i = 0; i < nodeCount; ++i)
                     {
-                        //MeshImporterNode * bone = 
+                        const MeshImporterNode & node = nodes[i];
 
-                        char boneLabel[256];
-                        sprintf_s(boneLabel, "Bone %u (index %u)", i, indices[i]);
-                        if (ImGui::TreeNode(boneLabel))
+                        char nodeName[256];
+                        sprintf_s(nodeName, "%s", node.name.c_str());
+                        const char * sub = strstr(nodeName, "mixamorig:");
+                        if (sub)
+                            sprintf_s(nodeName, node.name.c_str() + strlen("mixamorig:"));
+
+                        char nodeLabel[256];
+                        sprintf_s(nodeLabel, "[%u] %s", i, nodeName);
+                        if (ImGui::TreeNode(nodeLabel))
                         {
                             ImGui::BeginDisabled(true);
                             {
-                                ImGuiWindow::displayFloat4x4("Bone", (core::float4x4 *)&matrices[i]);
+                                //ImGuiWindow::displayU32("ParentIndex", &node.parent_index);
+                                ImGui::InputInt("ParentIndex", (int*) &node.parent_index, 1, 16, ImGuiInputTextFlags_EnterReturnsTrue);
+                                ImGuiWindow::displayFloat4x4("Bone", (core::float4x4 *)&node.node_to_parent);
                             }
                             ImGui::EndDisabled();
 

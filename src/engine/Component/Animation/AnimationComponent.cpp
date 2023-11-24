@@ -1,6 +1,9 @@
 #include "engine/Precomp.h"
 #include "AnimationComponent.h"
 #include "AnimationResourceList.hpp"
+#include "core/GameObject/GameObject.h"
+#include "engine/Component/Mesh/MeshComponent.h"
+#include "renderer/IMeshInstance.h"
 
 using namespace vg::core;
 
@@ -38,13 +41,13 @@ namespace vg::engine
     //--------------------------------------------------------------------------------------
     AnimationComponent::~AnimationComponent()
     {
-
+        
     }
 
     //--------------------------------------------------------------------------------------
     void AnimationComponent::Update(double _dt)
     {
-
+        
     }
 
     //--------------------------------------------------------------------------------------
@@ -57,14 +60,26 @@ namespace vg::engine
     //--------------------------------------------------------------------------------------
     void AnimationComponent::onResourceLoaded(IResource * _resource)
     {
-        // [...]
+        MeshComponent * meshComponents = getGameObject()->findComponent<MeshComponent>();
+        if (meshComponents)
+        {
+            renderer::ISkeletalAnimation * anim = (renderer::ISkeletalAnimation *)_resource->getObject();
+            meshComponents->m_meshInstance->AddAnimation(anim);
+        }
+
         super::onResourceLoaded(_resource);
     }
 
     //--------------------------------------------------------------------------------------
     void AnimationComponent::onResourceUnloaded(core::IResource * _resource)
     {
-        // [...]
+        MeshComponent * meshComponents = getGameObject()->findComponent<MeshComponent>();
+        if (meshComponents)
+        {
+            renderer::ISkeletalAnimation * anim = (renderer::ISkeletalAnimation *)_resource->getObject();
+            meshComponents->m_meshInstance->RemoveAnimation(anim);
+        }
+
         super::onResourceUnloaded(_resource);
     }
 }
