@@ -235,11 +235,11 @@ namespace vg::editor
         // TODO: Custom Object edit
         if (!ImGuiObjectHandler::display(_object))
         {
-            const char * classDisplayName = classDesc->getClassDisplayName();
+            const char * classDisplayName = classDesc->GetClassDisplayName();
         
-            for (uint i = 0; i < classDesc->getPropertyCount(); ++i)
+            for (uint i = 0; i < classDesc->GetPropertyCount(); ++i)
             {
-                const IProperty * prop = classDesc->getPropertyByIndex(i);
+                const IProperty * prop = classDesc->GetPropertyByIndex(i);
                 ImGuiWindow::displayProperty(_object, prop);
             }
         }
@@ -263,7 +263,7 @@ namespace vg::editor
 
         auto treeNodeFlags = ImGuiTreeNodeFlags_OpenOnArrow;
 
-        const bool isComponent = nullptr != _object && _object->getClassDesc() && asBool(_object->getClassDesc()->getFlags() & (IClassDesc::Flags::Component));
+        const bool isComponent = nullptr != _object && _object->getClassDesc() && asBool(IClassDesc::Flags::Component & _object->getClassDesc()->GetFlags());
         if (isComponent)
         {
             displayObject(_object);
@@ -704,7 +704,7 @@ namespace vg::editor
                         {
                             auto classDesc = pObject->getClassDesc();
                             VG_ASSERT(classDesc);
-                            if (classDesc && asBool(IClassDesc::Flags::Component & classDesc->getFlags()))
+                            if (classDesc && asBool(IClassDesc::Flags::Component & classDesc->GetFlags()))
                                 treeNodeFlags |= ImGuiTreeNodeFlags_Leaf;
                         }
 

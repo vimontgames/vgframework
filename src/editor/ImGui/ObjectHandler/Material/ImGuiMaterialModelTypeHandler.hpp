@@ -21,11 +21,11 @@ namespace vg::editor
                     for (uint i = 0; i < models.size(); ++i)
                     {
                         auto model = models[i];
-                        if (ImGui::Selectable(model->getClassDisplayName()))
+                        if (ImGui::Selectable(model->GetClassDisplayName()))
                         {
-                            matModel->m_shader = model->getClassDisplayName();
+                            matModel->m_shader = model->GetClassDisplayName();
                             IFactory * factory = Kernel::getFactory();
-                            const auto * prop = _object->getClassDesc()->getPropertyByName("m_shader");
+                            const auto * prop = _object->getClassDesc()->GetPropertyByName("m_shader");
                             if (nullptr != prop)
                                 _object->onPropertyChanged(_object, *prop);
                         }
@@ -47,7 +47,7 @@ namespace vg::editor
             for (uint i = 0; i < models.size(); ++i)
             {
                 auto * desc = models[i];
-                if (strstr(desc->getClassName(), "MaterialModel"))
+                if (strstr(desc->GetClassName(), "MaterialModel"))
                     matModel.push_back(desc);
             }
 

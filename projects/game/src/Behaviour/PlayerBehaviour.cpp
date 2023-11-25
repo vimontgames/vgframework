@@ -37,8 +37,6 @@ bool PlayerBehaviour::registerProperties(IClassDesc & _desc)
     return true;
 }
 
-
-
 //--------------------------------------------------------------------------------------
 void PlayerBehaviour::Update(double _dt)
 {

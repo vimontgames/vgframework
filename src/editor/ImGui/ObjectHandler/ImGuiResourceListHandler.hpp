@@ -21,9 +21,9 @@ namespace vg::editor
             auto list = dynamic_cast<engine::IResourceList *>(_object);
 
             uint materialCount = 0;
-            for (uint i = 0; i < classDesc->getPropertyCount(); ++i)
+            for (uint i = 0; i < classDesc->GetPropertyCount(); ++i)
             {
-                const IProperty * prop = classDesc->getPropertyByIndex(i);
+                const IProperty * prop = classDesc->GetPropertyByIndex(i);
                 if (!strcmp(prop->getName(), _vectorPropName.c_str()))
                     materialCount = prop->GetPropertyResourceVectorCount(_object);
             }
@@ -36,9 +36,9 @@ namespace vg::editor
 
             if (open)
             {
-                for (uint i = 0; i < classDesc->getPropertyCount(); ++i)
+                for (uint i = 0; i < classDesc->GetPropertyCount(); ++i)
                 {
-                    const IProperty * prop = classDesc->getPropertyByIndex(i);
+                    const IProperty * prop = classDesc->GetPropertyByIndex(i);
 
                     if (!strcmp(prop->getName(), _vectorPropName.c_str()))
                     {

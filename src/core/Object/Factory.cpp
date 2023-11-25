@@ -21,7 +21,7 @@ namespace vg::core
         for (uint i = 0; i < m_classes.size(); ++i)
         {
             ClassDesc & desc = m_classes[i];
-            if (!strcmp(desc.getClassName(), _className))
+            if (!strcmp(desc.GetClassName(), _className))
             {
                 VG_INFO("[Factory] Class \"%s\" is already registered", _className);
                 return nullptr; 
@@ -49,7 +49,7 @@ namespace vg::core
         for (uint i = 0; i < m_classes.size(); ++i)
         {
             ClassDesc & desc = m_classes[i];
-            if (!strcmp(desc.getClassName(), _className))
+            if (!strcmp(desc.GetClassName(), _className))
             {
                 VG_INFO("[Factory] Singleton Class \"%s\" is already registered", _className);
                 return nullptr;
@@ -88,8 +88,8 @@ namespace vg::core
         const auto * desc = getClassDescriptor(_className);
         if (desc)
         {
-            VG_ASSERT(asBool(IClassDesc::Flags::Singleton & desc->getFlags()));
-            return desc->getSingletonFunc()();
+            VG_ASSERT(asBool(IClassDesc::Flags::Singleton & desc->GetFlags()));
+            return desc->GetSingletonFunc()();
         }
         return nullptr;
     }
@@ -101,10 +101,10 @@ namespace vg::core
 
         if (desc)
         {
-            VG_ASSERT(!asBool(IClassDesc::Flags::Singleton & desc->getFlags()));
-            IObject * obj = desc->getCreateFunc()(_name, _parent);
+            VG_ASSERT(!asBool(IClassDesc::Flags::Singleton & desc->GetFlags()));
+            IObject * obj = desc->GetCreateFunc()(_name, _parent);
 
-            const auto index = desc->getNextIndex();
+            const auto index = desc->GetNextIndex();
 
             if (_name.length())
                 obj->setName(_name);
@@ -244,7 +244,7 @@ namespace vg::core
                             const char * name = xmlName->Value();
                             const char * typeName = xmlType->Value();
                             auto type = enumGetValue<IProperty::Type>(typeName);
-                            const auto * prop = classDesc->getPropertyByName(name);
+                            const auto * prop = classDesc->GetPropertyByName(name);
                             if (nullptr == prop)
                             {
                                 VG_WARNING("[Factory] Class \"%s\" has no property \"%s\" of type '%s'", className, name, typeName);
@@ -664,9 +664,9 @@ namespace vg::core
 
         const auto * classDesc = getClassDescriptor(className);
 
-        for (uint p = 0; p < classDesc->getPropertyCount(); ++p)
+        for (uint p = 0; p < classDesc->GetPropertyCount(); ++p)
         {
-            const auto & prop = classDesc->getPropertyByIndex(p);
+            const auto & prop = classDesc->GetPropertyByIndex(p);
 
             const auto name = prop->getName();
             const auto type = prop->getType();

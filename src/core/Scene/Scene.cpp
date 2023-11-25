@@ -39,7 +39,7 @@ namespace vg::core
     {
         super::registerProperties(_desc);
 
-        _desc.registerProperty("Scene", "m_root", (IObject**)(&((Scene*)(nullptr))->m_root), "Root", IProperty::Flags::None);
+        _desc.RegisterProperty("Scene", "m_root", (IObject**)(&((Scene*)(nullptr))->m_root), "Root", IProperty::Flags::None);
 
         return true;
     }

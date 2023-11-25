@@ -24,7 +24,7 @@ namespace vg::core
     {
         super::registerProperties(_desc);
 
-        _desc.getPropertyByName("m_name")->setFlags(IProperty::Flags::None, IProperty::Flags::Hidden);
+        _desc.GetPropertyByName("m_name")->setFlags(IProperty::Flags::None, IProperty::Flags::Hidden);
         _desc.registerPropertyObjectRefVectorHelper(GameObject, m_components, "Components", IProperty::Flags::None);
         _desc.registerPropertyObjectRefVectorHelper(GameObject, m_children, "Children", IProperty::Flags::Hidden);
 

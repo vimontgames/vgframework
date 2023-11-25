@@ -31,9 +31,9 @@ namespace vg::editor
 
             if (open)
             {
-                for (uint i = 0; i < classDesc->getPropertyCount(); ++i)
+                for (uint i = 0; i < classDesc->GetPropertyCount(); ++i)
                 {
-                    const IProperty * prop = classDesc->getPropertyByIndex(i);
+                    const IProperty * prop = classDesc->GetPropertyByIndex(i);
                 
                     if (strcmp(prop->getName(), "m_components"))
                     {
@@ -49,9 +49,9 @@ namespace vg::editor
                 }
             }
 
-            for (uint i = 0; i < classDesc->getPropertyCount(); ++i)
+            for (uint i = 0; i < classDesc->GetPropertyCount(); ++i)
             {
-                const IProperty * prop = classDesc->getPropertyByIndex(i);
+                const IProperty * prop = classDesc->GetPropertyByIndex(i);
             
                 if (!strcmp(prop->getName(), "m_components"))
                     ImGuiWindow::displayProperty(_object, prop);

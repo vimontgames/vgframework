@@ -38,7 +38,7 @@ namespace vg::renderer
         {
             DisplayOptions * displayOptions = static_cast<DisplayOptions*>(_object);
 
-            auto vSyncProp = _object->getClassDesc()->getPropertyByName("m_VSync");
+            auto vSyncProp = _object->getClassDesc()->GetPropertyByName("m_VSync");
             displayOptions->ApplyVsync(vSyncProp);
 
             return true;

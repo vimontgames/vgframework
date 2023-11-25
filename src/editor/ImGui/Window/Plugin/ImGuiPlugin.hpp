@@ -33,12 +33,12 @@ namespace vg::editor
                     if (nullptr == pluginDesc)
                         continue;
 
-                    const IPlugin * plugin = static_cast<IPlugin *>(factory->getSingleton(pluginDesc->getClassName()));
+                    const IPlugin * plugin = static_cast<IPlugin *>(factory->getSingleton(pluginDesc->GetClassName()));
 
                     ImGui::TableNextRow();
 
                     ImGui::TableSetColumnIndex(0);
-                    ImGui::Text(pluginDesc->getClassName());
+                    ImGui::Text(pluginDesc->GetClassName());
 
                     ImGui::TableSetColumnIndex(1);
                     if (plugin != nullptr)

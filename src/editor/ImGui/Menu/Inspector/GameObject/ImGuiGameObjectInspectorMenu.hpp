@@ -52,7 +52,7 @@ namespace vg::editor
                         for (uint i = 0; i < componentClassDescs.count(); ++i)
                         {
                             auto * classDesc = componentClassDescs[i];
-                            auto * className = classDesc->getClassName();
+                            auto * className = classDesc->GetClassName();
                             if (ImGui::Selectable(className))
                                 m_selectedClassName = className;
                         }

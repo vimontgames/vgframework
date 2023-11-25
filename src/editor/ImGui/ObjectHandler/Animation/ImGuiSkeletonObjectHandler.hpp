@@ -28,9 +28,9 @@ namespace vg::editor
                 const auto * factory = Kernel::getFactory();
                 const auto * classDesc = factory->getClassDescriptor(_object->getClassName());
 
-                for (uint i = 0; i < classDesc->getPropertyCount(); ++i)
+                for (uint i = 0; i < classDesc->GetPropertyCount(); ++i)
                 {
-                    const IProperty * prop = classDesc->getPropertyByIndex(i);
+                    const IProperty * prop = classDesc->GetPropertyByIndex(i);
                     ImGuiWindow::displayProperty(_object, prop);
                 }
 
