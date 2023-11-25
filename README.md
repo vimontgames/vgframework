@@ -15,6 +15,10 @@ Another subject that is very close to my heart is that there is a strong separat
 
 # changelog
 
+## 0.13
+Loaded resources are displayed per type and their owners with paths
+![Screenshot](ResourceWindow.gif)
+
 ## 0.12
 Mesh (FBX), Material & Texture hot-reload\
 GPU Picking
