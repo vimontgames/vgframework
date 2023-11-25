@@ -31,4 +31,29 @@ namespace vg::engine
 
         return true;
     }
+
+    //--------------------------------------------------------------------------------------
+    const core::string & SharedResource::GetResourcePath() const
+    {
+        return m_path;
+    }
+
+    //--------------------------------------------------------------------------------------
+    const core::string SharedResource::GetResourceType() const
+    {
+        VG_ASSERT(m_clients.size() > 0);
+        return m_clients[0]->getClassName();
+    }
+
+    //--------------------------------------------------------------------------------------
+    const core::uint SharedResource::GetClientCount() const
+    {
+        return (uint)m_clients.size();
+    }
+
+    //--------------------------------------------------------------------------------------
+    const core::IResource * SharedResource::GetClient(core::uint _index) const
+    {
+        return m_clients[_index];
+    }
 }

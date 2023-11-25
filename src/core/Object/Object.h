@@ -2,27 +2,33 @@
 
 #include "core/IObject.h"
 
-#define VG_CLASS_PROPERTIES(name, parent)			using super = parent;																\
-													static bool registerProperties(vg::core::IClassDesc & _desc);						\
-													static bool registerClass(vg::core::IFactory & _factory);							\
+#define VG_CLASS_SUPER_CLASSNAME(name, parent)		using super = parent;																\
 													static const char * getStaticClassName  () { return #name; }						\
 													const char * getClassName() const override { return name::getStaticClassName(); }	
 
-#define VG_CLASS_CTOR_HEADER_IMPL(name, parent)		name(const core::string & _name, IObject * _parent) :								\
-													parent(_name, _parent)																\
-													{																					\
-													}
+// Common class functions with default implementation for registerClass/registerProperty
+#define VG_CLASS_PROPERTIES_IMPL(name, parent)		static bool registerProperties(vg::core::IClassDesc & _desc) { super::registerProperties(_desc); return true; }	
 
-#define VG_CLASS_REGISTER_PROP_IMPL(name, parent)	bool registerProperties(class vg::core::IClassDesc & _desc)							\
-													{																					\
-														return parent::registerProperties(_desc);										\
-													}
+// Common class functions declaration only
+#define VG_CLASS_PROPERTIES_DECL(name, parent)		static bool registerProperties(vg::core::IClassDesc & _desc);						\
+													static bool registerClass(vg::core::IFactory & _factory);
 
-#define VG_CLASS_DECL(name, parent)					VG_CLASS_PROPERTIES(name, parent)	
+// Default ctor
+#define VG_CLASS_CTOR_HEADER_IMPL(name, parent)		name(const core::string & _name, IObject * _parent) : parent(_name, _parent) { }
 
-#define VG_CLASS_DECL_PASSTHROUGH(name, parent)		VG_CLASS_PROPERTIES(name, parent)													\
-													VG_CLASS_CTOR_HEADER_IMPL(name, parent)												\
-													//VG_CLASS_REGISTER_PROP_IMPL(name, parent)
+// Declare class that implements registerClass and registerProperties 
+#define VG_CLASS_DECL(name, parent)					VG_CLASS_SUPER_CLASSNAME(name, parent)		\
+													VG_CLASS_PROPERTIES_DECL(name, parent)	
+
+// Declare class with default ctor but that implements registerClass and registerProperties 
+#define VG_CLASS_DECL_PASSTHROUGH(name, parent)		VG_CLASS_SUPER_CLASSNAME(name, parent)		\
+													VG_CLASS_PROPERTIES_DECL(name, parent)		\
+													VG_CLASS_CTOR_HEADER_IMPL(name, parent)
+
+// Declare class used for virtual interface
+#define VG_CLASS_VIRTUAL(name, parent)				VG_CLASS_SUPER_CLASSNAME(name, parent)		\
+													VG_CLASS_PROPERTIES_IMPL(name, parent)		\
+													VG_CLASS_CTOR_HEADER_IMPL(name, parent)
 												
 namespace vg::core
 {

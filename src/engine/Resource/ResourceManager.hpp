@@ -58,6 +58,19 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
+    const IResourceInfo & ResourceManager::GetResourceInfo(core::uint _index) const
+    {
+        auto it = m_resourcesMap.begin();
+        uint i = 0;
+        while (i < _index && it != m_resourcesMap.end())
+        {
+            it = std::next(it);
+            i++;
+        }
+        return *it->second;
+    }
+
+    //--------------------------------------------------------------------------------------
     uint ResourceManager::UpdateResources()
     {
         uint count = 0;
@@ -218,13 +231,19 @@ namespace vg::engine
             {
                 SharedResource & loaded = *it->second;
 
-                // Add to client list
-                loaded.m_clients.push_back(_resource);
-
-                if (loaded.m_object != nullptr)
+                VG_ASSERT(loaded.GetResourceType() == _resource->getClassName(), "[Resource] Resource \"%s\" is already loaded as a '%s' resource and cannot also be loaded as a `%s`' resource", _newPath.c_str(), loaded.GetResourceType().c_str(), _resource->getClassName());
+                
+                // TODO : make resource type part of the hash and cooked name to that we e.g. can have a 'MeshResource' and an 'AnimationResource' from the same FBX file?
+                if (loaded.GetResourceType() == _resource->getClassName())
                 {
-                    // already loaded? Add to resource to update BUT is several clients requested the resource at the same frame it could be not ready yet and dropped :(
-                    m_resourcesLoadedAsync.push_back(_resource);
+                    // Add to client list
+                    loaded.m_clients.push_back(_resource);
+
+                    if (loaded.m_object != nullptr)
+                    {
+                        // already loaded? Add to resource to update BUT is several clients requested the resource at the same frame it could be not ready yet and dropped :(
+                        m_resourcesLoadedAsync.push_back(_resource);
+                    }
                 }
             }
             else
@@ -319,7 +338,7 @@ namespace vg::engine
             const auto startCook = Timer::getTick();
             if (needCook)
             {
-                VG_WARNING("[Resource] File \"%s\" needs cook.\n", path.c_str());
+                VG_WARNING("[Resource] File \"%s\" needs cook", path.c_str());
 
                 // HACK: use 1st client to cook
                 bool isFileCooked = clients[0]->cook(path);

@@ -9,6 +9,17 @@ namespace vg::core
 
 namespace vg::engine
 {
+    class IResourceInfo : public core::Object
+    {
+    public:
+        VG_CLASS_VIRTUAL(IResourceInfo, core::Object);
+
+        virtual const core::string &    GetResourcePath () const = 0;
+        virtual const core::string      GetResourceType () const = 0;
+        virtual const core::uint        GetClientCount  () const = 0;
+        virtual const core::IResource * GetClient       (core::uint _index) const = 0;
+    };
+
     class IResourceManager : public core::Object
     {
     public:
@@ -25,6 +36,9 @@ namespace vg::engine
         
         // Get number of registered resources
         virtual core::uint GetResourceCount() const = 0;
+
+        // Get infos about a loaded (or requested resource)
+        virtual const IResourceInfo & GetResourceInfo(core::uint _index) const = 0;
 
         // Reimport modified resources
         virtual core::uint UpdateResources() = 0;

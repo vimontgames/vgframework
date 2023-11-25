@@ -35,7 +35,7 @@ namespace vg::editor
                 }
 
                 const auto nodes = skeleton->getNodes();
-                const uint nodeCount = nodes.size();
+                const uint nodeCount = (uint)nodes.size();
 
                 //const auto indices = skeleton->getBoneIndices(); 
                 //const auto matrices = skeleton->getBoneMatrices();
