@@ -41,7 +41,7 @@ namespace vg::core
     //--------------------------------------------------------------------------------------
     bool Object::registerProperties(IClassDesc & _desc)
     {
-        _desc.registerPropertyHelperEx(Object, m_name, "Name", IProperty::Flags::Hidden);
+        _desc.registerPropertyEx(Object, m_name, "Name", IProperty::Flags::Hidden);
 
         return true;
     }

@@ -32,7 +32,7 @@ bool PlayerBehaviour::registerProperties(IClassDesc & _desc)
 {
     super::registerProperties(_desc);
 
-    _desc.registerPropertyHelper(PlayerBehaviour, m_MyFloat, "My Super Float");
+    _desc.registerProperty(PlayerBehaviour, m_MyFloat, "My Super Float");
     
     return true;
 }

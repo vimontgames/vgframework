@@ -18,10 +18,10 @@ namespace vg::engine
     {
         super::registerProperties(_desc);
 
-        _desc.registerPropertyResourceHelper(DefaultMaterialData, m_albedoMap, "Albedo Map", IProperty::Flags::Resource);
-        _desc.registerPropertyHelperEx(DefaultMaterialData, m_albedoColor, "Albedo Color", IProperty::Flags::Color);
+        _desc.registerPropertyResource(DefaultMaterialData, m_albedoMap, "Albedo Map");
+        _desc.registerPropertyEx(DefaultMaterialData, m_albedoColor, "Albedo Color", IProperty::Flags::Color);
 
-        _desc.registerPropertyResourceHelper(DefaultMaterialData, m_normalMap, "Normal Map", IProperty::Flags::Resource);        
+        _desc.registerPropertyResource(DefaultMaterialData, m_normalMap, "Normal Map");        
 
         return true;
     }

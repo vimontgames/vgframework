@@ -177,19 +177,19 @@ namespace vg::engine
     {
         super::registerProperties(_desc);
 
-        //_desc.registerCallbackHelper(Engine, createProject, "Create Project", IProperty::Flags::None);
-        //_desc.registerCallbackHelper(Engine, loadProject, "Load", IProperty::Flags::None);
-        //_desc.registerCallbackHelper(Engine, saveProject, "Save", IProperty::Flags::None);
-        //_desc.registerProperty("Project", (IObject**)(&((Engine*)(nullptr))->m_project), "Project", IProperty::Flags::None);
-        //_desc.registerPropertyHelper(Engine, m_project, "Project", IProperty::Flags::None);
-        //_desc.registerProperty("m_project", (IResource**)(&((Engine*)(nullptr))->m_project), "Project", IProperty::Flags::None);
+        //_desc.registerPropertyCallback(Engine, createProject, "Create Project");
+        //_desc.registerPropertyCallback(Engine, loadProject, "Load");
+        //_desc.registerPropertyCallback(Engine, saveProject, "Save");
+        //_desc.registerProperty("Project", (IObject**)(&((Engine*)(nullptr))->m_project), "Project");
+        //_desc.registerProperty(Engine, m_project, "Project", IProperty::Flags::None);
+        //_desc.registerProperty("m_project", (IResource**)(&((Engine*)(nullptr))->m_project), "Project");
 
-        _desc.registerPropertyHelperEx(Engine, m_projectPath, "Project folder", IProperty::Flags::IsFolder);
+        _desc.registerPropertyEx(Engine, m_projectPath, "Project folder", IProperty::Flags::IsFolder);
 
-        //_desc.registerCallbackHelper(Engine, createProject, "Create Project", IProperty::Flags::None);
+        //_desc.registerPropertyCallback(Engine, createProject, "Create Project");
         
-        _desc.registerCallbackHelper(DisplayOptions, load, "Load", IProperty::Flags::None);
-        _desc.registerCallbackHelper(DisplayOptions, save, "Save", IProperty::Flags::SameLine);
+        _desc.registerPropertyCallbackEx(DisplayOptions, load, "Load", IProperty::Flags::None);
+        _desc.registerPropertyCallbackEx(DisplayOptions, save, "Save", IProperty::Flags::SameLine);
 
         return true;
     }

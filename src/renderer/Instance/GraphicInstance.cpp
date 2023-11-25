@@ -10,7 +10,7 @@ namespace vg::renderer
     {
         super::registerProperties(_desc);
 
-        _desc.registerPropertyObjectRefVectorHelper(GraphicInstance, m_materials, "Materials", IProperty::Flags::NotSaved);
+        _desc.registerPropertyObjectPtrVectorEx(GraphicInstance, m_materials, "Materials", IProperty::Flags::NotSaved);
 
         return true;
     }

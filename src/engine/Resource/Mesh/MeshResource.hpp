@@ -24,7 +24,7 @@ namespace vg::engine
     {
         super::registerProperties(_desc);
 
-        //_desc.registerPropertyObjectVectorHelper(MeshResource, m_materialResources, MaterialResource, "Materials", IProperty::Flags::NotSaved | IProperty::Flags::ReadOnly);
+        //_desc.registerPropertyObjectVectorEx(MeshResource, m_materialResources, MaterialResource, "Materials", IProperty::Flags::NotSaved | IProperty::Flags::ReadOnly);
 
         return true;
     }

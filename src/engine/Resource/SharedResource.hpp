@@ -16,9 +16,9 @@ namespace vg::engine
     {
         super::registerProperties(_desc);
 
-        //_desc.registerPropertyHelperEx(SharedResource, m_path, "Path", IProperty::Flags::ReadOnly);
-        _desc.registerPropertyObjectRefVectorHelper(SharedResource, m_clients, "Clients", IProperty::Flags::ReadOnly);
-        //_desc.registerPropertyObjectRefHelper(SharedResource, m_object, "Shared Object", IProperty::Flags::ReadOnly | IProperty::Flags::Resource);
+        //_desc.registerPropertyEx(SharedResource, m_path, "Path", IProperty::Flags::ReadOnly);
+        _desc.registerPropertyObjectPtrVectorEx(SharedResource, m_clients, "Clients", IProperty::Flags::ReadOnly);
+        //_desc.registerPropertyObjectPtrEx(SharedResource, m_object, "Shared Object", IProperty::Flags::ReadOnly | IProperty::Flags::Resource);
 
         return true;
     }

@@ -23,8 +23,8 @@ namespace vg::renderer
     {
         super::registerProperties(_desc);
 
-        _desc.registerPropertyHelperEx(Batch, count, "Count", IProperty::Flags::ReadOnly);
-        _desc.registerPropertyHelperEx(Batch, offset, "Offset", IProperty::Flags::ReadOnly);
+        _desc.registerPropertyEx(Batch, count, "Count", IProperty::Flags::ReadOnly);
+        _desc.registerPropertyEx(Batch, offset, "Offset", IProperty::Flags::ReadOnly);
 
         return true;
     }

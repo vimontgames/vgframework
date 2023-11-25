@@ -29,8 +29,8 @@ namespace vg::renderer
     {
         super::registerProperties(_desc);
 
-        _desc.registerPropertyObjectRefHelper(MeshModel, m_geometry, "Geometry", IProperty::Flags::NotSaved);
-        _desc.registerPropertyObjectRefHelper(MeshModel, m_skeleton, "Skeleton", IProperty::Flags::NotSaved);
+        _desc.registerPropertyObjectPtrEx(MeshModel, m_geometry, "Geometry", IProperty::Flags::NotSaved);
+        _desc.registerPropertyObjectPtrEx(MeshModel, m_skeleton, "Skeleton", IProperty::Flags::NotSaved);
         
         return true;
     }

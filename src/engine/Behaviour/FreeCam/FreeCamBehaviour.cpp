@@ -28,19 +28,19 @@ namespace vg::engine
     {
         super::registerProperties(_desc);
 
-        _desc.registerPropertyHelper(FreeCamBehaviour, m_moveSpeed, "Translation Speed");
+        _desc.registerProperty(FreeCamBehaviour, m_moveSpeed, "Translation Speed");
         _desc.setPropertyRangeHelper(FreeCamBehaviour, m_moveSpeed, float2(0.0f, 10.0f));
 
-        _desc.registerPropertyHelper(FreeCamBehaviour, m_rotSpeed, "Rotation Speed");
+        _desc.registerProperty(FreeCamBehaviour, m_rotSpeed, "Rotation Speed");
         _desc.setPropertyRangeHelper(FreeCamBehaviour, m_rotSpeed, float2(0.0f, 10.0f));
 
-        _desc.registerPropertyHelper(FreeCamBehaviour, m_pitch, "Pitch");
+        _desc.registerProperty(FreeCamBehaviour, m_pitch, "Pitch");
         _desc.setPropertyRangeHelper(FreeCamBehaviour, m_pitch, float2(-PI, +PI));
 
-        _desc.registerPropertyHelper(FreeCamBehaviour, m_yaw, "Yaw");
+        _desc.registerProperty(FreeCamBehaviour, m_yaw, "Yaw");
         _desc.setPropertyRangeHelper(FreeCamBehaviour, m_yaw, float2(-PI, +PI));
 
-        _desc.registerPropertyHelper(FreeCamBehaviour, m_roll, "Roll");
+        _desc.registerProperty(FreeCamBehaviour, m_roll, "Roll");
         _desc.setPropertyRangeHelper(FreeCamBehaviour, m_roll, float2(-PI, +PI));
 
         return true;

@@ -30,9 +30,9 @@ namespace vg::engine
     {
         super::registerProperties(_desc);
 
-        _desc.registerPropertyHelper(MeshComponent, m_displayBones, "Display Bones");
-        _desc.registerPropertyResourceHelper(MeshComponent, m_meshResource, "Mesh", IProperty::Flags::Resource);
-        _desc.registerPropertyObjectHelper(MeshComponent, m_meshMaterials, "Materials", IProperty::Flags::None);
+        _desc.registerProperty(MeshComponent, m_displayBones, "Display Bones");
+        _desc.registerPropertyResource(MeshComponent, m_meshResource, "Mesh", IProperty::Flags::Resource);
+        _desc.registerPropertyObject(MeshComponent, m_meshMaterials, "Materials");
         //_desc.registerProperty("MeshComponent", "m_meshInstance", (IObject**)offsetof(MeshComponent, m_meshInstance), "Instance", IProperty::Flags::Hidden);
 
         return true;

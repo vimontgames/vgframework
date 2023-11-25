@@ -25,7 +25,7 @@ namespace vg::engine
     {
         super::registerProperties(_desc);
 
-        _desc.registerPropertyObjectHelper(AnimationComponent, m_animations, "Animations", IProperty::Flags::None);
+        _desc.registerPropertyObject(AnimationComponent, m_animations, "Animations");
         
         return true;
     }

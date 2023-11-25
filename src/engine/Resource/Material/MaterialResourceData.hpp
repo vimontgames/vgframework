@@ -22,8 +22,8 @@ namespace vg::engine
     {
         super::registerProperties(_desc);
 
-        _desc.registerPropertyObjectHelper(MaterialResourceData, m_materialModelType, "Material Model", IProperty::Flags::None);
-        _desc.registerPropertyObjectRefHelper(MaterialResourceData, m_data, "Material Data", IProperty::Flags::Flatten);
+        _desc.registerPropertyObject(MaterialResourceData, m_materialModelType, "Material Model");
+        _desc.registerPropertyObjectPtrEx(MaterialResourceData, m_data, "Material Data", IProperty::Flags::Flatten);
 
         return true;
     }

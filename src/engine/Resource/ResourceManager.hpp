@@ -26,7 +26,7 @@ namespace vg::engine
     {
         super::registerProperties(_desc);
 
-        _desc.registerPropertyObjectRefDictionaryHelper(ResourceManager, m_resourcesMap, "Resources", IProperty::Flags::ReadOnly);
+        _desc.registerPropertyObjectPtrDictionaryEx(ResourceManager, m_resourcesMap, "Resources", IProperty::Flags::ReadOnly);
 
         return true;
     }

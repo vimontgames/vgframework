@@ -35,7 +35,7 @@ namespace vg::engine
     {
         super::registerProperties(_desc);
 
-        _desc.registerPropertyObjectVectorHelper(MaterialResourceList, m_materialResources, MaterialResource, "Material", IProperty::Flags::Resource);
+        _desc.registerPropertyObjectVectorEx(MaterialResourceList, m_materialResources, MaterialResource, "Material", IProperty::Flags::Resource);
 
         return true;
     }
