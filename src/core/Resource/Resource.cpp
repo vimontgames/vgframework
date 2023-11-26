@@ -20,7 +20,7 @@ namespace vg::core
         _desc.registerPropertyEx(Resource, m_resourcePath, "Path", IProperty::Flags::Hidden);
 
         // This is used for the inspector but not serialized
-        _desc.RegisterProperty("Resource", "m_object", (IObject**)(&((Resource*)(nullptr))->m_object), "Object", IProperty::Flags::NotSaved);
+        _desc.registerPropertyObjectPtrEx(Resource, m_object, "Object", IProperty::Flags::NotSaved);
 
         return true;
     }

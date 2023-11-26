@@ -15,7 +15,7 @@ namespace vg::core
     //--------------------------------------------------------------------------------------
     // Returned pointer shall not be stored but used immediately
     //--------------------------------------------------------------------------------------
-    IClassDesc * Factory::registerClass(const char * _className, const char * _displayName, IClassDesc::Flags _flags, u32 sizeOf, IClassDesc::Func _createFunc)
+    IClassDesc * Factory::registerClass(const char * _interfaceName, const char * _className, const char * _classDisplayName, IClassDesc::Flags _flags, u32 sizeOf, IClassDesc::Func _createFunc)
     {
         // Classes declared in shared static libs could be declared more than once at static init
         for (uint i = 0; i < m_classes.size(); ++i)
@@ -28,11 +28,24 @@ namespace vg::core
             }
         }
 
-        VG_INFO("[Factory] Register class \"%s\"", _className);
+        // Use parent class name as interface name if it starts with an 'I'
+        // Note that it does not handle hierarchy of multiple interfaces but for now it's 
+        // enough e.g. to return an "AnimationComponent" object when requesting an "IAnimationComponent"
+        // but it won't return it when requesting e.g. an "IObject" despite being in the inheritance chain
+        if (nullptr != _interfaceName && _interfaceName[0] == 'I')
+        {
+            VG_INFO("[Factory] Register class \"%s\" (%s)", _className, _interfaceName);
+        }
+        else
+        {
+            VG_INFO("[Factory] Register class \"%s\"", _className);
+            _interfaceName = nullptr;
+        }        
 
         ClassDesc classDesc;
         classDesc.name = _className;
-        classDesc.displayName = _displayName ? _displayName : _className;
+        classDesc.interfaceName = _interfaceName;
+        classDesc.displayName = _classDisplayName ? _classDisplayName : _className;
         classDesc.flags = _flags;
         classDesc.sizeOf = sizeOf;
         classDesc.createFunc = _createFunc;
@@ -43,7 +56,7 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
-    IClassDesc * Factory::registerSingletonClass(const char * _className, const char * _displayName, IClassDesc::Flags _flags, u32 sizeOf, IClassDesc::SingletonFunc _singletonFunc)
+    IClassDesc * Factory::registerSingletonClass(const char * _interfaceName, const char * _className, const char * _classDisplayName, IClassDesc::Flags _flags, u32 sizeOf, IClassDesc::SingletonFunc _singletonFunc)
     {
         // Classes declared in shared static libs could be declared more than once at static init
         for (uint i = 0; i < m_classes.size(); ++i)
@@ -60,7 +73,7 @@ namespace vg::core
 
         ClassDesc classDesc;
         classDesc.name = _className;
-        classDesc.displayName = _displayName ? _displayName : _className;
+        classDesc.displayName = _classDisplayName ? _classDisplayName : _className;
         classDesc.flags = _flags;
         classDesc.sizeOf = sizeOf;
         classDesc.createSingletonFunc = _singletonFunc;

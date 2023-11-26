@@ -45,9 +45,7 @@ namespace vg::engine
         auto * picking = Engine::get()->GetRenderer()->GetPicking();
         PickingID id = picking->GetPickingID(this);
         picking->ReleasePickingID(id);
-
-        GameObject * gameObject = getGameObject();
-        gameObject->RemoveGraphicInstance(m_meshInstance);
+        getGameObject()->removeGraphicInstance(m_meshInstance);
         m_registered = false;
         Engine::get()->GetRenderer()->ReleaseAsync(m_meshInstance);
     }
@@ -107,10 +105,7 @@ namespace vg::engine
                 auto * picking = Engine::get()->GetRenderer()->GetPicking();
                 PickingID id = picking->GetPickingID(this);
                 m_meshInstance->setPickingID(id);
-
-                GameObject * gameObject = getGameObject();
-                gameObject->AddGraphicInstance(m_meshInstance);
-
+                getGameObject()->addGraphicInstance(m_meshInstance);
                 m_registered = true;
             }
         }
@@ -144,9 +139,7 @@ namespace vg::engine
                 auto * picking = Engine::get()->GetRenderer()->GetPicking();
                 picking->ReleasePickingID(m_meshInstance->getPickingID());
                 m_meshInstance->resetPickingID();
-                GameObject * gameObject = getGameObject();
-                gameObject->RemoveGraphicInstance(m_meshInstance);
-
+                getGameObject()->removeGraphicInstance(m_meshInstance);
                 m_registered = false;
             }
         }

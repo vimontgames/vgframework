@@ -112,7 +112,7 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
-    Component * GameObject::findComponentByType(const char * _className) const
+    IComponent * GameObject::GetComponentByType(const char * _className) const
     {
         const auto & components = getComponents();
         for (uint i = 0; i < components.size(); ++i)
@@ -125,7 +125,7 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
-    Component * GameObject::addComponent(const char * _className, const core::string & _name)
+    IComponent * GameObject::AddComponent(const char * _className, const core::string & _name)
     {
         Component * component = (Component *)Kernel::getFactory()->createObject(_className, _name, this);
         if (component)
@@ -171,7 +171,7 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
-    void GameObject::AddGraphicInstance(renderer::IGraphicInstance * _graphicInstance)
+    void GameObject::addGraphicInstance(renderer::IGraphicInstance * _graphicInstance)
     {
         VG_ASSERT(m_graphicInstances.end() == std::find(m_graphicInstances.begin(), m_graphicInstances.end(), _graphicInstance));
         _graphicInstance->addRef();
@@ -179,14 +179,14 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
-    void GameObject::RemoveGraphicInstance(renderer::IGraphicInstance * _graphicInstance)
+    void GameObject::removeGraphicInstance(renderer::IGraphicInstance * _graphicInstance)
     {
         if (m_graphicInstances.remove(_graphicInstance))
             VG_SAFE_RELEASE(_graphicInstance);
     }
 
     //--------------------------------------------------------------------------------------
-    const vector<renderer::IGraphicInstance*> & GameObject::GetGraphicInstances() const
+    const vector<renderer::IGraphicInstance*> & GameObject::getGraphicInstances() const
     {
         return m_graphicInstances;
     }

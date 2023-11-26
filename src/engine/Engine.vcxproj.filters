@@ -84,10 +84,10 @@
     <ClInclude Include="Selection\Selection.h">
       <Filter>Selection</Filter>
     </ClInclude>
-    <ClInclude Include="Resource\SharedResource.h">
+    <ClInclude Include="Resource\ResourceInfo.h">
       <Filter>Resource</Filter>
     </ClInclude>
-    <ClInclude Include="Resource\SharedResource.hpp">
+    <ClInclude Include="Resource\ResourceInfo.hpp">
       <Filter>Resource</Filter>
     </ClInclude>
     <ClInclude Include="Component\Mesh\MaterialResourceList.h">
@@ -136,6 +136,7 @@
     <ClInclude Include="Resource\Animation\AnimationResource.hpp">
       <Filter>Resource\Animation</Filter>
     </ClInclude>
+    <ClInclude Include="IAnimationComponent.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Input">

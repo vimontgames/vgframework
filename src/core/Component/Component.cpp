@@ -33,6 +33,12 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
+    IGameObject * Component::GetGameObject()
+    {
+        return (IGameObject *)getGameObject();
+    }
+
+    //--------------------------------------------------------------------------------------
     bool Component::registerProperties(IClassDesc & _desc)
     {
         _desc.registerPropertyEnumBitfield(Component, Flags, m_flags, "Flags");

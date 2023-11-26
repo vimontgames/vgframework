@@ -111,7 +111,7 @@ namespace vg::engine
         {
             go->SetFlags(IInstance::Selected, _selected);
 
-            auto graphicInstances = go->GetGraphicInstances();
+            auto graphicInstances = go->getGraphicInstances();
             for (uint i = 0; i < graphicInstances.size(); ++i)
             {
                 auto instance = graphicInstances[i];

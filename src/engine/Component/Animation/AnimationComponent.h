@@ -1,14 +1,14 @@
 #pragma once
 
-#include "core/Component/Component.h"
+#include "engine/IAnimationComponent.h"
 #include "AnimationResourceList.h"
 
 namespace vg::engine
 {
-    class AnimationComponent : public core::Component
+    class AnimationComponent : public IAnimationComponent
     {
     public:
-        VG_CLASS_DECL(AnimationComponent, core::Component);
+        VG_CLASS_DECL(AnimationComponent, IAnimationComponent);
 
         AnimationComponent(const core::string & _name, IObject * _parent);
         ~AnimationComponent();

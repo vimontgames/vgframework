@@ -9,12 +9,12 @@ namespace vg::core
 
 namespace vg::engine
 {
-    class SharedResource : public IResourceInfo
+    class ResourceInfo : public IResourceInfo
     {
     public:
-        VG_CLASS_DECL(SharedResource, IResourceInfo);
+        VG_CLASS_DECL(ResourceInfo, IResourceInfo);
 
-        SharedResource(const string & _name, IObject * _parent = nullptr);
+        ResourceInfo(const string & _name, IObject * _parent = nullptr);
 
         const core::string &    GetResourcePath () const final override;
         const core::string      GetResourceType () const final override;

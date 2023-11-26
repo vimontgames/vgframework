@@ -16,6 +16,7 @@ namespace vg::core
 
         void                    Update              (double _dt) { };
         const IGameObject *     GetGameObject       () const final;
+        IGameObject *           GetGameObject       () final;
 
         Flags                   GetFlags            () const final;
         void                    SetFlags            (Flags _flags, bool _enabled) final;

@@ -85,10 +85,16 @@
                                             <Object class="AnimationResource">
                                                 <Property type="String" name="m_name" flags="Hidden" value=""/>
                                                 <Property type="String" name="m_resourcePath" flags="Hidden" value="data/Models/Pablo/Pablo_hello_anim.fbx"/>
+                                                <Property type="Bool" name="m_playing" value="false"/>
+                                                <Property type="Float" name="m_time" value="0"/>
+                                                <Property type="Float" name="m_weight" value="0"/>
                                             </Object>
                                         </Property>
                                     </Object>
                                 </Property>
+                            </Object>
+                            <Object class="PlayerBehaviour">
+                                <Property type="Uint8" name="m_joypadID" value="0"/>
                             </Object>
                         </Property>
                         <Property type="ObjectRefVector" name="m_children" flags="Hidden"/>

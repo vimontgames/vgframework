@@ -14,7 +14,7 @@ namespace vg::core
 
 namespace vg::engine
 {
-    class SharedResource;
+    class ResourceInfo;
 
     class ResourceManager : public IResourceManager, public core::Singleton<ResourceManager>
     {
@@ -44,13 +44,13 @@ namespace vg::engine
         static bool             needsCook                   (const core::string & _resourcePath);
 
         void                    updateLoading               (bool _async);
-        void                    loadOneResource             (SharedResource & _shared);
+        void                    loadOneResource             (ResourceInfo & _info);
 
     private:
         std::thread                                         m_loadingThread;
         core::atomic<bool>                                  m_isLoadingThreadRunning = true;
 
-        core::dictionary<SharedResource*>                   m_resourcesMap;
+        core::dictionary<ResourceInfo*>                     m_resourceInfosMap;
 
         core::vector<core::IResource*>                      m_resourcesToLoad;
         core::vector<core::IResource*>                      m_resourcesLoaded;

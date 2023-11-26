@@ -19,25 +19,23 @@ namespace vg::core
         void                                                Update                  (double _dt);
 
         void                                                AddComponent            (IComponent * _component) final override;
+        IComponent *                                        AddComponent            (const char * _className, const core::string & _name) final override;
         bool                                                RemoveComponent         (IComponent * _component) final override;
         const vector<IComponent *> &                        GetComponents           () const final override;
 
+        IComponent *                                        GetComponentByType      (const char * _className) const final override;
+
+        void                                                AddChild                (IGameObject * _gameObject) final override;
+        bool                                                RemoveChild             (IGameObject * _gameObject) final override;
+        const vector<IGameObject*> &                        GetChildren             () const final override;
+        bool                                                IsRoot                  () const final override;
+
         void                                                addComponent            (Component * _component);
-        Component *                                         addComponent            (const char * _className, const core::string & _name);
-        template <class T> T *                              addComponent            (const core::string & _name);
         const vector<Component*> &                          getComponents           () const;
 
-        Component *                                         findComponentByType     (const char * _className) const;
-        template <class T> T *                              findComponent           () const;
-
-        void                                                AddChild                (IGameObject * _gameObject) final;
-        bool                                                RemoveChild             (IGameObject * _gameObject) final;
-        const vector<IGameObject*> &                        GetChildren             () const final;
-        bool                                                IsRoot                  () const final;
-
-        void                                                AddGraphicInstance      (renderer::IGraphicInstance * _graphicInstance) final;
-        void                                                RemoveGraphicInstance   (renderer::IGraphicInstance * _graphicInstance) final;
-        const vector<renderer::IGraphicInstance*> &         GetGraphicInstances     () const final;
+        void                                                addGraphicInstance      (renderer::IGraphicInstance * _graphicInstance);
+        void                                                removeGraphicInstance   (renderer::IGraphicInstance * _graphicInstance);
+        const vector<renderer::IGraphicInstance*> &         getGraphicInstances     () const;
 
         VG_INLINE const vector<GameObject*> &               getChildren             () const { return m_children;}
 
@@ -46,16 +44,4 @@ namespace vg::core
         vector<GameObject *>                                m_children;
         vector<renderer::IGraphicInstance*>                 m_graphicInstances;
     };
-
-    //--------------------------------------------------------------------------------------
-    template <class T> T * GameObject::findComponent() const
-    {
-        return static_cast<T *>(findComponentByType(T::getStaticClassName()));
-    }
-
-    //--------------------------------------------------------------------------------------
-    template <class T> T * GameObject::addComponent(const core::string & _name)
-    {
-        return static_cast<T *>(addComponent(T::getStaticClassName(), _name));
-    }
 }

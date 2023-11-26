@@ -23,7 +23,7 @@ namespace vg::engine
 
     //--------------------------------------------------------------------------------------
     AnimationComponent::AnimationComponent(const core::string & _name, IObject * _parent) :
-        core::Component(_name, _parent),
+        super(_name, _parent),
         m_animations(_name, this)
     {
 
@@ -51,7 +51,7 @@ namespace vg::engine
     //--------------------------------------------------------------------------------------
     void AnimationComponent::onResourceLoaded(IResource * _resource)
     {
-        MeshComponent * meshComponents = getGameObject()->findComponent<MeshComponent>();
+        MeshComponent * meshComponents = GetGameObject()->GetComponentByType<MeshComponent>();
         if (meshComponents)
         {
             renderer::ISkeletalAnimation * anim = (renderer::ISkeletalAnimation *)_resource->getObject();
@@ -64,7 +64,7 @@ namespace vg::engine
     //--------------------------------------------------------------------------------------
     void AnimationComponent::onResourceUnloaded(core::IResource * _resource)
     {
-        MeshComponent * meshComponents = getGameObject()->findComponent<MeshComponent>();
+        MeshComponent * meshComponents = GetGameObject()->GetComponentByType<MeshComponent>();
         if (meshComponents)
         {
             renderer::ISkeletalAnimation * anim = (renderer::ISkeletalAnimation *)_resource->getObject();

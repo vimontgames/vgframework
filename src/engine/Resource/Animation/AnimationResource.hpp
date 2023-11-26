@@ -23,6 +23,10 @@ namespace vg::engine
     {
         super::registerProperties(_desc);
 
+        _desc.registerProperty(AnimationResource, m_playing, "Playing");
+        _desc.registerProperty(AnimationResource, m_time, "Time");
+        _desc.registerProperty(AnimationResource, m_weight, "Weight");
+
         _desc.registerResizeVectorFunc(AnimationResource, ResizeAnimationResourceVector);
 
         return true;

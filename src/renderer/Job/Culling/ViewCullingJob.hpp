@@ -22,7 +22,7 @@ namespace vg::renderer
         // Visible? Then add it to the list
         if (GameObject::Flags::Enabled & _go->getFlags())
         {
-            auto & instances = _go->GetGraphicInstances();
+            auto & instances = _go->getGraphicInstances();
             const auto instanceCount = instances.size();
             for (uint i = 0; i < instanceCount; ++i)
             {

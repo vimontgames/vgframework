@@ -21,7 +21,9 @@ namespace vg::core
         }
 
         virtual void                Update          (double _dt) = 0;
+
         virtual const IGameObject * GetGameObject   () const = 0;
+        virtual IGameObject *       GetGameObject   () = 0;
 
         virtual Flags               GetFlags        () const = 0;
         virtual void                SetFlags        (Flags _flags, bool _enabled) = 0;

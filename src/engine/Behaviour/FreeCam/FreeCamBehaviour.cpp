@@ -46,7 +46,7 @@ namespace vg::engine
         m_moveSpeed(1.0f),
         m_rotSpeed(1.0f)
     {
-        m_camera = getGameObject()->findComponent<CameraComponent>();
+        m_camera = GetGameObject()->GetComponentByType<CameraComponent>();
     }
 
     //--------------------------------------------------------------------------------------
@@ -72,7 +72,7 @@ namespace vg::engine
             }
         }
 
-        auto go = getGameObject();
+        IGameObject * go = GetGameObject();
 
         const float4x4 & world = go->getWorldMatrix();
 

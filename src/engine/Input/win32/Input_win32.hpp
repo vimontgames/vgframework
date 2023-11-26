@@ -463,30 +463,45 @@ namespace vg::engine::win32
                 hr = directInputJoy->Acquire();
 
             hr = directInputJoy->GetDeviceState(sizeof(state), (void*)&state);
-            VG_ASSERT(SUCCEEDED(hr));
-
+            
             JoystickData & joy = m_joystickData[i];
 
-            joy.m_leftStickDir.x = float(state.lX) / 100.0f;
-            joy.m_leftStickDir.y = float(state.lY) / 100.0f;
-
-            joy.m_rightStickDir.x = float(state.lRx) / 100.0f;
-            joy.m_rightStickDir.y = float(state.lRy) / 100.0f;
-
-            for (uint b = 0; b < enumCount<JoyButton>(); ++b)
+            if (SUCCEEDED(hr))
             {
-                joy.m_wasPressed[b] = joy.m_pressed[b];
+                joy.m_leftStickDir.x = float(state.lX) / 100.0f;
+                joy.m_leftStickDir.y = float(state.lY) / 100.0f;
 
-                if (state.rgbButtons[b])
-                    joy.m_pressed[b] = true;
-                else
-                    joy.m_pressed[b] = false;
+                joy.m_rightStickDir.x = float(state.lRx) / 100.0f;
+                joy.m_rightStickDir.y = float(state.lRy) / 100.0f;
+
+                for (uint b = 0; b < enumCount<JoyButton>(); ++b)
+                {
+                    joy.m_wasPressed[b] = joy.m_pressed[b];
+
+                    if (state.rgbButtons[b])
+                        joy.m_pressed[b] = true;
+                    else
+                        joy.m_pressed[b] = false;
+                }
+
+                for (uint b = (uint)enumCount<JoyButton>(); b < 128; ++b)
+                {
+                    if (state.rgbButtons[b])
+                        VG_WARNING("[Input] Unknown button %u pressed", b);
+                }
             }
-
-            for (uint b = (uint)enumCount<JoyButton>(); b < 128; ++b)
+            else
             {
-                if (state.rgbButtons[b])
-                    VG_WARNING("Unknown button %u pressed", b);
+                VG_WARNING("[Input] Could not JoyPad %u state", i);
+
+                joy.m_leftStickDir.x = 0.0f;
+                joy.m_leftStickDir.y = 0.0f;
+
+                joy.m_rightStickDir.x = 0.0f;
+                joy.m_rightStickDir.y = 0.0f;
+
+                for (uint b = 0; b < enumCount<JoyButton>(); ++b)
+                    joy.m_pressed[b] = false;
             }
         }
     }

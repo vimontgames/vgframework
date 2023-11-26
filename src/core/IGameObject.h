@@ -26,11 +26,24 @@ namespace vg::core
         virtual bool                                        IsRoot                  () const = 0;
 
         virtual void                                        AddComponent            (IComponent * _component) = 0;
+        virtual IComponent *                                AddComponent            (const char * _className, const core::string & _name) = 0;
         virtual bool                                        RemoveComponent         (IComponent * _component) = 0;
         virtual const vector<IComponent *> &                GetComponents           () const = 0;
+        virtual IComponent *                                GetComponentByType      (const char * _className) const = 0;
 
-        virtual void                                        AddGraphicInstance      (renderer::IGraphicInstance * _graphicInstance) = 0;
-        virtual void                                        RemoveGraphicInstance   (renderer::IGraphicInstance * _graphicInstance) = 0;
-        virtual const vector<renderer::IGraphicInstance*> & GetGraphicInstances     () const = 0;
+        template <class T> T *                              AddComponentByType      (const core::string & _name);
+        template <class T> T *                              GetComponentByType      () const;
     };
+
+    //--------------------------------------------------------------------------------------
+    template <class T> T * IGameObject::GetComponentByType() const
+    {
+        return static_cast<T *>(GetComponentByType(T::getStaticClassName()));
+    }
+
+    //--------------------------------------------------------------------------------------
+    template <class T> T * IGameObject::AddComponentByType(const core::string & _name)
+    {
+        return static_cast<T *>(AddComponent(T::getStaticClassName(), _name));
+    }
 }

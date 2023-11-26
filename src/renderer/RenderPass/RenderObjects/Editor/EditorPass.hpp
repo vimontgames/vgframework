@@ -63,55 +63,61 @@ namespace vg::renderer
         renderContext.m_shaderPass = ShaderPass::Forward;
 
         DebugDraw * dbgDraw = DebugDraw::get();
-        dbgDraw->render((View*)_renderPassContext.m_view, _cmdList);
 
-        bool opaque = true;
+        // Draw grid & axis
+        dbgDraw->drawGrid(_cmdList);
+        dbgDraw->drawAxis(_cmdList);
 
-        const GraphicInstanceList & allInstances = view->m_cullingJobResult.m_instanceLists[asInteger(GraphicInstanceListType::All)];
-
-        // Default pass states
-        RasterizerState rs(FillMode::Solid, CullMode::None);
-        BlendState bs(BlendFactor::One, BlendFactor::Zero, BlendOp::Add);
-
-        const bool depthWrite = opaque && options->isZPrepassEnabled() ? false : true;
-
-        DepthStencilState ds(true, depthWrite, ComparisonFunc::LessEqual);
-
-        _cmdList->setPrimitiveTopology(PrimitiveTopology::TriangleList);
-        _cmdList->setRasterizerState(rs);
-        _cmdList->setBlendState(bs);
-        _cmdList->setDepthStencilState(ds);
-
-        bool wireframeSelection = false; // TODO: expose option for selection
-        if (options->isWireframeEnabled() || wireframeSelection)
+        // Draw AABBs
         {
-            renderContext.m_wireframe = true;
-            DrawGraphicInstances(renderContext, _cmdList, allInstances);
-        }
+            bool opaque = true;
 
-        bool boudingBoxSelection = true;
-        if (options->isAABBEnabled() || boudingBoxSelection)
-        {
-            for (uint i = 0; i < allInstances.m_instances.size(); ++i)
+            const GraphicInstanceList & allInstances = view->m_cullingJobResult.m_instanceLists[asInteger(GraphicInstanceListType::All)];
+
+            // Default pass states
+            RasterizerState rs(FillMode::Solid, CullMode::None);
+            BlendState bs(BlendFactor::One, BlendFactor::Zero, BlendOp::Add);
+
+            const bool depthWrite = opaque && options->isZPrepassEnabled() ? false : true;
+
+            DepthStencilState ds(true, depthWrite, ComparisonFunc::LessEqual);
+
+            _cmdList->setPrimitiveTopology(PrimitiveTopology::TriangleList);
+            _cmdList->setRasterizerState(rs);
+            _cmdList->setBlendState(bs);
+            _cmdList->setDepthStencilState(ds);
+
+            bool wireframeSelection = false; // TODO: expose option for selection
+            if (options->isWireframeEnabled() || wireframeSelection)
             {
-                const IGraphicInstance * instance = allInstances.m_instances[i];
+                renderContext.m_wireframe = true;
+                DrawGraphicInstances(renderContext, _cmdList, allInstances);
+            }
 
-                if (boudingBoxSelection && !asBool(IInstance::Flags::Selected & instance->getFlags()))
-                    continue;
-
-                const MeshModel * model = (MeshModel *)instance->getModel(Lod::Lod0); // TODO: get LoD from culling result
-                if (nullptr != model)
+            bool boudingBoxSelection = true;
+            if (options->isAABBEnabled() || boudingBoxSelection)
+            {
+                for (uint i = 0; i < allInstances.m_instances.size(); ++i)
                 {
-                    const MeshGeometry * geo = model->getGeometry();
-                    const AABB & aabb = geo->getAABB();
-                    dbgDraw->drawAABB(_cmdList, geo->getAABB(), instance->getWorldMatrix());
-                    //dbgDraw->AddWireframeBox(aabb.m_min, aabb.m_max, 0xFF00FF00, instance->getWorldMatrix());
+                    const IGraphicInstance * instance = allInstances.m_instances[i];
+
+                    if (boudingBoxSelection && !asBool(IInstance::Flags::Selected & instance->getFlags()))
+                        continue;
+
+                    const MeshModel * model = (MeshModel *)instance->getModel(Lod::Lod0); // TODO: get LoD from culling result
+                    if (nullptr != model)
+                    {
+                        const MeshGeometry * geo = model->getGeometry();
+                        const AABB & aabb = geo->getAABB();
+                        dbgDraw->drawAABB(_cmdList, geo->getAABB(), instance->getWorldMatrix());
+                        //dbgDraw->AddWireframeBox(aabb.m_min, aabb.m_max, 0xFF00FF00, instance->getWorldMatrix());
+                    }
                 }
             }
         }
 
-        dbgDraw->drawGrid(_cmdList);
-        dbgDraw->drawAxis(_cmdList);       
+        // Other Debug draw
+        dbgDraw->render((View *)_renderPassContext.m_view, _cmdList);
     }
 
     //--------------------------------------------------------------------------------------

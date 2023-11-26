@@ -338,11 +338,11 @@ namespace vg::engine
         GameObject * editorCameraGameObject = new GameObject("Editor Camera", rootGameObject);
 
         // add Camera component
-        auto * cameraComponent = editorCameraGameObject->addComponent<CameraComponent>("Camera");
+        auto * cameraComponent = editorCameraGameObject->AddComponentByType<CameraComponent>("Camera");
         cameraComponent->setViewTarget(gfx::ViewTarget::Editor);
 
         // add FreeCam behaviour
-        auto * freeCamComponent = editorCameraGameObject->addComponent<FreeCamBehaviour>("FreeCam");
+        auto * freeCamComponent = editorCameraGameObject->AddComponentByType<FreeCamBehaviour>("FreeCam");
         editorCameraGameObject->setWorldMatrix(float4x4
         (
             1.0f, 0.0f, 0.0f, 0.0f,

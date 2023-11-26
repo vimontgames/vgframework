@@ -3,6 +3,11 @@
 #include "application/IProject.h"
 #include "core/Singleton/Singleton.h"
 
+namespace vg::core
+{
+    class IInput;
+}
+
 namespace vg::engine
 {
     class IEngine;
@@ -15,21 +20,24 @@ class Game : public vg::IProject, public vg::core::Singleton<Game>
                                     ~Game       ();
 
         // vg::core::IObject overrides
-        const char *                getClassName            () const final { return "Game"; }
+        const char *                    getClassName            () const final { return "Game"; }
 
         // vg::core::IPlugin overrides
-        vg::core::IPlugin::Version  GetVersion              () const final override;
-        bool                        RegisterClasses         () final override;
-        bool                        UnregisterClasses       ();
+        vg::core::IPlugin::Version      GetVersion              () const final override;
+        bool                            RegisterClasses         () final override;
+        bool                            UnregisterClasses       ();
 
         // vg::core::IProject overrides
-        bool                        init                    (vg::engine::IEngine & _engine, vg::core::Singletons & _singletons) final;
-        bool                        deinit                  () final;
+        bool                            init                    (vg::engine::IEngine & _engine, vg::core::Singletons & _singletons) final;
+        bool                            deinit                  () final;
 
-        bool                        update                  () final;
+        bool                            update                  () final;
+
+        static vg::engine::IEngine &    Engine                  ();
+        static vg::core::IInput &       Input                   ();
 
     protected:
 
     private:
-        vg::engine::IEngine *       m_engine = nullptr;
+        static vg::engine::IEngine *    s_engine;
 };

@@ -24,5 +24,10 @@ namespace vg::engine
         core::IObject *                     load(const core::string & _file) final override;
 
         gfx::IAnimation *                   getAnimation() const { return (gfx::IAnimation *)m_object; }
+
+    private:
+        bool                                m_playing = false;
+        float                               m_time = 0.0f;
+        float                               m_weight = 0.0f;
     };
 }

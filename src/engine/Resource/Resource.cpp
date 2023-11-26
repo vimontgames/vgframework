@@ -11,5 +11,5 @@
 #include "Material/Default/DefaultMaterialData.hpp"
 #include "Mesh/MeshResource.hpp"
 #include "Animation/AnimationResource.hpp"
-#include "SharedResource.hpp"
+#include "ResourceInfo.hpp"
 #include "ResourceManager.hpp"

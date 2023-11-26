@@ -157,6 +157,12 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
+    const char * ClassDesc::GetInterfaceName() const
+    {
+        return interfaceName;
+    }
+
+    //--------------------------------------------------------------------------------------
     const char * ClassDesc::GetClassDisplayName() const
     {
         return displayName;

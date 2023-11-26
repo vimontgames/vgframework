@@ -8,6 +8,9 @@
 
 using namespace vg::core;
 
+// Static member init
+vg::engine::IEngine * Game::s_engine = nullptr;
+
 // Avoid stripping code for classes from static lib
 static PlayerBehaviour playerBehaviour("", nullptr);
 
@@ -71,7 +74,7 @@ bool Game::UnregisterClasses()
 //--------------------------------------------------------------------------------------
 bool Game::init(vg::engine::IEngine & _engine, Singletons & _singletons)
 {
-    m_engine = &_engine;
+    s_engine = &_engine;
 
     Kernel::setSingletons(_singletons);
 
@@ -92,4 +95,19 @@ bool Game::deinit()
 bool Game::update()
 {
     return true;
+}
+
+//--------------------------------------------------------------------------------------
+vg::engine::IEngine & Game::Engine()
+{
+    VG_ASSERT(s_engine);
+    return *s_engine;
+}
+
+//--------------------------------------------------------------------------------------
+vg::core::IInput & Game::Input()
+{
+    auto * input = Kernel::getInput();
+    VG_ASSERT(input);
+    return *input;
 }
