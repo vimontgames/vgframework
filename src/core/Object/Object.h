@@ -26,7 +26,7 @@
 													VG_CLASS_CTOR_HEADER_IMPL(name, parent)
 
 // Declare class used for virtual interface
-#define VG_CLASS_VIRTUAL(name, parent)				VG_CLASS_SUPER_CLASSNAME(name, parent)		\
+#define VG_CLASS_DECL_VIRTUAL(name, parent)			VG_CLASS_SUPER_CLASSNAME(name, parent)		\
 													VG_CLASS_PROPERTIES_IMPL(name, parent)		\
 													VG_CLASS_CTOR_HEADER_IMPL(name, parent)
 												

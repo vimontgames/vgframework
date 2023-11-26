@@ -5,6 +5,8 @@
 
 namespace vg::engine
 {
+    class MeshComponent;
+
     class AnimationComponent : public IAnimationComponent
     {
     public:
@@ -19,6 +21,9 @@ namespace vg::engine
 
         void                    onResourceLoaded    (core::IResource * _resource) override;
         void                    onResourceUnloaded  (core::IResource * _resource) override;
+
+    private:
+        MeshComponent *         getMeshComponent    () const;
 
     private:
         AnimationResourceList   m_animations;

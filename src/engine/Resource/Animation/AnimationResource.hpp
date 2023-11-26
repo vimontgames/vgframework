@@ -23,9 +23,9 @@ namespace vg::engine
     {
         super::registerProperties(_desc);
 
-        _desc.registerProperty(AnimationResource, m_playing, "Playing");
+        _desc.registerProperty(AnimationResource, m_play, "Play");
         _desc.registerProperty(AnimationResource, m_time, "Time");
-        _desc.registerProperty(AnimationResource, m_weight, "Weight");
+        //_desc.registerProperty(AnimationResource, m_weight, "Weight");
 
         _desc.registerResizeVectorFunc(AnimationResource, ResizeAnimationResourceVector);
 
@@ -72,5 +72,21 @@ namespace vg::engine
         IAnimation * anim = Engine::get()->GetRenderer()->loadAnimation(_file);
         VG_ASSERT(nullptr != anim);
         return anim;
+    }
+
+    //--------------------------------------------------------------------------------------
+    void AnimationResource::onPropertyChanged(core::IObject * _object, const core::IProperty & _prop)
+    {
+        if (!strcmp(_prop.getName(), "m_time"))
+            setTime(m_time);
+    }
+
+    //--------------------------------------------------------------------------------------
+    void AnimationResource::setTime(float _time)
+    {
+        m_time = _time;
+
+        if (IAnimation * anim = getAnimation())
+            anim->SetTime(_time);
     }
 }

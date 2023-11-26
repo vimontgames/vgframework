@@ -4,8 +4,10 @@
 #include "core/GameObject/GameObject.h"
 #include "engine/Component/Mesh/MeshComponent.h"
 #include "renderer/IMeshInstance.h"
+#include "renderer/IAnimation.h"
 
 using namespace vg::core;
+using namespace vg::renderer;
 
 namespace vg::engine
 {
@@ -38,7 +40,26 @@ namespace vg::engine
     //--------------------------------------------------------------------------------------
     void AnimationComponent::Update(double _dt)
     {
-        
+        auto & animResources = m_animations.getAnimationResources();
+        for (uint i = 0; i < animResources.size(); ++i)
+        {
+            AnimationResource & animRes = animResources[i];
+
+            if (animRes.isPlaying())
+            {
+                if (IAnimation * anim = (IAnimation *)animRes.getObject())
+                {
+                    const float speed = animRes.getSpeed();
+
+                    const float duration = anim->GetLength();
+                    const float framerate = anim->GetFramerate();
+                    
+                    float t = animRes.getTime();
+                    t = fmod(float(t + _dt / 1000.0f * speed), duration);
+                    animRes.setTime(t);
+                }
+            }
+        }
     }
 
     //--------------------------------------------------------------------------------------
@@ -49,13 +70,20 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
+    MeshComponent * AnimationComponent::getMeshComponent() const
+    {
+        MeshComponent * meshComponent = GetGameObject()->GetComponentByType<MeshComponent>();
+        return meshComponent;
+    }
+
+    //--------------------------------------------------------------------------------------
     void AnimationComponent::onResourceLoaded(IResource * _resource)
     {
-        MeshComponent * meshComponents = GetGameObject()->GetComponentByType<MeshComponent>();
-        if (meshComponents)
+        MeshComponent * meshComponent = getMeshComponent();
+        if (meshComponent)
         {
             renderer::ISkeletalAnimation * anim = (renderer::ISkeletalAnimation *)_resource->getObject();
-            meshComponents->m_meshInstance->AddAnimation(anim);
+            meshComponent->m_meshInstance->AddAnimation(anim);
         }
 
         super::onResourceLoaded(_resource);

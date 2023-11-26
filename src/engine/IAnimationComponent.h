@@ -7,6 +7,6 @@ namespace vg::engine
     class IAnimationComponent : public core::Component
     {
     public:
-        VG_CLASS_VIRTUAL(IAnimationComponent, core::Component)
+        VG_CLASS_DECL_VIRTUAL(IAnimationComponent, core::Component)
     };
 }

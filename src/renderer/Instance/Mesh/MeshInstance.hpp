@@ -170,12 +170,7 @@ namespace vg::renderer
         {
             const AnimImporterData & anim = m_animation->m_animData;
 
-            static float time = 0.0f;
-
-            time += 0.005f;
-
-            if (time > anim.time_end - anim.time_begin)
-                time = 0;
+            const float time = m_animation->getTime();
 
             float frame_time = (time - anim.time_begin) * anim.framerate;
             uint f0 = min((uint)frame_time + 0, anim.num_frames - 1);

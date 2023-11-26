@@ -13,10 +13,11 @@ namespace vg::engine
         AnimationResourceList(const core::string & _name, core::IObject * _parent);
         ~AnimationResourceList();
 
-        bool Add() final override;
-        bool Remove() final override;
+        bool                                        Add                     () final override;
+        bool                                        Remove                  () final override;
 
-        const core::vector<AnimationResource> & getAnimationResources() const { return m_animationResources; }
+        const core::vector<AnimationResource> &     getAnimationResources   () const { return m_animationResources; }
+        core::vector<AnimationResource> &           getAnimationResources   () { return m_animationResources; }
 
     private:
         core::vector<AnimationResource> m_animationResources;
