@@ -4,7 +4,7 @@ using namespace vg::core;
 
 namespace vg::engine
 {
-    VG_AUTO_REGISTER_CLASS(AnimationResourceList);
+    VG_REGISTER_OBJECT_CLASS(AnimationResourceList, "Animation Resource List");
 
     //--------------------------------------------------------------------------------------
     AnimationResourceList::AnimationResourceList(const core::string & _name, core::IObject * _parent) :
@@ -18,15 +18,6 @@ namespace vg::engine
     AnimationResourceList::~AnimationResourceList()
     {
 
-    }
-
-    //--------------------------------------------------------------------------------------
-    bool AnimationResourceList::registerClass(vg::core::IFactory & _factory)
-    {
-        if (core::IClassDesc * desc = _factory.registerClassHelper(AnimationResourceList, "Animation Resource List", IClassDesc::Flags::None))
-            registerProperties(*desc);
-
-        return true;
     }
 
     //--------------------------------------------------------------------------------------

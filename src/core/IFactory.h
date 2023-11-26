@@ -1,7 +1,6 @@
 #pragma once
 
 #include "IClassDesc.h"
-#include "core/Object/RegisterPropertiesMacros.h"
 #include "core/Object/EnumHelper.h"
 #include "XML/XML.h"
 
@@ -36,7 +35,17 @@ namespace vg::core
 
         virtual void                        ReleaseAsync                (core::IObject * _object) = 0;
         virtual void                        FlushReleaseAsync           () = 0;
-    };
-
-    #define CreateFactoryObject(type, name, parent) Kernel::getFactory()->createObject(#type, name, parent)    
+    };  
 }
+
+//--------------------------------------------------------------------------------------
+// Create any Object from its className
+//--------------------------------------------------------------------------------------
+#define CreateFactoryObject(type, name, parent) Kernel::getFactory()->createObject(#type, name, parent)  
+
+//--------------------------------------------------------------------------------------
+// Register object class macros
+//--------------------------------------------------------------------------------------
+#define registerClassHelper(className, displayName, flags)              registerClass(#className, displayName, flags, sizeof(className), [](const vg::core::string & _name, vg::core::IObject * _parent) { auto newObj = new className(_name, _parent); VG_ASSERT(nullptr != dynamic_cast<vg::core::IObject*>(newObj)); return dynamic_cast<vg::core::IObject*>(newObj); }) // 'dynamic_cast' should not be necessary but the cast is present to workaround weird Lambda to std::function conversion compilation issue  
+#define registerClassSingletonHelper(className, displayName, flags)     registerSingletonClass(#className, displayName, flags | vg::core::IClassDesc::Flags::Singleton, sizeof(className), [](){ return className::get(); } )
+#define registerPlugin(className, displayName)                          registerSingletonClass(#className, displayName, vg::core::IClassDesc::Flags::Singleton | vg::core::IClassDesc::Flags::Plugin, sizeof(className), [](){ return className::get(); } )

@@ -24,16 +24,7 @@ using namespace vg::gfx;
 
 namespace vg::renderer
 {
-    VG_AUTO_REGISTER_CLASS(MeshInstance);
-
-    //--------------------------------------------------------------------------------------
-    bool MeshInstance::registerClass(core::IFactory & _factory)
-    {
-        if (core::IClassDesc * desc = _factory.registerClassHelper(MeshInstance, "Mesh Instance", core::IClassDesc::Flags::Instance))
-            registerProperties(*desc);
-
-        return true;
-    }
+    VG_REGISTER_OBJECT_CLASS_EX(MeshInstance, "Mesh Instance", core::IClassDesc::Flags::Instance);
 
     //--------------------------------------------------------------------------------------
     bool MeshInstance::registerProperties(core::IClassDesc & _desc)

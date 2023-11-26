@@ -1,8 +1,21 @@
 #pragma once
 
 #include "core/IFactory.h"
-    
-#define VG_AUTO_REGISTER_CLASS(className)               vg::core::AutoRegisterObjectClassHelper<className> autoRegister##className(#className, className::registerClass)
+
+//--------------------------------------------------------------------------------------
+// Register object class macros
+//--------------------------------------------------------------------------------------
+#define VG_REGISTER_OBJECT_CLASS_EX(className, displayName, flags)  vg::core::AutoRegisterObjectClassHelper<className> autoRegister##className(#className, className::registerClass);   \
+                                                                    bool className::registerClass(vg::core::IFactory & _factory)                                                        \
+                                                                    {                                                                                                                   \
+                                                                        if (vg::core::IClassDesc * desc = _factory.registerClassHelper(className, displayName, flags))                  \
+                                                                            registerProperties(*desc);                                                                                  \
+                                                                        return true;                                                                                                    \
+                                                                    }
+
+#define VG_REGISTER_OBJECT_CLASS(className, displayName)            VG_REGISTER_OBJECT_CLASS_EX(className, displayName, IClassDesc::Flags::None)
+#define VG_REGISTER_COMPONENT_CLASS(className, displayName)         VG_REGISTER_OBJECT_CLASS_EX(className, displayName, IClassDesc::Flags::Component)
+#define VG_REGISTER_RESOURCE_CLASS(className, displayName)          VG_REGISTER_OBJECT_CLASS_EX(className, displayName, IClassDesc::Flags::Resource)
 
 namespace vg::core
 {

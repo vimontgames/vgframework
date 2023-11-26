@@ -14,16 +14,7 @@ using namespace vg::renderer;
 
 namespace vg::engine
 {
-    VG_AUTO_REGISTER_CLASS(MeshComponent);
-
-    //--------------------------------------------------------------------------------------
-    bool MeshComponent::registerClass(IFactory & _factory)
-    {
-        if (core::IClassDesc * desc = _factory.registerClassHelper(MeshComponent, "Mesh Component", IClassDesc::Flags::Component))
-            registerProperties(*desc);
-
-        return true;
-    }
+    VG_REGISTER_COMPONENT_CLASS(MeshComponent, "Mesh Component")
 
     //--------------------------------------------------------------------------------------
     bool MeshComponent::registerProperties(IClassDesc & _desc)
@@ -31,7 +22,7 @@ namespace vg::engine
         super::registerProperties(_desc);
 
         _desc.registerProperty(MeshComponent, m_displayBones, "Display Bones");
-        _desc.registerPropertyResource(MeshComponent, m_meshResource, "Mesh", IProperty::Flags::Resource);
+        _desc.registerPropertyResource(MeshComponent, m_meshResource, "Mesh");
         _desc.registerPropertyObject(MeshComponent, m_meshMaterials, "Materials");
         //_desc.registerProperty("MeshComponent", "m_meshInstance", (IObject**)offsetof(MeshComponent, m_meshInstance), "Instance", IProperty::Flags::Hidden);
 

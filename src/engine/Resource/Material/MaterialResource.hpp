@@ -8,19 +8,10 @@ using namespace vg::core;
 
 namespace vg::engine
 {
-    VG_AUTO_REGISTER_CLASS(MaterialResource);
+    VG_REGISTER_RESOURCE_CLASS(MaterialResource, "Material");
 
     //--------------------------------------------------------------------------------------
-    bool MaterialResource::registerClass(IFactory & _factory)
-    {
-        if (core::IClassDesc * desc = _factory.registerClassHelper(MaterialResource, "Material Resource", IClassDesc::Flags::Resource))
-            registerProperties(*desc);
-
-        return true;
-    }
-
-    //--------------------------------------------------------------------------------------
-    void * ResizeMaterialResourceVector(IObject * _parent, uint _offset, uint _count, uint & _elementSize)
+    void * MaterialResource::ResizeMaterialResourceVector(IObject * _parent, uint _offset, uint _count, uint & _elementSize)
     {
         auto vec = (core::vector<MaterialResource> *)(uint_ptr(_parent) + _offset);
         vec->clear();
@@ -33,11 +24,11 @@ namespace vg::engine
     bool MaterialResource::registerProperties(IClassDesc & _desc)
     {
         super::registerProperties(_desc);
-        
+
         _desc.registerResizeVectorFunc(MaterialResource, ResizeMaterialResourceVector);
-        
+
         return true;
-    }   
+    }
 
     //--------------------------------------------------------------------------------------
     MaterialResource::MaterialResource(const core::string & _name, IObject * _parent) :

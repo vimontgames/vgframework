@@ -19,24 +19,24 @@ namespace vg::gfx::dx12
 {
 	class Texture : public base::Texture
 	{
-		using super = base::Texture;
+    public:
+        VG_CLASS_DECL_PASSTHROUGH(Texture, base::Texture);
 
-	public:
-        static DXGI_FORMAT                  getd3d12PixelFormat                 (PixelFormat _format);
-        static D3D12_RESOURCE_DIMENSION     getd3d12ResourceDimension           (TextureType _texType);
-        static D3D12_SRV_DIMENSION          getd3d12ShaderResourceViewDimension (TextureType _texType);
-        static D3D12_RESOURCE_DESC          getd3d12ResourceDesc                (const TextureDesc & _texDesc);
+        static DXGI_FORMAT                              getd3d12PixelFormat                 (PixelFormat _format);
+        static D3D12_RESOURCE_DIMENSION                 getd3d12ResourceDimension           (TextureType _texType);
+        static D3D12_SRV_DIMENSION                      getd3d12ShaderResourceViewDimension (TextureType _texType);
+        static D3D12_RESOURCE_DESC                      getd3d12ResourceDesc                (const TextureDesc & _texDesc);
 
-        static PixelFormat                  getPixelFormat                      (DXGI_FORMAT _d3d12Format);
+        static PixelFormat                              getPixelFormat                      (DXGI_FORMAT _d3d12Format);
        
-											Texture				                (const TextureDesc & _texDesc, const core::string & _name, const void * _initData, ReservedSlot _reservedSlot);
-											~Texture			                ();
+											            Texture				                (const TextureDesc & _texDesc, const core::string & _name, const void * _initData, ReservedSlot _reservedSlot);
+											            ~Texture			                ();
 
-		const D3D12_CPU_DESCRIPTOR_HANDLE & getd3d12RTVHandle	                () const;
-        const D3D12_CPU_DESCRIPTOR_HANDLE & getd3d12DSVHandle	                () const;
+		const D3D12_CPU_DESCRIPTOR_HANDLE &             getd3d12RTVHandle	                () const;
+        const D3D12_CPU_DESCRIPTOR_HANDLE &             getd3d12DSVHandle	                () const;
 
-        void                                setSubResourceData(core::uint _index, core::size_t _offset);
-        const SubResourceData &             getSubResourceData(core::uint _index) const;
+        void                                            setSubResourceData(core::uint _index, core::size_t _offset);
+        const SubResourceData &                         getSubResourceData(core::uint _index) const;
 
 	private:
         static const inline D3D12_CPU_DESCRIPTOR_HANDLE s_d3d12invalidSRVHandle = { (core::uint)-1 };
@@ -51,9 +51,9 @@ namespace vg::gfx::dx12
             core::size_t                        m_totalSize;
         };
 
-        D3D12_CPU_DESCRIPTOR_HANDLE			        m_d3d12RTVHandle = s_d3d12invalidRTVHandle;
-        D3D12_CPU_DESCRIPTOR_HANDLE			        m_d3d12DSVHandle = s_d3d12invalidDSVHandle;
+        D3D12_CPU_DESCRIPTOR_HANDLE			            m_d3d12RTVHandle = s_d3d12invalidRTVHandle;
+        D3D12_CPU_DESCRIPTOR_HANDLE			            m_d3d12DSVHandle = s_d3d12invalidDSVHandle;
 
-        core::vector<SubResourceData>               m_subResourceData;
+        core::vector<SubResourceData>                   m_subResourceData;
 	};
 }

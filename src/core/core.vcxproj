@@ -55,7 +55,6 @@
     <ClInclude Include="Object\Property.hpp" />
     <ClInclude Include="Object\Object.h" />
     <ClInclude Include="Object\Factory.h" />
-    <ClInclude Include="Object\RegisterPropertiesMacros.h" />
     <ClInclude Include="Plugin\Plugin.h" />
     <ClInclude Include="Pool\IndexPool.h" />
     <ClInclude Include="Pool\Pool.h" />

@@ -2,16 +2,7 @@
 
 namespace vg::engine
 {
-    VG_AUTO_REGISTER_CLASS(DefaultMaterialData);
-
-    //--------------------------------------------------------------------------------------
-    bool DefaultMaterialData::registerClass(IFactory & _factory)
-    {
-        if (core::IClassDesc * desc = _factory.registerClassHelper(DefaultMaterialData, "Default Material Data", IClassDesc::Flags::None))
-            registerProperties(*desc);
-
-        return true;
-    }
+    VG_REGISTER_OBJECT_CLASS(DefaultMaterialData, "Default Material Data");
 
     //--------------------------------------------------------------------------------------
     bool DefaultMaterialData::registerProperties(IClassDesc & _desc)

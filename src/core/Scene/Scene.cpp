@@ -10,7 +10,7 @@
 
 namespace vg::core
 {
-    VG_AUTO_REGISTER_CLASS(Scene);
+    VG_REGISTER_OBJECT_CLASS_EX(Scene, "Scene", IClassDesc::Flags::SceneNode);
 
     //--------------------------------------------------------------------------------------
     Scene::Scene(const string & _name, IObject * _parent) :
@@ -26,20 +26,11 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
-    bool Scene::registerClass(IFactory & _factory)
-    {
-        if (core::IClassDesc * desc = _factory.registerClassHelper(Scene, "Scene", IClassDesc::Flags::SceneNode))
-            registerProperties(*desc);
-
-        return true;
-    }
-
-    //--------------------------------------------------------------------------------------
     bool Scene::registerProperties(IClassDesc & _desc)
     {
         super::registerProperties(_desc);
 
-        _desc.RegisterProperty("Scene", "m_root", (IObject**)(&((Scene*)(nullptr))->m_root), "Root", IProperty::Flags::None);
+        _desc.registerPropertyObjectPtr(Scene, m_root, "Root");
 
         return true;
     }

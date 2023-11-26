@@ -4,7 +4,20 @@ using namespace vg::core;
 
 namespace vg::renderer
 {
-    VG_AUTO_REGISTER_CLASS(MeshGeometry);
+    VG_REGISTER_OBJECT_CLASS(MeshGeometry, "Mesh Geometry");
+
+    //--------------------------------------------------------------------------------------
+    bool MeshGeometry::registerProperties(IClassDesc & _desc)
+    {
+        super::registerProperties(_desc);
+
+        _desc.registerPropertyEnumEx(MeshGeometry, VertexFormat, m_vertexFormat, "Vertex Format", IProperty::Flags::ReadOnly);
+        _desc.registerPropertyEx(MeshGeometry, m_indexBufferOffset, "IB Offset", IProperty::Flags::ReadOnly | IProperty::Flags::Hidden);
+        _desc.registerPropertyEx(MeshGeometry, m_vertexBufferOffset, "VB Offset", IProperty::Flags::ReadOnly | IProperty::Flags::Hidden);
+        _desc.registerPropertyObjectVectorEx(MeshGeometry, m_batches, Batch, "Batches", IProperty::Flags::ReadOnly);
+
+        return true;
+    }
 
     //--------------------------------------------------------------------------------------
     MeshGeometry::MeshGeometry(const core::string & _name, core::IObject * _parent) :
@@ -19,28 +32,6 @@ namespace vg::renderer
         VG_SAFE_RELEASE(m_indexBuffer);
         VG_SAFE_RELEASE(m_vertexBuffer);
         m_batches.clear();
-    }
-
-    //--------------------------------------------------------------------------------------
-    bool MeshGeometry::registerClass(IFactory & _factory)
-    {
-        if (core::IClassDesc * desc = _factory.registerClassHelper(MeshGeometry, "Mesh Geometry", IClassDesc::Flags::None))
-            registerProperties(*desc);
-
-        return true;
-    }
-
-    //--------------------------------------------------------------------------------------
-    bool MeshGeometry::registerProperties(IClassDesc & _desc)
-    {
-        super::registerProperties(_desc);
-
-        _desc.registerPropertyEnumEx(MeshGeometry, VertexFormat, m_vertexFormat, "Vertex Format", IProperty::Flags::ReadOnly);
-        _desc.registerPropertyEx(MeshGeometry, m_indexBufferOffset, "IB Offset", IProperty::Flags::ReadOnly | IProperty::Flags::Hidden);
-        _desc.registerPropertyEx(MeshGeometry, m_vertexBufferOffset, "VB Offset", IProperty::Flags::ReadOnly | IProperty::Flags::Hidden);
-        _desc.registerPropertyObjectVectorEx(MeshGeometry, m_batches, Batch, "Batches", IProperty::Flags::ReadOnly);
-
-        return true;
     }
 
     //--------------------------------------------------------------------------------------

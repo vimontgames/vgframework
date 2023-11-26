@@ -2,14 +2,7 @@
 
 namespace vg::engine
 {
-    VG_AUTO_REGISTER_CLASS(SharedResource);
-
-    //--------------------------------------------------------------------------------------
-    SharedResource::SharedResource(const string & _name, IObject * _parent) :
-        super(_name, _parent)
-    {
-
-    }
+    VG_REGISTER_OBJECT_CLASS(SharedResource, "Shared Resource");
 
     //--------------------------------------------------------------------------------------
     bool SharedResource::registerProperties(vg::core::IClassDesc & _desc)
@@ -24,12 +17,10 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
-    bool SharedResource::registerClass(vg::core::IFactory & _factory)
+    SharedResource::SharedResource(const string & _name, IObject * _parent) :
+        super(_name, _parent)
     {
-        if (IClassDesc * desc = _factory.registerClassHelper(SharedResource, "Shared Resource", IClassDesc::Flags::None))
-            registerProperties(*desc);
 
-        return true;
     }
 
     //--------------------------------------------------------------------------------------

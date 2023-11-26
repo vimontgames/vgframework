@@ -117,45 +117,6 @@
                         </Property>
                         <Property type="ObjectRefVector" name="m_children" flags="Hidden"/>
                     </Object>
-                    <Object class="GameObject">
-                        <Property type="String" name="m_name" value="Pablo 2"/>
-                        <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled|Selected"/>
-                        <Property type="Float4" name="m_color" flags="Color" x="1" y="1" z="1" w="1"/>
-                        <Property type="Float4x4" name="m_world" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="1.5" Ty="0" Tz="0" Tw="1"/>
-                        <Property type="ObjectRefVector" name="m_components">
-                            <Object class="MeshComponent">
-                                <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
-                                <Property type="Bool" name="m_displayBones" value="true"/>
-                                <Property type="Resource" name="m_meshResource" flags="Resource">
-                                    <Object class="MeshResource">
-                                        <Property type="String" name="m_name" flags="Hidden" value="New MeshComponent"/>
-                                        <Property type="String" name="m_resourcePath" flags="Hidden" value="data/Models/Pablo/Pablo.fbx"/>
-                                    </Object>
-                                </Property>
-                                <Property type="Object" name="m_meshMaterials">
-                                    <Object class="MaterialResourceList">
-                                        <Property type="String" name="m_name" flags="Hidden" value="New MeshComponent"/>
-                                        <Property type="ResourceVector" name="m_materialResources" flags="Resource"/>
-                                    </Object>
-                                </Property>
-                            </Object>
-                            <Object class="AnimationComponent">
-                                <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
-                                <Property type="Object" name="m_animations">
-                                    <Object class="AnimationResourceList">
-                                        <Property type="String" name="m_name" flags="Hidden" value="New AnimationComponent"/>
-                                        <Property type="ResourceVector" name="m_animationResources" flags="Resource">
-                                            <Object class="AnimationResource">
-                                                <Property type="String" name="m_name" flags="Hidden" value=""/>
-                                                <Property type="String" name="m_resourcePath" flags="Hidden" value="data/Models/Pablo/Pablo_salsa_anim.fbx"/>
-                                            </Object>
-                                        </Property>
-                                    </Object>
-                                </Property>
-                            </Object>
-                        </Property>
-                        <Property type="ObjectRefVector" name="m_children" flags="Hidden"/>
-                    </Object>
                 </Property>
             </Object>
         </Property>

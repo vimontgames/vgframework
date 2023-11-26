@@ -124,16 +124,7 @@ namespace vg::gfx
 	//--------------------------------------------------------------------------------------
 	// Texture
 	//--------------------------------------------------------------------------------------
-    VG_AUTO_REGISTER_CLASS(Texture);
-
-    //--------------------------------------------------------------------------------------
-    bool Texture::registerClass(IFactory & _factory)
-    {
-        if (core::IClassDesc * desc = _factory.registerClassHelper_NoCTor(Texture, "Texture", IClassDesc::Flags::Model))
-            registerProperties(*desc);
-
-        return true;
-    }
+    VG_REGISTER_OBJECT_CLASS_EX(Texture, "Texture", IClassDesc::Flags::Model);
 
     //--------------------------------------------------------------------------------------
     bool Texture::registerProperties(IClassDesc & _desc)

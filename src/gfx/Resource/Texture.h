@@ -10,9 +10,9 @@ namespace vg::gfx
 	{
 		class Texture : public ITexture
 		{
-            using super = ITexture;
-
 		public:
+			VG_CLASS_DECL_PASSTHROUGH(Texture, ITexture);
+
 			Texture(const TextureDesc & _texDesc, const core::string & _name, const void * _initData);
 			~Texture();
 
@@ -46,12 +46,8 @@ namespace vg::gfx
 
 	class Texture : public VG_GFXAPI::Texture
 	{
-		using super = VG_GFXAPI::Texture;
-
 	public:
-        const char *    getClassName() const final { return "Texture"; }
-        static bool     registerClass(core::IFactory & _factory);
-        static bool     registerProperties(core::IClassDesc & _desc);
+		VG_CLASS_DECL_PASSTHROUGH(Texture, VG_GFXAPI::Texture);
 
 		Texture(const TextureDesc & _texDesc, const core::string & _name, const void * _initData = nullptr, ReservedSlot _reservedSlot = ReservedSlot::None);
 		~Texture();

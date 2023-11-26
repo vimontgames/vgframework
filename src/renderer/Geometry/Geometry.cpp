@@ -14,16 +14,7 @@
 
 namespace vg::renderer
 {
-    VG_AUTO_REGISTER_CLASS(Geometry);
-
-    //--------------------------------------------------------------------------------------
-    bool Geometry::registerClass(IFactory & _factory)
-    {
-        if (core::IClassDesc * desc = _factory.registerClassHelper(Geometry, "Geometry", IClassDesc::Flags::None))
-            registerProperties(*desc);
-
-        return true;
-    }
+    VG_REGISTER_OBJECT_CLASS(Geometry, "Geometry");
 
     //--------------------------------------------------------------------------------------
     bool Geometry::registerProperties(IClassDesc & _desc)

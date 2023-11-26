@@ -7,51 +7,7 @@ using namespace vg::core;
 
 namespace vg::renderer
 {
-    VG_AUTO_REGISTER_CLASS(DisplayOptions);
-
-    static const char * filename = "DisplayOptions.xml";
-
-    //--------------------------------------------------------------------------------------
-    DisplayOptions::DisplayOptions(const core::string & _name, core::IObject * _parent) :
-        Object(_name, _parent),
-        m_debugDisplayMode(DisplayMode::Default),
-        m_displayFlags(DisplayFlags::AlbedoMap | DisplayFlags::NormalMap),
-        m_renderPassFlags(RenderPassFlags::ZPrepass | RenderPassFlags::Opaque | RenderPassFlags::Transparency | RenderPassFlags::PostProcess)
-    {
-        load(this);
-    }
-
-    //--------------------------------------------------------------------------------------
-    bool DisplayOptions::registerClass(IFactory & _factory)
-    {
-        if (core::IClassDesc * desc = _factory.registerClassSingletonHelper(DisplayOptions, "DisplayOptions", IClassDesc::Flags::None))
-            registerProperties(*desc);
-
-        return true;
-    }
-
-    //--------------------------------------------------------------------------------------
-    bool DisplayOptions::load(IObject * _object)
-    {
-        const auto * factory = Kernel::getFactory();
-        if (factory->loadFromXML(_object, filename))
-        {
-            DisplayOptions * displayOptions = static_cast<DisplayOptions*>(_object);
-
-            auto vSyncProp = _object->getClassDesc()->GetPropertyByName("m_VSync");
-            displayOptions->ApplyVsync(vSyncProp);
-
-            return true;
-        }
-        return false;
-    }
-
-    //--------------------------------------------------------------------------------------
-    bool DisplayOptions::save(IObject * _object)
-    {
-        const auto * factory = Kernel::getFactory();
-        return factory->saveToXML(_object, filename);
-    }
+    VG_REGISTER_OBJECT_CLASS(DisplayOptions, "Display Options");
 
     //--------------------------------------------------------------------------------------
     bool DisplayOptions::registerProperties(IClassDesc & _desc)
@@ -76,6 +32,41 @@ namespace vg::renderer
         _desc.registerPropertyCallbackEx(DisplayOptions, save, "Save", IProperty::Flags::SameLine);
 
         return true;
+    }
+
+    static const char * filename = "DisplayOptions.xml";
+
+    //--------------------------------------------------------------------------------------
+    DisplayOptions::DisplayOptions(const core::string & _name, core::IObject * _parent) :
+        Object(_name, _parent),
+        m_debugDisplayMode(DisplayMode::Default),
+        m_displayFlags(DisplayFlags::AlbedoMap | DisplayFlags::NormalMap),
+        m_renderPassFlags(RenderPassFlags::ZPrepass | RenderPassFlags::Opaque | RenderPassFlags::Transparency | RenderPassFlags::PostProcess)
+    {
+        load(this);
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool DisplayOptions::load(IObject * _object)
+    {
+        const auto * factory = Kernel::getFactory();
+        if (factory->loadFromXML(_object, filename))
+        {
+            DisplayOptions * displayOptions = static_cast<DisplayOptions *>(_object);
+
+            auto vSyncProp = _object->getClassDesc()->GetPropertyByName("m_VSync");
+            displayOptions->ApplyVsync(vSyncProp);
+
+            return true;
+        }
+        return false;
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool DisplayOptions::save(IObject * _object)
+    {
+        const auto * factory = Kernel::getFactory();
+        return factory->saveToXML(_object, filename);
     }
 
     //--------------------------------------------------------------------------------------

@@ -8,16 +8,7 @@ using namespace vg::core;
 
 namespace vg::renderer
 {
-    VG_AUTO_REGISTER_CLASS(Skeleton);
-
-    //--------------------------------------------------------------------------------------
-    bool Skeleton::registerClass(IFactory & _factory)
-    {
-        if (core::IClassDesc * desc = _factory.registerClassHelper(Skeleton, "Skeleton", IClassDesc::Flags::None))
-            registerProperties(*desc);
-
-        return true;
-    }
+    VG_REGISTER_OBJECT_CLASS(Skeleton, "Skeleton");
 
     //--------------------------------------------------------------------------------------
     bool Skeleton::registerProperties(IClassDesc & _desc)

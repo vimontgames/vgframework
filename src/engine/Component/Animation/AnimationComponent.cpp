@@ -9,16 +9,7 @@ using namespace vg::core;
 
 namespace vg::engine
 {
-    VG_AUTO_REGISTER_CLASS(AnimationComponent);
-
-    //--------------------------------------------------------------------------------------
-    bool AnimationComponent::registerClass(IFactory & _factory)
-    {
-        if (core::IClassDesc * desc = _factory.registerClassHelper(AnimationComponent, "Animation Component", IClassDesc::Flags::Component))
-            registerProperties(*desc);
-
-        return true;
-    }
+    VG_REGISTER_COMPONENT_CLASS(AnimationComponent, "Animation Component");
 
     //--------------------------------------------------------------------------------------
     bool AnimationComponent::registerProperties(IClassDesc & _desc)

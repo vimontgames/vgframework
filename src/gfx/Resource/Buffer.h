@@ -11,9 +11,9 @@ namespace vg::gfx
     {
         class Buffer : public IBuffer
         {
-            using super = IBuffer;
-
         public:
+            VG_CLASS_DECL_PASSTHROUGH(Buffer, IBuffer);
+
             Buffer(const BufferDesc & _bufDesc, const core::string & _name, const void * _initData);
             ~Buffer();
 

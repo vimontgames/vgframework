@@ -4,17 +4,6 @@ using namespace vg::core;
 
 namespace vg::engine
 {
-    //VG_AUTO_REGISTER_CLASS(MaterialData);
-
-    //--------------------------------------------------------------------------------------
-    //bool MaterialData::registerClass(IFactory & _factory)
-    //{
-    //    if (core::IClassDesc * desc = _factory.registerClassHelper(MaterialData, "Material Data", IClassDesc::Flags::None))
-    //        registerProperties(*desc);
-    //
-    //    return true;
-    //}
-
     //--------------------------------------------------------------------------------------
     bool MaterialData::registerProperties(IClassDesc & _desc)
     {

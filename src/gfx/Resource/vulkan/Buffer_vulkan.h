@@ -5,9 +5,9 @@ namespace vg::gfx::vulkan
 {
     class Buffer : public base::Buffer
     {
-        using super = base::Buffer;
-
     public:
+        VG_CLASS_DECL_PASSTHROUGH(Buffer, base::Buffer);
+
         Buffer(const BufferDesc & _bufDesc, const core::string & _name, const void * _initData, ReservedSlot _reservedSlot);
         ~Buffer();
 

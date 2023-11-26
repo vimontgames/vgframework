@@ -13,16 +13,7 @@ using namespace vg::gfx;
 
 namespace vg::renderer
 {
-    VG_AUTO_REGISTER_CLASS(MeshModel);
-
-    //--------------------------------------------------------------------------------------
-    bool MeshModel::registerClass(core::IFactory & _factory)
-    {
-        if (core::IClassDesc * desc = _factory.registerClassHelper(MeshModel, "Mesh Model", IClassDesc::Flags::Model))
-            registerProperties(*desc);
-
-        return true;
-    }
+    VG_REGISTER_OBJECT_CLASS_EX(MeshModel, "Mesh Model", IClassDesc::Flags::Model);
 
     //--------------------------------------------------------------------------------------
     bool MeshModel::registerProperties(core::IClassDesc & _desc)

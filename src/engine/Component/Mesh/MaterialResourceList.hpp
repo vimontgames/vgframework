@@ -5,7 +5,17 @@ using namespace vg::core;
 
 namespace vg::engine
 {
-    VG_AUTO_REGISTER_CLASS(MaterialResourceList);
+    VG_REGISTER_OBJECT_CLASS(MaterialResourceList, "Material Resource List");
+
+    //--------------------------------------------------------------------------------------
+    bool MaterialResourceList::registerProperties(vg::core::IClassDesc & _desc)
+    {
+        super::registerProperties(_desc);
+
+        _desc.registerPropertyObjectVectorEx(MaterialResourceList, m_materialResources, MaterialResource, "Material", IProperty::Flags::Resource);
+
+        return true;
+    }
 
     //--------------------------------------------------------------------------------------
     MaterialResourceList::MaterialResourceList(const core::string & _name, core::IObject * _parent) :
@@ -19,25 +29,6 @@ namespace vg::engine
     MaterialResourceList::~MaterialResourceList()
     {
 
-    }
-
-    //--------------------------------------------------------------------------------------
-    bool MaterialResourceList::registerClass(vg::core::IFactory & _factory)
-    {
-        if (core::IClassDesc * desc = _factory.registerClassHelper(MaterialResourceList, "Material Resource List", IClassDesc::Flags::None))
-            registerProperties(*desc);
-
-        return true;
-    }
-
-    //--------------------------------------------------------------------------------------
-    bool MaterialResourceList::registerProperties(vg::core::IClassDesc & _desc)
-    {
-        super::registerProperties(_desc);
-
-        _desc.registerPropertyObjectVectorEx(MaterialResourceList, m_materialResources, MaterialResource, "Material", IProperty::Flags::Resource);
-
-        return true;
     }
 
     //--------------------------------------------------------------------------------------

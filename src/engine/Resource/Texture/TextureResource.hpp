@@ -5,16 +5,7 @@ using namespace vg::core;
 
 namespace vg::engine
 {
-    VG_AUTO_REGISTER_CLASS(TextureResource);
-
-    //--------------------------------------------------------------------------------------
-    bool TextureResource::registerClass(IFactory & _factory)
-    {
-        if (core::IClassDesc * desc = _factory.registerClassHelper(TextureResource, "Texture", IClassDesc::Flags::Resource))
-            registerProperties(*desc);
-
-        return true;
-    }
+    VG_REGISTER_RESOURCE_CLASS(TextureResource, "Texture");
 
     //--------------------------------------------------------------------------------------
     bool TextureResource::registerProperties(IClassDesc & _desc)

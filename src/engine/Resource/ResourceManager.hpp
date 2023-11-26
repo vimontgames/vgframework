@@ -10,16 +10,7 @@ using namespace vg::core;
 
 namespace vg::engine
 {
-    VG_AUTO_REGISTER_CLASS(ResourceManager);
-
-    //--------------------------------------------------------------------------------------
-    bool ResourceManager::registerClass(IFactory & _factory)
-    {
-        if (IClassDesc * desc = _factory.registerClassHelper(ResourceManager, "Resource Manager", IClassDesc::Flags::None))
-            registerProperties(*desc);
-
-        return true;
-    }
+    VG_REGISTER_OBJECT_CLASS(ResourceManager, "Resource Manager");
 
     //--------------------------------------------------------------------------------------
     bool ResourceManager::registerProperties(IClassDesc & _desc)

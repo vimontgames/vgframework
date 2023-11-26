@@ -17,16 +17,7 @@ using namespace vg::core;
 
 namespace vg::engine
 {
-    VG_AUTO_REGISTER_CLASS(CameraComponent);
-
-    //--------------------------------------------------------------------------------------
-    bool CameraComponent::registerClass(IFactory & _factory)
-    {
-        if (core::IClassDesc * desc = _factory.registerClassHelper(CameraComponent, "Camera Component", IClassDesc::Flags::Component))
-            registerProperties(*desc);
-
-        return true;
-    }
+    VG_REGISTER_COMPONENT_CLASS(CameraComponent, "Camera Component");
 
     //--------------------------------------------------------------------------------------
     bool CameraComponent::registerProperties(IClassDesc & _desc)
@@ -35,16 +26,16 @@ namespace vg::engine
 
         _desc.registerPropertyEnum(CameraComponent, gfx::ViewTarget, m_target, "Target");
         _desc.registerProperty(CameraComponent, m_index, "Index");
-        _desc.setPropertyRangeHelper(CameraComponent, m_index, float2(0, 15));
+        _desc.setPropertyRange(CameraComponent, m_index, float2(0, 15));
 
         _desc.registerProperty(CameraComponent, m_fovY, "Horizontal FOV");
-        _desc.setPropertyRangeHelper(CameraComponent, m_fovY, float2(PI / 8.0f, PI / 2.0f));
+        _desc.setPropertyRange(CameraComponent, m_fovY, float2(PI / 8.0f, PI / 2.0f));
 
         _desc.registerProperty(CameraComponent, m_near, "Near");
-        _desc.setPropertyRangeHelper(CameraComponent, m_near, float2(0.0f, 8.0f));
+        _desc.setPropertyRange(CameraComponent, m_near, float2(0.0f, 8.0f));
 
         _desc.registerProperty(CameraComponent, m_far, "Far");
-        _desc.setPropertyRangeHelper(CameraComponent, m_far, float2(0.0f, 8192.0f));
+        _desc.setPropertyRange(CameraComponent, m_far, float2(0.0f, 8192.0f));
 
         return true;
     }

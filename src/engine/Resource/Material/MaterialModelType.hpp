@@ -4,16 +4,7 @@ using namespace vg::core;
 
 namespace vg::engine
 {
-    VG_AUTO_REGISTER_CLASS(MaterialModelType);
-
-    //--------------------------------------------------------------------------------------
-    bool MaterialModelType::registerClass(IFactory & _factory)
-    {
-        if (core::IClassDesc * desc = _factory.registerClassHelper(MaterialModelType, "Material Shader", IClassDesc::Flags::None))
-            registerProperties(*desc);
-
-        return true;
-    }
+    VG_REGISTER_OBJECT_CLASS(MaterialModelType, "Material Model Type");
 
     //--------------------------------------------------------------------------------------
     bool MaterialModelType::registerProperties(IClassDesc & _desc)

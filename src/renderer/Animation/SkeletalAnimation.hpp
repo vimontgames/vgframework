@@ -2,16 +2,7 @@
 
 namespace vg::renderer
 {
-    VG_AUTO_REGISTER_CLASS(SkeletalAnimation);
-
-    //--------------------------------------------------------------------------------------
-    bool SkeletalAnimation::registerClass(IFactory & _factory)
-    {
-        if (core::IClassDesc * desc = _factory.registerClassHelper(SkeletalAnimation, "Skeletal Animation", IClassDesc::Flags::None))
-            registerProperties(*desc);
-
-        return true;
-    }
+    VG_REGISTER_OBJECT_CLASS(SkeletalAnimation, "Skeletal Animation");
 
     //--------------------------------------------------------------------------------------
     bool SkeletalAnimation::registerProperties(IClassDesc & _desc)

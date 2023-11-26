@@ -3,7 +3,7 @@
 
 using namespace vg::core;
 
-VG_AUTO_REGISTER_CLASS(PlayerBehaviour);
+VG_REGISTER_COMPONENT_CLASS(PlayerBehaviour, "PlayerBehaviour Component");
 
 //--------------------------------------------------------------------------------------
 PlayerBehaviour::PlayerBehaviour(const string & _name, IObject * _parent) :
@@ -16,15 +16,6 @@ PlayerBehaviour::PlayerBehaviour(const string & _name, IObject * _parent) :
 PlayerBehaviour::~PlayerBehaviour()
 {
 
-}
-
-//--------------------------------------------------------------------------------------
-bool PlayerBehaviour::registerClass(IFactory & _factory)
-{
-    if (IClassDesc * desc = _factory.registerClassHelper(PlayerBehaviour, "Player Component", IClassDesc::Flags::Component))
-        registerProperties(*desc);
-
-    return true;
 }
 
 //--------------------------------------------------------------------------------------

@@ -6,16 +6,7 @@ using namespace vg::core;
 
 namespace vg::engine
 {
-    VG_AUTO_REGISTER_CLASS(MaterialResourceData);
-
-    //--------------------------------------------------------------------------------------
-    bool MaterialResourceData::registerClass(IFactory & _factory)
-    {
-        if (core::IClassDesc * desc = _factory.registerClassHelper(MaterialResourceData, "Material Resource Data", IClassDesc::Flags::None))
-            registerProperties(*desc);
-
-        return true;
-    }
+    VG_REGISTER_OBJECT_CLASS(MaterialResourceData, "Material Resource Data");
 
     //--------------------------------------------------------------------------------------
     bool MaterialResourceData::registerProperties(IClassDesc & _desc)

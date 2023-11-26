@@ -8,16 +8,7 @@
 
 namespace vg::core
 {
-    VG_AUTO_REGISTER_CLASS(GameObject);
-
-    //--------------------------------------------------------------------------------------
-    bool GameObject::registerClass(IFactory & _factory)
-    {
-        if (core::IClassDesc * desc = _factory.registerClassHelper(GameObject, "GameObject", IClassDesc::Flags::GameObject))
-            registerProperties(*desc);
-
-        return true;
-    }
+    VG_REGISTER_OBJECT_CLASS_EX(GameObject, "GameObject", IClassDesc::Flags::GameObject);
 
     //--------------------------------------------------------------------------------------
     bool GameObject::registerProperties(IClassDesc & _desc)

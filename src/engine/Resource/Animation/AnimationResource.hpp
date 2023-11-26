@@ -6,16 +6,7 @@ using namespace vg::renderer;
 
 namespace vg::engine
 {
-    VG_AUTO_REGISTER_CLASS(AnimationResource);
-
-    //--------------------------------------------------------------------------------------
-    bool AnimationResource::registerClass(IFactory & _factory)
-    {
-        if (core::IClassDesc * desc = _factory.registerClassHelper(AnimationResource, "Animation", IClassDesc::Flags::Resource))
-            registerProperties(*desc);
-
-        return true;
-    }
+    VG_REGISTER_RESOURCE_CLASS(AnimationResource, "Animation");
 
     //--------------------------------------------------------------------------------------
     void * ResizeAnimationResourceVector(IObject * _parent, uint _offset, uint _count, uint & _elementSize)

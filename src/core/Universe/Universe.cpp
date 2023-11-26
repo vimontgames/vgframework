@@ -5,7 +5,7 @@
 
 namespace vg::core
 {
-    VG_AUTO_REGISTER_CLASS(Universe);
+    VG_REGISTER_OBJECT_CLASS(Universe, "Universe");
 
     //--------------------------------------------------------------------------------------
     Universe::Universe(const string & _name, IObject * _parent) :
@@ -18,15 +18,6 @@ namespace vg::core
     Universe::~Universe()
     {
         removeAllScenes();
-    }
-
-    //--------------------------------------------------------------------------------------
-    bool Universe::registerClass(IFactory & _factory)
-    {
-        if (core::IClassDesc * desc = _factory.registerClassHelper(Universe, "Universe", IClassDesc::Flags::None))
-            registerProperties(*desc);
-
-        return true;
     }
 
     //--------------------------------------------------------------------------------------

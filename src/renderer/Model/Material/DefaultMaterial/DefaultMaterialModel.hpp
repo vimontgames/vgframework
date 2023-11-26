@@ -6,16 +6,7 @@ namespace vg::renderer
     using namespace vg::core;
     using namespace vg::gfx;
 
-    VG_AUTO_REGISTER_CLASS(DefaultMaterialModel);
-
-    //--------------------------------------------------------------------------------------
-    bool DefaultMaterialModel::registerClass(core::IFactory & _factory)
-    {
-        if (core::IClassDesc * desc = _factory.registerClassHelper(DefaultMaterialModel, "Default", IClassDesc::Flags::Model))
-            registerProperties(*desc);
-
-        return true;
-    }
+    VG_REGISTER_OBJECT_CLASS_EX(DefaultMaterialModel, "Default", IClassDesc::Flags::Model);
 
     //--------------------------------------------------------------------------------------
     bool DefaultMaterialModel::registerProperties(core::IClassDesc & _desc)

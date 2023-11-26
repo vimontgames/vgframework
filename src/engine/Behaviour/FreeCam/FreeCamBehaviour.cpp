@@ -12,16 +12,7 @@ using namespace vg::core;
 
 namespace vg::engine
 {
-    VG_AUTO_REGISTER_CLASS(FreeCamBehaviour);
-
-    //--------------------------------------------------------------------------------------
-    bool FreeCamBehaviour::registerClass(IFactory& _factory)
-    {
-        if (core::IClassDesc* desc = _factory.registerClassHelper(FreeCamBehaviour, "FreeCam Behaviour", IClassDesc::Flags::Component))
-            registerProperties(*desc);
-
-        return true;
-    }
+    VG_REGISTER_COMPONENT_CLASS(FreeCamBehaviour, "FreeCamBehaviour Component");
 
     //--------------------------------------------------------------------------------------
     bool FreeCamBehaviour::registerProperties(IClassDesc& _desc)
@@ -29,19 +20,19 @@ namespace vg::engine
         super::registerProperties(_desc);
 
         _desc.registerProperty(FreeCamBehaviour, m_moveSpeed, "Translation Speed");
-        _desc.setPropertyRangeHelper(FreeCamBehaviour, m_moveSpeed, float2(0.0f, 10.0f));
+        _desc.setPropertyRange(FreeCamBehaviour, m_moveSpeed, float2(0.0f, 10.0f));
 
         _desc.registerProperty(FreeCamBehaviour, m_rotSpeed, "Rotation Speed");
-        _desc.setPropertyRangeHelper(FreeCamBehaviour, m_rotSpeed, float2(0.0f, 10.0f));
+        _desc.setPropertyRange(FreeCamBehaviour, m_rotSpeed, float2(0.0f, 10.0f));
 
         _desc.registerProperty(FreeCamBehaviour, m_pitch, "Pitch");
-        _desc.setPropertyRangeHelper(FreeCamBehaviour, m_pitch, float2(-PI, +PI));
+        _desc.setPropertyRange(FreeCamBehaviour, m_pitch, float2(-PI, +PI));
 
         _desc.registerProperty(FreeCamBehaviour, m_yaw, "Yaw");
-        _desc.setPropertyRangeHelper(FreeCamBehaviour, m_yaw, float2(-PI, +PI));
+        _desc.setPropertyRange(FreeCamBehaviour, m_yaw, float2(-PI, +PI));
 
         _desc.registerProperty(FreeCamBehaviour, m_roll, "Roll");
-        _desc.setPropertyRangeHelper(FreeCamBehaviour, m_roll, float2(-PI, +PI));
+        _desc.setPropertyRange(FreeCamBehaviour, m_roll, float2(-PI, +PI));
 
         return true;
     }

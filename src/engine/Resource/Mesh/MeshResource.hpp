@@ -8,16 +8,7 @@ using namespace vg::core;
 
 namespace vg::engine
 {
-    VG_AUTO_REGISTER_CLASS(MeshResource);
-
-    //--------------------------------------------------------------------------------------
-    bool MeshResource::registerClass(IFactory & _factory)
-    {
-        if (core::IClassDesc * desc = _factory.registerClassHelper(MeshResource, "Mesh Resource", IClassDesc::Flags::Resource))
-            registerProperties(*desc);
-
-        return true;
-    }
+    VG_REGISTER_RESOURCE_CLASS(MeshResource, "Mesh");
 
     //--------------------------------------------------------------------------------------
     bool MeshResource::registerProperties(IClassDesc & _desc)
