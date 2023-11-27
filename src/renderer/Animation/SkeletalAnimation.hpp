@@ -1,5 +1,9 @@
 #include "SkeletalAnimation.h"
 
+#if !VG_ENABLE_INLINE
+#include "SkeletalAnimation.inl"
+#endif
+
 namespace vg::renderer
 {
     VG_REGISTER_OBJECT_CLASS(SkeletalAnimation, "Skeletal Animation");
@@ -43,6 +47,18 @@ namespace vg::renderer
         if (m_time != _time)
         {
             m_time = _time;
+            return true;
+        }
+
+        return false;
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool SkeletalAnimation::SetWeight(float _weight)
+    {
+        if (m_weight != _weight)
+        {
+            m_weight = _weight;
             return true;
         }
 

@@ -20,14 +20,14 @@ namespace vg::core
 
         virtual ~IUniverse() {}
 
-        virtual bool            setActiveScene  (IScene * _scene) = 0;
-        virtual core::IScene *  getActiveScene  () const = 0;
+        virtual bool            SetActiveScene  (IScene * _scene) = 0;
+        virtual core::IScene *  GetActiveScene  () const = 0;
 
-        virtual bool            addScene        (IScene * _scene) = 0;
-        virtual bool            removeScene     (core::IScene * scene) = 0;
-        virtual core::uint      removeAllScenes () = 0;
+        virtual bool            AddScene        (IScene * _scene) = 0;
+        virtual bool            RemoveScene     (core::IScene * scene) = 0;
+        virtual core::uint      RemoveAllScenes () = 0;
 
-        virtual uint            getSceneCount   () const = 0;
-        virtual const IScene *  getScene        (uint _index) const = 0;      
+        virtual uint            GetSceneCount   () const = 0;
+        virtual const IScene *  GetScene        (uint _index) const = 0;      
     };
 }

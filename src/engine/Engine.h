@@ -91,12 +91,12 @@ namespace vg::engine
         void                                destroyEditorView   ();
 
         VG_INLINE bool                      isPlaying           () const;
-        VG_INLINE void                      play                ();
-        VG_INLINE void                      stop                ();
+        void                                play                ();
+        void                                stop                ();
 
         VG_INLINE bool                      isPaused            () const;
-        VG_INLINE void                      pause               ();
-        VG_INLINE void                      resume              ();
+        void                                pause               ();
+        void                                resume              ();
 
         VG_INLINE const Time &              getTime             () const;
 

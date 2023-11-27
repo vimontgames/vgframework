@@ -30,7 +30,7 @@ namespace vg::gfx
             static core::u32								computeMaxMipmapCount	(const TextureDesc & _texDesc);
 			
         protected:
-			const TextureDesc								m_texDesc;
+			TextureDesc										m_texDesc;
             gfx::Resource									m_resource;
             gfx::BindlessTextureHandle						m_textureHandle;
 			gfx::BindlessRWTextureHandle					m_rwTextureHandle;

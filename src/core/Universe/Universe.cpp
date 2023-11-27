@@ -17,7 +17,7 @@ namespace vg::core
     //--------------------------------------------------------------------------------------
     Universe::~Universe()
     {
-        removeAllScenes();
+        RemoveAllScenes();
     }
 
     //--------------------------------------------------------------------------------------
@@ -29,7 +29,13 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
-    bool Universe::setActiveScene(IScene * _scene)
+    vector<Scene*> & Universe::getScenes()
+    {
+        return m_scenes;
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool Universe::SetActiveScene(IScene * _scene)
     {
         if (_scene != m_activeScene)
         {
@@ -43,13 +49,13 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
-    core::IScene * Universe::getActiveScene() const
+    core::IScene * Universe::GetActiveScene() const
     {
         return m_activeScene;
     }
 
     //--------------------------------------------------------------------------------------
-    bool Universe::addScene(IScene * _scene)
+    bool Universe::AddScene(IScene * _scene)
     {
         if (nullptr != _scene && !m_scenes.exists((Scene*)_scene))
         {
@@ -58,7 +64,7 @@ namespace vg::core
             m_scenes.push_back((Scene*)_scene);
 
             if (nullptr == m_activeScene)
-                setActiveScene(_scene);
+                SetActiveScene(_scene);
 
             return true;
         }
@@ -66,14 +72,14 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
-    bool Universe::removeScene(IScene * _scene)
+    bool Universe::RemoveScene(IScene * _scene)
     {
         if (nullptr != _scene && m_scenes.exists((Scene*)_scene))
         {
             m_scenes.remove((Scene*)_scene);
 
             if (m_activeScene == _scene)
-                setActiveScene(nullptr);
+                SetActiveScene(nullptr);
 
             _scene->release();
         }
@@ -81,7 +87,7 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
-    uint Universe::removeAllScenes()
+    uint Universe::RemoveAllScenes()
     {
         const uint sceneCount = m_scenes.count();
         for (uint i = 0; i < sceneCount; ++i)
@@ -93,13 +99,13 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
-    uint Universe::getSceneCount() const
+    uint Universe::GetSceneCount() const
     {
         return m_scenes.count();
     }
 
     //--------------------------------------------------------------------------------------
-    const IScene * Universe::getScene(uint _index) const
+    const IScene * Universe::GetScene(uint _index) const
     {
         return reinterpret_cast<const IScene*>(m_scenes[_index]);
     }

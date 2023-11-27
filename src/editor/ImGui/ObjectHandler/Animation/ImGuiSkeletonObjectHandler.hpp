@@ -1,8 +1,6 @@
 #pragma once
 
-#include "renderer/Animation/Skeleton.h"
-//#include "renderer/Importer/MeshImporterData.h"
-//#include "renderer/Model/Mesh/MeshModel.h"
+#include "renderer/ISkeleton.h"
 
 using namespace vg::core;
 using namespace vg::renderer;
@@ -18,10 +16,7 @@ namespace vg::editor
             auto availableWidth = ImGui::GetContentRegionAvail().x;
             ImGui::PushItemWidth(availableWidth - style::label::PixelWidth);
 
-            //const MeshModel * meshModel = dynamic_cast<MeshModel *>(_object->getParent());
-            //const MeshGeometry * geometry = meshModel->GetGeometry();
-
-            const Skeleton * skeleton = dynamic_cast<Skeleton *>(_object);
+            const ISkeleton * skeleton = dynamic_cast<ISkeleton *>(_object);
             VG_ASSERT(skeleton);
             if (skeleton)
             {
@@ -34,37 +29,32 @@ namespace vg::editor
                     ImGuiWindow::displayProperty(_object, prop);
                 }
 
-                const auto nodes = skeleton->getNodes();
-                const uint nodeCount = (uint)nodes.size();
+                const uint nodeCount = skeleton->GetNodeCount();
 
-                //const auto indices = skeleton->getBoneIndices(); 
-                //const auto matrices = skeleton->getBoneMatrices();
-                //const uint boneCount = (uint)indices.size();
-
-                //VG_ASSERT(indices.size() == matrices.size());
                 char treeNodeLabel[256];
                 sprintf_s(treeNodeLabel, "Nodes (%u)", nodeCount);
                 if (ImGui::TreeNode(treeNodeLabel))
                 {
                     for (uint i = 0; i < nodeCount; ++i)
                     {
-                        const MeshImporterNode & node = nodes[i];
-
-                        char nodeName[256];
-                        sprintf_s(nodeName, "%s", node.name.c_str());
-                        const char * sub = strstr(nodeName, "mixamorig:");
-                        if (sub)
-                            sprintf_s(nodeName, node.name.c_str() + strlen("mixamorig:"));
+                        const string nodeName = skeleton->GetNodeName(i);
+                        //const float4x4 nodeToParentMatrix =  
 
                         char nodeLabel[256];
-                        sprintf_s(nodeLabel, "[%u] %s", i, nodeName);
+                        const char * sub = strstr(nodeName.c_str(), "mixamorig:");
+
+                        if (sub)
+                            sprintf_s(nodeLabel, "[%u] %s", i, nodeName.c_str() + strlen("mixamorig:"));
+                        else
+                            sprintf_s(nodeLabel, "[%u] %s", i, nodeName.c_str());
+
                         if (ImGui::TreeNode(nodeLabel))
                         {
                             ImGui::BeginDisabled(true);
                             {
-                                //ImGuiWindow::displayU32("ParentIndex", &node.parent_index);
-                                ImGui::InputInt("ParentIndex", (int*) &node.parent_index, 1, 16, ImGuiInputTextFlags_EnterReturnsTrue);
-                                ImGuiWindow::displayFloat4x4("Bone", (core::float4x4 *)&node.node_to_parent);
+                                int parent = skeleton->GetParentIndex(i);
+                                ImGui::InputInt("ParentIndex", &parent);
+                                //ImGuiWindow::displayFloat4x4("Bone", (core::float4x4 *)&node.node_to_parent);
                             }
                             ImGui::EndDisabled();
 

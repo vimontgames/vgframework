@@ -78,10 +78,10 @@ namespace vg::renderer
 
         // "Universe" is a shitty name, I have to find something better like e.g. "SceneList" and cull by scene using separate jobs
         const auto * uni = view->getUniverse();
-        const uint count = uni->getSceneCount();
+        const uint count = uni->GetSceneCount();
         for (uint i = 0; i < count; ++i)
         {
-            const auto * scene = (Scene*)uni->getScene(i);
+            const auto * scene = (Scene*)uni->GetScene(i);
             const auto * root = scene->getRoot();
             cullGameObjectRecur(root);
         }

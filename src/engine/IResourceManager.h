@@ -12,7 +12,7 @@ namespace vg::engine
     class IResourceInfo : public core::Object
     {
     public:
-        VG_CLASS_DECL_VIRTUAL(IResourceInfo, core::Object);
+        VG_CLASS_DECL_ABSTRACT(IResourceInfo, core::Object);
 
         virtual const core::string &    GetResourcePath () const = 0;
         virtual const core::string      GetResourceType () const = 0;

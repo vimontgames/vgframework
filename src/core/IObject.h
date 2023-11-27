@@ -16,8 +16,11 @@ namespace vg::core
 
         virtual const IClassDesc *          getClassDesc        () const = 0;
 
-										    IObject		        () {}
-		virtual							    ~IObject	        () {}
+										    IObject		        () = default;
+		virtual							    ~IObject	        () = default;
+
+        virtual void                        OnPlay              () = 0;
+        virtual void                        OnStop              () = 0;
 
         virtual void                        setParent           (IObject * _parent) = 0;
         virtual IObject *                   getParent           () const = 0;

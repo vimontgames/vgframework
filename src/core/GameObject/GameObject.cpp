@@ -53,6 +53,24 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
+    void GameObject::OnPlay()
+    {
+        super::OnPlay();
+
+        for (uint i = 0; i < m_children.size(); ++i)
+            m_children[i]->OnPlay();
+    }
+
+    //--------------------------------------------------------------------------------------
+    void GameObject::OnStop()
+    {
+        for (uint i = 0; i < m_children.size(); ++i)
+            m_children[i]->OnStop();
+
+        super::OnStop();
+    }
+
+    //--------------------------------------------------------------------------------------
     void GameObject::Update(double _dt)
     {
         if (GameObject::Flags::Enabled & getFlags())
@@ -118,8 +136,28 @@ namespace vg::core
         for (uint i = 0; i < components.size(); ++i)
         {
             auto * component = components[i];
-            if (component && !strcmp(component->getClassName(), _className)) // TODO: RTTI/inheritance
-                return component;
+            if (nullptr != component)
+            {
+                if (!strcmp(component->getClassName(), _className))
+                {
+                    return component;
+                }
+                else 
+                {
+                    const auto * classDesc = Kernel::getFactory()->getClassDescriptor(component->getClassName());
+                    if (nullptr != classDesc)
+                    {
+                        const char * interfaceName = classDesc->GetInterfaceName();
+                        if (nullptr != interfaceName)
+                        {
+                            if (!strcmp(interfaceName, _className))
+                            {
+                                return component;
+                            }
+                        }
+                    }
+                }
+            }
         }
         return nullptr;
     }

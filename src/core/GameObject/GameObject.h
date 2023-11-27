@@ -16,6 +16,9 @@ namespace vg::core
                                                             GameObject              (const core::string & _name, IObject * _parent);
         virtual                                             ~GameObject             ();
 
+        void                                                OnPlay                  () override;
+        void                                                OnStop                  () override;
+
         void                                                Update                  (double _dt);
 
         void                                                AddComponent            (IComponent * _component) final override;

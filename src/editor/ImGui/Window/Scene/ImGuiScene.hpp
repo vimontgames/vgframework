@@ -68,7 +68,7 @@ namespace vg::editor
                             if (ImGui::Button("Add", style::button::SizeMedium))
                             {
                                 IScene * newScene = (IScene*)CreateFactoryObject(Scene, newName.c_str(), universe);
-                                universe->addScene(newScene);
+                                universe->AddScene(newScene);
                                 IGameObject * rootSector = (IGameObject*)CreateFactoryObject(GameObject, "Root", newScene);
                                 newScene->SetRoot(rootSector);
                                 rootSector->release();
@@ -97,7 +97,7 @@ namespace vg::editor
                             IScene* scene = (IScene*)CreateFactoryObject(Scene, "", universe);
                             if (factory->loadFromXML(scene, path))
                             {
-                                universe->addScene(scene);
+                                universe->AddScene(scene);
                                 scene->Release();
                             }
                             else
@@ -108,9 +108,9 @@ namespace vg::editor
                         break;
                 }
 
-                for (uint i = 0; i < universe->getSceneCount(); ++i)
+                for (uint i = 0; i < universe->GetSceneCount(); ++i)
                 {
-                    const IScene * scene = universe->getScene(i);
+                    const IScene * scene = universe->GetScene(i);
                     if (nullptr != scene)
                     {
                         IGameObject * root = scene->GetRoot();

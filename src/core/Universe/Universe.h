@@ -11,25 +11,22 @@ namespace vg::core
     class Universe : public IUniverse
     {
     public:
-        using super = IUniverse;
+        VG_CLASS_DECL(Universe, IUniverse);
 
         Universe(const string & _name, IObject * _parent);
         ~Universe();
 
-        const char *            getClassName() const final { return "Universe"; }
+        bool                    SetActiveScene(IScene * _scene) final override;
+        core::IScene *          GetActiveScene() const final override;
 
-        static bool             registerClass(IFactory & _factory);
-        static bool             registerProperties(IClassDesc & _desc);
+        bool                    AddScene(IScene * _scene) final override;
+        bool                    RemoveScene(core::IScene * scene) final override;
+        core::uint              RemoveAllScenes() final override;
 
-        virtual bool            setActiveScene(IScene * _scene) final;
-        virtual core::IScene *  getActiveScene() const final;
+        uint                    GetSceneCount() const final override;
+        const IScene *          GetScene(uint _index) const final override;
 
-        virtual bool            addScene(IScene * _scene) final;
-        virtual bool            removeScene(core::IScene * scene) final;
-        virtual core::uint      removeAllScenes() final;
-
-        virtual uint            getSceneCount() const final;
-        virtual const IScene *  getScene(uint _index) const final;
+        vector<Scene*> &        getScenes();
 
     private:
         Scene *                 m_activeScene = nullptr;

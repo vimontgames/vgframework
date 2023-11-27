@@ -89,7 +89,7 @@ namespace vg::editor
                     {
                         IUniverse * universe = (IUniverse*)scene->getParent();
                         if (nullptr != universe)
-                            universe->removeScene((IScene*)scene);
+                            universe->RemoveScene((IScene*)scene);
                         ImGui::CloseCurrentPopup();
                         status = Status::Removed;
                     }

@@ -4,9 +4,13 @@
 
 namespace vg::engine
 {
+    class IAnimationResource;
+
     class IAnimationComponent : public core::Component
     {
     public:
-        VG_CLASS_DECL_VIRTUAL(IAnimationComponent, core::Component)
+        VG_CLASS_DECL_ABSTRACT(IAnimationComponent, core::Component);
+
+        virtual IAnimationResource * GetAnimation(const core::string & _name) = 0;
     };
 }

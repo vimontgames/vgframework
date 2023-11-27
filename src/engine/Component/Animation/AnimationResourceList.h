@@ -20,6 +20,6 @@ namespace vg::engine
         core::vector<AnimationResource> &           getAnimationResources   () { return m_animationResources; }
 
     private:
-        core::vector<AnimationResource> m_animationResources;
+        core::vector<AnimationResource>             m_animationResources;
     };
 }

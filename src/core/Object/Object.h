@@ -26,7 +26,7 @@
 													VG_CLASS_CTOR_HEADER_IMPL(name, parent)
 
 // Declare class used for virtual interface
-#define VG_CLASS_DECL_VIRTUAL(name, parent)			VG_CLASS_SUPER_CLASSNAME(name, parent)		\
+#define VG_CLASS_DECL_ABSTRACT(name, parent)		VG_CLASS_SUPER_CLASSNAME(name, parent)		\
 													VG_CLASS_PROPERTIES_IMPL(name, parent)		\
 													VG_CLASS_CTOR_HEADER_IMPL(name, parent)
 												
@@ -45,6 +45,9 @@ namespace vg::core
 									Object				(const Object & _other);
 								    Object		        ();
 								    ~Object		        ();
+
+        void                        OnPlay				() override;
+        void                        OnStop				() override;
 
         void                        setParent           (IObject * _parent) final;
         IObject *                   getParent           () const final;
@@ -68,8 +71,10 @@ namespace vg::core
 
 		static bool					resizeVector		(core::IObject * _parent, core::uint _offset, core::uint _count, void ** _data);
 
-	private:
+	protected:
 		string					    m_name;
+
+	private:
         string                      m_file;
 		atomic<u32>				    m_refCount;
         Object *                    m_parent = nullptr;

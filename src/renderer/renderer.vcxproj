@@ -43,9 +43,11 @@
     <ClCompile Include="View\View.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Animation\SkeletalAnimation.inl" />
     <None Include="Animation\Skeleton.inl" />
     <None Include="Geometry\AABB\AABB.inl" />
     <None Include="Geometry\Geometry.inl" />
+    <None Include="Instance\Mesh\MeshInstance.inl" />
     <None Include="Renderer.def" />
     <None Include="Renderer.inl" />
     <None Include="View\View.inl" />
@@ -94,6 +96,7 @@
     <ClInclude Include="IPicking.h" />
     <ClInclude Include="IRenderer.h" />
     <ClInclude Include="ISkeletalAnimation.h" />
+    <ClInclude Include="ISkeleton.h" />
     <ClInclude Include="Job\Culling\GraphicInstanceList.h" />
     <ClInclude Include="Job\Culling\ViewCullingJob.h" />
     <ClInclude Include="Job\Culling\ViewCullingJob.hpp" />

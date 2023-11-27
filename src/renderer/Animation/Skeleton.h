@@ -1,30 +1,35 @@
 #pragma once
 
-#include "core/Object/Object.h"
+#include "renderer/ISkeleton.h"
 #include "renderer/Importer/MeshImporterData.h"
 
 namespace vg::renderer
 {
-    class Skeleton : public core::Object
+    class Skeleton : public ISkeleton
     {
     public:
-        VG_CLASS_DECL_PASSTHROUGH(Skeleton, core::Object)
+        VG_CLASS_DECL_PASSTHROUGH(Skeleton, ISkeleton)
 
-        void                                                        setNodes            (const core::vector<MeshImporterNode> & _nodes);
-        void                                                        setBoneIndices      (const core::vector<core::u32> & _bonesIndices);
-        void                                                        setBoneMatrices     (const core::vector<core::float4x4> & _bonesMatrices);
+        core::uint                                          GetNodeCount        () const final override;
+        const core::string                                  GetNodeName         (core::uint _index) const final override;
+        core::i16                                           GetParentIndex      (core::uint _index) const final override;
 
-        /*VG_INLINE*/ inline const core::vector<MeshImporterNode> & getNodes            () const;
-        /*VG_INLINE*/ inline const core::vector<core::u32> &        getBoneIndices      () const;
-        /*VG_INLINE*/ inline const core::vector<core::float4x4> &   getBoneMatrices     () const;
+        void                                                setNodes            (const core::vector<MeshImporterNode> & _nodes);
+        void                                                setBoneIndices      (const core::vector<core::u32> & _bonesIndices);
+        void                                                setBoneMatrices     (const core::vector<core::float4x4> & _bonesMatrices);
 
-    //private:
-        core::vector<MeshImporterNode>                              m_nodes;
-        core::vector<core::u32>                                     m_boneIndices;
-        core::vector<core::float4x4>                                m_boneMatrices;
+        VG_INLINE const core::vector<MeshImporterNode> &    getNodes            () const;
+        VG_INLINE       core::vector<MeshImporterNode> &    getNodes            ();
+        VG_INLINE const core::vector<core::u32> &           getBoneIndices      () const;
+        VG_INLINE const core::vector<core::float4x4> &      getBoneMatrices     () const;
+
+    private:
+        core::vector<MeshImporterNode>                      m_nodes;
+        core::vector<core::u32>                             m_boneIndices;
+        core::vector<core::float4x4>                        m_boneMatrices;
     };
 }
 
-//#if VG_ENABLE_INLINE
+#if VG_ENABLE_INLINE
 #include "Skeleton.inl"
-//#endif
+#endif

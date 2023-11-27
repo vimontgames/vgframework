@@ -8,6 +8,14 @@
 
 namespace vg::core
 {
+    //--------------------------------------------------------------------------------------
+    bool Object::registerProperties(IClassDesc & _desc)
+    {
+        _desc.registerPropertyEx(Object, m_name, "Name", IProperty::Flags::Hidden);
+
+        return true;
+    }
+
 	//--------------------------------------------------------------------------------------
 	Object::Object(const core::string & _name, IObject * _parent) :
 		m_refCount(1)
@@ -39,11 +47,15 @@ namespace vg::core
 	}
 
     //--------------------------------------------------------------------------------------
-    bool Object::registerProperties(IClassDesc & _desc)
+    void Object::OnPlay()
     {
-        _desc.registerPropertyEx(Object, m_name, "Name", IProperty::Flags::Hidden);
+        // TODO : save properties
+    }
 
-        return true;
+    //--------------------------------------------------------------------------------------
+    void Object::OnStop()
+    {
+        // TODO : restore properties
     }
 
     //--------------------------------------------------------------------------------------

@@ -17,4 +17,10 @@ namespace vg::renderer
     {
         return m_nodes;
     }
+
+    //--------------------------------------------------------------------------------------
+    VG_INLINE core::vector<MeshImporterNode> & Skeleton::getNodes()
+    {
+        return m_nodes;
+    }
 }

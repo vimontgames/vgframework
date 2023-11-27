@@ -3,18 +3,23 @@ using namespace vg::core;
 namespace vg::renderer
 {
     // Cooked mesh version
-    static const u32 MeshImporterDataVersion = 7;
+    static const u32 MeshImporterDataVersion = 9;
 
     //--------------------------------------------------------------------------------------
     bool MeshImporterNode::read(core::io::Buffer & _buffer)
     {
         _buffer.read(&name);
         _buffer.read(&parent_index);
+
         _buffer.read(&geometry_to_node);
         _buffer.read(&node_to_parent);
         _buffer.read(&node_to_world);
         _buffer.read(&geometry_to_world);
         _buffer.read(&normal_to_world);
+
+        _buffer.read(&rot);
+        _buffer.read(&pos);
+        _buffer.read(&scale);
 
         return true;
     }
@@ -24,11 +29,16 @@ namespace vg::renderer
     {
         _buffer.write(name);
         _buffer.write(parent_index);
+
         _buffer.write(geometry_to_node);
         _buffer.write(node_to_parent);
         _buffer.write(node_to_world);
         _buffer.write(geometry_to_world);
         _buffer.write(normal_to_world);
+
+        _buffer.write(rot);
+        _buffer.write(pos);
+        _buffer.write(scale);
 
         return true;
     }

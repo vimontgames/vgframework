@@ -17,6 +17,10 @@
 #include "renderer/DebugDraw/DebugDraw.h"
 #include "renderer/Animation/SkeletalAnimation.h"
 
+#if !VG_ENABLE_INLINE
+#include "MeshInstance.inl"
+#endif
+
 #include "shaders/system/rootConstants3D.hlsli"
 
 using namespace vg::core;
@@ -45,7 +49,9 @@ namespace vg::renderer
     MeshInstance::~MeshInstance()
     {
         VG_SAFE_RELEASE(m_instanceSkeleton);
-        VG_SAFE_RELEASE(m_animation);
+
+        for (uint i = 0; i < m_animationBindings.size(); ++i)
+            VG_SAFE_RELEASE(m_animationBindings[i].m_animation);
     }
 
     //--------------------------------------------------------------------------------------
@@ -131,18 +137,13 @@ namespace vg::renderer
         if (nullptr != _skeleton)
         {
             m_instanceSkeleton = new Skeleton("InstanceSkeleton", this);
-            m_instanceSkeleton->m_nodes = _skeleton->getNodes();
-            m_instanceSkeleton->m_boneIndices = _skeleton->getBoneIndices();
-            m_instanceSkeleton->m_boneMatrices = _skeleton->getBoneMatrices();                
+
+            m_instanceSkeleton->setNodes(_skeleton->getNodes());
+            m_instanceSkeleton->setBoneIndices(_skeleton->getBoneIndices());
+            m_instanceSkeleton->setBoneMatrices(_skeleton->getBoneMatrices());                
         }
 
         return true;
-    }
-
-    //--------------------------------------------------------------------------------------
-    const Skeleton * MeshInstance::getInstanceSkeleton() const
-    {
-        return m_instanceSkeleton;
     }
 
     //--------------------------------------------------------------------------------------
@@ -166,115 +167,262 @@ namespace vg::renderer
     //--------------------------------------------------------------------------------------
     bool MeshInstance::updateSkeleton()
     {
-        if (m_animation && m_instanceSkeleton)
+        VG_PROFILE_CPU("updateSkeleton");
+
+        bool skeletonUpdate = false;
+
+        if (nullptr != m_instanceSkeleton)
         {
-            const AnimImporterData & anim = m_animation->m_animData;
-
-            const float time = m_animation->getTime();
-
-            float frame_time = (time - anim.time_begin) * anim.framerate;
-            uint f0 = min((uint)frame_time + 0, anim.num_frames - 1);
-            uint f1 = min((uint)frame_time + 1, anim.num_frames - 1);
-            float t = min(frame_time - (float)f0, 1.0f);
-
             Skeleton & skeleton = *m_instanceSkeleton;
-            core::vector<MeshImporterNode> & skeletonNodes = skeleton.m_nodes;
+            core::vector<MeshImporterNode> & skeletonNodes = skeleton.getNodes();
 
-            for (size_t i = 0; i < skeletonNodes.size()-1; i++)
+            #if 1
+            // normalize weights
+            float weightSum = 0.0f;
+            for (uint j = 0; j < m_animationBindings.size(); ++j)
             {
-                const AnimNodeData & animNode = anim.animNodes[i];
-                
-                quaternion rot = animNode.rot.size() > 0 ? lerp(animNode.rot[f0], animNode.rot[f1], t) : animNode.const_rot;
-                float3 pos = animNode.pos.size() > 0 ? lerp(animNode.pos[f0], animNode.pos[f1], t) : animNode.const_pos;
-                float3 scale = animNode.scale.size() > 0 ? lerp(animNode.scale[f0], animNode.scale[f1], t) : animNode.const_scale;
-                
-                uint index = i;
-                if (i == 0)
-                    index = 0;
-                else if (i > 1)
-                    index = i + 1;
+                weightSum += m_animationBindings[j].m_animation->getWeight();
+            }
+            float tPoseWeight;
 
-                MeshImporterNode & skeletonNode = skeletonNodes[index];
-                skeletonNode.node_to_parent = MakeTRS(pos, rot, scale);
+            if (weightSum > 1.0f)
+            {
+                tPoseWeight = 0.0f;
+                const float invWeightSum = 1.0f / weightSum;
+                for (uint j = 0; j < m_animationBindings.size(); ++j)
+                    m_animationBindings[j].m_normalizedWeight = m_animationBindings[j].m_animation->getWeight() * invWeightSum;
+            }
+            else
+            {
+                tPoseWeight = 1.0f - weightSum;
+                for (uint j = 0; j < m_animationBindings.size(); ++j)
+                    m_animationBindings[j].m_normalizedWeight = m_animationBindings[j].m_animation->getWeight();
             }
 
-            // update hierarchy
+            // Update animations and blend
+            for (size_t i = 0; i < skeletonNodes.size(); i++)
             {
-                for (size_t i = 0; i < skeletonNodes.size() - 1; i++)
+                MeshImporterNode & skeletonNode = skeletonNodes[i];
+
+                // store TPose with model so that we can blend with T-Pose/restore skinning if no animation is present?
+                quaternion rot = skeletonNode.rot * tPoseWeight;
+                float3 pos = skeletonNode.pos * tPoseWeight;
+                float3 scale = skeletonNode.scale * tPoseWeight;
+
+                for (uint j = 0; j < m_animationBindings.size(); ++j)
                 {
-                    if (i == 1)
-                        continue;
+                    AnimationBinding & animationBinding = m_animationBindings[j];
+                    const SkeletalAnimation * animation = animationBinding.m_animation;
+                    const AnimImporterData & anim = animation->getAnimationData();
 
-                    MeshImporterNode & skeletonNode = skeletonNodes[i];
+                    const float time = animation->getTime();
 
-                    int index = 0;
-                    if (i > 1)
-                        index = i - 1;
+                    float frame_time = (time - anim.time_begin) * anim.framerate;
+                    uint f0 = min((uint)frame_time + 0, anim.num_frames - 1);
+                    uint f1 = min((uint)frame_time + 1, anim.num_frames - 1);
+                    float t = min(frame_time - (float)f0, 1.0f);
 
-                    if (skeletonNode.parent_index != 0xFFFFFFFF)
+                    // index in animation
+                    const int index = animationBinding.m_skeletonToAnimIndex[i];
+
+                    if (-1 != index)
                     {
                         const AnimNodeData & animNode = anim.animNodes[index];
-                        skeletonNode.node_to_world = mul(skeletonNodes[skeletonNode.parent_index].node_to_world, skeletonNode.node_to_parent);
-                    }
-                    else
-                    {
-                        skeletonNode.node_to_world = skeletonNode.node_to_parent;
+
+                        const quaternion animRot = animNode.rot.size() > 0 ? lerp(animNode.rot[f0], animNode.rot[f1], t) : animNode.const_rot;
+                        const float3 animPos = animNode.pos.size() > 0 ? lerp(animNode.pos[f0], animNode.pos[f1], t) : animNode.const_pos;
+                        const float3 animScale = animNode.scale.size() > 0 ? lerp(animNode.scale[f0], animNode.scale[f1], t) : animNode.const_scale;
+
+                        rot += animRot * animationBinding.m_normalizedWeight;
+                        pos += animPos * animationBinding.m_normalizedWeight;
+                        scale += animScale * animationBinding.m_normalizedWeight;
                     }
                 }
-                //for (size_t i = 0; i < vs->num_nodes; i++) 
-                //{
-                //    viewer_node * vn = &vs->nodes[i];
-                //
-                //    // ufbx stores nodes in order where parent nodes always precede child nodes so we can
-                //    // evaluate the transform hierarchy with a flat loop.
-                //    if (vn->parent_index >= 0)
-                //    {
-                //        vn->node_to_world = um_mat_mul(vs->nodes[vn->parent_index].node_to_world, vn->node_to_parent);
-                //    }
-                //    else {
-                //        vn->node_to_world = vn->node_to_parent;
-                //    }
-                //    vn->geometry_to_world = um_mat_mul(vn->node_to_world, vn->geometry_to_node);
-                //    vn->normal_to_world = um_mat_transpose(um_mat_inverse(vn->geometry_to_world));
-                //}
+
+                // Update skeleton node
+                skeletonNode.node_to_parent = MakeTRS(pos, rot, scale);
+
+                if (-1 != skeletonNode.parent_index)
+                {
+                    skeletonNode.node_to_world = mul(skeletonNodes[skeletonNode.parent_index].node_to_world, skeletonNode.node_to_parent);
+                }
+                else
+                {
+                    skeletonNode.node_to_world = skeletonNode.node_to_parent;
+                }
             }
-       
+            #else
+            // update animations
+            for (uint j = 0; j < m_animationBindings.size(); ++j)
+            {
+                AnimationBinding & animationBinding = m_animationBindings[j];
+
+                if (animationBinding.m_animation)
+                {
+                    const SkeletalAnimation * animation = animationBinding.m_animation;
+                    const AnimImporterData & anim = animation->m_animData;
+
+                    const float time = animation->getTime();
+
+                    float frame_time = (time - anim.time_begin) * anim.framerate;
+                    uint f0 = min((uint)frame_time + 0, anim.num_frames - 1);
+                    uint f1 = min((uint)frame_time + 1, anim.num_frames - 1);
+                    float t = min(frame_time - (float)f0, 1.0f);
+
+                    for (size_t i = 0; i < skeletonNodes.size() - 1; i++)
+                    {
+                        const AnimNodeData & animNode = anim.animNodes[i];
+
+                        quaternion rot = animNode.rot.size() > 0 ? lerp(animNode.rot[f0], animNode.rot[f1], t) : animNode.const_rot;
+                        float3 pos = animNode.pos.size() > 0 ? lerp(animNode.pos[f0], animNode.pos[f1], t) : animNode.const_pos;
+                        float3 scale = animNode.scale.size() > 0 ? lerp(animNode.scale[f0], animNode.scale[f1], t) : animNode.const_scale;
+
+                        const uint index = animationBinding.m_animToSkeletonIndex[i];
+
+                        MeshImporterNode & skeletonNode = skeletonNodes[index];
+                        skeletonNode.node_to_parent = MakeTRS(pos, rot, scale);
+                    }
+
+                    skeletonUpdate = true;
+                }
+            }
+
+            // blend anims and update hierarchy
+            if (skeletonUpdate)
+            {
+                for (size_t i = 0; i < skeletonNodes.size(); i++)
+                {
+                    MeshImporterNode & skeletonNode = skeletonNodes[i];
+
+                    for (uint j = 0; j < m_animationBindings.size(); ++j)
+                    {
+                        AnimationBinding & animationBinding = m_animationBindings[j];
+                        const SkeletalAnimation * animation = animationBinding.m_animation;
+                        const AnimImporterData & anim = animation->m_animData;
+
+                        const int index = animationBinding.m_skeletonToAnimIndex[i];
+
+                        if (-1 != index)
+                        {
+                            if (-1 != skeletonNode.parent_index)
+                            {
+                                skeletonNode.node_to_world = mul(skeletonNodes[skeletonNode.parent_index].node_to_world, skeletonNode.node_to_parent);
+                            }
+                            else
+                            {
+                                skeletonNode.node_to_world = skeletonNode.node_to_parent;
+                            }
+                        }
+                    }
+                }
+            }
+            #endif
         }
-        return true;
+
+        return skeletonUpdate;
     }
 
     //--------------------------------------------------------------------------------------
     bool MeshInstance::AddAnimation(ISkeletalAnimation * _animation)
     {
-        if (_animation != m_animation)
+        VG_SAFE_INCREASE_REFCOUNT(_animation);
+
+        AnimationBinding * binding = nullptr;
+        for (uint i = 0; i < m_animationBindings.size(); ++i)
         {
-            VG_SAFE_RELEASE(m_animation);
-            VG_SAFE_INCREASE_REFCOUNT(_animation);
-            m_animation = (SkeletalAnimation*)_animation;
-            
-            return true;
+            AnimationBinding & animationBinding = m_animationBindings[i];
+            if (animationBinding.m_animation == _animation)
+            {
+                binding = &animationBinding;
+                return true; // No need rebind an animation already binded to current model
+            }
         }
 
-        return false;
+        if (nullptr == binding)
+        {
+            binding = &m_animationBindings.push_empty();
+            binding->m_animation = (SkeletalAnimation*)_animation;
+        }    
+
+        // Rebind anim nodes indices to skeleton nodes indices
+        const vector<AnimNodeData> & animNodes = binding->m_animation->getAnimationData().animNodes;
+        binding->m_animToSkeletonIndex.reserve(animNodes.size());
+
+        const MeshModel * meshModel = (const MeshModel*)getModel(Lod::Lod0);
+        const Skeleton * meshSkeleton = meshModel->getSkeleton();
+        const vector<MeshImporterNode> & skeletonNodes = meshSkeleton->getNodes();
+        
+        for (uint i = 0; i < animNodes.size(); ++i)
+        {
+            const AnimNodeData & animNode = animNodes[i];
+
+            // TODO : use hash computed from node name during import to speed up the process
+            int index = -1;
+            for (uint j = 0; j < skeletonNodes.size(); ++j)
+            {
+                const MeshImporterNode & skeletonNode = skeletonNodes[j];
+                if (skeletonNode.name == animNode.name)
+                {
+                    index = j;
+                    break;
+                }
+            }
+            VG_ASSERT(-1 != index, "Could not find mapping for animation node %u \"%s\" in skin \"%s\"", i, animNode.name.c_str(), meshModel->getName().c_str());
+            binding->m_animToSkeletonIndex.push_back(index);
+        }
+
+        for (uint i = 0; i < skeletonNodes.size(); ++i)
+        {
+            const MeshImporterNode & skeletonNode = skeletonNodes[i];
+
+            int index = -1;
+            for (uint j = 0; j < binding->m_animToSkeletonIndex.size(); ++j)
+            {
+                if (binding->m_animToSkeletonIndex[j] == i)
+                {
+                    index = j;
+                    break;
+                }
+            }
+            //VG_ASSERT(-1 != index, "Could not find mapping for skin node %u \"%s\" in animation \"%s\"", i, skeletonNode.name.c_str(), _animation->getName().c_str());
+            binding->m_skeletonToAnimIndex.push_back(index);
+        }
+
+        return true;
     }
 
     //--------------------------------------------------------------------------------------
     bool MeshInstance::RemoveAnimation(ISkeletalAnimation * _animation)
     {
-        if (_animation == m_animation)
+        for (uint i = 0; i < m_animationBindings.size(); ++i)
         {
-            VG_SAFE_RELEASE(m_animation);
-            return true;
+            AnimationBinding & animationBinding = m_animationBindings[i];
+            if (animationBinding.m_animation == _animation)
+            {
+                VG_SAFE_RELEASE(animationBinding.m_animation);
+                m_animationBindings.erase(m_animationBindings.begin()+i);
+                return true;
+            }
         }
 
         return false;
     }
 
     //--------------------------------------------------------------------------------------
+    bool MeshInstance::HasSkeleton() const
+    {
+        return nullptr != getInstanceSkeleton();
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool MeshInstance::UpdateSkeleton()
+    {
+        return updateSkeleton();
+    }
+
+    //--------------------------------------------------------------------------------------
     bool MeshInstance::ShowSkeleton() const
     {
-        ((MeshInstance*)this)->updateSkeleton();
-
         VG_PROFILE_CPU("ShowSkeleton");
 
         float4x4 YUpToZUpMatrix = float4x4::rotation_x(PI / 2.0f); // mul(float4x4::rotation_x(PI / 2.0f), float4x4::rotation_y(PI));
@@ -288,17 +436,13 @@ namespace vg::renderer
             
             if (nullptr != skeleton)
             {
-                const auto & nodes = skeleton->m_nodes;
-                const auto & boneIndices = skeleton->m_boneIndices;
+                const auto & nodes = skeleton->getNodes();
+                const auto & boneIndices = skeleton->getBoneIndices();
                 for (uint j = 0; j < boneIndices.size(); ++j)
                 {
-                    int i = boneIndices[j];
+                    const int index = boneIndices[j];
 
-                    const MeshImporterNode & node = nodes[i];
-                    //if (0xFFFFFFFF != node.parent_index)
-                    //    node.node_to_world = mul(nodes[node.parent_index].node_to_world, node.node_to_world);
-                    //else
-                    //    node.node_to_world = node.node_to_parent;
+                    const MeshImporterNode & node = nodes[index];
 
                     // YUp skeleton displayed as ZUp
                     float4x4 boneMatrix = mul(transpose(node.node_to_world), YUpToZUpMatrix);
@@ -307,7 +451,7 @@ namespace vg::renderer
                     float3 boxSize = float3(0.01f, 0.01f, 0.01f);
                     dbgDraw->AddWireframeBox( -boxSize, boxSize, 0xFF00FF00, boneMatrix);
 
-                    if (0xFFFFFFFF != node.parent_index)
+                    if (-1 != node.parent_index)
                     {
                         const MeshImporterNode & parentNode = nodes[node.parent_index];
                         float4x4 parentBoneMatrix = mul(transpose(parentNode.node_to_world), YUpToZUpMatrix);

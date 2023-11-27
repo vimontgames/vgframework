@@ -3,7 +3,7 @@ using namespace vg::core;
 namespace vg::renderer
 {
     // Cooked anim version
-    static const u32 AnimImporterDataVersion = 0;
+    static const u32 AnimImporterDataVersion = 2;
 
     //--------------------------------------------------------------------------------------
     bool AnimNodeData::read(core::io::Buffer & _buffer)

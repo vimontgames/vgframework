@@ -30,10 +30,10 @@ namespace vg::renderer
 
         static MeshModel *              createFromImporterData  (const MeshImporterData & _data);
 
-    //private:
+    private:
         template <VertexFormat F> static gfx::Buffer * createVertexBufferFromImporterData(const MeshImporterData & _data);
 
-    //private:
+    private:
         MeshGeometry *                  m_geometry = nullptr;
         Skeleton *                      m_skeleton = nullptr;
     };

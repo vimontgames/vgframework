@@ -16,23 +16,28 @@ namespace vg::engine
     public:
         VG_CLASS_DECL(MeshComponent, core::Component);
 
-                        MeshComponent       (const core::string & _name, IObject * _parent);
-                        ~MeshComponent      ();
+                                            MeshComponent       (const core::string & _name, IObject * _parent);
+                                            ~MeshComponent      ();
 
-        void            Update              (double _dt) override;
+        void                                Update              (double _dt) override;
 
-        void            onPropertyChanged   (IObject * _object, const core::IProperty & _prop) override;
+        void                                onPropertyChanged   (IObject * _object, const core::IProperty & _prop) override;
 
-        void            onResourceLoaded    (core::IResource * _resource) override;
-        void            onResourceUnloaded  (core::IResource * _resource) override;
+        void                                onResourceLoaded    (core::IResource * _resource) override;
+        void                                onResourceUnloaded  (core::IResource * _resource) override;
 
-        MeshResource &  getMeshResource     () { return m_meshResource; }
+        VG_INLINE MeshResource &            getMeshResource     ();
+        VG_INLINE renderer::IMeshInstance * getMeshInstance     () const;
 
-    //private:
-        renderer::IMeshInstance *           m_meshInstance = nullptr;
+    private:
+        renderer::IMeshInstance *           m_meshInstance  = nullptr;
         MeshResource                        m_meshResource;
         MaterialResourceList                m_meshMaterials;
-        bool                                m_displayBones = false;
-        bool                                m_registered = false;
+        bool                                m_displayBones  = false;
+        bool                                m_registered    = false;
     };
 }
+
+#if VG_ENABLE_INLINE
+#include "MeshComponent.inl"
+#endif

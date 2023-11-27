@@ -50,13 +50,11 @@ namespace vg::engine
                 if (IAnimation * anim = (IAnimation *)animRes.getObject())
                 {
                     const float speed = animRes.getSpeed();
-
                     const float duration = anim->GetLength();
                     const float framerate = anim->GetFramerate();
                     
                     float t = animRes.getTime();
-                    t = fmod(float(t + _dt / 1000.0f * speed), duration);
-                    animRes.setTime(t);
+                    animRes.setTime((float)(t + _dt/1000.0f));
                 }
             }
         }
@@ -83,7 +81,7 @@ namespace vg::engine
         if (meshComponent)
         {
             renderer::ISkeletalAnimation * anim = (renderer::ISkeletalAnimation *)_resource->getObject();
-            meshComponent->m_meshInstance->AddAnimation(anim);
+            meshComponent->getMeshInstance()->AddAnimation(anim);
         }
 
         super::onResourceLoaded(_resource);
@@ -96,9 +94,23 @@ namespace vg::engine
         if (meshComponents)
         {
             renderer::ISkeletalAnimation * anim = (renderer::ISkeletalAnimation *)_resource->getObject();
-            meshComponents->m_meshInstance->RemoveAnimation(anim);
+            meshComponents->getMeshInstance()->RemoveAnimation(anim);
         }
 
         super::onResourceUnloaded(_resource);
+    }
+
+    //--------------------------------------------------------------------------------------
+    IAnimationResource * AnimationComponent::GetAnimation(const core::string & _name)
+    {
+        auto & anims = m_animations.getAnimationResources();
+        for (uint i = 0; i < anims.size(); ++i)
+        {
+            auto & anim = anims[i];
+            if (anim.getName() == _name)
+                return &anim;
+        }
+        VG_WARNING("[Animation] Could not find Animation \"%s\"", _name.c_str());
+        return nullptr;
     }
 }

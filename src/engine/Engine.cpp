@@ -188,8 +188,8 @@ namespace vg::engine
 
         //_desc.registerPropertyCallback(Engine, createProject, "Create Project");
         
-        _desc.registerPropertyCallbackEx(DisplayOptions, load, "Load", IProperty::Flags::None);
-        _desc.registerPropertyCallbackEx(DisplayOptions, save, "Save", IProperty::Flags::SameLine);
+        //_desc.registerPropertyCallbackEx(Engine, load, "Load", IProperty::Flags::None);
+        //_desc.registerPropertyCallbackEx(Engine, save, "Save", IProperty::Flags::SameLine);
 
         return true;
     }
@@ -327,7 +327,7 @@ namespace vg::engine
         m_universe = (Universe*)CreateFactoryObject(Universe, "DefaultUniverse", this);
 
         Scene * editor = (Scene *)CreateFactoryObject(Scene, "Editor", m_universe);
-        m_universe->addScene(editor);
+        m_universe->AddScene(editor);
         editor->release();
 
         GameObject * rootGameObject = (GameObject *)CreateFactoryObject(GameObject, "Root", editor);
@@ -448,10 +448,10 @@ namespace vg::engine
 
         if (m_universe)
         {
-            const uint sceneCount = m_universe->getSceneCount();
+            const uint sceneCount = m_universe->GetSceneCount();
             for (uint i = 0; i < sceneCount; ++i)
             {
-                Scene * scene = (Scene*)m_universe->getScene(i);
+                Scene * scene = (Scene*)m_universe->GetScene(i);
                 GameObject * root = scene->getRoot();
                 if (root)
                     root->Update(m_time.m_dt);
@@ -521,7 +521,6 @@ namespace vg::engine
         stop();
     }
 
-
     //--------------------------------------------------------------------------------------
     void Engine::Pause()
     {
@@ -532,6 +531,66 @@ namespace vg::engine
     void Engine::Resume()
     {
         resume();
+    }
+
+    //--------------------------------------------------------------------------------------
+    void Engine::play()
+    {
+        VG_INFO("[Engine] Play");
+        m_isPlaying = true;
+        m_isPaused = false;
+
+        if (nullptr != m_universe)
+        {
+            for (uint i = 0; i < m_universe->GetSceneCount(); ++i)
+            {
+                const IScene * scene = m_universe->GetScene(i);
+                if (nullptr != scene)
+                {
+                    IObject * root = scene->GetRoot();
+                    if (nullptr != root)
+                        root->OnPlay();
+                }
+            }
+        }
+    }
+
+    //--------------------------------------------------------------------------------------
+    void Engine::pause()
+    {
+        VG_INFO("[Engine] Pause");
+        VG_ASSERT(m_isPlaying);
+        m_isPaused = true;
+    }
+
+    //--------------------------------------------------------------------------------------
+    void Engine::resume()
+    {
+        VG_INFO("[Engine] Resume");
+        VG_ASSERT(m_isPlaying && m_isPaused);
+        m_isPaused = true;
+    }
+
+    //--------------------------------------------------------------------------------------
+    void Engine::stop()
+    {
+        VG_INFO("[Engine] Stop");
+        m_isPlaying = false;
+        m_isPaused = false;
+
+        if (nullptr != m_universe)
+        {
+            for (uint i = 0; i < m_universe->GetSceneCount(); ++i)
+            {
+                const IScene * scene = m_universe->GetScene(i);
+                if (nullptr != scene)
+                {
+                    IObject * root = scene->GetRoot();
+                    if (nullptr != root)
+                        root->OnStop();
+                }
+            }
+        }
     }
 
     //--------------------------------------------------------------------------------------

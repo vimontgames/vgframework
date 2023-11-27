@@ -1,6 +1,6 @@
 #pragma once
 
-#include "core/Resource/Resource.h"
+#include "engine/IAnimationResource.h"
 
 namespace vg::renderer
 {
@@ -9,10 +9,10 @@ namespace vg::renderer
 
 namespace vg::engine
 {
-    class AnimationResource : public core::Resource
+    class AnimationResource : public IAnimationResource
     {
     public:
-        VG_CLASS_DECL(AnimationResource, core::Resource)
+        VG_CLASS_DECL(AnimationResource, IAnimationResource)
 
         AnimationResource(const core::string & _name = "", core::IObject * _parent = nullptr);
         ~AnimationResource();
@@ -25,20 +25,35 @@ namespace vg::engine
 
         void                                    onPropertyChanged       (core::IObject * _object, const core::IProperty & _prop) override;
 
+        bool                                    IsPlaying               () const final override;
+        bool                                    IsFinished              () const final override;
+
+        bool                                    PlayLoop                () final override;
+        bool                                    PlayOnce                () final override;
+
+        bool                                    Stop                    () final override;
+
         VG_INLINE const renderer::IAnimation *  getAnimation            () const { return (renderer::IAnimation *)m_object; }
         VG_INLINE renderer::IAnimation *        getAnimation            () { return (renderer::IAnimation *)m_object; }
 
         VG_INLINE bool                          isPlaying               () const { return m_play; }
         VG_INLINE float                         getTime                 () const { return m_time; }
+        VG_INLINE float                         getWeight               () const { return m_weight; }
         VG_INLINE float                         getSpeed                () const { return m_speed; }
-        //VG_INLINE float                         getWeight               () const { return m_weight; }
 
         void                                    setTime                 (float _time);
+        void                                    setWeight               (float _weight);
 
     private:
-        bool                                    m_play = false;
-        float                                   m_time = 0.0f;
-        float                                   m_speed = 1.0f;
-        //float                                   m_weight = 1.0f;
+        static bool			                    playAnim                (IObject * _object);
+        static bool			                    stopAnim                (IObject * _object);
+
+    private:
+        bool                                    m_play   = false;
+        bool                                    m_loop      = false;
+        float                                   m_time      = 0.0f;
+        float                                   m_weight    = 0.0f;
+        float                                   m_speed     = 1.0f;
+
     };
 }

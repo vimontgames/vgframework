@@ -1,5 +1,6 @@
 #include "AnimationResource.h"
 #include "renderer/IAnimation.h"
+#include "core/Math/Math.h"
 
 using namespace vg::core;
 using namespace vg::renderer;
@@ -23,9 +24,17 @@ namespace vg::engine
     {
         super::registerProperties(_desc);
 
+        _desc.registerPropertyCallback(AnimationResource, playAnim, "Play");
+        _desc.registerPropertyCallbackEx(AnimationResource, stopAnim, "Stop", IProperty::Flags::SameLine);
+
         _desc.registerProperty(AnimationResource, m_play, "Play");
+        _desc.registerPropertyEx(AnimationResource, m_loop, "Loop", IProperty::Flags::SameLine);
+
+        _desc.registerProperty(AnimationResource, m_name, "Name");
         _desc.registerProperty(AnimationResource, m_time, "Time");
-        //_desc.registerProperty(AnimationResource, m_weight, "Weight");
+        _desc.registerProperty(AnimationResource, m_weight, "Weight");
+        _desc.setPropertyRange(AnimationResource, m_weight, float2(0.0f, 1.0f));
+        _desc.registerProperty(AnimationResource, m_speed, "Speed");
 
         _desc.registerResizeVectorFunc(AnimationResource, ResizeAnimationResourceVector);
 
@@ -34,7 +43,7 @@ namespace vg::engine
 
     //--------------------------------------------------------------------------------------
     AnimationResource::AnimationResource(const core::string & _name, core::IObject * _parent) :
-        Resource(_name, _parent)
+        super(_name, _parent)
     {
 
     }
@@ -70,8 +79,81 @@ namespace vg::engine
     core::IObject * AnimationResource::load(const string & _file)
     {
         IAnimation * anim = Engine::get()->GetRenderer()->loadAnimation(_file);
-        VG_ASSERT(nullptr != anim);
         return anim;
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool AnimationResource::playAnim(IObject * _object)
+    {
+        return ((AnimationResource *)_object)->PlayOnce();
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool AnimationResource::stopAnim(IObject * _object)
+    {
+        return ((AnimationResource *)_object)->Stop();
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool AnimationResource::PlayOnce()
+    {
+        if (!m_play)
+        {
+            setTime(0.0f);
+            setWeight(1.0f);
+            m_play = true;
+            m_loop = false;
+            return true;
+        }
+
+        return false;
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool AnimationResource::IsPlaying() const
+    {
+        if (IAnimation * anim = (IAnimation *)getObject())
+            return m_play;
+        else
+            return false;
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool AnimationResource::IsFinished() const
+    {
+        if (IAnimation * anim = (IAnimation *)getObject())
+            return !m_loop && m_time >= anim->GetLength();
+        else
+            return true;
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool AnimationResource::PlayLoop()
+    {
+        if (!m_play)
+        {
+            setTime(0.0f);
+            setWeight(1.0f);
+            m_play = true;
+            m_loop = true;
+            return true;
+        }
+
+        return false;
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool AnimationResource::Stop()
+    {
+        if (m_play)
+        {
+            setTime(0.0f);
+            setWeight(0.0f);
+            m_play = false;
+            return true;
+        }
+
+        return false;
     }
 
     //--------------------------------------------------------------------------------------
@@ -79,14 +161,35 @@ namespace vg::engine
     {
         if (!strcmp(_prop.getName(), "m_time"))
             setTime(m_time);
+        else if (!strcmp(_prop.getName(), "m_weight"))
+            setWeight(m_weight);
     }
 
     //--------------------------------------------------------------------------------------
     void AnimationResource::setTime(float _time)
     {
-        m_time = _time;
+        if (IAnimation * anim = (IAnimation *)getObject())
+        {
+            const float animLength = anim->GetLength();
+
+            if (m_loop)
+                m_time = fmod(_time, animLength);
+            else
+                m_time = _time;
+
+            anim->SetTime(m_time);
+        }
+    }
+
+    //--------------------------------------------------------------------------------------
+    void AnimationResource::setWeight(float _weight)
+    {
+        m_weight = _weight;
+
+        if (m_weight == 0.0f)
+            m_play = false;
 
         if (IAnimation * anim = getAnimation())
-            anim->SetTime(_time);
-    }
+            anim->SetWeight(_weight);
+    }    
 }

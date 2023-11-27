@@ -17,12 +17,17 @@ namespace vg::renderer
         bool write(core::io::Buffer & _buffer) const;
 
         core::string name;
-        core::u32 parent_index;
+        core::i16 parent_index;
+
         core::float4x4 geometry_to_node;
         core::float4x4 node_to_parent;
         core::float4x4 node_to_world;
         core::float4x4 geometry_to_world;
         core::float4x4 normal_to_world;
+
+        core::quaternion  rot;
+        core::float3      pos;
+        core::float3      scale;
     };
 
     class MeshImporterData

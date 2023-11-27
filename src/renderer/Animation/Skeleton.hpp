@@ -1,8 +1,8 @@
 #include "Skeleton.h"
 
-//#if !VG_ENABLE_INLINE
-//#include "Skeleton.inl"
-//#endif
+#if !VG_ENABLE_INLINE
+#include "Skeleton.inl"
+#endif
 
 using namespace vg::core;
 
@@ -16,6 +16,25 @@ namespace vg::renderer
         super::registerProperties(_desc);
 
         return true;
+    }
+
+    //--------------------------------------------------------------------------------------
+    uint Skeleton::GetNodeCount() const
+    {
+        return (uint)m_nodes.size();
+    }
+    //--------------------------------------------------------------------------------------
+    const core::string Skeleton::GetNodeName(uint _index) const
+    {
+        VG_ASSERT(_index < m_nodes.size());
+        return m_nodes[_index].name;
+    }
+
+    //--------------------------------------------------------------------------------------
+    core::i16 Skeleton::GetParentIndex(core::uint _index) const 
+    {
+        VG_ASSERT(_index < m_nodes.size());
+        return m_nodes[_index].parent_index;
     }
 
     //--------------------------------------------------------------------------------------

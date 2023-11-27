@@ -24,21 +24,36 @@ namespace vg::renderer
         MeshInstance(const core::string & _name, core::IObject * _parent);
         ~MeshInstance();
 
-        void                SetModel            (core::Lod _lod, core::IModel * _model) final override;
-        bool                ShowSkeleton        () const final override;
+        void                            SetModel            (core::Lod _lod, core::IModel * _model) final override;
 
-        bool                AddAnimation        (ISkeletalAnimation * _animation) final override;
-        bool                RemoveAnimation     (ISkeletalAnimation * _animation) final override;
+        bool                            HasSkeleton         () const final override;
+        bool                            UpdateSkeleton      () final override;
+        bool                            ShowSkeleton        () const final override;
 
-        void                Draw                (const RenderContext & _renderContext, gfx::CommandList * _cmdList) const final override;
+        bool                            AddAnimation        (ISkeletalAnimation * _animation) final override;
+        bool                            RemoveAnimation     (ISkeletalAnimation * _animation) final override;
 
-        bool                setInstanceSkeleton (const Skeleton * _skeleton);
-        const Skeleton *    getInstanceSkeleton () const;
+        void                            Draw                (const RenderContext & _renderContext, gfx::CommandList * _cmdList) const final override;
 
-        bool                updateSkeleton      ();
+        bool                            setInstanceSkeleton (const Skeleton * _skeleton);
+        VG_INLINE const Skeleton *      getInstanceSkeleton () const;
+
+        bool                            updateSkeleton      ();
 
     private:
-        Skeleton *          m_instanceSkeleton = nullptr;
-        SkeletalAnimation * m_animation        = nullptr;
+        Skeleton *                      m_instanceSkeleton = nullptr;
+
+        struct AnimationBinding
+        {
+            SkeletalAnimation *         m_animation = nullptr;
+            core::vector<core::i16>     m_animToSkeletonIndex;
+            core::vector<core::i16>     m_skeletonToAnimIndex;
+            float                       m_normalizedWeight = 0.0f;
+        };
+        core::vector<AnimationBinding>  m_animationBindings;
     };
 }
+
+#if VG_ENABLE_INLINE
+#include "MeshInstance.inl"
+#endif

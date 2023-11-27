@@ -64,6 +64,12 @@
     <None Include="Animation\Skeleton.inl">
       <Filter>Animation</Filter>
     </None>
+    <None Include="Instance\Mesh\MeshInstance.inl">
+      <Filter>Instance\Mesh</Filter>
+    </None>
+    <None Include="Animation\SkeletalAnimation.inl">
+      <Filter>Animation</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Precomp.h" />
@@ -321,6 +327,7 @@
     <ClInclude Include="DebugDraw\DebugDraw.h">
       <Filter>DebugDraw</Filter>
     </ClInclude>
+    <ClInclude Include="ISkeleton.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Pass">

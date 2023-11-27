@@ -59,7 +59,6 @@ namespace vg::engine
     core::IObject * TextureResource::load(const string & _file)
     {
         gfx::ITexture * texture = Engine::get()->GetRenderer()->loadTexture(_file);
-        VG_ASSERT(nullptr != texture);
         return texture;
     }
 }

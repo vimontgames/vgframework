@@ -1,6 +1,12 @@
 #pragma once
 #include "core/Component/Behaviour/Behaviour.h"
 
+enum PlayerState : vg::core::u8
+{
+    Idle = 0,
+    Hello
+};
+
 class PlayerBehaviour : public vg::core::Component
 {
 public:
@@ -13,4 +19,5 @@ public:
 
 private:
     vg::core::u8    m_joypadID = 0;
+    PlayerState     m_playerState = PlayerState::Idle;
 };

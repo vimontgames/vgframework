@@ -1,20 +1,20 @@
-namespace vg::engine
+namespace vg::renderer
 {
     //--------------------------------------------------------------------------------------
-    VG_INLINE bool Engine::isPlaying() const
-    {
-        return m_isPlaying;
+    VG_INLINE float SkeletalAnimation::getTime() const
+    { 
+        return m_time; 
     }
 
     //--------------------------------------------------------------------------------------
-    VG_INLINE bool Engine::isPaused() const
+    VG_INLINE float SkeletalAnimation::getWeight() const
     {
-        return m_isPaused;
+        return m_weight;
     }
 
     //--------------------------------------------------------------------------------------
-    VG_INLINE const Time & Engine::getTime() const
+    VG_INLINE const AnimImporterData & SkeletalAnimation::getAnimationData() const
     {
-        return m_time;
+        return m_animData;
     }
 }

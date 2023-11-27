@@ -9,6 +9,10 @@
 
 #include "MaterialResourceList.hpp"
 
+#if !VG_ENABLE_INLINE
+#include "MeshComponent.inl"
+#endif
+
 using namespace vg::core;
 using namespace vg::renderer;
 
@@ -62,8 +66,13 @@ namespace vg::engine
             m_meshInstance->setColor(go->getColor());
         }
 
-        if (m_displayBones)
-            m_meshInstance->ShowSkeleton();
+        if (m_meshInstance->HasSkeleton())
+        {
+            m_meshInstance->UpdateSkeleton();
+
+            if (m_displayBones)
+                m_meshInstance->ShowSkeleton();
+        }
     }
 
     //--------------------------------------------------------------------------------------

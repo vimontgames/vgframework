@@ -10,19 +10,28 @@ namespace vg::renderer
     public:
         VG_CLASS_DECL(SkeletalAnimation, ISkeletalAnimation)
 
-                            SkeletalAnimation       (const core::string & _name, core::IObject * _parent);
-                            ~SkeletalAnimation      ();
+                                            SkeletalAnimation       (const core::string & _name, core::IObject * _parent);
+                                            ~SkeletalAnimation      ();
 
-        float               GetLength               () const final override;
-        float               GetFramerate            () const final override;
-        bool                SetTime                 (float _time) final override;
+        float                               GetLength               () const final override;
+        float                               GetFramerate            () const final override;
 
-        static IAnimation * createFromImporterData  (const AnimImporterData & _data);
+        bool                                SetTime                 (float _time) final override;
+        bool                                SetWeight               (float _weight) final override;
 
-        VG_INLINE float     getTime                 () const { return m_time;}
+        static IAnimation *                 createFromImporterData  (const AnimImporterData & _data);
 
-    //private:
-        float               m_time = 0.0f;
-        AnimImporterData    m_animData;    
+        VG_INLINE float                     getTime                 () const;
+        VG_INLINE float                     getWeight               () const;
+        VG_INLINE const AnimImporterData &  getAnimationData        () const;
+
+    private:
+        float                               m_time = 0.0f;
+        float                               m_weight = 0.0f;
+        AnimImporterData                    m_animData;    
     };
 }
+
+#if VG_ENABLE_INLINE
+#include "SkeletalAnimation.inl"
+#endif

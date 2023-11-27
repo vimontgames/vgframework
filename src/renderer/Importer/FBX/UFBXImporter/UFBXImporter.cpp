@@ -169,12 +169,20 @@ namespace vg::renderer
                 VG_DEBUGPRINT("Skin Node %u : %s\n", i, UFBXNode->name.data);
 
                 node.name = UFBXNode->name.data;
-                node.parent_index = UFBXNode->parent ? UFBXNode->parent->typed_id : 0xFFFFFFFF;
+                node.parent_index = UFBXNode->parent ? UFBXNode->parent->typed_id : -1;
+
                 node.node_to_parent = UFBXMatrixToFloat4x3(UFBXNode->node_to_parent);
                 node.node_to_world = UFBXMatrixToFloat4x3(UFBXNode->node_to_world);
                 node.geometry_to_node = UFBXMatrixToFloat4x3(UFBXNode->geometry_to_node);
                 node.geometry_to_world = UFBXMatrixToFloat4x3(UFBXNode->geometry_to_world);
                 node.normal_to_world = UFBXMatrixToFloat4x3(ufbx_matrix_for_normals(&UFBXNode->geometry_to_world));
+
+                // Store original TRS
+                ufbx_transform transform = ufbx_evaluate_transform(&_UFBXScene->anim_stacks[0]->anim, UFBXNode, 0.0f);
+
+                node.rot = UFBXQuatToQuat(transform.rotation);
+                node.pos = UFBXVec3ToFloat3(transform.translation);
+                node.scale = UFBXVec3ToFloat3(transform.scale);
             }
 
             UFbxSkin = _UFbxMesh->skin_deformers[0];
@@ -440,11 +448,12 @@ namespace vg::renderer
         // Sample the animations of all nodes and blend channels in the stack
         for (size_t i = 0; i < _UFBXScene->nodes.count; i++)
         {
-            VG_DEBUGPRINT("Anim Node %u : %s\n", i, _UFBXScene->nodes.data[i]->name.data);
+            ufbx_node * UFBXNode = _UFBXScene->nodes.data[i];
+            VG_DEBUGPRINT("Anim Node %u : %s (Bone:%s)\n", i, UFBXNode->name.data, UFBXNode->bone? "Yes" : "No");
 
             AnimNodeData animNodeData;
 
-            if (loadFBXAnimNode(_UFBXAnimStack, _UFBXScene->nodes.data[i], _animData, animNodeData))
+            if (loadFBXAnimNode(_UFBXAnimStack, UFBXNode, _animData, animNodeData))
                 _animData.animNodes.push_back(animNodeData);
         }
 
@@ -454,6 +463,8 @@ namespace vg::renderer
     //--------------------------------------------------------------------------------------
     bool UFBXImporter::loadFBXAnimNode(const ufbx_anim_stack * _UFBXAnimStack, const ufbx_node * _UFBXNode, const AnimImporterData & _animData, AnimNodeData & _animNodeData)
     {
+        _animNodeData.name = _UFBXNode->name.data;
+
         _animNodeData.rot.reserve(_animData.num_frames);
         _animNodeData.pos.reserve(_animData.num_frames);
         _animNodeData.scale.reserve(_animData.num_frames);
