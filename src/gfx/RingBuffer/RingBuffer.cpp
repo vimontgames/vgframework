@@ -50,7 +50,7 @@ namespace vg::gfx
     //--------------------------------------------------------------------------------------
     core::uint_ptr RingBuffer::alloc(size_t _size, size_t _alignment)
     {
-        const size_t totalSize = m_buffer->getBufDesc().size();
+        const size_t totalSize = m_buffer->getBufDesc().getSize();
         const size_t alignedSize = (_size + _alignment - 1) & ~(_alignment - 1);
 
         if (m_offsetCur + alignedSize < totalSize)

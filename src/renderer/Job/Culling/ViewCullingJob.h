@@ -12,16 +12,19 @@ namespace vg::renderer
 {
     class View;
     class IGraphicInstance;
+    class MeshInstance;
  
     struct ViewCullingJobOutput
     {
-        GraphicInstanceList m_instanceLists[core::enumCount<GraphicInstanceListType>()];
-
         void clear()
         {
             for (core::uint i = 0; i < core::enumCount<GraphicInstanceListType>(); ++i)
                 m_instanceLists[i].clear();
+            m_skins.clear();
         }
+
+        GraphicInstanceList             m_instanceLists[core::enumCount<GraphicInstanceListType>()];
+        core::vector<MeshInstance *>    m_skins;
     };
 
     class ViewCullingJob : public core::Job
@@ -36,7 +39,7 @@ namespace vg::renderer
         void cullGameObjectRecur(const core::GameObject * _go);
 
     private:
-        VG_INLINE void dispatch(const IGraphicInstance * _instance);
+        VG_INLINE void dispatch(IGraphicInstance * _instance);
         VG_INLINE void add(GraphicInstanceListType _type, const IGraphicInstance * _instance);
 
     private:

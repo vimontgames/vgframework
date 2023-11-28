@@ -31,6 +31,7 @@ using namespace vg::gfx;
 
 #include "Compute/ComputePass.hpp"
 #include "Compute/ComputePostProcess/ComputePostProcessPass.hpp"
+#include "Compute/ComputeSkinning/ComputeSkinningPass.hpp"
 
 #include "Update/UpdatePass.hpp"
 #include "Update/ViewConstants/ViewConstantsUpdatePass.hpp"

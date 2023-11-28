@@ -21,7 +21,9 @@ namespace vg::gfx
 
         }
 
-        core::u32 size() const { return elementSize * elementCount; }
+        core::u32 getSize() const { return elementSize * elementCount; }
+        core::u32 getElementCount() const { return elementCount; }
+        core::u32 getElementSize() const { return elementSize; }
 
 		inline bool testBindFlags(BindFlags _flags) const { return resource.testBindFlags(_flags); }
 

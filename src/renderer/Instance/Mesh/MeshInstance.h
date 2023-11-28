@@ -15,18 +15,27 @@ namespace vg::renderer
     class DisplayOptions;
     class Skeleton;
     class SkeletalAnimation;
+    class MeshModel;
 
     class MeshInstance : public IMeshInstance
     {
     public:
         VG_CLASS_DECL(MeshInstance, IMeshInstance);
 
+        enum RuntimeFlags : core::u32
+        {
+            SkinLOD0 = 0x00000001,
+            //SkinLOD1 = 0x00000002,
+            //SkinLOD2 = 0x00000004,
+            //SkinLOD3 = 0x00000008
+        };
+
         MeshInstance(const core::string & _name, core::IObject * _parent);
         ~MeshInstance();
 
         void                            SetModel            (core::Lod _lod, core::IModel * _model) final override;
 
-        bool                            HasSkeleton         () const final override;
+        bool                            IsSkinned           () const final override;
         bool                            UpdateSkeleton      () final override;
         bool                            ShowSkeleton        () const final override;
 
@@ -37,10 +46,15 @@ namespace vg::renderer
 
         bool                            setInstanceSkeleton (const Skeleton * _skeleton);
         VG_INLINE const Skeleton *      getInstanceSkeleton () const;
+        const MeshModel *               getMeshModel        (core::Lod _lod) const;
 
         bool                            updateSkeleton      ();
 
+        VG_INLINE bool                  setRuntimeFlag      (RuntimeFlags _flag);
+        VG_INLINE bool                  clearRuntimeFlag    (RuntimeFlags _flag);
+
     private:
+        core::atomic<core::u32>         m_runtimeFlags;
         Skeleton *                      m_instanceSkeleton = nullptr;
 
         struct AnimationBinding

@@ -2,6 +2,10 @@
 
 using namespace vg::core;
 
+#if !VG_ENABLE_INLINE
+#include "MeshGeometry.inl"
+#endif
+
 namespace vg::renderer
 {
     VG_REGISTER_OBJECT_CLASS(MeshGeometry, "Mesh Geometry");
@@ -12,6 +16,10 @@ namespace vg::renderer
         super::registerProperties(_desc);
 
         _desc.registerPropertyEnumEx(MeshGeometry, VertexFormat, m_vertexFormat, "Vertex Format", IProperty::Flags::ReadOnly);
+        _desc.registerPropertyEx(MeshGeometry, m_indexCount, "Index Count", IProperty::Flags::ReadOnly);
+        _desc.registerPropertyEx(MeshGeometry, m_indexSize, "Index Size", IProperty::Flags::ReadOnly);
+        _desc.registerPropertyEx(MeshGeometry, m_vertexCount, "Vertex Count", IProperty::Flags::ReadOnly);
+        _desc.registerPropertyEx(MeshGeometry, m_vertexSize, "Vertex Size", IProperty::Flags::ReadOnly);
         _desc.registerPropertyEx(MeshGeometry, m_indexBufferOffset, "IB Offset", IProperty::Flags::ReadOnly | IProperty::Flags::Hidden);
         _desc.registerPropertyEx(MeshGeometry, m_vertexBufferOffset, "VB Offset", IProperty::Flags::ReadOnly | IProperty::Flags::Hidden);
         _desc.registerPropertyObjectVectorEx(MeshGeometry, m_batches, Batch, "Batches", IProperty::Flags::ReadOnly);
@@ -41,13 +49,6 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    VertexFormat MeshGeometry::getVertexFormat() const
-    {
-        VG_ASSERT(m_vertexFormat != (VertexFormat)-1);
-        return m_vertexFormat;
-    }
-
-    //--------------------------------------------------------------------------------------
     void MeshGeometry::setIndexBuffer(gfx::Buffer * _ib, core::u32 _offset)
     {
         if (_ib != m_indexBuffer)
@@ -55,6 +56,18 @@ namespace vg::renderer
             VG_SAFE_INCREASE_REFCOUNT(_ib);
             VG_SAFE_RELEASE(m_indexBuffer);
             m_indexBuffer = _ib;
+
+            if (nullptr != _ib)
+            {
+                const auto & desc = _ib->getBufDesc();
+                m_indexCount = desc.getElementCount();
+                m_indexSize = desc.getElementSize();
+            }
+            else
+            {
+                m_indexCount = 0;
+                m_indexSize = 0;
+            }
         }
 
         if (_offset != m_indexBufferOffset)
@@ -69,34 +82,22 @@ namespace vg::renderer
             VG_SAFE_INCREASE_REFCOUNT(_vb);
             VG_SAFE_RELEASE(m_vertexBuffer);
             m_vertexBuffer = _vb;
+
+            if (nullptr != _vb)
+            {
+                const auto & desc = _vb->getBufDesc();
+                m_vertexCount = desc.getElementCount();
+                m_vertexSize = desc.getElementSize();
+            }
+            else
+            {
+                m_vertexCount = 0;
+                m_vertexSize = 0;
+            }
         }
 
         if (_offset != m_vertexBufferOffset)
             m_vertexBufferOffset = _offset;
-    }
-
-    //--------------------------------------------------------------------------------------
-    gfx::Buffer * MeshGeometry::getIndexBuffer() const
-    {
-        return m_indexBuffer;
-    }
-
-    //--------------------------------------------------------------------------------------
-    core::u32 MeshGeometry::getIndexBufferOffset() const
-    {
-        return m_indexBufferOffset;
-    }
-
-    //--------------------------------------------------------------------------------------
-    gfx::Buffer * MeshGeometry::getVertexBuffer() const
-    {
-        return m_vertexBuffer;
-    }
-
-    //--------------------------------------------------------------------------------------
-    core::u32 MeshGeometry::getVertexBufferOffset() const
-    {
-        return m_vertexBufferOffset;
     }
 
     //--------------------------------------------------------------------------------------
@@ -109,12 +110,7 @@ namespace vg::renderer
               batch.offset = _offset;
 
         m_batches.push_back(batch);
-        return count;
-    }
 
-    //--------------------------------------------------------------------------------------
-    const core::vector<Batch> & MeshGeometry::batches() const
-    {
-        return m_batches;
+        return count;
     }
 }

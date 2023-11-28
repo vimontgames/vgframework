@@ -66,7 +66,7 @@ namespace vg::engine
             m_meshInstance->setColor(go->getColor());
         }
 
-        if (m_meshInstance->HasSkeleton())
+        if (m_meshInstance->IsSkinned())
         {
             m_meshInstance->UpdateSkeleton();
 
@@ -113,7 +113,7 @@ namespace vg::engine
             {
                 auto * picking = Engine::get()->GetRenderer()->GetPicking();
                 PickingID id = picking->GetPickingID(this);
-                m_meshInstance->setPickingID(id);
+                m_meshInstance->SetPickingID(id);
                 getGameObject()->addGraphicInstance(m_meshInstance);
                 m_registered = true;
             }
@@ -146,8 +146,8 @@ namespace vg::engine
             if (m_registered)
             {
                 auto * picking = Engine::get()->GetRenderer()->GetPicking();
-                picking->ReleasePickingID(m_meshInstance->getPickingID());
-                m_meshInstance->resetPickingID();
+                picking->ReleasePickingID(m_meshInstance->GetPickingID());
+                m_meshInstance->ClearPickingID();
                 getGameObject()->removeGraphicInstance(m_meshInstance);
                 m_registered = false;
             }

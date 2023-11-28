@@ -313,7 +313,7 @@ namespace vg::gfx::dx12
 
             d3d12IBView.BufferLocation = _ib->getResource().getd3d12BufferResource()->GetGPUVirtualAddress();
             d3d12IBView.Format = ibDesc.elementSize == 2 ? DXGI_FORMAT_R16_UINT : DXGI_FORMAT_R32_UINT;
-            d3d12IBView.SizeInBytes = ibDesc.size();
+            d3d12IBView.SizeInBytes = ibDesc.getSize();
         }
 
         m_d3d12graphicsCmdList->IASetIndexBuffer(&d3d12IBView);
@@ -445,7 +445,7 @@ namespace vg::gfx::dx12
         {
             auto * device = gfx::Device::get();
             auto uploadBuffer = device->getUploadBuffer();
-            result.data = uploadBuffer->map(_buffer->getBufDesc().size(), D3D12_DEFAULT_RESOURCE_PLACEMENT_ALIGNMENT);
+            result.data = uploadBuffer->map(_buffer->getBufDesc().getSize(), D3D12_DEFAULT_RESOURCE_PLACEMENT_ALIGNMENT);
         }
 
         result.rowPitch = 0;
@@ -513,7 +513,7 @@ namespace vg::gfx::dx12
 			m_d3d12graphicsCmdList->ResourceBarrier(1, &barrier);
 		}
 
-        m_d3d12graphicsCmdList->CopyBufferRegion(dst, 0, src, _srcOffset, dstBufferDesc.size());
+        m_d3d12graphicsCmdList->CopyBufferRegion(dst, 0, src, _srcOffset, dstBufferDesc.getSize());
 
         // Copy dest to generic read barrier
         if (srcBufferDesc.resource.m_usage == Usage::Upload)

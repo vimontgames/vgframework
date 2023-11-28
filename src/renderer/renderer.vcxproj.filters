@@ -70,6 +70,9 @@
     <None Include="Animation\SkeletalAnimation.inl">
       <Filter>Animation</Filter>
     </None>
+    <None Include="Geometry\Mesh\MeshGeometry.inl">
+      <Filter>Geometry\Mesh</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Precomp.h" />
@@ -328,6 +331,12 @@
       <Filter>DebugDraw</Filter>
     </ClInclude>
     <ClInclude Include="ISkeleton.h" />
+    <ClInclude Include="RenderPass\Compute\ComputeSkinning\ComputeSkinningPass.h">
+      <Filter>Pass\Compute\ComputeSkinning</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderPass\Compute\ComputeSkinning\ComputeSkinningPass.hpp">
+      <Filter>Pass\Compute\ComputeSkinning</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Pass">
@@ -455,6 +464,9 @@
     </Filter>
     <Filter Include="DebugDraw">
       <UniqueIdentifier>{a085a983-52b7-4a2b-b4b5-a24a9c304f2f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Pass\Compute\ComputeSkinning">
+      <UniqueIdentifier>{f241c194-4b05-4c17-ba48-f7472c055a95}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

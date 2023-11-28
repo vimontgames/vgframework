@@ -21,7 +21,7 @@ namespace vg::gfx::vulkan
             case Usage::Default:
                 vkBufferCreate.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
                 vkBufferCreate.usage = VK_BUFFER_USAGE_STORAGE_BUFFER_BIT | VK_BUFFER_USAGE_UNIFORM_TEXEL_BUFFER_BIT | VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT | VK_BUFFER_USAGE_TRANSFER_SRC_BIT | VK_BUFFER_USAGE_TRANSFER_DST_BIT;
-                vkBufferCreate.size = _bufDesc.size();
+                vkBufferCreate.size = _bufDesc.getSize();
                 allocCreateInfo.usage = VMA_MEMORY_USAGE_GPU_ONLY;
                 allocCreateInfo.flags = 0;
                 break;
@@ -29,7 +29,7 @@ namespace vg::gfx::vulkan
             case Usage::Upload:
                 vkBufferCreate.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
                 vkBufferCreate.usage = VK_BUFFER_USAGE_UNIFORM_TEXEL_BUFFER_BIT | VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT | VK_BUFFER_USAGE_TRANSFER_SRC_BIT;
-                vkBufferCreate.size = _bufDesc.size();
+                vkBufferCreate.size = _bufDesc.getSize();
                 allocCreateInfo.usage = VMA_MEMORY_USAGE_CPU_ONLY;
                 allocCreateInfo.flags = VMA_ALLOCATION_CREATE_MAPPED_BIT;
                 break;
@@ -37,7 +37,7 @@ namespace vg::gfx::vulkan
             case Usage::Staging:
                 vkBufferCreate.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
                 vkBufferCreate.usage = VK_BUFFER_USAGE_UNIFORM_TEXEL_BUFFER_BIT | VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT | VK_BUFFER_USAGE_TRANSFER_DST_BIT;
-                vkBufferCreate.size = _bufDesc.size();
+                vkBufferCreate.size = _bufDesc.getSize();
                 allocCreateInfo.usage = VMA_MEMORY_USAGE_CPU_ONLY;
                 allocCreateInfo.flags = VMA_ALLOCATION_CREATE_MAPPED_BIT;
                 break;
@@ -65,7 +65,7 @@ namespace vg::gfx::vulkan
             vkBufferViewDesc.sType = VK_STRUCTURE_TYPE_BUFFER_VIEW_CREATE_INFO;
             vkBufferViewDesc.buffer = m_resource.getVulkanBuffer();
             vkBufferViewDesc.format = (_bufDesc.testBindFlags(BindFlags::IndexBuffer) & (_bufDesc.elementSize == 2)) ? VK_FORMAT_R16_UINT : VK_FORMAT_R32_UINT;
-            vkBufferViewDesc.range = _bufDesc.size();
+            vkBufferViewDesc.range = _bufDesc.getSize();
 
             VG_ASSERT_VULKAN(vkCreateBufferView(device->getVulkanDevice(), &vkBufferViewDesc, nullptr, &m_vkBufferView));
 
@@ -75,7 +75,7 @@ namespace vg::gfx::vulkan
             VkDescriptorBufferInfo vkBufferInfo = {};
             vkBufferInfo.buffer = m_resource.getVulkanBuffer();
             vkBufferInfo.offset = 0;
-            vkBufferInfo.range = _bufDesc.size();
+            vkBufferInfo.range = _bufDesc.getSize();
 
             VkWriteDescriptorSet writes = {};
             writes.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
@@ -101,7 +101,7 @@ namespace vg::gfx::vulkan
                 if (nullptr != dst)
                 {
                     // Copy to upload buffer
-                    memcpy(dst, _initData, _bufDesc.size());
+                    memcpy(dst, _initData, _bufDesc.getSize());
                 }
                 uploadBuffer->unmap(static_cast<gfx::Buffer*>(this), dst);
             }
@@ -115,7 +115,7 @@ namespace vg::gfx::vulkan
             VkDescriptorBufferInfo vkBufferInfo = {};
             vkBufferInfo.buffer = m_resource.getVulkanBuffer();
             vkBufferInfo.offset = 0;
-            vkBufferInfo.range = _bufDesc.size();
+            vkBufferInfo.range = _bufDesc.getSize();
 
             VkWriteDescriptorSet writes = {};
             writes.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;

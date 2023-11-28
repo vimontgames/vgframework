@@ -3,6 +3,7 @@
 #include "core/Scene/Scene.h"
 #include "core/GameObject/GameObject.h"
 #include "renderer/IGraphicInstance.h"
+#include "renderer/Instance/Mesh/MeshInstance.h"
 
 using namespace vg::core;
 
@@ -48,7 +49,7 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    VG_INLINE void ViewCullingJob::dispatch(const IGraphicInstance * _instance)
+    VG_INLINE void ViewCullingJob::dispatch(IGraphicInstance * _instance)
     {
         add(GraphicInstanceListType::All, _instance);
 
@@ -57,6 +58,14 @@ namespace vg::renderer
 
         if (0) // TODO
             add(GraphicInstanceListType::Transparent, _instance);
+
+        if (_instance->IsSkinned())
+        {
+            VG_ASSERT(dynamic_cast<MeshInstance *>(_instance));
+            MeshInstance * meshInstance = (MeshInstance *)_instance;
+            if (meshInstance->setRuntimeFlag(MeshInstance::RuntimeFlags::SkinLOD0))
+                m_output->m_skins.push_back(meshInstance);
+        }
     }
 
     //--------------------------------------------------------------------------------------

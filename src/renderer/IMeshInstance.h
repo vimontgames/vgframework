@@ -15,7 +15,6 @@ namespace vg::renderer
             
         }
         
-        virtual bool HasSkeleton    () const = 0;
         virtual bool UpdateSkeleton () = 0;
         virtual bool ShowSkeleton   () const = 0;
 

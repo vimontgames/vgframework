@@ -52,7 +52,7 @@ namespace vg::gfx::dx12
 
             srvDesc.ViewDimension = D3D12_SRV_DIMENSION_BUFFER;
             srvDesc.Buffer.FirstElement = 0;
-            srvDesc.Buffer.NumElements = _bufDesc.size() / sizeof(u32);
+            srvDesc.Buffer.NumElements = _bufDesc.getSize() / sizeof(u32);
             srvDesc.Buffer.StructureByteStride = 0;// _bufDesc.elementSize;
             srvDesc.Buffer.Flags = D3D12_BUFFER_SRV_FLAG_RAW;
 
@@ -75,7 +75,7 @@ namespace vg::gfx::dx12
             uavDesc.Format = DXGI_FORMAT_R32_TYPELESS;
             uavDesc.ViewDimension = D3D12_UAV_DIMENSION_BUFFER;
             uavDesc.Buffer.FirstElement = 0;
-            uavDesc.Buffer.NumElements = _bufDesc.size() / sizeof(u32);
+            uavDesc.Buffer.NumElements = _bufDesc.getSize() / sizeof(u32);
             uavDesc.Buffer.StructureByteStride = 0;
             uavDesc.Buffer.Flags = D3D12_BUFFER_UAV_FLAG_RAW;
             d3d12device->CreateUnorderedAccessView(m_resource.getd3d12BufferResource(), nullptr, &uavDesc, d3d12RWBufferDescriptorHandle);
@@ -84,7 +84,7 @@ namespace vg::gfx::dx12
 
         if (nullptr != _initData)
         {
-            const size_t uploadBufferSize = _bufDesc.size();
+            const size_t uploadBufferSize = _bufDesc.getSize();
             auto * uploadBuffer = device->getUploadBuffer();
 
             core::u8 * dst = uploadBuffer->map(uploadBufferSize, D3D12_DEFAULT_RESOURCE_PLACEMENT_ALIGNMENT);
@@ -107,7 +107,7 @@ namespace vg::gfx::dx12
     {
         D3D12_RESOURCE_DESC resourceDesc = {};
 
-        auto size = _bufDesc.size();
+        auto size = _bufDesc.getSize();
 
         if (_bufDesc.testBindFlags(BindFlags::ConstantBuffer))
             size = (uint)alignUp(size, (u32)256);

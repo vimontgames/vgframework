@@ -17,6 +17,7 @@
 #include "renderer/RenderPass/ImGui/ImGui.h"
 #include "renderer/RenderPass/ImGui/ImGuiPass.h"
 #include "renderer/RenderPass/ImGui/imguiAdapter.h"
+#include "renderer/RenderPass/Compute/ComputeSkinning/ComputeSkinningPass.h"
 #include "renderer/Importer/SceneImporterData.h"
 #include "renderer/Model/Mesh/MeshModel.h"
 #include "renderer/Animation/SkeletalAnimation.h"
@@ -33,11 +34,13 @@
 #include "Renderer.inl"
 #endif
 
+// TODO : parse shader techniques & flag names from .hlsli
 #include "shaders/driver/driver.hlsl.h"
 #include "shaders/debugdraw/debugdraw.hlsl.h"
 #include "shaders/default/default.hlsl.h"
 #include "shaders/background/background.hlsl.h"
 #include "shaders/postprocess/postprocess.hlsl.h"
+#include "shaders/skinning/skinning.hlsl.h"
 
 using namespace vg::core;
 using namespace vg::gfx;
@@ -184,6 +187,7 @@ namespace vg::renderer
         DebugDraw * dbgDraw = new DebugDraw();
 
         // Create passes not bound to a View
+        m_computeSkinningPass = new ComputeSkinningPass();
         m_imguiPass = new ImGuiPass();
 
         RegisterClasses();
@@ -205,6 +209,7 @@ namespace vg::renderer
         sm->registerHLSL(DefaultHLSLDesc());
         sm->registerHLSL(BackgroundHLSLDesc());
         sm->registerHLSL(PostProcessHLSLDesc());
+        sm->registerHLSL(SkinningHLSLDesc());
 
         sm->update();
     }
@@ -232,6 +237,7 @@ namespace vg::renderer
             views.clear();
         }
 
+        VG_SAFE_DELETE(m_computeSkinningPass);
         VG_SAFE_DELETE(m_imguiPass);
         VG_SAFE_DELETE(m_imgui);
 
@@ -315,6 +321,13 @@ namespace vg::renderer
                 m_frameGraph.importRenderTarget("Backbuffer", m_device.getBackbuffer(), float4(0,0,0,0), FrameGraphResource::InitState::Clear);
                 m_frameGraph.setGraphOutput("Backbuffer");
 
+                // Register passes not linked to views (e.g. skinning)
+                RenderPassContext mainViewRenderPassContext;
+                                  mainViewRenderPassContext.m_view = m_mainView;
+
+                m_frameGraph.addUserPass(mainViewRenderPassContext, m_computeSkinningPass, "ComputeSkinningPass");
+
+                // Register view passes
                 for (uint j = 0; j < core::enumCount<gfx::ViewTarget>(); ++j)
                 {
                     auto target = gfx::ViewTarget(j);
@@ -352,9 +365,6 @@ namespace vg::renderer
                     }
                 }
 
-                RenderPassContext mainViewRenderPassContext;
-                                  mainViewRenderPassContext.m_view = m_mainView;
-
                 if (!m_fullscreen)
                     m_frameGraph.addUserPass(mainViewRenderPassContext, m_imguiPass, "UIPass");
 
@@ -376,7 +386,7 @@ namespace vg::renderer
     {
         core::Scheduler * jobScheduler = (core::Scheduler *)Kernel::getScheduler();
 
-        // Perform culling foreach view (might want to split views later)
+        // Perform culling for each view (might want to split views later)
         uint jobStartCounter = 0;
         core::JobSync syncCull;
         for (uint j = 0; j < core::enumCount<gfx::ViewTarget>(); ++j)
@@ -385,7 +395,7 @@ namespace vg::renderer
             for (uint i = 0; i < views.size(); ++i)
             {
                 View * view = views[i];
-                if (view)
+                if (view && view->IsVisible())
                 {
                     auto * job = view->getCullingJob();
                     jobScheduler->Start(job, &syncCull);
@@ -394,10 +404,22 @@ namespace vg::renderer
             }
         }
 
+        m_computeSkinningPass->clearSkins();
         if (jobStartCounter > 0)
         {
             VG_PROFILE_CPU("syncCull");
             jobScheduler->Wait(syncCull);
+
+            for (uint j = 0; j < core::enumCount<gfx::ViewTarget>(); ++j)
+            {
+                const auto & views = m_views[j];
+                for (uint i = 0; i < views.size(); ++i)
+                {
+                    View * view = views[i];
+                    if (view && view->IsVisible())
+                        m_computeSkinningPass->addSkins(&view->m_cullingJobResult.m_skins);
+                }
+            }
         }
     }
 

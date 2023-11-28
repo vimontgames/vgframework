@@ -40,7 +40,8 @@ namespace vg::renderer
 
     //--------------------------------------------------------------------------------------
     MeshInstance::MeshInstance(const core::string & _name, core::IObject * _parent) :
-        super(_name, _parent)
+        super(_name, _parent),
+        m_runtimeFlags(0x0)
     {
 
     }
@@ -80,7 +81,7 @@ namespace vg::renderer
             VertexFormat vertexFormat = geo->getVertexFormat();
             root3D.setVertexFormat(vertexFormat);
 
-            auto pickingID = getPickingID();
+            auto pickingID = GetPickingID();
             root3D.setPickingID(pickingID);
 
             _cmdList->setPrimitiveTopology(PrimitiveTopology::TriangleList);
@@ -124,6 +125,12 @@ namespace vg::renderer
         {
             setInstanceSkeleton(nullptr);
         }
+    }
+
+    //--------------------------------------------------------------------------------------
+    const MeshModel * MeshInstance::getMeshModel(core::Lod _lod) const
+    {
+        return (MeshModel *)getModel(_lod);
     }
 
     //--------------------------------------------------------------------------------------
@@ -243,13 +250,12 @@ namespace vg::renderer
                 skeletonNode.node_to_parent = MakeTRS(pos, rot, scale);
 
                 if (-1 != skeletonNode.parent_index)
-                {
                     skeletonNode.node_to_world = mul(skeletonNodes[skeletonNode.parent_index].node_to_world, skeletonNode.node_to_parent);
-                }
                 else
-                {
                     skeletonNode.node_to_world = skeletonNode.node_to_parent;
-                }
+
+                skeletonNode.geometry_to_world = mul(skeletonNode.node_to_world, skeletonNode.geometry_to_node);
+                skeletonNode.normal_to_world = transpose(inverse(skeletonNode.geometry_to_world));
             }
             #else
             // update animations
@@ -409,7 +415,7 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    bool MeshInstance::HasSkeleton() const
+    bool MeshInstance::IsSkinned() const
     {
         return nullptr != getInstanceSkeleton();
     }

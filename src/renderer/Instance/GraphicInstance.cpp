@@ -19,7 +19,7 @@ namespace vg::renderer
     GraphicInstance::GraphicInstance(const core::string & _name, core::IObject * _parent) :
         super(_name, _parent)
     {
-
+        ClearPickingID();
     }
 
     //--------------------------------------------------------------------------------------
@@ -28,6 +28,25 @@ namespace vg::renderer
         for (uint i = 0; i < m_materials.size(); ++i)
             VG_SAFE_RELEASE(m_materials[i]);
         m_materials.clear();
+    }
+
+    //--------------------------------------------------------------------------------------
+    void GraphicInstance::ClearPickingID()
+    {
+        m_pickingID = (PickingID)0;
+    }
+
+    //--------------------------------------------------------------------------------------
+    void GraphicInstance::SetPickingID(PickingID _id)
+    {
+        VG_ASSERT((PickingID)0 == m_pickingID, "GraphicInstance \"%s\" already uses PickingID %u", getName().c_str(), m_pickingID);
+        m_pickingID = _id;
+    }
+
+    //--------------------------------------------------------------------------------------
+    PickingID GraphicInstance::GetPickingID() const
+    {
+        return m_pickingID;
     }
 
     //--------------------------------------------------------------------------------------

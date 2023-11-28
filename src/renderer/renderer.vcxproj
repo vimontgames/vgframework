@@ -47,6 +47,7 @@
     <None Include="Animation\Skeleton.inl" />
     <None Include="Geometry\AABB\AABB.inl" />
     <None Include="Geometry\Geometry.inl" />
+    <None Include="Geometry\Mesh\MeshGeometry.inl" />
     <None Include="Instance\Mesh\MeshInstance.inl" />
     <None Include="Renderer.def" />
     <None Include="Renderer.inl" />
@@ -117,6 +118,8 @@
     <ClInclude Include="RenderPass\Compute\ComputePass.hpp" />
     <ClInclude Include="RenderPass\Compute\ComputePostProcess\ComputePostProcessPass.h" />
     <ClInclude Include="RenderPass\Compute\ComputePostProcess\ComputePostProcessPass.hpp" />
+    <ClInclude Include="RenderPass\Compute\ComputeSkinning\ComputeSkinningPass.h" />
+    <ClInclude Include="RenderPass\Compute\ComputeSkinning\ComputeSkinningPass.hpp" />
     <ClInclude Include="RenderPass\ImGui\ImGui.h" />
     <ClInclude Include="RenderPass\ImGui\ImGui.hpp" />
     <ClInclude Include="RenderPass\ImGui\imguiAdapter.h" />
