@@ -4,6 +4,8 @@
 
 namespace vg::renderer
 {
+	static core::uint s_ComputeSkinningBufferSize = 16 * 1024 * 1024; 
+
     //--------------------------------------------------------------------------------------
     ComputeSkinningPass::ComputeSkinningPass() :
         ComputePass("ComputeSkinningPass")
@@ -13,11 +15,11 @@ namespace vg::renderer
         const RootSignatureTableDesc & bindlessTable = device->getBindlessTable()->getTableDesc();
 
         RootSignatureDesc rsDesc;
-        rsDesc.addRootConstants(ShaderStageFlags::CS, 0, 0, RootConstants2DCount);
+        rsDesc.addRootConstants(ShaderStageFlags::CS, 0, 0, ComputeSkinningConstantsCount);
         rsDesc.addTable(bindlessTable);
 
         m_computeSkinningRootSignature = device->addRootSignature(rsDesc);
-        m_computeSkinningShaderKey.init("system/skinning/skinning.hlsl", "CS_Skinning");
+        m_computeSkinningShaderKey.init("skinning/skinning.hlsl", "SkinningCS");
     }
 
     //--------------------------------------------------------------------------------------
@@ -45,7 +47,7 @@ namespace vg::renderer
         auto * device = Device::get();
 
         FrameGraphBufferResourceDesc skinningRWBufferDesc;
-        skinningRWBufferDesc.elementCount = (4 * 1024 * 1024) >> 2;
+        skinningRWBufferDesc.elementCount = s_ComputeSkinningBufferSize >> 2;
         skinningRWBufferDesc.elementSize = 4;
 
         const auto skinningRWBuffer = _renderPassContext.getFrameGraphID("SkinningRWBuffer");
@@ -56,7 +58,7 @@ namespace vg::renderer
     //--------------------------------------------------------------------------------------
     void ComputeSkinningPass::Render(const gfx::RenderPassContext & _renderPassContext, gfx::CommandList * _cmdList) const
     {
-        uint offset = 0;
+        uint dstOffset = 0;
 
         for (uint j = 0; j < m_skinnedMeshes.size(); ++j)
         {
@@ -69,12 +71,33 @@ namespace vg::renderer
 
                 //const VertexFormat meshFmt = meshGeo->getVertexFormat();
                 //const uint meshFmtSize = getVertexFormatStride(meshFmt);
-
                 const uint vertexCount = meshGeo->getVertexCount();
                 const uint vertexSize = meshGeo->getVertexSize();
+				const uint requiredSize = vertexCount * vertexSize;
 
-                meshInstance->clearRuntimeFlag(MeshInstance::RuntimeFlags::SkinLOD0);
-                offset += vertexCount * vertexSize;
+				VG_ASSERT(dstOffset + vertexCount * vertexSize < s_ComputeSkinningBufferSize, "[Animation] Skinning buffer is too small");
+				if (dstOffset + vertexCount * vertexSize  < s_ComputeSkinningBufferSize)
+				{
+					auto threadGroupSize = uint1(SKINNING_THREADGROUP_SIZE_X);
+					auto threadGroupCount = uint3((vertexCount + threadGroupSize.x - 1) / threadGroupSize.x, 1, 1);
+
+					auto src = meshGeo->getVertexBuffer()->getBufferHandle();
+					auto srcOffset = meshGeo->getVertexBufferOffset();
+
+					auto dst = getRWBuffer(_renderPassContext.getFrameGraphID("SkinningRWBuffer"))->getRWBufferHandle();
+
+					// TODO : Pass vertex buffer to skin and destination buffer with offset
+					ComputeSkinningConstants skinningRootConstants;
+					skinningRootConstants.setSource(src, srcOffset);
+					skinningRootConstants.setDest(dst, dstOffset);
+					_cmdList->setComputeRootConstants(0, (u32 *)&skinningRootConstants, ComputeSkinningConstantsCount);
+
+					_cmdList->dispatch(threadGroupCount);
+
+					dstOffset += vertexCount * vertexSize;
+				}
+
+				meshInstance->clearRuntimeFlag(MeshInstance::RuntimeFlags::SkinLOD0);
             }
         }
 

@@ -345,7 +345,7 @@ namespace vg::gfx::vulkan
         VkBufferCopy vkBufferCopy = {};
         vkBufferCopy.srcOffset = _srcOffset; 
         vkBufferCopy.dstOffset = 0; 
-        vkBufferCopy.size = desc.size();
+        vkBufferCopy.size = desc.getSize();
 
         VkBufferMemoryBarrier vkBufMemBarrierBefore = {};
         vkBufMemBarrierBefore.sType = VK_STRUCTURE_TYPE_BUFFER_MEMORY_BARRIER;
@@ -355,9 +355,10 @@ namespace vg::gfx::vulkan
         vkBufMemBarrierBefore.srcQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
         vkBufMemBarrierBefore.dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
         vkBufMemBarrierBefore.buffer = _dst->getResource().getVulkanBuffer();
+
         // Make sure anything that was copying from this image has completed 
         vkBufMemBarrierBefore.dstAccessMask = VK_ACCESS_TRANSFER_WRITE_BIT;
-        vkBufMemBarrierBefore.size = desc.size();
+        vkBufMemBarrierBefore.size = desc.getSize();
 
         vkCmdPipelineBarrier(m_vkCommandBuffer, VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT, VK_PIPELINE_STAGE_TRANSFER_BIT, 0, 0, nullptr, 1, &vkBufMemBarrierBefore, 0, nullptr);
 
@@ -371,7 +372,7 @@ namespace vg::gfx::vulkan
         vkBufMemBarrierAfter.srcQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
         vkBufMemBarrierAfter.dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
         vkBufMemBarrierAfter.buffer = _dst->getResource().getVulkanBuffer();
-        vkBufMemBarrierAfter.size = desc.size();
+        vkBufMemBarrierAfter.size = desc.getSize();
         
         vkCmdPipelineBarrier(m_vkCommandBuffer, VK_PIPELINE_STAGE_TRANSFER_BIT, VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT, 0, 0, nullptr, 1, &vkBufMemBarrierAfter, 0, nullptr);
     }

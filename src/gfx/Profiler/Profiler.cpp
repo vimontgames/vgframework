@@ -102,7 +102,7 @@ namespace vg::gfx
         char filename[256] = {};
         sprintf(filename, "vgframework_%s_%s_%s_%s.opt", Plugin::getPlatform().c_str(), Plugin::getConfiguration().c_str(), asString(Device::get()->getDeviceParams().api).c_str(), timeStr);
         OPTICK_SAVE_CAPTURE(filename);
-        VG_DEBUGPRINT("Save and open profile capture \"%s\"\n", filename);
+        VG_INFO("[Profiler] Opening capture saved to \"%s\" ...\n", filename);
         char command[256];
         sprintf(command, "start %s", filename);
         system(command);

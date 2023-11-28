@@ -1,5 +1,4 @@
-#ifndef _POSTPROCESS__HLSLI_
-#define _POSTPROCESS__HLSLI_
+#pragma once
 
 #define POSTPROCESS_THREADGROUP_SIZE_X 16
 #define POSTPROCESS_THREADGROUP_SIZE_Y 16
@@ -17,6 +16,4 @@ struct PostProcessConstants
 
 #ifndef __cplusplus
 DECL_ROOTCONSTANTS(PostProcessConstants, postProcessConstants, 0, 0);
-#endif
-
 #endif

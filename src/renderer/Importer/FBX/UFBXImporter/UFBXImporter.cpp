@@ -166,7 +166,7 @@ namespace vg::renderer
                 const ufbx_node * UFBXNode = _UFBXScene->nodes.data[i];
                 MeshImporterNode & node = _data.nodes.push_empty();
 
-                VG_DEBUGPRINT("Skin Node %u : %s\n", i, UFBXNode->name.data);
+                //VG_DEBUGPRINT("Skin Node %u : %s\n", i, UFBXNode->name.data);
 
                 node.name = UFBXNode->name.data;
                 node.parent_index = UFBXNode->parent ? UFBXNode->parent->typed_id : -1;
@@ -449,7 +449,7 @@ namespace vg::renderer
         for (size_t i = 0; i < _UFBXScene->nodes.count; i++)
         {
             ufbx_node * UFBXNode = _UFBXScene->nodes.data[i];
-            VG_DEBUGPRINT("Anim Node %u : %s (Bone:%s)\n", i, UFBXNode->name.data, UFBXNode->bone? "Yes" : "No");
+            //VG_DEBUGPRINT("Anim Node %u : %s (Bone:%s)\n", i, UFBXNode->name.data, UFBXNode->bone? "Yes" : "No");
 
             AnimNodeData animNodeData;
 
