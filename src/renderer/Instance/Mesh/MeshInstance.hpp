@@ -207,7 +207,6 @@ namespace vg::renderer
             {
                 MeshImporterNode & skeletonNode = skeletonNodes[i];
 
-                // store TPose with model so that we can blend with T-Pose/restore skinning if no animation is present?
                 quaternion rot = skeletonNode.rot * tPoseWeight;
                 float3 pos = skeletonNode.pos * tPoseWeight;
                 float3 scale = skeletonNode.scale * tPoseWeight;
@@ -248,7 +247,7 @@ namespace vg::renderer
                 if (-1 != skeletonNode.parent_index)
                     skeletonNode.node_to_world = mul(skeletonNodes[skeletonNode.parent_index].node_to_world, skeletonNode.node_to_parent);
                 else
-                    skeletonNode.node_to_world = skeletonNode.node_to_parent;
+                    skeletonNode.node_to_world = mul(skeletonNode.node_to_parent, float4x4::rotation_x(-PI / 2.0f));
 
                 skeletonNode.geometry_to_world = mul(skeletonNode.node_to_world, skeletonNode.geometry_to_node);
                 skeletonNode.normal_to_world = transpose(inverse(skeletonNode.geometry_to_world));
@@ -361,7 +360,7 @@ namespace vg::renderer
     {
         VG_PROFILE_CPU("ShowSkeleton");
 
-        float4x4 YUpToZUpMatrix = float4x4::rotation_x(PI / 2.0f); // mul(float4x4::rotation_x(PI / 2.0f), float4x4::rotation_y(PI));
+        //float4x4 YUpToZUpMatrix = float4x4::rotation_x(PI / 2.0f); // mul(float4x4::rotation_x(PI / 2.0f), float4x4::rotation_y(PI));
 
         DebugDraw * dbgDraw = DebugDraw::get();
         //const MeshModel * model = (MeshModel *)getModel(Lod::Lod0);
@@ -381,8 +380,7 @@ namespace vg::renderer
                     const MeshImporterNode & node = nodes[index];
 
                     // YUp skeleton displayed as ZUp
-                    float4x4 boneMatrix = mul(transpose(node.node_to_world), YUpToZUpMatrix);
-                             boneMatrix = mul(boneMatrix, getWorldMatrix());
+                    float4x4 boneMatrix = mul(transpose(node.node_to_world), getWorldMatrix());
                     
                     float3 boxSize = float3(0.01f, 0.01f, 0.01f);
                     dbgDraw->AddWireframeBox( -boxSize, boxSize, 0xFF00FF00, boneMatrix);
@@ -390,8 +388,7 @@ namespace vg::renderer
                     if (-1 != node.parent_index)
                     {
                         const MeshImporterNode & parentNode = nodes[node.parent_index];
-                        float4x4 parentBoneMatrix = mul(transpose(parentNode.node_to_world), YUpToZUpMatrix);
-                                 parentBoneMatrix = mul(parentBoneMatrix, getWorldMatrix());
+                        float4x4 parentBoneMatrix = mul(transpose(parentNode.node_to_world), getWorldMatrix());
 
                         dbgDraw->AddLine(boneMatrix[3].xyz, parentBoneMatrix[3].xyz, 0xFF00FF00);
                     }

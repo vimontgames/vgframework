@@ -10,11 +10,15 @@
 struct ComputeSkinningConstants
 {
     uint vtxfmt_flags;
+    uint matrixOffset;
     uint vtx_count;
     uint src_handle_unused;
     uint src_offset;
     uint dst_handle_unused;
     uint dst_offset;
+    
+    void            setMatrixOffset (uint _offset)                          { matrixOffset = _offset; }
+    uint            getMatrixOffset ()                                      { return matrixOffset; }
     
     void            setVertexFormat (VertexFormat _format, uint _flags = 0) { vtxfmt_flags = packUint16(uint2((uint)_format, _flags)); }
     VertexFormat    getVertexFormat ()                                      { return (VertexFormat)((uint)(unpackUint16(vtxfmt_flags).x)); }

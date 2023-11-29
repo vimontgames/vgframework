@@ -20,11 +20,14 @@ namespace vg::renderer
             uv[0][0] = _vtx.uv[0].x;  uv[0][1] = _vtx.uv[0].y;                      // TODO: pack UV0
             uv[1][0] = _vtx.uv[1].x;  uv[1][1] = _vtx.uv[1].y;                      // TODO: pack UV1
 
-            for (core::uint i = 0; i < 4; ++i)
-                indices[i] = _vtx.indices[i];
+            //for (core::uint i = 0; i < 4; ++i)
+            //    indices[i] = _vtx.indices[i];
+            indices[0] = (_vtx.indices[1] << 16) | _vtx.indices[0];
+            indices[1] = (_vtx.indices[3] << 16) | _vtx.indices[2];
 
-            for (core::uint i = 0; i < 4; ++i)
-                weights[i] = _vtx.weights[i];
+            //for (core::uint i = 0; i < 4; ++i)
+            //    weights[i] = _vtx.weights[i];
+            weights = (_vtx.weights[3] << 24) | (_vtx.weights[2] << 16) | (_vtx.weights[1] << 8) | _vtx.weights[0];
         }
 
         void setPos(const core::float3 & _pos)
@@ -51,10 +54,12 @@ namespace vg::renderer
         float       tan[3];
         float       uv[2][2];
         core::u32   color;
-        uint        indices[4];
-        float       weights[4];        
+        u32         indices[2]; // indices[0] i0 | i1<<16, indicex[1] i2 | i3<<16
+        u32         weights;    // w0 | w1<<8 | w2<<16 | w3<<24    
     };
 
     // VertexFormat enum to VertexFormat struct traits 
     template <> struct VertexStorage<VertexFormat::Skinning_4Bones> { using type = SkinningVertex_4Bones; };
+    VG_STATIC_ASSERT(sizeof(SkinningVertex_4Bones) == getVertexFormatStride(VertexFormat::Skinning_4Bones), "SkinningVertex_4Bones struct size does not match HLSL stride");
 }
+

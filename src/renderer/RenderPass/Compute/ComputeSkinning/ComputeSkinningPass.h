@@ -25,6 +25,7 @@ namespace vg::renderer
     private:
         gfx::RootSignatureHandle                                m_computeSkinningRootSignature;
         gfx::ComputeShaderKey                                   m_computeSkinningShaderKey;
+        gfx::Buffer *                                           m_skinningMatricesBuffer;
         core::vector<const core::vector<MeshInstance *> *>      m_skinnedMeshes;
     };
 }

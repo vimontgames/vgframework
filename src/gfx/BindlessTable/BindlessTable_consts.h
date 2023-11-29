@@ -57,6 +57,7 @@ namespace vg::gfx
 
         // Buffer SRV
         ViewConstantsBufSrv     = RESERVEDSLOT_BUFSRV_VIEWCONSTANTS,
+        SkinningMatricesBufSrv  = RESERVEDSLOT_BUFSRV_SKINNINGMATRICES,
 
         // Dynamic
         None                    = 0x80000000

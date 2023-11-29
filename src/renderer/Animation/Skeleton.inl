@@ -1,6 +1,13 @@
 namespace vg::renderer
 {
     //--------------------------------------------------------------------------------------
+    VG_INLINE core::uint Skeleton::getBoneCount() const
+    {
+        VG_ASSERT(m_boneIndices.size() == m_boneMatrices.size());
+        return (core::uint)m_boneIndices.size();
+    }
+    
+    //--------------------------------------------------------------------------------------
     VG_INLINE const core::vector<core::u32> & Skeleton::getBoneIndices() const
     {
         return m_boneIndices;

@@ -17,5 +17,6 @@ using namespace vg::core;
 //--------------------------------------------------------------------------------------
 
 #define inline
+#define constexpr
 
 #endif

@@ -51,4 +51,5 @@ namespace vg::renderer
 
     // VertexFormat enum to VertexFormat struct traits 
     template <> struct VertexStorage<VertexFormat::Default> { using type = DefaultVertex; };
+    VG_STATIC_ASSERT(sizeof(DefaultVertex) == getVertexFormatStride(VertexFormat::Default), "DefaultVertex struct size does not match HLSL stride");
 }

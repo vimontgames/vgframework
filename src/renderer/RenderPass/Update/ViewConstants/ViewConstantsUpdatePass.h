@@ -23,6 +23,5 @@ namespace vg::renderer
 
     private:
         static gfx::Buffer * s_ViewConstantsBuffer;
-        //static gfx::Buffer * s_ViewToolmodeRWBuffer;
     };
 }

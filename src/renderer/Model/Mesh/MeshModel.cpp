@@ -125,7 +125,7 @@ namespace vg::renderer
 
         Buffer * vb = nullptr;
 
-        // Select vertex format
+        // Select vertex format (TODO: select vertex format at cooking time?)
         VertexFormat vtxFmt;
 
         if (_data.bonesIndices.size() > 0)

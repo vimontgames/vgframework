@@ -20,6 +20,9 @@ namespace vg::renderer
 
         VG_INLINE const core::vector<MeshImporterNode> &    getNodes            () const;
         VG_INLINE       core::vector<MeshImporterNode> &    getNodes            ();
+
+        VG_INLINE core::uint                                getBoneCount        () const;
+
         VG_INLINE const core::vector<core::u32> &           getBoneIndices      () const;
         VG_INLINE const core::vector<core::float4x4> &      getBoneMatrices     () const;
 

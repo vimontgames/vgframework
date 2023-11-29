@@ -11,7 +11,7 @@ enum class VertexFormat : uint
     DebugDraw       = 2,
 };
 
-inline uint getVertexFormatStride(VertexFormat _format)
+inline constexpr uint getVertexFormatStride(VertexFormat _format)
 {
     switch (_format)
     {
@@ -23,7 +23,7 @@ inline uint getVertexFormatStride(VertexFormat _format)
             return 68;
             
         case VertexFormat::Skinning_4Bones:
-            return 100;
+            return 80;
     }
 }
 
@@ -111,6 +111,18 @@ inline bool hasColor(VertexFormat _format)
     }
 }
 
+inline bool hasSkinning(VertexFormat _format)
+{
+    switch (_format)
+    {
+        case VertexFormat::Skinning_4Bones:
+            return true;
+        
+        default:
+            return false;
+    }
+}
+
 struct Vertex
 {    
 #ifndef __cplusplus
@@ -165,6 +177,26 @@ struct Vertex
             color = _buffer.Load<uint>(offset);
             offset += 4;
         }
+        
+        if (hasSkinning(_format))
+        {
+            uint2 temp0123 = _buffer.Load<uint2>(offset);
+            uint2 temp01 = unpackUint16(temp0123.x);
+            skinIndices[0] = temp01.x;
+            skinIndices[1] = temp01.y;
+            uint2 temp23 = unpackUint16(temp0123.y);
+            skinIndices[2] = temp23.x;
+            skinIndices[3] = temp23.y;
+            offset += 8;   
+            
+            float4 tempW = unpackRGBA8(_buffer.Load<uint>(offset));
+            skinWeights[0] = tempW.r;
+            skinWeights[1] = tempW.g;
+            skinWeights[2] = tempW.b;
+            skinWeights[3] = tempW.a;
+            offset += 4;
+        }
+
     }
     
     void Store(RWByteAddressBuffer _rwbuffer, VertexFormat _format, uint _vertexID, uint _offset = 0)
@@ -225,4 +257,6 @@ struct Vertex
     float3 tan;
     float2 uv[2];
     uint color;
+    uint skinIndices[4];
+    float skinWeights[4];
 };

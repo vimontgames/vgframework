@@ -38,4 +38,5 @@ namespace vg::renderer
 
     // VertexFormat enum to VertexFormat struct traits 
     template <> struct VertexStorage<VertexFormat::DebugDraw> { using type = DebugDrawVertex; };
+    VG_STATIC_ASSERT(sizeof(SkinningVertex_4Bones) == getVertexFormatStride(VertexFormat::Skinning_4Bones), "DebugDrawVertex struct size does not match HLSL stride");
 }

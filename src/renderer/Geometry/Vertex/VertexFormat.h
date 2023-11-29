@@ -15,8 +15,8 @@ namespace vg::renderer
         core::float4    tan;
         core::float4    color;
         core::float2    uv[2];
-        uint            indices[4];
-        float           weights[4];
+        u16             indices[4];
+        u8              weights[4];
 
         struct hash
         {

@@ -3,7 +3,7 @@ using namespace vg::core;
 namespace vg::renderer
 {
     // Cooked mesh version
-    static const u32 MeshImporterDataVersion = 9;
+    static const u32 MeshImporterDataVersion = 10;
 
     //--------------------------------------------------------------------------------------
     bool MeshImporterNode::read(core::io::Buffer & _buffer)
