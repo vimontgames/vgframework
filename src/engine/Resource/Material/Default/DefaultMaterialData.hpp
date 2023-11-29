@@ -63,8 +63,6 @@ namespace vg::engine
             material->SetTexture("AlbedoMap", (gfx::ITexture *)_resource->getObject());
         else if (_resource == &m_normalMap)
             material->SetTexture("NormalMap", (gfx::ITexture *)_resource->getObject());
-
-        super::onResourceLoaded(_resource);
     }
 
     //--------------------------------------------------------------------------------------
@@ -76,7 +74,5 @@ namespace vg::engine
             material->SetTexture("AlbedoMap", nullptr);
         else if (_resource == &m_normalMap)
             material->SetTexture("NormalMap", nullptr);
-
-        super::onResourceUnloaded(_resource);
     }
 }
