@@ -9,6 +9,7 @@
 #include "renderer/IRenderer.h"
 #include "gfx/IDevice.h"
 
+#include "resource.h"
 #include "application.h"
 
 HINSTANCE hInst;
@@ -79,7 +80,7 @@ ATOM MyRegisterClass(HINSTANCE hInstance)
 	wcex.cbClsExtra = 0;
 	wcex.cbWndExtra = 0;
 	wcex.hInstance = hInstance;
-	wcex.hIcon = nullptr;
+	wcex.hIcon = LoadIcon(hInstance, MAKEINTRESOURCE(IDI_ICON1));
 	wcex.hCursor = LoadCursor(NULL, IDC_ARROW);
 	wcex.hbrBackground = (HBRUSH)GetStockObject(BLACK_BRUSH);
 	wcex.lpszMenuName = nullptr;
