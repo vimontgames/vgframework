@@ -16,18 +16,11 @@ namespace vg::renderer
         float                               GetLength               () const final override;
         float                               GetFramerate            () const final override;
 
-        bool                                SetTime                 (float _time) final override;
-        bool                                SetWeight               (float _weight) final override;
-
         static IAnimation *                 createFromImporterData  (const AnimImporterData & _data);
 
-        VG_INLINE float                     getTime                 () const;
-        VG_INLINE float                     getWeight               () const;
         VG_INLINE const AnimImporterData &  getAnimationData        () const;
 
     private:
-        float                               m_time = 0.0f;
-        float                               m_weight = 0.0f;
         AnimImporterData                    m_animData;    
     };
 }

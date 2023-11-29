@@ -43,6 +43,9 @@ namespace vg::renderer
         bool                            AddAnimation        (ISkeletalAnimation * _animation) final override;
         bool                            RemoveAnimation     (ISkeletalAnimation * _animation) final override;
 
+        bool                            SetAnimationTime    (ISkeletalAnimation * _animation, float _time) final override;
+        bool                            SetAnimationWeight  (ISkeletalAnimation * _animation, float _weight) final override;
+
         void                            Draw                (const RenderContext & _renderContext, gfx::CommandList * _cmdList) const final override;
 
         bool                            setInstanceSkeleton (const Skeleton * _skeleton);
@@ -61,9 +64,16 @@ namespace vg::renderer
         gfx::BindlessBufferHandle       m_skinnedMeshBufferHandle;
         core::uint                      m_skinnedMeshBufferOffset = 0;
 
+        struct AnimationState
+        {
+            float m_time = 0.0f;
+            float m_weight = 0.0f;
+        };
+
         struct AnimationBinding
         {
             SkeletalAnimation *         m_animation = nullptr;
+            AnimationState              m_animationState;
             core::vector<core::i16>     m_animToSkeletonIndex;
             core::vector<core::i16>     m_skeletonToAnimIndex;
             float                       m_normalizedWeight = 0.0f;

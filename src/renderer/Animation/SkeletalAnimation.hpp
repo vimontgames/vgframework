@@ -42,30 +42,6 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    bool SkeletalAnimation::SetTime(float _time)
-    {
-        if (m_time != _time)
-        {
-            m_time = _time;
-            return true;
-        }
-
-        return false;
-    }
-
-    //--------------------------------------------------------------------------------------
-    bool SkeletalAnimation::SetWeight(float _weight)
-    {
-        if (m_weight != _weight)
-        {
-            m_weight = _weight;
-            return true;
-        }
-
-        return false;
-    }
-
-    //--------------------------------------------------------------------------------------
     IAnimation * SkeletalAnimation::createFromImporterData(const AnimImporterData & _data)
     {
         auto * anim = new SkeletalAnimation(_data.name, nullptr);

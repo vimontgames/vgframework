@@ -20,5 +20,8 @@ namespace vg::renderer
 
         virtual bool AddAnimation(ISkeletalAnimation * _animation) = 0;
         virtual bool RemoveAnimation(ISkeletalAnimation * _animation) = 0;
+
+        virtual bool SetAnimationTime(ISkeletalAnimation * _animation, float _time) = 0;
+        virtual bool SetAnimationWeight(ISkeletalAnimation * _animation, float _weight) = 0;
     };
 }

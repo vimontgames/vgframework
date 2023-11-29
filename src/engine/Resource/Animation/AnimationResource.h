@@ -5,6 +5,7 @@
 namespace vg::renderer
 {
     class IAnimation;
+    class IMeshInstance;
 }
 
 namespace vg::engine
@@ -44,12 +45,14 @@ namespace vg::engine
         void                                    setTime                 (float _time);
         void                                    setWeight               (float _weight);
 
+        renderer::IMeshInstance *               getMeshInstance         ();
+
     private:
         static bool			                    playAnim                (IObject * _object);
         static bool			                    stopAnim                (IObject * _object);
 
     private:
-        bool                                    m_play   = false;
+        bool                                    m_play      = false;
         bool                                    m_loop      = false;
         float                                   m_time      = 0.0f;
         float                                   m_weight    = 0.0f;

@@ -184,7 +184,7 @@ namespace vg::renderer
             float weightSum = 0.0f;
             for (uint j = 0; j < m_animationBindings.size(); ++j)
             {
-                weightSum += m_animationBindings[j].m_animation->getWeight();
+                weightSum += m_animationBindings[j].m_animationState.m_weight;
             }
             float tPoseWeight;
 
@@ -193,13 +193,13 @@ namespace vg::renderer
                 tPoseWeight = 0.0f;
                 const float invWeightSum = 1.0f / weightSum;
                 for (uint j = 0; j < m_animationBindings.size(); ++j)
-                    m_animationBindings[j].m_normalizedWeight = m_animationBindings[j].m_animation->getWeight() * invWeightSum;
+                    m_animationBindings[j].m_normalizedWeight = m_animationBindings[j].m_animationState.m_weight * invWeightSum;
             }
             else
             {
                 tPoseWeight = 1.0f - weightSum;
                 for (uint j = 0; j < m_animationBindings.size(); ++j)
-                    m_animationBindings[j].m_normalizedWeight = m_animationBindings[j].m_animation->getWeight();
+                    m_animationBindings[j].m_normalizedWeight = m_animationBindings[j].m_animationState.m_weight;
             }
 
             // Update animations and blend
@@ -217,7 +217,7 @@ namespace vg::renderer
                     const SkeletalAnimation * animation = animationBinding.m_animation;
                     const AnimImporterData & anim = animation->getAnimationData();
 
-                    const float time = animation->getTime();
+                    const float time = animationBinding.m_animationState.m_time;
 
                     float frame_time = (time - anim.time_begin) * anim.framerate;
                     uint f0 = min((uint)frame_time + 0, anim.num_frames - 1);
@@ -340,6 +340,36 @@ namespace vg::renderer
             }
         }
 
+        return false;
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool MeshInstance::SetAnimationTime(ISkeletalAnimation * _animation, float _time)
+    {
+        for (uint i = 0; i < m_animationBindings.size(); ++i)
+        {
+            AnimationBinding & animationBinding = m_animationBindings[i];
+            if (_animation == animationBinding.m_animation)
+            {
+                animationBinding.m_animationState.m_time = _time;
+                return true;
+            }
+        }
+        return false;
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool MeshInstance::SetAnimationWeight(ISkeletalAnimation * _animation, float _weight)
+    {
+        for (uint i = 0; i < m_animationBindings.size(); ++i)
+        {
+            AnimationBinding & animationBinding = m_animationBindings[i];
+            if (_animation == animationBinding.m_animation)
+            {
+                animationBinding.m_animationState.m_weight = _weight;
+                return true;
+            }
+        }
         return false;
     }
 

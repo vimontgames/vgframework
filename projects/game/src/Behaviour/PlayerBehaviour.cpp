@@ -46,38 +46,29 @@ void PlayerBehaviour::Update(double _dt)
             {
                 VG_INFO("[Player] Button 'A' pressed on joypad %u", m_joypadID);
                 m_playerState = PlayerState::Hello;
-
-                //IAnimationComponent * animationComponent = GetGameObject()->GetComponentByType<IAnimationComponent>();
-                //if (animationComponent)
-                //{
-                //    const char * helloAnim = "Hello";
-                //
-                //    IAnimationResource * anim = animationComponent->GetAnimation(helloAnim);
-                //    if (anim)
-                //        anim->PlayOnce();
-                //    else
-                //        VG_INFO("[Player] Could not find animation \"%s\" for \"%s\"", helloAnim, GetGameObject()->getName().c_str());
-                //}
             }
 
             switch (m_playerState)
             {
                 case PlayerState::Idle:
                 {
-                    IAnimationResource * idle = animationComponent->GetAnimation("Idle");
-                    if (idle && !idle->IsPlaying())
-                        idle->PlayLoop();
+                    if (IAnimationResource * idle = animationComponent->GetAnimation("Idle"))
+                    {
+                        if (idle && !idle->IsPlaying())
+                            idle->PlayLoop();
+                    }
                 }
                 break;
 
                 case PlayerState::Hello:
                 {
-                    IAnimationResource * idle = animationComponent->GetAnimation("Idle");
-                    if (idle && idle->IsPlaying())
-                        idle->Stop();
+                    if (IAnimationResource * idle = animationComponent->GetAnimation("Idle"))
+                    {
+                        if (idle && idle->IsPlaying())
+                            idle->Stop();
+                    }
 
-                    IAnimationResource * hello = animationComponent->GetAnimation("Hello");
-                    if (hello)
+                    if (IAnimationResource * hello = animationComponent->GetAnimation("Hello"))
                     {
                         if (!hello->IsPlaying())
                             hello->PlayOnce();
@@ -85,6 +76,11 @@ void PlayerBehaviour::Update(double _dt)
                         {
                             hello->Stop();
                             m_playerState = PlayerState::Idle;
+                            if (IAnimationResource * idle = animationComponent->GetAnimation("Idle"))
+                            {
+                                if (idle && !idle->IsPlaying())
+                                    idle->PlayLoop();
+                            }
                         }
                     }
                 }

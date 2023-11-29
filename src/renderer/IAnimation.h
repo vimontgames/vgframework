@@ -11,8 +11,5 @@ namespace vg::renderer
 
         virtual float GetLength() const = 0;
         virtual float GetFramerate() const = 0;
-
-        virtual bool SetTime(float _time) = 0;
-        virtual bool SetWeight(float _weight) = 0;
     };
 }

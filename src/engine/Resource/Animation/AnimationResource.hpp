@@ -1,6 +1,10 @@
 #include "AnimationResource.h"
 #include "renderer/IAnimation.h"
 #include "core/Math/Math.h"
+#include "core/GameObject/GameObject.h"
+#include "engine/Component/Animation/AnimationComponent.h"
+#include "engine/Component/Mesh/MeshComponent.h"
+#include "renderer/IMeshInstance.h"
 
 using namespace vg::core;
 using namespace vg::renderer;
@@ -31,10 +35,14 @@ namespace vg::engine
         _desc.registerPropertyEx(AnimationResource, m_loop, "Loop", IProperty::Flags::SameLine);
 
         _desc.registerProperty(AnimationResource, m_name, "Name");
-        _desc.registerProperty(AnimationResource, m_time, "Time");
-        _desc.registerProperty(AnimationResource, m_weight, "Weight");
+
+        _desc.registerPropertyEx(AnimationResource, m_time, "Time", IProperty::Flags::NotSaved);
+
+        _desc.registerPropertyEx(AnimationResource, m_weight, "Weight", IProperty::Flags::NotSaved);
         _desc.setPropertyRange(AnimationResource, m_weight, float2(0.0f, 1.0f));
+
         _desc.registerProperty(AnimationResource, m_speed, "Speed");
+        _desc.setPropertyRange(AnimationResource, m_speed, float2(0.0f, 10.0f));
 
         _desc.registerResizeVectorFunc(AnimationResource, ResizeAnimationResourceVector);
 
@@ -166,6 +174,20 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
+    IMeshInstance * AnimationResource::getMeshInstance()
+    {
+        AnimationComponent * animComponent = dynamic_cast<AnimationComponent *>(getParent()->getParent());
+        VG_ASSERT(animComponent);
+        IGameObject * go = animComponent->GetGameObject();
+        VG_ASSERT(go);
+        MeshComponent * meshComponent = go->GetComponentByType<MeshComponent>();
+        VG_ASSERT(meshComponent);
+        IMeshInstance * meshInstance = meshComponent->getMeshInstance();
+        VG_ASSERT(meshInstance);
+        return meshInstance;
+    }
+
+    //--------------------------------------------------------------------------------------
     void AnimationResource::setTime(float _time)
     {
         if (IAnimation * anim = (IAnimation *)getObject())
@@ -177,7 +199,8 @@ namespace vg::engine
             else
                 m_time = _time;
 
-            anim->SetTime(m_time);
+            if (IMeshInstance * meshInstance = getMeshInstance())
+                meshInstance->SetAnimationTime((ISkeletalAnimation*)anim, m_time);
         }
     }
 
@@ -189,7 +212,10 @@ namespace vg::engine
         if (m_weight == 0.0f)
             m_play = false;
 
-        if (IAnimation * anim = getAnimation())
-            anim->SetWeight(_weight);
+        if (IAnimation * anim = (IAnimation *)getObject())
+        {
+            if (IMeshInstance * meshInstance = getMeshInstance())
+                meshInstance->SetAnimationWeight((ISkeletalAnimation *)anim, m_weight);
+        }
     }    
 }
