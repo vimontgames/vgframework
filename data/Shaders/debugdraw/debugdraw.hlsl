@@ -18,7 +18,7 @@ VS_Output VS_DebugDraw(uint _vertexID : VertexID)
     ByteAddressBuffer buf = getBuffer(rootConstants3D.getBufferHandle());
         
     Vertex vert;
-           vert.Load(buf, rootConstants3D.getVertexFormat(), _vertexID, rootConstants3D.getVertexBufferOffset());
+           vert.Load(buf, rootConstants3D.getVertexFormat(), _vertexID, rootConstants3D.getBufferOffset());
     
     ViewConstants viewConstants;
     viewConstants.Load(getBuffer(RESERVEDSLOT_BUFSRV_VIEWCONSTANTS));
@@ -26,7 +26,7 @@ VS_Output VS_DebugDraw(uint _vertexID : VertexID)
     
     output.col = vert.getColor() * rootConstants3D.color;
     float4 modelPos = float4(vert.getPos(), 1.0f);
-    float4 worldPos = mul(modelPos, rootConstants3D.mat);
+    float4 worldPos = mul(modelPos, rootConstants3D.getWorldMatrix());
     output.pos = mul(worldPos, viewProj);
 
     return output;

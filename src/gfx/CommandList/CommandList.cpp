@@ -363,7 +363,10 @@ namespace vg::gfx
             auto * device = Device::get();
 
             if (asBool(GraphicPipelineStateCache::DirtyFlags::RootSignature & m_graphicStateCache.m_dirtyFlags))
+            {
+                VG_ASSERT(m_graphicStateCache.m_graphicPipelineKey.m_rootSignature.isValid(), "Invalid Graphics Root Signature");
                 super::bindGraphicRootSignature(device->getRootSignature(m_graphicStateCache.m_graphicPipelineKey.m_rootSignature));
+            }
 
             if (asBool(GraphicPipelineStateCache::DirtyFlags::IndexBuffer & m_graphicStateCache.m_dirtyFlags))
                 super::bindIndexBuffer(m_graphicStateCache.m_indexBuffer);
@@ -419,7 +422,10 @@ namespace vg::gfx
             auto * device = Device::get();
 
             if (asBool(ComputePipelineStateCache::DirtyFlags::RootSignature & m_computeStateCache.m_dirtyFlags))
+            {
+                VG_ASSERT(m_computeStateCache.m_computePipelineKey.m_computeRootSignature.isValid(), "Invalid Compute Root Signature");
                 super::bindComputeRootSignature(device->getRootSignature(m_computeStateCache.m_computePipelineKey.m_computeRootSignature));
+            }
 
             if (asBool(ComputePipelineStateCache::DirtyFlags::PipelineState & m_computeStateCache.m_dirtyFlags))
             {

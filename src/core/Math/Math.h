@@ -9,6 +9,24 @@ namespace vg::core
     const float MIN_FLOAT = FLT_MIN;
     const float MAX_FLOAT = FLT_MAX;
 
+    //--------------------------------------------------------------------------------------
+    inline float4x4 TRS(const float3 & _translation, const quaternion _rotation, const float3 _scale)
+    {
+        quaternion q = _rotation;
+
+        float xx = q.x * q.x, xy = q.x * q.y, xz = q.x * q.z, xw = q.x * q.w;
+        float yy = q.y * q.y, yz = q.y * q.z, yw = q.y * q.w;
+        float zz = q.z * q.z, zw = q.z * q.w;
+        float sx = 2.0f * _scale.x, sy = 2.0f * _scale.y, sz = 2.0f * _scale.z;
+
+        return float4x4(
+            sx * (-yy - zz + 0.5f), sy * (-zw + xy), sz * (+xz + yw), _translation.x,
+            sx * (+xy + zw), sy * (-xx - zz + 0.5f), sz * (-xw + yz), _translation.y,
+            sx * (-yw + xz), sy * (+xw + yz), sz * (-xx - yy + 0.5f), _translation.z,
+            0, 0, 0, 1
+        );
+    }
+
 	//--------------------------------------------------------------------------------------
 	template <typename T> T min(const T & _left, const T & _right)
 	{

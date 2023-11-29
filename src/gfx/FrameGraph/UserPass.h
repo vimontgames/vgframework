@@ -75,6 +75,7 @@ namespace vg::gfx
 
 		void createRWBuffer(const FrameGraphResourceID & _resID, FrameGraphBufferResourceDesc & _resDesc);
 		void writeRWBuffer(const FrameGraphResourceID & _resID);
+		void readRWBuffer(const FrameGraphResourceID & _resID);
 
         // draw
         Texture * getRenderTarget(const FrameGraphResourceID & _resID) const;

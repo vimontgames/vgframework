@@ -1,6 +1,7 @@
 #pragma once
 
 #include "renderer/IMeshInstance.h"
+#include "gfx/BindlessTable/BindlessTable_consts.h"
 
 namespace vg::core
 {
@@ -49,6 +50,7 @@ namespace vg::renderer
         const MeshModel *               getMeshModel        (core::Lod _lod) const;
 
         bool                            updateSkeleton      ();
+        void                            setSkinnedMesh      (const gfx::BindlessBufferHandle & _skinnedBufferHandle, core::uint _skinnedBufferOffset);
 
         VG_INLINE bool                  setRuntimeFlag      (RuntimeFlags _flag);
         VG_INLINE bool                  clearRuntimeFlag    (RuntimeFlags _flag);
@@ -56,6 +58,8 @@ namespace vg::renderer
     private:
         core::atomic<core::u32>         m_runtimeFlags;
         Skeleton *                      m_instanceSkeleton = nullptr;
+        gfx::BindlessBufferHandle       m_skinnedMeshBufferHandle;
+        core::uint                      m_skinnedMeshBufferOffset = 0;
 
         struct AnimationBinding
         {

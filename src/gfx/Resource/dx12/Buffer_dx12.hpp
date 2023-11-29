@@ -63,6 +63,7 @@ namespace vg::gfx::dx12
 
             D3D12_CPU_DESCRIPTOR_HANDLE d3d12DescriptorHandle = bindlessTable->getd3d12CPUDescriptorHandle(m_bufferHandle);
             d3d12device->CreateShaderResourceView(m_resource.getd3d12BufferResource(), &srvDesc, d3d12DescriptorHandle);
+            bindlessTable->updated3d12descriptor(getBufferHandle());
         }
 
         if (asBool(BindFlags::UnorderedAccess & _bufDesc.resource.m_bindFlags))

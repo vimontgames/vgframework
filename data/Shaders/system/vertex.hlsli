@@ -166,6 +166,50 @@ struct Vertex
             offset += 4;
         }
     }
+    
+    void Store(RWByteAddressBuffer _rwbuffer, VertexFormat _format, uint _vertexID, uint _offset = 0)
+    {
+        uint offset = _offset + _vertexID * getVertexFormatStride(_format);
+        
+        _rwbuffer.Store<float3>(offset, pos.xyz); 
+        offset += 3 * sizeof(float);
+        
+        if (hasNormal(_format))
+        {
+            _rwbuffer.Store<float3>(offset, nrm.xyz);
+            offset += 3 * sizeof(float);
+        }
+        
+        if (hasBinormal(_format))
+        {
+            _rwbuffer.Store<float3>(offset, bin.xyz);
+            offset += 3 * sizeof(float);
+        }
+        
+        if (hasTangent(_format))
+        {
+            _rwbuffer.Store<float3>(offset, tan.xyz);
+            offset += 3 * sizeof(float);
+        }
+        
+        if (hasUV0(_format))
+        {
+            _rwbuffer.Store<float2>(offset, uv[0].xy);
+            offset += 2 * sizeof(float);
+        }
+        
+        if (hasUV1(_format))
+        {
+            _rwbuffer.Store<float2>(offset, uv[1].xy);
+            offset += 2 * sizeof(float);
+        }
+        
+        if (hasColor(_format))
+        {
+            _rwbuffer.Store<uint>(offset, color);
+            offset += 4;
+        }
+    }
     #endif
 
     float3 getPos()             { return pos; }

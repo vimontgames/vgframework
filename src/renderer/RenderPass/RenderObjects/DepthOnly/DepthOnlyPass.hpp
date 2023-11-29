@@ -23,9 +23,10 @@ namespace vg::renderer
     //--------------------------------------------------------------------------------------
     // Setup executed each frame, for each pass instance
     //--------------------------------------------------------------------------------------
-    void DepthOnlyPass::Setup(const gfx::RenderPassContext & _renderContext, double _dt)
+    void DepthOnlyPass::Setup(const gfx::RenderPassContext & _renderPassContext, double _dt)
     {
-        writeDepthStencil(_renderContext.getFrameGraphID("DepthStencil"));
+        writeDepthStencil(_renderPassContext.getFrameGraphID("DepthStencil"));
+        readRWBuffer("SkinningRWBuffer");
     }
 
     //--------------------------------------------------------------------------------------

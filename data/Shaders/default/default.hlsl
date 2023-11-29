@@ -24,7 +24,7 @@ VS_Output VS_Forward(uint _vertexID : VertexID)
     VS_Output output;
 
     Vertex vert;
-           vert.Load(getBuffer(rootConstants3D.getBufferHandle()), rootConstants3D.getVertexFormat(), _vertexID, rootConstants3D.getVertexBufferOffset());
+           vert.Load(getBuffer(rootConstants3D.getBufferHandle()), rootConstants3D.getVertexFormat(), _vertexID, rootConstants3D.getBufferOffset());
 
     ViewConstants viewConstants;
     viewConstants.Load(getBuffer(RESERVEDSLOT_BUFSRV_VIEWCONSTANTS));
@@ -37,7 +37,7 @@ VS_Output VS_Forward(uint _vertexID : VertexID)
     output.col = vert.getColor() * rootConstants3D.color;
     
     float4 modelPos = float4(vert.getPos(), 1.0f);
-    float4 worldPos = mul(modelPos, rootConstants3D.mat);
+    float4 worldPos = mul(modelPos, rootConstants3D.getWorldMatrix());
     output.wpos = worldPos.xyz;
     output.pos = mul(worldPos, viewProj);
 

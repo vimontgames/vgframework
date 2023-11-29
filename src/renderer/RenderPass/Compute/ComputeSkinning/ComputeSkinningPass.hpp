@@ -50,7 +50,7 @@ namespace vg::renderer
         skinningRWBufferDesc.elementCount = s_ComputeSkinningBufferSize >> 2;
         skinningRWBufferDesc.elementSize = 4;
 
-        const auto skinningRWBuffer = _renderPassContext.getFrameGraphID("SkinningRWBuffer");
+        const auto skinningRWBuffer = "SkinningRWBuffer";
         createRWBuffer(skinningRWBuffer, skinningRWBufferDesc);
         writeRWBuffer(skinningRWBuffer);
     }
@@ -69,7 +69,7 @@ namespace vg::renderer
                 const MeshModel * meshModel = meshInstance->getMeshModel(Lod::Lod0);
                 const MeshGeometry * meshGeo = meshModel->getGeometry();
 
-                //const VertexFormat meshFmt = meshGeo->getVertexFormat();
+                const VertexFormat meshFmt = meshGeo->getVertexFormat();
                 //const uint meshFmtSize = getVertexFormatStride(meshFmt);
                 const uint vertexCount = meshGeo->getVertexCount();
                 const uint vertexSize = meshGeo->getVertexSize();
@@ -78,21 +78,30 @@ namespace vg::renderer
 				VG_ASSERT(dstOffset + vertexCount * vertexSize < s_ComputeSkinningBufferSize, "[Animation] Skinning buffer is too small");
 				if (dstOffset + vertexCount * vertexSize  < s_ComputeSkinningBufferSize)
 				{
+                    _cmdList->setComputeRootSignature(m_computeSkinningRootSignature);
+                    _cmdList->setComputeShader(m_computeSkinningShaderKey);
+
 					auto threadGroupSize = uint1(SKINNING_THREADGROUP_SIZE_X);
 					auto threadGroupCount = uint3((vertexCount + threadGroupSize.x - 1) / threadGroupSize.x, 1, 1);
 
-					auto src = meshGeo->getVertexBuffer()->getBufferHandle();
-					auto srcOffset = meshGeo->getVertexBufferOffset();
+					BindlessBufferHandle src = meshGeo->getVertexBuffer()->getBufferHandle();
+					uint srcOffset = meshGeo->getVertexBufferOffset();
 
-					auto dst = getRWBuffer(_renderPassContext.getFrameGraphID("SkinningRWBuffer"))->getRWBufferHandle();
+                    Buffer * dstBuffer = getRWBuffer("SkinningRWBuffer");
+					BindlessRWBufferHandle dst = dstBuffer->getRWBufferHandle();
 
 					// TODO : Pass vertex buffer to skin and destination buffer with offset
 					ComputeSkinningConstants skinningRootConstants;
+                    skinningRootConstants.setVertexFormat(meshFmt);
+                    skinningRootConstants.setVertexCount(vertexCount);
 					skinningRootConstants.setSource(src, srcOffset);
 					skinningRootConstants.setDest(dst, dstOffset);
 					_cmdList->setComputeRootConstants(0, (u32 *)&skinningRootConstants, ComputeSkinningConstantsCount);
 
 					_cmdList->dispatch(threadGroupCount);
+
+                    // Store skinned VB and offset in mesh
+                    meshInstance->setSkinnedMesh(dstBuffer->getBufferHandle(), dstOffset);
 
 					dstOffset += vertexCount * vertexSize;
 				}
@@ -100,22 +109,5 @@ namespace vg::renderer
 				meshInstance->clearRuntimeFlag(MeshInstance::RuntimeFlags::SkinLOD0);
             }
         }
-
-        //auto size = _renderPassContext.m_view->GetSize();
-        //auto threadGroupSize = uint2(POSTPROCESS_THREADGROUP_SIZE_X, POSTPROCESS_THREADGROUP_SIZE_Y);
-        //auto threadGroupCount = uint3((size.x + threadGroupSize.x - 1) / threadGroupSize.x, (size.y + threadGroupSize.y - 1) / threadGroupSize.y, 1);
-        //
-        //_cmdList->setComputeRootSignature(m_computePostProcessRootSignature);
-        //_cmdList->setComputeShader(m_computePostProcessShaderKey);
-        //
-        //u16 src = getRenderTarget(_renderPassContext.getFrameGraphID("Color"))->getTextureHandle();
-        //u16 dst = getRWTexture(_renderPassContext.getFrameGraphID("PostProcessUAV"))->getRWTextureHandle();
-        //
-        //PostProcessConstants postProcess;
-        //postProcess.width_height = packUint16(size.xy);
-        //postProcess.srv_uav = packUint16(uint2(src, dst));
-        //_cmdList->setComputeRootConstants(0, (u32 *)&postProcess, PostProcessConstantsCount);
-        //
-        //_cmdList->dispatch(threadGroupCount);
     }
 }

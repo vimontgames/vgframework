@@ -11,104 +11,126 @@ enum RootConstantsFlags : uint
 
 struct RootConstants3D
 {
-    uint4 data;
-    float4x4 mat;
-    float4 color;
+    float4x4 world; // world matrix (TODO: pass float3x4)
+    float4 color;   // instance color (TODO: pass u32)
+    uint buffer;    // stream0 | unused
+    uint offset;    // stream0 offset
+    uint mat;       // abeldo | normal (TODO : pass material constant buffer 16-bits handle instead)
+    uint picking;   // PickingID
+    uint misc;      // flags (16) | format (8) | matID (8)
 
     #ifdef __cplusplus
     RootConstants3D() :
-        mat(float4x4::identity()),
-        data(uint4(0,0,0,0))
+        world(float4x4::identity()),
+        color(float4(1,1,1,1)),
+        buffer(0xFFFFFFFF),
+        offset(0),
+        mat(0xFFFFFFFF),
+        picking(0),
+        misc(0)
     {
 
     }
     #endif
 
-    // data.x 
-    // uint BufferHandle        : 16;
-    // uint VertexBufferOffset  : 16
-    void setBufferHandle(uint _value)
+    // buffer
+    // uint Stream0BufferHandle     : 16;
+    // uint Stream1BufferHandle     : 16
+    void setBufferHandle(uint _stream0)
     {
-        data.x = (data.x & ~0x0000FFFFUL) | (_value & 0xFFFF);
+        buffer = packUint16(uint2(_stream0, 0));
     }
     uint getBufferHandle()
     {
-        return data.x & 0xFFFF;
+        return unpackUint16(buffer).x;
     }
-    void setVertexBufferOffset(uint _value)
+    
+    void setBufferOffset(uint _offset)
     {
-        data.x = (data.x & ~0xFFFF0000UL) | (_value & 0xFFFF) << 16;
-    }
-    uint getVertexBufferOffset()
-    {
-        return data.x >> 16;
+        offset = _offset;
     }
 
-    // data.y 
+    uint getBufferOffset()
+    {
+        return offset;
+    }
+
+    // mat
     // uint AlbedoTex : 16
     // uint NormalTex : 16
     void setAlbedoTextureHandle(uint _value)
     {
-        data.y = (data.y & ~0x0000FFFFUL) | (_value & 0xFFFF);
+        mat = (mat & ~0x0000FFFFUL) | (_value & 0xFFFF);
     }
     uint getAlbedoTextureHandle()
     {
-        return data.y & 0xFFFF;
+        return mat & 0xFFFF;
     }
     void setNormalTextureHandle(uint _value)
     {
-        data.y = (data.y & ~0xFFFF0000UL) | (_value & 0xFFFF) << 16;
+        mat = (mat & ~0xFFFF0000UL) | (_value & 0xFFFF) << 16;
     }
     uint getNormalTextureHandle()
     {
-        return data.y >> 16;
+        return mat >> 16;
     }
     
-    // data.z
+    // picking
     // uint pickingID : 32
     void setPickingID(uint _value)
     {
-        data.z = _value;
+        picking = _value;
     }
     
     uint getPickingID()
     {
-        return data.z;
+        return picking;
     }
 
-    // data.w
+    // misc
     // uint flags   : 16 (unused)
     // uint format  : 8 
     // uint matID   : 8 
     void setFlags(uint _value)
     {
-        data.w = (data.w & ~0x0000FFFFUL) | (_value & 0xFFFF);
+        misc = (misc & ~0x0000FFFFUL) | (_value & 0xFFFF);
     }
     uint getFlags()
     {
-        return data.w & 0xFFFF;
+        return misc & 0xFFFF;
     }
     void setVertexFormat(VertexFormat _value)
     {
-        data.w = (data.w & ~0x00FF0000UL) | ((((uint) _value) & 0xFF) << 16);
+        misc = (misc & ~0x00FF0000UL) | ((((uint) _value) & 0xFF) << 16);
     }
     VertexFormat getVertexFormat()
     {
-        return (VertexFormat)((data.w >> 16) & 0xFF);
+        return (VertexFormat) ((misc >> 16) & 0xFF);
     }
     void setMatID(uint _value)
     {
-        data.w = (data.w & ~0xFF000000UL) | ((_value & 0xFF) << 24);
+        misc = (misc & ~0xFF000000UL) | ((_value & 0xFF) << 24);
     }
     uint getMatID()
     {
-        return (data.w >> 24) & 0xFF;
+        return (misc >> 24) & 0xFF;
+    }
+    
+    void setWorldMatrix(float4x4 _world)
+    {
+        world = _world;
+    }
+    
+    float4x4 getWorldMatrix()
+    {
+        return world;
     }
     
     void setColor(float4 _color)
     {
         color = _color;
     }
+    
     float4 getColor()
     {
         return color;

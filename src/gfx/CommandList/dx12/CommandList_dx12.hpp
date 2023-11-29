@@ -166,6 +166,17 @@ namespace vg::gfx::dx12
                         VG_ASSERT_ENUM_NOT_IMPLEMENTED(resType);
                         break;
 
+                    case FrameGraphResource::Type::Buffer:
+                        d3d12barrier.Transition.pResource = ((FrameGraphBufferResource *)resTrans.m_resource)->getBuffer()->getResource().getd3d12BufferResource();
+                        d3d12barrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
+                        d3d12barrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
+                        d3d12barrier.Transition.StateBefore = getd3d12ResourceBarrierType(resTrans.m_transitionDesc.begin);
+                        d3d12barrier.Transition.StateAfter = getd3d12ResourceBarrierType(resTrans.m_transitionDesc.end);
+                        d3d12barrier.Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
+
+                        d3d12barriers.push_back(d3d12barrier);
+                        break;
+
                     case FrameGraphResource::Type::Texture:
                         d3d12barrier.Transition.pResource = ((FrameGraphTextureResource*)resTrans.m_resource)->getTexture()->getResource().getd3d12TextureResource();
                         d3d12barrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;

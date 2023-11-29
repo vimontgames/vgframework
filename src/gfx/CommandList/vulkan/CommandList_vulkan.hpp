@@ -137,10 +137,65 @@ namespace vg::gfx::vulkan
     //--------------------------------------------------------------------------------------
     void CommandList::transitionResource(gfx::Buffer * _buffer, ResourceState _before, ResourceState _after)
     {
-        VG_ASSERT_NOT_IMPLEMENTED();
+        VkBufferMemoryBarrier bufferMemoryBarrier = {};
+        bufferMemoryBarrier.sType = VK_STRUCTURE_TYPE_BUFFER_MEMORY_BARRIER;
+        bufferMemoryBarrier.pNext = NULL;
+        bufferMemoryBarrier.srcAccessMask = 0;
+        bufferMemoryBarrier.dstAccessMask = VK_ACCESS_TRANSFER_WRITE_BIT;
+        bufferMemoryBarrier.srcQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
+        bufferMemoryBarrier.dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
+        bufferMemoryBarrier.buffer = _buffer->getResource().getVulkanBuffer();
+        bufferMemoryBarrier.dstAccessMask = VK_ACCESS_TRANSFER_WRITE_BIT;
+        bufferMemoryBarrier.size = _buffer->getBufDesc().getSize();
 
-        //VkMemoryBarrier memoryBarrier;
-        //memoryBarrier.sType = VK_STRUCTURE_TYPE_MEMORY_BARRIER;
+        switch (_before)
+        {
+            default:
+                VG_ASSERT(false, "transitionResource from '%s' to '%s' is not implemented", asString(_before).c_str(), asString(_after).c_str());
+                break;
+
+            case ResourceState::UnorderedAccess:
+            {
+                switch (_after)
+                {
+                    default:
+                        VG_ASSERT(false, "transitionResource from '%s' to '%s' is not implemented", asString(_before).c_str(), asString(_after).c_str());
+                        break;
+
+                    case ResourceState::ShaderResource:
+                    {
+                        // ShaderResource to RenderTarget transition
+                        bufferMemoryBarrier.srcAccessMask = VK_ACCESS_SHADER_WRITE_BIT;
+                        bufferMemoryBarrier.dstAccessMask = VK_ACCESS_SHADER_READ_BIT;
+
+                        vkCmdPipelineBarrier(m_vkCommandBuffer, VK_PIPELINE_STAGE_ALL_GRAPHICS_BIT, VK_PIPELINE_STAGE_ALL_GRAPHICS_BIT, 0, 0, nullptr, 1, &bufferMemoryBarrier, 0, nullptr);
+                    }
+                    break;
+                }
+            }
+            break;
+
+            case ResourceState::ShaderResource:
+            {
+                switch (_after)
+                {
+                    default:
+                        VG_ASSERT(false, "transitionResource from '%s' to '%s' is not implemented", asString(_before).c_str(), asString(_after).c_str());
+                        break;
+
+                    case ResourceState::UnorderedAccess:
+                    {
+                        // ShaderResource to UnorderedAccess transition
+                        bufferMemoryBarrier.srcAccessMask = VK_ACCESS_SHADER_READ_BIT;
+                        bufferMemoryBarrier.dstAccessMask = VK_ACCESS_SHADER_WRITE_BIT;
+
+                        vkCmdPipelineBarrier(m_vkCommandBuffer, VK_PIPELINE_STAGE_ALL_GRAPHICS_BIT, VK_PIPELINE_STAGE_ALL_GRAPHICS_BIT, 0, 0, nullptr, 1, &bufferMemoryBarrier, 0, nullptr);
+                    }
+                    break;
+                }
+            }
+            break;
+        }
     }
 
     //--------------------------------------------------------------------------------------
@@ -168,6 +223,10 @@ namespace vg::gfx::vulkan
             {
                 default:
                     VG_ASSERT_ENUM_NOT_IMPLEMENTED(resType);
+
+                case FrameGraphResource::Type::Buffer:
+                    transitionResource(((FrameGraphBufferResource *)resTrans.m_resource)->getBuffer(), resTrans.m_transitionDesc.begin, resTrans.m_transitionDesc.end);
+                    break;
 
                 case FrameGraphResource::Type::Texture:
                     transitionResource(((FrameGraphTextureResource *)resTrans.m_resource)->getTexture(), resTrans.m_transitionDesc.begin, resTrans.m_transitionDesc.end);

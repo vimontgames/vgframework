@@ -67,13 +67,21 @@ namespace vg::renderer
 
             const float4x4 world = getWorldMatrix();
 
-            Buffer * vb = geo->getVertexBuffer();
-            Buffer * ib = geo->getIndexBuffer();
-            _cmdList->setIndexBuffer(ib);
+            _cmdList->setIndexBuffer(geo->getIndexBuffer());
 
             RootConstants3D root3D;
-            root3D.mat = transpose(world);
-            root3D.setBufferHandle(vb->getBufferHandle());
+            root3D.setWorldMatrix(transpose(world));
+
+            if (IsSkinned())
+            {
+                root3D.setBufferHandle(m_skinnedMeshBufferHandle);
+                root3D.setBufferOffset(m_skinnedMeshBufferOffset);
+            }
+            else
+            {
+                root3D.setBufferHandle(geo->getVertexBuffer()->getBufferHandle());
+                root3D.setBufferHandle(geo->getVertexBufferOffset());
+            }
             
             u16 flags = 0;
             root3D.setFlags(flags);
@@ -154,21 +162,10 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    float4x4 MakeTRS(const float3 & _translation, const quaternion _rotation, const float3 _scale)
+    void MeshInstance::setSkinnedMesh(const gfx::BindlessBufferHandle & _skinnedBufferHandle, core::uint _skinnedBufferOffset)
     {
-        quaternion q = _rotation;
-
-        float xx = q.x * q.x, xy = q.x * q.y, xz = q.x * q.z, xw = q.x * q.w;
-        float yy = q.y * q.y, yz = q.y * q.z, yw = q.y * q.w;
-        float zz = q.z * q.z, zw = q.z * q.w;
-        float sx = 2.0f * _scale.x, sy = 2.0f * _scale.y, sz = 2.0f * _scale.z;
-
-        return float4x4(
-            sx * (-yy - zz + 0.5f), sy * (-zw + xy), sz * (+xz + yw), _translation.x,
-            sx * (+xy + zw), sy * (-xx - zz + 0.5f), sz * (-xw + yz), _translation.y,
-            sx * (-yw + xz), sy * (+xw + yz), sz * (-xx - yy + 0.5f), _translation.z,
-            0, 0, 0, 1
-            );
+        m_skinnedMeshBufferHandle = _skinnedBufferHandle;
+        m_skinnedMeshBufferOffset = _skinnedBufferOffset;
     }
 
     //--------------------------------------------------------------------------------------
@@ -183,7 +180,6 @@ namespace vg::renderer
             Skeleton & skeleton = *m_instanceSkeleton;
             core::vector<MeshImporterNode> & skeletonNodes = skeleton.getNodes();
 
-            #if 1
             // normalize weights
             float weightSum = 0.0f;
             for (uint j = 0; j < m_animationBindings.size(); ++j)
@@ -247,7 +243,7 @@ namespace vg::renderer
                 }
 
                 // Update skeleton node
-                skeletonNode.node_to_parent = MakeTRS(pos, rot, scale);
+                skeletonNode.node_to_parent = TRS(pos, rot, scale);
 
                 if (-1 != skeletonNode.parent_index)
                     skeletonNode.node_to_world = mul(skeletonNodes[skeletonNode.parent_index].node_to_world, skeletonNode.node_to_parent);
@@ -257,72 +253,6 @@ namespace vg::renderer
                 skeletonNode.geometry_to_world = mul(skeletonNode.node_to_world, skeletonNode.geometry_to_node);
                 skeletonNode.normal_to_world = transpose(inverse(skeletonNode.geometry_to_world));
             }
-            #else
-            // update animations
-            for (uint j = 0; j < m_animationBindings.size(); ++j)
-            {
-                AnimationBinding & animationBinding = m_animationBindings[j];
-
-                if (animationBinding.m_animation)
-                {
-                    const SkeletalAnimation * animation = animationBinding.m_animation;
-                    const AnimImporterData & anim = animation->m_animData;
-
-                    const float time = animation->getTime();
-
-                    float frame_time = (time - anim.time_begin) * anim.framerate;
-                    uint f0 = min((uint)frame_time + 0, anim.num_frames - 1);
-                    uint f1 = min((uint)frame_time + 1, anim.num_frames - 1);
-                    float t = min(frame_time - (float)f0, 1.0f);
-
-                    for (size_t i = 0; i < skeletonNodes.size() - 1; i++)
-                    {
-                        const AnimNodeData & animNode = anim.animNodes[i];
-
-                        quaternion rot = animNode.rot.size() > 0 ? lerp(animNode.rot[f0], animNode.rot[f1], t) : animNode.const_rot;
-                        float3 pos = animNode.pos.size() > 0 ? lerp(animNode.pos[f0], animNode.pos[f1], t) : animNode.const_pos;
-                        float3 scale = animNode.scale.size() > 0 ? lerp(animNode.scale[f0], animNode.scale[f1], t) : animNode.const_scale;
-
-                        const uint index = animationBinding.m_animToSkeletonIndex[i];
-
-                        MeshImporterNode & skeletonNode = skeletonNodes[index];
-                        skeletonNode.node_to_parent = MakeTRS(pos, rot, scale);
-                    }
-
-                    skeletonUpdate = true;
-                }
-            }
-
-            // blend anims and update hierarchy
-            if (skeletonUpdate)
-            {
-                for (size_t i = 0; i < skeletonNodes.size(); i++)
-                {
-                    MeshImporterNode & skeletonNode = skeletonNodes[i];
-
-                    for (uint j = 0; j < m_animationBindings.size(); ++j)
-                    {
-                        AnimationBinding & animationBinding = m_animationBindings[j];
-                        const SkeletalAnimation * animation = animationBinding.m_animation;
-                        const AnimImporterData & anim = animation->m_animData;
-
-                        const int index = animationBinding.m_skeletonToAnimIndex[i];
-
-                        if (-1 != index)
-                        {
-                            if (-1 != skeletonNode.parent_index)
-                            {
-                                skeletonNode.node_to_world = mul(skeletonNodes[skeletonNode.parent_index].node_to_world, skeletonNode.node_to_parent);
-                            }
-                            else
-                            {
-                                skeletonNode.node_to_world = skeletonNode.node_to_parent;
-                            }
-                        }
-                    }
-                }
-            }
-            #endif
         }
 
         return skeletonUpdate;

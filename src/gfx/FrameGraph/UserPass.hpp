@@ -137,6 +137,15 @@ namespace vg::gfx
     }
 
     //--------------------------------------------------------------------------------------
+    void UserPass::readRWBuffer(const FrameGraphResourceID & _resID)
+    {
+        FrameGraphBufferResource * res = m_frameGraph->getBufferResource(_resID);
+        VG_ASSERT(res);
+        res->setReadAtPass(this);
+        m_rwBuffers.push_back(res);
+    }
+
+    //--------------------------------------------------------------------------------------
     // The pass will read RT '_resID'
     //--------------------------------------------------------------------------------------
     void UserPass::readRenderTarget(const FrameGraphResourceID & _resID)
