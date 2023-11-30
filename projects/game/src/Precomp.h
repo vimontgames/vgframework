@@ -5,6 +5,7 @@
 #include "core/Types/Types.h"
 #include "core/Object/Object.h"
 #include "core/Object/AutoRegisterClass.h"
+#include "core/Math/Math.h"
 
 #include "engine/IEngine.h"
 #include "engine/IAnimationComponent.h"

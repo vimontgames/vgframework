@@ -20,16 +20,16 @@ namespace vg::editor
             const auto * classDesc = factory->getClassDescriptor(_object->getClassName());
             auto list = dynamic_cast<engine::IResourceList *>(_object);
 
-            uint materialCount = 0;
+            uint resourceCount = 0;
             for (uint i = 0; i < classDesc->GetPropertyCount(); ++i)
             {
                 const IProperty * prop = classDesc->GetPropertyByIndex(i);
                 if (!strcmp(prop->getName(), _vectorPropName.c_str()))
-                    materialCount = prop->GetPropertyResourceVectorCount(_object);
+                    resourceCount = prop->GetPropertyResourceVectorCount(_object);
             }
 
             ImGui::PushID(_object);
-            string label = _label + (string)"s (" + to_string(materialCount) + (string)")###" + to_string((uint_ptr)_object);
+            string label = _label + (string)"s (" + to_string(resourceCount) + (string)")###" + to_string((uint_ptr)_object);
 
             bool open = ImGui::TreeNodeEx(label.c_str(), ImGuiTreeNodeFlags_DefaultOpen);
             bool remove = false;
@@ -42,9 +42,9 @@ namespace vg::editor
 
                     if (!strcmp(prop->getName(), _vectorPropName.c_str()))
                     {
-                        materialCount = prop->GetPropertyResourceVectorCount(_object);
+                        resourceCount = prop->GetPropertyResourceVectorCount(_object);
 
-                        for (uint i = 0; i < materialCount; ++i)
+                        for (uint i = 0; i < resourceCount; ++i)
                         {
                             ImGui::PushID(i);
                             auto obj = prop->GetPropertyResourceVectorElement(_object, i);
@@ -72,14 +72,14 @@ namespace vg::editor
 
                 ImGui::Spacing();
 
-                string addMaterialLabel = "Add###" + to_string((uint_ptr)_object);
-                string removeMaterialLabel = "Remove###" + to_string((uint_ptr)_object);
+                string addSubResourceLabel = "Add###" + to_string((uint_ptr)_object);
+                string removeSubResourceLabel = "Remove###" + to_string((uint_ptr)_object);
                 if (ImGui::Button(((string)"Add " + _label).c_str()))
                     list->Add();
 
                 ImGui::SameLine();
 
-                ImGui::BeginDisabled(materialCount == 0);
+                ImGui::BeginDisabled(resourceCount == 0);
                 {
                     if (ImGui::Button(((string)"Remove " + _label).c_str()))
                     {

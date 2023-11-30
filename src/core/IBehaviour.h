@@ -6,10 +6,6 @@ namespace vg::core
     class IBehaviour : public Component
     {
     public:
-        IBehaviour(const core::string & _name, IObject * _parent) :
-            Component(_name, _parent)
-        {
-
-        }
+        VG_CLASS_DECL_ABSTRACT(IBehaviour, Component);
     };
 }

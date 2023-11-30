@@ -97,9 +97,11 @@ PS_Output PS_Forward(VS_Output _input)
     float3 N = normalize(_input.nrm);
 
     float3 worldNormal = normalize(T * normal.x + B * normal.y + N * normal.z);
+           worldNormal = mul(worldNormal.xyz, rootConstants3D.getWorldMatrix());
 
     // fake shitty lighting
-    float3 fakeDiffuseLighting = saturate(dot(worldNormal, normalize(float3(-1, -1, 2))) * 0.8f);
+    float3 lightDir = normalize(float3(-1,0,-1));
+    float3 fakeDiffuseLighting = saturate(dot(worldNormal, -lightDir) * 0.8f);
     float3 fakeAmbientLighting = 0.1f;
 
     output.color0.rgba = float4(albedo.rgb * (fakeDiffuseLighting + fakeAmbientLighting), 1.0f);

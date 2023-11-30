@@ -813,9 +813,34 @@ namespace vg::editor
 
     //--------------------------------------------------------------------------------------
     // Display Resource Object
+    // Display Resource properties 1st, then path and referenced object properties 2nd
     //--------------------------------------------------------------------------------------
     bool ImGuiWindow::displayResource(core::IResource * _resource, const core::IProperty * _prop, core::uint _index)
     {
+        
+        const char * className = _resource->getClassName();
+        const auto * factory = Kernel::getFactory();
+        const auto * classDesc = factory->getClassDescriptor(className);
+
+        // Display all properties of the resource component
+        {
+            auto availableWidth = GetContentRegionAvail().x;
+            ImGui::PushItemWidth(availableWidth - style::label::PixelWidth);
+
+            if (!ImGuiObjectHandler::display(_resource))
+            {
+                const char * classDisplayName = classDesc->GetClassDisplayName();
+
+                for (uint i = 0; i < classDesc->GetPropertyCount(); ++i)
+                {
+                    const IProperty * prop = classDesc->GetPropertyByIndex(i);
+                    if (strcmp(prop->getName(), "m_object"))
+                        ImGuiWindow::displayProperty(_resource, prop);
+                }
+            }
+            ImGui::PopItemWidth();
+        }
+
         bool changed = false;
 
         char buffer[1024];
@@ -966,8 +991,34 @@ namespace vg::editor
             }
         }
 
-        displayObject(_resource);
+        // Display all properties of the resource object
+        IObject * resourceObject = _resource->getObject();
+        if (resourceObject)
+        {
+            bool anyVisibleProperty = false;
+            auto * objectClassDesc = factory->getClassDescriptor(resourceObject->getClassName());
 
+            for (uint i = 0; i < objectClassDesc->GetPropertyCount(); ++i)
+            {
+                const IProperty * prop = objectClassDesc->GetPropertyByIndex(i);
+                if (!asBool(prop->getFlags() & IProperty::Flags::Hidden) & strcmp(prop->getName(), "m_object"))
+                {
+                    anyVisibleProperty = true;
+                    break;
+                }
+            }
+
+            if (anyVisibleProperty)
+            {
+                char label[256];
+                sprintf(label, "%s Details", _prop->getDisplayName());
+                if (ImGui::TreeNodeEx(label, ImGuiTreeNodeFlags_DefaultOpen))
+                {
+                    ImGuiWindow::displayObject(resourceObject);
+                    ImGui::TreePop();
+                }
+            }
+        }
         ImGui::PopID();
 
         return changed;

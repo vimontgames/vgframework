@@ -29,48 +29,59 @@
                                         <Property type="String" name="m_name" flags="Hidden" value=""/>
                                         <Property type="ResourceVector" name="m_materialResources" flags="Resource">
                                             <Object class="MaterialResource">
-                                                <Property type="String" name="m_name" flags="Hidden" value="test"/>
+                                                <Property type="String" name="m_name" flags="Hidden" value="Skin"/>
                                                 <Property type="String" name="m_resourcePath" flags="Hidden" value="data/Models/Pablo/Skin.mat"/>
+                                                <Property type="String" name="m_name" value="Skin"/>
                                             </Object>
                                             <Object class="MaterialResource">
                                                 <Property type="String" name="m_name" flags="Hidden" value=""/>
                                                 <Property type="String" name="m_resourcePath" flags="Hidden" value="data/Models/Pablo/Mouth.mat"/>
+                                                <Property type="String" name="m_name" value=""/>
                                             </Object>
                                             <Object class="MaterialResource">
                                                 <Property type="String" name="m_name" flags="Hidden" value=""/>
                                                 <Property type="String" name="m_resourcePath" flags="Hidden" value="data/Models/Pablo/Iris.mat"/>
+                                                <Property type="String" name="m_name" value=""/>
                                             </Object>
                                             <Object class="MaterialResource">
                                                 <Property type="String" name="m_name" flags="Hidden" value=""/>
                                                 <Property type="String" name="m_resourcePath" flags="Hidden" value="data/Models/Pablo/Shirt.mat"/>
+                                                <Property type="String" name="m_name" value=""/>
                                             </Object>
                                             <Object class="MaterialResource">
                                                 <Property type="String" name="m_name" flags="Hidden" value=""/>
                                                 <Property type="String" name="m_resourcePath" flags="Hidden" value="data/Models/Pablo/Glove.mat"/>
+                                                <Property type="String" name="m_name" value=""/>
                                             </Object>
                                             <Object class="MaterialResource">
                                                 <Property type="String" name="m_name" flags="Hidden" value=""/>
                                                 <Property type="String" name="m_resourcePath" flags="Hidden" value="data/Models/Pablo/Logo.mat"/>
+                                                <Property type="String" name="m_name" value=""/>
                                             </Object>
                                             <Object class="MaterialResource">
                                                 <Property type="String" name="m_name" flags="Hidden" value=""/>
                                                 <Property type="String" name="m_resourcePath" flags="Hidden" value="data/Models/Pablo/Hair.mat"/>
+                                                <Property type="String" name="m_name" value=""/>
                                             </Object>
                                             <Object class="MaterialResource">
                                                 <Property type="String" name="m_name" flags="Hidden" value=""/>
                                                 <Property type="String" name="m_resourcePath" flags="Hidden" value="data/Models/Pablo/Trouser.mat"/>
+                                                <Property type="String" name="m_name" value=""/>
                                             </Object>
                                             <Object class="MaterialResource">
                                                 <Property type="String" name="m_name" flags="Hidden" value=""/>
                                                 <Property type="String" name="m_resourcePath" flags="Hidden" value="data/Models/Pablo/Shoe.mat"/>
+                                                <Property type="String" name="m_name" value=""/>
                                             </Object>
                                             <Object class="MaterialResource">
                                                 <Property type="String" name="m_name" flags="Hidden" value=""/>
                                                 <Property type="String" name="m_resourcePath" flags="Hidden" value="data/Models/Pablo/Trouser.mat"/>
+                                                <Property type="String" name="m_name" value=""/>
                                             </Object>
                                             <Object class="MaterialResource">
                                                 <Property type="String" name="m_name" flags="Hidden" value=""/>
                                                 <Property type="String" name="m_resourcePath" flags="Hidden" value="data/Models/Pablo/Button.mat"/>
+                                                <Property type="String" name="m_name" value=""/>
                                             </Object>
                                         </Property>
                                     </Object>
@@ -85,36 +96,46 @@
                                             <Object class="AnimationResource">
                                                 <Property type="String" name="m_name" flags="Hidden" value="Idle"/>
                                                 <Property type="String" name="m_resourcePath" flags="Hidden" value="data/Models/Pablo/Pablo_idle_anim.fbx"/>
-                                                <Property type="Bool" name="m_playing" value="false"/>
+                                                <Property type="Bool" name="m_play" value="false"/>
+                                                <Property type="Bool" name="m_loop" flags="SameLine" value="false"/>
                                                 <Property type="String" name="m_name" value="Idle"/>
-                                                <Property type="Float" name="m_time" value="0"/>
-                                                <Property type="Float" name="m_weight" flags="HasRange" value="0"/>
-                                                <Property type="Float" name="m_speed" value="1"/>
+                                                <Property type="Float" name="m_speed" flags="HasRange" value="1"/>
                                             </Object>
                                             <Object class="AnimationResource">
                                                 <Property type="String" name="m_name" flags="Hidden" value="Hello"/>
                                                 <Property type="String" name="m_resourcePath" flags="Hidden" value="data/Models/Pablo/Pablo_hello_anim.fbx"/>
-                                                <Property type="Bool" name="m_playing" value="false"/>
+                                                <Property type="Bool" name="m_play" value="false"/>
+                                                <Property type="Bool" name="m_loop" flags="SameLine" value="false"/>
                                                 <Property type="String" name="m_name" value="Hello"/>
-                                                <Property type="Float" name="m_time" value="0"/>
-                                                <Property type="Float" name="m_weight" flags="HasRange" value="0"/>
-                                                <Property type="Float" name="m_speed" value="1"/>
+                                                <Property type="Float" name="m_speed" flags="HasRange" value="1"/>
+                                            </Object>
+                                            <Object class="AnimationResource">
+                                                <Property type="String" name="m_name" flags="Hidden" value="Walking"/>
+                                                <Property type="String" name="m_resourcePath" flags="Hidden" value="data/Models/Pablo/Pablo_walking_anim.fbx"/>
+                                                <Property type="Bool" name="m_play" value="false"/>
+                                                <Property type="Bool" name="m_loop" flags="SameLine" value="false"/>
+                                                <Property type="String" name="m_name" value="Walking"/>
+                                                <Property type="Float" name="m_speed" flags="HasRange" value="1"/>
                                             </Object>
                                         </Property>
                                     </Object>
                                 </Property>
                             </Object>
                             <Object class="PlayerBehaviour">
+                                <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
                                 <Property type="Uint8" name="m_joypadID" value="0"/>
+                                <Property type="EnumU8" name="m_state" value="Idle"/>
+                                <Property type="EnumU8" name="m_facing" value="None"/>
+                                <Property type="Float" name="m_speed" value="1"/>
                             </Object>
                         </Property>
                         <Property type="ObjectRefVector" name="m_children" flags="Hidden"/>
                     </Object>
                     <Object class="GameObject">
                         <Property type="String" name="m_name" value="Camera"/>
-                        <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
+                        <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled|Selected"/>
                         <Property type="Float4" name="m_color" flags="Color" x="1" y="1" z="1" w="1"/>
-                        <Property type="Float4x4" name="m_world" Ix="0.93765116" Iy="-0.34757778" Iz="-0" Iw="-0" Jx="0.086435899" Jy="0.23317577" Jz="0.96858555" Jw="-0" Kx="-0.33665884" Ky="-0.90819538" Kz="0.24868073" Kw="0" Tx="-1.3057363" Ty="-3.9481611" Tz="1.8493571" Tw="1"/>
+                        <Property type="Float4x4" name="m_world" Ix="0.99999994" Iy="0.00040713151" Iz="-0" Iw="-0" Jx="7.6784436e-06" Jy="-0.01885986" Jz="0.99982214" Jw="-0" Kx="0.00040705909" Ky="-0.99982208" Kz="-0.018859861" Kw="0" Tx="0" Ty="-10" Tz="1.5" Tw="1"/>
                         <Property type="ObjectRefVector" name="m_components">
                             <Object class="CameraComponent">
                                 <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
@@ -125,10 +146,11 @@
                                 <Property type="Float" name="m_far" flags="HasRange" value="1024"/>
                             </Object>
                             <Object class="FreeCamBehaviour">
+                                <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
                                 <Property type="Float" name="m_moveSpeed" flags="HasRange" value="1"/>
                                 <Property type="Float" name="m_rotSpeed" flags="HasRange" value="1"/>
-                                <Property type="Float" name="m_pitch" flags="HasRange" value="-1.3194784"/>
-                                <Property type="Float" name="m_yaw" flags="HasRange" value="2.7866061"/>
+                                <Property type="Float" name="m_pitch" flags="HasRange" value="-1.5896573"/>
+                                <Property type="Float" name="m_yaw" flags="HasRange" value="-3.1411855"/>
                                 <Property type="Float" name="m_roll" flags="HasRange" value="0"/>
                             </Object>
                         </Property>

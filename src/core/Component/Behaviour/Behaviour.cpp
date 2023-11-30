@@ -6,6 +6,8 @@ namespace vg::core
     //--------------------------------------------------------------------------------------
     bool Behaviour::registerProperties(IClassDesc & _desc)
     {
+        super::registerProperties(_desc);
+
         return true;
     }
 
