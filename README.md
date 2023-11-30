@@ -16,13 +16,15 @@ Another subject that is very close to my heart is that there is a strong separat
 # changelog
 
 ## 0.1
-Skeletal animations with Compute Shader Skinning
-Modified properties are restored when exiting Game mode
+Skeletal animations with Compute Shader Skinning\
+Modified properties are restored when exiting Game mode\
 Application now has icon :p
+
 ![Screenshot](doc/img/0.14.gif)
 
 ## 0.13
 Loaded resources are displayed per type and their owners with paths
+
 ![Screenshot](doc/img/ResourceWindow.gif)
 
 ## 0.12
