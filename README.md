@@ -15,7 +15,7 @@ Another subject that is very close to my heart is that there is a strong separat
 
 # changelog
 
-## 0.1
+## 0.14
 Skeletal animations with Compute Shader Skinning\
 Modified properties are restored when exiting Game mode\
 Application now has icon :p
