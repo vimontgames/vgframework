@@ -165,6 +165,14 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
+    void AnimationResource::OnStop()
+    {
+        super::OnStop();
+        setTime(m_time);
+        setWeight(m_weight);
+    }
+
+    //--------------------------------------------------------------------------------------
     void AnimationResource::onPropertyChanged(core::IObject * _object, const core::IProperty & _prop)
     {
         if (!strcmp(_prop.getName(), "m_time"))

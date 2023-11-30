@@ -57,6 +57,9 @@ namespace vg::core
     {
         super::OnPlay();
 
+        for (uint i = 0; i < m_components.size(); ++i)
+            m_components[i]->OnPlay();
+
         for (uint i = 0; i < m_children.size(); ++i)
             m_children[i]->OnPlay();
     }
@@ -66,6 +69,9 @@ namespace vg::core
     {
         for (uint i = 0; i < m_children.size(); ++i)
             m_children[i]->OnStop();
+
+        for (uint i = 0; i < m_components.size(); ++i)
+            m_components[i]->OnStop();
 
         super::OnStop();
     }

@@ -17,6 +17,9 @@ namespace vg::engine
 
         void                    Update              (double _dt) override;
 
+        void                    OnPlay              () override;
+        void                    OnStop              () override;
+
         void                    onPropertyChanged   (IObject * _object, const core::IProperty & _prop) override;
 
         void                    onResourceLoaded    (core::IResource * _resource) override;

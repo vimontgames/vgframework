@@ -13,6 +13,9 @@ namespace vg::engine
         AnimationResourceList(const core::string & _name, core::IObject * _parent);
         ~AnimationResourceList();
 
+        void                                        OnPlay                  () override;
+        void                                        OnStop                  () override;
+
         bool                                        Add                     () final override;
         bool                                        Remove                  () final override;
 

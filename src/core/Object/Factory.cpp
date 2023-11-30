@@ -7,11 +7,28 @@
 #include "core/Kernel.h"
 #include "engine/IResourceManager.h"
 #include "core/File/File.h"
+#include "core/File/Buffer.h"
 
 using namespace tinyxml2;
 
 namespace vg::core
 {
+    //--------------------------------------------------------------------------------------
+    Factory::Factory()
+    {
+
+    }
+
+    //--------------------------------------------------------------------------------------
+    Factory::~Factory()
+    {
+        for (auto val : m_initValues)
+        {
+            VG_SAFE_DELETE(val.second);
+        }
+        m_initValues.clear();
+    }
+
     //--------------------------------------------------------------------------------------
     // Returned pointer shall not be stored but used immediately
     //--------------------------------------------------------------------------------------
@@ -169,6 +186,159 @@ namespace vg::core
                 return true;
 
         return false;
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool Factory::SaveProperties(core::IObject * _object)
+    {
+        auto it = m_initValues.find(_object);
+        VG_ASSERT((it == m_initValues.end()));
+        if (it == m_initValues.end())
+        {
+            io::Buffer * buffer = new io::Buffer();
+            it = m_initValues.insert(std::pair(_object, buffer)).first;
+            return serializeToMemory(_object, *buffer);
+        }
+        
+        return false;
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool Factory::RestoreProperties(core::IObject * _object)
+    {
+        auto it = m_initValues.find(_object);
+        if (it != m_initValues.end())
+        {
+            io::Buffer * buffer = it->second;
+            bool result = serializeFromMemory(_object, *buffer);
+            VG_SAFE_DELETE(it->second);
+            m_initValues.erase(it);
+            return result;
+        }
+
+        return false;
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool Factory::serializeToMemory(const IObject * _object, io::Buffer & _buffer)
+    {
+        const char * className = _object->getClassName();
+        const auto * classDesc = getClassDescriptor(className);
+
+        for (uint p = 0; p < classDesc->GetPropertyCount(); ++p)
+        {
+            const auto & prop = classDesc->GetPropertyByIndex(p);
+
+            const auto name = prop->getName();
+            const auto type = prop->getType();
+            const auto size = prop->getSizeOf();
+            const auto offset = prop->getOffset();
+            const auto flags = prop->getFlags();
+            const bool isEnumArray = asBool(IProperty::Flags::EnumArray & prop->getFlags());
+
+            switch (type)
+            {
+                default:
+                    //VG_ASSERT_ENUM_NOT_IMPLEMENTED(type);
+                    break;
+
+                case IProperty::Type::Callback:
+                    break;
+
+                case IProperty::Type::Bool:
+                case IProperty::Type::Int8:
+                case IProperty::Type::Int16:
+                case IProperty::Type::Int32:
+                case IProperty::Type::Int64:
+                case IProperty::Type::Uint8:
+                case IProperty::Type::Uint16:
+                case IProperty::Type::Uint32:
+                case IProperty::Type::Uint64:
+                case IProperty::Type::Float:
+                case IProperty::Type::Float2:
+                case IProperty::Type::Float3:
+                case IProperty::Type::Float4:
+                case IProperty::Type::Float4x4:
+                case IProperty::Type::EnumU8:
+                case IProperty::Type::EnumU16:
+                case IProperty::Type::EnumU32:
+                case IProperty::Type::EnumU64:
+                case IProperty::Type::EnumFlagsU8:
+                case IProperty::Type::EnumFlagsU16:
+                case IProperty::Type::EnumFlagsU32:
+                case IProperty::Type::EnumFlagsU64:
+                {
+                    VG_ASSERT(!isEnumArray, "EnumArray serialization from Memory not implemented for type '%s'", asString(type).c_str());
+                    const void * src = (void *)(uint_ptr(_object) + offset);
+                    VG_VERIFY(_buffer.write(src, size));
+                }
+            }
+        }
+
+        return true;
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool Factory::serializeFromMemory(IObject * _object, io::Buffer & _buffer)
+    {
+        const char * className = _object->getClassName();
+        const auto * classDesc = getClassDescriptor(className);
+
+        for (uint p = 0; p < classDesc->GetPropertyCount(); ++p)
+        {
+            const auto & prop = classDesc->GetPropertyByIndex(p);
+
+            const char * name = prop->getName();
+            const auto type = prop->getType();
+            const auto size = prop->getSizeOf();
+            const auto offset = prop->getOffset();
+            const auto flags = prop->getFlags();
+            const bool isEnumArray = asBool(IProperty::Flags::EnumArray & prop->getFlags());
+
+            switch (type)
+            {
+                default:
+                    //VG_ASSERT_ENUM_NOT_IMPLEMENTED(type);
+                    break;
+
+                case IProperty::Type::Callback:
+                    break;
+
+                case IProperty::Type::Bool:
+                case IProperty::Type::Int8:
+                case IProperty::Type::Int16:
+                case IProperty::Type::Int32:
+                case IProperty::Type::Int64:
+                case IProperty::Type::Uint8:
+                case IProperty::Type::Uint16:
+                case IProperty::Type::Uint32:
+                case IProperty::Type::Uint64:
+                case IProperty::Type::Float:
+                case IProperty::Type::Float2:
+                case IProperty::Type::Float3:
+                case IProperty::Type::Float4:
+                case IProperty::Type::Float4x4:
+                case IProperty::Type::EnumU8:
+                case IProperty::Type::EnumU16:
+                case IProperty::Type::EnumU32:
+                case IProperty::Type::EnumU64:
+                case IProperty::Type::EnumFlagsU8:
+                case IProperty::Type::EnumFlagsU16:
+                case IProperty::Type::EnumFlagsU32:
+                case IProperty::Type::EnumFlagsU64:
+                {
+                    VG_ASSERT(!isEnumArray, "EnumArray serialization from Memory not implemented for type '%s'", asString(type).c_str());
+                    void * dst = (void*)(uint_ptr(_object) + offset);
+
+                    bool changed = false;
+                    VG_VERIFY(_buffer.restore(dst, size, changed));
+                    if (changed)
+                        VG_INFO("[Factory] Property (%s) '%s' from %s \"%s\" has been restored", asString(type).c_str(), name, _object->getClassName(), _object->getName().c_str());
+                }
+            }
+        }
+
+        return true;
     }
 
     //--------------------------------------------------------------------------------------

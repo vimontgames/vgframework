@@ -49,13 +49,17 @@ namespace vg::core
     //--------------------------------------------------------------------------------------
     void Object::OnPlay()
     {
-        // TODO : save properties
+        auto * factory = Kernel::getFactory();
+        if (factory)
+            factory->SaveProperties(this);
     }
 
     //--------------------------------------------------------------------------------------
     void Object::OnStop()
     {
-        // TODO : restore properties
+        auto * factory = Kernel::getFactory();
+        if (factory)
+            factory->RestoreProperties(this);
     }
 
     //--------------------------------------------------------------------------------------

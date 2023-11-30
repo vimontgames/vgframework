@@ -26,6 +26,8 @@ namespace vg::engine
 
         void                                    onPropertyChanged       (core::IObject * _object, const core::IProperty & _prop) override;
 
+        void                                    OnStop                  () override;
+
         bool                                    IsPlaying               () const final override;
         bool                                    IsFinished              () const final override;
 

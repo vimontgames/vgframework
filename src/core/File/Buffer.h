@@ -47,6 +47,7 @@ namespace vg::core::io
         template <typename T> bool write(const vector<T> & _vector);
 
         bool read(void * _data, size_t _size);
+        bool restore(void * _data, size_t _size, bool & _modified);
         bool write(const void * _data, size_t _size);
 
         template <typename T> bool read(T * _value);

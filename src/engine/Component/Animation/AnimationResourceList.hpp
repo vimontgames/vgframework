@@ -31,6 +31,22 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
+    void AnimationResourceList::OnPlay()
+    {
+        super::OnPlay();
+        for (uint i = 0; i < m_animationResources.size(); ++i)
+            m_animationResources[i].OnPlay();
+    }
+
+    //--------------------------------------------------------------------------------------
+    void AnimationResourceList::OnStop()
+    {
+        for (uint i = 0; i < m_animationResources.size(); ++i)
+            m_animationResources[i].OnStop();
+        super::OnStop();
+    }
+
+    //--------------------------------------------------------------------------------------
     bool AnimationResourceList::Add()
     {
         AnimationResource & animRes = m_animationResources.push_empty();

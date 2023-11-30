@@ -191,6 +191,32 @@ namespace vg::core::io
     }
 
     //--------------------------------------------------------------------------------------
+    inline bool Buffer::restore(void * _data, core::size_t _size, bool & _modified)
+    {
+        if (m_read < m_data.size())
+        {
+            if (memcmp(_data, &m_data[m_read], _size))
+            {
+                memcpy(_data, &m_data[m_read], _size);
+                _modified = true;
+            }
+            else
+            {
+                _modified = false;
+            }
+
+            m_read += _size;
+
+            return true;
+        }
+        else
+        {
+            VG_ASSERT(m_read < m_data.size());
+            return false;
+        }
+    }
+
+    //--------------------------------------------------------------------------------------
     inline bool Buffer::write(const void * _data, core::size_t _size)
     {
         const auto requested = m_write + _size;

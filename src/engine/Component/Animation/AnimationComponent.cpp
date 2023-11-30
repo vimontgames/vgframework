@@ -61,6 +61,20 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
+    void AnimationComponent::OnPlay()
+    {
+        super::OnPlay();
+        m_animations.OnPlay();
+    }
+
+    //--------------------------------------------------------------------------------------
+    void AnimationComponent::OnStop()
+    {
+        m_animations.OnStop();
+        super::OnStop();
+    }
+
+    //--------------------------------------------------------------------------------------
     void AnimationComponent::onPropertyChanged(IObject * _object, const IProperty & _prop)
     {
         // [...]
