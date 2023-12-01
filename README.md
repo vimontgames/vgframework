@@ -15,6 +15,9 @@ Another subject that is very close to my heart is that there is a strong separat
 
 # changelog
 
+## 0.15
+**Removed dependency to the FBX SDK**
+
 ## 0.14
 Skeletal animations with Compute Shader Skinning\
 Modified properties are restored when exiting Game mode\
@@ -69,9 +72,10 @@ Also don't forget to set the *working directory* to **$(SolutionDir)**.
 ![Screenshot](doc/img/SolutionPlatformName2.png)
 
 # SDKs
-FBX SDK 2020.0.1\
+~~FBX SDK 2020.0.1\
 https://www.autodesk.com/developer-network/platform-technologies/fbx-sdk-2020-0  
-**$(FBX_SDK)** should point to the FBX SDK installation dir *(i.e. "C:\SDK\FBX\2020.0.1")*
+**$(FBX_SDK)** should point to the FBX SDK installation dir *(i.e. "C:\SDK\FBX\2020.0.1")*~~
+*The Dependency to FBX SDK was removed in v0.15*
 
 Vulkan SDK 1.3.261.1 (VK)\
 https://vulkan.lunarg.com/sdk/home  
@@ -118,6 +122,9 @@ https://github.com/nothings/stb
 
 tinyXML2\
 https://github.com/leethomason/tinyxml2
+
+UFBX\
+https://github.com/ufbx/ufbx
 
 Vulkan Memory Allocator\
 https://github.com/GPUOpen-LibrariesAndSDKs/VulkanMemoryAllocator
