@@ -19,6 +19,7 @@ rmdir capture /S /Q
 rmdir lib /S /Q
 rmdir tmp /S /Q
 rmdir .vs /S /Q
+rmdir cache /S /Q
 
 cd projects
 cd game
