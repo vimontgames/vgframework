@@ -19,4 +19,6 @@ enc_temp_folder/*
 !dxil.dll
 !WinPixEventRuntime.dll
 !WinPixEventRuntime.lib
-!libfbxsdk.dll
+!extern/JoltPhysics/Lib/Debug/*
+!extern/JoltPhysics/Lib/Release/*
+!extern/JoltPhysics/Lib/Distribution/*

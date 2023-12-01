@@ -20,7 +20,7 @@ rmdir lib /S /Q
 rmdir tmp /S /Q
 rmdir .vs /S /Q
 rmdir cache /S /Q
-
+del extern/JoltPhysics/Build/VS2022_CL /S /Q
 cd projects
 cd game
 del *.exp
