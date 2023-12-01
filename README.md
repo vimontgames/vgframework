@@ -106,6 +106,9 @@ https://github.com/juliettef/IconFontCppHeaders
 ImGui-Addons\
 https://github.com/gallickgunner/ImGui-Addons
 
+JoltPhysics 4.0.1
+https://github.com/jrouwe/JoltPhysics/releases/tag/v4.0.1
+
 magic_enum\
 https://github.com/Neargye/magic_enum
 

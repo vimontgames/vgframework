@@ -2,10 +2,50 @@
 
 namespace vg::editor
 {
+    struct LibraryDescription
+    {
+        const char * name;
+        const char * version;
+        const char * url;
+    };
+
+    static const float columnWidth[3] = { 256, 128, 640 };
+
     //--------------------------------------------------------------------------------------
     ImGuiAbout::ImGuiAbout() :
         ImGuiWindow(style::icon::About, "", "About", ImGuiWindow::None)
     {
+    }
+
+    //--------------------------------------------------------------------------------------
+    void ImGuiAbout::drawLibraryDescriptionList(const char * _label, LibraryDescription * _infos, core::uint _count)
+    {
+        Columns(1);
+        Text(_label);
+        Text("");
+
+        Columns(3, _label, false);
+
+        SetColumnWidth(0, columnWidth[0]);
+        SetColumnWidth(1, columnWidth[1]);
+        SetColumnWidth(2, columnWidth[2]);
+
+        for (uint i = 0; i < _count; ++i)
+            Text(_infos[i].name);
+
+        NextColumn();
+
+        for (uint i = 0; i < _count; ++i)
+            Text(_infos[i].version);
+
+        NextColumn();
+
+        for (uint i = 0; i < _count; ++i)
+            textURL(_infos[i].url + strlen("https://"), _infos[i].url);
+
+        Text("");
+
+        Separator();
     }
 
     //--------------------------------------------------------------------------------------
@@ -15,8 +55,6 @@ namespace vg::editor
         {
             Text("VG Framework");
             Text("");
-
-            float columnWidth[3] = { 256, 128, 620 };
 
             Columns(3, "author", false);
 
@@ -31,63 +69,21 @@ namespace vg::editor
             NextColumn();
             NextColumn();
 
-            textURL("github.com/vimontgames/vgframework", "https://github.com/vimontgames/vgframework");
-            textURL("@benoitvimont@mastodon.gamedev.place", "https://mastodon.gamedev.place/@benoitvimont");
+            textURL("github.com/vimontgames/vgframework",       "https://github.com/vimontgames/vgframework");
+            textURL("@benoitvimont@mastodon.gamedev.place",     "https://mastodon.gamedev.place/@benoitvimont");
             Text("");
 
             Separator();
 
-            Columns(1);
-            Text("SDKs:");
-            Text("");
-
-            Columns(3, "SDK", false);
-
-            SetColumnWidth(0, columnWidth[0]);
-            SetColumnWidth(1, columnWidth[1]);
-            SetColumnWidth(2, columnWidth[2]);
-
-            // name                        
-            Text("FBX SDK");
-            Text("Vulkan SDK");
-            Text("Windows 10 SDK");
-
-            Text("");
-            NextColumn();
-
-            // version
-            Text("2020.0.1");
-            Text("1.3.261.1");
-            Text("10.0.17763.0");
-
-            Text("");
-            NextColumn();
-            // url
-            textURL("www.autodesk.com/developer-network/platform-technologies/fbx-sdk-2020-0", "https://www.autodesk.com/developer-network/platform-technologies/fbx-sdk-2020-0");
-            textURL("vulkan.lunarg.com/sdk/home", "https://sdk.lunarg.com/sdk/download/1.3.261.1/windows/VulkanSDK-1.3.261.1-Installer.exe");
-            textURL("developer.microsoft.com/fr-fr/windows/downloads/sdk-archive", "https://developer.microsoft.com/fr-fr/windows/downloads/sdk-archive/");
-            Text("");
-
-            Separator();
-
-            Columns(1);
-            Text("3rd-parties:");
-            Text("");
-
-            Columns(3, "3rdparties", false);
-
-            SetColumnWidth(0, columnWidth[0]);
-            SetColumnWidth(1, columnWidth[1]);
-            SetColumnWidth(2, columnWidth[2]);
-
-            struct ThirdPartyInfo
+            LibraryDescription SDKs[] =
             {
-                const char * name;
-                const char * version;
-                const char * url;
+                { "Vulkan SDK",             "1.3.261.1",        "https://sdk.lunarg.com/sdk/download/1.3.261.1/windows/VulkanSDK-1.3.261.1-Installer.exe" },
+                { "Windows 10 SDK",         "10.0.17763.0",     "https://developer.microsoft.com/fr-fr/windows/downloads/sdk-archive/" },
             };
 
-            ThirdPartyInfo thirdParties[] =
+            drawLibraryDescriptionList("SDK", SDKs, (uint)countof(SDKs));
+
+            LibraryDescription thirdParties[] =
             {
                 { "D3D12MemoryAllocator",   "",                 "https://github.com/GPUOpen-LibrariesAndSDKs/D3D12MemoryAllocator" },
                 { "Dear ImGui",             "2a6d7b1",          "https://github.com/ocornut/imgui/tree/docking" },
@@ -97,6 +93,7 @@ namespace vg::editor
                 { "hlslpp",                 "3.3.1",            "https://github.com/redorav/hlslpp/releases/tag/3.3.1" },
                 { "IconFontCppHeaders",     "90da802",          "https://github.com/juliettef/IconFontCppHeaders" },
                 { "ImGui-Addons",           "ea0af59",          "https://github.com/gallickgunner/ImGui-Addons" },
+                { "JoltPhysics",            "4.0.1",            "https://github.com/jrouwe/JoltPhysics/releases/tag/v4.0.1" },
                 { "magic_enum",             "0.9.4",            "https://github.com/Neargye/magic_enum/releases/tag/v0.9.4" },
                 { "optick",                 "1.3.1",            "https://github.com/bombomby/optick" },
                 { "px_sched",               "",                 "https://github.com/pplux/px" },
@@ -107,26 +104,10 @@ namespace vg::editor
                 { "WinPixEventRuntime",     "1.0.200127001",    "https://www.nuget.org/packages/WinPixEventRuntime" },
             };
 
-
-            for (uint i = 0; i < countof(thirdParties); ++i)
-                Text(thirdParties[i].name);
-
-            NextColumn();
-
-            for (uint i = 0; i < countof(thirdParties); ++i)
-                Text(thirdParties[i].version);
-
-            NextColumn();
-
-            for (uint i = 0; i < countof(thirdParties); ++i)
-                textURL(thirdParties[i].url + strlen("https://"), thirdParties[i].url);
-
-            Text("");
-
-            Separator();
+            drawLibraryDescriptionList("3rd-parties:", thirdParties, (uint)countof(thirdParties));
 
             Columns(1);
-            Text("Special Thanks to SlavSquat, Bob, Guigui, Marcel, Hamilcar and the old guard :)");
+            Text("Special Thanks to SlavSquat, Bob, Guigui, Marcel, Hamilcar and the old guard");
 
             End();
         }
