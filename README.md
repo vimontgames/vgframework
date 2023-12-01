@@ -74,7 +74,7 @@ Also don't forget to set the *working directory* to **$(SolutionDir)**.
 # SDKs
 ~~FBX SDK 2020.0.1\
 https://www.autodesk.com/developer-network/platform-technologies/fbx-sdk-2020-0  
-**$(FBX_SDK)** should point to the FBX SDK installation dir *(i.e. "C:\SDK\FBX\2020.0.1")*~~
+**$(FBX_SDK)** should point to the FBX SDK installation dir *(i.e. "C:\SDK\FBX\2020.0.1")*~~\
 *The Dependency to FBX SDK was removed in v0.15*
 
 Vulkan SDK 1.3.261.1 (VK)\
