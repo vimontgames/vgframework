@@ -1,6 +1,7 @@
 #pragma once
 
 #include "renderer/Renderer_consts.h"
+#include "physics/Physics_Consts.h"
 
 namespace vg::core
 {
@@ -12,6 +13,7 @@ namespace vg::engine
     struct EngineCreationParams
     {
         vg::renderer::RendererCreationParams renderer;
+        vg::physics::PhysicsCreationParams physics;
         vg::core::Logger * logger = nullptr;
     };
 }

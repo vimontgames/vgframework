@@ -83,6 +83,7 @@ namespace vg::engine
 
         editor::IEditor *                   GetEditor           () const final override;
 		renderer::IRenderer *	            GetRenderer	        () const final override;
+        physics::IPhysics *                 GetPhysics          () const final override;
         engine::IResourceManager *          GetResourceManager  () const final override;
         core::ISelection *                  GetSelection        () const final override;
 
@@ -113,6 +114,7 @@ namespace vg::engine
         core::Universe *                    m_universe          = nullptr;
         editor::IEditor *                   m_editor            = nullptr;
 		renderer::IRenderer *	            m_renderer          = nullptr;
+        physics::IPhysics *                 m_physics           = nullptr;
         gfx::IView *                        m_mainView          = nullptr;
         ResourceManager *                   m_resourceManager   = nullptr;
         Selection *                         m_selection         = nullptr;

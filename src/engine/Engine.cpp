@@ -18,6 +18,8 @@
 
 #include "renderer/IRenderer.h"
 
+#include "physics/IPhysics.h"
+
 #include "engine/Input/Input.h"
 #include "engine/Resource/ResourceManager.h"
 #include "engine/Selection/Selection.h"
@@ -302,6 +304,10 @@ namespace vg::engine
         // Register worker threads, it will be useful to get worker thread names in profiler
         _singletons.scheduler->RegisterWorkerThreads();
 
+        // Load Physics DLL
+        m_physics = Plugin::create<physics::IPhysics>("physics");
+        m_physics->Init(_params.physics, _singletons);
+
         m_resourceManager = new ResourceManager("Resource Manager", this);
 
         RegisterClasses();
@@ -392,6 +398,9 @@ namespace vg::engine
         // Resource Manager should be deleted before renderer because the shared resource must be released to avoid GPU memory leak checked in gfx::Device deinit
         VG_SAFE_DELETE(m_resourceManager);
 
+        m_physics->Deinit();
+        m_physics->release();
+
 		m_renderer->deinit();
 		m_renderer->release();
 
@@ -472,6 +481,12 @@ namespace vg::engine
 	{
 		return m_renderer;
 	}
+
+    //--------------------------------------------------------------------------------------
+    physics::IPhysics * Engine::GetPhysics() const
+    {
+        return m_physics;
+    }
 
     //--------------------------------------------------------------------------------------
     IResourceManager * Engine::GetResourceManager() const

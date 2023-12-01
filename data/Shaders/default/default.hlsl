@@ -97,7 +97,7 @@ PS_Output PS_Forward(VS_Output _input)
     float3 N = normalize(_input.nrm);
 
     float3 worldNormal = normalize(T * normal.x + B * normal.y + N * normal.z);
-           worldNormal = mul(worldNormal.xyz, rootConstants3D.getWorldMatrix());
+           worldNormal = mul(float4(worldNormal.xyz, 0.0f), rootConstants3D.getWorldMatrix()).xyz;
 
     // fake shitty lighting
     float3 lightDir = normalize(float3(-1,0,-1));

@@ -46,6 +46,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "application", "src\applicat
 		{42797D89-56C0-4B42-846D-DEB042288DCF} = {42797D89-56C0-4B42-846D-DEB042288DCF}
 		{51C074CB-0146-4324-9D1E-EB8192BF6673} = {51C074CB-0146-4324-9D1E-EB8192BF6673}
 		{F31ACA84-29B9-4517-80E5-3D625A8AC34B} = {F31ACA84-29B9-4517-80E5-3D625A8AC34B}
+		{F9F268C0-B4CB-4B80-B857-C75C7555E09B} = {F9F268C0-B4CB-4B80-B857-C75C7555E09B}
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Natvis", "Natvis", "{D18557C7-59EB-4E5F-B1A5-68C78127148D}"
@@ -127,6 +128,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "skinning", "skinning", "{24
 		data\Shaders\skinning\skinning.hlsli = data\Shaders\skinning\skinning.hlsli
 	EndProjectSection
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "physics", "src\physics\physics.vcxproj", "{F9F268C0-B4CB-4B80-B857-C75C7555E09B}"
+	ProjectSection(ProjectDependencies) = postProject
+		{257A93DC-9206-4770-9560-7A22DFF0AC01} = {257A93DC-9206-4770-9560-7A22DFF0AC01}
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|PC DirectX12 = Debug|PC DirectX12
@@ -191,6 +197,14 @@ Global
 		{14D354ED-895F-48E3-85AF-AFF4335717C7}.Release|PC DirectX12.Build.0 = Release|x64
 		{14D354ED-895F-48E3-85AF-AFF4335717C7}.Release|PC Vulkan.ActiveCfg = Release|x64
 		{14D354ED-895F-48E3-85AF-AFF4335717C7}.Release|PC Vulkan.Build.0 = Release|x64
+		{F9F268C0-B4CB-4B80-B857-C75C7555E09B}.Debug|PC DirectX12.ActiveCfg = Debug|x64
+		{F9F268C0-B4CB-4B80-B857-C75C7555E09B}.Debug|PC DirectX12.Build.0 = Debug|x64
+		{F9F268C0-B4CB-4B80-B857-C75C7555E09B}.Debug|PC Vulkan.ActiveCfg = Debug|x64
+		{F9F268C0-B4CB-4B80-B857-C75C7555E09B}.Debug|PC Vulkan.Build.0 = Debug|x64
+		{F9F268C0-B4CB-4B80-B857-C75C7555E09B}.Release|PC DirectX12.ActiveCfg = Release|x64
+		{F9F268C0-B4CB-4B80-B857-C75C7555E09B}.Release|PC DirectX12.Build.0 = Release|x64
+		{F9F268C0-B4CB-4B80-B857-C75C7555E09B}.Release|PC Vulkan.ActiveCfg = Release|x64
+		{F9F268C0-B4CB-4B80-B857-C75C7555E09B}.Release|PC Vulkan.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

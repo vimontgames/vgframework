@@ -80,7 +80,7 @@ namespace vg::renderer
             else
             {
                 root3D.setBufferHandle(geo->getVertexBuffer()->getBufferHandle());
-                root3D.setBufferHandle(geo->getVertexBufferOffset());
+                root3D.setBufferOffset(geo->getVertexBufferOffset());
             }
             
             u16 flags = 0;
