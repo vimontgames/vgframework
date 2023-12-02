@@ -193,6 +193,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
     engineParams.renderer.device.window = g_hWnd;
     engineParams.renderer.device.instance = hInstance;
 
+	engineParams.physics.engine = g_engine;
+
     core::Singletons singletons;
     g_engine->init(engineParams, singletons);
 

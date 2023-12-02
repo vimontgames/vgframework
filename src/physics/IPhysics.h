@@ -19,7 +19,7 @@ namespace vg
             virtual void    Init            (const PhysicsCreationParams & _params, core::Singletons & _singletons) = 0;
             virtual void    Deinit          () = 0;
 
-            virtual void    RunOneFrame     () = 0;
+            virtual void    RunOneFrame     (double _dt) = 0;
 	    };
     }
 }

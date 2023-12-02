@@ -5,7 +5,7 @@
 namespace vg
 {
     #define VG_VERSION_MAJOR 0
-    #define VG_VERSION_MINOR 14
+    #define VG_VERSION_MINOR 16
 
     //--------------------------------------------------------------------------------------
     core::IPlugin::Version Application::GetVersion() const

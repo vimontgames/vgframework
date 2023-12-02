@@ -15,6 +15,11 @@ Another subject that is very close to my heart is that there is a strong separat
 
 # changelog
 
+## 0.16
+JoltPhysics integration V0
+
+![Screenshot](doc/img/0.16.gif)
+
 ## 0.15
 **Removed dependency to the FBX SDK**
 

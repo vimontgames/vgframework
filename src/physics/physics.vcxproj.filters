@@ -3,6 +3,12 @@
   <ItemGroup>
     <ClCompile Include="Precomp.cpp" />
     <ClCompile Include="Physics.cpp" />
+    <ClCompile Include="JobSystem\JobSystemAdapter.cpp">
+      <Filter>JobSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="BroadPhase\BroadPhase.cpp">
+      <Filter>BroadPhase</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Physics.def" />
@@ -13,5 +19,40 @@
     <ClInclude Include="IPhysics.h" />
     <ClInclude Include="Physics.h" />
     <ClInclude Include="Physics_Consts.h" />
+    <ClInclude Include="JobSystem\JobSystemAdapter.h">
+      <Filter>JobSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="JobSystem\PhysicsJob.h">
+      <Filter>JobSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="JobSystem\PhysicsJobs.hpp">
+      <Filter>JobSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="BroadPhase\BroadPhaseLayer.h">
+      <Filter>BroadPhase</Filter>
+    </ClInclude>
+    <ClInclude Include="BroadPhase\BroadPhaseLayer.hpp">
+      <Filter>BroadPhase</Filter>
+    </ClInclude>
+    <ClInclude Include="BroadPhase\ObjectFilter.h">
+      <Filter>BroadPhase</Filter>
+    </ClInclude>
+    <ClInclude Include="BroadPhase\ObjectFilter.hpp">
+      <Filter>BroadPhase</Filter>
+    </ClInclude>
+    <ClInclude Include="BroadPhase\BroadPhaseFilter.hpp">
+      <Filter>BroadPhase</Filter>
+    </ClInclude>
+    <ClInclude Include="BroadPhase\BroadPhaseFilter.h">
+      <Filter>BroadPhase</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="JobSystem">
+      <UniqueIdentifier>{ef6e100a-a1b2-48aa-8462-086027f8888c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="BroadPhase">
+      <UniqueIdentifier>{e1f686fb-5e51-466c-8664-22bc0859485c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
 </Project>

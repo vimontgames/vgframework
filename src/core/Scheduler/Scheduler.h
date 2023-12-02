@@ -12,7 +12,7 @@ namespace vg::core
 {
     class Job;
 
-    class Scheduler : public IScheduler, public core::Singleton<Scheduler>
+    class Scheduler final : public IScheduler, public core::Singleton<Scheduler>
     {
     public:
                                     Scheduler                   ();
@@ -29,8 +29,7 @@ namespace vg::core
         ThreadID                    GetCurrentThreadID          () const final override;
         const string                GetCurrentThreadName        () const final override;
 
-    private:
-        //void                        test();
+        core::uint                  GetWorkerThreadCount        () const final override;
 
     private:
         px_sched::Scheduler *       m_schd = nullptr;

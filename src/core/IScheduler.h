@@ -24,5 +24,7 @@ namespace vg::core
 
         virtual ThreadID                GetCurrentThreadID      () const = 0;
         virtual const core::string      GetCurrentThreadName    () const = 0;
+
+        virtual core::uint              GetWorkerThreadCount    () const = 0;
     };
 }

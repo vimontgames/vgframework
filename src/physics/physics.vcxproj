@@ -11,6 +11,8 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="BroadPhase\BroadPhase.cpp" />
+    <ClCompile Include="JobSystem\JobSystemAdapter.cpp" />
     <ClCompile Include="Physics.cpp" />
     <ClCompile Include="Precomp.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
@@ -22,7 +24,16 @@
     <None Include="Physics.inl" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="BroadPhase\BroadPhaseFilter.h" />
+    <ClInclude Include="BroadPhase\BroadPhaseFilter.hpp" />
+    <ClInclude Include="BroadPhase\BroadPhaseLayer.h" />
+    <ClInclude Include="BroadPhase\BroadPhaseLayer.hpp" />
+    <ClInclude Include="BroadPhase\ObjectFilter.h" />
+    <ClInclude Include="BroadPhase\ObjectFilter.hpp" />
     <ClInclude Include="IPhysics.h" />
+    <ClInclude Include="JobSystem\JobSystemAdapter.h" />
+    <ClInclude Include="JobSystem\PhysicsJob.h" />
+    <ClInclude Include="JobSystem\PhysicsJobs.hpp" />
     <ClInclude Include="Physics.h" />
     <ClInclude Include="Physics_Consts.h" />
     <ClInclude Include="Precomp.h" />
@@ -86,7 +97,7 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <ModuleDefinitionFile>Physics.def</ModuleDefinitionFile>
-      <AdditionalDependencies>$(SolutionDir)lib\Core_$(Platform)_$(Configuration).lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>$(SolutionDir)lib\Core_$(Platform)_$(Configuration).lib;$(SolutionDir)\extern\JoltPhysics\Lib\Debug\Jolt.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -107,7 +118,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <ModuleDefinitionFile>Physics.def</ModuleDefinitionFile>
-      <AdditionalDependencies>$(SolutionDir)lib\Core_$(Platform)_$(Configuration).lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>$(SolutionDir)lib\Core_$(Platform)_$(Configuration).lib;$(SolutionDir)\extern\JoltPhysics\Lib\Release\Jolt.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

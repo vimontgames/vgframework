@@ -466,6 +466,7 @@ namespace vg::engine
                     root->Update(m_time.m_dt);
             }
 
+            m_physics->RunOneFrame(m_time.m_dt);
             m_renderer->runOneFrame(m_time.m_dt);
         }
 	}

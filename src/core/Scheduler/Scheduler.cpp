@@ -153,6 +153,12 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
+    core::uint Scheduler::GetWorkerThreadCount() const
+    {
+        return m_threadCount;
+    }
+
+    //--------------------------------------------------------------------------------------
     const string Scheduler::GetCurrentThreadName() const
     {
         const ThreadID threadId = GetCurrentThreadID();
