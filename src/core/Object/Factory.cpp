@@ -342,6 +342,26 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
+    core::uint getComponentCount(IProperty::Type _type)
+    {
+        switch (_type)
+        {
+            default:
+                VG_ASSERT_ENUM_NOT_IMPLEMENTED(_type);
+                return 1;
+
+            case IProperty::Type::Float2:
+                return 2;
+
+            case IProperty::Type::Float3:
+                return 3;
+
+            case IProperty::Type::Float4:
+                return 4;
+        }
+    }
+
+    //--------------------------------------------------------------------------------------
     const IClassDesc * Factory::getClassDescriptor(const char * _className) const
     {
         for (uint i = 0; i < m_classes.size(); ++i)
@@ -737,19 +757,23 @@ namespace vg::core
                                         }
                                         break;
 
+                                        case IProperty::Type::Float2:
+                                        case IProperty::Type::Float3:
                                         case IProperty::Type::Float4:
                                         {
-                                            auto serializeFloat4FromXML = [](float4 * _value, const XMLElement * _xmlElement)
+                                            auto serializeFloatNFromXML = [](float * _value, const XMLElement * _xmlElement, uint _componentCount)
                                             {
                                                 float * pFloat = (float *)_value;
                                                 const char * values[] = { "x", "y", "z", "w" };
-                                                for (uint i = 0; i < countof(values); ++i)
+                                                for (uint i = 0; i < _componentCount; ++i)
                                                 {
                                                     const XMLAttribute * xmlValue = _xmlElement->FindAttribute(values[i]);
                                                     if (nullptr != xmlValue)
                                                         pFloat[i] = xmlValue->FloatValue();
                                                 }
                                             };
+
+                                            const auto componentCount = getComponentCount(type);
 
                                             if (isEnumArray)
                                             {
@@ -765,8 +789,8 @@ namespace vg::core
                                                             {
                                                                 if (!strcmp(xmlValueName->Value(), prop->getEnumName(i)))
                                                                 {
-                                                                    float4 * pFloat4 = prop->GetPropertyFloat4(_object, i);
-                                                                    serializeFloat4FromXML(pFloat4, xmlPropElemValue);
+                                                                    float * pFloat = prop->GetPropertyFloatN(_object, componentCount, i);
+                                                                    serializeFloatNFromXML(pFloat, xmlPropElemValue, componentCount);
                                                                     break;
                                                                 }
                                                             }
@@ -778,8 +802,8 @@ namespace vg::core
                                             }
                                             else
                                             {
-                                                float4 * pFloat4 = prop->GetPropertyFloat4(_object);
-                                                serializeFloat4FromXML(pFloat4, xmlPropElem);
+                                                float * pFloat = prop->GetPropertyFloatN(_object, componentCount);
+                                                serializeFloatNFromXML(pFloat, xmlPropElem, componentCount);
                                             }
                                         }
                                         break;
@@ -1018,16 +1042,29 @@ namespace vg::core
                 }
                 break;
 
+                case IProperty::Type::Float2:
+                case IProperty::Type::Float3:
                 case IProperty::Type::Float4:
                 {
-                    auto serializeFloat4ToXML = [](XMLElement * _xmlElement, const float4 * _value)
+                    auto serializeFloatNToXML = [](XMLElement * _xmlElement, const float * pFloat, uint _componentCount)
                     {
-                        const auto pFloat = (const float *)_value;
                         _xmlElement->SetAttribute("x", pFloat[0]);
-                        _xmlElement->SetAttribute("y", pFloat[1]);
-                        _xmlElement->SetAttribute("z", pFloat[2]);
-                        _xmlElement->SetAttribute("w", pFloat[3]);
+                        if (_componentCount > 1)
+                        {
+                            _xmlElement->SetAttribute("y", pFloat[1]);
+                            if (_componentCount > 2)
+                            {
+                                _xmlElement->SetAttribute("z", pFloat[2]);
+
+                                if (_componentCount > 3)
+                                {
+                                    _xmlElement->SetAttribute("w", pFloat[3]);
+                                }
+                            }
+                        }
                     };
+
+                    const uint componentCount = getComponentCount(type);
 
                     if (isEnumArray)
                     {
@@ -1038,16 +1075,16 @@ namespace vg::core
                             {
                                 auto enumValueName = prop->getEnumName(i);
                                 xmlPropElemChild->SetAttribute("name", enumValueName);
-                                const auto value = prop->GetPropertyFloat4(_object, i);
-                                serializeFloat4ToXML(xmlPropElemChild, value);
+                                const float * value = prop->GetPropertyFloatN(_object, componentCount, i);
+                                serializeFloatNToXML(xmlPropElemChild, value, componentCount);
                             }
                             xmlPropElem->InsertEndChild(xmlPropElemChild);
                         }
                     }
                     else
                     {
-                        const auto value = prop->GetPropertyFloat4(_object);
-                        serializeFloat4ToXML(xmlPropElem, value);
+                        const float * value = prop->GetPropertyFloatN(_object, componentCount);
+                        serializeFloatNToXML(xmlPropElem, value, componentCount);
                     }
                 }
                 break;

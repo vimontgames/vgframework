@@ -97,6 +97,7 @@ namespace vg::core
         virtual float2 *                    GetPropertyFloat2               (const IObject * _object) const = 0;
         virtual float3 *                    GetPropertyFloat3               (const IObject * _object) const = 0;
         virtual float4 *                    GetPropertyFloat4               (const IObject * _object, uint _index = 0) const = 0;
+        virtual float *                     GetPropertyFloatN               (const IObject * _object, uint _componentCount, uint _index = 0) const = 0;
         virtual float4x4 *                  GetPropertyFloat4x4             (const IObject * _object) const = 0;
         virtual string *                    GetPropertyString               (const IObject * _object) const = 0;
         virtual IResource *                 GetPropertyResource             (const IObject * _object, uint _index = 0) const = 0;
