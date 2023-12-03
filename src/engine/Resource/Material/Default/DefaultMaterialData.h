@@ -17,7 +17,7 @@ namespace vg::engine
         void                        onResourceLoaded        (core::IResource * _resource);
         void                        onResourceUnloaded      (core::IResource * _resource);
 
-        void                        onPropertyChanged       (IObject * _object, const IProperty & _prop) override;
+        void                        OnPropertyChanged       (IObject * _object, const IProperty & _prop, bool _notifyParent) override;
 
     private:
         TextureResource m_albedoMap;

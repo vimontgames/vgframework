@@ -27,7 +27,7 @@ namespace vg::editor
                             IFactory * factory = Kernel::getFactory();
                             const auto * prop = _object->getClassDesc()->GetPropertyByName("m_shader");
                             if (nullptr != prop)
-                                _object->onPropertyChanged(_object, *prop);
+                                _object->OnPropertyChanged(_object, *prop);
                         }
                     }
                     ImGui::EndCombo();

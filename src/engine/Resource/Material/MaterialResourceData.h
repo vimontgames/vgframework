@@ -25,7 +25,7 @@ namespace vg::engine
         
         void                        CreateRendererMaterial  ();
 
-        void                        onPropertyChanged       (core::IObject * _object, const core::IProperty & _prop) override;
+        void                        OnPropertyChanged       (core::IObject * _object, const core::IProperty & _prop, bool _notifyParent) override;
 
         MaterialModelType           m_materialModelType;
         MaterialData *              m_data = nullptr;

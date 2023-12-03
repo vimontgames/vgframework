@@ -75,10 +75,10 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
-    void Object::onPropertyChanged(IObject * _object, const IProperty & _prop)
+    void Object::OnPropertyChanged(IObject * _object, const IProperty & _prop, bool _notifyParent)
     {
-        if (nullptr != m_parent)
-            m_parent->onPropertyChanged(_object, _prop);
+        if (_notifyParent && nullptr != m_parent)
+            m_parent->OnPropertyChanged(_object, _prop, true);
     }
 
     //--------------------------------------------------------------------------------------

@@ -21,7 +21,7 @@ namespace vg::renderer
     void ViewCullingJob::cullGameObjectRecur(const GameObject * _go)
     {
         // Visible? Then add it to the list
-        if (GameObject::Flags::Enabled & _go->getFlags())
+        if (asBool(GameObject::Flags::Enabled & _go->getFlags()))
         {
             auto & instances = _go->getGraphicInstances();
             const auto instanceCount = instances.size();
@@ -29,7 +29,7 @@ namespace vg::renderer
             {
                 IGraphicInstance * instance = instances[i];
 
-                if (0 != (core::Instance::Flags::Enabled & instance->getFlags()))
+                if (asBool(core::Instance::Flags::Enabled & instance->getFlags()))
                 {
                     bool visible = true;
 
@@ -63,7 +63,7 @@ namespace vg::renderer
         {
             VG_ASSERT(dynamic_cast<MeshInstance *>(_instance));
             MeshInstance * meshInstance = (MeshInstance *)_instance;
-            if (meshInstance->setRuntimeFlag(MeshInstance::RuntimeFlags::SkinLOD0))
+            if (meshInstance->setSkinFlag(MeshInstance::SkinFlags::SkinLOD0))
                 m_output->m_skins.push_back(meshInstance);
         }
     }

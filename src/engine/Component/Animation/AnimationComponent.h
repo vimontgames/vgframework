@@ -7,7 +7,7 @@ namespace vg::engine
 {
     class MeshComponent;
 
-    class AnimationComponent : public IAnimationComponent
+    class AnimationComponent final : public IAnimationComponent
     {
     public:
         VG_CLASS_DECL(AnimationComponent, IAnimationComponent);
@@ -15,15 +15,15 @@ namespace vg::engine
         AnimationComponent(const core::string & _name, IObject * _parent);
         ~AnimationComponent();
 
-        void                    Update              (double _dt) override;
+        void                    Update              (double _dt) final override;
 
-        void                    OnPlay              () override;
-        void                    OnStop              () override;
+        void                    OnPlay              () final override;
+        void                    OnStop              () final override;
 
-        void                    onPropertyChanged   (IObject * _object, const core::IProperty & _prop) override;
+        void                    OnPropertyChanged   (IObject * _object, const core::IProperty & _prop, bool _notifyParent) final override;
 
-        void                    onResourceLoaded    (core::IResource * _resource) override;
-        void                    onResourceUnloaded  (core::IResource * _resource) override;
+        void                    onResourceLoaded    (core::IResource * _resource) final override;
+        void                    onResourceUnloaded  (core::IResource * _resource) final override;
 
         IAnimationResource *    GetAnimation        (const core::string & _name) final override;
 

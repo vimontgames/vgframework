@@ -33,6 +33,8 @@ namespace vg::core
         const vector<IGameObject*> &                        GetChildren             () const final override;
         bool                                                IsRoot                  () const final override;
 
+        void                                                OnPropertyChanged       (core::IObject * _object, const core::IProperty & _prop, bool _notifyParent) override;
+
         void                                                addComponent            (Component * _component);
         const vector<Component*> &                          getComponents           () const;
 

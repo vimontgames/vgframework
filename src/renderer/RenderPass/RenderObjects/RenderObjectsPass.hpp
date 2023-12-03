@@ -29,7 +29,7 @@ namespace vg::renderer
 
             if (_renderContext.m_wireframe && wireframeSelection)
             {
-                if (!asBool(IInstance::Flags::Selected & instance->getFlags()))
+                if (!asBool(IInstance::RuntimeFlags::Selected & instance->getRuntimeFlags()))
                     continue;
             }
 

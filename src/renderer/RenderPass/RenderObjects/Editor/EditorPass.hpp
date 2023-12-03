@@ -102,7 +102,7 @@ namespace vg::renderer
                 {
                     const IGraphicInstance * instance = allInstances.m_instances[i];
 
-                    if (boudingBoxSelection && !asBool(IInstance::Flags::Selected & instance->getFlags()))
+                    if (boudingBoxSelection && !asBool(IInstance::RuntimeFlags::Selected & instance->getRuntimeFlags()))
                         continue;
 
                     const MeshModel * model = (MeshModel *)instance->getModel(Lod::Lod0); // TODO: get LoD from culling result

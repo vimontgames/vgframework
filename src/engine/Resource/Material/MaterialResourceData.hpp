@@ -44,7 +44,7 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
-    void MaterialResourceData::onPropertyChanged(IObject * _object, const IProperty & _prop)
+    void MaterialResourceData::OnPropertyChanged(IObject * _object, const IProperty & _prop, bool _notifyParent)
     {
         // When shader template changes, alloc the new structure
         if (!strcmp(_prop.getName(), "m_shader"))
@@ -60,6 +60,6 @@ namespace vg::engine
             }
         }
 
-        super::onPropertyChanged(_object, _prop);
+        super::OnPropertyChanged(_object, _prop, _notifyParent);
     }
 }

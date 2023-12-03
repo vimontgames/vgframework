@@ -17,10 +17,15 @@ namespace vg::core
     class IInstance : public Object
     {
     public:
-        enum Flags : u32
+        enum class Flags : u32
         {
             Enabled = 0x00000001,
-            Selected = 0x00000002
+            Static  = 0x00000002
+        };
+
+        enum class RuntimeFlags : u32
+        {
+            Selected = 0x00000001
         };
 
         IInstance(const string & _name, IObject * _parent) :
@@ -39,6 +44,9 @@ namespace vg::core
         virtual IModel *            GetModel        (Lod _lod) const = 0;
 
         virtual Flags               GetFlags        () const = 0;
-        virtual void                SetFlags        (Flags flags, bool enabled) = 0;
+        virtual void                SetFlags        (Flags _flags, bool _enabled) = 0;
+
+        virtual RuntimeFlags        GetRuntimeFlags () const = 0;
+        virtual void                SetRuntimeFlags (RuntimeFlags _flags, bool _enabled) = 0;
     };
 }

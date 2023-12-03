@@ -13,9 +13,9 @@
                                                                         return true;                                                                                                    \
                                                                     }
 
-#define VG_REGISTER_OBJECT_CLASS(className, displayName)            VG_REGISTER_OBJECT_CLASS_EX(className, displayName, IClassDesc::Flags::None)
-#define VG_REGISTER_COMPONENT_CLASS(className, displayName)         VG_REGISTER_OBJECT_CLASS_EX(className, displayName, IClassDesc::Flags::Component)
-#define VG_REGISTER_RESOURCE_CLASS(className, displayName)          VG_REGISTER_OBJECT_CLASS_EX(className, displayName, IClassDesc::Flags::Resource)
+#define VG_REGISTER_OBJECT_CLASS(className, displayName)            VG_REGISTER_OBJECT_CLASS_EX(className, displayName, vg::core::IClassDesc::Flags::None)
+#define VG_REGISTER_COMPONENT_CLASS(className, displayName)         VG_REGISTER_OBJECT_CLASS_EX(className, displayName, vg::core::IClassDesc::Flags::Component)
+#define VG_REGISTER_RESOURCE_CLASS(className, displayName)          VG_REGISTER_OBJECT_CLASS_EX(className, displayName, vg::core::IClassDesc::Flags::Resource)
 
 namespace vg::core
 {

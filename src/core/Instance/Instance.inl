@@ -35,17 +35,32 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
-    VG_INLINE void Instance::setFlags(Flags flags, bool enabled)
+    VG_INLINE void Instance::setFlags(Flags _flags, bool _enabled)
     {
-        if (enabled)
-            m_flags |= flags;
+        if (_enabled)
+            m_flags |= _flags;
         else
-            (u32&)m_flags &= ~(u32)flags;
+            (std::underlying_type<Flags>::type &)m_flags &= ~(std::underlying_type<Flags>::type)_flags;
     }
 
     //--------------------------------------------------------------------------------------
     VG_INLINE IInstance::Flags Instance::getFlags() const
     {
         return m_flags;
+    }
+
+    //--------------------------------------------------------------------------------------
+    VG_INLINE void Instance::setRuntimeFlags(RuntimeFlags _flags, bool _enabled)
+    {
+        if (_enabled)
+            m_runtimeFlags |= _flags;
+        else
+            (std::underlying_type<RuntimeFlags>::type&)m_runtimeFlags &= ~(std::underlying_type<RuntimeFlags>::type)_flags;
+    }
+
+    //--------------------------------------------------------------------------------------
+    VG_INLINE IInstance::RuntimeFlags Instance::getRuntimeFlags() const
+    {
+        return m_runtimeFlags;
     }
 }

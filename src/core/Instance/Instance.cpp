@@ -14,7 +14,8 @@ namespace vg::core
     //--------------------------------------------------------------------------------------
     Instance::Instance(const string & _name, IObject * _parent) :
         IInstance(_name, _parent),
-        m_flags(Flags::Enabled)
+        m_flags(Flags::Enabled),
+        m_runtimeFlags((RuntimeFlags)0x0)
     {
     }
 
@@ -68,9 +69,21 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
-    void Instance::SetFlags(Flags flags, bool enabled)
+    void Instance::SetFlags(Flags flags, bool _enabled)
     {
-        setFlags(flags, enabled);
+        setFlags(flags, _enabled);
+    }
+
+    //--------------------------------------------------------------------------------------
+    IInstance::RuntimeFlags Instance::GetRuntimeFlags() const
+    {
+        return getRuntimeFlags();
+    }
+
+    //--------------------------------------------------------------------------------------
+    void Instance::SetRuntimeFlags(RuntimeFlags _flags, bool _enabled)
+    {
+        setRuntimeFlags(_flags, _enabled);
     }
 
     //--------------------------------------------------------------------------------------

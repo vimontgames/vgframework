@@ -25,7 +25,8 @@ namespace vg::core
         virtual void                        setParent           (IObject * _parent) = 0;
         virtual IObject *                   getParent           () const = 0;
 
-        virtual void                        onPropertyChanged   (IObject * _object, const IProperty & _prop) = 0;
+        virtual void                        OnPropertyChanged   (IObject * _object, const IProperty & _prop, bool _notifyParent = true) = 0;
+
         virtual void                        onResourceLoaded    (IResource * _resource) = 0;
         virtual void                        onResourceUnloaded  (IResource * _resource) = 0;
 

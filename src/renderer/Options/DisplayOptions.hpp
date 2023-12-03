@@ -70,7 +70,7 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    void DisplayOptions::onPropertyChanged(IObject * _object, const core::IProperty & _prop)
+    void DisplayOptions::OnPropertyChanged(IObject * _object, const core::IProperty & _prop, bool _notifyParent)
     {
         const char * name = _prop.getName();
         if (!strcmp(name, "m_VSync"))

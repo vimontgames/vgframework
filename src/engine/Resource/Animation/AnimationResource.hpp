@@ -173,7 +173,7 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
-    void AnimationResource::onPropertyChanged(core::IObject * _object, const core::IProperty & _prop)
+    void AnimationResource::OnPropertyChanged(core::IObject * _object, const core::IProperty & _prop, bool _notifyParent)
     {
         if (!strcmp(_prop.getName(), "m_time"))
             setTime(m_time);

@@ -76,7 +76,7 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
-    void MeshComponent::onPropertyChanged(IObject * _object, const IProperty & _prop)
+    void MeshComponent::OnPropertyChanged(IObject * _object, const IProperty & _prop, bool _notifyParent)
     {
         if (!strcmp(_prop.getName(), "m_shader"))
         {
@@ -97,7 +97,7 @@ namespace vg::engine
             }
         }
 
-        super::onPropertyChanged(_object, _prop);
+        super::OnPropertyChanged(_object, _prop, _notifyParent);
     }
 
     //--------------------------------------------------------------------------------------

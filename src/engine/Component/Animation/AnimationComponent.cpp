@@ -75,10 +75,10 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
-    void AnimationComponent::onPropertyChanged(IObject * _object, const IProperty & _prop)
+    void AnimationComponent::OnPropertyChanged(IObject * _object, const IProperty & _prop, bool _notifyParent)
     {
         // [...]
-        super::onPropertyChanged(_object, _prop);
+        super::OnPropertyChanged(_object, _prop, _notifyParent);
     }
 
     //--------------------------------------------------------------------------------------

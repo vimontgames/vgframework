@@ -41,7 +41,7 @@ namespace vg::renderer
     //--------------------------------------------------------------------------------------
     MeshInstance::MeshInstance(const core::string & _name, core::IObject * _parent) :
         super(_name, _parent),
-        m_runtimeFlags(0x0)
+        m_skinFlags(0x0)
     {
 
     }

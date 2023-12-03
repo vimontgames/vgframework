@@ -152,7 +152,7 @@ namespace vg::renderer
                     dstMatOffset += boneCount * sizeof(float4x4);
                 }
 
-                meshInstance->clearRuntimeFlag(MeshInstance::RuntimeFlags::SkinLOD0);
+                meshInstance->clearSkinFlag(MeshInstance::SkinFlags::SkinLOD0);
             }
         }
     }

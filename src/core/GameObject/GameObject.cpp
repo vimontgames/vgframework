@@ -79,7 +79,7 @@ namespace vg::core
     //--------------------------------------------------------------------------------------
     void GameObject::Update(double _dt)
     {
-        if (GameObject::Flags::Enabled & getFlags())
+        if (asBool(GameObject::Flags::Enabled & getFlags()))
         {
             for (uint i = 0; i < m_components.size(); ++i)
             {
@@ -212,6 +212,18 @@ namespace vg::core
     {
         const auto parent = getParent();
         return nullptr == parent || nullptr == dynamic_cast<const GameObject *>(parent);
+    }
+
+    //--------------------------------------------------------------------------------------
+    void GameObject::OnPropertyChanged(core::IObject * _object, const core::IProperty & _prop, bool _notifyParent)
+    {
+        // Notify components that a GameObject property changed, but we don't want infinite loop when the property will update its parent
+        for (uint i = 0; i < m_components.size(); ++i)
+        {
+            Component * component = m_components[i];
+            if (nullptr != component)
+                component->OnPropertyChanged(_object, _prop, false);
+        }
     }
 
     //--------------------------------------------------------------------------------------

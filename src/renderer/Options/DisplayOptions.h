@@ -21,7 +21,7 @@ namespace vg::renderer
         RayTracing      = 0x00000010
     };
 
-    class DisplayOptions : public core::Object, public core::Singleton<DisplayOptions>
+    class DisplayOptions final : public core::Object, public core::Singleton<DisplayOptions>
     {
     public:
         using super = core::Object;
@@ -33,7 +33,7 @@ namespace vg::renderer
         static bool			    registerClass			    (core::IFactory & _factory);
         static bool			    registerProperties		    (core::IClassDesc & _desc);
 
-        void                    onPropertyChanged           (IObject * _object, const core::IProperty & _prop) final override;
+        void                    OnPropertyChanged           (IObject * _object, const core::IProperty & _prop, bool _notifyParent) final override;
 
         DisplayMode             getDisplayMode              () const { return m_debugDisplayMode; }
         DisplayFlags            getDisplayFlags             () const { return m_displayFlags; }

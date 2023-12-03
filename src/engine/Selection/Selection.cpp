@@ -109,13 +109,13 @@ namespace vg::engine
         GameObject * go = dynamic_cast<GameObject *>(_object);
         if (nullptr != go)
         {
-            go->SetFlags(IInstance::Selected, _selected);
+            go->setRuntimeFlags(IInstance::RuntimeFlags::Selected, _selected);
 
             auto graphicInstances = go->getGraphicInstances();
             for (uint i = 0; i < graphicInstances.size(); ++i)
             {
                 auto instance = graphicInstances[i];
-                instance->SetFlags(IInstance::Selected, _selected);
+                instance->setRuntimeFlags(IInstance::RuntimeFlags::Selected, _selected);
             }
         }
     }

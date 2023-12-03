@@ -37,4 +37,24 @@ namespace vg::physics
         NonMoving = 0,
         Moving
     };
+
+    enum class MotionType : core::u8
+    {
+        Static = 0,     // Non movable
+        Kinematic,  // Movable using velocities only, does not respond to forces
+        Dynamic,    // Responds to forces as a normal physics object
+    };
+
+    enum class Shape : core::u8
+    {
+        Sphere = 0,
+        Box,
+        Capsule,
+        TaperedCapsule,
+        Cylinder,
+        ConvexHull,
+        Compound,
+        TriangleMesh,
+        HeightField
+    };
 }

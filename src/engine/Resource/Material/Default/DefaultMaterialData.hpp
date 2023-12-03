@@ -44,14 +44,14 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
-    void DefaultMaterialData::onPropertyChanged(IObject * _object, const IProperty & _prop)
+    void DefaultMaterialData::OnPropertyChanged(IObject * _object, const IProperty & _prop, bool _notifyParent)
     {
         auto material = getMaterialModel();
 
         if (!strcmp(_prop.getName(), "m_albedoColor"))
             material->SetColor("AlbedoColor", m_albedoColor);
 
-        super::onPropertyChanged(_object, _prop);
+        super::OnPropertyChanged(_object, _prop, _notifyParent);
     }
 
     //--------------------------------------------------------------------------------------

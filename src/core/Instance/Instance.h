@@ -16,17 +16,20 @@ namespace vg::core
 
         static bool                 registerProperties  (IClassDesc & _desc);
 
-        void                        SetWorldMatrix      (const float4x4 & _world) final;
+        void                        SetWorldMatrix      (const float4x4 & _world) final override;
         const float4x4 &            GetWorldMatrix      () const final override;
 
-        void                        SetColor            (const float4 & _color) final;
-        const float4 &              GetColor            () const final;
+        void                        SetColor            (const float4 & _color) final override;
+        const float4 &              GetColor            () const final override;
 
         void                        SetModel            (Lod _lod, IModel * _model) override;
         IModel *                    GetModel            (Lod _lod) const override;
 
-        Flags                       GetFlags            () const final;
-        void                        SetFlags            (Flags flags, bool enabled) final;
+        Flags                       GetFlags            () const final override;
+        void                        SetFlags            (Flags _flags, bool _enabled) final override;
+
+        RuntimeFlags                GetRuntimeFlags     () const final override;
+        void                        SetRuntimeFlags     (RuntimeFlags _flags, bool _enabled) final override;
 
     public:
         VG_INLINE void              setWorldMatrix      (const float4x4 & _world);
@@ -39,10 +42,14 @@ namespace vg::core
         VG_INLINE Model *           getModel            (Lod _lod) const;
 
         VG_INLINE Flags             getFlags            () const;
-        VG_INLINE void              setFlags            (Flags flags, bool enabled);
+        VG_INLINE void              setFlags            (Flags _flags, bool _enabled);
+
+        VG_INLINE RuntimeFlags      getRuntimeFlags     () const;
+        VG_INLINE void              setRuntimeFlags     (RuntimeFlags _flags, bool _enabled);
       
     private:
         Flags                       m_flags;
+        RuntimeFlags                m_runtimeFlags;
         float4                      m_color = { 1.0f, 1.0f, 1.0f, 1.0f };
         float4x4                    m_world = float4x4::identity();
         vector<Model *>             m_models;

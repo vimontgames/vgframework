@@ -52,7 +52,8 @@ namespace vg::core
         void                        setParent           (IObject * _parent) final;
         IObject *                   getParent           () const final;
 
-        void                        onPropertyChanged   (IObject * _object, const IProperty & _prop) override;
+        void                        OnPropertyChanged   (IObject * _object, const IProperty & _prop, bool _notifyParent) override;
+
         void                        onResourceLoaded    (IResource * _resource) override;
 		void                        onResourceUnloaded	(IResource * _resource) override;
 

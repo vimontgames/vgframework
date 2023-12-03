@@ -197,7 +197,7 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
-    void Engine::onPropertyChanged(IObject * _object, const IProperty & _prop)
+    void Engine::OnPropertyChanged(IObject * _object, const IProperty & _prop, bool _notifyParent)
     {
 
     }

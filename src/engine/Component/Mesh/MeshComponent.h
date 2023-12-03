@@ -21,7 +21,7 @@ namespace vg::engine
 
         void                                Update              (double _dt) override;
 
-        void                                onPropertyChanged   (IObject * _object, const core::IProperty & _prop) override;
+        void                                OnPropertyChanged   (IObject * _object, const core::IProperty & _prop, bool _notifyParent) override;
 
         void                                onResourceLoaded    (core::IResource * _resource) override;
         void                                onResourceUnloaded  (core::IResource * _resource) override;

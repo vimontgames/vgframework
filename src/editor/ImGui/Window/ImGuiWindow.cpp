@@ -124,6 +124,7 @@ namespace vg::editor
         const auto flags = _prop->getFlags();
 
         const bool readonly = asBool(IProperty::Flags::ReadOnly & flags);
+        ImGui::BeginDisabled(readonly);
 
         T * pEnum = (T*)(uint_ptr(_object) + offset);
         int enumVal = (int)*pEnum;
@@ -139,7 +140,9 @@ namespace vg::editor
         }
 
         bool changed = false;
-        if (ImGui::BeginCombo(getPropertyLabel(_prop).c_str(), preview.c_str(), ImGuiComboFlags_HeightLarge))
+        char enumLabel[256];
+        sprintf(enumLabel, "%s###%p", getPropertyLabel(_prop).c_str(), _prop);
+        if (ImGui::BeginCombo(enumLabel, preview.c_str(), ImGuiComboFlags_HeightLarge))
         {
             for (uint e = 0; e < _prop->getEnumCount(); ++e)
             {
@@ -154,7 +157,8 @@ namespace vg::editor
             }
             ImGui::EndCombo();
         }
-        
+
+        ImGui::EndDisabled();
         return changed;
     }
 
@@ -166,6 +170,7 @@ namespace vg::editor
         const auto flags = _prop->getFlags();
 
         const bool readonly = asBool(IProperty::Flags::ReadOnly & flags);
+        ImGui::BeginDisabled(readonly);
 
         T * pEnum = (T*)(uint_ptr(_object) + offset);
         int enumVal = (int)*pEnum;
@@ -191,7 +196,9 @@ namespace vg::editor
         if (!found)
             preview = "<None>";
 
-        if (ImGui::BeginCombo(getPropertyLabel(_prop).c_str(), preview.c_str(), ImGuiComboFlags_None))
+        char enumLabel[256];
+        sprintf(enumLabel, "%s###%p", getPropertyLabel(_prop).c_str(), _prop);
+        if (ImGui::BeginCombo(enumLabel, preview.c_str(), ImGuiComboFlags_None))
         {
             for (uint e = 0; e < _prop->getEnumCount(); ++e)
             {
@@ -215,6 +222,7 @@ namespace vg::editor
                 *pEnum = enumVal;
         }
 
+        ImGui::EndDisabled();
         return changed;
     }
 
@@ -803,7 +811,7 @@ namespace vg::editor
         //ImGui::EndDisabled();
 
         if (changed)
-            _object->onPropertyChanged(_object, *_prop);
+            _object->OnPropertyChanged(_object, *_prop);
     }
 
     void * allocate(size_t size)

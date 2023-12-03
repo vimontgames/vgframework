@@ -23,7 +23,7 @@ namespace vg::renderer
     public:
         VG_CLASS_DECL(MeshInstance, IMeshInstance);
 
-        enum RuntimeFlags : core::u32
+        enum SkinFlags : core::u32
         {
             SkinLOD0 = 0x00000001,
             //SkinLOD1 = 0x00000002,
@@ -55,11 +55,11 @@ namespace vg::renderer
         bool                            updateSkeleton      ();
         void                            setSkinnedMesh      (const gfx::BindlessBufferHandle & _skinnedBufferHandle, core::uint _skinnedBufferOffset);
 
-        VG_INLINE bool                  setRuntimeFlag      (RuntimeFlags _flag);
-        VG_INLINE bool                  clearRuntimeFlag    (RuntimeFlags _flag);
+        VG_INLINE bool                  setSkinFlag         (SkinFlags _flag);
+        VG_INLINE bool                  clearSkinFlag       (SkinFlags _flag);
 
     private:
-        core::atomic<core::u32>         m_runtimeFlags;
+        core::atomic<core::u32>         m_skinFlags;
         Skeleton *                      m_instanceSkeleton = nullptr;
         gfx::BindlessBufferHandle       m_skinnedMeshBufferHandle;
         core::uint                      m_skinnedMeshBufferOffset = 0;
