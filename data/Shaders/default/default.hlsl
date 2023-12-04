@@ -39,7 +39,7 @@ VS_Output VS_Forward(uint _vertexID : VertexID)
     output.col = vert.getColor() * rootConstants3D.color;
     
     float3 modelPos = vert.getPos();
-    float3 worldPos = mul(float4(modelPos.xyz, 1.0f), rootConstants3D.getWorldMatrix());
+    float3 worldPos = mul(float4(modelPos.xyz, 1.0f), rootConstants3D.getWorldMatrix()).xyz;
     output.wpos = worldPos.xyz;
     float4 viewPos = mul(float4(worldPos.xyz, 1.0f), view);
 

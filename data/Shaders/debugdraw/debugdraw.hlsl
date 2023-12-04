@@ -11,22 +11,6 @@ struct VS_Output
     float4 col  : Color;
 };
 
-inline float clipZBias(float clip_w,float depth_bias)
-{
-    float near = 0.1f;
-    float far = 1024.0f;
-
-    // calculate near plane depth with bias offset
-    float bias_near = near + depth_bias / clip_w;
-
-    // compute scale and translation based on updated near distance
-    float bias_scale = far / ( far - bias_near );
-    float bias_trans = bias_scale * -bias_near;
-    
-    // finally, compute and return the generated clip-space z value
-    return bias_trans + clip_w * bias_scale;
-}
-
 VS_Output VS_DebugDraw(uint _vertexID : VertexID)
 {
     VS_Output output = (VS_Output) 0;
@@ -43,7 +27,7 @@ VS_Output VS_DebugDraw(uint _vertexID : VertexID)
     
     output.col = vert.getColor() * rootConstants3D.color;
     float3 modelPos = vert.getPos();
-    float3 worldPos = mul(float4(modelPos.xyz, 1.0f), rootConstants3D.getWorldMatrix());
+    float3 worldPos = mul(float4(modelPos.xyz, 1.0f), rootConstants3D.getWorldMatrix()).xyz;
     float4 viewPos = mul(float4(worldPos.xyz, 1.0f), view);
 
     viewPos.z += WIREFRAME_DEPTHBIAS;
