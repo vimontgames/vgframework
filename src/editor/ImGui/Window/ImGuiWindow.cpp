@@ -321,6 +321,36 @@ namespace vg::editor
         if (asBool(IProperty::Flags::SameLine & flags))
             ImGui::SameLine();
 
+        bool optional = false, optionalChanged = false;
+        IProperty * optionalProp = nullptr;
+
+        if (asBool(IProperty::Flags::Optional & flags))
+        {
+            // check previous property is bool
+            const IClassDesc * classDesc = _object->getClassDesc();
+            optionalProp = classDesc->GetPreviousProperty(_prop->getName());
+            if (optionalProp)
+            {
+                VG_ASSERT(optionalProp->getType() == IProperty::Type::Bool, "[Factory] Property used for optional variable \"%s\" should be of type 'Bool'", _prop->getName());
+                VG_ASSERT(asBool(IProperty::Flags::Hidden & optionalProp->getFlags()), "[Factory] Property used for optional variable \"%s\" should be hidden", _prop->getName());
+                if (optionalProp->getType() == IProperty::Type::Bool)
+                {
+                    bool * b = optionalProp->GetPropertyBool(_object);
+                    if (ImGui::Checkbox("", b))
+                        optionalChanged = true;
+                    ImGui::SameLine();
+
+                    auto availableWidth = GetContentRegionAvail().x;
+                    ImGui::PushItemWidth(availableWidth - style::label::PixelWidth);
+
+                    optional = true;
+
+                    if (!*b)
+                        ImGui::BeginDisabled(true);
+                }                
+            }
+        }
+
         bool changed = false;
 
         const bool readOnly = asBool(IProperty::Flags::ReadOnly & flags);
@@ -810,8 +840,19 @@ namespace vg::editor
         }
         //ImGui::EndDisabled();
 
+        if (optionalChanged)
+            _object->OnPropertyChanged(_object, *optionalProp);
+
         if (changed)
             _object->OnPropertyChanged(_object, *_prop);
+
+        if (optional)
+        {
+            ImGui::PopItemWidth();
+            bool * b = optionalProp->GetPropertyBool(_object);
+            if (!*b)
+                ImGui::EndDisabled();
+        }
     }
 
     void * allocate(size_t size)

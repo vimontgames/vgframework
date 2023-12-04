@@ -73,6 +73,9 @@ namespace vg::core
         virtual uint                        GetPropertyCount            () const = 0;
         virtual const IProperty *           GetPropertyByIndex          (uint _index) const = 0;
         virtual IProperty *                 GetPropertyByName           (const char * _propertyName) const = 0;
+        virtual uint                        GetPropertyIndex            (const char * _propertyName) const = 0;
+        virtual IProperty *                 GetPreviousProperty         (const char * _propertyName) const = 0;
+        virtual IProperty *                 GetNextProperty             (const char * _propertyName) const = 0;
         virtual Func                        GetCreateFunc               () const = 0;
         virtual SingletonFunc               GetSingletonFunc            () const = 0;
         virtual IClassDesc::Flags           GetFlags                    () const = 0;

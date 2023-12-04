@@ -67,6 +67,12 @@
       <Filter>Body</Filter>
     </ClInclude>
     <ClInclude Include="Helper.h" />
+    <ClInclude Include="Body\BodyDesc.h">
+      <Filter>Body</Filter>
+    </ClInclude>
+    <ClInclude Include="Body\BodyDesc.hpp">
+      <Filter>Body</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="JobSystem">

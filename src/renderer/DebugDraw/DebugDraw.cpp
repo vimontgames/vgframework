@@ -353,6 +353,12 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
+    void DebugDraw::AddWireframeSphere(const float _radius, core::u32 _color, const core::float4x4 _world)
+    {
+
+    }
+
+    //--------------------------------------------------------------------------------------
     void DebugDraw::endFrame()
     {
         m_lines.clear();

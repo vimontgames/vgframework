@@ -43,7 +43,7 @@ namespace vg::physics
         void                                RunOneFrame                 (double _dt) final override;
 
         IShape *                            CreateShape                 (const IShapeDesc * _shapeDesc) final override;
-        IBody *                             CreateBody                  (IShape * _shape, const core::float4x4 & _world, MotionType _motion, ObjectLayer _layer, bool _activate = false) final override;
+        IBody *                             CreateBody                  (const IBodyDesc * _bodyDesc, IShape * _shape, const core::float4x4 & _world) final override;
 
         engine::IEngine *                   getEngine                   () const;
         renderer::IDebugDraw *              getDebugDraw                () const;

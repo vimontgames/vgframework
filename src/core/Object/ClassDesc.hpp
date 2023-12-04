@@ -18,12 +18,45 @@ namespace vg::core
     //--------------------------------------------------------------------------------------
     IProperty * ClassDesc::GetPropertyByName(const char * _propertyName) const
     {
+        uint index = GetPropertyIndex(_propertyName);
+        if (-1 != index)
+            return (IProperty*)&properties[index];
+        
+        VG_ASSERT("[Factory] Property \"%s\" not found in class '%s'", _propertyName, GetClassName());
+        return nullptr;
+    }
+
+    //--------------------------------------------------------------------------------------
+    uint ClassDesc::GetPropertyIndex(const char * _propertyName) const
+    {
         for (uint i = 0; i < properties.size(); ++i)
         {
             const auto & prop = properties[i];
             if (!strcmp(_propertyName, prop.getName()))
-                return (IProperty*)&prop;
+                return i;
         }
+        return -1;
+    }
+
+    //--------------------------------------------------------------------------------------
+    IProperty * ClassDesc::GetPreviousProperty(const char * _propertyName) const
+    {
+        uint index = GetPropertyIndex(_propertyName);
+        if (index > 0)
+            return  (IProperty *)&properties[index-1];
+        
+        VG_ASSERT("[Factory] Previous Property of \"%s\" not found in class '%s'", _propertyName, GetClassName());
+        return nullptr;
+    }
+
+    //--------------------------------------------------------------------------------------
+    IProperty * ClassDesc::GetNextProperty(const char * _propertyName) const
+    {
+        uint index = GetPropertyIndex(_propertyName);
+        if (index < properties.size() - 1 )
+            return  (IProperty *)&properties[index + 1];
+
+        VG_ASSERT("[Factory] Next Property of \"%s\" not found in class '%s'", _propertyName, GetClassName());
         return nullptr;
     }
 

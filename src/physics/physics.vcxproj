@@ -27,6 +27,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Body\Body.h" />
+    <ClInclude Include="Body\BodyDesc.h" />
+    <ClInclude Include="Body\BodyDesc.hpp" />
     <ClInclude Include="BroadPhase\BroadPhaseFilter.h" />
     <ClInclude Include="BroadPhase\BroadPhaseFilter.hpp" />
     <ClInclude Include="BroadPhase\BroadPhaseLayer.h" />

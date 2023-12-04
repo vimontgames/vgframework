@@ -21,7 +21,7 @@ namespace vg::renderer
     // Primitives to draw using 'AddLine', 'AddWireframe' are added to a common list but each
     // visible view will build its own buffer so that culling can possibly be done
     //--------------------------------------------------------------------------------------
-    class DebugDraw : public IDebugDraw, public core::Singleton<DebugDraw>
+    class DebugDraw final : public IDebugDraw, public core::Singleton<DebugDraw>
     {
         struct DrawData;
 
@@ -31,6 +31,7 @@ namespace vg::renderer
 
         void        AddLine                 (const core::float3 & _beginPos, const core::float3 & _endPos, core::u32 _color, const core::float4x4 & _world = core::float4x4::identity()) final override;
         void        AddWireframeBox         (const core::float3 & _minPos, const core::float3 & _maxPos, core::u32 _color, const core::float4x4 & _world = core::float4x4::identity()) final override;
+        void        AddWireframeSphere      (const float _radius, core::u32 _color, const core::float4x4 _world = core::float4x4::identity()) final override;
 
         void        endFrame                ();
         void        reset                   ();

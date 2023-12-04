@@ -60,12 +60,18 @@ namespace vg::editor
             openPopup = false;
         }
 
+        string ext = ".scene";
+
         switch (m_selected)
         {
             case MenuOption::Save:
-            if (fileBrowser.showFileDialog(m_popup, imgui_addons::ImGuiFileBrowser::DialogMode::SAVE, style::dialog::Size, ".scene"))
+            if (fileBrowser.showFileDialog(m_popup, imgui_addons::ImGuiFileBrowser::DialogMode::SAVE, style::dialog::Size, ext.c_str()))
             {
-                const string newFilePath = fileBrowser.selected_path;
+                string newFilePath = fileBrowser.selected_path;
+
+                size_t findExt = newFilePath.find_last_of(ext);
+                if (findExt != newFilePath.length() - 1)
+                    newFilePath += ".scene";
 
                 size_t lastFolder = newFilePath.find_last_of("/");
                 string name = newFilePath.substr(lastFolder+1);

@@ -40,7 +40,7 @@ namespace vg::physics
 
     enum class MotionType : core::u8
     {
-        Static = 0,     // Non movable
+        Static = 0, // Non movable
         Kinematic,  // Movable using velocities only, does not respond to forces
         Dynamic,    // Responds to forces as a normal physics object
     };
@@ -57,4 +57,20 @@ namespace vg::physics
         //TriangleMesh,
         //HeightField
     };
+
+    enum class BodyType : core::u8
+    {
+        Rigid = 0,
+        Soft
+    };
+
+    //struct BodyDesc
+    //{
+    //    class IShape *  shape           = nullptr;
+    //    core::float4x4  world           = core::float4x4::identity();
+    //    MotionType      motion          = MotionType::Static;
+    //    ObjectLayer     layer           = ObjectLayer::NonMoving;
+    //    bool            activate        = false;
+    //    float           mass            = -1.0f;
+    //};
 }

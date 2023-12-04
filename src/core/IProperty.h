@@ -70,7 +70,8 @@ namespace vg::core
             Resource        = 0x0000000000000100,
             NotSaved        = 0x0000000000000200,
             EnumArray       = 0x0000000000000400,   // Property is fixed-size C array with element count the size of the enum
-            Flatten         = 0x0000000000000800    // Do not open TreeNode to display object of this type
+            Flatten         = 0x0000000000000800,   // Do not open TreeNode to display object of this type
+            Optional        = 0x0000000000001000    // Previous property must be a bool, and if 'false' then this value won't be editable
         };
 
         virtual void                        setRange                        (float2 _range) = 0;

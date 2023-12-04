@@ -9,6 +9,7 @@ namespace vg::physics
     class IShape;
     class IShapeDesc;
     class IBody;
+    class IBodyDesc;
 }
 
 namespace vg::engine
@@ -36,18 +37,18 @@ namespace vg::engine
     private:
         bool                        updateFlagsFromGameObject();
 
+        bool                        createBodyDesc();
+        bool                        createBody();
+
         bool                        createShapeDesc();
         bool                        createShape();
-        bool                        createBody();
 
         static physics::IPhysics *  getPhysics();
 
     private:
-        physics::ObjectLayer        m_layer = physics::ObjectLayer::NonMoving;
-        physics::MotionType         m_motion = physics::MotionType::Static;
-        physics::ShapeType          m_shapeType = physics::ShapeType::Sphere;
-        physics::IShapeDesc *       m_shapeDesc = nullptr;
-        physics::IShape *           m_shape = nullptr;
-        physics::IBody *            m_body = nullptr;
+        physics::IBodyDesc *        m_bodyDesc  = nullptr;
+        physics::IBody *            m_body      = nullptr;
+        physics::IShapeDesc *       m_shapeDesc = nullptr;  
+        physics::IShape *           m_shape     = nullptr;
     };
 }

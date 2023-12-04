@@ -294,25 +294,17 @@ namespace vg::physics
     }
 
     //--------------------------------------------------------------------------------------
-    IBody * Physics::CreateBody(IShape * _shape, const float4x4 & _world, MotionType _motion, ObjectLayer _layer, bool _activate)
+    IBody * Physics::CreateBody(const IBodyDesc * _bodyDesc, IShape * _shape, const core::float4x4 & _world)
     {
-        BodyInterface & bodyInterface = m_physicsSystem->GetBodyInterface();
-        JPH::Shape * joltShape = ((Shape *)_shape)->getJoltShape();
-        VG_ASSERT(joltShape);
+        const BodyType bodyType = _bodyDesc->GetBodyType();
+        switch (bodyType)
+        {
+            default:
+                VG_ASSERT_ENUM_NOT_IMPLEMENTED(bodyType);
+                return nullptr;
 
-        // Get quaternion from matrix rotation part
-        float4x4 world = mul(_shape->GetTransform(), _world);
-        float4x4 rot = extractRotation(world);
-        quaternion quat = getQuaternionFromRotationMatrix(rot);
-     
-        BodyCreationSettings bodySettings(joltShape, getJoltVec3(world[3].xyz), getJoltQuaternion(quat), getJoltMotionType(_motion), getJoltObjectLayer(_layer));
-
-        JPH::BodyID bodyID = bodyInterface.CreateAndAddBody(bodySettings, _activate ? EActivation::Activate : EActivation::DontActivate);
-
-        auto quality = bodyInterface.GetMotionQuality(bodyID);
-        bodyInterface.SetMotionQuality(bodyID, EMotionQuality::LinearCast);
-
-        physics::Body * body = new physics::Body(bodyID, _shape->GetTransform());
-        return body;
+            case BodyType::Rigid:
+                return new physics::RigidBody((RigidBodyDesc *)_bodyDesc, (Shape*)_shape, _world);
+        }
     }
 }

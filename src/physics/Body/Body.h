@@ -2,6 +2,7 @@
 
 #include "physics/IBody.h"
 #include "Jolt/Physics/Body/BodyID.h"
+#include "Jolt/Physics/Body/BodyCreationSettings.h"
 
 namespace JPH
 {
@@ -10,13 +11,17 @@ namespace JPH
 
 namespace vg::physics
 {
-    class Body final : public IBody
+    class BodyDesc;
+    class RigidBodyDesc;
+    class Shape;
+
+    class Body : public IBody
     {
     public:
         VG_CLASS_DECL(Body, IBody);
+        VG_CLASS_CTOR_HEADER_IMPL(Body, IBody);
 
-        Body(const core::string & _name, core::IObject * _parent);
-        Body(const JPH::BodyID _joltBodyID, const core::float4x4 & _transform);
+        Body(const BodyDesc * _bodyDesc, Shape * _shape, const core::float4x4 & _world);
         ~Body();
 
         void Activate(const core::float4x4 & _world) final override;
@@ -29,7 +34,18 @@ namespace vg::physics
         void resetBody(const core::float4x4 & _world);
 
     private:
-        core::float4x4 m_transform = core::float4x4::identity();
-        JPH::BodyID m_joltBodyID;
-    };    
+        const Shape *       m_shape = nullptr;
+        const BodyDesc *    m_bodyDesc = nullptr;
+        JPH::BodyID         m_bodyID;
+    };  
+
+    class RigidBody : public Body
+    {
+    public:
+        VG_CLASS_DECL(RigidBody, Body);
+        VG_CLASS_CTOR_HEADER_IMPL(RigidBody, Body);
+        
+        RigidBody(const RigidBodyDesc * _bodyDesc, Shape * _shape, const core::float4x4 & _world);
+        ~RigidBody();
+    };
 }

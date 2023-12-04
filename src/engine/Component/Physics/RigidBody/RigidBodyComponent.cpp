@@ -17,11 +17,8 @@ namespace vg::engine
     {
         super::registerProperties(_desc);
 
-        _desc.registerPropertyEnumEx(RigidBodyComponent, physics::ObjectLayer, m_layer, "Layer", IProperty::Flags::ReadOnly);
-        _desc.registerPropertyEnumEx(RigidBodyComponent, physics::MotionType, m_motion, "Motion", IProperty::Flags::ReadOnly);
-        _desc.registerPropertyEnum(RigidBodyComponent, physics::ShapeType, m_shapeType, "Shape");
-
-        _desc.registerPropertyObjectPtrEx(RigidBodyComponent, m_shapeDesc, "Shape Settings", IProperty::Flags::Flatten);
+        _desc.registerPropertyObjectPtrEx(RigidBodyComponent, m_bodyDesc, "Body", IProperty::Flags::Flatten);
+        _desc.registerPropertyObjectPtrEx(RigidBodyComponent, m_shapeDesc, "Shape", IProperty::Flags::Flatten);
 
         return true;
     }
@@ -30,19 +27,29 @@ namespace vg::engine
     RigidBodyComponent::RigidBodyComponent(const core::string & _name, IObject * _parent) :
         super(_name, _parent)
     {
-        if (getGameObject())
-            updateFlagsFromGameObject();
+        if (m_bodyDesc == nullptr)
+            createBodyDesc();
 
         if (m_shapeDesc == nullptr)
             createShapeDesc();
+
+        if (getGameObject())
+            updateFlagsFromGameObject();
+
+        if (m_shape == nullptr)
+            createShape();
+
+        if (m_body == nullptr)
+            createBody();
     }
 
     //--------------------------------------------------------------------------------------
     RigidBodyComponent::~RigidBodyComponent()
     {
-        VG_SAFE_RELEASE(m_shapeDesc);
-        VG_SAFE_RELEASE(m_shape);
         VG_SAFE_RELEASE(m_body);
+        VG_SAFE_RELEASE(m_shape);
+        VG_SAFE_RELEASE(m_bodyDesc);
+        VG_SAFE_RELEASE(m_shapeDesc);
     }
 
     //--------------------------------------------------------------------------------------
@@ -50,7 +57,7 @@ namespace vg::engine
     {
         IGameObject * go = GetGameObject();
 
-        if (physics::MotionType::Static != m_motion)
+        if (physics::MotionType::Static != m_bodyDesc->GetMotion())
         {
             if (Engine::get()->IsPlaying())
             {
@@ -61,9 +68,9 @@ namespace vg::engine
                 }
             }
         }
-
+        
         if (m_shape)
-            m_shapeDesc->Draw(go->getWorldMatrix());
+            m_shape->Draw(go->getWorldMatrix());
     }
 
     //--------------------------------------------------------------------------------------
@@ -81,6 +88,9 @@ namespace vg::engine
         if (m_body)
             m_body->Activate(GetGameObject()->GetWorldMatrix());
 
+        if (m_shapeDesc)
+            m_shapeDesc->OnPlay();
+
         super::OnPlay();
     }
 
@@ -88,6 +98,9 @@ namespace vg::engine
     void RigidBodyComponent::OnStop()
     {
         super::OnStop();
+
+        if (m_shapeDesc)
+            m_shapeDesc->OnStop();
 
         if (m_body)
             m_body->Deactivate(GetGameObject()->GetWorldMatrix());
@@ -108,16 +121,35 @@ namespace vg::engine
         }
         else if (!strcmp(_prop.getName(), "m_shapeType"))
         {
-            if (nullptr == m_shapeDesc || m_shapeType != m_shapeDesc->GetShapeType())
+            if (nullptr == m_shapeDesc || m_bodyDesc->GetShapeType() != m_shapeDesc->GetShapeType())
+            {
                 createShapeDesc();
+                createShape();
+                createBody();
+            }
         }
         else if (_object == m_shapeDesc)
         {
             createShape();
             createBody();
         }
+        else if (_object == m_bodyDesc)
+        {
+            createBody();
+        }
 
         super::OnPropertyChanged(_object, _prop, _notifyParent);
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool RigidBodyComponent::createBodyDesc()
+    {
+        IFactory * factory = Kernel::getFactory();
+        VG_SAFE_RELEASE(m_bodyDesc);
+
+        m_bodyDesc = (physics::IBodyDesc *)factory->createObject("RigidBodyDesc", "", this);
+
+        return nullptr != m_bodyDesc;
     }
 
     //--------------------------------------------------------------------------------------
@@ -126,16 +158,18 @@ namespace vg::engine
         IFactory * factory = Kernel::getFactory();
         VG_SAFE_RELEASE(m_shapeDesc);
 
-        switch (m_shapeType)
+        VG_ASSERT(m_bodyDesc);
+        const physics::ShapeType shapeType = m_bodyDesc->GetShapeType();
+        switch (shapeType)
         {
             default:
-                VG_ASSERT_ENUM_NOT_IMPLEMENTED(m_shapeType);
+                VG_ASSERT_ENUM_NOT_IMPLEMENTED(shapeType);
                 break;
-
+        
             case physics::ShapeType::Sphere:
                 m_shapeDesc = (physics::IShapeDesc*)factory->createObject("SphereShapeDesc", "", this);
                 break;
-
+        
             case physics::ShapeType::Box:
                 m_shapeDesc = (physics::IShapeDesc *)factory->createObject("BoxShapeDesc", "", this);
                 break;
@@ -164,9 +198,14 @@ namespace vg::engine
     bool RigidBodyComponent::createBody()
     {
         VG_SAFE_RELEASE(m_body);
-        VG_ASSERT(m_shape);
-        if (m_shape)
-            m_body = getPhysics()->CreateBody(m_shape, GetGameObject()->GetWorldMatrix(), m_motion, m_layer);
+        VG_ASSERT(m_bodyDesc && m_shape);
+        if (m_bodyDesc && m_shape)
+        {                
+            m_body = getPhysics()->CreateBody(m_bodyDesc, m_shape, GetGameObject()->GetWorldMatrix());
+        
+            if (!m_bodyDesc->IsMassOverriden())
+                m_bodyDesc->SetMass(m_shape->GetMass());
+        }
         return nullptr != m_body;
     }
 
@@ -183,19 +222,19 @@ namespace vg::engine
             // Update static/dynamic physics flags
             if (asBool(IInstance::Flags::Static & go->getFlags()))
             {
-                if (physics::ObjectLayer::NonMoving != m_layer || physics::MotionType::Static != m_motion)
+                if (physics::ObjectLayer::NonMoving != m_bodyDesc->GetLayer() || physics::MotionType::Static != m_bodyDesc->GetMotion())
                 {
-                    m_layer = physics::ObjectLayer::NonMoving;
-                    m_motion = physics::MotionType::Static;
+                    m_bodyDesc->SetLayer(physics::ObjectLayer::NonMoving);
+                    m_bodyDesc->SetMotion(physics::MotionType::Static);
                     return true;
                 }
             }
             else
             {
-                if (physics::ObjectLayer::Moving != m_layer || physics::MotionType::Dynamic != m_motion)
+                if (physics::ObjectLayer::Moving != m_bodyDesc->GetLayer() || physics::MotionType::Dynamic != m_bodyDesc->GetMotion())
                 {
-                    m_layer = physics::ObjectLayer::Moving;
-                    m_motion = physics::MotionType::Dynamic;
+                    m_bodyDesc->SetLayer(physics::ObjectLayer::Moving);
+                    m_bodyDesc->SetMotion(physics::MotionType::Dynamic);
                     return true;
                 }
             }

@@ -9,5 +9,6 @@ namespace vg::renderer
     public:
         virtual void    AddLine(const core::float3 & _beginPos, const core::float3 & _endPos, core::u32 _color, const core::float4x4 & _world = core::float4x4::identity()) = 0;
         virtual void    AddWireframeBox(const core::float3 & _minPos, const core::float3 & _maxPos, core::u32 _color, const core::float4x4 & _world = core::float4x4::identity()) = 0;
+        virtual void    AddWireframeSphere(const float _radius, core::u32 _color, const core::float4x4 _world = core::float4x4::identity()) = 0;
     };
 }
