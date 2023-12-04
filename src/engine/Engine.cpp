@@ -324,6 +324,12 @@ namespace vg::engine
 	}
 
     //--------------------------------------------------------------------------------------
+    renderer::IDisplayOptions * Engine::getDisplayOptions() const
+    {
+        return m_renderer->GetDisplayOptions();
+    }
+
+    //--------------------------------------------------------------------------------------
     void Engine::createEditorScene()
     {
         // use factor to create objects

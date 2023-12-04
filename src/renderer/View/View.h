@@ -92,6 +92,7 @@ namespace vg::renderer
 
         VG_INLINE const core::float4x4 &    getViewProjMatrix           () const;
         VG_INLINE const core::float4x4 &    getViewInvMatrix            () const;
+        VG_INLINE const core::float4x4 &    getProjMatrix               () const;
         VG_INLINE core::float2              getCameraNearFar            () const;
         VG_INLINE float                     getCameraFovY               () const;
 
@@ -118,6 +119,7 @@ namespace vg::renderer
         core::uint2                         m_size = core::uint2(0, 0);
         core::int2                          m_offset = core::int2(0, 0);
         core::float4x4                      m_viewInv = core::float4x4::identity();
+        core::float4x4                      m_proj = core::float4x4::identity();
         core::float4x4                      m_viewProj = core::float4x4::identity();
         core::IUniverse *                   m_cameraUniverse = nullptr;
         core::float2                        m_cameraNearFar;

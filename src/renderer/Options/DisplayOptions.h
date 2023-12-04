@@ -1,6 +1,6 @@
 #pragma once
 
-#include "core/Object/Object.h"
+#include "renderer/IDisplayOptions.h"
 #include "core/Singleton/Singleton.h"
 #include "gfx/Device/Device_consts.h"
 #include "Shaders/system/displayoptions.hlsli"
@@ -21,19 +21,16 @@ namespace vg::renderer
         RayTracing      = 0x00000010
     };
 
-    class DisplayOptions final : public core::Object, public core::Singleton<DisplayOptions>
+    class DisplayOptions final : public IDisplayOptions, public core::Singleton<DisplayOptions>
     {
     public:
-        using super = core::Object;
+        VG_CLASS_DECL(DisplayOptions, IDisplayOptions);
 
 							    DisplayOptions			    (const core::string & _name, core::IObject * _parent = nullptr);
 
-        const char *		    getClassName			    () const final { return "DisplayOptions"; }
-
-        static bool			    registerClass			    (core::IFactory & _factory);
-        static bool			    registerProperties		    (core::IClassDesc & _desc);
-
         void                    OnPropertyChanged           (IObject * _object, const core::IProperty & _prop, bool _notifyParent) final override;
+
+        bool                    IsCollidersEnabled          () const final override { return isCollidersEnabled(); }
 
         DisplayMode             getDisplayMode              () const { return m_debugDisplayMode; }
         DisplayFlags            getDisplayFlags             () const { return m_displayFlags; }
@@ -42,6 +39,7 @@ namespace vg::renderer
 
         bool				    isAABBEnabled               () const { return m_aabb; }
         bool				    isWireframeEnabled          () const { return m_wireframe; }
+        bool                    isCollidersEnabled          () const { return m_colliders;}
 
         bool                    isZPrepassEnabled           () const { return core::asBool(RenderPassFlags::ZPrepass & m_renderPassFlags); }
         bool				    isOpaqueEnabled			    () const { return core::asBool(RenderPassFlags::Opaque & m_renderPassFlags); }
@@ -71,6 +69,7 @@ namespace vg::renderer
         gfx::VSync m_VSync                                  = gfx::VSync::VBL_1;
         bool                    m_vsync                     = true;
         bool				    m_wireframe                 = false;
+        bool                    m_colliders                 = false;
        
         DisplayMode	            m_debugDisplayMode;
         DisplayFlags            m_displayFlags;

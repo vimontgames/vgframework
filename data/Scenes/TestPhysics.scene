@@ -109,7 +109,7 @@
                         <Property type="String" name="m_name" value="Game Camera"/>
                         <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
                         <Property type="Float4" name="m_color" flags="Color" x="1" y="1" z="1" w="1"/>
-                        <Property type="Float4x4" name="m_world" Ix="0.79625708" Iy="-0.60495842" Iz="-0" Iw="-0" Jx="0.43106595" Jy="0.56737673" Jz="0.70161664" Jw="-0" Kx="-0.42444885" Ky="-0.55866718" Kz="0.71255463" Kw="0" Tx="-15.99325" Ty="-20.681507" Tz="28.136873" Tw="1"/>
+                        <Property type="Float4x4" name="m_world" Ix="0.73579401" Iy="-0.67720544" Iz="-0" Iw="-0" Jx="0.20615149" Jy="0.22398673" Jz="0.9525395" Jw="-0" Kx="-0.64506495" Ky="-0.70087284" Kz="0.30441499" Kw="0" Tx="-2.4625499" Ty="-4.9880466" Tz="15.39481" Tw="1"/>
                         <Property type="ObjectRefVector" name="m_components">
                             <Object class="CameraComponent">
                                 <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
@@ -123,8 +123,8 @@
                                 <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
                                 <Property type="Float" name="m_moveSpeed" flags="HasRange" value="1"/>
                                 <Property type="Float" name="m_rotSpeed" flags="HasRange" value="1"/>
-                                <Property type="Float" name="m_pitch" flags="HasRange" value="-0.77766371"/>
-                                <Property type="Float" name="m_yaw" flags="HasRange" value="2.491879"/>
+                                <Property type="Float" name="m_pitch" flags="HasRange" value="-1.2614721"/>
+                                <Property type="Float" name="m_yaw" flags="HasRange" value="2.3976347"/>
                                 <Property type="Float" name="m_roll" flags="HasRange" value="0"/>
                             </Object>
                         </Property>
@@ -258,7 +258,7 @@
                                     <Object class="SphereShapeDesc">
                                         <Property type="String" name="m_name" flags="Hidden" value="SphereShapeDesc #0"/>
                                         <Property type="Float3" name="m_offset" x="0" y="0" z="0"/>
-                                        <Property type="Float" name="m_radius" value="1"/>
+                                        <Property type="Float" name="m_radius" value="0.5"/>
                                     </Object>
                                 </Property>
                             </Object>
@@ -303,7 +303,7 @@
                                     <Object class="SphereShapeDesc">
                                         <Property type="String" name="m_name" flags="Hidden" value="SphereShapeDesc #1"/>
                                         <Property type="Float3" name="m_offset" x="0" y="0" z="0"/>
-                                        <Property type="Float" name="m_radius" value="1"/>
+                                        <Property type="Float" name="m_radius" value="0.5"/>
                                     </Object>
                                 </Property>
                             </Object>
@@ -348,7 +348,7 @@
                                     <Object class="SphereShapeDesc">
                                         <Property type="String" name="m_name" flags="Hidden" value="SphereShapeDesc #3"/>
                                         <Property type="Float3" name="m_offset" x="0" y="0" z="0"/>
-                                        <Property type="Float" name="m_radius" value="1"/>
+                                        <Property type="Float" name="m_radius" value="0.5"/>
                                     </Object>
                                 </Property>
                             </Object>

@@ -47,6 +47,7 @@ namespace vg::renderer
         void        createBoxPrimitive      ();
         void        createGrid              ();
         void        createAxis              ();
+        void        createIcoSpherePrimitive(); 
 
         DrawData &  getDrawData             (const View * _view);
         void        clearDrawData           ();
@@ -57,6 +58,7 @@ namespace vg::renderer
         MeshGeometry *                  m_box = nullptr;
         gfx::Buffer *                   m_gridVB = nullptr;
         gfx::Buffer *                   m_axisVB = nullptr;
+        MeshGeometry *                  m_icoSphere = nullptr;
 
         struct DebugDrawLineData
         {
@@ -77,6 +79,14 @@ namespace vg::renderer
         };
         core::vector<DebugDrawBoxData>  m_wireframeBoxes;
 
+        struct DebugDrawIcoSphereData
+        {
+            core::float4x4 world;
+            float radius;
+            core::u32 color;
+        };
+        core::vector<DebugDrawIcoSphereData>  m_icoSpheres;
+
         struct DrawData
         {
             gfx::Buffer *   m_debugDrawVB = nullptr;
@@ -89,6 +99,6 @@ namespace vg::renderer
             core::u32       m_wireframeBoxesToDraw = 0;
         };
 
-        core::unordered_map<const View *, DrawData>    m_drawData;
+        core::unordered_map<const View *, DrawData> m_drawData;
     };
 }

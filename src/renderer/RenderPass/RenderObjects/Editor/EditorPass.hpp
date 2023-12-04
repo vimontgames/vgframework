@@ -59,7 +59,8 @@ namespace vg::renderer
         const auto options = DisplayOptions::get();
 
         RenderContext renderContext;
-        renderContext.m_viewProj = view->getViewProjMatrix();
+        renderContext.m_view = view->getViewInvMatrix();
+        renderContext.m_proj = view->getProjMatrix();
         renderContext.m_toolmode = view->isToolmode();
         renderContext.m_shaderPass = ShaderPass::Forward;
 
@@ -76,7 +77,7 @@ namespace vg::renderer
             const GraphicInstanceList & allInstances = view->m_cullingJobResult.m_instanceLists[asInteger(GraphicInstanceListType::All)];
 
             // Default pass states
-            RasterizerState rs(FillMode::Solid, CullMode::None);
+            RasterizerState rs(FillMode::Solid, CullMode::None, Orientation::ClockWise, DepthClip::Enable, DepthBias::None);
             BlendState bs(BlendFactor::One, BlendFactor::Zero, BlendOp::Add);
 
             const bool depthWrite = opaque && options->isZPrepassEnabled() ? false : true;

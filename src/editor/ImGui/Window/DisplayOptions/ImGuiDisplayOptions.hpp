@@ -1,4 +1,5 @@
 #include "ImguiDisplayOptions.h"
+#include "renderer/IDisplayOptions.h"
 
 namespace vg::editor
 {
@@ -11,7 +12,7 @@ namespace vg::editor
     //--------------------------------------------------------------------------------------
     void ImGuiDisplayOptions::DrawGUI()
     {
-        core::IObject * displayOptions = Editor::get()->getRenderer()->GetDisplayOptions();
+        auto * displayOptions = Editor::get()->getRenderer()->GetDisplayOptions();
         if (displayOptions)
         {
             if (ImGui::IconBegin(style::icon::Display, getName().c_str(), &m_isVisible))

@@ -70,6 +70,7 @@
     <ClInclude Include="Geometry\Vertex\SkinningVertex.h" />
     <ClInclude Include="Geometry\Vertex\VertexFormat.h" />
     <ClInclude Include="IDebugDraw.h" />
+    <ClInclude Include="IDisplayOptions.h" />
     <ClInclude Include="IGraphicInstance.h" />
     <ClInclude Include="IGraphicModel.h" />
     <ClInclude Include="IImGuiAdapter.h" />

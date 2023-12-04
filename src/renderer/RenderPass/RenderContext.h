@@ -9,10 +9,12 @@ namespace vg::renderer
     public:
         RenderContext()
         {
-            m_viewProj.identity();
+            m_view.identity();
+            m_proj.identity();
         }
 
-        core::float4x4 m_viewProj;
+        core::float4x4 m_view;
+        core::float4x4 m_proj;
         bool m_toolmode = false;
         bool m_wireframe = false;
         ShaderPass m_shaderPass;

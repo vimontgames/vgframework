@@ -31,13 +31,13 @@ namespace vg::renderer
         m_size = _params.size;
         m_offset = _params.offset;
 
-        m_viewInv = float4x4
-        (
-            1.0f, 0.0f, 0.0f, 0.0f,
-            0.0f, 1.0f, 0.0f, 0.0f,
-            0.0f, 0.0f, -1.0f, 0.0f,
-            0.0f, 0.0f, -1.0f, 1.0f
-        );
+        //m_viewInv = float4x4
+        //(
+        //    1.0f, 0.0f, 0.0f, 0.0f,
+        //    0.0f, 1.0f, 0.0f, 0.0f,
+        //    0.0f, 0.0f, -1.0f, 0.0f,
+        //    0.0f, 0.0f, -1.0f, 1.0f
+        //);
 
         SetUniverse(_params.universe);
 
@@ -125,8 +125,7 @@ namespace vg::renderer
         const float2 nearFar = getCameraNearFar();
         const float ar = float(size.x) / float(size.y);
 
-        float4x4 proj = setPerspectiveProjectionRH(fovY, ar, nearFar.x, nearFar.y);
-        m_viewProj = mul(getViewInvMatrix(), proj);
+        m_proj = setPerspectiveProjectionRH(fovY, ar, nearFar.x, nearFar.y);
     }
 
     //--------------------------------------------------------------------------------------

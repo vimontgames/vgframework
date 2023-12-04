@@ -34,6 +34,18 @@ namespace vg::gfx::dx12
     }
 
     //--------------------------------------------------------------------------------------
+    // There are two options for calculating depth bias.
+    // 
+    // If the depth buffer currently bound to the output - merger stage has a UNORM format or no depth buffer is bound, the bias value is calculated like this:
+    //      Bias = (float)DepthBias * r + SlopeScaledDepthBias * MaxDepthSlope;
+    // where r is the minimum representable value > 0 in the depth - buffer format converted to float32.The DepthBias and SlopeScaledDepthBias values are D3D11_RASTERIZER_DESC1 structure members.The MaxDepthSlope value is the maximum of the horizontal and vertical slopes of the depth value at the pixel.
+    //
+    // If a floating - point depth buffer is bound to the output - merger stage the bias value is calculated like this:
+    //      Bias = (float)DepthBias * 2^((max z in primitive) - r) + SlopeScaledDepthBias * MaxDepthSlope;
+    // where r is the number of mantissa bits in the floating point representation(excluding the hidden bit); for example, 23 for float32.
+    // 
+    // https://learn.microsoft.com/en-us/windows/win32/direct3d11/d3d10-graphics-programming-guide-output-merger-stage-depth-bias
+    //--------------------------------------------------------------------------------------
     D3D12_RASTERIZER_DESC RasterizerState::getd3d12RasterizerState() const
     {
         D3D12_RASTERIZER_DESC d3d12desc = {};
@@ -68,9 +80,9 @@ namespace vg::gfx::dx12
         //    break;
         //
         //case DepthBias::Big:
-        //    d3d12desc.DepthBias = 0;
-        //    d3d12desc.DepthBiasClamp = 0.0f;
-        //    d3d12desc.SlopeScaledDepthBias = 0.0f;
+        //    d3d12desc.DepthBias = 200;
+        //    d3d12desc.DepthBiasClamp = 1.0f;
+        //    d3d12desc.SlopeScaledDepthBias = 1.0f;
         //    break;
         }
 

@@ -21,6 +21,11 @@ namespace vg::editor
     class IEditor;
 }
 
+namespace vg::renderer
+{
+    class IDisplayOptions;
+}
+
 namespace vg::engine
 {
     class FreeCam;
@@ -88,6 +93,8 @@ namespace vg::engine
         core::ISelection *                  GetSelection        () const final override;
 
     public:
+        renderer::IDisplayOptions *         getDisplayOptions   () const;
+
         void                                createEditorScene   ();
         void                                destroyEditorView   ();
 

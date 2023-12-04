@@ -2,6 +2,7 @@
 #include "RigidBodyComponent.h"
 #include "core/IGameObject.h"
 #include "engine/Engine.h"
+#include "renderer/IDisplayOptions.h"
 #include "physics/IShape.h"
 #include "physics/IPhysics.h"
 #include "physics/IBody.h"
@@ -55,11 +56,11 @@ namespace vg::engine
     //--------------------------------------------------------------------------------------
     void RigidBodyComponent::Update(double _dt)
     {
+        const auto * engine = Engine::get();
         IGameObject * go = GetGameObject();
 
         if (physics::MotionType::Static != m_bodyDesc->GetMotion())
         {
-            const auto * engine = Engine::get();
             if (engine->IsPlaying() && !engine->isPaused())
             {
                 if (m_body)
@@ -70,8 +71,11 @@ namespace vg::engine
             }
         }
         
-        if (m_shape)
-            m_shape->Draw(go->getWorldMatrix());
+        if (engine->getDisplayOptions()->IsCollidersEnabled())
+        {
+            if (m_shape)
+                m_shape->Draw(go->getWorldMatrix());
+        }
     }
 
     //--------------------------------------------------------------------------------------

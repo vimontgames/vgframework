@@ -43,7 +43,7 @@ namespace vg::renderer
 		void					                deinit				    () override;
 
         const gfx::DeviceParams &               GetDeviceCreationParams () const final override;
-        core::IObject *                         GetDisplayOptions       () final override;
+        renderer::IDisplayOptions *             GetDisplayOptions       () final override;
 
         gfx::ITexture *                         CreateTexture           (const gfx::TextureDesc & _texDesc, const core::string & _name) final override;
 

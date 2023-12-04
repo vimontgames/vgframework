@@ -89,6 +89,9 @@ namespace vg::engine
             float mouseSpeedY = m_rotSpeed * 0.001f * PI;
             float moveSpeed = m_moveSpeed * 0.001f * (float)_dt;
 
+            if (input->IsKeyPressed(Key::LSHIFT))
+                moveSpeed *= 16.0f;
+
             if (input->IsMouseButtonPressed(MouseButton::Middle))
             {
                 const auto delta = input->GetMouseDelta();

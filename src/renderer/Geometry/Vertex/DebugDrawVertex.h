@@ -7,6 +7,14 @@ namespace vg::renderer
     //--------------------------------------------------------------------------------------
     struct DebugDrawVertex
     {
+        DebugDrawVertex(float _x = 0.0f, float _y = 0.0f, float _z = 0.0f, core::u32 _color = 0xFFFFFFFF)
+        {
+            pos[0] = _x;
+            pos[1] = _y;
+            pos[2] = _z;
+            color = _color;
+        }
+
         // Every vertex format struct should implement a "set" func to initialize vertex contents from Fat vertex format
         void set(const FatVertex & _vtx)
         {

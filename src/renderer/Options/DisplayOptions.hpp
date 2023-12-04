@@ -15,9 +15,10 @@ namespace vg::renderer
         super::registerProperties(_desc);
 
         registerProperty(DisplayOptions, m_toolMode, "Toolmode");
+        registerPropertyEx(DisplayOptions, m_wireframe, "Wireframe", IProperty::Flags::SameLine);
 
         registerProperty(DisplayOptions, m_aabb, "Bounding Box");
-        registerPropertyEx(DisplayOptions, m_wireframe, "Wireframe", IProperty::Flags::SameLine);
+        registerPropertyEx(DisplayOptions, m_colliders, "Colliders", IProperty::Flags::SameLine);
 
         registerPropertyEnum(DisplayOptions, DisplayMode, m_debugDisplayMode, "Mode");
         registerPropertyEnumBitfield(DisplayOptions, DisplayFlags, m_displayFlags, "Flags");
@@ -38,7 +39,7 @@ namespace vg::renderer
 
     //--------------------------------------------------------------------------------------
     DisplayOptions::DisplayOptions(const core::string & _name, core::IObject * _parent) :
-        Object(_name, _parent),
+        super(_name, _parent),
         m_debugDisplayMode(DisplayMode::Default),
         m_displayFlags(DisplayFlags::AlbedoMap | DisplayFlags::NormalMap),
         m_renderPassFlags(RenderPassFlags::ZPrepass | RenderPassFlags::Opaque | RenderPassFlags::Transparency | RenderPassFlags::PostProcess)

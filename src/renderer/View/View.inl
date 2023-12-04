@@ -13,6 +13,12 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
+    VG_INLINE const core::float4x4 & View::getProjMatrix() const
+    {
+        return m_proj;
+    }
+
+    //--------------------------------------------------------------------------------------
     VG_INLINE core::float2 View::getCameraNearFar() const
     {
         return m_cameraNearFar;

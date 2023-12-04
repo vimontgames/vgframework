@@ -62,7 +62,8 @@ namespace vg::renderer
             constants->setDisplayMode(options->getDisplayMode());
             constants->setDisplayFlags(options->getDisplayFlags());
             constants->setToolmodeRWBufferID(toolmodeRWBufferID);
-            constants->setViewProj(view->getViewProjMatrix());
+            constants->setView(view->getViewInvMatrix());
+            constants->setProj(view->getProjMatrix());
         }
         _cmdList->unmap(s_ViewConstantsBuffer, constants);
     }

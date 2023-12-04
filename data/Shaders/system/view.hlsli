@@ -11,10 +11,16 @@ struct ViewConstants
     {       
         m_screenSizeAndMousePos   = _buffer.Load<uint4>(_offset + 0);
         m_debugDisplay            = _buffer.Load<uint4>(_offset + 16);
-        m_viewProj[0]             = _buffer.Load<float4>(_offset + 32);
-        m_viewProj[1]             = _buffer.Load<float4>(_offset + 48);
-        m_viewProj[2]             = _buffer.Load<float4>(_offset + 64);
-        m_viewProj[3]             = _buffer.Load<float4>(_offset + 80);
+        
+        m_view[0]                 = _buffer.Load<float4>(_offset + 32);
+        m_view[1]                 = _buffer.Load<float4>(_offset + 48);
+        m_view[2]                 = _buffer.Load<float4>(_offset + 64);
+        m_view[3]                 = _buffer.Load<float4>(_offset + 80);
+        
+        m_proj[0]                 = _buffer.Load<float4>(_offset + 96);
+        m_proj[1]                 = _buffer.Load<float4>(_offset + 112);
+        m_proj[2]                 = _buffer.Load<float4>(_offset + 128);
+        m_proj[3]                 = _buffer.Load<float4>(_offset + 144);
     }
     #endif
     
@@ -33,10 +39,14 @@ struct ViewConstants
     void            setToolmodeRWBufferID   (uint _id)              { m_debugDisplay.z = (m_debugDisplay.z & ~0x0000FFFF) | _id; }
     uint            getToolmodeRWBufferID   ()                      { return m_debugDisplay.z & 0x0000FFFF; }
     
-    void            setViewProj             (float4x4 _viewProj)    { m_viewProj = _viewProj; }
-    float4x4        getViewProj             ()                      { return m_viewProj; }
+    void            setView                 (float4x4 _view)        { m_view = _view; }
+    float4x4        getView                 ()                      { return m_view; }
+    
+    void            setProj                 (float4x4 _proj)        { m_proj = _proj; }
+    float4x4        getProj                 ()                      { return m_proj; }
     
     uint4           m_screenSizeAndMousePos;
     uint4           m_debugDisplay;
-    float4x4        m_viewProj;
+    float4x4        m_view;
+    float4x4        m_proj;
 };

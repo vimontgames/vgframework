@@ -331,6 +331,7 @@
     <ClInclude Include="RenderPass\Compute\ComputeSkinning\ComputeSkinningPass.hpp">
       <Filter>Pass\Compute\ComputeSkinning</Filter>
     </ClInclude>
+    <ClInclude Include="IDisplayOptions.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Pass">

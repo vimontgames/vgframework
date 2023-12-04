@@ -4,6 +4,7 @@
 #include "system/vertex.hlsli"
 #include "system/gamma.hlsli"
 #include "system/view.hlsli"
+#include "system/depthbias.hlsli"
 #include "system/picking.hlsl"
 
 #include "default.hlsli"
@@ -28,7 +29,8 @@ VS_Output VS_Forward(uint _vertexID : VertexID)
 
     ViewConstants viewConstants;
     viewConstants.Load(getBuffer(RESERVEDSLOT_BUFSRV_VIEWCONSTANTS));
-    float4x4 viewProj = viewConstants.getViewProj();
+    float4x4 view = viewConstants.getView();
+    float4x4 proj = viewConstants.getProj();
     
     output.nrm = vert.getNrm();
     output.tan = vert.getTan();
@@ -36,10 +38,17 @@ VS_Output VS_Forward(uint _vertexID : VertexID)
     output.uv = float4(vert.getUV(0), vert.getUV(1));
     output.col = vert.getColor() * rootConstants3D.color;
     
-    float4 modelPos = float4(vert.getPos(), 1.0f);
-    float4 worldPos = mul(modelPos, rootConstants3D.getWorldMatrix());
+    float3 modelPos = vert.getPos();
+    float3 worldPos = mul(float4(modelPos.xyz, 1.0f), rootConstants3D.getWorldMatrix());
     output.wpos = worldPos.xyz;
-    output.pos = mul(worldPos, viewProj);
+    float4 viewPos = mul(float4(worldPos.xyz, 1.0f), view);
+
+    #ifdef _TOOLMODE
+    if (RootConstantsFlags::Wireframe & rootConstants3D.getFlags())
+        viewPos.z += WIREFRAME_DEPTHBIAS;
+    #endif
+
+    output.pos = mul(viewPos, proj);
 
     return output;
 }

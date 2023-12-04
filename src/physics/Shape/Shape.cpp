@@ -71,7 +71,7 @@ namespace vg::physics
     void SphereShape::Draw(const float4x4 & _world)
     {
         float4x4 world = mul(m_transform, _world);
-        const float radius = ((SphereShapeDesc *)m_shape)->m_radius;
+        const float radius = m_radius;
         getDebugDraw()->AddWireframeSphere(radius, 0xFF0000FF, world);
     }
 

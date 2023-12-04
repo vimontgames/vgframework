@@ -36,7 +36,8 @@ namespace vg::renderer
         const auto options = DisplayOptions::get();
 
         RenderContext renderContext;
-        renderContext.m_viewProj = view->getViewProjMatrix();
+        renderContext.m_view = view->getViewInvMatrix();
+        renderContext.m_proj = view->getProjMatrix();
         renderContext.m_toolmode = view->getViewID().target == gfx::ViewTarget::Editor || options->isToolModeEnabled();
         renderContext.m_shaderPass = ShaderPass::ZOnly;
 

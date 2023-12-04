@@ -442,7 +442,7 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    core::IObject * Renderer::GetDisplayOptions()
+    renderer::IDisplayOptions * Renderer::GetDisplayOptions()
     {
         return DisplayOptions::get();
     }
