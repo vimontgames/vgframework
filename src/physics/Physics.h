@@ -12,11 +12,16 @@ namespace vg::renderer
     class IDebugDraw;
 }
 
+namespace JPH
+{
+    class BodyID;
+}
+
 namespace vg::physics
 {
     class JobSystemAdapter;
 
-	class Physics : public IPhysics, public core::Singleton<Physics>
+	class Physics final : public IPhysics, public core::Singleton<Physics>
 	{
 	public:
         using super = IPhysics;
@@ -37,9 +42,13 @@ namespace vg::physics
 
         void                                RunOneFrame                 (double _dt) final override;
 
-    protected:
+        IShape *                            CreateShape                 (const IShapeDesc * _shapeDesc) final override;
+        IBody *                             CreateBody                  (IShape * _shape, const core::float4x4 & _world, MotionType _motion, ObjectLayer _layer, bool _activate = false) final override;
+
         engine::IEngine *                   getEngine                   () const;
         renderer::IDebugDraw *              getDebugDraw                () const;
+
+        JPH::PhysicsSystem *                getPhysicsSystem            () const { return m_physicsSystem; }
 
     private:
         PhysicsCreationParams               m_physicsCreationParams;

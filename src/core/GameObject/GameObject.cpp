@@ -4,6 +4,7 @@
 #include "core/Component/Component.h"
 #include "core/Object/AutoRegisterClass.h"  
 #include "core/ISelection.h"
+#include "core/IProfiler.h"
 #include "renderer/IGraphicInstance.h"
 
 namespace vg::core
@@ -79,6 +80,8 @@ namespace vg::core
     //--------------------------------------------------------------------------------------
     void GameObject::Update(double _dt)
     {
+        VG_PROFILE_CPU(getName().c_str());
+
         if (asBool(GameObject::Flags::Enabled & getFlags()))
         {
             for (uint i = 0; i < m_components.size(); ++i)

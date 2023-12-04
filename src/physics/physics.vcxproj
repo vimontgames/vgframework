@@ -11,6 +11,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Body\Body.cpp" />
     <ClCompile Include="BroadPhase\BroadPhase.cpp" />
     <ClCompile Include="JobSystem\JobSystemAdapter.cpp" />
     <ClCompile Include="Physics.cpp" />
@@ -18,25 +19,33 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="Shape\Shape.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Physics.def" />
     <None Include="Physics.inl" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Body\Body.h" />
     <ClInclude Include="BroadPhase\BroadPhaseFilter.h" />
     <ClInclude Include="BroadPhase\BroadPhaseFilter.hpp" />
     <ClInclude Include="BroadPhase\BroadPhaseLayer.h" />
     <ClInclude Include="BroadPhase\BroadPhaseLayer.hpp" />
     <ClInclude Include="BroadPhase\ObjectFilter.h" />
     <ClInclude Include="BroadPhase\ObjectFilter.hpp" />
+    <ClInclude Include="Helper.h" />
+    <ClInclude Include="IBody.h" />
     <ClInclude Include="IPhysics.h" />
+    <ClInclude Include="IShape.h" />
     <ClInclude Include="JobSystem\JobSystemAdapter.h" />
     <ClInclude Include="JobSystem\PhysicsJob.h" />
     <ClInclude Include="JobSystem\PhysicsJobs.hpp" />
     <ClInclude Include="Physics.h" />
     <ClInclude Include="Physics_Consts.h" />
     <ClInclude Include="Precomp.h" />
+    <ClInclude Include="Shape\Shape.h" />
+    <ClInclude Include="Shape\ShapeDesc.h" />
+    <ClInclude Include="Shape\ShapeDesc.hpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>

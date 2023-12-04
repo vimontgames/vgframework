@@ -1,4 +1,5 @@
 #include "BroadPhaseLayer.h"
+#include "physics/Helper.h"
 
 namespace vg::physics
 {
@@ -19,7 +20,7 @@ namespace vg::physics
     JPH::BroadPhaseLayer BroadPhaseLayer::GetBroadPhaseLayer(JPH::ObjectLayer _layer) const
     {
         VG_ASSERT(_layer < core::enumCount<physics::ObjectLayer>());
-        return (JPH::BroadPhaseLayer)(JPH::BroadPhaseLayer::Type)m_objectToBroadPhase[(JPH::ObjectLayer)_layer];
+        return getJoltBroadPhaseLayer(m_objectToBroadPhase[(JPH::ObjectLayer)_layer]);
     }
 
     //--------------------------------------------------------------------------------------

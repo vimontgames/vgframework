@@ -100,7 +100,7 @@ PS_Output PS_Forward(VS_Output _input)
            worldNormal = mul(float4(worldNormal.xyz, 0.0f), rootConstants3D.getWorldMatrix()).xyz;
 
     // fake shitty lighting
-    float3 lightDir = normalize(float3(-1,0,-1));
+    float3 lightDir = normalize(float3(-2,1,-3));
     float3 fakeDiffuseLighting = saturate(dot(worldNormal, -lightDir) * 0.8f);
     float3 fakeAmbientLighting = 0.1f;
 

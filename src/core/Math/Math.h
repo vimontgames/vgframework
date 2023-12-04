@@ -27,6 +27,12 @@ namespace vg::core
         );
     }
 
+    //--------------------------------------------------------------------------------------
+    float4x4 extractRotation(const float4x4 & _matrix);
+
+    //--------------------------------------------------------------------------------------
+    quaternion getQuaternionFromRotationMatrix(const float4x4 & _matrix);
+
 	//--------------------------------------------------------------------------------------
 	template <typename T> T min(const T & _left, const T & _right)
 	{

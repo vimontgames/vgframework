@@ -45,16 +45,16 @@ namespace vg::physics
         Dynamic,    // Responds to forces as a normal physics object
     };
 
-    enum class Shape : core::u8
+    enum class ShapeType : core::u8
     {
         Sphere = 0,
         Box,
-        Capsule,
-        TaperedCapsule,
-        Cylinder,
-        ConvexHull,
-        Compound,
-        TriangleMesh,
-        HeightField
+        //Capsule,
+        //TaperedCapsule,
+        //Cylinder,
+        //ConvexHull,
+        //Compound,
+        //TriangleMesh,
+        //HeightField
     };
 }

@@ -699,7 +699,9 @@ namespace vg::core
                                                             {
                                                                 pObjectRef = createObject(classNameRef, "", _object);
                                                                 if (serializeFromXML(pObjectRef, xmlObjectRef))
+                                                                {
                                                                     vector->push_back(pObjectRef);
+                                                                }
                                                                 else
                                                                     VG_SAFE_DELETE(pObjectRef);
                                                             }
@@ -856,6 +858,7 @@ namespace vg::core
                 }
             }
         }
+        _object->OnLoad();
         return true;
     }
 

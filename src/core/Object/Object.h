@@ -14,7 +14,7 @@
 													static bool registerClass(vg::core::IFactory & _factory);
 
 // Default ctor
-#define VG_CLASS_CTOR_HEADER_IMPL(name, parent)		name(const core::string & _name, IObject * _parent) : parent(_name, _parent) { }
+#define VG_CLASS_CTOR_HEADER_IMPL(name, parent)		name(const vg::core::string & _name = "", vg::core::IObject * _parent = nullptr) : parent(_name, _parent) { }
 
 // Declare class that implements registerClass and registerProperties 
 #define VG_CLASS_DECL(name, parent)					VG_CLASS_SUPER_CLASSNAME(name, parent)		\
@@ -45,6 +45,8 @@ namespace vg::core
 									Object				(const Object & _other);
 								    Object		        ();
 								    ~Object		        ();
+
+		void                        OnLoad				() override;
 
         void                        OnPlay				() override;
         void                        OnStop				() override;

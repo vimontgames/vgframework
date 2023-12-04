@@ -9,6 +9,12 @@
     <ClCompile Include="BroadPhase\BroadPhase.cpp">
       <Filter>BroadPhase</Filter>
     </ClCompile>
+    <ClCompile Include="Shape\Shape.cpp">
+      <Filter>Shape</Filter>
+    </ClCompile>
+    <ClCompile Include="Body\Body.cpp">
+      <Filter>Body</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Physics.def" />
@@ -46,6 +52,21 @@
     <ClInclude Include="BroadPhase\BroadPhaseFilter.h">
       <Filter>BroadPhase</Filter>
     </ClInclude>
+    <ClInclude Include="IShape.h" />
+    <ClInclude Include="IBody.h" />
+    <ClInclude Include="Shape\Shape.h">
+      <Filter>Shape</Filter>
+    </ClInclude>
+    <ClInclude Include="Shape\ShapeDesc.h">
+      <Filter>Shape</Filter>
+    </ClInclude>
+    <ClInclude Include="Shape\ShapeDesc.hpp">
+      <Filter>Shape</Filter>
+    </ClInclude>
+    <ClInclude Include="Body\Body.h">
+      <Filter>Body</Filter>
+    </ClInclude>
+    <ClInclude Include="Helper.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="JobSystem">
@@ -53,6 +74,12 @@
     </Filter>
     <Filter Include="BroadPhase">
       <UniqueIdentifier>{e1f686fb-5e51-466c-8664-22bc0859485c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shape">
+      <UniqueIdentifier>{9fcc69c5-5ddd-47b9-bfff-e00d75b3b412}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Body">
+      <UniqueIdentifier>{1ce36a34-abb5-4596-979f-a955cc072a42}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

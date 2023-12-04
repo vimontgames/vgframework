@@ -1,6 +1,10 @@
 #include "engine/Precomp.h"
 #include "RigidBodyComponent.h"
 #include "core/IGameObject.h"
+#include "engine/Engine.h"
+#include "physics/IShape.h"
+#include "physics/IPhysics.h"
+#include "physics/IBody.h"
 
 using namespace vg::core;
 
@@ -15,7 +19,9 @@ namespace vg::engine
 
         _desc.registerPropertyEnumEx(RigidBodyComponent, physics::ObjectLayer, m_layer, "Layer", IProperty::Flags::ReadOnly);
         _desc.registerPropertyEnumEx(RigidBodyComponent, physics::MotionType, m_motion, "Motion", IProperty::Flags::ReadOnly);
-        _desc.registerPropertyEnum(RigidBodyComponent, physics::Shape, m_shape, "Shape");
+        _desc.registerPropertyEnum(RigidBodyComponent, physics::ShapeType, m_shapeType, "Shape");
+
+        _desc.registerPropertyObjectPtrEx(RigidBodyComponent, m_shapeDesc, "Shape Settings", IProperty::Flags::Flatten);
 
         return true;
     }
@@ -26,30 +32,65 @@ namespace vg::engine
     {
         if (getGameObject())
             updateFlagsFromGameObject();
+
+        if (m_shapeDesc == nullptr)
+            createShapeDesc();
     }
 
     //--------------------------------------------------------------------------------------
     RigidBodyComponent::~RigidBodyComponent()
     {
-
+        VG_SAFE_RELEASE(m_shapeDesc);
+        VG_SAFE_RELEASE(m_shape);
+        VG_SAFE_RELEASE(m_body);
     }
 
     //--------------------------------------------------------------------------------------
     void RigidBodyComponent::Update(double _dt)
     {
+        IGameObject * go = GetGameObject();
 
+        if (physics::MotionType::Static != m_motion)
+        {
+            if (Engine::get()->IsPlaying())
+            {
+                if (m_body)
+                {
+                    float4x4 world = m_body->GetMatrix();
+                    go->setWorldMatrix(world);
+                }
+            }
+        }
+
+        if (m_shape)
+            m_shapeDesc->Draw(go->getWorldMatrix());
+    }
+
+    //--------------------------------------------------------------------------------------
+    void RigidBodyComponent::OnLoad()
+    {
+        if (m_shapeDesc)
+            createShape();
+        if (m_shape)
+            createBody();
     }
     
     //--------------------------------------------------------------------------------------
     void RigidBodyComponent::OnPlay()
     {
+        if (m_body)
+            m_body->Activate(GetGameObject()->GetWorldMatrix());
 
+        super::OnPlay();
     }
 
     //--------------------------------------------------------------------------------------
     void RigidBodyComponent::OnStop()
     {
+        super::OnStop();
 
+        if (m_body)
+            m_body->Deactivate(GetGameObject()->GetWorldMatrix());
     }
       
     //--------------------------------------------------------------------------------------
@@ -65,8 +106,68 @@ namespace vg::engine
                     VG_INFO("[RigidBody] Updated RigidBody because GameObject flags changed");
             }
         }
+        else if (!strcmp(_prop.getName(), "m_shapeType"))
+        {
+            if (nullptr == m_shapeDesc || m_shapeType != m_shapeDesc->GetShapeType())
+                createShapeDesc();
+        }
+        else if (_object == m_shapeDesc)
+        {
+            createShape();
+            createBody();
+        }
 
         super::OnPropertyChanged(_object, _prop, _notifyParent);
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool RigidBodyComponent::createShapeDesc()
+    {
+        IFactory * factory = Kernel::getFactory();
+        VG_SAFE_RELEASE(m_shapeDesc);
+
+        switch (m_shapeType)
+        {
+            default:
+                VG_ASSERT_ENUM_NOT_IMPLEMENTED(m_shapeType);
+                break;
+
+            case physics::ShapeType::Sphere:
+                m_shapeDesc = (physics::IShapeDesc*)factory->createObject("SphereShapeDesc", "", this);
+                break;
+
+            case physics::ShapeType::Box:
+                m_shapeDesc = (physics::IShapeDesc *)factory->createObject("BoxShapeDesc", "", this);
+                break;
+        }
+
+        return nullptr != m_shapeDesc;
+    }
+
+    //--------------------------------------------------------------------------------------
+    physics::IPhysics * RigidBodyComponent::getPhysics()
+    {
+        return Engine::get()->GetPhysics();
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool RigidBodyComponent::createShape()
+    {
+        VG_SAFE_RELEASE(m_shape);
+        VG_ASSERT(m_shapeDesc);
+        if (m_shapeDesc)
+            m_shape = getPhysics()->CreateShape(m_shapeDesc);
+        return nullptr != m_shape;
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool RigidBodyComponent::createBody()
+    {
+        VG_SAFE_RELEASE(m_body);
+        VG_ASSERT(m_shape);
+        if (m_shape)
+            m_body = getPhysics()->CreateBody(m_shape, GetGameObject()->GetWorldMatrix(), m_motion, m_layer);
+        return nullptr != m_body;
     }
 
     //--------------------------------------------------------------------------------------

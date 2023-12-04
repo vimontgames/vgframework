@@ -436,7 +436,7 @@ namespace vg::editor
                     if (asBool(IProperty::Flags::HasRange & flags))
                         changed |= ImGui::SliderFloat(displayName, pFloat, _prop->getRange().x, _prop->getRange().y);
                     else
-                        changed |= ImGui::InputFloat(displayName, pFloat);
+                        changed |= ImGui::InputFloat(displayName, pFloat, 0.1f, 1.0f, "%.3f", imguiInputTextflags);
                 };
                 break;
 
@@ -446,7 +446,7 @@ namespace vg::editor
 
                     float * pFloat2 = (float *)_prop->GetPropertyFloat2(_object);
 
-                    changed |= ImGui::InputFloat2(displayName, pFloat2);
+                    changed |= ImGui::InputFloat2(displayName, pFloat2, "%.3f", imguiInputTextflags);
                 };
                 break;
 
@@ -459,7 +459,7 @@ namespace vg::editor
                     if (asBool(IProperty::Flags::Color & flags))
                         changed |= ImGui::ColorEdit3(displayName, pFloat4);
                     else
-                        changed |= ImGui::InputFloat3(displayName, pFloat4);
+                        changed |= ImGui::InputFloat3(displayName, pFloat4, "%.3f", imguiInputTextflags);
                 };
                 break;
 
@@ -478,7 +478,7 @@ namespace vg::editor
                                 if (asBool(IProperty::Flags::Color & flags))
                                     changed |= ImGui::ColorEdit4(_prop->getEnumName(e), pFloat4 + e * 4);
                                 else
-                                    changed |= ImGui::InputFloat4(_prop->getEnumName(e), pFloat4 + e * 4);
+                                    changed |= ImGui::InputFloat4(_prop->getEnumName(e), pFloat4 + e * 4, "%.3f", imguiInputTextflags);
                             }
                             ImGui::TreePop();
                         }
@@ -488,7 +488,7 @@ namespace vg::editor
                         if (asBool(IProperty::Flags::Color & flags))
                             changed |= ImGui::ColorEdit4(displayName, pFloat4);
                         else
-                            changed |= ImGui::InputFloat4(displayName, pFloat4);
+                            changed |= ImGui::InputFloat4(displayName, pFloat4, "%.3f", imguiInputTextflags);
                     }
                 };
                 break;
