@@ -11,7 +11,7 @@ namespace vg::engine
     {
         super::registerProperties(_desc);
 
-        _desc.registerProperty(MaterialModelType, m_shader, "Shader");
+        registerProperty(MaterialModelType, m_shader, "Shader");
 
         return true;
     }

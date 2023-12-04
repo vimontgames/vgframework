@@ -31,10 +31,10 @@ namespace vg::core
     {
         super::registerProperties(_desc);
 
-        _desc.registerPropertyEnumBitfield(Instance, Flags, m_flags, "Flags");
-        _desc.registerPropertyEx(Instance, m_color, "Color", IProperty::Flags::Color);
-        _desc.registerProperty(Instance, m_world, "Matrix");
-        _desc.registerPropertyObjectPtrVectorEx(Instance, m_models, "Models", IProperty::Flags::ReadOnly | IProperty::Flags::NotSaved);
+        registerPropertyEnumBitfield(Instance, Flags, m_flags, "Flags");
+        registerPropertyEx(Instance, m_color, "Color", IProperty::Flags::Color);
+        registerProperty(Instance, m_world, "Matrix");
+        registerPropertyObjectPtrVectorEx(Instance, m_models, "Models", IProperty::Flags::ReadOnly | IProperty::Flags::NotSaved);
 
         return true;
     }

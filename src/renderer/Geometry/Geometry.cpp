@@ -21,8 +21,8 @@ namespace vg::renderer
     {
         super::registerProperties(_desc);
 
-        _desc.registerPropertyEx(Geometry, m_aabb.m_min, "AABBMin", IProperty::Flags::ReadOnly);
-        _desc.registerPropertyEx(Geometry, m_aabb.m_max, "AABBMax", IProperty::Flags::ReadOnly);
+        registerPropertyEx(Geometry, m_aabb.m_min, "AABBMin", IProperty::Flags::ReadOnly);
+        registerPropertyEx(Geometry, m_aabb.m_max, "AABBMax", IProperty::Flags::ReadOnly);
 
         return true;
     }

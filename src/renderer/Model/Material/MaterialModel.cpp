@@ -29,9 +29,9 @@ namespace vg::renderer
     {
         super::registerProperties(_desc);
 
-        _desc.registerPropertyEnumBitfield(MaterialModel, MaterialFlags, m_flags, "Flags");
-        //_desc.registerPropertyEnumArray(MaterialModel, core::float4, MaterialColorType, m_colors, "Colors", IProperty::Flags::Color | IProperty::Flags::NotSaved);
-        //_desc.registerPropertyEnumArray(MaterialModel, core::IObject*, MaterialTextureType, m_textures, "Textures", IProperty::Flags::None | IProperty::Flags::NotSaved);
+        registerPropertyEnumBitfield(MaterialModel, MaterialFlags, m_flags, "Flags");
+        //registerPropertyEnumArray(MaterialModel, core::float4, MaterialColorType, m_colors, "Colors", IProperty::Flags::Color | IProperty::Flags::NotSaved);
+        //registerPropertyEnumArray(MaterialModel, core::IObject*, MaterialTextureType, m_textures, "Textures", IProperty::Flags::None | IProperty::Flags::NotSaved);
 
         return true;
     }

@@ -9,7 +9,7 @@ namespace vg::engine
     {
         super::registerProperties(_desc);
 
-        _desc.registerPropertyEnumBitfield(MaterialData, renderer::MaterialFlags, m_flags, "Flags");
+        registerPropertyEnumBitfield(MaterialData, renderer::MaterialFlags, m_flags, "Flags");
         
         return true;
     }

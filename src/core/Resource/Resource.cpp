@@ -17,10 +17,10 @@ namespace vg::core
     {
         super::registerProperties(_desc);
 
-        _desc.registerPropertyEx(Resource, m_resourcePath, "Path", IProperty::Flags::Hidden);
+        registerPropertyEx(Resource, m_resourcePath, "Path", IProperty::Flags::Hidden);
 
         // This is used for the inspector but not serialized
-        _desc.registerPropertyObjectPtrEx(Resource, m_object, "Object", IProperty::Flags::NotSaved);
+        registerPropertyObjectPtrEx(Resource, m_object, "Object", IProperty::Flags::NotSaved);
 
         return true;
     }

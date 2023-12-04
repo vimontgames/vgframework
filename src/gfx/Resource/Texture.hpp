@@ -129,10 +129,10 @@ namespace vg::gfx
     //--------------------------------------------------------------------------------------
     bool Texture::registerProperties(IClassDesc & _desc)
     {
-        _desc.registerPropertyEnumEx(Texture, PixelFormat, m_texDesc.format, "Format", IProperty::Flags::ReadOnly);
+        registerPropertyEnumEx(Texture, PixelFormat, m_texDesc.format, "Format", IProperty::Flags::ReadOnly);
         
-        _desc.registerPropertyEx(Texture, m_texDesc.width, "Width", IProperty::Flags::ReadOnly);
-        _desc.registerPropertyEx(Texture, m_texDesc.height, "Height", IProperty::Flags::ReadOnly);
+        registerPropertyEx(Texture, m_texDesc.width, "Width", IProperty::Flags::ReadOnly);
+        registerPropertyEx(Texture, m_texDesc.height, "Height", IProperty::Flags::ReadOnly);
 
         return true;
     }

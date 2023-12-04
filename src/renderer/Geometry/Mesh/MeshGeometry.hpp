@@ -15,14 +15,14 @@ namespace vg::renderer
     {
         super::registerProperties(_desc);
 
-        _desc.registerPropertyEnumEx(MeshGeometry, VertexFormat, m_vertexFormat, "Vertex Format", IProperty::Flags::ReadOnly);
-        _desc.registerPropertyEx(MeshGeometry, m_indexCount, "Index Count", IProperty::Flags::ReadOnly);
-        _desc.registerPropertyEx(MeshGeometry, m_indexSize, "Index Size", IProperty::Flags::ReadOnly);
-        _desc.registerPropertyEx(MeshGeometry, m_vertexCount, "Vertex Count", IProperty::Flags::ReadOnly);
-        _desc.registerPropertyEx(MeshGeometry, m_vertexSize, "Vertex Size", IProperty::Flags::ReadOnly);
-        _desc.registerPropertyEx(MeshGeometry, m_indexBufferOffset, "IB Offset", IProperty::Flags::ReadOnly | IProperty::Flags::Hidden);
-        _desc.registerPropertyEx(MeshGeometry, m_vertexBufferOffset, "VB Offset", IProperty::Flags::ReadOnly | IProperty::Flags::Hidden);
-        _desc.registerPropertyObjectVectorEx(MeshGeometry, m_batches, Batch, "Batches", IProperty::Flags::ReadOnly);
+        registerPropertyEnumEx(MeshGeometry, VertexFormat, m_vertexFormat, "Vertex Format", IProperty::Flags::ReadOnly);
+        registerPropertyEx(MeshGeometry, m_indexCount, "Index Count", IProperty::Flags::ReadOnly);
+        registerPropertyEx(MeshGeometry, m_indexSize, "Index Size", IProperty::Flags::ReadOnly);
+        registerPropertyEx(MeshGeometry, m_vertexCount, "Vertex Count", IProperty::Flags::ReadOnly);
+        registerPropertyEx(MeshGeometry, m_vertexSize, "Vertex Size", IProperty::Flags::ReadOnly);
+        registerPropertyEx(MeshGeometry, m_indexBufferOffset, "IB Offset", IProperty::Flags::ReadOnly | IProperty::Flags::Hidden);
+        registerPropertyEx(MeshGeometry, m_vertexBufferOffset, "VB Offset", IProperty::Flags::ReadOnly | IProperty::Flags::Hidden);
+        registerPropertyObjectVectorEx(MeshGeometry, m_batches, Batch, "Batches", IProperty::Flags::ReadOnly);
 
         return true;
     }

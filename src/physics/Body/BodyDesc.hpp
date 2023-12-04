@@ -9,8 +9,8 @@ namespace vg::physics
     {
         super::registerProperties(_desc);
 
-        _desc.registerPropertyEnumEx(BodyDesc, ObjectLayer, m_layer, "Layer", IProperty::Flags::ReadOnly);
-        _desc.registerPropertyEnumEx(BodyDesc, MotionType, m_motion, "Motion", IProperty::Flags::ReadOnly);
+        registerPropertyEnumEx(BodyDesc, ObjectLayer, m_layer, "Layer", IProperty::Flags::ReadOnly);
+        registerPropertyEnumEx(BodyDesc, MotionType, m_motion, "Motion", IProperty::Flags::ReadOnly);
 
         return true;
     }
@@ -22,11 +22,8 @@ namespace vg::physics
     {
         super::registerProperties(_desc);
 
-        // TODO : _desc.registerOptionalProperty(RigidBodyComponent, m_overrideMass, m_mass, "Mass");
-        _desc.registerPropertyEx(RigidBodyDesc, m_overrideMass, "Override Mass", IProperty::Flags::Hidden);
-        _desc.registerPropertyEx(RigidBodyDesc, m_mass, "Mass", IProperty::Flags::Optional);
-
-        _desc.registerPropertyEnum(RigidBodyDesc, ShapeType, m_shapeType, "Shape");
+        registerOptionalProperty(RigidBodyDesc, m_overrideMass, m_mass, "Mass");
+        registerPropertyEnum(RigidBodyDesc, ShapeType, m_shapeType, "Shape");
 
         return true;
     }

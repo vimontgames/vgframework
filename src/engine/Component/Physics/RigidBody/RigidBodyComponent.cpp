@@ -17,8 +17,8 @@ namespace vg::engine
     {
         super::registerProperties(_desc);
 
-        _desc.registerPropertyObjectPtrEx(RigidBodyComponent, m_bodyDesc, "Body", IProperty::Flags::Flatten);
-        _desc.registerPropertyObjectPtrEx(RigidBodyComponent, m_shapeDesc, "Shape", IProperty::Flags::Flatten);
+        registerPropertyObjectPtrEx(RigidBodyComponent, m_bodyDesc, "Body", IProperty::Flags::Flatten);
+        registerPropertyObjectPtrEx(RigidBodyComponent, m_shapeDesc, "Shape", IProperty::Flags::Flatten);
 
         return true;
     }
@@ -59,7 +59,8 @@ namespace vg::engine
 
         if (physics::MotionType::Static != m_bodyDesc->GetMotion())
         {
-            if (Engine::get()->IsPlaying())
+            const auto * engine = Engine::get();
+            if (engine->IsPlaying() && !engine->isPaused())
             {
                 if (m_body)
                 {

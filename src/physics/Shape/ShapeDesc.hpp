@@ -10,7 +10,7 @@ namespace vg::physics
     {
         super::registerProperties(_desc);
 
-        _desc.registerProperty(ShapeDesc, m_offset, "Offset");
+        registerProperty(ShapeDesc, m_offset, "Offset");
 
         return true;
     }
@@ -21,7 +21,7 @@ namespace vg::physics
     bool SphereShapeDesc::registerProperties(IClassDesc & _desc)
     {
         super::registerProperties(_desc);
-        _desc.registerProperty(SphereShapeDesc, m_radius, "Radius");
+        registerProperty(SphereShapeDesc, m_radius, "Radius");
         return true;
     }
 
@@ -31,7 +31,7 @@ namespace vg::physics
     bool BoxShapeDesc::registerProperties(IClassDesc & _desc)
     {
         super::registerProperties(_desc);
-        _desc.registerProperty(BoxShapeDesc, m_size, "Size");
+        registerProperty(BoxShapeDesc, m_size, "Size");
         return true;
     }
 }

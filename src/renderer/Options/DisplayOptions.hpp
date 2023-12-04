@@ -14,22 +14,22 @@ namespace vg::renderer
     {
         super::registerProperties(_desc);
 
-        _desc.registerProperty(DisplayOptions, m_toolMode, "Toolmode");
+        registerProperty(DisplayOptions, m_toolMode, "Toolmode");
 
-        _desc.registerProperty(DisplayOptions, m_aabb, "Bounding Box");
-        _desc.registerPropertyEx(DisplayOptions, m_wireframe, "Wireframe", IProperty::Flags::SameLine);
+        registerProperty(DisplayOptions, m_aabb, "Bounding Box");
+        registerPropertyEx(DisplayOptions, m_wireframe, "Wireframe", IProperty::Flags::SameLine);
 
-        _desc.registerPropertyEnum(DisplayOptions, DisplayMode, m_debugDisplayMode, "Mode");
-        _desc.registerPropertyEnumBitfield(DisplayOptions, DisplayFlags, m_displayFlags, "Flags");
-        _desc.registerPropertyEnumBitfield(DisplayOptions, RenderPassFlags, m_renderPassFlags, "Render Passes");
+        registerPropertyEnum(DisplayOptions, DisplayMode, m_debugDisplayMode, "Mode");
+        registerPropertyEnumBitfield(DisplayOptions, DisplayFlags, m_displayFlags, "Flags");
+        registerPropertyEnumBitfield(DisplayOptions, RenderPassFlags, m_renderPassFlags, "Render Passes");
 
-        _desc.registerPropertyEx(DisplayOptions, m_backgroundColor, "Background", IProperty::Flags::Color);
+        registerPropertyEx(DisplayOptions, m_backgroundColor, "Background", IProperty::Flags::Color);
 
-        _desc.registerPropertyEnum(DisplayOptions, gfx::VSync, m_VSync, "VSync");
+        registerPropertyEnum(DisplayOptions, gfx::VSync, m_VSync, "VSync");
 
         // TODO: Move to menu or toolbar instead
-        _desc.registerPropertyCallback(DisplayOptions, load, "Load");
-        _desc.registerPropertyCallbackEx(DisplayOptions, save, "Save", IProperty::Flags::SameLine);
+        registerPropertyCallback(DisplayOptions, load, "Load");
+        registerPropertyCallbackEx(DisplayOptions, save, "Save", IProperty::Flags::SameLine);
 
         return true;
     }

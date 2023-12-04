@@ -30,7 +30,7 @@ namespace vg::editor
         if (ImGui::TooltipButton(style::icon::Pause, playing && !paused, playing, "Pause (PAUSE)", getButtonSize()))
         {
             if (engine->IsPaused())
-                engine->Play();
+                engine->Resume();
             else
                 engine->Pause();
         }

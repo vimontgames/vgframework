@@ -25,7 +25,7 @@ namespace vg::engine
     {
         super::registerProperties(_desc);
 
-        _desc.registerPropertyObjectVectorEx(AnimationResourceList, m_animationResources, AnimationResource, "Animation", IProperty::Flags::Resource);
+        registerPropertyObjectVectorEx(AnimationResourceList, m_animationResources, AnimationResource, "Animation", IProperty::Flags::Resource);
 
         return true;
     }

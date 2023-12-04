@@ -30,7 +30,7 @@ namespace vg::core
     {
         super::registerProperties(_desc);
 
-        _desc.registerPropertyObjectPtr(Scene, m_root, "Root");
+        registerPropertyObjectPtr(Scene, m_root, "Root");
 
         return true;
     }

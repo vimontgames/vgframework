@@ -13,8 +13,8 @@ namespace vg::engine
     {
         super::registerProperties(_desc);
 
-        _desc.registerPropertyObject(MaterialResourceData, m_materialModelType, "Material Model");
-        _desc.registerPropertyObjectPtrEx(MaterialResourceData, m_data, "Material Data", IProperty::Flags::Flatten);
+        registerPropertyObject(MaterialResourceData, m_materialModelType, "Material Model");
+        registerPropertyObjectPtrEx(MaterialResourceData, m_data, "Material Data", IProperty::Flags::Flatten);
 
         return true;
     }

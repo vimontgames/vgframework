@@ -250,20 +250,9 @@ namespace vg::physics
 	void Physics::RunOneFrame(double _dt)
 	{
         VG_PROFILE_CPU("Physics");
-
-        //BodyInterface & body_interface = m_physicsSystem->GetBodyInterface();        
-
-        if (getEngine()->IsPlaying())
+        const auto * engine = getEngine();
+        if (engine->IsPlaying() && !engine->IsPaused())
             m_physicsSystem->Update((float)(_dt*0.001f), 1, &m_tempAllocator, m_jobSystem);           
-
-        // debug
-        {
-            //RVec3 position = body_interface.GetCenterOfMassPosition(sphere_id);
-            //float3 center = float3(position.GetX(), position.GetY(), position.GetZ());
-            //getDebugDraw()->AddWireframeBox(center - 0.1f, center + 0.1f, 0xFF0000FF);
-            //if (getEngine()->IsPlaying())
-            //    VG_INFO("[Physics] Position %.2f %.2f %.2f", (float)center.x, (float)center.y, (float)center.z);
-        }
 	}
 
     //--------------------------------------------------------------------------------------

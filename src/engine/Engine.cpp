@@ -179,19 +179,19 @@ namespace vg::engine
     {
         super::registerProperties(_desc);
 
-        //_desc.registerPropertyCallback(Engine, createProject, "Create Project");
-        //_desc.registerPropertyCallback(Engine, loadProject, "Load");
-        //_desc.registerPropertyCallback(Engine, saveProject, "Save");
-        //_desc.registerProperty("Project", (IObject**)(&((Engine*)(nullptr))->m_project), "Project");
-        //_desc.registerProperty(Engine, m_project, "Project", IProperty::Flags::None);
-        //_desc.registerProperty("m_project", (IResource**)(&((Engine*)(nullptr))->m_project), "Project");
+        //registerPropertyCallback(Engine, createProject, "Create Project");
+        //registerPropertyCallback(Engine, loadProject, "Load");
+        //registerPropertyCallback(Engine, saveProject, "Save");
+        //registerProperty("Project", (IObject**)(&((Engine*)(nullptr))->m_project), "Project");
+        //registerProperty(Engine, m_project, "Project", IProperty::Flags::None);
+        //registerProperty("m_project", (IResource**)(&((Engine*)(nullptr))->m_project), "Project");
 
-        _desc.registerPropertyEx(Engine, m_projectPath, "Project folder", IProperty::Flags::IsFolder);
+        registerPropertyEx(Engine, m_projectPath, "Project folder", IProperty::Flags::IsFolder);
 
-        //_desc.registerPropertyCallback(Engine, createProject, "Create Project");
+        //registerPropertyCallback(Engine, createProject, "Create Project");
         
-        //_desc.registerPropertyCallbackEx(Engine, load, "Load", IProperty::Flags::None);
-        //_desc.registerPropertyCallbackEx(Engine, save, "Save", IProperty::Flags::SameLine);
+        //registerPropertyCallbackEx(Engine, load, "Load", IProperty::Flags::None);
+        //registerPropertyCallbackEx(Engine, save, "Save", IProperty::Flags::SameLine);
 
         return true;
     }
@@ -591,7 +591,7 @@ namespace vg::engine
     {
         VG_INFO("[Engine] Resume");
         VG_ASSERT(m_isPlaying && m_isPaused);
-        m_isPaused = true;
+        m_isPaused = false;
     }
 
     //--------------------------------------------------------------------------------------

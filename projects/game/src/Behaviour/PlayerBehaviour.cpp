@@ -25,10 +25,10 @@ bool PlayerBehaviour::registerProperties(IClassDesc & _desc)
 {
     super::registerProperties(_desc);
 
-    _desc.registerProperty(PlayerBehaviour, m_joypadID, "Joypad");
-    _desc.registerPropertyEnum(PlayerBehaviour, PlayerState, m_state, "State");
-    _desc.registerPropertyEnum(PlayerBehaviour, Facing, m_facing, "Facing");
-    _desc.registerProperty(PlayerBehaviour, m_speed, "Speed");
+    registerProperty(PlayerBehaviour, m_joypadID, "Joypad");
+    registerPropertyEnum(PlayerBehaviour, PlayerState, m_state, "State");
+    registerPropertyEnum(PlayerBehaviour, Facing, m_facing, "Facing");
+    registerProperty(PlayerBehaviour, m_speed, "Speed");
     
     return true;
 }

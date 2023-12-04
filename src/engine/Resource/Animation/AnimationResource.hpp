@@ -28,20 +28,20 @@ namespace vg::engine
     {
         super::registerProperties(_desc);
 
-        _desc.registerPropertyCallback(AnimationResource, playAnim, "Play");
-        _desc.registerPropertyCallbackEx(AnimationResource, stopAnim, "Stop", IProperty::Flags::SameLine);
+        registerPropertyCallback(AnimationResource, playAnim, "Play");
+        registerPropertyCallbackEx(AnimationResource, stopAnim, "Stop", IProperty::Flags::SameLine);
 
-        _desc.registerProperty(AnimationResource, m_play, "Play");
-        _desc.registerPropertyEx(AnimationResource, m_loop, "Loop", IProperty::Flags::SameLine);
+        registerProperty(AnimationResource, m_play, "Play");
+        registerPropertyEx(AnimationResource, m_loop, "Loop", IProperty::Flags::SameLine);
 
-        _desc.registerProperty(AnimationResource, m_name, "Name");
+        registerProperty(AnimationResource, m_name, "Name");
 
-        _desc.registerPropertyEx(AnimationResource, m_time, "Time", IProperty::Flags::NotSaved);
+        registerPropertyEx(AnimationResource, m_time, "Time", IProperty::Flags::NotSaved);
 
-        _desc.registerPropertyEx(AnimationResource, m_weight, "Weight", IProperty::Flags::NotSaved);
+        registerPropertyEx(AnimationResource, m_weight, "Weight", IProperty::Flags::NotSaved);
         _desc.setPropertyRange(AnimationResource, m_weight, float2(0.0f, 1.0f));
 
-        _desc.registerProperty(AnimationResource, m_speed, "Speed");
+        registerProperty(AnimationResource, m_speed, "Speed");
         _desc.setPropertyRange(AnimationResource, m_speed, float2(0.0f, 10.0f));
 
         _desc.registerResizeVectorFunc(AnimationResource, ResizeAnimationResourceVector);

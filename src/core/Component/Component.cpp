@@ -41,7 +41,7 @@ namespace vg::core
     //--------------------------------------------------------------------------------------
     bool Component::registerProperties(IClassDesc & _desc)
     {
-        _desc.registerPropertyEnumBitfield(Component, Flags, m_flags, "Flags");
+        registerPropertyEnumBitfield(Component, Flags, m_flags, "Flags");
 
         return true;
     }
