@@ -2,6 +2,11 @@
 
 #include "editor/ImGui/Menu/ImGuiMenu.h"
 
+namespace vg::core
+{
+    class IGameObject;
+}
+
 namespace vg::editor
 {
     class ImGuiGameObjectSceneEditorMenu : public ImGuiMenu
@@ -11,9 +16,12 @@ namespace vg::editor
         {
             None = 0,
             AddChild,
-            Delete
+            Delete,
+            Rename
         };
 
         Status Display(core::IObject * _object) override;
+
+        core::IGameObject * m_RenamingGameObject = nullptr;
     };
 }

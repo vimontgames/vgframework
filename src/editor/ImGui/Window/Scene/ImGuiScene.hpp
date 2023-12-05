@@ -177,9 +177,38 @@ namespace vg::editor
                 flags |= ImGuiTreeNodeFlags_Selected;
             }
 
-            char gameObjectLabel[256];
-            sprintf_s(gameObjectLabel, "%s###%p", _gameObject->getName().c_str(), _gameObject);
-            open = ImGui::TreeNodeEx(gameObjectLabel, flags);
+            if (m_gameObjectMenu.m_RenamingGameObject == _gameObject)
+            {
+                char gameObjectLabel[256];
+                sprintf_s(gameObjectLabel, "###%p", _gameObject);
+                open = ImGui::TreeNodeEx(gameObjectLabel, flags);
+                ImGui::SameLine();
+                char temp[256];
+                sprintf_s(temp, _gameObject->getName().c_str());
+                sprintf_s(gameObjectLabel, "###Ren%p", _gameObject);
+
+                ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(4, 0));
+                {
+                    if (ImGui::InputText(gameObjectLabel, temp, 256, ImGuiInputTextFlags_AutoSelectAll | ImGuiInputTextFlags_EnterReturnsTrue))
+                    {
+                        _gameObject->setName(temp);
+                        m_gameObjectMenu.m_RenamingGameObject = nullptr;
+                    }
+                    else
+                    {
+                        if (!ImGui::IsAnyItemActive())
+                            ImGui::SetKeyboardFocusHere(-1);
+                    }
+                }
+                ImGui::PopStyleVar();
+            }
+            else
+            {
+                char gameObjectLabel[256];
+                sprintf_s(gameObjectLabel, "%s###%p", _gameObject->getName().c_str(), _gameObject);
+                open = ImGui::TreeNodeEx(gameObjectLabel, flags | ImGuiTreeNodeFlags_SpanAvailWidth | ImGuiTreeNodeFlags_SpanFullWidth);
+            }
+
             m_gameObjectMenu.Display(_gameObject);
         }
 

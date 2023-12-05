@@ -1088,9 +1088,11 @@ namespace vg::editor
         ISelection * selection = getSelection();
         if (isItemClicked())
         {
+            const bool isSelected = selection->IsSelectedObject(_object);
+
             if (ImGui::IsKeyDown(ImGuiMod_Ctrl))
             {
-                if (selection->IsSelectedObject(_object))
+                if (isSelected)
                     selection->Remove(_object);
                 else
                     selection->Add(_object);
@@ -1098,7 +1100,11 @@ namespace vg::editor
             else
             {
                 selection->Clear();
-                selection->Add(_object);
+
+                if (isSelected)
+                    selection->Remove(_object);
+                else
+                    selection->Add(_object);
             }
             return true;
         }

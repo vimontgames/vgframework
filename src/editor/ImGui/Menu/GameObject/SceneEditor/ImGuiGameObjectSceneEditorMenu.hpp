@@ -21,6 +21,7 @@ namespace vg::editor
 
         bool openPopup = false;
         bool doDelete = false;
+        bool doRename = false;
 
         ISelection * selection = Editor::get()->getSelection();
         const auto & selectedObjects = selection->GetSelectedObjects();
@@ -28,7 +29,7 @@ namespace vg::editor
         // Build a list of GameObjects to be deleted
         vector<IGameObject *> gameObjectsToDelete;
         {
-            if (!gameObject->IsRoot())
+            if (!gameObject->IsRoot() && ImGui::IsItemFocused())
                 gameObjectsToDelete.push_back(gameObject);
 
             for (uint i = 0; i < selectedObjects.size(); ++i)
@@ -64,23 +65,33 @@ namespace vg::editor
         // Root GameObject cannot be deleted
         const bool canDelete = gameObjectsToDelete.size() > 0;
 
-        //if (Kernel::getInput()->IsKeyPressed(Key::DEL))
-        if (ImGui::IsKeyPressed(ImGuiKey_Delete))
-            doDelete = true;
+        if (m_RenamingGameObject == nullptr)
+        {
+            if (selection->IsSelectedObject(gameObject))
+            {
+                if (ImGui::IsKeyPressed(ImGuiKey_Delete))
+                    doDelete = true;
+                else if (ImGui::IsKeyPressed(ImGuiKey_R) && ImGui::IsKeyDown(ImGuiKey_LeftCtrl))
+                    doRename = true;
+            }
+        }
 
         if (ImGui::BeginPopupContextItem())
         {
-            if (ImGui::MenuItem("Add GameObject"))
+            if (ImGui::MenuItem("Add Child GameObject"))
             {
                 m_selected = MenuOption::AddChild;
                 m_popup = "Add GameObject";
                 openPopup = true;
-                ImGui::OpenPopup("Add GameObject");
+                ImGui::OpenPopup("Add Child");
             }
+
+            if (ImGui::MenuItem("Rename", "Ctrl-R"))
+                doRename = true;
 
             ImGui::BeginDisabled(!canDelete);
             {
-                if (ImGui::MenuItem("Delete GameObject"))
+                if (ImGui::MenuItem("Delete", "Del"))
                     doDelete = true;
             }
             ImGui::EndDisabled();
@@ -117,6 +128,9 @@ namespace vg::editor
             }
             ImGui::MessageBox(MessageBoxType::YesNo, "Delete GameObject", msg.c_str(), deleteGameObject);
         }
+
+        if (doRename)
+            m_RenamingGameObject = gameObject;
 
         if (openPopup)
         {

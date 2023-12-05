@@ -47,18 +47,24 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		case WM_SYSKEYDOWN:
 			switch (LOWORD(wParam))
 			{
-			case VK_RETURN:
-				RECT win;
-				GetClientRect(g_hWnd, &win);
+				case VK_RETURN:
+				{
+					RECT win;
+					GetClientRect(g_hWnd, &win);
+				}
 				break;
 			}
 			break;
 
 		case WM_KEYDOWN:
-			switch (wParam)
+			switch (LOWORD(wParam))
 			{
-			case VK_ESCAPE:
-				SendMessage(g_hWnd, WM_DESTROY, 0, 0);
+				// Ctrl-Q
+				case 'Q':
+				{
+					if (GetKeyState(VK_CONTROL) & 0x8000)
+						SendMessage(g_hWnd, WM_DESTROY, 0, 0);
+				}
 				break;
 			}
 
