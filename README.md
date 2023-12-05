@@ -3,8 +3,7 @@ Yes, yet another work-in-progress game and graphic engine project :)
 
 [changelog](#changelog)\
 [getting started](#getting-started)\
-[dependencies](#dependencies)\
-[data](#data)\
+[extern libs](#extern-libs)\
 [disclaimer](#disclaimer)
 
 Its renderer only uses modern graphics APIs like DirectX12 and Vulkan (I would also like to support Metal the day I got and Apple device) so it can be 100% bindless from the very beginning and do strong choices in that direction:  
@@ -81,7 +80,6 @@ Separate DLLs for Engine, Renderer, Editor and Game.
  
 - Press Ctrl-Q to quit 
 
-# dependencies
 ## ide
 VS Studio 2022 Community\
 https://visualstudio.microsoft.com/fr/vs/community/
@@ -95,19 +93,14 @@ Also don't forget to set the *working directory* to **$(SolutionDir)**.
 ![Screenshot](doc/img/SolutionPlatformName2.png)
 
 ## SDKs
-~~FBX SDK 2020.0.1\
-https://www.autodesk.com/developer-network/platform-technologies/fbx-sdk-2020-0  
-**$(FBX_SDK)** should point to the FBX SDK installation dir *(i.e. "C:\SDK\FBX\2020.0.1")*~~\
-*The Dependency to FBX SDK was removed in v0.15*
-
-Vulkan SDK 1.3.261.1 (VK)\
-https://vulkan.lunarg.com/sdk/home  
-**$(VK_SDK_PATH)** should point the Vulkan SDK installation dir *(i.e. "C:\SDK\Vulkan\1.3.261.1")*
-
 Win10 SDK 10.0.17763.0\
 https://developer.microsoft.com/fr-fr/windows/downloads/sdk-archive/
 
-# external libs
+Vulkan SDK 1.3.261.1 (*Only required to build Vulkan version*)\
+https://vulkan.lunarg.com/sdk/home  
+**$(VK_SDK_PATH)** should point the Vulkan SDK installation dir *(i.e. "C:\SDK\Vulkan\1.3.261.1")*
+
+# extern libs
 D3D12 Memory Allocator\
 https://github.com/GPUOpen-LibrariesAndSDKs/D3D12MemoryAllocator
 
@@ -160,6 +153,7 @@ https://github.com/GPUOpen-LibrariesAndSDKs/VulkanMemoryAllocator
 
 WinPixEventRuntime 1.0.200127001\
 https://www.nuget.org/packages/WinPixEventRuntime
+
 
 # data
 ## models
