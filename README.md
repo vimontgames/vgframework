@@ -1,6 +1,12 @@
 # vgframework
 Yes, yet another work-in-progress game and graphic engine project :)
 
+[changelog](#changelog)\
+[getting started](#getting-started)\
+[dependencies](#dependencies)\
+[data](#data)\
+[disclaimer](#disclaimer)
+
 Its renderer only uses modern graphics APIs like DirectX12 and Vulkan (I would also like to support Metal the day I got and Apple device) so it can be 100% bindless from the very beginning and do strong choices in that direction:  
 * instanciating and writing into GPU tables is not even exposed: You have to do all the rendering stuff the modern, bindless way. 
 * All the interface is made to encourage using only push constants and bindless buffers/textures, not updating tables constantly as if we were still emulating DX9.
@@ -58,7 +64,7 @@ Separate DLLs for Engine, Renderer, Editor and Game.
 - Open the "vgframework.sln" solution in Visual Studio 2022 Community IDE.
 - Build & Run
 
-# keyboard shortcuts
+## keyboard shortcuts
 
 - Press F1 to start/stop profiler capture
 
@@ -75,7 +81,8 @@ Separate DLLs for Engine, Renderer, Editor and Game.
  
 - Press Ctrl-Q to quit 
 
-# ide
+# dependencies
+## ide
 VS Studio 2022 Community\
 https://visualstudio.microsoft.com/fr/vs/community/
 
@@ -87,7 +94,7 @@ Also don't forget to set the *working directory* to **$(SolutionDir)**.
 
 ![Screenshot](doc/img/SolutionPlatformName2.png)
 
-# SDKs
+## SDKs
 ~~FBX SDK 2020.0.1\
 https://www.autodesk.com/developer-network/platform-technologies/fbx-sdk-2020-0  
 **$(FBX_SDK)** should point to the FBX SDK installation dir *(i.e. "C:\SDK\FBX\2020.0.1")*~~\
@@ -125,7 +132,7 @@ https://github.com/juliettef/IconFontCppHeaders
 ImGui-Addons\
 https://github.com/gallickgunner/ImGui-Addons
 
-JoltPhysics 4.0.1
+JoltPhysics 4.0.1\
 https://github.com/jrouwe/JoltPhysics/releases/tag/v4.0.1
 
 magic_enum\
@@ -154,8 +161,8 @@ https://github.com/GPUOpen-LibrariesAndSDKs/VulkanMemoryAllocator
 WinPixEventRuntime 1.0.200127001\
 https://www.nuget.org/packages/WinPixEventRuntime
 
-
-# models
+# data
+## models
 Jess Casual Walking 001\
 https://www.cgtrader.com/free-3d-models/character/woman/woman-jess-casual-walking-001
 
