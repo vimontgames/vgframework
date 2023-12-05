@@ -177,7 +177,9 @@ namespace vg::editor
                 flags |= ImGuiTreeNodeFlags_Selected;
             }
 
-            open = ImGui::TreeNodeEx(_gameObject->getName().c_str(), flags);
+            char gameObjectLabel[256];
+            sprintf_s(gameObjectLabel, "%s###%p", _gameObject->getName().c_str(), _gameObject);
+            open = ImGui::TreeNodeEx(gameObjectLabel, flags);
             m_gameObjectMenu.Display(_gameObject);
         }
 

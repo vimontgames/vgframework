@@ -151,19 +151,25 @@ namespace vg::editor
     }
 
     //--------------------------------------------------------------------------------------
-    vg::core::IFactory * Editor::getFactory()
+    vg::core::IFactory * Editor::getFactory() const
     {
         return Kernel::getFactory();
     }
 
     //--------------------------------------------------------------------------------------
-    vg::engine::IEngine * Editor::getEngine()
+    core::ISelection * Editor::getSelection() const
+    {
+        return getEngine()->GetSelection();
+    }
+
+    //--------------------------------------------------------------------------------------
+    vg::engine::IEngine * Editor::getEngine() const
     {
         return (vg::engine::IEngine *)getFactory()->getSingleton("Engine");
     }
 
     //--------------------------------------------------------------------------------------
-    vg::renderer::IRenderer * Editor::getRenderer()
+    vg::renderer::IRenderer * Editor::getRenderer() const
     {
         return (vg::renderer::IRenderer *)getFactory()->getSingleton("Renderer");
     }

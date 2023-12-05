@@ -218,6 +218,19 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
+    bool GameObject::HasAncestor(const IGameObject * _ancestor) const
+    {
+        GameObject * parent = (GameObject*)getParent();
+        while (nullptr != parent)
+        {
+            if (parent == _ancestor)
+                return true;
+            parent = (GameObject *)parent->getParent();
+        }
+        return false;
+    }
+
+    //--------------------------------------------------------------------------------------
     void GameObject::OnPropertyChanged(core::IObject * _object, const core::IProperty & _prop, bool _notifyParent)
     {
         // Notify components that a GameObject property changed, but we don't want infinite loop when the property will update its parent

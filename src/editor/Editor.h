@@ -8,6 +8,7 @@ namespace vg
 	namespace core
 	{
 		class IFactory;
+		class ISelection;
 	}
 
 	namespace engine
@@ -48,9 +49,10 @@ namespace vg
 
 			template <class T> T *				getWindow			() const;
 
-			vg::core::IFactory *				getFactory			();
-			vg::engine::IEngine *				getEngine			();
-			vg::renderer::IRenderer *			getRenderer			();
+			core::IFactory *					getFactory			() const;
+			core::ISelection *					getSelection		() const;
+            engine::IEngine *					getEngine			() const;
+            renderer::IRenderer *				getRenderer			() const;
 
 		private:
 			core::vector<ImGuiWindow *>			m_imGuiWindows;

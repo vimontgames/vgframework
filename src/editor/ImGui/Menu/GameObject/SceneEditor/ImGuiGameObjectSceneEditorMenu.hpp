@@ -2,6 +2,7 @@
 #include "core/IGameObject.h"
 #include "core/ISelection.h"
 #include "core/string/string.h"
+#include "core/IInput.h"
 #include "engine/IEngine.h"
 #include "editor/ImGui/Window/ImGuiWindow.h"
 #include "editor/ImGui/Extensions/imGuiExtensions.h"
@@ -19,10 +20,56 @@ namespace vg::editor
         VG_ASSERT(nullptr != gameObject);
 
         bool openPopup = false;
+        bool doDelete = false;
+
+        ISelection * selection = Editor::get()->getSelection();
+        const auto & selectedObjects = selection->GetSelectedObjects();
+
+        // Build a list of GameObjects to be deleted
+        vector<IGameObject *> gameObjectsToDelete;
+        {
+            if (!gameObject->IsRoot())
+                gameObjectsToDelete.push_back(gameObject);
+
+            for (uint i = 0; i < selectedObjects.size(); ++i)
+            {
+                IObject * obj = selectedObjects[i];
+                IGameObject * go = dynamic_cast<IGameObject *>(obj);
+                if (go && !go->IsRoot() && go != gameObject)
+                    gameObjectsToDelete.push_back(go);
+            }
+
+            // Remove objects with parents already in the list
+            RESTART:
+            for (uint i = 0; i < gameObjectsToDelete.size(); ++i)
+            {
+                IGameObject * goi = gameObjectsToDelete[i];
+
+                for (uint j = 0; j < gameObjectsToDelete.size(); ++j)
+                {
+                    IGameObject * goj = gameObjectsToDelete[j];
+
+                    if (i != j)
+                    {
+                        if (goj->HasAncestor(goi))
+                        {
+                            gameObjectsToDelete.remove(goj);
+                            goto RESTART;
+                        }
+                    }
+                }
+            }
+        }
+
+        // Root GameObject cannot be deleted
+        const bool canDelete = gameObjectsToDelete.size() > 0;
+
+        //if (Kernel::getInput()->IsKeyPressed(Key::DEL))
+        if (ImGui::IsKeyPressed(ImGuiKey_Delete))
+            doDelete = true;
 
         if (ImGui::BeginPopupContextItem())
         {
-            ImGui::PushID("GameObjectInspectorMenu");
             if (ImGui::MenuItem("Add GameObject"))
             {
                 m_selected = MenuOption::AddChild;
@@ -31,33 +78,44 @@ namespace vg::editor
                 ImGui::OpenPopup("Add GameObject");
             }
 
-            // Root GameObject cannot be deleted
-            const bool isRootGO = gameObject->IsRoot();
-
-            ImGui::BeginDisabled(isRootGO);
+            ImGui::BeginDisabled(!canDelete);
             {
                 if (ImGui::MenuItem("Delete GameObject"))
-                {
-                    ImGui::OnMsgBoxClickedFunc deleteGameObject = [=]() mutable
-                    {
-                        IGameObject * parentGameObject = dynamic_cast<IGameObject *>(gameObject->getParent());
-                        if (nullptr != parentGameObject)
-                        {
-                            parentGameObject->RemoveChild(gameObject);
-                            VG_SAFE_RELEASE(gameObject);
-                            status = Status::Removed;
-                        }
-                        return true;
-                    };
-
-                    string msg = "Are you sure you want to delete " + (string)gameObject->getClassName() + " \"" + gameObject->getName() + "\"?";
-                    ImGui::MessageBox(MessageBoxType::YesNo, "Delete GameObject", msg.c_str(), deleteGameObject);
-                }
+                    doDelete = true;
             }
             ImGui::EndDisabled();
 
-            ImGui::PopID();
-            ImGui::EndPopup();
+            ImGui::EndPopup();            
+        }
+
+        if (doDelete)
+        {
+            ImGui::OnMsgBoxClickedFunc deleteGameObject = [=]() mutable
+            {
+                for (uint i = 0; i < gameObjectsToDelete.size(); ++i)
+                {
+                    IGameObject * gameObjectToDelete = gameObjectsToDelete[i];
+                    IGameObject * parentGameObject = dynamic_cast<IGameObject *>(gameObjectToDelete->getParent());
+                    if (nullptr != parentGameObject)
+                    {
+                        parentGameObject->RemoveChild(gameObjectToDelete);
+                        VG_SAFE_RELEASE(gameObjectToDelete);
+                        status = Status::Removed;
+                    }
+                }
+                return true;
+            };
+
+            string msg;
+            if (gameObjectsToDelete.size() > 1)
+            {
+                msg = "Are you sure you want to delete " + to_string(gameObjectsToDelete.size()) + " GameObjects and their children?";
+            }
+            else
+            { 
+                msg = "Are you sure you want to delete " + (string)gameObject->getClassName() + " \"" + gameObject->getName() + "\"?";
+            }
+            ImGui::MessageBox(MessageBoxType::YesNo, "Delete GameObject", msg.c_str(), deleteGameObject);
         }
 
         if (openPopup)
