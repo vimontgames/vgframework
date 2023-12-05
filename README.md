@@ -71,6 +71,8 @@ Separate DLLs for Engine, Renderer, Editor and Game.
 VS Studio 2022 Community\
 https://visualstudio.microsoft.com/fr/vs/community/
 
+**Don't forget to select *"Desktop development with C++"* and *"MSVC v143 - VS 2022 C++ x64/x86 build tools (latest)"* during the installation of Visual Studio or add to them later from Tool>Get Tools and Features...**
+
 You can change the Solution Platform in Visual Studio's command line to toggle between the DirectX12 and the Vulkan renderers.\
 Also don't forget to set the *working directory* to **$(SolutionDir)**.
 
