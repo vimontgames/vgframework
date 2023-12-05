@@ -2,7 +2,6 @@
 #include "Profiler.h"
 
 #ifdef VG_ENABLE_OPTICK
-
 #include "optick/src/optick_core.cpp"
 #include "optick/src/optick_capi.cpp"
 #include "optick/src/optick_gpu.cpp"
@@ -17,10 +16,13 @@
 #include "optick/src/optick_gpu.vulkan.cpp"
 #endif
 
+#include "core/File/File.h"
+#include "core/string/string.h"
+#include "core/Plugin/Plugin.h"
+
 #include "gfx/Device/Device.h"
 #include "gfx/CommandQueue/CommandQueue.h"
 #include "gfx/CommandList/CommandList.h"
-#include "core/Plugin/Plugin.h"
 
 using namespace vg::core;
 
@@ -99,13 +101,13 @@ namespace vg::gfx
         #endif
         char timeStr[80] = {};
 		strftime(timeStr, sizeof(timeStr), "%dd%mm%Yy%Hh%Mm%Ss", &tstruct);
-        char filename[256] = {};
-        sprintf(filename, "vgframework_%s_%s_%s_%s.opt", Plugin::getPlatform().c_str(), Plugin::getConfiguration().c_str(), asString(Device::get()->getDeviceParams().api).c_str(), timeStr);
-        OPTICK_SAVE_CAPTURE(filename);
+        const char * profileFolder = "profile";
+        io::createFolder(profileFolder);
+        string filename = fmt::sprintf("%s/application_%s_%s_%s_%s.opt", profileFolder, Plugin::getPlatform().c_str(), Plugin::getConfiguration().c_str(), asString(Device::get()->getDeviceParams().api).c_str(), timeStr);
+        OPTICK_SAVE_CAPTURE(filename.c_str());
         VG_INFO("[Profiler] Opening capture saved to \"%s\" ...\n", filename);
-        char command[256];
-        sprintf(command, "start %s", filename);
-        system(command);
+        string command = fmt::sprintf("start %s", filename.c_str());
+        system(command.c_str());
     }
 
     //--------------------------------------------------------------------------------------

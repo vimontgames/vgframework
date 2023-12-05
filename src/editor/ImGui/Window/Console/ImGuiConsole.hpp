@@ -24,6 +24,8 @@ namespace vg::editor
 
         if (IconBegin(style::icon::Console, "Console", &m_isVisible))
         {
+            VG_PROFILE_CPU("Console");
+
             const auto warningColor = ImVec4(1.0f, 1.0f, 0.4f, 1.0f);
             const auto errorColor = ImVec4(1.0f, 0.4f, 0.4f, 1.0f);
 
