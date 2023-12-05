@@ -113,6 +113,9 @@ https://github.com/tronkko/dirent
 Font-Awesome-6.x\
 https://github.com/FortAwesome/Font-Awesome/tree/6.x
 
+fmt 10.1.1\
+https://github.com/fmtlib/fmt/releases/tag/10.1.1
+
 hlslpp 3.3.1\
 https://github.com/redorav/hlslpp/releases/tag/3.3.1
 

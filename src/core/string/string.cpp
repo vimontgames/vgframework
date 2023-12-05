@@ -1,6 +1,7 @@
 #include "core/Precomp.h"
 #include "string.h"
 #include <locale>
+#include "fmt/src/format.cc"
 
 namespace vg::core
 {
