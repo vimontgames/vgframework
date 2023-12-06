@@ -24,8 +24,6 @@ namespace vg::editor
 
         if (IconBegin(style::icon::Console, "Console", &m_isVisible))
         {
-            VG_PROFILE_CPU("Console");
-
             const auto warningColor = ImVec4(1.0f, 1.0f, 0.4f, 1.0f);
             const auto errorColor = ImVec4(1.0f, 0.4f, 0.4f, 1.0f);
 
@@ -209,7 +207,7 @@ namespace vg::editor
                             break;
                     }
   
-                    string fullmsg = "[" + item.category + "] " + item.message;
+                    string fullmsg = fmt::sprintf("[\"%s\"] %s", item.category.c_str(), item.message.c_str());
 
                     if (!m_filter.PassFilter(fullmsg.c_str()))
                         continue;

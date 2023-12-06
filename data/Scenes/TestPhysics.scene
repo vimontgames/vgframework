@@ -10,6 +10,31 @@
                 <Property type="ObjectRefVector" name="m_components"/>
                 <Property type="ObjectRefVector" name="m_children" flags="Hidden">
                     <Object class="GameObject">
+                        <Property type="String" name="m_name" value="Game Camera"/>
+                        <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
+                        <Property type="Float4" name="m_color" flags="Color" x="1" y="1" z="1" w="1"/>
+                        <Property type="Float4x4" name="m_world" Ix="0.79815668" Iy="-0.60244989" Iz="-0" Iw="-0" Jx="0.36393121" Jy="0.48215485" Jz="0.79691952" Jw="-0" Kx="-0.48010412" Ky="-0.63606668" Kz="0.60408551" Kw="0" Tx="-18.446356" Ty="-25.109356" Tz="31.453672" Tw="1"/>
+                        <Property type="ObjectRefVector" name="m_components">
+                            <Object class="CameraComponent">
+                                <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
+                                <Property type="EnumU8" name="m_target" value="Game"/>
+                                <Property type="Uint8" name="m_index" flags="HasRange" value="0"/>
+                                <Property type="Float" name="m_fovY" flags="HasRange" value="0.78539819"/>
+                                <Property type="Float" name="m_near" flags="HasRange" value="0.1"/>
+                                <Property type="Float" name="m_far" flags="HasRange" value="1024"/>
+                            </Object>
+                            <Object class="FreeCamBehaviour">
+                                <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
+                                <Property type="Float" name="m_moveSpeed" flags="HasRange" value="1"/>
+                                <Property type="Float" name="m_rotSpeed" flags="HasRange" value="1"/>
+                                <Property type="Float" name="m_pitch" flags="HasRange" value="-0.92217857"/>
+                                <Property type="Float" name="m_yaw" flags="HasRange" value="2.4950256"/>
+                                <Property type="Float" name="m_roll" flags="HasRange" value="0"/>
+                            </Object>
+                        </Property>
+                        <Property type="ObjectRefVector" name="m_children" flags="Hidden"/>
+                    </Object>
+                    <Object class="GameObject">
                         <Property type="String" name="m_name" value="Floor"/>
                         <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled|Static"/>
                         <Property type="Float4" name="m_color" flags="Color" x="0.53281856" y="0.53281856" z="0.53281856" w="1"/>
@@ -61,299 +86,292 @@
                         <Property type="ObjectRefVector" name="m_children" flags="Hidden"/>
                     </Object>
                     <Object class="GameObject">
-                        <Property type="String" name="m_name" value="Red Cube"/>
-                        <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
-                        <Property type="Float4" name="m_color" flags="Color" x="1" y="0" z="0" w="1"/>
-                        <Property type="Float4x4" name="m_world" Ix="1" Iy="0" Iz="4.6323095e-08" Iw="0" Jx="1.2014751e-06" Jy="1" Jz="-1.4214341e-07" Jw="0" Kx="-4.6322924e-08" Ky="1.4214346e-07" Kz="1" Kw="0" Tx="-1.5405587e-07" Ty="3.4772305e-07" Tz="5" Tw="1"/>
-                        <Property type="ObjectRefVector" name="m_components">
-                            <Object class="MeshComponent">
-                                <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
-                                <Property type="Bool" name="m_displayBones" value="false"/>
-                                <Property type="Resource" name="m_meshResource" flags="Resource">
-                                    <Object class="MeshResource">
-                                        <Property type="String" name="m_name" flags="Hidden" value=""/>
-                                        <Property type="String" name="m_resourcePath" flags="Hidden" value="data/Models/unitcube.fbx"/>
-                                    </Object>
-                                </Property>
-                                <Property type="Object" name="m_meshMaterials">
-                                    <Object class="MaterialResourceList">
-                                        <Property type="String" name="m_name" flags="Hidden" value=""/>
-                                        <Property type="ResourceVector" name="m_materialResources" flags="Resource"/>
-                                    </Object>
-                                </Property>
-                            </Object>
-                            <Object class="RigidBodyComponent">
-                                <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
-                                <Property type="ObjectRef" name="m_bodyDesc" flags="Flatten">
-                                    <Object class="RigidBodyDesc">
-                                        <Property type="String" name="m_name" flags="Hidden" value="RigidBodyDesc #1"/>
-                                        <Property type="EnumU16" name="m_layer" flags="ReadOnly" value="Moving"/>
-                                        <Property type="EnumU8" name="m_motion" flags="ReadOnly" value="Dynamic"/>
-                                        <Property type="Bool" name="m_overrideMass" flags="Hidden" value="false"/>
-                                        <Property type="Float" name="m_mass" flags="Optional" value="1000"/>
-                                        <Property type="EnumU8" name="m_shapeType" value="Box"/>
-                                    </Object>
-                                </Property>
-                                <Property type="ObjectRef" name="m_shapeDesc" flags="Flatten">
-                                    <Object class="BoxShapeDesc">
-                                        <Property type="String" name="m_name" flags="Hidden" value="BoxShapeDesc #0"/>
-                                        <Property type="Float3" name="m_offset" x="0" y="0" z="0"/>
-                                        <Property type="Float3" name="m_size" x="1" y="1" z="1"/>
-                                    </Object>
-                                </Property>
-                            </Object>
-                        </Property>
-                        <Property type="ObjectRefVector" name="m_children" flags="Hidden"/>
-                    </Object>
-                    <Object class="GameObject">
-                        <Property type="String" name="m_name" value="Game Camera"/>
+                        <Property type="String" name="m_name" value="Cubes"/>
                         <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
                         <Property type="Float4" name="m_color" flags="Color" x="1" y="1" z="1" w="1"/>
-                        <Property type="Float4x4" name="m_world" Ix="0.73579401" Iy="-0.67720544" Iz="-0" Iw="-0" Jx="0.20615149" Jy="0.22398673" Jz="0.9525395" Jw="-0" Kx="-0.64506495" Ky="-0.70087284" Kz="0.30441499" Kw="0" Tx="-2.4625499" Ty="-4.9880466" Tz="15.39481" Tw="1"/>
-                        <Property type="ObjectRefVector" name="m_components">
-                            <Object class="CameraComponent">
+                        <Property type="Float4x4" name="m_world" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="0" Ty="0" Tz="0" Tw="1"/>
+                        <Property type="ObjectRefVector" name="m_components"/>
+                        <Property type="ObjectRefVector" name="m_children" flags="Hidden">
+                            <Object class="GameObject">
+                                <Property type="String" name="m_name" value="Red Cube"/>
                                 <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
-                                <Property type="EnumU8" name="m_target" value="Game"/>
-                                <Property type="Uint8" name="m_index" flags="HasRange" value="0"/>
-                                <Property type="Float" name="m_fovY" flags="HasRange" value="0.78539819"/>
-                                <Property type="Float" name="m_near" flags="HasRange" value="0.1"/>
-                                <Property type="Float" name="m_far" flags="HasRange" value="1024"/>
+                                <Property type="Float4" name="m_color" flags="Color" x="1" y="0" z="0" w="1"/>
+                                <Property type="Float4x4" name="m_world" Ix="1" Iy="0" Iz="4.6323095e-08" Iw="0" Jx="1.2014751e-06" Jy="1" Jz="-1.4214341e-07" Jw="0" Kx="-4.6322924e-08" Ky="1.4214346e-07" Kz="1" Kw="0" Tx="-1.5405587e-07" Ty="3.4772305e-07" Tz="5" Tw="1"/>
+                                <Property type="ObjectRefVector" name="m_components">
+                                    <Object class="MeshComponent">
+                                        <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
+                                        <Property type="Bool" name="m_displayBones" value="false"/>
+                                        <Property type="Resource" name="m_meshResource" flags="Resource">
+                                            <Object class="MeshResource">
+                                                <Property type="String" name="m_name" flags="Hidden" value=""/>
+                                                <Property type="String" name="m_resourcePath" flags="Hidden" value="data/Models/unitcube.fbx"/>
+                                            </Object>
+                                        </Property>
+                                        <Property type="Object" name="m_meshMaterials">
+                                            <Object class="MaterialResourceList">
+                                                <Property type="String" name="m_name" flags="Hidden" value=""/>
+                                                <Property type="ResourceVector" name="m_materialResources" flags="Resource"/>
+                                            </Object>
+                                        </Property>
+                                    </Object>
+                                    <Object class="RigidBodyComponent">
+                                        <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
+                                        <Property type="ObjectRef" name="m_bodyDesc" flags="Flatten">
+                                            <Object class="RigidBodyDesc">
+                                                <Property type="String" name="m_name" flags="Hidden" value="RigidBodyDesc #1"/>
+                                                <Property type="EnumU16" name="m_layer" flags="ReadOnly" value="Moving"/>
+                                                <Property type="EnumU8" name="m_motion" flags="ReadOnly" value="Dynamic"/>
+                                                <Property type="Bool" name="m_overrideMass" flags="Hidden" value="false"/>
+                                                <Property type="Float" name="m_mass" flags="Optional" value="1000"/>
+                                                <Property type="EnumU8" name="m_shapeType" value="Box"/>
+                                            </Object>
+                                        </Property>
+                                        <Property type="ObjectRef" name="m_shapeDesc" flags="Flatten">
+                                            <Object class="BoxShapeDesc">
+                                                <Property type="String" name="m_name" flags="Hidden" value="BoxShapeDesc #0"/>
+                                                <Property type="Float3" name="m_offset" x="0" y="0" z="0"/>
+                                                <Property type="Float3" name="m_size" x="1" y="1" z="1"/>
+                                            </Object>
+                                        </Property>
+                                    </Object>
+                                </Property>
+                                <Property type="ObjectRefVector" name="m_children" flags="Hidden"/>
                             </Object>
-                            <Object class="FreeCamBehaviour">
+                            <Object class="GameObject">
+                                <Property type="String" name="m_name" value="Blue Cube"/>
                                 <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
-                                <Property type="Float" name="m_moveSpeed" flags="HasRange" value="1"/>
-                                <Property type="Float" name="m_rotSpeed" flags="HasRange" value="1"/>
-                                <Property type="Float" name="m_pitch" flags="HasRange" value="-1.2614721"/>
-                                <Property type="Float" name="m_yaw" flags="HasRange" value="2.3976347"/>
-                                <Property type="Float" name="m_roll" flags="HasRange" value="0"/>
+                                <Property type="Float4" name="m_color" flags="Color" x="0" y="0.38610029" z="1" w="1"/>
+                                <Property type="Float4x4" name="m_world" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="-0.25" Ty="0.5" Tz="15" Tw="1"/>
+                                <Property type="ObjectRefVector" name="m_components">
+                                    <Object class="MeshComponent">
+                                        <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
+                                        <Property type="Bool" name="m_displayBones" value="false"/>
+                                        <Property type="Resource" name="m_meshResource" flags="Resource">
+                                            <Object class="MeshResource">
+                                                <Property type="String" name="m_name" flags="Hidden" value="New MeshComponent"/>
+                                                <Property type="String" name="m_resourcePath" flags="Hidden" value="data/Models/unitcube.fbx"/>
+                                            </Object>
+                                        </Property>
+                                        <Property type="Object" name="m_meshMaterials">
+                                            <Object class="MaterialResourceList">
+                                                <Property type="String" name="m_name" flags="Hidden" value="New MeshComponent"/>
+                                                <Property type="ResourceVector" name="m_materialResources" flags="Resource"/>
+                                            </Object>
+                                        </Property>
+                                    </Object>
+                                    <Object class="RigidBodyComponent">
+                                        <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
+                                        <Property type="ObjectRef" name="m_bodyDesc" flags="Flatten">
+                                            <Object class="RigidBodyDesc">
+                                                <Property type="String" name="m_name" flags="Hidden" value="RigidBodyDesc #3"/>
+                                                <Property type="EnumU16" name="m_layer" flags="ReadOnly" value="Moving"/>
+                                                <Property type="EnumU8" name="m_motion" flags="ReadOnly" value="Dynamic"/>
+                                                <Property type="Bool" name="m_overrideMass" flags="Hidden" value="true"/>
+                                                <Property type="Float" name="m_mass" flags="Optional" value="100000"/>
+                                                <Property type="EnumU8" name="m_shapeType" value="Box"/>
+                                            </Object>
+                                        </Property>
+                                        <Property type="ObjectRef" name="m_shapeDesc" flags="Flatten">
+                                            <Object class="BoxShapeDesc">
+                                                <Property type="String" name="m_name" flags="Hidden" value="BoxShapeDesc #3"/>
+                                                <Property type="Float3" name="m_offset" x="0" y="0" z="0"/>
+                                                <Property type="Float3" name="m_size" x="1" y="1" z="1"/>
+                                            </Object>
+                                        </Property>
+                                    </Object>
+                                </Property>
+                                <Property type="ObjectRefVector" name="m_children" flags="Hidden"/>
+                            </Object>
+                            <Object class="GameObject">
+                                <Property type="String" name="m_name" value="Green Cube"/>
+                                <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
+                                <Property type="Float4" name="m_color" flags="Color" x="0.28571427" y="1" z="0" w="1"/>
+                                <Property type="Float4x4" name="m_world" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="0.5" Ty="0" Tz="10" Tw="1"/>
+                                <Property type="ObjectRefVector" name="m_components">
+                                    <Object class="MeshComponent">
+                                        <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
+                                        <Property type="Bool" name="m_displayBones" value="false"/>
+                                        <Property type="Resource" name="m_meshResource" flags="Resource">
+                                            <Object class="MeshResource">
+                                                <Property type="String" name="m_name" flags="Hidden" value="New MeshComponent"/>
+                                                <Property type="String" name="m_resourcePath" flags="Hidden" value="data/Models/unitcube.fbx"/>
+                                            </Object>
+                                        </Property>
+                                        <Property type="Object" name="m_meshMaterials">
+                                            <Object class="MaterialResourceList">
+                                                <Property type="String" name="m_name" flags="Hidden" value="New MeshComponent"/>
+                                                <Property type="ResourceVector" name="m_materialResources" flags="Resource"/>
+                                            </Object>
+                                        </Property>
+                                    </Object>
+                                    <Object class="RigidBodyComponent">
+                                        <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
+                                        <Property type="ObjectRef" name="m_bodyDesc" flags="Flatten">
+                                            <Object class="RigidBodyDesc">
+                                                <Property type="String" name="m_name" flags="Hidden" value="RigidBodyDesc #2"/>
+                                                <Property type="EnumU16" name="m_layer" flags="ReadOnly" value="Moving"/>
+                                                <Property type="EnumU8" name="m_motion" flags="ReadOnly" value="Dynamic"/>
+                                                <Property type="Bool" name="m_overrideMass" flags="Hidden" value="false"/>
+                                                <Property type="Float" name="m_mass" flags="Optional" value="1000"/>
+                                                <Property type="EnumU8" name="m_shapeType" value="Box"/>
+                                            </Object>
+                                        </Property>
+                                        <Property type="ObjectRef" name="m_shapeDesc" flags="Flatten">
+                                            <Object class="BoxShapeDesc">
+                                                <Property type="String" name="m_name" flags="Hidden" value="BoxShapeDesc #2"/>
+                                                <Property type="Float3" name="m_offset" x="0" y="0" z="0"/>
+                                                <Property type="Float3" name="m_size" x="1" y="1" z="1"/>
+                                            </Object>
+                                        </Property>
+                                    </Object>
+                                </Property>
+                                <Property type="ObjectRefVector" name="m_children" flags="Hidden"/>
                             </Object>
                         </Property>
-                        <Property type="ObjectRefVector" name="m_children" flags="Hidden"/>
                     </Object>
                     <Object class="GameObject">
-                        <Property type="String" name="m_name" value="Green Cube"/>
+                        <Property type="String" name="m_name" value="Spheres"/>
                         <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
-                        <Property type="Float4" name="m_color" flags="Color" x="0.28571427" y="1" z="0" w="1"/>
-                        <Property type="Float4x4" name="m_world" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="0.5" Ty="0" Tz="10" Tw="1"/>
-                        <Property type="ObjectRefVector" name="m_components">
-                            <Object class="MeshComponent">
+                        <Property type="Float4" name="m_color" flags="Color" x="1" y="1" z="1" w="1"/>
+                        <Property type="Float4x4" name="m_world" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="0" Ty="0" Tz="0" Tw="1"/>
+                        <Property type="ObjectRefVector" name="m_components"/>
+                        <Property type="ObjectRefVector" name="m_children" flags="Hidden">
+                            <Object class="GameObject">
+                                <Property type="String" name="m_name" value="Black Sphere"/>
                                 <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
-                                <Property type="Bool" name="m_displayBones" value="false"/>
-                                <Property type="Resource" name="m_meshResource" flags="Resource">
-                                    <Object class="MeshResource">
-                                        <Property type="String" name="m_name" flags="Hidden" value="New MeshComponent"/>
-                                        <Property type="String" name="m_resourcePath" flags="Hidden" value="data/Models/unitcube.fbx"/>
+                                <Property type="Float4" name="m_color" flags="Color" x="0.17374516" y="0.17374516" z="0.17374516" w="1"/>
+                                <Property type="Float4x4" name="m_world" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="-0.75" Ty="-3" Tz="14.5" Tw="1"/>
+                                <Property type="ObjectRefVector" name="m_components">
+                                    <Object class="MeshComponent">
+                                        <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
+                                        <Property type="Bool" name="m_displayBones" value="false"/>
+                                        <Property type="Resource" name="m_meshResource" flags="Resource">
+                                            <Object class="MeshResource">
+                                                <Property type="String" name="m_name" flags="Hidden" value="New MeshComponent"/>
+                                                <Property type="String" name="m_resourcePath" flags="Hidden" value="data/Models/unitsphere.fbx"/>
+                                            </Object>
+                                        </Property>
+                                        <Property type="Object" name="m_meshMaterials">
+                                            <Object class="MaterialResourceList">
+                                                <Property type="String" name="m_name" flags="Hidden" value="New MeshComponent"/>
+                                                <Property type="ResourceVector" name="m_materialResources" flags="Resource"/>
+                                            </Object>
+                                        </Property>
+                                    </Object>
+                                    <Object class="RigidBodyComponent">
+                                        <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
+                                        <Property type="ObjectRef" name="m_bodyDesc" flags="Flatten">
+                                            <Object class="RigidBodyDesc">
+                                                <Property type="String" name="m_name" flags="Hidden" value="RigidBodyDesc #12"/>
+                                                <Property type="EnumU16" name="m_layer" flags="ReadOnly" value="Moving"/>
+                                                <Property type="EnumU8" name="m_motion" flags="ReadOnly" value="Dynamic"/>
+                                                <Property type="Bool" name="m_overrideMass" flags="Hidden" value="true"/>
+                                                <Property type="Float" name="m_mass" flags="Optional" value="10000"/>
+                                                <Property type="EnumU8" name="m_shapeType" value="Sphere"/>
+                                            </Object>
+                                        </Property>
+                                        <Property type="ObjectRef" name="m_shapeDesc" flags="Flatten">
+                                            <Object class="SphereShapeDesc">
+                                                <Property type="String" name="m_name" flags="Hidden" value="SphereShapeDesc #3"/>
+                                                <Property type="Float3" name="m_offset" x="0" y="0" z="0"/>
+                                                <Property type="Float" name="m_radius" value="0.5"/>
+                                            </Object>
+                                        </Property>
                                     </Object>
                                 </Property>
-                                <Property type="Object" name="m_meshMaterials">
-                                    <Object class="MaterialResourceList">
-                                        <Property type="String" name="m_name" flags="Hidden" value="New MeshComponent"/>
-                                        <Property type="ResourceVector" name="m_materialResources" flags="Resource"/>
-                                    </Object>
-                                </Property>
+                                <Property type="ObjectRefVector" name="m_children" flags="Hidden"/>
                             </Object>
-                            <Object class="RigidBodyComponent">
+                            <Object class="GameObject">
+                                <Property type="String" name="m_name" value="Pink Sphere"/>
                                 <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
-                                <Property type="ObjectRef" name="m_bodyDesc" flags="Flatten">
-                                    <Object class="RigidBodyDesc">
-                                        <Property type="String" name="m_name" flags="Hidden" value="RigidBodyDesc #2"/>
-                                        <Property type="EnumU16" name="m_layer" flags="ReadOnly" value="Moving"/>
-                                        <Property type="EnumU8" name="m_motion" flags="ReadOnly" value="Dynamic"/>
-                                        <Property type="Bool" name="m_overrideMass" flags="Hidden" value="false"/>
-                                        <Property type="Float" name="m_mass" flags="Optional" value="1000"/>
-                                        <Property type="EnumU8" name="m_shapeType" value="Box"/>
+                                <Property type="Float4" name="m_color" flags="Color" x="1" y="0" z="0.94980717" w="1"/>
+                                <Property type="Float4x4" name="m_world" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="2" Ty="0" Tz="7" Tw="1"/>
+                                <Property type="ObjectRefVector" name="m_components">
+                                    <Object class="MeshComponent">
+                                        <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
+                                        <Property type="Bool" name="m_displayBones" value="false"/>
+                                        <Property type="Resource" name="m_meshResource" flags="Resource">
+                                            <Object class="MeshResource">
+                                                <Property type="String" name="m_name" flags="Hidden" value="New MeshComponent"/>
+                                                <Property type="String" name="m_resourcePath" flags="Hidden" value="data/Models/unitsphere.fbx"/>
+                                            </Object>
+                                        </Property>
+                                        <Property type="Object" name="m_meshMaterials">
+                                            <Object class="MaterialResourceList">
+                                                <Property type="String" name="m_name" flags="Hidden" value="New MeshComponent"/>
+                                                <Property type="ResourceVector" name="m_materialResources" flags="Resource"/>
+                                            </Object>
+                                        </Property>
+                                    </Object>
+                                    <Object class="RigidBodyComponent">
+                                        <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
+                                        <Property type="ObjectRef" name="m_bodyDesc" flags="Flatten">
+                                            <Object class="RigidBodyDesc">
+                                                <Property type="String" name="m_name" flags="Hidden" value="RigidBodyDesc #10"/>
+                                                <Property type="EnumU16" name="m_layer" flags="ReadOnly" value="Moving"/>
+                                                <Property type="EnumU8" name="m_motion" flags="ReadOnly" value="Dynamic"/>
+                                                <Property type="Bool" name="m_overrideMass" flags="Hidden" value="true"/>
+                                                <Property type="Float" name="m_mass" flags="Optional" value="300"/>
+                                                <Property type="EnumU8" name="m_shapeType" value="Sphere"/>
+                                            </Object>
+                                        </Property>
+                                        <Property type="ObjectRef" name="m_shapeDesc" flags="Flatten">
+                                            <Object class="SphereShapeDesc">
+                                                <Property type="String" name="m_name" flags="Hidden" value="SphereShapeDesc #1"/>
+                                                <Property type="Float3" name="m_offset" x="0" y="0" z="0"/>
+                                                <Property type="Float" name="m_radius" value="0.5"/>
+                                            </Object>
+                                        </Property>
                                     </Object>
                                 </Property>
-                                <Property type="ObjectRef" name="m_shapeDesc" flags="Flatten">
-                                    <Object class="BoxShapeDesc">
-                                        <Property type="String" name="m_name" flags="Hidden" value="BoxShapeDesc #2"/>
-                                        <Property type="Float3" name="m_offset" x="0" y="0" z="0"/>
-                                        <Property type="Float3" name="m_size" x="1" y="1" z="1"/>
+                                <Property type="ObjectRefVector" name="m_children" flags="Hidden"/>
+                            </Object>
+                            <Object class="GameObject">
+                                <Property type="String" name="m_name" value="Yellow Sphere"/>
+                                <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
+                                <Property type="Float4" name="m_color" flags="Color" x="0.98069501" y="1" z="0" w="1"/>
+                                <Property type="Float4x4" name="m_world" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="0" Ty="-3" Tz="8" Tw="1"/>
+                                <Property type="ObjectRefVector" name="m_components">
+                                    <Object class="MeshComponent">
+                                        <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
+                                        <Property type="Bool" name="m_displayBones" value="false"/>
+                                        <Property type="Resource" name="m_meshResource" flags="Resource">
+                                            <Object class="MeshResource">
+                                                <Property type="String" name="m_name" flags="Hidden" value="New MeshComponent"/>
+                                                <Property type="String" name="m_resourcePath" flags="Hidden" value="data/Models/unitsphere.fbx"/>
+                                            </Object>
+                                        </Property>
+                                        <Property type="Object" name="m_meshMaterials">
+                                            <Object class="MaterialResourceList">
+                                                <Property type="String" name="m_name" flags="Hidden" value="New MeshComponent"/>
+                                                <Property type="ResourceVector" name="m_materialResources" flags="Resource"/>
+                                            </Object>
+                                        </Property>
+                                    </Object>
+                                    <Object class="RigidBodyComponent">
+                                        <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
+                                        <Property type="ObjectRef" name="m_bodyDesc" flags="Flatten">
+                                            <Object class="RigidBodyDesc">
+                                                <Property type="String" name="m_name" flags="Hidden" value="RigidBodyDesc #8"/>
+                                                <Property type="EnumU16" name="m_layer" flags="ReadOnly" value="Moving"/>
+                                                <Property type="EnumU8" name="m_motion" flags="ReadOnly" value="Dynamic"/>
+                                                <Property type="Bool" name="m_overrideMass" flags="Hidden" value="true"/>
+                                                <Property type="Float" name="m_mass" flags="Optional" value="500"/>
+                                                <Property type="EnumU8" name="m_shapeType" value="Sphere"/>
+                                            </Object>
+                                        </Property>
+                                        <Property type="ObjectRef" name="m_shapeDesc" flags="Flatten">
+                                            <Object class="SphereShapeDesc">
+                                                <Property type="String" name="m_name" flags="Hidden" value="SphereShapeDesc #0"/>
+                                                <Property type="Float3" name="m_offset" x="0" y="0" z="0"/>
+                                                <Property type="Float" name="m_radius" value="0.5"/>
+                                            </Object>
+                                        </Property>
                                     </Object>
                                 </Property>
+                                <Property type="ObjectRefVector" name="m_children" flags="Hidden"/>
                             </Object>
                         </Property>
-                        <Property type="ObjectRefVector" name="m_children" flags="Hidden"/>
-                    </Object>
-                    <Object class="GameObject">
-                        <Property type="String" name="m_name" value="Blue Cube"/>
-                        <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
-                        <Property type="Float4" name="m_color" flags="Color" x="0" y="0.38610029" z="1" w="1"/>
-                        <Property type="Float4x4" name="m_world" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="-0.25" Ty="0.5" Tz="15" Tw="1"/>
-                        <Property type="ObjectRefVector" name="m_components">
-                            <Object class="MeshComponent">
-                                <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
-                                <Property type="Bool" name="m_displayBones" value="false"/>
-                                <Property type="Resource" name="m_meshResource" flags="Resource">
-                                    <Object class="MeshResource">
-                                        <Property type="String" name="m_name" flags="Hidden" value="New MeshComponent"/>
-                                        <Property type="String" name="m_resourcePath" flags="Hidden" value="data/Models/unitcube.fbx"/>
-                                    </Object>
-                                </Property>
-                                <Property type="Object" name="m_meshMaterials">
-                                    <Object class="MaterialResourceList">
-                                        <Property type="String" name="m_name" flags="Hidden" value="New MeshComponent"/>
-                                        <Property type="ResourceVector" name="m_materialResources" flags="Resource"/>
-                                    </Object>
-                                </Property>
-                            </Object>
-                            <Object class="RigidBodyComponent">
-                                <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
-                                <Property type="ObjectRef" name="m_bodyDesc" flags="Flatten">
-                                    <Object class="RigidBodyDesc">
-                                        <Property type="String" name="m_name" flags="Hidden" value="RigidBodyDesc #3"/>
-                                        <Property type="EnumU16" name="m_layer" flags="ReadOnly" value="Moving"/>
-                                        <Property type="EnumU8" name="m_motion" flags="ReadOnly" value="Dynamic"/>
-                                        <Property type="Bool" name="m_overrideMass" flags="Hidden" value="true"/>
-                                        <Property type="Float" name="m_mass" flags="Optional" value="100000"/>
-                                        <Property type="EnumU8" name="m_shapeType" value="Box"/>
-                                    </Object>
-                                </Property>
-                                <Property type="ObjectRef" name="m_shapeDesc" flags="Flatten">
-                                    <Object class="BoxShapeDesc">
-                                        <Property type="String" name="m_name" flags="Hidden" value="BoxShapeDesc #3"/>
-                                        <Property type="Float3" name="m_offset" x="0" y="0" z="0"/>
-                                        <Property type="Float3" name="m_size" x="1" y="1" z="1"/>
-                                    </Object>
-                                </Property>
-                            </Object>
-                        </Property>
-                        <Property type="ObjectRefVector" name="m_children" flags="Hidden"/>
-                    </Object>
-                    <Object class="GameObject">
-                        <Property type="String" name="m_name" value="Yellow Sphere"/>
-                        <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
-                        <Property type="Float4" name="m_color" flags="Color" x="0.98069501" y="1" z="0" w="1"/>
-                        <Property type="Float4x4" name="m_world" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="0" Ty="-3" Tz="8" Tw="1"/>
-                        <Property type="ObjectRefVector" name="m_components">
-                            <Object class="MeshComponent">
-                                <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
-                                <Property type="Bool" name="m_displayBones" value="false"/>
-                                <Property type="Resource" name="m_meshResource" flags="Resource">
-                                    <Object class="MeshResource">
-                                        <Property type="String" name="m_name" flags="Hidden" value="New MeshComponent"/>
-                                        <Property type="String" name="m_resourcePath" flags="Hidden" value="data/Models/unitsphere.fbx"/>
-                                    </Object>
-                                </Property>
-                                <Property type="Object" name="m_meshMaterials">
-                                    <Object class="MaterialResourceList">
-                                        <Property type="String" name="m_name" flags="Hidden" value="New MeshComponent"/>
-                                        <Property type="ResourceVector" name="m_materialResources" flags="Resource"/>
-                                    </Object>
-                                </Property>
-                            </Object>
-                            <Object class="RigidBodyComponent">
-                                <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
-                                <Property type="ObjectRef" name="m_bodyDesc" flags="Flatten">
-                                    <Object class="RigidBodyDesc">
-                                        <Property type="String" name="m_name" flags="Hidden" value="RigidBodyDesc #8"/>
-                                        <Property type="EnumU16" name="m_layer" flags="ReadOnly" value="Moving"/>
-                                        <Property type="EnumU8" name="m_motion" flags="ReadOnly" value="Dynamic"/>
-                                        <Property type="Bool" name="m_overrideMass" flags="Hidden" value="true"/>
-                                        <Property type="Float" name="m_mass" flags="Optional" value="500"/>
-                                        <Property type="EnumU8" name="m_shapeType" value="Sphere"/>
-                                    </Object>
-                                </Property>
-                                <Property type="ObjectRef" name="m_shapeDesc" flags="Flatten">
-                                    <Object class="SphereShapeDesc">
-                                        <Property type="String" name="m_name" flags="Hidden" value="SphereShapeDesc #0"/>
-                                        <Property type="Float3" name="m_offset" x="0" y="0" z="0"/>
-                                        <Property type="Float" name="m_radius" value="0.5"/>
-                                    </Object>
-                                </Property>
-                            </Object>
-                        </Property>
-                        <Property type="ObjectRefVector" name="m_children" flags="Hidden"/>
-                    </Object>
-                    <Object class="GameObject">
-                        <Property type="String" name="m_name" value="Pink Sphere"/>
-                        <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
-                        <Property type="Float4" name="m_color" flags="Color" x="1" y="0" z="0.94980717" w="1"/>
-                        <Property type="Float4x4" name="m_world" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="2" Ty="0" Tz="7" Tw="1"/>
-                        <Property type="ObjectRefVector" name="m_components">
-                            <Object class="MeshComponent">
-                                <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
-                                <Property type="Bool" name="m_displayBones" value="false"/>
-                                <Property type="Resource" name="m_meshResource" flags="Resource">
-                                    <Object class="MeshResource">
-                                        <Property type="String" name="m_name" flags="Hidden" value="New MeshComponent"/>
-                                        <Property type="String" name="m_resourcePath" flags="Hidden" value="data/Models/unitsphere.fbx"/>
-                                    </Object>
-                                </Property>
-                                <Property type="Object" name="m_meshMaterials">
-                                    <Object class="MaterialResourceList">
-                                        <Property type="String" name="m_name" flags="Hidden" value="New MeshComponent"/>
-                                        <Property type="ResourceVector" name="m_materialResources" flags="Resource"/>
-                                    </Object>
-                                </Property>
-                            </Object>
-                            <Object class="RigidBodyComponent">
-                                <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
-                                <Property type="ObjectRef" name="m_bodyDesc" flags="Flatten">
-                                    <Object class="RigidBodyDesc">
-                                        <Property type="String" name="m_name" flags="Hidden" value="RigidBodyDesc #10"/>
-                                        <Property type="EnumU16" name="m_layer" flags="ReadOnly" value="Moving"/>
-                                        <Property type="EnumU8" name="m_motion" flags="ReadOnly" value="Dynamic"/>
-                                        <Property type="Bool" name="m_overrideMass" flags="Hidden" value="true"/>
-                                        <Property type="Float" name="m_mass" flags="Optional" value="300"/>
-                                        <Property type="EnumU8" name="m_shapeType" value="Sphere"/>
-                                    </Object>
-                                </Property>
-                                <Property type="ObjectRef" name="m_shapeDesc" flags="Flatten">
-                                    <Object class="SphereShapeDesc">
-                                        <Property type="String" name="m_name" flags="Hidden" value="SphereShapeDesc #1"/>
-                                        <Property type="Float3" name="m_offset" x="0" y="0" z="0"/>
-                                        <Property type="Float" name="m_radius" value="0.5"/>
-                                    </Object>
-                                </Property>
-                            </Object>
-                        </Property>
-                        <Property type="ObjectRefVector" name="m_children" flags="Hidden"/>
-                    </Object>
-                    <Object class="GameObject">
-                        <Property type="String" name="m_name" value="Black Sphere"/>
-                        <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
-                        <Property type="Float4" name="m_color" flags="Color" x="0.17374516" y="0.17374516" z="0.17374516" w="1"/>
-                        <Property type="Float4x4" name="m_world" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="-0.75" Ty="-3" Tz="14.5" Tw="1"/>
-                        <Property type="ObjectRefVector" name="m_components">
-                            <Object class="MeshComponent">
-                                <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
-                                <Property type="Bool" name="m_displayBones" value="false"/>
-                                <Property type="Resource" name="m_meshResource" flags="Resource">
-                                    <Object class="MeshResource">
-                                        <Property type="String" name="m_name" flags="Hidden" value="New MeshComponent"/>
-                                        <Property type="String" name="m_resourcePath" flags="Hidden" value="data/Models/unitsphere.fbx"/>
-                                    </Object>
-                                </Property>
-                                <Property type="Object" name="m_meshMaterials">
-                                    <Object class="MaterialResourceList">
-                                        <Property type="String" name="m_name" flags="Hidden" value="New MeshComponent"/>
-                                        <Property type="ResourceVector" name="m_materialResources" flags="Resource"/>
-                                    </Object>
-                                </Property>
-                            </Object>
-                            <Object class="RigidBodyComponent">
-                                <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
-                                <Property type="ObjectRef" name="m_bodyDesc" flags="Flatten">
-                                    <Object class="RigidBodyDesc">
-                                        <Property type="String" name="m_name" flags="Hidden" value="RigidBodyDesc #12"/>
-                                        <Property type="EnumU16" name="m_layer" flags="ReadOnly" value="Moving"/>
-                                        <Property type="EnumU8" name="m_motion" flags="ReadOnly" value="Dynamic"/>
-                                        <Property type="Bool" name="m_overrideMass" flags="Hidden" value="true"/>
-                                        <Property type="Float" name="m_mass" flags="Optional" value="10000"/>
-                                        <Property type="EnumU8" name="m_shapeType" value="Sphere"/>
-                                    </Object>
-                                </Property>
-                                <Property type="ObjectRef" name="m_shapeDesc" flags="Flatten">
-                                    <Object class="SphereShapeDesc">
-                                        <Property type="String" name="m_name" flags="Hidden" value="SphereShapeDesc #3"/>
-                                        <Property type="Float3" name="m_offset" x="0" y="0" z="0"/>
-                                        <Property type="Float" name="m_radius" value="0.5"/>
-                                    </Object>
-                                </Property>
-                            </Object>
-                        </Property>
-                        <Property type="ObjectRefVector" name="m_children" flags="Hidden"/>
                     </Object>
                 </Property>
             </Object>

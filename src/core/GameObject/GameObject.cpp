@@ -184,11 +184,16 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
-    void GameObject::AddChild(IGameObject * _gameObject)
+    void GameObject::AddChild(IGameObject * _gameObject, core::uint _index)
     {
-        VG_ASSERT(m_children.end() == std::find(m_children.begin(), m_children.end(), _gameObject));
+        VG_ASSERT(_index != -1 || m_children.end() == std::find(m_children.begin(), m_children.end(), _gameObject));
         VG_SAFE_INCREASE_REFCOUNT(_gameObject);
-        m_children.push_back((GameObject*)_gameObject);
+
+        if (-1 == _index || _index >= m_children.size())
+            m_children.push_back((GameObject *)_gameObject);
+        else
+            m_children.insert(m_children.begin() + _index, (GameObject*)_gameObject);
+
         _gameObject->setParent(this);
     }
 
@@ -198,10 +203,27 @@ namespace vg::core
         if (m_children.exists((GameObject*)_gameObject))
         {
             m_children.remove((GameObject*)_gameObject);
+            VG_SAFE_RELEASE(_gameObject);
             return true;
         }
 
         return false;
+    }
+
+    //--------------------------------------------------------------------------------------
+    core::uint GameObject::GetChildIndex(const IGameObject * _child) const
+    {
+        uint childIndex = -1;
+        for (uint i = 0; i < m_children.size(); ++i)
+        {
+            if (m_children[i] == _child)
+            {
+                childIndex = i;
+                break;
+            }
+        }
+        VG_ASSERT(-1 != childIndex, "[GameObject] GameObject \"%s\" is not a child of GameObject \"%s\"", _child->getName().c_str(), getName().c_str());
+        return childIndex;
     }
 
     //--------------------------------------------------------------------------------------

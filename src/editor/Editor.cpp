@@ -307,7 +307,10 @@ namespace vg::editor
         for (uint i = 0; i < m_imGuiWindows.size(); ++i)
         {
             if (m_imGuiWindows[i]->isVisible())
+            {
+                VG_PROFILE_CPU(m_imGuiWindows[i]->getName().c_str());
                 m_imGuiWindows[i]->DrawGUI();
+            }
         }
 
         static bool demo = false;

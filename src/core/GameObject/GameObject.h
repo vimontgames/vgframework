@@ -28,11 +28,12 @@ namespace vg::core
 
         IComponent *                                        GetComponentByType      (const char * _className) const final override;
 
-        void                                                AddChild                (IGameObject * _gameObject) final override;
+        void                                                AddChild                (IGameObject * _gameObject, core::uint _index = -1) final override;
         bool                                                RemoveChild             (IGameObject * _gameObject) final override;
         const vector<IGameObject*> &                        GetChildren             () const final override;
         bool                                                IsRoot                  () const final override;
         bool                                                HasAncestor             (const IGameObject * _ancestor) const final override;
+        core::uint                                          GetChildIndex           (const IGameObject * _child) const final override;
 
         void                                                OnPropertyChanged       (core::IObject * _object, const core::IProperty & _prop, bool _notifyParent) override;
 

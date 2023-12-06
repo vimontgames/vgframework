@@ -18,13 +18,15 @@ namespace vg::editor
 
         ImGuiScene();
 
-        virtual void                    DrawGUI             () final override;
+        virtual void                    DrawGUI                 () final override;
 
     private:
-        void                            displayGameObject   (core::IGameObject * root, core::uint * _count = nullptr);
+        void                            displayGameObject       (core::IGameObject * root, core::uint * _count = nullptr);
 
     private:
         ImGuiSceneMenu                  m_sceneMenu;
         ImGuiGameObjectSceneEditorMenu  m_gameObjectMenu;
+        core::IGameObject *             m_dragAndDropNodeTarget = nullptr;
+        core::IGameObject *             m_dragAndDropInterlineTarget = nullptr;
     };
 }

@@ -29,7 +29,7 @@ namespace vg::editor
         // Build a list of GameObjects to be deleted
         vector<IGameObject *> gameObjectsToDelete;
         {
-            if (!gameObject->IsRoot() && ImGui::IsItemFocused())
+            if (!gameObject->IsRoot())
                 gameObjectsToDelete.push_back(gameObject);
 
             for (uint i = 0; i < selectedObjects.size(); ++i)
@@ -64,6 +64,7 @@ namespace vg::editor
 
         // Root GameObject cannot be deleted
         const bool canDelete = gameObjectsToDelete.size() > 0;
+        const bool canRename = selection->GetSelectedObjects().size() <= 1;
 
         if (m_RenamingGameObject == nullptr)
         {
@@ -71,14 +72,18 @@ namespace vg::editor
             {
                 if (ImGui::IsKeyPressed(ImGuiKey_Delete))
                     doDelete = true;
-                else if (ImGui::IsKeyPressed(ImGuiKey_R) && ImGui::IsKeyDown(ImGuiKey_LeftCtrl))
+                else if (canRename && ImGui::IsKeyPressed(ImGuiKey_R) && ImGui::IsKeyDown(ImGuiKey_LeftCtrl))
                     doRename = true;
             }
         }
 
         if (ImGui::BeginPopupContextItem())
         {
-            if (ImGui::MenuItem("Add Child GameObject"))
+            // if menu called on non-selected object then it becomes the selection
+            if (!selection->IsSelectedObject(_object))
+                selection->SetSelectedObject(_object);
+
+            if (ImGui::MenuItem("Add GameObject"))
             {
                 m_selected = MenuOption::AddChild;
                 m_popup = "Add GameObject";
@@ -86,8 +91,12 @@ namespace vg::editor
                 ImGui::OpenPopup("Add Child");
             }
 
-            if (ImGui::MenuItem("Rename", "Ctrl-R"))
-                doRename = true;
+            ImGui::BeginDisabled(!canRename);
+            {
+                if (ImGui::MenuItem("Rename", "Ctrl-R"))
+                    doRename = true;
+            }
+            ImGui::EndDisabled();
 
             ImGui::BeginDisabled(!canDelete);
             {
@@ -110,7 +119,6 @@ namespace vg::editor
                     if (nullptr != parentGameObject)
                     {
                         parentGameObject->RemoveChild(gameObjectToDelete);
-                        VG_SAFE_RELEASE(gameObjectToDelete);
                         status = Status::Removed;
                     }
                 }
