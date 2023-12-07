@@ -33,7 +33,7 @@ namespace vg::core
 
         registerPropertyEnumBitfield(Instance, Flags, m_flags, "Flags");
         registerPropertyEx(Instance, m_color, "Color", IProperty::Flags::Color);
-        registerProperty(Instance, m_world, "Matrix");
+        registerProperty(Instance, m_world, "World");
         registerPropertyObjectPtrVectorEx(Instance, m_models, "Models", IProperty::Flags::ReadOnly | IProperty::Flags::NotSaved);
 
         return true;
