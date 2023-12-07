@@ -45,6 +45,9 @@
     <ClCompile Include="DebugDraw\DebugDraw.cpp">
       <Filter>DebugDraw</Filter>
     </ClCompile>
+    <ClCompile Include="ImGuiThemesManager.cpp">
+      <Filter>Pass\ImGui</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Renderer.def" />
@@ -332,6 +335,9 @@
       <Filter>Pass\Compute\ComputeSkinning</Filter>
     </ClInclude>
     <ClInclude Include="IDisplayOptions.h" />
+    <ClInclude Include="ImGuiThemesManager.h">
+      <Filter>Pass\ImGui</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Pass">

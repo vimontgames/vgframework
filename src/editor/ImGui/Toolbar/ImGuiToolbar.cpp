@@ -80,7 +80,7 @@ namespace vg::editor
         }
 
         // 5. Dummy populate tab bar
-        ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, 3.0f);
+        //ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, 3.0f);
         ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(5.0f, 5.0f));
         //UndockWidget(icon_size, toolbar_axis);
         //for (int icon_n = 0; icon_n < 10; icon_n++)
@@ -109,7 +109,7 @@ namespace vg::editor
 
         DrawButtons();
 
-        ImGui::PopStyleVar(2);
+        ImGui::PopStyleVar(1);
 
         // 6. Context-menu to change axis
         if (node == NULL || !TOOLBAR_AUTO_DIRECTION_WHEN_DOCKED)

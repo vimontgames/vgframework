@@ -20,6 +20,12 @@ Another subject that is very close to my heart is that there is a strong separat
 
 # changelog
 
+## 0.17
+New add/remove component buttons and improved components popup windows
+Add support for themes
+
+![Screenshot](doc/img/0.17.png)
+
 ## 0.16
 JoltPhysics integration V0
 

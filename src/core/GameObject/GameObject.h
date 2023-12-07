@@ -21,10 +21,11 @@ namespace vg::core
 
         void                                                Update                  (double _dt);
 
-        void                                                AddComponent            (IComponent * _component) final override;
+        void                                                AddComponent            (IComponent * _component, core::uint _index = -1) final override;
         IComponent *                                        AddComponent            (const char * _className, const core::string & _name) final override;
         bool                                                RemoveComponent         (IComponent * _component) final override;
         const vector<IComponent *> &                        GetComponents           () const final override;
+        core::uint                                          GetComponentIndex       (const IComponent * _component) const;
 
         IComponent *                                        GetComponentByType      (const char * _className) const final override;
 
@@ -37,7 +38,7 @@ namespace vg::core
 
         void                                                OnPropertyChanged       (core::IObject * _object, const core::IProperty & _prop, bool _notifyParent) override;
 
-        void                                                addComponent            (Component * _component);
+        void                                                addComponent            (Component * _component, core::uint _index = -1);
         const vector<Component*> &                          getComponents           () const;
 
         void                                                addGraphicInstance      (renderer::IGraphicInstance * _graphicInstance);

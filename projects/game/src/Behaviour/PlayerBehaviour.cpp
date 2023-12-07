@@ -5,7 +5,7 @@
 using namespace vg::core;
 using namespace vg::engine;
 
-VG_REGISTER_COMPONENT_CLASS(PlayerBehaviour, "Player", "Game", "");
+VG_REGISTER_COMPONENT_CLASS(PlayerBehaviour, "Player", "Game", "Player Behaviour");
 
 //--------------------------------------------------------------------------------------
 PlayerBehaviour::PlayerBehaviour(const string & _name, IObject * _parent) :

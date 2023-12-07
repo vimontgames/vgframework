@@ -27,11 +27,12 @@ namespace vg::core
         virtual bool                                        HasAncestor             (const IGameObject * _ancestor) const = 0;
         virtual core::uint                                  GetChildIndex           (const IGameObject * _child) const = 0;
 
-        virtual void                                        AddComponent            (IComponent * _component) = 0;
+        virtual void                                        AddComponent            (IComponent * _component, core::uint _index = -1) = 0;
         virtual IComponent *                                AddComponent            (const char * _className, const core::string & _name) = 0;
         virtual bool                                        RemoveComponent         (IComponent * _component) = 0;
         virtual const vector<IComponent *> &                GetComponents           () const = 0;
         virtual IComponent *                                GetComponentByType      (const char * _className) const = 0;
+        virtual core::uint                                  GetComponentIndex       (const IComponent * _component) const = 0;
 
         template <class T> T *                              AddComponentByType      (const core::string & _name);
         template <class T> T *                              GetComponentByType      () const;

@@ -6,15 +6,6 @@ using namespace vg::core;
 
 namespace vg::editor
 {
-    struct CategoryInfo
-    {
-        string name;
-        bool show = true;
-        vector<IClassDesc *> classes;
-    };
-
-    core::vector<CategoryInfo> categories;
-
     //--------------------------------------------------------------------------------------
     ImGuiMenu::Status ImGuiGameObjectInspectorMenu::Display(IObject * _object)
     {
@@ -24,26 +15,38 @@ namespace vg::editor
         VG_ASSERT(nullptr != gameObject);
 
         bool openPopup = false;   
+        bool addComponent = false;
 
-        ImGui::PushID("ImGuiGameObjectInspectorMenu");
-
-        if (ImGui::BeginPopupContextWindow())
+        if (m_addComponent)
         {
-            if (ImGui::MenuItem("Add Component"))
-            {
-                m_selected = MenuOption::AddComponent;
-                m_popup = "Add Component";
-                openPopup = true;
-                ImGui::OpenPopup(m_popup);
-            }
-            ImGui::EndPopup();
+            addComponent = true;
+            m_addComponent = false;
         }
 
-        ImGui::PopID();
+        //ImGui::PushID("ImGuiGameObjectInspectorMenu");
+        //
+        //if (ImGui::BeginPopupContextWindow())
+        //{
+        //    if (ImGui::MenuItem("Add Component"))
+        //        addComponent = true;
+        //
+        //    ImGui::EndPopup();
+        //}
+        //
+        //ImGui::PopID();
+
+        if (addComponent)
+        {
+            m_selected = MenuOption::AddComponent;
+            m_popup = "Add Component";
+            m_popupIcon = style::icon::Plus;
+            openPopup = true;
+            ImGui::OpenPopup(m_popup);
+        }
 
         if (openPopup)
         {
-            ImGui::OpenPopup(m_popup);
+            ImGui::OpenPopup(fmt::sprintf("%s %s", style::icon::Plus, m_popup).c_str());
             openPopup = false;
         }
 
@@ -51,7 +54,7 @@ namespace vg::editor
         {
             case MenuOption::AddComponent:
             {
-                if (ImGui::BeginPopupModal(m_popup, nullptr, ImGuiWindowFlags_AlwaysAutoResize))
+                if (ImGui::BeginPopupModal(fmt::sprintf("%s %s", style::icon::Plus, m_popup).c_str(), nullptr, ImGuiWindowFlags_AlwaysAutoResize))
                 {
                     // List the available components
                     auto factory = Kernel::getFactory();
@@ -63,9 +66,9 @@ namespace vg::editor
                         const auto * classDesc = componentClassDescs[i];
                         const char * category = classDesc->GetCategory();
                         bool found = false;
-                        for (uint j = 0; j < categories.size(); ++j)
+                        for (uint j = 0; j < m_categories.size(); ++j)
                         {
-                            if (!strcmp(categories[j].name.c_str(),category))
+                            if (!strcmp(m_categories[j].name.c_str(),category))
                             {
                                 found = true;
                                 break;
@@ -73,13 +76,13 @@ namespace vg::editor
                         }
                         if (!found)
                         {
-                            auto & newCat = categories.push_empty();
+                            auto & newCat = m_categories.push_empty();
                             newCat.name = category;
                         }
                     }
 
                     // sort categories in alphabetical order
-                    sort(categories.begin(), categories.end(), [](CategoryInfo & a, CategoryInfo & b)
+                    sort(m_categories.begin(), m_categories.end(), [](CategoryInfo & a, CategoryInfo & b)
                         {
                             if (a.name.empty() == b.name.empty())
                                 return a.name < b.name;
@@ -91,9 +94,9 @@ namespace vg::editor
                     );
 
                     // add to each category
-                    for (uint i = 0; i < categories.size(); ++i)
+                    for (uint i = 0; i < m_categories.size(); ++i)
                     {
-                        CategoryInfo & cat = categories[i];
+                        CategoryInfo & cat = m_categories[i];
                         for (uint j = 0; j < componentClassDescs.size(); ++j)
                         {
                             auto * classDesc = componentClassDescs[j];
@@ -121,9 +124,9 @@ namespace vg::editor
                         );
                     }
 
-                    for (uint i = 0; i < categories.size(); ++i)
+                    for (uint i = 0; i < m_categories.size(); ++i)
                     {
-                        auto & cat = categories[i];
+                        auto & cat = m_categories[i];
                         if (i > 0)
                             ImGui::SameLine();
                         ImGui::Checkbox(cat.name.c_str(), &cat.show);
@@ -148,9 +151,9 @@ namespace vg::editor
                     //if (ImGui::BeginCombo("Component", m_selectedClass->GetClassDisplayName(), ImGuiComboFlags_HeightLarge))
                     if (ImGui::BeginListBox("###Component", ImVec2(512, 4+core::clamp((uint)componentClassDescs.size(), (uint)4, (uint)16) * ImGui::GetTextLineHeightWithSpacing())))
                     {
-                        for (uint i = 0; i < categories.size(); ++i)
+                        for (uint i = 0; i < m_categories.size(); ++i)
                         {
-                            auto & cat = categories[i];
+                            auto & cat = m_categories[i];
 
                             if (!cat.show)
                                 continue;

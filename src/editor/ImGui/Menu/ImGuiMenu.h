@@ -16,10 +16,12 @@ namespace vg::editor
             Removed
         };
 
+        virtual ~ImGuiMenu() = default;
         virtual Status  Display(core::IObject * _object) = 0;
 
     protected:
         core::uint      m_selected  = 0;
-        const char *    m_popup;
+        const char *    m_popup = nullptr;
+        const char *    m_popupIcon = nullptr;
     };
 }

@@ -289,7 +289,7 @@ namespace ImGui
     //--------------------------------------------------------------------------------------
     vg::core::string getObjectLabel(const vg::core::string & _label, const vg::core::IObject * _object)
     {
-        return vg::core::fmt::sprintf("%s###%p", _label.c_str(), (void *)_object);
+        return vg::core::fmt::sprintf("%s###%s%p", _label.c_str(), _label.c_str(), (void *)_object);
     }
 
     //--------------------------------------------------------------------------------------

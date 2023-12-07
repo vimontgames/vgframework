@@ -25,6 +25,7 @@ namespace vg::renderer
         registerPropertyEnumBitfield(DisplayOptions, RenderPassFlags, m_renderPassFlags, "Render Passes");
 
         registerPropertyEx(DisplayOptions, m_backgroundColor, "Background", IProperty::Flags::Color);
+        registerPropertyEnum(DisplayOptions, GUITheme, m_guiTheme, "Theme");
 
         registerPropertyEnum(DisplayOptions, gfx::VSync, m_VSync, "VSync");
 
@@ -45,6 +46,7 @@ namespace vg::renderer
         m_renderPassFlags(RenderPassFlags::ZPrepass | RenderPassFlags::Opaque | RenderPassFlags::Transparency | RenderPassFlags::PostProcess)
     {
         load(this);
+        ImGuiThemesManager::set(m_guiTheme);
     }
 
     //--------------------------------------------------------------------------------------
@@ -83,6 +85,10 @@ namespace vg::renderer
             const auto backgroundColor = m_backgroundColor;
             m_backgroundColor = (float4)0.0f;
             setBackgroundColor(backgroundColor);
+        }
+        else if (!strcmp(name, "m_guiTheme"))
+        {
+            ImGuiThemesManager::set(m_guiTheme);
         }
     }
 

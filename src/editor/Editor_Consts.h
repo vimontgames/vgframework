@@ -14,7 +14,7 @@ namespace vg::editor
 
         namespace button
         {
-            inline static const ImVec2 SizeSmall = ImVec2(24, 0);
+            inline static const ImVec2 SizeSmall = ImVec2(23, 23);
             inline static const ImVec2 SizeMedium = ImVec2(64, 0);
         }
 
@@ -22,6 +22,18 @@ namespace vg::editor
         {
             inline static const float PixelWidth = 128.0f;
             inline static const core::uint TextLength = 14;
+        }
+
+        namespace draganddrop
+        {
+            inline static const ImVec2 interlineSize = ImVec2(256.0f, 8.0f);
+
+            enum Type
+            {
+                BeforeNode,
+                Node,
+                AfterNode
+            };
         }
 
         // from https://fontawesome.com/v6/search?m=free
@@ -49,6 +61,8 @@ namespace vg::editor
             inline static const char * Maximize     = ICON_FA_MAXIMIZE;
             inline static const char * Input        = ICON_FA_GAMEPAD;
             inline static const char * File         = ICON_FA_FILE;
+            inline static const char * Plus         = ICON_FA_SQUARE_PLUS;
+            inline static const char * Minus        = ICON_FA_SQUARE_MINUS;
         }
     }
 }

@@ -14,19 +14,25 @@ namespace vg::editor
         VG_ASSERT(nullptr != component);
 
         bool openPopup = false;
+        bool deleteComponent = m_componentToDelete;
 
-        if (ImGui::BeginPopupContextItem())
+        //if (ImGui::BeginPopupContextItem())
+        //{
+        //    ImGui::PushID("ImGuiComponentInspectorMenu");
+        //    if (ImGui::MenuItem("Delete Component"))
+        //        deleteComponent = true;
+        //
+        //    ImGui::PopID();
+        //    ImGui::EndPopup();
+        //}
+
+        if (deleteComponent)
         {
-            ImGui::PushID("ImGuiComponentInspectorMenu");
-            if (ImGui::MenuItem("Remove Component"))
-            {
-                m_selected = MenuOption::RemoveComponent;
-                m_popup = "Remove Component";
-                openPopup = true;
-                ImGui::OpenPopup(m_popup);
-            }
-            ImGui::PopID();
-            ImGui::EndPopup();
+            m_selected = MenuOption::RemoveComponent;
+            m_popup = "Delete Component";
+            openPopup = true;
+            ImGui::OpenPopup(m_popup);
+            m_componentToDelete = nullptr;
         }
 
         if (openPopup)
@@ -53,7 +59,7 @@ namespace vg::editor
                             return true;
                         };
 
-                    string msg = "Are you sure you want to delete " + (string)component->getClassName() + " \"" + component->getName() + "\"?";
+                    string msg = fmt::sprintf("Are you sure you want to delete %s component from \"%s\"?", component->getClassName(), component->getParent()->getName());
                     ImGui::MessageBox(MessageBoxType::YesNo, "Delete Component", msg.c_str(), deleteComponent);
 
                     ImGui::EndPopup();

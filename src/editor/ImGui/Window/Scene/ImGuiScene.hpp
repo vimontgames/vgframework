@@ -11,25 +11,25 @@ namespace vg::editor
     {
     }
 
-    enum DragDropDest
-    {
-        Node = 0,
-        Interline
-    };
-
     //--------------------------------------------------------------------------------------
-    bool doDragDrop(IGameObject * _from, IGameObject * _to, DragDropDest _dest)
+    bool doDragDrop(IGameObject * _from, IGameObject * _to, style::draganddrop::Type _dest)
     {
+        if (_from == _to)
+        {
+            //VG_WARNING("[Scene] Cannot move GameObject onto himself");
+            return false;
+        }
+
         // Moved not cannot became a child of its own child
         if (_to->HasAncestor(_from))
         {
-            VG_WARNING("[Scene] Cannot move GameObject because it would become a child of its own children");
+            //VG_WARNING("[Scene] Cannot move GameObject because it would become a child of its own children");
             return false;
         }
 
         switch(_dest)
         {
-            case DragDropDest::Node:
+            case style::draganddrop::Type::Node:
             {
                 // '_to' is the new parent of '_from'
                 IGameObject * fromParent = dynamic_cast<IGameObject *>(_from->getParent());
@@ -44,7 +44,7 @@ namespace vg::editor
             }
             break;
 
-            case DragDropDest::Interline:
+            case style::draganddrop::Type::AfterNode:
             {
                 // '_from' is not the next following brother of '_to'
                 IGameObject * fromParent = dynamic_cast<IGameObject *>(_from->getParent());
@@ -195,8 +195,25 @@ namespace vg::editor
                                 uint count = 0;
                                 displayGameObject(root, &count);
 
+                                ImVec4 bgColor = ImGui::GetStyleColorVec4(ImGuiCol_WindowBg);
+                                float grey = (bgColor.x + bgColor.y + bgColor.z) / 3.0f;
+                                float d1, d2;
+                                if (grey < 0.5f)
+                                {
+                                    d1 = 0.1f;
+                                    d2 = 0.2f;
+                                }
+                                else
+                                {
+                                    d1 = -0.1f;
+                                    d2 = -0.2f;
+                                }
+                                
+                                ImVec4 evenColor = ImVec4(bgColor.x + d1, bgColor.y + d1, bgColor.z + d1, bgColor.w * 0.35f);
+                                ImVec4 oddColor = ImVec4(bgColor.x + d2, bgColor.y + d2, bgColor.z + d2, bgColor.w * 0.35f);
+
                                 // Draw background
-                                DrawRowsBackground(count, ImGui::GetColorU32(ImVec4(0.5f, 0.5f, 0.5f, 0.5f)), ImGui::GetColorU32(ImVec4(0.4f, 0.4f, 0.4f, 0.5f)));
+                                DrawRowsBackground(count, ImGui::GetColorU32(evenColor), ImGui::GetColorU32(oddColor));
 
                                 // Draw
                                 displayGameObject(root);
@@ -287,11 +304,9 @@ namespace vg::editor
                     IGameObject * from = *(IGameObject **)payload->Data;
                     IGameObject * to = _gameObject;
 
-                    //VG_INFO("Moving from \"%s\" to node \"%s\"", from->getName().c_str(), to->getName().c_str());
-
                     if (payload->Delivery)
                     {
-                        doDragDrop(from, to, DragDropDest::Node);
+                        doDragDrop(from, to, style::draganddrop::Type::Node);
                         m_dragAndDropNodeTarget = nullptr;
                     }
                     else
@@ -322,11 +337,7 @@ namespace vg::editor
 
             m_gameObjectMenu.Display(_gameObject);
 
-            ImGuiDragDropFlags src_flags = 0;
-            src_flags |= ImGuiDragDropFlags_AcceptNoDrawDefaultRect;     // Keep the source displayed as hovered
-            src_flags |= ImGuiDragDropFlags_SourceNoHoldToOpenOthers; // Because our dragging is local, we disable the feature of opening foreign treenodes/tabs while dragging
-
-            if (ImGui::BeginDragDropSource(src_flags))
+            if (ImGui::BeginDragDropSource(ImGuiDragDropFlags_AcceptNoDrawDefaultRect | ImGuiDragDropFlags_SourceNoHoldToOpenOthers))
             {
                 //VG_INFO("BeginDragDropSource");
             
@@ -336,15 +347,13 @@ namespace vg::editor
                 ImGui::EndDragDropSource();
             }
 
-            float interlineHeight = 8.0f;
-
             // Invisible selectable for interline
             {
                 ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(0, 0));
                 {
-                    ImGui::SetCursorPosY(ImGui::GetCursorPosY() - interlineHeight - 1);
+                    ImGui::SetCursorPosY(ImGui::GetCursorPosY() - style::draganddrop::interlineSize.y - 1);
                     string beforeGO = fmt::sprintf("###after %s", _gameObject->getName().c_str());
-                    ImGui::InvisibleButton(beforeGO.c_str(), ImVec2(256.0f, interlineHeight));
+                    ImGui::InvisibleButton(beforeGO.c_str(), style::draganddrop::interlineSize);
                 
                     // debug
                     //ImDrawList * draw_list = ImGui::GetWindowDrawList();
@@ -373,9 +382,9 @@ namespace vg::editor
             
                     ImDrawList * draw_list = ImGui::GetWindowDrawList();
                     float x0 = ImGui::GetCursorScreenPos().x;
-                    float y0 = ImGui::GetCursorScreenPos().y - interlineHeight/2;
+                    float y0 = ImGui::GetCursorScreenPos().y - style::draganddrop::interlineSize.y /2;
                     float x1 = x0 + 1024;
-                    float y1 = y0 + interlineHeight/2;
+                    float y1 = y0 + style::draganddrop::interlineSize.y/2;
                     
                     const auto interlineColor = ImGui::GetStyleColorVec4(ImGuiCol_SeparatorActive); 
                     u32 intColor = GetColorU32(interlineColor);
@@ -383,7 +392,7 @@ namespace vg::editor
 
                     if (payload->Delivery)
                     {
-                        doDragDrop(from, to, DragDropDest::Interline);
+                        doDragDrop(from, to, style::draganddrop::Type::AfterNode);
                         m_dragAndDropInterlineTarget = nullptr;
                     }
                     else

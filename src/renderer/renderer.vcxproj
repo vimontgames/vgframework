@@ -22,6 +22,7 @@
     <ClCompile Include="Animation\Animation.cpp" />
     <ClCompile Include="DebugDraw\DebugDraw.cpp" />
     <ClCompile Include="Geometry\Geometry.cpp" />
+    <ClCompile Include="ImGuiThemesManager.cpp" />
     <ClCompile Include="Importer\FBX\UFBXImporter\UFBXImporter.cpp" />
     <ClCompile Include="Importer\ImporterData.cpp" />
     <ClCompile Include="Instance\GraphicInstance.cpp" />
@@ -78,6 +79,7 @@
     <ClInclude Include="IAnimation.h" />
     <ClInclude Include="IMeshInstance.h" />
     <ClInclude Include="IMeshModel.h" />
+    <ClInclude Include="ImGuiThemesManager.h" />
     <ClInclude Include="Importer\AnimImporterData.h" />
     <ClInclude Include="Importer\AnimImporterData.hpp" />
     <ClInclude Include="Importer\FBX\FBXImporter.h" />

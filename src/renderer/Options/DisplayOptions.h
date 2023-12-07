@@ -1,6 +1,7 @@
 #pragma once
 
 #include "renderer/IDisplayOptions.h"
+#include "renderer/ImGuiThemesManager.h"
 #include "core/Singleton/Singleton.h"
 #include "gfx/Device/Device_consts.h"
 #include "Shaders/system/displayoptions.hlsli"
@@ -56,6 +57,8 @@ namespace vg::renderer
         void                    setBackgroundColor          (const core::float4 & _backgroundColor);
         core::float4		    getBackgroundColor		    () const { return m_backgroundColor; }
 
+        GUITheme                getGuiTheme                 () const { return m_guiTheme; }
+
         static bool			    load					    (IObject * _object);
         static bool			    save					    (IObject * _object);
 
@@ -70,7 +73,7 @@ namespace vg::renderer
         bool                    m_vsync                     = true;
         bool				    m_wireframe                 = false;
         bool                    m_colliders                 = false;
-       
+        GUITheme                m_guiTheme                  = GUITheme::Dark;
         DisplayMode	            m_debugDisplayMode;
         DisplayFlags            m_displayFlags;
         RenderPassFlags         m_renderPassFlags;

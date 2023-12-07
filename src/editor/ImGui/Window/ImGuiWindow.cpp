@@ -629,9 +629,95 @@ namespace vg::editor
                     {
                         if (!strcmp(displayName, "Components"))
                         {
+                            auto dragAndDropInterline = [=](IComponent * component, style::draganddrop::Type type)
+                            {
+                                ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(0, 0));
+                                {
+                                    ImGui::SetCursorPosY(ImGui::GetCursorPosY() - style::draganddrop::interlineSize.y - 1);
+
+                                    string label = fmt::sprintf("###%s %s", asString(type), component->getName().c_str());
+                                    ImGui::InvisibleButton(label.c_str(), style::draganddrop::interlineSize);
+
+                                    // debug
+                                    //{
+                                    //    u32 color;
+                                    //    if (type == style::draganddrop::Type::BeforeNode)
+                                    //        color = 0x7F0000FF;
+                                    //    else
+                                    //        color = 0x7F00FF00;
+                                    //
+                                    //    ImDrawList * draw_list = ImGui::GetWindowDrawList();
+                                    //    float x0 = ImGui::GetCursorScreenPos().x;
+                                    //    float y0 = ImGui::GetCursorScreenPos().y - 4 - 3;
+                                    //    float x1 = x0 + 1024;
+                                    //    float y1 = y0 + 4;
+                                    //    draw_list->AddRect(ImVec2(x0, y0), ImVec2(x1, y1), color);
+                                    //}
+                                }
+                                ImGui::PopStyleVar(1);
+                                ImGui::SetCursorPosY(ImGui::GetCursorPosY() - 3);
+
+                                if (ImGui::BeginDragDropTarget())
+                                {
+                                    ImGuiDragDropFlags target_flags = 0;
+                                    target_flags |= ImGuiDragDropFlags_AcceptBeforeDelivery;    // Don't wait until the delivery (release mouse button on a target) to do something
+                                    target_flags |= ImGuiDragDropFlags_AcceptNoDrawDefaultRect; // Don't display the yellow rectangle
+                                    if (const ImGuiPayload * payload = ImGui::AcceptDragDropPayload("Component", target_flags))
+                                    {
+                                        IComponent * from = *(IComponent **)payload->Data;
+                                        IComponent * to = component;
+
+                                        ImDrawList * draw_list = ImGui::GetWindowDrawList();
+                                        float x0 = ImGui::GetCursorScreenPos().x;
+                                        float y0 = ImGui::GetCursorScreenPos().y - style::draganddrop::interlineSize.y / 2;
+                                        float x1 = x0 + 1024;
+                                        float y1 = y0 + style::draganddrop::interlineSize.y / 2;
+
+                                        const auto interlineColor = ImGui::GetStyleColorVec4(ImGuiCol_SeparatorActive);
+                                        u32 intColor = GetColorU32(interlineColor);
+                                        draw_list->AddRectFilled(ImVec2(x0, y0), ImVec2(x1, y1), intColor);
+
+                                        if (payload->Delivery)
+                                        {
+                                            if (from != to)
+                                            {
+                                                VG_INFO("[Inspector] Drag and drop component \"%s\" %s component \"%s\"", from->getName().c_str(), asString(type).c_str(), to->getName().c_str());
+
+                                                IGameObject * toParent = dynamic_cast<IGameObject *>(to->getParent());
+                                                IGameObject * fromParent = dynamic_cast<IGameObject *>(from->getParent());
+                                                IGameObject * parent = nullptr;
+                                                if (fromParent == toParent)
+                                                    parent = fromParent;
+
+                                                if (parent)
+                                                {
+                                                    VG_SAFE_INCREASE_REFCOUNT(from);
+                                                    parent->RemoveComponent(from);
+                                                    uint index = parent->GetComponentIndex(to);
+
+                                                    if (style::draganddrop::Type::BeforeNode == type)
+                                                        parent->AddComponent(from, index);
+                                                    else if (style::draganddrop::Type::AfterNode == type)
+                                                        parent->AddComponent(from, index + 1);
+
+                                                    VG_SAFE_RELEASE(from);
+                                                }
+                                            }
+                                        }
+                                    }
+
+                                    ImGui::EndDragDropTarget();
+                                }
+                            };
+
+                            auto availableWidth = ImGui::GetContentRegionAvail().x;
+
                             for (uint i = 0; i < count; ++i)
                             {
                                 IComponent * pComponent = (IComponent *)(*vec)[i];
+
+                                if (i == 0)
+                                    dragAndDropInterline(pComponent, style::draganddrop::BeforeNode);
 
                                 string componentShortName = pComponent->getClassName();
 
@@ -648,10 +734,59 @@ namespace vg::editor
                                     if (-1 != nPos)
                                         componentShortName.erase(nPos);
                                 }
-                                const bool open = ImGui::CollapsingHeader(ImGui::getObjectLabel(componentShortName, pComponent).c_str(), nullptr, ImGuiTreeNodeFlags_None);
 
-                                ImGuiComponentInspectorMenu componentInspectorMenu;
+                                ImVec2 pos = ImGui::GetCursorPos();
+
+                                const ImVec2 p0 = ImGui::GetItemRectMin();
+                                const ImVec2 p1 = ImGui::GetItemRectMax();
+
+                                //ImGui::PushItemWidth(100);
+                                //ImGui::PushClipRect(ImVec2(0,0), ImVec2(2000,2000), false);
+                                //ImGui::PushClipRect(p0,p0 + ImVec2(availableWidth - style::button::SizeSmall.x+4, 32), false);
+                                const bool open = ImGui::CollapsingHeader(ImGui::getObjectLabel(componentShortName, pComponent).c_str(), nullptr, ImGuiTreeNodeFlags_AllowItemOverlap);
+                                //ImGui::PopClipRect();
+                                //const bool open = ImGui::TreeNodeEx(ImGui::getObjectLabel(componentShortName, pComponent).c_str(), ImGuiTreeNodeFlags_Framed);
+                                //ImGui::PopItemWidth();
+
+                                if (ImGui::BeginDragDropSource(ImGuiDragDropFlags_AcceptNoDrawDefaultRect | ImGuiDragDropFlags_SourceNoHoldToOpenOthers))
+                                {
+                                    ImGui::SetDragDropPayload("Component", &pComponent, sizeof(IComponent *));
+                                    ImGui::EndDragDropSource();
+                                }
+
+                                static ImGuiComponentInspectorMenu componentInspectorMenu;
                                 componentInspectorMenu.Display(pComponent);
+
+                                // "Remove Component" button
+                                {
+                                    ImGui::SameLine();
+
+                                    ImGui::PushStyleVar(ImGuiStyleVar_ButtonTextAlign, ImVec2(0.5f, 0.5f));
+                                    {
+                                        ImGui::SetCursorPos(ImVec2(availableWidth - style::button::SizeSmall.x + ImGui::GetStyle().WindowPadding.x + 4, pos.y));
+
+                                        auto collapsedButtonSize = style::button::SizeSmall;
+                                        if (ImGui::GetStyle().FramePadding.y == 3)
+                                            collapsedButtonSize.y -= 1;
+
+                                        //ImGui::PushClipRect(p0 +ImVec2(availableWidth - style::button::SizeSmall.x + 4, 0), p0 + ImVec2(availableWidth - style::button::SizeSmall.x + 64, 32), false);
+                                        ImGui::ButtonEx(ImGui::getObjectLabel(fmt::sprintf("%s", style::icon::Minus).c_str(), pComponent).c_str(), collapsedButtonSize, ImGuiItemFlags_AllowOverlap);
+                                        //ImGui::PopClipRect();
+
+                                        if (ImGui::IsItemHovered())
+                                        {
+                                            if (ImGui::IsMouseClicked(ImGuiMouseButton_Left))
+                                                componentInspectorMenu.removeComponent(pComponent);
+                                        }
+                                    }
+                                    ImGui::PopStyleVar(1);
+
+                                    if (ImGui::IsItemHovered())
+                                        ImGui::SetTooltip(fmt::sprintf("Remove %s component from \"%s\"", pComponent->getClassDesc()->GetClassDisplayName(), _object->getName()).c_str());
+                                }
+
+                                // Invisible selectable for interline
+                                dragAndDropInterline(pComponent, style::draganddrop::AfterNode);                        
 
                                 if (open)
                                     displayArrayObject(pComponent, i, nullptr);

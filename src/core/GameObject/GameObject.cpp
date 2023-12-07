@@ -101,9 +101,26 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
-    void GameObject::AddComponent(IComponent * _component)
+    void GameObject::AddComponent(IComponent * _component, core::uint _index)
     {
-        addComponent((Component*)_component);
+        addComponent((Component*)_component, _index);
+    }
+
+    //--------------------------------------------------------------------------------------
+    core::uint GameObject::GetComponentIndex(const IComponent * _component) const
+    {
+        uint componentIndex = -1;
+        for (uint i = 0; i < m_components.size(); ++i)
+        {
+            if (m_components[i] == _component)
+            {
+                componentIndex = i;
+                break;
+            }
+        }
+
+        VG_ASSERT(-1 != componentIndex, "[GameObject] Component \"%s\" does not belong to GameObject \"%s\"", _component->getName().c_str(), getName().c_str());
+        return componentIndex;
     }
 
     //--------------------------------------------------------------------------------------
@@ -125,11 +142,21 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
-    void GameObject::addComponent(Component * _component)
+    void GameObject::addComponent(Component * _component, core::uint _index)
     {
         VG_ASSERT(_component);
-        _component->addRef();
-        m_components.push_back(_component);
+        if (nullptr != _component)
+        {
+            VG_ASSERT(_index != -1 || m_components.end() == std::find(m_components.begin(), m_components.end(), _component));
+            VG_SAFE_INCREASE_REFCOUNT(_component);
+
+            if (-1 == _index || _index >= m_components.size())
+                m_components.push_back(_component);
+            else
+                m_components.insert(m_components.begin() + _index, _component);
+
+            _component->setParent(this);
+        }
     }
 
     //--------------------------------------------------------------------------------------
@@ -186,15 +213,19 @@ namespace vg::core
     //--------------------------------------------------------------------------------------
     void GameObject::AddChild(IGameObject * _gameObject, core::uint _index)
     {
-        VG_ASSERT(_index != -1 || m_children.end() == std::find(m_children.begin(), m_children.end(), _gameObject));
-        VG_SAFE_INCREASE_REFCOUNT(_gameObject);
+        VG_ASSERT(_gameObject);
+        if (nullptr != _gameObject)
+        {
+            VG_ASSERT(_index != -1 || m_children.end() == std::find(m_children.begin(), m_children.end(), _gameObject));
+            VG_SAFE_INCREASE_REFCOUNT(_gameObject);
 
-        if (-1 == _index || _index >= m_children.size())
-            m_children.push_back((GameObject *)_gameObject);
-        else
-            m_children.insert(m_children.begin() + _index, (GameObject*)_gameObject);
+            if (-1 == _index || _index >= m_children.size())
+                m_children.push_back((GameObject *)_gameObject);
+            else
+                m_children.insert(m_children.begin() + _index, (GameObject *)_gameObject);
 
-        _gameObject->setParent(this);
+            _gameObject->setParent(this);
+        }
     }
 
     //--------------------------------------------------------------------------------------

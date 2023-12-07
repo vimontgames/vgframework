@@ -14,5 +14,11 @@ namespace vg::editor
         };
 
         Status Display(core::IObject * _object);
+        void removeComponent(IComponent * _component)
+        {
+            m_componentToDelete = _component;
+        }
+
+        IComponent * m_componentToDelete = nullptr;
     };
 }

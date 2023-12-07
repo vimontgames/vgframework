@@ -7,6 +7,7 @@ namespace vg::editor
     class ImGuiObjectHandler : public ImGuiCustomHandler<core::string, ImGuiObjectHandler>
     {
     public:
+        virtual ~ImGuiObjectHandler() = default;
         static bool display(core::IObject * _object);
         virtual void displayObject(core::IObject * _object) = 0;
     };
