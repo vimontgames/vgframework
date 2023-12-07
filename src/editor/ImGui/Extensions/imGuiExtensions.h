@@ -4,6 +4,11 @@
 #include "core/Types/Types.h"
 #include "core/Core.h"
 
+namespace vg::core
+{
+    class IObject;
+}
+
 namespace ImGui
 {
     ImVec4 getDisabledButtonColor();
@@ -22,6 +27,8 @@ namespace ImGui
     bool ProcessMessageBox();
 
     void DrawRowsBackground(int row_count, ImU32 col_even, ImU32 col_odd = 0);
+
+    vg::core::string getObjectLabel(const vg::core::string & _label, const vg::core::IObject * _object);
 
     ImVec2 GetWindowContentRegionSize();
 }

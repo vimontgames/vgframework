@@ -69,7 +69,13 @@ namespace vg::core
 
         virtual const char *                GetClassName                () const = 0;
         virtual const char *                GetInterfaceName            () const = 0;
-        virtual const char *                GetClassDisplayName         () const = 0;
+        virtual const char *                GetClassDisplayName         () const = 0;    
+        virtual const char *                GetCategory                 () const = 0;
+        virtual const char *                GetDescription              () const = 0;
+
+        virtual void                        SetCategory                 (const char * _category) = 0;
+        virtual void                        SetDescription              (const char * _description) = 0;
+
         virtual uint                        GetPropertyCount            () const = 0;
         virtual const IProperty *           GetPropertyByIndex          (uint _index) const = 0;
         virtual IProperty *                 GetPropertyByName           (const char * _propertyName) const = 0;
@@ -81,5 +87,8 @@ namespace vg::core
         virtual IClassDesc::Flags           GetFlags                    () const = 0;
         virtual u32                         GetSizeOf                   () const = 0;
         virtual u32                         GetNextIndex                () const = 0;
+
+        
+ 
     }; 
 }

@@ -18,7 +18,7 @@ using namespace vg::renderer;
 
 namespace vg::engine
 {
-    VG_REGISTER_COMPONENT_CLASS(MeshComponent, "Mesh Component")
+    VG_REGISTER_COMPONENT_CLASS(MeshComponent, "Mesh", "Rendering", "3D model for rendering")
 
     //--------------------------------------------------------------------------------------
     bool MeshComponent::registerProperties(IClassDesc & _desc)

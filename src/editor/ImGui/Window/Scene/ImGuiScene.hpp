@@ -1,7 +1,6 @@
 #include "ImguiScene.h"
 #include "editor/ImGui/ImGui.h"
 #include "core/IGameObject.h"
-#include "core/string/string.h"
 #include "ImGui-Addons/FileBrowser/ImGuiFileBrowser.h"
 
 namespace vg::editor

@@ -16,6 +16,6 @@ namespace vg::editor
         Status Display(core::IObject * _object);
 
     private:
-        const char * m_selectedClassName = nullptr;
+        const core::IClassDesc * m_selectedClass = nullptr;
     };
 }

@@ -18,7 +18,7 @@ namespace vg::engine
     class CameraComponent : public core::Component
     {
     public:
-        VG_CLASS_DECL(CameraComponent, core::Component);        
+        VG_CLASS_DECL(CameraComponent, core::Component);
 
                                                 CameraComponent     (const core::string & _name, core::IObject * _parent);
                                                 ~CameraComponent    ();

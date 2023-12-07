@@ -648,7 +648,7 @@ namespace vg::editor
                                     if (-1 != nPos)
                                         componentShortName.erase(nPos);
                                 }
-                                const bool open = ImGui::CollapsingHeader(componentShortName.c_str(), nullptr, ImGuiTreeNodeFlags_None);
+                                const bool open = ImGui::CollapsingHeader(ImGui::getObjectLabel(componentShortName, pComponent).c_str(), nullptr, ImGuiTreeNodeFlags_None);
 
                                 ImGuiComponentInspectorMenu componentInspectorMenu;
                                 componentInspectorMenu.Display(pComponent);

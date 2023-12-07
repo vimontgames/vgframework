@@ -12,7 +12,7 @@ using namespace vg::core;
 
 namespace vg::engine
 {
-    VG_REGISTER_COMPONENT_CLASS(FreeCamBehaviour, "FreeCamBehaviour Component");
+    VG_REGISTER_COMPONENT_CLASS(FreeCamBehaviour, "FreeCam", "Rendering", "FPS camera controlled with keyboard and mouse");
 
     //--------------------------------------------------------------------------------------
     bool FreeCamBehaviour::registerProperties(IClassDesc& _desc)

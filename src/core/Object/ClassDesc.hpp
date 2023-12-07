@@ -202,6 +202,30 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
+    const char * ClassDesc::GetCategory() const
+    {
+        return category;
+    }
+
+    //--------------------------------------------------------------------------------------
+    void ClassDesc::SetCategory(const char * _category)
+    {
+        category = _category;
+    }
+
+    //--------------------------------------------------------------------------------------
+    void ClassDesc::SetDescription(const char * _description)
+    {
+        description = _description;
+    }
+
+    //--------------------------------------------------------------------------------------
+    const char * ClassDesc::GetDescription() const
+    {
+        return description;
+    }
+
+    //--------------------------------------------------------------------------------------
     uint ClassDesc::GetPropertyCount() const
     {
         return (uint)properties.size();

@@ -1,7 +1,6 @@
 #include "ImGuiGameObjectSceneEditorMenu.h"
 #include "core/IGameObject.h"
 #include "core/ISelection.h"
-#include "core/string/string.h"
 #include "core/IInput.h"
 #include "engine/IEngine.h"
 #include "editor/ImGui/Window/ImGuiWindow.h"

@@ -1,5 +1,4 @@
 #pragma once
-
 #include "core/File/File.h"
 #include "core/IResource.h"
 #include "engine/IResourceList.h"
@@ -29,7 +28,7 @@ namespace vg::editor
             }
 
             ImGui::PushID(_object);
-            string label = _label + (string)"s (" + to_string(resourceCount) + (string)")###" + to_string((uint_ptr)_object);
+            string label = ImGui::getObjectLabel(fmt::sprintf("%ss (%u)", _label.c_str(), resourceCount), _object);
 
             bool open = ImGui::TreeNodeEx(label.c_str(), ImGuiTreeNodeFlags_DefaultOpen);
             bool remove = false;

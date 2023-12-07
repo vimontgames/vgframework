@@ -17,7 +17,7 @@ using namespace vg::core;
 
 namespace vg::engine
 {
-    VG_REGISTER_COMPONENT_CLASS(CameraComponent, "Camera Component");
+    VG_REGISTER_COMPONENT_CLASS(CameraComponent, "Camera", "Rendering", "Setup camera settings for a View");
 
     //--------------------------------------------------------------------------------------
     bool CameraComponent::registerProperties(IClassDesc & _desc)

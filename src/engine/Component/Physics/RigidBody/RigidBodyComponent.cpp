@@ -11,7 +11,7 @@ using namespace vg::core;
 
 namespace vg::engine
 {
-    VG_REGISTER_COMPONENT_CLASS(RigidBodyComponent, "RigidBody Component");
+    VG_REGISTER_COMPONENT_CLASS(RigidBodyComponent, "RigidBody", "Physics", "Rigid body to interact with physics world");
 
     //--------------------------------------------------------------------------------------
     bool RigidBodyComponent::registerProperties(core::IClassDesc & _desc)
