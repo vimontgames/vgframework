@@ -20,7 +20,7 @@ namespace vg::editor
 
         namespace label
         {
-            inline static const float PixelWidth = 128.0f;
+            inline static const float PixelWidth = 96.0f;
             inline static const core::uint TextLength = 14;
         }
 
@@ -63,6 +63,9 @@ namespace vg::editor
             inline static const char * File         = ICON_FA_FILE;
             inline static const char * Plus         = ICON_FA_SQUARE_PLUS;
             inline static const char * Minus        = ICON_FA_SQUARE_MINUS;
+            inline static const char * Checked      = ICON_FA_SQUARE_CHECK;
+            inline static const char * Unchecked    = ICON_FA_SQUARE;
+            inline static const char * Trashcan     = ICON_FA_TRASH_CAN;
         }
     }
 }

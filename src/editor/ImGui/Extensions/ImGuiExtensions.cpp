@@ -1,8 +1,11 @@
 #include "editor/Precomp.h"
 #include "imguiExtensions.h"
 #include "core/Math/Math.h"
+#include "core/IObject.h"
+#include "imgui/imgui_internal.h"
 
 using namespace vg::core;
+using namespace vg::editor;
 
 namespace ImGui
 {
@@ -42,7 +45,7 @@ namespace ImGui
     }
 
     //--------------------------------------------------------------------------------------
-    bool ButtonInternal(const vg::core::string & _textLabel, const vg::core::string & _buttonLabel, bool _enabled = true, bool _clickable = true, const vg::core::string & _tooltip = {}, ImVec2 _buttonSize = ImVec2(0, 0))
+    bool ButtonInternal(const string & _textLabel, const string & _buttonLabel, bool _enabled = true, bool _clickable = true, const string & _tooltip = {}, ImVec2 _buttonSize = ImVec2(0, 0))
     {
         bool clicked = false;
 
@@ -94,7 +97,7 @@ namespace ImGui
     }
 
     //--------------------------------------------------------------------------------------
-    bool TextButton(const vg::core::string & _textLabel, const vg::core::string & _buttonLabel, bool _enabled, const vg::core::string & _tooltip)
+    bool TextButton(const string & _textLabel, const string & _buttonLabel, bool _enabled, const string & _tooltip)
     {
         return ButtonInternal(_textLabel, _buttonLabel, _enabled, _enabled, _tooltip);
     }
@@ -106,18 +109,18 @@ namespace ImGui
     {
         struct Button
         {
-            vg::core::string label;
+            string label;
             OnMsgBoxClickedFunc action;
         };
-        vg::core::vector<Button> m_items;
-        vg::core::string m_title;
-        vg::core::string m_message;
+        vector<Button> m_items;
+        string m_title;
+        string m_message;
         bool m_needOpen = false;
     };
     static ModalMsgBox g_ModalMsgBox;
 
     //--------------------------------------------------------------------------------------
-    template <vg::core::uint N> void CustomMessageBox(const vg::core::string & _title, const vg::core::string & _message, ModalMsgBox::Button(&_buttons)[N])
+    template <uint N> void CustomMessageBox(const string & _title, const string & _message, ModalMsgBox::Button(&_buttons)[N])
     {
         g_ModalMsgBox.m_title = _title;
         g_ModalMsgBox.m_message = _message;
@@ -129,7 +132,7 @@ namespace ImGui
     }
 
     //--------------------------------------------------------------------------------------
-    void CustomMessageBox(const vg::core::string & _title, const vg::core::string & _message, const vg::core::string & _label0, OnMsgBoxClickedFunc _onClick0)
+    void CustomMessageBox(const string & _title, const string & _message, const string & _label0, OnMsgBoxClickedFunc _onClick0)
     {
         ModalMsgBox::Button buttons[] =
         {
@@ -139,7 +142,7 @@ namespace ImGui
     }
 
     //--------------------------------------------------------------------------------------
-    void CustomMessageBox(const string & _title, const string & _message, const vg::core::string & _label0, OnMsgBoxClickedFunc _onClick0, const vg::core::string & _label1, OnMsgBoxClickedFunc _onClick1)
+    void CustomMessageBox(const string & _title, const string & _message, const string & _label0, OnMsgBoxClickedFunc _onClick0, const string & _label1, OnMsgBoxClickedFunc _onClick1)
     {
         ModalMsgBox::Button buttons[] =
         {
@@ -150,7 +153,7 @@ namespace ImGui
     }
 
     //--------------------------------------------------------------------------------------
-    void MessageBox(MessageBoxType _msgBoxType, const vg::core::string & _title, const vg::core::string & _message, OnMsgBoxClickedFunc _onClick0, OnMsgBoxClickedFunc _onClick1, OnMsgBoxClickedFunc _onClick2)
+    void MessageBox(MessageBoxType _msgBoxType, const string & _title, const string & _message, OnMsgBoxClickedFunc _onClick0, OnMsgBoxClickedFunc _onClick1, OnMsgBoxClickedFunc _onClick2)
     {
         switch (_msgBoxType)
         {
@@ -287,10 +290,16 @@ namespace ImGui
     }
 
     //--------------------------------------------------------------------------------------
-    vg::core::string getObjectLabel(const vg::core::string & _label, const vg::core::IObject * _object)
+    string getObjectLabel(const string & _label, const IObject * _object)
     {
-        return vg::core::fmt::sprintf("%s###%s%p", _label.c_str(), _label.c_str(), (void *)_object);
+        return fmt::sprintf("%s###%s_%p", _label.c_str(), _label.c_str(), (void *)_object);
     }
+
+    //--------------------------------------------------------------------------------------
+    string getObjectLabel(const string & _label, const string & _subLabel, const IObject * _object)
+    {
+        return fmt::sprintf("%s###%s_%s_%p", _label.c_str(), _subLabel.c_str(), _label.c_str(), (void *)_object);
+    }    
 
     //--------------------------------------------------------------------------------------
     ImVec2 GetWindowContentRegionSize()
@@ -301,5 +310,70 @@ namespace ImGui
         vMin.y += ImGui::GetWindowPos().y;
         vMax.x += ImGui::GetWindowPos().x;
         return ImVec2(vMax.x - vMin.x, vMax.y - vMin.y);
+    }
+
+    //--------------------------------------------------------------------------------------
+    void CollapsedHeaderLabel(const ImVec2 & _headerPos, const string & _label, bool _enabled)
+    {
+        ImGui::SameLine();
+        ImGui::SetCursorPos(ImVec2(ImGui::GetStyle().FramePadding.x * 2 + style::button::SizeSmall.x, _headerPos.y));
+        ImGui::BeginDisabled(!_enabled);
+        ImGui::Text(_label.c_str());
+        ImGui::EndDisabled();
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool ImGui::CollapsedHeaderCheckbox(const ImVec2 & _headerPos, bool _enabled, IObject * _object, const char * _iconTrue, const char * _iconFalse, const string & _tooltip)
+    {
+        ImGui::SameLine();
+
+        auto collapsedButtonSize = style::button::SizeSmall;
+        if (ImGui::GetStyle().FramePadding.y == 3)
+            collapsedButtonSize.y -= 1;
+
+        auto icon = _enabled ? style::icon::Checked : style::icon::Unchecked;
+
+        // begin of line
+        ImGui::SetCursorPos(ImVec2(ImGui::GetStyle().FramePadding.x, _headerPos.y));
+
+        ImGui::ButtonEx(ImGui::getObjectLabel(icon, "CheckBoxEnable", _object).c_str(), collapsedButtonSize, ImGuiItemFlags_AllowOverlap);
+
+        if (ImGui::IsItemHovered())
+        {
+            if (!_tooltip.empty())
+                ImGui::SetTooltip(_tooltip.c_str());
+
+            if (ImGui::IsMouseClicked(ImGuiMouseButton_Left))
+                return true;
+        }
+
+        return false;
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool CollapsedHeaderIconButton(const ImVec2 & _headerPos, float _availableWidth, IObject * _object, const char * _icon, const string & _tooltip)
+    {
+        auto collapsedButtonSize = style::button::SizeSmall;
+        if (ImGui::GetStyle().FramePadding.y == 3)
+            collapsedButtonSize.y -= 1;
+
+        ImGui::SameLine();
+
+        ImGui::SetCursorPos(ImVec2(_availableWidth - style::button::SizeSmall.x + ImGui::GetStyle().WindowPadding.x + 4, _headerPos.y));
+
+        ImGui::PushStyleVar(ImGuiStyleVar_ButtonTextAlign, ImVec2(0.5f, 0.5f));
+        ImGui::ButtonEx(ImGui::getObjectLabel(fmt::sprintf("%s", style::icon::Trashcan).c_str(), _object).c_str(), collapsedButtonSize, ImGuiItemFlags_AllowOverlap);
+        ImGui::PopStyleVar(1);
+
+        if (ImGui::IsItemHovered())
+        {
+            if (!_tooltip.empty())
+                ImGui::SetTooltip(_tooltip.c_str());
+
+            if (ImGui::IsMouseClicked(ImGuiMouseButton_Left))
+                return true;            
+        }
+
+        return false;
     }
 }

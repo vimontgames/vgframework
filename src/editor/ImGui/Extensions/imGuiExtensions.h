@@ -29,6 +29,11 @@ namespace ImGui
     void DrawRowsBackground(int row_count, ImU32 col_even, ImU32 col_odd = 0);
 
     vg::core::string getObjectLabel(const vg::core::string & _label, const vg::core::IObject * _object);
+    vg::core::string getObjectLabel(const vg::core::string & _label, const vg::core::string & _subLabel, const vg::core::IObject * _object);
 
     ImVec2 GetWindowContentRegionSize();
+
+    void CollapsedHeaderLabel(const ImVec2 & _headerPos, const vg::core::string & _label, bool _enabled);
+    bool CollapsedHeaderCheckbox(const ImVec2 & _headerPos, bool _enabled, vg::core::IObject * _object, const char * _iconTrue, const char * _iconFalse, const vg::core::string & _tooltip);
+    bool CollapsedHeaderIconButton(const ImVec2 & _headerPos, float _availableWidth, vg::core::IObject * _object, const char * _icon, const vg::core::string & _tooltip);
 }

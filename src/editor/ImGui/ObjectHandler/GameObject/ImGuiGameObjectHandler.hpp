@@ -28,9 +28,28 @@ namespace vg::editor
 
             ImGui::PushID("DisplayObject");
 
-            bool open = ImGui::CollapsingHeader("GameObject", nullptr, ImGuiTreeNodeFlags_DefaultOpen);
+            auto availableWidth = ImGui::GetContentRegionAvail().x;
+            ImVec2 collapsingHeaderPos = ImGui::GetCursorPos();
+
+            bool open = ImGui::CollapsingHeader(ImGui::getObjectLabel("", "GameObject", go).c_str(), ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_AllowItemOverlap);
 
             m_gameObjectInspectorMenu.Display(go);
+
+            bool isGameobjectEnabled = asBool(IInstance::Flags::Enabled & go->GetFlags());
+
+            ImGui::CollapsedHeaderLabel(collapsingHeaderPos, "GameObject", isGameobjectEnabled);
+
+            if (ImGui::CollapsedHeaderCheckbox(collapsingHeaderPos, isGameobjectEnabled, go, style::icon::Checked, style::icon::Unchecked, fmt::sprintf("%s GameObject %s", isGameobjectEnabled? "Disable" : "Enable", go->getName().c_str())))
+            {
+                go->SetFlags(IInstance::Flags::Enabled, !isGameobjectEnabled);
+                //changed = true;
+            }
+
+            //if (ImGui::CollapsedHeaderIconButton(collapsingHeaderPos, availableWidth, go, style::icon::Trashcan, fmt::sprintf("Remove GameObject \"%s\"", go->getName().c_str())))
+            //{
+            //    //componentInspectorMenu.removeComponent(pComponent);
+            //    //changed = true;
+            //}
 
             if (open)
             {

@@ -735,18 +735,9 @@ namespace vg::editor
                                         componentShortName.erase(nPos);
                                 }
 
-                                ImVec2 pos = ImGui::GetCursorPos();
+                                ImVec2 collapsingHeaderPos = ImGui::GetCursorPos();
 
-                                const ImVec2 p0 = ImGui::GetItemRectMin();
-                                const ImVec2 p1 = ImGui::GetItemRectMax();
-
-                                //ImGui::PushItemWidth(100);
-                                //ImGui::PushClipRect(ImVec2(0,0), ImVec2(2000,2000), false);
-                                //ImGui::PushClipRect(p0,p0 + ImVec2(availableWidth - style::button::SizeSmall.x+4, 32), false);
-                                const bool open = ImGui::CollapsingHeader(ImGui::getObjectLabel(componentShortName, pComponent).c_str(), nullptr, ImGuiTreeNodeFlags_AllowItemOverlap);
-                                //ImGui::PopClipRect();
-                                //const bool open = ImGui::TreeNodeEx(ImGui::getObjectLabel(componentShortName, pComponent).c_str(), ImGuiTreeNodeFlags_Framed);
-                                //ImGui::PopItemWidth();
+                                const bool open = ImGui::CollapsingHeader(ImGui::getObjectLabel("", componentShortName, pComponent).c_str(), nullptr, ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_AllowItemOverlap);
 
                                 if (ImGui::BeginDragDropSource(ImGuiDragDropFlags_AcceptNoDrawDefaultRect | ImGuiDragDropFlags_SourceNoHoldToOpenOthers))
                                 {
@@ -757,32 +748,24 @@ namespace vg::editor
                                 static ImGuiComponentInspectorMenu componentInspectorMenu;
                                 componentInspectorMenu.Display(pComponent);
 
-                                // "Remove Component" button
+                                IGameObject * parent = dynamic_cast<IGameObject *>(pComponent->getParent());
+                                bool isParentGameObjectEnabled = parent && asBool(IInstance::Flags::Enabled & parent->GetFlags());
+                                bool isComponentEnabled = asBool(IComponent::Flags::Enabled & pComponent->GetFlags());
+
+                                ImGui::BeginDisabled(!isParentGameObjectEnabled);
+                                CollapsedHeaderLabel(collapsingHeaderPos, componentShortName, isComponentEnabled);
+                                ImGui::EndDisabled();
+
+                                if (CollapsedHeaderCheckbox(collapsingHeaderPos, isComponentEnabled, pComponent,style::icon::Checked, style::icon::Unchecked, fmt::sprintf("%s %s component", isComponentEnabled ? "Disable" : "Enable", pComponent->getClassDesc()->GetClassDisplayName()).c_str()))
                                 {
-                                    ImGui::SameLine();
+                                    pComponent->SetFlags(IComponent::Flags::Enabled, !isComponentEnabled);
+                                    changed = true;
+                                }
 
-                                    ImGui::PushStyleVar(ImGuiStyleVar_ButtonTextAlign, ImVec2(0.5f, 0.5f));
-                                    {
-                                        ImGui::SetCursorPos(ImVec2(availableWidth - style::button::SizeSmall.x + ImGui::GetStyle().WindowPadding.x + 4, pos.y));
-
-                                        auto collapsedButtonSize = style::button::SizeSmall;
-                                        if (ImGui::GetStyle().FramePadding.y == 3)
-                                            collapsedButtonSize.y -= 1;
-
-                                        //ImGui::PushClipRect(p0 +ImVec2(availableWidth - style::button::SizeSmall.x + 4, 0), p0 + ImVec2(availableWidth - style::button::SizeSmall.x + 64, 32), false);
-                                        ImGui::ButtonEx(ImGui::getObjectLabel(fmt::sprintf("%s", style::icon::Minus).c_str(), pComponent).c_str(), collapsedButtonSize, ImGuiItemFlags_AllowOverlap);
-                                        //ImGui::PopClipRect();
-
-                                        if (ImGui::IsItemHovered())
-                                        {
-                                            if (ImGui::IsMouseClicked(ImGuiMouseButton_Left))
-                                                componentInspectorMenu.removeComponent(pComponent);
-                                        }
-                                    }
-                                    ImGui::PopStyleVar(1);
-
-                                    if (ImGui::IsItemHovered())
-                                        ImGui::SetTooltip(fmt::sprintf("Remove %s component from \"%s\"", pComponent->getClassDesc()->GetClassDisplayName(), _object->getName()).c_str());
+                                if (CollapsedHeaderIconButton(collapsingHeaderPos, availableWidth, pComponent, style::icon::Trashcan, fmt::sprintf("Remove %s component", pComponent->getClassDesc()->GetClassDisplayName())))
+                                {
+                                    componentInspectorMenu.removeComponent(pComponent);
+                                    changed = true;
                                 }
 
                                 // Invisible selectable for interline

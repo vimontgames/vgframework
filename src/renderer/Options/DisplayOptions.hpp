@@ -22,7 +22,7 @@ namespace vg::renderer
 
         registerPropertyEnum(DisplayOptions, DisplayMode, m_debugDisplayMode, "Mode");
         registerPropertyEnumBitfield(DisplayOptions, DisplayFlags, m_displayFlags, "Flags");
-        registerPropertyEnumBitfield(DisplayOptions, RenderPassFlags, m_renderPassFlags, "Render Passes");
+        registerPropertyEnumBitfield(DisplayOptions, RenderPassFlags, m_renderPassFlags, "RenderPass");
 
         registerPropertyEx(DisplayOptions, m_backgroundColor, "Background", IProperty::Flags::Color);
         registerPropertyEnum(DisplayOptions, GUITheme, m_guiTheme, "Theme");
