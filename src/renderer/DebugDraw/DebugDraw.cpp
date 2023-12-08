@@ -633,15 +633,17 @@ namespace vg::renderer
     //--------------------------------------------------------------------------------------
     void DebugDraw::AddCapsule(float _radius, float _height, core::u32 _color, const core::float4x4 _world)
     {
+        float offset = max(0.0f, _height - _radius * 2.0f);
+
         float4x4 topHemi = float4x4::identity();
-        topHemi[3].xyz = float3(0, 0, 0.5f * _height);
+        topHemi[3].xyz = float3(0, 0, 0.5f * offset);
         AddHemisphere(_radius, _color, mul(topHemi, _world));
 
-        AddCylinder(_radius, _height, _color, _world);
+        AddCylinder(_radius, offset, _color, _world);
 
         float4x4 bottomHemi = float4x4::identity();
         bottomHemi[2].xyz *= -1.0f;
-        bottomHemi[3].xyz = float3(0, 0, -0.5f * _height);
+        bottomHemi[3].xyz = float3(0, 0, -0.5f * offset);
         AddHemisphere(_radius, _color, mul(bottomHemi, _world));
     }
 

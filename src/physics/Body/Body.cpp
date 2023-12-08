@@ -31,12 +31,11 @@ namespace vg::physics
         VG_ASSERT(joltShape);
         
         // Get quaternion from matrix rotation part
-        float4x4 world = mul(_shape->GetTransform(), _world);
+        float4x4 world = _world;
         float4x4 rot = extractRotation(world);
         quaternion quat = getQuaternionFromRotationMatrix(rot);
         
         JPH::BodyCreationSettings bodySettings(joltShape, getJoltVec3(world[3].xyz), getJoltQuaternion(quat), getJoltMotionType(_bodyDesc->m_motion), getJoltObjectLayer(_bodyDesc->m_layer));
-        //JPH::MassProperties massProperties = bodySettings.GetMassProperties();
         
         if (_bodyDesc->m_overrideMass)
         {
@@ -47,7 +46,6 @@ namespace vg::physics
         m_bodyID = getBodyInterface().CreateAndAddBody(bodySettings, JPH::EActivation::DontActivate);
         
         //getBodyInterface().SetFriction()
-        
         //auto quality = bodyInterface.GetMotionQuality(bodyID);
         //bodyInterface.SetMotionQuality(bodyID, EMotionQuality::LinearCast);
     }
@@ -87,7 +85,7 @@ namespace vg::physics
     //--------------------------------------------------------------------------------------
     void Body::resetBody(const core::float4x4 & _world)
     {
-        float4x4 world = mul(m_shape->GetTransform(), _world);
+        float4x4 world = _world;
         float4x4 rot = extractRotation(_world);
         quaternion quat = getQuaternionFromRotationMatrix(rot);
         getBodyInterface().SetPositionRotationAndVelocity(m_bodyID, getJoltVec3(world[3].xyz), getJoltQuaternion(quat), getJoltVec3(float3(0, 0, 0)), getJoltVec3(float3(0, 0, 0)));
@@ -104,7 +102,6 @@ namespace vg::physics
 
         float4x4 world = float4x4(fromJoltQuaternion(rotation));
         world[3].xyz = fromJoltVec3(position);
-        world = mul(world, inverse(m_shape->GetTransform())); // TODO : store inverse transform?
         return world;
     }
 

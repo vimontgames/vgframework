@@ -16,6 +16,7 @@ namespace vg::physics
 {
     class SphereShapeDesc;
     class BoxShapeDesc;
+    class CapsuleShapeDesc;
 
     class Shape : public IShape
     {
@@ -63,4 +64,17 @@ namespace vg::physics
 
         core::float3 m_size = core::float3(0, 0, 0);
     };
+
+    class CapsuleShape : public Shape
+    {
+    public:
+        VG_CLASS_DECL_PASSTHROUGH(CapsuleShape, Shape);
+
+        CapsuleShape(const CapsuleShapeDesc & _desc);
+
+        void Draw(const core::float4x4 & _world) final override;
+
+        float m_radius = 0.0f;
+        float m_height = 0.0f;
+    };    
 }

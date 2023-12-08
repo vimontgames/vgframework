@@ -9,9 +9,7 @@ namespace vg::physics
     bool ShapeDesc::registerProperties(IClassDesc & _desc)
     {
         super::registerProperties(_desc);
-
         registerProperty(ShapeDesc, m_offset, "Offset");
-
         return true;
     }
 
@@ -32,6 +30,17 @@ namespace vg::physics
     {
         super::registerProperties(_desc);
         registerProperty(BoxShapeDesc, m_size, "Size");
+        return true;
+    }
+
+    //--------------------------------------------------------------------------------------
+    VG_REGISTER_OBJECT_CLASS(CapsuleShapeDesc, "Capsule Shape Settings");
+    //--------------------------------------------------------------------------------------
+    bool CapsuleShapeDesc::registerProperties(IClassDesc & _desc)
+    {
+        super::registerProperties(_desc);
+        registerProperty(CapsuleShapeDesc, m_radius, "Radius");
+        registerProperty(CapsuleShapeDesc, m_height, "Height");
         return true;
     }
 }

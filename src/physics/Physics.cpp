@@ -11,8 +11,6 @@
 #include <Jolt/Core/Factory.h>
 #include <Jolt/Physics/Body/BodyManager.h>
 #include <Jolt/Physics/Body/BodyCreationSettings.h>
-#include <Jolt/Physics/Collision/Shape/BoxShape.h>
-#include <Jolt/Physics/Collision/Shape/SphereShape.h>
 
 #include "engine/IEngine.h"
 #include "renderer/IRenderer.h"
@@ -277,6 +275,9 @@ namespace vg::physics
                     shape = new BoxShape(*(const BoxShapeDesc *)_shapeDesc);
                     break;
 
+                case ShapeType::Capsule:
+                    shape = new CapsuleShape(*(const CapsuleShapeDesc *)_shapeDesc);
+                    break;
             }
         }
         return shape;

@@ -49,7 +49,7 @@ namespace vg::physics
     {
         Sphere = 0,
         Box,
-        //Capsule,
+        Capsule,
         //TaperedCapsule,
         //Cylinder,
         //ConvexHull,
@@ -63,14 +63,4 @@ namespace vg::physics
         Rigid = 0,
         Soft
     };
-
-    //struct BodyDesc
-    //{
-    //    class IShape *  shape           = nullptr;
-    //    core::float4x4  world           = core::float4x4::identity();
-    //    MotionType      motion          = MotionType::Static;
-    //    ObjectLayer     layer           = ObjectLayer::NonMoving;
-    //    bool            activate        = false;
-    //    float           mass            = -1.0f;
-    //};
 }

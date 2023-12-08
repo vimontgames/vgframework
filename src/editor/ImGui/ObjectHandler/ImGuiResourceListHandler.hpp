@@ -30,7 +30,7 @@ namespace vg::editor
             ImGui::PushID(_object);
             string label = ImGui::getObjectLabel(fmt::sprintf("%ss (%u)", _label.c_str(), resourceCount), _object);
 
-            bool open = ImGui::TreeNodeEx(label.c_str(), ImGuiTreeNodeFlags_DefaultOpen);
+            bool open = ImGui::TreeNodeEx(label.c_str(), ImGuiTreeNodeFlags_None);
             bool remove = false;
 
             if (open)
@@ -54,7 +54,7 @@ namespace vg::editor
                                 itemLabel += (string)" (" + io::getFileName(itemName) + (string)")";
                             itemLabel += "###" + to_string((uint_ptr)obj);
 
-                            if (ImGui::TreeNodeEx(itemLabel.c_str(), ImGuiTreeNodeFlags_DefaultOpen))
+                            if (ImGui::TreeNodeEx(itemLabel.c_str(), ImGuiTreeNodeFlags_None))
                             {
                                 ImGuiWindow::displayResource(obj, prop, i);
                                 ImGui::TreePop();

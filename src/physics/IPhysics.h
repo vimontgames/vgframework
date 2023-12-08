@@ -9,6 +9,7 @@ namespace vg
     {
         class IShapeDesc;
         class IShape;
+
         class IBodyDesc;
         class IBody;
 

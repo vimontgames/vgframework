@@ -178,6 +178,10 @@ namespace vg::engine
             case physics::ShapeType::Box:
                 m_shapeDesc = (physics::IShapeDesc *)factory->createObject("BoxShapeDesc", "", this);
                 break;
+
+            case physics::ShapeType::Capsule:
+                m_shapeDesc = (physics::IShapeDesc *)factory->createObject("CapsuleShapeDesc", "", this);
+                break;
         }
 
         return nullptr != m_shapeDesc;

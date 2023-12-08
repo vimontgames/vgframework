@@ -35,4 +35,16 @@ namespace vg::physics
 
         core::float3 m_size = core::float3(1, 1, 1);
     };
+
+    class CapsuleShapeDesc final : public ShapeDesc
+    {
+    public:
+        VG_CLASS_DECL_PASSTHROUGH(CapsuleShapeDesc, ShapeDesc);
+        ShapeType GetShapeType() const final override { return ShapeType::Capsule; }
+
+        float m_radius = 1.0f;
+        float m_height = 1.0f;
+    };
+
+    
 }
