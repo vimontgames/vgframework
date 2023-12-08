@@ -26,7 +26,7 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    PickingID PickingManager::GetPickingID(IObject * _object)
+    PickingID PickingManager::CreatePickingID(IObject * _object)
     {
         PickingID id = -1;
 

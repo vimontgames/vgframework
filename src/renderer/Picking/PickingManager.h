@@ -10,7 +10,7 @@ namespace vg::renderer
         PickingManager();
         ~PickingManager();
 
-        PickingID           GetPickingID        (core::IObject * _object) final override;
+        PickingID           CreatePickingID     (core::IObject * _object) final override;
         void                ReleasePickingID    (PickingID _id) final override;
         
         void                Update              (const gfx::IView * _view, bool & _showTooltip, core::string & _tooltipMsg) final override;

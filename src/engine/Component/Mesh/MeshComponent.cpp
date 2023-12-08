@@ -47,7 +47,7 @@ namespace vg::engine
     MeshComponent::~MeshComponent()
     {
         auto * picking = Engine::get()->GetRenderer()->GetPicking();
-        PickingID id = picking->GetPickingID(this);
+        PickingID id = m_meshInstance->GetPickingID();
         picking->ReleasePickingID(id);
         getGameObject()->removeGraphicInstance(m_meshInstance);
         m_registered = false;
@@ -112,8 +112,13 @@ namespace vg::engine
             if (false == m_registered)
             {
                 auto * picking = Engine::get()->GetRenderer()->GetPicking();
-                PickingID id = picking->GetPickingID(this);
-                m_meshInstance->SetPickingID(id);
+                PickingID id = m_meshInstance->GetPickingID();
+                if (!id)
+                {
+                    id = picking->CreatePickingID(this);
+                    m_meshInstance->SetPickingID(id);
+                }
+                
                 getGameObject()->addGraphicInstance(m_meshInstance);
                 m_registered = true;
             }
