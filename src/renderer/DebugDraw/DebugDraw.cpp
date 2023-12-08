@@ -31,6 +31,7 @@ namespace vg::renderer
         createIcoSpherePrimitive();
         createGrid();
         createAxis();
+        createCylinderPrimitive();
     }
 
     //--------------------------------------------------------------------------------------
@@ -44,6 +45,8 @@ namespace vg::renderer
         VG_SAFE_RELEASE(m_gridVB);
         VG_SAFE_RELEASE(m_axisVB);
         VG_SAFE_RELEASE(m_icoSphere);
+        VG_SAFE_RELEASE(m_hemiSphere);
+        VG_SAFE_RELEASE(m_cylinder);
     }
 
     //--------------------------------------------------------------------------------------
@@ -77,6 +80,21 @@ namespace vg::renderer
         return it->second;
     }
 
+    using VertexList = std::vector<DebugDrawVertex>;
+    struct Triangle
+    {
+        Triangle(u16 _indice0 = -1, u16 _indice1 = -1, u16 _indice2 = -1)
+        {
+            indices[0] = _indice0;
+            indices[1] = _indice1;
+            indices[2] = _indice2;
+        }
+
+        u16 indices[3];
+    };
+
+    using TriangleList = std::vector<Triangle>;
+
     //--------------------------------------------------------------------------------------
     // Inspired by method used in https://schneide.blog/2016/07/15/generating-an-icosphere-in-c/
     //--------------------------------------------------------------------------------------
@@ -87,7 +105,6 @@ namespace vg::renderer
         const float Z = 0.850650808352039932f;
         const float N = 0.0f;
 
-        using VertexList = std::vector<DebugDrawVertex>;
         static VertexList vertices =
         {
             {-X,N,Z}, { X,N, Z}, {-X,N,-Z}, { X, N,-Z},
@@ -95,12 +112,6 @@ namespace vg::renderer
             { Z,X,N}, {-Z,X, N}, { Z,-X,N}, {-Z,-X, N}
         };
 
-        struct Triangle
-        {
-            u16 indices[3];
-        };
-
-        using TriangleList = std::vector<Triangle>;
         static TriangleList triangles =
         {
           {0,4,1},{0,9,4},{9,5,4},{4,5,8},{4,8,1},
@@ -131,7 +142,8 @@ namespace vg::renderer
         auto subdivide = [=](VertexList & _vertices, TriangleList _triangles)
         {
             Lookup lookup;
-            TriangleList result(_triangles.size()*4);
+            TriangleList result;
+            result.reserve(_triangles.size() * 4);
 
             for (auto && each : _triangles)
             {
@@ -148,22 +160,164 @@ namespace vg::renderer
             return result;
         };
         
-        for (int i = 0; i < 3; ++i)
+        for (int i = 0; i < 2; ++i)
             triangles = subdivide(vertices, triangles);
 
         auto * device = Device::get();
 
+        // Create full sphere
+        {
+            BufferDesc vbDesc(Usage::Default, BindFlags::ShaderResource, CPUAccessFlags::None, BufferFlags::None, sizeof(DebugDrawVertex), (uint)vertices.size());
+            Buffer * vb = device->createBuffer(vbDesc, "IcoSphereVB", vertices.data());
+
+            const uint indiceCount = (uint)triangles.size() * 3;
+            BufferDesc ibDesc(Usage::Default, BindFlags::IndexBuffer, CPUAccessFlags::None, BufferFlags::None, sizeof(u16), indiceCount);
+            Buffer * ib = device->createBuffer(ibDesc, "IcoSphereIB", triangles.data());
+
+            m_icoSphere = new MeshGeometry("IcoSphere", this);
+            m_icoSphere->setIndexBuffer(ib);
+            m_icoSphere->setVertexBuffer(vb);
+            m_icoSphere->addBatch(indiceCount);
+
+            VG_SAFE_RELEASE(ib);
+            VG_SAFE_RELEASE(vb);
+        }
+
+        // Create Hemisphere by discarding triangles z < 0 and clamping
+        {
+            VertexList hemiVertices;
+            TriangleList hemiTriangles;
+
+            auto pushVertex = [](VertexList & hemiVertices, DebugDrawVertex & _vertex)
+            {
+                if (_vertex.pos[2] < 0.0f)
+                {
+                    float3 pos = float3(_vertex.pos[0], _vertex.pos[1], _vertex.pos[2]);
+                    pos.z = 0.0f;
+                    pos = normalize(pos);
+                    _vertex.pos[0] = pos.x;
+                    _vertex.pos[1] = pos.y;
+                    _vertex.pos[2] = pos.z;
+                }
+
+                const uint count = (uint)hemiVertices.size();
+                for (uint j = 0; j < count; ++j)
+                {
+                    if (!memcmp(&hemiVertices[j], &_vertex, sizeof(DebugDrawVertex)))
+                        return j;
+                }
+
+                hemiVertices.push_back(_vertex);
+                return count;
+            };
+            
+            for (uint i = 0; i < triangles.size(); ++i)
+            {
+                auto & v0 = vertices[triangles[i].indices[0]];
+                auto & v1 = vertices[triangles[i].indices[1]];
+                auto & v2 = vertices[triangles[i].indices[2]];
+
+                if (v0.pos[2] >= 0.0f || v1.pos[2] >= 0.0f || v2.pos[2] >= 0.0f)
+                {
+                    Triangle tri;
+                    tri.indices[0] = pushVertex(hemiVertices, v0);
+                    tri.indices[1] = pushVertex(hemiVertices, v1);
+                    tri.indices[2] = pushVertex(hemiVertices, v2);
+
+                    hemiTriangles.push_back(tri);
+                }
+            }
+
+            BufferDesc vbDesc(Usage::Default, BindFlags::ShaderResource, CPUAccessFlags::None, BufferFlags::None, sizeof(DebugDrawVertex), (uint)hemiVertices.size());
+            Buffer * vb = device->createBuffer(vbDesc, "HemiSphereVB", hemiVertices.data());
+
+            const uint indiceCount = (uint)hemiTriangles.size() * 3;
+            BufferDesc ibDesc(Usage::Default, BindFlags::IndexBuffer, CPUAccessFlags::None, BufferFlags::None, sizeof(u16), indiceCount);
+            Buffer * ib = device->createBuffer(ibDesc, "HemiSphereIB", hemiTriangles.data());
+
+            m_hemiSphere = new MeshGeometry("HemiSphere", this);
+            m_hemiSphere->setIndexBuffer(ib);
+            m_hemiSphere->setVertexBuffer(vb);
+            m_hemiSphere->addBatch(indiceCount);
+
+            VG_SAFE_RELEASE(ib);
+            VG_SAFE_RELEASE(vb);
+        }
+    }
+
+    //--------------------------------------------------------------------------------------
+    void DebugDraw::createCylinderPrimitive()
+    {
+        VertexList vertices;
+        TriangleList triangles;
+
+        uint resolution = 16;
+        float radius = 1.0f;
+        float height = 1.0f;
+
+        vertices.reserve(resolution * 2);
+        triangles.reserve(resolution * 4);
+
+        auto pushVertex = [](VertexList & vertices, DebugDrawVertex & _vertex)
+        {
+            const uint count = (uint)vertices.size();
+            for (uint j = 0; j < count; ++j)
+            {
+                if (!memcmp(&vertices[j], &_vertex, sizeof(DebugDrawVertex)))
+                    return j;
+            }
+
+            vertices.push_back(_vertex);
+            return count;
+        };
+
+        // generate bottom vertices
+        u16 firstBot, firstTop;
+        u16 prevBot, prevTop;
+        for (size_t i = 0; i < resolution; i++) 
+        {
+            float ratio = (float)i / (float)resolution;
+            float r = ratio * (PI * 2.0f);
+            float x = cos(r) * radius;
+            float y = sin(r) * radius;
+
+            auto bottom = DebugDrawVertex(x, y, -height);
+            auto top = DebugDrawVertex(x, y, height);
+
+            u16 vbot = pushVertex(vertices, bottom);
+            u16 vtop = pushVertex(vertices, top);
+
+            if (i == 0)
+            {
+                firstBot = vbot;
+                firstTop = vtop;
+            }
+            else // if (i > 0)
+            {
+                triangles.push_back({ prevTop, vtop, prevBot });
+                triangles.push_back({ prevBot, vbot, vtop });
+            }
+
+            prevBot = vbot;
+            prevTop = vtop;
+        }
+
+        triangles.push_back({ firstTop, prevTop, firstBot });
+        triangles.push_back({ firstBot, prevBot, prevTop });
+
+        auto * device = Device::get();
+
         BufferDesc vbDesc(Usage::Default, BindFlags::ShaderResource, CPUAccessFlags::None, BufferFlags::None, sizeof(DebugDrawVertex), (uint)vertices.size());
-        Buffer * vb = device->createBuffer(vbDesc, "IcoSphereVB", vertices.data());
+        Buffer * vb = device->createBuffer(vbDesc, "CylinderVB", vertices.data());
 
         const uint indiceCount = (uint)triangles.size() * 3;
         BufferDesc ibDesc(Usage::Default, BindFlags::IndexBuffer, CPUAccessFlags::None, BufferFlags::None, sizeof(u16), indiceCount);
-        Buffer * ib = device->createBuffer(ibDesc, "IcoSphereIB", triangles.data());
+        Buffer * ib = device->createBuffer(ibDesc, "CylinderIB", triangles.data());
 
-        m_icoSphere = new MeshGeometry("IcoSphere", this);
-        m_icoSphere->setIndexBuffer(ib);
-        m_icoSphere->setVertexBuffer(vb);
-        m_icoSphere->addBatch(indiceCount);
+        m_cylinder = new MeshGeometry("Cylinder", this);
+        m_cylinder->setIndexBuffer(ib);
+        m_cylinder->setVertexBuffer(vb);
+        m_cylinder->addBatch(indiceCount);
 
         VG_SAFE_RELEASE(ib);
         VG_SAFE_RELEASE(vb);
@@ -425,12 +579,6 @@ namespace vg::renderer
     //--------------------------------------------------------------------------------------
     void DebugDraw::AddWireframeBox(const float3 & _minPos, const float3 & _maxPos, u32 _color, const float4x4 & _world)
     {
-        //DebugDrawBoxData & box = m_wireframeBoxes.push_empty();
-        //box.minPos = _minPos;
-        //box.maxPos = _maxPos;
-        //box.world = _world;
-        //box.color = _color;
-
         AddLine(float3(_minPos.x, _minPos.y, _minPos.z), float3(_maxPos.x, _minPos.y, _minPos.z), _color, _world);
         AddLine(float3(_maxPos.x, _minPos.y, _minPos.z), float3(_maxPos.x, _maxPos.y, _minPos.z), _color, _world);
         AddLine(float3(_maxPos.x, _maxPos.y, _minPos.z), float3(_minPos.x, _maxPos.y, _minPos.z), _color, _world);
@@ -451,9 +599,50 @@ namespace vg::renderer
     void DebugDraw::AddWireframeSphere(const float _radius, core::u32 _color, const core::float4x4 _world)
     {
         DebugDrawIcoSphereData & icoSphere = m_icoSpheres.push_empty();
-        icoSphere.world = _world;
-        icoSphere.radius = _radius;
+        icoSphere.world = mul(float4x4::scale(_radius), _world);
         icoSphere.color = _color;
+    }
+
+    //--------------------------------------------------------------------------------------
+    void DebugDraw::AddHemisphere(const float _radius, core::u32 _color, const core::float4x4 _world)
+    {
+        DebugDrawHemiSphereData & hemiSphere = m_hemiSpheres.push_empty();
+        hemiSphere.world = mul(float4x4::scale(_radius), _world);
+        hemiSphere.color = _color;
+    }
+
+    //--------------------------------------------------------------------------------------
+    void DebugDraw::AddCylinder(float _radius, float _height, core::u32 _color, const core::float4x4 _world)
+    {
+        DebugDrawCylinderData & cylinder = m_cylinders.push_empty();
+
+        float3 s = float3(_radius, _radius, _height * 0.5f);
+
+        const float4x4 scale = float4x4
+        (
+            s.x,   0,   0, 0,
+              0, s.y,   0, 0,
+              0,   0, s.z, 0,
+              0,   0,   0, 1 
+        );
+
+        cylinder.world = mul(scale, _world);
+        cylinder.color = _color;
+    }
+
+    //--------------------------------------------------------------------------------------
+    void DebugDraw::AddCapsule(float _radius, float _height, core::u32 _color, const core::float4x4 _world)
+    {
+        float4x4 topHemi = float4x4::identity();
+        topHemi[3].xyz = float3(0, 0, 0.5f * _height);
+        AddHemisphere(_radius, _color, mul(topHemi, _world));
+
+        AddCylinder(_radius, _height, _color, _world);
+
+        float4x4 bottomHemi = float4x4::identity();
+        bottomHemi[2].xyz *= -1.0f;
+        bottomHemi[3].xyz = float3(0, 0, -0.5f * _height);
+        AddHemisphere(_radius, _color, mul(bottomHemi, _world));
     }
 
     //--------------------------------------------------------------------------------------
@@ -462,6 +651,8 @@ namespace vg::renderer
         m_lines.clear();
         m_wireframeBoxes.clear();
         m_icoSpheres.clear();
+        m_hemiSpheres.clear();
+        m_cylinders.clear();
     }
 
     //--------------------------------------------------------------------------------------
@@ -469,6 +660,9 @@ namespace vg::renderer
     {
         clearDrawData();
     }
+
+    const float4 opaqueColor = float4(1, 1, 1, 0.125f);
+    const float4 transparentColor = float4(1, 1, 1, 0.125f);
 
     //--------------------------------------------------------------------------------------
     void DebugDraw::update(const View * _view, gfx::CommandList * _cmdList)
@@ -544,8 +738,6 @@ namespace vg::renderer
 
         drawData.m_linesVBOffset = (u32)lineStartOffset;
         drawData.m_linesToDraw = lineCount;
-
-        //m_lines.clear();
     }
 
     //--------------------------------------------------------------------------------------
@@ -555,13 +747,10 @@ namespace vg::renderer
 
         const DrawData & drawData = getDrawData(_view);
 
-        const float4 opaqueColor = float4(1, 1, 1, 0.125f);
-        const float4 transparentColor = float4(1, 1, 1, 0.125f);
-
         // draw lines
         if (drawData.m_linesToDraw > 0)
         {
-            VG_PROFILE_GPU("DebugDrawLines");
+            VG_PROFILE_GPU("Lines");
 
             RasterizerState rs(FillMode::Wireframe, CullMode::None);
 
@@ -613,62 +802,81 @@ namespace vg::renderer
 
         // draw spheres
         {
-            VG_PROFILE_GPU("DebugDrawSpheres");
+            VG_PROFILE_CPU("Spheres");
+            drawDebugModelInstances(_cmdList, m_icoSphere, m_icoSpheres);
+        }
 
-            // Root sig
-            _cmdList->setGraphicRootSignature(m_debugDrawSignatureHandle);
+        // draw hemispheres
+        {
+            VG_PROFILE_CPU("HemiSpheres");
+            drawDebugModelInstances(_cmdList, m_hemiSphere, m_hemiSpheres);
+        }
 
-            RasterizerState rs(FillMode::Wireframe, CullMode::None);
-            _cmdList->setRasterizerState(rs);
-            _cmdList->setShader(m_debugDrawShaderKey);
-            _cmdList->setPrimitiveTopology(PrimitiveTopology::TriangleList);
-            _cmdList->setIndexBuffer(m_icoSphere->getIndexBuffer());
+        // draw cylinders
+        {
+            VG_PROFILE_CPU("Cylinders");
+            drawDebugModelInstances(_cmdList, m_cylinder, m_cylinders);
+        }
+    }
 
-            const uint indexCount = m_icoSphere->getIndexBuffer()->getBufDesc().getElementCount();
+    //--------------------------------------------------------------------------------------
+    void DebugDraw::drawDebugModelInstances(gfx::CommandList * _cmdList, const MeshGeometry * _geometry, const core::vector<DebugDrawInstanceData> & _instances)
+    {
+        VG_PROFILE_GPU("DebugDrawSpheres");
 
-            // Root constants
-            DebugDrawRootConstants3D root3D;
-            root3D.setBufferHandle(m_icoSphere->getVertexBuffer()->getBufferHandle());
-            root3D.setBufferOffset(0);
-            root3D.setVertexFormat(VertexFormat::DebugDraw);
+        // Root sig
+        _cmdList->setGraphicRootSignature(m_debugDrawSignatureHandle);
 
-            // Transparent
+        RasterizerState rs(FillMode::Wireframe, CullMode::None);
+        _cmdList->setRasterizerState(rs);
+        _cmdList->setShader(m_debugDrawShaderKey);
+        _cmdList->setPrimitiveTopology(PrimitiveTopology::TriangleList);
+        _cmdList->setIndexBuffer(_geometry->getIndexBuffer());
+
+        const uint indexCount = _geometry->getIndexBuffer()->getBufDesc().getElementCount();
+
+        // Root constants
+        DebugDrawRootConstants3D root3D;
+        root3D.setBufferHandle(_geometry->getVertexBuffer()->getBufferHandle());
+        root3D.setBufferOffset(0);
+        root3D.setVertexFormat(VertexFormat::DebugDraw);
+
+        // Transparent
+        {
+            BlendState bsAlpha(BlendFactor::SrcAlpha, BlendFactor::OneMinusSrcAlpha, BlendOp::Add);
+            _cmdList->setBlendState(bsAlpha);
+            DepthStencilState dsAlpha(false, false, ComparisonFunc::Always);
+            _cmdList->setDepthStencilState(dsAlpha);
+
+            for (uint i = 0; i < _instances.size(); ++i)
             {
-                BlendState bsAlpha(BlendFactor::SrcAlpha, BlendFactor::OneMinusSrcAlpha, BlendOp::Add);
-                _cmdList->setBlendState(bsAlpha);
-                DepthStencilState dsAlpha(false, false, ComparisonFunc::Always);
-                _cmdList->setDepthStencilState(dsAlpha);
+                const DebugDrawIcoSphereData & sphere = _instances[i];
+                float4 color = unpackRGBA8(sphere.color) * transparentColor;
 
-                for (uint i = 0; i < m_icoSpheres.size(); ++i)
-                {
-                    const DebugDrawIcoSphereData & sphere = m_icoSpheres[i];
-                    float4 color = unpackRGBA8(sphere.color) * transparentColor;
-
-                    root3D.setWorldMatrix(transpose(mul(float4x4::scale(sphere.radius), sphere.world)));
-                    root3D.setColor(color);
-                    _cmdList->setGraphicRootConstants(0, (u32 *)&root3D, DebugDrawRootConstants3DCount);
-                    _cmdList->drawIndexed(indexCount);
-                }
+                root3D.setWorldMatrix(transpose(sphere.world));
+                root3D.setColor(color);
+                _cmdList->setGraphicRootConstants(0, (u32 *)&root3D, DebugDrawRootConstants3DCount);
+                _cmdList->drawIndexed(indexCount);
             }
+        }
 
-            // Opaque
+        // Opaque
+        {
+            BlendState bsOpaque(BlendFactor::One, BlendFactor::Zero, BlendOp::Add);
+            _cmdList->setBlendState(bsOpaque);
+
+            DepthStencilState dsOpaque(true, true, ComparisonFunc::LessEqual);
+            _cmdList->setDepthStencilState(dsOpaque);
+
+            for (uint i = 0; i < _instances.size(); ++i)
             {
-                BlendState bsOpaque(BlendFactor::One, BlendFactor::Zero, BlendOp::Add);
-                _cmdList->setBlendState(bsOpaque);
+                const DebugDrawIcoSphereData & sphere = _instances[i];
+                float4 color = unpackRGBA8(sphere.color) * opaqueColor;
 
-                DepthStencilState dsOpaque(true, true, ComparisonFunc::LessEqual);
-                _cmdList->setDepthStencilState(dsOpaque);
-
-                for (uint i = 0; i < m_icoSpheres.size(); ++i)
-                {
-                    const DebugDrawIcoSphereData & sphere = m_icoSpheres[i];
-                    float4 color = unpackRGBA8(sphere.color) * opaqueColor;
-
-                    root3D.setWorldMatrix(transpose(mul(float4x4::scale(sphere.radius), sphere.world)));
-                    root3D.setColor(color);
-                    _cmdList->setGraphicRootConstants(0, (u32 *)&root3D, DebugDrawRootConstants3DCount);
-                    _cmdList->drawIndexed(indexCount);
-                }
+                root3D.setWorldMatrix(transpose(sphere.world));
+                root3D.setColor(color);
+                _cmdList->setGraphicRootConstants(0, (u32 *)&root3D, DebugDrawRootConstants3DCount);
+                _cmdList->drawIndexed(indexCount);
             }
         }
     }

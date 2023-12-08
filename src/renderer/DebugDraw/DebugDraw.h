@@ -31,7 +31,10 @@ namespace vg::renderer
 
         void        AddLine                 (const core::float3 & _beginPos, const core::float3 & _endPos, core::u32 _color, const core::float4x4 & _world = core::float4x4::identity()) final override;
         void        AddWireframeBox         (const core::float3 & _minPos, const core::float3 & _maxPos, core::u32 _color, const core::float4x4 & _world = core::float4x4::identity()) final override;
-        void        AddWireframeSphere      (const float _radius, core::u32 _color, const core::float4x4 _world = core::float4x4::identity()) final override;
+        void        AddWireframeSphere      (float _radius, core::u32 _color, const core::float4x4 _world = core::float4x4::identity()) final override;
+        void        AddHemisphere           (float _radius, core::u32 _color, const core::float4x4 _world = core::float4x4::identity()) final override;
+        void        AddCylinder             (float _radius, float _height, core::u32 _color, const core::float4x4 _world = core::float4x4::identity()) final override;
+        void        AddCapsule              (float _radius, float _height, core::u32 _color, const core::float4x4 _world = core::float4x4::identity()) final override;
 
         void        endFrame                ();
         void        reset                   ();
@@ -48,17 +51,28 @@ namespace vg::renderer
         void        createGrid              ();
         void        createAxis              ();
         void        createIcoSpherePrimitive(); 
+        void        createCylinderPrimitive ();
 
         DrawData &  getDrawData             (const View * _view);
         void        clearDrawData           ();
 
+        struct DebugDrawInstanceData
+        {
+            core::float4x4 world;
+            core::u32 color;
+        };
+
+        void        drawDebugModelInstances (gfx::CommandList * _cmdList, const MeshGeometry * _geometry, const core::vector<DebugDrawInstanceData> & _instances);
+
     private:
         gfx::RootSignatureHandle        m_debugDrawSignatureHandle;
         gfx::ShaderKey                  m_debugDrawShaderKey;
-        MeshGeometry *                  m_box = nullptr;
-        gfx::Buffer *                   m_gridVB = nullptr;
-        gfx::Buffer *                   m_axisVB = nullptr;
+        MeshGeometry *                  m_box       = nullptr;
+        gfx::Buffer *                   m_gridVB    = nullptr;
+        gfx::Buffer *                   m_axisVB    = nullptr;
         MeshGeometry *                  m_icoSphere = nullptr;
+        MeshGeometry *                  m_hemiSphere= nullptr;
+        MeshGeometry *                  m_cylinder  = nullptr;
 
         struct DebugDrawLineData
         {
@@ -79,13 +93,14 @@ namespace vg::renderer
         };
         core::vector<DebugDrawBoxData>  m_wireframeBoxes;
 
-        struct DebugDrawIcoSphereData
-        {
-            core::float4x4 world;
-            float radius;
-            core::u32 color;
-        };
+        using DebugDrawIcoSphereData = DebugDrawInstanceData;
         core::vector<DebugDrawIcoSphereData>  m_icoSpheres;
+
+        using DebugDrawHemiSphereData = DebugDrawInstanceData;
+        core::vector<DebugDrawHemiSphereData>  m_hemiSpheres;
+
+        using DebugDrawCylinderData = DebugDrawInstanceData;
+        core::vector<DebugDrawCylinderData>  m_cylinders;
 
         struct DrawData
         {
