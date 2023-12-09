@@ -7,7 +7,5 @@ namespace vg::renderer
     {
     public:
         VG_CLASS_DECL_ABSTRACT(IDisplayOptions, core::Object);
-
-        virtual bool IsCollidersEnabled() const = 0;
     };
 }

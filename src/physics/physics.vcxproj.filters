@@ -60,12 +60,6 @@
     <ClInclude Include="Shape\Shape.h">
       <Filter>Shape</Filter>
     </ClInclude>
-    <ClInclude Include="Shape\ShapeDesc.h">
-      <Filter>Shape</Filter>
-    </ClInclude>
-    <ClInclude Include="Shape\ShapeDesc.hpp">
-      <Filter>Shape</Filter>
-    </ClInclude>
     <ClInclude Include="Body\Body.h">
       <Filter>Body</Filter>
     </ClInclude>
@@ -79,6 +73,24 @@
     <ClInclude Include="IPhysicsOptions.h" />
     <ClInclude Include="Options\PhysicsOptions.h">
       <Filter>Options</Filter>
+    </ClInclude>
+    <ClInclude Include="Shape\SphereShape.h">
+      <Filter>Shape</Filter>
+    </ClInclude>
+    <ClInclude Include="Shape\SphereShape.hpp">
+      <Filter>Shape</Filter>
+    </ClInclude>
+    <ClInclude Include="Shape\BoxShape.h">
+      <Filter>Shape</Filter>
+    </ClInclude>
+    <ClInclude Include="Shape\BoxShape.hpp">
+      <Filter>Shape</Filter>
+    </ClInclude>
+    <ClInclude Include="Shape\CapsuleShape.h">
+      <Filter>Shape</Filter>
+    </ClInclude>
+    <ClInclude Include="Shape\CapsuleShape.hpp">
+      <Filter>Shape</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

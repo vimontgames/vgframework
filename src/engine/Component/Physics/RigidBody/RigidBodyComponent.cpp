@@ -2,7 +2,7 @@
 #include "RigidBodyComponent.h"
 #include "core/IGameObject.h"
 #include "engine/Engine.h"
-#include "renderer/IDisplayOptions.h"
+#include "physics/IPhysicsOptions.h"
 #include "physics/IShape.h"
 #include "physics/IPhysics.h"
 #include "physics/IBody.h"
@@ -71,7 +71,7 @@ namespace vg::engine
             }
         }
         
-        if (engine->getDisplayOptions()->IsCollidersEnabled())
+        if (engine->getPhysicsOptions()->IsRigidBodyVisible(m_shape->GetShapeType()))
         {
             if (m_shape)
                 m_shape->Draw(go->getWorldMatrix());

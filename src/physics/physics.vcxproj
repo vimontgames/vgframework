@@ -48,9 +48,13 @@
     <ClInclude Include="Physics.h" />
     <ClInclude Include="Physics_Consts.h" />
     <ClInclude Include="Precomp.h" />
+    <ClInclude Include="Shape\BoxShape.h" />
+    <ClInclude Include="Shape\BoxShape.hpp" />
+    <ClInclude Include="Shape\CapsuleShape.h" />
+    <ClInclude Include="Shape\CapsuleShape.hpp" />
     <ClInclude Include="Shape\Shape.h" />
-    <ClInclude Include="Shape\ShapeDesc.h" />
-    <ClInclude Include="Shape\ShapeDesc.hpp" />
+    <ClInclude Include="Shape\SphereShape.h" />
+    <ClInclude Include="Shape\SphereShape.hpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>

@@ -28,8 +28,8 @@ namespace ImGui
 
     void DrawRowsBackground(int row_count, ImU32 col_even, ImU32 col_odd = 0);
 
-    vg::core::string getObjectLabel(const vg::core::string & _label, const vg::core::IObject * _object);
-    vg::core::string getObjectLabel(const vg::core::string & _label, const vg::core::string & _subLabel, const vg::core::IObject * _object);
+    vg::core::string getObjectLabel(const vg::core::string & _label, const void * _object);
+    vg::core::string getObjectLabel(const vg::core::string & _label, const vg::core::string & _subLabel, const void * _object);
 
     ImVec2 GetWindowContentRegionSize();
 

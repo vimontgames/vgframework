@@ -14,9 +14,19 @@ namespace vg::renderer
 
 namespace vg::physics
 {
-    class SphereShapeDesc;
-    class BoxShapeDesc;
-    class CapsuleShapeDesc;
+    class ShapeDesc : public IShapeDesc
+    {
+    public:
+        VG_CLASS_DECL_PASSTHROUGH(ShapeDesc, IShapeDesc);
+
+        virtual ShapeType GetShapeType() const = 0;
+
+    protected:
+        renderer::IDebugDraw * getDebugDraw() const;
+
+    public:
+        core::float3 m_offset = core::float3(0, 0, 0);
+    };
 
     class Shape : public IShape
     {
@@ -39,42 +49,5 @@ namespace vg::physics
     protected:
         core::float4x4 m_transform = core::float4x4::identity();
         JPH::Shape * m_shape = nullptr;
-    };
-
-    class SphereShape : public Shape
-    {
-    public:
-        VG_CLASS_DECL_PASSTHROUGH(SphereShape, Shape);
-
-        SphereShape(const SphereShapeDesc & _desc);
-
-        void Draw(const core::float4x4 & _world) final override;
-
-        float m_radius = 0.0f;
-    };
-
-    class BoxShape : public Shape
-    {
-    public:
-        VG_CLASS_DECL_PASSTHROUGH(BoxShape, Shape);
-
-        BoxShape(const BoxShapeDesc & _desc);
-
-        void Draw(const core::float4x4 & _world) final override;
-
-        core::float3 m_size = core::float3(0, 0, 0);
-    };
-
-    class CapsuleShape : public Shape
-    {
-    public:
-        VG_CLASS_DECL_PASSTHROUGH(CapsuleShape, Shape);
-
-        CapsuleShape(const CapsuleShapeDesc & _desc);
-
-        void Draw(const core::float4x4 & _world) final override;
-
-        float m_radius = 0.0f;
-        float m_height = 0.0f;
-    };    
+    };   
 }

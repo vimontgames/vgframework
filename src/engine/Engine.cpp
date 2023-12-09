@@ -330,6 +330,12 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
+    physics::IPhysicsOptions * Engine::getPhysicsOptions() const
+    {
+        return m_physics->GetPhysicsOptions();
+    }
+
+    //--------------------------------------------------------------------------------------
     void Engine::createEditorScene()
     {
         // use factor to create objects

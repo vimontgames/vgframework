@@ -15,14 +15,13 @@ namespace vg::renderer
         super::registerProperties(_desc);
 
         registerProperty(DisplayOptions, m_toolMode, "Toolmode");
-        registerPropertyEx(DisplayOptions, m_wireframe, "Wireframe", IProperty::Flags::SameLine);
 
-        registerProperty(DisplayOptions, m_aabb, "Bounding Box");
-        registerPropertyEx(DisplayOptions, m_colliders, "Colliders", IProperty::Flags::SameLine);
+        registerProperty(DisplayOptions, m_wireframe, "Wireframe");
+        registerPropertyEx(DisplayOptions, m_aabb, "Bounding Box", IProperty::Flags::SameLine);
 
         registerPropertyEnum(DisplayOptions, DisplayMode, m_debugDisplayMode, "Mode");
         registerPropertyEnumBitfield(DisplayOptions, DisplayFlags, m_displayFlags, "Flags");
-        registerPropertyEnumBitfield(DisplayOptions, RenderPassFlags, m_renderPassFlags, "RenderPass");
+        registerPropertyEnumBitfield(DisplayOptions, RenderPassFlags, m_renderPassFlags, "Passes");
 
         registerPropertyEx(DisplayOptions, m_backgroundColor, "Background", IProperty::Flags::Color);
         registerPropertyEnum(DisplayOptions, GUITheme, m_guiTheme, "Theme");

@@ -26,6 +26,11 @@ namespace vg::renderer
     class IDisplayOptions;
 }
 
+namespace vg::physics
+{
+    class IPhysicsOptions;
+}
+
 namespace vg::engine
 {
     class FreeCam;
@@ -94,6 +99,7 @@ namespace vg::engine
 
     public:
         renderer::IDisplayOptions *         getDisplayOptions   () const;
+        physics::IPhysicsOptions *          getPhysicsOptions   () const;
 
         void                                createEditorScene   ();
         void                                destroyEditorView   ();

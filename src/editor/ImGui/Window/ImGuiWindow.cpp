@@ -337,7 +337,7 @@ namespace vg::editor
                 if (optionalProp->getType() == IProperty::Type::Bool)
                 {
                     bool * b = optionalProp->GetPropertyBool(_object);
-                    if (ImGui::Checkbox("", b))
+                    if (ImGui::Checkbox(ImGui::getObjectLabel("", optionalProp).c_str(), b))
                         optionalChanged = true;
                     ImGui::SameLine();
 

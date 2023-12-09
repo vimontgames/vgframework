@@ -31,8 +31,6 @@ namespace vg::renderer
 
         void                    OnPropertyChanged           (IObject * _object, const core::IProperty & _prop, bool _notifyParent) final override;
 
-        bool                    IsCollidersEnabled          () const final override { return isCollidersEnabled(); }
-
         DisplayMode             getDisplayMode              () const { return m_debugDisplayMode; }
         DisplayFlags            getDisplayFlags             () const { return m_displayFlags; }
 
@@ -40,7 +38,6 @@ namespace vg::renderer
 
         bool				    isAABBEnabled               () const { return m_aabb; }
         bool				    isWireframeEnabled          () const { return m_wireframe; }
-        bool                    isCollidersEnabled          () const { return m_colliders;}
 
         bool                    isZPrepassEnabled           () const { return core::asBool(RenderPassFlags::ZPrepass & m_renderPassFlags); }
         bool				    isOpaqueEnabled			    () const { return core::asBool(RenderPassFlags::Opaque & m_renderPassFlags); }
@@ -72,7 +69,7 @@ namespace vg::renderer
         gfx::VSync m_VSync                                  = gfx::VSync::VBL_1;
         bool                    m_vsync                     = true;
         bool				    m_wireframe                 = false;
-        bool                    m_colliders                 = false;
+
         GUITheme                m_guiTheme                  = GUITheme::Dark;
         DisplayMode	            m_debugDisplayMode;
         DisplayFlags            m_displayFlags;

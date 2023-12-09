@@ -58,6 +58,19 @@ namespace vg::physics
         //HeightField
     };
 
+    enum class ShapeTypeFlags : core::u32
+    {
+        Sphere          = 1 << (core::u32)ShapeType::Sphere,
+        Box             = 1 << (core::u32)ShapeType::Box,
+        Capsule         = 1 << (core::u32)ShapeType::Capsule,
+        //TaperedCapsule  = 1 << (core::u32)ShapeType::TaperedCapsule,
+        //Cylinder        = 1 << (core::u32)ShapeType::Cylinder,
+        //ConvexHull      = 1 << (core::u32)ShapeType::ConvexHull,
+        //Compound        = 1 << (core::u32)ShapeType::Compound,
+        //TriangleMesh    = 1 << (core::u32)ShapeType::TriangleMesh,
+        //HeightField     = 1 << (core::u32)ShapeType::HeightField
+    };
+
     enum class BodyType : core::u8
     {
         Rigid = 0,
