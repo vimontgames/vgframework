@@ -20,6 +20,9 @@ Another subject that is very close to my heart is that there is a strong separat
 
 # changelog
 
+## 0.18 (WIP)
+ImGuizmo
+
 ## 0.17
 New add/remove component buttons and improved components popup windows
 Add support for themes
