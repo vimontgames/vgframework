@@ -2,8 +2,9 @@
 #include "physics.h"
 #include "JobSystem/JobSystemAdapter.h"
 #include "Shape/Shape.h"
-#include "physics/Helper.h"
-#include "physics/Body/Body.h"
+#include "Helper.h"
+#include "Body/Body.h"
+#include "Options/PhysicsOptions.h"
 #include "core/Math/Math.h"
 
 // Jolt includes
@@ -158,45 +159,8 @@ namespace vg::physics
         m_physicsSystem->Init(m_physicsCreationParams.maxBodies, m_physicsCreationParams.numBodyMutexes, m_physicsCreationParams.maxBodyPairs, m_physicsCreationParams.maxContactConstraints, m_broadPhaseLayer, m_broadPhaseFilter, m_objectFilter);
         m_physicsSystem->SetGravity(JPH::Vec3(0, 0, -9.81f));
 
-        // The main way to interact with the bodies in the physics system is through the body interface. There is a locking and a non-locking
-        // variant of this. We're going to use the locking version (even though we're not planning to access bodies from multiple threads)
-        BodyInterface & body_interface = m_physicsSystem->GetBodyInterface();
+        PhysicsOptions * physicsOptions = new PhysicsOptions("PhysicsOptions", this);
 
-        // test : add floor
-        //{
-        //    // Next we can create a rigid body to serve as the floor, we make a large box
-        //    // Create the settings for the collision volume (the shape).
-        //    // Note that for simple shapes (like boxes) you can also directly construct a BoxShape.
-        //    JPH::BoxShapeSettings floor_shape_settings(Vec3(128.0f, 128.0f, 0.1f));
-        //
-        //    // Create the shape
-        //    ShapeSettings::ShapeResult floor_shape_result = floor_shape_settings.Create();
-        //    ShapeRefC floor_shape = floor_shape_result.Get(); // We don't expect an error here, but you can check floor_shape_result for HasError() / GetError()
-        //
-        //    // Create the settings for the body itself. Note that here you can also set other properties like the restitution / friction.
-        //    BodyCreationSettings floor_settings(floor_shape, RVec3(0.0f, 0.0f, -0.1f), Quat::sIdentity(), getJoltMotionType(MotionType::Static), getJoltObjectLayer(ObjectLayer::NonMoving));
-        //
-        //    // Create the actual rigid body
-        //    floor = body_interface.CreateBody(floor_settings); // Note that if we run out of bodies this can return nullptr
-        //
-        //    // Add it to the world
-        //    body_interface.AddBody(floor->GetID(), EActivation::DontActivate);
-        //}
-
-        // Now create a dynamic body to bounce on the floor
-        {
-            //// Note that this uses the shorthand version of creating and adding a body to the world
-            //BodyCreationSettings sphere_settings(new JPH::SphereShape(0.5f), RVec3(0.0f, 0.0f, 5.0f), Quat::sIdentity(), getJoltMotionType(MotionType::Dynamic), getJoltObjectLayer(ObjectLayer::Moving));
-            //sphere_id = body_interface.CreateAndAddBody(sphere_settings, EActivation::Activate);
-            //
-            //// Now you can interact with the dynamic body, in this case we're going to give it a velocity.
-            //// (note that if we had used CreateBody then we could have set the velocity straight on the body before adding it to the physics system)
-            //body_interface.SetLinearVelocity(sphere_id, Vec3(0.0f, 0.0f, 0.0f));
-        }
-
-        // Optional step: Before starting the physics simulation you can optimize the broad phase. This improves collision detection performance (it's pointless here because we only have 2 bodies).
-        // You should definitely not call this every frame or when e.g. streaming in a new level section as it is an expensive operation.
-        // Instead insert all new objects in batches instead of 1 at a time to keep the broad phase efficient.
         //m_physicsSystem->OptimizeBroadPhase();
 	}
 
@@ -228,6 +192,9 @@ namespace vg::physics
         VG_SAFE_DELETE(m_jobSystem);
         VG_SAFE_DELETE(m_physicsSystem);
 
+        PhysicsOptions * physicsOptions = PhysicsOptions::get();
+        VG_SAFE_DELETE(physicsOptions);
+
         // Unregister our classes
         UnregisterClasses();
 	}
@@ -252,6 +219,18 @@ namespace vg::physics
         if (engine->IsPlaying() && !engine->IsPaused())
             m_physicsSystem->Update((float)(_dt*0.001f), 1, &m_tempAllocator, m_jobSystem);           
 	}
+
+    //--------------------------------------------------------------------------------------
+    IPhysicsOptions * Physics::GetPhysicsOptions() const
+    {
+        return PhysicsOptions::get();
+    }
+
+    //--------------------------------------------------------------------------------------
+    void Physics::SetGravity(const core::float3 _gravity)
+    {
+        m_physicsSystem->SetGravity(JPH::Vec3(_gravity.x, _gravity.y, _gravity.z));
+    }
 
     //--------------------------------------------------------------------------------------
     IShape * Physics::CreateShape(const IShapeDesc * _shapeDesc)

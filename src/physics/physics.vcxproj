@@ -14,6 +14,7 @@
     <ClCompile Include="Body\Body.cpp" />
     <ClCompile Include="BroadPhase\BroadPhase.cpp" />
     <ClCompile Include="JobSystem\JobSystemAdapter.cpp" />
+    <ClCompile Include="Options\PhysicsOptions.cpp" />
     <ClCompile Include="Physics.cpp" />
     <ClCompile Include="Precomp.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
@@ -38,10 +39,12 @@
     <ClInclude Include="Helper.h" />
     <ClInclude Include="IBody.h" />
     <ClInclude Include="IPhysics.h" />
+    <ClInclude Include="IPhysicsOptions.h" />
     <ClInclude Include="IShape.h" />
     <ClInclude Include="JobSystem\JobSystemAdapter.h" />
     <ClInclude Include="JobSystem\PhysicsJob.h" />
     <ClInclude Include="JobSystem\PhysicsJobs.hpp" />
+    <ClInclude Include="Options\PhysicsOptions.h" />
     <ClInclude Include="Physics.h" />
     <ClInclude Include="Physics_Consts.h" />
     <ClInclude Include="Precomp.h" />

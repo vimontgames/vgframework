@@ -192,6 +192,12 @@
     <ClInclude Include="ImGui\ObjectHandler\Animation\ImGuiSkeletonObjectHandler.hpp">
       <Filter>ImGui\ObjectHandler\Animation</Filter>
     </ClInclude>
+    <ClInclude Include="ImGui\Window\PhysicsOptions\ImGuiPhysicsOptions.h">
+      <Filter>ImGui\Window\PhysicsOptions</Filter>
+    </ClInclude>
+    <ClInclude Include="ImGui\Window\PhysicsOptions\ImGuiPhysicsOptions.hpp">
+      <Filter>ImGui\Window\PhysicsOptions</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Editor.def" />
@@ -299,6 +305,9 @@
     </Filter>
     <Filter Include="ImGui\ObjectHandler\Animation">
       <UniqueIdentifier>{8f62b045-9705-4a30-86e2-21c836952a69}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ImGui\Window\PhysicsOptions">
+      <UniqueIdentifier>{a7ccac9e-f568-445f-9736-b49dd3f3302d}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

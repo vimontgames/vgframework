@@ -66,6 +66,7 @@ namespace vg::editor
             inline static const char * Checked      = ICON_FA_SQUARE_CHECK;
             inline static const char * Unchecked    = ICON_FA_SQUARE;
             inline static const char * Trashcan     = ICON_FA_TRASH_CAN;
+            inline static const char * Physics      = ICON_FA_CAPSULES;
         }
     }
 }

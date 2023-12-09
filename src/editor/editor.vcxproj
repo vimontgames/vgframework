@@ -66,6 +66,8 @@
     <ClInclude Include="ImGui\Window\Input\ImGuiInput.hpp" />
     <ClInclude Include="ImGui\Window\Inspector\ImGuiInspector.h" />
     <ClInclude Include="ImGui\Window\Inspector\ImGuiInspector.hpp" />
+    <ClInclude Include="ImGui\Window\PhysicsOptions\ImGuiPhysicsOptions.h" />
+    <ClInclude Include="ImGui\Window\PhysicsOptions\ImGuiPhysicsOptions.hpp" />
     <ClInclude Include="ImGui\Window\Platform\ImGuiPlatform.h" />
     <ClInclude Include="ImGui\Window\Platform\ImGuiPlatform.hpp" />
     <ClInclude Include="ImGui\Window\Plugin\ImGuiPlugin.h" />

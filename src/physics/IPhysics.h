@@ -13,6 +13,8 @@ namespace vg
         class IBodyDesc;
         class IBody;
 
+        class IPhysicsOptions;
+
 	    class IPhysics : public core::IPlugin
 	    {
 	    public:
@@ -22,13 +24,16 @@ namespace vg
 
             }
 
-            virtual void        Init            (const PhysicsCreationParams & _params, core::Singletons & _singletons) = 0;
-            virtual void        Deinit          () = 0;
+            virtual void                Init                (const PhysicsCreationParams & _params, core::Singletons & _singletons) = 0;
+            virtual void                Deinit              () = 0;
 
-            virtual void        RunOneFrame     (double _dt) = 0;
+            virtual void                RunOneFrame         (double _dt) = 0;
 
-            virtual IShape *    CreateShape     (const IShapeDesc * _shapeDesc) = 0;
-            virtual IBody *     CreateBody      (const IBodyDesc * _bodyDesc, IShape * _shape, const core::float4x4 & _world) = 0;
+            virtual IPhysicsOptions *   GetPhysicsOptions   () const = 0;
+            virtual void                SetGravity          (const core::float3 _gravity) = 0;
+
+            virtual IShape *            CreateShape         (const IShapeDesc * _shapeDesc) = 0;
+            virtual IBody *             CreateBody          (const IBodyDesc * _bodyDesc, IShape * _shape, const core::float4x4 & _world) = 0;
 	    };
     }
 }

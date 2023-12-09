@@ -34,6 +34,7 @@ using namespace ImGui;
 #include "editor/ImGui/Window/Plugin/ImGuiPlugin.hpp"
 #include "editor/ImGui/Window/Platform/ImGuiPlatform.hpp"
 #include "editor/ImGui/Window/DisplayOptions/ImGuiDisplayOptions.hpp"
+#include "editor/ImGui/Window/PhysicsOptions/ImGuiPhysicsOptions.hpp"
 #include "editor/ImGui/Window/About/ImGuiAbout.hpp"
 #include "editor/ImGui/Window/Input/ImGuiInput.hpp"
 #include "editor/ImGui/Window/Inspector/ImGuiInspector.hpp"

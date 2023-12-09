@@ -15,6 +15,9 @@
     <ClCompile Include="Body\Body.cpp">
       <Filter>Body</Filter>
     </ClCompile>
+    <ClCompile Include="Options\PhysicsOptions.cpp">
+      <Filter>Options</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Physics.def" />
@@ -73,6 +76,10 @@
     <ClInclude Include="Body\BodyDesc.hpp">
       <Filter>Body</Filter>
     </ClInclude>
+    <ClInclude Include="IPhysicsOptions.h" />
+    <ClInclude Include="Options\PhysicsOptions.h">
+      <Filter>Options</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="JobSystem">
@@ -86,6 +93,9 @@
     </Filter>
     <Filter Include="Body">
       <UniqueIdentifier>{1ce36a34-abb5-4596-979f-a955cc072a42}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Options">
+      <UniqueIdentifier>{d5fef440-ae77-4d6c-86bc-94704fbfa40c}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

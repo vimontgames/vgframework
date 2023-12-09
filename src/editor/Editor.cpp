@@ -13,6 +13,7 @@
 #include "editor/ImGui/Window/Platform/ImGuiPlatform.h"
 #include "editor/ImGui/Window/Inspector/ImGuiInspector.h"
 #include "editor/ImGui/Window/DisplayOptions/ImGuiDisplayOptions.h"
+#include "editor/ImGui/Window/PhysicsOptions/ImGuiPhysicsOptions.h"
 #include "editor/ImGui/Window/About/ImGuiAbout.h"
 #include "editor/ImGui/Window/Shader/ImGuiShader.h"
 #include "editor/ImGui/Window/Scene/ImGuiScene.h"
@@ -82,6 +83,7 @@ namespace vg::editor
         m_imGuiWindows.push_back(new ImGuiScene());
         m_imGuiWindows.push_back(new ImGuiInspector());
         m_imGuiWindows.push_back(new ImGuiDisplayOptions());
+        m_imGuiWindows.push_back(new ImGuiPhysicsOptions());
         m_imGuiWindows.push_back(new ImGuiGameView());
         m_imGuiWindows.push_back(new ImGuiEditorView());
         m_imGuiWindows.push_back(new ImGuiConsole());

@@ -1,0 +1,6 @@
+<Root>
+    <Object class="PhysicsOptions">
+        <Property type="String" name="m_name" flags="Hidden" value="PhysicsOptions"/>
+        <Property type="Float3" name="m_gravity" x="0" y="0" z="-9.8100004"/>
+    </Object>
+</Root>
