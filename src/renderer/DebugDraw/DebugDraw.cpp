@@ -391,14 +391,15 @@ namespace vg::renderer
     //--------------------------------------------------------------------------------------
     void DebugDraw::createGrid()
     {
-        auto * device = Device::get();
+        auto * device = Device::get();        
 
-        vector<DebugDrawVertex> vertices;
-
-        const uint gridSize = 16;
+        const uint gridSize = 64;
 
         int begin = -(int)gridSize / 2;
         int end = (int)gridSize / 2;
+
+        vector<DebugDrawVertex> vertices;
+        vertices.reserve((end - begin + 1) << 2);
 
         for (int i = begin; i <= end; ++i)
         {
@@ -420,7 +421,6 @@ namespace vg::renderer
         }
 
         BufferDesc vbDesc(Usage::Default, BindFlags::ShaderResource, CPUAccessFlags::None, BufferFlags::None, sizeof(DebugDrawVertex), (u32)vertices.size());
-
         m_gridVB = device->createBuffer(vbDesc, "GridVB", vertices.data());
     }
 
