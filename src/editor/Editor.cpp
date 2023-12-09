@@ -283,6 +283,13 @@ namespace vg::editor
                             displayOptions->setVisible(true);
                     }
 
+                    if (ImGui::IconMenuItem(style::icon::Physics, "Physics"))
+                    {
+                        ImGuiPhysicsOptions * physicsOptions = getWindow<ImGuiPhysicsOptions>();
+                        if (nullptr != physicsOptions)
+                            physicsOptions->setVisible(true);
+                    }
+
                     ImGui::EndMenu();
                 }
 
