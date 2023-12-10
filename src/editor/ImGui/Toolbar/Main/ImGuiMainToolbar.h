@@ -8,6 +8,7 @@ namespace vg::editor
     public:
         ImGuiMainToolbar(const core::string & _name, Flags _flags);
 
-        void DrawButtons() final override;
+        void        DrawButtons     () final override;
+        core::uint  GetButtonCount  () const final override;
     };
 }

@@ -97,7 +97,7 @@ namespace vg::editor
         ImGuiStyle & style = ImGui::GetStyle();
 
         float buttonSize = ImGui::CalcTextSize(style::icon::GameView).x + style.FramePadding.x*4.0f;
-        int buttonCount = 3;
+        int buttonCount = GetButtonCount();
 
         float offset;
         if (buttonCount & 1)

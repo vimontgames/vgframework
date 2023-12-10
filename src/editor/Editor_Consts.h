@@ -68,6 +68,7 @@ namespace vg::editor
             inline static const char * Trashcan     = ICON_FA_TRASH_CAN;
             inline static const char * Physics      = ICON_FA_CAPSULES;
             inline static const char * Editor       = ICON_FA_SCREWDRIVER_WRENCH;
+            inline static const char * Restart      = ICON_FA_CLOCK_ROTATE_LEFT;
         }
     }
 }

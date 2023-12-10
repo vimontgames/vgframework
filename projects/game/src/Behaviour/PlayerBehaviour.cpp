@@ -81,7 +81,7 @@ void PlayerBehaviour::PlayAnim(PlayerState _state)
 //--------------------------------------------------------------------------------------
 void PlayerBehaviour::Update(double _dt)
 {
-    if (Game::Engine().IsPlaying())
+    if (Game::Engine().IsPlaying() && !Game::Engine().IsPaused())
     {
         IInput & input = Game::Input();
         IAnimationComponent * animationComponent = GetGameObject()->GetComponentByType<IAnimationComponent>();

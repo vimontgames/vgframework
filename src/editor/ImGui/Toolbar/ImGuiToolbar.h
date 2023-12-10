@@ -9,17 +9,18 @@ namespace vg::editor
     public:
         ImGuiToolbar(const core::string & _name, Flags _flags);
 
-        virtual void    DrawGUI             ();
-        virtual void    DrawButtons         () = 0;
+        virtual void        DrawGUI             ();
+        virtual void        DrawButtons         () = 0;
+        virtual core::uint  GetButtonCount      () const = 0;
 
-        static ImVec2   ComputeButtonSize   ();
+        static ImVec2       ComputeButtonSize   ();
 
     protected:
-        void            nextItem            ();
-        ImVec2          getButtonSize       () const { return m_buttonSize; }
+        void                nextItem            ();
+        ImVec2              getButtonSize       () const { return m_buttonSize; }
         
     private:
-        ImGuiAxis       m_toolbarAxis       = ImGuiAxis_X;
-        ImVec2          m_buttonSize        = ImVec2(0, 0);
+        ImGuiAxis           m_toolbarAxis       = ImGuiAxis_X;
+        ImVec2              m_buttonSize        = ImVec2(0, 0);
     };
 }

@@ -488,6 +488,8 @@ namespace vg::engine
 
         m_resourceManager->updateLoading();
 
+        double dt = this->isPlaying() && !this->isPaused() ? m_time.m_dt : 0.0f;
+
         if (m_universe)
         {
             // Update all GameObjects and components
@@ -499,7 +501,7 @@ namespace vg::engine
                     Scene * scene = (Scene *)m_universe->GetScene(i);
                     GameObject * root = scene->getRoot();
                     if (root)
-                        root->Update(m_time.m_dt);
+                        root->Update(dt);
                 }
             }
 

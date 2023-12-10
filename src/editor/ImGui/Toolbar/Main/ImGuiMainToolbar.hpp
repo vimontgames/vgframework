@@ -15,6 +15,12 @@ namespace vg::editor
     }
 
     //--------------------------------------------------------------------------------------
+    core::uint ImGuiMainToolbar::GetButtonCount() const
+    {
+        return 5;
+    }
+
+    //--------------------------------------------------------------------------------------
     void ImGuiMainToolbar::DrawButtons()
     {
         IEngine * engine = Editor::get()->getEngine();
@@ -22,9 +28,17 @@ namespace vg::editor
         const bool playing = engine->IsPlaying();
         const bool paused = engine->IsPaused();
 
-        if (ImGui::TooltipButton(style::icon::Play, !playing, !playing, "Play (F5)", getButtonSize()))
+        if (ImGui::TooltipButton(style::icon::Restart, playing, playing, "Restart (Shift-F5)", getButtonSize()))
+        {
+            engine->Stop();
             engine->Play();
+        }
+        nextItem();
 
+        if (ImGui::TooltipButton(style::icon::Play, !playing, !playing, "Play (F5)", getButtonSize()))
+        {
+            engine->Play();
+        }
         nextItem();
 
         if (ImGui::TooltipButton(style::icon::Pause, playing && !paused, playing, "Pause (PAUSE)", getButtonSize()))
@@ -36,9 +50,10 @@ namespace vg::editor
         }
         nextItem();
 
-        if (ImGui::TooltipButton(style::icon::Stop, playing, playing, "Stop (Escape)", getButtonSize()))
+        if (ImGui::TooltipButton(style::icon::Stop, playing, playing, "Stop (ESC)", getButtonSize()))
+        {
             engine->Stop();
-        
+        }
         nextItem();
 
         renderer::IRenderer * renderer = engine->GetRenderer();
