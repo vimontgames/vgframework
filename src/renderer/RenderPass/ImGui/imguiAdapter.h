@@ -37,12 +37,16 @@ namespace vg
             void        beginFrame              ();
             void        render                  (gfx::CommandList * _cmdList);
 
+            void        AddBeginFrameCallback   (BeginFrameCallback _func);
+
         protected:
             ImTextureID getTextureID            (gfx::Texture * _tex) const;
             void        releaseTextureID        (ImTextureID _texID);
 
         private:
             gfx::BindlessTextureHandle          m_fontTexHandle;
+
+            core::vector<BeginFrameCallback>    m_beginFrameCallbacks;
 
             #ifdef VG_VULKAN
             VkDescriptorPool                    m_vkImguiDescriptorPool;

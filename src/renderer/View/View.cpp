@@ -159,6 +159,12 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
+    const core::float4x4 & View::GetProjectionMatrix() const
+    {
+        return getProjMatrix();
+    }
+
+    //--------------------------------------------------------------------------------------
     core::float2 View::GetCameraNearFar() const
     {
         return getCameraNearFar();

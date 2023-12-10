@@ -134,6 +134,9 @@ https://github.com/juliettef/IconFontCppHeaders
 ImGui-Addons\
 https://github.com/gallickgunner/ImGui-Addons
 
+ImGuizmo 1.83"\
+https://github.com/CedricGuillemet/ImGuizmo/releases/tag/1.83
+
 JoltPhysics 4.0.1\
 https://github.com/jrouwe/JoltPhysics/releases/tag/v4.0.1
 
@@ -142,8 +145,7 @@ https://github.com/Neargye/magic_enum
 
 optick 1.3.1\
 https://github.com/bombomby/optick
-![Screenshot](doc/img/Optick.png)
-You can download the binaries for optick 1.3.1 from https://github.com/bombomby/optick/releases/tag/1.3.1.0
+*You can download the binaries for optick 1.3.1 from https://github.com/bombomby/optick/releases/tag/1.3.1.0*
 
 px_sched\
 https://github.com/pplux/px

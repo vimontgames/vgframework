@@ -21,6 +21,7 @@ namespace vg::engine
     {
         clear();
         add(_object);
+        updateSelectionMatrix();
     }
 
     //--------------------------------------------------------------------------------------
@@ -36,6 +37,8 @@ namespace vg::engine
 
         for (uint i = 0; i < _objects.size(); ++i)
             add(_objects[i]);
+
+        updateSelectionMatrix();
     }
 
     //--------------------------------------------------------------------------------------
@@ -52,13 +55,25 @@ namespace vg::engine
     //--------------------------------------------------------------------------------------
     bool Selection::Remove(core::IObject * _object)
     {
-        return remove(_object);
+        if (remove(_object))
+        {
+            updateSelectionMatrix();
+            return true;
+        }
+
+        return false;
     }
 
     //--------------------------------------------------------------------------------------
     bool Selection::Add(core::IObject * _object)
     {
-        return add(_object);
+        if (add(_object))
+        {
+            updateSelectionMatrix();
+            return true;
+        }
+
+        return false;
     }
 
     //--------------------------------------------------------------------------------------
@@ -91,16 +106,19 @@ namespace vg::engine
     //--------------------------------------------------------------------------------------
     bool Selection::remove(core::IObject * _object)
     {
+        bool removed = false;
         GameObject * go = dynamic_cast<GameObject *>(_object);
         if (nullptr != go)
         {
             auto children = go->getChildren();
             for (uint j = 0; j < children.size(); ++j)
-                remove(children[j]);
+                removed |= remove(children[j]);
         }
 
         setSelected(_object, false);
-        return m_selection.remove(_object);
+        removed |= m_selection.remove(_object);
+
+        return removed;
     }
 
     //--------------------------------------------------------------------------------------
@@ -126,5 +144,83 @@ namespace vg::engine
         for (uint i = 0; i < m_selection.size(); ++i)
             setSelected(m_selection[i], false);
         m_selection.clear();
+    }
+
+    //--------------------------------------------------------------------------------------
+    void Selection::updateSelectionMatrix()
+    {
+        m_matrix = float4x4::identity();
+
+        auto objects = RemoveChildGameObjectsWithParents(m_selection);
+
+        float3 T = float3(0, 0, 0);
+
+        // average translation, rotate and scale
+        uint count = 0;
+        for (uint i = 0; i < objects.size(); ++i)
+        {
+            IGameObject * go = dynamic_cast<IGameObject*>(objects[i]);
+            if (go)
+            {
+                float4x4 m = go->GetWorldMatrix();
+
+                T.xyz += m[3].xyz;
+
+                ++count;
+            }
+        }
+
+        T.xyz /= (float)count;
+
+        m_matrix[3].xyz = T.xyz;
+    }
+
+    //--------------------------------------------------------------------------------------
+    core::float4x4 & Selection::GetSelectionMatrix()
+    {
+        return m_matrix;
+    }
+
+    //--------------------------------------------------------------------------------------
+    // Remove objects with parents already in the list
+    // This is useful e.g. when deleting or moving several objects
+    //--------------------------------------------------------------------------------------
+    core::vector<core::IGameObject *> Selection::RemoveChildGameObjectsWithParents(const core::vector<core::IObject *> & _objects) const
+    {
+        core::vector<core::IGameObject *> gameObjectsWithoutChildrenWithParents;
+
+        for (uint i = 0; i < _objects.size(); ++i)
+        {
+            IObject * obj = _objects[i];
+            IGameObject * go = dynamic_cast<IGameObject *>(obj);
+            if (go && !go->IsRoot())
+                gameObjectsWithoutChildrenWithParents.push_back(go);
+        }
+
+        // Remove objects with parents already in the list
+    RESTART:
+        for (uint i = 0; i < gameObjectsWithoutChildrenWithParents.size(); ++i)
+        {
+            IGameObject * goi = dynamic_cast<GameObject*>(gameObjectsWithoutChildrenWithParents[i]);
+
+            if (goi)
+            {
+                for (uint j = 0; j < gameObjectsWithoutChildrenWithParents.size(); ++j)
+                {
+                    IGameObject * goj = dynamic_cast<GameObject *>(gameObjectsWithoutChildrenWithParents[j]);
+
+                    if (goj && i != j)
+                    {
+                        if (goj->HasAncestor(goi))
+                        {
+                            gameObjectsWithoutChildrenWithParents.remove(goj);
+                            goto RESTART;
+                        }
+                    }
+                }
+            }
+        }
+
+        return gameObjectsWithoutChildrenWithParents;
     }
 }

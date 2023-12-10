@@ -23,43 +23,15 @@ namespace vg::editor
         bool doRename = false;
 
         ISelection * selection = Editor::get()->getSelection();
-        const auto & selectedObjects = selection->GetSelectedObjects();
 
-        // Build a list of GameObjects to be deleted
-        vector<IGameObject *> gameObjectsToDelete;
-        {
-            if (!gameObject->IsRoot())
-                gameObjectsToDelete.push_back(gameObject);
+        // The copy here is *intentional*
+        auto selectedObjects = selection->GetSelectedObjects(); 
 
-            for (uint i = 0; i < selectedObjects.size(); ++i)
-            {
-                IObject * obj = selectedObjects[i];
-                IGameObject * go = dynamic_cast<IGameObject *>(obj);
-                if (go && !go->IsRoot() && go != gameObject)
-                    gameObjectsToDelete.push_back(go);
-            }
+        // Add the clicked object to "selection" if not already selected
+        if (!gameObject->IsRoot() && !selection->IsSelectedObject(gameObject))
+            selectedObjects.push_back(gameObject);
 
-            // Remove objects with parents already in the list
-            RESTART:
-            for (uint i = 0; i < gameObjectsToDelete.size(); ++i)
-            {
-                IGameObject * goi = gameObjectsToDelete[i];
-
-                for (uint j = 0; j < gameObjectsToDelete.size(); ++j)
-                {
-                    IGameObject * goj = gameObjectsToDelete[j];
-
-                    if (i != j)
-                    {
-                        if (goj->HasAncestor(goi))
-                        {
-                            gameObjectsToDelete.remove(goj);
-                            goto RESTART;
-                        }
-                    }
-                }
-            }
-        }
+        vector<IGameObject *> gameObjectsToDelete = Editor::get()->getSelection()->RemoveChildGameObjectsWithParents(selectedObjects);
 
         // Root GameObject cannot be deleted
         const bool canDelete = gameObjectsToDelete.size() > 0;

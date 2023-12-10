@@ -1,7 +1,6 @@
 
 #include "ImGui.h"
 #include "imguiAdapter.h"
-
 #include "gfx/Device/Device.h"
 #include "gfx/CommandList/CommandList.h"
 #include "gfx/CommandQueue/CommandQueue.h"
@@ -279,6 +278,15 @@ namespace vg::renderer
         #endif       
 
         ImGui::NewFrame();
+
+        for (auto & cb : m_beginFrameCallbacks)
+            cb();
+    }
+
+    //--------------------------------------------------------------------------------------
+    void ImGuiAdapter::AddBeginFrameCallback(BeginFrameCallback _func)
+    {
+        m_beginFrameCallbacks.push_back(_func);
     }
 
     //--------------------------------------------------------------------------------------

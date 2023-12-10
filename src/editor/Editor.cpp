@@ -1,7 +1,9 @@
 #include "editor/Precomp.h"
 #include "editor.h"
 #include "renderer/IRenderer.h"
+#include "renderer/IImGuiAdapter.h"
 #include "engine/IEngine.h"
+#include "editor/ImGui/Extensions/ImGuizmo/ImGuizmoAdapter.h"
 
 #if !VG_ENABLE_INLINE
 #include "Editor.inl"
@@ -126,6 +128,13 @@ namespace vg::editor
         return AutoRegisterClassInfo::unregisterClasses(*factory);
     }
 
+    //--------------------------------------------------------------------------------------
+    void ImGuizmoBeginFrame()
+    {
+        if (GImGui)
+            ImGuizmo::BeginFrame();
+    }
+
 	//--------------------------------------------------------------------------------------
 	void Editor::Init(const core::Singletons & _singletons)
 	{
@@ -133,6 +142,9 @@ namespace vg::editor
         Kernel::setSingletons(_singletons);
 
         RegisterClasses();
+
+        // Register ImGuizmo callback
+        getRenderer()->GetImGuiAdapter()->AddBeginFrameCallback(ImGuizmoBeginFrame);
 	}
 
 	//--------------------------------------------------------------------------------------

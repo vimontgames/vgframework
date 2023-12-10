@@ -27,6 +27,9 @@
     <ClCompile Include="ImGui\ImGui.cpp">
       <Filter>ImGui</Filter>
     </ClCompile>
+    <ClCompile Include="ImGui\Extensions\ImGuizmo\ImGuizmoAdapter.cpp">
+      <Filter>ImGui\Extensions\ImGuizmo</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Precomp.h" />
@@ -198,6 +201,9 @@
     <ClInclude Include="ImGui\Window\PhysicsOptions\ImGuiPhysicsOptions.hpp">
       <Filter>ImGui\Window\PhysicsOptions</Filter>
     </ClInclude>
+    <ClInclude Include="ImGui\Extensions\ImGuizmo\ImGuizmoAdapter.h">
+      <Filter>ImGui\Extensions\ImGuizmo</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Editor.def" />
@@ -308,6 +314,9 @@
     </Filter>
     <Filter Include="ImGui\Window\PhysicsOptions">
       <UniqueIdentifier>{a7ccac9e-f568-445f-9736-b49dd3f3302d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ImGui\Extensions\ImGuizmo">
+      <UniqueIdentifier>{02c51f4d-c0e9-4775-8950-ac07cf9260d1}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

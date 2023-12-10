@@ -35,8 +35,15 @@ namespace vg::gfx
             
         }
 
-        ViewTarget target   : 2;
-        ViewIndex index     : 6;
+        union
+        {
+            struct
+            {
+                ViewTarget target : 2;
+                ViewIndex index : 6;
+            };
+            core::u8 id;
+        };
 
         inline bool operator == (const ViewID & _other) const
         {
@@ -89,6 +96,7 @@ namespace vg::gfx
         virtual Flags                   GetFlags                    () const = 0;
 
         virtual const core::float4x4 &  GetViewInvMatrix            () const = 0;
+        virtual const core::float4x4 &  GetProjectionMatrix         () const = 0;
         virtual core::float2            GetCameraNearFar            () const = 0;
         virtual float                   GetCameraFovY               () const = 0;
 

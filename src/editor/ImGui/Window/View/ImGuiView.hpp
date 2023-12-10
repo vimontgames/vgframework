@@ -4,6 +4,7 @@
 #include "renderer/IPicking.h"
 #include "gfx/ITexture.h"
 #include "core/IInput.h"
+#include "editor/ImGui/Extensions/ImGuizmo/ImGuizmoAdapter.h"
 
 namespace vg::editor
 {
@@ -110,12 +111,6 @@ namespace vg::editor
                 draw = false;
             }
 
-            // Set relative mouse pos
-            //ImVec2 mouseOffset = ImGui::GetCursorScreenPos();
-            //auto input = Kernel::getInput();
-            //uint2 mousePos = input->getMousePos();
-            //m_view->SetMousePos(uint2((uint)mousePos.x - mouseOffset.x, (uint)mousePos.y - mouseOffset.y));
-
             // Set mouse offset
             ImVec2 mouseOffset = ImGui::GetCursorScreenPos();
             m_view->SetMouseOffset(uint2(mouseOffset.x, mouseOffset.y));
@@ -140,12 +135,15 @@ namespace vg::editor
             // Update picking
             auto picking = renderer->GetPicking();
 
-            bool showTooltip = Kernel::getInput()->IsKeyPressed(Key::LSHIFT); // ImGui::IsKeyPressed(ImGuiKey_LeftShift);
-            string tooltipMsg;
-            picking->Update(m_view, showTooltip, tooltipMsg);
+            if (!drawGizmo())
+            {
+                bool showTooltip = Kernel::getInput()->IsKeyPressed(Key::LSHIFT); // ImGui::IsKeyPressed(ImGuiKey_LeftShift);
+                string tooltipMsg;
+                picking->Update(m_view, showTooltip, tooltipMsg);
 
-            if (showTooltip && !tooltipMsg.empty())
-                ImGui::SetTooltip(tooltipMsg.c_str());
+                if (showTooltip && !tooltipMsg.empty())
+                    ImGui::SetTooltip(tooltipMsg.c_str());
+            }            
 
             m_view->SetVisible(true);
         }
@@ -161,5 +159,61 @@ namespace vg::editor
         ImGui::PopStyleColor();
         ImGui::PopStyleVar();
         ImGui::End();
+    }
+
+    static ImGuizmo::OPERATION mCurrentGizmoOperation(ImGuizmo::TRANSLATE);
+    static ImGuizmo::MODE mCurrentGizmoMode(ImGuizmo::WORLD);
+
+    //--------------------------------------------------------------------------------------
+    // Returns 'true' if any gizmo is manipulated (and thus we shoudn't update picking selection
+    //--------------------------------------------------------------------------------------
+    bool ImGuiView::drawGizmo()
+    {
+        ISelection * selection = Editor::get()->getSelection();
+        const auto selectedObjects = selection->GetSelectedObjects();
+        if (m_view && m_view->IsToolmode() && selectedObjects.size() > 0)
+        {
+            ImGuizmo::AllowAxisFlip(false);
+
+            // force rendering gizmo in current window
+            ImGuizmo::SetDrawlist(ImGui::GetWindowDrawList());
+
+            // get window and viewport coords
+            ImVec2 pos = ImGui::GetWindowPos();
+            ImVec2 vMin = ImGui::GetWindowContentRegionMin();
+            ImVec2 vMax = ImGui::GetWindowContentRegionMax();
+
+            // set viewport size for Gizmo rendering
+            ImGuizmo::SetRect(pos.x + vMin.x, pos.y + vMin.y, (float)m_size.x, (float)m_size.y);
+
+            // clip gizmo rendering to viewport
+            ImGui::PushClipRect(ImVec2(pos.x + vMin.x, pos.y + vMin.y), ImVec2(pos.x + vMin.x + m_size.x, pos.y + vMin.y + m_size.y), false);
+            {
+                const float * viewMatrix = (float *)&m_view->GetViewInvMatrix();
+                const float * projMatrix = (float *)&m_view->GetProjectionMatrix();
+                
+                float4x4 & matrix = selection->GetSelectionMatrix();
+                float4x4 delta = float4x4::identity();
+
+                ImGuizmo::SetID((int)m_view->GetViewID().id);
+                if (ImGuizmo::Manipulate(viewMatrix, projMatrix, mCurrentGizmoOperation, mCurrentGizmoMode, (float *)&matrix, (float *)&delta, nullptr))
+                {
+                    // apply delta to selected objects without parents
+                    auto selectedObjectsWithoutParents = selection->RemoveChildGameObjectsWithParents(selectedObjects);
+                    for (uint i = 0; i < selectedObjectsWithoutParents.size(); ++i)
+                    {
+                        IGameObject * go = selectedObjectsWithoutParents[i];
+                        float4x4 mat = go->GetWorldMatrix();
+                        mat = mul(mat, delta);
+                        go->SetWorldMatrix(mat);
+                    }
+                }
+            }
+            ImGui::PopClipRect();
+
+            return ImGuizmo::IsOver();
+        }
+
+        return false;
     }
 }
