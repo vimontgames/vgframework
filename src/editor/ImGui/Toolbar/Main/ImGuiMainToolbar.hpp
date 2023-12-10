@@ -36,7 +36,7 @@ namespace vg::editor
         }
         nextItem();
 
-        if (ImGui::TooltipButton(style::icon::Stop, playing, playing, "Stop (F5)", getButtonSize()))
+        if (ImGui::TooltipButton(style::icon::Stop, playing, playing, "Stop (Escape)", getButtonSize()))
             engine->Stop();
         
         nextItem();

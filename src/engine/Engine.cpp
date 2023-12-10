@@ -86,12 +86,33 @@ namespace vg::engine
                         VG_PROFILE_TRIGGER();   // Start/Stop capture
                         break;
 
-                    case VK_F5:
+                    case VK_ESCAPE:
+                    {
                         if (IsPlaying())
                             Stop();
+
+                        if (m_renderer && m_renderer->IsFullscreen())
+                            m_renderer->SetFullscreen(false);
+                    }
+                    break;;
+
+                    case VK_F5:
+                    {
+                        if (GetKeyState(VK_SHIFT) & 0x8000)
+                        {
+                            if (IsPlaying())
+                            {
+                                Stop();
+                                Play();
+                            }
+                        }
                         else
-                            Play();
-                        break;
+                        {
+                            if (!IsPlaying())
+                                Play();
+                        }
+                    }
+                    break;
 
                     case VK_F6:
                         if (m_renderer)

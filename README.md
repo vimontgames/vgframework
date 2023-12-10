@@ -75,19 +75,18 @@ Separate DLLs for Engine, Renderer, Editor and Game.
 ## keyboard shortcuts
 
 - Press F1 to start/stop profiler capture
-
 - Press F6 to hot reload shaders
 - Press F7 to hot reload resources
-
-- Press F5 to start/stop engine 
-- Press 'Pause' to pause/resume engine when running
-
+- 
+- Press F5 to enter Play mode
+- Press Shift-F5 to restart Play mode 
+- Press 'Pause' to pause/resume Play mode
 - Press F11 for fullscreen
-
+- Press ESCAPE to exit Play mode and fullscreen
+- 
 - Press Ctrl-R to rename selected GameObject
 - Press Del to deleted selected GameOject
- 
-- Press Ctrl-Q to quit 
+- Press Ctrl-Q to quit application
 
 ## ide
 VS Studio 2022 Community\
