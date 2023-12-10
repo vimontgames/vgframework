@@ -1,6 +1,6 @@
 #include "BackgroundPass.h"
 #include "shaders/background/background.hlsli"
-#include "renderer/Options/DisplayOptions.h"
+#include "renderer/Options/RendererOptions.h"
 #include "gfx/IView.h"
 
 namespace vg::renderer
@@ -39,7 +39,7 @@ namespace vg::renderer
         auto * device = Device::get();
 
         auto size = _renderContext.m_view->GetSize();
-        const auto options = DisplayOptions::get();
+        const auto options = RendererOptions::get();
 
         auto clearColor = m_useFastClear ? pow(options->getBackgroundColor(), 2.2f) : float4(0, 0, 0, 0);
 
@@ -87,7 +87,7 @@ namespace vg::renderer
 
             root.quad.posOffsetScale = float4(0.0f, 0.0f, 1.0f, 1.0f);
             root.quad.uvOffsetScale = float4(0.0f, 0.0f, 1.0f, 1.0f);
-            root.color = pow(DisplayOptions::get()->getBackgroundColor(), 2.2f);
+            root.color = pow(RendererOptions::get()->getBackgroundColor(), 2.2f);
 
             _cmdList->setGraphicRootConstants(0, (u32 *)&root, sizeof(BackgroundRootConstants) / sizeof(u32));
 

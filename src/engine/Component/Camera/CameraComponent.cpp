@@ -26,16 +26,16 @@ namespace vg::engine
 
         registerPropertyEnum(CameraComponent, gfx::ViewTarget, m_target, "Target");
         registerProperty(CameraComponent, m_index, "Index");
-        _desc.setPropertyRange(CameraComponent, m_index, float2(0, 15));
+        setPropertyRange(CameraComponent, m_index, float2(0, 15));
 
         registerProperty(CameraComponent, m_fovY, "Horizontal FOV");
-        _desc.setPropertyRange(CameraComponent, m_fovY, float2(PI / 8.0f, PI / 2.0f));
+        setPropertyRange(CameraComponent, m_fovY, float2(PI / 8.0f, PI / 2.0f));
 
         registerProperty(CameraComponent, m_near, "Near");
-        _desc.setPropertyRange(CameraComponent, m_near, float2(0.0f, 8.0f));
+        setPropertyRange(CameraComponent, m_near, float2(0.0f, 8.0f));
 
         registerProperty(CameraComponent, m_far, "Far");
-        _desc.setPropertyRange(CameraComponent, m_far, float2(0.0f, 8192.0f));
+        setPropertyRange(CameraComponent, m_far, float2(0.0f, 8192.0f));
 
         return true;
     }

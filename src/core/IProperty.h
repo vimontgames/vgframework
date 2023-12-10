@@ -46,7 +46,7 @@ namespace vg::core
             Object,                 // Embedded IObject
             ObjectRef,              // Pointer to IObject
             ObjectRefVector,        // Vector of pointers to IObject
-            ObjectRefDictionary,    // Dictionary of pointers to IObject
+            ObjectRefDictionary,    // Dictionary of pointers to IObject,
 
             // sizeof(element) is unknown (cannot be serialized for now as some array trickery is necessary to resize vector of unknown type)
             ObjectVector,
@@ -54,6 +54,20 @@ namespace vg::core
 
             // No data, only (IObject*) callback
             Callback,
+
+            // Cosmetic-only properties (doesn't change serialized data)
+            LayoutElement,
+        };
+
+        enum class LayoutElementType
+        {
+            Separator = 0,
+
+            SameLineBegin,
+            SameLineEnd,
+
+            GroupBegin,
+            GroupEnd
         };
 
         enum class Flags : u64
@@ -74,58 +88,59 @@ namespace vg::core
             Optional        = 0x0000000000001000    // Previous property must be a bool, and if 'false' then this value won't be editable
         };
 
-        virtual void                        setRange                        (float2 _range) = 0;
-        virtual void                        setFlags                        (Flags _flagsToSet, Flags _flagsToRemove = Flags::None) = 0;
+        virtual void                            setRange                        (float2 _range) = 0;
+        virtual void                            setFlags                        (Flags _flagsToSet, Flags _flagsToRemove = Flags::None) = 0;
 
-        virtual const char *                getName                         () const = 0;
-        virtual const char *                getClassName                    () const = 0;
-        virtual const char *                getDisplayName                  () const = 0;
-        virtual Type                        getType                         () const = 0;
-        virtual Flags                       getFlags                        () const = 0;
-        virtual uint_ptr                    getOffset                       () const = 0;
-		virtual u32					        getSizeOf				        () const = 0;
-        virtual float2                      getRange                        () const = 0;
-        virtual u32                         getEnumCount                    () const = 0;
-        virtual const char *                getEnumName                     (uint index) const = 0;
-        virtual u64                         getEnumValue                    (uint index) const = 0;
+        virtual const char *                    getName                         () const = 0;
+        virtual const char *                    getClassName                    () const = 0;
+        virtual const char *                    getDisplayName                  () const = 0;
+        virtual Type                            getType                         () const = 0;
+        virtual Flags                           getFlags                        () const = 0;
+        virtual uint_ptr                        getOffset                       () const = 0;
+		virtual u32					            getSizeOf				        () const = 0;
+        virtual float2                          getRange                        () const = 0;
+        virtual u32                             getEnumCount                    () const = 0;
+        virtual const char *                    getEnumName                     (uint index) const = 0;
+        virtual u64                             getEnumValue                    (uint index) const = 0;
 
-        virtual bool *                      GetPropertyBool                 (const IObject * _object) const = 0;
-        virtual u8 *                        GetPropertyUint8                (const IObject * _object) const = 0;
-        virtual u16 *                       GetPropertyUint16               (const IObject * _object) const = 0;
-        virtual u32 *                       GetPropertyUint32               (const IObject * _object) const = 0;
-        virtual u64 *                       GetPropertyUint64               (const IObject * _object) const = 0;
-        virtual float *                     GetPropertyFloat                (const IObject * _object) const = 0;
-        virtual float2 *                    GetPropertyFloat2               (const IObject * _object) const = 0;
-        virtual float3 *                    GetPropertyFloat3               (const IObject * _object) const = 0;
-        virtual float4 *                    GetPropertyFloat4               (const IObject * _object, uint _index = 0) const = 0;
-        virtual float *                     GetPropertyFloatN               (const IObject * _object, uint _componentCount, uint _index = 0) const = 0;
-        virtual float4x4 *                  GetPropertyFloat4x4             (const IObject * _object) const = 0;
-        virtual string *                    GetPropertyString               (const IObject * _object) const = 0;
-        virtual IResource *                 GetPropertyResource             (const IObject * _object, uint _index = 0) const = 0;
-        virtual IResource *                 GetPropertyResourceRef          (const IObject * _object, uint _index = 0) const = 0;
-        virtual IObject *                   GetPropertyObject               (const IObject * _object, uint _index = 0) const = 0;
-        virtual IObject *                   GetPropertyObjectRef            (const IObject * _object, uint _index = 0) const = 0;
-        virtual vector<IObject*> *          GetPropertyObjectRefVector      (const IObject * _object) const = 0;
-        virtual dictionary<IObject*> *      GetPropertyObjectRefDictionary  (const IObject * _object) const = 0;
+        virtual bool *                          GetPropertyBool                 (const IObject * _object) const = 0;
+        virtual u8 *                            GetPropertyUint8                (const IObject * _object) const = 0;
+        virtual u16 *                           GetPropertyUint16               (const IObject * _object) const = 0;
+        virtual u32 *                           GetPropertyUint32               (const IObject * _object) const = 0;
+        virtual u64 *                           GetPropertyUint64               (const IObject * _object) const = 0;
+        virtual float *                         GetPropertyFloat                (const IObject * _object) const = 0;
+        virtual float2 *                        GetPropertyFloat2               (const IObject * _object) const = 0;
+        virtual float3 *                        GetPropertyFloat3               (const IObject * _object) const = 0;
+        virtual float4 *                        GetPropertyFloat4               (const IObject * _object, uint _index = 0) const = 0;
+        virtual float *                         GetPropertyFloatN               (const IObject * _object, uint _componentCount, uint _index = 0) const = 0;
+        virtual float4x4 *                      GetPropertyFloat4x4             (const IObject * _object) const = 0;
+        virtual string *                        GetPropertyString               (const IObject * _object) const = 0;
+        virtual IResource *                     GetPropertyResource             (const IObject * _object, uint _index = 0) const = 0;
+        virtual IResource *                     GetPropertyResourceRef          (const IObject * _object, uint _index = 0) const = 0;
+        virtual IObject *                       GetPropertyObject               (const IObject * _object, uint _index = 0) const = 0;
+        virtual IObject *                       GetPropertyObjectRef            (const IObject * _object, uint _index = 0) const = 0;
+        virtual vector<IObject*> *              GetPropertyObjectRefVector      (const IObject * _object) const = 0;
+        virtual dictionary<IObject*> *          GetPropertyObjectRefDictionary  (const IObject * _object) const = 0;
         
-        virtual uint                        GetPropertyObjectVectorCount    (const IObject * _object) const = 0;
-        virtual u8 *                        GetPropertyObjectVectorData     (const IObject * _object) const = 0;
-        virtual IObject *                   GetPropertyObjectVectorElement  (const IObject * _object, uint _index) const = 0;
+        virtual uint                            GetPropertyObjectVectorCount    (const IObject * _object) const = 0;
+        virtual u8 *                            GetPropertyObjectVectorData     (const IObject * _object) const = 0;
+        virtual IObject *                       GetPropertyObjectVectorElement  (const IObject * _object, uint _index) const = 0;
 
-        virtual uint                        GetPropertyResourceVectorCount  (const IObject * _object) const = 0;
-        virtual u8 *                        GetPropertyResourceVectorData   (const IObject * _object) const = 0;
-        virtual IResource *                 GetPropertyResourceVectorElement(const IObject * _object, uint _index) const = 0;
+        virtual uint                            GetPropertyResourceVectorCount  (const IObject * _object) const = 0;
+        virtual u8 *                            GetPropertyResourceVectorData   (const IObject * _object) const = 0;
+        virtual IResource *                     GetPropertyResourceVectorElement(const IObject * _object, uint _index) const = 0;
 
-        virtual IProperty::Callback         GetPropertyCallback             () const = 0;
+        virtual IProperty::Callback             GetPropertyCallback             () const = 0;
 
-        template <typename E> inline E *    GetPropertyEnum                 (const IObject * _object) const { return (E *)GetPropertyUnderlyingType<std::underlying_type_t<E>>(_object); }
+        virtual IProperty::LayoutElementType    GetLayoutElementType            () const = 0;
 
+        template <typename E> inline E *        GetPropertyEnum                 (const IObject * _object) const { return (E *)GetPropertyUnderlyingType<std::underlying_type_t<E>>(_object); }
 
     private:
-        template <typename T> inline T *    GetPropertyUnderlyingType       (const IObject * _object) const;
-        template <> inline u8 *             GetPropertyUnderlyingType<u8>   (const IObject * _object) const { return GetPropertyUint8(_object); }
-        template <> inline u16 *            GetPropertyUnderlyingType<u16>  (const IObject * _object) const { return GetPropertyUint16(_object); }
-        template <> inline u32 *            GetPropertyUnderlyingType<u32>  (const IObject * _object) const { return GetPropertyUint32(_object); }
+        template <typename T> inline T *        GetPropertyUnderlyingType       (const IObject * _object) const;
+        template <> inline u8 *                 GetPropertyUnderlyingType<u8>   (const IObject * _object) const { return GetPropertyUint8(_object); }
+        template <> inline u16 *                GetPropertyUnderlyingType<u16>  (const IObject * _object) const { return GetPropertyUint16(_object); }
+        template <> inline u32 *                GetPropertyUnderlyingType<u32>  (const IObject * _object) const { return GetPropertyUint32(_object); }
     }; 
 }
 
@@ -186,9 +201,14 @@ namespace vg::core
 //--------------------------------------------------------------------------------------
 // Modify existing class properties macros
 //--------------------------------------------------------------------------------------
-#define setPropertyRange(className, propertyName, range)												    GetPropertyByName(#propertyName)->setRange(range);
+#define setPropertyRange(className, propertyName, range)												    _desc.GetPropertyByName(#propertyName)->setRange(range);
 
 //--------------------------------------------------------------------------------------
 // Misc
 //--------------------------------------------------------------------------------------
-#define registerResizeVectorFunc(className, resizeVectorFunc)                                               RegisterResizeVectorFunc(#className, resizeVectorFunc);
+#define registerResizeVectorFunc(className, resizeVectorFunc)                                               _desc.RegisterResizeVectorFunc(#className, resizeVectorFunc);
+
+#define registerPropertySeparator(className, label)                                                         _desc.RegisterPropertyLayout(#className, vg::core::IProperty::LayoutElementType::Separator, label, vg::core::IProperty::Flags::None);
+
+#define registerPropertyGroupBegin(className, label)                                                        _desc.RegisterPropertyLayout(#className, vg::core::IProperty::LayoutElementType::GroupBegin, label, vg::core::IProperty::Flags::None);
+#define registerPropertyGroupEnd(className)                                                                 _desc.RegisterPropertyLayout(#className, vg::core::IProperty::LayoutElementType::GroupEnd, "", vg::core::IProperty::Flags::None);

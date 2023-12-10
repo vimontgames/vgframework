@@ -1,0 +1,7 @@
+<Root>
+    <Object class="EditorOptions">
+        <Property type="String" name="m_name" flags="Hidden" value="Editor Options"/>
+        <Property type="EnumU8" name="m_guiTheme" value="VG_Dark"/>
+        <Property type="EnumU8" name="m_gizmo.m_space" value="World"/>
+    </Object>
+</Root>

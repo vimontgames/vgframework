@@ -30,6 +30,9 @@
     <ClCompile Include="ImGui\Extensions\ImGuizmo\ImGuizmoAdapter.cpp">
       <Filter>ImGui\Extensions\ImGuizmo</Filter>
     </ClCompile>
+    <ClCompile Include="Options\EditorOptions.cpp">
+      <Filter>Options</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Precomp.h" />
@@ -47,12 +50,6 @@
     </ClInclude>
     <ClInclude Include="ImGui\Extensions\imGuiExtensions.h">
       <Filter>ImGui\Extensions</Filter>
-    </ClInclude>
-    <ClInclude Include="ImGui\Window\DisplayOptions\ImGuiDisplayOptions.h">
-      <Filter>ImGui\Window\DisplayOptions</Filter>
-    </ClInclude>
-    <ClInclude Include="ImGui\Window\DisplayOptions\ImGuiDisplayOptions.hpp">
-      <Filter>ImGui\Window\DisplayOptions</Filter>
     </ClInclude>
     <ClInclude Include="ImGui\Window\FPS\ImGuiFPS.h">
       <Filter>ImGui\Window\FPS</Filter>
@@ -204,6 +201,22 @@
     <ClInclude Include="ImGui\Extensions\ImGuizmo\ImGuizmoAdapter.h">
       <Filter>ImGui\Extensions\ImGuizmo</Filter>
     </ClInclude>
+    <ClInclude Include="ImGui\Window\RendererOptions\ImGuiRendererOptions.h">
+      <Filter>ImGui\Window\RendererOptions</Filter>
+    </ClInclude>
+    <ClInclude Include="ImGui\Window\RendererOptions\ImGuiRendererOptions.hpp">
+      <Filter>ImGui\Window\RendererOptions</Filter>
+    </ClInclude>
+    <ClInclude Include="IEditorOptions.h" />
+    <ClInclude Include="Options\EditorOptions.h">
+      <Filter>Options</Filter>
+    </ClInclude>
+    <ClInclude Include="ImGui\Window\EditorOptions\ImGuiEditorOptions.h">
+      <Filter>ImGui\Window\EditorOptions</Filter>
+    </ClInclude>
+    <ClInclude Include="ImGui\Window\EditorOptions\ImGuiEditorOptions.hpp">
+      <Filter>ImGui\Window\EditorOptions</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Editor.def" />
@@ -224,9 +237,6 @@
     </Filter>
     <Filter Include="ImGui\Extensions">
       <UniqueIdentifier>{558503ef-808b-480d-bbff-5a169330d969}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ImGui\Window\DisplayOptions">
-      <UniqueIdentifier>{1fd41208-ee8d-4856-b46b-8c9a94f435b8}</UniqueIdentifier>
     </Filter>
     <Filter Include="ImGui\Window\FPS">
       <UniqueIdentifier>{41b3a0da-9ff9-4666-a76a-d4aa31a7cf15}</UniqueIdentifier>
@@ -317,6 +327,15 @@
     </Filter>
     <Filter Include="ImGui\Extensions\ImGuizmo">
       <UniqueIdentifier>{02c51f4d-c0e9-4775-8950-ac07cf9260d1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ImGui\Window\RendererOptions">
+      <UniqueIdentifier>{63b33a5d-cc04-4d13-bde7-b1b37e027c64}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Options">
+      <UniqueIdentifier>{644a4346-e4f0-49af-ac91-c3894d5dbddc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ImGui\Window\EditorOptions">
+      <UniqueIdentifier>{c935834d-3631-41b1-bcea-190c2f06b802}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

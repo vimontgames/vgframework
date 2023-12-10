@@ -8,7 +8,7 @@
 #include "renderer/RenderPass/Compute/ComputePostProcess/ComputePostProcessPass.h"
 #include "renderer/RenderPass/Render2D/FinalBlit/FinalBlitPass.h"
 
-#include "renderer/Options/DisplayOptions.h"
+#include "renderer/Options/RendererOptions.h"
 
 using namespace vg::core;
 using namespace vg::gfx;
@@ -49,7 +49,7 @@ namespace vg::renderer
 
         super::RegisterFrameGraph(_renderPassContext, _frameGraph);
 
-        const auto options = DisplayOptions::get();
+        const auto options = RendererOptions::get();
 
         if (options->isRayTracingEnabled())
         {

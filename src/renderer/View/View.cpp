@@ -67,7 +67,7 @@ namespace vg::renderer
     //--------------------------------------------------------------------------------------
     bool View::isToolmode() const
     {
-        const auto options = DisplayOptions::get();
+        const auto options = RendererOptions::get();
         return getViewID().target == gfx::ViewTarget::Editor || options->isToolModeEnabled();
     }
 

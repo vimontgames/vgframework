@@ -29,7 +29,7 @@ namespace vg
         class IMaterialData;
         class IAnimation;
         class IDebugDraw;
-        class IDisplayOptions;
+        class IRendererOptions;
 
         struct RendererCreationParams;
 
@@ -46,7 +46,7 @@ namespace vg
             virtual void	                            deinit                  () = 0;
 
             virtual const gfx::DeviceParams &           GetDeviceCreationParams () const = 0;
-            virtual renderer::IDisplayOptions *         GetDisplayOptions       () = 0;
+            virtual renderer::IRendererOptions *        GetOptions              () = 0;
 
             virtual gfx::ITexture *                     CreateTexture           (const gfx::TextureDesc & _texDesc, const core::string & _name) = 0;
 

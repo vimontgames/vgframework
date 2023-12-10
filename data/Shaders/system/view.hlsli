@@ -2,7 +2,7 @@
 
 #include "types.hlsli"
 #include "packing.hlsli"
-#include "displayoptions.hlsli"
+#include "options.hlsli"
 
 struct ViewConstants
 {

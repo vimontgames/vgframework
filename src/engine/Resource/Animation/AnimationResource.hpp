@@ -39,12 +39,12 @@ namespace vg::engine
         registerPropertyEx(AnimationResource, m_time, "Time", IProperty::Flags::NotSaved);
 
         registerPropertyEx(AnimationResource, m_weight, "Weight", IProperty::Flags::NotSaved);
-        _desc.setPropertyRange(AnimationResource, m_weight, float2(0.0f, 1.0f));
+        setPropertyRange(AnimationResource, m_weight, float2(0.0f, 1.0f));
 
         registerProperty(AnimationResource, m_speed, "Speed");
-        _desc.setPropertyRange(AnimationResource, m_speed, float2(0.0f, 10.0f));
+        setPropertyRange(AnimationResource, m_speed, float2(0.0f, 10.0f));
 
-        _desc.registerResizeVectorFunc(AnimationResource, ResizeAnimationResourceVector);
+        registerResizeVectorFunc(AnimationResource, ResizeAnimationResourceVector);
 
         return true;
     }

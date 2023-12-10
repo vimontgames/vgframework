@@ -8,7 +8,7 @@
 #include "gfx/Resource/Texture.h"
 
 #include "renderer/Renderer.h"
-#include "renderer/Options/DisplayOptions.h"
+#include "renderer/Options/RendererOptions.h"
 #include "renderer/Model/Mesh/MeshModel.h"
 #include "renderer/Model/Material/MaterialModel.h"
 #include "renderer/Geometry/Mesh/MeshGeometry.h"

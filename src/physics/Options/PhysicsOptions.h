@@ -1,7 +1,6 @@
 #pragma once
 #include "core/Singleton/Singleton.h"
 #include "physics/IPhysicsOptions.h"
-#include "physics/Physics_Consts.h"
 
 namespace vg::physics
 {

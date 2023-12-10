@@ -22,7 +22,6 @@
     <ClCompile Include="Animation\Animation.cpp" />
     <ClCompile Include="DebugDraw\DebugDraw.cpp" />
     <ClCompile Include="Geometry\Geometry.cpp" />
-    <ClCompile Include="ImGuiThemesManager.cpp" />
     <ClCompile Include="Importer\FBX\UFBXImporter\UFBXImporter.cpp" />
     <ClCompile Include="Importer\ImporterData.cpp" />
     <ClCompile Include="Instance\GraphicInstance.cpp" />
@@ -71,7 +70,7 @@
     <ClInclude Include="Geometry\Vertex\SkinningVertex.h" />
     <ClInclude Include="Geometry\Vertex\VertexFormat.h" />
     <ClInclude Include="IDebugDraw.h" />
-    <ClInclude Include="IDisplayOptions.h" />
+    <ClInclude Include="IRendererOptions.h" />
     <ClInclude Include="IGraphicInstance.h" />
     <ClInclude Include="IGraphicModel.h" />
     <ClInclude Include="IImGuiAdapter.h" />
@@ -79,7 +78,6 @@
     <ClInclude Include="IAnimation.h" />
     <ClInclude Include="IMeshInstance.h" />
     <ClInclude Include="IMeshModel.h" />
-    <ClInclude Include="ImGuiThemesManager.h" />
     <ClInclude Include="Importer\AnimImporterData.h" />
     <ClInclude Include="Importer\AnimImporterData.hpp" />
     <ClInclude Include="Importer\FBX\FBXImporter.h" />
@@ -107,8 +105,8 @@
     <ClInclude Include="Model\Material\MaterialModel.h" />
     <ClInclude Include="Model\Material\Material_Consts.h" />
     <ClInclude Include="Model\Mesh\MeshModel.h" />
-    <ClInclude Include="Options\DisplayOptions.h" />
-    <ClInclude Include="Options\DisplayOptions.hpp" />
+    <ClInclude Include="Options\RendererOptions.h" />
+    <ClInclude Include="Options\RendererOptions.hpp" />
     <ClInclude Include="Options\Options.h" />
     <ClInclude Include="Pass\Pass.h" />
     <ClInclude Include="Picking\PickingManager.h" />

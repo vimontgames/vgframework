@@ -56,7 +56,7 @@ namespace vg::renderer
     void EditorPass::Render(const RenderPassContext & _renderPassContext, CommandList * _cmdList) const
     {
         const View * view = (const View *)_renderPassContext.m_view;
-        const auto options = DisplayOptions::get();
+        const auto options = RendererOptions::get();
 
         RenderContext renderContext;
         renderContext.m_view = view->getViewInvMatrix();

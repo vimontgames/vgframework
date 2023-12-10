@@ -40,7 +40,7 @@ namespace vg::editor
         namespace icon
         {
             inline static const char * About        = ICON_FA_CIRCLE_QUESTION;
-            inline static const char * Display      = ICON_FA_DISPLAY;
+            inline static const char * Renderer     = ICON_FA_DISPLAY;
             inline static const char * Inspector    = ICON_FA_MAGNIFYING_GLASS;
             inline static const char * Platform     = ICON_FA_COMPUTER;
             inline static const char * Shaders      = ICON_FA_HAT_WIZARD;
@@ -67,6 +67,7 @@ namespace vg::editor
             inline static const char * Unchecked    = ICON_FA_SQUARE;
             inline static const char * Trashcan     = ICON_FA_TRASH_CAN;
             inline static const char * Physics      = ICON_FA_CAPSULES;
+            inline static const char * Editor       = ICON_FA_SCREWDRIVER_WRENCH;
         }
     }
 }

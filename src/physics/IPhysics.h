@@ -29,7 +29,7 @@ namespace vg
 
             virtual void                RunOneFrame         (double _dt) = 0;
 
-            virtual IPhysicsOptions *   GetPhysicsOptions   () const = 0;
+            virtual IPhysicsOptions *   GetOptions          () const = 0;
             virtual void                SetGravity          (const core::float3 _gravity) = 0;
 
             virtual IShape *            CreateShape         (const IShapeDesc * _shapeDesc) = 0;

@@ -5,7 +5,7 @@
 #include "renderer/Renderer.h"
 #include "renderer/Geometry/Batch/Batch.h"
 #include "imguiAdapter.h"
-#include "renderer/Options/DisplayOptions.h"
+#include "renderer/Options/RendererOptions.h"
 #include "engine/IEngine.h"
 #include "core/Plugin/Plugin.h"
 #include "core/IFactory.h"
@@ -73,38 +73,6 @@ namespace vg::renderer
     {
         const auto * factory = Kernel::getFactory();
         return (const vg::engine::IEngine *) factory->getSingleton("Engine");
-    }
-
-    //--------------------------------------------------------------------------------------
-    void ImGuiPass::displayEngineWindow()
-    {
-        //if (ImGui::Begin("Engine", &m_isEngineWindowVisible))
-        //{
-        //    const auto * factory = Kernel::getFactory();
-        //    core::IObject * engine = (core::IObject *)getEngine();
-        //    if (engine)
-        //    {
-        //        const char * className = engine->getClassName();
-        //        const auto * classDesc = factory->getClassDescriptor(className);
-        //        const char * classDisplayName = classDesc->getClassDisplayName();
-        //
-        //        ImguiEditor::displayObject(engine);
-        //    }
-        //}
-        //ImGui::End();
-    }
-
-    //--------------------------------------------------------------------------------------
-    void ImGuiPass::displayRendererWindow()
-    {
-        //if (ImGui::Begin("Renderer", &m_isRendererWindowVisible))
-        //{
-        //    const auto * factory = Kernel::getFactory();
-        //    IObject * renderer = factory->getSingleton("Renderer");
-        //    if (renderer)
-        //        ImguiEditor::displayObject(renderer);
-        //}
-        //ImGui::End();
     }
     
     //--------------------------------------------------------------------------------------

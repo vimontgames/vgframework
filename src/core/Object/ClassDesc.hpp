@@ -61,6 +61,12 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
+    void ClassDesc::RegisterPropertyLayout(const char * _className, IProperty::LayoutElementType _layoutElementType, const char * _label, IProperty::Flags _flags)
+    {
+        properties.emplace_back(_className, _label, IProperty::Type::LayoutElement, (uint_ptr)_layoutElementType, -1, _label, _flags);
+    }
+
+    //--------------------------------------------------------------------------------------
     void ClassDesc::RegisterProperty(const char * _className, const char * _propertyName, bool * _offset, const char * _displayName, IProperty::Flags _flags)
     {
         registerClassMemberT(_className, _propertyName, _offset, _displayName, _flags);

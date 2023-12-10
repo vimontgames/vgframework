@@ -24,7 +24,7 @@ namespace vg::physics
         return true;
     }
 
-    static const char * filename = "PhysicsOptions.xml";
+    static const char * filename = "Physics.xml";
 
     //--------------------------------------------------------------------------------------
     PhysicsOptions::PhysicsOptions(const core::string & _name, core::IObject * _parent) :

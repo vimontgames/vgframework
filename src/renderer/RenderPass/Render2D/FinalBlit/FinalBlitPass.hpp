@@ -33,7 +33,7 @@ namespace vg::renderer
     //--------------------------------------------------------------------------------------
     void FinalBlitPass::Setup(const gfx::RenderPassContext & _renderPassContext, double _dt)
     {
-        const auto options = DisplayOptions::get();
+        const auto options = RendererOptions::get();
         if (options->isPostProcessEnabled())
             readRWTexture(_renderPassContext.getFrameGraphID("PostProcessUAV"));
         else
@@ -50,7 +50,7 @@ namespace vg::renderer
     //--------------------------------------------------------------------------------------
     void FinalBlitPass::Render(const RenderPassContext & _renderPassContext, CommandList * _cmdList) const
     {
-        const auto options = DisplayOptions::get();
+        const auto options = RendererOptions::get();
 
         RasterizerState rs(FillMode::Solid, CullMode::None);
         BlendState bs(BlendFactor::One, BlendFactor::Zero, BlendOp::Add);

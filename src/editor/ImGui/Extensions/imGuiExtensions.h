@@ -33,7 +33,7 @@ namespace ImGui
 
     ImVec2 GetWindowContentRegionSize();
 
-    void CollapsedHeaderLabel(const ImVec2 & _headerPos, const vg::core::string & _label, bool _enabled);
-    bool CollapsedHeaderCheckbox(const ImVec2 & _headerPos, bool _enabled, vg::core::IObject * _object, const char * _iconTrue, const char * _iconFalse, const vg::core::string & _tooltip);
-    bool CollapsedHeaderIconButton(const ImVec2 & _headerPos, float _availableWidth, vg::core::IObject * _object, const char * _icon, const vg::core::string & _tooltip);
+    void CollapsingHeaderLabel(const ImVec2 & _headerPos, const vg::core::string & _label, bool _enabled);
+    bool CollapsingHeaderCheckbox(const ImVec2 & _headerPos, bool _enabled, vg::core::IObject * _object, const char * _iconTrue, const char * _iconFalse, const vg::core::string & _tooltip);
+    bool CollapsingHeaderIconButton(const ImVec2 & _headerPos, float _availableWidth, vg::core::IObject * _object, const char * _icon, const vg::core::string & _tooltip);
 }

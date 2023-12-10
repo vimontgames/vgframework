@@ -42,7 +42,7 @@ namespace vg::physics
 
         void                                RunOneFrame                 (double _dt) final override;
 
-        IPhysicsOptions *                   GetPhysicsOptions           () const final override;
+        IPhysicsOptions *                   GetOptions                  () const final override;
         void                                SetGravity                  (const core::float3 _gravity) final override;
 
         IShape *                            CreateShape                 (const IShapeDesc * _shapeDesc) final override;

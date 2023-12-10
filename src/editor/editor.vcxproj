@@ -21,6 +21,7 @@
     <ClCompile Include="ImGui\PropertyHandler\ImGuiPropertyHandler.cpp" />
     <ClCompile Include="ImGui\Toolbar\ImGuiToolbar.cpp" />
     <ClCompile Include="ImGui\Window\ImGuiWindow.cpp" />
+    <ClCompile Include="Options\EditorOptions.cpp" />
     <ClCompile Include="Precomp.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
@@ -30,6 +31,7 @@
     <ClInclude Include="Editor.h" />
     <ClInclude Include="Editor_Consts.h" />
     <ClInclude Include="IEditor.h" />
+    <ClInclude Include="IEditorOptions.h" />
     <ClInclude Include="ImGui\Extensions\imGuiExtensions.h" />
     <ClInclude Include="ImGui\Extensions\ImGuizmo\ImGuizmoAdapter.h" />
     <ClInclude Include="ImGui\ImGui.h" />
@@ -59,8 +61,8 @@
     <ClInclude Include="ImGui\Window\About\ImGuiAbout.hpp" />
     <ClInclude Include="ImGui\Window\Console\ImGuiConsole.h" />
     <ClInclude Include="ImGui\Window\Console\ImGuiConsole.hpp" />
-    <ClInclude Include="ImGui\Window\DisplayOptions\ImGuiDisplayOptions.h" />
-    <ClInclude Include="ImGui\Window\DisplayOptions\ImGuiDisplayOptions.hpp" />
+    <ClInclude Include="ImGui\Window\EditorOptions\ImGuiEditorOptions.h" />
+    <ClInclude Include="ImGui\Window\EditorOptions\ImGuiEditorOptions.hpp" />
     <ClInclude Include="ImGui\Window\FPS\ImGuiFPS.h" />
     <ClInclude Include="ImGui\Window\FPS\ImGuiFPS.hpp" />
     <ClInclude Include="ImGui\Window\ImGuiWindow.h" />
@@ -74,6 +76,8 @@
     <ClInclude Include="ImGui\Window\Platform\ImGuiPlatform.hpp" />
     <ClInclude Include="ImGui\Window\Plugin\ImGuiPlugin.h" />
     <ClInclude Include="ImGui\Window\Plugin\ImGuiPlugin.hpp" />
+    <ClInclude Include="ImGui\Window\RendererOptions\ImGuiRendererOptions.h" />
+    <ClInclude Include="ImGui\Window\RendererOptions\ImGuiRendererOptions.hpp" />
     <ClInclude Include="ImGui\Window\Resource\ImGuiResource.h" />
     <ClInclude Include="ImGui\Window\Resource\ImGuiResource.hpp" />
     <ClInclude Include="ImGui\Window\Scene\ImGuiScene.h" />
@@ -86,6 +90,7 @@
     <ClInclude Include="ImGui\Window\View\GameView\ImGuiGameView.hpp" />
     <ClInclude Include="ImGui\Window\View\ImGuiView.h" />
     <ClInclude Include="ImGui\Window\View\ImGuiView.hpp" />
+    <ClInclude Include="Options\EditorOptions.h" />
     <ClInclude Include="Precomp.h" />
   </ItemGroup>
   <ItemGroup>

@@ -313,7 +313,7 @@ namespace ImGui
     }
 
     //--------------------------------------------------------------------------------------
-    void CollapsedHeaderLabel(const ImVec2 & _headerPos, const string & _label, bool _enabled)
+    void CollapsingHeaderLabel(const ImVec2 & _headerPos, const string & _label, bool _enabled)
     {
         ImGui::SameLine();
         ImGui::SetCursorPos(ImVec2(ImGui::GetStyle().FramePadding.x * 2 + style::button::SizeSmall.x, _headerPos.y));
@@ -323,7 +323,7 @@ namespace ImGui
     }
 
     //--------------------------------------------------------------------------------------
-    bool ImGui::CollapsedHeaderCheckbox(const ImVec2 & _headerPos, bool _enabled, IObject * _object, const char * _iconTrue, const char * _iconFalse, const string & _tooltip)
+    bool ImGui::CollapsingHeaderCheckbox(const ImVec2 & _headerPos, bool _enabled, IObject * _object, const char * _iconTrue, const char * _iconFalse, const string & _tooltip)
     {
         ImGui::SameLine();
 
@@ -351,7 +351,7 @@ namespace ImGui
     }
 
     //--------------------------------------------------------------------------------------
-    bool CollapsedHeaderIconButton(const ImVec2 & _headerPos, float _availableWidth, IObject * _object, const char * _icon, const string & _tooltip)
+    bool CollapsingHeaderIconButton(const ImVec2 & _headerPos, float _availableWidth, IObject * _object, const char * _icon, const string & _tooltip)
     {
         auto collapsedButtonSize = style::button::SizeSmall;
         if (ImGui::GetStyle().FramePadding.y == 3)

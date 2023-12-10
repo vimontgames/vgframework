@@ -11,6 +11,8 @@ namespace vg
             void * ptr = nullptr;
         };
 
+        class IEditorOptions;
+
 	    class IEditor : public core::IPlugin
 	    {
 	    public:
@@ -28,6 +30,8 @@ namespace vg
             #endif                              
                                                 
 		    virtual void						DrawGUI	            (const GUIContext & _context) = 0;
+
+            virtual IEditorOptions *            GetOptions          () const = 0;
 	    };
     }
 }

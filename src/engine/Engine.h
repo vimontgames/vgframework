@@ -23,7 +23,7 @@ namespace vg::editor
 
 namespace vg::renderer
 {
-    class IDisplayOptions;
+    class IRendererOptions;
 }
 
 namespace vg::physics
@@ -98,7 +98,7 @@ namespace vg::engine
         core::ISelection *                  GetSelection        () const final override;
 
     public:
-        renderer::IDisplayOptions *         getDisplayOptions   () const;
+        renderer::IRendererOptions *        getRendererOptions  () const;
         physics::IPhysicsOptions *          getPhysicsOptions   () const;
 
         void                                createEditorScene   ();

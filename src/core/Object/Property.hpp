@@ -180,6 +180,15 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
+    IProperty::LayoutElementType Property::GetLayoutElementType() const
+    {
+        checkPropertyType(Type::LayoutElement);
+        auto type = (IProperty::LayoutElementType)offset;
+        VG_ASSERT(isEnumValue(type));
+        return type;
+    }
+
+    //--------------------------------------------------------------------------------------
     bool * Property::GetPropertyBool(const IObject * _object) const
     {
         VG_ASSERT(nullptr != _object);

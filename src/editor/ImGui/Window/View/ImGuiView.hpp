@@ -4,6 +4,7 @@
 #include "renderer/IPicking.h"
 #include "gfx/ITexture.h"
 #include "core/IInput.h"
+#include "editor/Options/EditorOptions.h"
 #include "editor/ImGui/Extensions/ImGuizmo/ImGuizmoAdapter.h"
 
 namespace vg::editor
@@ -161,8 +162,7 @@ namespace vg::editor
         ImGui::End();
     }
 
-    static ImGuizmo::OPERATION mCurrentGizmoOperation(ImGuizmo::TRANSLATE);
-    static ImGuizmo::MODE mCurrentGizmoMode(ImGuizmo::WORLD);
+
 
     //--------------------------------------------------------------------------------------
     // Returns 'true' if any gizmo is manipulated (and thus we shoudn't update picking selection
@@ -173,6 +173,50 @@ namespace vg::editor
         const auto selectedObjects = selection->GetSelectedObjects();
         if (m_view && m_view->IsToolmode() && selectedObjects.size() > 0)
         {
+            const GizmoOptions & gizmoOptions = EditorOptions::get()->getGizmoOptions();
+
+            const float * snap = nullptr;
+
+            ImGuizmo::OPERATION imGuizmoOperation;
+            switch (gizmoOptions.m_type)
+            {
+                default:
+                    VG_ASSERT_ENUM_NOT_IMPLEMENTED(gizmoOptions.m_type);
+
+                case GizmoType::Translate:
+                    imGuizmoOperation = ImGuizmo::TRANSLATE;
+                    if (gizmoOptions.m_snapTranslate)
+                        snap = (float*) &gizmoOptions.m_translationSnap;
+                    break;
+
+                case GizmoType::Rotate:
+                    imGuizmoOperation = ImGuizmo::ROTATE;
+                    if (gizmoOptions.m_snapRotate)
+                        snap = &gizmoOptions.m_rotationSnapInDegrees;
+                    break;
+
+                case GizmoType::Scale:
+                    imGuizmoOperation = ImGuizmo::SCALE;
+                    if (gizmoOptions.m_snapScale)
+                        snap = &gizmoOptions.m_scaleSnap;
+                    break;
+            }
+
+            ImGuizmo::MODE imGuizmoSpace;
+            switch (gizmoOptions.m_space)
+            {
+                default:
+                    VG_ASSERT_ENUM_NOT_IMPLEMENTED(gizmoOptions.m_space);     
+
+                case GizmoSpace::World:
+                    imGuizmoSpace = ImGuizmo::WORLD;
+                    break;
+
+                case GizmoSpace::Local:
+                    imGuizmoSpace = ImGuizmo::LOCAL;
+                    break;
+            }
+
             ImGuizmo::AllowAxisFlip(false);
 
             // force rendering gizmo in current window
@@ -196,7 +240,7 @@ namespace vg::editor
                 float4x4 delta = float4x4::identity();
 
                 ImGuizmo::SetID((int)m_view->GetViewID().id);
-                if (ImGuizmo::Manipulate(viewMatrix, projMatrix, mCurrentGizmoOperation, mCurrentGizmoMode, (float *)&matrix, (float *)&delta, nullptr))
+                if (ImGuizmo::Manipulate(viewMatrix, projMatrix, imGuizmoOperation, imGuizmoSpace, (float *)&matrix, (float *)&delta, snap))
                 {
                     // apply delta to selected objects without parents
                     auto selectedObjectsWithoutParents = selection->RemoveChildGameObjectsWithParents(selectedObjects);

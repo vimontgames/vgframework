@@ -1,3 +1,2 @@
 #include "renderer/Precomp.h"
-
-#include "DisplayOptions.hpp"
+#include "RendererOptions.hpp"

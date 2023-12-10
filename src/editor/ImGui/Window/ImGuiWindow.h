@@ -29,6 +29,17 @@ namespace vg::gfx
 
 namespace vg::editor
 {
+    struct TreeNodeStackInfo
+    {
+        bool treeNodeIsCollapsingHeader = false;
+        bool treeNodeOpen = false;
+    };
+
+    struct ObjectContext
+    {
+        core::vector<TreeNodeStackInfo> treeNodes;
+    };
+
     class ImGuiWindow
     {
     public:
@@ -54,7 +65,11 @@ namespace vg::editor
         VG_INLINE const core::string            getIconizedName     () const;
 
         static void                             displayObject       (core::IObject * _object);
+        static void                             displayObject       (core::IObject * _object, ObjectContext & _context);
+
         static void                             displayProperty     (core::IObject * _object, const core::IProperty * _prop);
+        static void                             displayProperty     (core::IObject * _object, const core::IProperty * _prop, ObjectContext & _context);
+
         static bool                             displayResource     (core::IResource * _resource, const core::IProperty * _prop, core::uint _index = 0);
 
         static bool                             displayFloat4x4     (const core::string & _label, core::float4x4 * _pFloat4x4);

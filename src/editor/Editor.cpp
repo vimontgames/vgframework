@@ -4,6 +4,7 @@
 #include "renderer/IImGuiAdapter.h"
 #include "engine/IEngine.h"
 #include "editor/ImGui/Extensions/ImGuizmo/ImGuizmoAdapter.h"
+#include "editor/Options/EditorOptions.h"
 
 #if !VG_ENABLE_INLINE
 #include "Editor.inl"
@@ -14,7 +15,8 @@
 #include "editor/ImGui/Window/Plugin/ImGuiPlugin.h"
 #include "editor/ImGui/Window/Platform/ImGuiPlatform.h"
 #include "editor/ImGui/Window/Inspector/ImGuiInspector.h"
-#include "editor/ImGui/Window/DisplayOptions/ImGuiDisplayOptions.h"
+#include "editor/ImGui/Window/EditorOptions/ImGuiEditorOptions.h"
+#include "editor/ImGui/Window/RendererOptions/ImGuiRendererOptions.h"
 #include "editor/ImGui/Window/PhysicsOptions/ImGuiPhysicsOptions.h"
 #include "editor/ImGui/Window/About/ImGuiAbout.h"
 #include "editor/ImGui/Window/Shader/ImGuiShader.h"
@@ -84,7 +86,8 @@ namespace vg::editor
         m_imGuiWindows.push_back(new ImGuiResource());
         m_imGuiWindows.push_back(new ImGuiScene());
         m_imGuiWindows.push_back(new ImGuiInspector());
-        m_imGuiWindows.push_back(new ImGuiDisplayOptions());
+        m_imGuiWindows.push_back(new ImGuiEditorOptions());
+        m_imGuiWindows.push_back(new ImGuiRendererOptions());
         m_imGuiWindows.push_back(new ImGuiPhysicsOptions());
         m_imGuiWindows.push_back(new ImGuiGameView());
         m_imGuiWindows.push_back(new ImGuiEditorView());
@@ -106,6 +109,12 @@ namespace vg::editor
             VG_SAFE_DELETE(m_imGuiWindows[i]);
         m_imGuiWindows.clear();
 	}
+
+    //--------------------------------------------------------------------------------------
+    IEditorOptions * Editor::GetOptions() const
+    {
+        return EditorOptions::get();
+    }
 
     //--------------------------------------------------------------------------------------
     bool Editor::RegisterClasses()
@@ -143,6 +152,8 @@ namespace vg::editor
 
         RegisterClasses();
 
+        auto options = new EditorOptions("Editor Options", this);
+
         // Register ImGuizmo callback
         getRenderer()->GetImGuiAdapter()->AddBeginFrameCallback(ImGuizmoBeginFrame);
 	}
@@ -150,6 +161,9 @@ namespace vg::editor
 	//--------------------------------------------------------------------------------------
 	void Editor::Deinit()
 	{
+        auto * options = EditorOptions::get();
+        VG_SAFE_DELETE(options);
+
         UnregisterClasses();
 	}
 
@@ -288,18 +302,25 @@ namespace vg::editor
 
                 if (ImGui::BeginMenu("Options"))
                 {
-                    if (ImGui::IconMenuItem(style::icon::Display, "Display"))
+                    if (ImGui::IconMenuItem(style::icon::Editor, "Editor"))
                     {
-                        ImGuiDisplayOptions * displayOptions = getWindow<ImGuiDisplayOptions>();
-                        if (nullptr != displayOptions)
-                            displayOptions->setVisible(true);
+                        ImGuiEditorOptions * options = getWindow<ImGuiEditorOptions>();
+                        if (nullptr != options)
+                            options->setVisible(true);
+                    }
+
+                    if (ImGui::IconMenuItem(style::icon::Renderer, "Renderer"))
+                    {
+                        ImGuiRendererOptions * options = getWindow<ImGuiRendererOptions>();
+                        if (nullptr != options)
+                            options->setVisible(true);
                     }
 
                     if (ImGui::IconMenuItem(style::icon::Physics, "Physics"))
                     {
-                        ImGuiPhysicsOptions * physicsOptions = getWindow<ImGuiPhysicsOptions>();
-                        if (nullptr != physicsOptions)
-                            physicsOptions->setVisible(true);
+                        ImGuiPhysicsOptions * options = getWindow<ImGuiPhysicsOptions>();
+                        if (nullptr != options)
+                            options->setVisible(true);
                     }
 
                     ImGui::EndMenu();

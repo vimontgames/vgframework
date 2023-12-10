@@ -223,7 +223,7 @@ namespace vg::physics
 	}
 
     //--------------------------------------------------------------------------------------
-    IPhysicsOptions * Physics::GetPhysicsOptions() const
+    IPhysicsOptions * Physics::GetOptions() const
     {
         return PhysicsOptions::get();
     }

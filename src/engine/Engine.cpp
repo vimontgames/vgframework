@@ -324,15 +324,15 @@ namespace vg::engine
 	}
 
     //--------------------------------------------------------------------------------------
-    renderer::IDisplayOptions * Engine::getDisplayOptions() const
+    renderer::IRendererOptions * Engine::getRendererOptions() const
     {
-        return m_renderer->GetDisplayOptions();
+        return m_renderer->GetOptions();
     }
 
     //--------------------------------------------------------------------------------------
     physics::IPhysicsOptions * Engine::getPhysicsOptions() const
     {
-        return m_physics->GetPhysicsOptions();
+        return m_physics->GetOptions();
     }
 
     //--------------------------------------------------------------------------------------

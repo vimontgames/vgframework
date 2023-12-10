@@ -43,7 +43,7 @@ namespace vg::renderer
     //--------------------------------------------------------------------------------------
     void ViewConstantsUpdatePass::BeforeRender(const gfx::RenderPassContext & _renderPassContext, gfx::CommandList * _cmdList)
     {
-        const auto options = DisplayOptions::get();
+        const auto options = RendererOptions::get();
 
         u16 toolmodeRWBufferID = -1;
         if (_renderPassContext.m_view->IsToolmode())

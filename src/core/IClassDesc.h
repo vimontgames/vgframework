@@ -34,6 +34,8 @@ namespace vg::core
 
         virtual bool                        IsRegisteredProperty        (const char * _propertyName) = 0;
 
+        virtual void                        RegisterPropertyLayout      (const char * _className, IProperty::LayoutElementType _layoutElementType, const char * _label, IProperty::Flags _flags = IProperty::Flags::None) = 0;
+
         virtual void                        RegisterProperty            (const char * _className, const char * _propertyName, bool * _offset, const char * _displayName, IProperty::Flags _flags) = 0;
         virtual void                        RegisterProperty            (const char * _className, const char * _propertyName, u8 * _offset, const char * _displayName, IProperty::Flags _flags) = 0;
         virtual void                        RegisterProperty            (const char * _className, const char * _propertyName, u16 * _offset, const char * _displayName, IProperty::Flags _flags) = 0;

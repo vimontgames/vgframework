@@ -1,10 +1,9 @@
 #pragma once
 
-#include "renderer/IDisplayOptions.h"
-#include "renderer/ImGuiThemesManager.h"
+#include "renderer/IRendererOptions.h"
 #include "core/Singleton/Singleton.h"
 #include "gfx/Device/Device_consts.h"
-#include "Shaders/system/displayoptions.hlsli"
+#include "Shaders/system/options.hlsli"
 
 namespace vg::core
 {
@@ -22,12 +21,12 @@ namespace vg::renderer
         RayTracing      = 0x00000010
     };
 
-    class DisplayOptions final : public IDisplayOptions, public core::Singleton<DisplayOptions>
+    class RendererOptions final : public IRendererOptions, public core::Singleton<RendererOptions>
     {
     public:
-        VG_CLASS_DECL(DisplayOptions, IDisplayOptions);
+        VG_CLASS_DECL(RendererOptions, IRendererOptions);
 
-							    DisplayOptions			    (const core::string & _name, core::IObject * _parent = nullptr);
+							    RendererOptions			    (const core::string & _name, core::IObject * _parent = nullptr);
 
         void                    OnPropertyChanged           (IObject * _object, const core::IProperty & _prop, bool _notifyParent) final override;
 
@@ -54,8 +53,6 @@ namespace vg::renderer
         void                    setBackgroundColor          (const core::float4 & _backgroundColor);
         core::float4		    getBackgroundColor		    () const { return m_backgroundColor; }
 
-        GUITheme                getGuiTheme                 () const { return m_guiTheme; }
-
         static bool			    load					    (IObject * _object);
         static bool			    save					    (IObject * _object);
 
@@ -70,7 +67,6 @@ namespace vg::renderer
         bool                    m_vsync                     = true;
         bool				    m_wireframe                 = false;
 
-        GUITheme                m_guiTheme                  = GUITheme::Dark;
         DisplayMode	            m_debugDisplayMode;
         DisplayFlags            m_displayFlags;
         RenderPassFlags         m_renderPassFlags;

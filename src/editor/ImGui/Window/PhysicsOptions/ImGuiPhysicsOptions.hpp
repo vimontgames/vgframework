@@ -13,7 +13,7 @@ namespace vg::editor
     //--------------------------------------------------------------------------------------
     void ImGuiPhysicsOptions::DrawGUI()
     {
-        auto * physicsOptions = Editor::get()->getEngine()->GetPhysics()->GetPhysicsOptions();
+        auto * physicsOptions = Editor::get()->getEngine()->GetPhysics()->GetOptions();
         if (physicsOptions)
         {
             if (ImGui::IconBegin(style::icon::Physics, getName().c_str(), &m_isVisible))

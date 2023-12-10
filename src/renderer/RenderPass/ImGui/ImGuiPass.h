@@ -26,12 +26,8 @@ namespace vg::renderer
 
     private:
         static const vg::engine::IEngine * getEngine();
-
-        void displayEngineWindow();
-        void displayRendererWindow();
         
     private:
-        // Plugins
         bool m_isEngineWindowVisible = false;
         bool m_isRendererWindowVisible = false;
     };

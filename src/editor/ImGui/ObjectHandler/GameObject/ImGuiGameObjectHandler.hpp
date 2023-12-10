@@ -37,9 +37,9 @@ namespace vg::editor
 
             bool isGameobjectEnabled = asBool(IInstance::Flags::Enabled & go->GetFlags());
 
-            ImGui::CollapsedHeaderLabel(collapsingHeaderPos, "GameObject", isGameobjectEnabled);
+            ImGui::CollapsingHeaderLabel(collapsingHeaderPos, "GameObject", isGameobjectEnabled);
 
-            if (ImGui::CollapsedHeaderCheckbox(collapsingHeaderPos, isGameobjectEnabled, go, style::icon::Checked, style::icon::Unchecked, fmt::sprintf("%s GameObject %s", isGameobjectEnabled? "Disable" : "Enable", go->getName().c_str())))
+            if (ImGui::CollapsingHeaderCheckbox(collapsingHeaderPos, isGameobjectEnabled, go, style::icon::Checked, style::icon::Unchecked, fmt::sprintf("%s GameObject %s", isGameobjectEnabled? "Disable" : "Enable", go->getName().c_str())))
             {
                 go->SetFlags(IInstance::Flags::Enabled, !isGameobjectEnabled);
                 //changed = true;

@@ -45,9 +45,6 @@
     <ClCompile Include="DebugDraw\DebugDraw.cpp">
       <Filter>DebugDraw</Filter>
     </ClCompile>
-    <ClCompile Include="ImGuiThemesManager.cpp">
-      <Filter>Pass\ImGui</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Renderer.def" />
@@ -99,10 +96,10 @@
     <ClInclude Include="Importer\SceneImporterData.h">
       <Filter>Importer</Filter>
     </ClInclude>
-    <ClInclude Include="Options\DisplayOptions.h">
+    <ClInclude Include="Options\RendererOptions.h">
       <Filter>Options</Filter>
     </ClInclude>
-    <ClInclude Include="Options\DisplayOptions.hpp">
+    <ClInclude Include="Options\RendererOptions.hpp">
       <Filter>Options</Filter>
     </ClInclude>
     <ClInclude Include="Options\Options.h">
@@ -334,10 +331,7 @@
     <ClInclude Include="RenderPass\Compute\ComputeSkinning\ComputeSkinningPass.hpp">
       <Filter>Pass\Compute\ComputeSkinning</Filter>
     </ClInclude>
-    <ClInclude Include="IDisplayOptions.h" />
-    <ClInclude Include="ImGuiThemesManager.h">
-      <Filter>Pass\ImGui</Filter>
-    </ClInclude>
+    <ClInclude Include="IRendererOptions.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Pass">

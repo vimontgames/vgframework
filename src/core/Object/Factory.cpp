@@ -908,6 +908,9 @@ namespace vg::core
                     skipAttribute = true;
                     break;
 
+                case IProperty::Type::LayoutElement:
+                    break;
+
                 case IProperty::Type::Callback:
                 {
                     skipAttribute = true;

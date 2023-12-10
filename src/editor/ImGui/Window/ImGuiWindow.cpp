@@ -33,7 +33,8 @@ using namespace ImGui;
 #include "editor/ImGui/Window/FPS/ImGuiFPS.hpp"
 #include "editor/ImGui/Window/Plugin/ImGuiPlugin.hpp"
 #include "editor/ImGui/Window/Platform/ImGuiPlatform.hpp"
-#include "editor/ImGui/Window/DisplayOptions/ImGuiDisplayOptions.hpp"
+#include "editor/ImGui/Window/EditorOptions/ImGuiEditorOptions.hpp"
+#include "editor/ImGui/Window/RendererOptions/ImGuiRendererOptions.hpp"
 #include "editor/ImGui/Window/PhysicsOptions/ImGuiPhysicsOptions.hpp"
 #include "editor/ImGui/Window/About/ImGuiAbout.hpp"
 #include "editor/ImGui/Window/Input/ImGuiInput.hpp"
@@ -230,6 +231,19 @@ namespace vg::editor
     //--------------------------------------------------------------------------------------
     void ImGuiWindow::displayObject(core::IObject * _object)
     {
+        ObjectContext context;
+        displayObject(_object, context);
+    }
+    //--------------------------------------------------------------------------------------
+    void ImGuiWindow::displayProperty(core::IObject * _object, const core::IProperty * _prop)
+    {
+        ObjectContext context;
+        displayProperty(_object, _prop, context);
+    }
+
+    //--------------------------------------------------------------------------------------
+    void ImGuiWindow::displayObject(core::IObject * _object, ObjectContext & _context)
+    {
         const char * className = _object->getClassName();
 
         const auto * factory = Kernel::getFactory();
@@ -238,6 +252,12 @@ namespace vg::editor
         if (!classDesc)
             return;
 
+        if (_context.treeNodes.size() > 0)
+        {
+            auto & nodeInfo = _context.treeNodes[_context.treeNodes.size() - 1];
+            if (!nodeInfo.treeNodeOpen)
+                return;
+        }
         auto availableWidth = GetContentRegionAvail().x;
         ImGui::PushItemWidth(availableWidth - style::label::PixelWidth);
 
@@ -249,7 +269,7 @@ namespace vg::editor
             for (uint i = 0; i < classDesc->GetPropertyCount(); ++i)
             {
                 const IProperty * prop = classDesc->GetPropertyByIndex(i);
-                ImGuiWindow::displayProperty(_object, prop);
+                ImGuiWindow::displayProperty(_object, prop, _context);
             }
         }
 
@@ -301,9 +321,10 @@ namespace vg::editor
     }
 
     //--------------------------------------------------------------------------------------
-    void ImGuiWindow::displayProperty(core::IObject * _object, const IProperty * _prop)
+    void ImGuiWindow::displayProperty(core::IObject * _object, const IProperty * _prop, ObjectContext & _context)
     {
         VG_ASSERT(nullptr != _prop);
+
         const auto * factory = Kernel::getFactory();
 
         // TODO: Custom property edit
@@ -315,6 +336,29 @@ namespace vg::editor
         const auto displayName = _prop->getDisplayName();
         const auto offset = _prop->getOffset();
         const auto flags = _prop->getFlags();
+
+        if (_context.treeNodes.size() > 0)
+        {
+            auto nodeInfo = _context.treeNodes[_context.treeNodes.size() - 1];
+            if (!nodeInfo.treeNodeOpen)
+            {
+                if (IProperty::Type::LayoutElement == type)
+                {
+                    //switch (_prop->GetLayoutElementType())
+                    //{
+                    //    default:
+                    //        return;
+                    //
+                    //        //case IProperty::LayoutElementType::GroupEnd:
+                    //        //    break;
+                    //}
+                }
+                else
+                {
+                    return;
+                }
+            }
+        }
 
         if (asBool(IProperty::Flags::Hidden & flags))
             return;
@@ -370,6 +414,60 @@ namespace vg::editor
                 default:
                     VG_ASSERT_ENUM_NOT_IMPLEMENTED(type);
                     break;
+
+                case IProperty::Type::LayoutElement:
+                {
+                    auto type = _prop->GetLayoutElementType();
+                    switch (type)
+                    {
+                        default:
+                            VG_ASSERT_ENUM_NOT_IMPLEMENTED(type);
+                            break;
+
+                        case IProperty::LayoutElementType::Separator:
+                            ImGui::SeparatorText(_prop->getDisplayName());
+                            break;
+
+                        case IProperty::LayoutElementType::GroupBegin:
+                        {
+                            if (_context.treeNodes.size() > 0)
+                            {
+                                auto & nodeInfo = _context.treeNodes[_context.treeNodes.size() - 1];
+
+                                TreeNodeStackInfo & newInfo = _context.treeNodes.push_empty();
+                                
+                                newInfo.treeNodeOpen = ImGui::TreeNodeEx(ImGui::getObjectLabel(_prop->getDisplayName(), _prop).c_str(), ImGuiTreeNodeFlags_DefaultOpen);
+                                newInfo.treeNodeIsCollapsingHeader = false;
+                            }
+                            else
+                            {
+                                TreeNodeStackInfo & newInfo = _context.treeNodes.push_empty();
+                                
+                                newInfo.treeNodeOpen = ImGui::CollapsingHeader(ImGui::getObjectLabel(_prop->getDisplayName(), _prop).c_str(), ImGuiTreeNodeFlags_DefaultOpen);
+                                newInfo.treeNodeIsCollapsingHeader = true;
+                            }
+                        }
+                        break;
+
+                        case IProperty::LayoutElementType::GroupEnd:
+                        {
+                            if (_context.treeNodes.size() > 0)
+                            {
+                                auto & nodeInfo = _context.treeNodes[_context.treeNodes.size() - 1];
+
+                                if (nodeInfo.treeNodeOpen)
+                                {
+                                    if (!nodeInfo.treeNodeIsCollapsingHeader)
+                                        ImGui::TreePop();                                    
+                                }
+
+                                _context.treeNodes.erase(_context.treeNodes.begin() + _context.treeNodes.size() - 1);
+                            }
+                        }
+                        break;
+                    }
+                }
+                break;
 
                 case IProperty::Type::Bool:
                 {
@@ -754,16 +852,16 @@ namespace vg::editor
                                 bool isComponentEnabled = asBool(IComponent::Flags::Enabled & pComponent->GetFlags());
 
                                 ImGui::BeginDisabled(!isParentGameObjectEnabled);
-                                CollapsedHeaderLabel(collapsingHeaderPos, componentShortName, isComponentEnabled);
+                                CollapsingHeaderLabel(collapsingHeaderPos, componentShortName, isComponentEnabled);
                                 ImGui::EndDisabled();
 
-                                if (CollapsedHeaderCheckbox(collapsingHeaderPos, isComponentEnabled, pComponent,style::icon::Checked, style::icon::Unchecked, fmt::sprintf("%s %s component", isComponentEnabled ? "Disable" : "Enable", pComponent->getClassDesc()->GetClassDisplayName()).c_str()))
+                                if (CollapsingHeaderCheckbox(collapsingHeaderPos, isComponentEnabled, pComponent,style::icon::Checked, style::icon::Unchecked, fmt::sprintf("%s %s component", isComponentEnabled ? "Disable" : "Enable", pComponent->getClassDesc()->GetClassDisplayName()).c_str()))
                                 {
                                     pComponent->SetFlags(IComponent::Flags::Enabled, !isComponentEnabled);
                                     changed = true;
                                 }
 
-                                if (CollapsedHeaderIconButton(collapsingHeaderPos, availableWidth, pComponent, style::icon::Trashcan, fmt::sprintf("Remove %s component", pComponent->getClassDesc()->GetClassDisplayName())))
+                                if (CollapsingHeaderIconButton(collapsingHeaderPos, availableWidth, pComponent, style::icon::Trashcan, fmt::sprintf("Remove %s component", pComponent->getClassDesc()->GetClassDisplayName())))
                                 {
                                     componentInspectorMenu.removeComponent(pComponent);
                                     changed = true;

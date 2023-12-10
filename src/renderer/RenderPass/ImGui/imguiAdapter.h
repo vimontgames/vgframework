@@ -16,7 +16,7 @@ namespace vg
 
     namespace renderer
     {
-        class ImGuiAdapter : public IImGuiAdapter
+        class ImGuiAdapter final : public IImGuiAdapter
         {
         public:
                         ImGuiAdapter            (core::WinHandle _winHandle, gfx::Device & _device);
@@ -27,6 +27,8 @@ namespace vg
             #elif defined(VG_VULKAN)
             void        vulkanInit              ();
             #endif
+
+            void        SetGUITheme             (GUITheme _theme) final override;
 
             bool        IsKeyboardFocused       () const final override;
             bool        IsMouseFocused          () const final override;
@@ -42,6 +44,12 @@ namespace vg
         protected:
             ImTextureID getTextureID            (gfx::Texture * _tex) const;
             void        releaseTextureID        (ImTextureID _texID);
+
+            void        resetGUITheme           ();
+            void        setGUIThemeClassic      ();
+            void        setGUIThemeDark         ();
+            void        setGUIThemeLight        ();
+            void        setGUIThemeVGDark       ();
 
         private:
             gfx::BindlessTextureHandle          m_fontTexHandle;

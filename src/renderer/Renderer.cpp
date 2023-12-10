@@ -21,7 +21,7 @@
 #include "renderer/Importer/SceneImporterData.h"
 #include "renderer/Model/Mesh/MeshModel.h"
 #include "renderer/Animation/SkeletalAnimation.h"
-#include "renderer/Options/DisplayOptions.h"
+#include "renderer/Options/RendererOptions.h"
 #include "renderer/IGraphicInstance.h"
 #include "renderer/Importer/TextureImporterData.h"
 #include "renderer/View/View.h"
@@ -192,7 +192,7 @@ namespace vg::renderer
 
         RegisterClasses();
 
-        DisplayOptions * displayOptions = new DisplayOptions("DisplayOptions", this);
+        RendererOptions * options = new RendererOptions("Renderer Options", this);
 
         initDefaultTextures();
         initDefaultMaterials();
@@ -222,8 +222,8 @@ namespace vg::renderer
         deinitDefaultMaterials();
         deinitDefaultTextures();
 
-        DisplayOptions * displayOptions = DisplayOptions::get();
-        VG_SAFE_DELETE(displayOptions);
+        RendererOptions * options = RendererOptions::get();
+        VG_SAFE_DELETE(options);
 
         DebugDraw * dbgDraw = getDebugDraw();
         VG_SAFE_RELEASE(dbgDraw);
@@ -461,9 +461,9 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    renderer::IDisplayOptions * Renderer::GetDisplayOptions()
+    renderer::IRendererOptions * Renderer::GetOptions()
     {
-        return DisplayOptions::get();
+        return RendererOptions::get();
     }
 
     //--------------------------------------------------------------------------------------

@@ -4,10 +4,10 @@
 
 namespace vg::editor
 {
-    class ImGuiDisplayOptions: public ImGuiWindow
+    class ImGuiEditorOptions : public ImGuiWindow
     {
     public:
-        ImGuiDisplayOptions();
+        ImGuiEditorOptions();
 
         virtual void DrawGUI() final override;
     };

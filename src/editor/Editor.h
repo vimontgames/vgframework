@@ -25,7 +25,7 @@ namespace vg
 	{
 		class ImGuiWindow;
 
-		class Editor : public IEditor, public core::Singleton<Editor>
+		class Editor final : public IEditor, public core::Singleton<Editor>
 		{
 		public:
 			using super = IEditor;
@@ -46,6 +46,8 @@ namespace vg
 			void							    Deinit				() final override;
 
 			void							    DrawGUI				(const GUIContext & _context) final override;
+
+			IEditorOptions *					GetOptions			() const final override;
 
 			template <class T> T *				getWindow			() const;
 

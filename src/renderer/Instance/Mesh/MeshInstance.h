@@ -13,7 +13,7 @@ namespace vg::core
 
 namespace vg::renderer
 {
-    class DisplayOptions;
+    class RendererOptions;
     class Skeleton;
     class SkeletalAnimation;
     class MeshModel;
