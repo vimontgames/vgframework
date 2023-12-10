@@ -162,8 +162,6 @@ namespace vg::editor
         ImGui::End();
     }
 
-
-
     //--------------------------------------------------------------------------------------
     // Returns 'true' if any gizmo is manipulated (and thus we shoudn't update picking selection
     //--------------------------------------------------------------------------------------

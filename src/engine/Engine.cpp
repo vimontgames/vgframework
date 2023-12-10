@@ -575,6 +575,9 @@ namespace vg::engine
         m_isPlaying = true;
         m_isPaused = false;
 
+        // Detect joypads
+        Kernel::getInput()->OnPlay();
+
         if (nullptr != m_universe)
         {
             for (uint i = 0; i < m_universe->GetSceneCount(); ++i)

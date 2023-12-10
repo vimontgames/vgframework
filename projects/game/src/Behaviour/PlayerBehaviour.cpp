@@ -170,7 +170,7 @@ void PlayerBehaviour::Update(double _dt)
         }
         else
         {
-            VG_DEBUGPRINT("[Player] %u is not a valid Joypad (%u joypads detected)", m_joypadID, input.GetJoyCount());
+            VG_WARNING("[Player] %u is not a valid Joypad (%u joypads detected)", m_joypadID, input.GetJoyCount());
         }
     }
 }

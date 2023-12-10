@@ -208,6 +208,12 @@ namespace vg::engine::win32
     }
 
     //--------------------------------------------------------------------------------------
+    void Input::OnPlay()
+    {
+        initJoysticks();
+    }
+
+    //--------------------------------------------------------------------------------------
     Input::~Input()
     {
         if (m_directInputKeyboard)
@@ -417,6 +423,8 @@ namespace vg::engine::win32
     //--------------------------------------------------------------------------------------
     void Input::initJoysticks()
     {
+        m_directInputJoystick.clear();
+        m_joystickData.clear();
         HRESULT hr = m_directInputDevice->EnumDevices(DI8DEVCLASS_GAMECTRL, &enumJoysticksCallback, this, DIEDFL_ATTACHEDONLY);
         VG_ASSERT(SUCCEEDED(hr) && "Could not enum joystick input devices");
     }

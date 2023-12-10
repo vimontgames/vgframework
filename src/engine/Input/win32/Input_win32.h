@@ -17,6 +17,8 @@ namespace vg::engine::win32
         Input(const vg::core::WinHandle & _appHandle);
         ~Input();
 
+        void            OnPlay                      () final override;
+
         bool            Update                      () override;
 
         void            UpdateKeyboard              () final override;
