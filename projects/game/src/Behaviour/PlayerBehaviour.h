@@ -4,15 +4,8 @@
 enum PlayerState : vg::core::u8
 {
     Idle = 0,
-    Hello,
-    Walking
-};
-
-enum Facing : vg::core::u8
-{
-    None = 0,
-    Right,
-    Left
+    Walking,
+    Running
 };
 
 class PlayerBehaviour : public vg::core::Component
@@ -20,15 +13,24 @@ class PlayerBehaviour : public vg::core::Component
 public:
     VG_CLASS_DECL(PlayerBehaviour, vg::core::Behaviour);
 
-                        PlayerBehaviour     (const vg::core::string & _name, vg::core::IObject * _parent);
-                        ~PlayerBehaviour    ();
+                    PlayerBehaviour     (const vg::core::string & _name, vg::core::IObject * _parent);
+                    ~PlayerBehaviour    ();
 
-    void                Update              (double _dt) override;
+    void            OnPlay              () final override;
+
+    void            Update              (double _dt) override;
 
 private:
-    vg::core::u8        m_joypadID = 0;
-    PlayerState         m_state = PlayerState::Idle;
-    Facing              m_facing;
-    float               m_speed = 1.0f;
-    bool                m_facingLeft = false;
+    void            PlayAnim            (PlayerState _state);
+
+private:
+    vg::core::u8    m_joypadID  = 0;
+    PlayerState     m_state     = PlayerState::Idle;
+    float           m_walkSpeed = 1.5f;
+    float           m_runSpeed  = 3.0f;
+
+    float           m_dbgSpeed  = 0.0f;
+    float           m_dbgRot    = 0.0f;
+
+    vg::core::uint  m_anim[vg::core::enumCount<PlayerState>()];
 };

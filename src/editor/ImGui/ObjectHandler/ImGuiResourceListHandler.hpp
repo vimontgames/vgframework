@@ -28,7 +28,7 @@ namespace vg::editor
             }
 
             ImGui::PushID(_object);
-            string label = ImGui::getObjectLabel(fmt::sprintf("%ss (%u)", _label.c_str(), resourceCount), _object);
+            string label = ImGui::getObjectLabel(fmt::sprintf("%ss (%u)", _label.c_str(), resourceCount), _label.c_str(), _object);
 
             bool open = ImGui::TreeNodeEx(label.c_str(), ImGuiTreeNodeFlags_None);
             bool remove = false;

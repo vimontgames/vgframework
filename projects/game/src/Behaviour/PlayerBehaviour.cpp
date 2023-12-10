@@ -25,12 +25,57 @@ bool PlayerBehaviour::registerProperties(IClassDesc & _desc)
 {
     super::registerProperties(_desc);
 
+    registerPropertySeparator(PlayerBehaviour, "Settings");
     registerProperty(PlayerBehaviour, m_joypadID, "Joypad");
     registerPropertyEnum(PlayerBehaviour, PlayerState, m_state, "State");
-    registerPropertyEnum(PlayerBehaviour, Facing, m_facing, "Facing");
-    registerProperty(PlayerBehaviour, m_speed, "Speed");
+    registerProperty(PlayerBehaviour, m_walkSpeed, "Walk Speed");
+    registerProperty(PlayerBehaviour, m_runSpeed, "Run Speed");
+
+    registerPropertySeparator(PlayerBehaviour, "Debug");
+    registerPropertyEx(PlayerBehaviour, m_dbgSpeed, "Speed", vg::core::IProperty::Flags::NotSaved);
+    registerPropertyEx(PlayerBehaviour, m_dbgRot, "Rot", vg::core::IProperty::Flags::NotSaved);
     
     return true;
+}
+
+//--------------------------------------------------------------------------------------
+void PlayerBehaviour::OnPlay() 
+{
+    for (uint i = 0; i < vg::core::countof(m_anim); ++i)
+        m_anim[i] = -1;
+
+    IAnimationComponent * animationComponent = GetGameObject()->GetComponentByType<IAnimationComponent>();
+
+    if (nullptr != animationComponent)
+    {
+        m_anim[PlayerState::Idle] = animationComponent->GetAnimationIndex("Idle");
+        m_anim[PlayerState::Walking] = animationComponent->GetAnimationIndex("Walking");
+        m_anim[PlayerState::Running] = animationComponent->GetAnimationIndex("Running");
+    }
+}
+
+//--------------------------------------------------------------------------------------
+void PlayerBehaviour::PlayAnim(PlayerState _state)
+{
+    IAnimationComponent * animationComponent = GetGameObject()->GetComponentByType<IAnimationComponent>();
+
+    for (uint i = 0; i < vg::core::countof(m_anim); ++i)
+    {
+        if (_state != i)
+        {
+            if (IAnimationResource * anim = animationComponent->GetAnimation(m_anim[i]))
+            {
+                if (anim->IsPlaying())
+                    anim->Stop();
+            }
+        }
+    }
+
+    if (IAnimationResource * anim = animationComponent->GetAnimation(m_anim[_state]))
+    {
+        if (anim && !anim->IsPlaying())
+            anim->PlayLoop();
+    }
 }
 
 //--------------------------------------------------------------------------------------
@@ -40,129 +85,60 @@ void PlayerBehaviour::Update(double _dt)
     {
         IInput & input = Game::Input();
         IAnimationComponent * animationComponent = GetGameObject()->GetComponentByType<IAnimationComponent>();
-        bool updateRotation = false;
 
         if (m_joypadID < input.GetJoyCount())
         {
-            if (input.IsJoyButtonJustPressed(m_joypadID, JoyButton::A))
-            {
-                VG_INFO("[Player] Button 'A' pressed on joypad %u", m_joypadID);
-                m_state = PlayerState::Hello;
-                m_facing = Facing::None;
-                updateRotation = true;
-            }
-
             switch (m_state)
             {
                 case PlayerState::Idle:
-                {
-                    if (IAnimationResource * idle = animationComponent->GetAnimation("Idle"))
-                    {
-                        if (idle && !idle->IsPlaying())
-                            idle->PlayLoop();
-                    }
-                }
+                    PlayAnim(PlayerState::Idle);
                 break;
 
-                case PlayerState::Hello:
-                {
-                    if (IAnimationResource * idle = animationComponent->GetAnimation("Idle"))
-                    {
-                        if (idle->IsPlaying())
-                            idle->Stop();
-                    }
+                case PlayerState::Walking:
+                    PlayAnim(PlayerState::Walking);
+                    break;
 
-                    if (IAnimationResource * hello = animationComponent->GetAnimation("Hello"))
-                    {
-                        if (!hello->IsPlaying())
-                            hello->PlayOnce();
-                        else if (hello->IsFinished())
-                        {
-                            hello->Stop();
-                            m_state = PlayerState::Idle;
-                            if (IAnimationResource * idle = animationComponent->GetAnimation("Idle"))
-                            {
-                                if (!idle->IsPlaying())
-                                    idle->PlayLoop();
-                            }
-                        }
-                    }
-                }
-
+                case PlayerState::Running:
+                    PlayAnim(PlayerState::Running);
+                    break;           
             }
 
             float3 translation = float3(0, 0, 0);
             const float joyDeadZone = 0.15f;
 
+            bool running = input.IsJoyButtonPressed(m_joypadID, JoyButton::X);
+            m_dbgSpeed = running ? m_runSpeed : m_walkSpeed;
+
             const float2 leftJoyDir = input.GetJoyLeftStickDir(m_joypadID);
-            if (abs(leftJoyDir).x > joyDeadZone)
-                translation.x += leftJoyDir.x * m_speed * _dt * 0.001f;
 
-            if (translation.x > 0.0f && Facing::Left != m_facing)
+            if (any(abs(leftJoyDir).xy > joyDeadZone))
             {
-                m_facing = Facing::Left;
-                updateRotation = true;
-            }
-            else if (translation.x < 0.0f && Facing::Right != m_facing)
-            {
-                m_facing = Facing::Right;
-                updateRotation = true;
+                translation.xy += leftJoyDir.xy * float2(1, -1) * m_dbgSpeed * _dt;
+                m_dbgRot = atan2((float)leftJoyDir.x, (float)leftJoyDir.y) * 180.0f / PI;
             }
 
-            if (abs((float)translation.x) > 0.0f)
+            if (any(abs(translation.xy) > 0.0f))
             {
-                m_state = PlayerState::Walking;
+                if (m_dbgSpeed >= (m_walkSpeed + m_runSpeed) * 0.5f)
+                    m_state = PlayerState::Running;
+                else
+                    m_state = PlayerState::Walking;
             }
 
-            if (m_state == PlayerState::Walking)
+            if (m_state == PlayerState::Walking || m_state == PlayerState::Running)
             {
-                if (IAnimationResource * walking = animationComponent->GetAnimation("Walking"))
-                {
-                    if (!walking->IsPlaying())
-                        walking->PlayLoop();
-                }
-
                 if (abs((float)translation.x) < 0.00001f)
-                {
-                    if (IAnimationResource * walking = animationComponent->GetAnimation("Walking"))
-                    {
-                        if (walking->IsPlaying())
-                            walking->Stop();
-                    }
                     m_state = PlayerState::Idle;
-                }
             }
 
             IGameObject * go = GetGameObject();
             float4x4 worldMatrix = go->GetWorldMatrix();
             {
-                if (updateRotation)
-                {
-                    float4x4 rot;
-                    switch (m_facing)
-                    {
-                        default:
-                        VG_ASSERT_ENUM_NOT_IMPLEMENTED(m_facing);
-                        break;
+                float4x4 mRot = float4x4::rotation_z(m_dbgRot * PI / 180.0f);
 
-                        case None:
-                            rot = float4x4::identity();
-                            break;
-
-                        case Facing::Left:
-                            rot = worldMatrix.rotation_z(PI / 2.0f);
-                            break;
-
-                        case Facing::Right:
-                            rot = worldMatrix.rotation_z(-PI / 2.0f);
-                            break;
-
-                    }
-
-                    worldMatrix[0] = rot[0] * length(worldMatrix[0]);
-                    worldMatrix[1] = rot[1] * length(worldMatrix[1]);
-                    worldMatrix[2] = rot[2] * length(worldMatrix[2]);
-                }
+                worldMatrix[0] = mRot[0];
+                worldMatrix[1] = mRot[1];
+                worldMatrix[2] = mRot[2];
 
                 worldMatrix[3].xyz += translation;
             }

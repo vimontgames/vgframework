@@ -115,16 +115,32 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
-    IAnimationResource * AnimationComponent::GetAnimation(const core::string & _name)
+    IAnimationResource * AnimationComponent::GetAnimation(core::uint _index) const
+    {
+        auto & anims = m_animations.getAnimationResources();
+        if (_index < GetAnimationCount())
+            return (IAnimationResource *) &anims[_index];
+        else
+            return nullptr;
+    }
+
+    //--------------------------------------------------------------------------------------
+    core::uint AnimationComponent::GetAnimationIndex(const core::string _name) const
     {
         auto & anims = m_animations.getAnimationResources();
         for (uint i = 0; i < anims.size(); ++i)
         {
             auto & anim = anims[i];
             if (anim.getName() == _name)
-                return &anim;
+                return i;
         }
         VG_WARNING("[Animation] Could not find Animation \"%s\"", _name.c_str());
-        return nullptr;
+        return -1;
+    }
+
+    //--------------------------------------------------------------------------------------
+    core::uint AnimationComponent::GetAnimationCount() const
+    {
+        return (uint)m_animations.getAnimationResources().size();
     }
 }

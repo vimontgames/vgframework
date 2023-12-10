@@ -11,6 +11,8 @@ namespace vg::engine
     public:
         VG_CLASS_DECL_ABSTRACT(IAnimationComponent, core::Component);
 
-        virtual IAnimationResource * GetAnimation(const core::string & _name) = 0;
+        virtual IAnimationResource * GetAnimation(core::uint _index) const = 0;
+        virtual core::uint GetAnimationIndex(const core::string _name) const = 0;
+        virtual core::uint GetAnimationCount() const = 0;
     };
 }

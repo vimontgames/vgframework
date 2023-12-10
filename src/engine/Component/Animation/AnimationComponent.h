@@ -25,7 +25,9 @@ namespace vg::engine
         void                    onResourceLoaded    (core::IResource * _resource) final override;
         void                    onResourceUnloaded  (core::IResource * _resource) final override;
 
-        IAnimationResource *    GetAnimation        (const core::string & _name) final override;
+        IAnimationResource *    GetAnimation        (core::uint _index) const final override;
+        core::uint              GetAnimationIndex   (const core::string _name) const final override;
+        core::uint              GetAnimationCount   () const final override;
 
     private:
         MeshComponent *         getMeshComponent    () const;

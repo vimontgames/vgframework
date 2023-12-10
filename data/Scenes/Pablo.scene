@@ -11,7 +11,7 @@
                 <Property type="ObjectRefVector" name="m_children" flags="Hidden">
                     <Object class="GameObject">
                         <Property type="String" name="m_name" value="Pablo"/>
-                        <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled|Selected"/>
+                        <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
                         <Property type="Float4" name="m_color" flags="Color" x="1" y="1" z="1" w="1"/>
                         <Property type="Float4x4" name="m_world" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="0" Ty="0" Tz="0" Tw="1"/>
                         <Property type="ObjectRefVector" name="m_components">
@@ -117,25 +117,35 @@
                                                 <Property type="String" name="m_name" value="Walking"/>
                                                 <Property type="Float" name="m_speed" flags="HasRange" value="1"/>
                                             </Object>
+                                            <Object class="AnimationResource">
+                                                <Property type="String" name="m_name" flags="Hidden" value="Running"/>
+                                                <Property type="String" name="m_resourcePath" flags="Hidden" value="data/Models/Pablo/Pablo_running_anim.fbx"/>
+                                                <Property type="Bool" name="m_play" value="false"/>
+                                                <Property type="Bool" name="m_loop" flags="SameLine" value="false"/>
+                                                <Property type="String" name="m_name" value="Running"/>
+                                                <Property type="Float" name="m_speed" flags="HasRange" value="1"/>
+                                            </Object>
                                         </Property>
                                     </Object>
                                 </Property>
                             </Object>
                             <Object class="PlayerBehaviour">
                                 <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
+                                <Property type="LayoutElement" name="Settings"/>
                                 <Property type="Uint8" name="m_joypadID" value="0"/>
                                 <Property type="EnumU8" name="m_state" value="Idle"/>
-                                <Property type="EnumU8" name="m_facing" value="None"/>
-                                <Property type="Float" name="m_speed" value="1"/>
+                                <Property type="Float" name="m_walkSpeed" value="1.5"/>
+                                <Property type="Float" name="m_runSpeed" value="3"/>
+                                <Property type="LayoutElement" name="Debug"/>
                             </Object>
                         </Property>
                         <Property type="ObjectRefVector" name="m_children" flags="Hidden"/>
                     </Object>
                     <Object class="GameObject">
                         <Property type="String" name="m_name" value="Camera"/>
-                        <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled|Selected"/>
+                        <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
                         <Property type="Float4" name="m_color" flags="Color" x="1" y="1" z="1" w="1"/>
-                        <Property type="Float4x4" name="m_world" Ix="0.99999994" Iy="0.00040713151" Iz="-0" Iw="-0" Jx="7.6784436e-06" Jy="-0.01885986" Jz="0.99982214" Jw="-0" Kx="0.00040705909" Ky="-0.99982208" Kz="-0.018859861" Kw="0" Tx="0" Ty="-10" Tz="1.5" Tw="1"/>
+                        <Property type="Float4x4" name="m_world" Ix="0.99999994" Iy="0.00040713151" Iz="-0" Iw="-0" Jx="-0.00021722638" Jy="0.5335533" Jz="0.84576648" Jw="-0" Kx="0.00034433816" Ky="-0.84576637" Kz="0.5335533" Kw="0" Tx="-0.00058964785" Ty="-8.5516977" Tz="7.0427399" Tw="1"/>
                         <Property type="ObjectRefVector" name="m_components">
                             <Object class="CameraComponent">
                                 <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
@@ -148,8 +158,8 @@
                             <Object class="FreeCamBehaviour">
                                 <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
                                 <Property type="Float" name="m_moveSpeed" flags="HasRange" value="1"/>
-                                <Property type="Float" name="m_rotSpeed" flags="HasRange" value="1"/>
-                                <Property type="Float" name="m_pitch" flags="HasRange" value="-1.5896573"/>
+                                <Property type="Float" name="m_rotSpeed" flags="HasRange" value="0.59299999"/>
+                                <Property type="Float" name="m_pitch" flags="HasRange" value="-1.008"/>
                                 <Property type="Float" name="m_yaw" flags="HasRange" value="-3.1411855"/>
                                 <Property type="Float" name="m_roll" flags="HasRange" value="0"/>
                             </Object>
