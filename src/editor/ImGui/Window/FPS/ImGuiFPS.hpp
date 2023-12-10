@@ -19,7 +19,7 @@ namespace vg::editor
         if (m_accum > (double)smoothDtTime)
         {
             m_dt = (float)(m_accum / (float)m_frame);
-            m_fps = (float)1000.0f / m_dt;
+            m_fps = (float)1.0f / m_dt;
             m_accum = 0.0;
             m_frame = 0;
         }
@@ -37,7 +37,7 @@ namespace vg::editor
             ImGui::NextColumn();
             {
                 ImGui::Text("%.0f img/sec", m_fps);
-                ImGui::Text("%.4f ms", m_dt);
+                ImGui::Text("%.3f ms", m_dt * 1000.0f);
 
                 if (ImGui::TooltipButton("Start", !captureInProgress, "Press 'F1' to start capture"))
                     VG_PROFILE_START();

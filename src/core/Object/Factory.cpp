@@ -466,6 +466,9 @@ namespace vg::core
                                             VG_ASSERT_ENUM_NOT_IMPLEMENTED(type);
                                             break;
 
+                                        case IProperty::Type::LayoutElement:
+                                            break;
+
                                         case IProperty::Type::Float:
                                         {
                                             VG_ASSERT(!isEnumArray, "EnumArray serialization from XML not implemented for type '%s'", asString(type).c_str());

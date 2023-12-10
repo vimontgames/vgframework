@@ -54,7 +54,7 @@ namespace vg::engine
                     const float framerate = anim->GetFramerate();
                     
                     float t = animRes.getTime();
-                    animRes.setTime((float)(t + _dt * 0.001f));
+                    animRes.setTime((float)(t + _dt));
                 }
             }
         }

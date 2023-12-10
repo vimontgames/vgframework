@@ -445,7 +445,7 @@ namespace vg::engine
         static Timer::Tick previous = 0;
         Timer::Tick current = Timer::getTick();
         if (previous != 0)
-            m_time.m_dt = Timer::getEnlapsedTime(previous, current);
+            m_time.m_dt = Timer::getEnlapsedTime(previous, current) * 0.001f; // use _dt in seconds for computations, not milliseconds
         previous = current;
     }
 
