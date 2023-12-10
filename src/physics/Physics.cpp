@@ -219,7 +219,7 @@ namespace vg::physics
         VG_PROFILE_CPU("Physics");
         const auto * engine = getEngine();
         if (engine->IsPlaying() && !engine->IsPaused())
-            m_physicsSystem->Update((float)(_dt*0.001f), 1, &m_tempAllocator, m_jobSystem);           
+            m_physicsSystem->Update((float)(_dt), 1, &m_tempAllocator, m_jobSystem);           
 	}
 
     //--------------------------------------------------------------------------------------
