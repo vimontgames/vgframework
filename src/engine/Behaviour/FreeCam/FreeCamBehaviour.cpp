@@ -56,7 +56,7 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
-    void FreeCamBehaviour::Update(double _dt)
+    void FreeCamBehaviour::Update(float _dt)
     {
         bool update = false;
 
@@ -138,8 +138,6 @@ namespace vg::engine
         float4x4 mViewI = float4x4(-I, -J, K, T);
 
         go->setWorldMatrix(mViewI);
-
-        super::Update(_dt);
     }
 
     //--------------------------------------------------------------------------------------

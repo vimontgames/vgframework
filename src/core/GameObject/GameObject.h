@@ -16,10 +16,19 @@ namespace vg::core
                                                             GameObject              (const core::string & _name, IObject * _parent);
         virtual                                             ~GameObject             ();
 
+        void                                                OnLoad                  () override;
+
         void                                                OnPlay                  () override;
         void                                                OnStop                  () override;
 
-        void                                                Update                  (double _dt);
+        void                                                setParent               (IObject * _parent) final override;
+
+        UpdateFlags                                         GetUpdateFlags          () const final override;
+        void                                                SetUpdateFlags          (UpdateFlags _flags, bool _enabled) final override;
+
+        void                                                FixedUpdate             (float _dt);
+        void                                                Update                  (float _dt);
+        void                                                LateUpdate              (float _dt);
 
         void                                                AddComponent            (IComponent * _component, core::uint _index = -1) final override;
         IComponent *                                        AddComponent            (const char * _className, const core::string & _name) final override;
@@ -45,11 +54,21 @@ namespace vg::core
         void                                                removeGraphicInstance   (renderer::IGraphicInstance * _graphicInstance);
         const vector<renderer::IGraphicInstance*> &         getGraphicInstances     () const;
 
-        VG_INLINE const vector<GameObject*> &               getChildren             () const { return m_children;}
+        VG_INLINE const vector<GameObject*> &               getChildren             () const;
+
+        void                                                recomputeUpdateFlags    ();
+
+        VG_INLINE UpdateFlags                               getUpdateFlags          () const;
+        VG_INLINE void                                      setUpdateFlags          (UpdateFlags _flags, bool _enabled);
 
     private:
+        UpdateFlags                                         m_update = (UpdateFlags)0x0;
         vector<Component *>                                 m_components;
         vector<GameObject *>                                m_children;
         vector<renderer::IGraphicInstance*>                 m_graphicInstances;
     };
 }
+
+#if VG_ENABLE_INLINE
+#include "GameObject.inl"
+#endif

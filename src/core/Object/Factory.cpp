@@ -406,7 +406,8 @@ namespace vg::core
     {
         auto * parent = _xmlDoc.RootElement();
         const XMLElement * xmlObject = parent->FirstChildElement("Object");
-        return serializeFromXML(_object, xmlObject);
+        bool result = serializeFromXML(_object, xmlObject);
+        return result;
     }
 
     template <uint N> class AliasType

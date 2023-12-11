@@ -55,7 +55,7 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
-    void MeshComponent::Update(double _dt)
+    void MeshComponent::Update(float _dt)
     {
         // TODO: could be done only when GameObject's matrix changes?
         GameObject * go = getGameObject();

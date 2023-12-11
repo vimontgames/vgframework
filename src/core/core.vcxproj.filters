@@ -201,6 +201,9 @@
       <Filter>Logger</Filter>
     </ClInclude>
     <ClInclude Include="ISelection.h" />
+    <ClInclude Include="Object\UpdateFlags.h">
+      <Filter>Object</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Math\Math.cpp">
@@ -278,6 +281,9 @@
     </None>
     <None Include="Component\Behaviour\Behaviour.inl">
       <Filter>Component\Behaviour</Filter>
+    </None>
+    <None Include="GameObject\GameObject.inl">
+      <Filter>GameObject</Filter>
     </None>
   </ItemGroup>
 </Project>

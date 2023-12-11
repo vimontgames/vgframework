@@ -1,6 +1,7 @@
 #pragma once
 
 #include "core/Object/Object.h"
+#include "core/Object/UpdateFlags.h"
 
 namespace vg::core
 {
@@ -9,7 +10,9 @@ namespace vg::core
     class IComponent : public core::Object
     {
     public:
-        enum Flags : u32
+        VG_CLASS_DECL(IComponent, core::Object);
+
+        enum class Flags : u32
         {
             Enabled = 0x00000001
         };
@@ -20,12 +23,17 @@ namespace vg::core
 
         }
 
-        virtual void                Update          (double _dt) = 0;
+        virtual void                FixedUpdate     (float _dt) = 0;
+        virtual void                Update          (float _dt) = 0;
+        virtual void                LateUpdate      (float _dt) = 0;
 
         virtual const IGameObject * GetGameObject   () const = 0;
         virtual IGameObject *       GetGameObject   () = 0;
 
         virtual Flags               GetFlags        () const = 0;
         virtual void                SetFlags        (Flags _flags, bool _enabled) = 0;
+
+        virtual UpdateFlags         GetUpdateFlags  () const = 0;
+        virtual void                SetUpdateFlags  (UpdateFlags _flags, bool _enabled) = 0;
     };
 }

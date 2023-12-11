@@ -466,7 +466,7 @@ namespace vg::engine
         static Timer::Tick previous = 0;
         Timer::Tick current = Timer::getTick();
         if (previous != 0)
-            m_time.m_dt = Timer::getEnlapsedTime(previous, current) * 0.001f; // use _dt in seconds for computations, not milliseconds
+            m_time.m_dt = (float)(Timer::getEnlapsedTime(previous, current) * 0.001f); // use _dt in seconds for computations, not milliseconds
         previous = current;
     }
 
@@ -488,10 +488,26 @@ namespace vg::engine
 
         m_resourceManager->updateLoading();
 
-        double dt = this->isPlaying() && !this->isPaused() ? m_time.m_dt : 0.0f;
+        float dt = this->isPlaying() && !this->isPaused() ? m_time.m_dt : 0.0f;
 
         if (m_universe)
         {
+            // Update all GameObjects and components
+            {
+                VG_PROFILE_CPU("FixedUpdate");
+                const uint sceneCount = m_universe->GetSceneCount();
+                for (uint i = 0; i < sceneCount; ++i)
+                {
+                    Scene * scene = (Scene *)m_universe->GetScene(i);
+                    GameObject * root = scene->getRoot();
+                    if (root && asBool(UpdateFlags::FixedUpdate & root->getUpdateFlags()))
+                        root->FixedUpdate(dt);
+                }
+            }
+
+            // This will use all available threads for physics
+            m_physics->RunOneFrame(m_time.m_dt);
+
             // Update all GameObjects and components
             {
                 VG_PROFILE_CPU("Update");
@@ -500,13 +516,23 @@ namespace vg::engine
                 {
                     Scene * scene = (Scene *)m_universe->GetScene(i);
                     GameObject * root = scene->getRoot();
-                    if (root)
+                    if (root && asBool(UpdateFlags::Update & root->getUpdateFlags()))
                         root->Update(dt);
                 }
             }
 
-            // This will use all available threads for physics
-            m_physics->RunOneFrame(m_time.m_dt);
+            // Update all GameObjects and components
+            {
+                VG_PROFILE_CPU("LateUpdate");
+                const uint sceneCount = m_universe->GetSceneCount();
+                for (uint i = 0; i < sceneCount; ++i)
+                {
+                    Scene * scene = (Scene *)m_universe->GetScene(i);
+                    GameObject * root = scene->getRoot();
+                    if (root && asBool(UpdateFlags::LateUpdate & root->getUpdateFlags()))
+                        root->LateUpdate(dt);
+                }
+            }
 
             // This will use all available threads for culling then rendering scene (TODO)
             m_renderer->runOneFrame(m_time.m_dt);

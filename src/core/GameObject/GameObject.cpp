@@ -7,6 +7,10 @@
 #include "core/IProfiler.h"
 #include "renderer/IGraphicInstance.h"
 
+#if !VG_ENABLE_INLINE
+#include "GameObject.inl"
+#endif
+
 namespace vg::core
 {
     VG_REGISTER_OBJECT_CLASS_EX(GameObject, "GameObject", IClassDesc::Flags::GameObject);
@@ -54,6 +58,13 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
+    void GameObject::OnLoad()
+    {
+        super::OnLoad();
+        recomputeUpdateFlags();
+    }
+
+    //--------------------------------------------------------------------------------------
     void GameObject::OnPlay()
     {
         super::OnPlay();
@@ -78,25 +89,87 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
-    void GameObject::Update(double _dt)
+    void GameObject::setParent(IObject * _parent)
+    {
+        super::setParent(_parent);
+        recomputeUpdateFlags();
+    }
+
+    //--------------------------------------------------------------------------------------
+    UpdateFlags GameObject::GetUpdateFlags() const
+    {
+        return getUpdateFlags();
+    }
+
+    //--------------------------------------------------------------------------------------
+    void GameObject::SetUpdateFlags(UpdateFlags _flags, bool _enabled)
+    {
+        setUpdateFlags(_flags, _enabled);
+    }
+
+    //--------------------------------------------------------------------------------------
+    void GameObject::FixedUpdate(float _dt)
     {
         VG_PROFILE_CPU(getName().c_str());
+        VG_ASSERT(asBool(GameObject::Flags::Enabled & getFlags()) && asBool(UpdateFlags::FixedUpdate & getUpdateFlags()));
 
-        if (asBool(GameObject::Flags::Enabled & getFlags()))
+        for (uint i = 0; i < m_components.size(); ++i)
         {
-            for (uint i = 0; i < m_components.size(); ++i)
-            {
-                Component * component = m_components[i];
-                if (Component::Flags::Enabled & component->getFlags())
-                    component->Update(_dt);
-            }
+            Component * component = m_components[i];
+            if (asBool(Component::Flags::Enabled & component->getFlags()) && asBool(UpdateFlags::FixedUpdate & component->getUpdateFlags()))
+                component->FixedUpdate(_dt);
+        }
 
-            const auto & children = getChildren();
-            for (uint e = 0; e < children.size(); ++e)
-            {
-                auto * child = children[e];
+        const auto & children = getChildren();
+        for (uint e = 0; e < children.size(); ++e)
+        {
+            auto * child = children[e];
+            if (asBool(GameObject::Flags::Enabled & child->getFlags())  && asBool(UpdateFlags::FixedUpdate & child->getUpdateFlags()))
+                child->FixedUpdate(_dt);
+        }
+    }
+
+    //--------------------------------------------------------------------------------------
+    void GameObject::Update(float _dt)
+    {
+        VG_PROFILE_CPU(getName().c_str());
+        VG_ASSERT(asBool(GameObject::Flags::Enabled & getFlags()) && asBool(UpdateFlags::Update & getUpdateFlags()));
+
+        for (uint i = 0; i < m_components.size(); ++i)
+        {
+            Component * component = m_components[i];
+            if (asBool(Component::Flags::Enabled & component->getFlags()) && asBool(UpdateFlags::Update & component->getUpdateFlags()))
+                component->Update(_dt);
+        }
+
+        const auto & children = getChildren();
+        for (uint e = 0; e < children.size(); ++e)
+        {
+            auto * child = children[e];
+            if (asBool(GameObject::Flags::Enabled & child->getFlags())  && asBool(UpdateFlags::Update & child->getUpdateFlags()))
                 child->Update(_dt);
-            }
+        }
+    }
+
+    //--------------------------------------------------------------------------------------
+    void GameObject::LateUpdate(float _dt)
+    {
+        VG_PROFILE_CPU(getName().c_str());
+        VG_ASSERT(asBool(GameObject::Flags::Enabled & getFlags()) && asBool(UpdateFlags::LateUpdate & getUpdateFlags()));
+
+        for (uint i = 0; i < m_components.size(); ++i)
+        {
+            Component * component = m_components[i];
+            if (asBool(Component::Flags::Enabled & component->getFlags()) && asBool(UpdateFlags::LateUpdate & component->getUpdateFlags()))
+                component->LateUpdate(_dt);
+        }
+
+        const auto & children = getChildren();
+        for (uint e = 0; e < children.size(); ++e)
+        {
+            auto * child = children[e];
+            if (asBool(GameObject::Flags::Enabled & child->getFlags()) && asBool(UpdateFlags::LateUpdate & child->getUpdateFlags()))
+                child->LateUpdate(_dt);
         }
     }
 
@@ -129,6 +202,7 @@ namespace vg::core
         if (m_components.exists((Component *)_component))
         {
             m_components.remove((Component *)_component);
+            recomputeUpdateFlags();
             return true;
         }
 
@@ -155,7 +229,7 @@ namespace vg::core
             else
                 m_components.insert(m_components.begin() + _index, _component);
 
-            _component->setParent(this);
+            _component->setParent(this); // will recomputeUpdateFlags
         }
     }
 
@@ -224,7 +298,7 @@ namespace vg::core
             else
                 m_children.insert(m_children.begin() + _index, (GameObject *)_gameObject);
 
-            _gameObject->setParent(this);
+            _gameObject->setParent(this); // will recomputeUpdateFlags
         }
     }
 
@@ -235,6 +309,7 @@ namespace vg::core
         {
             m_children.remove((GameObject*)_gameObject);
             VG_SAFE_RELEASE(_gameObject);
+            recomputeUpdateFlags();
             return true;
         }
 
@@ -314,5 +389,23 @@ namespace vg::core
     const vector<renderer::IGraphicInstance*> & GameObject::getGraphicInstances() const
     {
         return m_graphicInstances;
+    }
+
+    //--------------------------------------------------------------------------------------
+    void GameObject::recomputeUpdateFlags()
+    {
+        UpdateFlags update = (UpdateFlags)0x0;
+
+        for (uint i = 0; i < m_children.size(); ++i)
+            update |= m_children[i]->getUpdateFlags();
+
+        for (uint i = 0; i < m_components.size(); ++i)
+            update |= m_components[i]->getUpdateFlags();
+        
+        m_update = update;
+
+        GameObject * parent = dynamic_cast<GameObject *>(getParent());
+        if (parent)
+            parent->recomputeUpdateFlags();
     }
 }

@@ -23,7 +23,7 @@ namespace vg::engine
                                                 CameraComponent     (const core::string & _name, core::IObject * _parent);
                                                 ~CameraComponent    ();
 
-        void                                    Update              (double _dt) override;
+        void                                    Update              (float _dt) override;
 
         VG_INLINE void                          setViewTarget       (gfx::ViewTarget _target);
         VG_INLINE gfx::ViewTarget               getViewTarget       () const;

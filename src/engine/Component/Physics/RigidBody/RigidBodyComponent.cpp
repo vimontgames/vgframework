@@ -54,7 +54,7 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
-    void RigidBodyComponent::Update(double _dt)
+    void RigidBodyComponent::Update(float _dt)
     {
         const auto * engine = Engine::get();
         IGameObject * go = GetGameObject();

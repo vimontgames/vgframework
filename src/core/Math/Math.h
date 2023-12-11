@@ -10,6 +10,18 @@ namespace vg::core
     const float MAX_FLOAT = FLT_MAX;
 
     //--------------------------------------------------------------------------------------
+    inline float degreesToRadians(float _degrees)
+    {
+        return _degrees * (PI / 180.0f);
+    }
+
+    //--------------------------------------------------------------------------------------
+    inline float radiansToDegrees(float _radians)
+    {
+        return _radians * (180.0f / PI);
+    }
+
+    //--------------------------------------------------------------------------------------
     inline float4x4 TRS(const float3 & _translation, const quaternion _rotation, const float3 _scale)
     {
         quaternion q = _rotation;

@@ -9,25 +9,35 @@ namespace vg::core
     class Component : public IComponent
     {
     public:
-                                Component           (const core::string & _name, IObject * _parent);
-                                ~Component          ();
+        VG_CLASS_DECL(Component, IComponent);
 
-        static bool             registerProperties  (IClassDesc & _desc);
+                                Component               (const core::string & _name, IObject * _parent);
+                                ~Component              ();
 
-        void                    Update              (double _dt) { };
-        const IGameObject *     GetGameObject       () const final;
-        IGameObject *           GetGameObject       () final;
+        void                    FixedUpdate             (float _dt) override;
+        void                    Update                  (float _dt) override;
+        void                    LateUpdate              (float _dt) override;
 
-        Flags                   GetFlags            () const final;
-        void                    SetFlags            (Flags _flags, bool _enabled) final;
+        const IGameObject *     GetGameObject           () const final override;
+        IGameObject *           GetGameObject           () final override;
 
-    public:
-        VG_INLINE Flags         getFlags            () const;
-        VG_INLINE void          setFlags            (Flags _flags, bool _enabled);
-        VG_INLINE GameObject *  getGameObject       () const;
+        Flags                   GetFlags                () const final override;
+        void                    SetFlags                (Flags _flags, bool _enabled) final override;
+
+        UpdateFlags             GetUpdateFlags          () const final override;
+        void                    SetUpdateFlags          (UpdateFlags _flags, bool _enabled) final override;
+
+        VG_INLINE Flags         getFlags                () const;
+        VG_INLINE void          setFlags                (Flags _flags, bool _enabled);
+
+        VG_INLINE UpdateFlags   getUpdateFlags          () const;
+        VG_INLINE void          setUpdateFlags          (UpdateFlags _flags, bool _enabled);
+
+        VG_INLINE GameObject *  getGameObject           () const;
 
     private:
         Flags                   m_flags;
+        UpdateFlags             m_update;
     };
 }
 

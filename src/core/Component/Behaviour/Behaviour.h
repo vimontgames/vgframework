@@ -6,9 +6,9 @@ namespace vg::core
     class Behaviour : public IBehaviour
     {
     public:
-        static bool     registerProperties  (IClassDesc & _desc);
+        VG_CLASS_DECL(Behaviour, IBehaviour);
 
-                        Behaviour           (const core::string & _name, IObject * _parent);
-                        ~Behaviour          ();
+        Behaviour(const core::string & _name, IObject * _parent);
+        ~Behaviour();
     };
 }

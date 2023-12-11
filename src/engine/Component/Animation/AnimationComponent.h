@@ -15,7 +15,7 @@ namespace vg::engine
         AnimationComponent(const core::string & _name, IObject * _parent);
         ~AnimationComponent();
 
-        void                    Update              (double _dt) final override;
+        void                    Update              (float _dt) final override;
 
         void                    OnPlay              () final override;
         void                    OnStop              () final override;

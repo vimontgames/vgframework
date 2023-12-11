@@ -1,6 +1,7 @@
 #pragma once
 
 #include "core/Instance/Instance.h"
+#include "core/Object/UpdateFlags.h"
 
 namespace vg::renderer
 {
@@ -20,22 +21,25 @@ namespace vg::core
 
         }
 
-        virtual void                                        AddChild                (IGameObject * _gameObject, core::uint _index = -1) = 0;
-        virtual bool                                        RemoveChild             (IGameObject * _gameObject) = 0;
-        virtual const vector<IGameObject*> &                GetChildren             () const = 0;
-        virtual bool                                        IsRoot                  () const = 0;
-        virtual bool                                        HasAncestor             (const IGameObject * _ancestor) const = 0;
-        virtual core::uint                                  GetChildIndex           (const IGameObject * _child) const = 0;
+        virtual void                            AddChild            (IGameObject * _gameObject, core::uint _index = -1) = 0;
+        virtual bool                            RemoveChild         (IGameObject * _gameObject) = 0;
+        virtual const vector<IGameObject*> &    GetChildren         () const = 0;
+        virtual bool                            IsRoot              () const = 0;
+        virtual bool                            HasAncestor         (const IGameObject * _ancestor) const = 0;
+        virtual core::uint                      GetChildIndex       (const IGameObject * _child) const = 0;
 
-        virtual void                                        AddComponent            (IComponent * _component, core::uint _index = -1) = 0;
-        virtual IComponent *                                AddComponent            (const char * _className, const core::string & _name) = 0;
-        virtual bool                                        RemoveComponent         (IComponent * _component) = 0;
-        virtual const vector<IComponent *> &                GetComponents           () const = 0;
-        virtual IComponent *                                GetComponentByType      (const char * _className) const = 0;
-        virtual core::uint                                  GetComponentIndex       (const IComponent * _component) const = 0;
+        virtual void                            AddComponent        (IComponent * _component, core::uint _index = -1) = 0;
+        virtual IComponent *                    AddComponent        (const char * _className, const core::string & _name) = 0;
+        virtual bool                            RemoveComponent     (IComponent * _component) = 0;
+        virtual const vector<IComponent *> &    GetComponents       () const = 0;
+        virtual IComponent *                    GetComponentByType  (const char * _className) const = 0;
+        virtual core::uint                      GetComponentIndex   (const IComponent * _component) const = 0;
 
-        template <class T> T *                              AddComponentByType      (const core::string & _name);
-        template <class T> T *                              GetComponentByType      () const;
+        virtual UpdateFlags                     GetUpdateFlags      () const = 0;
+        virtual void                            SetUpdateFlags      (UpdateFlags _flags, bool _enabled) = 0;
+
+        template <class T> T *                  AddComponentByType  (const core::string & _name);
+        template <class T> T *                  GetComponentByType  () const;
     };
 
     //--------------------------------------------------------------------------------------

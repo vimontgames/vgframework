@@ -35,7 +35,7 @@ namespace vg::editor
     {
         auto * renderer = Editor::get()->getRenderer();
 
-        ImGui::SetNextWindowSizeConstraints(ImVec2(256, 256), ImVec2(FLT_MAX, FLT_MAX));
+        ImGui::SetNextWindowSizeConstraints(ImVec2(640, 480), ImVec2(MIN_FLOAT, MAX_FLOAT));
         ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0, 0));
         ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0, 0, 0, 255));
         

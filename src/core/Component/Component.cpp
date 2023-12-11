@@ -15,7 +15,8 @@ namespace vg::core
     //--------------------------------------------------------------------------------------
     Component::Component(const core::string & _name, IObject * _parent) :
         IComponent(_name, _parent),
-        m_flags(Flags::Enabled)
+        m_flags(Flags::Enabled),
+        m_update(UpdateFlags::Update)
     {
         VG_ASSERT(_name.empty() || nullptr != dynamic_cast<IGameObject*>(_parent), "Creating Component without parent is only allowed during static initialization");
     }
@@ -24,6 +25,24 @@ namespace vg::core
     Component::~Component()
     {
         
+    }
+
+    //--------------------------------------------------------------------------------------
+    void Component::FixedUpdate(float _dt)
+    {
+        VG_ASSERT(false, "Component '%s' does not implement 'FixedUpdate'", getClassName());
+    }
+
+    //--------------------------------------------------------------------------------------
+    void Component::Update(float _dt) 
+    {
+        VG_ASSERT(false, "Component '%s' does not implement 'Update'", getClassName());
+    }
+
+    //--------------------------------------------------------------------------------------
+    void Component::LateUpdate(float _dt) 
+    {
+        VG_ASSERT(false, "Component '%s' does not implement 'LateUpdate'", getClassName());
     }
 
     //--------------------------------------------------------------------------------------
@@ -56,5 +75,17 @@ namespace vg::core
     void Component::SetFlags(Flags _flags, bool _enabled)
     {
         setFlags(_flags, _enabled);
+    }
+
+    //--------------------------------------------------------------------------------------
+    UpdateFlags Component::GetUpdateFlags() const
+    {
+        return getUpdateFlags();
+    }
+
+    //--------------------------------------------------------------------------------------
+    void Component::SetUpdateFlags(UpdateFlags _flags, bool _enabled)
+    {
+        setUpdateFlags(_flags, _enabled);
     }
 }

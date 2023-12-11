@@ -38,7 +38,7 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
-    void AnimationComponent::Update(double _dt)
+    void AnimationComponent::Update(float _dt)
     {
         auto & animResources = m_animations.getAnimationResources();
         for (uint i = 0; i < animResources.size(); ++i)
@@ -54,7 +54,7 @@ namespace vg::engine
                     const float framerate = anim->GetFramerate();
                     
                     float t = animRes.getTime();
-                    animRes.setTime((float)(t + _dt));
+                    animRes.setTime(t + _dt);
                 }
             }
         }

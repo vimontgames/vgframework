@@ -22,7 +22,7 @@ namespace vg::engine
         RigidBodyComponent(const core::string & _name, IObject * _parent);
         ~RigidBodyComponent();
 
-        void                        Update(double _dt) final override;
+        void                        Update(float _dt) final override;
 
         void                        OnLoad() final override;
 

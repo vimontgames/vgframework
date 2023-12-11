@@ -35,7 +35,7 @@ namespace vg
 
         struct Time
         {
-            double m_dt = 0.0f;
+            float m_dt = 0.0f;
         };
 
 	    class IEngine : public core::IPlugin

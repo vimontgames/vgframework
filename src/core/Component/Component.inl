@@ -7,12 +7,27 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
-    VG_INLINE void Component::setFlags(Flags flags, bool enabled)
+    VG_INLINE void Component::setFlags(Flags _flags, bool _enabled)
     {
-        if (enabled)
-            m_flags |= flags;
+        if (_enabled)
+            m_flags |= _flags;
         else
-            (u32&)m_flags &= ~(u32)flags;
+            (std::underlying_type<Flags>::type&)m_flags &= ~(std::underlying_type<Flags>::type&)_flags;
+    }
+
+    //--------------------------------------------------------------------------------------
+    VG_INLINE UpdateFlags Component::getUpdateFlags() const
+    {
+        return m_update;
+    }
+
+    //--------------------------------------------------------------------------------------
+    VG_INLINE void Component::setUpdateFlags(UpdateFlags _flags, bool _enabled)
+    {
+        if (_enabled)
+            m_update |= _flags;
+        else
+            (std::underlying_type<UpdateFlags>::type&)m_update &= ~(std::underlying_type<UpdateFlags>::type&)_flags;
     }
 
     //--------------------------------------------------------------------------------------

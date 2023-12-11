@@ -19,7 +19,7 @@ namespace vg::engine
                                             MeshComponent       (const core::string & _name, IObject * _parent);
                                             ~MeshComponent      ();
 
-        void                                Update              (double _dt) override;
+        void                                Update              (float _dt) override;
 
         void                                OnPropertyChanged   (IObject * _object, const core::IProperty & _prop, bool _notifyParent) override;
 
