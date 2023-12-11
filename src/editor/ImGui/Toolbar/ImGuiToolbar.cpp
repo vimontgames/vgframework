@@ -96,18 +96,27 @@ namespace vg::editor
         ImVec2 size = ImGui::GetWindowContentRegionSize();
         ImGuiStyle & style = ImGui::GetStyle();
 
-        float buttonSize = ImGui::CalcTextSize(style::icon::GameView).x + style.FramePadding.x*4.0f;
-        int buttonCount = GetButtonCount();
+        // left button
+        {
+            ImGui::SetCursorPos(ImVec2(style.FramePadding.x * 2.0f, 0));
+            DrawButtons(Align::Left);
+        }
 
-        float offset;
-        if (buttonCount & 1)
-            offset = size.x/2.0f - buttonCount / 2 * buttonSize - buttonSize*0.5f;
-        else
-            offset = size.x/2.0f - buttonCount / 2 * buttonSize;
+        // center buttons
+        {
+            float buttonSize = ImGui::CalcTextSize(style::icon::GameView).x + style.FramePadding.x * 4.0f;
+            int buttonCount = GetButtonCount(Align::Center);
+            float offset;
 
-        ImGui::SetCursorPos(ImVec2(offset,0));
+            if (buttonCount & 1)
+                offset = size.x / 2.0f - buttonCount / 2 * buttonSize - buttonSize * 0.5f;
+            else
+                offset = size.x / 2.0f - buttonCount / 2 * buttonSize;
 
-        DrawButtons();
+            ImGui::SetCursorPos(ImVec2(offset, 0));
+
+            DrawButtons(Align::Center);
+        }
 
         ImGui::PopStyleVar(1);
 

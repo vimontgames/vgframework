@@ -21,7 +21,7 @@ namespace vg::editor
             registerPropertyEnum(EditorOptions, GizmoType, m_gizmo.m_type, "Type");
             registerPropertyEnum(EditorOptions, GizmoSpace, m_gizmo.m_space, "Space");
 
-            registerPropertyGroupBegin(EditorOptions, "Snap");
+            registerPropertyGroupBegin(EditorOptions, "Snap Align");
             {
                 registerOptionalProperty(EditorOptions, m_gizmo.m_snapTranslate, m_gizmo.m_translationSnap, "Translate");
                 registerOptionalProperty(EditorOptions, m_gizmo.m_snapRotate, m_gizmo.m_rotationSnapInDegrees, "Rotate");
@@ -75,6 +75,69 @@ namespace vg::editor
         {
             auto imGuiAdapter = Editor::get()->getRenderer()->GetImGuiAdapter();
             imGuiAdapter->SetGUITheme(m_guiTheme);
+        }
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool EditorOptions::setGizmoType(GizmoType _gizmoType)
+    {
+        if (_gizmoType != m_gizmo.m_type)
+        {
+            m_gizmo.m_type = _gizmoType;
+            VG_INFO("[Editor] Gizmo type changed to '%s'", asString(_gizmoType).c_str());
+            return true;
+        }
+        return false;
+    }  
+
+    //--------------------------------------------------------------------------------------
+    bool EditorOptions::setSnap(bool _enable)
+    {
+        switch (m_gizmo.m_type)
+        {
+            case GizmoType::Translate:
+            if (_enable != m_gizmo.m_snapTranslate)
+            {
+                m_gizmo.m_snapTranslate = _enable;
+                return true;
+            }
+            break;
+
+            case GizmoType::Rotate:
+            if (_enable != m_gizmo.m_snapRotate)
+            {
+                m_gizmo.m_snapRotate = _enable;
+                return true;
+            }
+            break;
+
+            case GizmoType::Scale:
+            if (_enable != m_gizmo.m_snapScale)
+            {
+                m_gizmo.m_snapScale = _enable;
+                return true;
+            }
+            break;
+        }
+        return false;
+    }
+    //--------------------------------------------------------------------------------------
+    bool EditorOptions::getSnap() const
+    {
+        switch (m_gizmo.m_type)
+        {
+            default:
+                VG_ASSERT_ENUM_NOT_IMPLEMENTED(m_gizmo.m_type);
+                return false;
+
+            case GizmoType::Translate:
+                return m_gizmo.m_snapTranslate;
+
+            case GizmoType::Rotate:
+                return m_gizmo.m_snapRotate;
+
+            case GizmoType::Scale:
+                return m_gizmo.m_snapScale;
         }
     }
 }

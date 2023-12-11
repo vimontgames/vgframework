@@ -39,10 +39,10 @@ namespace vg::editor
                 ImGui::Text("%.0f img/sec", m_fps);
                 ImGui::Text("%.3f ms", m_dt * 1000.0f);
 
-                if (ImGui::TooltipButton("Start", !captureInProgress, "Press 'F1' to start capture"))
+                if (ImGui::TooltipButton("Start", !captureInProgress, !captureInProgress, "Press 'F1' to start capture"))
                     VG_PROFILE_START();
                 ImGui::SameLine();
-                if (ImGui::TooltipButton("Stop", captureInProgress, "Press 'F1' to stop capture"))
+                if (ImGui::TooltipButton("Stop", captureInProgress, captureInProgress, "Press 'F1' to stop capture"))
                     VG_PROFILE_STOP();
             }
             ImGui::Columns(1);

@@ -57,10 +57,10 @@ namespace ImGui
 
         if (!_enabled)
         {
-            ImGui::PushStyleColor(ImGuiCol_Button, buttonColorDisabled);
+            ImGui::PushStyleColor(ImGuiCol_Text, textColorDisabled);
 
             if (!_clickable)
-                ImGui::PushStyleColor(ImGuiCol_Text, textColorDisabled);
+                ImGui::PushStyleColor(ImGuiCol_Button, buttonColorDisabled);
         }
 
         if (!_textLabel.empty())
@@ -77,15 +77,15 @@ namespace ImGui
             clicked = true;
         }
 
-        if (!_tooltip.empty() && ImGui::IsItemHovered(ImGuiHoveredFlags_AllowWhenDisabled))
-            ImGui::SetTooltip(_tooltip.c_str());
-
         if (!_enabled)
         {
-            ImGui::PopStyleColor(); 
+            ImGui::PopStyleColor();
             if (!_clickable)
                 ImGui::PopStyleColor();
         }
+
+        if (!_tooltip.empty() && ImGui::IsItemHovered(ImGuiHoveredFlags_AllowWhenDisabled))
+            ImGui::SetTooltip(_tooltip.c_str());
 
         return clicked;
     }

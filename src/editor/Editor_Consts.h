@@ -45,7 +45,7 @@ namespace vg::editor
             inline static const char * Platform     = ICON_FA_COMPUTER;
             inline static const char * Shaders      = ICON_FA_HAT_WIZARD;
             inline static const char * FPS          = ICON_FA_STOPWATCH;
-            inline static const char * Scene        = ICON_FA_MAP;
+            inline static const char * Scene        = ICON_FA_SITEMAP;
             inline static const char * Resource     = ICON_FA_DATABASE;
             inline static const char * EditorView   = ICON_FA_DESKTOP;
             inline static const char * GameView     = ICON_FA_DISPLAY;
@@ -69,6 +69,10 @@ namespace vg::editor
             inline static const char * Physics      = ICON_FA_CAPSULES;
             inline static const char * Editor       = ICON_FA_SCREWDRIVER_WRENCH;
             inline static const char * Restart      = ICON_FA_CLOCK_ROTATE_LEFT;
+            inline static const char * Translate    = ICON_FA_UP_DOWN_LEFT_RIGHT;
+            inline static const char * Rotate       = ICON_FA_ROTATE;
+            inline static const char * Scale        = ICON_FA_ARROWS_LEFT_RIGHT_TO_LINE;
+            inline static const char * Snap         = ICON_FA_RULER_COMBINED;
         }
     }
 }

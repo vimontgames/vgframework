@@ -45,6 +45,8 @@ namespace vg
 			void							    Init				(const core::Singletons & _singletons) final override;
 			void							    Deinit				() final override;
 
+			void								RunOneFrame			(float _dt) final override;
+
 			void							    DrawGUI				(const GUIContext & _context) final override;
 
 			IEditorOptions *					GetOptions			() const final override;

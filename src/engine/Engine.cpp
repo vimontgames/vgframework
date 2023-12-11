@@ -534,6 +534,9 @@ namespace vg::engine
                 }
             }
 
+            if (m_editor)
+                m_editor->RunOneFrame(m_time.m_dt);
+
             // This will use all available threads for culling then rendering scene (TODO)
             m_renderer->runOneFrame(m_time.m_dt);
         }

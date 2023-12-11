@@ -5,6 +5,7 @@
 #include "engine/IEngine.h"
 #include "editor/ImGui/Extensions/ImGuizmo/ImGuizmoAdapter.h"
 #include "editor/Options/EditorOptions.h"
+#include "core/IInput.h"
 
 #if !VG_ENABLE_INLINE
 #include "Editor.inl"
@@ -200,6 +201,24 @@ namespace vg::editor
     vg::renderer::IRenderer * Editor::getRenderer() const
     {
         return (vg::renderer::IRenderer *)getFactory()->getSingleton("Renderer");
+    }
+
+    //--------------------------------------------------------------------------------------
+    void Editor::RunOneFrame(float _dt)
+    {
+        VG_PROFILE_CPU("Editor");
+
+        auto input = Kernel::getInput();
+        auto options = EditorOptions::get();
+
+        if (input->IsKeyJustPressed(Key::T))
+            options->setGizmoType(GizmoType::Translate);
+        else if (input->IsKeyJustPressed(Key::R))
+            options->setGizmoType(GizmoType::Rotate);
+        else if (input->IsKeyJustPressed(Key::S))
+            options->setGizmoType(GizmoType::Scale);
+        else if (input->IsKeyJustPressed(Key::A))
+            options->setSnap(options->getSnap());
     }
 
 	//--------------------------------------------------------------------------------------

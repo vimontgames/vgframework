@@ -40,12 +40,17 @@ namespace vg::editor
 
         EditorOptions(const core::string & _name, core::IObject * _parent = nullptr);
 
-        void                    OnPropertyChanged(IObject * _object, const core::IProperty & _prop, bool _notifyParent) final override;
+        void                    OnPropertyChanged   (IObject * _object, const core::IProperty & _prop, bool _notifyParent) final override;
 
-        static bool			    load(core::IObject * _object);
-        static bool			    save(core::IObject * _object);
+        static bool			    load                (core::IObject * _object);
+        static bool			    save                (core::IObject * _object);
 
-        const GizmoOptions &    getGizmoOptions() const { return m_gizmo; }
+        bool                    setGizmoType        (GizmoType _gizmoType);
+        bool                    setSnap             (bool _enable);
+        bool                    getSnap             () const;
+
+        const GizmoOptions &    getGizmoOptions     () const { return m_gizmo; }
+        GizmoOptions &          getGizmoOptions     () { return m_gizmo; }
 
     private:
         renderer::GUITheme      m_guiTheme = renderer::GUITheme::ImGui_Dark;       
