@@ -6,6 +6,7 @@
 #include "Shape/CapsuleShape.h"
 #include "Helper.h"
 #include "Body/Body.h"
+#include "Character/Character.h"
 #include "Options/PhysicsOptions.h"
 #include "core/Math/Math.h"
 
@@ -276,6 +277,21 @@ namespace vg::physics
 
             case BodyType::Rigid:
                 return new physics::RigidBody((RigidBodyDesc *)_bodyDesc, (Shape*)_shape, _world);
+        }
+    }
+
+    //--------------------------------------------------------------------------------------
+    ICharacter * Physics::CreateCharacter(const ICharacterDesc * _characterDesc, IShape * _shape, const core::float4x4 & _world)
+    {
+        const CharacterType characterType = _characterDesc->GetCharacterType();
+        switch (characterType)
+        {
+            default:
+                VG_ASSERT_ENUM_NOT_IMPLEMENTED(characterType);
+                return nullptr;
+
+            case CharacterType::Rigid:
+                return new physics::RigidCharacter((RigidCharacterDesc *)_characterDesc, (Shape *)_shape, _world);
         }
     }
 }

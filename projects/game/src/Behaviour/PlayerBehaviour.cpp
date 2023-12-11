@@ -1,6 +1,7 @@
 #include "Precomp.h"
 #include "PlayerBehaviour.h"
 #include "Game.h"
+#include "engine/ICharacterControllerComponent.h"
 
 using namespace vg::core;
 using namespace vg::engine;
@@ -115,7 +116,7 @@ void PlayerBehaviour::Update(float _dt)
 
             if (any(abs(leftJoyDir).xy > joyDeadZone))
             {
-                translation.xy += leftJoyDir.xy * float2(1, -1) * m_currentSpeed * _dt;
+                translation.xy += leftJoyDir.xy * float2(1, -1) * m_currentSpeed;
                 m_currentRotation = radiansToDegrees(atan2((float)leftJoyDir.x, (float)leftJoyDir.y));
             }
 
@@ -133,6 +134,17 @@ void PlayerBehaviour::Update(float _dt)
                     m_state = PlayerState::Idle;
             }
 
+            vg::engine::ICharacterControllerComponent * charaController = GetGameObject()->GetComponentByType<vg::engine::ICharacterControllerComponent>();
+            if (charaController)
+            {
+                float3 currentVelocity = charaController->GetVelocity();
+                float3 targetVelocity = translation.xyz;
+                float3 updatedVelocity;
+                updatedVelocity.xy = 0.75f * currentVelocity.xy + 0.25f * targetVelocity.xy;
+                updatedVelocity.z = currentVelocity.z;
+                charaController->SetVelocity(updatedVelocity);
+            }
+
             IGameObject * go = GetGameObject();
             float4x4 worldMatrix = go->GetWorldMatrix();
             {
@@ -142,7 +154,7 @@ void PlayerBehaviour::Update(float _dt)
                 worldMatrix[1] = mRot[1];
                 worldMatrix[2] = mRot[2];
 
-                worldMatrix[3].xyz += translation;
+                //worldMatrix[3].xyz += translation;
             }
             go->setWorldMatrix(worldMatrix);
         }

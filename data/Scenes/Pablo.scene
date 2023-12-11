@@ -129,11 +129,30 @@
                                     </Object>
                                 </Property>
                             </Object>
+                            <Object class="CharacterControllerComponent">
+                                <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
+                                <Property type="EnumU8" name="m_characterType" flags="ReadOnly" value="Rigid"/>
+                                <Property type="ObjectRef" name="m_characterDesc" flags="Flatten">
+                                    <Object class="RigidCharacterDesc">
+                                        <Property type="String" name="m_name" flags="Hidden" value="RigidCharacterDesc #0"/>
+                                        <Property type="Float" name="m_mass" value="90"/>
+                                        <Property type="Float" name="m_friction" flags="HasRange" value="1"/>
+                                        <Property type="Float" name="m_maxSlopeAngle" flags="HasRange" value="30.118"/>
+                                    </Object>
+                                </Property>
+                                <Property type="ObjectRef" name="m_shapeDesc" flags="Flatten">
+                                    <Object class="CapsuleShapeDesc">
+                                        <Property type="String" name="m_name" flags="Hidden" value="CapsuleShapeDesc #0"/>
+                                        <Property type="Float3" name="m_offset" x="0" y="0" z="0.625"/>
+                                        <Property type="Float" name="m_radius" value="0.25"/>
+                                        <Property type="Float" name="m_height" value="1.3"/>
+                                    </Object>
+                                </Property>
+                            </Object>
                             <Object class="PlayerBehaviour">
                                 <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
                                 <Property type="LayoutElement" name="Settings"/>
                                 <Property type="Uint8" name="m_joypadID" value="0"/>
-                                <Property type="EnumU8" name="m_state" value="Idle"/>
                                 <Property type="Float" name="m_walkSpeed" value="1.5"/>
                                 <Property type="Float" name="m_runSpeed" value="3"/>
                                 <Property type="LayoutElement" name="Debug"/>

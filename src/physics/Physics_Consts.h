@@ -76,4 +76,10 @@ namespace vg::physics
         Rigid = 0,
         Soft
     };
+
+    enum class CharacterType : core::u8
+    {
+        Rigid = 0,
+        Virtual
+    };
 }

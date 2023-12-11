@@ -5,7 +5,6 @@
 #include "physics/BroadPhase/BroadPhaseLayer.h"
 #include "physics/BroadPhase/BroadPhaseFilter.h"
 #include "physics/BroadPhase/ObjectFilter.h"
-#include "Jolt/Physics/PhysicsSystem.h"
 
 namespace vg::renderer
 {
@@ -47,6 +46,7 @@ namespace vg::physics
 
         IShape *                            CreateShape                 (const IShapeDesc * _shapeDesc) final override;
         IBody *                             CreateBody                  (const IBodyDesc * _bodyDesc, IShape * _shape, const core::float4x4 & _world) final override;
+        ICharacter *                        CreateCharacter             (const ICharacterDesc * _characterDesc, IShape * _shape, const core::float4x4 & _world) final override;
 
         engine::IEngine *                   getEngine                   () const;
         renderer::IDebugDraw *              getDebugDraw                () const;

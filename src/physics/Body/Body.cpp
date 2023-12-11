@@ -4,8 +4,6 @@
 #include "physics/Helper.h"
 #include "physics/Shape/Shape.h"
 #include "core/Math/Math.h"
-#include "Jolt/Physics/PhysicsSystem.h"
-#include "Jolt/Physics/Body/BodyCreationSettings.h"
 
 #include "physics/Body/BodyDesc.hpp"
 
@@ -44,10 +42,9 @@ namespace vg::physics
         }
         
         m_bodyID = getBodyInterface().CreateAndAddBody(bodySettings, JPH::EActivation::DontActivate);
-        
-        //getBodyInterface().SetFriction()
-        //auto quality = bodyInterface.GetMotionQuality(bodyID);
-        //bodyInterface.SetMotionQuality(bodyID, EMotionQuality::LinearCast);
+
+        getBodyInterface().SetFriction(m_bodyID, _bodyDesc->m_friction);
+        getBodyInterface().SetRestitution(m_bodyID, _bodyDesc->m_restitution);
     }
 
     //--------------------------------------------------------------------------------------

@@ -1,7 +1,7 @@
 <Root>
     <Object class="PhysicsOptions">
         <Property type="String" name="m_name" flags="Hidden" value="PhysicsOptions"/>
-        <Property type="Bool" name="m_showRigidBodies" flags="Hidden" value="false"/>
+        <Property type="Bool" name="m_showRigidBodies" flags="Hidden" value="true"/>
         <Property type="EnumFlagsU32" name="m_showRigidBodiesMask" flags="Bitfield|Optional" value="Sphere|Box|Capsule"/>
         <Property type="Float3" name="m_gravity" x="0" y="0" z="-9.8100004"/>
     </Object>

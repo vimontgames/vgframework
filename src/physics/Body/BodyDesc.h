@@ -23,15 +23,14 @@ namespace vg::physics
         float GetMass() const final override { return m_mass; }
         void SetMass(float _mass) final override { m_mass = _mass; }
 
-    protected:
-        renderer::IDebugDraw * getDebugDraw() const;
-
     public:
-        ObjectLayer m_layer         = ObjectLayer::NonMoving;
-        MotionType  m_motion        = MotionType::Static;
-        ShapeType   m_shapeType     = ShapeType::Box;
-        bool        m_overrideMass  = false;
-        float       m_mass          = 0.0f;
+        ObjectLayer     m_layer         = ObjectLayer::NonMoving;
+        MotionType      m_motion        = MotionType::Static;
+        ShapeType       m_shapeType     = ShapeType::Box;
+        bool            m_overrideMass  = false;
+        float           m_mass          = 0.0f;
+        float           m_friction      = 0.5f;
+        float           m_restitution   = 0.0f;
     };
 
     class RigidBodyDesc final : public BodyDesc

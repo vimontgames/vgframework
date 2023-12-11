@@ -13,6 +13,9 @@ namespace vg
         class IBodyDesc;
         class IBody;
 
+        class ICharacterDesc;
+        class ICharacter;
+
         class IPhysicsOptions;
 
 	    class IPhysics : public core::IPlugin
@@ -34,6 +37,7 @@ namespace vg
 
             virtual IShape *            CreateShape         (const IShapeDesc * _shapeDesc) = 0;
             virtual IBody *             CreateBody          (const IBodyDesc * _bodyDesc, IShape * _shape, const core::float4x4 & _world) = 0;
+            virtual ICharacter *        CreateCharacter     (const ICharacterDesc * _characterDesc, IShape * _shape, const core::float4x4 & _world) = 0;
 	    };
     }
 }

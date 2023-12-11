@@ -488,7 +488,7 @@ namespace vg::engine
 
         m_resourceManager->updateLoading();
 
-        float dt = this->isPlaying() && !this->isPaused() ? m_time.m_dt : 0.0f;
+        float dt = m_time.m_dt;
 
         if (m_universe)
         {

@@ -11,7 +11,7 @@ namespace vg::editor
     //--------------------------------------------------------------------------------------
     void ImGuiFPS::DrawGUI()
     {
-        static const uint smoothDtTime = 1000; // 1.0s
+        static const uint smoothDtTime = 1; // 1.0s
 
         m_accum += Editor::get()->getEngine()->GetTime().m_dt;
         m_frame++;

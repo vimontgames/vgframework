@@ -1,4 +1,3 @@
-#include "engine/Precomp.h"
 #include "RigidBodyComponent.h"
 #include "core/IGameObject.h"
 #include "engine/Engine.h"
@@ -61,7 +60,7 @@ namespace vg::engine
 
         if (physics::MotionType::Static != m_bodyDesc->GetMotion())
         {
-            if (engine->IsPlaying() && !engine->isPaused())
+            if (engine->isPlaying() && !engine->isPaused())
             {
                 if (m_body)
                 {
@@ -70,7 +69,7 @@ namespace vg::engine
                 }
             }
         }
-        
+
         if (engine->getPhysicsOptions()->IsRigidBodyVisible(m_shape->GetShapeType()))
         {
             if (m_shape)
@@ -86,7 +85,7 @@ namespace vg::engine
         if (m_shape)
             createBody();
     }
-    
+
     //--------------------------------------------------------------------------------------
     void RigidBodyComponent::OnPlay()
     {
@@ -95,6 +94,9 @@ namespace vg::engine
 
         if (m_shapeDesc)
             m_shapeDesc->OnPlay();
+
+        if (m_bodyDesc)
+            m_bodyDesc->OnPlay();
 
         super::OnPlay();
     }
@@ -107,10 +109,13 @@ namespace vg::engine
         if (m_shapeDesc)
             m_shapeDesc->OnStop();
 
+        if (m_bodyDesc)
+            m_bodyDesc->OnStop();
+
         if (m_body)
             m_body->Deactivate(GetGameObject()->GetWorldMatrix());
     }
-      
+
     //--------------------------------------------------------------------------------------
     void RigidBodyComponent::OnPropertyChanged(IObject * _object, const core::IProperty & _prop, bool _notifyParent)
     {
@@ -170,11 +175,11 @@ namespace vg::engine
             default:
                 VG_ASSERT_ENUM_NOT_IMPLEMENTED(shapeType);
                 break;
-        
+
             case physics::ShapeType::Sphere:
-                m_shapeDesc = (physics::IShapeDesc*)factory->createObject("SphereShapeDesc", "", this);
+                m_shapeDesc = (physics::IShapeDesc *)factory->createObject("SphereShapeDesc", "", this);
                 break;
-        
+
             case physics::ShapeType::Box:
                 m_shapeDesc = (physics::IShapeDesc *)factory->createObject("BoxShapeDesc", "", this);
                 break;
@@ -209,11 +214,11 @@ namespace vg::engine
         VG_SAFE_RELEASE(m_body);
         VG_ASSERT(m_bodyDesc && m_shape);
         if (m_bodyDesc && m_shape)
-        {                
-            m_body = getPhysics()->CreateBody(m_bodyDesc, m_shape, GetGameObject()->GetWorldMatrix());
-        
+        {
             if (!m_bodyDesc->IsMassOverriden())
                 m_bodyDesc->SetMass(m_shape->GetMass());
+
+            m_body = getPhysics()->CreateBody(m_bodyDesc, m_shape, GetGameObject()->GetWorldMatrix());
         }
         return nullptr != m_body;
     }
@@ -250,7 +255,7 @@ namespace vg::engine
         }
         return false;
     }
-      
+
     //--------------------------------------------------------------------------------------
     void RigidBodyComponent::onResourceLoaded(core::IResource * _resource)
     {

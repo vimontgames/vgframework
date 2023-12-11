@@ -24,8 +24,8 @@
     <ClCompile Include="Component\Animation\AnimationComponent.cpp">
       <Filter>Component\Animation</Filter>
     </ClCompile>
-    <ClCompile Include="Component\Physics\RigidBody\RigidBodyComponent.cpp">
-      <Filter>Component\Physics\RigidBody</Filter>
+    <ClCompile Include="Component\Physics\PhysicsComponents.cpp">
+      <Filter>Component\Physics</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -148,6 +148,16 @@
       <Filter>Component\Physics\RigidBody</Filter>
     </ClInclude>
     <ClInclude Include="IRigidBodyComponent.h" />
+    <ClInclude Include="ICharacterControllerComponent.h" />
+    <ClInclude Include="Component\Physics\CharacterController\CharacterControllerComponent.h">
+      <Filter>Component\Physics\CharacterController</Filter>
+    </ClInclude>
+    <ClInclude Include="Component\Physics\CharacterController\CharacterControllerComponent.hpp">
+      <Filter>Component\Physics\CharacterController</Filter>
+    </ClInclude>
+    <ClInclude Include="Component\Physics\RigidBody\RigidBodyComponent.hpp">
+      <Filter>Component\Physics\RigidBody</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Input">
@@ -197,6 +207,9 @@
     </Filter>
     <Filter Include="Component\Physics\RigidBody">
       <UniqueIdentifier>{61de2590-e67a-4974-a0de-4af80c4026c6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Component\Physics\CharacterController">
+      <UniqueIdentifier>{e5e6bcb2-d143-43db-a667-1b67eb4eebff}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

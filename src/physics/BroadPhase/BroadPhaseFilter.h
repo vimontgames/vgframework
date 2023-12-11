@@ -1,5 +1,4 @@
 #pragma once
-#include "Jolt/Physics/Collision/BroadPhase/BroadPhaseLayer.h"
 
 namespace vg::physics
 {

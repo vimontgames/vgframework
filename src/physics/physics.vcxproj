@@ -13,6 +13,7 @@
   <ItemGroup>
     <ClCompile Include="Body\Body.cpp" />
     <ClCompile Include="BroadPhase\BroadPhase.cpp" />
+    <ClCompile Include="Character\Character.cpp" />
     <ClCompile Include="JobSystem\JobSystemAdapter.cpp" />
     <ClCompile Include="Options\PhysicsOptions.cpp" />
     <ClCompile Include="Physics.cpp" />
@@ -36,8 +37,12 @@
     <ClInclude Include="BroadPhase\BroadPhaseLayer.hpp" />
     <ClInclude Include="BroadPhase\ObjectFilter.h" />
     <ClInclude Include="BroadPhase\ObjectFilter.hpp" />
+    <ClInclude Include="Character\Character.h" />
+    <ClInclude Include="Character\CharacterDesc.h" />
+    <ClInclude Include="Character\CharacterDesc.hpp" />
     <ClInclude Include="Helper.h" />
     <ClInclude Include="IBody.h" />
+    <ClInclude Include="ICharacter.h" />
     <ClInclude Include="IPhysics.h" />
     <ClInclude Include="IPhysicsOptions.h" />
     <ClInclude Include="IShape.h" />

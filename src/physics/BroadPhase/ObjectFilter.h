@@ -1,5 +1,4 @@
 #pragma once
-#include "Jolt/Physics/Collision/ObjectLayer.h"
 
 namespace vg::physics
 {

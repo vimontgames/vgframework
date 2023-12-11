@@ -18,6 +18,9 @@
     <ClCompile Include="Options\PhysicsOptions.cpp">
       <Filter>Options</Filter>
     </ClCompile>
+    <ClCompile Include="Character\Character.cpp">
+      <Filter>Character</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Physics.def" />
@@ -92,6 +95,16 @@
     <ClInclude Include="Shape\CapsuleShape.hpp">
       <Filter>Shape</Filter>
     </ClInclude>
+    <ClInclude Include="ICharacter.h" />
+    <ClInclude Include="Character\Character.h">
+      <Filter>Character</Filter>
+    </ClInclude>
+    <ClInclude Include="Character\CharacterDesc.h">
+      <Filter>Character</Filter>
+    </ClInclude>
+    <ClInclude Include="Character\CharacterDesc.hpp">
+      <Filter>Character</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="JobSystem">
@@ -108,6 +121,9 @@
     </Filter>
     <Filter Include="Options">
       <UniqueIdentifier>{d5fef440-ae77-4d6c-86bc-94704fbfa40c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Character">
+      <UniqueIdentifier>{356ba3bb-8356-4aa2-985c-5749801e959b}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

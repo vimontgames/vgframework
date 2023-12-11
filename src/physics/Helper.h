@@ -1,6 +1,5 @@
 #pragma once
 #include "Physics_Consts.h"
-#include "Jolt/Physics/Body/MotionType.h"
 
 namespace vg::physics
 {
@@ -38,6 +37,22 @@ namespace vg::physics
     inline core::quaternion fromJoltQuaternion(const JPH::Quat & _quat)
     {
         return core::quaternion(_quat.GetX(), _quat.GetY(), _quat.GetZ(), _quat.GetW());
+    }
+
+    //--------------------------------------------------------------------------------------
+    inline core::float4x4 fromJoltMatrix(const JPH::Mat44 & _mat)
+    {
+        JPH::Vec3 I = _mat.GetAxisX();
+        JPH::Vec3 J = _mat.GetAxisY();
+        JPH::Vec3 K = _mat.GetAxisZ();
+        JPH::Vec3 T = _mat.GetTranslation();
+
+        core::float4x4 matrix;
+        matrix[0] = core::float4(I.GetX(), I.GetY(), I.GetZ(), 0.0f);
+        matrix[1] = core::float4(J.GetX(), J.GetY(), J.GetZ(), 0.0f);
+        matrix[2] = core::float4(K.GetX(), K.GetY(), K.GetZ(), 0.0f);
+        matrix[3] = core::float4(T.GetX(), T.GetY(), T.GetZ(), 1.0f);
+        return matrix;
     }
 
     //--------------------------------------------------------------------------------------
