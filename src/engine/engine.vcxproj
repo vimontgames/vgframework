@@ -60,6 +60,7 @@
     <ClInclude Include="IResourceManager.h" />
     <ClInclude Include="IRigidBodyComponent.h" />
     <ClInclude Include="ISelection.h" />
+    <ClInclude Include="IWorldResource.h" />
     <ClInclude Include="Precomp.h" />
     <ClInclude Include="Resource\Animation\AnimationResource.h" />
     <ClInclude Include="Resource\Animation\AnimationResource.hpp" />
@@ -83,6 +84,10 @@
     <ClInclude Include="Resource\Scene\SceneResource.hpp" />
     <ClInclude Include="Resource\Texture\TextureResource.h" />
     <ClInclude Include="Resource\Texture\TextureResource.hpp" />
+    <ClInclude Include="Resource\World\WorldResource.h" />
+    <ClInclude Include="Resource\World\WorldResource.hpp" />
+    <ClInclude Include="Resource\World\WorldResourceData.h" />
+    <ClInclude Include="Resource\World\WorldResourceData.hpp" />
     <ClInclude Include="Selection\Selection.h" />
     <ClInclude Include="World\Scene\Scene.h" />
     <ClInclude Include="World\World.h" />

@@ -124,7 +124,6 @@ namespace vg::editor
                                         }
                                     }
 
-
                                     // Find parent IComponent
                                     IObject * parent = client->getParent();
                                     IComponent * component = nullptr;
@@ -136,7 +135,7 @@ namespace vg::editor
                                         parent = parent->getParent();
                                     }
 
-                                    VG_ASSERT(component);
+                                    //VG_ASSERT(component);
                                     if (component)
                                     {
                                         // Find parent GameObject

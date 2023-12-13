@@ -43,12 +43,13 @@ namespace vg::core
             EnumFlagsU64,
             Resource,
             ResourceRef,
+            ResourceRefVector,
             Object,                 // Embedded IObject
             ObjectRef,              // Pointer to IObject
             ObjectRefVector,        // Vector of pointers to IObject
             ObjectRefDictionary,    // Dictionary of pointers to IObject,
 
-            // sizeof(element) is unknown (cannot be serialized for now as some array trickery is necessary to resize vector of unknown type)
+            // sizeof(element) is unknown ('registerResizeVectorFunc' must be registered for serialization)
             ObjectVector,
             ResourceVector,
 
@@ -116,6 +117,7 @@ namespace vg::core
         virtual float4x4 *                      GetPropertyFloat4x4             (const IObject * _object) const = 0;
         virtual string *                        GetPropertyString               (const IObject * _object) const = 0;
         virtual IResource *                     GetPropertyResource             (const IObject * _object, uint _index = 0) const = 0;
+        virtual vector<IResource *> *           GetPropertyResourceRefVector    (const IObject * _object) const = 0;
         virtual IResource *                     GetPropertyResourceRef          (const IObject * _object, uint _index = 0) const = 0;
         virtual IObject *                       GetPropertyObject               (const IObject * _object, uint _index = 0) const = 0;
         virtual IObject *                       GetPropertyObjectRef            (const IObject * _object, uint _index = 0) const = 0;
@@ -174,8 +176,14 @@ namespace vg::core
 #define registerPropertyResourceEx(className, propertyName, displayName, flags)                             _desc.RegisterPropertyResource(#className, #propertyName, (core::IResource*) offsetof(className, propertyName), displayName, flags | vg::core::IProperty::Flags::Resource);
 #define registerPropertyResource(className, propertyName, displayName)                                      registerPropertyResourceEx(className, propertyName, displayName, vg::core::IProperty::Flags::None)    
 
+#define registerPropertyResourceVectorEx(className, propertyName, elementType, displayName, flags)          registerPropertyObjectVectorEx(className, propertyName, elementType, displayName, flags | vg::core::IProperty::Flags::Resource)
+#define registerPropertyResourceVector(className, propertyName, elementType, displayName)                   registerPropertyResourceVectorEx(className, propertyName, elementType, displayName, vg::core::IProperty::Flags::None)    
+
 #define registerPropertyResourcePtrEx(className, propertyName, displayName, flags)                          _desc.RegisterPropertyResourcePtr(#className, #propertyName, (core::IResource**)offsetof(className, propertyName), displayName, flags | vg::core::IProperty::Flags::Resource);
 #define registerPropertyResourcePtr(className, propertyName, displayName)                                   registerPropertyResourcePtrEx(className, propertyName, displayName, vg::core::IProperty::Flags::None)   
+
+#define registerPropertyResourcePtrVectorEx(className, propertyName, displayName, flags)                    registerPropertyObjectPtrVectorEx(className, propertyName, displayName, flags | vg::core::IProperty::Flags::Resource) 
+#define registerPropertyResourcePtrVector(className, propertyName, displayName)                             registerPropertyResourcePtrVectorEx(className, propertyName, displayName, vg::core::IProperty::Flags::None)   
 
 // Register property for a callback 
 #define registerPropertyCallbackEx(className, funcName, displayName, flags)									_desc.RegisterProperty(#className, #funcName, funcName, displayName, flags)

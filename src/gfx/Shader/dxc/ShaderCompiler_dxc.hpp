@@ -222,9 +222,11 @@ namespace vg::gfx::dxc
 
             const char * warningAndErrorBuffer = (const char*)dxcWarningAndErrors->GetBufferPointer();
 
+            VG_ASSERT(core::io::getRootDirectory() == core::io::getCurrentWorkingDirectory());
+
             if (hrCompilation < 0)
             {
-                const string message = "Error compiling shader:\n" + core::io::getCurrentWorkingDirectory() + "/" + string(warningAndErrorBuffer);
+                const string message = "Error compiling shader:\n" + core::io::getRootDirectory() + "/" + string(warningAndErrorBuffer);
                 _warningAndErrors += message;
 
                 VG_SAFE_RELEASE(dxcSource);
@@ -237,7 +239,7 @@ namespace vg::gfx::dxc
             {
                 if (nullptr != warningAndErrorBuffer)
                 {
-                    const string message = "Warning compiling shader:\n" + core::io::getCurrentWorkingDirectory() + "/" + string(warningAndErrorBuffer);
+                    const string message = "Warning compiling shader:\n" + core::io::getRootDirectory() + "/" + string(warningAndErrorBuffer);
                     _warningAndErrors += message;
                 }
             }

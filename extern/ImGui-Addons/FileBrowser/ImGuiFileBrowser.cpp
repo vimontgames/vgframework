@@ -810,6 +810,16 @@ namespace imgui_addons
         /* If the current directory doesn't exist, and we are opening the dialog for the first time, reset to defaults to avoid looping of showing error modal.
          * An example case is when user closes the dialog in a folder. Then deletes the folder outside. On reopening the dialog the current path (previous) would be invalid.
          */
+
+        if (!folder.empty())
+        {
+            pathdir = folder + "/";
+            current_path = pathdir;
+            current_dirlist.clear();
+            parsePathTabs(pathdir);
+            folder = "";
+        }
+
         dir = opendir(pathdir.c_str());
         if(dir == nullptr && is_appearing)
         {
@@ -1255,9 +1265,9 @@ namespace imgui_addons
     }
     #endif // OSWIN
 
-    void ImGuiFileBrowser::setPath(const std::string & _path)
+    void ImGuiFileBrowser::setFolder(const std::string & _path)
     {
-        current_path = _path;
+        folder = _path;
     }
 
     void ImGuiFileBrowser::setFilename(const std::string & _filename)

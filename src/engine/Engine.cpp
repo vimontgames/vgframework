@@ -22,10 +22,12 @@
 #include "engine/World/Scene/Scene.h"
 #include "engine/Input/Input.h"
 #include "engine/Resource/ResourceManager.h"
+#include "engine/Resource/World/WorldResource.h"
+#include "engine/Resource/World/WorldResourceData.h"
 #include "engine/Selection/Selection.h"
 #include "engine/Component/Camera/CameraComponent.h"
-#include "engine/Behaviour/FreeCam/FreeCamBehaviour.h"
 #include "engine/Component/Mesh/MeshComponent.h"
+#include "engine/Behaviour/FreeCam/FreeCamBehaviour.h"
 
 #include "editor/IEditor.h"
 
@@ -263,7 +265,15 @@ namespace vg::engine
     //--------------------------------------------------------------------------------------
     core::IWorld * Engine::getCurrentWorld() const
     {
-        return m_world;
+        if (m_worldResource)
+        {
+            core::IObject * obj = m_worldResource->getObject();
+            VG_ASSERT(obj == nullptr || dynamic_cast<WorldResourceData *>(obj));
+            if (obj)
+                return ((WorldResourceData *)obj)->getWorld();
+        }
+
+        return nullptr;
     }
 
 	//--------------------------------------------------------------------------------------
@@ -337,6 +347,10 @@ namespace vg::engine
         m_mainView = m_renderer->CreateView(mainViewParams, "MainView");
 
         createEditorScene();
+
+        // Create default world resource or load world path from commandline (TODO)
+        VG_ASSERT(m_worldResource == nullptr);
+        m_worldResource = new WorldResource("Default", this);
 	}
 
     //--------------------------------------------------------------------------------------
@@ -352,13 +366,87 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
+    void Engine::onResourceLoaded(core::IResource * _resource)
+    {
+        if (_resource == m_worldResource)
+        {
+            VG_ASSERT(dynamic_cast<WorldResource*>(_resource));
+            WorldResource * worldRes = (WorldResource *)_resource;
+            auto world = worldRes->GetWorld();
+
+            auto & editorViews = m_renderer->GetViews(gfx::ViewTarget::Editor);
+            for (auto view : editorViews)
+            {
+                if (view)
+                    view->SetWorld(world);
+            }
+
+            auto & gameViews = m_renderer->GetViews(gfx::ViewTarget::Game);
+            for (auto view : gameViews)
+            {
+                if (view)
+                    view->SetWorld(world);
+            }
+        }
+    }
+
+    //--------------------------------------------------------------------------------------
+    void Engine::onResourceUnloaded(core::IResource * _resource)
+    {
+        if (_resource == m_worldResource)
+        {
+            auto & editorViews = m_renderer->GetViews(gfx::ViewTarget::Editor);
+            for (auto view : editorViews)
+            {
+                if (view)
+                    view->SetWorld(nullptr);
+            }
+
+            auto & gameViews = m_renderer->GetViews(gfx::ViewTarget::Game);
+            for (auto view : gameViews)
+            {
+                if (view)
+                    view->SetWorld(nullptr);
+            }
+        }
+    }
+
+    //--------------------------------------------------------------------------------------
+    void Engine::CreateWorld()
+    {
+        //VG_SAFE_RELEASE(m_w)
+        //IWorld world = (IWorld *)CreateFactoryObject(World, "New World", this);
+        //
+        //m_worldResource->CreateFile()
+
+    }
+
+    //--------------------------------------------------------------------------------------
+    IWorldResource * Engine::GetWorldResource()
+    {
+        return m_worldResource;
+    }
+
+    //--------------------------------------------------------------------------------------
+    void Engine::SaveWorld(const core::string & _filename)
+    {
+
+    }
+
+    //--------------------------------------------------------------------------------------
+    void Engine::LoadWorld(const core::string & _filename)
+    {
+
+    }
+
+    //--------------------------------------------------------------------------------------
     void Engine::createEditorScene()
     {
         // use factor to create objects
         auto* factory = Kernel::getFactory();
 
         // create default universe
-        m_world = (World*)CreateFactoryObject(World, "Default", this);
+        /*m_world = (World *)CreateFactoryObject(World, "Default", this);
 
         Scene * editor = (Scene *)CreateFactoryObject(Scene, "Editor", m_world);
         m_world->AddScene(editor);
@@ -388,12 +476,12 @@ namespace vg::engine
         // Add Camera GameObject
         rootGameObject->AddChild(editorCameraGameObject);
         VG_SAFE_RELEASE(editorCameraGameObject);
+        */
     }
 
     //--------------------------------------------------------------------------------------
     void Engine::destroyEditorView()
     {
-        VG_SAFE_RELEASE(m_world);
         VG_SAFE_RELEASE(m_mainView);
     }
 
@@ -404,6 +492,7 @@ namespace vg::engine
         m_resourceManager->flushPendingLoading();
 
         destroyEditorView();
+
         unloadProject();
 
         UnregisterClasses();
@@ -422,6 +511,9 @@ namespace vg::engine
 
         m_editor->Deinit();
         m_editor->Release();
+
+        // ~dtor time is too late to unload world resource we have to use ptr so as to do it manually before the ResourceMananger shutdowns
+        VG_SAFE_RELEASE(m_worldResource);
 
         // Resource Manager should be deleted before renderer because the shared resource must be released to avoid GPU memory leak checked in gfx::Device deinit
         VG_SAFE_DELETE(m_resourceManager);
@@ -485,56 +577,57 @@ namespace vg::engine
 
         float dt = m_time.m_dt;
 
-        if (m_world)
+        IWorld * world = getCurrentWorld();
+        if (world)
+        {
+            // FixedUpdate all GameObjects and components
+            VG_PROFILE_CPU("FixedUpdate");
+            const uint sceneCount = world->GetSceneCount();
+            for (uint i = 0; i < sceneCount; ++i)
+            {
+                Scene * scene = (Scene *)world->GetScene(i);
+                GameObject * root = scene->getRoot();
+                if (root && asBool(UpdateFlags::FixedUpdate & root->getUpdateFlags()))
+                    root->FixedUpdate(dt);
+            }
+        }
+
+        // This will use all available threads for physics
+        m_physics->RunOneFrame(m_time.m_dt);
+
+        if (world)
         {
             // Update all GameObjects and components
+            VG_PROFILE_CPU("Update");
+            const uint sceneCount = world->GetSceneCount();
+            for (uint i = 0; i < sceneCount; ++i)
             {
-                VG_PROFILE_CPU("FixedUpdate");
-                const uint sceneCount = m_world->GetSceneCount();
-                for (uint i = 0; i < sceneCount; ++i)
-                {
-                    Scene * scene = (Scene *)m_world->GetScene(i);
-                    GameObject * root = scene->getRoot();
-                    if (root && asBool(UpdateFlags::FixedUpdate & root->getUpdateFlags()))
-                        root->FixedUpdate(dt);
-                }
+                Scene * scene = (Scene *)world->GetScene(i);
+                GameObject * root = scene->getRoot();
+                if (root && asBool(UpdateFlags::Update & root->getUpdateFlags()))
+                    root->Update(dt);
             }
-
-            // This will use all available threads for physics
-            m_physics->RunOneFrame(m_time.m_dt);
-
-            // Update all GameObjects and components
-            {
-                VG_PROFILE_CPU("Update");
-                const uint sceneCount = m_world->GetSceneCount();
-                for (uint i = 0; i < sceneCount; ++i)
-                {
-                    Scene * scene = (Scene *)m_world->GetScene(i);
-                    GameObject * root = scene->getRoot();
-                    if (root && asBool(UpdateFlags::Update & root->getUpdateFlags()))
-                        root->Update(dt);
-                }
-            }
-
-            // Update all GameObjects and components
-            {
-                VG_PROFILE_CPU("LateUpdate");
-                const uint sceneCount = m_world->GetSceneCount();
-                for (uint i = 0; i < sceneCount; ++i)
-                {
-                    Scene * scene = (Scene *)m_world->GetScene(i);
-                    GameObject * root = scene->getRoot();
-                    if (root && asBool(UpdateFlags::LateUpdate & root->getUpdateFlags()))
-                        root->LateUpdate(dt);
-                }
-            }
-
-            if (m_editor)
-                m_editor->RunOneFrame(m_time.m_dt);
-
-            // This will use all available threads for culling then rendering scene (TODO)
-            m_renderer->runOneFrame(m_time.m_dt);
         }
+
+        if (world)
+        {
+            // LateUpdate all GameObjects and components
+            VG_PROFILE_CPU("LateUpdate");
+            const uint sceneCount = world->GetSceneCount();
+            for (uint i = 0; i < sceneCount; ++i)
+            {
+                Scene * scene = (Scene *)world->GetScene(i);
+                GameObject * root = scene->getRoot();
+                if (root && asBool(UpdateFlags::LateUpdate & root->getUpdateFlags()))
+                    root->LateUpdate(dt);
+            }
+        }
+
+        if (m_editor)
+            m_editor->RunOneFrame(m_time.m_dt);
+
+        // This will use all available threads for culling then rendering scene (TODO)
+        m_renderer->runOneFrame(m_time.m_dt);
 	}
 
     //--------------------------------------------------------------------------------------
@@ -625,11 +718,12 @@ namespace vg::engine
         // Detect joypads
         Kernel::getInput()->OnPlay();
 
-        if (nullptr != m_world)
+        IWorld * world = getCurrentWorld();
+        if (nullptr != world)
         {
-            for (uint i = 0; i < m_world->GetSceneCount(); ++i)
+            for (uint i = 0; i < world->GetSceneCount(); ++i)
             {
-                const IScene * scene = m_world->GetScene(i);
+                const IScene * scene = world->GetScene(i);
                 if (nullptr != scene)
                 {
                     IObject * root = scene->GetRoot();
@@ -663,11 +757,12 @@ namespace vg::engine
         m_isPlaying = false;
         m_isPaused = false;
 
-        if (nullptr != m_world)
+        IWorld * world = getCurrentWorld();
+        if (nullptr != world)
         {
-            for (uint i = 0; i < m_world->GetSceneCount(); ++i)
+            for (uint i = 0; i < world->GetSceneCount(); ++i)
             {
-                const IScene * scene = m_world->GetScene(i);
+                const IScene * scene = world->GetScene(i);
                 if (nullptr != scene)
                 {
                     IObject * root = scene->GetRoot();

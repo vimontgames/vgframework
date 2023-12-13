@@ -262,7 +262,7 @@ namespace vg::engine
     //--------------------------------------------------------------------------------------
     void ResourceManager::unloadResource(core::Resource * _resource, const core::string & _path)
     {
-        VG_SAFE_INCREASE_REFCOUNT(_resource);
+        //VG_SAFE_INCREASE_REFCOUNT(_resource);
         auto it = m_resourceInfosMap.find(_path);
         if (m_resourceInfosMap.end() != it)
         {

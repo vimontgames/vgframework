@@ -33,6 +33,7 @@ namespace vg::engine
 {
     class FreeCam;
     class ResourceManager;
+    class WorldResource;
     class Selection;
     class World;
     class Scene;
@@ -84,7 +85,7 @@ namespace vg::engine
         bool                                unloadProject       () final;
         IProject *                          getProject          () const final;
 
-        core::IWorld *                   getCurrentWorld  () const final;
+        core::IWorld *                      getCurrentWorld  () const final;
 
 		void							    RunOneFrame	        () final;
 
@@ -96,6 +97,14 @@ namespace vg::engine
         physics::IPhysics *                 GetPhysics          () const final override;
         engine::IResourceManager *          GetResourceManager  () const final override;
         core::ISelection *                  GetSelection        () const final override;
+
+        void                                CreateWorld         () final override;
+        void                                SaveWorld           (const core::string & _filename) final override;
+        void                                LoadWorld           (const core::string & _filename) final override;
+        IWorldResource *                    GetWorldResource    () final override;
+
+        void                                onResourceLoaded    (core::IResource * _resource) final override;
+        void                                onResourceUnloaded  (core::IResource * _resource) final override;
 
     public:
         renderer::IRendererOptions *        getRendererOptions  () const;
@@ -124,7 +133,7 @@ namespace vg::engine
         bool                                m_isPaused          = false;
         bool                                m_quit              = false;
         IProject *                          m_project           = nullptr;
-        World *                             m_world             = nullptr;
+        WorldResource *                     m_worldResource     = nullptr;
         editor::IEditor *                   m_editor            = nullptr;
 		renderer::IRenderer *	            m_renderer          = nullptr;
         physics::IPhysics *                 m_physics           = nullptr;

@@ -50,7 +50,11 @@ namespace vg::renderer
 
         for (uint j = 0; j < enumCount<gfx::ViewTarget>(); ++j)
         {
-            const auto & views = renderer->GetViews((gfx::ViewTarget)j);
+            gfx::ViewTarget target = (gfx::ViewTarget)j;
+            if (gfx::ViewTarget::Backbuffer == target)
+                continue;
+
+            const auto & views = renderer->GetViews(target);
             for (uint i = 0; i < views.size(); ++i)
             {
                 const auto * view = views[i];

@@ -46,7 +46,7 @@
                                 <Property type="Resource" name="m_meshResource" flags="Resource">
                                     <Object class="MeshResource">
                                         <Property type="String" name="m_name" flags="Hidden" value=""/>
-                                        <Property type="String" name="m_resourcePath" flags="Hidden" value="data/Models/defaultfloor.fbx"/>
+                                        <Property type="String" name="m_resourcePath" flags="Hidden" value="data/Meshes/defaultfloor.fbx"/>
                                     </Object>
                                 </Property>
                                 <Property type="Object" name="m_meshMaterials">
@@ -106,7 +106,7 @@
                                         <Property type="Resource" name="m_meshResource" flags="Resource">
                                             <Object class="MeshResource">
                                                 <Property type="String" name="m_name" flags="Hidden" value=""/>
-                                                <Property type="String" name="m_resourcePath" flags="Hidden" value="data/Models/unitcube.fbx"/>
+                                                <Property type="String" name="m_resourcePath" flags="Hidden" value="data/Meshes/unitcube.fbx"/>
                                             </Object>
                                         </Property>
                                         <Property type="Object" name="m_meshMaterials">
@@ -145,7 +145,7 @@
                                 <Property type="String" name="m_name" value="Blue Cube"/>
                                 <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
                                 <Property type="Float4" name="m_color" flags="Color" x="0" y="0.38610029" z="1" w="1"/>
-                                <Property type="Float4x4" name="m_world" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="-0.25" Ty="4" Tz="4" Tw="1"/>
+                                <Property type="Float4x4" name="m_world" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="-2.75" Ty="4" Tz="4" Tw="1"/>
                                 <Property type="ObjectRefVector" name="m_components">
                                     <Object class="MeshComponent">
                                         <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
@@ -153,7 +153,7 @@
                                         <Property type="Resource" name="m_meshResource" flags="Resource">
                                             <Object class="MeshResource">
                                                 <Property type="String" name="m_name" flags="Hidden" value="New MeshComponent"/>
-                                                <Property type="String" name="m_resourcePath" flags="Hidden" value="data/Models/unitcube.fbx"/>
+                                                <Property type="String" name="m_resourcePath" flags="Hidden" value="data/Meshes/unitcube.fbx"/>
                                             </Object>
                                         </Property>
                                         <Property type="Object" name="m_meshMaterials">
@@ -200,7 +200,7 @@
                                         <Property type="Resource" name="m_meshResource" flags="Resource">
                                             <Object class="MeshResource">
                                                 <Property type="String" name="m_name" flags="Hidden" value="New MeshComponent"/>
-                                                <Property type="String" name="m_resourcePath" flags="Hidden" value="data/Models/unitcube.fbx"/>
+                                                <Property type="String" name="m_resourcePath" flags="Hidden" value="data/Meshes/unitcube.fbx"/>
                                             </Object>
                                         </Property>
                                         <Property type="Object" name="m_meshMaterials">
@@ -256,7 +256,7 @@
                                         <Property type="Resource" name="m_meshResource" flags="Resource">
                                             <Object class="MeshResource">
                                                 <Property type="String" name="m_name" flags="Hidden" value="New MeshComponent"/>
-                                                <Property type="String" name="m_resourcePath" flags="Hidden" value="data/Models/unitsphere.fbx"/>
+                                                <Property type="String" name="m_resourcePath" flags="Hidden" value="data/Meshes/unitsphere.fbx"/>
                                             </Object>
                                         </Property>
                                         <Property type="Object" name="m_meshMaterials">
@@ -303,7 +303,7 @@
                                         <Property type="Resource" name="m_meshResource" flags="Resource">
                                             <Object class="MeshResource">
                                                 <Property type="String" name="m_name" flags="Hidden" value="New MeshComponent"/>
-                                                <Property type="String" name="m_resourcePath" flags="Hidden" value="data/Models/unitsphere.fbx"/>
+                                                <Property type="String" name="m_resourcePath" flags="Hidden" value="data/Meshes/unitsphere.fbx"/>
                                             </Object>
                                         </Property>
                                         <Property type="Object" name="m_meshMaterials">
@@ -350,7 +350,7 @@
                                         <Property type="Resource" name="m_meshResource" flags="Resource">
                                             <Object class="MeshResource">
                                                 <Property type="String" name="m_name" flags="Hidden" value="New MeshComponent"/>
-                                                <Property type="String" name="m_resourcePath" flags="Hidden" value="data/Models/unitsphere.fbx"/>
+                                                <Property type="String" name="m_resourcePath" flags="Hidden" value="data/Meshes/unitsphere.fbx"/>
                                             </Object>
                                         </Property>
                                         <Property type="Object" name="m_meshMaterials">

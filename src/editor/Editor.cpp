@@ -1,11 +1,15 @@
 #include "editor/Precomp.h"
 #include "editor.h"
+#include "core/IInput.h"
+#include "core/IResource.h"
+#include "core/File/File.h"
 #include "renderer/IRenderer.h"
 #include "renderer/IImGuiAdapter.h"
 #include "engine/IEngine.h"
+#include "engine/IWorldResource.h"
 #include "editor/ImGui/Extensions/ImGuizmo/ImGuizmoAdapter.h"
 #include "editor/Options/EditorOptions.h"
-#include "core/IInput.h"
+#include "ImGui-Addons/FileBrowser/ImGuiFileBrowser.h"
 
 #if !VG_ENABLE_INLINE
 #include "Editor.inl"
@@ -246,6 +250,10 @@ namespace vg::editor
 
         bool showUI = true;
 
+        core::IResource * worldRes = getEngine()->GetWorldResource();
+
+        bool createNewWorld = false, loadWorld = false, saveWorld = false, saveWorldAs = false, closeWorld = false;
+
         ImGui::Begin("EditorDockSpace", &showUI, windowFlags);
         {
             ImGui::PopStyleVar(3);
@@ -257,7 +265,39 @@ namespace vg::editor
             {
                 if (ImGui::BeginMenu("File"))
                 {
-                    ImGui::Separator();
+                    if (ImGui::BeginMenu("World"))
+                    {
+                        if (ImGui::MenuItem("New"))
+                            createNewWorld = true;
+
+                        if (ImGui::MenuItem("Open"))
+                            loadWorld = true;
+
+                        ImGui::BeginDisabled(!worldRes || !worldRes->getObject());
+                        {
+                            if (ImGui::MenuItem("Save"))
+                                saveWorld = true;
+                        }
+                        ImGui::EndDisabled();
+
+                        ImGui::BeginDisabled(!worldRes || !worldRes->getObject());
+                        {
+                            if (ImGui::MenuItem("Save As"))
+                                saveWorldAs = true;
+                        }
+                        ImGui::EndDisabled();
+
+                        ImGui::Separator();
+
+                        ImGui::BeginDisabled(!worldRes || !worldRes->getObject());
+                        {
+                            if (ImGui::MenuItem("Close"))
+                                closeWorld = true;
+                        }
+                        ImGui::EndDisabled();
+
+                        ImGui::EndMenu();
+                    }
 
                     if (ImGui::MenuItem("Quit"))
                         ImGui::MessageBox(MessageBoxType::YesNo, "Quit", "Are you sure you want to quit program?", []() { Editor::get()->getEngine()->Quit(); return true; });
@@ -267,8 +307,6 @@ namespace vg::editor
 
                 if (ImGui::BeginMenu("Plugins"))
                 {
-                    ImGui::Separator();
-
                     if (ImGui::IconMenuItem(style::icon::Plugin, "Plugins"))
                     {
                         auto plugins = getWindow<ImGuiPlugin>();
@@ -365,6 +403,46 @@ namespace vg::editor
         }
         ImGui::End();
 
+        string newWorldPopupName = "New World";
+        string openFilePopupName = "Open World";
+        string saveFilePopupName = "Save World";
+        string saveAsFilePopupName = "Save World As";
+
+        auto & fileBrowser = ImGuiWindow::getFileBrowser();
+        string ext = ImGuiWindow::getFileBrowserExt(worldRes);
+
+        if (createNewWorld)
+        {
+            if (worldRes)
+                worldRes->ClearResourcePath();
+
+            fileBrowser.setFolder(io::getRootDirectory() + "/data/Worlds");
+            ImGui::OpenPopup(newWorldPopupName.c_str());
+        }
+        else if (loadWorld)
+        {
+            fileBrowser.setFolder(io::getRootDirectory() + "/data/Worlds");
+            ImGui::OpenPopup(openFilePopupName.c_str());
+        }
+        else if (saveWorldAs)
+        {
+            fileBrowser.setFolder(io::getRootDirectory() + "/data/Worlds");
+            ImGui::OpenPopup(saveAsFilePopupName.c_str());
+        }
+        else if (saveWorld)
+        {
+            if (worldRes)
+            {
+                if (worldRes->SaveFile(worldRes->GetResourcePath()))
+                    VG_INFO("[Editor] World \"%s\" saved", worldRes->GetResourcePath().c_str());
+            }
+        }
+        else if (closeWorld)
+        {
+            if (worldRes)
+                worldRes->ClearResourcePath();
+        }
+
         for (uint i = 0; i < m_imGuiWindows.size(); ++i)
         {
             if (m_imGuiWindows[i]->isVisible())
@@ -372,6 +450,33 @@ namespace vg::editor
                 VG_PROFILE_CPU(m_imGuiWindows[i]->getName().c_str());
                 m_imGuiWindows[i]->DrawGUI();
             }
+        }
+
+        // Create new file
+        if (fileBrowser.showFileDialog(newWorldPopupName.c_str(), imgui_addons::ImGuiFileBrowser::DialogMode::SAVE, style::dialog::Size, ext.c_str()))
+        {
+            const string newFilePath = io::addExtensionIfNotPresent(fileBrowser.selected_path, ".world");
+            if (worldRes->CreateFile(newFilePath))
+            {
+                worldRes->SetResourcePath(newFilePath);
+                worldRes->setName(core::io::getFileNameWithoutExt(fileBrowser.selected_path));
+            }
+        }
+
+        // Open existing file
+        if (fileBrowser.showFileDialog(openFilePopupName.c_str(), imgui_addons::ImGuiFileBrowser::DialogMode::OPEN, style::dialog::Size, ext.c_str()))
+        {
+            const string newFilePath = fileBrowser.selected_path;
+            if (worldRes->GetResourcePath() != newFilePath)
+                worldRes->SetResourcePath(newFilePath);
+        }
+
+        // Save as 
+        if (fileBrowser.showFileDialog(saveAsFilePopupName.c_str(), imgui_addons::ImGuiFileBrowser::DialogMode::SAVE, style::dialog::Size, ext.c_str()))
+        {
+            const string newFilePath = io::addExtensionIfNotPresent(fileBrowser.selected_path, ".world");
+            if (worldRes->SaveFile(newFilePath))
+                worldRes->SetResourcePath(newFilePath);
         }
 
         static bool demo = false;

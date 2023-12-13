@@ -229,7 +229,8 @@ namespace vg::core
             else
                 m_components.insert(m_components.begin() + _index, _component);
 
-            _component->setParent(this); // will recomputeUpdateFlags
+            _component->setParent(this); 
+            recomputeUpdateFlags();
         }
     }
 

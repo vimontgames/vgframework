@@ -1,5 +1,6 @@
 #include "ImguiScene.h"
 #include "editor/ImGui/ImGui.h"
+#include "engine/IWorldResource.h"
 #include "core/IGameObject.h"
 #include "ImGui-Addons/FileBrowser/ImGuiFileBrowser.h"
 
@@ -76,23 +77,30 @@ namespace vg::editor
     {
         ImGui::PushID("ImguiScene");
 
-        if (ImGui::IconBegin(style::icon::Scene, "Scenes", &m_isVisible))
+        auto worldRes = getEngine()->GetWorldResource();
+        string label = worldRes && worldRes->getObject() ? worldRes->getName() : "<No World loaded>";
+
+        if (ImGui::IconBegin(style::icon::Scene, fmt::sprintf("%s###WorldScenes", label).c_str(), &m_isVisible))
         {
             const auto * factory = Kernel::getFactory();
             engine::IEngine * engine = (engine::IEngine *)factory->getSingleton("Engine");
             auto & fileBrowser = ImGuiWindow::getFileBrowser();
-            IWorld * world = engine->getCurrentWorld();
+
+            engine::IWorldResource * worldRes = engine->GetWorldResource();
+            IWorld * world = worldRes ? worldRes->GetWorld() : nullptr;
+
             if (world)
             {
                 bool openPopup = false;
 
                 if (ImGui::BeginPopupContextWindow())
                 {
-                    if (ImGui::MenuItem("Add Scene"))
+                    if (ImGui::MenuItem("New Scene"))
                     {
                         m_selected = MenuOption::AddScene;
                         openPopup = true;
-                        m_popup = "Add Scene";
+                        m_popup = "New Scene";
+                        fileBrowser.setFolder(io::getRootDirectory() + "/data/Scenes");
                     }
 
                     if (ImGui::MenuItem("Load Scene"))
@@ -100,6 +108,7 @@ namespace vg::editor
                         m_selected = MenuOption::LoadScene;
                         openPopup = true;
                         m_popup = "Load Scene";
+                        fileBrowser.setFolder(io::getRootDirectory() + "/data/Scenes");
                     }
 
                     ImGui::EndPopup();
@@ -110,67 +119,34 @@ namespace vg::editor
                     ImGui::OpenPopup(m_popup);
                     openPopup = false;
                 }
+
+                string ext = ImGuiWindow::getFileBrowserExt(worldRes);
                 
                 switch (m_selected)
                 {
                     case MenuOption::AddScene:
-                        if (ImGui::BeginPopupModal(m_popup, nullptr, ImGuiWindowFlags_AlwaysAutoResize))
+                    {
+                        if (fileBrowser.showFileDialog(m_popup, imgui_addons::ImGuiFileBrowser::DialogMode::SAVE, style::dialog::Size, ".scene"))
                         {
-                            static char nameTmp[1024] = { '\0' };
-
-                            if (nameTmp[0] == '\0')
-                                strcpy(nameTmp, "New Scene");
-
-                            ImGui::InputText("Name", nameTmp, countof(nameTmp), ImGuiInputTextFlags_EnterReturnsTrue | ImGuiInputTextFlags_AutoSelectAll);
-
-                            string newName = nameTmp;
-
-                            if (ImGui::Button("Add", style::button::SizeMedium))
-                            {
-                                IScene * newScene = (IScene*)CreateFactoryObject(Scene, newName.c_str(), world);
-                                world->AddScene(newScene);
-                                IGameObject * rootSector = (IGameObject*)CreateFactoryObject(GameObject, "Root", newScene);
-                                newScene->SetRoot(rootSector);
-                                rootSector->release();
-                                newScene->Release();
-                                ImGui::CloseCurrentPopup();
-                                nameTmp[0] = '\0';
-                                m_selected = MenuOption::None;
-                            }
-
-                            ImGui::SameLine();
-
-                            if (ImGui::Button("Cancel", style::button::SizeMedium))
-                            {
-                                ImGui::CloseCurrentPopup();
-                                nameTmp[0] = '\0';
-                                m_selected = MenuOption::None;
-                            }
-                            ImGui::EndPopup();
+                            const string path = io::addExtensionIfNotPresent(fileBrowser.selected_path, ".scene");
+                            worldRes->CreateSceneResource(path);
                         }
-                        break;
-
+                    }
+                    break;
+    
                     case MenuOption::LoadScene:
-                        if (fileBrowser.showFileDialog(m_popup, imgui_addons::ImGuiFileBrowser::DialogMode::OPEN, style::dialog::Size, ".scene"))
-                        {
-                            const string path = fileBrowser.selected_path;
-                            IScene* scene = (IScene*)CreateFactoryObject(Scene, "", world);
-                            if (factory->loadFromXML(scene, path))
-                            {
-                                world->AddScene(scene);
-                                scene->Release();
-                            }
-                            else
-                            {
-                                VG_SAFE_DELETE(scene);
-                            }
-                        }
-                        break;
+                    if (fileBrowser.showFileDialog(m_popup, imgui_addons::ImGuiFileBrowser::DialogMode::OPEN, style::dialog::Size, ".scene"))
+                    {
+                        const string path = fileBrowser.selected_path;
+                        worldRes->LoadSceneResource(path);
+                    }
+                    break;
                 }
 
-                for (uint i = 0; i < world->GetSceneCount(); ++i)
+                for (uint i = 0; i < worldRes->GetSceneResourceCount(); ++i)
                 {
-                    const IScene * scene = world->GetScene(i);
+                    const core::IResource * sceneRes = worldRes->GetSceneResource(i);
+                    const IScene * scene = (IScene*)sceneRes->getObject();
                     if (nullptr != scene)
                     {
                         IGameObject * root = scene->GetRoot();

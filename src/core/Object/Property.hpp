@@ -329,6 +329,14 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
+    vector<IResource *> * Property::GetPropertyResourceRefVector(const IObject * _object) const
+    {
+        VG_ASSERT(nullptr != _object);
+        checkPropertyType(Type::ResourceRefVector);
+        return (vector<IResource *>*)(uint_ptr(_object) + offset);
+    }
+
+    //--------------------------------------------------------------------------------------
     vector<IObject*> * Property::GetPropertyObjectRefVector(const IObject * _object) const
     {
         VG_ASSERT(nullptr != _object);

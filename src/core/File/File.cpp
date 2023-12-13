@@ -211,6 +211,30 @@ namespace vg::core::io
     }
 
     //--------------------------------------------------------------------------------------
+    string getFileNameWithoutExt(const string & _file)
+    {
+        string filename = getFileName(_file);
+        auto dot = filename.find_last_of('.');
+        if (core::string::npos != dot)
+        {
+            string name = filename.substr(0, dot);
+            return name;
+        }
+        else
+            return filename;
+    }
+
+    //--------------------------------------------------------------------------------------
+    core::string addExtensionIfNotPresent(const core::string & _filename, const core::string & _ext)
+    {
+        size_t findExt = _filename.find_last_of(_ext);
+        if (findExt != _filename.length() - 1)
+            return _filename + _ext;
+        else
+            return _filename;
+    }
+
+    //--------------------------------------------------------------------------------------
     core::string getCookedPath(const core::string & _file)
     {
         return "cache/" + _file + ".bin";
@@ -247,15 +271,36 @@ namespace vg::core::io
     {
         const string syscwd = (std::filesystem::current_path()).string();
         const string path = cleanPath(syscwd);
-
         return path;
+    }
+
+    static string root = "";
+
+    //--------------------------------------------------------------------------------------
+    void initRootDirectory()
+    {
+        getRootDirectory();
+    }
+
+    //--------------------------------------------------------------------------------------
+    string getRootDirectory()
+    {
+        if (root.empty())
+            root = getCurrentWorkingDirectory();
+        return root;
+    }
+
+    //--------------------------------------------------------------------------------------
+    void setCurrentWorkingDirectory(const core::string & _path)
+    {
+        std::filesystem::current_path(_path);
     }
 
     //--------------------------------------------------------------------------------------
     core::string getRelativePath(const core::string & _file)
     {
         auto path = cleanPath(_file);
-        const auto cwd = getCurrentWorkingDirectory();
+        const auto cwd = getRootDirectory();
 
         const auto beginOffset = path.find(cwd);
         if (string::npos != beginOffset)

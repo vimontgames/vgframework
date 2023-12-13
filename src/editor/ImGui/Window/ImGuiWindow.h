@@ -76,6 +76,9 @@ namespace vg::editor
         static bool                             displayU32          (const core::string & _label, core::u32 * _pU32);
 
         static imgui_addons::ImGuiFileBrowser & getFileBrowser      ();
+        static core::string                     getFileBrowserExt   (const core::IResource * _resource);
+        static core::string                     getDefaultFolder    (const core::IResource * _resource);
+
         static engine::IEngine *                getEngine           ();
         static core::ISelection *               getSelection        ();
 

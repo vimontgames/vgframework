@@ -60,6 +60,25 @@ namespace vg::editor
     }
 
     //--------------------------------------------------------------------------------------
+    core::string ImGuiWindow::getFileBrowserExt(const core::IResource * _resource)
+    {
+        VG_ASSERT(_resource);
+        string ext = "";
+        bool first = true;
+        const auto & extensions = _resource->getExtensions();
+        for (uint e = 0; e < extensions.size(); ++e)
+        {
+            if (!first)
+                ext += ",";
+            ext += extensions[e];
+            first = false;
+        }
+        if (ext == "")
+            ext = "*.*";
+        return ext;
+    }
+
+    //--------------------------------------------------------------------------------------
     engine::IEngine * ImGuiWindow::getEngine()
     {
         return Editor::get()->getEngine();
@@ -1199,30 +1218,26 @@ namespace vg::editor
             ImGui::EndPopup();
         }
 
-        //ImGui::SeparatorEx(ImGuiSeparatorFlags_Horizontal, 4);
+        auto & fileBrowser = getFileBrowser();
 
         if (createNewFile)
+        {
+            fileBrowser.setFolder(getDefaultFolder(_resource));
             ImGui::OpenPopup(newFileButtonName.c_str());
+        }
         else if (openExistingFile)
+        {
+            fileBrowser.setFolder(getDefaultFolder(_resource));
             ImGui::OpenPopup(openFileButtonName.c_str());
+        }
         else if (saveAsFile)
+        {
+            fileBrowser.setFolder(getDefaultFolder(_resource));
             ImGui::OpenPopup(saveAsFileButtonName.c_str());
+        }
 
         // build extension list
-        string ext = "";
-        bool first = true;
-        const auto & extensions = _resource->getExtensions();
-        for (uint e = 0; e < extensions.size(); ++e)
-        {
-            if (!first)
-                ext += ",";
-            ext += extensions[e];
-            first = false;
-        }
-        if (ext == "")
-            ext = "*.*";
-
-        auto & fileBrowser = getFileBrowser();
+        string ext = getFileBrowserExt(_resource);
 
         // Create new file
         if (fileBrowser.showFileDialog(newFileButtonName.c_str(), imgui_addons::ImGuiFileBrowser::DialogMode::SAVE, style::dialog::Size, ext.c_str()))
@@ -1288,6 +1303,34 @@ namespace vg::editor
         ImGui::PopID();
 
         return changed;
+    }
+
+    //--------------------------------------------------------------------------------------
+    string ImGuiWindow::getDefaultFolder(const IResource * _resource)
+    {
+        const char * className = _resource->getClassName();
+        const char * folder = nullptr;
+
+        if (!strcmp(className, "MeshResource"))
+            folder = "Meshes";
+        else if (!strcmp(className, "TextureResource"))
+            folder = "Textures";
+        else if (!strcmp(className, "MaterialResource"))
+            folder = "Materials";
+        else if (!strcmp(className, "AnimationResource"))
+            folder = "Animations";
+        else if (!strcmp(className, "SceneResource"))
+            folder = "Scenes";
+        else if (!strcmp(className, "WorldResource"))
+            folder = "Worlds";
+
+        if (!folder)
+        {
+            VG_WARNING("[Editor] No default folder for Resource type \"%s\"", _resource->getClassName());
+            return fmt::sprintf("%s/data", io::getRootDirectory());
+        }
+
+        return fmt::sprintf("%s/data/%s", io::getRootDirectory(), folder);
     }
 
     //--------------------------------------------------------------------------------------

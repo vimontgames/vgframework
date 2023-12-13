@@ -97,8 +97,6 @@ namespace vg::engine
             renderer::ISkeletalAnimation * anim = (renderer::ISkeletalAnimation *)_resource->getObject();
             meshComponent->getMeshInstance()->AddAnimation(anim);
         }
-
-        super::onResourceLoaded(_resource);
     }
 
     //--------------------------------------------------------------------------------------
@@ -110,8 +108,6 @@ namespace vg::engine
             renderer::ISkeletalAnimation * anim = (renderer::ISkeletalAnimation *)_resource->getObject();
             meshComponents->getMeshInstance()->RemoveAnimation(anim);
         }
-
-        super::onResourceUnloaded(_resource);
     }
 
     //--------------------------------------------------------------------------------------

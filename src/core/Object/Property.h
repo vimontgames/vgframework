@@ -45,6 +45,7 @@ namespace vg::core
         string *                        GetPropertyString               (const IObject * _object) const final override;
         IResource *                     GetPropertyResource             (const IObject * _object, uint _index = 0) const final override;
         IResource *                     GetPropertyResourceRef          (const IObject * _object, uint _index = 0) const final override;
+        vector<IResource *> *           GetPropertyResourceRefVector    (const IObject * _object) const final override;
         IObject *                       GetPropertyObject               (const IObject * _object, uint _index = 0) const final override;
         IObject *                       GetPropertyObjectRef            (const IObject * _object, uint _index = 0) const final override;
         vector<IObject*> *              GetPropertyObjectRefVector      (const IObject * _object) const final override;

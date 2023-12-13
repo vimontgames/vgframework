@@ -36,7 +36,15 @@ namespace vg::core::io
     string getCookedPath(const string & _file);
     string getFileDir(const string & _file);
     string getFileName(const string & _file);
+    string getFileNameWithoutExt(const string & _file);
+    string addExtensionIfNotPresent(const string & _file, const core::string & _ext);
+
+    void initRootDirectory();
+    string getRootDirectory();
+
+    void setCurrentWorkingDirectory(const core::string & _path);
     string getCurrentWorkingDirectory();
+
     string getRelativePath(const string & _file);
     string cleanPath(const string & _file);
     string findAndReplace(const string & _string, const string & _find, const std::string & _replace);

@@ -66,4 +66,10 @@ namespace vg::engine
             view->SetupCamera(inverse(matrix), float2(m_near, m_far), m_fovY);
         }
     }
+
+    //--------------------------------------------------------------------------------------
+    void CameraComponent::OnPropertyChanged(core::IObject * _object, const core::IProperty & _prop, bool _notifyParent)
+    {
+
+    }
 }

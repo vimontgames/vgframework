@@ -32,6 +32,7 @@ namespace vg
     namespace engine
     {
         class IResourceManager;
+        class IWorldResource;
 
         struct Time
         {
@@ -82,6 +83,11 @@ namespace vg
             virtual physics::IPhysics *         GetPhysics          () const = 0;
             virtual engine::IResourceManager *  GetResourceManager  () const = 0;
             virtual core::ISelection *          GetSelection        () const = 0;
+
+            virtual void                        CreateWorld         () = 0;
+            virtual void                        SaveWorld           (const core::string & _filename) = 0;
+            virtual void                        LoadWorld           (const core::string & _filename) = 0;
+            virtual IWorldResource *            GetWorldResource    () = 0;
 	    };
     }
 }

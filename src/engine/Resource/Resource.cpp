@@ -12,5 +12,6 @@
 #include "Mesh/MeshResource.hpp"
 #include "Animation/AnimationResource.hpp"
 #include "Scene/SceneResource.hpp"
+#include "World/WorldResource.hpp"
 #include "ResourceInfo.hpp"
 #include "ResourceManager.hpp"

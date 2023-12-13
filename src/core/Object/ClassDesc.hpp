@@ -159,7 +159,7 @@ namespace vg::core
     //--------------------------------------------------------------------------------------
     void ClassDesc::RegisterProperty(const char * _className, const char * _propertyName, vector<IObject*>* _offset, const char * _displayName, IProperty::Flags _flags)
     {
-        registerClassMemberT(_className, _propertyName, _offset, _displayName, _flags);
+        properties.emplace_back(_className, _propertyName, asBool(_flags & IProperty::Flags::Resource) ? IProperty::Type::ResourceRefVector : IProperty::Type::ObjectRefVector, (uint_ptr)_offset, (u32)sizeof(vector<IObject *>), _displayName, _flags);
     }
 
     //--------------------------------------------------------------------------------------

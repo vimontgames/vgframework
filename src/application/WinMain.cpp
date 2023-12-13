@@ -4,6 +4,7 @@
 #include "core/CmdLine/CmdLine.h"
 #include "core/Logger/Logger.h"
 #include "core/Kernel.h"
+#include "core/File/File.h"
 
 #include "engine/IEngine.h"
 #include "renderer/IRenderer.h"
@@ -162,6 +163,9 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 	//_crtBreakAlloc = 6828;
 	#endif
+
+	// Save Startup root directory
+	core::io::initRootDirectory();
 
 	// First thing we do is create and set the logger instance
 	auto logger = new core::Logger();

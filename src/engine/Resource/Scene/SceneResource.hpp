@@ -100,6 +100,14 @@ namespace vg::engine
 		IScene * scene = dynamic_cast<IScene*>(factory->createObject("Scene"));
 		if (nullptr != scene)
 		{
+			// Use file name as default scene name
+			scene->setName(io::getFileNameWithoutExt(_path));
+
+			// Add default root node to scene
+            GameObject * root = (GameObject *)CreateFactoryObject(GameObject, "Root", this);
+			scene->SetRoot(root);
+			root->release();
+
 			factory->saveToXML(scene, _path);
 			VG_SAFE_RELEASE(scene);
 			return true;

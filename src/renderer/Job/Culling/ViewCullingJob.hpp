@@ -86,12 +86,17 @@ namespace vg::renderer
         //VG_DEBUGPRINT("\"%s\" running on \"%s\" (0x%08X)\n", name.c_str(), Kernel::getScheduler()->GetCurrentThreadName().c_str(), Kernel::getScheduler()->GetCurrentThreadID());
 
         const auto * world = view->getWorld();
-        const uint count = world->GetSceneCount();
-        for (uint i = 0; i < count; ++i)
+        if (nullptr != world)
         {
-            const auto * scene = world->GetScene(i);
-            const auto * root = scene->GetRoot();
-            cullGameObjectRecur((GameObject*)root);
+            const uint count = world->GetSceneCount();
+            for (uint i = 0; i < count; ++i)
+            {
+                const auto * scene = world->GetScene(i);
+                const auto * root = scene->GetRoot();
+                VG_ASSERT("[Culling] Scene has no root node");
+                if (root)
+                    cullGameObjectRecur((GameObject *)root);
+            }
         }
     }
 }

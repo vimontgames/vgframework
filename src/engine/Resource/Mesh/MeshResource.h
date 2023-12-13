@@ -13,11 +13,7 @@ namespace vg::engine
     class MeshResource : public core::Resource
     {
     public:
-        using super = core::Resource;
-
-        const char *                        getClassName            () const override { return "MeshResource"; }
-        static bool                         registerClass           (core::IFactory & _factory);
-        static bool                         registerProperties      (core::IClassDesc & _desc);
+        VG_CLASS_DECL(MeshResource, core::Resource);
 
                                             MeshResource            (const core::string & _name, IObject * _parent);
                                             ~MeshResource           ();

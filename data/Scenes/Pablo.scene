@@ -21,7 +21,7 @@
                                 <Property type="Resource" name="m_meshResource" flags="Resource">
                                     <Object class="MeshResource">
                                         <Property type="String" name="m_name" flags="Hidden" value=""/>
-                                        <Property type="String" name="m_resourcePath" flags="Hidden" value="data/Models/Pablo/Pablo.fbx"/>
+                                        <Property type="String" name="m_resourcePath" flags="Hidden" value="data/Meshes/Pablo/Pablo.fbx"/>
                                     </Object>
                                 </Property>
                                 <Property type="Object" name="m_meshMaterials">
@@ -30,57 +30,57 @@
                                         <Property type="ResourceVector" name="m_materialResources" flags="Resource">
                                             <Object class="MaterialResource">
                                                 <Property type="String" name="m_name" flags="Hidden" value="Skin"/>
-                                                <Property type="String" name="m_resourcePath" flags="Hidden" value="data/Models/Pablo/Skin.mat"/>
+                                                <Property type="String" name="m_resourcePath" flags="Hidden" value="data/Materials/Pablo/Skin.mat"/>
                                                 <Property type="String" name="m_name" value="Skin"/>
                                             </Object>
                                             <Object class="MaterialResource">
                                                 <Property type="String" name="m_name" flags="Hidden" value=""/>
-                                                <Property type="String" name="m_resourcePath" flags="Hidden" value="data/Models/Pablo/Mouth.mat"/>
+                                                <Property type="String" name="m_resourcePath" flags="Hidden" value="data/Materials/Pablo/Mouth.mat"/>
                                                 <Property type="String" name="m_name" value=""/>
                                             </Object>
                                             <Object class="MaterialResource">
                                                 <Property type="String" name="m_name" flags="Hidden" value=""/>
-                                                <Property type="String" name="m_resourcePath" flags="Hidden" value="data/Models/Pablo/Iris.mat"/>
+                                                <Property type="String" name="m_resourcePath" flags="Hidden" value="data/Materials/Pablo/Iris.mat"/>
                                                 <Property type="String" name="m_name" value=""/>
                                             </Object>
                                             <Object class="MaterialResource">
                                                 <Property type="String" name="m_name" flags="Hidden" value=""/>
-                                                <Property type="String" name="m_resourcePath" flags="Hidden" value="data/Models/Pablo/Shirt.mat"/>
+                                                <Property type="String" name="m_resourcePath" flags="Hidden" value="data/Materials/Pablo/Shirt.mat"/>
                                                 <Property type="String" name="m_name" value=""/>
                                             </Object>
                                             <Object class="MaterialResource">
                                                 <Property type="String" name="m_name" flags="Hidden" value=""/>
-                                                <Property type="String" name="m_resourcePath" flags="Hidden" value="data/Models/Pablo/Glove.mat"/>
+                                                <Property type="String" name="m_resourcePath" flags="Hidden" value="data/Materials/Pablo/Glove.mat"/>
                                                 <Property type="String" name="m_name" value=""/>
                                             </Object>
                                             <Object class="MaterialResource">
                                                 <Property type="String" name="m_name" flags="Hidden" value=""/>
-                                                <Property type="String" name="m_resourcePath" flags="Hidden" value="data/Models/Pablo/Logo.mat"/>
+                                                <Property type="String" name="m_resourcePath" flags="Hidden" value="data/Materials/Pablo/Logo.mat"/>
                                                 <Property type="String" name="m_name" value=""/>
                                             </Object>
                                             <Object class="MaterialResource">
                                                 <Property type="String" name="m_name" flags="Hidden" value=""/>
-                                                <Property type="String" name="m_resourcePath" flags="Hidden" value="data/Models/Pablo/Hair.mat"/>
+                                                <Property type="String" name="m_resourcePath" flags="Hidden" value="data/Materials/Pablo/Hair.mat"/>
                                                 <Property type="String" name="m_name" value=""/>
                                             </Object>
                                             <Object class="MaterialResource">
                                                 <Property type="String" name="m_name" flags="Hidden" value=""/>
-                                                <Property type="String" name="m_resourcePath" flags="Hidden" value="data/Models/Pablo/Trouser.mat"/>
+                                                <Property type="String" name="m_resourcePath" flags="Hidden" value="data/Materials/Pablo/Trouser.mat"/>
                                                 <Property type="String" name="m_name" value=""/>
                                             </Object>
                                             <Object class="MaterialResource">
                                                 <Property type="String" name="m_name" flags="Hidden" value=""/>
-                                                <Property type="String" name="m_resourcePath" flags="Hidden" value="data/Models/Pablo/Shoe.mat"/>
+                                                <Property type="String" name="m_resourcePath" flags="Hidden" value="data/Materials/Pablo/Shoe.mat"/>
                                                 <Property type="String" name="m_name" value=""/>
                                             </Object>
                                             <Object class="MaterialResource">
                                                 <Property type="String" name="m_name" flags="Hidden" value=""/>
-                                                <Property type="String" name="m_resourcePath" flags="Hidden" value="data/Models/Pablo/Trouser.mat"/>
+                                                <Property type="String" name="m_resourcePath" flags="Hidden" value="data/Materials/Pablo/Trouser.mat"/>
                                                 <Property type="String" name="m_name" value=""/>
                                             </Object>
                                             <Object class="MaterialResource">
                                                 <Property type="String" name="m_name" flags="Hidden" value=""/>
-                                                <Property type="String" name="m_resourcePath" flags="Hidden" value="data/Models/Pablo/Button.mat"/>
+                                                <Property type="String" name="m_resourcePath" flags="Hidden" value="data/Materials/Pablo/Button.mat"/>
                                                 <Property type="String" name="m_name" value=""/>
                                             </Object>
                                         </Property>
@@ -95,7 +95,7 @@
                                         <Property type="ResourceVector" name="m_animationResources" flags="Resource">
                                             <Object class="AnimationResource">
                                                 <Property type="String" name="m_name" flags="Hidden" value="Idle"/>
-                                                <Property type="String" name="m_resourcePath" flags="Hidden" value="data/Models/Pablo/Pablo_idle_anim.fbx"/>
+                                                <Property type="String" name="m_resourcePath" flags="Hidden" value="data/Animations/Pablo/Pablo_idle_anim.fbx"/>
                                                 <Property type="Bool" name="m_play" value="false"/>
                                                 <Property type="Bool" name="m_loop" flags="SameLine" value="false"/>
                                                 <Property type="String" name="m_name" value="Idle"/>
@@ -103,7 +103,7 @@
                                             </Object>
                                             <Object class="AnimationResource">
                                                 <Property type="String" name="m_name" flags="Hidden" value="Hello"/>
-                                                <Property type="String" name="m_resourcePath" flags="Hidden" value="data/Models/Pablo/Pablo_hello_anim.fbx"/>
+                                                <Property type="String" name="m_resourcePath" flags="Hidden" value="data/Animations/Pablo/Pablo_hello_anim.fbx"/>
                                                 <Property type="Bool" name="m_play" value="false"/>
                                                 <Property type="Bool" name="m_loop" flags="SameLine" value="false"/>
                                                 <Property type="String" name="m_name" value="Hello"/>
@@ -111,7 +111,7 @@
                                             </Object>
                                             <Object class="AnimationResource">
                                                 <Property type="String" name="m_name" flags="Hidden" value="Walking"/>
-                                                <Property type="String" name="m_resourcePath" flags="Hidden" value="data/Models/Pablo/Pablo_walking_anim.fbx"/>
+                                                <Property type="String" name="m_resourcePath" flags="Hidden" value="data/Animations/Pablo/Pablo_walking_anim.fbx"/>
                                                 <Property type="Bool" name="m_play" value="false"/>
                                                 <Property type="Bool" name="m_loop" flags="SameLine" value="false"/>
                                                 <Property type="String" name="m_name" value="Walking"/>
@@ -119,7 +119,7 @@
                                             </Object>
                                             <Object class="AnimationResource">
                                                 <Property type="String" name="m_name" flags="Hidden" value="Running"/>
-                                                <Property type="String" name="m_resourcePath" flags="Hidden" value="data/Models/Pablo/Pablo_running_anim.fbx"/>
+                                                <Property type="String" name="m_resourcePath" flags="Hidden" value="data/Animations/Pablo/Pablo_running_anim.fbx"/>
                                                 <Property type="Bool" name="m_play" value="false"/>
                                                 <Property type="Bool" name="m_loop" flags="SameLine" value="false"/>
                                                 <Property type="String" name="m_name" value="Running"/>

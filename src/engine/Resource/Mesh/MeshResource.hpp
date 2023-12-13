@@ -76,12 +76,6 @@ namespace vg::engine
         const auto userData = _resource->getUserData();
         const uint matID = (userData >> 16) & 0xFFFF;
         const auto texSlot = (renderer::MaterialTextureType)(userData & 0xFFFF);
-
-        //auto * meshModel = getMeshModel();
-        //auto * material = meshModel->GetMaterial(matID);
-        //auto * texRes = (TextureResource *)_resource;
-
-        //material->SetTexture(texSlot, texRes->getTexture());
     }
 
     //--------------------------------------------------------------------------------------
@@ -90,11 +84,6 @@ namespace vg::engine
         const auto userData = _resource->getUserData();
         const uint matID = (userData >> 16) & 0xFFFF;
         const auto texSlot = (renderer::MaterialTextureType)(userData & 0xFFFF);
-
-        //auto * meshModel = getMeshModel();
-        //auto * material = meshModel->GetMaterial(matID);
-
-        //material->SetTexture(texSlot, nullptr);
     }
 
     //--------------------------------------------------------------------------------------

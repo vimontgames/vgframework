@@ -14,7 +14,7 @@
                 <Property type="Resource" name="m_albedoMap" flags="Resource">
                     <Object class="TextureResource">
                         <Property type="String" name="m_name" flags="Hidden" value=""/>
-                        <Property type="String" name="m_resourcePath" flags="Hidden" value="data/Models/Pablo/Pablo_Hat_tex.png"/>
+                        <Property type="String" name="m_resourcePath" flags="Hidden" value="data/Textures/Pablo/Pablo_Hat_tex.png"/>
                     </Object>
                 </Property>
                 <Property type="Float4" name="m_albedoColor" flags="Color" x="1" y="1" z="1" w="1"/>

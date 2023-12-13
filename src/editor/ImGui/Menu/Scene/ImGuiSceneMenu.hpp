@@ -1,6 +1,8 @@
 #include "ImGuiSceneMenu.h"
 #include "core/IWorld.h"
 #include "core/IScene.h"
+#include "core/File/File.h"
+#include "engine/IWorldResource.h"
 #include "editor/ImGui/Window/ImGuiWindow.h"
 #include "ImGui-Addons/FileBrowser/ImGuiFileBrowser.h"
 
@@ -44,11 +46,14 @@ namespace vg::editor
                 m_popup = "Save Scene As ...";
                 openPopup = true;
             }
-            if (ImGui::MenuItem("Close Scene"))
+
+            ImGui::Separator();
+
+            if (ImGui::MenuItem("Remove Scene"))
             {
                 m_selected = MenuOption::Close;
                 openPopup = true;
-                m_popup = "Close Scene";
+                m_popup = "Remove Scene";
             }
             ImGui::PopID();
             ImGui::EndPopup();
@@ -67,20 +72,8 @@ namespace vg::editor
             case MenuOption::Save:
             if (fileBrowser.showFileDialog(m_popup, imgui_addons::ImGuiFileBrowser::DialogMode::SAVE, style::dialog::Size, ext.c_str()))
             {
-                string newFilePath = fileBrowser.selected_path;
-
-                size_t findExt = newFilePath.find_last_of(ext);
-                if (findExt != newFilePath.length() - 1)
-                    newFilePath += ".scene";
-
-                size_t lastFolder = newFilePath.find_last_of("/");
-                string name = newFilePath.substr(lastFolder+1);
-
-                size_t lastDot = name.find_last_of(".");
-                name = name.substr(0, lastDot);
-
-                scene->setName(name);
-
+                string newFilePath = io::addExtensionIfNotPresent(fileBrowser.selected_path, ".scene");;
+                scene->setName(io::getFileNameWithoutExt(newFilePath));
                 factory->saveToXML(scene, newFilePath);
                 status = Status::Saved;
             }
@@ -93,9 +86,14 @@ namespace vg::editor
 
                     if (ImGui::Button("Yes", style::button::SizeMedium))
                     {
-                        IWorld * world = (IWorld*)scene->getParent();
-                        if (nullptr != world)
-                            world->RemoveScene((IScene*)scene);
+                        auto worldRes = ImGuiWindow::getEngine()->GetWorldResource();
+                        VG_ASSERT(worldRes);
+
+                        IResource * sceneRes = worldRes->FindSceneResource(scene);
+                        VG_ASSERT(sceneRes);
+
+                        worldRes->UnloadSceneResource(sceneRes);
+
                         ImGui::CloseCurrentPopup();
                         status = Status::Removed;
                     }
