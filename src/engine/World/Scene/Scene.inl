@@ -2,10 +2,10 @@
 
 #include "core/IScene.h"
 
-namespace vg::core
+namespace vg::engine
 {
     //--------------------------------------------------------------------------------------
-    VG_INLINE GameObject * Scene::getRoot() const
+    VG_INLINE core::GameObject * Scene::getRoot() const
     {
         return m_root;
     }

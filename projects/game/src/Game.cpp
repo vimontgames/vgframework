@@ -11,9 +11,6 @@ using namespace vg::core;
 // Static member init
 vg::engine::IEngine * Game::s_engine = nullptr;
 
-// Avoid stripping code for classes from static lib
-static PlayerBehaviour playerBehaviour("", nullptr);
-
 //--------------------------------------------------------------------------------------
 Game * CreateNew()
 {

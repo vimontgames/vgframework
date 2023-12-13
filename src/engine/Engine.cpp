@@ -4,13 +4,11 @@
 
 #include "core/Kernel.h"
 #include "core/IProfiler.h"
-#include "core/Universe/Universe.h"
 #include "core/Timer/Timer.h"
 #include "core/Plugin/Plugin.h"
 #include "core/Logger/Logger.h"
 #include "core/Scheduler/Scheduler.h"
 #include "core/Object/Factory.h"
-#include "core/Scene/Scene.h"
 #include "core/GameObject/GameObject.h"
 
 #include "gfx/IView.h"
@@ -20,6 +18,8 @@
 
 #include "physics/IPhysics.h"
 
+#include "engine/World/World.h"
+#include "engine/World/Scene/Scene.h"
 #include "engine/Input/Input.h"
 #include "engine/Resource/ResourceManager.h"
 #include "engine/Selection/Selection.h"
@@ -40,11 +40,6 @@ using namespace vg::engine;
 
 #define VG_ENGINE_VERSION_MAJOR 0
 #define VG_ENGINE_VERSION_MINOR 1
-
-// Avoid stripping code for classes from static lib
-static Universe universe("", nullptr);
-static Scene scene("", nullptr);
-static GameObject gameObject("", nullptr);
 
 //--------------------------------------------------------------------------------------
 IEngine * CreateNew()
@@ -266,9 +261,9 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
-    core::IUniverse * Engine::getCurrentUniverse() const
+    core::IWorld * Engine::getCurrentWorld() const
     {
-        return m_universe;
+        return m_world;
     }
 
 	//--------------------------------------------------------------------------------------
@@ -363,10 +358,10 @@ namespace vg::engine
         auto* factory = Kernel::getFactory();
 
         // create default universe
-        m_universe = (Universe*)CreateFactoryObject(Universe, "DefaultUniverse", this);
+        m_world = (World*)CreateFactoryObject(World, "Default", this);
 
-        Scene * editor = (Scene *)CreateFactoryObject(Scene, "Editor", m_universe);
-        m_universe->AddScene(editor);
+        Scene * editor = (Scene *)CreateFactoryObject(Scene, "Editor", m_world);
+        m_world->AddScene(editor);
         editor->release();
 
         GameObject * rootGameObject = (GameObject *)CreateFactoryObject(GameObject, "Root", editor);
@@ -398,7 +393,7 @@ namespace vg::engine
     //--------------------------------------------------------------------------------------
     void Engine::destroyEditorView()
     {
-        VG_SAFE_RELEASE(m_universe);
+        VG_SAFE_RELEASE(m_world);
         VG_SAFE_RELEASE(m_mainView);
     }
 
@@ -490,15 +485,15 @@ namespace vg::engine
 
         float dt = m_time.m_dt;
 
-        if (m_universe)
+        if (m_world)
         {
             // Update all GameObjects and components
             {
                 VG_PROFILE_CPU("FixedUpdate");
-                const uint sceneCount = m_universe->GetSceneCount();
+                const uint sceneCount = m_world->GetSceneCount();
                 for (uint i = 0; i < sceneCount; ++i)
                 {
-                    Scene * scene = (Scene *)m_universe->GetScene(i);
+                    Scene * scene = (Scene *)m_world->GetScene(i);
                     GameObject * root = scene->getRoot();
                     if (root && asBool(UpdateFlags::FixedUpdate & root->getUpdateFlags()))
                         root->FixedUpdate(dt);
@@ -511,10 +506,10 @@ namespace vg::engine
             // Update all GameObjects and components
             {
                 VG_PROFILE_CPU("Update");
-                const uint sceneCount = m_universe->GetSceneCount();
+                const uint sceneCount = m_world->GetSceneCount();
                 for (uint i = 0; i < sceneCount; ++i)
                 {
-                    Scene * scene = (Scene *)m_universe->GetScene(i);
+                    Scene * scene = (Scene *)m_world->GetScene(i);
                     GameObject * root = scene->getRoot();
                     if (root && asBool(UpdateFlags::Update & root->getUpdateFlags()))
                         root->Update(dt);
@@ -524,10 +519,10 @@ namespace vg::engine
             // Update all GameObjects and components
             {
                 VG_PROFILE_CPU("LateUpdate");
-                const uint sceneCount = m_universe->GetSceneCount();
+                const uint sceneCount = m_world->GetSceneCount();
                 for (uint i = 0; i < sceneCount; ++i)
                 {
-                    Scene * scene = (Scene *)m_universe->GetScene(i);
+                    Scene * scene = (Scene *)m_world->GetScene(i);
                     GameObject * root = scene->getRoot();
                     if (root && asBool(UpdateFlags::LateUpdate & root->getUpdateFlags()))
                         root->LateUpdate(dt);
@@ -630,11 +625,11 @@ namespace vg::engine
         // Detect joypads
         Kernel::getInput()->OnPlay();
 
-        if (nullptr != m_universe)
+        if (nullptr != m_world)
         {
-            for (uint i = 0; i < m_universe->GetSceneCount(); ++i)
+            for (uint i = 0; i < m_world->GetSceneCount(); ++i)
             {
-                const IScene * scene = m_universe->GetScene(i);
+                const IScene * scene = m_world->GetScene(i);
                 if (nullptr != scene)
                 {
                     IObject * root = scene->GetRoot();
@@ -668,11 +663,11 @@ namespace vg::engine
         m_isPlaying = false;
         m_isPaused = false;
 
-        if (nullptr != m_universe)
+        if (nullptr != m_world)
         {
-            for (uint i = 0; i < m_universe->GetSceneCount(); ++i)
+            for (uint i = 0; i < m_world->GetSceneCount(); ++i)
             {
-                const IScene * scene = m_universe->GetScene(i);
+                const IScene * scene = m_world->GetScene(i);
                 if (nullptr != scene)
                 {
                     IObject * root = scene->GetRoot();

@@ -81,8 +81,8 @@ namespace vg::editor
             const auto * factory = Kernel::getFactory();
             engine::IEngine * engine = (engine::IEngine *)factory->getSingleton("Engine");
             auto & fileBrowser = ImGuiWindow::getFileBrowser();
-            IUniverse * universe = engine->getCurrentUniverse();
-            if (universe)
+            IWorld * world = engine->getCurrentWorld();
+            if (world)
             {
                 bool openPopup = false;
 
@@ -127,8 +127,8 @@ namespace vg::editor
 
                             if (ImGui::Button("Add", style::button::SizeMedium))
                             {
-                                IScene * newScene = (IScene*)CreateFactoryObject(Scene, newName.c_str(), universe);
-                                universe->AddScene(newScene);
+                                IScene * newScene = (IScene*)CreateFactoryObject(Scene, newName.c_str(), world);
+                                world->AddScene(newScene);
                                 IGameObject * rootSector = (IGameObject*)CreateFactoryObject(GameObject, "Root", newScene);
                                 newScene->SetRoot(rootSector);
                                 rootSector->release();
@@ -154,10 +154,10 @@ namespace vg::editor
                         if (fileBrowser.showFileDialog(m_popup, imgui_addons::ImGuiFileBrowser::DialogMode::OPEN, style::dialog::Size, ".scene"))
                         {
                             const string path = fileBrowser.selected_path;
-                            IScene* scene = (IScene*)CreateFactoryObject(Scene, "", universe);
+                            IScene* scene = (IScene*)CreateFactoryObject(Scene, "", world);
                             if (factory->loadFromXML(scene, path))
                             {
-                                universe->AddScene(scene);
+                                world->AddScene(scene);
                                 scene->Release();
                             }
                             else
@@ -168,9 +168,9 @@ namespace vg::editor
                         break;
                 }
 
-                for (uint i = 0; i < universe->GetSceneCount(); ++i)
+                for (uint i = 0; i < world->GetSceneCount(); ++i)
                 {
-                    const IScene * scene = universe->GetScene(i);
+                    const IScene * scene = world->GetScene(i);
                     if (nullptr != scene)
                     {
                         IGameObject * root = scene->GetRoot();

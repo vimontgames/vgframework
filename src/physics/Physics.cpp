@@ -31,9 +31,6 @@ using namespace JPH;
 #define VG_PHYSICS_VERSION_MAJOR 0
 #define VG_PHYSICS_VERSION_MINOR 0
 
-// Avoid stripping code for classes from static lib
-//static Shape universe("", nullptr);
-
 //--------------------------------------------------------------------------------------
 IPhysics * CreateNew()
 {

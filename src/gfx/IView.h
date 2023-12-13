@@ -1,7 +1,7 @@
 #pragma once
 
 #include "core/Object/Object.h"
-#include "core/IUniverse.h"
+#include "core/IWorld.h"
 
 struct PickingData;
 struct PickingHit;
@@ -62,11 +62,11 @@ namespace vg::gfx
         {
         }
 
-        CreateViewParams(ViewTarget _target, core::uint2 _size, core::int2 _offset = core::int2(0, 0), core::IUniverse * _universe = nullptr, gfx::ITexture * _dest = nullptr) :
+        CreateViewParams(ViewTarget _target, core::uint2 _size, core::int2 _offset = core::int2(0, 0), core::IWorld * _universe = nullptr, gfx::ITexture * _dest = nullptr) :
             target(_target),
             size(_size),
             offset(_offset),
-            universe(_universe),
+            world(_universe),
             dest(_dest)
         {
          
@@ -75,7 +75,7 @@ namespace vg::gfx
         ViewTarget          target = ViewTarget::Game;
         core::uint2         size = core::uint2(0, 0);
         core::int2          offset = core::int2(0, 0);
-        core::IUniverse *   universe = nullptr;
+        core::IWorld *      world = nullptr;
         gfx::ITexture *     dest = nullptr;
     };
 
@@ -100,8 +100,8 @@ namespace vg::gfx
         virtual core::float2            GetCameraNearFar            () const = 0;
         virtual float                   GetCameraFovY               () const = 0;
 
-        virtual void                    SetUniverse                 (core::IUniverse * _universe) = 0;
-        virtual core::IUniverse *       GetUniverse                 () const = 0;
+        virtual void                    SetWorld                    (core::IWorld * _world) = 0;
+        virtual core::IWorld *          GetWorld                    () const = 0;
 
         virtual void                    SetSize                     (core::uint2 _size) = 0;
         virtual core::uint2             GetSize                     () const = 0;

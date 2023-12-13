@@ -5,20 +5,20 @@
 namespace vg::core
 {
     //--------------------------------------------------------------------------------------
-    // An universe is a container for N scenes
+    // A "World" is a container for a list of scenes
     //--------------------------------------------------------------------------------------
     class IScene;
 
-    class IUniverse : public Object
+    class IWorld : public Object
     {
     public:
-        IUniverse(const string & _name, IObject * _parent) :
+        IWorld(const string & _name, IObject * _parent) :
             Object(_name, _parent)
         {
 
         }
 
-        virtual ~IUniverse() {}
+        virtual ~IWorld() {}
 
         virtual bool            SetActiveScene  (IScene * _scene) = 0;
         virtual core::IScene *  GetActiveScene  () const = 0;

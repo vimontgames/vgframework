@@ -1,27 +1,28 @@
-#include "core/Precomp.h"
-#include "core/Scene/Scene.h"
-#include "Universe.h"
-#include "core/Object/AutoRegisterClass.h"
+#include "engine/Precomp.h"
+#include "engine/World/Scene/Scene.h"
+#include "World.h"
 
-namespace vg::core
+using namespace vg::core;
+
+namespace vg::engine
 {
-    VG_REGISTER_OBJECT_CLASS(Universe, "Universe");
+    VG_REGISTER_OBJECT_CLASS(World, "World");
 
     //--------------------------------------------------------------------------------------
-    Universe::Universe(const string & _name, IObject * _parent) :
-        IUniverse(_name, _parent)
+    World::World(const string & _name, IObject * _parent) :
+        IWorld(_name, _parent)
     {
 
     }
 
     //--------------------------------------------------------------------------------------
-    Universe::~Universe()
+    World::~World()
     {
         RemoveAllScenes();
     }
 
     //--------------------------------------------------------------------------------------
-    bool Universe::registerProperties(IClassDesc & _desc)
+    bool World::registerProperties(IClassDesc & _desc)
     {
         super::registerProperties(_desc);
 
@@ -29,13 +30,13 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
-    vector<Scene*> & Universe::getScenes()
+    vector<Scene*> & World::getScenes()
     {
         return m_scenes;
     }
 
     //--------------------------------------------------------------------------------------
-    bool Universe::SetActiveScene(IScene * _scene)
+    bool World::SetActiveScene(IScene * _scene)
     {
         if (_scene != m_activeScene)
         {
@@ -49,13 +50,13 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
-    core::IScene * Universe::GetActiveScene() const
+    core::IScene * World::GetActiveScene() const
     {
         return m_activeScene;
     }
 
     //--------------------------------------------------------------------------------------
-    bool Universe::AddScene(IScene * _scene)
+    bool World::AddScene(IScene * _scene)
     {
         if (nullptr != _scene && !m_scenes.exists((Scene*)_scene))
         {
@@ -72,7 +73,7 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
-    bool Universe::RemoveScene(IScene * _scene)
+    bool World::RemoveScene(IScene * _scene)
     {
         if (nullptr != _scene && m_scenes.exists((Scene*)_scene))
         {
@@ -87,7 +88,7 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
-    uint Universe::RemoveAllScenes()
+    uint World::RemoveAllScenes()
     {
         const uint sceneCount = m_scenes.count();
         for (uint i = 0; i < sceneCount; ++i)
@@ -99,13 +100,13 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
-    uint Universe::GetSceneCount() const
+    uint World::GetSceneCount() const
     {
         return m_scenes.count();
     }
 
     //--------------------------------------------------------------------------------------
-    const IScene * Universe::GetScene(uint _index) const
+    const IScene * World::GetScene(uint _index) const
     {
         return reinterpret_cast<const IScene*>(m_scenes[_index]);
     }

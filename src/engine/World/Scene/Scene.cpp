@@ -1,4 +1,4 @@
-#include "core/Precomp.h"
+#include "engine/Precomp.h"
 #include "Scene.h"
 #include "core/GameObject/GameObject.h"
 #include "core/Object/AutoRegisterClass.h"
@@ -8,7 +8,9 @@
 #include "Scene.inl"
 #endif
 
-namespace vg::core
+using namespace vg::core;
+
+namespace vg::engine
 {
     VG_REGISTER_OBJECT_CLASS_EX(Scene, "Scene", IClassDesc::Flags::SceneNode);
 

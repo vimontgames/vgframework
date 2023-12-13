@@ -361,7 +361,7 @@ namespace vg::renderer
                     for (uint i = 0; i < views.count(); ++i)
                     {
                         auto * view = views[i];
-                        if (nullptr != view && nullptr != view->getUniverse())
+                        if (nullptr != view && nullptr != view->getWorld())
                         {
                             if (m_fullscreen)
                             {

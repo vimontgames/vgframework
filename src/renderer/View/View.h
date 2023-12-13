@@ -48,8 +48,8 @@ namespace vg::renderer
         core::float2                        GetCameraNearFar            () const override;
         float                               GetCameraFovY               () const override;
 
-        void                                SetUniverse                 (core::IUniverse* _universe) override;
-        core::IUniverse *                   GetUniverse                 () const override;
+        void                                SetWorld                    (core::IWorld * _world) override;
+        core::IWorld *                      GetWorld                    () const override;
 
         void                                SetSize                     (core::uint2 _size) override;
         core::uint2                         GetSize                     () const override;
@@ -83,7 +83,7 @@ namespace vg::renderer
 
         virtual void                        RegisterFrameGraph          (const gfx::RenderPassContext & _rc, gfx::FrameGraph & _frameGraph);
 
-        VG_INLINE core::IUniverse *         getUniverse                 () const;
+        VG_INLINE core::IWorld *            getWorld                    () const;
 
         VG_INLINE void                      setSize                     (core::uint2 _size);
         VG_INLINE core::uint2               getSize                     () const;
@@ -122,7 +122,7 @@ namespace vg::renderer
         core::float4x4                      m_viewInv = core::float4x4::identity();
         core::float4x4                      m_proj = core::float4x4::identity();
         core::float4x4                      m_viewProj = core::float4x4::identity();
-        core::IUniverse *                   m_cameraUniverse = nullptr;
+        core::IWorld *                      m_camWorld = nullptr;
         core::float2                        m_cameraNearFar;
         float                               m_cameraFovY;
         bool                                m_active = false;

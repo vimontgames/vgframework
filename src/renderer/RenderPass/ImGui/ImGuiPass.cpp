@@ -10,7 +10,7 @@
 #include "core/Plugin/Plugin.h"
 #include "core/IFactory.h"
 #include "core/IResource.h"
-#include "core/IUniverse.h"
+#include "core/IWorld.h"
 #include "core/IScene.h"
 #include "core/IGameObject.h"
 #include "corE/IComponent.h"

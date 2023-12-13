@@ -41,7 +41,7 @@
     <ClInclude Include="IScene.h" />
     <ClInclude Include="IScheduler.h" />
     <ClInclude Include="ISelection.h" />
-    <ClInclude Include="IUniverse.h" />
+    <ClInclude Include="IWorld.h" />
     <ClInclude Include="Kernel.h" />
     <ClInclude Include="Logger\Logger.h" />
     <ClInclude Include="Math\Math.h" />
@@ -61,14 +61,12 @@
     <ClInclude Include="Pool\Pool.h" />
     <ClInclude Include="Precomp.h" />
     <ClInclude Include="Resource\Resource.h" />
-    <ClInclude Include="Scene\Scene.h" />
     <ClInclude Include="Scheduler\Job.h" />
     <ClInclude Include="Scheduler\Scheduler.h" />
     <ClInclude Include="Singleton\Singleton.h" />
     <ClInclude Include="string\string.h" />
     <ClInclude Include="Timer\Timer.h" />
     <ClInclude Include="Types\Types.h" />
-    <ClInclude Include="Universe\Universe.h" />
     <ClInclude Include="XML\XML.h" />
   </ItemGroup>
   <ItemGroup>
@@ -90,12 +88,10 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="Resource\Resource.cpp" />
-    <ClCompile Include="Scene\Scene.cpp" />
     <ClCompile Include="Scheduler\Job.cpp" />
     <ClCompile Include="Scheduler\Scheduler.cpp" />
     <ClCompile Include="string\string.cpp" />
     <ClCompile Include="Timer\Timer.cpp" />
-    <ClCompile Include="Universe\Universe.cpp" />
     <ClCompile Include="XML\XML.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -103,7 +99,6 @@
     <None Include="Component\Component.inl" />
     <None Include="GameObject\GameObject.inl" />
     <None Include="Instance\Instance.inl" />
-    <None Include="Scene\Scene.inl" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>

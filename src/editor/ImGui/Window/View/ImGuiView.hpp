@@ -75,7 +75,7 @@ namespace vg::editor
                 // Create empty view using IRenderer
                 gfx::CreateViewParams params;
                                       params.size = m_size;
-                                      params.universe = Editor::get()->getEngine()->getCurrentUniverse(); // TODO: do better
+                                      params.world = Editor::get()->getEngine()->getCurrentWorld(); // TODO: do better
                                       params.target = m_target;
                                       params.dest = nullptr;    // No RenderTarget yet
             

@@ -10,7 +10,7 @@ namespace vg
     namespace core
     {
         struct Singletons;
-        class IUniverse;
+        class IWorld;
         class ISelection;
     }
 
@@ -67,7 +67,7 @@ namespace vg
             virtual bool                        unloadProject       () = 0;
             virtual IProject *                  getProject          () const = 0;
 
-            virtual core::IUniverse *           getCurrentUniverse  () const = 0;
+            virtual core::IWorld *              getCurrentWorld     () const = 0;
 
             virtual core::uint2                 getScreenSize       () const = 0;
                                                 

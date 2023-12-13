@@ -49,12 +49,6 @@
     <Filter Include="Resource">
       <UniqueIdentifier>{749ce279-5f65-497f-9265-66c5e28ef0a6}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Scene">
-      <UniqueIdentifier>{a8e699be-7052-41c2-8310-8e3b55f2d9ab}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Universe">
-      <UniqueIdentifier>{6761ac01-3b2d-4073-b7da-51b6c97941f3}</UniqueIdentifier>
-    </Filter>
     <Filter Include="GameObject">
       <UniqueIdentifier>{404128dc-c15c-44e1-97c6-6f45d1a0ec1c}</UniqueIdentifier>
     </Filter>
@@ -141,9 +135,6 @@
     </ClInclude>
     <ClInclude Include="IResource.h" />
     <ClInclude Include="IScene.h" />
-    <ClInclude Include="Scene\Scene.h">
-      <Filter>Scene</Filter>
-    </ClInclude>
     <ClInclude Include="Object\AutoRegisterClass.h">
       <Filter>Object</Filter>
     </ClInclude>
@@ -177,10 +168,7 @@
     <ClInclude Include="Container\Vector.h">
       <Filter>Container</Filter>
     </ClInclude>
-    <ClInclude Include="IUniverse.h" />
-    <ClInclude Include="Universe\Universe.h">
-      <Filter>Universe</Filter>
-    </ClInclude>
+    <ClInclude Include="IWorld.h" />
     <ClInclude Include="Object\EnumHelper.h">
       <Filter>Object</Filter>
     </ClInclude>
@@ -247,12 +235,6 @@
     <ClCompile Include="Resource\Resource.cpp">
       <Filter>Resource</Filter>
     </ClCompile>
-    <ClCompile Include="Scene\Scene.cpp">
-      <Filter>Scene</Filter>
-    </ClCompile>
-    <ClCompile Include="Universe\Universe.cpp">
-      <Filter>Universe</Filter>
-    </ClCompile>
     <ClCompile Include="GameObject\GameObject.cpp">
       <Filter>GameObject</Filter>
     </ClCompile>
@@ -275,9 +257,6 @@
     </None>
     <None Include="Component\Component.inl">
       <Filter>Component</Filter>
-    </None>
-    <None Include="Scene\Scene.inl">
-      <Filter>Scene</Filter>
     </None>
     <None Include="Component\Behaviour\Behaviour.inl">
       <Filter>Component\Behaviour</Filter>

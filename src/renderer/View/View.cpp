@@ -39,7 +39,7 @@ namespace vg::renderer
         //    0.0f, 0.0f, -1.0f, 1.0f
         //);
 
-        SetUniverse(_params.universe);
+        SetWorld(_params.world);
 
         if (_params.dest)
         {
@@ -177,16 +177,16 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    void View::SetUniverse(IUniverse* _universe)
+    void View::SetWorld(IWorld* _world)
     {
-        if (_universe != m_cameraUniverse)
-            m_cameraUniverse = _universe;
+        if (_world != m_camWorld)
+            m_camWorld = _world;
     }
 
     //--------------------------------------------------------------------------------------
-    IUniverse* View::GetUniverse() const
+    IWorld* View::GetWorld() const
     {
-        return getUniverse();
+        return getWorld();
     }
 
     //--------------------------------------------------------------------------------------

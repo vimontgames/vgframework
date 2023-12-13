@@ -6,8 +6,6 @@
 
 namespace vg::core
 {
-    class Universe;
-    class Scene;
     class Entity;
 }
 
@@ -36,6 +34,8 @@ namespace vg::engine
     class FreeCam;
     class ResourceManager;
     class Selection;
+    class World;
+    class Scene;
 
 	class Engine : public IEngine, public core::Singleton<Engine>
 	{
@@ -84,7 +84,7 @@ namespace vg::engine
         bool                                unloadProject       () final;
         IProject *                          getProject          () const final;
 
-        core::IUniverse *                   getCurrentUniverse  () const final;
+        core::IWorld *                   getCurrentWorld  () const final;
 
 		void							    RunOneFrame	        () final;
 
@@ -124,7 +124,7 @@ namespace vg::engine
         bool                                m_isPaused          = false;
         bool                                m_quit              = false;
         IProject *                          m_project           = nullptr;
-        core::Universe *                    m_universe          = nullptr;
+        World *                             m_world             = nullptr;
         editor::IEditor *                   m_editor            = nullptr;
 		renderer::IRenderer *	            m_renderer          = nullptr;
         physics::IPhysics *                 m_physics           = nullptr;

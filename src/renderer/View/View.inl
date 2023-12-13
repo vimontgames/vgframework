@@ -31,9 +31,9 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    VG_INLINE core::IUniverse * View::getUniverse() const
+    VG_INLINE core::IWorld * View::getWorld() const
     {
-        return m_cameraUniverse;
+        return m_camWorld;
     }
 
     //--------------------------------------------------------------------------------------

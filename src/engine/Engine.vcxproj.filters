@@ -27,6 +27,12 @@
     <ClCompile Include="Component\Physics\PhysicsComponents.cpp">
       <Filter>Component\Physics</Filter>
     </ClCompile>
+    <ClCompile Include="World\World.cpp">
+      <Filter>World</Filter>
+    </ClCompile>
+    <ClCompile Include="World\Scene\Scene.cpp">
+      <Filter>World\Scene</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Engine.def" />
@@ -36,6 +42,9 @@
     </None>
     <None Include="Component\Mesh\MeshComponent.inl">
       <Filter>Component\Mesh</Filter>
+    </None>
+    <None Include="World\Scene\Scene.inl">
+      <Filter>World\Scene</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -158,6 +167,18 @@
     <ClInclude Include="Component\Physics\RigidBody\RigidBodyComponent.hpp">
       <Filter>Component\Physics\RigidBody</Filter>
     </ClInclude>
+    <ClInclude Include="Resource\Scene\SceneResource.h">
+      <Filter>Resource\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource\Scene\SceneResource.hpp">
+      <Filter>Resource\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="World\World.h">
+      <Filter>World</Filter>
+    </ClInclude>
+    <ClInclude Include="World\Scene\Scene.h">
+      <Filter>World\Scene</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Input">
@@ -210,6 +231,15 @@
     </Filter>
     <Filter Include="Component\Physics\CharacterController">
       <UniqueIdentifier>{e5e6bcb2-d143-43db-a667-1b67eb4eebff}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource\Scene">
+      <UniqueIdentifier>{51c34615-a0a0-400c-afa5-4cb230e7bba3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="World">
+      <UniqueIdentifier>{6ca8f485-7f94-42b8-908a-025eab0c8d0c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="World\Scene">
+      <UniqueIdentifier>{772dd3e7-9608-4af7-8d1b-e90b72535d44}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

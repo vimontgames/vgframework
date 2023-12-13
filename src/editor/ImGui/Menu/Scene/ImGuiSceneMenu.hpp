@@ -1,5 +1,5 @@
 #include "ImGuiSceneMenu.h"
-#include "core/IUniverse.h"
+#include "core/IWorld.h"
 #include "core/IScene.h"
 #include "editor/ImGui/Window/ImGuiWindow.h"
 #include "ImGui-Addons/FileBrowser/ImGuiFileBrowser.h"
@@ -93,9 +93,9 @@ namespace vg::editor
 
                     if (ImGui::Button("Yes", style::button::SizeMedium))
                     {
-                        IUniverse * universe = (IUniverse*)scene->getParent();
-                        if (nullptr != universe)
-                            universe->RemoveScene((IScene*)scene);
+                        IWorld * world = (IWorld*)scene->getParent();
+                        if (nullptr != world)
+                            world->RemoveScene((IScene*)scene);
                         ImGui::CloseCurrentPopup();
                         status = Status::Removed;
                     }

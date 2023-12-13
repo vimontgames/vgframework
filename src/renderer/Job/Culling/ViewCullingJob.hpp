@@ -1,6 +1,6 @@
 #include "ViewCullingJob.h"
 #include "renderer/View/View.h"
-#include "core/Scene/Scene.h"
+#include "core/IScene.h"
 #include "core/GameObject/GameObject.h"
 #include "renderer/IGraphicInstance.h"
 #include "renderer/Instance/Mesh/MeshInstance.h"
@@ -85,14 +85,13 @@ namespace vg::renderer
         VG_PROFILE_CPU(name.c_str());
         //VG_DEBUGPRINT("\"%s\" running on \"%s\" (0x%08X)\n", name.c_str(), Kernel::getScheduler()->GetCurrentThreadName().c_str(), Kernel::getScheduler()->GetCurrentThreadID());
 
-        // "Universe" is a shitty name, I have to find something better like e.g. "SceneList" and cull by scene using separate jobs
-        const auto * uni = view->getUniverse();
-        const uint count = uni->GetSceneCount();
+        const auto * world = view->getWorld();
+        const uint count = world->GetSceneCount();
         for (uint i = 0; i < count; ++i)
         {
-            const auto * scene = (Scene*)uni->GetScene(i);
-            const auto * root = scene->getRoot();
-            cullGameObjectRecur(root);
+            const auto * scene = world->GetScene(i);
+            const auto * root = scene->GetRoot();
+            cullGameObjectRecur((GameObject*)root);
         }
     }
 }
