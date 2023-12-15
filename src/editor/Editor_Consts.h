@@ -61,6 +61,7 @@ namespace vg::editor
             inline static const char * Maximize     = ICON_FA_MAXIMIZE;
             inline static const char * Input        = ICON_FA_GAMEPAD;
             inline static const char * File         = ICON_FA_FILE;
+            inline static const char * Folder       = ICON_FA_FOLDER_OPEN;
             inline static const char * Plus         = ICON_FA_SQUARE_PLUS;
             inline static const char * Minus        = ICON_FA_SQUARE_MINUS;
             inline static const char * Checked      = ICON_FA_SQUARE_CHECK;
@@ -73,6 +74,7 @@ namespace vg::editor
             inline static const char * Rotate       = ICON_FA_ROTATE;
             inline static const char * Scale        = ICON_FA_ARROWS_LEFT_RIGHT_TO_LINE;
             inline static const char * Snap         = ICON_FA_RULER_COMBINED;
+            inline static const char * Engine       = ICON_FA_GEAR;
         }
     }
 }

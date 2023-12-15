@@ -217,6 +217,12 @@
     <ClInclude Include="ImGui\Window\EditorOptions\ImGuiEditorOptions.hpp">
       <Filter>ImGui\Window\EditorOptions</Filter>
     </ClInclude>
+    <ClInclude Include="ImGui\Window\EngineOptions\ImGuiEngineOptions.h">
+      <Filter>ImGui\Window\EngineOptions</Filter>
+    </ClInclude>
+    <ClInclude Include="ImGui\Window\EngineOptions\ImGuiEngineOptions.hpp">
+      <Filter>ImGui\Window\EngineOptions</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Editor.def" />
@@ -336,6 +342,9 @@
     </Filter>
     <Filter Include="ImGui\Window\EditorOptions">
       <UniqueIdentifier>{c935834d-3631-41b1-bcea-190c2f06b802}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ImGui\Window\EngineOptions">
+      <UniqueIdentifier>{26be5c4a-f914-45de-a2e7-08d4d882eec4}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

@@ -7,6 +7,7 @@
 #include "core/File/File.h"
 
 #include "engine/IEngine.h"
+#include "engine/IEngineOptions.h"
 #include "renderer/IRenderer.h"
 #include "gfx/IDevice.h"
 
@@ -184,8 +185,6 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 								 engineParams.renderer.device.resolution = core::uint2(width, height);
 								 engineParams.logger = logger;
 
-	const core::string * solutionPlatform = cmdLine.find("SolutionPlatform");
-
 	#ifdef VG_DX12
 	engineParams.renderer.device.api = gfx::API::DirectX12;
 	#elif VG_VULKAN
@@ -216,6 +215,19 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
         title += " (debug device)";
 
 	SetWindowTextA(g_hWnd, title.c_str());
+
+	// Command-line override or world name from config
+	const core::string * cmdLineWorld = cmdLine.find("world");
+	if (nullptr != cmdLineWorld)
+	{
+		g_engine->LoadWorld(*cmdLineWorld);
+	}
+	else
+	{
+		auto startWorld = g_engine->GetOptions()->GetStartWorld();
+		if (!startWorld.empty())
+			g_engine->LoadWorld(startWorld);
+	}
 
 	while (!processSystemMessage() && !g_engine->IsQuitting())
 		app->Update();

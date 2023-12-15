@@ -33,6 +33,9 @@
     <ClCompile Include="World\Scene\Scene.cpp">
       <Filter>World\Scene</Filter>
     </ClCompile>
+    <ClCompile Include="EngineOptions.cpp">
+      <Filter>Options</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Engine.def" />
@@ -192,6 +195,10 @@
     <ClInclude Include="Resource\World\WorldResourceData.hpp">
       <Filter>Resource\World</Filter>
     </ClInclude>
+    <ClInclude Include="IEngineOptions.h" />
+    <ClInclude Include="EngineOptions.h">
+      <Filter>Options</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Input">
@@ -256,6 +263,9 @@
     </Filter>
     <Filter Include="Resource\World">
       <UniqueIdentifier>{0518a40c-a83d-482e-9090-7c90425781ca}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Options">
+      <UniqueIdentifier>{67eb4aed-5969-4d71-93e3-3ff96d0c150e}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

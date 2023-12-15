@@ -51,7 +51,7 @@ namespace vg::core
         const char *                        GetCategory                 () const final override;
         const char *                        GetDescription              () const final override;
 
-        void                                SetCategory(const char * _category) final override;
+        void                                SetCategory                 (const char * _category) final override;
         void                                SetDescription              (const char * _description) final override;
 
         uint                                GetPropertyCount            () const final override;

@@ -78,7 +78,7 @@ namespace vg::editor
         ImGui::PushID("ImguiScene");
 
         auto worldRes = getEngine()->GetWorldResource();
-        string label = worldRes && worldRes->getObject() ? worldRes->getName() : "<No World loaded>";
+        string label = worldRes && worldRes->getObject() ? worldRes->getObject()->getName() : "<No World loaded>";
 
         if (ImGui::IconBegin(style::icon::Scene, fmt::sprintf("%s###WorldScenes", label).c_str(), &m_isVisible))
         {

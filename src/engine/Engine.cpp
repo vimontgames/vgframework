@@ -1,12 +1,14 @@
 #include "engine/Precomp.h"
 
 #include "engine.h"
+#include "engine/EngineOptions.h"
 
 #include "core/Kernel.h"
 #include "core/IProfiler.h"
 #include "core/Timer/Timer.h"
 #include "core/Plugin/Plugin.h"
 #include "core/Logger/Logger.h"
+#include "core/File/File.h"
 #include "core/Scheduler/Scheduler.h"
 #include "core/Object/Factory.h"
 #include "core/GameObject/GameObject.h"
@@ -163,9 +165,6 @@ namespace vg::engine
         if (core::IClassDesc * desc = factory->registerPlugin(Engine, "Engine"))
             registerProperties(*desc);
 
-        load(this);
-        loadProject(m_projectPath);
-
         return true;
     }
 
@@ -176,40 +175,10 @@ namespace vg::engine
         return AutoRegisterClassInfo::unregisterClasses(*factory);
     }
 
-    static const char * filename = "Engine.xml";
-
-    //--------------------------------------------------------------------------------------
-    bool Engine::load(IObject * _object)
-    {
-        const auto * factory = Kernel::getFactory();
-        return factory->loadFromXML(_object, filename);
-    }
-
-    //--------------------------------------------------------------------------------------
-    bool Engine::save(IObject * _object)
-    {
-        const auto * factory = Kernel::getFactory();
-        return factory->saveToXML(_object, filename);
-    }
-
     //--------------------------------------------------------------------------------------
     bool Engine::registerProperties(IClassDesc & _desc)
     {
         super::registerProperties(_desc);
-
-        //registerPropertyCallback(Engine, createProject, "Create Project");
-        //registerPropertyCallback(Engine, loadProject, "Load");
-        //registerPropertyCallback(Engine, saveProject, "Save");
-        //registerProperty("Project", (IObject**)(&((Engine*)(nullptr))->m_project), "Project");
-        //registerProperty(Engine, m_project, "Project", IProperty::Flags::None);
-        //registerProperty("m_project", (IResource**)(&((Engine*)(nullptr))->m_project), "Project");
-
-        registerPropertyEx(Engine, m_projectPath, "Project folder", IProperty::Flags::IsFolder);
-
-        //registerPropertyCallback(Engine, createProject, "Create Project");
-        
-        //registerPropertyCallbackEx(Engine, load, "Load", IProperty::Flags::None);
-        //registerPropertyCallbackEx(Engine, save, "Save", IProperty::Flags::SameLine);
 
         return true;
     }
@@ -338,6 +307,12 @@ namespace vg::engine
 
         RegisterClasses();
 
+        // Load engine options
+        EngineOptions * engineOptions = new EngineOptions("EngineOptions", this);  
+
+        // Load project DLL
+        loadProject(engineOptions->GetProjectPath());
+
         // Load Editor DLL
         m_editor = Plugin::create<editor::IEditor>("editor");
         m_editor->Init(_singletons);
@@ -412,13 +387,56 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
-    void Engine::CreateWorld()
+    bool Engine::CreateWorld(const core::string & _filename)
     {
-        //VG_SAFE_RELEASE(m_w)
-        //IWorld world = (IWorld *)CreateFactoryObject(World, "New World", this);
-        //
-        //m_worldResource->CreateFile()
+        m_worldResource->ClearResourcePath();
 
+        if (m_worldResource->CreateFile(_filename))
+        {
+            m_worldResource->SetResourcePath(_filename);
+            return true;
+        }
+
+        return false;
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool Engine::SaveWorld()
+    {
+        IObject * world = m_worldResource->getObject();
+        if (world)
+        {
+            const auto filename = m_worldResource->GetResourcePath();
+            world->setName(core::io::getFileNameWithoutExt(filename));
+            return m_worldResource->SaveFile(filename);
+        }
+
+        return false;
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool Engine::SaveWorldAs(const core::string & _filename)
+    {
+        IObject * world = m_worldResource->getObject();
+        if (world)
+        {
+            world->setName(core::io::getFileNameWithoutExt(_filename));
+            return m_worldResource->SaveFile(_filename);
+        }
+        
+        return false;
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool Engine::LoadWorld(const core::string & _filename)
+    {
+        if (m_worldResource->GetResourcePath() != _filename)
+        {
+            m_worldResource->SetResourcePath(_filename);
+            return true;
+        }
+
+        return false;
     }
 
     //--------------------------------------------------------------------------------------
@@ -428,15 +446,9 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
-    void Engine::SaveWorld(const core::string & _filename)
+    IEngineOptions * Engine::GetOptions()
     {
-
-    }
-
-    //--------------------------------------------------------------------------------------
-    void Engine::LoadWorld(const core::string & _filename)
-    {
-
+        return EngineOptions::get();
     }
 
     //--------------------------------------------------------------------------------------
@@ -494,6 +506,9 @@ namespace vg::engine
         destroyEditorView();
 
         unloadProject();
+
+        EngineOptions * engineOptions = EngineOptions::get();
+        VG_SAFE_DELETE(engineOptions);
 
         UnregisterClasses();
 

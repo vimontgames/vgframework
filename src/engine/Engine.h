@@ -62,9 +62,6 @@ namespace vg::engine
         bool                                UnregisterClasses   ();
         static bool                         registerProperties  (core::IClassDesc & _desc);
         
-        static bool                         load                (IObject * _object);
-        static bool                         save                (IObject * _object);
-
         void                                OnPropertyChanged   (IObject * _object, const core::IProperty & _prop, bool _notifyParent) override;
 
         static bool                         createProject       (core::IObject * _engine);
@@ -98,10 +95,14 @@ namespace vg::engine
         engine::IResourceManager *          GetResourceManager  () const final override;
         core::ISelection *                  GetSelection        () const final override;
 
-        void                                CreateWorld         () final override;
-        void                                SaveWorld           (const core::string & _filename) final override;
-        void                                LoadWorld           (const core::string & _filename) final override;
+        bool                                CreateWorld         (const core::string & _filename) final override;
+        bool                                SaveWorld           () final override;
+        bool                                SaveWorldAs         (const core::string & _filename) final override;
+        bool                                LoadWorld           (const core::string & _filename) final override;
+
         IWorldResource *                    GetWorldResource    () final override;
+
+        IEngineOptions *                    GetOptions          () final override;
 
         void                                onResourceLoaded    (core::IResource * _resource) final override;
         void                                onResourceUnloaded  (core::IResource * _resource) final override;
@@ -128,7 +129,6 @@ namespace vg::engine
         void                                toggleFullscreen    ();
 
 	private:
-        core::string                        m_projectPath;
         bool                                m_isPlaying         = false;
         bool                                m_isPaused          = false;
         bool                                m_quit              = false;

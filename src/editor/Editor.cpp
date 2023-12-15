@@ -21,6 +21,7 @@
 #include "editor/ImGui/Window/Platform/ImGuiPlatform.h"
 #include "editor/ImGui/Window/Inspector/ImGuiInspector.h"
 #include "editor/ImGui/Window/EditorOptions/ImGuiEditorOptions.h"
+#include "editor/ImGui/Window/EngineOptions/ImGuiEngineOptions.h"
 #include "editor/ImGui/Window/RendererOptions/ImGuiRendererOptions.h"
 #include "editor/ImGui/Window/PhysicsOptions/ImGuiPhysicsOptions.h"
 #include "editor/ImGui/Window/About/ImGuiAbout.h"
@@ -94,6 +95,7 @@ namespace vg::editor
         m_imGuiWindows.push_back(new ImGuiEditorOptions());
         m_imGuiWindows.push_back(new ImGuiRendererOptions());
         m_imGuiWindows.push_back(new ImGuiPhysicsOptions());
+        m_imGuiWindows.push_back(new ImGuiEngineOptions());        
         m_imGuiWindows.push_back(new ImGuiGameView());
         m_imGuiWindows.push_back(new ImGuiEditorView());
         m_imGuiWindows.push_back(new ImGuiConsole());
@@ -366,6 +368,13 @@ namespace vg::editor
                             options->setVisible(true);
                     }
 
+                    if (ImGui::IconMenuItem(style::icon::Engine, "Engine"))
+                    {
+                        ImGuiEngineOptions * options = getWindow<ImGuiEngineOptions>();
+                        if (nullptr != options)
+                            options->setVisible(true);
+                    }
+
                     if (ImGui::IconMenuItem(style::icon::Renderer, "Renderer"))
                     {
                         ImGuiRendererOptions * options = getWindow<ImGuiRendererOptions>();
@@ -411,31 +420,27 @@ namespace vg::editor
         auto & fileBrowser = ImGuiWindow::getFileBrowser();
         string ext = ImGuiWindow::getFileBrowserExt(worldRes);
 
+        const auto worldFolder = ImGuiWindow::getDefaultFolder("WorldResource");
+        auto engine = getEngine();
+
         if (createNewWorld)
         {
-            if (worldRes)
-                worldRes->ClearResourcePath();
-
-            fileBrowser.setFolder(io::getRootDirectory() + "/data/Worlds");
+            fileBrowser.setFolder(worldFolder);
             ImGui::OpenPopup(newWorldPopupName.c_str());
         }
         else if (loadWorld)
         {
-            fileBrowser.setFolder(io::getRootDirectory() + "/data/Worlds");
+            fileBrowser.setFolder(worldFolder);
             ImGui::OpenPopup(openFilePopupName.c_str());
         }
         else if (saveWorldAs)
         {
-            fileBrowser.setFolder(io::getRootDirectory() + "/data/Worlds");
+            fileBrowser.setFolder(worldFolder);
             ImGui::OpenPopup(saveAsFilePopupName.c_str());
         }
         else if (saveWorld)
         {
-            if (worldRes)
-            {
-                if (worldRes->SaveFile(worldRes->GetResourcePath()))
-                    VG_INFO("[Editor] World \"%s\" saved", worldRes->GetResourcePath().c_str());
-            }
+            engine->SaveWorld();
         }
         else if (closeWorld)
         {
@@ -454,35 +459,18 @@ namespace vg::editor
 
         // Create new file
         if (fileBrowser.showFileDialog(newWorldPopupName.c_str(), imgui_addons::ImGuiFileBrowser::DialogMode::SAVE, style::dialog::Size, ext.c_str()))
-        {
-            const string newFilePath = io::addExtensionIfNotPresent(fileBrowser.selected_path, ".world");
-            if (worldRes->CreateFile(newFilePath))
-            {
-                worldRes->SetResourcePath(newFilePath);
-                worldRes->setName(core::io::getFileNameWithoutExt(fileBrowser.selected_path));
-            }
-        }
+            engine->CreateWorld(io::addExtensionIfNotPresent(fileBrowser.selected_path, ".world"));
 
         // Open existing file
         if (fileBrowser.showFileDialog(openFilePopupName.c_str(), imgui_addons::ImGuiFileBrowser::DialogMode::OPEN, style::dialog::Size, ext.c_str()))
-        {
-            const string newFilePath = fileBrowser.selected_path;
-            if (worldRes->GetResourcePath() != newFilePath)
-                worldRes->SetResourcePath(newFilePath);
-        }
+            engine->LoadWorld(fileBrowser.selected_path);
 
         // Save as 
         if (fileBrowser.showFileDialog(saveAsFilePopupName.c_str(), imgui_addons::ImGuiFileBrowser::DialogMode::SAVE, style::dialog::Size, ext.c_str()))
-        {
-            const string newFilePath = io::addExtensionIfNotPresent(fileBrowser.selected_path, ".world");
-            if (worldRes->SaveFile(newFilePath))
-                worldRes->SetResourcePath(newFilePath);
-        }
+            engine->SaveWorldAs(io::addExtensionIfNotPresent(fileBrowser.selected_path, ".world"));
 
         static bool demo = false;
         if (demo)
             ImGui::ShowDemoWindow(&demo);
-    }
-
-    
+    }    
 }

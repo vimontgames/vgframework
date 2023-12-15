@@ -1,9 +1,9 @@
 <Root>
     <Object class="WorldResourceData">
-        <Property type="String" name="m_name" flags="Hidden" value="WorldResourceData #0"/>
+        <Property type="String" name="m_name" flags="Hidden" value="game"/>
         <Property type="ObjectRef" name="m_world">
             <Object class="World">
-                <Property type="String" name="m_name" flags="Hidden" value="World #0"/>
+                <Property type="String" name="m_name" flags="Hidden" value="World #1"/>
             </Object>
         </Property>
         <Property type="ResourceRefVector" name="m_sceneResources" flags="Resource">

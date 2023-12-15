@@ -78,6 +78,7 @@ namespace vg::editor
         static imgui_addons::ImGuiFileBrowser & getFileBrowser      ();
         static core::string                     getFileBrowserExt   (const core::IResource * _resource);
         static core::string                     getDefaultFolder    (const core::IResource * _resource);
+        static core::string                     getDefaultFolder    (const core::string & _resourceTypeName);
 
         static engine::IEngine *                getEngine           ();
         static core::ISelection *               getSelection        ();

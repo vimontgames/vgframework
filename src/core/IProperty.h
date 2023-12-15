@@ -77,24 +77,27 @@ namespace vg::core
             ReadOnly        = 0x0000000000000001,   // Cannot edit from GUI
             Color           = 0x0000000000000002,   // Type represents a color (e.g. float4 or u32)
             IsFolder        = 0x0000000000000004,   // String is a folder
-            HasRange        = 0x0000000000000008,   // Property has [min..max] range
-            SameLine        = 0x0000000000000010,   // Do no end line after this property
-			Radio		    = 0x0000000000000020,   // Part of a radio button group
-            Hidden          = 0x0000000000000040,   // Hide property
-            Bitfield        = 0x0000000000000080,   // Value displayed as hex, enum as flags
-            Resource        = 0x0000000000000100,
-            NotSaved        = 0x0000000000000200,
-            EnumArray       = 0x0000000000000400,   // Property is fixed-size C array with element count the size of the enum
-            Flatten         = 0x0000000000000800,   // Do not open TreeNode to display object of this type
-            Optional        = 0x0000000000001000    // Previous property must be a bool, and if 'false' then this value won't be editable
+            IsFile          = 0x0000000000000008,   // String is a folder
+            HasRange        = 0x0000000000000010,   // Property has [min..max] range
+            SameLine        = 0x0000000000000020,   // Do no end line after this property
+            Radio           = 0x0000000000000040,   // Part of a radio button group
+            Hidden          = 0x0000000000000080,   // Hide property
+            Bitfield        = 0x0000000000000100,   // Value displayed as hex, enum as flags
+            Resource        = 0x0000000000000200,
+            NotSaved        = 0x0000000000000400,
+            EnumArray       = 0x0000000000000800,   // Property is fixed-size C array with element count the size of the enum
+            Flatten         = 0x0000000000001000,   // Do not open TreeNode to display object of this type
+            Optional        = 0x0000000000002000,   // Previous property must be a bool, and if 'false' then this value won't be editable
         };
 
         virtual void                            setRange                        (float2 _range) = 0;
+        virtual void                            setDefaultFolder                (const char * _path) = 0;
         virtual void                            setFlags                        (Flags _flagsToSet, Flags _flagsToRemove = Flags::None) = 0;
 
         virtual const char *                    getName                         () const = 0;
         virtual const char *                    getClassName                    () const = 0;
         virtual const char *                    getDisplayName                  () const = 0;
+        virtual const char *                    getDefaultFolder                () const = 0;
         virtual Type                            getType                         () const = 0;
         virtual Flags                           getFlags                        () const = 0;
         virtual uint_ptr                        getOffset                       () const = 0;
@@ -210,6 +213,7 @@ namespace vg::core
 // Modify existing class properties macros
 //--------------------------------------------------------------------------------------
 #define setPropertyRange(className, propertyName, range)												    _desc.GetPropertyByName(#propertyName)->setRange(range);
+#define setPropertyDefaultFolder(className, propertyName, defaultFolder)									_desc.GetPropertyByName(#propertyName)->setDefaultFolder(defaultFolder);
 
 //--------------------------------------------------------------------------------------
 // Misc

@@ -63,6 +63,8 @@
     <ClInclude Include="ImGui\Window\Console\ImGuiConsole.hpp" />
     <ClInclude Include="ImGui\Window\EditorOptions\ImGuiEditorOptions.h" />
     <ClInclude Include="ImGui\Window\EditorOptions\ImGuiEditorOptions.hpp" />
+    <ClInclude Include="ImGui\Window\EngineOptions\ImGuiEngineOptions.h" />
+    <ClInclude Include="ImGui\Window\EngineOptions\ImGuiEngineOptions.hpp" />
     <ClInclude Include="ImGui\Window\FPS\ImGuiFPS.h" />
     <ClInclude Include="ImGui\Window\FPS\ImGuiFPS.hpp" />
     <ClInclude Include="ImGui\Window\ImGuiWindow.h" />

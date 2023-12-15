@@ -332,8 +332,8 @@ namespace vg::core
 
                     bool changed = false;
                     VG_VERIFY(_buffer.restore(dst, size, changed));
-                    if (changed)
-                        VG_INFO("[Factory] Property (%s) '%s' from %s \"%s\" has been restored", asString(type).c_str(), name, _object->getClassName(), _object->getName().c_str());
+                    //if (changed)
+                    //    VG_INFO("[Factory] Property (%s) '%s' from %s \"%s\" has been restored", asString(type).c_str(), name, _object->getClassName(), _object->getName().c_str());
                 }
             }
         }

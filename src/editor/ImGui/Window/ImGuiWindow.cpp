@@ -34,6 +34,7 @@ using namespace ImGui;
 #include "editor/ImGui/Window/Plugin/ImGuiPlugin.hpp"
 #include "editor/ImGui/Window/Platform/ImGuiPlatform.hpp"
 #include "editor/ImGui/Window/EditorOptions/ImGuiEditorOptions.hpp"
+#include "editor/ImGui/Window/EngineOptions/ImGuiEngineOptions.hpp"
 #include "editor/ImGui/Window/RendererOptions/ImGuiRendererOptions.hpp"
 #include "editor/ImGui/Window/PhysicsOptions/ImGuiPhysicsOptions.hpp"
 #include "editor/ImGui/Window/About/ImGuiAbout.hpp"
@@ -655,31 +656,39 @@ namespace vg::editor
                     bool selectPath = false;
 
                     string * pString = _prop->GetPropertyString(_object);
-
                     char buffer[1024];
-                    sprintf_s(buffer, pString->c_str());
-                    changed |= ImGui::InputText(getButtonLabel(displayName, _object).c_str(), buffer, countof(buffer), imguiInputTextflags);
 
-                    if (changed)
+                    const bool isFolder = asBool(IProperty::Flags::IsFolder & flags);
+                    const bool isFile = asBool(IProperty::Flags::IsFile & flags);
+
+                    if (isFolder || isFile)
                     {
-                        *pString = buffer;
+                        auto availableWidth = GetContentRegionAvail().x;
+                        ImGui::PushItemWidth(availableWidth - style::label::PixelWidth - style::button::SizeSmall.x);
+                        sprintf_s(buffer, pString->c_str());
+                        if (ImGui::InputText(getObjectLabel("", displayName, _object).c_str(), buffer, countof(buffer), imguiInputTextflags))
+                            *pString = buffer;
+                        ImGui::PopItemWidth();
 
-                        if (asBool(IProperty::Flags::IsFolder & flags))
-                        {
-                            ImGui::SameLine();
-                            if (ImGui::Button("Path"))
-                                selectPath = true;
-                        }
+                        ImGui::SameLine();
+                        auto x = ImGui::GetCursorPosX();
+                        ImGui::SetCursorPosX(x + style::button::SizeSmall.x);
+                        ImGui::Text(_prop->getDisplayName());
+                        auto x2 = ImGui::GetCursorPosX();
+                        ImGui::SameLine();
+                        ImGui::SetCursorPosX(x - 4);
 
-                        if (selectPath)
-                        {
-                            ImGui::OpenPopup("Select folder");
-                            selectPath = false;
-                        }
+                        auto & fileBrowser = getFileBrowser();
+                        const auto defaultFolder = ImGuiWindow::getDefaultFolder("WorldResource");
 
-                        if (asBool(IProperty::Flags::IsFolder & flags))
+                        if (isFolder)
                         {
-                            auto & fileBrowser = getFileBrowser();
+                            if (ImGui::Button(style::icon::Folder, style::button::SizeSmall))
+                            {
+                                fileBrowser.setFolder(defaultFolder);
+                                ImGui::OpenPopup("Select folder");
+                            }
+
                             if (fileBrowser.showFileDialog("Select folder", imgui_addons::ImGuiFileBrowser::DialogMode::SELECT, style::dialog::Size))
                             {
                                 const string newFolder = io::getRelativePath(fileBrowser.selected_path);
@@ -691,9 +700,34 @@ namespace vg::editor
                                 }
                             }
                         }
+                        else if (isFile)
+                        {
+                            if (ImGui::Button(style::icon::File, style::button::SizeSmall))
+                            {
+                                fileBrowser.setFolder(fmt::sprintf("%s/%s", io::getRootDirectory().c_str(),  _prop->getDefaultFolder()));
+                                ImGui::OpenPopup("Select file");
+                            }
 
-                        //ImGui::SetKeyboardFocusHere(-1); // Auto focus previous widget
+                            string ext = ".world";
+
+                            if (fileBrowser.showFileDialog("Select file", imgui_addons::ImGuiFileBrowser::DialogMode::OPEN, style::dialog::Size, ext))
+                            {
+                                const string newFile = io::getRelativePath(fileBrowser.selected_path);
+
+                                if (newFile != *pString)
+                                {
+                                    *pString = newFile;
+                                    changed = true;
+                                }
+                            }
+                        }
                     }
+                    else
+                    {
+                        sprintf_s(buffer, pString->c_str());
+                        if (ImGui::InputText(getButtonLabel(displayName, _object).c_str(), buffer, countof(buffer), imguiInputTextflags))
+                            *pString = buffer;
+                    }                    
                 }
                 break;
 
@@ -1306,31 +1340,36 @@ namespace vg::editor
     }
 
     //--------------------------------------------------------------------------------------
-    string ImGuiWindow::getDefaultFolder(const IResource * _resource)
+    core::string ImGuiWindow::getDefaultFolder(const core::string & _resourceTypeName)
     {
-        const char * className = _resource->getClassName();
         const char * folder = nullptr;
 
-        if (!strcmp(className, "MeshResource"))
+        if (!strcmp(_resourceTypeName.c_str(), "MeshResource"))
             folder = "Meshes";
-        else if (!strcmp(className, "TextureResource"))
+        else if (!strcmp(_resourceTypeName.c_str(), "TextureResource"))
             folder = "Textures";
-        else if (!strcmp(className, "MaterialResource"))
+        else if (!strcmp(_resourceTypeName.c_str(), "MaterialResource"))
             folder = "Materials";
-        else if (!strcmp(className, "AnimationResource"))
+        else if (!strcmp(_resourceTypeName.c_str(), "AnimationResource"))
             folder = "Animations";
-        else if (!strcmp(className, "SceneResource"))
+        else if (!strcmp(_resourceTypeName.c_str(), "SceneResource"))
             folder = "Scenes";
-        else if (!strcmp(className, "WorldResource"))
+        else if (!strcmp(_resourceTypeName.c_str(), "WorldResource"))
             folder = "Worlds";
 
         if (!folder)
         {
-            VG_WARNING("[Editor] No default folder for Resource type \"%s\"", _resource->getClassName());
+            VG_WARNING("[Editor] No default folder for Resource type \"%s\"", _resourceTypeName.c_str());
             return fmt::sprintf("%s/data", io::getRootDirectory());
         }
 
         return fmt::sprintf("%s/data/%s", io::getRootDirectory(), folder);
+    }
+
+    //--------------------------------------------------------------------------------------
+    string ImGuiWindow::getDefaultFolder(const IResource * _resource)
+    {
+        return getDefaultFolder(_resource->getClassName());
     }
 
     //--------------------------------------------------------------------------------------

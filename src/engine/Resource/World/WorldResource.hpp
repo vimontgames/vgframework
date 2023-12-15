@@ -101,7 +101,7 @@ namespace vg::engine
     {
         const auto * factory = Kernel::getFactory();
 
-        WorldResourceData * worldData = dynamic_cast<WorldResourceData *>(factory->createObject("WorldResourceData"));
+        WorldResourceData * worldData = dynamic_cast<WorldResourceData *>(factory->createObject("WorldResourceData", core::io::getFileNameWithoutExt(_path)));
         if (nullptr != worldData)
         {
             factory->saveToXML(worldData, _path);

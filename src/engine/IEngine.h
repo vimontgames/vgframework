@@ -33,6 +33,7 @@ namespace vg
     {
         class IResourceManager;
         class IWorldResource;
+        class IEngineOptions;
 
         struct Time
         {
@@ -84,10 +85,14 @@ namespace vg
             virtual engine::IResourceManager *  GetResourceManager  () const = 0;
             virtual core::ISelection *          GetSelection        () const = 0;
 
-            virtual void                        CreateWorld         () = 0;
-            virtual void                        SaveWorld           (const core::string & _filename) = 0;
-            virtual void                        LoadWorld           (const core::string & _filename) = 0;
+            virtual bool                        CreateWorld         (const core::string & _filename) = 0;
+            virtual bool                        SaveWorld           () = 0;
+            virtual bool                        SaveWorldAs         (const core::string & _filename) = 0;
+            virtual bool                        LoadWorld           (const core::string & _filename) = 0;
+
             virtual IWorldResource *            GetWorldResource    () = 0;
+
+            virtual IEngineOptions *            GetOptions          () = 0;
 	    };
     }
 }

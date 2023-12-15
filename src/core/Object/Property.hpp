@@ -105,6 +105,18 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
+    void Property::setDefaultFolder(const char * _path)
+    {
+        defaultFolder = _path;
+    }
+
+    //--------------------------------------------------------------------------------------
+    const char * Property::getDefaultFolder() const
+    {
+        return defaultFolder;
+    }
+
+    //--------------------------------------------------------------------------------------
     void Property::setFlags(Flags _flagsToSet, Flags _flagsToRemove)
     {
         flags = (Flags)((std::underlying_type<Flags>::type(flags) & ~std::underlying_type<Flags>::type(_flagsToRemove)) | (std::underlying_type<Flags>::type(_flagsToSet)));
