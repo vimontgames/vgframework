@@ -326,6 +326,7 @@ namespace vg::renderer
         if (m_device.isMinimized())
         {
             Sleep(1);
+            DebugDraw::get()->endFrame();
             return;
         }
 
