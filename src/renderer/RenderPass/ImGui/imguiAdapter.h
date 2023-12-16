@@ -60,7 +60,7 @@ namespace vg
             VkDescriptorPool                    m_vkImguiDescriptorPool;
             VkRenderPass                        m_vkImguiRenderPass;
             VkSampler                           m_vkSampler;
-            core::vector<VkDescriptorSet>       m_tempDescriptorSets;
+            core::vector<VkDescriptorSet>       m_tempDescriptorSets[2];
             #endif
         };
     }

@@ -262,14 +262,15 @@ namespace vg::renderer
         }
 
         // Release user descriptors
-        for (uint i = 0; i < m_tempDescriptorSets.count(); ++i)
+        for (uint i = 0; i < m_tempDescriptorSets[1].count(); ++i)
         {
-            auto texId = m_tempDescriptorSets[i];
+            auto texId = m_tempDescriptorSets[1][i];
             ImGui_ImplVulkan_Data * bd = ImGui_ImplVulkan_GetBackendData();
             ImGui_ImplVulkan_InitInfo * v = &bd->VulkanInitInfo;
             vkFreeDescriptorSets(device->getVulkanDevice(), v->DescriptorPool, 1, &texId);
         }
-        m_tempDescriptorSets.clear();
+        m_tempDescriptorSets[1].clear();
+        m_tempDescriptorSets[1] = std::move(m_tempDescriptorSets[0]);
 
         #endif
 
@@ -322,8 +323,8 @@ namespace vg::renderer
         #ifdef VG_DX12
         // Nothing to do
         #elif defined(VG_VULKAN)
-        m_tempDescriptorSets.push_back((VkDescriptorSet)_texID);
-        VG_ASSERT(m_tempDescriptorSets.count() <= max_imguitex_displayed_per_frame);
+        m_tempDescriptorSets[0].push_back((VkDescriptorSet)_texID);
+        VG_ASSERT(m_tempDescriptorSets[0].count() <= max_imguitex_displayed_per_frame);
         #endif
     }
 
