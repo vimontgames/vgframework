@@ -138,6 +138,9 @@ namespace vg::engine
     //--------------------------------------------------------------------------------------
     bool AnimationResource::PlayLoop()
     {
+        if (!getObject())
+            return false;
+
         if (!m_play)
         {
             setTime(0.0f);
