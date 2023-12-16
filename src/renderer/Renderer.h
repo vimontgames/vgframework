@@ -43,11 +43,11 @@ namespace vg::renderer
 		void					                deinit				    () override;
 
         const gfx::DeviceParams &               GetDeviceCreationParams () const final override;
-        renderer::IRendererOptions *             GetOptions       () final override;
+        renderer::IRendererOptions *            GetOptions              () final override;
 
         gfx::ITexture *                         CreateTexture           (const gfx::TextureDesc & _texDesc, const core::string & _name) final override;
 
-        gfx::IView *                            CreateView              (gfx::CreateViewParams _params, const core::string & _name, gfx::IView::Flags _flags) final override;
+        gfx::IView *                            CreateView              (gfx::CreateViewParams _params, const core::string & _name, gfx::IView::Flags _flags = (gfx::IView::Flags)0) final override;
         gfx::ViewID                             AddView                 (gfx::IView * _view) final override;
         void                                    RemoveView              (gfx::ViewID _viewID) final override;
         gfx::IView *                            GetView                 (gfx::ViewID _viewID) const final override;

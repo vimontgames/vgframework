@@ -87,7 +87,6 @@ namespace vg::engine
 		void							    RunOneFrame	        () final;
 
         core::uint2                         getScreenSize       () const final;
-        gfx::IView *                        getMainView         () const;
 
         editor::IEditor *                   GetEditor           () const final override;
 		renderer::IRenderer *	            GetRenderer	        () const final override;
@@ -110,9 +109,6 @@ namespace vg::engine
     public:
         renderer::IRendererOptions *        getRendererOptions  () const;
         physics::IPhysicsOptions *          getPhysicsOptions   () const;
-
-        void                                createEditorScene   ();
-        void                                destroyEditorView   ();
 
         VG_INLINE bool                      isPlaying           () const;
         void                                play                ();
@@ -137,7 +133,6 @@ namespace vg::engine
         editor::IEditor *                   m_editor            = nullptr;
 		renderer::IRenderer *	            m_renderer          = nullptr;
         physics::IPhysics *                 m_physics           = nullptr;
-        gfx::IView *                        m_mainView          = nullptr;
         ResourceManager *                   m_resourceManager   = nullptr;
         Selection *                         m_selection         = nullptr;
         Time                                m_time;

@@ -196,6 +196,10 @@ namespace vg::renderer
 
         initDefaultTextures();
         initDefaultMaterials();
+
+        // Create main view
+        auto mainViewParams = gfx::CreateViewParams(gfx::ViewTarget::Backbuffer, getBackbufferSize());
+        m_mainView = (View*)CreateView(mainViewParams, "MainView");
 	}
 
     //--------------------------------------------------------------------------------------
@@ -489,7 +493,6 @@ namespace vg::renderer
                 view = new View(_params);
                 VG_ASSERT(m_mainView == nullptr, "Only one \"Main\" backbuffer view is supported");
                 m_mainView = static_cast<View *>(view); // This is required for FrameGraph construction
-                VG_SAFE_INCREASE_REFCOUNT(m_mainView);
                 break;
         }
         

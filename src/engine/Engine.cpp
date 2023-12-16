@@ -317,12 +317,6 @@ namespace vg::engine
         m_editor = Plugin::create<editor::IEditor>("editor");
         m_editor->Init(_singletons);
 
-        // Create main view
-        auto mainViewParams = gfx::CreateViewParams(gfx::ViewTarget::Backbuffer, getScreenSize());
-        m_mainView = m_renderer->CreateView(mainViewParams, "MainView");
-
-        createEditorScene();
-
         // Create default world resource or load world path from commandline (TODO)
         VG_ASSERT(m_worldResource == nullptr);
         m_worldResource = new WorldResource("Default", this);
@@ -451,59 +445,11 @@ namespace vg::engine
         return EngineOptions::get();
     }
 
-    //--------------------------------------------------------------------------------------
-    void Engine::createEditorScene()
-    {
-        // use factor to create objects
-        auto* factory = Kernel::getFactory();
-
-        // create default universe
-        /*m_world = (World *)CreateFactoryObject(World, "Default", this);
-
-        Scene * editor = (Scene *)CreateFactoryObject(Scene, "Editor", m_world);
-        m_world->AddScene(editor);
-        editor->release();
-
-        GameObject * rootGameObject = (GameObject *)CreateFactoryObject(GameObject, "Root", editor);
-        editor->SetRoot(rootGameObject);
-        rootGameObject->release();
-
-        // add Camera GameObject
-        GameObject * editorCameraGameObject = new GameObject("Editor Camera", rootGameObject);
-
-        // add Camera component
-        auto * cameraComponent = editorCameraGameObject->AddComponentByType<CameraComponent>("Camera");
-        cameraComponent->setViewTarget(gfx::ViewTarget::Editor);
-
-        // add FreeCam behaviour
-        auto * freeCamComponent = editorCameraGameObject->AddComponentByType<FreeCamBehaviour>("FreeCam");
-        editorCameraGameObject->setWorldMatrix(float4x4
-        (
-            1.0f, 0.0f, 0.0f, 0.0f,
-            0.0f, 1.0f, 0.0f, 0.0f,
-            0.0f, 0.0f, 1.0f, 0.0f,
-            0.0f, -8.0f, 2.0f, 1.0f
-        ));
-
-        // Add Camera GameObject
-        rootGameObject->AddChild(editorCameraGameObject);
-        VG_SAFE_RELEASE(editorCameraGameObject);
-        */
-    }
-
-    //--------------------------------------------------------------------------------------
-    void Engine::destroyEditorView()
-    {
-        VG_SAFE_RELEASE(m_mainView);
-    }
-
 	//--------------------------------------------------------------------------------------
 	void Engine::deinit()
 	{
         m_renderer->waitGPUIdle();
         m_resourceManager->flushPendingLoading();
-
-        destroyEditorView();
 
         unloadProject();
 
@@ -679,12 +625,6 @@ namespace vg::engine
     core::uint2 Engine::getScreenSize() const
     {
         return GetRenderer()->getBackbufferSize();
-    }
-
-    //--------------------------------------------------------------------------------------
-    gfx::IView * Engine::getMainView() const
-    {
-        return m_mainView;
     }
 
     //--------------------------------------------------------------------------------------
