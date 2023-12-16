@@ -234,13 +234,17 @@ namespace vg::engine
                 if (scene)
                 {
                     if (worldResData->m_world)
-                        worldResData->m_world->AddScene(scene); // TODO : check the scene isn't already present
-
-                    if (Engine::get()->isPlaying())
                     {
-                        IObject * root = scene->GetRoot();
-                        if (nullptr != root)
-                            root->OnPlay();
+                        if (worldResData->m_world->AddScene(scene))
+                        {
+                            if (Engine::get()->isPlaying())
+                            {
+                                VG_DEBUGPRINT("OnPlay scene %s\n", scene->getName().c_str());
+                                IObject * root = scene->GetRoot();
+                                if (nullptr != root)
+                                    root->OnPlay();
+                            }
+                        }
                     }
                 }
             }

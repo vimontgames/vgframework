@@ -192,7 +192,7 @@ namespace vg::core
     bool Factory::SaveProperties(core::IObject * _object)
     {
         auto it = m_initValues.find(_object);
-        VG_ASSERT((it == m_initValues.end()));  // TODO : This should be done from main thread, not loading thread
+        VG_ASSERT((it == m_initValues.end()));  
         if (it == m_initValues.end())
         {
             io::Buffer * buffer = new io::Buffer();
