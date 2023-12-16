@@ -200,6 +200,11 @@ namespace vg::renderer
         // Create main view
         auto mainViewParams = gfx::CreateViewParams(gfx::ViewTarget::Backbuffer, getBackbufferSize());
         m_mainView = (View*)CreateView(mainViewParams, "MainView");
+
+        auto gameView0Params = gfx::CreateViewParams(gfx::ViewTarget::Game, getBackbufferSize());
+        auto gameView = (View *)CreateView(gameView0Params, "GameView#0");
+        AddView(gameView);
+        VG_SAFE_RELEASE(gameView);
 	}
 
     //--------------------------------------------------------------------------------------
@@ -264,6 +269,22 @@ namespace vg::renderer
         m_device.waitGPUIdle();
         m_device.resize(_width, _height);
         m_mainView->setSize(uint2(_width, _height));
+
+        if (IsFullscreen())
+        {
+            auto & views = m_views[(int)ViewTarget::Game];
+            for (uint i = 0; i < views.count(); ++i)
+            {
+                auto * view = views[i];
+                if (nullptr != view)
+                {
+                    view->setSize(m_mainView->getSize());
+                    view->SetActive(true);
+                    view->SetVisible(true);
+                }
+            }
+        }
+
         m_frameGraph.destroyTransientResources();
         DebugDraw::get()->reset();
     }
@@ -367,15 +388,15 @@ namespace vg::renderer
                         auto * view = views[i];
                         if (nullptr != view)
                         {
-                            if (m_fullscreen)
-                            {
-                                if (gfx::ViewTarget::Game == target)
-                                {
-                                    view->setSize(m_mainView->getSize());
-                                    view->SetActive(true);
-                                    view->SetVisible(true);
-                                }
-                            }
+                            //if (m_fullscreen)
+                            //{
+                            //    if (gfx::ViewTarget::Game == target)
+                            //    {
+                            //        view->setSize(m_mainView->getSize());
+                            //        view->SetActive(true);
+                            //        view->SetVisible(true);
+                            //    }
+                            //}
 
                             if (!view->IsVisible())
                                 continue;
@@ -723,7 +744,25 @@ namespace vg::renderer
         {
             m_fullscreen = _fullscreen;
             VG_INFO("[Renderer] Set Fullscreen to '%s'", _fullscreen ? "true" : "false");
-            SetResized();
+            //m_device.waitGPUIdle();
+            //m_frameGraph.destroyTransientResources();
+            //DebugDraw::get()->reset();
+
+            if (_fullscreen)
+            {
+                // Resize view to fit backbuffer
+                auto & views = m_views[(int)ViewTarget::Game];
+                for (uint i = 0; i < views.count(); ++i)
+                {
+                    auto * view = views[i];
+                    if (nullptr != view)
+                    {
+                        view->setSize(m_mainView->getSize());
+                        view->SetActive(true);
+                        view->SetVisible(true);
+                    }
+                }
+            }
         }
     }
 

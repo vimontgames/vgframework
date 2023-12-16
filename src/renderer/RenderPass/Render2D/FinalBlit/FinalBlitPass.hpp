@@ -41,7 +41,7 @@ namespace vg::renderer
 
         const auto * renderer = Renderer::get();
 
-        if (renderer->IsFullscreen())
+        if (!_renderPassContext.m_view->GetRenderTarget() || renderer->IsFullscreen())
             writeRenderTarget(0, "Backbuffer");
         else
             writeRenderTarget(0, _renderPassContext.getFrameGraphID("Dest")); 

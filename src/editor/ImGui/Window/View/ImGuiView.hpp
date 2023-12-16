@@ -261,26 +261,6 @@ namespace vg::editor
             }
             ImGui::PopClipRect();
 
-            // test
-            float4x4 m0;
-            m0[0] = float4(0, 0, 1, 0);
-            m0[1] = float4(0, -1, 0, 0);
-            m0[2] = float4(1, 0, 0, 0);
-            m0[3] = float4(1, 2, 3, 1);
-
-            float3 t0;
-            float3 r0;
-            float3 s0;
-            ImGuizmo::DecomposeMatrixToComponents((float*)&m0, (float*)&t0, (float *)&r0, (float *)&s0);
-
-            float4x4 m1;
-            ImGuizmo::RecomposeMatrixFromComponents((float *)&t0, (float *)&r0, (float *)&s0, (float *)&m1);
-
-            float3 t1;
-            float3 r1;
-            float3 s1;
-            ImGuizmo::DecomposeMatrixToComponents((float *)&m1, (float *)&t1, (float *)&r1, (float *)&s1);
-
             return ImGuizmo::IsOver();
         }
 

@@ -169,17 +169,22 @@ PS_Output PS_Forward(VS_Output _input)
     
     if (RootConstantsFlags::Wireframe & rootConstants3D.getFlags())
         output.color0 = float4(0,1,0,1);
-        
+
+    #endif // _TOOLMODE
+
+    #if 1 //_TOOLMODE
+
     // Picking
     uint toolmodeRWBufferID = viewConstants.getToolmodeRWBufferID();
-    uint2 inputPos = _input.pos.xy;
-    float depth = _input.pos.z;
-    uint2 mousePos = viewConstants.getMousePos();
-    uint4 pickingID = uint4(rootConstants3D.getPickingID(), rootConstants3D.getMatID(), 0, 0);
-    
-    if (ProcessPicking(toolmodeRWBufferID, 0, inputPos, depth, worldPos, mousePos, screenSize, pickingID))
+    if (0xFFFF != toolmodeRWBufferID)
     {
-        output.color0 = lerp(output.color0, float4(0,1,0,1), 0.25f);
+        uint2 inputPos = _input.pos.xy;
+        float depth = _input.pos.z;
+        uint2 mousePos = viewConstants.getMousePos();
+        uint4 pickingID = uint4(rootConstants3D.getPickingID(), rootConstants3D.getMatID(), 0, 0);
+    
+        if (ProcessPicking(toolmodeRWBufferID, 0, inputPos, depth, worldPos, mousePos, screenSize, pickingID))
+            output.color0 = lerp(output.color0, float4(0,1,0,1), 0.25f);
     }
 
     #endif // _TOOLMODE
