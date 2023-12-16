@@ -94,7 +94,7 @@ namespace vg::gfx::dxc
 		{
 			CComHeapPtr<char> VersionString;
 			VG_ASSERT_SUCCEEDED(pCompilerVersion3->GetCustomVersionString(&VersionString));
-			VG_INFO("DXC Shader Compiler Version %s", VersionString);
+			VG_INFO("[Shader] Using DXC Shader Compiler Version %s", VersionString);
 		}
 		else
 		{
@@ -106,7 +106,7 @@ namespace vg::gfx::dxc
 				UINT32 uCompilerMajor = 0;
 				UINT32 uCompilerMinor = 0;
 				VG_ASSERT_SUCCEEDED(pCompilerVersion->GetVersion(&uCompilerMajor, &uCompilerMinor));
-				VG_INFO("DXC Shader Compiler Version %u.%u ", uCompilerMajor, uCompilerMinor);
+				VG_INFO("[Shader] Using DXC Shader Compiler Version %u.%u ", uCompilerMajor, uCompilerMinor);
 			}
 		}		
 

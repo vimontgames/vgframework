@@ -207,7 +207,7 @@ namespace vg::editor
                             break;
                     }
   
-                    string fullmsg = fmt::sprintf("[\"%s\"] %s", item.category.c_str(), item.message.c_str());
+                    string fullmsg = fmt::sprintf("[%s] %s", item.category.c_str(), item.message.c_str());
 
                     if (!m_filter.PassFilter(fullmsg.c_str()))
                         continue;

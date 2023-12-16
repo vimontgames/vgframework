@@ -42,9 +42,6 @@ namespace vg::editor
 
         void                    OnPropertyChanged   (IObject * _object, const core::IProperty & _prop, bool _notifyParent) final override;
 
-        static bool			    load                (core::IObject * _object);
-        static bool			    save                (core::IObject * _object);
-
         bool                    setGizmoType        (GizmoType _gizmoType);
         bool                    setSnap             (bool _enable);
         bool                    getSnap             () const;

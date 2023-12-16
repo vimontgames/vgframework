@@ -500,7 +500,7 @@ namespace vg::engine::win32
             }
             else
             {
-                VG_WARNING("[Input] Could not JoyPad %u state", i);
+                VG_WARNING("[Input] Could not get JoyPad %u state", i);
 
                 joy.m_leftStickDir.x = 0.0f;
                 joy.m_leftStickDir.y = 0.0f;

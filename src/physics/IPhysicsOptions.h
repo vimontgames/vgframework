@@ -1,13 +1,13 @@
 #pragma once
-#include "core/Object/Object.h"
+#include "core/Options/Options.h"
 #include "physics/Physics_Consts.h"
 
 namespace vg::physics
 {
-    class IPhysicsOptions : public core::Object
+    class IPhysicsOptions : public core::Options
     {
     public:
-        VG_CLASS_DECL_ABSTRACT(IPhysicsOptions, core::Object);
+        VG_CLASS_DECL_ABSTRACT(IPhysicsOptions, core::Options);
 
         virtual bool    IsRigidBodyVisible(ShapeType _shape) const = 0;
     };

@@ -2,6 +2,6 @@
     <Object class="EngineOptions">
         <Property type="String" name="m_name" flags="Hidden" value="EngineOptions"/>
         <Property type="String" name="m_projectPath" flags="IsFolder" value="projects/game"/>
-        <Property type="String" name="m_startWorld" flags="IsFile" value="data/Worlds/Empty.world"/>
+        <Property type="String" name="m_startWorld" flags="IsFile" value="data/Worlds/Game.world"/>
     </Object>
 </Root>

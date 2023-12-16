@@ -216,18 +216,22 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
 	SetWindowTextA(g_hWnd, title.c_str());
 
+	// Start maximized?
+	bool fullscreen = cmdLine.getBool("fullscreen");
+	if (fullscreen)
+		g_engine->GetRenderer()->SetFullscreen(true);
+
 	// Command-line override or world name from config
-	const core::string * cmdLineWorld = cmdLine.find("world");
-	if (nullptr != cmdLineWorld)
-	{
-		g_engine->LoadWorld(*cmdLineWorld);
-	}
-	else
-	{
-		auto startWorld = g_engine->GetOptions()->GetStartWorld();
-		if (!startWorld.empty())
-			g_engine->LoadWorld(startWorld);
-	}
+	core::string world = cmdLine.getString("world");
+	if (world.empty())
+		world = g_engine->GetOptions()->GetStartWorld();
+	if (!world.empty())
+		g_engine->LoadWorld(world);
+
+    // Start in play mode?
+    bool play = cmdLine.getBool("play");
+    if (play)
+        g_engine->Play();
 
 	while (!processSystemMessage() && !g_engine->IsQuitting())
 		app->Update();

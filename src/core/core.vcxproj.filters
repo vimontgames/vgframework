@@ -61,6 +61,9 @@
     <Filter Include="Logger">
       <UniqueIdentifier>{ac882dcd-18b5-40d1-bfbe-dbae9b89f079}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Options">
+      <UniqueIdentifier>{34937bda-b674-4932-9962-25a39a290340}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Math\Math.h">
@@ -192,6 +195,10 @@
     <ClInclude Include="Object\UpdateFlags.h">
       <Filter>Object</Filter>
     </ClInclude>
+    <ClInclude Include="IOptions.h" />
+    <ClInclude Include="Options\Options.h">
+      <Filter>Options</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Math\Math.cpp">
@@ -249,6 +256,9 @@
     </ClCompile>
     <ClCompile Include="Logger\Logger.cpp">
       <Filter>Logger</Filter>
+    </ClCompile>
+    <ClCompile Include="Options\Options.cpp">
+      <Filter>Options</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

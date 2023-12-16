@@ -231,8 +231,18 @@ namespace vg::engine
             if (_resource == worldResData->m_sceneResources[i])
             {
                 IScene * scene = dynamic_cast<IScene *>(_resource->getObject());
-                if (worldResData->m_world)
-                    worldResData->m_world->AddScene(scene);
+                if (scene)
+                {
+                    if (worldResData->m_world)
+                        worldResData->m_world->AddScene(scene); // TODO : check the scene isn't already present
+
+                    if (Engine::get()->isPlaying())
+                    {
+                        IObject * root = scene->GetRoot();
+                        if (nullptr != root)
+                            root->OnPlay();
+                    }
+                }
             }
         }        
     }

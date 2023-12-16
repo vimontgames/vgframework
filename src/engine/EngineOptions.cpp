@@ -17,39 +17,15 @@ namespace vg::engine
         registerPropertyEx(EngineOptions, m_startWorld, "World", IProperty::Flags::IsFile);
         setPropertyDefaultFolder(EngineOptions, m_startWorld, "data/Worlds")
 
-        // TODO: Move to menu or toolbar instead
-        registerPropertyCallback(EngineOptions, load, "Load");
-        registerPropertyCallbackEx(EngineOptions, save, "Save", IProperty::Flags::SameLine);
-
         return true;
     }
-
-    static const char * filename = "Engine.xml";
 
     //--------------------------------------------------------------------------------------
     EngineOptions::EngineOptions(const core::string & _name, core::IObject * _parent) :
         super(_name, _parent)
     {
-        load(this);
-    }
-
-    //--------------------------------------------------------------------------------------
-    bool EngineOptions::load(IObject * _object)
-    {
-        const auto * factory = Kernel::getFactory();
-        if (factory->loadFromXML(_object, filename))
-        {
-            auto * engineOptions = static_cast<EngineOptions *>(_object);
-            return true;
-        }
-        return false;
-    }
-
-    //--------------------------------------------------------------------------------------
-    bool EngineOptions::save(IObject * _object)
-    {
-        const auto * factory = Kernel::getFactory();
-        return factory->saveToXML(_object, filename);
+        setFile("Engine.xml");
+        Load();
     }
 
     //--------------------------------------------------------------------------------------

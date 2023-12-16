@@ -18,6 +18,7 @@ namespace vg::editor
 
     private:
         gfx::ViewTarget     m_target    = gfx::ViewTarget::Game;
+        core::uint          m_index     = 0;
         core::uint2         m_size      = core::uint2(0, 0);
         gfx::IView *        m_view      = nullptr;
         gfx::ITexture *     m_texture   = nullptr;

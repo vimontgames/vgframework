@@ -14,7 +14,7 @@ namespace vg::editor
     {
         super::registerProperties(_desc);
 
-        registerPropertyEnum(EditorOptions, renderer::GUITheme, m_guiTheme, "GUI Theme");
+        registerPropertyEnum(EditorOptions, renderer::GUITheme, m_guiTheme, "Theme");
 
         registerPropertyGroupBegin(EditorOptions, "Gizmo");
         {
@@ -30,40 +30,16 @@ namespace vg::editor
         }
         registerPropertyGroupEnd(EditorOptions);
 
-        // TODO: Move to menu or toolbar instead
-        registerPropertyCallback(EditorOptions, load, "Load");
-        registerPropertyCallbackEx(EditorOptions, save, "Save", IProperty::Flags::SameLine);
-
         return true;
     }
-
-    static const char * filename = "Editor.xml";
 
     //--------------------------------------------------------------------------------------
     EditorOptions::EditorOptions(const core::string & _name, core::IObject * _parent) :
         super(_name, _parent)
     {
-        load(this);
+        setFile("Editor.xml");
+        Load();
         Editor::get()->getRenderer()->GetImGuiAdapter()->SetGUITheme(m_guiTheme);
-    }
-
-    //--------------------------------------------------------------------------------------
-    bool EditorOptions::load(IObject * _object)
-    {
-        const auto * factory = Kernel::getFactory();
-        if (factory->loadFromXML(_object, filename))
-        {
-            auto * options = static_cast<EditorOptions *>(_object);
-            return true;
-        }
-        return false;
-    }
-
-    //--------------------------------------------------------------------------------------
-    bool EditorOptions::save(IObject * _object)
-    {
-        const auto * factory = Kernel::getFactory();
-        return factory->saveToXML(_object, filename);
     }
 
     //--------------------------------------------------------------------------------------

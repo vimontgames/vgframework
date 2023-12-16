@@ -21,6 +21,7 @@
     <ClCompile Include="ImGui\PropertyHandler\ImGuiPropertyHandler.cpp" />
     <ClCompile Include="ImGui\Toolbar\ImGuiToolbar.cpp" />
     <ClCompile Include="ImGui\Window\ImGuiWindow.cpp" />
+    <ClCompile Include="ImGui\Window\Options\ImGuiOptionsWindow.cpp" />
     <ClCompile Include="Options\EditorOptions.cpp" />
     <ClCompile Include="Precomp.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
@@ -61,10 +62,6 @@
     <ClInclude Include="ImGui\Window\About\ImGuiAbout.hpp" />
     <ClInclude Include="ImGui\Window\Console\ImGuiConsole.h" />
     <ClInclude Include="ImGui\Window\Console\ImGuiConsole.hpp" />
-    <ClInclude Include="ImGui\Window\EditorOptions\ImGuiEditorOptions.h" />
-    <ClInclude Include="ImGui\Window\EditorOptions\ImGuiEditorOptions.hpp" />
-    <ClInclude Include="ImGui\Window\EngineOptions\ImGuiEngineOptions.h" />
-    <ClInclude Include="ImGui\Window\EngineOptions\ImGuiEngineOptions.hpp" />
     <ClInclude Include="ImGui\Window\FPS\ImGuiFPS.h" />
     <ClInclude Include="ImGui\Window\FPS\ImGuiFPS.hpp" />
     <ClInclude Include="ImGui\Window\ImGuiWindow.h" />
@@ -72,14 +69,19 @@
     <ClInclude Include="ImGui\Window\Input\ImGuiInput.hpp" />
     <ClInclude Include="ImGui\Window\Inspector\ImGuiInspector.h" />
     <ClInclude Include="ImGui\Window\Inspector\ImGuiInspector.hpp" />
-    <ClInclude Include="ImGui\Window\PhysicsOptions\ImGuiPhysicsOptions.h" />
-    <ClInclude Include="ImGui\Window\PhysicsOptions\ImGuiPhysicsOptions.hpp" />
+    <ClInclude Include="ImGui\Window\Options\Editor\ImGuiEditorOptions.h" />
+    <ClInclude Include="ImGui\Window\Options\Editor\ImGuiEditorOptions.hpp" />
+    <ClInclude Include="ImGui\Window\Options\Engine\ImGuiEngineOptions.h" />
+    <ClInclude Include="ImGui\Window\Options\Engine\ImGuiEngineOptions.hpp" />
+    <ClInclude Include="ImGui\Window\Options\ImGuiOptionsWindow.h" />
+    <ClInclude Include="ImGui\Window\Options\Physics\ImGuiPhysicsOptions.h" />
+    <ClInclude Include="ImGui\Window\Options\Physics\ImGuiPhysicsOptions.hpp" />
+    <ClInclude Include="ImGui\Window\Options\Renderer\ImGuiRendererOptions.h" />
+    <ClInclude Include="ImGui\Window\Options\Renderer\ImGuiRendererOptions.hpp" />
     <ClInclude Include="ImGui\Window\Platform\ImGuiPlatform.h" />
     <ClInclude Include="ImGui\Window\Platform\ImGuiPlatform.hpp" />
     <ClInclude Include="ImGui\Window\Plugin\ImGuiPlugin.h" />
     <ClInclude Include="ImGui\Window\Plugin\ImGuiPlugin.hpp" />
-    <ClInclude Include="ImGui\Window\RendererOptions\ImGuiRendererOptions.h" />
-    <ClInclude Include="ImGui\Window\RendererOptions\ImGuiRendererOptions.hpp" />
     <ClInclude Include="ImGui\Window\Resource\ImGuiResource.h" />
     <ClInclude Include="ImGui\Window\Resource\ImGuiResource.hpp" />
     <ClInclude Include="ImGui\Window\Scene\ImGuiScene.h" />

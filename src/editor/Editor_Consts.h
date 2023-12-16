@@ -75,6 +75,9 @@ namespace vg::editor
             inline static const char * Scale        = ICON_FA_ARROWS_LEFT_RIGHT_TO_LINE;
             inline static const char * Snap         = ICON_FA_RULER_COMBINED;
             inline static const char * Engine       = ICON_FA_GEAR;
+            inline static const char * Sliders      = ICON_FA_SLIDERS;
+            inline static const char * Reload       = ICON_FA_ROTATE_RIGHT;
+            inline static const char * Save         = ICON_FA_FLOPPY_DISK;
         }
     }
 }

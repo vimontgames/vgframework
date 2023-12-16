@@ -153,14 +153,12 @@ void PlayerBehaviour::Update(float _dt)
                 worldMatrix[0] = mRot[0];
                 worldMatrix[1] = mRot[1];
                 worldMatrix[2] = mRot[2];
-
-                //worldMatrix[3].xyz += translation;
             }
             go->setWorldMatrix(worldMatrix);
         }
         else
         {
-            VG_WARNING("[Player] %u is not a valid Joypad (%u joypads detected)", m_joypadID, input.GetJoyCount());
+            VG_WARNING_ONCE("[Player] Joypad %u is not a valid Joypad (%u detected)", m_joypadID, input.GetJoyCount());
         }
     }
 }

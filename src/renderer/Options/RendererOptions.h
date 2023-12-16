@@ -53,9 +53,6 @@ namespace vg::renderer
         void                    setBackgroundColor          (const core::float4 & _backgroundColor);
         core::float4		    getBackgroundColor		    () const { return m_backgroundColor; }
 
-        static bool			    load					    (IObject * _object);
-        static bool			    save					    (IObject * _object);
-
     protected:
         void                    ApplyVsync                  (const core::IProperty * _prop);
 

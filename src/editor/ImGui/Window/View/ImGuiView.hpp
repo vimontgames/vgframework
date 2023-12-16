@@ -72,22 +72,30 @@ namespace vg::editor
 
             if (!m_view)
             {
-                // Create empty view using IRenderer
-                gfx::CreateViewParams params;
-                                      params.size = m_size;
-                                      params.world = Editor::get()->getEngine()->getCurrentWorld(); // TODO: do better
-                                      params.target = m_target;
-                                      params.dest = nullptr;    // No RenderTarget yet
-            
-                string viewName = asString(params.target) + "View";
+                if (gfx::IView * view = renderer->GetView(gfx::ViewID(m_target, m_index)))
+                {
+                    m_view = view;
+                    VG_SAFE_INCREASE_REFCOUNT(view);
+                }
+                else
+                {
+                    // Create or update view using IRenderer
+                    gfx::CreateViewParams params;
+                    params.size = m_size;
+                    params.world = Editor::get()->getEngine()->getCurrentWorld(); // TODO: do better
+                    params.target = m_target;
+                    params.dest = nullptr;    // No RenderTarget yet
 
-                // Create a view with picking for editor views
-                gfx::IView::Flags viewFlags = (gfx::IView::Flags)0;
-                if (params.target == ViewTarget::Editor)
-                    viewFlags |= gfx::IView::Flags::Picking;
+                    string viewName = asString(params.target) + "View";
 
-                m_view = renderer->CreateView(params, viewName, viewFlags);
-                renderer->AddView(m_view);
+                    // Create a view with picking for editor views
+                    gfx::IView::Flags viewFlags = (gfx::IView::Flags)0;
+                    if (params.target == ViewTarget::Editor)
+                        viewFlags |= gfx::IView::Flags::Picking;
+
+                    m_view = renderer->CreateView(params, viewName, viewFlags);
+                    renderer->AddView(m_view);
+                }
                 draw = false;
             }
 

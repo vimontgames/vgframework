@@ -16,9 +16,6 @@ namespace vg::engine
 
         void                    OnPropertyChanged   (IObject * _object, const core::IProperty & _prop, bool _notifyParent) final override;
 
-        static bool			    load                (core::IObject * _object);
-        static bool			    save                (core::IObject * _object);
-
     private:
         core::string            m_projectPath;
         core::string            m_startWorld;

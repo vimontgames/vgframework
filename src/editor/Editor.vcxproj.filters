@@ -33,6 +33,9 @@
     <ClCompile Include="Options\EditorOptions.cpp">
       <Filter>Options</Filter>
     </ClCompile>
+    <ClCompile Include="ImGui\Window\Options\ImGuiOptionsWindow.cpp">
+      <Filter>ImGui\Window\Options</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Precomp.h" />
@@ -192,36 +195,39 @@
     <ClInclude Include="ImGui\ObjectHandler\Animation\ImGuiSkeletonObjectHandler.hpp">
       <Filter>ImGui\ObjectHandler\Animation</Filter>
     </ClInclude>
-    <ClInclude Include="ImGui\Window\PhysicsOptions\ImGuiPhysicsOptions.h">
-      <Filter>ImGui\Window\PhysicsOptions</Filter>
-    </ClInclude>
-    <ClInclude Include="ImGui\Window\PhysicsOptions\ImGuiPhysicsOptions.hpp">
-      <Filter>ImGui\Window\PhysicsOptions</Filter>
-    </ClInclude>
     <ClInclude Include="ImGui\Extensions\ImGuizmo\ImGuizmoAdapter.h">
       <Filter>ImGui\Extensions\ImGuizmo</Filter>
-    </ClInclude>
-    <ClInclude Include="ImGui\Window\RendererOptions\ImGuiRendererOptions.h">
-      <Filter>ImGui\Window\RendererOptions</Filter>
-    </ClInclude>
-    <ClInclude Include="ImGui\Window\RendererOptions\ImGuiRendererOptions.hpp">
-      <Filter>ImGui\Window\RendererOptions</Filter>
     </ClInclude>
     <ClInclude Include="IEditorOptions.h" />
     <ClInclude Include="Options\EditorOptions.h">
       <Filter>Options</Filter>
     </ClInclude>
-    <ClInclude Include="ImGui\Window\EditorOptions\ImGuiEditorOptions.h">
-      <Filter>ImGui\Window\EditorOptions</Filter>
+    <ClInclude Include="ImGui\Window\Options\ImGuiOptionsWindow.h">
+      <Filter>ImGui\Window\Options</Filter>
     </ClInclude>
-    <ClInclude Include="ImGui\Window\EditorOptions\ImGuiEditorOptions.hpp">
-      <Filter>ImGui\Window\EditorOptions</Filter>
+    <ClInclude Include="ImGui\Window\Options\Editor\ImGuiEditorOptions.h">
+      <Filter>ImGui\Window\Options\Editor</Filter>
     </ClInclude>
-    <ClInclude Include="ImGui\Window\EngineOptions\ImGuiEngineOptions.h">
-      <Filter>ImGui\Window\EngineOptions</Filter>
+    <ClInclude Include="ImGui\Window\Options\Editor\ImGuiEditorOptions.hpp">
+      <Filter>ImGui\Window\Options\Editor</Filter>
     </ClInclude>
-    <ClInclude Include="ImGui\Window\EngineOptions\ImGuiEngineOptions.hpp">
-      <Filter>ImGui\Window\EngineOptions</Filter>
+    <ClInclude Include="ImGui\Window\Options\Engine\ImGuiEngineOptions.h">
+      <Filter>ImGui\Window\Options\Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="ImGui\Window\Options\Engine\ImGuiEngineOptions.hpp">
+      <Filter>ImGui\Window\Options\Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="ImGui\Window\Options\Physics\ImGuiPhysicsOptions.h">
+      <Filter>ImGui\Window\Options\Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="ImGui\Window\Options\Physics\ImGuiPhysicsOptions.hpp">
+      <Filter>ImGui\Window\Options\Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="ImGui\Window\Options\Renderer\ImGuiRendererOptions.h">
+      <Filter>ImGui\Window\Options\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="ImGui\Window\Options\Renderer\ImGuiRendererOptions.hpp">
+      <Filter>ImGui\Window\Options\Renderer</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -328,23 +334,26 @@
     <Filter Include="ImGui\ObjectHandler\Animation">
       <UniqueIdentifier>{8f62b045-9705-4a30-86e2-21c836952a69}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ImGui\Window\PhysicsOptions">
-      <UniqueIdentifier>{a7ccac9e-f568-445f-9736-b49dd3f3302d}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ImGui\Extensions\ImGuizmo">
       <UniqueIdentifier>{02c51f4d-c0e9-4775-8950-ac07cf9260d1}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ImGui\Window\RendererOptions">
-      <UniqueIdentifier>{63b33a5d-cc04-4d13-bde7-b1b37e027c64}</UniqueIdentifier>
     </Filter>
     <Filter Include="Options">
       <UniqueIdentifier>{644a4346-e4f0-49af-ac91-c3894d5dbddc}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ImGui\Window\EditorOptions">
-      <UniqueIdentifier>{c935834d-3631-41b1-bcea-190c2f06b802}</UniqueIdentifier>
+    <Filter Include="ImGui\Window\Options">
+      <UniqueIdentifier>{dced118b-d4fa-491b-9c24-3de7f41e99f1}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ImGui\Window\EngineOptions">
-      <UniqueIdentifier>{26be5c4a-f914-45de-a2e7-08d4d882eec4}</UniqueIdentifier>
+    <Filter Include="ImGui\Window\Options\Editor">
+      <UniqueIdentifier>{ceae12fa-aef8-4c49-ae85-3b6cc680872a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ImGui\Window\Options\Engine">
+      <UniqueIdentifier>{8ff8a41a-54b5-47df-bf20-f3d4483c763d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ImGui\Window\Options\Renderer">
+      <UniqueIdentifier>{a7330523-7aff-43bb-b84c-6d7adb571943}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ImGui\Window\Options\Physics">
+      <UniqueIdentifier>{106dfd29-6192-4b02-b97f-efa66e7fbff1}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

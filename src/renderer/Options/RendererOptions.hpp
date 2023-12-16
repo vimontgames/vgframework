@@ -27,14 +27,8 @@ namespace vg::renderer
 
         registerPropertyEnum(RendererOptions, gfx::VSync, m_VSync, "VSync");
 
-        // TODO: Move to menu or toolbar instead
-        registerPropertyCallback(RendererOptions, load, "Load");
-        registerPropertyCallbackEx(RendererOptions, save, "Save", IProperty::Flags::SameLine);
-
         return true;
     }
-
-    static const char * filename = "Renderer.xml";
 
     //--------------------------------------------------------------------------------------
     RendererOptions::RendererOptions(const core::string & _name, core::IObject * _parent) :
@@ -43,30 +37,8 @@ namespace vg::renderer
         m_displayFlags(DisplayFlags::AlbedoMap | DisplayFlags::NormalMap),
         m_renderPassFlags(RenderPassFlags::ZPrepass | RenderPassFlags::Opaque | RenderPassFlags::Transparency | RenderPassFlags::PostProcess)
     {
-        load(this);
-    }
-
-    //--------------------------------------------------------------------------------------
-    bool RendererOptions::load(IObject * _object)
-    {
-        const auto * factory = Kernel::getFactory();
-        if (factory->loadFromXML(_object, filename))
-        {
-            RendererOptions * options = static_cast<RendererOptions *>(_object);
-
-            auto vSyncProp = _object->getClassDesc()->GetPropertyByName("m_VSync");
-            options->ApplyVsync(vSyncProp);
-
-            return true;
-        }
-        return false;
-    }
-
-    //--------------------------------------------------------------------------------------
-    bool RendererOptions::save(IObject * _object)
-    {
-        const auto * factory = Kernel::getFactory();
-        return factory->saveToXML(_object, filename);
+        setFile("Renderer.xml");
+        Load();
     }
 
     //--------------------------------------------------------------------------------------

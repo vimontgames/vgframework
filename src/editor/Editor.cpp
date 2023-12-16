@@ -20,10 +20,10 @@
 #include "editor/ImGui/Window/Plugin/ImGuiPlugin.h"
 #include "editor/ImGui/Window/Platform/ImGuiPlatform.h"
 #include "editor/ImGui/Window/Inspector/ImGuiInspector.h"
-#include "editor/ImGui/Window/EditorOptions/ImGuiEditorOptions.h"
-#include "editor/ImGui/Window/EngineOptions/ImGuiEngineOptions.h"
-#include "editor/ImGui/Window/RendererOptions/ImGuiRendererOptions.h"
-#include "editor/ImGui/Window/PhysicsOptions/ImGuiPhysicsOptions.h"
+#include "editor/ImGui/Window/Options/Editor/ImGuiEditorOptions.h"
+#include "editor/ImGui/Window/Options/Engine/ImGuiEngineOptions.h"
+#include "editor/ImGui/Window/Options/Renderer/ImGuiRendererOptions.h"
+#include "editor/ImGui/Window/Options/Physics/ImGuiPhysicsOptions.h"
 #include "editor/ImGui/Window/About/ImGuiAbout.h"
 #include "editor/ImGui/Window/Shader/ImGuiShader.h"
 #include "editor/ImGui/Window/Scene/ImGuiScene.h"
@@ -251,6 +251,7 @@ namespace vg::editor
         ImGuiDockNodeFlags dockspaceFlags = ImGuiDockNodeFlags_None;
 
         bool showUI = true;
+        static bool showImGuiDemo = false;
 
         core::IResource * worldRes = getEngine()->GetWorldResource();
 
@@ -304,17 +305,6 @@ namespace vg::editor
                     if (ImGui::MenuItem("Quit"))
                         ImGui::MessageBox(MessageBoxType::YesNo, "Quit", "Are you sure you want to quit program?", []() { Editor::get()->getEngine()->Quit(); return true; });
 
-                    ImGui::EndMenu();
-                }
-
-                if (ImGui::BeginMenu("Plugins"))
-                {
-                    if (ImGui::IconMenuItem(style::icon::Plugin, "Plugins"))
-                    {
-                        auto plugins = getWindow<ImGuiPlugin>();
-                        if (nullptr != plugins)
-                            plugins->setVisible(true);
-                    }
                     ImGui::EndMenu();
                 }
 
@@ -394,6 +384,20 @@ namespace vg::editor
 
                 if (ImGui::BeginMenu("Help"))
                 {
+                    if (ImGui::IconMenuItem(style::icon::Plugin, "Plugins"))
+                    {
+                        auto plugins = getWindow<ImGuiPlugin>();
+                        if (nullptr != plugins)
+                            plugins->setVisible(true);
+                    }
+
+                    ImGui::Separator();
+
+                    if (ImGui::IconMenuItem(style::icon::Sliders, "ImGui demo"))
+                        showImGuiDemo = true;
+
+                    ImGui::Separator();
+
                     if (ImGui::IconMenuItem(style::icon::About, "About"))
                     {
                         ImGuiAbout * about = getWindow<ImGuiAbout>();
@@ -469,8 +473,7 @@ namespace vg::editor
         if (fileBrowser.showFileDialog(saveAsFilePopupName.c_str(), imgui_addons::ImGuiFileBrowser::DialogMode::SAVE, style::dialog::Size, ext.c_str()))
             engine->SaveWorldAs(io::addExtensionIfNotPresent(fileBrowser.selected_path, ".world"));
 
-        static bool demo = false;
-        if (demo)
-            ImGui::ShowDemoWindow(&demo);
+        if (showImGuiDemo)
+            ImGui::ShowDemoWindow(&showImGuiDemo);
     }    
 }
