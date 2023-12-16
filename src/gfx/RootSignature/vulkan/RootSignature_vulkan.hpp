@@ -113,7 +113,7 @@ namespace vg::gfx::vulkan
             vector<VkDescriptorBindingFlags> flagsArray;
             for (uint i = 0; i < vkDescriptorSetLayoutBindings.size(); ++i)
             {
-                VkDescriptorBindingFlags flags = VK_DESCRIPTOR_BINDING_PARTIALLY_BOUND_BIT | VK_DESCRIPTOR_BINDING_UPDATE_UNUSED_WHILE_PENDING_BIT;
+                VkDescriptorBindingFlags flags = VK_DESCRIPTOR_BINDING_UPDATE_AFTER_BIND_BIT | VK_DESCRIPTOR_BINDING_PARTIALLY_BOUND_BIT | VK_DESCRIPTOR_BINDING_UPDATE_UNUSED_WHILE_PENDING_BIT;
                 flagsArray.push_back(flags);
             }
 

@@ -911,7 +911,13 @@ namespace vg::gfx::vulkan
 		CheckVulkanFeature(vulkan12SupportedFeatures, vulkan12Features, shaderUniformTexelBufferArrayDynamicIndexing);
 		CheckVulkanFeature(vulkan12SupportedFeatures, vulkan12Features, runtimeDescriptorArray);
 		CheckVulkanFeature(vulkan12SupportedFeatures, vulkan12Features, shaderStorageImageArrayNonUniformIndexing);
-		CheckVulkanFeature(vulkan12SupportedFeatures, vulkan12Features, descriptorBindingUpdateUnusedWhilePending);                           
+		CheckVulkanFeature(vulkan12SupportedFeatures, vulkan12Features, descriptorBindingUpdateUnusedWhilePending);   
+		CheckVulkanFeature(vulkan12SupportedFeatures, vulkan12Features, descriptorBindingUniformBufferUpdateAfterBind);
+		CheckVulkanFeature(vulkan12SupportedFeatures, vulkan12Features, descriptorBindingSampledImageUpdateAfterBind);
+		CheckVulkanFeature(vulkan12SupportedFeatures, vulkan12Features, descriptorBindingStorageImageUpdateAfterBind);
+		CheckVulkanFeature(vulkan12SupportedFeatures, vulkan12Features, descriptorBindingStorageBufferUpdateAfterBind);
+		CheckVulkanFeature(vulkan12SupportedFeatures, vulkan12Features, descriptorBindingUniformTexelBufferUpdateAfterBind);
+		CheckVulkanFeature(vulkan12SupportedFeatures, vulkan12Features, descriptorBindingStorageTexelBufferUpdateAfterBind);
 
         VkPhysicalDeviceFeatures enabledFeatures = {};
 		CheckVulkanFeature(supportedFeatures.features, enabledFeatures, fillModeNonSolid);
@@ -1168,7 +1174,7 @@ namespace vg::gfx::vulkan
 
             if (cmdBuffersToExecute.size() > 0)
             {
-                VkPipelineStageFlags pipe_stage_flags = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
+                VkPipelineStageFlags pipe_stage_flags = VK_PIPELINE_STAGE_ALL_COMMANDS_BIT;
                 VkSubmitInfo submit_info = {};
                 submit_info.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
                 submit_info.pWaitDstStageMask = &pipe_stage_flags;

@@ -64,7 +64,7 @@ namespace vg::core
 		if (m_args.end() != it)
 			return it->second;
 
-		VG_WARNING("[CmdLine] Could not find key \"%s\" is command-line", _key);
+		VG_WARNING("[CmdLine] Could not find key \"%s\" is command-line", _key.c_str());
 		return "";
 	}
 
