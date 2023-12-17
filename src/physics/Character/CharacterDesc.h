@@ -16,7 +16,7 @@ namespace vg::physics
         //void SetFriction(float _friction) final override            { m_friction = _friction;}
 
     public:
-        float           m_mass          = 87.0f;
+        float           m_mass          = 75.0f;
         float           m_maxSlopeAngle = 45.0f;
         float           m_friction      = 0.5f;
         //float           m_restitution   = 0.0f;

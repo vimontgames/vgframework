@@ -5,7 +5,8 @@ enum PlayerState : vg::core::u8
 {
     Idle = 0,
     Walking,
-    Running
+    Running,
+    Jumping
 };
 
 class PlayerBehaviour : public vg::core::Component
@@ -18,15 +19,18 @@ public:
 
     void            OnPlay              () final override;
 
+    void            FixedUpdate         (float _dt) override;
     void            Update              (float _dt) override;
 
 private:
-    void            PlayAnim            (PlayerState _state);
+    void            PlayAnim            (PlayerState _state, bool _loop = false);
 
 private:
     vg::core::u8    m_joypadID          = 0;
     float           m_walkSpeed         = 1.5f;
     float           m_runSpeed          = 3.0f;
+    float           m_jumpSpeed         = 3.0f;
+    float           m_runJumpSpeed      = 4.0f;
 
     PlayerState     m_state             = PlayerState::Idle;
     float           m_currentSpeed      = 0.0f;

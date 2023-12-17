@@ -25,9 +25,16 @@ namespace vg::physics
         virtual void            Activate        (const core::float4x4 & _world) = 0;
         virtual void            Deactivate      (const core::float4x4 & _world) = 0;
 
+        virtual void            FixedUpdate     () = 0;
+        virtual void            Update          () = 0;
+
         virtual core::float3    GetVelocity     () const = 0;
         virtual void            SetVelocity     (const core::float3 & _velocity) = 0;
 
+        virtual void            SetRotation     (const core::quaternion & _rotation) = 0;
+
         virtual core::float4x4  GetMatrix       () const = 0;
+
+        virtual GroundState     GetGroundState  () const = 0;
     };
 }

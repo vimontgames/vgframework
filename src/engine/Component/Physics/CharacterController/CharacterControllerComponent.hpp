@@ -21,6 +21,10 @@ namespace vg::engine
         registerPropertyObjectPtrEx(CharacterControllerComponent, m_characterDesc, "Character", IProperty::Flags::Flatten);
         registerPropertyObjectPtrEx(CharacterControllerComponent, m_shapeDesc, "Shape", IProperty::Flags::Flatten);
 
+        registerPropertyGroupBegin(CharacterControllerComponent, "Debug");
+        registerPropertyEnumEx(CharacterControllerComponent, physics::GroundState, m_groundState, "State", IProperty::Flags::NotSaved);
+        registerPropertyGroupEnd(CharacterControllerComponent);
+
         return true;
     }
 
@@ -39,6 +43,8 @@ namespace vg::engine
 
         if (m_character == nullptr)
             createCharacter();
+
+        SetUpdateFlags(UpdateFlags::FixedUpdate | UpdateFlags::Update);
     }
 
     //--------------------------------------------------------------------------------------
@@ -160,28 +166,41 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
-    void CharacterControllerComponent::Update(float _dt)
+    void CharacterControllerComponent::FixedUpdate(float _dt)
     {
         const auto * engine = Engine::get();
         IGameObject * go = GetGameObject();
-
-        //if (physics::CharacterType::Virtual != m_characterDesc->GetCharacterType())
-        {
-            if (engine->isPlaying() && !engine->isPaused())
-            {
-                if (m_character)
-                {
-                    float4x4 world = m_character->GetMatrix();
-                    go->setWorldMatrix(world);
-                }
-            }
-        }
 
         if (engine->getPhysicsOptions()->IsRigidBodyVisible(m_shape->GetShapeType()))
         {
             if (m_shape)
                 m_shape->Draw(go->getWorldMatrix());
         }
+    }
+
+    //--------------------------------------------------------------------------------------
+    physics::GroundState CharacterControllerComponent::GetGroundState() const
+    {
+        return m_groundState;
+    }
+
+    //--------------------------------------------------------------------------------------
+    void CharacterControllerComponent::Update(float _dt)
+    {
+        const auto * engine = Engine::get();
+        IGameObject * go = GetGameObject();
+
+        if (m_character)
+        {
+            if (engine->isPlaying() && !engine->isPaused())
+            {
+                m_character->Update();
+                m_groundState = m_character->GetGroundState();
+
+                float4x4 world = m_character->GetMatrix();
+                go->setWorldMatrix(world);                
+            }
+        }  
     } 
 
     //--------------------------------------------------------------------------------------
@@ -198,5 +217,12 @@ namespace vg::engine
     {
         if (m_character)
             return m_character->SetVelocity(_velocity);
+    }
+
+    //--------------------------------------------------------------------------------------
+    void CharacterControllerComponent::SetRotation(const core::quaternion & _rotation)
+    {
+        if (m_character)
+            return m_character->SetRotation(_rotation);
     }
 }

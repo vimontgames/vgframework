@@ -22,16 +22,16 @@ namespace vg::core
         IGameObject *           GetGameObject           () final override;
 
         Flags                   GetFlags                () const final override;
-        void                    SetFlags                (Flags _flags, bool _enabled) final override;
+        void                    SetFlags                (Flags _flags, bool _enabled = true) final override;
 
         UpdateFlags             GetUpdateFlags          () const final override;
-        void                    SetUpdateFlags          (UpdateFlags _flags, bool _enabled) final override;
+        void                    SetUpdateFlags          (UpdateFlags _flags, bool _enabled = true) final override;
 
         VG_INLINE Flags         getFlags                () const;
         VG_INLINE void          setFlags                (Flags _flags, bool _enabled);
 
         VG_INLINE UpdateFlags   getUpdateFlags          () const;
-        VG_INLINE void          setUpdateFlags          (UpdateFlags _flags, bool _enabled);
+        VG_INLINE void          setUpdateFlags          (UpdateFlags _flags, bool _enabled = true);
 
         VG_INLINE GameObject *  getGameObject           () const;
 

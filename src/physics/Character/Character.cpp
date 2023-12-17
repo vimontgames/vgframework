@@ -63,11 +63,12 @@ namespace vg::physics
         quaternion quat = getQuaternionFromRotationMatrix(rot);
 
         JPH::CharacterSettings settings;
-        settings.mMaxSlopeAngle = _rigidCharacterDesc->m_maxSlopeAngle;
+        settings.mMaxSlopeAngle = degreesToRadians(_rigidCharacterDesc->m_maxSlopeAngle);
         settings.mLayer = getJoltObjectLayer(ObjectLayer::Moving);
         settings.mShape = _shape->getJoltShape();
         settings.mFriction = _rigidCharacterDesc->m_friction;
         settings.mMass = _rigidCharacterDesc->m_mass;
+        settings.mUp = getJoltVec3(float3(0, 0, 1));
 
         // TODO : compute bounding "radius" from other primitives than capsule?
         CapsuleShape * capsuleShape = dynamic_cast<CapsuleShape *>(_shape);
@@ -129,11 +130,19 @@ namespace vg::physics
         else
             return float3(0, 0, 0);
     }
+
     //--------------------------------------------------------------------------------------
     void RigidCharacter::SetVelocity(const core::float3 & _velocity)
     {
-        if (m_character)
+        if (m_character) 
             m_character->SetLinearVelocity(getJoltVec3(_velocity));
+    }
+
+    //--------------------------------------------------------------------------------------
+    void RigidCharacter::SetRotation(const core::quaternion & _rotation)
+    {
+        if (m_character)
+            m_character->SetRotation(getJoltQuaternion(_rotation));
     }
 
     //--------------------------------------------------------------------------------------
@@ -141,5 +150,40 @@ namespace vg::physics
     {
         float4x4 world = fromJoltMatrix(m_character->GetWorldTransform());
         return world;
+    }
+
+    //--------------------------------------------------------------------------------------
+    void RigidCharacter::FixedUpdate()
+    {
+    }
+
+    //--------------------------------------------------------------------------------------
+    void RigidCharacter::Update()
+    {
+        if (m_character)
+            m_character->PostSimulation(0.00f);
+    }
+
+    //--------------------------------------------------------------------------------------
+    GroundState RigidCharacter::GetGroundState() const
+    {
+        JPH::CharacterBase::EGroundState state = m_character->GetGroundState();
+        switch (state)
+        {
+            default:
+                VG_ASSERT_ENUM_NOT_IMPLEMENTED(state);
+
+            case JPH::CharacterBase::EGroundState::OnGround:
+                return GroundState::Grounded;
+
+            case JPH::CharacterBase::EGroundState::OnSteepGround:
+                return GroundState::BlockedOnSlope;
+
+            case JPH::CharacterBase::EGroundState::NotSupported:
+                return GroundState::TouchingButFalling;
+
+            case JPH::CharacterBase::EGroundState::InAir:
+                return GroundState::InTheAir;
+        }
     }
 }

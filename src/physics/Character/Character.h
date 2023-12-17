@@ -23,13 +23,14 @@ namespace vg::physics
         Character(const CharacterDesc * _characterDesc, Shape * _shape, const core::float4x4 & _world);
         ~Character();
 
-        void Activate(const core::float4x4 & _world) = 0;
-        void Deactivate(const core::float4x4 & _world) = 0;
+        void                    Activate        (const core::float4x4 & _world) = 0;
+        void                    Deactivate      (const core::float4x4 & _world) = 0;
 
-        core::float4x4 GetMatrix() const = 0;
+        core::float4x4          GetMatrix       () const = 0;
+        GroundState             GetGroundState  () const = 0;
 
     protected:
-        JPH::BodyInterface & getBodyInterface() const;
+        JPH::BodyInterface &    getBodyInterface() const;
 
     private:
         const Shape *           m_shape = nullptr;
@@ -45,17 +46,22 @@ namespace vg::physics
         RigidCharacter(const RigidCharacterDesc * _rigidCharacterDesc, Shape * _shape, const core::float4x4 & _world);
         ~RigidCharacter();
 
-        void            Activate        (const core::float4x4 & _world) final override;
-        void            Deactivate      (const core::float4x4 & _world) final override;
+        void                    Activate        (const core::float4x4 & _world) final override;
+        void                    Deactivate      (const core::float4x4 & _world) final override;
 
-        core::float3    GetVelocity     () const final override;
-        void            SetVelocity     (const core::float3 & _velocity) final override;
+        core::float3            GetVelocity     () const final override;
+        void                    SetVelocity     (const core::float3 & _velocity) final override;
+        void                    SetRotation     (const core::quaternion & _rotation) final override;
 
-        core::float4x4  GetMatrix       () const final override;
+        void                    FixedUpdate     () final override;
+        void                    Update          () final override;
 
-        void            resetCharacter  (const core::float4x4 & _world);
+        core::float4x4          GetMatrix       () const final override;
+        GroundState             GetGroundState  () const final override;
+
+        void                    resetCharacter  (const core::float4x4 & _world);
 
     private:
-        JPH::Character * m_character = nullptr;
+        JPH::Character *        m_character = nullptr;
     };
 }

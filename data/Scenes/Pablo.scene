@@ -125,6 +125,14 @@
                                                 <Property type="String" name="m_name" value="Running"/>
                                                 <Property type="Float" name="m_speed" flags="HasRange" value="1"/>
                                             </Object>
+                                            <Object class="AnimationResource">
+                                                <Property type="String" name="m_name" flags="Hidden" value="Jump"/>
+                                                <Property type="String" name="m_resourcePath" flags="Hidden" value="data/Animations/Pablo/Pablo_jump_anim.fbx"/>
+                                                <Property type="Bool" name="m_play" value="false"/>
+                                                <Property type="Bool" name="m_loop" flags="SameLine" value="false"/>
+                                                <Property type="String" name="m_name" value="Jump"/>
+                                                <Property type="Float" name="m_speed" flags="HasRange" value="1"/>
+                                            </Object>
                                         </Property>
                                     </Object>
                                 </Property>
@@ -135,9 +143,9 @@
                                 <Property type="ObjectRef" name="m_characterDesc" flags="Flatten">
                                     <Object class="RigidCharacterDesc">
                                         <Property type="String" name="m_name" flags="Hidden" value="RigidCharacterDesc #0"/>
-                                        <Property type="Float" name="m_mass" value="90"/>
-                                        <Property type="Float" name="m_friction" flags="HasRange" value="1"/>
-                                        <Property type="Float" name="m_maxSlopeAngle" flags="HasRange" value="30.118"/>
+                                        <Property type="Float" name="m_mass" value="75"/>
+                                        <Property type="Float" name="m_friction" flags="HasRange" value="0.5"/>
+                                        <Property type="Float" name="m_maxSlopeAngle" flags="HasRange" value="30"/>
                                     </Object>
                                 </Property>
                                 <Property type="ObjectRef" name="m_shapeDesc" flags="Flatten">
@@ -148,14 +156,18 @@
                                         <Property type="Float" name="m_height" value="1.3"/>
                                     </Object>
                                 </Property>
+                                <Property type="LayoutElement" name="Debug"/>
+                                <Property type="LayoutElement" name=""/>
                             </Object>
                             <Object class="PlayerBehaviour">
                                 <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
-                                <Property type="LayoutElement" name="Settings"/>
                                 <Property type="Uint8" name="m_joypadID" value="0"/>
                                 <Property type="Float" name="m_walkSpeed" value="1.5"/>
                                 <Property type="Float" name="m_runSpeed" value="3"/>
+                                <Property type="Float" name="m_jumpSpeed" value="4"/>
+                                <Property type="Float" name="m_runJumpSpeed" value="5"/>
                                 <Property type="LayoutElement" name="Debug"/>
+                                <Property type="LayoutElement" name=""/>
                             </Object>
                         </Property>
                         <Property type="ObjectRefVector" name="m_children" flags="Hidden"/>

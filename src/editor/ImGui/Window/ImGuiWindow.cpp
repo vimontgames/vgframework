@@ -446,10 +446,8 @@ namespace vg::editor
 
                         case IProperty::LayoutElementType::GroupBegin:
                         {
-                            if (_context.treeNodes.size() > 0)
+                            if (_context.treeNodes.size() > 0 || dynamic_cast<IComponent*>(_object))
                             {
-                                auto & nodeInfo = _context.treeNodes[_context.treeNodes.size() - 1];
-
                                 TreeNodeStackInfo & newInfo = _context.treeNodes.push_empty();
                                 
                                 newInfo.treeNodeOpen = ImGui::TreeNodeEx(ImGui::getObjectLabel(_prop->getDisplayName(), _prop).c_str(), ImGuiTreeNodeFlags_DefaultOpen);

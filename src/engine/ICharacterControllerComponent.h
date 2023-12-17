@@ -9,7 +9,10 @@ namespace vg::engine
     public:
         VG_CLASS_DECL_ABSTRACT(ICharacterControllerComponent, core::Component);
 
-        virtual core::float3 GetVelocity() const = 0;
-        virtual void SetVelocity(const core::float3 & _velocity) = 0;
+        virtual physics::GroundState    GetGroundState  () const = 0;
+
+        virtual core::float3            GetVelocity     () const = 0;
+        virtual void                    SetVelocity     (const core::float3 & _velocity) = 0;
+        virtual void                    SetRotation     (const core::quaternion & _rotation) = 0;
     };
 }
