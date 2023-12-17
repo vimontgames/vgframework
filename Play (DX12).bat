@@ -1,0 +1,1 @@
+start application_x64_Release_DX12.exe play=true fullscreen=true

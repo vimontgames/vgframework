@@ -142,7 +142,7 @@ void PlayerBehaviour::FixedUpdate(float _dt)
 
             if (m_state == PlayerState::Walking || m_state == PlayerState::Running)
             {
-                if (abs((float)translation.x) < 0.00001f)
+                if (abs((float)translation.x) < 0.0001f)
                     m_state = PlayerState::Idle;
             }
 

@@ -20,19 +20,19 @@ Another subject that is very close to my heart is that there is a strong separat
 
 # changelog
 
-## 0.18 (WIP)
-ImGuizmo
+## 0.20
+Translate/Move/Rotate objects using ImGuizmo\
+Character Controller component\
+Start in Game mode, not editor
+
+![Screenshot](doc/img/0.20.gif)
 
 ## 0.17
 New add/remove component buttons and improved components popup windows
 Add support for themes
 
-![Screenshot](doc/img/0.17.png)
-
 ## 0.16
 JoltPhysics integration V0
-
-![Screenshot](doc/img/0.16.gif)
 
 ## 0.15
 **Removed dependency to the FBX SDK**
@@ -42,28 +42,18 @@ Skeletal animations with Compute Shader Skinning\
 Modified properties are restored when exiting Game mode\
 Application now has icon :p
 
-![Screenshot](doc/img/0.14.gif)
-
 ## 0.13
 Loaded resources are displayed per type and their owners with paths
-
-![Screenshot](doc/img/ResourceWindow.gif)
 
 ## 0.12
 Mesh (FBX), Material & Texture hot-reload\
 GPU Picking
 
-![Screenshot](doc/img/0.12.png)
-
 ## 0.11
 Add Info/Warning/Error console + clean & fixes
 
-![Screenshot](doc/img/0.11.png)
-
 ## 0.1
 Separate DLLs for Engine, Renderer, Editor and Game.
-
-![Screenshot](doc/img/0.1.png)
 
 # getting started
 
@@ -71,22 +61,36 @@ Separate DLLs for Engine, Renderer, Editor and Game.
 - Install the required SDKs and configure the environment variables.
 - Open the "vgframework.sln" solution in Visual Studio 2022 Community IDE.
 - Build & Run
+ 
+You can double-click "Play (DX12).bat" or "Play (Vulkan).bat" to start the game sample without editor.\
+In game you can press ESC at any time to go back Editor mode.\
+First run might take a few seconds because files are cooking.
+ 
+## command-line args
+
+| Argument		| Type			| Description													| Default
+| ------------- | ------------- | ------------------------------------------------------------- | ------
+| play			| bool			| Start application with play mode running						| false
+| fullscreen	| bool			| Start application with game view maximized instead of editor	| false
 
 ## keyboard shortcuts
 
-- Press F1 to start/stop profiler capture
-- Press F6 to hot reload shaders
-- Press F7 to hot reload resources
-- 
-- Press F5 to enter Play mode
-- Press Shift-F5 to restart Play mode 
-- Press 'Pause' to pause/resume Play mode
-- Press F11 for fullscreen
-- Press ESCAPE to exit Play mode and fullscreen
-- 
-- Press Ctrl-R to rename selected GameObject
-- Press Del to deleted selected GameOject
-- Press Ctrl-Q to quit application
+| Key			| Description	 												
+| ------------- | ------------------------------------------------------------- 
+| F1			| Start/stop profiler capture					
+| F6			| Hot reload shaders
+| F7			| Hot reload resources				
+| F5			| Enter Play mode
+| Shift-F5		| Restart Play mode
+| PAUSE			| Pause/resume Play mode
+| F11			| Maximize Game view (fullscreen)
+| ESCAPE		| Exit Play mode and go back to Editor mode
+| Ctrl-R		| Rename selected Object
+| DELETE		| Deleted selected Ojects
+| Ctrl-Q		| Quit application
+| T				| Translation gizmo
+| R				| Rotation gizmo
+| S				| Scale gizmo
 
 ## ide
 VS Studio 2022 Community\
