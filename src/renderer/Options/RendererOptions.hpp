@@ -39,6 +39,7 @@ namespace vg::renderer
     {
         setFile("Renderer.xml");
         Load();
+        Renderer::get()->SetVSync(m_VSync);
     }
 
     //--------------------------------------------------------------------------------------

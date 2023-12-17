@@ -63,7 +63,16 @@ namespace vg::gfx::dx12
             dst.DestBlendAlpha = getd3d12Blend(src.dstBlendAlpha);
             dst.BlendOpAlpha = getd3d12BlendOp(src.blendOpAlpha);
             dst.LogicOp = D3D12_LOGIC_OP_NOOP;
-            dst.RenderTargetWriteMask = D3D12_COLOR_WRITE_ENABLE_ALL;
+
+            dst.RenderTargetWriteMask = 0;
+            if (asBool(ColorWrite::Red & src.colorWrite))
+                dst.RenderTargetWriteMask |= D3D12_COLOR_WRITE_ENABLE_RED;
+            if (asBool(ColorWrite::Green & src.colorWrite))
+                dst.RenderTargetWriteMask |= D3D12_COLOR_WRITE_ENABLE_GREEN;
+            if (asBool(ColorWrite::Blue & src.colorWrite))
+                dst.RenderTargetWriteMask |= D3D12_COLOR_WRITE_ENABLE_BLUE;
+            if (asBool(ColorWrite::Alpha & src.colorWrite))
+                dst.RenderTargetWriteMask |= D3D12_COLOR_WRITE_ENABLE_ALPHA;
         }
 
         return d3d12desc;

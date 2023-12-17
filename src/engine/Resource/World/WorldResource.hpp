@@ -239,7 +239,6 @@ namespace vg::engine
                         {
                             if (Engine::get()->isPlaying())
                             {
-                                VG_DEBUGPRINT("OnPlay scene %s\n", scene->getName().c_str());
                                 IObject * root = scene->GetRoot();
                                 if (nullptr != root)
                                     root->OnPlay();

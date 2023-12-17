@@ -213,21 +213,21 @@ namespace vg::gfx::vulkan
 		}
 
         bool ignore = false;
-        static const char * ignoreList[] =
-        {
-            "VUID-vkCmdResetQueryPool-commandBuffer-recording",
-            "VUID-vkFreeDescriptorSets-pDescriptorSets-00309",
-            "UNASSIGNED-CoreValidation-DrawState-QueryNotReset",
-            "UNASSIGNED-CoreValidation-Shader-DescriptorTypeMismatch"
-        };
-        for (uint i = 0; i < countof(ignoreList); ++i)
-        {
-            if (!strcmp(ignoreList[i], _data->pMessageIdName))
-            {
-                ignore = true;
-                break;
-            }
-        }
+        //static const char * ignoreList[] =
+        //{
+        //    "VUID-vkCmdResetQueryPool-commandBuffer-recording",
+        //    "VUID-vkFreeDescriptorSets-pDescriptorSets-00309",
+        //    "UNASSIGNED-CoreValidation-DrawState-QueryNotReset",
+        //    "UNASSIGNED-CoreValidation-Shader-DescriptorTypeMismatch"
+        //};
+        //for (uint i = 0; i < countof(ignoreList); ++i)
+        //{
+        //    if (!strcmp(ignoreList[i], _data->pMessageIdName))
+        //    {
+        //        ignore = true;
+        //        break;
+        //    }
+        //}
 
 		// Hack to ignore false positive in this very specific case
 		// Generated SPIR-V code is a ByteAddressBuffer but validation layers says shader is expecting a texel buffer
@@ -304,7 +304,7 @@ namespace vg::gfx::vulkan
                 if (!strcmp(_layerName, instance_layers[j].layerName))
                 {
                     found = true;
-                    VG_DEBUGPRINT("Layer \"%s\" is enabled", _layerName);
+                    VG_INFO("[Device] Layer \"%s\" is enabled", _layerName);
                     break;
                 }
             }
@@ -901,7 +901,16 @@ namespace vg::gfx::vulkan
                                          vulkan12Features.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_2_FEATURES;
 										 vulkan12Features.pNext = nullptr;
 
-		#define CheckVulkanFeature(supported, destination, name) VG_ASSERT(supported.name == VK_TRUE, "'%s' is not supported by Vulkan device", #name); destination.name = true;
+		#define CheckVulkanFeature(supported, destination, name)	if (!supported.name)																		\
+																	{																							\
+																		VG_ASSERT(supported.name, "\"%s\" is not supported by Vulkan device", #name);				\
+																		destination.name = false;																\
+																	}																							\
+																	else																						\
+																	{																							\
+																		VG_INFO("[Device] Feature \"%s\" is enabled", #name);							\
+																		destination.name = true;																\
+																	}
 
 		CheckVulkanFeature(vulkan12SupportedFeatures, vulkan12Features, descriptorIndexing);
 		CheckVulkanFeature(vulkan12SupportedFeatures, vulkan12Features, descriptorBindingPartiallyBound);
@@ -1122,21 +1131,7 @@ namespace vg::gfx::vulkan
 			vkResetFences(vkDevice, 1, &m_vkFences[FrameIndex]);
 			m_currentFrameIndex = FrameIndex;
 
-			switch (m_KHR_Swapchain.m_pfnAcquireNextImageKHR(vkDevice, m_vkSwapchain, UINT64_MAX, m_vkImageAcquiredSemaphores[FrameIndex], VK_NULL_HANDLE, &currentBuffer))
-			{
-				default:
-					VG_ASSERT(false);
-
-				case VK_ERROR_OUT_OF_DATE_KHR:
-				case VK_SUBOPTIMAL_KHR:
-				case VK_ERROR_SURFACE_LOST_KHR:
-					//destroyVulkanBackbuffers();
-					//createVulkanBackbuffers();
-					break;
-
-				case VK_SUCCESS:
-					break;
-			}
+			VG_ASSERT_VULKAN(m_KHR_Swapchain.m_pfnAcquireNextImageKHR(vkDevice, m_vkSwapchain, UINT64_MAX, m_vkImageAcquiredSemaphores[FrameIndex], VK_NULL_HANDLE, &currentBuffer));
 		}
 
         m_currentBackbufferIndex = currentBuffer;

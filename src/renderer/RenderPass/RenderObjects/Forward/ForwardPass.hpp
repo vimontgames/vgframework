@@ -29,6 +29,7 @@ namespace vg::renderer
     {
         writeRenderTarget(0, _renderContext.getFrameGraphID("Color"));
         writeDepthStencil(_renderContext.getFrameGraphID("DepthStencil"));
+        
         readRWBuffer("SkinningRWBuffer");
     }
 

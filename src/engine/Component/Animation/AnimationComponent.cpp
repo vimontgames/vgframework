@@ -121,7 +121,7 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
-    core::uint AnimationComponent::GetAnimationIndex(const core::string _name) const
+    core::uint AnimationComponent::GetAnimationIndex(const core::string & _name) const
     {
         auto & anims = m_animations.getAnimationResources();
         for (uint i = 0; i < anims.size(); ++i)

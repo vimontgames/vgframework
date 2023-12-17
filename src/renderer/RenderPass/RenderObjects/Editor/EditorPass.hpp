@@ -30,25 +30,13 @@ namespace vg::renderer
         writeRenderTarget(0, _renderPassContext.getFrameGraphID("Color"));
         writeDepthStencil(_renderPassContext.getFrameGraphID("DepthStencil"));
         writeRWBuffer(_renderPassContext.getFrameGraphID("ToolmodeRWBuffer"));
+
         readRWBuffer("SkinningRWBuffer");
     }
 
     //--------------------------------------------------------------------------------------
     void EditorPass::BeforeRender(const gfx::RenderPassContext & _renderPassContext, gfx::CommandList * _cmdList)
     {
-        // test
-        //auto dbgDraw = DebugDraw::get();
-        //
-        //float4x4 world(1, 0, 0, 0,
-        //    0, 1, 0, 0,
-        //    0, 0, 1, 0,
-        //    0, 0, 0, 1);
-        //
-        //dbgDraw->AddLine(float3(0, 0, 0), float3(1, 1, 1), 0xFFFFFFFF);
-        //dbgDraw->AddLine(float3(1, 1, 1), float3(2, 1, 1), 0xFF7F7F7F);
-
-        //dbgDraw->AddWireframeBox(float3(0.0, 0.0, 0.0), float3(1.0f, 1.0f, 1.0f), 0xFF0000FF);
-
         DebugDraw::get()->update((View*)_renderPassContext.m_view, _cmdList);
     }
 

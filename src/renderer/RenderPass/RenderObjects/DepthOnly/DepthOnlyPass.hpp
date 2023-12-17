@@ -25,7 +25,9 @@ namespace vg::renderer
     //--------------------------------------------------------------------------------------
     void DepthOnlyPass::Setup(const gfx::RenderPassContext & _renderPassContext, double _dt)
     {
+        writeRenderTarget(0, _renderPassContext.getFrameGraphID("Color"));
         writeDepthStencil(_renderPassContext.getFrameGraphID("DepthStencil"));
+
         readRWBuffer("SkinningRWBuffer");
     }
 

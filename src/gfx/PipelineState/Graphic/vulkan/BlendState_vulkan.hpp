@@ -55,7 +55,16 @@ namespace vg::gfx::vulkan
            const auto & src = m_renderTargetBlend[i];
            auto & dst = rt[i];
 
-           dst.colorWriteMask = 0xf;
+           dst.colorWriteMask = 0;
+           if (asBool(ColorWrite::Red & src.colorWrite))
+               dst.colorWriteMask |= VkColorComponentFlagBits::VK_COLOR_COMPONENT_R_BIT;
+           if (asBool(ColorWrite::Green & src.colorWrite))
+               dst.colorWriteMask |= VkColorComponentFlagBits::VK_COLOR_COMPONENT_G_BIT;
+           if (asBool(ColorWrite::Blue & src.colorWrite))
+               dst.colorWriteMask |= VkColorComponentFlagBits::VK_COLOR_COMPONENT_B_BIT;
+           if (asBool(ColorWrite::Alpha & src.colorWrite))
+               dst.colorWriteMask |= VkColorComponentFlagBits::VK_COLOR_COMPONENT_A_BIT;
+
            dst.blendEnable = src.enable;
 
            dst.colorBlendOp = getVulkanBlendOp(src.blendOp);

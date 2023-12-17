@@ -170,10 +170,6 @@ PS_Output PS_Forward(VS_Output _input)
     if (RootConstantsFlags::Wireframe & rootConstants3D.getFlags())
         output.color0 = float4(0,1,0,1);
 
-    #endif // _TOOLMODE
-
-    #if 1 //_TOOLMODE
-
     // Picking
     uint toolmodeRWBufferID = viewConstants.getToolmodeRWBufferID();
     if (0xFFFF != toolmodeRWBufferID)
@@ -188,6 +184,10 @@ PS_Output PS_Forward(VS_Output _input)
     }
 
     #endif // _TOOLMODE
+
+    #if _ZONLY
+    output.color0 = (float4)0.0f;
+    #endif
                 
     return output;
 }

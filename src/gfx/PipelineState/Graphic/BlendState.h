@@ -23,27 +23,37 @@ namespace vg::gfx
         Max
     };
 
+    enum ColorWrite : core::u32
+    {
+        Red     = 0x01,
+        Green   = 0x02,
+        Blue    = 0x04,
+        Alpha   = 0x08
+    };
+
     struct RenderTargetBlend
     {
         RenderTargetBlend() :
             bits(0x0)
         {
+            colorWrite = ColorWrite(ColorWrite::Red | ColorWrite::Green | ColorWrite::Blue | ColorWrite::Alpha);
         }
 
         union 
         {
             struct
             {
-                core::u32       enable        : 1;
-                core::u32       _pad          : 7;
+                core::u32       enable          : 1;
+                ColorWrite      colorWrite      : 4;
+                core::u32       _pad            : 3;
 
-                BlendFactor     srcBlend      : 4;
-                BlendFactor     dstBlend      : 4;
-                BlendOp         blendOp       : 4;
+                BlendFactor     srcBlend        : 4;
+                BlendFactor     dstBlend        : 4;
+                BlendOp         blendOp         : 4;
                                           
-                BlendFactor     srcBlendAlpha : 4;
-                BlendFactor     dstBlendAlpha : 4;
-                BlendOp         blendOpAlpha  : 4;
+                BlendFactor     srcBlendAlpha   : 4;
+                BlendFactor     dstBlendAlpha   : 4;
+                BlendOp         blendOpAlpha    : 4;
             };
             core::u32 bits;
         };
@@ -53,7 +63,6 @@ namespace vg::gfx
 
     enum class BlendStateFlags : core::u32
     {
-        None                = 0x00000000,
         AlphaToCoverage     = 0x00000001,
         IndependantBlend    = 0x00000002 
     };
@@ -64,7 +73,7 @@ namespace vg::gfx
         {
         public:
             BlendState() :
-                m_flags(BlendStateFlags::None)
+                m_flags((BlendStateFlags)0x0)
             {
                 for (core::uint i = 0; i < maxRenderTarget; ++i)
                     m_bits[i] = 0x0;
@@ -96,15 +105,16 @@ namespace vg::gfx
 
         BlendState(BlendFactor _srcBlend = BlendFactor::One,
                    BlendFactor _dstBlend = BlendFactor::Zero,
-                   BlendOp     _blendOp  = BlendOp::Add)
+                   BlendOp     _blendOp  = BlendOp::Add, 
+                   ColorWrite  _colorWrite = ColorWrite(ColorWrite::Red | ColorWrite::Green | ColorWrite::Blue | ColorWrite::Alpha))
         {
-            m_flags = BlendStateFlags::None;
-
+            m_flags = (BlendStateFlags)0x0;
 
             for (core::uint i = 0; i < maxRenderTarget; ++i)
             {
                 auto & rt = m_renderTargetBlend[i];
 
+                rt.colorWrite = _colorWrite;
                 rt.srcBlend = _srcBlend;
                 rt.dstBlend = _dstBlend;
                 rt.blendOp = _blendOp;
@@ -123,14 +133,17 @@ namespace vg::gfx
                                          
                    BlendFactor _srcBlendAlpha,
                    BlendFactor _dstBlendAlpha,
-                   BlendOp     _blendOpAlpha)
+                   BlendOp     _blendOpAlpha,
+                   
+                   ColorWrite  _colorWrite = ColorWrite(ColorWrite::Red | ColorWrite::Green | ColorWrite::Blue | ColorWrite::Alpha))
         {
-            m_flags = BlendStateFlags::None;
+            m_flags = (BlendStateFlags)0x0;
 
             for (core::uint i = 0; i < maxRenderTarget; ++i)
             {
                 auto & rt = m_renderTargetBlend[i];
 
+                rt.colorWrite = _colorWrite;
                 rt.srcBlend = _srcBlend;
                 rt.dstBlend = _dstBlend;
                 rt.blendOp = _blendOp;

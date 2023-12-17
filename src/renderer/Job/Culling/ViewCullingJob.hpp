@@ -4,6 +4,7 @@
 #include "core/GameObject/GameObject.h"
 #include "renderer/IGraphicInstance.h"
 #include "renderer/Instance/Mesh/MeshInstance.h"
+#include "renderer/Options/RendererOptions.h"
 
 using namespace vg::core;
 

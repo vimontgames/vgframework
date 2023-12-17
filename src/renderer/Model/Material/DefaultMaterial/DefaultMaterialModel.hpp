@@ -43,28 +43,53 @@ namespace vg::renderer
         auto key = m_shaderKey[asInteger(_renderContext.m_shaderPass)];
 
         RasterizerState rs(FillMode::Solid, CullMode::Back);
-        BlendState bs(BlendFactor::One, BlendFactor::Zero, BlendOp::Add);
-        DepthStencilState ds(true, true, ComparisonFunc::LessEqual);
 
         _cmdList->setGraphicRootSignature(m_rootSignature);
         _cmdList->setPrimitiveTopology(PrimitiveTopology::TriangleList);
-        _cmdList->setBlendState(bs);
-        _cmdList->setDepthStencilState(ds);
 
-        if (_renderContext.m_toolmode)
+        //DepthStencilState ds(true, true, ComparisonFunc::LessEqual);
+        //_cmdList->setDepthStencilState(ds);
+
+        switch (_renderContext.m_shaderPass)
         {
-            if (_renderContext.m_wireframe)
+            default:
+                VG_ASSERT_ENUM_NOT_IMPLEMENTED(_renderContext.m_shaderPass);
+                break;
+
+            case ShaderPass::ZOnly:
             {
-                rs = RasterizerState(FillMode::Wireframe, CullMode::None);
-                _root3D->setFlags(RootConstantsFlags::Wireframe);
-            }
+                BlendState bs(BlendFactor::Zero, BlendFactor::Zero, BlendOp::Add, (ColorWrite)0x0);
+                _cmdList->setBlendState(bs);
 
-            key.setFlags(gfx::DefaultHLSLDesc::Toolmode, true);
+                key.setFlags(gfx::DefaultHLSLDesc::Toolmode, false);
+                key.setFlags(gfx::DefaultHLSLDesc::ZOnly, true);
+            }
+            break;
+
+            case ShaderPass::Forward:
+            {
+                BlendState bs(BlendFactor::One, BlendFactor::Zero, BlendOp::Add);
+                _cmdList->setBlendState(bs);
+
+                if (_renderContext.m_toolmode)
+                {
+                    if (_renderContext.m_wireframe)
+                    {
+                        rs = RasterizerState(FillMode::Wireframe, CullMode::None);
+                        _root3D->setFlags(RootConstantsFlags::Wireframe);
+                    }
+
+                    key.setFlags(gfx::DefaultHLSLDesc::Toolmode, true);
+                }
+                else
+                {
+                    key.setFlags(gfx::DefaultHLSLDesc::Toolmode, false);
+                }
+            }
+            break;
         }
-        else
-        {
-            key.setFlags(gfx::DefaultHLSLDesc::Toolmode, false);
-        }
+
+        
 
         _cmdList->setRasterizerState(rs);
         _cmdList->setShader(key);
