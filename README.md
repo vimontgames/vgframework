@@ -105,69 +105,45 @@ Also don't forget to set the *working directory* to **$(SolutionDir)**.
 ![Screenshot](doc/img/SolutionPlatformName2.png)
 
 ## SDKs
-Win10 SDK 10.0.17763.0\
-https://developer.microsoft.com/fr-fr/windows/downloads/sdk-archive/
 
-Vulkan SDK 1.3.261.1 (*Only required to build Vulkan version*)\
-https://vulkan.lunarg.com/sdk/home  
-**$(VK_SDK_PATH)** should point the Vulkan SDK installation dir *(i.e. "C:\SDK\Vulkan\1.3.261.1")*
+| Name			  | Version		  | URL																  
+| --------------- | ------------- | -------------------------------------------------------------------- 
+| Win10 SDK (*)   | 10.0.17763.0  | https://developer.microsoft.com/fr-fr/windows/downloads/sdk-archive/  
+| Vulkan SDK (**) | 1.3.261.1	  | https://vulkan.lunarg.com/sdk/home								     
+  
+(*) *This is the version I use but any recent version should also work*
+
+(**) *Only required to build Vulkan version*\
+*$(VK_SDK_PATH) should point the Vulkan SDK installation dir (i.e. "C:\SDK\Vulkan\1.3.261.1")*
 
 # extern libs
-D3D12 Memory Allocator\
-https://github.com/GPUOpen-LibrariesAndSDKs/D3D12MemoryAllocator
 
-Dear ImGui "docking" branch\
-https://github.com/ocornut/imgui/commits/docking
+These extern libs are already present in the depot for convenience, you don't have to download them separately :
 
-Dirent\
-https://github.com/tronkko/dirent
+| Name							| Version		| URL																   
+| ----------------------------- | ------------- | -------------------------------------------------------------------- 
+| D3D12 Memory Allocator		|				| https://github.com/GPUOpen-LibrariesAndSDKs/D3D12MemoryAllocator
+| Dear ImGui					|				| https://github.com/ocornut/imgui/commits/docking
+| DirectX-Headers				|       1.611.0 | https://github.com/microsoft/DirectX-Headers/releases/tag/v1.611.0
+| DirectXShaderCompiler			|	   1.7.2308 | https://github.com/microsoft/DirectXShaderCompiler/releases/tag/v1.7.2308
+| Dirent						|				| https://github.com/tronkko/dirent
+| Font-Awesome-6.x				|				| https://github.com/FortAwesome/Font-Awesome/tree/6.x
+| fmt 							|	     10.1.1 | https://github.com/fmtlib/fmt/releases/tag/10.1.1
+| hlslpp						|		  3.3.1 | https://github.com/redorav/hlslpp/releases/tag/3.3.1
+| IconFontCppHeaders			|		        | https://github.com/juliettef/IconFontCppHeaders
+| ImGui-Addons					|		        | https://github.com/gallickgunner/ImGui-Addons
+| ImGuizmo						|		   1.83 | https://github.com/CedricGuillemet/ImGuizmo/releases/tag/1.83
+| JoltPhysics					|		  4.0.1 | https://github.com/jrouwe/JoltPhysics/releases/tag/v4.0.1
+| magic_enum					|		        | https://github.com/Neargye/magic_enum
+| optick (*)					|		  1.3.1 | https://github.com/bombomby/optick/releases/tag/1.3.1.0
+| px_sched						|		        |  https://github.com/pplux/px
+| stb							|		        | https://github.com/nothings/stb
+| tinyXML2						|		        | https://github.com/leethomason/tinyxml2
+| UFBX							|		        | https://github.com/ufbx/ufbx
+| Vulkan Memory Allocator		|		        | https://github.com/GPUOpen-LibrariesAndSDKs/VulkanMemoryAllocator
+| WinPixEventRuntime			| 1.0.200127001 | https://www.nuget.org/packages/WinPixEventRuntime
 
-Font-Awesome-6.x\
-https://github.com/FortAwesome/Font-Awesome/tree/6.x
-
-fmt 10.1.1\
-https://github.com/fmtlib/fmt/releases/tag/10.1.1
-
-hlslpp 3.3.1\
-https://github.com/redorav/hlslpp/releases/tag/3.3.1
-
-IconFontCppHeaders\
-https://github.com/juliettef/IconFontCppHeaders
-
-ImGui-Addons\
-https://github.com/gallickgunner/ImGui-Addons
-
-ImGuizmo 1.83"\
-https://github.com/CedricGuillemet/ImGuizmo/releases/tag/1.83
-
-JoltPhysics 4.0.1\
-https://github.com/jrouwe/JoltPhysics/releases/tag/v4.0.1
-
-magic_enum\
-https://github.com/Neargye/magic_enum
-
-optick 1.3.1\
-https://github.com/bombomby/optick
-*You can download the binaries for optick 1.3.1 from https://github.com/bombomby/optick/releases/tag/1.3.1.0*
-
-px_sched\
-https://github.com/pplux/px
-
-stb\
-https://github.com/nothings/stb
-
-tinyXML2\
-https://github.com/leethomason/tinyxml2
-
-UFBX\
-https://github.com/ufbx/ufbx
-
-Vulkan Memory Allocator\
-https://github.com/GPUOpen-LibrariesAndSDKs/VulkanMemoryAllocator
-
-WinPixEventRuntime 1.0.200127001\
-https://www.nuget.org/packages/WinPixEventRuntime
-
+(*) *You can download the binaries for the optick viewer from https://github.com/bombomby/optick/releases/tag/1.3.1.0*
 
 # data
 ## models
