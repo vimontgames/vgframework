@@ -25,7 +25,7 @@ namespace vg::gfx
 
 namespace vg::gfx
 {
-    class ShaderCompiler : public dxc::ShaderCompiler
+    class ShaderCompiler final : public dxc::ShaderCompiler
     {
         using super = dxc::ShaderCompiler;
 
@@ -35,7 +35,7 @@ namespace vg::gfx
         ShaderCompiler();
         ~ShaderCompiler();
 
-        Shader * compile(API _api, const core::string & _file, const core::string & _entryPoint, ShaderStage _stage, const core::vector<core::pair<core::string, core::uint>> & _macros, core::string & _warningAndErrors);
+        Shader * compile(API _api, const core::string & _file, const core::string & _entryPoint, ShaderProgramType _programType, const core::vector<core::pair<core::string, core::uint>> & _macros, core::string & _warningAndErrors);
 
     private:
 

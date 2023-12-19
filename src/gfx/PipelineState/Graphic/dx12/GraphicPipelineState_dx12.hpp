@@ -5,27 +5,6 @@
 namespace vg::gfx::dx12
 {
     //--------------------------------------------------------------------------------------
-    bool GraphicPipelineState::getd3d3d12Bytecode(HLSLDesc * _desc, ShaderStage _stage, ShaderKey::EntryPoint _entryPoint, ShaderKey::Flags _flags, D3D12_SHADER_BYTECODE * _d3d12ShaderBytecode)
-    {
-        if (ShaderKey::EntryPoint(-1) != _entryPoint)
-        {
-            const Shader * shader = _desc->getShader(API::DirectX12, _stage, _entryPoint, _flags);
-            if (nullptr != shader)
-            {
-                *_d3d12ShaderBytecode = shader->getd3d12Bytecode();
-                return true;
-            }
-        }
-        else
-        {
-            *_d3d12ShaderBytecode = D3D12_SHADER_BYTECODE{ nullptr,0 };
-            return true;
-        }
-
-        return false;
-    }
-
-    //--------------------------------------------------------------------------------------
     GraphicPipelineState::GraphicPipelineState(const GraphicPipelineStateKey & _key) :
         super::GraphicPipelineState(_key)
     {
@@ -79,20 +58,29 @@ namespace vg::gfx::dx12
         VG_ASSERT(desc);
         if (desc)
         {
-            if (!getd3d3d12Bytecode(desc, ShaderStage::Vertex, _key.m_shaderKey.vs, _key.m_shaderKey.flags, &d3d12graphicPipelineDesc.VS))
+            GraphicsPrograms graphicsPrograms;
+            
+            if (!desc->getGraphicsPrograms(API::DirectX12, _key.m_shaderKey, graphicsPrograms))
                 return false;
 
-            if (!getd3d3d12Bytecode(desc, ShaderStage::Hull, _key.m_shaderKey.hs, _key.m_shaderKey.flags, &d3d12graphicPipelineDesc.HS))
-                return false;
-            
-            if (!getd3d3d12Bytecode(desc, ShaderStage::Domain, _key.m_shaderKey.ds, _key.m_shaderKey.flags, &d3d12graphicPipelineDesc.DS))
-                return false;
-            
-            if (!getd3d3d12Bytecode(desc, ShaderStage::Geometry, _key.m_shaderKey.gs, _key.m_shaderKey.flags, &d3d12graphicPipelineDesc.GS))
-                return false;
-            
-            if (!getd3d3d12Bytecode(desc, ShaderStage::Pixel, _key.m_shaderKey.ps, _key.m_shaderKey.flags, &d3d12graphicPipelineDesc.PS))
-                return false;
+            if (graphicsPrograms.m_shaders[asInteger(GraphicsStage::Vertex)])
+                d3d12graphicPipelineDesc.VS = graphicsPrograms.m_shaders[asInteger(GraphicsStage::Vertex  )]->getd3d12Bytecode();
+
+            if (graphicsPrograms.m_shaders[asInteger(GraphicsStage::Hull)])
+                d3d12graphicPipelineDesc.HS = graphicsPrograms.m_shaders[asInteger(GraphicsStage::Hull    )]->getd3d12Bytecode();
+
+            if (graphicsPrograms.m_shaders[asInteger(GraphicsStage::Domain)])
+                d3d12graphicPipelineDesc.DS = graphicsPrograms.m_shaders[asInteger(GraphicsStage::Domain  )]->getd3d12Bytecode();
+
+            if (graphicsPrograms.m_shaders[asInteger(GraphicsStage::Geometry)])
+                d3d12graphicPipelineDesc.GS = graphicsPrograms.m_shaders[asInteger(GraphicsStage::Geometry)]->getd3d12Bytecode();
+
+            if (graphicsPrograms.m_shaders[asInteger(GraphicsStage::Pixel)])
+                d3d12graphicPipelineDesc.PS = graphicsPrograms.m_shaders[asInteger(GraphicsStage::Pixel   )]->getd3d12Bytecode();
+        }
+        else
+        {
+            return false;
         }
 
         d3d12graphicPipelineDesc.RasterizerState = _key.m_rasterizerState.getd3d12RasterizerState();

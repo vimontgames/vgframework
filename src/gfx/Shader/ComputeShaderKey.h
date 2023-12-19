@@ -29,16 +29,17 @@ namespace vg::gfx
                 flags &= value;
         }
 
-        union
+        inline EntryPoint getEntryPointIndex(ComputeStage _stage) const
         {
-            struct
+            switch (_stage)
             {
-                File file;
-                CS cs;
-                Flags flags;
-            };
-            core::u32 bits;
-        };
+                default:
+                    VG_ASSERT_ENUM_NOT_IMPLEMENTED(_stage);
+
+                case ComputeStage::Compute:
+                    return cs;
+            }
+        }
 
         bool operator == (const ComputeShaderKey & _other) const
         {
@@ -49,6 +50,22 @@ namespace vg::gfx
         {
             return _other.bits != bits;
         }
+
+        inline bool operator < (const ComputeShaderKey & _other) const
+        {
+            return bits < _other.bits;
+        }
+
+        union
+        {
+            struct
+            {
+                File file;
+                CS cs;
+                Flags flags;
+            };
+            core::u32 bits = 0x0;
+        };
 
         struct hash
         {

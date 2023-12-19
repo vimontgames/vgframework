@@ -29,6 +29,20 @@ namespace vg::gfx::vulkan
     }
 
     //--------------------------------------------------------------------------------------
+    VkShaderStageFlagBits ComputePipelineState::getVulkanShaderStage(ComputeStage _stage)
+    {
+        switch (_stage)
+        {
+            default:
+                VG_ASSERT(false, "Unhandled ComputeStage \"%s\" (%u)", asString(_stage).c_str(), _stage);
+                return VkShaderStageFlagBits(0);
+
+            case ComputeStage::Compute:
+                return VK_SHADER_STAGE_COMPUTE_BIT;
+        }
+    }
+
+    //--------------------------------------------------------------------------------------
     bool ComputePipelineState::createVulkanComputePipelineState(const ComputePipelineStateKey & _computeKey, VkPipelineCache & _vkPipelineCache, VkPipeline & _vkPipeline)
     {
         auto * device = gfx::Device::get();
@@ -50,10 +64,24 @@ namespace vg::gfx::vulkan
         vector<VkPipelineShaderStageCreateInfo> vkShaderStages;
 
         auto * sm = ShaderManager::get();
-        auto & hlslDesc = *sm->getHLSLDescriptor(_computeKey.m_computeShaderKey.file);
+        auto * desc = sm->getHLSLDescriptor(_computeKey.m_computeShaderKey.file);
 
-        if (!GraphicPipelineState::addVulkanShader(vkShaderStages, hlslDesc, ShaderStage::Compute, _computeKey.m_computeShaderKey.cs, _computeKey.m_computeShaderKey.flags))
-            return false;
+        if (desc)
+        {
+            ComputePrograms computePrograms;
+
+            if (!desc->getComputePrograms(API::Vulkan, _computeKey.m_computeShaderKey, computePrograms))
+                return false;
+
+            VkPipelineShaderStageCreateInfo vkShaderStage = {};
+                
+            vkShaderStage.sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
+            vkShaderStage.stage = getVulkanShaderStage(ComputeStage::Compute);
+            vkShaderStage.module = computePrograms.m_shaders[asInteger(ComputeStage::Compute)]->getVulkanBytecode();
+            vkShaderStage.pName = computePrograms.m_shaders[asInteger(ComputeStage::Compute)]->getName().c_str();
+                
+            vkShaderStages.push_back(vkShaderStage);
+        }
 
         vkPipelineDesc.stage = vkShaderStages[0];
 

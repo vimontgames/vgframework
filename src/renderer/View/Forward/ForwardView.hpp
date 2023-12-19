@@ -51,26 +51,23 @@ namespace vg::renderer
 
         const auto options = RendererOptions::get();
 
+        
+        _frameGraph.addUserPass(_renderPassContext, m_backgroundPass, "BackgroundPass");
+
+        if (options->isZPrepassEnabled())
+            _frameGraph.addUserPass(_renderPassContext, m_depthPrePass, "DepthPrepass");
+
+        _frameGraph.addUserPass(_renderPassContext, m_forwardPass, "ForwardPass");
+
+        if (_renderPassContext.m_view->IsToolmode())
+            _frameGraph.addUserPass(_renderPassContext, m_editorPass, "EditorPass");
+
         if (options->isRayTracingEnabled())
-        {
             _frameGraph.addUserPass(_renderPassContext, m_testRayTracingPass, "TestRayTracingPass");
-        }
-        else
-        {
-            _frameGraph.addUserPass(_renderPassContext, m_backgroundPass, "BackgroundPass");
 
-            if (options->isZPrepassEnabled())
-                _frameGraph.addUserPass(_renderPassContext, m_depthPrePass, "DepthPrepass");
+        if (options->isPostProcessEnabled())
+            _frameGraph.addUserPass(_renderPassContext, m_computePostProcessPass, "ComputePostProcessPass");
 
-            _frameGraph.addUserPass(_renderPassContext, m_forwardPass, "ForwardPass");
-
-            if (_renderPassContext.m_view->IsToolmode())
-                _frameGraph.addUserPass(_renderPassContext, m_editorPass, "EditorPass");
-
-            if (options->isPostProcessEnabled())
-                _frameGraph.addUserPass(_renderPassContext, m_computePostProcessPass, "ComputePostProcessPass");
-
-            _frameGraph.addUserPass(_renderPassContext, m_finalBlitPass, "FinalBlitPass");
-        }
+        _frameGraph.addUserPass(_renderPassContext, m_finalBlitPass, "FinalBlitPass");
     }
 }

@@ -14,12 +14,12 @@ namespace vg::renderer
         const RootSignatureTableDesc & bindlessTable = device->getBindlessTable()->getTableDesc();
 
         RootSignatureDesc rsDesc;
-        rsDesc.addRootConstants(ShaderStageFlags::VS | ShaderStageFlags::PS, 0, 0, sizeof(RayTracingRootConstants) / sizeof(u32));
+        rsDesc.addRootConstants(ShaderStageFlags::AllRayTracing, 0, 0, sizeof(RayTracingRootConstants) / sizeof(u32));
         rsDesc.addTable(bindlessTable);
 
         m_testRayTracingGlobalRootSignatureHandle = device->addRootSignature(rsDesc);
 
-        //m_backgroundShaderKey.init("background/background.hlsl", "Gradient");
+        m_testRayTracingShaderKey.init("raytracing/raytracing.hlsl", "RayTracing");
     }
 
     //--------------------------------------------------------------------------------------
@@ -87,5 +87,9 @@ namespace vg::renderer
         //_cmdList->setInlineRootConstants(&root, sizeof(BackgroundRootConstants) / sizeof(u32));
         //
         //_cmdList->draw(4);
+
+        _cmdList->setRayTracingRootSignature(m_testRayTracingGlobalRootSignatureHandle);
+        _cmdList->setRayTracingShader(m_testRayTracingShaderKey);
+        _cmdList->dispatchRays(uint3(256, 256, 1));
     }
 }

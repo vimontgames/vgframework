@@ -5,6 +5,7 @@
 #include "gfx/Device/Device_consts.h"
 #include "gfx/PipelineState/Graphic/GraphicPipelineStateCache.h"
 #include "gfx/PipelineState/Compute/ComputePipelineStateCache.h"
+#include "gfx/PipelineState/RayTracing/RayTracingPipelineStateCache.h"
 
 namespace vg::gfx
 {
@@ -27,37 +28,42 @@ namespace vg::gfx
 			CommandList(gfx::CommandListType _type, gfx::CommandPool * _cmdPool, core::uint _frame, core::uint _index);
 			~CommandList();
 
-			CommandListType			getType			        () const;
-			CommandPool *			getCommandPool	        () const;
+			CommandListType			getType			            () const;
+			CommandPool *			getCommandPool	            () const;
 
             // Graphic
-			void					beginRenderPass	        (gfx::RenderPass * _renderPass);
-			void					endRenderPass	        ();
+			void					beginRenderPass	            (gfx::RenderPass * _renderPass);
+			void					endRenderPass	            ();
 
-			void					beginSubPass	        (core::uint _subPassIndex, gfx::SubPass * _subPass);
-			void					endSubPass		        ();
+			void					beginSubPass	            (core::uint _subPassIndex, gfx::SubPass * _subPass);
+			void					endSubPass		            ();
 
-			const RenderPass *		getRenderPass	        () const;
-            const SubPass *         getSubPass              () const;
-			const core::uint		getSubPassIndex	        () const;
+			const RenderPass *		getRenderPass	            () const;
+            const SubPass *         getSubPass                  () const;
+			const core::uint		getSubPassIndex	            () const;
 
-            void                    setGraphicRootSignature (const RootSignatureHandle & _rsHandle);
+            void                    setGraphicRootSignature     (const RootSignatureHandle & _rsHandle);
 
-            void                    setRasterizerState      (const gfx::RasterizerState & _rs);
-            void                    setDepthStencilState    (const gfx::DepthStencilState & _ds);
-            void                    setBlendState           (const gfx::BlendState & _bs);
-            void                    setShader               (const ShaderKey & _key);
-            void                    setPrimitiveTopology    (PrimitiveTopology _topology);
-            void                    setViewport             (const core::uint4 & _viewport);
-            void                    setScissor              (const core::uint4 & _scissor);
-            void                    setGraphicRootConstants (core::uint _startOffset, core::u32 * _values, core::uint _count);
-            void                    setIndexBuffer          (gfx::Buffer * _ib);
+            void                    setRasterizerState          (const gfx::RasterizerState & _rs);
+            void                    setDepthStencilState        (const gfx::DepthStencilState & _ds);
+            void                    setBlendState               (const gfx::BlendState & _bs);
+            void                    setShader                   (const ShaderKey & _key);
+            void                    setPrimitiveTopology        (PrimitiveTopology _topology);
+            void                    setViewport                 (const core::uint4 & _viewport);
+            void                    setScissor                  (const core::uint4 & _scissor);
+            void                    setGraphicRootConstants     (core::uint _startOffset, core::u32 * _values, core::uint _count);
+            void                    setIndexBuffer              (gfx::Buffer * _ib);
 
             // Compute
-            void                    setComputeRootSignature (const RootSignatureHandle & _rsHandle);
-            void                    setComputeShader        (const ComputeShaderKey & _computeKey);
-            void                    setComputeRootConstants (core::uint _startOffset, core::u32 * _values, core::uint _count);
+            void                    setComputeRootSignature     (const RootSignatureHandle & _rsHandle);
+            void                    setComputeShader            (const ComputeShaderKey & _computeKey);
+            void                    setComputeRootConstants     (core::uint _startOffset, core::u32 * _values, core::uint _count);
 
+            // RayTracing
+            void                    setRayTracingRootSignature  (const RootSignatureHandle & _rsHandle);
+            void                    setRayTracingShader         (const RayTracingShaderKey & _key);
+
+            // Mist
             void                    setCurrentRenderPassType(RenderPassType _renderPassType);
 
 		protected:
@@ -71,9 +77,10 @@ namespace vg::gfx
 			core::uint				m_subPassIndex = -1;
 
         protected:
-            RenderPassType              m_currentRenderPassType = (RenderPassType)-1;
-            GraphicPipelineStateCache   m_graphicStateCache;
-            ComputePipelineStateCache   m_computeStateCache;
+            RenderPassType                  m_currentRenderPassType = (RenderPassType)-1;
+            GraphicPipelineStateCache       m_graphicStateCache;
+            ComputePipelineStateCache       m_computeStateCache;
+            RayTracingPipelineStateCache    m_rayTracingStateCache;
 		};
 	}
 }
@@ -124,6 +131,12 @@ namespace vg::gfx
         bool                            applyComputePipelineState   ();
 
         void                            dispatch                    (core::uint3 _threadGroupCount);
+
+        // RayTracing    
+        VG_INLINE void                  setRayTracingRootSignature  (const RootSignatureHandle & _rsHandle);
+        VG_INLINE void                  setRayTracingShader         (const RayTracingShaderKey & _key);
+        bool                            applyRayTracingPipelineState();
+        void                            dispatchRays                (core::uint3 _threadGroupCount);
 
         // Copy
         VG_INLINE void                  copyTexture                 (gfx::Texture * _dst, gfx::Buffer * _src, core::uint_ptr _srcOffset = 0);

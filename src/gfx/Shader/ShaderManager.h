@@ -2,6 +2,7 @@
 
 #include "ShaderKey.h"
 #include "ComputeShaderKey.h"
+#include "RayTracingShaderKey.h"
 #include "gfx/IShaderManager.h"
 
 
@@ -27,12 +28,13 @@ namespace vg::gfx
         void applyUpdate();
 
         void registerHLSL(const HLSLDesc & _hlslDesc);
-        bool initShaderKey(ShaderKey & _key, const core::string & _file, const core::string & _technique);
+        bool initGraphicsShaderKey(ShaderKey & _key, const core::string & _file, const core::string & _technique);
         bool initComputeShaderKey(ComputeShaderKey & _key, const core::string & _file, const core::string & _technique);
+        bool initRayTracingShaderKey(RayTracingShaderKey & _key, const core::string & _file, const core::string & _technique);
 
         HLSLDesc * getHLSLDescriptor(ShaderKey::File _file);
 
-        Shader * compile(API _api, const core::string & _file, const core::string & _entryPoint, ShaderStage _stage, const core::vector<core::pair<core::string, core::uint>> & _macros);
+        Shader * compile(API _api, const core::string & _file, const core::string & _entryPoint, ShaderProgramType _programType, const core::vector<core::pair<core::string, core::uint>> & _macros);
 
         const core::string &               getShaderRootPath() const { return m_shaderRootPath; }
         const core::vector<core::string> & getShaderRootFolders() const { return m_shaderRootFolders; }

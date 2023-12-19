@@ -8,7 +8,7 @@ namespace vg::gfx::dx12
 {
     //--------------------------------------------------------------------------------------
     ComputePipelineState::ComputePipelineState(const ComputePipelineStateKey & _computeKey) :
-        super::ComputePipelineState(_computeKey)
+        super(_computeKey)
     {
 
     }
@@ -54,11 +54,18 @@ namespace vg::gfx::dx12
         VG_ASSERT(desc);
         if (desc)
         {
-            // TODO: move getd3d3d12Bytecode to some helper class instead?
-            if (!GraphicPipelineState::getd3d3d12Bytecode(desc, ShaderStage::Compute, _computeKey.m_computeShaderKey.cs, _computeKey.m_computeShaderKey.flags, &d3d12ComputePipelineDesc.CS))
-                return false;
-        }
+            ComputePrograms computePrograms;
 
+            if (!desc->getComputePrograms(API::DirectX12, _computeKey.m_computeShaderKey, computePrograms))
+                return false;
+
+            d3d12ComputePipelineDesc.CS = computePrograms.m_shaders[asInteger(ComputeStage::Compute)]->getd3d12Bytecode();
+        }
+        else
+        {
+            return false;
+        }
+        
         ID3D12PipelineState * d3d12ComputePipelineState = nullptr;
         VG_ASSERT_SUCCEEDED(d3d12device->CreateComputePipelineState(&d3d12ComputePipelineDesc, IID_PPV_ARGS(&d3d12ComputePipelineState)));
         _d3d12ComputePipelineState = d3d12ComputePipelineState;

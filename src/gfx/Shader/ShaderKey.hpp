@@ -36,7 +36,7 @@ namespace vg::gfx
     //--------------------------------------------------------------------------------------
     void ShaderKey::init(const core::string & _file, const core::string & _technique)
     {
-        ShaderManager::get()->initShaderKey(*this, _file, _technique);
+        ShaderManager::get()->initGraphicsShaderKey(*this, _file, _technique);
     }
 
 }

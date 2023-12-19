@@ -572,4 +572,20 @@ namespace vg::gfx::vulkan
     {
         vkCmdDispatch(m_vkCommandBuffer, _threadGroupCount.x, _threadGroupCount.y, _threadGroupCount.z);
     }
+
+    //--------------------------------------------------------------------------------------
+    // RayTracing
+    //--------------------------------------------------------------------------------------
+
+    //--------------------------------------------------------------------------------------
+    void CommandList::bindRayTracingPipelineState(gfx::RayTracingPipelineState * _pso)
+    {
+        VG_ASSERT_NOT_IMPLEMENTED();
+    }
+
+    //--------------------------------------------------------------------------------------
+    void CommandList::dispatchRays(core::uint3 _threadGroupCount)
+    {
+        VG_ASSERT_NOT_IMPLEMENTED();
+    }
 }

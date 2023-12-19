@@ -20,20 +20,20 @@ namespace vg::gfx
         {
             setFile("default/default.hlsl");
 
-            addFlag(ZOnly, ShaderStageFlags::VS | ShaderStageFlags::PS, "_ZONLY");
-            addFlag(Toolmode, ShaderStageFlags::VS | ShaderStageFlags::PS, "_TOOLMODE");
+            auto zOnlyFlag = declareFlag(ZOnly, "_ZONLY");
+            auto toolmodeFlag = declareFlag(Toolmode, "_TOOLMODE");
 
-            auto & zonly = addTechnique("ZOnly");
+            auto & zonlyTechnique = addGraphicsTechnique("ZOnly");
             {
-                zonly.vs = addVS("VS_Forward");
-                zonly.ps = addPS("PS_Forward");
-                zonly.addFlag(Flags::ZOnly);
+                zonlyTechnique.setVertexShader("VS_Forward");
+                zonlyTechnique.setPixelShader("PS_Forward");
+                zonlyTechnique.setFlags(zOnlyFlag);
             }
 
-            auto & forward = addTechnique("Forward");
+            auto & forwardTechnique = addGraphicsTechnique("Forward");
             {
-                forward.vs = addVS("VS_Forward");
-                forward.ps = addPS("PS_Forward");
+                forwardTechnique.setVertexShader("VS_Forward");
+                forwardTechnique.setPixelShader("PS_Forward");
             }
         }
     };

@@ -5,6 +5,7 @@
 #include "gfx/RootSignature/RootSignature.h"
 #include "gfx/PipelineState/Graphic/GraphicPipelineState.h"
 #include "gfx/PipelineState/Compute/ComputePipelineState.h"
+#include "gfx/PipelineState/RayTracing/RayTracingPipelineState.h"
 #include "gfx/FrameGraph/RenderPass.h"
 #include "gfx/FrameGraph/SubPass.h"
 #include "gfx/FrameGraph/UserPass.h"
@@ -296,9 +297,38 @@ namespace vg::gfx
                 case RenderPassType::Compute:
                     m_computeStateCache.m_dirtyFlags = (PipelineStateCache::DirtyFlags)-1;
                     break;
+
+                case RenderPassType::RayTrace:
+                    m_rayTracingStateCache.m_dirtyFlags = (RayTracingPipelineStateCache::DirtyFlags)-1;
+                    break;
             }
 
             m_currentRenderPassType = _renderPassType;
+        }
+
+        //--------------------------------------------------------------------------------------
+        // base::RayTracing
+        //--------------------------------------------------------------------------------------
+
+        //--------------------------------------------------------------------------------------
+        void CommandList::setRayTracingRootSignature(const RootSignatureHandle & _rsHandle)
+        {
+            if (_rsHandle != m_rayTracingStateCache.m_rayTracingPipelineKey.m_rayTracingRootSignature)
+            {
+                m_rayTracingStateCache.m_dirtyFlags |= RayTracingPipelineStateCache::DirtyFlags::RootSignature;
+                m_rayTracingStateCache.m_rayTracingPipelineKey.m_rayTracingRootSignature = _rsHandle;
+                m_rayTracingStateCache.m_rootSignature = gfx::Device::get()->getRootSignature(_rsHandle);
+            }
+        }
+
+        //--------------------------------------------------------------------------------------
+        void CommandList::setRayTracingShader(const RayTracingShaderKey & _key)
+        {
+            if (_key != m_rayTracingStateCache.m_rayTracingPipelineKey.m_rayTracingShaderKey)
+            {
+                m_rayTracingStateCache.m_dirtyFlags |= RayTracingPipelineStateCache::DirtyFlags::PipelineState;
+                m_rayTracingStateCache.m_rayTracingPipelineKey.m_rayTracingShaderKey = _key;
+            }
         }
 	}
 
@@ -314,6 +344,7 @@ namespace vg::gfx
 	{
         m_graphicStateCache.clear();
         m_computeStateCache.clear();
+        m_rayTracingStateCache.clear();
 	}
 
     //--------------------------------------------------------------------------------------
@@ -323,6 +354,7 @@ namespace vg::gfx
 
         m_graphicStateCache.reset();
         m_computeStateCache.reset();
+        m_rayTracingStateCache.reset();
 
         super::reset();
     }
@@ -338,6 +370,7 @@ namespace vg::gfx
     {
         m_graphicStateCache.resetShaders(_file);
         m_computeStateCache.resetShaders(_file);
+        m_rayTracingStateCache.resetShaders(_file);
     }
 
     //--------------------------------------------------------------------------------------
@@ -453,5 +486,50 @@ namespace vg::gfx
     {
         if (applyComputePipelineState())
             super::dispatch(_threadGroupCount.xyz);
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool CommandList::applyRayTracingPipelineState()
+    {
+        if (RenderPassType::RayTrace != m_currentRenderPassType)
+            setCurrentRenderPassType(RenderPassType::RayTrace);
+
+        if (asBool(m_rayTracingStateCache.m_dirtyFlags))
+        {
+            auto * device = Device::get();
+
+            //if (asBool(ComputePipelineStateCache::DirtyFlags::RootSignature & m_rayTracingStateCache.m_dirtyFlags))
+            //{
+            //    VG_ASSERT(m_rayTracingStateCache.m_rayTracingPipelineKey.m_rayTracingRootSignature.isValid(), "Invalid RayTracing Root Signature");
+            //    super::bindRayTracingRootSignature(device->getRootSignature(m_rayTracingStateCache.m_rayTracingPipelineKey.m_rayTracingRootSignature));
+            //}
+            
+            if (asBool(RayTracingPipelineStateCache::DirtyFlags::PipelineState & m_rayTracingStateCache.m_dirtyFlags))
+            {
+                const auto & key = m_rayTracingStateCache.m_rayTracingPipelineKey;
+
+                RayTracingPipelineState * pso = nullptr;
+                if (!m_rayTracingStateCache.getRayTracingPipelineState(key, pso))
+                    return false;
+
+                super::bindRayTracingPipelineState(pso);
+                m_rayTracingStateCache.m_rayTracingPipelineKey = key;
+            }
+
+            //
+            //if (asBool(ComputePipelineStateCache::DirtyFlags::RootConstants & m_computeStateCache.m_dirtyFlags))
+            //    super::bindComputeRootConstants(m_computeStateCache.m_rootConstants);
+
+            m_rayTracingStateCache.m_dirtyFlags = (RayTracingPipelineStateCache::DirtyFlags)0;
+        }
+
+        return true;
+    }
+
+    //--------------------------------------------------------------------------------------
+    void CommandList::dispatchRays(core::uint3 _threadGroupCount)
+    {
+        if (applyRayTracingPipelineState())
+            super::dispatchRays(_threadGroupCount.xyz);
     }
 }

@@ -126,35 +126,39 @@ namespace vg::gfx::dxc
     }
 
     //--------------------------------------------------------------------------------------
-    const char * ShaderCompiler::getDXCTargetProfile(ShaderStage _stage) const
+    const char * ShaderCompiler::getDXCTargetProfile(ShaderProgramType _programType) const
     {
-        switch (_stage)
+        switch (_programType)
         {
         default:
-            VG_ASSERT(false);
+            VG_ASSERT_ENUM_NOT_IMPLEMENTED(_programType);
+            return nullptr;
 
-        case ShaderStage::Vertex:
+        case ShaderProgramType::Vertex:
             return "vs_6_1";
 
-        case ShaderStage::Hull:
+        case ShaderProgramType::Hull:
             return "hs_6_1";
 
-        case ShaderStage::Domain:
+        case ShaderProgramType::Domain:
             return "ds_6_1";
 
-        case ShaderStage::Geometry:
+        case ShaderProgramType::Geometry:
             return "gs_6_1";
 
-        case ShaderStage::Pixel:
+        case ShaderProgramType::Pixel:
             return "ps_6_1";
 
-        case ShaderStage::Compute:
+        case ShaderProgramType::Compute:
             return "cs_6_1";
+
+        case ShaderProgramType::RayTracing:
+            return "lib_6_3";
         }
     }
 
     //--------------------------------------------------------------------------------------
-    gfx::Shader * ShaderCompiler::compile(API _api, const core::string & _path, const core::string & _entryPoint, ShaderStage _stage, const core::vector<core::pair<core::string, core::uint>> & _macros, string & _warningAndErrors)
+    gfx::Shader * ShaderCompiler::compile(API _api, const core::string & _path, const core::string & _entryPoint, ShaderProgramType _programType, const core::vector<core::pair<core::string, core::uint>> & _macros, string & _warningAndErrors)
     {
         string source;
 
@@ -202,7 +206,7 @@ namespace vg::gfx::dxc
 
             const wstring wfilename = wstring_convert(_path);
             const wstring wEntryPoint = wstring_convert(_entryPoint);
-            const wstring wTargetProfile = wstring_convert(string(getDXCTargetProfile(_stage)));
+            const wstring wTargetProfile = wstring_convert(string(getDXCTargetProfile(_programType)));
 
             IDxcOperationResult * dxcCompileResult = nullptr;
             m_d3d12dxcCompiler->Compile(dxcSource, wfilename.c_str(), wEntryPoint.c_str(), wTargetProfile.c_str(), (LPCWSTR*)args.data(), (uint)args.size(), dxcDefines.data(), (uint)dxcDefines.size(), m_d3d12dxcIncludeHandler, &dxcCompileResult);

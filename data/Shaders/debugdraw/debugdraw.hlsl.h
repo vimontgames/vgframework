@@ -11,10 +11,10 @@ namespace vg::gfx
         {
             setFile("debugdraw/debugdraw.hlsl");
 
-            auto & debugDraw = addTechnique("DebugDraw");
+            auto & debugDraw = addGraphicsTechnique("DebugDraw");
             {
-                debugDraw.vs = addVS("VS_DebugDraw");
-                debugDraw.ps = addPS("PS_DebugDraw");
+                debugDraw.setVertexShader("VS_DebugDraw");
+                debugDraw.setPixelShader("PS_DebugDraw");
             }
         }
     };

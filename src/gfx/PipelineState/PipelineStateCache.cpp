@@ -5,6 +5,7 @@ using namespace vg::core;
 
 #include "Graphic/GraphicPipelineStateCache.hpp"
 #include "Compute/ComputePipelineStateCache.hpp"
+#include "RayTracing/RayTracingPipelineStateCache.hpp"
 
 namespace vg::gfx
 {

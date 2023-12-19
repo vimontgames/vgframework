@@ -93,7 +93,7 @@ namespace vg::renderer
                                 if (_showTooltip)
                                 {
                                     char temp[256];
-                                    sprintf_s(temp, "GameObject \"%s\"\n%s \"%s\" (ID %u)\nSubID = %u\nCounter = %u\nWorldPos = (%.2f, %.2f, %.2f) Depth = %f", go->getName().c_str(), component->getClassName(), component->getName().c_str(), (uint)id.x, (uint)id.y, _view->GetPickingRequestedHitCount(), (float)pos.x, (float)pos.y, (float)pos.z, (float)pos.w);
+                                    sprintf_s(temp, "GameObject \"%s\"\n%s \"%s\" (ID %u)\nSubID = %u\nWorldPos = (%.2f, %.2f, %.2f) Depth = %f", go->getName().c_str(), component->getClassName(), component->getName().c_str(), (uint)id.x, (uint)id.y, (float)pos.x, (float)pos.y, (float)pos.z, (float)pos.w);
                                     _tooltipMsg = temp;
                                 }
 

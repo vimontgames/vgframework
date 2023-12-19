@@ -41,6 +41,7 @@
 #include "shaders/background/background.hlsl.h"
 #include "shaders/postprocess/postprocess.hlsl.h"
 #include "shaders/skinning/skinning.hlsl.h"
+#include "shaders/raytracing/raytracing.hlsl.h"
 
 using namespace vg::core;
 using namespace vg::gfx;
@@ -213,12 +214,19 @@ namespace vg::renderer
         auto * sm = ShaderManager::get();
 
         // TODO: register from parsing 
+
+        // Graphics
         sm->registerHLSL(DriverHLSLDesc());
         sm->registerHLSL(DebugDrawHLSLDesc());
         sm->registerHLSL(DefaultHLSLDesc());
         sm->registerHLSL(BackgroundHLSLDesc());
+
+        // Compute
         sm->registerHLSL(PostProcessHLSLDesc());
         sm->registerHLSL(SkinningHLSLDesc());
+
+        // RayTracing
+        sm->registerHLSL(RayTracingHLSLDesc());
 
         sm->update();
     }

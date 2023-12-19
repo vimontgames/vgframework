@@ -41,6 +41,10 @@ namespace vg::gfx::dx12
 
 		void								dispatch					(core::uint3 _threadGroupCount);
 
+		// RayTracing
+		void								bindRayTracingPipelineState	(gfx::RayTracingPipelineState * _pso);
+		void								dispatchRays				(core::uint3 _threadGroupCount);
+
 		// Copy
 		void                                copyTexture                 (gfx::Texture * _dst, gfx::Buffer * _src, core::uint_ptr _srcOffset);
         void                                copyBuffer                  (gfx::Buffer * _dst, gfx::Buffer * _src, core::uint_ptr _srcOffset);

@@ -1,5 +1,7 @@
 #pragma once
 
+#include "gfx/Shader/Shader_consts.h"
+
 namespace vg::gfx
 {
     class ShaderKey
@@ -30,7 +32,46 @@ namespace vg::gfx
             if (_enable)
                 flags |= value;
             else
-                flags &= value;
+                flags &= ~value;
+        }
+
+        inline EntryPoint getEntryPointIndex(GraphicsStage _stage) const
+        {
+            switch (_stage)
+            {
+                default:
+                    VG_ASSERT_ENUM_NOT_IMPLEMENTED(_stage);
+
+                case GraphicsStage::Vertex:
+                    return vs;
+
+                case GraphicsStage::Hull:
+                    return hs;
+
+                case GraphicsStage::Domain:
+                    return ds;
+
+                case GraphicsStage::Geometry:
+                    return gs;
+
+                case GraphicsStage::Pixel:
+                    return ps;
+            }
+        }
+
+        bool operator == (const ShaderKey & _other) const
+        {
+            return _other.bits == bits;
+        }
+
+        bool operator != (const ShaderKey & _other) const
+        {
+            return _other.bits != bits;
+        }
+
+        inline bool operator < (const ShaderKey & _other) const
+        {
+            return bits < _other.bits;
         }
 
         union
@@ -45,18 +86,8 @@ namespace vg::gfx
                 PS ps;
                 Flags flags;
             };
-            core::u64 bits;
+            core::u64 bits = 0x0;
         };
-
-        bool operator == (const ShaderKey & _other) const
-        {
-            return _other.bits == bits;
-        }
-
-        bool operator != (const ShaderKey & _other) const
-        {
-            return _other.bits != bits;
-        }
 
         struct hash
         {

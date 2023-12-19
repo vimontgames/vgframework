@@ -16,14 +16,10 @@ namespace vg::gfx
 
             setFile("background/background.hlsl");
 
-            auto vsQuad = addVS("VS_Background");
-            auto psQuad = addPS("PS_Gradient");
-
-            auto & quad = addTechnique("Gradient");
+            auto & gradientTechnique = addGraphicsTechnique("Gradient");
             {
-                quad.vs = vsQuad;
-                quad.ps = psQuad;
-                quad.flags = (Flags)0;
+                gradientTechnique.setVertexShader("VS_Background");
+                gradientTechnique.setPixelShader("PS_Gradient");
             }
         }
     };
