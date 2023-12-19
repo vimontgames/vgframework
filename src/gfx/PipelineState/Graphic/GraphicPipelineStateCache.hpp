@@ -52,8 +52,13 @@ namespace vg::gfx
         }
         else
         {
+            const auto startCreatePSO = Timer::getTick();
+
             pso = GraphicPipelineState::createGraphicPipelineState(_key);
             m_graphicPipelineStateHash[_key] = pso;
+
+            if (pso)
+                VG_INFO("[Device] Created Graphics PSO 0x%016X in %.2f ms", pso, Timer::getEnlapsedTime(startCreatePSO, Timer::getTick()));
         }
 
         _graphicPipelineState = pso;
