@@ -32,8 +32,7 @@
 #define PROFILE_BUILD 
 #endif
 
-#include <DirectX-Headers/include/directx/d3d12.h>
-#include <DirectX-Headers/include/directx/d3dx12.h>
+#include <d3d12.h>
 #include <DXGI1_5.h>
 #include <dxgidebug.h>
 
