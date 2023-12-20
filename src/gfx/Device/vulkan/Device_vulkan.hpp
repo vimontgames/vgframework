@@ -1,5 +1,9 @@
 #include "gfx/Device/vulkan/Extension/ExtensionList_vulkan.hpp"
 
+#if !VG_ENABLE_INLINE
+#include "Device_Vulkan.inl"
+#endif
+
 namespace vg::gfx::vulkan
 {
 	using namespace vg::core;
@@ -282,8 +286,10 @@ namespace vg::gfx::vulkan
 
 		m_deviceExtensionList.registerExtension(m_KHR_Swapchain);    
 		m_deviceExtensionList.registerExtension(m_KHR_Deferred_Host_Operations);
+		m_deviceExtensionList.registerExtension(m_KHR_Buffer_Device_Address);
 		m_deviceExtensionList.registerExtension(m_KHR_Acceleration_Structure);
 		m_deviceExtensionList.registerExtension(m_KHR_Ray_Tracing_Pipeline);
+		m_deviceExtensionList.registerExtension(m_KHR_Ray_Query);
 	}
 
     //--------------------------------------------------------------------------------------

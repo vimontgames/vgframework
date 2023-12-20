@@ -40,7 +40,9 @@
     <ClInclude Include="Device\dx12\DeviceCaps_dx12.h" />
     <ClInclude Include="Device\vulkan\DeviceCaps_vulkan.h" />
     <ClInclude Include="Device\vulkan\Extension\Device\KHR_Acceleration_Structure.h" />
+    <ClInclude Include="Device\vulkan\Extension\Device\KHR_Buffer_Device_Address.h" />
     <ClInclude Include="Device\vulkan\Extension\Device\KHR_Deferred_Host_Operations.h" />
+    <ClInclude Include="Device\vulkan\Extension\Device\KHR_Ray_Query.h" />
     <ClInclude Include="Device\vulkan\Extension\Device\KHR_Ray_Tracing_Pipeline.h" />
     <ClInclude Include="Device\vulkan\Extension\Device\KHR_Swapchain.h" />
     <ClInclude Include="Device\vulkan\Extension\ExtensionList_vulkan.h" />
@@ -229,6 +231,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="CommandList\CommandList.inl" />
+    <None Include="Device\vulkan\Device_vulkan.inl" />
     <None Include="FrameGraph\UserPass.inl" />
     <None Include="PipelineState\Compute\dx12\ComputePipelineState_dx12.inl" />
     <None Include="PipelineState\Compute\vulkan\ComputePipelineState_vulkan.inl" />

@@ -576,6 +576,12 @@
     <ClInclude Include="FrameGraph\ResourceTransition.h">
       <Filter>FrameGraph</Filter>
     </ClInclude>
+    <ClInclude Include="Device\vulkan\Extension\Device\KHR_Buffer_Device_Address.h">
+      <Filter>Device\vulkan\Extension\Device</Filter>
+    </ClInclude>
+    <ClInclude Include="Device\vulkan\Extension\Device\KHR_Ray_Query.h">
+      <Filter>Device\vulkan\Extension\Device</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Device">
@@ -741,6 +747,9 @@
     </None>
     <None Include="Resource\Texture.inl">
       <Filter>Resource</Filter>
+    </None>
+    <None Include="Device\vulkan\Device_vulkan.inl">
+      <Filter>Device\vulkan</Filter>
     </None>
   </ItemGroup>
 </Project>

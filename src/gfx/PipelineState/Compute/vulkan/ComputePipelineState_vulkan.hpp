@@ -8,7 +8,7 @@ namespace vg::gfx::vulkan
 {
     //--------------------------------------------------------------------------------------
     ComputePipelineState::ComputePipelineState(const ComputePipelineStateKey & _computeKey) :
-        super::ComputePipelineState(_computeKey)
+        super(_computeKey)
     {
     }
 
