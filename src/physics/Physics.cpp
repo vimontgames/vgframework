@@ -9,6 +9,7 @@
 #include "Character/Character.h"
 #include "Options/PhysicsOptions.h"
 #include "core/Math/Math.h"
+#include "core/Timer/Timer.h"
 
 // Jolt includes
 #include <Jolt/RegisterTypes.h>
@@ -120,6 +121,8 @@ namespace vg::physics
 	//--------------------------------------------------------------------------------------
 	void Physics::Init(const PhysicsCreationParams & _params, Singletons & _singletons)
 	{
+        Timer::init();
+
         // Copy init params
         m_physicsCreationParams = _params;
 
@@ -209,6 +212,17 @@ namespace vg::physics
     renderer::IDebugDraw * Physics::getDebugDraw() const
     {
         return getEngine()->GetRenderer()->GetDebugDraw();
+    }
+
+    //--------------------------------------------------------------------------------------
+    void Physics::OnPlay()
+    {
+        if (m_physicsSystem)
+        {
+            const auto startOptimizeBroadphase = Timer::getTick();
+            m_physicsSystem->OptimizeBroadPhase();
+            VG_INFO("[Physics] Optimize BroadPhase in %.2f ms", Timer::getEnlapsedTime(startOptimizeBroadphase, Timer::getTick()));
+        }
     }
 
 	//--------------------------------------------------------------------------------------
