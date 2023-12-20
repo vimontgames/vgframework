@@ -50,13 +50,8 @@ namespace vg::gfx
         }
         else
         {
-            const auto startCreatePSO = Timer::getTick();
-
             pso = ComputePipelineState::createComputePipelineState(_key);
             m_computePipelineStateHash[_key] = pso;
-            
-            if (pso)
-                VG_INFO("[Device] Created Compute PSO 0x%016X in %.2f ms", pso, Timer::getEnlapsedTime(startCreatePSO, Timer::getTick()));
         }
 
         _computePipelineState = pso;

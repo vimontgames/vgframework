@@ -50,13 +50,8 @@ namespace vg::gfx
         }
         else
         {
-            const auto startCreatePSO = Timer::getTick();
-
             pso = RayTracingPipelineState::createRayTracingPipelineState(_key);
             m_rayTracingPipelineStateHash[_key] = pso;
-
-            if (pso)
-                VG_INFO("[Device] Created RayTracing PSO 0x%016X in %.2f ms", pso, Timer::getEnlapsedTime(startCreatePSO, Timer::getTick()));
         }
 
         _rayTracingPipelineState = pso;

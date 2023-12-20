@@ -30,8 +30,6 @@ namespace vg
             virtual void                Init                (const PhysicsCreationParams & _params, core::Singletons & _singletons) = 0;
             virtual void                Deinit              () = 0;
 
-            virtual void                OnPlay              () = 0;
-
             virtual void                RunOneFrame         (double _dt) = 0;
 
             virtual IPhysicsOptions *   GetOptions          () const = 0;

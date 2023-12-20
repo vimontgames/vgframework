@@ -1,6 +1,5 @@
 #include "gfx/Precomp.h"
 #include "PipelineStateCache.h"
-#include "core/Timer/Timer.h"
 
 using namespace vg::core;
 
