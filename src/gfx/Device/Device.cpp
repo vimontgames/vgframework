@@ -1,5 +1,6 @@
 #include "gfx/Precomp.h"
 #include "Device.h"
+#include "core/Timer/Timer.h"
 #include "gfx/CommandQueue/CommandQueue.h"
 #include "gfx/CommandPool/CommandPool.h"
 #include "gfx/CommandList/CommandList.h"
@@ -252,11 +253,15 @@ namespace vg::gfx
 	//--------------------------------------------------------------------------------------
 	void Device::init(const DeviceParams & _params)
 	{
+        const auto startDeviceInit = Timer::getTick();
+
 		super::init(_params);
 		m_caps.init();
         VG_PROFILE_INIT();
         m_textureImporter = new TextureImporter();
         m_bindlessTable->init();
+
+        VG_INFO("[Device] Init %s device in %0.2f ms", asString(_params.api).c_str(), Timer::getEnlapsedTime(startDeviceInit, Timer::getTick()));
 	}
 
 	//--------------------------------------------------------------------------------------

@@ -134,20 +134,7 @@ namespace vg::gfx
     Shader * ShaderManager::compile(API _api, const core::string & _file, const core::string & _entryPoint, ShaderStage _stage, const vector<pair<string, uint>> & _macros)
     {
         RETRY:
-
-        string msg = "[Shader] Compile " + asString(_stage) + " Shader \"" + _entryPoint + "\"";
-        if (_macros.size() > 0)
-        {
-            msg += " (";
-            for (uint i = 0; i < _macros.size(); ++i)
-            {
-                if (i > 0)
-                    msg += " | ";
-                msg += _macros[i].first;
-            }
-            msg += ")";
-        }
-        VG_INFO(msg.c_str());
+        const auto startLoad = Timer::getTick();
 
         string warningAndErrors;
         Shader * shader = m_shaderCompiler->compile(_api, m_shaderRootPath + _file, _entryPoint, _stage, _macros, warningAndErrors);
@@ -171,7 +158,24 @@ namespace vg::gfx
                 VG_WARNING("[Shader] %s", warningAndErrors.c_str());
         }
 
-        if (!shader)
+        if (shader)
+        {
+            string msg = fmt::sprintf("[Shader] Compiled %s Shader \"%s\"", asString(_stage).c_str(), _entryPoint.c_str());
+
+            if (_macros.size() > 0)
+            {
+                msg += " (";
+                for (uint i = 0; i < _macros.size(); ++i)
+                {
+                    if (i > 0)
+                        msg += " | ";
+                    msg += _macros[i].first;
+                }
+                msg += ")";
+            }
+            VG_INFO("%s in %.2f ms", msg.c_str(), Timer::getEnlapsedTime(startLoad, Timer::getTick()));
+        }
+        else
         {
             warningAndErrors = header + warningAndErrors + "\nPress \"Yes\" to retry";
 
