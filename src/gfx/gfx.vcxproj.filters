@@ -50,9 +50,6 @@
     <ClCompile Include="PipelineState\PipelineStateCache.cpp">
       <Filter>PipelineState</Filter>
     </ClCompile>
-    <ClCompile Include="PipelineState\RayTracing\RayTracingPipelineState.cpp">
-      <Filter>PipelineState\RayTracing</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Precomp.h" />
@@ -579,48 +576,6 @@
     <ClInclude Include="FrameGraph\ResourceTransition.h">
       <Filter>FrameGraph</Filter>
     </ClInclude>
-    <ClInclude Include="PipelineState\RayTracing\RayTracingPipelineState.h">
-      <Filter>PipelineState\RayTracing</Filter>
-    </ClInclude>
-    <ClInclude Include="PipelineState\RayTracing\RayTracingPipelineStateKey.h">
-      <Filter>PipelineState\RayTracing</Filter>
-    </ClInclude>
-    <ClInclude Include="PipelineState\RayTracing\RayTracingPipelineStateKey.hpp">
-      <Filter>PipelineState\RayTracing</Filter>
-    </ClInclude>
-    <ClInclude Include="PipelineState\RayTracing\RayTracingPipelineState_consts.h">
-      <Filter>PipelineState\RayTracing</Filter>
-    </ClInclude>
-    <ClInclude Include="PipelineState\RayTracing\RayTracingPipelineStateCache.h">
-      <Filter>PipelineState\RayTracing</Filter>
-    </ClInclude>
-    <ClInclude Include="PipelineState\RayTracing\RayTracingPipelineStateCache.hpp">
-      <Filter>PipelineState\RayTracing</Filter>
-    </ClInclude>
-    <ClInclude Include="Shader\RayTracingShaderKey.h">
-      <Filter>Shader</Filter>
-    </ClInclude>
-    <ClInclude Include="Shader\RayTracingShaderKey.hpp">
-      <Filter>Shader</Filter>
-    </ClInclude>
-    <ClInclude Include="PipelineState\RayTracing\dx12\RayTracingPipelineState_dx12.h">
-      <Filter>PipelineState\RayTracing\dx12</Filter>
-    </ClInclude>
-    <ClInclude Include="PipelineState\RayTracing\dx12\RayTracingPipelineState_dx12.hpp">
-      <Filter>PipelineState\RayTracing\dx12</Filter>
-    </ClInclude>
-    <ClInclude Include="PipelineState\RayTracing\vulkan\RayTracingPipelineState_vulkan.h">
-      <Filter>PipelineState\RayTracing\vulkan</Filter>
-    </ClInclude>
-    <ClInclude Include="PipelineState\RayTracing\vulkan\RayTracingPipelineState_vulkan.hpp">
-      <Filter>PipelineState\RayTracing\vulkan</Filter>
-    </ClInclude>
-    <ClInclude Include="Device\vulkan\Extension\Device\KHR_Ray_Query.h">
-      <Filter>Device\vulkan\Extension\Device</Filter>
-    </ClInclude>
-    <ClInclude Include="Device\vulkan\Extension\Device\KHR_Buffer_Device_Address.h">
-      <Filter>Device\vulkan\Extension\Device</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Device">
@@ -760,12 +715,6 @@
     </Filter>
     <Filter Include="PipelineState\Compute\vulkan">
       <UniqueIdentifier>{7ef68ac4-c57b-452e-9f4b-2e28544d6c0a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="PipelineState\RayTracing\dx12">
-      <UniqueIdentifier>{ec1e251f-b0e1-440b-a657-350a24171e41}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="PipelineState\RayTracing\vulkan">
-      <UniqueIdentifier>{45fa3470-d839-424c-84a9-25ab3a7c9500}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

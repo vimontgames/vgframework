@@ -53,7 +53,7 @@ namespace vg::gfx
     }
 
     //--------------------------------------------------------------------------------------
-    bool ShaderManager::initGraphicsShaderKey(ShaderKey & _key, const core::string & _file, const core::string & _technique)
+    bool ShaderManager::initShaderKey(ShaderKey & _key, const core::string & _file, const core::string & _technique)
     {
         for (uint i = 0; i < m_shaderFileDescriptors.size(); ++i)
         {
@@ -63,7 +63,7 @@ namespace vg::gfx
             {
                 _key.file = i;
 
-                const auto & techniques = desc.getGraphicsTechniques();
+                const auto & techniques = desc.getTechniques();
                 for (uint j = 0; j < techniques.size(); ++j)
                 {
                     const auto & technique = techniques[j];
@@ -81,7 +81,7 @@ namespace vg::gfx
                     }
                 }
 
-                VG_ASSERT(false, "Graphics Technique \"%s\" not found in file \"%s\"", _technique.c_str(), _file.c_str());
+                VG_ASSERT(false, "Graphic Technique \"%s\" not found in file \"%s\"", _technique.c_str(), _file.c_str());
                 return false;
             }
         }
@@ -101,7 +101,7 @@ namespace vg::gfx
             {
                 _key.file = i;
 
-                const auto & techniques = desc.getComputeTechniques();
+                const auto & techniques = desc.getTechniques();
                 for (uint j = 0; j < techniques.size(); ++j)
                 {
                     const auto & technique = techniques[j];
@@ -125,55 +125,17 @@ namespace vg::gfx
     }
 
     //--------------------------------------------------------------------------------------
-    bool ShaderManager::initRayTracingShaderKey(RayTracingShaderKey & _key, const core::string & _file, const core::string & _technique)
-    {
-        for (uint i = 0; i < m_shaderFileDescriptors.size(); ++i)
-        {
-            const HLSLDesc & desc = m_shaderFileDescriptors[i];
-
-            if (!_file.compare(desc.getFile()))
-            {
-                _key.file = i;
-
-                const auto & techniques = desc.getRayTracingTechniques();
-                for (uint j = 0; j < techniques.size(); ++j)
-                {
-                    const auto & technique = techniques[j];
-
-                    if (!_technique.compare(technique.name))
-                    {
-                        _key.rg = technique.rg;
-                        _key.ah = technique.ah;
-                        _key.ch = technique.ch;
-                        _key.mi = technique.mi;
-                        _key.is = technique.is;
-                        _key.flags = technique.flags;
-
-                        return true;
-                    }
-                }
-
-                VG_ASSERT(false, "RayTracing Technique \"%s\" not found in file \"%s\"", _technique.c_str(), _file.c_str());
-                return false;
-            }
-        }
-
-        VG_ASSERT(false, "File \"%s\" not found", _file.c_str());
-        return false;
-    }
-
-    //--------------------------------------------------------------------------------------
     HLSLDesc * ShaderManager::getHLSLDescriptor(ShaderKey::File _file)
     {
         return &m_shaderFileDescriptors[_file];
     }
 
     //--------------------------------------------------------------------------------------
-    Shader * ShaderManager::compile(API _api, const core::string & _file, const core::string & _entryPoint, ShaderProgramType _programType, const vector<pair<string, uint>> & _macros)
+    Shader * ShaderManager::compile(API _api, const core::string & _file, const core::string & _entryPoint, ShaderStage _stage, const vector<pair<string, uint>> & _macros)
     {
         RETRY:
 
-        string msg = "[Shader] Compile " + asString(_programType) + " Shader \"" + _entryPoint + "\"";
+        string msg = "[Shader] Compile " + asString(_stage) + " Shader \"" + _entryPoint + "\"";
         if (_macros.size() > 0)
         {
             msg += " (";
@@ -188,14 +150,14 @@ namespace vg::gfx
         VG_INFO(msg.c_str());
 
         string warningAndErrors;
-        Shader * shader = m_shaderCompiler->compile(_api, m_shaderRootPath + _file, _entryPoint, _programType, _macros, warningAndErrors);
+        Shader * shader = m_shaderCompiler->compile(_api, m_shaderRootPath + _file, _entryPoint, _stage, _macros, warningAndErrors);
 
         if (shader)
             m_compiledCount++;
         else
             m_errorCount++;
         
-        string header = _file + "\n" + _entryPoint + " (" + asString(_programType) + " shader)\n";
+        string header = _file + "\n" + _entryPoint + " (" + asString(_stage) + " shader)\n";
         for (auto & macro : _macros)
             header += macro.first + " ";
         header += "\n";
@@ -335,7 +297,7 @@ namespace vg::gfx
                         VG_WARNING("[Shader] File \"%s\" updated (old CRC = 0x%016llu, new CRC = 0x%016llu)", file.c_str(), oldCRC, newCRC);
 
                     // delete the shaders
-                    desc.release();
+                    desc.reset();
                     
                     // delete the pso (TODO: L1 cache in cmdlist and L2 global cache using mutex)
                     device->resetShaders(ShaderKey::File(i));

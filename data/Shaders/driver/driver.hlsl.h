@@ -16,22 +16,32 @@ namespace vg::gfx
 
             setFile("driver/driver.hlsl");
 
-            auto & quadTechnique = addGraphicsTechnique("Quad");
+            auto vsQuad = addVS("VS_Quad");
+            auto psQuad = addPS("PS_Quad");
+
+            auto & quad = addTechnique("Quad");
             {
-                quadTechnique.setVertexShader("VS_Quad");
-                quadTechnique.setPixelShader("PS_Quad");
+                quad.vs = vsQuad;
+                quad.ps = psQuad;
+                quad.flags = (Flags)0;
             }
 
-            auto & copyTechnique = addGraphicsTechnique("Copy");
+            auto psCopy = addPS("PS_Copy");
+
+            auto & copy = addTechnique("Copy");
             {
-                copyTechnique.setVertexShader("VS_Quad");
-                copyTechnique.setPixelShader("PS_Copy");
+                copy.vs = vsQuad;
+                copy.ps = psCopy;
+                copy.flags = (Flags)0;
             }
 
-            auto & gamma = addGraphicsTechnique("Gamma");
+            auto psGamma = addPS("PS_Gamma");
+
+            auto & gamma = addTechnique("Gamma");
             {
-                gamma.setVertexShader("VS_Quad");
-                gamma.setPixelShader("PS_Gamma");
+                gamma.vs = vsQuad;
+                gamma.ps = psGamma;
+                gamma.flags = (Flags)0;
             }
         }
     };

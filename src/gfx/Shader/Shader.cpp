@@ -13,7 +13,6 @@ using namespace vg::core;
 #include "HLSLDesc.hpp"
 #include "ShaderKey.hpp"
 #include "ComputeShaderKey.hpp"
-#include "RayTracingShaderKey.hpp"
 
 #include VG_GFXAPI_IMPL(Shader)
 

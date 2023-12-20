@@ -40,9 +40,7 @@
     <ClInclude Include="Device\dx12\DeviceCaps_dx12.h" />
     <ClInclude Include="Device\vulkan\DeviceCaps_vulkan.h" />
     <ClInclude Include="Device\vulkan\Extension\Device\KHR_Acceleration_Structure.h" />
-    <ClInclude Include="Device\vulkan\Extension\Device\KHR_Buffer_Device_Address.h" />
     <ClInclude Include="Device\vulkan\Extension\Device\KHR_Deferred_Host_Operations.h" />
-    <ClInclude Include="Device\vulkan\Extension\Device\KHR_Ray_Query.h" />
     <ClInclude Include="Device\vulkan\Extension\Device\KHR_Ray_Tracing_Pipeline.h" />
     <ClInclude Include="Device\vulkan\Extension\Device\KHR_Swapchain.h" />
     <ClInclude Include="Device\vulkan\Extension\ExtensionList_vulkan.h" />
@@ -58,7 +56,6 @@
     <ClCompile Include="PipelineState\Compute\ComputePipelineState.cpp" />
     <ClCompile Include="PipelineState\Graphic\GraphicPipelineState.cpp" />
     <ClCompile Include="PipelineState\PipelineStateCache.cpp" />
-    <ClCompile Include="PipelineState\RayTracing\RayTracingPipelineState.cpp" />
     <ClCompile Include="Profiler\Profiler.cpp" />
     <ClCompile Include="Resource\Resource.cpp" />
     <ClInclude Include="FrameGraph\ResourceTransition.h" />
@@ -115,16 +112,6 @@
     <ClInclude Include="PipelineState\Graphic\vulkan\SamplerState_vulkan.h" />
     <ClInclude Include="PipelineState\Graphic\vulkan\SamplerState_vulkan.hpp" />
     <ClInclude Include="PipelineState\PipelineStateCache.h" />
-    <ClInclude Include="PipelineState\RayTracing\dx12\RayTracingPipelineState_dx12.h" />
-    <ClInclude Include="PipelineState\RayTracing\dx12\RayTracingPipelineState_dx12.hpp" />
-    <ClInclude Include="PipelineState\RayTracing\RayTracingPipelineState.h" />
-    <ClInclude Include="PipelineState\RayTracing\RayTracingPipelineStateCache.h" />
-    <ClInclude Include="PipelineState\RayTracing\RayTracingPipelineStateCache.hpp" />
-    <ClInclude Include="PipelineState\RayTracing\RayTracingPipelineStateKey.h" />
-    <ClInclude Include="PipelineState\RayTracing\RayTracingPipelineStateKey.hpp" />
-    <ClInclude Include="PipelineState\RayTracing\RayTracingPipelineState_consts.h" />
-    <ClInclude Include="PipelineState\RayTracing\vulkan\RayTracingPipelineState_vulkan.h" />
-    <ClInclude Include="PipelineState\RayTracing\vulkan\RayTracingPipelineState_vulkan.hpp" />
     <ClInclude Include="Profiler\Profiler.h" />
     <ClInclude Include="Resource\Buffer.h" />
     <ClInclude Include="Resource\Buffer.hpp" />
@@ -215,8 +202,6 @@
     <ClInclude Include="Shader\dxc\ShaderCompiler_dxc.hpp" />
     <ClInclude Include="Shader\HLSLDesc.h" />
     <ClInclude Include="Shader\HLSLDesc.hpp" />
-    <ClInclude Include="Shader\RayTracingShaderKey.h" />
-    <ClInclude Include="Shader\RayTracingShaderKey.hpp" />
     <ClInclude Include="Shader\Shader.h" />
     <ClInclude Include="Shader\ShaderCompiler.h" />
     <ClInclude Include="Shader\ShaderCompiler.hpp" />

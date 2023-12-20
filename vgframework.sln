@@ -105,8 +105,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "system", "system", "{34ABDE
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "raytracing", "raytracing", "{5523CE0C-0AA1-4E5F-82C7-85D032949B40}"
 	ProjectSection(SolutionItems) = preProject
-		data\Shaders\raytracing\raytracing.hlsl.h = data\Shaders\raytracing\raytracing.hlsl.h
-		data\Shaders\raytracing\raytracing.hlsl = data\Shaders\raytracing\raytracing.hlsl
 		data\Shaders\raytracing\raytracing.hlsli = data\Shaders\raytracing\raytracing.hlsli
 	EndProjectSection
 EndProject

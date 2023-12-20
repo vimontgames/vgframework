@@ -125,20 +125,4 @@ namespace vg::gfx
         VG_ASSERT(_buffer->getBufDesc().resource.testBindFlags(BindFlags::UnorderedAccess), "Buffer \"%s\" does not have the 'UnorderedAccess' flag");
         super::clearRWBuffer(_buffer, _clearValue);
     }
-
-    //--------------------------------------------------------------------------------------
-    // RayTracing
-    //--------------------------------------------------------------------------------------
-
-    //--------------------------------------------------------------------------------------
-    VG_INLINE void CommandList::setRayTracingRootSignature(const RootSignatureHandle & _rsHandle)
-    {
-        super::setRayTracingRootSignature(_rsHandle);
-    }
-
-    //--------------------------------------------------------------------------------------
-    VG_INLINE void CommandList::setRayTracingShader(const RayTracingShaderKey & _key)
-    {
-        super::setRayTracingShader(_key);
-    }
 }

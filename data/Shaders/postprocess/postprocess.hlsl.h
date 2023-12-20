@@ -16,9 +16,12 @@ namespace vg::gfx
 
             setFile("postprocess/postprocess.hlsl");
 
-            auto & postProcessMainTechnique = addComputeTechnique("PostProcessMainCS");
+            auto csPostProcessMain = addCS("CS_PostProcessMain");
+
+            auto & quad = addTechnique("PostProcessMainCS");
             {
-                postProcessMainTechnique.setComputeShader("CS_PostProcessMain");
+                quad.cs = csPostProcessMain;
+                quad.flags = (Flags)0;
             }
         }
     };

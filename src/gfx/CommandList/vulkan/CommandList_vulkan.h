@@ -41,10 +41,6 @@ namespace vg::gfx::vulkan
 
         void                                dispatch                    (core::uint3 _threadGroupCount);
 
-        // RayTracing
-        void								bindRayTracingPipelineState (gfx::RayTracingPipelineState * _pso);
-        void								dispatchRays                (core::uint3 _threadGroupCount);
-
         // Copy
         void                                copyBuffer                  (gfx::Buffer * _dst, gfx::Buffer * _src, core::uint_ptr _srcOffset);
         void                                copyTexture                 (gfx::Texture * _dst, gfx::Buffer * _src, core::uint_ptr _srcOffset);

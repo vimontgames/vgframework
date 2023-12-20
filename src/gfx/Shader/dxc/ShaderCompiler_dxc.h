@@ -17,8 +17,8 @@ namespace vg::gfx::dxc
         ~ShaderCompiler();
 
     protected:
-        const char * getDXCTargetProfile(ShaderProgramType _programType) const;
-        gfx::Shader * compile(API _api, const core::string & _path, const core::string & _entryPoint, ShaderProgramType _programType, const core::vector<core::pair<core::string, core::uint>> & _macros, core::string & _warningAndErrors);
+        const char * getDXCTargetProfile(ShaderStage _stage) const;
+        gfx::Shader * compile(API _api, const core::string & _path, const core::string & _entryPoint, ShaderStage _stage, const core::vector<core::pair<core::string, core::uint>> & _macros, core::string & _warningAndErrors);
 
     private:
         IDxcLibrary *           m_d3d12dxcLibrary = nullptr;

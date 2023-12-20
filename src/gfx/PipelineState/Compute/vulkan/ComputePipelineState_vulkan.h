@@ -23,7 +23,6 @@ namespace vg::gfx
 
         private:
             VG_INLINE void setVulkanComputePipelineState(const VkPipelineCache & _vkPipelineCache, const VkPipeline & _vkPipeline);
-            static VkShaderStageFlagBits getVulkanShaderStage(ComputeStage _stage);
             static bool createVulkanComputePipelineState(const ComputePipelineStateKey & _computeKey, VkPipelineCache & _vkPipelineCache, VkPipeline & _vkPipeline);
 
         private:

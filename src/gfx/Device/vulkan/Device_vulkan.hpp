@@ -282,10 +282,8 @@ namespace vg::gfx::vulkan
 
 		m_deviceExtensionList.registerExtension(m_KHR_Swapchain);    
 		m_deviceExtensionList.registerExtension(m_KHR_Deferred_Host_Operations);
-		m_deviceExtensionList.registerExtension(m_KHR_Buffer_Device_Address);
 		m_deviceExtensionList.registerExtension(m_KHR_Acceleration_Structure);
 		m_deviceExtensionList.registerExtension(m_KHR_Ray_Tracing_Pipeline);
-		m_deviceExtensionList.registerExtension(m_KHR_Ray_Query);
 	}
 
     //--------------------------------------------------------------------------------------
@@ -399,8 +397,10 @@ namespace vg::gfx::vulkan
 		m_deviceExtensionList.init();
 
 		// Update device caps according to extensions
-		if (m_KHR_Ray_Query.isEnabled() && m_KHR_Ray_Tracing_Pipeline.isEnabled())
-			m_caps.supportRaytracing = true;
+        if (m_KHR_Ray_Tracing_Pipeline.isEnabled())
+            m_caps.supportRaytracing = true;
+        else
+            m_caps.supportRaytracing = false;
 
         #ifdef VG_ENABLE_GPU_MARKER
         VG_ASSERT_VULKAN(m_EXT_DebugUtils.m_pfnCreateDebugUtilsMessengerEXT(m_vkInstance, &dbg_messenger_create_info, nullptr, &m_vkDebugMessenger));

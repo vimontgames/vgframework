@@ -194,21 +194,6 @@ namespace vg::gfx::vulkan
         if (asBool(ShaderStageFlags::CS & _shaderStageFlags))
             flags |= VK_SHADER_STAGE_COMPUTE_BIT;
 
-        if (asBool(ShaderStageFlags::RG & _shaderStageFlags))
-            flags |= VK_SHADER_STAGE_RAYGEN_BIT_KHR;
-
-        if (asBool(ShaderStageFlags::AH & _shaderStageFlags))
-            flags |= VK_SHADER_STAGE_ANY_HIT_BIT_KHR;
-                                                               
-        if (asBool(ShaderStageFlags::CH & _shaderStageFlags))  
-            flags |= VK_SHADER_STAGE_CLOSEST_HIT_BIT_KHR;
-
-        if (asBool(ShaderStageFlags::MI & _shaderStageFlags))
-            flags |= VK_SHADER_STAGE_MISS_BIT_KHR;
-
-        if (asBool(ShaderStageFlags::IS & _shaderStageFlags))
-            flags |= VK_SHADER_STAGE_INTERSECTION_BIT_KHR;
-        
         return flags;
       }
 }

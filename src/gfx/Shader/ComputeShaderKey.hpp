@@ -13,7 +13,7 @@ namespace vg::gfx
     void ComputeShaderKey::clear()
     {
         cs = ComputeShaderKey::CS(-1);
-        flags = ComputeShaderKey::Flags(0x0000);
+        flags = ComputeShaderKey::File(0x0000);
     }
 
     //--------------------------------------------------------------------------------------

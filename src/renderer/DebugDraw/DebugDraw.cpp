@@ -21,7 +21,7 @@ namespace vg::renderer
         const RootSignatureTableDesc & bindlessTable = device->getBindlessTable()->getTableDesc();
 
         RootSignatureDesc rsDesc;
-        rsDesc.addRootConstants(ShaderStageFlags::AllGraphics, 0, 0, DebugDrawRootConstants3DCount);
+        rsDesc.addRootConstants(ShaderStageFlags::All, 0, 0, DebugDrawRootConstants3DCount);
         rsDesc.addTable(bindlessTable);
         
         m_debugDrawSignatureHandle = device->addRootSignature(rsDesc);

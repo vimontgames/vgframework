@@ -680,20 +680,4 @@ namespace vg::gfx::dx12
         PIXEndEvent(getd3d12GraphicsCommandList());
         #endif
     }
-
-    //--------------------------------------------------------------------------------------
-    void CommandList::bindRayTracingPipelineState(gfx::RayTracingPipelineState * _pso)
-    {
-        m_d3d12graphicsCmdList->SetPipelineState1(_pso->getd3d12RayTracingPipelineState());
-    }
-
-    //--------------------------------------------------------------------------------------
-    void CommandList::dispatchRays(core::uint3 _threadGroupCount)
-    {
-        D3D12_DISPATCH_RAYS_DESC dispatchRaysDesc = {};
-        dispatchRaysDesc.Width = _threadGroupCount.x;
-        dispatchRaysDesc.Height = _threadGroupCount.y;
-        dispatchRaysDesc.Depth = _threadGroupCount.z;
-        m_d3d12graphicsCmdList->DispatchRays(&dispatchRaysDesc);
-    }
 }

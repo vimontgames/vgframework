@@ -40,7 +40,7 @@ namespace vg::renderer
         _root3D->setMatID(_index);
         _root3D->setColor(m_albedoColor);
 
-        gfx::ShaderKey key = m_shaderKey[asInteger(_renderContext.m_shaderPass)];
+        auto key = m_shaderKey[asInteger(_renderContext.m_shaderPass)];
 
         RasterizerState rs(FillMode::Solid, CullMode::Back);
 
@@ -62,6 +62,7 @@ namespace vg::renderer
                 _cmdList->setBlendState(bs);
 
                 key.setFlags(gfx::DefaultHLSLDesc::Toolmode, false);
+                key.setFlags(gfx::DefaultHLSLDesc::ZOnly, true);
             }
             break;
 

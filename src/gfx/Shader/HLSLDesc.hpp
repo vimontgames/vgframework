@@ -3,58 +3,18 @@
 namespace vg::gfx
 {
     //--------------------------------------------------------------------------------------
-    void GraphicsPrograms::release()
-    {
-        for (Shader *& shader : m_shaders)
-            VG_SAFE_RELEASE(shader);
-    }
-
-    //--------------------------------------------------------------------------------------
-    void ComputePrograms::release()
-    {
-        for (Shader *& shader : m_shaders)
-            VG_SAFE_RELEASE(shader);
-    }
-
-    //--------------------------------------------------------------------------------------
-    void RayTracingPrograms::release()
-    {
-        for (Shader *& shader : m_shaders)
-            VG_SAFE_RELEASE(shader);
-    }
-
-    //--------------------------------------------------------------------------------------
     HLSLDesc::~HLSLDesc()
     {
         for (uint i = 0; i < countof(m_flagDescs); ++i)
             m_flagDescs[i].clear();
 
-        // Graphics
-        for (uint i = 0; i < countof(m_graphicsEntryPoint); ++i)
-            m_graphicsEntryPoint[i].clear();
+        for (uint i = 0; i < core::enumCount<ShaderStage>(); ++i)
+            m_entryPoint[i].clear();
 
-        m_graphicsTechniques.clear();
+        m_techniques.clear();
 
-        for (auto & pair : m_graphicsVariants)
-            pair.second.release();
-
-        // Compute
-        for (uint i = 0; i < countof(m_computeEntryPoint); ++i)
-            m_computeEntryPoint[i].clear();
-
-        m_computeTechniques.clear();
-
-        for (auto & pair : m_computeVariants)
-            pair.second.release();
-
-        // RayTracing
-        for (uint i = 0; i < countof(m_rayTracingEntryPoint); ++i)
-            m_rayTracingEntryPoint[i].clear();
-
-        m_rayTracingTechniques.clear();
-
-        for (auto & pair : m_rayTracingVariants)
-            pair.second.release();
+        for (auto & pair : m_variants)
+            VG_SAFE_RELEASE(pair.second);
     }
 
     //--------------------------------------------------------------------------------------
@@ -70,13 +30,57 @@ namespace vg::gfx
     }
 
     //--------------------------------------------------------------------------------------
-    // Graphics
-    //--------------------------------------------------------------------------------------
+    ShaderKey::VS HLSLDesc::addVS(const core::string & _vsEntryPoint)
+    {
+        return (ShaderKey::VS)addShader(ShaderStage::Vertex, _vsEntryPoint);
+    }
 
     //--------------------------------------------------------------------------------------
-    ShaderKey::EntryPoint HLSLDesc::addGraphicsEntryPoint(GraphicsStage _stage, const core::string & _entryPoint)
+    ShaderKey::PS HLSLDesc::addPS(const core::string & _psEntryPoint)
     {
-        auto & stageEntryPoints = m_graphicsEntryPoint[asInteger(_stage)];
+        return (ShaderKey::PS)addShader(ShaderStage::Pixel, _psEntryPoint);
+    }
+
+    //--------------------------------------------------------------------------------------
+    ComputeShaderKey::CS HLSLDesc::addCS(const core::string & _csEntryPoint)
+    {
+        return (ComputeShaderKey::CS)addShader(ShaderStage::Compute, _csEntryPoint);
+    }
+
+    //--------------------------------------------------------------------------------------
+    Shader * HLSLDesc::getVS(API _api, ShaderKey::VS _vs, ShaderKey::Flags _flags)
+    {
+        return getShader(_api, ShaderStage::Vertex, _vs, _flags);
+    }    
+
+    //--------------------------------------------------------------------------------------
+    Shader * HLSLDesc::getHS(API _api, ShaderKey::HS _hs, ShaderKey::Flags _flags)
+    {
+        return getShader(_api, ShaderStage::Hull, _hs, _flags);
+    }
+
+    //--------------------------------------------------------------------------------------
+    Shader * HLSLDesc::getDS(API _api, ShaderKey::DS _ds, ShaderKey::Flags _flags)
+    {
+        return getShader(_api, ShaderStage::Domain, _ds, _flags);
+    }
+
+    //--------------------------------------------------------------------------------------
+    Shader * HLSLDesc::getGS(API _api, ShaderKey::GS _gs, ShaderKey::Flags _flags)
+    {
+        return getShader(_api, ShaderStage::Geometry, _gs, _flags);
+    }
+
+    //--------------------------------------------------------------------------------------
+    Shader * HLSLDesc::getPS(API _api, ShaderKey::PS _ps, ShaderKey::Flags _flags)
+    {
+        return getShader(_api, ShaderStage::Pixel, _ps, _flags);
+    }
+
+    //--------------------------------------------------------------------------------------
+    ShaderKey::EntryPoint HLSLDesc::addShader(ShaderStage _stage, const core::string & _entryPoint)
+    {
+        auto & stageEntryPoints = m_entryPoint[asInteger(_stage)];
         
         for (uint i = 0; i < stageEntryPoints.size(); ++i)
         {
@@ -94,206 +98,44 @@ namespace vg::gfx
     }
 
     //--------------------------------------------------------------------------------------
-    VG_INLINE ShaderProgramType getShaderProgramType(GraphicsStage _stage)
+    Shader * HLSLDesc::getShader(API _api, ShaderStage _stage, ShaderKey::EntryPoint _index, ShaderKey::Flags _flags)
     {
-        VG_STATIC_ASSERT(asInteger(ShaderProgramType::Vertex  ) == asInteger(GraphicsStage::Vertex  ), "ShaderProgramType enum does not match GraphicsStage");
-        VG_STATIC_ASSERT(asInteger(ShaderProgramType::Hull    ) == asInteger(GraphicsStage::Hull    ), "ShaderProgramType enum does not match GraphicsStage");
-        VG_STATIC_ASSERT(asInteger(ShaderProgramType::Domain  ) == asInteger(GraphicsStage::Domain  ), "ShaderProgramType enum does not match GraphicsStage");
-        VG_STATIC_ASSERT(asInteger(ShaderProgramType::Geometry) == asInteger(GraphicsStage::Geometry), "ShaderProgramType enum does not match GraphicsStage");
-        VG_STATIC_ASSERT(asInteger(ShaderProgramType::Pixel   ) == asInteger(GraphicsStage::Pixel   ), "ShaderProgramType enum does not match GraphicsStage");
+        auto & entryPoint = m_entryPoint[asInteger(_stage)][_index];
+        
+        VariantKey key(_stage, _index, _flags);
 
-        return (ShaderProgramType)_stage;
-    }
+        auto it = m_variants.find(key);
 
-    //--------------------------------------------------------------------------------------
-    bool HLSLDesc::getGraphicsPrograms(API _api, const ShaderKey & _key, GraphicsPrograms & _programs)
-    {
-        auto it = m_graphicsVariants.find(_key);
-        if (m_graphicsVariants.end() != it)
+        if (m_variants.end() != it)
         {
-            _programs = it->second;
-            bool valid = true;
-
-            for (uint i = 0; i < core::enumCount<GraphicsStage>(); ++i)
-            {
-                const auto stage = (GraphicsStage)i;
-                ShaderKey::EntryPoint index = _key.getEntryPointIndex(stage);
-                if (ShaderKey::EntryPoint(-1) != index)
-                {
-                    if (!_programs.m_shaders[i])
-                    {
-                        valid = false;
-                        break;
-                    }
-                }
-            }
-
-            if (valid)
-                return true;
-            else
-                _programs.release();
+            if (nullptr != it->second)
+                return it->second;
         }
 
         auto * sm = ShaderManager::get();
-        const auto & macros = getShaderMacros(_key.flags);
 
-        for (uint i = 0; i < core::enumCount<GraphicsStage>(); ++i)
-        {
-            const auto stage = (GraphicsStage)i;
-            ShaderKey::EntryPoint index = _key.getEntryPointIndex(stage);
-            if (ShaderKey::EntryPoint(-1) != index)
-            {
-                _programs.m_shaders[i] = sm->compile(_api, m_file, getGraphicsEntryPoint(stage, index), getShaderProgramType(stage), macros);
+        const auto & macros = getShaderMacros(_stage, _flags);
 
-                if (!_programs.m_shaders[i])
-                {
-                    _programs.release();
-                    return false;
-                }
-            }
-        }     
+        auto * shader = sm->compile(_api, m_file, entryPoint, _stage, macros);
 
-        m_graphicsVariants[_key] = _programs;
+        m_variants[key] = shader;
 
-        return true;
+        return shader;
     }
 
     //--------------------------------------------------------------------------------------
-    const string & HLSLDesc::getGraphicsEntryPoint(GraphicsStage _stage, ShaderKey::EntryPoint _index) const
-    {
-        return m_graphicsEntryPoint[asInteger(_stage)][_index];
-    }
-
-    //--------------------------------------------------------------------------------------
-    // Compute
-    //--------------------------------------------------------------------------------------
-    
-    //--------------------------------------------------------------------------------------
-    ComputeShaderKey::EntryPoint HLSLDesc::addComputeEntryPoint(ComputeStage _stage, const core::string & _entryPoint)
-    {
-        auto & stageEntryPoints = m_computeEntryPoint[asInteger(_stage)];
-
-        for (uint i = 0; i < stageEntryPoints.size(); ++i)
-        {
-            const auto & entryPoint = stageEntryPoints[i];
-            if (entryPoint == _entryPoint)
-                return (ShaderKey::EntryPoint)i; // Already exists
-        }
-
-        stageEntryPoints.push_back(_entryPoint);
-        auto index = (ShaderKey::EntryPoint)(stageEntryPoints.size() - 1);
-
-        VG_INFO("[Shader] \"%s\": Add %s Shader \"%s\" (%u)", getFile().c_str(), asString(_stage).c_str(), _entryPoint.c_str(), index);
-
-        return index;
-    }
-
-    //--------------------------------------------------------------------------------------
-    VG_INLINE ShaderProgramType getShaderProgramType(ComputeStage _stage)
-    {
-        VG_STATIC_ASSERT(asInteger(ShaderProgramType::Compute) == asInteger(ComputeStage::Compute) + 5, "ShaderProgramType enum does not match ComputeStage + 5");
-        return (ShaderProgramType)((core::uint)_stage + 5);
-    }
-
-    //--------------------------------------------------------------------------------------
-    bool HLSLDesc::getComputePrograms(API _api, const ComputeShaderKey & _key, ComputePrograms & _programs)
-    {
-        auto it = m_computeVariants.find(_key);
-        if (m_computeVariants.end() != it)
-        {
-            _programs = it->second;
-            bool valid = true;
-
-            for (uint i = 0; i < core::enumCount<ComputeStage>(); ++i)
-            {
-                const auto stage = (ComputeStage)i;
-                ComputeShaderKey::EntryPoint index = _key.getEntryPointIndex(stage);
-                if (ComputeShaderKey::EntryPoint(-1) != index)
-                {
-                    if (!_programs.m_shaders[i])
-                    {
-                        valid = false;
-                        break;
-                    }
-                }
-            }
-
-            if (valid)
-                return true;
-            else
-                _programs.release();
-        }
-
-        auto * sm = ShaderManager::get();
-        const auto & macros = getShaderMacros(_key.flags);
-
-        for (uint i = 0; i < core::enumCount<ComputeStage>(); ++i)
-        {
-            const auto stage = (ComputeStage)i;
-            ComputeShaderKey::EntryPoint index = _key.getEntryPointIndex(stage);
-            if (ComputeShaderKey::EntryPoint(-1) != index)
-            {
-                _programs.m_shaders[i] = sm->compile(_api, m_file, getComputeEntryPoint(stage, index), getShaderProgramType(stage), macros);
-
-                if (!_programs.m_shaders[i])
-                {
-                    _programs.release();
-                    return false;
-                }
-            }
-        }
-
-        m_computeVariants[_key] = _programs;
-
-        return true;
-    }
-
-    //--------------------------------------------------------------------------------------
-    const string & HLSLDesc::getComputeEntryPoint(ComputeStage _stage, ComputeShaderKey::EntryPoint _index) const
-    {
-        return m_computeEntryPoint[asInteger(_stage)][_index];
-    }
-
-    //--------------------------------------------------------------------------------------
-    // RayTracing
-    //--------------------------------------------------------------------------------------
-
-    //--------------------------------------------------------------------------------------
-    RayTracingShaderKey::EntryPoint HLSLDesc::addRayTracingEntryPoint(RayTracingStage _stage, const core::string & _entryPoint)
-    {
-        auto & stageEntryPoints = m_rayTracingEntryPoint[asInteger(_stage)];
-
-        for (uint i = 0; i < stageEntryPoints.size(); ++i)
-        {
-            const auto & entryPoint = stageEntryPoints[i];
-            if (entryPoint == _entryPoint)
-                return (ShaderKey::EntryPoint)i; // Already exists
-        }
-
-        stageEntryPoints.push_back(_entryPoint);
-        auto index = (ShaderKey::EntryPoint)(stageEntryPoints.size() - 1);
-
-        VG_INFO("[Shader] \"%s\": Add %s Shader \"%s\" (%u)", getFile().c_str(), asString(_stage).c_str(), _entryPoint.c_str(), index);
-
-        return index;
-    }
-
-    //--------------------------------------------------------------------------------------
-    ShaderKey::Flags HLSLDesc::declareFlag(uint _index, const core::string & _define)
+    void HLSLDesc::addFlag(uint _index, ShaderStageFlags _stages, const core::string & _define)
     {
         VG_ASSERT(_index < countof(m_flagDescs));
         auto & desc = m_flagDescs[_index];
-        if (!desc.m_define.empty())
-            VG_ASSERT(desc.m_define == _define, "[Shader] Same Flag %u cannot be declared using different names");
-
-        desc = ShaderFlagDesc(_define);
-        return _index << 16;
+        VG_ASSERT((ShaderStageFlags)0x0 == desc.m_stages);
+        desc = ShaderFlagDesc(_stages, _define);
     }
 
     //--------------------------------------------------------------------------------------
     // Build macros from shader key flags
     //--------------------------------------------------------------------------------------
-    core::vector<core::pair<core::string, core::uint>> HLSLDesc::getShaderMacros(ShaderKey::Flags _flags) const
+    core::vector<core::pair<core::string, core::uint>> HLSLDesc::getShaderMacros(ShaderStage _stage, ShaderKey::Flags _flags) const
     {
         core::vector<core::pair<core::string, core::uint>> macros;
 
@@ -313,60 +155,24 @@ namespace vg::gfx
     }
 
     //--------------------------------------------------------------------------------------
-    HLSLDesc::GraphicsTechnique & HLSLDesc::addGraphicsTechnique(const core::string & _name)
+    HLSLDesc::Technique & HLSLDesc::addTechnique(const core::string & _name)
     {
-        auto & technique = m_graphicsTechniques.push_empty();
-        technique.desc = this;
+        m_techniques.push_back({});
+        Technique & technique = m_techniques.back();
         technique.name = _name;
         return technique;
     }
 
     //--------------------------------------------------------------------------------------
-    const core::vector<HLSLDesc::GraphicsTechnique> & HLSLDesc::getGraphicsTechniques() const
+    const core::vector<HLSLDesc::Technique> & HLSLDesc::getTechniques() const
     {
-        return m_graphicsTechniques;
+        return m_techniques;
     }
 
     //--------------------------------------------------------------------------------------
-    HLSLDesc::ComputeTechnique & HLSLDesc::addComputeTechnique(const core::string & _name)
+    void HLSLDesc::reset()
     {
-        auto & technique = m_computeTechniques.push_empty();
-        technique.desc = this;
-        technique.name = _name;
-        return technique;
-    }
-
-    //--------------------------------------------------------------------------------------
-    const core::vector<HLSLDesc::ComputeTechnique> & HLSLDesc::getComputeTechniques() const
-    {
-        return m_computeTechniques;
-    }
-
-    //--------------------------------------------------------------------------------------
-    HLSLDesc::RayTracingTechnique & HLSLDesc::addRayTracingTechnique(const core::string & _name)
-    {
-        auto & technique = m_rayTracingTechniques.push_empty();
-        technique.desc = this;
-        technique.name = _name;
-        return technique;
-    }
-
-    //--------------------------------------------------------------------------------------
-    const core::vector<HLSLDesc::RayTracingTechnique> & HLSLDesc::getRayTracingTechniques() const
-    {
-        return m_rayTracingTechniques;
-    }
-
-    //--------------------------------------------------------------------------------------
-    void HLSLDesc::release()
-    {
-        for (auto & pair : m_graphicsVariants)
-            pair.second.release();
-
-        for (auto & pair : m_computeVariants)
-            pair.second.release();
-
-        for (auto & pair : m_rayTracingVariants)
-            pair.second.release();
+        for (auto & pair : m_variants)
+            VG_SAFE_RELEASE(pair.second);
     }
 }
