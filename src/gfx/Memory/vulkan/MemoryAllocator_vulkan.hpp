@@ -1,5 +1,5 @@
 #define VMA_IMPLEMENTATION
-#include "VulkanMemoryAllocator/src/vk_mem_alloc.h"
+#include "VulkanMemoryAllocator/include/vk_mem_alloc.h"
 
 namespace vg::gfx::vulkan
 {

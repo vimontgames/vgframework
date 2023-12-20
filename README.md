@@ -68,10 +68,10 @@ First run might take a few seconds because files are cooking.
  
 ## command-line args
 
-| Argument		| Type			| Description													| Default
-| ------------- | ------------- | ------------------------------------------------------------- | ------
-| play			| bool			| Start application with play mode running						| false
-| fullscreen	| bool			| Start application with game view maximized instead of editor	| false
+| Argument		| Type			| Default	| Description													
+| ------------- | ------------- | ---------	| ------------------------------------------------------------- 
+| play			| bool			| false		| Start application with play mode running						
+| fullscreen	| bool			| false		| Start application with game view maximized instead of editor	
 
 ## keyboard shortcuts
 
@@ -162,7 +162,7 @@ https://github.com/leethomason/tinyxml2
 UFBX\
 https://github.com/ufbx/ufbx
 
-Vulkan Memory Allocator\
+Vulkan Memory Allocator 3.0.1\
 https://github.com/GPUOpen-LibrariesAndSDKs/VulkanMemoryAllocator
 
 WinPixEventRuntime 1.0.200127001\

@@ -102,7 +102,7 @@ namespace vg::editor
                 { "stb_image",              "",                 "https://github.com/nothings/stb" },
                 { "tinyXML2",               "e45d9d1",          "https://github.com/leethomason/tinyxml2" },
                 { "UFBX",                   "0.5.0-30f035b",    "https://github.com/ufbx/ufbx" },
-                { "VulkanMemoryAllocator",  "",                 "https://github.com/GPUOpen-LibrariesAndSDKs/VulkanMemoryAllocator" },
+                { "VulkanMemoryAllocator",  "3.0.1",            "https://github.com/GPUOpen-LibrariesAndSDKs/VulkanMemoryAllocator" },
                 { "WinPixEventRuntime",     "1.0.200127001",    "https://www.nuget.org/packages/WinPixEventRuntime" },
             };
 

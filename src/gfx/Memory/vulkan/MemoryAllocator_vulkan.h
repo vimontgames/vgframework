@@ -1,7 +1,6 @@
 #pragma once
 
 #include "gfx/Memory/MemoryAllocator.h"
-#include "VulkanMemoryAllocator/src/vk_mem_alloc.h"
 
 namespace vg::gfx::vulkan
 {
