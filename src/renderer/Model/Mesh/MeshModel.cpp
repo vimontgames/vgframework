@@ -3,10 +3,12 @@
 #include "MeshModel.h"
 #include "gfx/Device/Device.h"
 #include "gfx/Resource/Buffer.h"
+#include "gfx/Raytracing/BLAS.h"
 #include "renderer/Geometry/Mesh/MeshGeometry.h"
 #include "renderer/Geometry/Vertex/VertexFormat.h"
 #include "renderer/Importer/SceneImporterData.h"
 #include "renderer/Animation/Skeleton.h"
+#include "renderer/RayTracing/RayTracingManager.h"
 
 using namespace vg::core;
 using namespace vg::gfx;
@@ -38,6 +40,11 @@ namespace vg::renderer
     {
         VG_SAFE_RELEASE(m_geometry); 
         VG_SAFE_RELEASE(m_skeleton);
+        VG_SAFE_RELEASE(m_blas);
+
+        auto * rtManager = RayTracingManager::get(false);
+        if (rtManager)
+            rtManager->removeMeshModel(this);
     }
 
     //--------------------------------------------------------------------------------------
@@ -197,6 +204,24 @@ namespace vg::renderer
         //    meshModel->m_materials.push_back(matModel);
         //}
 
+        RayTracingManager::get()->addMeshModel(meshModel);
+
         return meshModel;
+    }
+
+    //--------------------------------------------------------------------------------------
+    void MeshModel::setBLAS(BLAS * _blas)
+    {
+        if (m_blas != _blas)
+        {
+            VG_SAFE_RELEASE(m_blas);
+            m_blas = _blas;
+        }
+    }
+
+    //--------------------------------------------------------------------------------------
+    gfx::BLAS * MeshModel::getBLAS() const 
+    { 
+        return m_blas; 
     }
 }

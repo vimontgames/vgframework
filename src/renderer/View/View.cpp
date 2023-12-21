@@ -4,6 +4,7 @@
 #include "core/IInput.h"
 #include "gfx/ITexture.h"
 #include "gfx/Resource/Buffer.h"
+#include "gfx/Raytracing/TLAS.h"
 #include "renderer/Renderer.h"
 #include "renderer/Job/Culling/ViewCullingJob.h"
 #include "renderer/RenderPass/Update/ViewConstants/ViewConstantsUpdatePass.h"
@@ -31,14 +32,6 @@ namespace vg::renderer
         m_size = _params.size;
         m_offset = _params.offset;
 
-        //m_viewInv = float4x4
-        //(
-        //    1.0f, 0.0f, 0.0f, 0.0f,
-        //    0.0f, 1.0f, 0.0f, 0.0f,
-        //    0.0f, 0.0f, -1.0f, 0.0f,
-        //    0.0f, 0.0f, -1.0f, 1.0f
-        //);
-
         SetWorld(_params.world);
 
         if (_params.dest)
@@ -60,6 +53,7 @@ namespace vg::renderer
         VG_SAFE_RELEASE(m_renderTarget);
         VG_SAFE_RELEASE(m_cullingJob);
         VG_SAFE_RELEASE(m_viewConstantsUpdatePass);
+        VG_SAFE_RELEASE(m_tlas);
     }
 
     //--------------------------------------------------------------------------------------
@@ -294,6 +288,28 @@ namespace vg::renderer
     bool View::IsToolmode() const 
     {
         return isToolmode();
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool View::IsUsingRayTracing() const
+    {
+        return false;
+    }
+
+    //--------------------------------------------------------------------------------------
+    void View::setTLAS(gfx::TLAS * _tlas)
+    {
+        if (_tlas != m_tlas)
+        {
+            VG_SAFE_RELEASE(m_tlas)
+                m_tlas = _tlas;
+        }
+    }
+
+    //--------------------------------------------------------------------------------------
+    gfx::TLAS * View::getTLAS() const
+    {
+        return m_tlas;
     }
 
     //--------------------------------------------------------------------------------------

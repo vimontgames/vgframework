@@ -6,6 +6,7 @@
 namespace vg::gfx
 {
     class Buffer;
+    class BLAS;
 }
 
 namespace vg::renderer
@@ -28,13 +29,17 @@ namespace vg::renderer
         void                            setSkeleton             (Skeleton * _skeleton);
         const Skeleton *                getSkeleton             () const;
 
+        void                            setBLAS                 (gfx::BLAS * _blas);
+        gfx::BLAS *                     getBLAS                 () const;
+
         static MeshModel *              createFromImporterData  (const MeshImporterData & _data);
 
     private:
         template <VertexFormat F> static gfx::Buffer * createVertexBufferFromImporterData(const MeshImporterData & _data);
 
     private:
-        MeshGeometry *                  m_geometry = nullptr;
-        Skeleton *                      m_skeleton = nullptr;
+        MeshGeometry *                  m_geometry  = nullptr;
+        Skeleton *                      m_skeleton  = nullptr;
+        gfx::BLAS *                     m_blas      = nullptr;
     };
 }

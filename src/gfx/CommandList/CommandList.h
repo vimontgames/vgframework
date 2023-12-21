@@ -132,6 +132,9 @@ namespace vg::gfx
         VG_INLINE void                  transitionResource          (gfx::Texture * _texture, ResourceState _before, ResourceState _after);
         VG_INLINE void                  transitionResource          (gfx::Buffer * _buffer, ResourceState _before, ResourceState _after);
 
+        VG_INLINE void                  addRWTextureBarrier         (gfx::Texture * _texture);
+        VG_INLINE void                  addRWBufferBarrier          (gfx::Buffer * _buffer);
+
         VG_INLINE Map                   map                         (gfx::Buffer * _buffer);
         VG_INLINE void                  unmap                       (gfx::Buffer * _buffer, void * VG_RESTRICT _data = nullptr);
 

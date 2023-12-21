@@ -2,6 +2,7 @@
 #include "core/Object/AutoRegisterClass.h"
 #include "core/Object/EnumHelper.h"
 #include "renderer/Renderer.h"
+#include "renderer/RayTracing/RayTracingManager.h"
 
 using namespace vg::core;
 
@@ -55,6 +56,10 @@ namespace vg::renderer
             const auto backgroundColor = m_backgroundColor;
             m_backgroundColor = (float4)0.0f;
             setBackgroundColor(backgroundColor);
+        }
+        else if (!strcmp(name, "m_renderPassFlags"))
+        {
+            RayTracingManager::get()->enableRayTracing(asBool(RenderPassFlags::RayTracing & m_renderPassFlags));
         }
     }
 

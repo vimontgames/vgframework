@@ -16,6 +16,7 @@ namespace vg::renderer
     class ImGuiAdapter;
     class FBXImporter;
     class ComputeSkinningPass;
+    class BLASUpdatePass;
     class ImGuiPass;
     class MeshModel;
     class MaterialModel;
@@ -117,6 +118,7 @@ namespace vg::renderer
         FBXImporter *                           m_fbxImporter           = nullptr;
         View *                                  m_mainView              = nullptr;
         ComputeSkinningPass *                   m_computeSkinningPass   = nullptr;
+        BLASUpdatePass *                        m_BLASUpdatePass        = nullptr;
         ImGuiPass *                             m_imguiPass             = nullptr; 
         core::vector<View *>                    m_views[core::enumCount<gfx::ViewTarget>()];
         IPicking *                              m_picking               = nullptr;

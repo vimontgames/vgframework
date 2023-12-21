@@ -9,8 +9,8 @@ namespace vg::core
 	public:
 		CmdLine(const string & _string);
 
-		string getString(const string & _key) const;
-		bool getBool(const string & _key) const;
+		bool getString(const string & _key, string & _value) const;
+		bool getBool(const string & _key, bool & _value) const;
 
 	private:
 		map<string, string> m_args;

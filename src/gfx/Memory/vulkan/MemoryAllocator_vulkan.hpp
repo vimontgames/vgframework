@@ -18,6 +18,12 @@ namespace vg::gfx::vulkan
         allocatorInfo.pAllocationCallbacks = nullptr;
         allocatorInfo.pDeviceMemoryCallbacks = nullptr;
 
+        allocatorInfo.flags = 0x0;
+
+        // RayTracing acceleration structure require device address
+        if (device->getDeviceCaps().supportRayTracing)
+            allocatorInfo.flags |= VMA_ALLOCATOR_CREATE_BUFFER_DEVICE_ADDRESS_BIT;
+
         vmaCreateAllocator(&allocatorInfo, &m_vkAllocator);
     }
 

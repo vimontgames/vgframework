@@ -45,6 +45,9 @@
     <ClCompile Include="DebugDraw\DebugDraw.cpp">
       <Filter>DebugDraw</Filter>
     </ClCompile>
+    <ClCompile Include="RayTracing\RayTracingManager.cpp">
+      <Filter>RayTracing</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Renderer.def" />
@@ -332,6 +335,21 @@
       <Filter>Pass\Compute\ComputeSkinning</Filter>
     </ClInclude>
     <ClInclude Include="IRendererOptions.h" />
+    <ClInclude Include="RayTracing\RayTracingManager.h">
+      <Filter>RayTracing</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderPass\Update\TLAS\TLASUpdatePass.h">
+      <Filter>Pass\Update\TLAS</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderPass\Update\TLAS\TLASUpdatePass.hpp">
+      <Filter>Pass\Update\TLAS</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderPass\Update\BLAS\BLASUpdatePass.h">
+      <Filter>Pass\Update\BLAS</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderPass\Update\BLAS\BLASUpdatePass.hpp">
+      <Filter>Pass\Update\BLAS</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Pass">
@@ -459,6 +477,15 @@
     </Filter>
     <Filter Include="Pass\Compute\ComputeSkinning">
       <UniqueIdentifier>{f241c194-4b05-4c17-ba48-f7472c055a95}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="RayTracing">
+      <UniqueIdentifier>{a83c956c-dce0-4a80-8dcb-14a5d035e281}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Pass\Update\TLAS">
+      <UniqueIdentifier>{bd0d9e6b-f244-4afb-9cc2-53891220d228}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Pass\Update\BLAS">
+      <UniqueIdentifier>{8147a6d2-d59b-43be-902e-1b73af511564}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

@@ -35,6 +35,8 @@ using namespace vg::gfx;
 
 #include "Update/UpdatePass.hpp"
 #include "Update/ViewConstants/ViewConstantsUpdatePass.hpp"
+#include "Update/TLAS/TLASUpdatePass.hpp"
+#include "Update/BLAS/BLASUpdatePass.hpp"
 
 #include "RayTracing/RayTracingPass.hpp"
 #include "RayTracing/Test/TestRayTracingPass.hpp"

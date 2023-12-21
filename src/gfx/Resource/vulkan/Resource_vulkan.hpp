@@ -29,20 +29,22 @@ namespace vg::gfx::vulkan
     }
 
     //--------------------------------------------------------------------------------------
-    void Resource::setVulkanImage(const VkImage & _vkImage, const VmaAllocation & _vmaAlloc)
+    void Resource::setVulkanImage(const VkImage & _vkImage, const VmaAllocation & _vmaAlloc, VkDeviceAddress _vkDeviceAddress)
     {
         m_resourceType = ResourceType::Texture;
         m_vkImage = _vkImage;
         m_vma_alloc = _vmaAlloc;
+        m_vkDeviceAddress = _vkDeviceAddress;
     }
 
     //--------------------------------------------------------------------------------------
-    void Resource::setVulkanBuffer(const VkBuffer & _vkBuffer, const VmaAllocation & _vmaAlloc, const VmaAllocationInfo & _vmaAllocInfo)
+    void Resource::setVulkanBuffer(const VkBuffer & _vkBuffer, const VmaAllocation & _vmaAlloc, const VmaAllocationInfo & _vmaAllocInfo, VkDeviceAddress _vkDeviceAddress)
     {
         m_resourceType = ResourceType::Buffer;
         m_vkBuffer = _vkBuffer;
         m_vma_alloc = _vmaAlloc;
         m_vmaAllocInfo = _vmaAllocInfo;
+        m_vkDeviceAddress = _vkDeviceAddress;
     }
 
     //--------------------------------------------------------------------------------------

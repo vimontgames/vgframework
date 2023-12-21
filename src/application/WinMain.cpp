@@ -196,8 +196,20 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
     #ifdef VG_DEBUG
     engineParams.renderer.device.debugDevice = true;
     engineParams.renderer.device.breakOnErrors = true;
-    engineParams.renderer.device.breakOnWarnings = true;
+    engineParams.renderer.device.breakOnWarnings = false;
     #endif
+
+	bool debugDevice;
+	if (cmdLine.getBool("debugDevice", debugDevice))
+		engineParams.renderer.device.debugDevice = debugDevice;
+
+    bool breakOnErrors;
+    if (cmdLine.getBool("breakOnErrors", breakOnErrors))
+        engineParams.renderer.device.breakOnErrors = breakOnErrors;
+
+    bool breakOnWarnings;
+    if (cmdLine.getBool("breakOnWarnings", breakOnWarnings))
+        engineParams.renderer.device.breakOnWarnings = breakOnWarnings;
 
     engineParams.renderer.device.window = g_hWnd;
     engineParams.renderer.device.instance = hInstance;
@@ -216,22 +228,27 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
 	SetWindowTextA(g_hWnd, title.c_str());
 
+	// MessageBox at application start
+	bool attachDebugger;
+	if (cmdLine.getBool("attachDebugger", attachDebugger) && attachDebugger)
+		vg::core::messageBox(vg::core::MessageBoxIcon::Info, vg::core::MessageBoxType::OK, "attach=true", "You can attach debugger now");
+
     // Start in play mode?
-    bool play = cmdLine.getBool("play");
-    if (play)
+	bool play;
+	if (cmdLine.getBool("play", play) && play)
         g_engine->Play();
 
     // Start maximized?
-    bool fullscreen = cmdLine.getBool("fullscreen");
-    if (fullscreen)
-        g_engine->GetRenderer()->SetFullscreen(true);
+	bool fullscreen;
+    if (cmdLine.getBool("fullscreen", fullscreen) && fullscreen)
+		g_engine->GetRenderer()->SetFullscreen(true);
 
 	// Command-line override or world name from config
-	core::string world = cmdLine.getString("world");
-	if (world.empty())
+	core::string world;
+	if (!cmdLine.getString("world", world))
 		world = g_engine->GetOptions()->GetStartWorld();
-	if (!world.empty())
-		g_engine->LoadWorld(world);
+    if (!world.empty())
+        g_engine->LoadWorld(world);
 
 	while (!processSystemMessage() && !g_engine->IsQuitting())
 		app->Update();

@@ -58,26 +58,38 @@ namespace vg::core
 	}
 
 	//--------------------------------------------------------------------------------------
-	string CmdLine::getString(const string & _key) const
+	bool CmdLine::getString(const string & _key, string & _value) const
 	{
 		auto it = m_args.find(_key);
 		if (m_args.end() != it)
-			return it->second;
-
-		VG_WARNING("[CmdLine] Could not find key \"%s\" is command-line", _key.c_str());
-		return "";
+		{
+			_value = it->second;
+			return true;
+		}
+		else
+		{
+			_value = "";
+			VG_INFO("[CmdLine] Could not find \"%s\" in command-line", _key.c_str());
+			return false;
+		}
 	}
 
     //--------------------------------------------------------------------------------------
-	bool CmdLine::getBool(const string & _key) const
+	bool CmdLine::getBool(const string & _key, bool & _value) const
 	{
-		string value = getString(_key);
-		if (core::tolower(value) == "true" || value == "1")
+		string s;
+		if (getString(_key, s))
+		{
+			if (core::tolower(s) == "true" || s == "1")
+				_value = true;
+
+			if (core::tolower(s) == "false" || s == "0")
+				_value = false;
+
 			return true;
+		}
 
-		if (core::tolower(value) == "false" || value == "0")
-			return false;
-
+		_value = false;
 		return false;
 	}
 }

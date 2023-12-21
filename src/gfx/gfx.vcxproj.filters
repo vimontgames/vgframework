@@ -50,6 +50,9 @@
     <ClCompile Include="PipelineState\PipelineStateCache.cpp">
       <Filter>PipelineState</Filter>
     </ClCompile>
+    <ClCompile Include="Raytracing\RayTracing.cpp">
+      <Filter>RayTracing</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Precomp.h" />
@@ -582,6 +585,45 @@
     <ClInclude Include="Device\vulkan\Extension\Device\KHR_Ray_Query.h">
       <Filter>Device\vulkan\Extension\Device</Filter>
     </ClInclude>
+    <ClInclude Include="Raytracing\RayTracing_consts.h">
+      <Filter>RayTracing</Filter>
+    </ClInclude>
+    <ClInclude Include="Raytracing\vulkan\BLAS_vulkan.h">
+      <Filter>RayTracing\vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="Raytracing\vulkan\BLAS_vulkan.hpp">
+      <Filter>RayTracing\vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="Raytracing\dx12\BLAS_dx12.h">
+      <Filter>RayTracing\dx12</Filter>
+    </ClInclude>
+    <ClInclude Include="Raytracing\dx12\BLAS_dx12.hpp">
+      <Filter>RayTracing\dx12</Filter>
+    </ClInclude>
+    <ClInclude Include="Raytracing\TLAS.h">
+      <Filter>RayTracing</Filter>
+    </ClInclude>
+    <ClInclude Include="Raytracing\TLAS.hpp">
+      <Filter>RayTracing</Filter>
+    </ClInclude>
+    <ClInclude Include="Raytracing\BLAS.h">
+      <Filter>RayTracing</Filter>
+    </ClInclude>
+    <ClInclude Include="Raytracing\BLAS.hpp">
+      <Filter>RayTracing</Filter>
+    </ClInclude>
+    <ClInclude Include="Raytracing\dx12\TLAS_dx12.h">
+      <Filter>RayTracing\dx12</Filter>
+    </ClInclude>
+    <ClInclude Include="Raytracing\dx12\TLAS_dx12.hpp">
+      <Filter>RayTracing\dx12</Filter>
+    </ClInclude>
+    <ClInclude Include="Raytracing\vulkan\TLAS_vulkan.h">
+      <Filter>RayTracing\vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="Raytracing\vulkan\TLAS_vulkan.hpp">
+      <Filter>RayTracing\vulkan</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Device">
@@ -721,6 +763,15 @@
     </Filter>
     <Filter Include="PipelineState\Compute\vulkan">
       <UniqueIdentifier>{7ef68ac4-c57b-452e-9f4b-2e28544d6c0a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="RayTracing">
+      <UniqueIdentifier>{bc7e2280-2715-46ce-b524-5ea18af8a43f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="RayTracing\dx12">
+      <UniqueIdentifier>{e2c19d7a-a940-4d98-95ac-b029ac3df547}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="RayTracing\vulkan">
+      <UniqueIdentifier>{5a1fc7c6-4638-4c15-8f06-b45b5d5c97d3}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

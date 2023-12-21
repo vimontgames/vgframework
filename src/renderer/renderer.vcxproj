@@ -36,6 +36,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_DX12|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_Vulkan|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="RayTracing\RayTracingManager.cpp" />
     <ClCompile Include="Renderer.cpp" />
     <ClCompile Include="RenderPass\ImGui\ImGuiPass.cpp" />
     <ClCompile Include="RenderPass\RenderPass.cpp" />
@@ -111,6 +112,7 @@
     <ClInclude Include="Pass\Pass.h" />
     <ClInclude Include="Picking\PickingManager.h" />
     <ClInclude Include="Precomp.h" />
+    <ClInclude Include="RayTracing\RayTracingManager.h" />
     <ClInclude Include="Renderer.h" />
     <ClInclude Include="Renderer_consts.h" />
     <ClInclude Include="RenderPass\Compute\ComputePass.h" />
@@ -144,6 +146,10 @@
     <ClInclude Include="RenderPass\RenderObjects\RenderObjectsPass.h" />
     <ClInclude Include="RenderPass\RenderObjects\RenderObjectsPass.hpp" />
     <ClInclude Include="RenderPass\RenderPass.h" />
+    <ClInclude Include="RenderPass\Update\BLAS\BLASUpdatePass.h" />
+    <ClInclude Include="RenderPass\Update\BLAS\BLASUpdatePass.hpp" />
+    <ClInclude Include="RenderPass\Update\TLAS\TLASUpdatePass.h" />
+    <ClInclude Include="RenderPass\Update\TLAS\TLASUpdatePass.hpp" />
     <ClInclude Include="RenderPass\Update\UpdatePass.h" />
     <ClInclude Include="RenderPass\Update\UpdatePass.hpp" />
     <ClInclude Include="RenderPass\Update\ViewConstants\ViewConstantsUpdatePass.h" />

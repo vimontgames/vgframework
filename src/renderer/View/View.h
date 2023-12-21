@@ -17,6 +17,7 @@ namespace vg::gfx
     struct RenderPassContext;
     class FrameGraph;
     class Buffer;
+    class TLAS;
 }
 
 namespace vg::renderer
@@ -73,7 +74,12 @@ namespace vg::renderer
         core::uint2                         GetRelativeMousePos         () const override;
 
         const core::string                  GetFrameGraphID             (const core::string & _name) const final override;
+
         bool                                IsToolmode                  () const override;
+        bool                                IsUsingRayTracing           () const override;
+
+        void                                setTLAS                     (gfx::TLAS * _tlas);
+        gfx::TLAS *                         getTLAS                     () const;
 
         void                                SetPickingData              (const PickingData & _pickingData) override;
         virtual const PickingHit &          GetPickingHit               (core::uint _index) const override;
@@ -132,6 +138,8 @@ namespace vg::renderer
         core::uint2                         m_mouseOffset;
         PickingData                         m_rawPickingData;
         core::vector<PickingHit>            m_pickingHits;
+
+        gfx::TLAS * m_tlas = nullptr;
 
     public:
         ViewCullingJobOutput                m_cullingJobResult;

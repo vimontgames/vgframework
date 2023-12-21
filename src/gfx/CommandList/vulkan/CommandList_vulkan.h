@@ -52,10 +52,16 @@ namespace vg::gfx::vulkan
         void                                transitionResource          (gfx::Texture * _texture, ResourceState _before, ResourceState _after);
         void                                transitionResource          (gfx::Buffer * _buffer, ResourceState _before, ResourceState _after);
 
+        void								addRWTextureBarrier         (gfx::Texture * _texture);
+        void								addRWBufferBarrier          (gfx::Buffer * _buffer);
+
         void								clearRWBuffer               (gfx::Buffer * _buffer, core::uint _clearValue);
 
-        void                                beginGPUEvent(const char * _name, core::u32 _color);
-        void                                endGPUEvent();
+        void                                beginGPUEvent               (const char * _name, core::u32 _color);
+        void                                endGPUEvent                 ();
+
+        // KHR_Acceleration_Structure extension device funcs
+        void							    buildAccelerationStructures(core::u32 _infoCount, const VkAccelerationStructureBuildGeometryInfoKHR * _infos, const VkAccelerationStructureBuildRangeInfoKHR * const * _buildRangeInfos);
 
 		VkCommandBuffer &					getVulkanCommandBuffer      () { return m_vkCommandBuffer;  }
 

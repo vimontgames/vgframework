@@ -60,6 +60,9 @@ namespace vg::gfx::dx12
 		void								transitionResource			(gfx::Texture * _texture, ResourceState _before, ResourceState _after);
 		void								transitionResource			(gfx::Buffer * _buffer, ResourceState _before, ResourceState _after);
 
+		void								addRWTextureBarrier			(gfx::Texture * _texture);
+		void								addRWBufferBarrier			(gfx::Buffer * _buffer);
+
         static D3D12_PRIMITIVE_TOPOLOGY     getd3d12PrimitiveTopology   (PrimitiveTopology _topology);
 
 	private:

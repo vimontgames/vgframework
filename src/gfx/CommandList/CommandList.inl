@@ -94,6 +94,18 @@ namespace vg::gfx
     }
 
     //--------------------------------------------------------------------------------------
+    VG_INLINE void CommandList::addRWTextureBarrier(gfx::Texture * _texture)
+    {
+        super::addRWTextureBarrier(_texture);
+    }
+
+    //--------------------------------------------------------------------------------------
+    VG_INLINE void CommandList::addRWBufferBarrier(gfx::Buffer * _buffer)
+    {
+        super::addRWBufferBarrier(_buffer);
+    }
+
+    //--------------------------------------------------------------------------------------
     VG_INLINE Map CommandList::map(gfx::Buffer * _buffer)
     {
         return super::map(_buffer);

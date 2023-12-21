@@ -20,55 +20,63 @@ namespace vg::gfx::vulkan
 		using super = base::Device;
 
 	public:
-		void							init							(const DeviceParams & _params);
-		void							deinit							();
+		void							init								(const DeviceParams & _params);
+		void							deinit								();
 
-        void                            resize                          (core::uint _width, core::uint _height);
+        void                            resize								(core::uint _width, core::uint _height);
 
-		void							beginFrame						();
-		void							endFrame						();
+		void							beginFrame							();
+		void							endFrame							();
 
-        void                            waitGPUIdle                     ();
-        void							setVSync						(VSync mode);
+        void                            waitGPUIdle							();
+        void							setVSync							(VSync mode);
 
-		VkInstance &					getVulkanInstance				();
-		VkDevice &						getVulkanDevice					();
-		VkPhysicalDevice &				getVulkanPhysicalDevice			();
-        VmaAllocator &                  getVulkanMemoryAllocator        ();
+		VkInstance &					getVulkanInstance					();
+		VkDevice &						getVulkanDevice						();
+		VkPhysicalDevice &				getVulkanPhysicalDevice				();
+        VmaAllocator &                  getVulkanMemoryAllocator			();
 
-		bool							onDebugMessage					(VkDebugUtilsMessageSeverityFlagBitsEXT _severity, VkDebugUtilsMessageTypeFlagsEXT _flags, const VkDebugUtilsMessengerCallbackDataEXT * _data);
+		bool							onDebugMessage						(VkDebugUtilsMessageSeverityFlagBitsEXT _severity, VkDebugUtilsMessageTypeFlagsEXT _flags, const VkDebugUtilsMessengerCallbackDataEXT * _data);
 
-		core::u32						getVulkanCommandQueueFamilyIndex(CommandQueueType _type) const;
+		core::u32						getVulkanCommandQueueFamilyIndex	(CommandQueueType _type) const;
        
-        VkRenderPass                    getVulkanRenderPass             (const RenderPassKey & _key);
-        core::uint                      releaseVulkanRenderPass         (const RenderPassKey & _key, VkRenderPass & _vkRenderPass);
+        VkRenderPass                    getVulkanRenderPass					(const RenderPassKey & _key);
+        core::uint                      releaseVulkanRenderPass				(const RenderPassKey & _key, VkRenderPass & _vkRenderPass);
 
-		VG_INLINE VkDescriptorSet		getVulkanBindlessDescriptors	() const ;
+		VG_INLINE VkDescriptorSet		getVulkanBindlessDescriptors		() const ;
 
-        static const char *             getVulkanErrorString            (VkResult _vkResult);
+		// KHR_Acceleration_Structure extension device funcs
+        void							getAccelerationStructureBuildSizes(VkAccelerationStructureBuildTypeKHR _buildType, const VkAccelerationStructureBuildGeometryInfoKHR * _buildInfo, const uint32_t * _maxPrimitiveCounts, VkAccelerationStructureBuildSizesInfoKHR * _sizeInfo);
+		VkResult						createAccelerationStructure			(const VkAccelerationStructureCreateInfoKHR * _createInfo, const VkAllocationCallbacks * _allocator, VkAccelerationStructureKHR * _accelerationStructure);
+        void							destroyAccelerationStructure		(VkAccelerationStructureKHR _accelerationStructure, const VkAllocationCallbacks * _allocator);
+        
+		// KHR_Buffer_Device_Address extension device funcs
+		VkDeviceAddress					getBufferDeviceAddress				(const VkBufferDeviceAddressInfo * _info);
+
+        static const char *             getVulkanErrorString				(VkResult _vkResult);
 
 	private:
-		void							registerExtensions				(const DeviceParams & _params);
+		void							registerExtensions					(const DeviceParams & _params);
 
-		void							createVulkanDevice				();
-		void							createSwapchain					();
-        void							destroySwapchain				();
-		void							createCommandQueues				();
+		void							createVulkanDevice					();
+		void							createSwapchain						();
+        void							destroySwapchain					();
+		void							createCommandQueues					();
 
-        PixelFormat                     detectBackbufferFormat          ();
+        PixelFormat                     detectBackbufferFormat				();
 
-        void                            initSamplerStates               ();
+        void                            initSamplerStates					();
 
-		static Severity					getSeverity						(VkDebugUtilsMessageSeverityFlagBitsEXT _severity, const VkDebugUtilsMessengerCallbackDataEXT * _data = nullptr);
-		static const char *				getVulkanObjectTypeName			(VkObjectType _type);
+		static Severity					getSeverity							(VkDebugUtilsMessageSeverityFlagBitsEXT _severity, const VkDebugUtilsMessengerCallbackDataEXT * _data = nullptr);
+		static const char *				getVulkanObjectTypeName				(VkObjectType _type);
 
-        bool                            enableInstanceLayer             (const char * _layerName);
+        bool                            enableInstanceLayer					(const char * _layerName);
 
-        void                            createVulkanBackbuffers         ();
-        void                            destroyVulkanBackbuffers        ();
-        VG_INLINE VkSwapchainKHR        getVulkanSwapchain              () const;
+        void                            createVulkanBackbuffers				();
+        void                            destroyVulkanBackbuffers			();
+        VG_INLINE VkSwapchainKHR        getVulkanSwapchain					() const;
 
-		static VkPresentModeKHR			VSyncToVkPresentModeKHR			(VSync mode);
+		static VkPresentModeKHR			VSyncToVkPresentModeKHR				(VSync mode);
        
 	private:
 			VkInstance					m_vkInstance;

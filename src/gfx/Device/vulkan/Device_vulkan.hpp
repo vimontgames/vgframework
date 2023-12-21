@@ -404,9 +404,12 @@ namespace vg::gfx::vulkan
 
 		// Update device caps according to extensions
         if (m_KHR_Ray_Tracing_Pipeline.isEnabled())
-            m_caps.supportRaytracing = true;
+            m_caps.supportRayTracing = true;
         else
-            m_caps.supportRaytracing = false;
+            m_caps.supportRayTracing = false;
+
+		if (m_KHR_Buffer_Device_Address.isEnabled())
+			m_caps.supportDeviceAddress = true;
 
         #ifdef VG_ENABLE_GPU_MARKER
         VG_ASSERT_VULKAN(m_EXT_DebugUtils.m_pfnCreateDebugUtilsMessengerEXT(m_vkInstance, &dbg_messenger_create_info, nullptr, &m_vkDebugMessenger));
@@ -414,8 +417,7 @@ namespace vg::gfx::vulkan
 
 		vkGetPhysicalDeviceProperties(m_vkPhysicalDevice, &m_vkPhysicalDeviceProperties);
 
-		// Query fine-grained feature support for this device.
-		//  If app has specific feature requirements it should check supported features based on this query
+		// Query feature support for this device
 		VkPhysicalDeviceFeatures physDevFeatures;
 		vkGetPhysicalDeviceFeatures(m_vkPhysicalDevice, &physDevFeatures);
 
@@ -890,54 +892,96 @@ namespace vg::gfx::vulkan
 								queues[0].pQueuePriorities = queue_priorities;
 								queues[0].flags = 0;
 
-		VkPhysicalDeviceVulkan12Features vulkan12SupportedFeatures = {};
-										 vulkan12SupportedFeatures.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_2_FEATURES;
+		// TODO : clean this mess and declared chained structs only once
+
+		//VkPhysicalDeviceBufferDeviceAddressFeatures bufferDeviceAddressSupportedFeatures = {};
+		//bufferDeviceAddressSupportedFeatures.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_BUFFER_DEVICE_ADDRESS_FEATURES;
+		//bufferDeviceAddressSupportedFeatures.pNext = nullptr;
 
         VkPhysicalDeviceDescriptorIndexingFeatures descriptorIndexingSupportedFeatures = {};
-                                                   descriptorIndexingSupportedFeatures.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_INDEXING_FEATURES;
-												   descriptorIndexingSupportedFeatures.pNext = &vulkan12SupportedFeatures;
+		descriptorIndexingSupportedFeatures.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_INDEXING_FEATURES;
+		descriptorIndexingSupportedFeatures.pNext = nullptr; // &bufferDeviceAddressSupportedFeatures;
+
+		VkPhysicalDeviceAccelerationStructureFeaturesKHR accelerationStructureSupportedFeatures = {};
+		accelerationStructureSupportedFeatures.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_ACCELERATION_STRUCTURE_FEATURES_KHR;
+		accelerationStructureSupportedFeatures.pNext = &descriptorIndexingSupportedFeatures;
+
+        VkPhysicalDeviceVulkan12Features vulkan12SupportedFeatures = {};
+        vulkan12SupportedFeatures.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_2_FEATURES;
+        vulkan12SupportedFeatures.pNext = &accelerationStructureSupportedFeatures;
 
         VkPhysicalDeviceFeatures2 supportedFeatures = {};
-                                  supportedFeatures.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2;
-                                  supportedFeatures.pNext = &descriptorIndexingSupportedFeatures;
+		supportedFeatures.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2;
+		supportedFeatures.pNext = &vulkan12SupportedFeatures;
 
         vkGetPhysicalDeviceFeatures2(m_vkPhysicalDevice, &supportedFeatures);
 
+        VkPhysicalDeviceAccelerationStructurePropertiesKHR accelerationStructureProps = {};
+		accelerationStructureProps.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_ACCELERATION_STRUCTURE_PROPERTIES_KHR;
+		accelerationStructureProps.pNext = nullptr;
+
+		VkPhysicalDeviceProperties2 physicalDeviceProps;
+		physicalDeviceProps.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PROPERTIES_2;
+		physicalDeviceProps.pNext = &accelerationStructureProps;
+
+		vkGetPhysicalDeviceProperties2(m_vkPhysicalDevice, &physicalDeviceProps);
+
+		// Query RayTracing acceleration structure alignment
+        if (m_caps.supportRayTracing)
+            m_caps.rayTracingAccelerationStructureScratchOffsetAlignment = accelerationStructureProps.minAccelerationStructureScratchOffsetAlignment;
+
+        //VkPhysicalDeviceBufferDeviceAddressFeatures bufferDeviceAddressFeatures = {};
+        //bufferDeviceAddressFeatures.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_BUFFER_DEVICE_ADDRESS_FEATURES;
+        //bufferDeviceAddressFeatures.pNext = nullptr;
+
+        //VkPhysicalDeviceDescriptorIndexingFeatures descriptorIndexingFeatures = {};
+		//descriptorIndexingFeatures.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_INDEXING_FEATURES;
+		//descriptorIndexingFeatures.pNext = &bufferDeviceAddressFeatures;
+
+		VkPhysicalDeviceAccelerationStructureFeaturesKHR accelerationStructureFeatures = {};
+        accelerationStructureFeatures.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_ACCELERATION_STRUCTURE_FEATURES_KHR;
+		accelerationStructureFeatures.pNext = nullptr; // &bufferDeviceAddressFeatures; // &descriptorIndexingFeatures;
+
         VkPhysicalDeviceVulkan12Features vulkan12Features = {};
-                                         vulkan12Features.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_2_FEATURES;
-										 vulkan12Features.pNext = nullptr;
+        vulkan12Features.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_2_FEATURES;
+        vulkan12Features.pNext = &accelerationStructureFeatures;
 
-		#define CheckVulkanFeature(supported, destination, name)	if (!supported.name)																		\
-																	{																							\
-																		VG_ASSERT(supported.name, "\"%s\" is not supported by Vulkan device", #name);				\
-																		destination.name = false;																\
-																	}																							\
-																	else																						\
-																	{																							\
-																		VG_INFO("[Device] Feature \"%s\" is enabled", #name);							\
-																		destination.name = true;																\
-																	}
+		#define CheckVulkanFeature(supported, destination, name, value)	if (!supported.name)																		\
+																		{																							\
+																			VG_ASSERT(supported.name, "\"%s\" is not supported by Vulkan device", #name);			\
+																			destination.name = value;																\
+																		}																							\
+																		else																						\
+																		{																							\
+																			VG_INFO("[Device] Feature \"%s\" is enabled", #name);									\
+																			destination.name = value;																\
+																		}
 
-		CheckVulkanFeature(vulkan12SupportedFeatures, vulkan12Features, descriptorIndexing);
-		CheckVulkanFeature(vulkan12SupportedFeatures, vulkan12Features, descriptorBindingPartiallyBound);
-		CheckVulkanFeature(vulkan12SupportedFeatures, vulkan12Features, shaderSampledImageArrayNonUniformIndexing);
-		//CheckVulkanFeature(vulkan12SupportedFeatures, vulkan12Features, shaderInputAttachmentArrayDynamicIndexing);
-		//CheckVulkanFeature(vulkan12SupportedFeatures, vulkan12Features, shaderInputAttachmentArrayNonUniformIndexing);
-		CheckVulkanFeature(vulkan12SupportedFeatures, vulkan12Features, shaderUniformTexelBufferArrayDynamicIndexing);
-		CheckVulkanFeature(vulkan12SupportedFeatures, vulkan12Features, runtimeDescriptorArray);
-		CheckVulkanFeature(vulkan12SupportedFeatures, vulkan12Features, shaderStorageImageArrayNonUniformIndexing);
-		CheckVulkanFeature(vulkan12SupportedFeatures, vulkan12Features, descriptorBindingUpdateUnusedWhilePending);   
-		CheckVulkanFeature(vulkan12SupportedFeatures, vulkan12Features, descriptorBindingUniformBufferUpdateAfterBind);
-		CheckVulkanFeature(vulkan12SupportedFeatures, vulkan12Features, descriptorBindingSampledImageUpdateAfterBind);
-		CheckVulkanFeature(vulkan12SupportedFeatures, vulkan12Features, descriptorBindingStorageImageUpdateAfterBind);
-		CheckVulkanFeature(vulkan12SupportedFeatures, vulkan12Features, descriptorBindingStorageBufferUpdateAfterBind);
-		CheckVulkanFeature(vulkan12SupportedFeatures, vulkan12Features, descriptorBindingUniformTexelBufferUpdateAfterBind);
-		CheckVulkanFeature(vulkan12SupportedFeatures, vulkan12Features, descriptorBindingStorageTexelBufferUpdateAfterBind);
+		CheckVulkanFeature(vulkan12SupportedFeatures, vulkan12Features, descriptorIndexing, true);
+		CheckVulkanFeature(vulkan12SupportedFeatures, vulkan12Features, descriptorBindingPartiallyBound, true);
+		CheckVulkanFeature(vulkan12SupportedFeatures, vulkan12Features, shaderSampledImageArrayNonUniformIndexing, true);
+		//CheckVulkanFeature(vulkan12SupportedFeatures, vulkan12Features, shaderInputAttachmentArrayDynamicIndexing, true);
+		//CheckVulkanFeature(vulkan12SupportedFeatures, vulkan12Features, shaderInputAttachmentArrayNonUniformIndexing, true);
+		CheckVulkanFeature(vulkan12SupportedFeatures, vulkan12Features, shaderUniformTexelBufferArrayDynamicIndexing, true);
+		CheckVulkanFeature(vulkan12SupportedFeatures, vulkan12Features, runtimeDescriptorArray, true);
+		CheckVulkanFeature(vulkan12SupportedFeatures, vulkan12Features, shaderStorageImageArrayNonUniformIndexing, true);
+		CheckVulkanFeature(vulkan12SupportedFeatures, vulkan12Features, descriptorBindingUpdateUnusedWhilePending, true);
+		CheckVulkanFeature(vulkan12SupportedFeatures, vulkan12Features, descriptorBindingUniformBufferUpdateAfterBind, true);
+		CheckVulkanFeature(vulkan12SupportedFeatures, vulkan12Features, descriptorBindingSampledImageUpdateAfterBind, true);
+		CheckVulkanFeature(vulkan12SupportedFeatures, vulkan12Features, descriptorBindingStorageImageUpdateAfterBind, true);
+		CheckVulkanFeature(vulkan12SupportedFeatures, vulkan12Features, descriptorBindingStorageBufferUpdateAfterBind, true);
+		CheckVulkanFeature(vulkan12SupportedFeatures, vulkan12Features, descriptorBindingUniformTexelBufferUpdateAfterBind, true);
+		CheckVulkanFeature(vulkan12SupportedFeatures, vulkan12Features, descriptorBindingStorageTexelBufferUpdateAfterBind, true);
+
+		CheckVulkanFeature(vulkan12SupportedFeatures, vulkan12Features, bufferDeviceAddress, true);
+
+		if (m_caps.supportRayTracing)
+			CheckVulkanFeature(accelerationStructureSupportedFeatures, accelerationStructureFeatures, accelerationStructure, true)
 
         VkPhysicalDeviceFeatures enabledFeatures = {};
-		CheckVulkanFeature(supportedFeatures.features, enabledFeatures, fillModeNonSolid);
-		CheckVulkanFeature(supportedFeatures.features, enabledFeatures, fragmentStoresAndAtomics);
-		//CheckVulkanFeature(supportedFeatures.features, enabledFeatures, textureCompressionETC2);
+		CheckVulkanFeature(supportedFeatures.features, enabledFeatures, fillModeNonSolid, true);
+		CheckVulkanFeature(supportedFeatures.features, enabledFeatures, fragmentStoresAndAtomics, true);
+		//CheckVulkanFeature(supportedFeatures.features, enabledFeatures, textureCompressionETC2, true);
 
 		VkDeviceCreateInfo deviceCreateInfo; 
 						   deviceCreateInfo.sType = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO;
@@ -1334,4 +1378,40 @@ namespace vg::gfx::vulkan
 			#endif
 		}
     }
+
+    //--------------------------------------------------------------------------------------
+	// KHR_Acceleration_Structure extension funcs
+	//--------------------------------------------------------------------------------------
+
+	//--------------------------------------------------------------------------------------
+    void Device::getAccelerationStructureBuildSizes(VkAccelerationStructureBuildTypeKHR _buildType, const VkAccelerationStructureBuildGeometryInfoKHR * _buildInfo, const uint32_t * _maxPrimitiveCounts, VkAccelerationStructureBuildSizesInfoKHR * _sizeInfo)
+    {
+        VG_ASSERT(m_KHR_Acceleration_Structure.m_pfnGetAccelerationStructureBuildSizesKHR);
+        m_KHR_Acceleration_Structure.m_pfnGetAccelerationStructureBuildSizesKHR(m_vkDevice, _buildType, _buildInfo, _maxPrimitiveCounts, _sizeInfo);
+    }
+
+    //--------------------------------------------------------------------------------------
+    VkResult Device::createAccelerationStructure(const VkAccelerationStructureCreateInfoKHR * _createInfo, const VkAllocationCallbacks * _allocator, VkAccelerationStructureKHR * _accelerationStructure)
+	{
+		VG_ASSERT(m_KHR_Acceleration_Structure.m_pfnCreateAccelerationStructureKHR);
+		return m_KHR_Acceleration_Structure.m_pfnCreateAccelerationStructureKHR(m_vkDevice, _createInfo, _allocator, _accelerationStructure);
+	}
+
+    //--------------------------------------------------------------------------------------
+	void Device::destroyAccelerationStructure(VkAccelerationStructureKHR _accelerationStructure, const VkAllocationCallbacks * _allocator)
+	{
+		VG_ASSERT(m_KHR_Acceleration_Structure.m_pfnDestroyAccelerationStructureKHR);
+		m_KHR_Acceleration_Structure.m_pfnDestroyAccelerationStructureKHR(m_vkDevice, _accelerationStructure, _allocator);
+	}
+
+    //--------------------------------------------------------------------------------------
+    // KHR_Buffer_Device_Address extension funcs
+    //--------------------------------------------------------------------------------------
+
+	//--------------------------------------------------------------------------------------
+    VkDeviceAddress Device::getBufferDeviceAddress(const VkBufferDeviceAddressInfo * _info)
+	{
+		VG_ASSERT(m_KHR_Buffer_Device_Address.m_pfnGetBufferDeviceAddressKHR);
+		return m_KHR_Buffer_Device_Address.m_pfnGetBufferDeviceAddressKHR(m_vkDevice, _info);
+	}
 }

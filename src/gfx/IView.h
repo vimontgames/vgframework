@@ -125,7 +125,9 @@ namespace vg::gfx
         virtual core::uint2             GetRelativeMousePos         () const = 0;
 
         virtual const core::string      GetFrameGraphID             (const core::string & _name) const = 0;
+
         virtual bool                    IsToolmode                  () const = 0;
+        virtual bool                    IsUsingRayTracing           () const = 0;
       
         virtual void                    SetPickingData              (const PickingData & _pickingData) = 0;
         virtual const PickingHit &      GetPickingHit               (core::uint _index) const = 0;

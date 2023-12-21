@@ -7,6 +7,7 @@
 #include "renderer/RenderPass/RayTracing/Test/TestRayTracingPass.h"
 #include "renderer/RenderPass/Compute/ComputePostProcess/ComputePostProcessPass.h"
 #include "renderer/RenderPass/Render2D/FinalBlit/FinalBlitPass.h"
+#include "renderer/RenderPass/Update/TLAS/TLASUpdatePass.h"
 
 #include "renderer/Options/RendererOptions.h"
 
@@ -25,7 +26,8 @@ namespace vg::renderer
         m_editorPass = new EditorPass();
         m_testRayTracingPass = new TestRayTracingPass();
         m_computePostProcessPass = new ComputePostProcessPass();
-        m_finalBlitPass = new FinalBlitPass();        
+        m_finalBlitPass = new FinalBlitPass();  
+        m_TLASUpdatePass = new TLASUpdatePass();
     }
 
     //--------------------------------------------------------------------------------------
@@ -37,7 +39,14 @@ namespace vg::renderer
         VG_SAFE_RELEASE(m_editorPass);
         VG_SAFE_RELEASE(m_testRayTracingPass);
         VG_SAFE_RELEASE(m_computePostProcessPass);
-        VG_SAFE_RELEASE(m_finalBlitPass);        
+        VG_SAFE_RELEASE(m_finalBlitPass);   
+        VG_SAFE_RELEASE(m_TLASUpdatePass);
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool ForwardView::IsUsingRayTracing() const
+    {
+        return RendererOptions::get()->isRayTracingEnabled();
     }
 
     //--------------------------------------------------------------------------------------
@@ -51,26 +60,25 @@ namespace vg::renderer
 
         const auto options = RendererOptions::get();
 
-        if (options->isRayTracingEnabled())
+        _frameGraph.addUserPass(_renderPassContext, m_backgroundPass, "BackgroundPass");
+
+        if (options->isZPrepassEnabled())
+            _frameGraph.addUserPass(_renderPassContext, m_depthPrePass, "DepthPrepass");
+
+        _frameGraph.addUserPass(_renderPassContext, m_forwardPass, "ForwardPass");
+
+        if (_renderPassContext.m_view->IsToolmode())
+            _frameGraph.addUserPass(_renderPassContext, m_editorPass, "EditorPass");
+
+        if (options->isPostProcessEnabled())
+            _frameGraph.addUserPass(_renderPassContext, m_computePostProcessPass, "ComputePostProcessPass");
+
+        if (_renderPassContext.m_view->IsUsingRayTracing())
         {
+            _frameGraph.addUserPass(_renderPassContext, m_TLASUpdatePass, "TLASUpdatePass");
             _frameGraph.addUserPass(_renderPassContext, m_testRayTracingPass, "TestRayTracingPass");
         }
-        else
-        {
-            _frameGraph.addUserPass(_renderPassContext, m_backgroundPass, "BackgroundPass");
 
-            if (options->isZPrepassEnabled())
-                _frameGraph.addUserPass(_renderPassContext, m_depthPrePass, "DepthPrepass");
-
-            _frameGraph.addUserPass(_renderPassContext, m_forwardPass, "ForwardPass");
-
-            if (_renderPassContext.m_view->IsToolmode())
-                _frameGraph.addUserPass(_renderPassContext, m_editorPass, "EditorPass");
-
-            if (options->isPostProcessEnabled())
-                _frameGraph.addUserPass(_renderPassContext, m_computePostProcessPass, "ComputePostProcessPass");
-
-            _frameGraph.addUserPass(_renderPassContext, m_finalBlitPass, "FinalBlitPass");
-        }
+        _frameGraph.addUserPass(_renderPassContext, m_finalBlitPass, "FinalBlitPass");
     }
 }

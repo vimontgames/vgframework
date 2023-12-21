@@ -60,6 +60,7 @@
 
 #include "VulkanMemoryAllocator/include/vk_mem_alloc.h"
 
+#pragma message("TODO : rename VG_ASSERT_VULKAN to VG_VERIFY_VULKAN")
 #define VG_ASSERT_VULKAN(f) { VkResult err = f; VG_ASSERT(err == VK_SUCCESS, "%s\n\n%s", #f, Device::getVulkanErrorString(err)); }
 
 #endif // VG_VULKAN

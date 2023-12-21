@@ -72,6 +72,7 @@ namespace vg::core
 				tempBuffer[0] = '\0';
 			}
             VG_ERROR("[Assert] %s", msg.c_str());
+            VG_DEBUGPRINT("%s\n", msg.c_str());
             
             string title;
             string text;
@@ -176,17 +177,21 @@ namespace vg::core
                 break;  
         }
 
-        switch (MessageBoxA(nullptr, _message, _title, type | icon))
+        auto result = MessageBoxA(nullptr, _message, _title, type | icon);
+        switch (result)
         {
             default:
-                VG_ASSERT(false);
-
-            case IDRETRY:
-                return MessageBoxResult::Retry;
+            case IDABORT:
+            case IDIGNORE:
+                VG_ASSERT(false, "MessageBox result %u not implemented", result);
 
             case IDCANCEL:
                 return MessageBoxResult::Cancel;
 
+            case IDRETRY:
+                return MessageBoxResult::Retry;
+                
+            case IDOK:
             case IDYES:
                 return MessageBoxResult::Yes;
 

@@ -81,7 +81,7 @@ namespace vg::gfx
     //--------------------------------------------------------------------------------------
     void Profiler::start()
     {
-        VG_DEBUGPRINT("Start profile capture\n");
+        VG_INFO("[Profiler] Start capture");
         m_isCaptureInProgress = true;
         OPTICK_START_CAPTURE();
     }
@@ -91,7 +91,7 @@ namespace vg::gfx
     {
         m_isCaptureInProgress = false;
         OPTICK_STOP_CAPTURE();
-        VG_DEBUGPRINT("Stop profile capture\n");
+        VG_INFO("[Profiler] Stop capture");
         time_t now = time(0);
 		struct tm tstruct;
         #if defined(OPTICK_MSVC)

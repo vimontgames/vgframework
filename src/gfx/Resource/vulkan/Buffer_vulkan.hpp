@@ -43,18 +43,46 @@ namespace vg::gfx::vulkan
                 break;
         }
 
-        if (asBool(_bufDesc.resource.m_bindFlags & BindFlags::IndexBuffer))
+        if (_bufDesc.testBindFlags(BindFlags::IndexBuffer))
             vkBufferCreate.usage |= VK_BUFFER_USAGE_INDEX_BUFFER_BIT;
 
-        if (asBool(_bufDesc.resource.m_bindFlags & BindFlags::UnorderedAccess))
+        if (_bufDesc.testBindFlags(BindFlags::UnorderedAccess))
             vkBufferCreate.usage |= VK_BUFFER_USAGE_STORAGE_BUFFER_BIT | VK_BUFFER_USAGE_STORAGE_TEXEL_BUFFER_BIT;
+
+        if (_bufDesc.testBindFlags(BindFlags::RaytracingAccelerationStruct))
+            vkBufferCreate.usage |= VK_BUFFER_USAGE_ACCELERATION_STRUCTURE_STORAGE_BIT_KHR;
+        else if (device->getDeviceCaps().supportRayTracing)
+            vkBufferCreate.usage |= VK_BUFFER_USAGE_ACCELERATION_STRUCTURE_BUILD_INPUT_READ_ONLY_BIT_KHR;
+
+        if (device->getDeviceCaps().supportDeviceAddress)
+            vkBufferCreate.usage |= VK_BUFFER_USAGE_SHADER_DEVICE_ADDRESS_BIT;
 
         VkBuffer vkBuffer;
         VmaAllocation vmaAlloc;
         VmaAllocationInfo vmaAllocInfo = {};
-        VG_ASSERT_VULKAN(vmaCreateBuffer(device->getVulkanMemoryAllocator(), &vkBufferCreate, &allocCreateInfo, &vkBuffer, &vmaAlloc, &vmaAllocInfo));
 
-        m_resource.setVulkanBuffer(vkBuffer, vmaAlloc, vmaAllocInfo);
+        uint alignment = _bufDesc.getAlignment();
+
+        if (alignment == 0)
+        {
+            VG_ASSERT_VULKAN(vmaCreateBuffer(device->getVulkanMemoryAllocator(), &vkBufferCreate, &allocCreateInfo, &vkBuffer, &vmaAlloc, &vmaAllocInfo));
+        }
+        else
+        {
+            VG_ASSERT_VULKAN(vmaCreateBufferWithAlignment(device->getVulkanMemoryAllocator(), &vkBufferCreate, &allocCreateInfo, (VkDeviceSize)alignment, &vkBuffer, &vmaAlloc, &vmaAllocInfo));
+        }
+
+        VkDeviceAddress vkDeviceAddress = VkDeviceAddress(-1);
+        if (VK_BUFFER_USAGE_SHADER_DEVICE_ADDRESS_BIT & vkBufferCreate.usage)
+        {
+            VkBufferDeviceAddressInfo bufferAddressInfo = {};
+            bufferAddressInfo.sType = VK_STRUCTURE_TYPE_BUFFER_DEVICE_ADDRESS_INFO;
+            bufferAddressInfo.pNext = nullptr;
+            bufferAddressInfo.buffer = vkBuffer;
+            vkDeviceAddress = device->getBufferDeviceAddress(&bufferAddressInfo);
+        }
+
+        m_resource.setVulkanBuffer(vkBuffer, vmaAlloc, vmaAllocInfo, vkDeviceAddress);
 
         if (_bufDesc.testBindFlags(BindFlags::ShaderResource | BindFlags::IndexBuffer))
         {

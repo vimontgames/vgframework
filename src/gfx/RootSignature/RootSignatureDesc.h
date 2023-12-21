@@ -42,6 +42,6 @@ namespace vg::gfx
         core::vector<PushConstantParams>        m_pushConstants;
         core::vector<RootSignatureTableDesc>    m_tables;
         core::uint                              m_rayTracingOutputUAVCount = 0;
-        core::uint                              m_rayTracingAccellerationStructureCount = 0;
+        core::uint                              m_rayTracingAccelerationStructureCount = 0;
     };
 }

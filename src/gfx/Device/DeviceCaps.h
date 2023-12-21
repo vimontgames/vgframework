@@ -12,6 +12,7 @@ namespace vg::gfx
     public:
 		void init();
 
-        bool supportRaytracing = false;
+        bool supportRayTracing = false;
+        core::uint rayTracingAccelerationStructureScratchOffsetAlignment = 0;
     };
 }

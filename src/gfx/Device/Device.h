@@ -87,6 +87,8 @@ namespace vg::gfx
             gfx::PixelFormat                                getBackbufferFormat         () const { return m_backbufferFormat; }
             gfx::ShaderManager *                            getShaderManager            () { return m_shaderManager;}
 
+            const DeviceCaps &                              getDeviceCaps               () const { return m_caps; }
+
 		protected:
             DeviceCaps                                      m_caps;
 			gfx::CommandQueue*				                m_commandQueue[core::enumCount<CommandQueueType>()];

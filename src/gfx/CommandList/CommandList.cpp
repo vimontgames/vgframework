@@ -304,7 +304,7 @@ namespace vg::gfx
 
 	//--------------------------------------------------------------------------------------
 	CommandList::CommandList(gfx::CommandListType _type, gfx::CommandPool * _cmdPool, core::uint _frame, core::uint _index) :
-		super::CommandList(_type, _cmdPool, _frame, _index)
+		super(_type, _cmdPool, _frame, _index)
 	{
 
 	}

@@ -68,10 +68,16 @@ First run might take a few seconds because files are cooking.
  
 ## command-line args
 
-| Argument		| Type			| Default	| Description													
-| ------------- | ------------- | ---------	| ------------------------------------------------------------- 
-| play			| bool			| false		| Start application with play mode running						
-| fullscreen	| bool			| false		| Start application with game view maximized instead of editor	
+| Argument		  | Type | Default	 | Description													
+| --------------  | ---- | --------- | ------------------------------------------------------------- 
+| attachDebugger  | bool | false	 | MessageBox at application start to let attach a debugger
+| breakOnErrors   | bool | true	     | Break on graphics API errors (with **debugDevice**)
+| breakOnWarnings | bool | false	 | Break on graphics API warnings (with **debugDevice**)
+| debugDevice	  | bool | false (*) | Enable the graphics API debug layer	
+| fullscreen	  | bool | false	 | Start application with game view maximized instead of editor	
+| play			  | bool | false	 | Start application with play mode running	
+
+(*) **debugDevice** is enabled by default on **debug** builds
 
 ## keyboard shortcuts
 

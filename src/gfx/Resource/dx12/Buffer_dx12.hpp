@@ -35,7 +35,7 @@ namespace vg::gfx::dx12
             resourceDesc.Flags |= D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS;
         }
 
-		if (_bufDesc.testBindFlags(BindFlags::Raytracing))
+		if (_bufDesc.testBindFlags(BindFlags::RaytracingAccelerationStruct))
 			resourceState = D3D12_RESOURCE_STATE_RAYTRACING_ACCELERATION_STRUCTURE;
 
         D3D12MA::Allocator * allocator = gfx::Device::get()->getd3d12MemoryAllocator();
@@ -125,7 +125,7 @@ namespace vg::gfx::dx12
         resourceDesc.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
 		resourceDesc.Flags = D3D12_RESOURCE_FLAG_NONE;
 
-		if (_bufDesc.testBindFlags(BindFlags::UnorderedAccess | BindFlags::Raytracing))
+		if (_bufDesc.testBindFlags(BindFlags::UnorderedAccess | BindFlags::RaytracingAccelerationStruct))
 			resourceDesc.Flags |= D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS;
 
         return resourceDesc;

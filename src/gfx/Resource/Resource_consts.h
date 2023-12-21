@@ -19,14 +19,14 @@ namespace vg::gfx
 
     enum class BindFlags : core::u16
     {
-        None				= 0x0000,
-        ConstantBuffer      = 0x0001,
-        ShaderResource      = 0x0002,
-        IndexBuffer			= 0x0004,
-        VertexBuffer		= 0x0008,
-        UnorderedAccess		= 0x0010,
-        IndirectArgsBuffer	= 0x0020,
-		Raytracing			= 0x0040
+        None				            = 0x0000,
+        ConstantBuffer                  = 0x0001,
+        ShaderResource                  = 0x0002,
+        IndexBuffer			            = 0x0004,
+        VertexBuffer		            = 0x0008,
+        UnorderedAccess		            = 0x0010,
+        IndirectArgsBuffer	            = 0x0020,
+		RaytracingAccelerationStruct    = 0x0040,
     };
 
     class ResourceDesc

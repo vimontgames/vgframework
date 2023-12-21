@@ -5,7 +5,7 @@ namespace vg::gfx::dx12
 {
 	//--------------------------------------------------------------------------------------
 	CommandList::CommandList(gfx::CommandListType _type, gfx::CommandPool * _cmdPool, core::uint _frame, core::uint _index) :
-		super::CommandList(_type, _cmdPool, _frame, _index)
+		super(_type, _cmdPool, _frame, _index)
 	{
 		Device * device = gfx::Device::get();
 		auto * d3d12device = device->getd3d12Device();
@@ -221,6 +221,26 @@ namespace vg::gfx::dx12
         barrier.Transition.StateBefore = getd3d12ResourceBarrierType(_before);
         barrier.Transition.StateAfter = getd3d12ResourceBarrierType(_after);;
         barrier.Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
+        m_d3d12graphicsCmdList->ResourceBarrier(1, &barrier);
+    }
+
+    //--------------------------------------------------------------------------------------
+    void CommandList::addRWTextureBarrier(gfx::Texture * _texture)
+    {
+        D3D12_RESOURCE_BARRIER barrier;
+        barrier.Type = D3D12_RESOURCE_BARRIER_TYPE_UAV;
+        barrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
+        barrier.UAV.pResource = _texture->getResource().getd3d12TextureResource();
+        m_d3d12graphicsCmdList->ResourceBarrier(1, &barrier);
+    }
+
+    //--------------------------------------------------------------------------------------
+    void CommandList::addRWBufferBarrier(gfx::Buffer * _buffer)
+    {
+        D3D12_RESOURCE_BARRIER barrier;
+        barrier.Type = D3D12_RESOURCE_BARRIER_TYPE_UAV;
+        barrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
+        barrier.UAV.pResource = _buffer->getResource().getd3d12BufferResource();        
         m_d3d12graphicsCmdList->ResourceBarrier(1, &barrier);
     }
 

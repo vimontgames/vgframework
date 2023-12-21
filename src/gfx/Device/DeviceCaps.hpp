@@ -4,7 +4,7 @@ namespace vg::gfx
 	void DeviceCaps::init()
 	{
 		#if VG_ENABLE_RAYTRACING
-		if (supportRaytracing)
+		if (supportRayTracing)
 			VG_INFO("[Device] Raytracing is supported");
 		else
 			VG_WARNING("[Device] Raytracing is not supported");

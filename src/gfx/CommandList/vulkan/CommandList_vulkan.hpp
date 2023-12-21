@@ -2,7 +2,7 @@ namespace vg::gfx::vulkan
 {
 	//--------------------------------------------------------------------------------------
 	CommandList::CommandList(gfx::CommandListType _type, gfx::CommandPool * _cmdPool, core::uint _frame, core::uint _index) :
-		super::CommandList(_type, _cmdPool, _frame, _index)
+		super(_type, _cmdPool, _frame, _index)
 	{
 		Device * device = gfx::Device::get();
 
@@ -199,9 +199,48 @@ namespace vg::gfx::vulkan
     }
 
     //--------------------------------------------------------------------------------------
+    void CommandList::addRWTextureBarrier(gfx::Texture * _texture)
+    {
+        VG_ASSERT_NOT_IMPLEMENTED();
+        //VkFormat imageFormat = barrier.pResource->GetImpl()->GetImageCreateInfo().format;
+        //
+        //VkImageMemoryBarrier imageBarrier = {};
+        //imageBarrier.sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER;
+        //imageBarrier.pNext = nullptr;
+        //imageBarrier.srcAccessMask = ConvertToAccessMask(barrier.SourceState); // Is this really needed for a UAV barrier? Remove if it's ignored
+        //imageBarrier.dstAccessMask = VK_ACCESS_SHADER_READ_BIT | VK_ACCESS_SHADER_WRITE_BIT;
+        //imageBarrier.oldLayout = barrier.SourceState == ResourceState::Present ? VK_IMAGE_LAYOUT_UNDEFINED : ConvertToLayout(barrier.SourceState);
+        //imageBarrier.newLayout = ConvertToLayout(barrier.DestState);
+        //imageBarrier.srcQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
+        //imageBarrier.dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
+        //imageBarrier.subresourceRange.aspectMask = GetImageAspectMask(imageFormat);
+        //SetSubResourceRange(barrier.pResource, imageBarrier, barrier.SubResource);
+        //imageBarrier.image = barrier.pResource->GetImpl()->GetImage();
+        //
+        //imageBarriers.push_back(imageBarrier);
+    }
+
+    //--------------------------------------------------------------------------------------
+    void CommandList::addRWBufferBarrier(gfx::Buffer * _buffer)
+    {
+        VkBufferMemoryBarrier bufferBarrier;
+        bufferBarrier.sType = VK_STRUCTURE_TYPE_BUFFER_MEMORY_BARRIER;
+        bufferBarrier.pNext = nullptr;
+        bufferBarrier.srcAccessMask = VK_ACCESS_SHADER_READ_BIT | VK_ACCESS_SHADER_WRITE_BIT;
+        bufferBarrier.dstAccessMask = VK_ACCESS_SHADER_READ_BIT | VK_ACCESS_SHADER_WRITE_BIT;
+        bufferBarrier.srcQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
+        bufferBarrier.dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
+        bufferBarrier.buffer = _buffer->getResource().getVulkanBuffer();
+        bufferBarrier.offset = 0;
+        bufferBarrier.size = _buffer->getBufDesc().getSize();
+
+        vkCmdPipelineBarrier(m_vkCommandBuffer, VK_PIPELINE_STAGE_ALL_GRAPHICS_BIT, VK_PIPELINE_STAGE_ALL_GRAPHICS_BIT, 0, 0, nullptr, 1, &bufferBarrier, 0, nullptr);
+    }
+
+    //--------------------------------------------------------------------------------------
     void CommandList::clearRWBuffer(gfx::Buffer * _buffer, core::uint _clearValue)
     {
-        vkCmdFillBuffer(m_vkCommandBuffer, _buffer->getResource().getVulkanBuffer(), 0, VK_WHOLE_SIZE, _clearValue);
+        vkCmdFillBuffer(m_vkCommandBuffer, _buffer->getResource().getVulkanBuffer(), 0, _buffer->getBufDesc().getSize(), _clearValue);
     }
 
 	//--------------------------------------------------------------------------------------
@@ -571,5 +610,16 @@ namespace vg::gfx::vulkan
     void CommandList::dispatch(core::uint3 _threadGroupCount)
     {
         vkCmdDispatch(m_vkCommandBuffer, _threadGroupCount.x, _threadGroupCount.y, _threadGroupCount.z);
+    }
+
+    //--------------------------------------------------------------------------------------
+    // KHR_Acceleration_Structure extension device funcs
+    //--------------------------------------------------------------------------------------
+    
+    //--------------------------------------------------------------------------------------
+    void CommandList::buildAccelerationStructures(core::u32 _infoCount, const VkAccelerationStructureBuildGeometryInfoKHR * _infos, const VkAccelerationStructureBuildRangeInfoKHR * const * _buildRangeInfos)
+    {
+        VG_ASSERT(gfx::Device::get()->m_KHR_Acceleration_Structure.m_pfnCmdBuildAccelerationStructuresKHR);
+        gfx::Device::get()->m_KHR_Acceleration_Structure.m_pfnCmdBuildAccelerationStructuresKHR(m_vkCommandBuffer, _infoCount, _infos, _buildRangeInfos);
     }
 }

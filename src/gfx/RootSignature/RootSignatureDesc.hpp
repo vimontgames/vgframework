@@ -41,7 +41,7 @@ namespace vg::gfx
     //--------------------------------------------------------------------------------------
     // RayTracing RootSignature Layout:
     //   m_rayTracingOutputUAVCount               : [0..N[
-    //   m_rayTracingAccellerationStructureCount  : [N..M[
+    //   m_rayTracingAccelerationStructureCount  : [N..M[
     //--------------------------------------------------------------------------------------
     core::uint RootSignatureDesc::addRayTracingOutputUAV(core::uint _count)
     {
@@ -54,8 +54,8 @@ namespace vg::gfx
     //--------------------------------------------------------------------------------------
     core::uint RootSignatureDesc::addRayTracingAccelerationStructure(core::uint _count)
     {
-        VG_ASSERT(m_rayTracingAccellerationStructureCount == 0);
-        m_rayTracingAccellerationStructureCount = _count;
+        VG_ASSERT(m_rayTracingAccelerationStructureCount == 0);
+        m_rayTracingAccelerationStructureCount = _count;
 
         return m_rayTracingOutputUAVCount;
     }

@@ -18,6 +18,7 @@
 #include "renderer/RenderPass/ImGui/ImGuiPass.h"
 #include "renderer/RenderPass/ImGui/imguiAdapter.h"
 #include "renderer/RenderPass/Compute/ComputeSkinning/ComputeSkinningPass.h"
+#include "renderer/RenderPass/Update/BLAS/BLASUpdatePass.h"
 #include "renderer/Importer/SceneImporterData.h"
 #include "renderer/Model/Mesh/MeshModel.h"
 #include "renderer/Animation/SkeletalAnimation.h"
@@ -29,6 +30,7 @@
 #include "renderer/Model/Material/DefaultMaterial/DefaultMaterialModel.h"
 #include "renderer/Picking/PickingManager.h"
 #include "renderer/DebugDraw/DebugDraw.h"
+#include "renderer/RayTracing/RayTracingManager.h"
 
 #if !VG_ENABLE_INLINE
 #include "Renderer.inl"
@@ -188,6 +190,7 @@ namespace vg::renderer
 
         // Create passes not bound to a View
         m_computeSkinningPass = new ComputeSkinningPass();
+        m_BLASUpdatePass = new BLASUpdatePass();
         m_imguiPass = new ImGuiPass();
 
         RegisterClasses();
@@ -196,6 +199,8 @@ namespace vg::renderer
 
         initDefaultTextures();
         initDefaultMaterials();
+
+        RayTracingManager * rtManager = new RayTracingManager();
 
         // Create main view
         auto mainViewParams = gfx::CreateViewParams(gfx::ViewTarget::Backbuffer, getBackbufferSize());
@@ -237,6 +242,9 @@ namespace vg::renderer
         DebugDraw * dbgDraw = getDebugDraw();
         VG_SAFE_RELEASE(dbgDraw);
 
+        RayTracingManager * rtManager = RayTracingManager::get();
+        VG_SAFE_RELEASE(rtManager);
+
         VG_SAFE_RELEASE(m_mainView);
         for (uint j = 0; j < core::enumCount<gfx::ViewTarget>(); ++j)
         {
@@ -247,6 +255,7 @@ namespace vg::renderer
         }
 
         VG_SAFE_DELETE(m_computeSkinningPass);
+        VG_SAFE_DELETE(m_BLASUpdatePass);
         VG_SAFE_DELETE(m_imguiPass);
         VG_SAFE_DELETE(m_imgui);
 
@@ -371,6 +380,7 @@ namespace vg::renderer
                                   mainViewRenderPassContext.m_view = m_mainView;
 
                 m_frameGraph.addUserPass(mainViewRenderPassContext, m_computeSkinningPass, "ComputeSkinningPass");
+                m_frameGraph.addUserPass(mainViewRenderPassContext, m_BLASUpdatePass, "RTASUpdatePass");
 
                 // Register view passes
                 for (uint j = 0; j < core::enumCount<gfx::ViewTarget>(); ++j)
@@ -386,19 +396,9 @@ namespace vg::renderer
                     auto & views = m_views[j];
                     for (uint i = 0; i < views.count(); ++i)
                     {
-                        auto * view = views[i];
+                        auto * view = (View*)views[i];
                         if (nullptr != view)
                         {
-                            //if (m_fullscreen)
-                            //{
-                            //    if (gfx::ViewTarget::Game == target)
-                            //    {
-                            //        view->setSize(m_mainView->getSize());
-                            //        view->SetActive(true);
-                            //        view->SetVisible(true);
-                            //    }
-                            //}
-
                             if (!view->IsVisible())
                                 continue;
 
