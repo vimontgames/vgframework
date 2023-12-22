@@ -34,7 +34,7 @@ namespace vg::renderer
     //--------------------------------------------------------------------------------------
     // Create main color and depth buffers and prepare for write
     //--------------------------------------------------------------------------------------
-    void BackgroundPass::Setup(const gfx::RenderPassContext & _renderContext, double _dt)
+    void BackgroundPass::Setup(const gfx::RenderPassContext & _renderContext, float _dt)
     {
         auto * device = Device::get();
 

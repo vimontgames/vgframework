@@ -18,7 +18,7 @@ namespace vg::renderer
         ViewConstantsUpdatePass();
         ~ViewConstantsUpdatePass();
 
-        void	Setup(const gfx::RenderPassContext & _renderPassContext, double _dt) final override;
+        void	Setup(const gfx::RenderPassContext & _renderPassContext, float _dt) final override;
         void	BeforeRender(const gfx::RenderPassContext & _renderPassContext, gfx::CommandList * _cmdList) final override;
 
     private:

@@ -31,7 +31,7 @@ namespace vg::renderer
     //--------------------------------------------------------------------------------------
     // Setup executed each frame, for each pass instance
     //--------------------------------------------------------------------------------------
-    void FinalBlitPass::Setup(const gfx::RenderPassContext & _renderPassContext, double _dt)
+    void FinalBlitPass::Setup(const gfx::RenderPassContext & _renderPassContext, float _dt)
     {
         const auto options = RendererOptions::get();
 

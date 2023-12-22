@@ -25,7 +25,7 @@ namespace vg::gfx
 		void			reset			();
 
 		// Called when building FrameGraph, no access to CommandList
-		virtual void	Setup			(const RenderPassContext & _renderContext, double _dt) = 0;
+		virtual void	Setup			(const RenderPassContext & _renderContext, float _dt) = 0;
 
 		// Called before entering RenderPass (e.g. write buffers from CPU to the GPU)
 		virtual void	BeforeRender	(const RenderPassContext & _renderContext, CommandList * _cmdList) {}

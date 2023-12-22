@@ -25,7 +25,7 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    void EditorPass::Setup(const gfx::RenderPassContext & _renderPassContext, double _dt)
+    void EditorPass::Setup(const gfx::RenderPassContext & _renderPassContext, float _dt)
     {
         writeRenderTarget(0, _renderPassContext.getFrameGraphID("Color"));
         writeDepthStencil(_renderPassContext.getFrameGraphID("DepthStencil"));

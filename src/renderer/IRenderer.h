@@ -59,7 +59,7 @@ namespace vg
             virtual void                                SetResized              () = 0;
             virtual void                                resize                  (core::uint _width, core::uint _height) = 0;
             virtual core::uint2                         getBackbufferSize       () const = 0;
-            virtual void	                            runOneFrame             (double _dt) = 0;
+            virtual void	                            runOneFrame             (float _dt) = 0;
             virtual void                                updateShaders           () = 0;
             virtual void                                waitGPUIdle             () = 0;
 

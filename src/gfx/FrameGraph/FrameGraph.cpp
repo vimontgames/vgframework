@@ -175,7 +175,7 @@ namespace vg::gfx
     }
 
 	//--------------------------------------------------------------------------------------
-	void FrameGraph::setup(double _dt)
+	void FrameGraph::setup(float _dt)
 	{
         VG_PROFILE_CPU("setup");
 

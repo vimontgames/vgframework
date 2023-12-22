@@ -16,7 +16,7 @@ namespace vg::editor
         m_accum += Editor::get()->getEngine()->GetTime().m_dt;
         m_frame++;
 
-        if (m_accum > (double)smoothDtTime)
+        if (m_accum > (float)smoothDtTime)
         {
             m_dt = (float)(m_accum / (float)m_frame);
             m_fps = (float)1.0f / m_dt;

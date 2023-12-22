@@ -41,7 +41,7 @@ namespace vg::physics
 
         void                                OnPlay                      () final override;
 
-        void                                RunOneFrame                 (double _dt) final override;
+        void                                RunOneFrame                 (float _dt) final override;
 
         IPhysicsOptions *                   GetOptions                  () const final override;
         void                                SetGravity                  (const core::float3 _gravity) final override;

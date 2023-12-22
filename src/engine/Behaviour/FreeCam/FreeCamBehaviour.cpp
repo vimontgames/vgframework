@@ -87,7 +87,7 @@ namespace vg::engine
 
             float mouseSpeedX = m_rotSpeed * 0.001f * PI;
             float mouseSpeedY = m_rotSpeed * 0.001f * PI;
-            float moveSpeed = m_moveSpeed * (float)_dt;
+            float moveSpeed = m_moveSpeed * _dt;
 
             if (input->IsKeyPressed(Key::LSHIFT))
                 moveSpeed *= 16.0f;

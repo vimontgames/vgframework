@@ -52,7 +52,7 @@ namespace vg::gfx
 		void importRenderTarget(const FrameGraphResourceID & _resID, Texture * _tex, core::float4 _clearColor = core::float4(0, 0, 0, 0), FrameGraphResource::InitState _initState = FrameGraphResource::InitState::Clear);
 		void setGraphOutput(const FrameGraphResourceID & _destTexResID);
 
-		void setup(double _dt);
+		void setup(float _dt);
 		void build();
 		void render();
 

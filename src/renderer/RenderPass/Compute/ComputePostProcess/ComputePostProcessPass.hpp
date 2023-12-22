@@ -28,7 +28,7 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    void ComputePostProcessPass::Setup(const gfx::RenderPassContext & _renderPassContext, double _dt)
+    void ComputePostProcessPass::Setup(const gfx::RenderPassContext & _renderPassContext, float _dt)
     {
         const auto srcID = _renderPassContext.getFrameGraphID("Color");
         readRenderTarget(srcID);

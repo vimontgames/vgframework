@@ -17,7 +17,7 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    void TLASUpdatePass::Setup(const gfx::RenderPassContext & _renderPassContext, double _dt)
+    void TLASUpdatePass::Setup(const gfx::RenderPassContext & _renderPassContext, float _dt)
     {
 
     }

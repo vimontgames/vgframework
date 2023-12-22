@@ -58,7 +58,7 @@ namespace vg::renderer
         void                                    resize                  (core::uint _width, core::uint _height) override;
         core::uint2                             getBackbufferSize       () const override;
 
-		void					                runOneFrame			    (double _dt) override;
+		void					                runOneFrame			    (float _dt) override;
 
         void                                    updateShaders           () override;
         void                                    waitGPUIdle             () override;

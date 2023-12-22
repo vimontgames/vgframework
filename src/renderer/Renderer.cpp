@@ -330,7 +330,7 @@ namespace vg::renderer
     }
 
 	//--------------------------------------------------------------------------------------
-	void Renderer::runOneFrame(double _dt)
+	void Renderer::runOneFrame(float _dt)
 	{
         if (m_device.isMinimized())
         {

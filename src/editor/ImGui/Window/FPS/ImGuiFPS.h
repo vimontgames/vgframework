@@ -13,7 +13,7 @@ namespace vg::editor
 
     private:
         core::uint      m_captureFrameCounter = 0;
-        double          m_accum = 0.0f;
+        float           m_accum = 0.0f;
         core::uint      m_frame = 0;
         float           m_dt = 0.0f;
         float           m_fps = 0.0f;

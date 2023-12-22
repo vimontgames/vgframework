@@ -226,7 +226,7 @@ namespace vg::physics
     }
 
 	//--------------------------------------------------------------------------------------
-	void Physics::RunOneFrame(double _dt)
+	void Physics::RunOneFrame(float _dt)
 	{
         VG_PROFILE_CPU("Physics");
         const auto * engine = getEngine();

@@ -25,7 +25,7 @@ namespace vg::renderer
     //--------------------------------------------------------------------------------------
     // Setup executed each frame, for each pass instance
     //--------------------------------------------------------------------------------------
-    void ForwardPass::Setup(const gfx::RenderPassContext & _renderContext, double _dt)
+    void ForwardPass::Setup(const gfx::RenderPassContext & _renderContext, float _dt)
     {
         writeRenderTarget(0, _renderContext.getFrameGraphID("Color"));
         writeDepthStencil(_renderContext.getFrameGraphID("DepthStencil"));
