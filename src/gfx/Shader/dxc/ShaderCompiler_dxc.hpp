@@ -19,7 +19,7 @@ public:
         using namespace vg::gfx;
 
         if (nullptr == m_dxcUtils)
-            VG_ASSERT_SUCCEEDED(DxcCreateInstance(CLSID_DxcUtils, IID_PPV_ARGS(m_dxcUtils.GetAddressOf())));
+            VG_VERIFY_SUCCEEDED(DxcCreateInstance(CLSID_DxcUtils, IID_PPV_ARGS(m_dxcUtils.GetAddressOf())));
 
         ComPtr<IDxcBlobEncoding> pEncoding;
         std::string path = string_convert(pFilename);
@@ -84,8 +84,8 @@ namespace vg::gfx::dxc
     //--------------------------------------------------------------------------------------
     ShaderCompiler::ShaderCompiler()
     {
-        VG_ASSERT_SUCCEEDED(DxcCreateInstance(CLSID_DxcLibrary, IID_PPV_ARGS(&m_d3d12dxcLibrary)));
-        VG_ASSERT_SUCCEEDED(DxcCreateInstance(CLSID_DxcCompiler, IID_PPV_ARGS(&m_d3d12dxcCompiler)));
+        VG_VERIFY_SUCCEEDED(DxcCreateInstance(CLSID_DxcLibrary, IID_PPV_ARGS(&m_d3d12dxcLibrary)));
+        VG_VERIFY_SUCCEEDED(DxcCreateInstance(CLSID_DxcCompiler, IID_PPV_ARGS(&m_d3d12dxcCompiler)));
 
 		CComPtr<IDxcVersionInfo3> pCompilerVersion3;
 		m_d3d12dxcCompiler->QueryInterface(&pCompilerVersion3);
@@ -93,7 +93,7 @@ namespace vg::gfx::dxc
 		if (nullptr != pCompilerVersion3)
 		{
 			CComHeapPtr<char> VersionString;
-			VG_ASSERT_SUCCEEDED(pCompilerVersion3->GetCustomVersionString(&VersionString));
+			VG_VERIFY_SUCCEEDED(pCompilerVersion3->GetCustomVersionString(&VersionString));
 			VG_INFO("[Shader] Using DXC Shader Compiler Version %s", VersionString);
 		}
 		else
@@ -105,7 +105,7 @@ namespace vg::gfx::dxc
 			{
 				UINT32 uCompilerMajor = 0;
 				UINT32 uCompilerMinor = 0;
-				VG_ASSERT_SUCCEEDED(pCompilerVersion->GetVersion(&uCompilerMajor, &uCompilerMinor));
+				VG_VERIFY_SUCCEEDED(pCompilerVersion->GetVersion(&uCompilerMajor, &uCompilerMinor));
 				VG_INFO("[Shader] Using DXC Shader Compiler Version %u.%u ", uCompilerMajor, uCompilerMinor);
 			}
 		}		
@@ -113,7 +113,7 @@ namespace vg::gfx::dxc
         #if CUSTOM_DXC_INCLUDE_HANDLER
         m_d3d12dxcIncludeHandler = new CustomIncludeHandler();
         #else
-        VG_ASSERT_SUCCEEDED(m_d3d12dxcLibrary->CreateIncludeHandler(&m_d3d12dxcIncludeHandler));
+        VG_VERIFY_SUCCEEDED(m_d3d12dxcLibrary->CreateIncludeHandler(&m_d3d12dxcIncludeHandler));
         #endif
     }
 
@@ -163,7 +163,7 @@ namespace vg::gfx::dxc
         if (io::readFile(_path, source))
         {
             IDxcBlobEncoding * dxcSource;
-            VG_ASSERT_SUCCEEDED(m_d3d12dxcLibrary->CreateBlobWithEncodingFromPinned(source.c_str(), (uint)source.size(), CP_UTF8, &dxcSource));
+            VG_VERIFY_SUCCEEDED(m_d3d12dxcLibrary->CreateBlobWithEncodingFromPinned(source.c_str(), (uint)source.size(), CP_UTF8, &dxcSource));
 
             vector<wchar_t*> args;
             auto macros = _macros;
@@ -217,10 +217,10 @@ namespace vg::gfx::dxc
             dxcDefines.clear();
 
             HRESULT hrCompilation;
-            VG_ASSERT_SUCCEEDED(dxcCompileResult->GetStatus(&hrCompilation));
+            VG_VERIFY_SUCCEEDED(dxcCompileResult->GetStatus(&hrCompilation));
 
             IDxcBlobEncoding * dxcWarningAndErrors;
-            VG_ASSERT_SUCCEEDED(dxcCompileResult->GetErrorBuffer(&dxcWarningAndErrors));
+            VG_VERIFY_SUCCEEDED(dxcCompileResult->GetErrorBuffer(&dxcWarningAndErrors));
 
             const char * warningAndErrorBuffer = (const char*)dxcWarningAndErrors->GetBufferPointer();
 

@@ -159,7 +159,7 @@ namespace vg::gfx::dx12
         VG_ASSERT(SUCCEEDED(hr), "%s", errorBlob ? (char*)errorBlob->GetBufferPointer() : "");
 
         Device * device = gfx::Device::get();
-        VG_ASSERT_SUCCEEDED(device->getd3d12Device()->CreateRootSignature(0, outBlob->GetBufferPointer(), outBlob->GetBufferSize(), IID_PPV_ARGS(&m_d3d12rootSignature)));
+        VG_VERIFY_SUCCEEDED(device->getd3d12Device()->CreateRootSignature(0, outBlob->GetBufferPointer(), outBlob->GetBufferSize(), IID_PPV_ARGS(&m_d3d12rootSignature)));
     }
 
     //--------------------------------------------------------------------------------------

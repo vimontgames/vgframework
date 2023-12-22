@@ -136,7 +136,7 @@ namespace vg::gfx::vulkan
             vkDescriptorSetLayoutDesc.pNext = &binding_flags;
 
             VkDescriptorSetLayout vkDescriptorSetLayout;
-            VG_ASSERT_VULKAN(vkCreateDescriptorSetLayout(vkDevice, &vkDescriptorSetLayoutDesc, nullptr, &vkDescriptorSetLayout));
+            VG_VERIFY_VULKAN(vkCreateDescriptorSetLayout(vkDevice, &vkDescriptorSetLayoutDesc, nullptr, &vkDescriptorSetLayout));
             m_vkDescriptorSetLayouts.push_back(vkDescriptorSetLayout);
         }
 
@@ -155,7 +155,7 @@ namespace vg::gfx::vulkan
             vkDescriptorSetLayoutDesc.pBindings = &vkLayoutBinding;
 
             VkDescriptorSetLayout vkSamplerDescriptorSetLayout;
-            VG_ASSERT_VULKAN(vkCreateDescriptorSetLayout(vkDevice, &vkDescriptorSetLayoutDesc, nullptr, &vkSamplerDescriptorSetLayout));
+            VG_VERIFY_VULKAN(vkCreateDescriptorSetLayout(vkDevice, &vkDescriptorSetLayoutDesc, nullptr, &vkSamplerDescriptorSetLayout));
             m_vkDescriptorSetLayouts.push_back(vkSamplerDescriptorSetLayout);
         }
 
@@ -167,7 +167,7 @@ namespace vg::gfx::vulkan
         vkDesc.pushConstantRangeCount = (uint)vkRootConstants.size();
         vkDesc.pPushConstantRanges = vkRootConstants.data();
 
-        VG_ASSERT_VULKAN(vkCreatePipelineLayout(vkDevice, &vkDesc, nullptr, &m_vkPipelineLayout));
+        VG_VERIFY_VULKAN(vkCreatePipelineLayout(vkDevice, &vkDesc, nullptr, &m_vkPipelineLayout));
     }
 
     //--------------------------------------------------------------------------------------

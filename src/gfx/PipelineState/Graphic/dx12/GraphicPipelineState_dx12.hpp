@@ -134,7 +134,7 @@ namespace vg::gfx::dx12
         d3d12graphicPipelineDesc.SampleDesc.Quality = 0;
 
         ID3D12PipelineState * d3d12GraphicPipelineState = nullptr;
-        VG_ASSERT_SUCCEEDED(d3d12device->CreateGraphicsPipelineState(&d3d12graphicPipelineDesc, IID_PPV_ARGS(&d3d12GraphicPipelineState)));
+        VG_VERIFY_SUCCEEDED(d3d12device->CreateGraphicsPipelineState(&d3d12graphicPipelineDesc, IID_PPV_ARGS(&d3d12GraphicPipelineState)));
         _d3d12GraphicPipelineState = d3d12GraphicPipelineState;
 
         return nullptr != d3d12GraphicPipelineState;

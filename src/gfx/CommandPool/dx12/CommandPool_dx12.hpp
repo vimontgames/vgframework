@@ -5,7 +5,7 @@ namespace vg::gfx::dx12
 		super::CommandPool(_frame, _index)
 	{
 		auto * device = gfx::Device::get();
-		VG_ASSERT_SUCCEEDED(device->getd3d12Device()->CreateCommandAllocator(D3D12_COMMAND_LIST_TYPE_DIRECT, IID_PPV_ARGS(&m_d3d12cmdAllocator)));
+		VG_VERIFY_SUCCEEDED(device->getd3d12Device()->CreateCommandAllocator(D3D12_COMMAND_LIST_TYPE_DIRECT, IID_PPV_ARGS(&m_d3d12cmdAllocator)));
 	}
 
 	//--------------------------------------------------------------------------------------
@@ -17,6 +17,6 @@ namespace vg::gfx::dx12
 	//--------------------------------------------------------------------------------------
 	void CommandPool::beginFrame()
 	{
-		VG_ASSERT_SUCCEEDED(m_d3d12cmdAllocator->Reset());
+		VG_VERIFY_SUCCEEDED(m_d3d12cmdAllocator->Reset());
 	}
 }

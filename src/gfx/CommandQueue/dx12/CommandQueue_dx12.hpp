@@ -9,7 +9,7 @@ namespace vg::gfx::dx12
 								 desc.Type = D3D12_COMMAND_LIST_TYPE_DIRECT;
 
 		auto * D3D12Device = gfx::Device::get()->getd3d12Device();
-		VG_ASSERT_SUCCEEDED(D3D12Device->CreateCommandQueue(&desc, IID_PPV_ARGS(&m_d3d12commandQueue)));
+		VG_VERIFY_SUCCEEDED(D3D12Device->CreateCommandQueue(&desc, IID_PPV_ARGS(&m_d3d12commandQueue)));
 	}
 
 	//--------------------------------------------------------------------------------------

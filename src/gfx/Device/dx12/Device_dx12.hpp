@@ -8,14 +8,14 @@ namespace vg::gfx::dx12
         uint dxgiFactoryFlags = 0;
 		if (_params.debugDevice)
 		{
-			VG_ASSERT_SUCCEEDED(D3D12GetDebugInterface(IID_PPV_ARGS(&m_d3d12debug)));
+			VG_VERIFY_SUCCEEDED(D3D12GetDebugInterface(IID_PPV_ARGS(&m_d3d12debug)));
 
 			if (m_d3d12debug)
 				m_d3d12debug->EnableDebugLayer();
 
             dxgiFactoryFlags = DXGI_CREATE_FACTORY_DEBUG; 
 		}
-		VG_ASSERT_SUCCEEDED(CreateDXGIFactory2(dxgiFactoryFlags, IID_PPV_ARGS(&m_dxgiFactory)));
+		VG_VERIFY_SUCCEEDED(CreateDXGIFactory2(dxgiFactoryFlags, IID_PPV_ARGS(&m_dxgiFactory)));
 
 		const D3D_FEATURE_LEVEL levels[] =
 		{
@@ -124,7 +124,7 @@ namespace vg::gfx::dx12
         m_nextFrameFence = 1;
         m_nextFrameIndex = 0;
         m_d3d12fenceEvent = CreateEvent(nullptr, false, false, nullptr);
-        VG_ASSERT_SUCCEEDED(device->CreateFence(0, D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(&m_d3d12fence)));
+        VG_VERIFY_SUCCEEDED(device->CreateFence(0, D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(&m_d3d12fence)));
 
         // Rendertarget CPU descriptor heap
         {
@@ -132,7 +132,7 @@ namespace vg::gfx::dx12
             heapDesc.NumDescriptors = (uint)m_RTVHandleIndexPool.allocated();
             heapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_RTV;
             heapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
-            VG_ASSERT_SUCCEEDED(device->CreateDescriptorHeap(&heapDesc, IID_PPV_ARGS(&m_RTVDescriptorHeap)));
+            VG_VERIFY_SUCCEEDED(device->CreateDescriptorHeap(&heapDesc, IID_PPV_ARGS(&m_RTVDescriptorHeap)));
             m_RTVDescriptorSize = device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
         }
 
@@ -142,7 +142,7 @@ namespace vg::gfx::dx12
             heapDesc.NumDescriptors = (uint)m_DSVHandleIndexPool.allocated();
             heapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_DSV;
             heapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
-            VG_ASSERT_SUCCEEDED(device->CreateDescriptorHeap(&heapDesc, IID_PPV_ARGS(&m_DSVDescriptorHeap)));
+            VG_VERIFY_SUCCEEDED(device->CreateDescriptorHeap(&heapDesc, IID_PPV_ARGS(&m_DSVDescriptorHeap)));
             m_DSVDescriptorSize = device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_DSV);
         }
 
@@ -216,15 +216,15 @@ namespace vg::gfx::dx12
 
 		auto * graphicsQueue = getCommandQueue(CommandQueueType::Graphics);
 
-		VG_ASSERT_SUCCEEDED(m_dxgiFactory->CreateSwapChainForHwnd(graphicsQueue->getd3d12CommandQueue(), _winHandle, &m_dxgiSwapChainDesc, nullptr, nullptr, (IDXGISwapChain1**)&m_dxgiSwapChain));
+		VG_VERIFY_SUCCEEDED(m_dxgiFactory->CreateSwapChainForHwnd(graphicsQueue->getd3d12CommandQueue(), _winHandle, &m_dxgiSwapChainDesc, nullptr, nullptr, (IDXGISwapChain1**)&m_dxgiSwapChain));
         
-        VG_ASSERT_SUCCEEDED(m_dxgiFactory->MakeWindowAssociation(_winHandle, DXGI_MWA_NO_WINDOW_CHANGES | DXGI_MWA_NO_ALT_ENTER | DXGI_MWA_NO_PRINT_SCREEN));
+        VG_VERIFY_SUCCEEDED(m_dxgiFactory->MakeWindowAssociation(_winHandle, DXGI_MWA_NO_WINDOW_CHANGES | DXGI_MWA_NO_ALT_ENTER | DXGI_MWA_NO_PRINT_SCREEN));
 
         m_currentBackbufferIndex = m_dxgiSwapChain->GetCurrentBackBufferIndex();
 
         if (m_dxgiSwapChainDesc.Flags & DXGI_SWAP_CHAIN_FLAG_FRAME_LATENCY_WAITABLE_OBJECT)
         {
-            VG_ASSERT_SUCCEEDED(m_dxgiSwapChain->SetMaximumFrameLatency(max_frame_latency));
+            VG_VERIFY_SUCCEEDED(m_dxgiSwapChain->SetMaximumFrameLatency(max_frame_latency));
             //mSwapEvent = m_dxgiSwapChain->GetFrameLatencyWaitableObject();
         }
 
@@ -361,7 +361,7 @@ namespace vg::gfx::dx12
         m_dxgiSwapChainDesc.Width = _width;
         m_dxgiSwapChainDesc.Height = _height;
 
-        VG_ASSERT_SUCCEEDED(m_dxgiSwapChain->ResizeBuffers(max_backbuffer_count, m_dxgiSwapChainDesc.Width, m_dxgiSwapChainDesc.Height, Texture::getd3d12PixelFormat(m_backbufferFormat), m_dxgiSwapChainDesc.Flags));
+        VG_VERIFY_SUCCEEDED(m_dxgiSwapChain->ResizeBuffers(max_backbuffer_count, m_dxgiSwapChainDesc.Width, m_dxgiSwapChainDesc.Height, Texture::getd3d12PixelFormat(m_backbufferFormat), m_dxgiSwapChainDesc.Flags));
 
         created3d12Backbuffers();
     }
@@ -511,15 +511,15 @@ namespace vg::gfx::dx12
 
                 // Signal that the frame is complete
                 auto & Frame = getCurrentFrameContext();
-                VG_ASSERT_SUCCEEDED(m_d3d12fence->SetEventOnCompletion(Frame.mFrameFenceId, m_d3d12fenceEvent));
-                VG_ASSERT_SUCCEEDED(d3d12queue->Signal(m_d3d12fence, Frame.mFrameFenceId));
+                VG_VERIFY_SUCCEEDED(m_d3d12fence->SetEventOnCompletion(Frame.mFrameFenceId, m_d3d12fenceEvent));
+                VG_VERIFY_SUCCEEDED(d3d12queue->Signal(m_d3d12fence, Frame.mFrameFenceId));
             }
         }
         
         {
             VG_PROFILE_CPU("Present");
             VG_PROFILE_GPU_SWAP(this);
-            VG_ASSERT_SUCCEEDED(m_dxgiSwapChain->Present((uint)m_VSync, 0));
+            VG_VERIFY_SUCCEEDED(m_dxgiSwapChain->Present((uint)m_VSync, 0));
         }
 
 		super::endFrame();

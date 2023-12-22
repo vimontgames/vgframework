@@ -98,7 +98,7 @@ namespace vg::renderer
         imguiDescriptorDesc.pPoolSizes = imguiDescriptorPoolSizes;
         imguiDescriptorDesc.flags = VK_DESCRIPTOR_POOL_CREATE_UPDATE_AFTER_BIND_BIT | VK_DESCRIPTOR_POOL_CREATE_FREE_DESCRIPTOR_SET_BIT;
 
-        VG_ASSERT_VULKAN(vkCreateDescriptorPool(device->getVulkanDevice(), &imguiDescriptorDesc, nullptr, &m_vkImguiDescriptorPool));
+        VG_VERIFY_VULKAN(vkCreateDescriptorPool(device->getVulkanDevice(), &imguiDescriptorDesc, nullptr, &m_vkImguiDescriptorPool));
 
         const PixelFormat fmt = device->getBackbufferFormat();
 
@@ -138,7 +138,7 @@ namespace vg::renderer
         info.dependencyCount = 1;
         info.pDependencies = &dependency;
 
-        VG_ASSERT_VULKAN(vkCreateRenderPass(device->getVulkanDevice(), &info, nullptr, &m_vkImguiRenderPass));
+        VG_VERIFY_VULKAN(vkCreateRenderPass(device->getVulkanDevice(), &info, nullptr, &m_vkImguiRenderPass));
 
         ImGui_ImplVulkan_InitInfo init_info = {};
         init_info.Instance = device->getVulkanInstance();
@@ -166,7 +166,7 @@ namespace vg::renderer
         sampler_info.minLod = -1000;
         sampler_info.maxLod = 1000;
         sampler_info.maxAnisotropy = 1.0f;
-        VG_ASSERT_VULKAN(vkCreateSampler(device->getVulkanDevice(), &sampler_info, nullptr, &m_vkSampler));
+        VG_VERIFY_VULKAN(vkCreateSampler(device->getVulkanDevice(), &sampler_info, nullptr, &m_vkSampler));
     }
     #endif
 

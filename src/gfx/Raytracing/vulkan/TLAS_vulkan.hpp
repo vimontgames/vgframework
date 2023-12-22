@@ -34,7 +34,7 @@ namespace vg::gfx::vulkan
         desc.size = VG_TLAS_SIZE;
         desc.type = VK_ACCELERATION_STRUCTURE_TYPE_TOP_LEVEL_KHR;
         
-        VG_ASSERT_VULKAN(device->createAccelerationStructure(&desc, nullptr, &m_VKTLAS));
+        VG_VERIFY_VULKAN(device->createAccelerationStructure(&desc, nullptr, &m_VKTLAS));
     }
 
     //--------------------------------------------------------------------------------------

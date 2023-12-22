@@ -13,7 +13,7 @@ namespace vg::gfx::dx12
 		switch (getType())
 		{
 			case CommandListType::Graphics:
-				VG_ASSERT_SUCCEEDED(d3d12device->CreateCommandList(0, D3D12_COMMAND_LIST_TYPE_DIRECT, _cmdPool->getd3d12CommandAllocator(), nullptr, IID_PPV_ARGS(&m_d3d12graphicsCmdList)));
+				VG_VERIFY_SUCCEEDED(d3d12device->CreateCommandList(0, D3D12_COMMAND_LIST_TYPE_DIRECT, _cmdPool->getd3d12CommandAllocator(), nullptr, IID_PPV_ARGS(&m_d3d12graphicsCmdList)));
 				break;
 
 			default:
@@ -42,7 +42,7 @@ namespace vg::gfx::dx12
 		switch (getType())
 		{
 			case CommandListType::Graphics:
-                VG_ASSERT_SUCCEEDED(m_d3d12graphicsCmdList->Reset(getCommandPool()->getd3d12CommandAllocator(), nullptr));
+                VG_VERIFY_SUCCEEDED(m_d3d12graphicsCmdList->Reset(getCommandPool()->getd3d12CommandAllocator(), nullptr));
             break;
 
 			default:
@@ -61,7 +61,7 @@ namespace vg::gfx::dx12
 		switch (getType())
 		{
 			case CommandListType::Graphics:
-				VG_ASSERT_SUCCEEDED(m_d3d12graphicsCmdList->Close());
+				VG_VERIFY_SUCCEEDED(m_d3d12graphicsCmdList->Close());
 				break;
 
 			default:

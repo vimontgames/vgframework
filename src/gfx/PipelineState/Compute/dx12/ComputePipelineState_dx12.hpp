@@ -60,7 +60,7 @@ namespace vg::gfx::dx12
         }
 
         ID3D12PipelineState * d3d12ComputePipelineState = nullptr;
-        VG_ASSERT_SUCCEEDED(d3d12device->CreateComputePipelineState(&d3d12ComputePipelineDesc, IID_PPV_ARGS(&d3d12ComputePipelineState)));
+        VG_VERIFY_SUCCEEDED(d3d12device->CreateComputePipelineState(&d3d12ComputePipelineDesc, IID_PPV_ARGS(&d3d12ComputePipelineState)));
         _d3d12ComputePipelineState = d3d12ComputePipelineState;
 
         return nullptr != d3d12ComputePipelineState;

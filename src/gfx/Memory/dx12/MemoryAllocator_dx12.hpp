@@ -16,7 +16,7 @@ namespace vg::gfx::dx12
         desc.PreferredBlockSize = 0; // default
         desc.pAllocationCallbacks = nullptr;
 
-        VG_ASSERT_SUCCEEDED(D3D12MA::CreateAllocator(&desc, &m_d3d12memoryAllocator));
+        VG_VERIFY_SUCCEEDED(D3D12MA::CreateAllocator(&desc, &m_d3d12memoryAllocator));
     }
 
     //--------------------------------------------------------------------------------------

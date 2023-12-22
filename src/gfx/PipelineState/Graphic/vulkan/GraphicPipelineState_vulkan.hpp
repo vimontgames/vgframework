@@ -41,7 +41,7 @@ namespace vg::gfx::vulkan
 
         VkPipelineCacheCreateInfo vkPipelineCacheDesc = {};
         vkPipelineCacheDesc.sType = VK_STRUCTURE_TYPE_PIPELINE_CACHE_CREATE_INFO;
-        VG_ASSERT_VULKAN(vkCreatePipelineCache(vkDevice, &vkPipelineCacheDesc, nullptr, &vkPipelineCache));
+        VG_VERIFY_VULKAN(vkCreatePipelineCache(vkDevice, &vkPipelineCacheDesc, nullptr, &vkPipelineCache));
 
         VkGraphicsPipelineCreateInfo vkPipelineDesc = {};
 
@@ -119,7 +119,7 @@ namespace vg::gfx::vulkan
         vkPipelineDesc.subpass = _key.m_subPassIndex;
 
         VkPipeline vkPipeline = {};
-        VG_ASSERT_VULKAN(vkCreateGraphicsPipelines(vkDevice, vkPipelineCache, 1, &vkPipelineDesc, nullptr, &vkPipeline));
+        VG_VERIFY_VULKAN(vkCreateGraphicsPipelines(vkDevice, vkPipelineCache, 1, &vkPipelineDesc, nullptr, &vkPipeline));
 
         _vkPipelineCache = vkPipelineCache;
         _vkPipeline = vkPipeline;

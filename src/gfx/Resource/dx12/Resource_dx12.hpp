@@ -64,7 +64,7 @@ namespace vg::gfx::dx12
     {
         Map result;
         const D3D12_RANGE readRange = { _read.begin, _read.end };
-        VG_ASSERT_SUCCEEDED(m_d3d12resource->Map(_subResource, &readRange, &result.data));
+        VG_VERIFY_SUCCEEDED(m_d3d12resource->Map(_subResource, &readRange, &result.data));
         return result;
     }
 

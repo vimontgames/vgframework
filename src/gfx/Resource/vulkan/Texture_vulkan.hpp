@@ -164,7 +164,7 @@ namespace vg::gfx::vulkan
 
             VkImage vkImage;
             VmaAllocation vmaAlloc;
-            VG_ASSERT_VULKAN(vmaCreateImage(device->getVulkanMemoryAllocator(), &imgDesc, &allocCreateInfo, &vkImage, &vmaAlloc, nullptr));
+            VG_VERIFY_VULKAN(vmaCreateImage(device->getVulkanMemoryAllocator(), &imgDesc, &allocCreateInfo, &vkImage, &vmaAlloc, nullptr));
             m_resource.setVulkanImage(vkImage, vmaAlloc);
         }
 
@@ -191,7 +191,7 @@ namespace vg::gfx::vulkan
 			vkImageViewDesc.viewType = getVulkanImageViewType(_texDesc.type);
 			vkImageViewDesc.flags = 0;
 
-			VG_ASSERT_VULKAN(vkCreateImageView(device->getVulkanDevice(), &vkImageViewDesc, nullptr, &m_vkImageView));
+			VG_VERIFY_VULKAN(vkCreateImageView(device->getVulkanDevice(), &vkImageViewDesc, nullptr, &m_vkImageView));
 
             if (!_texDesc.isBackbuffer())
             {

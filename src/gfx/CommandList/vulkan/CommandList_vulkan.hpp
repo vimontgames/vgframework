@@ -13,7 +13,7 @@ namespace vg::gfx::vulkan
 		cmdBufAllocInfo.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
 		cmdBufAllocInfo.commandBufferCount = 1;
 
-		VG_ASSERT_VULKAN(vkAllocateCommandBuffers(device->getVulkanDevice(), &cmdBufAllocInfo, &m_vkCommandBuffer));
+		VG_VERIFY_VULKAN(vkAllocateCommandBuffers(device->getVulkanDevice(), &cmdBufAllocInfo, &m_vkCommandBuffer));
 	}
 
 	//--------------------------------------------------------------------------------------
@@ -32,13 +32,13 @@ namespace vg::gfx::vulkan
 		cmdBufBegInfo.flags = VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT;
 		cmdBufBegInfo.pInheritanceInfo = nullptr;
 
-		VG_ASSERT_VULKAN(vkBeginCommandBuffer(m_vkCommandBuffer, &cmdBufBegInfo));
+		VG_VERIFY_VULKAN(vkBeginCommandBuffer(m_vkCommandBuffer, &cmdBufBegInfo));
 	}
 
 	//--------------------------------------------------------------------------------------
 	void CommandList::close()
 	{
-		VG_ASSERT_VULKAN(vkEndCommandBuffer(m_vkCommandBuffer));
+		VG_VERIFY_VULKAN(vkEndCommandBuffer(m_vkCommandBuffer));
 	}
 
     //--------------------------------------------------------------------------------------

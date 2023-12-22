@@ -298,12 +298,12 @@ namespace vg::gfx::vulkan
         bool found = false;
      
         core::u32 instance_layer_count = 0;
-        VG_ASSERT_VULKAN(vkEnumerateInstanceLayerProperties(&instance_layer_count, nullptr));
+        VG_VERIFY_VULKAN(vkEnumerateInstanceLayerProperties(&instance_layer_count, nullptr));
 
         if (instance_layer_count > 0)
         {
             auto * instance_layers = (VkLayerProperties*)malloc(sizeof(VkLayerProperties) * instance_layer_count);
-            VG_ASSERT_VULKAN(vkEnumerateInstanceLayerProperties(&instance_layer_count, instance_layers));
+            VG_VERIFY_VULKAN(vkEnumerateInstanceLayerProperties(&instance_layer_count, instance_layers));
 
             for (uint j = 0; j < instance_layer_count; j++)
             {
@@ -380,19 +380,19 @@ namespace vg::gfx::vulkan
 			inst_info.pNext = &dbg_messenger_create_info;
 		}
 
-		VG_ASSERT_VULKAN(vkCreateInstance(&inst_info, nullptr, &m_vkInstance));
+		VG_VERIFY_VULKAN(vkCreateInstance(&inst_info, nullptr, &m_vkInstance));
 
 		m_instanceExtensionList.onInstanceCreated();
 
 		u32 gpu_count;
 		// Make initial call to query gpu_count, then second call for gpu info
-		VG_ASSERT_VULKAN(vkEnumeratePhysicalDevices(m_vkInstance, &gpu_count, nullptr));
+		VG_VERIFY_VULKAN(vkEnumeratePhysicalDevices(m_vkInstance, &gpu_count, nullptr));
 		VG_ASSERT(gpu_count > 0);
 
 		if (gpu_count > 0) 
 		{
 			auto * physical_devices = (VkPhysicalDevice*)malloc(sizeof(VkPhysicalDevice) * gpu_count);
-			VG_ASSERT_VULKAN(vkEnumeratePhysicalDevices(m_vkInstance, &gpu_count, physical_devices));
+			VG_VERIFY_VULKAN(vkEnumeratePhysicalDevices(m_vkInstance, &gpu_count, physical_devices));
 	
 			// just grab the first physical device
 			m_vkPhysicalDevice = physical_devices[0];
@@ -412,7 +412,7 @@ namespace vg::gfx::vulkan
 			m_caps.supportDeviceAddress = true;
 
         #ifdef VG_ENABLE_GPU_MARKER
-        VG_ASSERT_VULKAN(m_EXT_DebugUtils.m_pfnCreateDebugUtilsMessengerEXT(m_vkInstance, &dbg_messenger_create_info, nullptr, &m_vkDebugMessenger));
+        VG_VERIFY_VULKAN(m_EXT_DebugUtils.m_pfnCreateDebugUtilsMessengerEXT(m_vkInstance, &dbg_messenger_create_info, nullptr, &m_vkDebugMessenger));
         #endif
 
 		vkGetPhysicalDeviceProperties(m_vkPhysicalDevice, &m_vkPhysicalDeviceProperties);
@@ -431,7 +431,7 @@ namespace vg::gfx::vulkan
 									createInfo.hinstance = static_cast<HINSTANCE>(_params.instance);
 									createInfo.hwnd = static_cast<HWND>(_params.window);
 
-		VG_ASSERT_VULKAN(vkCreateWin32SurfaceKHR(m_vkInstance, &createInfo, NULL, &m_vkSurface));
+		VG_VERIFY_VULKAN(vkCreateWin32SurfaceKHR(m_vkInstance, &createInfo, NULL, &m_vkSurface));
 
 		createCommandQueues();
 		createVulkanDevice();
@@ -474,7 +474,7 @@ namespace vg::gfx::vulkan
             descriptor_pool.pPoolSizes = type_counts;
             descriptor_pool.flags = VK_DESCRIPTOR_POOL_CREATE_UPDATE_AFTER_BIND_BIT;
 
-            VG_ASSERT_VULKAN(vkCreateDescriptorPool(m_vkDevice, &descriptor_pool, nullptr, &m_vkBindlessDescriptorPool));
+            VG_VERIFY_VULKAN(vkCreateDescriptorPool(m_vkDevice, &descriptor_pool, nullptr, &m_vkBindlessDescriptorPool));
 
             VkDescriptorSetAllocateInfo alloc_info = {};
             alloc_info.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
@@ -491,7 +491,7 @@ namespace vg::gfx::vulkan
                 alloc_info1.descriptorSetCount = 1;
                 alloc_info1.pSetLayouts = &bindlessLayouts[0];
 
-                VG_ASSERT_VULKAN(vkAllocateDescriptorSets(m_vkDevice, &alloc_info1, &m_vkBindlessDescriptors));
+                VG_VERIFY_VULKAN(vkAllocateDescriptorSets(m_vkDevice, &alloc_info1, &m_vkBindlessDescriptors));
             }
         }
 
@@ -522,7 +522,7 @@ namespace vg::gfx::vulkan
         descriptor_pool.poolSizeCount = (uint)countof(type_counts);
         descriptor_pool.pPoolSizes = type_counts;
 
-        VG_ASSERT_VULKAN(vkCreateDescriptorPool(m_vkDevice, &descriptor_pool, nullptr, &m_vkSamplerDescriptorPool));
+        VG_VERIFY_VULKAN(vkCreateDescriptorPool(m_vkDevice, &descriptor_pool, nullptr, &m_vkSamplerDescriptorPool));
 
         // Sampler descriptors (layout 1)
         {
@@ -533,14 +533,14 @@ namespace vg::gfx::vulkan
             alloc_info1.descriptorSetCount = 1;
             alloc_info1.pSetLayouts = &bindlessLayouts[1];
 
-            VG_ASSERT_VULKAN(vkAllocateDescriptorSets(m_vkDevice, &alloc_info1, &m_vkSamplerDescriptors));
+            VG_VERIFY_VULKAN(vkAllocateDescriptorSets(m_vkDevice, &alloc_info1, &m_vkSamplerDescriptors));
         }
 
         vector<VkDescriptorImageInfo> vkSamplerDescs;
         for (uint i = 0; i < enumCount<Sampler>(); ++i)
         {
             VkSamplerCreateInfo vkSamplerCreateInfo = SamplerState::getVulkanSamplerState((Sampler)i);
-            VG_ASSERT_VULKAN(vkCreateSampler(m_vkDevice, &vkSamplerCreateInfo, nullptr, &m_vkSampler[i]));
+            VG_VERIFY_VULKAN(vkCreateSampler(m_vkDevice, &vkSamplerCreateInfo, nullptr, &m_vkSampler[i]));
 
             VkDescriptorImageInfo vkSamplerDesc = {};
             vkSamplerDesc.imageView = VK_NULL_HANDLE;
@@ -676,15 +676,15 @@ namespace vg::gfx::vulkan
 
 		// Check the surface capabilities and formats
 		VkSurfaceCapabilitiesKHR surfCapabilities;
-		VG_ASSERT_VULKAN(m_KHR_Surface.m_pfnGetPhysicalDeviceSurfaceCapabilitiesKHR(m_vkPhysicalDevice, m_vkSurface, &surfCapabilities));
+		VG_VERIFY_VULKAN(m_KHR_Surface.m_pfnGetPhysicalDeviceSurfaceCapabilitiesKHR(m_vkPhysicalDevice, m_vkSurface, &surfCapabilities));
 
 		uint32_t presentModeCount;
-		VG_ASSERT_VULKAN(m_KHR_Surface.m_pfnGetPhysicalDeviceSurfacePresentModesKHR(m_vkPhysicalDevice, m_vkSurface, &presentModeCount, nullptr));
+		VG_VERIFY_VULKAN(m_KHR_Surface.m_pfnGetPhysicalDeviceSurfacePresentModesKHR(m_vkPhysicalDevice, m_vkSurface, &presentModeCount, nullptr));
 
 		VkPresentModeKHR *presentModes = (VkPresentModeKHR *)malloc(presentModeCount * sizeof(VkPresentModeKHR));
 		VG_ASSERT(presentModes);
 
-		VG_ASSERT_VULKAN(m_KHR_Surface.m_pfnGetPhysicalDeviceSurfacePresentModesKHR(m_vkPhysicalDevice, m_vkSurface, &presentModeCount, presentModes));
+		VG_VERIFY_VULKAN(m_KHR_Surface.m_pfnGetPhysicalDeviceSurfacePresentModesKHR(m_vkPhysicalDevice, m_vkSurface, &presentModeCount, presentModes));
 
 		VkExtent2D swapchainExtent;
 		// width and height are either both 0xFFFFFFFF, or both not 0xFFFFFFFF.
@@ -818,7 +818,7 @@ namespace vg::gfx::vulkan
 								 swapchain_ci.oldSwapchain = oldSwapchain;
 								 swapchain_ci.clipped = true;
 		
-		VG_ASSERT_VULKAN(m_KHR_Swapchain.m_pfnCreateSwapchainKHR(m_vkDevice, &swapchain_ci, nullptr, &m_vkSwapchain));
+		VG_VERIFY_VULKAN(m_KHR_Swapchain.m_pfnCreateSwapchainKHR(m_vkDevice, &swapchain_ci, nullptr, &m_vkSwapchain));
 
 		// If we just re-created an existing swapchain, we should destroy the old swapchain at this point.
 		// Note: destroying the swapchain also cleans up all its associated presentable images once the platform is done with them.
@@ -836,7 +836,7 @@ namespace vg::gfx::vulkan
             }
         }
 
-		VG_ASSERT_VULKAN(m_KHR_Swapchain.m_pfnGetSwapchainImagesKHR(m_vkDevice, m_vkSwapchain, &m_vkSwapchainImageCount, nullptr));
+		VG_VERIFY_VULKAN(m_KHR_Swapchain.m_pfnGetSwapchainImagesKHR(m_vkDevice, m_vkSwapchain, &m_vkSwapchainImageCount, nullptr));
 		
 		VG_SAFE_FREE(presentModes);
 	}
@@ -851,12 +851,12 @@ namespace vg::gfx::vulkan
     PixelFormat Device::detectBackbufferFormat()
     {
         u32 count;
-        VG_ASSERT_VULKAN(m_KHR_Surface.m_pfnGetPhysicalDeviceSurfaceFormatsKHR(m_vkPhysicalDevice, m_vkSurface, &count, nullptr));
+        VG_VERIFY_VULKAN(m_KHR_Surface.m_pfnGetPhysicalDeviceSurfaceFormatsKHR(m_vkPhysicalDevice, m_vkSurface, &count, nullptr));
 
         vector<VkSurfaceFormatKHR> availableSurfaceFormats;
         availableSurfaceFormats.resize(count);
 
-        VG_ASSERT_VULKAN(m_KHR_Surface.m_pfnGetPhysicalDeviceSurfaceFormatsKHR(m_vkPhysicalDevice, m_vkSurface, &count, availableSurfaceFormats.data()));
+        VG_VERIFY_VULKAN(m_KHR_Surface.m_pfnGetPhysicalDeviceSurfaceFormatsKHR(m_vkPhysicalDevice, m_vkSurface, &count, availableSurfaceFormats.data()));
 
         VkSurfaceFormatKHR selectedSurfaceFormat = { VK_FORMAT_UNDEFINED };
 
@@ -1004,7 +1004,7 @@ namespace vg::gfx::vulkan
 
 			deviceCreateInfo.queueCreateInfoCount = 2;
 		}
-		VG_ASSERT_VULKAN(vkCreateDevice(m_vkPhysicalDevice, &deviceCreateInfo, nullptr, &m_vkDevice));
+		VG_VERIFY_VULKAN(vkCreateDevice(m_vkPhysicalDevice, &deviceCreateInfo, nullptr, &m_vkDevice));
 
 		m_deviceExtensionList.onDeviceCreated();
 
@@ -1031,12 +1031,12 @@ namespace vg::gfx::vulkan
 
 		for (uint32_t i = 0; i < max_frame_latency; i++)
 		{
-			VG_ASSERT_VULKAN(vkCreateFence(m_vkDevice, &fence_ci, nullptr, &m_vkFences[i]));
-			VG_ASSERT_VULKAN(vkCreateSemaphore(m_vkDevice, &semaphoreCreateInfo, nullptr, &m_vkImageAcquiredSemaphores[i]));
-			VG_ASSERT_VULKAN(vkCreateSemaphore(m_vkDevice, &semaphoreCreateInfo, nullptr, &m_vkDrawCompleteSemaphores[i]));
+			VG_VERIFY_VULKAN(vkCreateFence(m_vkDevice, &fence_ci, nullptr, &m_vkFences[i]));
+			VG_VERIFY_VULKAN(vkCreateSemaphore(m_vkDevice, &semaphoreCreateInfo, nullptr, &m_vkImageAcquiredSemaphores[i]));
+			VG_VERIFY_VULKAN(vkCreateSemaphore(m_vkDevice, &semaphoreCreateInfo, nullptr, &m_vkDrawCompleteSemaphores[i]));
 			
 			if (m_useSeparatePresentCommandQueue)
-				VG_ASSERT_VULKAN(vkCreateSemaphore(m_vkDevice, &semaphoreCreateInfo, nullptr, &m_vkImageOwnershipSemaphores[i]));
+				VG_VERIFY_VULKAN(vkCreateSemaphore(m_vkDevice, &semaphoreCreateInfo, nullptr, &m_vkImageOwnershipSemaphores[i]));
 		}
 
         m_nextFrameIndex = 0;
@@ -1060,7 +1060,7 @@ namespace vg::gfx::vulkan
     {
         VkImage * swapchainImages = (VkImage *)malloc(m_vkSwapchainImageCount * sizeof(VkImage));
         assert(swapchainImages);
-        VG_ASSERT_VULKAN(m_KHR_Swapchain.m_pfnGetSwapchainImagesKHR(m_vkDevice, m_vkSwapchain, &m_vkSwapchainImageCount, swapchainImages));
+        VG_VERIFY_VULKAN(m_KHR_Swapchain.m_pfnGetSwapchainImagesKHR(m_vkDevice, m_vkSwapchain, &m_vkSwapchainImageCount, swapchainImages));
 
         for (uint i = 0; i < max_backbuffer_count; ++i)
             createBackbuffer(i, &swapchainImages[i]);
@@ -1178,7 +1178,7 @@ namespace vg::gfx::vulkan
 			vkResetFences(vkDevice, 1, &m_vkFences[FrameIndex]);
 			m_currentFrameIndex = FrameIndex;
 
-			VG_ASSERT_VULKAN(m_KHR_Swapchain.m_pfnAcquireNextImageKHR(vkDevice, m_vkSwapchain, UINT64_MAX, m_vkImageAcquiredSemaphores[FrameIndex], VK_NULL_HANDLE, &currentBuffer));
+			VG_VERIFY_VULKAN(m_KHR_Swapchain.m_pfnAcquireNextImageKHR(vkDevice, m_vkSwapchain, UINT64_MAX, m_vkImageAcquiredSemaphores[FrameIndex], VK_NULL_HANDLE, &currentBuffer));
 		}
 
         m_currentBackbufferIndex = currentBuffer;
@@ -1227,7 +1227,7 @@ namespace vg::gfx::vulkan
                 submit_info.signalSemaphoreCount = 1;
                 submit_info.pSignalSemaphores = &m_vkDrawCompleteSemaphores[currentFrameIndex];
 
-                VG_ASSERT_VULKAN(vkQueueSubmit(queue->getVulkanCommandQueue(), 1, &submit_info, m_vkFences[currentFrameIndex]));
+                VG_VERIFY_VULKAN(vkQueueSubmit(queue->getVulkanCommandQueue(), 1, &submit_info, m_vkFences[currentFrameIndex]));
             }
         }
 
@@ -1247,7 +1247,7 @@ namespace vg::gfx::vulkan
         present.pImageIndices = &currentBackbuffer;
         present.pResults = nullptr;
 
-        VG_ASSERT_VULKAN(m_KHR_Swapchain.m_pfnQueuePresentKHR(getCommandQueue(CommandQueueType::Graphics)->getVulkanCommandQueue(), &present));
+        VG_VERIFY_VULKAN(m_KHR_Swapchain.m_pfnQueuePresentKHR(getCommandQueue(CommandQueueType::Graphics)->getVulkanCommandQueue(), &present));
 
 		if (m_vkDirtySwapchain)
 		{

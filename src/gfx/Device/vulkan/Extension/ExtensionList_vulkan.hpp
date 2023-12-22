@@ -59,12 +59,12 @@ namespace vg::gfx::vulkan
 	{
 		super::init();
 
-		VG_ASSERT_VULKAN(vkEnumerateInstanceExtensionProperties(nullptr, &m_availableExtensionCount, nullptr));
+		VG_VERIFY_VULKAN(vkEnumerateInstanceExtensionProperties(nullptr, &m_availableExtensionCount, nullptr));
 
 		if (m_availableExtensionCount > 0)
 		{
 			m_availableExtensions = (VkExtensionProperties*)malloc(sizeof(VkExtensionProperties) * m_availableExtensionCount);
-			VG_ASSERT_VULKAN(vkEnumerateInstanceExtensionProperties(nullptr, &m_availableExtensionCount, m_availableExtensions));
+			VG_VERIFY_VULKAN(vkEnumerateInstanceExtensionProperties(nullptr, &m_availableExtensionCount, m_availableExtensions));
 			
 			for (auto * ext : m_registered)
 				ext->init();
@@ -95,12 +95,12 @@ namespace vg::gfx::vulkan
 
 		auto * device = gfx::Device::get();
 
-		VG_ASSERT_VULKAN(vkEnumerateDeviceExtensionProperties(device->getVulkanPhysicalDevice(), nullptr, &m_availableExtensionCount, nullptr));
+		VG_VERIFY_VULKAN(vkEnumerateDeviceExtensionProperties(device->getVulkanPhysicalDevice(), nullptr, &m_availableExtensionCount, nullptr));
 
 		if (m_availableExtensionCount > 0)
 		{
 			m_availableExtensions = (VkExtensionProperties*)malloc(sizeof(VkExtensionProperties) * m_availableExtensionCount);
-			VG_ASSERT_VULKAN(vkEnumerateDeviceExtensionProperties(device->getVulkanPhysicalDevice(), nullptr, &m_availableExtensionCount, m_availableExtensions));
+			VG_VERIFY_VULKAN(vkEnumerateDeviceExtensionProperties(device->getVulkanPhysicalDevice(), nullptr, &m_availableExtensionCount, m_availableExtensions));
 			
 			for (auto * ext : m_registered)
 				ext->init();

@@ -65,11 +65,11 @@ namespace vg::gfx::vulkan
 
         if (alignment == 0)
         {
-            VG_ASSERT_VULKAN(vmaCreateBuffer(device->getVulkanMemoryAllocator(), &vkBufferCreate, &allocCreateInfo, &vkBuffer, &vmaAlloc, &vmaAllocInfo));
+            VG_VERIFY_VULKAN(vmaCreateBuffer(device->getVulkanMemoryAllocator(), &vkBufferCreate, &allocCreateInfo, &vkBuffer, &vmaAlloc, &vmaAllocInfo));
         }
         else
         {
-            VG_ASSERT_VULKAN(vmaCreateBufferWithAlignment(device->getVulkanMemoryAllocator(), &vkBufferCreate, &allocCreateInfo, (VkDeviceSize)alignment, &vkBuffer, &vmaAlloc, &vmaAllocInfo));
+            VG_VERIFY_VULKAN(vmaCreateBufferWithAlignment(device->getVulkanMemoryAllocator(), &vkBufferCreate, &allocCreateInfo, (VkDeviceSize)alignment, &vkBuffer, &vmaAlloc, &vmaAllocInfo));
         }
 
         VkDeviceAddress vkDeviceAddress = VkDeviceAddress(-1);
@@ -95,7 +95,7 @@ namespace vg::gfx::vulkan
             vkBufferViewDesc.format = (_bufDesc.testBindFlags(BindFlags::IndexBuffer) & (_bufDesc.elementSize == 2)) ? VK_FORMAT_R16_UINT : VK_FORMAT_R32_UINT;
             vkBufferViewDesc.range = _bufDesc.getSize();
 
-            VG_ASSERT_VULKAN(vkCreateBufferView(device->getVulkanDevice(), &vkBufferViewDesc, nullptr, &m_vkBufferView));
+            VG_VERIFY_VULKAN(vkCreateBufferView(device->getVulkanDevice(), &vkBufferViewDesc, nullptr, &m_vkBufferView));
 
             BindlessTable * bindlessTable = device->getBindlessTable();
             m_bufferHandle = bindlessTable->allocBindlessBufferHandle(static_cast<gfx::Buffer *>(this), _reservedSlot);

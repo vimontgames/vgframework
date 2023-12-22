@@ -20,7 +20,7 @@
 #endif
 
 #ifdef _WIN32
-#define VG_ASSERT_SUCCEEDED(f) { HRESULT hr = f; VG_ASSERT(SUCCEEDED(hr), "%s\n\n%s", #f, std::system_category().message(hr).c_str()); }
+#define VG_VERIFY_SUCCEEDED(f) { HRESULT hr = f; VG_ASSERT(SUCCEEDED(hr), "%s\n\n%s", #f, std::system_category().message(hr).c_str()); }
 #endif
 
 #ifdef VG_DX12
@@ -60,8 +60,7 @@
 
 #include "VulkanMemoryAllocator/include/vk_mem_alloc.h"
 
-#pragma message("TODO : rename VG_ASSERT_VULKAN to VG_VERIFY_VULKAN")
-#define VG_ASSERT_VULKAN(f) { VkResult err = f; VG_ASSERT(err == VK_SUCCESS, "%s\n\n%s", #f, Device::getVulkanErrorString(err)); }
+#define VG_VERIFY_VULKAN(f) { VkResult err = f; VG_ASSERT(err == VK_SUCCESS, "%s\n\n%s", #f, Device::getVulkanErrorString(err)); }
 
 #endif // VG_VULKAN
 

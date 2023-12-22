@@ -38,7 +38,7 @@ namespace vg::gfx::vulkan
 
         VkPipelineCacheCreateInfo vkPipelineCacheDesc = {};
         vkPipelineCacheDesc.sType = VK_STRUCTURE_TYPE_PIPELINE_CACHE_CREATE_INFO;
-        VG_ASSERT_VULKAN(vkCreatePipelineCache(vkDevice, &vkPipelineCacheDesc, nullptr, &vkPipelineCache));
+        VG_VERIFY_VULKAN(vkCreatePipelineCache(vkDevice, &vkPipelineCacheDesc, nullptr, &vkPipelineCache));
 
         VkComputePipelineCreateInfo vkPipelineDesc = {};
 
@@ -58,7 +58,7 @@ namespace vg::gfx::vulkan
         vkPipelineDesc.stage = vkShaderStages[0];
 
         VkPipeline vkPipeline = {};
-        VG_ASSERT_VULKAN(vkCreateComputePipelines(vkDevice, vkPipelineCache, 1, &vkPipelineDesc, nullptr, &vkPipeline));
+        VG_VERIFY_VULKAN(vkCreateComputePipelines(vkDevice, vkPipelineCache, 1, &vkPipelineDesc, nullptr, &vkPipeline));
 
         _vkPipelineCache = vkPipelineCache;
         _vkPipeline = vkPipeline;

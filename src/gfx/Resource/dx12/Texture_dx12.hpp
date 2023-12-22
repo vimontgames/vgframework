@@ -154,7 +154,7 @@ namespace vg::gfx::dx12
             D3D12MA::Allocator * allocator = gfx::Device::get()->getd3d12MemoryAllocator();
             ID3D12Resource * resource;
             D3D12MA::Allocation * alloc;
-            VG_ASSERT_SUCCEEDED(allocator->CreateResource(&allocDesc, &resourceDesc, initState, nullptr, &alloc, IID_PPV_ARGS(&resource)));
+            VG_VERIFY_SUCCEEDED(allocator->CreateResource(&allocDesc, &resourceDesc, initState, nullptr, &alloc, IID_PPV_ARGS(&resource)));
             m_resource.setd3d12TextureResource(_name, resource, alloc);
         }
 

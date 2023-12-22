@@ -195,7 +195,7 @@ namespace vg::gfx::vulkan
 
         VkRenderPass vkRenderPass;
         VkDevice & vkDevice = gfx::Device::get()->getVulkanDevice();
-        VG_ASSERT_VULKAN(vkCreateRenderPass(vkDevice, &vkRenderPassDesc, nullptr, &vkRenderPass)); 
+        VG_VERIFY_VULKAN(vkCreateRenderPass(vkDevice, &vkRenderPassDesc, nullptr, &vkRenderPass)); 
         return vkRenderPass;
     }
 
@@ -290,7 +290,7 @@ namespace vg::gfx::vulkan
             m_vkFrameBufferInfo.attachmentCount = (uint)vkImageViews.size();
             m_vkFrameBufferInfo.pAttachments = vkImageViews.data();
 
-            VG_ASSERT_VULKAN(vkCreateFramebuffer(vkDevice, &m_vkFrameBufferInfo, nullptr, &m_vkFrameBuffer));
+            VG_VERIFY_VULKAN(vkCreateFramebuffer(vkDevice, &m_vkFrameBufferInfo, nullptr, &m_vkFrameBuffer));
 
             m_vkRenderPassBeginInfo.framebuffer = m_vkFrameBuffer;
 

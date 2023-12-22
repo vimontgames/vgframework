@@ -12,7 +12,7 @@ namespace vg::gfx::vulkan
 		cmdPoolCreateInfo.queueFamilyIndex = device->getVulkanCommandQueueFamilyIndex(CommandQueueType::Graphics);
 		cmdPoolCreateInfo.flags = 0;
 
-		VG_ASSERT_VULKAN(vkCreateCommandPool(device->getVulkanDevice(), &cmdPoolCreateInfo, nullptr, &m_vulkanCmdPool));
+		VG_VERIFY_VULKAN(vkCreateCommandPool(device->getVulkanDevice(), &cmdPoolCreateInfo, nullptr, &m_vulkanCmdPool));
 	}
 
 	//--------------------------------------------------------------------------------------
@@ -28,6 +28,6 @@ namespace vg::gfx::vulkan
 	{
         auto * device = gfx::Device::get();
 
-        VG_ASSERT_VULKAN(vkResetCommandPool(device->getVulkanDevice(), m_vulkanCmdPool, 0));
+        VG_VERIFY_VULKAN(vkResetCommandPool(device->getVulkanDevice(), m_vulkanCmdPool, 0));
 	}
 }

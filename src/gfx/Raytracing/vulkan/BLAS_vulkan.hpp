@@ -92,7 +92,7 @@ namespace vg::gfx::vulkan
         desc.size = sizeInfo.accelerationStructureSize;
         desc.type = VK_ACCELERATION_STRUCTURE_TYPE_BOTTOM_LEVEL_KHR;
         
-        VG_ASSERT_VULKAN(device->createAccelerationStructure(&desc, nullptr, &m_VKBLAS));
+        VG_VERIFY_VULKAN(device->createAccelerationStructure(&desc, nullptr, &m_VKBLAS));
         
         m_VKRTAccelStructInputs.dstAccelerationStructure = m_VKBLAS;
         m_VKRTAccelStructInputs.scratchData.deviceAddress = m_scratchBuffer->getResource().getVulkanDeviceAddress();

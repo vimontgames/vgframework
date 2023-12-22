@@ -54,7 +54,7 @@ namespace vg::gfx::vulkan
         auto * allocator = device->getVulkanMemoryAllocator();
 
         Map result;
-        VG_ASSERT_VULKAN(vmaMapMemory(allocator, m_vma_alloc, &result.data));
+        VG_VERIFY_VULKAN(vmaMapMemory(allocator, m_vma_alloc, &result.data));
 
         //if (1) // flush for read
         //    vmaFlushAllocation(allocator, m_vma_alloc, _read.begin, _read.end - _read.begin);
