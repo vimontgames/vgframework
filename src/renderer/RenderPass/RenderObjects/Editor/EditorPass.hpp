@@ -47,7 +47,7 @@ namespace vg::renderer
         const auto options = RendererOptions::get();
 
         RenderContext renderContext;
-        renderContext.m_view = view->getViewInvMatrix();
+        renderContext.m_view = view->getViewMatrix();
         renderContext.m_proj = view->getProjMatrix();
         renderContext.m_toolmode = view->isToolmode();
         renderContext.m_shaderPass = ShaderPass::Forward;

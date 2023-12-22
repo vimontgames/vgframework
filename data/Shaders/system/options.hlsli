@@ -2,7 +2,7 @@
 
 #include "types.hlsli"
 
-enum DisplayMode : uint
+enum class DisplayMode : uint
 {
 	Default = 0,
     MatID,
@@ -22,4 +22,20 @@ enum DisplayFlags : uint
 {
     AlbedoMap   = 0x00000001,
     NormalMap   = 0x00000002    
+};
+
+enum class PostProcessMode : uint
+{
+    Default = 0,
+    Luminance
+};
+
+enum class RayTracingMode : uint
+{
+    Default = 0,
+    Hit,
+    Barycentrics,
+    InstanceID,
+    GeometryIndex,
+    PrimitiveIndex    
 };

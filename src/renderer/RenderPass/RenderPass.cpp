@@ -38,8 +38,7 @@ using namespace vg::gfx;
 #include "Update/TLAS/TLASUpdatePass.hpp"
 #include "Update/BLAS/BLASUpdatePass.hpp"
 
-#include "RayTracing/RayTracingPass.hpp"
-#include "RayTracing/Test/TestRayTracingPass.hpp"
+
 
 namespace vg::renderer
 {

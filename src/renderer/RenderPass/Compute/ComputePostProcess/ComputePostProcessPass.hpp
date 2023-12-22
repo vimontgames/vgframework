@@ -1,5 +1,6 @@
 #include "ComputePostProcessPass.h"
 #include "Shaders/postprocess/postprocess.hlsli"
+#include "Shaders/postprocess/postprocess.hlsl.h"
 
 namespace vg::renderer
 {
@@ -55,8 +56,18 @@ namespace vg::renderer
         auto threadGroupSize = uint2(POSTPROCESS_THREADGROUP_SIZE_X, POSTPROCESS_THREADGROUP_SIZE_Y);
         auto threadGroupCount = uint3((size.x + threadGroupSize.x - 1) / threadGroupSize.x, (size.y + threadGroupSize.y - 1) / threadGroupSize.y, 1);
 
+        ComputeShaderKey shaderKey = m_computePostProcessShaderKey;
+
+        if (_renderPassContext.m_view->IsToolmode())
+        {
+            shaderKey.setFlags(gfx::PostProcessHLSLDesc::Toolmode);
+
+            if (_renderPassContext.m_view->IsUsingRayTracing())
+                shaderKey.setFlags(gfx::PostProcessHLSLDesc::RayTracing);
+        }
+
         _cmdList->setComputeRootSignature(m_computePostProcessRootSignature);
-        _cmdList->setComputeShader(m_computePostProcessShaderKey);
+        _cmdList->setComputeShader(shaderKey);
 
         u16 src = getRenderTarget(_renderPassContext.getFrameGraphID("Color"))->getTextureHandle();
         u16 dst = getRWTexture(_renderPassContext.getFrameGraphID("PostProcessUAV"))->getRWTextureHandle();

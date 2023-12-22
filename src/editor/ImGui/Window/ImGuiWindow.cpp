@@ -112,23 +112,6 @@ namespace vg::editor
     }
 
     //--------------------------------------------------------------------------------------
-    string ImGuiWindow::getPropertyLabel(const IProperty * _prop)
-    {
-        string name = _prop->getDisplayName();
-        string className = _prop->getClassName();
-        const auto width = style::label::TextLength;
-
-        if (name.length() < width)
-        {
-            const auto spaces = width - name.length();
-            name.append(spaces, ' ');
-        }
-
-        name += "##" + className;
-        return name;
-    }
-
-    //--------------------------------------------------------------------------------------
     string ImGuiWindow::getButtonLabel(string _baseName, IObject * _object)
     {
         return _baseName + "##" + _object->getClassName() + "##" + to_string((u64)&_object); // TODO: Object GUID?
@@ -158,9 +141,9 @@ namespace vg::editor
         }
 
         bool changed = false;
-        char enumLabel[256];
-        sprintf(enumLabel, "%s###%p", getPropertyLabel(_prop).c_str(), _prop);
-        if (ImGui::BeginCombo(enumLabel, preview.c_str(), ImGuiComboFlags_HeightLarge))
+
+        string enumLabel = ImGui::getObjectLabel(_prop->getDisplayName(), _prop);
+        if (ImGui::BeginCombo(enumLabel.c_str(), preview.c_str(), ImGuiComboFlags_HeightLarge))
         {
             for (uint e = 0; e < _prop->getEnumCount(); ++e)
             {
@@ -214,9 +197,8 @@ namespace vg::editor
         if (!found)
             preview = "<None>";
 
-        char enumLabel[256];
-        sprintf(enumLabel, "%s###%p", getPropertyLabel(_prop).c_str(), _prop);
-        if (ImGui::BeginCombo(enumLabel, preview.c_str(), ImGuiComboFlags_None))
+        string enumLabel = ImGui::getObjectLabel(_prop->getDisplayName(), _prop);
+        if (ImGui::BeginCombo(enumLabel.c_str(), preview.c_str(), ImGuiComboFlags_None))
         {
             for (uint e = 0; e < _prop->getEnumCount(); ++e)
             {
@@ -487,7 +469,7 @@ namespace vg::editor
                 {
                     VG_ASSERT(!isEnumArray, "Display of EnumArray property not implemented for type '%s'", asString(type).c_str());
                     bool * pBool = _prop->GetPropertyBool(_object);
-                    changed |= ImGui::Checkbox(getPropertyLabel(_prop).c_str(), pBool);
+                    changed |= ImGui::Checkbox(ImGui::getObjectLabel(_prop->getDisplayName(), _prop).c_str(), pBool);
                 };
                 break;
 

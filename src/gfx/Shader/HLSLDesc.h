@@ -10,6 +10,14 @@ namespace vg::gfx
     class HLSLDesc
     {
     public:
+        enum Flags : ShaderKey::Flags
+        {
+            // Flags 13..15 are reserved and should be common for all shaders 
+            ZOnly       = 13, 
+            RayTracing  = 14,           
+            Toolmode    = 15
+        };
+
         struct Technique
         {
             core::string            name;

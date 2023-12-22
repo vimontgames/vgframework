@@ -8,7 +8,7 @@ namespace vg::renderer
     class DepthOnlyPass;
     class ForwardPass;
     class EditorPass;
-    class TestRayTracingPass;
+    class RayTracingDebugPass;
     class ComputePostProcessPass;
     class FinalBlitPass;
     class TLASUpdatePass;
@@ -33,7 +33,6 @@ namespace vg::renderer
         ForwardPass *               m_forwardPass               = nullptr;
         EditorPass *                m_editorPass                = nullptr;
         TLASUpdatePass *            m_TLASUpdatePass            = nullptr;
-        TestRayTracingPass *        m_testRayTracingPass        = nullptr;
         ComputePostProcessPass *    m_computePostProcessPass    = nullptr;
         FinalBlitPass *             m_finalBlitPass             = nullptr;
     };

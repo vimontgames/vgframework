@@ -39,7 +39,7 @@ namespace vg::renderer
                                             View                        (const gfx::CreateViewParams & _params);
                                             ~View                       ();
 
-        void                                SetupCamera                 (const core::float4x4 & _viewInv, core::float2 _nearFar, float _fovY) override;
+        void                                SetupCamera                 (const core::float4x4 & _cameraWorldMatrix, core::float2 _nearFar, float _fovY) override;
 
         void                                SetFlags                    (Flags _flagsToSet, Flags _flagsToRemove = (Flags)0) override;
         Flags                               GetFlags                    () const override;
@@ -77,6 +77,7 @@ namespace vg::renderer
 
         bool                                IsToolmode                  () const override;
         bool                                IsUsingRayTracing           () const override;
+        bool                                IsComputePostProcessNeeded  () const override;
 
         void                                setTLAS                     (gfx::TLAS * _tlas);
         gfx::TLAS *                         getTLAS                     () const;
@@ -99,8 +100,13 @@ namespace vg::renderer
         VG_INLINE core::int2                getOffset                   () const;
 
         VG_INLINE const core::float4x4 &    getViewProjMatrix           () const;
+
+        VG_INLINE const core::float4x4 &    getViewMatrix               () const;
         VG_INLINE const core::float4x4 &    getViewInvMatrix            () const;
+
         VG_INLINE const core::float4x4 &    getProjMatrix               () const;
+        VG_INLINE const core::float4x4 &    getProjInvMatrix            () const;
+
         VG_INLINE core::float2              getCameraNearFar            () const;
         VG_INLINE float                     getCameraFovY               () const;
 
@@ -126,8 +132,10 @@ namespace vg::renderer
         gfx::Texture *                      m_renderTarget = nullptr;   // Assume backbuffer if nullptr
         core::uint2                         m_size = core::uint2(0, 0);
         core::int2                          m_offset = core::int2(0, 0);
+        core::float4x4                      m_view = core::float4x4::identity();
         core::float4x4                      m_viewInv = core::float4x4::identity();
         core::float4x4                      m_proj = core::float4x4::identity();
+        core::float4x4                      m_projInv = core::float4x4::identity();
         core::float4x4                      m_viewProj = core::float4x4::identity();
         core::IWorld *                      m_camWorld = nullptr;
         core::float2                        m_cameraNearFar;

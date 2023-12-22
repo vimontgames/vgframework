@@ -34,7 +34,8 @@ namespace vg::renderer
     void FinalBlitPass::Setup(const gfx::RenderPassContext & _renderPassContext, double _dt)
     {
         const auto options = RendererOptions::get();
-        if (options->isPostProcessEnabled())
+
+        if (_renderPassContext.m_view->IsComputePostProcessNeeded())
             readRWTexture(_renderPassContext.getFrameGraphID("PostProcessUAV"));
         else
             readRenderTarget(_renderPassContext.getFrameGraphID("Color"));
@@ -69,7 +70,7 @@ namespace vg::renderer
         root2D.quad.uvOffsetScale = float4(0.0f, 0.0f, 1.0f, 1.0f);
 
         // When Compute post-process is enabled then we blit from the PostProcessUAV read as Shader Resource
-        if (options->isPostProcessEnabled())
+        if (_renderPassContext.m_view->IsComputePostProcessNeeded())
             root2D.texID = getRWTexture(_renderPassContext.getFrameGraphID("PostProcessUAV"))->getTextureHandle();
         else
             root2D.texID = getRenderTarget(_renderPassContext.getFrameGraphID("Color"))->getTextureHandle();       

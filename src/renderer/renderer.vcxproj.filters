@@ -227,18 +227,6 @@
     <ClInclude Include="Importer\FBX\UFBXImporter\UFBXImporter.h">
       <Filter>Importer\FBX\UFBXImporter</Filter>
     </ClInclude>
-    <ClInclude Include="RenderPass\RayTracing\RayTracingPass.h">
-      <Filter>Pass\RayTracing</Filter>
-    </ClInclude>
-    <ClInclude Include="RenderPass\RayTracing\RayTracingPass.hpp">
-      <Filter>Pass\RayTracing</Filter>
-    </ClInclude>
-    <ClInclude Include="RenderPass\RayTracing\Test\TestRayTracingPass.h">
-      <Filter>Pass\RayTracing\Test</Filter>
-    </ClInclude>
-    <ClInclude Include="RenderPass\RayTracing\Test\TestRayTracingPass.hpp">
-      <Filter>Pass\RayTracing\Test</Filter>
-    </ClInclude>
     <ClInclude Include="RenderPass\Compute\ComputePostProcess\ComputePostProcessPass.h">
       <Filter>Pass\Compute\ComputePostProcess</Filter>
     </ClInclude>
@@ -435,12 +423,6 @@
     </Filter>
     <Filter Include="Importer\FBX\UFBXImporter">
       <UniqueIdentifier>{25a0abb5-62e6-44ad-af17-83344db2afb1}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Pass\RayTracing">
-      <UniqueIdentifier>{bc22b757-a2ad-43e7-a473-4b9c2b6b240b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Pass\RayTracing\Test">
-      <UniqueIdentifier>{3122665f-08c1-4d87-817e-747dfe66cffa}</UniqueIdentifier>
     </Filter>
     <Filter Include="Pass\Compute">
       <UniqueIdentifier>{565f6566-9966-4089-8ceb-e2da39b956a0}</UniqueIdentifier>

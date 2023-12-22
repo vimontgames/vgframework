@@ -20,13 +20,30 @@ namespace vg::renderer
         registerProperty(RendererOptions, m_wireframe, "Wireframe");
         registerPropertyEx(RendererOptions, m_aabb, "Bounding Box", IProperty::Flags::SameLine);
 
-        registerPropertyEnum(RendererOptions, DisplayMode, m_debugDisplayMode, "Mode");
-        registerPropertyEnumBitfield(RendererOptions, DisplayFlags, m_displayFlags, "Flags");
+        registerPropertyEnum(RendererOptions, gfx::VSync, m_VSync, "VSync");
+        registerPropertyEx(RendererOptions, m_backgroundColor, "Background", IProperty::Flags::Color);
         registerPropertyEnumBitfield(RendererOptions, RenderPassFlags, m_renderPassFlags, "Passes");
 
-        registerPropertyEx(RendererOptions, m_backgroundColor, "Background", IProperty::Flags::Color);
+        registerPropertyGroupBegin(RendererOptions, "Materials");
+        {
+            registerPropertyEnum(RendererOptions, DisplayMode, m_debugDisplayMode, "Mode");
+            registerPropertyEnumBitfield(RendererOptions, DisplayFlags, m_displayFlags, "Flags");
+        }
+        registerPropertyGroupEnd(RendererOptions);
 
-        registerPropertyEnum(RendererOptions, gfx::VSync, m_VSync, "VSync");
+        registerPropertyGroupBegin(RendererOptions, "RayTracing");
+        {
+            registerProperty(RendererOptions, m_rayTracing, "Enable");
+            registerPropertyEnum(RendererOptions, RayTracingMode, m_rayTracingMode, "Mode");
+        }
+        registerPropertyGroupEnd(RendererOptions);
+
+        registerPropertyGroupBegin(RendererOptions, "PostProcess");
+        {
+            registerProperty(RendererOptions, m_postProcess, "Enable");
+            registerPropertyEnum(RendererOptions, PostProcessMode, m_postProcessMode, "Mode");
+        }
+        registerPropertyGroupEnd(RendererOptions);
 
         return true;
     }
@@ -34,9 +51,7 @@ namespace vg::renderer
     //--------------------------------------------------------------------------------------
     RendererOptions::RendererOptions(const core::string & _name, core::IObject * _parent) :
         super(_name, _parent),
-        m_debugDisplayMode(DisplayMode::Default),
-        m_displayFlags(DisplayFlags::AlbedoMap | DisplayFlags::NormalMap),
-        m_renderPassFlags(RenderPassFlags::ZPrepass | RenderPassFlags::Opaque | RenderPassFlags::Transparency | RenderPassFlags::PostProcess)
+        m_renderPassFlags(RenderPassFlags::ZPrepass | RenderPassFlags::Opaque | RenderPassFlags::Transparency)
     {
         setFile("Renderer.xml");
         Load();
@@ -57,9 +72,9 @@ namespace vg::renderer
             m_backgroundColor = (float4)0.0f;
             setBackgroundColor(backgroundColor);
         }
-        else if (!strcmp(name, "m_renderPassFlags"))
+        else if (!strcmp(name, "m_rayTracing"))
         {
-            RayTracingManager::get()->enableRayTracing(asBool(RenderPassFlags::RayTracing & m_renderPassFlags));
+            RayTracingManager::get()->enableRayTracing(isRayTracingEnabled());
         }
     }
 

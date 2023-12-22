@@ -95,7 +95,6 @@ namespace vg::editor
         template <typename T> static bool       displayEnum         (core::IObject * _object, const core::IProperty * _prop);
         template <typename T> static bool       displayEnumFlags    (core::IObject * _object, const core::IProperty * _prop);
 
-        static core::string                     getPropertyLabel    (const core::IProperty * _prop);
         static core::string                     getButtonLabel      (core::string _baseName, core::IObject * _object);
 
     protected:

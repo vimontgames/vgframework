@@ -60,10 +60,14 @@ namespace vg::renderer
             constants->setScreenSize(view->getSize());
             constants->setMousePos(view->GetRelativeMousePos());
             constants->setDisplayMode(options->getDisplayMode());
+            constants->setRayTracingMode(options->getRayTracingMode());
+            constants->setPostProcessMode(options->getPostProcessMode());
             constants->setDisplayFlags(options->getDisplayFlags());
             constants->setToolmodeRWBufferID(toolmodeRWBufferID);
-            constants->setView(view->getViewInvMatrix());
+            constants->setView(view->getViewMatrix());
+            constants->setViewInv(view->getViewInvMatrix());
             constants->setProj(view->getProjMatrix());
+            constants->setProjInv(view->getProjInvMatrix());
             constants->setTLASHandle(view->getTLASHandle());
         }
         _cmdList->unmap(s_ViewConstantsBuffer, constants);

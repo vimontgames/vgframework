@@ -9,11 +9,11 @@ namespace vg::gfx
     public:
         enum Flags : ShaderKey::Flags
         {
-            // Flags 0..13 are available
+            // Flags 0..12 are available
 
-            // Flags 14..15 are reserved and should be common for all shaders             
-            ZOnly       = 14,
-            Toolmode    = 15
+            // Flags 13..15 are reserved and should be common for all shaders 
+            ZOnly       = HLSLDesc::Flags::ZOnly,
+            Toolmode    = HLSLDesc::Flags::Toolmode
         };
 
         DefaultHLSLDesc()

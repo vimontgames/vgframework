@@ -90,7 +90,7 @@ namespace vg::gfx
         IView(const CreateViewParams & _params) {};
         virtual ~IView() = default;
 
-        virtual void                    SetupCamera                 (const core::float4x4 & _viewInv, core::float2 _nearFar, float _fovY) = 0;
+        virtual void                    SetupCamera                 (const core::float4x4 & _cameraWorldMatrix, core::float2 _nearFar, float _fovY) = 0;
 
         virtual void                    SetFlags                    (Flags _flagsToSet, Flags _flagsToRemove = (Flags)0) = 0;
         virtual Flags                   GetFlags                    () const = 0;
@@ -128,6 +128,7 @@ namespace vg::gfx
 
         virtual bool                    IsToolmode                  () const = 0;
         virtual bool                    IsUsingRayTracing           () const = 0;
+        virtual bool                    IsComputePostProcessNeeded  () const = 0;
       
         virtual void                    SetPickingData              (const PickingData & _pickingData) = 0;
         virtual const PickingHit &      GetPickingHit               (core::uint _index) const = 0;

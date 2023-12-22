@@ -7,6 +7,12 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
+    VG_INLINE const core::float4x4 & View::getViewMatrix() const
+    {
+        return m_view;
+    }
+
+    //--------------------------------------------------------------------------------------
     VG_INLINE const core::float4x4 & View::getViewInvMatrix() const
     {
         return m_viewInv;
@@ -16,6 +22,12 @@ namespace vg::renderer
     VG_INLINE const core::float4x4 & View::getProjMatrix() const
     {
         return m_proj;
+    }
+
+    //--------------------------------------------------------------------------------------
+    VG_INLINE const core::float4x4 & View::getProjInvMatrix() const
+    {
+        return m_projInv;
     }
 
     //--------------------------------------------------------------------------------------

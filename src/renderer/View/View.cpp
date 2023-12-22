@@ -108,9 +108,10 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    void View::SetupCamera(const core::float4x4 & _viewInv, core::float2 _nearFar, float _fovY)
+    void View::SetupCamera(const core::float4x4 & _cameraWorldMatrix, core::float2 _nearFar, float _fovY)
     {
-        m_viewInv = _viewInv;
+        m_viewInv = _cameraWorldMatrix;
+        m_view = inverse(_cameraWorldMatrix);
         m_cameraNearFar = _nearFar;
         m_cameraFovY = _fovY;
 
@@ -120,6 +121,7 @@ namespace vg::renderer
         const float ar = float(size.x) / float(size.y);
 
         m_proj = setPerspectiveProjectionRH(fovY, ar, nearFar.x, nearFar.y);
+        m_projInv = inverse(m_proj);
     }
 
     //--------------------------------------------------------------------------------------
@@ -149,7 +151,7 @@ namespace vg::renderer
     //--------------------------------------------------------------------------------------
     const core::float4x4 & View::GetViewInvMatrix() const
     {
-        return getViewInvMatrix();
+        return getViewMatrix();
     }
 
     //--------------------------------------------------------------------------------------
@@ -294,6 +296,13 @@ namespace vg::renderer
     bool View::IsUsingRayTracing() const
     {
         return false;
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool View::IsComputePostProcessNeeded() const
+    {
+        const auto options = RendererOptions::get();
+        return options->isPostProcessEnabled() || (isToolmode() && IsUsingRayTracing() && RayTracingMode::Default != options->getRayTracingMode());
     }
 
     //--------------------------------------------------------------------------------------
