@@ -60,22 +60,22 @@ namespace vg::renderer
         const bool toolmode = _renderPassContext.m_view->IsToolmode();
         const bool computePostProcess = _renderPassContext.m_view->IsComputePostProcessNeeded();
 
-        _frameGraph.addUserPass(_renderPassContext, m_backgroundPass, "BackgroundPass");
+        _frameGraph.addUserPass(_renderPassContext, m_backgroundPass, "Background");
 
         if (_renderPassContext.m_view->IsUsingRayTracing())
-            _frameGraph.addUserPass(_renderPassContext, m_TLASUpdatePass, "TLASUpdatePass");
+            _frameGraph.addUserPass(_renderPassContext, m_TLASUpdatePass, "TLAS Update");
 
         if (options->isZPrepassEnabled())
-            _frameGraph.addUserPass(_renderPassContext, m_depthPrePass, "DepthPrepass");
+            _frameGraph.addUserPass(_renderPassContext, m_depthPrePass, "ZPrepass");
 
-        _frameGraph.addUserPass(_renderPassContext, m_forwardPass, "ForwardPass");
+        _frameGraph.addUserPass(_renderPassContext, m_forwardPass, "Forward");
 
         if (toolmode)
-            _frameGraph.addUserPass(_renderPassContext, m_editorPass, "EditorPass");
+            _frameGraph.addUserPass(_renderPassContext, m_editorPass, "Editor");
 
         if (_renderPassContext.m_view->IsComputePostProcessNeeded())
-            _frameGraph.addUserPass(_renderPassContext, m_computePostProcessPass, "ComputePostProcessPass");
+            _frameGraph.addUserPass(_renderPassContext, m_computePostProcessPass, "PostProcess");
 
-        _frameGraph.addUserPass(_renderPassContext, m_finalBlitPass, "FinalBlitPass");
+        _frameGraph.addUserPass(_renderPassContext, m_finalBlitPass, "Final Blit");
     }
 }

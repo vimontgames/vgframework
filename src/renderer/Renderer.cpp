@@ -341,24 +341,7 @@ namespace vg::renderer
 
         VG_PROFILE_CPU("Renderer");
 
-        // test debug draw
-        {
-            //float4x4 top = float4x4::identity();
-            //top[3].xyz = float3(0, 0, 2);
-            //DebugDraw::get()->AddHemisphere(1.0f, 0xFF00FFFF, top);
-            //
-            //float4x4 mid = float4x4::identity();
-            //mid[3].xyz = float3(0, 0, 1.5f);
-            //DebugDraw::get()->AddCylinder(1.0f, 1.0f, 0xFFFFFF00, mid);
-            //
-            //float4x4 bottom = float4x4::rotation_x(PI);            
-            //bottom[3].xyz = float3(0, 0, 1);
-            //DebugDraw::get()->AddHemisphere(1.0f, 0xFFFF00FF, bottom);
-
-            //float4x4 caps = float4x4::identity();
-            //caps[3].xyz = float3(2, 0, 1.5f);
-            //DebugDraw::get()->AddCapsule(1.0f, 1.0f, 0xFFFFFFFF, caps);
-        }
+        const RendererOptions * options = RendererOptions::get();
 
 		m_device.beginFrame();
 		{
@@ -375,12 +358,14 @@ namespace vg::renderer
                 m_frameGraph.importRenderTarget("Backbuffer", m_device.getBackbuffer(), float4(0,0,0,0), FrameGraphResource::InitState::Clear);
                 m_frameGraph.setGraphOutput("Backbuffer");
 
-                // Register passes not linked to views (e.g. skinning)
+                // Register passes not linked to views (e.g. skinning, or BLAS updates)
                 RenderPassContext mainViewRenderPassContext;
                                   mainViewRenderPassContext.m_view = m_mainView;
 
-                m_frameGraph.addUserPass(mainViewRenderPassContext, m_computeSkinningPass, "ComputeSkinningPass");
-                m_frameGraph.addUserPass(mainViewRenderPassContext, m_BLASUpdatePass, "RTASUpdatePass");
+                m_frameGraph.addUserPass(mainViewRenderPassContext, m_computeSkinningPass, "Skinning");
+
+                if (options->isRayTracingEnabled())
+                    m_frameGraph.addUserPass(mainViewRenderPassContext, m_BLASUpdatePass, "BLAS Update");
 
                 // Register view passes
                 for (uint j = 0; j < core::enumCount<gfx::ViewTarget>(); ++j)
@@ -411,7 +396,7 @@ namespace vg::renderer
                 }
 
                 if (!m_fullscreen)
-                    m_frameGraph.addUserPass(mainViewRenderPassContext, m_imguiPass, "UIPass");
+                    m_frameGraph.addUserPass(mainViewRenderPassContext, m_imguiPass, "ImGui");
 
                 m_frameGraph.setup(_dt);
                 m_frameGraph.build();

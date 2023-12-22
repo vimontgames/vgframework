@@ -331,7 +331,7 @@ namespace vg::renderer
     //--------------------------------------------------------------------------------------
     void View::RegisterFrameGraph(const gfx::RenderPassContext & _rc, gfx::FrameGraph & _frameGraph)
     {
-        _frameGraph.addUserPass(_rc, m_viewConstantsUpdatePass, "ViewConstantsUpdatePass");
+        _frameGraph.addUserPass(_rc, m_viewConstantsUpdatePass, "View Constants Update");
     }
 
     //--------------------------------------------------------------------------------------

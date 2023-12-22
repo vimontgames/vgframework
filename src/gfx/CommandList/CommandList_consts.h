@@ -28,6 +28,10 @@ namespace vg::gfx
     constexpr core::uint max_root_constants = 32;
     constexpr core::uint max_constant_buffers = 1;
 
+    const core::float4 defaultOptimizedClearColor = (core::float4)0.0f;
+    const float        defaultOptimizedClearDepth = 1.0f;
+    const core::u8     defaultOptimizedClearStencil = 0x00;
+
     #ifdef VG_DX12
     namespace dx12
     {

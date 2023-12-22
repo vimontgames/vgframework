@@ -41,7 +41,7 @@ namespace vg::renderer
         uavDesc.format = PixelFormat::R16G16B16A16_float;
         uavDesc.width = size.x;
         uavDesc.height = size.y;
-        uavDesc.clearColor = float4(0, 0, 0, 0);
+        uavDesc.clearColor = defaultOptimizedClearColor;
         uavDesc.initState = FrameGraphResource::InitState::Clear;
 
         const auto dstID = _renderPassContext.getFrameGraphID("PostProcessUAV");

@@ -123,6 +123,7 @@ namespace vg::gfx::dx12
         auto * d3d12device = device->getd3d12Device();
         
         D3D12_RESOURCE_DESC resourceDesc = getd3d12ResourceDesc(_texDesc);
+        DXGI_FORMAT d3d12PixFmt = getd3d12PixelFormat(_texDesc.format);
 
         if (asBool(TextureFlags::Backbuffer & _texDesc.flags))
         {
@@ -138,12 +139,38 @@ namespace vg::gfx::dx12
             allocDesc.HeapType = D3D12_HEAP_TYPE_DEFAULT;
 
             D3D12_RESOURCE_STATES initState = D3D12_RESOURCE_STATE_COMMON;
+
+            D3D12_CLEAR_VALUE optimizedClearValue;
+            D3D12_CLEAR_VALUE * pOptimizedClearValue = nullptr;
+
             if (asBool(TextureFlags::RenderTarget & _texDesc.flags))
+            {
                 initState = D3D12_RESOURCE_STATE_RENDER_TARGET;
+
+                optimizedClearValue.Format = d3d12PixFmt;
+
+                optimizedClearValue.Color[0] = defaultOptimizedClearColor.x;
+                optimizedClearValue.Color[1] = defaultOptimizedClearColor.y;
+                optimizedClearValue.Color[2] = defaultOptimizedClearColor.z;
+                optimizedClearValue.Color[3] = defaultOptimizedClearColor.w;
+
+                pOptimizedClearValue = &optimizedClearValue;
+            }
             else if (asBool(TextureFlags::DepthStencil & _texDesc.flags))
+            {
                 initState = D3D12_RESOURCE_STATE_DEPTH_WRITE;
+
+                optimizedClearValue.Format = d3d12PixFmt;
+
+                optimizedClearValue.DepthStencil.Depth = defaultOptimizedClearDepth;
+                optimizedClearValue.DepthStencil.Stencil = defaultOptimizedClearStencil;
+
+                pOptimizedClearValue = &optimizedClearValue;
+            }
             else if (_initData)
+            {
                 initState = D3D12_RESOURCE_STATE_COPY_DEST;
+            }
 
             if (asBool(BindFlags::UnorderedAccess & _texDesc.resource.m_bindFlags))
             {
@@ -154,7 +181,7 @@ namespace vg::gfx::dx12
             D3D12MA::Allocator * allocator = gfx::Device::get()->getd3d12MemoryAllocator();
             ID3D12Resource * resource;
             D3D12MA::Allocation * alloc;
-            VG_VERIFY_SUCCEEDED(allocator->CreateResource(&allocDesc, &resourceDesc, initState, nullptr, &alloc, IID_PPV_ARGS(&resource)));
+            VG_VERIFY_SUCCEEDED(allocator->CreateResource(&allocDesc, &resourceDesc, initState, pOptimizedClearValue, &alloc, IID_PPV_ARGS(&resource)));
             m_resource.setd3d12TextureResource(_name, resource, alloc);
         }
 
@@ -162,7 +189,7 @@ namespace vg::gfx::dx12
         {
             D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc = {};
             srvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
-            srvDesc.Format = getd3d12PixelFormat(_texDesc.format);
+            srvDesc.Format = d3d12PixFmt;
             srvDesc.ViewDimension = getd3d12ShaderResourceViewDimension(_texDesc.type);
             
             switch (_texDesc.type)
@@ -197,7 +224,7 @@ namespace vg::gfx::dx12
         if (asBool(TextureFlags::RenderTarget & _texDesc.flags))
         {
             D3D12_RENDER_TARGET_VIEW_DESC viewDesc;
-                                          viewDesc.Format = getd3d12PixelFormat(_texDesc.format);
+                                          viewDesc.Format = d3d12PixFmt;
                                           viewDesc.ViewDimension = D3D12_RTV_DIMENSION_TEXTURE2D;
                                           viewDesc.Texture2D.MipSlice = 0;  // TODO: alloc RTV for every mip available
                                           viewDesc.Texture2D.PlaneSlice = 0;
@@ -209,7 +236,7 @@ namespace vg::gfx::dx12
         else if (asBool(TextureFlags::DepthStencil & _texDesc.flags))
         {
             D3D12_DEPTH_STENCIL_VIEW_DESC depthStencilViewDesc;
-                                          depthStencilViewDesc.Format = getd3d12PixelFormat(_texDesc.format);
+                                          depthStencilViewDesc.Format = d3d12PixFmt;
                                           depthStencilViewDesc.Flags = D3D12_DSV_FLAG_NONE;
                                           depthStencilViewDesc.ViewDimension = D3D12_DSV_DIMENSION_TEXTURE2D;
                                           depthStencilViewDesc.Texture2D.MipSlice = 0;  // TODO: alloc DSV for every mip available

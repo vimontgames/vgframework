@@ -1,6 +1,7 @@
 #pragma once
 
 #include "FrameGraph_consts.h"
+#include "gfx/CommandList/CommandList_consts.h"
 #include "ResourceTransition.h"
 
 namespace vg::gfx
@@ -118,7 +119,7 @@ namespace vg::gfx
         FrameGraphResource::InitState   initState = FrameGraphResource::InitState::Discard;
         union
         {
-            core::float4		        clearColor = (core::float4)0.0f;
+            core::float4		        clearColor = defaultOptimizedClearColor;
             struct
             {
                 float                   clearDepth;

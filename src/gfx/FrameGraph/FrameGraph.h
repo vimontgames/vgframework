@@ -49,7 +49,7 @@ namespace vg::gfx
 
 		void destroyTransientResources(bool _sync = false);
 
-		void importRenderTarget(const FrameGraphResourceID & _resID, Texture * _tex, core::float4 _clearColor = core::float4(0, 0, 0, 0), FrameGraphResource::InitState _initState = FrameGraphResource::InitState::Clear);
+		void importRenderTarget(const FrameGraphResourceID & _resID, Texture * _tex, core::float4 _clearColor = defaultOptimizedClearColor, FrameGraphResource::InitState _initState = FrameGraphResource::InitState::Clear);
 		void setGraphOutput(const FrameGraphResourceID & _destTexResID);
 
 		void setup(float _dt);
