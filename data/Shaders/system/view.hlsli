@@ -44,9 +44,13 @@ struct ViewConstants
     
     void            setProj                 (float4x4 _proj)        { m_proj = _proj; }
     float4x4        getProj                 ()                      { return m_proj; }
+
+    void            setTLASHandle           (uint _value)           { m_rayTracing.x = (m_rayTracing.x & ~0x0000FFFFUL) | (_value & 0xFFFF); }
+    uint            getTLASHandle           ()                      { return 0xFFFF & m_rayTracing.x; }
     
     uint4           m_screenSizeAndMousePos;
     uint4           m_debugDisplay;
     float4x4        m_view;
     float4x4        m_proj;
+    uint4           m_rayTracing;
 };

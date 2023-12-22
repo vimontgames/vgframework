@@ -47,58 +47,72 @@ namespace vg::gfx::vulkan
     //--------------------------------------------------------------------------------------
     void TLAS::reset()
     {
-        //m_DXRInstanceDescriptors.clear();
+        m_VKInstances.clear();
     };
 
     //--------------------------------------------------------------------------------------
     void TLAS::build(gfx::CommandList * _cmdList)
     {
+        if (m_VKInstances.empty())
+            return;
+
         VG_PROFILE_GPU("TLAS");
 
-        //auto device = gfx::Device::get();
-        //auto d3d12Device = device->getd3d12Device();
-        //
-        //VG_ASSERT(m_DXRInstanceDescriptors.size() < VG_TLAS_INSTANCECOUNT, "[Device] TLAS m_instanceBuffer is not big enough");
-        //
-        //// Get AS build Info
-        //D3D12_BUILD_RAYTRACING_ACCELERATION_STRUCTURE_INPUTS asInputs = {};
-        //asInputs.Type = D3D12_RAYTRACING_ACCELERATION_STRUCTURE_TYPE_TOP_LEVEL;
-        //asInputs.Flags = D3D12_RAYTRACING_ACCELERATION_STRUCTURE_BUILD_FLAG_NONE;
-        //asInputs.DescsLayout = D3D12_ELEMENTS_LAYOUT_ARRAY;
-        //
-        //asInputs.NumDescs = static_cast<UINT>(m_DXRInstanceDescriptors.size());
-        //asInputs.InstanceDescs = m_instanceBuffer->getResource().getd3d12BufferResource()->GetGPUVirtualAddress();
-        //
-        //#ifdef VG_DEBUG
-        //D3D12_RAYTRACING_ACCELERATION_STRUCTURE_PREBUILD_INFO sizeInfo = {};
-        //d3d12Device->GetRaytracingAccelerationStructurePrebuildInfo(&asInputs, &sizeInfo);
-        //VG_ASSERT(sizeInfo.ResultDataMaxSizeInBytes < VG_TLAS_SIZE, "[Device] TLAS m_resultBuffer is not big enough");
-        //VG_ASSERT(sizeInfo.ScratchDataSizeInBytes < VG_TLAS_SCRATCH_SIZE, "[Device] TLAS m_scratchBuffer not big enough");
-        //#endif
-        //
-        //D3D12_BUILD_RAYTRACING_ACCELERATION_STRUCTURE_DESC desc{};
-        //desc.Inputs = asInputs;
-        //desc.ScratchAccelerationStructureData = m_scratchBuffer->getResource().getd3d12BufferResource()->GetGPUVirtualAddress();
-        //desc.DestAccelerationStructureData = m_resultBuffer->getResource().getd3d12BufferResource()->GetGPUVirtualAddress();
-        //
-        //D3D12GraphicsCommandList * d3d12CmdList = _cmdList->getd3d12GraphicsCommandList();
-        //d3d12CmdList->BuildRaytracingAccelerationStructure(&desc, 0, nullptr);
-        //
-        //_cmdList->addRWBufferBarrier(m_resultBuffer);
+        // Update instances
+        auto device = gfx::Device::get();
+
+        VG_ASSERT(m_VKInstances.size() < VG_TLAS_INSTANCECOUNT, "[Device] TLAS m_instanceBuffer is not big enough");
+
+        VkAccelerationStructureInstanceKHR * data = (VkAccelerationStructureInstanceKHR *)_cmdList->map(m_instanceBuffer).data;
+        {
+            memcpy(data, m_VKInstances.data(), sizeof(VkAccelerationStructureInstanceKHR) * m_VKInstances.size());
+        }
+        _cmdList->unmap(m_instanceBuffer, data);
+
+        // TLAS info
+        VkAccelerationStructureGeometryKHR tlasGeometry{};
+        tlasGeometry.sType = VK_STRUCTURE_TYPE_ACCELERATION_STRUCTURE_GEOMETRY_KHR;
+        tlasGeometry.geometryType = VK_GEOMETRY_TYPE_INSTANCES_KHR;
+        tlasGeometry.geometry.instances.sType = VK_STRUCTURE_TYPE_ACCELERATION_STRUCTURE_GEOMETRY_INSTANCES_DATA_KHR;
+        tlasGeometry.geometry.instances.arrayOfPointers = VK_FALSE;
+        tlasGeometry.geometry.instances.data.deviceAddress = m_instanceBuffer->getResource().getVulkanDeviceAddress();
+
+        VkAccelerationStructureBuildGeometryInfoKHR asInputs = {};
+        asInputs.sType = VK_STRUCTURE_TYPE_ACCELERATION_STRUCTURE_BUILD_GEOMETRY_INFO_KHR;
+        asInputs.type = VK_ACCELERATION_STRUCTURE_TYPE_TOP_LEVEL_KHR;
+        asInputs.geometryCount = 1;
+        asInputs.pGeometries = &tlasGeometry;
+        asInputs.mode = VK_BUILD_ACCELERATION_STRUCTURE_MODE_BUILD_KHR;
+        asInputs.pNext = nullptr;
+        asInputs.dstAccelerationStructure = m_VKTLAS;
+        asInputs.scratchData.deviceAddress = m_scratchBuffer->getResource().getVulkanDeviceAddress();
+
+        VkAccelerationStructureBuildRangeInfoKHR tlasRangeInfo{};
+        tlasRangeInfo.primitiveCount = static_cast<uint32_t>(m_VKInstances.size());
+
+        VkAccelerationStructureBuildRangeInfoKHR * tlasRanges[] = { &tlasRangeInfo };
+
+        _cmdList->buildAccelerationStructures(1, &asInputs, tlasRanges);
+
+        _cmdList->addRWBufferBarrier(m_resultBuffer);
+
+        BindlessTable * bindlessTable = gfx::Device::get()->getBindlessTable();
+        if (m_bindlessTLASHandle.isValid())
+            bindlessTable->updateBindlessTLASHandle(m_bindlessTLASHandle, static_cast<gfx::TLAS *>(this));
     }
 
     //--------------------------------------------------------------------------------------
     void TLAS::addInstance(const gfx::BLAS * _blas, const core::float4x4 & _world, const core::u32 _instanceID)
     {
-        //D3D12_RAYTRACING_INSTANCE_DESC desc = {};
-        //memcpy(desc.Transform, &(float &)transpose(_world), sizeof(desc.Transform));
-        //desc.InstanceID = _instanceID;
-        //desc.InstanceMask = 0xFF;
-        //desc.InstanceContributionToHitGroupIndex = 0;
-        //desc.Flags = D3D12_RAYTRACING_INSTANCE_FLAG_NONE;
-        //
-        //desc.AccelerationStructure = _blas->getBuffer()->getResource().getd3d12BufferResource()->GetGPUVirtualAddress();
-        //
-        //m_DXRInstanceDescriptors.emplace_back(std::move(desc));
+        VkAccelerationStructureInstanceKHR tlasStructure = {};
+        memcpy(&tlasStructure.transform, &(float &)transpose(_world), sizeof(tlasStructure));
+        tlasStructure.mask = 0xff;
+        tlasStructure.instanceCustomIndex = _instanceID;
+        tlasStructure.instanceShaderBindingTableRecordOffset = 0;
+
+        tlasStructure.flags = VK_GEOMETRY_INSTANCE_TRIANGLE_FACING_CULL_DISABLE_BIT_KHR;
+        tlasStructure.accelerationStructureReference = _blas->getBuffer()->getResource().getVulkanDeviceAddress();
+
+        m_VKInstances.push_back(tlasStructure);
     }
 }

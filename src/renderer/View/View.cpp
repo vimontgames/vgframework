@@ -301,8 +301,8 @@ namespace vg::renderer
     {
         if (_tlas != m_tlas)
         {
-            VG_SAFE_RELEASE(m_tlas)
-                m_tlas = _tlas;
+            VG_SAFE_RELEASE_ASYNC(m_tlas)
+            m_tlas = _tlas;
         }
     }
 
@@ -310,6 +310,13 @@ namespace vg::renderer
     gfx::TLAS * View::getTLAS() const
     {
         return m_tlas;
+    }
+
+    //--------------------------------------------------------------------------------------
+    gfx::BindlessTLASHandle View::getTLASHandle() const
+    {
+        TLAS * tlas = getTLAS();
+        return tlas ? tlas->getHandle() : gfx::BindlessTLASHandle(BINDLESS_TLAS_INVALID);
     }
 
     //--------------------------------------------------------------------------------------

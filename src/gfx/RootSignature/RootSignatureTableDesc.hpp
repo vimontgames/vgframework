@@ -77,6 +77,15 @@ namespace vg::gfx
     }
 
     //--------------------------------------------------------------------------------------
+    void RootSignatureTableDesc::addTLAS(core::u8 _binding, core::u16 _register, core::u16 _count)
+    {
+        RootSignatureTableDesc::Descriptor descritor;
+        descritor.m_type = Descriptor::Type::TLAS;
+        descritor.tlas = Descriptor::TLAS(_binding, _register, _count);
+        m_descriptors.push_back(descritor);
+    }
+
+    //--------------------------------------------------------------------------------------
     const core::vector<RootSignatureTableDesc::Descriptor> & RootSignatureTableDesc::getDescriptors() const
     {
         return m_descriptors;

@@ -18,9 +18,10 @@ namespace vg::gfx::vulkan
         TLAS();
         ~TLAS();
 
-        void reset();
-        void build(gfx::CommandList * _cmdList);
-        void addInstance(const gfx::BLAS * _blas, const core::float4x4 & _world, const core::u32 _instanceID);
+        void                                reset                           ();
+        void                                build                           (gfx::CommandList * _cmdList);
+        void                                addInstance                     (const gfx::BLAS * _blas, const core::float4x4 & _world, const core::u32 _instanceID);
+        const VkAccelerationStructureKHR &  getVulkanAccelerationStructure  () const { return m_VKTLAS; }
 
     private:
         std::vector<VkAccelerationStructureInstanceKHR> m_VKInstances = {};

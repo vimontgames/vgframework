@@ -80,6 +80,7 @@ namespace vg::renderer
 
         void                                setTLAS                     (gfx::TLAS * _tlas);
         gfx::TLAS *                         getTLAS                     () const;
+        gfx::BindlessTLASHandle             getTLASHandle               () const;
 
         void                                SetPickingData              (const PickingData & _pickingData) override;
         virtual const PickingHit &          GetPickingHit               (core::uint _index) const override;

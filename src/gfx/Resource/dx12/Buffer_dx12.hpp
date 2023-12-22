@@ -35,8 +35,10 @@ namespace vg::gfx::dx12
             resourceDesc.Flags |= D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS;
         }
 
-		if (_bufDesc.testBindFlags(BindFlags::RaytracingAccelerationStruct))
-			resourceState = D3D12_RESOURCE_STATE_RAYTRACING_ACCELERATION_STRUCTURE;
+        if (_bufDesc.testBindFlags(BindFlags::RaytracingAccelerationStruct))
+        {
+            resourceState = D3D12_RESOURCE_STATE_RAYTRACING_ACCELERATION_STRUCTURE;
+        }
 
         D3D12MA::Allocator * allocator = gfx::Device::get()->getd3d12MemoryAllocator();
         ID3D12Resource * resource;

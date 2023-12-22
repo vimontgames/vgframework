@@ -128,6 +128,8 @@ namespace vg::gfx::dxc
     //--------------------------------------------------------------------------------------
     const char * ShaderCompiler::getDXCTargetProfile(ShaderStage _stage) const
     {
+        const bool rayTracingSupported = Device::get()->getDeviceCaps().supportRayTracing;
+
         switch (_stage)
         {
         default:
@@ -149,7 +151,7 @@ namespace vg::gfx::dxc
             return "ps_6_1";
 
         case ShaderStage::Compute:
-            return "cs_6_1";
+            return rayTracingSupported ? "cs_6_6" : "cs_6_1";
         }
     }
 

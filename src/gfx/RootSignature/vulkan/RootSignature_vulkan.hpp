@@ -96,6 +96,17 @@ namespace vg::gfx::vulkan
                         vkLayoutBinding.pImmutableSamplers = nullptr;
                     }
                     break;
+
+                    case RootSignatureTableDesc::Descriptor::Type::TLAS:
+                    {
+                        const auto & tlas = descriptor.getTLAS();
+                        vkLayoutBinding.binding = tlas.m_binding;
+                        vkLayoutBinding.descriptorType = VK_DESCRIPTOR_TYPE_ACCELERATION_STRUCTURE_KHR;
+                        vkLayoutBinding.descriptorCount = tlas.m_count;
+                        vkLayoutBinding.stageFlags = getVulkanShaderStageFlags(table.getShaderStageFlags());
+                        vkLayoutBinding.pImmutableSamplers = nullptr;
+                    }
+                    break;
                 }
 
                 vkDescriptorSetLayoutBindings.push_back(vkLayoutBinding);

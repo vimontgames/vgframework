@@ -49,6 +49,13 @@ namespace vg::gfx
         bool isValid() const { return checkValidRange(getValidRange()); }
     };
 
+    struct BindlessTLASHandle : public BindlessHandle
+    {
+        BindlessTLASHandle(Type _value = BINDLESS_TLAS_INVALID) : BindlessHandle(_value) { }
+        static core::uint2 getValidRange() { return core::uint2(BINDLESS_TLAS_START, (BINDLESS_TLAS_START + BINDLESS_TLAS_COUNT - 1)); }
+        bool isValid() const { return checkValidRange(getValidRange()); }
+    };
+
     // Allocate fixed Textures/Buffers SRVs/UAVs slots top-down (dynamic slots are allocated bottom-up)
     enum class ReservedSlot : core::u32
     {

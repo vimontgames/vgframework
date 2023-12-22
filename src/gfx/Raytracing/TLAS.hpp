@@ -13,9 +13,8 @@ namespace vg::gfx
         //--------------------------------------------------------------------------------------
         TLAS::TLAS()
         {
-            auto device = gfx::Device::get();
-
-      
+            BindlessTable * bindlessTable = gfx::Device::get()->getBindlessTable();
+            m_bindlessTLASHandle = bindlessTable->allocBindlessTLASHandle(nullptr);
         }
 
         //--------------------------------------------------------------------------------------
@@ -38,5 +37,15 @@ namespace vg::gfx
         VG_SAFE_RELEASE(m_resultBuffer);
         VG_SAFE_RELEASE(m_scratchBuffer);
         VG_SAFE_RELEASE(m_instanceBuffer);
+
+        BindlessTable * bindlessTable = gfx::Device::get()->getBindlessTable();
+        if (m_bindlessTLASHandle.isValid())
+            bindlessTable->freeBindlessTLASHandle(m_bindlessTLASHandle);
+    }
+
+    //--------------------------------------------------------------------------------------
+    const BindlessTLASHandle & TLAS::getHandle() const
+    {
+        return m_bindlessTLASHandle;
     }
 }

@@ -18,6 +18,7 @@ namespace vg::gfx
                 Buffer,
                 RWTexture,
                 RWBuffer,
+                TLAS,
                 Sampler
             };
 
@@ -77,6 +78,15 @@ namespace vg::gfx
                 }
             };
 
+            struct TLAS : public DescriptorParameters
+            {
+                TLAS(core::u8 _binding, core::u16 _register, core::u16 _count) :
+                    DescriptorParameters(_binding, _register, _count)
+                {
+
+                }
+            };
+
             struct ConstantBuffer : public DescriptorParameters
             {
                 ConstantBuffer(core::u8 _binding, core::u16 _register, core::u16 _count) :
@@ -112,6 +122,8 @@ namespace vg::gfx
                         return rwTexture == _other.rwTexture;
                     case Type::RWBuffer:
                         return rwBuffer == _other.rwBuffer;
+                    case Type::TLAS:
+                        return tlas == _other.tlas;
                     case Type::ConstantBuffer:
                         return constantBuffer == _other.constantBuffer;
                     case Type::Sampler:
@@ -131,6 +143,7 @@ namespace vg::gfx
             const Buffer &          getBuffers          () const { VG_ASSERT(Type::Buffer         == m_type); return buffer; }
             const RWTexture &       getRWTextures       () const { VG_ASSERT(Type::RWTexture      == m_type); return rwTexture; }
             const RWBuffer &        getRWBuffers        () const { VG_ASSERT(Type::RWBuffer       == m_type); return rwBuffer; }
+            const TLAS &            getTLAS             () const { VG_ASSERT(Type::TLAS           == m_type); return tlas; }
             const ConstantBuffer &  getConstantBuffers  () const { VG_ASSERT(Type::ConstantBuffer == m_type); return constantBuffer; }
             const Sampler &         getSamplers         () const { VG_ASSERT(Type::Sampler        == m_type); return sampler; }
 
@@ -144,6 +157,7 @@ namespace vg::gfx
                 Buffer          buffer;
                 RWTexture       rwTexture;
                 RWBuffer        rwBuffer;
+                TLAS            tlas;
                 Sampler         sampler;
             };
 
@@ -154,9 +168,9 @@ namespace vg::gfx
         void                                addConstantBuffers  (core::u8 _binding, core::u16 _register, core::u16 _count);
         void                                addTextures         (core::u8 _binding, core::u16 _register, core::u16 _count);
         void                                addBuffers          (core::u8 _binding, core::u16 _register, core::u16 _count);
-
         void                                addRWTextures       (core::u8 _binding, core::u16 _register, core::u16 _count);
         void                                addRWBuffers        (core::u8 _binding, core::u16 _register, core::u16 _count);
+        void                                addTLAS             (core::u8 _binding, core::u16 _register, core::u16 _count);
 
         const core::vector<Descriptor> &    getDescriptors      () const;
 

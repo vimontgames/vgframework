@@ -64,6 +64,7 @@ namespace vg::renderer
             constants->setToolmodeRWBufferID(toolmodeRWBufferID);
             constants->setView(view->getViewInvMatrix());
             constants->setProj(view->getProjMatrix());
+            constants->setTLASHandle(view->getTLASHandle());
         }
         _cmdList->unmap(s_ViewConstantsBuffer, constants);
     }

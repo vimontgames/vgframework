@@ -1,7 +1,9 @@
 #include "gfx/Precomp.h"
 #include "BindlessTable.h"
 #include "gfx/device/Device.h"
+#include "gfx/Raytracing/TLAS.h"
 #include "gfx/Resource/Texture.h"
+#include "gfx/Resource/Buffer.h"
 #include "core/Math/Math.h"
 
 using namespace vg::core;
@@ -21,6 +23,7 @@ namespace vg::gfx
             m_tableDesc.addBuffers(BINDLESS_BUFFER_BINDING, BINDLESS_BUFFER_START, BINDLESS_BUFFER_COUNT);
             m_tableDesc.addRWTextures(BINDLESS_RWTEXTURE_BINDING, BINDLESS_RWTEXTURE_START, BINDLESS_RWTEXTURE_COUNT);
             m_tableDesc.addRWBuffers(BINDLESS_RWBUFFER_BINDING, BINDLESS_RWBUFFER_START, BINDLESS_RWBUFFER_COUNT);
+            m_tableDesc.addTLAS(BINDLESS_TLAS_BINDING, BINDLESS_TLAS_START, BINDLESS_TLAS_COUNT);
         }
 
         //--------------------------------------------------------------------------------------
@@ -118,6 +121,20 @@ namespace vg::gfx
             VG_ASSERT(_handle.isValid(), "0x%04X is not a valid RWBuffer handle", (u16)_handle);
             freeBindlessHandle(_handle, m_rwBufferIndexPool, m_rwBuffers, BINDLESS_RWBUFFER_START, BINDLESS_RWBUFFER_INVALID);
         }
+
+        //--------------------------------------------------------------------------------------
+        BindlessTLASHandle BindlessTable::allocBindlessTLASHandle(const gfx::Buffer * _buffer, ReservedSlot _reservedSlot)
+        {
+            VG_ASSERT(ReservedSlot::None == _reservedSlot || BindlessTLASHandle((u16)_reservedSlot).isValid(), "Reserved slot %u does not belong to the TLAS range [%u;%u]", _reservedSlot, (uint)BindlessTLASHandle::getValidRange().x, (uint)BindlessTLASHandle::getValidRange().y);
+            return allocBindlessHandle<BindlessTLASHandle>(_buffer, _reservedSlot, m_TLASIndexPool, m_TLAS, BINDLESS_TLAS_START, BINDLESS_TLAS_INVALID);
+        }
+
+        //--------------------------------------------------------------------------------------
+        void BindlessTable::freeBindlessTLASHandle(BindlessTLASHandle & _handle)
+        {
+            VG_ASSERT(_handle.isValid(), "0x%04X is not a valid TLAS handle", (u16)_handle);
+            freeBindlessHandle(_handle, m_TLASIndexPool, m_TLAS, BINDLESS_TLAS_START, BINDLESS_TLAS_INVALID);
+        }
     }
 
     //--------------------------------------------------------------------------------------
@@ -151,10 +168,16 @@ namespace vg::gfx
         VG_ASSERT(m_defaultTexture->getTextureHandle() == BINDLESS_TEXTURE_INVALID);
         
         // copy texture to all 'texture' slots
-        for (uint i = BINDLESS_TEXTURE_START; i < BINDLESS_TEXTURE_COUNT; ++i)
-            if (BINDLESS_TEXTURE_INVALID != i)
-                copyTextureHandle(i, m_defaultTexture);
+        //for (uint i = BINDLESS_TEXTURE_START; i < BINDLESS_TEXTURE_COUNT; ++i)
+        //    if (BINDLESS_TEXTURE_INVALID != i)
+        //        copyTextureHandle(i, m_defaultTexture);
 
         // TODO: initialize other buffer types?
+    }
+
+    //--------------------------------------------------------------------------------------
+    void BindlessTable::updateBindlessTLASHandle(const BindlessTLASHandle & _handle, const gfx::TLAS * _tlas)
+    {
+        super::updateBindlessTLASHandle(_handle, _tlas);
     }
 }

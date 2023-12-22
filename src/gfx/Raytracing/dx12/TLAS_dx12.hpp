@@ -17,7 +17,7 @@ namespace vg::gfx::dx12
         m_resultBuffer = device->createBuffer(resultBufferDesc, "TLASResultBuffer");
 
         // alloc TLAS instance buffer
-        BufferDesc instanceBufferDesc = BufferDesc(Usage::Default, BindFlags::ConstantBuffer, CPUAccessFlags::Write, BufferFlags::None, sizeof(D3D12_RAYTRACING_INSTANCE_DESC), VG_TLAS_INSTANCECOUNT);
+        BufferDesc instanceBufferDesc = BufferDesc(Usage::Default, BindFlags::ShaderResource, CPUAccessFlags::Write, BufferFlags::None, sizeof(D3D12_RAYTRACING_INSTANCE_DESC), VG_TLAS_INSTANCECOUNT);
         m_instanceBuffer = device->createBuffer(instanceBufferDesc, "TLASInstanceBuffer", nullptr);
     }
 
@@ -74,6 +74,11 @@ namespace vg::gfx::dx12
         d3d12CmdList->BuildRaytracingAccelerationStructure(&desc, 0, nullptr);
 
         _cmdList->addRWBufferBarrier(m_resultBuffer);
+
+        BindlessTable * bindlessTable = gfx::Device::get()->getBindlessTable();
+
+        if (m_bindlessTLASHandle.isValid())
+            bindlessTable->updateBindlessTLASHandle(m_bindlessTLASHandle, static_cast<gfx::TLAS*>(this));
     }
 
     //--------------------------------------------------------------------------------------

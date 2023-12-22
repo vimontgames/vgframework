@@ -9,6 +9,7 @@ namespace vg::gfx
 {
     class Texture;
     class Buffer;
+    class TLAS;
 
     namespace base
     {
@@ -31,6 +32,9 @@ namespace vg::gfx
 
             BindlessRWBufferHandle allocBindlessRWBufferHandle(const gfx::Buffer * _buffer, ReservedSlot _reservedSlot = ReservedSlot::None);
             void freeBindlessRWBufferHandle(BindlessRWBufferHandle & _handle);
+
+            BindlessTLASHandle allocBindlessTLASHandle(const gfx::Buffer * _buffer, ReservedSlot _reservedSlot = ReservedSlot::None);
+            void freeBindlessTLASHandle(BindlessTLASHandle & _handle);
             
         private:
             template <class H, class T, class P> H allocBindlessHandle(const T * _resource, ReservedSlot _reservedSlot, P & _pool, T ** _resources, core::uint _offset, core::uint _invalid);
@@ -50,6 +54,9 @@ namespace vg::gfx
 
             core::IndexPool<BindlessHandle::Type, BINDLESS_RWBUFFER_COUNT>  m_rwBufferIndexPool;
             Buffer *                                                        m_rwBuffers[BINDLESS_RWBUFFER_COUNT];
+
+            core::IndexPool<BindlessHandle::Type, BINDLESS_TLAS_COUNT>      m_TLASIndexPool;
+            Buffer *                                                        m_TLAS[BINDLESS_RWBUFFER_COUNT];
         };
     }
 }
@@ -69,6 +76,8 @@ namespace vg::gfx
         ~BindlessTable();
 
         void init();
+
+        void updateBindlessTLASHandle(const BindlessTLASHandle & _handle, const gfx::TLAS * _tlas);
 
     private:
         gfx::Texture *   m_defaultTexture = nullptr;

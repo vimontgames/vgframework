@@ -73,4 +73,24 @@ namespace vg::gfx::dx12
 
         updated3d12descriptor(_slot);
     }
+
+    //--------------------------------------------------------------------------------------
+    void BindlessTable::updateBindlessTLASHandle(const BindlessTLASHandle & _handle, const gfx::TLAS * _tlas)
+    {
+        auto * device = gfx::Device::get();
+        auto * d3d12device = device->getd3d12Device();
+
+        Buffer * buffer = _tlas->getBuffer();
+        gfx::Resource & resource = buffer->getResource();
+        VG_ASSERT(resource.getd3d12BufferResource());
+
+        D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc = {};
+        srvDesc.ViewDimension = D3D12_SRV_DIMENSION_RAYTRACING_ACCELERATION_STRUCTURE;
+        srvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
+        srvDesc.RaytracingAccelerationStructure.Location = resource.getd3d12BufferResource()->GetGPUVirtualAddress();
+
+        D3D12_CPU_DESCRIPTOR_HANDLE d3d12DescriptorHandle = getd3d12CPUDescriptorHandle(_handle);
+        d3d12device->CreateShaderResourceView(nullptr, &srvDesc, d3d12DescriptorHandle);
+        updated3d12descriptor(_handle);
+    }
 }

@@ -62,10 +62,10 @@ namespace vg::gfx::dx12
 
         // Allocate Buffers for AS
         BufferDesc scratchBufferDesc(Usage::Default, BindFlags::UnorderedAccess, CPUAccessFlags::None, BufferFlags::None, alignUp((uint)sizeInfo.ScratchDataSizeInBytes, (uint)D3D12_RAYTRACING_ACCELERATION_STRUCTURE_BYTE_ALIGNMENT));
-        m_scratchBuffer = device->createBuffer(scratchBufferDesc, "ScratchBuffer");
+        m_scratchBuffer = device->createBuffer(scratchBufferDesc, "BLASScratchBuffer");
 
         BufferDesc resultBufferDesc(Usage::Default, BindFlags::RaytracingAccelerationStruct, CPUAccessFlags::None, BufferFlags::None, alignUp((uint)sizeInfo.ResultDataMaxSizeInBytes, (uint)D3D12_RAYTRACING_ACCELERATION_STRUCTURE_BYTE_ALIGNMENT));
-        m_resultBuffer = device->createBuffer(resultBufferDesc, "ResultBuffer");
+        m_resultBuffer = device->createBuffer(resultBufferDesc, "BLASResultBuffer");
     }
 
     //--------------------------------------------------------------------------------------
@@ -78,5 +78,6 @@ namespace vg::gfx::dx12
         desc.ScratchAccelerationStructureData = m_scratchBuffer->getResource().getd3d12BufferResource()->GetGPUVirtualAddress();
         desc.DestAccelerationStructureData = m_resultBuffer->getResource().getd3d12BufferResource()->GetGPUVirtualAddress();
         _cmdList->getd3d12GraphicsCommandList()->BuildRaytracingAccelerationStructure(&desc, 0, nullptr);
+        _cmdList->addRWBufferBarrier(m_resultBuffer);
     }
 }

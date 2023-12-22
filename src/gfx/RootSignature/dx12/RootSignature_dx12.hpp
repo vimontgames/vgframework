@@ -85,6 +85,20 @@ namespace vg::gfx::dx12
                     }
                     break;
 
+                    case RootSignatureTableDesc::Descriptor::Type::TLAS:
+                    {
+                        const auto & tlas = descriptor.getTLAS();
+
+                        d3d12Descriptor.RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SRV;
+                        d3d12Descriptor.BaseShaderRegister = tlas.m_register;
+                        d3d12Descriptor.NumDescriptors = tlas.m_count;
+                        d3d12Descriptor.RegisterSpace = tlas.m_binding;
+                        d3d12Descriptor.OffsetInDescriptorsFromTableStart = tlas.m_register;
+
+                        d3d12Descriptors.push_back(d3d12Descriptor);
+                    }
+                    break;
+
                     case RootSignatureTableDesc::Descriptor::Type::RWTexture:
                     {
                         const auto & textures = descriptor.getRWTextures();

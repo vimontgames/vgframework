@@ -62,6 +62,9 @@ namespace vg::renderer
 
         _frameGraph.addUserPass(_renderPassContext, m_backgroundPass, "BackgroundPass");
 
+        if (_renderPassContext.m_view->IsUsingRayTracing())
+            _frameGraph.addUserPass(_renderPassContext, m_TLASUpdatePass, "TLASUpdatePass");
+
         if (options->isZPrepassEnabled())
             _frameGraph.addUserPass(_renderPassContext, m_depthPrePass, "DepthPrepass");
 
@@ -74,10 +77,7 @@ namespace vg::renderer
             _frameGraph.addUserPass(_renderPassContext, m_computePostProcessPass, "ComputePostProcessPass");
 
         if (_renderPassContext.m_view->IsUsingRayTracing())
-        {
-            _frameGraph.addUserPass(_renderPassContext, m_TLASUpdatePass, "TLASUpdatePass");
             _frameGraph.addUserPass(_renderPassContext, m_testRayTracingPass, "TestRayTracingPass");
-        }
 
         _frameGraph.addUserPass(_renderPassContext, m_finalBlitPass, "FinalBlitPass");
     }

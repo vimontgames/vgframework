@@ -157,6 +157,35 @@ namespace vg::gfx::vulkan
 
             vkUpdateDescriptorSets(device->getVulkanDevice(), 1, &writes, 0, nullptr);
         }
+
+        // TODO : differentiate BLAS from TLAS and create descriptor only for TLAS?
+        if (_bufDesc.testBindFlags(BindFlags::RaytracingAccelerationStruct))
+        {
+            //BindlessTable * bindlessTable = device->getBindlessTable();
+            //m_tlasHandle = bindlessTable->allocBindlessTLASHandle(static_cast<gfx::Buffer *>(this), _reservedSlot);
+            //
+            //VkWriteDescriptorSetAccelerationStructureKHR vkASInfo = {};
+            //vkASInfo.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET_ACCELERATION_STRUCTURE_KHR;
+            //vkASInfo.accelerationStructureCount = 1;
+            //vkASInfo.pAccelerationStructures = &static_cast<const TLASInternal *>(pTLAS)->GetHandle();
+            //vkASInfo.pNext = nullptr;
+
+            //vkBufferInfo.buffer = m_resource.getVulkanBuffer();
+            //vkBufferInfo.offset = 0;
+            //vkBufferInfo.range = _bufDesc.getSize();
+            //
+            //VkWriteDescriptorSet writes = {};
+            //writes.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+            //writes.dstBinding = BINDLESS_BUFFER_BINDING;
+            //writes.descriptorCount = 1;
+            //writes.descriptorType = VK_DESCRIPTOR_TYPE_STORAGE_BUFFER;
+            //writes.pBufferInfo = &vkBufferInfo;
+            //writes.pTexelBufferView = &m_vkBufferView;
+            //writes.dstSet = device->getVulkanBindlessDescriptors();
+            //writes.dstArrayElement = m_bufferHandle - BINDLESS_BUFFER_START;
+            //
+            //vkUpdateDescriptorSets(device->getVulkanDevice(), 1, &writes, 0, nullptr);
+        }
     }
 
     //--------------------------------------------------------------------------------------

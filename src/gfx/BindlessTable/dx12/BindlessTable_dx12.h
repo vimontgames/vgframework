@@ -1,5 +1,10 @@
 #pragma once
 
+namespace vg::gfx
+{
+    class TLAS;
+}
+
 namespace vg::gfx::dx12
 {
     class BindlessTable : public base::BindlessTable
@@ -9,6 +14,8 @@ namespace vg::gfx::dx12
     public:
         BindlessTable();
         ~BindlessTable();
+
+        void                            updateBindlessTLASHandle    (const BindlessTLASHandle & _handle, const gfx::TLAS * _tlas);
 
         D3D12_CPU_DESCRIPTOR_HANDLE     getd3d12CPUDescriptorHandle (BindlessHandle _handle) const;
         D3D12_GPU_DESCRIPTOR_HANDLE     getd3d12GPUDescriptorHandle (BindlessHandle _handle) const;

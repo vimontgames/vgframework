@@ -21,14 +21,14 @@ namespace vg::gfx
         }
 
         //--------------------------------------------------------------------------------------
-        VG_INLINE const gfx::BindlessBufferHandle Buffer::getBufferHandle() const
+        VG_INLINE const gfx::BindlessBufferHandle & Buffer::getBufferHandle() const
         {
             VG_ASSERT(m_bufferHandle.isValid());
             return m_bufferHandle; 
         }
 
         //--------------------------------------------------------------------------------------
-        VG_INLINE const gfx::BindlessRWBufferHandle Buffer::getRWBufferHandle() const
+        VG_INLINE const gfx::BindlessRWBufferHandle & Buffer::getRWBufferHandle() const
         {
             VG_ASSERT(m_rwBufferHandle.isValid());
             return m_rwBufferHandle; 

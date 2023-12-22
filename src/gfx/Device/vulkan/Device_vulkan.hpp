@@ -461,7 +461,8 @@ namespace vg::gfx::vulkan
                 { VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE, BINDLESS_TEXTURE_COUNT },
 				{ VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, BINDLESS_BUFFER_COUNT },
                 { VK_DESCRIPTOR_TYPE_STORAGE_IMAGE, BINDLESS_RWTEXTURE_COUNT },
-				{ VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, BINDLESS_RWBUFFER_COUNT }
+				{ VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, BINDLESS_RWBUFFER_COUNT },
+				{ VK_DESCRIPTOR_TYPE_ACCELERATION_STRUCTURE_KHR, BINDLESS_TLAS_COUNT }
             };
 
             VkDescriptorPoolCreateInfo descriptor_pool = {};
@@ -894,17 +895,13 @@ namespace vg::gfx::vulkan
 
 		// TODO : clean this mess and declared chained structs only once
 
-		//VkPhysicalDeviceBufferDeviceAddressFeatures bufferDeviceAddressSupportedFeatures = {};
-		//bufferDeviceAddressSupportedFeatures.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_BUFFER_DEVICE_ADDRESS_FEATURES;
-		//bufferDeviceAddressSupportedFeatures.pNext = nullptr;
-
-        VkPhysicalDeviceDescriptorIndexingFeatures descriptorIndexingSupportedFeatures = {};
-		descriptorIndexingSupportedFeatures.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_INDEXING_FEATURES;
-		descriptorIndexingSupportedFeatures.pNext = nullptr; // &bufferDeviceAddressSupportedFeatures;
+		VkPhysicalDeviceRayQueryFeaturesKHR rayQuerySupportedFeatures = {};
+		rayQuerySupportedFeatures.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_RAY_QUERY_FEATURES_KHR;
+		rayQuerySupportedFeatures.pNext = nullptr;
 
 		VkPhysicalDeviceAccelerationStructureFeaturesKHR accelerationStructureSupportedFeatures = {};
 		accelerationStructureSupportedFeatures.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_ACCELERATION_STRUCTURE_FEATURES_KHR;
-		accelerationStructureSupportedFeatures.pNext = &descriptorIndexingSupportedFeatures;
+		accelerationStructureSupportedFeatures.pNext = &rayQuerySupportedFeatures;
 
         VkPhysicalDeviceVulkan12Features vulkan12SupportedFeatures = {};
         vulkan12SupportedFeatures.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_2_FEATURES;
@@ -930,17 +927,13 @@ namespace vg::gfx::vulkan
         if (m_caps.supportRayTracing)
             m_caps.rayTracingAccelerationStructureScratchOffsetAlignment = accelerationStructureProps.minAccelerationStructureScratchOffsetAlignment;
 
-        //VkPhysicalDeviceBufferDeviceAddressFeatures bufferDeviceAddressFeatures = {};
-        //bufferDeviceAddressFeatures.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_BUFFER_DEVICE_ADDRESS_FEATURES;
-        //bufferDeviceAddressFeatures.pNext = nullptr;
-
-        //VkPhysicalDeviceDescriptorIndexingFeatures descriptorIndexingFeatures = {};
-		//descriptorIndexingFeatures.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_INDEXING_FEATURES;
-		//descriptorIndexingFeatures.pNext = &bufferDeviceAddressFeatures;
+        VkPhysicalDeviceRayQueryFeaturesKHR rayQueryFeatures = {};
+		rayQueryFeatures.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_RAY_QUERY_FEATURES_KHR;
+		rayQueryFeatures.pNext = nullptr;
 
 		VkPhysicalDeviceAccelerationStructureFeaturesKHR accelerationStructureFeatures = {};
         accelerationStructureFeatures.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_ACCELERATION_STRUCTURE_FEATURES_KHR;
-		accelerationStructureFeatures.pNext = nullptr; // &bufferDeviceAddressFeatures; // &descriptorIndexingFeatures;
+		accelerationStructureFeatures.pNext = &rayQueryFeatures; 
 
         VkPhysicalDeviceVulkan12Features vulkan12Features = {};
         vulkan12Features.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_2_FEATURES;
@@ -976,7 +969,11 @@ namespace vg::gfx::vulkan
 		CheckVulkanFeature(vulkan12SupportedFeatures, vulkan12Features, bufferDeviceAddress, true);
 
 		if (m_caps.supportRayTracing)
-			CheckVulkanFeature(accelerationStructureSupportedFeatures, accelerationStructureFeatures, accelerationStructure, true)
+		{
+			CheckVulkanFeature(accelerationStructureSupportedFeatures, accelerationStructureFeatures, accelerationStructure, true);
+			CheckVulkanFeature(accelerationStructureSupportedFeatures, accelerationStructureFeatures, descriptorBindingAccelerationStructureUpdateAfterBind, true);
+			CheckVulkanFeature(rayQuerySupportedFeatures, rayQueryFeatures, rayQuery, true);
+		}
 
         VkPhysicalDeviceFeatures enabledFeatures = {};
 		CheckVulkanFeature(supportedFeatures.features, enabledFeatures, fillModeNonSolid, true);
