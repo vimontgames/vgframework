@@ -44,17 +44,17 @@ namespace vg::editor
                 EditorOptions * options = EditorOptions::get();
                 auto & gizmoOptions = options->getGizmoOptions();
 
-                if (ImGui::TooltipButton(style::icon::Translate, GizmoType::Translate == gizmoOptions.m_type, true, "Translate (T)", getButtonSize()))
+                if (ImGui::TooltipButton(style::icon::Translate, GizmoType::Translate == gizmoOptions.m_type, true, "Translate (Ctrl-T)", getButtonSize()))
                     options->setGizmoType(GizmoType::Translate);
 
                 nextItem();
 
-                if (ImGui::TooltipButton(style::icon::Rotate, GizmoType::Rotate == gizmoOptions.m_type, true, "Rotate (R)", getButtonSize()))
+                if (ImGui::TooltipButton(style::icon::Rotate, GizmoType::Rotate == gizmoOptions.m_type, true, "Rotate (Ctrl-R)", getButtonSize()))
                     options->setGizmoType(GizmoType::Rotate);
 
                 nextItem();
 
-                if (ImGui::TooltipButton(style::icon::Scale, GizmoType::Scale == gizmoOptions.m_type, true, "Scale (S)", getButtonSize()))
+                if (ImGui::TooltipButton(style::icon::Scale, GizmoType::Scale == gizmoOptions.m_type, true, "Scale (Ctrl-S)", getButtonSize()))
                     options->setGizmoType(GizmoType::Scale);
 
                 nextItem();

@@ -217,14 +217,20 @@ namespace vg::editor
         auto input = Kernel::getInput();
         auto options = EditorOptions::get();
 
-        if (input->IsKeyJustPressed(Key::T))
-            options->setGizmoType(GizmoType::Translate);
-        else if (input->IsKeyJustPressed(Key::R))
-            options->setGizmoType(GizmoType::Rotate);
-        else if (input->IsKeyJustPressed(Key::S))
-            options->setGizmoType(GizmoType::Scale);
-        else if (input->IsKeyJustPressed(Key::A))
-            options->setSnap(options->getSnap());
+        const bool shift = input->IsKeyPressed(Key::LSHIFT) || input->IsKeyPressed(Key::RSHIFT);
+        const bool ctrl = input->IsKeyPressed(Key::LCONTROL) || input->IsKeyPressed(Key::RCONTROL);
+
+        if (ctrl && !shift)
+        {
+            if (input->IsKeyJustPressed(Key::T))
+                options->setGizmoType(GizmoType::Translate);
+            else if (input->IsKeyJustPressed(Key::R))
+                options->setGizmoType(GizmoType::Rotate);
+            else if (input->IsKeyJustPressed(Key::S))
+                options->setGizmoType(GizmoType::Scale);
+            else if (input->IsKeyJustPressed(Key::A))
+                options->setSnap(options->getSnap());
+        }
     }
 
 	//--------------------------------------------------------------------------------------
