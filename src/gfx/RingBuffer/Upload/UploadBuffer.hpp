@@ -2,6 +2,7 @@
 #include "core/Math/Math.h"
 #include "gfx/CommandList/CommandList.h"
 #include "gfx/Resource/Buffer.h"
+#include "gfx/Profiler/Profiler.h"
 
 namespace vg
 {
@@ -29,10 +30,11 @@ namespace vg
         }
 
         //--------------------------------------------------------------------------------------
-        void UploadBuffer::unmap(Buffer * _buffer, core::u8 * _dst)
+        void UploadBuffer::unmap(Buffer * _buffer, core::u8 * _dst, size_t _size)
         {
+            VG_ASSERT((size_t)-1 != _size);
             if (nullptr != _dst)
-                upload(_buffer, _dst - getBaseAddress());
+                upload(_buffer, _dst - getBaseAddress(), _size);
             RingBuffer::unmap();
         }
 
@@ -52,10 +54,11 @@ namespace vg
         }
 
         //--------------------------------------------------------------------------------------
-        void UploadBuffer::upload(gfx::Buffer * _dst, core::uint_ptr _from)
+        void UploadBuffer::upload(gfx::Buffer * _dst, core::uint_ptr _from, size_t _size)
         {
             //VG_DEBUGPRINT("[UploadBuffer] upload buffer \"%s\" from 0x%016X\n", _dst->getName().c_str(), _from);
-            m_buffersToUpload.push_back({ _dst, _from });
+            VG_ASSERT((size_t)-1 != _size);
+            m_buffersToUpload.push_back({ _dst, {_from, _size} });
         }
 
         //--------------------------------------------------------------------------------------
@@ -65,6 +68,9 @@ namespace vg
 
             if (m_buffersToUpload.size() || m_texturesToUpload.size())
             {
+                VG_PROFILE_GPU_CONTEXT(_cmdList);
+                VG_PROFILE_GPU("Upload");
+
                 //VG_DEBUGPRINT("[UploadBuffer] Flush %u buffer(s) %u texture(s)\n", m_buffersToUpload.size(), m_texturesToUpload.size());
 
                 Buffer * src = getBuffer();
@@ -73,8 +79,7 @@ namespace vg
                 {
                     auto & pair = m_buffersToUpload[i];
                     Buffer * dst = pair.first;
-                    uint_ptr srcOffset = pair.second;
-                    _cmdList->copyBuffer(dst, src, srcOffset);
+                    _cmdList->copyBuffer(dst, src, pair.second.offset, pair.second.size);
                 }
                 m_buffersToUpload.clear();
 
@@ -82,8 +87,7 @@ namespace vg
                 {
                     auto & pair = m_texturesToUpload[i];
                     Texture * dst = pair.first;
-                    uint_ptr srcOffset = pair.second;
-                    _cmdList->copyTexture(dst, src, srcOffset);
+                    _cmdList->copyTexture(dst, src, pair.second.offset);
                 }
                 m_texturesToUpload.clear();
             }

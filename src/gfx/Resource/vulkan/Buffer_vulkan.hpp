@@ -121,8 +121,8 @@ namespace vg::gfx::vulkan
             {
                 VkMemoryRequirements mem_reqs;
                 vkGetBufferMemoryRequirements(device->getVulkanDevice(), getResource().getVulkanBuffer(), &mem_reqs);
-
-                u64 uploadBufferSize = mem_reqs.size;
+                VG_ASSERT(_bufDesc.getSize() == mem_reqs.size);
+                u64 uploadBufferSize = _bufDesc.getSize();
 
                 auto * uploadBuffer = device->getUploadBuffer();
                 u8 * dst = uploadBuffer->map(uploadBufferSize, (uint)mem_reqs.alignment);
@@ -131,7 +131,7 @@ namespace vg::gfx::vulkan
                     // Copy to upload buffer
                     memcpy(dst, _initData, _bufDesc.getSize());
                 }
-                uploadBuffer->unmap(static_cast<gfx::Buffer*>(this), dst);
+                uploadBuffer->unmap(static_cast<gfx::Buffer*>(this), dst, uploadBufferSize);
             }
         }
 

@@ -240,7 +240,7 @@ namespace vg::gfx::vulkan
                             currentOffset += w * h * fmtSize;
                         }
                     }
-                    uploadBuffer->unmap(static_cast<gfx::Texture*>(this), dst);
+                    uploadBuffer->unmap(static_cast<gfx::Texture*>(this), dst/*, uploadBufferSize*/);
                 }
 
                 if (asBool(BindFlags::UnorderedAccess & _texDesc.resource.m_bindFlags))

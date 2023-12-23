@@ -330,7 +330,7 @@ namespace vg::gfx::dx12
                         memcpy(dst + footprint[i].Offset + footprint[i].Footprint.RowPitch * y, (u8*)subResource[i].pData + subResource[i].RowPitch * y, strides[i]);
                 }
             }
-            uploadBuffer->unmap(static_cast<gfx::Texture*>(this), dst);
+            uploadBuffer->unmap(static_cast<gfx::Texture*>(this), dst/*, d3d12TotalSizeInBytes*/);
         }
 	}
 

@@ -682,7 +682,8 @@ namespace vg::renderer
         uint_ptr lineStartOffset = offset;
         uint lineCount = 0;
 
-        u8 * dbgDrawData = (u8 *)_cmdList->map(drawData.m_debugDrawVB).data;
+        const auto mapSizeInBytes = m_lines.size() * 2 * sizeof(DebugDrawVertex);
+        u8 * dbgDrawData = (u8 *)_cmdList->map(drawData.m_debugDrawVB, mapSizeInBytes).data;
         {
             for (uint i = 0; i < m_lines.size(); ++i)
             {
@@ -736,7 +737,7 @@ namespace vg::renderer
                 //}
             }
         }
-        _cmdList->unmap(drawData.m_debugDrawVB, dbgDrawData);
+        _cmdList->unmap(drawData.m_debugDrawVB);
 
         drawData.m_linesVBOffset = (u32)lineStartOffset;
         drawData.m_linesToDraw = lineCount;

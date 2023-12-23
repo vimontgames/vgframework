@@ -463,8 +463,10 @@ namespace vg::gfx::dx12
     }
 
     //--------------------------------------------------------------------------------------
-    Map CommandList::map(gfx::Buffer * _buffer)
+    Map CommandList::map(gfx::Buffer * _buffer, size_t _size)
     {   
+        VG_ASSERT((size_t)-1 != _size);
+
         Map result;
 
         if (_buffer->getBufDesc().resource.m_usage == Usage::Staging)
@@ -476,7 +478,7 @@ namespace vg::gfx::dx12
         {
             auto * device = gfx::Device::get();
             auto uploadBuffer = device->getUploadBuffer();
-            result.data = uploadBuffer->map(_buffer->getBufDesc().getSize(), D3D12_DEFAULT_RESOURCE_PLACEMENT_ALIGNMENT);
+            result.data = uploadBuffer->map(_size, D3D12_DEFAULT_RESOURCE_PLACEMENT_ALIGNMENT);
         }
 
         result.rowPitch = 0;
@@ -485,8 +487,10 @@ namespace vg::gfx::dx12
     }
     
     //--------------------------------------------------------------------------------------
-    void CommandList::unmap(gfx::Buffer * _buffer, void * VG_RESTRICT _data)
+    void CommandList::unmap(gfx::Buffer * _buffer, void * VG_RESTRICT _data, size_t _size)
     {
+        VG_ASSERT((size_t)-1 != _size);
+
         if (_buffer->getBufDesc().resource.m_usage == Usage::Staging)
         {
             VG_ASSERT(nullptr == _data, "The '_data' parameter should be NULL when mapping Staging Resources");
@@ -497,13 +501,13 @@ namespace vg::gfx::dx12
             VG_ASSERT(nullptr != _data, "The '_data' parameter should not be NULL when mapping Resources for Upload");
             auto * device = gfx::Device::get();
             auto uploadBuffer = device->getUploadBuffer();
-            uploadBuffer->unmap(_buffer, (u8 *)_data);
+            uploadBuffer->unmap(_buffer, (u8 *)_data, _size);
             uploadBuffer->flush((gfx::CommandList *)this);
         }
     }
 
     //--------------------------------------------------------------------------------------
-    void CommandList::copyBuffer(gfx::Buffer * _dst, gfx::Buffer * _src, core::uint_ptr _srcOffset)
+    void CommandList::copyBuffer(gfx::Buffer * _dst, gfx::Buffer * _src, core::uint_ptr _srcOffset, size_t _size)
     {
         auto * device = gfx::Device::get();
         auto & context = device->getCurrentFrameContext();
@@ -544,7 +548,7 @@ namespace vg::gfx::dx12
 			m_d3d12graphicsCmdList->ResourceBarrier(1, &barrier);
 		}
 
-        m_d3d12graphicsCmdList->CopyBufferRegion(dst, 0, src, _srcOffset, dstBufferDesc.getSize());
+        m_d3d12graphicsCmdList->CopyBufferRegion(dst, 0, src, _srcOffset, _size);
 
         // Copy dest to generic read barrier
         if (srcBufferDesc.resource.m_usage == Usage::Upload)

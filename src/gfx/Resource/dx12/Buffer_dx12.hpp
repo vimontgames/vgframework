@@ -95,7 +95,7 @@ namespace vg::gfx::dx12
             {
                 memcpy(dst, _initData, uploadBufferSize);
             }
-            uploadBuffer->unmap(static_cast<gfx::Buffer*>(this), dst);
+            uploadBuffer->unmap(static_cast<gfx::Buffer*>(this), dst, uploadBufferSize);
         }
     }
 

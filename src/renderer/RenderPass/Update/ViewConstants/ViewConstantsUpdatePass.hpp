@@ -55,7 +55,7 @@ namespace vg::renderer
 
         View * view = (View *)_renderPassContext.m_view;
 
-        ViewConstants * constants = (ViewConstants*)_cmdList->map(s_ViewConstantsBuffer).data;
+        ViewConstants * constants = (ViewConstants*)_cmdList->map(s_ViewConstantsBuffer, sizeof(ViewConstants)).data;
         {
             constants->setScreenSize(view->getSize());
             constants->setMousePos(view->GetRelativeMousePos());
@@ -70,6 +70,6 @@ namespace vg::renderer
             constants->setProjInv(view->getProjInvMatrix());
             constants->setTLASHandle(view->getTLASHandle());
         }
-        _cmdList->unmap(s_ViewConstantsBuffer, constants);
+        _cmdList->unmap(s_ViewConstantsBuffer);
     }
 }

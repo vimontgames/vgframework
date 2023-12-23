@@ -42,12 +42,12 @@ namespace vg::gfx::vulkan
         void                                dispatch                    (core::uint3 _threadGroupCount);
 
         // Copy
-        void                                copyBuffer                  (gfx::Buffer * _dst, gfx::Buffer * _src, core::uint_ptr _srcOffset);
+        void                                copyBuffer                  (gfx::Buffer * _dst, gfx::Buffer * _src, core::uint_ptr _srcOffset, size_t _size);
         void                                copyTexture                 (gfx::Texture * _dst, gfx::Buffer * _src, core::uint_ptr _srcOffset);
 
         // Misc
-        Map                                 map                         (gfx::Buffer * _buffer);
-        void                                unmap                       (gfx::Buffer * _buffer, void * VG_RESTRICT _data);
+        Map                                 map                         (gfx::Buffer * _buffer, size_t _size);
+        void                                unmap                       (gfx::Buffer * _buffer, void * VG_RESTRICT _data, size_t _size);
 
         void                                transitionResource          (gfx::Texture * _texture, ResourceState _before, ResourceState _after);
         void                                transitionResource          (gfx::Buffer * _buffer, ResourceState _before, ResourceState _after);

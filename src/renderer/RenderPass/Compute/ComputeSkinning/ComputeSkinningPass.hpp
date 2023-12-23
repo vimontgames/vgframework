@@ -69,36 +69,56 @@ namespace vg::renderer
     {
         uint dstMatOffset = 0;
 
-        // Upload bones matrices
-        u8 * skinningMatrices = (u8 *)_cmdList->map(m_skinningMatricesBuffer).data;
+        // Compute bones upload size
+        uint totalBoneCount = 0;
+        for (uint j = 0; j < m_skinnedMeshes.size(); ++j)
         {
-            for (uint j = 0; j < m_skinnedMeshes.size(); ++j)
+            const core::vector<MeshInstance *> & list = *m_skinnedMeshes[j];
+            for (uint i = 0; i < list.size(); ++i)
             {
-                const core::vector<MeshInstance *> & list = *m_skinnedMeshes[j];
-                for (uint i = 0; i < list.size(); ++i)
-                {
-                    MeshInstance * meshInstance = list[i];
-                    const MeshModel * meshModel = meshInstance->getMeshModel(Lod::Lod0);
-                    const Skeleton * skeleton = meshInstance->getInstanceSkeleton();
-                    const uint boneCount = skeleton->getBoneCount();
-                    const auto & nodes = skeleton->getNodes();
-                    const auto & boneIndices = skeleton->getBoneIndices();
-                    const auto & boneMatrices = skeleton->getBoneMatrices();
-                    VG_ASSERT(dstMatOffset + boneCount * sizeof(float4x4) < s_SkinningMatricesBufferSize, "[Skinning] Buffer is too small to store skinning matrices");
+                MeshInstance * meshInstance = list[i];
+                const MeshModel * meshModel = meshInstance->getMeshModel(Lod::Lod0);
+                const Skeleton * skeleton = meshInstance->getInstanceSkeleton();
+                const uint boneCount = skeleton->getBoneCount();
 
-                    for (uint b = 0; b < boneCount; ++b)
-                    {
-                        uint index = boneIndices[b];
-                        const MeshImporterNode & bone = nodes[index];
-                        float4x4 boneMatrix = mul(bone.node_to_world, boneMatrices[b]);
-                        (float4x4&)(skinningMatrices[dstMatOffset + b * sizeof(float4x4)]) = transpose(boneMatrix);
-                    }
-
-                    dstMatOffset += boneCount * sizeof(float4x4);
-                }
+                totalBoneCount += boneCount;
             }
         }
-        _cmdList->unmap(m_skinningMatricesBuffer, skinningMatrices); // TODO: pass the size actually written so that we don't update the whole buffer 
+        size_t mapSizeInBytes = m_skinningMatricesBuffer->getBufDesc().getSize();// totalBoneCount * sizeof(float4x4);
+
+        // Upload bones matrices
+        if (mapSizeInBytes > 0)
+        {
+            u8 * skinningMatrices = (u8 *)_cmdList->map(m_skinningMatricesBuffer, mapSizeInBytes).data;
+            {
+                for (uint j = 0; j < m_skinnedMeshes.size(); ++j)
+                {
+                    const core::vector<MeshInstance *> & list = *m_skinnedMeshes[j];
+                    for (uint i = 0; i < list.size(); ++i)
+                    {
+                        MeshInstance * meshInstance = list[i];
+                        const MeshModel * meshModel = meshInstance->getMeshModel(Lod::Lod0);
+                        const Skeleton * skeleton = meshInstance->getInstanceSkeleton();
+                        const uint boneCount = skeleton->getBoneCount();
+                        const auto & nodes = skeleton->getNodes();
+                        const auto & boneIndices = skeleton->getBoneIndices();
+                        const auto & boneMatrices = skeleton->getBoneMatrices();
+                        VG_ASSERT(dstMatOffset + boneCount * sizeof(float4x4) < s_SkinningMatricesBufferSize, "[Skinning] Buffer is too small to store skinning matrices");
+
+                        for (uint b = 0; b < boneCount; ++b)
+                        {
+                            uint index = boneIndices[b];
+                            const MeshImporterNode & bone = nodes[index];
+                            float4x4 boneMatrix = mul(bone.node_to_world, boneMatrices[b]);
+                            (float4x4 &)(skinningMatrices[dstMatOffset + b * sizeof(float4x4)]) = transpose(boneMatrix);
+                        }
+
+                        dstMatOffset += boneCount * sizeof(float4x4);
+                    }
+                }
+            }
+            _cmdList->unmap(m_skinningMatricesBuffer); // TODO: pass the size actually written so that we don't update the whole buffer 
+        }
 
         // Skin vertices
         dstMatOffset = 0;

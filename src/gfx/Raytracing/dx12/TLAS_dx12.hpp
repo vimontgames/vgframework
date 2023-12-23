@@ -42,12 +42,12 @@ namespace vg::gfx::dx12
         auto d3d12Device = device->getd3d12Device();
 
         VG_ASSERT(m_DXRInstanceDescriptors.size() < VG_TLAS_INSTANCECOUNT, "[Device] TLAS m_instanceBuffer is not big enough");
-
-        D3D12_RAYTRACING_INSTANCE_DESC * data = (D3D12_RAYTRACING_INSTANCE_DESC*)_cmdList->map(m_instanceBuffer).data;
+        const auto mapSizeInBytes = sizeof(D3D12_RAYTRACING_INSTANCE_DESC) * m_DXRInstanceDescriptors.size();
+        D3D12_RAYTRACING_INSTANCE_DESC * data = (D3D12_RAYTRACING_INSTANCE_DESC*)_cmdList->map(m_instanceBuffer, mapSizeInBytes).data;
         {
-            memcpy(data, m_DXRInstanceDescriptors.data(), sizeof(D3D12_RAYTRACING_INSTANCE_DESC) * m_DXRInstanceDescriptors.size());
+            memcpy(data, m_DXRInstanceDescriptors.data(), mapSizeInBytes);
         }
-        _cmdList->unmap(m_instanceBuffer, data);
+        _cmdList->unmap(m_instanceBuffer);
 
         // Get AS build Info
         D3D12_BUILD_RAYTRACING_ACCELERATION_STRUCTURE_INPUTS asInputs = {};

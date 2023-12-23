@@ -126,7 +126,7 @@ namespace vg::renderer
             m_toolmodeRWBufferStaging = device->createBuffer(stagingDesc, (toolmodeRWBuffer->getName() + "_Staging").c_str());
 
         // copy to staging
-        _cmdList->copyBuffer(m_toolmodeRWBufferStaging, toolmodeRWBuffer);
+        _cmdList->copyBuffer(m_toolmodeRWBufferStaging, toolmodeRWBuffer, 0);
 
         // TODO: wait or make sure the IDs remain valid even for deleted objects
         Map result = m_toolmodeRWBufferStaging->getResource().map();

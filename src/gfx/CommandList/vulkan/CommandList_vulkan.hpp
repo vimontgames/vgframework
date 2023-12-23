@@ -390,8 +390,10 @@ namespace vg::gfx::vulkan
     }
 
     //--------------------------------------------------------------------------------------
-    Map CommandList::map(gfx::Buffer * _buffer)
+    Map CommandList::map(gfx::Buffer * _buffer, size_t _size)
     {
+        VG_ASSERT((size_t)-1 != _size);
+
         auto * device = gfx::Device::get();
         auto uploadBuffer = device->getUploadBuffer();
 
@@ -406,7 +408,9 @@ namespace vg::gfx::vulkan
         {
             VkMemoryRequirements mem_reqs;
             vkGetBufferMemoryRequirements(device->getVulkanDevice(), _buffer->getResource().getVulkanBuffer(), &mem_reqs);
-            result.data = uploadBuffer->map(mem_reqs.size, (uint)mem_reqs.alignment);
+            VG_ASSERT(mem_reqs.size == _buffer->getBufDesc().getSize());
+
+            result.data = uploadBuffer->map(_size, (uint)mem_reqs.alignment);
         }
         
         result.rowPitch = 0;
@@ -415,8 +419,10 @@ namespace vg::gfx::vulkan
     }
 
     //--------------------------------------------------------------------------------------
-    void CommandList::unmap(gfx::Buffer * _buffer, void * VG_RESTRICT _data)
+    void CommandList::unmap(gfx::Buffer * _buffer, void * VG_RESTRICT _data, size_t _size)
     {
+        VG_ASSERT((size_t)-1 != _size);
+
         if (_buffer->getBufDesc().resource.m_usage == Usage::Staging)
         {
             VG_ASSERT(nullptr == _data, "The '_data' parameter should be NULL when mapping Staging Resources");
@@ -427,13 +433,13 @@ namespace vg::gfx::vulkan
             VG_ASSERT(nullptr != _data, "The '_data' parameter should not be NULL when mapping Resources for Upload");
             auto * device = gfx::Device::get();
             auto uploadBuffer = device->getUploadBuffer();
-            uploadBuffer->unmap(_buffer, (u8 *)_data);
+            uploadBuffer->unmap(_buffer, (u8 *)_data, _size);
             uploadBuffer->flush((gfx::CommandList *)this);
         }
     }
       
     //--------------------------------------------------------------------------------------
-    void CommandList::copyBuffer(gfx::Buffer * _dst, gfx::Buffer * _src, core::uint_ptr _srcOffset)
+    void CommandList::copyBuffer(gfx::Buffer * _dst, gfx::Buffer * _src, core::uint_ptr _srcOffset, size_t _size)
     {
         auto * device = gfx::Device::get();
         auto & context = device->getCurrentFrameContext();
@@ -443,7 +449,7 @@ namespace vg::gfx::vulkan
         VkBufferCopy vkBufferCopy = {};
         vkBufferCopy.srcOffset = _srcOffset; 
         vkBufferCopy.dstOffset = 0; 
-        vkBufferCopy.size = desc.getSize();
+        vkBufferCopy.size = _size; // desc.getSize();
 
         VkBufferMemoryBarrier vkBufMemBarrierBefore = {};
         vkBufMemBarrierBefore.sType = VK_STRUCTURE_TYPE_BUFFER_MEMORY_BARRIER;
@@ -456,7 +462,7 @@ namespace vg::gfx::vulkan
 
         // Make sure anything that was copying from this image has completed 
         vkBufMemBarrierBefore.dstAccessMask = VK_ACCESS_TRANSFER_WRITE_BIT;
-        vkBufMemBarrierBefore.size = desc.getSize();
+        vkBufMemBarrierBefore.size = _size; //desc.getSize();
 
         vkCmdPipelineBarrier(m_vkCommandBuffer, VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT, VK_PIPELINE_STAGE_TRANSFER_BIT, 0, 0, nullptr, 1, &vkBufMemBarrierBefore, 0, nullptr);
 
@@ -470,7 +476,7 @@ namespace vg::gfx::vulkan
         vkBufMemBarrierAfter.srcQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
         vkBufMemBarrierAfter.dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
         vkBufMemBarrierAfter.buffer = _dst->getResource().getVulkanBuffer();
-        vkBufMemBarrierAfter.size = desc.getSize();
+        vkBufMemBarrierAfter.size = _size; //desc.getSize();
         
         vkCmdPipelineBarrier(m_vkCommandBuffer, VK_PIPELINE_STAGE_TRANSFER_BIT, VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT, 0, 0, nullptr, 1, &vkBufMemBarrierAfter, 0, nullptr);
     }

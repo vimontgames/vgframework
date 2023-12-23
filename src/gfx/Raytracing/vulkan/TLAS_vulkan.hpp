@@ -63,11 +63,12 @@ namespace vg::gfx::vulkan
 
         VG_ASSERT(m_VKInstances.size() < VG_TLAS_INSTANCECOUNT, "[Device] TLAS m_instanceBuffer is not big enough");
 
-        VkAccelerationStructureInstanceKHR * data = (VkAccelerationStructureInstanceKHR *)_cmdList->map(m_instanceBuffer).data;
+        auto sizeInBytes = sizeof(VkAccelerationStructureInstanceKHR) * m_VKInstances.size();
+        VkAccelerationStructureInstanceKHR * data = (VkAccelerationStructureInstanceKHR *)_cmdList->map(m_instanceBuffer, sizeInBytes).data;
         {
-            memcpy(data, m_VKInstances.data(), sizeof(VkAccelerationStructureInstanceKHR) * m_VKInstances.size());
+            memcpy(data, m_VKInstances.data(), sizeInBytes);
         }
-        _cmdList->unmap(m_instanceBuffer, data);
+        _cmdList->unmap(m_instanceBuffer);
 
         // TLAS info
         VkAccelerationStructureGeometryKHR tlasGeometry{};

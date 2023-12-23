@@ -126,8 +126,8 @@ namespace vg::gfx
         void                            dispatch                    (core::uint3 _threadGroupCount);
 
         // Copy
-        VG_INLINE void                  copyTexture                 (gfx::Texture * _dst, gfx::Buffer * _src, core::uint_ptr _srcOffset = 0);
-        VG_INLINE void                  copyBuffer                  (gfx::Buffer * _dst, gfx::Buffer * _src, core::uint_ptr _srcOffset = 0);
+        VG_INLINE void                  copyTexture                 (gfx::Texture * _dst, gfx::Buffer * _src, core::uint_ptr _srcOffset);
+        VG_INLINE void                  copyBuffer                  (gfx::Buffer * _dst, gfx::Buffer * _src, core::uint_ptr _srcOffset, size_t _size = (size_t) - 1);
 
         VG_INLINE void                  transitionResource          (gfx::Texture * _texture, ResourceState _before, ResourceState _after);
         VG_INLINE void                  transitionResource          (gfx::Buffer * _buffer, ResourceState _before, ResourceState _after);
@@ -135,12 +135,22 @@ namespace vg::gfx
         VG_INLINE void                  addRWTextureBarrier         (gfx::Texture * _texture);
         VG_INLINE void                  addRWBufferBarrier          (gfx::Buffer * _buffer);
 
-        VG_INLINE Map                   map                         (gfx::Buffer * _buffer);
-        VG_INLINE void                  unmap                       (gfx::Buffer * _buffer, void * VG_RESTRICT _data = nullptr);
+        VG_INLINE Map                   map                         (gfx::Buffer * _buffer, size_t _size);
+        VG_INLINE void                  unmap                       (gfx::Buffer * _buffer);
 
         // Misc
         VG_INLINE void                  clearRWBuffer               (Buffer * _buffer, core::uint _clearValue);
         void                            resetShaders                (ShaderKey::File _file);
+
+    private:
+        struct MapInfo
+        {
+            Buffer *    buffer = nullptr;
+            Texture *   texture = nullptr;
+            void *      data = nullptr;
+            size_t      size = (size_t)-1;
+        };
+        MapInfo                         m_curMapInfo;
 	};
 }
 
