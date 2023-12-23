@@ -51,14 +51,16 @@ namespace vg::engine
     //--------------------------------------------------------------------------------------
     const IResourceInfo & ResourceManager::GetResourceInfo(core::uint _index) const
     {
-        auto it = m_resourceInfosMap.begin();
-        uint i = 0;
-        while (i < _index && it != m_resourceInfosMap.end())
-        {
-            it = std::next(it);
-            i++;
-        }
-        return *it->second;
+        return *std::next(m_resourceInfosMap.begin(), _index)->second;
+
+        //auto it = m_resourceInfosMap.begin();
+        //uint i = 0;
+        //while (i < _index && it != m_resourceInfosMap.end())
+        //{
+        //    it = std::next(it);
+        //    i++;
+        //}
+        //return *it->second;
     }
 
     //--------------------------------------------------------------------------------------
@@ -452,5 +454,19 @@ namespace vg::engine
         #if !VG_RESOURCE_MANAGER_ASYNC_LOADING
         updateLoading(false);
         #endif
+    }
+
+    //--------------------------------------------------------------------------------------
+    void ResourceManager::Lock()
+    {
+        m_addResourceToLoadRecursiveMutex.lock();
+        m_resourceLoadedAsyncMutex.lock();
+    }
+
+    //--------------------------------------------------------------------------------------
+    void ResourceManager::Unlock()
+    {
+        m_addResourceToLoadRecursiveMutex.unlock();
+        m_resourceLoadedAsyncMutex.unlock();
     }
 }

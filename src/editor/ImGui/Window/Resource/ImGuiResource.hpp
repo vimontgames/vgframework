@@ -19,10 +19,12 @@ namespace vg::editor
         {
             engine::IResourceManager * rm = Editor::get()->getEngine()->GetResourceManager();
 
-            const auto resCount = rm->GetResourceCount();
-
-            if (ImGui::TextButton("Press 'F7' to", "Reload Resources", rm != nullptr && resCount > 0 && !rm->HasResourceLoading(), "Reimport all modified resources"))
+            if (ImGui::TextButton("Press 'F7' to", "Reload Resources", rm != nullptr && !rm->HasResourceLoading(), "Reimport all modified resources"))
                 rm->UpdateResources();
+
+            rm->Lock();
+
+            const auto resCount = rm->GetResourceCount();
 
             // Sort Resources by resource type
             unordered_map<string, vector<const IResourceInfo *>> resourcesByType;
@@ -186,7 +188,9 @@ namespace vg::editor
                 //    displayObject(rm); 
             }
             ImGui::EndChild();
+
+            rm->Unlock();
         }  
-        ImGui::End();  
+        ImGui::End();          
     }
 }

@@ -16,13 +16,17 @@ namespace vg::engine
 {
     class ResourceInfo;
 
-    class ResourceManager : public IResourceManager, public core::Singleton<ResourceManager>
+    class ResourceManager final : public IResourceManager, public core::Singleton<ResourceManager>
     {
     public:
         VG_CLASS_DECL(ResourceManager, IResourceManager);
 
         ResourceManager(const core::string & _name, IObject * _parent);
         ~ResourceManager();
+
+        // Lock during editing
+        void                    Lock                        () final override;
+        void                    Unlock                      () final override;
 
         bool                    HasResourceLoading          () const final override;
         core::uint              GetResourceCount            () const final override;
