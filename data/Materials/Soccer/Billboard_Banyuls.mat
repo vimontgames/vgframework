@@ -1,0 +1,30 @@
+<Root>
+    <Object class="MaterialResourceData">
+        <Property type="String" name="m_name" flags="Hidden" value="MaterialResourceData #21"/>
+        <Property type="Object" name="m_materialModelType">
+            <Object class="MaterialModelType">
+                <Property type="String" name="m_name" flags="Hidden" value=""/>
+                <Property type="String" name="m_shader" value="Default"/>
+            </Object>
+        </Property>
+        <Property type="ObjectRef" name="m_data" flags="Flatten">
+            <Object class="DefaultMaterialData">
+                <Property type="String" name="m_name" flags="Hidden" value="Default"/>
+                <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value=""/>
+                <Property type="Resource" name="m_albedoMap" flags="Resource">
+                    <Object class="TextureResource">
+                        <Property type="String" name="m_name" flags="Hidden" value=""/>
+                        <Property type="String" name="m_resourcePath" flags="Hidden" value="data/Textures/Soccer/Banyuls.psd"/>
+                    </Object>
+                </Property>
+                <Property type="Float4" name="m_albedoColor" flags="Color" x="1" y="1" z="1" w="1"/>
+                <Property type="Resource" name="m_normalMap" flags="Resource">
+                    <Object class="TextureResource">
+                        <Property type="String" name="m_name" flags="Hidden" value=""/>
+                        <Property type="String" name="m_resourcePath" flags="Hidden" value=""/>
+                    </Object>
+                </Property>
+            </Object>
+        </Property>
+    </Object>
+</Root>

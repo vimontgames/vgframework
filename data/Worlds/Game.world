@@ -3,7 +3,7 @@
         <Property type="String" name="m_name" flags="Hidden" value="Game"/>
         <Property type="ObjectRef" name="m_world">
             <Object class="World">
-                <Property type="String" name="m_name" flags="Hidden" value="World #3"/>
+                <Property type="String" name="m_name" flags="Hidden" value="World #1"/>
             </Object>
         </Property>
         <Property type="ResourceRefVector" name="m_sceneResources" flags="Resource">
@@ -14,17 +14,17 @@
             </Object>
             <Object class="SceneResource">
                 <Property type="String" name="m_name" flags="Hidden" value=""/>
-                <Property type="String" name="m_resourcePath" flags="Hidden" value="data/Scenes/TestPhysics.scene"/>
-                <Property type="String" name="m_name" value=""/>
-            </Object>
-            <Object class="SceneResource">
-                <Property type="String" name="m_name" flags="Hidden" value=""/>
                 <Property type="String" name="m_resourcePath" flags="Hidden" value="data/Scenes/Pablo.scene"/>
                 <Property type="String" name="m_name" value=""/>
             </Object>
             <Object class="SceneResource">
                 <Property type="String" name="m_name" flags="Hidden" value=""/>
                 <Property type="String" name="m_resourcePath" flags="Hidden" value="data/Scenes/Romeo.scene"/>
+                <Property type="String" name="m_name" value=""/>
+            </Object>
+            <Object class="SceneResource">
+                <Property type="String" name="m_name" flags="Hidden" value=""/>
+                <Property type="String" name="m_resourcePath" flags="Hidden" value="data/Scenes/Soccer.scene"/>
                 <Property type="String" name="m_name" value=""/>
             </Object>
         </Property>

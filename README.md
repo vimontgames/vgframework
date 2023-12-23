@@ -180,14 +180,20 @@ https://www.nuget.org/packages/WinPixEventRuntime
 Jess Casual Walking 001\
 https://www.cgtrader.com/free-3d-models/character/woman/woman-jess-casual-walking-001
 
-3d scan man 1\
+3d scan man\
 https://www.cgtrader.com/free-3d-models/character/man/3d-scan-man
 
 3D Scan Man Summer 016\
 https://www.cgtrader.com/free-3d-models/character/man/3d-scan-man-summer-016
 
-Pablo model\
-https://www.turbosquid.com/3d-models/luigi-super-model-1308288 (modified)
+Luigi\
+https://www.turbosquid.com/3d-models/luigi-super-model-1308288 
+
+3D Foot Ball Free low-poly 3D\
+https://www.cgtrader.com/free-3d-models/sports/game/3d-foot-ball
+
+Traffic Cone Free 3D model
+https://www.cgtrader.com/free-3d-models/exterior/street-exterior/traffic-cone-5849a434-2331-4a90-9b87-087ccc16cd0c
 
 
 # disclaimer

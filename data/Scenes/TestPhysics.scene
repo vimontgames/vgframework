@@ -145,7 +145,7 @@
                                 <Property type="String" name="m_name" value="Blue Cube"/>
                                 <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
                                 <Property type="Float4" name="m_color" flags="Color" x="0" y="0.38610029" z="1" w="1"/>
-                                <Property type="Float4x4" name="m_world" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="-2.75" Ty="4" Tz="4" Tw="1"/>
+                                <Property type="Float4x4" name="m_world" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="-2.75" Ty="0.5" Tz="5.5" Tw="1"/>
                                 <Property type="ObjectRefVector" name="m_components">
                                     <Object class="MeshComponent">
                                         <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
@@ -171,9 +171,9 @@
                                                 <Property type="EnumU16" name="m_layer" flags="ReadOnly" value="Moving"/>
                                                 <Property type="EnumU8" name="m_motion" flags="ReadOnly" value="Dynamic"/>
                                                 <Property type="Bool" name="m_overrideMass" flags="Hidden" value="true"/>
-                                                <Property type="Float" name="m_mass" flags="Optional" value="2000"/>
-                                                <Property type="Float" name="m_friction" flags="HasRange" value="0.5"/>
-                                                <Property type="Float" name="m_restitution" flags="HasRange" value="0"/>
+                                                <Property type="Float" name="m_mass" flags="Optional" value="300"/>
+                                                <Property type="Float" name="m_friction" flags="HasRange" value="0.1"/>
+                                                <Property type="Float" name="m_restitution" flags="HasRange" value="0.25"/>
                                                 <Property type="EnumU8" name="m_shapeType" value="Box"/>
                                             </Object>
                                         </Property>
@@ -369,8 +369,8 @@
                                                 <Property type="EnumU8" name="m_motion" flags="ReadOnly" value="Dynamic"/>
                                                 <Property type="Bool" name="m_overrideMass" flags="Hidden" value="true"/>
                                                 <Property type="Float" name="m_mass" flags="Optional" value="1000"/>
-                                                <Property type="Float" name="m_friction" flags="HasRange" value="0.5"/>
-                                                <Property type="Float" name="m_restitution" flags="HasRange" value="0.50700003"/>
+                                                <Property type="Float" name="m_friction" flags="HasRange" value="0.1"/>
+                                                <Property type="Float" name="m_restitution" flags="HasRange" value="0.89999998"/>
                                                 <Property type="EnumU8" name="m_shapeType" value="Sphere"/>
                                             </Object>
                                         </Property>

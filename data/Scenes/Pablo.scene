@@ -165,7 +165,7 @@
                                 <Property type="Float" name="m_walkSpeed" value="1.5"/>
                                 <Property type="Float" name="m_runSpeed" value="3"/>
                                 <Property type="Float" name="m_jumpSpeed" value="4"/>
-                                <Property type="Float" name="m_runJumpSpeed" value="5"/>
+                                <Property type="Float" name="m_runJumpSpeed" value="6"/>
                                 <Property type="LayoutElement" name="Debug"/>
                                 <Property type="LayoutElement" name=""/>
                             </Object>
