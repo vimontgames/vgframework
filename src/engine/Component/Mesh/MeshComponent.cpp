@@ -46,9 +46,12 @@ namespace vg::engine
     //--------------------------------------------------------------------------------------
     MeshComponent::~MeshComponent()
     {
+        // MeshComponent may have no PickingID if the mesh was not found
         auto * picking = Engine::get()->GetRenderer()->GetPicking();
         PickingID id = m_meshInstance->GetPickingID();
-        picking->ReleasePickingID(id);
+        if (id)
+            picking->ReleasePickingID(id);
+
         getGameObject()->removeGraphicInstance(m_meshInstance);
         m_registered = false;
         Engine::get()->GetRenderer()->ReleaseAsync(m_meshInstance);

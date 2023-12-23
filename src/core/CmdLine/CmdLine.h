@@ -1,6 +1,7 @@
 #pragma once
 
 #include "core/Types/Types.h"
+#include "core/string/string.h"
 
 namespace vg::core
 {
@@ -13,6 +14,14 @@ namespace vg::core
 		bool getBool(const string & _key, bool & _value) const;
 
 	private:
-		map<string, string> m_args;
+        struct CaseInsensitive
+        {
+            bool operator()(const std::string & a, const std::string & b) const noexcept
+            {
+				return core::tolower(a).compare(core::tolower(b)) < 0;
+            }
+        };
+
+		std::map<string, string, CaseInsensitive> m_args;
 	};
 }

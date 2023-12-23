@@ -4,10 +4,20 @@
         <Property type="Bool" name="m_toolMode" value="false"/>
         <Property type="Bool" name="m_wireframe" value="false"/>
         <Property type="Bool" name="m_aabb" flags="SameLine" value="false"/>
+        <Property type="EnumU8" name="m_VSync" value="VBL_1"/>
+        <Property type="Float4" name="m_backgroundColor" flags="Color" x="0" y="0" z="0" w="0"/>
+        <Property type="EnumFlagsU32" name="m_renderPassFlags" flags="Bitfield" value="ZPrepass|Opaque|Transparency"/>
+        <Property type="LayoutElement" name="Materials"/>
         <Property type="EnumU32" name="m_debugDisplayMode" value="Default"/>
         <Property type="EnumFlagsU32" name="m_displayFlags" flags="Bitfield" value="AlbedoMap|NormalMap"/>
-        <Property type="EnumFlagsU32" name="m_renderPassFlags" flags="Bitfield" value="ZPrepass|Opaque|Transparency|PostProcess"/>
-        <Property type="Float4" name="m_backgroundColor" flags="Color" x="0" y="0" z="0" w="0"/>
-        <Property type="EnumU8" name="m_VSync" value="VBL_1"/>
+        <Property type="LayoutElement" name=""/>
+        <Property type="LayoutElement" name="RayTracing"/>
+        <Property type="Bool" name="m_rayTracing" value="false"/>
+        <Property type="EnumU32" name="m_rayTracingMode" value="Default"/>
+        <Property type="LayoutElement" name=""/>
+        <Property type="LayoutElement" name="PostProcess"/>
+        <Property type="Bool" name="m_postProcess" value="true"/>
+        <Property type="EnumU32" name="m_postProcessMode" value="Default"/>
+        <Property type="LayoutElement" name=""/>
     </Object>
 </Root>

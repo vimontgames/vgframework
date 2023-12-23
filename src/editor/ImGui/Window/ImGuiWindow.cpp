@@ -1252,7 +1252,7 @@ namespace vg::editor
         // Create new file
         if (fileBrowser.showFileDialog(newFileButtonName.c_str(), imgui_addons::ImGuiFileBrowser::DialogMode::SAVE, style::dialog::Size, ext.c_str()))
         {
-            const string newFilePath = fileBrowser.selected_path;
+            const string newFilePath = io::addExtensionIfNotPresent(fileBrowser.selected_path, _resource->getExtensions());
             if (_resource->CreateFile(newFilePath))
             {
                 _resource->SetResourcePath(newFilePath);

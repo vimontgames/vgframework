@@ -192,7 +192,7 @@ https://www.turbosquid.com/3d-models/luigi-super-model-1308288
 3D Foot Ball Free low-poly 3D\
 https://www.cgtrader.com/free-3d-models/sports/game/3d-foot-ball
 
-Traffic Cone Free 3D model
+Traffic Cone Free 3D model\
 https://www.cgtrader.com/free-3d-models/exterior/street-exterior/traffic-cone-5849a434-2331-4a90-9b87-087ccc16cd0c
 
 

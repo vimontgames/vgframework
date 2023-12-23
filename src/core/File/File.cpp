@@ -10,7 +10,7 @@ using namespace std;
 namespace vg::core::io
 {
     //--------------------------------------------------------------------------------------
-    bool getLastWriteTime(const core::string _file, FileAccessTime * _lastWrite)
+    bool getLastWriteTime(const string _file, FileAccessTime * _lastWrite)
     {
         bool succeeded = false;
 
@@ -32,7 +32,7 @@ namespace vg::core::io
     }
 
     //--------------------------------------------------------------------------------------
-    bool setLastWriteTime(const core::string & _file, FileAccessTime _lastWrite)
+    bool setLastWriteTime(const string & _file, FileAccessTime _lastWrite)
     {
         bool succeeded = false;
 
@@ -70,7 +70,7 @@ namespace vg::core::io
     }
 
     //--------------------------------------------------------------------------------------
-    bool readFile(const core::string & _file, core::string & _out, bool _mustExist)
+    bool readFile(const string & _file, string & _out, bool _mustExist)
     {
         Buffer buffer;
 
@@ -112,13 +112,13 @@ namespace vg::core::io
     }
 
     //--------------------------------------------------------------------------------------
-    bool writeFile(const core::string & _file, const core::string & _in, bool _mustExist)
+    bool writeFile(const string & _file, const string & _in, bool _mustExist)
     {
         return writeFile(_file, Buffer((const u8*)_in.c_str(), _in.size()), _mustExist);
     }
 
     //--------------------------------------------------------------------------------------
-    bool writeFile(const core::string & _file, const Buffer & _in, bool _mustExist)
+    bool writeFile(const string & _file, const Buffer & _in, bool _mustExist)
     {
         const auto dir = getFileDir(_file);
 
@@ -147,7 +147,7 @@ namespace vg::core::io
     }
 
     //--------------------------------------------------------------------------------------
-    bool openFileWrite(const core::string & _file, FileHandle & _fileHandle, bool _append)
+    bool openFileWrite(const string & _file, FileHandle & _fileHandle, bool _append)
     {
         const auto dir = getFileDir(_file);
 
@@ -191,7 +191,7 @@ namespace vg::core::io
     }
 
     //--------------------------------------------------------------------------------------
-    core::string getFileDir(const core::string & _file)
+    string getFileDir(const string & _file)
     {
         size_t found = _file.find_last_of("/\\");
         return _file.substr(0, found);
@@ -201,7 +201,7 @@ namespace vg::core::io
     string getFileName(const string & _file)
     {
         auto found = _file.find_last_of('/');
-        if (core::string::npos != found)
+        if (string::npos != found)
         {
             string name = _file.substr(found+1);
             return name;
@@ -215,7 +215,7 @@ namespace vg::core::io
     {
         string filename = getFileName(_file);
         auto dot = filename.find_last_of('.');
-        if (core::string::npos != dot)
+        if (string::npos != dot)
         {
             string name = filename.substr(0, dot);
             return name;
@@ -225,23 +225,45 @@ namespace vg::core::io
     }
 
     //--------------------------------------------------------------------------------------
-    core::string addExtensionIfNotPresent(const core::string & _filename, const core::string & _ext)
+    string addExtensionIfNotPresent(const string & _file, const string & _ext)
     {
-        size_t findExt = _filename.find_last_of(_ext);
-        if (findExt != _filename.length() - 1)
-            return _filename + _ext;
+        size_t findExt = _file.find_last_of(_ext);
+        if (findExt != _file.length() - 1)
+            return _file + _ext;
         else
-            return _filename;
+            return _file;
     }
 
     //--------------------------------------------------------------------------------------
-    core::string getCookedPath(const core::string & _file)
+    string addExtensionIfNotPresent(const string & _file, const vector<string> _ext)
+    {
+        VG_ASSERT(_ext.size() > 0);
+
+        bool extensionFound = false;
+        for (uint i = 0; i < _ext.size(); ++i)
+        {
+            size_t findExt = _file.find_last_of(_ext[i]); 
+            if (findExt != _file.length() - 1)
+            {
+                extensionFound = true;
+                break;
+            }
+        }
+
+        if (!extensionFound && _ext.size() > 0)
+            return _file + _ext[0];
+
+        return _file;
+    }
+
+    //--------------------------------------------------------------------------------------
+    string getCookedPath(const string & _file)
     {
         return "cache/" + _file + ".bin";
     }
 
     //--------------------------------------------------------------------------------------
-    core::string findAndReplace(const core::string & _string, const core::string & _find, const std::string & _replace)
+    string findAndReplace(const string & _string, const string & _find, const std::string & _replace)
     {
         string res;
 
@@ -261,13 +283,13 @@ namespace vg::core::io
     }
 
     //--------------------------------------------------------------------------------------
-    core::string cleanPath(const core::string & _file)
+    string cleanPath(const string & _file)
     {
         return findAndReplace(_file, "\\", "/");
     }
 
     //--------------------------------------------------------------------------------------
-    core::string getCurrentWorkingDirectory()
+    string getCurrentWorkingDirectory()
     {
         const string syscwd = (std::filesystem::current_path()).string();
         const string path = cleanPath(syscwd);
@@ -291,13 +313,13 @@ namespace vg::core::io
     }
 
     //--------------------------------------------------------------------------------------
-    void setCurrentWorkingDirectory(const core::string & _path)
+    void setCurrentWorkingDirectory(const string & _path)
     {
         std::filesystem::current_path(_path);
     }
 
     //--------------------------------------------------------------------------------------
-    core::string getRelativePath(const core::string & _file)
+    string getRelativePath(const string & _file)
     {
         auto path = cleanPath(_file);
         const auto cwd = getRootDirectory();
@@ -310,7 +332,7 @@ namespace vg::core::io
     }
 
     //--------------------------------------------------------------------------------------
-    bool exists(const core::string & _file)
+    bool exists(const string & _file)
     {
         #if VG_WINDOWS
         return INVALID_FILE_ATTRIBUTES != GetFileAttributesA(_file.c_str());
@@ -320,7 +342,7 @@ namespace vg::core::io
     }
 
     //--------------------------------------------------------------------------------------
-    bool createPath(const core::string & _dir)
+    bool createPath(const string & _dir)
     {
         string directory = _dir;
 
@@ -341,7 +363,7 @@ namespace vg::core::io
     }
 
     //--------------------------------------------------------------------------------------
-    bool createFolder(const core::string & _dir)
+    bool createFolder(const string & _dir)
     {
         #if VG_WINDOWS
         if (!CreateDirectoryA(_dir.c_str(), nullptr))
