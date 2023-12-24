@@ -10,7 +10,7 @@ VG_REGISTER_COMPONENT_CLASS(PlayerBehaviour, "Player", "Game", "Player Behaviour
 
 //--------------------------------------------------------------------------------------
 PlayerBehaviour::PlayerBehaviour(const string & _name, IObject * _parent) :
-    Component(_name, _parent)
+    super(_name, _parent)
 {
     SetUpdateFlags(UpdateFlags::FixedUpdate | UpdateFlags::Update);
 }
@@ -58,6 +58,16 @@ void PlayerBehaviour::OnPlay()
         m_anim[PlayerState::Running] = animationComponent->GetAnimationIndex("Running");
         m_anim[PlayerState::Jumping] = animationComponent->GetAnimationIndex("Jump");
     } 
+
+    Game::get()->addPlayer(this);
+}
+
+//--------------------------------------------------------------------------------------
+void PlayerBehaviour::OnStop()
+{
+    Game::get()->removePlayer(this);
+
+    super::OnStop();
 }
 
 //--------------------------------------------------------------------------------------

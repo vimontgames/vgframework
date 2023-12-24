@@ -139,7 +139,7 @@ namespace vg::renderer
     {
         IFactory * factory = Kernel::getFactory();
 
-        // Register classes to auto-register the "Engine" module
+        // Register classes to auto-register from the "Renderer" module
         AutoRegisterClassInfo::registerClasses(*factory);
 
         if (IClassDesc * desc = factory->registerPlugin(Renderer, "Renderer"))

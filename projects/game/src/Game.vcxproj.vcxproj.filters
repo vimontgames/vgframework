@@ -6,12 +6,18 @@
     <ClCompile Include="Behaviour\PlayerBehaviour.cpp">
       <Filter>Behaviour\Player</Filter>
     </ClCompile>
+    <ClCompile Include="Component\GameCamera\GameCameraComponent.cpp">
+      <Filter>Component\GameCamera</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Precomp.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="Behaviour\PlayerBehaviour.h">
       <Filter>Behaviour\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="Component\GameCamera\GameCameraComponent.h">
+      <Filter>Component\GameCamera</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -23,6 +29,9 @@
     </Filter>
     <Filter Include="Behaviour\Player">
       <UniqueIdentifier>{cdec89b6-4019-4a02-bb85-3c75afb4edb1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Component\GameCamera">
+      <UniqueIdentifier>{88dd00ff-ac99-4e67-b2b9-6d4bcd77e90d}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

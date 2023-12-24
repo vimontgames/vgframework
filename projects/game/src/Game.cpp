@@ -44,11 +44,19 @@ IPlugin::Version Game::GetVersion() const
 }
 
 //--------------------------------------------------------------------------------------
+bool Game::registerProperties(IClassDesc & _desc)
+{
+    super::registerProperties(_desc);
+
+    return true;
+}
+
+//--------------------------------------------------------------------------------------
 bool Game::RegisterClasses()
 {
     IFactory * factory = Kernel::getFactory();
 
-    // Register classes to auto-register the "Engine" module
+    // Register classes to auto-register from the "Game" module
     AutoRegisterClassInfo::registerClasses(*factory);
 
     if (IClassDesc * desc = factory->registerPlugin(Game, "Game"))
@@ -107,4 +115,18 @@ vg::core::IInput & Game::Input()
     auto * input = Kernel::getInput();
     VG_ASSERT(input);
     return *input;
+}
+
+//--------------------------------------------------------------------------------------
+void Game::addPlayer(PlayerBehaviour * _player)
+{
+    VG_ASSERT(!m_players.exists(_player));
+    m_players.push_back(_player);
+}
+
+//--------------------------------------------------------------------------------------
+void Game::removePlayer(PlayerBehaviour * _player)
+{
+    VG_ASSERT(m_players.exists(_player));
+    m_players.remove(_player);
 }

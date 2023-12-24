@@ -77,12 +77,16 @@
                                 <Property type="Float" name="m_far" flags="HasRange" value="1024"/>
                             </Object>
                             <Object class="FreeCamBehaviour">
-                                <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
+                                <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value=""/>
                                 <Property type="Float" name="m_moveSpeed" flags="HasRange" value="1"/>
                                 <Property type="Float" name="m_rotSpeed" flags="HasRange" value="1"/>
                                 <Property type="Float" name="m_pitch" flags="HasRange" value="-0.92900002"/>
                                 <Property type="Float" name="m_yaw" flags="HasRange" value="3.1411855"/>
                                 <Property type="Float" name="m_roll" flags="HasRange" value="0"/>
+                            </Object>
+                            <Object class="GameCameraComponent">
+                                <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
+                                <Property type="Float" name="m_speed" value="1"/>
                             </Object>
                         </Property>
                         <Property type="ObjectRefVector" name="m_children" flags="Hidden"/>

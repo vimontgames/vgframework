@@ -9,15 +9,16 @@ enum PlayerState : vg::core::u8
     Jumping
 };
 
-class PlayerBehaviour : public vg::core::Component
+class PlayerBehaviour final: public vg::core::Behaviour
 {
 public:
-    VG_CLASS_DECL(PlayerBehaviour, vg::core::Component);
+    VG_CLASS_DECL(PlayerBehaviour, vg::core::Behaviour);
 
                     PlayerBehaviour     (const vg::core::string & _name, vg::core::IObject * _parent);
                     ~PlayerBehaviour    ();
 
     void            OnPlay              () final override;
+    void            OnStop              () final override;
 
     void            FixedUpdate         (float _dt) override;
     void            Update              (float _dt) override;

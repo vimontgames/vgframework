@@ -128,7 +128,7 @@ namespace vg::editor
     {
         core::IFactory * factory = Kernel::getFactory();
 
-        // Register classes to auto-register the "Engine" module
+        // Register classes to auto-register from the "Editor" module
         AutoRegisterClassInfo::registerClasses(*factory);
 
         if (core::IClassDesc * desc = factory->registerPlugin(Editor, "Editor"))
