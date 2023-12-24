@@ -91,12 +91,12 @@ First run might take a few seconds because files are cooking.
 | PAUSE			| Pause/resume Play mode
 | F11			| Maximize Game view (fullscreen)
 | ESCAPE		| Exit Play mode and go back to Editor mode
-| Ctrl-R		| Rename selected Object
 | DELETE		| Deleted selected Ojects
+| Ctrl-R		| Rename selected Object
 | Ctrl-Q		| Quit application
-| T				| Translation gizmo
-| R				| Rotation gizmo
-| S				| Scale gizmo
+| Ctrl-T		| Translation gizmo
+| Ctrl-R		| Rotation gizmo
+| Ctrl-S		| Scale gizmo
 
 ## ide
 VS Studio 2022 Community\
