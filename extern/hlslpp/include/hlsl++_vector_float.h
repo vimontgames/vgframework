@@ -13,9 +13,9 @@ namespace hlslpp
 	// Measured to be marginally faster than the 4-shuffle
 	hlslpp_inline n128 _hlslpp_cross_ps(n128 x, n128 y)
 	{
-		n128 yzx_0 = _hlslpp_perm_yzxx_ps(x);
-		n128 yzx_1 = _hlslpp_perm_yzxx_ps(y);
-		return _hlslpp_perm_yzxx_ps(_hlslpp_msub_ps(x, yzx_1, _hlslpp_mul_ps(yzx_0, y)));
+		n128 x_yzx = _hlslpp_perm_yzxx_ps(x);
+		n128 y_yzx = _hlslpp_perm_yzxx_ps(y);
+		return _hlslpp_perm_yzxx_ps(_hlslpp_msub_ps(x, y_yzx, _hlslpp_mul_ps(x_yzx, y)));
 	}
 
 	hlslpp_inline n128 _hlslpp_dot2_ps(n128 x, n128 y)
@@ -639,6 +639,8 @@ namespace hlslpp
 	hlslpp_inline float3& operator %= (float3& f1, const float3& f2) { f1 = f1 % f2; return f1; }
 	hlslpp_inline float4& operator %= (float4& f1, const float4& f2) { f1 = f1 % f2; return f1; }
 
+HLSLPP_WARNINGS_IMPLICIT_CONSTRUCTOR_BEGIN
+
 	// Pre-increment
 
 	hlslpp_inline float1& operator ++ (float1& f) { f = f + float1(f4_1); return f; }
@@ -690,6 +692,8 @@ namespace hlslpp
 	hlslpp_inline swizzle3<X, Y, Z> operator -- (swizzle3<X, Y, Z>& f, int) { swizzle3<X, Y, Z> tmp = f; f = f - float3(f4_1); return tmp; }
 	template<int X, int Y, int Z, int W>
 	hlslpp_inline swizzle4<X, Y, Z, W> operator -- (swizzle4<X, Y, Z, W>& f, int) { swizzle4<X, Y, Z, W> tmp = f; f = f - float4(f4_1); return tmp; }
+
+HLSLPP_WARNINGS_IMPLICIT_CONSTRUCTOR_END
 
 	//------------------------------------------------------------------------------------------------------------------------
 	// float1 and swizzle1 need special overloads to disambiguate between our operators/functions and built-in float operators
@@ -882,6 +886,11 @@ namespace hlslpp
 	hlslpp_inline float2 degrees(const float2& f) { return float2(_hlslpp_mul_ps(f.vec, f4_rad2deg)); }
 	hlslpp_inline float3 degrees(const float3& f) { return float3(_hlslpp_mul_ps(f.vec, f4_rad2deg)); }
 	hlslpp_inline float4 degrees(const float4& f) { return float4(_hlslpp_mul_ps(f.vec, f4_rad2deg)); }
+
+	hlslpp_inline float1 distance(const float1& f1, const float1& f2) { return float1(_hlslpp_abs_ps(_hlslpp_sub_ps(f2.vec, f1.vec))); }
+	hlslpp_inline float1 distance(const float2& f1, const float2& f2) { n128 delta = _hlslpp_sub_ps(f2.vec, f1.vec); return float1(_hlslpp_sqrt_ps(_hlslpp_dot2_ps(delta, delta))); }
+	hlslpp_inline float1 distance(const float3& f1, const float3& f2) { n128 delta = _hlslpp_sub_ps(f2.vec, f1.vec); return float1(_hlslpp_sqrt_ps(_hlslpp_dot3_ps(delta, delta))); }
+	hlslpp_inline float1 distance(const float4& f1, const float4& f2) { n128 delta = _hlslpp_sub_ps(f2.vec, f1.vec); return float1(_hlslpp_sqrt_ps(_hlslpp_dot4_ps(delta, delta))); }
 
 	hlslpp_inline float1 dot(const float1& f1, const float1& f2) { return f1 * f2; }
 	hlslpp_inline float1 dot(const float2& f1, const float2& f2) { return float1(_hlslpp_dot2_ps(f1.vec, f2.vec)); }
@@ -1173,31 +1182,100 @@ namespace hlslpp
 	template<int X, int Y> hlslpp_inline float1 operator <= (const swizzle1<X>& f1, const swizzle1<Y>& f2) { return float1(f1) <= float1(f2); }
 
 	template<int X>
+	hlslpp_inline swizzle1<X>& swizzle1<X>::operator = (float f)
+	{
+		vec = _hlslpp_blend_ps(vec, _hlslpp_set1_ps(f), HLSLPP_COMPONENT_X(X));
+		return *this;
+	}
+
+	// Revise these functions. Can I not do with swizzle?
+
+	template<int X>
+	template<int A>
+	hlslpp_inline swizzle1<X>& swizzle1<X>::operator = (const swizzle1<A>& s)
+	{
+		n128 t = _hlslpp_shuffle_ps(s.vec, s.vec, HLSLPP_SHUFFLE_MASK(A, A, A, A));
+		vec = _hlslpp_blend_ps(vec, t, HLSLPP_COMPONENT_X(X));
+		return *this;
+	}
+
+	template<int X>
+	hlslpp_inline swizzle1<X>& swizzle1<X>::operator = (const swizzle1<X>& s)
+	{
+		n128 t = _hlslpp_shuffle_ps(s.vec, s.vec, HLSLPP_SHUFFLE_MASK(X, X, X, X));
+		vec = _hlslpp_blend_ps(vec, t, HLSLPP_COMPONENT_X(X));
+		return *this;
+	}
+
+	template<int X>
 	swizzle1<X>& swizzle1<X>::operator = (const float1& f)
 	{
 		vec = _hlslpp_blend_ps(vec, hlslpp_swizzle1_swizzle(0, X, f.vec), HLSLPP_COMPONENT_X(X)); return *this;
 	}
 
 	template<int X, int Y>
+	template<int A, int B>
+	hlslpp_inline swizzle2<X, Y>& swizzle2<X, Y>::operator = (const swizzle2<A, B>& s)
+	{
+		static_assert(X != Y, "\"l-value specifies const object\" No component can be equal for assignment.");
+		vec = hlslpp_swizzle2_blend(vec, hlslpp_swizzle2_swizzle(A, B, X, Y, s.vec));
+		return *this;
+	}
+
+	template<int X, int Y>
+	hlslpp_inline swizzle2<X, Y>& swizzle2<X, Y>::operator = (const swizzle2<X, Y>& s)
+	{
+		static_assert(X != Y, "\"l-value specifies const object\" No component can be equal for assignment.");
+		vec = hlslpp_swizzle2_blend(vec, hlslpp_swizzle2_swizzle(X, Y, X, Y, s.vec));
+		return *this;
+	}
+
+	template<int X, int Y>
 	swizzle2<X, Y>& swizzle2<X, Y>::operator = (const float2& f)
 	{
-		staticAsserts();
+		static_assert(X != Y, "\"l-value specifies const object\" No component can be equal for assignment.");
 		vec = hlslpp_swizzle2_blend(vec, hlslpp_swizzle2_swizzle(0, 1, X, Y, f.vec));
+		return *this;
+	}
+
+	template<int X, int Y, int Z>
+	template<int A, int B, int C>
+	hlslpp_inline swizzle3<X, Y, Z>& swizzle3<X, Y, Z>::operator = (const swizzle3<A, B, C>& s)
+	{
+		static_assert(X != Y && X != Z && Y != Z, "\"l-value specifies const object\" No component can be equal for assignment.");
+		vec = hlslpp_swizzle3_blend(vec, hlslpp_swizzle3_swizzle(A, B, C, X, Y, Z, s.vec));
+		return *this;
+	}
+
+	template<int X, int Y, int Z>
+	hlslpp_inline swizzle3<X, Y, Z>& swizzle3<X, Y, Z>::operator = (const swizzle3<X, Y, Z>& s)
+	{
+		static_assert(X != Y && X != Z && Y != Z, "\"l-value specifies const object\" No component can be equal for assignment.");
+		vec = hlslpp_swizzle3_blend(vec, hlslpp_swizzle3_swizzle(X, Y, Z, X, Y, Z, s.vec));
 		return *this;
 	}
 
 	template<int X, int Y, int Z>
 	swizzle3<X, Y, Z>& swizzle3<X, Y, Z>::operator = (const float3& f)
 	{
-		staticAsserts();
+		static_assert(X != Y && X != Z && Y != Z, "\"l-value specifies const object\" No component can be equal for assignment.");
 		vec = hlslpp_swizzle3_blend(vec, hlslpp_swizzle3_swizzle(0, 1, 2, X, Y, Z, f.vec));
+		return *this;
+	}
+
+	template<int X, int Y, int Z, int W>
+	template<int A, int B, int C, int D>
+	hlslpp_inline swizzle4<X, Y, Z, W>& swizzle4<X, Y, Z, W>::operator = (const swizzle4<A, B, C, D>& s)
+	{
+		static_assert(X != Y && X != Z && X != W && Y != Z && Y != W && Z != W, "\"l-value specifies const object\" No component can be equal for assignment.");
+		vec = hlslpp_swizzle4_swizzle(A, B, C, D, X, Y, Z, W, s.vec);
 		return *this;
 	}
 
 	template<int X, int Y, int Z, int W>
 	swizzle4<X, Y, Z, W>& swizzle4<X, Y, Z, W>::operator = (const float4& f)
 	{
-		staticAsserts();
+		static_assert(X != Y && X != Z && X != W && Y != Z && Y != W && Z != W, "\"l-value specifies const object\" No component can be equal for assignment.");
 		vec = hlslpp_swizzle4_swizzle(0, 1, 2, 3, X, Y, Z, W, f.vec);
 		return *this;
 	}

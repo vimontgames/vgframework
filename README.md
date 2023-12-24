@@ -125,15 +125,16 @@ Also don't forget to set the *working directory* to **$(SolutionDir)**.
 | -------------------------- | ------------- | ------------------------------------------------------------- 
 | D3D12 Memory Allocator     |				 | https://github.com/GPUOpen-LibrariesAndSDKs/D3D12MemoryAllocator
 | Dear ImGui				 |				 | https://github.com/ocornut/imgui/commits/docking
+| DirectXShaderCompiler		 | August 2023   | https://github.com/microsoft/DirectXShaderCompiler/releases/tag/v1.7.2308
 | Dirent					 |				 | https://github.com/tronkko/dirent
-| Font-Awesome-6.x			 |				 | https://github.com/FortAwesome/Font-Awesome/tree/6.x
+| Font-Awesome			     | 6.x		     | https://github.com/FortAwesome/Font-Awesome/tree/6.x
 | fmt 						 | 10.1.1		 | https://github.com/fmtlib/fmt/releases/tag/10.1.1
-| hlslpp					 | 3.3.1		 | https://github.com/redorav/hlslpp/releases/tag/3.3.1
+| hlslpp					 | 3.4			 | https://github.com/redorav/hlslpp/releases/tag/3.4
 | IconFontCppHeaders		 |				 | https://github.com/juliettef/IconFontCppHeaders
 | ImGui-Addons				 |				 | https://github.com/gallickgunner/ImGui-Addons
 | ImGuizmo					 | 1.83			 | https://github.com/CedricGuillemet/ImGuizmo/releases/tag/1.83
 | JoltPhysics				 | 4.0.1		 | https://github.com/jrouwe/JoltPhysics/releases/tag/v4.0.1
-| magic_enum				 |				 | https://github.com/Neargye/magic_enum
+| magic_enum				 | 0.9.4		 | https://github.com/Neargye/magic_enum
 | optick (*)				 | 1.3.1		 | https://github.com/bombomby/optick
 | px_sched					 |				 | https://github.com/pplux/px
 | stb						 |				 | https://github.com/nothings/stb

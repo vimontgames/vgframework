@@ -11,6 +11,12 @@
 
 const float deg2rad = 3.14159265f / 180.0f;
 
+#if defined(_MSC_VER)
+	#define sprintf_safe(dst, dst_size, format, ...) sprintf_s(dst, dst_size, format, __VA_ARGS__)
+#else
+	#define sprintf_safe(dst, dst_size, format, ...) snprintf(dst, dst_size, format, __VA_ARGS__)
+#endif
+
 namespace hlslpp_unit
 {
 	using namespace hlslpp;
@@ -91,6 +97,7 @@ namespace hlslpp_unit
 
 			printf("%s\n", TestState.scratchAppveyorCommand.c_str());
 			int result = std::system(TestState.scratchAppveyorCommand.c_str());
+			hlslpp_unit_unused(result);
 		}
 	}
 
@@ -115,7 +122,7 @@ namespace hlslpp_unit
 				TestState.testPassed = false;
 
 				char functionLine[512] = {};
-				sprintf(functionLine, "%s %s(%d)", TestCaseState.testString, TestCaseState.filename, TestCaseState.lineNumber);
+				sprintf_safe(functionLine, sizeof(functionLine), "%s %s(%d)", TestCaseState.testString, TestCaseState.filename, TestCaseState.lineNumber);
 
 				TestState.testFailureMessages.push_back(functionLine);
 				TestState.testFailureMessages.push_back(TestCaseState.testFailureMessage);
@@ -149,7 +156,7 @@ namespace hlslpp_unit
 		if (!withinTolerance)
 		{
 			char assertMessage[512] = {};
-			sprintf(assertMessage, "Assertion failed! Values are not equal: a = %f, b = %f, tolerance = %f", a, b, tolerance);
+			sprintf_safe(assertMessage, sizeof(assertMessage), "Assertion failed! Values are not equal: a = %f, b = %f, tolerance = %f", a, b, tolerance);
 			TestCaseState.testFailureMessage += assertMessage;
 		}
 
@@ -382,9 +389,9 @@ namespace hlslpp_unit
 
 	bool eq(const float3x2& m, float m00, float m01, float m10, float m11, float m20, float m21, float tolerance /*= 0.0f*/)
 	{
-		return eq(m.f32_0[0], m00, tolerance); eq(m.f32_1[0], m01, tolerance)
-			&& eq(m.f32_0[1], m10, tolerance); eq(m.f32_1[1], m11, tolerance)
-			&& eq(m.f32_0[2], m20, tolerance); eq(m.f32_1[2], m21, tolerance);
+		return eq(m.f32_0[0], m00, tolerance) && eq(m.f32_1[0], m01, tolerance)
+			&& eq(m.f32_0[1], m10, tolerance) && eq(m.f32_1[1], m11, tolerance)
+			&& eq(m.f32_0[2], m20, tolerance) && eq(m.f32_1[2], m21, tolerance);
 	}
 
 	bool eq(const float3x3& m, float m00, float m01, float m02, float m10, float m11, float m12, float m20, float m21, float m22, float tolerance /*= 0.0f*/)
@@ -462,6 +469,19 @@ namespace hlslpp_unit
 		return x + (y - x) * a;
 	}
 
+	float round_f(float x)
+	{
+		float t = trunc_f(x);
+		float frac = x - t;
+		float abs_frac = frac >= 0.0f ? frac : -frac;
+		return abs_frac <= 0.5f ? t : x >= 0.0f ? t + 1.0f : t - 1.0f;
+	}
+
+	float trunc_f(float x)
+	{
+		return (float)((int)x);
+	}
+
 	void maxErrorExhaustive(Vec4Func vectorFunction, ScalarFunc scalarFunction, const char* funcName, float rangeStart, float rangeEnd)
 	{
 		struct ErrorInfo
@@ -515,7 +535,7 @@ namespace hlslpp_unit
 		int32_t posRangeStart = std::max<int32_t>(0, rangeStart_t.i);
 		int32_t posRangeEnd = std::max<int32_t>(0, rangeEnd_t.i);
 
-		for (uint64_t i = posRangeStart; i < posRangeEnd; ++i)
+		for (int32_t i = posRangeStart; i < posRangeEnd; ++i)
 		{
 			float_t input;
 			input.i = (int32_t)i;
@@ -549,6 +569,7 @@ namespace hlslpp_unit
 
 }
 
+HLSLPP_UNIT_UNUSED_VARIABLE_BEGIN
 void RunExperiments()
 {
 	printf("1) Experiments started\n");
@@ -639,28 +660,9 @@ void RunExperiments()
 
 	float3 intTexCoord = float3(1, 2, 3);
 
-	const float M = 10.0f;
-
-	float4 pato = float4(10.0f, 5.0f, 0.5f, 4.0f);
-
-	//pato.zw += pato.yx;
-
-	//pato.z = 1.0f / pato.z;
-
-	float1 integerPart, fracPart;
-
-	fracPart = modf(-testq.y, integerPart);
-
-	//float checker = fmod(float1(10.0f), float1(3.0f)) > 0.5f;// ^ fmod(intTexCoord.y * M, 1.0f) > 0.5f;
-	//
-	//float checker2 = max(intTexCoord.x * M, 1.0f);// > 0.5f ^ fmod(intTexCoord.y * M, 1.0f) > 0.5f;
-
-	//float2 p = (float2) q1.xyzw;
-
-	//printf("%f %f %f %f\n", q3.x, q3.y, q3.z, q3.w);
-
 	printf("Experiments completed\n\n");
 }
+HLSLPP_UNIT_UNUSED_VARIABLE_END
 
 void RunUnitTestsMatrixFloat();
 
@@ -694,26 +696,6 @@ void RunUnitTests()
 	RunUnitTestsQuaternion();
 
 	RunUnitTestsMatrixTransform();
-
-	// Quaternion tests
-
-	quaternion q1 = quaternion::identity();
-	quaternion q2 = quaternion(0.0f, 1.0f, 1.0f, 1.0f);
-
-	quaternion qeuler1 = quaternion::rotation_euler_zxy(float3(90.0f * deg2rad, 45.0f * deg2rad, 0.0f * deg2rad));
-	quaternion qeuler2 = quaternion::rotation_euler_zxy(float3(180.0f * deg2rad, 0.0f * deg2rad, 0.0f * deg2rad));
-
-	quaternion qaxisangle = quaternion::rotation_axis(float3(0.0f, 1.0f, 0.0f), 1.57f);
-
-	quaternion slerp1 = slerp(q1, q2, 0.0f);
-	quaternion slerp2 = slerp(q1, q2, 1.0f);
-	
-	quaternion slerp3 = slerp(q1, q2, 0.5f);
-	
-	quaternion testq = quaternion(0.66519f, 0.1881441f, 0.282216f, 0.665190f);
-
-	float3x3 mat3x3FromQuat = float3x3(q1);
-	float4x4 mat4x4FromQuat = float4x4(q1);
 
 	printf("Unit tests completed\n\n");
 }
@@ -768,36 +750,26 @@ void RunPerformanceTests()
 	float4x4 m4x4_1(f1, f2, f3, f4, f5, f6, f7, f8, f9, f10, f11, f12, f13, f14, f15, f16);
 	float4x4 m4x4_2(f2);
 
-	const float2x4 m2x4_1 = float2x4(1, 2, 3, 4, 5, 6, 7, 8);
-	const float4x4 m2 = float4x4(
-		1, 2, 3, 4,
-		5, 6, 7, 8,
-		9, 10, 11, 12,
-		13, 14, 15, 16);
-
-	const float2x4 m3 = mul(m2x4_1, m2);
-
-	bool b1 = false;
-
 	quaternion q1 = quaternion(f1, f2, f3, f4);
 	quaternion q2 = quaternion(f4, f1, f3, f2);
 
 	float1 t1_1 = f1;
-	float1 t1_2 = f2;
-	float1 t1_3 = f3;
 
 	const long int iter = 100000000;
 
 	float3x3 m = float3x3::rotation_y(3.1415f / 2.0f);
 
 	benchmark<float4x4, iter>("m4x4 add", [&]() -> float4x4 { m4x4_1 = m4x4_1 + m4x4_2; return m4x4_1; });
+	benchmark<quaternion, iter>("quaternion slerp", [&]() -> quaternion { q1 = slerp(q1, q2, t1_1); return q1; });
+	benchmark<quaternion, iter>("quaternion nlerp", [&]() -> quaternion { q1 = nlerp(q1, q2, t1_1); return q1; });
+	benchmark<quaternion, iter>("quaternion lerp", [&]() -> quaternion { q1 = lerp(q1, q2, t1_1); return q1; });
 	benchmark<quaternion, iter>("rotation_euler_zxy", [&]() -> quaternion { q1 = quaternion::rotation_euler_zxy(q1.xyz); return q1; });
 	benchmark<float3x3, iter>("m3x3 inverse", [&]() -> float3x3 { m3x3_1 = inverse(m3x3_1); return m3x3_1; });
 	benchmark<float4x4, iter>("m4x4 inverse", [&]() -> float4x4 { m4x4_1 = inverse(m4x4_1); return m4x4_1; });
 	benchmark<quaternion, iter>("rotation_axis_cosangle", [&]() -> quaternion { q1 = quaternion::rotation_axis_cosangle(q1.xyz, f1, 1.0f); return q1; });
 	benchmark<quaternion, iter>("rotation_axis", [&]() -> quaternion { q1 = quaternion::rotation_axis(q1.xyz, t1_1); return q1; });
 	benchmark<quaternion, iter>("conjugate", [&]() -> quaternion { q1 = conjugate(q1); return q1; });
-	benchmark<quaternion, iter>("slerp", [&]() -> quaternion { q1 = slerp(q1, q2, t1_1); return q1; });
+	
 	benchmark<quaternion, iter>("quaternion(m3x3)", [&]() -> quaternion { q1 = quaternion(m); return q1; });
 
 	benchmark<float4x4, iter>("m4x4 add", [&]() -> float4x4 { m4x4_1 = m4x4_1 + m4x4_2; return m4x4_1; });

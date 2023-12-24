@@ -11,6 +11,7 @@ namespace hlslpp
 		hlslpp_inline vector_float4(float f) : x(f), y(f), z(f), w(f) {}
 		hlslpp_inline vector_float4(float f1, float f2, float f3, float f4) : x(f1), y(f2), z(f3), w(f4) {}
 
+		HLSLPP_WARNING_ANONYMOUS_STRUCT_UNION_BEGIN
 		union
 		{
 			struct
@@ -25,6 +26,7 @@ namespace hlslpp
 
 			float m[4];
 		};
+		HLSLPP_WARNING_ANONYMOUS_STRUCT_UNION_END
 	};
 
 	struct vector_int4
@@ -36,6 +38,7 @@ namespace hlslpp
 		hlslpp_inline vector_int4(int32_t i) : x(i), y(i), z(i), w(i) {}
 		hlslpp_inline vector_int4(int32_t i1, int32_t i2, int32_t i3, int32_t i4) : x(i1), y(i2), z(i3), w(i4) {}
 
+		HLSLPP_WARNING_ANONYMOUS_STRUCT_UNION_BEGIN
 		union
 		{
 			struct
@@ -45,6 +48,7 @@ namespace hlslpp
 
 			int32_t m[4];
 		};
+		HLSLPP_WARNING_ANONYMOUS_STRUCT_UNION_END
 	};
 
 	struct vector_uint4
@@ -55,6 +59,7 @@ namespace hlslpp
 		hlslpp_inline vector_uint4(uint32_t i) : x(i), y(i), z(i), w(i) {}
 		hlslpp_inline vector_uint4(uint32_t i1, uint32_t i2, uint32_t i3, uint32_t i4) : x(i1), y(i2), z(i3), w(i4) {}
 
+		HLSLPP_WARNING_ANONYMOUS_STRUCT_UNION_BEGIN
 		union
 		{
 			struct
@@ -64,6 +69,7 @@ namespace hlslpp
 
 			uint32_t m[4];
 		};
+		HLSLPP_WARNING_ANONYMOUS_STRUCT_UNION_END
 	};
 
 	typedef vector_float4 n128;
@@ -81,12 +87,18 @@ namespace hlslpp
 	hlslpp_inline vector_float4 _hlslpp_add_ps(const vector_float4& v1, const vector_float4& v2) { return vector_float4(v1.x + v2.x, v1.y + v2.y, v1.z + v2.z, v1.w + v2.w); }
 	hlslpp_inline vector_float4 _hlslpp_sub_ps(const vector_float4& v1, const vector_float4& v2) { return vector_float4(v1.x - v2.x, v1.y - v2.y, v1.z - v2.z, v1.w - v2.w); }
 	hlslpp_inline vector_float4 _hlslpp_mul_ps(const vector_float4& v1, const vector_float4& v2) { return vector_float4(v1.x * v2.x, v1.y * v2.y, v1.z * v2.z, v1.w * v2.w); }
+
+HLSLPP_WARNING_POTENTIAL_DIVIDE_BY_0_BEGIN
 	hlslpp_inline vector_float4 _hlslpp_div_ps(const vector_float4& v1, const vector_float4& v2) { return vector_float4(v1.x / v2.x, v1.y / v2.y, v1.z / v2.z, v1.w / v2.w); }
+HLSLPP_WARNING_POTENTIAL_DIVIDE_BY_0_END
 
 	hlslpp_inline vector_float4 _hlslpp_add_ss(const vector_float4& v1, const vector_float4& v2) { return vector_float4(v1.x + v2.x, v1.y, v1.z, v1.w); }
 	hlslpp_inline vector_float4 _hlslpp_sub_ss(const vector_float4& v1, const vector_float4& v2) { return vector_float4(v1.x - v2.x, v1.y, v1.z, v1.w); }
 	hlslpp_inline vector_float4 _hlslpp_mul_ss(const vector_float4& v1, const vector_float4& v2) { return vector_float4(v1.x * v2.x, v1.y, v1.z, v1.w); }
+
+HLSLPP_WARNING_POTENTIAL_DIVIDE_BY_0_BEGIN
 	hlslpp_inline vector_float4 _hlslpp_div_ss(const vector_float4& v1, const vector_float4& v2) { return vector_float4(v1.x / v2.x, v1.y, v1.z, v1.w); }
+HLSLPP_WARNING_POTENTIAL_DIVIDE_BY_0_END
 
 	hlslpp_inline vector_float4 _hlslpp_rcp_ps(const vector_float4& v) { return vector_float4(1.0f / v.x, 1.0f / v.y, 1.0f / v.z, 1.0f / v.w); }
 
@@ -182,24 +194,52 @@ namespace hlslpp
 
 #define _hlslpp_blend_ps(x, y, msk)				blend4<(msk) & 1, ((msk) >> 1) & 1, ((msk) >> 2) & 1, ((msk) >> 3) & 1>((x), (y))
 
+	namespace internal
+	{
+		hlslpp_inline float trunc_float(float f)
+		{
+			return (float)(int)f;
+		}
+
+		hlslpp_inline float floor_float(float f)
+		{
+			float trunc = (float)(int)f;
+			return trunc > f ? trunc - 1.0f : trunc;
+		}
+
+		hlslpp_inline float ceil_float(float f)
+		{
+			float trunc = (float)(int)f;
+			return trunc < f ? trunc + 1.0f : trunc;
+		}
+
+		hlslpp_inline float round_float(float f)
+		{
+			float trunc = (float)(int)f;
+			float frac = f - trunc;
+			float abs_frac = frac >= 0.0f ? frac : -frac;
+			return abs_frac <= 0.5f ? trunc : f >= 0.0f ? trunc + 1.0f : trunc - 1.0f;
+		}
+	};
+
 	hlslpp_inline vector_float4 _hlslpp_trunc_ps(const vector_float4& v)
 	{
-		return vector_float4(truncf(v.x), truncf(v.y), truncf(v.z), truncf(v.w));
+		return vector_float4(internal::trunc_float(v.x), internal::trunc_float(v.y), internal::trunc_float(v.z), internal::trunc_float(v.w));
 	}
 
 	hlslpp_inline vector_float4 _hlslpp_floor_ps(const vector_float4& v)
 	{
-		return vector_float4(floorf(v.x), floorf(v.y), floorf(v.z), floorf(v.w));
+		return vector_float4(internal::floor_float(v.x), internal::floor_float(v.y), internal::floor_float(v.z), internal::floor_float(v.w));
 	}
 
 	hlslpp_inline vector_float4 _hlslpp_ceil_ps(const vector_float4& v)
 	{
-		return vector_float4(ceilf(v.x), ceilf(v.y), ceilf(v.z), ceilf(v.w));
+		return vector_float4(internal::ceil_float(v.x), internal::ceil_float(v.y), internal::ceil_float(v.z), internal::ceil_float(v.w));
 	}
 
 	hlslpp_inline vector_float4 _hlslpp_round_ps(const vector_float4& v)
 	{
-		return vector_float4(roundf(v.x), roundf(v.y), roundf(v.z), roundf(v.w));
+		return vector_float4(internal::round_float(v.x), internal::round_float(v.y), internal::round_float(v.z), internal::round_float(v.w));
 	}
 
 	hlslpp_inline vector_float4 _hlslpp_frac_ps(const vector_float4& v)
@@ -298,8 +338,8 @@ namespace hlslpp
 		return vector_float4(v1.m[A], v1.m[B], v2.m[C], v2.m[D]);
 	}
 
-#define _hlslpp_perm_ps(x, msk)					perm4<(msk) & 3, ((msk) >> 2) & 3, ((msk) >> 4) & 3, ((msk) >> 6) & 3>((x))
-#define _hlslpp_shuffle_ps(x, y, msk)			shuf4<(msk) & 3, ((msk) >> 2) & 3, ((msk) >> 4) & 3, ((msk) >> 6) & 3>((x), (y))
+#define _hlslpp_perm_ps(x, msk)					(perm4<(msk) & 3, ((msk) >> 2) & 3, ((msk) >> 4) & 3, ((msk) >> 6) & 3>((x)))
+#define _hlslpp_shuffle_ps(x, y, msk)			(shuf4<(msk) & 3, ((msk) >> 2) & 3, ((msk) >> 4) & 3, ((msk) >> 6) & 3>((x), (y)))
 
 	hlslpp_inline vector_float4 _hlslpp_unpacklo_ps(const vector_float4& v1, const vector_float4& v2)
 	{
@@ -613,8 +653,8 @@ namespace hlslpp
 	}
 
 	// https://stackoverflow.com/questions/13153584/mm-shuffle-ps-equivalent-for-integer-vectors-m128i
-#define _hlslpp_perm_epi32(x, msk)				perm4<(msk) & 3, ((msk) >> 2) & 3, ((msk) >> 4) & 3, ((msk) >> 6) & 3>((x))
-#define _hlslpp_shuffle_epi32(x, y, msk)		shuf4<(msk) & 3, ((msk) >> 2) & 3, ((msk) >> 4) & 3, ((msk) >> 6) & 3>((x), (y))
+#define _hlslpp_perm_epi32(x, msk)				(perm4<(msk) & 3, ((msk) >> 2) & 3, ((msk) >> 4) & 3, ((msk) >> 6) & 3>((x)))
+#define _hlslpp_shuffle_epi32(x, y, msk)		(shuf4<(msk) & 3, ((msk) >> 2) & 3, ((msk) >> 4) & 3, ((msk) >> 6) & 3>((x), (y)))
 
 	hlslpp_inline vector_int4 select4(const vector_int4& v1, const vector_int4& v2, const vector_int4& msk)
 	{

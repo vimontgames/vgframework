@@ -62,7 +62,7 @@ typedef __m256i n256i;
 // Float
 //------
 
-#define _hlslpp_set1_ps(x)						_mm_set1_ps((x))
+#define _hlslpp_set1_ps(x)						_mm_set_ps1((x))
 #define _hlslpp_set_ps(x, y, z, w)				_mm_set_ps((w), (z), (y), (x))
 #define _hlslpp_setzero_ps()					_mm_setzero_ps()
 
@@ -98,7 +98,7 @@ typedef __m256i n256i;
 #endif
 
 // Reference http://www.liranuna.com/sse-intrinsics-optimizations-in-popular-compilers/
-#define _hlslpp_abs_ps(x)						_mm_and_ps(f4absMask, (x))
+#define _hlslpp_abs_ps(x)						_mm_and_ps(_mm_castsi128_ps(_mm_set1_epi32(0x7fffffff)), (x))
 
 #define _hlslpp_sqrt_ps(x)						_mm_sqrt_ps((x))
 #define _hlslpp_rsqrt_ps(x)						_mm_rsqrt_ps((x))
@@ -148,29 +148,32 @@ hlslpp_inline n128 _hlslpp_blend_ps(n128 x, n128 y, int mask)
 
 #define _hlslpp_trunc_ps(x)						_mm_cvtepi32_ps(_mm_cvttps_epi32(x))
 
-hlslpp_inline n128 _hlslpp_floor_ps(n128 x)
+// http://dss.stephanierct.com/DevBlog/?p=8
+
+hlslpp_inline __m128 _hlslpp_floor_ps(__m128 x)
 {
-	n128  trnc   = _mm_cvtepi32_ps(_mm_cvttps_epi32(x));	 // Truncate
-	n128  gt     = _mm_cmpgt_ps(trnc, x);					 // Check if truncation was greater or smaller (i.e. was negative or positive number)
-	n128i shr    = _mm_srli_epi32(_mm_castps_si128(gt), 31); // Shift right to leave a 1 or a 0
-	n128  result = _mm_sub_ps(trnc, _mm_cvtepi32_ps(shr));	 // Subtract from truncated value
-	return result;
+	__m128 ones = _mm_set_ps1(1.0f);
+	__m128 trnc = _mm_cvtepi32_ps(_mm_cvttps_epi32(x)); // Truncate 
+	__m128 tgtx = _mm_cmpgt_ps(trnc, x);
+	return _mm_sub_ps(trnc, _mm_and_ps(tgtx, ones)); // Subtract one if trnc greater than x
 }
 
-hlslpp_inline n128 _hlslpp_ceil_ps(n128 x)
+hlslpp_inline __m128 _hlslpp_ceil_ps(__m128 x)
 {
-	n128  trnc   = _mm_cvtepi32_ps(_mm_cvttps_epi32(x));	 // Truncate
-	n128  gt     = _mm_cmpgt_ps(x, trnc);					 // Check if truncation was greater or smaller (i.e. was negative or positive number)
-	n128i shr    = _mm_srli_epi32(_mm_castps_si128(gt), 31); // Shift right to leave a 1 or a 0
-	n128  result = _mm_add_ps(trnc, _mm_cvtepi32_ps(shr));	 // Subtract from truncated value
-	return result;
+	__m128 ones = _mm_set_ps1(1.0f);
+	__m128 trnc = _mm_cvtepi32_ps(_mm_cvttps_epi32(x)); // Truncate 
+	__m128 tgtx = _mm_cmplt_ps(trnc, x);
+	return _mm_add_ps(trnc, _mm_and_ps(tgtx, ones)); // Add one if trnc greater than x
 }
 
-hlslpp_inline n128 _hlslpp_round_ps(n128 x)
+hlslpp_inline __m128 _hlslpp_round_ps(__m128 x)
 {
-	n128 add     = _mm_add_ps(x, _mm_set1_ps(0.5f));		// Add 0.5
-	n128 frc_add = _mm_sub_ps(add, _hlslpp_floor_ps(add));	// Get the fractional part
-	n128 result  = _mm_sub_ps(add, frc_add);				// Subtract from result
+	__m128 near_2    = _mm_set_ps1(1.99999988f);
+	__m128 trnc      = _mm_cvtepi32_ps(_mm_cvttps_epi32(x)); // Truncate 
+	__m128 frac      = _mm_sub_ps(x, trnc);                  // Get fractional part
+	__m128 frac2     = _mm_mul_ps(frac, near_2);             // Fractional part by near 2
+	__m128 frac2trnc = _mm_cvtepi32_ps(_mm_cvttps_epi32(frac2));
+	__m128 result    = _mm_add_ps(trnc, frac2trnc);
 	return result;
 }
 
@@ -179,11 +182,11 @@ hlslpp_inline n128 _hlslpp_round_ps(n128 x)
 #define _hlslpp_frac_ps(x)						_mm_sub_ps((x), _hlslpp_floor_ps(x))
 
 #define _hlslpp_clamp_ps(x, minx, maxx)			_mm_max_ps(_mm_min_ps((x), (maxx)), (minx))
-#define _hlslpp_sat_ps(x)						_mm_max_ps(_mm_min_ps((x), f4_1), f4_0)
+#define _hlslpp_sat_ps(x)						_mm_max_ps(_mm_min_ps((x), _mm_set1_ps(1.0f)), _mm_setzero_ps())
 
 #define _hlslpp_and_ps(x, y)					_mm_and_ps((x), (y))
 #define _hlslpp_andnot_ps(x, y)					_mm_andnot_ps((x), (y))
-#define _hlslpp_not_ps(x, y)					_mm_andnot_ps((x), f4_fff)
+#define _hlslpp_not_ps(x)						_mm_andnot_ps((x), f4_fff)
 #define _hlslpp_or_ps(x, y)						_mm_or_ps((x), (y))
 #define _hlslpp_xor_ps(x, y)					_mm_xor_ps((x), (y))
 
@@ -199,7 +202,18 @@ hlslpp_inline n128 _hlslpp_round_ps(n128 x)
 #if defined(__AVX__)
 #define _hlslpp_perm_ps(x, mask)				_mm_permute_ps((x), (mask))
 #else
-#define _hlslpp_perm_ps(x, mask)				_mm_shuffle_ps((x), (x), (mask))
+
+namespace hlslpp
+{
+	template<unsigned int mask>
+	hlslpp_inline __m128 permute(__m128 x)
+	{
+		return _mm_shuffle_ps(x, x, mask);
+	}
+};
+
+#define _hlslpp_perm_ps(x, mask)				hlslpp::permute<mask>(x)
+
 #endif
 
 #define _hlslpp_shuffle_ps(x, y, mask)			_mm_shuffle_ps((x), (y), (mask))
@@ -663,8 +677,8 @@ hlslpp_inline n128i _hlslpp_blend_epi32(n128i x, n128i y, int mask)
 
 #endif
 
-#define _hlslpp_clamp_epi32(x, minx, maxx)		_mm_max_epi32(_mm_min_epi32((x), (maxx)), (minx))
-#define _hlslpp_sat_epi32(x)					_mm_max_epi32(_mm_min_epi32((x), i4_1), i4_0)
+#define _hlslpp_clamp_epi32(x, minx, maxx)		_hlslpp_max_epi32(_hlslpp_min_epi32((x), (maxx)), (minx))
+#define _hlslpp_sat_epi32(x)					_hlslpp_max_epi32(_hlslpp_min_epi32((x), i4_1), i4_0)
 
 #define _hlslpp_and_si128(x, y)					_mm_and_si128((x), (y))
 #define _hlslpp_andnot_si128(x, y)				_mm_andnot_si128((x), (y))

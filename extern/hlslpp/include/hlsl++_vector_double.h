@@ -77,6 +77,8 @@ namespace hlslpp
 	#define _hlslpp256_perm_zzzz_pd(x)			_hlslpp256_perm_pd((x), MaskZ, MaskZ, MaskZ, MaskZ)
 	#define _hlslpp256_perm_wwww_pd(x)			_hlslpp256_perm_pd((x), MaskW, MaskW, MaskW, MaskW)
 
+	#define _hlslpp256_perm_yzxx_pd(x)			_hlslpp256_perm_pd((x), MaskY, MaskZ, MaskX, MaskX)
+
 	#define _hlslpp256_cmpneq1_pd(val1, val2)	_hlslpp256_and_pd(_hlslpp256_cmpneq_pd((val1), (val2)), d4_1)
 	#define _hlslpp256_cmpeq1_pd(val1, val2)	_hlslpp256_and_pd(_hlslpp256_cmpeq_pd((val1), (val2)), d4_1)
 	
@@ -93,29 +95,6 @@ namespace hlslpp
 		n128d multi = _hlslpp_mul_pd(x, y); // Multiply components
 		n128d shuf = _hlslpp_perm_yy_pd(multi); // Shuffle y
 		return _hlslpp_add_pd(multi, shuf);
-	}
-
-	hlslpp_inline n128d _hlslpp_dot3_pd(const n128d& x0, const n128d& x1, const n128d& y0, const n128d& y1)
-	{
-		n128d multi0 = _hlslpp_mul_pd(x0, y0); // Multiply components
-		n128d multi1 = _hlslpp_mul_pd(x1, y1);
-		n128d shuf0 = _hlslpp_perm_yy_pd(multi0); // Shuffle y and w
-		n128d add0 = _hlslpp_add_pd(shuf0, multi0);  // Contains x+y, _
-		return _hlslpp_add_pd(add0, multi1);
-	}
-
-	hlslpp_inline n128d _hlslpp_dot4_pd(const n128d& x0, const n128d& x1, const n128d& y0, const n128d& y1)
-	{
-		n128d multi0 = _hlslpp_mul_pd(x0, y0); // Multiply components
-		n128d multi1 = _hlslpp_mul_pd(x1, y1);
-
-		n128d shuf0 = _hlslpp_perm_yy_pd(multi0); // Shuffle y and w
-		n128d shuf1 = _hlslpp_perm_yy_pd(multi1);
-
-		n128d add0 = _hlslpp_add_pd(shuf0, multi0);  // Contains x+y, _
-		n128d add1 = _hlslpp_add_pd(shuf1, multi1);  // Contains z+w, _
-
-		return _hlslpp_add_pd(add0, add1);
 	}
 
 	// See http://http.developer.nvidia.com/Cg/fmod.html for reference
@@ -157,6 +136,13 @@ namespace hlslpp
 	}
 
 #if defined(HLSLPP_SIMD_REGISTER_FLOAT8)
+
+	hlslpp_inline n256d _hlslpp256_cross_pd(const n256d& x, const n256d& y)
+	{
+		n256d x_yzx = _hlslpp256_perm_yzxx_pd(x);
+		n256d y_yzx = _hlslpp256_perm_yzxx_pd(y);
+		return _hlslpp256_perm_yzxx_pd(_hlslpp256_msub_pd(x, y_yzx, _hlslpp256_mul_pd(x_yzx, y)));
+	}
 
 	hlslpp_inline n128d _hlslpp256_dot3_pd(const n256d& x, const n256d& y)
 	{
@@ -214,6 +200,46 @@ namespace hlslpp
 	hlslpp_inline n256d _hlslpp256_step_pd(n256d x, n256d y)
 	{
 		return _hlslpp256_cmpge1_pd(x, y);
+	}
+
+#else
+
+	hlslpp_inline void _hlslpp_cross_pd(const n128d& x0, const n128d& x1, const n128d& y0, const n128d& y1, n128d& r0, n128d& r1)
+	{
+		n128d x_yz = _hlslpp_shuf_yx_pd(x0, x1);
+		n128d y_yz = _hlslpp_shuf_yx_pd(y0, y1);
+
+		n128d multi0 = _hlslpp_mul_pd(x_yz, y0);
+		n128d multi1 = _hlslpp_mul_pd(x0, y1);
+
+		n128d msub0 = _hlslpp_msub_pd(x0, y_yz, multi0);
+		n128d msub1 = _hlslpp_msub_pd(x1, y0, multi1);
+
+		r0 = _hlslpp_shuf_yx_pd(msub0, msub1);
+		r1 = msub0;
+	}
+
+	hlslpp_inline n128d _hlslpp_dot3_pd(const n128d& x0, const n128d& x1, const n128d& y0, const n128d& y1)
+	{
+		n128d multi0 = _hlslpp_mul_pd(x0, y0); // Multiply components
+		n128d multi1 = _hlslpp_mul_pd(x1, y1);
+		n128d shuf0 = _hlslpp_perm_yy_pd(multi0); // Shuffle y and w
+		n128d add0 = _hlslpp_add_pd(shuf0, multi0);  // Contains x+y, _
+		return _hlslpp_add_pd(add0, multi1);
+	}
+
+	hlslpp_inline n128d _hlslpp_dot4_pd(const n128d& x0, const n128d& x1, const n128d& y0, const n128d& y1)
+	{
+		n128d multi0 = _hlslpp_mul_pd(x0, y0); // Multiply components
+		n128d multi1 = _hlslpp_mul_pd(x1, y1);
+
+		n128d shuf0 = _hlslpp_perm_yy_pd(multi0); // Shuffle y and w
+		n128d shuf1 = _hlslpp_perm_yy_pd(multi1);
+
+		n128d add0 = _hlslpp_add_pd(shuf0, multi0);  // Contains x+y, _
+		n128d add1 = _hlslpp_add_pd(shuf1, multi1);  // Contains z+w, _
+
+		return _hlslpp_add_pd(add0, add1);
 	}
 
 #endif
@@ -583,6 +609,8 @@ namespace hlslpp
 	hlslpp_inline double3& operator %= (double3& f1, const double3& f2) { f1 = f1 % f2; return f1; }
 	hlslpp_inline double4& operator %= (double4& f1, const double4& f2) { f1 = f1 % f2; return f1; }
 
+HLSLPP_WARNINGS_IMPLICIT_CONSTRUCTOR_BEGIN
+
 	// Pre-increment
 
 	hlslpp_inline double1& operator ++ (double1& f) { f = f + double1(1.0); return f; }
@@ -634,6 +662,8 @@ namespace hlslpp
 	hlslpp_inline dswizzle3<X, Y, Z> operator -- (dswizzle3<X, Y, Z>& f, int) { dswizzle3<X, Y, Z> tmp = f; f = f - double3(1.0); return tmp; }
 	template<int X, int Y, int Z, int W>
 	hlslpp_inline dswizzle4<X, Y, Z, W> operator -- (dswizzle4<X, Y, Z, W>& f, int) { dswizzle4<X, Y, Z, W> tmp = f; f = f - double4(1.0); return tmp; }
+
+HLSLPP_WARNINGS_IMPLICIT_CONSTRUCTOR_END
 
 	//--------------------------------------------------------------------------------------------------------------------
 	// double1 and dswizzle1 need special overloads to disambiguate between our operators/functions and built-in operators
@@ -819,6 +849,17 @@ namespace hlslpp
 #endif
 	}
 
+	hlslpp_inline double3 cross(const double3& f1, const double3& f2)
+	{
+#if defined(HLSLPP_SIMD_REGISTER_FLOAT8)
+		return double3(_hlslpp256_cross_pd(f1.vec, f2.vec));
+#else
+		n128d r0, r1;
+		_hlslpp_cross_pd(f1.vec0, f1.vec1, f2.vec0, f2.vec1, r0, r1);
+		return double3(r0, r1);
+#endif
+	}
+
 	hlslpp_inline double1 degrees(const double1& f) { return double1(_hlslpp_mul_pd(f.vec, d2_rad2deg)); }
 	hlslpp_inline double2 degrees(const double2& f) { return double2(_hlslpp_mul_pd(f.vec, d2_rad2deg)); }
 	hlslpp_inline double3 degrees(const double3& f)
@@ -835,6 +876,37 @@ namespace hlslpp
 		return double4(_hlslpp256_mul_pd(f.vec, d4_rad2deg));
 #else
 		return double4(_hlslpp_mul_pd(f.vec0, d2_rad2deg), _hlslpp_mul_pd(f.vec1, d2_rad2deg));
+#endif
+	}
+
+	hlslpp_inline double1 distance(const double1& f1, const double1& f2) { return double1(_hlslpp_abs_pd(_hlslpp_sub_pd(f2.vec, f1.vec))); }
+	hlslpp_inline double1 distance(const double2& f1, const double2& f2)
+	{
+		n128d delta = _hlslpp_sub_pd(f2.vec, f1.vec);
+		return double1(_hlslpp_sqrt_pd(_hlslpp_dot2_pd(delta, delta)));
+	}
+
+	hlslpp_inline double1 distance(const double3& f1, const double3& f2)
+	{
+#if defined(HLSLPP_SIMD_REGISTER_FLOAT8)
+		n256d delta = _hlslpp256_sub_pd(f2.vec, f1.vec);
+		return double1(_hlslpp_sqrt_pd(_hlslpp256_dot3_pd(delta, delta)));
+#else
+		n128d delta0 = _hlslpp_sub_pd(f2.vec0, f1.vec0);
+		n128d delta1 = _hlslpp_sub_pd(f2.vec1, f1.vec1);
+		return double1(_hlslpp_sqrt_pd(_hlslpp_dot3_pd(delta0, delta1, delta0, delta1)));
+#endif
+	}
+
+	hlslpp_inline double1 distance(const double4& f1, const double4& f2)
+	{
+#if defined(HLSLPP_SIMD_REGISTER_FLOAT8)
+		n256d delta = _hlslpp256_sub_pd(f2.vec, f1.vec);
+		return double1(_hlslpp_sqrt_pd(_hlslpp256_dot4_pd(delta, delta)));
+#else
+		n128d delta0 = _hlslpp_sub_pd(f2.vec0, f1.vec0);
+		n128d delta1 = _hlslpp_sub_pd(f2.vec1, f1.vec1);
+		return double1(_hlslpp_sqrt_pd(_hlslpp_dot4_pd(delta0, delta1, delta0, delta1)));
 #endif
 	}
 
@@ -1070,6 +1142,34 @@ namespace hlslpp
 #endif
 	}
 
+	hlslpp_inline double1 normalize(const double1&/* f*/) { return double1(1.0f); }
+	hlslpp_inline double2 normalize(const double2& f) { return double2(_hlslpp_div_pd(f.vec, _hlslpp_perm_xx_pd(_hlslpp_sqrt_pd(_hlslpp_dot2_pd(f.vec, f.vec))))); }
+	hlslpp_inline double3 normalize(const double3& f)
+	{
+#if defined(HLSLPP_SIMD_REGISTER_FLOAT8)		
+		n128d dot3 = _hlslpp256_dot3_pd(f.vec, f.vec);
+		return double3(_hlslpp256_div_pd(f.vec, _hlslpp256_perm_xxxx_pd(_hlslpp256_sqrt_pd(_hlslpp256_set128_pd(dot3, dot3)))));
+#else
+		return double3(
+			_hlslpp_div_pd(f.vec0, _hlslpp_perm_xx_pd(_hlslpp_sqrt_pd(_hlslpp_dot3_pd(f.vec0, f.vec1, f.vec0, f.vec1)))),
+			_hlslpp_div_pd(f.vec1, _hlslpp_perm_xx_pd(_hlslpp_sqrt_pd(_hlslpp_dot3_pd(f.vec0, f.vec1, f.vec0, f.vec1))))
+		);
+#endif
+	}
+
+	hlslpp_inline double4 normalize(const double4& f)
+	{
+#if defined(HLSLPP_SIMD_REGISTER_FLOAT8)
+		n128d dot4 = _hlslpp256_dot4_pd(f.vec, f.vec);
+		return double4(_hlslpp256_div_pd(f.vec, _hlslpp256_perm_xxxx_pd(_hlslpp256_sqrt_pd(_hlslpp256_set128_pd(dot4, dot4)))));
+#else
+		return double4(
+			_hlslpp_div_pd(f.vec0, _hlslpp_perm_xx_pd(_hlslpp_sqrt_pd(_hlslpp_dot4_pd(f.vec0, f.vec1, f.vec0, f.vec1)))),
+			_hlslpp_div_pd(f.vec1, _hlslpp_perm_xx_pd(_hlslpp_sqrt_pd(_hlslpp_dot4_pd(f.vec0, f.vec1, f.vec0, f.vec1))))
+		);
+#endif
+	}
+
 	hlslpp_inline double1 select(const double1& condition, const double1& f1, const double1& f2) { return double1(_hlslpp_sel_pd(f1.vec, f2.vec, _hlslpp_cmpeq_pd(condition.vec, _hlslpp_setzero_pd()))); }
 	hlslpp_inline double2 select(const double2& condition, const double2& f1, const double2& f2) { return double2(_hlslpp_sel_pd(f1.vec, f2.vec, _hlslpp_cmpeq_pd(condition.vec, _hlslpp_setzero_pd()))); }
 
@@ -1296,17 +1396,60 @@ namespace hlslpp
 	template<int X> hlslpp_inline double1 sqrt(const dswizzle1<X>& s) { return sqrt(double1(s)); }
 
 	template<int X>
-	dswizzle1<X>& dswizzle1<X>::operator = (const double1& f)
+	hlslpp_inline dswizzle1<X>& dswizzle1<X>::operator = (double f)
+	{
+		vec[X / 2] = _hlslpp_blend_pd(vec[X / 2], _hlslpp_set1_pd(f), HLSLPP_COMPONENT_X(X % 2));
+		return *this;
+	}
+
+	// Revise these functions. Can I not do with swizzle?
+
+	template<int X>
+	template<int A>
+	hlslpp_inline dswizzle1<X>& dswizzle1<X>::operator = (const dswizzle1<A>& s)
+	{
+		n128d t = _hlslpp_shuffle_pd(s.vec[A / 2], s.vec[A / 2], HLSLPP_SHUFFLE_MASK_PD(A % 2, A % 2));
+		vec[X / 2] = _hlslpp_blend_pd(vec[X / 2], t, HLSLPP_COMPONENT_X(X % 2));
+		return *this;
+	}
+
+	template<int X>
+	hlslpp_inline dswizzle1<X>& dswizzle1<X>::operator = (const dswizzle1<X>& s)
+	{
+		n128d t = _hlslpp_shuffle_pd(s.vec[X / 2], s.vec[X / 2], HLSLPP_SHUFFLE_MASK_PD(X % 2, X % 2));
+		vec[X / 2] = _hlslpp_blend_pd(vec[X / 2], t, HLSLPP_COMPONENT_X(X % 2));
+		return *this;
+	}
+
+	template<int X>
+	hlslpp_inline dswizzle1<X>& dswizzle1<X>::operator = (const double1& f)
 	{
 		vec[X / 2] = _hlslpp_blend_pd(vec[X / 2], _hlslpp_perm_xx_pd(f.vec), HLSLPP_COMPONENT_X(X));
 		return *this;
 	}
 
 	template<int X, int Y>
+	template<int E, int F>
+	hlslpp_inline dswizzle2<X, Y>& dswizzle2<X, Y>::operator = (const dswizzle2<E, F>& s)
+	{
+		static_assert(X != Y, "\"l-value specifies const object\" No component can be equal for assignment.");
+		swizzle_all<E, F>(s);
+		return *this;
+	}
+
+	template<int X, int Y>
+	hlslpp_inline dswizzle2<X, Y>& dswizzle2<X, Y>::operator = (const dswizzle2<X, Y>& s)
+	{
+		static_assert(X != Y, "\"l-value specifies const object\" No component can be equal for assignment.");
+		swizzle_all<X, Y>(s);
+		return *this;
+	}
+
+	template<int X, int Y>
 	dswizzle2<X, Y>& dswizzle2<X, Y>::operator = (const double2& f)
 	{
-		staticAsserts();
-		
+		static_assert(X != Y, "\"l-value specifies const object\" No component can be equal for assignment.");
+
 		HLSLPP_CONSTEXPR_IF((X < 2 && Y < 2) || (X >= 2 && Y >= 2))
 		{
 			vec[(X < 2 && Y < 2) ? 0 : 1] = _hlslpp_perm_pd(f.vec, HLSLPP_SHUFFLE_MASK_PD((X % 2) == 0 ? 0 : 1, (Y % 2) == 0 ? 0 : 1));
@@ -1327,9 +1470,26 @@ namespace hlslpp
 	}
 
 	template<int X, int Y, int Z>
+	template<int A, int B, int C>
+	hlslpp_inline dswizzle3<X, Y, Z>& dswizzle3<X, Y, Z>::operator = (const dswizzle3<A, B, C>& s)
+	{
+		static_assert(X != Y && X != Z && Y != Z, "\"l-value specifies const object\" No component can be equal for assignment.");
+		swizzle_all<A, B, C>(s);
+		return *this;
+	}
+
+	template<int X, int Y, int Z>
+	hlslpp_inline dswizzle3<X, Y, Z>& dswizzle3<X, Y, Z>::operator = (const dswizzle3<X, Y, Z>& s)
+	{
+		static_assert(X != Y && X != Z && Y != Z, "\"l-value specifies const object\" No component can be equal for assignment.");
+		swizzle_all<X, Y, Z>(s);
+		return *this;
+	}
+
+	template<int X, int Y, int Z>
 	dswizzle3<X, Y, Z>& dswizzle3<X, Y, Z>::operator = (const double3& f)
 	{
-		staticAsserts();
+		static_assert(X != Y && X != Z && Y != Z, "\"l-value specifies const object\" No component can be equal for assignment.");
 #if defined(HLSLPP_SIMD_REGISTER_FLOAT8)
 		swizzleblend<0, 1, 2, X, Y, Z>(f.vec, vec);
 #else
@@ -1339,9 +1499,22 @@ namespace hlslpp
 	}
 
 	template<int X, int Y, int Z, int W>
+	template<int A, int B, int C, int D>
+	hlslpp_inline dswizzle4<X, Y, Z, W>& dswizzle4<X, Y, Z, W>::operator = (const dswizzle4<A, B, C, D>& s)
+	{
+		static_assert(X != Y && X != Z && X != W && Y != Z && Y != W && Z != W, "\"l-value specifies const object\" No component can be equal for assignment.");
+#if defined(HLSLPP_SIMD_REGISTER_FLOAT8)
+		swizzle<A, B, C, D, X, Y, Z, W>(s.vec, vec);
+#else
+		swizzle<A, B, C, D, X, Y, Z, W>(s.vec[0], s.vec[1], vec[0], vec[1]);
+#endif
+		return *this;
+	}
+
+	template<int X, int Y, int Z, int W>
 	dswizzle4<X, Y, Z, W>& dswizzle4<X, Y, Z, W>::operator = (const double4& f)
 	{
-		staticAsserts();
+		static_assert(X != Y && X != Z && X != W && Y != Z && Y != W && Z != W, "\"l-value specifies const object\" No component can be equal for assignment.");
 #if defined(HLSLPP_SIMD_REGISTER_FLOAT8)
 		swizzle<0, 1, 2, 3, X, Y, Z, W>(f.vec, vec);
 #else

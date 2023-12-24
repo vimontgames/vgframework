@@ -1,7 +1,7 @@
 #pragma once
 
-#include <cstdint>
-#include <cstdio>
+#include <stdint.h>
+#include <stdio.h>
 
 #define _USE_MATH_DEFINES
 #include "math.h"
@@ -10,10 +10,10 @@
 #include <cassert>
 
 #if !defined(_XBOX) && (_MSC_VER >= 1900)
-#define HLSLPP_HAS_CHRONO
+#define HLSLPP_UNIT_HAS_CHRONO
 #endif
 
-#if defined(HLSLPP_HAS_CHRONO)
+#if defined(HLSLPP_UNIT_HAS_CHRONO)
 #include <chrono>
 #endif
 
@@ -61,7 +61,41 @@ namespace hlslpp
 	struct double2;
 	struct double3;
 	struct double4;
-}
+};
+
+#define hlslpp_unit_unused(x) (void)x
+
+#if defined(__clang__)
+
+	#define HLSLPP_UNIT_UNUSED_VARIABLE_BEGIN \
+		_Pragma("clang diagnostic push") \
+		_Pragma("clang diagnostic ignored \"-Wunused-variable\"")
+
+	#define HLSLPP_UNIT_UNUSED_VARIABLE_END _Pragma("clang diagnostic pop")
+
+#elif defined(__GNUC__)
+
+	#define HLSLPP_UNIT_UNUSED_VARIABLE_BEGIN \
+		_Pragma("GCC diagnostic push") \
+		_Pragma("GCC diagnostic ignored \"-Wunused-variable\"") \
+		_Pragma("GCC diagnostic ignored \"-Wunused-but-set-variable\"")
+
+	#define HLSLPP_UNIT_UNUSED_VARIABLE_END _Pragma("GCC diagnostic pop")
+
+#elif defined(_MSC_VER)
+
+	#define HLSLPP_UNIT_UNUSED_VARIABLE_BEGIN  \
+		__pragma(warning(push)) \
+		__pragma(warning(disable : 4189))
+
+	#define HLSLPP_UNIT_UNUSED_VARIABLE_END __pragma(warning(pop))
+
+#else
+
+	#define HLSLPP_UNIT_UNUSED_VARIABLE_BEGIN
+	#define HLSLPP_UNIT_UNUSED_VARIABLE_END
+
+#endif
 
 namespace hlslpp_unit
 {
@@ -147,7 +181,7 @@ namespace hlslpp_unit
 	{
 		private:
 
-		#if defined(HLSLPP_HAS_CHRONO)
+		#if defined(HLSLPP_UNIT_HAS_CHRONO)
 		std::chrono::high_resolution_clock::time_point m_startTime;
 		std::chrono::high_resolution_clock::time_point m_endTime;
 		#endif
@@ -155,14 +189,14 @@ namespace hlslpp_unit
 		public:
 		void Start()
 		{
-			#if defined(HLSLPP_HAS_CHRONO)
+			#if defined(HLSLPP_UNIT_HAS_CHRONO)
 			m_startTime = std::chrono::high_resolution_clock::now();
 			#endif
 		}
 
 		double Get()
 		{
-			#if defined(HLSLPP_HAS_CHRONO)
+			#if defined(HLSLPP_UNIT_HAS_CHRONO)
 			m_endTime = std::chrono::high_resolution_clock::now();
 			return std::chrono::duration_cast<std::chrono::nanoseconds>(m_endTime - m_startTime).count() / 1e9f;
 			#else
@@ -298,6 +332,12 @@ namespace hlslpp_unit
 	float frac(float x);
 
 	float lerpf(float x, float y, float a);
+
+	// Some old platforms don't define these so make sure they're available for unit testing
+
+	float round_f(float x);
+
+	float trunc_f(float x);
 
 	typedef float4(*Vec4Func)(const float4&);
 	typedef float(*ScalarFunc)(float);

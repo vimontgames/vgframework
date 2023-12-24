@@ -1,11 +1,44 @@
 #pragma once
 
-#if defined(__clang__) || defined(__GNUG__)
+// Note: The HLSLPP_WARNINGS_IMPLICIT_CONSTRUCTOR_BEGIN warning behaves differently
+// between GCC and Clang. In GCC, we need to apply the warning to the call site, i.e.
+// wherever we call the copy constructor. In Clang, we need to apply it to the class
+// itself. This means we seem to add the same warning suppression to multiple places,
+// where in reality it only applies once per compiler
+
+#if defined(__clang__)
 
 	#define hlslpp_inline inline __attribute__((always_inline))
 
 	#define HLSLPP_WARNING_ANONYMOUS_STRUCT_UNION_BEGIN
 	#define HLSLPP_WARNING_ANONYMOUS_STRUCT_UNION_END
+
+	#define HLSLPP_WARNING_POTENTIAL_DIVIDE_BY_0_BEGIN
+	#define HLSLPP_WARNING_POTENTIAL_DIVIDE_BY_0_END
+
+	#define HLSLPP_WARNINGS_IMPLICIT_CONSTRUCTOR_BEGIN \
+		_Pragma("clang diagnostic push") \
+		_Pragma("clang diagnostic ignored \"-Wdeprecated\"")
+
+	#define HLSLPP_WARNINGS_IMPLICIT_CONSTRUCTOR_END \
+		_Pragma("clang diagnostic pop")
+
+#elif defined(__GNUG__)
+
+	#define hlslpp_inline inline __attribute__((always_inline))
+
+	#define HLSLPP_WARNING_ANONYMOUS_STRUCT_UNION_BEGIN
+	#define HLSLPP_WARNING_ANONYMOUS_STRUCT_UNION_END
+
+	#define HLSLPP_WARNING_POTENTIAL_DIVIDE_BY_0_BEGIN
+	#define HLSLPP_WARNING_POTENTIAL_DIVIDE_BY_0_END
+
+	#define HLSLPP_WARNINGS_IMPLICIT_CONSTRUCTOR_BEGIN \
+	    _Pragma("GCC diagnostic push") \
+		_Pragma("GCC diagnostic ignored \"-Wdeprecated-copy\"")
+
+	#define HLSLPP_WARNINGS_IMPLICIT_CONSTRUCTOR_END \
+		_Pragma("GCC diagnostic pop")
 
 #elif defined(_MSC_VER)
 
@@ -16,6 +49,15 @@
 	__pragma(warning(disable : 4201))
 
 	#define HLSLPP_WARNING_ANONYMOUS_STRUCT_UNION_END __pragma(warning(pop))
+
+	#define HLSLPP_WARNING_POTENTIAL_DIVIDE_BY_0_BEGIN \
+	__pragma(warning(push)) \
+	__pragma(warning(disable : 4723))
+
+	#define HLSLPP_WARNING_POTENTIAL_DIVIDE_BY_0_END __pragma(warning(pop))
+
+	#define HLSLPP_WARNINGS_IMPLICIT_CONSTRUCTOR_BEGIN
+	#define HLSLPP_WARNINGS_IMPLICIT_CONSTRUCTOR_END
 
 #else
 
@@ -95,7 +137,7 @@
 
 	#define HLSLPP_360
 
-#elif !defined(HLSLPP_SSE) && (defined(__SSE__) || (_M_IX86_FP > 0) || defined(_M_AMD64) || defined(_M_X64))
+#elif !defined(HLSLPP_SSE) && (defined(__SSE__) || (defined(_M_IX86_FP) && _M_IX86_FP > 0) || defined(_M_AMD64) || defined(_M_X64))
 
 	#define HLSLPP_SSE
 
