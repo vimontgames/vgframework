@@ -9,33 +9,33 @@ float4 DebugRayTracing(float4 color, float2 uv, uint2 screenSize, ViewConstants 
 {
     float4x4 viewInv = viewConstants.getViewInv();
 
-    float nearDist = 0.1f;
-    float farDist = 1024.0f;
-    float fovRadians = 0.785398185f;
-    float viewRatio = (float)screenSize.x / (float)screenSize.y;
+    float nearDist = viewConstants.getCameraNearFar().x;
+    float farDist = viewConstants.getCameraNearFar().y;
+    float fovRadians = viewConstants.getCameraFieldOfView();
+    float viewRatio = viewConstants.getCameraAspectRatio();
 
     float3 camPos = viewInv[3].xyz;
-    float3 camRight = viewInv[0].xyz;
-    float3 camUp = viewInv[1].xyz;
-    float3 camForward = viewInv[2].xyz;
+    float3 camRight = -viewInv[0].xyz;
+    float3 camUp = -viewInv[1].xyz;
+    float3 camForward = -viewInv[2].xyz;
 
-    float3 nearCenter = camPos - camForward * nearDist;
-    float3 farCenter = camPos - camForward * farDist;
+    float3 nearCenter = camPos + camForward * nearDist;
+    float3 farCenter = camPos + camForward * farDist;
 
     float nearHeight = 2.0f * tan(fovRadians/ 2.0f) * nearDist;
     float farHeight = 2.0f * tan(fovRadians / 2.0f) * farDist;
     float nearWidth = nearHeight * viewRatio;
     float farWidth  = farHeight * viewRatio;
 
-    float3 farTopLeft = farCenter + camUp * (farHeight*0.5f) - camRight * (farWidth*0.5f);
-    float3 farTopRight = farCenter + camUp * (farHeight*0.5f) + camRight * (farWidth*0.5f);
-    float3 farBottomLeft = farCenter - camUp * (farHeight*0.5f) - camRight * (farWidth*0.5f);
-    float3 farBottomRight = farCenter - camUp * (farHeight*0.5f) + camRight * (farWidth*0.5f);
+    float3 farTopLeft = farCenter - camUp * (farHeight*0.5f) + camRight * (farWidth*0.5f);
+    float3 farTopRight = farCenter - camUp * (farHeight*0.5f) - camRight * (farWidth*0.5f);
+    float3 farBottomLeft = farCenter + camUp * (farHeight*0.5f) + camRight * (farWidth*0.5f);
+    float3 farBottomRight = farCenter + camUp * (farHeight*0.5f) - camRight * (farWidth*0.5f);
 
-    float3 nearTopLeft = nearCenter + camUp * (nearHeight*0.5f) - camRight * (nearWidth*0.5f);
-    float3 nearTopRight = nearCenter + camUp * (nearHeight*0.5f) + camRight * (nearWidth*0.5f);
-    float3 nearBottomLeft = nearCenter - camUp * (nearHeight*0.5f) - camRight * (nearWidth*0.5f);
-    float3 nearBottomRight = nearCenter - camUp * (nearHeight*0.5f) + camRight * (nearWidth*0.5f);
+    float3 nearTopLeft = nearCenter - camUp * (nearHeight*0.5f) + camRight * (nearWidth*0.5f);
+    float3 nearTopRight = nearCenter - camUp * (nearHeight*0.5f) - camRight * (nearWidth*0.5f);
+    float3 nearBottomLeft = nearCenter + camUp * (nearHeight*0.5f) + camRight * (nearWidth*0.5f);
+    float3 nearBottomRight = nearCenter + camUp * (nearHeight*0.5f) - camRight * (nearWidth*0.5f);
 
     float3 origin = camPos;
 

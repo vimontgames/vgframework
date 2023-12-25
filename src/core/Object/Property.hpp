@@ -209,6 +209,38 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
+    core::i8 * Property::GetPropertyInt8(const IObject * _object) const
+    {
+        VG_ASSERT(nullptr != _object);
+        VG_ASSERT(Type::Int8 == getType() /* || Type::EnumI8 == getType() || Type::EnumFlagsI8 == getType()*/);
+        return (i8 *)(uint_ptr(_object) + offset);
+    }
+
+    //--------------------------------------------------------------------------------------
+    core::i16 * Property::GetPropertyInt16(const IObject * _object) const
+    {
+        VG_ASSERT(nullptr != _object);
+        VG_ASSERT(Type::Int16 == getType() /* || Type::EnumI16 == getType() || Type::EnumFlagsI16 == getType()*/);
+        return (i16 *)(uint_ptr(_object) + offset);
+    }
+
+    //--------------------------------------------------------------------------------------
+    core::i32 * Property::GetPropertyInt32(const IObject * _object) const
+    {
+        VG_ASSERT(nullptr != _object);
+        VG_ASSERT(Type::Int32 == getType() /* || Type::EnumI32 == getType() || Type::EnumFlagsI32 == getType()*/);
+        return (i32 *)(uint_ptr(_object) + offset);
+    }
+
+    //--------------------------------------------------------------------------------------
+    core::i64 * Property::GetPropertyInt64(const IObject * _object) const
+    {
+        VG_ASSERT(nullptr != _object);
+        VG_ASSERT(Type::Int64 == getType() /* || Type::EnumI64 == getType() || Type::EnumFlagsI64 == getType()*/);
+        return (i64 *)(uint_ptr(_object) + offset);
+    }
+
+    //--------------------------------------------------------------------------------------
     core::u8 * Property::GetPropertyUint8(const IObject * _object) const
     {
         VG_ASSERT(nullptr != _object);
@@ -308,12 +340,12 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
-    IResource * Property::GetPropertyResourceRef(const IObject * _object, uint _index) const
+    IResource ** Property::GetPropertyResourcePtr(const IObject * _object, uint _index) const
     {
         VG_ASSERT(nullptr != _object);
-        checkPropertyType(Type::ResourceRef);
+        checkPropertyType(Type::ResourcePtr);
         VG_ASSERT(0 == _index || asBool(Flags::EnumArray & flags));
-        return *(IResource **)(uint_ptr(_object) + offset + _index * sizeof(IResource *));
+        return (IResource **)(uint_ptr(_object) + offset + _index * sizeof(IResource *));
     }
 
     //--------------------------------------------------------------------------------------
@@ -332,35 +364,35 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
-    IObject * Property::GetPropertyObjectRef(const IObject * _object, uint _index) const
+    IObject ** Property::GetPropertyObjectPtr(const IObject * _object, uint _index) const
     {
         VG_ASSERT(nullptr != _object);
-        checkPropertyType(Type::ObjectRef);
+        checkPropertyType(Type::ObjectPtr);
         VG_ASSERT(0 == _index || asBool(Flags::EnumArray & flags));
-        return *(IObject**)(uint_ptr(_object) + offset + _index * sizeof(IObject*));
+        return (IObject**)(uint_ptr(_object) + offset + _index * sizeof(IObject*));
     }
 
     //--------------------------------------------------------------------------------------
-    vector<IResource *> * Property::GetPropertyResourceRefVector(const IObject * _object) const
+    vector<IResource *> * Property::GetPropertyResourcePtrVector(const IObject * _object) const
     {
         VG_ASSERT(nullptr != _object);
-        checkPropertyType(Type::ResourceRefVector);
+        checkPropertyType(Type::ResourcePtrVector);
         return (vector<IResource *>*)(uint_ptr(_object) + offset);
     }
 
     //--------------------------------------------------------------------------------------
-    vector<IObject*> * Property::GetPropertyObjectRefVector(const IObject * _object) const
+    vector<IObject*> * Property::GetPropertyObjectPtrVector(const IObject * _object) const
     {
         VG_ASSERT(nullptr != _object);
-        checkPropertyType(Type::ObjectRefVector);
+        checkPropertyType(Type::ObjectPtrVector);
         return (vector<IObject*>*)(uint_ptr(_object) + offset);
     }
 
     //--------------------------------------------------------------------------------------
-    dictionary<IObject*> * Property::GetPropertyObjectRefDictionary(const IObject * _object) const
+    dictionary<IObject*> * Property::GetPropertyObjectPtrDictionary(const IObject * _object) const
     {
         VG_ASSERT(nullptr != _object);
-        checkPropertyType(Type::ObjectRefDictionary);
+        checkPropertyType(Type::ObjectPtrDictionary);
         return (dictionary<IObject*>*)(uint_ptr(_object) + offset);
     }
 

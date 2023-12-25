@@ -34,6 +34,8 @@ namespace vg::core
 
         bool                                        SaveProperties                  (core::IObject * _object) final override;
         bool                                        RestoreProperties               (core::IObject * _object) final override;
+        bool                                        CopyProperties                  (const core::IObject * _srcObj, core::IObject * _dstObj) final override;
+        IObject *                                   Instanciate                     (const core::IObject * _object, IObject * _parent) final override;
 
     protected:
         bool                                        serializeFromXML                (IObject * _object, const XMLElem * _xmlElem) const;
@@ -57,6 +59,7 @@ namespace vg::core
 
     private:
         core::vector<ClassDesc>                     m_classes;
+        core::dictionary<IProperty::Type>           m_oldTypeNames;
         mutex                                       m_objectsToReleaseMutex;
         vector<IObject*>                            m_objectsToRelease[2];
         u8                                          m_objectsToReleaseTableIndex = 0;

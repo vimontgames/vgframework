@@ -34,10 +34,17 @@ namespace vg::core
         u64                             getEnumValue                    (uint index) const final override;
 
         bool *                          GetPropertyBool                 (const IObject * _object) const final override;
+
+        i8 *                            GetPropertyInt8                 (const IObject * _object) const final override;
+        i16 *                           GetPropertyInt16                (const IObject * _object) const final override;
+        i32 *                           GetPropertyInt32                (const IObject * _object) const final override;
+        i64 *                           GetPropertyInt64                (const IObject * _object) const final override;
+
         u8 *                            GetPropertyUint8                (const IObject * _object) const final override;
         u16 *                           GetPropertyUint16               (const IObject * _object) const final override;
         u32 *                           GetPropertyUint32               (const IObject * _object) const final override;
         u64 *                           GetPropertyUint64               (const IObject * _object) const final override;
+
         float *                         GetPropertyFloat                (const IObject * _object) const final override;
         float2 *                        GetPropertyFloat2               (const IObject * _object) const final override;
         float3 *                        GetPropertyFloat3               (const IObject * _object) const final override;
@@ -46,12 +53,12 @@ namespace vg::core
         float4x4 *                      GetPropertyFloat4x4             (const IObject * _object) const final override;
         string *                        GetPropertyString               (const IObject * _object) const final override;
         IResource *                     GetPropertyResource             (const IObject * _object, uint _index = 0) const final override;
-        IResource *                     GetPropertyResourceRef          (const IObject * _object, uint _index = 0) const final override;
-        vector<IResource *> *           GetPropertyResourceRefVector    (const IObject * _object) const final override;
+        IResource **                    GetPropertyResourcePtr          (const IObject * _object, uint _index = 0) const final override;
+        vector<IResource *> *           GetPropertyResourcePtrVector    (const IObject * _object) const final override;
         IObject *                       GetPropertyObject               (const IObject * _object, uint _index = 0) const final override;
-        IObject *                       GetPropertyObjectRef            (const IObject * _object, uint _index = 0) const final override;
-        vector<IObject*> *              GetPropertyObjectRefVector      (const IObject * _object) const final override;
-        dictionary<IObject*> *          GetPropertyObjectRefDictionary  (const IObject * _object) const final override;
+        IObject **                      GetPropertyObjectPtr            (const IObject * _object, uint _index = 0) const final override;
+        vector<IObject*> *              GetPropertyObjectPtrVector      (const IObject * _object) const final override;
+        dictionary<IObject*> *          GetPropertyObjectPtrDictionary  (const IObject * _object) const final override;
 
         uint                            GetPropertyObjectVectorCount    (const IObject * _object) const final override;
         u8 *                            GetPropertyObjectVectorData     (const IObject * _object) const final override;

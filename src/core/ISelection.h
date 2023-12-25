@@ -24,5 +24,6 @@ namespace vg::core
 
         virtual core::float4x4 &                    GetSelectionMatrix                  () = 0;
         virtual core::vector<core::IGameObject *>   RemoveChildGameObjectsWithParents   (const core::vector<core::IObject *> & _objects) const = 0;
+        virtual core::vector<core::IGameObject*>    DuplicateGameObjects                (const core::vector<core::IGameObject *> & _gameObjects) = 0;
     };
 }

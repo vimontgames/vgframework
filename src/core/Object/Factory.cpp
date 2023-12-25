@@ -16,7 +16,12 @@ namespace vg::core
     //--------------------------------------------------------------------------------------
     Factory::Factory()
     {
-
+        // TODO : make proper API to register deprecated type names
+        m_oldTypeNames.insert(std::pair("ResourceRef", IProperty::Type::ResourcePtr));
+        m_oldTypeNames.insert(std::pair("ResourceRefVector", IProperty::Type::ResourcePtrVector));
+        m_oldTypeNames.insert(std::pair("ObjectRef", IProperty::Type::ObjectPtr));
+        m_oldTypeNames.insert(std::pair("ObjectRefVector", IProperty::Type::ObjectPtrVector));
+        m_oldTypeNames.insert(std::pair("ObjectRefDictionary", IProperty::Type::ObjectPtrDictionary));
     }
 
     //--------------------------------------------------------------------------------------
@@ -201,6 +206,212 @@ namespace vg::core
         }
         
         return false;
+    }
+
+    //--------------------------------------------------------------------------------------
+    IObject * Factory::Instanciate(const core::IObject * _object, IObject * _parent)
+    {
+        const auto className = _object->getClassName();
+        
+        IObject * newObj = createObject(className, _object->getName(), _parent);
+        VG_ASSERT(nullptr != newObj);
+        if (nullptr == newObj)
+            return nullptr;
+
+        CopyProperties(_object, newObj);
+
+        return newObj;
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool Factory::CopyProperties(const core::IObject * _srcObj, core::IObject * _dstObj)
+    {
+        // Copy all properties from this to new GameObject
+        const auto srcClassName = _srcObj->getClassName();
+        const auto dstClassName = _dstObj->getClassName();
+        VG_ASSERT(dstClassName == srcClassName);
+
+        const auto * classDesc = Kernel::getFactory()->getClassDescriptor(srcClassName);
+
+        VG_ASSERT(nullptr != classDesc);
+        if (nullptr == classDesc)
+            return false;
+
+        const uint propCount = classDesc->GetPropertyCount();
+        for (uint i = 0; i < propCount; ++i)
+        {
+            const IProperty * prop = classDesc->GetPropertyByIndex(i);
+            const IProperty::Type propType = prop->getType();
+            const IProperty::Flags propFlags = prop->getFlags();
+
+            if (asBool(IProperty::Flags::NotSaved & propFlags))
+                continue;
+
+            switch (propType)
+            {
+                case IProperty::Type::Undefined:
+                    VG_ASSERT_ENUM_NOT_IMPLEMENTED(propType);
+                    break;
+
+                case IProperty::Type::Bool:
+                    *prop->GetPropertyBool(_dstObj) = *prop->GetPropertyBool(_srcObj);
+                    break;
+
+                case IProperty::Type::Int8:
+                    *prop->GetPropertyInt8(_dstObj) = *prop->GetPropertyInt8(_srcObj);
+                    break;
+
+                case IProperty::Type::Int16:
+                    *prop->GetPropertyInt16(_dstObj) = *prop->GetPropertyInt16(_srcObj);
+                    break;
+
+                case IProperty::Type::Int32:
+                    *prop->GetPropertyInt32(_dstObj) = *prop->GetPropertyInt32(_srcObj);
+                    break;
+
+                case IProperty::Type::Int64:
+                    *prop->GetPropertyInt64(_dstObj) = *prop->GetPropertyInt64(_srcObj);
+                    break;
+
+                case IProperty::Type::Uint8:
+                case IProperty::Type::EnumU8:
+                case IProperty::Type::EnumFlagsU8:
+                    *prop->GetPropertyUint8(_dstObj) = *prop->GetPropertyUint8(_srcObj);
+                    break;
+
+                case IProperty::Type::Uint16:
+                case IProperty::Type::EnumU16:
+                case IProperty::Type::EnumFlagsU16:
+                    *prop->GetPropertyUint16(_dstObj) = *prop->GetPropertyUint16(_srcObj);
+                    break;
+
+                case IProperty::Type::Uint32:
+                case IProperty::Type::EnumU32:
+                case IProperty::Type::EnumFlagsU32:
+                    *prop->GetPropertyUint32(_dstObj) = *prop->GetPropertyUint32(_srcObj);
+                    break;
+
+                case IProperty::Type::Float:
+                    *prop->GetPropertyFloat(_dstObj) = *prop->GetPropertyFloat(_srcObj);
+                    break;
+
+                case IProperty::Type::Float2:
+                    *prop->GetPropertyFloat2(_dstObj) = *prop->GetPropertyFloat2(_srcObj);
+                    break;
+
+                case IProperty::Type::Float3:
+                    *prop->GetPropertyFloat3(_dstObj) = *prop->GetPropertyFloat3(_srcObj);
+                    break;
+
+                case IProperty::Type::Float4:
+                    *prop->GetPropertyFloat4(_dstObj) = *prop->GetPropertyFloat4(_srcObj);
+                    break;
+
+                case IProperty::Type::Float4x4:
+                    *prop->GetPropertyFloat4x4(_dstObj) = *prop->GetPropertyFloat4x4(_srcObj);
+                    break;
+
+                case IProperty::Type::Uint64:
+                case IProperty::Type::EnumU64:
+                case IProperty::Type::EnumFlagsU64:
+                    *prop->GetPropertyUint64(_dstObj) = *prop->GetPropertyUint64(_srcObj);
+                    break;
+
+                case IProperty::Type::String:
+                    *prop->GetPropertyString(_dstObj) = *prop->GetPropertyString(_srcObj);
+                    break;
+
+                case IProperty::Type::Object:
+                {
+                    IObject * srcObj = prop->GetPropertyObject(_srcObj);
+                    IObject * dstObj = prop->GetPropertyObject(_dstObj);
+                    CopyProperties(srcObj, dstObj);
+                }
+                break;
+
+                case IProperty::Type::ObjectPtr:
+                {
+                    IObject ** srcObj = prop->GetPropertyObjectPtr(_srcObj);
+                    IObject ** dstObj = prop->GetPropertyObjectPtr(_dstObj);
+                    CopyProperties(*srcObj, *dstObj);
+                }
+                break;
+
+                case IProperty::Type::ObjectPtrVector:
+                {
+                    const vector<IObject *> * srcVec = prop->GetPropertyObjectPtrVector(_srcObj);
+                    const auto count = srcVec->size();
+
+                    vector<IObject *> * dstVec = prop->GetPropertyObjectPtrVector(_dstObj);
+                    VG_ASSERT(dstVec->size() == 0);
+                    dstVec->reserve(count);
+
+                    for (uint i = 0; i < count; ++i)
+                    {
+                        IObject * srcChild = (*srcVec)[i];
+                        IObject * newChild = createObject(srcChild->getClassName(), srcChild->getName(), _dstObj);
+                        CopyProperties((IObject *)srcChild, newChild);
+                        newChild->setParent(_dstObj);
+                        dstVec->push_back(newChild);
+                    }
+                }
+                break;   
+
+                case IProperty::Type::Resource:
+                {
+                    IResource * srcRes = prop->GetPropertyResource(_srcObj);
+                    IResource * dstRes = prop->GetPropertyResource(_dstObj);
+                    CopyProperties(srcRes, dstRes);
+
+                    dstRes->setParent(_dstObj);
+                    dstRes->onResourcePathChanged("", dstRes->GetResourcePath());
+                }
+                break;
+
+                case IProperty::Type::ResourceVector:
+                {
+                    const size_t srcCount = prop->GetPropertyResourceVectorCount(_srcObj);
+                    const byte * srcData = prop->GetPropertyResourceVectorData(_srcObj);
+
+                    if (srcCount > 0)
+                    {
+                        const char * elemClassName = prop->GetPropertyResourceVectorElement(_srcObj, 0)->getClassName();
+                        const IClassDesc * elemClassDesc = getClassDescriptor(elemClassName);
+                        VG_ASSERT(elemClassDesc);
+                        if (elemClassDesc)
+                        {
+                            uint elementSize;
+                            void * data = elemClassDesc->ResizeVector(_dstObj, (uint)prop->getOffset(), (uint)srcCount, elementSize);
+
+                            for (uint i = 0; i < srcCount; ++i)
+                            {
+                                IResource * srcRes = prop->GetPropertyResourceVectorElement(_srcObj, i);
+                                IResource * dstRes = prop->GetPropertyResourceVectorElement(_dstObj, i);
+                                CopyProperties(srcRes, dstRes);
+
+                                dstRes->setParent(_dstObj);
+                                dstRes->onResourcePathChanged("", dstRes->GetResourcePath());
+                            }
+                        }                        
+                    }
+                }
+                break;
+
+                case IProperty::Type::ResourcePtr:
+                case IProperty::Type::ResourcePtrVector:
+                case IProperty::Type::ObjectPtrDictionary:
+                case IProperty::Type::ObjectVector:
+                
+                case IProperty::Type::Callback:
+                case IProperty::Type::LayoutElement:
+                    VG_ASSERT_ENUM_NOT_IMPLEMENTED(propType);
+                    break;
+            }
+
+            _dstObj->OnPropertyChanged(_dstObj, *prop);
+        }
+
+        return true;
     }
 
     //--------------------------------------------------------------------------------------
@@ -448,6 +659,14 @@ namespace vg::core
                             const char * name = xmlName->Value();
                             const char * typeName = xmlType->Value();
                             auto type = enumGetValue<IProperty::Type>(typeName);
+
+                            if (IProperty::Type::Undefined == type)
+                            {
+                                auto it = m_oldTypeNames.find(typeName);
+                                if (m_oldTypeNames.end() != it)
+                                    type = it->second;
+                            }
+
                             const auto * prop = classDesc->GetPropertyByName(name);
                             if (nullptr == prop)
                             {
@@ -527,9 +746,9 @@ namespace vg::core
                                         break;
 
                                         case IProperty::Type::Resource:
-                                        case IProperty::Type::ResourceRef:
+                                        case IProperty::Type::ResourcePtr:
                                         {
-                                            const bool ref = type == IProperty::Type::ResourceRef;
+                                            const bool ref = type == IProperty::Type::ResourcePtr;
 
                                             auto serializeResourceFromXML = [=](IResource * _resource, const XMLElement * _xmlElement)
                                             {
@@ -568,7 +787,7 @@ namespace vg::core
                                                             {
                                                                 if (!strcmp(xmlValueName->Value(), prop->getEnumName(i)))
                                                                 {
-                                                                    IResource * pResource = ref ? prop->GetPropertyResourceRef(_object, i) : prop->GetPropertyResource(_object, i);
+                                                                    IResource * pResource = ref ? *prop->GetPropertyResourcePtr(_object, i) : prop->GetPropertyResource(_object, i);
                                                                     serializeResourceFromXML(pResource, xmlPropElemValue);
                                                                     break;
                                                                 }
@@ -581,19 +800,19 @@ namespace vg::core
                                             }
                                             else
                                             {
-                                                IResource * pResource = ref ? prop->GetPropertyResourceRef(_object) : prop->GetPropertyResource(_object);
+                                                IResource * pResource = ref ? *prop->GetPropertyResourcePtr(_object) : prop->GetPropertyResource(_object);
                                                 serializeResourceFromXML(pResource, xmlPropElem);
                                             }
                                         }
                                         break;
 
-                                        case IProperty::Type::ResourceRefVector:
+                                        case IProperty::Type::ResourcePtrVector:
                                         {
                                             VG_ASSERT(!isEnumArray, "EnumArray serialization from XML not implemented for type '%s'", asString(type).c_str());
                                             const XMLElement * xmlObjectRef = xmlPropElem->FirstChildElement("Object");
                                             if (nullptr != xmlObjectRef)
                                             {
-                                                auto * vector = prop->GetPropertyResourceRefVector(_object);
+                                                auto * vector = prop->GetPropertyResourcePtrVector(_object);
                                                 const XMLElement * xmlObjectRef = xmlPropElem->FirstChildElement("Object");
 
                                                 do
@@ -692,7 +911,7 @@ namespace vg::core
                                         }
                                         break;
 
-                                        case IProperty::Type::ObjectRef:
+                                        case IProperty::Type::ObjectPtr:
                                         {
                                             VG_ASSERT(!isEnumArray, "EnumArray serialization from XML not implemented for type '%s'", asString(type).c_str());
                                             IObject* pObjectRef = nullptr;
@@ -719,13 +938,13 @@ namespace vg::core
                                         }
                                         break;
 
-                                        case IProperty::Type::ObjectRefVector:
+                                        case IProperty::Type::ObjectPtrVector:
                                         {
                                             VG_ASSERT(!isEnumArray, "EnumArray serialization from XML not implemented for type '%s'", asString(type).c_str());
                                             const XMLElement* xmlObjectRef = xmlPropElem->FirstChildElement("Object");
                                             if (nullptr != xmlObjectRef)
                                             {
-                                                auto * vector = prop->GetPropertyObjectRefVector(_object);
+                                                auto * vector = prop->GetPropertyObjectPtrVector(_object);
                                                 const XMLElement* xmlObjectRef = xmlPropElem->FirstChildElement("Object");
                                         
                                                 do
@@ -892,7 +1111,7 @@ namespace vg::core
                                 }
                                 else
                                 {
-                                    VG_WARNING("[Factory] Serialized Object type \"%s\" for Property \"%s\" from class \"%s\" does not match type \"%s\" declared in ClassDesc\n", typeName, name, className, asString(prop->getType()));
+                                    VG_WARNING("[Factory] Serialized Object type \"%s\" for Property \"%s\" from class \"%s\" does not match type \"%s\" declared in ClassDesc\n", typeName, name, className, asString(prop->getType()).c_str());
                                 }
                             }
                         }
@@ -982,9 +1201,9 @@ namespace vg::core
                     break;
 
                 case IProperty::Type::Resource:
-                case IProperty::Type::ResourceRef:
+                case IProperty::Type::ResourcePtr:
                 {
-                    const bool ref = type == IProperty::Type::ResourceRef;
+                    const bool ref = type == IProperty::Type::ResourcePtr;
 
                     if (isEnumArray)
                     {
@@ -995,7 +1214,7 @@ namespace vg::core
                             {
                                 auto enumValueName = prop->getEnumName(i);
                                 xmlPropElemChild->SetAttribute("name", enumValueName);
-                                const IObject * pResource = ref ? prop->GetPropertyResourceRef(_object, i) : prop->GetPropertyResource(_object, i);
+                                const IObject * pResource = ref ? *prop->GetPropertyResourcePtr(_object, i) : prop->GetPropertyResource(_object, i);
                                 serializeToXML(pResource, _xmlDoc, xmlPropElemChild);
                             }
                             xmlPropElem->InsertEndChild(xmlPropElemChild);
@@ -1003,7 +1222,7 @@ namespace vg::core
                     }
                     else
                     {
-                        const IObject * pResource = ref ? prop->GetPropertyResourceRef(_object) : prop->GetPropertyResource(_object);
+                        const IObject * pResource = ref ? *prop->GetPropertyResourcePtr(_object) : prop->GetPropertyResource(_object);
                         serializeToXML(pResource, _xmlDoc, xmlPropElem);
                     }
                 }
@@ -1032,10 +1251,10 @@ namespace vg::core
                 }
                 break;
 
-                case IProperty::Type::ObjectRef:
+                case IProperty::Type::ObjectPtr:
                 {
                     VG_ASSERT(!isEnumArray, "EnumArray serialization to XML not implemented for type '%s'", asString(type).c_str());
-                    const IObject * pObject = prop->GetPropertyObjectRef(_object);
+                    const IObject * pObject = *prop->GetPropertyObjectPtr(_object);
                     if (nullptr != pObject)
                         serializeToXML(pObject, _xmlDoc, xmlPropElem);
                 }
@@ -1056,20 +1275,20 @@ namespace vg::core
                 //}
                 //break;
 
-                case IProperty::Type::ResourceRefVector:
+                case IProperty::Type::ResourcePtrVector:
                 {
                     VG_ASSERT(!isEnumArray, "EnumArray serialization to XML not implemented for type '%s'", asString(type).c_str());
-                    auto * vector = prop->GetPropertyResourceRefVector(_object);
+                    auto * vector = prop->GetPropertyResourcePtrVector(_object);
                     const uint count = vector->count();
                     for (uint i = 0; i < count; ++i)
                         serializeToXML((const IObject *)(*vector)[i], _xmlDoc, xmlPropElem);
                 }
                 break;
 
-                case IProperty::Type::ObjectRefVector:
+                case IProperty::Type::ObjectPtrVector:
                 {
                     VG_ASSERT(!isEnumArray, "EnumArray serialization to XML not implemented for type '%s'", asString(type).c_str());
-                    auto * vector = prop->GetPropertyObjectRefVector(_object);
+                    auto * vector = prop->GetPropertyObjectPtrVector(_object);
                     const uint count = vector->count();
                     for (uint i = 0; i < count; ++i)
                         serializeToXML((const IObject *)(*vector)[i], _xmlDoc, xmlPropElem);

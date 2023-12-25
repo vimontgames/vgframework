@@ -11,6 +11,7 @@ struct ViewConstants
     {       
         m_screenSizeAndMousePos   = _buffer.Load<uint4>(_offset);   _offset += sizeof(uint4);
         m_debugDisplay            = _buffer.Load<uint4>(_offset);   _offset += sizeof(uint4);
+        m_camera                  = _buffer.Load<float4>(_offset);  _offset += sizeof(float4);
         m_rayTracing              = _buffer.Load<uint4>(_offset);   _offset += sizeof(uint4);
                                                                   
         m_view[0]                 = _buffer.Load<float4>(_offset);  _offset += sizeof(float4);
@@ -35,6 +36,7 @@ struct ViewConstants
     }
     #endif
     
+    // m_screenSizeAndMousePos
     void            setScreenSize           (uint2 _screenSize)     { m_screenSizeAndMousePos.xy = _screenSize; }
     uint2           getScreenSize           ()                      { return m_screenSizeAndMousePos.xy; }
     
@@ -45,39 +47,49 @@ struct ViewConstants
     // DisplayMode      : 8
     // RayTracingMode   : 8
     // PostProcessMode  : 8
-    void            setDisplayMode          (DisplayMode _mode)     { m_debugDisplay.x = (m_debugDisplay.x & ~0x000000FF) | ((uint)_mode & 0xFF)<<0; }
-    DisplayMode     getDisplayMode          ()                      { return (DisplayMode)(uint(m_debugDisplay.x) & 0x000000FF); }
+    void            setDisplayMode          (DisplayMode _mode)         { m_debugDisplay.x = (m_debugDisplay.x & ~0x000000FF) | ((uint)_mode & 0xFF)<<0; }
+    DisplayMode     getDisplayMode          ()                          { return (DisplayMode)(uint(m_debugDisplay.x) & 0x000000FF); }
 
-    void            setRayTracingMode       (RayTracingMode _mode)  { m_debugDisplay.x = (m_debugDisplay.x & ~0x0000FF00) | ((uint)_mode & 0xFF)<<8; }
-    RayTracingMode  getRayTracingMode       ()                      { return (RayTracingMode)(uint(m_debugDisplay.x)>>8 & 0xFF); }
+    void            setRayTracingMode       (RayTracingMode _mode)      { m_debugDisplay.x = (m_debugDisplay.x & ~0x0000FF00) | ((uint)_mode & 0xFF)<<8; }
+    RayTracingMode  getRayTracingMode       ()                          { return (RayTracingMode)(uint(m_debugDisplay.x)>>8 & 0xFF); }
 
-    void            setPostProcessMode      (PostProcessMode _mode) { m_debugDisplay.x = (m_debugDisplay.x & ~0x00FF0000) | ((uint)_mode & 0xFF)<<16; }
-    PostProcessMode getPostProcessMode      ()                      { return (PostProcessMode)(uint(m_debugDisplay.x)>>16 & 0xFF); }
+    void            setPostProcessMode      (PostProcessMode _mode)     { m_debugDisplay.x = (m_debugDisplay.x & ~0x00FF0000) | ((uint)_mode & 0xFF)<<16; }
+    PostProcessMode getPostProcessMode      ()                          { return (PostProcessMode)(uint(m_debugDisplay.x)>>16 & 0xFF); }
     
-    void            setDisplayFlags         (DisplayFlags _flags)   { m_debugDisplay.y = (uint)_flags; }
-    DisplayFlags    getDisplayFlags         ()                      { return (DisplayFlags)uint(m_debugDisplay.y); }
+    void            setDisplayFlags         (DisplayFlags _flags)       { m_debugDisplay.y = (uint)_flags; }
+    DisplayFlags    getDisplayFlags         ()                          { return (DisplayFlags)uint(m_debugDisplay.y); }
     
-    void            setToolmodeRWBufferID   (uint _id)              { m_debugDisplay.z = (m_debugDisplay.z & ~0x0000FFFF) | _id; }
-    uint            getToolmodeRWBufferID   ()                      { return m_debugDisplay.z & 0x0000FFFF; }
-    
-    void            setView                 (float4x4 _view)        { m_view = _view; }
-    float4x4        getView                 ()                      { return m_view; }
+    void            setToolmodeRWBufferID   (uint _id)                  { m_debugDisplay.z = (m_debugDisplay.z & ~0x0000FFFF) | _id; }
+    uint            getToolmodeRWBufferID   ()                          { return m_debugDisplay.z & 0x0000FFFF; }
 
-    void            setViewInv              (float4x4 _viewInv)     { m_viewInv = _viewInv; }
-    float4x4        getViewInv              ()                      { return m_viewInv; }
-    
-    void            setProj                 (float4x4 _proj)        { m_proj = _proj; }
-    float4x4        getProj                 ()                      { return m_proj; }
+    // m_camera
+    void            setCameraNearFar        (float2 _nearFar)           { m_camera.xy = _nearFar; }
+    void            setCameraFieldOfView    (float _fov)                { m_camera.z = _fov; }
+    void            setCameraAspectRatio    (float _ar)                 { m_camera.w = _ar; }
 
-    void            setProjInv              (float4x4 _projInv)     { m_projInv = _projInv; }
-    float4x4        getProjInv              ()                      { return m_projInv; }
-
-    void            setTLASHandle           (uint _value)           { m_rayTracing.x = (m_rayTracing.x & ~0x0000FFFFUL) | (_value & 0xFFFF); }
-    uint            getTLASHandle           ()                      { return 0xFFFF & m_rayTracing.x; }
+    float2          getCameraNearFar           ()                       { return m_camera.xy; }
+    float           getCameraFieldOfView    ()                          { return m_camera.z; }
+    float           getCameraAspectRatio    ()                          { return m_camera.w; }
     
-    uint4           m_screenSizeAndMousePos;
-    uint4           m_debugDisplay;
-    uint4           m_rayTracing;
+    void            setView                 (float4x4 _view)            { m_view = _view; }
+    float4x4        getView                 ()                          { return m_view; }
+
+    void            setViewInv              (float4x4 _viewInv)         { m_viewInv = _viewInv; }
+    float4x4        getViewInv              ()                          { return m_viewInv; }
+    
+    void            setProj                 (float4x4 _proj)            { m_proj = _proj; }
+    float4x4        getProj                 ()                          { return m_proj; }
+
+    void            setProjInv              (float4x4 _projInv)         { m_projInv = _projInv; }
+    float4x4        getProjInv              ()                          { return m_projInv; }
+
+    void            setTLASHandle           (uint _value)               { m_rayTracing.x = (m_rayTracing.x & ~0x0000FFFFUL) | (_value & 0xFFFF); }
+    uint            getTLASHandle           ()                          { return 0xFFFF & m_rayTracing.x; }
+    
+    uint4           m_screenSizeAndMousePos;    // { size.x, size.y, mouse.x, mouse.y }
+    uint4           m_debugDisplay;             // 0x00FFFFFF 0xFFFFFFFF 0x0000FFFF 0x00000000
+    float4          m_camera;                   // { near, far, fov, ar }
+    uint4           m_rayTracing;               // 0x0000FFFF 0x00000000 0x00000000 0x00000000
     float4x4        m_view;
     float4x4        m_proj;
     float4x4        m_viewInv;

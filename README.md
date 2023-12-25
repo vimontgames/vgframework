@@ -20,6 +20,18 @@ Another subject that is very close to my heart is that there is a strong separat
 
 # changelog
 
+## 0.21
+Add support for inline RayTracing with BLAS & TLAS for DirectX12/Vulkan\
+Duplicate/Instanciate GameObjects hierarchies UI\
+Log shader and PSO compilation timings\
+Optimize physics broadphase when game starts\
+Use float for dt instead of double\
+Optimized DirectX12 clear color\
+Fix multithread issue in Resource window when hot-reloading\
+Variable map/unmap size to speed up skinning\
+Update Vulkan Memory Allocator to 3.0.1\
+Update hlslpp to 3.4
+
 ## 0.20
 Translate/Move/Rotate objects using ImGuizmo\
 Character Controller component\
@@ -83,7 +95,8 @@ First run might take a few seconds because files are cooking.
 
 | Key			| Description	 												
 | ------------- | ------------------------------------------------------------- 
-| F1			| Start/stop profiler capture					
+| F1			| Start/stop profiler capture	
+| F2			| Rename selected Object
 | F6			| Hot reload shaders
 | F7			| Hot reload resources				
 | F5			| Enter Play mode
@@ -91,12 +104,14 @@ First run might take a few seconds because files are cooking.
 | PAUSE			| Pause/resume Play mode
 | F11			| Maximize Game view (fullscreen)
 | ESCAPE		| Exit Play mode and go back to Editor mode
-| DELETE		| Deleted selected Ojects
-| Ctrl-R		| Rename selected Object
+| DELETE		| Delete selected objects
+| Ctrl-D		| Duplicate selected objects (*)
 | Ctrl-Q		| Quit application
 | Ctrl-T		| Translation gizmo
 | Ctrl-R		| Rotation gizmo
 | Ctrl-S		| Scale gizmo
+
+(*) You can also keep shift pressed while moving objects to duplicate
 
 ## ide
 VS Studio 2022 Community\
@@ -117,7 +132,7 @@ Also don't forget to set the *working directory* to **$(SolutionDir)**.
 | Win10 SDK		 | 10.0.17763.0  | https://developer.microsoft.com/fr-fr/windows/downloads/sdk-archive/	
 | Vulkan SDK (*) | SDK 1.3.261.1 | https://vulkan.lunarg.com/sdk/home 
 
-(*) *Only required to build Vulkan version. **$(VK_SDK_PATH)** should point the Vulkan SDK installation dir (i.e. **"C:\SDK\Vulkan\1.3.261.1"**)*
+(*) Only required to build Vulkan version. **$(VK_SDK_PATH)** should point the Vulkan SDK installation dir (i.e. **"C:\SDK\Vulkan\1.3.261.1"**)
 
 # extern libs
 

@@ -742,11 +742,11 @@ namespace vg::editor
                 }
                 break;
 
-                case IProperty::Type::ObjectRefVector:
+                case IProperty::Type::ObjectPtrVector:
                 {
                     VG_ASSERT(!isEnumArray, "Display of EnumArray property not implemented for type '%s'", asString(type).c_str());
 
-                    auto * vec = _prop->GetPropertyObjectRefVector(_object);
+                    auto * vec = _prop->GetPropertyObjectPtrVector(_object);
                     const uint count = vec->count();
 
                     string treeNodeName = (string)displayName + " (" + to_string(count) + ")";
@@ -919,11 +919,11 @@ namespace vg::editor
                 }
                 break;
 
-                case IProperty::Type::ObjectRefDictionary:
+                case IProperty::Type::ObjectPtrDictionary:
                 {
                     VG_ASSERT(!isEnumArray, "Display of EnumArray property not implemented for type '%s'", asString(type).c_str());
 
-                    dictionary<IObject *> * dic = _prop->GetPropertyObjectRefDictionary(_object);
+                    dictionary<IObject *> * dic = _prop->GetPropertyObjectPtrDictionary(_object);
                     const uint count = (uint)dic->size();
 
                     string treeNodeName = (string)displayName + " (" + to_string(count) + ")";
@@ -946,10 +946,10 @@ namespace vg::editor
                 break;
 
                 case IProperty::Type::Object:
-                case IProperty::Type::ObjectRef:
+                case IProperty::Type::ObjectPtr:
                 {
-                    bool ref = (type == IProperty::Type::ObjectRef);
-                    IObject * pObject = ref ? _prop->GetPropertyObjectRef(_object) : _prop->GetPropertyObject(_object);
+                    bool ref = (type == IProperty::Type::ObjectPtr);
+                    IObject * pObject = ref ? *_prop->GetPropertyObjectPtr(_object) : _prop->GetPropertyObject(_object);
 
                     string treeNodeName;
                     auto treeNodeFlags = ImGuiTreeNodeFlags_OpenOnArrow;
@@ -967,7 +967,7 @@ namespace vg::editor
                         {
                             for (uint e = 0; e < _prop->getEnumCount(); ++e)
                             {
-                                pObject = ref ? _prop->GetPropertyObjectRef(_object, e) : _prop->GetPropertyObject(_object, e);
+                                pObject = ref ? *_prop->GetPropertyObjectPtr(_object, e) : _prop->GetPropertyObject(_object, e);
 
                                 if (ImGui::TreeNodeEx(_prop->getEnumName(e), treeNodeFlags | ImGuiTreeNodeFlags_DefaultOpen))
                                 {
@@ -1048,9 +1048,9 @@ namespace vg::editor
                 break;
 
                 case IProperty::Type::Resource:
-                case IProperty::Type::ResourceRef:
+                case IProperty::Type::ResourcePtr:
                 {
-                    const bool ref = type == IProperty::Type::ResourceRef;
+                    const bool ref = type == IProperty::Type::ResourcePtr;
 
                     if (isEnumArray)
                     {
@@ -1060,7 +1060,7 @@ namespace vg::editor
                         {
                             for (uint e = 0; e < _prop->getEnumCount(); ++e)
                             {
-                                auto pResource = ref ? _prop->GetPropertyResourceRef(_object, e) : _prop->GetPropertyResource(_object, e);
+                                auto pResource = ref ? *_prop->GetPropertyResourcePtr(_object, e) : _prop->GetPropertyResource(_object, e);
 
                                 if (ImGui::TreeNodeEx(_prop->getEnumName(e), ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_DefaultOpen))
                                 {
@@ -1077,7 +1077,7 @@ namespace vg::editor
                     }
                     else
                     {
-                        IResource * pResource = ref ? _prop->GetPropertyResourceRef(_object) : _prop->GetPropertyResource(_object);
+                        IResource * pResource = ref ? *_prop->GetPropertyResourcePtr(_object) : _prop->GetPropertyResource(_object);
                         changed |= displayResource(pResource, _prop);
                     }
                 }
@@ -1250,7 +1250,7 @@ namespace vg::editor
         string ext = getFileBrowserExt(_resource);
 
         // Create new file
-        if (fileBrowser.showFileDialog(newFileButtonName.c_str(), imgui_addons::ImGuiFileBrowser::DialogMode::SAVE, style::dialog::Size, ext.c_str()))
+        if (fileBrowser.showFileDialog(newFileButtonName.c_str(), imgui_addons::ImGuiFileBrowser::DialogMode::SAVE, style::dialog::Size, ext.c_str())) 
         {
             const string newFilePath = io::addExtensionIfNotPresent(fileBrowser.selected_path, _resource->getExtensions());
             if (_resource->CreateFile(newFilePath))
@@ -1274,7 +1274,7 @@ namespace vg::editor
         // Save existing file
         if (fileBrowser.showFileDialog(saveAsFileButtonName.c_str(), imgui_addons::ImGuiFileBrowser::DialogMode::SAVE, style::dialog::Size, ext.c_str()))
         {
-            const string newFilePath = fileBrowser.selected_path;
+            const string newFilePath = io::addExtensionIfNotPresent(fileBrowser.selected_path, _resource->getExtensions());
             if (_resource->SaveFile(newFilePath))
             {
                 _resource->SetResourcePath(newFilePath);

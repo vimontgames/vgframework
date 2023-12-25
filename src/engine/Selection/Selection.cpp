@@ -163,9 +163,7 @@ namespace vg::engine
             if (go)
             {
                 float4x4 m = go->GetWorldMatrix();
-
                 T.xyz += m[3].xyz;
-
                 ++count;
             }
         }
@@ -222,5 +220,26 @@ namespace vg::engine
         }
 
         return gameObjectsWithoutChildrenWithParents;
+    }
+
+    //--------------------------------------------------------------------------------------
+    core::vector<core::IGameObject *> Selection::DuplicateGameObjects(const core::vector<core::IGameObject *> & _selectedGameObjects)
+    {
+        core::vector<core::IGameObject *> newGameObjects;
+
+        for (uint i = 0; i < _selectedGameObjects.size(); ++i)
+        {
+            IGameObject * go = _selectedGameObjects[i];
+            IGameObject * parentGameObject = dynamic_cast<IGameObject *>(go->getParent());
+            if (nullptr != parentGameObject)
+            {
+                IGameObject * newGO = (IGameObject *)go->Instanciate();
+                parentGameObject->AddChild(newGO);
+                newGameObjects.push_back(newGO);
+                VG_SAFE_RELEASE(newGO);
+            }
+        }
+
+        return newGameObjects;
     }
 }

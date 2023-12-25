@@ -19,6 +19,8 @@ namespace vg::core
 										    IObject		        () = default;
 		virtual							    ~IObject	        () = default;
 
+        virtual IObject *                   Instanciate         () const = 0;
+
         virtual void                        OnLoad              () = 0;
 
         virtual void                        OnPlay              () = 0;

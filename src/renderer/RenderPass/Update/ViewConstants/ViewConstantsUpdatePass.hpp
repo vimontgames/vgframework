@@ -54,16 +54,20 @@ namespace vg::renderer
         }
 
         View * view = (View *)_renderPassContext.m_view;
+        const uint2 screenSize = view->getSize();
 
         ViewConstants * constants = (ViewConstants*)_cmdList->map(s_ViewConstantsBuffer, sizeof(ViewConstants)).data;
         {
-            constants->setScreenSize(view->getSize());
+            constants->setScreenSize(screenSize);
             constants->setMousePos(view->GetRelativeMousePos());
             constants->setDisplayMode(options->getDisplayMode());
             constants->setRayTracingMode(options->getRayTracingMode());
             constants->setPostProcessMode(options->getPostProcessMode());
             constants->setDisplayFlags(options->getDisplayFlags());
             constants->setToolmodeRWBufferID(toolmodeRWBufferID);
+            constants->setCameraNearFar(view->getCameraNearFar());
+            constants->setCameraFieldOfView(view->getCameraFovY());
+            constants->setCameraAspectRatio((float)screenSize.x / (float)screenSize.y);
             constants->setView(view->getViewMatrix());
             constants->setViewInv(view->getViewInvMatrix());
             constants->setProj(view->getProjMatrix());

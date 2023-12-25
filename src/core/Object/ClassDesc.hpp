@@ -159,7 +159,7 @@ namespace vg::core
     //--------------------------------------------------------------------------------------
     void ClassDesc::RegisterProperty(const char * _className, const char * _propertyName, vector<IObject*>* _offset, const char * _displayName, IProperty::Flags _flags)
     {
-        properties.emplace_back(_className, _propertyName, asBool(_flags & IProperty::Flags::Resource) ? IProperty::Type::ResourceRefVector : IProperty::Type::ObjectRefVector, (uint_ptr)_offset, (u32)sizeof(vector<IObject *>), _displayName, _flags);
+        properties.emplace_back(_className, _propertyName, asBool(_flags & IProperty::Flags::Resource) ? IProperty::Type::ResourcePtrVector : IProperty::Type::ObjectPtrVector, (uint_ptr)_offset, (u32)sizeof(vector<IObject *>), _displayName, _flags);
     }
 
     //--------------------------------------------------------------------------------------
@@ -280,12 +280,12 @@ namespace vg::core
     template <> struct TypeToEnum<core::float4x4> { static constexpr auto value = IProperty::Type::Float4x4; };
     template <> struct TypeToEnum<core::string> { static constexpr auto value = IProperty::Type::String; };
     template <> struct TypeToEnum<IObject> { static constexpr auto value = IProperty::Type::Object; };
-    template <> struct TypeToEnum<IObject*> { static constexpr auto value = IProperty::Type::ObjectRef; };
+    template <> struct TypeToEnum<IObject*> { static constexpr auto value = IProperty::Type::ObjectPtr; };
     template <> struct TypeToEnum<IResource> { static constexpr auto value = IProperty::Type::Resource; };
-    template <> struct TypeToEnum<IResource*> { static constexpr auto value = IProperty::Type::ResourceRef; };
+    template <> struct TypeToEnum<IResource*> { static constexpr auto value = IProperty::Type::ResourcePtr; };
     template <> struct TypeToEnum<IProperty::Callback> { static constexpr auto value = IProperty::Type::Callback; };
-    template <> struct TypeToEnum<vector<IObject*>> { static constexpr auto value = IProperty::Type::ObjectRefVector; };
-    template <> struct TypeToEnum<dictionary<core::IObject*>> { static constexpr auto value = IProperty::Type::ObjectRefDictionary; };
+    template <> struct TypeToEnum<vector<IObject*>> { static constexpr auto value = IProperty::Type::ObjectPtrVector; };
+    template <> struct TypeToEnum<dictionary<core::IObject*>> { static constexpr auto value = IProperty::Type::ObjectPtrDictionary; };
 
     //--------------------------------------------------------------------------------------
     template <typename T> void ClassDesc::registerClassMemberT(const char * _className, const char * _propertyName, T * _offset, const char * _displayName, IProperty::Flags _flags)

@@ -47,6 +47,12 @@ namespace vg::core
 	}
 
     //--------------------------------------------------------------------------------------
+    IObject * Object::Instanciate() const
+    {
+        return Kernel::getFactory()->Instanciate(this);
+    }
+
+    //--------------------------------------------------------------------------------------
     void Object::OnLoad()
     {
 

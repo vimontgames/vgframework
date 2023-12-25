@@ -22,6 +22,7 @@ namespace vg::engine
 
         core::float4x4 &                    GetSelectionMatrix                  () final override;
         core::vector<core::IGameObject *>   RemoveChildGameObjectsWithParents   (const core::vector<core::IObject *> & _objects) const final override;
+        core::vector<core::IGameObject *>   DuplicateGameObjects                (const core::vector<core::IGameObject *> & _gameObjects) final override;
 
     protected:
         bool                                add                                 (core::IObject * _object);

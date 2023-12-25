@@ -27,20 +27,23 @@ namespace vg::engine
     RigidBodyComponent::RigidBodyComponent(const core::string & _name, IObject * _parent) :
         super(_name, _parent)
     {
-        if (m_bodyDesc == nullptr)
-            createBodyDesc();
+        if (_parent)
+        {
+            if (m_bodyDesc == nullptr)
+                createBodyDesc();
 
-        if (m_shapeDesc == nullptr)
-            createShapeDesc();
+            if (m_shapeDesc == nullptr)
+                createShapeDesc();
 
-        if (getGameObject())
-            updateFlagsFromGameObject();
+            if (getGameObject())
+                updateFlagsFromGameObject();
 
-        if (m_shape == nullptr)
-            createShape();
+            if (m_shape == nullptr)
+                createShape();
 
-        if (m_body == nullptr)
-            createBody();
+            if (m_body == nullptr)
+                createBody();
+        }
     }
 
     //--------------------------------------------------------------------------------------

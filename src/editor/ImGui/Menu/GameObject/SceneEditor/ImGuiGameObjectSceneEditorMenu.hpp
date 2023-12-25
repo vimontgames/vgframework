@@ -21,6 +21,7 @@ namespace vg::editor
         bool openPopup = false;
         bool doDelete = false;
         bool doRename = false;
+        bool doDuplicate = false;
 
         ISelection * selection = Editor::get()->getSelection();
 
@@ -43,10 +44,12 @@ namespace vg::editor
             {
                 if (ImGui::IsKeyPressed(ImGuiKey_Delete))
                     doDelete = true;
-                else if (canRename && ImGui::IsKeyPressed(ImGuiKey_R) && ImGui::IsKeyDown(ImGuiKey_LeftCtrl))
+                else if (canRename && ImGui::IsKeyPressed(ImGuiKey_F2))
                     doRename = true;
+                else if (ImGui::IsKeyPressed(ImGuiKey_D) && ImGui::IsKeyDown(ImGuiKey_LeftCtrl))
+                    doDuplicate = true;
             }
-        }
+        }        
 
         if (ImGui::BeginPopupContextItem())
         {
@@ -54,13 +57,31 @@ namespace vg::editor
             if (!selection->IsSelectedObject(_object))
                 selection->SetSelectedObject(_object);
 
-            if (ImGui::MenuItem("Add GameObject"))
+            if (ImGui::MenuItem("Add"))
+            {
+                m_selected = MenuOption::Add;
+                m_popup = "Add GameObject";
+                openPopup = true;
+                ImGui::OpenPopup("Add");
+            }
+
+            if (ImGui::MenuItem("Add Child"))
             {
                 m_selected = MenuOption::AddChild;
-                m_popup = "Add GameObject";
+                m_popup = "Add Child GameObject";
                 openPopup = true;
                 ImGui::OpenPopup("Add Child");
             }
+
+            if (ImGui::MenuItem("Add Parent"))
+            {
+                m_selected = MenuOption::AddParent;
+                m_popup = "Add Parent GameObject";
+                openPopup = true;
+                ImGui::OpenPopup("Add Parent");
+            }
+
+            ImGui::Separator();
 
             ImGui::BeginDisabled(!canRename);
             {
@@ -68,6 +89,11 @@ namespace vg::editor
                     doRename = true;
             }
             ImGui::EndDisabled();
+
+            if (ImGui::MenuItem("Duplicate", "Ctrl-D"))
+                doDuplicate = true;
+
+            ImGui::Separator();
 
             ImGui::BeginDisabled(!canDelete);
             {
@@ -77,6 +103,11 @@ namespace vg::editor
             ImGui::EndDisabled();
 
             ImGui::EndPopup();            
+        }
+
+        if (doDuplicate)
+        {
+            Editor::get()->getSelection()->DuplicateGameObjects(gameObjectsToDelete);
         }
 
         if (doDelete)
@@ -116,10 +147,13 @@ namespace vg::editor
             ImGui::OpenPopup(m_popup);
             openPopup = false;
         }
-       
-        switch ((MenuOption)m_selected)
+        
+        auto selected = (MenuOption)m_selected;
+        switch (selected)
         {
+            case MenuOption::Add:
             case MenuOption::AddChild:
+            case MenuOption::AddParent:
             {
                 if (ImGui::BeginPopupModal(m_popup, nullptr, ImGuiWindowFlags_AlwaysAutoResize))
                 {
@@ -138,7 +172,38 @@ namespace vg::editor
                     if (ImGui::Button("Add", style::button::SizeMedium) || enterPressed)
                     {
                         IGameObject * newGameObject = (IGameObject*)CreateFactoryObject(GameObject, newName.c_str(), gameObject);
-                        gameObject->AddChild(newGameObject);
+
+                        switch (selected)
+                        {
+                            default:
+                                VG_ASSERT_ENUM_NOT_IMPLEMENTED(selected);
+                                break;
+
+                            case MenuOption::Add:
+                            {
+                                auto parent = dynamic_cast<IGameObject *>(gameObject->getParent());
+                                if (parent)
+                                    parent->AddChild(newGameObject);
+                            }
+                                break;
+
+                            case MenuOption::AddChild:
+                                gameObject->AddChild(newGameObject);
+                                break;
+
+                            case MenuOption::AddParent:
+                                auto parent = dynamic_cast<IGameObject *>(gameObject->getParent());
+                                if (parent)
+                                {
+                                    parent->AddChild(newGameObject);
+                                    VG_SAFE_INCREASE_REFCOUNT(gameObject);
+                                    parent->RemoveChild(gameObject);
+                                    newGameObject->AddChild(gameObject);
+                                    VG_SAFE_RELEASE(gameObject);
+                                }
+                                break;
+                        }
+                        
                         newGameObject->Release();
                         ImGui::CloseCurrentPopup();
                         nameTmp[0] = '\0';

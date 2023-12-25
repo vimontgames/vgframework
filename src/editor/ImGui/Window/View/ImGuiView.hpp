@@ -248,15 +248,42 @@ namespace vg::editor
                 ImGuizmo::SetID((int)m_view->GetViewID().id);
                 if (ImGuizmo::Manipulate(viewMatrix, projMatrix, imGuizmoOperation, imGuizmoSpace, (float *)&matrix, (float *)&delta, snap))
                 {
-                    // apply delta to selected objects without parents
                     auto selectedObjectsWithoutParents = selection->RemoveChildGameObjectsWithParents(selectedObjects);
-                    for (uint i = 0; i < selectedObjectsWithoutParents.size(); ++i)
+                    bool skip = false;
+                    if (!m_manipulating && ImGuizmo::IsUsing())
                     {
-                        IGameObject * go = selectedObjectsWithoutParents[i];
-                        float4x4 mat = go->GetWorldMatrix();
-                        mat = mul(mat, delta);
-                        go->SetWorldMatrix(mat);
+                        m_manipulating = true;
+                        VG_INFO("[Editor] Start manipulating Gizmo");
+
+                        if (Kernel::getInput()->IsKeyPressed(Key::LSHIFT))
+                        {
+                            // Duplicate the current selection and manipulate the copy
+                            VG_INFO("[Editor] Duplicate current selection");
+                            matrix = core::float4x4::identity();
+                            delta = core::float4x4::identity();
+                            ImGuizmo::Manipulate(viewMatrix, projMatrix, imGuizmoOperation, imGuizmoSpace, (float *)&matrix, (float *)&delta, snap);
+                            selection->SetSelectedObjects((core::vector<IObject*>&)selection->DuplicateGameObjects(selectedObjectsWithoutParents));
+                            skip = true;
+                        }
                     }
+
+                    // apply delta to selected objects without parents
+                    if (!skip)
+                    {
+                        for (uint i = 0; i < selectedObjectsWithoutParents.size(); ++i)
+                        {
+                            IGameObject * go = selectedObjectsWithoutParents[i];
+                            float4x4 mat = go->GetWorldMatrix();
+                            mat = mul(mat, delta);
+                            go->SetWorldMatrix(mat);
+                        }
+                    }
+                }
+
+                if (m_manipulating && !ImGuizmo::IsUsing())
+                {
+                    VG_INFO("[Editor] Stop manipulating Gizmo");
+                    m_manipulating = false;
                 }
             }
             ImGui::PopClipRect();

@@ -15,7 +15,9 @@ namespace vg::editor
         enum MenuOption
         {
             None = 0,
+            Add,
             AddChild,
+            AddParent,
             Delete,
             Rename
         };

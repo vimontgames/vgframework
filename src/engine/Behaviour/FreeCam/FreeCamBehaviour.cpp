@@ -110,20 +110,23 @@ namespace vg::engine
             else if (m_yaw > PI)
                 m_yaw = m_yaw - 2.0f * PI;
 
-            if (input->IsKeyPressed(Key::A))
-                T -= moveSpeed * I;
-            else if (input->IsKeyPressed(Key::D))
-                T += moveSpeed * I;
+            if (!input->IsKeyPressed(Key::LCONTROL))
+            {
+                if (input->IsKeyPressed(Key::A))
+                    T -= moveSpeed * I;
+                else if (input->IsKeyPressed(Key::D))
+                    T += moveSpeed * I;
 
-            if (input->IsKeyPressed(Key::PAGEDOWN))
-                T -= moveSpeed * J;
-            else if (input->IsKeyPressed(Key::PAGEUP))
-                T += moveSpeed * J;
+                if (input->IsKeyPressed(Key::PAGEDOWN))
+                    T -= moveSpeed * J;
+                else if (input->IsKeyPressed(Key::PAGEUP))
+                    T += moveSpeed * J;
 
-            if (input->IsKeyPressed(Key::W))
-                T -= moveSpeed * K;
-            else if (input->IsKeyPressed(Key::S))
-                T += moveSpeed * K;
+                if (input->IsKeyPressed(Key::W))
+                    T -= moveSpeed * K;
+                else if (input->IsKeyPressed(Key::S))
+                    T += moveSpeed * K;
+            }
         }
 
         const float4x4 rotX = getRotX(m_pitch);

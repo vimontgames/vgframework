@@ -42,12 +42,12 @@ namespace vg::core
             EnumFlagsU32,
             EnumFlagsU64,
             Resource,
-            ResourceRef,
-            ResourceRefVector,
+            ResourcePtr,
+            ResourcePtrVector,
             Object,                 // Embedded IObject
-            ObjectRef,              // Pointer to IObject
-            ObjectRefVector,        // Vector of pointers to IObject
-            ObjectRefDictionary,    // Dictionary of pointers to IObject,
+            ObjectPtr,              // Pointer to IObject
+            ObjectPtrVector,        // Vector of pointers to IObject
+            ObjectPtrDictionary,    // Dictionary of pointers to IObject,
 
             // sizeof(element) is unknown ('registerResizeVectorFunc' must be registered for serialization)
             ObjectVector,
@@ -108,10 +108,17 @@ namespace vg::core
         virtual u64                             getEnumValue                    (uint index) const = 0;
 
         virtual bool *                          GetPropertyBool                 (const IObject * _object) const = 0;
+
+        virtual i8 *                            GetPropertyInt8                 (const IObject * _object) const = 0;
+        virtual i16 *                           GetPropertyInt16                (const IObject * _object) const = 0;
+        virtual i32 *                           GetPropertyInt32                (const IObject * _object) const = 0;
+        virtual i64 *                           GetPropertyInt64                (const IObject * _object) const = 0;
+
         virtual u8 *                            GetPropertyUint8                (const IObject * _object) const = 0;
         virtual u16 *                           GetPropertyUint16               (const IObject * _object) const = 0;
         virtual u32 *                           GetPropertyUint32               (const IObject * _object) const = 0;
         virtual u64 *                           GetPropertyUint64               (const IObject * _object) const = 0;
+
         virtual float *                         GetPropertyFloat                (const IObject * _object) const = 0;
         virtual float2 *                        GetPropertyFloat2               (const IObject * _object) const = 0;
         virtual float3 *                        GetPropertyFloat3               (const IObject * _object) const = 0;
@@ -120,12 +127,12 @@ namespace vg::core
         virtual float4x4 *                      GetPropertyFloat4x4             (const IObject * _object) const = 0;
         virtual string *                        GetPropertyString               (const IObject * _object) const = 0;
         virtual IResource *                     GetPropertyResource             (const IObject * _object, uint _index = 0) const = 0;
-        virtual vector<IResource *> *           GetPropertyResourceRefVector    (const IObject * _object) const = 0;
-        virtual IResource *                     GetPropertyResourceRef          (const IObject * _object, uint _index = 0) const = 0;
+        virtual vector<IResource *> *           GetPropertyResourcePtrVector    (const IObject * _object) const = 0;
+        virtual IResource **                    GetPropertyResourcePtr          (const IObject * _object, uint _index = 0) const = 0;
         virtual IObject *                       GetPropertyObject               (const IObject * _object, uint _index = 0) const = 0;
-        virtual IObject *                       GetPropertyObjectRef            (const IObject * _object, uint _index = 0) const = 0;
-        virtual vector<IObject*> *              GetPropertyObjectRefVector      (const IObject * _object) const = 0;
-        virtual dictionary<IObject*> *          GetPropertyObjectRefDictionary  (const IObject * _object) const = 0;
+        virtual IObject **                      GetPropertyObjectPtr            (const IObject * _object, uint _index = 0) const = 0;
+        virtual vector<IObject*> *              GetPropertyObjectPtrVector      (const IObject * _object) const = 0;
+        virtual dictionary<IObject*> *          GetPropertyObjectPtrDictionary  (const IObject * _object) const = 0;
         
         virtual uint                            GetPropertyObjectVectorCount    (const IObject * _object) const = 0;
         virtual u8 *                            GetPropertyObjectVectorData     (const IObject * _object) const = 0;
@@ -143,9 +150,16 @@ namespace vg::core
 
     private:
         template <typename T> inline T *        GetPropertyUnderlyingType       (const IObject * _object) const;
+
+        template <> inline i8 *                 GetPropertyUnderlyingType<i8>   (const IObject * _object) const { return GetPropertyInt8(_object); }
+        template <> inline i16 *                GetPropertyUnderlyingType<i16>  (const IObject * _object) const { return GetPropertyInt16(_object); }
+        template <> inline i32 *                GetPropertyUnderlyingType<i32>  (const IObject * _object) const { return GetPropertyInt32(_object); }
+        template <> inline i64 *                GetPropertyUnderlyingType<i64>  (const IObject * _object) const { return GetPropertyInt64(_object); }
+
         template <> inline u8 *                 GetPropertyUnderlyingType<u8>   (const IObject * _object) const { return GetPropertyUint8(_object); }
         template <> inline u16 *                GetPropertyUnderlyingType<u16>  (const IObject * _object) const { return GetPropertyUint16(_object); }
         template <> inline u32 *                GetPropertyUnderlyingType<u32>  (const IObject * _object) const { return GetPropertyUint32(_object); }
+        template <> inline u64 *                GetPropertyUnderlyingType<u64>  (const IObject * _object) const { return GetPropertyUint64(_object); }
     }; 
 }
 

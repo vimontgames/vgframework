@@ -4,6 +4,7 @@
 #include <fstream>
 #include <filesystem>
 #include "Buffer.h"
+#include "core/string/string.h"
 
 using namespace std;
 
@@ -251,7 +252,10 @@ namespace vg::core::io
         }
 
         if (!extensionFound && _ext.size() > 0)
-            return _file + _ext[0];
+        {
+            string newFilepath = core::fmt::sprintf("%s%s", _file.c_str(), _ext[0].c_str());
+            return newFilepath;
+        }
 
         return _file;
     }

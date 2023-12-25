@@ -39,7 +39,6 @@ namespace vg::engine
         m_meshResource(_name, this),
         m_meshMaterials(_name, this)
     {
-        VG_ASSERT(dynamic_cast<IGameObject*>(_parent));
         m_meshInstance = (IMeshInstance *)CreateFactoryObject(MeshInstance, _name, this);
     }
 

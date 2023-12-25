@@ -683,61 +683,64 @@ namespace vg::renderer
         uint lineCount = 0;
 
         const auto mapSizeInBytes = m_lines.size() * 2 * sizeof(DebugDrawVertex);
-        u8 * dbgDrawData = (u8 *)_cmdList->map(drawData.m_debugDrawVB, mapSizeInBytes).data;
+        if (mapSizeInBytes > 0)
         {
-            for (uint i = 0; i < m_lines.size(); ++i)
+            u8 * dbgDrawData = (u8 *)_cmdList->map(drawData.m_debugDrawVB, mapSizeInBytes).data;
             {
-                VG_ASSERT(offset + 2 * sizeof(DebugDrawVertex) < drawData.m_debugDrawVBSize);
-
-                if (uint_ptr(offset + 2 * sizeof(DebugDrawVertex)) < drawData.m_debugDrawVBSize)
+                for (uint i = 0; i < m_lines.size(); ++i)
                 {
-                    const auto & line = m_lines[i];
+                    VG_ASSERT(offset + 2 * sizeof(DebugDrawVertex) < drawData.m_debugDrawVBSize);
 
-                    DebugDrawVertex * v0 = ((DebugDrawVertex *)(dbgDrawData + offset));
-                    float3 pos0 = mul(float4(line.beginPos.xyz,1), line.world).xyz;
-                    memcpy(v0->pos, &pos0, sizeof(float) * 3);
-                    v0->color = line.beginColor;
-                    offset += sizeof(DebugDrawVertex);
+                    if (uint_ptr(offset + 2 * sizeof(DebugDrawVertex)) < drawData.m_debugDrawVBSize)
+                    {
+                        const auto & line = m_lines[i];
 
-                    DebugDrawVertex * v1 = ((DebugDrawVertex *)(dbgDrawData + offset));
-                    float3 pos1 = mul(float4(line.endPos.xyz, 1), line.world).xyz;
-                    memcpy(v1->pos, &pos1, sizeof(float) * 3);
-                    v1->color = line.endColor;
-                    offset += sizeof(DebugDrawVertex);
+                        DebugDrawVertex * v0 = ((DebugDrawVertex *)(dbgDrawData + offset));
+                        float3 pos0 = mul(float4(line.beginPos.xyz, 1), line.world).xyz;
+                        memcpy(v0->pos, &pos0, sizeof(float) * 3);
+                        v0->color = line.beginColor;
+                        offset += sizeof(DebugDrawVertex);
 
-                    lineCount++;
+                        DebugDrawVertex * v1 = ((DebugDrawVertex *)(dbgDrawData + offset));
+                        float3 pos1 = mul(float4(line.endPos.xyz, 1), line.world).xyz;
+                        memcpy(v1->pos, &pos1, sizeof(float) * 3);
+                        v1->color = line.endColor;
+                        offset += sizeof(DebugDrawVertex);
+
+                        lineCount++;
+                    }
+                }
+
+                for (uint i = 0; i < m_wireframeBoxes.size(); ++i)
+                {
+                    //VG_ASSERT(offset + 12 * sizeof(DebugDrawVertex) < m_debugDrawVBSize);
+                    //
+                    //if (offset + 12 * sizeof(DebugDrawVertex) < m_debugDrawVBSize)
+                    //{
+                    //    const auto & box = m_wireframeBoxes[i];
+                    //
+                    //    DebugDrawVertex * v0 = ((DebugDrawVertex *)(dbgDrawData + offset));
+                    //    float3 pos0 = float3(box.minPos.x, box.minPos.y, box.minPos.z);
+                    //    memcpy(v0->pos, &pos0, sizeof(float) * 3);
+                    //    v0->color = box.color;
+                    //    offset += sizeof(DebugDrawVertex);
+                    //
+                    //    DebugDrawVertex * v1 = ((DebugDrawVertex *)(dbgDrawData + offset));
+                    //    float3 pos1 = float3(box.maxPos.x, box.minPos.y, box.minPos.z);
+                    //    memcpy(v1->pos, &pos1, sizeof(float) * 3);
+                    //    v1->color = box.color;
+                    //    offset += sizeof(DebugDrawVertex);
+                    //
+                    //    DebugDrawVertex * v2 = ((DebugDrawVertex *)(dbgDrawData + offset));
+                    //    float3 pos2 = float3(box.minPos.x, box.minPos.y, box.minPos.z);
+                    //    memcpy(v1->pos, &pos1, sizeof(float) * 3);
+                    //    v1->color = box.color;
+                    //    offset += sizeof(DebugDrawVertex);
+                    //}
                 }
             }
-
-            for (uint i = 0; i < m_wireframeBoxes.size(); ++i)
-            {
-                //VG_ASSERT(offset + 12 * sizeof(DebugDrawVertex) < m_debugDrawVBSize);
-                //
-                //if (offset + 12 * sizeof(DebugDrawVertex) < m_debugDrawVBSize)
-                //{
-                //    const auto & box = m_wireframeBoxes[i];
-                //
-                //    DebugDrawVertex * v0 = ((DebugDrawVertex *)(dbgDrawData + offset));
-                //    float3 pos0 = float3(box.minPos.x, box.minPos.y, box.minPos.z);
-                //    memcpy(v0->pos, &pos0, sizeof(float) * 3);
-                //    v0->color = box.color;
-                //    offset += sizeof(DebugDrawVertex);
-                //
-                //    DebugDrawVertex * v1 = ((DebugDrawVertex *)(dbgDrawData + offset));
-                //    float3 pos1 = float3(box.maxPos.x, box.minPos.y, box.minPos.z);
-                //    memcpy(v1->pos, &pos1, sizeof(float) * 3);
-                //    v1->color = box.color;
-                //    offset += sizeof(DebugDrawVertex);
-                //
-                //    DebugDrawVertex * v2 = ((DebugDrawVertex *)(dbgDrawData + offset));
-                //    float3 pos2 = float3(box.minPos.x, box.minPos.y, box.minPos.z);
-                //    memcpy(v1->pos, &pos1, sizeof(float) * 3);
-                //    v1->color = box.color;
-                //    offset += sizeof(DebugDrawVertex);
-                //}
-            }
+            _cmdList->unmap(drawData.m_debugDrawVB);
         }
-        _cmdList->unmap(drawData.m_debugDrawVB);
 
         drawData.m_linesVBOffset = (u32)lineStartOffset;
         drawData.m_linesToDraw = lineCount;

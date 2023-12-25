@@ -36,8 +36,10 @@ namespace vg::core
         virtual void                        ReleaseAsync                (core::IObject * _object) = 0;
         virtual void                        FlushReleaseAsync           () = 0;
 
-        virtual bool                        SaveProperties              (core::IObject * Object) = 0; 
-        virtual bool                        RestoreProperties           (core::IObject * Object) = 0;
+        virtual bool                        SaveProperties              (core::IObject * _object) = 0; 
+        virtual bool                        RestoreProperties           (core::IObject * _object) = 0;
+        virtual bool                        CopyProperties              (const core::IObject * _srcObj, core::IObject * _dstObj) = 0;
+        virtual IObject *                   Instanciate                 (const core::IObject * _object, IObject * _parent = nullptr) = 0;
     };  
 }
 

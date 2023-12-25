@@ -46,6 +46,8 @@ namespace vg::core
 								    Object		        ();
 								    ~Object		        ();
 
+		IObject *					Instanciate			() const override;
+
 		void                        OnLoad				() override;
 
         void                        OnPlay				() override;
