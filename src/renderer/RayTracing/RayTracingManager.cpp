@@ -132,6 +132,7 @@ namespace vg::renderer
     {
         if (isRayTracingEnabled())
         {
+            // Static mesh models' BLAS are added right after loading and computed here
             while (m_meshModelUpdateQueue.size() > 0)
             {
                 MeshModel * meshModel = m_meshModelUpdateQueue[m_meshModelUpdateQueue.size() - 1];
@@ -146,6 +147,9 @@ namespace vg::renderer
                     VG_INFO("[Renderer] Built BLAS for meshModel \"%s\" in %.2f ms", meshModel->getName().c_str(), Timer::getEnlapsedTime(startBuildBLAS, Timer::getTick()));
                 }
             }
+
+            // Skins require BLAS update every frame
+
         }
     }
 

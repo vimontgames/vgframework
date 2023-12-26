@@ -19,13 +19,9 @@ namespace vg::renderer
         void Setup(const gfx::RenderPassContext & _renderContext, float _dt) override;
         void Render(const gfx::RenderPassContext & _renderContext, gfx::CommandList * _cmdList) const override;
 
-        void clearSkins();
-        void addSkins(const core::vector<MeshInstance *> * _skinnedMeshes);
-
     private:
-        gfx::RootSignatureHandle                                m_computeSkinningRootSignature;
-        gfx::ComputeShaderKey                                   m_computeSkinningShaderKey;
-        gfx::Buffer *                                           m_skinningMatricesBuffer;
-        core::vector<const core::vector<MeshInstance *> *>      m_skinnedMeshes;
+        gfx::RootSignatureHandle    m_computeSkinningRootSignature;
+        gfx::ComputeShaderKey       m_computeSkinningShaderKey;
+        gfx::Buffer *               m_skinningMatricesBuffer;
     };
 }

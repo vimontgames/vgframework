@@ -40,7 +40,7 @@ namespace vg::renderer
             m_renderTarget = (Texture*)_params.dest;
         }
 
-        m_cullingJob = new ViewCullingJob("ViewCulling", this, &m_cullingJobResult);
+        m_cullingJob = new ViewCullingJob("ViewCulling", this, &m_cullingJobResult, Renderer::get()->getSharedCullingJobOutput());
 
         m_viewConstantsUpdatePass = new ViewConstantsUpdatePass();
 

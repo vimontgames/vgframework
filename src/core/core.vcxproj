@@ -14,6 +14,7 @@
     <ClInclude Include="CmdLine\CmdLine.h" />
     <ClInclude Include="Component\Behaviour\Behaviour.h" />
     <ClInclude Include="Component\Component.h" />
+    <ClInclude Include="Container\AtomicVector.h" />
     <ClInclude Include="Container\Blob.h" />
     <ClInclude Include="Container\HandleTable.h" />
     <ClInclude Include="Container\HandleTable.hpp" />

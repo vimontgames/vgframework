@@ -102,7 +102,7 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    VG_INLINE core::Job * View::getCullingJob() const
+    VG_INLINE ViewCullingJob * View::getCullingJob() const
     {
         return m_cullingJob;
     }

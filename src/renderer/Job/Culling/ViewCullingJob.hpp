@@ -11,11 +11,13 @@ using namespace vg::core;
 namespace vg::renderer
 {
     //--------------------------------------------------------------------------------------
-    ViewCullingJob::ViewCullingJob(const string & _name, IObject * _parent, ViewCullingJobOutput * const _output) :
+    ViewCullingJob::ViewCullingJob(const string & _name, IObject * _parent, ViewCullingJobOutput * const _output, SharedCullingJobOutput * const _sharedOutput) :
         Job(_name, _parent),
-        m_output(_output)
+        m_output(_output),
+        m_sharedOutput(_sharedOutput)
     {
-
+        VG_ASSERT(_output);
+        VG_ASSERT(_sharedOutput);
     }
 
     //--------------------------------------------------------------------------------------
@@ -65,7 +67,7 @@ namespace vg::renderer
             VG_ASSERT(dynamic_cast<MeshInstance *>(_instance));
             MeshInstance * meshInstance = (MeshInstance *)_instance;
             if (meshInstance->setSkinFlag(MeshInstance::SkinFlags::SkinLOD0))
-                m_output->m_skins.push_back(meshInstance);
+                m_sharedOutput->m_skins.push_atomic(meshInstance);
         }
     }
 

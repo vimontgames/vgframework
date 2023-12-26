@@ -199,6 +199,9 @@
     <ClInclude Include="Options\Options.h">
       <Filter>Options</Filter>
     </ClInclude>
+    <ClInclude Include="Container\AtomicVector.h">
+      <Filter>Container</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Math\Math.cpp">

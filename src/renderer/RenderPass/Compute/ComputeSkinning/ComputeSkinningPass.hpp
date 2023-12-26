@@ -39,18 +39,6 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    void ComputeSkinningPass::clearSkins()
-    {
-        m_skinnedMeshes.clear();
-    }
-
-    //--------------------------------------------------------------------------------------
-    void ComputeSkinningPass::addSkins(const core::vector<MeshInstance *> * _skinnedMeshes)
-    {
-        m_skinnedMeshes.push_back(_skinnedMeshes);
-    }
-
-    //--------------------------------------------------------------------------------------
     void ComputeSkinningPass::Setup(const gfx::RenderPassContext & _renderPassContext, float _dt)
     {
         auto * device = Device::get();
@@ -69,21 +57,21 @@ namespace vg::renderer
     {
         uint dstMatOffset = 0;
 
+        const auto & skinnedMeshes = Renderer::get()->getSharedCullingJobOutput()->m_skins;
+
         // Compute bones upload size
         uint totalBoneCount = 0;
-        for (uint j = 0; j < m_skinnedMeshes.size(); ++j)
-        {
-            const core::vector<MeshInstance *> & list = *m_skinnedMeshes[j];
-            for (uint i = 0; i < list.size(); ++i)
-            {
-                MeshInstance * meshInstance = list[i];
-                const MeshModel * meshModel = meshInstance->getMeshModel(Lod::Lod0);
-                const Skeleton * skeleton = meshInstance->getInstanceSkeleton();
-                const uint boneCount = skeleton->getBoneCount();
 
-                totalBoneCount += boneCount;
-            }
+        for (uint i = 0; i < skinnedMeshes.size(); ++i)
+        {
+            MeshInstance * meshInstance = skinnedMeshes[i];
+            const MeshModel * meshModel = meshInstance->getMeshModel(Lod::Lod0);
+            const Skeleton * skeleton = meshInstance->getInstanceSkeleton();
+            const uint boneCount = skeleton->getBoneCount();
+
+            totalBoneCount += boneCount;
         }
+
         size_t mapSizeInBytes = m_skinningMatricesBuffer->getBufDesc().getSize();// totalBoneCount * sizeof(float4x4);
 
         // Upload bones matrices
@@ -91,30 +79,26 @@ namespace vg::renderer
         {
             u8 * skinningMatrices = (u8 *)_cmdList->map(m_skinningMatricesBuffer, mapSizeInBytes).data;
             {
-                for (uint j = 0; j < m_skinnedMeshes.size(); ++j)
+                for (uint i = 0; i < skinnedMeshes.size(); ++i)
                 {
-                    const core::vector<MeshInstance *> & list = *m_skinnedMeshes[j];
-                    for (uint i = 0; i < list.size(); ++i)
+                    MeshInstance * meshInstance = skinnedMeshes[i];
+                    const MeshModel * meshModel = meshInstance->getMeshModel(Lod::Lod0);
+                    const Skeleton * skeleton = meshInstance->getInstanceSkeleton();
+                    const uint boneCount = skeleton->getBoneCount();
+                    const auto & nodes = skeleton->getNodes();
+                    const auto & boneIndices = skeleton->getBoneIndices();
+                    const auto & boneMatrices = skeleton->getBoneMatrices();
+                    VG_ASSERT(dstMatOffset + boneCount * sizeof(float4x4) < s_SkinningMatricesBufferSize, "[Skinning] Buffer is too small to store skinning matrices");
+
+                    for (uint b = 0; b < boneCount; ++b)
                     {
-                        MeshInstance * meshInstance = list[i];
-                        const MeshModel * meshModel = meshInstance->getMeshModel(Lod::Lod0);
-                        const Skeleton * skeleton = meshInstance->getInstanceSkeleton();
-                        const uint boneCount = skeleton->getBoneCount();
-                        const auto & nodes = skeleton->getNodes();
-                        const auto & boneIndices = skeleton->getBoneIndices();
-                        const auto & boneMatrices = skeleton->getBoneMatrices();
-                        VG_ASSERT(dstMatOffset + boneCount * sizeof(float4x4) < s_SkinningMatricesBufferSize, "[Skinning] Buffer is too small to store skinning matrices");
-
-                        for (uint b = 0; b < boneCount; ++b)
-                        {
-                            uint index = boneIndices[b];
-                            const MeshImporterNode & bone = nodes[index];
-                            float4x4 boneMatrix = mul(bone.node_to_world, boneMatrices[b]);
-                            (float4x4 &)(skinningMatrices[dstMatOffset + b * sizeof(float4x4)]) = transpose(boneMatrix);
-                        }
-
-                        dstMatOffset += boneCount * sizeof(float4x4);
+                        uint index = boneIndices[b];
+                        const MeshImporterNode & bone = nodes[index];
+                        float4x4 boneMatrix = mul(bone.node_to_world, boneMatrices[b]);
+                        (float4x4 &)(skinningMatrices[dstMatOffset + b * sizeof(float4x4)]) = transpose(boneMatrix);
                     }
+
+                    dstMatOffset += boneCount * sizeof(float4x4);
                 }
             }
             _cmdList->unmap(m_skinningMatricesBuffer); // TODO: pass the size actually written so that we don't update the whole buffer 
@@ -123,57 +107,54 @@ namespace vg::renderer
         // Skin vertices
         dstMatOffset = 0;
         uint dstVertOffset = 0;
-        for (uint j = 0; j < m_skinnedMeshes.size(); ++j)
+
+        for (uint i = 0; i < skinnedMeshes.size(); ++i)
         {
-            const core::vector<MeshInstance *> & list = *m_skinnedMeshes[j];
-            for (uint i = 0; i < list.size(); ++i)
+            MeshInstance * meshInstance = skinnedMeshes[i];
+            const MeshModel * meshModel = meshInstance->getMeshModel(Lod::Lod0);
+            const MeshGeometry * meshGeo = meshModel->getGeometry();
+            const Skeleton * skeleton = meshInstance->getInstanceSkeleton();
+            const uint boneCount = skeleton->getBoneCount();
+
+            const VertexFormat meshFmt = meshGeo->getVertexFormat();
+            //const uint meshFmtSize = getVertexFormatStride(meshFmt);
+            const uint vertexCount = meshGeo->getVertexCount();
+            const uint vertexSize = meshGeo->getVertexSize();
+
+            VG_ASSERT(dstVertOffset + vertexCount * vertexSize < s_ComputeSkinningBufferSize, "[Skinning] Buffer is too small to store skinned vertices");
+            if (dstVertOffset + vertexCount * vertexSize < s_ComputeSkinningBufferSize)
             {
-                MeshInstance * meshInstance = list[i];
-                const MeshModel * meshModel = meshInstance->getMeshModel(Lod::Lod0);
-                const MeshGeometry * meshGeo = meshModel->getGeometry();
-                const Skeleton * skeleton = meshInstance->getInstanceSkeleton();
-                const uint boneCount = skeleton->getBoneCount();
+                _cmdList->setComputeRootSignature(m_computeSkinningRootSignature);
+                _cmdList->setComputeShader(m_computeSkinningShaderKey);
 
-                const VertexFormat meshFmt = meshGeo->getVertexFormat();
-                //const uint meshFmtSize = getVertexFormatStride(meshFmt);
-                const uint vertexCount = meshGeo->getVertexCount();
-                const uint vertexSize = meshGeo->getVertexSize();
+                auto threadGroupSize = uint1(SKINNING_THREADGROUP_SIZE_X);
+                auto threadGroupCount = uint3((vertexCount + threadGroupSize.x - 1) / threadGroupSize.x, 1, 1);
 
-                VG_ASSERT(dstVertOffset + vertexCount * vertexSize < s_ComputeSkinningBufferSize, "[Skinning] Buffer is too small to store skinned vertices");
-                if (dstVertOffset + vertexCount * vertexSize < s_ComputeSkinningBufferSize)
-                {
-                    _cmdList->setComputeRootSignature(m_computeSkinningRootSignature);
-                    _cmdList->setComputeShader(m_computeSkinningShaderKey);
+                BindlessBufferHandle src = meshGeo->getVertexBuffer()->getBufferHandle();
+                uint srcOffset = meshGeo->getVertexBufferOffset();
 
-                    auto threadGroupSize = uint1(SKINNING_THREADGROUP_SIZE_X);
-                    auto threadGroupCount = uint3((vertexCount + threadGroupSize.x - 1) / threadGroupSize.x, 1, 1);
+                Buffer * dstBuffer = getRWBuffer("SkinningRWBuffer");
+                BindlessRWBufferHandle dst = dstBuffer->getRWBufferHandle();
 
-                    BindlessBufferHandle src = meshGeo->getVertexBuffer()->getBufferHandle();
-                    uint srcOffset = meshGeo->getVertexBufferOffset();
+                // TODO : Pass vertex buffer to skin and destination buffer with offset
+                ComputeSkinningConstants skinningRootConstants;
+                skinningRootConstants.setVertexFormat(meshFmt);
+                skinningRootConstants.setMatrixOffset(dstMatOffset);
+                skinningRootConstants.setVertexCount(vertexCount);
+                skinningRootConstants.setSource(src, srcOffset);
+                skinningRootConstants.setDest(dst, dstVertOffset);
+                _cmdList->setComputeRootConstants(0, (u32 *)&skinningRootConstants, ComputeSkinningConstantsCount);
 
-                    Buffer * dstBuffer = getRWBuffer("SkinningRWBuffer");
-                    BindlessRWBufferHandle dst = dstBuffer->getRWBufferHandle();
+                _cmdList->dispatch(threadGroupCount);
 
-                    // TODO : Pass vertex buffer to skin and destination buffer with offset
-                    ComputeSkinningConstants skinningRootConstants;
-                    skinningRootConstants.setVertexFormat(meshFmt);
-                    skinningRootConstants.setMatrixOffset(dstMatOffset);
-                    skinningRootConstants.setVertexCount(vertexCount);
-                    skinningRootConstants.setSource(src, srcOffset);
-                    skinningRootConstants.setDest(dst, dstVertOffset);
-                    _cmdList->setComputeRootConstants(0, (u32 *)&skinningRootConstants, ComputeSkinningConstantsCount);
+                // Store skinned VB and offset in mesh
+                meshInstance->setSkinnedMesh(dstBuffer->getBufferHandle(), dstVertOffset);
 
-                    _cmdList->dispatch(threadGroupCount);
-
-                    // Store skinned VB and offset in mesh
-                    meshInstance->setSkinnedMesh(dstBuffer->getBufferHandle(), dstVertOffset);
-
-                    dstVertOffset += vertexCount * vertexSize;
-                    dstMatOffset += boneCount * sizeof(float4x4);
-                }
-
-                meshInstance->clearSkinFlag(MeshInstance::SkinFlags::SkinLOD0);
+                dstVertOffset += vertexCount * vertexSize;
+                dstMatOffset += boneCount * sizeof(float4x4);
             }
+
+            meshInstance->clearSkinFlag(MeshInstance::SkinFlags::SkinLOD0);
         }
     }
 }

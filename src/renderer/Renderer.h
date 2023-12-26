@@ -23,6 +23,8 @@ namespace vg::renderer
     class View;
     class DebugDraw;
 
+    struct SharedCullingJobOutput;
+
     enum class MaterialTextureType : core::u8;
 
 	class Renderer : public IRenderer, public core::Singleton<Renderer>
@@ -30,101 +32,102 @@ namespace vg::renderer
 	public:
         using super = IRenderer;
 
-		IPlugin::Version		                GetVersion			    () const override;
+		IPlugin::Version		                GetVersion			        () const override;
 
-								                Renderer			    (const core::string & _name, core::IObject * _parent);
-								                ~Renderer			    ();
+								                Renderer			        (const core::string & _name, core::IObject * _parent);
+								                ~Renderer			        ();
 
-        const char *                            getClassName            () const final { return "Renderer"; }
-        bool                                    RegisterClasses         () override;
-        bool                                    UnregisterClasses       ();
-        static bool                             registerProperties      (core::IClassDesc & _desc);
+        const char *                            getClassName                () const final { return "Renderer"; }
+        bool                                    RegisterClasses             () override;
+        bool                                    UnregisterClasses           ();
+        static bool                             registerProperties          (core::IClassDesc & _desc);
  
-		void					                init				    (const RendererCreationParams & _params, core::Singletons & _singletons) override;
-		void					                deinit				    () override;
+		void					                init				        (const RendererCreationParams & _params, core::Singletons & _singletons) override;
+		void					                deinit				        () override;
 
-        const gfx::DeviceParams &               GetDeviceCreationParams () const final override;
-        renderer::IRendererOptions *            GetOptions              () final override;
+        const gfx::DeviceParams &               GetDeviceCreationParams     () const final override;
+        renderer::IRendererOptions *            GetOptions                  () final override;
 
-        gfx::ITexture *                         CreateTexture           (const gfx::TextureDesc & _texDesc, const core::string & _name) final override;
+        gfx::ITexture *                         CreateTexture               (const gfx::TextureDesc & _texDesc, const core::string & _name) final override;
 
-        gfx::IView *                            CreateView              (gfx::CreateViewParams _params, const core::string & _name, gfx::IView::Flags _flags = (gfx::IView::Flags)0) final override;
-        gfx::ViewID                             AddView                 (gfx::IView * _view) final override;
-        void                                    RemoveView              (gfx::ViewID _viewID) final override;
-        gfx::IView *                            GetView                 (gfx::ViewID _viewID) const final override;
-        const core::vector <gfx::IView *>       GetViews                (gfx::ViewTarget _target) const final override;
+        gfx::IView *                            CreateView                  (gfx::CreateViewParams _params, const core::string & _name, gfx::IView::Flags _flags = (gfx::IView::Flags)0) final override;
+        gfx::ViewID                             AddView                     (gfx::IView * _view) final override;
+        void                                    RemoveView                  (gfx::ViewID _viewID) final override;
+        gfx::IView *                            GetView                     (gfx::ViewID _viewID) const final override;
+        const core::vector <gfx::IView *>       GetViews                    (gfx::ViewTarget _target) const final override;
 
-        void                                    SetResized              () final override;
-        void                                    resize                  (core::uint _width, core::uint _height) override;
-        core::uint2                             getBackbufferSize       () const override;
+        void                                    SetResized                  () final override;
+        void                                    resize                      (core::uint _width, core::uint _height) override;
+        core::uint2                             getBackbufferSize           () const override;
 
-		void					                runOneFrame			    (float _dt) override;
+		void					                runOneFrame			        (float _dt) override;
 
-        void                                    updateShaders           () override;
-        void                                    waitGPUIdle             () override;
+        void                                    updateShaders               () override;
+        void                                    waitGPUIdle                 () override;
 
-        void                                    SetVSync                (gfx::VSync mode) final override;
-        gfx::VSync                              GetVSync                () const final override;
+        void                                    SetVSync                    (gfx::VSync mode) final override;
+        gfx::VSync                              GetVSync                    () const final override;
 
-        core::IProfiler *                       GetProfiler             () const final override;
-        IImGuiAdapter *                         GetImGuiAdapter         () const final override;
-        gfx::IShaderManager *                   GetShaderManager        () const final override;
-        IPicking *                              GetPicking              () const final override;
-        IDebugDraw *                            GetDebugDraw            () const final override;
+        core::IProfiler *                       GetProfiler                 () const final override;
+        IImGuiAdapter *                         GetImGuiAdapter             () const final override;
+        gfx::IShaderManager *                   GetShaderManager            () const final override;
+        IPicking *                              GetPicking                  () const final override;
+        IDebugDraw *                            GetDebugDraw                () const final override;
 
-        bool                                    cookMeshModel           (const core::string & _file) final override;
-        IMeshModel *                            loadMeshModel           (const core::string & _file) final override;
+        bool                                    cookMeshModel               (const core::string & _file) final override;
+        IMeshModel *                            loadMeshModel               (const core::string & _file) final override;
 
-        bool                                    cookTexture             (const core::string & _file) final override;
-        gfx::ITexture *                         loadTexture             (const core::string & _file) final override;
+        bool                                    cookTexture                 (const core::string & _file) final override;
+        gfx::ITexture *                         loadTexture                 (const core::string & _file) final override;
 
-        bool                                    cookAnimation           (const core::string & _file) final override;
-        IAnimation *                            loadAnimation           (const core::string & _file) final override;
+        bool                                    cookAnimation               (const core::string & _file) final override;
+        IAnimation *                            loadAnimation               (const core::string & _file) final override;
 
-        void                                    ReleaseAsync            (core::IObject * _object) final override;
+        void                                    ReleaseAsync                (core::IObject * _object) final override;
 
-        VG_INLINE gfx::Texture *                getDefaultTexture       (MaterialTextureType _type) const;
-        VG_INLINE MaterialModel *               getDefaultMaterial      () const;
-        DebugDraw *                             getDebugDraw            () const;
+        VG_INLINE gfx::Texture *                getDefaultTexture           (MaterialTextureType _type) const;
+        VG_INLINE MaterialModel *               getDefaultMaterial          () const;
+        DebugDraw *                             getDebugDraw                () const;
         
         #ifdef _WIN32
-        LRESULT CALLBACK                        WndProc                 (HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) override;
+        LRESULT CALLBACK                        WndProc                     (HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) override;
         #endif     
 
-        void                                    SetFullscreen           (bool _fullscreen) final override;
-        bool                                    IsFullscreen            () const final override;
+        void                                    SetFullscreen               (bool _fullscreen) final override;
+        bool                                    IsFullscreen                () const final override;
 
     public: // internal
-        View *                                  getMainView             () const;
-
-        gfx::Texture *		                    getBackbuffer           () const;
-        ImGuiAdapter *                          getImGuiAdapter         () const { return m_imgui; }
+        View *                                  getMainView                 () const;
+        gfx::Texture *		                    getBackbuffer               () const;
+        ImGuiAdapter *                          getImGuiAdapter             () const { return m_imgui; }
+        SharedCullingJobOutput *                getSharedCullingJobOutput   () const { return m_sharedCullingJobOutput;}
 
     private:
-        void                                    registerShaders         ();
+        void                                    registerShaders             ();
 
-        void                                    initDefaultTextures     ();
-        void                                    deinitDefaultTextures   ();
+        void                                    initDefaultTextures         ();
+        void                                    deinitDefaultTextures       ();
 
-        void                                    initDefaultMaterials    ();
-        void                                    deinitDefaultMaterials  ();
+        void                                    initDefaultMaterials        ();
+        void                                    deinitDefaultMaterials      ();
 
-        void                                    cullViews               ();
+        void                                    cullViews                   ();
 
 	private:
 		gfx::Device &		                    m_device;
         gfx::FrameGraph &                       m_frameGraph;
-        ImGuiAdapter *                          m_imgui                 = nullptr;
-        FBXImporter *                           m_fbxImporter           = nullptr;
-        View *                                  m_mainView              = nullptr;
-        ComputeSkinningPass *                   m_computeSkinningPass   = nullptr;
-        BLASUpdatePass *                        m_BLASUpdatePass        = nullptr;
-        ImGuiPass *                             m_imguiPass             = nullptr; 
+        ImGuiAdapter *                          m_imgui                     = nullptr;
+        FBXImporter *                           m_fbxImporter               = nullptr;
+        View *                                  m_mainView                  = nullptr;
+        ComputeSkinningPass *                   m_computeSkinningPass       = nullptr;
+        BLASUpdatePass *                        m_BLASUpdatePass            = nullptr;
+        ImGuiPass *                             m_imguiPass                 = nullptr; 
         core::vector<View *>                    m_views[core::enumCount<gfx::ViewTarget>()];
-        IPicking *                              m_picking               = nullptr;
+        IPicking *                              m_picking                   = nullptr;
         core::vector<gfx::Texture *>            m_defaultTextures;
-        MaterialModel *                         m_defaultMaterial       = nullptr;
-        bool                                    m_fullscreen            = false;
+        MaterialModel *                         m_defaultMaterial           = nullptr;
+        bool                                    m_fullscreen                = false;
+        SharedCullingJobOutput *                m_sharedCullingJobOutput    = nullptr;
 	};
 }
 

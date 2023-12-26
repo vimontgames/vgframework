@@ -116,7 +116,7 @@ namespace vg::renderer
         VG_INLINE void                      setRenderTarget             (gfx::Texture * _renderTarget);
         VG_INLINE gfx::Texture *            getRenderTarget             () const;
 
-        VG_INLINE core::Job *               getCullingJob               () const;
+        VG_INLINE ViewCullingJob *          getCullingJob               () const;
 
         void                                setFlags                    (Flags _flagsToSet, Flags _flagsToRemove = (Flags)0);
         Flags                               getFlags                    () const;

@@ -1,3 +1,5 @@
+#pragma once
+
 #include "renderer/Precomp.h"
 #include "renderer.h"
 
@@ -202,6 +204,9 @@ namespace vg::renderer
 
         RayTracingManager * rtManager = new RayTracingManager();
 
+        // Shared job output (must be created before views because it's needed to init View culling jobs
+        m_sharedCullingJobOutput = new SharedCullingJobOutput();
+
         // Create main view
         auto mainViewParams = gfx::CreateViewParams(gfx::ViewTarget::Backbuffer, getBackbufferSize());
         m_mainView = (View*)CreateView(mainViewParams, "MainView");
@@ -231,6 +236,8 @@ namespace vg::renderer
 	//--------------------------------------------------------------------------------------
 	void Renderer::deinit()
 	{
+        VG_SAFE_DELETE(m_sharedCullingJobOutput);
+
         UnregisterClasses();
 
         deinitDefaultMaterials();
@@ -348,7 +355,11 @@ namespace vg::renderer
             if (!m_fullscreen)
                 m_imgui->beginFrame();
 
-            // Culling all views
+            //--------------------------------------------------------------------------------------
+            // Culling all views : 
+            // - a job a created for each view to fill View::m_cullingJobResult & synced
+            // - and some results are merged to 
+            //--------------------------------------------------------------------------------------
             cullViews();
 
             // Framegraph
@@ -414,6 +425,8 @@ namespace vg::renderer
     //--------------------------------------------------------------------------------------
     void Renderer::cullViews()
     {
+        m_sharedCullingJobOutput->clear();
+
         core::Scheduler * jobScheduler = (core::Scheduler *)Kernel::getScheduler();
 
         // Perform culling for each view (might want to split views later)
@@ -434,22 +447,10 @@ namespace vg::renderer
             }
         }
 
-        m_computeSkinningPass->clearSkins();
         if (jobStartCounter > 0)
         {
             VG_PROFILE_CPU("syncCull");
             jobScheduler->Wait(syncCull);
-
-            for (uint j = 0; j < core::enumCount<gfx::ViewTarget>(); ++j)
-            {
-                const auto & views = m_views[j];
-                for (uint i = 0; i < views.size(); ++i)
-                {
-                    View * view = views[i];
-                    if (view && view->IsVisible())
-                        m_computeSkinningPass->addSkins(&view->m_cullingJobResult.m_skins);
-                }
-            }
         }
     }
 
