@@ -20,6 +20,9 @@ Another subject that is very close to my heart is that there is a strong separat
 
 # changelog
 
+## 0.22
+Skinned BLAS updates for RT 
+
 ## 0.21
 Add support for inline RayTracing with BLAS & TLAS for DirectX12/Vulkan\
 Duplicate/Instanciate GameObjects hierarchies UI\

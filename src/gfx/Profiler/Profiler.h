@@ -9,7 +9,7 @@
 #include "optick/src/optick.h"
 
 #define VG_PROFILE_CATEGORY(name, cat)  OPTICK_CATEGORY(name, Optick::Category::cat)
-#define VG_PROFILE_GPU(name)            OPTICK_GPU_EVENT_DYNAMIC(name); ScopedGPUEvent scopedGPUEvent##__COUNTER__(name)
+#define VG_PROFILE_GPU(name)            OPTICK_GPU_EVENT_DYNAMIC(name); vg::gfx::ScopedGPUEvent scopedGPUEvent##__COUNTER__(name)   
 #define VG_PROFILE_SAVE()               Profiler::save();
 
 #ifdef VG_DX12

@@ -14,12 +14,14 @@ namespace vg::gfx::dx12
         using super = base::BLAS;
 
     public:
-        BLAS();
+        BLAS(BLASUpdateType _blasUpdateType);
         ~BLAS();
 
-        void addIndexedGeometry(gfx::Buffer * _ib, core::uint _ibOffset, core::uint _indexCount, gfx::Buffer * _vb, core::uint _vbOffset, core::uint _vbStride);
-        void init();
-        void build(gfx::CommandList * _cmdList);
+        void addIndexedGeometry(const gfx::Buffer * _ib, core::uint _ibOffset, core::uint _indexCount, const gfx::Buffer * _vb, core::uint _vbOffset, core::uint _vertexCount, core::uint _vbStride);
+        void clear();
+        void init(bool _update = false);
+        void build(gfx::CommandList * _cmdList, bool _update = false);
+        void update(gfx::CommandList * _cmdList);
 
     private:
         core::vector<D3D12_RAYTRACING_GEOMETRY_DESC>            m_DXRGeometries = {};

@@ -1302,7 +1302,7 @@ namespace vg::editor
             if (anyVisibleProperty)
             {
                 char label[256];
-                sprintf(label, "%s Details", _prop->getDisplayName());
+                sprintf(label, "%s", _prop->getDisplayName());
                 if (ImGui::TreeNodeEx(label, ImGuiTreeNodeFlags_DefaultOpen))
                 {
                     ImGuiWindow::displayObject(resourceObject);

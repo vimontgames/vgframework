@@ -17,13 +17,6 @@ namespace vg::renderer
 
         registerProperty(RendererOptions, m_toolMode, "Toolmode");
 
-        registerProperty(RendererOptions, m_wireframe, "Wireframe");
-        registerPropertyEx(RendererOptions, m_aabb, "Bounding Box", IProperty::Flags::SameLine);
-
-        registerPropertyEnum(RendererOptions, gfx::VSync, m_VSync, "VSync");
-        registerPropertyEx(RendererOptions, m_backgroundColor, "Background", IProperty::Flags::Color);
-        registerPropertyEnumBitfield(RendererOptions, RenderPassFlags, m_renderPassFlags, "Passes");
-
         registerPropertyGroupBegin(RendererOptions, "Materials");
         {
             registerPropertyEnum(RendererOptions, DisplayMode, m_debugDisplayMode, "Mode");
@@ -42,6 +35,17 @@ namespace vg::renderer
         {
             registerProperty(RendererOptions, m_postProcess, "Enable");
             registerPropertyEnum(RendererOptions, PostProcessMode, m_postProcessMode, "Mode");
+        }
+        registerPropertyGroupEnd(RendererOptions);
+
+        registerPropertyGroupBegin(RendererOptions, "Misc");
+        {
+            registerProperty(RendererOptions, m_wireframe, "Wireframe");
+            registerPropertyEx(RendererOptions, m_aabb, "Bounding Box", IProperty::Flags::SameLine);
+
+            registerPropertyEnum(RendererOptions, gfx::VSync, m_VSync, "VSync");
+            registerPropertyEx(RendererOptions, m_backgroundColor, "Background", IProperty::Flags::Color);
+            registerPropertyEnumBitfield(RendererOptions, RenderPassFlags, m_renderPassFlags, "Passes");
         }
         registerPropertyGroupEnd(RendererOptions);
 

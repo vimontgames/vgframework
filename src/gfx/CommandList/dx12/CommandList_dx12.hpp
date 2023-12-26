@@ -89,6 +89,9 @@ namespace vg::gfx::dx12
 
             case ResourceState::ShaderResource:
                 return D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE | D3D12_RESOURCE_STATE_NON_PIXEL_SHADER_RESOURCE;
+
+            case ResourceState::NonPixelShaderResource:
+                return D3D12_RESOURCE_STATE_NON_PIXEL_SHADER_RESOURCE;
         }
     }
 

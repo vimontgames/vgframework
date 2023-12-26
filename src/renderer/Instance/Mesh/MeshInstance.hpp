@@ -6,6 +6,7 @@
 #include "gfx/CommandList/CommandList.h"
 #include "gfx/Resource/Buffer.h"
 #include "gfx/Resource/Texture.h"
+#include "gfx/Raytracing/BLAS.h"
 
 #include "renderer/Renderer.h"
 #include "renderer/Options/RendererOptions.h"
@@ -49,6 +50,7 @@ namespace vg::renderer
     //--------------------------------------------------------------------------------------
     MeshInstance::~MeshInstance()
     {
+        VG_SAFE_RELEASE(m_instanceBLAS);
         VG_SAFE_RELEASE(m_instanceSkeleton);
 
         for (uint i = 0; i < m_animationBindings.size(); ++i)
@@ -74,7 +76,7 @@ namespace vg::renderer
 
             if (IsSkinned())
             {
-                root3D.setBufferHandle(m_skinnedMeshBufferHandle);
+                root3D.setBufferHandle(m_skinnedMeshBuffer->getBufferHandle());
                 root3D.setBufferOffset(m_skinnedMeshBufferOffset);
             }
             else
@@ -162,9 +164,9 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    void MeshInstance::setSkinnedMesh(const gfx::BindlessBufferHandle & _skinnedBufferHandle, core::uint _skinnedBufferOffset)
+    void MeshInstance::setSkinnedMesh(const gfx::Buffer * _skinnedBuffer, core::uint _skinnedBufferOffset)
     {
-        m_skinnedMeshBufferHandle = _skinnedBufferHandle;
+        m_skinnedMeshBuffer = _skinnedBuffer;
         m_skinnedMeshBufferOffset = _skinnedBufferOffset;
     }
 

@@ -154,6 +154,26 @@ namespace vg::gfx::vulkan
                 VG_ASSERT(false, "transitionResource from '%s' to '%s' is not implemented", asString(_before).c_str(), asString(_after).c_str());
                 break;
 
+            case ResourceState::NonPixelShaderResource:
+            {
+                switch (_after)
+                {
+                    VG_ASSERT(false, "transitionResource from '%s' to '%s' is not implemented", asString(_before).c_str(), asString(_after).c_str());
+                    break;
+
+                    case ResourceState::UnorderedAccess:
+                    {
+                        // ShaderResource to UnorderedAccess transition
+                        bufferMemoryBarrier.srcAccessMask = VK_ACCESS_SHADER_READ_BIT;
+                        bufferMemoryBarrier.dstAccessMask = VK_ACCESS_SHADER_WRITE_BIT;
+
+                        vkCmdPipelineBarrier(m_vkCommandBuffer, VK_PIPELINE_STAGE_ALL_GRAPHICS_BIT, VK_PIPELINE_STAGE_ALL_GRAPHICS_BIT, 0, 0, nullptr, 1, &bufferMemoryBarrier, 0, nullptr);
+                    }
+                    break;
+                }
+            }
+            break;
+
             case ResourceState::UnorderedAccess:
             {
                 switch (_after)
@@ -161,6 +181,15 @@ namespace vg::gfx::vulkan
                     default:
                         VG_ASSERT(false, "transitionResource from '%s' to '%s' is not implemented", asString(_before).c_str(), asString(_after).c_str());
                         break;
+
+                    case ResourceState::NonPixelShaderResource:
+                    {
+                        bufferMemoryBarrier.srcAccessMask = VK_ACCESS_SHADER_READ_BIT;
+                        bufferMemoryBarrier.dstAccessMask = VK_ACCESS_SHADER_WRITE_BIT;
+
+                        vkCmdPipelineBarrier(m_vkCommandBuffer, VK_PIPELINE_STAGE_ALL_GRAPHICS_BIT, VK_PIPELINE_STAGE_ALL_GRAPHICS_BIT, 0, 0, nullptr, 1, &bufferMemoryBarrier, 0, nullptr);
+                    }
+                    break;
 
                     case ResourceState::ShaderResource:
                     {

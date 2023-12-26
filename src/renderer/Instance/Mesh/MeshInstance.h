@@ -11,6 +11,12 @@ namespace vg::core
     enum class Lod : core::u8;
 }
 
+namespace vg::gfx
+{
+    class Buffer;
+    class BLAS;
+}
+
 namespace vg::renderer
 {
     class RendererOptions;
@@ -34,35 +40,41 @@ namespace vg::renderer
         MeshInstance(const core::string & _name, core::IObject * _parent);
         ~MeshInstance();
 
-        void                            SetModel            (core::Lod _lod, core::IModel * _model) final override;
+        void                            SetModel                    (core::Lod _lod, core::IModel * _model) final override;
 
-        bool                            IsSkinned           () const final override;
-        bool                            UpdateSkeleton      () final override;
-        bool                            ShowSkeleton        () const final override;
+        bool                            IsSkinned                   () const final override;
+        bool                            UpdateSkeleton              () final override;
+        bool                            ShowSkeleton                () const final override;
 
-        bool                            AddAnimation        (ISkeletalAnimation * _animation) final override;
-        bool                            RemoveAnimation     (ISkeletalAnimation * _animation) final override;
+        bool                            AddAnimation                (ISkeletalAnimation * _animation) final override;
+        bool                            RemoveAnimation             (ISkeletalAnimation * _animation) final override;
 
-        bool                            SetAnimationTime    (ISkeletalAnimation * _animation, float _time) final override;
-        bool                            SetAnimationWeight  (ISkeletalAnimation * _animation, float _weight) final override;
+        bool                            SetAnimationTime            (ISkeletalAnimation * _animation, float _time) final override;
+        bool                            SetAnimationWeight          (ISkeletalAnimation * _animation, float _weight) final override;
 
-        void                            Draw                (const RenderContext & _renderContext, gfx::CommandList * _cmdList) const final override;
+        void                            Draw                        (const RenderContext & _renderContext, gfx::CommandList * _cmdList) const final override;
 
-        bool                            setInstanceSkeleton (const Skeleton * _skeleton);
-        VG_INLINE const Skeleton *      getInstanceSkeleton () const;
-        const MeshModel *               getMeshModel        (core::Lod _lod) const;
+        bool                            setInstanceSkeleton         (const Skeleton * _skeleton);
+        VG_INLINE const Skeleton *      getInstanceSkeleton         () const;
+        const MeshModel *               getMeshModel                (core::Lod _lod) const;
 
-        bool                            updateSkeleton      ();
-        void                            setSkinnedMesh      (const gfx::BindlessBufferHandle & _skinnedBufferHandle, core::uint _skinnedBufferOffset);
+        bool                            updateSkeleton              ();
+        void                            setSkinnedMesh              (const gfx::Buffer * _skinnedBuffer, core::uint _skinnedBufferOffset);
+        VG_INLINE const gfx::Buffer *   getSkinnedMeshBuffer        () const;
+        VG_INLINE const core::uint      getSkinnedMeshBufferOffset  () const;
 
-        VG_INLINE bool                  setSkinFlag         (SkinFlags _flag);
-        VG_INLINE bool                  clearSkinFlag       (SkinFlags _flag);
+        VG_INLINE void                  setInstanceBLAS             (gfx::BLAS * _blas);
+        VG_INLINE gfx::BLAS *           getInstanceBLAS             () const;
+
+        VG_INLINE bool                  setSkinFlag                 (SkinFlags _flag);
+        VG_INLINE bool                  clearSkinFlag               (SkinFlags _flag);
 
     private:
         core::atomic<core::u32>         m_skinFlags;
         Skeleton *                      m_instanceSkeleton = nullptr;
-        gfx::BindlessBufferHandle       m_skinnedMeshBufferHandle;
+        const gfx::Buffer *             m_skinnedMeshBuffer = nullptr;
         core::uint                      m_skinnedMeshBufferOffset = 0;
+        gfx::BLAS *                     m_instanceBLAS = nullptr;
 
         struct AnimationState
         {

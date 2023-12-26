@@ -19,13 +19,16 @@ namespace vg::renderer
     //--------------------------------------------------------------------------------------
     void BLASUpdatePass::Setup(const gfx::RenderPassContext & _renderPassContext, float _dt)
     {
-    
+        const auto skinningRWBuffer = "SkinningRWBuffer";
+        readRWBuffer(skinningRWBuffer);
     }
 
     //--------------------------------------------------------------------------------------
     void BLASUpdatePass::BeforeRender(const gfx::RenderPassContext & _renderPassContext, gfx::CommandList * _cmdList)
     {
+        VG_PROFILE_GPU("BLASUpdate");
         RayTracingManager * rtManager = RayTracingManager::get();
-        rtManager->update(_cmdList);
+        Buffer * skinningBuffer = getRWBuffer("SkinningRWBuffer");
+        rtManager->update(_cmdList, skinningBuffer);
     }
 }

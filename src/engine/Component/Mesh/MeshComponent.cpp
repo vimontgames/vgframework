@@ -27,9 +27,8 @@ namespace vg::engine
 
         registerProperty(MeshComponent, m_displayBones, "Display Bones");
         registerPropertyResource(MeshComponent, m_meshResource, "Mesh");
-        registerPropertyObject(MeshComponent, m_meshMaterials, "Materials");
-        //registerProperty("MeshComponent", "m_meshInstance", (IObject**)offsetof(MeshComponent, m_meshInstance), "Instance", IProperty::Flags::Hidden);
-
+        registerPropertyObjectEx(MeshComponent, m_meshMaterials, "Materials", IProperty::Flags::Flatten);
+        
         return true;
     }
 

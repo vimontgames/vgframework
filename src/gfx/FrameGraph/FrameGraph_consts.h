@@ -12,7 +12,8 @@ namespace vg::gfx
         Undefined = 0,
         RenderTarget,
         ShaderResource,
-        UnorderedAccess
+        UnorderedAccess,
+        NonPixelShaderResource
     };
 
     enum class RenderPassType : core::u8

@@ -5,6 +5,7 @@
 namespace vg::gfx
 {
     class CommandList;
+    class Buffer;
 }
 
 namespace vg::renderer
@@ -17,7 +18,7 @@ namespace vg::renderer
     {
     public:
 
-        void    update                  (gfx::CommandList * _cmdList);
+        void    update                  (gfx::CommandList * _cmdList, gfx::Buffer * _skinningBuffer);
         void    updateView              (gfx::CommandList * _cmdList, View * _view);
 
         bool    enableRayTracing        (bool _enable);

@@ -148,7 +148,7 @@ namespace vg::renderer
                 _cmdList->dispatch(threadGroupCount);
 
                 // Store skinned VB and offset in mesh
-                meshInstance->setSkinnedMesh(dstBuffer->getBufferHandle(), dstVertOffset);
+                meshInstance->setSkinnedMesh(dstBuffer, dstVertOffset);
 
                 dstVertOffset += vertexCount * vertexSize;
                 dstMatOffset += boneCount * sizeof(float4x4);

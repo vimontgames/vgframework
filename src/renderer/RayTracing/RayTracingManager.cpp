@@ -1,6 +1,8 @@
 #include "renderer/Precomp.h"
 #include "RayTracingManager.h"
 #include "core/Timer/Timer.h"
+#include "gfx/CommandList/CommandList.h"
+#include "gfx/Resource/Buffer.h"
 #include "renderer/Model/Mesh/MeshModel.h"
 #include "renderer/Geometry/Mesh/MeshGeometry.h"
 #include "gfx/Raytracing/TLAS.h"
@@ -49,7 +51,7 @@ namespace vg::renderer
             if (!meshModel->getBLAS())
             {
                 // Create BLAS from model geometry
-                auto blas = new gfx::BLAS();
+                auto blas = new gfx::BLAS(gfx::BLASUpdateType::Static);
 
                 const MeshGeometry * meshGeo = meshModel->getGeometry();
                 gfx::Buffer * ib = meshGeo->getIndexBuffer();
@@ -65,7 +67,7 @@ namespace vg::renderer
                 for (uint j = 0; j < batches.size(); ++j)
                 {
                     const Batch & batch = batches[j];
-                    blas->addIndexedGeometry(ib, ibOffset + batch.offset, batch.count, vb, vbOffset, vertexStride);
+                    blas->addIndexedGeometry(ib, ibOffset + batch.offset, batch.count, vb, vbOffset, vb->getBufDesc().getElementCount(), vertexStride);
                 }               
 
                 blas->init();
@@ -128,28 +130,81 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    void RayTracingManager::update(gfx::CommandList * _cmdList)
+    void RayTracingManager::update(gfx::CommandList * _cmdList, gfx::Buffer * _skinningBuffer)
     {
         if (isRayTracingEnabled())
         {
             // Static mesh models' BLAS are added right after loading and computed here
-            while (m_meshModelUpdateQueue.size() > 0)
             {
-                MeshModel * meshModel = m_meshModelUpdateQueue[m_meshModelUpdateQueue.size() - 1];
-                m_meshModelUpdateQueue.pop_back();
-
-                gfx::BLAS * blas = meshModel->getBLAS();
-                VG_ASSERT(blas);
-                if (blas)
+                VG_PROFILE_GPU("Models");
+                while (m_meshModelUpdateQueue.size() > 0)
                 {
-                    const auto startBuildBLAS = Timer::getTick();
-                    blas->build(_cmdList);
-                    VG_INFO("[Renderer] Built BLAS for meshModel \"%s\" in %.2f ms", meshModel->getName().c_str(), Timer::getEnlapsedTime(startBuildBLAS, Timer::getTick()));
+                    MeshModel * meshModel = m_meshModelUpdateQueue[m_meshModelUpdateQueue.size() - 1];
+                    m_meshModelUpdateQueue.pop_back();
+
+                    gfx::BLAS * blas = meshModel->getBLAS();
+                    VG_ASSERT(blas);
+                    if (blas)
+                    {
+                        const auto startBuildBLAS = Timer::getTick();
+                        blas->build(_cmdList);
+                        VG_INFO("[Renderer] Built BLAS for meshModel \"%s\" in %.2f ms", meshModel->getName().c_str(), Timer::getEnlapsedTime(startBuildBLAS, Timer::getTick()));
+                    }
                 }
             }
 
             // Skins require BLAS update every frame
+            const auto & skins = Renderer::get()->getSharedCullingJobOutput()->m_skins;
+            if (skins.size() > 0)
+            {
+                VG_PROFILE_GPU("Skins");
 
+                // D3D12_BUILD_RAYTRACING_ACCELERATION_STRUCTURE_INPUTS: "The memory pointed to must be in state D3D12_RESOURCE_STATE_NON_PIXEL_SHADER_RESOURCE."
+                // https://learn.microsoft.com/en-us/windows/win32/api/d3d12/ns-d3d12-d3d12_build_raytracing_acceleration_structure_inputs
+                if (nullptr != _skinningBuffer)
+                    _cmdList->transitionResource(_skinningBuffer, gfx::ResourceState::UnorderedAccess, gfx::ResourceState::NonPixelShaderResource);
+               
+                for (uint i = 0; i < skins.size(); ++i)
+                {
+                    MeshInstance * skin = skins[i];
+                    auto * blas = skin->getInstanceBLAS();
+                    bool update = true;
+                    if (nullptr == blas)
+                    {
+                        // Create instance BLAS from model geometry
+                        blas = new gfx::BLAS(gfx::BLASUpdateType::Dynamic);
+                        skin->setInstanceBLAS(blas);
+                        update = false;
+                    }
+
+                    blas->clear();
+
+                    const MeshModel * meshModel = skin->getMeshModel(Lod::Lod0);
+
+                    const MeshGeometry * meshGeo = meshModel->getGeometry();
+                    gfx::Buffer * ib = meshGeo->getIndexBuffer();
+                    const uint ibOffset = meshGeo->getIndexBufferOffset();
+
+                    const gfx::Buffer * modelvb = meshGeo->getVertexBuffer();
+                    const gfx::Buffer * skinvb = skin->getSkinnedMeshBuffer();
+                    const uint vbOffset = skin->getSkinnedMeshBufferOffset();
+
+                    VertexFormat vtxFmt = meshGeo->getVertexFormat();
+                    const uint vertexStride = getVertexFormatStride(vtxFmt);
+
+                    const auto batches = meshGeo->batches();
+                    for (uint j = 0; j < batches.size(); ++j)
+                    {
+                        const Batch & batch = batches[j];
+                        blas->addIndexedGeometry(ib, ibOffset + batch.offset, batch.count, skinvb, vbOffset, modelvb->getBufDesc().getElementCount(), vertexStride);
+                    }
+
+                    blas->update(_cmdList); 
+                }
+
+                if (nullptr != _skinningBuffer)
+                    _cmdList->transitionResource(_skinningBuffer, gfx::ResourceState::NonPixelShaderResource, gfx::ResourceState::UnorderedAccess);
+            }
         }
     }
 
@@ -178,9 +233,16 @@ namespace vg::renderer
                     VG_ASSERT(dynamic_cast<const MeshInstance *>(instances.m_instances[i]));
                     MeshInstance * meshInstance = (MeshInstance *)instances.m_instances[i];
 
-                    MeshModel * meshModel = (MeshModel *)meshInstance->getModel(Lod::Lod0);
-                    const gfx::BLAS * blas = meshModel->getBLAS();
-                    tlas->addInstance(blas, meshInstance->getWorldMatrix(), i);
+                    if (meshInstance->IsSkinned())
+                    {
+                        tlas->addInstance(meshInstance->getInstanceBLAS(), meshInstance->getWorldMatrix(), i);
+                    }
+                    else
+                    {
+                        MeshModel * meshModel = (MeshModel *)meshInstance->getModel(Lod::Lod0);
+                        const gfx::BLAS * blas = meshModel->getBLAS();
+                        tlas->addInstance(blas, meshInstance->getWorldMatrix(), i);
+                    }
                 }
 
                 tlas->build(_cmdList);

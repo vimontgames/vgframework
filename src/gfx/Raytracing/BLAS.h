@@ -4,18 +4,27 @@
 
 namespace vg::gfx
 {
+    enum class BLASUpdateType
+    {
+        Static = 0, // Slower to build but faster to render
+        Dynamic     // Faster to build but slower to render
+    };
+
     namespace base
     {
         class BLAS : public core::Object
         {
         public:
-            BLAS();
+            BLAS(BLASUpdateType _blasUpdateType);
             ~BLAS();
 
             gfx::Buffer * getBuffer() const { return m_resultBuffer; }
 
-            gfx::Buffer *    m_resultBuffer = nullptr;
-            gfx::Buffer *    m_scratchBuffer = nullptr;
+        protected:
+            BLASUpdateType  m_blasUpdateType;
+            gfx::Buffer *   m_resultBuffer = nullptr;
+            gfx::Buffer *   m_scratchBuffer = nullptr;
+            bool            m_initDone = false;
         };
     }
 }
@@ -32,7 +41,7 @@ namespace vg::gfx
         using super = VG_GFXAPI::BLAS;
         const char * getClassName() const final { return "BLAS"; }
 
-        BLAS();
+        BLAS(BLASUpdateType _blasUpdateType);
         ~BLAS();
     };
 }
