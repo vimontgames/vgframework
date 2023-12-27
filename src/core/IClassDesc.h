@@ -74,9 +74,11 @@ namespace vg::core
         virtual const char *                GetClassDisplayName         () const = 0;    
         virtual const char *                GetCategory                 () const = 0;
         virtual const char *                GetDescription              () const = 0;
+        virtual const char *                GetIcon                     () const = 0;
 
         virtual void                        SetCategory                 (const char * _category) = 0;
         virtual void                        SetDescription              (const char * _description) = 0;
+        virtual void                        SetIcon                     (const char * _icon) = 0;
 
         virtual uint                        GetPropertyCount            () const = 0;
         virtual const IProperty *           GetPropertyByIndex          (uint _index) const = 0;

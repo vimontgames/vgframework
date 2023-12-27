@@ -1,45 +1,47 @@
 #include "Precomp.h"
-#include "GameCameraComponent.h"
+#include "GameCameraBehaviour.h"
 #include "Game.h"
 #include "core/GameObject/GameObject.h"
-#include "Behaviour/PlayerBehaviour.h"
+#include "Behaviour/Player/PlayerBehaviour.h"
+#include "editor/Editor_Consts.h"
 
 using namespace vg::core;
 using namespace vg::engine;
 
-VG_REGISTER_COMPONENT_CLASS(GameCameraComponent, "GameCamera", "Game", "Game Camera");
+VG_REGISTER_COMPONENT_CLASS(GameCameraBehaviour, "Game Camera Behaviour", "Game", "Camera Behaviour following the average of player positions", vg::editor::style::icon::Script);
 
 //--------------------------------------------------------------------------------------
-GameCameraComponent::GameCameraComponent(const string & _name, IObject * _parent) :
+GameCameraBehaviour::GameCameraBehaviour(const string & _name, IObject * _parent) :
     super(_name, _parent)
 {
     SetUpdateFlags(UpdateFlags::Update);
 }
 
 //--------------------------------------------------------------------------------------
-GameCameraComponent::~GameCameraComponent()
+GameCameraBehaviour::~GameCameraBehaviour()
 {
 
 }
 
 //--------------------------------------------------------------------------------------
-bool GameCameraComponent::registerProperties(IClassDesc & _desc)
+bool GameCameraBehaviour::registerProperties(IClassDesc & _desc)
 {
     super::registerProperties(_desc);
 
-    registerProperty(GameCameraComponent, m_speed, "Walk Speed");
+    registerProperty(GameCameraBehaviour, m_speed, "Walk Speed");
 
     return true;
 }
 
 //--------------------------------------------------------------------------------------
-void GameCameraComponent::OnPlay()
+void GameCameraBehaviour::OnPlay()
 {
     super::OnPlay();
+    m_offset = getGameObject()->getWorldMatrix()[3].xyz;
 }
 
 //--------------------------------------------------------------------------------------
-void GameCameraComponent::Update(float _dt)
+void GameCameraBehaviour::Update(float _dt)
 {
     const auto players = Game::get()->getPlayers();    
     
@@ -51,8 +53,8 @@ void GameCameraComponent::Update(float _dt)
         for (uint i = 0; i < players.size(); ++i)
             avgPos.xyz += players[i]->getGameObject()->getWorldMatrix()[3].xyz;
 
-        matrix[3].xy = avgPos.xy / (float)players.size() + float2(0,-18);
-        //matrix[3].xyz = avgPos.xyz / (float)players.size() + float3(0, -18, 12);
+        matrix[3].xy = avgPos.xy / (float)players.size() + m_offset.xy;
+        //matrix[3].xyz = avgPos.xyz / (float)players.size() + m_offset.xyz;
 
         getGameObject()->setWorldMatrix(matrix);
     }

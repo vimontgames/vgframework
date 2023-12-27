@@ -50,9 +50,11 @@ namespace vg::core
         const char *                        GetClassDisplayName         () const final override;
         const char *                        GetCategory                 () const final override;
         const char *                        GetDescription              () const final override;
+        const char *                        GetIcon                     () const final override;
 
         void                                SetCategory                 (const char * _category) final override;
         void                                SetDescription              (const char * _description) final override;
+        void                                SetIcon                     (const char * _icon) final override;
 
         uint                                GetPropertyCount            () const final override;
         const IProperty *                   GetPropertyByIndex          (uint _index) const final override;
@@ -71,6 +73,7 @@ namespace vg::core
         const char *                        displayName                 = nullptr;
         const char *                        category                    = nullptr;
         const char *                        description                 = nullptr;
+        const char *                        icon                        = nullptr;
         IClassDesc::Flags                   flags                       = IClassDesc::Flags::None;
         u32                                 sizeOf                      = 0;
         IClassDesc::Func                    createFunc                  = nullptr;

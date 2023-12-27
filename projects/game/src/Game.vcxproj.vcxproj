@@ -11,8 +11,8 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Behaviour\PlayerBehaviour.cpp" />
-    <ClCompile Include="Component\GameCamera\GameCameraComponent.cpp" />
+    <ClCompile Include="Behaviour\GameCamera\GameCameraBehaviour.cpp" />
+    <ClCompile Include="Behaviour\Player\PlayerBehaviour.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="Precomp.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
@@ -20,8 +20,8 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Behaviour\PlayerBehaviour.h" />
-    <ClInclude Include="Component\GameCamera\GameCameraComponent.h" />
+    <ClInclude Include="Behaviour\GameCamera\GameCameraBehaviour.h" />
+    <ClInclude Include="Behaviour\Player\PlayerBehaviour.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="Precomp.h" />
   </ItemGroup>

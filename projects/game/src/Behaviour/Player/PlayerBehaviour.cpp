@@ -2,11 +2,12 @@
 #include "PlayerBehaviour.h"
 #include "Game.h"
 #include "engine/ICharacterControllerComponent.h"
+#include "editor/Editor_Consts.h"
 
 using namespace vg::core;
 using namespace vg::engine;
 
-VG_REGISTER_COMPONENT_CLASS(PlayerBehaviour, "Player", "Game", "Player Behaviour");
+VG_REGISTER_COMPONENT_CLASS(PlayerBehaviour, "Player", "Game", "Player Behaviour", vg::editor::style::icon::Script); 
 
 //--------------------------------------------------------------------------------------
 PlayerBehaviour::PlayerBehaviour(const string & _name, IObject * _parent) :

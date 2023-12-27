@@ -6,7 +6,7 @@
 #include "engine/Engine.h"
 #include "renderer/IRenderer.h"
 #include "renderer/IPicking.h"
-
+#include "editor/Editor_Consts.h"
 #include "MaterialResourceList.hpp"
 
 #if !VG_ENABLE_INLINE
@@ -18,7 +18,7 @@ using namespace vg::renderer;
 
 namespace vg::engine
 {
-    VG_REGISTER_COMPONENT_CLASS(MeshComponent, "Mesh", "Rendering", "3D model for rendering")
+    VG_REGISTER_COMPONENT_CLASS(MeshComponent, "Mesh", "Rendering", "Mesh model for 3D rendering", editor::style::icon::Mesh)
 
     //--------------------------------------------------------------------------------------
     bool MeshComponent::registerProperties(IClassDesc & _desc)

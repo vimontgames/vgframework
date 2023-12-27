@@ -846,8 +846,9 @@ namespace vg::editor
 
                                 if (i == 0)
                                     dragAndDropInterline(pComponent, style::draganddrop::BeforeNode);
-
-                                string componentShortName = pComponent->getClassName();
+                                
+                                auto * classDesc = pComponent->getClassDesc();
+                                string componentShortName = fmt::sprintf("%s %s", classDesc->GetIcon(), classDesc->GetClassDisplayName()); // pComponent->getClassName();
 
                                 // Remove "Component" at the end of class name if present
                                 {
@@ -884,13 +885,13 @@ namespace vg::editor
                                 CollapsingHeaderLabel(collapsingHeaderPos, componentShortName, isComponentEnabled);
                                 ImGui::EndDisabled();
 
-                                if (CollapsingHeaderCheckbox(collapsingHeaderPos, isComponentEnabled, pComponent,style::icon::Checked, style::icon::Unchecked, fmt::sprintf("%s %s component", isComponentEnabled ? "Disable" : "Enable", pComponent->getClassDesc()->GetClassDisplayName()).c_str()))
+                                if (CollapsingHeaderCheckbox(collapsingHeaderPos, isComponentEnabled, pComponent,style::icon::Checked, style::icon::Unchecked, fmt::sprintf("%s %s component", isComponentEnabled ? "Disable" : "Enable", classDesc->GetClassDisplayName()).c_str()))
                                 {
                                     pComponent->SetFlags(IComponent::Flags::Enabled, !isComponentEnabled);
                                     changed = true;
                                 }
 
-                                if (CollapsingHeaderIconButton(collapsingHeaderPos, availableWidth, pComponent, style::icon::Trashcan, fmt::sprintf("Remove %s component", pComponent->getClassDesc()->GetClassDisplayName())))
+                                if (CollapsingHeaderIconButton(collapsingHeaderPos, availableWidth, pComponent, style::icon::Trashcan, fmt::sprintf("Remove %s component", classDesc->GetClassDisplayName())))
                                 {
                                     componentInspectorMenu.removeComponent(pComponent);
                                     changed = true;

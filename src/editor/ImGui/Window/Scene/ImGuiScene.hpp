@@ -217,6 +217,9 @@ namespace vg::editor
         }
         else
         {
+            auto availableWidth = ImGui::GetContentRegionMax().x;
+            //auto pos = ImGui::GetCursorScreenPos();
+
             ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags_SpanAvailWidth;
             if (children.size() > 0)
                 flags |= ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_DefaultOpen;
@@ -236,7 +239,10 @@ namespace vg::editor
                 DrawRowsBackground(1, GetColorU32(selColor));
             }
 
-            if (m_gameObjectMenu.m_RenamingGameObject == _gameObject)
+            auto pos = ImGui::GetCursorPos();
+
+            const bool renaming = m_gameObjectMenu.m_RenamingGameObject == _gameObject;
+            if (renaming)
             {
                 char gameObjectLabel[256];
                 sprintf_s(gameObjectLabel, "###%p", _gameObject);
@@ -264,7 +270,7 @@ namespace vg::editor
             else
             {
                 string gameObjectLabel = fmt::sprintf("%s###%p", _gameObject->getName(), (void*)_gameObject);
-                open = ImGui::TreeNodeEx(gameObjectLabel.c_str(), flags | ImGuiTreeNodeFlags_SpanAvailWidth | ImGuiTreeNodeFlags_SpanFullWidth);                
+                open = ImGui::TreeNodeEx(gameObjectLabel.c_str(), flags | ImGuiTreeNodeFlags_SpanAvailWidth | ImGuiTreeNodeFlags_SpanFullWidth);  
             }
 
             bool startDragDrop = false;
@@ -378,6 +384,47 @@ namespace vg::editor
                 }
             
                 ImGui::EndDragDropTarget();
+            }
+
+            // icons
+            const auto & components = _gameObject->GetComponents();
+            if (components.size() > 0)
+            {
+                auto bakePos = ImGui::GetCursorPos();
+                ImGui::SameLine();
+
+                float totalSize = 0;
+                for (i64 i = components.size()-1; i >= 0; --i)
+                {
+                    const auto * component = components[i];
+                    const auto * componentClassDesc = component->getClassDesc();
+                    auto icon = componentClassDesc->GetIcon();
+                    auto size = ImGui::CalcTextSize(icon).x;
+                    totalSize += size + ImGui::GetStyle().FramePadding.x;
+
+                    ImVec4 textColor = ImGui::GetStyleColorVec4(ImGuiCol_Text);
+
+                    if (asBool(IComponent::Flags::Enabled & component->GetFlags()))
+                        textColor.w = 0.5f;
+                    else
+                        textColor.w = 0.15f; 
+
+                    ImGui::SetCursorPosX(availableWidth - totalSize);
+                    ImGui::SetCursorPosY(pos.y);
+                    ImGui::PushStyleColor(ImGuiCol_Text, textColor);
+                    ImGui::Text(icon);
+
+                    if (ImGui::IsItemHovered(ImGuiHoveredFlags_AllowWhenDisabled))
+                    {
+                        string tooltip = fmt::sprintf("%s:\n%s", componentClassDesc->GetClassDisplayName(), componentClassDesc->GetDescription());
+                        ImGui::SetTooltip(tooltip.c_str());
+                    }
+
+                    ImGui::PopStyleColor();
+                }
+                
+                ImGui::SetCursorPosX(bakePos.x);
+                ImGui::SetCursorPosY(bakePos.y);
             }
         }
 

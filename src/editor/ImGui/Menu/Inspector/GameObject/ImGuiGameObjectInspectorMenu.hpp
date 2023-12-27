@@ -83,14 +83,14 @@ namespace vg::editor
 
                     // sort categories in alphabetical order
                     sort(m_categories.begin(), m_categories.end(), [](CategoryInfo & a, CategoryInfo & b)
-                        {
-                            if (a.name.empty() == b.name.empty())
-                                return a.name < b.name;
-                            else if (a.name.empty())
-                                return true;
-                            else
-                                return false;
-                        }
+                    {
+                        if (a.name.empty() == b.name.empty())
+                            return a.name < b.name;
+                        else if (a.name.empty())
+                            return true;
+                        else
+                            return false;
+                    }
                     );
 
                     // add to each category
@@ -105,7 +105,7 @@ namespace vg::editor
                             if (!strcmp(category, cat.name.c_str()))
                             {
                                 if (!cat.classes.exists(classDesc))
-                                cat.classes.push_back(classDesc);
+                                    cat.classes.push_back(classDesc);
                             }
                         }
 
@@ -164,11 +164,12 @@ namespace vg::editor
                             {
                                 auto * classDesc = descriptors[j];
                                 auto * className = classDesc->GetClassName();
-                                auto * classDisplayName = classDesc->GetClassDisplayName();
 
                                 bool isSelected = m_selectedClass == classDesc;
 
-                                if (ImGui::Selectable(classDisplayName, isSelected, ImGuiSelectableFlags_AllowDoubleClick))
+                                string displayName = fmt::sprintf("%s %s", classDesc->GetIcon(), classDesc->GetClassDisplayName());
+
+                                if (ImGui::Selectable(displayName.c_str(), isSelected, ImGuiSelectableFlags_AllowDoubleClick))
                                 {
                                     m_selectedClass = classDesc;
                                     if (ImGui::IsMouseDoubleClicked(ImGuiMouseButton_Left))

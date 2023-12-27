@@ -1,13 +1,11 @@
 #include "engine/Precomp.h"
 #include "CameraComponent.h"
-
 #include "core/GameObject/GameObject.h"
 #include "core/Math/Math.h"
-
 #include "gfx/IView.h"
 #include "renderer/IRenderer.h"
-
 #include "engine/Engine.h"
+#include "editor/Editor_Consts.h"
 
 #if !VG_ENABLE_INLINE
 #include "CameraComponent.inl"
@@ -17,7 +15,7 @@ using namespace vg::core;
 
 namespace vg::engine
 {
-    VG_REGISTER_COMPONENT_CLASS(CameraComponent, "Camera", "Rendering", "Setup camera settings for a View");
+    VG_REGISTER_COMPONENT_CLASS(CameraComponent, "Camera", "Rendering", "Setup camera settings for a View", editor::style::icon::Camera);
 
     //--------------------------------------------------------------------------------------
     bool CameraComponent::registerProperties(IClassDesc & _desc)

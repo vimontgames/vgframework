@@ -5,13 +5,14 @@
 #include "engine/Component/Mesh/MeshComponent.h"
 #include "renderer/IMeshInstance.h"
 #include "renderer/IAnimation.h"
+#include "editor/Editor_Consts.h"
 
 using namespace vg::core;
 using namespace vg::renderer;
 
 namespace vg::engine
 {
-    VG_REGISTER_COMPONENT_CLASS(AnimationComponent, "Animation", "Rendering", "List of animations to use with a skinned Mesh component");
+    VG_REGISTER_COMPONENT_CLASS(AnimationComponent, "Animation", "Rendering", "List of animations to use with a skinned Mesh component", editor::style::icon::Animation);
 
     //--------------------------------------------------------------------------------------
     bool AnimationComponent::registerProperties(IClassDesc & _desc)

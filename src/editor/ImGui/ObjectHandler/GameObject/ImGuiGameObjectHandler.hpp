@@ -30,14 +30,14 @@ namespace vg::editor
 
             auto availableWidth = ImGui::GetContentRegionAvail().x;
             ImVec2 collapsingHeaderPos = ImGui::GetCursorPos();
-
-            bool open = ImGui::CollapsingHeader(ImGui::getObjectLabel("", "GameObject", go).c_str(), ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_AllowItemOverlap);
+            string gameObjectLabel = fmt::sprintf("%s %s", style::icon::Scene, "GameObject");
+            bool open = ImGui::CollapsingHeader(ImGui::getObjectLabel("", gameObjectLabel, go).c_str(), ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_AllowItemOverlap);
 
             m_gameObjectInspectorMenu.Display(go);
 
             bool isGameobjectEnabled = asBool(IInstance::Flags::Enabled & go->GetFlags());
 
-            ImGui::CollapsingHeaderLabel(collapsingHeaderPos, "GameObject", isGameobjectEnabled);
+            ImGui::CollapsingHeaderLabel(collapsingHeaderPos, gameObjectLabel.c_str(), isGameobjectEnabled);
 
             if (ImGui::CollapsingHeaderCheckbox(collapsingHeaderPos, isGameobjectEnabled, go, style::icon::Checked, style::icon::Unchecked, fmt::sprintf("%s GameObject %s", isGameobjectEnabled? "Disable" : "Enable", go->getName().c_str())))
             {
@@ -71,6 +71,14 @@ namespace vg::editor
                 }
             }
 
+            for (uint i = 0; i < classDesc->GetPropertyCount(); ++i)
+            {
+                const IProperty * prop = classDesc->GetPropertyByIndex(i);
+            
+                if (!strcmp(prop->getName(), "m_components"))
+                    ImGuiWindow::displayProperty(go, prop);
+            }    
+
             // "Add Component" button
             {
                 // align right
@@ -80,7 +88,7 @@ namespace vg::editor
                     auto availableWidth = ImGui::GetContentRegionAvail().x;
                     ImGui::SetCursorPosX(availableWidth - style::button::SizeSmall.x + ImGui::GetStyle().WindowPadding.x + 4);
 
-                    if (ImGui::Button(ImGui::getObjectLabel(fmt::sprintf("%s", style::icon::Plus).c_str(), go).c_str(), style::button::SizeSmall + ImVec2(0, ImGui::GetStyle().WindowPadding.x-3)))
+                    if (ImGui::Button(ImGui::getObjectLabel(fmt::sprintf("%s", style::icon::Plus).c_str(), go).c_str(), style::button::SizeSmall + ImVec2(0, ImGui::GetStyle().WindowPadding.x - 3)))
                         m_gameObjectInspectorMenu.addComponentPopup();
                 }
                 ImGui::PopStyleVar(1);
@@ -88,14 +96,6 @@ namespace vg::editor
                 if (ImGui::IsItemHovered())
                     ImGui::SetTooltip(fmt::sprintf("Add Component to \"%s\"", go->getName()).c_str());
             }
-
-            for (uint i = 0; i < classDesc->GetPropertyCount(); ++i)
-            {
-                const IProperty * prop = classDesc->GetPropertyByIndex(i);
-            
-                if (!strcmp(prop->getName(), "m_components"))
-                    ImGuiWindow::displayProperty(go, prop);
-            }            
 
             ImGui::PopID();
         }

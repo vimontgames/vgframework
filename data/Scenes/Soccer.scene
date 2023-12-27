@@ -15,6 +15,28 @@
                         <Property type="Float4" name="m_color" flags="Color" x="1" y="1" z="1" w="1"/>
                         <Property type="Float4x4" name="m_world" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="0" Ty="0" Tz="0" Tw="1"/>
                         <Property type="ObjectPtrVector" name="m_components">
+                            <Object class="MeshComponent">
+                                <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
+                                <Property type="Bool" name="m_displayBones" value="false"/>
+                                <Property type="Resource" name="m_meshResource" flags="Resource">
+                                    <Object class="MeshResource">
+                                        <Property type="String" name="m_name" flags="Hidden" value="New MeshComponent"/>
+                                        <Property type="String" name="m_resourcePath" flags="Hidden" value="data/Meshes/Soccer/Field.fbx"/>
+                                    </Object>
+                                </Property>
+                                <Property type="Object" name="m_meshMaterials" flags="Flatten">
+                                    <Object class="MaterialResourceList">
+                                        <Property type="String" name="m_name" flags="Hidden" value="New MeshComponent"/>
+                                        <Property type="ResourceVector" name="m_materialResources" flags="Resource">
+                                            <Object class="MaterialResource">
+                                                <Property type="String" name="m_name" flags="Hidden" value="Field"/>
+                                                <Property type="String" name="m_resourcePath" flags="Hidden" value="data/Materials/Soccer/Field.mat"/>
+                                                <Property type="String" name="m_name" value="Field"/>
+                                            </Object>
+                                        </Property>
+                                    </Object>
+                                </Property>
+                            </Object>
                             <Object class="RigidBodyComponent">
                                 <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
                                 <Property type="ObjectPtr" name="m_bodyDesc" flags="Flatten">
@@ -37,28 +59,6 @@
                                     </Object>
                                 </Property>
                             </Object>
-                            <Object class="MeshComponent">
-                                <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
-                                <Property type="Bool" name="m_displayBones" value="false"/>
-                                <Property type="Resource" name="m_meshResource" flags="Resource">
-                                    <Object class="MeshResource">
-                                        <Property type="String" name="m_name" flags="Hidden" value="New MeshComponent"/>
-                                        <Property type="String" name="m_resourcePath" flags="Hidden" value="data/Meshes/Soccer/Field.fbx"/>
-                                    </Object>
-                                </Property>
-                                <Property type="Object" name="m_meshMaterials">
-                                    <Object class="MaterialResourceList">
-                                        <Property type="String" name="m_name" flags="Hidden" value="New MeshComponent"/>
-                                        <Property type="ResourceVector" name="m_materialResources" flags="Resource">
-                                            <Object class="MaterialResource">
-                                                <Property type="String" name="m_name" flags="Hidden" value="Field"/>
-                                                <Property type="String" name="m_resourcePath" flags="Hidden" value="data/Materials/Soccer/Field.mat"/>
-                                                <Property type="String" name="m_name" value="Field"/>
-                                            </Object>
-                                        </Property>
-                                    </Object>
-                                </Property>
-                            </Object>
                         </Property>
                         <Property type="ObjectPtrVector" name="m_children" flags="Hidden"/>
                     </Object>
@@ -66,25 +66,17 @@
                         <Property type="String" name="m_name" value="Camera"/>
                         <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
                         <Property type="Float4" name="m_color" flags="Color" x="1" y="1" z="1" w="1"/>
-                        <Property type="Float4x4" name="m_world" Ix="0.99999994" Iy="-0.00040713151" Iz="-0" Iw="-0" Jx="0.00024372329" Jy="0.59863526" Jz="0.8010217" Jw="-0" Kx="-0.00032612117" Ky="-0.80102164" Kz="0.59863532" Kw="0" Tx="0" Ty="-18" Tz="12" Tw="1"/>
+                        <Property type="Float4x4" name="m_world" Ix="0.99999994" Iy="-0.00040713151" Iz="-0" Iw="-0" Jx="0.00024372329" Jy="0.59863526" Jz="0.8010217" Jw="-0" Kx="-0.00032612117" Ky="-0.80102164" Kz="0.59863532" Kw="0" Tx="0" Ty="-12" Tz="8" Tw="1"/>
                         <Property type="ObjectPtrVector" name="m_components">
                             <Object class="CameraComponent">
                                 <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
                                 <Property type="EnumU8" name="m_target" value="Game"/>
                                 <Property type="Uint8" name="m_index" flags="HasRange" value="0"/>
-                                <Property type="Float" name="m_fovY" flags="HasRange" value="0.5"/>
+                                <Property type="Float" name="m_fovY" flags="HasRange" value="0.75"/>
                                 <Property type="Float" name="m_near" flags="HasRange" value="0.1"/>
                                 <Property type="Float" name="m_far" flags="HasRange" value="1024"/>
                             </Object>
-                            <Object class="FreeCamBehaviour">
-                                <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value=""/>
-                                <Property type="Float" name="m_moveSpeed" flags="HasRange" value="1"/>
-                                <Property type="Float" name="m_rotSpeed" flags="HasRange" value="1"/>
-                                <Property type="Float" name="m_pitch" flags="HasRange" value="-0.92900002"/>
-                                <Property type="Float" name="m_yaw" flags="HasRange" value="3.1411855"/>
-                                <Property type="Float" name="m_roll" flags="HasRange" value="0"/>
-                            </Object>
-                            <Object class="GameCameraComponent">
+                            <Object class="GameCameraBehaviour">
                                 <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
                                 <Property type="Float" name="m_speed" value="1"/>
                             </Object>
@@ -113,7 +105,7 @@
                                                 <Property type="String" name="m_resourcePath" flags="Hidden" value="data/Meshes/Soccer/Ball.fbx"/>
                                             </Object>
                                         </Property>
-                                        <Property type="Object" name="m_meshMaterials">
+                                        <Property type="Object" name="m_meshMaterials" flags="Flatten">
                                             <Object class="MaterialResourceList">
                                                 <Property type="String" name="m_name" flags="Hidden" value="New MeshComponent"/>
                                                 <Property type="ResourceVector" name="m_materialResources" flags="Resource">
@@ -166,7 +158,7 @@
                                                 <Property type="String" name="m_resourcePath" flags="Hidden" value="data/Meshes/Soccer/Ball.fbx"/>
                                             </Object>
                                         </Property>
-                                        <Property type="Object" name="m_meshMaterials">
+                                        <Property type="Object" name="m_meshMaterials" flags="Flatten">
                                             <Object class="MaterialResourceList">
                                                 <Property type="String" name="m_name" flags="Hidden" value="New MeshComponent"/>
                                                 <Property type="ResourceVector" name="m_materialResources" flags="Resource">
@@ -219,7 +211,7 @@
                                                 <Property type="String" name="m_resourcePath" flags="Hidden" value="data/Meshes/Soccer/Ball.fbx"/>
                                             </Object>
                                         </Property>
-                                        <Property type="Object" name="m_meshMaterials">
+                                        <Property type="Object" name="m_meshMaterials" flags="Flatten">
                                             <Object class="MaterialResourceList">
                                                 <Property type="String" name="m_name" flags="Hidden" value="New MeshComponent"/>
                                                 <Property type="ResourceVector" name="m_materialResources" flags="Resource">
@@ -281,7 +273,7 @@
                                                 <Property type="String" name="m_resourcePath" flags="Hidden" value="data/Meshes/TrafficCone/TrafficCone.fbx"/>
                                             </Object>
                                         </Property>
-                                        <Property type="Object" name="m_meshMaterials">
+                                        <Property type="Object" name="m_meshMaterials" flags="Flatten">
                                             <Object class="MaterialResourceList">
                                                 <Property type="String" name="m_name" flags="Hidden" value="New MeshComponent"/>
                                                 <Property type="ResourceVector" name="m_materialResources" flags="Resource">
@@ -334,7 +326,7 @@
                                                 <Property type="String" name="m_resourcePath" flags="Hidden" value="data/Meshes/TrafficCone/TrafficCone.fbx"/>
                                             </Object>
                                         </Property>
-                                        <Property type="Object" name="m_meshMaterials">
+                                        <Property type="Object" name="m_meshMaterials" flags="Flatten">
                                             <Object class="MaterialResourceList">
                                                 <Property type="String" name="m_name" flags="Hidden" value="New MeshComponent"/>
                                                 <Property type="ResourceVector" name="m_materialResources" flags="Resource">
@@ -387,7 +379,7 @@
                                                 <Property type="String" name="m_resourcePath" flags="Hidden" value="data/Meshes/TrafficCone/TrafficCone.fbx"/>
                                             </Object>
                                         </Property>
-                                        <Property type="Object" name="m_meshMaterials">
+                                        <Property type="Object" name="m_meshMaterials" flags="Flatten">
                                             <Object class="MaterialResourceList">
                                                 <Property type="String" name="m_name" flags="Hidden" value="New MeshComponent"/>
                                                 <Property type="ResourceVector" name="m_materialResources" flags="Resource">
@@ -449,7 +441,7 @@
                                                 <Property type="String" name="m_resourcePath" flags="Hidden" value="data/Meshes/Soccer/Billboard.fbx"/>
                                             </Object>
                                         </Property>
-                                        <Property type="Object" name="m_meshMaterials">
+                                        <Property type="Object" name="m_meshMaterials" flags="Flatten">
                                             <Object class="MaterialResourceList">
                                                 <Property type="String" name="m_name" flags="Hidden" value="New MeshComponent"/>
                                                 <Property type="ResourceVector" name="m_materialResources" flags="Resource">
@@ -502,7 +494,7 @@
                                                 <Property type="String" name="m_resourcePath" flags="Hidden" value="data/Meshes/Soccer/Billboard.fbx"/>
                                             </Object>
                                         </Property>
-                                        <Property type="Object" name="m_meshMaterials">
+                                        <Property type="Object" name="m_meshMaterials" flags="Flatten">
                                             <Object class="MaterialResourceList">
                                                 <Property type="String" name="m_name" flags="Hidden" value="New MeshComponent"/>
                                                 <Property type="ResourceVector" name="m_materialResources" flags="Resource">
@@ -555,7 +547,7 @@
                                                 <Property type="String" name="m_resourcePath" flags="Hidden" value="data/Meshes/Soccer/Billboard.fbx"/>
                                             </Object>
                                         </Property>
-                                        <Property type="Object" name="m_meshMaterials">
+                                        <Property type="Object" name="m_meshMaterials" flags="Flatten">
                                             <Object class="MaterialResourceList">
                                                 <Property type="String" name="m_name" flags="Hidden" value="New MeshComponent"/>
                                                 <Property type="ResourceVector" name="m_materialResources" flags="Resource">

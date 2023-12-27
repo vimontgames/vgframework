@@ -3,35 +3,32 @@
   <ItemGroup>
     <ClCompile Include="Precomp.cpp" />
     <ClCompile Include="Game.cpp" />
-    <ClCompile Include="Behaviour\PlayerBehaviour.cpp">
-      <Filter>Behaviour\Player</Filter>
+    <ClCompile Include="Behaviour\GameCamera\GameCameraBehaviour.cpp">
+      <Filter>Behaviour\GameCamera</Filter>
     </ClCompile>
-    <ClCompile Include="Component\GameCamera\GameCameraComponent.cpp">
-      <Filter>Component\GameCamera</Filter>
+    <ClCompile Include="Behaviour\Player\PlayerBehaviour.cpp">
+      <Filter>Behaviour\Player</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Precomp.h" />
     <ClInclude Include="Game.h" />
-    <ClInclude Include="Behaviour\PlayerBehaviour.h">
-      <Filter>Behaviour\Player</Filter>
+    <ClInclude Include="Behaviour\GameCamera\GameCameraBehaviour.h">
+      <Filter>Behaviour\GameCamera</Filter>
     </ClInclude>
-    <ClInclude Include="Component\GameCamera\GameCameraComponent.h">
-      <Filter>Component\GameCamera</Filter>
+    <ClInclude Include="Behaviour\Player\PlayerBehaviour.h">
+      <Filter>Behaviour\Player</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <Filter Include="Component">
-      <UniqueIdentifier>{e85099fb-866e-4f52-b544-b1476e1ba671}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Behaviour">
       <UniqueIdentifier>{f22a42c3-1de4-4af1-a237-fd64e93380cf}</UniqueIdentifier>
     </Filter>
     <Filter Include="Behaviour\Player">
       <UniqueIdentifier>{cdec89b6-4019-4a02-bb85-3c75afb4edb1}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Component\GameCamera">
-      <UniqueIdentifier>{88dd00ff-ac99-4e67-b2b9-6d4bcd77e90d}</UniqueIdentifier>
+    <Filter Include="Behaviour\GameCamera">
+      <UniqueIdentifier>{65575239-8c55-4d8c-a157-46a06c63512c}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

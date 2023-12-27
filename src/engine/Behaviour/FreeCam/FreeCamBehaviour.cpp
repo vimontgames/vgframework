@@ -7,12 +7,13 @@
 #include "engine/Component/Camera/CameraComponent.h"
 #include "engine/Engine.h"
 #include "renderer/IRenderer.h"
+#include "editor/Editor_Consts.h"
 
 using namespace vg::core;
 
 namespace vg::engine
 {
-    VG_REGISTER_COMPONENT_CLASS(FreeCamBehaviour, "FreeCam", "Rendering", "Keyboard/Mouse First-Person Camera behaviour");
+    VG_REGISTER_COMPONENT_CLASS(FreeCamBehaviour, "Free Camera Behaviour", "Rendering", "Keyboard/Mouse First-Person Camera behaviour", editor::style::icon::Script);
 
     //--------------------------------------------------------------------------------------
     bool FreeCamBehaviour::registerProperties(IClassDesc& _desc)

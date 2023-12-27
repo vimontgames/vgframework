@@ -5,12 +5,13 @@
 #include "physics/IShape.h"
 #include "physics/IPhysics.h"
 #include "physics/IBody.h"
+#include "editor/Editor_Consts.h"
 
 using namespace vg::core;
 
 namespace vg::engine
 {
-    VG_REGISTER_COMPONENT_CLASS(RigidBodyComponent, "RigidBody", "Physics", "Rigid body to interact with physics world");
+    VG_REGISTER_COMPONENT_CLASS(RigidBodyComponent, "RigidBody", "Physics", "Rigid body to interact with physics world", editor::style::icon::RigidBody);
 
     //--------------------------------------------------------------------------------------
     bool RigidBodyComponent::registerProperties(core::IClassDesc & _desc)
