@@ -372,6 +372,12 @@ namespace vg::gfx::dx12
     }
 
     //--------------------------------------------------------------------------------------
+    void CommandList::bindStencilRefValue(core::u8 _stencilRef)
+    {
+        m_d3d12graphicsCmdList->OMSetStencilRef(_stencilRef);
+    }
+
+    //--------------------------------------------------------------------------------------
     void CommandList::bindViewport(const core::uint4 & _viewport)
     {
         D3D12_VIEWPORT d3d12viewport;
@@ -599,7 +605,7 @@ namespace vg::gfx::dx12
         for (uint i = 0; i < texDesc.mipmaps; ++i)
         {
             D3D12_SUBRESOURCE_FOOTPRINT pitchedDesc = {};
-                                        pitchedDesc.Format = Texture::getd3d12PixelFormat(texDesc.format);
+                                        pitchedDesc.Format = Texture::getd3d12ResourceFormat(texDesc.format);
                                         pitchedDesc.Width = texDesc.width>>i;
                                         pitchedDesc.Height = texDesc.height>>i;
                                         pitchedDesc.Depth = 1;

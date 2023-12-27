@@ -75,9 +75,32 @@ namespace vg::gfx::vulkan
         if (asBool(_info.flags & ResourceTransitionFlags::Present))
             _att->finalLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
 
-        _att->storeOp = VK_ATTACHMENT_STORE_OP_STORE;
-        _att->stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
-        _att->stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
+        if (isDepthStencil)
+        {
+            _att->storeOp = VK_ATTACHMENT_STORE_OP_STORE;
+
+            if (asBool(ResourceTransitionFlags::Clear & _info.flags))
+            {
+                _att->stencilLoadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
+                _att->stencilStoreOp = VK_ATTACHMENT_STORE_OP_STORE;
+            }
+            else if (asBool(ResourceTransitionFlags::Preserve & _info.flags))
+            {
+                _att->stencilLoadOp = VK_ATTACHMENT_LOAD_OP_LOAD;
+                _att->stencilStoreOp = VK_ATTACHMENT_STORE_OP_STORE;
+            }   
+            else
+            {
+                _att->stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
+                _att->stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
+            }
+        }
+        else
+        {
+            _att->storeOp = VK_ATTACHMENT_STORE_OP_STORE;
+            _att->stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
+            _att->stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
+        }       
 
         return true;
     }

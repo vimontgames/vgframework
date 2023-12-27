@@ -22,6 +22,12 @@ namespace vg::gfx
     }
 
     //--------------------------------------------------------------------------------------
+    VG_INLINE void CommandList::setStencilRefValue(core::u8 _stencilRef)
+    {
+        super::setStencilRefValue(_stencilRef);
+    }
+
+    //--------------------------------------------------------------------------------------
     VG_INLINE void CommandList::setBlendState(const gfx::BlendState & _bs) 
     {
         super::setBlendState(_bs);

@@ -56,12 +56,22 @@ namespace vg::renderer
         
         const bool depthWrite = opaque && options->isZPrepassEnabled() ? false : true;
 
+        //#define TEST_STENCIL
+
+        #if TEST_STENCIL
+        DepthStencilState ds(true, depthWrite, ComparisonFunc::LessEqual, true, 0xFF, 0xFF, StencilState(ComparisonFunc::Always, StencilOp::Replace));
+        #else
         DepthStencilState ds(true, depthWrite, ComparisonFunc::LessEqual);
+        #endif
 
         _cmdList->setPrimitiveTopology(PrimitiveTopology::TriangleList);
         _cmdList->setRasterizerState(rs);
         _cmdList->setBlendState(bs);
         _cmdList->setDepthStencilState(ds);
+
+        #if TEST_STENCIL
+        _cmdList->setStencilRefValue(0xFF);
+        #endif
 
         if (!renderContext.m_toolmode || options->isOpaqueEnabled())
             DrawGraphicInstances(renderContext, _cmdList, allInstances);

@@ -216,6 +216,11 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
 	engineParams.physics.engine = g_engine;
 
+    // MessageBox at application start before engine init
+    bool attachDebugger;
+    if (cmdLine.getBool("attachDebugger", attachDebugger) && attachDebugger)
+        vg::core::messageBox(vg::core::MessageBoxIcon::Info, vg::core::MessageBoxType::OK, "attach=true", "You can attach debugger now");
+
     core::Singletons singletons;
     g_engine->init(engineParams, singletons);
 
@@ -227,11 +232,6 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
         title += " (debug device)";
 
 	SetWindowTextA(g_hWnd, title.c_str());
-
-	// MessageBox at application start
-	bool attachDebugger;
-	if (cmdLine.getBool("attachDebugger", attachDebugger) && attachDebugger)
-		vg::core::messageBox(vg::core::MessageBoxIcon::Info, vg::core::MessageBoxType::OK, "attach=true", "You can attach debugger now");
 
     // Start in play mode?
 	bool play;

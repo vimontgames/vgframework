@@ -30,8 +30,11 @@ namespace vg::renderer
     //--------------------------------------------------------------------------------------
     void ComputePostProcessPass::Setup(const gfx::RenderPassContext & _renderPassContext, float _dt)
     {
-        const auto srcID = _renderPassContext.getFrameGraphID("Color");
-        readRenderTarget(srcID);
+        const auto colorID = _renderPassContext.getFrameGraphID("Color");
+        readRenderTarget(colorID);
+
+        const auto depthStencilID = _renderPassContext.getFrameGraphID("DepthStencil");
+        readDepthStencil(depthStencilID);
 
         auto * device = Device::get();
 
@@ -69,12 +72,18 @@ namespace vg::renderer
         _cmdList->setComputeRootSignature(m_computePostProcessRootSignature);
         _cmdList->setComputeShader(shaderKey);
 
-        u16 src = getRenderTarget(_renderPassContext.getFrameGraphID("Color"))->getTextureHandle();
-        u16 dst = getRWTexture(_renderPassContext.getFrameGraphID("PostProcessUAV"))->getRWTextureHandle();
+        auto color = getRenderTarget(_renderPassContext.getFrameGraphID("Color"))->getTextureHandle();
+        auto depthstencil = getDepthStencil(_renderPassContext.getFrameGraphID("DepthStencil"));
+        auto depth = depthstencil->getDepthTextureHandle();
+        auto stencil = depthstencil->getStencilTextureHandle();
+        auto dst = getRWTexture(_renderPassContext.getFrameGraphID("PostProcessUAV"))->getRWTextureHandle();
         
         PostProcessConstants postProcess;
         postProcess.width_height = packUint16(size.xy);
-        postProcess.srv_uav = packUint16(uint2(src, dst));
+        postProcess.setColor(color);
+        postProcess.setDepth(depth);
+        postProcess.setStencil(stencil);
+        postProcess.setRWBufferOut(dst);
         _cmdList->setComputeRootConstants(0, (u32*) &postProcess, PostProcessConstantsCount);
 
         _cmdList->dispatch(threadGroupCount);

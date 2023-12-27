@@ -21,7 +21,10 @@ Another subject that is very close to my heart is that there is a strong separat
 # changelog
 
 ## 0.22
-Skinned BLAS updates for RT 
+Skinned BLAS updates for RT\
+Add icons for component types\
+Depth/Stencil Shader Resource Views\
+Fix Vulkan RenderDoc capture crash because of RayTracing used in bindless root signature
 
 ## 0.21
 Add support for inline RayTracing with BLAS & TLAS for DirectX12/Vulkan\
@@ -69,6 +72,8 @@ Add Info/Warning/Error console + clean & fixes
 
 ## 0.1
 Separate DLLs for Engine, Renderer, Editor and Game.
+
+![Screenshot](doc/img/0.1.png)
 
 # getting started
 

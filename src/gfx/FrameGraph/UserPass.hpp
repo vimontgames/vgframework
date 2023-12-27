@@ -175,7 +175,7 @@ namespace vg::gfx
     }
 
     //--------------------------------------------------------------------------------------
-    // Get RenderTarget '_resID' for read during 'render'
+    // Get RenderTarget '_resID' during Render
     //--------------------------------------------------------------------------------------
     Texture * UserPass::getRenderTarget(const FrameGraphResourceID & _resID) const
     {
@@ -186,7 +186,18 @@ namespace vg::gfx
     }
 
     //--------------------------------------------------------------------------------------
-    // Get RWTexture '_resID' for read during 'render'
+    // Get DepthStencil '_resID' during Render
+    //--------------------------------------------------------------------------------------
+    Texture * UserPass::getDepthStencil(const FrameGraphResourceID & _resID) const
+    {
+        FrameGraphTextureResource * res = m_frameGraph->getTextureResource(_resID);
+        VG_ASSERT(res, "RenderTarget \"%s\" does not exist in FrameGraph", _resID.c_str());
+        VG_ASSERT(res->getTexture(), "DepthStencil \"%s\" exists in FrameGraph but is not allocated", _resID.c_str());
+        return res->getTexture();
+    }
+
+    //--------------------------------------------------------------------------------------
+    // Get RWTexture '_resID'during Render
     //--------------------------------------------------------------------------------------
     Texture * UserPass::getRWTexture(const FrameGraphResourceID & _resID) const
     {
@@ -196,6 +207,8 @@ namespace vg::gfx
         return res->getTexture();
     }
 
+    //--------------------------------------------------------------------------------------
+    // Get getRWBuffer '_resID' during Render
     //--------------------------------------------------------------------------------------
     Buffer * UserPass::getRWBuffer(const FrameGraphResourceID & _resID) const
     {

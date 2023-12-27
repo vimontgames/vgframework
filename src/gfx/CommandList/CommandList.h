@@ -45,6 +45,7 @@ namespace vg::gfx
 
             void                    setRasterizerState      (const gfx::RasterizerState & _rs);
             void                    setDepthStencilState    (const gfx::DepthStencilState & _ds);
+            void                    setStencilRefValue      (core::u8 _stencilRef);
             void                    setBlendState           (const gfx::BlendState & _bs);
             void                    setShader               (const ShaderKey & _key);
             void                    setPrimitiveTopology    (PrimitiveTopology _topology);
@@ -103,6 +104,7 @@ namespace vg::gfx
          
         VG_INLINE void                  setRasterizerState          (const gfx::RasterizerState & _rs);
         VG_INLINE void                  setDepthStencilState        (const gfx::DepthStencilState & _ds);
+        VG_INLINE void                  setStencilRefValue          (core::u8 _stencilRef);
         VG_INLINE void                  setBlendState               (const gfx::BlendState & _bs);
         VG_INLINE void                  setShader                   (const ShaderKey & _key);
         VG_INLINE void                  setPrimitiveTopology        (PrimitiveTopology _topology);

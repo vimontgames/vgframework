@@ -8,19 +8,34 @@
 #define PASTE(a,b) a##b
 
 #ifdef VG_DX12
+
+// DX12 requires aliasing texture types to use different spaces
+#define BINDLESS_TEXTURE_BINDING_1D         10
+#define BINDLESS_TEXTURE_BINDING_2D         20
+#define BINDLESS_TEXTURE_BINDING_2D_UINT2   21
+#define BINDLESS_TEXTURE_BINDING_3D         30
+
+
 #define DECL_DESCRIPTOR_RANGE_RO(type, name, bind, offset) type name[] : register(PASTE(t, offset), PASTE(space, bind));
 #define DECL_DESCRIPTOR_RANGE_RW(type, name, bind, offset) type name[] : register(PASTE(u, offset), PASTE(space, bind));
 #elif defined(VG_VULKAN)
-//#define DECL_DESCRIPTOR_RANGE_RO(type, name, bind, offset) [[vk::binding(bind)]] type name[];
-//#define DECL_DESCRIPTOR_RANGE_RW(type, name, bind, offset) [[vk::binding(bind)]] type name[];
+
+#define BINDLESS_TEXTURE_BINDING_1D         0
+#define BINDLESS_TEXTURE_BINDING_2D         0
+#define BINDLESS_TEXTURE_BINDING_2D_UINT2   0
+#define BINDLESS_TEXTURE_BINDING_3D         0
+
 #define DECL_DESCRIPTOR_RANGE_RO(type, name, bind, offset) type name[] : register(PASTE(t, bind));
 #define DECL_DESCRIPTOR_RANGE_RW(type, name, bind, offset) type name[] : register(PASTE(u, bind));
 #endif
 
 // Read-only textures
-DECL_DESCRIPTOR_RANGE_RO(Texture1D, g_Texture1DTable, BINDLESS_TEXTURE_BINDING, BINDLESS_TEXTURE_START);
-DECL_DESCRIPTOR_RANGE_RO(Texture2D, g_Texture2DTable, BINDLESS_TEXTURE_BINDING, BINDLESS_TEXTURE_START);
-DECL_DESCRIPTOR_RANGE_RO(Texture3D, g_Texture3DTable, BINDLESS_TEXTURE_BINDING, BINDLESS_TEXTURE_START);
+DECL_DESCRIPTOR_RANGE_RO(Texture1D, g_Texture1DTable, BINDLESS_TEXTURE_BINDING_1D, BINDLESS_TEXTURE_START);
+
+DECL_DESCRIPTOR_RANGE_RO(Texture2D, g_Texture2DTable, BINDLESS_TEXTURE_BINDING_2D, BINDLESS_TEXTURE_START);
+DECL_DESCRIPTOR_RANGE_RO(Texture2D<uint2>, g_Texture2DTable_UInt2, BINDLESS_TEXTURE_BINDING_2D_UINT2, BINDLESS_TEXTURE_START);
+
+DECL_DESCRIPTOR_RANGE_RO(Texture3D, g_Texture3DTable, BINDLESS_TEXTURE_BINDING_3D, BINDLESS_TEXTURE_START);
 
 // Read-only buffers
 DECL_DESCRIPTOR_RANGE_RO(ByteAddressBuffer, g_BufferTable, BINDLESS_BUFFER_BINDING, BINDLESS_BUFFER_START);
@@ -34,12 +49,16 @@ DECL_DESCRIPTOR_RANGE_RW(RWTexture3D<float4>, g_RWTexture3DTable, BINDLESS_RWTEX
 DECL_DESCRIPTOR_RANGE_RW(RWByteAddressBuffer, g_RWBufferTable, BINDLESS_RWBUFFER_BINDING, BINDLESS_RWBUFFER_START);
 
 // TLAS is a different descriptor type on Vulkan, hence the separate bindless table
+// The table cannot be declared in shader (even if unused) when RayTracing is not allowed (not supported or Renderdoc capture) otherwise Vulkan will complain about SPIR-V Extension being used
+#ifdef _RAYTRACING
 DECL_DESCRIPTOR_RANGE_RO(RaytracingAccelerationStructure, g_TLASTable, BINDLESS_TLAS_BINDING, BINDLESS_TLAS_START);
+#endif
 
 // Bindless resources access
 
 #define getTexture1D(_handle)       (g_Texture1DTable[_handle - BINDLESS_TEXTURE_START])
 #define getTexture2D(_handle)       (g_Texture2DTable[_handle - BINDLESS_TEXTURE_START])
+#define getTexture2D_UInt2(_handle) (g_Texture2DTable_UInt2[_handle - BINDLESS_TEXTURE_START])
 #define getTexture3D(_handle)       (g_Texture3DTable[_handle - BINDLESS_TEXTURE_START])
 #define getBuffer(_handle)          (g_BufferTable[_handle - BINDLESS_BUFFER_START])
 #define getRWTexture1D(_handle)     (g_RWTexture1DTable[_handle - BINDLESS_RWTEXTURE_START])

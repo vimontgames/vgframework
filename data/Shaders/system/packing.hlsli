@@ -26,3 +26,23 @@ inline uint2 unpackUint16(uint _value)
 {
     return uint2(0xFFFF & _value, _value >> 16);
 }
+
+inline uint packUint16low(uint _packed, uint _value)
+{
+    return (_packed & 0xFFFF0000) | _value;
+}
+
+inline uint packUint16high(uint _packed, uint _value)
+{
+    return (_packed & 0x0000FFFF) | (_value<<16);
+}
+
+inline uint unpackUint16low(uint _packed)
+{
+    return _packed & 0xFFFF;
+}
+
+inline uint unpackUint16high(uint _packed)
+{
+    return (_packed>>16);
+}

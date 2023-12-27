@@ -24,6 +24,7 @@ namespace vg::gfx::vulkan
 
         void                                bindGraphicRootSignature    (gfx::RootSignature * _rootSig);
         void                                bindGraphicPipelineState    (gfx::GraphicPipelineState * _pso);
+        void                                bindStencilRefValue         (core::u8 _stencilRef);
         void                                bindViewport                (const core::uint4 & _viewport);
         void                                bindScissor                 (const core::uint4 & _scissor);
         void                                bindGraphicRootConstants           (core::uint(&_constants)[max_root_constants]);

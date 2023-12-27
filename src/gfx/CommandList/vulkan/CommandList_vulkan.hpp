@@ -350,6 +350,12 @@ namespace vg::gfx::vulkan
     }
 
     //--------------------------------------------------------------------------------------
+    void CommandList::bindStencilRefValue(core::u8 _stencilRef)
+    {
+        vkCmdSetStencilReference(m_vkCommandBuffer, VK_STENCIL_FACE_FRONT_AND_BACK, _stencilRef);
+    }
+
+    //--------------------------------------------------------------------------------------
     void CommandList::bindViewport(const core::uint4 & _viewport)
     {
         VkViewport vp;
@@ -412,9 +418,6 @@ namespace vg::gfx::vulkan
     //--------------------------------------------------------------------------------------
     void CommandList::drawIndexed(core::uint _indexCount, core::uint _startIndex, core::uint _baseVertex)
     {
-        // test
-        vkCmdSetStencilReference(m_vkCommandBuffer, VK_STENCIL_FACE_FRONT_AND_BACK, 0);
-
         vkCmdDrawIndexed(m_vkCommandBuffer, _indexCount, 1, _startIndex, 0, 0);
     }
 

@@ -27,6 +27,8 @@ enum DisplayFlags : uint
 enum class PostProcessMode : uint
 {
     Default = 0,
+    Depth,
+    Stencil,
     Luminance
 };
 

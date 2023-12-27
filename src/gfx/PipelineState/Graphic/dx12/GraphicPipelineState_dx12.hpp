@@ -108,7 +108,7 @@ namespace vg::gfx::dx12
             {
                 const auto format = _key.m_renderPassKey.m_colorFormat[i];
                 VG_ASSERT(PixelFormat::Unknow != format);
-                d3d12graphicPipelineDesc.RTVFormats[numRenderTargets] = Texture::getd3d12PixelFormat(format);
+                d3d12graphicPipelineDesc.RTVFormats[numRenderTargets] = Texture::getd3d12SurfaceFormat(format);
                 ++numRenderTargets;
             }
             else
@@ -123,7 +123,7 @@ namespace vg::gfx::dx12
         {
             const auto format = _key.m_renderPassKey.m_depthStencilFormat;
             VG_ASSERT(PixelFormat::Unknow != format);
-            d3d12graphicPipelineDesc.DSVFormat = Texture::getd3d12PixelFormat(format);
+            d3d12graphicPipelineDesc.DSVFormat = Texture::getd3d12SurfaceFormat(format);
         }
         else
         {

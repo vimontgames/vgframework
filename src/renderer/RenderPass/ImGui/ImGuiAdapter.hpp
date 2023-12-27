@@ -67,7 +67,7 @@ namespace vg::renderer
         D3D12_CPU_DESCRIPTOR_HANDLE fontCpuHandle = bindlessTable->getd3d12CPUDescriptorHandle(m_fontTexHandle);
         D3D12_GPU_DESCRIPTOR_HANDLE fontGpuHandle = bindlessTable->getd3d12GPUDescriptorHandle(m_fontTexHandle);
 
-        ImGui_ImplDX12_Init(device->getd3d12Device(), max_frame_latency, Texture::getd3d12PixelFormat(fmt), bindlessTable->getd3d12GPUDescriptorHeap(), fontCpuHandle, fontGpuHandle);
+        ImGui_ImplDX12_Init(device->getd3d12Device(), max_frame_latency, Texture::getd3d12SurfaceFormat(fmt), bindlessTable->getd3d12GPUDescriptorHeap(), fontCpuHandle, fontGpuHandle);
     }
     #elif defined(VG_VULKAN)
     //--------------------------------------------------------------------------------------

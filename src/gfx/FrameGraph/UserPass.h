@@ -79,6 +79,7 @@ namespace vg::gfx
 
         // draw
         Texture * getRenderTarget(const FrameGraphResourceID & _resID) const;
+		Texture * getDepthStencil(const FrameGraphResourceID & _resID) const;
 		Texture * getRWTexture(const FrameGraphResourceID & _resID) const;
 		Buffer * getRWBuffer(const FrameGraphResourceID & _resID) const;
 

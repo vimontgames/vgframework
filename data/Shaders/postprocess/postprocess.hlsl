@@ -150,15 +150,27 @@ float4 DebugRayTracing(float4 color, float2 uv, uint2 screenSize, ViewConstants 
 [numthreads(POSTPROCESS_THREADGROUP_SIZE_X, POSTPROCESS_THREADGROUP_SIZE_Y, 1)]
 void CS_PostProcessMain(int2 dispatchThreadID : SV_DispatchThreadID)
 {   
-    uint2 src_dst = unpackUint16(postProcessConstants.srv_uav);
-    uint2 width_height = unpackUint16(postProcessConstants.width_height);
-    
-    int2 coords = dispatchThreadID;
-    float2 uv = dispatchThreadID.xy / (float2)width_height;
+    uint2 screenSize = postProcessConstants.getScreenSize();    
 
-    if (all(dispatchThreadID.xy < width_height))
+    int2 coords = dispatchThreadID;
+    float2 uv = dispatchThreadID.xy / (float2)screenSize;
+
+    if (all(dispatchThreadID.xy < screenSize))
     {
-        float4 color = getTexture2D(src_dst.x).Load(int3(dispatchThreadID.xy, 0));
+        int3 address = int3(dispatchThreadID.xy, 0);
+
+        float4 color = getTexture2D(postProcessConstants.getColor()).Load(address);
+
+        // Red contains depth.
+        float depth = getTexture2D(postProcessConstants.getDepth()).Load(address).r;
+        
+        #ifdef VG_VULKAN
+        // Vulkan : Red contains stencil
+        uint stencil = getTexture2D_UInt2(postProcessConstants.getStencil()).Load(address).r;
+        #else
+        // DX12 : Green contains stencil
+        uint stencil = getTexture2D_UInt2(postProcessConstants.getStencil()).Load(address).g;
+        #endif
 
         ViewConstants viewConstants;
         viewConstants.Load(getBuffer(RESERVEDSLOT_BUFSRV_VIEWCONSTANTS));
@@ -166,12 +178,24 @@ void CS_PostProcessMain(int2 dispatchThreadID : SV_DispatchThreadID)
         #if _TOOLMODE
 
         #if _RAYTRACING
-        color = DebugRayTracing(color, uv, width_height, viewConstants);
+        color = DebugRayTracing(color, uv, screenSize, viewConstants);
         #endif
 
         switch(viewConstants.getPostProcessMode())
         {
             default:
+            color.rgb = float3(1,0,1);
+            break;
+        
+            case PostProcessMode::Default:
+            break;
+
+            case PostProcessMode::Depth:
+            color.rgb = frac(depth * float3(256,16,1));
+            break;
+
+            case PostProcessMode::Stencil:
+            color.rgb = stencil / 255.0f;
             break;
 
             case PostProcessMode::Luminance:
@@ -181,6 +205,6 @@ void CS_PostProcessMain(int2 dispatchThreadID : SV_DispatchThreadID)
 
         #endif // _TOOLMODE
 
-        getRWTexture2D(src_dst.y)[coords] = color;
+        getRWTexture2D(postProcessConstants.getRWBufferOut())[coords] = color;
     }
 }

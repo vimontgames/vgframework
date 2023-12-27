@@ -1,12 +1,12 @@
 namespace vg::gfx::dx12
 {
     //--------------------------------------------------------------------------------------
-    DXGI_FORMAT Texture::getd3d12PixelFormat(PixelFormat _format)
+    DXGI_FORMAT Texture::getd3d12ResourceFormat(PixelFormat _format)
     {
         switch (_format)
         {
             default:
-                VG_ASSERT(false, "Unhandled pixel format \"%s\"", asString(_format).c_str());
+                VG_ASSERT_ENUM_NOT_IMPLEMENTED(_format);
                 return DXGI_FORMAT_UNKNOWN;
 
             case PixelFormat::R8G8B8A8_unorm:
@@ -17,6 +17,32 @@ namespace vg::gfx::dx12
 
             case PixelFormat::R16G16B16A16_float:
                 return DXGI_FORMAT_R16G16B16A16_FLOAT;
+
+            case PixelFormat::D32S8:
+                return DXGI_FORMAT_R32G8X24_TYPELESS;
+        }
+    }
+
+    //--------------------------------------------------------------------------------------
+    DXGI_FORMAT Texture::getd3d12ShaderResourceViewFormat(PixelFormat _format, bool _stencil)
+    {
+        switch (_format)
+        {
+            default:
+                return getd3d12ResourceFormat(_format);
+
+            case PixelFormat::D32S8:
+                return _stencil ? DXGI_FORMAT_X32_TYPELESS_G8X24_UINT : DXGI_FORMAT_R32_FLOAT_X8X24_TYPELESS;
+        }
+    }
+
+    //--------------------------------------------------------------------------------------
+    DXGI_FORMAT Texture::getd3d12SurfaceFormat(PixelFormat _format)
+    {
+        switch (_format)
+        {
+            default:
+                return getd3d12ResourceFormat(_format);
 
             case PixelFormat::D32S8:
                 return DXGI_FORMAT_D32_FLOAT_S8X24_UINT;
@@ -100,7 +126,7 @@ namespace vg::gfx::dx12
                             resourceDesc.Height = _texDesc.height;
                             resourceDesc.DepthOrArraySize = _texDesc.depth;
                             resourceDesc.MipLevels = _texDesc.mipmaps;
-                            resourceDesc.Format = getd3d12PixelFormat(_texDesc.format);
+                            resourceDesc.Format = getd3d12ResourceFormat(_texDesc.format);
                             resourceDesc.SampleDesc.Count = 1;
                             resourceDesc.SampleDesc.Quality = 0;
                             resourceDesc.Layout = D3D12_TEXTURE_LAYOUT_UNKNOWN;
@@ -123,7 +149,7 @@ namespace vg::gfx::dx12
         auto * d3d12device = device->getd3d12Device();
         
         D3D12_RESOURCE_DESC resourceDesc = getd3d12ResourceDesc(_texDesc);
-        DXGI_FORMAT d3d12PixFmt = getd3d12PixelFormat(_texDesc.format);
+        DXGI_FORMAT d3d12PixFmt = getd3d12ResourceFormat(_texDesc.format);
 
         if (asBool(TextureFlags::Backbuffer & _texDesc.flags))
         {
@@ -146,9 +172,7 @@ namespace vg::gfx::dx12
             if (asBool(TextureFlags::RenderTarget & _texDesc.flags))
             {
                 initState = D3D12_RESOURCE_STATE_RENDER_TARGET;
-
-                optimizedClearValue.Format = d3d12PixFmt;
-
+                optimizedClearValue.Format = getd3d12SurfaceFormat(_texDesc.format);
                 optimizedClearValue.Color[0] = defaultOptimizedClearColor.x;
                 optimizedClearValue.Color[1] = defaultOptimizedClearColor.y;
                 optimizedClearValue.Color[2] = defaultOptimizedClearColor.z;
@@ -159,9 +183,7 @@ namespace vg::gfx::dx12
             else if (asBool(TextureFlags::DepthStencil & _texDesc.flags))
             {
                 initState = D3D12_RESOURCE_STATE_DEPTH_WRITE;
-
-                optimizedClearValue.Format = d3d12PixFmt;
-
+                optimizedClearValue.Format = getd3d12SurfaceFormat(_texDesc.format);
                 optimizedClearValue.DepthStencil.Depth = defaultOptimizedClearDepth;
                 optimizedClearValue.DepthStencil.Stencil = defaultOptimizedClearStencil;
 
@@ -185,40 +207,55 @@ namespace vg::gfx::dx12
             m_resource.setd3d12TextureResource(_name, resource, alloc);
         }
 
-        if (asBool(BindFlags::ShaderResource & _texDesc.resource.m_bindFlags) && !asBool(TextureFlags::DepthStencil & _texDesc.flags)) // TODO: depth texture SRV
+        if (asBool(BindFlags::ShaderResource & _texDesc.resource.m_bindFlags)) 
         {
-            D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc = {};
-            srvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
-            srvDesc.Format = d3d12PixFmt;
-            srvDesc.ViewDimension = getd3d12ShaderResourceViewDimension(_texDesc.type);
-            
-            switch (_texDesc.type)
+            auto created3d12ShaderResourceView = [&](const TextureDesc & _texDesc, bool _stencil = false)
             {
-                default:
-                      VG_ASSERT_ENUM_NOT_IMPLEMENTED(_texDesc.type);
-                      break;
+                D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc = {};
+                srvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
+                srvDesc.Format = getd3d12ShaderResourceViewFormat(_texDesc.format, _stencil);
+                srvDesc.ViewDimension = getd3d12ShaderResourceViewDimension(_texDesc.type);
 
-                case TextureType::Texture1D:
-                    srvDesc.Texture1D.MipLevels = 1;
-                    srvDesc.Texture1D.MostDetailedMip = 0;
-                    srvDesc.Texture1D.ResourceMinLODClamp = 0;
-                    break;
+                switch (_texDesc.type)
+                {
+                    default:
+                        VG_ASSERT_ENUM_NOT_IMPLEMENTED(_texDesc.type);
+                        break;
 
-                case TextureType::Texture2D:
-                    srvDesc.Texture2D.MipLevels = _texDesc.mipmaps;
-                    srvDesc.Texture2D.MostDetailedMip = 0;
-                    srvDesc.Texture2D.PlaneSlice = 0;
-                    srvDesc.Texture2D.ResourceMinLODClamp = 0;
-                    break;
+                    case TextureType::Texture1D:
+                        srvDesc.Texture1D.MipLevels = 1;
+                        srvDesc.Texture1D.MostDetailedMip = 0;
+                        srvDesc.Texture1D.ResourceMinLODClamp = 0;
+                        break;
+
+                    case TextureType::Texture2D:
+                        srvDesc.Texture2D.MipLevels = _texDesc.mipmaps;
+                        srvDesc.Texture2D.MostDetailedMip = 0;
+                        srvDesc.Texture2D.PlaneSlice = _stencil ? 1 : 0;
+                        srvDesc.Texture2D.ResourceMinLODClamp = 0;
+                        break;
+                }
+
+                VG_ASSERT(m_resource.getd3d12TextureResource());
+
+                BindlessTable * bindlessTable = device->getBindlessTable();
+                BindlessTextureHandle srvHandle = bindlessTable->allocBindlessTextureHandle(static_cast<gfx::Texture *>(this), _reservedSlot);
+
+                D3D12_CPU_DESCRIPTOR_HANDLE d3d12DescriptorHandle = bindlessTable->getd3d12CPUDescriptorHandle(srvHandle);
+                d3d12device->CreateShaderResourceView(m_resource.getd3d12TextureResource(), &srvDesc, d3d12DescriptorHandle);
+
+                return srvHandle;
+            };
+
+            if (asBool(TextureFlags::DepthStencil & _texDesc.flags))
+            {
+                m_depthTextureHandle = created3d12ShaderResourceView(_texDesc, false);
+                m_stencilTextureHandle = created3d12ShaderResourceView(_texDesc, true);
             }
-
-            VG_ASSERT(m_resource.getd3d12TextureResource());
-
-            BindlessTable * bindlessTable = device->getBindlessTable();
-            m_textureHandle = bindlessTable->allocBindlessTextureHandle(static_cast<gfx::Texture*>(this), _reservedSlot);
-
-            D3D12_CPU_DESCRIPTOR_HANDLE d3d12DescriptorHandle = bindlessTable->getd3d12CPUDescriptorHandle(m_textureHandle);
-            d3d12device->CreateShaderResourceView(m_resource.getd3d12TextureResource(), &srvDesc, d3d12DescriptorHandle);
+            else
+            {
+                m_textureHandle = created3d12ShaderResourceView(_texDesc);
+            }
         }
 
         if (asBool(TextureFlags::RenderTarget & _texDesc.flags))
@@ -236,7 +273,7 @@ namespace vg::gfx::dx12
         else if (asBool(TextureFlags::DepthStencil & _texDesc.flags))
         {
             D3D12_DEPTH_STENCIL_VIEW_DESC depthStencilViewDesc;
-                                          depthStencilViewDesc.Format = d3d12PixFmt;
+                                          depthStencilViewDesc.Format = getd3d12SurfaceFormat(_texDesc.format); 
                                           depthStencilViewDesc.Flags = D3D12_DSV_FLAG_NONE;
                                           depthStencilViewDesc.ViewDimension = D3D12_DSV_DIMENSION_TEXTURE2D;
                                           depthStencilViewDesc.Texture2D.MipSlice = 0;  // TODO: alloc DSV for every mip available
@@ -246,11 +283,20 @@ namespace vg::gfx::dx12
             d3d12device->CreateDepthStencilView(m_resource.getd3d12TextureResource(), &depthStencilViewDesc, m_d3d12DSVHandle);
         }
 
-        // Update ShaderResource descriptor in bindless table
+        // Update ShaderResource descriptors in bindless table
         if (nullptr == _initData && asBool(BindFlags::ShaderResource & _texDesc.resource.m_bindFlags))
         {
             auto * bindlessTable = device->getBindlessTable();
-            bindlessTable->updated3d12descriptor(getTextureHandle());
+
+            if (isDepthStencilFormat(_texDesc.format))
+            {
+                bindlessTable->updated3d12descriptor(getDepthTextureHandle());
+                bindlessTable->updated3d12descriptor(getStencilTextureHandle());
+            }
+            else
+            {
+                bindlessTable->updated3d12descriptor(getTextureHandle());
+            }            
         }
 
         if (asBool(BindFlags::UnorderedAccess & _texDesc.resource.m_bindFlags))
@@ -268,7 +314,7 @@ namespace vg::gfx::dx12
                     D3D12_CPU_DESCRIPTOR_HANDLE d3d12RWTextureDescriptorHandle = bindlessTable->getd3d12CPUDescriptorHandle(m_rwTextureHandle);
 
                     D3D12_UNORDERED_ACCESS_VIEW_DESC uavDesc;
-                    uavDesc.Format = getd3d12PixelFormat(_texDesc.format);
+                    uavDesc.Format = getd3d12ResourceFormat(_texDesc.format);
                     uavDesc.ViewDimension = D3D12_UAV_DIMENSION_TEXTURE2D;
                     uavDesc.Texture2D.MipSlice = 0;
                     uavDesc.Texture2D.PlaneSlice = 0;

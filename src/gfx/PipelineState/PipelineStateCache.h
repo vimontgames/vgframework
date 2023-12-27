@@ -16,7 +16,8 @@ namespace vg::gfx
             Viewport        = 0x00000004,
             Scissor         = 0x00000008,
             RootConstants   = 0x00000010,
-            IndexBuffer     = 0x00000020
+            IndexBuffer     = 0x00000020,
+            StencilRefValue = 0x00000040
         };
 
         PipelineStateCache() = default;

@@ -170,101 +170,133 @@ namespace vg::gfx::vulkan
 
 		if (_texDesc.isShaderResource() || _texDesc.isBackbuffer())
 		{
-            VkImageViewCreateInfo vkImageViewDesc = {};
-
-			vkImageViewDesc.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
-			vkImageViewDesc.pNext = nullptr;
-			vkImageViewDesc.format = getVulkanPixelFormat(_texDesc.format);
-            vkImageViewDesc.image = m_resource.getVulkanImage();
-
-			vkImageViewDesc.components.r = VK_COMPONENT_SWIZZLE_R;
-			vkImageViewDesc.components.g = VK_COMPONENT_SWIZZLE_G;
-			vkImageViewDesc.components.b = VK_COMPONENT_SWIZZLE_B;
-			vkImageViewDesc.components.a = VK_COMPONENT_SWIZZLE_A;
-
-			vkImageViewDesc.subresourceRange.aspectMask = isDepthStencilFormat(_texDesc.format) ? (VK_IMAGE_ASPECT_DEPTH_BIT/*|VK_IMAGE_ASPECT_STENCIL_BIT*/) : VK_IMAGE_ASPECT_COLOR_BIT; // TODO: create another view for stencil if needed
-			vkImageViewDesc.subresourceRange.baseMipLevel = 0;
-			vkImageViewDesc.subresourceRange.levelCount = _texDesc.mipmaps;
-			vkImageViewDesc.subresourceRange.baseArrayLayer = 0;
-			vkImageViewDesc.subresourceRange.layerCount = 1;
-
-			vkImageViewDesc.viewType = getVulkanImageViewType(_texDesc.type);
-			vkImageViewDesc.flags = 0;
-
-			VG_VERIFY_VULKAN(vkCreateImageView(device->getVulkanDevice(), &vkImageViewDesc, nullptr, &m_vkImageView));
-
-            if (!_texDesc.isBackbuffer())
+            auto createVulkanShaderResourceView = [&](const TextureDesc & _texDesc, bool _stencil = false)
             {
-                BindlessTable * bindlessTable = device->getBindlessTable();
-                m_textureHandle = bindlessTable->allocBindlessTextureHandle(static_cast<gfx::Texture*>(this), _reservedSlot);
+                VkImageViewCreateInfo vkImageViewDesc = {};
 
-                VkDescriptorImageInfo tex_descs = {};
-                                      tex_descs.imageView = m_vkImageView;
-                                      tex_descs.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
-                                      tex_descs.sampler = nullptr;
+                vkImageViewDesc.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
+                vkImageViewDesc.pNext = nullptr;
+                vkImageViewDesc.format = getVulkanPixelFormat(_texDesc.format);
+                vkImageViewDesc.image = m_resource.getVulkanImage();
 
-                VkWriteDescriptorSet writes = {};
-                                     writes.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
-                                     writes.dstBinding = BINDLESS_TEXTURE_BINDING;
-                                     writes.descriptorCount = 1;
-                                     writes.descriptorType = VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE;
-                                     writes.pImageInfo = &tex_descs;
-                                     writes.dstSet = device->getVulkanBindlessDescriptors();
-                                     writes.dstArrayElement = m_textureHandle - BINDLESS_TEXTURE_START;
+                vkImageViewDesc.components.r = VK_COMPONENT_SWIZZLE_R;
+                vkImageViewDesc.components.g = VK_COMPONENT_SWIZZLE_G;
+                vkImageViewDesc.components.b = VK_COMPONENT_SWIZZLE_B;
+                vkImageViewDesc.components.a = VK_COMPONENT_SWIZZLE_A;
 
-                vkUpdateDescriptorSets(device->getVulkanDevice(), 1, &writes, 0, nullptr);
-
-                if (nullptr != _initData)
+                if (isDepthStencilFormat(_texDesc.format))
                 {
-                    const auto fmtSize = getPixelFormatSize(_texDesc.format);
-
-                    VkMemoryRequirements mem_reqs;
-                    vkGetImageMemoryRequirements(device->getVulkanDevice(), getResource().getVulkanImage(), &mem_reqs);
-
-                    u64 uploadBufferSize = mem_reqs.size;
-
-                    auto * uploadBuffer = device->getUploadBuffer();
-                    u8 * dst = uploadBuffer->map(uploadBufferSize, (uint)mem_reqs.alignment);
-                    if (nullptr != dst)
-                    {
-                        uint_ptr currentOffset = 0;
-                        for (uint i = 0; i < _texDesc.mipmaps; ++i)
-                        {
-                            const uint w = _texDesc.width >> i;
-                            const uint h = _texDesc.height >> i;
-
-                            // Copy to upload buffer line by line
-                            for (uint y = 0; y < h; ++y)
-                                memcpy(currentOffset + dst + y * w * fmtSize, currentOffset + &((u8*)_initData)[y * w * fmtSize], fmtSize * w);
-
-                            currentOffset += w * h * fmtSize;
-                        }
-                    }
-                    uploadBuffer->unmap(static_cast<gfx::Texture*>(this), dst/*, uploadBufferSize*/);
+                    if (_stencil)
+                        vkImageViewDesc.subresourceRange.aspectMask = VK_IMAGE_ASPECT_STENCIL_BIT;
+                    else
+                        vkImageViewDesc.subresourceRange.aspectMask = VK_IMAGE_ASPECT_DEPTH_BIT;
+                }
+                else
+                {
+                    vkImageViewDesc.subresourceRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
                 }
 
-                if (asBool(BindFlags::UnorderedAccess & _texDesc.resource.m_bindFlags))
+                vkImageViewDesc.subresourceRange.baseMipLevel = 0;
+                vkImageViewDesc.subresourceRange.levelCount = _texDesc.mipmaps;
+                vkImageViewDesc.subresourceRange.baseArrayLayer = 0;
+                vkImageViewDesc.subresourceRange.layerCount = 1;
+
+                vkImageViewDesc.viewType = getVulkanImageViewType(_texDesc.type);
+                vkImageViewDesc.flags = 0;
+
+                // Can't return a bindless handle for backbuffer, but still need to create an imageView
+                VG_VERIFY_VULKAN(vkCreateImageView(device->getVulkanDevice(), &vkImageViewDesc, nullptr, &m_vkImageView));
+
+                if (!_texDesc.isBackbuffer())
                 {
-                    m_rwTextureHandle = bindlessTable->allocBindlessRWTextureHandle(static_cast<gfx::Texture *>(this));
+                    BindlessTable * bindlessTable = device->getBindlessTable();
+                    BindlessTextureHandle srvHandle = bindlessTable->allocBindlessTextureHandle(static_cast<gfx::Texture *>(this), _reservedSlot);
 
                     VkDescriptorImageInfo tex_descs = {};
                     tex_descs.imageView = m_vkImageView;
-                    tex_descs.imageLayout = VK_IMAGE_LAYOUT_GENERAL;
+                    tex_descs.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
                     tex_descs.sampler = nullptr;
 
                     VkWriteDescriptorSet writes = {};
                     writes.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
-                    writes.dstBinding = BINDLESS_RWTEXTURE_BINDING;
+                    writes.dstBinding = BINDLESS_TEXTURE_BINDING;
                     writes.descriptorCount = 1;
-                    writes.descriptorType = VK_DESCRIPTOR_TYPE_STORAGE_IMAGE;
+                    writes.descriptorType = VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE;
                     writes.pImageInfo = &tex_descs;
                     writes.dstSet = device->getVulkanBindlessDescriptors();
-                    writes.dstArrayElement = m_rwTextureHandle - BINDLESS_RWTEXTURE_START;
+                    writes.dstArrayElement = srvHandle - BINDLESS_TEXTURE_START;
 
                     vkUpdateDescriptorSets(device->getVulkanDevice(), 1, &writes, 0, nullptr);
+
+                    return srvHandle;
                 }
+                else
+                {
+                    return BindlessTextureHandle(BINDLESS_TEXTURE_INVALID);
+                }
+            };
+
+            if (asBool(TextureFlags::DepthStencil & _texDesc.flags))
+            {
+                m_depthTextureHandle = createVulkanShaderResourceView(_texDesc, false);
+                m_stencilTextureHandle = createVulkanShaderResourceView(_texDesc, true);
             }
-		}
+            else
+            {
+                m_textureHandle = createVulkanShaderResourceView(_texDesc);
+            }
+
+            if (nullptr != _initData && !_texDesc.isBackbuffer())
+            {
+                const auto fmtSize = getPixelFormatSize(_texDesc.format);
+
+                VkMemoryRequirements mem_reqs;
+                vkGetImageMemoryRequirements(device->getVulkanDevice(), getResource().getVulkanImage(), &mem_reqs);
+
+                u64 uploadBufferSize = mem_reqs.size;
+
+                auto * uploadBuffer = device->getUploadBuffer();
+                u8 * dst = uploadBuffer->map(uploadBufferSize, (uint)mem_reqs.alignment);
+                if (nullptr != dst)
+                {
+                    uint_ptr currentOffset = 0;
+                    for (uint i = 0; i < _texDesc.mipmaps; ++i)
+                    {
+                        const uint w = _texDesc.width >> i;
+                        const uint h = _texDesc.height >> i;
+
+                        // Copy to upload buffer line by line
+                        for (uint y = 0; y < h; ++y)
+                            memcpy(currentOffset + dst + y * w * fmtSize, currentOffset + &((u8*)_initData)[y * w * fmtSize], fmtSize * w);
+
+                        currentOffset += w * h * fmtSize;
+                    }
+                }
+                uploadBuffer->unmap(static_cast<gfx::Texture*>(this), dst/*, uploadBufferSize*/);
+            }
+
+            if (asBool(BindFlags::UnorderedAccess & _texDesc.resource.m_bindFlags))
+            {
+                BindlessTable * bindlessTable = device->getBindlessTable();
+                m_rwTextureHandle = bindlessTable->allocBindlessRWTextureHandle(static_cast<gfx::Texture *>(this));
+
+                VkDescriptorImageInfo tex_descs = {};
+                tex_descs.imageView = m_vkImageView;
+                tex_descs.imageLayout = VK_IMAGE_LAYOUT_GENERAL;
+                tex_descs.sampler = nullptr;
+
+                VkWriteDescriptorSet writes = {};
+                writes.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+                writes.dstBinding = BINDLESS_RWTEXTURE_BINDING;
+                writes.descriptorCount = 1;
+                writes.descriptorType = VK_DESCRIPTOR_TYPE_STORAGE_IMAGE;
+                writes.pImageInfo = &tex_descs;
+                writes.dstSet = device->getVulkanBindlessDescriptors();
+                writes.dstArrayElement = m_rwTextureHandle - BINDLESS_RWTEXTURE_START;
+
+                vkUpdateDescriptorSets(device->getVulkanDevice(), 1, &writes, 0, nullptr);
+            }
+        }
 	}
 
 	//--------------------------------------------------------------------------------------

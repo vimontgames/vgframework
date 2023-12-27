@@ -23,6 +23,8 @@ namespace vg::gfx
 			VG_INLINE const gfx::Resource &					getResource				() const;
 			VG_INLINE gfx::Resource &						getResource				();
 			VG_INLINE const gfx::BindlessTextureHandle		getTextureHandle		() const;
+			VG_INLINE const gfx::BindlessTextureHandle		getDepthTextureHandle	() const;
+			VG_INLINE const gfx::BindlessTextureHandle		getStencilTextureHandle	() const;
 			VG_INLINE const gfx::BindlessRWTextureHandle	getRWTextureHandle		() const;
 
             static core::u32								getPixelFormatSize		(PixelFormat _format);
@@ -32,7 +34,16 @@ namespace vg::gfx
         protected:
 			TextureDesc										m_texDesc;
             gfx::Resource									m_resource;
-            gfx::BindlessTextureHandle						m_textureHandle;
+			union
+			{
+				gfx::BindlessTextureHandle					m_textureHandle;
+				struct  
+				{
+					gfx::BindlessTextureHandle				m_depthTextureHandle;
+					gfx::BindlessTextureHandle				m_stencilTextureHandle;
+				};
+			};
+			
 			gfx::BindlessRWTextureHandle					m_rwTextureHandle;
 		};
 	}

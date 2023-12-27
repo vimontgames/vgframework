@@ -21,7 +21,7 @@ namespace vg::gfx::vulkan
         allocatorInfo.flags = 0x0;
 
         // RayTracing acceleration structure require device address
-        if (device->getDeviceCaps().supportRayTracing)
+        if (device->getDeviceCaps().supportDeviceAddress)
             allocatorInfo.flags |= VMA_ALLOCATOR_CREATE_BUFFER_DEVICE_ADDRESS_BIT;
 
         vmaCreateAllocator(&allocatorInfo, &m_vkAllocator);

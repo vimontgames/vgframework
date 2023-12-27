@@ -236,6 +236,16 @@ namespace vg::gfx
         }
 
         //--------------------------------------------------------------------------------------
+        void CommandList::setStencilRefValue(core::u8 _stencilRef)
+        {
+            if (_stencilRef != m_graphicStateCache.m_stencilRef)
+            {
+                m_graphicStateCache.m_dirtyFlags |= GraphicPipelineStateCache::DirtyFlags::StencilRefValue;
+                m_graphicStateCache.m_stencilRef = _stencilRef;
+            }
+        }
+
+        //--------------------------------------------------------------------------------------
         void CommandList::setBlendState(const gfx::BlendState & _bs)
         {
             if (_bs != m_graphicStateCache.m_graphicPipelineKey.m_blendState)
@@ -361,6 +371,9 @@ namespace vg::gfx
         if (asBool(m_graphicStateCache.m_dirtyFlags))
         {
             auto * device = Device::get();
+
+            if (asBool(GraphicPipelineStateCache::DirtyFlags::StencilRefValue & m_graphicStateCache.m_dirtyFlags))
+                super::bindStencilRefValue(m_graphicStateCache.m_stencilRef);
 
             if (asBool(GraphicPipelineStateCache::DirtyFlags::RootSignature & m_graphicStateCache.m_dirtyFlags))
             {

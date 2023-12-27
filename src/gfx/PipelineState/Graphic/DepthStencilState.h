@@ -30,13 +30,22 @@ namespace vg::gfx
 
     struct StencilState
     {
+        StencilState(ComparisonFunc _func = ComparisonFunc::Always, StencilOp _passOp = StencilOp::Keep, StencilOp _failOp = StencilOp::Keep, StencilOp _depthFailOp = StencilOp::Keep) :
+            func(_func),
+            passOp(_passOp),
+            failOp(_failOp),
+            depthFailOp(_depthFailOp)
+        {
+
+        }
+
         union
         {
             struct  
             {
-                ComparisonFunc  func : 4;           // 3
-                StencilOp       passOp : 4;         // 3
-                StencilOp       failOp : 4;         // 3
+                ComparisonFunc  func        : 4;    // 3
+                StencilOp       passOp      : 4;    // 3
+                StencilOp       failOp      : 4;    // 3
                 StencilOp       depthFailOp : 4;    // 3
             };
             core::u16 m_bits;

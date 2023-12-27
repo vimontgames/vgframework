@@ -201,7 +201,7 @@ namespace vg::gfx::dx12
 
 		m_dxgiSwapChainDesc.Width = _width;
 		m_dxgiSwapChainDesc.Height = _height;
-		m_dxgiSwapChainDesc.Format = Texture::getd3d12PixelFormat(m_backbufferFormat);
+		m_dxgiSwapChainDesc.Format = Texture::getd3d12ResourceFormat(m_backbufferFormat);
 		m_dxgiSwapChainDesc.Stereo = false;
 		m_dxgiSwapChainDesc.Scaling = DXGI_SCALING_STRETCH;
 		m_dxgiSwapChainDesc.SampleDesc.Quality = 0;
@@ -361,7 +361,7 @@ namespace vg::gfx::dx12
         m_dxgiSwapChainDesc.Width = _width;
         m_dxgiSwapChainDesc.Height = _height;
 
-        VG_VERIFY_SUCCEEDED(m_dxgiSwapChain->ResizeBuffers(max_backbuffer_count, m_dxgiSwapChainDesc.Width, m_dxgiSwapChainDesc.Height, Texture::getd3d12PixelFormat(m_backbufferFormat), m_dxgiSwapChainDesc.Flags));
+        VG_VERIFY_SUCCEEDED(m_dxgiSwapChain->ResizeBuffers(max_backbuffer_count, m_dxgiSwapChainDesc.Width, m_dxgiSwapChainDesc.Height, Texture::getd3d12ResourceFormat(m_backbufferFormat), m_dxgiSwapChainDesc.Flags));
 
         created3d12Backbuffers();
     }

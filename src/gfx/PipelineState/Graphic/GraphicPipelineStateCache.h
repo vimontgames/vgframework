@@ -26,7 +26,7 @@ namespace vg::gfx
         core::uint4                 m_viewport;
         core::uint4                 m_scissor;
         Buffer *                    m_indexBuffer = nullptr;
-
+        core::u8                    m_stencilRef = 0x0;
         GraphicPipelineStateHash    m_graphicPipelineStateHash;
     };
 }

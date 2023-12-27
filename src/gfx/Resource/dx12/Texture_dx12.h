@@ -22,7 +22,9 @@ namespace vg::gfx::dx12
     public:
         VG_CLASS_DECL_PASSTHROUGH(Texture, base::Texture);
 
-        static DXGI_FORMAT                              getd3d12PixelFormat                 (PixelFormat _format);
+        static DXGI_FORMAT                              getd3d12ResourceFormat              (PixelFormat _format);
+        static DXGI_FORMAT                              getd3d12SurfaceFormat               (PixelFormat _format);
+        static DXGI_FORMAT                              getd3d12ShaderResourceViewFormat    (PixelFormat _format, bool _stencil = false);
         static D3D12_RESOURCE_DIMENSION                 getd3d12ResourceDimension           (TextureType _texType);
         static D3D12_SRV_DIMENSION                      getd3d12ShaderResourceViewDimension (TextureType _texType);
         static D3D12_RESOURCE_DESC                      getd3d12ResourceDesc                (const TextureDesc & _texDesc);
