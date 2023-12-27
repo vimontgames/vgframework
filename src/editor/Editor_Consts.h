@@ -56,6 +56,7 @@ namespace vg::editor
             inline static const char * Info                 = ICON_FA_CIRCLE_INFO;
             inline static const char * Input                = ICON_FA_GAMEPAD;
             inline static const char * Inspector            = ICON_FA_MAGNIFYING_GLASS;
+            inline static const char * Light                = ICON_FA_LIGHTBULB;
             inline static const char * Maximize             = ICON_FA_MAXIMIZE;
             inline static const char * Mesh                 = ICON_FA_CUBE;
             inline static const char * Minimize             = ICON_FA_MINIMIZE;

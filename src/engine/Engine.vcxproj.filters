@@ -36,6 +36,9 @@
     <ClCompile Include="EngineOptions.cpp">
       <Filter>Options</Filter>
     </ClCompile>
+    <ClCompile Include="Component\Camera\LightComponent.cpp">
+      <Filter>Component\Light</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Engine.def" />
@@ -48,6 +51,9 @@
     </None>
     <None Include="World\Scene\Scene.inl">
       <Filter>World\Scene</Filter>
+    </None>
+    <None Include="Component\Camera\LightComponent.inl">
+      <Filter>Component\Light</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -199,6 +205,9 @@
     <ClInclude Include="EngineOptions.h">
       <Filter>Options</Filter>
     </ClInclude>
+    <ClInclude Include="Component\Camera\LightComponent.h">
+      <Filter>Component\Light</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Input">
@@ -266,6 +275,9 @@
     </Filter>
     <Filter Include="Options">
       <UniqueIdentifier>{67eb4aed-5969-4d71-93e3-3ff96d0c150e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Component\Light">
+      <UniqueIdentifier>{75eca871-f6fc-44bf-a133-758c9497a22a}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

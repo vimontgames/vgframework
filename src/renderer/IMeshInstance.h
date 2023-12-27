@@ -1,5 +1,4 @@
 #pragma once
-
 #include "renderer/Instance/GraphicInstance.h"
 
 namespace vg::renderer

@@ -15,6 +15,9 @@ namespace vg::gfx
     namespace base
     {
         //--------------------------------------------------------------------------------------
+        // TODO : Use DynamicResources to clean up this mess with aliasing different texture type descriptors?
+        // https://microsoft.github.io/DirectX-Specs/d3d/HLSL_SM_6_6_DynamicResources.html
+        //--------------------------------------------------------------------------------------
         BindlessTable::BindlessTable()
         {
             m_tableDesc.setShaderStageFlags(ShaderStageFlags::All);
@@ -22,15 +25,24 @@ namespace vg::gfx
             #ifdef VG_VULKAN
             m_tableDesc.addTextures(BINDLESS_TEXTURE_BINDING, BINDLESS_TEXTURE_START, BINDLESS_TEXTURE_COUNT);
             #else
-            m_tableDesc.addTextures(BINDLESS_TEXTURE_BINDING+10, BINDLESS_TEXTURE_START, BINDLESS_TEXTURE_COUNT);
-            m_tableDesc.addTextures(BINDLESS_TEXTURE_BINDING+20, BINDLESS_TEXTURE_START, BINDLESS_TEXTURE_COUNT);
-            m_tableDesc.addTextures(BINDLESS_TEXTURE_BINDING+21, BINDLESS_TEXTURE_START, BINDLESS_TEXTURE_COUNT);
-            m_tableDesc.addTextures(BINDLESS_TEXTURE_BINDING+30, BINDLESS_TEXTURE_START, BINDLESS_TEXTURE_COUNT);
+            m_tableDesc.addTextures(BINDLESS_TEXTURE_BINDING_1D,        BINDLESS_TEXTURE_START, BINDLESS_TEXTURE_COUNT);
+            m_tableDesc.addTextures(BINDLESS_TEXTURE_BINDING_2D,        BINDLESS_TEXTURE_START, BINDLESS_TEXTURE_COUNT);
+            m_tableDesc.addTextures(BINDLESS_TEXTURE_BINDING_2D_UINT2,  BINDLESS_TEXTURE_START, BINDLESS_TEXTURE_COUNT);
+            m_tableDesc.addTextures(BINDLESS_TEXTURE_BINDING_3D,        BINDLESS_TEXTURE_START, BINDLESS_TEXTURE_COUNT);
             #endif
-            m_tableDesc.addBuffers(BINDLESS_BUFFER_BINDING, BINDLESS_BUFFER_START, BINDLESS_BUFFER_COUNT);
-            m_tableDesc.addRWTextures(BINDLESS_RWTEXTURE_BINDING, BINDLESS_RWTEXTURE_START, BINDLESS_RWTEXTURE_COUNT);
-            m_tableDesc.addRWBuffers(BINDLESS_RWBUFFER_BINDING, BINDLESS_RWBUFFER_START, BINDLESS_RWBUFFER_COUNT);
-            m_tableDesc.addTLAS(BINDLESS_TLAS_BINDING, BINDLESS_TLAS_START, BINDLESS_TLAS_COUNT);
+
+            m_tableDesc.addBuffers(BINDLESS_BUFFER_BINDING,             BINDLESS_BUFFER_START, BINDLESS_BUFFER_COUNT);
+
+            #ifdef VG_VULKAN
+            m_tableDesc.addRWTextures(BINDLESS_RWTEXTURE_BINDING,       BINDLESS_RWTEXTURE_START, BINDLESS_RWTEXTURE_COUNT);
+            #else
+            m_tableDesc.addRWTextures(BINDLESS_RWTEXTURE_BINDING_1D,    BINDLESS_RWTEXTURE_START, BINDLESS_RWTEXTURE_COUNT);
+            m_tableDesc.addRWTextures(BINDLESS_RWTEXTURE_BINDING_2D,    BINDLESS_RWTEXTURE_START, BINDLESS_RWTEXTURE_COUNT);
+            m_tableDesc.addRWTextures(BINDLESS_RWTEXTURE_BINDING_3D,    BINDLESS_RWTEXTURE_START, BINDLESS_RWTEXTURE_COUNT);
+            #endif
+
+            m_tableDesc.addRWBuffers(BINDLESS_RWBUFFER_BINDING,         BINDLESS_RWBUFFER_START, BINDLESS_RWBUFFER_COUNT);
+            m_tableDesc.addTLAS(BINDLESS_TLAS_BINDING,                  BINDLESS_TLAS_START, BINDLESS_TLAS_COUNT);
         }
 
         //--------------------------------------------------------------------------------------
@@ -175,9 +187,9 @@ namespace vg::gfx
         VG_ASSERT(m_defaultTexture->getTextureHandle() == BINDLESS_TEXTURE_INVALID);
         
         // copy texture to all 'texture' slots
-        //for (uint i = BINDLESS_TEXTURE_START; i < BINDLESS_TEXTURE_COUNT; ++i)
-        //    if (BINDLESS_TEXTURE_INVALID != i)
-        //        copyTextureHandle(i, m_defaultTexture);
+        for (uint i = BINDLESS_TEXTURE_START; i < BINDLESS_TEXTURE_COUNT; ++i)
+            if (BINDLESS_TEXTURE_INVALID != i)
+                copyTextureHandle(i, m_defaultTexture);
 
         // TODO: initialize other buffer types?
     }

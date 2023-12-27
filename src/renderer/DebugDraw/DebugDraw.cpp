@@ -663,8 +663,8 @@ namespace vg::renderer
         clearDrawData();
     }
 
-    const float4 opaqueColor = float4(1, 1, 1, 0.125f);
-    const float4 transparentColor = float4(1, 1, 1, 0.125f);
+    const float4 opaqueColor = float4(1, 1, 1, 0.2f);
+    const float4 transparentColor = float4(0.5f, 0.5f, 0.5f, 0.1f);
 
     //--------------------------------------------------------------------------------------
     void DebugDraw::update(const View * _view, gfx::CommandList * _cmdList)

@@ -8,7 +8,9 @@ namespace vg::gfx
     struct BindlessHandle
     {
         using Type = core::u16;
-        BindlessHandle(Type _value) : value(_value) { }
+        BindlessHandle(Type _value) : value(_value) 
+        {
+        }
         operator Type() const { return value; }
 
     protected:
@@ -23,35 +25,50 @@ namespace vg::gfx
 
     struct BindlessTextureHandle : public BindlessHandle
     {
-        BindlessTextureHandle(Type _value = BINDLESS_TEXTURE_INVALID) : BindlessHandle(_value) { }
+        BindlessTextureHandle(Type _value = BINDLESS_TEXTURE_INVALID) : 
+            BindlessHandle(_value) 
+        { 
+        }
         static core::uint2 getValidRange() { return core::uint2(BINDLESS_TEXTURE_START, (BINDLESS_TEXTURE_START + BINDLESS_TEXTURE_COUNT - 1)); }
         bool isValid() const { return checkValidRange(getValidRange()); }
     };
 
     struct BindlessBufferHandle : public BindlessHandle
     {
-        BindlessBufferHandle(Type _value = BINDLESS_BUFFER_INVALID) : BindlessHandle(_value) { }
+        BindlessBufferHandle(Type _value = BINDLESS_BUFFER_INVALID) : 
+            BindlessHandle(_value) 
+        {
+        }
         static core::uint2 getValidRange() { return core::uint2(BINDLESS_BUFFER_START, (BINDLESS_BUFFER_START + BINDLESS_BUFFER_COUNT - 1)); }
         bool isValid() const { return checkValidRange(getValidRange()); }
     };
 
     struct BindlessRWTextureHandle : public BindlessHandle
     {
-        BindlessRWTextureHandle(Type _value = BINDLESS_RWTEXTURE_INVALID) : BindlessHandle(_value) {  }
+        BindlessRWTextureHandle(Type _value = BINDLESS_RWTEXTURE_INVALID) : 
+            BindlessHandle(_value) 
+        {  
+        }
         static core::uint2 getValidRange() { return core::uint2(BINDLESS_RWTEXTURE_START, (BINDLESS_RWTEXTURE_START + BINDLESS_RWTEXTURE_COUNT - 1)); }
         bool isValid() const { return checkValidRange(getValidRange()); }
     };
 
     struct BindlessRWBufferHandle : public BindlessHandle
     {
-        BindlessRWBufferHandle(Type _value = BINDLESS_RWBUFFER_INVALID) : BindlessHandle(_value) { }
+        BindlessRWBufferHandle(Type _value = BINDLESS_RWBUFFER_INVALID) : 
+            BindlessHandle(_value) 
+        { 
+        }
         static core::uint2 getValidRange() { return core::uint2(BINDLESS_RWBUFFER_START, (BINDLESS_RWBUFFER_START + BINDLESS_RWBUFFER_COUNT - 1)); }
         bool isValid() const { return checkValidRange(getValidRange()); }
     };
 
     struct BindlessTLASHandle : public BindlessHandle
     {
-        BindlessTLASHandle(Type _value = BINDLESS_TLAS_INVALID) : BindlessHandle(_value) { }
+        BindlessTLASHandle(Type _value = BINDLESS_TLAS_INVALID) : 
+            BindlessHandle(_value) 
+        { 
+        }
         static core::uint2 getValidRange() { return core::uint2(BINDLESS_TLAS_START, (BINDLESS_TLAS_START + BINDLESS_TLAS_COUNT - 1)); }
         bool isValid() const { return checkValidRange(getValidRange()); }
     };

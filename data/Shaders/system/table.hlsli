@@ -39,3 +39,29 @@
 // Buffer SRV
 #define RESERVEDSLOT_BUFSRV_VIEWCONSTANTS       (BINDLESS_BUFFER_INVALID - 1)
 #define RESERVEDSLOT_BUFSRV_SKINNINGMATRICES    (BINDLESS_BUFFER_INVALID - 2)
+
+#ifdef VG_DX12
+
+// DX12 requires aliasing texture types to use different spaces
+
+#define BINDLESS_TEXTURE_BINDING_1D              10  
+#define BINDLESS_TEXTURE_BINDING_2D              20  
+#define BINDLESS_TEXTURE_BINDING_2D_UINT2        21  
+#define BINDLESS_TEXTURE_BINDING_3D              30  
+
+#define BINDLESS_RWTEXTURE_BINDING_1D           110 
+#define BINDLESS_RWTEXTURE_BINDING_2D           120 
+#define BINDLESS_RWTEXTURE_BINDING_3D           130 
+
+#elif defined(VG_VULKAN)
+
+#define BINDLESS_TEXTURE_BINDING_1D               0 // <=> BINDLESS_TEXTURE_BINDING
+#define BINDLESS_TEXTURE_BINDING_2D               0   
+#define BINDLESS_TEXTURE_BINDING_2D_UINT2         0   
+#define BINDLESS_TEXTURE_BINDING_3D               0   
+
+#define BINDLESS_RWTEXTURE_BINDING_1D             2 // <=> BINDLESS_RWTEXTURE_BINDING
+#define BINDLESS_RWTEXTURE_BINDING_2D             2 
+#define BINDLESS_RWTEXTURE_BINDING_2D_UINT2       2 
+#define BINDLESS_RWTEXTURE_BINDING_3D             2 
+#endif

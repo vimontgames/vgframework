@@ -112,6 +112,10 @@ namespace vg::gfx
             //	}
             //}
             //VG_DEBUGPRINT(")\n");
+
+            // explicit initialization is needed because of union
+            m_depthTextureHandle = BindlessTextureHandle();
+            m_stencilTextureHandle = BindlessTextureHandle();
 		}
 
 		//--------------------------------------------------------------------------------------

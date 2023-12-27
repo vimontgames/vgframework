@@ -2,6 +2,7 @@
 #include "GraphicInstance.h"
 
 #include "Mesh/MeshInstance.hpp"
+#include "Light/LightInstance.hpp"
 
 namespace vg::renderer
 {

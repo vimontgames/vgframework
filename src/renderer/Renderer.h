@@ -96,6 +96,8 @@ namespace vg::renderer
         void                                    SetFullscreen               (bool _fullscreen) final override;
         bool                                    IsFullscreen                () const final override;
 
+        ILightInstance *                        CreateLightInstance         (const ILightDesc * _lightDesc) final override;
+
     public: // internal
         View *                                  getMainView                 () const;
         gfx::Texture *		                    getBackbuffer               () const;

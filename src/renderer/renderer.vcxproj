@@ -48,6 +48,7 @@
     <None Include="Geometry\AABB\AABB.inl" />
     <None Include="Geometry\Geometry.inl" />
     <None Include="Geometry\Mesh\MeshGeometry.inl" />
+    <None Include="Instance\Light\LightInstance.inl" />
     <None Include="Instance\Mesh\MeshInstance.inl" />
     <None Include="Renderer.def" />
     <None Include="Renderer.inl" />
@@ -71,6 +72,11 @@
     <ClInclude Include="Geometry\Vertex\SkinningVertex.h" />
     <ClInclude Include="Geometry\Vertex\VertexFormat.h" />
     <ClInclude Include="IDebugDraw.h" />
+    <ClInclude Include="ILightInstance.h" />
+    <ClInclude Include="Instance\Light\LightInstance.h" />
+    <ClInclude Include="Instance\Light\LightInstance.hpp" />
+    <ClInclude Include="Instance\Light\Omni\OmniLightInstance.h" />
+    <ClInclude Include="Instance\Light\Omni\OmniLightInstance.hpp" />
     <ClInclude Include="IRendererOptions.h" />
     <ClInclude Include="IGraphicInstance.h" />
     <ClInclude Include="IGraphicModel.h" />

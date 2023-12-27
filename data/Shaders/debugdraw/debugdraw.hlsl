@@ -25,7 +25,7 @@ VS_Output VS_DebugDraw(uint _vertexID : VertexID)
     float4x4 view = viewConstants.getView();
     float4x4 proj = viewConstants.getProj();
     
-    output.col = vert.getColor() * rootConstants3D.color;
+    output.col = vert.getColor() * rootConstants3D.getColor();
     float3 modelPos = vert.getPos();
     float3 worldPos = mul(float4(modelPos.xyz, 1.0f), rootConstants3D.getWorldMatrix()).xyz;
     float4 viewPos = mul(float4(worldPos.xyz, 1.0f), view);
@@ -46,5 +46,6 @@ PS_Output PS_DebugDraw(VS_Output _input)
 {
     PS_Output output;
     output.color0 = _input.col;
+//output.color0.a = 1;
     return output;
 }

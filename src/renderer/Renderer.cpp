@@ -33,6 +33,7 @@
 #include "renderer/Picking/PickingManager.h"
 #include "renderer/DebugDraw/DebugDraw.h"
 #include "renderer/RayTracing/RayTracingManager.h"
+#include "renderer/Instance/Light/Omni/OmniLightInstance.h"
 
 #if !VG_ENABLE_INLINE
 #include "Renderer.inl"
@@ -775,5 +776,21 @@ namespace vg::renderer
     DebugDraw * Renderer::getDebugDraw() const
     {
         return DebugDraw::get();
+    }
+
+    //--------------------------------------------------------------------------------------
+    ILightInstance * Renderer::CreateLightInstance(const ILightDesc * _lightDesc)
+    {
+        const LightType lightType = _lightDesc->GetLightType();
+        switch (lightType)
+        {
+            default:
+                VG_ASSERT_ENUM_NOT_IMPLEMENTED(lightType);
+                return nullptr;
+
+            case LightType::Omni:
+                return new OmniLightInstance((const OmniLightDesc *)_lightDesc);
+        }
+
     }
 }

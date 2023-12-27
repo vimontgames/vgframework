@@ -14,6 +14,7 @@
     <ClCompile Include="Behaviour\FreeCam\FreeCamBehaviour.cpp" />
     <ClCompile Include="Component\Animation\AnimationComponent.cpp" />
     <ClCompile Include="Component\Camera\CameraComponent.cpp" />
+    <ClCompile Include="Component\Camera\LightComponent.cpp" />
     <ClCompile Include="Component\Mesh\MeshComponent.cpp" />
     <ClCompile Include="Component\Physics\PhysicsComponents.cpp" />
     <ClCompile Include="Engine.cpp" />
@@ -30,6 +31,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Component\Camera\CameraComponent.inl" />
+    <None Include="Component\Camera\LightComponent.inl" />
     <None Include="Component\Mesh\MeshComponent.inl" />
     <None Include="Engine.def" />
     <None Include="Engine.inl" />
@@ -41,6 +43,7 @@
     <ClInclude Include="Component\Animation\AnimationResourceList.h" />
     <ClInclude Include="Component\Animation\AnimationResourceList.hpp" />
     <ClInclude Include="Component\Camera\CameraComponent.h" />
+    <ClInclude Include="Component\Camera\LightComponent.h" />
     <ClInclude Include="Component\Mesh\MaterialResourceList.h" />
     <ClInclude Include="Component\Mesh\MaterialResourceList.hpp" />
     <ClInclude Include="Component\Mesh\MeshComponent.h" />

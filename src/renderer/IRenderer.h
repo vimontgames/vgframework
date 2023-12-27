@@ -30,6 +30,8 @@ namespace vg
         class IAnimation;
         class IDebugDraw;
         class IRendererOptions;
+        class ILightInstance;
+        class ILightDesc;
 
         struct RendererCreationParams;
 
@@ -89,6 +91,8 @@ namespace vg
 
             virtual void                                SetFullscreen           (bool _fullscreen) = 0;
             virtual bool                                IsFullscreen            () const = 0;
+
+            virtual ILightInstance *                    CreateLightInstance     (const ILightDesc * _lightDesc) = 0;
         };
     }
 }
