@@ -1,12 +1,12 @@
 <Root>
     <Object class="WorldResourceData">
         <Property type="String" name="m_name" flags="Hidden" value="Game"/>
-        <Property type="ObjectRef" name="m_world">
+        <Property type="ObjectPtr" name="m_world">
             <Object class="World">
                 <Property type="String" name="m_name" flags="Hidden" value="World #1"/>
             </Object>
         </Property>
-        <Property type="ResourceRefVector" name="m_sceneResources" flags="Resource">
+        <Property type="ResourcePtrVector" name="m_sceneResources" flags="Resource">
             <Object class="SceneResource">
                 <Property type="String" name="m_name" flags="Hidden" value=""/>
                 <Property type="String" name="m_resourcePath" flags="Hidden" value="data/Scenes/Editor.scene"/>
@@ -20,6 +20,11 @@
             <Object class="SceneResource">
                 <Property type="String" name="m_name" flags="Hidden" value=""/>
                 <Property type="String" name="m_resourcePath" flags="Hidden" value="data/Scenes/Romeo.scene"/>
+                <Property type="String" name="m_name" value=""/>
+            </Object>
+            <Object class="SceneResource">
+                <Property type="String" name="m_name" flags="Hidden" value=""/>
+                <Property type="String" name="m_resourcePath" flags="Hidden" value="data/Scenes/Benualdo.scene"/>
                 <Property type="String" name="m_name" value=""/>
             </Object>
             <Object class="SceneResource">

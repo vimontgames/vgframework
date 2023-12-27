@@ -8,11 +8,12 @@ namespace vg::renderer
     public:
         VG_CLASS_DECL_PASSTHROUGH(LightDesc, ILightDesc);
 
-        LightType GetLightType() const = 0;
+        LightType       GetLightType() const = 0;
 
     private:
-        bool    m_castShadows = false;
-        float   m_intensity = 1.0f;
+        bool            m_castShadows = false;
+        core::float4    m_color = core::float4(1, 1, 1, 1);
+        float           m_intensity = 1.0f;
     };
 
     class LightInstance : public ILightInstance
@@ -23,7 +24,9 @@ namespace vg::renderer
         LightInstance(const core::string & _name, core::IObject * _parent);
         ~LightInstance();
 
-        LightType GetLightType() const = 0;        
+
+        bool            OnUpdateRayTracing  (gfx::CommandList * _cmdList, View * _view, core::uint _index) override { return false; }
+        LightType       GetLightType        () const = 0;        
     };
 }
 

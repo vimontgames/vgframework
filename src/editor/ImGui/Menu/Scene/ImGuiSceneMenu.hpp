@@ -41,7 +41,7 @@ namespace vg::editor
             if (ImGui::MenuItem("Save As"))
             {
                 m_selected = MenuOption::Save;
-                //fileBrowser.setPath(io::getCurrentWorkingDirectory() + "/data/Scenes");
+                fileBrowser.setFolder(io::getRootDirectory() + "/data/Scenes");
                 fileBrowser.setFilename(scene->getName() + ".scene");
                 m_popup = "Save Scene As ...";
                 openPopup = true;

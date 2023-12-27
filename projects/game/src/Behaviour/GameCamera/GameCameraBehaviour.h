@@ -13,6 +13,8 @@ public:
     void                Update      (float _dt) override;
 
 private:
-    float               m_speed = 1.0f;
-    vg::core::float3    m_offset = (vg::core::float3)0.0f;
+    float               m_speed             = 1.0f;
+    vg::core::float3    m_offset            = (vg::core::float3)0.0f;
+    vg::core::float3    m_target            = (vg::core::float3)0.0f;
+    vg::core::float3    m_targetVelocity    = (vg::core::float3)0.0f;
 };

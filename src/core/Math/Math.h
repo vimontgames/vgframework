@@ -69,6 +69,55 @@ namespace vg::core
         return _value >= _min && _value <= _max;
     }
 
+    //--------------------------------------------------------------------------------------
+    inline float smoothdamp(float _currentValue, float _targetValue, float & _currentVelocity, float _duration, float _dt)
+    {
+        VG_ASSERT(_duration > 0.0f);
+
+        float omega = 2.0f / _duration;
+        float x = omega * _dt;
+        float exp = 1.0f / (1.0f + x + 0.48f * x * x + 0.235f * x * x * x);
+        float delta = _currentValue - _targetValue;
+        float originalTarget = _targetValue;
+
+        _targetValue = _currentValue - delta;
+
+        float temp = (_currentVelocity + omega * delta) * _dt;
+
+        _currentVelocity = (_currentVelocity - omega * temp) * exp;
+
+        float result = _targetValue + (delta + temp) * exp;
+
+        if ((originalTarget - _currentValue > 0.0f) == (result > originalTarget))
+        {
+            result = originalTarget;
+            _currentVelocity = (result - originalTarget) / _dt;
+        }
+
+        return result;
+    }
+
+    //--------------------------------------------------------------------------------------
+    inline float2 smoothdamp(float2 _currentValue, float2 _targetValue, float2 & _currentVelocity, float _duration, float _dt)
+    {
+        return float2
+        (
+            smoothdamp(_currentValue.x, _targetValue.x, (float &)_currentVelocity.x, _duration, _dt),
+            smoothdamp(_currentValue.y, _targetValue.y, (float &)_currentVelocity.y, _duration, _dt)
+        );
+    }
+
+    //--------------------------------------------------------------------------------------
+    inline float3 smoothdamp(float3 _currentValue, float3 _targetValue, float3 & _currentVelocity, float _duration, float _dt)
+    {
+        return float3
+        (
+            smoothdamp(_currentValue.x, _targetValue.x, (float &)_currentVelocity.x, _duration, _dt),
+            smoothdamp(_currentValue.y, _targetValue.y, (float &)_currentVelocity.y, _duration, _dt),
+            smoothdamp(_currentValue.z, _targetValue.z, (float &)_currentVelocity.z, _duration, _dt)
+        );
+    }
+
     static constexpr u64 table[256] =
     {
         0x000FF1CEBAADDEAD, 0xCAFE0D15EA5EFEED, 0xBAADF00DDEADF00D, 0xF00DDEAD10CC000F, 0xBAADB16B00B5FACE, 0xDEAD000FDEADDEAD, 0xDEAD10CCCAFEBABE, 0xFACEBAADFEED10CC,

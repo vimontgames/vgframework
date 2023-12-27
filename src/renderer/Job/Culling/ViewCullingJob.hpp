@@ -30,7 +30,7 @@ namespace vg::renderer
             const auto instanceCount = instances.size();
             for (uint i = 0; i < instanceCount; ++i)
             {
-                IGraphicInstance * instance = instances[i];
+                GraphicInstance * instance = (GraphicInstance*)instances[i];
 
                 if (asBool(core::Instance::Flags::Enabled & instance->getFlags()))
                 {

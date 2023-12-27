@@ -22,6 +22,7 @@ namespace vg::gfx::vulkan
         void init(bool _update = false);
         void update(gfx::CommandList * _cmdList);
         void build(gfx::CommandList * _cmdList, bool _update = false);
+        void wait(gfx::CommandList * _cmdList);
 
     private:
         core::vector<VkAccelerationStructureGeometryKHR>        m_VKRTGeometries = {};

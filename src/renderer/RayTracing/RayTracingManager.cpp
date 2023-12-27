@@ -228,24 +228,15 @@ namespace vg::renderer
                 const GraphicInstanceList & instances = _view->m_cullingJobResult.m_instanceLists[asInteger(GraphicInstanceListType::Opaque)];
                 tlas->reset();
 
+                bool updateTLAS = false;
                 for (uint i = 0; i < instances.m_instances.size(); ++i)
                 {
-                    VG_ASSERT(dynamic_cast<const MeshInstance *>(instances.m_instances[i]));
-                    MeshInstance * meshInstance = (MeshInstance *)instances.m_instances[i];
-
-                    if (meshInstance->IsSkinned())
-                    {
-                        tlas->addInstance(meshInstance->getInstanceBLAS(), meshInstance->getWorldMatrix(), i);
-                    }
-                    else
-                    {
-                        MeshModel * meshModel = (MeshModel *)meshInstance->getModel(Lod::Lod0);
-                        const gfx::BLAS * blas = meshModel->getBLAS();
-                        tlas->addInstance(blas, meshInstance->getWorldMatrix(), i);
-                    }
+                    GraphicInstance * instance = (GraphicInstance*)instances.m_instances[i];
+                    updateTLAS |= instance->OnUpdateRayTracing(_cmdList, _view, i);
                 }
 
-                tlas->build(_cmdList);
+                if (updateTLAS)
+                    tlas->build(_cmdList);
             }
             else
             {

@@ -62,6 +62,7 @@ namespace vg::renderer
     //--------------------------------------------------------------------------------------
     void OmniLightInstance::Draw(const RenderContext & _renderContext, gfx::CommandList * _cmdList) const
     {
-        DebugDraw::get()->AddWireframeSphere(m_radius, 0xFF00FFFF, getWorldMatrix());
+        if (_renderContext.m_shaderPass == ShaderPass::Forward)
+            DebugDraw::get()->AddWireframeSphere(m_radius, 0xFF00FFFF, getWorldMatrix());
     }
 }

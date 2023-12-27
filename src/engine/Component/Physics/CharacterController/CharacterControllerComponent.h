@@ -16,6 +16,7 @@ namespace vg::engine
 
         core::float3                GetVelocity         () const final override;
         void                        SetVelocity         (const core::float3 & _velocity) final override;
+        void                        SetPosition         (const core::float3 & _position) final override;
         void                        SetRotation         (const core::quaternion & _rotation) final override;
 
         void                        FixedUpdate         (float _dt) final override;

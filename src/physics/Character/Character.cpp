@@ -139,6 +139,13 @@ namespace vg::physics
     }
 
     //--------------------------------------------------------------------------------------
+    void RigidCharacter::SetPosition(const core::float3 & _position)
+    {
+        if (m_character)
+            m_character->SetPosition(getJoltVec3(_position));
+    }
+
+    //--------------------------------------------------------------------------------------
     void RigidCharacter::SetRotation(const core::quaternion & _rotation)
     {
         if (m_character)

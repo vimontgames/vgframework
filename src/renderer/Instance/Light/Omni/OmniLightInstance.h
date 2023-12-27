@@ -11,8 +11,8 @@ namespace vg::renderer
         OmniLightDesc(const core::string & _name, core::IObject * _parent);
         ~OmniLightDesc();
 
-        LightType GetLightType() const final override { return LightType::Omni; }
-
+        LightType   GetLightType() const final override { return LightType::Omni; }
+        
         float m_radius = 1.0f;
     };
 
@@ -24,14 +24,11 @@ namespace vg::renderer
         OmniLightInstance(const OmniLightDesc * _omniLightDesc);
         ~OmniLightInstance();
 
-        void        Draw            (const RenderContext & _renderContext, gfx::CommandList * _cmdList) const final override;
-        LightType   GetLightType    () const final override { return LightType::Omni; }
+        void        Draw                (const RenderContext & _renderContext, gfx::CommandList * _cmdList) const final override;
+
+        LightType   GetLightType        () const final override { return LightType::Omni; }
 
     private:
         float m_radius = 1.0f;
     };
 }
-
-#if VG_ENABLE_INLINE
-#include "LightInstance.inl"
-#endif

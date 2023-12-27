@@ -21,7 +21,8 @@ namespace vg::renderer
     {
         super::registerProperties(_desc);
 
-        registerProperty(LightDesc, m_castShadows, "Shadows");
+        registerProperty(LightDesc, m_castShadows, "Cast Shadows");
+        registerPropertyEx(LightDesc, m_color, "Intensity", IProperty::Flags::Color);
         registerProperty(LightDesc, m_intensity, "Intensity");
 
         return true;

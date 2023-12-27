@@ -207,7 +207,7 @@ namespace vg::engine
     core::float3 CharacterControllerComponent::GetVelocity() const
     {
         if (m_character)
-            return m_character->GetVelocity();
+            return m_character->GetVelocity(); 
         else
             return float3(0, 0, 0);
     }
@@ -217,6 +217,13 @@ namespace vg::engine
     {
         if (m_character)
             return m_character->SetVelocity(_velocity);
+    }
+
+    //--------------------------------------------------------------------------------------
+    void CharacterControllerComponent::SetPosition(const core::float3 & _position)
+    {
+        if (m_character)
+            return m_character->SetPosition(_position);
     }
 
     //--------------------------------------------------------------------------------------

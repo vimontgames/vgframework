@@ -7,6 +7,7 @@
 #include "gfx/Resource/Buffer.h"
 #include "gfx/Resource/Texture.h"
 #include "gfx/Raytracing/BLAS.h"
+#include "gfx/Raytracing/TLAS.h"
 
 #include "renderer/Renderer.h"
 #include "renderer/Options/RendererOptions.h"
@@ -17,6 +18,7 @@
 #include "renderer/RenderPass/RenderContext.h"
 #include "renderer/DebugDraw/DebugDraw.h"
 #include "renderer/Animation/SkeletalAnimation.h"
+#include "renderer/View/View.h"
 
 #if !VG_ENABLE_INLINE
 #include "MeshInstance.inl"
@@ -55,6 +57,24 @@ namespace vg::renderer
 
         for (uint i = 0; i < m_animationBindings.size(); ++i)
             VG_SAFE_RELEASE(m_animationBindings[i].m_animation);
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool MeshInstance::OnUpdateRayTracing(gfx::CommandList * _cmdList, View * _view, core::uint _index)
+    {
+        auto * tlas = _view->getTLAS();
+        if (IsSkinned())
+        {
+            tlas->addInstance(getInstanceBLAS(), getWorldMatrix(), _index);
+        }
+        else
+        {
+            MeshModel * meshModel = (MeshModel *)getModel(Lod::Lod0);
+            const gfx::BLAS * blas = meshModel->getBLAS();
+            tlas->addInstance(blas, getWorldMatrix(), _index);
+        }
+
+        return true;
     }
 
     //--------------------------------------------------------------------------------------

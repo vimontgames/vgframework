@@ -3,6 +3,7 @@
 #include "Game.h"
 #include "engine/ICharacterControllerComponent.h"
 #include "editor/Editor_Consts.h"
+#include "core/GameObject/GameObject.h"
 
 using namespace vg::core;
 using namespace vg::engine;
@@ -59,6 +60,8 @@ void PlayerBehaviour::OnPlay()
         m_anim[PlayerState::Running] = animationComponent->GetAnimationIndex("Running");
         m_anim[PlayerState::Jumping] = animationComponent->GetAnimationIndex("Jump");
     } 
+
+    m_startPos = GetGameObject()->getWorldMatrix()[3].xyz;
 
     Game::get()->addPlayer(this);
 }
@@ -205,5 +208,13 @@ void PlayerBehaviour::FixedUpdate(float _dt)
 //--------------------------------------------------------------------------------------
 void PlayerBehaviour::Update(float _dt)
 {
-
+    auto * go = GetGameObject();
+    auto world = go->getWorldMatrix();
+    if (world[3].z < -32.0f)
+    {
+        if (auto * charaController = go->GetComponentByType<vg::engine::ICharacterControllerComponent>())
+        {
+            charaController->SetPosition(m_startPos + float3(0, 0, 16));
+        }
+    }
 }

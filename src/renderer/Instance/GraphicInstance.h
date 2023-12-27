@@ -5,6 +5,7 @@
 namespace vg::renderer
 {
     class MaterialModel;
+    class View;
 
     class GraphicInstance : public IGraphicInstance
     {
@@ -14,16 +15,18 @@ namespace vg::renderer
         GraphicInstance(const core::string & _name, core::IObject * _parent);
         ~GraphicInstance();
 
-        virtual bool                    SetMaterial     (core::uint _index, IMaterialModel * _materialModel) override;
-        virtual IMaterialModel *        GetMaterial     (core::uint _index) const override;
+        virtual bool                    SetMaterial         (core::uint _index, IMaterialModel * _materialModel) override;
+        virtual IMaterialModel *        GetMaterial         (core::uint _index) const override;
 
         // internal
-        bool                            setMaterial     (core::uint _index, MaterialModel * _materialModel);
-        MaterialModel *                 getMaterial     (core::uint _index) const;
+        bool                            setMaterial         (core::uint _index, MaterialModel * _materialModel);
+        MaterialModel *                 getMaterial         (core::uint _index) const;
 
-        void                            ClearPickingID  () override;
-        void                            SetPickingID    (PickingID _id) override;
-        PickingID                       GetPickingID    () const override;
+        void                            ClearPickingID      () override;
+        void                            SetPickingID        (PickingID _id) override;
+        PickingID                       GetPickingID        () const override;
+
+        virtual bool                    OnUpdateRayTracing  (gfx::CommandList * _cmdList, View * _view, core::uint _index) = 0;
 
     private:
         PickingID                       m_pickingID;

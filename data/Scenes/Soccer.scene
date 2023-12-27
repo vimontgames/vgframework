@@ -78,7 +78,7 @@
                             </Object>
                             <Object class="GameCameraBehaviour">
                                 <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
-                                <Property type="Float" name="m_speed" value="1"/>
+                                <Property type="Float" name="m_speed" value="0.25"/>
                             </Object>
                         </Property>
                         <Property type="ObjectPtrVector" name="m_children" flags="Hidden"/>
@@ -94,7 +94,7 @@
                                 <Property type="String" name="m_name" value="Ball"/>
                                 <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
                                 <Property type="Float4" name="m_color" flags="Color" x="1" y="1" z="1" w="1"/>
-                                <Property type="Float4x4" name="m_world" Ix="0.99999988" Iy="-2.7032903e-16" Iz="0.0004989467" Iw="0" Jx="2.0382588e-16" Jy="1" Jz="1.3328715e-13" Jw="0" Kx="-0.0004989467" Ky="-1.3328704e-13" Kz="0.99999988" Kw="0" Tx="-2.0001142" Ty="4" Tz="6.25" Tw="1"/>
+                                <Property type="Float4x4" name="m_world" Ix="0.99999988" Iy="-2.7032903e-16" Iz="0.0004989467" Iw="0" Jx="2.0382588e-16" Jy="1" Jz="1.3328715e-13" Jw="0" Kx="-0.0004989467" Ky="-1.3328704e-13" Kz="0.99999988" Kw="0" Tx="-1.5" Ty="-1" Tz="8" Tw="1"/>
                                 <Property type="ObjectPtrVector" name="m_components">
                                     <Object class="MeshComponent">
                                         <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
@@ -147,7 +147,7 @@
                                 <Property type="String" name="m_name" value="Ball"/>
                                 <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
                                 <Property type="Float4" name="m_color" flags="Color" x="1" y="1" z="1" w="1"/>
-                                <Property type="Float4x4" name="m_world" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="0" Ty="0" Tz="4.75" Tw="1"/>
+                                <Property type="Float4x4" name="m_world" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="0" Ty="-1" Tz="8" Tw="1"/>
                                 <Property type="ObjectPtrVector" name="m_components">
                                     <Object class="MeshComponent">
                                         <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
@@ -200,7 +200,7 @@
                                 <Property type="String" name="m_name" value="Ball"/>
                                 <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
                                 <Property type="Float4" name="m_color" flags="Color" x="1" y="1" z="1" w="1"/>
-                                <Property type="Float4x4" name="m_world" Ix="1" Iy="0" Iz="-2.8719818e-05" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="2.8719818e-05" Ky="0" Kz="1" Kw="0" Tx="3.5000541" Ty="4" Tz="8.25" Tw="1"/>
+                                <Property type="Float4x4" name="m_world" Ix="1" Iy="0" Iz="-2.8719818e-05" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="2.8719818e-05" Ky="0" Kz="1" Kw="0" Tx="1.5" Ty="-1" Tz="8" Tw="1"/>
                                 <Property type="ObjectPtrVector" name="m_components">
                                     <Object class="MeshComponent">
                                         <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
@@ -1402,8 +1402,9 @@
                                             <Object class="OmniLightDesc">
                                                 <Property type="String" name="m_name" flags="Hidden" value="OmniLightDesc #0"/>
                                                 <Property type="Bool" name="m_castShadows" value="false"/>
+                                                <Property type="Float4" name="m_color" flags="Color" x="1" y="1" z="1" w="1"/>
                                                 <Property type="Float" name="m_intensity" value="1"/>
-                                                <Property type="Float" name="m_radius" value="1"/>
+                                                <Property type="Float" name="m_radius" value="2.0000002"/>
                                             </Object>
                                         </Property>
                                     </Object>

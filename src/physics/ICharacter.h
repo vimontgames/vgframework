@@ -31,6 +31,7 @@ namespace vg::physics
         virtual core::float3    GetVelocity     () const = 0;
         virtual void            SetVelocity     (const core::float3 & _velocity) = 0;
 
+        virtual void            SetPosition     (const core::float3 & _position) = 0;
         virtual void            SetRotation     (const core::quaternion & _rotation) = 0;
 
         virtual core::float4x4  GetMatrix       () const = 0;
