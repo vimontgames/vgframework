@@ -190,11 +190,25 @@ void CS_PostProcessMain(int2 dispatchThreadID : SV_DispatchThreadID)
             case PostProcessMode::Default:
             break;
 
-            case PostProcessMode::Depth:
-            color.rgb = frac(depth * float3(256,16,1));
+            case PostProcessMode::DepthBuffer:
+            color.rgb = frac(depth * viewConstants.getCameraNearFar().y);
             break;
 
-            case PostProcessMode::Stencil:
+            case PostProcessMode::LinearDepth:
+            {
+                float linearDepth = viewConstants.getLinearDepth(depth);
+                color.rgb = depth < 1.0f ? frac(linearDepth * viewConstants.getCameraNearFar().y) : 0.0f;
+            }
+            break;
+
+            case PostProcessMode::WorldPos:
+            {
+                float3 worldPos = viewConstants.getWorldPos(uv, depth);
+                color.rgb = depth < 1.0f ? frac(worldPos.xyz) : 0.0f;
+            }
+            break;
+
+            case PostProcessMode::StencilBuffer:
             color.rgb = stencil / 255.0f;
             break;
 

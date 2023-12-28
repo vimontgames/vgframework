@@ -177,6 +177,12 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	if (!CreateGameWindow(hInstance, lpCmdLine, nCmdShow, width, height))
 		return 1;
 
+	ShowWindow(g_hWnd, SW_MAXIMIZE);
+	RECT clientRect;
+	GetClientRect(g_hWnd, &clientRect);
+	width = clientRect.right - clientRect.left;
+	height = clientRect.bottom - clientRect.top;
+
 	core::CmdLine cmdLine(lpCmdLine);
 
     g_engine = core::Plugin::create<engine::IEngine>("engine");

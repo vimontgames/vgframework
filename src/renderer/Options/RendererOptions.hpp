@@ -16,29 +16,15 @@ namespace vg::renderer
         super::registerProperties(_desc);
 
         registerProperty(RendererOptions, m_toolMode, "Toolmode");
+        registerPropertyEx(RendererOptions, m_rayTracing, "RayTracing", IProperty::Flags::SameLine);
+        registerPropertyEx(RendererOptions, m_postProcess, "PostProcess", IProperty::Flags::SameLine);
 
-        registerPropertyGroupBegin(RendererOptions, "Materials");
-        {
-            registerPropertyEnum(RendererOptions, DisplayMode, m_debugDisplayMode, "Mode");
-            registerPropertyEnumBitfield(RendererOptions, DisplayFlags, m_displayFlags, "Flags");
-        }
-        registerPropertyGroupEnd(RendererOptions);
+        registerPropertyEnum(RendererOptions, DisplayMode, m_debugDisplayMode, "Debug");
+        registerPropertyEnumBitfield(RendererOptions, DisplayFlags, m_displayFlags, "Flags");
+        registerPropertyEnum(RendererOptions, RayTracingMode, m_rayTracingMode, "RayTracing");
+        registerPropertyEnum(RendererOptions, PostProcessMode, m_postProcessMode, "PostProcess");
 
-        registerPropertyGroupBegin(RendererOptions, "RayTracing");
-        {
-            registerProperty(RendererOptions, m_rayTracing, "Enable");
-            registerPropertyEnum(RendererOptions, RayTracingMode, m_rayTracingMode, "Mode");
-        }
-        registerPropertyGroupEnd(RendererOptions);
-
-        registerPropertyGroupBegin(RendererOptions, "PostProcess");
-        {
-            registerProperty(RendererOptions, m_postProcess, "Enable");
-            registerPropertyEnum(RendererOptions, PostProcessMode, m_postProcessMode, "Mode");
-        }
-        registerPropertyGroupEnd(RendererOptions);
-
-        registerPropertyGroupBegin(RendererOptions, "Misc");
+        registerPropertyGroupBegin(RendererOptions, "Advanced");
         {
             registerProperty(RendererOptions, m_wireframe, "Wireframe");
             registerPropertyEx(RendererOptions, m_aabb, "Bounding Box", IProperty::Flags::SameLine);

@@ -94,4 +94,24 @@ struct ViewConstants
     float4x4        m_proj;
     float4x4        m_viewInv;
     float4x4        m_projInv;
+
+    float getLinearDepth(float _zBufferDepth)
+    {
+        float n = getCameraNearFar().x;
+        float f = getCameraNearFar().y;
+        return (2.0f * n) / (f + n - _zBufferDepth * (f - n));
+    }
+
+    float3 getViewPos(float2 _screenPos, float _zBufferDepth)
+    {
+        float4 clipPos = float4(float2(_screenPos.x, 1-_screenPos.y) * 2.0f - 1.0f, _zBufferDepth, 1.0f);
+        float4 viewPos = mul(clipPos, getProjInv());
+        return viewPos.xyz / viewPos.w;
+    }
+
+    float3 getWorldPos(float2 _screenPos, float _zBufferDepth)
+    {
+        float3 viewPos = getViewPos(_screenPos, _zBufferDepth);
+        return mul(float4(viewPos.xyz,1.0f), getViewInv()).xyz;
+    }
 };
