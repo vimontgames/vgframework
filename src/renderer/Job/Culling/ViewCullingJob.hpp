@@ -89,8 +89,11 @@ namespace vg::renderer
         //VG_DEBUGPRINT("\"%s\" running on \"%s\" (0x%08X)\n", name.c_str(), Kernel::getScheduler()->GetCurrentThreadName().c_str(), Kernel::getScheduler()->GetCurrentThreadID());
 
         const auto * world = view->getWorld();
+        
         if (nullptr != world)
         {
+            const auto & frustum = view->getCameraFrustum();
+
             const uint count = world->GetSceneCount();
             for (uint i = 0; i < count; ++i)
             {

@@ -22,6 +22,9 @@ namespace vg::core
         m_oldTypeNames.insert(std::pair("ObjectRef", IProperty::Type::ObjectPtr));
         m_oldTypeNames.insert(std::pair("ObjectRefVector", IProperty::Type::ObjectPtrVector));
         m_oldTypeNames.insert(std::pair("ObjectRefDictionary", IProperty::Type::ObjectPtrDictionary));
+
+        // TODO : make proper API to register deprecated property names names for each class
+        m_oldPropertyNames.insert(std::pair("m_world", "m_local"));
     }
 
     //--------------------------------------------------------------------------------------
@@ -664,10 +667,25 @@ namespace vg::core
                             {
                                 auto it = m_oldTypeNames.find(typeName);
                                 if (m_oldTypeNames.end() != it)
+                                {
+                                    VG_WARNING("[Factory] Deprecated type \"%s\" for property \"%s\" replaced by \"%s\"", typeName, name, asString(it->second).c_str());
                                     type = it->second;
+                                }
                             }
 
                             const auto * prop = classDesc->GetPropertyByName(name);
+
+                            if (nullptr == prop)
+                            {
+                                auto it = m_oldPropertyNames.find(name);
+                                if (m_oldPropertyNames.end() != it)
+                                {
+                                    VG_WARNING("[Factory] Deprecated name for property \"%s\" replaced by \"%s\"", name, it->second.c_str());
+                                    name = it->second.c_str();
+                                    prop = classDesc->GetPropertyByName(name);
+                                }
+                            }
+
                             if (nullptr == prop)
                             {
                                 VG_WARNING("[Factory] Class \"%s\" has no property \"%s\" of type '%s'", className, name, typeName);

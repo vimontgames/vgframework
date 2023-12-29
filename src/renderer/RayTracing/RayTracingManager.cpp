@@ -225,7 +225,7 @@ namespace vg::renderer
                     VG_INFO("[Renderer] Built TLAS for View \"%s\" in %.2f ms", _view->getName().c_str(), Timer::getEnlapsedTime(startBuildTLAS, Timer::getTick()));
                 }
 
-                const GraphicInstanceList & instances = _view->m_cullingJobResult.m_instanceLists[asInteger(GraphicInstanceListType::Opaque)];
+                const GraphicInstanceList & instances = _view->getCullingJobResult().m_instanceLists[asInteger(GraphicInstanceListType::Opaque)];
                 tlas->reset();
 
                 bool updateTLAS = false;

@@ -48,7 +48,7 @@ namespace vg::renderer
         // TODO: transparent forward pass
         bool opaque = true;
 
-        const GraphicInstanceList & allInstances = view->m_cullingJobResult.m_instanceLists[asInteger(opaque ? GraphicInstanceListType::Opaque : GraphicInstanceListType::Transparent)];
+        const GraphicInstanceList & opaqueInstances = view->getCullingJobResult().m_instanceLists[asInteger(GraphicInstanceListType::Opaque)];
         
         // Default pass states
         RasterizerState rs(FillMode::Solid, CullMode::None);
@@ -74,6 +74,6 @@ namespace vg::renderer
         #endif
 
         if (!renderContext.m_toolmode || options->isOpaqueEnabled())
-            DrawGraphicInstances(renderContext, _cmdList, allInstances);
+            DrawGraphicInstances(renderContext, _cmdList, opaqueInstances);
     }   
 }

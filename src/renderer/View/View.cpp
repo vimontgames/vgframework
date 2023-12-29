@@ -120,6 +120,50 @@ namespace vg::renderer
 
         m_proj = setPerspectiveProjectionRH(fovY, ar, nearFar.x, nearFar.y);
         m_projInv = inverse(m_proj);
+
+        computeCameraFrustum();
+    }
+
+    //--------------------------------------------------------------------------------------
+    void View::computeCameraFrustum()
+    {
+        const float4x4 viewProj = mul(m_view, m_proj);
+
+        m_frustum.planes[asInteger(FrustumPlane::Left)].x = viewProj._14 + viewProj._11;
+        m_frustum.planes[asInteger(FrustumPlane::Left)].y = viewProj._24 + viewProj._21;
+        m_frustum.planes[asInteger(FrustumPlane::Left)].z = viewProj._34 + viewProj._31;
+        m_frustum.planes[asInteger(FrustumPlane::Left)].w = viewProj._44 + viewProj._41;
+
+        m_frustum.planes[asInteger(FrustumPlane::Right)].x = viewProj._14 - viewProj._11;
+        m_frustum.planes[asInteger(FrustumPlane::Right)].y = viewProj._24 - viewProj._21;
+        m_frustum.planes[asInteger(FrustumPlane::Right)].z = viewProj._34 - viewProj._31;
+        m_frustum.planes[asInteger(FrustumPlane::Right)].w = viewProj._44 - viewProj._41;
+
+        m_frustum.planes[asInteger(FrustumPlane::Top)].x = viewProj._14 - viewProj._12;
+        m_frustum.planes[asInteger(FrustumPlane::Top)].y = viewProj._24 - viewProj._22;
+        m_frustum.planes[asInteger(FrustumPlane::Top)].z = viewProj._34 - viewProj._32;
+        m_frustum.planes[asInteger(FrustumPlane::Top)].w = viewProj._44 - viewProj._42;
+
+        m_frustum.planes[asInteger(FrustumPlane::Bottom)].x = viewProj._14 + viewProj._12;
+        m_frustum.planes[asInteger(FrustumPlane::Bottom)].y = viewProj._24 + viewProj._22;
+        m_frustum.planes[asInteger(FrustumPlane::Bottom)].z = viewProj._34 + viewProj._32;
+        m_frustum.planes[asInteger(FrustumPlane::Bottom)].w = viewProj._44 + viewProj._42;
+
+        m_frustum.planes[asInteger(FrustumPlane::Near)].x = viewProj._13;
+        m_frustum.planes[asInteger(FrustumPlane::Near)].y = viewProj._23;
+        m_frustum.planes[asInteger(FrustumPlane::Near)].z = viewProj._33;
+        m_frustum.planes[asInteger(FrustumPlane::Near)].w = viewProj._43;
+
+        m_frustum.planes[asInteger(FrustumPlane::Far)].x = viewProj._14 - viewProj._13;
+        m_frustum.planes[asInteger(FrustumPlane::Far)].y = viewProj._24 - viewProj._23;
+        m_frustum.planes[asInteger(FrustumPlane::Far)].z = viewProj._34 - viewProj._33;
+        m_frustum.planes[asInteger(FrustumPlane::Far)].w = viewProj._44 - viewProj._43;
+    }
+
+    //--------------------------------------------------------------------------------------
+    const Frustum & View::getCameraFrustum() const
+    {
+        return m_frustum;
     }
 
     //--------------------------------------------------------------------------------------
@@ -381,5 +425,11 @@ namespace vg::renderer
     uint View::GetPickingRequestedHitCount() const
     {
         return (uint)m_rawPickingData.m_counter.x;
+    }
+
+    //--------------------------------------------------------------------------------------
+    const ViewCullingJobOutput & View::getCullingJobResult() const
+    {
+        return m_cullingJobResult;
     }
 }

@@ -24,6 +24,21 @@ namespace vg::renderer
 {
     class ViewConstantsUpdatePass;
 
+    enum class FrustumPlane
+    {
+        Left = 0,
+        Right,
+        Top,
+        Bottom,
+        Near,
+        Far
+    };
+
+    struct Frustum
+    {
+        core::float4 planes[core::enumCount<FrustumPlane>()];
+    };
+
     //--------------------------------------------------------------------------------------
     // Base class for user views.
     // The 'IView' interface is declared in graphics::driver so that the Framegraph can  
@@ -89,7 +104,11 @@ namespace vg::renderer
         virtual core::uint                  GetPickingRequestedHitCount () const override;
         const PickingHit &                  GetPickingClosestHit        () const override;
 
+        const Frustum &                     getCameraFrustum            () const;
+
         virtual void                        RegisterFrameGraph          (const gfx::RenderPassContext & _rc, gfx::FrameGraph & _frameGraph);
+
+        const ViewCullingJobOutput &        getCullingJobResult         () const;
 
         VG_INLINE core::IWorld *            getWorld                    () const;
 
@@ -124,33 +143,32 @@ namespace vg::renderer
         bool                                isToolmode                  () const;
 
     private:
+        void                                computeCameraFrustum        ();
         static core::float4x4               setPerspectiveProjectionRH  (float _fov, float _ar, float _near, float _far);
 
     private:
         gfx::ViewID                         m_viewID;
-        Flags                               m_flags = (Flags)0;
-        gfx::Texture *                      m_renderTarget = nullptr;   // Assume backbuffer if nullptr
-        core::uint2                         m_size = core::uint2(0, 0);
-        core::int2                          m_offset = core::int2(0, 0);
-        core::float4x4                      m_view = core::float4x4::identity();
-        core::float4x4                      m_viewInv = core::float4x4::identity();
-        core::float4x4                      m_proj = core::float4x4::identity();
-        core::float4x4                      m_projInv = core::float4x4::identity();
-        core::float4x4                      m_viewProj = core::float4x4::identity();
-        core::IWorld *                      m_camWorld = nullptr;
+        Flags                               m_flags                     = (Flags)0;
+        gfx::Texture *                      m_renderTarget              = nullptr;   // Assume backbuffer if nullptr
+        core::uint2                         m_size                      = core::uint2(0, 0);
+        core::int2                          m_offset                    = core::int2(0, 0);
+        core::float4x4                      m_view                      = core::float4x4::identity();
+        core::float4x4                      m_viewInv                   = core::float4x4::identity();
+        core::float4x4                      m_proj                      = core::float4x4::identity();
+        core::float4x4                      m_projInv                   = core::float4x4::identity();
+        core::float4x4                      m_viewProj                  = core::float4x4::identity();
+        core::IWorld *                      m_camWorld                  = nullptr;
         core::float2                        m_cameraNearFar;
         float                               m_cameraFovY;
-        bool                                m_active = false;
-        bool                                m_visible = false;
-        ViewCullingJob *                    m_cullingJob = nullptr;
-        ViewConstantsUpdatePass *           m_viewConstantsUpdatePass = nullptr;
+        bool                                m_active                    = false;
+        bool                                m_visible                   = false;
+        ViewCullingJob *                    m_cullingJob                = nullptr;
+        ViewConstantsUpdatePass *           m_viewConstantsUpdatePass   = nullptr;
         core::uint2                         m_mouseOffset;
         PickingData                         m_rawPickingData;
         core::vector<PickingHit>            m_pickingHits;
-
-        gfx::TLAS * m_tlas = nullptr;
-
-    public:
+        gfx::TLAS *                         m_tlas                      = nullptr;
+        Frustum                             m_frustum;
         ViewCullingJobOutput                m_cullingJobResult;
     };
 }

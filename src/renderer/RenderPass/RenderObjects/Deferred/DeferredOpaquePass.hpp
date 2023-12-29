@@ -86,7 +86,7 @@ namespace vg::renderer
         renderContext.m_toolmode = view->getViewID().target == gfx::ViewTarget::Editor || options->isToolModeEnabled();
         renderContext.m_shaderPass = ShaderPass::Deferred;
 
-        const GraphicInstanceList & allInstances = view->m_cullingJobResult.m_instanceLists[asInteger(GraphicInstanceListType::Opaque)];
+        const GraphicInstanceList & opaqueInstances = view->getCullingJobResult().m_instanceLists[asInteger(GraphicInstanceListType::Opaque)];
 
         // Default pass states
         RasterizerState rs(FillMode::Solid, CullMode::None);
@@ -101,6 +101,6 @@ namespace vg::renderer
         _cmdList->setBlendState(bs);
         _cmdList->setDepthStencilState(ds);
 
-        DrawGraphicInstances(renderContext, _cmdList, allInstances);
+        DrawGraphicInstances(renderContext, _cmdList, opaqueInstances);
     }
 }

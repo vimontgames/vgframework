@@ -125,7 +125,7 @@ PS_Output PS_Forward(VS_Output _input)
     float2 uv1 = _input.uv.zw;
     
     float4 albedo = getAlbedo(uv0, _input.col, flags);
-    float3 normal = getNormal(uv0, flags);
+    float3 normal = getNormal(uv0, flags).xyz;
     float4 pbr = getPBR(uv0);
     
     float3 worldNormal = getWorldNormal(normal, _input.tan, _input.bin, _input.nrm, rootConstants3D.getWorldMatrix());
@@ -136,11 +136,11 @@ PS_Output PS_Forward(VS_Output _input)
     //output.color0 = float4(lighting.diffuse.rgb, 1.0f);
     //return output;
 
-    output.color0.rgb = ApplyLighting(albedo, lighting);
+    output.color0.rgb = ApplyLighting(albedo.rgb, lighting);
     
     #if _TOOLMODE && !_ZONLY
 
-    output.color0 = forwardDebugDisplay(output.color0, viewConstants.getDisplayMode(), rootConstants3D.getMatID(), _input.tan, _input.bin, _input.nrm, _input.col, uv0, uv1, screenPos, worldPos, albedo, normal);
+    output.color0 = forwardDebugDisplay(output.color0, viewConstants.getDisplayMode(), rootConstants3D.getMatID(), _input.tan.xyz, _input.bin.xyz, _input.nrm.xyz, _input.col, uv0, uv1, screenPos.xy, worldPos.xyz, albedo.rgb, normal.xyz);
     
     if (RootConstantsFlags::Wireframe & rootConstants3D.getFlags())
         output.color0 = float4(0,1,0,1);
@@ -228,7 +228,7 @@ PS_OutputDeferred PS_Deferred(VS_Output _input)
     float2 uv1 = _input.uv.zw;
     
     float4 albedo = getAlbedo(uv0, _input.col, flags);
-    float3 normal = getNormal(uv0, flags);
+    float3 normal = getNormal(uv0, flags).xyz;
     float4 pbr = getPBR(uv0);
     
     float3 worldNormal = getWorldNormal(normal, _input.tan, _input.bin, _input.nrm, rootConstants3D.getWorldMatrix());
@@ -239,7 +239,7 @@ PS_OutputDeferred PS_Deferred(VS_Output _input)
 
     #if _TOOLMODE && !_ZONLY
     // If any 'Forward' debug display mode is enabled then its result is stored into the 'Albedo' buffer
-    output.albedo = forwardDebugDisplay(output.albedo, viewConstants.getDisplayMode(), rootConstants3D.getMatID(), _input.tan, _input.bin, _input.nrm, _input.col, uv0, uv1, screenPos, worldPos, albedo, normal);
+    output.albedo = forwardDebugDisplay(output.albedo, viewConstants.getDisplayMode(), rootConstants3D.getMatID(), _input.tan.xyz, _input.bin.xyz, _input.nrm.xyz, _input.col, uv0, uv1, screenPos.xy, worldPos.xyz, albedo.rgb, normal.xyz);
     #endif
 
     return output;

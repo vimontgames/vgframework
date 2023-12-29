@@ -62,7 +62,7 @@ namespace vg::renderer
         {
             bool opaque = true;
 
-            const GraphicInstanceList & allInstances = view->m_cullingJobResult.m_instanceLists[asInteger(GraphicInstanceListType::All)];
+            const GraphicInstanceList & allInstances = view->getCullingJobResult().m_instanceLists[asInteger(GraphicInstanceListType::All)];
 
             // Default pass states
             RasterizerState rs(FillMode::Solid, CullMode::None, Orientation::ClockWise, DepthClip::Enable, DepthBias::None);
