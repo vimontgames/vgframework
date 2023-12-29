@@ -65,6 +65,7 @@ namespace vg::gfx
         bool isWrite(const UserPass * _userPass) const;
         bool isFirstWrite(const UserPass * _userPass) const;
         bool isLastWrite(const UserPass * _userPass) const;
+        bool isReadAfter(const UserPass * _userPass) const;
 
         bool needsReadToWriteTransition(const UserPass * _userPass) const;
         bool needsWriteToReadTransition(const UserPass * _userPass) const;

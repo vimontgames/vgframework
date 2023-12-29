@@ -62,6 +62,33 @@ namespace vg::gfx::vulkan
                 VG_ASSERT(false, "transitionResource from '%s' to '%s' is not implemented", asString(_before).c_str(), asString(_after).c_str());
                 break;
 
+            case ResourceState::RenderTarget:
+            {
+                switch (_after)
+                {
+                    default:
+                        VG_ASSERT(false, "transitionResource from '%s' to '%s' is not implemented", asString(_before).c_str(), asString(_after).c_str());
+                        break;
+
+                    case ResourceState::UnorderedAccess:
+                    {
+                        // RenderTarget to UnorderedAccess transition
+                        imageMemoryBarrier.srcAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
+                        imageMemoryBarrier.dstAccessMask = VK_ACCESS_SHADER_READ_BIT;
+                        
+                        imageMemoryBarrier.oldLayout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
+                        imageMemoryBarrier.newLayout = VK_IMAGE_LAYOUT_GENERAL;
+                        
+                        VkPipelineStageFlags srcStageMask = VK_PIPELINE_STAGE_ALL_GRAPHICS_BIT;
+                        VkPipelineStageFlags dstStageMask = VK_PIPELINE_STAGE_ALL_GRAPHICS_BIT;
+                        
+                        vkCmdPipelineBarrier(m_vkCommandBuffer, srcStageMask, dstStageMask, 0, 0, NULL, 0, NULL, 1, &imageMemoryBarrier);
+                    }
+                    break;
+                }
+            }
+            break;
+
             case ResourceState::UnorderedAccess:
             {
                 switch (_after)
@@ -72,16 +99,32 @@ namespace vg::gfx::vulkan
 
                     case ResourceState::ShaderResource:
                     {
-                        // ShaderResource to RenderTarget transition
+                        // UnorderedAccess to ShaderResource transition
                         imageMemoryBarrier.srcAccessMask = VK_ACCESS_SHADER_WRITE_BIT;
                         imageMemoryBarrier.dstAccessMask = VK_ACCESS_SHADER_READ_BIT;
-
+                        
                         imageMemoryBarrier.oldLayout = VK_IMAGE_LAYOUT_UNDEFINED;
                         imageMemoryBarrier.newLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
-
+                        
                         VkPipelineStageFlags srcStageMask = VK_PIPELINE_STAGE_ALL_GRAPHICS_BIT;
                         VkPipelineStageFlags dstStageMask = VK_PIPELINE_STAGE_ALL_GRAPHICS_BIT;
+                        
+                        vkCmdPipelineBarrier(m_vkCommandBuffer, srcStageMask, dstStageMask, 0, 0, NULL, 0, NULL, 1, &imageMemoryBarrier);
+                    }
+                    break;
 
+                    case ResourceState::RenderTarget:
+                    {
+                        // ShaderResource to RenderTarget transition
+                        imageMemoryBarrier.srcAccessMask = VK_ACCESS_SHADER_READ_BIT;
+                        imageMemoryBarrier.dstAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
+                        
+                        imageMemoryBarrier.oldLayout = VK_IMAGE_LAYOUT_GENERAL;
+                        imageMemoryBarrier.newLayout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
+                        
+                        VkPipelineStageFlags srcStageMask = VK_PIPELINE_STAGE_ALL_GRAPHICS_BIT;
+                        VkPipelineStageFlags dstStageMask = VK_PIPELINE_STAGE_ALL_GRAPHICS_BIT;
+                        
                         vkCmdPipelineBarrier(m_vkCommandBuffer, srcStageMask, dstStageMask, 0, 0, NULL, 0, NULL, 1, &imageMemoryBarrier);
                     }
                     break;

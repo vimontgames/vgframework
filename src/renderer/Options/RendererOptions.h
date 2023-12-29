@@ -3,7 +3,7 @@
 #include "renderer/IRendererOptions.h"
 #include "core/Singleton/Singleton.h"
 #include "gfx/Device/Device_consts.h"
-#include "Shaders/system/options.hlsli"
+#include "Shaders/system/displaymodes.hlsli"
 
 namespace vg::core
 {
@@ -19,6 +19,12 @@ namespace vg::renderer
         Transparency    = 0x00000004
     };
 
+    enum class LightingMode : core::u8
+    {
+        Forward = 0,
+        Deferred
+    };
+
     class RendererOptions final : public IRendererOptions, public core::Singleton<RendererOptions>
     {
     public:
@@ -30,11 +36,10 @@ namespace vg::renderer
 
         bool				    isToolModeEnabled           () const { return m_toolMode; }
 
+        LightingMode            getLightingMode             () const { return m_lightingMode; }
+
         DisplayMode             getDisplayMode              () const { return m_debugDisplayMode; }
         DisplayFlags            getDisplayFlags             () const { return m_displayFlags; }
-
-        RayTracingMode          getRayTracingMode           () const { return m_rayTracing? m_rayTracingMode : RayTracingMode::Default; }
-        PostProcessMode         getPostProcessMode          () const { return m_postProcess? m_postProcessMode : PostProcessMode::Default; }
 
         bool				    isAABBEnabled               () const { return m_aabb; }
         bool				    isWireframeEnabled          () const { return m_wireframe; }
@@ -45,10 +50,11 @@ namespace vg::renderer
 
         bool                    isPostProcessEnabled        () const { return m_postProcess; }
         bool                    isRayTracingEnabled         () const { return m_rayTracing; }
+        bool                    anyRayTracingDebugDisplay   () const;
 
-        bool                    isDisplayMatIDEnabled       () const { return DisplayMode::MatID    == m_debugDisplayMode;}
-        bool				    isDisplayNormalEnabled	    () const { return DisplayMode::VSNormal == m_debugDisplayMode; }
-		bool				    isDisplayUV0Enabled		    () const { return DisplayMode::UV0      == m_debugDisplayMode; }
+        bool                    isDisplayMatIDEnabled       () const { return DisplayMode::Forward_MatID    == m_debugDisplayMode;}
+        bool				    isDisplayNormalEnabled	    () const { return DisplayMode::Forward_VSNormal == m_debugDisplayMode; }
+		bool				    isDisplayUV0Enabled		    () const { return DisplayMode::Forward_UV0      == m_debugDisplayMode; }
 
         bool                    isAlbedoMapsEnabled         () const { return 0 != (DisplayFlags::AlbedoMap & m_displayFlags); }
         bool                    isNormalMapsEnabled         () const { return 0 != (DisplayFlags::NormalMap & m_displayFlags); }
@@ -63,18 +69,16 @@ namespace vg::renderer
         core::float4		    m_backgroundColor           = core::float4(0, 0, 0, 0);
         bool				    m_toolMode                  = true;
         bool                    m_aabb                      = false;
-        gfx::VSync              m_VSync                     = gfx::VSync::VBL_1;
         bool                    m_vsync                     = true;
         bool				    m_wireframe                 = false;
-
-        DisplayMode	            m_debugDisplayMode          = DisplayMode::Default;
+        bool                    m_postProcess               = true;
+        bool                    m_rayTracing                = false;
+        gfx::VSync              m_VSync                     = gfx::VSync::VBL_1;
+        LightingMode            m_lightingMode              = LightingMode::Forward;
+        DisplayMode	            m_debugDisplayMode          = DisplayMode::None;
         DisplayFlags            m_displayFlags              = DisplayFlags::AlbedoMap | DisplayFlags::NormalMap;
 
-        bool                    m_postProcess               = true;
-        PostProcessMode         m_postProcessMode           = PostProcessMode::Default;
 
-        bool                    m_rayTracing                = false;
-        RayTracingMode          m_rayTracingMode            = RayTracingMode::Default;
 
         RenderPassFlags         m_renderPassFlags;
     };

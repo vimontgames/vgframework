@@ -22,6 +22,31 @@ namespace vg::editor
             if (ImGui::TextButton("Press 'F7' to", "Reload Resources", rm != nullptr && !rm->HasResourceLoading(), "Reimport all modified resources"))
                 rm->UpdateResources();
 
+            // test
+            //if (ImGui::BeginCombo("test", "preview", ImGuiComboFlags_HeightLarge))
+            //{
+            //    for (uint e = 0; e < 5; ++e)
+            //    {
+            //        if (e == 2)
+            //        {
+            //            if (ImGui::BeginMenu("World"))
+            //            {
+            //                if (ImGui::MenuItem("New"))
+            //                    
+            //                {}
+            //
+            //                ImGui::EndMenu();
+            //            }
+            //        }
+            //
+            //        else if (ImGui::Selectable(fmt::sprintf("e=%u", e).c_str()))
+            //        {
+            //
+            //        }
+            //    }
+            //    ImGui::EndCombo();
+            //}
+
             rm->Lock();
 
             const auto resCount = rm->GetResourceCount();

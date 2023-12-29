@@ -13,7 +13,7 @@ namespace vg::renderer
         const RootSignatureTableDesc & bindlessTable = device->getBindlessTable()->getTableDesc();
 
         RootSignatureDesc rsDesc;
-        rsDesc.addRootConstants(ShaderStageFlags::CS, 0, 0, RootConstants2DCount);
+        rsDesc.addRootConstants(ShaderStageFlags::CS, 0, 0, PostProcessConstantsCount);
         rsDesc.addTable(bindlessTable);
 
         m_computePostProcessRootSignature = device->addRootSignature(rsDesc);

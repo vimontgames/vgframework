@@ -74,7 +74,7 @@ namespace vg::gfx
         Texture * createDepthStencilFromPool(const FrameGraphTextureResourceDesc & _textureResourceDesc);
 		Texture * createRWTextureFromPool(const FrameGraphTextureResourceDesc & _textureResourceDesc);
 
-        Texture * createTextureFromPool(const FrameGraphTextureResourceDesc & _textureResourceDesc, bool _depthStencil = false, bool _uav = false);
+        Texture * createTextureFromPool(const FrameGraphTextureResourceDesc & _textureResourceDesc, bool _renderTarget, bool _depthStencil, bool _uav);
         void releaseTextureFromPool(Texture *& _tex);
 
         Buffer * createRWBufferFromPool(const FrameGraphBufferResourceDesc & _bufferResourceDesc);

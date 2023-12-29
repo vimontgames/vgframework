@@ -28,7 +28,7 @@
 #include "renderer/IGraphicInstance.h"
 #include "renderer/Importer/TextureImporterData.h"
 #include "renderer/View/View.h"
-#include "renderer/View/Forward/ForwardView.h"
+#include "renderer/View/Lit/LitView.h"
 #include "renderer/Model/Material/DefaultMaterial/DefaultMaterialModel.h"
 #include "renderer/Picking/PickingManager.h"
 #include "renderer/DebugDraw/DebugDraw.h"
@@ -46,6 +46,7 @@
 #include "shaders/background/background.hlsl.h"
 #include "shaders/postprocess/postprocess.hlsl.h"
 #include "shaders/skinning/skinning.hlsl.h"
+#include "shaders/lighting/deferredLighting.hlsl.h"
 
 using namespace vg::core;
 using namespace vg::gfx;
@@ -230,6 +231,7 @@ namespace vg::renderer
         sm->registerHLSL(BackgroundHLSLDesc());
         sm->registerHLSL(PostProcessHLSLDesc());
         sm->registerHLSL(SkinningHLSLDesc());
+        sm->registerHLSL(DeferredLightingHLSLDesc());
 
         sm->update();
     }
@@ -495,7 +497,7 @@ namespace vg::renderer
         switch (_params.target)
         {
             default:
-                view = new ForwardView(_params);
+                view = new LitView(_params);
                 break;
 
             case ViewTarget::Backbuffer:

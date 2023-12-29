@@ -75,15 +75,15 @@ namespace vg::editor
                     switch (item.level)
                     {
                         case Level::Info:
-                            infoCount++;
+                            infoCount += item.count;
                             break;
 
                         case Level::Warning:
-                            warningCount++;
+                            warningCount += item.count;
                             break;
 
                         case Level::Error:
-                            errorCount++;
+                            errorCount += item.count;
                             break;
                     }
                 }
@@ -207,7 +207,12 @@ namespace vg::editor
                             break;
                     }
   
-                    string fullmsg = fmt::sprintf("[%s] %s", item.category.c_str(), item.message.c_str());
+                    string fullmsg;
+                    
+                    if (item.count > 1)
+                        fullmsg = fmt::sprintf("[%s] %s (x%u)", item.category, item.message, item.count);
+                    else
+                        fullmsg = fmt::sprintf("[%s] %s", item.category, item.message);
 
                     if (!m_filter.PassFilter(fullmsg.c_str()))
                         continue;

@@ -59,7 +59,7 @@ float4 DebugRayTracing(float4 color, float2 uv, uint2 screenSize, ViewConstants 
     query.TraceRayInline(tlas, 0, 0xff, ray);
     query.Proceed();
 
-    RayTracingMode mode = viewConstants.getRayTracingMode();
+    DisplayMode mode = viewConstants.getDisplayMode();
 
     float3 colors[6] = 
     {
@@ -80,7 +80,7 @@ float4 DebugRayTracing(float4 color, float2 uv, uint2 screenSize, ViewConstants 
                 default:
                 break;
 
-                case RayTracingMode::Hit:
+                case DisplayMode::RayTracing_Hit:
                 color.rgb = lerp(color.rgb, float3(1,0,0), 0.5f);
                 break;
             }
@@ -95,29 +95,29 @@ float4 DebugRayTracing(float4 color, float2 uv, uint2 screenSize, ViewConstants 
                 default:
                 break;
 
-                case RayTracingMode::Hit:
+                case DisplayMode::RayTracing_Hit:
                 color.rgb = lerp(color.rgb, float3(0,1,0), 0.5f);
                 break;
 
-                case RayTracingMode::Barycentrics:
+                case DisplayMode::RayTracing_Barycentrics:
                 color.rgb = float3(query.CommittedTriangleBarycentrics(), 0);
                 break;
 
-                case RayTracingMode::InstanceID:
+                case DisplayMode::RayTracing_InstanceID:
                 {
                     uint instanceID = query.CommittedInstanceID();
                     color.rgb = float3(colors[instanceID % 6]);
                 }
                 break;
 
-                case RayTracingMode::GeometryIndex:
+                case DisplayMode::RayTracing_GeometryIndex:
                 {
                     uint geoIndex = query.CommittedGeometryIndex();
                     color.rgb = float3(frac(geoIndex.xxx / 16.0f));
                 }
                 break;
 
-                case RayTracingMode::PrimitiveIndex:
+                case DisplayMode::RayTracing_PrimitiveIndex:
                 {
                     uint primitiveIndex = query.CommittedPrimitiveIndex();
                     color.rgb = float3(frac(primitiveIndex.xxx / 256.0f));
@@ -134,7 +134,7 @@ float4 DebugRayTracing(float4 color, float2 uv, uint2 screenSize, ViewConstants 
                 default:
                 break;
 
-                case RayTracingMode::Hit:
+                case DisplayMode::RayTracing_Hit:
                 color.rgb = lerp(color.rgb, float3(0,0,1), 0.5f);
                 break;
             }
@@ -181,39 +181,31 @@ void CS_PostProcessMain(int2 dispatchThreadID : SV_DispatchThreadID)
         color = DebugRayTracing(color, uv, screenSize, viewConstants);
         #endif
 
-        switch(viewConstants.getPostProcessMode())
+        switch(viewConstants.getDisplayMode())
         {
             default:
-            color.rgb = float3(1,0,1);
             break;
         
-            case PostProcessMode::Default:
-            break;
-
-            case PostProcessMode::DepthBuffer:
+            case DisplayMode::PostProcess_Depth:
             color.rgb = frac(depth * viewConstants.getCameraNearFar().y);
             break;
 
-            case PostProcessMode::LinearDepth:
+            case DisplayMode::PostProcess_LinearDepth:
             {
                 float linearDepth = viewConstants.getLinearDepth(depth);
                 color.rgb = depth < 1.0f ? frac(linearDepth * viewConstants.getCameraNearFar().y) : 0.0f;
             }
             break;
 
-            case PostProcessMode::WorldPos:
+            case DisplayMode::PostProcess_WorldPos:
             {
                 float3 worldPos = viewConstants.getWorldPos(uv, depth);
                 color.rgb = depth < 1.0f ? frac(worldPos.xyz) : 0.0f;
             }
             break;
 
-            case PostProcessMode::StencilBuffer:
+            case DisplayMode::PostProcess_Stencil:
             color.rgb = stencil / 255.0f;
-            break;
-
-            case PostProcessMode::Luminance:
-            color.rgb = dot(color.rgb,0.33f).xxx;
             break;
         }
 

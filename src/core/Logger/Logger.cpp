@@ -1,5 +1,6 @@
 #include "core/Precomp.h"
 #include "Logger.h"
+#include "core/Math/Math.h"
 
 namespace vg::core
 {
@@ -89,7 +90,28 @@ namespace vg::core
             if (string::npos != first)
                 message = message.substr(first);
 
-            m_entries.emplace_back(LogEntry{ _level, category, message });
+            u64 crc = computeCRC64(message.c_str(), message.length());
+            size_t index = -1;
+            for (uint i = 0; i < m_entries.size(); ++i)
+            {
+                if (m_entries[i].crc == crc)
+                {
+                    index = i;
+                    break;
+                }
+            }
+
+            if (-1 == index)
+            {
+                m_entries.emplace_back(LogEntry{ crc, _level, category, message, 1 });
+            }
+            else
+            {
+                LogEntry entry = m_entries[index];
+                m_entries.erase(m_entries.begin() + index);
+                entry.count++;
+                m_entries.push_back(entry);
+            }
         }
         Unlock();
     }

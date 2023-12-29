@@ -196,7 +196,9 @@ namespace vg::gfx::dx12
 
             if (asBool(BindFlags::UnorderedAccess & _texDesc.resource.m_bindFlags))
             {
-                initState = D3D12_RESOURCE_STATE_UNORDERED_ACCESS;
+                if (!asBool(TextureFlags::RenderTarget & _texDesc.flags))
+                    initState = D3D12_RESOURCE_STATE_UNORDERED_ACCESS;
+
                 resourceDesc.Flags |= D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS;
             }
 

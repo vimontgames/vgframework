@@ -72,7 +72,7 @@ namespace vg::renderer
             totalBoneCount += boneCount;
         }
 
-        size_t mapSizeInBytes = m_skinningMatricesBuffer->getBufDesc().getSize();// totalBoneCount * sizeof(float4x4);
+        size_t mapSizeInBytes = totalBoneCount * sizeof(float4x4); // m_skinningMatricesBuffer->getBufDesc().getSize();
 
         // Upload bones matrices
         if (mapSizeInBytes > 0)

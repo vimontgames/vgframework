@@ -2,7 +2,7 @@
 #define _ROOTCONSTANTS3D__HLSLI_
 
 #include "constants.hlsli"
-#include "options.hlsli"
+#include "displaymodes.hlsli"
 
 enum RootConstantsFlags : uint
 {

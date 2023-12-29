@@ -54,6 +54,7 @@ namespace vg::renderer
         const char * shaderFile = "default/default.hlsl";
         m_shaderKey[asInteger(ShaderPass::ZOnly)] = ShaderKey(shaderFile, "ZOnly");
         m_shaderKey[asInteger(ShaderPass::Forward)] = ShaderKey(shaderFile, "Forward");
+        m_shaderKey[asInteger(ShaderPass::Deferred)] = ShaderKey(shaderFile, "Deferred");
     }
 
     //--------------------------------------------------------------------------------------

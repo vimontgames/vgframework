@@ -41,9 +41,11 @@ namespace vg::core
 
     struct LogEntry
     {
+        u64 crc;
         Level level;
         string category;
         string message;
+        uint count;
     };
 
     class ILogger

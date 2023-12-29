@@ -13,12 +13,10 @@
 #include "View.inl"
 #endif
 
-// Blob
-#include "Forward/ForwardView.hpp"
+#include "Lit/LitView.hpp"
 
 using namespace vg::core;
 using namespace vg::gfx;
-
 
 namespace vg::renderer
 {
@@ -302,7 +300,7 @@ namespace vg::renderer
     bool View::IsComputePostProcessNeeded() const
     {
         const auto options = RendererOptions::get();
-        return options->isPostProcessEnabled() || (isToolmode() && IsUsingRayTracing() && RayTracingMode::Default != options->getRayTracingMode());
+        return options->isPostProcessEnabled() || (isToolmode() && IsUsingRayTracing() && options->anyRayTracingDebugDisplay());
     }
 
     //--------------------------------------------------------------------------------------

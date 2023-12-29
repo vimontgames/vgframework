@@ -118,6 +118,38 @@ namespace vg::editor
     }
 
     //--------------------------------------------------------------------------------------
+    template <typename T> bool displayEnumRecur(string _enumName, uint _e, T * _pEnum, bool _readonly)
+    {
+        bool changed = false;
+
+        auto it = _enumName.find_first_of("_");
+        if (it != string::npos)
+        {
+            string category = _enumName.substr(0, it);
+            if (ImGui::BeginMenu(category.c_str()))
+            {
+                string name = _enumName.substr(it + 1);
+                bool res = displayEnumRecur(name, _e, _pEnum, _readonly);
+                ImGui::EndMenu();
+                return res;
+            }
+        }
+        else
+        {
+            if (ImGui::Selectable(_enumName.c_str()))
+            {
+                if (!_readonly)
+                {
+                    *_pEnum = _e;
+                    changed = true;
+                }
+            }
+        }
+
+        return changed;
+    };
+
+    //--------------------------------------------------------------------------------------
     template <typename T> bool ImGuiWindow::displayEnum(core::IObject * _object, const core::IProperty * _prop)
     {
         const auto displayName = _prop->getDisplayName();
@@ -136,6 +168,13 @@ namespace vg::editor
             if (enumVal == _prop->getEnumValue(e))
             {
                 preview = _prop->getEnumName(e);
+
+                auto it = preview.find_first_of("_");
+                while (string::npos != it)
+                {
+                    preview = preview.replace(it, 1, "/");
+                    it = preview.find_first_of("_");
+                }
                 break;
             }
         }
@@ -147,14 +186,8 @@ namespace vg::editor
         {
             for (uint e = 0; e < _prop->getEnumCount(); ++e)
             {
-                if (ImGui::Selectable(_prop->getEnumName(e)))
-                {
-                    if (!readonly)
-                    {
-                        *pEnum = e;
-                        changed = true;
-                    }
-                }
+                const string enumName = _prop->getEnumName(e);
+                changed |= displayEnumRecur(enumName, e, pEnum, readonly);
             }
             ImGui::EndCombo();
         }

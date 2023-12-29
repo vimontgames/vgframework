@@ -4,19 +4,19 @@
 namespace vg::renderer
 {
     //--------------------------------------------------------------------------------------
-    class ComputePostProcessPass : public ComputePass
+    class ComputeDeferredLightingPass : public ComputePass
     {
     public:
-        const char * getClassName() const final { return "ComputePostProcessPass"; }
+        const char * getClassName() const final { return "ComputeDeferredLightingPass"; }
 
-        ComputePostProcessPass();
-        ~ComputePostProcessPass();
+        ComputeDeferredLightingPass();
+        ~ComputeDeferredLightingPass();
 
         void Setup(const gfx::RenderPassContext & _renderContext, float _dt) override;
         void Render(const gfx::RenderPassContext & _renderContext, gfx::CommandList * _cmdList) const override;
 
     private:
-        gfx::RootSignatureHandle    m_computePostProcessRootSignature;
-        gfx::ComputeShaderKey       m_computePostProcessShaderKey;
+        gfx::RootSignatureHandle    m_computeDeferredLightingRootSignature;
+        gfx::ComputeShaderKey       m_computeDeferredLightingShaderKey;
     };
 }

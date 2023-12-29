@@ -2,7 +2,7 @@
 
 #include "types.hlsli"
 #include "packing.hlsli"
-#include "options.hlsli"
+#include "displaymodes.hlsli"
 
 struct ViewConstants
 {
@@ -44,20 +44,13 @@ struct ViewConstants
     uint2           getMousePos             ()                      { return m_screenSizeAndMousePos.zw; }
     
     // m_debugDisplay.x
-    // DisplayMode      : 8
-    // RayTracingMode   : 8
-    // PostProcessMode  : 8
-    void            setDisplayMode          (DisplayMode _mode)         { m_debugDisplay.x = (m_debugDisplay.x & ~0x000000FF) | ((uint)_mode & 0xFF)<<0; }
-    DisplayMode     getDisplayMode          ()                          { return (DisplayMode)(uint(m_debugDisplay.x) & 0x000000FF); }
-
-    void            setRayTracingMode       (RayTracingMode _mode)      { m_debugDisplay.x = (m_debugDisplay.x & ~0x0000FF00) | ((uint)_mode & 0xFF)<<8; }
-    RayTracingMode  getRayTracingMode       ()                          { return (RayTracingMode)(uint(m_debugDisplay.x)>>8 & 0xFF); }
-
-    void            setPostProcessMode      (PostProcessMode _mode)     { m_debugDisplay.x = (m_debugDisplay.x & ~0x00FF0000) | ((uint)_mode & 0xFF)<<16; }
-    PostProcessMode getPostProcessMode      ()                          { return (PostProcessMode)(uint(m_debugDisplay.x)>>16 & 0xFF); }
+    // DisplayMode      : 16
+    // DisplayFlags     : 16
+    void            setDisplayMode          (DisplayMode _mode)         { m_debugDisplay.x = packUint16low(m_debugDisplay.x, (uint)_mode); }
+    DisplayMode     getDisplayMode          ()                          { return (DisplayMode)unpackUint16low(m_debugDisplay.x); }
     
-    void            setDisplayFlags         (DisplayFlags _flags)       { m_debugDisplay.y = (uint)_flags; }
-    DisplayFlags    getDisplayFlags         ()                          { return (DisplayFlags)uint(m_debugDisplay.y); }
+    void            setDisplayFlags         (DisplayFlags _flags)       { m_debugDisplay.x = packUint16high(m_debugDisplay.x, (uint)_flags); }
+    DisplayFlags    getDisplayFlags         ()                          { return (DisplayFlags)unpackUint16high(m_debugDisplay.x); }
     
     void            setToolmodeRWBufferID   (uint _id)                  { m_debugDisplay.z = (m_debugDisplay.z & ~0x0000FFFF) | _id; }
     uint            getToolmodeRWBufferID   ()                          { return m_debugDisplay.z & 0x0000FFFF; }
@@ -87,7 +80,7 @@ struct ViewConstants
     uint            getTLASHandle           ()                          { return 0xFFFF & m_rayTracing.x; }
     
     uint4           m_screenSizeAndMousePos;    // { size.x, size.y, mouse.x, mouse.y }
-    uint4           m_debugDisplay;             // 0x00FFFFFF 0xFFFFFFFF 0x0000FFFF 0x00000000
+    uint4           m_debugDisplay;             // 0xFFFFFFFF 0x00000000 0x0000FFFF 0x00000000
     float4          m_camera;                   // { near, far, fov, ar }
     uint4           m_rayTracing;               // 0x0000FFFF 0x00000000 0x00000000 0x00000000
     float4x4        m_view;

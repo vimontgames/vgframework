@@ -81,11 +81,12 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "system", "system", "{34ABDEEE-1180-4BD9-9FCC-16C174A96FE8}"
 	ProjectSection(SolutionItems) = preProject
 		data\Shaders\system\bindless.hlsli = data\Shaders\system\bindless.hlsli
-		data\Shaders\system\buffer.hlsli = data\Shaders\system\buffer.hlsli
 		data\Shaders\system\constants.hlsli = data\Shaders\system\constants.hlsli
 		data\Shaders\system\depthbias.hlsli = data\Shaders\system\depthbias.hlsli
-		data\Shaders\system\displayoptions.hlsli = data\Shaders\system\displayoptions.hlsli
+		data\Shaders\system\debugdisplay.hlsli = data\Shaders\system\debugdisplay.hlsli
 		data\Shaders\system\gamma.hlsli = data\Shaders\system\gamma.hlsli
+		data\Shaders\system\displaymodes.hlsli = data\Shaders\system\displaymodes.hlsli
+		data\Shaders\system\lighting.hlsli = data\Shaders\system\lighting.hlsli
 		data\Shaders\system\packing.hlsli = data\Shaders\system\packing.hlsli
 		data\Shaders\system\picking.hlsl = data\Shaders\system\picking.hlsl
 		data\Shaders\system\picking.hlsli = data\Shaders\system\picking.hlsli
@@ -132,6 +133,13 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "physics", "src\physics\physics.vcxproj", "{F9F268C0-B4CB-4B80-B857-C75C7555E09B}"
 	ProjectSection(ProjectDependencies) = postProject
 		{257A93DC-9206-4770-9560-7A22DFF0AC01} = {257A93DC-9206-4770-9560-7A22DFF0AC01}
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "lighting", "lighting", "{4AD9B61D-1402-4E76-ACBA-5D3B57B9F408}"
+	ProjectSection(SolutionItems) = preProject
+		data\Shaders\lighting\deferredLighting.hlsl = data\Shaders\lighting\deferredLighting.hlsl
+		data\Shaders\lighting\deferredLighting.hlsl.h = data\Shaders\lighting\deferredLighting.hlsl.h
+		data\Shaders\lighting\deferredLighting.hlsli = data\Shaders\lighting\deferredLighting.hlsli
 	EndProjectSection
 EndProject
 Global
@@ -220,6 +228,7 @@ Global
 		{1E58B5A8-C977-4C9E-9705-CB2089DCFF8C} = {3A24AFD2-079B-45FC-8488-70058ACACD89}
 		{A78F21EC-5A7B-4D8A-AF8F-6E8D9B36EBCE} = {3A24AFD2-079B-45FC-8488-70058ACACD89}
 		{2451B526-F25E-4778-A38E-00BAA0B569A7} = {3A24AFD2-079B-45FC-8488-70058ACACD89}
+		{4AD9B61D-1402-4E76-ACBA-5D3B57B9F408} = {3A24AFD2-079B-45FC-8488-70058ACACD89}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {B437215B-B736-4FF0-8DA1-E6B35C780CE1}

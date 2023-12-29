@@ -43,18 +43,21 @@ namespace vg::renderer
 
         auto clearColor = m_useFastClear ? pow(options->getBackgroundColor(), 2.2f) : defaultOptimizedClearColor;
 
-        FrameGraphTextureResourceDesc colorDesc;
+        FrameGraphTextureResourceDesc colorDesc = {};
                                       colorDesc.format = PixelFormat::R16G16B16A16_float;
                                       colorDesc.width = size.x;
                                       colorDesc.height = size.y;
                                       colorDesc.clearColor = clearColor;
                                       colorDesc.initState = FrameGraphResource::InitState::Clear;
 
+        //if (options->getLightingMode() == LightingMode::Deferred)
+            colorDesc.uav = true;
+
         const auto colorID = _renderContext.getFrameGraphID("Color");
         createRenderTarget(colorID, colorDesc);
         writeRenderTarget(0, colorID);
 
-        FrameGraphTextureResourceDesc depthStencilDesc;
+        FrameGraphTextureResourceDesc depthStencilDesc = {};
                                       depthStencilDesc.format = PixelFormat::D32S8;
                                       depthStencilDesc.width = size.x;
                                       depthStencilDesc.height = size.y;

@@ -260,12 +260,14 @@ namespace vg::gfx
                     renderPassKey.m_colorFormat[i] = textureResourceDesc.format;
 
                     // add or get index of attachment
-                    uint attachmentIndex = (uint)-1;
-                    for (uint i = 0; i < colorAttachments.size(); ++i)
-                    {
-                        if (colorAttachments[i]->getTextureResourceDesc() == textureResourceDesc)
-                            attachmentIndex = i;
-                    }
+                    uint attachmentIndex = -1;
+
+                    // what if the same render targets are reused but in a different order in a sub-pass?
+                    //for (uint i = 0; i < colorAttachments.size(); ++i)
+                    //{
+                    //    if (colorAttachments[i]->getTextureResourceDesc() == textureResourceDesc)
+                    //        attachmentIndex = i;
+                    //}
 
                     if ((uint)-1 == attachmentIndex)
                     {
@@ -321,9 +323,16 @@ namespace vg::gfx
                     if (lastWrite)
                     {
                         if (isBackbuffer)
+                        {
                             flags |= ResourceTransitionFlags::Present;
+                        }
                         else
-                            end = ResourceState::ShaderResource;
+                        {
+                            if (res->isReadAfter(userPass))
+                                end = ResourceState::ShaderResource;
+                            else
+                                end = ResourceState::RenderTarget;
+                        }
                     }
 
                     ResourceTransitionDesc info(flags, begin, end);
@@ -402,26 +411,28 @@ namespace vg::gfx
     //--------------------------------------------------------------------------------------
     Texture * FrameGraph::createRenderTargetFromPool(const FrameGraphTextureResourceDesc & _textureResourceDesc)
     {
-        return createTextureFromPool(_textureResourceDesc, false, false);
+        return createTextureFromPool(_textureResourceDesc, true, false, false);
     }
 
     //--------------------------------------------------------------------------------------
     Texture * FrameGraph::createDepthStencilFromPool(const FrameGraphTextureResourceDesc & _textureResourceDesc)
     {
-        return createTextureFromPool(_textureResourceDesc, true, false);
+        return createTextureFromPool(_textureResourceDesc, false, true, false);
     }
 
     //--------------------------------------------------------------------------------------
     Texture * FrameGraph::createRWTextureFromPool(const FrameGraphTextureResourceDesc & _textureResourceDesc)
     {
-        return createTextureFromPool(_textureResourceDesc, false, true);
+        return createTextureFromPool(_textureResourceDesc, false, false, true);
     }
 
     //--------------------------------------------------------------------------------------
-    Texture * FrameGraph::createTextureFromPool(const FrameGraphTextureResourceDesc & _textureResourceDesc, bool _depthStencil, bool _uav)
+    Texture * FrameGraph::createTextureFromPool(const FrameGraphTextureResourceDesc & _textureResourceDesc, bool _renderTarget, bool _depthStencil, bool _uav)
     {
         VG_ASSERT(_depthStencil == Texture::isDepthStencilFormat(_textureResourceDesc.format));
-        VG_ASSERT(_uav == _textureResourceDesc.uav);
+
+        // Use settings from desc
+        _uav = _textureResourceDesc.uav;
 
         for (uint i = 0; i < m_sharedTextures.size(); ++i)
         {
@@ -444,22 +455,37 @@ namespace vg::gfx
                     desc.format = _textureResourceDesc.format;
                     desc.width = _textureResourceDesc.width;
                     desc.height = _textureResourceDesc.height;
-                    desc.flags = _depthStencil ? TextureFlags::DepthStencil : TextureFlags::RenderTarget;
+
+                    if (_renderTarget)
+                        desc.flags = TextureFlags::RenderTarget;
+                    else if (_depthStencil)
+                        desc.flags = TextureFlags::DepthStencil;
+                    else
+                        desc.flags = (TextureFlags)0x0;
                     
                     if (_uav)
-                    {
-                        desc.flags = TextureFlags::None;
                         desc.resource.m_bindFlags = BindFlags::ShaderResource | BindFlags::UnorderedAccess; // What about "UAV-only" textures?
-                    }
                     else
                         desc.resource.m_bindFlags = BindFlags::ShaderResource;
 
                     desc.resource.m_cpuAccessFlags = CPUAccessFlags::None;
                     desc.resource.m_usage = Usage::Default;
 
-        string name = "TempTex#" + to_string(m_sharedTextures.size());
+        string name = "Temp";
+
+        if (_renderTarget)
+            name += "RenderTarget";
+        else if (_depthStencil)
+            name += "DepthStencil";
+        else if (_uav)
+            name += "RWTexture";
+        else
+            name += "Texture";
+
+        name += "#" + to_string(m_sharedTextures.size());
+
         if (asBool(BindFlags::ShaderResource & desc.resource.m_bindFlags))
-            name += "_RO";
+            name += "_SRV";
         if (asBool(BindFlags::UnorderedAccess & desc.resource.m_bindFlags))
             name += "_RW";
         
@@ -530,11 +556,12 @@ namespace vg::gfx
         desc.resource.m_cpuAccessFlags = CPUAccessFlags::None;
         desc.resource.m_usage = Usage::Default;
 
-        string name = "TempBuf#" + to_string(m_sharedBuffers.size());
-        if (asBool(BindFlags::ShaderResource & desc.resource.m_bindFlags))
-            name += "_RO";
+        string name = "Temp";
         if (asBool(BindFlags::UnorderedAccess & desc.resource.m_bindFlags))
-            name += "_RW";
+            name += "RWBuffer";
+        else if (asBool(BindFlags::ShaderResource & desc.resource.m_bindFlags))
+            name += "Buffer";
+        name += "#" + to_string(m_sharedBuffers.size());
 
         SharedBuffer sharedBuf;
         sharedBuf.desc = _bufferResourceDesc;
@@ -658,41 +685,42 @@ namespace vg::gfx
                         {
                             Texture * tex = createDepthStencilFromPool(textureResourceDesc);
                             res->setTexture(tex);
-                            //res->setCurrentState(ResourceState::RenderTarget);
                         }
                     }
                 }
             }
 
-            for (uint i = 0; i < subPasses.size(); ++i)
+            // Before + Render + After
             {
-                SubPass * subPass = subPasses[i];
+                // TODO : Refactor this to account that we only have one SubPass per RenderPass or make it work? (Not really relevant on Desktop, though)
+                VG_ASSERT(subPasses.size() == 1);
+                SubPass * subPass = subPasses[0];
                 const auto & userPassInfo = subPass->getUserPassesInfos()[0];
-                userPassInfo.m_userPass->BeforeRender(userPassInfo.m_renderContext, cmdList);
-            }
-
-			cmdList->beginRenderPass(renderPass);
-			for (uint i = 0; i < subPasses.size(); ++i)
-			{
-				SubPass * subPass = subPasses[i];
-                const auto & userPassInfo = subPass->getUserPassesInfos()[0];
-
                 VG_PROFILE_GPU(userPassInfo.m_userPass->getName().c_str());
 
-                cmdList->beginSubPass(i, subPass);
-				{
-                    VG_ASSERT(isEnumValue(userPassInfo.m_userPass->getUserPassType()), "UserPass \"%s\" has invalid RenderPassType 0x%02X. Valid values are Graphic (0), Compute (1), and Raytrace (2)", userPassInfo.m_userPass->getName().c_str(), userPassInfo.m_userPass->getUserPassType());
-                    userPassInfo.m_userPass->Render(userPassInfo.m_renderContext, cmdList);
-				}
-                cmdList->endSubPass();
-			}
-			cmdList->endRenderPass();
+                for (uint i = 0; i < subPasses.size(); ++i)
+                {                   
+                    const auto & userPassInfo = subPass->getUserPassesInfos()[0];
+                    userPassInfo.m_userPass->BeforeRender(userPassInfo.m_renderContext, cmdList);
+                }
 
-            for (uint i = 0; i < subPasses.size(); ++i)
-            {
-                SubPass * subPass = subPasses[i];
-                const auto & userPassInfo = subPass->getUserPassesInfos()[0];
-                userPassInfo.m_userPass->AfterRender(userPassInfo.m_renderContext, cmdList);
+                cmdList->beginRenderPass(renderPass);
+                for (uint i = 0; i < subPasses.size(); ++i)
+                {
+                    cmdList->beginSubPass(i, subPass);
+                    {
+                        VG_ASSERT(isEnumValue(userPassInfo.m_userPass->getUserPassType()), "UserPass \"%s\" has invalid RenderPassType 0x%02X. Valid values are Graphic (0), Compute (1), and Raytrace (2)", userPassInfo.m_userPass->getName().c_str(), userPassInfo.m_userPass->getUserPassType());
+                        userPassInfo.m_userPass->Render(userPassInfo.m_renderContext, cmdList);
+                    }
+                    cmdList->endSubPass();
+                }
+                cmdList->endRenderPass();
+
+                for (uint i = 0; i < subPasses.size(); ++i)
+                {
+                    const auto & userPassInfo = subPass->getUserPassesInfos()[0];
+                    userPassInfo.m_userPass->AfterRender(userPassInfo.m_renderContext, cmdList);
+                }
             }
            
             // release all transient resources that are read or write for the last time during this pass
@@ -728,6 +756,34 @@ namespace vg::gfx
                         }
                     }
                 }
+
+                //auto & renderTargets = userPass->getRenderTargets();
+                //for (uint i = 0; i < renderTargets.size(); ++i)
+                //{
+                //    FrameGraphTextureResource * res = renderTargets[i];
+                //    const FrameGraphTextureResourceDesc & textureResourceDesc = res->getTextureResourceDesc();
+                //
+                //    const auto & readWrites = res->getReadWriteAccess();
+                //    const bool isLastReadOrWrite = readWrites.size() > 0 && readWrites[readWrites.size() - 1].m_userPass == userPass;
+                //
+                //    if (isLastReadOrWrite)
+                //    {
+                //        // Make sure RenderTarget is set in the 'RenderTarget' state after use by FrameGraph so that's in a predictable state for the next frame
+                //        auto current = res->getCurrentState();
+                //        if (ResourceState::RenderTarget != current)
+                //        {
+                //            cmdList->transitionResource(res->getTexture(), current, ResourceState::RenderTarget);
+                //            res->setCurrentState(ResourceState::RenderTarget);
+                //        }
+                //
+                //        if (textureResourceDesc.transient)
+                //        {
+                //            Texture * tex = res->getTexture();
+                //            releaseTextureFromPool(tex);
+                //            res->resetTexture();
+                //        }
+                //    }
+                //}
 
                 FrameGraphTextureResource * depthStencil = userPass->getDepthStencil();
                 if (depthStencil)
@@ -817,6 +873,28 @@ namespace vg::gfx
 
         if (NULL != currentView)
             profiler->stopGpuEvent();
+
+        // All textures and buffers remaining in pool should be marked as 'unused' at this point
+        for (uint i = 0; i < m_sharedTextures.size(); ++i)
+        {
+            auto & slot = m_sharedTextures[i];
+            if (slot.used)
+            {
+                Texture * tex = slot.tex;
+                VG_WARNING("[FrameGraph] Texture \"%s\" (%u) was not released", tex->getName().c_str(), i);
+                releaseTextureFromPool(tex);
+            }
+        }
+        for (uint i = 0; i < m_sharedBuffers.size(); ++i)
+        {
+            auto & slot = m_sharedBuffers[i];
+            if (slot.used)
+            {
+                Buffer * buffer = slot.buffer;
+                VG_WARNING("[FrameGraph] Buffer \"%s\" (%u) was not released", buffer->getName().c_str(), i);
+                releaseBufferFromPool(buffer);
+            }
+        }
 
         cleanup();
 

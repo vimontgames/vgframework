@@ -61,8 +61,6 @@ namespace vg::renderer
             constants->setScreenSize(screenSize);
             constants->setMousePos(view->GetRelativeMousePos());
             constants->setDisplayMode(options->getDisplayMode());
-            constants->setRayTracingMode(options->getRayTracingMode());
-            constants->setPostProcessMode(options->getPostProcessMode());
             constants->setDisplayFlags(options->getDisplayFlags());
             constants->setToolmodeRWBufferID(toolmodeRWBufferID);
             constants->setCameraNearFar(view->getCameraNearFar());

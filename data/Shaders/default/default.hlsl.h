@@ -35,6 +35,12 @@ namespace vg::gfx
                 forward.vs = addVS("VS_Forward");
                 forward.ps = addPS("PS_Forward");
             }
+
+            auto & deferred = addTechnique("Deferred");
+            {
+                deferred.vs = addVS("VS_Deferred");
+                deferred.ps = addPS("PS_Deferred");
+            }
         }
     };
 }

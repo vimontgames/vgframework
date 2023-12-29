@@ -1,4 +1,4 @@
-#include "ForwardPass.h"
+#include "ForwardOpaquePass.h"
 #include "core/GameObject/GameObject.h"
 #include "renderer/Geometry/Mesh/MeshGeometry.h"
 #include "renderer/Model/Mesh/MeshModel.h"
@@ -10,14 +10,14 @@ namespace vg::renderer
     //--------------------------------------------------------------------------------------
     // Setup executed once, when pass is created
     //--------------------------------------------------------------------------------------
-    ForwardPass::ForwardPass() :
-        RenderObjectsPass("ForwardPass")
+    ForwardOpaquePass::ForwardOpaquePass() :
+        RenderObjectsPass("ForwardOpaquePass")
     {
 
     }
 
     //--------------------------------------------------------------------------------------
-    ForwardPass::~ForwardPass()
+    ForwardOpaquePass::~ForwardOpaquePass()
     {
         
     }    
@@ -25,7 +25,7 @@ namespace vg::renderer
     //--------------------------------------------------------------------------------------
     // Setup executed each frame, for each pass instance
     //--------------------------------------------------------------------------------------
-    void ForwardPass::Setup(const gfx::RenderPassContext & _renderContext, float _dt)
+    void ForwardOpaquePass::Setup(const gfx::RenderPassContext & _renderContext, float _dt)
     {
         writeRenderTarget(0, _renderContext.getFrameGraphID("Color"));
         writeDepthStencil(_renderContext.getFrameGraphID("DepthStencil"));
@@ -34,7 +34,7 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    void ForwardPass::Render(const RenderPassContext & _renderPassContext, CommandList * _cmdList) const
+    void ForwardOpaquePass::Render(const RenderPassContext & _renderPassContext, CommandList * _cmdList) const
     {
         const View * view = (const View *)_renderPassContext.m_view;
         const auto options = RendererOptions::get();

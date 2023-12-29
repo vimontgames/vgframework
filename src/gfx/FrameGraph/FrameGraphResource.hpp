@@ -155,6 +155,32 @@ namespace vg::gfx
     }
 
     //--------------------------------------------------------------------------------------
+    bool FrameGraphResource::isReadAfter(const UserPass * _userPass) const
+    {
+        if (m_readWrite.size() > 0)
+        {
+            bool read = false;
+            for (int i = (int)m_readWrite.size() - 1; i >= 0; --i)
+            {
+                const PassRWAccess & readWrite = m_readWrite[i];
+
+                if (!read && asBool(RWFlags::Read & readWrite.m_rwAccess))
+                {
+                    read = true;
+                }
+
+                if (asBool(RWFlags::Write & readWrite.m_rwAccess))
+                {
+                    if (_userPass == readWrite.m_userPass)
+                        return read;
+                    break;
+                }
+            }
+        }
+        return false;
+    }
+
+    //--------------------------------------------------------------------------------------
     // Previous state was 'read' and new state is 'write'
     //--------------------------------------------------------------------------------------
     bool FrameGraphResource::needsReadToWriteTransition(const UserPass * _userPass) const

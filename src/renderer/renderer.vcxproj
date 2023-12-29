@@ -121,6 +121,8 @@
     <ClInclude Include="RayTracing\RayTracingManager.h" />
     <ClInclude Include="Renderer.h" />
     <ClInclude Include="Renderer_consts.h" />
+    <ClInclude Include="RenderPass\Compute\ComputeDeferredLighting\ComputeDeferredLightingPass.h" />
+    <ClInclude Include="RenderPass\Compute\ComputeDeferredLighting\ComputeDeferredLightingPass.hpp" />
     <ClInclude Include="RenderPass\Compute\ComputePass.h" />
     <ClInclude Include="RenderPass\Compute\ComputePass.hpp" />
     <ClInclude Include="RenderPass\Compute\ComputePostProcess\ComputePostProcessPass.h" />
@@ -139,12 +141,14 @@
     <ClInclude Include="RenderPass\Render2D\Render2DPass.h" />
     <ClInclude Include="RenderPass\Render2D\Render2DPass.hpp" />
     <ClInclude Include="RenderPass\RenderContext.h" />
+    <ClInclude Include="RenderPass\RenderObjects\Deferred\DeferredOpaquePass.h" />
+    <ClInclude Include="RenderPass\RenderObjects\Deferred\DeferredOpaquePass.hpp" />
     <ClInclude Include="RenderPass\RenderObjects\DepthOnly\DepthOnlyPass.h" />
     <ClInclude Include="RenderPass\RenderObjects\DepthOnly\DepthOnlyPass.hpp" />
     <ClInclude Include="RenderPass\RenderObjects\Editor\EditorPass.h" />
     <ClInclude Include="RenderPass\RenderObjects\Editor\EditorPass.hpp" />
-    <ClInclude Include="RenderPass\RenderObjects\Forward\ForwardPass.h" />
-    <ClInclude Include="RenderPass\RenderObjects\Forward\ForwardPass.hpp" />
+    <ClInclude Include="RenderPass\RenderObjects\Forward\ForwardOpaquePass.h" />
+    <ClInclude Include="RenderPass\RenderObjects\Forward\ForwardOpaquePass.hpp" />
     <ClInclude Include="RenderPass\RenderObjects\RenderObjectsPass.h" />
     <ClInclude Include="RenderPass\RenderObjects\RenderObjectsPass.hpp" />
     <ClInclude Include="RenderPass\RenderPass.h" />
@@ -156,8 +160,8 @@
     <ClInclude Include="RenderPass\Update\UpdatePass.hpp" />
     <ClInclude Include="RenderPass\Update\ViewConstants\ViewConstantsUpdatePass.h" />
     <ClInclude Include="RenderPass\Update\ViewConstants\ViewConstantsUpdatePass.hpp" />
-    <ClInclude Include="View\Forward\ForwardView.h" />
-    <ClInclude Include="View\Forward\ForwardView.hpp" />
+    <ClInclude Include="View\Lit\LitView.h" />
+    <ClInclude Include="View\Lit\LitView.hpp" />
     <ClInclude Include="View\View.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

@@ -19,10 +19,10 @@ namespace vg::renderer
         registerPropertyEx(RendererOptions, m_rayTracing, "RayTracing", IProperty::Flags::SameLine);
         registerPropertyEx(RendererOptions, m_postProcess, "PostProcess", IProperty::Flags::SameLine);
 
+        registerPropertyEnum(RendererOptions, LightingMode, m_lightingMode, "Lighting");
+
         registerPropertyEnum(RendererOptions, DisplayMode, m_debugDisplayMode, "Debug");
         registerPropertyEnumBitfield(RendererOptions, DisplayFlags, m_displayFlags, "Flags");
-        registerPropertyEnum(RendererOptions, RayTracingMode, m_rayTracingMode, "RayTracing");
-        registerPropertyEnum(RendererOptions, PostProcessMode, m_postProcessMode, "PostProcess");
 
         registerPropertyGroupBegin(RendererOptions, "Advanced");
         {
@@ -89,5 +89,11 @@ namespace vg::renderer
             auto value = *_prop->GetPropertyEnum<gfx::VSync>(this);
             Renderer::get()->SetVSync(value);
         }
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool RendererOptions::anyRayTracingDebugDisplay() const
+    {
+        return asInteger(m_debugDisplayMode) >= asInteger(DisplayMode::RayTracing_Hit) && asInteger(m_debugDisplayMode) < asInteger(DisplayMode::PostProcess_Depth);
     }
 }

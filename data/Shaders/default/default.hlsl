@@ -6,6 +6,8 @@
 #include "system/view.hlsli"
 #include "system/depthbias.hlsli"
 #include "system/picking.hlsl"
+#include "system/lighting.hlsli"
+#include "system/debugdisplay.hlsli"
 
 #include "default.hlsli"
 
@@ -58,27 +60,52 @@ struct PS_Output
     float4 color0 : Color0;
 };
 
-float3 getMatIDColor(uint _matID)
+float4 getAlbedo(float2 _uv, float4 _vertexColor, DisplayFlags _flags)
 {
-    switch (_matID % 6)
-    {
-        case 0: return float3(1, 0, 0);
-        case 1: return float3(0, 1, 0);
-        case 2: return float3(1, 1, 0);
-        case 3: return float3(0, 0, 1);
-        case 4: return float3(1, 0, 1);
-        case 5: return float3(0, 1, 1);
-    }
+    float4 albedo = getTexture2D( rootConstants3D.getAlbedoTextureHandle() ).Sample(linearRepeat, _uv).rgba;
 
-    return 0;
+    #if _TOOLMODE
+    if (0 == (DisplayFlags::AlbedoMap & _flags))
+        albedo = pow(0.5, 0.45);
+    #endif
+
+    albedo *= _vertexColor;
+    
+    return albedo;
+}
+
+float3 getNormal(float2 _uv, DisplayFlags _flags)
+{
+    float3 normal = getTexture2D( rootConstants3D.getNormalTextureHandle() ).Sample(linearRepeat, _uv).rgb*2-1;
+
+    #if _TOOLMODE
+    if (0 == (DisplayFlags::NormalMap & _flags))
+        normal = float3(0,0,1);
+    #endif
+
+    return normal;
+}
+
+float3 getWorldNormal(float3 _normal, float3 _vertexTangent, float3 _vertexBinormal, float3 _vertexNormal, float4x4 _world)
+{
+    float3 T = normalize(_vertexTangent);
+    float3 B = normalize(_vertexBinormal);
+    float3 N = normalize(_vertexNormal);
+
+    float3 worldNormal = normalize(T * _normal.x + B * _normal.y + N * _normal.z);
+           worldNormal = mul(float4(worldNormal.xyz, 0.0f), _world).xyz;
+
+    return worldNormal;
 }
 
 PS_Output PS_Forward(VS_Output _input)
 {
-    PS_Output output;
+    PS_Output output = (PS_Output)0;
     
     ViewConstants viewConstants;
     viewConstants.Load(getBuffer(RESERVEDSLOT_BUFSRV_VIEWCONSTANTS));
+
+    DisplayFlags flags = viewConstants.getDisplayFlags();
     
     uint2 screenSize = viewConstants.getScreenSize();
     float3 screenPos = _input.pos.xyz / float3(screenSize.xy, 1);
@@ -87,85 +114,18 @@ PS_Output PS_Forward(VS_Output _input)
     float2 uv0 = _input.uv.xy;
     float2 uv1 = _input.uv.zw;
     
-    float4 albedo = getTexture2D( rootConstants3D.getAlbedoTextureHandle() ).Sample(linearRepeat, uv0).rgba;
-    float3 normal = getTexture2D( rootConstants3D.getNormalTextureHandle() ).Sample(linearRepeat, uv0).rgb*2-1;
-
-    #if _TOOLMODE
-    DisplayFlags flags = viewConstants.getDisplayFlags();
-    if (0 == (DisplayFlags::AlbedoMap & flags))
-        albedo = pow(0.5, 0.45);
-
-    if (0 == (DisplayFlags::NormalMap & flags))
-        normal = float3(0,0,1);
-    #endif
+    float4 albedo = getAlbedo(uv0, _input.col, flags);
+    float3 normal = getNormal(uv0, flags);
     
-    albedo *= _input.col;
+    float3 worldNormal = getWorldNormal(normal, _input.tan, _input.bin, _input.nrm, rootConstants3D.getWorldMatrix());
 
-    float3 T = normalize(_input.tan);
-    float3 B = normalize(_input.bin);
-    float3 N = normalize(_input.nrm);
-
-    float3 worldNormal = normalize(T * normal.x + B * normal.y + N * normal.z);
-           worldNormal = mul(float4(worldNormal.xyz, 0.0f), rootConstants3D.getWorldMatrix()).xyz;
-
-    // fake shitty lighting
-    float3 lightDir = normalize(float3(-2,1,-3));
-    float3 fakeDiffuseLighting = saturate(dot(worldNormal, -lightDir) * 0.8f);
-    float3 fakeAmbientLighting = 0.1f;
-
-    output.color0.rgba = float4(albedo.rgb * (fakeDiffuseLighting + fakeAmbientLighting), 1.0f);
+    // Compute & Apply lighting
+    LightingResult lighting = ComputeLighting(worldNormal);
+    output.color0.rgb = ApplyLighting(albedo, lighting);
     
     #if _TOOLMODE && !_ZONLY
-    DisplayMode mode = viewConstants.getDisplayMode();
-    switch (mode)
-    {
-        case DisplayMode::Default:
-            break;
-    
-        case DisplayMode::MatID:
-            output.color0 = sRGBA2Linear(float4(getMatIDColor(rootConstants3D.getMatID()), 1.0f));
-            break;
-    
-        case DisplayMode::VSNormal:
-            output.color0 = sRGBA2Linear(float4(N * 0.5f + 0.5f, 1.0f));
-            break;
-    
-        case DisplayMode::VSTangent:
-            output.color0 = sRGBA2Linear(float4(T * 0.5f + 0.5f, 1.0f));
-            break;
-    
-        case DisplayMode::VSBinormal:
-            output.color0 = sRGBA2Linear(float4(B * 0.5f + 0.5f, 1.0f));
-            break;
 
-        case DisplayMode::VSColor:
-            output.color0 = _input.col;
-            break;
-    
-        case DisplayMode::UV0:
-            output.color0 = sRGBA2Linear(float4(uv0.xy, 0, 1));
-            break;
-    
-        case DisplayMode::UV1:
-            output.color0 = sRGBA2Linear(float4(uv1.xy, 0, 1));
-            break;
-    
-        case DisplayMode::Albedo:
-            output.color0 = float4(albedo.rgb, 1);
-            break;
-    
-        case DisplayMode::PSNormal:
-            output.color0 = sRGBA2Linear(float4(normal.rgb * 0.5 + 0.5, 1));
-            break;
-    
-     case DisplayMode::WorldPos:
-            output.color0 = sRGBA2Linear(float4(frac(worldPos.xyz), 1));
-            break;
-    
-    case DisplayMode::ScreenPos:
-            output.color0 = sRGBA2Linear(float4(screenPos.xy, 0, 1));
-            break;
-    }
+    output.color0 = forwardDebugDisplay(output.color0, viewConstants.getDisplayMode(), rootConstants3D.getMatID(), _input.tan, _input.bin, _input.nrm, _input.col, uv0, uv1, screenPos, worldPos, albedo, normal);
     
     if (RootConstantsFlags::Wireframe & rootConstants3D.getFlags())
         output.color0 = float4(0,1,0,1);
@@ -189,5 +149,80 @@ PS_Output PS_Forward(VS_Output _input)
     output.color0 = (float4)0.0f;
     #endif
                 
+    return output;
+}
+
+VS_Output VS_Deferred(uint _vertexID : VertexID)
+{
+    VS_Output output;
+
+    Vertex vert;
+           vert.Load(getBuffer(rootConstants3D.getBufferHandle()), rootConstants3D.getVertexFormat(), _vertexID, rootConstants3D.getBufferOffset());
+
+    ViewConstants viewConstants;
+    viewConstants.Load(getBuffer(RESERVEDSLOT_BUFSRV_VIEWCONSTANTS));
+    float4x4 view = viewConstants.getView();
+    float4x4 proj = viewConstants.getProj();
+    
+    output.nrm = vert.getNrm();
+    output.tan = vert.getTan();
+    output.bin = vert.getBin();
+    output.uv = float4(vert.getUV(0), vert.getUV(1));
+    output.col = vert.getColor() * rootConstants3D.color;
+    
+    float3 modelPos = vert.getPos();
+    float3 worldPos = mul(float4(modelPos.xyz, 1.0f), rootConstants3D.getWorldMatrix()).xyz;
+    output.wpos = worldPos.xyz;
+    float4 viewPos = mul(float4(worldPos.xyz, 1.0f), view);
+
+    #ifdef _TOOLMODE
+    if (RootConstantsFlags::Wireframe & rootConstants3D.getFlags())
+        viewPos.z += WIREFRAME_DEPTHBIAS;
+    #endif
+
+    output.pos = mul(viewPos, proj);
+
+    return output;
+}
+
+struct PS_OutputDeferred
+{
+    float4 albedo : Color0;
+    float4 normal : Color1;
+};
+
+PS_OutputDeferred PS_Deferred(VS_Output _input)
+{
+    PS_OutputDeferred output = (PS_OutputDeferred)0;
+
+    #if _ZONLY
+    return output;
+    #endif
+
+    ViewConstants viewConstants;
+    viewConstants.Load(getBuffer(RESERVEDSLOT_BUFSRV_VIEWCONSTANTS));
+
+    DisplayFlags flags = viewConstants.getDisplayFlags();
+
+    uint2 screenSize = viewConstants.getScreenSize();
+    float3 screenPos = _input.pos.xyz / float3(screenSize.xy, 1);
+    float3 worldPos = _input.wpos.xyz;        
+
+    float2 uv0 = _input.uv.xy;
+    float2 uv1 = _input.uv.zw;
+    
+    float4 albedo = getAlbedo(uv0, _input.col, flags);
+    float3 normal = getNormal(uv0, flags);
+    
+    float3 worldNormal = getWorldNormal(normal, _input.tan, _input.bin, _input.nrm, rootConstants3D.getWorldMatrix());
+
+    output.albedo = float4(albedo.rgb, 1.0f);
+    output.normal = float4(worldNormal.xyz, 1.0f);
+
+    #if _TOOLMODE && !_ZONLY
+    // If any 'Forward' debug display mode is enabled then its result is stored into the 'Albedo' buffer
+    output.albedo = forwardDebugDisplay(output.albedo, viewConstants.getDisplayMode(), rootConstants3D.getMatID(), _input.tan, _input.bin, _input.nrm, _input.col, uv0, uv1, screenPos, worldPos, albedo, normal);
+    #endif
+
     return output;
 }

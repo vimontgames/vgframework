@@ -47,8 +47,6 @@ namespace vg::renderer
         _cmdList->setGraphicRootSignature(m_rootSignature);
         _cmdList->setPrimitiveTopology(PrimitiveTopology::TriangleList);
 
-        //DepthStencilState ds(true, true, ComparisonFunc::LessEqual);
-        //_cmdList->setDepthStencilState(ds);
 
         switch (_renderContext.m_shaderPass)
         {
@@ -87,9 +85,21 @@ namespace vg::renderer
                 }
             }
             break;
-        }
 
-        
+            case ShaderPass::Deferred:
+            {
+                BlendState bs(BlendFactor::One, BlendFactor::Zero, BlendOp::Add);
+                _cmdList->setBlendState(bs);
+
+                VG_ASSERT(!_renderContext.m_wireframe);
+
+                if (_renderContext.m_toolmode)
+                    key.setFlags(gfx::DefaultHLSLDesc::Toolmode, true);
+                else
+                    key.setFlags(gfx::DefaultHLSLDesc::Toolmode, false);
+            }
+            break;
+        }        
 
         _cmdList->setRasterizerState(rs);
         _cmdList->setShader(key);

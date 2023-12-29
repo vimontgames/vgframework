@@ -151,12 +151,6 @@
     <ClInclude Include="Importer\TextureImporterData.hpp">
       <Filter>Importer</Filter>
     </ClInclude>
-    <ClInclude Include="View\Forward\ForwardView.h">
-      <Filter>View\ForwardView</Filter>
-    </ClInclude>
-    <ClInclude Include="View\Forward\ForwardView.hpp">
-      <Filter>View\ForwardView</Filter>
-    </ClInclude>
     <ClInclude Include="Job\Culling\ViewCullingJob.h">
       <Filter>Job\Culling</Filter>
     </ClInclude>
@@ -182,10 +176,10 @@
     <ClInclude Include="RenderPass\RenderObjects\RenderObjectsPass.h">
       <Filter>Pass\RenderObjects</Filter>
     </ClInclude>
-    <ClInclude Include="RenderPass\RenderObjects\Forward\ForwardPass.h">
+    <ClInclude Include="RenderPass\RenderObjects\Forward\ForwardOpaquePass.h">
       <Filter>Pass\RenderObjects\Forward</Filter>
     </ClInclude>
-    <ClInclude Include="RenderPass\RenderObjects\Forward\ForwardPass.hpp">
+    <ClInclude Include="RenderPass\RenderObjects\Forward\ForwardOpaquePass.hpp">
       <Filter>Pass\RenderObjects\Forward</Filter>
     </ClInclude>
     <ClInclude Include="RenderPass\RenderPass.h">
@@ -354,6 +348,24 @@
     <ClInclude Include="Instance\Light\Omni\OmniLightInstance.hpp">
       <Filter>Instance\Light\Omni</Filter>
     </ClInclude>
+    <ClInclude Include="RenderPass\RenderObjects\Deferred\DeferredOpaquePass.h">
+      <Filter>Pass\RenderObjects\Deferred</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderPass\RenderObjects\Deferred\DeferredOpaquePass.hpp">
+      <Filter>Pass\RenderObjects\Deferred</Filter>
+    </ClInclude>
+    <ClInclude Include="View\Lit\LitView.h">
+      <Filter>View\Lit</Filter>
+    </ClInclude>
+    <ClInclude Include="View\Lit\LitView.hpp">
+      <Filter>View\Lit</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderPass\Compute\ComputeDeferredLighting\ComputeDeferredLightingPass.h">
+      <Filter>Pass\Compute\ComputeDeferredLighting</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderPass\Compute\ComputeDeferredLighting\ComputeDeferredLightingPass.hpp">
+      <Filter>Pass\Compute\ComputeDeferredLighting</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Pass">
@@ -400,9 +412,6 @@
     </Filter>
     <Filter Include="Model\Material\DefaultMaterial">
       <UniqueIdentifier>{4f3e414b-d52f-4193-8058-e19c75f3ef01}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="View\ForwardView">
-      <UniqueIdentifier>{239c8e07-6a74-4972-bd04-c3cc454c7c0e}</UniqueIdentifier>
     </Filter>
     <Filter Include="Pass\ImGui">
       <UniqueIdentifier>{208f36c1-6c04-4c8e-9ce2-3982a8bc9642}</UniqueIdentifier>
@@ -496,6 +505,12 @@
     </Filter>
     <Filter Include="Instance\Light\Spot">
       <UniqueIdentifier>{443862a4-9b17-4948-aaae-f9828f1d730f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="View\Lit">
+      <UniqueIdentifier>{9016948f-f3ca-47ad-ae60-b1634913c353}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Pass\Compute\ComputeDeferredLighting">
+      <UniqueIdentifier>{64ad6f68-c38f-4d6a-9d7a-7906281dbd91}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

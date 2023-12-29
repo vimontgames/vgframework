@@ -164,7 +164,7 @@ namespace vg::gfx::vulkan
                     if (Texture::isDepthStencilFormat(format))
                         continue;
 
-                    VkAttachmentReference colorAttRef = { i, VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL };
+                    VkAttachmentReference colorAttRef = { j, VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL };
                     vkSubPassAttachmentRefs.push_back(colorAttRef);
 
                     ++renderTargetCount;
@@ -281,7 +281,6 @@ namespace vg::gfx::vulkan
 
         m_vkFrameBufferInfo.width = width;
         m_vkFrameBufferInfo.height = height;
-        m_vkFrameBufferInfo.layers = 1;
         
         m_vkRenderPassBeginInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO,
         m_vkRenderPassBeginInfo.pNext = nullptr;
@@ -312,6 +311,7 @@ namespace vg::gfx::vulkan
 
             m_vkFrameBufferInfo.attachmentCount = (uint)vkImageViews.size();
             m_vkFrameBufferInfo.pAttachments = vkImageViews.data();
+            m_vkFrameBufferInfo.layers = 1;
 
             VG_VERIFY_VULKAN(vkCreateFramebuffer(vkDevice, &m_vkFrameBufferInfo, nullptr, &m_vkFrameBuffer));
 

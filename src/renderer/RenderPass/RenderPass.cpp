@@ -26,19 +26,19 @@ using namespace vg::gfx;
 
 #include "RenderObjects/RenderObjectsPass.hpp"
 #include "RenderObjects/DepthOnly/DepthOnlyPass.hpp"
-#include "RenderObjects/Forward/ForwardPass.hpp"
+#include "RenderObjects/Forward/ForwardOpaquePass.hpp"
+#include "RenderObjects/Deferred/DeferredOpaquePass.hpp"
 #include "RenderObjects/Editor/EditorPass.hpp"
 
 #include "Compute/ComputePass.hpp"
 #include "Compute/ComputePostProcess/ComputePostProcessPass.hpp"
 #include "Compute/ComputeSkinning/ComputeSkinningPass.hpp"
+#include "Compute/ComputeDeferredLighting/ComputeDeferredLightingPass.hpp"
 
 #include "Update/UpdatePass.hpp"
 #include "Update/ViewConstants/ViewConstantsUpdatePass.hpp"
 #include "Update/TLAS/TLASUpdatePass.hpp"
 #include "Update/BLAS/BLASUpdatePass.hpp"
-
-
 
 namespace vg::renderer
 {
