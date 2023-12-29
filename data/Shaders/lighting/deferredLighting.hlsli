@@ -8,26 +8,30 @@
 
 struct DeferredLightingConstants
 {
-    void setScreenSize  (uint2 _size)   { width_height = packUint16(_size.xy);}
-    uint2 getScreenSize ()              { return unpackUint16(width_height); }
+    void setScreenSize      (uint2 _size)   { width_height = packUint16(_size.xy);}
+    uint2 getScreenSize     ()              { return unpackUint16(width_height); }
 
-    void setAlbedo      (uint _albedo)  { albedo_normal = packUint16low(albedo_normal, _albedo); }
-    uint getAlbedo      ()              { return unpackUint16low(albedo_normal); }
+    void setAlbedoGBuffer   (uint _albedo)  { albedo_normal = packUint16low(albedo_normal, _albedo); }
+    uint getAlbedoGBuffer   ()              { return unpackUint16low(albedo_normal); }
 
-    void setNormal      (uint _normal)  { albedo_normal = packUint16high(albedo_normal, _normal); }
-    uint getNormal      ()              { return unpackUint16high(albedo_normal); }
+    void setNormalGBuffer   (uint _normal)  { albedo_normal = packUint16high(albedo_normal, _normal); }
+    uint getNormalGBuffer   ()              { return unpackUint16high(albedo_normal); }
 
-    void setDepth       (uint _depth)   { depth_stencil = packUint16low(depth_stencil, _depth); }
-    uint getDepth       ()              { return unpackUint16low(depth_stencil); }
+    void setPBRGBuffer      (uint _pbr)     { pbr_unused = packUint16high(pbr_unused, _pbr); }
+    uint getPBRGBuffer      ()              { return unpackUint16high(pbr_unused); }
 
-    void setStencil     (uint _stencil) { depth_stencil = packUint16high(depth_stencil, _stencil); }
-    uint getStencil     ()              { return unpackUint16high(depth_stencil); }
+    void setDepth           (uint _depth)   { depth_stencil = packUint16low(depth_stencil, _depth); }
+    uint getDepth           ()              { return unpackUint16low(depth_stencil); }
 
-    void setRWBufferOut (uint _rwbuffer){ rwbuffer = packUint16low(rwbuffer, _rwbuffer); }
-    uint getRWBufferOut ()              { return unpackUint16low(rwbuffer); }
+    void setStencil         (uint _stencil) { depth_stencil = packUint16high(depth_stencil, _stencil); }
+    uint getStencil         ()              { return unpackUint16high(depth_stencil); }
+
+    void setRWBufferOut     (uint _rwbuffer){ rwbuffer = packUint16low(rwbuffer, _rwbuffer); }
+    uint getRWBufferOut     ()              { return unpackUint16low(rwbuffer); }
 
     uint width_height;
     uint albedo_normal;
+    uint pbr_unused;
     uint depth_stencil;
     uint rwbuffer;
 };

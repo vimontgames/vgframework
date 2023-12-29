@@ -107,4 +107,24 @@ struct ViewConstants
         float3 viewPos = getViewPos(_screenPos, _zBufferDepth);
         return mul(float4(viewPos.xyz,1.0f), getViewInv()).xyz;
     }
+
+    float3 getCameraRight()
+    {
+        return -m_viewInv[0].xyz;
+    }
+
+    float3 getCameraUp()
+    {
+        return -m_viewInv[1].xyz;
+    }
+
+    float3 getCameraForward()
+    {
+        return -m_viewInv[2].xyz;
+    }
+
+    float3 getCameraPos()
+    {
+        return m_viewInv[3].xyz;
+    }
 };

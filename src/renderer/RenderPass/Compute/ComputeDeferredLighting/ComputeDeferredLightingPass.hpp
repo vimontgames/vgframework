@@ -36,6 +36,9 @@ namespace vg::renderer
         const auto normalGBufferID = _renderPassContext.getFrameGraphID("NormalGBuffer");
         readRenderTarget(normalGBufferID);
 
+        const auto pbrGBufferID = _renderPassContext.getFrameGraphID("PBRGBuffer");
+        readRenderTarget(pbrGBufferID);
+
         const auto depthStencilID = _renderPassContext.getFrameGraphID("DepthStencil");
         readDepthStencil(depthStencilID);
 
@@ -65,6 +68,7 @@ namespace vg::renderer
         
         auto albedoID = getRenderTarget(_renderPassContext.getFrameGraphID("AlbedoGBuffer"))->getTextureHandle();
         auto normalID = getRenderTarget(_renderPassContext.getFrameGraphID("NormalGBuffer"))->getTextureHandle();
+        auto pbrID = getRenderTarget(_renderPassContext.getFrameGraphID("PBRGBuffer"))->getTextureHandle();
 
         auto depthstencilTex = getDepthStencil(_renderPassContext.getFrameGraphID("DepthStencil"));
         auto depthID = depthstencilTex->getDepthTextureHandle();
@@ -77,9 +81,10 @@ namespace vg::renderer
         _cmdList->transitionResource(colorTex, ResourceState::RenderTarget, ResourceState::UnorderedAccess);
         
         DeferredLightingConstants deferredLighting;
-        deferredLighting.width_height = packUint16(size.xy);
-        deferredLighting.setAlbedo(albedoID);
-        deferredLighting.setNormal(normalID);
+        deferredLighting.setScreenSize(size.xy);
+        deferredLighting.setAlbedoGBuffer(albedoID);
+        deferredLighting.setNormalGBuffer(normalID);
+        deferredLighting.setPBRGBuffer(pbrID);
         deferredLighting.setDepth(depthID);
         deferredLighting.setStencil(stencilID);
         deferredLighting.setRWBufferOut(colorID);

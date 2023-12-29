@@ -19,18 +19,26 @@ void CS_DeferredLighting(int2 dispatchThreadID : SV_DispatchThreadID)
 
         int3 address = int3(dispatchThreadID.xy, 0);
 
-        float4 albedo = getTexture2D(deferredLightingConstants.getAlbedo()).Load(address);
-        float4 normal = getTexture2D(deferredLightingConstants.getNormal()).Load(address);
+        float4 albedo = getTexture2D(deferredLightingConstants.getAlbedoGBuffer()).Load(address);
+        float4 normal = getTexture2D(deferredLightingConstants.getNormalGBuffer()).Load(address);
+        float4 pbr = getTexture2D(deferredLightingConstants.getPBRGBuffer()).Load(address);
+
         float depth = getTexture2D(deferredLightingConstants.getDepth()).Load(address).r;
 
         if (albedo.a <= 0.0f)
             return;
 
         float3 worldPos = viewConstants.getWorldPos(uv, depth);
+        float3 camPos = viewConstants.getCameraPos();
 
         float4 color = float4(frac(worldPos),1);
 
-        LightingResult lighting = ComputeLighting(normal.xyz);
+        LightingResult lighting = computeDirectLighting(camPos, worldPos, albedo.xyz, normal.xyz, pbr);
+        
+        //color = float4(lighting.diffuse.rgb, 1.0f);
+        //getRWTexture2D(deferredLightingConstants.getRWBufferOut())[coords] = color;
+        //return;
+
         color.rgb = ApplyLighting(albedo.rgb, lighting);
 
         #if _TOOLMODE
@@ -43,21 +51,37 @@ void CS_DeferredLighting(int2 dispatchThreadID : SV_DispatchThreadID)
                 color = float4(albedo.rgb, 1.0f);
                 break;
 
-            case DisplayMode::Deferred_GBuffer0_RGB:
+            case DisplayMode::Deferred_GBuffer0_Albedo:
                 color = float4(albedo.rgb, 1.0f);
                 break;
 
-            case DisplayMode::Deferred_GBuffer0_A:
-                color = float4(albedo.aaa, 1.0f);
-                break;
+            //case DisplayMode::Deferred_GBuffer0_A:
+            //    color = float4(albedo.aaa, 1.0f);
+            //    break;
 
-            case DisplayMode::Deferred_GBuffer1_RGB:
+            case DisplayMode::Deferred_GBuffer1_Normal:
                 color = float4(normal.rgb*0.5f+0.5f, 1.0f);
                 break;
 
-            case DisplayMode::Deferred_GBuffer1_A:
-                color = float4(normal.aaa, 1.0f);
+            //case DisplayMode::Deferred_GBuffer1_A:
+            //    color = float4(normal.aaa, 1.0f);
+            //    break;
+
+            case DisplayMode::Deferred_GBuffer2_Occlusion:
+                color = float4(pbr.rrr, 1.0f);
                 break;
+
+            case DisplayMode::Deferred_GBuffer2_Roughness:
+                color = float4(pbr.ggg, 1.0f);
+                break;
+
+            case DisplayMode::Deferred_GBuffer2_Metalness:
+                color = float4(pbr.bbb, 1.0f);
+                break;
+
+            //case DisplayMode::Deferred_GBuffer1_A:
+            //    color = float4(normal.aaa, 1.0f);
+            //    break;
         }
         #endif
 

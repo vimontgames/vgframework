@@ -55,6 +55,20 @@ namespace vg::renderer
             writeRenderTarget(1, normalGBufferID);
         }
 
+        // PBR
+        {
+            FrameGraphTextureResourceDesc pbrGBufferDesc;
+                                          pbrGBufferDesc.format = PixelFormat::R16G16B16A16_float;
+                                          pbrGBufferDesc.width = size.x;
+                                          pbrGBufferDesc.height = size.y;
+                                          pbrGBufferDesc.clearColor = defaultOptimizedClearColor;
+                                          pbrGBufferDesc.initState = FrameGraphResource::InitState::Clear;
+
+            const auto pbrGBufferID = _renderContext.getFrameGraphID("PBRGBuffer");
+            createRenderTarget(pbrGBufferID, pbrGBufferDesc);
+            writeRenderTarget(2, pbrGBufferID);
+        }
+
         writeDepthStencil(_renderContext.getFrameGraphID("DepthStencil"));
 
         readRWBuffer("SkinningRWBuffer");

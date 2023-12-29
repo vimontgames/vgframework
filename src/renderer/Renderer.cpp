@@ -697,6 +697,10 @@ namespace vg::renderer
                 case MaterialTextureType::Normal:
                     data = 0xFFFF7F7F;
                     break;
+
+                case MaterialTextureType::PBR:
+                    data = 0x00007FFF;    // Blue: Metalness Green: Roughness Red: Occlusion
+                    break;
             }
 
             TextureDesc texDesc = TextureDesc(Usage::Default, BindFlags::ShaderResource, CPUAccessFlags::None, TextureType::Texture2D, PixelFormat::R8G8B8A8_unorm, TextureFlags::None, 1, 1);

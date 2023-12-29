@@ -32,11 +32,13 @@ namespace vg::renderer
     {
         gfx::Texture * albedoMap = m_albedoMap;
         gfx::Texture * normalMap = m_normaMap;
+        gfx::Texture * pbrMap = m_pbrMap;
 
         const Renderer * renderer = Renderer::get();
   
         _root3D->setAlbedoTextureHandle( albedoMap ? albedoMap->getTextureHandle() : renderer->getDefaultTexture(MaterialTextureType::Albedo)->getTextureHandle());
         _root3D->setNormalTextureHandle( normalMap ? normalMap->getTextureHandle() : renderer->getDefaultTexture(MaterialTextureType::Normal)->getTextureHandle());
+        _root3D->setPBRTextureHandle(normalMap ? normalMap->getTextureHandle() : renderer->getDefaultTexture(MaterialTextureType::PBR)->getTextureHandle());
         _root3D->setMatID(_index);
         _root3D->setColor(m_albedoColor);
 
@@ -119,6 +121,8 @@ namespace vg::renderer
             assignTexture((gfx::Texture**)&m_albedoMap, (gfx::Texture *)_value);
         else if (_name == "NormalMap")
             assignTexture((gfx::Texture**)&m_normaMap, (gfx::Texture *)_value);
+        else if (_name == "PBRMap")
+            assignTexture((gfx::Texture **)&m_pbrMap, (gfx::Texture *)_value);
     }
 
     //--------------------------------------------------------------------------------------
@@ -130,5 +134,19 @@ namespace vg::renderer
             VG_SAFE_INCREASE_REFCOUNT(_value);
             *_texture = _value;
         }
+    }
+
+    //--------------------------------------------------------------------------------------
+    void DefaultMaterialModel::SetFloat(const core::string & _name, float _value)
+    {
+        if (_name == "NormalStrength")
+            m_normalStrength = _value;
+        else if (_name == "Occlusion")
+            m_occlusion = _value;
+        else if (_name == "Roughness")
+            m_roughness = _value;
+        else if (_name == "Metalness")
+            m_metalness = _value;
+
     }
 }

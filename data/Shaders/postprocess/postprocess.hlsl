@@ -13,11 +13,10 @@ float4 DebugRayTracing(float4 color, float2 uv, uint2 screenSize, ViewConstants 
     float farDist = viewConstants.getCameraNearFar().y;
     float fovRadians = viewConstants.getCameraFieldOfView();
     float viewRatio = viewConstants.getCameraAspectRatio();
-
-    float3 camPos = viewInv[3].xyz;
-    float3 camRight = -viewInv[0].xyz;
-    float3 camUp = -viewInv[1].xyz;
-    float3 camForward = -viewInv[2].xyz;
+    float3 camRight = viewConstants.getCameraRight();
+    float3 camUp = viewConstants.getCameraUp();
+    float3 camForward = viewConstants.getCameraForward();
+    float3 camPos = viewConstants.getCameraPos();
 
     float3 nearCenter = camPos + camForward * nearDist;
     float3 farCenter = camPos + camForward * farDist;

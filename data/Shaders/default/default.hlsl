@@ -74,16 +74,22 @@ float4 getAlbedo(float2 _uv, float4 _vertexColor, DisplayFlags _flags)
     return albedo;
 }
 
-float3 getNormal(float2 _uv, DisplayFlags _flags)
+float4 getNormal(float2 _uv, DisplayFlags _flags)
 {
-    float3 normal = getTexture2D( rootConstants3D.getNormalTextureHandle() ).Sample(linearRepeat, _uv).rgb*2-1;
+    float4 normal = getTexture2D( rootConstants3D.getNormalTextureHandle() ).Sample(linearRepeat, _uv);
 
     #if _TOOLMODE
     if (0 == (DisplayFlags::NormalMap & _flags))
-        normal = float3(0,0,1);
+        normal.xyz = float3(0,0,1);
     #endif
 
-    return normal;
+    return float4(normal.xyz*2-1, normal.w);
+}
+
+float4 getPBR(float2 _uv)
+{
+    float4 pbr = getTexture2D(rootConstants3D.getPBRTextureHandle() ).Sample(linearRepeat, _uv);
+    return pbr;
 }
 
 float3 getWorldNormal(float3 _normal, float3 _vertexTangent, float3 _vertexBinormal, float3 _vertexNormal, float4x4 _world)
@@ -101,6 +107,9 @@ float3 getWorldNormal(float3 _normal, float3 _vertexTangent, float3 _vertexBinor
 PS_Output PS_Forward(VS_Output _input)
 {
     PS_Output output = (PS_Output)0;
+
+    //output.color0 = float4(frac(_input.pos.xyz*100),1);
+    //return output;
     
     ViewConstants viewConstants;
     viewConstants.Load(getBuffer(RESERVEDSLOT_BUFSRV_VIEWCONSTANTS));
@@ -110,17 +119,23 @@ PS_Output PS_Forward(VS_Output _input)
     uint2 screenSize = viewConstants.getScreenSize();
     float3 screenPos = _input.pos.xyz / float3(screenSize.xy, 1);
     float3 worldPos = _input.wpos.xyz;
-    
+    float3 camPos = viewConstants.getCameraPos();  
+
     float2 uv0 = _input.uv.xy;
     float2 uv1 = _input.uv.zw;
     
     float4 albedo = getAlbedo(uv0, _input.col, flags);
     float3 normal = getNormal(uv0, flags);
+    float4 pbr = getPBR(uv0);
     
     float3 worldNormal = getWorldNormal(normal, _input.tan, _input.bin, _input.nrm, rootConstants3D.getWorldMatrix());
 
     // Compute & Apply lighting
-    LightingResult lighting = ComputeLighting(worldNormal);
+    LightingResult lighting = computeDirectLighting(camPos, worldPos, albedo.rgb, worldNormal.xyz, pbr);
+
+    //output.color0 = float4(lighting.diffuse.rgb, 1.0f);
+    //return output;
+
     output.color0.rgb = ApplyLighting(albedo, lighting);
     
     #if _TOOLMODE && !_ZONLY
@@ -187,8 +202,9 @@ VS_Output VS_Deferred(uint _vertexID : VertexID)
 
 struct PS_OutputDeferred
 {
-    float4 albedo : Color0;
-    float4 normal : Color1;
+    float4 albedo   : Color0;
+    float4 normal   : Color1;
+    float4 pbr      : Color2;
 };
 
 PS_OutputDeferred PS_Deferred(VS_Output _input)
@@ -213,11 +229,13 @@ PS_OutputDeferred PS_Deferred(VS_Output _input)
     
     float4 albedo = getAlbedo(uv0, _input.col, flags);
     float3 normal = getNormal(uv0, flags);
+    float4 pbr = getPBR(uv0);
     
     float3 worldNormal = getWorldNormal(normal, _input.tan, _input.bin, _input.nrm, rootConstants3D.getWorldMatrix());
 
     output.albedo = float4(albedo.rgb, 1.0f);
     output.normal = float4(worldNormal.xyz, 1.0f);
+    output.pbr = pbr;
 
     #if _TOOLMODE && !_ZONLY
     // If any 'Forward' debug display mode is enabled then its result is stored into the 'Albedo' buffer

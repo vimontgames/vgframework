@@ -135,6 +135,8 @@ Also don't forget to set the *working directory* to **$(SolutionDir)**.
 
 ## SDKs
 
+The SDKs are not included with the sources. You need to install them.
+
 | SDK			 | Version       | URL												
 | -------------- | ------------- | ------------------------------------------------------------- 
 | Win10 SDK		 | 10.0.17763.0  | https://developer.microsoft.com/fr-fr/windows/downloads/sdk-archive/	
@@ -144,27 +146,29 @@ Also don't forget to set the *working directory* to **$(SolutionDir)**.
 
 # extern libs
 
-| Name						 | Version       | URL												
-| -------------------------- | ------------- | ------------------------------------------------------------- 
-| D3D12 Memory Allocator     |				 | https://github.com/GPUOpen-LibrariesAndSDKs/D3D12MemoryAllocator
-| Dear ImGui				 |				 | https://github.com/ocornut/imgui/commits/docking
-| DirectXShaderCompiler		 | August 2023   | https://github.com/microsoft/DirectXShaderCompiler/releases/tag/v1.7.2308
-| Dirent					 |				 | https://github.com/tronkko/dirent
-| Font-Awesome			     | 6.x		     | https://github.com/FortAwesome/Font-Awesome/tree/6.x
-| fmt 						 | 10.1.1		 | https://github.com/fmtlib/fmt/releases/tag/10.1.1
-| hlslpp					 | 3.4			 | https://github.com/redorav/hlslpp/releases/tag/3.4
-| IconFontCppHeaders		 |				 | https://github.com/juliettef/IconFontCppHeaders
-| ImGui-Addons				 |				 | https://github.com/gallickgunner/ImGui-Addons
-| ImGuizmo					 | 1.83			 | https://github.com/CedricGuillemet/ImGuizmo/releases/tag/1.83
-| JoltPhysics				 | 4.0.1		 | https://github.com/jrouwe/JoltPhysics/releases/tag/v4.0.1
-| magic_enum				 | 0.9.4		 | https://github.com/Neargye/magic_enum
-| optick (*)				 | 1.3.1		 | https://github.com/bombomby/optick
-| px_sched					 |				 | https://github.com/pplux/px
-| stb						 |				 | https://github.com/nothings/stb
-| tinyXML2					 |				 | https://github.com/leethomason/tinyxml2
-| UFBX						 |				 | https://github.com/ufbx/ufbx
-| Vulkan Memory Allocator	 | 3.0.1		 | https://github.com/GPUOpen-LibrariesAndSDKs/VulkanMemoryAllocator
-| WinPixEventRuntime		 | 1.0.200127001 | https://www.nuget.org/packages/WinPixEventRuntime
+The external libraries are included with the sources for convenience.
+
+| Name                       | Version       | URL                                                                       | Licence
+| -------------------------- | ------------- | ------------------------------------------------------------------------- | ------- 
+| D3D12 Memory Allocator     |               | https://github.com/GPUOpen-LibrariesAndSDKs/D3D12MemoryAllocator          | MIT    
+| Dear ImGui                 |               | https://github.com/ocornut/imgui/commits/docking                          | MIT    
+| DirectXShaderCompiler      | August 2023   | https://github.com/microsoft/DirectXShaderCompiler/releases/tag/v1.7.2308 | MIT    
+| Dirent                     |               | https://github.com/tronkko/dirent                                         | MIT    
+| Font-Awesome               | 6.x           | https://github.com/FortAwesome/Font-Awesome/tree/6.x                      | MIT    
+| fmt                        | 10.1.1        | https://github.com/fmtlib/fmt/releases/tag/10.1.1                         | MIT    
+| hlslpp                     | 3.4           | https://github.com/redorav/hlslpp/releases/tag/3.4                        | MIT    
+| IconFontCppHeaders         |               | https://github.com/juliettef/IconFontCppHeaders                           | MIT    
+| ImGui-Addons               |               | https://github.com/gallickgunner/ImGui-Addons                             | MIT    
+| ImGuizmo                   | 1.83          | https://github.com/CedricGuillemet/ImGuizmo/releases/tag/1.83             | MIT    
+| JoltPhysics                | 4.0.1         | https://github.com/jrouwe/JoltPhysics/releases/tag/v4.0.1                 | MIT    
+| magic_enum                 | 0.9.4         | https://github.com/Neargye/magic_enum                                     | MIT    
+| optick (*)                 | 1.3.1         | https://github.com/bombomby/optick                                        | MIT    
+| px_sched                   |               | https://github.com/pplux/px                                               | MIT    
+| stb                        |               | https://github.com/nothings/stb                                           | MIT    
+| tinyXML2                   |               | https://github.com/leethomason/tinyxml2                                   | MIT    
+| UFBX                       |               | https://github.com/ufbx/ufbx                                              | MIT    
+| Vulkan Memory Allocator    | 3.0.1         | https://github.com/GPUOpen-LibrariesAndSDKs/VulkanMemoryAllocator         | MIT    
+| WinPixEventRuntime         | 1.0.200127001 | https://www.nuget.org/packages/WinPixEventRuntime                         | MIT    
 
 (*) *You can download the binaries for optick 1.3.1 from https://github.com/bombomby/optick/releases/tag/1.3.1.0*
 
@@ -176,6 +180,10 @@ Also don't forget to set the *working directory* to **$(SolutionDir)**.
 | Luigi						    | https://www.turbosquid.com/3d-models/luigi-super-model-1308288 
 | 3D Foot Ball Free low-poly 3D | https://www.cgtrader.com/free-3d-models/sports/game/3d-foot-ball
 | Traffic Cone Free 3D model	| https://www.cgtrader.com/free-3d-models/exterior/street-exterior/traffic-cone-5849a434-2331-4a90-9b87-087ccc16cd0c
+
+# misc
+
+Used https://github.com/Nadrin/PBR as reference for PBR lighting equations (MIT licence)
 
 # disclaimer
 Everything is heavily "Work-in-Progress" and 0% in an usable state, and I would not recommend anyone to use it yet.

@@ -12,7 +12,17 @@ namespace vg::engine
         registerPropertyResource(DefaultMaterialData, m_albedoMap, "Albedo Map");
         registerPropertyEx(DefaultMaterialData, m_albedoColor, "Albedo Color", IProperty::Flags::Color);
 
-        registerPropertyResource(DefaultMaterialData, m_normalMap, "Normal Map");        
+        registerPropertyResource(DefaultMaterialData, m_normalMap, "Normal Map"); 
+        registerProperty(DefaultMaterialData, m_normalStrength, "Normal Strength");
+        setPropertyRange(DefaultMaterialData, m_normalStrength, float2(0.0f, 1.0f));
+
+        registerPropertyResource(DefaultMaterialData, m_pbr, "PBR Map");
+        registerProperty(DefaultMaterialData, m_occlusion, "Occlusion");
+        setPropertyRange(DefaultMaterialData, m_occlusion, float2(0.0f, 1.0f));
+        registerProperty(DefaultMaterialData, m_roughness, "Roughness");
+        setPropertyRange(DefaultMaterialData, m_roughness, float2(0.0f, 1.0f));
+        registerProperty(DefaultMaterialData, m_metalness, "Metalness");
+        setPropertyRange(DefaultMaterialData, m_metalness, float2(0.0f, 1.0f));
 
         return true;
     }
@@ -39,6 +49,10 @@ namespace vg::engine
         material->setParent((IObject*)this);
         
         material->SetColor("AlbedoColor", m_albedoColor);
+        material->SetFloat("NormalStrength", m_normalStrength);
+        material->SetFloat("Occlusion", m_occlusion);
+        material->SetFloat("Roughness", m_roughness);
+        material->SetFloat("Metalness", m_metalness);
         
         return material;
     }
@@ -63,6 +77,8 @@ namespace vg::engine
             material->SetTexture("AlbedoMap", (gfx::ITexture *)_resource->getObject());
         else if (_resource == &m_normalMap)
             material->SetTexture("NormalMap", (gfx::ITexture *)_resource->getObject());
+        else if (_resource == &m_pbr)
+            material->SetTexture("PBRMap", (gfx::ITexture *)_resource->getObject());
     }
 
     //--------------------------------------------------------------------------------------
@@ -74,5 +90,7 @@ namespace vg::engine
             material->SetTexture("AlbedoMap", nullptr);
         else if (_resource == &m_normalMap)
             material->SetTexture("NormalMap", nullptr);
+        else if (_resource == &m_pbr)
+            material->SetTexture("PBRMap", nullptr);
     }
 }

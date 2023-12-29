@@ -11,13 +11,14 @@ enum RootConstantsFlags : uint
 
 struct RootConstants3D
 {
-    float4x4 world; // world matrix (TODO: pass float3x4)
-    float4 color;   // instance color (TODO: pass u32)
-    uint buffer;    // stream0 | unused
-    uint offset;    // stream0 offset
-    uint mat;       // abeldo | normal (TODO : pass material constant buffer 16-bits handle instead)
-    uint picking;   // PickingID
-    uint misc;      // flags (16) | format (8) | matID (8)
+    float4x4 world;     // world matrix (TODO: pass float3x4)
+    float4 color;       // instance color (TODO: pass u32)
+    uint buffer;        // stream0 | unused
+    uint offset;        // stream0 offset
+    uint albedo_normal; // albedo | normal (TODO : pass material constant buffer 16-bits handle instead)
+    uint pbr_unused;    // pbr | unused (TODO : pass material constant buffer 16-bits handle instead)
+    uint picking;       // PickingID
+    uint misc;          // flags (16) | format (8) | matID (8)
 
     #ifdef __cplusplus
     RootConstants3D() :
@@ -25,7 +26,7 @@ struct RootConstants3D
         color(float4(1,1,1,1)),
         buffer(0xFFFFFFFF),
         offset(0),
-        mat(0xFFFFFFFF),
+        albedo_normal(0xFFFFFFFF),
         picking(0),
         misc(0)
     {
@@ -55,24 +56,35 @@ struct RootConstants3D
         return offset;
     }
 
-    // mat
+    // albedo_normal
     // uint AlbedoTex : 16
     // uint NormalTex : 16
     void setAlbedoTextureHandle(uint _value)
     {
-        mat = (mat & ~0x0000FFFFUL) | (_value & 0xFFFF);
+        albedo_normal = packUint16low(albedo_normal, _value);
     }
     uint getAlbedoTextureHandle()
     {
-        return mat & 0xFFFF;
+        return unpackUint16low(albedo_normal);
     }
+
     void setNormalTextureHandle(uint _value)
     {
-        mat = (mat & ~0xFFFF0000UL) | (_value & 0xFFFF) << 16;
+        albedo_normal = packUint16high(albedo_normal, _value);
     }
     uint getNormalTextureHandle()
     {
-        return mat >> 16;
+         return unpackUint16high(albedo_normal);
+    }
+
+    // pbr_unused
+    void setPBRTextureHandle(uint _value)
+    {
+        pbr_unused = packUint16low(pbr_unused, _value);
+    }
+    uint getPBRTextureHandle()
+    {
+        return unpackUint16low(pbr_unused);
     }
     
     // picking
