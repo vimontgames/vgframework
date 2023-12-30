@@ -65,13 +65,13 @@ namespace vg::renderer
         auto * tlas = _view->getTLAS();
         if (IsSkinned())
         {
-            tlas->addInstance(getInstanceBLAS(), getWorldMatrix(), _index);
+            tlas->addInstance(getInstanceBLAS(), getGlobalMatrix(), _index);
         }
         else
         {
             MeshModel * meshModel = (MeshModel *)getModel(Lod::Lod0);
             const gfx::BLAS * blas = meshModel->getBLAS();
-            tlas->addInstance(blas, getWorldMatrix(), _index);
+            tlas->addInstance(blas, getGlobalMatrix(), _index);
         }
 
         return true;
@@ -87,7 +87,7 @@ namespace vg::renderer
         {
             const MeshGeometry * geo = model->getGeometry();
 
-            const float4x4 world = getWorldMatrix();
+            const float4x4 world = getGlobalMatrix();
 
             _cmdList->setIndexBuffer(geo->getIndexBuffer());
 
@@ -432,7 +432,7 @@ namespace vg::renderer
                     const MeshImporterNode & node = nodes[index];
 
                     // YUp skeleton displayed as ZUp
-                    float4x4 boneMatrix = mul(transpose(node.node_to_world), getWorldMatrix());
+                    float4x4 boneMatrix = mul(transpose(node.node_to_world), getGlobalMatrix());
                     
                     float3 boxSize = float3(0.01f, 0.01f, 0.01f);
                     dbgDraw->AddWireframeBox( -boxSize, boxSize, 0xFF00FF00, boneMatrix);
@@ -440,7 +440,7 @@ namespace vg::renderer
                     if (-1 != node.parent_index)
                     {
                         const MeshImporterNode & parentNode = nodes[node.parent_index];
-                        float4x4 parentBoneMatrix = mul(transpose(parentNode.node_to_world), getWorldMatrix());
+                        float4x4 parentBoneMatrix = mul(transpose(parentNode.node_to_world), getGlobalMatrix());
 
                         dbgDraw->AddLine(boneMatrix[3].xyz, parentBoneMatrix[3].xyz, 0xFF00FF00);
                     }

@@ -63,7 +63,7 @@ namespace vg::engine
 
         if (nullptr != m_meshInstance)
         {
-            m_meshInstance->setWorldMatrix(go->getWorldMatrix());
+            m_meshInstance->setGlobalMatrix(go->getGlobalMatrix());
             m_meshInstance->setColor(go->getColor());
         }
 

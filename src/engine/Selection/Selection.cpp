@@ -162,7 +162,7 @@ namespace vg::engine
             IGameObject * go = dynamic_cast<IGameObject*>(objects[i]);
             if (go)
             {
-                float4x4 m = go->GetWorldMatrix();
+                float4x4 m = go->GetGlobalMatrix();
                 T.xyz += m[3].xyz;
                 ++count;
             }

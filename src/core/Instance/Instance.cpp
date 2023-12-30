@@ -33,22 +33,34 @@ namespace vg::core
 
         registerPropertyEnumBitfield(Instance, Flags, m_flags, "Flags");
         registerPropertyEx(Instance, m_color, "Color", IProperty::Flags::Color);
-        registerProperty(Instance, m_world, "World");
+        registerProperty(Instance, m_local, "Transform");
         registerPropertyObjectPtrVectorEx(Instance, m_models, "Models", IProperty::Flags::ReadOnly | IProperty::Flags::NotSaved);
 
         return true;
     }
 
     //--------------------------------------------------------------------------------------
-    void Instance::SetWorldMatrix(const float4x4 & _world)
+    void Instance::SetLocalMatrix(const float4x4 & _local)
     {
-        setWorldMatrix(_world);
+        setLocalMatrix(_local);
     }
 
     //--------------------------------------------------------------------------------------
-    const float4x4 & Instance::GetWorldMatrix() const
+    const float4x4 & Instance::GetLocalMatrix() const
     {
-        return getWorldMatrix();
+        return getLocalMatrix();
+    }
+
+    //--------------------------------------------------------------------------------------
+    void Instance::SetGlobalMatrix(const float4x4 & _global)
+    {
+        setGlobalMatrix(_global);
+    }
+
+    //--------------------------------------------------------------------------------------
+    const float4x4 Instance::GetGlobalMatrix() const
+    {
+        return getGlobalMatrix();
     }
 
     //--------------------------------------------------------------------------------------

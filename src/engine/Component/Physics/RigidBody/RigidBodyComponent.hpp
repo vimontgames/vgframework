@@ -69,7 +69,7 @@ namespace vg::engine
                 if (m_body)
                 {
                     float4x4 world = m_body->GetMatrix();
-                    go->setWorldMatrix(world);
+                    go->setGlobalMatrix(world);
                 }
             }
         }
@@ -77,7 +77,7 @@ namespace vg::engine
         if (engine->getPhysicsOptions()->IsRigidBodyVisible(m_shape->GetShapeType()))
         {
             if (m_shape)
-                m_shape->Draw(go->getWorldMatrix());
+                m_shape->Draw(go->getGlobalMatrix());
         }
     }
 
@@ -94,7 +94,7 @@ namespace vg::engine
     void RigidBodyComponent::OnPlay()
     {
         if (m_body)
-            m_body->Activate(GetGameObject()->GetWorldMatrix());
+            m_body->Activate(GetGameObject()->GetGlobalMatrix());
 
         if (m_shapeDesc)
             m_shapeDesc->OnPlay();
@@ -117,7 +117,7 @@ namespace vg::engine
             m_bodyDesc->OnStop();
 
         if (m_body)
-            m_body->Deactivate(GetGameObject()->GetWorldMatrix());
+            m_body->Deactivate(GetGameObject()->GetGlobalMatrix());
     }
 
     //--------------------------------------------------------------------------------------
@@ -222,7 +222,7 @@ namespace vg::engine
             if (!m_bodyDesc->IsMassOverriden())
                 m_bodyDesc->SetMass(m_shape->GetMass());
 
-            m_body = getPhysics()->CreateBody(m_bodyDesc, m_shape, GetGameObject()->GetWorldMatrix());
+            m_body = getPhysics()->CreateBody(m_bodyDesc, m_shape, GetGameObject()->GetGlobalMatrix());
         }
         return nullptr != m_body;
     }

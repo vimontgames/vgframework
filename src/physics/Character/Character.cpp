@@ -58,9 +58,8 @@ namespace vg::physics
         VG_ASSERT(joltShape);
 
         // Get quaternion from matrix rotation part
-        float4x4 world = _world;
-        float4x4 rot = extractRotation(world);
-        quaternion quat = getQuaternionFromRotationMatrix(rot);
+        float3x3 rot = extractRotation(_world);
+        quaternion quat = quaternion(rot);
 
         JPH::CharacterSettings settings;
         settings.mMaxSlopeAngle = degreesToRadians(_rigidCharacterDesc->m_maxSlopeAngle);
@@ -75,7 +74,7 @@ namespace vg::physics
         VG_ASSERT(capsuleShape);
         settings.mSupportingVolume = JPH::Plane(getJoltVec3(float3(0, 0, 1)), -capsuleShape->m_radius); // Accept contacts that touch the lower sphere of the capsule
 
-        m_character = new JPH::Character(&settings, getJoltVec3(world[3].xyz), getJoltQuaternion(quat), 0, Physics::get()->getPhysicsSystem());
+        m_character = new JPH::Character(&settings, getJoltVec3(_world[3].xyz), getJoltQuaternion(quat), 0, Physics::get()->getPhysicsSystem());
         m_character->AddRef();
 
         //getBodyInterface().SetFriction(m_character->GetBodyID(), _rigidCharacterDesc->m_friction);
@@ -115,10 +114,9 @@ namespace vg::physics
     {
         if (m_character)
         {
-            float4x4 world = _world;
-            float4x4 rot = extractRotation(_world);
-            quaternion quat = getQuaternionFromRotationMatrix(rot);
-            getBodyInterface().SetPositionRotationAndVelocity(m_character->GetBodyID(), getJoltVec3(world[3].xyz), getJoltQuaternion(quat), getJoltVec3(float3(0, 0, 0)), getJoltVec3(float3(0, 0, 0)));
+            float3x3 rot = extractRotation(_world);
+            quaternion quat = quaternion(rot);
+            getBodyInterface().SetPositionRotationAndVelocity(m_character->GetBodyID(), getJoltVec3(_world[3].xyz), getJoltQuaternion(quat), getJoltVec3(float3(0, 0, 0)), getJoltVec3(float3(0, 0, 0)));
         }
     }
 

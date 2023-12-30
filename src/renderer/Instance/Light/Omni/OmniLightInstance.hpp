@@ -73,7 +73,7 @@ namespace vg::renderer
 
             case ShaderPass::Forward:
             case ShaderPass::Deferred:
-                DebugDraw::get()->AddWireframeSphere(m_radius, 0xFF00FFFF, getWorldMatrix());
+                DebugDraw::get()->AddWireframeSphere(m_radius, 0xFF00FFFF, getGlobalMatrix());
                 break;     
         }            
     }

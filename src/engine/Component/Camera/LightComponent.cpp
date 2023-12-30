@@ -110,7 +110,7 @@ namespace vg::engine
     void LightComponent::Update(float _dt)
     {
         if (m_light)
-            m_light->setWorldMatrix(getGameObject()->getWorldMatrix());
+            m_light->setGlobalMatrix(getGameObject()->getGlobalMatrix());
     }
 
     //--------------------------------------------------------------------------------------

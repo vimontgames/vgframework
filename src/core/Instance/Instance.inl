@@ -1,15 +1,33 @@
 namespace vg::core
 {
     //--------------------------------------------------------------------------------------
-    VG_INLINE void Instance::setWorldMatrix(const float4x4 & _world)
+    VG_INLINE void Instance::setLocalMatrix(const float4x4 & _local)
     {
-        m_world = _world;
+        m_local = _local;
     }
 
     //--------------------------------------------------------------------------------------
-    VG_INLINE const float4x4 & Instance::getWorldMatrix() const
+    VG_INLINE const float4x4 & Instance::getLocalMatrix() const
     {
-        return m_world;
+        return m_local;
+    }
+
+    //--------------------------------------------------------------------------------------
+    VG_INLINE void Instance::setGlobalMatrix(const float4x4 & _global)
+    {
+        if (Instance * parent = dynamic_cast<Instance *>(getParent()))
+            m_local = mul(_global, inverse(parent->getGlobalMatrix()));
+        else
+            m_local = _global;
+    }
+
+    //--------------------------------------------------------------------------------------
+    VG_INLINE const float4x4 Instance::getGlobalMatrix() const
+    {
+        float4x4 global = m_local;
+        if (Instance * parent = dynamic_cast<Instance *>(getParent()))
+            global = mul(global, parent->getGlobalMatrix());
+        return global;
     }
 
     //--------------------------------------------------------------------------------------

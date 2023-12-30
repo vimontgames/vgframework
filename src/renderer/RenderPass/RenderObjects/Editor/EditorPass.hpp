@@ -99,7 +99,7 @@ namespace vg::renderer
                     {
                         const MeshGeometry * geo = model->getGeometry();
                         const AABB & aabb = geo->getAABB();
-                        dbgDraw->drawAABB(_cmdList, geo->getAABB(), instance->getWorldMatrix());
+                        dbgDraw->drawAABB(_cmdList, geo->getAABB(), instance->getGlobalMatrix());
                         //dbgDraw->AddWireframeBox(aabb.m_min, aabb.m_max, 0xFF00FF00, instance->getWorldMatrix());
                     }
                 }

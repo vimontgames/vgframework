@@ -99,7 +99,7 @@ namespace vg::engine
         VG_SAFE_RELEASE(m_character);
         VG_ASSERT(m_characterDesc && m_shape);
         if (m_characterDesc && m_shape)
-            m_character = getPhysics()->CreateCharacter(m_characterDesc, m_shape, GetGameObject()->GetWorldMatrix());
+            m_character = getPhysics()->CreateCharacter(m_characterDesc, m_shape, GetGameObject()->GetGlobalMatrix());
 
         return nullptr != m_character;
     }
@@ -117,7 +117,7 @@ namespace vg::engine
     void CharacterControllerComponent::OnPlay()
     {
         if (m_character)
-            m_character->Activate(GetGameObject()->GetWorldMatrix());
+            m_character->Activate(GetGameObject()->GetGlobalMatrix());
 
         if (m_shapeDesc)
             m_shapeDesc->OnPlay();
@@ -140,7 +140,7 @@ namespace vg::engine
             m_characterDesc->OnStop();
 
         if (m_character)
-            m_character->Deactivate(GetGameObject()->GetWorldMatrix());
+            m_character->Deactivate(GetGameObject()->GetGlobalMatrix());
     }
 
     //--------------------------------------------------------------------------------------
@@ -174,7 +174,7 @@ namespace vg::engine
         if (engine->getPhysicsOptions()->IsRigidBodyVisible(m_shape->GetShapeType()))
         {
             if (m_shape)
-                m_shape->Draw(go->getWorldMatrix());
+                m_shape->Draw(go->getGlobalMatrix());
         }
     }
 
@@ -198,7 +198,7 @@ namespace vg::engine
                 m_groundState = m_character->GetGroundState();
 
                 float4x4 world = m_character->GetMatrix();
-                go->setWorldMatrix(world);                
+                go->setGlobalMatrix(world);                
             }
         }  
     } 

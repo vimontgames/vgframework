@@ -16,8 +16,11 @@ namespace vg::core
 
         static bool                 registerProperties  (IClassDesc & _desc);
 
-        void                        SetWorldMatrix      (const float4x4 & _world) final override;
-        const float4x4 &            GetWorldMatrix      () const final override;
+        void                        SetLocalMatrix      (const float4x4 & _local) final override;
+        const float4x4 &            GetLocalMatrix      () const final override;
+
+        void                        SetGlobalMatrix     (const float4x4 & _global) final override;
+        const float4x4              GetGlobalMatrix     () const final override;
 
         void                        SetColor            (const float4 & _color) final override;
         const float4 &              GetColor            () const final override;
@@ -32,8 +35,11 @@ namespace vg::core
         void                        SetRuntimeFlags     (RuntimeFlags _flags, bool _enabled) final override;
 
     public:
-        VG_INLINE void              setWorldMatrix      (const float4x4 & _world);
-        VG_INLINE const float4x4 &  getWorldMatrix      () const;
+        VG_INLINE void              setLocalMatrix      (const float4x4 & _local);
+        VG_INLINE const float4x4 &  getLocalMatrix      () const;
+
+        VG_INLINE void              setGlobalMatrix     (const float4x4 & _global);
+        VG_INLINE const float4x4    getGlobalMatrix     () const;
 
         VG_INLINE void              setColor            (const float4 & _color);
         VG_INLINE const float4 &    getColor            () const;
@@ -51,7 +57,7 @@ namespace vg::core
         Flags                       m_flags;
         RuntimeFlags                m_runtimeFlags;
         float4                      m_color = { 1.0f, 1.0f, 1.0f, 1.0f };
-        float4x4                    m_world = float4x4::identity();
+        float4x4                    m_local = float4x4::identity();
         vector<Model *>             m_models;
     };
 }

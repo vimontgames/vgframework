@@ -61,7 +61,7 @@ void PlayerBehaviour::OnPlay()
         m_anim[PlayerState::Jumping] = animationComponent->GetAnimationIndex("Jump");
     } 
 
-    m_startPos = GetGameObject()->getWorldMatrix()[3].xyz;
+    m_startPos = GetGameObject()->getGlobalMatrix()[3].xyz;
 
     Game::get()->addPlayer(this);
 }
@@ -209,7 +209,7 @@ void PlayerBehaviour::FixedUpdate(float _dt)
 void PlayerBehaviour::Update(float _dt)
 {
     auto * go = GetGameObject();
-    auto world = go->getWorldMatrix();
+    auto world = go->getGlobalMatrix();
     if (world[3].z < -32.0f)
     {
         if (auto * charaController = go->GetComponentByType<vg::engine::ICharacterControllerComponent>())

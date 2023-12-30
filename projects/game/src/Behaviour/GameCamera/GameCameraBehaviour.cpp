@@ -37,7 +37,7 @@ bool GameCameraBehaviour::registerProperties(IClassDesc & _desc)
 void GameCameraBehaviour::OnPlay()
 {
     super::OnPlay();
-    m_offset = getGameObject()->getWorldMatrix()[3].xyz;
+    m_offset = getGameObject()->getGlobalMatrix()[3].xyz;
 }
 
 //--------------------------------------------------------------------------------------
@@ -49,16 +49,16 @@ void GameCameraBehaviour::Update(float _dt)
     
     if (players.size() > 0)
     {
-        auto matrix = getGameObject()->getWorldMatrix();
+        auto matrix = getGameObject()->getGlobalMatrix();
 
         float3 avgPos = (float3)0.0f;
         for (uint i = 0; i < players.size(); ++i)
-            avgPos.xyz += players[i]->getGameObject()->getWorldMatrix()[3].xyz;
+            avgPos.xyz += players[i]->getGameObject()->getGlobalMatrix()[3].xyz;
 
         m_target.xy = avgPos.xy / (float)players.size() + m_offset.xy;
 
         matrix[3].xy = smoothdamp(matrix[3].xy, m_target.xy, (float2&)m_targetVelocity.xy, m_speed, _dt);
 
-        getGameObject()->setWorldMatrix(matrix);
+        getGameObject()->setGlobalMatrix(matrix);
     }
 }

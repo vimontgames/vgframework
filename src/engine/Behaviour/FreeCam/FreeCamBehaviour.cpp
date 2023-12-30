@@ -75,7 +75,7 @@ namespace vg::engine
 
         IGameObject * go = GetGameObject();
 
-        const float4x4 & world = go->getWorldMatrix();
+        const float4x4 & world = go->getGlobalMatrix();
 
         float4 I(world.vec0);
         float4 J(world.vec1);
@@ -141,7 +141,7 @@ namespace vg::engine
 
         float4x4 mViewI = float4x4(-I, -J, K, T);
 
-        go->setWorldMatrix(mViewI);
+        go->setGlobalMatrix(mViewI);
     }
 
     //--------------------------------------------------------------------------------------

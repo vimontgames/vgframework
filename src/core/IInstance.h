@@ -34,8 +34,11 @@ namespace vg::core
 
         }
 
-        virtual void                SetWorldMatrix  (const float4x4 & _world) = 0;
-        virtual const float4x4 &    GetWorldMatrix  () const = 0;
+        virtual void                SetLocalMatrix  (const float4x4 & _local) = 0;
+        virtual const float4x4 &    GetLocalMatrix  () const = 0;
+
+        virtual void                SetGlobalMatrix (const float4x4 & _global) = 0;
+        virtual const float4x4      GetGlobalMatrix () const = 0;
 
         virtual void                SetColor        (const float4 & _color) = 0;
         virtual const float4 &      GetColor        () const = 0;

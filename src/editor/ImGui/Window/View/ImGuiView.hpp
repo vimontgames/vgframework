@@ -273,9 +273,9 @@ namespace vg::editor
                         for (uint i = 0; i < selectedObjectsWithoutParents.size(); ++i)
                         {
                             IGameObject * go = selectedObjectsWithoutParents[i];
-                            float4x4 mat = go->GetWorldMatrix();
+                            float4x4 mat = go->GetGlobalMatrix();
                             mat = mul(mat, delta);
-                            go->SetWorldMatrix(mat);
+                            go->SetGlobalMatrix(mat);
                         }
                     }
                 }

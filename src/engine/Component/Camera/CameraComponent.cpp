@@ -60,7 +60,7 @@ namespace vg::engine
         auto * view = Engine::get()->GetRenderer()->GetView(gfx::ViewID(m_target, m_index));
         if (nullptr != view)
         {
-            const float4x4 & matrix = getGameObject()->getWorldMatrix();
+            const float4x4 & matrix = getGameObject()->GetGlobalMatrix();
             view->SetupCamera(matrix, float2(m_near, m_far), m_fovY);
         }
     }
