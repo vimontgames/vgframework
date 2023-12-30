@@ -8,7 +8,8 @@ namespace vg::renderer
     {
         All = 0,
         Opaque,
-        Transparent
+        Transparent,
+        Light
     };
 
     class GraphicInstanceList

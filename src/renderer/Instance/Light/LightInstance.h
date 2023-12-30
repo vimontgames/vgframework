@@ -24,7 +24,7 @@ namespace vg::renderer
         LightInstance(const core::string & _name, core::IObject * _parent);
         ~LightInstance();
 
-
+        bool            Cull                (const Frustum & _frustum, CullingResult * _cullingResult) override;
         bool            OnUpdateRayTracing  (gfx::CommandList * _cmdList, View * _view, core::uint _index) override { return false; }
         LightType       GetLightType        () const = 0;        
     };

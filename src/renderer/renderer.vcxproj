@@ -160,6 +160,8 @@
     <ClInclude Include="RenderPass\Update\UpdatePass.hpp" />
     <ClInclude Include="RenderPass\Update\ViewConstants\ViewConstantsUpdatePass.h" />
     <ClInclude Include="RenderPass\Update\ViewConstants\ViewConstantsUpdatePass.hpp" />
+    <ClInclude Include="View\Frustum.h" />
+    <ClInclude Include="View\Frustum.hpp" />
     <ClInclude Include="View\Lit\LitView.h" />
     <ClInclude Include="View\Lit\LitView.hpp" />
     <ClInclude Include="View\View.h" />

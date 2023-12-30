@@ -6,6 +6,7 @@
 #include "renderer/View/View.h"
 #include "renderer/Picking/PickingManager.h"
 #include "renderer/DebugDraw/DebugDraw.h"
+#include "renderer/Instance/GraphicInstance.h"
 
 #include "Shaders/system/toolmode.hlsl.h"
 
@@ -89,19 +90,14 @@ namespace vg::renderer
             {
                 for (uint i = 0; i < allInstances.m_instances.size(); ++i)
                 {
-                    const IGraphicInstance * instance = allInstances.m_instances[i];
+                    auto * instance = (GraphicInstance*)allInstances.m_instances[i];
 
                     if (boudingBoxSelection && !asBool(IInstance::RuntimeFlags::Selected & instance->getRuntimeFlags()))
                         continue;
 
-                    const MeshModel * model = (MeshModel *)instance->getModel(Lod::Lod0); // TODO: get LoD from culling result
-                    if (nullptr != model)
-                    {
-                        const MeshGeometry * geo = model->getGeometry();
-                        const AABB & aabb = geo->getAABB();
-                        dbgDraw->drawAABB(_cmdList, geo->getAABB(), instance->getGlobalMatrix());
-                        //dbgDraw->AddWireframeBox(aabb.m_min, aabb.m_max, 0xFF00FF00, instance->getWorldMatrix());
-                    }
+                    AABB aabb;
+                    if (instance->GetAABB(aabb))
+                        dbgDraw->drawAABB(_cmdList, aabb, instance->getGlobalMatrix());
                 }
             }
         }

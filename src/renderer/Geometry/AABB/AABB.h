@@ -15,6 +15,8 @@ namespace vg::renderer
 
         }
 
+        AABB(const AABB & _other, const core::float4x4 & _world);
+
         VG_INLINE void grow(const core::float3 & _point);
 
         core::float4x4 getLocalSpaceUnitCubeMatrix() const;

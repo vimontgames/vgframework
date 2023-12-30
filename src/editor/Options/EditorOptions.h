@@ -49,8 +49,11 @@ namespace vg::editor
         const GizmoOptions &    getGizmoOptions     () const { return m_gizmo; }
         GizmoOptions &          getGizmoOptions     () { return m_gizmo; }
 
+        bool                    showCullingInfo     () const { return m_cullingInfo;}
+
     private:
         renderer::GUITheme      m_guiTheme = renderer::GUITheme::ImGui_Dark;       
         GizmoOptions            m_gizmo;
+        bool                    m_cullingInfo = false;
     };
 }

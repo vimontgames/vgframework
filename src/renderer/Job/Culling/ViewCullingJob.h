@@ -14,6 +14,8 @@ namespace vg::renderer
     class View;
     class IGraphicInstance;
     class MeshInstance;
+
+    struct Frustum;
  
     struct ViewCullingJobOutput
     {
@@ -23,7 +25,12 @@ namespace vg::renderer
                 m_instanceLists[i].clear();
         }
 
-        GraphicInstanceList                 m_instanceLists[core::enumCount<GraphicInstanceListType>()];
+        void add(GraphicInstanceListType _type, const IGraphicInstance * _instance)
+        {
+            m_instanceLists[core::asInteger(_type)].m_instances.push_back(_instance);
+        }
+
+        GraphicInstanceList m_instanceLists[core::enumCount<GraphicInstanceListType>()];
     };
 
     struct SharedCullingJobOutput
@@ -42,6 +49,12 @@ namespace vg::renderer
         core::atomicvector<MeshInstance *>  m_skins;
     };
 
+    struct CullingResult
+    {
+        ViewCullingJobOutput *      m_output        = nullptr;
+        SharedCullingJobOutput *    m_sharedOutput  = nullptr;
+    };
+
     class ViewCullingJob : public core::Job
     {
     public:
@@ -51,14 +64,13 @@ namespace vg::renderer
         void run() override;
 
     protected:
-        void cullGameObjectRecur(const core::GameObject * _go);
+        void cullGameObjectRecur(const core::GameObject * _go, const Frustum & _frustum);
 
     private:
-        VG_INLINE void dispatch(IGraphicInstance * _instance);
+        //VG_INLINE void dispatch(IGraphicInstance * _instance);
         VG_INLINE void add(GraphicInstanceListType _type, const IGraphicInstance * _instance);
 
     private:
-        ViewCullingJobOutput * const    m_output = nullptr;
-        SharedCullingJobOutput * const  m_sharedOutput = nullptr;
+        CullingResult m_result;
     };
 }

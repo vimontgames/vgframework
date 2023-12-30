@@ -60,6 +60,13 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
+    bool OmniLightInstance::GetAABB(AABB & _aabb) const
+    {
+        _aabb = AABB(-m_radius, +m_radius);
+        return true;
+    }
+
+    //--------------------------------------------------------------------------------------
     void OmniLightInstance::Draw(const RenderContext & _renderContext, gfx::CommandList * _cmdList) const
     {
         switch (_renderContext.m_shaderPass)

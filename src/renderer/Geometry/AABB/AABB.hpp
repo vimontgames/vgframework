@@ -27,6 +27,22 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
+    AABB::AABB(const AABB & _other, const float4x4 & _world)
+    {
+        float4 p000 = mul(float4(_other.m_min.xyz, 1.0f), _world);
+        float4 p001 = mul(float4(_other.m_min.xy, _other.m_max.z , 1.0f), _world);
+        float4 p010 = mul(float4(_other.m_min.x,  _other.m_max.y, _other.m_min.z, 1.0f), _world);
+        float4 p011 = mul(float4(_other.m_min.x,  _other.m_max.yz, 1.0f), _world);
+        float4 p100 = mul(float4(_other.m_max.x,  _other.m_min.yz, 1.0f), _world);
+        float4 p101 = mul(float4(_other.m_max.x,  _other.m_min.y, _other.m_max.z, 1.0f), _world);
+        float4 p110 = mul(float4(_other.m_max.xy, _other.m_min.z, 1.0f), _world);
+        float4 p111 = mul(float4(_other.m_max.xyz, 1.0f), _world);
+
+        m_min = min(min(min(p000, p001), min(p010, p011)), min(min(p100, p101), min(p110, p111))).xyz;
+        m_max = max(max(max(p000, p001), max(p010, p011)), max(max(p100, p101), max(p110, p111))).xyz;
+    }
+
+    //--------------------------------------------------------------------------------------
     bool AABB::read(io::Buffer & _buffer)
     {
         _buffer.read(&m_min);

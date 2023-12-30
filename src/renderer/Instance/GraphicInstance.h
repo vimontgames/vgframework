@@ -6,6 +6,10 @@ namespace vg::renderer
 {
     class MaterialModel;
     class View;
+    class AABB;
+
+    struct Frustum;
+    struct CullingResult;
 
     class GraphicInstance : public IGraphicInstance
     {
@@ -25,6 +29,9 @@ namespace vg::renderer
         void                            ClearPickingID      () override;
         void                            SetPickingID        (PickingID _id) override;
         PickingID                       GetPickingID        () const override;
+
+        virtual bool                    GetAABB             (AABB & _aabb) const = 0;
+        virtual bool                    Cull                (const Frustum & _frustum, CullingResult * _cullingResult) = 0;
 
         virtual bool                    OnUpdateRayTracing  (gfx::CommandList * _cmdList, View * _view, core::uint _index) = 0;
 

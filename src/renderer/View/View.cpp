@@ -14,6 +14,7 @@
 #endif
 
 #include "Lit/LitView.hpp"
+#include "Frustum.hpp"
 
 using namespace vg::core;
 using namespace vg::gfx;
@@ -158,6 +159,12 @@ namespace vg::renderer
         m_frustum.planes[asInteger(FrustumPlane::Far)].y = viewProj._24 - viewProj._23;
         m_frustum.planes[asInteger(FrustumPlane::Far)].z = viewProj._34 - viewProj._33;
         m_frustum.planes[asInteger(FrustumPlane::Far)].w = viewProj._44 - viewProj._43;
+
+        for (uint i = 0; i < countof(m_frustum.planes); ++i)
+        {
+            float normXYZ = length(m_frustum.planes[i].xyz);
+            m_frustum.planes[i] /= (float4)normXYZ;
+        }
     }
 
     //--------------------------------------------------------------------------------------
@@ -431,5 +438,15 @@ namespace vg::renderer
     const ViewCullingJobOutput & View::getCullingJobResult() const
     {
         return m_cullingJobResult;
+    }
+
+    //--------------------------------------------------------------------------------------
+    gfx::ViewCullingStats View::GetViewCullingStats() const
+    {
+        ViewCullingStats stats;
+        stats.opaque        = (uint)m_cullingJobResult.m_instanceLists[asInteger(GraphicInstanceListType::Opaque)     ].m_instances.size();
+        stats.transparent   = (uint)m_cullingJobResult.m_instanceLists[asInteger(GraphicInstanceListType::Transparent)].m_instances.size();
+        stats.lights        = (uint)m_cullingJobResult.m_instanceLists[asInteger(GraphicInstanceListType::Light)      ].m_instances.size();
+        return stats;
     }
 }

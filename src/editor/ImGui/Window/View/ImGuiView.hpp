@@ -138,6 +138,24 @@ namespace vg::editor
                 imGuiAdapter->ReleaseTextureID(texID);
             }
 
+            const auto options = EditorOptions::get();
+            bool showStats = options->showCullingInfo();
+            if (m_view && showStats)
+            {
+                float fontHeight = 13.0f;
+
+                const auto & stats = m_view->GetViewCullingStats();
+                ImGui::SameLine();
+                ImGui::SetCursorPos(ImVec2(0.0f, ImGui::GetWindowContentRegionMin().y));
+                ImGui::Text("Opaque %u", stats.opaque);
+                ImGui::SameLine();
+                ImGui::SetCursorPos(ImVec2(0.0f, ImGui::GetWindowContentRegionMin().y + fontHeight) );
+                ImGui::Text("Transp %u", stats.transparent);
+                ImGui::SameLine();
+                ImGui::SetCursorPos(ImVec2(0.0f, ImGui::GetWindowContentRegionMin().y + fontHeight * 2) );
+                ImGui::Text("Lights %u", stats.lights);
+            }
+
             // Draw Border
             //ImGui::GetForegroundDrawList()->AddRect(vMin, vMax, IM_COL32(0, 255, 0, 255));
 
@@ -156,7 +174,8 @@ namespace vg::editor
 
             m_view->SetVisible(true);
         }
-        else
+
+        if (!m_isVisible)
         {
             if (m_view)
             {
@@ -179,7 +198,8 @@ namespace vg::editor
         const auto selectedObjects = selection->GetSelectedObjects();
         if (m_view && m_view->IsToolmode() && selectedObjects.size() > 0)
         {
-            const GizmoOptions & gizmoOptions = EditorOptions::get()->getGizmoOptions();
+            const auto options = EditorOptions::get();
+            const GizmoOptions & gizmoOptions = options->getGizmoOptions();
 
             const float * snap = nullptr;
 

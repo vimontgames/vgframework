@@ -24,6 +24,7 @@ namespace vg::renderer
         OmniLightInstance(const OmniLightDesc * _omniLightDesc);
         ~OmniLightInstance();
 
+        bool        GetAABB             (AABB & _aabb) const;
         void        Draw                (const RenderContext & _renderContext, gfx::CommandList * _cmdList) const final override;
 
         LightType   GetLightType        () const final override { return LightType::Omni; }

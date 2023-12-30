@@ -366,6 +366,12 @@
     <ClInclude Include="RenderPass\Compute\ComputeDeferredLighting\ComputeDeferredLightingPass.hpp">
       <Filter>Pass\Compute\ComputeDeferredLighting</Filter>
     </ClInclude>
+    <ClInclude Include="View\Frustum.h">
+      <Filter>View</Filter>
+    </ClInclude>
+    <ClInclude Include="View\Frustum.hpp">
+      <Filter>View</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Pass">

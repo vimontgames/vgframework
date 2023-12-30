@@ -60,6 +60,52 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
+    bool MeshInstance::GetAABB(AABB & _aabb) const
+    {
+        if (auto * model = getMeshModel(Lod::Lod0))
+        {
+            const MeshGeometry * geo = model->getGeometry();
+            _aabb = geo->getAABB();
+            return true;
+        }
+        return false;
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool MeshInstance::Cull(const Frustum & _frustum, CullingResult * _cullingResult)
+    {
+        const MeshModel * meshModel = getMeshModel(Lod::Lod0);
+
+        if (nullptr != meshModel)
+        {
+            const AABB & aabb = meshModel->getGeometry()->getAABB();
+
+            bool visible = _frustum.intersects(aabb, getGlobalMatrix()) != FrustumTest::Outside;
+
+            if (visible)
+            {
+                _cullingResult->m_output->add(GraphicInstanceListType::All, this);
+
+                if (1) // TODO
+                    _cullingResult->m_output->add(GraphicInstanceListType::Opaque, this);
+
+                if (0) // TODO
+                    _cullingResult->m_output->add(GraphicInstanceListType::Transparent, this);
+
+                if (IsSkinned())
+                {
+                    if (setSkinFlag(MeshInstance::SkinFlags::SkinLOD0))
+                        _cullingResult->m_sharedOutput->m_skins.push_atomic(this);
+                }
+
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    //--------------------------------------------------------------------------------------
     bool MeshInstance::OnUpdateRayTracing(gfx::CommandList * _cmdList, View * _view, core::uint _index)
     {
         auto * tlas = _view->getTLAS();

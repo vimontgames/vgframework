@@ -79,6 +79,13 @@ namespace vg::gfx
         gfx::ITexture *     dest = nullptr;
     };
 
+    struct ViewCullingStats
+    {
+        core::uint opaque       = 0;
+        core::uint transparent  = 0;
+        core::uint lights       = 0;
+    };
+
     class IView : public core::Object
     {
     public:
@@ -136,5 +143,6 @@ namespace vg::gfx
         virtual core::uint              GetPickingRequestedHitCount () const = 0;
         virtual const PickingHit &      GetPickingClosestHit        () const = 0;
 
+        virtual ViewCullingStats        GetViewCullingStats         () const = 0;
     };
 }

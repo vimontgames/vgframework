@@ -52,4 +52,19 @@ namespace vg::renderer
     {
         
     }
+
+    //--------------------------------------------------------------------------------------
+    bool LightInstance::Cull(const Frustum & _frustum, CullingResult * _cullingResult)
+    {
+        bool visible = true; // TODO
+
+        if (visible)
+        {
+            _cullingResult->m_output->add(GraphicInstanceListType::All, this);
+            _cullingResult->m_output->add(GraphicInstanceListType::Light, this);
+            return true;
+        }
+
+        return false;
+    }
 }

@@ -3,7 +3,8 @@
 #include "gfx/IView.h"
 #include "gfx/Resource/Texture.h"
 #include "renderer/Job/Culling/ViewCullingJob.h"
-#include "shaders/system/picking.hlsli"         
+#include "shaders/system/picking.hlsli"    
+#include "Frustum.h"
 
 namespace vg::core
 {
@@ -23,21 +24,6 @@ namespace vg::gfx
 namespace vg::renderer
 {
     class ViewConstantsUpdatePass;
-
-    enum class FrustumPlane
-    {
-        Left = 0,
-        Right,
-        Top,
-        Bottom,
-        Near,
-        Far
-    };
-
-    struct Frustum
-    {
-        core::float4 planes[core::enumCount<FrustumPlane>()];
-    };
 
     //--------------------------------------------------------------------------------------
     // Base class for user views.
@@ -103,6 +89,8 @@ namespace vg::renderer
         virtual core::uint                  GetPickingHitCount          () const override;
         virtual core::uint                  GetPickingRequestedHitCount () const override;
         const PickingHit &                  GetPickingClosestHit        () const override;
+
+        gfx::ViewCullingStats               GetViewCullingStats         () const final override;
 
         const Frustum &                     getCameraFrustum            () const;
 

@@ -27,6 +27,13 @@ namespace vg::editor
                 registerOptionalProperty(EditorOptions, m_gizmo.m_snapRotate, m_gizmo.m_rotationSnapInDegrees, "Rotate");
                 registerOptionalProperty(EditorOptions, m_gizmo.m_snapScale, m_gizmo.m_scaleSnap, "Scale");
             }
+            registerPropertyGroupEnd(EditorOptions);
+        }
+        registerPropertyGroupEnd(EditorOptions);
+
+        registerPropertyGroupBegin(EditorOptions, "Camera");
+        {
+            registerProperty(EditorOptions, m_cullingInfo, "Show Culling Info");
         }
         registerPropertyGroupEnd(EditorOptions);
 

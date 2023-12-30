@@ -12,16 +12,17 @@ namespace vg::renderer
 {
     //--------------------------------------------------------------------------------------
     ViewCullingJob::ViewCullingJob(const string & _name, IObject * _parent, ViewCullingJobOutput * const _output, SharedCullingJobOutput * const _sharedOutput) :
-        Job(_name, _parent),
-        m_output(_output),
-        m_sharedOutput(_sharedOutput)
+        Job(_name, _parent)
     {
         VG_ASSERT(_output);
         VG_ASSERT(_sharedOutput);
+
+        m_result.m_output = _output;
+        m_result.m_sharedOutput = _sharedOutput;
     }
 
     //--------------------------------------------------------------------------------------
-    void ViewCullingJob::cullGameObjectRecur(const GameObject * _go)
+    void ViewCullingJob::cullGameObjectRecur(const GameObject * _go, const Frustum & _frustum)
     {
         // Visible? Then add it to the list
         if (asBool(GameObject::Flags::Enabled & _go->getFlags()))
@@ -33,12 +34,7 @@ namespace vg::renderer
                 GraphicInstance * instance = (GraphicInstance*)instances[i];
 
                 if (asBool(core::Instance::Flags::Enabled & instance->getFlags()))
-                {
-                    bool visible = true;
-
-                    if (visible)
-                        dispatch(instance);
-                }
+                    instance->Cull(_frustum, &m_result);
             }
 
             const auto & children = _go->getChildren();
@@ -46,41 +42,15 @@ namespace vg::renderer
             for (uint i = 0; i < childCount; ++i)
             {
                 const GameObject * child = children[i];
-                cullGameObjectRecur(child);
+                cullGameObjectRecur(child, _frustum);
             }
         }
     }
 
     //--------------------------------------------------------------------------------------
-    VG_INLINE void ViewCullingJob::dispatch(IGraphicInstance * _instance)
-    {
-        add(GraphicInstanceListType::All, _instance);
-
-        if (1) // TODO
-            add(GraphicInstanceListType::Opaque, _instance);
-
-        if (0) // TODO
-            add(GraphicInstanceListType::Transparent, _instance);
-
-        if (_instance->IsSkinned())
-        {
-            VG_ASSERT(dynamic_cast<MeshInstance *>(_instance));
-            MeshInstance * meshInstance = (MeshInstance *)_instance;
-            if (meshInstance->setSkinFlag(MeshInstance::SkinFlags::SkinLOD0))
-                m_sharedOutput->m_skins.push_atomic(meshInstance);
-        }
-    }
-
-    //--------------------------------------------------------------------------------------
-    VG_INLINE void ViewCullingJob::add(GraphicInstanceListType _type, const IGraphicInstance * _instance)
-    {
-        m_output->m_instanceLists[asInteger(_type)].m_instances.push_back(_instance);
-    }
-
-    //--------------------------------------------------------------------------------------
     void ViewCullingJob::run()
     {
-        m_output->clear();
+        m_result.m_output->clear();
 
         View * view = (View *)getParent();
         gfx::ViewID viewID = view->getViewID();
@@ -89,6 +59,7 @@ namespace vg::renderer
         //VG_DEBUGPRINT("\"%s\" running on \"%s\" (0x%08X)\n", name.c_str(), Kernel::getScheduler()->GetCurrentThreadName().c_str(), Kernel::getScheduler()->GetCurrentThreadID());
 
         const auto * world = view->getWorld();
+        const auto & frustum = view->getCameraFrustum();
         
         if (nullptr != world)
         {
@@ -101,7 +72,7 @@ namespace vg::renderer
                 const auto * root = scene->GetRoot();
                 VG_ASSERT("[Culling] Scene has no root node");
                 if (root)
-                    cullGameObjectRecur((GameObject *)root);
+                    cullGameObjectRecur((GameObject *)root, frustum);
             }
         }
     }

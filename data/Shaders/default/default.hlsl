@@ -133,9 +133,6 @@ PS_Output PS_Forward(VS_Output _input)
     // Compute & Apply lighting
     LightingResult lighting = computeDirectLighting(camPos, worldPos, albedo.rgb, worldNormal.xyz, pbr);
 
-    //output.color0 = float4(lighting.diffuse.rgb, 1.0f);
-    //return output;
-
     output.color0.rgb = ApplyLighting(albedo.rgb, lighting);
     
     #if _TOOLMODE && !_ZONLY
@@ -240,7 +237,20 @@ PS_OutputDeferred PS_Deferred(VS_Output _input)
     #if _TOOLMODE && !_ZONLY
     // If any 'Forward' debug display mode is enabled then its result is stored into the 'Albedo' buffer
     output.albedo = forwardDebugDisplay(output.albedo, viewConstants.getDisplayMode(), rootConstants3D.getMatID(), _input.tan.xyz, _input.bin.xyz, _input.nrm.xyz, _input.col, uv0, uv1, screenPos.xy, worldPos.xyz, albedo.rgb, normal.xyz);
-    #endif
+
+    // Picking
+    uint toolmodeRWBufferID = viewConstants.getToolmodeRWBufferID();
+    if (0xFFFF != toolmodeRWBufferID)
+    {
+        uint2 inputPos = _input.pos.xy;
+        float depth = _input.pos.z;
+        uint2 mousePos = viewConstants.getMousePos();
+        uint4 pickingID = uint4(rootConstants3D.getPickingID(), rootConstants3D.getMatID(), 0, 0);
+    
+        if (ProcessPicking(toolmodeRWBufferID, 0, inputPos, depth, worldPos, mousePos, screenSize, pickingID))
+            output.albedo = lerp(output.albedo, float4(0,1,0,1), 0.25f);
+    }
+    #endif // _TOOLMODE && !_ZONLY
 
     return output;
 }
