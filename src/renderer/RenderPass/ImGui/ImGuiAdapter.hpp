@@ -7,6 +7,7 @@
 #include "gfx/Resource/Texture.h"
 #include "gfx/BindlessTable/BindlessTable.h"
 #include "gfx/Device/Device.h"
+#include "editor/Editor_Consts.h"
 
 #include "IconFont/IconsFontAwesome6.h"
 
@@ -28,9 +29,9 @@ namespace vg::renderer
         io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard | ImGuiConfigFlags_DockingEnable;
         io.ConfigDockingTransparentPayload = true;
 
-        io.Fonts->AddFontFromFileTTF("data/Fonts/ubuntu/UbuntuMono-R.ttf", 16);
+        io.Fonts->AddFontFromFileTTF("data/Fonts/ubuntu/UbuntuMono-R.ttf", editor::style::font::Height);
 
-        float baseFontSize = 13.0f; // 13.0f is the size of the default font. Change to the font size you use.
+        float baseFontSize = editor::style::font::Height; // 13.0f is the size of the default font. Change to the font size you use.
         float iconFontSize = baseFontSize;// *2.0f / 3.0f; // FontAwesome fonts need to have their sizes reduced by 2.0f/3.0f in order to align correctly
 
         // merge in icons from Font Awesome

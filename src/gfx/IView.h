@@ -83,7 +83,9 @@ namespace vg::gfx
     {
         core::uint opaque       = 0;
         core::uint transparent  = 0;
-        core::uint lights       = 0;
+        core::uint directional  = 0;
+        core::uint omni         = 0;
+        core::uint spot         = 0;
     };
 
     class IView : public core::Object

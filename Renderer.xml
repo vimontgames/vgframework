@@ -2,7 +2,7 @@
     <Object class="RendererOptions">
         <Property type="String" name="m_name" flags="Hidden" value="Renderer Options"/>
         <Property type="Bool" name="m_toolMode" value="false"/>
-        <Property type="Bool" name="m_rayTracing" flags="SameLine" value="false"/>
+        <Property type="Bool" name="m_rayTracing" flags="SameLine" value="true"/>
         <Property type="Bool" name="m_postProcess" flags="SameLine" value="true"/>
         <Property type="EnumU8" name="m_lightingMode" value="Deferred"/>
         <Property type="EnumU32" name="m_debugDisplayMode" value="None"/>

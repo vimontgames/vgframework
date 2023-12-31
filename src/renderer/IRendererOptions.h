@@ -7,5 +7,8 @@ namespace vg::renderer
     {
     public:
         VG_CLASS_DECL_ABSTRACT(IRendererOptions, core::Options);
+
+        virtual bool    IsToolModeEnabled   () const = 0;
+        virtual bool    IsRayTracingEnabled () const = 0;
     };
 }

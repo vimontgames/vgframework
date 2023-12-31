@@ -20,6 +20,12 @@ Another subject that is very close to my heart is that there is a strong separat
 
 # changelog
 
+## 0.23
+Directional and spot lights with Raytraced (hard) shadows
+
+![Screenshot](doc/img/0.23.gif)
+
+
 ## 0.22
 Skinned BLAS updates for RT\
 Add icons for component types\

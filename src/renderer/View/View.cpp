@@ -444,9 +444,14 @@ namespace vg::renderer
     gfx::ViewCullingStats View::GetViewCullingStats() const
     {
         ViewCullingStats stats;
-        stats.opaque        = (uint)m_cullingJobResult.m_instanceLists[asInteger(GraphicInstanceListType::Opaque)     ].m_instances.size();
-        stats.transparent   = (uint)m_cullingJobResult.m_instanceLists[asInteger(GraphicInstanceListType::Transparent)].m_instances.size();
-        stats.lights        = (uint)m_cullingJobResult.m_instanceLists[asInteger(GraphicInstanceListType::Light)      ].m_instances.size();
+
+        stats.opaque        = (uint)m_cullingJobResult.get(GraphicInstanceListType::Opaque).m_instances.size();
+        stats.transparent   = (uint)m_cullingJobResult.get(GraphicInstanceListType::Transparent).m_instances.size();
+
+        stats.directional   = (uint)m_cullingJobResult.get(LightType::Directional).m_instances.size();
+        stats.omni          = (uint)m_cullingJobResult.get(LightType::Omni).m_instances.size();
+        stats.spot          = (uint)m_cullingJobResult.get(LightType::Spot).m_instances.size();
+
         return stats;
     }
 }

@@ -142,18 +142,28 @@ namespace vg::editor
             bool showStats = options->showCullingInfo();
             if (m_view && showStats)
             {
-                float fontHeight = 13.0f;
-
                 const auto & stats = m_view->GetViewCullingStats();
+                uint line = 0;
+
                 ImGui::SameLine();
-                ImGui::SetCursorPos(ImVec2(0.0f, ImGui::GetWindowContentRegionMin().y));
+                ImGui::SetCursorPos(ImVec2(0.0f, ImGui::GetWindowContentRegionMin().y + style::font::Height * line++));
                 ImGui::Text("Opaque %u", stats.opaque);
+
                 ImGui::SameLine();
-                ImGui::SetCursorPos(ImVec2(0.0f, ImGui::GetWindowContentRegionMin().y + fontHeight) );
-                ImGui::Text("Transp %u", stats.transparent);
+                ImGui::SetCursorPos(ImVec2(0.0f, ImGui::GetWindowContentRegionMin().y + style::font::Height * line++) );
+                ImGui::Text("Transparent %u", stats.transparent);
+
                 ImGui::SameLine();
-                ImGui::SetCursorPos(ImVec2(0.0f, ImGui::GetWindowContentRegionMin().y + fontHeight * 2) );
-                ImGui::Text("Lights %u", stats.lights);
+                ImGui::SetCursorPos(ImVec2(0.0f, ImGui::GetWindowContentRegionMin().y + style::font::Height * line++) );
+                ImGui::Text("Directional %u", stats.directional);
+
+                ImGui::SameLine();
+                ImGui::SetCursorPos(ImVec2(0.0f, ImGui::GetWindowContentRegionMin().y + style::font::Height * line++));
+                ImGui::Text("Omni %u", stats.omni);
+
+                ImGui::SameLine();
+                ImGui::SetCursorPos(ImVec2(0.0f, ImGui::GetWindowContentRegionMin().y + style::font::Height * line++));
+                ImGui::Text("Spot %u", stats.spot);
             }
 
             // Draw Border

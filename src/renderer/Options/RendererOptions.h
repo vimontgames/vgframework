@@ -32,6 +32,9 @@ namespace vg::renderer
 
 							    RendererOptions			    (const core::string & _name, core::IObject * _parent = nullptr);
 
+        bool                    IsToolModeEnabled           () const final override { return isToolModeEnabled(); };
+        bool                    IsRayTracingEnabled         () const final override { return isRayTracingEnabled(); };
+
         void                    OnPropertyChanged           (IObject * _object, const core::IProperty & _prop, bool _notifyParent) final override;
 
         bool				    isToolModeEnabled           () const { return m_toolMode; }

@@ -43,7 +43,7 @@ namespace vg::renderer
         renderContext.m_toolmode = view->getViewID().target == gfx::ViewTarget::Editor || options->isToolModeEnabled();
         renderContext.m_shaderPass = ShaderPass::ZOnly;
 
-        const GraphicInstanceList & opaqueInstances = view->getCullingJobResult().m_instanceLists[asInteger(GraphicInstanceListType::Opaque)];
+        const GraphicInstanceList & opaqueInstances = view->getCullingJobResult().get(GraphicInstanceListType::Opaque);
 
         RasterizerState rs(FillMode::Solid, CullMode::None);
         BlendState bs(BlendFactor::One, BlendFactor::Zero, BlendOp::Add);

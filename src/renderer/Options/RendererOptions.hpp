@@ -45,7 +45,10 @@ namespace vg::renderer
     {
         setFile("Renderer.xml");
         Load();
-        Renderer::get()->SetVSync(m_VSync);
+
+        auto * renderer = Renderer::get();
+        renderer->SetVSync(m_VSync);
+        RayTracingManager::get()->enableRayTracing(m_rayTracing);
     }
 
     //--------------------------------------------------------------------------------------

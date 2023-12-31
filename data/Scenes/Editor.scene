@@ -1,20 +1,20 @@
 <Root>
     <Object class="Scene">
         <Property type="String" name="m_name" flags="Hidden" value="Editor"/>
-        <Property type="ObjectRef" name="m_root">
+        <Property type="ObjectPtr" name="m_root">
             <Object class="GameObject">
                 <Property type="String" name="m_name" value="Root"/>
                 <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
                 <Property type="Float4" name="m_color" flags="Color" x="1" y="1" z="1" w="1"/>
-                <Property type="Float4x4" name="m_world" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="0" Ty="0" Tz="0" Tw="1"/>
-                <Property type="ObjectRefVector" name="m_components"/>
-                <Property type="ObjectRefVector" name="m_children" flags="Hidden">
+                <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="0" Ty="0" Tz="0" Tw="1"/>
+                <Property type="ObjectPtrVector" name="m_components"/>
+                <Property type="ObjectPtrVector" name="m_children" flags="Hidden">
                     <Object class="GameObject">
                         <Property type="String" name="m_name" value="Editor Camera"/>
                         <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
                         <Property type="Float4" name="m_color" flags="Color" x="1" y="1" z="1" w="1"/>
-                        <Property type="Float4x4" name="m_world" Ix="1" Iy="8.7422777e-08" Iz="-0" Iw="-0" Jx="3.8213709e-15" Jy="-4.3711388e-08" Jz="1" Jw="-0" Kx="8.7422777e-08" Ky="-1" Kz="-4.3711388e-08" Kw="0" Tx="1.0954183e-06" Ty="-12.530107" Tz="1.8684962" Tw="1"/>
-                        <Property type="ObjectRefVector" name="m_components">
+                        <Property type="Float4x4" name="m_local" Ix="0.59538507" Iy="0.80344051" Iz="0" Iw="0" Jx="-0.1480666" Jy="0.10972392" Jz="0.98287177" Jw="0" Kx="0.78967899" Ky="-0.5851872" Kz="0.18429068" Kw="0" Tx="4.8356757" Ty="-2.9164283" Tz="1.5575846" Tw="1"/>
+                        <Property type="ObjectPtrVector" name="m_components">
                             <Object class="CameraComponent">
                                 <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
                                 <Property type="EnumU8" name="m_target" value="Editor"/>
@@ -27,12 +27,12 @@
                                 <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
                                 <Property type="Float" name="m_moveSpeed" flags="HasRange" value="1"/>
                                 <Property type="Float" name="m_rotSpeed" flags="HasRange" value="1"/>
-                                <Property type="Float" name="m_pitch" flags="HasRange" value="-1.5707964"/>
-                                <Property type="Float" name="m_yaw" flags="HasRange" value="3.1415927"/>
+                                <Property type="Float" name="m_pitch" flags="HasRange" value="-1.3854462"/>
+                                <Property type="Float" name="m_yaw" flags="HasRange" value="-2.2085412"/>
                                 <Property type="Float" name="m_roll" flags="HasRange" value="0"/>
                             </Object>
                         </Property>
-                        <Property type="ObjectRefVector" name="m_children" flags="Hidden"/>
+                        <Property type="ObjectPtrVector" name="m_children" flags="Hidden"/>
                     </Object>
                 </Property>
             </Object>

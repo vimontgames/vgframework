@@ -111,13 +111,14 @@ namespace vg::renderer
         auto * tlas = _view->getTLAS();
         if (IsSkinned())
         {
-            tlas->addInstance(getInstanceBLAS(), getGlobalMatrix(), _index);
+            if (const BLAS * blas = getInstanceBLAS())
+                tlas->addInstance(blas, getGlobalMatrix(), _index);
         }
         else
         {
             MeshModel * meshModel = (MeshModel *)getModel(Lod::Lod0);
-            const gfx::BLAS * blas = meshModel->getBLAS();
-            tlas->addInstance(blas, getGlobalMatrix(), _index);
+            if (const gfx::BLAS * blas = meshModel->getBLAS())
+                tlas->addInstance(blas, getGlobalMatrix(), _index);
         }
 
         return true;

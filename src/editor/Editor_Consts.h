@@ -18,6 +18,11 @@ namespace vg::editor
             inline static const ImVec2 SizeMedium = ImVec2(64, 0);
         }
 
+        namespace font
+        {
+            inline static const float Height = 14.0f;
+        }
+
         namespace label
         {
             inline static const float PixelWidth = 96.0f;

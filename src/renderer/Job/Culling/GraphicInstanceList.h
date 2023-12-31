@@ -2,24 +2,24 @@
 
 namespace vg::renderer
 {
-    class IGraphicInstance;
-
-    enum class GraphicInstanceListType : core::u8
-    {
-        All = 0,
-        Opaque,
-        Transparent,
-        Light
-    };
-
-    class GraphicInstanceList
+    template <typename T> class InstanceList
     {
     public:
-        core::vector<const IGraphicInstance *> m_instances;
+        core::vector<const T *> m_instances;
 
         void clear()
         {
             m_instances.clear();
         }
+    };
+
+    class GraphicInstanceList : public InstanceList<class GraphicInstance>
+    {
+
+    };
+
+    class LightInstanceList : public InstanceList<class LightInstance>
+    {
+
     };
 }

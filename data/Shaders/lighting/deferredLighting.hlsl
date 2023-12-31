@@ -33,7 +33,7 @@ void CS_DeferredLighting(int2 dispatchThreadID : SV_DispatchThreadID)
 
         float4 color = float4(frac(worldPos),1);
 
-        LightingResult lighting = computeDirectLighting(camPos, worldPos, albedo.xyz, normal.xyz, pbr);
+        LightingResult lighting = computeDirectLighting(viewConstants, camPos, worldPos, albedo.xyz, normal.xyz, pbr);
         
         color.rgb = ApplyLighting(albedo.rgb, lighting);
 

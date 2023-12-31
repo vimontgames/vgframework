@@ -49,7 +49,7 @@ float4 DebugRayTracing(float4 color, float2 uv, uint2 screenSize, ViewConstants 
 
     #define tlas getTLAS(viewConstants.getTLASHandle())
         
-    RayQuery<RAY_FLAG_NONE | RAY_FLAG_FORCE_OPAQUE> query;
+    RayQuery<RAY_FLAG_FORCE_OPAQUE> query;
     RayDesc ray;
     ray.Origin    = origin;
     ray.Direction = dir;

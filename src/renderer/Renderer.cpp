@@ -200,12 +200,12 @@ namespace vg::renderer
 
         RegisterClasses();
 
+        RayTracingManager * rtManager = new RayTracingManager();
+
         RendererOptions * options = new RendererOptions("Renderer Options", this);
 
         initDefaultTextures();
-        initDefaultMaterials();
-
-        RayTracingManager * rtManager = new RayTracingManager();
+        initDefaultMaterials();        
 
         // Shared job output (must be created before views because it's needed to init View culling jobs
         m_sharedCullingJobOutput = new SharedCullingJobOutput();

@@ -56,12 +56,10 @@ namespace vg::renderer
         ComputeShaderKey shaderKey = m_computeDeferredLightingShaderKey;
         
         if (_renderPassContext.m_view->IsToolmode())
-        {
             shaderKey.setFlags(gfx::DeferredLightingHLSLDesc::Toolmode);
-        
-            if (_renderPassContext.m_view->IsUsingRayTracing())
-                shaderKey.setFlags(gfx::DeferredLightingHLSLDesc::RayTracing);
-        }
+
+        if (_renderPassContext.m_view->IsUsingRayTracing())
+            shaderKey.setFlags(gfx::DeferredLightingHLSLDesc::RayTracing);
         
         _cmdList->setComputeRootSignature(m_computeDeferredLightingRootSignature);
         _cmdList->setComputeShader(shaderKey);
@@ -91,6 +89,8 @@ namespace vg::renderer
         _cmdList->setComputeRootConstants(0, (u32 *)&deferredLighting, DeferredLightingConstantsCount);
         
         _cmdList->dispatch(threadGroupCount);
+
+        _cmdList->addRWTextureBarrier(colorTex);
 
         // Transition "Color" back to RT state
         _cmdList->transitionResource(colorTex, ResourceState::UnorderedAccess, ResourceState::RenderTarget);

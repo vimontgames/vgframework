@@ -70,7 +70,8 @@ namespace vg::renderer
     {
         // Directional light is never culled
         _cullingResult->m_output->add(GraphicInstanceListType::All, this);
-        _cullingResult->m_output->add(GraphicInstanceListType::Light, this);
+        _cullingResult->m_output->add(LightType::Directional, this);
+
         return true;
     }
 

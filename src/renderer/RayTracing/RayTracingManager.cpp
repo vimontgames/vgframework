@@ -39,6 +39,36 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
+    void RayTracingManager::createMeshModelBLAS(MeshModel * _meshModel)
+    {
+        // Create BLAS from model geometry
+        auto blas = new gfx::BLAS(gfx::BLASUpdateType::Static);
+
+        const MeshGeometry * meshGeo = _meshModel->getGeometry();
+        gfx::Buffer * ib = meshGeo->getIndexBuffer();
+        const uint ibOffset = meshGeo->getIndexBufferOffset();
+
+        gfx::Buffer * vb = meshGeo->getVertexBuffer();
+        const uint vbOffset = meshGeo->getVertexBufferOffset();
+
+        VertexFormat vtxFmt = meshGeo->getVertexFormat();
+        const uint vertexStride = getVertexFormatStride(vtxFmt);
+
+        const auto batches = meshGeo->batches();
+        for (uint j = 0; j < batches.size(); ++j)
+        {
+            const Batch & batch = batches[j];
+            blas->addIndexedGeometry(ib, ibOffset + batch.offset, batch.count, vb, vbOffset, vb->getBufDesc().getElementCount(), vertexStride);
+        }
+
+        blas->init();
+
+        _meshModel->setBLAS(blas);
+
+        updateMeshModel(_meshModel);
+    }
+
+    //--------------------------------------------------------------------------------------
     void RayTracingManager::onEnableRayTracing()
     {
         VG_INFO("[Renderer] RayTracing is enabled");
@@ -49,33 +79,7 @@ namespace vg::renderer
             MeshModel * meshModel = m_meshModels[i];
             
             if (!meshModel->getBLAS())
-            {
-                // Create BLAS from model geometry
-                auto blas = new gfx::BLAS(gfx::BLASUpdateType::Static);
-
-                const MeshGeometry * meshGeo = meshModel->getGeometry();
-                gfx::Buffer * ib = meshGeo->getIndexBuffer();
-                const uint ibOffset = meshGeo->getIndexBufferOffset();
-
-                gfx::Buffer * vb = meshGeo->getVertexBuffer();
-                const uint vbOffset = meshGeo->getVertexBufferOffset();
-
-                VertexFormat vtxFmt = meshGeo->getVertexFormat();
-                const uint vertexStride = getVertexFormatStride(vtxFmt);
-
-                const auto batches = meshGeo->batches();
-                for (uint j = 0; j < batches.size(); ++j)
-                {
-                    const Batch & batch = batches[j];
-                    blas->addIndexedGeometry(ib, ibOffset + batch.offset, batch.count, vb, vbOffset, vb->getBufDesc().getElementCount(), vertexStride);
-                }               
-
-                blas->init();
-
-                meshModel->setBLAS(blas);
-
-                updateMeshModel(meshModel);
-            }
+                createMeshModelBLAS(meshModel);
         }
     }
 
@@ -143,7 +147,9 @@ namespace vg::renderer
                     m_meshModelUpdateQueue.pop_back();
 
                     gfx::BLAS * blas = meshModel->getBLAS();
-                    VG_ASSERT(blas);
+                    if (!blas)
+                        createMeshModelBLAS(meshModel);
+
                     if (blas)
                     {
                         const auto startBuildBLAS = Timer::getTick();
@@ -225,7 +231,7 @@ namespace vg::renderer
                     VG_INFO("[Renderer] Built TLAS for View \"%s\" in %.2f ms", _view->getName().c_str(), Timer::getEnlapsedTime(startBuildTLAS, Timer::getTick()));
                 }
 
-                const GraphicInstanceList & instances = _view->getCullingJobResult().m_instanceLists[asInteger(GraphicInstanceListType::Opaque)];
+                const GraphicInstanceList & instances = _view->getCullingJobResult().get(GraphicInstanceListType::Opaque);
                 tlas->reset();
 
                 bool updateTLAS = false;

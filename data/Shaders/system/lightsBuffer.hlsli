@@ -19,6 +19,9 @@ struct LightsConstantsHeader
 
 	void	setOmniCount		(uint _count)		{ m_counters.y = _count; }
 	uint	getOmniCount		()					{ return m_counters.y; }
+
+	void	setSpotCount		(uint _count)		{ m_counters.z = _count; }
+	uint	getSpotCount		()					{ return m_counters.z; }
 };
 
 struct OmniLightConstants 

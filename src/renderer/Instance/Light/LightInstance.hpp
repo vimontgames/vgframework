@@ -64,7 +64,8 @@ namespace vg::renderer
         if (visible)
         {
             _cullingResult->m_output->add(GraphicInstanceListType::All, this);
-            _cullingResult->m_output->add(GraphicInstanceListType::Light, this);
+            _cullingResult->m_output->add(GetLightType(), this);
+
             return true;
         }
 

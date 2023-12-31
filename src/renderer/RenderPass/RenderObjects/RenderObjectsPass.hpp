@@ -1,6 +1,6 @@
 #include "RenderObjectsPass.h"
 #include "renderer/Job/Culling/GraphicInstanceList.h"
-#include "renderer/IGraphicInstance.h"
+#include "renderer/Instance/GraphicInstance.h"
 
 namespace vg::renderer
 {
@@ -25,7 +25,7 @@ namespace vg::renderer
 
         for (uint i = 0; i < list.size(); ++i)
         {
-            const IGraphicInstance * instance = list[i];
+            const GraphicInstance * instance = list[i];
 
             if (_renderContext.m_wireframe && wireframeSelection)
             {

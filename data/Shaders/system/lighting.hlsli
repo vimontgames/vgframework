@@ -104,7 +104,7 @@ float getRangeAttenuation(float _dist, float _maxRange)
 }
 
 //--------------------------------------------------------------------------------------
-LightingResult computeDirectLighting(float3 _eyePos, float3 _worldPos, float3 _albedo, float3 _worldNormal, float4 _pbr)
+LightingResult computeDirectLighting(ViewConstants _viewConstants, float3 _eyePos, float3 _worldPos, float3 _albedo, float3 _worldNormal, float4 _pbr)
 {
     LightingResult output = (LightingResult)0;
     
@@ -128,6 +128,10 @@ LightingResult computeDirectLighting(float3 _eyePos, float3 _worldPos, float3 _a
 	LightsConstantsHeader lightsHeader;
     uint offset = lightsHeader.Load(lights);
 
+	#ifdef _RAYTRACING
+	RaytracingAccelerationStructure tlas = getTLAS(_viewConstants.getTLASHandle());
+	#endif
+
 	for(uint i=0; i < lightsHeader.getDirectionalCount(); ++i)
 	{
 		DirectionalLightConstants directional = lights.Load<DirectionalLightConstants>(offset);
@@ -137,7 +141,28 @@ LightingResult computeDirectLighting(float3 _eyePos, float3 _worldPos, float3 _a
 		float3 Li = normalize(lightDir);
 		float3 Lradiance = directional.getColor();
 
-		output.addLightContribution(Lo, cosLo, Lr, F0, Li, Lradiance, _worldNormal, roughness, metalness);
+		float shadow = 1.0f;
+
+		#ifdef _RAYTRACING
+		RayDesc ray;
+		ray.Origin    = _worldPos;
+		ray.Direction = lightDir;
+		ray.TMin      = 0.03f;
+		ray.TMax      = 10;
+
+		RayQuery<RAY_FLAG_FORCE_OPAQUE> query;
+		query.TraceRayInline(tlas, 0, 0xff, ray);
+		query.Proceed();
+
+		switch(query.CommittedStatus())
+		{
+			case COMMITTED_TRIANGLE_HIT:
+				shadow = 0;     
+				break;
+		}
+		#endif // _RAYTRACING
+
+		output.addLightContribution(Lo, cosLo, Lr, F0, Li, Lradiance * shadow, _worldNormal, roughness, metalness);
 	}	
 
 	for(uint i=0; i < lightsHeader.getOmniCount(); ++i)
@@ -157,7 +182,28 @@ LightingResult computeDirectLighting(float3 _eyePos, float3 _worldPos, float3 _a
 		float3 Li = normalize(lightDir);
 		float3 Lradiance = att * color;
 
-		output.addLightContribution(Lo, cosLo, Lr, F0, Li, Lradiance, _worldNormal, roughness, metalness);
+		float shadow = 1.0f;
+
+		#ifdef _RAYTRACING
+		RayDesc ray;
+		ray.Origin    = _worldPos;
+		ray.Direction = lightDir;
+		ray.TMin      = 0.03f;
+		ray.TMax      = 10;
+
+		RayQuery<RAY_FLAG_FORCE_OPAQUE> query;
+		query.TraceRayInline(tlas, 0, 0xff, ray);
+		query.Proceed();
+
+		switch(query.CommittedStatus())
+		{
+			case COMMITTED_TRIANGLE_HIT:
+				shadow = 0;     
+				break;
+		}
+		#endif // _RAYTRACING
+
+		output.addLightContribution(Lo, cosLo, Lr, F0, Li, Lradiance * shadow, _worldNormal, roughness, metalness);
     }	
 
     return output;

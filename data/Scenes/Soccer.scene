@@ -13,7 +13,7 @@
                         <Property type="String" name="m_name" value="Camera"/>
                         <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
                         <Property type="Float4" name="m_color" flags="Color" x="1" y="1" z="1" w="1"/>
-                        <Property type="Float4x4" name="m_local" Ix="0.99999994" Iy="-0.00040713151" Iz="-0" Iw="-0" Jx="0.00024372329" Jy="0.59863526" Jz="0.8010217" Jw="-0" Kx="-0.00032612117" Ky="-0.80102164" Kz="0.59863532" Kw="0" Tx="0" Ty="-12" Tz="8" Tw="1"/>
+                        <Property type="Float4x4" name="m_local" Ix="0.99999994" Iy="-0.00040713151" Iz="0" Iw="0" Jx="0.00024372329" Jy="0.59863526" Jz="0.8010217" Jw="0" Kx="-0.00032612117" Ky="-0.80102164" Kz="0.59863532" Kw="0" Tx="0.2924428" Ty="-11.817179" Tz="8" Tw="1"/>
                         <Property type="ObjectPtrVector" name="m_components">
                             <Object class="CameraComponent">
                                 <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
@@ -101,7 +101,7 @@
                                         <Property type="String" name="m_name" value="Ball"/>
                                         <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
                                         <Property type="Float4" name="m_color" flags="Color" x="1" y="1" z="1" w="1"/>
-                                        <Property type="Float4x4" name="m_local" Ix="0.99999988" Iy="-2.7032903e-16" Iz="0.0004989467" Iw="0" Jx="2.0382588e-16" Jy="1" Jz="1.3328715e-13" Jw="0" Kx="-0.0004989467" Ky="-1.3328704e-13" Kz="0.99999988" Kw="0" Tx="-1.5" Ty="-1" Tz="0" Tw="1"/>
+                                        <Property type="Float4x4" name="m_local" Ix="-0.45199251" Iy="-0.072221875" Iz="0.88909322" Iw="0" Jx="0.27346715" Jy="0.93750417" Jz="0.21517813" Jw="0" Kx="-0.84906918" Ky="0.3403967" Kz="-0.40399456" Kw="0" Tx="-67.860268" Ty="6.4048195" Tz="-61212.449" Tw="1"/>
                                         <Property type="ObjectPtrVector" name="m_components">
                                             <Object class="MeshComponent">
                                                 <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
@@ -154,7 +154,7 @@
                                         <Property type="String" name="m_name" value="Ball"/>
                                         <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
                                         <Property type="Float4" name="m_color" flags="Color" x="1" y="1" z="1" w="1"/>
-                                        <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="0" Ty="-1" Tz="0" Tw="1"/>
+                                        <Property type="Float4x4" name="m_local" Ix="0.67927694" Iy="-0.70176953" Iz="-0.21471456" Iw="0" Jx="0.1921801" Jy="-0.11226666" Jz="0.97491693" Jw="0" Kx="-0.70827222" Ky="-0.70350242" Kz="0.058605969" Kw="0" Tx="2.8432026" Ty="7.4933887" Tz="-34483.797" Tw="1"/>
                                         <Property type="ObjectPtrVector" name="m_components">
                                             <Object class="MeshComponent">
                                                 <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
@@ -207,7 +207,7 @@
                                         <Property type="String" name="m_name" value="Ball"/>
                                         <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
                                         <Property type="Float4" name="m_color" flags="Color" x="1" y="1" z="1" w="1"/>
-                                        <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="-2.8719818e-05" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="2.8719818e-05" Ky="0" Kz="1" Kw="0" Tx="1.5" Ty="-1" Tz="0" Tw="1"/>
+                                        <Property type="Float4x4" name="m_local" Ix="0.54191995" Iy="-0.74046862" Iz="0.39752856" Iw="0" Jx="0.4157232" Jy="-0.17490458" Jz="-0.89251471" Jw="0" Kx="0.73040879" Ky="0.64893341" Kz="0.21304566" Kw="0" Tx="-48.745152" Ty="-9.7815609" Tz="-63258.746" Tw="1"/>
                                         <Property type="ObjectPtrVector" name="m_components">
                                             <Object class="MeshComponent">
                                                 <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
@@ -269,7 +269,7 @@
                                         <Property type="String" name="m_name" value="Cone"/>
                                         <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
                                         <Property type="Float4" name="m_color" flags="Color" x="1" y="1" z="1" w="1"/>
-                                        <Property type="Float4x4" name="m_local" Ix="0.70754087" Iy="-0.70667255" Iz="1.7881393e-07" Iw="0" Jx="0.70667255" Jy="0.70754081" Jz="-3.7252903e-07" Jw="0" Kx="8.9406967e-08" Ky="3.4544206e-07" Kz="1.0000001" Kw="0" Tx="15.502008" Ty="7.4960585" Tz="-0.00050020218" Tw="1"/>
+                                        <Property type="Float4x4" name="m_local" Ix="0.7076298" Iy="-0.70658344" Iz="9.1980198e-08" Iw="0" Jx="0.70658344" Jy="0.7076298" Jz="-5.8429771e-07" Jw="0" Kx="3.4776713e-07" Ky="4.7845811e-07" Kz="1" Kw="0" Tx="15.501654" Ty="7.494493" Tz="-0.00050008297" Tw="1"/>
                                         <Property type="ObjectPtrVector" name="m_components">
                                             <Object class="MeshComponent">
                                                 <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
@@ -322,7 +322,7 @@
                                         <Property type="String" name="m_name" value="Cone"/>
                                         <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
                                         <Property type="Float4" name="m_color" flags="Color" x="1" y="1" z="1" w="1"/>
-                                        <Property type="Float4x4" name="m_local" Ix="0.92364442" Iy="0.38325062" Iz="1.3860873e-07" Iw="0" Jx="-0.38325062" Jy="0.92364442" Jz="-3.4979058e-07" Jw="0" Kx="-2.6208261e-07" Ky="2.6996025e-07" Kz="1" Kw="0" Tx="-2.9979911" Ty="6.4960585" Tz="-0.00050014257" Tw="1"/>
+                                        <Property type="Float4x4" name="m_local" Ix="0.9236002" Iy="0.3833572" Iz="1.9887847e-07" Iw="0" Jx="-0.3833572" Jy="0.9236002" Jz="-6.1619585e-07" Jw="0" Kx="-4.1990728e-07" Ky="4.9287712e-07" Kz="1" Kw="0" Tx="-2.996563" Ty="6.4952497" Tz="-0.00050011277" Tw="1"/>
                                         <Property type="ObjectPtrVector" name="m_components">
                                             <Object class="MeshComponent">
                                                 <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
@@ -375,7 +375,7 @@
                                         <Property type="String" name="m_name" value="Cone"/>
                                         <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
                                         <Property type="Float4" name="m_color" flags="Color" x="1" y="1" z="1" w="1"/>
-                                        <Property type="Float4x4" name="m_local" Ix="-0.38211617" Iy="-0.92411435" Iz="1.3860873e-07" Iw="0" Jx="0.92411435" Jy="-0.38211617" Jz="-3.4979058e-07" Jw="0" Kx="3.7621112e-07" Ky="-5.5703424e-09" Kz="1" Kw="0" Tx="15.002008" Ty="-7.5039415" Tz="0.2494998" Tw="1"/>
+                                        <Property type="Float4x4" name="m_local" Ix="-0.40591812" Iy="-0.91390944" Iz="2.7955321e-06" Iw="0" Jx="0.91390944" Jy="-0.40591812" Jz="-1.4221685e-05" Jw="0" Kx="1.4132089e-05" Ky="-3.2179764e-06" Kz="1" Kw="0" Tx="15.002004" Ty="-7.5039415" Tz="-0.017445281" Tw="1"/>
                                         <Property type="ObjectPtrVector" name="m_components">
                                             <Object class="MeshComponent">
                                                 <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
@@ -428,7 +428,7 @@
                                         <Property type="String" name="m_name" value="Cone"/>
                                         <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
                                         <Property type="Float4" name="m_color" flags="Color" x="1" y="1" z="1" w="1"/>
-                                        <Property type="Float4x4" name="m_local" Ix="0.92364442" Iy="0.38325062" Iz="1.3860873e-07" Iw="0" Jx="-0.38325062" Jy="0.92364442" Jz="-3.4979058e-07" Jw="0" Kx="-2.6208261e-07" Ky="2.6996025e-07" Kz="1" Kw="0" Tx="-15.497992" Ty="7.4960585" Tz="-0.00050014257" Tw="1"/>
+                                        <Property type="Float4x4" name="m_local" Ix="0.9236002" Iy="0.3833572" Iz="1.5032268e-07" Iw="0" Jx="-0.3833572" Jy="0.9236002" Jz="-5.3465914e-07" Jw="0" Kx="-3.4380346e-07" Ky="4.3618402e-07" Kz="1" Kw="0" Tx="-15.496563" Ty="7.4952493" Tz="-0.00050020218" Tw="1"/>
                                         <Property type="ObjectPtrVector" name="m_components">
                                             <Object class="MeshComponent">
                                                 <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
@@ -481,7 +481,7 @@
                                         <Property type="String" name="m_name" value="Cone"/>
                                         <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
                                         <Property type="Float4" name="m_color" flags="Color" x="1" y="1" z="1" w="1"/>
-                                        <Property type="Float4x4" name="m_local" Ix="0.92364442" Iy="0.38325062" Iz="1.3860873e-07" Iw="0" Jx="-0.38325062" Jy="0.92364442" Jz="-3.4979058e-07" Jw="0" Kx="-2.6208261e-07" Ky="2.6996025e-07" Kz="1" Kw="0" Tx="-15.497992" Ty="-7.5039415" Tz="-0.00050014257" Tw="1"/>
+                                        <Property type="Float4x4" name="m_local" Ix="0.9236002" Iy="0.3833572" Iz="2.2872507e-07" Iw="0" Jx="-0.3833572" Jy="0.9236002" Jz="-6.2799762e-07" Jw="0" Kx="-4.5199789e-07" Ky="4.9233535e-07" Kz="1" Kw="0" Tx="-15.496564" Ty="-7.5047498" Tz="-0.00050014257" Tw="1"/>
                                         <Property type="ObjectPtrVector" name="m_components">
                                             <Object class="MeshComponent">
                                                 <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
@@ -1400,7 +1400,7 @@
                                         <Property type="String" name="m_name" value="Sun"/>
                                         <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
                                         <Property type="Float4" name="m_color" flags="Color" x="1" y="1" z="1" w="1"/>
-                                        <Property type="Float4x4" name="m_local" Ix="0.68006539" Iy="-0.35362485" Iz="0.64223063" Iw="0" Jx="0.14656833" Jy="0.92387962" Jz="0.35350263" Jw="0" Kx="-1.4363707" Ky="-0.29272029" Kz="1.3605704" Kw="0" Tx="-4.7683716e-07" Ty="3.5762787e-07" Tz="4.9999986" Tw="1"/>
+                                        <Property type="Float4x4" name="m_local" Ix="0.38252723" Iy="-0.35362479" Iz="0.85359329" Iw="0" Jx="0.00013186038" Jy="0.92387974" Jz="0.38268337" Jw="0" Kx="-1.8477012" Ky="-0.29272014" Kz="0.70732796" Kw="0" Tx="-4.7683716e-07" Ty="3.5762787e-07" Tz="4.9999986" Tw="1"/>
                                         <Property type="ObjectPtrVector" name="m_components">
                                             <Object class="LightComponent">
                                                 <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
@@ -1408,9 +1408,9 @@
                                                 <Property type="ObjectPtr" name="m_lightDesc" flags="Flatten">
                                                     <Object class="DirectionalLightDesc">
                                                         <Property type="String" name="m_name" flags="Hidden" value="DirectionalLightDesc #1"/>
-                                                        <Property type="Bool" name="m_castShadows" value="false"/>
-                                                        <Property type="Float4" name="m_color" flags="Color|HDR" x="0.77208149" y="0.91095644" z="0.96138996" w="1"/>
-                                                        <Property type="Float" name="m_intensity" value="0.89999998"/>
+                                                        <Property type="Bool" name="m_castShadows" value="true"/>
+                                                        <Property type="Float4" name="m_color" flags="Color|HDR" x="1" y="1" z="1" w="1"/>
+                                                        <Property type="Float" name="m_intensity" value="1"/>
                                                     </Object>
                                                 </Property>
                                             </Object>
@@ -1424,7 +1424,7 @@
                                         <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="-2" Ty="-0.5" Tz="1.5" Tw="1"/>
                                         <Property type="ObjectPtrVector" name="m_components">
                                             <Object class="LightComponent">
-                                                <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
+                                                <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value=""/>
                                                 <Property type="EnumU8" name="m_lightType" value="Omni"/>
                                                 <Property type="ObjectPtr" name="m_lightDesc" flags="Flatten">
                                                     <Object class="OmniLightDesc">
@@ -1447,12 +1447,12 @@
                                         <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="0" Ty="-0.5" Tz="1.5" Tw="1"/>
                                         <Property type="ObjectPtrVector" name="m_components">
                                             <Object class="LightComponent">
-                                                <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
+                                                <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value=""/>
                                                 <Property type="EnumU8" name="m_lightType" value="Omni"/>
                                                 <Property type="ObjectPtr" name="m_lightDesc" flags="Flatten">
                                                     <Object class="OmniLightDesc">
                                                         <Property type="String" name="m_name" flags="Hidden" value="OmniLightDesc #0"/>
-                                                        <Property type="Bool" name="m_castShadows" value="false"/>
+                                                        <Property type="Bool" name="m_castShadows" value="true"/>
                                                         <Property type="Float4" name="m_color" flags="Color|HDR" x="0.56504822" y="1" z="0.37065637" w="1"/>
                                                         <Property type="Float" name="m_intensity" value="1"/>
                                                         <Property type="Bool" name="m_useMaxRadius" flags="Hidden" value="true"/>
@@ -1470,12 +1470,12 @@
                                         <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="2" Ty="-0.5" Tz="1.5" Tw="1"/>
                                         <Property type="ObjectPtrVector" name="m_components">
                                             <Object class="LightComponent">
-                                                <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
+                                                <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value=""/>
                                                 <Property type="EnumU8" name="m_lightType" value="Omni"/>
                                                 <Property type="ObjectPtr" name="m_lightDesc" flags="Flatten">
                                                     <Object class="OmniLightDesc">
                                                         <Property type="String" name="m_name" flags="Hidden" value="OmniLightDesc #0"/>
-                                                        <Property type="Bool" name="m_castShadows" value="false"/>
+                                                        <Property type="Bool" name="m_castShadows" value="true"/>
                                                         <Property type="Float4" name="m_color" flags="Color|HDR" x="0.39768338" y="0.42093897" z="1" w="1"/>
                                                         <Property type="Float" name="m_intensity" value="1"/>
                                                         <Property type="Bool" name="m_useMaxRadius" flags="Hidden" value="true"/>

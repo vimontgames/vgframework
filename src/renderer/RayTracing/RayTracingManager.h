@@ -31,6 +31,7 @@ namespace vg::renderer
     private:
         void    onEnableRayTracing      ();
         void    onDisableRayTracing     ();
+        void    createMeshModelBLAS     (MeshModel * _meshModel);
 
     private:    
         bool    m_rayTracingEnabled = false;

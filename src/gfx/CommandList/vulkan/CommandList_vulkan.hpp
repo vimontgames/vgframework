@@ -273,23 +273,22 @@ namespace vg::gfx::vulkan
     //--------------------------------------------------------------------------------------
     void CommandList::addRWTextureBarrier(gfx::Texture * _texture)
     {
-        VG_ASSERT_NOT_IMPLEMENTED();
-        //VkFormat imageFormat = barrier.pResource->GetImpl()->GetImageCreateInfo().format;
-        //
-        //VkImageMemoryBarrier imageBarrier = {};
-        //imageBarrier.sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER;
-        //imageBarrier.pNext = nullptr;
-        //imageBarrier.srcAccessMask = ConvertToAccessMask(barrier.SourceState); // Is this really needed for a UAV barrier? Remove if it's ignored
-        //imageBarrier.dstAccessMask = VK_ACCESS_SHADER_READ_BIT | VK_ACCESS_SHADER_WRITE_BIT;
-        //imageBarrier.oldLayout = barrier.SourceState == ResourceState::Present ? VK_IMAGE_LAYOUT_UNDEFINED : ConvertToLayout(barrier.SourceState);
-        //imageBarrier.newLayout = ConvertToLayout(barrier.DestState);
-        //imageBarrier.srcQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
-        //imageBarrier.dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
-        //imageBarrier.subresourceRange.aspectMask = GetImageAspectMask(imageFormat);
-        //SetSubResourceRange(barrier.pResource, imageBarrier, barrier.SubResource);
-        //imageBarrier.image = barrier.pResource->GetImpl()->GetImage();
-        //
-        //imageBarriers.push_back(imageBarrier);
+        const TextureDesc & desc = _texture->getTexDesc();
+        VkFormat imageFormat = Texture::getVulkanPixelFormat(desc.format);
+        
+        VkImageMemoryBarrier imageBarrier = {};
+        imageBarrier.sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER;
+        imageBarrier.pNext = nullptr;
+        imageBarrier.srcAccessMask = VK_ACCESS_SHADER_READ_BIT | VK_ACCESS_SHADER_WRITE_BIT; 
+        imageBarrier.dstAccessMask = VK_ACCESS_SHADER_READ_BIT | VK_ACCESS_SHADER_WRITE_BIT;
+        imageBarrier.oldLayout = VK_IMAGE_LAYOUT_GENERAL;
+        imageBarrier.newLayout = VK_IMAGE_LAYOUT_GENERAL;
+        imageBarrier.srcQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
+        imageBarrier.dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
+        imageBarrier.image = _texture->getResource().getVulkanImage();
+        imageBarrier.subresourceRange = { VK_IMAGE_ASPECT_COLOR_BIT, 0, desc.mipmaps, 0, 1 };
+        
+        vkCmdPipelineBarrier(m_vkCommandBuffer, VK_PIPELINE_STAGE_ALL_GRAPHICS_BIT, VK_PIPELINE_STAGE_ALL_GRAPHICS_BIT, 0, 0, nullptr, 0, nullptr, 1, &imageBarrier);
     }
 
     //--------------------------------------------------------------------------------------

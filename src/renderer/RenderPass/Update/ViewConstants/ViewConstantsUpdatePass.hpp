@@ -106,31 +106,16 @@ namespace vg::renderer
     {
         View * view = (View*)_renderPassContext.m_view;
         const ViewCullingJobOutput & culling = view->getCullingJobResult();
-        const auto & lights = culling.m_instanceLists[asInteger(GraphicInstanceListType::Light)].m_instances;
 
-        uint mapSize = sizeof(LightsConstantsHeader);
-        uint directionalCount = 0;
-        uint omniCount = 0;
+        const auto & directionals = culling.get(LightType::Directional).m_instances;
+        const auto & omnis = culling.get(LightType::Omni).m_instances;
+        const auto & spots = culling.get(LightType::Spot).m_instances;
 
-        for (uint i = 0; i < lights.size(); ++i)
-        {
-            LightInstance * light = (LightInstance*)lights[i];
-            switch (light->GetLightType())
-            {
-                VG_ASSERT_ENUM_NOT_IMPLEMENTED(light->GetLightType());
-                break;
+        uint directionalCount = (uint)directionals.size();
+        uint omniCount = (uint)omnis.size();
+        uint spotCount = 0;// (uint)spots.size();
 
-                case LightType::Directional:
-                    directionalCount++;
-                    break;
-
-                case LightType::Omni:
-                    omniCount++;
-                    break;
-            }
-        }
-
-        mapSize += directionalCount * sizeof(DirectionalLightConstants) + omniCount * sizeof(OmniLightConstants);
+        const uint mapSize = sizeof(LightsConstantsHeader) + directionalCount * sizeof(DirectionalLightConstants) + omniCount * sizeof(OmniLightConstants);
 
         uint offset = 0;
         u8 * data = (u8*)_cmdList->map(s_LightsConstantsBuffer, mapSize).data;
@@ -139,52 +124,36 @@ namespace vg::renderer
 
             header->setDirectionalCount(directionalCount);
             header->setOmniCount(omniCount);
+            header->setSpotCount(spotCount);
 
             offset += sizeof(LightsConstantsHeader);
 
-            for (uint j = 0; j < enumCount<LightType>(); ++j)
+            for (uint i = 0; i < directionalCount; ++i)
             {
-                for (uint i = 0; i < lights.size(); ++i)
-                {
-                    LightInstance * light = (LightInstance *)lights[i];
-                    auto lightType = light->GetLightType();
+                VG_ASSERT(LightType::Directional == directionals[i]->GetLightType());
 
-                    // TODO : sort by LightType during culling instead
-                    if (lightType == (LightType)j)
-                    {
-                        switch (lightType)
-                        {
-                            VG_ASSERT_ENUM_NOT_IMPLEMENTED(light->GetLightType());
-                            break;
+                const DirectionalLightInstance * directional = (const DirectionalLightInstance *)directionals[i];
+                DirectionalLightConstants * constants = (DirectionalLightConstants *)(data + offset);
 
-                            case LightType::Directional:
-                            {
-                                auto * directional = (DirectionalLightInstance *)light;
-                                DirectionalLightConstants * constants = (DirectionalLightConstants *)(data + offset);
+                constants->setColor(directional->getColor().rgb * directional->getIntensity());
+                constants->setDirection(directional->getGlobalMatrix()[0].xyz);
 
-                                constants->setColor(directional->getColor().rgb * directional->getIntensity());
-                                constants->setDirection(directional->getGlobalMatrix()[0].xyz);
-
-                                offset += sizeof(DirectionalLightConstants);
-                            }
-                            break;
-
-                            case LightType::Omni:
-                            {
-                                auto * omni = (OmniLightInstance *)light;
-                                OmniLightConstants * constants = (OmniLightConstants *)(data + offset);
-
-                                constants->setColor(omni->getColor().rgb * omni->getIntensity());
-                                constants->setPosition(omni->getGlobalMatrix()[3].xyz);
-                                constants->setRadius(omni->getMaxRadius());
-
-                                offset += sizeof(OmniLightConstants);
-                            }
-                            break;
-                        }
-                    }
-                }
+                offset += sizeof(DirectionalLightConstants);
             }
+
+            for (uint i = 0; i < omniCount; ++i)
+            {
+                VG_ASSERT(LightType::Omni == omnis[i]->GetLightType());
+
+                const OmniLightInstance * omni = (const OmniLightInstance *)omnis[i];
+                OmniLightConstants * constants = (OmniLightConstants *)(data + offset);
+
+                constants->setColor(omni->getColor().rgb * omni->getIntensity());
+                constants->setPosition(omni->getGlobalMatrix()[3].xyz);
+                constants->setRadius(omni->getMaxRadius());
+
+                offset += sizeof(OmniLightConstants);
+            }            
         }
         _cmdList->unmap(s_LightsConstantsBuffer);
     }

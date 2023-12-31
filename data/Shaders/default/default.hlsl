@@ -131,7 +131,7 @@ PS_Output PS_Forward(VS_Output _input)
     float3 worldNormal = getWorldNormal(normal, _input.tan, _input.bin, _input.nrm, rootConstants3D.getWorldMatrix());
 
     // Compute & Apply lighting
-    LightingResult lighting = computeDirectLighting(camPos, worldPos, albedo.rgb, worldNormal.xyz, pbr);
+    LightingResult lighting = computeDirectLighting(viewConstants, camPos, worldPos, albedo.rgb, worldNormal.xyz, pbr);
 
     output.color0.rgb = ApplyLighting(albedo.rgb, lighting);
     

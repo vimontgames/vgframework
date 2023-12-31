@@ -3,6 +3,7 @@
 #include "core/Scheduler/Job.h"
 #include "GraphicInstanceList.h"
 #include "core/Container/AtomicVector.h"
+#include "renderer/ILightInstance.h"
 
 namespace vg::core
 {
@@ -16,21 +17,48 @@ namespace vg::renderer
     class MeshInstance;
 
     struct Frustum;
+
+    enum class GraphicInstanceListType : core::u8
+    {
+        All = 0,
+
+        Opaque,
+        Transparent
+    };
  
     struct ViewCullingJobOutput
     {
         void clear()
         {
             for (core::uint i = 0; i < core::enumCount<GraphicInstanceListType>(); ++i)
-                m_instanceLists[i].clear();
+                m_instancesLists[i].clear();
+
+            for (core::uint i = 0; i < core::enumCount<LightType>(); ++i)
+                m_lightsLists[i].clear();
         }
 
-        void add(GraphicInstanceListType _type, const IGraphicInstance * _instance)
+        void add(GraphicInstanceListType _type, const GraphicInstance * _instance)
         {
-            m_instanceLists[core::asInteger(_type)].m_instances.push_back(_instance);
+            m_instancesLists[core::asInteger(_type)].m_instances.push_back(_instance);
         }
 
-        GraphicInstanceList m_instanceLists[core::enumCount<GraphicInstanceListType>()];
+        const GraphicInstanceList & get(GraphicInstanceListType _type) const
+        {
+            return m_instancesLists[core::asInteger(_type)];
+        }
+
+        void add(LightType _type, const LightInstance * _light)
+        {
+            m_lightsLists[core::asInteger(_type)].m_instances.push_back(_light);
+        }
+
+        const LightInstanceList & get(LightType _type) const
+        {
+            return m_lightsLists[core::asInteger(_type)];
+        }
+
+        GraphicInstanceList m_instancesLists[core::enumCount<GraphicInstanceListType>()];
+        LightInstanceList   m_lightsLists[core::enumCount<LightType>()];
     };
 
     struct SharedCullingJobOutput

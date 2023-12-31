@@ -48,7 +48,7 @@ namespace vg::renderer
         // TODO: transparent forward pass
         bool opaque = true;
 
-        const GraphicInstanceList & opaqueInstances = view->getCullingJobResult().m_instanceLists[asInteger(GraphicInstanceListType::Opaque)];
+        const GraphicInstanceList & opaqueInstances = view->getCullingJobResult().get(GraphicInstanceListType::Opaque);
         
         // Default pass states
         RasterizerState rs(FillMode::Solid, CullMode::None);
