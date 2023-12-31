@@ -4,11 +4,12 @@
 namespace vg::renderer
 {
     //--------------------------------------------------------------------------------------
+    // Local AABB x world vs. Frustum
+    //--------------------------------------------------------------------------------------
     FrustumTest Frustum::intersects(const AABB & _aabb, const core::float4x4 & _world) const
     {
-        AABB worldAABB(_aabb, _world);
-
         FrustumTest result = FrustumTest::Inside;
+        AABB worldAABB(_aabb, _world);
 
         for (uint i = 0; i < countof(planes); ++i)
         {
@@ -23,6 +24,30 @@ namespace vg::renderer
                 return FrustumTest::Outside;
 
             if (dot(plane.xyz, vmax) <= -plane.w)
+                result = FrustumTest::Intersect;
+        }
+
+        return result;
+    }
+
+    //--------------------------------------------------------------------------------------
+    // Local sphere x world vs. Frustum
+    //--------------------------------------------------------------------------------------
+    FrustumTest Frustum::intersects(float _radius, const core::float4x4 & _world) const
+    {
+        FrustumTest result = FrustumTest::Inside;
+        float3 center = _world[3].xyz;
+
+        for (uint i = 0; i < countof(planes); ++i)
+        {
+            float4 plane = planes[i];
+
+            float dist = dot(float4(center.xyz, 1.0f), plane);
+
+            if (dist < -_radius)
+                return FrustumTest::Outside;
+
+            if (dist <= _radius)
                 result = FrustumTest::Intersect;
         }
 

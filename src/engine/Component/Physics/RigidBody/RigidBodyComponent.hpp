@@ -84,10 +84,8 @@ namespace vg::engine
     //--------------------------------------------------------------------------------------
     void RigidBodyComponent::OnLoad()
     {
-        if (m_shapeDesc)
-            createShape();
-        if (m_shape)
-            createBody();
+        createShape();
+        createBody();
     }
 
     //--------------------------------------------------------------------------------------

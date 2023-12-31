@@ -35,10 +35,6 @@ void CS_DeferredLighting(int2 dispatchThreadID : SV_DispatchThreadID)
 
         LightingResult lighting = computeDirectLighting(camPos, worldPos, albedo.xyz, normal.xyz, pbr);
         
-        //color = float4(lighting.diffuse.rgb, 1.0f);
-        //getRWTexture2D(deferredLightingConstants.getRWBufferOut())[coords] = color;
-        //return;
-
         color.rgb = ApplyLighting(albedo.rgb, lighting);
 
         #if _TOOLMODE

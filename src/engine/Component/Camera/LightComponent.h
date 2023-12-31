@@ -19,8 +19,10 @@ namespace vg::engine
         LightComponent(const core::string & _name, core::IObject * _parent);
         ~LightComponent();
 
+        void                        OnLoad              () override;
         void                        Update              (float _dt) override;
         void                        OnPropertyChanged   (core::IObject * _object, const core::IProperty & _prop, bool _notifyParent);
+        void                        SetFlags            (core::IComponent::Flags _flags, bool _enabled = true) final override;
 
     protected:
         bool                        createLightDesc     ();

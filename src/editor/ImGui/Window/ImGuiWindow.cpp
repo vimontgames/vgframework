@@ -365,6 +365,7 @@ namespace vg::editor
         const auto type = _prop->getType();
         const auto name = _prop->getName();
         const auto displayName = _prop->getDisplayName();
+        const auto label = ImGui::getObjectLabel(displayName, _prop);
         const auto offset = _prop->getOffset();
         const auto flags = _prop->getFlags();
 
@@ -502,7 +503,7 @@ namespace vg::editor
                 {
                     VG_ASSERT(!isEnumArray, "Display of EnumArray property not implemented for type '%s'", asString(type).c_str());
                     bool * pBool = _prop->GetPropertyBool(_object);
-                    changed |= ImGui::Checkbox(ImGui::getObjectLabel(_prop->getDisplayName(), _prop).c_str(), pBool);
+                    changed |= ImGui::Checkbox(label.c_str(), pBool);
                 };
                 break;
 
@@ -545,9 +546,9 @@ namespace vg::editor
                     i32 temp = (u8)*pU8;
 
                     if (asBool(IProperty::Flags::HasRange & flags))
-                        changed |= ImGui::SliderInt(displayName, &temp, max((int)0, (int)_prop->getRange().x), min((int)255, (int)_prop->getRange().y), "%d", imguiInputTextflags);
+                        changed |= ImGui::SliderInt(label.c_str(), &temp, max((int)0, (int)_prop->getRange().x), min((int)255, (int)_prop->getRange().y), "%d", imguiInputTextflags);
                     else
-                        changed |= ImGui::InputInt(displayName, &temp, 1, 16, imguiInputTextflags);
+                        changed |= ImGui::InputInt(label.c_str(), &temp, 1, 16, imguiInputTextflags);
 
                     if (changed)
                         *pU8 = (u8)temp;
@@ -563,9 +564,9 @@ namespace vg::editor
                     i32 temp = (u16)*pU16;
 
                     if (asBool(IProperty::Flags::HasRange & flags))
-                        changed |= ImGui::SliderInt(displayName, &temp, max((int)0, (int)_prop->getRange().x), min((int)65535, (int)_prop->getRange().y), "%d", imguiInputTextflags);
+                        changed |= ImGui::SliderInt(label.c_str(), &temp, max((int)0, (int)_prop->getRange().x), min((int)65535, (int)_prop->getRange().y), "%d", imguiInputTextflags);
                     else
-                        changed |= ImGui::InputInt(displayName, &temp, 1, 16, imguiInputTextflags);
+                        changed |= ImGui::InputInt(label.c_str(), &temp, 1, 16, imguiInputTextflags);
 
                     if (changed)
                         *pU16 = (u16)temp;
@@ -579,9 +580,9 @@ namespace vg::editor
                     i32 * pU32 = (i32 *)(uint_ptr(_object) + offset);
 
                     if (asBool(IProperty::Flags::HasRange & flags))
-                        changed |= ImGui::SliderInt(displayName, pU32, max(0, (int)_prop->getRange().x), (int)_prop->getRange().y, "%d", imguiInputTextflags);
+                        changed |= ImGui::SliderInt(label.c_str(), pU32, max(0, (int)_prop->getRange().x), (int)_prop->getRange().y, "%d", imguiInputTextflags);
                     else
-                        changed |= ImGui::InputInt(displayName, pU32, 1, 16, imguiInputTextflags);
+                        changed |= ImGui::InputInt(label.c_str(), pU32, 1, 16, imguiInputTextflags);
                 };
                 break;
 
@@ -592,9 +593,9 @@ namespace vg::editor
                     float * pFloat = _prop->GetPropertyFloat(_object);
 
                     if (asBool(IProperty::Flags::HasRange & flags))
-                        changed |= ImGui::SliderFloat(displayName, pFloat, _prop->getRange().x, _prop->getRange().y);
+                        changed |= ImGui::SliderFloat(label.c_str(), pFloat, _prop->getRange().x, _prop->getRange().y);
                     else
-                        changed |= ImGui::InputFloat(displayName, pFloat, 0.1f, 1.0f, "%.3f", imguiInputTextflags);
+                        changed |= ImGui::InputFloat(label.c_str(), pFloat, 0.1f, 1.0f, "%.3f", imguiInputTextflags);
                 };
                 break;
 
@@ -604,7 +605,7 @@ namespace vg::editor
 
                     float * pFloat2 = (float *)_prop->GetPropertyFloat2(_object);
 
-                    changed |= ImGui::InputFloat2(displayName, pFloat2, "%.3f", imguiInputTextflags);
+                    changed |= ImGui::InputFloat2(label.c_str(), pFloat2, "%.3f", imguiInputTextflags);
                 };
                 break;
 
@@ -615,9 +616,18 @@ namespace vg::editor
                     float * pFloat4 = (float *)_prop->GetPropertyFloat3(_object);
 
                     if (asBool(IProperty::Flags::Color & flags))
-                        changed |= ImGui::ColorEdit3(displayName, pFloat4);
+                    {
+                        ImGuiColorEditFlags colorEditFlags = 0;
+
+                        if (asBool(IProperty::Flags::HDR & flags))
+                            colorEditFlags |= ImGuiColorEditFlags_HDR | ImGuiColorEditFlags_Float;
+
+                        changed |= ImGui::ColorEdit3(label.c_str(), pFloat4, colorEditFlags);
+                    }
                     else
-                        changed |= ImGui::InputFloat3(displayName, pFloat4, "%.3f", imguiInputTextflags);
+                    {
+                        changed |= ImGui::InputFloat3(label.c_str(), pFloat4, "%.3f", imguiInputTextflags);
+                    }
                 };
                 break;
 
@@ -627,9 +637,9 @@ namespace vg::editor
 
                     if (isEnumArray)
                     {
-                        char label[1024];
-                        sprintf_s(label, "%s (%u)", displayName, _prop->getEnumCount());
-                        if (ImGui::TreeNodeEx(label, ImGuiTreeNodeFlags_OpenOnArrow))
+                        char temp[1024];
+                        sprintf_s(temp, "%s (%u)", label.c_str(), _prop->getEnumCount());
+                        if (ImGui::TreeNodeEx(temp, ImGuiTreeNodeFlags_OpenOnArrow))
                         {
                             for (uint e = 0; e < _prop->getEnumCount(); ++e)
                             {
@@ -644,9 +654,18 @@ namespace vg::editor
                     else
                     {
                         if (asBool(IProperty::Flags::Color & flags))
-                            changed |= ImGui::ColorEdit4(displayName, pFloat4);
+                        {
+                            ImGuiColorEditFlags colorEditFlags = 0;
+
+                            if (asBool(IProperty::Flags::HDR & flags))
+                                colorEditFlags |= ImGuiColorEditFlags_HDR | ImGuiColorEditFlags_Float;
+
+                            changed |= ImGui::ColorEdit4(label.c_str(), pFloat4, colorEditFlags);
+                        }
                         else
-                            changed |= ImGui::InputFloat4(displayName, pFloat4, "%.3f", imguiInputTextflags);
+                        {
+                            changed |= ImGui::InputFloat4(label.c_str(), pFloat4, "%.3f", imguiInputTextflags);
+                        }
                     }
                 };
                 break;
@@ -654,7 +673,7 @@ namespace vg::editor
                 case IProperty::Type::Float4x4:
                 {
                     VG_ASSERT(!isEnumArray, "Display of EnumArray property not implemented for type '%s'", asString(type).c_str());
-                    changed |= displayFloat4x4(displayName, _prop->GetPropertyFloat4x4(_object));
+                    changed |= displayFloat4x4(label.c_str(), _prop->GetPropertyFloat4x4(_object));
                 }
                 break;
 
@@ -734,7 +753,7 @@ namespace vg::editor
                     else
                     {
                         sprintf_s(buffer, pString->c_str());
-                        if (ImGui::InputText(getButtonLabel(displayName, _object).c_str(), buffer, countof(buffer), imguiInputTextflags))
+                        if (ImGui::InputText(label.c_str(), buffer, countof(buffer), imguiInputTextflags))
                             *pString = buffer;
                     }                    
                 }

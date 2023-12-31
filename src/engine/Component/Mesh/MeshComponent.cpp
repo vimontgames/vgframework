@@ -77,6 +77,15 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
+    void MeshComponent::SetFlags(IComponent::Flags _flags, bool _enabled)
+    {
+        super::SetFlags(_flags, _enabled);
+
+        if (m_meshInstance)
+            m_meshInstance->SetFlags(IInstance::Flags::Enabled, asBool(IComponent::Flags::Enabled & GetFlags()));
+    }
+
+    //--------------------------------------------------------------------------------------
     void MeshComponent::OnPropertyChanged(IObject * _object, const IProperty & _prop, bool _notifyParent)
     {
         if (!strcmp(_prop.getName(), "m_shader"))

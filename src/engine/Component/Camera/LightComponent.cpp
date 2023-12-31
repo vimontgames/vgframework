@@ -64,6 +64,10 @@ namespace vg::engine
                 VG_ASSERT_ENUM_NOT_IMPLEMENTED(m_lightType);
                 break;
 
+            case renderer::LightType::Directional:
+                m_lightDesc = (renderer::ILightDesc *)factory->createObject("DirectionalLightDesc", "", this);
+                break;
+
             case renderer::LightType::Omni:
                 m_lightDesc = (renderer::ILightDesc *)factory->createObject("OmniLightDesc", "", this);
                 break;
@@ -91,6 +95,7 @@ namespace vg::engine
                 VG_ASSERT_ENUM_NOT_IMPLEMENTED(m_lightType);
                 break;
 
+            case renderer::LightType::Directional:
             case renderer::LightType::Omni:
                 m_light = Engine::get()->GetRenderer()->CreateLightInstance(m_lightDesc);                
                 break;
@@ -104,6 +109,15 @@ namespace vg::engine
         }
 
         return false;
+    }
+
+    //--------------------------------------------------------------------------------------
+    void LightComponent::OnLoad()
+    {
+        createLight();
+
+        if (m_light)
+            m_light->SetFlags(IInstance::Flags::Enabled, asBool(IComponent::Flags::Enabled & GetFlags()));
     }
 
     //--------------------------------------------------------------------------------------
@@ -127,5 +141,14 @@ namespace vg::engine
         }
 
         super::OnPropertyChanged(_object, _prop, _notifyParent);
+    }
+
+    //--------------------------------------------------------------------------------------
+    void LightComponent::SetFlags(IComponent::Flags _flags, bool _enabled)
+    {
+        super::SetFlags(_flags, _enabled);
+
+        if (m_light)
+            m_light->SetFlags(IInstance::Flags::Enabled, asBool(IComponent::Flags::Enabled & GetFlags()));
     }
 }

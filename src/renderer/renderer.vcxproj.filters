@@ -372,6 +372,12 @@
     <ClInclude Include="View\Frustum.hpp">
       <Filter>View</Filter>
     </ClInclude>
+    <ClInclude Include="Instance\Light\Directional\DirectionalLightInstance.h">
+      <Filter>Instance\Light\Directional</Filter>
+    </ClInclude>
+    <ClInclude Include="Instance\Light\Directional\DirectionalLightInstance.hpp">
+      <Filter>Instance\Light\Directional</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Pass">

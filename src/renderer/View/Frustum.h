@@ -26,5 +26,6 @@ namespace vg::renderer
         core::float4 planes[core::enumCount<FrustumPlane>()];
 
         FrustumTest intersects(const AABB & _aabb, const core::float4x4 & _world) const;
+        FrustumTest intersects(float _radius, const core::float4x4 & _world) const;
     };
 }

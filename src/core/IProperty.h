@@ -88,6 +88,7 @@ namespace vg::core
             EnumArray       = 0x0000000000000800,   // Property is fixed-size C array with element count the size of the enum
             Flatten         = 0x0000000000001000,   // Do not open TreeNode to display object of this type
             Optional        = 0x0000000000002000,   // Previous property must be a bool, and if 'false' then this value won't be editable
+            HDR             = 0x0000000000004000,   // HDR value for color
         };
 
         virtual void                            setRange                        (float2 _range) = 0;

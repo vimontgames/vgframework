@@ -1397,10 +1397,31 @@
                                 <Property type="ObjectPtrVector" name="m_components"/>
                                 <Property type="ObjectPtrVector" name="m_children" flags="Hidden">
                                     <Object class="GameObject">
-                                        <Property type="String" name="m_name" value="Light 0"/>
+                                        <Property type="String" name="m_name" value="Sun"/>
                                         <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
                                         <Property type="Float4" name="m_color" flags="Color" x="1" y="1" z="1" w="1"/>
-                                        <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="3.5" Ty="6" Tz="0.5" Tw="1"/>
+                                        <Property type="Float4x4" name="m_local" Ix="0.68006539" Iy="-0.35362485" Iz="0.64223063" Iw="0" Jx="0.14656833" Jy="0.92387962" Jz="0.35350263" Jw="0" Kx="-1.4363707" Ky="-0.29272029" Kz="1.3605704" Kw="0" Tx="-4.7683716e-07" Ty="3.5762787e-07" Tz="4.9999986" Tw="1"/>
+                                        <Property type="ObjectPtrVector" name="m_components">
+                                            <Object class="LightComponent">
+                                                <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
+                                                <Property type="EnumU8" name="m_lightType" value="Directional"/>
+                                                <Property type="ObjectPtr" name="m_lightDesc" flags="Flatten">
+                                                    <Object class="DirectionalLightDesc">
+                                                        <Property type="String" name="m_name" flags="Hidden" value="DirectionalLightDesc #1"/>
+                                                        <Property type="Bool" name="m_castShadows" value="false"/>
+                                                        <Property type="Float4" name="m_color" flags="Color|HDR" x="0.77208149" y="0.91095644" z="0.96138996" w="1"/>
+                                                        <Property type="Float" name="m_intensity" value="0.89999998"/>
+                                                    </Object>
+                                                </Property>
+                                            </Object>
+                                        </Property>
+                                        <Property type="ObjectPtrVector" name="m_children" flags="Hidden"/>
+                                    </Object>
+                                    <Object class="GameObject">
+                                        <Property type="String" name="m_name" value="Red Light"/>
+                                        <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
+                                        <Property type="Float4" name="m_color" flags="Color" x="1" y="1" z="1" w="1"/>
+                                        <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="-2" Ty="-0.5" Tz="1.5" Tw="1"/>
                                         <Property type="ObjectPtrVector" name="m_components">
                                             <Object class="LightComponent">
                                                 <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
@@ -1409,9 +1430,56 @@
                                                     <Object class="OmniLightDesc">
                                                         <Property type="String" name="m_name" flags="Hidden" value="OmniLightDesc #0"/>
                                                         <Property type="Bool" name="m_castShadows" value="false"/>
-                                                        <Property type="Float4" name="m_color" flags="Color" x="1" y="1" z="1" w="1"/>
+                                                        <Property type="Float4" name="m_color" flags="Color|HDR" x="1" y="0" z="0" w="1"/>
                                                         <Property type="Float" name="m_intensity" value="1"/>
-                                                        <Property type="Float" name="m_radius" value="2.0000002"/>
+                                                        <Property type="Bool" name="m_useMaxRadius" flags="Hidden" value="true"/>
+                                                        <Property type="Float" name="m_maxRadius" flags="Optional" value="5"/>
+                                                    </Object>
+                                                </Property>
+                                            </Object>
+                                        </Property>
+                                        <Property type="ObjectPtrVector" name="m_children" flags="Hidden"/>
+                                    </Object>
+                                    <Object class="GameObject">
+                                        <Property type="String" name="m_name" value="Green Light"/>
+                                        <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
+                                        <Property type="Float4" name="m_color" flags="Color" x="1" y="1" z="1" w="1"/>
+                                        <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="0" Ty="-0.5" Tz="1.5" Tw="1"/>
+                                        <Property type="ObjectPtrVector" name="m_components">
+                                            <Object class="LightComponent">
+                                                <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
+                                                <Property type="EnumU8" name="m_lightType" value="Omni"/>
+                                                <Property type="ObjectPtr" name="m_lightDesc" flags="Flatten">
+                                                    <Object class="OmniLightDesc">
+                                                        <Property type="String" name="m_name" flags="Hidden" value="OmniLightDesc #0"/>
+                                                        <Property type="Bool" name="m_castShadows" value="false"/>
+                                                        <Property type="Float4" name="m_color" flags="Color|HDR" x="0.56504822" y="1" z="0.37065637" w="1"/>
+                                                        <Property type="Float" name="m_intensity" value="1"/>
+                                                        <Property type="Bool" name="m_useMaxRadius" flags="Hidden" value="true"/>
+                                                        <Property type="Float" name="m_maxRadius" flags="Optional" value="5"/>
+                                                    </Object>
+                                                </Property>
+                                            </Object>
+                                        </Property>
+                                        <Property type="ObjectPtrVector" name="m_children" flags="Hidden"/>
+                                    </Object>
+                                    <Object class="GameObject">
+                                        <Property type="String" name="m_name" value="Blue Light"/>
+                                        <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
+                                        <Property type="Float4" name="m_color" flags="Color" x="1" y="1" z="1" w="1"/>
+                                        <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="2" Ty="-0.5" Tz="1.5" Tw="1"/>
+                                        <Property type="ObjectPtrVector" name="m_components">
+                                            <Object class="LightComponent">
+                                                <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
+                                                <Property type="EnumU8" name="m_lightType" value="Omni"/>
+                                                <Property type="ObjectPtr" name="m_lightDesc" flags="Flatten">
+                                                    <Object class="OmniLightDesc">
+                                                        <Property type="String" name="m_name" flags="Hidden" value="OmniLightDesc #0"/>
+                                                        <Property type="Bool" name="m_castShadows" value="false"/>
+                                                        <Property type="Float4" name="m_color" flags="Color|HDR" x="0.39768338" y="0.42093897" z="1" w="1"/>
+                                                        <Property type="Float" name="m_intensity" value="1"/>
+                                                        <Property type="Bool" name="m_useMaxRadius" flags="Hidden" value="true"/>
+                                                        <Property type="Float" name="m_maxRadius" flags="Optional" value="5"/>
                                                     </Object>
                                                 </Property>
                                             </Object>

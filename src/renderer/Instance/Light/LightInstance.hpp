@@ -5,6 +5,7 @@
 #include "LightInstance.inl"
 #endif
 
+#include "Directional/DirectionalLightInstance.hpp"
 #include "Omni/OmniLightInstance.hpp"
 
 using namespace vg::core;
@@ -22,7 +23,7 @@ namespace vg::renderer
         super::registerProperties(_desc);
 
         registerProperty(LightDesc, m_castShadows, "Cast Shadows");
-        registerPropertyEx(LightDesc, m_color, "Intensity", IProperty::Flags::Color);
+        registerPropertyEx(LightDesc, m_color, "Color", IProperty::Flags::Color | IProperty::Flags::HDR);
         registerProperty(LightDesc, m_intensity, "Intensity");
 
         return true;
@@ -41,10 +42,12 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    LightInstance::LightInstance(const core::string & _name, core::IObject * _parent) :
+    LightInstance::LightInstance(const core::string & _name, core::IObject * _parent, const LightDesc * _lightDesc) :
         super(_name, _parent)
     {
-
+        m_castShadows = _lightDesc->m_castShadows;
+        setColor(_lightDesc->m_color);
+        m_intensity = _lightDesc->m_intensity;
     }
 
     //--------------------------------------------------------------------------------------

@@ -33,6 +33,7 @@
 #include "renderer/Picking/PickingManager.h"
 #include "renderer/DebugDraw/DebugDraw.h"
 #include "renderer/RayTracing/RayTracingManager.h"
+#include "renderer/Instance/Light/Directional/DirectionalLightInstance.h"
 #include "renderer/Instance/Light/Omni/OmniLightInstance.h"
 
 #if !VG_ENABLE_INLINE
@@ -787,16 +788,25 @@ namespace vg::renderer
     //--------------------------------------------------------------------------------------
     ILightInstance * Renderer::CreateLightInstance(const ILightDesc * _lightDesc)
     {
-        const LightType lightType = _lightDesc->GetLightType();
-        switch (lightType)
-        {
-            default:
-                VG_ASSERT_ENUM_NOT_IMPLEMENTED(lightType);
-                return nullptr;
+        VG_ASSERT(_lightDesc);
 
-            case LightType::Omni:
-                return new OmniLightInstance((const OmniLightDesc *)_lightDesc);
+        if (_lightDesc)
+        {
+            const LightType lightType = _lightDesc->GetLightType();
+            switch (lightType)
+            {
+                default:
+                    VG_ASSERT_ENUM_NOT_IMPLEMENTED(lightType);
+                    return nullptr;
+
+                case LightType::Directional:
+                    return new DirectionalLightInstance((const DirectionalLightDesc *)_lightDesc);
+
+                case LightType::Omni:
+                    return new OmniLightInstance((const OmniLightDesc *)_lightDesc);
+            }
         }
 
+        return nullptr;
     }
 }

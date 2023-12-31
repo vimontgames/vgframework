@@ -1,5 +1,6 @@
 #include "renderer/Precomp.h"
 #include "OmniLightInstance.h"
+#include "Shaders/system/lightsBuffer.hlsli"
 
 namespace vg::renderer
 {
@@ -14,7 +15,7 @@ namespace vg::renderer
     {
         super::registerProperties(_desc);
     
-        registerProperty(OmniLightDesc, m_radius, "Radius");
+        registerOptionalProperty(OmniLightDesc, m_useMaxRadius, m_maxRadius, "Max. Radius");
     
         return true;
     }
@@ -48,9 +49,9 @@ namespace vg::renderer
 
     //--------------------------------------------------------------------------------------
     OmniLightInstance::OmniLightInstance(const OmniLightDesc * _omniLightDesc) :
-        super("Omni", nullptr)
+        super("Omni", nullptr, _omniLightDesc)
     {
-        m_radius = _omniLightDesc->m_radius;
+        m_maxRadius = _omniLightDesc->m_useMaxRadius ? _omniLightDesc->m_maxRadius : -1.0f;
     }
 
     //--------------------------------------------------------------------------------------
@@ -62,8 +63,36 @@ namespace vg::renderer
     //--------------------------------------------------------------------------------------
     bool OmniLightInstance::GetAABB(AABB & _aabb) const
     {
-        _aabb = AABB(-m_radius, +m_radius);
+        float radius = getMaxRadius();
+        _aabb = AABB(-radius, +radius);
         return true;
+    }
+
+    //--------------------------------------------------------------------------------------
+    float OmniLightInstance::getMaxRadius() const
+    {
+        float intensity = dot(getColor().rgb, float3(0.299f, 0.587f, 0.114f)) * m_intensity;
+        float maxRadius = sqrtf(intensity / (lightEps));
+
+        if (m_maxRadius < 0.0f)
+            return maxRadius;
+        else 
+            return min(maxRadius, m_maxRadius); 
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool OmniLightInstance::Cull(const Frustum & _frustum, CullingResult * _cullingResult)
+    {
+        bool visible = _frustum.intersects(getMaxRadius(), getGlobalMatrix()) != FrustumTest::Outside;
+
+        if (visible)
+        {
+            _cullingResult->m_output->add(GraphicInstanceListType::All, this);
+            _cullingResult->m_output->add(GraphicInstanceListType::Light, this);
+            return true;
+        }
+
+        return false;
     }
 
     //--------------------------------------------------------------------------------------
@@ -80,7 +109,7 @@ namespace vg::renderer
 
             case ShaderPass::Forward:
             case ShaderPass::Deferred:
-                DebugDraw::get()->AddWireframeSphere(m_radius, 0xFF00FFFF, getGlobalMatrix());
+                DebugDraw::get()->AddWireframeSphere(getMaxRadius(), 0xFF00FFFF, getGlobalMatrix());
                 break;     
         }            
     }

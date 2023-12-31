@@ -118,7 +118,7 @@ namespace vg::gfx
             _size = _buffer->getBufDesc().getSize();
 
         VG_ASSERT(nullptr == m_curMapInfo.buffer && nullptr == m_curMapInfo.texture);
-        VG_ASSERT(_size <= _buffer->getBufDesc().getSize());
+        VG_ASSERT(_size <= _buffer->getBufDesc().getSize(), "[Device] Trying to Map %u bytes but buffer size is only %u", _size, _buffer->getBufDesc().getSize());
         VG_ASSERT(_size > 0);
 
         Map map = super::map(_buffer, _size);
@@ -156,7 +156,7 @@ namespace vg::gfx
         if ((size_t)-1 == _size)
             _size = _dst->getBufDesc().getSize();
 
-        VG_ASSERT(_size <= _dst->getBufDesc().getSize(), "Size %u is greater than size of the destination Texture \"%s\"", _size, _dst->getBufDesc().getSize(), _src->getName().c_str());
+        VG_ASSERT(_size <= _dst->getBufDesc().getSize(), "Size %u is greater than size %u of the destination Buffer \"%s\"", _size, _dst->getBufDesc().getSize(), _src->getName().c_str());
         VG_ASSERT(_srcOffset <= _src->getBufDesc().getSize(), "Offset %u is greater than size %u of the source Buffer \"%s\"", _srcOffset, _src->getBufDesc().getSize(), _src->getName().c_str());
 
         super::copyBuffer(_dst, _src, _srcOffset, _size);

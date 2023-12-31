@@ -81,6 +81,7 @@ namespace vg::gfx
 
         // Buffer SRV
         ViewConstantsBufSrv     = RESERVEDSLOT_BUFSRV_VIEWCONSTANTS,
+        LightsConstantBufSrv    = RESERVEDSLOT_BUFSRV_LIGHTSCONSTANTS,
         SkinningMatricesBufSrv  = RESERVEDSLOT_BUFSRV_SKINNINGMATRICES,
 
         // Dynamic

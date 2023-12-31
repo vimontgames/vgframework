@@ -13,7 +13,8 @@ namespace vg::renderer
 
         LightType   GetLightType() const final override { return LightType::Omni; }
         
-        float m_radius = 1.0f;
+        bool  m_useMaxRadius = false;
+        float m_maxRadius = 1.0f;
     };
 
     class OmniLightInstance : public LightInstance
@@ -24,12 +25,15 @@ namespace vg::renderer
         OmniLightInstance(const OmniLightDesc * _omniLightDesc);
         ~OmniLightInstance();
 
-        bool        GetAABB             (AABB & _aabb) const;
-        void        Draw                (const RenderContext & _renderContext, gfx::CommandList * _cmdList) const final override;
+        bool            GetAABB             (AABB & _aabb) const final override;
+        bool            Cull                (const Frustum & _frustum, CullingResult * _cullingResult) final override;
+        void            Draw                (const RenderContext & _renderContext, gfx::CommandList * _cmdList) const final override;
 
-        LightType   GetLightType        () const final override { return LightType::Omni; }
+        LightType       GetLightType        () const final override { return LightType::Omni; }
+
+        float           getMaxRadius() const;
 
     private:
-        float m_radius = 1.0f;
+        float m_maxRadius = -1.0f;
     };
 }

@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Shaders/system/lightsBuffer.hlsli"
+
 //--------------------------------------------------------------------------------------
 // https://github.com/Nadrin/PBR/blob/master/data/shaders/hlsl/pbr.hlsl 
 //--------------------------------------------------------------------------------------
@@ -51,34 +53,9 @@ struct LightingResult
 {
     float3 diffuse;
     float3 specular;
-};
 
-//--------------------------------------------------------------------------------------
-LightingResult computeDirectLighting(float3 _eyePos, float3 _worldPos, float3 _albedo, float3 _worldNormal, float4 _pbr)
-{
-    LightingResult output = (LightingResult)0;
-    
-    float occlusion = 1.0f; //_pbr.r;
-    float roughness = 0.3f; //_pbr.g;
-    float metalness = 0.0f; //_pbr.b;
-
-    // Outgoing light direction (vector from world-space fragment position to camera).
-	float3 Lo = normalize(_eyePos - _worldPos.xyz);
-
-    // Angle between surface normal and outgoing light direction.
-	float cosLo = max(0.0, dot(_worldNormal, Lo));
-
-    // Specular reflection vector.
-	float3 Lr = 2.0 * cosLo * _worldNormal - Lo;
-
-    // Fresnel reflectance at normal incidence (for metals use albedo color).
-	float3 F0 = lerp(Fdielectric, _albedo, metalness);
-
-	//for(uint i=0; i<NumLights; ++i)
+	void addLightContribution(float3 Lo, float cosLo, float3 Lr, float3 F0, float3 Li, float3 Lradiance, float3 _worldNormal, float roughness, float metalness)
 	{
-		float3 Li = normalize(float3(2, -1, 3));//-lights[i].direction;
-		float3 Lradiance = 1.0f; //lights[i].radiance;
-
 		// Half-vector between Li and Lo.
 		float3 Lh = normalize(Li + Lo);
 
@@ -108,8 +85,79 @@ LightingResult computeDirectLighting(float3 _eyePos, float3 _worldPos, float3 _a
 		// Cook-Torrance specular microfacet BRDF.
 		float3 specularBRDF = (F * D * G) / max(Epsilon, 4.0 * cosLi * cosLo);
 
-		output.diffuse += diffuseBRDF * Lradiance * cosLi;
-		output.specular += specularBRDF * Lradiance * cosLi;
+		diffuse += diffuseBRDF * Lradiance * cosLi;
+		specular += specularBRDF * Lradiance * cosLi;
+	}
+};
+
+//--------------------------------------------------------------------------------------
+float getRangeAttenuation(float _dist, float _maxRange)
+{
+#if 1
+	// inverse square dist + smooth max range
+	float ratio = _dist / _maxRange;
+	return max(min(1.0f - pow(ratio, 4), 1.0f), 0.0f) / pow(_dist, 2);
+#else
+	// inverse square dist 
+	return 1.0f / ( _dist * _dist );
+#endif
+}
+
+//--------------------------------------------------------------------------------------
+LightingResult computeDirectLighting(float3 _eyePos, float3 _worldPos, float3 _albedo, float3 _worldNormal, float4 _pbr)
+{
+    LightingResult output = (LightingResult)0;
+    
+    float occlusion = 1.0f; //_pbr.r;
+    float roughness = 0.3f; //_pbr.g;
+    float metalness = 0.0f; //_pbr.b;
+
+    // Outgoing light direction (vector from world-space fragment position to camera). 
+	float3 Lo = normalize(_eyePos - _worldPos.xyz);
+
+    // Angle between surface normal and outgoing light direction.
+	float cosLo = max(0.0, dot(_worldNormal, Lo));
+
+    // Specular reflection vector.
+	float3 Lr = 2.0 * cosLo * _worldNormal - Lo;
+
+    // Fresnel reflectance at normal incidence (for metals use albedo color).
+	float3 F0 = lerp(Fdielectric, _albedo, metalness);
+
+	ByteAddressBuffer lights = getBuffer(RESERVEDSLOT_BUFSRV_LIGHTSCONSTANTS);
+	LightsConstantsHeader lightsHeader;
+    uint offset = lightsHeader.Load(lights);
+
+	for(uint i=0; i < lightsHeader.getDirectionalCount(); ++i)
+	{
+		DirectionalLightConstants directional = lights.Load<DirectionalLightConstants>(offset);
+		offset += sizeof(DirectionalLightConstants);
+
+		float3 lightDir = directional.getDirection();
+		float3 Li = normalize(lightDir);
+		float3 Lradiance = directional.getColor();
+
+		output.addLightContribution(Lo, cosLo, Lr, F0, Li, Lradiance, _worldNormal, roughness, metalness);
+	}	
+
+	for(uint i=0; i < lightsHeader.getOmniCount(); ++i)
+	{
+		OmniLightConstants omni = lights.Load<OmniLightConstants>(offset);
+		offset += sizeof(OmniLightConstants);
+
+		float3 lightDir = omni.getPosition() - _worldPos.xyz;
+		float dist = length(lightDir);
+
+		float att = getRangeAttenuation(dist, omni.getRadius());
+
+		if (att <= lightEps)
+			continue;
+
+		float3 color = omni.getColor();
+		float3 Li = normalize(lightDir);
+		float3 Lradiance = att * color;
+
+		output.addLightContribution(Lo, cosLo, Lr, F0, Li, Lradiance, _worldNormal, roughness, metalness);
     }	
 
     return output;
