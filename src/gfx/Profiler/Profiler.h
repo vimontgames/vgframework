@@ -57,12 +57,14 @@ namespace vg::gfx
         inline ScopedGPUEvent(const char * _name) :
             m_name(_name)
         {
-            core::Kernel::getProfiler()->startGpuEvent(_name);
+            if (m_name[0] != '\0')
+                core::Kernel::getProfiler()->startGpuEvent(_name);
         }
 
         inline ~ScopedGPUEvent()
         {
-            core::Kernel::getProfiler()->stopGpuEvent();
+            if (m_name[0] != '\0')
+                core::Kernel::getProfiler()->stopGpuEvent();
         }
 
     private:

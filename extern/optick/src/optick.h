@@ -650,7 +650,10 @@ struct OPTICK_API Event
 
 	Event(const EventDescription& description)
 	{
-		data = Start(description);
+		if (&description)
+			data = Start(description);
+		else
+			data = nullptr;
 	}
 
 	~Event()
@@ -681,7 +684,10 @@ struct OPTICK_API GPUEvent
 
 	GPUEvent(const EventDescription& description)
 	{
-		data = Start(description);
+		if (&description)
+			data = Start(description);
+		else
+			data = nullptr;
 	}
 
 	~GPUEvent()
