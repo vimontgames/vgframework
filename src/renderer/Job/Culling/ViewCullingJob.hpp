@@ -5,6 +5,7 @@
 #include "renderer/IGraphicInstance.h"
 #include "renderer/Instance/Mesh/MeshInstance.h"
 #include "renderer/Options/RendererOptions.h"
+#include "renderer/Renderer.h"
 
 using namespace vg::core;
 
@@ -68,6 +69,16 @@ namespace vg::renderer
 
         View * view = (View *)getParent();
         gfx::ViewID viewID = view->getViewID();
+
+        if (Renderer::get()->IsFullscreen() && viewID.target == gfx::ViewTarget::Editor)
+            return;
+
+        if (viewID.target == gfx::ViewTarget::Game || viewID.target == gfx::ViewTarget::Editor)
+        {
+            if (!view->IsVisible())
+                return;
+        }
+       
         string name = getName() + " " + asString(viewID.target) + " " + to_string(viewID.index);
         VG_PROFILE_CPU(name.c_str());
         //VG_DEBUGPRINT("\"%s\" running on \"%s\" (0x%08X)\n", name.c_str(), Kernel::getScheduler()->GetCurrentThreadName().c_str(), Kernel::getScheduler()->GetCurrentThreadID());

@@ -383,8 +383,6 @@ namespace vg::renderer
                 if (options->isRayTracingEnabled())
                     m_frameGraph.addUserPass(mainViewRenderPassContext, m_BLASUpdatePass, "BLAS Update");
 
-                vector<View *> registeredViews;
-
                 // Register view passes
                 for (uint j = 0; j < core::enumCount<gfx::ViewTarget>(); ++j)
                 {
@@ -409,8 +407,6 @@ namespace vg::renderer
                                                    rc.m_view = view;
 
                             view->RegisterFrameGraph(rc, m_frameGraph);
-
-                            registeredViews.push_back(view);
                         }
                     }
                 }
@@ -422,8 +418,15 @@ namespace vg::renderer
                 m_frameGraph.build();
                 m_frameGraph.render();
 
-                for (auto & view : registeredViews)
-                    view->clearShadowViews();
+                for (uint j = 0; j < core::enumCount<gfx::ViewTarget>(); ++j)
+                {
+                    auto & views = m_views[j];
+                    for (uint i = 0; i < views.count(); ++i)
+                    {
+                        auto * view = (View *)views[i];
+                        view->clearShadowViews();
+                    }
+                }
 
                 // reset debug draw after last render
                 DebugDraw::get()->endFrame();
