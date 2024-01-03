@@ -565,12 +565,15 @@ namespace vg::core
                 return 1;
 
             case IProperty::Type::Float2:
+            case IProperty::Type::Uint2:
                 return 2;
 
             case IProperty::Type::Float3:
+            case IProperty::Type::Uint3:
                 return 3;
 
             case IProperty::Type::Float4:
+            case IProperty::Type::Uint4:
                 return 4;
         }
     }
@@ -1040,6 +1043,57 @@ namespace vg::core
                                         }
                                         break;
 
+                                        case IProperty::Type::Uint2:
+                                        case IProperty::Type::Uint3:
+                                        case IProperty::Type::Uint4:
+                                        {
+                                            auto serializeUintNFromXML = [](u32 * _value, const XMLElement * _xmlElement, uint _componentCount)
+                                            {
+                                                u32 * pUint = (u32 *)_value;
+                                                const char * values[] = { "x", "y", "z", "w" };
+                                                for (uint i = 0; i < _componentCount; ++i)
+                                                {
+                                                    const XMLAttribute * xmlValue = _xmlElement->FindAttribute(values[i]);
+                                                    if (nullptr != xmlValue)
+                                                        pUint[i] = xmlValue->UnsignedValue();
+                                                }
+                                            };
+
+                                            const auto componentCount = getComponentCount(type);
+
+                                            if (isEnumArray)
+                                            {
+                                                const XMLElement * xmlPropElemValue = xmlPropElem->FirstChildElement("Value");
+                                                if (nullptr != xmlPropElemValue)
+                                                {
+                                                    do
+                                                    {
+                                                        const XMLAttribute * xmlValueName = xmlPropElemValue->FindAttribute("name");
+                                                        if (nullptr != xmlValueName)
+                                                        {
+                                                            for (uint i = 0; i < prop->getEnumCount(); ++i)
+                                                            {
+                                                                if (!strcmp(xmlValueName->Value(), prop->getEnumName(i)))
+                                                                {
+                                                                    u32 * pUint = prop->GetPropertyUintN(_object, componentCount, i);
+                                                                    serializeUintNFromXML(pUint, xmlPropElemValue, componentCount);
+                                                                    break;
+                                                                }
+                                                            }
+                                                        }
+
+                                                        xmlPropElemValue = xmlPropElemValue->NextSiblingElement("Value");
+                                                    } while (nullptr != xmlPropElemValue); 
+                                                }
+                                            }
+                                            else
+                                            {
+                                                u32 * pUint = prop->GetPropertyUintN(_object, componentCount);
+                                                serializeUintNFromXML(pUint, xmlPropElem, componentCount);
+                                            }
+                                        }
+                                        break;
+
                                         case IProperty::Type::Float2:
                                         case IProperty::Type::Float3:
                                         case IProperty::Type::Float4:
@@ -1334,6 +1388,53 @@ namespace vg::core
                     VG_ASSERT(!isEnumArray, "EnumArray serialization to XML not implemented for type '%s'", asString(type).c_str());
                     const float * pFloat = prop->GetPropertyFloat(_object);
                     xmlPropElem->SetAttribute("value", *pFloat);
+                }
+                break;
+
+                case IProperty::Type::Uint2:
+                case IProperty::Type::Uint3:
+                case IProperty::Type::Uint4:
+                {
+                    auto serializeUintNToXML = [](XMLElement * _xmlElement, const uint * pUint, uint _componentCount)
+                    {
+                        _xmlElement->SetAttribute("x", pUint[0]);
+                        if (_componentCount > 1)
+                        {
+                            _xmlElement->SetAttribute("y", pUint[1]);
+                            if (_componentCount > 2)
+                            {
+                                _xmlElement->SetAttribute("z", pUint[2]);
+
+                                if (_componentCount > 3)
+                                {
+                                    _xmlElement->SetAttribute("w", pUint[3]);
+                                }
+                            }
+                        }
+                    };
+
+                    const uint componentCount = getComponentCount(type);
+
+                    if (isEnumArray)
+                    {
+                        const uint count = prop->getEnumCount();
+                        for (uint i = 0; i < count; ++i)
+                        {
+                            XMLElement * xmlPropElemChild = _xmlDoc.NewElement("Value");
+                            {
+                                auto enumValueName = prop->getEnumName(i);
+                                xmlPropElemChild->SetAttribute("name", enumValueName);
+                                const uint * value = prop->GetPropertyUintN(_object, componentCount, i);
+                                serializeUintNToXML(xmlPropElemChild, value, componentCount);
+                            }
+                            xmlPropElem->InsertEndChild(xmlPropElemChild);
+                        }
+                    }
+                    else
+                    {
+                        const u32 * value = prop->GetPropertyUintN(_object, componentCount);
+                        serializeUintNToXML(xmlPropElem, value, componentCount);
+                    }
                 }
                 break;
 

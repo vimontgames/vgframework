@@ -58,12 +58,18 @@ namespace vg::core
         inline ScopedCPUEvent(const char * _name) :
             m_name(_name)
         {
-            VG_PROFILE_CPU_EVENT_START(_name);
+            if (m_name[0] != '\0')
+            {
+                VG_PROFILE_CPU_EVENT_START(_name);
+            }
         }
 
         inline ~ScopedCPUEvent()
         {
-            VG_PROFILE_CPU_EVENT_STOP();
+            if (m_name[0] != '\0')
+            {
+                VG_PROFILE_CPU_EVENT_STOP();
+            }
         }
 
     private:

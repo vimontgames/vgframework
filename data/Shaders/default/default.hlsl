@@ -133,7 +133,7 @@ PS_Output PS_Forward(VS_Output _input)
     // Compute & Apply lighting
     LightingResult lighting = computeDirectLighting(viewConstants, camPos, worldPos, albedo.rgb, worldNormal.xyz, pbr);
 
-    output.color0.rgb = ApplyLighting(albedo.rgb, lighting);
+    output.color0.rgb = applyLighting(albedo.rgb, lighting, viewConstants.getDisplayMode());
     
     #if _TOOLMODE && !_ZONLY
 

@@ -7,7 +7,8 @@ namespace vg::gfx
     enum class Filter : core::u8
     {
         Nearest = 0,
-        Linear
+        Linear,
+        DepthCmp
     };
 
     enum class Address : core::u8
@@ -32,11 +33,11 @@ namespace vg::gfx
             {
                 struct
                 {
-                    Filter      filter  : 1;
-                    Address     address : 2;
+                    Filter      filter  : 4;
+                    Address     address : 4;
 
                 };
-                core::u32 bits;
+                core::u8 bits;
             };
         };
     }
@@ -69,8 +70,8 @@ namespace vg::gfx
         {
             inline core::size_t operator() (const SamplerState & _this) const
             {
-                VG_STATIC_ASSERT(sizeof(_this) == sizeof(core::u32), "Invalid sizeof in hash function");
-                return std::hash<core::u32>()(_this.bits);
+                VG_STATIC_ASSERT(sizeof(_this) == sizeof(core::u8), "Invalid sizeof in hash function");
+                return std::hash<core::u8>()(_this.bits);
             }
         };
     };

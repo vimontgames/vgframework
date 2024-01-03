@@ -2,6 +2,7 @@
 
 #include "gfx/IView.h"
 #include "gfx/Resource/Texture.h"
+#include "gfx/FrameGraph/FrameGraph_consts.h"
 #include "renderer/Job/Culling/ViewCullingJob.h"
 #include "shaders/system/picking.hlsli"    
 #include "Frustum.h"
@@ -24,6 +25,7 @@ namespace vg::gfx
 namespace vg::renderer
 {
     class ViewConstantsUpdatePass;
+    class ShadowView;
 
     //--------------------------------------------------------------------------------------
     // Base class for user views.
@@ -40,7 +42,8 @@ namespace vg::renderer
                                             View                        (const gfx::CreateViewParams & _params);
                                             ~View                       ();
 
-        void                                SetupCamera                 (const core::float4x4 & _cameraWorldMatrix, core::float2 _nearFar, float _fovY) override;
+        void                                SetupPerspectiveCamera      (const core::float4x4 & _cameraWorldMatrix, core::float2 _nearFar, float _fovY) override;
+        void                                SetupOrthographicCamera     (const core::float4x4 & _cameraWorldMatrix, core::uint2 _size, core::float2 _nearFar) override;
 
         void                                SetFlags                    (Flags _flagsToSet, Flags _flagsToRemove = (Flags)0) override;
         Flags                               GetFlags                    () const override;
@@ -77,7 +80,9 @@ namespace vg::renderer
         const core::string                  GetFrameGraphID             (const core::string & _name) const final override;
 
         bool                                IsToolmode                  () const override;
+        bool                                IsOrtho                     () const override;
         bool                                IsUsingRayTracing           () const override;
+        bool                                IsLit                       () const override;
         bool                                IsComputePostProcessNeeded  () const override;
 
         void                                setTLAS                     (gfx::TLAS * _tlas);
@@ -92,7 +97,9 @@ namespace vg::renderer
 
         gfx::ViewCullingStats               GetViewCullingStats         () const final override;
 
-        const Frustum &                     getCameraFrustum            () const;
+        core::vector<gfx::FrameGraphResourceID>  getShadowMaps          () const;
+
+        VG_INLINE const Frustum &           getCameraFrustum            () const;
 
         virtual void                        RegisterFrameGraph          (const gfx::RenderPassContext & _rc, gfx::FrameGraph & _frameGraph);
 
@@ -130,9 +137,20 @@ namespace vg::renderer
 
         bool                                isToolmode                  () const;
 
+        void                                addShadowView               (ShadowView * _shadowView);
+        const core::vector<ShadowView *> &  getShadowViews              () const { return m_shadowViews; }
+        void                                setIsAdditionalView         (bool _isAdditionalView) { m_additionalView = _isAdditionalView; }
+        bool                                isAdditionalView            () const { return m_additionalView;}
+        void                                clearShadowViews            ();
+        const ShadowView *                  findShadowView              (const LightInstance * _light) const;
+        core::string                        findShadowMapID             (const LightInstance * _light) const;
+
+        void                                setOrtho                    (bool _ortho);
+
     private:
         void                                computeCameraFrustum        ();
         static core::float4x4               setPerspectiveProjectionRH  (float _fov, float _ar, float _near, float _far);
+        static core::float4x4               setOrthoProjectionRH        (float _w, float _h, float _near, float _far);
 
     private:
         gfx::ViewID                         m_viewID;
@@ -150,6 +168,8 @@ namespace vg::renderer
         float                               m_cameraFovY;
         bool                                m_active                    = false;
         bool                                m_visible                   = false;
+        bool                                m_ortho                     = false;
+        bool                                m_additionalView            = false;
         ViewCullingJob *                    m_cullingJob                = nullptr;
         ViewConstantsUpdatePass *           m_viewConstantsUpdatePass   = nullptr;
         core::uint2                         m_mouseOffset;
@@ -158,6 +178,7 @@ namespace vg::renderer
         gfx::TLAS *                         m_tlas                      = nullptr;
         Frustum                             m_frustum;
         ViewCullingJobOutput                m_cullingJobResult;
+        core::vector<ShadowView*>           m_shadowViews;
     };
 }
 

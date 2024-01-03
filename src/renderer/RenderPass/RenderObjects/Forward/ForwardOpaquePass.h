@@ -13,7 +13,7 @@ namespace vg::renderer
         ForwardOpaquePass();
         ~ForwardOpaquePass();
 
-        void Setup(const gfx::RenderPassContext & _renderContext, float _dt) override;
-        void Render(const gfx::RenderPassContext & _renderContext, gfx::CommandList * _cmdList) const override;
+        void Setup(const gfx::RenderPassContext & _renderPassContext, float _dt) override;
+        void Render(const gfx::RenderPassContext & _renderPassContext, gfx::CommandList * _cmdList) const override;
     };
 }

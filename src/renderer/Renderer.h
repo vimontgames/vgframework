@@ -2,6 +2,7 @@
 
 #include "renderer/IRenderer.h"
 #include "core/Singleton/Singleton.h"
+#include "core/IScheduler.h"
 
 namespace vg::gfx
 {
@@ -102,7 +103,8 @@ namespace vg::renderer
         View *                                  getMainView                 () const;
         gfx::Texture *		                    getBackbuffer               () const;
         ImGuiAdapter *                          getImGuiAdapter             () const { return m_imgui; }
-        SharedCullingJobOutput *                getSharedCullingJobOutput   () const { return m_sharedCullingJobOutput;}
+        SharedCullingJobOutput *                getSharedCullingJobOutput   () const { return m_sharedCullingJobOutput; }
+        core::JobSync *                         getCullingJobSync           () { return &m_cullingJobSync; }
 
     private:
         void                                    registerShaders             ();
@@ -130,6 +132,7 @@ namespace vg::renderer
         MaterialModel *                         m_defaultMaterial           = nullptr;
         bool                                    m_fullscreen                = false;
         SharedCullingJobOutput *                m_sharedCullingJobOutput    = nullptr;
+        core::JobSync                           m_cullingJobSync;
 	};
 }
 

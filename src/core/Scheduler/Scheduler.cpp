@@ -120,8 +120,12 @@ namespace vg::core
     //--------------------------------------------------------------------------------------
     void Scheduler::Start(Job * _job, JobSync * _sync)
     {
-        px_sched::Job job{ _job };
-        m_schd->run(job, reinterpret_cast<px_sched::Sync *>(_sync));
+        VG_ASSERT(nullptr != _job);
+        if (nullptr != _job)
+        {
+            px_sched::Job job{ _job };
+            m_schd->run(job, reinterpret_cast<px_sched::Sync *>(_sync));
+        }
     }
 
     //--------------------------------------------------------------------------------------

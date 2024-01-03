@@ -166,6 +166,13 @@ namespace vg::gfx
     }
 
     //--------------------------------------------------------------------------------------
+    void UserPass::readDepthStencil(const core::vector<FrameGraphResourceID> & _resIDs)
+    {
+        for (auto & id : _resIDs)
+            readDepthStencil(id);
+    }
+
+    //--------------------------------------------------------------------------------------
     void UserPass::readRWTexture(const FrameGraphResourceID & _resID)
     {
         FrameGraphTextureResource * res = m_frameGraph->getTextureResource(_resID);

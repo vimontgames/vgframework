@@ -10,6 +10,14 @@ namespace vg::renderer
         Spot
     };
 
+    enum class ShadowType : core::u8
+    {
+        None,
+        ShadowMap,
+        Hybrid,
+        RayTraced
+    };
+
     class ILightDesc : public core::Object
     {
     public:
@@ -30,5 +38,6 @@ namespace vg::renderer
         void                Draw        (const RenderContext & _renderContext, gfx::CommandList * _cmdList) const override = 0;
 
         virtual LightType   GetLightType() const = 0;
+        virtual ShadowType  GetShadowType() const = 0;
     };
 }

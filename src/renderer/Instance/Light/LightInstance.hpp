@@ -22,7 +22,22 @@ namespace vg::renderer
     {
         super::registerProperties(_desc);
 
-        registerProperty(LightDesc, m_castShadows, "Cast Shadows");
+        registerPropertyGroupBegin(LightDesc, "Shadow");
+        {
+            registerPropertyEnum(LightDesc, ShadowType, m_shadowType, "Type");
+
+            registerProperty(LightDesc, m_shadowRange, "Range");
+            //setPropertyRange(LightDesc, m_shadowRange, float2(0.0f, 100.0f));
+
+            registerProperty(LightDesc, m_shadowBias, "Bias");
+            setPropertyRange(LightDesc, m_shadowBias, float2(0.0001f, 0.01f));
+
+            registerProperty(LightDesc, m_shadowSize, "Size");
+            registerProperty(LightDesc, m_shadowResolution, "Resolution");
+        }
+        registerPropertyGroupEnd(LightDesc);
+
+
         registerPropertyEx(LightDesc, m_color, "Color", IProperty::Flags::Color | IProperty::Flags::HDR);
         registerProperty(LightDesc, m_intensity, "Intensity");
 
@@ -45,7 +60,12 @@ namespace vg::renderer
     LightInstance::LightInstance(const core::string & _name, core::IObject * _parent, const LightDesc * _lightDesc) :
         super(_name, _parent)
     {
-        m_castShadows = _lightDesc->m_castShadows;
+        m_shadowType = _lightDesc->m_shadowType;
+        m_shadowRange = _lightDesc->m_shadowRange;
+        m_shadowBias = _lightDesc->m_shadowBias;
+        m_shadowSize = _lightDesc->m_shadowSize;
+        m_shadowResolution = _lightDesc->m_shadowResolution;
+
         setColor(_lightDesc->m_color);
         m_intensity = _lightDesc->m_intensity;
     }
@@ -57,7 +77,7 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    bool LightInstance::Cull(const Frustum & _frustum, CullingResult * _cullingResult)
+    bool LightInstance::Cull(CullingResult * _cullingResult, View * _view)
     {
         bool visible = true; // TODO
 

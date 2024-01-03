@@ -16,13 +16,23 @@ namespace vg::gfx::vulkan
                             samplerCreateInfo.mipLodBias = 0.0;
                             samplerCreateInfo.anisotropyEnable = VK_FALSE;
                             samplerCreateInfo.maxAnisotropy = 1;
-                            samplerCreateInfo.compareOp = VK_COMPARE_OP_NEVER;
+
+                            if (samplerState.filter == Filter::DepthCmp)
+                            {
+                                samplerCreateInfo.compareEnable = VK_TRUE;
+                                samplerCreateInfo.compareOp = VK_COMPARE_OP_LESS_OR_EQUAL;
+                            }
+                            else
+                            {
+                                samplerCreateInfo.compareEnable = VK_FALSE;
+                                samplerCreateInfo.compareOp = VK_COMPARE_OP_NEVER;
+                            }
+           
                             samplerCreateInfo.minLod = 0.0f;
                             samplerCreateInfo.maxLod = VK_LOD_CLAMP_NONE;
-                            samplerCreateInfo.compareEnable = VK_FALSE;
                             samplerCreateInfo.borderColor = VK_BORDER_COLOR_FLOAT_OPAQUE_WHITE;
 
-        return samplerCreateInfo;
+        return samplerCreateInfo; 
     }
 
     //--------------------------------------------------------------------------------------
@@ -34,6 +44,7 @@ namespace vg::gfx::vulkan
                 VG_ASSERT(false, "Unhandled Filter \"%s\" (%u)", asString(_filter).c_str(), _filter);
             case Filter::Nearest:
                 return VK_FILTER_NEAREST;
+            case Filter::DepthCmp:
             case Filter::Linear:
                 return VK_FILTER_LINEAR;
         }
@@ -48,6 +59,7 @@ namespace vg::gfx::vulkan
                 VG_ASSERT(false, "Unhandled Filter \"%s\" (%u)", asString(_filter).c_str(), _filter);
             case Filter::Nearest:
                 return VK_SAMPLER_MIPMAP_MODE_NEAREST;
+            case Filter::DepthCmp:
             case Filter::Linear:
                 return VK_SAMPLER_MIPMAP_MODE_LINEAR;
         }

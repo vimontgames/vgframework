@@ -8,6 +8,7 @@
 #include "core/Object/AutoRegisterClass.h"
 #include "core/File/File.h"
 #include "core/Scheduler/Scheduler.h"
+#include "core/string/string.h"
 
 #include "gfx/device/device.h"
 #include "gfx/Shader/ShaderManager.h"
@@ -215,7 +216,7 @@ namespace vg::renderer
         m_mainView = (View*)CreateView(mainViewParams, "MainView");
 
         auto gameView0Params = gfx::CreateViewParams(gfx::ViewTarget::Game, getBackbufferSize());
-        auto gameView = (View *)CreateView(gameView0Params, "GameView#0");
+        auto gameView = (View *)CreateView(gameView0Params, "GameView");
         AddView(gameView);
         VG_SAFE_RELEASE(gameView);
 	}
@@ -382,6 +383,8 @@ namespace vg::renderer
                 if (options->isRayTracingEnabled())
                     m_frameGraph.addUserPass(mainViewRenderPassContext, m_BLASUpdatePass, "BLAS Update");
 
+                vector<View *> registeredViews;
+
                 // Register view passes
                 for (uint j = 0; j < core::enumCount<gfx::ViewTarget>(); ++j)
                 {
@@ -406,6 +409,8 @@ namespace vg::renderer
                                                    rc.m_view = view;
 
                             view->RegisterFrameGraph(rc, m_frameGraph);
+
+                            registeredViews.push_back(view);
                         }
                     }
                 }
@@ -416,6 +421,9 @@ namespace vg::renderer
                 m_frameGraph.setup(_dt);
                 m_frameGraph.build();
                 m_frameGraph.render();
+
+                for (auto & view : registeredViews)
+                    view->clearShadowViews();
 
                 // reset debug draw after last render
                 DebugDraw::get()->endFrame();
@@ -435,7 +443,6 @@ namespace vg::renderer
 
         // Perform culling for each view (might want to split views later)
         uint jobStartCounter = 0;
-        core::JobSync syncCull;
         for (uint j = 0; j < core::enumCount<gfx::ViewTarget>(); ++j)
         {
             const auto & views = m_views[j];
@@ -445,7 +452,7 @@ namespace vg::renderer
                 if (view && view->IsVisible())
                 {
                     auto * job = view->getCullingJob();
-                    jobScheduler->Start(job, &syncCull);
+                    jobScheduler->Start(job, &m_cullingJobSync);
                     jobStartCounter++;
                 }
             }
@@ -454,7 +461,7 @@ namespace vg::renderer
         if (jobStartCounter > 0)
         {
             VG_PROFILE_CPU("syncCull");
-            jobScheduler->Wait(syncCull);
+            jobScheduler->Wait(m_cullingJobSync);
         }
     }
 
@@ -493,7 +500,7 @@ namespace vg::renderer
     //--------------------------------------------------------------------------------------
     gfx::IView * Renderer::CreateView(gfx::CreateViewParams _params, const core::string & _name, IView::Flags _flags)
     {
-        View * view;
+        View * view = nullptr;
 
         switch (_params.target)
         {
@@ -527,7 +534,7 @@ namespace vg::renderer
         {
             if (!views[i])
             {
-                views[i] = (View*)_view;
+                views[i] = (View *)_view;
                 auto id = ViewID(target, i);
                 _view->SetViewID(id);
                 return id;
@@ -538,6 +545,8 @@ namespace vg::renderer
         ViewID id = ViewID(target, index);
         views.push_back((View *)_view);
         _view->SetViewID(id);
+        _view->setName(fmt::sprintf("%s #%u", asString(id.target), id.index));
+
         return id;
     }
 

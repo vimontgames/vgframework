@@ -8,18 +8,26 @@ namespace vg::gfx
         switch (_sampler)
         {
             default:
-                VG_ASSERT(false, "Unhandled Sampler \"%s\" (%u)", asString(_sampler).c_str());
+                VG_ASSERT_ENUM_NOT_IMPLEMENTED(_sampler);
+
             case Sampler::NearestClamp:
                 *this = SamplerState(Filter::Nearest, Address::Clamp);
                 break;
+
             case Sampler::NearestRepeat:
                 *this = SamplerState(Filter::Nearest, Address::Repeat);
                 break;
+
             case Sampler::LinearClamp:
                 *this = SamplerState(Filter::Linear, Address::Clamp);
                 break;
+
             case Sampler::LinearRepeat:
                 *this = SamplerState(Filter::Linear, Address::Repeat);
+                break;
+
+            case Sampler::ShadowCmp:
+                *this = SamplerState(Filter::DepthCmp, Address::Clamp);
                 break;
         }
     }

@@ -511,7 +511,7 @@ namespace vg::gfx::vulkan
         // allocate enough descriptors in pool for bindless
         VkDescriptorPoolSize type_counts[] =
         {
-            {VK_DESCRIPTOR_TYPE_SAMPLER, (uint)enumCount<Sampler>()},
+            { VK_DESCRIPTOR_TYPE_SAMPLER, (uint)enumCount<Sampler>() },
         };
 
         VkDescriptorPoolCreateInfo descriptor_pool = {};

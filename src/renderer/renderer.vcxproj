@@ -147,6 +147,10 @@
     <ClInclude Include="RenderPass\RenderObjects\Deferred\DeferredOpaquePass.hpp" />
     <ClInclude Include="RenderPass\RenderObjects\DepthOnly\DepthOnlyPass.h" />
     <ClInclude Include="RenderPass\RenderObjects\DepthOnly\DepthOnlyPass.hpp" />
+    <ClInclude Include="RenderPass\RenderObjects\DepthOnly\DepthPrepass\DepthPrePass.h" />
+    <ClInclude Include="RenderPass\RenderObjects\DepthOnly\DepthPrepass\DepthPrePass.hpp" />
+    <ClInclude Include="RenderPass\RenderObjects\DepthOnly\ShadowMap\ShadowMapPass.h" />
+    <ClInclude Include="RenderPass\RenderObjects\DepthOnly\ShadowMap\ShadowMapPass.hpp" />
     <ClInclude Include="RenderPass\RenderObjects\Editor\EditorPass.h" />
     <ClInclude Include="RenderPass\RenderObjects\Editor\EditorPass.hpp" />
     <ClInclude Include="RenderPass\RenderObjects\Forward\ForwardOpaquePass.h" />
@@ -166,6 +170,8 @@
     <ClInclude Include="View\Frustum.hpp" />
     <ClInclude Include="View\Lit\LitView.h" />
     <ClInclude Include="View\Lit\LitView.hpp" />
+    <ClInclude Include="View\Shadow\ShadowView.h" />
+    <ClInclude Include="View\Shadow\ShadowView.hpp" />
     <ClInclude Include="View\View.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

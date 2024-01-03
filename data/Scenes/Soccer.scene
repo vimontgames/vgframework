@@ -94,14 +94,14 @@
                                 <Property type="String" name="m_name" value="Balls"/>
                                 <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
                                 <Property type="Float4" name="m_color" flags="Color" x="1" y="1" z="1" w="1"/>
-                                <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="0" Ty="0" Tz="7" Tw="1"/>
+                                <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="0" Ty="-1" Tz="7" Tw="1"/>
                                 <Property type="ObjectPtrVector" name="m_components"/>
                                 <Property type="ObjectPtrVector" name="m_children" flags="Hidden">
                                     <Object class="GameObject">
                                         <Property type="String" name="m_name" value="Ball"/>
                                         <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
                                         <Property type="Float4" name="m_color" flags="Color" x="1" y="1" z="1" w="1"/>
-                                        <Property type="Float4x4" name="m_local" Ix="-0.45199251" Iy="-0.072221875" Iz="0.88909322" Iw="0" Jx="0.27346715" Jy="0.93750417" Jz="0.21517813" Jw="0" Kx="-0.84906918" Ky="0.3403967" Kz="-0.40399456" Kw="0" Tx="-67.860268" Ty="6.4048195" Tz="-61212.449" Tw="1"/>
+                                        <Property type="Float4x4" name="m_local" Ix="-0.45199251" Iy="-0.072221875" Iz="0.88909322" Iw="0" Jx="0.27346715" Jy="0.93750417" Jz="0.21517813" Jw="0" Kx="-0.84906918" Ky="0.3403967" Kz="-0.40399456" Kw="0" Tx="-2" Ty="0" Tz="0" Tw="1"/>
                                         <Property type="ObjectPtrVector" name="m_components">
                                             <Object class="MeshComponent">
                                                 <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
@@ -154,7 +154,7 @@
                                         <Property type="String" name="m_name" value="Ball"/>
                                         <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
                                         <Property type="Float4" name="m_color" flags="Color" x="1" y="1" z="1" w="1"/>
-                                        <Property type="Float4x4" name="m_local" Ix="0.67927694" Iy="-0.70176953" Iz="-0.21471456" Iw="0" Jx="0.1921801" Jy="-0.11226666" Jz="0.97491693" Jw="0" Kx="-0.70827222" Ky="-0.70350242" Kz="0.058605969" Kw="0" Tx="2.8432026" Ty="7.4933887" Tz="-34483.797" Tw="1"/>
+                                        <Property type="Float4x4" name="m_local" Ix="0.67927694" Iy="-0.70176953" Iz="-0.21471456" Iw="0" Jx="0.1921801" Jy="-0.11226666" Jz="0.97491693" Jw="0" Kx="-0.70827222" Ky="-0.70350242" Kz="0.058605969" Kw="0" Tx="0" Ty="0" Tz="0" Tw="1"/>
                                         <Property type="ObjectPtrVector" name="m_components">
                                             <Object class="MeshComponent">
                                                 <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
@@ -207,7 +207,7 @@
                                         <Property type="String" name="m_name" value="Ball"/>
                                         <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
                                         <Property type="Float4" name="m_color" flags="Color" x="1" y="1" z="1" w="1"/>
-                                        <Property type="Float4x4" name="m_local" Ix="0.54191995" Iy="-0.74046862" Iz="0.39752856" Iw="0" Jx="0.4157232" Jy="-0.17490458" Jz="-0.89251471" Jw="0" Kx="0.73040879" Ky="0.64893341" Kz="0.21304566" Kw="0" Tx="-48.745152" Ty="-9.7815609" Tz="-63258.746" Tw="1"/>
+                                        <Property type="Float4x4" name="m_local" Ix="0.54191995" Iy="-0.74046862" Iz="0.39752856" Iw="0" Jx="0.4157232" Jy="-0.17490458" Jz="-0.89251471" Jw="0" Kx="0.73040879" Ky="0.64893341" Kz="0.21304566" Kw="0" Tx="2" Ty="0" Tz="0" Tw="1"/>
                                         <Property type="ObjectPtrVector" name="m_components">
                                             <Object class="MeshComponent">
                                                 <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
@@ -375,7 +375,7 @@
                                         <Property type="String" name="m_name" value="Cone"/>
                                         <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
                                         <Property type="Float4" name="m_color" flags="Color" x="1" y="1" z="1" w="1"/>
-                                        <Property type="Float4x4" name="m_local" Ix="-0.40591812" Iy="-0.91390944" Iz="2.7955321e-06" Iw="0" Jx="0.91390944" Jy="-0.40591812" Jz="-1.4221685e-05" Jw="0" Kx="1.4132089e-05" Ky="-3.2179764e-06" Kz="1" Kw="0" Tx="15.002004" Ty="-7.5039415" Tz="-0.017445281" Tw="1"/>
+                                        <Property type="Float4x4" name="m_local" Ix="-0.40591812" Iy="-0.91390944" Iz="2.7955321e-06" Iw="0" Jx="0.91390944" Jy="-0.40591812" Jz="-1.4221685e-05" Jw="0" Kx="1.4132089e-05" Ky="-3.2179764e-06" Kz="1" Kw="0" Tx="15.002004" Ty="-7.5039415" Tz="0" Tw="1"/>
                                         <Property type="ObjectPtrVector" name="m_components">
                                             <Object class="MeshComponent">
                                                 <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
@@ -1400,7 +1400,7 @@
                                         <Property type="String" name="m_name" value="Sun"/>
                                         <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
                                         <Property type="Float4" name="m_color" flags="Color" x="1" y="1" z="1" w="1"/>
-                                        <Property type="Float4x4" name="m_local" Ix="0.38252723" Iy="-0.35362479" Iz="0.85359329" Iw="0" Jx="0.00013186038" Jy="0.92387974" Jz="0.38268337" Jw="0" Kx="-1.8477012" Ky="-0.29272014" Kz="0.70732796" Kw="0" Tx="-4.7683716e-07" Ty="3.5762787e-07" Tz="4.9999986" Tw="1"/>
+                                        <Property type="Float4x4" name="m_local" Ix="0.17189518" Iy="-0.77839214" Iz="-0.60378516" Iw="0" Jx="0.87428403" Jy="0.40298221" Jz="-0.27061421" Jw="0" Kx="0.45407343" Ky="-0.48130935" Kz="0.74977136" Kw="0" Tx="3.0335252e-06" Ty="-3.0356202e-06" Tz="16" Tw="1"/>
                                         <Property type="ObjectPtrVector" name="m_components">
                                             <Object class="LightComponent">
                                                 <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
@@ -1408,7 +1408,13 @@
                                                 <Property type="ObjectPtr" name="m_lightDesc" flags="Flatten">
                                                     <Object class="DirectionalLightDesc">
                                                         <Property type="String" name="m_name" flags="Hidden" value="DirectionalLightDesc #1"/>
-                                                        <Property type="Bool" name="m_castShadows" value="true"/>
+                                                        <Property type="LayoutElement" name="Shadow"/>
+                                                        <Property type="EnumU8" name="m_shadowType" value="ShadowMap"/>
+                                                        <Property type="Float2" name="m_shadowRange" x="0.1" y="100"/>
+                                                        <Property type="Float" name="m_shadowBias" flags="HasRange" value="0.001"/>
+                                                        <Property type="Uint2" name="m_shadowSize" x="50" y="50"/>
+                                                        <Property type="Uint2" name="m_shadowResolution" x="2048" y="2048"/>
+                                                        <Property type="LayoutElement" name=""/>
                                                         <Property type="Float4" name="m_color" flags="Color|HDR" x="1" y="1" z="1" w="1"/>
                                                         <Property type="Float" name="m_intensity" value="1"/>
                                                     </Object>
@@ -1429,7 +1435,13 @@
                                                 <Property type="ObjectPtr" name="m_lightDesc" flags="Flatten">
                                                     <Object class="OmniLightDesc">
                                                         <Property type="String" name="m_name" flags="Hidden" value="OmniLightDesc #0"/>
-                                                        <Property type="Bool" name="m_castShadows" value="false"/>
+                                                        <Property type="LayoutElement" name="Shadow"/>
+                                                        <Property type="EnumU8" name="m_shadowType" value="None"/>
+                                                        <Property type="Float2" name="m_shadowRange" x="0.1" y="100"/>
+                                                        <Property type="Float" name="m_shadowBias" flags="HasRange" value="0.001"/>
+                                                        <Property type="Uint2" name="m_shadowSize" x="16" y="16"/>
+                                                        <Property type="Uint2" name="m_shadowResolution" x="1024" y="1024"/>
+                                                        <Property type="LayoutElement" name=""/>
                                                         <Property type="Float4" name="m_color" flags="Color|HDR" x="1" y="0" z="0" w="1"/>
                                                         <Property type="Float" name="m_intensity" value="1"/>
                                                         <Property type="Bool" name="m_useMaxRadius" flags="Hidden" value="true"/>
@@ -1452,7 +1464,13 @@
                                                 <Property type="ObjectPtr" name="m_lightDesc" flags="Flatten">
                                                     <Object class="OmniLightDesc">
                                                         <Property type="String" name="m_name" flags="Hidden" value="OmniLightDesc #0"/>
-                                                        <Property type="Bool" name="m_castShadows" value="true"/>
+                                                        <Property type="LayoutElement" name="Shadow"/>
+                                                        <Property type="EnumU8" name="m_shadowType" value="None"/>
+                                                        <Property type="Float2" name="m_shadowRange" x="0.1" y="100"/>
+                                                        <Property type="Float" name="m_shadowBias" flags="HasRange" value="0.001"/>
+                                                        <Property type="Uint2" name="m_shadowSize" x="16" y="16"/>
+                                                        <Property type="Uint2" name="m_shadowResolution" x="1024" y="1024"/>
+                                                        <Property type="LayoutElement" name=""/>
                                                         <Property type="Float4" name="m_color" flags="Color|HDR" x="0.56504822" y="1" z="0.37065637" w="1"/>
                                                         <Property type="Float" name="m_intensity" value="1"/>
                                                         <Property type="Bool" name="m_useMaxRadius" flags="Hidden" value="true"/>
@@ -1475,7 +1493,13 @@
                                                 <Property type="ObjectPtr" name="m_lightDesc" flags="Flatten">
                                                     <Object class="OmniLightDesc">
                                                         <Property type="String" name="m_name" flags="Hidden" value="OmniLightDesc #0"/>
-                                                        <Property type="Bool" name="m_castShadows" value="true"/>
+                                                        <Property type="LayoutElement" name="Shadow"/>
+                                                        <Property type="EnumU8" name="m_shadowType" value="None"/>
+                                                        <Property type="Float2" name="m_shadowRange" x="0.1" y="100"/>
+                                                        <Property type="Float" name="m_shadowBias" flags="HasRange" value="0.001"/>
+                                                        <Property type="Uint2" name="m_shadowSize" x="16" y="16"/>
+                                                        <Property type="Uint2" name="m_shadowResolution" x="1024" y="1024"/>
+                                                        <Property type="LayoutElement" name=""/>
                                                         <Property type="Float4" name="m_color" flags="Color|HDR" x="0.39768338" y="0.42093897" z="1" w="1"/>
                                                         <Property type="Float" name="m_intensity" value="1"/>
                                                         <Property type="Bool" name="m_useMaxRadius" flags="Hidden" value="true"/>

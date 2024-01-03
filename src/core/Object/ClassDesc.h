@@ -15,7 +15,11 @@ namespace vg::core
         void                                RegisterProperty            (const char * _className, const char * _propertyName, core::u8 * _offset, const char * _displayName, IProperty::Flags _flags) final override;
         void                                RegisterProperty            (const char * _className, const char * _propertyName, core::u16 * _offset, const char * _displayName, IProperty::Flags _flags) final override;
         void                                RegisterProperty            (const char * _className, const char * _propertyName, core::u32 * _offset, const char * _displayName, IProperty::Flags _flags) final override;
+        void                                RegisterProperty            (const char * _className, const char * _propertyName, uint2 * _offset, const char * _displayName, IProperty::Flags _flags) final override;
+        void                                RegisterProperty            (const char * _className, const char * _propertyName, uint3 * _offset, const char * _displayName, IProperty::Flags _flags) final override;
+        void                                RegisterProperty            (const char * _className, const char * _propertyName, uint4 * _offset, const char * _displayName, IProperty::Flags _flags) final override;
         void                                RegisterProperty            (const char * _className, const char * _propertyName, float * _offset, const char * _displayName, IProperty::Flags _flags) final override;
+        void                                RegisterProperty            (const char * _className, const char * _propertyName, float2 * _offset, const char * _displayName, IProperty::Flags _flags) final override; 
         void                                RegisterProperty            (const char * _className, const char * _propertyName, float3 * _offset, const char * _displayName, IProperty::Flags _flags) final override;
         void                                RegisterProperty            (const char * _className, const char * _propertyName, float4 * _offset, const char * _displayName, IProperty::Flags _flags) final override;
         void                                RegisterProperty            (const char * _className, const char * _propertyName, float4x4 * _offset, const char * _displayName, IProperty::Flags _flags) final override;

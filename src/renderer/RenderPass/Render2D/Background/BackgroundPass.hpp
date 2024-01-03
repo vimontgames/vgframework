@@ -50,7 +50,7 @@ namespace vg::renderer
                                       colorDesc.clearColor = clearColor;
                                       colorDesc.initState = FrameGraphResource::InitState::Clear;
 
-        //if (options->getLightingMode() == LightingMode::Deferred)
+        if (options->getLightingMode() == LightingMode::Deferred)
             colorDesc.uav = true;
 
         const auto colorID = _renderContext.getFrameGraphID("Color");

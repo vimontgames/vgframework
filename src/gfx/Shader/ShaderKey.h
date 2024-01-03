@@ -30,7 +30,7 @@ namespace vg::gfx
             if (_enable)
                 flags |= value;
             else
-                flags &= value;
+                flags &= ~value;
         }
 
         union

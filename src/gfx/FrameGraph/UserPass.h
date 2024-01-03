@@ -68,6 +68,7 @@ namespace vg::gfx
         void createDepthStencil(const FrameGraphResourceID & _resID, FrameGraphTextureResourceDesc & _resDesc);
         void writeDepthStencil(const FrameGraphResourceID & _resID);
         void readDepthStencil(const FrameGraphResourceID & _resID);
+		void readDepthStencil(const core::vector<FrameGraphResourceID> & _resIDs);
 
 		void createRWTexture(const FrameGraphResourceID & _resID, FrameGraphTextureResourceDesc & _resDesc);
         void writeRWTexture(const FrameGraphResourceID & _resID);

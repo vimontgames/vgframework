@@ -72,7 +72,7 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    bool MeshInstance::Cull(const Frustum & _frustum, CullingResult * _cullingResult)
+    bool MeshInstance::Cull(CullingResult * _cullingResult, View * _view)
     {
         const MeshModel * meshModel = getMeshModel(Lod::Lod0);
 
@@ -80,7 +80,7 @@ namespace vg::renderer
         {
             const AABB & aabb = meshModel->getGeometry()->getAABB();
 
-            bool visible = _frustum.intersects(aabb, getGlobalMatrix()) != FrustumTest::Outside;
+            bool visible = _view->getCameraFrustum().intersects(aabb, getGlobalMatrix()) != FrustumTest::Outside;
 
             if (visible)
             {

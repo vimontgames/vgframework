@@ -126,10 +126,14 @@ LightingResult computeDirectLighting(ViewConstants _viewConstants, float3 _eyePo
 
 	ByteAddressBuffer lights = getBuffer(RESERVEDSLOT_BUFSRV_LIGHTSCONSTANTS);
 	LightsConstantsHeader lightsHeader;
-    uint offset = lightsHeader.Load(lights);
+    uint offset = lightsHeader.Load(lights);	
 
 	#ifdef _RAYTRACING
 	RaytracingAccelerationStructure tlas = getTLAS(_viewConstants.getTLASHandle());
+	#endif
+
+	#ifdef _TOOLMODE
+	uint rayCount = 0;
 	#endif
 
 	for(uint i=0; i < lightsHeader.getDirectionalCount(); ++i)
@@ -144,15 +148,21 @@ LightingResult computeDirectLighting(ViewConstants _viewConstants, float3 _eyePo
 		float shadow = 1.0f;
 
 		#ifdef _RAYTRACING
+		shadow = 1;		
+
 		RayDesc ray;
 		ray.Origin    = _worldPos;
 		ray.Direction = lightDir;
-		ray.TMin      = 0.03f;
+		ray.TMin      = 0.035f;
 		ray.TMax      = 10;
 
 		RayQuery<RAY_FLAG_FORCE_OPAQUE> query;
 		query.TraceRayInline(tlas, 0, 0xff, ray);
 		query.Proceed();
+
+		#ifdef _TOOLMODE
+		rayCount++;
+		#endif
 
 		switch(query.CommittedStatus())
 		{
@@ -160,8 +170,42 @@ LightingResult computeDirectLighting(ViewConstants _viewConstants, float3 _eyePo
 				shadow = 0;     
 				break;
 		}
-		#endif // _RAYTRACING
+		#else // _RAYTRACING
 
+		float4 shadowUV = mul(directional.getShadowMatrix(), float4(_worldPos, 1.0f));
+			   shadowUV.xyz /= shadowUV.w;
+			   shadowUV.xy = shadowUV.xy*0.5f+0.5f;
+			   shadowUV.y = 1-shadowUV.y;
+		
+		if (all(shadowUV.xy == saturate(shadowUV.xy) ))
+		{
+			//output.diffuse = float3(frac(shadowUV.xy),0);
+				
+			Texture2D shadowMap = getTexture2D(directional.getShadowMapTextureHandle());
+			float bias = directional.getShadowBias();
+			
+			#if 0
+			shadow = shadowMap.SampleCmpLevelZero(shadowcmp, shadowUV.xy, shadowUV.z - bias, int2(0,0)).x;
+			#else
+			// PCF9
+			shadow = 0;
+			shadow += shadowMap.SampleCmpLevelZero(shadowcmp, shadowUV.xy, shadowUV.z - bias, int2(0,-1)).x;	
+			shadow += shadowMap.SampleCmpLevelZero(shadowcmp, shadowUV.xy, shadowUV.z - bias, int2(1,-1)).x;	
+			shadow += shadowMap.SampleCmpLevelZero(shadowcmp, shadowUV.xy, shadowUV.z - bias, int2(2,-1)).x;	
+			shadow += shadowMap.SampleCmpLevelZero(shadowcmp, shadowUV.xy, shadowUV.z - bias, int2(0,0)).x;	
+			shadow += shadowMap.SampleCmpLevelZero(shadowcmp, shadowUV.xy, shadowUV.z - bias, int2(1,0)).x;	
+			shadow += shadowMap.SampleCmpLevelZero(shadowcmp, shadowUV.xy, shadowUV.z - bias, int2(2,0)).x;	
+			shadow += shadowMap.SampleCmpLevelZero(shadowcmp, shadowUV.xy, shadowUV.z - bias, int2(0,+1)).x;	
+			shadow += shadowMap.SampleCmpLevelZero(shadowcmp, shadowUV.xy, shadowUV.z - bias, int2(1,+1)).x;	
+			shadow += shadowMap.SampleCmpLevelZero(shadowcmp, shadowUV.xy, shadowUV.z - bias, int2(2,+1)).x;
+			shadow /= 9.0f;	
+			shadow = smoothstep(0.0,1.0,shadow);				
+			#endif
+		}
+
+		#endif
+
+		//output.diffuse = shadow;
 		output.addLightContribution(Lo, cosLo, Lr, F0, Li, Lradiance * shadow, _worldNormal, roughness, metalness);
 	}	
 
@@ -195,6 +239,10 @@ LightingResult computeDirectLighting(ViewConstants _viewConstants, float3 _eyePo
 		query.TraceRayInline(tlas, 0, 0xff, ray);
 		query.Proceed();
 
+		#ifdef _TOOLMODE
+		rayCount++;
+		#endif
+
 		switch(query.CommittedStatus())
 		{
 			case COMMITTED_TRIANGLE_HIT:
@@ -206,11 +254,32 @@ LightingResult computeDirectLighting(ViewConstants _viewConstants, float3 _eyePo
 		output.addLightContribution(Lo, cosLo, Lr, F0, Li, Lradiance * shadow, _worldNormal, roughness, metalness);
     }	
 
+	#ifdef _TOOLMODE
+	switch(_viewConstants.getDisplayMode())
+	{
+		case DisplayMode::Lighting_RayCount:
+			output.diffuse = lerp(float3(0,1,0), float3(1,0,0), rayCount);
+			break;
+	}
+	#endif
+
     return output;
 }
 
 //--------------------------------------------------------------------------------------
-float3 ApplyLighting(float3 _albedo, LightingResult _lighting)
+float3 applyLighting(float3 _albedo, LightingResult _lighting, DisplayMode _displayMode)
 {
+	#ifdef _TOOLMODE
+	switch(_displayMode)
+	{
+		case DisplayMode::Lighting_RayCount:
+		case DisplayMode::Lighting_Diffuse:
+			return _lighting.diffuse.rgb;
+
+		case DisplayMode::Lighting_Specular:
+			return _lighting.specular;
+	}
+	#endif
+
     return _albedo.rgb * _lighting.diffuse + _lighting.specular;
 }

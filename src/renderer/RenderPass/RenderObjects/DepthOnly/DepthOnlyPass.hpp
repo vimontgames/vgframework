@@ -8,8 +8,8 @@
 namespace vg::renderer
 {
     //--------------------------------------------------------------------------------------
-    DepthOnlyPass::DepthOnlyPass() :
-        RenderObjectsPass("DepthOnlyPass")
+    DepthOnlyPass::DepthOnlyPass(const core::string & _name) :
+        RenderObjectsPass(_name)
     {
 
     }
@@ -18,17 +18,6 @@ namespace vg::renderer
     DepthOnlyPass::~DepthOnlyPass()
     {
 
-    }
-
-    //--------------------------------------------------------------------------------------
-    // Setup executed each frame, for each pass instance
-    //--------------------------------------------------------------------------------------
-    void DepthOnlyPass::Setup(const gfx::RenderPassContext & _renderPassContext, float _dt)
-    {
-        writeRenderTarget(0, _renderPassContext.getFrameGraphID("Color"));
-        writeDepthStencil(_renderPassContext.getFrameGraphID("DepthStencil"));
-
-        readRWBuffer("SkinningRWBuffer");
     }
 
     //--------------------------------------------------------------------------------------

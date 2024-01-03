@@ -462,7 +462,7 @@ namespace vg::editor
 
                         case IProperty::LayoutElementType::GroupBegin:
                         {
-                            if (_context.treeNodes.size() > 0 || dynamic_cast<IComponent*>(_object))
+                            if (_context.treeNodes.size() > 0 || dynamic_cast<IComponent*>(_object) || dynamic_cast<IComponent *>(_object->getParent()))
                             {
                                 TreeNodeStackInfo & newInfo = _context.treeNodes.push_empty();
                                 
@@ -586,6 +586,19 @@ namespace vg::editor
                 };
                 break;
 
+                case IProperty::Type::Uint2:
+                {
+                    VG_ASSERT(!isEnumArray, "Display of EnumArray property not implemented for type '%s'", asString(type).c_str());
+
+                    i32 * pU32 = (i32 *)(uint_ptr(_object) + offset);
+
+                    if (asBool(IProperty::Flags::HasRange & flags))
+                        changed |= ImGui::SliderInt2(label.c_str(), pU32, max(0, (int)_prop->getRange().x), (int)_prop->getRange().y, "%d", imguiInputTextflags);
+                    else
+                        changed |= ImGui::InputInt2(label.c_str(), pU32, imguiInputTextflags);
+                };
+                break;
+
                 case IProperty::Type::Float:
                 {
                     VG_ASSERT(!isEnumArray, "Display of EnumArray property not implemented for type '%s'", asString(type).c_str());
@@ -605,7 +618,10 @@ namespace vg::editor
 
                     float * pFloat2 = (float *)_prop->GetPropertyFloat2(_object);
 
-                    changed |= ImGui::InputFloat2(label.c_str(), pFloat2, "%.3f", imguiInputTextflags);
+                    if (asBool(IProperty::Flags::HasRange & flags))
+                        changed |= ImGui::SliderFloat2(label.c_str(), pFloat2, _prop->getRange().x, _prop->getRange().y);
+                    else
+                        changed |= ImGui::InputFloat2(label.c_str(), pFloat2, "%.3f", imguiInputTextflags);
                 };
                 break;
 

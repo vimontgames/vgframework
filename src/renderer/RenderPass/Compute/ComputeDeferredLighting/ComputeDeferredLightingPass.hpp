@@ -44,6 +44,9 @@ namespace vg::renderer
 
         const auto colorID = _renderPassContext.getFrameGraphID("Color");
         writeRWTexture(colorID);
+
+        View * view = (View *)_renderPassContext.m_view;
+        readDepthStencil(view->getShadowMaps());
     }
 
     //--------------------------------------------------------------------------------------

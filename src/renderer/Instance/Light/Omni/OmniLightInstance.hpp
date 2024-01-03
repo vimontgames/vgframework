@@ -81,9 +81,9 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    bool OmniLightInstance::Cull(const Frustum & _frustum, CullingResult * _cullingResult)
+    bool OmniLightInstance::Cull(CullingResult * _cullingResult, View * _view)
     {
-        bool visible = _frustum.intersects(getMaxRadius(), getGlobalMatrix()) != FrustumTest::Outside;
+        bool visible = _view->getCameraFrustum().intersects(getMaxRadius(), getGlobalMatrix()) != FrustumTest::Outside;
 
         if (visible)
         {

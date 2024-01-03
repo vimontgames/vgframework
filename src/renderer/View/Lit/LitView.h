@@ -5,7 +5,7 @@
 namespace vg::renderer
 {
     class BackgroundPass;
-    class DepthOnlyPass;
+    class DepthPrePass;
     class ForwardOpaquePass;
     class DeferredOpaquePass;
     class ComputeDeferredLightingPass;
@@ -25,13 +25,15 @@ namespace vg::renderer
                                         LitView             (const gfx::CreateViewParams & _params);
                                         ~LitView            ();
 
+        bool                            IsLit               () const { return true; }
         bool                            IsUsingRayTracing   () const final override;
+
 
         void                            RegisterFrameGraph  (const gfx::RenderPassContext & _renderPassContext, gfx::FrameGraph & _frameGraph) override;
 
     private:
         BackgroundPass *                m_backgroundPass            = nullptr;
-        DepthOnlyPass *                 m_depthPrePass              = nullptr;
+        DepthPrePass *                  m_depthPrePass              = nullptr;
         ForwardOpaquePass *             m_forwardOpaquePass         = nullptr;
         DeferredOpaquePass *            m_deferredOpaquePass        = nullptr;
         ComputeDeferredLightingPass *   m_deferredLightingPass      = nullptr;

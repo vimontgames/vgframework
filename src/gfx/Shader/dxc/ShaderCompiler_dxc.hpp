@@ -136,19 +136,19 @@ namespace vg::gfx::dxc
             VG_ASSERT(false);
 
         case ShaderStage::Vertex:
-            return "vs_6_1";
+            return rayTracingSupported ? "vs_6_6" : "vs_6_1";
 
         case ShaderStage::Hull:
-            return "hs_6_1";
+            return rayTracingSupported ? "hs_6_6" : "hs_6_1";
 
         case ShaderStage::Domain:
-            return "ds_6_1";
+            return rayTracingSupported ? "ds_6_6" : "ds_6_1";
 
         case ShaderStage::Geometry:
-            return "gs_6_1";
+            return rayTracingSupported ? "gs_6_6" : "gs_6_1";
 
         case ShaderStage::Pixel:
-            return "ps_6_1";
+            return rayTracingSupported? "ps_6_6" : "ps_6_1";
 
         case ShaderStage::Compute:
             return rayTracingSupported ? "cs_6_6" : "cs_6_1";

@@ -14,12 +14,14 @@ namespace vg::core
 namespace vg::gfx
 {
     class ITexture;
+    class UserPass;
 
     enum class ViewTarget : core::u8
     {
         Backbuffer  = 0,
         Game        = 1,
-        Editor      = 2
+        Editor      = 2,
+        Shadow      = 3
     };
     static inline const ViewTarget ViewTargetInvalid = (ViewTarget)-1;
 
@@ -62,11 +64,11 @@ namespace vg::gfx
         {
         }
 
-        CreateViewParams(ViewTarget _target, core::uint2 _size, core::int2 _offset = core::int2(0, 0), core::IWorld * _universe = nullptr, gfx::ITexture * _dest = nullptr) :
+        CreateViewParams(ViewTarget _target, core::uint2 _size, core::int2 _offset = core::int2(0, 0), core::IWorld * _world = nullptr, gfx::ITexture * _dest = nullptr) :
             target(_target),
             size(_size),
             offset(_offset),
-            world(_universe),
+            world(_world),
             dest(_dest)
         {
          
@@ -96,10 +98,11 @@ namespace vg::gfx
             Picking = 0x00000001
         };
 
-        IView(const CreateViewParams & _params) {};
+        IView() {};
         virtual ~IView() = default;
 
-        virtual void                    SetupCamera                 (const core::float4x4 & _cameraWorldMatrix, core::float2 _nearFar, float _fovY) = 0;
+        virtual void                    SetupPerspectiveCamera      (const core::float4x4 & _cameraWorldMatrix, core::float2 _nearFar, float _fovY) = 0;
+        virtual void                    SetupOrthographicCamera     (const core::float4x4 & _cameraWorldMatrix, core::uint2 _size, core::float2 _nearFar) = 0;
 
         virtual void                    SetFlags                    (Flags _flagsToSet, Flags _flagsToRemove = (Flags)0) = 0;
         virtual Flags                   GetFlags                    () const = 0;
@@ -136,6 +139,8 @@ namespace vg::gfx
         virtual const core::string      GetFrameGraphID             (const core::string & _name) const = 0;
 
         virtual bool                    IsToolmode                  () const = 0;
+        virtual bool                    IsOrtho                     () const = 0;
+        virtual bool                    IsLit                       () const = 0;
         virtual bool                    IsUsingRayTracing           () const = 0;
         virtual bool                    IsComputePostProcessNeeded  () const = 0;
       

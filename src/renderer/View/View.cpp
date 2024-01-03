@@ -14,6 +14,7 @@
 #endif
 
 #include "Lit/LitView.hpp"
+#include "Shadow/ShadowView.hpp"
 #include "Frustum.hpp"
 
 using namespace vg::core;
@@ -21,10 +22,8 @@ using namespace vg::gfx;
 
 namespace vg::renderer
 {
-    
     //--------------------------------------------------------------------------------------
-    View::View(const CreateViewParams & _params) : 
-        IView(_params)
+    View::View(const CreateViewParams & _params)
     {
         m_viewID.target = _params.target;
 
@@ -36,7 +35,7 @@ namespace vg::renderer
         if (_params.dest)
         {
             VG_SAFE_INCREASE_REFCOUNT(_params.dest);
-            m_renderTarget = (Texture*)_params.dest;
+            m_renderTarget = (Texture *)_params.dest;
         }
 
         m_cullingJob = new ViewCullingJob("ViewCulling", this, &m_cullingJobResult, Renderer::get()->getSharedCullingJobOutput());
@@ -53,6 +52,42 @@ namespace vg::renderer
         VG_SAFE_RELEASE(m_cullingJob);
         VG_SAFE_RELEASE(m_viewConstantsUpdatePass);
         VG_SAFE_RELEASE(m_tlas);
+    }
+
+    //--------------------------------------------------------------------------------------
+    void View::addShadowView(ShadowView * _shadowView)
+    {
+        _shadowView->SetViewID(ViewID(ViewTarget::Shadow, (ViewIndex)m_shadowViews.size()));
+        m_shadowViews.push_back(_shadowView);
+    }
+
+    //--------------------------------------------------------------------------------------
+    void View::clearShadowViews()
+    {
+        m_shadowViews.clear();
+    }
+
+    //--------------------------------------------------------------------------------------
+    // TODO : Use hashtable to speed up search?
+    //--------------------------------------------------------------------------------------
+    const ShadowView * View::findShadowView(const LightInstance * _light) const
+    {
+        for (uint i = 0; i < m_shadowViews.size(); ++i)
+        {
+            const auto * shadowView = m_shadowViews[i];
+            if (_light == shadowView->getLight())
+                return shadowView;
+        }
+        return nullptr;
+    }
+
+    //--------------------------------------------------------------------------------------
+    core::string View::findShadowMapID(const LightInstance * _light) const
+    {
+        if (const auto * shadowView = findShadowView(_light))
+            return shadowView->getShadowMapName(this);
+
+        return {};
     }
 
     //--------------------------------------------------------------------------------------
@@ -78,15 +113,6 @@ namespace vg::renderer
 
     //--------------------------------------------------------------------------------------
     // Setup Right-Handed perspective projection matrix:
-    // 
-    // sx = sy/_ar
-    // sy = 1.0f/tan(fov*0.5f)  
-    // q = far / (near - far);
-    //
-    // sx   0    0     0
-    //  0  sy    0     0
-    //  0   0    q    -1
-    //  0   0   zn*q   0
     //--------------------------------------------------------------------------------------
     float4x4 View::setPerspectiveProjectionRH(float _fov, float _ar, float _near, float _far)
     {
@@ -107,20 +133,54 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    void View::SetupCamera(const core::float4x4 & _cameraWorldMatrix, core::float2 _nearFar, float _fovY)
+    // Setup Right-Handed orthographic projection matrix:
+    //--------------------------------------------------------------------------------------
+    float4x4 View::setOrthoProjectionRH(float _w, float _h, float _near, float _far)
+    {
+        const float d = _near - _far;
+
+        float4x4 mProj
+        (
+            2.0f/_w, 0,           0,   0,
+                  0, 2.0f/_h,     0,   0,
+                  0, 0,       1.0f/d, 0,
+                  0, 0,      _near/d,  1
+        );
+
+        return mProj;
+    }
+
+    //--------------------------------------------------------------------------------------
+    void View::SetupPerspectiveCamera(const core::float4x4 & _cameraWorldMatrix, core::float2 _nearFar, float _fovY)
     {
         m_viewInv = _cameraWorldMatrix;
         m_view = inverse(_cameraWorldMatrix);
         m_cameraNearFar = _nearFar;
+
         m_cameraFovY = _fovY;
 
         const auto size = getSize();
-        const float fovY = getCameraFovY();
-        const float2 nearFar = getCameraNearFar();
         const float ar = float(size.x) / float(size.y);
 
-        m_proj = setPerspectiveProjectionRH(fovY, ar, nearFar.x, nearFar.y);
+        m_proj = setPerspectiveProjectionRH(_fovY, ar, _nearFar.x, _nearFar.y);
+
         m_projInv = inverse(m_proj);
+        m_viewProj = mul(m_view, m_proj);
+
+        computeCameraFrustum();
+    }
+
+    //--------------------------------------------------------------------------------------
+    void View::SetupOrthographicCamera(const core::float4x4 & _cameraWorldMatrix, core::uint2 _size, core::float2 _nearFar)
+    {
+        m_viewInv = _cameraWorldMatrix;
+        m_view = inverse(_cameraWorldMatrix);
+        m_cameraNearFar = _nearFar;
+
+        m_proj = setOrthoProjectionRH((float)_size.x, (float)_size.y, _nearFar.x, _nearFar.y);
+
+        m_projInv = inverse(m_proj);
+        m_viewProj = mul(m_view, m_proj);
 
         computeCameraFrustum();
     }
@@ -165,12 +225,6 @@ namespace vg::renderer
             float normXYZ = length(m_frustum.planes[i].xyz);
             m_frustum.planes[i] /= (float4)normXYZ;
         }
-    }
-
-    //--------------------------------------------------------------------------------------
-    const Frustum & View::getCameraFrustum() const
-    {
-        return m_frustum;
     }
 
     //--------------------------------------------------------------------------------------
@@ -342,7 +396,25 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
+    bool View::IsOrtho() const 
+    {
+        return m_ortho;
+    }
+
+    //--------------------------------------------------------------------------------------
+    void View::setOrtho(bool _ortho)
+    {
+        m_ortho = _ortho;
+    }
+
+    //--------------------------------------------------------------------------------------
     bool View::IsUsingRayTracing() const
+    {
+        return false;
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool View::IsLit() const
     {
         return false;
     }
@@ -453,5 +525,26 @@ namespace vg::renderer
         stats.spot          = (uint)m_cullingJobResult.get(LightType::Spot).m_instances.size();
 
         return stats;
+    }
+
+    //--------------------------------------------------------------------------------------
+    core::vector<FrameGraphResourceID> View::getShadowMaps() const
+    {
+        const auto & shadowViews = getShadowViews();
+        core::vector<FrameGraphResourceID> shadowMaps;
+        shadowMaps.reserve(shadowViews.size());
+
+        // Read shadow maps
+        for (uint i = 0; i < shadowViews.size(); ++i)
+        {
+            ShadowView * shadowView = shadowViews[i];
+
+            const auto shadowMapID = shadowView->getShadowMapName(this);
+
+            if (!shadowMapID.empty())
+                shadowMaps.push_back(shadowMapID);
+        }
+
+        return shadowMaps;
     }
 }

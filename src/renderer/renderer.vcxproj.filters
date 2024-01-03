@@ -378,6 +378,24 @@
     <ClInclude Include="Instance\Light\Directional\DirectionalLightInstance.hpp">
       <Filter>Instance\Light\Directional</Filter>
     </ClInclude>
+    <ClInclude Include="View\Shadow\ShadowView.h">
+      <Filter>View\Shadow</Filter>
+    </ClInclude>
+    <ClInclude Include="View\Shadow\ShadowView.hpp">
+      <Filter>View\Shadow</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderPass\RenderObjects\DepthOnly\DepthPrepass\DepthPrePass.h">
+      <Filter>Pass\RenderObjects\DepthOnly\DepthPrepass</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderPass\RenderObjects\DepthOnly\DepthPrepass\DepthPrePass.hpp">
+      <Filter>Pass\RenderObjects\DepthOnly\DepthPrepass</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderPass\RenderObjects\DepthOnly\ShadowMap\ShadowMapPass.h">
+      <Filter>Pass\RenderObjects\DepthOnly\ShadowMap</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderPass\RenderObjects\DepthOnly\ShadowMap\ShadowMapPass.hpp">
+      <Filter>Pass\RenderObjects\DepthOnly\ShadowMap</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Pass">
@@ -523,6 +541,15 @@
     </Filter>
     <Filter Include="Pass\Compute\ComputeDeferredLighting">
       <UniqueIdentifier>{64ad6f68-c38f-4d6a-9d7a-7906281dbd91}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="View\Shadow">
+      <UniqueIdentifier>{4d3d68a1-2054-4353-93bc-ae5bfd01071a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Pass\RenderObjects\DepthOnly\ShadowMap">
+      <UniqueIdentifier>{ca4b411c-6024-4289-9e4b-ccf366aa499a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Pass\RenderObjects\DepthOnly\DepthPrepass">
+      <UniqueIdentifier>{5e773015-315d-49dc-bcb5-607c4670615c}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

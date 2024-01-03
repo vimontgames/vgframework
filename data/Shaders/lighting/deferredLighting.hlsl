@@ -35,12 +35,17 @@ void CS_DeferredLighting(int2 dispatchThreadID : SV_DispatchThreadID)
 
         LightingResult lighting = computeDirectLighting(viewConstants, camPos, worldPos, albedo.xyz, normal.xyz, pbr);
         
-        color.rgb = ApplyLighting(albedo.rgb, lighting);
+        color.rgb = applyLighting(albedo.rgb, lighting, viewConstants.getDisplayMode());
 
         #if _TOOLMODE
         switch(viewConstants.getDisplayMode())
         {
             case DisplayMode::None:
+                break;
+        
+            case DisplayMode::Lighting_Diffuse:
+            case DisplayMode::Lighting_Specular:
+            case DisplayMode::Lighting_RayCount:
                 break;
 
             default:

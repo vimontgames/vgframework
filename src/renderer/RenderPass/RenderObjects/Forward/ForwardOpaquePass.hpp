@@ -25,12 +25,15 @@ namespace vg::renderer
     //--------------------------------------------------------------------------------------
     // Setup executed each frame, for each pass instance
     //--------------------------------------------------------------------------------------
-    void ForwardOpaquePass::Setup(const gfx::RenderPassContext & _renderContext, float _dt)
+    void ForwardOpaquePass::Setup(const gfx::RenderPassContext & _renderPassContext, float _dt)
     {
-        writeRenderTarget(0, _renderContext.getFrameGraphID("Color"));
-        writeDepthStencil(_renderContext.getFrameGraphID("DepthStencil"));
+        writeRenderTarget(0, _renderPassContext.getFrameGraphID("Color"));
+        writeDepthStencil(_renderPassContext.getFrameGraphID("DepthStencil"));
         
         readRWBuffer("SkinningRWBuffer");
+
+        View * view = (View *)_renderPassContext.m_view;
+        readDepthStencil(view->getShadowMaps());
     }
 
     //--------------------------------------------------------------------------------------
@@ -43,6 +46,7 @@ namespace vg::renderer
         renderContext.m_view = view->getViewMatrix();
         renderContext.m_proj = view->getProjMatrix();
         renderContext.m_toolmode = view->getViewID().target == gfx::ViewTarget::Editor || options->isToolModeEnabled();
+        renderContext.m_raytracing = view->IsUsingRayTracing();
         renderContext.m_shaderPass = ShaderPass::Forward;
 
         // TODO: transparent forward pass

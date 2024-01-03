@@ -98,13 +98,14 @@ namespace vg::renderer
         }
         _cmdList->unmap(s_ViewConstantsBuffer);
 
-        updateLightsConstants(_renderPassContext, _cmdList);
+        if (_renderPassContext.m_view->IsLit())
+            updateLightsConstants(_renderPassContext, _cmdList);
     }
 
     //--------------------------------------------------------------------------------------
     void ViewConstantsUpdatePass::updateLightsConstants(const gfx::RenderPassContext & _renderPassContext, gfx::CommandList * _cmdList)
     {
-        View * view = (View*)_renderPassContext.m_view;
+        const auto view = (View *)_renderPassContext.m_view; 
         const ViewCullingJobOutput & culling = view->getCullingJobResult();
 
         const auto & directionals = culling.get(LightType::Directional).m_instances;
@@ -136,7 +137,22 @@ namespace vg::renderer
                 DirectionalLightConstants * constants = (DirectionalLightConstants *)(data + offset);
 
                 constants->setColor(directional->getColor().rgb * directional->getIntensity());
-                constants->setDirection(directional->getGlobalMatrix()[0].xyz);
+                constants->setDirection(directional->getGlobalMatrix()[2].xyz);
+                constants->setShadowBias(directional->m_shadowBias);
+
+                auto shadowView = view->findShadowView(directionals[i]);
+                if (shadowView)
+                {
+                    auto shadowMapID = getDepthStencil(shadowView->getShadowMapName(view))->getDepthTextureHandle();
+
+                    constants->setShadowMapTextureHandle(shadowMapID);
+                    constants->setShadowMatrix(shadowView->getViewProjMatrix());
+                }
+                else
+                {
+                    constants->setShadowMapTextureHandle(0);
+                    constants->setShadowMatrix(float4x4::identity());
+                }
 
                 offset += sizeof(DirectionalLightConstants);
             }
@@ -151,6 +167,8 @@ namespace vg::renderer
                 constants->setColor(omni->getColor().rgb * omni->getIntensity());
                 constants->setPosition(omni->getGlobalMatrix()[3].xyz);
                 constants->setRadius(omni->getMaxRadius());
+
+                auto shadowMapID = ((View *)_renderPassContext.m_view)->findShadowMapID(omnis[i]);
 
                 offset += sizeof(OmniLightConstants);
             }            

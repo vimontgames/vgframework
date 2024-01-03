@@ -8,6 +8,7 @@ namespace vg::gfx
         NearestClamp = 0,
         NearestRepeat,
         LinearClamp,
-        LinearRepeat
+        LinearRepeat,
+        ShadowCmp
     };
 }

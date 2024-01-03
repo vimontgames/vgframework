@@ -4,6 +4,7 @@
 #include "FrameGraph_consts.h"
 #include "FrameGraphResource.h"
 #include "gfx/IView.h"
+#include "core/string/string.h"
 
 namespace vg::gfx
 {
@@ -14,21 +15,33 @@ namespace vg::gfx
 	class UserPass;
 	class RenderPass;
 	class FrameGraph;
+    class CommandList;
 
 	enum class PixelFormat : core::u8;
 
     struct RenderPassContext
     {
-        IView * m_view;
+        IView * m_view = nullptr;
+        IView * m_parent = nullptr;
 
 		const core::string getFrameGraphID(const core::string & _name) const
 		{
 			return MakeFrameGraphID(_name, m_view->GetViewID());
 		}
 
+        const core::string getFrameGraphIDEx(const core::string & _name) const
+        {
+            return MakeFrameGraphIDEx(_name, m_view->GetViewID(), m_parent->GetViewID());
+        }
+
         static const core::string MakeFrameGraphID(const core::string & _name, ViewID _viewID)
         {
-            return _name + (core::string)"-" + core::asString(_viewID.target) + core::to_string(_viewID.index);
+            return fmt::sprintf("%s - %s %u", _name , core::asString(_viewID.target), _viewID.index);
+        }
+
+        static const core::string MakeFrameGraphIDEx(const core::string & _name, ViewID _viewID, ViewID _parentViewID)
+        {
+            return fmt::sprintf("%s %u - %s %u", _name, _viewID.index, core::asString(_parentViewID.target), _parentViewID.index);
         }
     };
 
@@ -56,6 +69,9 @@ namespace vg::gfx
 		void build();
 		void render();
 
+        void pushPassGroup(const core::string & _name);
+        void popPassGroup();
+
         bool addUserPass(const RenderPassContext & _renderContext, UserPass * _userPass, const FrameGraphUserPassID & _renderPassID);
 
         template <class T> T * getResource(FrameGraphResource::Type _type, const FrameGraphResourceID & _resID, bool _mustExist);
@@ -69,6 +85,24 @@ namespace vg::gfx
 		void setResized(); 
 
 	private:
+        struct UserPassInfoNode
+        {
+            UserPassInfoNode(UserPassInfoNode * _parent = nullptr) :
+                m_parent(_parent)
+            {
+                m_children.reserve(256);
+            }
+
+            UserPassInfoNode *              m_parent = nullptr;
+            core::string                    m_name;
+            UserPassInfo *                  m_userPass = nullptr;
+            RenderPass *                    m_renderPass = nullptr;
+            core::vector<UserPassInfoNode>  m_children;
+        };
+
+        void setupNode(UserPassInfoNode & _node, float _dt);
+        void buildNode(UserPassInfoNode & _node);
+        void renderNode(UserPassInfoNode & _node, gfx::CommandList * _cmdList);
 
         Texture * createRenderTargetFromPool(const FrameGraphTextureResourceDesc & _textureResourceDesc);
         Texture * createDepthStencilFromPool(const FrameGraphTextureResourceDesc & _textureResourceDesc);
@@ -89,6 +123,10 @@ namespace vg::gfx
 
 		core::vector<UserPassInfo>	m_userPassInfo;
 		core::vector<RenderPass*>	m_renderPasses;
+
+
+        UserPassInfoNode m_userPassInfoTree;
+        UserPassInfoNode * m_currentUserPass = &m_userPassInfoTree;
 
         struct SharedTexture
         {

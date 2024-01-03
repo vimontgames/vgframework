@@ -1,6 +1,8 @@
 #include "renderer/Precomp.h"
 #include "DirectionalLightInstance.h"
 #include "Shaders/system/lightsBuffer.hlsli"
+#include "renderer/View/Shadow/ShadowView.h"
+#include "core/Scheduler/Scheduler.h"
 
 namespace vg::renderer
 {
@@ -66,11 +68,32 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    bool DirectionalLightInstance::Cull(const Frustum & _frustum, CullingResult * _cullingResult)
+    bool DirectionalLightInstance::Cull(CullingResult * _cullingResult, View * _view)
     {
         // Directional light is never culled
         _cullingResult->m_output->add(GraphicInstanceListType::All, this);
         _cullingResult->m_output->add(LightType::Directional, this);
+
+        const auto shadowType = GetShadowType();
+
+        if (!_view->isAdditionalView() && (ShadowType::ShadowMap == shadowType || ShadowType::Hybrid == shadowType))
+        {
+            // Create view and start culling immediately
+            Renderer * renderer = Renderer::get();
+
+            ShadowView * shadowView = new ShadowView(this, _view->getWorld(), m_shadowResolution);
+            _view->addShadowView(shadowView);
+
+            shadowView->SetupOrthographicCamera(this->getGlobalMatrix(), m_shadowSize, m_shadowRange);
+
+            _cullingResult->m_output->add(shadowView);
+
+            core::Scheduler * jobScheduler = (core::Scheduler *)Kernel::getScheduler();
+            
+            auto * job = shadowView->getCullingJob();
+            core::JobSync * jobSync = renderer->getCullingJobSync();
+            jobScheduler->Start(job, jobSync);
+        }
 
         return true;
     }

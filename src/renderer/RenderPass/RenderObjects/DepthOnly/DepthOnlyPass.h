@@ -1,5 +1,4 @@
 #pragma once
-
 #include "renderer/RenderPass/RenderObjects/RenderObjectsPass.h"
 
 namespace vg::renderer
@@ -8,12 +7,10 @@ namespace vg::renderer
     class DepthOnlyPass : public RenderObjectsPass
     {
     public:
-        const char * getClassName() const final { return "DepthOnlyPass"; }
-
-        DepthOnlyPass();
+        DepthOnlyPass(const core::string & _name);
         ~DepthOnlyPass();
 
-        void Setup(const gfx::RenderPassContext & _renderPassContext, float _dt) override;
+        void Setup(const gfx::RenderPassContext & _renderPassContext, float _dt) = 0;
         void Render(const gfx::RenderPassContext & _renderPassContext, gfx::CommandList * _cmdList) const override;
     };
 }

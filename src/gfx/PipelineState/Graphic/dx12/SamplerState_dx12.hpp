@@ -18,7 +18,7 @@ namespace vg::gfx::dx12
         desc.MinLOD = 0;
         desc.MaxLOD = D3D12_FLOAT32_MAX;
 
-        desc.ComparisonFunc = D3D12_COMPARISON_FUNC_NEVER;
+        desc.ComparisonFunc = samplerState.filter == Filter::DepthCmp ? D3D12_COMPARISON_FUNC_LESS_EQUAL : D3D12_COMPARISON_FUNC_NEVER;
         desc.BorderColor = D3D12_STATIC_BORDER_COLOR_OPAQUE_BLACK;
 
         desc.ShaderRegister = (uint)_sampler;
@@ -38,6 +38,8 @@ namespace vg::gfx::dx12
                 return D3D12_FILTER_MIN_MAG_MIP_POINT;
             case Filter::Linear:
                 return D3D12_FILTER_MIN_MAG_MIP_LINEAR;
+            case Filter::DepthCmp:
+                return D3D12_FILTER_COMPARISON_MIN_MAG_MIP_LINEAR;
         }
     }
 

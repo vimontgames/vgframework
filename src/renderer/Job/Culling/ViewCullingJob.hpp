@@ -11,6 +11,20 @@ using namespace vg::core;
 namespace vg::renderer
 {
     //--------------------------------------------------------------------------------------
+    void ViewCullingJobOutput::clear()
+    {
+        for (core::uint i = 0; i < core::enumCount<GraphicInstanceListType>(); ++i)
+            m_instancesLists[i].clear();
+
+        for (core::uint i = 0; i < core::enumCount<LightType>(); ++i)
+            m_lightsLists[i].clear();
+
+        for (core::uint i = 0; i < m_additionalViews.size(); ++i)
+            VG_SAFE_RELEASE(m_additionalViews[i]);
+        m_additionalViews.clear();
+    }
+
+    //--------------------------------------------------------------------------------------
     ViewCullingJob::ViewCullingJob(const string & _name, IObject * _parent, ViewCullingJobOutput * const _output, SharedCullingJobOutput * const _sharedOutput) :
         Job(_name, _parent)
     {
@@ -22,7 +36,7 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    void ViewCullingJob::cullGameObjectRecur(const GameObject * _go, const Frustum & _frustum)
+    void ViewCullingJob::cullGameObjectRecur(const GameObject * _go, View * _view)
     {
         // Visible? Then add it to the list
         if (asBool(GameObject::Flags::Enabled & _go->getFlags()))
@@ -34,7 +48,7 @@ namespace vg::renderer
                 GraphicInstance * instance = (GraphicInstance*)instances[i];
 
                 if (asBool(core::Instance::Flags::Enabled & instance->getFlags()))
-                    instance->Cull(_frustum, &m_result);
+                    instance->Cull(&m_result, _view);
             }
 
             const auto & children = _go->getChildren();
@@ -42,7 +56,7 @@ namespace vg::renderer
             for (uint i = 0; i < childCount; ++i)
             {
                 const GameObject * child = children[i];
-                cullGameObjectRecur(child, _frustum);
+                cullGameObjectRecur(child, _view);
             }
         }
     }
@@ -63,8 +77,6 @@ namespace vg::renderer
         
         if (nullptr != world)
         {
-            const auto & frustum = view->getCameraFrustum();
-
             const uint count = world->GetSceneCount();
             for (uint i = 0; i < count; ++i)
             {
@@ -72,7 +84,7 @@ namespace vg::renderer
                 const auto * root = scene->GetRoot();
                 VG_ASSERT("[Culling] Scene has no root node");
                 if (root)
-                    cullGameObjectRecur((GameObject *)root, frustum);
+                    cullGameObjectRecur((GameObject *)root, view);
             }
         }
     }

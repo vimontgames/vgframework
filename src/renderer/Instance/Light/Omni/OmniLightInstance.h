@@ -26,7 +26,7 @@ namespace vg::renderer
         ~OmniLightInstance();
 
         bool            GetAABB             (AABB & _aabb) const final override;
-        bool            Cull                (const Frustum & _frustum, CullingResult * _cullingResult) final override;
+        bool            Cull                (CullingResult * _cullingResult, View * _view) final override;
         void            Draw                (const RenderContext & _renderContext, gfx::CommandList * _cmdList) const final override;
 
         LightType       GetLightType        () const final override { return LightType::Omni; }

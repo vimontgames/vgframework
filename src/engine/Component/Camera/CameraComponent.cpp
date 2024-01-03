@@ -61,7 +61,7 @@ namespace vg::engine
         if (nullptr != view)
         {
             const float4x4 & matrix = getGameObject()->GetGlobalMatrix();
-            view->SetupCamera(matrix, float2(m_near, m_far), m_fovY);
+            view->SetupPerspectiveCamera(matrix, float2(m_near, m_far), m_fovY);
         }
     }
 

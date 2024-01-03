@@ -4,6 +4,7 @@
 #include "renderer/Model/Mesh/MeshModel.h"
 #include "renderer/Model/Material/MaterialModel.h"
 #include "renderer/View/View.h"
+#include "renderer/View/Shadow/ShadowView.h"
 
 namespace vg::renderer
 {

@@ -16,6 +16,7 @@ namespace vg::renderer
         core::float4x4 m_view;
         core::float4x4 m_proj;
         bool m_toolmode = false;
+        bool m_raytracing = false;
         bool m_wireframe = false;
         ShaderPass m_shaderPass;
     };

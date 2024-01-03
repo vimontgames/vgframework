@@ -285,7 +285,7 @@ namespace vg::gfx
     //--------------------------------------------------------------------------------------
     Texture * FrameGraphTextureResource::getTexture() const
     {
-        VG_ASSERT(nullptr != m_texture, "Resource \"%s\" has not texture", getName().c_str());
+        VG_ASSERT(nullptr != m_texture, "Resource \"%s\" has no texture", getName().c_str());
         return m_texture;
     }
 

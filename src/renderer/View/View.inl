@@ -49,6 +49,12 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
+    VG_INLINE const Frustum & View::getCameraFrustum() const 
+    { 
+        return m_frustum;
+    };
+
+    //--------------------------------------------------------------------------------------
     VG_INLINE void View::setSize(core::uint2 _size)
     {
         m_size = _size;
@@ -75,6 +81,7 @@ namespace vg::renderer
     //--------------------------------------------------------------------------------------
     VG_INLINE void View::setViewID(gfx::ViewID _viewID)
     {
+        VG_ASSERT(_viewID.index < 63);
         m_viewID = _viewID;
     }
 

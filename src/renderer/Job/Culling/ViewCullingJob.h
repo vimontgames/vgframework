@@ -28,14 +28,8 @@ namespace vg::renderer
  
     struct ViewCullingJobOutput
     {
-        void clear()
-        {
-            for (core::uint i = 0; i < core::enumCount<GraphicInstanceListType>(); ++i)
-                m_instancesLists[i].clear();
-
-            for (core::uint i = 0; i < core::enumCount<LightType>(); ++i)
-                m_lightsLists[i].clear();
-        }
+        ~ViewCullingJobOutput() { clear(); }
+        void clear();
 
         void add(GraphicInstanceListType _type, const GraphicInstance * _instance)
         {
@@ -57,8 +51,14 @@ namespace vg::renderer
             return m_lightsLists[core::asInteger(_type)];
         }
 
-        GraphicInstanceList m_instancesLists[core::enumCount<GraphicInstanceListType>()];
-        LightInstanceList   m_lightsLists[core::enumCount<LightType>()];
+        void add(View * _view)
+        {
+            m_additionalViews.push_back(_view);
+        }
+
+        GraphicInstanceList     m_instancesLists[core::enumCount<GraphicInstanceListType>()];
+        LightInstanceList       m_lightsLists[core::enumCount<LightType>()];
+        core::vector<View *>    m_additionalViews;
     };
 
     struct SharedCullingJobOutput
@@ -92,10 +92,9 @@ namespace vg::renderer
         void run() override;
 
     protected:
-        void cullGameObjectRecur(const core::GameObject * _go, const Frustum & _frustum);
+        void cullGameObjectRecur(const core::GameObject * _go, View * _view);
 
     private:
-        //VG_INLINE void dispatch(IGraphicInstance * _instance);
         VG_INLINE void add(GraphicInstanceListType _type, const IGraphicInstance * _instance);
 
     private:

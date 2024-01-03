@@ -31,7 +31,7 @@ namespace vg::renderer
         PickingID                       GetPickingID        () const override;
 
         virtual bool                    GetAABB             (AABB & _aabb) const = 0;
-        virtual bool                    Cull                (const Frustum & _frustum, CullingResult * _cullingResult) = 0;
+        virtual bool                    Cull                (CullingResult * _cullingResult, View * _view) = 0;
 
         virtual bool                    OnUpdateRayTracing  (gfx::CommandList * _cmdList, View * _view, core::uint _index) = 0;
 

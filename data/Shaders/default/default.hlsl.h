@@ -13,6 +13,7 @@ namespace vg::gfx
 
             // Flags 13..15 are reserved and should be common for all shaders 
             ZOnly       = HLSLDesc::Flags::ZOnly,
+            RayTracing  = HLSLDesc::Flags::RayTracing,
             Toolmode    = HLSLDesc::Flags::Toolmode
         };
 
@@ -21,6 +22,7 @@ namespace vg::gfx
             setFile("default/default.hlsl");
 
             addFlag(ZOnly, ShaderStageFlags::VS | ShaderStageFlags::PS, "_ZONLY");
+            addFlag(RayTracing, ShaderStageFlags::VS | ShaderStageFlags::PS, "_RAYTRACING");
             addFlag(Toolmode, ShaderStageFlags::VS | ShaderStageFlags::PS, "_TOOLMODE");
 
             auto & zonly = addTechnique("ZOnly");

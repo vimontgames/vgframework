@@ -306,6 +306,15 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
+    u32 * Property::GetPropertyUintN(const IObject * _object, uint _componentCount, uint _index) const
+    {
+        VG_ASSERT(nullptr != _object);
+        VG_ASSERT(Type::Uint2 == getType() || Type::Uint3 == getType() || Type::Uint4 == getType());
+        VG_ASSERT(0 == _index || asBool(Flags::EnumArray & flags));
+        return (u32 *)(uint_ptr(_object) + offset + _index * sizeof(float) * _componentCount);
+    }
+
+    //--------------------------------------------------------------------------------------
     float * Property::GetPropertyFloatN(const IObject * _object, uint _componentCount, uint _index) const
     {
         VG_ASSERT(nullptr != _object);

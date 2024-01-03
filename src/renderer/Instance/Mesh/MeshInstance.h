@@ -53,7 +53,7 @@ namespace vg::renderer
         bool                            SetAnimationWeight          (ISkeletalAnimation * _animation, float _weight) final override;
 
         bool                            GetAABB                     (AABB & _aabb) const final override;
-        bool                            Cull                        (const Frustum & _frustum, CullingResult * _cullingResult) final override;
+        bool                            Cull                        (CullingResult * _cullingResult, View * _view) final override;
 
         bool                            OnUpdateRayTracing          (gfx::CommandList * _cmdList, View * _view, core::uint _index) final override;
 

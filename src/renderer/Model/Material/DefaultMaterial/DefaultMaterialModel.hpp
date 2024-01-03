@@ -71,6 +71,9 @@ namespace vg::renderer
                 BlendState bs(BlendFactor::One, BlendFactor::Zero, BlendOp::Add);
                 _cmdList->setBlendState(bs);
 
+                if (_renderContext.m_raytracing)
+                    key.setFlags(gfx::DefaultHLSLDesc::RayTracing, true);
+
                 if (_renderContext.m_toolmode)
                 {
                     if (_renderContext.m_wireframe)

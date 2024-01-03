@@ -33,6 +33,10 @@ class DisplayMode : uint
     Deferred_GBuffer2_Roughness,
     Deferred_GBuffer2_Metalness,
 
+    Lighting_Diffuse,
+    Lighting_Specular,
+    Lighting_RayCount,
+
     RayTracing_Hit,
     RayTracing_Barycentrics,
     RayTracing_InstanceID,
