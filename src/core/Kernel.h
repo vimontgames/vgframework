@@ -26,7 +26,7 @@ namespace vg::core
         static ILogger * getLogger();
 
         static void setProfiler(IProfiler * _profiler);
-        static IProfiler * getProfiler();
+        static IProfiler * getProfiler(bool _mustExist = true);
 
         static void setScheduler(IScheduler * _scheduler);
         static IScheduler * getScheduler();
@@ -66,9 +66,9 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
-    inline IProfiler * Kernel::getProfiler()
+    inline IProfiler * Kernel::getProfiler(bool _mustExist)
     {
-        VG_ASSERT(s_singletons.profiler, "IProfiler interface is not specified for this executable or dynamic library.");
+        VG_ASSERT(!_mustExist || s_singletons.profiler, "IProfiler interface is not specified for this executable or dynamic library.");
         return s_singletons.profiler;
     }
 

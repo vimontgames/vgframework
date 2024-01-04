@@ -20,6 +20,7 @@
     <ClCompile Include="Engine.cpp" />
     <ClCompile Include="EngineOptions.cpp" />
     <ClCompile Include="Input\Input.cpp" />
+    <ClCompile Include="Job\Job.cpp" />
     <ClCompile Include="Precomp.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
@@ -67,6 +68,10 @@
     <ClInclude Include="IRigidBodyComponent.h" />
     <ClInclude Include="ISelection.h" />
     <ClInclude Include="IWorldResource.h" />
+    <ClInclude Include="Job\Animation\AnimationJob.h" />
+    <ClInclude Include="Job\Animation\AnimationJob.hpp" />
+    <ClInclude Include="Job\Animation\DrawSkeletonJob.h" />
+    <ClInclude Include="Job\Animation\DrawSkeletonJob.hpp" />
     <ClInclude Include="Precomp.h" />
     <ClInclude Include="Resource\Animation\AnimationResource.h" />
     <ClInclude Include="Resource\Animation\AnimationResource.hpp" />

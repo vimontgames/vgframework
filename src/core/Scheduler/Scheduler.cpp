@@ -76,7 +76,7 @@ namespace vg::core
     //--------------------------------------------------------------------------------------
     void Scheduler::RegisterCurrentThread(const core::string & _name)
     {
-        lock_guard<mutex> lock(m_registerThreadMutex);
+        core::lock_guard<mutex> lock(m_registerThreadMutex);
 
         // Current thread id
         ThreadID threadId = GetCurrentThreadID();
@@ -134,13 +134,24 @@ namespace vg::core
         px_sched::Sync s;
         px_sched::Job j{ _job };
         m_schd->run(j, &s);
-        return *reinterpret_cast<JobSync*>(&s);
+        return *reinterpret_cast<JobSync *>(&s);
     }
 
     //--------------------------------------------------------------------------------------
-    void Scheduler::Wait(JobSync _sync)
+    void Scheduler::StartAfter(JobSync * _trigger, Job * _job, JobSync * _sync)
     {
-        m_schd->waitFor(*reinterpret_cast<px_sched::Sync *>(&_sync));
+        VG_ASSERT(nullptr != _job);
+        if (nullptr != _job)
+        {
+            px_sched::Job job{ _job };
+            m_schd->runAfter(*reinterpret_cast<px_sched::Sync *>(_trigger), job, reinterpret_cast<px_sched::Sync *>(_sync));
+        }
+    }
+
+    //--------------------------------------------------------------------------------------
+    void Scheduler::Wait(JobSync * _sync)
+    {
+        m_schd->waitFor(*reinterpret_cast<px_sched::Sync *>(_sync));
     }
 
     //--------------------------------------------------------------------------------------

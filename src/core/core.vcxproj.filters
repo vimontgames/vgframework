@@ -202,6 +202,9 @@
     <ClInclude Include="Container\AtomicVector.h">
       <Filter>Container</Filter>
     </ClInclude>
+    <ClInclude Include="Scheduler\Mutex.h">
+      <Filter>Scheduler</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Math\Math.cpp">

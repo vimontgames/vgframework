@@ -65,6 +65,7 @@
     <ClInclude Include="Precomp.h" />
     <ClInclude Include="Resource\Resource.h" />
     <ClInclude Include="Scheduler\Job.h" />
+    <ClInclude Include="Scheduler\Mutex.h" />
     <ClInclude Include="Scheduler\Scheduler.h" />
     <ClInclude Include="Singleton\Singleton.h" />
     <ClInclude Include="string\string.h" />

@@ -2,6 +2,7 @@
 
 #include "core/IFactory.h"
 #include "ClassDesc.h"
+#include "core/Scheduler/Mutex.h"
 
 namespace vg::core
 {

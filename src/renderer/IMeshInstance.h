@@ -15,7 +15,7 @@ namespace vg::renderer
         }
         
         virtual bool UpdateSkeleton () = 0;
-        virtual bool ShowSkeleton   () const = 0;
+        virtual bool DrawSkeleton   () const = 0;
 
         virtual bool AddAnimation(ISkeletalAnimation * _animation) = 0;
         virtual bool RemoveAnimation(ISkeletalAnimation * _animation) = 0;

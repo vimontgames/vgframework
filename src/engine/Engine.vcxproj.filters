@@ -39,6 +39,9 @@
     <ClCompile Include="Component\Camera\LightComponent.cpp">
       <Filter>Component\Light</Filter>
     </ClCompile>
+    <ClCompile Include="Job\Job.cpp">
+      <Filter>Job</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Engine.def" />
@@ -208,6 +211,18 @@
     <ClInclude Include="Component\Camera\LightComponent.h">
       <Filter>Component\Light</Filter>
     </ClInclude>
+    <ClInclude Include="Job\Animation\AnimationJob.h">
+      <Filter>Job\Animation</Filter>
+    </ClInclude>
+    <ClInclude Include="Job\Animation\AnimationJob.hpp">
+      <Filter>Job\Animation</Filter>
+    </ClInclude>
+    <ClInclude Include="Job\Animation\DrawSkeletonJob.h">
+      <Filter>Job\Animation</Filter>
+    </ClInclude>
+    <ClInclude Include="Job\Animation\DrawSkeletonJob.hpp">
+      <Filter>Job\Animation</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Input">
@@ -278,6 +293,12 @@
     </Filter>
     <Filter Include="Component\Light">
       <UniqueIdentifier>{75eca871-f6fc-44bf-a133-758c9497a22a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Job">
+      <UniqueIdentifier>{8920f598-6a36-4019-b208-149b78d47494}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Job\Animation">
+      <UniqueIdentifier>{1be2d36e-9e04-4461-9659-a051c691a57c}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

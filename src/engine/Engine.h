@@ -1,6 +1,7 @@
 #pragma once
 
 #include "engine/IEngine.h"
+#include "core/IScheduler.h"
 #include "core/Singleton/Singleton.h"
 #include "core/Resource/Resource.h"
 
@@ -31,6 +32,11 @@ namespace vg::physics
 
 namespace vg::engine
 {
+    enum class JobSync
+    {
+        Animation
+    };
+
     class FreeCam;
     class ResourceManager;
     class WorldResource;
@@ -106,6 +112,8 @@ namespace vg::engine
         void                                onResourceLoaded    (core::IResource * _resource) final override;
         void                                onResourceUnloaded  (core::IResource * _resource) final override;
 
+        core::JobSync *                     getJobSync          (JobSync _jobSync) { return &m_jobSync[core::asInteger(_jobSync)]; }
+
     public:
         renderer::IRendererOptions *        getRendererOptions  () const;
         physics::IPhysicsOptions *          getPhysicsOptions   () const;
@@ -136,6 +144,7 @@ namespace vg::engine
         ResourceManager *                   m_resourceManager   = nullptr;
         Selection *                         m_selection         = nullptr;
         Time                                m_time;
+        core::JobSync                       m_jobSync[core::enumCount<JobSync>()];
 	};
 }
 

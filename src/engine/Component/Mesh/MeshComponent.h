@@ -11,6 +11,9 @@ namespace vg::renderer
 
 namespace vg::engine
 {
+    class AnimationJob;
+    class DrawSkeletonJob;
+
     class MeshComponent : public core::Component
     {
     public:
@@ -31,11 +34,13 @@ namespace vg::engine
         VG_INLINE renderer::IMeshInstance * getMeshInstance     () const;
 
     private:
-        renderer::IMeshInstance *           m_meshInstance  = nullptr;
+        renderer::IMeshInstance *           m_meshInstance      = nullptr;
+        AnimationJob *                      m_updateSkeletonJob = nullptr;
+        DrawSkeletonJob *                   m_drawSkeletonJob   = nullptr;
         MeshResource                        m_meshResource;
         MaterialResourceList                m_meshMaterials;
-        bool                                m_displayBones  = false;
-        bool                                m_registered    = false;
+        bool                                m_displayBones      = false;
+        bool                                m_registered        = false;
     };
 }
 

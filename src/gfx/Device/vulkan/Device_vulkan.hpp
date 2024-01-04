@@ -1164,7 +1164,7 @@ namespace vg::gfx::vulkan
 
 		// Scope WaitGPU/VSync
 		{
-			VG_PROFILE_CPU("Wait");
+			VG_PROFILE_CPU("Wait Fence");
 			// Ensure no more than max_frame_latency renderings are outstanding
 			//if (m_frameCounter >= max_frame_latency)
 			{

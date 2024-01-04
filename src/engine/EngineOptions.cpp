@@ -17,6 +17,8 @@ namespace vg::engine
         registerPropertyEx(EngineOptions, m_startWorld, "World", IProperty::Flags::IsFile);
         setPropertyDefaultFolder(EngineOptions, m_startWorld, "data/Worlds")
 
+        registerProperty(EngineOptions, m_animationJobs, "Animation Jobs");
+
         return true;
     }
 

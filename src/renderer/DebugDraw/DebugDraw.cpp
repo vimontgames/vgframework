@@ -1,5 +1,7 @@
 #include "renderer/Precomp.h"
 #include "DebugDraw.h"
+#include "core/IScheduler.h"
+#include "renderer/Renderer.h"
 #include "renderer/Geometry/Mesh/MeshGeometry.h"
 #include "gfx/Device/Device.h"
 #include "gfx/CommandList/CommandList.h"
@@ -566,33 +568,96 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    void DebugDraw::AddLine(const float3 & _beginPos, const float3 & _endPos, u32 _color, const float4x4 & _world)
+    void DebugDraw::AddLine(const core::float3 & _beginPos, const core::float3 & _endPos, core::u32 _color, const core::float4x4 & _world)
+    {
+        AddLine({ _beginPos , _endPos, _color, _world });
+    }
+
+    //--------------------------------------------------------------------------------------
+    void DebugDraw::AddLine(const LineDesc & _lineDesc)
+    {
+        lock_guard<mutex> lock(m_debugDrawMutex);
+
+        addLine(_lineDesc);        
+    }   
+
+    //--------------------------------------------------------------------------------------
+    void DebugDraw::AddLines(const core::vector<LineDesc> & _linesDesc)
+    {
+        VG_PROFILE_CPU("Add Lines");
+
+        lock_guard<mutex> lock(m_debugDrawMutex);
+
+        m_lines.reserve(m_lines.size() + _linesDesc.size());
+
+        for (const LineDesc & lineDesc : _linesDesc)
+            addLine(lineDesc);
+    }
+
+    //--------------------------------------------------------------------------------------
+    inline void DebugDraw::addLine(const LineDesc & _lineDesc)
     {
         DebugDrawLineData & line = m_lines.push_empty();
-        line.world = _world;
-        line.beginPos = _beginPos;
-        line.beginColor = _color;
-        line.endPos = _endPos;
-        line.endColor = _color;
+        line.world = _lineDesc.world;
+        line.beginPos = _lineDesc.beginPos;
+        line.beginColor = _lineDesc.color;
+        line.endPos = _lineDesc.endPos;
+        line.endColor = _lineDesc.color;
     }
 
     //--------------------------------------------------------------------------------------
     void DebugDraw::AddWireframeBox(const float3 & _minPos, const float3 & _maxPos, u32 _color, const float4x4 & _world)
     {
-        AddLine(float3(_minPos.x, _minPos.y, _minPos.z), float3(_maxPos.x, _minPos.y, _minPos.z), _color, _world);
-        AddLine(float3(_maxPos.x, _minPos.y, _minPos.z), float3(_maxPos.x, _maxPos.y, _minPos.z), _color, _world);
-        AddLine(float3(_maxPos.x, _maxPos.y, _minPos.z), float3(_minPos.x, _maxPos.y, _minPos.z), _color, _world);
-        AddLine(float3(_minPos.x, _maxPos.y, _minPos.z), float3(_minPos.x, _minPos.y, _minPos.z), _color, _world);
-        
-        AddLine(float3(_minPos.x, _minPos.y, _minPos.z), float3(_minPos.x, _minPos.y, _maxPos.z), _color, _world);
-        AddLine(float3(_maxPos.x, _minPos.y, _minPos.z), float3(_maxPos.x, _minPos.y, _maxPos.z), _color, _world);
-        AddLine(float3(_maxPos.x, _maxPos.y, _minPos.z), float3(_maxPos.x, _maxPos.y, _maxPos.z), _color, _world);
-        AddLine(float3(_minPos.x, _maxPos.y, _minPos.z), float3(_minPos.x, _maxPos.y, _maxPos.z), _color, _world);
-        
-        AddLine(float3(_minPos.x, _minPos.y, _maxPos.z), float3(_maxPos.x, _minPos.y, _maxPos.z), _color, _world);
-        AddLine(float3(_maxPos.x, _minPos.y, _maxPos.z), float3(_maxPos.x, _maxPos.y, _maxPos.z), _color, _world);
-        AddLine(float3(_maxPos.x, _maxPos.y, _maxPos.z), float3(_minPos.x, _maxPos.y, _maxPos.z), _color, _world);
-        AddLine(float3(_minPos.x, _maxPos.y, _maxPos.z), float3(_minPos.x, _minPos.y, _maxPos.z), _color, _world);
+        AddWireframeBox(IDebugDraw::BoxDesc(_minPos, _maxPos, _color, _world));        
+    }
+
+    //--------------------------------------------------------------------------------------
+    void DebugDraw::AddWireframeBox(const BoxDesc & _boxDesc)
+    {
+        addWireframeBox(_boxDesc);
+    }
+
+    //--------------------------------------------------------------------------------------
+    void DebugDraw::AddWireframeBoxes(const core::vector< BoxDesc> & _boxesDesc)
+    {
+        VG_PROFILE_CPU("Add Boxes");
+
+        core::vector<LineDesc> lines;
+        lines.reserve(_boxesDesc.size() * 12);
+
+        for (const BoxDesc & box : _boxesDesc)
+            buildBoxLines(box, lines);
+
+        AddLines(lines);
+    }
+
+    //--------------------------------------------------------------------------------------
+    inline void DebugDraw::buildBoxLines(const BoxDesc & _boxDesc, core::vector<LineDesc> & _lines)
+    {
+        _lines.push_back(LineDesc(float3(_boxDesc.minPos.x, _boxDesc.minPos.y, _boxDesc.minPos.z), float3(_boxDesc.maxPos.x, _boxDesc.minPos.y, _boxDesc.minPos.z), _boxDesc.color, _boxDesc.world));
+        _lines.push_back(LineDesc(float3(_boxDesc.maxPos.x, _boxDesc.minPos.y, _boxDesc.minPos.z), float3(_boxDesc.maxPos.x, _boxDesc.maxPos.y, _boxDesc.minPos.z), _boxDesc.color, _boxDesc.world));
+        _lines.push_back(LineDesc(float3(_boxDesc.maxPos.x, _boxDesc.maxPos.y, _boxDesc.minPos.z), float3(_boxDesc.minPos.x, _boxDesc.maxPos.y, _boxDesc.minPos.z), _boxDesc.color, _boxDesc.world));
+        _lines.push_back(LineDesc(float3(_boxDesc.minPos.x, _boxDesc.maxPos.y, _boxDesc.minPos.z), float3(_boxDesc.minPos.x, _boxDesc.minPos.y, _boxDesc.minPos.z), _boxDesc.color, _boxDesc.world));
+
+        _lines.push_back(LineDesc(float3(_boxDesc.minPos.x, _boxDesc.minPos.y, _boxDesc.minPos.z), float3(_boxDesc.minPos.x, _boxDesc.minPos.y, _boxDesc.maxPos.z), _boxDesc.color, _boxDesc.world));
+        _lines.push_back(LineDesc(float3(_boxDesc.maxPos.x, _boxDesc.minPos.y, _boxDesc.minPos.z), float3(_boxDesc.maxPos.x, _boxDesc.minPos.y, _boxDesc.maxPos.z), _boxDesc.color, _boxDesc.world));
+        _lines.push_back(LineDesc(float3(_boxDesc.maxPos.x, _boxDesc.maxPos.y, _boxDesc.minPos.z), float3(_boxDesc.maxPos.x, _boxDesc.maxPos.y, _boxDesc.maxPos.z), _boxDesc.color, _boxDesc.world));
+        _lines.push_back(LineDesc(float3(_boxDesc.minPos.x, _boxDesc.maxPos.y, _boxDesc.minPos.z), float3(_boxDesc.minPos.x, _boxDesc.maxPos.y, _boxDesc.maxPos.z), _boxDesc.color, _boxDesc.world));
+
+        _lines.push_back(LineDesc(float3(_boxDesc.minPos.x, _boxDesc.minPos.y, _boxDesc.maxPos.z), float3(_boxDesc.maxPos.x, _boxDesc.minPos.y, _boxDesc.maxPos.z), _boxDesc.color, _boxDesc.world));
+        _lines.push_back(LineDesc(float3(_boxDesc.maxPos.x, _boxDesc.minPos.y, _boxDesc.maxPos.z), float3(_boxDesc.maxPos.x, _boxDesc.maxPos.y, _boxDesc.maxPos.z), _boxDesc.color, _boxDesc.world));
+        _lines.push_back(LineDesc(float3(_boxDesc.maxPos.x, _boxDesc.maxPos.y, _boxDesc.maxPos.z), float3(_boxDesc.minPos.x, _boxDesc.maxPos.y, _boxDesc.maxPos.z), _boxDesc.color, _boxDesc.world));
+        _lines.push_back(LineDesc(float3(_boxDesc.minPos.x, _boxDesc.maxPos.y, _boxDesc.maxPos.z), float3(_boxDesc.minPos.x, _boxDesc.minPos.y, _boxDesc.maxPos.z), _boxDesc.color, _boxDesc.world));
+    }
+
+    //--------------------------------------------------------------------------------------
+    inline void DebugDraw::addWireframeBox(const BoxDesc & _boxDesc)
+    {
+        core::vector<LineDesc> lines;
+        lines.reserve(12);
+        buildBoxLines(_boxDesc, lines);
+
+        AddLines(lines);
     }
 
     //--------------------------------------------------------------------------------------
@@ -670,6 +735,15 @@ namespace vg::renderer
     void DebugDraw::update(const View * _view, gfx::CommandList * _cmdList)
     {
         VG_PROFILE_CPU("DebugDrawUpdate");
+
+        // Wait DebugDraw jobs
+        {
+            VG_PROFILE_CPU("Wait DebugDraw");
+            auto scheduler = Kernel::getScheduler();
+            scheduler->Wait(Renderer::get()->GetJobSync(IRenderer::JobSync::DebugDraw));
+        }
+
+        lock_guard<mutex> lock(m_debugDrawMutex);
 
         DrawData & drawData = getDrawData(_view);
 

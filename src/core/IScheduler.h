@@ -15,9 +15,10 @@ namespace vg::core
         virtual                         ~IScheduler             () = default;
 
         virtual void                    Start                   (Job * _job, JobSync * _sync) = 0;
-        virtual JobSync                 Start                   (Job * _job) = 0;
+        virtual JobSync                 Start                   (Job * _job) = 0; 
+        virtual void                    StartAfter              (JobSync * _trigger, Job * _job, JobSync * _sync) = 0;
     
-        virtual void                    Wait                    (JobSync _sync) = 0;
+        virtual void                    Wait                    (JobSync * _sync) = 0;
 
         virtual void                    RegisterWorkerThreads   () = 0;
         virtual void                    RegisterCurrentThread   (const core::string & _name) = 0;

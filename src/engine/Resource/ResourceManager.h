@@ -3,6 +3,7 @@
 #include "core/Singleton/Singleton.h"
 #include "engine/IResourceManager.h"
 #include "core/Object/Object.h"
+#include "core/Scheduler/Mutex.h"
 
 namespace vg::core
 {

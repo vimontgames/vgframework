@@ -12,8 +12,8 @@
 #define VG_PROFILE_STOP()                   Kernel::getProfiler()->stop()
 #define VG_PROFILE_CAPTURE_IN_PROGRESS()    Kernel::getProfiler()->isCaptureInProgress()
 #define VG_PROFILE_TRIGGER()                if (Kernel::getProfiler()->isCaptureInProgress()) VG_PROFILE_STOP(); else VG_PROFILE_START();
-#define VG_PROFILE_CPU_EVENT_START(name)    Kernel::getProfiler()->startCpuEvent(name)
-#define VG_PROFILE_CPU_EVENT_STOP()         Kernel::getProfiler()->stopCpuEvent()
+#define VG_PROFILE_CPU_EVENT_START(name)    if (auto * profiler = Kernel::getProfiler(false)) { profiler->startCpuEvent(name); }
+#define VG_PROFILE_CPU_EVENT_STOP()         if (auto * profiler = Kernel::getProfiler(false)) { profiler->stopCpuEvent(); }
 #define VG_PROFILE_CPU(name)                vg::core::ScopedCPUEvent scopedCPUEvent##__COUNTER__(name)
 #define VG_PROFILE_REGISTER_THREAD(name)    Kernel::registerThread(name)
 

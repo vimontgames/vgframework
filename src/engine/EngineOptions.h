@@ -16,8 +16,11 @@ namespace vg::engine
 
         void                    OnPropertyChanged   (IObject * _object, const core::IProperty & _prop, bool _notifyParent) final override;
 
+        VG_INLINE bool          useAnimationJobs    () const { return m_animationJobs;}
+
     private:
         core::string            m_projectPath;
         core::string            m_startWorld;
+        bool                    m_animationJobs = false;
     };
 }

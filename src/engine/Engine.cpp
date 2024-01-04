@@ -570,6 +570,13 @@ namespace vg::engine
             }
         }
 
+        // Sync animations so the result can be used during LateUpdate & Render
+        auto * scheduler = Kernel::getScheduler();
+        {
+            VG_PROFILE_CPU("Sync Animation");
+            scheduler->Wait(getJobSync(JobSync::Animation));
+        }
+
         if (world)
         {
             // LateUpdate all GameObjects and components

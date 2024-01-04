@@ -1,6 +1,7 @@
 #pragma once
 
 #include "core/ILogger.h"
+#include "core/Scheduler/Mutex.h"
 
 namespace vg::core
 {

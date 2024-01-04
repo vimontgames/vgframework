@@ -443,6 +443,7 @@ namespace vg::renderer
         m_sharedCullingJobOutput->clear();
 
         core::Scheduler * jobScheduler = (core::Scheduler *)Kernel::getScheduler();
+        auto jobSync = GetJobSync(IRenderer::JobSync::Culling);
 
         // Perform culling for each view (might want to split views later)
         uint jobStartCounter = 0;
@@ -455,7 +456,7 @@ namespace vg::renderer
                 if (view && view->IsVisible())
                 {
                     auto * job = view->getCullingJob();
-                    jobScheduler->Start(job, &m_cullingJobSync);
+                    jobScheduler->Start(job, jobSync);
                     jobStartCounter++;
                 }
             }
@@ -463,8 +464,8 @@ namespace vg::renderer
 
         if (jobStartCounter > 0)
         {
-            VG_PROFILE_CPU("syncCull");
-            jobScheduler->Wait(m_cullingJobSync);
+            VG_PROFILE_CPU("Sync Culling");
+            jobScheduler->Wait(jobSync);
         }
     }
 

@@ -10,6 +10,7 @@ namespace vg
     {
         class IProfiler;
         struct Singletons;
+        struct JobSync;
     }
 
     namespace gfx
@@ -38,6 +39,13 @@ namespace vg
         class IRenderer : public core::IPlugin
         {
         public:
+
+            enum class JobSync
+            {
+                Culling,
+                DebugDraw
+            };
+
             IRenderer(const core::string & _name, core::IObject * _parent) :
                 core::IPlugin(_name, _parent)
             {
@@ -93,6 +101,8 @@ namespace vg
             virtual bool                                IsFullscreen            () const = 0;
 
             virtual ILightInstance *                    CreateLightInstance     (const ILightDesc * _lightDesc) = 0;
+
+            virtual core::JobSync *                     GetJobSync              (JobSync _jobSync) = 0;
         };
     }
 }

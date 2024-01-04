@@ -419,7 +419,7 @@ namespace vg::gfx::dx12
 
         // Wait for the last frame occupying this slot to be complete
         {
-            VG_PROFILE_CPU("Wait");
+            VG_PROFILE_CPU("Wait Fence");
             FrameContext * Frame = &m_frameContext[FrameIndex];
             WaitForFence(m_d3d12fence, m_d3d12fenceEvent, Frame->mFrameFenceId);
             Frame->mFrameFenceId = FrameFence;

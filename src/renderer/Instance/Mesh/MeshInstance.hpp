@@ -240,7 +240,7 @@ namespace vg::renderer
     //--------------------------------------------------------------------------------------
     bool MeshInstance::updateSkeleton()
     {
-        VG_PROFILE_CPU("updateSkeleton");
+        VG_PROFILE_CPU("Skeleton Update");
 
         bool skeletonUpdate = false;
 
@@ -455,46 +455,59 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    bool MeshInstance::ShowSkeleton() const
+    bool MeshInstance::DrawSkeleton() const
     {
-        VG_PROFILE_CPU("ShowSkeleton");
-
-        //float4x4 YUpToZUpMatrix = float4x4::rotation_x(PI / 2.0f); // mul(float4x4::rotation_x(PI / 2.0f), float4x4::rotation_y(PI));
+        VG_PROFILE_CPU("Skeleton Draw");
 
         DebugDraw * dbgDraw = DebugDraw::get();
-        //const MeshModel * model = (MeshModel *)getModel(Lod::Lod0);
-        //if (nullptr != model)
-        {
-            //const Skeleton * skeleton = model->m_skeleton;
-            const Skeleton * skeleton = getInstanceSkeleton(); 
+
+        const Skeleton * skeleton = getInstanceSkeleton(); 
             
-            if (nullptr != skeleton)
+        if (nullptr != skeleton)
+        {
+            const auto & nodes = skeleton->getNodes();
+            const auto & boneIndices = skeleton->getBoneIndices();
+
+            core::vector<IDebugDraw::LineDesc> lines;
+            lines.reserve(boneIndices.size());
+
+            core::vector<IDebugDraw::BoxDesc> boxes;
+            boxes.reserve(boneIndices.size());
+
+            // build
             {
-                const auto & nodes = skeleton->getNodes();
-                const auto & boneIndices = skeleton->getBoneIndices();
+                VG_PROFILE_CPU("Build");
+
                 for (uint j = 0; j < boneIndices.size(); ++j)
                 {
                     const int index = boneIndices[j];
 
                     const MeshImporterNode & node = nodes[index];
 
+                    const float4x4 matrix = getGlobalMatrix();
+
                     // YUp skeleton displayed as ZUp
-                    float4x4 boneMatrix = mul(transpose(node.node_to_world), getGlobalMatrix());
-                    
+                    float4x4 boneMatrix = mul(transpose(node.node_to_world), matrix);
+
                     float3 boxSize = float3(0.01f, 0.01f, 0.01f);
-                    dbgDraw->AddWireframeBox( -boxSize, boxSize, 0xFF00FF00, boneMatrix);
+                    boxes.push_back(IDebugDraw::BoxDesc(-boxSize, boxSize, 0xFF00FF00, boneMatrix));
 
                     if (-1 != node.parent_index)
                     {
                         const MeshImporterNode & parentNode = nodes[node.parent_index];
-                        float4x4 parentBoneMatrix = mul(transpose(parentNode.node_to_world), getGlobalMatrix());
-
-                        dbgDraw->AddLine(boneMatrix[3].xyz, parentBoneMatrix[3].xyz, 0xFF00FF00);
+                        float4x4 parentBoneMatrix = mul(transpose(parentNode.node_to_world), matrix);
+                        lines.push_back(IDebugDraw::LineDesc(boneMatrix[3].xyz, parentBoneMatrix[3].xyz, 0xFF00FF00));
                     }
                 }
-
-                return true;
             }
+
+            // add
+            {
+                dbgDraw->AddLines(lines);
+                dbgDraw->AddWireframeBoxes(boxes);
+            }
+
+            return true;
         }
 
         return false;

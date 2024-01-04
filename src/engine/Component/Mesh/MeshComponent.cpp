@@ -4,9 +4,14 @@
 #include "renderer/IMeshInstance.h"
 #include "renderer/IMeshModel.h"
 #include "engine/Engine.h"
+#include "engine/EngineOptions.h"
 #include "renderer/IRenderer.h"
 #include "renderer/IPicking.h"
 #include "editor/Editor_Consts.h"
+#include "core/Scheduler/Scheduler.h"
+#include "engine/Job/Animation/AnimationJob.h"
+#include "engine/Job/Animation/DrawSkeletonJob.h"
+
 #include "MaterialResourceList.hpp"
 
 #if !VG_ENABLE_INLINE
@@ -53,6 +58,9 @@ namespace vg::engine
         getGameObject()->removeGraphicInstance(m_meshInstance);
         m_registered = false;
         Engine::get()->GetRenderer()->ReleaseAsync(m_meshInstance);
+
+        VG_SAFE_RELEASE(m_updateSkeletonJob);
+        VG_SAFE_RELEASE(m_drawSkeletonJob);
     }
 
     //--------------------------------------------------------------------------------------
@@ -69,10 +77,36 @@ namespace vg::engine
 
         if (m_meshInstance->IsSkinned())
         {
-            m_meshInstance->UpdateSkeleton();
+            if (EngineOptions::get()->useAnimationJobs())
+            {
+                if (nullptr == m_updateSkeletonJob)
+                    m_updateSkeletonJob = new AnimationJob(this, m_displayBones);
 
-            if (m_displayBones)
-                m_meshInstance->ShowSkeleton();
+                const auto animSync = Engine::get()->getJobSync(JobSync::Animation);
+
+                core::Scheduler * jobScheduler = (core::Scheduler *)Kernel::getScheduler();
+                jobScheduler->Start(m_updateSkeletonJob, animSync);
+
+                #if 1
+                if (m_displayBones)
+                {
+                    const auto debugDrawSync = Engine::get()->GetRenderer()->GetJobSync(IRenderer::JobSync::DebugDraw);
+
+                    if (nullptr == m_drawSkeletonJob)
+                        m_drawSkeletonJob = new DrawSkeletonJob(this);
+                    jobScheduler->StartAfter(animSync, m_drawSkeletonJob, debugDrawSync);
+                }
+                #endif
+            }
+            else
+            {
+                VG_PROFILE_CPU("Animation");
+
+                m_meshInstance->UpdateSkeleton();
+
+                if (m_displayBones)
+                    m_meshInstance->DrawSkeleton();
+            }
         }
     }
 

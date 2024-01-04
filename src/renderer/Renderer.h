@@ -104,7 +104,8 @@ namespace vg::renderer
         gfx::Texture *		                    getBackbuffer               () const;
         ImGuiAdapter *                          getImGuiAdapter             () const { return m_imgui; }
         SharedCullingJobOutput *                getSharedCullingJobOutput   () const { return m_sharedCullingJobOutput; }
-        core::JobSync *                         getCullingJobSync           () { return &m_cullingJobSync; }
+
+        core::JobSync *                         GetJobSync                  (JobSync _jobSync) final override { return &m_jobSync[core::asInteger(_jobSync)]; }
 
     private:
         void                                    registerShaders             ();
@@ -132,7 +133,8 @@ namespace vg::renderer
         MaterialModel *                         m_defaultMaterial           = nullptr;
         bool                                    m_fullscreen                = false;
         SharedCullingJobOutput *                m_sharedCullingJobOutput    = nullptr;
-        core::JobSync                           m_cullingJobSync;
+
+        core::JobSync                           m_jobSync[core::enumCount<JobSync>()];
 	};
 }
 

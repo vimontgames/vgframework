@@ -1,6 +1,7 @@
 #pragma once
 
 #include "core/Object/Object.h"
+#include "core/Scheduler/Mutex.h"
 
 namespace vg::gfx
 {
