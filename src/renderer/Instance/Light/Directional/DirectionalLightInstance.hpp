@@ -74,9 +74,7 @@ namespace vg::renderer
         _cullingResult->m_output->add(GraphicInstanceListType::All, this);
         _cullingResult->m_output->add(LightType::Directional, this);
 
-        const auto shadowType = GetShadowType();
-
-        if (!_view->isAdditionalView() && (ShadowType::ShadowMap == shadowType || ShadowType::Hybrid == shadowType))
+        if (!_view->isAdditionalView() && IsCastShadow())
         {
             // Create view and start culling immediately
             Renderer * renderer = Renderer::get();

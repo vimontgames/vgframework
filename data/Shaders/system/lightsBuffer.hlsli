@@ -29,6 +29,7 @@ struct OmniLightConstants
 	float4		m_color;
 	float4		m_position;
 	float4x4	m_shadowMatrix;
+	uint4		m_shadow; 
 
 	void		setColor					(float3 _color)		{ m_color.rgb = _color; }
 	float3		getColor					()					{ return m_color.rgb;}
@@ -38,6 +39,18 @@ struct OmniLightConstants
 
 	void		setRadius					(float _radius)		{ m_position.w = _radius; }
 	float		getRadius					()					{ return m_position.w; }
+
+	void		setShadowMapTextureHandle	(uint _shadowMap)	{ m_shadow.x = packUint16low(m_shadow.x, _shadowMap); }
+	uint		getShadowMapTextureHandle	()					{ return unpackUint16low(m_shadow.x); }
+
+	void		setShadowMatrix				(float4x4 _matrix)	{ m_shadowMatrix = _matrix; }
+	float4x4	getShadowMatrix				()					{ return m_shadowMatrix; }
+
+	void		setShadowBias				(float _bias)		{ m_shadow.y = asuint((float1)_bias); }
+	float		getShadowBias				()					{ return asfloat(m_shadow.y); }
+
+	void		setShadowInstensity			(float _intensity)  { m_shadow.z = asuint((float1)_intensity); }
+	float		getShadowInstensity			()					{ return asfloat(m_shadow.z); }
 };
 
 struct DirectionalLightConstants 
@@ -61,4 +74,7 @@ struct DirectionalLightConstants
 
 	void		setShadowBias				(float _bias)		{ m_shadow.y = asuint((float1)_bias); }
 	float		getShadowBias				()					{ return asfloat(m_shadow.y); }
+
+	void		setShadowInstensity			(float _intensity)  { m_shadow.z = asuint((float1)_intensity); }
+	float		getShadowInstensity			()					{ return asfloat(m_shadow.z); }
 };

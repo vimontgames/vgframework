@@ -29,6 +29,7 @@ namespace vg::renderer
         void                            RegisterFrameGraph  (const gfx::RenderPassContext & _renderPassContext, gfx::FrameGraph & _frameGraph) override;
 
         const LightInstance *           getLight            () const { return m_light; }
+        bool                            isUsingShadowMap    () const;
         core::string                    getShadowMapName    (const gfx::IView * _view) const;
 
     private:

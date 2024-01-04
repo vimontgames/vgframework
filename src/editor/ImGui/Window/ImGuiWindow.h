@@ -38,6 +38,7 @@ namespace vg::editor
     struct ObjectContext
     {
         core::vector<TreeNodeStackInfo> treeNodes;
+        bool hide = false;
     };
 
     class ImGuiWindow

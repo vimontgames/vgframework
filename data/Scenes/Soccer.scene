@@ -1408,12 +1408,13 @@
                                                 <Property type="ObjectPtr" name="m_lightDesc" flags="Flatten">
                                                     <Object class="DirectionalLightDesc">
                                                         <Property type="String" name="m_name" flags="Hidden" value="DirectionalLightDesc #1"/>
-                                                        <Property type="LayoutElement" name="Shadow"/>
-                                                        <Property type="EnumU8" name="m_shadowType" value="ShadowMap"/>
+                                                        <Property type="Bool" name="m_shadow" value="true"/>
+                                                        <Property type="LayoutElement" name="Shadow Settings"/>
                                                         <Property type="Float2" name="m_shadowRange" x="0.1" y="100"/>
                                                         <Property type="Float" name="m_shadowBias" flags="HasRange" value="0.001"/>
                                                         <Property type="Uint2" name="m_shadowSize" x="50" y="50"/>
                                                         <Property type="Uint2" name="m_shadowResolution" x="2048" y="2048"/>
+                                                        <Property type="Float" name="m_shadowIntensity" flags="HasRange" value="0.5"/>
                                                         <Property type="LayoutElement" name=""/>
                                                         <Property type="Float4" name="m_color" flags="Color|HDR" x="1" y="1" z="1" w="1"/>
                                                         <Property type="Float" name="m_intensity" value="1"/>
@@ -1435,12 +1436,13 @@
                                                 <Property type="ObjectPtr" name="m_lightDesc" flags="Flatten">
                                                     <Object class="OmniLightDesc">
                                                         <Property type="String" name="m_name" flags="Hidden" value="OmniLightDesc #0"/>
-                                                        <Property type="LayoutElement" name="Shadow"/>
-                                                        <Property type="EnumU8" name="m_shadowType" value="None"/>
+                                                        <Property type="Bool" name="m_shadow" value="false"/>
+                                                        <Property type="LayoutElement" name="Shadow Settings"/>
                                                         <Property type="Float2" name="m_shadowRange" x="0.1" y="100"/>
                                                         <Property type="Float" name="m_shadowBias" flags="HasRange" value="0.001"/>
                                                         <Property type="Uint2" name="m_shadowSize" x="16" y="16"/>
                                                         <Property type="Uint2" name="m_shadowResolution" x="1024" y="1024"/>
+                                                        <Property type="Float" name="m_shadowIntensity" flags="HasRange" value="1"/>
                                                         <Property type="LayoutElement" name=""/>
                                                         <Property type="Float4" name="m_color" flags="Color|HDR" x="1" y="0" z="0" w="1"/>
                                                         <Property type="Float" name="m_intensity" value="1"/>
@@ -1464,12 +1466,13 @@
                                                 <Property type="ObjectPtr" name="m_lightDesc" flags="Flatten">
                                                     <Object class="OmniLightDesc">
                                                         <Property type="String" name="m_name" flags="Hidden" value="OmniLightDesc #0"/>
-                                                        <Property type="LayoutElement" name="Shadow"/>
-                                                        <Property type="EnumU8" name="m_shadowType" value="None"/>
+                                                        <Property type="Bool" name="m_shadow" value="false"/>
+                                                        <Property type="LayoutElement" name="Shadow Settings"/>
                                                         <Property type="Float2" name="m_shadowRange" x="0.1" y="100"/>
                                                         <Property type="Float" name="m_shadowBias" flags="HasRange" value="0.001"/>
                                                         <Property type="Uint2" name="m_shadowSize" x="16" y="16"/>
                                                         <Property type="Uint2" name="m_shadowResolution" x="1024" y="1024"/>
+                                                        <Property type="Float" name="m_shadowIntensity" flags="HasRange" value="1"/>
                                                         <Property type="LayoutElement" name=""/>
                                                         <Property type="Float4" name="m_color" flags="Color|HDR" x="0.56504822" y="1" z="0.37065637" w="1"/>
                                                         <Property type="Float" name="m_intensity" value="1"/>
@@ -1493,12 +1496,13 @@
                                                 <Property type="ObjectPtr" name="m_lightDesc" flags="Flatten">
                                                     <Object class="OmniLightDesc">
                                                         <Property type="String" name="m_name" flags="Hidden" value="OmniLightDesc #0"/>
-                                                        <Property type="LayoutElement" name="Shadow"/>
-                                                        <Property type="EnumU8" name="m_shadowType" value="None"/>
+                                                        <Property type="Bool" name="m_shadow" value="false"/>
+                                                        <Property type="LayoutElement" name="Shadow Settings"/>
                                                         <Property type="Float2" name="m_shadowRange" x="0.1" y="100"/>
                                                         <Property type="Float" name="m_shadowBias" flags="HasRange" value="0.001"/>
                                                         <Property type="Uint2" name="m_shadowSize" x="16" y="16"/>
                                                         <Property type="Uint2" name="m_shadowResolution" x="1024" y="1024"/>
+                                                        <Property type="Float" name="m_shadowIntensity" flags="HasRange" value="1"/>
                                                         <Property type="LayoutElement" name=""/>
                                                         <Property type="Float4" name="m_color" flags="Color|HDR" x="0.39768338" y="0.42093897" z="1" w="1"/>
                                                         <Property type="Float" name="m_intensity" value="1"/>

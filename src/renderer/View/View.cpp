@@ -539,10 +539,11 @@ namespace vg::renderer
         {
             ShadowView * shadowView = shadowViews[i];
 
-            const auto shadowMapID = shadowView->getShadowMapName(this);
-
-            if (!shadowMapID.empty())
+            if (shadowView->isUsingShadowMap())
+            {
+                const auto shadowMapID = shadowView->getShadowMapName(this);
                 shadowMaps.push_back(shadowMapID);
+            }
         }
 
         return shadowMaps;

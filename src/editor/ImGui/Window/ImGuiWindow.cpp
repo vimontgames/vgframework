@@ -374,23 +374,13 @@ namespace vg::editor
             auto nodeInfo = _context.treeNodes[_context.treeNodes.size() - 1];
             if (!nodeInfo.treeNodeOpen)
             {
-                if (IProperty::Type::LayoutElement == type)
-                {
-                    //switch (_prop->GetLayoutElementType())
-                    //{
-                    //    default:
-                    //        return;
-                    //
-                    //        //case IProperty::LayoutElementType::GroupEnd:
-                    //        //    break;
-                    //}
-                }
-                else
-                {
+                if (IProperty::Type::LayoutElement != type)
                     return;
-                }
             }
         }
+
+        if (_context.hide && (type != IProperty::Type::LayoutElement || !(asBool(flags & IProperty::Flags::Optional))))
+            return;
 
         if (asBool(IProperty::Flags::Hidden & flags))
             return;
@@ -408,22 +398,27 @@ namespace vg::editor
             optionalProp = classDesc->GetPreviousProperty(_prop->getName());
             if (optionalProp)
             {
-                VG_ASSERT(optionalProp->getType() == IProperty::Type::Bool, "[Factory] Property used for optional variable \"%s\" should be of type 'Bool'", _prop->getName());
-                VG_ASSERT(asBool(IProperty::Flags::Hidden & optionalProp->getFlags()), "[Factory] Property used for optional variable \"%s\" should be hidden", _prop->getName());
+                VG_ASSERT(asBool(IProperty::Flags::Hidden & optionalProp->getFlags()) || _prop->getType() == IProperty::Type::LayoutElement, "[Factory] Property used for optional variable \"%s\" should be hidden", _prop->getName());
+                
                 if (optionalProp->getType() == IProperty::Type::Bool)
                 {
                     bool * b = optionalProp->GetPropertyBool(_object);
-                    if (ImGui::Checkbox(ImGui::getObjectLabel("", optionalProp).c_str(), b))
-                        optionalChanged = true;
-                    ImGui::SameLine();
 
-                    auto availableWidth = GetContentRegionAvail().x;
-                    ImGui::PushItemWidth(availableWidth - style::label::PixelWidth);
+                    if (_prop->getType() != IProperty::Type::LayoutElement)
+                    {
 
-                    optional = true;
+                        if (ImGui::Checkbox(ImGui::getObjectLabel("", optionalProp).c_str(), b))
+                            optionalChanged = true;
+                        ImGui::SameLine();
 
-                    if (!*b)
-                        ImGui::BeginDisabled(true);
+                        auto availableWidth = GetContentRegionAvail().x;
+                        ImGui::PushItemWidth(availableWidth - style::label::PixelWidth);
+
+                        optional = true;
+
+                        if (!*b)
+                            ImGui::BeginDisabled(true);
+                    }
                 }                
             }
         }
@@ -462,36 +457,55 @@ namespace vg::editor
 
                         case IProperty::LayoutElementType::GroupBegin:
                         {
-                            if (_context.treeNodes.size() > 0 || dynamic_cast<IComponent*>(_object) || dynamic_cast<IComponent *>(_object->getParent()))
+                            if (asBool(IProperty::Flags::Optional & flags))
                             {
-                                TreeNodeStackInfo & newInfo = _context.treeNodes.push_empty();
-                                
-                                newInfo.treeNodeOpen = ImGui::TreeNodeEx(ImGui::getObjectLabel(_prop->getDisplayName(), _prop).c_str(), ImGuiTreeNodeFlags_DefaultOpen);
-                                newInfo.treeNodeIsCollapsingHeader = false;
+                                // optional group
+                                VG_ASSERT(_prop->getOffset() != 0);
+                                //_context.hide = !*_prop->GetPropertyBool(_object);
+                                ImGui::BeginDisabled(!*_prop->GetPropertyBool(_object));
                             }
                             else
                             {
-                                TreeNodeStackInfo & newInfo = _context.treeNodes.push_empty();
-                                
-                                newInfo.treeNodeOpen = ImGui::CollapsingHeader(ImGui::getObjectLabel(_prop->getDisplayName(), _prop).c_str(), ImGuiTreeNodeFlags_DefaultOpen);
-                                newInfo.treeNodeIsCollapsingHeader = true;
+                                if (_context.treeNodes.size() > 0 || dynamic_cast<IComponent *>(_object) || dynamic_cast<IComponent *>(_object->getParent()))
+                                {
+                                    TreeNodeStackInfo & newInfo = _context.treeNodes.push_empty();
+
+                                    newInfo.treeNodeOpen = ImGui::TreeNodeEx(ImGui::getObjectLabel(_prop->getDisplayName(), _prop).c_str(), ImGuiTreeNodeFlags_DefaultOpen);
+                                    newInfo.treeNodeIsCollapsingHeader = false;
+                                }
+                                else
+                                {
+                                    TreeNodeStackInfo & newInfo = _context.treeNodes.push_empty();
+
+                                    newInfo.treeNodeOpen = ImGui::CollapsingHeader(ImGui::getObjectLabel(_prop->getDisplayName(), _prop).c_str(), ImGuiTreeNodeFlags_DefaultOpen);
+                                    newInfo.treeNodeIsCollapsingHeader = true;
+                                }
                             }
                         }
                         break;
 
                         case IProperty::LayoutElementType::GroupEnd:
                         {
-                            if (_context.treeNodes.size() > 0)
+                            if (asBool(IProperty::Flags::Optional & flags))
                             {
-                                auto & nodeInfo = _context.treeNodes[_context.treeNodes.size() - 1];
-
-                                if (nodeInfo.treeNodeOpen)
+                                //_context.hide = false;
+                                ImGui::EndDisabled();
+                                //ImGui::Spacing();
+                            }
+                            else
+                            {
+                                if (_context.treeNodes.size() > 0)
                                 {
-                                    if (!nodeInfo.treeNodeIsCollapsingHeader)
-                                        ImGui::TreePop();                                    
-                                }
+                                    auto & nodeInfo = _context.treeNodes[_context.treeNodes.size() - 1];
 
-                                _context.treeNodes.erase(_context.treeNodes.begin() + _context.treeNodes.size() - 1);
+                                    if (nodeInfo.treeNodeOpen)
+                                    {
+                                        if (!nodeInfo.treeNodeIsCollapsingHeader)
+                                            ImGui::TreePop();
+                                    }
+
+                                    _context.treeNodes.erase(_context.treeNodes.begin() + _context.treeNodes.size() - 1);
+                                }
                             }
                         }
                         break;
@@ -1163,10 +1177,13 @@ namespace vg::editor
 
         if (optional)
         {
-            ImGui::PopItemWidth();
-            bool * b = optionalProp->GetPropertyBool(_object);
-            if (!*b)
-                ImGui::EndDisabled();
+            if (_prop->getType() != IProperty::Type::LayoutElement)
+            {
+                ImGui::PopItemWidth();
+                bool * b = optionalProp->GetPropertyBool(_object);
+                if (!*b)
+                    ImGui::EndDisabled();
+            }
         }
     }
 

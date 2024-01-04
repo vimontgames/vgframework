@@ -22,10 +22,10 @@ namespace vg::renderer
     {
         super::registerProperties(_desc);
 
-        registerPropertyGroupBegin(LightDesc, "Shadow");
-        {
-            registerPropertyEnum(LightDesc, ShadowType, m_shadowType, "Type");
+        registerProperty(LightDesc, m_shadow, "Cast Shadows");
 
+        registerPropertyOptionalGroupBegin(LightDesc, m_shadow, "Shadow Settings");
+        {
             registerProperty(LightDesc, m_shadowRange, "Range");
             //setPropertyRange(LightDesc, m_shadowRange, float2(0.0f, 100.0f));
 
@@ -34,8 +34,11 @@ namespace vg::renderer
 
             registerProperty(LightDesc, m_shadowSize, "Size");
             registerProperty(LightDesc, m_shadowResolution, "Resolution");
+
+            registerProperty(LightDesc, m_shadowIntensity, "Intensity");
+            setPropertyRange(LightDesc, m_shadowIntensity, float2(0.0f, 1.0f));
         }
-        registerPropertyGroupEnd(LightDesc);
+        registerPropertyOptionalGroupEnd(LightDesc);
 
 
         registerPropertyEx(LightDesc, m_color, "Color", IProperty::Flags::Color | IProperty::Flags::HDR);
@@ -60,11 +63,12 @@ namespace vg::renderer
     LightInstance::LightInstance(const core::string & _name, core::IObject * _parent, const LightDesc * _lightDesc) :
         super(_name, _parent)
     {
-        m_shadowType = _lightDesc->m_shadowType;
+        m_shadow = _lightDesc->m_shadow;
         m_shadowRange = _lightDesc->m_shadowRange;
         m_shadowBias = _lightDesc->m_shadowBias;
         m_shadowSize = _lightDesc->m_shadowSize;
         m_shadowResolution = _lightDesc->m_shadowResolution;
+        m_shadowIntensity = m_shadow ? _lightDesc->m_shadowIntensity : 0.0f;
 
         setColor(_lightDesc->m_color);
         m_intensity = _lightDesc->m_intensity;

@@ -195,7 +195,7 @@ namespace vg::core
     IProperty::LayoutElementType Property::GetLayoutElementType() const
     {
         checkPropertyType(Type::LayoutElement);
-        auto type = (IProperty::LayoutElementType)offset;
+        auto type = (IProperty::LayoutElementType)sizeOf;
         VG_ASSERT(isEnumValue(type));
         return type;
     }
@@ -204,7 +204,7 @@ namespace vg::core
     bool * Property::GetPropertyBool(const IObject * _object) const
     {
         VG_ASSERT(nullptr != _object);
-        checkPropertyType(Type::Bool);
+        VG_ASSERT(Type::Bool == getType() || (Type::LayoutElement == getType() && asBool(IProperty::Flags::Optional & getFlags())));
         return (bool*)(uint_ptr(_object) + offset);
     }
 

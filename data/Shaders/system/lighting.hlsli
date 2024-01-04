@@ -2,6 +2,18 @@
 
 #include "Shaders/system/lightsBuffer.hlsli"
 
+float3 heatmapGradient(float x, float _green, float _yellow, float _red)
+{
+    float3 color = 0;
+	if (x <= _green)
+		return float3(0,x/_green,0);
+	else if (x <= _yellow)
+		return lerp(float3(0,1,0), float3(1,1,0), saturate((x-_green)/(_yellow-_green)));
+	else 
+		return lerp(float3(1,1,0), float3(1,0,0), saturate((x-_yellow)/(_red-_yellow)));
+	return color;
+}
+
 //--------------------------------------------------------------------------------------
 // https://github.com/Nadrin/PBR/blob/master/data/shaders/hlsl/pbr.hlsl 
 //--------------------------------------------------------------------------------------
@@ -54,13 +66,13 @@ struct LightingResult
     float3 diffuse;
     float3 specular;
 
-	void addLightContribution(float3 Lo, float cosLo, float3 Lr, float3 F0, float3 Li, float3 Lradiance, float3 _worldNormal, float roughness, float metalness)
+	void addLightContribution(float3 Lo, float cosLo, float _cosLi, float3 Lr, float3 F0, float3 Li, float3 Lradiance, float3 _worldNormal, float roughness, float metalness)
 	{
 		// Half-vector between Li and Lo.
 		float3 Lh = normalize(Li + Lo);
 
         // Calculate angles between surface normal and various light vectors.
-		float cosLi = max(0.0f, dot(_worldNormal, Li));
+		float cosLi = _cosLi; //max(0.0f, dot(_worldNormal, Li));
 		float cosLh = max(0.0f, dot(_worldNormal, Lh));
 
         // Calculate Fresnel term for direct lighting. 
@@ -143,70 +155,79 @@ LightingResult computeDirectLighting(ViewConstants _viewConstants, float3 _eyePo
 
 		float3 lightDir = directional.getDirection();
 		float3 Li = normalize(lightDir);
-		float3 Lradiance = directional.getColor();
+		float cosLi = max(0.0f, dot(_worldNormal, Li));
 
-		float shadow = 1.0f;
-
-		#ifdef _RAYTRACING
-		shadow = 1;		
-
-		RayDesc ray;
-		ray.Origin    = _worldPos;
-		ray.Direction = lightDir;
-		ray.TMin      = 0.035f;
-		ray.TMax      = 10;
-
-		RayQuery<RAY_FLAG_FORCE_OPAQUE> query;
-		query.TraceRayInline(tlas, 0, 0xff, ray);
-		query.Proceed();
-
-		#ifdef _TOOLMODE
-		rayCount++;
-		#endif
-
-		switch(query.CommittedStatus())
+		if (cosLi > 0.0f)
 		{
-			case COMMITTED_TRIANGLE_HIT:
-				shadow = 0;     
-				break;
-		}
-		#else // _RAYTRACING
+			float3 Lradiance = directional.getColor();
+			float shadow = 1.0f;
+			float si = directional.getShadowInstensity();
 
-		float4 shadowUV = mul(directional.getShadowMatrix(), float4(_worldPos, 1.0f));
-			   shadowUV.xyz /= shadowUV.w;
-			   shadowUV.xy = shadowUV.xy*0.5f+0.5f;
-			   shadowUV.y = 1-shadowUV.y;
+			if (si > 0.0f)
+			{
+				#ifdef _RAYTRACING
+				shadow = 1;		
+
+				RayDesc ray;
+				ray.Origin    = _worldPos;
+				ray.Direction = lightDir;
+				ray.TMin      = 0.0325f;
+				ray.TMax      = 10;
+
+				RayQuery<RAY_FLAG_FORCE_OPAQUE> query;
+				query.TraceRayInline(tlas, 0, 0xff, ray);
+				query.Proceed();
+
+				#ifdef _TOOLMODE
+				rayCount++;
+				#endif
+
+				switch(query.CommittedStatus())
+				{
+					case COMMITTED_TRIANGLE_HIT:
+						shadow = 0;     
+						break;
+				}
+				#else // _RAYTRACING
+
+				float4 shadowUV = mul(directional.getShadowMatrix(), float4(_worldPos, 1.0f));
+					   shadowUV.xyz /= shadowUV.w;
+					   shadowUV.xy = shadowUV.xy*0.5f+0.5f;
+					   shadowUV.y = 1-shadowUV.y;
 		
-		if (all(shadowUV.xy == saturate(shadowUV.xy) ))
-		{
-			//output.diffuse = float3(frac(shadowUV.xy),0);
+				if (all(shadowUV.xy == saturate(shadowUV.xy) ))
+				{
+					//output.diffuse = float3(frac(shadowUV.xy),0);
 				
-			Texture2D shadowMap = getTexture2D(directional.getShadowMapTextureHandle());
-			float bias = directional.getShadowBias();
+					Texture2D shadowMap = getTexture2D(directional.getShadowMapTextureHandle());
+					float bias = directional.getShadowBias();
 			
-			#if 0
-			shadow = shadowMap.SampleCmpLevelZero(shadowcmp, shadowUV.xy, shadowUV.z - bias, int2(0,0)).x;
-			#else
-			// PCF9
-			shadow = 0;
-			shadow += shadowMap.SampleCmpLevelZero(shadowcmp, shadowUV.xy, shadowUV.z - bias, int2(0,-1)).x;	
-			shadow += shadowMap.SampleCmpLevelZero(shadowcmp, shadowUV.xy, shadowUV.z - bias, int2(1,-1)).x;	
-			shadow += shadowMap.SampleCmpLevelZero(shadowcmp, shadowUV.xy, shadowUV.z - bias, int2(2,-1)).x;	
-			shadow += shadowMap.SampleCmpLevelZero(shadowcmp, shadowUV.xy, shadowUV.z - bias, int2(0,0)).x;	
-			shadow += shadowMap.SampleCmpLevelZero(shadowcmp, shadowUV.xy, shadowUV.z - bias, int2(1,0)).x;	
-			shadow += shadowMap.SampleCmpLevelZero(shadowcmp, shadowUV.xy, shadowUV.z - bias, int2(2,0)).x;	
-			shadow += shadowMap.SampleCmpLevelZero(shadowcmp, shadowUV.xy, shadowUV.z - bias, int2(0,+1)).x;	
-			shadow += shadowMap.SampleCmpLevelZero(shadowcmp, shadowUV.xy, shadowUV.z - bias, int2(1,+1)).x;	
-			shadow += shadowMap.SampleCmpLevelZero(shadowcmp, shadowUV.xy, shadowUV.z - bias, int2(2,+1)).x;
-			shadow /= 9.0f;	
-			shadow = smoothstep(0.0,1.0,shadow);				
-			#endif
+					#if 0
+					shadow = shadowMap.SampleCmpLevelZero(shadowcmp, shadowUV.xy, shadowUV.z - bias, int2(0,0)).x;
+					#else
+					// PCF9
+					shadow = 0;
+					shadow += shadowMap.SampleCmpLevelZero(shadowcmp, shadowUV.xy, shadowUV.z - bias, int2(0,-1)).x;	
+					shadow += shadowMap.SampleCmpLevelZero(shadowcmp, shadowUV.xy, shadowUV.z - bias, int2(1,-1)).x;	
+					shadow += shadowMap.SampleCmpLevelZero(shadowcmp, shadowUV.xy, shadowUV.z - bias, int2(2,-1)).x;	
+					shadow += shadowMap.SampleCmpLevelZero(shadowcmp, shadowUV.xy, shadowUV.z - bias, int2(0,0)).x;	
+					shadow += shadowMap.SampleCmpLevelZero(shadowcmp, shadowUV.xy, shadowUV.z - bias, int2(1,0)).x;	
+					shadow += shadowMap.SampleCmpLevelZero(shadowcmp, shadowUV.xy, shadowUV.z - bias, int2(2,0)).x;	
+					shadow += shadowMap.SampleCmpLevelZero(shadowcmp, shadowUV.xy, shadowUV.z - bias, int2(0,+1)).x;	
+					shadow += shadowMap.SampleCmpLevelZero(shadowcmp, shadowUV.xy, shadowUV.z - bias, int2(1,+1)).x;	
+					shadow += shadowMap.SampleCmpLevelZero(shadowcmp, shadowUV.xy, shadowUV.z - bias, int2(2,+1)).x;
+					shadow /= 9.0f;	
+					shadow = smoothstep(0.0,1.0,shadow);				
+					#endif
+				}
+				#endif		
+
+				shadow = 1.0f - ((1.0f-shadow) * si);
+			}
+
+			//output.diffuse = cosLi;
+			output.addLightContribution(Lo, cosLo, cosLi, Lr, F0, Li, Lradiance * shadow, _worldNormal, roughness, metalness);
 		}
-
-		#endif
-
-		//output.diffuse = shadow;
-		output.addLightContribution(Lo, cosLo, Lr, F0, Li, Lradiance * shadow, _worldNormal, roughness, metalness);
 	}	
 
 	for(uint i=0; i < lightsHeader.getOmniCount(); ++i)
@@ -224,41 +245,51 @@ LightingResult computeDirectLighting(ViewConstants _viewConstants, float3 _eyePo
 
 		float3 color = omni.getColor();
 		float3 Li = normalize(lightDir);
-		float3 Lradiance = att * color;
+		float cosLi = max(0.0f, dot(_worldNormal, Li));
 
-		float shadow = 1.0f;
-
-		#ifdef _RAYTRACING
-		RayDesc ray;
-		ray.Origin    = _worldPos;
-		ray.Direction = lightDir;
-		ray.TMin      = 0.03f;
-		ray.TMax      = 10;
-
-		RayQuery<RAY_FLAG_FORCE_OPAQUE> query;
-		query.TraceRayInline(tlas, 0, 0xff, ray);
-		query.Proceed();
-
-		#ifdef _TOOLMODE
-		rayCount++;
-		#endif
-
-		switch(query.CommittedStatus())
+		if (cosLi > 0.0f)
 		{
-			case COMMITTED_TRIANGLE_HIT:
-				shadow = 0;     
-				break;
-		}
-		#endif // _RAYTRACING
+			float3 Lradiance = att * color;
+			float shadow = 1.0f;
+			float si = omni.getShadowInstensity();
 
-		output.addLightContribution(Lo, cosLo, Lr, F0, Li, Lradiance * shadow, _worldNormal, roughness, metalness);
+			if (si > 0.0f)
+			{
+				#ifdef _RAYTRACING
+				RayDesc ray;
+				ray.Origin    = _worldPos;
+				ray.Direction = lightDir;
+				ray.TMin      = 0.0325f;
+				ray.TMax      = 10;
+
+				RayQuery<RAY_FLAG_FORCE_OPAQUE> query;
+				query.TraceRayInline(tlas, 0, 0xff, ray);
+				query.Proceed();
+
+				#ifdef _TOOLMODE
+				rayCount++;
+				#endif
+
+				switch(query.CommittedStatus())
+				{
+					case COMMITTED_TRIANGLE_HIT:
+						shadow = 0;     
+						break;
+				}
+				#endif // _RAYTRACING
+
+				shadow = 1.0f - ((1.0f-shadow) * si);
+			}
+
+			output.addLightContribution(Lo, cosLo, cosLi, Lr, F0, Li, Lradiance * shadow, _worldNormal, roughness, metalness);
+		}
     }	
 
 	#ifdef _TOOLMODE
 	switch(_viewConstants.getDisplayMode())
 	{
 		case DisplayMode::Lighting_RayCount:
-			output.diffuse = lerp(float3(0,1,0), float3(1,0,0), rayCount);
+			output.diffuse = heatmapGradient(rayCount, 1.0f, 3.0f, 6.0f);
 			break;
 	}
 	#endif

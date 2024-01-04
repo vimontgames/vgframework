@@ -9,6 +9,7 @@
 #include "gfx/Raytracing/BLAS.h"
 #include "renderer/Renderer.h"
 #include "renderer/View/View.h"
+#include "renderer/View/Shadow/ShadowView.h"
 #include "renderer/Instance/Mesh/MeshInstance.h"
 
 using namespace vg::core;
@@ -215,6 +216,9 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
+    // Not only the visible objects have to be added to TLAS, but also the ones visible from 
+    // shadow casters if raytraced shadows are used for those lights.
+    //--------------------------------------------------------------------------------------
     void RayTracingManager::updateView(gfx::CommandList * _cmdList, View * _view)
     {
         VG_ASSERT(_view);
@@ -231,14 +235,38 @@ namespace vg::renderer
                     VG_INFO("[Renderer] Built TLAS for View \"%s\" in %.2f ms", _view->getName().c_str(), Timer::getEnlapsedTime(startBuildTLAS, Timer::getTick()));
                 }
 
-                const GraphicInstanceList & instances = _view->getCullingJobResult().get(GraphicInstanceListType::Opaque);
                 tlas->reset();
 
                 bool updateTLAS = false;
+
+                const GraphicInstanceList & instances = _view->getCullingJobResult().get(GraphicInstanceListType::Opaque);
+
+                core::set<GraphicInstance *> set;
+
                 for (uint i = 0; i < instances.m_instances.size(); ++i)
                 {
-                    GraphicInstance * instance = (GraphicInstance*)instances.m_instances[i];
-                    updateTLAS |= instance->OnUpdateRayTracing(_cmdList, _view, i);
+                    GraphicInstance * instance = (GraphicInstance *)instances.m_instances[i];
+                    set.insert(instance);
+                }     
+
+                const auto shadowViews = _view->getShadowViews();
+                for (ShadowView * shadowView : shadowViews)
+                {
+                    //VG_ASSERT(shadowView->getLight()->GetShadowType() != ShadowType::None);
+                    const GraphicInstanceList & instances = shadowView->getCullingJobResult().get(GraphicInstanceListType::Opaque);
+
+                    for (uint i = 0; i < instances.m_instances.size(); ++i)
+                    {
+                        GraphicInstance * instance = (GraphicInstance *)instances.m_instances[i];
+                        set.insert(instance);
+                    }
+                }
+
+                uint index = 0;
+                for (GraphicInstance * instance : set)
+                {
+                    updateTLAS |= instance->OnUpdateRayTracing(_cmdList, _view, index);
+                    index++;
                 }
 
                 if (updateTLAS)

@@ -10,11 +10,12 @@ namespace vg::renderer
 
         LightType       GetLightType() const = 0;
 
-        ShadowType      m_shadowType        = ShadowType::None;
+        bool            m_shadow            = false;
         core::float2    m_shadowRange       = core::float2(0.1f, 100.0f);
         float           m_shadowBias        = 0.001f;
         core::uint2     m_shadowSize        = core::uint2(16, 16);
         core::uint2     m_shadowResolution  = core::uint2(1024, 1024);
+        float           m_shadowIntensity   = 1.0f;
         core::float4    m_color             = core::float4(1, 1, 1, 1);
         float           m_intensity         = 1.0f;
     };
@@ -32,15 +33,16 @@ namespace vg::renderer
         bool            Cull                (CullingResult * _cullingResult, View * _view) override;
         bool            OnUpdateRayTracing  (gfx::CommandList * _cmdList, View * _view, core::uint _index) override { return false; }
         LightType       GetLightType        () const = 0;    
-        ShadowType      GetShadowType       () const { return m_shadowType;}
+        bool            IsCastShadow        () const { return m_shadow;}
 
         VG_INLINE float getIntensity() const { return m_intensity; }
 
-        ShadowType      m_shadowType;
+        bool            m_shadow;
         core::float2    m_shadowRange;
         float           m_shadowBias;
         core::uint2     m_shadowSize;
         core::uint2     m_shadowResolution;
+        float           m_shadowIntensity;
         float           m_intensity;
     };
 }

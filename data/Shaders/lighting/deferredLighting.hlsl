@@ -19,14 +19,14 @@ void CS_DeferredLighting(int2 dispatchThreadID : SV_DispatchThreadID)
 
         int3 address = int3(dispatchThreadID.xy, 0);
 
-        float4 albedo = getTexture2D(deferredLightingConstants.getAlbedoGBuffer()).Load(address);
-        float4 normal = getTexture2D(deferredLightingConstants.getNormalGBuffer()).Load(address);
-        float4 pbr = getTexture2D(deferredLightingConstants.getPBRGBuffer()).Load(address);
-
         float depth = getTexture2D(deferredLightingConstants.getDepth()).Load(address).r;
 
-        if (albedo.a <= 0.0f)
+        if (depth >= 1.0f)
             return;
+
+        float4 albedo = getTexture2D(deferredLightingConstants.getAlbedoGBuffer()).Load(address);
+        float4 normal = getTexture2D(deferredLightingConstants.getNormalGBuffer()).Load(address);
+        float4 pbr = getTexture2D(deferredLightingConstants.getPBRGBuffer()).Load(address);        
 
         float3 worldPos = viewConstants.getWorldPos(uv, depth);
         float3 camPos = viewConstants.getCameraPos();

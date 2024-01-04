@@ -1,4 +1,5 @@
 #include "ShadowView.h"
+#include "renderer/Instance/Light/LightInstance.h"
 
 #include "renderer/RenderPass/RenderObjects/DepthOnly/ShadowMap/ShadowMapPass.h"
 
@@ -24,11 +25,22 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
+    bool ShadowView::isUsingShadowMap() const
+    {
+        if (m_light)
+            return m_light->m_shadow && !RendererOptions::get()->IsRayTracingEnabled();
+
+        return false;
+    }
+
+    //--------------------------------------------------------------------------------------
     core::string ShadowView::getShadowMapName(const IView * _view) const
     {
+        VG_ASSERT(isUsingShadowMap());
+
         RenderPassContext rc;
-                          rc.m_view = (IView*)this;
-                          rc.m_parent = (IView*)_view;
+        rc.m_view = (IView *)this;
+        rc.m_parent = (IView *)_view;
 
         return rc.getFrameGraphIDEx("ShadowMap");
     }
@@ -36,16 +48,21 @@ namespace vg::renderer
     //--------------------------------------------------------------------------------------
     void ShadowView::RegisterFrameGraph(const gfx::RenderPassContext & _renderPassContext, FrameGraph & _frameGraph)
     {
-        _frameGraph.pushPassGroup(fmt::sprintf("Shadow #%u", _renderPassContext.m_view->GetViewID().index));
+        VG_ASSERT(m_light && m_light->IsCastShadow());
 
-        gfx::RenderPassContext rc = _renderPassContext;
-                               rc.m_view = this;
-                               rc.m_parent = _renderPassContext.m_view;
+        if (isUsingShadowMap())
+        {
+            _frameGraph.pushPassGroup(fmt::sprintf("Shadow #%u", _renderPassContext.m_view->GetViewID().index));
 
-        super::RegisterFrameGraph(rc, _frameGraph);
+            gfx::RenderPassContext rc = _renderPassContext;
+            rc.m_view = this;
+            rc.m_parent = _renderPassContext.m_view;
 
-        _frameGraph.addUserPass(rc, m_shadowMapPass, "ShadowMap");
+            super::RegisterFrameGraph(rc, _frameGraph);
 
-        _frameGraph.popPassGroup();
+            _frameGraph.addUserPass(rc, m_shadowMapPass, "ShadowMap");
+
+            _frameGraph.popPassGroup();
+        }
     }
 }

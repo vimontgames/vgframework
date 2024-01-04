@@ -139,9 +139,10 @@ namespace vg::renderer
                 constants->setColor(directional->getColor().rgb * directional->getIntensity());
                 constants->setDirection(directional->getGlobalMatrix()[2].xyz);
                 constants->setShadowBias(directional->m_shadowBias);
+                constants->setShadowInstensity(directional->m_shadowIntensity);
 
                 auto shadowView = view->findShadowView(directionals[i]);
-                if (shadowView)
+                if (shadowView && shadowView->isUsingShadowMap())
                 {
                     auto shadowMapID = getDepthStencil(shadowView->getShadowMapName(view))->getDepthTextureHandle();
 
@@ -167,6 +168,8 @@ namespace vg::renderer
                 constants->setColor(omni->getColor().rgb * omni->getIntensity());
                 constants->setPosition(omni->getGlobalMatrix()[3].xyz);
                 constants->setRadius(omni->getMaxRadius());
+                constants->setShadowBias(omni->m_shadowBias);
+                constants->setShadowInstensity(omni->m_shadowIntensity);
 
                 auto shadowMapID = ((View *)_renderPassContext.m_view)->findShadowMapID(omnis[i]);
 

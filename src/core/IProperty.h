@@ -239,7 +239,10 @@ namespace vg::core
 //--------------------------------------------------------------------------------------
 #define registerResizeVectorFunc(className, resizeVectorFunc)                                               _desc.RegisterResizeVectorFunc(#className, resizeVectorFunc);
 
-#define registerPropertySeparator(className, label)                                                         _desc.RegisterPropertyLayout(#className, vg::core::IProperty::LayoutElementType::Separator, label, vg::core::IProperty::Flags::None);
+#define registerPropertySeparator(className, label)                                                         _desc.RegisterPropertyLayout(#className, vg::core::IProperty::LayoutElementType::Separator, label, nullptr, vg::core::IProperty::Flags::None);
 
-#define registerPropertyGroupBegin(className, label)                                                        _desc.RegisterPropertyLayout(#className, vg::core::IProperty::LayoutElementType::GroupBegin, label, vg::core::IProperty::Flags::None);
-#define registerPropertyGroupEnd(className)                                                                 _desc.RegisterPropertyLayout(#className, vg::core::IProperty::LayoutElementType::GroupEnd, "", vg::core::IProperty::Flags::None);
+#define registerPropertyGroupBegin(className, label)                                                        _desc.RegisterPropertyLayout(#className, vg::core::IProperty::LayoutElementType::GroupBegin, label, nullptr, vg::core::IProperty::Flags::None);
+#define registerPropertyGroupEnd(className)                                                                 _desc.RegisterPropertyLayout(#className, vg::core::IProperty::LayoutElementType::GroupEnd, "", nullptr, vg::core::IProperty::Flags::None);
+
+#define registerPropertyOptionalGroupBegin(className, propertyName, label)                                  _desc.RegisterPropertyLayout(#className, vg::core::IProperty::LayoutElementType::GroupBegin, label, (bool*)(&((className*)(nullptr))->propertyName), vg::core::IProperty::Flags::Optional);
+#define registerPropertyOptionalGroupEnd(className)                                                         _desc.RegisterPropertyLayout(#className, vg::core::IProperty::LayoutElementType::GroupEnd, "", nullptr, vg::core::IProperty::Flags::Optional);
