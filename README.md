@@ -171,7 +171,7 @@ The external libraries are included with the sources for convenience.
 | optick (*)                 | 1.3.1         | https://github.com/bombomby/optick                                        | MIT    
 | px_sched                   |               | https://github.com/pplux/px                                               | MIT    
 | stb                        |               | https://github.com/nothings/stb                                           | MIT    
-| tinyXML2                   |               | https://github.com/leethomason/tinyxml2                                   | MIT    
+| tinyXML2                   | 10.0.0        | https://github.com/leethomason/tinyxml2/releases/tag/10.0.0               | zlib    
 | UFBX                       |               | https://github.com/ufbx/ufbx                                              | MIT    
 | Vulkan Memory Allocator    | 3.0.1         | https://github.com/GPUOpen-LibrariesAndSDKs/VulkanMemoryAllocator         | MIT    
 | WinPixEventRuntime         | 1.0.200127001 | https://www.nuget.org/packages/WinPixEventRuntime                         | MIT    

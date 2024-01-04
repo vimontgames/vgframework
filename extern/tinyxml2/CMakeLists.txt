@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.15)
-project(tinyxml2 VERSION 9.0.0)
+project(tinyxml2 VERSION 10.0.0)
 
 include(CTest)
 option(tinyxml2_BUILD_TESTING "Build tests for tinyxml2" "${BUILD_TESTING}")
@@ -31,6 +31,7 @@ target_compile_definitions(
     PUBLIC $<$<CONFIG:Debug>:TINYXML2_DEBUG>
     INTERFACE $<$<BOOL:${BUILD_SHARED_LIBS}>:TINYXML2_IMPORT>
     PRIVATE $<$<CXX_COMPILER_ID:MSVC>:_CRT_SECURE_NO_WARNINGS>
+    PUBLIC _FILE_OFFSET_BITS=64
 )
 
 set_target_properties(

@@ -100,7 +100,7 @@ namespace vg::editor
                 { "optick",                 "1.3.1",            "https://github.com/bombomby/optick" },
                 { "px_sched",               "",                 "https://github.com/pplux/px" },
                 { "stb_image",              "",                 "https://github.com/nothings/stb" },
-                { "tinyXML2",               "e45d9d1",          "https://github.com/leethomason/tinyxml2" },
+                { "tinyXML2",               "10.0.0",           "https://github.com/leethomason/tinyxml2" },
                 { "UFBX",                   "0.5.0-30f035b",    "https://github.com/ufbx/ufbx" },
                 { "VulkanMemoryAllocator",  "3.0.1",            "https://github.com/GPUOpen-LibrariesAndSDKs/VulkanMemoryAllocator" },
                 { "WinPixEventRuntime",     "1.0.200127001",    "https://www.nuget.org/packages/WinPixEventRuntime" },
