@@ -17,7 +17,8 @@ using namespace vg::gfx;
 namespace vg::renderer
 {
     //--------------------------------------------------------------------------------------
-    DebugDraw::DebugDraw()
+    DebugDraw::DebugDraw() :
+        m_lines(1024*16)
     {
         auto * device = Device::get();
         const RootSignatureTableDesc & bindlessTable = device->getBindlessTable()->getTableDesc();
@@ -570,94 +571,61 @@ namespace vg::renderer
     //--------------------------------------------------------------------------------------
     void DebugDraw::AddLine(const core::float3 & _beginPos, const core::float3 & _endPos, core::u32 _color, const core::float4x4 & _world)
     {
-        AddLine({ _beginPos , _endPos, _color, _world });
+        addLine(_beginPos, _endPos, _color, _world);
     }
 
     //--------------------------------------------------------------------------------------
-    void DebugDraw::AddLine(const LineDesc & _lineDesc)
+    void DebugDraw::addLine(const core::float3 & _beginPos, const core::float3 & _endPos, core::u32 _color, const core::float4x4 & _world)
     {
-        lock_guard<mutex> lock(m_debugDrawMutex);
+        DebugDrawLineData & line = m_lines.push_empty_atomic();
 
-        addLine(_lineDesc);        
-    }   
-
-    //--------------------------------------------------------------------------------------
-    void DebugDraw::AddLines(const core::vector<LineDesc> & _linesDesc)
-    {
-        VG_PROFILE_CPU("Add Lines");
-
-        lock_guard<mutex> lock(m_debugDrawMutex);
-
-        m_lines.reserve(m_lines.size() + _linesDesc.size());
-
-        for (const LineDesc & lineDesc : _linesDesc)
-            addLine(lineDesc);
-    }
-
-    //--------------------------------------------------------------------------------------
-    inline void DebugDraw::addLine(const LineDesc & _lineDesc)
-    {
-        DebugDrawLineData & line = m_lines.push_empty();
-        line.world = _lineDesc.world;
-        line.beginPos = _lineDesc.beginPos;
-        line.beginColor = _lineDesc.color;
-        line.endPos = _lineDesc.endPos;
-        line.endColor = _lineDesc.color;
+        line.world = _world;
+        line.beginPos = _beginPos;
+        line.beginColor = _color;
+        line.endPos = _endPos;
+        line.endColor = _color;
     }
 
     //--------------------------------------------------------------------------------------
     void DebugDraw::AddWireframeBox(const float3 & _minPos, const float3 & _maxPos, u32 _color, const float4x4 & _world)
     {
-        AddWireframeBox(IDebugDraw::BoxDesc(_minPos, _maxPos, _color, _world));        
-    }
+        #if 0
 
-    //--------------------------------------------------------------------------------------
-    void DebugDraw::AddWireframeBox(const BoxDesc & _boxDesc)
-    {
-        addWireframeBox(_boxDesc);
-    }
+        addLine(float3(_minPos.x, _minPos.y, _minPos.z), float3(_maxPos.x, _minPos.y, _minPos.z), _color,_world);
+        addLine(float3(_maxPos.x, _minPos.y, _minPos.z), float3(_maxPos.x, _maxPos.y, _minPos.z), _color,_world);
+        addLine(float3(_maxPos.x, _maxPos.y, _minPos.z), float3(_minPos.x, _maxPos.y, _minPos.z), _color,_world);
+        addLine(float3(_minPos.x, _maxPos.y, _minPos.z), float3(_minPos.x, _minPos.y, _minPos.z), _color,_world);
+                                                                                                       
+        addLine(float3(_minPos.x, _minPos.y, _minPos.z), float3(_minPos.x, _minPos.y, _maxPos.z), _color,_world);
+        addLine(float3(_maxPos.x, _minPos.y, _minPos.z), float3(_maxPos.x, _minPos.y, _maxPos.z), _color,_world);
+        addLine(float3(_maxPos.x, _maxPos.y, _minPos.z), float3(_maxPos.x, _maxPos.y, _maxPos.z), _color,_world);
+        addLine(float3(_minPos.x, _maxPos.y, _minPos.z), float3(_minPos.x, _maxPos.y, _maxPos.z), _color,_world);
+                                                                                                      
+        addLine(float3(_minPos.x, _minPos.y, _maxPos.z), float3(_maxPos.x, _minPos.y, _maxPos.z), _color,_world);
+        addLine(float3(_maxPos.x, _minPos.y, _maxPos.z), float3(_maxPos.x, _maxPos.y, _maxPos.z), _color,_world);
+        addLine(float3(_maxPos.x, _maxPos.y, _maxPos.z), float3(_minPos.x, _maxPos.y, _maxPos.z), _color,_world);
+        addLine(float3(_minPos.x, _maxPos.y, _maxPos.z), float3(_minPos.x, _minPos.y, _maxPos.z), _color,_world);
 
-    //--------------------------------------------------------------------------------------
-    void DebugDraw::AddWireframeBoxes(const core::vector< BoxDesc> & _boxesDesc)
-    {
-        VG_PROFILE_CPU("Add Boxes");
+        #else
 
-        core::vector<LineDesc> lines;
-        lines.reserve(_boxesDesc.size() * 12);
+        DebugDrawLineData * lines = m_lines.alloc(12);
 
-        for (const BoxDesc & box : _boxesDesc)
-            buildBoxLines(box, lines);
+        lines[0x0] = { _world, float3(_minPos.x, _minPos.y, _minPos.z), _color, float3(_maxPos.x, _minPos.y, _minPos.z), _color };
+        lines[0x1] = { _world, float3(_maxPos.x, _minPos.y, _minPos.z), _color, float3(_maxPos.x, _maxPos.y, _minPos.z), _color };
+        lines[0x2] = { _world, float3(_maxPos.x, _maxPos.y, _minPos.z), _color, float3(_minPos.x, _maxPos.y, _minPos.z), _color };
+        lines[0x3] = { _world, float3(_minPos.x, _maxPos.y, _minPos.z), _color, float3(_minPos.x, _minPos.y, _minPos.z), _color };
+                                                                       
+        lines[0x4] = { _world, float3(_minPos.x, _minPos.y, _minPos.z), _color, float3(_minPos.x, _minPos.y, _maxPos.z), _color };
+        lines[0x5] = { _world, float3(_maxPos.x, _minPos.y, _minPos.z), _color, float3(_maxPos.x, _minPos.y, _maxPos.z), _color };
+        lines[0x6] = { _world, float3(_maxPos.x, _maxPos.y, _minPos.z), _color, float3(_maxPos.x, _maxPos.y, _maxPos.z), _color };
+        lines[0x7] = { _world, float3(_minPos.x, _maxPos.y, _minPos.z), _color, float3(_minPos.x, _maxPos.y, _maxPos.z), _color };
+                                                                      
+        lines[0x8] = { _world, float3(_minPos.x, _minPos.y, _maxPos.z), _color, float3(_maxPos.x, _minPos.y, _maxPos.z), _color };
+        lines[0x9] = { _world, float3(_maxPos.x, _minPos.y, _maxPos.z), _color, float3(_maxPos.x, _maxPos.y, _maxPos.z), _color };
+        lines[0xA] = { _world, float3(_maxPos.x, _maxPos.y, _maxPos.z), _color, float3(_minPos.x, _maxPos.y, _maxPos.z), _color };
+        lines[0xB] = { _world, float3(_minPos.x, _maxPos.y, _maxPos.z), _color, float3(_minPos.x, _minPos.y, _maxPos.z), _color };
 
-        AddLines(lines);
-    }
-
-    //--------------------------------------------------------------------------------------
-    inline void DebugDraw::buildBoxLines(const BoxDesc & _boxDesc, core::vector<LineDesc> & _lines)
-    {
-        _lines.push_back(LineDesc(float3(_boxDesc.minPos.x, _boxDesc.minPos.y, _boxDesc.minPos.z), float3(_boxDesc.maxPos.x, _boxDesc.minPos.y, _boxDesc.minPos.z), _boxDesc.color, _boxDesc.world));
-        _lines.push_back(LineDesc(float3(_boxDesc.maxPos.x, _boxDesc.minPos.y, _boxDesc.minPos.z), float3(_boxDesc.maxPos.x, _boxDesc.maxPos.y, _boxDesc.minPos.z), _boxDesc.color, _boxDesc.world));
-        _lines.push_back(LineDesc(float3(_boxDesc.maxPos.x, _boxDesc.maxPos.y, _boxDesc.minPos.z), float3(_boxDesc.minPos.x, _boxDesc.maxPos.y, _boxDesc.minPos.z), _boxDesc.color, _boxDesc.world));
-        _lines.push_back(LineDesc(float3(_boxDesc.minPos.x, _boxDesc.maxPos.y, _boxDesc.minPos.z), float3(_boxDesc.minPos.x, _boxDesc.minPos.y, _boxDesc.minPos.z), _boxDesc.color, _boxDesc.world));
-
-        _lines.push_back(LineDesc(float3(_boxDesc.minPos.x, _boxDesc.minPos.y, _boxDesc.minPos.z), float3(_boxDesc.minPos.x, _boxDesc.minPos.y, _boxDesc.maxPos.z), _boxDesc.color, _boxDesc.world));
-        _lines.push_back(LineDesc(float3(_boxDesc.maxPos.x, _boxDesc.minPos.y, _boxDesc.minPos.z), float3(_boxDesc.maxPos.x, _boxDesc.minPos.y, _boxDesc.maxPos.z), _boxDesc.color, _boxDesc.world));
-        _lines.push_back(LineDesc(float3(_boxDesc.maxPos.x, _boxDesc.maxPos.y, _boxDesc.minPos.z), float3(_boxDesc.maxPos.x, _boxDesc.maxPos.y, _boxDesc.maxPos.z), _boxDesc.color, _boxDesc.world));
-        _lines.push_back(LineDesc(float3(_boxDesc.minPos.x, _boxDesc.maxPos.y, _boxDesc.minPos.z), float3(_boxDesc.minPos.x, _boxDesc.maxPos.y, _boxDesc.maxPos.z), _boxDesc.color, _boxDesc.world));
-
-        _lines.push_back(LineDesc(float3(_boxDesc.minPos.x, _boxDesc.minPos.y, _boxDesc.maxPos.z), float3(_boxDesc.maxPos.x, _boxDesc.minPos.y, _boxDesc.maxPos.z), _boxDesc.color, _boxDesc.world));
-        _lines.push_back(LineDesc(float3(_boxDesc.maxPos.x, _boxDesc.minPos.y, _boxDesc.maxPos.z), float3(_boxDesc.maxPos.x, _boxDesc.maxPos.y, _boxDesc.maxPos.z), _boxDesc.color, _boxDesc.world));
-        _lines.push_back(LineDesc(float3(_boxDesc.maxPos.x, _boxDesc.maxPos.y, _boxDesc.maxPos.z), float3(_boxDesc.minPos.x, _boxDesc.maxPos.y, _boxDesc.maxPos.z), _boxDesc.color, _boxDesc.world));
-        _lines.push_back(LineDesc(float3(_boxDesc.minPos.x, _boxDesc.maxPos.y, _boxDesc.maxPos.z), float3(_boxDesc.minPos.x, _boxDesc.minPos.y, _boxDesc.maxPos.z), _boxDesc.color, _boxDesc.world));
-    }
-
-    //--------------------------------------------------------------------------------------
-    inline void DebugDraw::addWireframeBox(const BoxDesc & _boxDesc)
-    {
-        core::vector<LineDesc> lines;
-        lines.reserve(12);
-        buildBoxLines(_boxDesc, lines);
-
-        AddLines(lines);
+        #endif
     }
 
     //--------------------------------------------------------------------------------------
@@ -716,7 +684,7 @@ namespace vg::renderer
     void DebugDraw::endFrame()
     {
         m_lines.clear();
-        m_wireframeBoxes.clear();
+        //m_wireframeBoxes.clear();
         m_icoSpheres.clear();
         m_hemiSpheres.clear();
         m_cylinders.clear();
@@ -743,13 +711,11 @@ namespace vg::renderer
             scheduler->Wait(Renderer::get()->GetJobSync(IRenderer::JobSync::DebugDraw));
         }
 
-        lock_guard<mutex> lock(m_debugDrawMutex);
-
         DrawData & drawData = getDrawData(_view);
 
         // reset
         drawData.m_linesToDraw = 0;
-        drawData.m_wireframeBoxesToDraw = 0;
+        //drawData.m_wireframeBoxesToDraw = 0;
 
         uint_ptr offset = 0;
 
@@ -785,33 +751,33 @@ namespace vg::renderer
                     }
                 }
 
-                for (uint i = 0; i < m_wireframeBoxes.size(); ++i)
-                {
-                    //VG_ASSERT(offset + 12 * sizeof(DebugDrawVertex) < m_debugDrawVBSize);
-                    //
-                    //if (offset + 12 * sizeof(DebugDrawVertex) < m_debugDrawVBSize)
-                    //{
-                    //    const auto & box = m_wireframeBoxes[i];
-                    //
-                    //    DebugDrawVertex * v0 = ((DebugDrawVertex *)(dbgDrawData + offset));
-                    //    float3 pos0 = float3(box.minPos.x, box.minPos.y, box.minPos.z);
-                    //    memcpy(v0->pos, &pos0, sizeof(float) * 3);
-                    //    v0->color = box.color;
-                    //    offset += sizeof(DebugDrawVertex);
-                    //
-                    //    DebugDrawVertex * v1 = ((DebugDrawVertex *)(dbgDrawData + offset));
-                    //    float3 pos1 = float3(box.maxPos.x, box.minPos.y, box.minPos.z);
-                    //    memcpy(v1->pos, &pos1, sizeof(float) * 3);
-                    //    v1->color = box.color;
-                    //    offset += sizeof(DebugDrawVertex);
-                    //
-                    //    DebugDrawVertex * v2 = ((DebugDrawVertex *)(dbgDrawData + offset));
-                    //    float3 pos2 = float3(box.minPos.x, box.minPos.y, box.minPos.z);
-                    //    memcpy(v1->pos, &pos1, sizeof(float) * 3);
-                    //    v1->color = box.color;
-                    //    offset += sizeof(DebugDrawVertex);
-                    //}
-                }
+                //for (uint i = 0; i < m_wireframeBoxes.size(); ++i)
+                //{
+                //    VG_ASSERT(offset + 12 * sizeof(DebugDrawVertex) < m_debugDrawVBSize);
+                //    
+                //    if (offset + 12 * sizeof(DebugDrawVertex) < m_debugDrawVBSize)
+                //    {
+                //        const auto & box = m_wireframeBoxes[i];
+                //    
+                //        DebugDrawVertex * v0 = ((DebugDrawVertex *)(dbgDrawData + offset));
+                //        float3 pos0 = float3(box.minPos.x, box.minPos.y, box.minPos.z);
+                //        memcpy(v0->pos, &pos0, sizeof(float) * 3);
+                //        v0->color = box.color;
+                //        offset += sizeof(DebugDrawVertex);
+                //    
+                //        DebugDrawVertex * v1 = ((DebugDrawVertex *)(dbgDrawData + offset));
+                //        float3 pos1 = float3(box.maxPos.x, box.minPos.y, box.minPos.z);
+                //        memcpy(v1->pos, &pos1, sizeof(float) * 3);
+                //        v1->color = box.color;
+                //        offset += sizeof(DebugDrawVertex);
+                //    
+                //        DebugDrawVertex * v2 = ((DebugDrawVertex *)(dbgDrawData + offset));
+                //        float3 pos2 = float3(box.minPos.x, box.minPos.y, box.minPos.z);
+                //        memcpy(v1->pos, &pos1, sizeof(float) * 3);
+                //        v1->color = box.color;
+                //        offset += sizeof(DebugDrawVertex);
+                //    }
+                //}
             }
             _cmdList->unmap(drawData.m_debugDrawVB);
         }

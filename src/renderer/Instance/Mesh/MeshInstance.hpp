@@ -95,7 +95,7 @@ namespace vg::renderer
                 if (IsSkinned())
                 {
                     if (setSkinFlag(MeshInstance::SkinFlags::SkinLOD0))
-                        _cullingResult->m_sharedOutput->m_skins.push_atomic(this);
+                        _cullingResult->m_sharedOutput->m_skins.push_back_atomic(this);
                 }
 
                 return true;
@@ -468,43 +468,26 @@ namespace vg::renderer
             const auto & nodes = skeleton->getNodes();
             const auto & boneIndices = skeleton->getBoneIndices();
 
-            core::vector<IDebugDraw::LineDesc> lines;
-            lines.reserve(boneIndices.size());
-
-            core::vector<IDebugDraw::BoxDesc> boxes;
-            boxes.reserve(boneIndices.size());
-
-            // build
+            for (uint j = 0; j < boneIndices.size(); ++j)
             {
-                VG_PROFILE_CPU("Build");
+                const int index = boneIndices[j];
 
-                for (uint j = 0; j < boneIndices.size(); ++j)
+                const MeshImporterNode & node = nodes[index];
+
+                const float4x4 matrix = getGlobalMatrix();
+
+                // YUp skeleton displayed as ZUp
+                float4x4 boneMatrix = mul(transpose(node.node_to_world), matrix);
+
+                float3 boxSize = float3(0.01f, 0.01f, 0.01f);
+                dbgDraw->AddWireframeBox(-boxSize, boxSize, 0xFF00FF00, boneMatrix);
+
+                if (-1 != node.parent_index)
                 {
-                    const int index = boneIndices[j];
-
-                    const MeshImporterNode & node = nodes[index];
-
-                    const float4x4 matrix = getGlobalMatrix();
-
-                    // YUp skeleton displayed as ZUp
-                    float4x4 boneMatrix = mul(transpose(node.node_to_world), matrix);
-
-                    float3 boxSize = float3(0.01f, 0.01f, 0.01f);
-                    boxes.push_back(IDebugDraw::BoxDesc(-boxSize, boxSize, 0xFF00FF00, boneMatrix));
-
-                    if (-1 != node.parent_index)
-                    {
-                        const MeshImporterNode & parentNode = nodes[node.parent_index];
-                        float4x4 parentBoneMatrix = mul(transpose(parentNode.node_to_world), matrix);
-                        lines.push_back(IDebugDraw::LineDesc(boneMatrix[3].xyz, parentBoneMatrix[3].xyz, 0xFF00FF00));
-                    }
+                    const MeshImporterNode & parentNode = nodes[node.parent_index];
+                    float4x4 parentBoneMatrix = mul(transpose(parentNode.node_to_world), matrix);
+                    dbgDraw->AddLine(boneMatrix[3].xyz, parentBoneMatrix[3].xyz, 0xFF00FF00);
                 }
-            }
-
-            // add
-            {
-                dbgDraw->AddLines(lines);
-                dbgDraw->AddWireframeBoxes(boxes);
             }
 
             return true;

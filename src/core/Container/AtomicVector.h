@@ -21,26 +21,48 @@ namespace vg::core
         }
 
         //--------------------------------------------------------------------------------------
-        size_t size() const
+        inline size_t capacity()
+        {
+            return m_data.capacity();
+        }
+
+        //--------------------------------------------------------------------------------------
+        inline size_t size() const
         {
             return m_counter;
         }
 
         //--------------------------------------------------------------------------------------
-        const T & operator[] (size_t _index) const
+        inline const T & operator[] (size_t _index) const
         {
-            return m_data[_index];
+            return m_data.data()[_index];
         }
 
         //--------------------------------------------------------------------------------------
         // Only 'push_atomic' is lock-free, 'size' or 'clear' shouldn't be called while the vector is being filled
         //--------------------------------------------------------------------------------------
-        size_t push_atomic(const T & _value)
+        inline size_t push_back_atomic(const T & _value)
         {
             size_t index = m_counter.fetch_add(1);
-            VG_ASSERT(index < size());
-            m_data[index] = _value;
+            VG_ASSERT(index < capacity());
+            m_data.data()[index] = _value;
             return index;
+        }
+
+        //--------------------------------------------------------------------------------------
+        inline T & push_empty_atomic()
+        {
+            size_t index = m_counter.fetch_add(1);
+            VG_ASSERT(index < capacity());
+            return m_data.data()[index];
+        }
+
+        //--------------------------------------------------------------------------------------
+        inline T * alloc(size_t _count)
+        {
+            size_t offset = m_counter.fetch_add(_count);
+            VG_ASSERT(offset < capacity());
+            return &m_data.data()[offset];
         }
 
     private:

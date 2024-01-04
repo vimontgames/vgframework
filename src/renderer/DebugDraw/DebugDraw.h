@@ -1,8 +1,8 @@
 #pragma once
 
-#include "core/Singleton/Singleton.h"
-#include "core/Scheduler/Mutex.h"
 #include "renderer/IDebugDraw.h"
+#include "core/Singleton/Singleton.h"
+#include "core/Container/AtomicVector.h"
 #include "gfx/RootSignature/RootSignature_consts.h"
 #include "gfx/Shader/ShaderKey.h"
 
@@ -31,13 +31,7 @@ namespace vg::renderer
         ~DebugDraw();
 
         void        AddLine                 (const core::float3 & _beginPos, const core::float3 & _endPos, core::u32 _color, const core::float4x4 & _world = core::float4x4::identity()) final override;
-        void        AddLine                 (const LineDesc & _lineDesc) final override;
-        void        AddLines                (const core::vector<LineDesc> & _linesDesc) final override;
-
         void        AddWireframeBox         (const core::float3 & _minPos, const core::float3 & _maxPos, core::u32 _color, const core::float4x4 & _world = core::float4x4::identity()) final override;
-        void        AddWireframeBox         (const BoxDesc & _boxDesc)  final override;
-        void        AddWireframeBoxes       (const core::vector< BoxDesc> & _boxesDesc) final override;
-
         void        AddWireframeSphere      (float _radius, core::u32 _color, const core::float4x4 _world = core::float4x4::identity()) final override;
         void        AddHemisphere           (float _radius, core::u32 _color, const core::float4x4 _world = core::float4x4::identity()) final override;
         void        AddCylinder             (float _radius, float _height, core::u32 _color, const core::float4x4 _world = core::float4x4::identity()) final override;
@@ -63,11 +57,8 @@ namespace vg::renderer
         DrawData &  getDrawData             (const View * _view);
         void        clearDrawData           ();
 
-        inline void addLine                 (const LineDesc & _lineDesc);
-        inline void addWireframeBox         (const BoxDesc & _boxDesc);
+        void        addLine                 (const core::float3 & _beginPos, const core::float3 & _endPos, core::u32 _color, const core::float4x4 & _world);
          
-        inline void buildBoxLines           (const BoxDesc & _boxDesc, core::vector<LineDesc> & _lines);
-
         struct DebugDrawInstanceData
         {
             core::float4x4 world;
@@ -94,16 +85,17 @@ namespace vg::renderer
             core::float3 endPos;
             core::u32 endColor;
         };
-        core::vector<DebugDrawLineData> m_lines;
+        //core::vector<DebugDrawLineData> m_lines;
+        core::atomicvector<DebugDrawLineData> m_lines;
 
-        struct DebugDrawBoxData
-        {
-            core::float4x4 world;
-            core::float3 minPos;
-            core::float3 maxPos;
-            core::u32 color;
-        };
-        core::vector<DebugDrawBoxData>  m_wireframeBoxes;
+        //struct DebugDrawBoxData
+        //{
+        //    core::float4x4 world;
+        //    core::float3 minPos;
+        //    core::float3 maxPos;
+        //    core::u32 color;
+        //};
+        //core::vector<DebugDrawBoxData>  m_wireframeBoxes;
 
         using DebugDrawIcoSphereData = DebugDrawInstanceData;
         core::vector<DebugDrawIcoSphereData>  m_icoSpheres;
@@ -122,11 +114,10 @@ namespace vg::renderer
             core::u32       m_linesVBOffset;
             core::u32       m_linesToDraw = 0;
             
-            core::u32       m_wireframeBoxesOffset;
-            core::u32       m_wireframeBoxesToDraw = 0;
+            //core::u32       m_wireframeBoxesOffset;
+            //core::u32       m_wireframeBoxesToDraw = 0;
         };
 
         core::unordered_map<const View *, DrawData> m_drawData;
-        core::mutex                                 m_debugDrawMutex;
     };
 }
