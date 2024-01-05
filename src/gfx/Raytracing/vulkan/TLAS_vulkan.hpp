@@ -56,8 +56,6 @@ namespace vg::gfx::vulkan
         if (m_VKInstances.empty())
             return;
 
-        VG_PROFILE_GPU("TLAS");
-
         // Update instances
         auto device = gfx::Device::get();
 
@@ -111,7 +109,7 @@ namespace vg::gfx::vulkan
         tlasStructure.instanceCustomIndex = _instanceID;
         tlasStructure.instanceShaderBindingTableRecordOffset = 0;
 
-        tlasStructure.flags = VK_GEOMETRY_INSTANCE_TRIANGLE_FACING_CULL_DISABLE_BIT_KHR;
+        tlasStructure.flags = 0x0;// VK_GEOMETRY_INSTANCE_TRIANGLE_FACING_CULL_DISABLE_BIT_KHR;
         tlasStructure.accelerationStructureReference = _blas->getBuffer()->getResource().getVulkanDeviceAddress();
 
         m_VKInstances.push_back(tlasStructure);

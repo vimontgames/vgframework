@@ -36,6 +36,10 @@ namespace vg::gfx
         gfx::Buffer *               getBuffer   () const { return m_resultBuffer; }
         const BindlessTLASHandle &  getHandle   () const;
 
+        void                        reset       ();
+        void                        build       (gfx::CommandList * _cmdList);
+        void                        addInstance (const gfx::BLAS * _blas, const core::float4x4 & _world, const core::u32 _instanceID);
+
         TLAS();
         ~TLAS();
     };

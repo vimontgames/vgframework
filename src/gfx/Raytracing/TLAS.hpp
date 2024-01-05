@@ -48,4 +48,23 @@ namespace vg::gfx
     {
         return m_bindlessTLASHandle;
     }
+
+    //--------------------------------------------------------------------------------------
+    void TLAS::reset()
+    {
+        super::reset();
+    }
+
+    //--------------------------------------------------------------------------------------
+    void TLAS::build(gfx::CommandList * _cmdList)
+    {
+        VG_PROFILE_GPU("TLAS");
+        super::build(_cmdList);
+    }
+
+    //--------------------------------------------------------------------------------------
+    void TLAS::addInstance(const gfx::BLAS * _blas, const core::float4x4 & _world, const core::u32 _instanceID)
+    {
+        super::addInstance(_blas, _world, 0/*_instanceID*/);
+    }
 }

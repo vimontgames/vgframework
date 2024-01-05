@@ -36,8 +36,6 @@ namespace vg::gfx::dx12
     //--------------------------------------------------------------------------------------
     void TLAS::build(gfx::CommandList * _cmdList)
     {
-        VG_PROFILE_GPU("TLAS");
-
         auto device = gfx::Device::get();
         auto d3d12Device = device->getd3d12Device();
 

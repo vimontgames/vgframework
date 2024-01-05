@@ -288,6 +288,9 @@ LightingResult computeDirectLighting(ViewConstants _viewConstants, float3 _eyePo
 	#ifdef _TOOLMODE
 	switch(_viewConstants.getDisplayMode())
 	{
+		default:
+			break;
+		
 		case DisplayMode::Lighting_RayCount:
 			output.diffuse = heatmapGradient(rayCount, 1.0f, 3.0f, 6.0f);
 			break;
@@ -303,6 +306,9 @@ float3 applyLighting(float3 _albedo, LightingResult _lighting, DisplayMode _disp
 	#ifdef _TOOLMODE
 	switch(_displayMode)
 	{
+		default:
+			break;
+
 		case DisplayMode::Lighting_RayCount:
 		case DisplayMode::Lighting_Diffuse:
 			return _lighting.diffuse.rgb;
