@@ -12,7 +12,9 @@ namespace vg::gfx
     public:
         enum Flags : ShaderKey::Flags
         {
-            // Flags 13..15 are reserved and should be common for all shaders 
+            // Flags 11..15 are reserved and should be common for all shaders 
+            AlphaBlend  = 11,
+            AlphaTest   = 12,
             ZOnly       = 13, 
             RayTracing  = 14,           
             Toolmode    = 15

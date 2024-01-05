@@ -18,6 +18,7 @@ namespace vg::renderer
         bool m_toolmode = false;
         bool m_raytracing = false;
         bool m_wireframe = false;
+        bool m_alphatest = false;
         ShaderPass m_shaderPass;
     };
 }

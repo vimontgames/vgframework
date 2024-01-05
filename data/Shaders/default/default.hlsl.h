@@ -7,20 +7,22 @@ namespace vg::gfx
     class DefaultHLSLDesc : public HLSLDesc
     {
     public:
-        enum Flags : ShaderKey::Flags
-        {
-            // Flags 0..12 are available
-
-            // Flags 13..15 are reserved and should be common for all shaders 
-            ZOnly       = HLSLDesc::Flags::ZOnly,
-            RayTracing  = HLSLDesc::Flags::RayTracing,
-            Toolmode    = HLSLDesc::Flags::Toolmode
-        };
+        //enum Flags : ShaderKey::Flags
+        //{
+        //    // Flags 0..12 are available
+        //
+        //    // Flags 13..15 are reserved and should be common for all shaders 
+        //    ZOnly       = HLSLDesc::Flags::ZOnly,
+        //    RayTracing  = HLSLDesc::Flags::RayTracing,
+        //    Toolmode    = HLSLDesc::Flags::Toolmode
+        //};
 
         DefaultHLSLDesc()
         {
             setFile("default/default.hlsl");
 
+            addFlag(AlphaBlend, ShaderStageFlags::VS | ShaderStageFlags::PS, "_ALPHABLEND");
+            addFlag(AlphaTest, ShaderStageFlags::VS | ShaderStageFlags::PS, "_ALPHATEST");
             addFlag(ZOnly, ShaderStageFlags::VS | ShaderStageFlags::PS, "_ZONLY");
             addFlag(RayTracing, ShaderStageFlags::VS | ShaderStageFlags::PS, "_RAYTRACING");
             addFlag(Toolmode, ShaderStageFlags::VS | ShaderStageFlags::PS, "_TOOLMODE");

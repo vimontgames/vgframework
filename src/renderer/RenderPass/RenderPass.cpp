@@ -29,6 +29,7 @@ using namespace vg::gfx;
 #include "RenderObjects/DepthOnly/DepthPrepass/DepthPrePass.hpp"
 #include "RenderObjects/DepthOnly/ShadowMap/ShadowMapPass.hpp"
 #include "RenderObjects/Forward/ForwardOpaquePass.hpp"
+#include "RenderObjects/Forward/ForwardTransparentPass.hpp"
 #include "RenderObjects/Deferred/DeferredOpaquePass.hpp"
 #include "RenderObjects/Editor/EditorPass.hpp"
 

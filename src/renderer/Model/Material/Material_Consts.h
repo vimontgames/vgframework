@@ -2,10 +2,11 @@
 
 namespace vg::renderer
 {
-    enum MaterialFlags : core::u32
+    enum SurfaceType : core::u8
     {
-        AlphaTest   = 0x00000001,
-        AlphaBlend  = 0x00000002
+        Opaque      = 0,
+        AlphaTest,
+        AlphaBlend
     };
 
     enum class MaterialTextureType : core::u8

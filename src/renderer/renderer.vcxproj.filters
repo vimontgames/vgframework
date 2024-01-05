@@ -396,6 +396,12 @@
     <ClInclude Include="RenderPass\RenderObjects\DepthOnly\ShadowMap\ShadowMapPass.hpp">
       <Filter>Pass\RenderObjects\DepthOnly\ShadowMap</Filter>
     </ClInclude>
+    <ClInclude Include="RenderPass\RenderObjects\Forward\ForwardTransparentPass.h">
+      <Filter>Pass\RenderObjects\Forward</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderPass\RenderObjects\Forward\ForwardTransparentPass.hpp">
+      <Filter>Pass\RenderObjects\Forward</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Pass">

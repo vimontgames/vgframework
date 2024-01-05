@@ -23,6 +23,7 @@ namespace vg::renderer
         All = 0,
 
         Opaque,
+        AlphaTest,
         Transparent
     };
  

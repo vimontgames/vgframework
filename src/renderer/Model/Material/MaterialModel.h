@@ -26,7 +26,8 @@ namespace vg
         {
             ZOnly = 0,
             Forward,
-            Deferred
+            Deferred,
+            Transparent
         };
 
         class MaterialModel : public IMaterialModel
@@ -44,8 +45,10 @@ namespace vg
 
             virtual void                Setup                   (const RenderContext & _renderContext, gfx::CommandList * _cmdList, RootConstants3D * _root3DConstants, core::uint _index) const = 0;
 
+            VG_INLINE SurfaceType       getSurfaceType          () const { return m_surfaceType; }
+
         protected:
-            MaterialFlags               m_flags;
+            SurfaceType                 m_surfaceType;
             gfx::RootSignatureHandle    m_rootSignature;
             gfx::ShaderKey              m_shaderKey[core::enumCount<ShaderPass>()];
         };

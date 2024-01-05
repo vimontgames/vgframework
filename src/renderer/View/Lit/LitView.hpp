@@ -3,6 +3,7 @@
 #include "renderer/RenderPass/Render2D/Background/BackgroundPass.h"
 #include "renderer/RenderPass/RenderObjects/DepthOnly/DepthPrepass/DepthPrePass.h"
 #include "renderer/RenderPass/RenderObjects/Forward/ForwardOpaquePass.h"
+#include "renderer/RenderPass/RenderObjects/Forward/ForwardTransparentPass.h"
 #include "renderer/RenderPass/RenderObjects/Deferred/DeferredOpaquePass.h"
 #include "renderer/RenderPass/RenderObjects/Editor/EditorPass.h"
 #include "renderer/RenderPass/Compute/ComputePostProcess/ComputePostProcessPass.h"
@@ -24,6 +25,7 @@ namespace vg::renderer
         m_depthPrePass = new DepthPrePass();
         m_backgroundPass = new BackgroundPass();
         m_forwardOpaquePass = new ForwardOpaquePass();
+        m_forwardTransparentPass = new ForwardTransparentPass();
         m_deferredOpaquePass = new DeferredOpaquePass();
         m_deferredLightingPass = new ComputeDeferredLightingPass();
         m_editorPass = new EditorPass();
@@ -38,6 +40,7 @@ namespace vg::renderer
         VG_SAFE_RELEASE(m_depthPrePass);
         VG_SAFE_RELEASE(m_backgroundPass);
         VG_SAFE_RELEASE(m_forwardOpaquePass);
+        VG_SAFE_RELEASE(m_forwardTransparentPass);
         VG_SAFE_RELEASE(m_deferredOpaquePass);
         VG_SAFE_RELEASE(m_deferredLightingPass);
         VG_SAFE_RELEASE(m_editorPass);
@@ -103,7 +106,9 @@ namespace vg::renderer
                 // Then compute deferred shading to "Color" ("Color" must be an UAV *and* RenderTarget)
                 _frameGraph.addUserPass(_renderPassContext, m_deferredLightingPass, "DeferredLightingPass");
                 break;
-        }       
+        }      
+
+        _frameGraph.addUserPass(_renderPassContext, m_forwardTransparentPass, "ForwardTransparent");
 
         // Render editor display to "Color"
         if (toolmode)

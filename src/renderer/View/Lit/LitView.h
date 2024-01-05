@@ -7,6 +7,7 @@ namespace vg::renderer
     class BackgroundPass;
     class DepthPrePass;
     class ForwardOpaquePass;
+    class ForwardTransparentPass;
     class DeferredOpaquePass;
     class ComputeDeferredLightingPass;
     class EditorPass;
@@ -35,6 +36,7 @@ namespace vg::renderer
         BackgroundPass *                m_backgroundPass            = nullptr;
         DepthPrePass *                  m_depthPrePass              = nullptr;
         ForwardOpaquePass *             m_forwardOpaquePass         = nullptr;
+        ForwardTransparentPass *        m_forwardTransparentPass    = nullptr;
         DeferredOpaquePass *            m_deferredOpaquePass        = nullptr;
         ComputeDeferredLightingPass *   m_deferredLightingPass      = nullptr;
         EditorPass *                    m_editorPass                = nullptr;

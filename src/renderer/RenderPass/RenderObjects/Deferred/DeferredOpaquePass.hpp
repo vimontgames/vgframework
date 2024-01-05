@@ -87,8 +87,6 @@ namespace vg::renderer
         renderContext.m_toolmode = view->getViewID().target == gfx::ViewTarget::Editor || options->isToolModeEnabled();
         renderContext.m_shaderPass = ShaderPass::Deferred;
 
-        const GraphicInstanceList & opaqueInstances = view->getCullingJobResult().get(GraphicInstanceListType::Opaque);
-
         // Default pass states
         RasterizerState rs(FillMode::Solid, CullMode::None);
         BlendState bs(BlendFactor::One, BlendFactor::Zero, BlendOp::Add);
@@ -102,6 +100,19 @@ namespace vg::renderer
         _cmdList->setBlendState(bs);
         _cmdList->setDepthStencilState(ds);
 
-        DrawGraphicInstances(renderContext, _cmdList, opaqueInstances);
+        // Render full opaque then alphatest
+        const GraphicInstanceListType opaqueLists[] =
+        {
+            GraphicInstanceListType::Opaque,
+            GraphicInstanceListType::AlphaTest
+        };
+
+        for (uint i = 0; i < countof(opaqueLists); ++i)
+        {
+            const auto list = (GraphicInstanceListType)opaqueLists[i];
+            const GraphicInstanceList & instances = view->getCullingJobResult().get(list);
+            renderContext.m_alphatest = (GraphicInstanceListType::AlphaTest == list) ? true : false;
+            DrawGraphicInstances(renderContext, _cmdList, instances);
+        }
     }
 }

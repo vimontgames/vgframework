@@ -155,6 +155,8 @@
     <ClInclude Include="RenderPass\RenderObjects\Editor\EditorPass.hpp" />
     <ClInclude Include="RenderPass\RenderObjects\Forward\ForwardOpaquePass.h" />
     <ClInclude Include="RenderPass\RenderObjects\Forward\ForwardOpaquePass.hpp" />
+    <ClInclude Include="RenderPass\RenderObjects\Forward\ForwardTransparentPass.h" />
+    <ClInclude Include="RenderPass\RenderObjects\Forward\ForwardTransparentPass.hpp" />
     <ClInclude Include="RenderPass\RenderObjects\RenderObjectsPass.h" />
     <ClInclude Include="RenderPass\RenderObjects\RenderObjectsPass.hpp" />
     <ClInclude Include="RenderPass\RenderPass.h" />

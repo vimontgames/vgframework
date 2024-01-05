@@ -4,7 +4,7 @@
 
 namespace vg::renderer
 {
-    enum MaterialFlags : core::u32;
+    enum SurfaceType : core::u8;
     class IMaterialModel;
 }
 
@@ -23,10 +23,12 @@ namespace vg::engine
 
         virtual renderer::IMaterialModel *  CreateRendererMaterialModel () const = 0;
 
-    protected:
-        renderer::IMaterialModel * getMaterialModel() const;
+        void                                OnPropertyChanged(IObject * _object, const IProperty & _prop, bool _notifyParent) override;
 
-    private:
-        renderer::MaterialFlags m_flags;
+    protected:
+        renderer::IMaterialModel *          getMaterialModel() const;
+
+    protected:
+        renderer::SurfaceType               m_surfaceType;
     };
 }

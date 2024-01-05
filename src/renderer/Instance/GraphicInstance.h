@@ -19,24 +19,25 @@ namespace vg::renderer
         GraphicInstance(const core::string & _name, core::IObject * _parent);
         ~GraphicInstance();
 
-        virtual bool                    SetMaterial         (core::uint _index, IMaterialModel * _materialModel) override;
-        virtual IMaterialModel *        GetMaterial         (core::uint _index) const override;
+        virtual bool                                    SetMaterial         (core::uint _index, IMaterialModel * _materialModel) override;
+        virtual IMaterialModel *                        GetMaterial         (core::uint _index) const override;
 
         // internal
-        bool                            setMaterial         (core::uint _index, MaterialModel * _materialModel);
-        MaterialModel *                 getMaterial         (core::uint _index) const;
+        bool                                            setMaterial         (core::uint _index, MaterialModel * _materialModel);
+        MaterialModel *                                 getMaterial         (core::uint _index) const;
+        VG_INLINE const core::vector<MaterialModel *> & getMaterials        () const { return m_materials;}
 
-        void                            ClearPickingID      () override;
-        void                            SetPickingID        (PickingID _id) override;
-        PickingID                       GetPickingID        () const override;
+        void                                            ClearPickingID      () override;
+        void                                            SetPickingID        (PickingID _id) override;
+        PickingID                                       GetPickingID        () const override;
 
-        virtual bool                    GetAABB             (AABB & _aabb) const = 0;
-        virtual bool                    Cull                (CullingResult * _cullingResult, View * _view) = 0;
+        virtual bool                                    GetAABB             (AABB & _aabb) const = 0;
+        virtual bool                                    Cull                (CullingResult * _cullingResult, View * _view) = 0;
 
-        virtual bool                    OnUpdateRayTracing  (gfx::CommandList * _cmdList, View * _view, core::uint _index) = 0;
+        virtual bool                                    OnUpdateRayTracing  (gfx::CommandList * _cmdList, View * _view, core::uint _index) = 0;
 
     private:
-        PickingID                       m_pickingID;
-        core::vector<MaterialModel *>   m_materials;
+        PickingID                                       m_pickingID;
+        core::vector<MaterialModel *>                   m_materials;
     };
 }

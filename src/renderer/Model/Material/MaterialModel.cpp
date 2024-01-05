@@ -29,7 +29,7 @@ namespace vg::renderer
     {
         super::registerProperties(_desc);
 
-        registerPropertyEnumBitfield(MaterialModel, MaterialFlags, m_flags, "Flags");
+        registerPropertyEnumBitfield(MaterialModel, SurfaceType, m_surfaceType, "Surface Type");
         //registerPropertyEnumArray(MaterialModel, core::float4, MaterialColorType, m_colors, "Colors", IProperty::Flags::Color | IProperty::Flags::NotSaved);
         //registerPropertyEnumArray(MaterialModel, core::IObject*, MaterialTextureType, m_textures, "Textures", IProperty::Flags::None | IProperty::Flags::NotSaved);
 
@@ -39,7 +39,7 @@ namespace vg::renderer
     //--------------------------------------------------------------------------------------
     MaterialModel::MaterialModel(const core::string & _name, core::IObject * _parent) :
         super(_name, _parent),
-        m_flags((MaterialFlags)0x0)
+        m_surfaceType(SurfaceType::Opaque)
     {
         auto * device = Device::get();
 
@@ -55,6 +55,9 @@ namespace vg::renderer
         m_shaderKey[asInteger(ShaderPass::ZOnly)] = ShaderKey(shaderFile, "ZOnly");
         m_shaderKey[asInteger(ShaderPass::Forward)] = ShaderKey(shaderFile, "Forward");
         m_shaderKey[asInteger(ShaderPass::Deferred)] = ShaderKey(shaderFile, "Deferred");
+
+        m_shaderKey[asInteger(ShaderPass::Transparent)] = ShaderKey(shaderFile, "Forward");
+        m_shaderKey[asInteger(ShaderPass::Transparent)].setFlags(DefaultHLSLDesc::AlphaBlend, true);
     }
 
     //--------------------------------------------------------------------------------------

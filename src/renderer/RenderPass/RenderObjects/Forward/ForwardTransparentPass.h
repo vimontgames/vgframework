@@ -5,13 +5,13 @@
 namespace vg::renderer
 {
     //--------------------------------------------------------------------------------------
-    class ForwardOpaquePass : public RenderObjectsPass
+    class ForwardTransparentPass : public RenderObjectsPass
     {
     public:
-        const char * getClassName() const final { return "ForwardOpaquePass"; }
+        const char * getClassName() const final { return "ForwardTransparentPass"; }
 
-        ForwardOpaquePass();
-        ~ForwardOpaquePass();
+        ForwardTransparentPass();
+        ~ForwardTransparentPass();
 
         void Setup(const gfx::RenderPassContext & _renderPassContext, float _dt) override;
         void Render(const gfx::RenderPassContext & _renderPassContext, gfx::CommandList * _cmdList) const override;

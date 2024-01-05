@@ -47,6 +47,8 @@ namespace vg::engine
         IFactory * factory = Kernel::getFactory();
         auto * material = (renderer::IMaterialModel*)factory->createObject("DefaultMaterialModel", "Default");
         material->setParent((IObject*)this);
+
+        material->SetSurfaceType(m_surfaceType);
         
         material->SetColor("AlbedoColor", m_albedoColor);
         material->SetFloat("NormalStrength", m_normalStrength);

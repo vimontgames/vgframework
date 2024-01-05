@@ -67,8 +67,13 @@ namespace vg::renderer
             break;
 
             case ShaderPass::Forward:
+            case ShaderPass::Transparent:
             {
-                BlendState bs(BlendFactor::One, BlendFactor::Zero, BlendOp::Add);
+                BlendState bs;
+                if (_renderContext.m_shaderPass == ShaderPass::Forward)
+                    bs = BlendState(BlendFactor::One, BlendFactor::Zero, BlendOp::Add);
+                else
+                    bs = BlendState(BlendFactor::SrcAlpha, BlendFactor::OneMinusSrcAlpha, BlendOp::Add);
                 _cmdList->setBlendState(bs);
 
                 if (_renderContext.m_raytracing)
@@ -107,7 +112,17 @@ namespace vg::renderer
         }        
 
         _cmdList->setRasterizerState(rs);
+
+        if (_renderContext.m_alphatest)
+            key.setFlags(gfx::DefaultHLSLDesc::AlphaTest);
+
         _cmdList->setShader(key);
+    }
+
+    //--------------------------------------------------------------------------------------
+    void DefaultMaterialModel::SetSurfaceType(SurfaceType _surfaceType)
+    {
+        m_surfaceType = _surfaceType;
     }
 
     //--------------------------------------------------------------------------------------

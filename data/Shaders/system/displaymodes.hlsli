@@ -12,6 +12,7 @@ class DisplayMode : uint
 {
 	None = 0,
 
+    Forward_SurfaceType,
     Forward_MatID,
 	Forward_VSNormal,
     Forward_VSTangent,

@@ -86,10 +86,40 @@ namespace vg::renderer
             {
                 _cullingResult->m_output->add(GraphicInstanceListType::All, this);
 
-                if (1) // TODO
+                bool hasOpaque = false;
+                bool hasAlphaTest = false;
+                bool hasAlphaBlend = false;
+
+                for (auto * material : getMaterials())
+                {
+                    if (material)
+                    {
+                        auto surf = material->getSurfaceType();
+
+                        switch (surf)
+                        {
+                            case SurfaceType::Opaque:
+                                hasOpaque = true;
+                                break;
+
+                            case SurfaceType::AlphaTest:
+                                hasAlphaTest = true;
+                                break;
+
+                            case SurfaceType::AlphaBlend:
+                                hasAlphaBlend = true;
+                                break;
+                        }
+                    }
+                }
+
+                if (hasOpaque)
                     _cullingResult->m_output->add(GraphicInstanceListType::Opaque, this);
 
-                if (0) // TODO
+                if (hasAlphaTest)
+                    _cullingResult->m_output->add(GraphicInstanceListType::AlphaTest, this);
+
+                if (hasAlphaBlend)
                     _cullingResult->m_output->add(GraphicInstanceListType::Transparent, this);
 
                 if (IsSkinned())
@@ -167,18 +197,60 @@ namespace vg::renderer
             for (uint i = 0; i < batches.size(); ++i)
             {
                 const auto & batch = batches[i];
+                bool draw = false;
 
                 // Setup material 
                 const MaterialModel * material = getMaterial(i);
                 if (nullptr != material)
-                    material->Setup(_renderContext, _cmdList, &root3D, i);
+                {
+                    auto surfaceType = material->getSurfaceType();
+
+                    switch (_renderContext.m_shaderPass)
+                    {
+                        default:
+                            VG_ASSERT_ENUM_NOT_IMPLEMENTED(_renderContext.m_shaderPass);
+                            break;
+
+                        case ShaderPass::ZOnly:
+                        case ShaderPass::Forward:
+                        case ShaderPass::Deferred:
+                        {
+                            // Do not render transparent material in opaque passes
+                            if (SurfaceType::AlphaBlend != surfaceType)
+                            {
+                                if (_renderContext.m_alphatest == (SurfaceType::AlphaTest == surfaceType))
+                                {
+                                    material->Setup(_renderContext, _cmdList, &root3D, i);
+                                    draw = true;
+                                }
+                            }
+                        }
+                        break;
+
+                        case ShaderPass::Transparent:
+                        {
+                            if (SurfaceType::AlphaBlend == surfaceType)
+                            {
+                                material->Setup(_renderContext, _cmdList, &root3D, i);
+                                draw = true;
+                            }
+                        }
+                        break;
+                    }                    
+                }
                 else
+                {
+                    // Assume default material is opaque only
                     renderer->getDefaultMaterial()->Setup(_renderContext, _cmdList, &root3D, i);
+                }
 
-                root3D.color *= getColor();
+                if (draw)
+                {
+                    root3D.color *= getColor();
 
-                _cmdList->setGraphicRootConstants(0, (u32 *)&root3D, RootConstants3DCount);
-                _cmdList->drawIndexed(batch.count, batch.offset);
+                    _cmdList->setGraphicRootConstants(0, (u32 *)&root3D, RootConstants3DCount);
+                    _cmdList->drawIndexed(batch.count, batch.offset);
+                }
             }
         }
     }

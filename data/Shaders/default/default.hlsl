@@ -134,6 +134,7 @@ PS_Output PS_Forward(VS_Output _input)
     LightingResult lighting = computeDirectLighting(viewConstants, camPos, worldPos, albedo.rgb, worldNormal.xyz, pbr);
 
     output.color0.rgb = applyLighting(albedo.rgb, lighting, viewConstants.getDisplayMode());
+    output.color0.a = albedo.a; 
     
     #if _TOOLMODE && !_ZONLY
 
@@ -157,10 +158,18 @@ PS_Output PS_Forward(VS_Output _input)
 
     #endif // _TOOLMODE
 
+    #if _ALPHATEST
+    clip(output.color0.a-0.5f); 
+    #endif
+
     #if _ZONLY
     output.color0 = (float4)0.0f;
     #endif
-                
+    
+    #if !_ALPHABLEND
+    output.color0.a = 1.0f;           
+    #endif 
+
     return output;
 }
 
@@ -208,10 +217,6 @@ PS_OutputDeferred PS_Deferred(VS_Output _input)
 {
     PS_OutputDeferred output = (PS_OutputDeferred)0;
 
-    #if _ZONLY
-    return output;
-    #endif
-
     ViewConstants viewConstants;
     viewConstants.Load(getBuffer(RESERVEDSLOT_BUFSRV_VIEWCONSTANTS));
 
@@ -230,7 +235,7 @@ PS_OutputDeferred PS_Deferred(VS_Output _input)
     
     float3 worldNormal = getWorldNormal(normal, _input.tan, _input.bin, _input.nrm, rootConstants3D.getWorldMatrix());
 
-    output.albedo = float4(albedo.rgb, 1.0f);
+    output.albedo = float4(albedo.rgb, albedo.a);
     output.normal = float4(worldNormal.xyz, 1.0f);
     output.pbr = pbr;
 
@@ -252,5 +257,13 @@ PS_OutputDeferred PS_Deferred(VS_Output _input)
     }
     #endif // _TOOLMODE && !_ZONLY
 
+    #if _ALPHATEST
+    clip(output.albedo.a-0.5f); 
+    #endif
+
+    #if _ZONLY
+    output = (PS_OutputDeferred)0;
+    #endif
+    
     return output;
 }

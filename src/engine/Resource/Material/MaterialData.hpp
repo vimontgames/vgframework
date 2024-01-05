@@ -9,7 +9,7 @@ namespace vg::engine
     {
         super::registerProperties(_desc);
 
-        registerPropertyEnumBitfield(MaterialData, renderer::MaterialFlags, m_flags, "Flags");
+        registerPropertyEnum(MaterialData, renderer::SurfaceType, m_surfaceType, "Surface Type");
         
         return true;
     }
@@ -17,7 +17,7 @@ namespace vg::engine
     //--------------------------------------------------------------------------------------
     MaterialData::MaterialData(const core::string & _name, IObject * _parent) :
         super(_name, _parent),
-        m_flags((renderer::MaterialFlags)0)
+        m_surfaceType(renderer::SurfaceType::Opaque)
     {
 
     }
@@ -36,5 +36,16 @@ namespace vg::engine
         renderer::IMaterialModel * materialModel = parent->m_materialModel;
         VG_ASSERT(materialModel);
         return materialModel;
+    }
+
+    //--------------------------------------------------------------------------------------
+    void MaterialData::OnPropertyChanged(IObject * _object, const IProperty & _prop, bool _notifyParent)
+    {
+        auto * material = getMaterialModel();
+
+        if (!strcmp(_prop.getName(), "m_surfaceType"))
+            material->SetSurfaceType(m_surfaceType);
+
+        super::OnPropertyChanged(_object, _prop, _notifyParent);
     }
 }
