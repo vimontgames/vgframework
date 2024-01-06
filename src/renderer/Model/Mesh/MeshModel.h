@@ -7,6 +7,10 @@ namespace vg::gfx
 {
     class Buffer;
     class BLAS;
+
+    using BLASCollectionKey = core::u64;
+    class BLASCollection;
+    using BLASCollectionMap = core::unordered_map<BLASCollectionKey, BLASCollection *>;
 }
 
 namespace vg::renderer
@@ -29,8 +33,8 @@ namespace vg::renderer
         void                            setSkeleton             (Skeleton * _skeleton);
         const Skeleton *                getSkeleton             () const;
 
-        void                            setBLAS                 (gfx::BLAS * _blas);
-        gfx::BLAS *                     getBLAS                 () const;
+        void                            clearBLASes             ();
+        gfx::BLASCollectionMap &        getBLASCollectionMap    () { return m_BLASCollectionMap; }
 
         static MeshModel *              createFromImporterData  (const MeshImporterData & _data);
 
@@ -40,6 +44,6 @@ namespace vg::renderer
     private:
         MeshGeometry *                  m_geometry  = nullptr;
         Skeleton *                      m_skeleton  = nullptr;
-        gfx::BLAS *                     m_blas      = nullptr;
+        gfx::BLASCollectionMap          m_BLASCollectionMap;
     };
 }

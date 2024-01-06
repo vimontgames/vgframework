@@ -1,14 +1,9 @@
 #pragma once
 
+#include "gfx/Raytracing/RayTracing_consts.h"
+
 namespace vg::renderer
 {
-    enum SurfaceType : core::u8
-    {
-        Opaque      = 0,
-        AlphaTest,
-        AlphaBlend
-    };
-
     enum class MaterialTextureType : core::u8
     {
         Albedo = 0,

@@ -43,6 +43,7 @@ namespace vg::core
 
 		virtual u32						    addRef		        () = 0;
 		virtual u32						    release		        () = 0;
+        virtual u32                         getRefCount         () const = 0;
 
 		// Added alias so that we can use the same 'VG_SAFE_RELEASE' macro everywhere
 		virtual u32						    Release		        () = 0;

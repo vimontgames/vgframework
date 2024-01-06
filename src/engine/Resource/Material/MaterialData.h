@@ -2,9 +2,13 @@
 
 #include "core/Object/Object.h"
 
+namespace vg::gfx
+{
+    enum class SurfaceType : core::u8;
+}
+
 namespace vg::renderer
 {
-    enum SurfaceType : core::u8;
     class IMaterialModel;
 }
 
@@ -29,6 +33,6 @@ namespace vg::engine
         renderer::IMaterialModel *          getMaterialModel() const;
 
     protected:
-        renderer::SurfaceType               m_surfaceType;
+        gfx::SurfaceType                    m_surfaceType;
     };
 }

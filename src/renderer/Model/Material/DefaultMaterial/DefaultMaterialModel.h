@@ -12,7 +12,7 @@ namespace vg::renderer
         DefaultMaterialModel(const core::string & _name, IObject * _parent);
         ~DefaultMaterialModel();
 
-        void SetSurfaceType(SurfaceType _surfaceType) final override;
+        void SetSurfaceType(gfx::SurfaceType _surfaceType) final override;
         void SetColor(const core::string & _name, core::float4 _value) final override;
         void SetTexture(const core::string & _name, gfx::ITexture * _value) final override;
         void SetFloat(const core::string & _name, float _value) final override;

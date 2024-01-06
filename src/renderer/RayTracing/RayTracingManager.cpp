@@ -7,10 +7,12 @@
 #include "renderer/Geometry/Mesh/MeshGeometry.h"
 #include "gfx/Raytracing/TLAS.h"
 #include "gfx/Raytracing/BLAS.h"
+#include "gfx/Raytracing/BLASCollection.h"
 #include "renderer/Renderer.h"
 #include "renderer/View/View.h"
 #include "renderer/View/Shadow/ShadowView.h"
 #include "renderer/Instance/Mesh/MeshInstance.h"
+#include "renderer/Model/Material/MaterialModel.h"
 
 using namespace vg::core;
 
@@ -40,47 +42,18 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    void RayTracingManager::createMeshModelBLAS(MeshModel * _meshModel)
-    {
-        // Create BLAS from model geometry
-        auto blas = new gfx::BLAS(gfx::BLASUpdateType::Static);
-
-        const MeshGeometry * meshGeo = _meshModel->getGeometry();
-        gfx::Buffer * ib = meshGeo->getIndexBuffer();
-        const uint ibOffset = meshGeo->getIndexBufferOffset();
-
-        gfx::Buffer * vb = meshGeo->getVertexBuffer();
-        const uint vbOffset = meshGeo->getVertexBufferOffset();
-
-        VertexFormat vtxFmt = meshGeo->getVertexFormat();
-        const uint vertexStride = getVertexFormatStride(vtxFmt);
-
-        const auto batches = meshGeo->batches();
-        for (uint j = 0; j < batches.size(); ++j)
-        {
-            const Batch & batch = batches[j];
-            blas->addIndexedGeometry(ib, ibOffset + batch.offset, batch.count, vb, vbOffset, vb->getBufDesc().getElementCount(), vertexStride);
-        }
-
-        blas->init();
-
-        _meshModel->setBLAS(blas);
-
-        updateMeshModel(_meshModel);
-    }
-
+    // Can't create BLASes right after enabling RayTracing because the actual BLASes to use 
+    // will depend on the materials' surface types, so instead we create a BLASCollection 
+    // hash that will be populated on-demand.
     //--------------------------------------------------------------------------------------
     void RayTracingManager::onEnableRayTracing()
     {
         VG_INFO("[Renderer] RayTracing is enabled");
-
-        // Create BLAS for mesh models
-        for (uint i = 0; i < m_meshModels.size(); ++i)
+        
+        for (uint i = 0; i < m_meshInstances.size(); ++i)
         {
-            MeshModel * meshModel = m_meshModels[i];
-            
-            if (!meshModel->getBLAS())
-                createMeshModelBLAS(meshModel);
+            MeshInstance * meshInstance = m_meshInstances[i];
+            meshInstance->updateInstanceBLAS();
         }
     }
 
@@ -89,12 +62,16 @@ namespace vg::renderer
     {
         VG_INFO("[Renderer] RayTracing is disabled");
 
+        for (uint i = 0; i < m_meshInstances.size(); ++i)
+        {
+            MeshInstance * meshInstance = m_meshInstances[i];
+            meshInstance->setInstanceBLASes(nullptr);
+        }
+
         for (uint i = 0; i < m_meshModels.size(); ++i)
         {
             MeshModel * meshModel = m_meshModels[i];
-            auto blas = meshModel->getBLAS();
-            if (blas)
-                meshModel->setBLAS(nullptr);
+            meshModel->clearBLASes();
         }
 
         auto * renderer = Renderer::get();
@@ -115,18 +92,18 @@ namespace vg::renderer
     {
         VG_ASSERT(!m_meshModels.exists(_meshModel));
         m_meshModels.push_back(_meshModel);
-
-        if (isRayTracingEnabled())
-            updateMeshModel(_meshModel);
+    
+        //if (isRayTracingEnabled())
+        //    updateMeshModel(_meshModel);
     }
-
+    
     //--------------------------------------------------------------------------------------
-    void RayTracingManager::updateMeshModel(MeshModel * _meshModel)
-    {
-        VG_ASSERT(!m_meshModelUpdateQueue.exists(_meshModel));
-        m_meshModelUpdateQueue.push_back(_meshModel);
-    }
-
+    //void RayTracingManager::updateMeshModel(MeshModel * _meshModel)
+    //{
+    //    VG_ASSERT(!m_meshModelUpdateQueue.exists(_meshModel));
+    //    m_meshModelUpdateQueue.push_back(_meshModel);
+    //}
+    
     //--------------------------------------------------------------------------------------
     void RayTracingManager::removeMeshModel(MeshModel * _meshModel)
     {
@@ -135,30 +112,96 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
+    void RayTracingManager::addMeshInstance(MeshInstance * _meshInstance)
+    {
+        VG_ASSERT(!m_meshInstances.exists(_meshInstance));
+        m_meshInstances.push_back(_meshInstance);
+    }
+
+    //--------------------------------------------------------------------------------------
+    void RayTracingManager::removeMeshInstance(MeshInstance * _meshInstance)
+    {
+        VG_ASSERT(m_meshInstances.exists(_meshInstance));
+        m_meshInstances.remove(_meshInstance);
+    }
+
+    //--------------------------------------------------------------------------------------
+    void RayTracingManager::updateMeshInstance(MeshInstance * _meshInstance)
+    {
+        // TODO : Use 'DirtyBLAS' + atomic to avoid search?
+        if(!m_meshInstanceUpdateQueue.exists(_meshInstance))
+            m_meshInstanceUpdateQueue.push_back(_meshInstance);
+    }
+
+    //--------------------------------------------------------------------------------------
     void RayTracingManager::update(gfx::CommandList * _cmdList, gfx::Buffer * _skinningBuffer)
     {
         if (isRayTracingEnabled())
         {
-            // Static mesh models' BLAS are added right after loading and computed here
+            // Non-skins require update when model or material surface types change, but BLAS can be shared
+            for (uint i = 0; i < m_meshInstanceUpdateQueue.size(); ++i)
             {
-                VG_PROFILE_GPU("Models");
-                while (m_meshModelUpdateQueue.size() > 0)
+                MeshInstance * instance = m_meshInstanceUpdateQueue[i];
+                VG_ASSERT(!instance->IsSkinned());
+                auto * BLASes = instance->getInstanceBLASes();
+                MeshModel * meshModel = (MeshModel*)instance->getMeshModel(Lod::Lod0);
+
+                // Create BLAS collection if it does not exist yet or it's key changed
+                gfx::BLASCollectionKey BLASeskey = instance->computeBLASCollectionKey();
+
+                if (nullptr == BLASes || BLASes->getKey() != BLASeskey)
                 {
-                    MeshModel * meshModel = m_meshModelUpdateQueue[m_meshModelUpdateQueue.size() - 1];
-                    m_meshModelUpdateQueue.pop_back();
-                
-                    gfx::BLAS * blas = meshModel->getBLAS();
-                    if (!blas)
-                        createMeshModelBLAS(meshModel);
-                
-                    if (blas)
+                    // Try to find a corresponding BLAS in map
+                    gfx::BLASCollectionMap & BLASesMap = meshModel->getBLASCollectionMap();
+
+                    auto it = BLASesMap.find(BLASeskey);
+                    if (BLASesMap.end() != it)
                     {
-                        const auto startBuildBLAS = Timer::getTick();
-                        blas->build(_cmdList);
-                        VG_INFO("[Renderer] Built BLAS for meshModel \"%s\" in %.2f ms", meshModel->getName().c_str(), Timer::getEnlapsedTime(startBuildBLAS, Timer::getTick()));
+                        instance->setInstanceBLASes(it->second);    // This will increase RefCount
+                        VG_INFO("[Renderer] Reuse existing BLASes collection 0x%016X for instance \"%s\" with key 0x%016X", it->second, instance->getName().c_str(), BLASeskey);
+                    }
+                    else
+                    {
+                        // Create new BLAS collection and add it to hash for reuse
+                        auto BLASes = new gfx::BLASCollection(BLASeskey, gfx::BLASUpdateType::Static);
+                        instance->setInstanceBLASes(BLASes);    // This will increase RefCount
+                        BLASes->Release();
+                        BLASes->clear();
+
+                        const MeshGeometry * meshGeo = meshModel->getGeometry();
+                        gfx::Buffer * ib = meshGeo->getIndexBuffer();
+                        const uint ibOffset = meshGeo->getIndexBufferOffset();
+
+                        const gfx::Buffer * modelVB = meshGeo->getVertexBuffer();
+
+                        VertexFormat vtxFmt = meshGeo->getVertexFormat();
+                        const uint vertexStride = getVertexFormatStride(vtxFmt);
+
+                        const auto batches = meshGeo->batches();
+                        const auto & materials = instance->getMaterials();
+
+                        for (uint m = 0; m < batches.size(); ++m)
+                        {
+                            gfx::SurfaceType surfaceType = gfx::SurfaceType::Opaque;
+                            const MaterialModel * mat = m < materials.size() ? materials[m] : nullptr;
+                            if (mat)
+                                surfaceType = mat->getSurfaceType();
+
+                            const Batch & batch = batches[m];
+                            gfx::BLAS * blas = BLASes->getBLAS(surfaceType);
+                            VG_ASSERT(blas);
+                            blas->addIndexedGeometry(ib, ibOffset + batch.offset, batch.count, modelVB, 0, modelVB->getBufDesc().getElementCount(), vertexStride);
+                        }
+
+                        BLASes->update(_cmdList);
+
+                        BLASesMap.insert(std::pair(BLASeskey, BLASes));
+
+                        VG_INFO("[Renderer] Create new BLASes collection 0x%016X for instance \"%s\" with key 0x%016X (%u)", BLASes, instance->getName().c_str(), BLASeskey, BLASes->getRefCount());
                     }
                 }
             }
+            m_meshInstanceUpdateQueue.clear();
 
             // Skins require BLAS update every frame
             const auto & skins = Renderer::get()->getSharedCullingJobOutput()->m_skins;
@@ -174,17 +217,20 @@ namespace vg::renderer
                 for (uint i = 0; i < skins.size(); ++i)
                 {
                     MeshInstance * skin = skins[i];
-                    auto * blas = skin->getInstanceBLAS();
-                    bool update = true;
-                    if (nullptr == blas)
+                    auto * BLASes = skin->getInstanceBLASes();
+
+                    // Create BLAS collection if it does not exist yet or it's key changed
+                    gfx::BLASCollectionKey BLASkey = skin->computeBLASCollectionKey();
+
+                    if (nullptr == BLASes || BLASes->getKey() != BLASkey)
                     {
                         // Create instance BLAS from model geometry
-                        blas = new gfx::BLAS(gfx::BLASUpdateType::Dynamic);
-                        skin->setInstanceBLAS(blas);
-                        update = false;
+                        BLASes = new gfx::BLASCollection(BLASkey, gfx::BLASUpdateType::Dynamic);
+                        skin->setInstanceBLASes(BLASes);
+                        BLASes->Release();
                     }
 
-                    blas->clear();
+                    BLASes->clear();
 
                     const MeshModel * meshModel = skin->getMeshModel(Lod::Lod0);
 
@@ -192,21 +238,30 @@ namespace vg::renderer
                     gfx::Buffer * ib = meshGeo->getIndexBuffer();
                     const uint ibOffset = meshGeo->getIndexBufferOffset();
 
-                    const gfx::Buffer * modelvb = meshGeo->getVertexBuffer();
-                    const gfx::Buffer * skinvb = skin->getSkinnedMeshBuffer();
-                    const uint vbOffset = skin->getSkinnedMeshBufferOffset();
+                    const gfx::Buffer * modelVB = meshGeo->getVertexBuffer();
+                    const gfx::Buffer * skinVB = skin->getSkinnedMeshBuffer();
+                    const uint skinVBOffset = skin->getSkinnedMeshBufferOffset();
 
                     VertexFormat vtxFmt = meshGeo->getVertexFormat();
                     const uint vertexStride = getVertexFormatStride(vtxFmt);
 
                     const auto batches = meshGeo->batches();
-                    for (uint j = 0; j < batches.size(); ++j)
+                    const auto & materials = skin->getMaterials();
+
+                    for (uint m = 0; m < batches.size(); ++m)
                     {
-                        const Batch & batch = batches[j];
-                        blas->addIndexedGeometry(ib, ibOffset + batch.offset, batch.count, skinvb, vbOffset, modelvb->getBufDesc().getElementCount(), vertexStride);
+                        gfx::SurfaceType surfaceType = gfx::SurfaceType::Opaque;
+                        const MaterialModel * mat = m < materials.size() ? materials[m] : nullptr;
+                        if (mat)
+                            surfaceType = mat->getSurfaceType();
+
+                        const Batch & batch = batches[m];
+                        gfx::BLAS * blas = BLASes->getBLAS(surfaceType);
+                        VG_ASSERT(blas);
+                        blas->addIndexedGeometry(ib, ibOffset + batch.offset, batch.count, skinVB, skinVBOffset, modelVB->getBufDesc().getElementCount(), vertexStride);
                     }
 
-                    blas->update(_cmdList); 
+                    BLASes->update(_cmdList);
                 }
 
                 if (nullptr != _skinningBuffer)

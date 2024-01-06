@@ -32,6 +32,8 @@ namespace vg::engine
         super(_name, _parent),
         m_lightType(renderer::LightType::Omni)
     {
+        SetUpdateFlags((UpdateFlags)0x0);
+
         if (nullptr == m_lightDesc)
             createLightDesc();
         if (nullptr == m_light)

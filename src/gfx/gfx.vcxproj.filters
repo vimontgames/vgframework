@@ -624,10 +624,10 @@
     <ClInclude Include="Raytracing\vulkan\TLAS_vulkan.hpp">
       <Filter>RayTracing\vulkan</Filter>
     </ClInclude>
-    <ClInclude Include="Raytracing\BLASList.h">
+    <ClInclude Include="Raytracing\BLASCollection.h">
       <Filter>RayTracing</Filter>
     </ClInclude>
-    <ClInclude Include="Raytracing\BLASList.hpp">
+    <ClInclude Include="Raytracing\BLASCollection.hpp">
       <Filter>RayTracing</Filter>
     </ClInclude>
   </ItemGroup>

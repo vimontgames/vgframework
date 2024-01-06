@@ -58,7 +58,7 @@ namespace vg::gfx
     //--------------------------------------------------------------------------------------
     void TLAS::build(gfx::CommandList * _cmdList)
     {
-        VG_PROFILE_GPU("TLAS");
+        VG_PROFILE_GPU("TLAS build");
         super::build(_cmdList);
     }
 
@@ -66,5 +66,14 @@ namespace vg::gfx
     void TLAS::addInstance(const gfx::BLAS * _blas, const core::float4x4 & _world, const core::u32 _instanceID)
     {
         super::addInstance(_blas, _world, 0/*_instanceID*/);
+    }
+
+    //--------------------------------------------------------------------------------------
+    void TLAS::addInstances(const gfx::BLASCollection * _BLASes, const core::float4x4 & _world, const core::u32 _instanceID)
+    {
+        VG_ASSERT(_BLASes);
+
+        if (const auto & opaque = _BLASes->getBLAS(SurfaceType::Opaque))
+            addInstance(opaque, _world, _instanceID);        
     }
 }

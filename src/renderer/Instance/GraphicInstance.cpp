@@ -73,6 +73,7 @@ namespace vg::renderer
             VG_SAFE_RELEASE(m_materials[_index]);
             VG_SAFE_INCREASE_REFCOUNT(_materialModel);
             m_materials[_index] = _materialModel;
+            OnMaterialChanged(_index);
             return true;
         }
 

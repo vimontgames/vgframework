@@ -66,6 +66,7 @@ namespace vg::renderer
     {
         SharedCullingJobOutput() :
             m_skins(1024)
+            //m_rayTracing(4096)
         {
 
         }
@@ -73,9 +74,11 @@ namespace vg::renderer
         void clear()
         {
             m_skins.clear();
+            //m_rayTracing.clear();
         }
 
-        core::atomicvector<MeshInstance *>  m_skins;
+        core::atomicvector<MeshInstance *>  m_skins;        // all mesh instances with skin visible in one view or more
+        //core::atomicvector<MeshInstance *>  m_rayTracing;   // all mesh instances that need to be processed once for raytracing except skins
     };
 
     struct CullingResult

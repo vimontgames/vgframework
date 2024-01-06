@@ -35,14 +35,19 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    VG_INLINE void MeshInstance::setInstanceBLAS(gfx::BLAS * _blas)
+    VG_INLINE void MeshInstance::setInstanceBLASes(gfx::BLASCollection * _BLASes)
     {
-        m_instanceBLAS = _blas;
+        if (_BLASes != m_instanceBLASes)
+        {
+            VG_SAFE_RELEASE_ASYNC(m_instanceBLASes);
+            m_instanceBLASes = _BLASes;
+            VG_SAFE_INCREASE_REFCOUNT(m_instanceBLASes);
+        }
     }
 
     //--------------------------------------------------------------------------------------
-    VG_INLINE gfx::BLAS * MeshInstance::getInstanceBLAS() const
+    VG_INLINE gfx::BLASCollection * MeshInstance::getInstanceBLASes() const
     {
-        return m_instanceBLAS;
+        return m_instanceBLASes;
     }
 }

@@ -3,7 +3,7 @@
 #include "MeshModel.h"
 #include "gfx/Device/Device.h"
 #include "gfx/Resource/Buffer.h"
-#include "gfx/Raytracing/BLAS.h"
+#include "gfx/Raytracing/BLASCollection.h"
 #include "renderer/Geometry/Mesh/MeshGeometry.h"
 #include "renderer/Geometry/Vertex/VertexFormat.h"
 #include "renderer/Importer/SceneImporterData.h"
@@ -40,11 +40,24 @@ namespace vg::renderer
     {
         VG_SAFE_RELEASE(m_geometry); 
         VG_SAFE_RELEASE(m_skeleton);
-        VG_SAFE_RELEASE(m_blas);
+
+        clearBLASes();
 
         auto * rtManager = RayTracingManager::get(false);
         if (rtManager)
             rtManager->removeMeshModel(this);
+    }
+
+    //--------------------------------------------------------------------------------------
+    // clearing BLAS collections when deleting model isn't necessary because only instances
+    // using it will increase RefCount and this way we don't have to deal with dandling pointers
+    // we are sure that when all instances are deleted then all BLAS collections are deleted too
+    //--------------------------------------------------------------------------------------
+    void MeshModel::clearBLASes()
+    {
+        //for (auto & BLASes : m_BLASCollectionMap)
+        //    VG_SAFE_RELEASE(BLASes.second);
+        m_BLASCollectionMap.clear();
     }
 
     //--------------------------------------------------------------------------------------
@@ -210,18 +223,18 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    void MeshModel::setBLAS(BLAS * _blas)
-    {
-        if (m_blas != _blas)
-        {
-            VG_SAFE_RELEASE(m_blas);
-            m_blas = _blas;
-        }
-    }
-
-    //--------------------------------------------------------------------------------------
-    gfx::BLAS * MeshModel::getBLAS() const 
-    { 
-        return m_blas; 
-    }
+    //void MeshModel::setBLAS(BLAS * _blas)
+    //{
+    //    if (m_blas != _blas)
+    //    {
+    //        VG_SAFE_RELEASE(m_blas);
+    //        m_blas = _blas;
+    //    }
+    //}
+    //
+    ////--------------------------------------------------------------------------------------
+    //gfx::BLAS * MeshModel::getBLAS() const 
+    //{ 
+    //    return m_blas; 
+    //}
 }

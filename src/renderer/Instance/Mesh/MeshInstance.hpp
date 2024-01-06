@@ -6,7 +6,7 @@
 #include "gfx/CommandList/CommandList.h"
 #include "gfx/Resource/Buffer.h"
 #include "gfx/Resource/Texture.h"
-#include "gfx/Raytracing/BLAS.h"
+#include "gfx/Raytracing/BLASCollection.h"
 #include "gfx/Raytracing/TLAS.h"
 
 #include "renderer/Renderer.h"
@@ -19,6 +19,7 @@
 #include "renderer/DebugDraw/DebugDraw.h"
 #include "renderer/Animation/SkeletalAnimation.h"
 #include "renderer/View/View.h"
+#include "renderer/RayTracing/RayTracingManager.h"
 
 #if !VG_ENABLE_INLINE
 #include "MeshInstance.inl"
@@ -46,17 +47,23 @@ namespace vg::renderer
         super(_name, _parent),
         m_skinFlags(0x0)
     {
-
+        auto * rtManager = RayTracingManager::get(false);
+        if (rtManager)
+            rtManager->addMeshInstance(this);
     }
 
     //--------------------------------------------------------------------------------------
     MeshInstance::~MeshInstance()
     {
-        VG_SAFE_RELEASE(m_instanceBLAS);
+        VG_SAFE_RELEASE(m_instanceBLASes);
         VG_SAFE_RELEASE(m_instanceSkeleton);
 
         for (uint i = 0; i < m_animationBindings.size(); ++i)
             VG_SAFE_RELEASE(m_animationBindings[i].m_animation);
+
+        auto * rtManager = RayTracingManager::get(false);
+        if (rtManager)
+            rtManager->removeMeshInstance(this);
     }
 
     //--------------------------------------------------------------------------------------
@@ -75,6 +82,8 @@ namespace vg::renderer
     bool MeshInstance::Cull(CullingResult * _cullingResult, View * _view)
     {
         const MeshModel * meshModel = getMeshModel(Lod::Lod0);
+
+        bool raytracing = RendererOptions::get()->isRayTracingEnabled();
 
         if (nullptr != meshModel)
         {
@@ -127,6 +136,11 @@ namespace vg::renderer
                     if (setSkinFlag(MeshInstance::SkinFlags::SkinLOD0))
                         _cullingResult->m_sharedOutput->m_skins.push_back_atomic(this);
                 }
+                //else if (raytracing)
+                //{
+                //    if (setSkinFlag(MeshInstance::SkinFlags::RayTracing))
+                //        _cullingResult->m_sharedOutput->m_rayTracing.push_back_atomic(this);
+                //}
 
                 return true;
             }
@@ -136,20 +150,74 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
+    gfx::BLASCollectionKey MeshInstance::computeBLASCollectionKey() const
+    {
+        const auto & materials = getMaterials();
+        VG_ASSERT(materials.size() <= 32);
+        
+        gfx::BLASCollectionKey key = 0;
+
+        MeshModel * meshModel = (MeshModel*)getModel(Lod::Lod0);
+        if (meshModel)
+        {
+            const auto & batches = meshModel->getGeometry()->batches();
+            VG_ASSERT(batches.size() <= 32);
+
+            for (uint i = 0; i < batches.size(); ++i)
+            {
+                if (i < materials.size())
+                {
+                    if (const auto * mat = materials[i])
+                        BLASCollection::setSurfaceTypeBits(key, i, mat->getSurfaceType());
+                }
+            }
+        }
+
+        return key;
+    }    
+
+    //--------------------------------------------------------------------------------------
+    bool MeshInstance::updateInstanceBLAS()
+    {
+        if (!IsSkinned() && RendererOptions::get()->isRayTracingEnabled())
+        {
+            auto * BLASes = getInstanceBLASes();
+
+            bool update = false;
+
+            if (nullptr == BLASes)
+            {
+                update = true;
+            }
+            else
+            {
+                auto key = computeBLASCollectionKey();
+                if (BLASes->getKey() != key)
+                    update = true;
+            }
+
+            if (update)
+            {
+                RayTracingManager::get()->updateMeshInstance(this);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    //--------------------------------------------------------------------------------------
+    void MeshInstance::OnMaterialChanged(core::uint _index)
+    {
+        updateInstanceBLAS();
+    }
+
+    //--------------------------------------------------------------------------------------
     bool MeshInstance::OnUpdateRayTracing(gfx::CommandList * _cmdList, View * _view, core::uint _index)
     {
         auto * tlas = _view->getTLAS();
-        if (IsSkinned())
-        {
-            if (const BLAS * blas = getInstanceBLAS())
-                tlas->addInstance(blas, getGlobalMatrix(), _index);
-        }
-        else
-        {
-            MeshModel * meshModel = (MeshModel *)getModel(Lod::Lod0);
-            if (const gfx::BLAS * blas = meshModel->getBLAS())
-                tlas->addInstance(blas, getGlobalMatrix(), _index);
-        }
+
+        if (const auto * BLASes = getInstanceBLASes())
+            tlas->addInstances(BLASes, getGlobalMatrix(), _index);
 
         return true;
     }
@@ -258,8 +326,12 @@ namespace vg::renderer
     //--------------------------------------------------------------------------------------
     void MeshInstance::SetModel(Lod _lod, IModel * _model)
     {
-        MeshModel * meshModel = dynamic_cast<MeshModel *>(_model);
-        VG_ASSERT(nullptr == _model || nullptr != meshModel);
+        MeshModel * current = (MeshModel*)getModel(_lod);
+        MeshModel * meshModel = (MeshModel *)_model;
+        VG_ASSERT(nullptr == _model || nullptr != dynamic_cast<MeshModel *>(_model));
+
+        if (meshModel != current)
+            setInstanceBLASes(nullptr);
 
         super::SetModel(_lod, (Model *)_model);
 
@@ -272,8 +344,11 @@ namespace vg::renderer
         }
         else
         {
-            setInstanceSkeleton(nullptr);
-        }
+            setInstanceSkeleton(nullptr);            
+        }   
+
+        if (nullptr != _model)
+            updateInstanceBLAS();
     }
 
     //--------------------------------------------------------------------------------------

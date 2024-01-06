@@ -70,6 +70,7 @@ namespace vg::core
 
 		u32						    addRef		        () override;
 		u32						    release		        () override;
+		u32                         getRefCount			() const override;
 
 		// Added so that we can use the same 'VG_SAFE_RELEASE' macro everywhere
 		u32						    Release		        () final;

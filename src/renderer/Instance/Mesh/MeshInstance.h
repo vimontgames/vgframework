@@ -14,7 +14,8 @@ namespace vg::core
 namespace vg::gfx
 {
     class Buffer;
-    class BLAS;
+    class BLASCollection;
+    using BLASCollectionKey = core::u64;
 }
 
 namespace vg::renderer
@@ -31,10 +32,12 @@ namespace vg::renderer
 
         enum SkinFlags : core::u32
         {
-            SkinLOD0 = 0x00000001,
-            //SkinLOD1 = 0x00000002,
-            //SkinLOD2 = 0x00000004,
-            //SkinLOD3 = 0x00000008
+            //RayTracing  = 0x00000001,
+
+            SkinLOD0    = 0x00000010,
+            //SkinLOD1  = 0x00000020,
+            //SkinLOD2  = 0x00000040,
+            //SkinLOD3  = 0x00000080,
         };
 
         MeshInstance(const core::string & _name, core::IObject * _parent);
@@ -54,7 +57,7 @@ namespace vg::renderer
 
         bool                            GetAABB                     (AABB & _aabb) const final override;
         bool                            Cull                        (CullingResult * _cullingResult, View * _view) final override;
-
+        void                            OnMaterialChanged           (core::uint _index) final override;
         bool                            OnUpdateRayTracing          (gfx::CommandList * _cmdList, View * _view, core::uint _index) final override;
 
         void                            Draw                        (const RenderContext & _renderContext, gfx::CommandList * _cmdList) const final override;
@@ -68,8 +71,11 @@ namespace vg::renderer
         VG_INLINE const gfx::Buffer *   getSkinnedMeshBuffer        () const;
         VG_INLINE const core::uint      getSkinnedMeshBufferOffset  () const;
 
-        VG_INLINE void                  setInstanceBLAS             (gfx::BLAS * _blas);
-        VG_INLINE gfx::BLAS *           getInstanceBLAS             () const;
+        VG_INLINE void                  setInstanceBLASes           (gfx::BLASCollection * _BLASes);
+        VG_INLINE gfx::BLASCollection * getInstanceBLASes           () const;
+
+        gfx::BLASCollectionKey          computeBLASCollectionKey    () const;
+        bool                            updateInstanceBLAS          ();
 
         VG_INLINE bool                  setSkinFlag                 (SkinFlags _flag);
         VG_INLINE bool                  clearSkinFlag               (SkinFlags _flag);
@@ -79,7 +85,7 @@ namespace vg::renderer
         Skeleton *                      m_instanceSkeleton = nullptr;
         const gfx::Buffer *             m_skinnedMeshBuffer = nullptr;
         core::uint                      m_skinnedMeshBufferOffset = 0;
-        gfx::BLAS *                     m_instanceBLAS = nullptr;
+        gfx::BLASCollection *           m_instanceBLASes = nullptr;
 
         struct AnimationState
         {

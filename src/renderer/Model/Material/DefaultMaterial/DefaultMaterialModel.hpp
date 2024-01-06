@@ -120,7 +120,7 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    void DefaultMaterialModel::SetSurfaceType(SurfaceType _surfaceType)
+    void DefaultMaterialModel::SetSurfaceType(gfx::SurfaceType _surfaceType)
     {
         m_surfaceType = _surfaceType;
     }

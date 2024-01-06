@@ -5,7 +5,7 @@ namespace vg::renderer
 {
     //--------------------------------------------------------------------------------------
     BLASUpdatePass::BLASUpdatePass() :
-        UpdatePass("RTASUpdatePass")
+        UpdatePass("BLASUpdatePass")
     {
      
     }
@@ -26,7 +26,6 @@ namespace vg::renderer
     //--------------------------------------------------------------------------------------
     void BLASUpdatePass::BeforeRender(const gfx::RenderPassContext & _renderPassContext, gfx::CommandList * _cmdList)
     {
-        VG_PROFILE_GPU("BLASUpdate");
         RayTracingManager * rtManager = RayTracingManager::get();
         Buffer * skinningBuffer = getRWBuffer("SkinningRWBuffer");
         rtManager->update(_cmdList, skinningBuffer);

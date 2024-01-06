@@ -140,6 +140,22 @@ namespace vg::engine
                 }
             }
         }
+        else if (!strcmp(_prop.getName(), "m_surfaceType"))
+        {
+            MaterialResourceData * matResData = dynamic_cast<MaterialResourceData *>(_object->getParent());
+            VG_ASSERT(matResData);
+            MaterialResource * matRes = dynamic_cast<MaterialResource *>(matResData->getParent());
+            VG_ASSERT(matRes);
+            const auto & matResources = m_meshMaterials.getMaterialResources();
+            for (uint i = 0; i < matResources.size(); ++i)
+            {
+                if (&matResources[i] == matRes)
+                {
+                    m_meshInstance->OnMaterialChanged(i);
+                    break;
+                }
+            }
+        }
 
         super::OnPropertyChanged(_object, _prop, _notifyParent);
     }
@@ -164,6 +180,7 @@ namespace vg::engine
                 }
                 
                 getGameObject()->addGraphicInstance(m_meshInstance);
+                m_meshInstance->setName(getGameObject()->getName().c_str());
                 m_registered = true;
             }
         }

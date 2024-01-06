@@ -9,7 +9,7 @@ namespace vg::engine
     {
         super::registerProperties(_desc);
 
-        registerPropertyEnum(MaterialData, renderer::SurfaceType, m_surfaceType, "Surface Type");
+        registerPropertyEnum(MaterialData, gfx::SurfaceType, m_surfaceType, "Surface Type");
         
         return true;
     }
@@ -17,7 +17,7 @@ namespace vg::engine
     //--------------------------------------------------------------------------------------
     MaterialData::MaterialData(const core::string & _name, IObject * _parent) :
         super(_name, _parent),
-        m_surfaceType(renderer::SurfaceType::Opaque)
+        m_surfaceType(gfx::SurfaceType::Opaque)
     {
 
     }

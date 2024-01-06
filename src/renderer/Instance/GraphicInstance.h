@@ -33,7 +33,7 @@ namespace vg::renderer
 
         virtual bool                                    GetAABB             (AABB & _aabb) const = 0;
         virtual bool                                    Cull                (CullingResult * _cullingResult, View * _view) = 0;
-
+        virtual void                                    OnMaterialChanged   (core::uint _index) {}
         virtual bool                                    OnUpdateRayTracing  (gfx::CommandList * _cmdList, View * _view, core::uint _index) = 0;
 
     private:
