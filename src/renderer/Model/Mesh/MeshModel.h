@@ -7,10 +7,8 @@ namespace vg::gfx
 {
     class Buffer;
     class BLAS;
-
-    using BLASCollectionKey = core::u64;
-    class BLASCollection;
-    using BLASCollectionMap = core::unordered_map<BLASCollectionKey, BLASCollection *>;
+    using BLASVariantKey = core::u64;
+    using BLASMap = core::unordered_map<BLASVariantKey, BLAS *>;
 }
 
 namespace vg::renderer
@@ -24,26 +22,26 @@ namespace vg::renderer
     public:
         VG_CLASS_DECL(MeshModel, IMeshModel);
 
-                                        MeshModel               (const core::string & _name, core::IObject * _parent);
-                                        ~MeshModel              ();
+                                MeshModel               (const core::string & _name, core::IObject * _parent);
+                                ~MeshModel              ();
 
-        void                            setGeometry             (MeshGeometry * _geometry);
-        const MeshGeometry *            getGeometry             () const;
+        void                    setGeometry             (MeshGeometry * _geometry);
+        const MeshGeometry *    getGeometry             () const;
 
-        void                            setSkeleton             (Skeleton * _skeleton);
-        const Skeleton *                getSkeleton             () const;
+        void                    setSkeleton             (Skeleton * _skeleton);
+        const Skeleton *        getSkeleton             () const;
 
-        void                            clearBLASes             ();
-        gfx::BLASCollectionMap &        getBLASCollectionMap    () { return m_BLASCollectionMap; }
+        void                    clearBLASes             ();
+        gfx::BLASMap &          getBLASMap              () { return m_BLASMap; }
 
-        static MeshModel *              createFromImporterData  (const MeshImporterData & _data);
+        static MeshModel *      createFromImporterData  (const MeshImporterData & _data);
 
     private:
         template <VertexFormat F> static gfx::Buffer * createVertexBufferFromImporterData(const MeshImporterData & _data);
 
     private:
-        MeshGeometry *                  m_geometry  = nullptr;
-        Skeleton *                      m_skeleton  = nullptr;
-        gfx::BLASCollectionMap          m_BLASCollectionMap;
+        MeshGeometry *          m_geometry  = nullptr;
+        Skeleton *              m_skeleton  = nullptr;
+        gfx::BLASMap            m_BLASMap;
     };
 }

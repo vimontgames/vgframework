@@ -7,8 +7,9 @@ namespace vg::gfx
     namespace base
     {
         //--------------------------------------------------------------------------------------
-        BLAS::BLAS(BLASUpdateType _blasUpdateType) :
-            m_blasUpdateType(_blasUpdateType)
+        BLAS::BLAS(BLASUpdateType _blasUpdateType, gfx::BLASVariantKey _key) :
+            m_updateType(_blasUpdateType),
+            m_key(_key)
         {
 
         }
@@ -21,8 +22,8 @@ namespace vg::gfx
     }
 
     //--------------------------------------------------------------------------------------
-    BLAS::BLAS(BLASUpdateType _blasUpdateType) :
-        super(_blasUpdateType)
+    BLAS::BLAS(BLASUpdateType _blasUpdateType, BLASVariantKey _key) :
+        super(_blasUpdateType, _key)
     {
 
     }

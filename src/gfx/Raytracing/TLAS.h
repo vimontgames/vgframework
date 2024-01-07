@@ -26,7 +26,6 @@ namespace vg::gfx
 namespace vg::gfx
 {
     class CommandList;
-    class BLASCollection;
 
     class TLAS : public VG_GFXAPI::TLAS
     {
@@ -39,12 +38,9 @@ namespace vg::gfx
 
         void                        reset           ();
         void                        build           (gfx::CommandList * _cmdList);
-        void                        addInstances    (const gfx::BLASCollection * _BLASes, const core::float4x4 & _world, const core::u32 _instanceID);
+        void                        addInstance     (const gfx::BLAS * _blas, const core::float4x4 & _world, const core::u32 _instanceID);
 
         TLAS();
         ~TLAS();
-
-    private:
-        void                        addInstance     (const gfx::BLAS * _blas, const core::float4x4 & _world, const core::u32 _instanceID);
     };
 }

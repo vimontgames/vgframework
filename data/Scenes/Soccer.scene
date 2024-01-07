@@ -98,7 +98,7 @@
                                 <Property type="ObjectPtrVector" name="m_components"/>
                                 <Property type="ObjectPtrVector" name="m_children" flags="Hidden">
                                     <Object class="GameObject">
-                                        <Property type="String" name="m_name" value="Ball"/>
+                                        <Property type="String" name="m_name" value="Ball 0"/>
                                         <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
                                         <Property type="Float4" name="m_color" flags="Color" x="1" y="1" z="1" w="1"/>
                                         <Property type="Float4x4" name="m_local" Ix="-0.45199251" Iy="-0.072221875" Iz="0.88909322" Iw="0" Jx="0.27346715" Jy="0.93750417" Jz="0.21517813" Jw="0" Kx="-0.84906918" Ky="0.3403967" Kz="-0.40399456" Kw="0" Tx="-2" Ty="0" Tz="0" Tw="1"/>
@@ -151,7 +151,7 @@
                                         <Property type="ObjectPtrVector" name="m_children" flags="Hidden"/>
                                     </Object>
                                     <Object class="GameObject">
-                                        <Property type="String" name="m_name" value="Ball"/>
+                                        <Property type="String" name="m_name" value="Ball 1"/>
                                         <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
                                         <Property type="Float4" name="m_color" flags="Color" x="1" y="1" z="1" w="1"/>
                                         <Property type="Float4x4" name="m_local" Ix="0.67927694" Iy="-0.70176953" Iz="-0.21471456" Iw="0" Jx="0.1921801" Jy="-0.11226666" Jz="0.97491693" Jw="0" Kx="-0.70827222" Ky="-0.70350242" Kz="0.058605969" Kw="0" Tx="0" Ty="0" Tz="0" Tw="1"/>
@@ -204,7 +204,7 @@
                                         <Property type="ObjectPtrVector" name="m_children" flags="Hidden"/>
                                     </Object>
                                     <Object class="GameObject">
-                                        <Property type="String" name="m_name" value="Ball"/>
+                                        <Property type="String" name="m_name" value="Ball 2"/>
                                         <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
                                         <Property type="Float4" name="m_color" flags="Color" x="1" y="1" z="1" w="1"/>
                                         <Property type="Float4x4" name="m_local" Ix="0.54191995" Iy="-0.74046862" Iz="0.39752856" Iw="0" Jx="0.4157232" Jy="-0.17490458" Jz="-0.89251471" Jw="0" Kx="0.73040879" Ky="0.64893341" Kz="0.21304566" Kw="0" Tx="2" Ty="0" Tz="0" Tw="1"/>
@@ -266,7 +266,7 @@
                                 <Property type="ObjectPtrVector" name="m_components"/>
                                 <Property type="ObjectPtrVector" name="m_children" flags="Hidden">
                                     <Object class="GameObject">
-                                        <Property type="String" name="m_name" value="Cone"/>
+                                        <Property type="String" name="m_name" value="Cone 0"/>
                                         <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
                                         <Property type="Float4" name="m_color" flags="Color" x="1" y="1" z="1" w="1"/>
                                         <Property type="Float4x4" name="m_local" Ix="0.7076298" Iy="-0.70658344" Iz="9.1980198e-08" Iw="0" Jx="0.70658344" Jy="0.7076298" Jz="-5.8429771e-07" Jw="0" Kx="3.4776713e-07" Ky="4.7845811e-07" Kz="1" Kw="0" Tx="15.501654" Ty="7.494493" Tz="-0.00050008297" Tw="1"/>
@@ -319,7 +319,7 @@
                                         <Property type="ObjectPtrVector" name="m_children" flags="Hidden"/>
                                     </Object>
                                     <Object class="GameObject">
-                                        <Property type="String" name="m_name" value="Cone"/>
+                                        <Property type="String" name="m_name" value="Cone 1"/>
                                         <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
                                         <Property type="Float4" name="m_color" flags="Color" x="1" y="1" z="1" w="1"/>
                                         <Property type="Float4x4" name="m_local" Ix="0.9236002" Iy="0.3833572" Iz="1.9887847e-07" Iw="0" Jx="-0.3833572" Jy="0.9236002" Jz="-6.1619585e-07" Jw="0" Kx="-4.1990728e-07" Ky="4.9287712e-07" Kz="1" Kw="0" Tx="-2.996563" Ty="6.4952497" Tz="-0.00050011277" Tw="1"/>
@@ -372,7 +372,7 @@
                                         <Property type="ObjectPtrVector" name="m_children" flags="Hidden"/>
                                     </Object>
                                     <Object class="GameObject">
-                                        <Property type="String" name="m_name" value="Cone"/>
+                                        <Property type="String" name="m_name" value="Cone 2"/>
                                         <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
                                         <Property type="Float4" name="m_color" flags="Color" x="1" y="1" z="1" w="1"/>
                                         <Property type="Float4x4" name="m_local" Ix="-0.40591812" Iy="-0.91390944" Iz="2.7955321e-06" Iw="0" Jx="0.91390944" Jy="-0.40591812" Jz="-1.4221685e-05" Jw="0" Kx="1.4132089e-05" Ky="-3.2179764e-06" Kz="1" Kw="0" Tx="15.002004" Ty="-7.5039415" Tz="0" Tw="1"/>
@@ -425,7 +425,7 @@
                                         <Property type="ObjectPtrVector" name="m_children" flags="Hidden"/>
                                     </Object>
                                     <Object class="GameObject">
-                                        <Property type="String" name="m_name" value="Cone"/>
+                                        <Property type="String" name="m_name" value="Cone 3"/>
                                         <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
                                         <Property type="Float4" name="m_color" flags="Color" x="1" y="1" z="1" w="1"/>
                                         <Property type="Float4x4" name="m_local" Ix="0.9236002" Iy="0.3833572" Iz="1.5032268e-07" Iw="0" Jx="-0.3833572" Jy="0.9236002" Jz="-5.3465914e-07" Jw="0" Kx="-3.4380346e-07" Ky="4.3618402e-07" Kz="1" Kw="0" Tx="-15.496563" Ty="7.4952493" Tz="-0.00050020218" Tw="1"/>
@@ -478,7 +478,7 @@
                                         <Property type="ObjectPtrVector" name="m_children" flags="Hidden"/>
                                     </Object>
                                     <Object class="GameObject">
-                                        <Property type="String" name="m_name" value="Cone"/>
+                                        <Property type="String" name="m_name" value="Cone 4"/>
                                         <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
                                         <Property type="Float4" name="m_color" flags="Color" x="1" y="1" z="1" w="1"/>
                                         <Property type="Float4x4" name="m_local" Ix="0.9236002" Iy="0.3833572" Iz="2.2872507e-07" Iw="0" Jx="-0.3833572" Jy="0.9236002" Jz="-6.2799762e-07" Jw="0" Kx="-4.5199789e-07" Ky="4.9233535e-07" Kz="1" Kw="0" Tx="-15.496564" Ty="-7.5047498" Tz="-0.00050014257" Tw="1"/>
@@ -540,7 +540,7 @@
                                 <Property type="ObjectPtrVector" name="m_components"/>
                                 <Property type="ObjectPtrVector" name="m_children" flags="Hidden">
                                     <Object class="GameObject">
-                                        <Property type="String" name="m_name" value="Banyuls"/>
+                                        <Property type="String" name="m_name" value="Banyuls 0"/>
                                         <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled|Static"/>
                                         <Property type="Float4" name="m_color" flags="Color" x="1" y="1" z="1" w="1"/>
                                         <Property type="Float4x4" name="m_local" Ix="-1.0000001" Iy="-1.1920929e-07" Iz="0" Iw="0" Jx="1.1920929e-07" Jy="-1.0000001" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="2.5" Ty="8" Tz="0.5" Tw="1"/>
@@ -593,7 +593,7 @@
                                         <Property type="ObjectPtrVector" name="m_children" flags="Hidden"/>
                                     </Object>
                                     <Object class="GameObject">
-                                        <Property type="String" name="m_name" value="HotDog"/>
+                                        <Property type="String" name="m_name" value="HotDog 0"/>
                                         <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled|Static"/>
                                         <Property type="Float4" name="m_color" flags="Color" x="1" y="1" z="1" w="1"/>
                                         <Property type="Float4x4" name="m_local" Ix="-1" Iy="0.000488166" Iz="2.5833941e-08" Iw="0" Jx="-0.000488166" Jy="-0.99999994" Jz="-3.1061667e-11" Jw="0" Kx="5.5636278e-08" Ky="2.7166755e-11" Kz="1.0000001" Kw="0" Tx="-2.5" Ty="8" Tz="0.5" Tw="1"/>
@@ -646,7 +646,7 @@
                                         <Property type="ObjectPtrVector" name="m_children" flags="Hidden"/>
                                     </Object>
                                     <Object class="GameObject">
-                                        <Property type="String" name="m_name" value="Octafight"/>
+                                        <Property type="String" name="m_name" value="Octafight 0"/>
                                         <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled|Static"/>
                                         <Property type="Float4" name="m_color" flags="Color" x="1" y="1" z="1" w="1"/>
                                         <Property type="Float4x4" name="m_local" Ix="-1" Iy="0.000488166" Iz="2.5833941e-08" Iw="0" Jx="-0.000488166" Jy="-0.99999994" Jz="-3.1061667e-11" Jw="0" Kx="5.5636278e-08" Ky="2.7166755e-11" Kz="1.0000001" Kw="0" Tx="-7.5" Ty="8" Tz="0.5" Tw="1"/>
@@ -699,7 +699,7 @@
                                         <Property type="ObjectPtrVector" name="m_children" flags="Hidden"/>
                                     </Object>
                                     <Object class="GameObject">
-                                        <Property type="String" name="m_name" value="Banyuls"/>
+                                        <Property type="String" name="m_name" value="Banyuls 1"/>
                                         <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled|Static"/>
                                         <Property type="Float4" name="m_color" flags="Color" x="1" y="1" z="1" w="1"/>
                                         <Property type="Float4x4" name="m_local" Ix="-1.0000001" Iy="-1.1920929e-07" Iz="0" Iw="0" Jx="1.1920929e-07" Jy="-1.0000001" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="-12.5" Ty="8" Tz="0.5" Tw="1"/>
@@ -752,7 +752,7 @@
                                         <Property type="ObjectPtrVector" name="m_children" flags="Hidden"/>
                                     </Object>
                                     <Object class="GameObject">
-                                        <Property type="String" name="m_name" value="Octafight"/>
+                                        <Property type="String" name="m_name" value="Octafight 1"/>
                                         <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled|Static"/>
                                         <Property type="Float4" name="m_color" flags="Color" x="1" y="1" z="1" w="1"/>
                                         <Property type="Float4x4" name="m_local" Ix="-1" Iy="0.000488166" Iz="2.5833941e-08" Iw="0" Jx="-0.000488166" Jy="-0.99999994" Jz="-3.1061667e-11" Jw="0" Kx="5.5636278e-08" Ky="2.7166755e-11" Kz="1.0000001" Kw="0" Tx="7.5" Ty="8" Tz="0.5" Tw="1"/>
@@ -805,7 +805,7 @@
                                         <Property type="ObjectPtrVector" name="m_children" flags="Hidden"/>
                                     </Object>
                                     <Object class="GameObject">
-                                        <Property type="String" name="m_name" value="HotDog"/>
+                                        <Property type="String" name="m_name" value="HotDog 1"/>
                                         <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled|Static"/>
                                         <Property type="Float4" name="m_color" flags="Color" x="1" y="1" z="1" w="1"/>
                                         <Property type="Float4x4" name="m_local" Ix="-1" Iy="0.000488166" Iz="2.5833941e-08" Iw="0" Jx="-0.000488166" Jy="-0.99999994" Jz="-3.1061667e-11" Jw="0" Kx="5.5636278e-08" Ky="2.7166755e-11" Kz="1.0000001" Kw="0" Tx="12.5" Ty="8" Tz="0.5" Tw="1"/>
@@ -858,7 +858,7 @@
                                         <Property type="ObjectPtrVector" name="m_children" flags="Hidden"/>
                                     </Object>
                                     <Object class="GameObject">
-                                        <Property type="String" name="m_name" value="Banyuls"/>
+                                        <Property type="String" name="m_name" value="Banyuls 2"/>
                                         <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled|Static"/>
                                         <Property type="Float4" name="m_color" flags="Color" x="1" y="1" z="1" w="1"/>
                                         <Property type="Float4x4" name="m_local" Ix="1" Iy="1.4901161e-07" Iz="0" Iw="0" Jx="-1.4901161e-07" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="-2.4999998" Ty="-8.0000019" Tz="0.5" Tw="1"/>
@@ -911,7 +911,7 @@
                                         <Property type="ObjectPtrVector" name="m_children" flags="Hidden"/>
                                     </Object>
                                     <Object class="GameObject">
-                                        <Property type="String" name="m_name" value="HotDog"/>
+                                        <Property type="String" name="m_name" value="HotDog 2"/>
                                         <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled|Static"/>
                                         <Property type="Float4" name="m_color" flags="Color" x="1" y="1" z="1" w="1"/>
                                         <Property type="Float4x4" name="m_local" Ix="1" Iy="-0.00048798323" Iz="2.5833941e-08" Iw="0" Jx="0.00048795342" Jy="0.99999988" Jz="-3.1061667e-11" Jw="0" Kx="-5.5636274e-08" Ky="-2.7171154e-11" Kz="1.0000001" Kw="0" Tx="2.500001" Ty="-8" Tz="0.5" Tw="1"/>
@@ -964,7 +964,7 @@
                                         <Property type="ObjectPtrVector" name="m_children" flags="Hidden"/>
                                     </Object>
                                     <Object class="GameObject">
-                                        <Property type="String" name="m_name" value="Octafight"/>
+                                        <Property type="String" name="m_name" value="Octafight 2"/>
                                         <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled|Static"/>
                                         <Property type="Float4" name="m_color" flags="Color" x="1" y="1" z="1" w="1"/>
                                         <Property type="Float4x4" name="m_local" Ix="1" Iy="-0.00048798323" Iz="2.5833941e-08" Iw="0" Jx="0.00048795342" Jy="0.99999988" Jz="-3.1061667e-11" Jw="0" Kx="-5.5636274e-08" Ky="-2.7171154e-11" Kz="1.0000001" Kw="0" Tx="7.500001" Ty="-7.9999981" Tz="0.5" Tw="1"/>
@@ -1017,7 +1017,7 @@
                                         <Property type="ObjectPtrVector" name="m_children" flags="Hidden"/>
                                     </Object>
                                     <Object class="GameObject">
-                                        <Property type="String" name="m_name" value="Banyuls"/>
+                                        <Property type="String" name="m_name" value="Banyuls 3"/>
                                         <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled|Static"/>
                                         <Property type="Float4" name="m_color" flags="Color" x="1" y="1" z="1" w="1"/>
                                         <Property type="Float4x4" name="m_local" Ix="1" Iy="1.4901161e-07" Iz="0" Iw="0" Jx="-1.4901161e-07" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="12.500005" Ty="-8" Tz="0.5" Tw="1"/>
@@ -1070,7 +1070,7 @@
                                         <Property type="ObjectPtrVector" name="m_children" flags="Hidden"/>
                                     </Object>
                                     <Object class="GameObject">
-                                        <Property type="String" name="m_name" value="Octafight"/>
+                                        <Property type="String" name="m_name" value="Octafight 3"/>
                                         <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled|Static"/>
                                         <Property type="Float4" name="m_color" flags="Color" x="1" y="1" z="1" w="1"/>
                                         <Property type="Float4x4" name="m_local" Ix="1" Iy="-0.00048798323" Iz="2.5833941e-08" Iw="0" Jx="0.00048795342" Jy="0.99999988" Jz="-3.1061667e-11" Jw="0" Kx="-5.5636274e-08" Ky="-2.7171154e-11" Kz="1.0000001" Kw="0" Tx="-7.5" Ty="-8" Tz="0.5" Tw="1"/>
@@ -1123,7 +1123,7 @@
                                         <Property type="ObjectPtrVector" name="m_children" flags="Hidden"/>
                                     </Object>
                                     <Object class="GameObject">
-                                        <Property type="String" name="m_name" value="HotDog"/>
+                                        <Property type="String" name="m_name" value="HotDog 3"/>
                                         <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled|Static"/>
                                         <Property type="Float4" name="m_color" flags="Color" x="1" y="1" z="1" w="1"/>
                                         <Property type="Float4x4" name="m_local" Ix="1" Iy="-0.00048798323" Iz="2.5833941e-08" Iw="0" Jx="0.00048795342" Jy="0.99999988" Jz="-3.1061667e-11" Jw="0" Kx="-5.5636274e-08" Ky="-2.7171154e-11" Kz="1.0000001" Kw="0" Tx="-12.499997" Ty="-8.0000019" Tz="0.5" Tw="1"/>
@@ -1176,7 +1176,7 @@
                                         <Property type="ObjectPtrVector" name="m_children" flags="Hidden"/>
                                     </Object>
                                     <Object class="GameObject">
-                                        <Property type="String" name="m_name" value="Banyuls"/>
+                                        <Property type="String" name="m_name" value="Banyuls 4"/>
                                         <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled|Static"/>
                                         <Property type="Float4" name="m_color" flags="Color" x="1" y="1" z="1" w="1"/>
                                         <Property type="Float4x4" name="m_local" Ix="1.4901161e-07" Iy="-1" Iz="0" Iw="0" Jx="1" Jy="1.4901161e-07" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="-15.999999" Ty="-4.9999986" Tz="0.5" Tw="1"/>
@@ -1229,7 +1229,7 @@
                                         <Property type="ObjectPtrVector" name="m_children" flags="Hidden"/>
                                     </Object>
                                     <Object class="GameObject">
-                                        <Property type="String" name="m_name" value="HotDog"/>
+                                        <Property type="String" name="m_name" value="HotDog 4"/>
                                         <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled|Static"/>
                                         <Property type="Float4" name="m_color" flags="Color" x="1" y="1" z="1" w="1"/>
                                         <Property type="Float4x4" name="m_local" Ix="-0.00048810244" Iy="-0.99999988" Iz="2.5833941e-08" Iw="0" Jx="0.99999976" Jy="-0.00048804283" Jz="-3.1061667e-11" Jw="0" Kx="-2.7165825e-11" Ky="5.5636274e-08" Kz="1.0000001" Kw="0" Tx="-16.000002" Ty="5" Tz="0.5" Tw="1"/>
@@ -1282,7 +1282,7 @@
                                         <Property type="ObjectPtrVector" name="m_children" flags="Hidden"/>
                                     </Object>
                                     <Object class="GameObject">
-                                        <Property type="String" name="m_name" value="Banyuls"/>
+                                        <Property type="String" name="m_name" value="Banyuls 5"/>
                                         <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled|Static"/>
                                         <Property type="Float4" name="m_color" flags="Color" x="1" y="1" z="1" w="1"/>
                                         <Property type="Float4x4" name="m_local" Ix="0.00034508505" Iy="0.99999982" Iz="0" Iw="0" Jx="-0.99999982" Jy="0.00034508505" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="16.001728" Ty="4.9993072" Tz="0.5" Tw="1"/>
@@ -1335,7 +1335,7 @@
                                         <Property type="ObjectPtrVector" name="m_children" flags="Hidden"/>
                                     </Object>
                                     <Object class="GameObject">
-                                        <Property type="String" name="m_name" value="HotDog"/>
+                                        <Property type="String" name="m_name" value="HotDog 5"/>
                                         <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled|Static"/>
                                         <Property type="Float4" name="m_color" flags="Color" x="1" y="1" z="1" w="1"/>
                                         <Property type="Float4x4" name="m_local" Ix="0.00083330669" Iy="0.99999964" Iz="2.5833941e-08" Iw="0" Jx="-0.99999964" Jy="0.00083318749" Jz="-3.1061667e-11" Jw="0" Kx="7.9500425e-12" Ky="-5.5636285e-08" Kz="1.0000001" Kw="0" Tx="15.998278" Ty="-5.0006919" Tz="0.5" Tw="1"/>
@@ -1409,13 +1409,13 @@
                                                     <Object class="DirectionalLightDesc">
                                                         <Property type="String" name="m_name" flags="Hidden" value="DirectionalLightDesc #1"/>
                                                         <Property type="Bool" name="m_shadow" value="true"/>
-                                                        <Property type="LayoutElement" name="Shadow Settings"/>
+                                                        <Property type="LayoutElement" name="Shadow Settings" flags="Optional"/>
                                                         <Property type="Float2" name="m_shadowRange" x="0.1" y="100"/>
                                                         <Property type="Float" name="m_shadowBias" flags="HasRange" value="0.001"/>
                                                         <Property type="Uint2" name="m_shadowSize" x="50" y="50"/>
                                                         <Property type="Uint2" name="m_shadowResolution" x="2048" y="2048"/>
                                                         <Property type="Float" name="m_shadowIntensity" flags="HasRange" value="0.5"/>
-                                                        <Property type="LayoutElement" name=""/>
+                                                        <Property type="LayoutElement" name="" flags="Optional"/>
                                                         <Property type="Float4" name="m_color" flags="Color|HDR" x="1" y="1" z="1" w="1"/>
                                                         <Property type="Float" name="m_intensity" value="1"/>
                                                     </Object>
@@ -1437,13 +1437,13 @@
                                                     <Object class="OmniLightDesc">
                                                         <Property type="String" name="m_name" flags="Hidden" value="OmniLightDesc #0"/>
                                                         <Property type="Bool" name="m_shadow" value="false"/>
-                                                        <Property type="LayoutElement" name="Shadow Settings"/>
+                                                        <Property type="LayoutElement" name="Shadow Settings" flags="Optional"/>
                                                         <Property type="Float2" name="m_shadowRange" x="0.1" y="100"/>
                                                         <Property type="Float" name="m_shadowBias" flags="HasRange" value="0.001"/>
                                                         <Property type="Uint2" name="m_shadowSize" x="16" y="16"/>
                                                         <Property type="Uint2" name="m_shadowResolution" x="1024" y="1024"/>
                                                         <Property type="Float" name="m_shadowIntensity" flags="HasRange" value="1"/>
-                                                        <Property type="LayoutElement" name=""/>
+                                                        <Property type="LayoutElement" name="" flags="Optional"/>
                                                         <Property type="Float4" name="m_color" flags="Color|HDR" x="1" y="0" z="0" w="1"/>
                                                         <Property type="Float" name="m_intensity" value="1"/>
                                                         <Property type="Bool" name="m_useMaxRadius" flags="Hidden" value="true"/>
@@ -1467,13 +1467,13 @@
                                                     <Object class="OmniLightDesc">
                                                         <Property type="String" name="m_name" flags="Hidden" value="OmniLightDesc #0"/>
                                                         <Property type="Bool" name="m_shadow" value="false"/>
-                                                        <Property type="LayoutElement" name="Shadow Settings"/>
+                                                        <Property type="LayoutElement" name="Shadow Settings" flags="Optional"/>
                                                         <Property type="Float2" name="m_shadowRange" x="0.1" y="100"/>
                                                         <Property type="Float" name="m_shadowBias" flags="HasRange" value="0.001"/>
                                                         <Property type="Uint2" name="m_shadowSize" x="16" y="16"/>
                                                         <Property type="Uint2" name="m_shadowResolution" x="1024" y="1024"/>
                                                         <Property type="Float" name="m_shadowIntensity" flags="HasRange" value="1"/>
-                                                        <Property type="LayoutElement" name=""/>
+                                                        <Property type="LayoutElement" name="" flags="Optional"/>
                                                         <Property type="Float4" name="m_color" flags="Color|HDR" x="0.56504822" y="1" z="0.37065637" w="1"/>
                                                         <Property type="Float" name="m_intensity" value="1"/>
                                                         <Property type="Bool" name="m_useMaxRadius" flags="Hidden" value="true"/>
@@ -1497,13 +1497,13 @@
                                                     <Object class="OmniLightDesc">
                                                         <Property type="String" name="m_name" flags="Hidden" value="OmniLightDesc #0"/>
                                                         <Property type="Bool" name="m_shadow" value="false"/>
-                                                        <Property type="LayoutElement" name="Shadow Settings"/>
+                                                        <Property type="LayoutElement" name="Shadow Settings" flags="Optional"/>
                                                         <Property type="Float2" name="m_shadowRange" x="0.1" y="100"/>
                                                         <Property type="Float" name="m_shadowBias" flags="HasRange" value="0.001"/>
                                                         <Property type="Uint2" name="m_shadowSize" x="16" y="16"/>
                                                         <Property type="Uint2" name="m_shadowResolution" x="1024" y="1024"/>
                                                         <Property type="Float" name="m_shadowIntensity" flags="HasRange" value="1"/>
-                                                        <Property type="LayoutElement" name=""/>
+                                                        <Property type="LayoutElement" name="" flags="Optional"/>
                                                         <Property type="Float4" name="m_color" flags="Color|HDR" x="0.39768338" y="0.42093897" z="1" w="1"/>
                                                         <Property type="Float" name="m_intensity" value="1"/>
                                                         <Property type="Bool" name="m_useMaxRadius" flags="Hidden" value="true"/>

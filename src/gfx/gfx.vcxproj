@@ -118,8 +118,6 @@
     <ClInclude Include="Profiler\Profiler.h" />
     <ClInclude Include="Raytracing\BLAS.h" />
     <ClInclude Include="Raytracing\BLAS.hpp" />
-    <ClInclude Include="Raytracing\BLASCollection.h" />
-    <ClInclude Include="Raytracing\BLASCollection.hpp" />
     <ClInclude Include="Raytracing\dx12\BLAS_dx12.h" />
     <ClInclude Include="Raytracing\dx12\BLAS_dx12.hpp" />
     <ClInclude Include="Raytracing\dx12\TLAS_dx12.h" />

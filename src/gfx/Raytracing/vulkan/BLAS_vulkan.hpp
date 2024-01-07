@@ -3,8 +3,8 @@
 namespace vg::gfx::vulkan
 {
     //--------------------------------------------------------------------------------------
-    BLAS::BLAS(BLASUpdateType _blasUpdateType) :
-        super(_blasUpdateType)
+    BLAS::BLAS(BLASUpdateType _blasUpdateType, gfx::BLASVariantKey _key) :
+        super(_blasUpdateType, _key)
     {
 
     }
@@ -17,17 +17,17 @@ namespace vg::gfx::vulkan
     }
 
     //--------------------------------------------------------------------------------------
-    void BLAS::addIndexedGeometry(const gfx::Buffer * _ib, core::uint _ibOffset, core::uint _indexCount, const gfx::Buffer * _vb, core::uint _vbOffset, core::uint _vertexCount, core::uint _vbStride)
+    void BLAS::addIndexedGeometry(const gfx::Buffer * _ib, core::uint _ibOffset, core::uint _indexCount, const gfx::Buffer * _vb, core::uint _vbOffset, core::uint _vertexCount, core::uint _vbStride, SurfaceType _surfaceType)
     {
         const BufferDesc & vbDesc = _vb->getBufDesc();
         const BufferDesc & ibDesc = _ib->getBufDesc();
 
-        if (BLASUpdateType::Static == m_blasUpdateType)
+        if (BLASUpdateType::Static == m_updateType)
             VG_ASSERT(vbDesc.getElementSize() == _vbStride);
 
         VkAccelerationStructureGeometryKHR desc = {};
         desc.sType = VK_STRUCTURE_TYPE_ACCELERATION_STRUCTURE_GEOMETRY_KHR;
-        desc.flags = VK_GEOMETRY_OPAQUE_BIT_KHR;
+        desc.flags = (SurfaceType::Opaque == _surfaceType) ? VK_GEOMETRY_OPAQUE_BIT_KHR : 0x0;
         desc.geometryType = VK_GEOMETRY_TYPE_TRIANGLES_KHR;
         desc.geometry.triangles.sType = VK_STRUCTURE_TYPE_ACCELERATION_STRUCTURE_GEOMETRY_TRIANGLES_DATA_KHR;
         desc.geometry.triangles.vertexData.deviceAddress = _vb->getResource().getVulkanDeviceAddress() + _vbOffset;
@@ -75,10 +75,10 @@ namespace vg::gfx::vulkan
         VkBuildAccelerationStructureModeKHR mode;
         VkBuildAccelerationStructureFlagsKHR flags;
         VkAccelerationStructureKHR src = VK_NULL_HANDLE;
-        switch (m_blasUpdateType)
+        switch (m_updateType)
         {
             default:
-                VG_ASSERT_ENUM_NOT_IMPLEMENTED(m_blasUpdateType);
+                VG_ASSERT_ENUM_NOT_IMPLEMENTED(m_updateType);
                 break;
 
             case BLASUpdateType::Static:

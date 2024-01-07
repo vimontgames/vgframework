@@ -3,8 +3,8 @@
 namespace vg::gfx::dx12
 {
     //--------------------------------------------------------------------------------------
-    BLAS::BLAS(BLASUpdateType _blasUpdateType) :
-        super(_blasUpdateType)
+    BLAS::BLAS(BLASUpdateType _blasUpdateType, BLASVariantKey _key) :
+        super(_blasUpdateType, _key)
     {
 
     }
@@ -16,16 +16,16 @@ namespace vg::gfx::dx12
     }
 
     //--------------------------------------------------------------------------------------
-    void BLAS::addIndexedGeometry(const gfx::Buffer * _ib, core::uint _ibOffset, core::uint _indexCount, const gfx::Buffer * _vb, core::uint _vbOffset, core::uint _vertexCount, core::uint _vbStride)
+    void BLAS::addIndexedGeometry(const gfx::Buffer * _ib, core::uint _ibOffset, core::uint _indexCount, const gfx::Buffer * _vb, core::uint _vbOffset, core::uint _vertexCount, core::uint _vbStride, SurfaceType _surfaceType)
     {
         D3D12_RAYTRACING_GEOMETRY_DESC desc{};
         desc.Type = D3D12_RAYTRACING_GEOMETRY_TYPE_TRIANGLES;
-        desc.Flags = D3D12_RAYTRACING_GEOMETRY_FLAG_OPAQUE;
+        desc.Flags = (_surfaceType == SurfaceType::Opaque) ? D3D12_RAYTRACING_GEOMETRY_FLAG_OPAQUE : D3D12_RAYTRACING_GEOMETRY_FLAG_NONE;
 
         const BufferDesc & vbDesc = _vb->getBufDesc();
         const BufferDesc & ibDesc = _ib->getBufDesc();
 
-        if (BLASUpdateType::Static == m_blasUpdateType)
+        if (BLASUpdateType::Static == m_updateType)
             VG_ASSERT(vbDesc.getElementSize() == _vbStride);
 
         desc.Triangles.VertexBuffer.StartAddress = _vb->getResource().getd3d12BufferResource()->GetGPUVirtualAddress() + _vbOffset;
@@ -60,10 +60,10 @@ namespace vg::gfx::dx12
         // Get AS build Info
         m_DXRAccelStructInputs.Type = D3D12_RAYTRACING_ACCELERATION_STRUCTURE_TYPE_BOTTOM_LEVEL;
         D3D12_RAYTRACING_ACCELERATION_STRUCTURE_BUILD_FLAGS flags;
-        switch (m_blasUpdateType)
+        switch (m_updateType)
         {
             default:
-                VG_ASSERT_ENUM_NOT_IMPLEMENTED(m_blasUpdateType);
+                VG_ASSERT_ENUM_NOT_IMPLEMENTED(m_updateType);
                 break;
 
             case BLASUpdateType::Static:

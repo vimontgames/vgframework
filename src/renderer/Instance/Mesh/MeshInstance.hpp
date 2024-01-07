@@ -6,7 +6,6 @@
 #include "gfx/CommandList/CommandList.h"
 #include "gfx/Resource/Buffer.h"
 #include "gfx/Resource/Texture.h"
-#include "gfx/Raytracing/BLASCollection.h"
 #include "gfx/Raytracing/TLAS.h"
 
 #include "renderer/Renderer.h"
@@ -55,7 +54,7 @@ namespace vg::renderer
     //--------------------------------------------------------------------------------------
     MeshInstance::~MeshInstance()
     {
-        VG_SAFE_RELEASE(m_instanceBLASes);
+        VG_SAFE_RELEASE(m_instanceBLAS);
         VG_SAFE_RELEASE(m_instanceSkeleton);
 
         for (uint i = 0; i < m_animationBindings.size(); ++i)
@@ -150,12 +149,12 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    gfx::BLASCollectionKey MeshInstance::computeBLASCollectionKey() const
+    gfx::BLASVariantKey MeshInstance::computeBLASVariantKey() const
     {
         const auto & materials = getMaterials();
         VG_ASSERT(materials.size() <= 32);
         
-        gfx::BLASCollectionKey key = 0;
+        gfx::BLASVariantKey key = 0;
 
         MeshModel * meshModel = (MeshModel*)getModel(Lod::Lod0);
         if (meshModel)
@@ -168,7 +167,7 @@ namespace vg::renderer
                 if (i < materials.size())
                 {
                     if (const auto * mat = materials[i])
-                        BLASCollection::setSurfaceTypeBits(key, i, mat->getSurfaceType());
+                        key |= ((u64)mat->getSurfaceType()) << (i<<1);
                 }
             }
         }
@@ -181,18 +180,18 @@ namespace vg::renderer
     {
         if (!IsSkinned() && RendererOptions::get()->isRayTracingEnabled())
         {
-            auto * BLASes = getInstanceBLASes();
+            auto * blas = getInstanceBLAS();
 
             bool update = false;
 
-            if (nullptr == BLASes)
+            if (nullptr == blas)
             {
                 update = true;
             }
             else
             {
-                auto key = computeBLASCollectionKey();
-                if (BLASes->getKey() != key)
+                auto key = computeBLASVariantKey();
+                if (blas->getKey() != key)
                     update = true;
             }
 
@@ -216,8 +215,8 @@ namespace vg::renderer
     {
         auto * tlas = _view->getTLAS();
 
-        if (const auto * BLASes = getInstanceBLASes())
-            tlas->addInstances(BLASes, getGlobalMatrix(), _index);
+        if (const auto * blas = getInstanceBLAS())
+            tlas->addInstance(blas, getGlobalMatrix(), _index);
 
         return true;
     }
@@ -331,7 +330,7 @@ namespace vg::renderer
         VG_ASSERT(nullptr == _model || nullptr != dynamic_cast<MeshModel *>(_model));
 
         if (meshModel != current)
-            setInstanceBLASes(nullptr);
+            setInstanceBLAS(nullptr);
 
         super::SetModel(_lod, (Model *)_model);
 

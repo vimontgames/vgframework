@@ -7,7 +7,6 @@
 #include "renderer/Geometry/Mesh/MeshGeometry.h"
 #include "gfx/Raytracing/TLAS.h"
 #include "gfx/Raytracing/BLAS.h"
-#include "gfx/Raytracing/BLASCollection.h"
 #include "renderer/Renderer.h"
 #include "renderer/View/View.h"
 #include "renderer/View/Shadow/ShadowView.h"
@@ -42,7 +41,7 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    // Can't create BLASes right after enabling RayTracing because the actual BLASes to use 
+    // Can't create BLAS right after enabling RayTracing because the actual BLASes to use 
     // will depend on the materials' surface types, so instead we create a BLASCollection 
     // hash that will be populated on-demand.
     //--------------------------------------------------------------------------------------
@@ -65,7 +64,7 @@ namespace vg::renderer
         for (uint i = 0; i < m_meshInstances.size(); ++i)
         {
             MeshInstance * meshInstance = m_meshInstances[i];
-            meshInstance->setInstanceBLASes(nullptr);
+            meshInstance->setInstanceBLAS(nullptr);
         }
 
         for (uint i = 0; i < m_meshModels.size(); ++i)
@@ -143,30 +142,31 @@ namespace vg::renderer
             {
                 MeshInstance * instance = m_meshInstanceUpdateQueue[i];
                 VG_ASSERT(!instance->IsSkinned());
-                auto * BLASes = instance->getInstanceBLASes();
+                auto * blas = instance->getInstanceBLAS();
                 MeshModel * meshModel = (MeshModel*)instance->getMeshModel(Lod::Lod0);
 
                 // Create BLAS collection if it does not exist yet or it's key changed
-                gfx::BLASCollectionKey BLASeskey = instance->computeBLASCollectionKey();
+                gfx::BLASVariantKey key = instance->computeBLASVariantKey();
 
-                if (nullptr == BLASes || BLASes->getKey() != BLASeskey)
+                if (nullptr == blas || blas->getKey() != key)
                 {
                     // Try to find a corresponding BLAS in map
-                    gfx::BLASCollectionMap & BLASesMap = meshModel->getBLASCollectionMap();
+                    gfx::BLASMap & BLASMap = meshModel->getBLASMap();
 
-                    auto it = BLASesMap.find(BLASeskey);
-                    if (BLASesMap.end() != it)
+                    auto it = BLASMap.find(key);
+                    if (BLASMap.end() != it)
                     {
-                        instance->setInstanceBLASes(it->second);    // This will increase RefCount
-                        VG_INFO("[Renderer] Reuse existing BLASes collection 0x%016X for instance \"%s\" with key 0x%016X", it->second, instance->getName().c_str(), BLASeskey);
+                        blas = it->second;
+                        instance->setInstanceBLAS(blas);    // This will increase RefCount
+                        VG_INFO("[Renderer] Use existing BLAS 0x%016X for instance \"%s\" with key 0x%016X (RefCount=%u)", it->second, instance->getName().c_str(), key, blas->getRefCount());
                     }
                     else
                     {
                         // Create new BLAS collection and add it to hash for reuse
-                        auto BLASes = new gfx::BLASCollection(BLASeskey, gfx::BLASUpdateType::Static);
-                        instance->setInstanceBLASes(BLASes);    // This will increase RefCount
-                        BLASes->Release();
-                        BLASes->clear();
+                        blas = new gfx::BLAS(gfx::BLASUpdateType::Static, key);
+                        instance->setInstanceBLAS(blas);    // This will increase RefCount
+                        blas->Release();
+                        blas->clear();
 
                         const MeshGeometry * meshGeo = meshModel->getGeometry();
                         gfx::Buffer * ib = meshGeo->getIndexBuffer();
@@ -188,16 +188,15 @@ namespace vg::renderer
                                 surfaceType = mat->getSurfaceType();
 
                             const Batch & batch = batches[m];
-                            gfx::BLAS * blas = BLASes->getBLAS(surfaceType);
                             VG_ASSERT(blas);
-                            blas->addIndexedGeometry(ib, ibOffset + batch.offset, batch.count, modelVB, 0, modelVB->getBufDesc().getElementCount(), vertexStride);
+                            blas->addIndexedGeometry(ib, ibOffset + batch.offset, batch.count, modelVB, 0, modelVB->getBufDesc().getElementCount(), vertexStride, surfaceType);
                         }
 
-                        BLASes->update(_cmdList);
+                        blas->update(_cmdList);
 
-                        BLASesMap.insert(std::pair(BLASeskey, BLASes));
+                        BLASMap.insert(std::pair(key, blas));
 
-                        VG_INFO("[Renderer] Create new BLASes collection 0x%016X for instance \"%s\" with key 0x%016X (%u)", BLASes, instance->getName().c_str(), BLASeskey, BLASes->getRefCount());
+                        VG_INFO("[Renderer] Create BLAS 0x%016X for instance \"%s\" with key 0x%016X (RefCount=%u)", blas, instance->getName().c_str(), key, blas->getRefCount());
                     }
                 }
             }
@@ -217,20 +216,21 @@ namespace vg::renderer
                 for (uint i = 0; i < skins.size(); ++i)
                 {
                     MeshInstance * skin = skins[i];
-                    auto * BLASes = skin->getInstanceBLASes();
+                    auto * blas = skin->getInstanceBLAS();
 
                     // Create BLAS collection if it does not exist yet or it's key changed
-                    gfx::BLASCollectionKey BLASkey = skin->computeBLASCollectionKey();
+                    gfx::BLASVariantKey key = skin->computeBLASVariantKey();
 
-                    if (nullptr == BLASes || BLASes->getKey() != BLASkey)
+                    if (nullptr == blas || blas->getKey() != key)
                     {
                         // Create instance BLAS from model geometry
-                        BLASes = new gfx::BLASCollection(BLASkey, gfx::BLASUpdateType::Dynamic);
-                        skin->setInstanceBLASes(BLASes);
-                        BLASes->Release();
+                        blas = new gfx::BLAS(gfx::BLASUpdateType::Dynamic, key);
+                        skin->setInstanceBLAS(blas);
+                        blas->Release();
+                        VG_INFO("[Renderer] Create BLAS 0x%016X for skinned instance \"%s\" with key 0x%016X (RefCount=%u)", blas, skin->getName().c_str(), key, blas->getRefCount());
                     }
 
-                    BLASes->clear();
+                    blas->clear();
 
                     const MeshModel * meshModel = skin->getMeshModel(Lod::Lod0);
 
@@ -256,12 +256,10 @@ namespace vg::renderer
                             surfaceType = mat->getSurfaceType();
 
                         const Batch & batch = batches[m];
-                        gfx::BLAS * blas = BLASes->getBLAS(surfaceType);
-                        VG_ASSERT(blas);
-                        blas->addIndexedGeometry(ib, ibOffset + batch.offset, batch.count, skinVB, skinVBOffset, modelVB->getBufDesc().getElementCount(), vertexStride);
+                        blas->addIndexedGeometry(ib, ibOffset + batch.offset, batch.count, skinVB, skinVBOffset, modelVB->getBufDesc().getElementCount(), vertexStride, surfaceType);
                     }
 
-                    BLASes->update(_cmdList);
+                    blas->update(_cmdList);
                 }
 
                 if (nullptr != _skinningBuffer)
@@ -294,7 +292,7 @@ namespace vg::renderer
 
                 bool updateTLAS = false;
 
-                const GraphicInstanceList & instances = _view->getCullingJobResult().get(GraphicInstanceListType::Opaque);
+                const GraphicInstanceList & instances = _view->getCullingJobResult().get(GraphicInstanceListType::All);
 
                 core::set<GraphicInstance *> set;
 
@@ -307,7 +305,7 @@ namespace vg::renderer
                 const auto shadowViews = _view->getShadowViews();
                 for (ShadowView * shadowView : shadowViews)
                 {
-                    const GraphicInstanceList & instances = shadowView->getCullingJobResult().get(GraphicInstanceListType::Opaque);
+                    const GraphicInstanceList & instances = shadowView->getCullingJobResult().get(GraphicInstanceListType::All);
 
                     for (uint i = 0; i < instances.m_instances.size(); ++i)
                     {

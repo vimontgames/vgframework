@@ -174,20 +174,51 @@ LightingResult computeDirectLighting(ViewConstants _viewConstants, float3 _eyePo
 				ray.TMin      = 0.0325f;
 				ray.TMax      = 10;
 
-				RayQuery<RAY_FLAG_FORCE_OPAQUE> query;
+				RayQuery<RAY_FLAG_NONE> query;
 				query.TraceRayInline(tlas, 0, 0xff, ray);
-				query.Proceed();
 
 				#ifdef _TOOLMODE
 				rayCount++;
 				#endif
 
+				#if 1
+				query.Proceed();
+				#else
+				// TODO : get material and apply alphatest/alphaclip as in https://microsoft.github.io/DirectX-Specs/d3d/Raytracing.html#tracerayinline-example-2
+				while (query.Proceed())
+				{
+					switch(query.CandidateType())
+					{
+						case CANDIDATE_NON_OPAQUE_TRIANGLE:
+						query.CommitNonOpaqueTriangleHit();
+						break;
+					}
+				}
+				#endif
+
 				switch(query.CommittedStatus())
 				{
 					case COMMITTED_TRIANGLE_HIT:
-						shadow = 0;     
+						shadow = 0;   
 						break;
-				}
+				}					
+
+				//if (query.Proceed())
+				//{
+				//	//uint primitiveIndex = query.CommittedInstanceID();
+				//	//float2 barycentrics = query.GetBarycentrics();
+				//
+				//	return output;    
+				//}
+				//else
+				//{
+				//	switch(query.CommittedStatus())
+				//	{
+				//		case COMMITTED_TRIANGLE_HIT:
+				//			shadow = 0;   
+				//			break;
+				//	}					
+				//}
 				#else // _RAYTRACING
 
 				float4 shadowUV = mul(directional.getShadowMatrix(), float4(_worldPos, 1.0f));

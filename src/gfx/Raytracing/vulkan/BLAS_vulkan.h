@@ -14,10 +14,10 @@ namespace vg::gfx::vulkan
         using super = base::BLAS;
 
     public:
-        BLAS(BLASUpdateType _blasUpdateType);
+        BLAS(BLASUpdateType _blasUpdateType, gfx::BLASVariantKey _key);
         ~BLAS();
 
-        void addIndexedGeometry(const gfx::Buffer * _ib, core::uint _ibOffset, core::uint _indexCount, const gfx::Buffer * _vb, core::uint _vbOffset, core::uint _vertexCount, core::uint _vbStride);
+        void addIndexedGeometry(const gfx::Buffer * _ib, core::uint _ibOffset, core::uint _indexCount, const gfx::Buffer * _vb, core::uint _vbOffset, core::uint _vertexCount, core::uint _vbStride, SurfaceType _surfaceType);
         void clear();
         void init(bool _update = false);
         void update(gfx::CommandList * _cmdList);

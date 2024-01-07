@@ -14,8 +14,8 @@ namespace vg::core
 namespace vg::gfx
 {
     class Buffer;
-    class BLASCollection;
-    using BLASCollectionKey = core::u64;
+    class BLAS;
+    using BLASVariantKey = core::u64;
 }
 
 namespace vg::renderer
@@ -71,10 +71,10 @@ namespace vg::renderer
         VG_INLINE const gfx::Buffer *   getSkinnedMeshBuffer        () const;
         VG_INLINE const core::uint      getSkinnedMeshBufferOffset  () const;
 
-        VG_INLINE void                  setInstanceBLASes           (gfx::BLASCollection * _BLASes);
-        VG_INLINE gfx::BLASCollection * getInstanceBLASes           () const;
+        VG_INLINE void                  setInstanceBLAS             (gfx::BLAS * _BLAS);
+        VG_INLINE gfx::BLAS *           getInstanceBLAS             () const;
 
-        gfx::BLASCollectionKey          computeBLASCollectionKey    () const;
+        gfx::BLASVariantKey             computeBLASVariantKey       () const;
         bool                            updateInstanceBLAS          ();
 
         VG_INLINE bool                  setSkinFlag                 (SkinFlags _flag);
@@ -85,7 +85,7 @@ namespace vg::renderer
         Skeleton *                      m_instanceSkeleton = nullptr;
         const gfx::Buffer *             m_skinnedMeshBuffer = nullptr;
         core::uint                      m_skinnedMeshBufferOffset = 0;
-        gfx::BLASCollection *           m_instanceBLASes = nullptr;
+        gfx::BLAS *                     m_instanceBLAS = nullptr;
 
         struct AnimationState
         {

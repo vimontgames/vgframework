@@ -14,12 +14,12 @@
             </Object>
             <Object class="SceneResource">
                 <Property type="String" name="m_name" flags="Hidden" value=""/>
-                <Property type="String" name="m_resourcePath" flags="Hidden" value="data/Scenes/Pablo.scene"/>
+                <Property type="String" name="m_resourcePath" flags="Hidden" value="data/Scenes/Soccer.scene"/>
                 <Property type="String" name="m_name" value=""/>
             </Object>
             <Object class="SceneResource">
                 <Property type="String" name="m_name" flags="Hidden" value=""/>
-                <Property type="String" name="m_resourcePath" flags="Hidden" value="data/Scenes/Romeo.scene"/>
+                <Property type="String" name="m_resourcePath" flags="Hidden" value="data/Scenes/Pablo.scene"/>
                 <Property type="String" name="m_name" value=""/>
             </Object>
             <Object class="SceneResource">
@@ -29,7 +29,7 @@
             </Object>
             <Object class="SceneResource">
                 <Property type="String" name="m_name" flags="Hidden" value=""/>
-                <Property type="String" name="m_resourcePath" flags="Hidden" value="data/Scenes/Soccer.scene"/>
+                <Property type="String" name="m_resourcePath" flags="Hidden" value="data/Scenes/Romeo.scene"/>
                 <Property type="String" name="m_name" value=""/>
             </Object>
         </Property>

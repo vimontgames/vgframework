@@ -210,6 +210,9 @@ namespace vg::editor
         const bool counting = (_count != nullptr);
         const auto children = _gameObject->GetChildren();
 
+        const bool disabled = !asBool(_gameObject->GetFlags() & IGameObject::Flags::Enabled);
+        ImGui::BeginDisabled(disabled);
+
         bool open = counting;
         if (counting)
         {
@@ -438,6 +441,8 @@ namespace vg::editor
 
             if (!counting)
                 ImGui::TreePop();
-        }        
+        }    
+
+        ImGui::EndDisabled();
     }
 }

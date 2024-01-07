@@ -8,5 +8,4 @@
 using namespace vg::core;
 
 #include "BLAS.hpp"
-#include "BLASCollection.hpp"
 #include "TLAS.hpp"

@@ -1,3 +1,5 @@
+#include "gfx/Raytracing/BLAS.h"
+
 namespace vg::renderer
 {
     //--------------------------------------------------------------------------------------
@@ -35,19 +37,19 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    VG_INLINE void MeshInstance::setInstanceBLASes(gfx::BLASCollection * _BLASes)
+    VG_INLINE void MeshInstance::setInstanceBLAS(gfx::BLAS * _BLAS)
     {
-        if (_BLASes != m_instanceBLASes)
+        if (_BLAS != m_instanceBLAS)
         {
-            VG_SAFE_RELEASE_ASYNC(m_instanceBLASes);
-            m_instanceBLASes = _BLASes;
-            VG_SAFE_INCREASE_REFCOUNT(m_instanceBLASes);
+            VG_SAFE_RELEASE_ASYNC(m_instanceBLAS);
+            m_instanceBLAS = _BLAS;
+            VG_SAFE_INCREASE_REFCOUNT(m_instanceBLAS);
         }
     }
 
     //--------------------------------------------------------------------------------------
-    VG_INLINE gfx::BLASCollection * MeshInstance::getInstanceBLASes() const
+    VG_INLINE gfx::BLAS * MeshInstance::getInstanceBLAS() const
     {
-        return m_instanceBLASes;
+        return m_instanceBLAS;
     }
 }
