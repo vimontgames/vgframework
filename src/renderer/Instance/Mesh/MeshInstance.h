@@ -30,16 +30,6 @@ namespace vg::renderer
     public:
         VG_CLASS_DECL(MeshInstance, IMeshInstance);
 
-        enum SkinFlags : core::u32
-        {
-            //RayTracing  = 0x00000001,
-
-            SkinLOD0    = 0x00000010,
-            //SkinLOD1  = 0x00000020,
-            //SkinLOD2  = 0x00000040,
-            //SkinLOD3  = 0x00000080,
-        };
-
         MeshInstance(const core::string & _name, core::IObject * _parent);
         ~MeshInstance();
 
@@ -77,11 +67,7 @@ namespace vg::renderer
         gfx::BLASVariantKey             computeBLASVariantKey       () const;
         bool                            updateInstanceBLAS          ();
 
-        VG_INLINE bool                  setSkinFlag                 (SkinFlags _flag);
-        VG_INLINE bool                  clearSkinFlag               (SkinFlags _flag);
-
     private:
-        core::atomic<core::u32>         m_skinFlags;
         Skeleton *                      m_instanceSkeleton = nullptr;
         const gfx::Buffer *             m_skinnedMeshBuffer = nullptr;
         core::uint                      m_skinnedMeshBufferOffset = 0;

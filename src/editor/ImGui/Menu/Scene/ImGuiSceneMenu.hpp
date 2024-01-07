@@ -24,7 +24,6 @@ namespace vg::editor
 
         if (ImGui::BeginPopupContextItem())
         {
-            ImGui::PushID("SceneMenu");
             if (ImGui::MenuItem("Save", nullptr, false))
             {
                 string filePath;
@@ -53,15 +52,14 @@ namespace vg::editor
             {
                 m_selected = MenuOption::Close;
                 openPopup = true;
-                m_popup = "Remove Scene";
+                m_popup = ImGui::getObjectLabel("Remove Scene", _object);
             }
-            ImGui::PopID();
             ImGui::EndPopup();
         }
 
         if (openPopup)
         {
-            ImGui::OpenPopup(m_popup);
+            ImGui::OpenPopup(m_popup.c_str());
             openPopup = false;
         }
 
@@ -70,7 +68,7 @@ namespace vg::editor
         switch (m_selected)
         {
             case MenuOption::Save:
-            if (fileBrowser.showFileDialog(m_popup, imgui_addons::ImGuiFileBrowser::DialogMode::SAVE, style::dialog::Size, ext.c_str()))
+            if (fileBrowser.showFileDialog(m_popup.c_str(), imgui_addons::ImGuiFileBrowser::DialogMode::SAVE, style::dialog::Size, ext.c_str()))
             {
                 string newFilePath = io::addExtensionIfNotPresent(fileBrowser.selected_path, ".scene");;
                 scene->setName(io::getFileNameWithoutExt(newFilePath));
@@ -80,9 +78,9 @@ namespace vg::editor
             break;
             case MenuOption::Close:
             {
-                if (ImGui::BeginPopupModal(m_popup, nullptr, ImGuiWindowFlags_AlwaysAutoResize))
+                if (ImGui::BeginPopupModal(m_popup.c_str(), nullptr, ImGuiWindowFlags_AlwaysAutoResize))
                 {
-                    ImGui::Text("Are you sure you want to close Scene \"%s\?", scene->getName().c_str());
+                    ImGui::Text("Are you sure you want to close Scene \"%s\"?", scene->getName().c_str());
 
                     if (ImGui::Button("Yes", style::button::SizeMedium))
                     {

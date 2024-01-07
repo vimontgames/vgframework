@@ -76,6 +76,9 @@
     <None Include="Instance\Light\LightInstance.inl">
       <Filter>Instance\Light</Filter>
     </None>
+    <None Include="Instance\GraphicInstance.inl">
+      <Filter>Instance</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Precomp.h" />
@@ -402,6 +405,12 @@
     <ClInclude Include="RenderPass\RenderObjects\Forward\ForwardTransparentPass.hpp">
       <Filter>Pass\RenderObjects\Forward</Filter>
     </ClInclude>
+    <ClInclude Include="RenderPass\Update\InstanceData\InstanceDataUpdatePass.h">
+      <Filter>Pass\Update\InstanceData</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderPass\Update\InstanceData\InstanceDataUpdatePass.hpp">
+      <Filter>Pass\Update\InstanceData</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Pass">
@@ -556,6 +565,9 @@
     </Filter>
     <Filter Include="Pass\RenderObjects\DepthOnly\DepthPrepass">
       <UniqueIdentifier>{5e773015-315d-49dc-bcb5-607c4670615c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Pass\Update\InstanceData">
+      <UniqueIdentifier>{b2f63b1f-9c36-481d-b1be-bf513138d151}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

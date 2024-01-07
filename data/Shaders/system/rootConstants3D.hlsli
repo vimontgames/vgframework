@@ -11,81 +11,95 @@ enum RootConstantsFlags : uint
 
 struct RootConstants3D
 {
-    float4x4 world;     // world matrix (TODO: pass float3x4)
-    float4 color;       // instance color (TODO: pass u32)
-    uint buffer;        // stream0 | unused
-    uint offset;        // stream0 offset
-    uint albedo_normal; // albedo | normal (TODO : pass material constant buffer 16-bits handle instead)
-    uint pbr_unused;    // pbr | unused (TODO : pass material constant buffer 16-bits handle instead)
-    uint picking;       // PickingID
-    uint misc;          // flags (16) | format (8) | matID (8)
+    float4x4 world;             // world matrix (TODO: pass float3x4)
+
+    // TODO : pass material constant buffer 16-bits handle instead
+    float4 color;               // instance color (TODO: pass u32?)
+
+    uint stream0;               // stream0 address
+    uint stream0Offset;         // stream0 offset (might need more than 16 bits because of skinning)
+    uint picking;               // PickingID
+    uint misc;                  // flags (16) | format (8) | matID (8)
+    uint instanceDataOffset;    // Offset in Buffer RESERVEDSLOT_BUFSRV_INSTANCEDATA with Instance data (slot 0 holds default instance data)
+
+    // TODO : pass material constant buffer 16-bits handle instead
+    //float4 color;               // instance color (TODO: pass u32?)
+    //uint albedo_normal;         // albedo | normal 
+    //uint pbr_unused;            // pbr | unused 
 
     #ifdef __cplusplus
     RootConstants3D() :
         world(float4x4::identity()),
         color(float4(1,1,1,1)),
-        buffer(0xFFFFFFFF),
-        offset(0),
-        albedo_normal(0xFFFFFFFF),
+        stream0(0x0000FFFF),
         picking(0),
         misc(0)
     {
-
+        //setAlbedoTextureHandle(RESERVEDSLOT_TEXSRV_DEFAULT_ALBEDO);
+        //setNormalTextureHandle(RESERVEDSLOT_TEXSRV_DEFAULT_NORMAL);
+        //setPBRTextureHandle(RESERVEDSLOT_TEXSRV_DEFAULT_PBR);
     }
     #endif
 
-    // buffer
-    // uint Stream0BufferHandle     : 16;
-    // uint Stream1BufferHandle     : 16
-    void setBufferHandle(uint _stream0)
+    void setGPUInstanceDataOffset(uint _offset)
     {
-        buffer = packUint16(uint2(_stream0, 0));
-    }
-    uint getBufferHandle()
-    {
-        return unpackUint16(buffer).x;
-    }
-    
-    void setBufferOffset(uint _offset)
-    {
-        offset = _offset;
+        instanceDataOffset = _offset;
     }
 
+    uint getGPUInstanceDataOffset()
+    {
+        return instanceDataOffset;
+    }
+
+    // buffer
+    // stream0 address : 16;
+    // stream0 offset  : 16
+    void setBufferHandle(uint _stream0, uint _offset = 0)
+    {
+        stream0 = packUint16low(stream0, _stream0);
+        stream0Offset = _offset;
+    }
+
+    uint getBufferHandle()
+    {
+        return unpackUint16low(stream0);
+    }
+    
     uint getBufferOffset()
     {
-        return offset;
+        return stream0Offset;
     }
 
     // albedo_normal
     // uint AlbedoTex : 16
     // uint NormalTex : 16
-    void setAlbedoTextureHandle(uint _value)
-    {
-        albedo_normal = packUint16low(albedo_normal, _value);
-    }
-    uint getAlbedoTextureHandle()
-    {
-        return unpackUint16low(albedo_normal);
-    }
-
-    void setNormalTextureHandle(uint _value)
-    {
-        albedo_normal = packUint16high(albedo_normal, _value);
-    }
-    uint getNormalTextureHandle()
-    {
-         return unpackUint16high(albedo_normal);
-    }
-
-    // pbr_unused
-    void setPBRTextureHandle(uint _value)
-    {
-        pbr_unused = packUint16low(pbr_unused, _value);
-    }
-    uint getPBRTextureHandle()
-    {
-        return unpackUint16low(pbr_unused);
-    }
+    //void setAlbedoTextureHandle(uint _value)
+    //{
+    //    albedo_normal = packUint16low(albedo_normal, _value);
+    //}
+    //uint getAlbedoTextureHandle()
+    //{
+    //    return unpackUint16low(albedo_normal);
+    //}
+    //
+    //void setNormalTextureHandle(uint _value)
+    //{
+    //    albedo_normal = packUint16high(albedo_normal, _value);
+    //}
+    //uint getNormalTextureHandle()
+    //{
+    //     return unpackUint16high(albedo_normal);
+    //}
+    //
+    //// pbr_unused
+    //void setPBRTextureHandle(uint _value)
+    //{
+    //    pbr_unused = packUint16low(pbr_unused, _value);
+    //}
+    //uint getPBRTextureHandle()
+    //{
+    //    return unpackUint16low(pbr_unused);
+    //}
     
     // picking
     // uint pickingID : 32

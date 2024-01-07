@@ -16,6 +16,7 @@ namespace vg::renderer
 {
     class ImGuiAdapter;
     class FBXImporter;
+    class InstanceDataUpdatePass;
     class ComputeSkinningPass;
     class BLASUpdatePass;
     class ImGuiPass;
@@ -124,6 +125,7 @@ namespace vg::renderer
         ImGuiAdapter *                          m_imgui                     = nullptr;
         FBXImporter *                           m_fbxImporter               = nullptr;
         View *                                  m_mainView                  = nullptr;
+        InstanceDataUpdatePass *                m_instanceDataUpdatePass    = nullptr;
         ComputeSkinningPass *                   m_computeSkinningPass       = nullptr;
         BLASUpdatePass *                        m_BLASUpdatePass            = nullptr;
         ImGuiPass *                             m_imguiPass                 = nullptr; 

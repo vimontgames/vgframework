@@ -48,6 +48,7 @@
     <None Include="Geometry\AABB\AABB.inl" />
     <None Include="Geometry\Geometry.inl" />
     <None Include="Geometry\Mesh\MeshGeometry.inl" />
+    <None Include="Instance\GraphicInstance.inl" />
     <None Include="Instance\Light\LightInstance.inl" />
     <None Include="Instance\Mesh\MeshInstance.inl" />
     <None Include="Renderer.def" />
@@ -162,6 +163,8 @@
     <ClInclude Include="RenderPass\RenderPass.h" />
     <ClInclude Include="RenderPass\Update\BLAS\BLASUpdatePass.h" />
     <ClInclude Include="RenderPass\Update\BLAS\BLASUpdatePass.hpp" />
+    <ClInclude Include="RenderPass\Update\InstanceData\InstanceDataUpdatePass.h" />
+    <ClInclude Include="RenderPass\Update\InstanceData\InstanceDataUpdatePass.hpp" />
     <ClInclude Include="RenderPass\Update\TLAS\TLASUpdatePass.h" />
     <ClInclude Include="RenderPass\Update\TLAS\TLASUpdatePass.hpp" />
     <ClInclude Include="RenderPass\Update\UpdatePass.h" />

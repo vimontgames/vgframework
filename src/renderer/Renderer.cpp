@@ -20,6 +20,7 @@
 #include "renderer/RenderPass/ImGui/ImGui.h"
 #include "renderer/RenderPass/ImGui/ImGuiPass.h"
 #include "renderer/RenderPass/ImGui/imguiAdapter.h"
+#include "renderer/RenderPass/Update/InstanceData/InstanceDataUpdatePass.h"
 #include "renderer/RenderPass/Compute/ComputeSkinning/ComputeSkinningPass.h"
 #include "renderer/RenderPass/Update/BLAS/BLASUpdatePass.h"
 #include "renderer/Importer/SceneImporterData.h"
@@ -195,6 +196,7 @@ namespace vg::renderer
         DebugDraw * dbgDraw = new DebugDraw();
 
         // Create passes not bound to a View
+        m_instanceDataUpdatePass = new InstanceDataUpdatePass();
         m_computeSkinningPass = new ComputeSkinningPass();
         m_BLASUpdatePass = new BLASUpdatePass();
         m_imguiPass = new ImGuiPass();
@@ -266,6 +268,7 @@ namespace vg::renderer
             views.clear();
         }
 
+        VG_SAFE_RELEASE(m_instanceDataUpdatePass);
         VG_SAFE_DELETE(m_computeSkinningPass);
         VG_SAFE_DELETE(m_BLASUpdatePass);
         VG_SAFE_DELETE(m_imguiPass);
@@ -378,6 +381,7 @@ namespace vg::renderer
                 RenderPassContext mainViewRenderPassContext;
                                   mainViewRenderPassContext.m_view = m_mainView;
 
+                m_frameGraph.addUserPass(mainViewRenderPassContext, m_instanceDataUpdatePass, "Instance Data");
                 m_frameGraph.addUserPass(mainViewRenderPassContext, m_computeSkinningPass, "Skinning");
 
                 if (options->isRayTracingEnabled())
@@ -698,6 +702,7 @@ namespace vg::renderer
         {
             const auto type = (MaterialTextureType)t;
             u32 data;
+            ReservedSlot reservedSlot = ReservedSlot::None;
             switch (type)
             {
                 default:
@@ -706,20 +711,23 @@ namespace vg::renderer
 
                 case MaterialTextureType::Albedo:
                     data = 0xFFBBBBBB;
+                    reservedSlot = ReservedSlot::DefaultAlbedoTexSrv;
                     break;
 
                 case MaterialTextureType::Normal:
                     data = 0xFFFF7F7F;
+                    reservedSlot = ReservedSlot::DefaultNormalTexSrv;
                     break;
 
                 case MaterialTextureType::PBR:
                     data = 0x00007FFF;    // Blue: Metalness Green: Roughness Red: Occlusion
+                    reservedSlot = ReservedSlot::DefaultPBRTexSrv;
                     break;
             }
 
             TextureDesc texDesc = TextureDesc(Usage::Default, BindFlags::ShaderResource, CPUAccessFlags::None, TextureType::Texture2D, PixelFormat::R8G8B8A8_unorm, TextureFlags::None, 1, 1);
             string name = "Default_" + asString(type);
-            m_defaultTextures[t] = m_device.createTexture(texDesc, name.c_str(), &data);
+            m_defaultTextures[t] = m_device.createTexture(texDesc, name.c_str(), &data, reservedSlot);
         }        
     }
 

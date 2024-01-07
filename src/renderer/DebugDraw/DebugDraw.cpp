@@ -468,8 +468,7 @@ namespace vg::renderer
         DebugDrawRootConstants3D root3D;
         {
             root3D.setWorldMatrix(transpose(aabbMatrixWS));
-            root3D.setBufferHandle(m_box->getVertexBuffer()->getBufferHandle());
-            root3D.setBufferOffset(m_box->getVertexBufferOffset());
+            root3D.setBufferHandle(m_box->getVertexBuffer()->getBufferHandle(), m_box->getVertexBufferOffset());
             root3D.setVertexFormat(VertexFormat::DebugDraw);
         }
 
@@ -808,8 +807,7 @@ namespace vg::renderer
             // Root constants
             DebugDrawRootConstants3D root3D;
             root3D.setWorldMatrix(float4x4::identity());
-            root3D.setBufferHandle(drawData.m_debugDrawVB->getBufferHandle());
-            root3D.setBufferOffset(drawData.m_linesVBOffset);
+            root3D.setBufferHandle(drawData.m_debugDrawVB->getBufferHandle(), drawData.m_linesVBOffset);
             root3D.setVertexFormat(VertexFormat::DebugDraw);
             root3D.color = float4(1, 1, 1, 1);
 
@@ -884,7 +882,6 @@ namespace vg::renderer
         // Root constants
         DebugDrawRootConstants3D root3D;
         root3D.setBufferHandle(_geometry->getVertexBuffer()->getBufferHandle());
-        root3D.setBufferOffset(0);
         root3D.setVertexFormat(VertexFormat::DebugDraw);
 
         // Transparent

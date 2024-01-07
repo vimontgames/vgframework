@@ -1,6 +1,10 @@
 #include "renderer/Precomp.h"
 #include "GraphicInstance.h"
 
+#if !VG_ENABLE_INLINE
+#include "GraphicInstance.inl"
+#endif
+
 #include "Mesh/MeshInstance.hpp"
 #include "Light/LightInstance.hpp"
 
@@ -18,7 +22,8 @@ namespace vg::renderer
 
     //--------------------------------------------------------------------------------------
     GraphicInstance::GraphicInstance(const core::string & _name, core::IObject * _parent) :
-        super(_name, _parent)
+        super(_name, _parent),
+        m_atomicFlags(0x0)
     {
         ClearPickingID();
     }

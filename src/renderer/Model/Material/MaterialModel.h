@@ -7,6 +7,7 @@
 #include "renderer/Model/Material/Material_Consts.h"
 
 struct RootConstants3D;
+struct GPUMaterialData;
 
 namespace vg
 {
@@ -42,6 +43,8 @@ namespace vg
 
                                         MaterialModel           (const core::string & _name, core::IObject * _parent = nullptr);
                                         ~MaterialModel          ();
+
+            virtual void                FillGPUMaterialData     (GPUMaterialData * _data) const = 0;
 
             virtual void                Setup                   (const RenderContext & _renderContext, gfx::CommandList * _cmdList, RootConstants3D * _root3DConstants, core::uint _index) const = 0;
 

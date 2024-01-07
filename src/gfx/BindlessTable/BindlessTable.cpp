@@ -54,11 +54,11 @@ namespace vg::gfx
         //--------------------------------------------------------------------------------------
         template <class H, class T, class P> H BindlessTable::allocBindlessHandle(const T * _resource, ReservedSlot _reservedSlot, P & _pool, T ** _resources, uint _offset, uint _invalid)
         {
-            H handle = _invalid;
+            H handle = H(_invalid);
 
             if (ReservedSlot::None == _reservedSlot)
             {
-                handle = _pool.alloc() + _offset;
+                handle = H(_pool.alloc() + _offset);
             }
             else
             {
@@ -66,7 +66,7 @@ namespace vg::gfx
                 VG_ASSERT(_pool.isAvailable(reservedSlotIndex), "[BindlessTable] ReservedSlot %u is already used", (u16)_reservedSlot);
                 if (_pool.isAvailable(reservedSlotIndex))
                 {
-                    handle = (u16)_reservedSlot;
+                    handle = H((u16)_reservedSlot);
                     _resources[handle - _offset] = (T *)_resource;
                 }
             }
@@ -81,7 +81,7 @@ namespace vg::gfx
             {
                 _pool.dealloc(_handle);
                 _resources[_handle - _offset] = nullptr;
-                _handle = _invalid;
+                _handle = H(_invalid);
             }
         }
 

@@ -8,6 +8,7 @@
 #include "system/picking.hlsl"
 #include "system/lighting.hlsli"
 #include "system/debugdisplay.hlsli"
+#include "system/instancedata.hlsli"
 
 #include "default.hlsli"
 
@@ -60,9 +61,9 @@ struct PS_Output
     float4 color0 : Color0;
 };
 
-float4 getAlbedo(float2 _uv, float4 _vertexColor, DisplayFlags _flags)
+float4 getAlbedo(uint _handle, float2 _uv, float4 _vertexColor, DisplayFlags _flags)
 {
-    float4 albedo = getTexture2D( rootConstants3D.getAlbedoTextureHandle() ).Sample(linearRepeat, _uv).rgba;
+    float4 albedo = getTexture2D(_handle).Sample(linearRepeat, _uv).rgba;
 
     #if _TOOLMODE
     if (0 == (DisplayFlags::AlbedoMap & _flags))
@@ -74,9 +75,9 @@ float4 getAlbedo(float2 _uv, float4 _vertexColor, DisplayFlags _flags)
     return albedo;
 }
 
-float4 getNormal(float2 _uv, DisplayFlags _flags)
+float4 getNormal(uint _handle, float2 _uv, DisplayFlags _flags)
 {
-    float4 normal = getTexture2D( rootConstants3D.getNormalTextureHandle() ).Sample(linearRepeat, _uv);
+    float4 normal = getTexture2D(_handle).Sample(linearRepeat, _uv);
 
     #if _TOOLMODE
     if (0 == (DisplayFlags::NormalMap & _flags))
@@ -86,9 +87,9 @@ float4 getNormal(float2 _uv, DisplayFlags _flags)
     return float4(normal.xyz*2-1, normal.w);
 }
 
-float4 getPBR(float2 _uv)
+float4 getPBR(uint _handle, float2 _uv)
 {
-    float4 pbr = getTexture2D(rootConstants3D.getPBRTextureHandle() ).Sample(linearRepeat, _uv);
+    float4 pbr = getTexture2D(_handle).Sample(linearRepeat, _uv);
     return pbr;
 }
 
@@ -123,11 +124,18 @@ PS_Output PS_Forward(VS_Output _input)
 
     float2 uv0 = _input.uv.xy;
     float2 uv1 = _input.uv.zw;
-    
-    float4 albedo = getAlbedo(uv0, _input.col, flags);
-    float3 normal = getNormal(uv0, flags).xyz;
-    float4 pbr = getPBR(uv0);
-    
+
+    // Get texture handles from instance data. If no instance data specified, offset is 0 and default instance data is used
+    uint instanceDataOffset = rootConstants3D.getGPUInstanceDataOffset(); 
+    GPUInstanceData instanceDataHeader = getBuffer(RESERVEDSLOT_BUFSRV_INSTANCEDATA).Load<GPUInstanceData>(instanceDataOffset);
+
+    // Material entries are only present once material is loaded, if matIndex is above limit then use the default material
+    GPUMaterialData materialData = instanceDataHeader.getGPUMaterialData(instanceDataOffset, rootConstants3D.getMatID());
+
+    float4 albedo = getAlbedo(materialData.getAlbedoTextureHandle(), uv0, _input.col, flags);
+    float3 normal = getNormal(materialData.getNormalTextureHandle(), uv0, flags).xyz;
+    float4 pbr = getPBR(materialData.getPBRTextureHandle(), uv0);
+
     float3 worldNormal = getWorldNormal(normal, _input.tan, _input.bin, _input.nrm, rootConstants3D.getWorldMatrix());
 
     // Compute & Apply lighting
@@ -229,9 +237,16 @@ PS_OutputDeferred PS_Deferred(VS_Output _input)
     float2 uv0 = _input.uv.xy;
     float2 uv1 = _input.uv.zw;
     
-    float4 albedo = getAlbedo(uv0, _input.col, flags);
-    float3 normal = getNormal(uv0, flags).xyz;
-    float4 pbr = getPBR(uv0);
+    // Get texture handles from instance data. If no instance data specified, offset is 0 and default instance data is used
+    uint instanceDataOffset = rootConstants3D.getGPUInstanceDataOffset(); 
+    GPUInstanceData instanceDataHeader = getBuffer(RESERVEDSLOT_BUFSRV_INSTANCEDATA).Load<GPUInstanceData>(instanceDataOffset);
+
+    // Material entries are only present once material is loaded, if matIndex is above limit then use the default material
+    GPUMaterialData materialData = instanceDataHeader.getGPUMaterialData(instanceDataOffset, rootConstants3D.getMatID());
+
+    float4 albedo = getAlbedo(materialData.getAlbedoTextureHandle(), uv0, _input.col, flags);
+    float3 normal = getNormal(materialData.getNormalTextureHandle(), uv0, flags).xyz;
+    float4 pbr = getPBR(materialData.getPBRTextureHandle(), uv0);
     
     float3 worldNormal = getWorldNormal(normal, _input.tan, _input.bin, _input.nrm, rootConstants3D.getWorldMatrix());
 

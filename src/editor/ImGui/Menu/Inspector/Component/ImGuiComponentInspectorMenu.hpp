@@ -31,13 +31,13 @@ namespace vg::editor
             m_selected = MenuOption::RemoveComponent;
             m_popup = "Delete Component";
             openPopup = true;
-            ImGui::OpenPopup(m_popup);
+            ImGui::OpenPopup(m_popup.c_str());
             m_componentToDelete = nullptr;
         }
 
         if (openPopup)
         {
-            ImGui::OpenPopup(m_popup);
+            ImGui::OpenPopup(m_popup.c_str());
             openPopup = false;
         }
 
@@ -45,7 +45,7 @@ namespace vg::editor
         {
             case MenuOption::RemoveComponent:
             {
-                if (ImGui::BeginPopupModal(m_popup, nullptr, ImGuiWindowFlags_AlwaysAutoResize))
+                if (ImGui::BeginPopupModal(m_popup.c_str(), nullptr, ImGuiWindowFlags_AlwaysAutoResize))
                 {
                     ImGui::OnMsgBoxClickedFunc deleteComponent = [=]() mutable
                         {

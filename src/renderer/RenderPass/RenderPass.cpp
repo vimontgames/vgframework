@@ -39,9 +39,10 @@ using namespace vg::gfx;
 #include "Compute/ComputeDeferredLighting/ComputeDeferredLightingPass.hpp"
 
 #include "Update/UpdatePass.hpp"
-#include "Update/ViewConstants/ViewConstantsUpdatePass.hpp"
+#include "Update/InstanceData/InstanceDataUpdatePass.hpp"
 #include "Update/TLAS/TLASUpdatePass.hpp"
 #include "Update/BLAS/BLASUpdatePass.hpp"
+#include "Update/ViewConstants/ViewConstantsUpdatePass.hpp"
 
 namespace vg::renderer
 {

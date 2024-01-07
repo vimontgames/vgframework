@@ -43,8 +43,7 @@ namespace vg::renderer
 
     //--------------------------------------------------------------------------------------
     MeshInstance::MeshInstance(const core::string & _name, core::IObject * _parent) :
-        super(_name, _parent),
-        m_skinFlags(0x0)
+        super(_name, _parent)
     {
         auto * rtManager = RayTracingManager::get(false);
         if (rtManager)
@@ -130,16 +129,14 @@ namespace vg::renderer
                 if (hasAlphaBlend)
                     _cullingResult->m_output->add(GraphicInstanceListType::Transparent, this);
 
+                if (setAtomicFlags(GraphicInstance::AtomicFlags::Instance))
+                    _cullingResult->m_sharedOutput->m_instances.push_back_atomic(this);
+
                 if (IsSkinned())
                 {
-                    if (setSkinFlag(MeshInstance::SkinFlags::SkinLOD0))
+                    if (setAtomicFlags(GraphicInstance::AtomicFlags::SkinLOD0))
                         _cullingResult->m_sharedOutput->m_skins.push_back_atomic(this);
                 }
-                //else if (raytracing)
-                //{
-                //    if (setSkinFlag(MeshInstance::SkinFlags::RayTracing))
-                //        _cullingResult->m_sharedOutput->m_rayTracing.push_back_atomic(this);
-                //}
 
                 return true;
             }
@@ -238,16 +235,12 @@ namespace vg::renderer
             RootConstants3D root3D;
             root3D.setWorldMatrix(transpose(world));
 
+            root3D.setGPUInstanceDataOffset(getGPUInstanceDataOffset());
+
             if (IsSkinned())
-            {
-                root3D.setBufferHandle(m_skinnedMeshBuffer->getBufferHandle());
-                root3D.setBufferOffset(m_skinnedMeshBufferOffset);
-            }
+                root3D.setBufferHandle(m_skinnedMeshBuffer->getBufferHandle(), m_skinnedMeshBufferOffset);
             else
-            {
-                root3D.setBufferHandle(geo->getVertexBuffer()->getBufferHandle());
-                root3D.setBufferOffset(geo->getVertexBufferOffset());
-            }
+                root3D.setBufferHandle(geo->getVertexBuffer()->getBufferHandle(), geo->getVertexBufferOffset());
             
             u16 flags = 0;
             root3D.setFlags(flags);
@@ -259,6 +252,9 @@ namespace vg::renderer
             root3D.setPickingID(pickingID);
 
             _cmdList->setPrimitiveTopology(PrimitiveTopology::TriangleList);
+
+            const auto * defaultMaterial = renderer->getDefaultMaterial();
+            VG_ASSERT(defaultMaterial);
 
             const auto & batches = geo->batches();
             for (uint i = 0; i < batches.size(); ++i)
@@ -308,7 +304,7 @@ namespace vg::renderer
                 else
                 {
                     // Assume default material is opaque only
-                    renderer->getDefaultMaterial()->Setup(_renderContext, _cmdList, &root3D, i);
+                    defaultMaterial->Setup(_renderContext, _cmdList, &root3D, i);
                 }
 
                 if (draw)

@@ -167,32 +167,33 @@ namespace vg::editor
                         {
                             if (nullptr != root)
                             {
-                                // First pass to get child count
-                                uint count = 0;
-                                displayGameObject(root, &count);
-
-                                ImVec4 bgColor = ImGui::GetStyleColorVec4(ImGuiCol_WindowBg);
-                                float grey = (bgColor.x + bgColor.y + bgColor.z) / 3.0f;
-                                float d1, d2;
-                                if (grey < 0.5f)
-                                {
-                                    d1 = 0.1f;
-                                    d2 = 0.2f;
-                                }
-                                else
-                                {
-                                    d1 = -0.1f;
-                                    d2 = -0.2f;
-                                }
-                                
-                                ImVec4 evenColor = ImVec4(bgColor.x + d1, bgColor.y + d1, bgColor.z + d1, bgColor.w * 0.35f);
-                                ImVec4 oddColor = ImVec4(bgColor.x + d2, bgColor.y + d2, bgColor.z + d2, bgColor.w * 0.35f);
-
-                                // Draw background
-                                DrawRowsBackground(count, ImGui::GetColorU32(evenColor), ImGui::GetColorU32(oddColor));
+                                //// First pass to get child count
+                                //uint count = 0;
+                                //displayGameObject(root, &count);
+                                //
+                                //ImVec4 bgColor = ImGui::GetStyleColorVec4(ImGuiCol_WindowBg);
+                                //float grey = (bgColor.x + bgColor.y + bgColor.z) / 3.0f;
+                                //float d1, d2;
+                                //if (grey < 0.5f)
+                                //{
+                                //    d1 = 0.1f;
+                                //    d2 = 0.2f;
+                                //}
+                                //else
+                                //{
+                                //    d1 = -0.1f;
+                                //    d2 = -0.2f;
+                                //}
+                                //
+                                //ImVec4 evenColor = ImVec4(bgColor.x + d1, bgColor.y + d1, bgColor.z + d1, bgColor.w * 0.35f);
+                                //ImVec4 oddColor = ImVec4(bgColor.x + d2, bgColor.y + d2, bgColor.z + d2, bgColor.w * 0.35f);
+                                //
+                                //// Draw background
+                                //DrawRowsBackground(count, ImGui::GetColorU32(evenColor), ImGui::GetColorU32(oddColor));
 
                                 // Draw
-                                displayGameObject(root);
+                                uint counter = 0;
+                                displayGameObject(root, &counter);
                             }
                             ImGui::TreePop();
                         }
@@ -207,18 +208,21 @@ namespace vg::editor
     //--------------------------------------------------------------------------------------
     void ImGuiScene::displayGameObject(IGameObject * _gameObject, uint * _count)
     {
-        const bool counting = (_count != nullptr);
+        //const bool counting = (_count != nullptr);
         const auto children = _gameObject->GetChildren();
+
+        if (_count)
+            (*_count)++;
 
         const bool disabled = !asBool(_gameObject->GetFlags() & IGameObject::Flags::Enabled);
         ImGui::BeginDisabled(disabled);
 
-        bool open = counting;
-        if (counting)
-        {
-            (*_count)++;
-        }
-        else
+        bool open;
+        //if (counting)
+        //{
+        //    (*_count)++;
+        //}
+        //else
         {
             auto availableWidth = ImGui::GetContentRegionMax().x;
             //auto pos = ImGui::GetCursorScreenPos();
@@ -228,6 +232,35 @@ namespace vg::editor
                 flags |= ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_DefaultOpen;
             else
                 flags |= ImGuiTreeNodeFlags_Leaf;
+
+            // row background (TODO : cache even/odd colors?)
+            {
+                ImVec4 bgColor = ImGui::GetStyleColorVec4(ImGuiCol_WindowBg);
+
+                float grey = (bgColor.x + bgColor.y + bgColor.z) / 3.0f;
+                float d1, d2;
+                if (grey < 0.5f)
+                {
+                    d1 = 0.1f;
+                    d2 = 0.2f;
+                }
+                else
+                {
+                    d1 = -0.1f;
+                    d2 = -0.2f;
+                }
+
+                ImVec4 evenColor = ImVec4(bgColor.x + d1, bgColor.y + d1, bgColor.z + d1, bgColor.w * 0.35f);
+                ImVec4 oddColor = ImVec4(bgColor.x + d2, bgColor.y + d2, bgColor.z + d2, bgColor.w * 0.35f);
+                u32 rowBgColor;
+
+                if (*_count & 1)
+                    rowBgColor = GetColorU32(evenColor);
+                else
+                    rowBgColor = GetColorU32(oddColor);
+
+                DrawRowsBackground(1, rowBgColor);
+            }
 
             if (getSelection()->IsSelectedObject(_gameObject))
             {
@@ -316,7 +349,7 @@ namespace vg::editor
 
             if (!startDragDrop)
             {
-                if (!counting)
+                //if (!counting)
                     updateSelection(_gameObject);
             }
 
@@ -439,7 +472,7 @@ namespace vg::editor
                 displayGameObject(child, _count);
             }
 
-            if (!counting)
+            //if (!counting)
                 ImGui::TreePop();
         }    
 

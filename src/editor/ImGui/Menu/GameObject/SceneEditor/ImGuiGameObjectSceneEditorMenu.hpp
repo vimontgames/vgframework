@@ -40,14 +40,17 @@ namespace vg::editor
 
         if (m_RenamingGameObject == nullptr)
         {
-            if (selection->IsSelectedObject(gameObject))
+            if (selection->IsSelectedObject(gameObject)) 
             {
-                if (ImGui::IsKeyPressed(ImGuiKey_Delete))
-                    doDelete = true;
-                else if (canRename && ImGui::IsKeyPressed(ImGuiKey_F2))
-                    doRename = true;
-                else if (ImGui::IsKeyPressed(ImGuiKey_D) && ImGui::IsKeyDown(ImGuiKey_LeftCtrl))
-                    doDuplicate = true;
+                if (!ImGui::IsAnyItemActive())
+                {
+                    if (ImGui::IsKeyPressed(ImGuiKey_Delete))
+                        doDelete = true;
+                    else if (canRename && ImGui::IsKeyPressed(ImGuiKey_F2))
+                        doRename = true;
+                    else if (ImGui::IsKeyPressed(ImGuiKey_D) && ImGui::IsKeyDown(ImGuiKey_LeftCtrl))
+                        doDuplicate = true;
+                }
             }
         }        
 
@@ -144,7 +147,7 @@ namespace vg::editor
 
         if (openPopup)
         {
-            ImGui::OpenPopup(m_popup);
+            ImGui::OpenPopup(m_popup.c_str());
             openPopup = false;
         }
         
@@ -155,7 +158,7 @@ namespace vg::editor
             case MenuOption::AddChild:
             case MenuOption::AddParent:
             {
-                if (ImGui::BeginPopupModal(m_popup, nullptr, ImGuiWindowFlags_AlwaysAutoResize))
+                if (ImGui::BeginPopupModal(m_popup.c_str(), nullptr, ImGuiWindowFlags_AlwaysAutoResize))
                 {
                     static char nameTmp[1024] = { '\0' };
 

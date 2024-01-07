@@ -1,4 +1,5 @@
-#pragma once
+#ifndef __PACKING_HLSLI__
+#define __PACKING_HLSLI__
 
 #include "types.hlsli"
 
@@ -46,3 +47,5 @@ inline uint unpackUint16high(uint _packed)
 {
     return (_packed>>16);
 }
+
+#endif // __PACKING_HLSLI__

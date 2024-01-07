@@ -70,7 +70,8 @@ public:
 
     ~CustomIncludeHandler()
     {
-        VG_SAFE_RELEASE(m_dxcUtils);
+        if (m_dxcUtils)
+            m_dxcUtils->Release();
     }
 
     atomic<u32>                         m_refCount = 1;

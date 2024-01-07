@@ -41,7 +41,7 @@ namespace vg::editor
             m_popup = "Add Component";
             m_popupIcon = style::icon::Plus;
             openPopup = true;
-            ImGui::OpenPopup(m_popup);
+            ImGui::OpenPopup(m_popup.c_str());
         }
 
         if (openPopup)

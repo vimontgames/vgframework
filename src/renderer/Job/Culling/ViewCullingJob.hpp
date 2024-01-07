@@ -1,4 +1,5 @@
 #include "ViewCullingJob.h"
+#include "core/string/string.h"
 #include "renderer/View/View.h"
 #include "core/IScene.h"
 #include "core/GameObject/GameObject.h"
@@ -79,7 +80,7 @@ namespace vg::renderer
                 return;
         }
        
-        string name = getName() + " " + asString(viewID.target) + " " + to_string(viewID.index);
+        string name = fmt::sprintf("Culling %s #%u", asString(viewID.target), viewID.index);
         VG_PROFILE_CPU(name.c_str());
         //VG_DEBUGPRINT("\"%s\" running on \"%s\" (0x%08X)\n", name.c_str(), Kernel::getScheduler()->GetCurrentThreadName().c_str(), Kernel::getScheduler()->GetCurrentThreadID());
 

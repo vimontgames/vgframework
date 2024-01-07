@@ -1,5 +1,6 @@
 #include "DefaultMaterialModel.h"
 #include "Shaders/default/default.hlsl.h"
+#include "Shaders/system/instancedata.hlsli"
 
 namespace vg::renderer
 {
@@ -28,17 +29,24 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
+    void DefaultMaterialModel::FillGPUMaterialData(GPUMaterialData * _data) const
+    {
+        _data->setAlbedoTextureHandle(m_albedoMap ? m_albedoMap->getTextureHandle() : RESERVEDSLOT_TEXSRV_DEFAULT_ALBEDO);
+        _data->setNormalTextureHandle(m_normaMap ? m_normaMap->getTextureHandle() : RESERVEDSLOT_TEXSRV_DEFAULT_NORMAL);
+        _data->setPBRTextureHandle(m_pbrMap ? m_pbrMap->getTextureHandle() : RESERVEDSLOT_TEXSRV_DEFAULT_PBR);
+    }
+
+    //--------------------------------------------------------------------------------------
     void DefaultMaterialModel::Setup(const RenderContext & _renderContext, gfx::CommandList * _cmdList, RootConstants3D * _root3D, core::uint _index) const
     {
         gfx::Texture * albedoMap = m_albedoMap;
         gfx::Texture * normalMap = m_normaMap;
         gfx::Texture * pbrMap = m_pbrMap;
-
-        const Renderer * renderer = Renderer::get();
   
-        _root3D->setAlbedoTextureHandle( albedoMap ? albedoMap->getTextureHandle() : renderer->getDefaultTexture(MaterialTextureType::Albedo)->getTextureHandle());
-        _root3D->setNormalTextureHandle( normalMap ? normalMap->getTextureHandle() : renderer->getDefaultTexture(MaterialTextureType::Normal)->getTextureHandle());
-        _root3D->setPBRTextureHandle(normalMap ? normalMap->getTextureHandle() : renderer->getDefaultTexture(MaterialTextureType::PBR)->getTextureHandle());
+        //_root3D->setAlbedoTextureHandle( albedoMap ? albedoMap->getTextureHandle() : RESERVEDSLOT_TEXSRV_DEFAULT_ALBEDO ); 
+        //_root3D->setNormalTextureHandle( normalMap ? normalMap->getTextureHandle() : RESERVEDSLOT_TEXSRV_DEFAULT_NORMAL);
+        //_root3D->setPBRTextureHandle(normalMap ? normalMap->getTextureHandle() : RESERVEDSLOT_TEXSRV_DEFAULT_PBR);
+
         _root3D->setMatID(_index);
         _root3D->setColor(m_albedoColor);
 

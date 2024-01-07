@@ -183,7 +183,7 @@ namespace vg::gfx
         //--------------------------------------------------------------------------------------
         void CommandList::setGraphicRootConstants(core::uint _startOffset, core::u32 * _values, core::uint _count)
         {
-            VG_ASSERT(_startOffset + _count < countof(m_graphicStateCache.m_rootConstants));
+            VG_ASSERT(_startOffset + _count <= countof(m_graphicStateCache.m_rootConstants));
             for (uint i = 0; i < _count; ++i)
             {
                 if (_values[i] != m_graphicStateCache.m_rootConstants[_startOffset + i])
@@ -279,7 +279,7 @@ namespace vg::gfx
         //--------------------------------------------------------------------------------------
         void CommandList::setComputeRootConstants(core::uint _startOffset, core::u32 * _values, core::uint _count)
         {
-            VG_ASSERT(_startOffset + _count < countof(m_computeStateCache.m_rootConstants));
+            VG_ASSERT(_startOffset + _count <= countof(m_computeStateCache.m_rootConstants));
             for (uint i = 0; i < _count; ++i)
             {
                 if (_values[i] != m_computeStateCache.m_rootConstants[_startOffset + i])
