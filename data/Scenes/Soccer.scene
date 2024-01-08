@@ -41,7 +41,7 @@
                                 <Property type="String" name="m_name" value="Field"/>
                                 <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled|Static"/>
                                 <Property type="Float4" name="m_color" flags="Color" x="1" y="1" z="1" w="1"/>
-                                <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="0" Ty="0" Tz="0" Tw="1"/>
+                                <Property type="Float4x4" name="m_local" Ix="-8.9406967e-08" Iy="-1.0000001" Iz="0" Iw="0" Jx="1.0000001" Jy="-8.9406967e-08" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="0" Ty="0" Tz="0" Tw="1"/>
                                 <Property type="ObjectPtrVector" name="m_components">
                                     <Object class="MeshComponent">
                                         <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
@@ -73,7 +73,7 @@
                                                 <Property type="EnumU16" name="m_layer" flags="ReadOnly" value="NonMoving"/>
                                                 <Property type="EnumU8" name="m_motion" flags="ReadOnly" value="Static"/>
                                                 <Property type="Bool" name="m_overrideMass" flags="Hidden" value="false"/>
-                                                <Property type="Float" name="m_mass" flags="Optional" value="256000"/>
+                                                <Property type="Float" name="m_mass" flags="Optional" value="306000"/>
                                                 <Property type="Float" name="m_friction" flags="HasRange" value="0.5"/>
                                                 <Property type="Float" name="m_restitution" flags="HasRange" value="0"/>
                                                 <Property type="EnumU8" name="m_shapeType" value="Box"/>
@@ -83,7 +83,7 @@
                                             <Object class="BoxShapeDesc">
                                                 <Property type="String" name="m_name" flags="Hidden" value="BoxShapeDesc #0"/>
                                                 <Property type="Float3" name="m_offset" x="0" y="0" z="-0.25"/>
-                                                <Property type="Float3" name="m_size" x="32" y="16" z="0.5"/>
+                                                <Property type="Float3" name="m_size" x="18" y="34" z="0.5"/>
                                             </Object>
                                         </Property>
                                     </Object>
@@ -541,9 +541,9 @@
                                 <Property type="ObjectPtrVector" name="m_children" flags="Hidden">
                                     <Object class="GameObject">
                                         <Property type="String" name="m_name" value="Banyuls 0"/>
-                                        <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled|Static"/>
+                                        <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
                                         <Property type="Float4" name="m_color" flags="Color" x="1" y="1" z="1" w="1"/>
-                                        <Property type="Float4x4" name="m_local" Ix="-1.0000001" Iy="-1.1920929e-07" Iz="0" Iw="0" Jx="1.1920929e-07" Jy="-1.0000001" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="2.5" Ty="8" Tz="0.5" Tw="1"/>
+                                        <Property type="Float4x4" name="m_local" Ix="-1.0000001" Iy="-1.1920929e-07" Iz="0" Iw="0" Jx="1.1920929e-07" Jy="-1.0000001" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="2.5" Ty="8.5" Tz="0.5" Tw="1"/>
                                         <Property type="ObjectPtrVector" name="m_components">
                                             <Object class="MeshComponent">
                                                 <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
@@ -572,8 +572,8 @@
                                                 <Property type="ObjectPtr" name="m_bodyDesc" flags="Flatten">
                                                     <Object class="RigidBodyDesc">
                                                         <Property type="String" name="m_name" flags="Hidden" value="RigidBodyDesc #2"/>
-                                                        <Property type="EnumU16" name="m_layer" flags="ReadOnly" value="NonMoving"/>
-                                                        <Property type="EnumU8" name="m_motion" flags="ReadOnly" value="Static"/>
+                                                        <Property type="EnumU16" name="m_layer" flags="ReadOnly" value="Moving"/>
+                                                        <Property type="EnumU8" name="m_motion" flags="ReadOnly" value="Dynamic"/>
                                                         <Property type="Bool" name="m_overrideMass" flags="Hidden" value="false"/>
                                                         <Property type="Float" name="m_mass" flags="Optional" value="2000"/>
                                                         <Property type="Float" name="m_friction" flags="HasRange" value="0.5"/>
@@ -594,9 +594,9 @@
                                     </Object>
                                     <Object class="GameObject">
                                         <Property type="String" name="m_name" value="HotDog 0"/>
-                                        <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled|Static"/>
+                                        <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
                                         <Property type="Float4" name="m_color" flags="Color" x="1" y="1" z="1" w="1"/>
-                                        <Property type="Float4x4" name="m_local" Ix="-1" Iy="0.000488166" Iz="2.5833941e-08" Iw="0" Jx="-0.000488166" Jy="-0.99999994" Jz="-3.1061667e-11" Jw="0" Kx="5.5636278e-08" Ky="2.7166755e-11" Kz="1.0000001" Kw="0" Tx="-2.5" Ty="8" Tz="0.5" Tw="1"/>
+                                        <Property type="Float4x4" name="m_local" Ix="-1" Iy="0.000488166" Iz="2.5833941e-08" Iw="0" Jx="-0.000488166" Jy="-0.99999994" Jz="-3.1061667e-11" Jw="0" Kx="5.5636278e-08" Ky="2.7166755e-11" Kz="1.0000001" Kw="0" Tx="-2.5" Ty="8.5" Tz="0.5" Tw="1"/>
                                         <Property type="ObjectPtrVector" name="m_components">
                                             <Object class="MeshComponent">
                                                 <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
@@ -625,8 +625,8 @@
                                                 <Property type="ObjectPtr" name="m_bodyDesc" flags="Flatten">
                                                     <Object class="RigidBodyDesc">
                                                         <Property type="String" name="m_name" flags="Hidden" value="RigidBodyDesc #6"/>
-                                                        <Property type="EnumU16" name="m_layer" flags="ReadOnly" value="NonMoving"/>
-                                                        <Property type="EnumU8" name="m_motion" flags="ReadOnly" value="Static"/>
+                                                        <Property type="EnumU16" name="m_layer" flags="ReadOnly" value="Moving"/>
+                                                        <Property type="EnumU8" name="m_motion" flags="ReadOnly" value="Dynamic"/>
                                                         <Property type="Bool" name="m_overrideMass" flags="Hidden" value="false"/>
                                                         <Property type="Float" name="m_mass" flags="Optional" value="2000"/>
                                                         <Property type="Float" name="m_friction" flags="HasRange" value="0.5"/>
@@ -647,9 +647,9 @@
                                     </Object>
                                     <Object class="GameObject">
                                         <Property type="String" name="m_name" value="Octafight 0"/>
-                                        <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled|Static"/>
+                                        <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
                                         <Property type="Float4" name="m_color" flags="Color" x="1" y="1" z="1" w="1"/>
-                                        <Property type="Float4x4" name="m_local" Ix="-1" Iy="0.000488166" Iz="2.5833941e-08" Iw="0" Jx="-0.000488166" Jy="-0.99999994" Jz="-3.1061667e-11" Jw="0" Kx="5.5636278e-08" Ky="2.7166755e-11" Kz="1.0000001" Kw="0" Tx="-7.5" Ty="8" Tz="0.5" Tw="1"/>
+                                        <Property type="Float4x4" name="m_local" Ix="-1" Iy="0.000488166" Iz="2.5833941e-08" Iw="0" Jx="-0.000488166" Jy="-0.99999994" Jz="-3.1061667e-11" Jw="0" Kx="5.5636278e-08" Ky="2.7166755e-11" Kz="1.0000001" Kw="0" Tx="-7.5" Ty="8.5" Tz="0.5" Tw="1"/>
                                         <Property type="ObjectPtrVector" name="m_components">
                                             <Object class="MeshComponent">
                                                 <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
@@ -678,8 +678,8 @@
                                                 <Property type="ObjectPtr" name="m_bodyDesc" flags="Flatten">
                                                     <Object class="RigidBodyDesc">
                                                         <Property type="String" name="m_name" flags="Hidden" value="RigidBodyDesc #6"/>
-                                                        <Property type="EnumU16" name="m_layer" flags="ReadOnly" value="NonMoving"/>
-                                                        <Property type="EnumU8" name="m_motion" flags="ReadOnly" value="Static"/>
+                                                        <Property type="EnumU16" name="m_layer" flags="ReadOnly" value="Moving"/>
+                                                        <Property type="EnumU8" name="m_motion" flags="ReadOnly" value="Dynamic"/>
                                                         <Property type="Bool" name="m_overrideMass" flags="Hidden" value="false"/>
                                                         <Property type="Float" name="m_mass" flags="Optional" value="2000"/>
                                                         <Property type="Float" name="m_friction" flags="HasRange" value="0.5"/>
@@ -700,9 +700,9 @@
                                     </Object>
                                     <Object class="GameObject">
                                         <Property type="String" name="m_name" value="Banyuls 1"/>
-                                        <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled|Static"/>
+                                        <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
                                         <Property type="Float4" name="m_color" flags="Color" x="1" y="1" z="1" w="1"/>
-                                        <Property type="Float4x4" name="m_local" Ix="-1.0000001" Iy="-1.1920929e-07" Iz="0" Iw="0" Jx="1.1920929e-07" Jy="-1.0000001" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="-12.5" Ty="8" Tz="0.5" Tw="1"/>
+                                        <Property type="Float4x4" name="m_local" Ix="-1.0000001" Iy="-1.1920929e-07" Iz="0" Iw="0" Jx="1.1920929e-07" Jy="-1.0000001" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="-12.5" Ty="8.5" Tz="0.5" Tw="1"/>
                                         <Property type="ObjectPtrVector" name="m_components">
                                             <Object class="MeshComponent">
                                                 <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
@@ -731,8 +731,8 @@
                                                 <Property type="ObjectPtr" name="m_bodyDesc" flags="Flatten">
                                                     <Object class="RigidBodyDesc">
                                                         <Property type="String" name="m_name" flags="Hidden" value="RigidBodyDesc #2"/>
-                                                        <Property type="EnumU16" name="m_layer" flags="ReadOnly" value="NonMoving"/>
-                                                        <Property type="EnumU8" name="m_motion" flags="ReadOnly" value="Static"/>
+                                                        <Property type="EnumU16" name="m_layer" flags="ReadOnly" value="Moving"/>
+                                                        <Property type="EnumU8" name="m_motion" flags="ReadOnly" value="Dynamic"/>
                                                         <Property type="Bool" name="m_overrideMass" flags="Hidden" value="false"/>
                                                         <Property type="Float" name="m_mass" flags="Optional" value="2000"/>
                                                         <Property type="Float" name="m_friction" flags="HasRange" value="0.5"/>
@@ -753,9 +753,9 @@
                                     </Object>
                                     <Object class="GameObject">
                                         <Property type="String" name="m_name" value="Octafight 1"/>
-                                        <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled|Static"/>
+                                        <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
                                         <Property type="Float4" name="m_color" flags="Color" x="1" y="1" z="1" w="1"/>
-                                        <Property type="Float4x4" name="m_local" Ix="-1" Iy="0.000488166" Iz="2.5833941e-08" Iw="0" Jx="-0.000488166" Jy="-0.99999994" Jz="-3.1061667e-11" Jw="0" Kx="5.5636278e-08" Ky="2.7166755e-11" Kz="1.0000001" Kw="0" Tx="7.5" Ty="8" Tz="0.5" Tw="1"/>
+                                        <Property type="Float4x4" name="m_local" Ix="-1" Iy="0.000488166" Iz="2.5833941e-08" Iw="0" Jx="-0.000488166" Jy="-0.99999994" Jz="-3.1061667e-11" Jw="0" Kx="5.5636278e-08" Ky="2.7166755e-11" Kz="1.0000001" Kw="0" Tx="7.5" Ty="8.5" Tz="0.5" Tw="1"/>
                                         <Property type="ObjectPtrVector" name="m_components">
                                             <Object class="MeshComponent">
                                                 <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
@@ -784,8 +784,8 @@
                                                 <Property type="ObjectPtr" name="m_bodyDesc" flags="Flatten">
                                                     <Object class="RigidBodyDesc">
                                                         <Property type="String" name="m_name" flags="Hidden" value="RigidBodyDesc #6"/>
-                                                        <Property type="EnumU16" name="m_layer" flags="ReadOnly" value="NonMoving"/>
-                                                        <Property type="EnumU8" name="m_motion" flags="ReadOnly" value="Static"/>
+                                                        <Property type="EnumU16" name="m_layer" flags="ReadOnly" value="Moving"/>
+                                                        <Property type="EnumU8" name="m_motion" flags="ReadOnly" value="Dynamic"/>
                                                         <Property type="Bool" name="m_overrideMass" flags="Hidden" value="false"/>
                                                         <Property type="Float" name="m_mass" flags="Optional" value="2000"/>
                                                         <Property type="Float" name="m_friction" flags="HasRange" value="0.5"/>
@@ -806,9 +806,9 @@
                                     </Object>
                                     <Object class="GameObject">
                                         <Property type="String" name="m_name" value="HotDog 1"/>
-                                        <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled|Static"/>
+                                        <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
                                         <Property type="Float4" name="m_color" flags="Color" x="1" y="1" z="1" w="1"/>
-                                        <Property type="Float4x4" name="m_local" Ix="-1" Iy="0.000488166" Iz="2.5833941e-08" Iw="0" Jx="-0.000488166" Jy="-0.99999994" Jz="-3.1061667e-11" Jw="0" Kx="5.5636278e-08" Ky="2.7166755e-11" Kz="1.0000001" Kw="0" Tx="12.5" Ty="8" Tz="0.5" Tw="1"/>
+                                        <Property type="Float4x4" name="m_local" Ix="-1" Iy="0.000488166" Iz="2.5833941e-08" Iw="0" Jx="-0.000488166" Jy="-0.99999994" Jz="-3.1061667e-11" Jw="0" Kx="5.5636278e-08" Ky="2.7166755e-11" Kz="1.0000001" Kw="0" Tx="12.5" Ty="8.5" Tz="0.5" Tw="1"/>
                                         <Property type="ObjectPtrVector" name="m_components">
                                             <Object class="MeshComponent">
                                                 <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
@@ -837,8 +837,8 @@
                                                 <Property type="ObjectPtr" name="m_bodyDesc" flags="Flatten">
                                                     <Object class="RigidBodyDesc">
                                                         <Property type="String" name="m_name" flags="Hidden" value="RigidBodyDesc #6"/>
-                                                        <Property type="EnumU16" name="m_layer" flags="ReadOnly" value="NonMoving"/>
-                                                        <Property type="EnumU8" name="m_motion" flags="ReadOnly" value="Static"/>
+                                                        <Property type="EnumU16" name="m_layer" flags="ReadOnly" value="Moving"/>
+                                                        <Property type="EnumU8" name="m_motion" flags="ReadOnly" value="Dynamic"/>
                                                         <Property type="Bool" name="m_overrideMass" flags="Hidden" value="false"/>
                                                         <Property type="Float" name="m_mass" flags="Optional" value="2000"/>
                                                         <Property type="Float" name="m_friction" flags="HasRange" value="0.5"/>
@@ -859,9 +859,9 @@
                                     </Object>
                                     <Object class="GameObject">
                                         <Property type="String" name="m_name" value="Banyuls 2"/>
-                                        <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled|Static"/>
+                                        <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
                                         <Property type="Float4" name="m_color" flags="Color" x="1" y="1" z="1" w="1"/>
-                                        <Property type="Float4x4" name="m_local" Ix="1" Iy="1.4901161e-07" Iz="0" Iw="0" Jx="-1.4901161e-07" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="-2.4999998" Ty="-8.0000019" Tz="0.5" Tw="1"/>
+                                        <Property type="Float4x4" name="m_local" Ix="1" Iy="1.4901161e-07" Iz="0" Iw="0" Jx="-1.4901161e-07" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="-2.4999998" Ty="-8.5000019" Tz="0.5" Tw="1"/>
                                         <Property type="ObjectPtrVector" name="m_components">
                                             <Object class="MeshComponent">
                                                 <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
@@ -890,8 +890,8 @@
                                                 <Property type="ObjectPtr" name="m_bodyDesc" flags="Flatten">
                                                     <Object class="RigidBodyDesc">
                                                         <Property type="String" name="m_name" flags="Hidden" value="RigidBodyDesc #2"/>
-                                                        <Property type="EnumU16" name="m_layer" flags="ReadOnly" value="NonMoving"/>
-                                                        <Property type="EnumU8" name="m_motion" flags="ReadOnly" value="Static"/>
+                                                        <Property type="EnumU16" name="m_layer" flags="ReadOnly" value="Moving"/>
+                                                        <Property type="EnumU8" name="m_motion" flags="ReadOnly" value="Dynamic"/>
                                                         <Property type="Bool" name="m_overrideMass" flags="Hidden" value="false"/>
                                                         <Property type="Float" name="m_mass" flags="Optional" value="2000"/>
                                                         <Property type="Float" name="m_friction" flags="HasRange" value="0.5"/>
@@ -912,9 +912,9 @@
                                     </Object>
                                     <Object class="GameObject">
                                         <Property type="String" name="m_name" value="HotDog 2"/>
-                                        <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled|Static"/>
+                                        <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
                                         <Property type="Float4" name="m_color" flags="Color" x="1" y="1" z="1" w="1"/>
-                                        <Property type="Float4x4" name="m_local" Ix="1" Iy="-0.00048798323" Iz="2.5833941e-08" Iw="0" Jx="0.00048795342" Jy="0.99999988" Jz="-3.1061667e-11" Jw="0" Kx="-5.5636274e-08" Ky="-2.7171154e-11" Kz="1.0000001" Kw="0" Tx="2.500001" Ty="-8" Tz="0.5" Tw="1"/>
+                                        <Property type="Float4x4" name="m_local" Ix="1" Iy="-0.00048798323" Iz="2.5833941e-08" Iw="0" Jx="0.00048795342" Jy="0.99999988" Jz="-3.1061667e-11" Jw="0" Kx="-5.5636274e-08" Ky="-2.7171154e-11" Kz="1.0000001" Kw="0" Tx="2.500001" Ty="-8.5" Tz="0.5" Tw="1"/>
                                         <Property type="ObjectPtrVector" name="m_components">
                                             <Object class="MeshComponent">
                                                 <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
@@ -943,8 +943,8 @@
                                                 <Property type="ObjectPtr" name="m_bodyDesc" flags="Flatten">
                                                     <Object class="RigidBodyDesc">
                                                         <Property type="String" name="m_name" flags="Hidden" value="RigidBodyDesc #6"/>
-                                                        <Property type="EnumU16" name="m_layer" flags="ReadOnly" value="NonMoving"/>
-                                                        <Property type="EnumU8" name="m_motion" flags="ReadOnly" value="Static"/>
+                                                        <Property type="EnumU16" name="m_layer" flags="ReadOnly" value="Moving"/>
+                                                        <Property type="EnumU8" name="m_motion" flags="ReadOnly" value="Dynamic"/>
                                                         <Property type="Bool" name="m_overrideMass" flags="Hidden" value="false"/>
                                                         <Property type="Float" name="m_mass" flags="Optional" value="2000"/>
                                                         <Property type="Float" name="m_friction" flags="HasRange" value="0.5"/>
@@ -965,9 +965,9 @@
                                     </Object>
                                     <Object class="GameObject">
                                         <Property type="String" name="m_name" value="Octafight 2"/>
-                                        <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled|Static"/>
+                                        <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
                                         <Property type="Float4" name="m_color" flags="Color" x="1" y="1" z="1" w="1"/>
-                                        <Property type="Float4x4" name="m_local" Ix="1" Iy="-0.00048798323" Iz="2.5833941e-08" Iw="0" Jx="0.00048795342" Jy="0.99999988" Jz="-3.1061667e-11" Jw="0" Kx="-5.5636274e-08" Ky="-2.7171154e-11" Kz="1.0000001" Kw="0" Tx="7.500001" Ty="-7.9999981" Tz="0.5" Tw="1"/>
+                                        <Property type="Float4x4" name="m_local" Ix="1" Iy="-0.00048798323" Iz="2.5833941e-08" Iw="0" Jx="0.00048795342" Jy="0.99999988" Jz="-3.1061667e-11" Jw="0" Kx="-5.5636274e-08" Ky="-2.7171154e-11" Kz="1.0000001" Kw="0" Tx="7.500001" Ty="-8.4999981" Tz="0.5" Tw="1"/>
                                         <Property type="ObjectPtrVector" name="m_components">
                                             <Object class="MeshComponent">
                                                 <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
@@ -996,8 +996,8 @@
                                                 <Property type="ObjectPtr" name="m_bodyDesc" flags="Flatten">
                                                     <Object class="RigidBodyDesc">
                                                         <Property type="String" name="m_name" flags="Hidden" value="RigidBodyDesc #6"/>
-                                                        <Property type="EnumU16" name="m_layer" flags="ReadOnly" value="NonMoving"/>
-                                                        <Property type="EnumU8" name="m_motion" flags="ReadOnly" value="Static"/>
+                                                        <Property type="EnumU16" name="m_layer" flags="ReadOnly" value="Moving"/>
+                                                        <Property type="EnumU8" name="m_motion" flags="ReadOnly" value="Dynamic"/>
                                                         <Property type="Bool" name="m_overrideMass" flags="Hidden" value="false"/>
                                                         <Property type="Float" name="m_mass" flags="Optional" value="2000"/>
                                                         <Property type="Float" name="m_friction" flags="HasRange" value="0.5"/>
@@ -1018,9 +1018,9 @@
                                     </Object>
                                     <Object class="GameObject">
                                         <Property type="String" name="m_name" value="Banyuls 3"/>
-                                        <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled|Static"/>
+                                        <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
                                         <Property type="Float4" name="m_color" flags="Color" x="1" y="1" z="1" w="1"/>
-                                        <Property type="Float4x4" name="m_local" Ix="1" Iy="1.4901161e-07" Iz="0" Iw="0" Jx="-1.4901161e-07" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="12.500005" Ty="-8" Tz="0.5" Tw="1"/>
+                                        <Property type="Float4x4" name="m_local" Ix="1" Iy="1.4901161e-07" Iz="0" Iw="0" Jx="-1.4901161e-07" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="12.500005" Ty="-8.5" Tz="0.5" Tw="1"/>
                                         <Property type="ObjectPtrVector" name="m_components">
                                             <Object class="MeshComponent">
                                                 <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
@@ -1049,8 +1049,8 @@
                                                 <Property type="ObjectPtr" name="m_bodyDesc" flags="Flatten">
                                                     <Object class="RigidBodyDesc">
                                                         <Property type="String" name="m_name" flags="Hidden" value="RigidBodyDesc #2"/>
-                                                        <Property type="EnumU16" name="m_layer" flags="ReadOnly" value="NonMoving"/>
-                                                        <Property type="EnumU8" name="m_motion" flags="ReadOnly" value="Static"/>
+                                                        <Property type="EnumU16" name="m_layer" flags="ReadOnly" value="Moving"/>
+                                                        <Property type="EnumU8" name="m_motion" flags="ReadOnly" value="Dynamic"/>
                                                         <Property type="Bool" name="m_overrideMass" flags="Hidden" value="false"/>
                                                         <Property type="Float" name="m_mass" flags="Optional" value="2000"/>
                                                         <Property type="Float" name="m_friction" flags="HasRange" value="0.5"/>
@@ -1071,9 +1071,9 @@
                                     </Object>
                                     <Object class="GameObject">
                                         <Property type="String" name="m_name" value="Octafight 3"/>
-                                        <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled|Static"/>
+                                        <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
                                         <Property type="Float4" name="m_color" flags="Color" x="1" y="1" z="1" w="1"/>
-                                        <Property type="Float4x4" name="m_local" Ix="1" Iy="-0.00048798323" Iz="2.5833941e-08" Iw="0" Jx="0.00048795342" Jy="0.99999988" Jz="-3.1061667e-11" Jw="0" Kx="-5.5636274e-08" Ky="-2.7171154e-11" Kz="1.0000001" Kw="0" Tx="-7.5" Ty="-8" Tz="0.5" Tw="1"/>
+                                        <Property type="Float4x4" name="m_local" Ix="1" Iy="-0.00048798323" Iz="2.5833941e-08" Iw="0" Jx="0.00048795342" Jy="0.99999988" Jz="-3.1061667e-11" Jw="0" Kx="-5.5636274e-08" Ky="-2.7171154e-11" Kz="1.0000001" Kw="0" Tx="-7.5" Ty="-8.5" Tz="0.5" Tw="1"/>
                                         <Property type="ObjectPtrVector" name="m_components">
                                             <Object class="MeshComponent">
                                                 <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
@@ -1102,8 +1102,8 @@
                                                 <Property type="ObjectPtr" name="m_bodyDesc" flags="Flatten">
                                                     <Object class="RigidBodyDesc">
                                                         <Property type="String" name="m_name" flags="Hidden" value="RigidBodyDesc #6"/>
-                                                        <Property type="EnumU16" name="m_layer" flags="ReadOnly" value="NonMoving"/>
-                                                        <Property type="EnumU8" name="m_motion" flags="ReadOnly" value="Static"/>
+                                                        <Property type="EnumU16" name="m_layer" flags="ReadOnly" value="Moving"/>
+                                                        <Property type="EnumU8" name="m_motion" flags="ReadOnly" value="Dynamic"/>
                                                         <Property type="Bool" name="m_overrideMass" flags="Hidden" value="false"/>
                                                         <Property type="Float" name="m_mass" flags="Optional" value="2000"/>
                                                         <Property type="Float" name="m_friction" flags="HasRange" value="0.5"/>
@@ -1124,9 +1124,9 @@
                                     </Object>
                                     <Object class="GameObject">
                                         <Property type="String" name="m_name" value="HotDog 3"/>
-                                        <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled|Static"/>
+                                        <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
                                         <Property type="Float4" name="m_color" flags="Color" x="1" y="1" z="1" w="1"/>
-                                        <Property type="Float4x4" name="m_local" Ix="1" Iy="-0.00048798323" Iz="2.5833941e-08" Iw="0" Jx="0.00048795342" Jy="0.99999988" Jz="-3.1061667e-11" Jw="0" Kx="-5.5636274e-08" Ky="-2.7171154e-11" Kz="1.0000001" Kw="0" Tx="-12.499997" Ty="-8.0000019" Tz="0.5" Tw="1"/>
+                                        <Property type="Float4x4" name="m_local" Ix="1" Iy="-0.00048798323" Iz="2.5833941e-08" Iw="0" Jx="0.00048795342" Jy="0.99999988" Jz="-3.1061667e-11" Jw="0" Kx="-5.5636274e-08" Ky="-2.7171154e-11" Kz="1.0000001" Kw="0" Tx="-12.499997" Ty="-8.5000019" Tz="0.5" Tw="1"/>
                                         <Property type="ObjectPtrVector" name="m_components">
                                             <Object class="MeshComponent">
                                                 <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
@@ -1155,8 +1155,8 @@
                                                 <Property type="ObjectPtr" name="m_bodyDesc" flags="Flatten">
                                                     <Object class="RigidBodyDesc">
                                                         <Property type="String" name="m_name" flags="Hidden" value="RigidBodyDesc #6"/>
-                                                        <Property type="EnumU16" name="m_layer" flags="ReadOnly" value="NonMoving"/>
-                                                        <Property type="EnumU8" name="m_motion" flags="ReadOnly" value="Static"/>
+                                                        <Property type="EnumU16" name="m_layer" flags="ReadOnly" value="Moving"/>
+                                                        <Property type="EnumU8" name="m_motion" flags="ReadOnly" value="Dynamic"/>
                                                         <Property type="Bool" name="m_overrideMass" flags="Hidden" value="false"/>
                                                         <Property type="Float" name="m_mass" flags="Optional" value="2000"/>
                                                         <Property type="Float" name="m_friction" flags="HasRange" value="0.5"/>
@@ -1177,9 +1177,9 @@
                                     </Object>
                                     <Object class="GameObject">
                                         <Property type="String" name="m_name" value="Banyuls 4"/>
-                                        <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled|Static"/>
+                                        <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
                                         <Property type="Float4" name="m_color" flags="Color" x="1" y="1" z="1" w="1"/>
-                                        <Property type="Float4x4" name="m_local" Ix="1.4901161e-07" Iy="-1" Iz="0" Iw="0" Jx="1" Jy="1.4901161e-07" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="-15.999999" Ty="-4.9999986" Tz="0.5" Tw="1"/>
+                                        <Property type="Float4x4" name="m_local" Ix="1.4901161e-07" Iy="-1" Iz="0" Iw="0" Jx="1" Jy="1.4901161e-07" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="-16.5" Ty="-4.9999986" Tz="0.5" Tw="1"/>
                                         <Property type="ObjectPtrVector" name="m_components">
                                             <Object class="MeshComponent">
                                                 <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
@@ -1208,8 +1208,8 @@
                                                 <Property type="ObjectPtr" name="m_bodyDesc" flags="Flatten">
                                                     <Object class="RigidBodyDesc">
                                                         <Property type="String" name="m_name" flags="Hidden" value="RigidBodyDesc #2"/>
-                                                        <Property type="EnumU16" name="m_layer" flags="ReadOnly" value="NonMoving"/>
-                                                        <Property type="EnumU8" name="m_motion" flags="ReadOnly" value="Static"/>
+                                                        <Property type="EnumU16" name="m_layer" flags="ReadOnly" value="Moving"/>
+                                                        <Property type="EnumU8" name="m_motion" flags="ReadOnly" value="Dynamic"/>
                                                         <Property type="Bool" name="m_overrideMass" flags="Hidden" value="false"/>
                                                         <Property type="Float" name="m_mass" flags="Optional" value="2000"/>
                                                         <Property type="Float" name="m_friction" flags="HasRange" value="0.5"/>
@@ -1230,9 +1230,9 @@
                                     </Object>
                                     <Object class="GameObject">
                                         <Property type="String" name="m_name" value="HotDog 4"/>
-                                        <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled|Static"/>
+                                        <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
                                         <Property type="Float4" name="m_color" flags="Color" x="1" y="1" z="1" w="1"/>
-                                        <Property type="Float4x4" name="m_local" Ix="-0.00048810244" Iy="-0.99999988" Iz="2.5833941e-08" Iw="0" Jx="0.99999976" Jy="-0.00048804283" Jz="-3.1061667e-11" Jw="0" Kx="-2.7165825e-11" Ky="5.5636274e-08" Kz="1.0000001" Kw="0" Tx="-16.000002" Ty="5" Tz="0.5" Tw="1"/>
+                                        <Property type="Float4x4" name="m_local" Ix="-0.00048810244" Iy="-0.99999988" Iz="2.5833941e-08" Iw="0" Jx="0.99999976" Jy="-0.00048804283" Jz="-3.1061667e-11" Jw="0" Kx="-2.7165825e-11" Ky="5.5636274e-08" Kz="1.0000001" Kw="0" Tx="-16.500002" Ty="5" Tz="0.5" Tw="1"/>
                                         <Property type="ObjectPtrVector" name="m_components">
                                             <Object class="MeshComponent">
                                                 <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
@@ -1261,8 +1261,8 @@
                                                 <Property type="ObjectPtr" name="m_bodyDesc" flags="Flatten">
                                                     <Object class="RigidBodyDesc">
                                                         <Property type="String" name="m_name" flags="Hidden" value="RigidBodyDesc #6"/>
-                                                        <Property type="EnumU16" name="m_layer" flags="ReadOnly" value="NonMoving"/>
-                                                        <Property type="EnumU8" name="m_motion" flags="ReadOnly" value="Static"/>
+                                                        <Property type="EnumU16" name="m_layer" flags="ReadOnly" value="Moving"/>
+                                                        <Property type="EnumU8" name="m_motion" flags="ReadOnly" value="Dynamic"/>
                                                         <Property type="Bool" name="m_overrideMass" flags="Hidden" value="false"/>
                                                         <Property type="Float" name="m_mass" flags="Optional" value="2000"/>
                                                         <Property type="Float" name="m_friction" flags="HasRange" value="0.5"/>
@@ -1283,9 +1283,9 @@
                                     </Object>
                                     <Object class="GameObject">
                                         <Property type="String" name="m_name" value="Banyuls 5"/>
-                                        <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled|Static"/>
+                                        <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
                                         <Property type="Float4" name="m_color" flags="Color" x="1" y="1" z="1" w="1"/>
-                                        <Property type="Float4x4" name="m_local" Ix="0.00034508505" Iy="0.99999982" Iz="0" Iw="0" Jx="-0.99999982" Jy="0.00034508505" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="16.001728" Ty="4.9993072" Tz="0.5" Tw="1"/>
+                                        <Property type="Float4x4" name="m_local" Ix="0.00034508505" Iy="0.99999982" Iz="0" Iw="0" Jx="-0.99999982" Jy="0.00034508505" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="16.501728" Ty="4.9993072" Tz="0.5" Tw="1"/>
                                         <Property type="ObjectPtrVector" name="m_components">
                                             <Object class="MeshComponent">
                                                 <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
@@ -1314,8 +1314,8 @@
                                                 <Property type="ObjectPtr" name="m_bodyDesc" flags="Flatten">
                                                     <Object class="RigidBodyDesc">
                                                         <Property type="String" name="m_name" flags="Hidden" value="RigidBodyDesc #2"/>
-                                                        <Property type="EnumU16" name="m_layer" flags="ReadOnly" value="NonMoving"/>
-                                                        <Property type="EnumU8" name="m_motion" flags="ReadOnly" value="Static"/>
+                                                        <Property type="EnumU16" name="m_layer" flags="ReadOnly" value="Moving"/>
+                                                        <Property type="EnumU8" name="m_motion" flags="ReadOnly" value="Dynamic"/>
                                                         <Property type="Bool" name="m_overrideMass" flags="Hidden" value="false"/>
                                                         <Property type="Float" name="m_mass" flags="Optional" value="2000"/>
                                                         <Property type="Float" name="m_friction" flags="HasRange" value="0.5"/>
@@ -1336,9 +1336,9 @@
                                     </Object>
                                     <Object class="GameObject">
                                         <Property type="String" name="m_name" value="HotDog 5"/>
-                                        <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled|Static"/>
+                                        <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
                                         <Property type="Float4" name="m_color" flags="Color" x="1" y="1" z="1" w="1"/>
-                                        <Property type="Float4x4" name="m_local" Ix="0.00083330669" Iy="0.99999964" Iz="2.5833941e-08" Iw="0" Jx="-0.99999964" Jy="0.00083318749" Jz="-3.1061667e-11" Jw="0" Kx="7.9500425e-12" Ky="-5.5636285e-08" Kz="1.0000001" Kw="0" Tx="15.998278" Ty="-5.0006919" Tz="0.5" Tw="1"/>
+                                        <Property type="Float4x4" name="m_local" Ix="0.00083330669" Iy="0.99999964" Iz="2.5833941e-08" Iw="0" Jx="-0.99999964" Jy="0.00083318749" Jz="-3.1061667e-11" Jw="0" Kx="7.9500425e-12" Ky="-5.5636285e-08" Kz="1.0000001" Kw="0" Tx="16.498278" Ty="-5.0006919" Tz="0.5" Tw="1"/>
                                         <Property type="ObjectPtrVector" name="m_components">
                                             <Object class="MeshComponent">
                                                 <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
@@ -1367,8 +1367,8 @@
                                                 <Property type="ObjectPtr" name="m_bodyDesc" flags="Flatten">
                                                     <Object class="RigidBodyDesc">
                                                         <Property type="String" name="m_name" flags="Hidden" value="RigidBodyDesc #6"/>
-                                                        <Property type="EnumU16" name="m_layer" flags="ReadOnly" value="NonMoving"/>
-                                                        <Property type="EnumU8" name="m_motion" flags="ReadOnly" value="Static"/>
+                                                        <Property type="EnumU16" name="m_layer" flags="ReadOnly" value="Moving"/>
+                                                        <Property type="EnumU8" name="m_motion" flags="ReadOnly" value="Dynamic"/>
                                                         <Property type="Bool" name="m_overrideMass" flags="Hidden" value="false"/>
                                                         <Property type="Float" name="m_mass" flags="Optional" value="2000"/>
                                                         <Property type="Float" name="m_friction" flags="HasRange" value="0.5"/>

@@ -33,7 +33,7 @@
                 </Property>
                 <Property type="Float" name="m_occlusion" flags="HasRange" value="1"/>
                 <Property type="Float" name="m_roughness" flags="HasRange" value="1"/>
-                <Property type="Float" name="m_metalness" flags="HasRange" value="1"/>
+                <Property type="Float" name="m_metalness" flags="HasRange" value="0"/>
             </Object>
         </Property>
     </Object>
