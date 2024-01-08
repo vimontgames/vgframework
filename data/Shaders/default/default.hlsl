@@ -27,6 +27,10 @@ VS_Output VS_Forward(uint _vertexID : VertexID)
 {
     VS_Output output;
 
+    uint instanceDataOffset = rootConstants3D.getGPUInstanceDataOffset(); 
+    GPUInstanceData instanceDataHeader = getBuffer(RESERVEDSLOT_BUFSRV_INSTANCEDATA).Load<GPUInstanceData>(instanceDataOffset);
+    GPUMaterialData materialData = instanceDataHeader.getGPUMaterialData(instanceDataOffset, rootConstants3D.getMatID());
+
     Vertex vert;
            vert.Load(getBuffer(rootConstants3D.getBufferHandle()), rootConstants3D.getVertexFormat(), _vertexID, rootConstants3D.getBufferOffset());
 
@@ -39,7 +43,7 @@ VS_Output VS_Forward(uint _vertexID : VertexID)
     output.tan = vert.getTan();
     output.bin = vert.getBin();
     output.uv = float4(vert.getUV(0), vert.getUV(1));
-    output.col = vert.getColor() * rootConstants3D.color;
+    output.col = vert.getColor() * materialData.getAlbedoColor();
     
     float3 modelPos = vert.getPos();
     float3 worldPos = mul(float4(modelPos.xyz, 1.0f), rootConstants3D.getWorldMatrix()).xyz;
@@ -61,9 +65,9 @@ struct PS_Output
     float4 color0 : Color0;
 };
 
-float4 getAlbedo(uint _handle, float2 _uv, float4 _vertexColor, DisplayFlags _flags)
+float4 getAlbedo(GPUMaterialData _materialData, float2 _uv, float4 _vertexColor, DisplayFlags _flags)
 {
-    float4 albedo = getTexture2D(_handle).Sample(linearRepeat, _uv).rgba;
+    float4 albedo = getTexture2D(_materialData.getAlbedoTextureHandle()).Sample(linearRepeat, _uv).rgba;
 
     #if _TOOLMODE
     if (0 == (DisplayFlags::AlbedoMap & _flags))
@@ -75,21 +79,30 @@ float4 getAlbedo(uint _handle, float2 _uv, float4 _vertexColor, DisplayFlags _fl
     return albedo;
 }
 
-float4 getNormal(uint _handle, float2 _uv, DisplayFlags _flags)
+float4 getNormal(GPUMaterialData _materialData, float2 _uv, DisplayFlags _flags)
 {
-    float4 normal = getTexture2D(_handle).Sample(linearRepeat, _uv);
+    float4 normal = getTexture2D(_materialData.getNormalTextureHandle()).Sample(linearRepeat, _uv);
 
     #if _TOOLMODE
     if (0 == (DisplayFlags::NormalMap & _flags))
         normal.xyz = float3(0,0,1);
     #endif
 
-    return float4(normal.xyz*2-1, normal.w);
+    return float4((normal.xyz*2-1) * _materialData.getNormalStrength() , normal.w);
 }
 
-float4 getPBR(uint _handle, float2 _uv)
+float4 getPBR(GPUMaterialData _materialData, float2 _uv)
 {
-    float4 pbr = getTexture2D(_handle).Sample(linearRepeat, _uv);
+    float4 pbr = getTexture2D(_materialData.getPBRTextureHandle()).Sample(linearRepeat, _uv);
+
+    pbr.r = lerp(1.0f, pbr.r, _materialData.getOcclusion());
+    pbr.g *= _materialData.getRoughness();
+    pbr.b *= _materialData.getMetalness();
+
+    //pbr.r = 1;
+    //pbr.g = 0.3f;
+    //pbr.b = 0;
+
     return pbr;
 }
 
@@ -132,9 +145,9 @@ PS_Output PS_Forward(VS_Output _input)
     // Material entries are only present once material is loaded, if matIndex is above limit then use the default material
     GPUMaterialData materialData = instanceDataHeader.getGPUMaterialData(instanceDataOffset, rootConstants3D.getMatID());
 
-    float4 albedo = getAlbedo(materialData.getAlbedoTextureHandle(), uv0, _input.col, flags);
-    float3 normal = getNormal(materialData.getNormalTextureHandle(), uv0, flags).xyz;
-    float4 pbr = getPBR(materialData.getPBRTextureHandle(), uv0);
+    float4 albedo = getAlbedo(materialData, uv0, _input.col, flags);
+    float3 normal = getNormal(materialData, uv0, flags).xyz;
+    float4 pbr = getPBR(materialData, uv0);
 
     float3 worldNormal = getWorldNormal(normal, _input.tan, _input.bin, _input.nrm, rootConstants3D.getWorldMatrix());
 
@@ -185,6 +198,10 @@ VS_Output VS_Deferred(uint _vertexID : VertexID)
 {
     VS_Output output;
 
+    uint instanceDataOffset = rootConstants3D.getGPUInstanceDataOffset(); 
+    GPUInstanceData instanceDataHeader = getBuffer(RESERVEDSLOT_BUFSRV_INSTANCEDATA).Load<GPUInstanceData>(instanceDataOffset);
+    GPUMaterialData materialData = instanceDataHeader.getGPUMaterialData(instanceDataOffset, rootConstants3D.getMatID());
+
     Vertex vert;
            vert.Load(getBuffer(rootConstants3D.getBufferHandle()), rootConstants3D.getVertexFormat(), _vertexID, rootConstants3D.getBufferOffset());
 
@@ -197,7 +214,7 @@ VS_Output VS_Deferred(uint _vertexID : VertexID)
     output.tan = vert.getTan();
     output.bin = vert.getBin();
     output.uv = float4(vert.getUV(0), vert.getUV(1));
-    output.col = vert.getColor() * rootConstants3D.color;
+    output.col = vert.getColor() * materialData.getAlbedoColor();
     
     float3 modelPos = vert.getPos();
     float3 worldPos = mul(float4(modelPos.xyz, 1.0f), rootConstants3D.getWorldMatrix()).xyz;
@@ -244,9 +261,9 @@ PS_OutputDeferred PS_Deferred(VS_Output _input)
     // Material entries are only present once material is loaded, if matIndex is above limit then use the default material
     GPUMaterialData materialData = instanceDataHeader.getGPUMaterialData(instanceDataOffset, rootConstants3D.getMatID());
 
-    float4 albedo = getAlbedo(materialData.getAlbedoTextureHandle(), uv0, _input.col, flags);
-    float3 normal = getNormal(materialData.getNormalTextureHandle(), uv0, flags).xyz;
-    float4 pbr = getPBR(materialData.getPBRTextureHandle(), uv0);
+    float4 albedo = getAlbedo(materialData, uv0, _input.col, flags);
+    float3 normal = getNormal(materialData, uv0, flags).xyz;
+    float4 pbr = getPBR(materialData, uv0);
     
     float3 worldNormal = getWorldNormal(normal, _input.tan, _input.bin, _input.nrm, rootConstants3D.getWorldMatrix());
 

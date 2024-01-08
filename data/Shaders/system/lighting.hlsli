@@ -120,9 +120,9 @@ LightingResult computeDirectLighting(ViewConstants _viewConstants, float3 _eyePo
 {
     LightingResult output = (LightingResult)0;
     
-    float occlusion = 1.0f; //_pbr.r;
-    float roughness = 0.3f; //_pbr.g;
-    float metalness = 0.0f; //_pbr.b;
+    float occlusion = _pbr.r;
+    float roughness = _pbr.g;
+    float metalness = _pbr.b;
 
     // Outgoing light direction (vector from world-space fragment position to camera). 
 	float3 Lo = normalize(_eyePos - _worldPos.xyz);

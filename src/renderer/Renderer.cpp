@@ -720,7 +720,7 @@ namespace vg::renderer
                     break;
 
                 case MaterialTextureType::PBR:
-                    data = 0x00007FFF;    // Blue: Metalness Green: Roughness Red: Occlusion
+                    data = 0x00FFFFFF;    // Blue: Metalness Green: Roughness Red: Occlusion (will be multiplied by material constants)
                     reservedSlot = ReservedSlot::DefaultPBRTexSrv;
                     break;
             }

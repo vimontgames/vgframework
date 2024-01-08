@@ -32,23 +32,22 @@ namespace vg::renderer
     void DefaultMaterialModel::FillGPUMaterialData(GPUMaterialData * _data) const
     {
         _data->setAlbedoTextureHandle(m_albedoMap ? m_albedoMap->getTextureHandle() : RESERVEDSLOT_TEXSRV_DEFAULT_ALBEDO);
+        _data->setAlbedoColor(m_albedoColor);
+
         _data->setNormalTextureHandle(m_normaMap ? m_normaMap->getTextureHandle() : RESERVEDSLOT_TEXSRV_DEFAULT_NORMAL);
+        _data->setNormalStrength(m_normalStrength);
+
         _data->setPBRTextureHandle(m_pbrMap ? m_pbrMap->getTextureHandle() : RESERVEDSLOT_TEXSRV_DEFAULT_PBR);
+        _data->setOcclusion(m_occlusion);
+        _data->setRoughness(m_roughness);
+        _data->setMetalness(m_metalness);
     }
 
     //--------------------------------------------------------------------------------------
     void DefaultMaterialModel::Setup(const RenderContext & _renderContext, gfx::CommandList * _cmdList, RootConstants3D * _root3D, core::uint _index) const
     {
-        gfx::Texture * albedoMap = m_albedoMap;
-        gfx::Texture * normalMap = m_normaMap;
-        gfx::Texture * pbrMap = m_pbrMap;
-  
-        //_root3D->setAlbedoTextureHandle( albedoMap ? albedoMap->getTextureHandle() : RESERVEDSLOT_TEXSRV_DEFAULT_ALBEDO ); 
-        //_root3D->setNormalTextureHandle( normalMap ? normalMap->getTextureHandle() : RESERVEDSLOT_TEXSRV_DEFAULT_NORMAL);
-        //_root3D->setPBRTextureHandle(normalMap ? normalMap->getTextureHandle() : RESERVEDSLOT_TEXSRV_DEFAULT_PBR);
-
         _root3D->setMatID(_index);
-        _root3D->setColor(m_albedoColor);
+        //_root3D->setColor(m_albedoColor);
 
         auto key = m_shaderKey[asInteger(_renderContext.m_shaderPass)];
 
@@ -173,6 +172,5 @@ namespace vg::renderer
             m_roughness = _value;
         else if (_name == "Metalness")
             m_metalness = _value;
-
     }
 }

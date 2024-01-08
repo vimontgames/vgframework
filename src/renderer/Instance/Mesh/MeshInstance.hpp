@@ -315,7 +315,7 @@ namespace vg::renderer
 
                 if (draw)
                 {
-                    root3D.color *= getColor();
+                    //root3D.color *= getColor();
 
                     _cmdList->setGraphicRootConstants(0, (u32 *)&root3D, RootConstants3DCount);
                     _cmdList->drawIndexed(batch.count, batch.offset);

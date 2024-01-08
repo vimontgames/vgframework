@@ -465,11 +465,11 @@ namespace vg::renderer
         // AABB Matrix in world-space
         float4x4 aabbMatrixWS = mul(_aabb.getLocalSpaceUnitCubeMatrix(), _world);
 
-        DebugDrawRootConstants3D root3D;
+        DebugDrawRootConstants3D debugDraw3D;
         {
-            root3D.setWorldMatrix(transpose(aabbMatrixWS));
-            root3D.setBufferHandle(m_box->getVertexBuffer()->getBufferHandle(), m_box->getVertexBufferOffset());
-            root3D.setVertexFormat(VertexFormat::DebugDraw);
+            debugDraw3D.setWorldMatrix(transpose(aabbMatrixWS));
+            debugDraw3D.setBufferHandle(m_box->getVertexBuffer()->getBufferHandle(), m_box->getVertexBufferOffset());
+            debugDraw3D.setVertexFormat(VertexFormat::DebugDraw);
         }
 
         // Root sig
@@ -486,8 +486,8 @@ namespace vg::renderer
 
         // Draw Alpha
         {
-            root3D.color = float4(0, 1, 0, 0.125f);
-            _cmdList->setGraphicRootConstants(0, (u32 *)&root3D, DebugDrawRootConstants3DCount);
+            debugDraw3D.color = float4(0, 1, 0, 0.125f);
+            _cmdList->setGraphicRootConstants(0, (u32 *)&debugDraw3D, DebugDrawRootConstants3DCount);
 
             // Blend (2)
             BlendState bsAlpha(BlendFactor::SrcAlpha, BlendFactor::OneMinusSrcAlpha, BlendOp::Add);
@@ -504,8 +504,8 @@ namespace vg::renderer
 
         // Draw opaque
         {
-            root3D.color = float4(0, 1, 0, 1.0f);
-            _cmdList->setGraphicRootConstants(0, (u32 *)&root3D, DebugDrawRootConstants3DCount);
+            debugDraw3D.color = float4(0, 1, 0, 1.0f);
+            _cmdList->setGraphicRootConstants(0, (u32 *)&debugDraw3D, DebugDrawRootConstants3DCount);
 
             // Blend
             BlendState bsOpaque(BlendFactor::One, BlendFactor::Zero, BlendOp::Add);
@@ -529,17 +529,17 @@ namespace vg::renderer
         VG_ASSERT(nullptr != m_gridVB);
         const BufferDesc & gridDesc = m_gridVB->getBufDesc();
 
-        DebugDrawRootConstants3D root3D;
+        DebugDrawRootConstants3D debugDrawRoot3D;
 
-        root3D.setWorldMatrix(float4x4::identity());
-        root3D.setBufferHandle(m_gridVB->getBufferHandle());
-        root3D.setVertexFormat(VertexFormat::DebugDraw);
-        root3D.color = float4(1, 1, 1, 1);
+        debugDrawRoot3D.setWorldMatrix(float4x4::identity());
+        debugDrawRoot3D.setBufferHandle(m_gridVB->getBufferHandle());
+        debugDrawRoot3D.setVertexFormat(VertexFormat::DebugDraw);
+        debugDrawRoot3D.setColor(float4(1, 1, 1, 1));
 
         _cmdList->setRasterizerState(rs);
         _cmdList->setGraphicRootSignature(m_debugDrawSignatureHandle);
         _cmdList->setShader(m_debugDrawShaderKey);
-        _cmdList->setGraphicRootConstants(0, (u32 *)&root3D, DebugDrawRootConstants3DCount);
+        _cmdList->setGraphicRootConstants(0, (u32 *)&debugDrawRoot3D, DebugDrawRootConstants3DCount);
         _cmdList->setPrimitiveTopology(PrimitiveTopology::LineList);
         _cmdList->draw(gridDesc.elementCount);
     }
@@ -552,18 +552,18 @@ namespace vg::renderer
         VG_ASSERT(nullptr != m_axisVB);
         const BufferDesc & gridDesc = m_axisVB->getBufDesc();
 
-        DebugDrawRootConstants3D root3D;
+        DebugDrawRootConstants3D debugDrawRoot3D;
 
-        root3D.setWorldMatrix(float4x4::identity());
-        root3D.setBufferHandle(m_axisVB->getBufferHandle());
-        root3D.setVertexFormat(VertexFormat::DebugDraw);
-        root3D.color = float4(1, 1, 1, 1);
+        debugDrawRoot3D.setWorldMatrix(float4x4::identity());
+        debugDrawRoot3D.setBufferHandle(m_axisVB->getBufferHandle());
+        debugDrawRoot3D.setVertexFormat(VertexFormat::DebugDraw);
+        debugDrawRoot3D.setColor(float4(1, 1, 1, 1));
 
         _cmdList->setRasterizerState(rs);
         _cmdList->setShader(m_debugDrawShaderKey);
         _cmdList->setPrimitiveTopology(PrimitiveTopology::LineList);
 
-        _cmdList->setGraphicRootConstants(0, (u32 *)&root3D, DebugDrawRootConstants3DCount);
+        _cmdList->setGraphicRootConstants(0, (u32 *)&debugDrawRoot3D, DebugDrawRootConstants3DCount);
         _cmdList->draw(6);
     }
 
@@ -805,11 +805,11 @@ namespace vg::renderer
             _cmdList->setGraphicRootSignature(m_debugDrawSignatureHandle);
 
             // Root constants
-            DebugDrawRootConstants3D root3D;
-            root3D.setWorldMatrix(float4x4::identity());
-            root3D.setBufferHandle(drawData.m_debugDrawVB->getBufferHandle(), drawData.m_linesVBOffset);
-            root3D.setVertexFormat(VertexFormat::DebugDraw);
-            root3D.color = float4(1, 1, 1, 1);
+            DebugDrawRootConstants3D debugDrawRoot3D;
+            debugDrawRoot3D.setWorldMatrix(float4x4::identity());
+            debugDrawRoot3D.setBufferHandle(drawData.m_debugDrawVB->getBufferHandle(), drawData.m_linesVBOffset);
+            debugDrawRoot3D.setVertexFormat(VertexFormat::DebugDraw);
+            debugDrawRoot3D.setColor(float4(1, 1, 1, 1));
 
             _cmdList->setRasterizerState(rs);
             _cmdList->setShader(m_debugDrawShaderKey);
@@ -817,8 +817,8 @@ namespace vg::renderer
 
             // transparent 
             {
-                root3D.color = opaqueColor;
-                _cmdList->setGraphicRootConstants(0, (u32 *)&root3D, DebugDrawRootConstants3DCount);
+                debugDrawRoot3D.color = opaqueColor;
+                _cmdList->setGraphicRootConstants(0, (u32 *)&debugDrawRoot3D, DebugDrawRootConstants3DCount);
 
                 BlendState bsAlpha(BlendFactor::SrcAlpha, BlendFactor::OneMinusSrcAlpha, BlendOp::Add);
                 _cmdList->setBlendState(bsAlpha);
@@ -831,8 +831,8 @@ namespace vg::renderer
 
             // opaque
             {
-                root3D.color = transparentColor;
-                _cmdList->setGraphicRootConstants(0, (u32 *)&root3D, DebugDrawRootConstants3DCount);
+                debugDrawRoot3D.color = transparentColor;
+                _cmdList->setGraphicRootConstants(0, (u32 *)&debugDrawRoot3D, DebugDrawRootConstants3DCount);
 
                 BlendState bsOpaque(BlendFactor::One, BlendFactor::Zero, BlendOp::Add);
                 _cmdList->setBlendState(bsOpaque);
@@ -880,9 +880,9 @@ namespace vg::renderer
         const uint indexCount = _geometry->getIndexBuffer()->getBufDesc().getElementCount();
 
         // Root constants
-        DebugDrawRootConstants3D root3D;
-        root3D.setBufferHandle(_geometry->getVertexBuffer()->getBufferHandle());
-        root3D.setVertexFormat(VertexFormat::DebugDraw);
+        DebugDrawRootConstants3D debugDraw3D;
+        debugDraw3D.setBufferHandle(_geometry->getVertexBuffer()->getBufferHandle());
+        debugDraw3D.setVertexFormat(VertexFormat::DebugDraw);
 
         // Transparent
         {
@@ -896,9 +896,9 @@ namespace vg::renderer
                 const DebugDrawIcoSphereData & sphere = _instances[i];
                 float4 color = unpackRGBA8(sphere.color) * transparentColor;
 
-                root3D.setWorldMatrix(transpose(sphere.world));
-                root3D.setColor(color);
-                _cmdList->setGraphicRootConstants(0, (u32 *)&root3D, DebugDrawRootConstants3DCount);
+                debugDraw3D.setWorldMatrix(transpose(sphere.world));
+                debugDraw3D.setColor(color);
+                _cmdList->setGraphicRootConstants(0, (u32 *)&debugDraw3D, DebugDrawRootConstants3DCount);
                 _cmdList->drawIndexed(indexCount);
             }
         }
@@ -916,9 +916,9 @@ namespace vg::renderer
                 const DebugDrawIcoSphereData & sphere = _instances[i];
                 float4 color = unpackRGBA8(sphere.color) * opaqueColor;
 
-                root3D.setWorldMatrix(transpose(sphere.world));
-                root3D.setColor(color);
-                _cmdList->setGraphicRootConstants(0, (u32 *)&root3D, DebugDrawRootConstants3DCount);
+                debugDraw3D.setWorldMatrix(transpose(sphere.world));
+                debugDraw3D.setColor(color);
+                _cmdList->setGraphicRootConstants(0, (u32 *)&debugDraw3D, DebugDrawRootConstants3DCount);
                 _cmdList->drawIndexed(indexCount);
             }
         }

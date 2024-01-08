@@ -66,6 +66,14 @@ namespace vg::engine
 
         if (!strcmp(_prop.getName(), "m_albedoColor"))
             material->SetColor("AlbedoColor", m_albedoColor);
+        else if (!strcmp(_prop.getName(), "m_normalStrength"))
+            material->SetFloat("NormalStrength", m_normalStrength);
+        else if (!strcmp(_prop.getName(), "m_occlusion"))
+            material->SetFloat("Occlusion", m_occlusion);
+        else if (!strcmp(_prop.getName(), "m_roughness"))
+            material->SetFloat("Roughness", m_roughness);
+        else if (!strcmp(_prop.getName(), "m_metalness"))
+            material->SetFloat("Metalness", m_metalness);
 
         super::OnPropertyChanged(_object, _prop, _notifyParent);
     }
