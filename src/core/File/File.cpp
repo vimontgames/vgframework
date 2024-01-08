@@ -244,7 +244,7 @@ namespace vg::core::io
         for (uint i = 0; i < _ext.size(); ++i)
         {
             size_t findExt = _file.find_last_of(_ext[i]); 
-            if (findExt != _file.length() - 1)
+            if (findExt == _file.length() - 1)
             {
                 extensionFound = true;
                 break;

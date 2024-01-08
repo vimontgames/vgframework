@@ -13,7 +13,7 @@
                         <Property type="String" name="m_name" value="Editor Camera"/>
                         <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
                         <Property type="Float4" name="m_color" flags="Color" x="1" y="1" z="1" w="1"/>
-                        <Property type="Float4x4" name="m_local" Ix="0.59538507" Iy="0.80344051" Iz="0" Iw="0" Jx="-0.1480666" Jy="0.10972392" Jz="0.98287177" Jw="0" Kx="0.78967899" Ky="-0.5851872" Kz="0.18429068" Kw="0" Tx="4.8356757" Ty="-2.9164283" Tz="1.5575846" Tw="1"/>
+                        <Property type="Float4x4" name="m_local" Ix="0.94909787" Iy="0.31498149" Iz="0" Iw="0" Jx="-0.11870658" Jy="0.35768506" Jz="0.92626679" Jw="0" Kx="0.29175687" Ky="-0.87911779" Kz="0.37686849" Kw="0" Tx="1.6871065" Ty="-5.7557893" Tz="2.0985777" Tw="1"/>
                         <Property type="ObjectPtrVector" name="m_components">
                             <Object class="CameraComponent">
                                 <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
@@ -27,8 +27,8 @@
                                 <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
                                 <Property type="Float" name="m_moveSpeed" flags="HasRange" value="1"/>
                                 <Property type="Float" name="m_rotSpeed" flags="HasRange" value="1"/>
-                                <Property type="Float" name="m_pitch" flags="HasRange" value="-1.3854462"/>
-                                <Property type="Float" name="m_yaw" flags="HasRange" value="-2.2085412"/>
+                                <Property type="Float" name="m_pitch" flags="HasRange" value="-1.1843832"/>
+                                <Property type="Float" name="m_yaw" flags="HasRange" value="-2.8211555"/>
                                 <Property type="Float" name="m_roll" flags="HasRange" value="0"/>
                             </Object>
                         </Property>

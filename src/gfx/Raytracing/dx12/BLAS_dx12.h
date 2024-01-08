@@ -17,7 +17,7 @@ namespace vg::gfx::dx12
         BLAS(BLASUpdateType _blasUpdateType, BLASVariantKey _key);
         ~BLAS();
 
-        void addIndexedGeometry(const gfx::Buffer * _ib, core::uint _ibOffset, core::uint _indexCount, const gfx::Buffer * _vb, core::uint _vbOffset, core::uint _vertexCount, core::uint _vbStride, SurfaceType _surfaceType);
+        void addIndexedGeometry(const gfx::Buffer * _ib, core::uint _ibOffset, core::uint _indexCount, const gfx::Buffer * _vb, core::uint _vbOffset, core::uint _vertexCount, core::uint _vbStride, bool _opaque);
         void clear();
         void init(bool _update = false);
         void build(gfx::CommandList * _cmdList, bool _update = false);

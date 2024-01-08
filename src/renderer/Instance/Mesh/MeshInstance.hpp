@@ -149,7 +149,7 @@ namespace vg::renderer
     gfx::BLASVariantKey MeshInstance::computeBLASVariantKey() const
     {
         const auto & materials = getMaterials();
-        VG_ASSERT(materials.size() <= 32);
+        VG_ASSERT(materials.size() <= 64);
         
         gfx::BLASVariantKey key = 0;
 
@@ -157,15 +157,21 @@ namespace vg::renderer
         if (meshModel)
         {
             const auto & batches = meshModel->getGeometry()->batches();
-            VG_ASSERT(batches.size() <= 32);
+            VG_ASSERT(batches.size() <= 64);
 
+            uint bit = 1;
             for (uint i = 0; i < batches.size(); ++i)
             {
                 if (i < materials.size())
                 {
                     if (const auto * mat = materials[i])
-                        key |= ((u64)mat->getSurfaceType()) << (i<<1);
+                    {
+                        if (gfx::SurfaceType::Opaque != mat->getSurfaceType())
+                            key |= bit;
+                    }                   
                 }
+
+                bit <<= 1;
             }
         }
 

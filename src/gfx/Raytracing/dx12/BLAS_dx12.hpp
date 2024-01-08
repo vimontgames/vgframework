@@ -16,11 +16,11 @@ namespace vg::gfx::dx12
     }
 
     //--------------------------------------------------------------------------------------
-    void BLAS::addIndexedGeometry(const gfx::Buffer * _ib, core::uint _ibOffset, core::uint _indexCount, const gfx::Buffer * _vb, core::uint _vbOffset, core::uint _vertexCount, core::uint _vbStride, SurfaceType _surfaceType)
+    void BLAS::addIndexedGeometry(const gfx::Buffer * _ib, core::uint _ibOffset, core::uint _indexCount, const gfx::Buffer * _vb, core::uint _vbOffset, core::uint _vertexCount, core::uint _vbStride, bool _opaque)
     {
         D3D12_RAYTRACING_GEOMETRY_DESC desc{};
         desc.Type = D3D12_RAYTRACING_GEOMETRY_TYPE_TRIANGLES;
-        desc.Flags = (_surfaceType == SurfaceType::Opaque) ? D3D12_RAYTRACING_GEOMETRY_FLAG_OPAQUE : D3D12_RAYTRACING_GEOMETRY_FLAG_NONE;
+        desc.Flags = _opaque ? D3D12_RAYTRACING_GEOMETRY_FLAG_OPAQUE : D3D12_RAYTRACING_GEOMETRY_FLAG_NONE;
 
         const BufferDesc & vbDesc = _vb->getBufDesc();
         const BufferDesc & ibDesc = _ib->getBufDesc();

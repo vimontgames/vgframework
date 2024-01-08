@@ -189,7 +189,7 @@ namespace vg::renderer
 
                             const Batch & batch = batches[m];
                             VG_ASSERT(blas);
-                            blas->addIndexedGeometry(ib, ibOffset + batch.offset, batch.count, modelVB, 0, modelVB->getBufDesc().getElementCount(), vertexStride, surfaceType);
+                            blas->addIndexedGeometry(ib, ibOffset + batch.offset, batch.count, modelVB, 0, modelVB->getBufDesc().getElementCount(), vertexStride, (gfx::SurfaceType::Opaque == surfaceType) ? true : false);
                         }
 
                         blas->update(_cmdList);
@@ -256,7 +256,7 @@ namespace vg::renderer
                             surfaceType = mat->getSurfaceType();
 
                         const Batch & batch = batches[m];
-                        blas->addIndexedGeometry(ib, ibOffset + batch.offset, batch.count, skinVB, skinVBOffset, modelVB->getBufDesc().getElementCount(), vertexStride, surfaceType);
+                        blas->addIndexedGeometry(ib, ibOffset + batch.offset, batch.count, skinVB, skinVBOffset, modelVB->getBufDesc().getElementCount(), vertexStride, (gfx::SurfaceType::Opaque == surfaceType) ? true : false);
                     }
 
                     blas->update(_cmdList);

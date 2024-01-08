@@ -1,0 +1,22 @@
+<Root>
+    <Object class="WorldResourceData">
+        <Property type="String" name="m_name" flags="Hidden" value="BLAStest"/>
+        <Property type="ObjectPtr" name="m_world">
+            <Object class="World">
+                <Property type="String" name="m_name" flags="Hidden" value="World #1"/>
+            </Object>
+        </Property>
+        <Property type="ResourcePtrVector" name="m_sceneResources" flags="Resource">
+            <Object class="SceneResource">
+                <Property type="String" name="m_name" flags="Hidden" value=""/>
+                <Property type="String" name="m_resourcePath" flags="Hidden" value="data/Scenes/Editor.scene"/>
+                <Property type="String" name="m_name" value=""/>
+            </Object>
+            <Object class="SceneResource">
+                <Property type="String" name="m_name" flags="Hidden" value=""/>
+                <Property type="String" name="m_resourcePath" flags="Hidden" value="data/Scenes/BLAStest.scene"/>
+                <Property type="String" name="m_name" value=""/>
+            </Object>
+        </Property>
+    </Object>
+</Root>

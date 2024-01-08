@@ -17,7 +17,7 @@ namespace vg::gfx::vulkan
     }
 
     //--------------------------------------------------------------------------------------
-    void BLAS::addIndexedGeometry(const gfx::Buffer * _ib, core::uint _ibOffset, core::uint _indexCount, const gfx::Buffer * _vb, core::uint _vbOffset, core::uint _vertexCount, core::uint _vbStride, SurfaceType _surfaceType)
+    void BLAS::addIndexedGeometry(const gfx::Buffer * _ib, core::uint _ibOffset, core::uint _indexCount, const gfx::Buffer * _vb, core::uint _vbOffset, core::uint _vertexCount, core::uint _vbStride, bool _opaque)
     {
         const BufferDesc & vbDesc = _vb->getBufDesc();
         const BufferDesc & ibDesc = _ib->getBufDesc();
@@ -27,7 +27,7 @@ namespace vg::gfx::vulkan
 
         VkAccelerationStructureGeometryKHR desc = {};
         desc.sType = VK_STRUCTURE_TYPE_ACCELERATION_STRUCTURE_GEOMETRY_KHR;
-        desc.flags = (SurfaceType::Opaque == _surfaceType) ? VK_GEOMETRY_OPAQUE_BIT_KHR : 0x0;
+        desc.flags = _opaque ? VK_GEOMETRY_OPAQUE_BIT_KHR : 0x0;
         desc.geometryType = VK_GEOMETRY_TYPE_TRIANGLES_KHR;
         desc.geometry.triangles.sType = VK_STRUCTURE_TYPE_ACCELERATION_STRUCTURE_GEOMETRY_TRIANGLES_DATA_KHR;
         desc.geometry.triangles.vertexData.deviceAddress = _vb->getResource().getVulkanDeviceAddress() + _vbOffset;
