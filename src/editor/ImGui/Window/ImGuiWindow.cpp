@@ -1224,9 +1224,11 @@ namespace vg::editor
 
         bool changed = false;
 
+        const string resPath = _resource->GetResourcePath();
+
         char buffer[1024];
-        sprintf_s(buffer, _resource->GetResourcePath().c_str());
-        string label = (string)"###" + to_string(uint_ptr(_resource));
+        sprintf_s(buffer, resPath.c_str());
+        string label =  (string)"###" + to_string(uint_ptr(_resource));
 
         const float buttonWidth = style::button::SizeSmall.x;
 
@@ -1241,6 +1243,8 @@ namespace vg::editor
         
         string saveFileButtonName = getButtonLabel("Save", _resource);
         string saveAsFileButtonName = getButtonLabel("Save As", _resource);
+
+        string editFile = getButtonLabel("Edit", _resource);
 
         string clearFileButtonName = getButtonLabel("Remove", _resource);
         string reimportFileButtonName = getButtonLabel("Reimport", _resource);
@@ -1275,18 +1279,28 @@ namespace vg::editor
             }
 
             if (ImGui::MenuItem(openFileButtonName.c_str()))
-                openExistingFile = true;                
+                openExistingFile = true;  
+
+            ImGui::Separator();
+            ImGui::BeginDisabled(resPath.empty());
+            {
+                if (ImGui::MenuItem(editFile.c_str()))
+                {
+                    string cmd = fmt::sprintf("start %s/%s", io::getRootDirectory(), resPath);
+                    system(cmd.c_str());
+                }
+            }
+            ImGui::EndDisabled();
 
             ImGui::Separator();
 
             if (_resource->CanSaveFile())
             {
-
                 ImGui::BeginDisabled(nullptr == _resource->getObject());
                 {
                     if (ImGui::MenuItem(saveFileButtonName.c_str()))
                     {
-                        if (_resource->SaveFile(_resource->GetResourcePath()))
+                        if (_resource->SaveFile(resPath))
                             changed = true;
                     }
 
@@ -1298,7 +1312,7 @@ namespace vg::editor
                 ImGui::Separator();
             }
 
-            ImGui::BeginDisabled(_resource->GetResourcePath().empty());
+            ImGui::BeginDisabled(resPath.empty());
             {
                 if (ImGui::MenuItem(clearFileButtonName.c_str()))
                     _resource->ClearResourcePath();
