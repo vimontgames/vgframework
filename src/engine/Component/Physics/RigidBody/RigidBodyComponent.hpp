@@ -228,11 +228,13 @@ namespace vg::engine
     //--------------------------------------------------------------------------------------
     // Called at creation or when GameObject flags change. 
     // Updates the layer and motion flags according to Static/Dynamic GameObject
+    // It will recreate the physics body if needed.
     //--------------------------------------------------------------------------------------
     bool RigidBodyComponent::updateFlagsFromGameObject()
     {
         IGameObject * go = GetGameObject();
         VG_ASSERT(go);
+        bool updated = false;
         if (nullptr != go)
         {
             // Update static/dynamic physics flags
@@ -242,7 +244,7 @@ namespace vg::engine
                 {
                     m_bodyDesc->SetLayer(physics::ObjectLayer::NonMoving);
                     m_bodyDesc->SetMotion(physics::MotionType::Static);
-                    return true;
+                    updated = true;
                 }
             }
             else
@@ -251,11 +253,21 @@ namespace vg::engine
                 {
                     m_bodyDesc->SetLayer(physics::ObjectLayer::Moving);
                     m_bodyDesc->SetMotion(physics::MotionType::Dynamic);
-                    return true;
+                    updated = true;
                 }
             }
         }
-        return false;
+
+        if (updated)
+        {
+            if (m_body)
+            {
+                VG_SAFE_RELEASE(m_body);
+                createBody();
+            }
+        }
+
+        return updated;
     }
 
     //--------------------------------------------------------------------------------------
