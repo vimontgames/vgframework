@@ -46,10 +46,11 @@ namespace vg
             void        releaseTextureID        (ImTextureID _texID);
 
             void        resetGUITheme           ();
-            void        setGUIThemeClassic      ();
-            void        setGUIThemeDark         ();
-            void        setGUIThemeLight        ();
-            void        setGUIThemeVGDark       ();
+            void        setGUITheme_ImGui_Classic      ();
+            void        setGUITheme_ImGui_Dark         ();
+            void        setGUITheme_ImGui_Light        ();
+            void        setGUIThemeVimontGames_Grey       ();
+            void        setGUIThemeVimontGames_Dark     ();
 
         private:
             gfx::BindlessTextureHandle          m_fontTexHandle;

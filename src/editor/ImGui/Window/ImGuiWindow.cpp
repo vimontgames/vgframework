@@ -1504,13 +1504,21 @@ namespace vg::editor
         if (nullptr == _url)
             _url = _text;
 
-        ImGui::PushStyleColor(ImGuiCol_Text, ImGui::GetStyle().Colors[ImGuiCol_PlotHistogramHovered]);
+        auto pos = ImGui::GetCursorPos();
+
+        ImGui::PushStyleColor(ImGuiCol_Text, ImGui::GetStyle().Colors[ImGuiCol_PlotHistogram ]);
         ImGui::Text(_text);
         ImGui::PopStyleColor();
 
         if (ImGui::IsItemHovered())
         {
-            underLine(ImGui::GetStyle().Colors[ImGuiCol_ButtonHovered]);
+            ImGui::SameLine();
+            ImGui::SetCursorPos(pos);
+            ImGui::PushStyleColor(ImGuiCol_Text, ImGui::GetStyle().Colors[ImGuiCol_PlotHistogramHovered]);
+            ImGui::Text(_text);
+            ImGui::PopStyleColor();
+
+            underLine(ImGui::GetStyle().Colors[ImGuiCol_PlotHistogramHovered ]);
 
             if (ImGui::IsMouseClicked(0))
             {
@@ -1522,7 +1530,7 @@ namespace vg::editor
         }
         else
         {
-            underLine(ImGui::GetStyle().Colors[ImGuiCol_Button]);
+            underLine(ImGui::GetStyle().Colors[ImGuiCol_PlotHistogram]);
         }
     }
 

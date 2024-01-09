@@ -16,7 +16,8 @@ namespace vg
             ImGui_Classic,
             ImGui_Dark,
             ImGui_Light,
-            VG_Dark
+            VimontGames_Grey,
+            VimontGames_Dark
         };
 
         class IImGuiAdapter
