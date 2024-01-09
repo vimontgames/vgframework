@@ -20,6 +20,13 @@ Another subject that is very close to my heart is that there is a strong separat
 
 # changelog
 
+## 0.24
+New darker ImGui style
+Read instance color and texture from GPUInstanceData and GPUMaterialData
+Improve BLAS management
+Transparent pass
+Lock-free multithreaded debug display
+
 ## 0.23
 Directional and spot lights with Raytraced (hard) shadows
 
