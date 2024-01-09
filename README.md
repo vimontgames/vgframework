@@ -27,6 +27,8 @@ Improve BLAS management\
 Transparent pass\
 Lock-free multithreaded debug display
 
+![Screenshot](doc/img/0.24.png)
+
 ## 0.23
 Directional and spot lights with Raytraced (hard) shadows
 
