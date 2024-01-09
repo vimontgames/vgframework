@@ -138,7 +138,7 @@ namespace vg::gfx::vulkan
         if (asBool(BindFlags::UnorderedAccess & _bufDesc.resource.m_bindFlags))
         {
             BindlessTable * bindlessTable = device->getBindlessTable();
-            m_rwBufferHandle = bindlessTable->allocBindlessRWBufferHandle(static_cast<gfx::Buffer *>(this));
+            m_rwBufferHandle = bindlessTable->allocBindlessRWBufferHandle(static_cast<gfx::Buffer *>(this), _reservedSlot);
 
             VkDescriptorBufferInfo vkBufferInfo = {};
             vkBufferInfo.buffer = m_resource.getVulkanBuffer();

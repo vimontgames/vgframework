@@ -87,6 +87,9 @@ namespace vg::gfx
         SkinningMatricesBufSrv  = RESERVEDSLOT_BUFSRV_SKINNINGMATRICES,
         LightsConstantBufSrv    = RESERVEDSLOT_BUFSRV_LIGHTSCONSTANTS,
         ViewConstantsBufSrv     = RESERVEDSLOT_BUFSRV_VIEWCONSTANTS,
+
+        // RWBuffer 
+        GPUDebugBufRW           = RESERVEDSLOT_RWBUFFER_GPUDEBUG,
         
         // Dynamic
         None                    = 0x80000000

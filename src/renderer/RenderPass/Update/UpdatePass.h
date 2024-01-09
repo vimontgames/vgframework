@@ -14,6 +14,6 @@ namespace vg::renderer
         void	Setup           (const gfx::RenderPassContext & _renderContext, float _dt) override {}
         void	BeforeRender    (const gfx::RenderPassContext & _renderContext, gfx::CommandList * _cmdList) override = 0;
         void	AfterRender     (const gfx::RenderPassContext & _renderContext, gfx::CommandList * _cmdList) override {};
-        void	Render          (const gfx::RenderPassContext & _renderContext, gfx::CommandList * _cmdList) const final override {}
+        void	Render          (const gfx::RenderPassContext & _renderContext, gfx::CommandList * _cmdList) const override {}
     };
 }

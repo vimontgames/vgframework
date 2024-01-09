@@ -71,7 +71,7 @@ namespace vg::gfx::dx12
         if (asBool(BindFlags::UnorderedAccess & _bufDesc.resource.m_bindFlags))
         {
             BindlessTable * bindlessTable = device->getBindlessTable();
-            m_rwBufferHandle = bindlessTable->allocBindlessRWBufferHandle(static_cast<gfx::Buffer *>(this));
+            m_rwBufferHandle = bindlessTable->allocBindlessRWBufferHandle(static_cast<gfx::Buffer *>(this), _reservedSlot);
             D3D12_CPU_DESCRIPTOR_HANDLE d3d12RWBufferDescriptorHandle = bindlessTable->getd3d12CPUDescriptorHandle(m_rwBufferHandle);
 
             D3D12_UNORDERED_ACCESS_VIEW_DESC uavDesc = {};

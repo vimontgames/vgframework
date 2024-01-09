@@ -20,6 +20,7 @@
 #include "renderer/RenderPass/ImGui/ImGui.h"
 #include "renderer/RenderPass/ImGui/ImGuiPass.h"
 #include "renderer/RenderPass/ImGui/imguiAdapter.h"
+#include "renderer/RenderPass/Update/GPUDebug/GPUDebugUpdatePass.h"
 #include "renderer/RenderPass/Update/InstanceData/InstanceDataUpdatePass.h"
 #include "renderer/RenderPass/Compute/ComputeSkinning/ComputeSkinningPass.h"
 #include "renderer/RenderPass/Update/BLAS/BLASUpdatePass.h"
@@ -196,6 +197,7 @@ namespace vg::renderer
         DebugDraw * dbgDraw = new DebugDraw();
 
         // Create passes not bound to a View
+        m_gpuDebugUpdatePass = new GPUDebugUpdatePass();
         m_instanceDataUpdatePass = new InstanceDataUpdatePass();
         m_computeSkinningPass = new ComputeSkinningPass();
         m_BLASUpdatePass = new BLASUpdatePass();
@@ -268,6 +270,7 @@ namespace vg::renderer
             views.clear();
         }
 
+        VG_SAFE_RELEASE(m_gpuDebugUpdatePass);
         VG_SAFE_RELEASE(m_instanceDataUpdatePass);
         VG_SAFE_DELETE(m_computeSkinningPass);
         VG_SAFE_DELETE(m_BLASUpdatePass);
@@ -381,6 +384,8 @@ namespace vg::renderer
                 RenderPassContext mainViewRenderPassContext;
                                   mainViewRenderPassContext.m_view = m_mainView;
 
+                m_frameGraph.addUserPass(mainViewRenderPassContext, m_gpuDebugUpdatePass, "GPU Debug");
+
                 m_frameGraph.addUserPass(mainViewRenderPassContext, m_instanceDataUpdatePass, "Instance Data");
                 m_frameGraph.addUserPass(mainViewRenderPassContext, m_computeSkinningPass, "Skinning");
 
@@ -439,8 +444,6 @@ namespace vg::renderer
 		m_device.endFrame();
 	}
 
-    //--------------------------------------------------------------------------------------
-    // TODO: create additional views from Views (Shadowmaps, Cubemaps ...)
     //--------------------------------------------------------------------------------------
     void Renderer::cullViews()
     {

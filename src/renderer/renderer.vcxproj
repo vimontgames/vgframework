@@ -163,6 +163,8 @@
     <ClInclude Include="RenderPass\RenderPass.h" />
     <ClInclude Include="RenderPass\Update\BLAS\BLASUpdatePass.h" />
     <ClInclude Include="RenderPass\Update\BLAS\BLASUpdatePass.hpp" />
+    <ClInclude Include="RenderPass\Update\GPUDebug\GPUDebugUpdatePass.h" />
+    <ClInclude Include="RenderPass\Update\GPUDebug\GPUDebugUpdatePass.hpp" />
     <ClInclude Include="RenderPass\Update\InstanceData\InstanceDataUpdatePass.h" />
     <ClInclude Include="RenderPass\Update\InstanceData\InstanceDataUpdatePass.hpp" />
     <ClInclude Include="RenderPass\Update\TLAS\TLASUpdatePass.h" />

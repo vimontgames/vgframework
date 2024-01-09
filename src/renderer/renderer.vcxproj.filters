@@ -411,6 +411,12 @@
     <ClInclude Include="RenderPass\Update\InstanceData\InstanceDataUpdatePass.hpp">
       <Filter>Pass\Update\InstanceData</Filter>
     </ClInclude>
+    <ClInclude Include="RenderPass\Update\GPUDebug\GPUDebugUpdatePass.h">
+      <Filter>Pass\Update\GPUDebug</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderPass\Update\GPUDebug\GPUDebugUpdatePass.hpp">
+      <Filter>Pass\Update\GPUDebug</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Pass">
@@ -568,6 +574,9 @@
     </Filter>
     <Filter Include="Pass\Update\InstanceData">
       <UniqueIdentifier>{b2f63b1f-9c36-481d-b1be-bf513138d151}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Pass\Update\GPUDebug">
+      <UniqueIdentifier>{be642f13-6ed2-4fe1-9191-c12275f3b6bf}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

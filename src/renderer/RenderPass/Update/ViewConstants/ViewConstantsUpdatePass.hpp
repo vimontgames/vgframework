@@ -105,6 +105,8 @@ namespace vg::renderer
     //--------------------------------------------------------------------------------------
     void ViewConstantsUpdatePass::updateLightsConstants(const gfx::RenderPassContext & _renderPassContext, gfx::CommandList * _cmdList)
     {
+        VG_PROFILE_CPU("Lights");
+
         const auto view = (View *)_renderPassContext.m_view; 
         const ViewCullingJobOutput & culling = view->getCullingJobResult();
 
