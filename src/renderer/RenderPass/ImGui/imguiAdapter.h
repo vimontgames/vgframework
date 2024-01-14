@@ -19,38 +19,47 @@ namespace vg
         class ImGuiAdapter final : public IImGuiAdapter
         {
         public:
-                        ImGuiAdapter            (core::WinHandle _winHandle, gfx::Device & _device);
-                        ~ImGuiAdapter           ();
+            ImGuiAdapter(core::WinHandle _winHandle, gfx::Device & _device);
+            ~ImGuiAdapter();
 
             #ifdef VG_DX12
-            void        d3d12Init               ();
+            void                d3d12Init                   ();
             #elif defined(VG_VULKAN)
-            void        vulkanInit              ();
+            void                vulkanInit                  ();
             #endif
 
-            void        SetGUITheme             (GUITheme _theme) final override;
+            void                SetGUITheme                 (GUITheme _theme) final override;
+            bool                IsCurrentThemeDark          () const final override;
+            const ImVec4 &      GetRowColorEven             () const final override { return m_rowColorEven;}
+            const ImVec4 &      GetRowColorOdd              () const final override { return m_rowColorOdd; }
 
-            bool        IsKeyboardFocused       () const final override;
-            bool        IsMouseFocused          () const final override;
+            const ImVec4 &      GetWarningColor             () const final override { return m_warningColor; }
+            const ImVec4 &      GetErrorColor               () const final override { return m_errorColor; }
 
-            ImTextureID GetTextureID            (const gfx::ITexture * _texture) const final override;
-            void        ReleaseTextureID        (ImTextureID _texID) final override;
+            bool                IsKeyboardFocused           () const final override;
+            bool                IsMouseFocused              () const final override;
 
-            void        beginFrame              ();
-            void        render                  (gfx::CommandList * _cmdList);
+            ImTextureID         GetTextureID                (const gfx::ITexture * _texture) const final override;
+            void                ReleaseTextureID            (ImTextureID _texID) final override;
 
-            void        AddBeginFrameCallback   (BeginFrameCallback _func);
+            void                beginFrame                  ();
+            void                render                      (gfx::CommandList * _cmdList);
+
+            void                AddBeginFrameCallback       (BeginFrameCallback _func);
 
         protected:
-            ImTextureID getTextureID            (gfx::Texture * _tex) const;
-            void        releaseTextureID        (ImTextureID _texID);
+            ImTextureID         getTextureID                (gfx::Texture * _tex) const;
+            void                releaseTextureID            (ImTextureID _texID);
 
-            void        resetGUITheme           ();
-            void        setGUITheme_ImGui_Classic      ();
-            void        setGUITheme_ImGui_Dark         ();
-            void        setGUITheme_ImGui_Light        ();
-            void        setGUIThemeVimontGames_Grey       ();
-            void        setGUIThemeVimontGames_Dark     ();
+            void                resetGUITheme               ();
+
+            void                setGUITheme_ImGui_Classic   ();
+            void                setGUITheme_ImGui_Dark      ();
+            void                setGUITheme_ImGui_Light     ();
+            void                setGUIThemeVimontGames_Grey ();
+            void                setGUIThemeVimontGames_Dark ();
+
+            void                onGUIThemeChanged           ();
 
         private:
             gfx::BindlessTextureHandle          m_fontTexHandle;
@@ -63,6 +72,11 @@ namespace vg
             VkSampler                           m_vkSampler;
             core::vector<VkDescriptorSet>       m_tempDescriptorSets[2];
             #endif
+
+            ImVec4                              m_rowColorEven;
+            ImVec4                              m_rowColorOdd;
+            ImVec4                              m_warningColor;
+            ImVec4                              m_errorColor;
         };
     }
 }

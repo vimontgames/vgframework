@@ -131,6 +131,48 @@ namespace vg::gfx
     }
 
     //--------------------------------------------------------------------------------------
+    // Fix the warning or error line number so that visual studio opens correct file when double-clicked
+    // 
+    // before : 
+    // D:/GitHub/vimontgames/vgframework/data/shaders/lighting/deferredLighting.hlsl:40:1: error: use of undeclared identifier 'caca'
+    // 
+    // after : 
+    // D:/GitHub/vimontgames/vgframework/data/shaders/lighting/deferredLighting.hlsl(40): error: use of undeclared identifier 'caca'
+    //--------------------------------------------------------------------------------------
+    core::string ShaderManager::fixFileLine(const core::string & _filename, const core::string & _warningAndErrorString)
+    {
+        auto it = _warningAndErrorString.find(_filename);
+        VG_ASSERT(string::npos != it);
+        if (string::npos != it)
+        {
+            string before = _warningAndErrorString.substr(0, it);
+
+            auto beginLineNum = it + 1 + _filename.length();
+            auto endLineNum = _warningAndErrorString.find(":", beginLineNum + 1);
+
+            auto lineNum = _warningAndErrorString.substr(beginLineNum, endLineNum - beginLineNum);
+            auto line = stoi(lineNum);
+
+            string after = _warningAndErrorString.substr(it + _filename.length());
+
+            // skip 3 occurences of ':'
+            int count = 0;
+            auto skip = after.find(':');
+            if (string::npos != skip)
+            {
+                skip = after.find(':', skip + 1);
+                if (string::npos != skip)
+                    skip = after.find(':', skip + 1);
+                if (string::npos != skip)
+                    after = after.substr(skip + 1);
+            }
+
+            return fmt::sprintf("%s%s(%u):%s", before, _filename, line, after);
+        }
+        return _warningAndErrorString;
+    }
+
+    //--------------------------------------------------------------------------------------
     Shader * ShaderManager::compile(API _api, const core::string & _file, const core::string & _entryPoint, ShaderStage _stage, const vector<pair<string, uint>> & _macros)
     {
         RETRY:
@@ -151,14 +193,18 @@ namespace vg::gfx
 
         if (!warningAndErrors.empty())
         {
-            m_warningCount++;
+            warningAndErrors = fixFileLine(_file, warningAndErrors);
+
             if (!shader)
                 VG_ERROR("[Shader] %s", warningAndErrors.c_str());
             else
+            {
+                m_warningCount++;
                 VG_WARNING("[Shader] %s", warningAndErrors.c_str());
+            }
         }
 
-        if (shader)
+        if (shader) 
         {
             string msg = fmt::sprintf("[Shader] Compiled %s Shader \"%s\"", asString(_stage).c_str(), _entryPoint.c_str());
 
@@ -179,6 +225,9 @@ namespace vg::gfx
         {
             warningAndErrors = header + warningAndErrors + "\nPress \"Yes\" to retry";
 
+            if (warningAndErrors.length() > 2048)
+                warningAndErrors = warningAndErrors.substr(0, 2048) + "\n\n[...]";
+
             switch (messageBox(MessageBoxIcon::Error, MessageBoxType::YesNoCancel, "Shader compilation failed", warningAndErrors.c_str()))
             {
                 case MessageBoxResult::Yes:
@@ -193,7 +242,7 @@ namespace vg::gfx
     }
 
     //--------------------------------------------------------------------------------------
-    void parseIncludes(uint _index, string dir, string _file, vector<string> & _includes, u64 & _crc, uint _depth = 0)
+    void ShaderManager::parseIncludes(uint _index, string dir, string _file, vector<string> & _includes, u64 & _crc, uint _depth)
     {
         vector<string> paths;
         paths.push_back(_file);             // absolute path
@@ -206,9 +255,16 @@ namespace vg::gfx
         {
             string fullpath = paths[i];
 
+            #if VG_SHADER_SOURCE_IN_MEMORY
+            const string * pSource = getShaderSource("data/" + fullpath, false);
+            if (pSource)
+            {
+                string & contents = (string&)*pSource;
+            #else
             string contents;
             if (io::readFile("data/" + fullpath, contents, false))
             {
+            #endif
                 exists = true;
 
                 if (_includes.end() == std::find(_includes.begin(), _includes.end(), fullpath))
@@ -253,9 +309,9 @@ namespace vg::gfx
 
         if (!exists)
         {
-            string msg = "Could not open file " + _file + " using paths:\n";
+            string msg = fmt::sprintf("Could not open file \"%s\" using paths:\n", _file);
             for (uint i = 0; i < paths.size(); ++i)
-                msg += "paths["+ to_string(i) +"] = \"" + paths[i] + "\";\n";
+                msg += fmt::sprintf("paths[%u] = \"data/%s\";\n", i, paths[i]);
 
             VG_ASSERT(exists, msg.c_str());
         }
@@ -267,11 +323,89 @@ namespace vg::gfx
         m_updateNeeded = true;
     }
 
+    struct HLSLFile
+    {
+        string name;
+        string folder;
+    };
+
+    //--------------------------------------------------------------------------------------
+    void getHLSLFilesInFolder(vector<HLSLFile> & _hlslFiles, const string & _root, string _subFolder = "")
+    {
+        auto files = io::getFilesInFolder(fmt::sprintf("%s/%s", _root, _subFolder));
+
+        for (auto file : files)
+        {
+            if (file.isFolder)
+            {
+                if (file.name != "." && file.name != "..")
+                    getHLSLFilesInFolder(_hlslFiles, _root, _subFolder + file.name);
+            }
+            else
+            {
+                if (io::fileHasExtension(file.name, ".hlsl") || io::fileHasExtension(file.name, ".hlsli"))
+                {
+                    auto & hlslFile = _hlslFiles.push_empty();
+                    hlslFile.name = file.name;
+                    hlslFile.folder = _subFolder;
+                }
+            }
+        }
+    };
+
+    #if VG_SHADER_SOURCE_IN_MEMORY
+    //--------------------------------------------------------------------------------------
+    // Build a hash 'm_shaderSourceHash' of all .hlsl files to compile from
+    //--------------------------------------------------------------------------------------
+    void ShaderManager::saveShaderSourceInMemory()
+    {
+        const auto start = Timer::getTick(); 
+
+        vector<HLSLFile> hlslFiles;
+        getHLSLFilesInFolder(hlslFiles, getShaderRootPath());
+
+        m_shaderSourceHash.clear();
+
+        // Now we have all the .hlsl files, let's preprocess them
+        for (auto & file : hlslFiles)
+        {
+            string path = fmt::sprintf("%s%s/%s", getShaderRootPath(), file.folder, file.name);
+            string source;
+            if (io::readFile(path, source))
+                m_shaderSourceHash.insert(std::pair(tolower(path), source));
+        }
+
+        VG_INFO("[Shader] Copy %u shader files to memory in %.2f ms", hlslFiles.size(), Timer::getEnlapsedTime(start, Timer::getTick()));
+    }
+
+    //--------------------------------------------------------------------------------------
+    const core::string * ShaderManager::getShaderSource(const core::string & _path, bool _mustExist) const
+    {
+        // clean path
+        string path = tolower(_path);
+        const string curDir = "./";
+        auto prefix = _path.find_first_of(curDir);
+        if (0 == prefix)
+            path = path.substr(curDir.length());
+
+        auto it = m_shaderSourceHash.find(path);
+        VG_ASSERT(!_mustExist || m_shaderSourceHash.end() != it, "Could not read file \"%s\" from shaderSourceHash", path.c_str());
+        if (m_shaderSourceHash.end() != it)
+            return &it->second;
+
+        return nullptr;
+    }
+    #endif
+
     //--------------------------------------------------------------------------------------
     void ShaderManager::applyUpdate()
     {
         if (m_updateNeeded)
         {
+            #if VG_SHADER_SOURCE_IN_MEMORY
+            saveShaderSourceInMemory();
+            #endif
+
             //VG_INFO("[Shader] Update Shaders");
 
             Device * device = Device::get();

@@ -1,6 +1,7 @@
 #pragma once
 
 typedef void * ImTextureID;
+struct ImVec4;
 
 namespace vg
 {
@@ -25,17 +26,23 @@ namespace vg
         public:
             using BeginFrameCallback = void(*)(void);
 
-            virtual             ~IImGuiAdapter          () = default;
+            virtual                 ~IImGuiAdapter          () = default;
 
-            virtual void        SetGUITheme             (GUITheme _theme) = 0;
+            virtual void            SetGUITheme             (GUITheme _theme) = 0;
+            virtual bool            IsCurrentThemeDark      () const = 0;
+            virtual const ImVec4 &  GetRowColorEven         () const = 0;
+            virtual const ImVec4 &  GetRowColorOdd          () const = 0;
 
-            virtual bool        IsKeyboardFocused       () const = 0;
-            virtual bool        IsMouseFocused          () const = 0;
+            virtual const ImVec4 &  GetWarningColor         () const = 0;
+            virtual const ImVec4 &  GetErrorColor           () const = 0;
 
-            virtual ImTextureID GetTextureID            (const gfx::ITexture * _texture) const = 0;
-            virtual void        ReleaseTextureID        (ImTextureID _texID) = 0;
+            virtual bool            IsKeyboardFocused       () const = 0;
+            virtual bool            IsMouseFocused          () const = 0;
 
-            virtual void        AddBeginFrameCallback   (BeginFrameCallback _func) = 0;
+            virtual ImTextureID     GetTextureID            (const gfx::ITexture * _texture) const = 0;
+            virtual void            ReleaseTextureID        (ImTextureID _texID) = 0;
+
+            virtual void            AddBeginFrameCallback   (BeginFrameCallback _func) = 0;
         };
     }
 }

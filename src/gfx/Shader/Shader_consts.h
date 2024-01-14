@@ -1,5 +1,8 @@
 #pragma once
 
+// When enabled, the shader source files will be stored in memory and no filesystem access will be needed to compile. It makes it possible to "patch" shader source 
+#define VG_SHADER_SOURCE_IN_MEMORY 1
+
 namespace vg::gfx
 {
     enum class ShaderStage : core::u8

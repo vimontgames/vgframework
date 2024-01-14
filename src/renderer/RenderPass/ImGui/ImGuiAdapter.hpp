@@ -356,6 +356,8 @@ namespace vg::renderer
                 setGUIThemeVimontGames_Dark();
                 break;
         }
+
+        onGUIThemeChanged();
     }
 
     //--------------------------------------------------------------------------------------
@@ -557,7 +559,46 @@ namespace vg::renderer
         colors[ImGuiCol_NavWindowingHighlight] = ImVec4(1.00f, 1.00f, 1.00f, 0.70f);
         colors[ImGuiCol_NavWindowingDimBg] = ImVec4(0.80f, 0.80f, 0.80f, 0.20f);
         colors[ImGuiCol_ModalWindowDimBg] = ImVec4(0.80f, 0.80f, 0.80f, 0.35f);
+    }
 
+    //--------------------------------------------------------------------------------------
+    bool ImGuiAdapter::IsCurrentThemeDark() const
+    {
+        ImVec4 bgColor = ImGui::GetStyleColorVec4(ImGuiCol_WindowBg);
 
+        float grey = (bgColor.x + bgColor.y + bgColor.z) / 3.0f;
+        return grey < 0.5f;
+    }
+
+    //--------------------------------------------------------------------------------------
+    void ImGuiAdapter::onGUIThemeChanged()
+    {
+        // update alternating row colors
+        ImVec4 bgColor = ImGui::GetStyleColorVec4(ImGuiCol_WindowBg);
+        float d1, d2;
+        if (IsCurrentThemeDark())
+        {
+            d1 = 0.1f;
+            d2 = 0.2f;
+        }
+        else
+        {
+            d1 = -0.1f;
+            d2 = -0.2f;
+        }
+        m_rowColorEven = ImVec4(bgColor.x + d1, bgColor.y + d1, bgColor.z + d1, bgColor.w * 0.35f);
+        m_rowColorOdd = ImVec4(bgColor.x + d2, bgColor.y + d2, bgColor.z + d2, bgColor.w * 0.35f);
+
+        // update warning and error colors
+        if (IsCurrentThemeDark())
+        {
+            m_warningColor = ImVec4(0.9f, 0.9f, 0.3f, 1.0f);
+            m_errorColor = ImVec4(1.0f, 0.5f, 0.5f, 1.0f);
+        }
+        else
+        {
+            m_warningColor = ImVec4(0.5f, 0.4f, 0.0f, 1.0f);
+            m_errorColor = ImVec4(0.6f, 0.0f, 0.0f, 1.0f);
+        }
     }
 }

@@ -24,8 +24,10 @@ namespace vg::editor
 
         if (IconBegin(style::icon::Console, "Console", &m_isVisible))
         {
-            const auto warningColor = ImVec4(1.0f, 1.0f, 0.4f, 1.0f);
-            const auto errorColor = ImVec4(1.0f, 0.4f, 0.4f, 1.0f);
+            auto adapter = Editor::get()->getRenderer()->GetImGuiAdapter();
+
+            const auto warningColor = adapter->GetWarningColor(); 
+            const auto errorColor = adapter->GetErrorColor();
 
             // As a specific feature guaranteed by the library, after calling Begin() the last Item represent the title bar.
             // So e.g. IsItemHovered() will return true when hovering the title bar.
@@ -117,13 +119,21 @@ namespace vg::editor
 
                     ImGui::SameLine();
     
+                    if (warningCount > 0)
+                        ImGui::PushStyleColor(ImGuiCol_Text, warningColor);
                     if (ImGui::TooltipButton(warningLabel, m_showWarnings, true, "Show Warnings"))
                         m_showWarnings = !m_showWarnings;
+                    if (warningCount > 0)
+                        ImGui::PopStyleColor();
 
                     ImGui::SameLine();
                   
+                    if (errorCount > 0)
+                        ImGui::PushStyleColor(ImGuiCol_Text, errorColor);
                     if (ImGui::TooltipButton(errorLabel, m_showErrors, true, "Show Errors"))
                         m_showErrors = !m_showErrors;
+                    if (errorCount > 0)
+                        ImGui::PopStyleColor();
                 }
                 PopStyleVar();
 

@@ -5,6 +5,7 @@
 #include "atlcomcli.h"
 
 #define CUSTOM_DXC_INCLUDE_HANDLER 1
+
 #if CUSTOM_DXC_INCLUDE_HANDLER
 
 #include <wrl/client.h>
@@ -42,9 +43,14 @@ public:
             }
         }
 
+        #if VG_SHADER_SOURCE_IN_MEMORY
+        const string * pSource = ShaderManager::get()->getShaderSource(path);
+        HRESULT hr = m_dxcUtils->CreateBlob(pSource->data(), (uint)pSource->size(), CP_UTF8, pEncoding.GetAddressOf());
+        #else
         wstring filename = wstring_convert(path);
-
         HRESULT hr = m_dxcUtils->LoadFile(filename.c_str(), nullptr, pEncoding.GetAddressOf());
+        #endif
+
         VG_ASSERT(SUCCEEDED(hr), "CustomIncludeHandler could not open #include file \"%s\"", path.c_str());
         if (SUCCEEDED(hr))
         {
@@ -159,19 +165,26 @@ namespace vg::gfx::dxc
     //--------------------------------------------------------------------------------------
     gfx::Shader * ShaderCompiler::compile(API _api, const core::string & _path, const core::string & _entryPoint, ShaderStage _stage, const core::vector<core::pair<core::string, core::uint>> & _macros, string & _warningAndErrors)
     {
-        string source;
+        #if VG_SHADER_SOURCE_IN_MEMORY
+        const string * pSource = ShaderManager::get()->getShaderSource(_path);
+        if (pSource)
+        {
+            IDxcBlobEncoding * dxcSource;
+            VG_VERIFY_SUCCEEDED(m_d3d12dxcLibrary->CreateBlobWithEncodingFromPinned((*pSource).c_str(), (uint)(*pSource).size(), CP_UTF8, &dxcSource));
 
+        #else
+
+        string source;
         if (io::readFile(_path, source))
         {
             IDxcBlobEncoding * dxcSource;
             VG_VERIFY_SUCCEEDED(m_d3d12dxcLibrary->CreateBlobWithEncodingFromPinned(source.c_str(), (uint)source.size(), CP_UTF8, &dxcSource));
+        #endif
 
             vector<wchar_t*> args;
             auto macros = _macros;
 
-            //args.push_back((wchar_t *)L"-WX");
             args.push_back((wchar_t *)L"-HV 2021");
-			//args.push_back((wchar_t *)L"–version");
 
             #ifdef VG_DEBUG
             args.push_back((wchar_t*)L"-Od");
