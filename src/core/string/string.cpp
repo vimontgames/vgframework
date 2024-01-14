@@ -25,7 +25,7 @@ namespace vg::core
     wstring wstring_convert(const string & _string)
     {
         int len;
-        int slength = (int)_string.length() + 1;
+        int slength = (int)_string.length();
         len = MultiByteToWideChar(CP_ACP, 0, _string.c_str(), slength, 0, 0);
         std::wstring r(len, L'\0');
         MultiByteToWideChar(CP_ACP, 0, _string.c_str(), slength, &r[0], len);
@@ -38,7 +38,7 @@ namespace vg::core
     string string_convert(const wstring & _string)
     {
         int len;
-        int slength = (int)_string.length() + 1;
+        int slength = (int)_string.length();
         len = WideCharToMultiByte(CP_ACP, 0, _string.c_str(), slength, 0, 0, 0, 0);
         std::string r(len, '\0');
         WideCharToMultiByte(CP_ACP, 0, _string.c_str(), slength, &r[0], len, 0, 0);

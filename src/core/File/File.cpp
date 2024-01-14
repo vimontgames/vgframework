@@ -5,6 +5,7 @@
 #include <filesystem>
 #include "Buffer.h"
 #include "core/string/string.h"
+#include "dirent/include/dirent.h"
 
 using namespace std;
 
@@ -226,13 +227,22 @@ namespace vg::core::io
     }
 
     //--------------------------------------------------------------------------------------
+    bool fileHasExtension(const string & _file, const string & _ext)
+    {
+        if (_file.length() >= _ext.length())
+            return _file.compare(_file.length() - _ext.length(), _ext.length(), _ext) == 0;
+
+        return false;
+    }
+
+    //--------------------------------------------------------------------------------------
     string addExtensionIfNotPresent(const string & _file, const string & _ext)
     {
         size_t findExt = _file.find_last_of(_ext);
-        if (findExt != _file.length() - 1)
-            return _file + _ext;
+        if (fileHasExtension(_file, _ext))
+            return _file ;
         else
-            return _file;
+            return _file + _ext;
     }
 
     //--------------------------------------------------------------------------------------
@@ -244,7 +254,7 @@ namespace vg::core::io
         for (uint i = 0; i < _ext.size(); ++i)
         {
             size_t findExt = _file.find_last_of(_ext[i]); 
-            if (findExt == _file.length() - 1)
+            if (fileHasExtension(_file, _ext[i]))
             {
                 extensionFound = true;
                 break;
@@ -380,5 +390,26 @@ namespace vg::core::io
         #elif
         VG_STATIC_ASSERT_NOT_IMPLEMENTED();
         #endif
+    }
+
+    //--------------------------------------------------------------------------------------
+    core::vector<FileInfo> getFilesInFolder(const string & _folder)
+    {
+        core::vector<FileInfo> files;
+
+        DIR * dir = nullptr;
+        dirent * ent = nullptr;
+        
+        VG_VERIFY(nullptr != (dir = opendir(_folder.c_str())));
+
+        while (nullptr != (ent = readdir(dir)))
+        {
+            FileInfo & info = files.push_empty();
+            info.name = ent->d_name;
+            info.isFolder = (ent->d_type == DT_DIR) ? true : false;
+        }
+        closedir(dir);
+
+        return files;
     }
 }

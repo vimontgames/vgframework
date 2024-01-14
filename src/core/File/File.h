@@ -37,6 +37,7 @@ namespace vg::core::io
     string getFileDir(const string & _file);
     string getFileName(const string & _file);
     string getFileNameWithoutExt(const string & _file);
+    bool fileHasExtension(const string & _file, const string & _ext);
     string addExtensionIfNotPresent(const string & _file, const core::string & _ext);
     string addExtensionIfNotPresent(const string & _file, const core::vector<core::string> _ext);
 
@@ -49,6 +50,14 @@ namespace vg::core::io
     string getRelativePath(const string & _file);
     string cleanPath(const string & _file);
     string findAndReplace(const string & _string, const string & _find, const std::string & _replace);
+
+    struct FileInfo
+    {
+        string name;
+        bool isFolder;
+    };
+
+    core::vector<FileInfo> getFilesInFolder(const string & _folder);
 }
 
 
