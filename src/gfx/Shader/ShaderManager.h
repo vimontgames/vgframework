@@ -4,7 +4,6 @@
 #include "ComputeShaderKey.h"
 #include "gfx/IShaderManager.h"
 
-
 namespace vg::gfx
 {
     class Shader;
@@ -38,6 +37,7 @@ namespace vg::gfx
         const core::vector<core::string> &  getShaderRootFolders        () const { return m_shaderRootFolders; }
 
         #if VG_SHADER_SOURCE_IN_MEMORY
+        const core::string *                getShaderFilePathFromID     (core::uint _fileID, bool _mustExist = true) const;
         const core::string *                getShaderSource             (const core::string & _path, bool _mustExist = true) const;
         void                                saveShaderSourceInMemory    ();
         #endif
@@ -57,7 +57,9 @@ namespace vg::gfx
         core::uint                          m_errorCount = 0;
 
         #if VG_SHADER_SOURCE_IN_MEMORY
-        core::unordered_map<core::string, core::string> m_shaderSourceHash;
+        core::unordered_map<core::string, core::string> m_shaderFilesHash;
+        core::unordered_map<core::uint, core::string>   m_shaderFileIDToPath;
+        core::uint                                      m_shaderFilesCounter = 0;
         #endif
     };
 }

@@ -3,7 +3,7 @@
 
 namespace vg::renderer
 {
-    static const uint s_GPUDebugBufferSize = GPUDEBUGBUFFER_SIZE;
+    static const uint s_GPUDebugBufferSize = GPUDEBUG_TOTAL_BUFFER_SIZE;
 
     //--------------------------------------------------------------------------------------
     GPUDebugUpdatePass::GPUDebugUpdatePass() :
@@ -31,17 +31,126 @@ namespace vg::renderer
             {
                 if (data[0] != 0)
                 {
-                    char temp[256];
-                    uint index = 0;
-                    u8 * p = (u8*) &data[1];
-                    while (*p != 0)
+                    u8 * p = (u8 *)&data[1];
+
+                    while ((p - (u8*)data) < data[0])
                     {
-                        temp[index] = *p;
-                        ++index;
-                        ++p;
-                    }
-                    temp[index] = 0;
-                    VG_INFO("[GPU] %s", temp);
+                        char temp[256];
+                        uint index = 0;
+
+                        uint header = (*(uint *)p);
+                        GPUDebugMsgType msgType = (GPUDebugMsgType)(header & 0xF);
+                        uint fileID = (header >> 4) & 0xFFF;
+                        uint line = (header >> 16);
+
+                        p += 4;
+
+                        while (*p != 0)
+                        {
+                            temp[index] = *p;
+                            ++index;
+                            ++p;
+                        }
+                        if (index > 0)
+                        {
+                            temp[index] = 0;
+
+                            // count args in string
+                            uint argCount = 0;
+                            for (uint i = 0; i < index; ++i)
+                            {
+                                if (temp[i] == '%')
+                                    argCount++;
+                            }
+
+                            string tempString = temp;
+                            auto argPos = tempString.find('%');
+
+                            u32 * args = (u32*)core::alignUp((uint_ptr)p, (uint_ptr)4);
+
+                            // skip {'0','0','0','0'} footer
+                            while (*args == 0x00000000)
+                                args++;
+
+                            for (uint i = 0; i < argCount; ++i)
+                            {
+                                size_t endArg = tempString.length();
+
+                                for (auto j = argPos; j < tempString.length(); ++j)
+                                {
+                                    char c = tempString[j];
+                                    if ((c >= '0' && c <= '9') || c == '.' || c == '%' || (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'A'))
+                                    {
+                                        continue;
+                                    }
+                                    else
+                                    {
+                                        endArg = j;
+                                        break;
+                                    }
+                                }                               
+
+                                string arg = tempString.substr(argPos, endArg-argPos);
+                                char argType = arg[arg.length() - 1];
+                                switch (argType)
+                                {
+                                    default:
+                                        VG_ASSERT("[GPUDebug] Unknow arg type \"%s\" used. Only \"%u\" and \"%%f\" args are supported", arg.c_str());
+                                        break;
+
+                                    case 'u':
+                                        tempString.replace(argPos, arg.length(), fmt::sprintf(arg, args[i]));
+                                        break;
+
+                                    case 'f':
+                                        tempString.replace(argPos, arg.length(), fmt::sprintf(arg, (float &)args[i]));
+                                        break;
+                                }
+
+                                argPos = tempString.find('%', argPos + 1);
+                            }
+
+                            p = (u8 *)(args+argCount);
+
+                            switch (msgType)
+                            {
+                                default:
+                                    VG_DEBUGPRINT("[GPUDebug] Unknown message type 0x%08X\n", msgType);
+                                    break;
+
+                                case GPUDebugMsgType::None:
+                                    VG_DEBUGPRINT("[GPUDebug] %s\n", tempString.c_str()); // Unlike VG_INFO/VG_WARNING/VG_ERROR, VG_DEBUGPRINT does not automatically add EOL
+                                    break;
+
+                                case GPUDebugMsgType::Info:
+                                    VG_INFO("[GPUDebug] %s", tempString.c_str());
+                                    break;
+
+                                case GPUDebugMsgType::Warning:
+                                    VG_WARNING("[GPUDebug] %s", tempString.c_str());
+                                    break;
+
+                                case GPUDebugMsgType::Error:
+                                    VG_ERROR("[GPUDebug] %s", tempString.c_str());
+                                    break;
+
+                                case GPUDebugMsgType::Assert:
+                                {
+                                    static bool skip = false;								
+                                    const auto filename = ShaderManager::get()->getShaderFilePathFromID(fileID);
+                                    if (vg::core::assertmsg("[GPUAssert]", __func__, filename->c_str(), line, skip, "%s", tempString.c_str()))
+                                        __debugbreak();																        
+                                }
+                                break;
+                            } 
+
+                            p += 4;
+                        }
+                        else
+                        {
+                            ++p;
+                        }
+                    };
                 }
             }
             m_GPUDebugBufferStaging->getResource().unmap();

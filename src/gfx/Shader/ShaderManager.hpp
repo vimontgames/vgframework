@@ -231,6 +231,8 @@ namespace vg::gfx
             switch (messageBox(MessageBoxIcon::Error, MessageBoxType::YesNoCancel, "Shader compilation failed", warningAndErrors.c_str()))
             {
                 case MessageBoxResult::Yes:
+                    update();
+                    applyUpdate();
                     goto RETRY;
 
                 default:
@@ -364,7 +366,12 @@ namespace vg::gfx
         vector<HLSLFile> hlslFiles;
         getHLSLFilesInFolder(hlslFiles, getShaderRootPath());
 
-        m_shaderSourceHash.clear();
+        m_shaderFilesHash.clear();
+        m_shaderFileIDToPath.clear();
+        m_shaderFilesCounter = 0;
+
+        // used to generate unique string variable for each string in source
+        uint string_counter = 0;
 
         // Now we have all the .hlsl files, let's preprocess them
         for (auto & file : hlslFiles)
@@ -372,10 +379,115 @@ namespace vg::gfx
             string path = fmt::sprintf("%s%s/%s", getShaderRootPath(), file.folder, file.name);
             string source;
             if (io::readFile(path, source))
-                m_shaderSourceHash.insert(std::pair(tolower(path), source));
+            {
+                // "patch" the string used in file to turn them from "Foo" into {'F','o','o'}
+                //DebugPrint("abc"); ==> static uint temp[] = { 'a','b','c' }; DebugPrint(temp);
+
+                auto processLine = [](const string & _line, string & _source, uint & _string_counter, uint _fileID)
+                {
+                    VG_DEBUGPRINT("%s\n", _line.c_str());
+
+                    static const string stringFuncs[] =
+                    {
+                        "VG_DEBUGPRINT",
+                        "VG_INFO",
+                        "VG_WARNING",
+                        "VG_ERROR",
+                        "VG_ASSERT"
+                    };
+
+                    size_t stringFunc = string::npos;
+
+                    for (uint i = 0; i < countof(stringFuncs); ++i)
+                    {
+                        stringFunc = _line.find(stringFuncs[i]);
+                        if(string::npos != stringFunc)
+                            break;
+                    }
+                    
+                    if (string::npos != stringFunc)
+                    {
+                        auto strBegin = _line.find("\"");
+                        if (string::npos != strBegin)
+                        {
+                            auto strEnd = _line.find("\"", strBegin + 1); 
+                            if (string::npos != strEnd)
+                            {
+                                string str = _line.substr(strBegin + 1, strEnd - strBegin - 1);
+                                string name = fmt::sprintf("_tmpstr_%u", _string_counter);
+                                string temp = fmt::sprintf("static uint %s[] = {", name);
+
+                                const auto len = str.length();
+                                for (uint i = 0; i < len; ++i)
+                                {
+                                    if (i > 0)
+                                        temp += ",";
+                                    temp += fmt::sprintf("'%c'", str[i]);
+                                }
+                                temp += "}; ";
+
+                                temp += fmt::sprintf("g_File = %u; ", _fileID);
+
+                                _string_counter++;
+                                
+                                auto line = _line;
+                                line.replace(strBegin, strEnd - strBegin + 1, name);
+                                line.insert(stringFunc, temp);
+
+                                _source.replace(_source.find(_line), _line.length(), line);
+                            }
+                        }
+                    }
+                };
+
+                m_shaderFilesCounter++;
+                uint fileID = m_shaderFilesCounter;
+
+                size_t start = 0;
+                size_t end;
+                while (1) 
+                {
+                    string line;
+
+                    auto endN = source.find("\n", start);
+                    auto endR = source.find("\r", start);
+
+                    end = string::npos;
+                    if (string::npos != endN && string::npos != endR)
+                        end = min(endN, endR);
+                    else if (string::npos != endN)
+                        end = endN;
+                    else if (string::npos != endR)
+                        end = endR;
+
+                    if ((end = source.find("\n", start)) == string::npos) 
+                    {
+                        if (!(line = source.substr(start)).empty())
+                            processLine(line, source, string_counter, fileID);
+                        break;
+                    }
+
+                    line = source.substr(start, end - start);
+                    processLine(line, source, string_counter, fileID);
+                    start = end + 1;
+                }
+
+                m_shaderFilesHash.insert(std::pair(tolower(path), source));
+                m_shaderFileIDToPath.insert(std::pair(fileID, tolower(path)));
+            }
         }
 
         VG_INFO("[Shader] Copy %u shader files to memory in %.2f ms", hlslFiles.size(), Timer::getEnlapsedTime(start, Timer::getTick()));
+    }
+
+    //--------------------------------------------------------------------------------------
+    const core::string * ShaderManager::getShaderFilePathFromID(core::uint _fileID, bool _mustExist) const
+    {
+        auto it = m_shaderFileIDToPath.find(_fileID);
+        if (m_shaderFileIDToPath.end() != it)
+            return &it->second;
+        VG_ASSERT(!_mustExist || m_shaderFileIDToPath.end() != it, "Could not find shader file %u", _fileID);
+        return nullptr;
     }
 
     //--------------------------------------------------------------------------------------
@@ -388,9 +500,9 @@ namespace vg::gfx
         if (0 == prefix)
             path = path.substr(curDir.length());
 
-        auto it = m_shaderSourceHash.find(path);
-        VG_ASSERT(!_mustExist || m_shaderSourceHash.end() != it, "Could not read file \"%s\" from shaderSourceHash", path.c_str());
-        if (m_shaderSourceHash.end() != it)
+        auto it = m_shaderFilesHash.find(path);
+        VG_ASSERT(!_mustExist || m_shaderFilesHash.end() != it, "Could not read file \"%s\" from shaderSourceHash", path.c_str());
+        if (m_shaderFilesHash.end() != it)
             return &it->second;
 
         return nullptr;

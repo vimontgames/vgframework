@@ -1,4 +1,5 @@
-#include "picking.hlsli"
+#include "picking.hlsli" 
+#include "debug.hlsli"
 
 //--------------------------------------------------------------------------------------
 bool ProcessPicking(uint _rwBufferID, uint _offset, uint2 _inputPos, float _depth, float3 _worldPos, uint2 _mousePos, uint2 _screenSize, uint4 _pickindID)
@@ -7,6 +8,9 @@ bool ProcessPicking(uint _rwBufferID, uint _offset, uint2 _inputPos, float _dept
     {        
         if (all(_mousePos.xy == _inputPos.xy) && all(_mousePos.xy < _screenSize))
         {
+            VG_INFO("Picking (%u, %u)", _inputPos.x, _inputPos.y);
+            VG_ASSERT(_inputPos.x != 42, "x = %u is forbidden (for no reason)!!!", 42);
+
             // Get picking RWBuffer
             RWByteAddressBuffer rwBuffer = getRWBuffer(_rwBufferID);
             
