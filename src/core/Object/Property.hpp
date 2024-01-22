@@ -96,6 +96,18 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
+    void Property::setInterface(const char * _interface)
+    {
+        interfaceType = _interface;
+    }
+
+    //--------------------------------------------------------------------------------------
+    const char * Property::getInterface() const
+    {
+        return interfaceType;
+    }
+
+    //--------------------------------------------------------------------------------------
     void Property::setRange(float2 _range)
     {
         if ((float)_range.x != (float)_range.y)

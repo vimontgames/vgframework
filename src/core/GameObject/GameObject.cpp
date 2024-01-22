@@ -258,7 +258,7 @@ namespace vg::core
                     const auto * classDesc = Kernel::getFactory()->getClassDescriptor(component->getClassName());
                     if (nullptr != classDesc)
                     {
-                        const char * interfaceName = classDesc->GetInterfaceName();
+                        const char * interfaceName = classDesc->GetParentClassName();
                         if (nullptr != interfaceName)
                         {
                             if (!strcmp(interfaceName, _className))

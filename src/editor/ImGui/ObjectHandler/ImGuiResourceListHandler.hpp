@@ -18,6 +18,7 @@ namespace vg::editor
             const auto * factory = Kernel::getFactory();
             const auto * classDesc = factory->getClassDescriptor(_object->getClassName());
             auto list = dynamic_cast<engine::IResourceList *>(_object);
+            auto availableWidth = ImGui::GetContentRegionAvail().x;
 
             uint resourceCount = 0;
             for (uint i = 0; i < classDesc->GetPropertyCount(); ++i)
@@ -27,14 +28,49 @@ namespace vg::editor
                     resourceCount = prop->GetPropertyResourceVectorCount(_object);
             }
 
-            ImGui::PushID(_object);
-            string label = ImGui::getObjectLabel(fmt::sprintf("%ss (%u)", _label.c_str(), resourceCount), _label.c_str(), _object);
+            ImVec2 collapsingHeaderPos = ImGui::GetCursorPos();
 
-            bool open = ImGui::TreeNodeEx(label.c_str(), ImGuiTreeNodeFlags_None);
+            string label = fmt::sprintf("%ss (%u)", _label.c_str(), resourceCount);
+
+            //ImGui::BeginTable(ImGui::getObjectLabel(label.c_str(), _object).c_str(), 1, ImGuiTableFlags_BordersOuter | ImGuiTableFlags_BordersInner);
+
+            // The first column will use the default _WidthStretch when ScrollX is Off and _WidthFixed when ScrollX is On
+            //ImGui::TableSetupColumn(label.c_str(), ImGuiTableColumnFlags_NoHeaderLabel);
+            //ImGui::TableHeadersRow();
+
+            ImGuiStyle & style = ImGui::GetStyle();
+
+            ImGui::PushStyleColor(ImGuiCol_Header, style.Colors[ImGuiCol_WindowBg]);
+            ImGui::PushStyleColor(ImGuiCol_HeaderActive, style.Colors[ImGuiCol_ButtonActive]);
+            ImGui::PushStyleColor(ImGuiCol_HeaderHovered, style.Colors[ImGuiCol_ButtonHovered]);
+            ImGui::PushStyleColor(ImGuiCol_Button, style.Colors[ImGuiCol_Header]);
+            ImGui::PushStyleColor(ImGuiCol_ButtonActive, style.Colors[ImGuiCol_HeaderActive]);
+            ImGui::PushStyleColor(ImGuiCol_ButtonHovered, style.Colors[ImGuiCol_HeaderHovered]);
+
+            ImGui::PushID("CollapsingHeader");
+            bool open = ImGui::CollapsingHeader(ImGui::getObjectLabel("", _object).c_str(), nullptr, ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_AllowItemOverlap);
+            ImGui::PopID();
+
+            ImGui::BeginDisabled(false);
+            ImGui::CollapsingHeaderLabel(collapsingHeaderPos, label.c_str(), true);            
+            ImGui::EndDisabled();
+
             bool remove = false;
+
+            if (ImGui::CollapsingHeaderIconButton(collapsingHeaderPos, availableWidth, _object, style::icon::Plus, fmt::sprintf("Add %s", _label), 0))
+                list->Add();
+
+            ImGui::BeginDisabled(list->Size() == 0);
+            if (ImGui::CollapsingHeaderIconButton(collapsingHeaderPos, availableWidth, _object, style::icon::Minus, fmt::sprintf("Remove %s", _label), 1))
+                remove = true;    
+            ImGui::EndDisabled();
+
+            ImGui::PopStyleColor(6);
 
             if (open)
             {
+                ImGui::Indent();
+
                 for (uint i = 0; i < classDesc->GetPropertyCount(); ++i)
                 {
                     const IProperty * prop = classDesc->GetPropertyByIndex(i);
@@ -71,30 +107,45 @@ namespace vg::editor
 
                 ImGui::Spacing();
 
-                string addSubResourceLabel = "Add###" + to_string((uint_ptr)_object);
-                string removeSubResourceLabel = "Remove###" + to_string((uint_ptr)_object);
-                if (ImGui::Button(((string)"Add " + _label).c_str()))
-                    list->Add();
+                //ImGuiStyle & style = ImGui::GetStyle();
 
-                ImGui::SameLine();
+                //string addLabel = fmt::sprintf(" %s Add %s ", style::icon::Plus, _label);
+                //string removeLabel = fmt::sprintf(" %s Remove %s ", style::icon::Minus, _label);
+                //
+                //float size = ImGui::CalcTextSize(addLabel.c_str()).x + ImGui::CalcTextSize(removeLabel.c_str()).x + style.FramePadding.x * 3.0f;
+                //float avail = ImGui::GetContentRegionAvail().x;
+                //
+                //float off = (avail - size) * 0.5f;
+                //if (off > 0.0f)
+                //    ImGui::SetCursorPosX(ImGui::GetCursorPosX() + off);
 
-                ImGui::BeginDisabled(resourceCount == 0);
-                {
-                    if (ImGui::Button(((string)"Remove " + _label).c_str()))
-                    {
-                        // Can't remove while iterating the list ;)
-                        remove = true;
-                    }
-                }
-                ImGui::EndDisabled();
+                //string addSubResourceLabel = "Add###" + to_string((uint_ptr)_object);
+                //string removeSubResourceLabel = "Remove###" + to_string((uint_ptr)_object);
+                //if (ImGui::Button(addLabel.c_str()))
+                //    list->Add();
+                //
+                //ImGui::SameLine();
+                //
+                //ImGui::BeginDisabled(resourceCount == 0);
+                //{
+                //    if (ImGui::Button(removeLabel.c_str()))
+                //    {
+                //        // Can't remove while iterating the list ;)
+                //        remove = true;
+                //    }
+                //}
+                //ImGui::EndDisabled();
 
-                ImGui::TreePop();
+                //ImGui::TreePop();
+
+                ImGui::Unindent();
             }
-            ImGui::PopID();
 
             if (remove)
                 list->Remove();
-        }
+
+            //ImGui::EndTable();
+        }        
     };
 }
 

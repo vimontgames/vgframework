@@ -74,4 +74,10 @@ namespace vg::engine
 
         return false;
     }
+
+    //--------------------------------------------------------------------------------------
+    size_t AnimationResourceList::Size() const 
+    {
+        return m_animationResources.size();
+    }
 }

@@ -1109,6 +1109,8 @@ enum ImGuiTreeNodeFlags_
 #ifndef IMGUI_DISABLE_OBSOLETE_FUNCTIONS
     ImGuiTreeNodeFlags_AllowItemOverlap     = ImGuiTreeNodeFlags_AllowOverlap,  // Renamed in 1.89.7
 #endif
+
+    ImGuiTreeNodeFlags_InvisibleArrow       = 1 << 15
 };
 
 // Flags for OpenPopup*(), BeginPopupContext*(), IsPopupOpen() functions.

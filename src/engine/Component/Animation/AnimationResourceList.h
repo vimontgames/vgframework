@@ -18,6 +18,7 @@ namespace vg::engine
 
         bool                                        Add                     () final override;
         bool                                        Remove                  () final override;
+        size_t                                      Size                    () const final override;
 
         const core::vector<AnimationResource> &     getAnimationResources   () const { return m_animationResources; }
         core::vector<AnimationResource> &           getAnimationResources   () { return m_animationResources; }

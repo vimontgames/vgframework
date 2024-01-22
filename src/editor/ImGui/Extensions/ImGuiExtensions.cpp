@@ -336,7 +336,12 @@ namespace ImGui
         // begin of line
         ImGui::SetCursorPos(ImVec2(ImGui::GetStyle().FramePadding.x, _headerPos.y));
 
+        ImGuiStyle & style = ImGui::GetStyle();
+        auto bgColor = style.Colors[ImGuiCol_Header];
+
+        ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(bgColor.x, bgColor.y, bgColor.z, 0));
         ImGui::ButtonEx(ImGui::getObjectLabel(icon, "CheckBoxEnable", _object).c_str(), collapsedButtonSize, ImGuiItemFlags_AllowOverlap);
+        ImGui::PopStyleColor();
 
         if (ImGui::IsItemHovered())
         {
@@ -351,7 +356,7 @@ namespace ImGui
     }
 
     //--------------------------------------------------------------------------------------
-    bool CollapsingHeaderIconButton(const ImVec2 & _headerPos, float _availableWidth, IObject * _object, const char * _icon, const string & _tooltip)
+    bool CollapsingHeaderIconButton(const ImVec2 & _headerPos, float _availableWidth, IObject * _object, const char * _icon, const string & _tooltip, vg::core::uint _index)
     {
         auto collapsedButtonSize = style::button::SizeSmall;
         if (ImGui::GetStyle().FramePadding.y == 3)
@@ -359,11 +364,16 @@ namespace ImGui
 
         ImGui::SameLine();
 
-        ImGui::SetCursorPos(ImVec2(_availableWidth - style::button::SizeSmall.x + ImGui::GetStyle().WindowPadding.x + 4, _headerPos.y));
+        ImGui::SetCursorPos(ImVec2(_availableWidth - (_index+1)*style::button::SizeSmall.x + ImGui::GetStyle().WindowPadding.x + 4, _headerPos.y));
 
+        ImGuiStyle & style = ImGui::GetStyle();
+        auto bgColor = style.Colors[ImGuiCol_Header];
+
+        ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(bgColor.x, bgColor.y, bgColor.z, 0));
         ImGui::PushStyleVar(ImGuiStyleVar_ButtonTextAlign, ImVec2(0.5f, 0.5f));
-        ImGui::ButtonEx(ImGui::getObjectLabel(fmt::sprintf("%s", style::icon::Trashcan).c_str(), _object).c_str(), collapsedButtonSize, ImGuiItemFlags_AllowOverlap);
-        ImGui::PopStyleVar(1);
+        ImGui::ButtonEx(ImGui::getObjectLabel(fmt::sprintf("%s", _icon).c_str(), _object).c_str(), collapsedButtonSize, ImGuiItemFlags_AllowOverlap);
+        ImGui::PopStyleVar();
+        ImGui::PopStyleColor();
 
         if (ImGui::IsItemHovered())
         {

@@ -182,9 +182,11 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
-    void ClassDesc::RegisterProperty(const char * _className, const char * _propertyName, vector<IObject*>* _offset, const char * _displayName, IProperty::Flags _flags)
+    void ClassDesc::RegisterProperty(const char * _className, const char * _propertyName, vector<IObject*>* _offset, const char * _elemType, const char * _displayName, IProperty::Flags _flags)
     {
         properties.emplace_back(_className, _propertyName, asBool(_flags & IProperty::Flags::Resource) ? IProperty::Type::ResourcePtrVector : IProperty::Type::ObjectPtrVector, (uint_ptr)_offset, (u32)sizeof(vector<IObject *>), _displayName, _flags);
+        auto & prop = properties.back();
+        prop.setInterface(_elemType);
     }
 
     //--------------------------------------------------------------------------------------
@@ -221,9 +223,9 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
-    const char * ClassDesc::GetInterfaceName() const
+    const char * ClassDesc::GetParentClassName() const
     {
-        return interfaceName;
+        return parentClassName;
     }
 
     //--------------------------------------------------------------------------------------

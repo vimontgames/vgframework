@@ -31,7 +31,7 @@ namespace vg::core
         void                                RegisterProperty            (const char * _className, const char * _propertyName, IObject * _offset, const char * _displayName, IProperty::Flags _flags) final override;
         void                                RegisterProperty            (const char * _className, const char * _propertyName, IObject ** _offset, const char * _displayName, IProperty::Flags _flags) final override;
 
-        void                                RegisterProperty            (const char * _className, const char * _propertyName, vector<IObject*>* _offset, const char * _displayName = nullptr, IProperty::Flags _flags = IProperty::Flags::None) final override;
+        void                                RegisterProperty            (const char * _className, const char * _propertyName, vector<IObject*>* _offset, const char * _elemType, const char * _displayName = nullptr, IProperty::Flags _flags = IProperty::Flags::None) final override;
         void                                RegisterProperty            (const char * _className, const char * _propertyName, dictionary<core::IObject*>* _offset, const char * _displayName = nullptr, IProperty::Flags _flags = IProperty::Flags::None) final override;
         void                                RegisterProperty            (const char * _className, const char * _propertyName, core::u32 _sizeOf, void * _offset, const char * _displayName = nullptr, IProperty::Flags _flags = IProperty::Flags::None) final override;
 
@@ -50,7 +50,7 @@ namespace vg::core
         void *                              ResizeVector                (core::IObject * _parent, core::uint _offset, core::uint _count, core::uint & _elementSize) const final override;
 
         const char *                        GetClassName                () const final override;
-        const char *                        GetInterfaceName            () const final override;
+        const char *                        GetParentClassName          () const final override;
         const char *                        GetClassDisplayName         () const final override;
         const char *                        GetCategory                 () const final override;
         const char *                        GetDescription              () const final override;
@@ -73,7 +73,7 @@ namespace vg::core
         u32                                 GetNextIndex                () const final override;
 
         const char *                        name                        = nullptr;
-        const char *                        interfaceName               = nullptr;
+        const char *                        parentClassName             = nullptr;
         const char *                        displayName                 = nullptr;
         const char *                        category                    = nullptr;
         const char *                        description                 = nullptr;

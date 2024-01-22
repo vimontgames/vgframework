@@ -55,7 +55,13 @@ namespace vg::core
 
         virtual void                        RegisterProperty            (const char * _className, const char * _propertyName, IObject * _offset, const char * _displayName, IProperty::Flags _flags) = 0;
         virtual void                        RegisterProperty            (const char * _className, const char * _propertyName, IObject ** _offset, const char * _displayName = nullptr, IProperty::Flags _flags = IProperty::Flags::None) = 0;
-        virtual void                        RegisterProperty            (const char * _className, const char * _propertyName, vector<IObject*>* _offset, const char * _displayName = nullptr, IProperty::Flags _flags = IProperty::Flags::None) = 0;
+        
+        template <class T> void             RegisterPropertyT           (const char * _className, const char * _propertyName, vector<T *> * _offset, const char * _displayName = nullptr, IProperty::Flags _flags = IProperty::Flags::None)
+        {
+            RegisterProperty(_className, _propertyName, (vector<IObject *>*)_offset, T::getStaticClassName(), _displayName, _flags);
+        }
+        
+        virtual void                        RegisterProperty            (const char * _className, const char * _propertyName, vector<IObject*>* _offset, const char * _elemType, const char * _displayName = nullptr, IProperty::Flags _flags = IProperty::Flags::None) = 0;
         virtual void                        RegisterProperty            (const char * _className, const char * _propertyName, dictionary<IObject*>* _offset, const char * _displayName = nullptr, IProperty::Flags _flags = IProperty::Flags::None) = 0;;
         
         virtual void                        RegisterProperty            (const char * _className, const char * _propertyName, u32 _sizeOf, void * _offset, const char * _displayName = nullptr, IProperty::Flags _flags = IProperty::Flags::None) = 0;
@@ -74,7 +80,7 @@ namespace vg::core
         virtual void *                      ResizeVector                (core::IObject * _parent, core::uint _offset, core::uint _count, core::uint & _elementSize) const = 0;
 
         virtual const char *                GetClassName                () const = 0;
-        virtual const char *                GetInterfaceName            () const = 0;
+        virtual const char *                GetParentClassName            () const = 0;
         virtual const char *                GetClassDisplayName         () const = 0;    
         virtual const char *                GetCategory                 () const = 0;
         virtual const char *                GetDescription              () const = 0;

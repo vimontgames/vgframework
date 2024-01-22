@@ -94,10 +94,12 @@ namespace vg::core
             HDR             = 0x0000000000004000,   // HDR value for color
         };
 
+        virtual void                            setInterface                    (const char * _interface) = 0;
         virtual void                            setRange                        (float2 _range) = 0;
         virtual void                            setDefaultFolder                (const char * _path) = 0;
         virtual void                            setFlags                        (Flags _flagsToSet, Flags _flagsToRemove = Flags::None) = 0;
 
+        virtual const char *                    getInterface                    () const = 0;
         virtual const char *                    getName                         () const = 0;
         virtual const char *                    getClassName                    () const = 0;
         virtual const char *                    getDisplayName                  () const = 0;
@@ -188,7 +190,7 @@ namespace vg::core
 #define registerPropertyObjectPtrEx(className, propertyName, displayName, flags)                            _desc.RegisterProperty(#className, #propertyName, (core::IObject**)offsetof(className, propertyName), displayName, flags);
 #define registerPropertyObjectPtr(className, propertyName, displayName)                                     registerPropertyObjectPtrEx(className, propertyName, displayName, vg::core::IProperty::Flags::None)
 
-#define registerPropertyObjectPtrVectorEx(className, propertyName, displayName, flags)                      _desc.RegisterProperty(#className, #propertyName, (core::vector<core::IObject*>*)&((className*)nullptr)->propertyName, displayName, flags);
+#define registerPropertyObjectPtrVectorEx(className, propertyName, displayName, flags)                      _desc.RegisterPropertyT(#className, #propertyName, &((className*)nullptr)->propertyName, displayName, flags);
 #define registerPropertyObjectPtrVector(className, propertyName, displayName)                               registerPropertyObjectPtrVectorEx(className, propertyName, displayName, vg::core::IProperty::Flags::None)
 
 #define registerPropertyObjectPtrDictionaryEx(className, propertyName, displayName, flags)                  _desc.RegisterProperty(#className, #propertyName, (core::dictionary<core::IObject*>*)&((className*)nullptr)->propertyName, displayName, flags);

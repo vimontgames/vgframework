@@ -8,15 +8,14 @@ bool ProcessPicking(uint _rwBufferID, uint _offset, uint2 _inputPos, float _dept
     {        
         if (all(_mousePos.xy == _inputPos.xy) && all(_mousePos.xy < _screenSize))
         {
-            VG_INFO("Picking (%u, %u)", _inputPos.x, _inputPos.y);
-            VG_ASSERT(_inputPos.x != 42, "x = %u is forbidden (for no reason)!!!", 42);
-
             // Get picking RWBuffer
             RWByteAddressBuffer rwBuffer = getRWBuffer(_rwBufferID);
             
             // Get index to store picking hit
             uint index;
             rwBuffer.InterlockedAdd(_offset, 1, index);
+
+            VG_ASSERT(index < PICKING_MAX_HITS, "Please increase PICKING_MAX_HITS (%u)", (uint)PICKING_MAX_HITS);
             
             // Store picking hit
             if (index < PICKING_MAX_HITS)

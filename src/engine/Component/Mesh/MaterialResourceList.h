@@ -15,6 +15,7 @@ namespace vg::engine
 
         bool Add() final override;
         bool Remove() final override;
+        size_t Size() const final override;
 
         const core::vector<MaterialResource> & getMaterialResources() const { return m_materialResources; }
 

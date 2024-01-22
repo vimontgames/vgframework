@@ -11,5 +11,6 @@ namespace vg::engine
 
         virtual bool Add() = 0;
         virtual bool Remove() = 0;
+        virtual size_t Size() const = 0;
     };
 }

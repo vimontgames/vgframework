@@ -19,9 +19,9 @@ namespace vg::core
                                                     Factory                         ();
                                                     ~Factory                        ();
 
-        IClassDesc *                                registerClass                   (const char * _interfaceName, const char * _className, const char * _classDisplayName, IClassDesc::Flags _flags, u32 sizeOf, IClassDesc::Func _createFunc) final;
-        IClassDesc *                                registerSingletonClass          (const char * _interfaceName, const char * _className, const char * _classDisplayName, IClassDesc::Flags _flags, u32 sizeOf, IClassDesc::SingletonFunc _createFunc) final;
-        const IClassDesc *                          getClassDescriptor              (const char * _className) const final;
+        IClassDesc *                                registerClass                   (const char * _parentClassName, const char * _className, const char * _classDisplayName, IClassDesc::Flags _flags, u32 sizeOf, IClassDesc::Func _createFunc) final;
+        IClassDesc *                                registerSingletonClass          (const char * _parentClassName, const char * _className, const char * _classDisplayName, IClassDesc::Flags _flags, u32 sizeOf, IClassDesc::SingletonFunc _createFunc) final;
+        const IClassDesc *                          getClassDescriptor              (const char * _className, bool _mustExist = true) const final;
         const vector<IClassDesc *>                  getClassDescriptors             (IClassDesc::Flags _required = (IClassDesc::Flags)-1, IClassDesc::Flags _excluded = (IClassDesc::Flags)0) const final;
         bool                                        isRegisteredClass               (const char * _className) const final;
         IObject *                                   getSingleton                    (const char * _className) const final;
@@ -37,6 +37,8 @@ namespace vg::core
         bool                                        RestoreProperties               (core::IObject * _object) final override;
         bool                                        CopyProperties                  (const core::IObject * _srcObj, core::IObject * _dstObj) final override;
         IObject *                                   Instanciate                     (const core::IObject * _object, IObject * _parent) final override;
+
+        bool                                        IsA                             (const char * _class, const char * _other) const final override;
 
     protected:
         bool                                        serializeFromXML                (IObject * _object, const XMLElem * _xmlElem) const;

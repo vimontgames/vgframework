@@ -835,13 +835,13 @@ namespace vg::editor
 
                     auto treeNodeFlags = ImGuiTreeNodeFlags_OpenOnArrow;
 
-                    if (count > 0)
+                    //if (count > 0)
                     {
                         if (!strcmp(displayName, "Components"))
                         {
                             auto dragAndDropInterline = [=](IComponent * component, style::draganddrop::Type type)
                             {
-                                ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(0, 0));
+                                //ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(0, 0));
                                 {
                                     ImGui::SetCursorPosY(ImGui::GetCursorPosY() - style::draganddrop::interlineSize.y - 1);
 
@@ -864,7 +864,7 @@ namespace vg::editor
                                     //    draw_list->AddRect(ImVec2(x0, y0), ImVec2(x1, y1), color);
                                     //}
                                 }
-                                ImGui::PopStyleVar(1);
+                                //ImGui::PopStyleVar(1);
                                 ImGui::SetCursorPosY(ImGui::GetCursorPosY() - 3);
 
                                 if (ImGui::BeginDragDropTarget())
@@ -948,7 +948,7 @@ namespace vg::editor
 
                                 ImVec2 collapsingHeaderPos = ImGui::GetCursorPos();
 
-                                const bool open = ImGui::CollapsingHeader(ImGui::getObjectLabel("", componentShortName, pComponent).c_str(), nullptr, ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_AllowItemOverlap);
+                                const bool open = ImGui::CollapsingHeader(ImGui::getObjectLabel("", componentShortName, pComponent).c_str(), nullptr, ImGuiTreeNodeFlags_InvisibleArrow | ImGuiTreeNodeFlags_AllowItemOverlap);
 
                                 if (ImGui::BeginDragDropSource(ImGuiDragDropFlags_AcceptNoDrawDefaultRect | ImGuiDragDropFlags_SourceNoHoldToOpenOthers))
                                 {
@@ -988,14 +988,75 @@ namespace vg::editor
                         }
                         else
                         {
-                            if (ImGui::TreeNodeEx(treeNodeName.c_str(), treeNodeFlags))
+                            auto availableWidth = ImGui::GetContentRegionAvail().x;
+                            ImVec2 collapsingHeaderPos = ImGui::GetCursorPos();
+
+                            ImGuiStyle & style = ImGui::GetStyle();
+
+                            ImGui::PushStyleColor(ImGuiCol_Header, style.Colors[ImGuiCol_WindowBg]);
+                            ImGui::PushStyleColor(ImGuiCol_HeaderActive, style.Colors[ImGuiCol_ButtonActive]);
+                            ImGui::PushStyleColor(ImGuiCol_HeaderHovered, style.Colors[ImGuiCol_ButtonHovered]);
+                            ImGui::PushStyleColor(ImGuiCol_Button, style.Colors[ImGuiCol_Header]);
+                            ImGui::PushStyleColor(ImGuiCol_ButtonActive, style.Colors[ImGuiCol_HeaderActive]);
+                            ImGui::PushStyleColor(ImGuiCol_ButtonHovered, style.Colors[ImGuiCol_HeaderHovered]);
+                            ImGui::PushID("CollapsingHeader");
+                            bool open = ImGui::CollapsingHeader(ImGui::getObjectLabel(treeNodeName, _object).c_str(), nullptr, ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_AllowItemOverlap);
+                            ImGui::PopID();
+                            ImGui::PopStyleColor(6);
+
+                            bool add = false, remove = false;
+
+                            const char * interfaceName = _prop->getInterface();
+                            const auto * factory = Kernel::getFactory();
+                            const vector<IClassDesc *> elemClassDescs = factory->getClassDescriptors();
+                            vector<IClassDesc*> compatibleElemDescs;
+                            for (auto & elemDesc : elemClassDescs)
+                            {
+                                if (factory->IsA(elemDesc->GetClassName(), interfaceName))
+                                    compatibleElemDescs.push_back(elemDesc);
+                            }
+
+                            const IClassDesc * elemDesc = nullptr;
+
+                            if (compatibleElemDescs.size() > 0)
+                            {
+                                //if (compatibleElemDescs.size() == 1)
+                                {
+                                    elemDesc = compatibleElemDescs[0];
+
+                                    ImGui::BeginDisabled(!elemDesc);
+                                    if (ImGui::CollapsingHeaderIconButton(collapsingHeaderPos, availableWidth, _object, style::icon::Plus, fmt::sprintf("Add %s", elemDesc->GetClassName()), 0))
+                                        add = true;
+                                    ImGui::EndDisabled();
+
+                                    ImGui::BeginDisabled(vec->size() <= 0);
+                                    if (ImGui::CollapsingHeaderIconButton(collapsingHeaderPos, availableWidth, _object, style::icon::Minus, fmt::sprintf("Remove %s", elemDesc->GetClassName()), 1))
+                                        remove = true;
+                                    ImGui::EndDisabled();
+                                }
+                            }
+
+                            if (open) //ImGui::TreeNodeEx(treeNodeName.c_str(), treeNodeFlags))
                             {
                                 for (uint i = 0; i < count; ++i)
                                 {
                                     IObject * pObject = (*vec)[i];
                                     displayArrayObject(pObject, i, nullptr);
                                 }
-                                ImGui::TreePop();
+                                //ImGui::TreePop();
+                            }
+
+                            if (add && nullptr != elemDesc)
+                            {
+                                auto * obj = factory->createObject(elemDesc->GetClassName(), fmt::sprintf("[%u]", vec->size()));
+                                vec->push_back(obj);
+                            }
+
+                            if (remove && vec->size() > 0)
+                            {
+                                auto * elem = vec->back();
+                                VG_SAFE_RELEASE(elem);
+                                vec->pop_back();
                             }
                         }
                     }
@@ -1198,7 +1259,6 @@ namespace vg::editor
     //--------------------------------------------------------------------------------------
     bool ImGuiWindow::displayResource(core::IResource * _resource, const core::IProperty * _prop, core::uint _index)
     {
-        
         const char * className = _resource->getClassName();
         const auto * factory = Kernel::getFactory();
         const auto * classDesc = factory->getClassDescriptor(className);
@@ -1461,7 +1521,7 @@ namespace vg::editor
     bool ImGuiWindow::updateSelection(core::IObject * _object)
     {
         ISelection * selection = getSelection();
-        if (isItemClicked())
+        if (isItemClicked() && dynamic_cast<core::IGameObject*>(_object))
         {
             const bool isSelected = selection->IsSelectedObject(_object);
 

@@ -40,7 +40,7 @@ namespace vg::core
     //--------------------------------------------------------------------------------------
     // Returned pointer shall not be stored but used immediately
     //--------------------------------------------------------------------------------------
-    IClassDesc * Factory::registerClass(const char * _interfaceName, const char * _className, const char * _classDisplayName, IClassDesc::Flags _flags, u32 sizeOf, IClassDesc::Func _createFunc)
+    IClassDesc * Factory::registerClass(const char * _parentClassName, const char * _className, const char * _classDisplayName, IClassDesc::Flags _flags, u32 sizeOf, IClassDesc::Func _createFunc)
     {
         // Classes declared in shared static libs could be declared more than once at static init
         for (uint i = 0; i < m_classes.size(); ++i)
@@ -51,25 +51,11 @@ namespace vg::core
                 VG_INFO("[Factory] Class \"%s\" is already registered", _className);
                 return nullptr; 
             }
-        }
-
-        // Use parent class name as interface name if it starts with an 'I'
-        // Note that it does not handle hierarchy of multiple interfaces but for now it's 
-        // enough e.g. to return an "AnimationComponent" object when requesting an "IAnimationComponent"
-        // but it won't return it when requesting e.g. an "IObject" despite being in the inheritance chain
-        if (nullptr != _interfaceName && _interfaceName[0] == 'I')
-        {
-            VG_INFO("[Factory] Register class \"%s\" (%s)", _className, _interfaceName);
-        }
-        else
-        {
-            VG_INFO("[Factory] Register class \"%s\"", _className);
-            _interfaceName = nullptr;
-        }        
+        }   
 
         ClassDesc classDesc;
         classDesc.name = _className;
-        classDesc.interfaceName = _interfaceName;
+        classDesc.parentClassName = _parentClassName;
         classDesc.displayName = _classDisplayName ? _classDisplayName : _className;
         classDesc.flags = _flags;
         classDesc.sizeOf = sizeOf;
@@ -81,7 +67,7 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
-    IClassDesc * Factory::registerSingletonClass(const char * _interfaceName, const char * _className, const char * _classDisplayName, IClassDesc::Flags _flags, u32 sizeOf, IClassDesc::SingletonFunc _singletonFunc)
+    IClassDesc * Factory::registerSingletonClass(const char * _parentClassName, const char * _className, const char * _classDisplayName, IClassDesc::Flags _flags, u32 sizeOf, IClassDesc::SingletonFunc _singletonFunc)
     {
         // Classes declared in shared static libs could be declared more than once at static init
         for (uint i = 0; i < m_classes.size(); ++i)
@@ -224,6 +210,24 @@ namespace vg::core
         CopyProperties(_object, newObj);
 
         return newObj;
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool Factory::IsA(const char * _class, const char * _other) const
+    {
+        if (!strcmp(_class, _other))
+            return true;
+
+        if (const ClassDesc * classDesc = (const ClassDesc*)getClassDescriptor(_class, false))
+        {
+            if (classDesc->parentClassName && strcmp(_class, classDesc->parentClassName))
+            {
+                if (IsA(classDesc->parentClassName, _other))
+                    return true;
+            }
+        }
+
+        return false;
     }
 
     //--------------------------------------------------------------------------------------
@@ -579,7 +583,7 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
-    const IClassDesc * Factory::getClassDescriptor(const char * _className) const
+    const IClassDesc * Factory::getClassDescriptor(const char * _className, bool _mustExist) const
     {
         for (uint i = 0; i < m_classes.size(); ++i)
         {
@@ -588,7 +592,7 @@ namespace vg::core
                 return &classDesc;
         }
 
-        VG_ASSERT(false, "class \"%s\" has no class descriptor", _className);
+        VG_ASSERT(!_mustExist, "class \"%s\" has no class descriptor", _className);
         return nullptr;
     }
 
@@ -599,7 +603,7 @@ namespace vg::core
         for (uint i = 0; i < m_classes.count(); ++i)
         {
             auto & clas = m_classes[i];
-            if (asBool(clas.flags & _required) && !asBool(clas.flags & _excluded))
+            if ((asBool(clas.flags & _required) || (u64)_required == -1) && !asBool(clas.flags & _excluded))
                 classes.push_back((IClassDesc *) &clas);
         }
         return classes;

@@ -5,6 +5,20 @@
 //--------------------------------------------------------------------------------------
 // Register object class macros
 //--------------------------------------------------------------------------------------
+
+#define VG_REGISTER_ABSTRACT_CLASS_EX(className, displayName, flags)                        vg::core::AutoRegisterObjectClassHelper<className> autoRegister##className(#className, className::registerClass);                   \
+                                                                                            bool className::registerClass(vg::core::IFactory & _factory)                                                                        \
+                                                                                            {                                                                                                                                   \
+                                                                                                if (vg::core::IClassDesc * desc = _factory.registerInterfaceHelper(className, displayName, flags))                              \
+                                                                                                {                                                                                                                               \
+                                                                                                    registerProperties(*desc);                                                                                                  \
+                                                                                                    return true;                                                                                                                \
+                                                                                                }                                                                                                                               \
+                                                                                                return false;                                                                                                                   \
+                                                                                            }
+
+#define VG_REGISTER_ABSTRACT_CLASS(className, displayName)                                  VG_REGISTER_ABSTRACT_CLASS_EX(className, displayName, vg::core::IClassDesc::Flags::None)
+
 #define VG_REGISTER_OBJECT_CLASS_EX(className, displayName, flags)                          vg::core::AutoRegisterObjectClassHelper<className> autoRegister##className(#className, className::registerClass);                   \
                                                                                             bool className::registerClass(vg::core::IFactory & _factory)                                                                        \
                                                                                             {                                                                                                                                   \

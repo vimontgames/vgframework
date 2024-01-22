@@ -31,7 +31,7 @@ namespace vg::editor
             auto availableWidth = ImGui::GetContentRegionAvail().x;
             ImVec2 collapsingHeaderPos = ImGui::GetCursorPos();
             string gameObjectLabel = fmt::sprintf("%s %s", style::icon::Scene, "GameObject");
-            bool open = ImGui::CollapsingHeader(ImGui::getObjectLabel("", gameObjectLabel, go).c_str(), ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_AllowItemOverlap);
+            bool open = ImGui::CollapsingHeader(ImGui::getObjectLabel("", gameObjectLabel, go).c_str(), ImGuiTreeNodeFlags_InvisibleArrow | ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_AllowItemOverlap);
 
             m_gameObjectInspectorMenu.Display(go);
 
@@ -83,15 +83,36 @@ namespace vg::editor
             {
                 // align right
                 //ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(0, 0));
-                ImGui::PushStyleVar(ImGuiStyleVar_ButtonTextAlign, ImVec2(0.75f, 0.5f));
-                {
-                    auto availableWidth = ImGui::GetContentRegionAvail().x;
-                    ImGui::SetCursorPosX(availableWidth - style::button::SizeSmall.x + ImGui::GetStyle().WindowPadding.x + 4);
+                //ImGui::PushStyleVar(ImGuiStyleVar_ButtonTextAlign, ImVec2(0.75f, 0.5f));
+                //{
+                //    auto availableWidth = ImGui::GetContentRegionAvail().x;
+                //    ImGui::SetCursorPosX(availableWidth - style::button::SizeSmall.x + ImGui::GetStyle().WindowPadding.x + 4);
+                //
+                //    if (ImGui::Button(ImGui::getObjectLabel(fmt::sprintf("%s", style::icon::Plus).c_str(), go).c_str(), style::button::SizeSmall + ImVec2(0, ImGui::GetStyle().WindowPadding.x - 3)))
+                //        m_gameObjectInspectorMenu.addComponentPopup();
+                //}
+                //ImGui::PopStyleVar(1);
 
-                    if (ImGui::Button(ImGui::getObjectLabel(fmt::sprintf("%s", style::icon::Plus).c_str(), go).c_str(), style::button::SizeSmall + ImVec2(0, ImGui::GetStyle().WindowPadding.x - 3)))
-                        m_gameObjectInspectorMenu.addComponentPopup();
-                }
-                ImGui::PopStyleVar(1);
+                ImGui::Spacing();
+                ImGui::Spacing();
+                ImGui::Spacing();
+                ImGui::Separator();
+                ImGui::Spacing();
+
+                ImGuiStyle & style = ImGui::GetStyle();
+
+                // Centered Button
+                string label = fmt::sprintf(" %s Add Component ", style::icon::Plus);
+                float alignment = 0.5f;
+                float size = ImGui::CalcTextSize(label.c_str()).x + style.FramePadding.x * 2.0f;
+                float avail = ImGui::GetContentRegionAvail().x;   
+
+                float off = (avail - size) * alignment;
+                if (off > 0.0f)
+                    ImGui::SetCursorPosX(ImGui::GetCursorPosX() + off);
+
+                if (ImGui::Button(ImGui::getObjectLabel(label.c_str(), go).c_str()))
+                    m_gameObjectInspectorMenu.addComponentPopup();
 
                 if (ImGui::IsItemHovered())
                     ImGui::SetTooltip(fmt::sprintf("Add Component to \"%s\"", go->getName()).c_str());

@@ -58,4 +58,10 @@ namespace vg::engine
         }
         return false;
     }
+
+    //--------------------------------------------------------------------------------------
+    size_t MaterialResourceList::Size() const 
+    {
+        return m_materialResources.size();
+    }
 }
