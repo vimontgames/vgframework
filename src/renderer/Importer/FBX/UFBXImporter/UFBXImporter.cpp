@@ -289,45 +289,50 @@ namespace vg::renderer
                 ufbx_face face = _UFbxMesh->faces.data[UFbxMeshMat->face_indices.data[j]];
                 uint triangleCount = ufbx_triangulate_face(triangleIndexTmp, maxIndexCountPerFace, _UFbxMesh, face);
 
-                for (uint k = 0; k < triangleCount * 3; k++)
+                for (uint t = 0; t < triangleCount; t++)
                 {
-                    uint index = triangleIndexTmp[2 - k];
-
-                    const auto pos = getUFBXAttribute(index, _UFbxMesh->vertex_position, float3(0, 0, 0));
-                    const auto nrm = getUFBXAttribute(index, _UFbxMesh->vertex_normal,   float3(1, 0, 0));
-                    const auto bin = getUFBXAttribute(index, _UFbxMesh->vertex_bitangent,float3(0, 1, 0));
-                    const auto tan = getUFBXAttribute(index, _UFbxMesh->vertex_tangent,  float3(0, 0, 1));
-                    const auto col = getUFBXAttribute(index, _UFbxMesh->vertex_color,    float4(1,1,1,1));
-                    const auto uv0 = getUFBXAttribute(index, _UFbxMesh->vertex_uv,       float2(0, 0));
-
-                    MeshImporterVertex vertex;
-
-                    vertex.pos = float4(pos.x * _scale, pos.y * _scale, pos.z * _scale, 1.0f);
-                    vertex.nrm = float4(nrm.x, nrm.y, nrm.z, 1.0f);
-                    vertex.bin = float4(bin.x, bin.y, bin.z, 1.0f);
-                    vertex.tan = float4(tan.x, tan.y, tan.z, 1.0f);
-                    vertex.color = float4(col.x, col.y, col.z, col.w);
-                    vertex.uv[0] = float2(uv0.x, 1.0f-uv0.y);
-                    vertex.uv[1] = float2(0,1.0f - 0); // TODO: Support UV1+
-
-                    // The skinning vertex stream is pre-calculated above so we just need to copy the right one by the vertex index.
-                    if (skinned)
+                    for (uint v = 0; v < 3; ++v)
                     {
-                        auto & skinVertex = meshSkinVertices[_UFbxMesh->vertex_indices.data[index]];
+                        uint k = t * 3 + 2 - v;
 
-                        for (uint l = 0; l < 4; ++l)
+                        uint index = triangleIndexTmp[k];
+
+                        const auto pos = getUFBXAttribute(index, _UFbxMesh->vertex_position, float3(0, 0, 0));
+                        const auto nrm = getUFBXAttribute(index, _UFbxMesh->vertex_normal, float3(1, 0, 0));
+                        const auto bin = getUFBXAttribute(index, _UFbxMesh->vertex_bitangent, float3(0, 1, 0));
+                        const auto tan = getUFBXAttribute(index, _UFbxMesh->vertex_tangent, float3(0, 0, 1));
+                        const auto col = getUFBXAttribute(index, _UFbxMesh->vertex_color, float4(1, 1, 1, 1));
+                        const auto uv0 = getUFBXAttribute(index, _UFbxMesh->vertex_uv, float2(0, 0));
+
+                        MeshImporterVertex vertex;
+
+                        vertex.pos = float4(pos.x * _scale, pos.y * _scale, pos.z * _scale, 1.0f);
+                        vertex.nrm = float4(nrm.x, nrm.y, nrm.z, 1.0f);
+                        vertex.bin = float4(bin.x, bin.y, bin.z, 1.0f);
+                        vertex.tan = float4(tan.x, tan.y, tan.z, 1.0f);
+                        vertex.color = float4(col.x, col.y, col.z, col.w);
+                        vertex.uv[0] = float2(uv0.x, 1.0f - uv0.y);
+                        vertex.uv[1] = float2(0, 1.0f - 0); // TODO: Support UV1+
+
+                        // The skinning vertex stream is pre-calculated above so we just need to copy the right one by the vertex index.
+                        if (skinned)
                         {
-                            vertex.indices[l] = skinVertex.bone_index[l];
-                            vertex.weights[l] = skinVertex.bone_weight[l];
+                            auto & skinVertex = meshSkinVertices[_UFbxMesh->vertex_indices.data[index]];
+
+                            for (uint l = 0; l < 4; ++l)
+                            {
+                                vertex.indices[l] = skinVertex.bone_index[l];
+                                vertex.weights[l] = skinVertex.bone_weight[l];
+                            }
                         }
+
+                        vertexBuffer.push_back(vertex);
+                        indexBuffer.push_back(vertexIndex);
+
+                        aabb.grow(vertex.pos.xyz);
+
+                        vertexIndex++;
                     }
-
-                    vertexBuffer.push_back(vertex);
-                    indexBuffer.push_back(vertexIndex);
-
-                    aabb.grow(vertex.pos.xyz);
-
-                    vertexIndex++;
                 }
 
                 batchIndexCount += (uint)triangleCount * 3;

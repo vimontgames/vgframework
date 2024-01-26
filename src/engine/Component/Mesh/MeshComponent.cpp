@@ -73,6 +73,11 @@ namespace vg::engine
         {
             m_meshInstance->setGlobalMatrix(go->getGlobalMatrix());
             m_meshInstance->setColor(go->getColor());
+
+            if (asBool(IComponent::Flags::NoCulling & getFlags()))
+                m_meshInstance->setRuntimeFlags(IInstance::RuntimeFlags::NoCulling, true);
+            else
+                m_meshInstance->setRuntimeFlags(IInstance::RuntimeFlags::NoCulling, false);
         }
 
         if (m_meshInstance->IsSkinned())

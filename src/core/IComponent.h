@@ -14,7 +14,8 @@ namespace vg::core
 
         enum class Flags : u32
         {
-            Enabled = 0x00000001
+            Enabled     = 0x00000001,
+            NoCulling   = 0x00000002
         };
 
         IComponent(const core::string & _name, IObject * _parent) :

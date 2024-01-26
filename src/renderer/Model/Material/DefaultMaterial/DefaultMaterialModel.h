@@ -33,7 +33,7 @@ namespace vg::renderer
 
         gfx::Texture *  m_pbrMap            = nullptr;
         float           m_occlusion         = 1.0f;
-        float           m_roughness         = 1.0f;
-        float           m_metalness         = 1.0f;
+        float           m_roughness         = 0.25f;
+        float           m_metalness         = 0.0f;
     };
 }

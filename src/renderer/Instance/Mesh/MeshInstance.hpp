@@ -87,7 +87,7 @@ namespace vg::renderer
         {
             const AABB & aabb = meshModel->getGeometry()->getAABB();
 
-            bool visible = _view->getCameraFrustum().intersects(aabb, getGlobalMatrix()) != FrustumTest::Outside;
+            bool visible = _view->getCameraFrustum().intersects(aabb, getGlobalMatrix()) != FrustumTest::Outside || asBool(IInstance::RuntimeFlags::NoCulling & getRuntimeFlags());
 
             if (visible)
             {
@@ -97,27 +97,40 @@ namespace vg::renderer
                 bool hasAlphaTest = false;
                 bool hasAlphaBlend = false;
 
-                for (auto * material : getMaterials())
+                auto materials = getMaterials();
+                if (materials.size() > 0)
                 {
-                    if (material)
+                    for (auto * material : materials)
                     {
-                        auto surf = material->getSurfaceType();
-
-                        switch (surf)
+                        if (material)
                         {
-                            case SurfaceType::Opaque:
-                                hasOpaque = true;
-                                break;
+                            auto surf = material->getSurfaceType();
 
-                            case SurfaceType::AlphaTest:
-                                hasAlphaTest = true;
-                                break;
+                            switch (surf)
+                            {
+                                case SurfaceType::Opaque:
+                                    hasOpaque = true;
+                                    break;
 
-                            case SurfaceType::AlphaBlend:
-                                hasAlphaBlend = true;
-                                break;
+                                case SurfaceType::AlphaTest:
+                                    hasAlphaTest = true;
+                                    break;
+
+                                case SurfaceType::AlphaBlend:
+                                    hasAlphaBlend = true;
+                                    break;
+                            }
+                        }
+                        else
+                        {
+                            hasOpaque = true;
+                            break;
                         }
                     }
+                }
+                else
+                {
+                    hasOpaque = true;
                 }
 
                 if (hasOpaque)
@@ -259,9 +272,6 @@ namespace vg::renderer
 
             _cmdList->setPrimitiveTopology(PrimitiveTopology::TriangleList);
 
-            const auto * defaultMaterial = renderer->getDefaultMaterial();
-            VG_ASSERT(defaultMaterial);
-
             const auto & batches = geo->batches();
             for (uint i = 0; i < batches.size(); ++i)
             {
@@ -270,53 +280,46 @@ namespace vg::renderer
 
                 // Setup material 
                 const MaterialModel * material = getMaterial(i);
-                if (nullptr != material)
+                if (nullptr == material)
+                    material = renderer->getDefaultMaterial();
+                
+                auto surfaceType = material->getSurfaceType();
+
+                switch (_renderContext.m_shaderPass)
                 {
-                    auto surfaceType = material->getSurfaceType();
-
-                    switch (_renderContext.m_shaderPass)
-                    {
-                        default:
-                            VG_ASSERT_ENUM_NOT_IMPLEMENTED(_renderContext.m_shaderPass);
-                            break;
-
-                        case ShaderPass::ZOnly:
-                        case ShaderPass::Forward:
-                        case ShaderPass::Deferred:
-                        {
-                            // Do not render transparent material in opaque passes
-                            if (SurfaceType::AlphaBlend != surfaceType)
-                            {
-                                if (_renderContext.m_alphatest == (SurfaceType::AlphaTest == surfaceType))
-                                {
-                                    material->Setup(_renderContext, _cmdList, &root3D, i);
-                                    draw = true;
-                                }
-                            }
-                        }
+                    default:
+                        VG_ASSERT_ENUM_NOT_IMPLEMENTED(_renderContext.m_shaderPass);
                         break;
 
-                        case ShaderPass::Transparent:
+                    case ShaderPass::ZOnly:
+                    case ShaderPass::Forward:
+                    case ShaderPass::Deferred:
+                    {
+                        // Do not render transparent material in opaque passes
+                        if (SurfaceType::AlphaBlend != surfaceType)
                         {
-                            if (SurfaceType::AlphaBlend == surfaceType)
+                            if (_renderContext.m_alphatest == (SurfaceType::AlphaTest == surfaceType))
                             {
                                 material->Setup(_renderContext, _cmdList, &root3D, i);
                                 draw = true;
                             }
                         }
-                        break;
-                    }                    
-                }
-                else
-                {
-                    // Assume default material is opaque only
-                    defaultMaterial->Setup(_renderContext, _cmdList, &root3D, i);
-                }
+                    }
+                    break;
+
+                    case ShaderPass::Transparent:
+                    {
+                        if (SurfaceType::AlphaBlend == surfaceType)
+                        {
+                            material->Setup(_renderContext, _cmdList, &root3D, i);
+                            draw = true;
+                        }
+                    }
+                    break;
+                }                    
 
                 if (draw)
                 {
-                    //root3D.color *= getColor();
-
                     _cmdList->setGraphicRootConstants(0, (u32 *)&root3D, RootConstants3DCount);
                     _cmdList->drawIndexed(batch.count, batch.offset);
                 }
