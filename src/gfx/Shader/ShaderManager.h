@@ -22,8 +22,8 @@ namespace vg::gfx
         core::uint                          GetShaderWarningCount       () const final override;
         core::uint                          GetShaderErrorCount         () const final override;
 
-        void                                update                      ();
-        void                                applyUpdate                 ();
+        void                                update                      (bool _forceUpdate = false);
+        void                                applyUpdate                 (bool _forceUpdate = false);
 
         void                                registerHLSL                (const HLSLDesc & _hlslDesc);
         bool                                initShaderKey               (ShaderKey & _key, const core::string & _file, const core::string & _technique);

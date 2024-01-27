@@ -320,9 +320,12 @@ namespace vg::gfx
     }
 
     //--------------------------------------------------------------------------------------
-    void ShaderManager::update()
+    void ShaderManager::update(bool _forceUpdate)
     {
-        m_updateNeeded = true;
+        if (_forceUpdate)
+            applyUpdate(true);
+        else
+            m_updateNeeded = true;
     }
 
     struct HLSLFile
@@ -510,9 +513,9 @@ namespace vg::gfx
     #endif
 
     //--------------------------------------------------------------------------------------
-    void ShaderManager::applyUpdate()
+    void ShaderManager::applyUpdate(bool _forceUpdate)
     {
-        if (m_updateNeeded)
+        if (m_updateNeeded || _forceUpdate)
         {
             #if VG_SHADER_SOURCE_IN_MEMORY
             saveShaderSourceInMemory();

@@ -239,7 +239,7 @@ namespace vg::renderer
         sm->registerHLSL(SkinningHLSLDesc());
         sm->registerHLSL(DeferredLightingHLSLDesc());
 
-        sm->update();
+        sm->update(true);
     }
 
 	//--------------------------------------------------------------------------------------
