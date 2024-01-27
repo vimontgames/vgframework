@@ -140,15 +140,15 @@ namespace vg::gfx
         core::vector<core::pair<core::string, core::uint>> macros;
 
         u32 value = (u32)_flags;
-        u32 ctlz = core::countl_zero(value);
+        u32 ctlz = core::clz(value);
         u32 index = 0;
         while (ctlz < 32)
         {
             index = 32-ctlz-1;
             const auto & desc = m_flagDescs[index];
-            macros.push_back({ desc.m_define,1 });
+            macros.push_back({ desc.m_define, 1 });
             value &= ~(1<<index);
-            ctlz = core::countl_zero(value);
+            ctlz = core::clz(value);
         }
         
         return macros;

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "core/Types/Types.h"
+#include <intrin.h>
 
 namespace vg::core
 {
@@ -170,18 +171,49 @@ namespace vg::core
 
     #define crc64(str) std::integral_constant<u64, computeCRC64(str, sizeof(str)-1)>::value
 
-    template <typename T> inline T countl_zero(T _value);
+    template <typename T> inline T ctz(T _value);
+    template <typename T> inline T clz(T _value);
 
     //--------------------------------------------------------------------------------------
-    template<> inline u32 countl_zero(u32 _value)
+    template<> inline core::u32 ctz(core::u32 value)
     {
-        return _lzcnt_u32(_value);
+        DWORD trailing_zero = 0;
+
+        if (_BitScanForward(&trailing_zero, value))
+            return trailing_zero;
+        else
+            return 32;
     }
 
     //--------------------------------------------------------------------------------------
-    template<> inline u64 countl_zero(u64 _value)
+    template<> inline core::u64 ctz(core::u64 value)
     {
-        return _lzcnt_u64(_value);
+        DWORD trailing_zero = 0;
+
+        if (_BitScanForward64(&trailing_zero, value))
+            return trailing_zero;
+        else
+            return 64;
+    }    
+
+    //--------------------------------------------------------------------------------------
+    template<> inline core::u32 clz(core::u32 value)
+    {
+        DWORD leading_zero = 0;
+        if (_BitScanReverse(&leading_zero, value))
+            return 31 - leading_zero;
+        else
+            return 32;
+    }
+
+    //--------------------------------------------------------------------------------------
+    template<> inline core::u64 clz(core::u64 value)
+    {
+        DWORD leading_zero = 0;
+        if (_BitScanReverse(&leading_zero, value))
+            return 63 - leading_zero;
+        else
+            return 63;
     }
 
     //--------------------------------------------------------------------------------------
