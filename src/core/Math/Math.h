@@ -210,7 +210,7 @@ namespace vg::core
     template<> inline core::u64 clz(core::u64 value)
     {
         DWORD leading_zero = 0;
-        if (_BitScanReverse(&leading_zero, value))
+        if (_BitScanReverse64(&leading_zero, value))
             return 63 - leading_zero;
         else
             return 63;
