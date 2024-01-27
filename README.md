@@ -20,6 +20,11 @@ Another subject that is very close to my heart is that there is a strong separat
 
 # changelog
 
+## 0.25
+Fix an issue with **CountLeadingZeroes** that could return a different result depending on CPU used\
+Jolt no more uses **AVX2** to allow running on older hardware\
+VGFramework requires **AVX1** available on any AMD/Intel CPU since 2011 (Bulldozer/Sandy Bridge) 
+
 ## 0.24
 New darker ImGui style\
 Read instance color and texture from GPUInstanceData and GPUMaterialData\

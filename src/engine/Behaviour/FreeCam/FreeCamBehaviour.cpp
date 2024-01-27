@@ -77,10 +77,10 @@ namespace vg::engine
 
         const float4x4 & world = go->getGlobalMatrix();
 
-        float4 I(world.vec0);
-        float4 J(world.vec1);
-        float4 K(world.vec2);
-        float4 T(world.vec3);
+        float4 I = world[0];
+        float4 J = world[1];
+        float4 K = world[2];
+        float4 T = world[3];
 
         if (update)
         {
@@ -135,9 +135,9 @@ namespace vg::engine
 
         float4x4 mRotXZ = mul(rotX, rotZ);
 
-        I = normalize(float4(mRotXZ.vec0));
-        J = normalize(float4(mRotXZ.vec1));
-        K = normalize(float4(mRotXZ.vec2));
+        I = normalize(float4(mRotXZ[0]));
+        J = normalize(float4(mRotXZ[1]));
+        K = normalize(float4(mRotXZ[2]));
 
         float4x4 mViewI = float4x4(-I, -J, K, T);
 
