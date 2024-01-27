@@ -160,7 +160,7 @@ The SDKs are not included with the sources. You need to install them.
 
 | SDK			 | Version       | URL												
 | -------------- | ------------- | ------------------------------------------------------------- 
-| Win10 SDK		 | 10.0.17763.0  | https://developer.microsoft.com/fr-fr/windows/downloads/sdk-archive/	
+| Win10 SDK		 | 10.0.22621.0  | https://developer.microsoft.com/fr-fr/windows/downloads/sdk-archive/	
 | Vulkan SDK (*) | SDK 1.3.261.1 | https://vulkan.lunarg.com/sdk/home 
 
 (*) Only required to build Vulkan version. **$(VK_SDK_PATH)** should point the Vulkan SDK installation dir (i.e. **"C:\SDK\Vulkan\1.3.261.1"**)
