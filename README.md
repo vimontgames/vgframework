@@ -20,12 +20,14 @@ Another subject that is very close to my heart is that there is a strong separat
 
 # changelog
 
-## 0.25
+## 0.25 "Freaky Clown"
 Fix an issue with **CountLeadingZeroes** that could return a different result depending on CPU used\
 Jolt no more uses **AVX2** to allow running on older hardware\
-VGFramework requires **AVX1** available on any AMD/Intel CPU since 2011 (Bulldozer/Sandy Bridge) 
+VGFramework requires **AVX1** available on any AMD/Intel CPU since 2011 (Bulldozer/Sandy Bridge)\
+Patch shader files in memory to support GPU DebugInfo/Warning/Error/Assert\
+Fix non-triangulated mesh import
 
-## 0.24
+## 0.24 "Kasper"
 New darker ImGui style\
 Read instance color and texture from GPUInstanceData and GPUMaterialData\
 Improve BLAS management\
