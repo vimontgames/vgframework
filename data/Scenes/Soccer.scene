@@ -322,7 +322,7 @@
                                         <Property type="String" name="m_name" value="Cone 1"/>
                                         <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
                                         <Property type="Float4" name="m_color" flags="Color" x="1" y="1" z="1" w="1"/>
-                                        <Property type="Float4x4" name="m_local" Ix="0.9236002" Iy="0.3833572" Iz="1.9887847e-07" Iw="0" Jx="-0.3833572" Jy="0.9236002" Jz="-6.1619585e-07" Jw="0" Kx="-4.1990728e-07" Ky="4.9287712e-07" Kz="1" Kw="0" Tx="-2.996563" Ty="6.4952497" Tz="-0.00050011277" Tw="1"/>
+                                        <Property type="Float4x4" name="m_local" Ix="0.9236002" Iy="0.3833572" Iz="1.9887847e-07" Iw="0" Jx="-0.3833572" Jy="0.9236002" Jz="-6.1619585e-07" Jw="0" Kx="-4.1990728e-07" Ky="4.9287712e-07" Kz="1" Kw="0" Tx="-3.996563" Ty="6.4952497" Tz="-0.00050011277" Tw="1"/>
                                         <Property type="ObjectPtrVector" name="m_components">
                                             <Object class="MeshComponent">
                                                 <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
