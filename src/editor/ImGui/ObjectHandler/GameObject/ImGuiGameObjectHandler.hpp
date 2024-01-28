@@ -39,7 +39,7 @@ namespace vg::editor
 
             ImGui::CollapsingHeaderLabel(collapsingHeaderPos, gameObjectLabel.c_str(), isGameobjectEnabled);
 
-            if (ImGui::CollapsingHeaderCheckbox(collapsingHeaderPos, isGameobjectEnabled, go, style::icon::Checked, style::icon::Unchecked, fmt::sprintf("%s GameObject %s", isGameobjectEnabled? "Disable" : "Enable", go->getName().c_str())))
+            if (ImGui::CollapsingHeaderCheckbox(collapsingHeaderPos, isGameobjectEnabled, go, style::icon::Checked, style::icon::Unchecked, fmt::sprintf("%s GameObject \"%s\"", isGameobjectEnabled? "Disable" : "Enable", go->getName().c_str())))
             {
                 go->SetFlags(IInstance::Flags::Enabled, !isGameobjectEnabled);
                 //changed = true;

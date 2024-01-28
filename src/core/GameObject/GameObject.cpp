@@ -110,66 +110,75 @@ namespace vg::core
     //--------------------------------------------------------------------------------------
     void GameObject::FixedUpdate(float _dt)
     {
-        VG_PROFILE_CPU(getName().c_str());
-        VG_ASSERT(asBool(GameObject::Flags::Enabled & getFlags()) && asBool(UpdateFlags::FixedUpdate & getUpdateFlags()));
-
-        for (uint i = 0; i < m_components.size(); ++i)
+        if (asBool(GameObject::Flags::Enabled & getFlags()))
         {
-            Component * component = m_components[i];
-            if (asBool(Component::Flags::Enabled & component->getFlags()) && asBool(UpdateFlags::FixedUpdate & component->getUpdateFlags()))
-                component->FixedUpdate(_dt);
-        }
+            VG_PROFILE_CPU(getName().c_str());
+            VG_ASSERT(asBool(UpdateFlags::FixedUpdate & getUpdateFlags()), "[FixedUpdate] GameObject \"%s\" does not have the '%s' flag", getName().c_str(), asString(UpdateFlags::FixedUpdate).c_str());
 
-        const auto & children = getChildren();
-        for (uint e = 0; e < children.size(); ++e)
-        {
-            auto * child = children[e];
-            if (asBool(GameObject::Flags::Enabled & child->getFlags())  && asBool(UpdateFlags::FixedUpdate & child->getUpdateFlags()))
-                child->FixedUpdate(_dt);
+            for (uint i = 0; i < m_components.size(); ++i)
+            {
+                Component* component = m_components[i];
+                if (asBool(Component::Flags::Enabled & component->getFlags()) && asBool(UpdateFlags::FixedUpdate & component->getUpdateFlags()))
+                    component->FixedUpdate(_dt);
+            }
+
+            const auto& children = getChildren();
+            for (uint e = 0; e < children.size(); ++e)
+            {
+                auto* child = children[e];
+                if (asBool(GameObject::Flags::Enabled & child->getFlags()) && asBool(UpdateFlags::FixedUpdate & child->getUpdateFlags()))
+                    child->FixedUpdate(_dt);
+            }
         }
     }
 
     //--------------------------------------------------------------------------------------
     void GameObject::Update(float _dt)
     {
-        VG_PROFILE_CPU(getName().c_str());
-        VG_ASSERT(asBool(GameObject::Flags::Enabled & getFlags()) && asBool(UpdateFlags::Update & getUpdateFlags()));
-
-        for (uint i = 0; i < m_components.size(); ++i)
+        if (asBool(GameObject::Flags::Enabled & getFlags()))
         {
-            Component * component = m_components[i];
-            if (asBool(Component::Flags::Enabled & component->getFlags()) && asBool(UpdateFlags::Update & component->getUpdateFlags()))
-                component->Update(_dt);
-        }
+            VG_PROFILE_CPU(getName().c_str());
+            VG_ASSERT(asBool(UpdateFlags::Update & getUpdateFlags()), "[FixedUpdate] GameObject \"%s\" does not have the '%s' flag", getName().c_str(), asString(UpdateFlags::Update).c_str());
 
-        const auto & children = getChildren();
-        for (uint e = 0; e < children.size(); ++e)
-        {
-            auto * child = children[e];
-            if (asBool(GameObject::Flags::Enabled & child->getFlags())  && asBool(UpdateFlags::Update & child->getUpdateFlags()))
-                child->Update(_dt);
+            for (uint i = 0; i < m_components.size(); ++i)
+            {
+                Component* component = m_components[i];
+                if (asBool(Component::Flags::Enabled & component->getFlags()) && asBool(UpdateFlags::Update & component->getUpdateFlags()))
+                    component->Update(_dt);
+            }
+
+            const auto& children = getChildren();
+            for (uint e = 0; e < children.size(); ++e)
+            {
+                auto* child = children[e];
+                if (asBool(GameObject::Flags::Enabled & child->getFlags()) && asBool(UpdateFlags::Update & child->getUpdateFlags()))
+                    child->Update(_dt);
+            }
         }
     }
 
     //--------------------------------------------------------------------------------------
     void GameObject::LateUpdate(float _dt)
     {
-        VG_PROFILE_CPU(getName().c_str());
-        VG_ASSERT(asBool(GameObject::Flags::Enabled & getFlags()) && asBool(UpdateFlags::LateUpdate & getUpdateFlags()));
-
-        for (uint i = 0; i < m_components.size(); ++i)
+        if (asBool(GameObject::Flags::Enabled & getFlags()))
         {
-            Component * component = m_components[i];
-            if (asBool(Component::Flags::Enabled & component->getFlags()) && asBool(UpdateFlags::LateUpdate & component->getUpdateFlags()))
-                component->LateUpdate(_dt);
-        }
+            VG_PROFILE_CPU(getName().c_str());
+            VG_ASSERT(asBool(UpdateFlags::LateUpdate & getUpdateFlags()), "[FixedUpdate] GameObject \"%s\" does not have the '%s' flag", getName().c_str(), asString(UpdateFlags::LateUpdate).c_str());
 
-        const auto & children = getChildren();
-        for (uint e = 0; e < children.size(); ++e)
-        {
-            auto * child = children[e];
-            if (asBool(GameObject::Flags::Enabled & child->getFlags()) && asBool(UpdateFlags::LateUpdate & child->getUpdateFlags()))
-                child->LateUpdate(_dt);
+            for (uint i = 0; i < m_components.size(); ++i)
+            {
+                Component* component = m_components[i];
+                if (asBool(Component::Flags::Enabled & component->getFlags()) && asBool(UpdateFlags::LateUpdate & component->getUpdateFlags()))
+                    component->LateUpdate(_dt);
+            }
+
+            const auto& children = getChildren();
+            for (uint e = 0; e < children.size(); ++e)
+            {
+                auto* child = children[e];
+                if (asBool(GameObject::Flags::Enabled & child->getFlags()) && asBool(UpdateFlags::LateUpdate & child->getUpdateFlags()))
+                    child->LateUpdate(_dt);
+            }
         }
     }
 

@@ -90,6 +90,7 @@ namespace vg::editor
             inline static const char * Translate            = ICON_FA_UP_DOWN_LEFT_RIGHT;
             inline static const char * Unchecked            = ICON_FA_SQUARE;
             inline static const char * Warning              = ICON_FA_TRIANGLE_EXCLAMATION;
+            inline static const char * World                = ICON_FA_GLOBE;
         }
     }
 }

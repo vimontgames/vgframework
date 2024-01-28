@@ -9,7 +9,7 @@ namespace vg::editor
 {
     //--------------------------------------------------------------------------------------
     ImGuiScene::ImGuiScene() :
-        ImGuiWindow(style::icon::Scene, "", "Scenes", ImGuiWindow::StartVisible | ImGuiWindow::AddMenuEntry)
+        ImGuiWindow(style::icon::World, "", "World", ImGuiWindow::StartVisible | ImGuiWindow::AddMenuEntry)
     {
     }
 
@@ -81,7 +81,7 @@ namespace vg::editor
         auto worldRes = getEngine()->GetWorldResource();
         string label = worldRes && worldRes->getObject() ? worldRes->getObject()->getName() : "<No World loaded>";
 
-        if (ImGui::IconBegin(style::icon::Scene, fmt::sprintf("%s###WorldScenes", label).c_str(), &m_isVisible))
+        if (ImGui::IconBegin(style::icon::World, fmt::sprintf("%s###WorldScenes", label).c_str(), &m_isVisible))
         {
             const auto * factory = Kernel::getFactory();
             engine::IEngine * engine = (engine::IEngine *)factory->getSingleton("Engine");
@@ -144,22 +144,36 @@ namespace vg::editor
                     break;
                 }
 
+                auto availableWidth = ImGui::GetContentRegionAvail().x;
+
                 for (uint i = 0; i < worldRes->GetSceneResourceCount(); ++i)
                 {
                     const core::IResource * sceneRes = worldRes->GetSceneResource(i);
                     const IScene * scene = (IScene*)sceneRes->getObject();
                     if (nullptr != scene)
                     {
+                        ImGui::PushID("SceneTree");
+
                         IGameObject * root = scene->GetRoot();
-                        auto flags = ImGuiTreeNodeFlags_Framed;
+                        auto flags = ImGuiTreeNodeFlags_InvisibleArrow | ImGuiTreeNodeFlags_AllowItemOverlap | ImGuiTreeNodeFlags_DefaultOpen;
                         if (nullptr != root)
-                            flags |= ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_DefaultOpen;
+                            flags |= ImGuiTreeNodeFlags_None;
                         else
                             flags |= ImGuiTreeNodeFlags_Leaf;
                         
-                        const bool open = ImGui::TreeNodeEx(scene->getName().c_str(), flags);
+                        ImVec2 collapsingHeaderPos = ImGui::GetCursorPos();
+
+                        const bool open = ImGui::CollapsingHeader(ImGui::getObjectLabel("", scene->getName(), scene).c_str(), flags);
+                        bool enabled = asBool(IInstance::Flags::Enabled & root->GetFlags());
 
                         auto status = m_sceneMenu.Display((IObject*)scene);
+
+                        string sceneLabel = fmt::sprintf("%s %s", style::icon::Scene, scene->getName());
+
+                        ImGui::CollapsingHeaderLabel(collapsingHeaderPos, sceneLabel.c_str(), enabled);
+
+                        if (ImGui::CollapsingHeaderCheckbox(collapsingHeaderPos, enabled, root, style::icon::Checked, style::icon::Unchecked, fmt::sprintf("%s Scene \"%s\"", enabled ? "Disable" : "Enable", scene->getName().c_str())))
+                            root->SetFlags(IInstance::Flags::Enabled, !enabled);
 
                         if (status == ImGuiMenu::Status::Removed)
                             root = nullptr;
@@ -172,8 +186,10 @@ namespace vg::editor
                                 uint counter = 0;
                                 displayGameObject(root, &counter);
                             }
-                            ImGui::TreePop();
+                            //ImGui::TreePop();
                         }
+
+                        ImGui::PopID();
                     }
                 }
             }
