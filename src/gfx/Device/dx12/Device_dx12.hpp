@@ -34,6 +34,9 @@ namespace vg::gfx::dx12
 		IDXGIAdapter1 * adapter = nullptr;
         D3D12Device * device = nullptr;
 
+        char description[256];
+        size_t s;
+
 		for (uint l = 0; l < countof(levels); ++l)
 		{
 			for (u32 a = 0; !m_d3d12device && DXGI_ERROR_NOT_FOUND != m_dxgiFactory->EnumAdapters1(a, &adapter); ++a)
@@ -48,16 +51,8 @@ namespace vg::gfx::dx12
 
 					m_d3d12device = device;
                     m_dxgiAdapter = adapter;
-					m_level = levels[l];
-					
-					uint major = (m_level & 0xF000) >> 12;
-					uint minor = (m_level & 0x0F00) >> 8;
-
-					char description[256];
-					size_t s;
+                    m_caps.d3d12.featureLevel = levels[l];
 					wcstombs_s(&s, description, countof(description), desc.Description, wcslen(desc.Description));
-
-                    VG_INFO("[Device] DirectX %u.%u %s - %s", major, minor, m_d3d12debug ? "debug " : "", description);
                 }
                 else
                 {
@@ -101,17 +96,49 @@ namespace vg::gfx::dx12
 			}
 		}
 
+        // Check max supported signature version
         D3D12_FEATURE_DATA_ROOT_SIGNATURE featureData = {};
-        auto HighestVersion = D3D_ROOT_SIGNATURE_VERSION_1_1;
+        featureData.HighestVersion = D3D_ROOT_SIGNATURE_VERSION_1_1;
         if (FAILED(device->CheckFeatureSupport(D3D12_FEATURE_ROOT_SIGNATURE, &featureData, sizeof(featureData))))
-            HighestVersion = D3D_ROOT_SIGNATURE_VERSION_1_0;
+        {
+            m_caps.d3d12.rootSignatureVersion = D3D_ROOT_SIGNATURE_VERSION_1_0;
+        }
+        else
+        {
+            m_caps.d3d12.rootSignatureVersion = featureData.HighestVersion;
+        }
 
+        // Check for the highest supported shader model
+        D3D12_FEATURE_DATA_SHADER_MODEL shaderModelData = {};
+        shaderModelData.HighestShaderModel = D3D_SHADER_MODEL_6_6;        
+        if (FAILED(device->CheckFeatureSupport(D3D12_FEATURE_SHADER_MODEL, &shaderModelData, sizeof(shaderModelData))))
+        {
+            m_caps.d3d12.shaderModel = D3D_SHADER_MODEL_5_1;
+        }
+        else
+        {
+            m_caps.d3d12.shaderModel = shaderModelData.HighestShaderModel;
+        }
+
+        // Shader model from caps
+        m_caps.shaderModel = (gfx::ShaderModel)m_caps.d3d12.shaderModel;
+
+        // Check raytracing support
 		D3D12_FEATURE_DATA_D3D12_OPTIONS5 options5 = {};
-		if (!FAILED(device->CheckFeatureSupport(D3D12_FEATURE_D3D12_OPTIONS5, &options5, sizeof(options5))))
+        if (FAILED(device->CheckFeatureSupport(D3D12_FEATURE_D3D12_OPTIONS5, &options5, sizeof(options5))))
+        {
+            m_caps.supportRayTracing = false;
+            m_caps.d3d12.raytracier_tier = D3D12_RAYTRACING_TIER_NOT_SUPPORTED;
+        }
+        else
 		{
 			m_caps.supportRayTracing = options5.RaytracingTier >= D3D12_RAYTRACING_TIER_1_0;
 			m_caps.d3d12.raytracier_tier = options5.RaytracingTier;
 		}
+
+        uint major = (m_caps.d3d12.featureLevel & 0xF000) >> 12;
+        uint minor = (m_caps.d3d12.featureLevel & 0x0F00) >> 8;
+        VG_INFO("[Device] DirectX %u.%u %s- %s - %s", major, minor, m_d3d12debug ? "debug " : "", asString(m_caps.shaderModel).c_str(), description);
 
         m_memoryAllocator = new gfx::MemoryAllocator();
 

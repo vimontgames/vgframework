@@ -290,6 +290,7 @@ namespace vg::gfx::vulkan
 		m_deviceExtensionList.registerExtension(m_KHR_Acceleration_Structure);
 		m_deviceExtensionList.registerExtension(m_KHR_Ray_Tracing_Pipeline);
 		m_deviceExtensionList.registerExtension(m_KHR_Ray_Query);
+		m_deviceExtensionList.registerExtension(m_KHR_Multiview);
 	}
 
     //--------------------------------------------------------------------------------------
@@ -423,6 +424,34 @@ namespace vg::gfx::vulkan
 
 		VG_ASSERT(core::invalidInstanceHandle != _params.instance);
 		VG_ASSERT(core::invalidWindowHandle != _params.window);
+
+		// Shader model from caps (https://docs.vulkan.org/guide/latest/hlsl.html)
+		{
+			m_caps.shaderModel = ShaderModel::SM_5_1;
+
+			if (physDevFeatures.shaderInt64)
+				m_caps.shaderModel = ShaderModel::SM_6_0;
+
+			// SM 6_1 : SPV_KHR_multiview + SPV_AMD_shader_explicit_vertex_parameter
+			if (m_KHR_Multiview.isEnabled())
+				m_caps.shaderModel = ShaderModel::SM_6_1;
+
+            if (physDevFeatures.shaderInt16)
+                m_caps.shaderModel = ShaderModel::SM_6_2;
+
+			//if (m_caps.supportRayTracing)
+			//	m_caps.shaderModel = ShaderModel::SM_6_3;
+
+			// SM 6_4 : VK_KHR_fragment_shading_rate
+
+			// SM 6_5 : DXR1.1 (KHR ray tracing), Mesh and Amplification shaders, additional Wave intrinsics
+            if (m_caps.supportRayTracing)
+                m_caps.shaderModel = ShaderModel::SM_6_3;
+
+			// SM 6_6 : VK_NV_compute_shader_derivatives, VK_KHR_shader_atomic_int64
+		}
+		
+        VG_INFO("[Device] Vulkan %s- %s - %s", validationLayer ? "debug " : "", asString(m_caps.shaderModel).c_str(), m_vkPhysicalDeviceProperties.deviceName);
 
 		VkWin32SurfaceCreateInfoKHR createInfo;
 									createInfo.sType = VK_STRUCTURE_TYPE_WIN32_SURFACE_CREATE_INFO_KHR;
@@ -913,9 +942,13 @@ namespace vg::gfx::vulkan
 
         vkGetPhysicalDeviceFeatures2(m_vkPhysicalDevice, &supportedFeatures);
 
+        VkPhysicalDeviceRayTracingPipelinePropertiesKHR rayTracingProperties = {};
+        rayTracingProperties.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_RAY_TRACING_PIPELINE_PROPERTIES_KHR;
+        rayTracingProperties.pNext = nullptr;
+
         VkPhysicalDeviceAccelerationStructurePropertiesKHR accelerationStructureProps = {};
-		accelerationStructureProps.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_ACCELERATION_STRUCTURE_PROPERTIES_KHR;
-		accelerationStructureProps.pNext = nullptr;
+        accelerationStructureProps.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_ACCELERATION_STRUCTURE_PROPERTIES_KHR;
+        accelerationStructureProps.pNext = &rayTracingProperties;
 
 		VkPhysicalDeviceProperties2 physicalDeviceProps;
 		physicalDeviceProps.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PROPERTIES_2;

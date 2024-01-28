@@ -133,33 +133,87 @@ namespace vg::gfx::dxc
     }
 
     //--------------------------------------------------------------------------------------
-    const char * ShaderCompiler::getDXCTargetProfile(ShaderStage _stage) const
+    string ShaderCompiler::getDXCTargetProfile(ShaderStage _stage) const
     {
-        const bool rayTracingSupported = Device::get()->getDeviceCaps().supportRayTracing;
+        const auto & caps = Device::get()->getDeviceCaps();
 
+        string prefix;
         switch (_stage)
         {
-        default:
-            VG_ASSERT(false);
+            default:
+                VG_ASSERT_ENUM_NOT_IMPLEMENTED(caps.shaderModel);
+                break;
 
-        case ShaderStage::Vertex:
-            return rayTracingSupported ? "vs_6_6" : "vs_6_1";
+            case ShaderStage::Vertex:
+                prefix = "vs";
+                break;
 
-        case ShaderStage::Hull:
-            return rayTracingSupported ? "hs_6_6" : "hs_6_1";
+            case ShaderStage::Hull:
+                prefix = "hs";
+                break;
 
-        case ShaderStage::Domain:
-            return rayTracingSupported ? "ds_6_6" : "ds_6_1";
+            case ShaderStage::Domain:
+                prefix = "ds";
+                break;
 
-        case ShaderStage::Geometry:
-            return rayTracingSupported ? "gs_6_6" : "gs_6_1";
+            case ShaderStage::Geometry:
+                prefix = "gs";
+                break;
 
-        case ShaderStage::Pixel:
-            return rayTracingSupported? "ps_6_6" : "ps_6_1";
+            case ShaderStage::Pixel:
+                prefix = "ps";
+                break;
 
-        case ShaderStage::Compute:
-            return rayTracingSupported ? "cs_6_6" : "cs_6_1";
+            case ShaderStage::Compute:
+                prefix = "cs";
+                break;
         }
+
+        string suffix;
+        switch (caps.shaderModel)
+        {
+            default:
+                VG_ASSERT_ENUM_NOT_IMPLEMENTED(caps.shaderModel);
+                break;
+
+            case ShaderModel::SM_5_1:
+                suffix = "5_1";
+                break;
+
+            case ShaderModel::SM_6_0:
+                suffix = "6_0";
+                break;
+
+            case ShaderModel::SM_6_1:
+                suffix = "6_1";
+                break;
+
+            case ShaderModel::SM_6_2:
+                suffix = "6_2";
+                break;
+
+            case ShaderModel::SM_6_3:
+                suffix = "6_3";
+                break;
+
+            case ShaderModel::SM_6_4:
+                suffix = "6_4";
+                break;
+
+            case ShaderModel::SM_6_5:
+                suffix = "6_5";
+                break;
+
+            case ShaderModel::SM_6_6:
+                suffix = "6_6";
+                break;
+
+            case ShaderModel::SM_6_7:
+                suffix = "6_7";
+                break;
+        }
+
+        return fmt::sprintf("%s_%s", prefix, suffix);
     }
 
     //--------------------------------------------------------------------------------------
@@ -218,7 +272,7 @@ namespace vg::gfx::dxc
 
             const wstring wfilename = wstring_convert(_path);
             const wstring wEntryPoint = wstring_convert(_entryPoint);
-            const wstring wTargetProfile = wstring_convert(string(getDXCTargetProfile(_stage)));
+            const wstring wTargetProfile = wstring_convert(getDXCTargetProfile(_stage));
 
             IDxcOperationResult * dxcCompileResult = nullptr;
             m_d3d12dxcCompiler->Compile(dxcSource, wfilename.c_str(), wEntryPoint.c_str(), wTargetProfile.c_str(), (LPCWSTR*)args.data(), (uint)args.size(), dxcDefines.data(), (uint)dxcDefines.size(), m_d3d12dxcIncludeHandler, &dxcCompileResult);
@@ -242,7 +296,7 @@ namespace vg::gfx::dxc
 
             if (hrCompilation < 0)
             {
-                const string message = "Error compiling shader:\n" + core::io::getRootDirectory() + "/" + string(warningAndErrorBuffer);
+                const string message = string(warningAndErrorBuffer);
                 _warningAndErrors += message;
 
                 VG_SAFE_RELEASE(dxcSource);

@@ -42,6 +42,7 @@
     <ClInclude Include="Device\vulkan\Extension\Device\KHR_Acceleration_Structure.h" />
     <ClInclude Include="Device\vulkan\Extension\Device\KHR_Buffer_Device_Address.h" />
     <ClInclude Include="Device\vulkan\Extension\Device\KHR_Deferred_Host_Operations.h" />
+    <ClInclude Include="Device\vulkan\Extension\Device\KHR_Multiview.h" />
     <ClInclude Include="Device\vulkan\Extension\Device\KHR_Ray_Query.h" />
     <ClInclude Include="Device\vulkan\Extension\Device\KHR_Ray_Tracing_Pipeline.h" />
     <ClInclude Include="Device\vulkan\Extension\Device\KHR_Swapchain.h" />

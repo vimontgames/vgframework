@@ -10,6 +10,8 @@
 #include "gfx/Device/vulkan/Extension/Device/KHR_Acceleration_Structure.h"
 #include "gfx/Device/vulkan/Extension/Device/KHR_Ray_Tracing_Pipeline.h"
 #include "gfx/Device/vulkan/Extension/Device/KHR_Ray_Query.h"
+#include "gfx/Device/vulkan/Extension/Device/KHR_Multiview.h"
+
 #include "gfx/PipelineState/Graphic/SamplerState_consts.h"
 #include "gfx/FrameGraph/RenderPassKey.h"
 
@@ -99,6 +101,7 @@ namespace vg::gfx::vulkan
 			KHR_Acceleration_Structure	m_KHR_Acceleration_Structure;
 			KHR_RayTracingPipeline		m_KHR_Ray_Tracing_Pipeline;
 			KHR_RayQuery				m_KHR_Ray_Query;
+			KHR_Multiview				m_KHR_Multiview;
 
 			DeviceExtensionList			m_deviceExtensionList;
 			KHR_Swapchain				m_KHR_Swapchain;

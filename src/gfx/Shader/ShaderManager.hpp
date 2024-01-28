@@ -142,7 +142,9 @@ namespace vg::gfx
     core::string ShaderManager::fixFileLine(const core::string & _filename, const core::string & _warningAndErrorString)
     {
         auto it = _warningAndErrorString.find(_filename);
-        VG_ASSERT(string::npos != it);
+
+        //"Error compiling shader:\n" + core::io::getRootDirectory() + "/" +
+        
         if (string::npos != it)
         {
             string before = _warningAndErrorString.substr(0, it);
@@ -388,7 +390,7 @@ namespace vg::gfx
 
                 auto processLine = [](const string & _line, string & _source, uint & _string_counter, uint _fileID)
                 {
-                    VG_DEBUGPRINT("%s\n", _line.c_str());
+                    //VG_DEBUGPRINT("%s\n", _line.c_str());
 
                     static const string stringFuncs[] =
                     {

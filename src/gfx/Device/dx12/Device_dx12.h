@@ -50,7 +50,6 @@ namespace vg::gfx::dx12
         private:
             D3D12Device *					m_d3d12device				= nullptr;
 			ID3D12Debug *					m_d3d12debug				= nullptr;
-			D3D_FEATURE_LEVEL				m_level						= (D3D_FEATURE_LEVEL)0;	// TODO: caps struct
 			
 			IDXGISwapChain3 *               m_dxgiSwapChain				= nullptr;
             DXGI_SWAP_CHAIN_DESC1           m_dxgiSwapChainDesc;

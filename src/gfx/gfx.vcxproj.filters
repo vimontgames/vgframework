@@ -624,6 +624,9 @@
     <ClInclude Include="Raytracing\vulkan\TLAS_vulkan.hpp">
       <Filter>RayTracing\vulkan</Filter>
     </ClInclude>
+    <ClInclude Include="Device\vulkan\Extension\Device\KHR_Multiview.h">
+      <Filter>Device\vulkan\Extension\Device</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Device">
