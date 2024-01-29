@@ -78,12 +78,6 @@
     <ClInclude Include="ImGui\Window\Shader\ImGuiShader.hpp">
       <Filter>ImGui\Window\Shader</Filter>
     </ClInclude>
-    <ClInclude Include="ImGui\Window\Scene\ImGuiScene.h">
-      <Filter>ImGui\Window\Scene</Filter>
-    </ClInclude>
-    <ClInclude Include="ImGui\Window\Scene\ImGuiScene.hpp">
-      <Filter>ImGui\Window\Scene</Filter>
-    </ClInclude>
     <ClInclude Include="ImGui\Menu\ImGuiMenu.h">
       <Filter>ImGui\Menu</Filter>
     </ClInclude>
@@ -229,6 +223,24 @@
     <ClInclude Include="ImGui\Window\Options\Renderer\ImGuiRendererOptions.hpp">
       <Filter>ImGui\Window\Options\Renderer</Filter>
     </ClInclude>
+    <ClInclude Include="ImGui\Window\GameObjectTree\Prefab\ImGuiPrefab.h">
+      <Filter>ImGui\Window\GameObjectTree\Prefab</Filter>
+    </ClInclude>
+    <ClInclude Include="ImGui\Window\GameObjectTree\Prefab\ImGuiPrefab.hpp">
+      <Filter>ImGui\Window\GameObjectTree\Prefab</Filter>
+    </ClInclude>
+    <ClInclude Include="ImGui\Window\GameObjectTree\World\ImGuiWorld.h">
+      <Filter>ImGui\Window\GameObjectTree\World</Filter>
+    </ClInclude>
+    <ClInclude Include="ImGui\Window\GameObjectTree\World\ImGuiWorld.hpp">
+      <Filter>ImGui\Window\GameObjectTree\World</Filter>
+    </ClInclude>
+    <ClInclude Include="ImGui\Window\GameObjectTree\ImGuiGameObjectTree.h">
+      <Filter>ImGui\Window\GameObjectTree</Filter>
+    </ClInclude>
+    <ClInclude Include="ImGui\Window\GameObjectTree\ImGuiGameObjectTree.hpp">
+      <Filter>ImGui\Window\GameObjectTree</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Editor.def" />
@@ -261,9 +273,6 @@
     </Filter>
     <Filter Include="ImGui\Window\Shader">
       <UniqueIdentifier>{764c6cad-f95c-4444-baa7-0fc63aa80b14}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ImGui\Window\Scene">
-      <UniqueIdentifier>{9500d54d-7b6e-49e5-9858-1232b4b3d700}</UniqueIdentifier>
     </Filter>
     <Filter Include="ImGui\Menu">
       <UniqueIdentifier>{103392c6-30f7-46e8-8223-3116e3341644}</UniqueIdentifier>
@@ -354,6 +363,15 @@
     </Filter>
     <Filter Include="ImGui\Window\Options\Physics">
       <UniqueIdentifier>{106dfd29-6192-4b02-b97f-efa66e7fbff1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ImGui\Window\GameObjectTree">
+      <UniqueIdentifier>{1d4ebaed-a7cf-4dba-bd82-3ba127214c61}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ImGui\Window\GameObjectTree\World">
+      <UniqueIdentifier>{8c59f026-1ae5-46e2-8071-c349994af6d5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ImGui\Window\GameObjectTree\Prefab">
+      <UniqueIdentifier>{1a54f948-206b-4c88-b582-b088ecf507bb}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

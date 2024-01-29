@@ -6,7 +6,7 @@
 
 namespace vg::editor
 {
-    class ImGuiScene : public ImGuiWindow
+    class ImGuiGameObjectTree : public ImGuiWindow
     {
     public:
         enum MenuOption
@@ -16,14 +16,12 @@ namespace vg::editor
             LoadScene,
         };
 
-        ImGuiScene();
+        ImGuiGameObjectTree(const core::string& _icon, const core::string& _path, const core::string& _name, Flags _flags);
 
-        virtual void                    DrawGUI                 () final override;
+    protected:
+        void                            displayGameObject(core::IGameObject* root, core::uint* _count = nullptr);
 
-    private:
-        void                            displayGameObject       (core::IGameObject * root, core::uint * _count = nullptr);
-
-    private:
+    protected:
         ImGuiSceneMenu                  m_sceneMenu;
         ImGuiGameObjectSceneEditorMenu  m_gameObjectMenu;
         core::IGameObject *             m_dragAndDropNodeTarget = nullptr;

@@ -26,7 +26,8 @@
 #include "editor/ImGui/Window/Options/Physics/ImGuiPhysicsOptions.h"
 #include "editor/ImGui/Window/About/ImGuiAbout.h"
 #include "editor/ImGui/Window/Shader/ImGuiShader.h"
-#include "editor/ImGui/Window/Scene/ImGuiScene.h"
+#include "editor/ImGui/Window/GameObjectTree/World/ImGuiWorld.h"
+#include "editor/ImGui/Window/GameObjectTree/Prefab/ImGuiPrefab.h"
 #include "editor/ImGui/Window/Resource/ImGuiResource.h"
 #include "editor/ImGui/Window/View/EditorView/ImGuiEditorView.h"
 #include "editor/ImGui/Window/View/GameView/ImGuiGameView.h"
@@ -90,7 +91,8 @@ namespace vg::editor
         m_imGuiWindows.push_back(new ImGuiShader());
         m_imGuiWindows.push_back(new ImGuiFPS());
         m_imGuiWindows.push_back(new ImGuiResource());
-        m_imGuiWindows.push_back(new ImGuiScene());
+        m_imGuiWindows.push_back(new ImGuiWorld());
+        m_imGuiWindows.push_back(new ImGuiPrefab());
         m_imGuiWindows.push_back(new ImGuiInspector());
         m_imGuiWindows.push_back(new ImGuiEditorOptions());
         m_imGuiWindows.push_back(new ImGuiRendererOptions());
