@@ -83,7 +83,9 @@ namespace vg::editor
             (*_count)++;
 
         const bool disabled = !asBool(_gameObject->GetFlags() & IGameObject::Flags::Enabled);
-        ImGui::BeginDisabled(disabled);
+
+        if (disabled)
+            ImGui::PushStyleColor(ImGuiCol_Text, ImGui::GetStyleColorVec4(ImGuiCol_TextDisabled));
 
         bool open = false;
         auto availableWidth = ImGui::GetContentRegionMax().x;
@@ -319,6 +321,7 @@ namespace vg::editor
             ImGui::TreePop();
         }
 
-        ImGui::EndDisabled();
+        if (disabled)
+            ImGui::PopStyleColor();
     }
 }
