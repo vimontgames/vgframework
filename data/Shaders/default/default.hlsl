@@ -88,7 +88,7 @@ float4 getNormal(GPUMaterialData _materialData, float2 _uv, DisplayFlags _flags)
         normal.xyz = float3(0,0,1);
     #endif
 
-    return float4((normal.xyz*2-1) * _materialData.getNormalStrength() , normal.w);
+    return float4((normal.xy*2-1) * _materialData.getNormalStrength(), normal.z, normal.w);
 }
 
 float4 getPBR(GPUMaterialData _materialData, float2 _uv)
