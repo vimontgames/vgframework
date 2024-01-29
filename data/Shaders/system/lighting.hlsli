@@ -263,8 +263,7 @@ LightingResult computeDirectLighting(ViewConstants _viewConstants, float3 _eyePo
 
 	for(uint i=0; i < lightsHeader.getOmniCount(); ++i)
 	{
-		OmniLightConstants omni = lights.Load<OmniLightConstants>(offset);
-		offset += sizeof(OmniLightConstants);
+		OmniLightConstants omni = lights.Load<OmniLightConstants>(offset + i * sizeof(OmniLightConstants));
 
 		float3 lightDir = omni.getPosition() - _worldPos.xyz;
 		float dist = length(lightDir);
