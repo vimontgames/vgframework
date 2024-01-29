@@ -60,6 +60,7 @@ namespace vg::gfx
     //--------------------------------------------------------------------------------------
     void UserPass::createRenderTarget(const FrameGraphResourceID & _resID, FrameGraphTextureResourceDesc & _resDesc)
     {
+        _resDesc.renderTarget = true;
         FrameGraphTextureResource * res = createTexture(_resID, _resDesc);
         res->setCurrentState(ResourceState::RenderTarget);
     }

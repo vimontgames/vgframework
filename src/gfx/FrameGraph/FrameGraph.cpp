@@ -483,8 +483,9 @@ namespace vg::gfx
     {
         VG_ASSERT(_depthStencil == Texture::isDepthStencilFormat(_textureResourceDesc.format));
 
-        // Use settings from desc
+        // Use settings from desc?
         _uav = _textureResourceDesc.uav;
+        //_renderTarget = _textureResourceDesc.renderTarget;
 
         for (uint i = 0; i < m_sharedTextures.size(); ++i)
         {
@@ -495,6 +496,18 @@ namespace vg::gfx
                 {
                     slot.used = true;
                     VG_ASSERT(slot.tex);
+
+                    const auto & desc = slot.tex->getTexDesc();
+
+                    if (_renderTarget)
+                        VG_ASSERT(desc.isRenderTarget());
+
+                    if (_depthStencil)
+                        VG_ASSERT(desc.isDepthStencil());
+
+                    if (_uav)
+                        VG_ASSERT(desc.resource.testBindFlags(BindFlags::UnorderedAccess));
+
                     return slot.tex;
                 }
             }

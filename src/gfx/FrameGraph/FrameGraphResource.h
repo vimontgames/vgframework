@@ -96,6 +96,7 @@ namespace vg::gfx
             initState(_other.initState),
             clearColor(_other.clearColor),
             transient(_other.transient),
+            renderTarget(_other.renderTarget),
             uav(_other.uav)
         {
 
@@ -109,6 +110,7 @@ namespace vg::gfx
             initState = _other.initState;
             clearColor = _other.clearColor;
             transient = _other.transient;
+            renderTarget = _other.renderTarget;
             uav = _other.uav;
 
             return *this;
@@ -129,12 +131,14 @@ namespace vg::gfx
         };
 
         bool    transient = false;
+        bool    renderTarget = false;
         bool    uav = false;
 
         bool operator == (const FrameGraphTextureResourceDesc & _other) const
         {
             return transient == _other.transient
                 && uav == _other.uav
+                && renderTarget == _other.renderTarget
                 && width == _other.width
                 && height == _other.height
                 && format == _other.format          // TODO: alias textures of the same size but different format (store format, init state, clear color elsewhere ?)
