@@ -4,7 +4,7 @@
         <Property type="ObjectPtr" name="m_root">
             <Object class="GameObject">
                 <Property type="String" name="m_name" value="Root"/>
-                <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value=""/>
+                <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
                 <Property type="Float4" name="m_color" flags="Color" x="1" y="1" z="1" w="1"/>
                 <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="-2" Ty="4" Tz="0" Tw="1"/>
                 <Property type="ObjectPtrVector" name="m_components"/>
@@ -17,7 +17,7 @@
                         <Property type="ObjectPtrVector" name="m_components">
                             <Object class="MeshComponent">
                                 <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
-                                <Property type="Bool" name="m_displayBones" value="false"/>
+                                <Property type="Bool" name="m_displayBones" value="true"/>
                                 <Property type="Resource" name="m_meshResource" flags="Resource">
                                     <Object class="MeshResource">
                                         <Property type="String" name="m_name" flags="Hidden" value="New MeshComponent"/>
@@ -29,13 +29,87 @@
                                         <Property type="String" name="m_name" flags="Hidden" value="New MeshComponent"/>
                                         <Property type="ResourceVector" name="m_materialResources" flags="Resource">
                                             <Object class="MaterialResource">
-                                                <Property type="String" name="m_name" flags="Hidden" value=""/>
+                                                <Property type="String" name="m_name" flags="Hidden" value="JG"/>
                                                 <Property type="String" name="m_resourcePath" flags="Hidden" value="data/Materials/GJ/GJ.mat"/>
-                                                <Property type="String" name="m_name" value=""/>
+                                                <Property type="String" name="m_name" value="JG"/>
                                             </Object>
                                         </Property>
                                     </Object>
                                 </Property>
+                            </Object>
+                            <Object class="AnimationComponent">
+                                <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
+                                <Property type="Object" name="m_animations">
+                                    <Object class="AnimationResourceList">
+                                        <Property type="String" name="m_name" flags="Hidden" value="New AnimationComponent"/>
+                                        <Property type="ResourceVector" name="m_animationResources" flags="Resource">
+                                            <Object class="AnimationResource">
+                                                <Property type="String" name="m_name" flags="Hidden" value="Idle"/>
+                                                <Property type="String" name="m_resourcePath" flags="Hidden" value="data/Animations/J_G/JG_Idle_1.fbx"/>
+                                                <Property type="Bool" name="m_play" value="true"/>
+                                                <Property type="Bool" name="m_loop" flags="SameLine" value="true"/>
+                                                <Property type="String" name="m_name" value="Idle"/>
+                                                <Property type="Float" name="m_speed" flags="HasRange" value="1"/>
+                                            </Object>
+                                            <Object class="AnimationResource">
+                                                <Property type="String" name="m_name" flags="Hidden" value="Walking"/>
+                                                <Property type="String" name="m_resourcePath" flags="Hidden" value="data/Animations/J_G/JG_Walking.fbx"/>
+                                                <Property type="Bool" name="m_play" value="false"/>
+                                                <Property type="Bool" name="m_loop" flags="SameLine" value="false"/>
+                                                <Property type="String" name="m_name" value="Walking"/>
+                                                <Property type="Float" name="m_speed" flags="HasRange" value="1"/>
+                                            </Object>
+                                            <Object class="AnimationResource">
+                                                <Property type="String" name="m_name" flags="Hidden" value="Running"/>
+                                                <Property type="String" name="m_resourcePath" flags="Hidden" value="data/Animations/J_G/JG_Run_1.fbx"/>
+                                                <Property type="Bool" name="m_play" value="false"/>
+                                                <Property type="Bool" name="m_loop" flags="SameLine" value="false"/>
+                                                <Property type="String" name="m_name" value="Running"/>
+                                                <Property type="Float" name="m_speed" flags="HasRange" value="1"/>
+                                            </Object>
+                                            <Object class="AnimationResource">
+                                                <Property type="String" name="m_name" flags="Hidden" value="Jump"/>
+                                                <Property type="String" name="m_resourcePath" flags="Hidden" value="data/Animations/J_G/JG_Jump.fbx"/>
+                                                <Property type="Bool" name="m_play" value="false"/>
+                                                <Property type="Bool" name="m_loop" flags="SameLine" value="false"/>
+                                                <Property type="String" name="m_name" value="Jump"/>
+                                                <Property type="Float" name="m_speed" flags="HasRange" value="0"/>
+                                            </Object>
+                                        </Property>
+                                    </Object>
+                                </Property>
+                            </Object>
+                            <Object class="CharacterControllerComponent">
+                                <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
+                                <Property type="EnumU8" name="m_characterType" flags="ReadOnly" value="Rigid"/>
+                                <Property type="ObjectPtr" name="m_characterDesc" flags="Flatten">
+                                    <Object class="RigidCharacterDesc">
+                                        <Property type="String" name="m_name" flags="Hidden" value="RigidCharacterDesc #8"/>
+                                        <Property type="Float" name="m_mass" value="75"/>
+                                        <Property type="Float" name="m_friction" flags="HasRange" value="0.5"/>
+                                        <Property type="Float" name="m_maxSlopeAngle" flags="HasRange" value="45"/>
+                                    </Object>
+                                </Property>
+                                <Property type="ObjectPtr" name="m_shapeDesc" flags="Flatten">
+                                    <Object class="CapsuleShapeDesc">
+                                        <Property type="String" name="m_name" flags="Hidden" value="CapsuleShapeDesc #8"/>
+                                        <Property type="Float3" name="m_offset" x="0" y="0" z="0"/>
+                                        <Property type="Float" name="m_radius" value="1"/>
+                                        <Property type="Float" name="m_height" value="1"/>
+                                    </Object>
+                                </Property>
+                                <Property type="LayoutElement" name="Debug"/>
+                                <Property type="LayoutElement" name=""/>
+                            </Object>
+                            <Object class="PlayerBehaviour">
+                                <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
+                                <Property type="Uint8" name="m_joypadID" value="0"/>
+                                <Property type="Float" name="m_walkSpeed" value="1.5"/>
+                                <Property type="Float" name="m_runSpeed" value="3"/>
+                                <Property type="Float" name="m_jumpSpeed" value="3"/>
+                                <Property type="Float" name="m_runJumpSpeed" value="4"/>
+                                <Property type="LayoutElement" name="Debug"/>
+                                <Property type="LayoutElement" name=""/>
                             </Object>
                         </Property>
                         <Property type="ObjectPtrVector" name="m_children" flags="Hidden"/>
