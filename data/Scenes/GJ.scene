@@ -12,7 +12,7 @@
                     <Object class="GameObject">
                         <Property type="String" name="m_name" value="GJ"/>
                         <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
-                        <Property type="Float4" name="m_color" flags="Color" x="1" y="1" z="1" w="1"/>
+                        <Property type="Float4" name="m_color" flags="Color" x="1" y="1" z="0" w="1"/>
                         <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="0" Ty="0" Tz="0" Tw="1"/>
                         <Property type="ObjectPtrVector" name="m_components">
                             <Object class="MeshComponent">
@@ -46,7 +46,7 @@
                                             <Object class="AnimationResource">
                                                 <Property type="String" name="m_name" flags="Hidden" value="Idle"/>
                                                 <Property type="String" name="m_resourcePath" flags="Hidden" value="data/Animations/J_G/JG_Idle_1.fbx"/>
-                                                <Property type="Bool" name="m_play" value="true"/>
+                                                <Property type="Bool" name="m_play" value="false"/>
                                                 <Property type="Bool" name="m_loop" flags="SameLine" value="true"/>
                                                 <Property type="String" name="m_name" value="Idle"/>
                                                 <Property type="Float" name="m_speed" flags="HasRange" value="1"/>
@@ -85,7 +85,7 @@
                                 <Property type="ObjectPtr" name="m_characterDesc" flags="Flatten">
                                     <Object class="RigidCharacterDesc">
                                         <Property type="String" name="m_name" flags="Hidden" value="RigidCharacterDesc #8"/>
-                                        <Property type="Float" name="m_mass" value="75"/>
+                                        <Property type="Float" name="m_mass" value="130"/>
                                         <Property type="Float" name="m_friction" flags="HasRange" value="0.5"/>
                                         <Property type="Float" name="m_maxSlopeAngle" flags="HasRange" value="45"/>
                                     </Object>
@@ -93,23 +93,20 @@
                                 <Property type="ObjectPtr" name="m_shapeDesc" flags="Flatten">
                                     <Object class="CapsuleShapeDesc">
                                         <Property type="String" name="m_name" flags="Hidden" value="CapsuleShapeDesc #8"/>
-                                        <Property type="Float3" name="m_offset" x="0" y="0" z="0"/>
-                                        <Property type="Float" name="m_radius" value="1"/>
-                                        <Property type="Float" name="m_height" value="1"/>
+                                        <Property type="Float3" name="m_offset" x="0" y="0" z="0.875"/>
+                                        <Property type="Float" name="m_radius" value="0.5"/>
+                                        <Property type="Float" name="m_height" value="1.75"/>
                                     </Object>
                                 </Property>
-                                <Property type="LayoutElement" name="Debug"/>
-                                <Property type="LayoutElement" name=""/>
                             </Object>
                             <Object class="PlayerBehaviour">
                                 <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
-                                <Property type="Uint8" name="m_joypadID" value="0"/>
                                 <Property type="Float" name="m_walkSpeed" value="1.5"/>
                                 <Property type="Float" name="m_runSpeed" value="3"/>
                                 <Property type="Float" name="m_jumpSpeed" value="3"/>
                                 <Property type="Float" name="m_runJumpSpeed" value="4"/>
-                                <Property type="LayoutElement" name="Debug"/>
-                                <Property type="LayoutElement" name=""/>
+                                <Property type="EnumU8" name="m_controllerType" value="Joypad"/>
+                                <Property type="Uint8" name="m_controllerIndex" value="0"/>
                             </Object>
                         </Property>
                         <Property type="ObjectPtrVector" name="m_children" flags="Hidden"/>

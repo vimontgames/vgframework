@@ -91,9 +91,9 @@ namespace vg::engine
             EnableInput(InputType::Mouse, true);
 
         if (Engine::get()->isPlaying())
-            EnableInput(InputType::Joypads, true);
+            EnableInput(InputType::Joypad, true);
         else
-            EnableInput(InputType::Joypads, false);
+            EnableInput(InputType::Joypad, false);
         
         return super::Update();
     }

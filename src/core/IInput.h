@@ -12,7 +12,7 @@ namespace vg::core
     {
         Keyboard = 0,
         Mouse,
-        Joypads
+        Joypad
     };
 
     class IInput

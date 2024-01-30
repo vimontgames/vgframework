@@ -1222,7 +1222,7 @@ namespace vg::core
             const auto offset = prop->getOffset();
             const auto flags = prop->getFlags();
 
-            if (asBool(IProperty::Flags::NotSaved & flags))
+            if (asBool(IProperty::Flags::NotSaved & flags) || type == IProperty::Type::LayoutElement)
                 continue;
 
             XMLElement * xmlPropElem = _xmlDoc.NewElement("Property");

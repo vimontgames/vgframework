@@ -28,17 +28,10 @@ bool PlayerBehaviour::registerProperties(IClassDesc & _desc)
 {
     super::registerProperties(_desc);
 
-    registerProperty(PlayerBehaviour, m_joypadID, "Joypad");
-    registerProperty(PlayerBehaviour, m_walkSpeed, "Walk Speed");
-    registerProperty(PlayerBehaviour, m_runSpeed, "Run Speed");
-    registerProperty(PlayerBehaviour, m_jumpSpeed, "Jump Speed");
-    registerProperty(PlayerBehaviour, m_runJumpSpeed, "Run Jump Speed");
-
-    registerPropertyGroupBegin(CharacterControllerComponent, "Debug");
-    registerPropertyEnumEx(PlayerBehaviour, PlayerState, m_state, "State", vg::core::IProperty::Flags::NotSaved);
-    registerPropertyEx(PlayerBehaviour, m_currentSpeed, "Speed", vg::core::IProperty::Flags::NotSaved);
-    registerPropertyEx(PlayerBehaviour, m_currentRotation, "Rot", vg::core::IProperty::Flags::NotSaved);
-    registerPropertyGroupEnd(CharacterControllerComponent);
+    registerPropertyGroupBegin(PlayerBehaviour, "Player");
+    registerPropertyEnum(PlayerBehaviour, vg::core::InputType, m_controllerType, "Input");
+    registerProperty(PlayerBehaviour, m_controllerIndex, "Index");
+    registerPropertyGroupEnd(PlayerBehaviour);
     
     return true;
 }
@@ -47,22 +40,6 @@ bool PlayerBehaviour::registerProperties(IClassDesc & _desc)
 void PlayerBehaviour::OnPlay() 
 {
     super::OnPlay();
-
-    for (uint i = 0; i < vg::core::countof(m_anim); ++i)
-        m_anim[i] = -1;
-
-    IAnimationComponent * animationComponent = GetGameObject()->GetComponentByType<IAnimationComponent>();
-
-    if (nullptr != animationComponent)
-    {
-        m_anim[PlayerState::Idle] = animationComponent->GetAnimationIndex("Idle");
-        m_anim[PlayerState::Walking] = animationComponent->GetAnimationIndex("Walking");
-        m_anim[PlayerState::Running] = animationComponent->GetAnimationIndex("Running");
-        m_anim[PlayerState::Jumping] = animationComponent->GetAnimationIndex("Jump");
-    } 
-
-    m_startPos = GetGameObject()->getGlobalMatrix()[3].xyz;
-
     Game::get()->addPlayer(this);
 }
 
@@ -70,37 +47,7 @@ void PlayerBehaviour::OnPlay()
 void PlayerBehaviour::OnStop()
 {
     Game::get()->removePlayer(this);
-
     super::OnStop();
-}
-
-//--------------------------------------------------------------------------------------
-void PlayerBehaviour::PlayAnim(PlayerState _state, bool _loop)
-{
-    IAnimationComponent * animationComponent = GetGameObject()->GetComponentByType<IAnimationComponent>();
-
-    for (uint i = 0; i < vg::core::countof(m_anim); ++i)
-    {
-        if (_state != i)
-        {
-            if (IAnimationResource * anim = animationComponent->GetAnimation(m_anim[i]))
-            {
-                if (anim->IsPlaying())
-                    anim->Stop();
-            }
-        }
-    }
-
-    if (IAnimationResource * anim = animationComponent->GetAnimation(m_anim[_state]))
-    {
-        if (anim && !anim->IsPlaying())
-        {
-            if (_loop)
-                anim->PlayLoop();
-            else
-                anim->PlayOnce();
-        }
-    }
 }
 
 //--------------------------------------------------------------------------------------
@@ -110,35 +57,37 @@ void PlayerBehaviour::FixedUpdate(float _dt)
     {
         IInput & input = Game::Input();
         IAnimationComponent * animationComponent = GetGameObject()->GetComponentByType<IAnimationComponent>();
-
-        if (m_joypadID < input.GetJoyCount())
+       
+        switch (m_state)
         {
-            switch (m_state)
-            {
-                case PlayerState::Idle:
-                    PlayAnim(PlayerState::Idle, true);
+            case CharacterState::Idle:
+                PlayAnim(CharacterState::Idle, true);
+            break;
+
+            case CharacterState::Walking:
+                PlayAnim(CharacterState::Walking, true);
                 break;
 
-                case PlayerState::Walking:
-                    PlayAnim(PlayerState::Walking, true);
-                    break;
+            case CharacterState::Running:
+                PlayAnim(CharacterState::Running, true);
+                break;     
 
-                case PlayerState::Running:
-                    PlayAnim(PlayerState::Running, true);
-                    break;     
+            case CharacterState::Jumping:
+                PlayAnim(CharacterState::Jumping, false);
+                break;
+        }
 
-                case PlayerState::Jumping:
-                    PlayAnim(PlayerState::Jumping, false);
-                    break;
-            }
+        if (m_controllerType == InputType::Joypad && m_controllerIndex < input.GetJoyCount())
+        {
+            auto joyID = m_controllerIndex;
 
             float3 translation = float3(0, 0, 0);
             const float joyDeadZone = 0.15f;
 
-            bool running = input.IsJoyButtonPressed(m_joypadID, JoyButton::X);
+            bool running = input.IsJoyButtonPressed(joyID, JoyButton::X);
             m_currentSpeed = running ? m_runSpeed : m_walkSpeed;
 
-            const float2 leftJoyDir = input.GetJoyLeftStickDir(m_joypadID);
+            const float2 leftJoyDir = input.GetJoyLeftStickDir(joyID);
 
             if (any(abs(leftJoyDir).xy > joyDeadZone))
             {
@@ -149,21 +98,21 @@ void PlayerBehaviour::FixedUpdate(float _dt)
             if (any(abs(translation.xy) > 0.0f))
             {
                 if (m_currentSpeed >= (m_walkSpeed + m_runSpeed) * 0.5f)
-                    m_state = PlayerState::Running;
+                    m_state = CharacterState::Running;
                 else
-                    m_state = PlayerState::Walking;
+                    m_state = CharacterState::Walking;
             }
 
-            if (m_state == PlayerState::Walking || m_state == PlayerState::Running)
+            if (m_state == CharacterState::Walking || m_state == CharacterState::Running)
             {
                 if (abs((float)translation.x) < 0.0001f)
-                    m_state = PlayerState::Idle;
+                    m_state = CharacterState::Idle;
             }
 
             vg::engine::ICharacterControllerComponent * charaController = GetGameObject()->GetComponentByType<vg::engine::ICharacterControllerComponent>();
 
             bool jump = false;
-            if (input.IsJoyButtonJustPressed(m_joypadID, JoyButton::A))
+            if (input.IsJoyButtonJustPressed(joyID, JoyButton::A))
             {
                 if (charaController && vg::physics::GroundState::Grounded == charaController->GetGroundState())
                     jump = true;
@@ -171,12 +120,12 @@ void PlayerBehaviour::FixedUpdate(float _dt)
 
             if (charaController && vg::physics::GroundState::InTheAir == charaController->GetGroundState())
             {
-                m_state = PlayerState::Jumping;
+                m_state = CharacterState::Jumping;
 
-                if (IAnimationResource * anim = animationComponent->GetAnimation(m_anim[PlayerState::Jumping]))
+                if (IAnimationResource * anim = animationComponent->GetAnimation(m_anim[CharacterState::Jumping]))
                 {
                     if (anim->IsFinished())
-                        m_state = PlayerState::Idle;
+                        m_state = CharacterState::Idle;
                 }
             }
 
@@ -188,8 +137,8 @@ void PlayerBehaviour::FixedUpdate(float _dt)
                 updatedVelocity.xy = 0.75f * currentVelocity.xy + 0.25f * targetVelocity.xy;
                 updatedVelocity.z = currentVelocity.z;
 
-                if (abs((float)currentVelocity.z) <= 0.0001f && m_state == PlayerState::Jumping)
-                    m_state = PlayerState::Idle;
+                if (abs((float)currentVelocity.z) <= 0.0001f && m_state == CharacterState::Jumping)
+                    m_state = CharacterState::Idle;
 
                 if (jump)
                     updatedVelocity += float3(0, 0, running? m_runJumpSpeed : m_jumpSpeed);
@@ -200,7 +149,7 @@ void PlayerBehaviour::FixedUpdate(float _dt)
         }
         else
         {
-            VG_WARNING_ONCE("[Player] Joypad %u is not a valid Joypad (%u detected)", m_joypadID, input.GetJoyCount());
+            VG_WARNING_ONCE("[Player] %s %u is not a valid controller", asString(m_controllerType).c_str(), m_controllerIndex);
         }
     }
 }

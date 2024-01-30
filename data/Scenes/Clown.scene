@@ -156,18 +156,15 @@
                                         <Property type="Float" name="m_height" value="2"/>
                                     </Object>
                                 </Property>
-                                <Property type="LayoutElement" name="Debug"/>
-                                <Property type="LayoutElement" name=""/>
                             </Object>
                             <Object class="PlayerBehaviour">
                                 <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
-                                <Property type="Uint8" name="m_joypadID" value="0"/>
                                 <Property type="Float" name="m_walkSpeed" value="1.5"/>
                                 <Property type="Float" name="m_runSpeed" value="5"/>
                                 <Property type="Float" name="m_jumpSpeed" value="4"/>
                                 <Property type="Float" name="m_runJumpSpeed" value="5"/>
-                                <Property type="LayoutElement" name="Debug"/>
-                                <Property type="LayoutElement" name=""/>
+                                <Property type="EnumU8" name="m_controllerType" value="Joypad"/>
+                                <Property type="Uint8" name="m_controllerIndex" value="0"/>
                             </Object>
                         </Property>
                         <Property type="ObjectPtrVector" name="m_children" flags="Hidden"/>
@@ -185,13 +182,11 @@
                                     <Object class="OmniLightDesc">
                                         <Property type="String" name="m_name" flags="Hidden" value="OmniLightDesc #0"/>
                                         <Property type="Bool" name="m_shadow" value="true"/>
-                                        <Property type="LayoutElement" name="Shadow Settings" flags="Optional"/>
                                         <Property type="Float2" name="m_shadowRange" x="0.1" y="100"/>
                                         <Property type="Float" name="m_shadowBias" flags="HasRange" value="0.001"/>
                                         <Property type="Uint2" name="m_shadowSize" x="16" y="16"/>
                                         <Property type="Uint2" name="m_shadowResolution" x="1024" y="1024"/>
                                         <Property type="Float" name="m_shadowIntensity" flags="HasRange" value="1"/>
-                                        <Property type="LayoutElement" name="" flags="Optional"/>
                                         <Property type="Float4" name="m_color" flags="Color|HDR" x="1" y="1" z="1" w="1"/>
                                         <Property type="Float" name="m_intensity" value="1"/>
                                         <Property type="Bool" name="m_useMaxRadius" flags="Hidden" value="false"/>

@@ -100,7 +100,7 @@ namespace vg::editor
 
             Columns(1, nullptr, true);
 
-            if (!input->IsInputEnabled(InputType::Joypads))
+            if (!input->IsInputEnabled(InputType::Joypad))
                 ImGui::PushStyleColor(ImGuiCol_Text, getDisabledTextColor());
 
             const auto joyCount = input->GetJoyCount();
@@ -116,7 +116,7 @@ namespace vg::editor
                     Columns(2, joyLabel, true);
                     float columnWidth[2] = { 196, 128 };
 
-                    uint id = i;
+                    auto id = (JoyID)i;
 
                     SetColumnWidth(0, columnWidth[0]);
                     SetColumnWidth(1, columnWidth[1]);
@@ -153,7 +153,7 @@ namespace vg::editor
                 }
             }
 
-            if (!input->IsInputEnabled(InputType::Joypads))
+            if (!input->IsInputEnabled(InputType::Joypad))
                 ImGui::PopStyleColor();
         }
         End();

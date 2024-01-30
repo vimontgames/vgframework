@@ -4,7 +4,7 @@
 #include "core/Object/AutoRegisterClass.h"
 #include "engine/IEngine.h"
 
-#include "Behaviour/Player/PlayerBehaviour.h"
+#include "Behaviour/Character/Player/PlayerBehaviour.h"
 
 using namespace vg::core;
 

@@ -156,18 +156,15 @@
                                         <Property type="Float" name="m_height" value="1.3"/>
                                     </Object>
                                 </Property>
-                                <Property type="LayoutElement" name="Debug"/>
-                                <Property type="LayoutElement" name=""/>
                             </Object>
                             <Object class="PlayerBehaviour">
                                 <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
-                                <Property type="Uint8" name="m_joypadID" value="0"/>
                                 <Property type="Float" name="m_walkSpeed" value="1.5"/>
                                 <Property type="Float" name="m_runSpeed" value="3"/>
                                 <Property type="Float" name="m_jumpSpeed" value="4"/>
                                 <Property type="Float" name="m_runJumpSpeed" value="6"/>
-                                <Property type="LayoutElement" name="Debug"/>
-                                <Property type="LayoutElement" name=""/>
+                                <Property type="EnumU8" name="m_controllerType" value="Joypad"/>
+                                <Property type="Uint8" name="m_controllerIndex" value="0"/>
                             </Object>
                         </Property>
                         <Property type="ObjectPtrVector" name="m_children" flags="Hidden"/>

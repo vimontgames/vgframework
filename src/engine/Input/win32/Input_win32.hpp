@@ -248,7 +248,7 @@ namespace vg::engine::win32
                 UpdateMouse();
         }
 
-        if (IsInputEnabled(InputType::Joypads))
+        if (IsInputEnabled(InputType::Joypad))
             UpdateJoypads();
         
         return super::Update();
@@ -551,7 +551,7 @@ namespace vg::engine::win32
     }
 
     //--------------------------------------------------------------------------------------
-    bool Input::wasJoyButtonPressed(core::JoyID _id, JoyButton _button) const 
+    bool Input::wasJoyButtonPressed(core::JoyID _id, JoyButton _button) const
     {
         return m_joystickData[_id].m_wasPressed[core::asInteger(_button)];
     }
