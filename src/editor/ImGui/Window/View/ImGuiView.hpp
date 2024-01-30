@@ -66,7 +66,9 @@ namespace vg::editor
             vMax.x += ImGui::GetWindowPos().x;
             vMax.y += ImGui::GetWindowPos().y;
 
-            m_size = uint2(vMax.x - vMin.x, vMax.y-vMin.y);
+            //VG_ASSERT(vMax.x > vMin.x && vMax.y > vMin.y, "vMin = (%f,%f) vMax = (%f, %f)", vMin.x, vMin.y, vMax.x, vMax.y);
+
+            m_size = uint2((uint)max(vMax.x - vMin.x, 1.0f), (uint)max(vMax.y-vMin.y, 1.0f));
 
             bool draw = true;
 
@@ -101,6 +103,8 @@ namespace vg::editor
 
             m_view->SetSize(m_size);
 
+            auto texture = m_texture;
+
             if (!m_texture || m_texture->GetWidth() != m_size.x || m_texture->GetHeight() != m_size.y)
             {
                 // As we're executing framegraph we can't fully release the texture right now because it may be still in use
@@ -124,10 +128,10 @@ namespace vg::editor
             ImVec2 mouseOffset = ImGui::GetCursorScreenPos();
             m_view->SetMouseOffset(uint2(mouseOffset.x, mouseOffset.y));
 
-            if (draw) 
+            if (texture)
             {
                 auto * imGuiAdapter = renderer->GetImGuiAdapter();
-                ImTextureID texID = imGuiAdapter->GetTextureID(m_texture);
+                ImTextureID texID = imGuiAdapter->GetTextureID(texture);
                 ImGui::Image(texID, ImVec2((float)m_size.x, (float)m_size.y));
 
                 if (ImGui::IsWindowFocused())

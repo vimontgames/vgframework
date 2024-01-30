@@ -69,6 +69,14 @@ namespace vg::engine
 
         switch (message)
         {
+            case WM_GETMINMAXINFO: 
+            {
+                MINMAXINFO* pMinMaxInfo = reinterpret_cast<MINMAXINFO*>(lParam);
+                pMinMaxInfo->ptMinTrackSize.x = 320; 
+                pMinMaxInfo->ptMinTrackSize.y = 200; 
+                return 0;
+            }
+
             case WM_SIZE:
                 if (m_renderer)
                 {
@@ -76,6 +84,10 @@ namespace vg::engine
                     const uint height = uint(lParam >> 16);
                     m_renderer->resize(width, height);
                 }
+                break;
+
+            case WM_PAINT:
+                RunOneFrame();
                 break;
 
             case WM_KEYDOWN:
@@ -525,10 +537,16 @@ namespace vg::engine
             m_renderer->SetFullscreen(!m_renderer->IsFullscreen());
     }
 
+    static bool g_RunningOneFrame = false;
+
 	//--------------------------------------------------------------------------------------
 	void Engine::RunOneFrame()
 	{
-        VG_PROFILE_CPU("Engine");
+        if (g_RunningOneFrame)
+            return;
+        g_RunningOneFrame = true;
+
+        VG_PROFILE_CPU("Engine");       
 
         updateDt();
 
@@ -596,6 +614,8 @@ namespace vg::engine
 
         // This will use all available threads for culling then rendering scene (TODO)
         m_renderer->runOneFrame(m_time.m_dt);
+
+        g_RunningOneFrame = false;
 	}
 
     //--------------------------------------------------------------------------------------

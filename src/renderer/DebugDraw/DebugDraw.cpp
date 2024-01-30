@@ -58,7 +58,7 @@ namespace vg::renderer
         for (auto & pair : m_drawData)
         {
             DrawData & drawData = pair.second;
-            VG_SAFE_RELEASE(drawData.m_debugDrawVB);
+            VG_SAFE_RELEASE_ASYNC(drawData.m_debugDrawVB);
         }
         m_drawData.clear();
     }
