@@ -522,7 +522,7 @@ namespace vg::renderer
                     break;
                 }
             }
-            VG_ASSERT(-1 != index, "Could not find mapping for animation node %u \"%s\" in skin \"%s\"", i, animNode.name.c_str(), meshModel->getName().c_str());
+            VG_ASSERT(-1 != index, "Could not find node \"%s\" (#%u) from animation \"%s\" in skin \"%s\"", animNode.name.c_str(), i, binding->m_animation->getName().c_str(), meshModel->getName().c_str());
             binding->m_animToSkeletonIndex.push_back(index);
         }
 

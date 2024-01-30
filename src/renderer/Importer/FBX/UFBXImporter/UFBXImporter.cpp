@@ -444,7 +444,7 @@ namespace vg::renderer
         uint num_frames = clamp(uint(duration * target_framerate), (uint)2, (uint)max_frames);
         float framerate = (float)(num_frames - 1) / duration;
 
-        _animData.name = _UFBXAnimStack->name.data;
+        _animData.name = _UFBXScene->metadata.filename.data;//_UFBXAnimStack->name.data;
         _animData.time_begin = (float)_UFBXAnimStack->time_begin;
         _animData.time_end = (float)_UFBXAnimStack->time_end;
         _animData.framerate = framerate;

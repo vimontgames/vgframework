@@ -49,6 +49,8 @@ using namespace ImGui;
 #include "editor/ImGui/ObjectHandler/ImGuiObjectHandler.h"
 #include "editor/ImGui/Menu/Inspector/Component/ImGuiComponentInspectorMenu.h"
 
+#include "shlobj_core.h"
+
 namespace vg::editor
 {
     //--------------------------------------------------------------------------------------
@@ -1256,6 +1258,30 @@ namespace vg::editor
     };
 
     //--------------------------------------------------------------------------------------
+    void BrowseToFile(const core::string& _filename)
+    {
+        string path = _filename;
+        string rootDir = io::getRootDirectory();
+        if (path.compare(0, rootDir.length(), rootDir) != 0)
+            path = rootDir + "/" + path;
+
+        // Replace "/" with "\"
+        std::replace(path.begin(), path.end(), '/', '\\');
+
+        wstring fullpath = wstring_convert(path);
+
+        PIDLIST_ABSOLUTE pidl;
+        HRESULT hr = ::SHParseDisplayName(fullpath.c_str(), nullptr, &pidl, 0, nullptr);
+        VG_ASSERT(SUCCEEDED(hr), "Failed to parse display name. Error code: 0x%X\n", hr);
+        if (SUCCEEDED(hr)) 
+        {
+            hr = ::SHOpenFolderAndSelectItems(pidl, 0, nullptr, 0);
+            VG_ASSERT(SUCCEEDED(hr), "Failed to open Explorer and select the file. Error code : 0x%X", hr);
+            CoTaskMemFree(pidl);
+        }
+    }
+
+    //--------------------------------------------------------------------------------------
     // Display Resource Object
     // Display Resource properties 1st, then path and referenced object properties 2nd
     //--------------------------------------------------------------------------------------
@@ -1307,6 +1333,7 @@ namespace vg::editor
         string saveAsFileButtonName = getButtonLabel("Save As", _resource);
 
         string editFile = getButtonLabel("Edit", _resource);
+        string openFolder = getButtonLabel("Open Folder", _resource);
 
         string clearFileButtonName = getButtonLabel("Remove", _resource);
         string reimportFileButtonName = getButtonLabel("Reimport", _resource);
@@ -1350,6 +1377,14 @@ namespace vg::editor
                 {
                     string cmd = fmt::sprintf("start %s/%s", io::getRootDirectory(), resPath);
                     system(cmd.c_str());
+                }
+
+                if (ImGui::MenuItem(openFolder.c_str()))
+                {
+                    //string cmd = fmt::sprintf("Explorer.exe /select,\"%s/%s\"", io::getRootDirectory(), resPath);
+                    //system(cmd.c_str());
+                    string path = fmt::sprintf("%s/%s", io::getRootDirectory(), resPath);
+                    BrowseToFile(path.c_str());
                 }
             }
             ImGui::EndDisabled();
