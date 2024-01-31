@@ -1,6 +1,6 @@
 #include "SceneResource.h"
 #include "core/File/File.h"
-#include "core/IScene.h"
+#include "core/IBaseScene.h"
 
 using namespace vg::core;
 
@@ -23,7 +23,6 @@ namespace vg::engine
 	{
 		super::registerProperties(_desc);
 
-		registerProperty(SceneResource, m_name, "Name");
 		registerResizeVectorFunc(SceneResource, ResizeSceneResourceVector);
 
 		return true;
@@ -31,7 +30,7 @@ namespace vg::engine
 
 	//--------------------------------------------------------------------------------------
 	SceneResource::SceneResource(const core::string & _name, IObject * _parent) :
-		Resource(_name, _parent)
+		super(_name, _parent)
 	{
 
 	}
@@ -51,35 +50,10 @@ namespace vg::engine
 	}
 
 	//--------------------------------------------------------------------------------------
-	void SceneResource::onResourcePathChanged(const string & _oldPath, const string & _newPath)
-	{
-		if (_oldPath != _newPath)
-			ResourceManager::get()->loadResourceAsync(this, _oldPath, _newPath);
-	}
-
-	//--------------------------------------------------------------------------------------
-	bool SceneResource::cook(const string & _file) const
-	{
-		// Cooked file is same format as source file for now (TODO : serializeFrom/ToBinary)
-		const string cookedPath = io::getCookedPath(_file);
-
-		string data;
-		if (io::readFile(_file, data))
-		{
-			if (io::writeFile(cookedPath, data))
-			{
-				return true;
-			}
-		}
-
-		return false;
-	}
-
-	//--------------------------------------------------------------------------------------
 	core::IObject * SceneResource::load(const string & _path)
 	{
 		IFactory * factory = Kernel::getFactory();
-		IScene * scene = dynamic_cast<IScene*>(factory->createObject("Scene"));
+		IBaseScene * scene = dynamic_cast<IBaseScene*>(factory->createObject("Scene"));
 		if (nullptr != scene)
 		{
 			scene->setParent(this);
@@ -97,7 +71,7 @@ namespace vg::engine
 	{
 		const auto * factory = Kernel::getFactory();
 
-		IScene * scene = dynamic_cast<IScene*>(factory->createObject("Scene"));
+		IBaseScene * scene = dynamic_cast<IBaseScene*>(factory->createObject("Scene"));
 		if (nullptr != scene)
 		{
 			// Use file name as default scene name
@@ -119,7 +93,7 @@ namespace vg::engine
 	//--------------------------------------------------------------------------------------
 	bool SceneResource::SaveFile(const string & _path) const
 	{
-		IScene * scene = dynamic_cast<IScene*>(getObject());
+		IBaseScene * scene = dynamic_cast<IBaseScene*>(getObject());
 		if (nullptr != scene)
 		{
 			const auto * factory = Kernel::getFactory();

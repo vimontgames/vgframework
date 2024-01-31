@@ -1,34 +1,29 @@
-#include "engine/Precomp.h"
-#include "Scene.h"
+#include "GameObjectHierarchy.h"
 #include "core/GameObject/GameObject.h"
 #include "core/Object/AutoRegisterClass.h"
 #include "core/Kernel.h"
-
-#if !VG_ENABLE_INLINE
-#include "Scene.inl"
-#endif
 
 using namespace vg::core;
 
 namespace vg::engine
 {
-    VG_REGISTER_OBJECT_CLASS_EX(Scene, "Scene", IClassDesc::Flags::SceneNode);
+    //VG_REGISTER_OBJECT_CLASS_EX(GameObjectTree, "GameObjectTree", IClassDesc::Flags::SceneNode);
 
     //--------------------------------------------------------------------------------------
-    Scene::Scene(const string & _name, IObject * _parent) :
-        IScene()
+    GameObjectHierarchy::GameObjectHierarchy(const string & _name, IObject * _parent) :
+        IBaseScene()
     {
 
     }
 
     //--------------------------------------------------------------------------------------
-    Scene::~Scene()
+    GameObjectHierarchy::~GameObjectHierarchy()
     {
         VG_SAFE_RELEASE(m_root);
     }
 
     //--------------------------------------------------------------------------------------
-    bool Scene::registerProperties(IClassDesc & _desc)
+    bool GameObjectHierarchy::registerProperties(IClassDesc & _desc)
     {
         super::registerProperties(_desc);
 
@@ -38,13 +33,13 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
-    void Scene::SetRoot(IGameObject * _sector)
+    void GameObjectHierarchy::SetRoot(IGameObject * _sector)
     {
-        setRoot((GameObject*)_sector);
-    }   
+        setRoot((GameObject *)_sector);
+    }
 
     //--------------------------------------------------------------------------------------
-    void Scene::setRoot(GameObject * _sector)
+    void GameObjectHierarchy::setRoot(GameObject * _sector)
     {
         if (_sector != m_root)
         {
@@ -55,8 +50,8 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
-    IGameObject * Scene::GetRoot() const
+    IGameObject * GameObjectHierarchy::GetRoot() const
     {
-        return (IGameObject*)getRoot();
+        return (IGameObject *)getRoot();
     }
 }

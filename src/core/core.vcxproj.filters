@@ -137,7 +137,7 @@
       <Filter>Resource</Filter>
     </ClInclude>
     <ClInclude Include="IResource.h" />
-    <ClInclude Include="IScene.h" />
+    <ClInclude Include="IBaseScene.h" />
     <ClInclude Include="Object\AutoRegisterClass.h">
       <Filter>Object</Filter>
     </ClInclude>

@@ -561,10 +561,10 @@ namespace vg::engine
         {
             // FixedUpdate all GameObjects and components
             VG_PROFILE_CPU("FixedUpdate");
-            const uint sceneCount = world->GetSceneCount();
+            const uint sceneCount = world->GetSceneCount(SceneType::Scene);
             for (uint i = 0; i < sceneCount; ++i)
             {
-                Scene * scene = (Scene *)world->GetScene(i);
+                Scene * scene = (Scene *)world->GetScene(i, SceneType::Scene);
                 GameObject * root = scene->getRoot();
                 if (root && asBool(UpdateFlags::FixedUpdate & root->getUpdateFlags()))
                     root->FixedUpdate(dt);
@@ -578,10 +578,10 @@ namespace vg::engine
         {
             // Update all GameObjects and components
             VG_PROFILE_CPU("Update");
-            const uint sceneCount = world->GetSceneCount();
+            const uint sceneCount = world->GetSceneCount(SceneType::Scene);
             for (uint i = 0; i < sceneCount; ++i)
             {
-                Scene * scene = (Scene *)world->GetScene(i);
+                Scene * scene = (Scene *)world->GetScene(i, SceneType::Scene);
                 GameObject * root = scene->getRoot();
                 if (root && asBool(UpdateFlags::Update & root->getUpdateFlags()))
                     root->Update(dt);
@@ -599,10 +599,10 @@ namespace vg::engine
         {
             // LateUpdate all GameObjects and components
             VG_PROFILE_CPU("LateUpdate");
-            const uint sceneCount = world->GetSceneCount();
+            const uint sceneCount = world->GetSceneCount(SceneType::Scene);
             for (uint i = 0; i < sceneCount; ++i)
             {
-                Scene * scene = (Scene *)world->GetScene(i);
+                Scene * scene = (Scene *)world->GetScene(i, SceneType::Scene);
                 GameObject * root = scene->getRoot();
                 if (root && asBool(UpdateFlags::LateUpdate & root->getUpdateFlags()))
                     root->LateUpdate(dt);
@@ -703,9 +703,9 @@ namespace vg::engine
         IWorld * world = getCurrentWorld();
         if (nullptr != world)
         {
-            for (uint i = 0; i < world->GetSceneCount(); ++i)
+            for (uint i = 0; i < world->GetSceneCount(SceneType::Scene); ++i)
             {
-                const IScene * scene = world->GetScene(i);
+                const IBaseScene * scene = world->GetScene(i, SceneType::Scene);
                 if (nullptr != scene)
                 {
                     IObject * root = scene->GetRoot();
@@ -746,9 +746,9 @@ namespace vg::engine
         IWorld * world = getCurrentWorld();
         if (nullptr != world)
         {
-            for (uint i = 0; i < world->GetSceneCount(); ++i)
+            for (uint i = 0; i < world->GetSceneCount(SceneType::Scene); ++i)
             {
-                const IScene * scene = world->GetScene(i);
+                const IBaseScene * scene = world->GetScene(i, SceneType::Scene);
                 if (nullptr != scene)
                 {
                     IObject * root = scene->GetRoot();

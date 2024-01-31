@@ -1,7 +1,7 @@
 #pragma once
 
 #include "engine/IWorldResource.h"
-#include "engine/Resource/Scene/SceneResource.h"
+#include "engine/Resource/BaseScene/Scene/SceneResource.h"
 
 namespace vg::engine
 {
@@ -15,13 +15,13 @@ namespace vg::engine
 
         core::IWorld *                      GetWorld                () const final override;
 
-        void                                CreateSceneResource     (const core::string & _file) final override;
-        void                                LoadSceneResource       (const core::string & _file) final override;
-        IResource *                         FindSceneResource       (core::IScene * _scene) final override;
-        void                                UnloadSceneResource     (core::IResource * _resource) final override;
+        void                                CreateSceneResource     (const core::string & _file, core::SceneType _sceneType) final override;
+        void                                LoadSceneResource       (const core::string & _file, core::SceneType _sceneType) final override;
+        IResource *                         FindSceneResource       (core::IBaseScene * _scene, core::SceneType _sceneType) final override;
+        void                                UnloadSceneResource     (core::IResource * _resource, core::SceneType _sceneType) final override;
 
-        core::uint                          GetSceneResourceCount   () const final override;
-        core::IResource *                   GetSceneResource        (core::uint _index) const final override;
+        core::uint                          GetSceneResourceCount   (core::SceneType _sceneType) const final override;
+        core::IResource *                   GetSceneResource        (core::uint _index, core::SceneType _sceneType) const final override;
 
         const core::vector<core::string>    getExtensions           () const final;
         void                                onResourcePathChanged   (const core::string & _oldPath, const core::string & _newPath) final override;

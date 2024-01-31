@@ -105,7 +105,7 @@ namespace vg::editor
         Flags                                   m_flags;
         bool                                    m_isVisible = true;
         core::uint                              m_selected = 0;
-        const char *                            m_popup = nullptr;
+        core::string                            m_popup;
     };
 }
 

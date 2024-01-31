@@ -22,6 +22,7 @@ namespace vg::editor
     protected:
         core::uint      m_selected  = 0;
         core::string    m_popup;
+        core::IObject * m_popupObject = nullptr;
         const char *    m_popupIcon = nullptr;
     };
 }

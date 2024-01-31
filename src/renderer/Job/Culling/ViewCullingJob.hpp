@@ -1,7 +1,7 @@
 #include "ViewCullingJob.h"
 #include "core/string/string.h"
 #include "renderer/View/View.h"
-#include "core/IScene.h"
+#include "core/IBaseScene.h"
 #include "core/GameObject/GameObject.h"
 #include "renderer/IGraphicInstance.h"
 #include "renderer/Instance/Mesh/MeshInstance.h"
@@ -89,10 +89,10 @@ namespace vg::renderer
         
         if (nullptr != world)
         {
-            const uint count = world->GetSceneCount();
+            const uint count = world->GetSceneCount(SceneType::Scene);
             for (uint i = 0; i < count; ++i)
             {
-                const auto * scene = world->GetScene(i);
+                const auto * scene = world->GetScene(i, SceneType::Scene);
                 const auto * root = scene->GetRoot();
                 VG_ASSERT("[Culling] Scene has no root node");
                 if (root)

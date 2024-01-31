@@ -30,9 +30,6 @@
     <ClCompile Include="World\World.cpp">
       <Filter>World</Filter>
     </ClCompile>
-    <ClCompile Include="World\Scene\Scene.cpp">
-      <Filter>World\Scene</Filter>
-    </ClCompile>
     <ClCompile Include="EngineOptions.cpp">
       <Filter>Options</Filter>
     </ClCompile>
@@ -51,9 +48,6 @@
     </None>
     <None Include="Component\Mesh\MeshComponent.inl">
       <Filter>Component\Mesh</Filter>
-    </None>
-    <None Include="World\Scene\Scene.inl">
-      <Filter>World\Scene</Filter>
     </None>
     <None Include="Component\Camera\LightComponent.inl">
       <Filter>Component\Light</Filter>
@@ -179,17 +173,8 @@
     <ClInclude Include="Component\Physics\RigidBody\RigidBodyComponent.hpp">
       <Filter>Component\Physics\RigidBody</Filter>
     </ClInclude>
-    <ClInclude Include="Resource\Scene\SceneResource.h">
-      <Filter>Resource\Scene</Filter>
-    </ClInclude>
-    <ClInclude Include="Resource\Scene\SceneResource.hpp">
-      <Filter>Resource\Scene</Filter>
-    </ClInclude>
     <ClInclude Include="World\World.h">
       <Filter>World</Filter>
-    </ClInclude>
-    <ClInclude Include="World\Scene\Scene.h">
-      <Filter>World\Scene</Filter>
     </ClInclude>
     <ClInclude Include="Resource\World\WorldResource.h">
       <Filter>Resource\World</Filter>
@@ -222,6 +207,42 @@
     </ClInclude>
     <ClInclude Include="Job\Animation\DrawSkeletonJob.hpp">
       <Filter>Job\Animation</Filter>
+    </ClInclude>
+    <ClInclude Include="World\GameObjectHierarchy.h">
+      <Filter>World</Filter>
+    </ClInclude>
+    <ClInclude Include="World\GameObjectHierarchy.hpp">
+      <Filter>World</Filter>
+    </ClInclude>
+    <ClInclude Include="World\Scene\Scene.h">
+      <Filter>World\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="World\Scene\Scene.hpp">
+      <Filter>World\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="World\Prefab\Prefab.h">
+      <Filter>World\Prefab</Filter>
+    </ClInclude>
+    <ClInclude Include="World\Prefab\Prefab.hpp">
+      <Filter>World\Prefab</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource\BaseScene\BaseSceneResource.h">
+      <Filter>Resource\BaseScene</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource\BaseScene\BaseSceneResource.hpp">
+      <Filter>Resource\BaseScene</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource\BaseScene\Prefab\PrefabResource.h">
+      <Filter>Resource\BaseScene\Prefab</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource\BaseScene\Prefab\PrefabResource.hpp">
+      <Filter>Resource\BaseScene\Prefab</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource\BaseScene\Scene\SceneResource.h">
+      <Filter>Resource\BaseScene\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource\BaseScene\Scene\SceneResource.hpp">
+      <Filter>Resource\BaseScene\Scene</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -276,14 +297,8 @@
     <Filter Include="Component\Physics\CharacterController">
       <UniqueIdentifier>{e5e6bcb2-d143-43db-a667-1b67eb4eebff}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Resource\Scene">
-      <UniqueIdentifier>{51c34615-a0a0-400c-afa5-4cb230e7bba3}</UniqueIdentifier>
-    </Filter>
     <Filter Include="World">
       <UniqueIdentifier>{6ca8f485-7f94-42b8-908a-025eab0c8d0c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="World\Scene">
-      <UniqueIdentifier>{772dd3e7-9608-4af7-8d1b-e90b72535d44}</UniqueIdentifier>
     </Filter>
     <Filter Include="Resource\World">
       <UniqueIdentifier>{0518a40c-a83d-482e-9090-7c90425781ca}</UniqueIdentifier>
@@ -299,6 +314,21 @@
     </Filter>
     <Filter Include="Job\Animation">
       <UniqueIdentifier>{1be2d36e-9e04-4461-9659-a051c691a57c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="World\Scene">
+      <UniqueIdentifier>{165add90-f415-48cf-93c2-54a57a100a0b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="World\Prefab">
+      <UniqueIdentifier>{eba293d5-b8e4-41e7-94b2-f1dbce744003}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource\BaseScene">
+      <UniqueIdentifier>{6fa147cf-c3e2-45c7-8a42-33e15fa1f0c0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource\BaseScene\Scene">
+      <UniqueIdentifier>{de0017f8-175a-4c11-b3fc-3c24a133a99f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource\BaseScene\Prefab">
+      <UniqueIdentifier>{16605bc5-8eb9-4439-8bdd-2ec363668d3c}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

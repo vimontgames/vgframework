@@ -1,7 +1,5 @@
 #include "WorldResourceData.h"
 
-#define MAX_SCENE_PER_WORLD 256
-
 using namespace vg::core;
 
 namespace vg::engine
@@ -15,6 +13,7 @@ namespace vg::engine
 
         registerPropertyObjectPtr(WorldResourceData, m_world, "World");
         registerPropertyResourcePtrVector(WorldResourceData, m_sceneResources, "Scenes");
+        registerPropertyResourcePtrVector(WorldResourceData, m_prefabsResources, "Prefabs");
 
         return true;
     }
@@ -30,10 +29,15 @@ namespace vg::engine
     WorldResourceData::~WorldResourceData()
     {
         // The copy here is intentional, because release scene resources will remove them from the container
-        auto scenesToRelease = m_sceneResources;
-        for (uint i = 0; i < scenesToRelease.size(); ++i)
-            VG_SAFE_RELEASE(scenesToRelease[i]);
-        m_sceneResources.clear();
+        for (uint j = 0; j < enumCount<SceneType>(); ++j)
+        {
+            auto sceneType = (SceneType)j;
+            auto scenesToRelease = *getScenes(sceneType);
+
+            for (uint i = 0; i < scenesToRelease.size(); ++i)
+                VG_SAFE_RELEASE(scenesToRelease[i]);
+            getScenes(sceneType)->clear();
+        }
 
         VG_SAFE_RELEASE(m_world);
     }
@@ -53,5 +57,22 @@ namespace vg::engine
         // [...]
 
         super::OnPropertyChanged(_object, _prop, _notifyParent);
+    }
+
+    //--------------------------------------------------------------------------------------
+    core::vector<BaseSceneResource *> * WorldResourceData::getScenes(core::SceneType _sceneType)
+    {
+        switch (_sceneType)
+        {
+            default:
+                VG_ASSERT_ENUM_NOT_IMPLEMENTED(_sceneType)
+                return nullptr;
+
+            case SceneType::Scene:
+                return (core::vector<BaseSceneResource *> *) &m_sceneResources;
+    
+            case SceneType::Prefab:
+                return (core::vector<BaseSceneResource *> *) &m_prefabsResources;
+        }
     }
 }

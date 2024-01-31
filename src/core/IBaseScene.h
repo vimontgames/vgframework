@@ -6,7 +6,13 @@ namespace vg::core
 {
     class IGameObject;
 
-    class IScene : public Object
+    enum SceneType : core::u8
+    {
+        Scene = 0,
+        Prefab
+    };
+
+    class IBaseScene : public Object
     {
     public:
         virtual void            SetRoot (IGameObject * _sector) = 0;

@@ -223,23 +223,23 @@
     <ClInclude Include="ImGui\Window\Options\Renderer\ImGuiRendererOptions.hpp">
       <Filter>ImGui\Window\Options\Renderer</Filter>
     </ClInclude>
-    <ClInclude Include="ImGui\Window\GameObjectTree\Prefab\ImGuiPrefab.h">
-      <Filter>ImGui\Window\GameObjectTree\Prefab</Filter>
+    <ClInclude Include="ImGui\Window\SceneList\ImGuiSceneList.h">
+      <Filter>ImGui\Window\SceneList</Filter>
     </ClInclude>
-    <ClInclude Include="ImGui\Window\GameObjectTree\Prefab\ImGuiPrefab.hpp">
-      <Filter>ImGui\Window\GameObjectTree\Prefab</Filter>
+    <ClInclude Include="ImGui\Window\SceneList\ImGuiSceneList.hpp">
+      <Filter>ImGui\Window\SceneList</Filter>
     </ClInclude>
-    <ClInclude Include="ImGui\Window\GameObjectTree\World\ImGuiWorld.h">
-      <Filter>ImGui\Window\GameObjectTree\World</Filter>
+    <ClInclude Include="ImGui\Window\SceneList\Prefab\ImGuiPrefab.h">
+      <Filter>ImGui\Window\SceneList\Prefabs</Filter>
     </ClInclude>
-    <ClInclude Include="ImGui\Window\GameObjectTree\World\ImGuiWorld.hpp">
-      <Filter>ImGui\Window\GameObjectTree\World</Filter>
+    <ClInclude Include="ImGui\Window\SceneList\Prefab\ImGuiPrefab.hpp">
+      <Filter>ImGui\Window\SceneList\Prefabs</Filter>
     </ClInclude>
-    <ClInclude Include="ImGui\Window\GameObjectTree\ImGuiGameObjectTree.h">
-      <Filter>ImGui\Window\GameObjectTree</Filter>
+    <ClInclude Include="ImGui\Window\SceneList\World\ImGuiWorld.h">
+      <Filter>ImGui\Window\SceneList\World</Filter>
     </ClInclude>
-    <ClInclude Include="ImGui\Window\GameObjectTree\ImGuiGameObjectTree.hpp">
-      <Filter>ImGui\Window\GameObjectTree</Filter>
+    <ClInclude Include="ImGui\Window\SceneList\World\ImGuiWorld.hpp">
+      <Filter>ImGui\Window\SceneList\World</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -364,14 +364,14 @@
     <Filter Include="ImGui\Window\Options\Physics">
       <UniqueIdentifier>{106dfd29-6192-4b02-b97f-efa66e7fbff1}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ImGui\Window\GameObjectTree">
-      <UniqueIdentifier>{1d4ebaed-a7cf-4dba-bd82-3ba127214c61}</UniqueIdentifier>
+    <Filter Include="ImGui\Window\SceneList">
+      <UniqueIdentifier>{0dfc0736-e182-4dd9-ad1f-4e66871a7cf4}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ImGui\Window\GameObjectTree\World">
-      <UniqueIdentifier>{8c59f026-1ae5-46e2-8071-c349994af6d5}</UniqueIdentifier>
+    <Filter Include="ImGui\Window\SceneList\Prefabs">
+      <UniqueIdentifier>{5b4e24c4-b785-4daf-a23c-74339bba17cd}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ImGui\Window\GameObjectTree\Prefab">
-      <UniqueIdentifier>{1a54f948-206b-4c88-b582-b088ecf507bb}</UniqueIdentifier>
+    <Filter Include="ImGui\Window\SceneList\World">
+      <UniqueIdentifier>{83e866b9-2c1a-44e8-afae-c3efcc8bdc47}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

@@ -11,7 +11,7 @@
 #include "core/IFactory.h"
 #include "core/IResource.h"
 #include "core/IWorld.h"
-#include "core/IScene.h"
+#include "core/IBaseScene.h"
 #include "core/IGameObject.h"
 #include "corE/IComponent.h"
 #include "core/File/File.h"

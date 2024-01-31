@@ -64,12 +64,6 @@
     <ClInclude Include="ImGui\Window\Console\ImGuiConsole.hpp" />
     <ClInclude Include="ImGui\Window\FPS\ImGuiFPS.h" />
     <ClInclude Include="ImGui\Window\FPS\ImGuiFPS.hpp" />
-    <ClInclude Include="ImGui\Window\GameObjectTree\ImGuiGameObjectTree.h" />
-    <ClInclude Include="ImGui\Window\GameObjectTree\ImGuiGameObjectTree.hpp" />
-    <ClInclude Include="ImGui\Window\GameObjectTree\Prefab\ImGuiPrefab.h" />
-    <ClInclude Include="ImGui\Window\GameObjectTree\Prefab\ImGuiPrefab.hpp" />
-    <ClInclude Include="ImGui\Window\GameObjectTree\World\ImGuiWorld.h" />
-    <ClInclude Include="ImGui\Window\GameObjectTree\World\ImGuiWorld.hpp" />
     <ClInclude Include="ImGui\Window\ImGuiWindow.h" />
     <ClInclude Include="ImGui\Window\Input\ImGuiInput.h" />
     <ClInclude Include="ImGui\Window\Input\ImGuiInput.hpp" />
@@ -90,6 +84,12 @@
     <ClInclude Include="ImGui\Window\Plugin\ImGuiPlugin.hpp" />
     <ClInclude Include="ImGui\Window\Resource\ImGuiResource.h" />
     <ClInclude Include="ImGui\Window\Resource\ImGuiResource.hpp" />
+    <ClInclude Include="ImGui\Window\SceneList\ImGuiSceneList.h" />
+    <ClInclude Include="ImGui\Window\SceneList\ImGuiSceneList.hpp" />
+    <ClInclude Include="ImGui\Window\SceneList\Prefab\ImGuiPrefab.h" />
+    <ClInclude Include="ImGui\Window\SceneList\Prefab\ImGuiPrefab.hpp" />
+    <ClInclude Include="ImGui\Window\SceneList\World\ImGuiWorld.h" />
+    <ClInclude Include="ImGui\Window\SceneList\World\ImGuiWorld.hpp" />
     <ClInclude Include="ImGui\Window\Shader\ImGuiShader.h" />
     <ClInclude Include="ImGui\Window\Shader\ImGuiShader.hpp" />
     <ClInclude Include="ImGui\Window\View\EditorView\ImGuiEditorView.h" />

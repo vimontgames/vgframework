@@ -1,4 +1,4 @@
-#include "ImGuiGameObjectTree.h"
+#include "ImGuiSceneList.h"
 #include "editor/ImGui/ImGui.h"
 #include "engine/IWorldResource.h"
 #include "core/IGameObject.h"
@@ -8,8 +8,9 @@
 namespace vg::editor
 {
     //--------------------------------------------------------------------------------------
-    ImGuiGameObjectTree::ImGuiGameObjectTree(const core::string& _icon, const core::string& _path, const core::string& _name, Flags _flags) :
-        ImGuiWindow(_icon, _path, _name, _flags)
+    ImGuiSceneList::ImGuiSceneList(SceneType _sceneType, const core::string& _icon, const core::string& _path, const core::string& _name, Flags _flags) :
+        ImGuiWindow(_icon, _path, _name, _flags),
+        m_sceneMenu(_sceneType)
     {
     }
 
@@ -74,7 +75,7 @@ namespace vg::editor
     }
 
     //--------------------------------------------------------------------------------------
-    void ImGuiGameObjectTree::displayGameObject(IGameObject* _gameObject, uint* _count)
+    void ImGuiSceneList::displayGameObject(IGameObject* _gameObject, uint* _count)
     {
         //const bool counting = (_count != nullptr);
         const auto children = _gameObject->GetChildren();
@@ -323,5 +324,184 @@ namespace vg::editor
 
         if (disabled)
             ImGui::PopStyleColor();
+    }
+
+    //--------------------------------------------------------------------------------------
+    ImGuiSceneList::SceneTypeInfo ImGuiSceneList::getGameObjectTreeTypeInfo(core::SceneType _sceneType)
+    {
+        SceneTypeInfo info;
+
+        switch (_sceneType)
+        {
+            case SceneType::Scene:
+                info.icon = style::icon::Scene;
+                info.windowName = "Scenes";
+                info.newLabel = "New Scene";
+                info.loadLabel = "Load Scene";
+                info.dataFolder = "data/Scenes";
+                info.fileExt = ".scene";
+                break;
+
+            case SceneType::Prefab:
+                info.icon = style::icon::Prefab;
+                info.windowName = "Prefabs";
+                info.newLabel = "New Prefab";
+                info.loadLabel = "Load Prefab";
+                info.dataFolder = "data/Prefabs";
+                info.fileExt = ".prefab";
+                break;
+        }
+
+        return info;
+    }
+
+    //--------------------------------------------------------------------------------------
+    void ImGuiSceneList::display(core::SceneType _sceneType)
+    {
+        const string sceneTypeName = asString(_sceneType);
+        const auto typeInfo = getGameObjectTreeTypeInfo(_sceneType);
+
+        ImGui::PushID(sceneTypeName.c_str());
+
+        auto worldRes = getEngine()->GetWorldResource();
+        string label = worldRes && worldRes->getObject() ? worldRes->getObject()->getName() : "<No World loaded>";
+
+        if (ImGui::IconBegin(typeInfo.icon.c_str(), fmt::sprintf("%s###%s", typeInfo.windowName, sceneTypeName).c_str(), &m_isVisible))
+        {
+            bool newScene = false, loadScene = false;
+
+            if (ImGui::TooltipButton(editor::style::icon::New, true, true, typeInfo.newLabel.c_str()))
+                newScene = true;
+
+            ImGui::SameLine();
+
+            if (ImGui::TooltipButton(editor::style::icon::Load, true, true, typeInfo.loadLabel.c_str()))
+                loadScene = true;
+
+            ImGui::Separator();
+
+            ImGui::BeginChild(ImGui::getObjectLabel("ChildWindow", this).c_str());
+            {
+                const auto* factory = Kernel::getFactory();
+                engine::IEngine* engine = (engine::IEngine*)factory->getSingleton("Engine");
+                auto& fileBrowser = ImGuiWindow::getFileBrowser();
+
+                engine::IWorldResource* worldRes = engine->GetWorldResource();
+                IWorld* world = worldRes ? worldRes->GetWorld() : nullptr;
+
+                if (world)
+                {
+                    bool openPopup = false;
+
+                    if (ImGui::BeginPopupContextWindow())
+                    {
+                        if (ImGui::MenuItem(typeInfo.newLabel.c_str()))
+                            newScene = true;
+
+                        if (ImGui::MenuItem(typeInfo.loadLabel.c_str()))
+                            loadScene = true;
+
+                        ImGui::EndPopup();
+                    }
+
+                    if (newScene)
+                    {
+                        m_selected = MenuOption::AddScene;
+                        openPopup = true;
+                        m_popup = typeInfo.newLabel;
+                        fileBrowser.setFolder(io::getRootDirectory() + "/" + typeInfo.dataFolder);
+                    }
+
+                    if (loadScene)
+                    {
+                        m_selected = MenuOption::LoadScene;
+                        openPopup = true;
+                        m_popup = typeInfo.loadLabel;
+                        fileBrowser.setFolder(io::getRootDirectory() + "/" + typeInfo.dataFolder);
+                    }
+
+                    if (openPopup)
+                    {
+                        ImGui::OpenPopup(m_popup.c_str());
+                        openPopup = false;
+                    }
+
+                    string ext = ImGuiWindow::getFileBrowserExt(worldRes);
+
+                    switch (m_selected)
+                    {
+                    case MenuOption::AddScene:
+                    {
+                        if (fileBrowser.showFileDialog(m_popup, imgui_addons::ImGuiFileBrowser::DialogMode::SAVE, style::dialog::Size, typeInfo.fileExt.c_str()))
+                        {
+                            const string path = io::addExtensionIfNotPresent(fileBrowser.selected_path, typeInfo.fileExt.c_str());
+                            worldRes->CreateSceneResource(path, _sceneType);
+                        }
+                    }
+                    break;
+
+                    case MenuOption::LoadScene:
+                        if (fileBrowser.showFileDialog(m_popup, imgui_addons::ImGuiFileBrowser::DialogMode::OPEN, style::dialog::Size, typeInfo.fileExt.c_str()))
+                        {
+                            const string path = fileBrowser.selected_path;
+                            worldRes->LoadSceneResource(path, _sceneType);
+                        }
+                        break;
+                    }
+
+                    auto availableWidth = ImGui::GetContentRegionAvail().x;
+
+                    for (uint i = 0; i < worldRes->GetSceneResourceCount(_sceneType); ++i)
+                    {
+                        const core::IResource* sceneRes = worldRes->GetSceneResource(i, _sceneType);
+                        const IBaseScene* scene = (IBaseScene*)sceneRes->getObject();
+                        if (nullptr != scene)
+                        {
+                            ImGui::PushID("SceneTree");
+
+                            IGameObject* root = scene->GetRoot();
+                            auto flags = ImGuiTreeNodeFlags_InvisibleArrow | ImGuiTreeNodeFlags_AllowItemOverlap | ImGuiTreeNodeFlags_DefaultOpen;
+                            if (nullptr != root)
+                                flags |= ImGuiTreeNodeFlags_None;
+                            else
+                                flags |= ImGuiTreeNodeFlags_Leaf;
+
+                            ImVec2 collapsingHeaderPos = ImGui::GetCursorPos();
+
+                            const bool open = ImGui::CollapsingHeader(ImGui::getObjectLabel("", scene->getName(), scene).c_str(), flags);
+                            bool enabled = asBool(IInstance::Flags::Enabled & root->GetFlags());
+
+                            auto status = m_sceneMenu.Display((IObject*)scene);
+
+                            if (ImGuiMenu::Status::Removed != status)
+                            {
+                                string sceneLabel = fmt::sprintf("%s %s", typeInfo.icon, scene->getName());
+
+                                ImGui::CollapsingHeaderLabel(collapsingHeaderPos, sceneLabel.c_str(), enabled);
+
+                                if (ImGui::CollapsingHeaderCheckbox(collapsingHeaderPos, enabled, root, style::icon::Checked, style::icon::Unchecked, fmt::sprintf("%s Scene \"%s\"", enabled ? "Disable" : "Enable", scene->getName().c_str())))
+                                    root->SetFlags(IInstance::Flags::Enabled, !enabled);
+
+                                if (open)
+                                {
+                                    if (nullptr != root)
+                                    {
+                                        // Draw
+                                        uint counter = 0;
+                                        displayGameObject(root, &counter);
+                                    }
+                                    //ImGui::TreePop();
+                                }
+                            }
+
+                            ImGui::PopID();
+                        }
+                    }
+                }
+            }
+            ImGui::EndChild();
+        }
+        ImGui::End();
+        ImGui::PopID();
     }
 }

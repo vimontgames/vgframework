@@ -40,7 +40,7 @@
     <ClInclude Include="IProfiler.h" />
     <ClInclude Include="IProperty.h" />
     <ClInclude Include="IResource.h" />
-    <ClInclude Include="IScene.h" />
+    <ClInclude Include="IBaseScene.h" />
     <ClInclude Include="IScheduler.h" />
     <ClInclude Include="ISelection.h" />
     <ClInclude Include="IWorld.h" />

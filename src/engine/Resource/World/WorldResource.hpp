@@ -135,48 +135,93 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
-    void WorldResource::CreateSceneResource(const core::string & _file)
+    void WorldResource::CreateSceneResource(const core::string & _file, core::SceneType _sceneType)
     {
         WorldResourceData * worldResData = dynamic_cast<WorldResourceData *>(getObject());
         if (worldResData)
         {
-            VG_ASSERT(worldResData->m_sceneResources.size() + 1 < MAX_SCENE_PER_WORLD);
-            SceneResource * sceneRes = new SceneResource();
-            sceneRes->setName(io::getFileNameWithoutExt(_file));
-
-            if (sceneRes->CreateFile(_file))
+            switch (_sceneType)
             {
-                sceneRes->setParent(this);
-                sceneRes->SetResourcePath(_file);
-                worldResData->m_sceneResources.push_back(sceneRes);
+                default:
+                    VG_ASSERT_ENUM_NOT_IMPLEMENTED(_sceneType);
+                    break;
+
+                case core::Scene:
+                {
+                    SceneResource * sceneRes = new SceneResource();
+                    sceneRes->setName(io::getFileNameWithoutExt(_file));
+
+                    if (sceneRes->CreateFile(_file))
+                    {
+                        sceneRes->setParent(this);
+                        sceneRes->SetResourcePath(_file);
+                        worldResData->m_sceneResources.push_back(sceneRes);
+                    }
+                }
+                break;
+
+                case core::Prefab:
+                {
+                    PrefabResource * prefabRes = new PrefabResource();
+                    prefabRes->setName(io::getFileNameWithoutExt(_file));
+
+                    if (prefabRes->CreateFile(_file))
+                    {
+                        prefabRes->setParent(this);
+                        prefabRes->SetResourcePath(_file);
+                        worldResData->m_prefabsResources.push_back(prefabRes);
+                    }
+                }
+                break;
             }
         }
     }
 
     //--------------------------------------------------------------------------------------
-    void WorldResource::LoadSceneResource(const core::string & _file)
+    void WorldResource::LoadSceneResource(const core::string & _file, core::SceneType _sceneType)
     {
         WorldResourceData * worldResData = dynamic_cast<WorldResourceData *>(getObject());
         if (worldResData)
         {
-            VG_ASSERT(worldResData->m_sceneResources.size() + 1 < MAX_SCENE_PER_WORLD);
-            SceneResource * sceneRes = new SceneResource();
-            sceneRes->setParent(worldResData);
-            sceneRes->SetResourcePath(_file);
-            worldResData->m_sceneResources.push_back(sceneRes);
+            switch (_sceneType)
+            {
+                default:
+                    VG_ASSERT_ENUM_NOT_IMPLEMENTED(_sceneType);
+                    break;
+
+                case core::Scene:
+                {
+                    SceneResource * sceneRes = new SceneResource();
+                    sceneRes->setParent(worldResData);
+                    sceneRes->SetResourcePath(_file);
+                    worldResData->m_sceneResources.push_back(sceneRes);
+                }
+                break;
+
+                case core::Prefab:
+                {
+                    PrefabResource * prefabRes = new PrefabResource();
+                    prefabRes->setParent(worldResData);
+                    prefabRes->SetResourcePath(_file);
+                    worldResData->m_prefabsResources.push_back(prefabRes);
+                }
+                break;
+            }
         }        
     }
 
     //--------------------------------------------------------------------------------------
-    IResource * WorldResource::FindSceneResource(core::IScene * _scene)
+    IResource * WorldResource::FindSceneResource(core::IBaseScene * _scene, core::SceneType _sceneType)
     {
         WorldResourceData * worldResData = dynamic_cast<WorldResourceData *>(getObject());
         if (worldResData)
         {
-            for (uint i = 0; i < worldResData->m_sceneResources.size(); ++i)
+            auto * sceneResources = worldResData->getScenes(_sceneType);
+
+            for (uint i = 0; i < sceneResources->size(); ++i)
             {
-                if (worldResData->m_sceneResources[i]->getObject() == _scene)
-                    return worldResData->m_sceneResources[i];
+                if ((*sceneResources)[i]->getObject() == _scene)
+                    return (*sceneResources)[i];
             }
         }
 
@@ -184,7 +229,7 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
-    void WorldResource::UnloadSceneResource(core::IResource * _resource)
+    void WorldResource::UnloadSceneResource(core::IResource * _resource, core::SceneType _sceneType)
     {
         WorldResourceData * worldResData = dynamic_cast<WorldResourceData *>(getObject());
         if (worldResData)
@@ -192,26 +237,31 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
-    core::uint WorldResource::GetSceneResourceCount() const
+    core::uint WorldResource::GetSceneResourceCount(SceneType _sceneType) const
     {
         WorldResourceData * worldResData = dynamic_cast<WorldResourceData *>(getObject());
         if (worldResData)
-            return (core::uint)worldResData->m_sceneResources.size();
+        {
+            auto * sceneResources = worldResData->getScenes(_sceneType);
+            return (core::uint)sceneResources->size();
+        }
 
         return 0;
     }
 
     //--------------------------------------------------------------------------------------
-    core::IResource * WorldResource::GetSceneResource(core::uint _index) const
+    core::IResource * WorldResource::GetSceneResource(core::uint _index, SceneType _sceneType) const
     {
         IObject * obj = getObject();
         VG_ASSERT(nullptr == obj || dynamic_cast<WorldResourceData*>(obj));
         WorldResourceData * worldResData = (WorldResourceData *)obj;
         if (worldResData)
         {
-            if (_index < GetSceneResourceCount())
+            auto * sceneResources = worldResData->getScenes(_sceneType);
+
+            if (_index < sceneResources->size())
             {
-                IResource * res = worldResData->m_sceneResources[_index];
+                IResource * res = (*sceneResources)[_index];
                 VG_ASSERT(dynamic_cast<core::IResource*>(res));
                 return (core::IResource *)res;
             }
@@ -226,28 +276,51 @@ namespace vg::engine
         WorldResourceData * worldResData = dynamic_cast<WorldResourceData *>(getObject());
         VG_ASSERT(worldResData);
 
-        for (uint i = 0; i < worldResData->m_sceneResources.size(); ++i)
+        for (uint j = 0; j < enumCount<SceneType>(); ++j)
         {
-            if (_resource == worldResData->m_sceneResources[i])
+            auto sceneType = (SceneType)j;
+            auto * sceneResources = worldResData->getScenes(sceneType);
+
+            for (uint i = 0; i < sceneResources->size(); ++i)
             {
-                IScene * scene = dynamic_cast<IScene *>(_resource->getObject());
-                if (scene)
+                if (_resource == (*sceneResources)[i])
                 {
-                    if (worldResData->m_world)
+                    IBaseScene * scene = dynamic_cast<IBaseScene *>(_resource->getObject());
+                    if (scene)
                     {
-                        if (worldResData->m_world->AddScene(scene))
+                        if (worldResData->m_world)
                         {
-                            if (Engine::get()->isPlaying())
+                            switch (sceneType)
                             {
-                                IObject * root = scene->GetRoot();
-                                if (nullptr != root)
-                                    root->OnPlay();
+                                default:
+                                if (worldResData->m_world->AddScene(scene, SceneType::Prefab))
+                                {
+                                    //if (Engine::get()->isPlaying())
+                                    //{
+                                    //    IObject * root = scene->GetRoot();
+                                    //    if (nullptr != root)
+                                    //        root->OnPlay();
+                                    //}
+                                }
+                                break;
+
+                                case SceneType::Scene:
+                                if (worldResData->m_world->AddScene(scene, SceneType::Scene))
+                                {
+                                    if (Engine::get()->isPlaying())
+                                    {
+                                        IObject * root = scene->GetRoot();
+                                        if (nullptr != root)
+                                            root->OnPlay();
+                                    }
+                                }
+                                break;
                             }
                         }
                     }
                 }
             }
-        }        
+        }
     }
 
     //--------------------------------------------------------------------------------------
@@ -256,16 +329,35 @@ namespace vg::engine
         WorldResourceData * worldResData = dynamic_cast<WorldResourceData *>(getObject());
         VG_ASSERT(worldResData);
 
-        for (uint i = 0; i < worldResData->m_sceneResources.size(); ++i)
+        for (uint j = 0; j < enumCount<SceneType>(); ++j)
         {
-            if (_resource == worldResData->m_sceneResources[i])
+            auto sceneType = (SceneType)j;
+            auto * sceneResources = worldResData->getScenes(sceneType);
+
+            for (uint i = 0; i < sceneResources->size(); ++i)
             {
-                IScene * scene = dynamic_cast<IScene *>(_resource->getObject());
-                if (worldResData->m_world)
+                if (_resource == (*sceneResources)[i])
                 {
-                    worldResData->m_world->RemoveScene(scene);
-                    worldResData->m_sceneResources.remove((SceneResource *)_resource);
-                    return;
+                    IBaseScene * scene = dynamic_cast<IBaseScene *>(_resource->getObject());
+                    if (worldResData->m_world)
+                    {
+                        switch (sceneType)
+                        {
+                            default:
+                                VG_ASSERT_ENUM_NOT_IMPLEMENTED(sceneType);
+                                break;
+
+                            case SceneType::Scene:
+                                    worldResData->m_world->RemoveScene(scene, sceneType);
+                                    worldResData->m_sceneResources.remove((SceneResource *)_resource);
+                                    break;
+
+                            case SceneType::Prefab:
+                                    worldResData->m_world->RemoveScene(scene, sceneType);
+                                    worldResData->m_prefabsResources.remove((PrefabResource *)_resource);
+                                    break;
+                        }
+                    }
                 }
             }
         }

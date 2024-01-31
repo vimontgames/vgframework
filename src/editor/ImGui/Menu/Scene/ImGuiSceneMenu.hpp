@@ -1,24 +1,34 @@
 #include "ImGuiSceneMenu.h"
 #include "core/IWorld.h"
-#include "core/IScene.h"
+#include "core/IBaseScene.h"
 #include "core/File/File.h"
 #include "engine/IWorldResource.h"
 #include "editor/ImGui/Window/ImGuiWindow.h"
 #include "ImGui-Addons/FileBrowser/ImGuiFileBrowser.h"
+#include "editor/ImGui/Window/SceneList/ImGuiSceneList.h"
 
 using namespace vg::core;
 
 namespace vg::editor
 {
     //--------------------------------------------------------------------------------------
+    ImGuiSceneMenu::ImGuiSceneMenu(SceneType _sceneType) :
+        m_sceneType(_sceneType)
+    {
+
+    }
+
+    //--------------------------------------------------------------------------------------
     ImGuiMenu::Status ImGuiSceneMenu::Display(core::IObject * _object)
     {
         auto status = Status::None;
-        IScene * scene = dynamic_cast<IScene*>(_object);
+        IBaseScene * scene = dynamic_cast<IBaseScene*>(_object);
         VG_ASSERT(nullptr != scene);
 
         const auto * factory = Kernel::getFactory();
         auto & fileBrowser = ImGuiWindow::getFileBrowser();
+
+        const auto & typeInfo = ImGuiSceneList::getGameObjectTreeTypeInfo(m_sceneType);
 
         bool openPopup = false;
 
@@ -31,7 +41,7 @@ namespace vg::editor
                 if (_object->hasFile())
                     filePath = scene->getFile();
                 else
-                    filePath = "data/scenes/" + scene->getName() + ".scene";
+                    filePath = typeInfo.dataFolder + scene->getName() + typeInfo.fileExt;
 
                 factory->saveToXML(scene, filePath);
                 status = Status::Saved;
@@ -40,19 +50,20 @@ namespace vg::editor
             if (ImGui::MenuItem("Save As"))
             {
                 m_selected = MenuOption::Save;
-                fileBrowser.setFolder(io::getRootDirectory() + "/data/Scenes");
-                fileBrowser.setFilename(scene->getName() + ".scene");
-                m_popup = "Save Scene As ...";
+                fileBrowser.setFolder(io::getRootDirectory() + "/" + typeInfo.dataFolder);
+                fileBrowser.setFilename(scene->getName() + typeInfo.fileExt);
+                m_popup = fmt::sprintf("Save %s As ...", asString(m_sceneType));
                 openPopup = true;
             }
 
             ImGui::Separator();
 
-            if (ImGui::MenuItem("Remove Scene"))
+            if (ImGui::MenuItem("Remove"))
             {
                 m_selected = MenuOption::Close;
                 openPopup = true;
-                m_popup = ImGui::getObjectLabel("Remove Scene", _object);
+                m_popup = ImGui::getObjectLabel("Remove", _object);
+                m_popupObject = scene;
             }
             ImGui::EndPopup();
         }
@@ -63,22 +74,21 @@ namespace vg::editor
             openPopup = false;
         }
 
-        string ext = ".scene";
-
         switch (m_selected)
         {
             case MenuOption::Save:
-            if (fileBrowser.showFileDialog(m_popup.c_str(), imgui_addons::ImGuiFileBrowser::DialogMode::SAVE, style::dialog::Size, ext.c_str()))
+            if (fileBrowser.showFileDialog(m_popup.c_str(), imgui_addons::ImGuiFileBrowser::DialogMode::SAVE, style::dialog::Size, typeInfo.fileExt.c_str()))
             {
-                string newFilePath = io::addExtensionIfNotPresent(fileBrowser.selected_path, ".scene");;
+                string newFilePath = io::addExtensionIfNotPresent(fileBrowser.selected_path, typeInfo.fileExt.c_str());
                 scene->setName(io::getFileNameWithoutExt(newFilePath));
                 factory->saveToXML(scene, newFilePath);
                 status = Status::Saved;
             }
             break;
+
             case MenuOption::Close:
             {
-                if (ImGui::BeginPopupModal(m_popup.c_str(), nullptr, ImGuiWindowFlags_AlwaysAutoResize))
+                if (m_popupObject == scene && ImGui::BeginPopupModal(m_popup.c_str(), nullptr, ImGuiWindowFlags_AlwaysAutoResize))
                 {
                     ImGui::Text("Are you sure you want to close Scene \"%s\"?", scene->getName().c_str());
 
@@ -87,10 +97,10 @@ namespace vg::editor
                         auto worldRes = ImGuiWindow::getEngine()->GetWorldResource();
                         VG_ASSERT(worldRes);
 
-                        IResource * sceneRes = worldRes->FindSceneResource(scene);
+                        IResource * sceneRes = worldRes->FindSceneResource(scene, m_sceneType);
                         VG_ASSERT(sceneRes);
 
-                        worldRes->UnloadSceneResource(sceneRes);
+                        worldRes->UnloadSceneResource(sceneRes, m_sceneType);
 
                         ImGui::CloseCurrentPopup();
                         status = Status::Removed;

@@ -2,6 +2,11 @@
 
 #include "editor/ImGui/Menu/ImGuiMenu.h"
 
+namespace vg::core
+{
+    enum SceneType : core::u8;
+}
+
 namespace vg::editor
 {
     class ImGuiSceneMenu : public ImGuiMenu
@@ -14,6 +19,10 @@ namespace vg::editor
             Close
         };
 
+        ImGuiSceneMenu(core::SceneType _sceneType);
         Status Display(core::IObject * _object) final;
+
+    private:
+        core::SceneType m_sceneType;
     };
 }

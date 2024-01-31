@@ -1,10 +1,10 @@
 #pragma once
 
-#include "editor/ImGui/Window/GameObjectTree/ImGuiGameObjectTree.h"
+#include "editor/ImGui/Window/SceneList/ImGuiSceneList.h"
 
 namespace vg::editor
 {
-    class ImGuiWorld : public ImGuiGameObjectTree
+    class ImGuiWorld : public ImGuiSceneList
     {
     public:
         ImGuiWorld();

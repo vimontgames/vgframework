@@ -3,7 +3,9 @@
 
 namespace vg::engine
 {
-    class MaterialData;
+    class BaseSceneResource;
+    class SceneResource;
+    class PrefabResource;
 
     //--------------------------------------------------------------------------------------
     class WorldResourceData : public core::Object
@@ -13,12 +15,14 @@ namespace vg::engine
         WorldResourceData(const core::string & _name = "", IObject * _parent = nullptr);
         ~WorldResourceData();
 
-        void                            createWorld();
-        core::IWorld *                  getWorld() const { return m_world; }
+        void                                        createWorld();
+        core::IWorld *                              getWorld() const { return m_world; }
+        core::vector<BaseSceneResource *> *   getScenes(core::SceneType _sceneType);
+        void                                        OnPropertyChanged(core::IObject * _object, const core::IProperty & _prop, bool _notifyParent) override;
 
-        void                            OnPropertyChanged(core::IObject * _object, const core::IProperty & _prop, bool _notifyParent) override;
-
-        core::IWorld *                  m_world = nullptr;
-        core::vector<SceneResource*>    m_sceneResources;
+    //private:
+        core::IWorld *                              m_world = nullptr;
+        core::vector<SceneResource*>                m_sceneResources;
+        core::vector<PrefabResource*>               m_prefabsResources;
     };
 }
