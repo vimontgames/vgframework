@@ -101,10 +101,10 @@
                             </Object>
                             <Object class="PlayerBehaviour">
                                 <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
-                                <Property type="Float" name="m_walkSpeed" value="1.5"/>
-                                <Property type="Float" name="m_runSpeed" value="3"/>
-                                <Property type="Float" name="m_jumpSpeed" value="3"/>
-                                <Property type="Float" name="m_runJumpSpeed" value="4"/>
+                                <Property type="Float" name="m_walkSpeed" value="0.5"/>
+                                <Property type="Float" name="m_runSpeed" value="1.5"/>
+                                <Property type="Float" name="m_jumpSpeed" value="5.5"/>
+                                <Property type="Float" name="m_runJumpSpeed" value="7"/>
                                 <Property type="EnumU8" name="m_controllerType" value="Joypad"/>
                                 <Property type="Uint8" name="m_controllerIndex" value="0"/>
                             </Object>
