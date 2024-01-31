@@ -135,7 +135,7 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
-    void WorldResource::CreateSceneResource(const core::string & _file, core::SceneType _sceneType)
+    void WorldResource::CreateSceneResource(const core::string & _file, core::BaseSceneType _sceneType)
     {
         WorldResourceData * worldResData = dynamic_cast<WorldResourceData *>(getObject());
         if (worldResData)
@@ -178,7 +178,7 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
-    void WorldResource::LoadSceneResource(const core::string & _file, core::SceneType _sceneType)
+    void WorldResource::LoadSceneResource(const core::string & _file, core::BaseSceneType _sceneType)
     {
         WorldResourceData * worldResData = dynamic_cast<WorldResourceData *>(getObject());
         if (worldResData)
@@ -211,7 +211,7 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
-    IResource * WorldResource::FindSceneResource(core::IBaseScene * _scene, core::SceneType _sceneType)
+    IResource * WorldResource::FindSceneResource(core::IBaseScene * _scene, core::BaseSceneType _sceneType)
     {
         WorldResourceData * worldResData = dynamic_cast<WorldResourceData *>(getObject());
         if (worldResData)
@@ -229,7 +229,7 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
-    void WorldResource::UnloadSceneResource(core::IResource * _resource, core::SceneType _sceneType)
+    void WorldResource::UnloadSceneResource(core::IResource * _resource, core::BaseSceneType _sceneType)
     {
         WorldResourceData * worldResData = dynamic_cast<WorldResourceData *>(getObject());
         if (worldResData)
@@ -237,7 +237,7 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
-    core::uint WorldResource::GetSceneResourceCount(SceneType _sceneType) const
+    core::uint WorldResource::GetSceneResourceCount(BaseSceneType _sceneType) const
     {
         WorldResourceData * worldResData = dynamic_cast<WorldResourceData *>(getObject());
         if (worldResData)
@@ -250,7 +250,7 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
-    core::IResource * WorldResource::GetSceneResource(core::uint _index, SceneType _sceneType) const
+    core::IResource * WorldResource::GetSceneResource(core::uint _index, BaseSceneType _sceneType) const
     {
         IObject * obj = getObject();
         VG_ASSERT(nullptr == obj || dynamic_cast<WorldResourceData*>(obj));
@@ -276,9 +276,9 @@ namespace vg::engine
         WorldResourceData * worldResData = dynamic_cast<WorldResourceData *>(getObject());
         VG_ASSERT(worldResData);
 
-        for (uint j = 0; j < enumCount<SceneType>(); ++j)
+        for (uint j = 0; j < enumCount<BaseSceneType>(); ++j)
         {
-            auto sceneType = (SceneType)j;
+            auto sceneType = (BaseSceneType)j;
             auto * sceneResources = worldResData->getScenes(sceneType);
 
             for (uint i = 0; i < sceneResources->size(); ++i)
@@ -293,7 +293,7 @@ namespace vg::engine
                             switch (sceneType)
                             {
                                 default:
-                                if (worldResData->m_world->AddScene(scene, SceneType::Prefab))
+                                if (worldResData->m_world->AddScene(scene, BaseSceneType::Prefab))
                                 {
                                     //if (Engine::get()->isPlaying())
                                     //{
@@ -304,8 +304,8 @@ namespace vg::engine
                                 }
                                 break;
 
-                                case SceneType::Scene:
-                                if (worldResData->m_world->AddScene(scene, SceneType::Scene))
+                                case BaseSceneType::Scene:
+                                if (worldResData->m_world->AddScene(scene, BaseSceneType::Scene))
                                 {
                                     if (Engine::get()->isPlaying())
                                     {
@@ -329,9 +329,9 @@ namespace vg::engine
         WorldResourceData * worldResData = dynamic_cast<WorldResourceData *>(getObject());
         VG_ASSERT(worldResData);
 
-        for (uint j = 0; j < enumCount<SceneType>(); ++j)
+        for (uint j = 0; j < enumCount<BaseSceneType>(); ++j)
         {
-            auto sceneType = (SceneType)j;
+            auto sceneType = (BaseSceneType)j;
             auto * sceneResources = worldResData->getScenes(sceneType);
 
             for (uint i = 0; i < sceneResources->size(); ++i)
@@ -347,12 +347,12 @@ namespace vg::engine
                                 VG_ASSERT_ENUM_NOT_IMPLEMENTED(sceneType);
                                 break;
 
-                            case SceneType::Scene:
+                            case BaseSceneType::Scene:
                                     worldResData->m_world->RemoveScene(scene, sceneType);
                                     worldResData->m_sceneResources.remove((SceneResource *)_resource);
                                     break;
 
-                            case SceneType::Prefab:
+                            case BaseSceneType::Prefab:
                                     worldResData->m_world->RemoveScene(scene, sceneType);
                                     worldResData->m_prefabsResources.remove((PrefabResource *)_resource);
                                     break;

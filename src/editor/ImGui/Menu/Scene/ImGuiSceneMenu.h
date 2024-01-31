@@ -4,7 +4,7 @@
 
 namespace vg::core
 {
-    enum SceneType : core::u8;
+    enum BaseSceneType : core::u8;
 }
 
 namespace vg::editor
@@ -19,10 +19,10 @@ namespace vg::editor
             Close
         };
 
-        ImGuiSceneMenu(core::SceneType _sceneType);
+        ImGuiSceneMenu(core::BaseSceneType _sceneType);
         Status Display(core::IObject * _object) final;
 
     private:
-        core::SceneType m_sceneType;
+        core::BaseSceneType m_sceneType;
     };
 }

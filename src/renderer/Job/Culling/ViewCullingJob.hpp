@@ -89,10 +89,10 @@ namespace vg::renderer
         
         if (nullptr != world)
         {
-            const uint count = world->GetSceneCount(SceneType::Scene);
+            const uint count = world->GetSceneCount(BaseSceneType::Scene);
             for (uint i = 0; i < count; ++i)
             {
-                const auto * scene = world->GetScene(i, SceneType::Scene);
+                const auto * scene = world->GetScene(i, BaseSceneType::Scene);
                 const auto * root = scene->GetRoot();
                 VG_ASSERT("[Culling] Scene has no root node");
                 if (root)

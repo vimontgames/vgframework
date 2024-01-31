@@ -29,9 +29,9 @@ namespace vg::engine
     WorldResourceData::~WorldResourceData()
     {
         // The copy here is intentional, because release scene resources will remove them from the container
-        for (uint j = 0; j < enumCount<SceneType>(); ++j)
+        for (uint j = 0; j < enumCount<BaseSceneType>(); ++j)
         {
-            auto sceneType = (SceneType)j;
+            auto sceneType = (BaseSceneType)j;
             auto scenesToRelease = *getScenes(sceneType);
 
             for (uint i = 0; i < scenesToRelease.size(); ++i)
@@ -60,7 +60,7 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
-    core::vector<BaseSceneResource *> * WorldResourceData::getScenes(core::SceneType _sceneType)
+    core::vector<BaseSceneResource *> * WorldResourceData::getScenes(core::BaseSceneType _sceneType)
     {
         switch (_sceneType)
         {
@@ -68,10 +68,10 @@ namespace vg::engine
                 VG_ASSERT_ENUM_NOT_IMPLEMENTED(_sceneType)
                 return nullptr;
 
-            case SceneType::Scene:
+            case BaseSceneType::Scene:
                 return (core::vector<BaseSceneResource *> *) &m_sceneResources;
     
-            case SceneType::Prefab:
+            case BaseSceneType::Prefab:
                 return (core::vector<BaseSceneResource *> *) &m_prefabsResources;
         }
     }

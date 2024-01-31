@@ -8,7 +8,7 @@ namespace vg::core
     // A "World" is a container for a list of scenes
     //--------------------------------------------------------------------------------------
     class IBaseScene;
-    enum SceneType : core::u8;
+    enum BaseSceneType : core::u8;
 
     class IWorld : public Object
     {
@@ -21,14 +21,14 @@ namespace vg::core
 
         virtual ~IWorld() {}
 
-        virtual bool            SetActiveScene  (IBaseScene * _scene, SceneType _sceneType) = 0;
-        virtual core::IBaseScene *  GetActiveScene  (SceneType _sceneType) const = 0;
+        virtual bool            SetActiveScene  (IBaseScene * _scene, BaseSceneType _sceneType) = 0;
+        virtual core::IBaseScene *  GetActiveScene  (BaseSceneType _sceneType) const = 0;
 
-        virtual bool            AddScene        (IBaseScene * _scene, SceneType _sceneType) = 0;
-        virtual bool            RemoveScene     (core::IBaseScene * scene, SceneType _sceneType) = 0;
-        virtual core::uint      RemoveAllScenes (SceneType _sceneType) = 0;
+        virtual bool            AddScene        (IBaseScene * _scene, BaseSceneType _sceneType) = 0;
+        virtual bool            RemoveScene     (core::IBaseScene * scene, BaseSceneType _sceneType) = 0;
+        virtual core::uint      RemoveAllScenes (BaseSceneType _sceneType) = 0;
 
-        virtual uint            GetSceneCount   (SceneType _sceneType) const = 0;
-        virtual const IBaseScene *  GetScene        (uint _index, SceneType _sceneType) const = 0;
+        virtual uint            GetSceneCount   (BaseSceneType _sceneType) const = 0;
+        virtual const IBaseScene *  GetScene        (uint _index, BaseSceneType _sceneType) const = 0;
     };
 }

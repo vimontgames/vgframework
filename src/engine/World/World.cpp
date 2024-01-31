@@ -16,16 +16,16 @@ namespace vg::engine
     World::World(const string & _name, IObject * _parent) :
         IWorld(_name, _parent)
     {
-        for (uint j = 0; j < enumCount<SceneType>(); ++j)
+        for (uint j = 0; j < enumCount<BaseSceneType>(); ++j)
             m_activeScene[j] = nullptr;
     }
 
     //--------------------------------------------------------------------------------------
     World::~World()
     {
-        for (uint j = 0; j < enumCount<SceneType>(); ++j)
+        for (uint j = 0; j < enumCount<BaseSceneType>(); ++j)
         {
-            auto sceneType = (SceneType)j;
+            auto sceneType = (BaseSceneType)j;
             RemoveAllScenes(sceneType);
         }
     }
@@ -39,13 +39,13 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
-    vector<Scene*> & World::getScenes(SceneType _sceneType)
+    vector<Scene*> & World::getScenes(BaseSceneType _sceneType)
     {
         return m_scenes[asInteger(_sceneType)];
     }
 
     //--------------------------------------------------------------------------------------
-    bool World::SetActiveScene(IBaseScene * _scene, SceneType _sceneType)
+    bool World::SetActiveScene(IBaseScene * _scene, BaseSceneType _sceneType)
     {
         const auto typeIndex = asInteger(_sceneType);
 
@@ -61,14 +61,14 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
-    core::IBaseScene * World::GetActiveScene(SceneType _sceneType) const
+    core::IBaseScene * World::GetActiveScene(BaseSceneType _sceneType) const
     {
         const auto typeIndex = asInteger(_sceneType);
         return m_activeScene[typeIndex];
     }
 
     //--------------------------------------------------------------------------------------
-    bool World::AddScene(IBaseScene * _scene, SceneType _sceneType)
+    bool World::AddScene(IBaseScene * _scene, BaseSceneType _sceneType)
     {
         const auto typeIndex = asInteger(_sceneType);
         if (nullptr != _scene && !m_scenes[typeIndex].exists((Scene *)_scene))
@@ -86,7 +86,7 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
-    bool World::RemoveScene(IBaseScene * _scene, SceneType _sceneType)
+    bool World::RemoveScene(IBaseScene * _scene, BaseSceneType _sceneType)
     {
         const auto typeIndex = asInteger(_sceneType);
         if (nullptr != _scene && m_scenes[typeIndex].exists((Scene*)_scene))
@@ -102,7 +102,7 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
-    uint World::RemoveAllScenes(SceneType _sceneType)
+    uint World::RemoveAllScenes(BaseSceneType _sceneType)
     {
         const auto typeIndex = asInteger(_sceneType);
         const uint sceneCount = m_scenes[typeIndex].count();
@@ -115,14 +115,14 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
-    uint World::GetSceneCount(SceneType _sceneType) const
+    uint World::GetSceneCount(BaseSceneType _sceneType) const
     {
         const auto typeIndex = asInteger(_sceneType);
         return m_scenes[typeIndex].count();
     }
 
     //--------------------------------------------------------------------------------------
-    const IBaseScene * World::GetScene(uint _index, SceneType _sceneType) const
+    const IBaseScene * World::GetScene(uint _index, BaseSceneType _sceneType) const
     {
         const auto typeIndex = asInteger(_sceneType);
         return reinterpret_cast<const IBaseScene*>(m_scenes[typeIndex][_index]);

@@ -6,7 +6,7 @@ namespace vg::core
 {
     class IGameObject;
 
-    enum SceneType : core::u8
+    enum BaseSceneType : core::u8
     {
         Scene = 0,
         Prefab

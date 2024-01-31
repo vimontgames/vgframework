@@ -12,7 +12,7 @@ using namespace vg::core;
 namespace vg::editor
 {
     //--------------------------------------------------------------------------------------
-    ImGuiSceneMenu::ImGuiSceneMenu(SceneType _sceneType) :
+    ImGuiSceneMenu::ImGuiSceneMenu(BaseSceneType _sceneType) :
         m_sceneType(_sceneType)
     {
 

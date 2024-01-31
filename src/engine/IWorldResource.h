@@ -19,12 +19,12 @@ namespace vg::engine
 
         virtual core::IWorld * GetWorld() const = 0;
 
-        virtual void CreateSceneResource(const core::string & _file, core::SceneType _sceneType) = 0;
-        virtual void LoadSceneResource(const core::string & _file, core::SceneType _sceneType) = 0;
-        virtual IResource * FindSceneResource(core::IBaseScene * _scene, core::SceneType _sceneType) = 0;
-        virtual void UnloadSceneResource(core::IResource * _resource, core::SceneType _sceneType) = 0;
+        virtual void CreateSceneResource(const core::string & _file, core::BaseSceneType _sceneType) = 0;
+        virtual void LoadSceneResource(const core::string & _file, core::BaseSceneType _sceneType) = 0;
+        virtual IResource * FindSceneResource(core::IBaseScene * _scene, core::BaseSceneType _sceneType) = 0;
+        virtual void UnloadSceneResource(core::IResource * _resource, core::BaseSceneType _sceneType) = 0;
 
-        virtual core::uint GetSceneResourceCount(core::SceneType _sceneType) const = 0;
-        virtual core::IResource * GetSceneResource(core::uint _index, core::SceneType _sceneType) const = 0;
+        virtual core::uint GetSceneResourceCount(core::BaseSceneType _sceneType) const = 0;
+        virtual core::IResource * GetSceneResource(core::uint _index, core::BaseSceneType _sceneType) const = 0;
     };
 }

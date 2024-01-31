@@ -18,20 +18,20 @@ namespace vg::engine
         World(const core::string & _name, core::IObject * _parent);
         ~World();
 
-        bool                    SetActiveScene  (core::IBaseScene * _scene, core::SceneType _sceneType) final override;
-        core::IBaseScene *          GetActiveScene  (core::SceneType _sceneType) const final override;
+        bool                    SetActiveScene  (core::IBaseScene * _scene, core::BaseSceneType _sceneType) final override;
+        core::IBaseScene *          GetActiveScene  (core::BaseSceneType _sceneType) const final override;
 
-        bool                    AddScene        (core::IBaseScene * _scene, core::SceneType _sceneType) final override;
-        bool                    RemoveScene     (core::IBaseScene * scene, core::SceneType _sceneType) final override;
-        core::uint              RemoveAllScenes (core::SceneType _sceneType) final override;
+        bool                    AddScene        (core::IBaseScene * _scene, core::BaseSceneType _sceneType) final override;
+        bool                    RemoveScene     (core::IBaseScene * scene, core::BaseSceneType _sceneType) final override;
+        core::uint              RemoveAllScenes (core::BaseSceneType _sceneType) final override;
 
-        core::uint              GetSceneCount   (core::SceneType _sceneType) const final override;
-        const core::IBaseScene *    GetScene        (core::uint _index, core::SceneType _sceneType) const final override;
+        core::uint              GetSceneCount   (core::BaseSceneType _sceneType) const final override;
+        const core::IBaseScene *    GetScene        (core::uint _index, core::BaseSceneType _sceneType) const final override;
 
-        core::vector<Scene*> &  getScenes       (core::SceneType _sceneType);
+        core::vector<Scene*> &  getScenes       (core::BaseSceneType _sceneType);
 
     private:
-        Scene *                 m_activeScene[core::enumCount<core::SceneType>()];
-        core::vector<Scene*>    m_scenes[core::enumCount<core::SceneType>()];
+        Scene *                 m_activeScene[core::enumCount<core::BaseSceneType>()];
+        core::vector<Scene*>    m_scenes[core::enumCount<core::BaseSceneType>()];
     };
 }

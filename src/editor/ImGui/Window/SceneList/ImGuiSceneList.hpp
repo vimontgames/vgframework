@@ -8,7 +8,7 @@
 namespace vg::editor
 {
     //--------------------------------------------------------------------------------------
-    ImGuiSceneList::ImGuiSceneList(SceneType _sceneType, const core::string& _icon, const core::string& _path, const core::string& _name, Flags _flags) :
+    ImGuiSceneList::ImGuiSceneList(BaseSceneType _sceneType, const core::string& _icon, const core::string& _path, const core::string& _name, Flags _flags) :
         ImGuiWindow(_icon, _path, _name, _flags),
         m_sceneMenu(_sceneType)
     {
@@ -327,13 +327,13 @@ namespace vg::editor
     }
 
     //--------------------------------------------------------------------------------------
-    ImGuiSceneList::SceneTypeInfo ImGuiSceneList::getGameObjectTreeTypeInfo(core::SceneType _sceneType)
+    ImGuiSceneList::SceneTypeInfo ImGuiSceneList::getGameObjectTreeTypeInfo(core::BaseSceneType _sceneType)
     {
         SceneTypeInfo info;
 
         switch (_sceneType)
         {
-            case SceneType::Scene:
+            case BaseSceneType::Scene:
                 info.icon = style::icon::Scene;
                 info.windowName = "Scenes";
                 info.newLabel = "New Scene";
@@ -342,7 +342,7 @@ namespace vg::editor
                 info.fileExt = ".scene";
                 break;
 
-            case SceneType::Prefab:
+            case BaseSceneType::Prefab:
                 info.icon = style::icon::Prefab;
                 info.windowName = "Prefabs";
                 info.newLabel = "New Prefab";
@@ -356,7 +356,7 @@ namespace vg::editor
     }
 
     //--------------------------------------------------------------------------------------
-    void ImGuiSceneList::display(core::SceneType _sceneType)
+    void ImGuiSceneList::display(core::BaseSceneType _sceneType)
     {
         const string sceneTypeName = asString(_sceneType);
         const auto typeInfo = getGameObjectTreeTypeInfo(_sceneType);

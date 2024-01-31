@@ -9,7 +9,7 @@ namespace vg::editor
 {
     //--------------------------------------------------------------------------------------
     ImGuiPrefab::ImGuiPrefab() :
-        ImGuiSceneList(SceneType::Prefab, style::icon::Prefab, "", "Prefab", ImGuiWindow::StartVisible | ImGuiWindow::AddMenuEntry)
+        ImGuiSceneList(BaseSceneType::Prefab, style::icon::Prefab, "", "Prefab", ImGuiWindow::StartVisible | ImGuiWindow::AddMenuEntry)
     {
 
     }
@@ -17,6 +17,6 @@ namespace vg::editor
     //--------------------------------------------------------------------------------------
     void ImGuiPrefab::DrawGUI()
     {
-        display(SceneType::Prefab);
+        display(BaseSceneType::Prefab);
     }
 }

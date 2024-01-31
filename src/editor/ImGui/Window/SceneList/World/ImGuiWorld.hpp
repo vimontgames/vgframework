@@ -9,7 +9,7 @@ namespace vg::editor
 {
     //--------------------------------------------------------------------------------------
     ImGuiWorld::ImGuiWorld() :
-        ImGuiSceneList(SceneType::Scene, style::icon::World, "", "World", ImGuiWindow::StartVisible | ImGuiWindow::AddMenuEntry)
+        ImGuiSceneList(BaseSceneType::Scene, style::icon::World, "", "World", ImGuiWindow::StartVisible | ImGuiWindow::AddMenuEntry)
     {
       
     }
@@ -17,6 +17,6 @@ namespace vg::editor
     //--------------------------------------------------------------------------------------
     void ImGuiWorld::DrawGUI()
     {
-        display(SceneType::Scene);
+        display(BaseSceneType::Scene);
     }    
 }

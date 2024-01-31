@@ -6,7 +6,7 @@
 
 namespace vg::core
 {
-    enum SceneType : core::u8;
+    enum BaseSceneType : core::u8;
 }
 
 namespace vg::editor
@@ -31,12 +31,12 @@ namespace vg::editor
             core::string    fileExt;
         };
 
-        ImGuiSceneList(core::SceneType _sceneType, const core::string& _icon, const core::string& _path, const core::string& _name, Flags _flags);
+        ImGuiSceneList(core::BaseSceneType _sceneType, const core::string& _icon, const core::string& _path, const core::string& _name, Flags _flags);
         
-        static SceneTypeInfo            getGameObjectTreeTypeInfo   (core::SceneType _sceneType);
+        static SceneTypeInfo            getGameObjectTreeTypeInfo   (core::BaseSceneType _sceneType);
 
     protected:
-        void                            display                     (core::SceneType _sceneType);
+        void                            display                     (core::BaseSceneType _sceneType);
         void                            displayGameObject           (core::IGameObject* root, core::uint* _count = nullptr);
        
     protected:
