@@ -6,6 +6,7 @@
 #include "editor/ImGui/Window/ImGuiWindow.h"
 #include "editor/ImGui/Extensions/imGuiExtensions.h"
 #include "editor/Editor.h"
+#include "core/IBaseScene.h"
 
 using namespace vg::core;
 
@@ -29,14 +30,16 @@ namespace vg::editor
         auto selectedObjects = selection->GetSelectedObjects(); 
 
         // Add the clicked object to "selection" if not already selected
-        if (!gameObject->IsRoot() && !selection->IsSelectedObject(gameObject))
+        const bool isRoot = gameObject->IsRoot();
+        if (!isRoot && !selection->IsSelectedObject(gameObject))
             selectedObjects.push_back(gameObject);
 
         vector<IGameObject *> gameObjectsToDelete = Editor::get()->getSelection()->RemoveChildGameObjectsWithParents(selectedObjects);
 
         // Root GameObject cannot be deleted
-        const bool canDelete = gameObjectsToDelete.size() > 0;
-        const bool canRename = selection->GetSelectedObjects().size() <= 1;
+        const bool canDelete = gameObjectsToDelete.size() > 0 && !isRoot;
+        const bool canRename = true; // !isRoot;
+        const bool canDuplicate = !isRoot;
 
         if (m_RenamingGameObject == nullptr)
         {
@@ -44,11 +47,11 @@ namespace vg::editor
             {
                 if (!ImGui::IsAnyItemActive())
                 {
-                    if (ImGui::IsKeyPressed(ImGuiKey_Delete))
+                    if (ImGui::IsKeyPressed(ImGuiKey_Delete) && canDelete)
                         doDelete = true;
-                    else if (canRename && ImGui::IsKeyPressed(ImGuiKey_F2))
+                    else if (canRename && ImGui::IsKeyPressed(ImGuiKey_F2) && canRename)
                         doRename = true;
-                    else if (ImGui::IsKeyPressed(ImGuiKey_D) && ImGui::IsKeyDown(ImGuiKey_LeftCtrl))
+                    else if (ImGui::IsKeyPressed(ImGuiKey_D) && ImGui::IsKeyDown(ImGuiKey_LeftCtrl) && canDuplicate)
                         doDuplicate = true;
                 }
             }
@@ -60,6 +63,7 @@ namespace vg::editor
             if (!selection->IsSelectedObject(_object))
                 selection->SetSelectedObject(_object);
 
+            ImGui::BeginDisabled(isRoot);
             if (ImGui::MenuItem("Add"))
             {
                 m_selected = MenuOption::Add;
@@ -67,6 +71,7 @@ namespace vg::editor
                 openPopup = true;
                 ImGui::OpenPopup("Add");
             }
+            ImGui::EndDisabled();
 
             if (ImGui::MenuItem("Add Child"))
             {
@@ -93,8 +98,12 @@ namespace vg::editor
             }
             ImGui::EndDisabled();
 
-            if (ImGui::MenuItem("Duplicate", "Ctrl-D"))
-                doDuplicate = true;
+            ImGui::BeginDisabled(!canDuplicate);
+            {
+                if (ImGui::MenuItem("Duplicate", "Ctrl-D"))
+                    doDuplicate = true;
+            }
+            ImGui::EndDisabled();
 
             ImGui::Separator();
 
@@ -201,6 +210,15 @@ namespace vg::editor
                                     parent->AddChild(newGameObject);
                                     VG_SAFE_INCREASE_REFCOUNT(gameObject);
                                     parent->RemoveChild(gameObject);
+                                    newGameObject->AddChild(gameObject);
+                                    VG_SAFE_RELEASE(gameObject);
+                                }
+                                else if (core::IBaseScene * scene = dynamic_cast<core::IBaseScene *>(gameObject->getParent()))
+                                {
+                                    // Object is root node, create a new root node and add this a its child
+                                    VG_SAFE_INCREASE_REFCOUNT(gameObject);
+                                    newGameObject->setParent(scene);
+                                    scene->SetRoot(newGameObject);
                                     newGameObject->AddChild(gameObject);
                                     VG_SAFE_RELEASE(gameObject);
                                 }
