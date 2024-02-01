@@ -404,13 +404,15 @@ namespace vg::core
                 }
                 break;
 
+                case IProperty::Type::Callback:
+                case IProperty::Type::LayoutElement:
+                    // Nothing to do
+                    break;
+
                 case IProperty::Type::ResourcePtr:
                 case IProperty::Type::ResourcePtrVector:
                 case IProperty::Type::ObjectPtrDictionary:
                 case IProperty::Type::ObjectVector:
-                
-                case IProperty::Type::Callback:
-                case IProperty::Type::LayoutElement:
                     VG_ASSERT_ENUM_NOT_IMPLEMENTED(propType);
                     break;
             }
