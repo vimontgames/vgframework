@@ -57,7 +57,7 @@ namespace vg::gfx::dx12
 			IDXGIFactory5 *					m_dxgiFactory				= nullptr;
 			
 			ID3D12DescriptorHeap *			m_RTVDescriptorHeap = nullptr;
-            core::IndexPool<core::u16,32>	m_RTVHandleIndexPool;
+            core::IndexPool<core::u16,64>	m_RTVHandleIndexPool;
 			core::uint						m_RTVDescriptorSize = 0;
 
             ID3D12DescriptorHeap *			m_DSVDescriptorHeap = nullptr;
