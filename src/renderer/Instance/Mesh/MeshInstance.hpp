@@ -480,8 +480,6 @@ namespace vg::renderer
     //--------------------------------------------------------------------------------------
     bool MeshInstance::AddAnimation(ISkeletalAnimation * _animation)
     {
-        VG_SAFE_INCREASE_REFCOUNT(_animation);
-
         AnimationBinding * binding = nullptr;
         for (uint i = 0; i < m_animationBindings.size(); ++i)
         {
@@ -492,6 +490,8 @@ namespace vg::renderer
                 return true; // No need rebind an animation already binded to current model
             }
         }
+
+        VG_SAFE_INCREASE_REFCOUNT(_animation);
 
         if (nullptr == binding)
         {
