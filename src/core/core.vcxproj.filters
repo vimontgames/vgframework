@@ -64,6 +64,9 @@
     <Filter Include="Options">
       <UniqueIdentifier>{34937bda-b674-4932-9962-25a39a290340}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Memory">
+      <UniqueIdentifier>{2cc24ec9-cf94-4ec6-814a-a60f2def42b7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Math\Math.h">
@@ -205,6 +208,12 @@
     <ClInclude Include="Scheduler\Mutex.h">
       <Filter>Scheduler</Filter>
     </ClInclude>
+    <ClInclude Include="Memory\MemoryAllocator.h">
+      <Filter>Memory</Filter>
+    </ClInclude>
+    <ClInclude Include="Memory\NewDelete.h">
+      <Filter>Memory</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Math\Math.cpp">
@@ -265,6 +274,9 @@
     </ClCompile>
     <ClCompile Include="Options\Options.cpp">
       <Filter>Options</Filter>
+    </ClCompile>
+    <ClCompile Include="Memory\MemoryAllocator.cpp">
+      <Filter>Memory</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

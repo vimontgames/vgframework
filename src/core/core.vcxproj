@@ -47,6 +47,8 @@
     <ClInclude Include="Kernel.h" />
     <ClInclude Include="Logger\Logger.h" />
     <ClInclude Include="Math\Math.h" />
+    <ClInclude Include="Memory\MemoryAllocator.h" />
+    <ClInclude Include="Memory\NewDelete.h" />
     <ClInclude Include="Model\Model.h" />
     <ClInclude Include="Object\AutoRegisterClass.h" />
     <ClInclude Include="Object\AutoRegisterClass.hpp" />
@@ -83,6 +85,7 @@
     <ClCompile Include="Instance\Instance.cpp" />
     <ClCompile Include="Logger\Logger.cpp" />
     <ClCompile Include="Math\Math.cpp" />
+    <ClCompile Include="Memory\MemoryAllocator.cpp" />
     <ClCompile Include="Model\Model.cpp" />
     <ClCompile Include="Object\Factory.cpp" />
     <ClCompile Include="Object\Object.cpp" />
