@@ -61,7 +61,10 @@
 #include <vulkan/vulkan_win32.h>
 #endif
 
+#pragma push_macro("new")
+#undef new
 #include "VulkanMemoryAllocator/include/vk_mem_alloc.h"
+#pragma pop_macro("new")
 
 #define VG_VERIFY_VULKAN(f) { VkResult err = f; VG_ASSERT(err == VK_SUCCESS, "%s\n\n%s", #f, Device::getVulkanErrorString(err)); }
 

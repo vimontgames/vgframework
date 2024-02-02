@@ -23,7 +23,7 @@ namespace vg::gfx::vulkan
 
 	private:
         VkFramebufferCreateInfo                 m_vkFrameBufferInfo;
-        VkFramebuffer                           m_vkFrameBuffer;
+        VkFramebuffer                           m_vkFrameBuffer = VK_NULL_HANDLE;
         VkRenderPass 							m_vkRenderPass = nullptr;
         VkRenderPassBeginInfo					m_vkRenderPassBeginInfo;
         core::vector<VkSubpassDescription>      m_vkSubPasses;

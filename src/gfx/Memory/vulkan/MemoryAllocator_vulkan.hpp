@@ -1,5 +1,8 @@
+#pragma push_macro("new")
+#undef new
 #define VMA_IMPLEMENTATION
 #include "VulkanMemoryAllocator/include/vk_mem_alloc.h"
+#pragma pop_macro("new")
 
 namespace vg::gfx::vulkan
 {
