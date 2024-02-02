@@ -11,12 +11,6 @@
 #include "core/Math/Math.h"
 #include "core/Timer/Timer.h"
 
-// Jolt includes
-#include <Jolt/RegisterTypes.h>
-#include <Jolt/Core/Factory.h>
-#include <Jolt/Physics/Body/BodyManager.h>
-#include <Jolt/Physics/Body/BodyCreationSettings.h>
-
 #include "engine/IEngine.h"
 #include "renderer/IRenderer.h"
 #include "renderer/IDebugDraw.h"
@@ -140,7 +134,10 @@ namespace vg::physics
         JPH_IF_ENABLE_ASSERTS(AssertFailed = AssertFailedImpl;)
 
         // Create a Jolt factory
+        #pragma push_macro("new")
+        #undef new
         Factory::sInstance = new Factory();
+        #pragma pop_macro("new")        
 
         // Register all Jolt physics types
         RegisterTypes();
@@ -155,10 +152,17 @@ namespace vg::physics
         // We need a job system that will execute physics jobs on multiple threads. Typically
         // you would implement the JobSystem interface yourself and let Jolt Physics run on top
         // of your own job scheduler. JobSystemThreadPool is an example implementation.
+        #pragma push_macro("new")
+        #undef new
         m_jobSystem = new JobSystemAdapter(m_physicsCreationParams.maxPhysicsBarriers);
+        #pragma pop_macro("new")  
 
         // Now we can create the actual physics system
+        #pragma push_macro("new")
+        #undef new
         m_physicsSystem = new JPH::PhysicsSystem();
+        #pragma pop_macro("new")  
+
         m_physicsSystem->Init(m_physicsCreationParams.maxBodies, m_physicsCreationParams.numBodyMutexes, m_physicsCreationParams.maxBodyPairs, m_physicsCreationParams.maxContactConstraints, m_broadPhaseLayer, m_broadPhaseFilter, m_objectFilter);
         m_physicsSystem->SetGravity(JPH::Vec3(0, 0, -9.81f));
 

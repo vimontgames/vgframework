@@ -1,5 +1,4 @@
 #include "SphereShape.h"
-#include "Jolt/Physics/Collision/Shape/SphereShape.h"
 
 namespace vg::physics
 {
@@ -27,8 +26,16 @@ namespace vg::physics
         Shape("Sphere", nullptr),
         m_radius(_desc.m_radius)
     {
+        #pragma push_macro("new")
+        #undef new
         auto shape = new JPH::SphereShape(m_radius);
+        #pragma pop_macro("new")
+
+        #pragma push_macro("new")
+        #undef new
         m_shape = new JPH::RotatedTranslatedShape(JPH::Vec3(_desc.m_offset.x, _desc.m_offset.y, _desc.m_offset.z), JPH::Quat::sIdentity(), shape);
+        #pragma pop_macro("new")
+
         m_transform[3].xyz = _desc.m_offset;
         m_shape->AddRef();
     }

@@ -6,7 +6,9 @@ namespace vg::gfx::dx12
 {
 	//--------------------------------------------------------------------------------------
 	SubPass::SubPass() :
-        super::SubPass()
+        super::SubPass(),
+		m_renderTargetCount(0),
+		m_depthStencilCount(0)
 	{
 
 	}

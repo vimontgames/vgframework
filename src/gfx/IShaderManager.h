@@ -4,7 +4,7 @@
 
 namespace vg::gfx
 {
-    class IShaderManager : core::Object
+    class IShaderManager : public core::Object
     {
     public:
         virtual core::uint GetShaderCompiledCount() const = 0;

@@ -16,7 +16,11 @@ namespace px_sched
 } // px namespace
 
 #define PX_SCHED_IMPLEMENTATION 1
+#pragma push_macro("new")
+#undef new
 #include "px/px_sched.h"
+#pragma pop_macro("new")
+
 
 namespace vg::core
 {

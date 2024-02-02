@@ -1,5 +1,4 @@
 #include "CapsuleShape.h"
-#include "Jolt/Physics/Collision/Shape/CapsuleShape.h"
 
 namespace vg::physics
 {
@@ -32,12 +31,20 @@ namespace vg::physics
         float height = m_height - 2.0f * m_radius;
 
         JPH::ConvexShape * shape = nullptr;
+
+        #pragma push_macro("new")
+        #undef new
         if (height > 0.0f)
             shape = new JPH::CapsuleShape(max(0.0f, m_height - 2.0f * m_radius) * 0.5f, m_radius);
         else
             shape = new JPH::SphereShape(m_radius);
+        #pragma pop_macro("new")
 
+        #pragma push_macro("new")
+        #undef new
         m_shape = new JPH::RotatedTranslatedShape(JPH::Vec3(_desc.m_offset.x, _desc.m_offset.y, _desc.m_offset.z), JPH::Quat::sRotation(JPH::Vec3(1, 0, 0), PI / 2.0f), shape);
+        #pragma pop_macro("new")
+
         m_transform[3].xyz = _desc.m_offset;
         m_shape->AddRef();
     }

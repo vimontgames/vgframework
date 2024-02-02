@@ -5,9 +5,6 @@
 #include "renderer/IDebugDraw.h"
 #include "physics/Physics.h"
 
-#include "Jolt/Physics/Collision/Shape/Shape.h"
-#include "Jolt/Physics/Collision/Shape/RotatedTranslatedShape.h"
-
 #include "SphereShape.hpp"
 #include "BoxShape.hpp"
 #include "CapsuleShape.hpp"

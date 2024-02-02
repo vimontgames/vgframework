@@ -2,7 +2,6 @@
 #include "imguiExtensions.h"
 #include "core/Math/Math.h"
 #include "core/IObject.h"
-#include "imgui/imgui_internal.h"
 
 using namespace vg::core;
 using namespace vg::editor;

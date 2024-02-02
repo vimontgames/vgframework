@@ -1,5 +1,8 @@
 #include "ImGui.h"
 
+#pragma push_macro("new")
+#undef new
+
 #include "imgui/imgui.cpp"
 #include "imgui/imgui_demo.cpp"
 #include "imgui/imgui_draw.cpp"
@@ -15,3 +18,5 @@
 #elif defined(VG_VULKAN)
 #include "imgui/backends/imgui_impl_vulkan.cpp"
 #endif
+
+#pragma pop_macro("new")

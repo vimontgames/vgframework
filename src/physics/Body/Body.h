@@ -1,8 +1,6 @@
 #pragma once
 
 #include "physics/IBody.h"
-#include "Jolt/Physics/Body/BodyID.h"
-#include "Jolt/Physics/Body/BodyCreationSettings.h"
 
 namespace JPH
 {

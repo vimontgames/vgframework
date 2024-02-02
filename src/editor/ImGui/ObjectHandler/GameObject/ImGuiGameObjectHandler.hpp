@@ -5,7 +5,6 @@
 #include "editor/ImGui/Menu/Inspector/GameObject/ImGuiGameObjectInspectorMenu.h"
 #include "editor/ImGui/Window/ImGuiWindow.h"
 #include "editor/ImGui/Extensions/imGuiExtensions.h"
-#include "imgui/imgui_internal.h"
 
 using namespace vg::core;
 

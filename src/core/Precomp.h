@@ -62,6 +62,7 @@ void * operator new[](std::size_t _size, const char * _file, int _line);
 void operator delete[](void * _ptr, const char * _file, int _line) noexcept;
 
 #define VG_NEW new( __FILE__ , __LINE__ )
+#define new VG_NEW
 #define VG_DELETE(p) delete p
 
 #else

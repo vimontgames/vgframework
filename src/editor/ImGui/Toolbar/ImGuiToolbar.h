@@ -1,5 +1,5 @@
 #pragma once
-#include "imgui/imgui_internal.h"
+
 #include "editor/ImGui//Window/ImGuiWindow.h"
 
 namespace vg::editor

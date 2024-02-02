@@ -2,6 +2,9 @@
 #include "Profiler.h"
 
 #ifdef VG_ENABLE_OPTICK
+#pragma push_macro("new")
+#undef new
+
 #include "optick/src/optick_core.cpp"
 #include "optick/src/optick_capi.cpp"
 #include "optick/src/optick_gpu.cpp"
@@ -15,6 +18,8 @@
 #elif defined(VG_VULKAN)
 #include "optick/src/optick_gpu.vulkan.cpp"
 #endif
+
+#pragma pop_macro("new")
 
 #include "core/File/File.h"
 #include "core/string/string.h"

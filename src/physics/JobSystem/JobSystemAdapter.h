@@ -1,5 +1,4 @@
 #pragma once
-#include <Jolt/Core/JobSystemWithBarrier.h>
 #include "core/Scheduler/Job.h"
 
 namespace vg::core

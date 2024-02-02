@@ -44,7 +44,10 @@
 #include "dxc/inc/dxcapi.h"
 #endif
 
+#pragma push_macro("new")
+#undef new
 #include "D3D12MemoryAllocator/src/D3D12MemAlloc.h"
+#pragma pop_macro("new")
 
 #endif // VG_DX12
 

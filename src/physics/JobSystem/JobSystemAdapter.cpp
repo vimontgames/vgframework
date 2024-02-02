@@ -40,8 +40,11 @@ namespace vg::physics
     //--------------------------------------------------------------------------------------
     JobSystemAdapter::JobHandle JobSystemAdapter::CreateJob(const char * _name, JPH::ColorArg _color, const JobFunction & _jobFunction, JPH::uint32 _numDependencies)
     {
+        #pragma push_macro("new")
+        #undef new
         auto * jphJob = new JPH::JobSystem::Job(_name, _color, this, _jobFunction, _numDependencies);
-        
+        #pragma pop_macro("new")
+
         // Construct handle to keep a reference, the job is queued below and may immediately complete
         JobHandle handle(jphJob);
         

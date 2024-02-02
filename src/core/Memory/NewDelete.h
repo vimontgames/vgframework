@@ -1,6 +1,9 @@
 #pragma once
 
 #if VG_GLOBAL_NEW_DELETE
+#pragma push_macro("new")
+#undef new
+
 #include "MemoryAllocator.h"
 
 //--------------------------------------------------------------------------------------
@@ -57,4 +60,5 @@ void operator delete[](void * _ptr, const char * _file, int _line) noexcept
     vg::core::MemoryAllocator::Delete(_ptr);
 }
 
+#pragma pop_macro("new")
 #endif

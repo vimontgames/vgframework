@@ -1,4 +1,7 @@
+#pragma push_macro("new")
+#undef new
 #include "D3D12MemoryAllocator/src/D3D12MemAlloc.cpp"
+#pragma pop_macro("new")
 
 namespace vg::gfx::dx12
 {

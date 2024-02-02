@@ -1252,11 +1252,6 @@ namespace vg::editor
         }
     }
 
-    void * allocate(size_t size)
-    {
-        return operator new(size);
-    };
-
     //--------------------------------------------------------------------------------------
     void BrowseToFile(const core::string& _filename)
     {

@@ -1,5 +1,4 @@
 #include "BoxShape.h"
-#include "Jolt/Physics/Collision/Shape/BoxShape.h"
 
 using namespace vg::core;
 
@@ -30,8 +29,17 @@ namespace vg::physics
         m_size(_desc.m_size)
     {
         JPH::Vec3 halfSize = JPH::Vec3(m_size.x * 0.5f, m_size.y * 0.5f, m_size.z * 0.5f);
+
+        #pragma push_macro("new")
+        #undef new
         auto shape = new JPH::BoxShape(halfSize);
+        #pragma pop_macro("new")
+
+        #pragma push_macro("new")
+        #undef new
         m_shape = new JPH::RotatedTranslatedShape(JPH::Vec3(_desc.m_offset.x, _desc.m_offset.y, _desc.m_offset.z), JPH::Quat::sIdentity(), shape);
+        #pragma pop_macro("new")
+       
         m_transform[3].xyz = _desc.m_offset;
         m_shape->AddRef();
     }

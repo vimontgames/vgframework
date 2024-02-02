@@ -1,7 +1,12 @@
 #include "dxc/inc/dxcapi.h"
 #include "gfx/Shader/ShaderManager.h"
 #include "core/File/File.h"
+
+#pragma push_macro("new")
+#undef new
 #include "atlbase.h"
+#pragma pop_macro("new")
+
 #include "atlcomcli.h"
 
 #define CUSTOM_DXC_INCLUDE_HANDLER 1

@@ -74,7 +74,11 @@ namespace vg::physics
         VG_ASSERT(capsuleShape);
         settings.mSupportingVolume = JPH::Plane(getJoltVec3(float3(0, 0, 1)), -capsuleShape->m_radius); // Accept contacts that touch the lower sphere of the capsule
 
+        #pragma push_macro("new")
+        #undef new
         m_character = new JPH::Character(&settings, getJoltVec3(_world[3].xyz), getJoltQuaternion(quat), 0, Physics::get()->getPhysicsSystem());
+        #pragma pop_macro("new")
+
         m_character->AddRef();
 
         //getBodyInterface().SetFriction(m_character->GetBodyID(), _rigidCharacterDesc->m_friction);

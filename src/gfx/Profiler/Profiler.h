@@ -6,7 +6,11 @@
 #define VG_ENABLE_OPTICK
 
 #ifdef VG_ENABLE_OPTICK
+
+#pragma push_macro("new")
+#undef new
 #include "optick/src/optick.h"
+#pragma pop_macro("new")
 
 #define VG_PROFILE_CATEGORY(name, cat)  OPTICK_CATEGORY(name, Optick::Category::cat)
 #define VG_PROFILE_GPU(name)            OPTICK_GPU_EVENT_DYNAMIC(name); vg::gfx::ScopedGPUEvent scopedGPUEvent##__COUNTER__(name)   
