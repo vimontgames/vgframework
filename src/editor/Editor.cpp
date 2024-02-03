@@ -98,8 +98,8 @@ namespace vg::editor
         m_imGuiWindows.push_back(new ImGuiRendererOptions());
         m_imGuiWindows.push_back(new ImGuiPhysicsOptions());
         m_imGuiWindows.push_back(new ImGuiEngineOptions());        
-        m_imGuiWindows.push_back(new ImGuiGameView());
-        m_imGuiWindows.push_back(new ImGuiEditorView());
+        m_imGuiWindows.push_back(new ImGuiGameView(0));
+        m_imGuiWindows.push_back(new ImGuiEditorView(0));
         m_imGuiWindows.push_back(new ImGuiConsole());
         m_imGuiWindows.push_back(new ImGuiInput());
         m_imGuiWindows.push_back(new ImGuiAbout());        
@@ -233,6 +233,16 @@ namespace vg::editor
             else if (input->IsKeyJustPressed(Key::A))
                 options->setSnap(options->getSnap());
         }
+
+        // Update Editor views cameras
+        //auto * renderer = Editor::get()->getRenderer();
+        //auto views = renderer->GetViews(gfx::ViewTarget::Editor);
+        //for (uint i = 0; i < views.size(); ++i)
+        //{
+        //    auto view = views[i];
+        //    if (view)
+        //        view->updateEditorCamera();
+        //}
     }
 
 	//--------------------------------------------------------------------------------------

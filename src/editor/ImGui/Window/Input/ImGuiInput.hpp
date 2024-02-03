@@ -67,6 +67,7 @@ namespace vg::editor
                 SetColumnWidth(1, columnWidth[1]);
 
                 Text("MousePos");
+                Text("MouseDelta");
 
                 for (uint b = 0; b < enumCount<core::MouseButton>(); ++b)
                 {
@@ -79,8 +80,10 @@ namespace vg::editor
                 NextColumn();
 
                 const uint2 mousePos = input->GetMousePos();
+                const int3 mouseDelta = input->GetMouseDelta();
 
                 Text("(%u, %u)", (uint)mousePos.x, (uint)mousePos.y);
+                Text("(%i, %i, %i)", (int)mouseDelta.x, (int)mouseDelta.y, (int)mouseDelta.z);
 
                 for (uint b = 0; b < enumCount<core::MouseButton>(); ++b)
                 {

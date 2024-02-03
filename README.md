@@ -20,12 +20,21 @@ Another subject that is very close to my heart is that there is a strong separat
 
 # changelog
 
+## 0.26 "Yellow Zombie" (WIP¨)
+Editor Camera V0\
+Improve window resize + fix rare crash when maximizing window\
+Prefabs\
+Forbid deleting or adding siblings to root node\
+Better leak tracking with __FILE__ and __LINE__ + Fix rare memory leak in animation loading
+
 ## 0.25 "Freaky Clown"
 Fix an issue with **CountLeadingZeroes** that could return a different result depending on CPU used\
 Jolt no more uses **AVX2** to allow running on older hardware\
 VGFramework requires **AVX1** available on any AMD/Intel CPU since 2011 (Bulldozer/Sandy Bridge)\
 Patch shader files in memory to support GPU DebugInfo/Warning/Error/Assert\
 Fix non-triangulated mesh import
+
+![Screenshot](doc/img/0.26.png)
 
 ## 0.24 "Kasper"
 New darker ImGui style\

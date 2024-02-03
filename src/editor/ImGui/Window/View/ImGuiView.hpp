@@ -10,11 +10,12 @@
 namespace vg::editor
 {
     //--------------------------------------------------------------------------------------
-    ImGuiView::ImGuiView(const char * _icon, const core::string & _path, const string & _name, Flags _flags, gfx::ViewTarget _target) :
+    ImGuiView::ImGuiView(const char * _icon, const core::string & _path, const string & _name, Flags _flags, gfx::ViewTarget _target, uint _index) :
         ImGuiWindow(_icon, _path, _name, _flags),
-        m_target(_target)
+        m_target(_target),
+        m_index(_index)
     {
-        
+
     }
 
     //--------------------------------------------------------------------------------------
@@ -27,15 +28,170 @@ namespace vg::editor
             VG_SAFE_RELEASE(m_view);
             Editor::get()->getRenderer()->RemoveView(viewID);
         }
-  
+    }
+
+    //--------------------------------------------------------------------------------------
+    ImGuiView::EditorCamera::EditorCamera() :
+        m_matrix(core::float4x4::identity()),
+        m_fovY(core::PI / 4.0f),
+        m_near(0.01f),
+        m_far(1024.0f),
+        m_pitch(0.0f),
+        m_yaw(0.0f),
+        m_roll(0.0f),
+        m_moveSpeed(1.0f),
+        m_rotSpeed(1.0f),
+        m_panXYSpeed(1.0f),
+        m_zoomSpeed(1.0f),
+        m_panning(false)
+    {
+        m_pitch = -PI / 4.0f;
+        m_yaw = PI;
+        m_matrix[3].xyz = float3(0, -16, 16);
+
+        //m_pitch = -PI / 2.0f;
+        //m_yaw = PI;
+        //m_matrix[3].xyz = float3(0, -16, 4);
+        //
+        //m_pitch = -PI / 4.0f;
+        //m_yaw = PI * 3.0f / 4.0f;
+        //m_matrix[3].xyz = float3(-8, -8, 12);
+    }
+
+    //--------------------------------------------------------------------------------------
+    void ImGuiView::updateEditorCamera(float _dt)
+    {
+        auto view = m_view;
+        if (view)
+        {
+            auto & editorCam = m_editorCam;
+
+            float mouseSpeedX = editorCam.m_rotSpeed * 0.001f * PI;
+            float mouseSpeedY = editorCam.m_rotSpeed * 0.001f * PI;
+            float moveSpeed = editorCam.m_moveSpeed * _dt;
+            float panXYSpeed = editorCam.m_panXYSpeed * _dt;
+            float zoomSpeed = editorCam.m_zoomSpeed * _dt;
+
+            float4 I = editorCam.m_matrix[0];
+            float4 J = editorCam.m_matrix[1];
+            float4 K = editorCam.m_matrix[2];
+            float4 T = editorCam.m_matrix[3];
+
+            if (view->IsActive())
+            {
+                IInput * input = Kernel::getInput();
+                const int3 delta = input->GetMouseDelta();
+
+                if (input->IsKeyPressed(Key::LSHIFT))
+                    moveSpeed *= 16.0f;
+
+                if (input->IsMouseButtonPressed(MouseButton::Middle))
+                {
+                    if (!editorCam.m_panning)
+                    {
+                        // Start pan
+                        editorCam.m_panning = true;
+                        VG_DEBUGPRINT("[EditorCam] Start Pan\n");
+                    }
+                    else
+                    {
+                        // Continue pan
+                        VG_DEBUGPRINT("[EditorCam] Pan %i %i\n", (int)delta.x, (int)delta.y);
+
+                        if (any(delta.xy != 0))
+                        {
+                            T.xyz = T.xyz - (float)(delta.x) * panXYSpeed * I.xyz;
+                            T.xyz = T.xyz + (float)(delta.y) * panXYSpeed * J.xyz;
+                            
+                        }
+                    }
+                }
+                else 
+                {
+                    if (editorCam.m_panning)
+                    {
+                        // Stop pan
+                        editorCam.m_panning = false;
+                        VG_DEBUGPRINT("[EditorCam] Stop Pan\n");
+                    }
+
+                    // Pan using keyboard
+                    if (!input->IsKeyPressed(Key::LCONTROL))
+                    {
+                        if (input->IsKeyPressed(Key::A))
+                            T -= moveSpeed * I;
+                        else if (input->IsKeyPressed(Key::D))
+                            T += moveSpeed * I;
+
+                        if (input->IsKeyPressed(Key::PAGEDOWN))
+                            T -= moveSpeed * J;
+                        else if (input->IsKeyPressed(Key::PAGEUP))
+                            T += moveSpeed * J;
+                    }
+                }
+
+                // zoom
+                if (delta.z != 0)
+                {
+                    VG_DEBUGPRINT("[EditorCam] Zoom %i\n", (int)delta.z);
+                    T.xyz = T.xyz - (float)(delta.z) * zoomSpeed * K.xyz;
+                }
+                else
+                {
+                    // zoom using keyboard
+                    if (!input->IsKeyPressed(Key::LCONTROL))
+                    {
+                        if (input->IsKeyPressed(Key::W))
+                            T -= moveSpeed * K;
+                        else if (input->IsKeyPressed(Key::S))
+                            T += moveSpeed * K;
+                    }
+                }
+
+                if (input->IsMouseButtonPressed(MouseButton::Right))
+                {
+                    editorCam.m_pitch += clamp((float)delta.y * mouseSpeedY, -PI, PI);
+                    editorCam.m_yaw -= clamp((float)delta.x * mouseSpeedX, -PI, PI);
+                }
+            }
+
+            // wrap
+            if (editorCam.m_pitch < -PI)
+                editorCam.m_pitch = 2.0f * PI + editorCam.m_pitch;
+            else if (editorCam.m_pitch > PI)
+                editorCam.m_pitch = editorCam.m_pitch - 2.0f * PI;
+
+            if (editorCam.m_yaw < -PI)
+                editorCam.m_yaw = 2.0f * PI + editorCam.m_yaw;
+            else if (editorCam.m_yaw > PI)
+                editorCam.m_yaw = editorCam.m_yaw - 2.0f * PI;
+
+            const float4x4 rotX = float4x4::rotation_x(editorCam.m_pitch);
+            const float4x4 rotZ = float4x4::rotation_z(editorCam.m_yaw);
+
+            float4x4 mRotXZ = mul(rotX, rotZ);
+
+            I = normalize(float4(mRotXZ[0]));
+            J = normalize(float4(mRotXZ[1]));
+            K = normalize(float4(mRotXZ[2]));
+
+            float4x4 mViewI = float4x4(-I, -J, K, T);
+            editorCam.m_matrix = mViewI;
+
+            view->SetupPerspectiveCamera(mViewI, float2(editorCam.m_near, editorCam.m_far), editorCam.m_fovY);
+        }
     }
 
     //--------------------------------------------------------------------------------------
     void ImGuiView::DrawGUI()
     {
+        // TODO : update editor camera *BEFORE* render?
+        if (m_target == gfx::ViewTarget::Editor)
+            updateEditorCamera(getEngine()->GetTime().m_dt);
+
         auto * renderer = Editor::get()->getRenderer();
 
-        ImGui::SetNextWindowSizeConstraints(ImVec2(640, 480), ImVec2(MIN_FLOAT, MAX_FLOAT));
+        ImGui::SetNextWindowSizeConstraints(ImVec2(640, 480), ImVec2(MAX_FLOAT, MAX_FLOAT));
         ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0, 0));
         ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0, 0, 0, 255));
         
@@ -74,6 +230,20 @@ namespace vg::editor
 
             if (!m_view)
             {
+                // get free index
+                if (m_index == -1)
+                {
+                    auto * renderer = Editor::get()->getRenderer();
+                    auto views = renderer->GetViews(m_target);
+                    for (uint i = 0; i < views.size(); ++i)
+                    {
+                        if (!views[i])
+                            m_index = i;
+                    }
+                    if (m_index == -1)
+                        m_index = (uint)views.size();
+                }
+
                 if (gfx::IView * view = renderer->GetView(gfx::ViewID(m_target, m_index)))
                 {
                     m_view = view;

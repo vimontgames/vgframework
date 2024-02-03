@@ -6,6 +6,7 @@
 #include "editor/ImGui/Window/ImGuiWindow.h"
 #include "ImGui-Addons/FileBrowser/ImGuiFileBrowser.h"
 #include "editor/ImGui/Window/SceneList/ImGuiSceneList.h"
+#include "editor/ImGui/Window/View/EditorView/ImGuiEditorView.h"
 
 using namespace vg::core;
 
@@ -34,6 +35,19 @@ namespace vg::editor
 
         if (ImGui::BeginPopupContextItem())
         {
+            if (m_sceneType == BaseSceneType::Prefab)
+            {
+                //if (ImGui::MenuItem("Preview", nullptr, false))
+                //{
+                //    // create editor view for this prefab
+                //    auto prefabView = new ImGuiEditorView(-1);
+                //    prefabView->m_name = _object->getName();
+                //    Editor::get()->m_imGuiWindows.push_back(prefabView);
+                //}
+
+                ImGui::Separator();
+            }
+
             if (ImGui::MenuItem("Save", nullptr, false))
             {
                 string filePath;

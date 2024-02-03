@@ -17,7 +17,7 @@ namespace vg::engine
 
         void                                        createWorld();
         core::IWorld *                              getWorld() const { return m_world; }
-        core::vector<BaseSceneResource *> *   getScenes(core::BaseSceneType _sceneType);
+        core::vector<BaseSceneResource *> *         getScenes(core::BaseSceneType _sceneType);
         void                                        OnPropertyChanged(core::IObject * _object, const core::IProperty & _prop, bool _notifyParent) override;
 
     //private:

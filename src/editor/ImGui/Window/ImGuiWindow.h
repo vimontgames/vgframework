@@ -84,7 +84,7 @@ namespace vg::editor
         static engine::IEngine *                getEngine           ();
         static core::ISelection *               getSelection        ();
 
-    protected:
+    //protected:
         static void                             underLine           (const ImColor & _color);
         static void                             textURL             (const char * _text, const char * _url);
 
@@ -98,7 +98,7 @@ namespace vg::editor
 
         static core::string                     getButtonLabel      (core::string _baseName, core::IObject * _object);
 
-    protected:
+    //protected:
         core::string                            m_icon;
         core::string                            m_name;
         core::string                            m_path;

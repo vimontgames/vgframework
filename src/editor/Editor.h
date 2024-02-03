@@ -58,7 +58,7 @@ namespace vg
             engine::IEngine *					getEngine			() const;
             renderer::IRenderer *				getRenderer			() const;
 
-		private:
+		//private:
 			core::vector<ImGuiWindow *>			m_imGuiWindows;
 		};
 	}

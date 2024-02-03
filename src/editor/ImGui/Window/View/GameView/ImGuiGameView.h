@@ -7,7 +7,7 @@ namespace vg::editor
     class ImGuiGameView : public ImGuiView
     {
     public:
-        ImGuiGameView();
+        ImGuiGameView(core::uint _index);
         ~ImGuiGameView();
     };
 }
