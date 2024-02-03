@@ -7,6 +7,8 @@
 #include "editor/Options/EditorOptions.h"
 #include "editor/ImGui/Extensions/ImGuizmo/ImGuizmoAdapter.h"
 
+#include "Shaders/system/picking.hlsli"
+
 namespace vg::editor
 {
     //--------------------------------------------------------------------------------------
@@ -77,9 +79,30 @@ namespace vg::editor
             float4 K = editorCam.m_matrix[2];
             float4 T = editorCam.m_matrix[3];
 
+            float3 zoomDir = normalize(K.xyz);
+
             if (view->IsActive())
             {
                 IInput * input = Kernel::getInput();
+
+                // Update picking
+                auto * renderer = Editor::get()->getRenderer();
+                auto picking = renderer->GetPicking();
+                bool showTooltip = Kernel::getInput()->IsKeyPressed(Key::LSHIFT); // ImGui::IsKeyPressed(ImGuiKey_LeftShift);
+                picking->Update(m_view, showTooltip, m_pickingTooltip);
+                if (!showTooltip)
+                    m_pickingTooltip.clear();
+
+                if (input->IsKeyPressed(Key::LALT))
+                {
+                    if (m_view->GetPickingHitCount() > 0)
+                    {
+                        // get closest hit
+                        const PickingHit & pickingHit = m_view->GetPickingHit(0);
+                        zoomDir = normalize(T.xyz - pickingHit.m_pos.xyz);
+                    }
+                }
+                
                 const int3 delta = input->GetMouseDelta();
 
                 if (input->IsKeyPressed(Key::LSHIFT))
@@ -134,7 +157,7 @@ namespace vg::editor
                 if (delta.z != 0)
                 {
                     VG_DEBUGPRINT("[EditorCam] Zoom %i\n", (int)delta.z);
-                    T.xyz = T.xyz - (float)(delta.z) * zoomSpeed * K.xyz;
+                    T.xyz = T.xyz - (float)(delta.z) * zoomSpeed * zoomDir;
                 }
                 else
                 {
@@ -343,17 +366,10 @@ namespace vg::editor
             // Draw Border
             //ImGui::GetForegroundDrawList()->AddRect(vMin, vMax, IM_COL32(0, 255, 0, 255));
 
-            // Update picking
-            auto picking = renderer->GetPicking();
-
             if (!drawGizmo())
             {
-                bool showTooltip = Kernel::getInput()->IsKeyPressed(Key::LSHIFT); // ImGui::IsKeyPressed(ImGuiKey_LeftShift);
-                string tooltipMsg;
-                picking->Update(m_view, showTooltip, tooltipMsg);
-
-                if (showTooltip && !tooltipMsg.empty())
-                    ImGui::SetTooltip(tooltipMsg.c_str());
+                if (!m_pickingTooltip.empty())
+                    ImGui::SetTooltip(m_pickingTooltip.c_str());
             }            
 
             m_view->SetVisible(true);

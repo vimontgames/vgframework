@@ -52,5 +52,6 @@ namespace vg::editor
             core::uint2         m_pan2DPosStart;
         };
         EditorCamera        m_editorCam;
+        core::string        m_pickingTooltip;
     };
 }
