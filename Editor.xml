@@ -2,20 +2,14 @@
     <Object class="EditorOptions">
         <Property type="String" name="m_name" flags="Hidden" value="Editor Options"/>
         <Property type="EnumU8" name="m_guiTheme" value="VimontGames_Dark"/>
-        <Property type="LayoutElement" name="Gizmo"/>
         <Property type="EnumU8" name="m_gizmo.m_type" value="Translate"/>
         <Property type="EnumU8" name="m_gizmo.m_space" value="World"/>
-        <Property type="LayoutElement" name="Snap Align"/>
         <Property type="Bool" name="m_gizmo.m_snapTranslate" flags="Hidden" value="true"/>
         <Property type="Float3" name="m_gizmo.m_translationSnap" flags="Optional" x="0.5" y="0.5" z="0.5"/>
         <Property type="Bool" name="m_gizmo.m_snapRotate" flags="Hidden" value="true"/>
         <Property type="Float" name="m_gizmo.m_rotationSnapInDegrees" flags="Optional" value="22.5"/>
         <Property type="Bool" name="m_gizmo.m_snapScale" flags="Hidden" value="true"/>
         <Property type="Float" name="m_gizmo.m_scaleSnap" flags="Optional" value="0.5"/>
-        <Property type="LayoutElement" name=""/>
-        <Property type="LayoutElement" name=""/>
-        <Property type="LayoutElement" name="Camera"/>
         <Property type="Bool" name="m_cullingInfo" value="true"/>
-        <Property type="LayoutElement" name=""/>
     </Object>
 </Root>
