@@ -83,7 +83,7 @@ namespace vg::renderer
         ViewConstants * constants = (ViewConstants*)_cmdList->map(s_ViewConstantsBuffer, sizeof(ViewConstants)).data;
         {
             constants->setScreenSize(screenSize);
-            constants->setMousePos(view->GetRelativeMousePos());
+            constants->setMousePos((uint2)view->GetRelativeMousePos());
             constants->setDisplayMode(options->getDisplayMode());
             constants->setDisplayFlags(options->getDisplayFlags());
             constants->setToolmodeRWBufferID(toolmodeRWBufferID);

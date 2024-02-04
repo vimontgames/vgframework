@@ -134,7 +134,8 @@ namespace vg::gfx
         virtual bool                    IsVisible                   () const = 0;
 
         virtual void                    SetMouseOffset              (const core::uint2 & _mouseOffset) = 0;
-        virtual core::uint2             GetRelativeMousePos         () const = 0;
+        virtual core::int2              GetRelativeMousePos         () const = 0;
+        virtual bool                    IsMouseOverView             () const = 0;
 
         virtual const core::string      GetFrameGraphID             (const core::string & _name) const = 0;
 

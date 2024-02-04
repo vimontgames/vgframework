@@ -69,5 +69,7 @@ namespace vg::engine::win32
         IDirectInputDevice8A *		            m_directInputKeyboard = nullptr;
         IDirectInputDevice8A *		            m_directInputMouse    = nullptr;
         core::vector<IDirectInputDevice8A *>    m_directInputJoystick;
+        bool                                    m_wasFocused          = false;
+        bool                                    m_justFocused         = false;
     };
 }

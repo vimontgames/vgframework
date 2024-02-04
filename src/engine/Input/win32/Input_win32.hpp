@@ -239,8 +239,16 @@ namespace vg::engine::win32
     {
         const auto handle = (HWND)m_appHandle;
 
-        if (GetActiveWindow() == handle)
+        bool isFocused = GetActiveWindow() == handle;
+
+        if (isFocused)
         {
+            if (isFocused != m_wasFocused)
+            {
+                m_justFocused = true;
+                VG_DEBUGPRINT("[Input] m_justFocused = true;\n");
+            }
+
             if (IsInputEnabled(InputType::Keyboard))
                 UpdateKeyboard();
 
@@ -250,6 +258,9 @@ namespace vg::engine::win32
 
         if (IsInputEnabled(InputType::Joypad))
             UpdateJoypads();
+
+        m_wasFocused = isFocused;
+        m_justFocused = false;
         
         return super::Update();
     }
@@ -335,15 +346,30 @@ namespace vg::engine::win32
         m_mouseData.m_pos.x = clamp(mousePos.x - p.x, 0L, clientRect.right - clientRect.left);
         m_mouseData.m_pos.y = clamp(mousePos.y - p.y, 0L, clientRect.bottom - clientRect.top);
 
-        m_mouseData.m_posDelta.x = abs(ms.lX) < threshold ? ms.lX : 0;
-        m_mouseData.m_posDelta.y = abs(ms.lY) < threshold ? ms.lY : 0;
-        m_mouseData.m_posDelta.z = abs(ms.lZ) < threshold ? ms.lZ : 0;
+        if (!m_justFocused)
+        {
+            m_mouseData.m_posDelta.x = abs(ms.lX) < threshold ? ms.lX : 0;
+            m_mouseData.m_posDelta.y = abs(ms.lY) < threshold ? ms.lY : 0;
+            m_mouseData.m_posDelta.z = abs(ms.lZ) < threshold ? ms.lZ : 0;
+        }
+        else
+        {
+            m_mouseData.m_posDelta = int3(0, 0, 0);
+        }
 
         VG_STATIC_ASSERT(core::enumCount<core::MouseButton>() <= countof(ms.rgbButtons), "Invalid mouse button count");
         for (uint b = 0; b < core::enumCount<core::MouseButton>(); ++b)
         {
-            m_mouseData.m_wasPressed[b] = m_mouseData.m_pressed[b];
-            m_mouseData.m_pressed[b] = 0 != ms.rgbButtons[b];
+            if (!m_justFocused)
+            {
+                m_mouseData.m_wasPressed[b] = m_mouseData.m_pressed[b];
+                m_mouseData.m_pressed[b] = 0 != ms.rgbButtons[b];
+            }
+            else
+            {
+                m_mouseData.m_wasPressed[b] = false;
+                m_mouseData.m_pressed[b] = false;
+            }
         }
     }
 #pragma endregion Mouse

@@ -71,10 +71,10 @@ namespace vg::editor
 
             float3 zoomDir = normalize(K.xyz);
 
-            if (view->IsActive()) 
+            if (view->IsActive() && view->IsMouseOverView())
             {
                 IInput * input = Kernel::getInput();
-
+                
                 // Update picking
                 auto * renderer = Editor::get()->getRenderer();
                 auto picking = renderer->GetPicking();

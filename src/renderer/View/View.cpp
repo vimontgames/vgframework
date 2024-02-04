@@ -371,16 +371,24 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    core::uint2 View::GetRelativeMousePos() const
+    core::int2 View::GetRelativeMousePos() const
     {
         auto input = Kernel::getInput();
         uint2 mousePos = input->GetMousePos();
 
         const auto renderer = Renderer::get();
         if (renderer->IsFullscreen())
-            return mousePos;
+            return (int2)mousePos;
         else
-            return uint2(mousePos.x - m_mouseOffset.x, mousePos.y - m_mouseOffset.y);
+            return int2((int)mousePos.x - (int)m_mouseOffset.x, (int)mousePos.y - (int)m_mouseOffset.y);
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool View::IsMouseOverView() const
+    {
+        const auto mousePos = GetRelativeMousePos();
+        const int2 viewSize = (int2)GetSize();
+        return all(mousePos.xy >= 0) && all(mousePos.xy < viewSize.xy);
     }
 
     //--------------------------------------------------------------------------------------

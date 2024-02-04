@@ -75,7 +75,8 @@ namespace vg::renderer
         bool                                IsVisible                   () const override;
 
         void                                SetMouseOffset              (const core::uint2 & _mouseOffset) override;
-        core::uint2                         GetRelativeMousePos         () const override;
+        core::int2                          GetRelativeMousePos         () const override;
+        bool                                IsMouseOverView             () const final override;
 
         const core::string                  GetFrameGraphID             (const core::string & _name) const final override;
 

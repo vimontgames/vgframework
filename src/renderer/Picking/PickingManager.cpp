@@ -59,10 +59,7 @@ namespace vg::renderer
     //--------------------------------------------------------------------------------------
     void PickingManager::Update(const gfx::IView * _view, bool & _showTooltip, core::string & _tooltipMsg)
     {
-        const auto mousePos = _view->GetRelativeMousePos();
-        const auto viewSize = _view->GetSize();
-
-        if (all(mousePos.xy >= 0) && all(mousePos.xy < viewSize.xy))
+        if (_view->IsMouseOverView())
         {
             auto input = Kernel::getInput();
             const bool ctrl = input->IsKeyPressed(Key::LCONTROL) || input->IsKeyPressed(Key::LCONTROL);
