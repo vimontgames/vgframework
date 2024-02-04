@@ -75,14 +75,6 @@ namespace vg::editor
             {
                 IInput * input = Kernel::getInput();
                 
-                // Update picking
-                auto * renderer = Editor::get()->getRenderer();
-                auto picking = renderer->GetPicking();
-                bool showTooltip = Kernel::getInput()->IsKeyPressed(Key::LSHIFT); // ImGui::IsKeyPressed(ImGuiKey_LeftShift);
-                picking->Update(m_view, showTooltip, m_pickingTooltip);
-                if (!showTooltip)
-                    m_pickingTooltip.clear();
-
                 const bool alt = input->IsKeyPressed(Key::LALT);
 
                 if (alt)
@@ -382,6 +374,14 @@ namespace vg::editor
 
             if (!drawGizmo())
             {
+                // Update picking if not currently manipulating gizmos
+                auto * renderer = Editor::get()->getRenderer();
+                auto picking = renderer->GetPicking();
+                bool showTooltip = Kernel::getInput()->IsKeyPressed(Key::LSHIFT); // ImGui::IsKeyPressed(ImGuiKey_LeftShift);
+                picking->Update(m_view, showTooltip, m_pickingTooltip);
+                if (!showTooltip)
+                    m_pickingTooltip.clear();
+
                 if (!m_pickingTooltip.empty())
                     ImGui::SetTooltip(m_pickingTooltip.c_str());
             }            
