@@ -11,6 +11,12 @@ namespace vg::core
     const float MAX_FLOAT = FLT_MAX;
 
     //--------------------------------------------------------------------------------------
+    template <typename T> T inline sign(T _value)
+    {
+        return (_value > T(0)) ? T(+1) : ((_value < T(0)) ? T(-1) : T(0));
+    }
+
+    //--------------------------------------------------------------------------------------
     inline float degreesToRadians(float _degrees)
     {
         return _degrees * (PI / 180.0f);
@@ -44,13 +50,13 @@ namespace vg::core
     float3x3 extractRotation(const float4x4 & _matrix);
 
 	//--------------------------------------------------------------------------------------
-	template <typename T> T min(const T & _left, const T & _right)
+	template <typename T> inline T min(const T & _left, const T & _right)
 	{
 		return _left < _right ? _left : _right;
 	}
 
 	//--------------------------------------------------------------------------------------
-	template <typename T> T max(const T & _left, const T & _right)
+	template <typename T> inline T max(const T & _left, const T & _right)
 	{
 		return _left > _right ? _left : _right;
 	}

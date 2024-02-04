@@ -38,10 +38,6 @@ namespace vg::editor
             float               m_near;
             float               m_far;
 
-            float               m_pitch;
-            float               m_yaw;
-            float               m_roll;
-
             float               m_moveSpeed;
             float               m_rotSpeed;
             float               m_panXYSpeed;

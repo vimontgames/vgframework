@@ -38,26 +38,16 @@ namespace vg::editor
         m_fovY(core::PI / 4.0f),
         m_near(0.01f),
         m_far(1024.0f),
-        m_pitch(0.0f),
-        m_yaw(0.0f),
-        m_roll(0.0f),
         m_moveSpeed(1.0f),
         m_rotSpeed(1.0f),
         m_panXYSpeed(1.0f),
         m_zoomSpeed(1.0f),
         m_panning(false)
     {
-        m_pitch = -PI / 4.0f;
-        m_yaw = PI;
-        m_matrix[3].xyz = float3(0, -16, 16);
-
-        //m_pitch = -PI / 2.0f;
-        //m_yaw = PI;
-        //m_matrix[3].xyz = float3(0, -16, 4);
-        //
-        //m_pitch = -PI / 4.0f;
-        //m_yaw = PI * 3.0f / 4.0f;
-        //m_matrix[3].xyz = float3(-8, -8, 12);
+        m_matrix[0] = float4(1, 0, 0, 0);
+        m_matrix[1] = float4(0, 0, 1, 0);
+        m_matrix[2] = float4(0, -1, 0, 0);
+        m_matrix[3] = float4(0, -8, 2, 1);
     }
 
     //--------------------------------------------------------------------------------------
@@ -68,8 +58,8 @@ namespace vg::editor
         {
             auto & editorCam = m_editorCam;
 
-            float mouseSpeedX = editorCam.m_rotSpeed * 0.001f * PI;
-            float mouseSpeedY = editorCam.m_rotSpeed * 0.001f * PI;
+            float mouseSpeedX = editorCam.m_rotSpeed;
+            float mouseSpeedY = editorCam.m_rotSpeed;
             float moveSpeed = editorCam.m_moveSpeed * _dt;
             float panXYSpeed = editorCam.m_panXYSpeed * _dt;
             float zoomSpeed = editorCam.m_zoomSpeed * _dt;
@@ -81,7 +71,7 @@ namespace vg::editor
 
             float3 zoomDir = normalize(K.xyz);
 
-            if (view->IsActive())
+            if (view->IsActive()) 
             {
                 IInput * input = Kernel::getInput();
 
@@ -93,7 +83,9 @@ namespace vg::editor
                 if (!showTooltip)
                     m_pickingTooltip.clear();
 
-                if (input->IsKeyPressed(Key::LALT))
+                const bool alt = input->IsKeyPressed(Key::LALT);
+
+                if (alt)
                 {
                     if (m_view->GetPickingHitCount() > 0)
                     {
@@ -114,12 +106,12 @@ namespace vg::editor
                     {
                         // Start pan
                         editorCam.m_panning = true;
-                        VG_DEBUGPRINT("[EditorCam] Start Pan\n");
+                        //VG_DEBUGPRINT("[EditorCam] Start Pan\n");
                     }
                     else
                     {
                         // Continue pan
-                        VG_DEBUGPRINT("[EditorCam] Pan %i %i\n", (int)delta.x, (int)delta.y);
+                        //VG_DEBUGPRINT("[EditorCam] Pan %i %i\n", (int)delta.x, (int)delta.y);
 
                         if (any(delta.xy != 0))
                         {
@@ -135,7 +127,7 @@ namespace vg::editor
                     {
                         // Stop pan
                         editorCam.m_panning = false;
-                        VG_DEBUGPRINT("[EditorCam] Stop Pan\n");
+                        //VG_DEBUGPRINT("[EditorCam] Stop Pan\n");
                     }
 
                     // Pan using keyboard
@@ -156,7 +148,7 @@ namespace vg::editor
                 // zoom
                 if (delta.z != 0)
                 {
-                    VG_DEBUGPRINT("[EditorCam] Zoom %i\n", (int)delta.z);
+                    //VG_DEBUGPRINT("[EditorCam] Zoom %i\n", (int)delta.z);
                     T.xyz = T.xyz - (float)(delta.z) * zoomSpeed * zoomDir;
                 }
                 else
@@ -171,37 +163,59 @@ namespace vg::editor
                     }
                 }
 
-                if (input->IsMouseButtonPressed(MouseButton::Right))
+                editorCam.m_matrix = float4x4(I, J, K, T);
+
+                if (input->IsMouseButtonPressed(MouseButton::Right) && any(delta.xy != 0))
                 {
-                    editorCam.m_pitch += clamp((float)delta.y * mouseSpeedY, -PI, PI);
-                    editorCam.m_yaw -= clamp((float)delta.x * mouseSpeedX, -PI, PI);
+                    float3 position = T.xyz;
+
+                    float3 pivot = float3(0, 0, 0);
+                    ISelection * selection = Editor::get()->getSelection();
+
+                    bool rotateAroundPivot= false;
+
+                    if (alt && selection->GetSelectedObjects().size() > 0)
+                    {
+                        pivot = selection->GetSelectionMatrix()[3].xyz;
+                        rotateAroundPivot = true;
+                    }
+
+                    float3 viewDir = (position - pivot);
+                    
+                    const float2 viewSize = m_view->GetSize();
+                    float deltaAngleX = (2.0f * PI / viewSize.x * mouseSpeedX);
+                    float deltaAngleY = (PI / viewSize.y * mouseSpeedY);
+                    float xAngle = (float)delta.x * deltaAngleX;
+                    float yAngle = (float)delta.y * deltaAngleY;
+                    
+                    float3 up = float3(0, 0, 1);
+
+                    if (rotateAroundPivot)
+                    {
+                        float4x4 rotationMatrixX = float4x4::rotation_axis(up, xAngle);
+                        editorCam.m_matrix[3].xyz -= pivot;
+                        editorCam.m_matrix = mul(editorCam.m_matrix, rotationMatrixX);
+
+                        float4x4 rotationMatrixY = float4x4::rotation_axis(editorCam.m_matrix[0].xyz, yAngle);
+                        editorCam.m_matrix = mul(editorCam.m_matrix, rotationMatrixY);
+                        editorCam.m_matrix[3].xyz += pivot;
+                    }
+                    else
+                    {
+                        float4x4 rotationMatrixX = float4x4::rotation_axis(up, -xAngle);
+
+                        T = editorCam.m_matrix[3];
+                        editorCam.m_matrix[3] = float4(0, 0, 0, 1);
+                        editorCam.m_matrix = mul(editorCam.m_matrix, rotationMatrixX);
+
+                        float4x4 rotationMatrixY = float4x4::rotation_axis(editorCam.m_matrix[0].xyz, -yAngle);
+                        editorCam.m_matrix = mul(editorCam.m_matrix, rotationMatrixY);
+                        editorCam.m_matrix[3] = T;
+                    }
                 }
             }
 
-            // wrap
-            if (editorCam.m_pitch < -PI)
-                editorCam.m_pitch = 2.0f * PI + editorCam.m_pitch;
-            else if (editorCam.m_pitch > PI)
-                editorCam.m_pitch = editorCam.m_pitch - 2.0f * PI;
-
-            if (editorCam.m_yaw < -PI)
-                editorCam.m_yaw = 2.0f * PI + editorCam.m_yaw;
-            else if (editorCam.m_yaw > PI)
-                editorCam.m_yaw = editorCam.m_yaw - 2.0f * PI;
-
-            const float4x4 rotX = float4x4::rotation_x(editorCam.m_pitch);
-            const float4x4 rotZ = float4x4::rotation_z(editorCam.m_yaw);
-
-            float4x4 mRotXZ = mul(rotX, rotZ);
-
-            I = normalize(float4(mRotXZ[0]));
-            J = normalize(float4(mRotXZ[1]));
-            K = normalize(float4(mRotXZ[2]));
-
-            float4x4 mViewI = float4x4(-I, -J, K, T);
-            editorCam.m_matrix = mViewI;
-
-            view->SetupPerspectiveCamera(mViewI, float2(editorCam.m_near, editorCam.m_far), editorCam.m_fovY);
+            view->SetupPerspectiveCamera(editorCam.m_matrix, float2(editorCam.m_near, editorCam.m_far), editorCam.m_fovY);
         }
     }
 
@@ -230,7 +244,7 @@ namespace vg::editor
         //if (any(m_size > 0))
         //    title = name + " (" + to_string(m_size.x) + "x" + to_string(m_size.y) + ")###" + name;
 
-        if (ImGui::Begin((title).c_str(), &m_isVisible, ImGuiWindowFlags_NoFocusOnAppearing))
+        if (ImGui::Begin((title).c_str(), &m_isVisible, ImGuiWindowFlags_NoFocusOnAppearing | ImGuiWindowFlags_NoNavInputs))
         {
             //if (IsWindowAppearing())
             //{

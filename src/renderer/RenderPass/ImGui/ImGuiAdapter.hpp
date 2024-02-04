@@ -26,7 +26,7 @@ namespace vg::renderer
         ImGui::CreateContext();
         ImGuiIO & io = ImGui::GetIO();
 
-        io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard | ImGuiConfigFlags_DockingEnable;
+        io.ConfigFlags |= /*ImGuiConfigFlags_NavEnableKeyboard |*/ ImGuiConfigFlags_DockingEnable;
         io.ConfigDockingTransparentPayload = true;
 
         io.Fonts->AddFontFromFileTTF("data/Fonts/ubuntu/UbuntuMono-R.ttf", editor::style::font::Height);
