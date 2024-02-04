@@ -23,6 +23,11 @@ namespace vg::editor
                 ImTextureID texID = imGuiAdapter->GetTextureID(tex);
                 {
                     auto availableWidth = ImGui::GetContentRegionAvail().x;
+
+                    // Anti-flickering hack
+                    if (ImGui::GetScrollMaxY() == 0.0f)
+                        availableWidth -= ImGui::GetStyle().ScrollbarSize;
+
                     auto texturePreviewSize = ImVec2(availableWidth - style::label::PixelWidth, availableWidth - style::label::PixelWidth);
                     ImGui::PushItemWidth(availableWidth);
                     {

@@ -84,10 +84,7 @@ namespace vg::editor
                             ImGui::PushID(i);
                             auto obj = prop->GetPropertyResourceVectorElement(_object, i);
 
-                            string itemLabel = _label + (string)" " + to_string(i);
-                            string itemName = obj->GetResourcePath();
-                            if (!itemName.empty())
-                                itemLabel += (string)" (" + io::getFileName(itemName) + (string)")";
+                            string itemLabel = fmt::sprintf("[%u] %s", i, obj->GetResourcePath().empty() ? "Empty" : io::getFileName(obj->GetResourcePath()));
                             itemLabel += "###" + to_string((uint_ptr)obj);
 
                             if (ImGui::TreeNodeEx(itemLabel.c_str(), ImGuiTreeNodeFlags_None))
