@@ -1,6 +1,7 @@
 #pragma once
 
 #include "renderer/IGraphicInstance.h"
+#include "core/Misc/BitMask.h"
 
 namespace vg::renderer
 {
@@ -32,6 +33,8 @@ namespace vg::renderer
         virtual bool                                    SetMaterial                 (core::uint _index, IMaterialModel * _materialModel) override;
         virtual IMaterialModel *                        GetMaterial                 (core::uint _index) const override;
 
+        void                                            SetBatchMask                (const core::BitMask & _batchMask) override;
+
         // internal
         bool                                            setMaterial                 (core::uint _index, MaterialModel * _materialModel);
         MaterialModel *                                 getMaterial                 (core::uint _index) const;
@@ -45,6 +48,7 @@ namespace vg::renderer
         VG_INLINE bool                                  removeAtomicFlags           (AtomicFlags _flag);
         VG_INLINE void                                  setGPUInstanceDataOffset    (core::uint _offset);
         VG_INLINE core::uint                            getGPUInstanceDataOffset    () const;
+        VG_INLINE const core::BitMask &                 getBatchMask                () const;
 
         virtual bool                                    GetAABB                     (AABB & _aabb) const = 0;
         virtual bool                                    Cull                        (CullingResult * _cullingResult, View * _view) = 0;
@@ -56,6 +60,7 @@ namespace vg::renderer
         core::uint                                      m_shaderInstanceDataOffset = -1;
         PickingID                                       m_pickingID;
         core::vector<MaterialModel *>                   m_materials;
+        core::BitMask                                   m_batchMask;
     };
 }
 

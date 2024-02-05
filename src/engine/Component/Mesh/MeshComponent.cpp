@@ -33,6 +33,7 @@ namespace vg::engine
         registerProperty(MeshComponent, m_displayBones, "Display Bones");
         registerPropertyResource(MeshComponent, m_meshResource, "Mesh");
         registerPropertyObjectEx(MeshComponent, m_meshMaterials, "Materials", IProperty::Flags::Flatten);
+        registerProperty(MeshComponent, m_batchMask, "Batch Mask");
         
         return true;
     }
@@ -127,7 +128,12 @@ namespace vg::engine
     //--------------------------------------------------------------------------------------
     void MeshComponent::OnPropertyChanged(IObject * _object, const IProperty & _prop, bool _notifyParent)
     {
-        if (!strcmp(_prop.getName(), "m_shader"))
+        if (!strcmp(_prop.getName(), "m_batchMask"))
+        {
+            if (nullptr != m_meshInstance)
+                m_meshInstance->SetBatchMask(m_batchMask);
+        }
+        else if (!strcmp(_prop.getName(), "m_shader"))
         {
             MaterialResourceData * matResData = dynamic_cast<MaterialResourceData *>(_object->getParent());
             VG_ASSERT(matResData);
@@ -173,6 +179,8 @@ namespace vg::engine
             // Mesh loaded
             IMeshModel * meshModel = m_meshResource.getMeshModel();
             m_meshInstance->SetModel(Lod::Lod0, meshModel);
+            m_batchMask.setBitCount(meshModel->GetBatchCount(), true);
+            m_meshInstance->SetBatchMask(m_batchMask);
 
             if (false == m_registered)
             {
@@ -213,6 +221,7 @@ namespace vg::engine
         {
             // Mesh unloaded
             m_meshInstance->SetModel(Lod::Lod0, nullptr);
+            //m_batchMask.setBitCount(0);
 
             if (m_registered)
             {

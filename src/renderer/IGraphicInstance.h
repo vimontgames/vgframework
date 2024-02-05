@@ -2,6 +2,11 @@
 
 #include "core/Instance/Instance.h"
 
+namespace vg::core
+{
+    class BitMask;
+}
+
 namespace vg::gfx
 {
     class CommandList;
@@ -22,6 +27,8 @@ namespace vg::renderer
 
         virtual bool                SetMaterial     (core::uint _index, IMaterialModel * _materialModel) = 0;
         virtual IMaterialModel *    GetMaterial     (core::uint _index) const = 0;
+
+        virtual void                SetBatchMask    (const core::BitMask & _batchMask) = 0;
 
         virtual void                ClearPickingID  () = 0;
         virtual void                SetPickingID    (PickingID _id) = 0;

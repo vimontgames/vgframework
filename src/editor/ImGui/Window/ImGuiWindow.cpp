@@ -9,6 +9,7 @@
 #include "core/IGameObject.h"
 #include "core/IComponent.h"
 #include "core/ISelection.h"
+#include "core/Misc/BitMask.h"
 
 #include "renderer/IRenderer.h"
 
@@ -513,6 +514,39 @@ namespace vg::editor
                             }
                         }
                         break;
+                    }
+                }
+                break;
+
+                case IProperty::Type::BitMask:
+                {
+                    VG_ASSERT(!isEnumArray, "Display of EnumArray property not implemented for type '%s'", asString(type).c_str());
+                    BitMask * pBitMask = _prop->GetPropertyBitMask(_object);
+
+                    string enumLabel = ImGui::getObjectLabel(_prop->getDisplayName(), _prop);
+                    string preview = pBitMask->toString();
+
+                    if (ImGui::BeginCombo(enumLabel.c_str(), preview.c_str(), ImGuiComboFlags_HeightLarge))
+                    {
+                        const auto bitCount = pBitMask->getBitCount();
+                        for (uint i = 0; i < bitCount; ++i)
+                        {
+                            bool value = pBitMask->getBitValue(i);
+                            const string bitName = fmt::sprintf("Bit %u", i);
+                            
+                            if (ImGui::Checkbox(bitName.c_str(), &value))
+                            {
+                                if (!readOnly)
+                                {
+                                    if (value)
+                                        pBitMask->setBitValue(i, true);
+                                    else
+                                        pBitMask->setBitValue(i, false);
+                                }
+                                changed = true;
+                            }
+                        }
+                        ImGui::EndCombo();
                     }
                 }
                 break;

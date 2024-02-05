@@ -1,5 +1,6 @@
 #include "ClassDesc.h"
 #include "core/IResource.h"
+#include "core/Misc/BitMask.h"
 
 namespace vg::core
 {
@@ -141,6 +142,12 @@ namespace vg::core
 
     //--------------------------------------------------------------------------------------
     void ClassDesc::RegisterProperty(const char * _className, const char * _propertyName, core::string * _offset, const char * _displayName, IProperty::Flags _flags)
+    {
+        registerClassMemberT(_className, _propertyName, _offset, _displayName, _flags);
+    }
+
+    //--------------------------------------------------------------------------------------
+    void ClassDesc::RegisterProperty(const char * _className, const char * _propertyName, BitMask * _offset, const char * _displayName, IProperty::Flags _flags)
     {
         registerClassMemberT(_className, _propertyName, _offset, _displayName, _flags);
     }
@@ -321,6 +328,7 @@ namespace vg::core
     template <> struct TypeToEnum<core::float4> { static constexpr auto value = IProperty::Type::Float4; };
     template <> struct TypeToEnum<core::float4x4> { static constexpr auto value = IProperty::Type::Float4x4; };
     template <> struct TypeToEnum<core::string> { static constexpr auto value = IProperty::Type::String; };
+    template <> struct TypeToEnum<core::BitMask> { static constexpr auto value = IProperty::Type::BitMask; };
     template <> struct TypeToEnum<IObject> { static constexpr auto value = IProperty::Type::Object; };
     template <> struct TypeToEnum<IObject*> { static constexpr auto value = IProperty::Type::ObjectPtr; };
     template <> struct TypeToEnum<IResource> { static constexpr auto value = IProperty::Type::Resource; };

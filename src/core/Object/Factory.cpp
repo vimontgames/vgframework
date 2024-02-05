@@ -8,6 +8,7 @@
 #include "engine/IResourceManager.h"
 #include "core/File/File.h"
 #include "core/File/Buffer.h"
+#include "core/Misc/BitMask.h"
 
 using namespace tinyxml2;
 
@@ -716,6 +717,24 @@ namespace vg::core
                                         case IProperty::Type::LayoutElement:
                                             break;
 
+                                        case IProperty::Type::BitMask:
+                                        {
+                                            VG_ASSERT(!isEnumArray, "EnumArray serialization from XML not implemented for type '%s'", asString(type).c_str());
+
+                                            const XMLAttribute * xmlBitCount = xmlPropElem->FindAttribute("BitCount");
+                                            const XMLAttribute * xmlValue = xmlPropElem->FindAttribute("Value");
+                                            if (nullptr != xmlValue && nullptr != xmlBitCount)
+                                            {
+                                                uint bitCount = xmlBitCount->UnsignedValue();
+
+                                                BitMask * pBitMask = prop->GetPropertyBitMask(_object); 
+                                                string sVal = xmlValue->Value();
+
+                                                pBitMask->fromString(sVal, bitCount);
+                                            }
+                                        }
+                                        break;
+
                                         case IProperty::Type::Float:
                                         {
                                             VG_ASSERT(!isEnumArray, "EnumArray serialization from XML not implemented for type '%s'", asString(type).c_str());
@@ -1255,6 +1274,18 @@ namespace vg::core
                 case IProperty::Type::Callback:
                 {
                     skipAttribute = true;
+                }
+                break;
+
+                case IProperty::Type::BitMask:
+                {
+                    VG_ASSERT(!isEnumArray, "EnumArray serialization to XML not implemented for type '%s'", asString(type).c_str());
+
+                    const BitMask * pBitMask = prop->GetPropertyBitMask(_object);
+                    const uint bitCount = pBitMask->getBitCount();
+
+                    xmlPropElem->SetAttribute("BitCount", bitCount);
+                    xmlPropElem->SetAttribute("Value", pBitMask->toString(true).c_str());
                 }
                 break;
 

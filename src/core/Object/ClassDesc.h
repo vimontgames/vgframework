@@ -24,6 +24,7 @@ namespace vg::core
         void                                RegisterProperty            (const char * _className, const char * _propertyName, float4 * _offset, const char * _displayName, IProperty::Flags _flags) final override;
         void                                RegisterProperty            (const char * _className, const char * _propertyName, float4x4 * _offset, const char * _displayName, IProperty::Flags _flags) final override;
         void                                RegisterProperty            (const char * _className, const char * _propertyName, string * _offset, const char * _displayName, IProperty::Flags _flags) final override;
+        void                                RegisterProperty            (const char * _className, const char * _propertyName, BitMask * _offset, const char * _displayName, IProperty::Flags _flags) final override;
 
         void                                RegisterPropertyResource    (const char * _className, const char * _propertyName, IResource * _offset, const char * _displayName, IProperty::Flags _flags) final override;
         void                                RegisterPropertyResourcePtr (const char * _className, const char * _propertyName, IResource ** _offset, const char * _displayName, IProperty::Flags _flags) final override;

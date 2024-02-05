@@ -285,6 +285,14 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
+    BitMask * Property::GetPropertyBitMask(const IObject * _object) const
+    {
+        VG_ASSERT(nullptr != _object);
+        checkPropertyType(Type::BitMask);
+        return (BitMask *)(uint_ptr(_object) + offset);
+    }
+
+    //--------------------------------------------------------------------------------------
     float * Property::GetPropertyFloat(const IObject * _object) const
     {
         VG_ASSERT(nullptr != _object);

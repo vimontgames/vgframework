@@ -8,6 +8,7 @@ namespace vg::core
     
     class IObject;
     class IResource;
+    class BitMask;
 
     class IProperty
     {
@@ -44,6 +45,7 @@ namespace vg::core
             EnumFlagsU16,
             EnumFlagsU32,
             EnumFlagsU64,
+            BitMask,
             Resource,
             ResourcePtr,
             ResourcePtrVector,
@@ -125,6 +127,8 @@ namespace vg::core
         virtual u32 *                           GetPropertyUint32               (const IObject * _object) const = 0;
         virtual u32 *                           GetPropertyUintN                (const IObject * _object, uint _componentCount, uint _index = 0) const = 0;
         virtual u64 *                           GetPropertyUint64               (const IObject * _object) const = 0;
+
+        virtual BitMask *                       GetPropertyBitMask              (const IObject * _object) const = 0;
 
         virtual float *                         GetPropertyFloat                (const IObject * _object) const = 0;
         virtual float2 *                        GetPropertyFloat2               (const IObject * _object) const = 0;

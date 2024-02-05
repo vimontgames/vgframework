@@ -67,6 +67,9 @@
     <Filter Include="Memory">
       <UniqueIdentifier>{2cc24ec9-cf94-4ec6-814a-a60f2def42b7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Misc">
+      <UniqueIdentifier>{3b40ac56-fb20-485c-9d2c-78abb38b3525}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Math\Math.h">
@@ -214,6 +217,9 @@
     <ClInclude Include="Memory\NewDelete.h">
       <Filter>Memory</Filter>
     </ClInclude>
+    <ClInclude Include="Misc\BitMask.h">
+      <Filter>Misc</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Math\Math.cpp">
@@ -278,6 +284,9 @@
     <ClCompile Include="Memory\MemoryAllocator.cpp">
       <Filter>Memory</Filter>
     </ClCompile>
+    <ClCompile Include="Misc\BitMask.cpp">
+      <Filter>Misc</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Instance\Instance.inl">
@@ -291,6 +300,9 @@
     </None>
     <None Include="GameObject\GameObject.inl">
       <Filter>GameObject</Filter>
+    </None>
+    <None Include="Misc\BitMask.inl">
+      <Filter>Misc</Filter>
     </None>
   </ItemGroup>
 </Project>

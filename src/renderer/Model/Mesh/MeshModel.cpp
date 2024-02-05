@@ -48,6 +48,15 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
+    uint MeshModel::GetBatchCount() const
+    {
+        if (auto * geo = getGeometry())
+            return (uint)geo->batches().size();
+        else
+            return 0;
+    }
+
+    //--------------------------------------------------------------------------------------
     // clearing BLAS collections when deleting model isn't necessary because only instances
     // using it will increase RefCount and this way we don't have to deal with dandling pointers
     // we are sure that when all instances are deleted then all BLAS collections are deleted too

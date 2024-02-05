@@ -49,6 +49,7 @@
     <ClInclude Include="Math\Math.h" />
     <ClInclude Include="Memory\MemoryAllocator.h" />
     <ClInclude Include="Memory\NewDelete.h" />
+    <ClInclude Include="Misc\BitMask.h" />
     <ClInclude Include="Model\Model.h" />
     <ClInclude Include="Object\AutoRegisterClass.h" />
     <ClInclude Include="Object\AutoRegisterClass.hpp" />
@@ -86,6 +87,7 @@
     <ClCompile Include="Logger\Logger.cpp" />
     <ClCompile Include="Math\Math.cpp" />
     <ClCompile Include="Memory\MemoryAllocator.cpp" />
+    <ClCompile Include="Misc\BitMask.cpp" />
     <ClCompile Include="Model\Model.cpp" />
     <ClCompile Include="Object\Factory.cpp" />
     <ClCompile Include="Object\Object.cpp" />
@@ -107,6 +109,7 @@
     <None Include="Component\Component.inl" />
     <None Include="GameObject\GameObject.inl" />
     <None Include="Instance\Instance.inl" />
+    <None Include="Misc\BitMask.inl" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>

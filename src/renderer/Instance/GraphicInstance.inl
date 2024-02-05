@@ -26,8 +26,14 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    VG_INLINE core::uint  GraphicInstance::getGPUInstanceDataOffset() const
+    VG_INLINE core::uint GraphicInstance::getGPUInstanceDataOffset() const
     {
         return m_shaderInstanceDataOffset;
-    }    
+    }  
+
+    //--------------------------------------------------------------------------------------
+    VG_INLINE const core::BitMask & GraphicInstance::getBatchMask() const
+    {
+        return m_batchMask;
+    }
 }

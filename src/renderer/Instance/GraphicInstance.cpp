@@ -68,6 +68,12 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
+    void GraphicInstance::SetBatchMask(const core::BitMask & _batchMask)
+    {
+        m_batchMask = _batchMask;
+    }
+
+    //--------------------------------------------------------------------------------------
     bool GraphicInstance::setMaterial(core::uint _index, MaterialModel * _materialModel)
     {
         if (m_materials.size() < _index + 1)

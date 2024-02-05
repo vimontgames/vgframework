@@ -271,6 +271,7 @@ namespace vg::renderer
             root3D.setPickingID(pickingID);
 
             _cmdList->setPrimitiveTopology(PrimitiveTopology::TriangleList);
+            const BitMask batchMask = getBatchMask();
 
             const auto & batches = geo->batches();
             for (uint i = 0; i < batches.size(); ++i)
@@ -278,15 +279,17 @@ namespace vg::renderer
                 const auto & batch = batches[i];
                 bool draw = false;
 
-                // Setup material 
-                const MaterialModel * material = getMaterial(i);
-                if (nullptr == material)
-                    material = renderer->getDefaultMaterial();
-                
-                auto surfaceType = material->getSurfaceType();
-
-                switch (_renderContext.m_shaderPass)
+                if (batchMask.getBitValue(i))
                 {
+                    // Setup material 
+                    const MaterialModel * material = getMaterial(i);
+                    if (nullptr == material)
+                        material = renderer->getDefaultMaterial();
+
+                    auto surfaceType = material->getSurfaceType();
+
+                    switch (_renderContext.m_shaderPass)
+                    {
                     default:
                         VG_ASSERT_ENUM_NOT_IMPLEMENTED(_renderContext.m_shaderPass);
                         break;
@@ -316,12 +319,13 @@ namespace vg::renderer
                         }
                     }
                     break;
-                }                    
+                    }
 
-                if (draw)
-                {
-                    _cmdList->setGraphicRootConstants(0, (u32 *)&root3D, RootConstants3DCount);
-                    _cmdList->drawIndexed(batch.count, batch.offset);
+                    if (draw)
+                    {
+                        _cmdList->setGraphicRootConstants(0, (u32 *)&root3D, RootConstants3DCount);
+                        _cmdList->drawIndexed(batch.count, batch.offset);
+                    }
                 }
             }
         }

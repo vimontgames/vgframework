@@ -3,6 +3,7 @@
 #include "core/Component/Component.h"
 #include "engine/Resource/Mesh/MeshResource.h"
 #include "MaterialResourceList.h"
+#include "core/Misc/BitMask.h"
 
 namespace vg::renderer
 {
@@ -39,6 +40,7 @@ namespace vg::engine
         DrawSkeletonJob *                   m_drawSkeletonJob   = nullptr;
         MeshResource                        m_meshResource;
         MaterialResourceList                m_meshMaterials;
+        core::BitMask                       m_batchMask;
         bool                                m_displayBones      = false;
         bool                                m_registered        = false;
     };

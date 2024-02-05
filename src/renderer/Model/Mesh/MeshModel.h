@@ -25,6 +25,8 @@ namespace vg::renderer
                                 MeshModel               (const core::string & _name, core::IObject * _parent);
                                 ~MeshModel              ();
 
+        core::uint              GetBatchCount           () const final override;
+
         void                    setGeometry             (MeshGeometry * _geometry);
         const MeshGeometry *    getGeometry             () const;
 
