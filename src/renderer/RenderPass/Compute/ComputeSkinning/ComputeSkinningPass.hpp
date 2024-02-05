@@ -9,7 +9,7 @@ namespace vg::renderer
     static core::uint s_SkinningMatricesBufferSize = 8 * 1024 * 1024;
 
     // Buffer for skinned vertices
-	static core::uint s_ComputeSkinningBufferSize = 16 * 1024 * 1024; 
+	static core::uint s_ComputeSkinningBufferSize = 128 * 1024 * 1024; 
 
     //--------------------------------------------------------------------------------------
     ComputeSkinningPass::ComputeSkinningPass() :
