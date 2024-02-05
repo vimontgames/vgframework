@@ -37,6 +37,11 @@
                 <Property type="String" name="m_resourcePath" flags="Hidden" value="data/Scenes/GJ.scene"/>
                 <Property type="String" name="m_name" value=""/>
             </Object>
+            <Object class="SceneResource">
+                <Property type="String" name="m_name" flags="Hidden" value=""/>
+                <Property type="String" name="m_resourcePath" flags="Hidden" value="data/Scenes/Justin.scene"/>
+                <Property type="String" name="m_name" value=""/>
+            </Object>
         </Property>
         <Property type="ResourcePtrVector" name="m_prefabsResources" flags="Resource"/>
     </Object>
