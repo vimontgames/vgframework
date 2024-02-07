@@ -1,6 +1,11 @@
 #pragma once
 #include "renderer/Instance/GraphicInstance.h"
 
+namespace vg::core
+{
+    class IWorld;
+}
+
 namespace vg::renderer
 {
     class ISkeletalAnimation;
@@ -15,7 +20,7 @@ namespace vg::renderer
         }
         
         virtual bool UpdateSkeleton () = 0;
-        virtual bool DrawSkeleton   () const = 0;
+        virtual bool DrawSkeleton   (const core::IWorld * _world) const = 0;
 
         virtual bool AddAnimation(ISkeletalAnimation * _animation) = 0;
         virtual bool RemoveAnimation(ISkeletalAnimation * _animation) = 0;

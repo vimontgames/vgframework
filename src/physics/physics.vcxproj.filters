@@ -105,6 +105,8 @@
     <ClInclude Include="Character\CharacterDesc.hpp">
       <Filter>Character</Filter>
     </ClInclude>
+    <ClInclude Include="PhysicsWorld.h" />
+    <ClInclude Include="PhysicsWorld.hpp" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="JobSystem">

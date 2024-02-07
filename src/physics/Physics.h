@@ -19,6 +19,7 @@ namespace JPH
 namespace vg::physics
 {
     class JobSystemAdapter;
+    class PhysicsWorld;
 
 	class Physics final : public IPhysics, public core::Singleton<Physics>
 	{
@@ -46,14 +47,21 @@ namespace vg::physics
         IPhysicsOptions *                   GetOptions                  () const final override;
         void                                SetGravity                  (const core::float3 _gravity) final override;
 
+        core::IPhysicsWorld *               CreatePhysicsWorld          (const core::IWorld * _world) final override;
         IShape *                            CreateShape                 (const IShapeDesc * _shapeDesc) final override;
-        IBody *                             CreateBody                  (const IBodyDesc * _bodyDesc, IShape * _shape, const core::float4x4 & _world) final override;
-        ICharacter *                        CreateCharacter             (const ICharacterDesc * _characterDesc, IShape * _shape, const core::float4x4 & _world) final override;
+        IBody *                             CreateBody                  (core::IPhysicsWorld * _physicsWorld, const IBodyDesc * _bodyDesc, IShape * _shape, const core::float4x4 & _matrix) final override;
+        ICharacter *                        CreateCharacter             (core::IPhysicsWorld * _physicsWorld, const ICharacterDesc * _characterDesc, IShape * _shape, const core::float4x4 & _matrix) final override;
 
         engine::IEngine *                   getEngine                   () const;
         renderer::IDebugDraw *              getDebugDraw                () const;
 
-        JPH::PhysicsSystem *                getPhysicsSystem            () const { return m_physicsSystem; }
+        const PhysicsCreationParams &       getPhysicsCreationParams    () { return m_physicsCreationParams;}
+        BroadPhaseLayer &                   getBroadPhaseLayer          () { return m_broadPhaseLayer; }
+        BroadPhaseFilter &                  getBroadPhaseFilter         () { return m_broadPhaseFilter; }
+        ObjectFilter &                      getObjectfilter             () { return m_objectFilter; }
+
+        void                                registerPhysicsWorld        (PhysicsWorld * _physicsWorld);
+        void                                unregisterPhysicsWorld      (PhysicsWorld * _physicsWorld);
 
     private:
         PhysicsCreationParams               m_physicsCreationParams;
@@ -61,8 +69,8 @@ namespace vg::physics
         BroadPhaseLayer                     m_broadPhaseLayer;
         BroadPhaseFilter                    m_broadPhaseFilter;
         ObjectFilter                        m_objectFilter;
-        JPH::PhysicsSystem *                m_physicsSystem = nullptr;
         JPH::TempAllocatorMalloc            m_tempAllocator;
+        core::vector<PhysicsWorld*>         m_physicsWorlds;
 	};
 }
 

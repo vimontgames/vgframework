@@ -26,6 +26,9 @@ namespace vg::core
         UpdateFlags                                         GetUpdateFlags          () const final override;
         void                                                SetUpdateFlags          (UpdateFlags _flags, bool _enabled) final override;
 
+        IBaseScene *                                        GetScene                () const final override;
+        IWorld *                                            GetWorld                () const final override;
+
         void                                                FixedUpdate             (float _dt);
         void                                                Update                  (float _dt);
         void                                                LateUpdate              (float _dt);

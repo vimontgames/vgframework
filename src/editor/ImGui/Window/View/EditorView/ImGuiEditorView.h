@@ -7,6 +7,8 @@ namespace vg::editor
     class ImGuiEditorView : public ImGuiView
     {
     public:
+        VG_CLASS_DECL(ImGuiEditorView, ImGuiView);
+
         ImGuiEditorView(core::uint _index);
         ~ImGuiEditorView(); 
     };

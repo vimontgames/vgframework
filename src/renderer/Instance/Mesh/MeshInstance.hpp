@@ -610,7 +610,7 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    bool MeshInstance::DrawSkeleton() const
+    bool MeshInstance::DrawSkeleton(const core::IWorld * _world) const
     {
         VG_PROFILE_CPU("Skeleton Draw");
 
@@ -635,13 +635,13 @@ namespace vg::renderer
                 float4x4 boneMatrix = mul(transpose(node.node_to_world), matrix);
 
                 float3 boxSize = float3(0.01f, 0.01f, 0.01f);
-                dbgDraw->AddWireframeBox(-boxSize, boxSize, 0xFF00FF00, boneMatrix);
+                dbgDraw->AddWireframeBox(_world, -boxSize, boxSize, 0xFF00FF00, boneMatrix);
 
                 if (-1 != node.parent_index)
                 {
                     const MeshImporterNode & parentNode = nodes[node.parent_index];
                     float4x4 parentBoneMatrix = mul(transpose(parentNode.node_to_world), matrix);
-                    dbgDraw->AddLine(boneMatrix[3].xyz, parentBoneMatrix[3].xyz, 0xFF00FF00);
+                    dbgDraw->AddLine(_world, boneMatrix[3].xyz, parentBoneMatrix[3].xyz, 0xFF00FF00);
                 }
             }
 

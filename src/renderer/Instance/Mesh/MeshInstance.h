@@ -37,7 +37,7 @@ namespace vg::renderer
 
         bool                            IsSkinned                   () const final override;
         bool                            UpdateSkeleton              () final override;
-        bool                            DrawSkeleton                () const final override;
+        bool                            DrawSkeleton                (const core::IWorld * _world) const final override;
 
         bool                            AddAnimation                (ISkeletalAnimation * _animation) final override;
         bool                            RemoveAnimation             (ISkeletalAnimation * _animation) final override;

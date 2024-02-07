@@ -111,7 +111,7 @@ namespace vg::engine
                 m_meshInstance->UpdateSkeleton();
 
                 if (m_displayBones)
-                    m_meshInstance->DrawSkeleton();
+                    m_meshInstance->DrawSkeleton(getGameObject()->GetWorld());
             }
         }
     }

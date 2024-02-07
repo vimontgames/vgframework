@@ -41,10 +41,10 @@ namespace vg::physics
     }
 
     //--------------------------------------------------------------------------------------
-    void SphereShape::Draw(const core::float4x4 & _world)
+    void SphereShape::Draw(const core::IWorld * _world, const core::float4x4 & _matrix)
     {
-        core::float4x4 world = mul(m_transform, _world);
+        core::float4x4 matrix = mul(m_transform, _matrix);
         const float radius = m_radius;
-        getDebugDraw()->AddWireframeSphere(radius, 0xFF0000FF, world);
+        getDebugDraw()->AddWireframeSphere(_world, radius, 0xFF0000FF, matrix);
     }
 }

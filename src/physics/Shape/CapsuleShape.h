@@ -20,7 +20,7 @@ namespace vg::physics
 
         CapsuleShape(const CapsuleShapeDesc & _desc);
         ShapeType GetShapeType() const final override { return ShapeType::Capsule; }
-        void Draw(const core::float4x4 & _world) final override;
+        void Draw(const core::IWorld * _world, const core::float4x4 & _matrix) final override;
 
         float m_radius = 0.0f;
         float m_height = 0.0f;

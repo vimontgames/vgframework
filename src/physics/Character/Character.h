@@ -2,6 +2,11 @@
 
 #include "physics/ICharacter.h"
 
+namespace vg::core
+{
+    class IWorld;
+}
+
 namespace JPH
 {
     class CharacterBase;
@@ -13,6 +18,7 @@ namespace vg::physics
     class CharacterDesc;
     class RigidCharacterDesc;
     class Shape;
+    class PhysicsWorld;
 
     class Character : public ICharacter
     {
@@ -20,7 +26,7 @@ namespace vg::physics
         VG_CLASS_DECL(Character, ICharacter);
         VG_CLASS_CTOR_HEADER_IMPL(Character, ICharacter);
 
-        Character(const CharacterDesc * _characterDesc, Shape * _shape, const core::float4x4 & _world);
+        Character(PhysicsWorld * _physicsWorld, const CharacterDesc * _characterDesc, Shape * _shape, const core::float4x4 & _matrix);
         ~Character();
 
         void                    Activate        (const core::float4x4 & _world) = 0;
@@ -29,10 +35,10 @@ namespace vg::physics
         core::float4x4          GetMatrix       () const = 0;
         GroundState             GetGroundState  () const = 0;
 
-    protected:
-        JPH::BodyInterface &    getBodyInterface() const;
+        const PhysicsWorld *    getPhysicsWorld () const { return m_physicsWorld;}
 
     private:
+        const PhysicsWorld *    m_physicsWorld = nullptr;
         const Shape *           m_shape = nullptr;
         const CharacterDesc *   m_characterDesc = nullptr;
     };
@@ -43,7 +49,7 @@ namespace vg::physics
         VG_CLASS_DECL(RigidCharacter, Character);
         VG_CLASS_CTOR_HEADER_IMPL(RigidCharacter, Character);
 
-        RigidCharacter(const RigidCharacterDesc * _rigidCharacterDesc, Shape * _shape, const core::float4x4 & _world);
+        RigidCharacter(PhysicsWorld * _physicsWorld, const RigidCharacterDesc * _rigidCharacterDesc, Shape * _shape, const core::float4x4 & _matrix);
         ~RigidCharacter();
 
         void                    Activate        (const core::float4x4 & _world) final override;

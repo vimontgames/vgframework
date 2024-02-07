@@ -1,5 +1,6 @@
 #include "RigidBodyComponent.h"
 #include "core/IGameObject.h"
+#include "core/IWorld.h"
 #include "engine/Engine.h"
 #include "physics/IPhysicsOptions.h"
 #include "physics/IShape.h"
@@ -77,7 +78,7 @@ namespace vg::engine
         if (engine->getPhysicsOptions()->IsRigidBodyVisible(m_shape->GetShapeType()))
         {
             if (m_shape)
-                m_shape->Draw(go->getGlobalMatrix());
+                m_shape->Draw(go->GetWorld(), go->getGlobalMatrix());
         }
     }
 
@@ -91,6 +92,9 @@ namespace vg::engine
     //--------------------------------------------------------------------------------------
     void RigidBodyComponent::OnPlay()
     {
+        if (!m_body)
+            createBody();
+
         if (m_body)
             m_body->Activate(GetGameObject()->GetGlobalMatrix());
 
@@ -107,6 +111,8 @@ namespace vg::engine
     void RigidBodyComponent::OnStop()
     {
         super::OnStop();
+
+        VG_SAFE_RELEASE(m_body);
 
         if (m_shapeDesc)
             m_shapeDesc->OnStop();
@@ -220,7 +226,8 @@ namespace vg::engine
             if (!m_bodyDesc->IsMassOverriden())
                 m_bodyDesc->SetMass(m_shape->GetMass());
 
-            m_body = getPhysics()->CreateBody(m_bodyDesc, m_shape, GetGameObject()->GetGlobalMatrix());
+            if (auto * world = GetGameObject()->GetWorld())
+                m_body = getPhysics()->CreateBody(world->GetPhysicsWorld(), m_bodyDesc, m_shape, GetGameObject()->GetGlobalMatrix());
         }
         return nullptr != m_body;
     }

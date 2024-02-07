@@ -2,6 +2,11 @@
 
 #include "physics/IBody.h"
 
+namespace vg::core
+{
+    class IWorld;
+}
+
 namespace JPH
 {
     class BodyInterface;
@@ -12,6 +17,7 @@ namespace vg::physics
     class BodyDesc;
     class RigidBodyDesc;
     class Shape;
+    class PhysicsWorld;
 
     class Body : public IBody
     {
@@ -19,7 +25,7 @@ namespace vg::physics
         VG_CLASS_DECL(Body, IBody);
         VG_CLASS_CTOR_HEADER_IMPL(Body, IBody);
 
-        Body(const BodyDesc * _bodyDesc, Shape * _shape, const core::float4x4 & _world);
+        Body(PhysicsWorld * _physicsWorld, const BodyDesc * _bodyDesc, Shape * _shape, const core::float4x4 & _matrix);
         ~Body();
 
         void Activate(const core::float4x4 & _world) final override;
@@ -28,13 +34,13 @@ namespace vg::physics
         core::float4x4 GetMatrix() const final override;
 
     private:
-        JPH::BodyInterface & getBodyInterface() const;
         void resetBody(const core::float4x4 & _world);
 
     private:
-        const Shape *       m_shape = nullptr;
-        const BodyDesc *    m_bodyDesc = nullptr;
-        JPH::BodyID         m_bodyID;
+        const PhysicsWorld *    m_physicsWorld = nullptr;
+        const Shape *           m_shape = nullptr;
+        const BodyDesc *        m_bodyDesc = nullptr;
+        JPH::BodyID             m_bodyID;
     };  
 
     class RigidBody : public Body
@@ -43,7 +49,7 @@ namespace vg::physics
         VG_CLASS_DECL(RigidBody, Body);
         VG_CLASS_CTOR_HEADER_IMPL(RigidBody, Body);
         
-        RigidBody(const RigidBodyDesc * _bodyDesc, Shape * _shape, const core::float4x4 & _world);
+        RigidBody(PhysicsWorld * _physicsWorld, const RigidBodyDesc * _bodyDesc, Shape * _shape, const core::float4x4 & _matrix);
         ~RigidBody();
     };
 }

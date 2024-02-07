@@ -5,6 +5,7 @@
 #include "physics/Helper.h"
 #include "physics/Shape/CapsuleShape.h"
 #include "physics/Physics.h"
+#include "physics/PhysicsWorld.h"
 
 #include "CharacterDesc.hpp"
 
@@ -21,8 +22,9 @@ namespace vg::physics
     }
 
     //--------------------------------------------------------------------------------------
-    Character::Character(const CharacterDesc * _characterDesc, Shape * _shape, const core::float4x4 & _world) :
+    Character::Character(PhysicsWorld * _physicsWorld, const CharacterDesc * _characterDesc, Shape * _shape, const core::float4x4 & _matrix) :
         super(),
+        m_physicsWorld(_physicsWorld),
         m_shape(_shape),
         m_characterDesc(_characterDesc)
     {
@@ -36,12 +38,6 @@ namespace vg::physics
     }
 
     //--------------------------------------------------------------------------------------
-    JPH::BodyInterface & Character::getBodyInterface() const
-    {
-        return Physics::get()->getPhysicsSystem()->GetBodyInterface();
-    }
-
-    //--------------------------------------------------------------------------------------
     VG_REGISTER_OBJECT_CLASS(RigidCharacter, "Rigid Character");
     //--------------------------------------------------------------------------------------
     bool RigidCharacter::registerProperties(IClassDesc & _desc)
@@ -51,14 +47,14 @@ namespace vg::physics
     }
 
     //--------------------------------------------------------------------------------------
-    RigidCharacter::RigidCharacter(const RigidCharacterDesc * _rigidCharacterDesc, Shape * _shape, const core::float4x4 & _world) :
-        super((CharacterDesc*)_rigidCharacterDesc, _shape, _world)
+    RigidCharacter::RigidCharacter(PhysicsWorld * _physicsWorld, const RigidCharacterDesc * _rigidCharacterDesc, Shape * _shape, const core::float4x4 & _matrix) :
+        super(_physicsWorld, (CharacterDesc*)_rigidCharacterDesc, _shape, _matrix)
     {
         JPH::Shape * joltShape = _shape->getJoltShape();
         VG_ASSERT(joltShape);
 
         // Get quaternion from matrix rotation part
-        float3x3 rot = extractRotation(_world);
+        float3x3 rot = extractRotation(_matrix);
         quaternion quat = quaternion(rot);
 
         JPH::CharacterSettings settings;
@@ -76,14 +72,14 @@ namespace vg::physics
 
         #pragma push_macro("new")
         #undef new
-        m_character = new JPH::Character(&settings, getJoltVec3(_world[3].xyz), getJoltQuaternion(quat), 0, Physics::get()->getPhysicsSystem());
+        m_character = new JPH::Character(&settings, getJoltVec3(_matrix[3].xyz), getJoltQuaternion(quat), 0, getPhysicsWorld()->getPhysicsSystem());
         #pragma pop_macro("new")
 
         m_character->AddRef();
 
         //getBodyInterface().SetFriction(m_character->GetBodyID(), _rigidCharacterDesc->m_friction);
         //getBodyInterface().SetRestitution(m_character->GetBodyID(), _rigidCharacterDesc->m_restitution);
-        getBodyInterface().AddBody(m_character->GetBodyID(), JPH::EActivation::DontActivate);
+        getPhysicsWorld()->getBodyInterface().AddBody(m_character->GetBodyID(), JPH::EActivation::DontActivate);
     }
 
     //--------------------------------------------------------------------------------------
@@ -91,7 +87,9 @@ namespace vg::physics
     {
         if (m_character)
         {
-            getBodyInterface().RemoveBody(m_character->GetBodyID());
+            // If we close prefab view then we could be trying to delete a body from a physics world that has been deleted!
+
+            getPhysicsWorld()->getBodyInterface().RemoveBody(m_character->GetBodyID());
             //getBodyInterface().DestroyBody(m_character->GetBodyID()); // Body will be destroyed by m_character ~ctor
         }
         VG_SAFE_RELEASE(m_character);
@@ -102,14 +100,14 @@ namespace vg::physics
     {
         resetCharacter(_world);
         if (m_character)
-            getBodyInterface().ActivateBody(m_character->GetBodyID());
+            getPhysicsWorld()->getBodyInterface().ActivateBody(m_character->GetBodyID());
     }
 
     //--------------------------------------------------------------------------------------
     void RigidCharacter::Deactivate(const float4x4 & _world)
     {
         if (m_character)
-            getBodyInterface().DeactivateBody(m_character->GetBodyID());
+            getPhysicsWorld()->getBodyInterface().DeactivateBody(m_character->GetBodyID());
         resetCharacter(_world);
     }
 
@@ -120,7 +118,7 @@ namespace vg::physics
         {
             float3x3 rot = extractRotation(_world);
             quaternion quat = quaternion(rot);
-            getBodyInterface().SetPositionRotationAndVelocity(m_character->GetBodyID(), getJoltVec3(_world[3].xyz), getJoltQuaternion(quat), getJoltVec3(float3(0, 0, 0)), getJoltVec3(float3(0, 0, 0)));
+            getPhysicsWorld()->getBodyInterface().SetPositionRotationAndVelocity(m_character->GetBodyID(), getJoltVec3(_world[3].xyz), getJoltQuaternion(quat), getJoltVec3(float3(0, 0, 0)), getJoltVec3(float3(0, 0, 0)));
         }
     }
 

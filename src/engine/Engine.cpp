@@ -238,13 +238,27 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
+    void Engine::registerWorld(World * _world)
+    {
+        VG_ASSERT(!m_worlds.exists(_world));
+        m_worlds.push_back(_world);
+    }
+
+    //--------------------------------------------------------------------------------------
+    void Engine::unregisterWorld(World * _world)
+    {
+        VG_ASSERT(m_worlds.exists(_world));
+        m_worlds.remove(_world);
+    }
+
+    //--------------------------------------------------------------------------------------
     IProject * Engine::getProject() const
     {
         return m_project;
     }
 
     //--------------------------------------------------------------------------------------
-    core::IWorld * Engine::getCurrentWorld() const
+    core::IWorld * Engine::GetMainWorld() const
     {
         if (m_worldResource)
         {
@@ -255,6 +269,12 @@ namespace vg::engine
         }
 
         return nullptr;
+    }
+
+    //--------------------------------------------------------------------------------------
+    const core::vector<core::IWorld *> & Engine::GetWorlds() const
+    {
+        return m_worlds;
     }
 
 	//--------------------------------------------------------------------------------------
@@ -556,35 +576,36 @@ namespace vg::engine
 
         float dt = m_time.m_dt;
 
-        IWorld * world = getCurrentWorld();
-        if (world)
+        // FixedUpdate all GameObjects and components
         {
-            // FixedUpdate all GameObjects and components
             VG_PROFILE_CPU("FixedUpdate");
-            const uint sceneCount = world->GetSceneCount(BaseSceneType::Scene);
-            for (uint i = 0; i < sceneCount; ++i)
+            for (IWorld * world : GetWorlds())
             {
-                Scene * scene = (Scene *)world->GetScene(i, BaseSceneType::Scene);
-                GameObject * root = scene->getRoot();
-                if (root && asBool(UpdateFlags::FixedUpdate & root->getUpdateFlags()))
-                    root->FixedUpdate(dt);
+                for (uint i = 0; i < world->GetSceneCount(BaseSceneType::Scene); ++i)
+                {
+                    const Scene * scene = (Scene *)world->GetScene(i, BaseSceneType::Scene);
+                    GameObject * root = scene->getRoot();
+                    if (root && asBool(UpdateFlags::FixedUpdate & root->getUpdateFlags()))
+                        root->FixedUpdate(dt);
+                }
             }
         }
 
         // This will use all available threads for physics
         m_physics->RunOneFrame(m_time.m_dt);
 
-        if (world)
+        // Update
         {
-            // Update all GameObjects and components
             VG_PROFILE_CPU("Update");
-            const uint sceneCount = world->GetSceneCount(BaseSceneType::Scene);
-            for (uint i = 0; i < sceneCount; ++i)
+            for (IWorld * world : GetWorlds())
             {
-                Scene * scene = (Scene *)world->GetScene(i, BaseSceneType::Scene);
-                GameObject * root = scene->getRoot();
-                if (root && asBool(UpdateFlags::Update & root->getUpdateFlags()))
-                    root->Update(dt);
+                for (uint i = 0; i < world->GetSceneCount(BaseSceneType::Scene); ++i)
+                {
+                    const Scene * scene = (Scene *)world->GetScene(i, BaseSceneType::Scene);
+                    GameObject * root = scene->getRoot();
+                    if (root && asBool(UpdateFlags::Update & root->getUpdateFlags()))
+                        root->Update(dt);
+                }
             }
         }
 
@@ -595,17 +616,18 @@ namespace vg::engine
             scheduler->Wait(getJobSync(JobSync::Animation));
         }
 
-        if (world)
+        // LateUpdate all GameObjects and components
         {
-            // LateUpdate all GameObjects and components
             VG_PROFILE_CPU("LateUpdate");
-            const uint sceneCount = world->GetSceneCount(BaseSceneType::Scene);
-            for (uint i = 0; i < sceneCount; ++i)
+            for (IWorld * world : GetWorlds())
             {
-                Scene * scene = (Scene *)world->GetScene(i, BaseSceneType::Scene);
-                GameObject * root = scene->getRoot();
-                if (root && asBool(UpdateFlags::LateUpdate & root->getUpdateFlags()))
-                    root->LateUpdate(dt);
+                for (uint i = 0; i < world->GetSceneCount(BaseSceneType::Scene); ++i)
+                {
+                    const Scene * scene = (Scene *)world->GetScene(i, BaseSceneType::Scene);
+                    GameObject * root = scene->getRoot();
+                    if (root && asBool(UpdateFlags::LateUpdate & root->getUpdateFlags()))
+                        root->LateUpdate(dt);
+                }
             }
         }
 
@@ -700,8 +722,7 @@ namespace vg::engine
         // Detect joypads
         Kernel::getInput()->OnPlay();
 
-        IWorld * world = getCurrentWorld();
-        if (nullptr != world)
+        for (IWorld * world : GetWorlds())
         {
             for (uint i = 0; i < world->GetSceneCount(BaseSceneType::Scene); ++i)
             {
@@ -743,8 +764,7 @@ namespace vg::engine
         m_isPlaying = false;
         m_isPaused = false;
 
-        IWorld * world = getCurrentWorld();
-        if (nullptr != world)
+        for (IWorld * world : GetWorlds())
         {
             for (uint i = 0; i < world->GetSceneCount(BaseSceneType::Scene); ++i)
             {

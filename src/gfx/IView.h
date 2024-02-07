@@ -95,7 +95,8 @@ namespace vg::gfx
     public:
         enum class Flags : core::u32
         {
-            Picking = 0x00000001
+            Picking = 0x00000001,
+            Prefab  = 0x00000002
         };
 
         IView() {};

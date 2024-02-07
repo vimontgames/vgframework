@@ -36,7 +36,7 @@ namespace vg::physics
         Shape(const core::string & _name, core::IObject * _parent);
         ~Shape();
 
-        virtual void Draw(const core::float4x4 & _world) = 0;
+        virtual void Draw(const core::IWorld * _world, const core::float4x4 & _matrix) = 0;
 
         const core::float4x4 & GetTransform() const final override;
         float GetMass() const final override;

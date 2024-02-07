@@ -11,6 +11,8 @@ namespace vg::renderer
 namespace vg::core
 {
     class IComponent;
+    class IBaseScene;
+    class IWorld;
 
     class IGameObject : public Instance
     {
@@ -37,6 +39,9 @@ namespace vg::core
 
         virtual UpdateFlags                     GetUpdateFlags      () const = 0;
         virtual void                            SetUpdateFlags      (UpdateFlags _flags, bool _enabled) = 0;
+
+        virtual IBaseScene *                    GetScene            () const = 0;
+        virtual IWorld *                        GetWorld            () const = 0;
 
         template <class T> T *                  AddComponentByType  (const core::string & _name);
         template <class T> T *                  GetComponentByType  () const;

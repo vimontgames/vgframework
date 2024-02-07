@@ -98,6 +98,8 @@
     <ClInclude Include="ImGui\Window\View\GameView\ImGuiGameView.hpp" />
     <ClInclude Include="ImGui\Window\View\ImGuiView.h" />
     <ClInclude Include="ImGui\Window\View\ImGuiView.hpp" />
+    <ClInclude Include="ImGui\Window\View\PrefabView\ImGuiPrefabView.h" />
+    <ClInclude Include="ImGui\Window\View\PrefabView\ImGuiPrefabView.hpp" />
     <ClInclude Include="Options\EditorOptions.h" />
     <ClInclude Include="Precomp.h" />
   </ItemGroup>

@@ -1,6 +1,8 @@
 #include "renderer/Precomp.h"
 #include "DebugDraw.h"
 #include "core/IScheduler.h"
+#include "core/IWorld.h"
+#include "engine/IEngine.h"
 #include "renderer/Renderer.h"
 #include "renderer/Geometry/Mesh/MeshGeometry.h"
 #include "gfx/Device/Device.h"
@@ -17,8 +19,19 @@ using namespace vg::gfx;
 namespace vg::renderer
 {
     //--------------------------------------------------------------------------------------
-    DebugDraw::DebugDraw() :
-        m_lines(1024*16)
+    DebugDraw::WorldData::WorldData() :
+        m_lines(1024 * 16)
+    {
+    }
+
+    //--------------------------------------------------------------------------------------
+    DebugDraw::WorldData::~WorldData()
+    {
+
+    }
+
+    //--------------------------------------------------------------------------------------
+    DebugDraw::DebugDraw() 
     {
         auto * device = Device::get();
         const RootSignatureTableDesc & bindlessTable = device->getBindlessTable()->getTableDesc();
@@ -43,6 +56,7 @@ namespace vg::renderer
         Device::get()->removeRootSignature(m_debugDrawSignatureHandle);
 
         clearDrawData();
+        clearWorldData();   
 
         VG_SAFE_RELEASE(m_box);
         VG_SAFE_RELEASE(m_gridVB);
@@ -50,6 +64,33 @@ namespace vg::renderer
         VG_SAFE_RELEASE(m_icoSphere);
         VG_SAFE_RELEASE(m_hemiSphere);
         VG_SAFE_RELEASE(m_cylinder);
+    }
+
+    //--------------------------------------------------------------------------------------
+    void DebugDraw::clearWorldData()
+    {
+        //for (auto & pair : m_worldData)
+        //{
+        //    WorldData & worldData = pair.second;
+        //
+        //    // TODO
+        //}
+        //m_worldData.clear();
+    }
+
+    //--------------------------------------------------------------------------------------
+    DebugDraw::WorldData * DebugDraw::getWorldData(const core::IWorld * _world)
+    {
+        if (IDebugDrawData * data = _world->GetDebugDrawData())
+        {
+            return (DebugDraw::WorldData *)data;
+        }
+        else
+        {
+            auto * newData = new DebugDraw::WorldData();
+            ((core::IWorld*)(_world))->SetDebugDrawData(newData);
+            return newData;
+        }
     }
 
     //--------------------------------------------------------------------------------------
@@ -568,17 +609,17 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    void DebugDraw::AddLine(const core::float3 & _beginPos, const core::float3 & _endPos, core::u32 _color, const core::float4x4 & _world)
+    void DebugDraw::AddLine(const core::IWorld * _world, const core::float3 & _beginPos, const core::float3 & _endPos, core::u32 _color, const core::float4x4 & _matrix)
     {
-        addLine(_beginPos, _endPos, _color, _world);
+        addLine(_world, _beginPos, _endPos, _color, _matrix);
     }
 
     //--------------------------------------------------------------------------------------
-    void DebugDraw::addLine(const core::float3 & _beginPos, const core::float3 & _endPos, core::u32 _color, const core::float4x4 & _world)
+    void DebugDraw::addLine(const core::IWorld * _world, const core::float3 & _beginPos, const core::float3 & _endPos, core::u32 _color, const core::float4x4 & _matrix)
     {
-        DebugDrawLineData & line = m_lines.push_empty_atomic();
+        DebugDrawLineData & line = getWorldData(_world)->m_lines.push_empty_atomic();
 
-        line.world = _world;
+        line.world = _matrix;
         line.beginPos = _beginPos;
         line.beginColor = _color;
         line.endPos = _endPos;
@@ -586,67 +627,46 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    void DebugDraw::AddWireframeBox(const float3 & _minPos, const float3 & _maxPos, u32 _color, const float4x4 & _world)
+    void DebugDraw::AddWireframeBox(const core::IWorld * _world, const float3 & _minPos, const float3 & _maxPos, u32 _color, const float4x4 & _matrix)
     {
-        #if 0
+        DebugDrawLineData * lines = getWorldData(_world)->m_lines.alloc(12);
 
-        addLine(float3(_minPos.x, _minPos.y, _minPos.z), float3(_maxPos.x, _minPos.y, _minPos.z), _color,_world);
-        addLine(float3(_maxPos.x, _minPos.y, _minPos.z), float3(_maxPos.x, _maxPos.y, _minPos.z), _color,_world);
-        addLine(float3(_maxPos.x, _maxPos.y, _minPos.z), float3(_minPos.x, _maxPos.y, _minPos.z), _color,_world);
-        addLine(float3(_minPos.x, _maxPos.y, _minPos.z), float3(_minPos.x, _minPos.y, _minPos.z), _color,_world);
-                                                                                                       
-        addLine(float3(_minPos.x, _minPos.y, _minPos.z), float3(_minPos.x, _minPos.y, _maxPos.z), _color,_world);
-        addLine(float3(_maxPos.x, _minPos.y, _minPos.z), float3(_maxPos.x, _minPos.y, _maxPos.z), _color,_world);
-        addLine(float3(_maxPos.x, _maxPos.y, _minPos.z), float3(_maxPos.x, _maxPos.y, _maxPos.z), _color,_world);
-        addLine(float3(_minPos.x, _maxPos.y, _minPos.z), float3(_minPos.x, _maxPos.y, _maxPos.z), _color,_world);
-                                                                                                      
-        addLine(float3(_minPos.x, _minPos.y, _maxPos.z), float3(_maxPos.x, _minPos.y, _maxPos.z), _color,_world);
-        addLine(float3(_maxPos.x, _minPos.y, _maxPos.z), float3(_maxPos.x, _maxPos.y, _maxPos.z), _color,_world);
-        addLine(float3(_maxPos.x, _maxPos.y, _maxPos.z), float3(_minPos.x, _maxPos.y, _maxPos.z), _color,_world);
-        addLine(float3(_minPos.x, _maxPos.y, _maxPos.z), float3(_minPos.x, _minPos.y, _maxPos.z), _color,_world);
-
-        #else
-
-        DebugDrawLineData * lines = m_lines.alloc(12);
-
-        lines[0x0] = { _world, float3(_minPos.x, _minPos.y, _minPos.z), _color, float3(_maxPos.x, _minPos.y, _minPos.z), _color };
-        lines[0x1] = { _world, float3(_maxPos.x, _minPos.y, _minPos.z), _color, float3(_maxPos.x, _maxPos.y, _minPos.z), _color };
-        lines[0x2] = { _world, float3(_maxPos.x, _maxPos.y, _minPos.z), _color, float3(_minPos.x, _maxPos.y, _minPos.z), _color };
-        lines[0x3] = { _world, float3(_minPos.x, _maxPos.y, _minPos.z), _color, float3(_minPos.x, _minPos.y, _minPos.z), _color };
-                                                                       
-        lines[0x4] = { _world, float3(_minPos.x, _minPos.y, _minPos.z), _color, float3(_minPos.x, _minPos.y, _maxPos.z), _color };
-        lines[0x5] = { _world, float3(_maxPos.x, _minPos.y, _minPos.z), _color, float3(_maxPos.x, _minPos.y, _maxPos.z), _color };
-        lines[0x6] = { _world, float3(_maxPos.x, _maxPos.y, _minPos.z), _color, float3(_maxPos.x, _maxPos.y, _maxPos.z), _color };
-        lines[0x7] = { _world, float3(_minPos.x, _maxPos.y, _minPos.z), _color, float3(_minPos.x, _maxPos.y, _maxPos.z), _color };
-                                                                      
-        lines[0x8] = { _world, float3(_minPos.x, _minPos.y, _maxPos.z), _color, float3(_maxPos.x, _minPos.y, _maxPos.z), _color };
-        lines[0x9] = { _world, float3(_maxPos.x, _minPos.y, _maxPos.z), _color, float3(_maxPos.x, _maxPos.y, _maxPos.z), _color };
-        lines[0xA] = { _world, float3(_maxPos.x, _maxPos.y, _maxPos.z), _color, float3(_minPos.x, _maxPos.y, _maxPos.z), _color };
-        lines[0xB] = { _world, float3(_minPos.x, _maxPos.y, _maxPos.z), _color, float3(_minPos.x, _minPos.y, _maxPos.z), _color };
-
-        #endif
+        lines[0x0] = { _matrix, float3(_minPos.x, _minPos.y, _minPos.z), _color, float3(_maxPos.x, _minPos.y, _minPos.z), _color };
+        lines[0x1] = { _matrix, float3(_maxPos.x, _minPos.y, _minPos.z), _color, float3(_maxPos.x, _maxPos.y, _minPos.z), _color };
+        lines[0x2] = { _matrix, float3(_maxPos.x, _maxPos.y, _minPos.z), _color, float3(_minPos.x, _maxPos.y, _minPos.z), _color };
+        lines[0x3] = { _matrix, float3(_minPos.x, _maxPos.y, _minPos.z), _color, float3(_minPos.x, _minPos.y, _minPos.z), _color };
+                                                            
+        lines[0x4] = { _matrix, float3(_minPos.x, _minPos.y, _minPos.z), _color, float3(_minPos.x, _minPos.y, _maxPos.z), _color };
+        lines[0x5] = { _matrix, float3(_maxPos.x, _minPos.y, _minPos.z), _color, float3(_maxPos.x, _minPos.y, _maxPos.z), _color };
+        lines[0x6] = { _matrix, float3(_maxPos.x, _maxPos.y, _minPos.z), _color, float3(_maxPos.x, _maxPos.y, _maxPos.z), _color };
+        lines[0x7] = { _matrix, float3(_minPos.x, _maxPos.y, _minPos.z), _color, float3(_minPos.x, _maxPos.y, _maxPos.z), _color };
+                                                          
+        lines[0x8] = { _matrix, float3(_minPos.x, _minPos.y, _maxPos.z), _color, float3(_maxPos.x, _minPos.y, _maxPos.z), _color };
+        lines[0x9] = { _matrix, float3(_maxPos.x, _minPos.y, _maxPos.z), _color, float3(_maxPos.x, _maxPos.y, _maxPos.z), _color };
+        lines[0xA] = { _matrix, float3(_maxPos.x, _maxPos.y, _maxPos.z), _color, float3(_minPos.x, _maxPos.y, _maxPos.z), _color };
+        lines[0xB] = { _matrix, float3(_minPos.x, _maxPos.y, _maxPos.z), _color, float3(_minPos.x, _minPos.y, _maxPos.z), _color };
     }
 
     //--------------------------------------------------------------------------------------
-    void DebugDraw::AddWireframeSphere(const float _radius, core::u32 _color, const core::float4x4 _world)
+    void DebugDraw::AddWireframeSphere(const core::IWorld * _world, const float _radius, core::u32 _color, const core::float4x4 _matrix)
     {
-        DebugDrawIcoSphereData & icoSphere = m_icoSpheres.push_empty();
-        icoSphere.world = mul(float4x4::scale(_radius), _world);
+        DebugDrawIcoSphereData & icoSphere = getWorldData(_world)->m_icoSpheres.push_empty();
+        icoSphere.world = mul(float4x4::scale(_radius), _matrix);
         icoSphere.color = _color;
     }
 
     //--------------------------------------------------------------------------------------
-    void DebugDraw::AddHemisphere(const float _radius, core::u32 _color, const core::float4x4 _world)
+    void DebugDraw::AddHemisphere(const core::IWorld * _world, const float _radius, core::u32 _color, const core::float4x4 _matrix)
     {
-        DebugDrawHemiSphereData & hemiSphere = m_hemiSpheres.push_empty();
-        hemiSphere.world = mul(float4x4::scale(_radius), _world);
+        DebugDrawHemiSphereData & hemiSphere = getWorldData(_world)->m_hemiSpheres.push_empty();
+        hemiSphere.world = mul(float4x4::scale(_radius), _matrix);
         hemiSphere.color = _color;
     }
 
     //--------------------------------------------------------------------------------------
-    void DebugDraw::AddCylinder(float _radius, float _height, core::u32 _color, const core::float4x4 _world)
+    void DebugDraw::AddCylinder(const core::IWorld * _world, float _radius, float _height, core::u32 _color, const core::float4x4 _matrix)
     {
-        DebugDrawCylinderData & cylinder = m_cylinders.push_empty();
+        DebugDrawCylinderData & cylinder = getWorldData(_world)->m_cylinders.push_empty();
 
         float3 s = float3(_radius, _radius, _height * 0.5f);
 
@@ -658,41 +678,91 @@ namespace vg::renderer
               0,   0,   0, 1 
         );
 
-        cylinder.world = mul(scale, _world);
+        cylinder.world = mul(scale, _matrix);
         cylinder.color = _color;
     }
 
     //--------------------------------------------------------------------------------------
-    void DebugDraw::AddCapsule(float _radius, float _height, core::u32 _color, const core::float4x4 _world)
+    void DebugDraw::AddCapsule(const core::IWorld * _world, float _radius, float _height, core::u32 _color, const core::float4x4 _matrix)
     {
         float offset = max(0.0f, _height - _radius * 2.0f);
 
         float4x4 topHemi = float4x4::identity();
         topHemi[3].xyz = float3(0, 0, 0.5f * offset);
-        AddHemisphere(_radius, _color, mul(topHemi, _world));
+        AddHemisphere(_world, _radius, _color, mul(topHemi, _matrix));
 
-        AddCylinder(_radius, offset, _color, _world);
+        AddCylinder(_world, _radius, offset, _color, _matrix);
 
         float4x4 bottomHemi = float4x4::identity();
         bottomHemi[2].xyz *= -1.0f;
         bottomHemi[3].xyz = float3(0, 0, -0.5f * offset);
-        AddHemisphere(_radius, _color, mul(bottomHemi, _world));
+        AddHemisphere(_world, _radius, _color, mul(bottomHemi, _matrix));
+    }
+
+    //--------------------------------------------------------------------------------------
+    const vg::engine::IEngine * getEngine()
+    {
+        const auto * factory = Kernel::getFactory();
+        return (const vg::engine::IEngine *)factory->getSingleton("Engine");
     }
 
     //--------------------------------------------------------------------------------------
     void DebugDraw::endFrame()
     {
-        m_lines.clear();
-        //m_wireframeBoxes.clear();
-        m_icoSpheres.clear();
-        m_hemiSpheres.clear();
-        m_cylinders.clear();
+        Renderer * renderer = Renderer::get();
+
+        auto & worlds = getEngine()->GetWorlds();
+
+        for (auto * world : worlds)
+        {
+            auto * worldData = (WorldData *)world->GetDebugDrawData();
+
+            if (worldData)
+            {
+                worldData->m_lines.clear();
+                worldData->m_icoSpheres.clear();
+                worldData->m_hemiSpheres.clear();
+                worldData->m_cylinders.clear();
+            }
+        }
+
+        //set<IWorld *> worlds;
+        //for (uint j = 0; j < core::enumCount<gfx::ViewTarget>(); ++j)
+        //{
+        //    auto target = (gfx::ViewTarget)j;
+        //    auto & views = renderer->GetViews(target);
+        //    for (uint i = 0; i < views.count(); ++i)
+        //    {
+        //        auto * view = views[i];
+        //        if (view->IsVisible())
+        //        {
+        //            if (auto * world = view->GetWorld())
+        //                worlds.insert(world);
+        //        }
+        //    }
+        //}
+        //
+        //for (auto * world : worlds)
+        //{
+        //    auto * worldData = (WorldData *)world->GetDebugDrawData();
+        //
+        //    if (worldData)
+        //    {
+        //        worldData->m_lines.clear();
+        //        worldData->m_icoSpheres.clear();
+        //        worldData->m_hemiSpheres.clear();
+        //        worldData->m_cylinders.clear();
+        //    }
+        //}
+
+
     }
 
     //--------------------------------------------------------------------------------------
     void DebugDraw::reset()
     {
         clearDrawData();
+        clearWorldData();
     }
 
     const float4 opaqueColor = float4(1, 1, 1, 0.2f);
@@ -721,18 +791,24 @@ namespace vg::renderer
         uint_ptr lineStartOffset = offset;
         uint lineCount = 0;
 
-        const auto mapSizeInBytes = m_lines.size() * 2 * sizeof(DebugDrawVertex);
+        auto world = ((IView *)_view)->GetWorld();
+        if (!world)
+            return;
+
+        auto * worldData = getWorldData(world);
+
+        const auto mapSizeInBytes = worldData->m_lines.size() * 2 * sizeof(DebugDrawVertex);
         if (mapSizeInBytes > 0)
         {
             u8 * dbgDrawData = (u8 *)_cmdList->map(drawData.m_debugDrawVB, mapSizeInBytes).data;
             {
-                for (uint i = 0; i < m_lines.size(); ++i)
+                for (uint i = 0; i < worldData->m_lines.size(); ++i)
                 {
                     VG_ASSERT(offset + 2 * sizeof(DebugDrawVertex) < drawData.m_debugDrawVBSize);
 
                     if (uint_ptr(offset + 2 * sizeof(DebugDrawVertex)) < drawData.m_debugDrawVBSize)
                     {
-                        const auto & line = m_lines[i];
+                        const auto & line = worldData->m_lines[i];
 
                         DebugDrawVertex * v0 = ((DebugDrawVertex *)(dbgDrawData + offset));
                         float3 pos0 = mul(float4(line.beginPos.xyz, 1), line.world).xyz;
@@ -844,22 +920,28 @@ namespace vg::renderer
             }
         }
 
+        auto world = ((IView *)_view)->GetWorld();
+        if (!world)
+            return;
+
+        auto * worldData = getWorldData(world);
+
         // draw spheres
         {
             VG_PROFILE_CPU("Spheres");
-            drawDebugModelInstances(_cmdList, m_icoSphere, m_icoSpheres);
+            drawDebugModelInstances(_cmdList, m_icoSphere, worldData->m_icoSpheres);
         }
 
         // draw hemispheres
         {
             VG_PROFILE_CPU("HemiSpheres");
-            drawDebugModelInstances(_cmdList, m_hemiSphere, m_hemiSpheres);
+            drawDebugModelInstances(_cmdList, m_hemiSphere, worldData->m_hemiSpheres);
         }
 
         // draw cylinders
         {
             VG_PROFILE_CPU("Cylinders");
-            drawDebugModelInstances(_cmdList, m_cylinder, m_cylinders);
+            drawDebugModelInstances(_cmdList, m_cylinder, worldData->m_cylinders);
         }
     }
 

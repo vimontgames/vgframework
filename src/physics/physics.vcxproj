@@ -51,6 +51,8 @@
     <ClInclude Include="JobSystem\PhysicsJobs.hpp" />
     <ClInclude Include="Options\PhysicsOptions.h" />
     <ClInclude Include="Physics.h" />
+    <ClInclude Include="PhysicsWorld.h" />
+    <ClInclude Include="PhysicsWorld.hpp" />
     <ClInclude Include="Physics_Consts.h" />
     <ClInclude Include="Precomp.h" />
     <ClInclude Include="Shape\BoxShape.h" />

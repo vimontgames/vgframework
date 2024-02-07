@@ -241,6 +241,12 @@
     <ClInclude Include="ImGui\Window\SceneList\World\ImGuiWorld.hpp">
       <Filter>ImGui\Window\SceneList\World</Filter>
     </ClInclude>
+    <ClInclude Include="ImGui\Window\View\PrefabView\ImGuiPrefabView.hpp">
+      <Filter>ImGui\Window\View\Prefab</Filter>
+    </ClInclude>
+    <ClInclude Include="ImGui\Window\View\PrefabView\ImGuiPrefabView.h">
+      <Filter>ImGui\Window\View\Prefab</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Editor.def" />
@@ -372,6 +378,9 @@
     </Filter>
     <Filter Include="ImGui\Window\SceneList\World">
       <UniqueIdentifier>{83e866b9-2c1a-44e8-afae-c3efcc8bdc47}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ImGui\Window\View\Prefab">
+      <UniqueIdentifier>{5ea308f1-af76-4742-afa6-872f559e01ef}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

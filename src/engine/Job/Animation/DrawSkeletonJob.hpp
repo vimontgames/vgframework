@@ -1,6 +1,7 @@
 #include "Animation/DrawSkeletonJob.h"
 #include "engine/Component/Mesh/MeshComponent.h"
 #include "renderer/IMeshInstance.h"
+#include "core/GameObject/GameObject.h"
 
 namespace vg::engine
 {
@@ -18,6 +19,7 @@ namespace vg::engine
         //VG_PROFILE_CPU("DrawSkeletonJob");
 
         auto * instance = m_meshComponent->getMeshInstance();
-        instance->DrawSkeleton();
+        auto * world = m_meshComponent->getGameObject()->GetWorld();
+        instance->DrawSkeleton(world);
     }
 }

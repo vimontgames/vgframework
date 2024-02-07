@@ -19,6 +19,8 @@
 #include "Physics.inl"
 #endif
 
+#include "PhysicsWorld.hpp"
+
 using namespace vg::core;
 using namespace vg::physics;
 using namespace JPH;
@@ -157,18 +159,7 @@ namespace vg::physics
         m_jobSystem = new JobSystemAdapter(m_physicsCreationParams.maxPhysicsBarriers);
         #pragma pop_macro("new")  
 
-        // Now we can create the actual physics system
-        #pragma push_macro("new")
-        #undef new
-        m_physicsSystem = new JPH::PhysicsSystem();
-        #pragma pop_macro("new")  
-
-        m_physicsSystem->Init(m_physicsCreationParams.maxBodies, m_physicsCreationParams.numBodyMutexes, m_physicsCreationParams.maxBodyPairs, m_physicsCreationParams.maxContactConstraints, m_broadPhaseLayer, m_broadPhaseFilter, m_objectFilter);
-        m_physicsSystem->SetGravity(JPH::Vec3(0, 0, -9.81f));
-
         PhysicsOptions * physicsOptions = new PhysicsOptions("PhysicsOptions", this);
-
-        //m_physicsSystem->OptimizeBroadPhase();
 	}
 
 	//--------------------------------------------------------------------------------------
@@ -179,7 +170,7 @@ namespace vg::physics
 
         // Destroy test objects
         {
-            BodyInterface & body_interface = m_physicsSystem->GetBodyInterface();
+            //BodyInterface & body_interface = m_physicsSystem->GetBodyInterface();
 
             // Remove the sphere from the physics system. Note that the sphere itself keeps all of its state and can be re-added at any time.
             //body_interface.RemoveBody(sphere_id);
@@ -197,7 +188,7 @@ namespace vg::physics
         Factory::sInstance = nullptr;
 
         VG_SAFE_DELETE(m_jobSystem);
-        VG_SAFE_DELETE(m_physicsSystem);
+        //VG_SAFE_DELETE(m_physicsSystem);
 
         PhysicsOptions * physicsOptions = PhysicsOptions::get();
         VG_SAFE_DELETE(physicsOptions);
@@ -221,10 +212,11 @@ namespace vg::physics
     //--------------------------------------------------------------------------------------
     void Physics::OnPlay()
     {
-        if (m_physicsSystem)
+        for (auto * physicsWorld : m_physicsWorlds)
         {
+            auto * physicsSystem = physicsWorld->getPhysicsSystem();
             const auto startOptimizeBroadphase = Timer::getTick();
-            m_physicsSystem->OptimizeBroadPhase();
+            physicsSystem->OptimizeBroadPhase();
             VG_INFO("[Physics] Optimize BroadPhase in %.2f ms", Timer::getEnlapsedTime(startOptimizeBroadphase, Timer::getTick()));
         }
     }
@@ -235,7 +227,13 @@ namespace vg::physics
         VG_PROFILE_CPU("Physics");
         const auto * engine = getEngine();
         if (engine->IsPlaying() && !engine->IsPaused())
-            m_physicsSystem->Update((float)(_dt), 1, &m_tempAllocator, m_jobSystem);           
+        {
+            for (auto * physicsWorld : m_physicsWorlds)
+            {
+                auto * physicsSystem = physicsWorld->getPhysicsSystem();
+                physicsSystem->Update((float)(_dt), 1, &m_tempAllocator, m_jobSystem);
+            }
+        }
 	}
 
     //--------------------------------------------------------------------------------------
@@ -247,7 +245,29 @@ namespace vg::physics
     //--------------------------------------------------------------------------------------
     void Physics::SetGravity(const core::float3 _gravity)
     {
-        m_physicsSystem->SetGravity(JPH::Vec3(_gravity.x, _gravity.y, _gravity.z));
+        for (auto * physicsWorld : m_physicsWorlds)
+        {
+            auto * physicsSystem = physicsWorld->getPhysicsSystem();
+            physicsSystem->SetGravity(JPH::Vec3(_gravity.x, _gravity.y, _gravity.z));
+        }
+    }
+
+    //--------------------------------------------------------------------------------------
+    core::IPhysicsWorld * Physics::CreatePhysicsWorld(const core::IWorld * _world)
+    {
+        PhysicsWorld * physWorld = new PhysicsWorld(_world);
+        return physWorld;
+    }
+
+    //--------------------------------------------------------------------------------------
+    void Physics::registerPhysicsWorld(PhysicsWorld * _physicsWorld)
+    {
+        m_physicsWorlds.push_back(_physicsWorld);
+    }
+    //--------------------------------------------------------------------------------------
+    void Physics::unregisterPhysicsWorld(PhysicsWorld * _physicsWorld)
+    {
+        m_physicsWorlds.remove(_physicsWorld);
     }
 
     //--------------------------------------------------------------------------------------
@@ -281,8 +301,10 @@ namespace vg::physics
     }
 
     //--------------------------------------------------------------------------------------
-    IBody * Physics::CreateBody(const IBodyDesc * _bodyDesc, IShape * _shape, const core::float4x4 & _world)
+    IBody * Physics::CreateBody(core::IPhysicsWorld * _physicsWorld, const IBodyDesc * _bodyDesc, IShape * _shape, const core::float4x4 & _matrix)
     {
+        VG_ASSERT(_physicsWorld);
+
         const BodyType bodyType = _bodyDesc->GetBodyType();
         switch (bodyType)
         {
@@ -291,13 +313,15 @@ namespace vg::physics
                 return nullptr;
 
             case BodyType::Rigid:
-                return new physics::RigidBody((RigidBodyDesc *)_bodyDesc, (Shape*)_shape, _world);
+                return new physics::RigidBody((PhysicsWorld*)_physicsWorld, (RigidBodyDesc *)_bodyDesc, (Shape*)_shape, _matrix);
         }
     }
 
     //--------------------------------------------------------------------------------------
-    ICharacter * Physics::CreateCharacter(const ICharacterDesc * _characterDesc, IShape * _shape, const core::float4x4 & _world)
+    ICharacter * Physics::CreateCharacter(core::IPhysicsWorld * _world, const ICharacterDesc * _characterDesc, IShape * _shape, const core::float4x4 & _matrix)
     {
+        VG_ASSERT(_world);
+
         const CharacterType characterType = _characterDesc->GetCharacterType();
         switch (characterType)
         {
@@ -306,7 +330,7 @@ namespace vg::physics
                 return nullptr;
 
             case CharacterType::Rigid:
-                return new physics::RigidCharacter((RigidCharacterDesc *)_characterDesc, (Shape *)_shape, _world);
+                return new physics::RigidCharacter((PhysicsWorld*)_world, (RigidCharacterDesc *)_characterDesc, (Shape *)_shape, _matrix);
         }
     }
 }

@@ -34,6 +34,7 @@
 #include "editor/ImGui/Window/Console/ImGuiConsole.h"
 #include "editor/ImGui/Window/Input/ImGuiInput.h"
 #include "editor/ImGui/Toolbar/Main/ImGuiMainToolbar.h"
+#include "editor/ImGui/Window/View/PrefabView/ImGuiPrefabView.h"
 
 using namespace vg::core;
 using namespace vg::editor;
@@ -115,7 +116,7 @@ namespace vg::editor
     Editor::~Editor()
 	{
         for (uint i = 0; i < m_imGuiWindows.count(); ++i)
-            VG_SAFE_DELETE(m_imGuiWindows[i]);
+            VG_SAFE_RELEASE(m_imGuiWindows[i]);
         m_imGuiWindows.clear();
 	}
 
@@ -177,14 +178,20 @@ namespace vg::editor
 	}
 
     //--------------------------------------------------------------------------------------
-    template <class T> T * Editor::getWindow() const
+    template <class T> T * Editor::getWindow(const core::string _name) const
     {
         for (uint i = 0; i < m_imGuiWindows.count(); ++i)
         {
-            if (dynamic_cast<T *>(m_imGuiWindows[i]) != nullptr)
+            if (dynamic_cast<T *>(m_imGuiWindows[i]) != nullptr && (_name.empty() || m_imGuiWindows[i]->getName()._Starts_with(_name) ))
                 return (T *)(m_imGuiWindows[i]);
         }
         return nullptr;
+    }
+
+    //--------------------------------------------------------------------------------------
+    void Editor::destroyWindow(ImGuiWindow * _window)
+    {
+        m_imGuiWindowsToDestroy.push_back(_window);
     }
 
     //--------------------------------------------------------------------------------------
@@ -244,6 +251,24 @@ namespace vg::editor
         //        view->updateEditorCamera();
         //}
     }
+
+    //--------------------------------------------------------------------------------------
+    void drawMenuItemRecur(ImGuiWindow * window, vector<string> folders, int _depth = 0)
+    {
+        if (_depth == folders.size())
+        {
+            if (ImGui::MenuItem(window->getIconizedName().c_str()))
+                window->setVisible(true);
+        }
+        else
+        {
+            if (ImGui::BeginMenu(folders[_depth].c_str()))
+            {
+                drawMenuItemRecur(window, folders, _depth + 1);
+                ImGui::EndMenu();
+            }
+        }
+    };
 
 	//--------------------------------------------------------------------------------------
 	void Editor::DrawGUI(const GUIContext & _context)
@@ -349,12 +374,18 @@ namespace vg::editor
                             string folder = window->getPath();
                             if (!folder.empty())
                             {
-                                if (ImGui::BeginMenu(folder.c_str()))
+                                vector<string> folders;
+
+                                auto dirPos = folder.find_first_of("/");
+                                if (string::npos != dirPos)
                                 {
-                                    if (ImGui::MenuItem(window->getIconizedName().c_str()))
-                                        window->setVisible(true);
-                                    ImGui::EndMenu();
+                                    auto temp = folder.substr(0, dirPos);
+                                    folders.push_back(temp);
+                                    folder = folder.substr(dirPos+1);
                                 }
+
+                                folders.push_back(folder);
+                                drawMenuItemRecur(window, folders);                               
                             }
                             else
                             {
@@ -362,6 +393,54 @@ namespace vg::editor
                                     window->setVisible(true);
                             }
                         }
+                    }
+
+                    if (ImGui::BeginMenu("View"))
+                    {
+                        // Get Prefab views
+                        //vector<ImGuiPrefabView*> prefabWindows;
+                        //for (uint i = 0; i < m_imGuiWindows.size(); ++i)
+                        //{
+                        //    if (auto * prefabView = dynamic_cast<ImGuiPrefabView *>(m_imGuiWindows[i]))
+                        //        prefabWindows.push_back(prefabView);
+                        //}
+                        //
+                        //ImGui::BeginDisabled(prefabWindows.size() == 0);
+                        //{
+                        //    if (ImGui::BeginMenu("Prefabs"))
+                        //    {
+                        //        for (uint p = 0; p < prefabWindows.size(); ++p)
+                        //        {
+                        //            auto window = prefabWindows[p];
+                        //            if (ImGui::MenuItem(window->getName().c_str()))
+                        //                window->setVisible(true);
+                        //        }
+                        //        ImGui::EndMenu();
+                        //    }
+                        //}
+                        //ImGui::EndDisabled();
+                        //ImGui::EndMenu();
+
+                        auto world = getEngine()->GetMainWorld();
+                        uint prefabCount = 0;
+                        if (world)
+                            prefabCount = world->GetSceneCount(BaseSceneType::Prefab);
+
+                        ImGui::BeginDisabled(prefabCount == 0);
+                        {
+                            if (ImGui::BeginMenu("Prefabs"))
+                            {
+                                for (uint p = 0; p < prefabCount; ++p)
+                                {
+                                    auto prefab = world->GetScene(p, BaseSceneType::Prefab);
+                                    if (ImGui::MenuItem(prefab->getName().c_str()))
+                                        openPrefabView(prefab);
+                                }
+                                ImGui::EndMenu();
+                            }
+                        }
+                        ImGui::EndDisabled();
+                        ImGui::EndMenu();
                     }
 
                     ImGui::EndMenu();
@@ -434,6 +513,13 @@ namespace vg::editor
         }
         ImGui::End();
 
+        for (auto & window : m_imGuiWindowsToDestroy)
+        {
+            m_imGuiWindows.remove(window);
+            VG_SAFE_RELEASE_ASYNC(window);            
+        }
+        m_imGuiWindowsToDestroy.clear();
+
         string newWorldPopupName = "New World";
         string openFilePopupName = "Open World";
         string saveFilePopupName = "Save World";
@@ -494,4 +580,22 @@ namespace vg::editor
         if (showImGuiDemo)
             ImGui::ShowDemoWindow(&showImGuiDemo);
     }    
+
+    //--------------------------------------------------------------------------------------
+    void Editor::openPrefabView(const core::IBaseScene * _prefab)
+    {
+        // Create or show window
+        auto * prefabView = getWindow<ImGuiPrefabView>(_prefab->getName());
+
+        if (prefabView)
+        {
+            prefabView->setVisible(true);
+        }
+        else
+        {
+            auto prefabView = new ImGuiPrefabView((IBaseScene *)_prefab);
+            prefabView->m_name = _prefab->getName();
+            Editor::get()->m_imGuiWindows.push_back(prefabView);
+        }
+    }
 }

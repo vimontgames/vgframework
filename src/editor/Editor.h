@@ -9,6 +9,7 @@ namespace vg
 	{
 		class IFactory;
 		class ISelection;
+		class IBaseScene;
 	}
 
 	namespace engine
@@ -51,15 +52,19 @@ namespace vg
 
 			IEditorOptions *					GetOptions			() const final override;
 
-			template <class T> T *				getWindow			() const;
+			template <class T> T *				getWindow			(const core::string _name = {}) const;
+			void								destroyWindow		(ImGuiWindow * _window);
 
 			core::IFactory *					getFactory			() const;
 			core::ISelection *					getSelection		() const;
             engine::IEngine *					getEngine			() const;
             renderer::IRenderer *				getRenderer			() const;
 
+			void								openPrefabView		(const core::IBaseScene * _prefab);
+
 		//private:
 			core::vector<ImGuiWindow *>			m_imGuiWindows;
+			core::vector<ImGuiWindow *>			m_imGuiWindowsToDestroy;
 		};
 	}
 }

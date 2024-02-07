@@ -339,7 +339,9 @@ namespace ImGui
         auto bgColor = style.Colors[ImGuiCol_Header];
 
         ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(bgColor.x, bgColor.y, bgColor.z, 0));
+        ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, 0);
         ImGui::ButtonEx(ImGui::getObjectLabel(icon, "CheckBoxEnable", _object).c_str(), collapsedButtonSize, ImGuiItemFlags_AllowOverlap);
+        ImGui::PopStyleVar();
         ImGui::PopStyleColor();
 
         if (ImGui::IsItemHovered())
@@ -370,8 +372,9 @@ namespace ImGui
 
         ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(bgColor.x, bgColor.y, bgColor.z, 0));
         ImGui::PushStyleVar(ImGuiStyleVar_ButtonTextAlign, ImVec2(0.5f, 0.5f));
+        ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, 0);
         ImGui::ButtonEx(ImGui::getObjectLabel(fmt::sprintf("%s", _icon).c_str(), _object).c_str(), collapsedButtonSize, ImGuiItemFlags_AllowOverlap);
-        ImGui::PopStyleVar();
+        ImGui::PopStyleVar(2);
         ImGui::PopStyleColor();
 
         if (ImGui::IsItemHovered())

@@ -212,6 +212,24 @@ namespace vg::editor
     }
 
     //--------------------------------------------------------------------------------------
+    gfx::IView::Flags ImGuiView::GetViewFlags() const
+    {
+        return gfx::IView::Flags::Picking;
+    }
+
+    //--------------------------------------------------------------------------------------
+    IWorld * ImGuiView::GetWorld() const
+    {
+        return Editor::get()->getEngine()->GetMainWorld();
+    }
+    
+    //--------------------------------------------------------------------------------------
+    void ImGuiView::OnCloseWindow()
+    {
+       
+    }
+
+    //--------------------------------------------------------------------------------------
     void ImGuiView::DrawGUI()
     {
         // TODO : update editor camera *BEFORE* render?
@@ -236,7 +254,7 @@ namespace vg::editor
         //if (any(m_size > 0))
         //    title = name + " (" + to_string(m_size.x) + "x" + to_string(m_size.y) + ")###" + name;
 
-        if (ImGui::Begin((title).c_str(), &m_isVisible, ImGuiWindowFlags_NoFocusOnAppearing | ImGuiWindowFlags_NoNavInputs))
+        if (ImGui::Begin(title.c_str(), &m_isVisible, ImGuiWindowFlags_NoFocusOnAppearing | ImGuiWindowFlags_NoNavInputs))
         {
             //if (IsWindowAppearing())
             //{
@@ -283,16 +301,14 @@ namespace vg::editor
                     // Create or update view using IRenderer
                     gfx::CreateViewParams params;
                     params.size = m_size;
-                    params.world = Editor::get()->getEngine()->getCurrentWorld(); // TODO: do better
+                    params.world = GetWorld();
                     params.target = m_target;
                     params.dest = nullptr;    // No RenderTarget yet
 
                     string viewName = asString(params.target) + "View";
 
                     // Create a view with picking for editor views
-                    gfx::IView::Flags viewFlags = (gfx::IView::Flags)0;
-                    if (params.target == ViewTarget::Editor)
-                        viewFlags |= gfx::IView::Flags::Picking;
+                    gfx::IView::Flags viewFlags = GetViewFlags();
 
                     m_view = renderer->CreateView(params, viewName, viewFlags);
                     renderer->AddView(m_view);
@@ -370,21 +386,33 @@ namespace vg::editor
             }
 
             // Draw Border
-            //ImGui::GetForegroundDrawList()->AddRect(vMin, vMax, IM_COL32(0, 255, 0, 255));
-
-            if (!drawGizmo())
+            auto * window = ImGui::FindWindowByName(title.c_str());
+            ImGuiDockNode * node = window->DockNode;
+            if (!node)
             {
-                // Update picking if not currently manipulating gizmos
-                auto * renderer = Editor::get()->getRenderer();
-                auto picking = renderer->GetPicking();
-                bool showTooltip = Kernel::getInput()->IsKeyPressed(Key::LSHIFT); // ImGui::IsKeyPressed(ImGuiKey_LeftShift);
-                picking->Update(m_view, showTooltip, m_pickingTooltip);
-                if (!showTooltip)
-                    m_pickingTooltip.clear();
+                auto borderColor = ImGui::GetStyleColorVec4(ImGuiCol_Border);
+                borderColor.w *= 0.5f;
+                ImGui::GetForegroundDrawList()->AddRect(vMin, vMax, GetColorU32(borderColor));
+            }
 
-                if (!m_pickingTooltip.empty())
-                    ImGui::SetTooltip(m_pickingTooltip.c_str());
-            }            
+            bool activeGizmo = false;
+
+            if (m_view && m_view->IsActive())
+            {
+                if (!drawGizmo())
+                {
+                    // Update picking if not currently manipulating gizmos
+                    auto * renderer = Editor::get()->getRenderer();
+                    auto picking = renderer->GetPicking();
+                    bool showTooltip = Kernel::getInput()->IsKeyPressed(Key::LSHIFT); // ImGui::IsKeyPressed(ImGuiKey_LeftShift);
+                    picking->Update(m_view, showTooltip, m_pickingTooltip);
+                    if (!showTooltip)
+                        m_pickingTooltip.clear();
+
+                    if (!m_pickingTooltip.empty())
+                        ImGui::SetTooltip(m_pickingTooltip.c_str());
+                }
+            }
 
             m_view->SetVisible(true);
         }
@@ -401,6 +429,9 @@ namespace vg::editor
         ImGui::PopStyleColor();
         ImGui::PopStyleVar();
         ImGui::End();
+
+        if (!m_isVisible)
+            OnCloseWindow();
     }
 
     //--------------------------------------------------------------------------------------
@@ -409,7 +440,18 @@ namespace vg::editor
     bool ImGuiView::drawGizmo()
     {
         ISelection * selection = Editor::get()->getSelection();
-        const auto selectedObjects = selection->GetSelectedObjects();
+        const auto selectedObjectsNoFilter = selection->GetSelectedObjects();
+
+        // filter selected objects by world to keep only those belonging to current view
+        core::vector<core::IObject *> selectedObjects;
+        const auto viewWorld = m_view->GetWorld();
+        for (auto selected : selectedObjectsNoFilter)
+        {
+            auto go = dynamic_cast<IGameObject *>(selected);
+            if (go && go->GetWorld() == viewWorld)
+                selectedObjects.push_back(go);
+        }
+
         if (m_view && m_view->IsToolmode() && selectedObjects.size() > 0)
         {
             const auto options = EditorOptions::get();

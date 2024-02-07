@@ -2,6 +2,7 @@
 #include "core/GameObject/GameObject.h"
 #include "core/Object/AutoRegisterClass.h"
 #include "core/Kernel.h"
+#include "engine/Resource/World/WorldResourceData.h"
 
 using namespace vg::core;
 
@@ -53,5 +54,23 @@ namespace vg::engine
     IGameObject * GameObjectHierarchy::GetRoot() const
     {
         return (IGameObject *)getRoot();
+    }
+
+    //--------------------------------------------------------------------------------------
+    core::IWorld * GameObjectHierarchy::GetWorld() const
+    {
+        auto parent = getParent();
+        while (parent)
+        {
+            if (auto world = dynamic_cast<IWorld *>(parent))
+                return world;
+
+            //if (auto worldRes = dynamic_cast<WorldResourceData *>(parent))
+            //    return ((WorldResourceData *)parent)->getWorld();
+
+            parent = parent->getParent();
+        }
+
+        return nullptr;
     }
 }

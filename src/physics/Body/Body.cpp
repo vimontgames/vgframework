@@ -4,6 +4,7 @@
 #include "physics/Helper.h"
 #include "physics/Shape/Shape.h"
 #include "core/Math/Math.h"
+#include "physics/PhysicsWorld.h"
 
 #include "physics/Body/BodyDesc.hpp"
 
@@ -20,8 +21,9 @@ namespace vg::physics
     }
 
     //--------------------------------------------------------------------------------------
-    Body::Body(const BodyDesc * _bodyDesc, Shape * _shape, const core::float4x4 & _world) :
+    Body::Body(PhysicsWorld * _physicsWorld, const BodyDesc * _bodyDesc, Shape * _shape, const core::float4x4 & _matrix) :
         super(),
+        m_physicsWorld(_physicsWorld),
         m_shape(_shape),
         m_bodyDesc(_bodyDesc)
     {
@@ -29,10 +31,10 @@ namespace vg::physics
         VG_ASSERT(joltShape);
         
         // Get quaternion from matrix rotation part
-        float3x3 rot = extractRotation(_world);
+        float3x3 rot = extractRotation(_matrix);
         quaternion quat = quaternion(rot); 
         
-        JPH::BodyCreationSettings bodySettings(joltShape, getJoltVec3(_world[3].xyz), getJoltQuaternion(quat), getJoltMotionType(_bodyDesc->m_motion), getJoltObjectLayer(_bodyDesc->m_layer));
+        JPH::BodyCreationSettings bodySettings(joltShape, getJoltVec3(_matrix[3].xyz), getJoltQuaternion(quat), getJoltMotionType(_bodyDesc->m_motion), getJoltObjectLayer(_bodyDesc->m_layer));
         
         if (_bodyDesc->m_overrideMass)
         {
@@ -40,10 +42,10 @@ namespace vg::physics
             bodySettings.mMassPropertiesOverride.mMass = _bodyDesc->m_mass;
         }
         
-        m_bodyID = getBodyInterface().CreateAndAddBody(bodySettings, JPH::EActivation::DontActivate);
+        m_bodyID = m_physicsWorld->getBodyInterface().CreateAndAddBody(bodySettings, JPH::EActivation::DontActivate);
 
-        getBodyInterface().SetFriction(m_bodyID, _bodyDesc->m_friction);
-        getBodyInterface().SetRestitution(m_bodyID, _bodyDesc->m_restitution);
+        m_physicsWorld->getBodyInterface().SetFriction(m_bodyID, _bodyDesc->m_friction);
+        m_physicsWorld->getBodyInterface().SetRestitution(m_bodyID, _bodyDesc->m_restitution);
     }
 
     //--------------------------------------------------------------------------------------
@@ -51,8 +53,8 @@ namespace vg::physics
     {
         if (!m_bodyID.IsInvalid())
         {
-            getBodyInterface().RemoveBody(m_bodyID);
-            getBodyInterface().DestroyBody(m_bodyID);
+            m_physicsWorld->getBodyInterface().RemoveBody(m_bodyID);
+            m_physicsWorld->getBodyInterface().DestroyBody(m_bodyID);
         }
     }
 
@@ -61,21 +63,15 @@ namespace vg::physics
     {
         resetBody(_world);
         if (!m_bodyID.IsInvalid())
-            getBodyInterface().ActivateBody(m_bodyID);
+            m_physicsWorld->getBodyInterface().ActivateBody(m_bodyID);
     }
 
     //--------------------------------------------------------------------------------------
     void Body::Deactivate(const float4x4 & _world)
     {
-        getBodyInterface().DeactivateBody(m_bodyID);
+        m_physicsWorld->getBodyInterface().DeactivateBody(m_bodyID);
         if (!m_bodyID.IsInvalid())
             resetBody(_world);
-    }
-
-    //--------------------------------------------------------------------------------------
-    JPH::BodyInterface & Body::getBodyInterface() const
-    {
-        return Physics::get()->getPhysicsSystem()->GetBodyInterface();
     }
 
     //--------------------------------------------------------------------------------------
@@ -83,22 +79,19 @@ namespace vg::physics
     {
         float3x3 rot = extractRotation(_world);
         quaternion quat = quaternion(rot);
-        getBodyInterface().SetPositionRotationAndVelocity(m_bodyID, getJoltVec3(_world[3].xyz), getJoltQuaternion(quat), getJoltVec3(float3(0, 0, 0)), getJoltVec3(float3(0, 0, 0)));
+        m_physicsWorld->getBodyInterface().SetPositionRotationAndVelocity(m_bodyID, getJoltVec3(_world[3].xyz), getJoltQuaternion(quat), getJoltVec3(float3(0, 0, 0)), getJoltVec3(float3(0, 0, 0)));
     }
 
     //--------------------------------------------------------------------------------------
     float4x4 Body::GetMatrix() const
     {
-        JPH::BodyInterface & bodyInterface = Physics::get()->getPhysicsSystem()->GetBodyInterface();
-
         JPH::Vec3 position;
         JPH::Quat rotation;
-        getBodyInterface().GetPositionAndRotation(m_bodyID, position, rotation);
+        m_physicsWorld->getBodyInterface().GetPositionAndRotation(m_bodyID, position, rotation);
 
         float4x4 world = float4x4(fromJoltQuaternion(rotation));
-        //world[1] *= -1;
-
         world[3].xyz = fromJoltVec3(position);
+
         return world;
     }
 
@@ -112,8 +105,8 @@ namespace vg::physics
     }
 
     //--------------------------------------------------------------------------------------
-    RigidBody::RigidBody(const RigidBodyDesc * _bodyDesc, Shape * _shape, const core::float4x4 & _world) :
-       super(_bodyDesc, _shape, _world)
+    RigidBody::RigidBody(PhysicsWorld * _physicsWorld, const RigidBodyDesc * _bodyDesc, Shape * _shape, const core::float4x4 & _matrix) :
+       super(_physicsWorld, _bodyDesc, _shape, _matrix)
     {
 
     }

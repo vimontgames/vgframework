@@ -1,6 +1,8 @@
 #include "engine/Precomp.h"
 #include "engine/World/Scene/Scene.h"
 #include "World.h"
+#include "engine/Engine.h"
+#include "physics/IPhysics.h"
 
 #include "GameObjectHierarchy.hpp"
 #include "Scene/Scene.hpp"
@@ -18,16 +20,25 @@ namespace vg::engine
     {
         for (uint j = 0; j < enumCount<BaseSceneType>(); ++j)
             m_activeScene[j] = nullptr;
+
+        SetPhysicsWorld(Engine::get()->GetPhysics()->CreatePhysicsWorld(this));
+        Engine::get()->registerWorld(this);
     }
 
     //--------------------------------------------------------------------------------------
     World::~World()
     {
+        Engine::get()->unregisterWorld(this);
+
+        VG_SAFE_RELEASE(m_physicsWorld);
+
+        VG_SAFE_DELETE(m_debugDrawData);
+
         for (uint j = 0; j < enumCount<BaseSceneType>(); ++j)
         {
             auto sceneType = (BaseSceneType)j;
             RemoveAllScenes(sceneType);
-        }
+        }        
     }
 
     //--------------------------------------------------------------------------------------
@@ -42,6 +53,32 @@ namespace vg::engine
     vector<Scene*> & World::getScenes(BaseSceneType _sceneType)
     {
         return m_scenes[asInteger(_sceneType)];
+    }
+
+    //--------------------------------------------------------------------------------------
+    void World::SetDebugDrawData(core::IDebugDrawData * _debugDrawData)
+    {
+        VG_ASSERT(!m_debugDrawData);
+        m_debugDrawData = _debugDrawData;
+    }
+    
+    //--------------------------------------------------------------------------------------
+    core::IDebugDrawData * World::GetDebugDrawData() const
+    {
+        return m_debugDrawData;
+    }
+
+    //--------------------------------------------------------------------------------------
+    void World::SetPhysicsWorld(core::IPhysicsWorld * _physicsWorld)
+    {
+        VG_ASSERT(!m_physicsWorld);
+        m_physicsWorld = _physicsWorld;
+    }
+
+    //--------------------------------------------------------------------------------------
+    core::IPhysicsWorld * World::GetPhysicsWorld() const
+    {
+        return m_physicsWorld;
     }
 
     //--------------------------------------------------------------------------------------

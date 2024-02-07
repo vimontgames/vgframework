@@ -1,5 +1,7 @@
 #pragma once
 
+#include "core/Object/Object.h"
+
 struct ImColor;
 
 namespace imgui_addons
@@ -41,7 +43,7 @@ namespace vg::editor
         bool hide = false;
     };
 
-    class ImGuiWindow
+    class ImGuiWindow : public core::Object
     {
     public:
         enum Flags : core::u32

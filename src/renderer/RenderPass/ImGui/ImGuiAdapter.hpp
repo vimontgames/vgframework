@@ -25,6 +25,7 @@ namespace vg::renderer
     {
         ImGui::CreateContext();
         ImGuiIO & io = ImGui::GetIO();
+        io.ConfigWindowsMoveFromTitleBarOnly = true;
 
         io.ConfigFlags |= /*ImGuiConfigFlags_NavEnableKeyboard |*/ ImGuiConfigFlags_DockingEnable;
         io.ConfigDockingTransparentPayload = true;

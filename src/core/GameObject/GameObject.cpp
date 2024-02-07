@@ -6,6 +6,7 @@
 #include "core/ISelection.h"
 #include "core/IProfiler.h"
 #include "renderer/IGraphicInstance.h"
+#include "core/IBaseScene.h"
 
 #if !VG_ENABLE_INLINE
 #include "GameObject.inl"
@@ -105,6 +106,27 @@ namespace vg::core
     void GameObject::SetUpdateFlags(UpdateFlags _flags, bool _enabled)
     {
         setUpdateFlags(_flags, _enabled);
+    }
+
+    //--------------------------------------------------------------------------------------
+    IBaseScene * GameObject::GetScene() const
+    {
+        auto parent = getParent();
+        if (IBaseScene * scene = dynamic_cast<IBaseScene *>(parent))
+            return scene;
+        else if (IGameObject * go = dynamic_cast<IGameObject *>(parent))
+            return go->GetScene();
+
+        return nullptr;
+    }
+
+    //--------------------------------------------------------------------------------------
+    IWorld * GameObject::GetWorld() const
+    {
+        if (auto scene = GetScene())
+            return scene->GetWorld();
+
+        return nullptr;
     }
 
     //--------------------------------------------------------------------------------------

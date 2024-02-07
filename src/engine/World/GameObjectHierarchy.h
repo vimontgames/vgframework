@@ -19,14 +19,16 @@ namespace vg::engine
                                         GameObjectHierarchy      (const core::string & _name, core::IObject * _parent);
                                         ~GameObjectHierarchy     ();
 
-        void                            SetRoot             (core::IGameObject * _sector) final;
-        core::IGameObject *             GetRoot             () const final;
+        void                            SetRoot                 (core::IGameObject * _sector) final override;
+        core::IGameObject *             GetRoot                 () const final override;
+
+        core::IWorld *                  GetWorld                () const final override;
 
     public:
-        void                            setRoot             (core::GameObject * _sector);
-        VG_INLINE core::GameObject *    getRoot             () const { return m_root; }
+        void                            setRoot                 (core::GameObject * _sector);
+        VG_INLINE core::GameObject *    getRoot                 () const { return m_root; }
 
     private:
-        core::GameObject *              m_root              = nullptr;
+        core::GameObject *              m_root                  = nullptr;
     };
 }
