@@ -42,6 +42,7 @@
     <None Include="Component\Mesh\MeshComponent.inl" />
     <None Include="Engine.def" />
     <None Include="Engine.inl" />
+    <None Include="World\World.inl" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Behaviour\FreeCam\FreeCamBehaviour.h" />

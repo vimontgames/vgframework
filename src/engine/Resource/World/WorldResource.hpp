@@ -307,7 +307,7 @@ namespace vg::engine
                                 case BaseSceneType::Scene:
                                 if (worldResData->m_world->AddScene(scene, BaseSceneType::Scene))
                                 {
-                                    if (Engine::get()->isPlaying())
+                                    if (worldResData->m_world->IsPlaying())
                                     {
                                         IObject * root = scene->GetRoot();
                                         if (nullptr != root)

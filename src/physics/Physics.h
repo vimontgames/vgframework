@@ -40,8 +40,6 @@ namespace vg::physics
         void							    Init                        (const PhysicsCreationParams & _params, core::Singletons & _singletons) final override;
         void							    Deinit                      () final override;
 
-        void                                OnPlay                      () final override;
-
         void                                RunOneFrame                 (float _dt) final override;
 
         IPhysicsOptions *                   GetOptions                  () const final override;

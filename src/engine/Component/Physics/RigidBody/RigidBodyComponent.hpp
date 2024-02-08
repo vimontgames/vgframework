@@ -63,14 +63,16 @@ namespace vg::engine
         const auto * engine = Engine::get();
         IGameObject * go = GetGameObject();
 
+        auto * world = go->GetWorld();
+
         if (physics::MotionType::Static != m_bodyDesc->GetMotion())
         {
-            if (engine->isPlaying() && !engine->isPaused())
+            if (world->IsPlaying() && !world->IsPaused())
             {
                 if (m_body)
                 {
-                    float4x4 world = m_body->GetMatrix();
-                    go->setGlobalMatrix(world);
+                    auto matrix = m_body->GetMatrix();
+                    go->setGlobalMatrix(matrix);
                 }
             }
         }
@@ -78,7 +80,7 @@ namespace vg::engine
         if (engine->getPhysicsOptions()->IsRigidBodyVisible(m_shape->GetShapeType()))
         {
             if (m_shape)
-                m_shape->Draw(go->GetWorld(), go->getGlobalMatrix());
+                m_shape->Draw(world, go->getGlobalMatrix());
         }
     }
 

@@ -3,7 +3,7 @@
         <Property type="String" name="m_name" flags="Hidden" value="Game"/>
         <Property type="ObjectPtr" name="m_world">
             <Object class="World">
-                <Property type="String" name="m_name" flags="Hidden" value="World #1"/>
+                <Property type="String" name="m_name" flags="Hidden" value="Game"/>
             </Object>
         </Property>
         <Property type="ResourcePtrVector" name="m_sceneResources" flags="Resource">

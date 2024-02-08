@@ -53,6 +53,7 @@ namespace vg
 			IEditorOptions *					GetOptions			() const final override;
 
 			template <class T> T *				getWindow			(const core::string _name = {}) const;
+			template <class T> core::vector<T*>	getWindows			(const core::string _name = {}) const;
 			void								destroyWindow		(ImGuiWindow * _window);
 
 			core::IFactory *					getFactory			() const;

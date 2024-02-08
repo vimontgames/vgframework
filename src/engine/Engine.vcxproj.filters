@@ -52,6 +52,9 @@
     <None Include="Component\Camera\LightComponent.inl">
       <Filter>Component\Light</Filter>
     </None>
+    <None Include="World\World.inl">
+      <Filter>World</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="IEngine.h" />

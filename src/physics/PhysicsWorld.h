@@ -2,6 +2,11 @@
 
 #include "core/IWorld.h"
 
+namespace vg::core
+{
+    class IWorld;
+}
+
 namespace JPH
 {
     class PhysicsSystem;
@@ -16,6 +21,13 @@ namespace vg::physics
         PhysicsWorld(const core::IWorld * _world);
         ~PhysicsWorld();
 
+        void OnPlay() final override;
+
+        VG_INLINE const vg::core::IWorld * getWorld() const
+        {
+            return m_world;
+        }
+
         VG_INLINE JPH::PhysicsSystem * getPhysicsSystem() const
         {
             return m_physicsSystem;
@@ -27,6 +39,8 @@ namespace vg::physics
         }
 
     private:
-        JPH::PhysicsSystem * m_physicsSystem = nullptr;
+        const vg::core::IWorld *    m_world = nullptr;
+        JPH::PhysicsSystem *        m_physicsSystem = nullptr;
+
     };
 }

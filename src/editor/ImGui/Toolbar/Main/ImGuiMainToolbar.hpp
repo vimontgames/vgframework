@@ -102,34 +102,36 @@ namespace vg::editor
 
             case Align::Center:
             {
-                const bool playing = engine->IsPlaying();
-                const bool paused = engine->IsPaused();
+                auto * world = engine->GetMainWorld();
 
-                if (ImGui::TooltipButton(style::icon::Restart, playing, playing, "Restart (Shift-F5)", getButtonSize()))
+                const bool playing = world && world->IsPlaying();
+                const bool paused = world && world->IsPaused();
+
+                if (ImGui::TooltipButton(style::icon::Restart, playing, playing, "Restart (Shift-F5)", getButtonSize()) && world)
                 {
-                    engine->Stop();
-                    engine->Play();
+                    world->Stop();
+                    world->Play();
                 }
                 nextItem();
 
-                if (ImGui::TooltipButton(style::icon::Play, !playing, !playing, "Play (F5)", getButtonSize()))
+                if (ImGui::TooltipButton(style::icon::Play, !playing, !playing, "Play (F5)", getButtonSize()) && world)
                 {
-                    engine->Play();
+                    world->Play();
                 }
                 nextItem();
 
-                if (ImGui::TooltipButton(style::icon::Pause, playing && !paused, playing, "Pause (PAUSE)", getButtonSize()))
+                if (ImGui::TooltipButton(style::icon::Pause, playing && !paused, playing, "Pause (PAUSE)", getButtonSize()) && world)
                 {
-                    if (engine->IsPaused())
-                        engine->Resume();
+                    if (world->IsPaused())
+                        world->Resume();
                     else
-                        engine->Pause();
+                        world->Pause();
                 }
                 nextItem();
 
-                if (ImGui::TooltipButton(style::icon::Stop, playing, playing, "Stop (ESC)", getButtonSize()))
+                if (ImGui::TooltipButton(style::icon::Stop, playing, playing, "Stop (ESC)", getButtonSize()) && world)
                 {
-                    engine->Stop();
+                    world->Stop();
                 }
                 nextItem();
 

@@ -240,9 +240,9 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	SetWindowTextA(g_hWnd, title.c_str());
 
     // Start in play mode?
-	bool play;
-	if (cmdLine.getBool("play", play) && play)
-        g_engine->Play();
+    bool play;
+    if (cmdLine.getBool("play", play))
+        g_engine->StartInPlayMode(play);
 
     // Start maximized?
 	bool fullscreen;

@@ -189,6 +189,19 @@ namespace vg::editor
     }
 
     //--------------------------------------------------------------------------------------
+    template <class T> core::vector<T *> Editor::getWindows(const core::string _name) const
+    {
+        core::vector<T *> windows;
+        for (uint i = 0; i < m_imGuiWindows.count(); ++i)
+        {
+            if (dynamic_cast<T*>(m_imGuiWindows[i]) != nullptr && (_name.empty() || m_imGuiWindows[i]->getName()._Starts_with(_name)))
+                windows.push_back((T*)(m_imGuiWindows[i]));
+        }
+
+        return windows;
+    }
+
+    //--------------------------------------------------------------------------------------
     void Editor::destroyWindow(ImGuiWindow * _window)
     {
         m_imGuiWindowsToDestroy.push_back(_window);
@@ -567,11 +580,25 @@ namespace vg::editor
 
         // Create new file
         if (fileBrowser.showFileDialog(newWorldPopupName.c_str(), imgui_addons::ImGuiFileBrowser::DialogMode::SAVE, style::dialog::Size, ext.c_str()))
+        {
+            // Close all prefab views when creating new world
+            auto prefabViews = getWindows<ImGuiPrefabView>();
+            for (auto * prefabView : prefabViews)
+                prefabView->m_isVisible = false;
+
             engine->CreateWorld(io::addExtensionIfNotPresent(fileBrowser.selected_path, ".world"));
+        }
 
         // Open existing file
         if (fileBrowser.showFileDialog(openFilePopupName.c_str(), imgui_addons::ImGuiFileBrowser::DialogMode::OPEN, style::dialog::Size, ext.c_str()))
+        {
+            // Close all prefab views when loading new world
+            auto prefabViews = getWindows<ImGuiPrefabView>();
+            for (auto * prefabView : prefabViews)
+                prefabView->m_isVisible = false;
+
             engine->LoadWorld(fileBrowser.selected_path);
+        }
 
         // Save as 
         if (fileBrowser.showFileDialog(saveAsFilePopupName.c_str(), imgui_addons::ImGuiFileBrowser::DialogMode::SAVE, style::dialog::Size, ext.c_str()))

@@ -4,6 +4,7 @@
 #include "engine/ICharacterControllerComponent.h"
 #include "editor/Editor_Consts.h"
 #include "core/GameObject/GameObject.h"
+#include "core/IWorld.h"
 
 using namespace vg::core;
 using namespace vg::engine;
@@ -53,7 +54,9 @@ void PlayerBehaviour::OnStop()
 //--------------------------------------------------------------------------------------
 void PlayerBehaviour::FixedUpdate(float _dt)
 {
-    if (Game::Engine().IsPlaying() && !Game::Engine().IsPaused())
+    auto * world = GetGameObject()->GetWorld();
+
+    if (world->IsPlaying() && !world->IsPaused())
     {
         IInput & input = Game::Input();
         IAnimationComponent * animationComponent = GetGameObject()->GetComponentByType<IAnimationComponent>();

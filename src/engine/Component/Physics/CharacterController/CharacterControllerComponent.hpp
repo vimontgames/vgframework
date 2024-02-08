@@ -199,13 +199,15 @@ namespace vg::engine
 
         if (m_character)
         {
-            if (engine->isPlaying() && !engine->isPaused())
+            auto * world = GetGameObject()->GetWorld();
+
+            if (world->IsPlaying() && !world->IsPaused())
             {
                 m_character->Update();
                 m_groundState = m_character->GetGroundState();
 
-                float4x4 world = m_character->GetMatrix();
-                go->setGlobalMatrix(world);                
+                float4x4 matrix = m_character->GetMatrix();
+                go->setGlobalMatrix(matrix);
             }
         }  
     } 

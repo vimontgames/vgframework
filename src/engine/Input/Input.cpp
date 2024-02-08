@@ -61,7 +61,8 @@ namespace vg::engine
     {
         VG_PROFILE_CPU("Input");
 
-        const auto & renderer = Engine::get()->GetRenderer();
+        const auto & engine = Engine::get();
+        const auto & renderer = engine->GetRenderer();
         const auto & imGuiAdapter = renderer->GetImGuiAdapter();
 
         bool anyViewActive = false;
@@ -80,17 +81,19 @@ namespace vg::engine
             }
         }
 
-        if (imGuiAdapter->IsKeyboardFocused() && !anyViewActive && !Engine::get()->isPlaying())
+        auto * mainWorld = engine->GetMainWorld();
+
+        if (imGuiAdapter->IsKeyboardFocused() && !anyViewActive && mainWorld && !mainWorld->IsPlaying())
             EnableInput(InputType::Keyboard, false);
         else
             EnableInput(InputType::Keyboard, true);
 
-        if (imGuiAdapter->IsMouseFocused() && !anyViewActive && !Engine::get()->isPlaying())
+        if (imGuiAdapter->IsMouseFocused() && !anyViewActive && mainWorld && !mainWorld->IsPlaying())
             EnableInput(InputType::Mouse, false);
         else
             EnableInput(InputType::Mouse, true);
 
-        if (Engine::get()->isPlaying())
+        if (mainWorld && mainWorld->IsPlaying())
             EnableInput(InputType::Joypad, true);
         else
             EnableInput(InputType::Joypad, false);

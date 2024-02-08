@@ -94,53 +94,73 @@ namespace vg::engine
                 switch (wParam)
                 {
                     case VK_F1:
+                    {
                         VG_PROFILE_TRIGGER();   // Start/Stop capture
-                        break;
+                    }
+                    break;
 
                     case VK_ESCAPE:
                     {
-                        if (IsPlaying())
-                            Stop();
+                        auto * mainWorld = GetMainWorld();
+                        if (mainWorld)
+                        {
+                            if (mainWorld->IsPlaying())
+                                mainWorld->Stop();
 
-                        if (m_renderer && m_renderer->IsFullscreen())
-                            m_renderer->SetFullscreen(false);
+                            if (m_renderer && m_renderer->IsFullscreen())
+                                m_renderer->SetFullscreen(false);
+                        }
                     }
                     break;;
 
                     case VK_F5:
                     {
-                        if (GetKeyState(VK_SHIFT) & 0x8000)
+                        auto * mainWorld = GetMainWorld();
+                        if (mainWorld)
                         {
-                            if (IsPlaying())
+                            if (GetKeyState(VK_SHIFT) & 0x8000)
                             {
-                                Stop();
-                                Play();
+                                if (mainWorld->IsPlaying())
+                                {
+                                    mainWorld->Stop();
+                                    mainWorld->Play();
+                                }
                             }
-                        }
-                        else
-                        {
-                            if (!IsPlaying())
-                                Play();
+                            else
+                            {
+                                if (!mainWorld->IsPlaying())
+                                    mainWorld->Play();
+                            }
                         }
                     }
                     break;
 
                     case VK_F6:
+                    {
                         if (m_renderer)
                             m_renderer->updateShaders();
-                        break;
+                    }
+                    break;
 
                     case VK_F7:
+                    {
                         if (m_resourceManager)
                             m_resourceManager->UpdateResources();
-                        break;
+                    }
+                    break;
 
                     case VK_PAUSE:
-                        if (isPaused())
-                            Resume();
-                        else
-                            Pause();
-                        break;
+                    {
+                        auto * mainWorld = GetMainWorld();
+                        if (mainWorld)
+                        {
+                            if (mainWorld->IsPaused())
+                                mainWorld->Resume();
+                            else
+                                mainWorld->Pause();
+                        }
+                    }
+                    break;
 
                     case VK_F11:
                         toggleFullscreen();
@@ -155,7 +175,9 @@ namespace vg::engine
 
 	//--------------------------------------------------------------------------------------
 	Engine::Engine(const core::string & _name, core::IObject * _parent) :
-        IEngine(_name, _parent)
+        IEngine(_name, _parent),
+        m_startInPlayMode(false),
+        m_quit(false)
 	{
         
 	}
@@ -374,20 +396,30 @@ namespace vg::engine
             VG_ASSERT(dynamic_cast<WorldResource*>(_resource));
             WorldResource * worldRes = (WorldResource *)_resource;
             auto world = worldRes->GetWorld();
+            world->setName(io::getFileNameWithoutExt(worldRes->GetResourcePath()));
 
             auto & editorViews = m_renderer->GetViews(gfx::ViewTarget::Editor);
             for (auto view : editorViews)
             {
                 if (view)
-                    view->SetWorld(world);
+                {
+                    if (!asBool(gfx::IView::Flags::Prefab & view->GetFlags()))
+                        view->SetWorld(world);
+                }
             }
 
             auto & gameViews = m_renderer->GetViews(gfx::ViewTarget::Game);
             for (auto view : gameViews)
             {
                 if (view)
-                    view->SetWorld(world);
+                {
+                    if (!asBool(gfx::IView::Flags::Prefab & view->GetFlags()))
+                        view->SetWorld(world);
+                }
             }
+
+            if (m_startInPlayMode)
+                world->Play();
         }
     }
 
@@ -527,6 +559,12 @@ namespace vg::engine
         VG_SAFE_RELEASE(m_selection);
         Kernel::setSelection(nullptr);
 	}
+
+    //--------------------------------------------------------------------------------------
+    void Engine::StartInPlayMode(bool _enable)
+    {
+        m_startInPlayMode = _enable;
+    }
 
     //--------------------------------------------------------------------------------------
     void Engine::Quit()
@@ -674,109 +712,6 @@ namespace vg::engine
     core::uint2 Engine::getScreenSize() const
     {
         return GetRenderer()->getBackbufferSize();
-    }
-
-    //--------------------------------------------------------------------------------------
-    bool Engine::IsPlaying() const
-    {
-        return isPlaying();
-    }
-
-    //--------------------------------------------------------------------------------------
-    bool Engine::IsPaused() const
-    {
-        return isPaused();
-    }
-
-    //--------------------------------------------------------------------------------------
-    void Engine::Play()
-    {
-        play();
-    }
-
-    //--------------------------------------------------------------------------------------
-    void Engine::Stop()
-    {
-        stop();
-    }
-
-    //--------------------------------------------------------------------------------------
-    void Engine::Pause()
-    {
-        pause();
-    }
-
-    //--------------------------------------------------------------------------------------
-    void Engine::Resume()
-    {
-        resume();
-    }
-
-    //--------------------------------------------------------------------------------------
-    void Engine::play()
-    {
-        VG_INFO("[Engine] Play");
-        m_isPlaying = true;
-        m_isPaused = false;
-
-        // Detect joypads
-        Kernel::getInput()->OnPlay();
-
-        for (IWorld * world : GetWorlds())
-        {
-            for (uint i = 0; i < world->GetSceneCount(BaseSceneType::Scene); ++i)
-            {
-                const IBaseScene * scene = world->GetScene(i, BaseSceneType::Scene);
-                if (nullptr != scene)
-                {
-                    IObject * root = scene->GetRoot();
-                    if (nullptr != root)
-                        root->OnPlay();
-                }
-            }
-        }
-
-        // Warmup physics
-        if (m_physics)
-            m_physics->OnPlay();
-    }
-
-    //--------------------------------------------------------------------------------------
-    void Engine::pause()
-    {
-        VG_INFO("[Engine] Pause");
-        VG_ASSERT(m_isPlaying);
-        m_isPaused = true;
-    }
-
-    //--------------------------------------------------------------------------------------
-    void Engine::resume()
-    {
-        VG_INFO("[Engine] Resume");
-        VG_ASSERT(m_isPlaying && m_isPaused);
-        m_isPaused = false;
-    }
-
-    //--------------------------------------------------------------------------------------
-    void Engine::stop()
-    {
-        VG_INFO("[Engine] Stop");
-        m_isPlaying = false;
-        m_isPaused = false;
-
-        for (IWorld * world : GetWorlds())
-        {
-            for (uint i = 0; i < world->GetSceneCount(BaseSceneType::Scene); ++i)
-            {
-                const IBaseScene * scene = world->GetScene(i, BaseSceneType::Scene);
-                if (nullptr != scene)
-                {
-                    IObject * root = scene->GetRoot();
-                    if (nullptr != root)
-                        root->OnStop();
-                }
-            }
-        }
     }
 
     //--------------------------------------------------------------------------------------

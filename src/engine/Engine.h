@@ -54,13 +54,6 @@ namespace vg::engine
 										        Engine		        (const core::string & _name, core::IObject * _parent);
 										        ~Engine		        ();
 
-        bool                                    IsPlaying           () const final override;
-        bool                                    IsPaused            () const final override;
-        void                                    Play                () final override;
-        void                                    Stop                () final override;
-        void                                    Pause               () final override;
-        void                                    Resume              () final override;
-
         const Time &                            GetTime             () const final override;
 
         const char *                            getClassName        () const final { return "Engine"; }
@@ -80,6 +73,8 @@ namespace vg::engine
 
 		void							        init		        (const EngineCreationParams & _params, core::Singletons & _singletons) final;
 		void							        deinit		        () override;
+
+        void                                    StartInPlayMode     (bool _enable) final override;
 
         void                                    Quit                () final override;
         bool                                    IsQuitting          () const final override;
@@ -119,14 +114,6 @@ namespace vg::engine
         renderer::IRendererOptions *            getRendererOptions  () const;
         physics::IPhysicsOptions *              getPhysicsOptions   () const;
 
-        VG_INLINE bool                          isPlaying           () const;
-        void                                    play                ();
-        void                                    stop                ();
-
-        VG_INLINE bool                          isPaused            () const;
-        void                                    pause               ();
-        void                                    resume              ();
-
         VG_INLINE const Time &                  getTime             () const;
 
         void                                    registerWorld       (World * _world);
@@ -137,9 +124,8 @@ namespace vg::engine
         void                                    toggleFullscreen    ();
 
 	private:
-        bool                                    m_isPlaying         = false;
-        bool                                    m_isPaused          = false;
-        bool                                    m_quit              = false;
+        bool                                    m_startInPlayMode   : 1;
+        bool                                    m_quit              : 1;
         IProject *                              m_project           = nullptr;
         WorldResource *                         m_worldResource     = nullptr;
         editor::IEditor *                       m_editor            = nullptr;

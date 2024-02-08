@@ -1,9 +1,13 @@
 #include "PhysicsWorld.h"
+#include "core/Timer/Timer.h"
+
+using namespace vg::core;
 
 namespace vg::physics
 {
     //--------------------------------------------------------------------------------------
-    PhysicsWorld::PhysicsWorld(const core::IWorld * _world)
+    PhysicsWorld::PhysicsWorld(const core::IWorld * _world) :
+        m_world(_world)
     {
         setName(_world->getName());
 
@@ -27,5 +31,14 @@ namespace vg::physics
         auto * physics = Physics::get();
         physics->unregisterPhysicsWorld(this);
         VG_SAFE_DELETE(m_physicsSystem);
+    }
+
+    //--------------------------------------------------------------------------------------
+    void PhysicsWorld::OnPlay()
+    {
+        auto * physicsSystem = getPhysicsSystem();
+        const auto startOptimizeBroadphase = Timer::getTick();
+        physicsSystem->OptimizeBroadPhase();
+        VG_INFO("[PhysicsWorld] Optimize BroadPhase in %.2f ms", Timer::getEnlapsedTime(startOptimizeBroadphase, Timer::getTick()));
     }
 }

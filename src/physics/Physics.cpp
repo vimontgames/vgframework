@@ -209,26 +209,16 @@ namespace vg::physics
         return getEngine()->GetRenderer()->GetDebugDraw();
     }
 
-    //--------------------------------------------------------------------------------------
-    void Physics::OnPlay()
-    {
-        for (auto * physicsWorld : m_physicsWorlds)
-        {
-            auto * physicsSystem = physicsWorld->getPhysicsSystem();
-            const auto startOptimizeBroadphase = Timer::getTick();
-            physicsSystem->OptimizeBroadPhase();
-            VG_INFO("[Physics] Optimize BroadPhase in %.2f ms", Timer::getEnlapsedTime(startOptimizeBroadphase, Timer::getTick()));
-        }
-    }
-
 	//--------------------------------------------------------------------------------------
 	void Physics::RunOneFrame(float _dt)
 	{
         VG_PROFILE_CPU("Physics");
         const auto * engine = getEngine();
-        if (engine->IsPlaying() && !engine->IsPaused())
+       
+        for (auto * physicsWorld : m_physicsWorlds)
         {
-            for (auto * physicsWorld : m_physicsWorlds)
+            auto * world = physicsWorld->getWorld();
+            if (world->IsPlaying() && !world->IsPaused())
             {
                 auto * physicsSystem = physicsWorld->getPhysicsSystem();
                 physicsSystem->Update((float)(_dt), 1, &m_tempAllocator, m_jobSystem);
