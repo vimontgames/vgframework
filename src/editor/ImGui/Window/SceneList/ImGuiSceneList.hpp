@@ -370,12 +370,12 @@ namespace vg::editor
         {
             bool newScene = false, loadScene = false;
 
-            if (ImGui::TooltipButton(editor::style::icon::New, true, true, typeInfo.newLabel.c_str()))
+            if (ImGui::TooltipButton(fmt::sprintf("%s %s", editor::style::icon::New, typeInfo.newLabel).c_str(), true, true, typeInfo.newLabel.c_str(), style::button::SizeLarge))
                 newScene = true;
 
             ImGui::SameLine();
 
-            if (ImGui::TooltipButton(editor::style::icon::Load, true, true, typeInfo.loadLabel.c_str()))
+            if (ImGui::TooltipButton(fmt::sprintf("%s %s", editor::style::icon::Load, typeInfo.loadLabel).c_str(), true, true, typeInfo.loadLabel.c_str(), style::button::SizeLarge))
                 loadScene = true;
 
             ImGui::Separator();

@@ -22,13 +22,15 @@ namespace vg::editor
         {
             if (ImGui::IconBegin(getIcon().c_str(), getName().c_str(), &m_isVisible))
             {
-                if (ImGui::TooltipButton(editor::style::icon::Reload, true, true, "Reload"))
+                if (ImGui::TooltipButton(fmt::sprintf("%s Reload", editor::style::icon::Reload).c_str(), true, true, "Reload", style::button::SizeLarge))
                     GetOptions()->Load();
 
                 ImGui::SameLine();
 
-                if (ImGui::TooltipButton(editor::style::icon::Save, true, true, "Save"))
+                if (ImGui::TooltipButton(fmt::sprintf("%s Save", editor::style::icon::Save).c_str(), true, true, "Save", style::button::SizeLarge))
                     GetOptions()->Save();
+
+                ImGui::Separator();
 
                 ImGui::BeginChild(ImGui::getObjectLabel("ChildWindow", this).c_str());
                 {

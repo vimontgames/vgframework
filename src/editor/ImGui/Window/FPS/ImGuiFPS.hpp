@@ -1,4 +1,5 @@
 #include "ImguiFPS.h"
+#include "editor/Editor_Consts.h"
 
 namespace vg::editor
 {
@@ -28,34 +29,41 @@ namespace vg::editor
 
         if (ImGui::IconBegin(getIcon().c_str(), "FPS", &m_isVisible))
         {
-            ImGui::Columns(2, "mycolumns2", false);  // 2-ways, no border
-            {
-                ImGui::Text("FPS: ");
-                ImGui::Text("Frame Time: ");
-                ImGui::Text("Capture");
-            }
-            ImGui::NextColumn();
-            {
-                ImGui::Text("%.0f img/sec", m_fps);
-                ImGui::Text("%.3f ms", m_dt * 1000.0f);
+            if (ImGui::TooltipButton(fmt::sprintf("%s Start Profile", style::icon::Clock).c_str(), !captureInProgress, !captureInProgress, "Start Profiling (F1)", style::button::SizeLarge))
+                VG_PROFILE_START();
 
-                if (ImGui::TooltipButton("Start", !captureInProgress, !captureInProgress, "Press 'F1' to start capture"))
-                    VG_PROFILE_START();
-                ImGui::SameLine();
-                if (ImGui::TooltipButton("Stop", captureInProgress, captureInProgress, "Press 'F1' to stop capture"))
-                    VG_PROFILE_STOP();
-            }
-            ImGui::Columns(1);
+            ImGui::SameLine();
 
-            if (VG_PROFILE_CAPTURE_IN_PROGRESS())
+            if (ImGui::TooltipButton(fmt::sprintf("%s Stop Profile", style::icon::Clock).c_str(), captureInProgress, captureInProgress, "Stop Profiling (F1)", style::button::SizeLarge))
+                VG_PROFILE_STOP();
+
+            ImGui::Separator();
+
+            ImGui::BeginChild(ImGui::getObjectLabel("ChildWindow", this).c_str());
             {
-                ImGui::TextColored(ImVec4(1, 0, 0, 1), "Capture in progress ... %u", m_captureFrameCounter);
-                m_captureFrameCounter++;
+                ImGui::Columns(2, "mycolumns2", false);  // 2-ways, no border
+                {
+                    ImGui::Text("FPS");
+                    ImGui::Text("Frame Time");
+                }
+                ImGui::NextColumn();
+                {
+                    ImGui::Text("%.0f img/sec", m_fps);
+                    ImGui::Text("%.3f ms", m_dt * 1000.0f);                
+                }
+                ImGui::Columns(1);
+
+                if (VG_PROFILE_CAPTURE_IN_PROGRESS())
+                {
+                    ImGui::TextColored(ImVec4(1, 0, 0, 1), "Profiling Frame %u", m_captureFrameCounter);
+                    m_captureFrameCounter++;
+                }
+                else if (0 != m_captureFrameCounter)
+                {
+                    m_captureFrameCounter = 0;
+                }
             }
-            else if (0 != m_captureFrameCounter)
-            {
-                m_captureFrameCounter = 0;
-            }
+            ImGui::EndChild();
         }
         ImGui::End();
     }

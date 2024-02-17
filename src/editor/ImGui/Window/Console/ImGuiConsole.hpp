@@ -90,7 +90,7 @@ namespace vg::editor
                     }
                 }
 
-                auto buttonSize = ImGuiToolbar::ComputeButtonSize();
+                auto buttonSize = style::button::SizeSmall;
                 buttonSize.x *= 2;
 
                 ImVec2 size = GetWindowContentRegionSize();

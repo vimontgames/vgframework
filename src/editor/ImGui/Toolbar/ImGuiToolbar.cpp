@@ -13,13 +13,6 @@ namespace vg::editor
     }
 
     //--------------------------------------------------------------------------------------
-    ImVec2 ImGuiToolbar::ComputeButtonSize()
-    {
-        const float font_size = ImGui::GetFontSize();
-        return ImVec2(ImFloor(font_size * 1.5f), ImFloor(font_size * 1.5f));
-    }
-
-    //--------------------------------------------------------------------------------------
     // https://github.com/ocornut/imgui/issues/2648
     //--------------------------------------------------------------------------------------
     void ImGuiToolbar::DrawGUI()
@@ -60,7 +53,6 @@ namespace vg::editor
         const auto name = getName();
 
         // 3. Begin into the window
-        m_buttonSize = ComputeButtonSize();
         ImGui::Begin(name.c_str(), &m_isVisible, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoScrollbar);        
 
         // 4. Overwrite node size
@@ -70,7 +62,7 @@ namespace vg::editor
             // Overwrite size of the node
             ImGuiStyle & style = ImGui::GetStyle();
             const ImGuiAxis toolbar_axis_perp = (ImGuiAxis)(toolbar_axis ^ 1);
-            const float TOOLBAR_SIZE_WHEN_DOCKED = style.WindowPadding[toolbar_axis_perp] * 0.0f + m_buttonSize[toolbar_axis_perp];
+            const float TOOLBAR_SIZE_WHEN_DOCKED = style.WindowPadding[toolbar_axis_perp] * 0.0f + toolbar_axis_perp ? style::button::SizeSmall.y : style::button::SizeSmall.x;
             node->WantLockSizeOnce = true;
             node->Size[toolbar_axis_perp] = node->SizeRef[toolbar_axis_perp] = TOOLBAR_SIZE_WHEN_DOCKED;
 

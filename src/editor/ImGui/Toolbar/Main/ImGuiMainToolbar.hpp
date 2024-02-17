@@ -44,17 +44,17 @@ namespace vg::editor
                 EditorOptions * options = EditorOptions::get();
                 auto & gizmoOptions = options->getGizmoOptions();
 
-                if (ImGui::TooltipButton(style::icon::Translate, GizmoType::Translate == gizmoOptions.m_type, true, "Translate (Ctrl-T)", getButtonSize()))
+                if (ImGui::TooltipButton(style::icon::Translate, GizmoType::Translate == gizmoOptions.m_type, true, "Translate (Ctrl-T)", style::button::SizeSmall))
                     options->setGizmoType(GizmoType::Translate);
 
                 nextItem();
 
-                if (ImGui::TooltipButton(style::icon::Rotate, GizmoType::Rotate == gizmoOptions.m_type, true, "Rotate (Ctrl-R)", getButtonSize()))
+                if (ImGui::TooltipButton(style::icon::Rotate, GizmoType::Rotate == gizmoOptions.m_type, true, "Rotate (Ctrl-R)", style::button::SizeSmall))
                     options->setGizmoType(GizmoType::Rotate);
 
                 nextItem();
 
-                if (ImGui::TooltipButton(style::icon::Scale, GizmoType::Scale == gizmoOptions.m_type, true, "Scale (Ctrl-S)", getButtonSize()))
+                if (ImGui::TooltipButton(style::icon::Scale, GizmoType::Scale == gizmoOptions.m_type, true, "Scale (Ctrl-S)", style::button::SizeSmall))
                     options->setGizmoType(GizmoType::Scale);
 
                 nextItem();
@@ -79,7 +79,7 @@ namespace vg::editor
                         break;
                 }
 
-                if (ImGui::TooltipButton(style::icon::Snap, *snap, true, tooltip, getButtonSize()))
+                if (ImGui::TooltipButton(style::icon::Snap, *snap, true, tooltip, style::button::SizeSmall))
                     *snap = !(*snap);
 
                 nextItem();
@@ -107,20 +107,20 @@ namespace vg::editor
                 const bool playing = world && world->IsPlaying();
                 const bool paused = world && world->IsPaused();
 
-                if (ImGui::TooltipButton(style::icon::Restart, playing, playing, "Restart (Shift-F5)", getButtonSize()) && world)
+                if (ImGui::TooltipButton(style::icon::Restart, playing, playing, "Restart (Shift-F5)", style::button::SizeSmall) && world)
                 {
                     world->Stop();
                     world->Play();
                 }
                 nextItem();
 
-                if (ImGui::TooltipButton(style::icon::Play, !playing, !playing, "Play (F5)", getButtonSize()) && world)
+                if (ImGui::TooltipButton(style::icon::Play, !playing, !playing, "Play (F5)", style::button::SizeSmall) && world)
                 {
                     world->Play();
                 }
                 nextItem();
 
-                if (ImGui::TooltipButton(style::icon::Pause, playing && !paused, playing, "Pause (PAUSE)", getButtonSize()) && world)
+                if (ImGui::TooltipButton(style::icon::Pause, playing && !paused, playing, "Pause (PAUSE)", style::button::SizeSmall) && world)
                 {
                     if (world->IsPaused())
                         world->Resume();
@@ -129,7 +129,7 @@ namespace vg::editor
                 }
                 nextItem();
 
-                if (ImGui::TooltipButton(style::icon::Stop, playing, playing, "Stop (ESC)", getButtonSize()) && world)
+                if (ImGui::TooltipButton(style::icon::Stop, playing, playing, "Stop (ESC)", style::button::SizeSmall) && world)
                 {
                     world->Stop();
                 }
@@ -137,7 +137,7 @@ namespace vg::editor
 
                 renderer::IRenderer * renderer = engine->GetRenderer();
                 const bool fullscreen = renderer->IsFullscreen();
-                if (ImGui::TooltipButton(style::icon::Maximize, true, true, "Fullscreen (F11)", getButtonSize()))
+                if (ImGui::TooltipButton(style::icon::Maximize, true, true, "Fullscreen (F11)", style::button::SizeSmall))
                     renderer->SetFullscreen(!fullscreen);
                 nextItem();
             }

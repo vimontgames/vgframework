@@ -16,6 +16,7 @@ namespace vg::editor
         {
             inline static const ImVec2 SizeSmall = ImVec2(22, 22);
             inline static const ImVec2 SizeMedium = ImVec2(64, 0);
+            inline static const ImVec2 SizeLarge = ImVec2(140, 0);
         }
 
         namespace font
@@ -50,6 +51,7 @@ namespace vg::editor
             inline static const char * CharacterController  = ICON_FA_CAPSULES;
             inline static const char * Checked              = ICON_FA_SQUARE_CHECK;
             inline static const char * Console              = ICON_FA_TABLE_LIST;
+            inline static const char * Clock                = ICON_FA_CLOCK;
             inline static const char * Editor               = ICON_FA_SCREWDRIVER_WRENCH;
             inline static const char * EditorView           = ICON_FA_DESKTOP;
             inline static const char * Engine               = ICON_FA_GEAR;
@@ -89,6 +91,7 @@ namespace vg::editor
             inline static const char * Sliders              = ICON_FA_SLIDERS;
             inline static const char * Snap                 = ICON_FA_RULER_COMBINED;
             inline static const char * Stop                 = ICON_FA_STOP;
+            inline static const char * Timer                = ICON_FA_STOPWATCH;
             inline static const char * Trashcan             = ICON_FA_TRASH_CAN;
             inline static const char * Translate            = ICON_FA_UP_DOWN_LEFT_RIGHT;
             inline static const char * Unchecked            = ICON_FA_SQUARE;

@@ -19,33 +19,12 @@ namespace vg::editor
         {
             engine::IResourceManager * rm = Editor::get()->getEngine()->GetResourceManager();
 
-            if (ImGui::TextButton("Press 'F7' to", "Reload Resources", rm != nullptr && !rm->HasResourceLoading(), "Reimport all modified resources"))
-                rm->UpdateResources();
+            bool enabled = rm != nullptr && !rm->HasResourceLoading();
 
-            // test
-            //if (ImGui::BeginCombo("test", "preview", ImGuiComboFlags_HeightLarge))
-            //{
-            //    for (uint e = 0; e < 5; ++e)
-            //    {
-            //        if (e == 2)
-            //        {
-            //            if (ImGui::BeginMenu("World"))
-            //            {
-            //                if (ImGui::MenuItem("New"))
-            //                    
-            //                {}
-            //
-            //                ImGui::EndMenu();
-            //            }
-            //        }
-            //
-            //        else if (ImGui::Selectable(fmt::sprintf("e=%u", e).c_str()))
-            //        {
-            //
-            //        }
-            //    }
-            //    ImGui::EndCombo();
-            //}
+            if (ImGui::TooltipButton(fmt::sprintf("%s Reload Resources", style::icon::Reload).c_str(), enabled, enabled, "Reload Resources (F7)", style::button::SizeLarge))
+                rm->UpdateResources();   
+
+            ImGui::Separator();
 
             rm->Lock();
 
