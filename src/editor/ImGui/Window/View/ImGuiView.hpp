@@ -51,6 +51,14 @@ namespace vg::editor
     }
 
     //--------------------------------------------------------------------------------------
+    //void ImGuiView::setName(const string & _name)
+    //{
+    //    ImGuiWindow::setName(_name);
+    //    if (m_view)
+    //        m_view->setName(_name);
+    //}
+
+    //--------------------------------------------------------------------------------------
     void ImGuiView::updateEditorCamera(float _dt)
     {
         auto view = m_view;
@@ -249,18 +257,15 @@ namespace vg::editor
         // https://skia.googlesource.com/external/github.com/ocornut/imgui/+/refs/tags/v1.73/imgui_demo.cpp
 
         const string & name = getIconizedName();
-        string title = name;
+        string title;
         
-        //if (any(m_size > 0))
-        //    title = name + " (" + to_string(m_size.x) + "x" + to_string(m_size.y) + ")###" + name;
+        if (any(m_size > 0) && m_view && m_view->IsVisible())
+            title = fmt::sprintf("%s %ux%u###%s", name, (uint)m_size.x, (uint)m_size.y, name);
+        else
+            title = fmt::sprintf("%s###%s", name, name);
 
         if (ImGui::Begin(title.c_str(), &m_isVisible, ImGuiWindowFlags_NoFocusOnAppearing | ImGuiWindowFlags_NoNavInputs))
         {
-            //if (IsWindowAppearing())
-            //{
-            //    VG_INFO("[Editor] Window \"%s\" is appearing", title.c_str());
-            //}
-
             // Compute Window content size
             ImVec2 vMin = ImGui::GetWindowContentRegionMin();
             ImVec2 vMax = ImGui::GetWindowContentRegionMax();
@@ -386,14 +391,14 @@ namespace vg::editor
             }
 
             // Draw Border
-            auto * window = ImGui::FindWindowByName(title.c_str());
-            ImGuiDockNode * node = window->DockNode;
-            if (!node)
-            {
-                auto borderColor = ImGui::GetStyleColorVec4(ImGuiCol_Border);
-                borderColor.w *= 0.5f;
-                ImGui::GetForegroundDrawList()->AddRect(vMin, vMax, GetColorU32(borderColor));
-            }
+            //auto * window = ImGui::FindWindowByName(name.c_str());
+            //ImGuiDockNode * node = window->DockNode;
+            //if (!node)
+            //{
+            //    auto borderColor = ImGui::GetStyleColorVec4(ImGuiCol_Border);
+            //    borderColor.w *= 0.5f;
+            //    ImGui::GetForegroundDrawList()->AddRect(vMin, vMax, GetColorU32(borderColor));
+            //}
 
             bool activeGizmo = false;
 
@@ -415,6 +420,14 @@ namespace vg::editor
             }
 
             m_view->SetVisible(true);
+        }
+        else
+        {
+            if (m_view)
+            {
+                m_view->SetActive(false);
+                m_view->SetVisible(false);
+            }
         }
 
         if (!m_isVisible)

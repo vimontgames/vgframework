@@ -16,6 +16,8 @@ namespace vg::editor
                                     ImGuiView           (const char * _icon, const core::string & _path, const core::string & _name, Flags _flags, gfx::ViewTarget _target, core::uint _index = -1);
                                     ~ImGuiView          ();
 
+        //void					    setName             (const core::string & _name) override;
+
         void                        updateEditorCamera  (float _dt);
 
         void                        DrawGUI             () final override;

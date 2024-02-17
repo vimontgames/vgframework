@@ -247,6 +247,12 @@
     <ClInclude Include="ImGui\Window\View\PrefabView\ImGuiPrefabView.h">
       <Filter>ImGui\Window\View\Prefab</Filter>
     </ClInclude>
+    <ClInclude Include="ImGui\Window\Statistics\ImGuiStatistics.h">
+      <Filter>ImGui\Window\Statistics</Filter>
+    </ClInclude>
+    <ClInclude Include="ImGui\Window\Statistics\ImGuiStatistics.hpp">
+      <Filter>ImGui\Window\Statistics</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Editor.def" />
@@ -381,6 +387,9 @@
     </Filter>
     <Filter Include="ImGui\Window\View\Prefab">
       <UniqueIdentifier>{5ea308f1-af76-4742-afa6-872f559e01ef}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ImGui\Window\Statistics">
+      <UniqueIdentifier>{55b89530-6d77-4e66-b7ad-1b3df8e9b4fb}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

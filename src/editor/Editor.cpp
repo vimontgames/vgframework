@@ -35,6 +35,7 @@
 #include "editor/ImGui/Window/Input/ImGuiInput.h"
 #include "editor/ImGui/Toolbar/Main/ImGuiMainToolbar.h"
 #include "editor/ImGui/Window/View/PrefabView/ImGuiPrefabView.h"
+#include "editor/ImGui/Window/Statistics/ImGuiStatistics.h"
 
 using namespace vg::core;
 using namespace vg::editor;
@@ -103,8 +104,8 @@ namespace vg::editor
         m_imGuiWindows.push_back(new ImGuiEditorView(0));
         m_imGuiWindows.push_back(new ImGuiConsole());
         m_imGuiWindows.push_back(new ImGuiInput());
-        m_imGuiWindows.push_back(new ImGuiAbout());        
-
+        m_imGuiWindows.push_back(new ImGuiAbout());  
+        m_imGuiWindows.push_back(new ImGuiStatistics());
         // Add ImGui toolbars
         m_imGuiWindows.push_back(new ImGuiMainToolbar("Main Toolbar", ImGuiWindow::StartVisible));
 
@@ -621,7 +622,7 @@ namespace vg::editor
         else
         {
             auto prefabView = new ImGuiPrefabView((IBaseScene *)_prefab);
-            prefabView->m_name = _prefab->getName();
+            prefabView->setName(_prefab->getName());
             Editor::get()->m_imGuiWindows.push_back(prefabView);
         }
     }

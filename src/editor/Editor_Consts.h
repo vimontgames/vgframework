@@ -90,6 +90,7 @@ namespace vg::editor
             inline static const char * Shaders              = ICON_FA_HAT_WIZARD;
             inline static const char * Sliders              = ICON_FA_SLIDERS;
             inline static const char * Snap                 = ICON_FA_RULER_COMBINED;
+            inline static const char * Statistics           = ICON_FA_CHART_SIMPLE;
             inline static const char * Stop                 = ICON_FA_STOP;
             inline static const char * Timer                = ICON_FA_STOPWATCH;
             inline static const char * Trashcan             = ICON_FA_TRASH_CAN;

@@ -92,6 +92,8 @@
     <ClInclude Include="ImGui\Window\SceneList\World\ImGuiWorld.hpp" />
     <ClInclude Include="ImGui\Window\Shader\ImGuiShader.h" />
     <ClInclude Include="ImGui\Window\Shader\ImGuiShader.hpp" />
+    <ClInclude Include="ImGui\Window\Statistics\ImGuiStatistics.h" />
+    <ClInclude Include="ImGui\Window\Statistics\ImGuiStatistics.hpp" />
     <ClInclude Include="ImGui\Window\View\EditorView\ImGuiEditorView.h" />
     <ClInclude Include="ImGui\Window\View\EditorView\ImGuiEditorView.hpp" />
     <ClInclude Include="ImGui\Window\View\GameView\ImGuiGameView.h" />

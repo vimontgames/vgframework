@@ -29,12 +29,12 @@ namespace vg::editor
 
         if (ImGui::IconBegin(getIcon().c_str(), "FPS", &m_isVisible))
         {
-            if (ImGui::TooltipButton(fmt::sprintf("%s Start Profile", style::icon::Clock).c_str(), !captureInProgress, !captureInProgress, "Start Profiling (F1)", style::button::SizeLarge))
+            if (ImGui::TooltipButton(fmt::sprintf("%s Start Profiling", style::icon::Clock).c_str(), !captureInProgress, !captureInProgress, "Start Profiling (F1)", style::button::SizeLarge))
                 VG_PROFILE_START();
 
             ImGui::SameLine();
 
-            if (ImGui::TooltipButton(fmt::sprintf("%s Stop Profile", style::icon::Clock).c_str(), captureInProgress, captureInProgress, "Stop Profiling (F1)", style::button::SizeLarge))
+            if (ImGui::TooltipButton(fmt::sprintf("%s Stop Profiling", style::icon::Clock).c_str(), captureInProgress, captureInProgress, "Stop Profiling (F1)", style::button::SizeLarge))
                 VG_PROFILE_STOP();
 
             ImGui::Separator();
