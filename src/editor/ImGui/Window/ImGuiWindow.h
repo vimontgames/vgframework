@@ -46,6 +46,8 @@ namespace vg::editor
     class ImGuiWindow : public core::Object
     {
     public:
+        VG_CLASS_DECL(ImGuiWindow, core::Object);
+
         enum Flags : core::u32
         {
             None            = 0x00000000,
@@ -62,7 +64,6 @@ namespace vg::editor
 
         VG_INLINE const core::string &          getIcon             () const;
         VG_INLINE const core::string &          getPath             () const;
-        VG_INLINE const core::string &          getName             () const;
         VG_INLINE Flags                         getFlags            () const;
 
         VG_INLINE const core::string            getIconizedName     () const;
@@ -102,7 +103,6 @@ namespace vg::editor
 
     //protected:
         core::string                            m_icon;
-        core::string                            m_name;
         core::string                            m_path;
         Flags                                   m_flags;
         bool                                    m_isVisible = true;

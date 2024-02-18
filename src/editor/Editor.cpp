@@ -2,6 +2,7 @@
 #include "editor.h"
 #include "core/IInput.h"
 #include "core/IResource.h"
+#include "core/IGameObject.h"
 #include "core/File/File.h"
 #include "renderer/IRenderer.h"
 #include "renderer/IImGuiAdapter.h"

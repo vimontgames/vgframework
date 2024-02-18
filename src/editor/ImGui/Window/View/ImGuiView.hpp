@@ -298,7 +298,7 @@ namespace vg::editor
 
                 if (gfx::IView * view = renderer->GetView(gfx::ViewID(m_target, m_index)))
                 {
-                    m_view = view;
+                    m_view = view;                    
                     VG_SAFE_INCREASE_REFCOUNT(view);
                 }
                 else
@@ -317,6 +317,7 @@ namespace vg::editor
 
                     m_view = renderer->CreateView(params, viewName, viewFlags);
                     renderer->AddView(m_view);
+                    m_view->setName(getName());
                 }
                 draw = false;
             }

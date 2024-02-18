@@ -7,12 +7,6 @@ namespace vg::editor
     }
 
     //--------------------------------------------------------------------------------------
-    VG_INLINE const core::string & ImGuiWindow::getName() const
-    {
-        return m_name;
-    }
-
-    //--------------------------------------------------------------------------------------
     VG_INLINE const core::string ImGuiWindow::getIconizedName() const
     {
         return getIcon().empty()? getName() : getIcon() + " " + getName();

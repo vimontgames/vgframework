@@ -96,9 +96,9 @@ namespace vg::editor
 
     //--------------------------------------------------------------------------------------
     ImGuiWindow::ImGuiWindow(const core::string & _icon, const core::string & _path, const string & _name, Flags _flags) :
+        super(_name),
         m_icon(_icon),
         m_path(_path),
-        m_name(_name),
         m_flags(_flags),
         m_isVisible(asBool(_flags & Flags::StartVisible))
     {

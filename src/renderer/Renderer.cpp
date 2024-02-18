@@ -222,6 +222,7 @@ namespace vg::renderer
         auto gameView0Params = gfx::CreateViewParams(gfx::ViewTarget::Game, getBackbufferSize());
         auto gameView = (View *)CreateView(gameView0Params, "GameView");
         AddView(gameView);
+        gameView->setName("Game");
         VG_SAFE_RELEASE(gameView);
 	}
 
