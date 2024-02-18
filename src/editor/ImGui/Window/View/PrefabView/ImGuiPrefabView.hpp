@@ -36,6 +36,26 @@ namespace vg::editor
     //--------------------------------------------------------------------------------------
     void ImGuiPrefabView::OnCloseWindow()
     {
+        // Unselect objects in prefab
+        ISelection * selection = Editor::get()->getSelection();
+        if (selection)
+        {
+            core::vector<core::IObject *> selected;
+            auto & selObjs = selection->GetSelectedObjects();
+            for (uint i = 0; i < selObjs.size(); ++i)
+            {
+                auto * obj = dynamic_cast<IGameObject*>(selObjs[i]);
+                if (obj && obj->GetWorld() == m_prefabWorld)
+                {
+                }
+                else
+                {
+                    selected.push_back(obj);
+                }
+            }
+            selection->SetSelectedObjects(selected);
+        }
+
         Editor::get()->destroyWindow(this);
         VG_SAFE_RELEASE(m_prefabWorld);
     }
