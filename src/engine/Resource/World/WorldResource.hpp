@@ -292,7 +292,11 @@ namespace vg::engine
                         {
                             switch (sceneType)
                             {
-                                default:
+                            default:
+                                VG_ASSERT_ENUM_NOT_IMPLEMENTED(sceneType);
+                                break;
+
+                                case BaseSceneType::Prefab:
                                 if (worldResData->m_world->AddScene(scene, BaseSceneType::Prefab))
                                 {
                                     //if (Engine::get()->isPlaying())
@@ -349,12 +353,10 @@ namespace vg::engine
 
                             case BaseSceneType::Scene:
                                     worldResData->m_world->RemoveScene(scene, sceneType);
-                                    worldResData->m_sceneResources.remove((SceneResource *)_resource);
                                     break;
 
                             case BaseSceneType::Prefab:
                                     worldResData->m_world->RemoveScene(scene, sceneType);
-                                    worldResData->m_prefabsResources.remove((PrefabResource *)_resource);
                                     break;
                         }
                     }
