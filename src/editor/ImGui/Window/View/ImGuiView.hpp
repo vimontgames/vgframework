@@ -246,7 +246,9 @@ namespace vg::editor
 
         auto * renderer = Editor::get()->getRenderer();
 
-        ImGui::SetNextWindowSizeConstraints(ImVec2(640, 480), ImVec2(MAX_FLOAT, MAX_FLOAT));
+        const auto titleBarHeight = editor::style::font::Height + 2 * ImGui::GetStyle().FramePadding.y;
+
+        ImGui::SetNextWindowSizeConstraints(ImVec2(320, 256 + titleBarHeight), ImVec2(MAX_FLOAT, MAX_FLOAT));
         ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0, 0));
         ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0, 0, 0, 255));
         
