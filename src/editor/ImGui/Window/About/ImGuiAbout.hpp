@@ -103,7 +103,7 @@ namespace vg::editor
                 { "tinyXML2",               "10.0.0",           "https://github.com/leethomason/tinyxml2" },
                 { "UFBX",                   "0.5.0-30f035b",    "https://github.com/ufbx/ufbx" },
                 { "VulkanMemoryAllocator",  "3.0.1",            "https://github.com/GPUOpen-LibrariesAndSDKs/VulkanMemoryAllocator" },
-                { "WinPixEventRuntime",     "1.0.200127001",    "https://www.nuget.org/packages/WinPixEventRuntime" },
+                { "WinPixEventRuntime",     "1.0.231030001",    "https://www.nuget.org/packages/WinPixEventRuntime" },
             };
 
             drawLibraryDescriptionList("3rd-parties:", thirdParties, (uint)countof(thirdParties));

@@ -25,7 +25,8 @@ Editor Camera V0\
 Improve window resize + fix rare crash when maximizing window\
 Prefabs\
 Forbid deleting or adding siblings to root node\
-Better leak tracking with __FILE__ and __LINE__ + Fix rare memory leak in animation loading
+Better leak tracking with __FILE__ and __LINE__ + Fix rare memory leak in animation loading\
+Update WinPixEventRuntime 1.0.231030001
 
 ![Screenshot](doc/img/0.26.png)
 
@@ -198,7 +199,7 @@ The external libraries are included with the sources for convenience.
 | tinyXML2                   | 10.0.0        | https://github.com/leethomason/tinyxml2/releases/tag/10.0.0               | zlib    
 | UFBX                       |               | https://github.com/ufbx/ufbx                                              | MIT    
 | Vulkan Memory Allocator    | 3.0.1         | https://github.com/GPUOpen-LibrariesAndSDKs/VulkanMemoryAllocator         | MIT    
-| WinPixEventRuntime         | 1.0.200127001 | https://www.nuget.org/packages/WinPixEventRuntime                         | MIT    
+| WinPixEventRuntime         | 1.0.231030001 | https://www.nuget.org/packages/WinPixEventRuntime                         | MIT    
 
 (*) *You can download the binaries for optick 1.3.1 from https://github.com/bombomby/optick/releases/tag/1.3.1.0*
 
