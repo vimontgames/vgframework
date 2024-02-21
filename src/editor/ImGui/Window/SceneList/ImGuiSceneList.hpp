@@ -75,7 +75,7 @@ namespace vg::editor
     }
 
     //--------------------------------------------------------------------------------------
-    void ImGuiSceneList::displayGameObject(IGameObject* _gameObject, uint* _count)
+    void ImGuiSceneList::displayGameObject(IGameObject* _gameObject, uint * _count)
     {
         //const bool counting = (_count != nullptr);
         const auto children = _gameObject->GetChildren();
@@ -83,13 +83,15 @@ namespace vg::editor
         if (_count)
             (*_count)++;
 
-        const bool disabled = !asBool(_gameObject->GetFlags() & IGameObject::Flags::Enabled);
+        const bool disabled = !asBool(InstanceFlags::Enabled & _gameObject->GetInstanceFlags());
 
         if (disabled)
             ImGui::PushStyleColor(ImGuiCol_Text, ImGui::GetStyleColorVec4(ImGuiCol_TextDisabled));
 
         bool open = false;
         auto availableWidth = ImGui::GetContentRegionMax().x;
+
+        const bool isPrefab = _gameObject->IsPrefab();
 
         ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags_SpanAvailWidth;
         if (children.size() > 0)
@@ -287,7 +289,7 @@ namespace vg::editor
 
                 ImVec4 textColor = ImGui::GetStyleColorVec4(ImGuiCol_Text);
 
-                if (asBool(IComponent::Flags::Enabled & component->GetFlags()))
+                if (asBool(ComponentFlags::Enabled & component->GetComponentFlags()))
                     textColor.w = 0.5f;
                 else
                     textColor.w = 0.15f;
@@ -469,9 +471,9 @@ namespace vg::editor
                             ImVec2 collapsingHeaderPos = ImGui::GetCursorPos();
 
                             const bool open = ImGui::CollapsingHeader(ImGui::getObjectLabel("", scene->getName(), scene).c_str(), flags);
-                            bool enabled = asBool(IInstance::Flags::Enabled & root->GetFlags());
+                            bool enabled = asBool(InstanceFlags::Enabled & root->GetInstanceFlags());
 
-                            auto status = m_sceneMenu.Display((IObject*)scene);
+                            auto status = m_sceneMenu.Display((IObject*)sceneRes);
 
                             if (ImGuiMenu::Status::Removed != status)
                             {
@@ -480,7 +482,7 @@ namespace vg::editor
                                 ImGui::CollapsingHeaderLabel(collapsingHeaderPos, sceneLabel.c_str(), enabled);
 
                                 if (ImGui::CollapsingHeaderCheckbox(collapsingHeaderPos, enabled, root, style::icon::Checked, style::icon::Unchecked, fmt::sprintf("%s Scene \"%s\"", enabled ? "Disable" : "Enable", scene->getName().c_str())))
-                                    root->SetFlags(IInstance::Flags::Enabled, !enabled);
+                                    root->SetInstanceFlags(InstanceFlags::Enabled, !enabled);
 
                                 if (open)
                                 {

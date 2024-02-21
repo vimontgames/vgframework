@@ -25,6 +25,7 @@ namespace vg::editor
         virtual gfx::IView::Flags   GetViewFlags        () const; 
         virtual core::IWorld*       GetWorld            () const;;
         virtual void                OnCloseWindow       ();
+        virtual void                UpdateScene         () {};
 
     protected:
         bool                        drawGizmo           ();

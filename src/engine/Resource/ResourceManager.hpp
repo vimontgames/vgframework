@@ -130,7 +130,7 @@ namespace vg::engine
                     VG_SAFE_INCREASE_REFCOUNT(client);
 
                 for (uint i = 0; i < clients.size(); ++i)
-                    clients[i]->SetResourcePath("");
+                    clients[i]->ClearResourcePath();
 
                 for (uint i = 0; i < clients.size(); ++i)
                     clients[i]->SetResourcePath(path);

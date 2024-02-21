@@ -3,21 +3,22 @@
 namespace vg::editor
 {
     //--------------------------------------------------------------------------------------
-    ImGuiPrefabView::ImGuiPrefabView(core::IBaseScene * _prefab) :
-        ImGuiView(style::icon::Prefab, "View/Prefabs", "Prefabs", ImGuiWindow::StartVisible, gfx::ViewTarget::Editor)
+    ImGuiPrefabView::ImGuiPrefabView(const core::IResource * _prefabRes) :
+        ImGuiView(style::icon::Prefab, "View/Prefabs", "Prefabs", ImGuiWindow::StartVisible, gfx::ViewTarget::Editor),
+        m_prefabRes(_prefabRes)
     {
-        VG_SAFE_INCREASE_REFCOUNT(_prefab);
-        m_prefabScene = _prefab;
+        //VG_SAFE_INCREASE_REFCOUNT(_prefab);
+        //m_prefabScene = _prefab;
 
         IFactory * factory = Kernel::getFactory();
-        m_prefabWorld = (IWorld *)factory->createObject("World", _prefab->getName());
-        m_prefabWorld->AddScene(_prefab, BaseSceneType::Scene);
+        m_prefabWorld = (IWorld *)factory->createObject("World", _prefabRes->GetResourcePath());
+        //m_prefabWorld->AddScene(_prefab, BaseSceneType::Scene);
     }
 
     //--------------------------------------------------------------------------------------
     ImGuiPrefabView::~ImGuiPrefabView()
     {
-        VG_SAFE_RELEASE(m_prefabScene);
+        //VG_SAFE_RELEASE(m_prefabScene);
         VG_SAFE_RELEASE(m_prefabWorld);
     }
 
@@ -31,6 +32,24 @@ namespace vg::editor
     core::IWorld * ImGuiPrefabView::GetWorld() const
     {
         return m_prefabWorld;
+    }
+
+    //--------------------------------------------------------------------------------------
+    void ImGuiPrefabView::UpdateScene()
+    {
+        auto cur = m_prefabWorld->GetActiveScene(BaseSceneType::Scene);
+        auto scene = VG_SAFE_STATIC_CAST(IBaseScene, m_prefabRes->getObject());
+
+        if (cur == nullptr || nullptr == scene)
+        {
+            m_prefabWorld->RemoveAllScenes(BaseSceneType::Scene);
+        }
+        
+        if (cur != scene)
+        {
+            m_prefabWorld->AddScene(scene, BaseSceneType::Scene);
+            m_prefabWorld->SetActiveScene(scene, BaseSceneType::Scene);
+        }
     }
 
     //--------------------------------------------------------------------------------------

@@ -13,7 +13,7 @@ namespace vg::engine
     {
         super::registerProperties(_desc);
 
-        registerProperty(BaseSceneResource, m_name, "Name");
+        //registerProperty(BaseSceneResource, m_name, "Name");
 
         return true;
     }

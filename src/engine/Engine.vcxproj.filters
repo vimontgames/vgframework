@@ -39,6 +39,9 @@
     <ClCompile Include="Job\Job.cpp">
       <Filter>Job</Filter>
     </ClCompile>
+    <ClCompile Include="GameObject\Prefab\PrefabGameObject.cpp">
+      <Filter>GameObject\Prefab</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Engine.def" />
@@ -223,10 +226,10 @@
     <ClInclude Include="World\Scene\Scene.hpp">
       <Filter>World\Scene</Filter>
     </ClInclude>
-    <ClInclude Include="World\Prefab\Prefab.h">
+    <ClInclude Include="World\Prefab\PrefabScene.h">
       <Filter>World\Prefab</Filter>
     </ClInclude>
-    <ClInclude Include="World\Prefab\Prefab.hpp">
+    <ClInclude Include="World\Prefab\PrefabScene.hpp">
       <Filter>World\Prefab</Filter>
     </ClInclude>
     <ClInclude Include="Resource\BaseScene\BaseSceneResource.h">
@@ -246,6 +249,9 @@
     </ClInclude>
     <ClInclude Include="Resource\BaseScene\Scene\SceneResource.hpp">
       <Filter>Resource\BaseScene\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject\Prefab\PrefabGameObject.h">
+      <Filter>GameObject\Prefab</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -332,6 +338,12 @@
     </Filter>
     <Filter Include="Resource\BaseScene\Prefab">
       <UniqueIdentifier>{16605bc5-8eb9-4439-8bdd-2ec363668d3c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameObject">
+      <UniqueIdentifier>{1de4757a-7729-44a1-b718-5b26b6144289}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameObject\Prefab">
+      <UniqueIdentifier>{c1379bef-8cdd-4d5b-b7f7-084e82f5f660}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

@@ -28,8 +28,8 @@ namespace vg::core
         void                        SetModel            (Lod _lod, IModel * _model) override;
         IModel *                    GetModel            (Lod _lod) const override;
 
-        Flags                       GetFlags            () const final override;
-        void                        SetFlags            (Flags _flags, bool _enabled) final override;
+        InstanceFlags               GetInstanceFlags    () const final override;
+        void                        SetInstanceFlags    (InstanceFlags _flags, bool _enabled) final override;
 
         RuntimeFlags                GetRuntimeFlags     () const final override;
         void                        SetRuntimeFlags     (RuntimeFlags _flags, bool _enabled) final override;
@@ -47,14 +47,14 @@ namespace vg::core
         void                        setModel            (Lod _lod, Model * _model);
         VG_INLINE Model *           getModel            (Lod _lod) const;
 
-        VG_INLINE Flags             getFlags            () const;
-        VG_INLINE void              setFlags            (Flags _flags, bool _enabled);
+        VG_INLINE InstanceFlags     getInstanceFlags    () const;
+        VG_INLINE void              setInstanceFlags    (InstanceFlags _flags, bool _enabled);
 
         VG_INLINE RuntimeFlags      getRuntimeFlags     () const;
         VG_INLINE void              setRuntimeFlags     (RuntimeFlags _flags, bool _enabled);
       
     private:
-        Flags                       m_flags;
+        InstanceFlags               m_flags;
         RuntimeFlags                m_runtimeFlags;
         float4                      m_color = { 1.0f, 1.0f, 1.0f, 1.0f };
         float4x4                    m_local = float4x4::identity();

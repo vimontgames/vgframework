@@ -29,6 +29,9 @@ namespace vg::core
         IBaseScene *                                        GetScene                () const final override;
         IWorld *                                            GetWorld                () const final override;
 
+        bool                                                IsPrefab                () const override;
+        IResource *                                         GetPrefabResource       () const override;
+
         void                                                FixedUpdate             (float _dt);
         void                                                Update                  (float _dt);
         void                                                LateUpdate              (float _dt);
@@ -43,7 +46,7 @@ namespace vg::core
 
         void                                                AddChild                (IGameObject * _gameObject, core::uint _index = -1) final override;
         bool                                                RemoveChild             (IGameObject * _gameObject) final override;
-        const vector<IGameObject*> &                        GetChildren             () const final override;
+        const vector<IGameObject*> &                        GetChildren             () const override;
         bool                                                IsRoot                  () const final override;
         bool                                                HasAncestor             (const IGameObject * _ancestor) const final override;
         core::uint                                          GetChildIndex           (const IGameObject * _child) const final override;

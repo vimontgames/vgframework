@@ -23,7 +23,8 @@ namespace vg::editor
     ImGuiMenu::Status ImGuiSceneMenu::Display(core::IObject * _object)
     {
         auto status = Status::None;
-        IBaseScene * scene = dynamic_cast<IBaseScene*>(_object);
+        core::IResource * sceneRes = VG_SAFE_STATIC_CAST(core::IResource, _object);
+        IBaseScene * scene = VG_SAFE_STATIC_CAST(IBaseScene, sceneRes->getObject());
         VG_ASSERT(nullptr != scene);
 
         const auto * factory = Kernel::getFactory();
@@ -38,7 +39,7 @@ namespace vg::editor
             if (m_sceneType == BaseSceneType::Prefab)
             {
                 if (ImGui::MenuItem("View", nullptr, false))
-                    Editor::get()->openPrefabView(scene);
+                    Editor::get()->openPrefabView(sceneRes);
 
                 ImGui::Separator();
             }
@@ -47,7 +48,7 @@ namespace vg::editor
             {
                 string filePath;
 
-                if (_object->hasFile())
+                if (scene->hasFile())
                     filePath = scene->getFile();
                 else
                     filePath = typeInfo.dataFolder + scene->getName() + typeInfo.fileExt;

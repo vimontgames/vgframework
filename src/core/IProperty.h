@@ -237,6 +237,7 @@ namespace vg::core
 //--------------------------------------------------------------------------------------
 // Modify existing class properties macros
 //--------------------------------------------------------------------------------------
+#define setPropertyFlag(className, propertyName, flags, value)												_desc.GetPropertyByName(#propertyName)->setFlags(value ? flags : (vg::core::IProperty::Flags)0, value ? (vg::core::IProperty::Flags)0 : flags);
 #define setPropertyRange(className, propertyName, range)												    _desc.GetPropertyByName(#propertyName)->setRange(range);
 #define setPropertyDefaultFolder(className, propertyName, defaultFolder)									_desc.GetPropertyByName(#propertyName)->setDefaultFolder(defaultFolder);
 

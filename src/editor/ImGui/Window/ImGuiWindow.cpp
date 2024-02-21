@@ -591,6 +591,11 @@ namespace vg::editor
                     changed |= displayEnumFlags<u32>(_object, _prop);
                     break;
 
+                case IProperty::Type::EnumFlagsU64:
+                    VG_ASSERT(!isEnumArray, "Display of EnumArray property not implemented for type '%s'", asString(type).c_str());
+                    changed |= displayEnumFlags<u64>(_object, _prop);
+                    break;
+
                 case IProperty::Type::Uint8:
                 {
                     VG_ASSERT(!isEnumArray, "Display of EnumArray property not implemented for type '%s'", asString(type).c_str());
@@ -986,6 +991,10 @@ namespace vg::editor
                                         componentShortName.erase(nPos);
                                 }
 
+                                const bool debugInspector = EditorOptions::get()->IsDebugInspector();
+                                if (debugInspector)
+                                    componentShortName += fmt::sprintf(" (0x%016X)", (u64)pComponent);
+
                                 ImVec2 collapsingHeaderPos = ImGui::GetCursorPos();
 
                                 const bool open = ImGui::CollapsingHeader(ImGui::getObjectLabel("", componentShortName, pComponent).c_str(), nullptr, ImGuiTreeNodeFlags_InvisibleArrow | ImGuiTreeNodeFlags_AllowItemOverlap);
@@ -1000,8 +1009,8 @@ namespace vg::editor
                                 componentInspectorMenu.Display(pComponent);
 
                                 IGameObject * parent = dynamic_cast<IGameObject *>(pComponent->getParent());
-                                bool isParentGameObjectEnabled = parent && asBool(IInstance::Flags::Enabled & parent->GetFlags());
-                                bool isComponentEnabled = asBool(IComponent::Flags::Enabled & pComponent->GetFlags());
+                                bool isParentGameObjectEnabled = parent && asBool(InstanceFlags::Enabled & parent->GetInstanceFlags());
+                                bool isComponentEnabled = asBool(ComponentFlags::Enabled & pComponent->GetComponentFlags());
 
                                 ImGui::BeginDisabled(!isParentGameObjectEnabled);
                                 CollapsingHeaderLabel(collapsingHeaderPos, componentShortName, isComponentEnabled);
@@ -1009,7 +1018,7 @@ namespace vg::editor
 
                                 if (CollapsingHeaderCheckbox(collapsingHeaderPos, isComponentEnabled, pComponent,style::icon::Checked, style::icon::Unchecked, fmt::sprintf("%s %s component", isComponentEnabled ? "Disable" : "Enable", classDesc->GetClassDisplayName()).c_str()))
                                 {
-                                    pComponent->SetFlags(IComponent::Flags::Enabled, !isComponentEnabled);
+                                    pComponent->SetComponentFlags(ComponentFlags::Enabled, !isComponentEnabled);
                                     changed = true;
                                 }
 
@@ -1560,6 +1569,8 @@ namespace vg::editor
             folder = "Scenes";
         else if (!strcmp(_resourceTypeName.c_str(), "WorldResource"))
             folder = "Worlds";
+        else if (!strcmp(_resourceTypeName.c_str(), "Prefabs"))
+            folder = "Prefabs";
 
         if (!folder)
         {

@@ -352,12 +352,12 @@ namespace vg::engine
                                 break;
 
                             case BaseSceneType::Scene:
-                                    worldResData->m_world->RemoveScene(scene, sceneType);
-                                    break;
+                                worldResData->m_world->RemoveScene(scene, sceneType);
+                                break;
 
                             case BaseSceneType::Prefab:
-                                    worldResData->m_world->RemoveScene(scene, sceneType);
-                                    break;
+                                worldResData->m_world->RemoveScene(scene, sceneType);
+                                break;
                         }
                     }
                 }

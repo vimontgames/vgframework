@@ -1,18 +1,18 @@
 namespace vg::core
 {
     //--------------------------------------------------------------------------------------
-    VG_INLINE IComponent::Flags Component::getFlags() const
+    VG_INLINE ComponentFlags Component::getComponentFlags() const
     {
         return m_flags;
     }
 
     //--------------------------------------------------------------------------------------
-    VG_INLINE void Component::setFlags(Flags _flags, bool _enabled)
+    VG_INLINE void Component::setComponentFlags(ComponentFlags _flags, bool _enabled)
     {
         if (_enabled)
             m_flags |= _flags;
         else
-            (std::underlying_type<Flags>::type&)m_flags &= ~(std::underlying_type<Flags>::type&)_flags;
+            (std::underlying_type<ComponentFlags>::type&)m_flags &= ~(std::underlying_type<ComponentFlags>::type&)_flags;
     }
 
     //--------------------------------------------------------------------------------------

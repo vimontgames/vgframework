@@ -38,7 +38,7 @@ namespace vg::engine
 	//--------------------------------------------------------------------------------------
 	SceneResource::~SceneResource()
 	{
-		ResourceManager::get()->unloadResource(this, GetResourcePath());
+		
 	}
 
 	//--------------------------------------------------------------------------------------

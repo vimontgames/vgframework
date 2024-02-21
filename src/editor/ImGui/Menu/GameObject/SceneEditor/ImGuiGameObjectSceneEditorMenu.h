@@ -15,9 +15,14 @@ namespace vg::editor
         enum MenuOption
         {
             None = 0,
-            Add,
-            AddChild,
-            AddParent,
+
+            AddGameObject,
+            AddChildGameObject,
+            AddParentGameObject,
+
+            AddPrefab,
+            AddChildPrefab,
+
             Delete,
             Rename
         };

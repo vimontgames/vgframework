@@ -1,6 +1,7 @@
 #include "PrefabResource.h"
 #include "core/File/File.h"
 #include "core/IBaseScene.h"
+#include "engine/World/Prefab/PrefabScene.h"
 
 using namespace vg::core;
 
@@ -38,7 +39,7 @@ namespace vg::engine
     //--------------------------------------------------------------------------------------
     PrefabResource::~PrefabResource()
     {
-        ResourceManager::get()->unloadResource(this, GetResourcePath());
+        
     }
 
     //--------------------------------------------------------------------------------------
@@ -53,12 +54,12 @@ namespace vg::engine
     core::IObject* PrefabResource::load(const string& _path)
     {
         IFactory* factory = Kernel::getFactory();
-        IBaseScene* scene = dynamic_cast<IBaseScene*>(factory->createObject("Scene"));
-        if (nullptr != scene)
+        PrefabScene * prefabScene = VG_SAFE_STATIC_CAST(PrefabScene, factory->createObject("PrefabScene"));
+        if (nullptr != prefabScene)
         {
-            scene->setParent(this);
-            if (factory->loadFromXML(scene, _path))
-                return scene;
+            prefabScene->setParent(this);
+            if (factory->loadFromXML(prefabScene, _path))
+                return prefabScene;
         }
 
         return nullptr;
@@ -71,19 +72,18 @@ namespace vg::engine
     {
         const auto* factory = Kernel::getFactory();
 
-        IBaseScene* scene = dynamic_cast<IBaseScene*>(factory->createObject("Scene"));
-        if (nullptr != scene)
+        if (PrefabScene * prefabScene = VG_SAFE_STATIC_CAST(PrefabScene, factory->createObject("PrefabScene")))
         {
             // Use file name as default scene name
-            scene->setName(io::getFileNameWithoutExt(_path));
+            prefabScene->setName(io::getFileNameWithoutExt(_path));
 
             // Add default root node to scene
             GameObject* root = (GameObject*)CreateFactoryObject(GameObject, "Root", this);
-            scene->SetRoot(root);
+            prefabScene->SetRoot(root);
             root->release();
 
-            factory->saveToXML(scene, _path);
-            VG_SAFE_RELEASE(scene);
+            factory->saveToXML(prefabScene, _path);
+            VG_SAFE_RELEASE(prefabScene);
             return true;
         }
 

@@ -11,7 +11,7 @@
 
 #include "GameObjectHierarchy.hpp"
 #include "Scene/Scene.hpp"
-#include "Prefab/Prefab.hpp"
+#include "Prefab/PrefabScene.hpp"
 
 using namespace vg::core;
 
@@ -57,7 +57,7 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
-    vector<Scene*> & World::getScenes(BaseSceneType _sceneType)
+    vector<core::IBaseScene*> & World::getScenes(BaseSceneType _sceneType)
     {
         return m_scenes[asInteger(_sceneType)];
     }

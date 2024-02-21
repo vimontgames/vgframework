@@ -14,7 +14,7 @@ namespace vg::core
     //--------------------------------------------------------------------------------------
     Instance::Instance(const string & _name, IObject * _parent) :
         IInstance(_name, _parent),
-        m_flags(Flags::Enabled),
+        m_flags(InstanceFlags::Enabled),
         m_runtimeFlags((RuntimeFlags)0x0)
     {
     }
@@ -31,7 +31,7 @@ namespace vg::core
     {
         super::registerProperties(_desc);
 
-        registerPropertyEnumBitfield(Instance, Flags, m_flags, "Flags");
+        registerPropertyEnumBitfield(Instance, InstanceFlags, m_flags, "Flags");
         registerPropertyEx(Instance, m_color, "Color", IProperty::Flags::Color);
         registerProperty(Instance, m_local, "Transform");
         registerPropertyObjectPtrVectorEx(Instance, m_models, "Models", IProperty::Flags::ReadOnly | IProperty::Flags::NotSaved | IProperty::Flags::Hidden);
@@ -75,15 +75,15 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
-    IInstance::Flags Instance::GetFlags() const
+    InstanceFlags Instance::GetInstanceFlags() const
     {
-        return getFlags();
+        return getInstanceFlags();
     }
 
     //--------------------------------------------------------------------------------------
-    void Instance::SetFlags(Flags flags, bool _enabled)
+    void Instance::SetInstanceFlags(InstanceFlags flags, bool _enabled)
     {
-        setFlags(flags, _enabled);
+        setInstanceFlags(flags, _enabled);
     }
 
     //--------------------------------------------------------------------------------------

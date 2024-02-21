@@ -246,7 +246,7 @@ namespace vg::engine::win32
             if (isFocused != m_wasFocused)
             {
                 m_justFocused = true;
-                VG_DEBUGPRINT("[Input] m_justFocused = true;\n");
+                //VG_DEBUGPRINT("[Input] m_justFocused = true;\n");
             }
 
             if (IsInputEnabled(InputType::Keyboard))

@@ -247,7 +247,7 @@ namespace vg::engine
         if (nullptr != go)
         {
             // Update static/dynamic physics flags
-            if (asBool(IInstance::Flags::Static & go->getFlags()))
+            if (asBool(InstanceFlags::Static & go->getInstanceFlags()))
             {
                 if (physics::ObjectLayer::NonMoving != m_bodyDesc->GetLayer() || physics::MotionType::Static != m_bodyDesc->GetMotion())
                 {

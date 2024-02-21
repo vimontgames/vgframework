@@ -20,16 +20,16 @@ namespace vg::core
 
         enum class Flags : u64
         {
-            None        = 0x0000000000000000,
+            None            = 0x0000000000000000,
 
-            Singleton   = 0x0000000000000001,
-            GameObject  = 0x0000000000000002,
-            Component   = 0x0000000000000004,
-            Model       = 0x0000000000000010,
-            Instance    = 0x0000000000000020,
-            Resource    = 0x0000000000000040,
-            SceneNode   = 0x0000000000000080,
-            Plugin      = 0x0000000000000100
+            Singleton       = 0x0000000000000001,
+            GameObject      = 0x0000000000000002,
+            Component       = 0x0000000000000004,
+            Model           = 0x0000000000000010,
+            Instance        = 0x0000000000000020,
+            Resource        = 0x0000000000000040,
+            SceneNode       = 0x0000000000000080,
+            Plugin          = 0x0000000000000100
         };
         virtual                             ~IClassDesc  () {}
 
@@ -72,6 +72,7 @@ namespace vg::core
         virtual void                        RegisterEnum                (const char * _className, const char * _propertyName, u8 * _offset, const char * _displayName, uint _enumCount, const char * _enumNames, const u8 * _enumValues, IProperty::Flags _flags) = 0;
         virtual void                        RegisterEnum                (const char * _className, const char * _propertyName, u16 * _offset, const char * _displayName, uint _enumCount, const char * _enumNames, const u16 * _enumValues, IProperty::Flags _flags) = 0;
         virtual void                        RegisterEnum                (const char * _className, const char * _propertyName, u32 * _offset, const char * _displayName, uint _enumCount, const char * _enumNames, const u32 * _enumValues, IProperty::Flags _flags) = 0;
+        virtual void                        RegisterEnum                (const char * _className, const char * _propertyName, u64 * _offset, const char * _displayName, uint _enumCount, const char * _enumNames, const u64 * _enumValues, IProperty::Flags _flags) = 0;
 
         virtual void                        RegisterEnumArray           (const char * _className, const char * _propertyName, float4 * _offset, const char * _displayName, uint _enumCount, uint _elementSize, const char * _enumNames, const void * _enumValues, IProperty::Flags _flags, uint _enumSizeOf) = 0;
         virtual void                        RegisterEnumArray           (const char * _className, const char * _propertyName, IResource * _offset, const char * _displayName, uint _enumCount, uint _elementSize, const char * _enumNames, const void * _enumValues, IProperty::Flags _flags, uint _enumSizeOf) = 0;

@@ -27,13 +27,15 @@
     </ClCompile>
     <ClCompile Include="Resource\Resource.cpp" />
     <ClCompile Include="Selection\Selection.cpp" />
+    <ClInclude Include="GameObject\Prefab\PrefabGameObject.h" />
+    <ClCompile Include="GameObject\Prefab\PrefabGameObject.cpp" />
     <ClInclude Include="Resource\BaseScene\BaseSceneResource.h" />
     <ClInclude Include="Resource\BaseScene\BaseSceneResource.hpp" />
     <ClInclude Include="Resource\BaseScene\Prefab\PrefabResource.h" />
     <ClInclude Include="Resource\BaseScene\Prefab\PrefabResource.hpp" />
     <ClInclude Include="Resource\BaseScene\Scene\SceneResource.h" />
     <ClInclude Include="Resource\BaseScene\Scene\SceneResource.hpp" />
-    <ClInclude Include="World\Prefab\Prefab.hpp" />
+    <ClInclude Include="World\Prefab\PrefabScene.hpp" />
     <ClCompile Include="World\World.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -106,7 +108,7 @@
     <ClInclude Include="Selection\Selection.h" />
     <ClInclude Include="World\GameObjectHierarchy.h" />
     <ClInclude Include="World\GameObjectHierarchy.hpp" />
-    <ClInclude Include="World\Prefab\Prefab.h" />
+    <ClInclude Include="World\Prefab\PrefabScene.h" />
     <ClInclude Include="World\Scene\Scene.h" />
     <ClInclude Include="World\Scene\Scene.hpp" />
     <ClInclude Include="World\World.h" />

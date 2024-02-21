@@ -119,7 +119,7 @@ namespace vg::engine
         createLight();
 
         if (m_light)
-            m_light->SetFlags(IInstance::Flags::Enabled, asBool(IComponent::Flags::Enabled & GetFlags()));
+            m_light->SetInstanceFlags(InstanceFlags::Enabled, asBool(ComponentFlags::Enabled & GetComponentFlags()));
     }
 
     //--------------------------------------------------------------------------------------
@@ -146,11 +146,11 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
-    void LightComponent::SetFlags(IComponent::Flags _flags, bool _enabled)
+    void LightComponent::SetComponentFlags(ComponentFlags _flags, bool _enabled)
     {
-        super::SetFlags(_flags, _enabled);
+        super::SetComponentFlags(_flags, _enabled);
 
         if (m_light)
-            m_light->SetFlags(IInstance::Flags::Enabled, asBool(IComponent::Flags::Enabled & GetFlags()));
+            m_light->SetInstanceFlags(InstanceFlags::Enabled, asBool(ComponentFlags::Enabled & GetComponentFlags()));
     }
 }

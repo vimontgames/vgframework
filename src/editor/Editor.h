@@ -61,7 +61,7 @@ namespace vg
             engine::IEngine *					getEngine			() const;
             renderer::IRenderer *				getRenderer			() const;
 
-			void								openPrefabView		(const core::IBaseScene * _prefab);
+			void								openPrefabView		(const core::IResource * _prefabRes);
 
 		//private:
 			core::vector<ImGuiWindow *>			m_imGuiWindows;

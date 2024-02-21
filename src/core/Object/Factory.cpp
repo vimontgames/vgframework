@@ -9,6 +9,7 @@
 #include "core/File/File.h"
 #include "core/File/Buffer.h"
 #include "core/Misc/BitMask.h"
+#include "core/IInstance.h"
 
 using namespace tinyxml2;
 
@@ -1228,6 +1229,12 @@ namespace vg::core
         auto * parent = nullptr != _parent ? _parent : _xmlDoc.RootElement();
 
         const char * className = _object->getClassName();
+
+        if (auto instance = dynamic_cast<const IInstance *>(_object))
+        {
+            if (asBool(InstanceFlags::NotSerialized & instance->GetInstanceFlags()))
+                return false;
+        }
 
         XMLElement * xmlElement = _xmlDoc.NewElement("Object");
         xmlElement->SetAttribute("class", className);

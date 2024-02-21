@@ -83,6 +83,11 @@ void operator delete[](void * _ptr, const char * _file, int _line) noexcept;
 #endif
 
 #if VG_ENABLE_ASSERT
+namespace vg::core
+{
+	bool assertmsg(const char * _condition, const char * _func, const char * _file, int _line, bool & _skip, const char * _format, ...);
+	bool assertmsg(const char * _condition, const char * _func, const char * _file, int _line, bool & _skip);
+}
 #define VG_ASSERT(condition, ...)															        \
 	do																						        \
 	{																						        \
@@ -105,6 +110,24 @@ void operator delete[](void * _ptr, const char * _file, int _line) noexcept;
 
 #define VG_STATIC_ASSERT(condition, message) static_assert(condition, message)
 #define VG_STATIC_ASSERT_NOT_IMPLEMENTED() VG_STATIC_ASSERT(false, "Function is not implemented")
+
+#if VG_ENABLE_ASSERT
+	namespace vg::core
+	{
+		template <typename DST, typename SRC> inline DST * SafeStaticCast(SRC * _src)
+		{
+			if (nullptr != _src)
+			{
+				VG_ASSERT(dynamic_cast<DST *>(_src));
+				return (DST *)_src;
+			}
+			return nullptr;
+		}
+	};
+	#define VG_SAFE_STATIC_CAST(type, ptr) vg::core::SafeStaticCast<type>(ptr)
+#else
+	#define VG_SAFE_STATIC_CAST(type, ptr) ((type*)ptr)
+#endif
 
 #define VG_SAFE_FREE(p)	 { if (p) { free((void*)(p)); (p) = nullptr;} }
 #define VG_SAFE_DELETE(p)  { if (p) { delete (p); (p) = nullptr;} }

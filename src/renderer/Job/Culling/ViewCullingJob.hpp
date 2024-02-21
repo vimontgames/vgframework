@@ -41,7 +41,7 @@ namespace vg::renderer
     void ViewCullingJob::cullGameObjectRecur(const GameObject * _go, View * _view)
     {
         // Visible? Then add it to the list
-        if (asBool(GameObject::Flags::Enabled & _go->getFlags()))
+        if (asBool(InstanceFlags::Enabled & _go->getInstanceFlags()))
         {
             auto & instances = _go->getGraphicInstances();
             const auto instanceCount = instances.size();
@@ -49,15 +49,15 @@ namespace vg::renderer
             {
                 GraphicInstance * instance = (GraphicInstance*)instances[i];
 
-                if (asBool(core::Instance::Flags::Enabled & instance->getFlags()))
+                if (asBool(InstanceFlags::Enabled & instance->getInstanceFlags()))
                     instance->Cull(&m_result, _view);
             }
 
-            const auto & children = _go->getChildren();
+            const auto & children = _go->GetChildren();
             const auto childCount = children.size();
             for (uint i = 0; i < childCount; ++i)
             {
-                const GameObject * child = children[i];
+                const GameObject * child = VG_SAFE_STATIC_CAST(GameObject, children[i]);
                 cullGameObjectRecur(child, _view);
             }
         }

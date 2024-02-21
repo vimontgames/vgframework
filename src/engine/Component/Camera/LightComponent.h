@@ -22,7 +22,7 @@ namespace vg::engine
         void                        OnLoad              () override;
         void                        Update              (float _dt) override;
         void                        OnPropertyChanged   (core::IObject * _object, const core::IProperty & _prop, bool _notifyParent);
-        void                        SetFlags            (core::IComponent::Flags _flags, bool _enabled = true) final override;
+        void                        SetComponentFlags   (core::ComponentFlags _flags, bool _enabled = true) final override;
 
     protected:
         bool                        createLightDesc     ();

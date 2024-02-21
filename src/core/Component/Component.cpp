@@ -15,7 +15,7 @@ namespace vg::core
     //--------------------------------------------------------------------------------------
     Component::Component(const core::string & _name, IObject * _parent) :
         IComponent(_name, _parent),
-        m_flags(Flags::Enabled),
+        m_flags(ComponentFlags::Enabled),
         m_update(UpdateFlags::Update)
     {
         VG_ASSERT(_name.empty() || nullptr != dynamic_cast<IGameObject*>(_parent), "Creating Component without parent is only allowed during static initialization");
@@ -60,21 +60,21 @@ namespace vg::core
     //--------------------------------------------------------------------------------------
     bool Component::registerProperties(IClassDesc & _desc)
     {
-        registerPropertyEnumBitfield(Component, Flags, m_flags, "Flags");
+        registerPropertyEnumBitfield(Component, ComponentFlags, m_flags, "Flags");
 
         return true;
     }
 
     //--------------------------------------------------------------------------------------
-    IComponent::Flags Component::GetFlags() const
+    ComponentFlags Component::GetComponentFlags() const
     {
-        return getFlags();
+        return getComponentFlags();
     }
 
     //--------------------------------------------------------------------------------------
-    void Component::SetFlags(Flags _flags, bool _enabled)
+    void Component::SetComponentFlags(ComponentFlags _flags, bool _enabled)
     {
-        setFlags(_flags, _enabled);
+        setComponentFlags(_flags, _enabled);
     }
 
     //--------------------------------------------------------------------------------------

@@ -53,16 +53,16 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
-    VG_INLINE void Instance::setFlags(Flags _flags, bool _enabled)
+    VG_INLINE void Instance::setInstanceFlags(InstanceFlags _flags, bool _enabled)
     {
         if (_enabled)
             m_flags |= _flags;
         else
-            (std::underlying_type<Flags>::type &)m_flags &= ~(std::underlying_type<Flags>::type)_flags;
+            (std::underlying_type<InstanceFlags>::type &)m_flags &= ~(std::underlying_type<InstanceFlags>::type)_flags;
     }
 
     //--------------------------------------------------------------------------------------
-    VG_INLINE IInstance::Flags Instance::getFlags() const
+    VG_INLINE InstanceFlags Instance::getInstanceFlags() const
     {
         return m_flags;
     }

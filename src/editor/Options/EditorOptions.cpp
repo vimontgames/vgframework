@@ -31,13 +31,25 @@ namespace vg::editor
         }
         registerPropertyGroupEnd(EditorOptions);
 
-        registerPropertyGroupBegin(EditorOptions, "Camera");
+        registerPropertyGroupBegin(EditorOptions, "Debug");
         {
-            registerProperty(EditorOptions, m_cullingInfo, "Show Culling Info");
+            registerPropertyEnumBitfield(EditorOptions, EditorDebugFlags, m_debugFlags, "Flags");
         }
         registerPropertyGroupEnd(EditorOptions);
 
         return true;
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool EditorOptions::IsDebugInspector() const
+    { 
+        return core::asBool(EditorDebugFlags::Inspector & m_debugFlags);
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool EditorOptions::IsDebugCulling() const
+    { 
+        return core::asBool(EditorDebugFlags::Culling & m_debugFlags); 
     }
 
     //--------------------------------------------------------------------------------------

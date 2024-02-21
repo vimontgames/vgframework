@@ -18,6 +18,12 @@ namespace vg::editor
         World
     };
 
+    enum class EditorDebugFlags : core::u64
+    {
+        Inspector   = 0x00000001,
+        Culling     = 0x00000002 
+    };
+
     struct GizmoOptions
     {
         GizmoType           m_type = GizmoType::Translate;
@@ -49,11 +55,12 @@ namespace vg::editor
         const GizmoOptions &    getGizmoOptions     () const { return m_gizmo; }
         GizmoOptions &          getGizmoOptions     () { return m_gizmo; }
 
-        bool                    showCullingInfo     () const { return m_cullingInfo;}
+        bool                    IsDebugInspector    () const;
+        bool                    IsDebugCulling      () const;
 
     private:
         renderer::GUITheme      m_guiTheme = renderer::GUITheme::ImGui_Dark;       
         GizmoOptions            m_gizmo;
-        bool                    m_cullingInfo = false;
+        EditorDebugFlags        m_debugFlags = (EditorDebugFlags)0x0;
     };
 }

@@ -75,7 +75,7 @@ namespace vg::engine
             m_meshInstance->setGlobalMatrix(go->getGlobalMatrix());
             m_meshInstance->setColor(go->getColor());
 
-            if (asBool(IComponent::Flags::NoCulling & getFlags()))
+            if (asBool(ComponentFlags::NoCulling & getComponentFlags()))
                 m_meshInstance->setRuntimeFlags(IInstance::RuntimeFlags::NoCulling, true);
             else
                 m_meshInstance->setRuntimeFlags(IInstance::RuntimeFlags::NoCulling, false);
@@ -117,12 +117,12 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
-    void MeshComponent::SetFlags(IComponent::Flags _flags, bool _enabled)
+    void MeshComponent::SetComponentFlags(ComponentFlags _flags, bool _enabled)
     {
-        super::SetFlags(_flags, _enabled);
+        super::SetComponentFlags(_flags, _enabled);
 
         if (m_meshInstance)
-            m_meshInstance->SetFlags(IInstance::Flags::Enabled, asBool(IComponent::Flags::Enabled & GetFlags()));
+            m_meshInstance->SetInstanceFlags(InstanceFlags::Enabled, asBool(ComponentFlags::Enabled & GetComponentFlags()));
     }
 
     //--------------------------------------------------------------------------------------

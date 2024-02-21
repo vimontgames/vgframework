@@ -322,7 +322,9 @@ namespace vg::editor
                     m_view->setName(getName());
                 }
                 draw = false;
-            }
+            }  
+
+            UpdateScene();
 
             m_view->SetSize(m_size);
 
@@ -366,8 +368,8 @@ namespace vg::editor
             }
 
             const auto options = EditorOptions::get();
-            bool showStats = options->showCullingInfo();
-            if (m_view && showStats)
+            bool debugCulling = options->IsDebugCulling();
+            if (m_view && debugCulling)
             {
                 const auto & stats = m_view->GetViewCullingStats();
                 uint line = 0;

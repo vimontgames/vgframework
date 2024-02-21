@@ -5,6 +5,7 @@
 #include "editor/ImGui/Menu/Inspector/GameObject/ImGuiGameObjectInspectorMenu.h"
 #include "editor/ImGui/Window/ImGuiWindow.h"
 #include "editor/ImGui/Extensions/imGuiExtensions.h"
+#include "editor/Options/EditorOptions.h"
 
 using namespace vg::core;
 
@@ -34,21 +35,16 @@ namespace vg::editor
 
             m_gameObjectInspectorMenu.Display(go);
 
-            bool isGameobjectEnabled = asBool(IInstance::Flags::Enabled & go->GetFlags());
+            bool isGameobjectEnabled = asBool(InstanceFlags::Enabled & go->GetInstanceFlags());
+
+            const bool debugInspector = EditorOptions::get()->IsDebugInspector();
+            if (debugInspector)
+                gameObjectLabel += fmt::sprintf(" (0x%016X)", (u64)_object);
 
             ImGui::CollapsingHeaderLabel(collapsingHeaderPos, gameObjectLabel.c_str(), isGameobjectEnabled);
 
             if (ImGui::CollapsingHeaderCheckbox(collapsingHeaderPos, isGameobjectEnabled, go, style::icon::Checked, style::icon::Unchecked, fmt::sprintf("%s GameObject \"%s\"", isGameobjectEnabled? "Disable" : "Enable", go->getName().c_str())))
-            {
-                go->SetFlags(IInstance::Flags::Enabled, !isGameobjectEnabled);
-                //changed = true;
-            }
-
-            //if (ImGui::CollapsedHeaderIconButton(collapsingHeaderPos, availableWidth, go, style::icon::Trashcan, fmt::sprintf("Remove GameObject \"%s\"", go->getName().c_str())))
-            //{
-            //    //componentInspectorMenu.removeComponent(pComponent);
-            //    //changed = true;
-            //}
+                go->SetInstanceFlags(InstanceFlags::Enabled, !isGameobjectEnabled);
 
             if (open)
             {
@@ -103,14 +99,14 @@ namespace vg::editor
                 // Centered Button
                 string label = fmt::sprintf(" %s Add Component ", style::icon::Plus);
                 float alignment = 0.5f;
-                float size = ImGui::CalcTextSize(label.c_str()).x + style.FramePadding.x * 2.0f;
+                float size = editor::style::button::SizeLarge.x; //ImGui::CalcTextSize(label.c_str()).x + style.FramePadding.x * 2.0f;
                 float avail = ImGui::GetContentRegionAvail().x;   
 
                 float off = (avail - size) * alignment;
                 if (off > 0.0f)
                     ImGui::SetCursorPosX(ImGui::GetCursorPosX() + off);
 
-                if (ImGui::Button(ImGui::getObjectLabel(label.c_str(), go).c_str()))
+                if (ImGui::Button(ImGui::getObjectLabel(label.c_str(), go).c_str(), editor::style::button::SizeLarge))
                     m_gameObjectInspectorMenu.addComponentPopup();
 
                 if (ImGui::IsItemHovered())

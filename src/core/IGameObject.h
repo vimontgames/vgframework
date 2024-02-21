@@ -42,6 +42,9 @@ namespace vg::core
 
         virtual IBaseScene *                    GetScene            () const = 0;
         virtual IWorld *                        GetWorld            () const = 0;
+        
+        virtual bool                            IsPrefab            () const = 0;
+        virtual IResource *                     GetPrefabResource   () const = 0;
 
         template <class T> T *                  AddComponentByType  (const core::string & _name);
         template <class T> T *                  GetComponentByType  () const;

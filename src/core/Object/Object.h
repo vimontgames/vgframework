@@ -77,12 +77,10 @@ namespace vg::core
 
 		static bool					resizeVector		(core::IObject * _parent, core::uint _offset, core::uint _count, void ** _data);
 
-	protected:
-		string					    m_name;
-
 	private:
+        atomic<u32>				    m_refCount;
+        Object *					m_parent = nullptr;
+		string					    m_name;
         string                      m_file;
-		atomic<u32>				    m_refCount;
-        Object *                    m_parent = nullptr;
 	};
 }

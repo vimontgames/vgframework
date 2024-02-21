@@ -436,10 +436,30 @@ namespace vg::editor
                         //ImGui::EndDisabled();
                         //ImGui::EndMenu();
 
-                        auto world = getEngine()->GetMainWorld();
+                        //auto world = getEngine()->GetMainWorld();
+                        //uint prefabCount = 0;
+                        //if (world)
+                        //    prefabCount = world->GetSceneCount(BaseSceneType::Prefab);
+
+                        //ImGui::BeginDisabled(prefabCount == 0);
+                        //{
+                        //    if (ImGui::BeginMenu("Prefabs"))
+                        //    {
+                        //        for (uint p = 0; p < prefabCount; ++p)
+                        //        {
+                        //            auto prefab = world->GetScene(p, BaseSceneType::Prefab);
+                        //            if (ImGui::MenuItem(prefab->getName().c_str()))
+                        //                openPrefabView(prefab);
+                        //        }
+                        //        ImGui::EndMenu();
+                        //    }
+                        //}
+
+                        engine::IWorldResource * worldRes = getEngine()->GetWorldResource();
+
                         uint prefabCount = 0;
-                        if (world)
-                            prefabCount = world->GetSceneCount(BaseSceneType::Prefab);
+                        if (worldRes)
+                            prefabCount = worldRes->GetSceneResourceCount(BaseSceneType::Prefab);
 
                         ImGui::BeginDisabled(prefabCount == 0);
                         {
@@ -447,13 +467,15 @@ namespace vg::editor
                             {
                                 for (uint p = 0; p < prefabCount; ++p)
                                 {
-                                    auto prefab = world->GetScene(p, BaseSceneType::Prefab);
-                                    if (ImGui::MenuItem(prefab->getName().c_str()))
-                                        openPrefabView(prefab);
+                                    auto prefabRes = worldRes->GetSceneResource(p, BaseSceneType::Prefab);
+
+                                    if (ImGui::MenuItem(prefabRes->GetResourcePath().c_str()))
+                                        openPrefabView(prefabRes);
                                 }
                                 ImGui::EndMenu();
                             }
                         }
+                        
                         ImGui::EndDisabled();
                         ImGui::EndMenu();
                     }
@@ -611,10 +633,10 @@ namespace vg::editor
     }    
 
     //--------------------------------------------------------------------------------------
-    void Editor::openPrefabView(const core::IBaseScene * _prefab)
+    void Editor::openPrefabView(const core::IResource * _prefabRes)
     {
         // Create or show window
-        auto * prefabView = getWindow<ImGuiPrefabView>(_prefab->getName());
+        auto * prefabView = getWindow<ImGuiPrefabView>(_prefabRes->GetResourcePath());
 
         if (prefabView)
         {
@@ -622,8 +644,8 @@ namespace vg::editor
         }
         else
         {
-            auto prefabView = new ImGuiPrefabView((IBaseScene *)_prefab);
-            prefabView->setName(_prefab->getName());
+            auto prefabView = new ImGuiPrefabView(_prefabRes);
+            prefabView->setName(_prefabRes->GetResourcePath());
             Editor::get()->m_imGuiWindows.push_back(prefabView);
         }
     }

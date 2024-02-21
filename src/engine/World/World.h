@@ -18,47 +18,47 @@ namespace vg::engine
         World(const core::string & _name, core::IObject * _parent);
         ~World();
 
-        bool                        IsPlaying           () const final override;
-        bool                        IsPaused            () const final override;
-        void                        Play                () final override;
-        void                        Stop                () final override;
-        void                        Pause               () final override;
-        void                        Resume              () final override;
+        bool                                IsPlaying           () const final override;
+        bool                                IsPaused            () const final override;
+        void                                Play                () final override;
+        void                                Stop                () final override;
+        void                                Pause               () final override;
+        void                                Resume              () final override;
 
-        bool                        SetActiveScene      (core::IBaseScene * _scene, core::BaseSceneType _sceneType) final override;
-        core::IBaseScene *          GetActiveScene      (core::BaseSceneType _sceneType) const final override;
+        bool                                SetActiveScene      (core::IBaseScene * _scene, core::BaseSceneType _sceneType) final override;
+        core::IBaseScene *                  GetActiveScene      (core::BaseSceneType _sceneType) const final override;
 
-        bool                        AddScene            (core::IBaseScene * _scene, core::BaseSceneType _sceneType) final override;
-        bool                        RemoveScene         (core::IBaseScene * scene, core::BaseSceneType _sceneType) final override;
-        core::uint                  RemoveAllScenes     (core::BaseSceneType _sceneType) final override;
+        bool                                AddScene            (core::IBaseScene * _scene, core::BaseSceneType _sceneType) final override;
+        bool                                RemoveScene         (core::IBaseScene * scene, core::BaseSceneType _sceneType) final override;
+        core::uint                          RemoveAllScenes     (core::BaseSceneType _sceneType) final override;
 
-        core::uint                  GetSceneCount       (core::BaseSceneType _sceneType) const final override;
-        const core::IBaseScene *    GetScene            (core::uint _index, core::BaseSceneType _sceneType) const final override;
+        core::uint                          GetSceneCount       (core::BaseSceneType _sceneType) const final override;
+        const core::IBaseScene *            GetScene            (core::uint _index, core::BaseSceneType _sceneType) const final override;
 
-        core::vector<Scene*> &      getScenes           (core::BaseSceneType _sceneType);
+        core::vector<core::IBaseScene *> &  getScenes           (core::BaseSceneType _sceneType);
 
-        void                        SetDebugDrawData    (core::IDebugDrawData * _debugDrawData) final override;
-        core::IDebugDrawData *      GetDebugDrawData    () const final override;
+        void                                SetDebugDrawData    (core::IDebugDrawData * _debugDrawData) final override;
+        core::IDebugDrawData *              GetDebugDrawData    () const final override;
 
-        void                        SetPhysicsWorld     (core::IPhysicsWorld * _physicsWorld) final override;
-        core::IPhysicsWorld *       GetPhysicsWorld     () const final override;
+        void                                SetPhysicsWorld     (core::IPhysicsWorld * _physicsWorld) final override;
+        core::IPhysicsWorld *               GetPhysicsWorld     () const final override;
 
     protected:
-        VG_INLINE bool              isPlaying           () const;
-        void                        play                ();
-        void                        stop                ();
+        VG_INLINE bool                      isPlaying           () const;
+        void                                play                ();
+        void                                stop                ();
 
-        VG_INLINE bool              isPaused            () const;
-        void                        pause               ();
-        void                        resume              ();
+        VG_INLINE bool                      isPaused            () const;
+        void                                pause               ();
+        void                                resume              ();
 
     private:
-        bool                        m_isPlaying     : 1;
-        bool                        m_isPaused      : 1;
-        Scene *                     m_activeScene[core::enumCount<core::BaseSceneType>()];
-        core::vector<Scene*>        m_scenes[core::enumCount<core::BaseSceneType>()];
-        core::IDebugDrawData *      m_debugDrawData = nullptr;
-        core::IPhysicsWorld *       m_physicsWorld = nullptr;
+        bool                                m_isPlaying     : 1;
+        bool                                m_isPaused      : 1;
+        core::IBaseScene *                  m_activeScene[core::enumCount<core::BaseSceneType>()];
+        core::vector<core::IBaseScene *>    m_scenes[core::enumCount<core::BaseSceneType>()];
+        core::IDebugDrawData *              m_debugDrawData = nullptr;
+        core::IPhysicsWorld *               m_physicsWorld = nullptr;
     };
 }
 

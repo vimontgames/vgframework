@@ -14,15 +14,17 @@ namespace vg::editor
     public:
         VG_CLASS_DECL(ImGuiPrefabView, ImGuiView);
 
-        ImGuiPrefabView(core::IBaseScene * _prefab);
+        ImGuiPrefabView(const core::IResource * _prefabRes);
         ~ImGuiPrefabView();
 
         gfx::IView::Flags GetViewFlags() const final override;
         core::IWorld * GetWorld() const final override;
         void OnCloseWindow() final override;
+        void UpdateScene()final override;
 
     private:
-        core::IBaseScene *  m_prefabScene = nullptr;
-        core::IWorld *      m_prefabWorld = nullptr;
+        //core::IBaseScene *  m_prefabScene = nullptr;
+        const core::IResource *   m_prefabRes = nullptr;
+        core::IWorld * m_prefabWorld = nullptr;
     };
 }

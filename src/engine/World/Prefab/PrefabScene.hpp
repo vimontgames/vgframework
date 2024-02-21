@@ -1,27 +1,27 @@
 #include "engine/Precomp.h"
-#include "Prefab.h"
+#include "PrefabScene.h"
 
 using namespace vg::core;
 
 namespace vg::engine
 {
-    VG_REGISTER_OBJECT_CLASS_EX(Prefab, "Prefab", IClassDesc::Flags::SceneNode);
+    VG_REGISTER_OBJECT_CLASS_EX(PrefabScene, "PrefabScene", IClassDesc::Flags::SceneNode);
 
     //--------------------------------------------------------------------------------------
-    Prefab::Prefab(const string & _name, IObject * _parent) :
+    PrefabScene::PrefabScene(const string & _name, IObject * _parent) :
         super(_name, _parent)
     {
 
     }
 
     //--------------------------------------------------------------------------------------
-    Prefab::~Prefab()
+    PrefabScene::~PrefabScene()
     {
 
     }
 
     //--------------------------------------------------------------------------------------
-    bool Prefab::registerProperties(IClassDesc & _desc)
+    bool PrefabScene::registerProperties(IClassDesc & _desc)
     {
         super::registerProperties(_desc);
 

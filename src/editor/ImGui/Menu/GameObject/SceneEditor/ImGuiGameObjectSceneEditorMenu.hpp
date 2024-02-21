@@ -1,5 +1,6 @@
 #include "ImGuiGameObjectSceneEditorMenu.h"
 #include "core/IGameObject.h"
+#include "core/IResource.h"
 #include "core/ISelection.h"
 #include "core/IInput.h"
 #include "engine/IEngine.h"
@@ -7,6 +8,8 @@
 #include "editor/ImGui/Extensions/imGuiExtensions.h"
 #include "editor/Editor.h"
 #include "core/IBaseScene.h"
+#include "ImGui-Addons/FileBrowser/ImGuiFileBrowser.h"
+#include "core/File/File.h"
 
 using namespace vg::core;
 
@@ -63,30 +66,65 @@ namespace vg::editor
             if (!selection->IsSelectedObject(_object))
                 selection->SetSelectedObject(_object);
 
-            ImGui::BeginDisabled(isRoot);
-            if (ImGui::MenuItem("Add"))
+            if (ImGui::BeginMenu("GameObject"))
             {
-                m_selected = MenuOption::Add;
-                m_popup = "Add GameObject";
-                openPopup = true;
-                ImGui::OpenPopup("Add");
-            }
-            ImGui::EndDisabled();
+                ImGui::BeginDisabled(isRoot);
+                if (ImGui::MenuItem("Add"))
+                {
+                    m_selected = MenuOption::AddGameObject;
+                    m_popup = "Add GameObject";
+                    m_popupObject = _object;
+                    openPopup = true;
+                    ImGui::OpenPopup("Add");
+                }
+                ImGui::EndDisabled();
 
-            if (ImGui::MenuItem("Add Child"))
-            {
-                m_selected = MenuOption::AddChild;
-                m_popup = "Add Child GameObject";
-                openPopup = true;
-                ImGui::OpenPopup("Add Child");
+                if (ImGui::MenuItem("Add Child"))
+                {
+                    m_selected = MenuOption::AddChildGameObject;
+                    m_popup = "Add Child GameObject";
+                    m_popupObject = _object;
+                    openPopup = true;
+                    ImGui::OpenPopup("Add Child GameObject");
+                }
+
+                if (ImGui::MenuItem("Add Parent"))
+                {
+                    m_selected = MenuOption::AddParentGameObject;
+                    m_popup = "Add Parent GameObject";
+                    m_popupObject = _object;
+                    openPopup = true;
+                    ImGui::OpenPopup("Add Parent GameObject");
+                }
+
+                ImGui::EndMenu();
             }
 
-            if (ImGui::MenuItem("Add Parent"))
+            ImGui::Separator();
+
+            if (ImGui::BeginMenu("Prefab"))
             {
-                m_selected = MenuOption::AddParent;
-                m_popup = "Add Parent GameObject";
-                openPopup = true;
-                ImGui::OpenPopup("Add Parent");
+                ImGui::BeginDisabled(isRoot);
+                if (ImGui::MenuItem("Add"))
+                {
+                    m_selected = MenuOption::AddPrefab;
+                    m_popup = "Add Prefab";
+                    m_popupObject = _object;
+                    openPopup = true;
+                    ImGui::OpenPopup("Add");
+                }
+                ImGui::EndDisabled();
+
+                if (ImGui::MenuItem("Add Child"))
+                {
+                    m_selected = MenuOption::AddChildPrefab;
+                    m_popup = "Add Child Prefab";
+                    m_popupObject = _object;
+                    openPopup = true;
+                    ImGui::OpenPopup("Add Child MenuOption");
+                }
+
+                ImGui::EndMenu();
             }
 
             ImGui::Separator();
@@ -160,12 +198,117 @@ namespace vg::editor
             openPopup = false;
         }
         
-        auto selected = (MenuOption)m_selected;
-        switch (selected)
+        if (m_popupObject == _object)
         {
-            case MenuOption::Add:
-            case MenuOption::AddChild:
-            case MenuOption::AddParent:
+            auto selected = (MenuOption)m_selected;
+            switch (selected)
+            {
+                case MenuOption::AddChildPrefab:
+                case MenuOption::AddPrefab:
+                {
+                    auto & fileBrowser = ImGuiWindow::getFileBrowser();
+                    static char prefabPath[1024] = { '\0' };
+                    bool pickPrefabFile = false;
+                    bool addPrefab = false;
+
+                    if (ImGui::BeginPopupModal(m_popup.c_str(), nullptr, ImGuiWindowFlags_AlwaysAutoResize))
+                    {
+                        if (ImGui::IsWindowFocused(ImGuiFocusedFlags_RootAndChildWindows) && !ImGui::IsAnyItemActive() && !ImGui::IsMouseClicked(0))
+                            ImGui::SetKeyboardFocusHere(0);
+
+                        ImGui::Text("Select prefab");
+
+                        ImGui::PushItemWidth(384 - style::button::SizeSmall.x);
+
+                        bool enterPressed = ImGui::InputText("###Path", prefabPath, countof(prefabPath), ImGuiInputTextFlags_AutoSelectAll | ImGuiInputTextFlags_EnterReturnsTrue);
+
+                        ImGui::PopItemWidth();
+
+                        ImGui::SameLine();
+                        auto x = ImGui::GetCursorPosX();
+                        ImGui::SetCursorPosX(x + style::button::SizeSmall.x);
+                        ImGui::Text("Path");
+                        auto x2 = ImGui::GetCursorPosX();
+                        ImGui::SameLine();
+                        ImGui::SetCursorPosX(x - 4);
+
+                        if (ImGui::Button(style::icon::File, style::button::SizeSmall))
+                            pickPrefabFile = true;
+
+                        if (ImGui::Button("Add", style::button::SizeMedium) || enterPressed)
+                        {
+                            addPrefab = true;
+                            ImGui::CloseCurrentPopup();
+                            m_selected = MenuOption::None;
+                        }
+
+                        ImGui::SameLine();
+
+                        if (ImGui::Button("Cancel", style::button::SizeMedium))
+                        {
+                            ImGui::CloseCurrentPopup();
+                            prefabPath[0] = '\0';
+                            m_selected = MenuOption::None;
+                        }
+
+                        ImGui::EndPopup();
+                    }
+
+                    if (pickPrefabFile)
+                    {
+                        const auto defaultFolder = ImGuiWindow::getDefaultFolder("Prefabs");
+                        fileBrowser.setFolder(defaultFolder);
+                        ImGui::OpenPopup("Select Prefab");
+                    }
+
+                    const string ext = ".prefab";
+
+                    if (fileBrowser.showFileDialog("Select Prefab", imgui_addons::ImGuiFileBrowser::DialogMode::OPEN, style::dialog::Size, ext))
+                    {
+                        const string newFile = io::getRelativePath(fileBrowser.selected_path);
+
+                        if (strcmp(prefabPath, newFile.c_str()))
+                        {
+                            strcpy(prefabPath, newFile.c_str());
+                            //changed = true;
+                        }
+
+                        ImGui::OpenPopup(m_popup.c_str());
+                    }
+
+                    if (addPrefab)
+                    {
+                        //VG_INFO("[Prefab] Add Prefab \"%s\"", prefabPath);
+
+                        auto newName = io::getFileNameWithoutExt(prefabPath);
+                        IGameObject * newPrefabObject = (IGameObject *)CreateFactoryObject(PrefabGameObject, newName.c_str(), gameObject);
+                        newPrefabObject->GetPrefabResource()->SetResourcePath(prefabPath);
+
+                        switch (selected)
+                        {
+                            default:
+                                VG_ASSERT_ENUM_NOT_IMPLEMENTED(selected);
+                                break;
+
+                            case MenuOption::AddPrefab:
+                            {
+                                auto parent = dynamic_cast<IGameObject *>(gameObject->getParent());
+                                if (parent)
+                                    parent->AddChild(newPrefabObject);
+                            }
+                            break;
+
+                            case MenuOption::AddChildPrefab:
+                                gameObject->AddChild(newPrefabObject);
+                                break;
+                        }   
+                    }
+                }
+                break;
+
+            case MenuOption::AddGameObject:
+            case MenuOption::AddChildGameObject:
+            case MenuOption::AddParentGameObject:
             {
                 if (ImGui::BeginPopupModal(m_popup.c_str(), nullptr, ImGuiWindowFlags_AlwaysAutoResize))
                 {
@@ -179,52 +322,52 @@ namespace vg::editor
 
                     bool enterPressed = ImGui::InputText("Name", nameTmp, countof(nameTmp), ImGuiInputTextFlags_AutoSelectAll | ImGuiInputTextFlags_EnterReturnsTrue);
 
-                    string newName = nameTmp;          
+                    string newName = nameTmp;
 
                     if (ImGui::Button("Add", style::button::SizeMedium) || enterPressed)
                     {
-                        IGameObject * newGameObject = (IGameObject*)CreateFactoryObject(GameObject, newName.c_str(), gameObject);
+                        IGameObject * newGameObject = (IGameObject *)CreateFactoryObject(GameObject, newName.c_str(), gameObject);
 
                         switch (selected)
                         {
-                            default:
-                                VG_ASSERT_ENUM_NOT_IMPLEMENTED(selected);
-                                break;
+                        default:
+                            VG_ASSERT_ENUM_NOT_IMPLEMENTED(selected);
+                            break;
 
-                            case MenuOption::Add:
-                            {
-                                auto parent = dynamic_cast<IGameObject *>(gameObject->getParent());
-                                if (parent)
-                                    parent->AddChild(newGameObject);
-                            }
-                                break;
-
-                            case MenuOption::AddChild:
-                                gameObject->AddChild(newGameObject);
-                                break;
-
-                            case MenuOption::AddParent:
-                                auto parent = dynamic_cast<IGameObject *>(gameObject->getParent());
-                                if (parent)
-                                {
-                                    parent->AddChild(newGameObject);
-                                    VG_SAFE_INCREASE_REFCOUNT(gameObject);
-                                    parent->RemoveChild(gameObject);
-                                    newGameObject->AddChild(gameObject);
-                                    VG_SAFE_RELEASE(gameObject);
-                                }
-                                else if (core::IBaseScene * scene = dynamic_cast<core::IBaseScene *>(gameObject->getParent()))
-                                {
-                                    // Object is root node, create a new root node and add this a its child
-                                    VG_SAFE_INCREASE_REFCOUNT(gameObject);
-                                    newGameObject->setParent(scene);
-                                    scene->SetRoot(newGameObject);
-                                    newGameObject->AddChild(gameObject);
-                                    VG_SAFE_RELEASE(gameObject);
-                                }
-                                break;
+                        case MenuOption::AddGameObject:
+                        {
+                            auto parent = dynamic_cast<IGameObject *>(gameObject->getParent());
+                            if (parent)
+                                parent->AddChild(newGameObject);
                         }
-                        
+                        break;
+
+                        case MenuOption::AddChildGameObject:
+                            gameObject->AddChild(newGameObject);
+                            break;
+
+                        case MenuOption::AddParentGameObject:
+                            auto parent = dynamic_cast<IGameObject *>(gameObject->getParent());
+                            if (parent)
+                            {
+                                parent->AddChild(newGameObject);
+                                VG_SAFE_INCREASE_REFCOUNT(gameObject);
+                                parent->RemoveChild(gameObject);
+                                newGameObject->AddChild(gameObject);
+                                VG_SAFE_RELEASE(gameObject);
+                            }
+                            else if (core::IBaseScene * scene = dynamic_cast<core::IBaseScene *>(gameObject->getParent()))
+                            {
+                                // Object is root node, create a new root node and add this a its child
+                                VG_SAFE_INCREASE_REFCOUNT(gameObject);
+                                newGameObject->setParent(scene);
+                                scene->SetRoot(newGameObject);
+                                newGameObject->AddChild(gameObject);
+                                VG_SAFE_RELEASE(gameObject);
+                            }
+                            break;
+                        }
+
                         newGameObject->Release();
                         ImGui::CloseCurrentPopup();
                         nameTmp[0] = '\0';
@@ -243,6 +386,7 @@ namespace vg::editor
                 }
             }
             break;
+            }
         }
         return status;
     }
