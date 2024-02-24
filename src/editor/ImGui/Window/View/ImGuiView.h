@@ -25,7 +25,7 @@ namespace vg::editor
         virtual gfx::IView::Flags   GetViewFlags        () const; 
         virtual core::IWorld*       GetWorld            () const;;
         virtual void                OnCloseWindow       ();
-        virtual void                UpdateScene         () {};
+        virtual bool                UpdateScene         () { return true; };
 
     protected:
         bool                        drawGizmo           ();
@@ -38,6 +38,7 @@ namespace vg::editor
         gfx::IView *                m_view              = nullptr;
         gfx::ITexture *             m_texture           = nullptr;
         bool                        m_manipulating      = false;
+        bool                        m_closeNextFrame    = false;
 
         struct EditorCamera
         {

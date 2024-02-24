@@ -75,4 +75,25 @@ namespace vg::engine
                 return (core::vector<BaseSceneResource *> *) &m_prefabsResources;
         }
     }
+
+    //--------------------------------------------------------------------------------------
+    void WorldResourceData::RemoveScene(BaseSceneResource * _sceneRes, BaseSceneType _sceneType)
+    {
+        IBaseScene * scene = dynamic_cast<IBaseScene *>(_sceneRes->getObject());
+        switch (_sceneType)
+        {
+            default:
+                VG_ASSERT_ENUM_NOT_IMPLEMENTED(_sceneType);
+                break;
+
+            case core::Scene:
+                m_sceneResources.remove((SceneResource*)_sceneRes);
+                break;
+
+            case core::Prefab:
+                m_prefabsResources.remove((PrefabResource *)_sceneRes);
+                break;
+        }
+        m_world->RemoveScene(scene, _sceneType);
+    }
 }

@@ -229,11 +229,22 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
-    void WorldResource::UnloadSceneResource(core::IResource * _resource, core::BaseSceneType _sceneType)
+    //void WorldResource::UnloadSceneResource(core::IResource * _resource, core::BaseSceneType _sceneType)
+    //{
+    //    WorldResourceData * worldResData = dynamic_cast<WorldResourceData *>(getObject());
+    //    if (worldResData)
+    //        VG_SAFE_RELEASE(_resource);
+    //}
+
+    //--------------------------------------------------------------------------------------
+    void WorldResource::RemoveSceneResource(core::IResource * _resource, core::BaseSceneType _sceneType)
     {
         WorldResourceData * worldResData = dynamic_cast<WorldResourceData *>(getObject());
         if (worldResData)
+        {
+            worldResData->RemoveScene(VG_SAFE_STATIC_CAST(BaseSceneResource,_resource), _sceneType);
             VG_SAFE_RELEASE(_resource);
+        }
     }
 
     //--------------------------------------------------------------------------------------
@@ -343,6 +354,8 @@ namespace vg::engine
                 if (_resource == (*sceneResources)[i])
                 {
                     IBaseScene * scene = dynamic_cast<IBaseScene *>(_resource->getObject());
+                    BaseSceneResource * sceneRes = VG_SAFE_STATIC_CAST(BaseSceneResource, _resource);
+                    
                     if (worldResData->m_world)
                     {
                         switch (sceneType)
@@ -353,10 +366,12 @@ namespace vg::engine
 
                             case BaseSceneType::Scene:
                                 worldResData->m_world->RemoveScene(scene, sceneType);
+                                //worldResData->RemoveScene(sceneRes, sceneType);
                                 break;
 
                             case BaseSceneType::Prefab:
                                 worldResData->m_world->RemoveScene(scene, sceneType);
+                                //worldResData->RemoveScene(sceneRes, sceneType);
                                 break;
                         }
                     }

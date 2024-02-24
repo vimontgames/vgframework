@@ -126,6 +126,9 @@ namespace vg::editor
 
         auto pos = ImGui::GetCursorPos();
 
+        //if (isPrefab)
+        //    ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1, 0, 0, 1));
+
         const bool renaming = m_gameObjectMenu.m_RenamingGameObject == _gameObject;
         if (renaming)
         {
@@ -157,6 +160,9 @@ namespace vg::editor
             string gameObjectLabel = fmt::sprintf("%s###%p", _gameObject->getName(), (void*)_gameObject);
             open = ImGui::TreeNodeEx(gameObjectLabel.c_str(), flags | ImGuiTreeNodeFlags_SpanAvailWidth | ImGuiTreeNodeFlags_SpanFullWidth);
         }
+
+        //if (isPrefab)
+        //    ImGui::PopStyleColor(ImGuiCol_Text);
 
         bool startDragDrop = false;
 
@@ -453,7 +459,8 @@ namespace vg::editor
 
                     auto availableWidth = ImGui::GetContentRegionAvail().x;
 
-                    for (uint i = 0; i < worldRes->GetSceneResourceCount(_sceneType); ++i)
+                    auto sceneResourceCount = worldRes->GetSceneResourceCount(_sceneType);
+                    for (uint i = 0; i < sceneResourceCount; ++i)
                     {
                         const core::IResource* sceneRes = worldRes->GetSceneResource(i, _sceneType);
                         const IBaseScene* scene = (IBaseScene*)sceneRes->getObject();
@@ -475,7 +482,12 @@ namespace vg::editor
 
                             auto status = m_sceneMenu.Display((IObject*)sceneRes);
 
-                            if (ImGuiMenu::Status::Removed != status)
+                            if (ImGuiMenu::Status::Removed == status)
+                            {
+                                sceneResourceCount--;
+                                i--;
+                            }
+                            else
                             {
                                 string sceneLabel = fmt::sprintf("%s %s", typeInfo.icon, scene->getName());
 

@@ -266,6 +266,12 @@ namespace vg::editor
         else
             title = fmt::sprintf("%s###%s", name, name);
 
+        if (m_closeNextFrame)
+        {
+            m_isVisible = false;
+            m_closeNextFrame = false;
+        }
+
         if (ImGui::Begin(title.c_str(), &m_isVisible, ImGuiWindowFlags_NoFocusOnAppearing | ImGuiWindowFlags_NoNavInputs))
         {
             // Compute Window content size
@@ -324,7 +330,8 @@ namespace vg::editor
                 draw = false;
             }  
 
-            UpdateScene();
+            if (!UpdateScene())
+                m_closeNextFrame = true;
 
             m_view->SetSize(m_size);
 

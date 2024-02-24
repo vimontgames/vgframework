@@ -10,39 +10,13 @@
             <Object class="SceneResource">
                 <Property type="String" name="m_name" flags="Hidden" value=""/>
                 <Property type="String" name="m_resourcePath" flags="Hidden" value="data/Scenes/Soccer.scene"/>
-                <Property type="String" name="m_name" value=""/>
-            </Object>
-            <Object class="SceneResource">
-                <Property type="String" name="m_name" flags="Hidden" value=""/>
-                <Property type="String" name="m_resourcePath" flags="Hidden" value="data/Scenes/Pablo.scene"/>
-                <Property type="String" name="m_name" value=""/>
-            </Object>
-            <Object class="SceneResource">
-                <Property type="String" name="m_name" flags="Hidden" value=""/>
-                <Property type="String" name="m_resourcePath" flags="Hidden" value="data/Scenes/Romeo.scene"/>
-                <Property type="String" name="m_name" value=""/>
-            </Object>
-            <Object class="SceneResource">
-                <Property type="String" name="m_name" flags="Hidden" value=""/>
-                <Property type="String" name="m_resourcePath" flags="Hidden" value="data/Scenes/Benualdo.scene"/>
-                <Property type="String" name="m_name" value=""/>
-            </Object>
-            <Object class="SceneResource">
-                <Property type="String" name="m_name" flags="Hidden" value=""/>
-                <Property type="String" name="m_resourcePath" flags="Hidden" value="data/Scenes/Clown.scene"/>
-                <Property type="String" name="m_name" value=""/>
-            </Object>
-            <Object class="SceneResource">
-                <Property type="String" name="m_name" flags="Hidden" value=""/>
-                <Property type="String" name="m_resourcePath" flags="Hidden" value="data/Scenes/GJ.scene"/>
-                <Property type="String" name="m_name" value=""/>
-            </Object>
-            <Object class="SceneResource">
-                <Property type="String" name="m_name" flags="Hidden" value=""/>
-                <Property type="String" name="m_resourcePath" flags="Hidden" value="data/Scenes/Justin.scene"/>
-                <Property type="String" name="m_name" value=""/>
             </Object>
         </Property>
-        <Property type="ResourcePtrVector" name="m_prefabsResources" flags="Resource"/>
+        <Property type="ResourcePtrVector" name="m_prefabsResources" flags="Resource">
+            <Object class="PrefabResource">
+                <Property type="String" name="m_name" flags="Hidden" value=""/>
+                <Property type="String" name="m_resourcePath" flags="Hidden" value="data/Prefabs/Cube.prefab"/>
+            </Object>
+        </Property>
     </Object>
 </Root>

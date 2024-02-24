@@ -24,7 +24,7 @@ namespace vg::core
         }
 
         virtual void                            AddChild            (IGameObject * _gameObject, core::uint _index = -1) = 0;
-        virtual bool                            RemoveChild         (IGameObject * _gameObject) = 0;
+        virtual bool                            RemoveChild         (IGameObject * _gameObject, bool _recomputeFlags = true) = 0;
         virtual const vector<IGameObject*> &    GetChildren         () const = 0;
         virtual bool                            IsRoot              () const = 0;
         virtual bool                            HasAncestor         (const IGameObject * _ancestor) const = 0;

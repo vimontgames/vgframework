@@ -24,6 +24,18 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
+    core::u32 GameObjectHierarchy::addRef()
+    {
+        return super::addRef();
+    }
+
+    //--------------------------------------------------------------------------------------
+    core::u32 GameObjectHierarchy::release()
+    {
+        return super::release();
+    }
+
+    //--------------------------------------------------------------------------------------
     bool GameObjectHierarchy::registerProperties(IClassDesc & _desc)
     {
         super::registerProperties(_desc);

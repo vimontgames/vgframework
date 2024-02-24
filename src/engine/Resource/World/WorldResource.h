@@ -18,7 +18,8 @@ namespace vg::engine
         void                                CreateSceneResource     (const core::string & _file, core::BaseSceneType _sceneType) final override;
         void                                LoadSceneResource       (const core::string & _file, core::BaseSceneType _sceneType) final override;
         IResource *                         FindSceneResource       (core::IBaseScene * _scene, core::BaseSceneType _sceneType) final override;
-        void                                UnloadSceneResource     (core::IResource * _resource, core::BaseSceneType _sceneType) final override;
+        //void                                UnloadSceneResource     (core::IResource * _resource, core::BaseSceneType _sceneType) final override;
+        void                                RemoveSceneResource     (core::IResource * _resource, core::BaseSceneType _sceneTyp) final override;
 
         core::uint                          GetSceneResourceCount   (core::BaseSceneType _sceneType) const final override;
         core::IResource *                   GetSceneResource        (core::uint _index, core::BaseSceneType _sceneType) const final override;

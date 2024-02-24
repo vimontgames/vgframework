@@ -20,11 +20,10 @@ namespace vg::editor
         gfx::IView::Flags GetViewFlags() const final override;
         core::IWorld * GetWorld() const final override;
         void OnCloseWindow() final override;
-        void UpdateScene()final override;
+        bool UpdateScene() final override;
 
     private:
-        //core::IBaseScene *  m_prefabScene = nullptr;
-        const core::IResource *   m_prefabRes = nullptr;
-        core::IWorld * m_prefabWorld = nullptr;
+        const core::IResource * m_prefabRes = nullptr;
+        core::IWorld *          m_prefabWorld = nullptr;
     };
 }

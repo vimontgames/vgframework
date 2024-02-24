@@ -57,13 +57,13 @@
                                                 <Property type="String" name="m_name" flags="Hidden" value="New MeshComponent"/>
                                                 <Property type="ResourceVector" name="m_materialResources" flags="Resource">
                                                     <Object class="MaterialResource">
-                                                        <Property type="String" name="m_name" flags="Hidden" value="Field"/>
-                                                        <Property type="String" name="m_resourcePath" flags="Hidden" value="data/Materials/Soccer/Field.mat"/>
                                                         <Property type="String" name="m_name" value="Field"/>
+                                                        <Property type="String" name="m_resourcePath" flags="Hidden" value="data/Materials/Soccer/Field.mat"/>
                                                     </Object>
                                                 </Property>
                                             </Object>
                                         </Property>
+                                        <Property type="BitMask" name="m_batchMask" BitCount="1" Value="0x0000000000000001"/>
                                     </Object>
                                     <Object class="RigidBodyComponent">
                                         <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
@@ -117,13 +117,13 @@
                                                         <Property type="String" name="m_name" flags="Hidden" value="New MeshComponent"/>
                                                         <Property type="ResourceVector" name="m_materialResources" flags="Resource">
                                                             <Object class="MaterialResource">
-                                                                <Property type="String" name="m_name" flags="Hidden" value="Ball"/>
-                                                                <Property type="String" name="m_resourcePath" flags="Hidden" value="data/Materials/Ball.mat"/>
                                                                 <Property type="String" name="m_name" value="Ball"/>
+                                                                <Property type="String" name="m_resourcePath" flags="Hidden" value="data/Materials/Ball.mat"/>
                                                             </Object>
                                                         </Property>
                                                     </Object>
                                                 </Property>
+                                                <Property type="BitMask" name="m_batchMask" BitCount="1" Value="0x0000000000000001"/>
                                             </Object>
                                             <Object class="RigidBodyComponent">
                                                 <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
@@ -170,13 +170,13 @@
                                                         <Property type="String" name="m_name" flags="Hidden" value="New MeshComponent"/>
                                                         <Property type="ResourceVector" name="m_materialResources" flags="Resource">
                                                             <Object class="MaterialResource">
-                                                                <Property type="String" name="m_name" flags="Hidden" value="Ball"/>
-                                                                <Property type="String" name="m_resourcePath" flags="Hidden" value="data/Materials/Ball.mat"/>
                                                                 <Property type="String" name="m_name" value="Ball"/>
+                                                                <Property type="String" name="m_resourcePath" flags="Hidden" value="data/Materials/Ball.mat"/>
                                                             </Object>
                                                         </Property>
                                                     </Object>
                                                 </Property>
+                                                <Property type="BitMask" name="m_batchMask" BitCount="1" Value="0x0000000000000001"/>
                                             </Object>
                                             <Object class="RigidBodyComponent">
                                                 <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
@@ -223,13 +223,13 @@
                                                         <Property type="String" name="m_name" flags="Hidden" value="New MeshComponent"/>
                                                         <Property type="ResourceVector" name="m_materialResources" flags="Resource">
                                                             <Object class="MaterialResource">
-                                                                <Property type="String" name="m_name" flags="Hidden" value="Ball"/>
-                                                                <Property type="String" name="m_resourcePath" flags="Hidden" value="data/Materials/Ball.mat"/>
                                                                 <Property type="String" name="m_name" value="Ball"/>
+                                                                <Property type="String" name="m_resourcePath" flags="Hidden" value="data/Materials/Ball.mat"/>
                                                             </Object>
                                                         </Property>
                                                     </Object>
                                                 </Property>
+                                                <Property type="BitMask" name="m_batchMask" BitCount="1" Value="0x0000000000000001"/>
                                             </Object>
                                             <Object class="RigidBodyComponent">
                                                 <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
@@ -285,13 +285,13 @@
                                                         <Property type="String" name="m_name" flags="Hidden" value="New MeshComponent"/>
                                                         <Property type="ResourceVector" name="m_materialResources" flags="Resource">
                                                             <Object class="MaterialResource">
-                                                                <Property type="String" name="m_name" flags="Hidden" value="TrafficCone"/>
-                                                                <Property type="String" name="m_resourcePath" flags="Hidden" value="data/Materials/TrafficCone/TrafficCone.mat"/>
                                                                 <Property type="String" name="m_name" value="TrafficCone"/>
+                                                                <Property type="String" name="m_resourcePath" flags="Hidden" value="data/Materials/TrafficCone/TrafficCone.mat"/>
                                                             </Object>
                                                         </Property>
                                                     </Object>
                                                 </Property>
+                                                <Property type="BitMask" name="m_batchMask" BitCount="1" Value="0x0000000000000001"/>
                                             </Object>
                                             <Object class="RigidBodyComponent">
                                                 <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
@@ -338,13 +338,13 @@
                                                         <Property type="String" name="m_name" flags="Hidden" value="New MeshComponent"/>
                                                         <Property type="ResourceVector" name="m_materialResources" flags="Resource">
                                                             <Object class="MaterialResource">
-                                                                <Property type="String" name="m_name" flags="Hidden" value="TrafficCone"/>
-                                                                <Property type="String" name="m_resourcePath" flags="Hidden" value="data/Materials/TrafficCone/TrafficCone.mat"/>
                                                                 <Property type="String" name="m_name" value="TrafficCone"/>
+                                                                <Property type="String" name="m_resourcePath" flags="Hidden" value="data/Materials/TrafficCone/TrafficCone.mat"/>
                                                             </Object>
                                                         </Property>
                                                     </Object>
                                                 </Property>
+                                                <Property type="BitMask" name="m_batchMask" BitCount="1" Value="0x0000000000000001"/>
                                             </Object>
                                             <Object class="RigidBodyComponent">
                                                 <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
@@ -391,13 +391,13 @@
                                                         <Property type="String" name="m_name" flags="Hidden" value="New MeshComponent"/>
                                                         <Property type="ResourceVector" name="m_materialResources" flags="Resource">
                                                             <Object class="MaterialResource">
-                                                                <Property type="String" name="m_name" flags="Hidden" value="TrafficCone"/>
-                                                                <Property type="String" name="m_resourcePath" flags="Hidden" value="data/Materials/TrafficCone/TrafficCone.mat"/>
                                                                 <Property type="String" name="m_name" value="TrafficCone"/>
+                                                                <Property type="String" name="m_resourcePath" flags="Hidden" value="data/Materials/TrafficCone/TrafficCone.mat"/>
                                                             </Object>
                                                         </Property>
                                                     </Object>
                                                 </Property>
+                                                <Property type="BitMask" name="m_batchMask" BitCount="1" Value="0x0000000000000001"/>
                                             </Object>
                                             <Object class="RigidBodyComponent">
                                                 <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
@@ -444,13 +444,13 @@
                                                         <Property type="String" name="m_name" flags="Hidden" value="New MeshComponent"/>
                                                         <Property type="ResourceVector" name="m_materialResources" flags="Resource">
                                                             <Object class="MaterialResource">
-                                                                <Property type="String" name="m_name" flags="Hidden" value="TrafficCone"/>
-                                                                <Property type="String" name="m_resourcePath" flags="Hidden" value="data/Materials/TrafficCone/TrafficCone.mat"/>
                                                                 <Property type="String" name="m_name" value="TrafficCone"/>
+                                                                <Property type="String" name="m_resourcePath" flags="Hidden" value="data/Materials/TrafficCone/TrafficCone.mat"/>
                                                             </Object>
                                                         </Property>
                                                     </Object>
                                                 </Property>
+                                                <Property type="BitMask" name="m_batchMask" BitCount="1" Value="0x0000000000000001"/>
                                             </Object>
                                             <Object class="RigidBodyComponent">
                                                 <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
@@ -497,13 +497,13 @@
                                                         <Property type="String" name="m_name" flags="Hidden" value="New MeshComponent"/>
                                                         <Property type="ResourceVector" name="m_materialResources" flags="Resource">
                                                             <Object class="MaterialResource">
-                                                                <Property type="String" name="m_name" flags="Hidden" value="TrafficCone"/>
-                                                                <Property type="String" name="m_resourcePath" flags="Hidden" value="data/Materials/TrafficCone/TrafficCone.mat"/>
                                                                 <Property type="String" name="m_name" value="TrafficCone"/>
+                                                                <Property type="String" name="m_resourcePath" flags="Hidden" value="data/Materials/TrafficCone/TrafficCone.mat"/>
                                                             </Object>
                                                         </Property>
                                                     </Object>
                                                 </Property>
+                                                <Property type="BitMask" name="m_batchMask" BitCount="1" Value="0x0000000000000001"/>
                                             </Object>
                                             <Object class="RigidBodyComponent">
                                                 <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
@@ -559,13 +559,13 @@
                                                         <Property type="String" name="m_name" flags="Hidden" value="New MeshComponent"/>
                                                         <Property type="ResourceVector" name="m_materialResources" flags="Resource">
                                                             <Object class="MaterialResource">
-                                                                <Property type="String" name="m_name" flags="Hidden" value=""/>
-                                                                <Property type="String" name="m_resourcePath" flags="Hidden" value="data/Materials/Soccer/Billboard_Banyuls.mat"/>
                                                                 <Property type="String" name="m_name" value=""/>
+                                                                <Property type="String" name="m_resourcePath" flags="Hidden" value="data/Materials/Soccer/Billboard_Banyuls.mat"/>
                                                             </Object>
                                                         </Property>
                                                     </Object>
                                                 </Property>
+                                                <Property type="BitMask" name="m_batchMask" BitCount="1" Value="0x0000000000000001"/>
                                             </Object>
                                             <Object class="RigidBodyComponent">
                                                 <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
@@ -612,13 +612,13 @@
                                                         <Property type="String" name="m_name" flags="Hidden" value="New MeshComponent"/>
                                                         <Property type="ResourceVector" name="m_materialResources" flags="Resource">
                                                             <Object class="MaterialResource">
-                                                                <Property type="String" name="m_name" flags="Hidden" value="HotDog"/>
-                                                                <Property type="String" name="m_resourcePath" flags="Hidden" value="data/Materials/Soccer/Billboard_HotDog.mat"/>
                                                                 <Property type="String" name="m_name" value="HotDog"/>
+                                                                <Property type="String" name="m_resourcePath" flags="Hidden" value="data/Materials/Soccer/Billboard_HotDog.mat"/>
                                                             </Object>
                                                         </Property>
                                                     </Object>
                                                 </Property>
+                                                <Property type="BitMask" name="m_batchMask" BitCount="1" Value="0x0000000000000001"/>
                                             </Object>
                                             <Object class="RigidBodyComponent">
                                                 <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
@@ -665,13 +665,13 @@
                                                         <Property type="String" name="m_name" flags="Hidden" value="New MeshComponent"/>
                                                         <Property type="ResourceVector" name="m_materialResources" flags="Resource">
                                                             <Object class="MaterialResource">
-                                                                <Property type="String" name="m_name" flags="Hidden" value="HotDog"/>
-                                                                <Property type="String" name="m_resourcePath" flags="Hidden" value="data/Materials/Soccer/Billboard_Octafight.mat.mat"/>
                                                                 <Property type="String" name="m_name" value="HotDog"/>
+                                                                <Property type="String" name="m_resourcePath" flags="Hidden" value="data/Materials/Soccer/Billboard_Octafight.mat.mat"/>
                                                             </Object>
                                                         </Property>
                                                     </Object>
                                                 </Property>
+                                                <Property type="BitMask" name="m_batchMask" BitCount="1" Value="0x0000000000000001"/>
                                             </Object>
                                             <Object class="RigidBodyComponent">
                                                 <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
@@ -718,13 +718,13 @@
                                                         <Property type="String" name="m_name" flags="Hidden" value="New MeshComponent"/>
                                                         <Property type="ResourceVector" name="m_materialResources" flags="Resource">
                                                             <Object class="MaterialResource">
-                                                                <Property type="String" name="m_name" flags="Hidden" value=""/>
-                                                                <Property type="String" name="m_resourcePath" flags="Hidden" value="data/Materials/Soccer/Billboard_Banyuls.mat"/>
                                                                 <Property type="String" name="m_name" value=""/>
+                                                                <Property type="String" name="m_resourcePath" flags="Hidden" value="data/Materials/Soccer/Billboard_Banyuls.mat"/>
                                                             </Object>
                                                         </Property>
                                                     </Object>
                                                 </Property>
+                                                <Property type="BitMask" name="m_batchMask" BitCount="1" Value="0x0000000000000001"/>
                                             </Object>
                                             <Object class="RigidBodyComponent">
                                                 <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
@@ -771,13 +771,13 @@
                                                         <Property type="String" name="m_name" flags="Hidden" value="New MeshComponent"/>
                                                         <Property type="ResourceVector" name="m_materialResources" flags="Resource">
                                                             <Object class="MaterialResource">
-                                                                <Property type="String" name="m_name" flags="Hidden" value="HotDog"/>
-                                                                <Property type="String" name="m_resourcePath" flags="Hidden" value="data/Materials/Soccer/Billboard_Octafight.mat.mat"/>
                                                                 <Property type="String" name="m_name" value="HotDog"/>
+                                                                <Property type="String" name="m_resourcePath" flags="Hidden" value="data/Materials/Soccer/Billboard_Octafight.mat.mat"/>
                                                             </Object>
                                                         </Property>
                                                     </Object>
                                                 </Property>
+                                                <Property type="BitMask" name="m_batchMask" BitCount="1" Value="0x0000000000000001"/>
                                             </Object>
                                             <Object class="RigidBodyComponent">
                                                 <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
@@ -824,13 +824,13 @@
                                                         <Property type="String" name="m_name" flags="Hidden" value="New MeshComponent"/>
                                                         <Property type="ResourceVector" name="m_materialResources" flags="Resource">
                                                             <Object class="MaterialResource">
-                                                                <Property type="String" name="m_name" flags="Hidden" value="HotDog"/>
-                                                                <Property type="String" name="m_resourcePath" flags="Hidden" value="data/Materials/Soccer/Billboard_HotDog.mat"/>
                                                                 <Property type="String" name="m_name" value="HotDog"/>
+                                                                <Property type="String" name="m_resourcePath" flags="Hidden" value="data/Materials/Soccer/Billboard_HotDog.mat"/>
                                                             </Object>
                                                         </Property>
                                                     </Object>
                                                 </Property>
+                                                <Property type="BitMask" name="m_batchMask" BitCount="1" Value="0x0000000000000001"/>
                                             </Object>
                                             <Object class="RigidBodyComponent">
                                                 <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
@@ -877,13 +877,13 @@
                                                         <Property type="String" name="m_name" flags="Hidden" value="New MeshComponent"/>
                                                         <Property type="ResourceVector" name="m_materialResources" flags="Resource">
                                                             <Object class="MaterialResource">
-                                                                <Property type="String" name="m_name" flags="Hidden" value=""/>
-                                                                <Property type="String" name="m_resourcePath" flags="Hidden" value="data/Materials/Soccer/Billboard_Banyuls.mat"/>
                                                                 <Property type="String" name="m_name" value=""/>
+                                                                <Property type="String" name="m_resourcePath" flags="Hidden" value="data/Materials/Soccer/Billboard_Banyuls.mat"/>
                                                             </Object>
                                                         </Property>
                                                     </Object>
                                                 </Property>
+                                                <Property type="BitMask" name="m_batchMask" BitCount="1" Value="0x0000000000000001"/>
                                             </Object>
                                             <Object class="RigidBodyComponent">
                                                 <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
@@ -930,13 +930,13 @@
                                                         <Property type="String" name="m_name" flags="Hidden" value="New MeshComponent"/>
                                                         <Property type="ResourceVector" name="m_materialResources" flags="Resource">
                                                             <Object class="MaterialResource">
-                                                                <Property type="String" name="m_name" flags="Hidden" value="HotDog"/>
-                                                                <Property type="String" name="m_resourcePath" flags="Hidden" value="data/Materials/Soccer/Billboard_HotDog.mat"/>
                                                                 <Property type="String" name="m_name" value="HotDog"/>
+                                                                <Property type="String" name="m_resourcePath" flags="Hidden" value="data/Materials/Soccer/Billboard_HotDog.mat"/>
                                                             </Object>
                                                         </Property>
                                                     </Object>
                                                 </Property>
+                                                <Property type="BitMask" name="m_batchMask" BitCount="1" Value="0x0000000000000001"/>
                                             </Object>
                                             <Object class="RigidBodyComponent">
                                                 <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
@@ -983,13 +983,13 @@
                                                         <Property type="String" name="m_name" flags="Hidden" value="New MeshComponent"/>
                                                         <Property type="ResourceVector" name="m_materialResources" flags="Resource">
                                                             <Object class="MaterialResource">
-                                                                <Property type="String" name="m_name" flags="Hidden" value="HotDog"/>
-                                                                <Property type="String" name="m_resourcePath" flags="Hidden" value="data/Materials/Soccer/Billboard_Octafight.mat.mat"/>
                                                                 <Property type="String" name="m_name" value="HotDog"/>
+                                                                <Property type="String" name="m_resourcePath" flags="Hidden" value="data/Materials/Soccer/Billboard_Octafight.mat.mat"/>
                                                             </Object>
                                                         </Property>
                                                     </Object>
                                                 </Property>
+                                                <Property type="BitMask" name="m_batchMask" BitCount="1" Value="0x0000000000000001"/>
                                             </Object>
                                             <Object class="RigidBodyComponent">
                                                 <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
@@ -1036,13 +1036,13 @@
                                                         <Property type="String" name="m_name" flags="Hidden" value="New MeshComponent"/>
                                                         <Property type="ResourceVector" name="m_materialResources" flags="Resource">
                                                             <Object class="MaterialResource">
-                                                                <Property type="String" name="m_name" flags="Hidden" value=""/>
-                                                                <Property type="String" name="m_resourcePath" flags="Hidden" value="data/Materials/Soccer/Billboard_Banyuls.mat"/>
                                                                 <Property type="String" name="m_name" value=""/>
+                                                                <Property type="String" name="m_resourcePath" flags="Hidden" value="data/Materials/Soccer/Billboard_Banyuls.mat"/>
                                                             </Object>
                                                         </Property>
                                                     </Object>
                                                 </Property>
+                                                <Property type="BitMask" name="m_batchMask" BitCount="1" Value="0x0000000000000001"/>
                                             </Object>
                                             <Object class="RigidBodyComponent">
                                                 <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
@@ -1089,13 +1089,13 @@
                                                         <Property type="String" name="m_name" flags="Hidden" value="New MeshComponent"/>
                                                         <Property type="ResourceVector" name="m_materialResources" flags="Resource">
                                                             <Object class="MaterialResource">
-                                                                <Property type="String" name="m_name" flags="Hidden" value="HotDog"/>
-                                                                <Property type="String" name="m_resourcePath" flags="Hidden" value="data/Materials/Soccer/Billboard_Octafight.mat.mat"/>
                                                                 <Property type="String" name="m_name" value="HotDog"/>
+                                                                <Property type="String" name="m_resourcePath" flags="Hidden" value="data/Materials/Soccer/Billboard_Octafight.mat.mat"/>
                                                             </Object>
                                                         </Property>
                                                     </Object>
                                                 </Property>
+                                                <Property type="BitMask" name="m_batchMask" BitCount="1" Value="0x0000000000000001"/>
                                             </Object>
                                             <Object class="RigidBodyComponent">
                                                 <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
@@ -1142,13 +1142,13 @@
                                                         <Property type="String" name="m_name" flags="Hidden" value="New MeshComponent"/>
                                                         <Property type="ResourceVector" name="m_materialResources" flags="Resource">
                                                             <Object class="MaterialResource">
-                                                                <Property type="String" name="m_name" flags="Hidden" value="HotDog"/>
-                                                                <Property type="String" name="m_resourcePath" flags="Hidden" value="data/Materials/Soccer/Billboard_HotDog.mat"/>
                                                                 <Property type="String" name="m_name" value="HotDog"/>
+                                                                <Property type="String" name="m_resourcePath" flags="Hidden" value="data/Materials/Soccer/Billboard_HotDog.mat"/>
                                                             </Object>
                                                         </Property>
                                                     </Object>
                                                 </Property>
+                                                <Property type="BitMask" name="m_batchMask" BitCount="1" Value="0x0000000000000001"/>
                                             </Object>
                                             <Object class="RigidBodyComponent">
                                                 <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
@@ -1195,13 +1195,13 @@
                                                         <Property type="String" name="m_name" flags="Hidden" value="New MeshComponent"/>
                                                         <Property type="ResourceVector" name="m_materialResources" flags="Resource">
                                                             <Object class="MaterialResource">
-                                                                <Property type="String" name="m_name" flags="Hidden" value=""/>
-                                                                <Property type="String" name="m_resourcePath" flags="Hidden" value="data/Materials/Soccer/Billboard_Banyuls.mat"/>
                                                                 <Property type="String" name="m_name" value=""/>
+                                                                <Property type="String" name="m_resourcePath" flags="Hidden" value="data/Materials/Soccer/Billboard_Banyuls.mat"/>
                                                             </Object>
                                                         </Property>
                                                     </Object>
                                                 </Property>
+                                                <Property type="BitMask" name="m_batchMask" BitCount="1" Value="0x0000000000000001"/>
                                             </Object>
                                             <Object class="RigidBodyComponent">
                                                 <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
@@ -1248,13 +1248,13 @@
                                                         <Property type="String" name="m_name" flags="Hidden" value="New MeshComponent"/>
                                                         <Property type="ResourceVector" name="m_materialResources" flags="Resource">
                                                             <Object class="MaterialResource">
-                                                                <Property type="String" name="m_name" flags="Hidden" value="HotDog"/>
-                                                                <Property type="String" name="m_resourcePath" flags="Hidden" value="data/Materials/Soccer/Billboard_HotDog.mat"/>
                                                                 <Property type="String" name="m_name" value="HotDog"/>
+                                                                <Property type="String" name="m_resourcePath" flags="Hidden" value="data/Materials/Soccer/Billboard_HotDog.mat"/>
                                                             </Object>
                                                         </Property>
                                                     </Object>
                                                 </Property>
+                                                <Property type="BitMask" name="m_batchMask" BitCount="1" Value="0x0000000000000001"/>
                                             </Object>
                                             <Object class="RigidBodyComponent">
                                                 <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
@@ -1301,13 +1301,13 @@
                                                         <Property type="String" name="m_name" flags="Hidden" value="New MeshComponent"/>
                                                         <Property type="ResourceVector" name="m_materialResources" flags="Resource">
                                                             <Object class="MaterialResource">
-                                                                <Property type="String" name="m_name" flags="Hidden" value=""/>
-                                                                <Property type="String" name="m_resourcePath" flags="Hidden" value="data/Materials/Soccer/Billboard_Banyuls.mat"/>
                                                                 <Property type="String" name="m_name" value=""/>
+                                                                <Property type="String" name="m_resourcePath" flags="Hidden" value="data/Materials/Soccer/Billboard_Banyuls.mat"/>
                                                             </Object>
                                                         </Property>
                                                     </Object>
                                                 </Property>
+                                                <Property type="BitMask" name="m_batchMask" BitCount="1" Value="0x0000000000000001"/>
                                             </Object>
                                             <Object class="RigidBodyComponent">
                                                 <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
@@ -1354,13 +1354,13 @@
                                                         <Property type="String" name="m_name" flags="Hidden" value="New MeshComponent"/>
                                                         <Property type="ResourceVector" name="m_materialResources" flags="Resource">
                                                             <Object class="MaterialResource">
-                                                                <Property type="String" name="m_name" flags="Hidden" value="HotDog"/>
-                                                                <Property type="String" name="m_resourcePath" flags="Hidden" value="data/Materials/Soccer/Billboard_HotDog.mat"/>
                                                                 <Property type="String" name="m_name" value="HotDog"/>
+                                                                <Property type="String" name="m_resourcePath" flags="Hidden" value="data/Materials/Soccer/Billboard_HotDog.mat"/>
                                                             </Object>
                                                         </Property>
                                                     </Object>
                                                 </Property>
+                                                <Property type="BitMask" name="m_batchMask" BitCount="1" Value="0x0000000000000001"/>
                                             </Object>
                                             <Object class="RigidBodyComponent">
                                                 <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
@@ -1409,13 +1409,11 @@
                                                     <Object class="DirectionalLightDesc">
                                                         <Property type="String" name="m_name" flags="Hidden" value="DirectionalLightDesc #1"/>
                                                         <Property type="Bool" name="m_shadow" value="true"/>
-                                                        <Property type="LayoutElement" name="Shadow Settings" flags="Optional"/>
                                                         <Property type="Float2" name="m_shadowRange" x="0.1" y="100"/>
                                                         <Property type="Float" name="m_shadowBias" flags="HasRange" value="0.001"/>
                                                         <Property type="Uint2" name="m_shadowSize" x="50" y="50"/>
                                                         <Property type="Uint2" name="m_shadowResolution" x="2048" y="2048"/>
                                                         <Property type="Float" name="m_shadowIntensity" flags="HasRange" value="0.5"/>
-                                                        <Property type="LayoutElement" name="" flags="Optional"/>
                                                         <Property type="Float4" name="m_color" flags="Color|HDR" x="1" y="1" z="1" w="1"/>
                                                         <Property type="Float" name="m_intensity" value="1"/>
                                                     </Object>
@@ -1437,13 +1435,11 @@
                                                     <Object class="OmniLightDesc">
                                                         <Property type="String" name="m_name" flags="Hidden" value="OmniLightDesc #0"/>
                                                         <Property type="Bool" name="m_shadow" value="false"/>
-                                                        <Property type="LayoutElement" name="Shadow Settings" flags="Optional"/>
                                                         <Property type="Float2" name="m_shadowRange" x="0.1" y="100"/>
                                                         <Property type="Float" name="m_shadowBias" flags="HasRange" value="0.001"/>
                                                         <Property type="Uint2" name="m_shadowSize" x="16" y="16"/>
                                                         <Property type="Uint2" name="m_shadowResolution" x="1024" y="1024"/>
                                                         <Property type="Float" name="m_shadowIntensity" flags="HasRange" value="1"/>
-                                                        <Property type="LayoutElement" name="" flags="Optional"/>
                                                         <Property type="Float4" name="m_color" flags="Color|HDR" x="1" y="0" z="0" w="1"/>
                                                         <Property type="Float" name="m_intensity" value="1"/>
                                                         <Property type="Bool" name="m_useMaxRadius" flags="Hidden" value="true"/>
@@ -1467,13 +1463,11 @@
                                                     <Object class="OmniLightDesc">
                                                         <Property type="String" name="m_name" flags="Hidden" value="OmniLightDesc #0"/>
                                                         <Property type="Bool" name="m_shadow" value="false"/>
-                                                        <Property type="LayoutElement" name="Shadow Settings" flags="Optional"/>
                                                         <Property type="Float2" name="m_shadowRange" x="0.1" y="100"/>
                                                         <Property type="Float" name="m_shadowBias" flags="HasRange" value="0.001"/>
                                                         <Property type="Uint2" name="m_shadowSize" x="16" y="16"/>
                                                         <Property type="Uint2" name="m_shadowResolution" x="1024" y="1024"/>
                                                         <Property type="Float" name="m_shadowIntensity" flags="HasRange" value="1"/>
-                                                        <Property type="LayoutElement" name="" flags="Optional"/>
                                                         <Property type="Float4" name="m_color" flags="Color|HDR" x="0.56504822" y="1" z="0.37065637" w="1"/>
                                                         <Property type="Float" name="m_intensity" value="1"/>
                                                         <Property type="Bool" name="m_useMaxRadius" flags="Hidden" value="true"/>
@@ -1497,13 +1491,11 @@
                                                     <Object class="OmniLightDesc">
                                                         <Property type="String" name="m_name" flags="Hidden" value="OmniLightDesc #0"/>
                                                         <Property type="Bool" name="m_shadow" value="false"/>
-                                                        <Property type="LayoutElement" name="Shadow Settings" flags="Optional"/>
                                                         <Property type="Float2" name="m_shadowRange" x="0.1" y="100"/>
                                                         <Property type="Float" name="m_shadowBias" flags="HasRange" value="0.001"/>
                                                         <Property type="Uint2" name="m_shadowSize" x="16" y="16"/>
                                                         <Property type="Uint2" name="m_shadowResolution" x="1024" y="1024"/>
                                                         <Property type="Float" name="m_shadowIntensity" flags="HasRange" value="1"/>
-                                                        <Property type="LayoutElement" name="" flags="Optional"/>
                                                         <Property type="Float4" name="m_color" flags="Color|HDR" x="0.39768338" y="0.42093897" z="1" w="1"/>
                                                         <Property type="Float" name="m_intensity" value="1"/>
                                                         <Property type="Bool" name="m_useMaxRadius" flags="Hidden" value="true"/>
@@ -1513,6 +1505,43 @@
                                             </Object>
                                         </Property>
                                         <Property type="ObjectPtrVector" name="m_children" flags="Hidden"/>
+                                    </Object>
+                                </Property>
+                            </Object>
+                            <Object class="GameObject">
+                                <Property type="String" name="m_name" value="Prefabs"/>
+                                <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
+                                <Property type="Float4" name="m_color" flags="Color" x="1" y="1" z="1" w="1"/>
+                                <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="0" Ty="0" Tz="0" Tw="1"/>
+                                <Property type="ObjectPtrVector" name="m_components"/>
+                                <Property type="ObjectPtrVector" name="m_children" flags="Hidden">
+                                    <Object class="PrefabGameObject">
+                                        <Property type="String" name="m_name" value="Cube A"/>
+                                        <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
+                                        <Property type="Float4" name="m_color" flags="Color" x="1" y="1" z="1" w="1"/>
+                                        <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="0" Ty="0" Tz="0" Tw="1"/>
+                                        <Property type="ObjectPtrVector" name="m_components"/>
+                                        <Property type="ObjectPtrVector" name="m_children" flags="Hidden"/>
+                                        <Property type="Resource" name="m_prefabResource" flags="Resource">
+                                            <Object class="PrefabResource">
+                                                <Property type="String" name="m_name" flags="Hidden" value=""/>
+                                                <Property type="String" name="m_resourcePath" flags="Hidden" value="data/Prefabs/Cube.prefab"/>
+                                            </Object>
+                                        </Property>
+                                    </Object>
+                                    <Object class="PrefabGameObject">
+                                        <Property type="String" name="m_name" value="Cube B"/>
+                                        <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
+                                        <Property type="Float4" name="m_color" flags="Color" x="1" y="1" z="1" w="1"/>
+                                        <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="-2" Ty="0" Tz="0" Tw="1"/>
+                                        <Property type="ObjectPtrVector" name="m_components"/>
+                                        <Property type="ObjectPtrVector" name="m_children" flags="Hidden"/>
+                                        <Property type="Resource" name="m_prefabResource" flags="Resource">
+                                            <Object class="PrefabResource">
+                                                <Property type="String" name="m_name" flags="Hidden" value=""/>
+                                                <Property type="String" name="m_resourcePath" flags="Hidden" value="data/Prefabs/Cube.prefab"/>
+                                            </Object>
+                                        </Property>
                                     </Object>
                                 </Property>
                             </Object>

@@ -125,7 +125,7 @@ namespace vg::engine
             {
                 auto * prefabChild = prefabChildren[0];
                 prefabChild->setParent(nullptr);
-                RemoveChild(prefabChild);
+                RemoveChild(prefabChild, false);
             }
         }
     }

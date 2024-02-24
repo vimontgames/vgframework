@@ -348,13 +348,14 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
-    bool GameObject::RemoveChild(IGameObject * _gameObject)
+    bool GameObject::RemoveChild(IGameObject * _gameObject, bool _recomputeFlags)
     {
         if (m_children.exists((GameObject*)_gameObject))
         {
             m_children.remove((GameObject*)_gameObject);
             VG_SAFE_RELEASE(_gameObject);
-            recomputeUpdateFlags();
+            if (_recomputeFlags)
+                recomputeUpdateFlags();
             return true;
         }
 

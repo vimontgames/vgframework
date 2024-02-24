@@ -15,11 +15,12 @@ namespace vg::engine
         WorldResourceData(const core::string & _name = "", IObject * _parent = nullptr);
         ~WorldResourceData();
 
-        void                                        createWorld();
-        core::IWorld *                              getWorld() const { return m_world; }
-        core::vector<BaseSceneResource *> *         getScenes(core::BaseSceneType _sceneType);
-        void                                        OnPropertyChanged(core::IObject * _object, const core::IProperty & _prop, bool _notifyParent) override;
-
+        void                                        createWorld         ();
+        core::IWorld *                              getWorld            () const { return m_world; }
+        core::vector<BaseSceneResource *> *         getScenes           (core::BaseSceneType _sceneType);
+        void                                        RemoveScene         (BaseSceneResource * _sceneRes, core::BaseSceneType _sceneType);
+        void                                        OnPropertyChanged   (core::IObject * _object, const core::IProperty & _prop, bool _notifyParent) override;
+        
     //private:
         core::IWorld *                              m_world = nullptr;
         core::vector<SceneResource*>                m_sceneResources;

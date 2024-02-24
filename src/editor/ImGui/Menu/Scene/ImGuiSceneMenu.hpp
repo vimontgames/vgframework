@@ -110,7 +110,7 @@ namespace vg::editor
                         IResource * sceneRes = worldRes->FindSceneResource(scene, m_sceneType);
                         VG_ASSERT(sceneRes);
 
-                        worldRes->UnloadSceneResource(sceneRes, m_sceneType);
+                        worldRes->RemoveSceneResource(sceneRes, m_sceneType);
 
                         ImGui::CloseCurrentPopup();
                         status = Status::Removed;

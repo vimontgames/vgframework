@@ -35,8 +35,30 @@ namespace vg::editor
     }
 
     //--------------------------------------------------------------------------------------
-    void ImGuiPrefabView::UpdateScene()
+    // Return 'false' if Prefab does not exist anymore and the View needs to be closed
+    //--------------------------------------------------------------------------------------
+    bool ImGuiPrefabView::UpdateScene()
     {
+        // Check prefab world still points to a valid scene
+        const auto worldRes = Editor::get()->getEngine()->GetWorldResource();
+        const uint prefabCount = worldRes->GetSceneResourceCount(core::BaseSceneType::Prefab);
+        bool found = false;
+        for (uint i = 0; i < prefabCount; ++i)
+        {
+            const auto * prefabRes = worldRes->GetSceneResource(i, core::BaseSceneType::Prefab);
+            if (prefabRes == m_prefabRes)
+            {
+                found = true;
+                break;
+            }
+        }
+
+        if (!found)
+        {
+            m_prefabWorld->RemoveAllScenes(BaseSceneType::Scene);
+            return false;
+        }
+
         auto cur = m_prefabWorld->GetActiveScene(BaseSceneType::Scene);
         auto scene = VG_SAFE_STATIC_CAST(IBaseScene, m_prefabRes->getObject());
 
@@ -50,6 +72,8 @@ namespace vg::editor
             m_prefabWorld->AddScene(scene, BaseSceneType::Scene);
             m_prefabWorld->SetActiveScene(scene, BaseSceneType::Scene);
         }
+
+        return true;
     }
 
     //--------------------------------------------------------------------------------------
