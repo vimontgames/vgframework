@@ -25,6 +25,10 @@
                 <Property type="String" name="m_name" flags="Hidden" value=""/>
                 <Property type="String" name="m_resourcePath" flags="Hidden" value="data/Prefabs/Benualdo.prefab"/>
             </Object>
+            <Object class="PrefabResource">
+                <Property type="String" name="m_name" flags="Hidden" value=""/>
+                <Property type="String" name="m_resourcePath" flags="Hidden" value="data/Prefabs/GJ.prefab"/>
+            </Object>
         </Property>
     </Object>
 </Root>

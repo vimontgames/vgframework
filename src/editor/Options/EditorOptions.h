@@ -20,8 +20,9 @@ namespace vg::editor
 
     enum class EditorDebugFlags : core::u64
     {
-        Inspector   = 0x00000001,
-        Culling     = 0x00000002 
+        Culling     = 0x00000001,
+        Inspector   = 0x00000002,
+        Picking     = 0x00000004
     };
 
     struct GizmoOptions
@@ -55,8 +56,10 @@ namespace vg::editor
         const GizmoOptions &    getGizmoOptions     () const { return m_gizmo; }
         GizmoOptions &          getGizmoOptions     () { return m_gizmo; }
 
-        bool                    IsDebugInspector    () const;
+        
         bool                    IsDebugCulling      () const;
+        bool                    IsDebugInspector    () const;
+        bool                    IsDebugPicking      () const;
 
     private:
         ImGui::Theme            m_theme = ImGui::Theme::ImGui_Dark;

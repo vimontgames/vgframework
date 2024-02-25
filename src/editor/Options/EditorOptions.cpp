@@ -41,15 +41,21 @@ namespace vg::editor
     }
 
     //--------------------------------------------------------------------------------------
-    bool EditorOptions::IsDebugInspector() const
+    bool EditorOptions::IsDebugCulling() const
     { 
+        return core::asBool(EditorDebugFlags::Culling & m_debugFlags); 
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool EditorOptions::IsDebugInspector() const
+    {
         return core::asBool(EditorDebugFlags::Inspector & m_debugFlags);
     }
 
     //--------------------------------------------------------------------------------------
-    bool EditorOptions::IsDebugCulling() const
-    { 
-        return core::asBool(EditorDebugFlags::Culling & m_debugFlags); 
+    bool EditorOptions::IsDebugPicking() const
+    {
+        return core::asBool(EditorDebugFlags::Picking & m_debugFlags);
     }
 
     //--------------------------------------------------------------------------------------

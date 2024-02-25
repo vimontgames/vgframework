@@ -5,6 +5,7 @@
 #include "core/IInstance.h"
 #include "core/IComponent.h"
 #include "core/IGameObject.h"
+#include "core/string/string.h"
 #include "gfx/IView.h"
 #include "Shaders/system/toolmode.hlsl.h"
 #include "renderer/IMeshInstance.h"
@@ -57,7 +58,7 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    void PickingManager::Update(const gfx::IView * _view, bool & _showTooltip, core::string & _tooltipMsg)
+    void PickingManager::Update(const gfx::IView * _view, bool & _showTooltip, core::string & _tooltipMsg, core::string & _tooltipDbg)
     {
         if (_view->IsMouseOverView())
         {
@@ -87,12 +88,25 @@ namespace vg::renderer
                             IGameObject * go = dynamic_cast<IGameObject *>(parent);
                             if (nullptr != go)
                             {
-                                if (_showTooltip)
+                                auto * parentPrefab = go->GetParentPrefab();
+                                if (parentPrefab)
                                 {
-                                    char temp[256];
-                                    sprintf_s(temp, "GameObject \"%s\"\n%s \"%s\" (ID %u)\nSubID = %u\nCounter = %u\nWorldPos = (%.2f, %.2f, %.2f) Depth = %f", go->getName().c_str(), component->getClassName(), component->getName().c_str(), (uint)id.x, (uint)id.y, _view->GetPickingRequestedHitCount(), (float)pos.x, (float)pos.y, (float)pos.z, (float)pos.w);
-                                    _tooltipMsg = temp;
+                                    go = parentPrefab;
+
+                                    if (_showTooltip)
+                                        _tooltipMsg = fmt::sprintf("Prefab \"%s\"", go->getName());
                                 }
+                                else
+                                {
+                                    if (_showTooltip)
+                                    {
+                                        //char temp[256];
+                                        //sprintf_s(temp, "GameObject \"%s\"\n%s \"%s\" (ID %u)\nSubID = %u\nCounter = %u\nWorldPos = (%.2f, %.2f, %.2f) Depth = %f", go->getName().c_str(), component->getClassName(), component->getName().c_str(), (uint)id.x, (uint)id.y, _view->GetPickingRequestedHitCount(), (float)pos.x, (float)pos.y, (float)pos.z, (float)pos.w);
+                                        _tooltipMsg = fmt::sprintf("GameObject \"%s\"", go->getName());
+                                    }
+                                }
+
+                                _tooltipDbg = fmt::sprintf("\n%s \"%s\" (ID %u)\nSubID = %u\nCounter = %u\nWorldPos = (%.2f, %.2f, %.2f) Depth = %f", component->getClassName(), component->getName().c_str(), (uint)id.x, (uint)id.y, _view->GetPickingRequestedHitCount(), (float)pos.x, (float)pos.y, (float)pos.z, (float)pos.w);
 
                                 if (input->IsMouseButtonJustPressed(MouseButton::Left))
                                 {

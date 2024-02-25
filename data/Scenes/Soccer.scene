@@ -1561,6 +1561,29 @@
                             </Object>
                         </Property>
                     </Object>
+                    <Object class="GameObject">
+                        <Property type="String" name="m_name" value="Enemies"/>
+                        <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
+                        <Property type="Float4" name="m_color" flags="Color" x="1" y="1" z="1" w="1"/>
+                        <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="0" Ty="0" Tz="0" Tw="1"/>
+                        <Property type="ObjectPtrVector" name="m_components"/>
+                        <Property type="ObjectPtrVector" name="m_children" flags="Hidden">
+                            <Object class="PrefabGameObject">
+                                <Property type="String" name="m_name" value="GJ"/>
+                                <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
+                                <Property type="Float4" name="m_color" flags="Color" x="1" y="1" z="1" w="1"/>
+                                <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="4.5" Ty="0" Tz="0" Tw="1"/>
+                                <Property type="ObjectPtrVector" name="m_components"/>
+                                <Property type="ObjectPtrVector" name="m_children" flags="Hidden"/>
+                                <Property type="Resource" name="m_prefabResource" flags="Resource">
+                                    <Object class="PrefabResource">
+                                        <Property type="String" name="m_name" flags="Hidden" value=""/>
+                                        <Property type="String" name="m_resourcePath" flags="Hidden" value="data/Prefabs/GJ.prefab"/>
+                                    </Object>
+                                </Property>
+                            </Object>
+                        </Property>
+                    </Object>
                 </Property>
             </Object>
         </Property>

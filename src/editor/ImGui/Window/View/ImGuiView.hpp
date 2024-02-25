@@ -443,12 +443,15 @@ namespace vg::editor
                     auto * renderer = Editor::get()->getRenderer();
                     auto picking = renderer->GetPicking();
                     bool showTooltip = Kernel::getInput()->IsKeyPressed(Key::LSHIFT); // ImGui::IsKeyPressed(ImGuiKey_LeftShift);
-                    picking->Update(m_view, showTooltip, m_pickingTooltip);
-                    if (!showTooltip)
-                        m_pickingTooltip.clear();
 
-                    if (!m_pickingTooltip.empty())
-                        ImGui::SetTooltip(m_pickingTooltip.c_str());
+                    string tooltip, tooltipDbg;
+                    picking->Update(m_view, showTooltip, tooltip, tooltipDbg);
+
+                    if (EditorOptions::get()->IsDebugPicking())
+                        tooltip += tooltipDbg;
+
+                    if (!tooltip.empty())
+                        ImGui::SetTooltip(tooltip.c_str());
                 }
             }
 

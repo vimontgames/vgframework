@@ -21,6 +21,6 @@ namespace vg::renderer
         virtual PickingID           CreatePickingID     (core::IObject * _object) = 0;
         virtual void                ReleasePickingID    (PickingID _id) = 0;
 
-        virtual void                Update              (const gfx::IView * _view, bool & _showTooltip, core::string & _tooltipMsg) = 0;
+        virtual void                Update              (const gfx::IView * _view, bool & _showTooltip, core::string & _tooltipMsg, core::string & _tooltipDbg) = 0;
     };
 }
