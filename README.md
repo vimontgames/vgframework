@@ -20,10 +20,14 @@ Another subject that is very close to my heart is that there is a strong separat
 
 # changelog
 
-## 0.26 "Yellow Zombie" (WIP¨)
+## 0.27 "Let it snow"
+Can now create **Prefabs** to instanciate in Levels
+
+![Screenshot](doc/img/0.27.png)
+
+## 0.26 "Yellow Zombie"
 Editor Camera V0\
 Improve window resize + fix rare crash when maximizing window\
-Prefabs\
 Forbid deleting or adding siblings to root node\
 Better leak tracking with __FILE__ and __LINE__ + Fix rare memory leak in animation loading\
 Update WinPixEventRuntime 1.0.231030001

@@ -469,7 +469,7 @@ namespace vg::editor
                                 {
                                     auto prefabRes = worldRes->GetSceneResource(p, BaseSceneType::Prefab);
 
-                                    if (ImGui::MenuItem(prefabRes->GetResourcePath().c_str()))
+                                    if (ImGui::MenuItem(io::getFileNameWithoutExt(prefabRes->GetResourcePath()).c_str()))
                                         openPrefabView(prefabRes);
                                 }
                                 ImGui::EndMenu();
@@ -636,7 +636,7 @@ namespace vg::editor
     void Editor::openPrefabView(const core::IResource * _prefabRes)
     {
         // Create or show window
-        auto * prefabView = getWindow<ImGuiPrefabView>(_prefabRes->GetResourcePath());
+        auto * prefabView = getWindow<ImGuiPrefabView>(io::getFileNameWithoutExt(_prefabRes->GetResourcePath()));
 
         if (prefabView)
         {
@@ -645,7 +645,7 @@ namespace vg::editor
         else
         {
             auto prefabView = new ImGuiPrefabView(_prefabRes);
-            prefabView->setName(_prefabRes->GetResourcePath());
+            prefabView->setName(io::getFileNameWithoutExt(_prefabRes->GetResourcePath()));
             Editor::get()->m_imGuiWindows.push_back(prefabView);
         }
     }

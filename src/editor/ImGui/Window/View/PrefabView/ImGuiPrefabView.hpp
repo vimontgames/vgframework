@@ -23,6 +23,21 @@ namespace vg::editor
     }
 
     //--------------------------------------------------------------------------------------
+    bool ImGuiPrefabView::ShowToolbar()
+    { 
+        return false; 
+    }
+
+    //--------------------------------------------------------------------------------------
+    void ImGuiPrefabView::DrawToolbar()
+    {
+        //if (ImGui::TooltipButton(fmt::sprintf("%s", editor::style::icon::Save).c_str(), true, true, "Save Prefab", style::button::SizeSmall))
+        //{
+        //
+        //}
+    }
+
+    //--------------------------------------------------------------------------------------
     gfx::IView::Flags ImGuiPrefabView::GetViewFlags() const
     {
         return super::GetViewFlags() | gfx::IView::Flags::Prefab;
@@ -39,6 +54,9 @@ namespace vg::editor
     //--------------------------------------------------------------------------------------
     bool ImGuiPrefabView::UpdateScene()
     {
+        if (!m_prefabWorld)
+            return false;
+
         // Check prefab world still points to a valid scene
         const auto worldRes = Editor::get()->getEngine()->GetWorldResource();
         const uint prefabCount = worldRes->GetSceneResourceCount(core::BaseSceneType::Prefab);

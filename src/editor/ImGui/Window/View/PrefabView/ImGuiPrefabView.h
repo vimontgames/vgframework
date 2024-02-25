@@ -17,10 +17,12 @@ namespace vg::editor
         ImGuiPrefabView(const core::IResource * _prefabRes);
         ~ImGuiPrefabView();
 
-        gfx::IView::Flags GetViewFlags() const final override;
-        core::IWorld * GetWorld() const final override;
-        void OnCloseWindow() final override;
-        bool UpdateScene() final override;
+        bool                    ShowToolbar     () final override;
+        void                    DrawToolbar     () final override;
+        gfx::IView::Flags       GetViewFlags    () const final override;
+        core::IWorld *          GetWorld        () const final override;
+        void                    OnCloseWindow   () final override;
+        bool                    UpdateScene     () final override;
 
     private:
         const core::IResource * m_prefabRes = nullptr;

@@ -240,17 +240,23 @@ namespace vg::editor
     //--------------------------------------------------------------------------------------
     void ImGuiView::DrawGUI()
     {
+        float padding = 1;
+
         // TODO : update editor camera *BEFORE* render?
         if (m_target == gfx::ViewTarget::Editor)
             updateEditorCamera(getEngine()->GetTime().m_dt);
 
         auto * renderer = Editor::get()->getRenderer();
 
+        ImGuiStyle & style = ImGui::GetStyle();
+        const float saveWindowRounding = style.WindowRounding;
+        style.WindowRounding = 0; 
+
         const auto titleBarHeight = editor::style::font::Height + 2 * ImGui::GetStyle().FramePadding.y;
 
         ImGui::SetNextWindowSizeConstraints(ImVec2(320, 256 + titleBarHeight), ImVec2(MAX_FLOAT, MAX_FLOAT));
-        ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0, 0));
-        ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0, 0, 0, 255));
+        ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(padding, padding));
+        ImGui::PushStyleColor(ImGuiCol_WindowBg, ImGui::GetStyleColorVec4(ImGuiCol_WindowBg));
         
         // By default, Windows are uniquely identified by their title.
         // You can use the "##" and "###" markers to manipulate the display/ID.
@@ -274,6 +280,18 @@ namespace vg::editor
 
         if (ImGui::Begin(title.c_str(), &m_isVisible, ImGuiWindowFlags_NoFocusOnAppearing | ImGuiWindowFlags_NoNavInputs))
         {
+            // Toolbar
+            bool hasToolbar = ShowToolbar();
+            float posY = ImGui::GetCursorPosY();
+            if (hasToolbar)
+            {
+                ImGui::Spacing();
+                ImGui::PopStyleVar();
+                DrawToolbar();
+                ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(padding, padding));
+            }
+            float toolbarHeight = ImGui::GetCursorPosY() - posY;
+
             // Compute Window content size
             ImVec2 vMin = ImGui::GetWindowContentRegionMin();
             ImVec2 vMax = ImGui::GetWindowContentRegionMax();
@@ -285,6 +303,9 @@ namespace vg::editor
             //VG_ASSERT(vMax.x > vMin.x && vMax.y > vMin.y, "vMin = (%f,%f) vMax = (%f, %f)", vMin.x, vMin.y, vMax.x, vMax.y);
 
             m_size = uint2((uint)max(vMax.x - vMin.x, 1.0f), (uint)max(vMax.y-vMin.y, 1.0f));
+            m_size.y = (uint)max(0, (int)m_size.y- (int)toolbarHeight);
+
+            m_size.xy = max(m_size.xy, uint2(1, 1));
 
             bool draw = true;
 
@@ -454,6 +475,8 @@ namespace vg::editor
         ImGui::PopStyleColor();
         ImGui::PopStyleVar();
         ImGui::End();
+
+        style.WindowRounding = saveWindowRounding;
 
         if (!m_isVisible)
             OnCloseWindow();
