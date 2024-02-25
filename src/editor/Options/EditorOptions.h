@@ -59,7 +59,7 @@ namespace vg::editor
         bool                    IsDebugCulling      () const;
 
     private:
-        renderer::GUITheme      m_guiTheme = renderer::GUITheme::ImGui_Dark;       
+        ImGui::Theme            m_theme = ImGui::Theme::ImGui_Dark;
         GizmoOptions            m_gizmo;
         EditorDebugFlags        m_debugFlags = (EditorDebugFlags)0x0;
     };

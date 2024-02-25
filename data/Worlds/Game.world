@@ -15,7 +15,15 @@
         <Property type="ResourcePtrVector" name="m_prefabsResources" flags="Resource">
             <Object class="PrefabResource">
                 <Property type="String" name="m_name" flags="Hidden" value=""/>
-                <Property type="String" name="m_resourcePath" flags="Hidden" value="data/Prefabs/Cube.prefab"/>
+                <Property type="String" name="m_resourcePath" flags="Hidden" value="data/Prefabs/Pablo.prefab"/>
+            </Object>
+            <Object class="PrefabResource">
+                <Property type="String" name="m_name" flags="Hidden" value=""/>
+                <Property type="String" name="m_resourcePath" flags="Hidden" value="data/Prefabs/Romeo.prefab"/>
+            </Object>
+            <Object class="PrefabResource">
+                <Property type="String" name="m_name" flags="Hidden" value=""/>
+                <Property type="String" name="m_resourcePath" flags="Hidden" value="data/Prefabs/Benualdo.prefab"/>
             </Object>
         </Property>
     </Object>

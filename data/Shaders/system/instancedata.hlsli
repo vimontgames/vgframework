@@ -55,8 +55,11 @@ struct GPUInstanceData
 {
     uint4 data;
 
-    void setMaterialCount  (uint _count)   { data.x = packUint16low(data.x, _count); }
-    uint getMaterialCount  ()              { return unpackUint16low(data.x); }
+    void setMaterialCount           (uint _count)   { data.x = packUint16low(data.x, _count); }
+    uint getMaterialCount           ()              { return unpackUint16low(data.x); }
+
+    void setInstanceColor           (float4 _color) { data.y = packRGBA8(_color); }
+    float4 getInstanceColor         ()              { return unpackRGBA8(data.y); }
 
     #ifndef __cplusplus
     //--------------------------------------------------------------------------------------

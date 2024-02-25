@@ -748,7 +748,7 @@ namespace vg::editor
                 case IProperty::Type::Float4x4:
                 {
                     VG_ASSERT(!isEnumArray, "Display of EnumArray property not implemented for type '%s'", asString(type).c_str());
-                    changed |= displayFloat4x4(label.c_str(), _prop->GetPropertyFloat4x4(_object));
+                    changed |= displayFloat4x4(_object, _prop);
                 }
                 break;
 
@@ -1536,6 +1536,9 @@ namespace vg::editor
                 }
             }
 
+            if (!strcmp(_resource->getClassName(), "PrefabResource"))
+                anyVisibleProperty = false;
+
             if (anyVisibleProperty)
             {
                 char label[256];
@@ -1674,15 +1677,18 @@ namespace vg::editor
     }
 
     //--------------------------------------------------------------------------------------
-    bool ImGuiWindow::displayFloat4x4(const core::string & _label, core::float4x4 * _pFloat4x4)
+    bool ImGuiWindow::displayFloat4x4(core::IObject * _object, const core::IProperty * _prop)
     {
         bool changed = false;
 
-        changed |= ImGui::InputFloat4(((string)_label + ".I").c_str(), (float*)_pFloat4x4 + 0, "%.2f", ImGuiInputTextFlags_EnterReturnsTrue);
-        changed |= ImGui::InputFloat4(((string)_label + ".J").c_str(), (float*)_pFloat4x4 + 4, "%.2f", ImGuiInputTextFlags_EnterReturnsTrue);
-        changed |= ImGui::InputFloat4(((string)_label + ".K").c_str(), (float*)_pFloat4x4 + 8, "%.2f", ImGuiInputTextFlags_EnterReturnsTrue);
-        changed |= ImGui::InputFloat4(((string)_label + ".T").c_str(), (float*)_pFloat4x4 + 12, "%.2f", ImGuiInputTextFlags_EnterReturnsTrue);
-
+        const auto displayName = _prop->getDisplayName();
+        auto pFloat4x4 = _prop->GetPropertyFloat4x4(_object);
+        ImGui::PushID(_prop);
+        changed |= ImGui::InputFloat4(fmt::sprintf("%s.I", displayName).c_str(), (float*)pFloat4x4 + 0, "%.2f", ImGuiInputTextFlags_EnterReturnsTrue);
+        changed |= ImGui::InputFloat4(fmt::sprintf("%s.J", displayName).c_str(), (float*)pFloat4x4 + 4, "%.2f", ImGuiInputTextFlags_EnterReturnsTrue);
+        changed |= ImGui::InputFloat4(fmt::sprintf("%s.K", displayName).c_str(), (float*)pFloat4x4 + 8, "%.2f", ImGuiInputTextFlags_EnterReturnsTrue);
+        changed |= ImGui::InputFloat4(fmt::sprintf("%s.T", displayName).c_str(), (float*)pFloat4x4 + 12, "%.2f", ImGuiInputTextFlags_EnterReturnsTrue);
+        ImGui::PopID();
         return changed;
     }
 

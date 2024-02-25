@@ -14,7 +14,7 @@ namespace vg::editor
     {
         super::registerProperties(_desc);
 
-        registerPropertyEnum(EditorOptions, renderer::GUITheme, m_guiTheme, "Theme");
+        registerPropertyEnum(EditorOptions, ImGui::Theme, m_theme, "Theme");
 
         registerPropertyGroupBegin(EditorOptions, "Gizmo");
         {
@@ -58,7 +58,7 @@ namespace vg::editor
     {
         setFile("Editor.xml");
         Load();
-        Editor::get()->getRenderer()->GetImGuiAdapter()->SetGUITheme(m_guiTheme);
+        Editor::get()->getRenderer()->GetImGuiAdapter()->SetGUITheme(m_theme);
     }
 
     //--------------------------------------------------------------------------------------
@@ -66,10 +66,10 @@ namespace vg::editor
     {
         const char * name = _prop.getName();
 
-        if (!strcmp(name, "m_guiTheme"))
+        if (!strcmp(name, "m_theme"))
         {
             auto imGuiAdapter = Editor::get()->getRenderer()->GetImGuiAdapter();
-            imGuiAdapter->SetGUITheme(m_guiTheme);
+            imGuiAdapter->SetGUITheme(m_theme);
         }
     }
 

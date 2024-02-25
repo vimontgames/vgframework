@@ -136,6 +136,20 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
+    IGameObject * GameObject::GetParentPrefab() const
+    {
+        IGameObject * parent = dynamic_cast<IGameObject *>(getParent());
+        while (nullptr != parent)
+        {
+            if (parent->IsPrefab())
+                return parent;
+
+            parent = dynamic_cast<IGameObject*>(parent->getParent());
+        }
+        return nullptr;
+    }
+
+    //--------------------------------------------------------------------------------------
     IResource * GameObject::GetPrefabResource() const
     {
         VG_ASSERT(IsPrefab());
@@ -394,12 +408,13 @@ namespace vg::core
     //--------------------------------------------------------------------------------------
     bool GameObject::HasAncestor(const IGameObject * _ancestor) const
     {
-        GameObject * parent = (GameObject*)getParent();
+        GameObject * parent = dynamic_cast<GameObject*>(getParent());
         while (nullptr != parent)
         {
             if (parent == _ancestor)
                 return true;
-            parent = (GameObject *)parent->getParent();
+            if (nullptr != parent)
+                parent = dynamic_cast<GameObject *>(parent->getParent());
         }
         return false;
     }

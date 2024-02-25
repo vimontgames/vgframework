@@ -2,6 +2,31 @@
 
 typedef void * ImTextureID;
 struct ImVec4;
+struct ImFont;
+
+namespace ImGui
+{
+    enum class Font : vg::core::u8
+    {
+        UbuntuMono
+    };
+
+    enum class Style : vg::core::u8
+    {
+        Regular = 0,
+        Bold,
+        Italic
+    };
+
+    enum class Theme : vg::core::u8
+    {
+        ImGui_Classic,
+        ImGui_Dark,
+        ImGui_Light,
+        VimontGames_Grey,
+        VimontGames_Dark
+    };
+}
 
 namespace vg
 {
@@ -12,15 +37,6 @@ namespace vg
 
     namespace renderer
     {
-        enum class GUITheme : core::u8
-        {
-            ImGui_Classic,
-            ImGui_Dark,
-            ImGui_Light,
-            VimontGames_Grey,
-            VimontGames_Dark
-        };
-
         class IImGuiAdapter
         {
         public:
@@ -28,7 +44,7 @@ namespace vg
 
             virtual                 ~IImGuiAdapter          () = default;
 
-            virtual void            SetGUITheme             (GUITheme _theme) = 0;
+            virtual void            SetGUITheme             (ImGui::Theme _theme) = 0;
             virtual bool            IsCurrentThemeDark      () const = 0;
             virtual const ImVec4 &  GetRowColorEven         () const = 0;
             virtual const ImVec4 &  GetRowColorOdd          () const = 0;
@@ -43,6 +59,7 @@ namespace vg
             virtual void            ReleaseTextureID        (ImTextureID _texID) = 0;
 
             virtual void            AddBeginFrameCallback   (BeginFrameCallback _func) = 0;
+            virtual ImFont *        GetFont                 (ImGui::Font _font, ImGui::Style _style = ImGui::Style::Regular) const = 0;
         };
     }
 }

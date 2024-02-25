@@ -120,16 +120,43 @@ namespace vg::renderer
 
         const uint mapSize = sizeof(LightsConstantsHeader) + directionalCount * sizeof(DirectionalLightConstants) + omniCount * sizeof(OmniLightConstants);
 
+        // Add default light if needed
+        bool useDefaultLight = true;
+        for (uint i = 0; i < enumCount<LightType>(); ++i)
+        {
+            const auto lightType = (LightType)i;
+            auto & lights = culling.get(lightType);
+            if (lights.m_instances.count() > 0)
+            {
+                useDefaultLight = false;
+                break;
+            }
+        }
+
         uint offset = 0;
         u8 * data = (u8*)_cmdList->map(s_LightsConstantsBuffer, mapSize).data;
         {
             auto * header = (LightsConstantsHeader*)data;
 
-            header->setDirectionalCount(directionalCount);
+            header->setDirectionalCount(useDefaultLight ? 1 : directionalCount);
             header->setOmniCount(omniCount);
             header->setSpotCount(spotCount);
 
             offset += sizeof(LightsConstantsHeader);
+
+            if (useDefaultLight)
+            {
+                DirectionalLightConstants * constants = (DirectionalLightConstants *)(data + offset);
+
+                constants->setColor(float3(1,1,1));
+                constants->setDirection(normalize(float3(1,1,1)));
+                constants->setShadowBias(0);
+                constants->setShadowInstensity(0);
+                constants->setShadowMapTextureHandle(0);
+                constants->setShadowMatrix(float4x4::identity());
+
+                offset += sizeof(DirectionalLightConstants);
+            }            
 
             for (uint i = 0; i < directionalCount; ++i)
             {

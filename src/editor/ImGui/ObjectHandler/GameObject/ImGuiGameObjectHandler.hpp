@@ -1,6 +1,7 @@
 #pragma once
 
 #include "core/IGameObject.h"
+#include "engine/GameObject/Prefab/PrefabGameObject.h"
 #include "core/IComponent.h"
 #include "editor/ImGui/Menu/Inspector/GameObject/ImGuiGameObjectInspectorMenu.h"
 #include "editor/ImGui/Window/ImGuiWindow.h"
@@ -28,10 +29,21 @@ namespace vg::editor
 
             ImGui::PushID("DisplayObject");
 
+            const bool isPrefab = go->IsPrefab();
+            string goTypeName = isPrefab ? "Prefab" : "GameObject";
+            auto goIcon = isPrefab ? style::icon::Prefab : style::icon::Scene;
+
             auto availableWidth = ImGui::GetContentRegionAvail().x;
             ImVec2 collapsingHeaderPos = ImGui::GetCursorPos();
-            string gameObjectLabel = fmt::sprintf("%s %s", style::icon::Scene, "GameObject");
+            string gameObjectLabel = fmt::sprintf("%s %s", goIcon, goTypeName);
+
+            if (isPrefab)
+                ImGui::PushStyleColor(ImGuiCol_Text, ImGui::GetStyleColorVec4(ImGuiCol_HeaderActive));
+
             bool open = ImGui::CollapsingHeader(ImGui::getObjectLabel("", gameObjectLabel, go).c_str(), ImGuiTreeNodeFlags_InvisibleArrow | ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_AllowItemOverlap);
+
+            if (isPrefab)
+                ImGui::PopStyleColor(1);
 
             m_gameObjectInspectorMenu.Display(go);
 
@@ -41,9 +53,15 @@ namespace vg::editor
             if (debugInspector)
                 gameObjectLabel += fmt::sprintf(" (0x%016X)", (u64)_object);
 
+            if (isPrefab)
+                ImGui::PushStyleColor(ImGuiCol_Text, ImGui::GetStyleColorVec4(ImGuiCol_HeaderActive));
+
             ImGui::CollapsingHeaderLabel(collapsingHeaderPos, gameObjectLabel.c_str(), isGameobjectEnabled);
 
-            if (ImGui::CollapsingHeaderCheckbox(collapsingHeaderPos, isGameobjectEnabled, go, style::icon::Checked, style::icon::Unchecked, fmt::sprintf("%s GameObject \"%s\"", isGameobjectEnabled? "Disable" : "Enable", go->getName().c_str())))
+            if (isPrefab)
+                ImGui::PopStyleColor(1);
+
+            if (ImGui::CollapsingHeaderCheckbox(collapsingHeaderPos, isGameobjectEnabled, go, style::icon::Checked, style::icon::Unchecked, fmt::sprintf("%s %s \"%s\"", isGameobjectEnabled? "Disable" : "Enable", goTypeName, go->getName().c_str())))
                 go->SetInstanceFlags(InstanceFlags::Enabled, !isGameobjectEnabled);
 
             if (open)
@@ -75,6 +93,7 @@ namespace vg::editor
             }    
 
             // "Add Component" button
+            if (!isPrefab)
             {
                 // align right
                 //ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(0, 0));
@@ -121,6 +140,7 @@ namespace vg::editor
     };
 
     VG_AUTO_REGISTER_IMGUI_OBJECT_HANDLER(GameObject, ImGuiGameObjectHandler); 
+    VG_AUTO_REGISTER_IMGUI_OBJECT_HANDLER(PrefabGameObject, ImGuiGameObjectHandler);
 }
 
 

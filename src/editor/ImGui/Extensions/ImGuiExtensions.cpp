@@ -2,6 +2,9 @@
 #include "imguiExtensions.h"
 #include "core/Math/Math.h"
 #include "core/IObject.h"
+#include "editor/Editor.h"
+#include "renderer/IRenderer.h"
+#include "renderer/IImGuiAdapter.h"
 
 using namespace vg::core;
 using namespace vg::editor;
@@ -387,5 +390,40 @@ namespace ImGui
         }
 
         return false;
+    }
+
+    static Font g_font = ImGui::Font::UbuntuMono;
+    static Style g_style = ImGui::Style::Regular;
+
+    //--------------------------------------------------------------------------------------
+    void PushFont(ImGui::Font _font)
+    {
+        g_font = _font;
+
+        auto renderer = Editor::get()->getRenderer();
+        auto * imGuiAdapter = renderer->GetImGuiAdapter();
+        PushFont(imGuiAdapter->GetFont(g_font, g_style));
+    }
+
+    //--------------------------------------------------------------------------------------
+    //void PopFont()
+    //{
+    //
+    //}
+
+    //--------------------------------------------------------------------------------------
+    void PushStyle(ImGui::Style _style)
+    {
+        g_style = _style;
+
+        auto renderer = Editor::get()->getRenderer();
+        auto * imGuiAdapter = renderer->GetImGuiAdapter();
+        PushFont(imGuiAdapter->GetFont(g_font, g_style));
+    }
+
+    //--------------------------------------------------------------------------------------
+    void PopStyle()
+    {
+        PopFont();
     }
 }

@@ -77,8 +77,8 @@ namespace vg::editor
     //--------------------------------------------------------------------------------------
     void ImGuiSceneList::displayGameObject(IGameObject* _gameObject, uint * _count)
     {
-        //const bool counting = (_count != nullptr);
         const auto children = _gameObject->GetChildren();
+        const auto adapter = Editor::get()->getRenderer()->GetImGuiAdapter();
 
         if (_count)
             (*_count)++;
@@ -92,6 +92,7 @@ namespace vg::editor
         auto availableWidth = ImGui::GetContentRegionMax().x;
 
         const bool isPrefab = _gameObject->IsPrefab();
+        const bool isPrefabChild = !isPrefab && nullptr != _gameObject->GetParentPrefab();
 
         ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags_SpanAvailWidth;
         if (children.size() > 0)
@@ -104,9 +105,9 @@ namespace vg::editor
             u32 rowBgColor;
 
             if (*_count & 1)
-                rowBgColor = GetColorU32(Editor::get()->getRenderer()->GetImGuiAdapter()->GetRowColorEven());
+                rowBgColor = GetColorU32(adapter->GetRowColorEven());
             else
-                rowBgColor = GetColorU32(Editor::get()->getRenderer()->GetImGuiAdapter()->GetRowColorOdd());
+                rowBgColor = GetColorU32(adapter->GetRowColorOdd());
 
             DrawRowsBackground(1, rowBgColor);
         }
@@ -126,8 +127,20 @@ namespace vg::editor
 
         auto pos = ImGui::GetCursorPos();
 
-        //if (isPrefab)
-        //    ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1, 0, 0, 1));
+        if (isPrefab)
+        {
+            auto prefabGameObjectColor = ImGui::GetStyleColorVec4(ImGuiCol_HeaderActive);
+            ImGui::PushStyleColor(ImGuiCol_Text, prefabGameObjectColor);
+
+            ImGui::PushStyle(ImGui::Style::Bold);
+        }
+        else if (isPrefabChild)
+        {
+            //auto prefabChildGameObjectColor = ImGui::GetStyleColorVec4(ImGuiCol_HeaderActive);
+            //ImGui::PushStyleColor(ImGuiCol_Text, prefabChildGameObjectColor);
+
+            ImGui::PushStyle(ImGui::Style::Italic);
+        }
 
         const bool renaming = m_gameObjectMenu.m_RenamingGameObject == _gameObject;
         if (renaming)
@@ -161,8 +174,16 @@ namespace vg::editor
             open = ImGui::TreeNodeEx(gameObjectLabel.c_str(), flags | ImGuiTreeNodeFlags_SpanAvailWidth | ImGuiTreeNodeFlags_SpanFullWidth);
         }
 
-        //if (isPrefab)
-        //    ImGui::PopStyleColor(ImGuiCol_Text);
+        if (isPrefab)
+        {
+            ImGui::PopStyleColor();
+            ImGui::PopFont();
+        }
+        else if (isPrefabChild)
+        {
+            //ImGui::PopStyleColor();
+            ImGui::PopFont();
+        }
 
         bool startDragDrop = false;
 
@@ -203,10 +224,7 @@ namespace vg::editor
         }
 
         if (!startDragDrop)
-        {
-            //if (!counting)
             updateSelection(_gameObject);
-        }
 
         m_gameObjectMenu.Display(_gameObject);
 
@@ -279,26 +297,22 @@ namespace vg::editor
 
         // icons
         const auto& components = _gameObject->GetComponents();
-        if (components.size() > 0)
+        //if (components.size() > 0)
         {
             auto bakePos = ImGui::GetCursorPos();
             ImGui::SameLine();
 
-            float totalSize = 0;
-            for (i64 i = components.size() - 1; i >= 0; --i)
+            auto drawIcon = [](const char * icon, bool enabled, float & totalSize, float availableWidth, ImVec2 pos, string tooltip)
             {
-                const auto* component = components[i];
-                const auto* componentClassDesc = component->getClassDesc();
-                auto icon = componentClassDesc->GetIcon();
                 auto size = ImGui::CalcTextSize(icon).x;
                 totalSize += size + ImGui::GetStyle().FramePadding.x;
 
                 ImVec4 textColor = ImGui::GetStyleColorVec4(ImGuiCol_Text);
 
-                if (asBool(ComponentFlags::Enabled & component->GetComponentFlags()))
-                    textColor.w = 0.5f;
+                if (enabled)
+                    textColor.w *= 0.5f;
                 else
-                    textColor.w = 0.15f;
+                    textColor.w *= 0.15f;
 
                 ImGui::SetCursorPosX(availableWidth - totalSize);
                 ImGui::SetCursorPosY(pos.y);
@@ -306,12 +320,27 @@ namespace vg::editor
                 ImGui::Text(icon);
 
                 if (ImGui::IsItemHovered(ImGuiHoveredFlags_AllowWhenDisabled))
-                {
-                    string tooltip = fmt::sprintf("%s:\n%s", componentClassDesc->GetClassDisplayName(), componentClassDesc->GetDescription());
                     ImGui::SetTooltip(tooltip.c_str());
-                }
 
                 ImGui::PopStyleColor();
+            };
+
+            float totalSize = 0;
+            for (i64 i = components.size() - 1; i >= 0; --i)
+            {
+                const auto* component = components[i];
+                const auto* componentClassDesc = component->getClassDesc();
+                auto icon = componentClassDesc->GetIcon();
+                bool enabled = asBool(ComponentFlags::Enabled & component->GetComponentFlags());
+                string tooltip = fmt::sprintf("%s", componentClassDesc->GetDescription());
+
+                drawIcon(icon, enabled, totalSize, availableWidth, pos, tooltip);
+            }
+
+            if (isPrefab)
+            {
+                bool enabled = asBool(InstanceFlags::Enabled & _gameObject->GetInstanceFlags());
+                drawIcon(editor::style::icon::Prefab, enabled, totalSize, availableWidth, pos, "Prefab");
             }
 
             ImGui::SetCursorPosX(bakePos.x);
@@ -326,7 +355,6 @@ namespace vg::editor
                 displayGameObject(child, _count);
             }
 
-            //if (!counting)
             ImGui::TreePop();
         }
 

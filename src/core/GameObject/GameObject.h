@@ -30,6 +30,7 @@ namespace vg::core
         IWorld *                                            GetWorld                () const final override;
 
         bool                                                IsPrefab                () const override;
+        IGameObject *                                       GetParentPrefab         () const override;
         IResource *                                         GetPrefabResource       () const override;
 
         void                                                FixedUpdate             (float _dt);

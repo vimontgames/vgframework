@@ -484,6 +484,10 @@ namespace vg::renderer
     //--------------------------------------------------------------------------------------
     bool MeshInstance::AddAnimation(ISkeletalAnimation * _animation)
     {
+        const MeshModel * meshModel = (const MeshModel *)getModel(Lod::Lod0);
+        if (meshModel == nullptr)
+            return false;
+
         AnimationBinding * binding = nullptr;
         for (uint i = 0; i < m_animationBindings.size(); ++i)
         {
@@ -507,7 +511,6 @@ namespace vg::renderer
         const vector<AnimNodeData> & animNodes = binding->m_animation->getAnimationData().animNodes;
         binding->m_animToSkeletonIndex.reserve(animNodes.size());
 
-        const MeshModel * meshModel = (const MeshModel*)getModel(Lod::Lod0);
         const Skeleton * meshSkeleton = meshModel->getSkeleton();
         const vector<MeshImporterNode> & skeletonNodes = meshSkeleton->getNodes();
         

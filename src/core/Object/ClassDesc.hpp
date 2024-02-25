@@ -227,7 +227,7 @@ namespace vg::core
     void ClassDesc::RegisterEnum(const char * _className, const char * _propertyName, core::u64 * _offset, const char * _displayName, uint _enumCount, const char * _enumNames, const u64 * _enumValues, IProperty::Flags _flags)
     {
         const bool bitfield = asBool(IProperty::Flags::Bitfield & _flags);
-        properties.emplace_back(_className, _propertyName, bitfield ? IProperty::Type::EnumFlagsU64 : IProperty::Type::EnumU64, (uint_ptr)_offset, (u64)sizeof(u64), _displayName, _flags, _enumCount, _enumNames, _enumValues);
+        properties.emplace_back(_className, _propertyName, bitfield ? IProperty::Type::EnumFlagsU64 : IProperty::Type::EnumU64, (uint_ptr)_offset, (u32)sizeof(u64), _displayName, _flags, _enumCount, _enumNames, _enumValues);
     }
 
     //--------------------------------------------------------------------------------------

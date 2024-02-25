@@ -43,7 +43,7 @@ VS_Output VS_Forward(uint _vertexID : VertexID)
     output.tan = vert.getTan();
     output.bin = vert.getBin();
     output.uv = float4(vert.getUV(0), vert.getUV(1));
-    output.col = vert.getColor() * materialData.getAlbedoColor();
+    output.col = vert.getColor() * materialData.getAlbedoColor() * instanceDataHeader.getInstanceColor();
     
     float3 modelPos = vert.getPos();
     float3 worldPos = mul(float4(modelPos.xyz, 1.0f), rootConstants3D.getWorldMatrix()).xyz;
@@ -214,7 +214,7 @@ VS_Output VS_Deferred(uint _vertexID : VertexID)
     output.tan = vert.getTan();
     output.bin = vert.getBin();
     output.uv = float4(vert.getUV(0), vert.getUV(1));
-    output.col = vert.getColor() * materialData.getAlbedoColor();
+    output.col = vert.getColor() * materialData.getAlbedoColor() * instanceDataHeader.getInstanceColor();
     
     float3 modelPos = vert.getPos();
     float3 worldPos = mul(float4(modelPos.xyz, 1.0f), rootConstants3D.getWorldMatrix()).xyz;

@@ -1,7 +1,7 @@
 <Root>
     <Object class="EditorOptions">
         <Property type="String" name="m_name" flags="Hidden" value="Editor Options"/>
-        <Property type="EnumU8" name="m_guiTheme" value="VimontGames_Dark"/>
+        <Property type="EnumU8" name="m_theme" value="VimontGames_Dark"/>
         <Property type="EnumU8" name="m_gizmo.m_type" value="Translate"/>
         <Property type="EnumU8" name="m_gizmo.m_space" value="World"/>
         <Property type="Bool" name="m_gizmo.m_snapTranslate" flags="Hidden" value="true"/>

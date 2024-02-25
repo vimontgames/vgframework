@@ -58,6 +58,7 @@ namespace vg::renderer
                     GPUInstanceData * defaultHeader = (GPUInstanceData *)(data + offset);
                     {
                         defaultHeader->setMaterialCount(1);
+                        defaultHeader->setInstanceColor(float4(1,1,1,1));
                     }
                     offset += sizeof(GPUInstanceData);
 
@@ -79,6 +80,7 @@ namespace vg::renderer
                     GPUInstanceData * instanceHeader = (GPUInstanceData *)(data + offset);
                     {
                         instanceHeader->setMaterialCount(materialCount);
+                        instanceHeader->setInstanceColor(instance->getColor());
                     }
                     offset += sizeof(GPUInstanceData);
                     

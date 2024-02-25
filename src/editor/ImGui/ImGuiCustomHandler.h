@@ -43,5 +43,5 @@ namespace vg::editor
         static core::vector<HandlerInfo> s_ImGuiHandlers;
     };
 
-    #define VG_AUTO_REGISTER_IMGUI_CUSTOM_HANDLER(className, handler, keyType, handlerType) vg::editor::ImGuiCustomHandler<keyType, handlerType>::AutoRegister<handler> autoRegister##handler(#className)
+#define VG_AUTO_REGISTER_IMGUI_CUSTOM_HANDLER(className, handler, keyType, handlerType) vg::editor::ImGuiCustomHandler<keyType, handlerType>::AutoRegister<handler> autoRegister##className##handler(#className)
 }

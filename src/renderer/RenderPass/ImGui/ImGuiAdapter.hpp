@@ -19,6 +19,30 @@ namespace vg::renderer
     static uint max_imguitex_displayed_per_frame = 64;
 
     //--------------------------------------------------------------------------------------
+    string getFontPath(ImGui::Font _font, ImGui::Style _style)
+    {
+        switch (_font)
+        {
+            case ImGui::Font::UbuntuMono:
+            {
+                switch (_style)
+                {
+                    case ImGui::Style::Regular:
+                        return "ubuntu/UbuntuMono-R.ttf";
+                    case ImGui::Style::Bold:
+                        return "ubuntu/UbuntuMono-B.ttf";
+                    case ImGui::Style::Italic:
+                        return "ubuntu/UbuntuMono-RI.ttf";
+                };
+            }
+            break;
+        }
+
+        VG_ASSERT(false, "[ImGui] Could not get font %s - %s", asString(_font).c_str(), asString(_style).c_str());
+        return "";
+    };
+
+    //--------------------------------------------------------------------------------------
     // TODO: move themes to editor?
     //--------------------------------------------------------------------------------------
     ImGuiAdapter::ImGuiAdapter(WinHandle _winHandle, Device & _device)
@@ -30,18 +54,36 @@ namespace vg::renderer
         io.ConfigFlags |= /*ImGuiConfigFlags_NavEnableKeyboard |*/ ImGuiConfigFlags_DockingEnable;
         io.ConfigDockingTransparentPayload = true;
 
-        io.Fonts->AddFontFromFileTTF("data/Fonts/ubuntu/UbuntuMono-R.ttf", editor::style::font::Height);
+        for (uint j = 0; j < enumCount<ImGui::Font>(); ++j)
+        {
+            const auto font = (ImGui::Font)j;
 
-        float baseFontSize = editor::style::font::Height; // 13.0f is the size of the default font. Change to the font size you use.
-        float iconFontSize = baseFontSize;// *2.0f / 3.0f; // FontAwesome fonts need to have their sizes reduced by 2.0f/3.0f in order to align correctly
+            for (uint i = 0; i < enumCount<ImGui::Style>(); ++i)
+            {
+                const auto style = (ImGui::Style)i;
 
-        // merge in icons from Font Awesome
-        static const ImWchar icons_ranges[] = { ICON_MIN_FA, ICON_MAX_16_FA, 0 };
-        ImFontConfig icons_config;
-        icons_config.MergeMode = true;
-        icons_config.PixelSnapH = true;
-        icons_config.GlyphMinAdvanceX = iconFontSize;
-        io.Fonts->AddFontFromFileTTF("data/Fonts/Font-Awesome-6.x/" FONT_ICON_FILE_NAME_FAS, iconFontSize, &icons_config, icons_ranges);
+                auto fontPath = getFontPath(font, style);
+
+                if (!fontPath.empty())
+                {
+                    fontPath = "data/Fonts/" + fontPath;
+
+                    io.Fonts->AddFontFromFileTTF(fontPath.c_str(), editor::style::font::Height);
+
+                    float baseFontSize = editor::style::font::Height; // 13.0f is the size of the default font. Change to the font size you use.
+                    float iconFontSize = baseFontSize;// *2.0f / 3.0f; // FontAwesome fonts need to have their sizes reduced by 2.0f/3.0f in order to align correctly
+
+                    // merge in icons from Font Awesome
+                    static const ImWchar icons_ranges[] = { ICON_MIN_FA, ICON_MAX_16_FA, 0 };
+                    ImFontConfig icons_config;
+                    icons_config.MergeMode = true;
+                    icons_config.PixelSnapH = true;
+                    icons_config.GlyphMinAdvanceX = iconFontSize;
+                    m_imGuiFont[j][i] = io.Fonts->AddFontFromFileTTF("data/Fonts/Font-Awesome-6.x/" FONT_ICON_FILE_NAME_FAS, iconFontSize, &icons_config, icons_ranges);
+                }
+            }
+        }   
+        io.Fonts->Build();
 
         #ifdef _WIN32
         ImGui_ImplWin32_Init(_winHandle);
@@ -331,29 +373,35 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    void ImGuiAdapter::SetGUITheme(GUITheme _theme)
+    ImFont * ImGuiAdapter::GetFont(ImGui::Font _font, ImGui::Style _style) const
+    {
+        return m_imGuiFont[asInteger(_font)][asInteger(_style)];
+    }
+
+    //--------------------------------------------------------------------------------------
+    void ImGuiAdapter::SetGUITheme(ImGui::Theme _theme)
     {
         resetGUITheme();
 
         switch (_theme)
         {
-            case GUITheme::ImGui_Classic:
+            case ImGui::Theme::ImGui_Classic:
                 setGUITheme_ImGui_Classic();
                 break;
 
-            case GUITheme::ImGui_Dark:
+            case ImGui::Theme::ImGui_Dark:
                 setGUITheme_ImGui_Dark();
                 break;
 
-            case GUITheme::ImGui_Light:
+            case ImGui::Theme::ImGui_Light:
                 setGUITheme_ImGui_Light();
                 break;
 
-            case GUITheme::VimontGames_Grey:
+            case ImGui::Theme::VimontGames_Grey:
                 setGUIThemeVimontGames_Grey();
                 break;
 
-            case GUITheme::VimontGames_Dark:
+            case ImGui::Theme::VimontGames_Dark:
                 setGUIThemeVimontGames_Dark();
                 break;
         }

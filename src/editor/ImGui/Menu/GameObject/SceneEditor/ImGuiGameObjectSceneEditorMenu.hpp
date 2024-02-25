@@ -121,7 +121,7 @@ namespace vg::editor
                     m_popup = "Add Child Prefab";
                     m_popupObject = _object;
                     openPopup = true;
-                    ImGui::OpenPopup("Add Child MenuOption");
+                    ImGui::OpenPopup("Add Child Prefab");
                 }
 
                 ImGui::EndMenu();
@@ -268,10 +268,7 @@ namespace vg::editor
                         const string newFile = io::getRelativePath(fileBrowser.selected_path);
 
                         if (strcmp(prefabPath, newFile.c_str()))
-                        {
                             strcpy(prefabPath, newFile.c_str());
-                            //changed = true;
-                        }
 
                         ImGui::OpenPopup(m_popup.c_str());
                     }
@@ -301,7 +298,9 @@ namespace vg::editor
                             case MenuOption::AddChildPrefab:
                                 gameObject->AddChild(newPrefabObject);
                                 break;
-                        }   
+                        }  
+
+                        VG_SAFE_RELEASE(newPrefabObject);
                     }
                 }
                 break;
