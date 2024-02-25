@@ -509,7 +509,7 @@ namespace vg::editor
                             bool enabled = asBool(InstanceFlags::Enabled & root->GetInstanceFlags());
 
                             auto status = m_sceneMenu.Display((IObject*)sceneRes);
-
+                            
                             if (ImGuiMenu::Status::Removed == status)
                             {
                                 sceneResourceCount--;
@@ -517,22 +517,26 @@ namespace vg::editor
                             }
                             else
                             {
-                                string sceneLabel = fmt::sprintf("%s %s", typeInfo.icon, scene->getName());
-
-                                ImGui::CollapsingHeaderLabel(collapsingHeaderPos, sceneLabel.c_str(), enabled);
-
-                                if (ImGui::CollapsingHeaderCheckbox(collapsingHeaderPos, enabled, root, style::icon::Checked, style::icon::Unchecked, fmt::sprintf("%s Scene \"%s\"", enabled ? "Disable" : "Enable", scene->getName().c_str())))
-                                    root->SetInstanceFlags(InstanceFlags::Enabled, !enabled);
-
-                                if (open)
+                                // Check in case menu just unloaded the scene (e.g. "Save & Update")
+                                if (nullptr != sceneRes->getObject())
                                 {
-                                    if (nullptr != root)
+                                    string sceneLabel = fmt::sprintf("%s %s", typeInfo.icon, scene->getName());
+
+                                    ImGui::CollapsingHeaderLabel(collapsingHeaderPos, sceneLabel.c_str(), enabled);
+
+                                    if (ImGui::CollapsingHeaderCheckbox(collapsingHeaderPos, enabled, root, style::icon::Checked, style::icon::Unchecked, fmt::sprintf("%s Scene \"%s\"", enabled ? "Disable" : "Enable", scene->getName().c_str())))
+                                        root->SetInstanceFlags(InstanceFlags::Enabled, !enabled);
+
+                                    if (open)
                                     {
-                                        // Draw
-                                        uint counter = 0;
-                                        displayGameObject(root, &counter);
+                                        if (nullptr != root)
+                                        {
+                                            // Draw
+                                            uint counter = 0;
+                                            displayGameObject(root, &counter);
+                                        }
+                                        //ImGui::TreePop();
                                     }
-                                    //ImGui::TreePop();
                                 }
                             }
 

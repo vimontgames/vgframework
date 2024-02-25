@@ -14,7 +14,7 @@ namespace vg::editor
         VG_ASSERT(nullptr != component);
 
         bool openPopup = false;
-        bool deleteComponent = m_componentToDelete;
+        bool deleteComponent = m_componentToDelete && m_componentToDelete == _object;
 
         //if (ImGui::BeginPopupContextItem())
         //{
@@ -33,6 +33,7 @@ namespace vg::editor
             openPopup = true;
             ImGui::OpenPopup(m_popup.c_str());
             m_componentToDelete = nullptr;
+            m_selectedObject = _object;
         }
 
         if (openPopup)
@@ -41,31 +42,34 @@ namespace vg::editor
             openPopup = false;
         }
 
-        switch (m_selected)
+        if (_object == m_selectedObject)
         {
-            case MenuOption::RemoveComponent:
+            switch (m_selected)
             {
-                if (ImGui::BeginPopupModal(m_popup.c_str(), nullptr, ImGuiWindowFlags_AlwaysAutoResize))
+                case MenuOption::RemoveComponent:
                 {
-                    ImGui::OnMsgBoxClickedFunc deleteComponent = [=]() mutable
-                        {
-                            IGameObject * go = dynamic_cast<IGameObject *>(component->getParent());
-                            if (nullptr != go)
+                    if (ImGui::BeginPopupModal(m_popup.c_str(), nullptr, ImGuiWindowFlags_AlwaysAutoResize))
+                    {
+                        ImGui::OnMsgBoxClickedFunc deleteComponent = [=]() mutable
                             {
-                                go->RemoveComponent(component);
-                                VG_SAFE_RELEASE(component);
-                                status = Status::Removed;
-                            }
-                            return true;
-                        };
+                                IGameObject * go = dynamic_cast<IGameObject *>(component->getParent());
+                                if (nullptr != go)
+                                {
+                                    go->RemoveComponent(component);
+                                    VG_SAFE_RELEASE(component);
+                                    status = Status::Removed;
+                                }
+                                return true;
+                            };
 
-                    string msg = fmt::sprintf("Are you sure you want to delete %s component from \"%s\"?", component->getClassName(), component->getParent()->getName());
-                    ImGui::MessageBox(MessageBoxType::YesNo, "Delete Component", msg.c_str(), deleteComponent);
+                        string msg = fmt::sprintf("Are you sure you want to delete %s component from \"%s\"?", component->getClassName(), component->getParent()->getName());
+                        ImGui::MessageBox(MessageBoxType::YesNo, "Delete Component", msg.c_str(), deleteComponent);
 
-                    ImGui::EndPopup();
+                        ImGui::EndPopup();
+                    }
                 }
+                break;
             }
-            break;
         }
 
         return status;

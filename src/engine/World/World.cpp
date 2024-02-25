@@ -93,12 +93,23 @@ namespace vg::engine
     {
         const auto typeIndex = asInteger(_sceneType);
 
-        if (_scene != m_activeScene[typeIndex])
+        if (nullptr == _scene)
         {
-            if (m_scenes[typeIndex].exists((Scene *)_scene))
+            if (nullptr != m_activeScene[typeIndex])
             {
-                m_activeScene[typeIndex] = (Scene *)_scene;
+                m_activeScene[typeIndex] = nullptr;
                 return true;
+            }
+        }
+        else
+        {
+            if (_scene != m_activeScene[typeIndex])
+            {
+                if (m_scenes[typeIndex].exists((Scene *)_scene))
+                {
+                    m_activeScene[typeIndex] = (Scene *)_scene;
+                    return true;
+                }
             }
         }
         return false;
@@ -155,6 +166,7 @@ namespace vg::engine
             VG_SAFE_RELEASE(m_scenes[typeIndex][i]);
         }
         m_scenes[typeIndex].clear();
+        SetActiveScene(nullptr, _sceneType);
         return sceneCount;
     }
 

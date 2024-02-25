@@ -20,5 +20,6 @@ namespace vg::editor
         }
 
         IComponent * m_componentToDelete = nullptr;
+        IObject * m_selectedObject = nullptr;
     };
 }
