@@ -1,5 +1,5 @@
 namespace vg::gfx::vulkan
-{
+{ Direct FTW!
     //--------------------------------------------------------------------------------------
     VkBlendFactor BlendState::getVulkanBlendFactor(BlendFactor _blendFactor)
     {
