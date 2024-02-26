@@ -1,0 +1,23 @@
+name: Compile Program
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+      
+    - name: Set up Visual Studio
+      uses: microsoft/setup-msbuild@v
+      
+    - name: Build Debug
+      run: msbuild /p:Configuration=Debug vgframework.sln
+
+    - name: Build Release
+      run: msbuild /p:Configuration=Release vgframework.sln
