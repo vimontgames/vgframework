@@ -144,9 +144,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "lighting", "lighting", "{4A
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "github", "github", "{7C17C12C-1875-4215-8A0B-C4FBC50907FE}"
 	ProjectSection(SolutionItems) = preProject
-		.github\workflows\Debug_PC_Vulkan.yml = .github\workflows\Debug_PC_Vulkan.yml
-		.github\workflows\Debug_PC_DirectX12.yml = .github\workflows\Debug_PC_DirectX12.yml
 		README.md = README.md
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "workflows", "workflows", "{A6056C5D-D628-4DFE-945D-0938671C5BA8}"
+	ProjectSection(SolutionItems) = preProject
+		.github\workflows\Debug_PC_DirectX12.yml = .github\workflows\Debug_PC_DirectX12.yml
+		.github\workflows\Debug_PC_Vulkan.yml = .github\workflows\Debug_PC_Vulkan.yml
 		.github\workflows\Release_PC_DirectX12.yml = .github\workflows\Release_PC_DirectX12.yml
 		.github\workflows\Release_PC_Vulkan.yml = .github\workflows\Release_PC_Vulkan.yml
 	EndProjectSection
@@ -238,6 +242,7 @@ Global
 		{A78F21EC-5A7B-4D8A-AF8F-6E8D9B36EBCE} = {3A24AFD2-079B-45FC-8488-70058ACACD89}
 		{2451B526-F25E-4778-A38E-00BAA0B569A7} = {3A24AFD2-079B-45FC-8488-70058ACACD89}
 		{4AD9B61D-1402-4E76-ACBA-5D3B57B9F408} = {3A24AFD2-079B-45FC-8488-70058ACACD89}
+		{A6056C5D-D628-4DFE-945D-0938671C5BA8} = {7C17C12C-1875-4215-8A0B-C4FBC50907FE}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {B437215B-B736-4FF0-8DA1-E6B35C780CE1}
