@@ -1232,7 +1232,7 @@ namespace vg::core
 
         if (auto instance = dynamic_cast<const IInstance *>(_object))
         {
-            if (asBool(InstanceFlags::NotSerialized & instance->GetInstanceFlags()))
+            if (asBool(ObjectFlags::NotSerialized & instance->GetObjectFlags()))
                 return false;
         }
 

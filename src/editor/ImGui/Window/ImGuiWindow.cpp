@@ -359,6 +359,16 @@ namespace vg::editor
     }
 
     //--------------------------------------------------------------------------------------
+    bool isPropertyVisible(IProperty::Flags _flags)
+    {
+        const bool invisible = asBool(IProperty::Flags::NotVisible & _flags);
+        const bool debug = asBool(IProperty::Flags::Debug & _flags);
+        const bool showDebug = EditorOptions::get()->IsDebugPropertyVisible();
+
+        return !invisible && (!debug || showDebug);
+    }
+
+    //--------------------------------------------------------------------------------------
     void ImGuiWindow::displayProperty(core::IObject * _object, const IProperty * _prop, ObjectContext & _context)
     {
         VG_ASSERT(nullptr != _prop);
@@ -389,7 +399,7 @@ namespace vg::editor
         if (_context.hide && (type != IProperty::Type::LayoutElement || !(asBool(flags & IProperty::Flags::Optional))))
             return;
 
-        if (asBool(IProperty::Flags::Hidden & flags))
+        if (!isPropertyVisible(flags))
             return;
 
         if (asBool(IProperty::Flags::SameLine & flags))
@@ -405,7 +415,7 @@ namespace vg::editor
             optionalProp = classDesc->GetPreviousProperty(_prop->getName());
             if (optionalProp)
             {
-                VG_ASSERT(asBool(IProperty::Flags::Hidden & optionalProp->getFlags()) || _prop->getType() == IProperty::Type::LayoutElement, "[Factory] Property used for optional variable \"%s\" should be hidden", _prop->getName());
+                VG_ASSERT(asBool(IProperty::Flags::NotVisible & optionalProp->getFlags()) || _prop->getType() == IProperty::Type::LayoutElement, "[Factory] Property used for optional variable \"%s\" should be %s", _prop->getName(), asString(IProperty::Flags::NotVisible).c_str());
                 
                 if (optionalProp->getType() == IProperty::Type::Bool)
                 {
@@ -1529,7 +1539,8 @@ namespace vg::editor
             for (uint i = 0; i < objectClassDesc->GetPropertyCount(); ++i)
             {
                 const IProperty * prop = objectClassDesc->GetPropertyByIndex(i);
-                if (!asBool(prop->getFlags() & IProperty::Flags::Hidden) & strcmp(prop->getName(), "m_object"))
+
+                if (isPropertyVisible(prop->getFlags()) && strcmp(prop->getName(), "m_object"))
                 {
                     anyVisibleProperty = true;
                     break;

@@ -22,10 +22,10 @@ namespace vg::core
         super::registerProperties(_desc);
 
         // Hide GameObject name
-        _desc.GetPropertyByName("m_name")->setFlags(IProperty::Flags::None, IProperty::Flags::Hidden);
+        _desc.GetPropertyByName("m_name")->setFlags(IProperty::Flags::None, IProperty::Flags::Debug);
 
         registerPropertyObjectPtrVector(GameObject, m_components, "Components");
-        registerPropertyObjectPtrVectorEx(GameObject, m_children, "Children", IProperty::Flags::Hidden);
+        registerPropertyObjectPtrVectorEx(GameObject, m_children, "Children", IProperty::Flags::Debug);
 
         return true;
     }

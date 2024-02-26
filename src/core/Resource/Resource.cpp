@@ -17,7 +17,7 @@ namespace vg::core
     {
         super::registerProperties(_desc);
 
-        registerPropertyEx(Resource, m_resourcePath, "Path", IProperty::Flags::Hidden);
+        registerPropertyEx(Resource, m_resourcePath, "Path", IProperty::Flags::Debug);
 
         // This is used for the inspector but not serialized
         registerPropertyObjectPtrEx(Resource, m_object, "Object", IProperty::Flags::NotSaved);

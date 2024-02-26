@@ -20,8 +20,8 @@ namespace vg::renderer
         registerPropertyEx(MeshGeometry, m_indexSize, "Index Size", IProperty::Flags::ReadOnly);
         registerPropertyEx(MeshGeometry, m_vertexCount, "Vertex Count", IProperty::Flags::ReadOnly);
         registerPropertyEx(MeshGeometry, m_vertexSize, "Vertex Size", IProperty::Flags::ReadOnly);
-        registerPropertyEx(MeshGeometry, m_indexBufferOffset, "IB Offset", IProperty::Flags::ReadOnly | IProperty::Flags::Hidden);
-        registerPropertyEx(MeshGeometry, m_vertexBufferOffset, "VB Offset", IProperty::Flags::ReadOnly | IProperty::Flags::Hidden);
+        registerPropertyEx(MeshGeometry, m_indexBufferOffset, "IB Offset", IProperty::Flags::ReadOnly | IProperty::Flags::Debug);
+        registerPropertyEx(MeshGeometry, m_vertexBufferOffset, "VB Offset", IProperty::Flags::ReadOnly | IProperty::Flags::Debug);
         registerPropertyObjectVectorEx(MeshGeometry, m_batches, Batch, "Batches", IProperty::Flags::ReadOnly);
 
         return true;

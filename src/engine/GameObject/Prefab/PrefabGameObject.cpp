@@ -77,24 +77,14 @@ namespace vg::engine
             if (PrefabScene * prefabScene = VG_SAFE_STATIC_CAST(PrefabScene, _resource->getObject()))
             {
                 IGameObject * prefabRoot = prefabScene->GetRoot();
-                //auto & prefabChildren = prefabRoot->GetChildren();
-                //for (uint i = 0; i < prefabChildren.size(); ++i)
-                //{
-                //    auto * prefabChild = prefabChildren[i];
-                //    IGameObject * instance = VG_SAFE_STATIC_CAST(IGameObject, prefabChild->Instanciate());
-                //    instance->setParent(this);
-                //    //instance->setName(instance->getName() + " (Prefab)");
-                //    AddChild(instance);
-                //    VG_SAFE_RELEASE(instance);
-                //}
 
                 auto & prefabChildren = GetChildren();
                 if (prefabChildren.size() == 0)
                 {
                     IGameObject * instance = VG_SAFE_STATIC_CAST(IGameObject, prefabRoot->Instanciate());
-                    instance->setInstanceFlags(InstanceFlags::NotSerialized, true); 
+                    instance->SetObjectFlags(ObjectFlags::NotSerialized, true);
                     instance->setParent(this);
-                    //instance->setName(instance->getName() + " (Prefab)");
+
                     AddChild(instance);
                     VG_SAFE_RELEASE(instance);
                 }
@@ -109,17 +99,6 @@ namespace vg::engine
         {
             // Destroy the Prefab instances
             auto & prefabChildren = GetChildren();
-            //core::vector<IGameObject *> prefabChildrenToRemove;
-            //for (uint i = 0; i < prefabChildren.size(); ++i)
-            //{
-            //    auto * prefabChild = prefabChildren[i];
-            //    prefabChild->setParent(nullptr);
-            //    prefabChildrenToRemove.push_back(prefabChild);
-            //    
-            //}
-            //
-            //for (uint i = 0; i < prefabChildrenToRemove.size(); ++i)
-            //    RemoveChild(prefabChildrenToRemove[i]);
 
             if (prefabChildren.size() > 0)
             {

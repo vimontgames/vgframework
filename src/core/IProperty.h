@@ -86,7 +86,7 @@ namespace vg::core
             HasRange        = 0x0000000000000010,   // Property has [min..max] range
             SameLine        = 0x0000000000000020,   // Do no end line after this property
             Radio           = 0x0000000000000040,   // Part of a radio button group
-            Hidden          = 0x0000000000000080,   // Hide property
+            Debug           = 0x0000000000000080,   // A debug property that is hidden by default
             Bitfield        = 0x0000000000000100,   // Value displayed as hex, enum as flags
             Resource        = 0x0000000000000200,
             NotSaved        = 0x0000000000000400,
@@ -94,6 +94,7 @@ namespace vg::core
             Flatten         = 0x0000000000001000,   // Do not open TreeNode to display object of this type
             Optional        = 0x0000000000002000,   // Previous property must be a bool, and if 'false' then this value won't be editable
             HDR             = 0x0000000000004000,   // HDR value for color
+            NotVisible      = 0x0000000000008000,   // A property that is not visible
         };
 
         virtual void                            setInterface                    (const char * _interface) = 0;
@@ -228,10 +229,10 @@ namespace vg::core
 #define registerPropertyEnumArray(className, elementType, enumClassName, propertyName, displayName, flags)  _desc.RegisterEnumArray(#className, #propertyName, (elementType*)(&((className*)(nullptr))->propertyName[0]), displayName, vg::core::EnumHelper<enumClassName>::getStaticCount(), sizeof(elementType), vg::core::EnumHelper<enumClassName>::getStaticNames().c_str(), (void*)vg::core::EnumHelper<enumClassName>::getStaticValues().data(), flags, vg::core::EnumHelper<enumClassName>::getSizeOfUnderlyingType());
 
 // Helper for "optional" property (bool + property)
-#define registerOptionalProperty(className, boolpropertyname, propertyName, displayName)	                registerPropertyEx(className, boolpropertyname, displayName, IProperty::Flags::Hidden); \
+#define registerOptionalProperty(className, boolpropertyname, propertyName, displayName)	                registerPropertyEx(className, boolpropertyname, displayName, IProperty::Flags::NotVisible); \
                                                                                                             registerPropertyEx(className, propertyName, displayName, IProperty::Flags::Optional);
 
-#define registerOptionalPropertyEnumBitfield(className, boolpropertyname, enumClassName, propertyName, displayName)     registerPropertyEx(className, boolpropertyname, displayName, IProperty::Flags::Hidden); \
+#define registerOptionalPropertyEnumBitfield(className, boolpropertyname, enumClassName, propertyName, displayName)     registerPropertyEx(className, boolpropertyname, displayName, IProperty::Flags::NotVisible); \
                                                                                                                         registerPropertyEnumEx(className, enumClassName, propertyName, displayName, vg::core::IProperty::Flags::Bitfield | vg::core::IProperty::Flags::Optional) 
 
 //--------------------------------------------------------------------------------------

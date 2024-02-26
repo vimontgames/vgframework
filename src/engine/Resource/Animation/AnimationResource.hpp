@@ -34,7 +34,7 @@ namespace vg::engine
         registerProperty(AnimationResource, m_play, "Play");
         registerPropertyEx(AnimationResource, m_loop, "Loop", IProperty::Flags::SameLine);
 
-        setPropertyFlag(AnimationResource, m_name, IProperty::Flags::Hidden, false);
+        setPropertyFlag(AnimationResource, m_name, IProperty::Flags::NotVisible, false);
 
         registerPropertyEx(AnimationResource, m_time, "Time", IProperty::Flags::NotSaved);
 

@@ -46,6 +46,9 @@ namespace vg::core
 								    Object		        ();
 								    ~Object		        ();
 
+		ObjectFlags                 GetObjectFlags		() const final override;
+		void                        SetObjectFlags		(ObjectFlags _flags, bool _enabled) final override;
+
 		IObject *					Instanciate			() const override;
 
 		void                        OnLoad				() override;
@@ -77,10 +80,19 @@ namespace vg::core
 
 		static bool					resizeVector		(core::IObject * _parent, core::uint _offset, core::uint _count, void ** _data);
 
+	protected:
+        VG_INLINE ObjectFlags       getObjectFlags		() const;
+        VG_INLINE void              setObjectFlags		(ObjectFlags _flags, bool _enabled);
+
 	private:
         atomic<u32>				    m_refCount;
+		ObjectFlags					m_objectFlags = (ObjectFlags)0x0;
         Object *					m_parent = nullptr;
 		string					    m_name;
         string                      m_file;
 	};
 }
+
+#if VG_ENABLE_INLINE
+#include "Object.inl"
+#endif

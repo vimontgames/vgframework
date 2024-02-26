@@ -37,7 +37,7 @@ namespace vg::editor
 
     protected:
         void                            display                     (core::BaseSceneType _sceneType);
-        void                            displayGameObject           (core::IGameObject* root, core::uint* _count = nullptr);
+        void                            displayGameObject           (core::IGameObject* root, core::uint* _count);
        
     protected:
         ImGuiSceneMenu                  m_sceneMenu;

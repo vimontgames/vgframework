@@ -59,6 +59,12 @@ namespace vg::editor
     }
 
     //--------------------------------------------------------------------------------------
+    bool EditorOptions::IsDebugPropertyVisible() const
+    {
+        return core::asBool(EditorDebugFlags::Properties & m_debugFlags);
+    }
+
+    //--------------------------------------------------------------------------------------
     EditorOptions::EditorOptions(const core::string & _name, core::IObject * _parent) :
         super(_name, _parent)
     {

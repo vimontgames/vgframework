@@ -8,6 +8,12 @@ namespace vg::core
     class IProperty;
     class IResource;
 
+    enum class ObjectFlags : u32
+    {
+        NotSerialized   = 0x00000001,   // Object is not saved when its parent is serialized (e.g. for objects instantiated at runtime)
+        DirtySave       = 0x00000002    // Object has been modified and needs to be saved again or changes will be lost
+    };
+
 	class IObject
 	{
 	public:
@@ -18,6 +24,9 @@ namespace vg::core
 
 										    IObject		        () = default;
 		virtual							    ~IObject	        () = default;
+
+        virtual ObjectFlags                 GetObjectFlags      () const = 0;
+        virtual void                        SetObjectFlags      (ObjectFlags _flags, bool _enabled) = 0;
 
         virtual IObject *                   Instanciate         () const = 0;
 

@@ -2,6 +2,11 @@
 #include "Object.h"
 #include "core/Kernel.h"
 #include "core/File/File.h"
+
+#if !VG_ENABLE_INLINE
+#include "Object.inl"
+#endif
+
 #include "Property.hpp"
 #include "ClassDesc.hpp"
 #include "AutoRegisterClass.hpp"
@@ -11,7 +16,8 @@ namespace vg::core
     //--------------------------------------------------------------------------------------
     bool Object::registerProperties(IClassDesc & _desc)
     {
-        registerPropertyEx(Object, m_name, "Name", IProperty::Flags::Hidden);
+        registerPropertyEx(Object, m_name, "Name", IProperty::Flags::NotVisible);
+        registerPropertyEnumBitfieldEx(Object, ObjectFlags,m_objectFlags, "Object Flags", IProperty::Flags::Debug);
 
         return true;
     }
@@ -45,6 +51,18 @@ namespace vg::core
 	{
 
 	}
+
+    //--------------------------------------------------------------------------------------
+    ObjectFlags Object::GetObjectFlags() const 
+    {
+        return getObjectFlags();
+    }
+
+    //--------------------------------------------------------------------------------------
+    void Object::SetObjectFlags(ObjectFlags _flags, bool _enabled)
+    {
+        setObjectFlags(_flags, _enabled);
+    }
 
     //--------------------------------------------------------------------------------------
     IObject * Object::Instanciate() const
