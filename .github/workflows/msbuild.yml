@@ -30,13 +30,8 @@ jobs:
     steps:
     - uses: actions/checkout@v4
   
-    - name: Set up Node.js
-      uses: actions/setup-node@v2
-      with:
-        node-version: '20'
-
     - name: Add MSBuild to PATH
-      uses: microsoft/setup-msbuild@v1.1.3
+      uses: microsoft/setup-msbuild@v4
 
     - name: Restore NuGet packages
       working-directory: ${{env.GITHUB_WORKSPACE}}
