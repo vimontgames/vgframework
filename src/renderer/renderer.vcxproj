@@ -291,7 +291,7 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <ModuleDefinitionFile>Renderer.def</ModuleDefinitionFile>
-      <AdditionalDependencies>$(SolutionDir)lib\Core_$(Platform)_Debug.lib;$(SolutionDir)lib\Gfx_$(Platform)_$(Configuration).lib;$(SolutionDir)extern\dxc\lib\x64\dxcompiler.lib;$(VULKAN_SDK)\Lib\vulkan-1.lib;$(VULKAN_SDK)\Lib\glslang.lib;$(VULKAN_SDK)\Lib\hlsl.lib;$(VULKAN_SDK)\Lib\OGLCompiler.lib;$(VULKAN_SDK)\Lib\OSDependent.lib;$(VULKAN_SDK)\Lib\SPIRV.lib;$(VULKAN_SDK)\Lib\SPIRV-Tools.lib;$(VULKAN_SDK)\Lib\SPIRV-Tools-opt.lib;$(VULKAN_SDK)\Lib\SPVRemapper.lib;$(VULKAN_SDK)\Lib\shaderc_combined.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>$(SolutionDir)lib\Core_$(Platform)_Debug.lib;$(SolutionDir)lib\Gfx_$(Platform)_$(Configuration).lib;$(SolutionDir)extern\dxc\lib\x64\dxcompiler.lib;$(VULKAN_SDK)\Lib\vulkan-1.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalOptions>/ignore:4099 %(AdditionalOptions)</AdditionalOptions>
     </Link>
   </ItemDefinitionGroup>
