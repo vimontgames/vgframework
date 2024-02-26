@@ -29,6 +29,11 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
+  
+    - name: Set up Node.js
+      uses: actions/setup-node@v2
+      with:
+        node-version: '20'
 
     - name: Add MSBuild to PATH
       uses: microsoft/setup-msbuild@v1.1.3
