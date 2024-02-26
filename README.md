@@ -24,12 +24,6 @@ Its renderer only uses modern graphics APIs like DirectX12 and Vulkan (I would a
 * You can't access the command lists without using the framegraph that is part of the graphic driver layer. Go framegraph or do not render anything.
 * Apart from the number of root constants, all shaders are sharing the same root signatures.
 
-For the engine part, so far I integrated several "must-haves" tools like a CPU/GPU profiler, inputs, a job scheduler and Dear Imgui. I am currently implementing an Entity/Component system and reflection using ImGui.  
-
-Another subject that is very close to my heart is that there is a strong separation between modules as the engine is "physically" split in several DLLs using only pure abstract interfaces.
-
-![Screenshot](doc/img/modules.png)
-
 # changelog
 
 ## 0.27 "Let it snow"
