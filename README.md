@@ -1,10 +1,18 @@
 # vgframework
 Yes, yet another work-in-progress game and graphic engine project :)
 
+[build](#build)\
 [changelog](#changelog)\
 [getting started](#getting-started)\
 [extern libs](#extern-libs)\
 [disclaimer](#disclaimer)
+
+# build
+| Configuration	  | Platform  | API       | Status 												
+| --------------  | --------- | --------- | ------ 
+| Debug           | PC        | DirectX12 | ![Debug_PC_DirectX12.yml](https://github.com/vimontgames/vgframework/actions/workflows/Debug_PC_DirectX12.yml/badge.svg)
+| Release         | PC        | DirectX12 | ![Release_PC_DirectX12.yml](https://github.com/vimontgames/vgframework/actions/workflows/Release_PC_DirectX12.yml/badge.svg)
+
 
 Its renderer only uses modern graphics APIs like DirectX12 and Vulkan (I would also like to support Metal the day I got and Apple device) so it can be 100% bindless from the very beginning and do strong choices in that direction:  
 * instanciating and writing into GPU tables is not even exposed: You have to do all the rendering stuff the modern, bindless way. 
