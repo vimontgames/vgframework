@@ -8,11 +8,12 @@ Yes, yet another work-in-progress game and graphic engine project :)
 [disclaimer](#disclaimer)
 
 # build
-
-![Debug_PC_DirectX12.yml](https://github.com/vimontgames/vgframework/actions/workflows/Debug_PC_DirectX12.yml/badge.svg)
-![Release_PC_DirectX12.yml](https://github.com/vimontgames/vgframework/actions/workflows/Release_PC_DirectX12.yml/badge.svg)
-![Debug_PC_Vulkan.yml](https://github.com/vimontgames/vgframework/actions/workflows/Debug_PC_Vulkan.yml/badge.svg)
-![Release_PC_Vulkan.yml](https://github.com/vimontgames/vgframework/actions/workflows/Release_PC_Vulkan.yml/badge.svg)
+| Configuration	  | Platform  | API       | Status 												
+| --------------  | --------- | --------- | ------ 
+| Debug           | PC        | DirectX12 | ![Debug_PC_DirectX12.yml](https://github.com/vimontgames/vgframework/actions/workflows/Debug_PC_DirectX12.yml/badge.svg?label="test")
+| Release         | PC        | DirectX12 | ![Release_PC_DirectX12.yml](https://github.com/vimontgames/vgframework/actions/workflows/Release_PC_DirectX12.yml/badge.svg)
+| Debug           | PC        | Vulkan    | ![Debug_PC_Vulkan.yml](https://github.com/vimontgames/vgframework/actions/workflows/Debug_PC_Vulkan.yml/badge.svg)
+| Release         | PC        | Vulkan    | ![Release_PC_Vulkan.yml](https://github.com/vimontgames/vgframework/actions/workflows/Release_PC_Vulkan.yml/badge.svg)
 
 
 Its renderer only uses modern graphics APIs like DirectX12 and Vulkan (I would also like to support Metal the day I got and Apple device) so it can be 100% bindless from the very beginning and do strong choices in that direction:  
@@ -186,7 +187,7 @@ The SDKs are not included with the sources. You need to install them.
 | Win10 SDK		 | 10.0.22621.0  | https://developer.microsoft.com/fr-fr/windows/downloads/sdk-archive/	
 | Vulkan SDK (*) | SDK 1.3.261.1 | https://vulkan.lunarg.com/sdk/home 
 
-(*) Only required to build Vulkan version. **$(VK_SDK_PATH)** should point the Vulkan SDK installation dir (i.e. **"C:\SDK\Vulkan\1.3.261.1"**)
+(*) Only required to build Vulkan version. **$(VULKAN_SDK)** should point the Vulkan SDK installation dir (i.e. **"C:\SDK\Vulkan\1.3.261.1"**)
 
 # extern libs
 

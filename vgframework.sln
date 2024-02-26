@@ -12,9 +12,6 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "engine", "src\engine\engine
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "data", "data", "{AE20161D-322E-4F0C-AC90-8EBDF6B42882}"
-	ProjectSection(SolutionItems) = preProject
-		README.md = README.md
-	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "shaders", "shaders", "{3A24AFD2-079B-45FC-8488-70058ACACD89}"
 EndProject
@@ -147,8 +144,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "lighting", "lighting", "{4A
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "github", "github", "{7C17C12C-1875-4215-8A0B-C4FBC50907FE}"
 	ProjectSection(SolutionItems) = preProject
-		.github\workflows\msbuild.yml = .github\workflows\msbuild.yml
+		.github\workflows\Debug_PC_Vulkan.yml = .github\workflows\Debug_PC_Vulkan.yml
+		.github\workflows\Debug_PC_DirectX12.yml = .github\workflows\Debug_PC_DirectX12.yml
 		README.md = README.md
+		.github\workflows\Release_PC_DirectX12.yml = .github\workflows\Release_PC_DirectX12.yml
+		.github\workflows\Release_PC_Vulkan.yml = .github\workflows\Release_PC_Vulkan.yml
 	EndProjectSection
 EndProject
 Global
