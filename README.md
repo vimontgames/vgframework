@@ -12,6 +12,8 @@ Yes, yet another work-in-progress game and graphic engine project :)
 | --------------  | --------- | --------- | ------ 
 | Debug           | PC        | DirectX12 | ![Debug_PC_DirectX12.yml](https://github.com/vimontgames/vgframework/actions/workflows/Debug_PC_DirectX12.yml/badge.svg)
 | Release         | PC        | DirectX12 | ![Release_PC_DirectX12.yml](https://github.com/vimontgames/vgframework/actions/workflows/Release_PC_DirectX12.yml/badge.svg)
+| Debug           | PC        | Vulkan    | ![Debug_PC_Vulkan.yml](https://github.com/vimontgames/vgframework/actions/workflows/Debug_PC_Vulkan.yml/badge.svg)
+| Release         | PC        | Vulkan    | ![Release_PC_Vulkan.yml](https://github.com/vimontgames/vgframework/actions/workflows/Release_PC_Vulkan.yml/badge.svg)
 
 
 Its renderer only uses modern graphics APIs like DirectX12 and Vulkan (I would also like to support Metal the day I got and Apple device) so it can be 100% bindless from the very beginning and do strong choices in that direction:  

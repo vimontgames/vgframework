@@ -21,7 +21,7 @@ env:
   BUILD_CONFIGURATION: Debug
 
   # Platform to build.
-  BUILD_PLATFORM: '"PC DirectX12"'
+  BUILD_PLATFORM: '"PC Vulkan"'
 
 permissions:
   contents: read

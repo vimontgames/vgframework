@@ -21,7 +21,7 @@ env:
   BUILD_CONFIGURATION: Release
 
   # Platform to build.
-  BUILD_PLATFORM:"PC DirectX12"
+  BUILD_PLATFORM: '"PC DirectX12"'
 
 permissions:
   contents: read
