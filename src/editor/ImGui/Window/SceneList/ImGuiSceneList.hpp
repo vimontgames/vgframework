@@ -85,9 +85,6 @@ namespace vg::editor
 
         const bool disabled = !asBool(InstanceFlags::Enabled & _gameObject->GetInstanceFlags());
 
-        if (disabled)
-            ImGui::PushStyleColor(ImGuiCol_Text, ImGui::GetStyleColorVec4(ImGuiCol_TextDisabled));
-
         bool open = false;
         auto availableWidth = ImGui::GetContentRegionMax().x;
 
@@ -96,7 +93,7 @@ namespace vg::editor
 
         ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags_SpanAvailWidth;
         if (children.size() > 0)
-            flags |= ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_DefaultOpen;
+            flags |= ImGuiTreeNodeFlags_OpenOnArrow /* | ImGuiTreeNodeFlags_DefaultOpen*/;
         else
             flags |= ImGuiTreeNodeFlags_Leaf;
 
@@ -119,6 +116,8 @@ namespace vg::editor
             flags |= ImGuiTreeNodeFlags_Selected;
         }
 
+        ImVec4 textColor = ImGui::GetStyleColorVec4(ImGuiCol_Text);
+
         if (_gameObject == m_dragAndDropNodeTarget)
         {
             const auto selColor = ImGui::GetStyleColorVec4(ImGuiCol_SeparatorActive);
@@ -129,18 +128,26 @@ namespace vg::editor
 
         if (isPrefab)
         {
-            auto prefabGameObjectColor = ImGui::GetStyleColorVec4(ImGuiCol_HeaderActive);
-            ImGui::PushStyleColor(ImGuiCol_Text, prefabGameObjectColor);
-
+            auto prefabColor = ImGui::GetStyleColorVec4(ImGuiCol_HeaderActive);
+            textColor.x = prefabColor.x;
+            textColor.y = prefabColor.y;
+            textColor.z = prefabColor.z;
             ImGui::PushStyle(ImGui::Style::Bold);
         }
         else if (isPrefabChild)
         {
-            //auto prefabChildGameObjectColor = ImGui::GetStyleColorVec4(ImGuiCol_HeaderActive);
-            //ImGui::PushStyleColor(ImGuiCol_Text, prefabChildGameObjectColor);
-
             ImGui::PushStyle(ImGui::Style::Italic);
         }
+
+        const float disabledAlpha = ImGui::GetStyleColorVec4(ImGuiCol_TextDisabled).w;
+        
+        if (disabled)
+            textColor.w = disabledAlpha;
+
+        ImGui::PushStyleColor(ImGuiCol_Text, textColor);
+
+        const bool isOpen = asBool(ObjectFlags::Opened & _gameObject->GetObjectFlags());
+        ImGui::SetNextItemOpen(isOpen);
 
         const bool renaming = m_gameObjectMenu.m_RenamingGameObject == _gameObject;
         if (renaming)
@@ -174,14 +181,15 @@ namespace vg::editor
             open = ImGui::TreeNodeEx(gameObjectLabel.c_str(), flags | ImGuiTreeNodeFlags_SpanAvailWidth | ImGuiTreeNodeFlags_SpanFullWidth);
         }
 
+        if (open != isOpen)
+            _gameObject->SetObjectFlags(ObjectFlags::Opened, open);
+
         if (isPrefab)
         {
-            ImGui::PopStyleColor();
             ImGui::PopFont();
         }
         else if (isPrefabChild)
         {
-            //ImGui::PopStyleColor();
             ImGui::PopFont();
         }
 
@@ -302,7 +310,7 @@ namespace vg::editor
             auto bakePos = ImGui::GetCursorPos();
             ImGui::SameLine();
 
-            auto drawIcon = [](const char * icon, bool enabled, float & totalSize, float availableWidth, ImVec2 pos, string tooltip)
+            auto drawIcon = [=](const char * icon, bool enabled, float & totalSize, float availableWidth, ImVec2 pos, string tooltip)
             {
                 auto size = ImGui::CalcTextSize(icon).x;
                 totalSize += size + ImGui::GetStyle().FramePadding.x;
@@ -310,9 +318,9 @@ namespace vg::editor
                 ImVec4 textColor = ImGui::GetStyleColorVec4(ImGuiCol_Text);
 
                 if (enabled)
-                    textColor.w *= 0.5f;
+                    textColor.w *= 1;
                 else
-                    textColor.w *= 0.15f;
+                    textColor.w *= disabledAlpha;
 
                 ImGui::SetCursorPosX(availableWidth - totalSize);
                 ImGui::SetCursorPosY(pos.y);
@@ -358,8 +366,7 @@ namespace vg::editor
             ImGui::TreePop();
         }
 
-        if (disabled)
-            ImGui::PopStyleColor();
+        ImGui::PopStyleColor();
     }
 
     //--------------------------------------------------------------------------------------
@@ -506,6 +513,7 @@ namespace vg::editor
                             ImVec2 collapsingHeaderPos = ImGui::GetCursorPos();
 
                             const bool open = ImGui::CollapsingHeader(ImGui::getObjectLabel("", scene->getName(), scene).c_str(), flags);
+
                             bool enabled = asBool(InstanceFlags::Enabled & root->GetInstanceFlags());
 
                             auto status = m_sceneMenu.Display((IObject*)sceneRes);

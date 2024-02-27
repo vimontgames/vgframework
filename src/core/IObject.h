@@ -11,7 +11,8 @@ namespace vg::core
     enum class ObjectFlags : u32
     {
         NotSerialized   = 0x00000001,   // Object is not saved when its parent is serialized (e.g. for objects instantiated at runtime)
-        DirtySave       = 0x00000002    // Object has been modified and needs to be saved again or changes will be lost
+        DirtySave       = 0x00000002,   // Object has been modified and needs to be saved again or changes will be lost
+        Opened          = 0x00000004    // Object shows its children
     };
 
 	class IObject
