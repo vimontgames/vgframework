@@ -12,7 +12,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Behaviour\Character\CharacterBehaviour.cpp" />
-    <ClCompile Include="Behaviour\Character\Player\PlayerBehaviour.cpp" />
+    <ClInclude Include="Behaviour\Character\Player\PlayerBehaviour.hpp" />
     <ClCompile Include="Behaviour\GameCamera\GameCameraBehaviour.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="Precomp.cpp">
@@ -22,9 +22,12 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Behaviour\Character\CharacterBehaviour.h" />
+    <ClInclude Include="Behaviour\Character\Enemy\EnemyBehaviour.h" />
+    <ClInclude Include="Behaviour\Character\Enemy\EnemyBehaviour.hpp" />
     <ClInclude Include="Behaviour\Character\Player\PlayerBehaviour.h" />
     <ClInclude Include="Behaviour\GameCamera\GameCameraBehaviour.h" />
     <ClInclude Include="Game.h" />
+    <ClInclude Include="Game_consts.h" />
     <ClInclude Include="Precomp.h" />
   </ItemGroup>
   <ItemGroup>

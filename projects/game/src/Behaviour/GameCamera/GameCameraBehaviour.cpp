@@ -8,7 +8,7 @@
 using namespace vg::core;
 using namespace vg::engine;
 
-VG_REGISTER_COMPONENT_CLASS(GameCameraBehaviour, "Game Camera Behaviour", "Game", "Camera Behaviour following the average of player positions", vg::editor::style::icon::Script);
+VG_REGISTER_COMPONENT_CLASS(GameCameraBehaviour, "Game Camera", "Game", "Camera Behaviour following the average of player positions", vg::editor::style::icon::Script);
 
 //--------------------------------------------------------------------------------------
 GameCameraBehaviour::GameCameraBehaviour(const string & _name, IObject * _parent) :
@@ -45,7 +45,7 @@ void GameCameraBehaviour::OnPlay()
 //--------------------------------------------------------------------------------------
 void GameCameraBehaviour::Update(float _dt)
 {
-    const auto players = Game::get()->getPlayers();    
+    const auto players = Game::get()->getCharacters(CharacterType::Player);    
     
     if (players.size() > 0)
     {

@@ -5,10 +5,13 @@
 #include "editor/Editor_Consts.h"
 #include "core/GameObject/GameObject.h"
 
+#include "Player/PlayerBehaviour.hpp"
+#include "Enemy/EnemyBehaviour.hpp"
+
 using namespace vg::core;
 using namespace vg::engine;
 
-VG_REGISTER_COMPONENT_CLASS(CharacterBehaviour, "Character", "Game", "Base Character Behaviour", vg::editor::style::icon::Script);
+//VG_REGISTER_COMPONENT_CLASS(CharacterBehaviour, "Character", "Game", "Base Character Behaviour", vg::editor::style::icon::Script);
 
 //--------------------------------------------------------------------------------------
 CharacterBehaviour::CharacterBehaviour(const string& _name, IObject* _parent) :
@@ -37,6 +40,7 @@ bool CharacterBehaviour::registerProperties(IClassDesc& _desc)
 
         registerPropertyGroupBegin(CharacterBehaviour, "Debug");
         {
+            registerPropertyEx(CharacterBehaviour, m_isActive, "Active", vg::core::IProperty::Flags::NotSaved);
             registerPropertyEnumEx(CharacterBehaviour, CharacterState, m_state, "State", vg::core::IProperty::Flags::NotSaved);
             registerPropertyEx(CharacterBehaviour, m_currentSpeed, "Speed", vg::core::IProperty::Flags::NotSaved);
             registerPropertyEx(CharacterBehaviour, m_currentRotation, "Rot", vg::core::IProperty::Flags::NotSaved);

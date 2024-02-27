@@ -118,15 +118,28 @@ vg::core::IInput & Game::Input()
 }
 
 //--------------------------------------------------------------------------------------
-void Game::addPlayer(PlayerBehaviour * _player)
+void Game::addCharacter(CharacterType _type, CharacterBehaviour * _character)
 {
-    VG_ASSERT(!m_players.exists(_player));
-    m_players.push_back(_player);
+    auto & characters = m_characters[vg::core::asInteger(_type)];
+    VG_ASSERT(!characters.exists(_character));
+    characters.push_back(_character);
 }
 
 //--------------------------------------------------------------------------------------
-void Game::removePlayer(PlayerBehaviour * _player)
+void Game::removeCharacter(CharacterType _type, CharacterBehaviour * _character)
 {
-    VG_ASSERT(m_players.exists(_player));
-    m_players.remove(_player);
+    auto & characters = m_characters[vg::core::asInteger(_type)];
+    VG_ASSERT(characters.exists(_character));
+    characters.remove(_character);
+}
+
+//--------------------------------------------------------------------------------------
+const vg::core::vector<PlayerBehaviour *> & Game::getPlayers() const 
+{ 
+    return reinterpret_cast<const vg::core::vector<PlayerBehaviour *> &>(m_characters[vg::core::asInteger(CharacterType::Player)]);
+}
+//--------------------------------------------------------------------------------------
+const vg::core::vector<EnemyBehaviour *> & Game::getEnemies() const 
+{ 
+    return reinterpret_cast<const vg::core::vector<EnemyBehaviour *> &>(m_characters[vg::core::asInteger(CharacterType::Player)]);
 }

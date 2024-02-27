@@ -6,9 +6,6 @@
     <ClCompile Include="Behaviour\GameCamera\GameCameraBehaviour.cpp">
       <Filter>Behaviour\GameCamera</Filter>
     </ClCompile>
-    <ClCompile Include="Behaviour\Character\Player\PlayerBehaviour.cpp">
-      <Filter>Behaviour\Character\Player</Filter>
-    </ClCompile>
     <ClCompile Include="Behaviour\Character\CharacterBehaviour.cpp">
       <Filter>Behaviour\Character</Filter>
     </ClCompile>
@@ -25,6 +22,16 @@
     <ClInclude Include="Behaviour\Character\CharacterBehaviour.h">
       <Filter>Behaviour\Character</Filter>
     </ClInclude>
+    <ClInclude Include="Behaviour\Character\Enemy\EnemyBehaviour.h">
+      <Filter>Behaviour\Character\Enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="Behaviour\Character\Enemy\EnemyBehaviour.hpp">
+      <Filter>Behaviour\Character\Enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="Behaviour\Character\Player\PlayerBehaviour.hpp">
+      <Filter>Behaviour\Character\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="Game_consts.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Behaviour">

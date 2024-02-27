@@ -304,5 +304,8 @@
     <None Include="Misc\BitMask.inl">
       <Filter>Misc</Filter>
     </None>
+    <None Include="Object\Object.inl">
+      <Filter>Object</Filter>
+    </None>
   </ItemGroup>
 </Project>

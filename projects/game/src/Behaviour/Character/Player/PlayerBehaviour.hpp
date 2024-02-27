@@ -30,8 +30,10 @@ bool PlayerBehaviour::registerProperties(IClassDesc & _desc)
     super::registerProperties(_desc);
 
     registerPropertyGroupBegin(PlayerBehaviour, "Player");
-    registerPropertyEnum(PlayerBehaviour, vg::core::InputType, m_controllerType, "Input");
-    registerProperty(PlayerBehaviour, m_controllerIndex, "Index");
+    {
+        registerPropertyEnum(PlayerBehaviour, vg::core::InputType, m_controllerType, "Input");
+        registerProperty(PlayerBehaviour, m_controllerIndex, "Index");
+    }
     registerPropertyGroupEnd(PlayerBehaviour);
     
     return true;
@@ -41,13 +43,13 @@ bool PlayerBehaviour::registerProperties(IClassDesc & _desc)
 void PlayerBehaviour::OnPlay() 
 {
     super::OnPlay();
-    Game::get()->addPlayer(this);
+    Game::get()->addCharacter(CharacterType::Player, this);
 }
 
 //--------------------------------------------------------------------------------------
 void PlayerBehaviour::OnStop()
 {
-    Game::get()->removePlayer(this);
+    Game::get()->removeCharacter(CharacterType::Player, this);
     super::OnStop();
 }
 
@@ -96,6 +98,9 @@ void PlayerBehaviour::FixedUpdate(float _dt)
             {
                 translation.xy += leftJoyDir.xy * float2(1, -1) * m_currentSpeed;
                 m_currentRotation = radiansToDegrees(atan2((float)leftJoyDir.x, (float)leftJoyDir.y));
+
+                if (!m_isActive)
+                    m_isActive = true;
             }
 
             if (any(abs(translation.xy) > 0.0f))

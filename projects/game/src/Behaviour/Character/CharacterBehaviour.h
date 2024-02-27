@@ -1,13 +1,6 @@
 #pragma once
+#include "game_consts.h"
 #include "core/Component/Behaviour/Behaviour.h"
-
-enum CharacterState : vg::core::u8
-{
-    Idle = 0,
-    Walking,
-    Running,
-    Jumping
-};
 
 class CharacterBehaviour : public vg::core::Behaviour
 {
@@ -23,10 +16,14 @@ public:
     void                FixedUpdate(float _dt) override;
     void                Update(float _dt) override;
 
+    bool                isActive() const { return m_isActive; }
+
 protected:
     void                PlayAnim(CharacterState _state, bool _loop = false);
 
 protected:
+    bool                m_isActive = false;
+
     float               m_walkSpeed = 1.5f;
     float               m_runSpeed = 3.0f;
     float               m_jumpSpeed = 3.0f;

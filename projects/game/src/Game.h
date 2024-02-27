@@ -2,6 +2,7 @@
 
 #include "application/IProject.h"
 #include "core/Singleton/Singleton.h"
+#include "game_consts.h"
 
 namespace vg::core
 {
@@ -13,7 +14,9 @@ namespace vg::engine
     class IEngine;
 }
 
+class CharacterBehaviour;
 class PlayerBehaviour;
+class EnemyBehaviour;
 
 class Game : public vg::IProject, public vg::core::Singleton<Game>
 {
@@ -36,12 +39,15 @@ class Game : public vg::IProject, public vg::core::Singleton<Game>
         static vg::engine::IEngine &                    Engine                  ();
         static vg::core::IInput &                       Input                   ();
 
-        void                                            addPlayer               (PlayerBehaviour * _player);
-        void                                            removePlayer            (PlayerBehaviour * _player);
-        const vg::core::vector<PlayerBehaviour *> &     getPlayers              () const { return m_players;}
+        void                                            addCharacter            (CharacterType _type, CharacterBehaviour * _character);
+        void                                            removeCharacter         (CharacterType _type, CharacterBehaviour * _character);
+        const vg::core::vector<CharacterBehaviour *> &  getCharacters           (CharacterType _type) const { return m_characters[vg::core::asInteger(_type)];}
+
+        const vg::core::vector<PlayerBehaviour *> &     getPlayers              () const;
+        const vg::core::vector<EnemyBehaviour *> &      getEnemies              () const;
 
     private:
         static vg::engine::IEngine *                    s_engine;
 
-        vg::core::vector<PlayerBehaviour *>             m_players;
+        vg::core::vector<CharacterBehaviour *>          m_characters[vg::core::enumCount<CharacterType>()];
 };

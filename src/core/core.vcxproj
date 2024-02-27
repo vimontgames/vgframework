@@ -110,6 +110,7 @@
     <None Include="GameObject\GameObject.inl" />
     <None Include="Instance\Instance.inl" />
     <None Include="Misc\BitMask.inl" />
+    <None Include="Object\Object.inl" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>
