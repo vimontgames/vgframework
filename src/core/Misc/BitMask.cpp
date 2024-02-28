@@ -21,16 +21,15 @@ namespace vg::core
         auto itemCount = (_count + getNumBitsPerItem()-1) / getNumBitsPerItem();
         auto previousBitCount = m_bitCount;
 
-        if (m_bits.size() != itemCount)
+        if (m_bitCount != _count)
         {
-            m_bits.resize(itemCount);
+            if (m_bits.size() != itemCount)
+                m_bits.resize(itemCount);
+
             m_bitCount = _count;
 
-            if (m_bitCount > previousBitCount)
-            {
-                for (uint i = previousBitCount; i < m_bitCount; ++i)
-                    setBitValue(i, _default);
-            }
+            for (uint i = previousBitCount; i < m_bitCount; ++i)
+                setBitValue(i, _default);
 
             return true;
         }

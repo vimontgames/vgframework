@@ -1,33 +1,45 @@
 <Root>
     <Object class="WorldResourceData">
-        <Property type="String" name="m_name" flags="Hidden" value="Game"/>
+        <Property type="String" name="m_name" flags="NotVisible" value="Game"/>
+        <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
         <Property type="ObjectPtr" name="m_world">
             <Object class="World">
-                <Property type="String" name="m_name" flags="Hidden" value="Game"/>
+                <Property type="String" name="m_name" flags="NotVisible" value="Game"/>
+                <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
             </Object>
         </Property>
         <Property type="ResourcePtrVector" name="m_sceneResources" flags="Resource">
             <Object class="SceneResource">
-                <Property type="String" name="m_name" flags="Hidden" value=""/>
-                <Property type="String" name="m_resourcePath" flags="Hidden" value="data/Scenes/Soccer.scene"/>
+                <Property type="String" name="m_name" flags="NotVisible" value=""/>
+                <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
+                <Property type="String" name="m_resourcePath" flags="Debug" value="data/Scenes/Soccer.scene"/>
             </Object>
         </Property>
         <Property type="ResourcePtrVector" name="m_prefabsResources" flags="Resource">
             <Object class="PrefabResource">
-                <Property type="String" name="m_name" flags="Hidden" value=""/>
-                <Property type="String" name="m_resourcePath" flags="Hidden" value="data/Prefabs/Pablo.prefab"/>
+                <Property type="String" name="m_name" flags="NotVisible" value=""/>
+                <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
+                <Property type="String" name="m_resourcePath" flags="Debug" value="data/Prefabs/Pablo.prefab"/>
             </Object>
             <Object class="PrefabResource">
-                <Property type="String" name="m_name" flags="Hidden" value=""/>
-                <Property type="String" name="m_resourcePath" flags="Hidden" value="data/Prefabs/Romeo.prefab"/>
+                <Property type="String" name="m_name" flags="NotVisible" value=""/>
+                <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
+                <Property type="String" name="m_resourcePath" flags="Debug" value="data/Prefabs/Romeo.prefab"/>
             </Object>
             <Object class="PrefabResource">
-                <Property type="String" name="m_name" flags="Hidden" value=""/>
-                <Property type="String" name="m_resourcePath" flags="Hidden" value="data/Prefabs/Benualdo.prefab"/>
+                <Property type="String" name="m_name" flags="NotVisible" value=""/>
+                <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
+                <Property type="String" name="m_resourcePath" flags="Debug" value="data/Prefabs/Benualdo.prefab"/>
             </Object>
             <Object class="PrefabResource">
-                <Property type="String" name="m_name" flags="Hidden" value=""/>
-                <Property type="String" name="m_resourcePath" flags="Hidden" value="data/Prefabs/GJ.prefab"/>
+                <Property type="String" name="m_name" flags="NotVisible" value=""/>
+                <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
+                <Property type="String" name="m_resourcePath" flags="Debug" value="data/Prefabs/GJ.prefab"/>
+            </Object>
+            <Object class="PrefabResource">
+                <Property type="String" name="m_name" flags="NotVisible" value=""/>
+                <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
+                <Property type="String" name="m_resourcePath" flags="Debug" value="data/Prefabs/Justin.prefab"/>
             </Object>
         </Property>
     </Object>
