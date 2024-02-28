@@ -88,4 +88,11 @@ namespace vg::core
     {
         setUpdateFlags(_flags, _enabled);
     }
+
+    //--------------------------------------------------------------------------------------
+    const core::string Component::GetSubObjectName(core::uint _subObjectIndex) const 
+    { 
+        VG_ASSERT_NOT_IMPLEMENTED(); 
+        return ""; 
+    };
 }

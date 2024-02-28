@@ -13,6 +13,12 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
+    VG_INLINE const core::vector<core::string> & BitMask::getNames() const
+    {
+        return m_names;
+    }
+
+    //--------------------------------------------------------------------------------------
     VG_INLINE bool BitMask::getBitValue(core::uint _index) const
     {
         auto itemIndex = _index / getNumBitsPerItem();

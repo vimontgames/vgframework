@@ -221,7 +221,7 @@ namespace vg::renderer
             m_icoSphere = new MeshGeometry("IcoSphere", this);
             m_icoSphere->setIndexBuffer(ib);
             m_icoSphere->setVertexBuffer(vb);
-            m_icoSphere->addBatch(indiceCount);
+            m_icoSphere->addBatch("IcoBatch", indiceCount);
 
             VG_SAFE_RELEASE(ib);
             VG_SAFE_RELEASE(vb);
@@ -282,7 +282,7 @@ namespace vg::renderer
             m_hemiSphere = new MeshGeometry("HemiSphere", this);
             m_hemiSphere->setIndexBuffer(ib);
             m_hemiSphere->setVertexBuffer(vb);
-            m_hemiSphere->addBatch(indiceCount);
+            m_hemiSphere->addBatch("HemiBatch", indiceCount);
 
             VG_SAFE_RELEASE(ib);
             VG_SAFE_RELEASE(vb);
@@ -361,7 +361,7 @@ namespace vg::renderer
         m_cylinder = new MeshGeometry("Cylinder", this);
         m_cylinder->setIndexBuffer(ib);
         m_cylinder->setVertexBuffer(vb);
-        m_cylinder->addBatch(indiceCount);
+        m_cylinder->addBatch("CylinderBatch", indiceCount);
 
         VG_SAFE_RELEASE(ib);
         VG_SAFE_RELEASE(vb);
@@ -426,7 +426,7 @@ namespace vg::renderer
         m_box = new MeshGeometry("Box", this);
         m_box->setIndexBuffer(ib);
         m_box->setVertexBuffer(vb);
-        m_box->addBatch(indiceCount);
+        m_box->addBatch("BoxBatch", indiceCount);
 
         VG_SAFE_RELEASE(ib);
         VG_SAFE_RELEASE(vb);

@@ -60,6 +60,7 @@ namespace vg::editor
             inline static const char * FPS                  = ICON_FA_STOPWATCH;
             inline static const char * Folder               = ICON_FA_FOLDER_OPEN;
             inline static const char * GameView             = ICON_FA_DISPLAY;
+            inline static const char * GameObject           = ICON_FA_SITEMAP;// ICON_FA_PERSON;
             inline static const char * Info                 = ICON_FA_CIRCLE_INFO;
             inline static const char * Input                = ICON_FA_GAMEPAD;
             inline static const char * Inspector            = ICON_FA_MAGNIFYING_GLASS;

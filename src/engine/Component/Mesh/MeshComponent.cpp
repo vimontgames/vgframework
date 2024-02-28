@@ -126,6 +126,15 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
+    const core::string MeshComponent::GetSubObjectName(core::uint _subObjectIndex) const
+    {
+        if (nullptr != m_meshInstance)
+            return m_meshInstance->GetBatchName(_subObjectIndex);
+
+        return "";
+    };
+
+    //--------------------------------------------------------------------------------------
     void MeshComponent::OnPropertyChanged(IObject * _object, const IProperty & _prop, bool _notifyParent)
     {
         if (!strcmp(_prop.getName(), "m_batchMask"))
@@ -180,6 +189,7 @@ namespace vg::engine
             IMeshModel * meshModel = m_meshResource.getMeshModel();
             m_meshInstance->SetModel(Lod::Lod0, meshModel);
             m_batchMask.setBitCount(meshModel->GetBatchCount(), true);
+            m_batchMask.setNames(meshModel->GetBatchNames());
             m_meshInstance->SetBatchMask(m_batchMask);
 
             if (false == m_registered)

@@ -601,6 +601,21 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
+    core::string MeshInstance::GetBatchName(core::uint _batchIndex) const
+    {
+        if (const MeshModel * model = VG_SAFE_STATIC_CAST(MeshModel, getModel(Lod::Lod0)))
+        {
+            if (auto * geo = model->getGeometry())
+            {
+                const auto & batches = geo->batches();
+                if (_batchIndex < batches.size())
+                    return batches[_batchIndex].getName();
+            }
+        }
+        return "";
+    }
+
+    //--------------------------------------------------------------------------------------
     bool MeshInstance::IsSkinned() const
     {
         return nullptr != getInstanceSkeleton();

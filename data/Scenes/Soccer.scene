@@ -1737,7 +1737,7 @@
                     </Object>
                     <Object class="GameObject">
                         <Property type="String" name="m_name" value="Players"/>
-                        <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value="Opened"/>
+                        <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
                         <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
                         <Property type="Float4" name="m_color" flags="Color" x="1" y="1" z="1" w="1"/>
                         <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="0" Ty="0" Tz="0" Tw="1"/>
@@ -1795,7 +1795,7 @@
                     </Object>
                     <Object class="GameObject">
                         <Property type="String" name="m_name" value="Enemies"/>
-                        <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value="Opened"/>
+                        <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
                         <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
                         <Property type="Float4" name="m_color" flags="Color" x="1" y="1" z="1" w="1"/>
                         <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="0" Ty="0" Tz="0" Tw="1"/>
@@ -1862,6 +1862,32 @@
                                         <Property type="String" name="m_name" flags="NotVisible" value=""/>
                                         <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
                                         <Property type="String" name="m_resourcePath" flags="Debug" value="data/Prefabs/GJ.prefab"/>
+                                    </Object>
+                                </Property>
+                            </Object>
+                        </Property>
+                    </Object>
+                    <Object class="GameObject">
+                        <Property type="String" name="m_name" value="Test"/>
+                        <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value="Opened"/>
+                        <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
+                        <Property type="Float4" name="m_color" flags="Color" x="1" y="1" z="1" w="1"/>
+                        <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="0" Ty="0" Tz="0" Tw="1"/>
+                        <Property type="ObjectPtrVector" name="m_components"/>
+                        <Property type="ObjectPtrVector" name="m_children" flags="Debug">
+                            <Object class="PrefabGameObject">
+                                <Property type="String" name="m_name" value="Justin"/>
+                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
+                                <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
+                                <Property type="Float4" name="m_color" flags="Color" x="1" y="1" z="1" w="1"/>
+                                <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="-4" Ty="0" Tz="0" Tw="1"/>
+                                <Property type="ObjectPtrVector" name="m_components"/>
+                                <Property type="ObjectPtrVector" name="m_children" flags="Debug"/>
+                                <Property type="Resource" name="m_prefabResource" flags="Resource">
+                                    <Object class="PrefabResource">
+                                        <Property type="String" name="m_name" flags="NotVisible" value=""/>
+                                        <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
+                                        <Property type="String" name="m_resourcePath" flags="Debug" value="data/Prefabs/Justin.prefab"/>
                                     </Object>
                                 </Property>
                             </Object>

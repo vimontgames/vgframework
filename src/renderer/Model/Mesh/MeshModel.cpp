@@ -57,6 +57,20 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
+    core::vector<core::string> MeshModel::GetBatchNames() const
+    {
+        core::vector<core::string> names;
+        if (const auto * geo = getGeometry())
+        {
+            const auto batches = geo->batches();
+            names.resize(batches.size());
+            for (uint i = 0; i < batches.size(); ++i)
+                names[i] = batches[i].getName();
+        }
+        return names;
+    }
+
+    //--------------------------------------------------------------------------------------
     // clearing BLAS collections when deleting model isn't necessary because only instances
     // using it will increase RefCount and this way we don't have to deal with dandling pointers
     // we are sure that when all instances are deleted then all BLAS collections are deleted too
@@ -198,7 +212,7 @@ namespace vg::renderer
         for (uint b = 0; b < _data.batches.size(); ++b)
         {
             const auto & batch = _data.batches[b];
-            meshGeometry->addBatch(batch.count, batch.offset);
+            meshGeometry->addBatch(batch.getName(), batch.count, batch.offset);
         }
 
         VG_SAFE_RELEASE(ib);

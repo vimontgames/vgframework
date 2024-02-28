@@ -16,5 +16,6 @@ namespace vg::renderer
         }
 
         virtual core::uint GetBatchCount() const = 0;
+        virtual core::vector<core::string> GetBatchNames() const = 0;
     };
 }

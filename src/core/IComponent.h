@@ -18,25 +18,25 @@ namespace vg::core
     public:
         VG_CLASS_DECL(IComponent, core::Object);
 
-       
-
         IComponent(const core::string & _name, IObject * _parent) :
             core::Object(_name, _parent)
         {
 
         }
 
-        virtual void                FixedUpdate         (float _dt) = 0;
-        virtual void                Update              (float _dt) = 0;
-        virtual void                LateUpdate          (float _dt) = 0;
+        virtual void                    FixedUpdate         (float _dt) = 0;
+        virtual void                    Update              (float _dt) = 0;
+        virtual void                    LateUpdate          (float _dt) = 0;
 
-        virtual const IGameObject * GetGameObject       () const = 0;
-        virtual IGameObject *       GetGameObject       () = 0;
+        virtual const IGameObject *     GetGameObject       () const = 0;
+        virtual IGameObject *           GetGameObject       () = 0;
 
-        virtual ComponentFlags      GetComponentFlags   () const = 0;
-        virtual void                SetComponentFlags   (ComponentFlags _flags, bool _enabled = true) = 0;
+        virtual ComponentFlags          GetComponentFlags   () const = 0;
+        virtual void                    SetComponentFlags   (ComponentFlags _flags, bool _enabled = true) = 0;
 
-        virtual UpdateFlags         GetUpdateFlags      () const = 0;
-        virtual void                SetUpdateFlags      (UpdateFlags _flags, bool _enabled = true) = 0;
+        virtual UpdateFlags             GetUpdateFlags      () const = 0;
+        virtual void                    SetUpdateFlags      (UpdateFlags _flags, bool _enabled = true) = 0;
+
+        virtual const core::string      GetSubObjectName    (core::uint _subObjectIndex) const = 0;
     };
 }

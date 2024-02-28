@@ -45,6 +45,8 @@ namespace vg::renderer
         bool                            SetAnimationTime            (ISkeletalAnimation * _animation, float _time) final override;
         bool                            SetAnimationWeight          (ISkeletalAnimation * _animation, float _weight) final override;
 
+        core::string                    GetBatchName                (core::uint _batchIndex) const final override;
+
         bool                            GetAABB                     (AABB & _aabb) const final override;
         bool                            Cull                        (CullingResult * _cullingResult, View * _view) final override;
         void                            OnMaterialChanged           (core::uint _index) final override;

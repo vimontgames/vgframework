@@ -36,11 +36,6 @@
                 <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
                 <Property type="String" name="m_resourcePath" flags="Debug" value="data/Prefabs/GJ.prefab"/>
             </Object>
-            <Object class="PrefabResource">
-                <Property type="String" name="m_name" flags="NotVisible" value=""/>
-                <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
-                <Property type="String" name="m_resourcePath" flags="Debug" value="data/Prefabs/Justin.prefab"/>
-            </Object>
         </Property>
     </Object>
 </Root>

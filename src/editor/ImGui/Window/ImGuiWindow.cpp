@@ -324,7 +324,7 @@ namespace vg::editor
         if (_name)
             treeNodeName = "[" + string(_name) + "]";
         else if (_object)
-            treeNodeName = _object->getName();
+            treeNodeName = fmt::sprintf("[%u] %s", _index, _object->getName());
         else
             treeNodeName = "[" + to_string(_index) + "]";
 
@@ -541,10 +541,17 @@ namespace vg::editor
                     if (ImGui::BeginCombo(enumLabel.c_str(), preview.c_str(), ImGuiComboFlags_HeightLarge))
                     {
                         const auto bitCount = pBitMask->getBitCount();
+                        const auto names = pBitMask->getNames();
+
                         for (uint i = 0; i < bitCount; ++i)
                         {
                             bool value = pBitMask->getBitValue(i);
-                            const string bitName = fmt::sprintf("Bit %u", i);
+                            string bitName;
+                            
+                            if (i < names.size() && !names[i].empty())
+                                bitName = fmt::sprintf("[%u] %s", i, names[i]);
+                            else 
+                                bitName = fmt::sprintf("Bit %u", i);
                             
                             if (ImGui::Checkbox(bitName.c_str(), &value))
                             {
@@ -863,7 +870,7 @@ namespace vg::editor
                     const size_t count = _prop->GetPropertyObjectVectorCount(_object);
                     const byte * data = _prop->GetPropertyObjectVectorData(_object);
 
-                    string treeNodeName = (string)displayName + " (" + to_string(count) + ")";
+                    string treeNodeName = fmt::sprintf("%s[%u]", displayName, count); 
 
                     auto treeNodeFlags = ImGuiTreeNodeFlags_OpenOnArrow;
 
@@ -886,7 +893,7 @@ namespace vg::editor
                     auto * vec = _prop->GetPropertyObjectPtrVector(_object);
                     const uint count = vec->count();
 
-                    string treeNodeName = (string)displayName + " (" + to_string(count) + ")";
+                    string treeNodeName = fmt::sprintf("%s[%u]", displayName, count);
 
                     auto treeNodeFlags = ImGuiTreeNodeFlags_OpenOnArrow;
 

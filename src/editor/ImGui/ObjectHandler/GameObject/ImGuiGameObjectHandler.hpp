@@ -31,7 +31,7 @@ namespace vg::editor
 
             const bool isPrefab = go->IsPrefab();
             string goTypeName = isPrefab ? "Prefab" : "GameObject";
-            auto goIcon = isPrefab ? style::icon::Prefab : style::icon::Scene;
+            auto goIcon = isPrefab ? style::icon::Prefab : style::icon::GameObject;
 
             auto availableWidth = ImGui::GetContentRegionAvail().x;
             ImVec2 collapsingHeaderPos = ImGui::GetCursorPos();

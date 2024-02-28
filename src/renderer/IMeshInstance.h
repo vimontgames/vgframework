@@ -27,5 +27,7 @@ namespace vg::renderer
 
         virtual bool SetAnimationTime(ISkeletalAnimation * _animation, float _time) = 0;
         virtual bool SetAnimationWeight(ISkeletalAnimation * _animation, float _weight) = 0;
+
+        virtual core::string GetBatchName(core::uint _batchIndex) const = 0;
     };
 }

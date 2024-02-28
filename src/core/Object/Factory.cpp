@@ -406,11 +406,20 @@ namespace vg::core
                 }
                 break;
 
+                case IProperty::Type::BitMask:
+                {
+                    auto * srcBitMask = prop->GetPropertyBitMask(_srcObj);
+                    auto * dstBitMask = prop->GetPropertyBitMask(_dstObj);
+                    *dstBitMask = *srcBitMask;
+                }
+                break;
+
                 case IProperty::Type::Callback:
                 case IProperty::Type::LayoutElement:
                     // Nothing to do
                     break;
 
+                default:
                 case IProperty::Type::ResourcePtr:
                 case IProperty::Type::ResourcePtrVector:
                 case IProperty::Type::ObjectPtrDictionary:

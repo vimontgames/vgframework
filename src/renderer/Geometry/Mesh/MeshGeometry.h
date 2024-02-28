@@ -36,7 +36,7 @@ namespace vg::renderer
         VG_INLINE gfx::Buffer *                 getVertexBuffer         () const;
         VG_INLINE core::u32                     getVertexBufferOffset   () const;
 
-        core::u32                               addBatch                (core::u32 _count, core::u32 _offset = 0);
+        core::u32                               addBatch                (const core::string & _name, core::u32 _count, core::u32 _offset = 0);
 
         VG_INLINE const core::vector<Batch> &   batches                 () const;
 
