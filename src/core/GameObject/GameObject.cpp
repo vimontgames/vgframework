@@ -132,6 +132,7 @@ namespace vg::core
     //--------------------------------------------------------------------------------------
     bool GameObject::IsPrefab() const
     {
+        VG_ASSERT(!asBool(ObjectFlags::Prefab & getObjectFlags()));
         return false;
     }
 

@@ -7,18 +7,14 @@ namespace vg::editor
         ImGuiView(style::icon::Prefab, "View/Prefabs", "Prefabs", ImGuiWindow::StartVisible, gfx::ViewTarget::Editor),
         m_prefabRes(_prefabRes)
     {
-        //VG_SAFE_INCREASE_REFCOUNT(_prefab);
-        //m_prefabScene = _prefab;
-
         IFactory * factory = Kernel::getFactory();
         m_prefabWorld = (IWorld *)factory->createObject("World", _prefabRes->GetResourcePath());
-        //m_prefabWorld->AddScene(_prefab, BaseSceneType::Scene);
+        m_prefabWorld->SetObjectFlags(ObjectFlags::Prefab, true);
     }
 
     //--------------------------------------------------------------------------------------
     ImGuiPrefabView::~ImGuiPrefabView()
     {
-        //VG_SAFE_RELEASE(m_prefabScene);
         VG_SAFE_RELEASE(m_prefabWorld);
     }
 

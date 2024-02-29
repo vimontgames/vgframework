@@ -10,7 +10,7 @@ namespace vg::renderer
         DepthOnlyPass(const core::string & _name);
         ~DepthOnlyPass();
 
-        void Setup(const gfx::RenderPassContext & _renderPassContext, float _dt) = 0;
+        void Setup(const gfx::RenderPassContext & _renderPassContext) = 0;
         void Render(const gfx::RenderPassContext & _renderPassContext, gfx::CommandList * _cmdList) const override;
     };
 }

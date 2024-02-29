@@ -34,6 +34,7 @@
 #include "editor/ImGui/Window/View/GameView/ImGuiGameView.h"
 #include "editor/ImGui/Window/Console/ImGuiConsole.h"
 #include "editor/ImGui/Window/Input/ImGuiInput.h"
+#include "editor/ImGui/Window/Time/ImGuiTime.h"
 #include "editor/ImGui/Toolbar/Main/ImGuiMainToolbar.h"
 #include "editor/ImGui/Window/View/PrefabView/ImGuiPrefabView.h"
 #include "editor/ImGui/Window/Statistics/ImGuiStatistics.h"
@@ -107,6 +108,8 @@ namespace vg::editor
         m_imGuiWindows.push_back(new ImGuiInput());
         m_imGuiWindows.push_back(new ImGuiAbout());  
         m_imGuiWindows.push_back(new ImGuiStatistics());
+        m_imGuiWindows.push_back(new ImGuiTime());
+
         // Add ImGui toolbars
         m_imGuiWindows.push_back(new ImGuiMainToolbar("Main Toolbar", ImGuiWindow::StartVisible));
 

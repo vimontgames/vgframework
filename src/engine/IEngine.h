@@ -37,7 +37,8 @@ namespace vg
 
         struct Time
         {
-            float m_dt = 0.0f;
+            float m_realDeltaTime = 0.0f;
+            float m_scaledDeltaTime = 0.0f;
         };
 
 	    class IEngine : public core::IPlugin
@@ -73,6 +74,7 @@ namespace vg
             #endif                                      
                                                         
 		    virtual void						        RunOneFrame	        () = 0;
+            virtual void                                FlushLoading        () = 0;
 
             virtual editor::IEditor *                   GetEditor           () const = 0;
 		    virtual renderer::IRenderer *	            GetRenderer	        () const = 0;

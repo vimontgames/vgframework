@@ -35,6 +35,8 @@ namespace vg::core
 
         virtual bool                IsPlaying           () const = 0;
         virtual bool                IsPaused            () const = 0;
+        virtual void                SetTimeScale        (float _timeScale) = 0;
+        virtual float               GetTimeScale        (bool _ignorePause = false) const = 0;
         virtual void                Play                () = 0;
         virtual void                Stop                () = 0;
         virtual void                Pause               () = 0;
@@ -55,5 +57,7 @@ namespace vg::core
 
         virtual void                SetPhysicsWorld     (IPhysicsWorld * _physicsWorld) = 0;
         virtual IPhysicsWorld *     GetPhysicsWorld     () const = 0;
+
+        virtual bool                IsPrefabWorld       () const = 0;
     };
 }

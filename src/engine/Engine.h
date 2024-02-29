@@ -87,6 +87,7 @@ namespace vg::engine
         const core::vector<core::IWorld *> &    GetWorlds           () const final override;
 
 		void							        RunOneFrame	        () final override;
+        void                                    FlushLoading        () final override;
 
         core::uint2                             getScreenSize       () const final;
 

@@ -50,7 +50,7 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    void ViewConstantsUpdatePass::Setup(const gfx::RenderPassContext & _renderPassContext, float _dt)
+    void ViewConstantsUpdatePass::Setup(const gfx::RenderPassContext & _renderPassContext)
     {
         if (_renderPassContext.m_view->IsToolmode())
         {

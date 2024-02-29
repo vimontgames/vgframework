@@ -65,7 +65,7 @@ namespace vg::gfx
 		void importRenderTarget(const FrameGraphResourceID & _resID, Texture * _tex, core::float4 _clearColor = defaultOptimizedClearColor, FrameGraphResource::InitState _initState = FrameGraphResource::InitState::Clear);
 		void setGraphOutput(const FrameGraphResourceID & _destTexResID);
 
-		void setup(float _dt);
+		void setup();
 		void build();
 		void render();
 
@@ -100,7 +100,7 @@ namespace vg::gfx
             core::vector<UserPassInfoNode>  m_children;
         };
 
-        void setupNode(UserPassInfoNode & _node, float _dt);
+        void setupNode(UserPassInfoNode & _node);
         void buildNode(UserPassInfoNode & _node);
         void renderNode(UserPassInfoNode & _node, gfx::CommandList * _cmdList);
 

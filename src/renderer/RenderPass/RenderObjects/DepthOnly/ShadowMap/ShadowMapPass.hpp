@@ -16,7 +16,7 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    void ShadowMapPass::Setup(const gfx::RenderPassContext & _renderPassContext, float _dt)
+    void ShadowMapPass::Setup(const gfx::RenderPassContext & _renderPassContext)
     {
         const auto size = _renderPassContext.m_view->GetSize();
 

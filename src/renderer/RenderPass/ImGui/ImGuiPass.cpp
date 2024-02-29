@@ -43,7 +43,7 @@ namespace vg::renderer
     }
     
     //--------------------------------------------------------------------------------------
-    void ImGuiPass::Setup(const gfx::RenderPassContext & _renderContext, float _dt)
+    void ImGuiPass::Setup(const gfx::RenderPassContext & _renderContext)
     {
         // ImGui windows require to read the viewport render targets
         Renderer * renderer = Renderer::get();

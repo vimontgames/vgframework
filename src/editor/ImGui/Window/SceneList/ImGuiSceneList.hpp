@@ -116,7 +116,7 @@ namespace vg::editor
             flags |= ImGuiTreeNodeFlags_Selected;
         }
 
-        ImVec4 textColor = ImGui::GetStyleColorVec4(ImGuiCol_Text);
+        ImVec4 textColor = m_originalTextColor;
 
         if (_gameObject == m_dragAndDropNodeTarget)
         {
@@ -234,7 +234,11 @@ namespace vg::editor
         if (!startDragDrop)
             updateSelection(_gameObject);
 
-        m_gameObjectMenu.Display(_gameObject);
+        ImGui::PushStyleColor(ImGuiCol_Text, m_originalTextColor);
+        {
+            m_gameObjectMenu.Display(_gameObject);
+        }
+        ImGui::PopStyleColor();
 
         if (ImGui::BeginDragDropSource(ImGuiDragDropFlags_AcceptNoDrawDefaultRect | ImGuiDragDropFlags_SourceNoHoldToOpenOthers))
         {
@@ -403,6 +407,8 @@ namespace vg::editor
     {
         const string sceneTypeName = asString(_sceneType);
         const auto typeInfo = getGameObjectTreeTypeInfo(_sceneType);
+
+        m_originalTextColor = ImGui::GetStyleColorVec4(ImGuiCol_Text);
 
         ImGui::PushID(sceneTypeName.c_str());
 

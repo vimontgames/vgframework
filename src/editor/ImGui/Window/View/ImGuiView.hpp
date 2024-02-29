@@ -244,7 +244,7 @@ namespace vg::editor
 
         // TODO : update editor camera *BEFORE* render?
         if (m_target == gfx::ViewTarget::Editor)
-            updateEditorCamera(getEngine()->GetTime().m_dt);
+            updateEditorCamera(getEngine()->GetTime().m_realDeltaTime);
 
         auto * renderer = Editor::get()->getRenderer();
 

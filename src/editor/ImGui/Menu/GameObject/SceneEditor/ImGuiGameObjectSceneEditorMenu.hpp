@@ -10,6 +10,7 @@
 #include "core/IBaseScene.h"
 #include "ImGui-Addons/FileBrowser/ImGuiFileBrowser.h"
 #include "core/File/File.h"
+#include "engine/IWorldResource.h"
 
 using namespace vg::core;
 
@@ -39,7 +40,13 @@ namespace vg::editor
 
         vector<IGameObject *> gameObjectsToDelete = Editor::get()->getSelection()->RemoveChildGameObjectsWithParents(selectedObjects);
 
+        const bool isPrefab = gameObject->IsPrefab();
+        const bool isPrefabChild = gameObject->GetParentPrefab();
+        const bool isPrefabOrPartOfPrefab = isPrefab || isPrefabChild;
+
         // Root GameObject cannot be deleted
+        const bool canAddChildGameObject = !isPrefabOrPartOfPrefab;
+        const bool canAddChildPrefab = !isPrefabOrPartOfPrefab;
         const bool canDelete = gameObjectsToDelete.size() > 0 && !isRoot;
         const bool canRename = true; // !isRoot;
         const bool canDuplicate = !isRoot;
@@ -66,9 +73,10 @@ namespace vg::editor
             if (!selection->IsSelectedObject(_object))
                 selection->SetSelectedObject(_object);
 
-            if (ImGui::BeginMenu("GameObject"))
+            //ImGui::BeginDisabled((isRoot || isPrefabChild) && isPrefabOrPartOfPrefab);
+            if (ImGui::BeginMenu("GameObjects"))
             {
-                ImGui::BeginDisabled(isRoot);
+                ImGui::BeginDisabled(isRoot || isPrefabChild);
                 if (ImGui::MenuItem("Add"))
                 {
                     m_selected = MenuOption::AddGameObject;
@@ -79,6 +87,7 @@ namespace vg::editor
                 }
                 ImGui::EndDisabled();
 
+                ImGui::BeginDisabled(isPrefabOrPartOfPrefab);
                 if (ImGui::MenuItem("Add Child"))
                 {
                     m_selected = MenuOption::AddChildGameObject;
@@ -87,7 +96,9 @@ namespace vg::editor
                     openPopup = true;
                     ImGui::OpenPopup("Add Child GameObject");
                 }
+                ImGui::EndDisabled();
 
+                ImGui::BeginDisabled(isPrefabOrPartOfPrefab);
                 if (ImGui::MenuItem("Add Parent"))
                 {
                     m_selected = MenuOption::AddParentGameObject;
@@ -96,15 +107,54 @@ namespace vg::editor
                     openPopup = true;
                     ImGui::OpenPopup("Add Parent GameObject");
                 }
+                ImGui::EndDisabled();
 
                 ImGui::EndMenu();
             }
+            //ImGui::EndDisabled();
 
             ImGui::Separator();
 
-            if (ImGui::BeginMenu("Prefab"))
+            //ImGui::BeginDisabled(isPrefab && (isRoot || isPrefabChild) && isPrefabOrPartOfPrefab);
+            if (ImGui::BeginMenu("Prefabs"))
             {
-                ImGui::BeginDisabled(isRoot);
+                ImGui::BeginDisabled(!isPrefab && !isPrefabChild);
+
+                if (ImGui::MenuItem("Edit"))
+                {
+                    auto engine = ImGuiWindow::getEngine();
+                    auto worldRes = engine->GetWorldResource();
+                    VG_ASSERT(worldRes);
+
+                    auto prefabGameObject = gameObject;
+                    if (isPrefabChild)
+                        prefabGameObject = gameObject->GetParentPrefab();
+
+                    if (prefabGameObject && prefabGameObject->GetPrefabResource())
+                    {
+                        auto scene = VG_SAFE_STATIC_CAST(IBaseScene, prefabGameObject->GetPrefabResource()->getObject());
+
+                        IResource * sceneRes = worldRes->FindSceneResource(scene, BaseSceneType::Prefab);
+                        
+                        if (!sceneRes)
+                        {
+                            const string path = prefabGameObject->GetPrefabResource()->GetResourcePath();
+                            worldRes->LoadSceneResource(path, BaseSceneType::Prefab);
+                            engine->FlushLoading();
+                        }
+
+                        // open immediately
+                        sceneRes = worldRes->FindSceneResource(scene, BaseSceneType::Prefab);
+                        VG_ASSERT(sceneRes);
+                        if (sceneRes)
+                            Editor::get()->openPrefabView(sceneRes);
+                    }
+                }
+                ImGui::EndDisabled();
+
+                ImGui::Separator();
+
+                ImGui::BeginDisabled(isRoot || isPrefabChild);
                 if (ImGui::MenuItem("Add"))
                 {
                     m_selected = MenuOption::AddPrefab;
@@ -115,6 +165,7 @@ namespace vg::editor
                 }
                 ImGui::EndDisabled();
 
+                ImGui::BeginDisabled(isPrefabOrPartOfPrefab);
                 if (ImGui::MenuItem("Add Child"))
                 {
                     m_selected = MenuOption::AddChildPrefab;
@@ -123,9 +174,11 @@ namespace vg::editor
                     openPopup = true;
                     ImGui::OpenPopup("Add Child Prefab");
                 }
+                ImGui::EndDisabled();
 
                 ImGui::EndMenu();
             }
+            //ImGui::EndDisabled();
 
             ImGui::Separator();
 

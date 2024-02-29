@@ -23,7 +23,8 @@ namespace vg::engine
     World::World(const string & _name, IObject * _parent) :
         IWorld(_name, _parent),
         m_isPlaying(false),
-        m_isPaused(false)
+        m_isPaused(false),
+        m_timeScale(1.0f)
     {
         for (uint j = 0; j < enumCount<BaseSceneType>(); ++j)
             m_activeScene[j] = nullptr;
@@ -86,6 +87,12 @@ namespace vg::engine
     core::IPhysicsWorld * World::GetPhysicsWorld() const
     {
         return m_physicsWorld;
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool World::IsPrefabWorld() const
+    {
+        return asBool(ObjectFlags::Prefab & getObjectFlags());
     }
 
     //--------------------------------------------------------------------------------------
@@ -194,6 +201,18 @@ namespace vg::engine
     bool World::IsPaused() const
     {
         return isPaused();
+    }
+
+    //--------------------------------------------------------------------------------------
+    void World::SetTimeScale(float _timeScale)
+    {
+        setTimeScale(_timeScale);
+    }
+
+    //--------------------------------------------------------------------------------------
+    float World::GetTimeScale(bool _ignorePause) const
+    {
+        return getTimeScale(_ignorePause);
     }
 
     //--------------------------------------------------------------------------------------

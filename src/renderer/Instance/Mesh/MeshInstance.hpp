@@ -223,7 +223,8 @@ namespace vg::renderer
     //--------------------------------------------------------------------------------------
     void MeshInstance::OnMaterialChanged(core::uint _index)
     {
-        updateInstanceBLAS();
+        if (Model * model = getModel(Lod::Lod0))
+            updateInstanceBLAS();
     }
 
     //--------------------------------------------------------------------------------------

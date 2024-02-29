@@ -23,6 +23,7 @@ namespace vg::engine
         GameObject(_name, _parent)
     {
         m_prefabResource.setParent(this);
+        setObjectFlags(ObjectFlags::Prefab, true);
     }
 
     //--------------------------------------------------------------------------------------
@@ -36,30 +37,6 @@ namespace vg::engine
     {
         return true;
     }
-
-    //--------------------------------------------------------------------------------------
-    // When not instanced, 
-    // a prefab will return children from its prefab scene for rendering but will not update them.
-    //--------------------------------------------------------------------------------------
-    //const vector<IGameObject *> & PrefabGameObject::GetChildren() const
-    //{
-    //    if (asBool(UpdateFlags::InstancedPrefab & getUpdateFlags()))
-    //    {
-    //        return super::GetChildren();
-    //    }
-    //    else
-    //    {
-    //        if (PrefabScene * prefabScene = (PrefabScene*)m_prefabResource.getObject())
-    //        {
-    //            return prefabScene->GetRoot()->GetChildren();
-    //        }
-    //        else
-    //        {
-    //            const static vector<IGameObject *> empty;
-    //            return empty;
-    //        }
-    //    }
-    //}
 
     //--------------------------------------------------------------------------------------
     core::IResource * PrefabGameObject::GetPrefabResource() const
@@ -107,6 +84,13 @@ namespace vg::engine
                 RemoveChild(prefabChild, false);
             }
         }
+    }
+
+    //--------------------------------------------------------------------------------------
+    void PrefabGameObject::OnLoad()
+    {
+        super::OnLoad();
+        setObjectFlags(ObjectFlags::Prefab, true);
     }
 
     ////--------------------------------------------------------------------------------------

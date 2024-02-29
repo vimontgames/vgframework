@@ -349,7 +349,7 @@ namespace vg::renderer
     }
 
 	//--------------------------------------------------------------------------------------
-	void Renderer::runOneFrame(float _dt)
+	void Renderer::runOneFrame()
 	{
         if (m_device.isMinimized())
         {
@@ -424,7 +424,7 @@ namespace vg::renderer
                 if (!m_fullscreen)
                     m_frameGraph.addUserPass(mainViewRenderPassContext, m_imguiPass, "ImGui");
 
-                m_frameGraph.setup(_dt);
+                m_frameGraph.setup();
                 m_frameGraph.build();
                 m_frameGraph.render();
 

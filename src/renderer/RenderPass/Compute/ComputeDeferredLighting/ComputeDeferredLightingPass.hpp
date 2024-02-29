@@ -28,7 +28,7 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    void ComputeDeferredLightingPass::Setup(const gfx::RenderPassContext & _renderPassContext, float _dt)
+    void ComputeDeferredLightingPass::Setup(const gfx::RenderPassContext & _renderPassContext)
     {
         const auto albedoGBufferID = _renderPassContext.getFrameGraphID("AlbedoGBuffer");
         readRenderTarget(albedoGBufferID);

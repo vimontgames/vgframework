@@ -43,7 +43,7 @@ namespace vg::editor
         {
             if (m_sceneType == BaseSceneType::Prefab)
             {
-                if (ImGui::MenuItem("Open 3D View", nullptr, false))
+                if (ImGui::MenuItem("Edit", nullptr, false))
                     Editor::get()->openPrefabView(sceneRes);
 
                 ImGui::Separator();

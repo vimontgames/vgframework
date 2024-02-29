@@ -19,6 +19,8 @@ namespace vg::engine
         void                                                onResourceLoaded        (core::IResource * _resource) override;
         void                                                onResourceUnloaded      (core::IResource * _resource) override;
 
+        void                                                OnLoad                  () override;
+
         //void                                                OnPlay                  () override;
         //void                                                OnStop                  () override;
 

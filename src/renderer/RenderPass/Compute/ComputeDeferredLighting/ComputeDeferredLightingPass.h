@@ -12,7 +12,7 @@ namespace vg::renderer
         ComputeDeferredLightingPass();
         ~ComputeDeferredLightingPass();
 
-        void Setup(const gfx::RenderPassContext & _renderContext, float _dt) override;
+        void Setup(const gfx::RenderPassContext & _renderContext) override;
         void Render(const gfx::RenderPassContext & _renderContext, gfx::CommandList * _cmdList) const override;
 
     private:

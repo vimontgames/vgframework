@@ -13,6 +13,6 @@ namespace vg::renderer
         ShadowMapPass();
         ~ShadowMapPass();
 
-        void Setup(const gfx::RenderPassContext & _renderPassContext, float _dt) final override;
+        void Setup(const gfx::RenderPassContext & _renderPassContext) final override;
     };
 }
