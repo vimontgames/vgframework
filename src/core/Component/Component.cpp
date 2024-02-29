@@ -60,6 +60,8 @@ namespace vg::core
     //--------------------------------------------------------------------------------------
     bool Component::registerProperties(IClassDesc & _desc)
     {
+        super::registerProperties(_desc);
+
         registerPropertyEnumBitfield(Component, ComponentFlags, m_flags, "Flags");
 
         return true;

@@ -1015,7 +1015,14 @@ namespace vg::editor
 
                                 ImVec2 collapsingHeaderPos = ImGui::GetCursorPos();
 
+                                const bool isOpen = asBool(ObjectFlags::Opened & pComponent->GetObjectFlags());
+                                ImGui::SetNextItemOpen(isOpen);
+
                                 const bool open = ImGui::CollapsingHeader(ImGui::getObjectLabel("", componentShortName, pComponent).c_str(), nullptr, ImGuiTreeNodeFlags_InvisibleArrow | ImGuiTreeNodeFlags_AllowItemOverlap);
+
+                                // Save Open/Close state
+                                if (open != isOpen)
+                                    pComponent->SetObjectFlags(ObjectFlags::Opened, open);
 
                                 if (ImGui::BeginDragDropSource(ImGuiDragDropFlags_AcceptNoDrawDefaultRect | ImGuiDragDropFlags_SourceNoHoldToOpenOthers))
                                 {

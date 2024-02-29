@@ -16,13 +16,7 @@ namespace vg::core
     class IComponent : public core::Object
     {
     public:
-        VG_CLASS_DECL(IComponent, core::Object);
-
-        IComponent(const core::string & _name, IObject * _parent) :
-            core::Object(_name, _parent)
-        {
-
-        }
+        VG_CLASS_DECL_ABSTRACT(IComponent, core::Object);
 
         virtual void                    FixedUpdate         (float _dt) = 0;
         virtual void                    Update              (float _dt) = 0;

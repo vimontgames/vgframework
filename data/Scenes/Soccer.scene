@@ -19,14 +19,18 @@
                         <Property type="Float4x4" name="m_local" Ix="0.99999994" Iy="-0.00040713151" Iz="0" Iw="0" Jx="0.00024372329" Jy="0.59863526" Jz="0.8010217" Jw="0" Kx="-0.00032612117" Ky="-0.80102164" Kz="0.59863532" Kw="0" Tx="0.2924428" Ty="-11.817179" Tz="8" Tw="1"/>
                         <Property type="ObjectPtrVector" name="m_components">
                             <Object class="CameraComponent">
+                                <Property type="String" name="m_name" flags="NotVisible" value="CameraComponent #0"/>
+                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
                                 <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
                                 <Property type="EnumU8" name="m_target" value="Game"/>
                                 <Property type="Uint8" name="m_index" flags="HasRange" value="0"/>
-                                <Property type="Float" name="m_fovY" flags="HasRange" value="0.75"/>
+                                <Property type="Float" name="m_fovY" flags="HasRange" value="0.94"/>
                                 <Property type="Float" name="m_near" flags="HasRange" value="0.1"/>
                                 <Property type="Float" name="m_far" flags="HasRange" value="1024"/>
                             </Object>
                             <Object class="GameCameraBehaviour">
+                                <Property type="String" name="m_name" flags="NotVisible" value="GameCameraBehaviour #0"/>
+                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
                                 <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
                                 <Property type="Float" name="m_speed" value="0.25"/>
                             </Object>
@@ -49,6 +53,8 @@
                                 <Property type="Float4x4" name="m_local" Ix="-8.9406967e-08" Iy="-1.0000001" Iz="0" Iw="0" Jx="1.0000001" Jy="-8.9406967e-08" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="0" Ty="0" Tz="0" Tw="1"/>
                                 <Property type="ObjectPtrVector" name="m_components">
                                     <Object class="MeshComponent">
+                                        <Property type="String" name="m_name" flags="NotVisible" value="MeshComponent #0"/>
+                                        <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
                                         <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
                                         <Property type="Bool" name="m_displayBones" value="false"/>
                                         <Property type="Resource" name="m_meshResource" flags="Resource">
@@ -74,6 +80,8 @@
                                         <Property type="BitMask" name="m_batchMask" BitCount="1" Value="0x0000000000000001"/>
                                     </Object>
                                     <Object class="RigidBodyComponent">
+                                        <Property type="String" name="m_name" flags="NotVisible" value="RigidBodyComponent #0"/>
+                                        <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
                                         <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
                                         <Property type="ObjectPtr" name="m_bodyDesc" flags="Flatten">
                                             <Object class="RigidBodyDesc">
@@ -116,6 +124,8 @@
                                         <Property type="Float4x4" name="m_local" Ix="-0.45199251" Iy="-0.072221875" Iz="0.88909322" Iw="0" Jx="0.27346715" Jy="0.93750417" Jz="0.21517813" Jw="0" Kx="-0.84906918" Ky="0.3403967" Kz="-0.40399456" Kw="0" Tx="-2" Ty="0" Tz="0" Tw="1"/>
                                         <Property type="ObjectPtrVector" name="m_components">
                                             <Object class="MeshComponent">
+                                                <Property type="String" name="m_name" flags="NotVisible" value="MeshComponent #1"/>
+                                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
                                                 <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
                                                 <Property type="Bool" name="m_displayBones" value="false"/>
                                                 <Property type="Resource" name="m_meshResource" flags="Resource">
@@ -141,6 +151,8 @@
                                                 <Property type="BitMask" name="m_batchMask" BitCount="1" Value="0x0000000000000001"/>
                                             </Object>
                                             <Object class="RigidBodyComponent">
+                                                <Property type="String" name="m_name" flags="NotVisible" value="RigidBodyComponent #1"/>
+                                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
                                                 <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
                                                 <Property type="ObjectPtr" name="m_bodyDesc" flags="Flatten">
                                                     <Object class="RigidBodyDesc">
@@ -175,6 +187,8 @@
                                         <Property type="Float4x4" name="m_local" Ix="0.67927694" Iy="-0.70176953" Iz="-0.21471456" Iw="0" Jx="0.1921801" Jy="-0.11226666" Jz="0.97491693" Jw="0" Kx="-0.70827222" Ky="-0.70350242" Kz="0.058605969" Kw="0" Tx="0" Ty="0" Tz="0" Tw="1"/>
                                         <Property type="ObjectPtrVector" name="m_components">
                                             <Object class="MeshComponent">
+                                                <Property type="String" name="m_name" flags="NotVisible" value="MeshComponent #2"/>
+                                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
                                                 <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
                                                 <Property type="Bool" name="m_displayBones" value="false"/>
                                                 <Property type="Resource" name="m_meshResource" flags="Resource">
@@ -200,6 +214,8 @@
                                                 <Property type="BitMask" name="m_batchMask" BitCount="1" Value="0x0000000000000001"/>
                                             </Object>
                                             <Object class="RigidBodyComponent">
+                                                <Property type="String" name="m_name" flags="NotVisible" value="RigidBodyComponent #2"/>
+                                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
                                                 <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
                                                 <Property type="ObjectPtr" name="m_bodyDesc" flags="Flatten">
                                                     <Object class="RigidBodyDesc">
@@ -234,6 +250,8 @@
                                         <Property type="Float4x4" name="m_local" Ix="0.54191995" Iy="-0.74046862" Iz="0.39752856" Iw="0" Jx="0.4157232" Jy="-0.17490458" Jz="-0.89251471" Jw="0" Kx="0.73040879" Ky="0.64893341" Kz="0.21304566" Kw="0" Tx="2" Ty="0" Tz="0" Tw="1"/>
                                         <Property type="ObjectPtrVector" name="m_components">
                                             <Object class="MeshComponent">
+                                                <Property type="String" name="m_name" flags="NotVisible" value="MeshComponent #3"/>
+                                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
                                                 <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
                                                 <Property type="Bool" name="m_displayBones" value="false"/>
                                                 <Property type="Resource" name="m_meshResource" flags="Resource">
@@ -259,6 +277,8 @@
                                                 <Property type="BitMask" name="m_batchMask" BitCount="1" Value="0x0000000000000001"/>
                                             </Object>
                                             <Object class="RigidBodyComponent">
+                                                <Property type="String" name="m_name" flags="NotVisible" value="RigidBodyComponent #3"/>
+                                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
                                                 <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
                                                 <Property type="ObjectPtr" name="m_bodyDesc" flags="Flatten">
                                                     <Object class="RigidBodyDesc">
@@ -303,6 +323,8 @@
                                         <Property type="Float4x4" name="m_local" Ix="0.7076298" Iy="-0.70658344" Iz="9.1980198e-08" Iw="0" Jx="0.70658344" Jy="0.7076298" Jz="-5.8429771e-07" Jw="0" Kx="3.4776713e-07" Ky="4.7845811e-07" Kz="1" Kw="0" Tx="15.501654" Ty="7.494493" Tz="-0.00050008297" Tw="1"/>
                                         <Property type="ObjectPtrVector" name="m_components">
                                             <Object class="MeshComponent">
+                                                <Property type="String" name="m_name" flags="NotVisible" value="MeshComponent #4"/>
+                                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
                                                 <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
                                                 <Property type="Bool" name="m_displayBones" value="false"/>
                                                 <Property type="Resource" name="m_meshResource" flags="Resource">
@@ -328,6 +350,8 @@
                                                 <Property type="BitMask" name="m_batchMask" BitCount="1" Value="0x0000000000000001"/>
                                             </Object>
                                             <Object class="RigidBodyComponent">
+                                                <Property type="String" name="m_name" flags="NotVisible" value="RigidBodyComponent #4"/>
+                                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
                                                 <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
                                                 <Property type="ObjectPtr" name="m_bodyDesc" flags="Flatten">
                                                     <Object class="RigidBodyDesc">
@@ -362,6 +386,8 @@
                                         <Property type="Float4x4" name="m_local" Ix="0.9236002" Iy="0.3833572" Iz="1.9887847e-07" Iw="0" Jx="-0.3833572" Jy="0.9236002" Jz="-6.1619585e-07" Jw="0" Kx="-4.1990728e-07" Ky="4.9287712e-07" Kz="1" Kw="0" Tx="-3.996563" Ty="6.4952497" Tz="-0.00050011277" Tw="1"/>
                                         <Property type="ObjectPtrVector" name="m_components">
                                             <Object class="MeshComponent">
+                                                <Property type="String" name="m_name" flags="NotVisible" value="MeshComponent #5"/>
+                                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
                                                 <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
                                                 <Property type="Bool" name="m_displayBones" value="false"/>
                                                 <Property type="Resource" name="m_meshResource" flags="Resource">
@@ -387,6 +413,8 @@
                                                 <Property type="BitMask" name="m_batchMask" BitCount="1" Value="0x0000000000000001"/>
                                             </Object>
                                             <Object class="RigidBodyComponent">
+                                                <Property type="String" name="m_name" flags="NotVisible" value="RigidBodyComponent #5"/>
+                                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
                                                 <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
                                                 <Property type="ObjectPtr" name="m_bodyDesc" flags="Flatten">
                                                     <Object class="RigidBodyDesc">
@@ -421,6 +449,8 @@
                                         <Property type="Float4x4" name="m_local" Ix="-0.40591812" Iy="-0.91390944" Iz="2.7955321e-06" Iw="0" Jx="0.91390944" Jy="-0.40591812" Jz="-1.4221685e-05" Jw="0" Kx="1.4132089e-05" Ky="-3.2179764e-06" Kz="1" Kw="0" Tx="15.002004" Ty="-7.5039415" Tz="0" Tw="1"/>
                                         <Property type="ObjectPtrVector" name="m_components">
                                             <Object class="MeshComponent">
+                                                <Property type="String" name="m_name" flags="NotVisible" value="MeshComponent #6"/>
+                                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
                                                 <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
                                                 <Property type="Bool" name="m_displayBones" value="false"/>
                                                 <Property type="Resource" name="m_meshResource" flags="Resource">
@@ -446,6 +476,8 @@
                                                 <Property type="BitMask" name="m_batchMask" BitCount="1" Value="0x0000000000000001"/>
                                             </Object>
                                             <Object class="RigidBodyComponent">
+                                                <Property type="String" name="m_name" flags="NotVisible" value="RigidBodyComponent #6"/>
+                                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
                                                 <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
                                                 <Property type="ObjectPtr" name="m_bodyDesc" flags="Flatten">
                                                     <Object class="RigidBodyDesc">
@@ -480,6 +512,8 @@
                                         <Property type="Float4x4" name="m_local" Ix="0.9236002" Iy="0.3833572" Iz="1.5032268e-07" Iw="0" Jx="-0.3833572" Jy="0.9236002" Jz="-5.3465914e-07" Jw="0" Kx="-3.4380346e-07" Ky="4.3618402e-07" Kz="1" Kw="0" Tx="-15.496563" Ty="7.4952493" Tz="-0.00050020218" Tw="1"/>
                                         <Property type="ObjectPtrVector" name="m_components">
                                             <Object class="MeshComponent">
+                                                <Property type="String" name="m_name" flags="NotVisible" value="MeshComponent #7"/>
+                                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
                                                 <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
                                                 <Property type="Bool" name="m_displayBones" value="false"/>
                                                 <Property type="Resource" name="m_meshResource" flags="Resource">
@@ -505,6 +539,8 @@
                                                 <Property type="BitMask" name="m_batchMask" BitCount="1" Value="0x0000000000000001"/>
                                             </Object>
                                             <Object class="RigidBodyComponent">
+                                                <Property type="String" name="m_name" flags="NotVisible" value="RigidBodyComponent #7"/>
+                                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
                                                 <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
                                                 <Property type="ObjectPtr" name="m_bodyDesc" flags="Flatten">
                                                     <Object class="RigidBodyDesc">
@@ -539,6 +575,8 @@
                                         <Property type="Float4x4" name="m_local" Ix="0.9236002" Iy="0.3833572" Iz="2.2872507e-07" Iw="0" Jx="-0.3833572" Jy="0.9236002" Jz="-6.2799762e-07" Jw="0" Kx="-4.5199789e-07" Ky="4.9233535e-07" Kz="1" Kw="0" Tx="-15.496564" Ty="-7.5047498" Tz="-0.00050014257" Tw="1"/>
                                         <Property type="ObjectPtrVector" name="m_components">
                                             <Object class="MeshComponent">
+                                                <Property type="String" name="m_name" flags="NotVisible" value="MeshComponent #8"/>
+                                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
                                                 <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
                                                 <Property type="Bool" name="m_displayBones" value="false"/>
                                                 <Property type="Resource" name="m_meshResource" flags="Resource">
@@ -564,6 +602,8 @@
                                                 <Property type="BitMask" name="m_batchMask" BitCount="1" Value="0x0000000000000001"/>
                                             </Object>
                                             <Object class="RigidBodyComponent">
+                                                <Property type="String" name="m_name" flags="NotVisible" value="RigidBodyComponent #8"/>
+                                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
                                                 <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
                                                 <Property type="ObjectPtr" name="m_bodyDesc" flags="Flatten">
                                                     <Object class="RigidBodyDesc">
@@ -598,6 +638,8 @@
                                         <Property type="Float4x4" name="m_local" Ix="0.38290614" Iy="-0.92378736" Iz="1.9887847e-07" Iw="0" Jx="0.92378736" Jy="0.38290614" Jz="-6.1619585e-07" Jw="0" Kx="4.930821e-07" Ky="4.1966641e-07" Kz="1" Kw="0" Tx="-1.996563" Ty="3.4952497" Tz="-0.00050011277" Tw="1"/>
                                         <Property type="ObjectPtrVector" name="m_components">
                                             <Object class="MeshComponent">
+                                                <Property type="String" name="m_name" flags="NotVisible" value="MeshComponent #9"/>
+                                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
                                                 <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
                                                 <Property type="Bool" name="m_displayBones" value="false"/>
                                                 <Property type="Resource" name="m_meshResource" flags="Resource">
@@ -623,6 +665,8 @@
                                                 <Property type="BitMask" name="m_batchMask" BitCount="1" Value="0x0000000000000001"/>
                                             </Object>
                                             <Object class="RigidBodyComponent">
+                                                <Property type="String" name="m_name" flags="NotVisible" value="RigidBodyComponent #9"/>
+                                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
                                                 <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
                                                 <Property type="ObjectPtr" name="m_bodyDesc" flags="Flatten">
                                                     <Object class="RigidBodyDesc">
@@ -667,6 +711,8 @@
                                         <Property type="Float4x4" name="m_local" Ix="-1.0000001" Iy="-1.1920929e-07" Iz="0" Iw="0" Jx="1.1920929e-07" Jy="-1.0000001" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="2.5" Ty="8.5" Tz="0.5" Tw="1"/>
                                         <Property type="ObjectPtrVector" name="m_components">
                                             <Object class="MeshComponent">
+                                                <Property type="String" name="m_name" flags="NotVisible" value="MeshComponent #10"/>
+                                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
                                                 <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
                                                 <Property type="Bool" name="m_displayBones" value="false"/>
                                                 <Property type="Resource" name="m_meshResource" flags="Resource">
@@ -692,6 +738,8 @@
                                                 <Property type="BitMask" name="m_batchMask" BitCount="1" Value="0x0000000000000001"/>
                                             </Object>
                                             <Object class="RigidBodyComponent">
+                                                <Property type="String" name="m_name" flags="NotVisible" value="RigidBodyComponent #10"/>
+                                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
                                                 <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
                                                 <Property type="ObjectPtr" name="m_bodyDesc" flags="Flatten">
                                                     <Object class="RigidBodyDesc">
@@ -726,6 +774,8 @@
                                         <Property type="Float4x4" name="m_local" Ix="-1" Iy="0.000488166" Iz="2.5833941e-08" Iw="0" Jx="-0.000488166" Jy="-0.99999994" Jz="-3.1061667e-11" Jw="0" Kx="5.5636278e-08" Ky="2.7166755e-11" Kz="1.0000001" Kw="0" Tx="-2.5" Ty="8.5" Tz="0.5" Tw="1"/>
                                         <Property type="ObjectPtrVector" name="m_components">
                                             <Object class="MeshComponent">
+                                                <Property type="String" name="m_name" flags="NotVisible" value="MeshComponent #11"/>
+                                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
                                                 <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
                                                 <Property type="Bool" name="m_displayBones" value="false"/>
                                                 <Property type="Resource" name="m_meshResource" flags="Resource">
@@ -751,6 +801,8 @@
                                                 <Property type="BitMask" name="m_batchMask" BitCount="1" Value="0x0000000000000001"/>
                                             </Object>
                                             <Object class="RigidBodyComponent">
+                                                <Property type="String" name="m_name" flags="NotVisible" value="RigidBodyComponent #11"/>
+                                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
                                                 <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
                                                 <Property type="ObjectPtr" name="m_bodyDesc" flags="Flatten">
                                                     <Object class="RigidBodyDesc">
@@ -785,6 +837,8 @@
                                         <Property type="Float4x4" name="m_local" Ix="-1" Iy="0.000488166" Iz="2.5833941e-08" Iw="0" Jx="-0.000488166" Jy="-0.99999994" Jz="-3.1061667e-11" Jw="0" Kx="5.5636278e-08" Ky="2.7166755e-11" Kz="1.0000001" Kw="0" Tx="-7.5" Ty="8.5" Tz="0.5" Tw="1"/>
                                         <Property type="ObjectPtrVector" name="m_components">
                                             <Object class="MeshComponent">
+                                                <Property type="String" name="m_name" flags="NotVisible" value="MeshComponent #12"/>
+                                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
                                                 <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
                                                 <Property type="Bool" name="m_displayBones" value="false"/>
                                                 <Property type="Resource" name="m_meshResource" flags="Resource">
@@ -810,6 +864,8 @@
                                                 <Property type="BitMask" name="m_batchMask" BitCount="1" Value="0x0000000000000001"/>
                                             </Object>
                                             <Object class="RigidBodyComponent">
+                                                <Property type="String" name="m_name" flags="NotVisible" value="RigidBodyComponent #12"/>
+                                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
                                                 <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
                                                 <Property type="ObjectPtr" name="m_bodyDesc" flags="Flatten">
                                                     <Object class="RigidBodyDesc">
@@ -844,6 +900,8 @@
                                         <Property type="Float4x4" name="m_local" Ix="-1.0000001" Iy="-1.1920929e-07" Iz="0" Iw="0" Jx="1.1920929e-07" Jy="-1.0000001" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="-12.5" Ty="8.5" Tz="0.5" Tw="1"/>
                                         <Property type="ObjectPtrVector" name="m_components">
                                             <Object class="MeshComponent">
+                                                <Property type="String" name="m_name" flags="NotVisible" value="MeshComponent #13"/>
+                                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
                                                 <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
                                                 <Property type="Bool" name="m_displayBones" value="false"/>
                                                 <Property type="Resource" name="m_meshResource" flags="Resource">
@@ -869,6 +927,8 @@
                                                 <Property type="BitMask" name="m_batchMask" BitCount="1" Value="0x0000000000000001"/>
                                             </Object>
                                             <Object class="RigidBodyComponent">
+                                                <Property type="String" name="m_name" flags="NotVisible" value="RigidBodyComponent #13"/>
+                                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
                                                 <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
                                                 <Property type="ObjectPtr" name="m_bodyDesc" flags="Flatten">
                                                     <Object class="RigidBodyDesc">
@@ -903,6 +963,8 @@
                                         <Property type="Float4x4" name="m_local" Ix="-1" Iy="0.000488166" Iz="2.5833941e-08" Iw="0" Jx="-0.000488166" Jy="-0.99999994" Jz="-3.1061667e-11" Jw="0" Kx="5.5636278e-08" Ky="2.7166755e-11" Kz="1.0000001" Kw="0" Tx="7.5" Ty="8.5" Tz="0.5" Tw="1"/>
                                         <Property type="ObjectPtrVector" name="m_components">
                                             <Object class="MeshComponent">
+                                                <Property type="String" name="m_name" flags="NotVisible" value="MeshComponent #14"/>
+                                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
                                                 <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
                                                 <Property type="Bool" name="m_displayBones" value="false"/>
                                                 <Property type="Resource" name="m_meshResource" flags="Resource">
@@ -928,6 +990,8 @@
                                                 <Property type="BitMask" name="m_batchMask" BitCount="1" Value="0x0000000000000001"/>
                                             </Object>
                                             <Object class="RigidBodyComponent">
+                                                <Property type="String" name="m_name" flags="NotVisible" value="RigidBodyComponent #14"/>
+                                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
                                                 <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
                                                 <Property type="ObjectPtr" name="m_bodyDesc" flags="Flatten">
                                                     <Object class="RigidBodyDesc">
@@ -962,6 +1026,8 @@
                                         <Property type="Float4x4" name="m_local" Ix="-1" Iy="0.000488166" Iz="2.5833941e-08" Iw="0" Jx="-0.000488166" Jy="-0.99999994" Jz="-3.1061667e-11" Jw="0" Kx="5.5636278e-08" Ky="2.7166755e-11" Kz="1.0000001" Kw="0" Tx="12.5" Ty="8.5" Tz="0.5" Tw="1"/>
                                         <Property type="ObjectPtrVector" name="m_components">
                                             <Object class="MeshComponent">
+                                                <Property type="String" name="m_name" flags="NotVisible" value="MeshComponent #15"/>
+                                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
                                                 <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
                                                 <Property type="Bool" name="m_displayBones" value="false"/>
                                                 <Property type="Resource" name="m_meshResource" flags="Resource">
@@ -987,6 +1053,8 @@
                                                 <Property type="BitMask" name="m_batchMask" BitCount="1" Value="0x0000000000000001"/>
                                             </Object>
                                             <Object class="RigidBodyComponent">
+                                                <Property type="String" name="m_name" flags="NotVisible" value="RigidBodyComponent #15"/>
+                                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
                                                 <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
                                                 <Property type="ObjectPtr" name="m_bodyDesc" flags="Flatten">
                                                     <Object class="RigidBodyDesc">
@@ -1021,6 +1089,8 @@
                                         <Property type="Float4x4" name="m_local" Ix="1" Iy="1.4901161e-07" Iz="0" Iw="0" Jx="-1.4901161e-07" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="-2.4999998" Ty="-8.5000019" Tz="0.5" Tw="1"/>
                                         <Property type="ObjectPtrVector" name="m_components">
                                             <Object class="MeshComponent">
+                                                <Property type="String" name="m_name" flags="NotVisible" value="MeshComponent #16"/>
+                                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
                                                 <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
                                                 <Property type="Bool" name="m_displayBones" value="false"/>
                                                 <Property type="Resource" name="m_meshResource" flags="Resource">
@@ -1046,6 +1116,8 @@
                                                 <Property type="BitMask" name="m_batchMask" BitCount="1" Value="0x0000000000000001"/>
                                             </Object>
                                             <Object class="RigidBodyComponent">
+                                                <Property type="String" name="m_name" flags="NotVisible" value="RigidBodyComponent #16"/>
+                                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
                                                 <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
                                                 <Property type="ObjectPtr" name="m_bodyDesc" flags="Flatten">
                                                     <Object class="RigidBodyDesc">
@@ -1080,6 +1152,8 @@
                                         <Property type="Float4x4" name="m_local" Ix="1" Iy="-0.00048798323" Iz="2.5833941e-08" Iw="0" Jx="0.00048795342" Jy="0.99999988" Jz="-3.1061667e-11" Jw="0" Kx="-5.5636274e-08" Ky="-2.7171154e-11" Kz="1.0000001" Kw="0" Tx="2.500001" Ty="-8.5" Tz="0.5" Tw="1"/>
                                         <Property type="ObjectPtrVector" name="m_components">
                                             <Object class="MeshComponent">
+                                                <Property type="String" name="m_name" flags="NotVisible" value="MeshComponent #17"/>
+                                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
                                                 <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
                                                 <Property type="Bool" name="m_displayBones" value="false"/>
                                                 <Property type="Resource" name="m_meshResource" flags="Resource">
@@ -1105,6 +1179,8 @@
                                                 <Property type="BitMask" name="m_batchMask" BitCount="1" Value="0x0000000000000001"/>
                                             </Object>
                                             <Object class="RigidBodyComponent">
+                                                <Property type="String" name="m_name" flags="NotVisible" value="RigidBodyComponent #17"/>
+                                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
                                                 <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
                                                 <Property type="ObjectPtr" name="m_bodyDesc" flags="Flatten">
                                                     <Object class="RigidBodyDesc">
@@ -1139,6 +1215,8 @@
                                         <Property type="Float4x4" name="m_local" Ix="1" Iy="-0.00048798323" Iz="2.5833941e-08" Iw="0" Jx="0.00048795342" Jy="0.99999988" Jz="-3.1061667e-11" Jw="0" Kx="-5.5636274e-08" Ky="-2.7171154e-11" Kz="1.0000001" Kw="0" Tx="7.500001" Ty="-8.4999981" Tz="0.5" Tw="1"/>
                                         <Property type="ObjectPtrVector" name="m_components">
                                             <Object class="MeshComponent">
+                                                <Property type="String" name="m_name" flags="NotVisible" value="MeshComponent #18"/>
+                                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
                                                 <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
                                                 <Property type="Bool" name="m_displayBones" value="false"/>
                                                 <Property type="Resource" name="m_meshResource" flags="Resource">
@@ -1164,6 +1242,8 @@
                                                 <Property type="BitMask" name="m_batchMask" BitCount="1" Value="0x0000000000000001"/>
                                             </Object>
                                             <Object class="RigidBodyComponent">
+                                                <Property type="String" name="m_name" flags="NotVisible" value="RigidBodyComponent #18"/>
+                                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
                                                 <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
                                                 <Property type="ObjectPtr" name="m_bodyDesc" flags="Flatten">
                                                     <Object class="RigidBodyDesc">
@@ -1198,6 +1278,8 @@
                                         <Property type="Float4x4" name="m_local" Ix="1" Iy="1.4901161e-07" Iz="0" Iw="0" Jx="-1.4901161e-07" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="12.500005" Ty="-8.5" Tz="0.5" Tw="1"/>
                                         <Property type="ObjectPtrVector" name="m_components">
                                             <Object class="MeshComponent">
+                                                <Property type="String" name="m_name" flags="NotVisible" value="MeshComponent #19"/>
+                                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
                                                 <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
                                                 <Property type="Bool" name="m_displayBones" value="false"/>
                                                 <Property type="Resource" name="m_meshResource" flags="Resource">
@@ -1223,6 +1305,8 @@
                                                 <Property type="BitMask" name="m_batchMask" BitCount="1" Value="0x0000000000000001"/>
                                             </Object>
                                             <Object class="RigidBodyComponent">
+                                                <Property type="String" name="m_name" flags="NotVisible" value="RigidBodyComponent #19"/>
+                                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
                                                 <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
                                                 <Property type="ObjectPtr" name="m_bodyDesc" flags="Flatten">
                                                     <Object class="RigidBodyDesc">
@@ -1257,6 +1341,8 @@
                                         <Property type="Float4x4" name="m_local" Ix="1" Iy="-0.00048798323" Iz="2.5833941e-08" Iw="0" Jx="0.00048795342" Jy="0.99999988" Jz="-3.1061667e-11" Jw="0" Kx="-5.5636274e-08" Ky="-2.7171154e-11" Kz="1.0000001" Kw="0" Tx="-7.5" Ty="-8.5" Tz="0.5" Tw="1"/>
                                         <Property type="ObjectPtrVector" name="m_components">
                                             <Object class="MeshComponent">
+                                                <Property type="String" name="m_name" flags="NotVisible" value="MeshComponent #20"/>
+                                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
                                                 <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
                                                 <Property type="Bool" name="m_displayBones" value="false"/>
                                                 <Property type="Resource" name="m_meshResource" flags="Resource">
@@ -1282,6 +1368,8 @@
                                                 <Property type="BitMask" name="m_batchMask" BitCount="1" Value="0x0000000000000001"/>
                                             </Object>
                                             <Object class="RigidBodyComponent">
+                                                <Property type="String" name="m_name" flags="NotVisible" value="RigidBodyComponent #20"/>
+                                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
                                                 <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
                                                 <Property type="ObjectPtr" name="m_bodyDesc" flags="Flatten">
                                                     <Object class="RigidBodyDesc">
@@ -1316,6 +1404,8 @@
                                         <Property type="Float4x4" name="m_local" Ix="1" Iy="-0.00048798323" Iz="2.5833941e-08" Iw="0" Jx="0.00048795342" Jy="0.99999988" Jz="-3.1061667e-11" Jw="0" Kx="-5.5636274e-08" Ky="-2.7171154e-11" Kz="1.0000001" Kw="0" Tx="-12.499997" Ty="-8.5000019" Tz="0.5" Tw="1"/>
                                         <Property type="ObjectPtrVector" name="m_components">
                                             <Object class="MeshComponent">
+                                                <Property type="String" name="m_name" flags="NotVisible" value="MeshComponent #21"/>
+                                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
                                                 <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
                                                 <Property type="Bool" name="m_displayBones" value="false"/>
                                                 <Property type="Resource" name="m_meshResource" flags="Resource">
@@ -1341,6 +1431,8 @@
                                                 <Property type="BitMask" name="m_batchMask" BitCount="1" Value="0x0000000000000001"/>
                                             </Object>
                                             <Object class="RigidBodyComponent">
+                                                <Property type="String" name="m_name" flags="NotVisible" value="RigidBodyComponent #21"/>
+                                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
                                                 <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
                                                 <Property type="ObjectPtr" name="m_bodyDesc" flags="Flatten">
                                                     <Object class="RigidBodyDesc">
@@ -1375,6 +1467,8 @@
                                         <Property type="Float4x4" name="m_local" Ix="1.4901161e-07" Iy="-1" Iz="0" Iw="0" Jx="1" Jy="1.4901161e-07" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="-16.5" Ty="-4.9999986" Tz="0.5" Tw="1"/>
                                         <Property type="ObjectPtrVector" name="m_components">
                                             <Object class="MeshComponent">
+                                                <Property type="String" name="m_name" flags="NotVisible" value="MeshComponent #22"/>
+                                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
                                                 <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
                                                 <Property type="Bool" name="m_displayBones" value="false"/>
                                                 <Property type="Resource" name="m_meshResource" flags="Resource">
@@ -1400,6 +1494,8 @@
                                                 <Property type="BitMask" name="m_batchMask" BitCount="1" Value="0x0000000000000001"/>
                                             </Object>
                                             <Object class="RigidBodyComponent">
+                                                <Property type="String" name="m_name" flags="NotVisible" value="RigidBodyComponent #22"/>
+                                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
                                                 <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
                                                 <Property type="ObjectPtr" name="m_bodyDesc" flags="Flatten">
                                                     <Object class="RigidBodyDesc">
@@ -1434,6 +1530,8 @@
                                         <Property type="Float4x4" name="m_local" Ix="-0.00048810244" Iy="-0.99999988" Iz="2.5833941e-08" Iw="0" Jx="0.99999976" Jy="-0.00048804283" Jz="-3.1061667e-11" Jw="0" Kx="-2.7165825e-11" Ky="5.5636274e-08" Kz="1.0000001" Kw="0" Tx="-16.500002" Ty="5" Tz="0.5" Tw="1"/>
                                         <Property type="ObjectPtrVector" name="m_components">
                                             <Object class="MeshComponent">
+                                                <Property type="String" name="m_name" flags="NotVisible" value="MeshComponent #23"/>
+                                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
                                                 <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
                                                 <Property type="Bool" name="m_displayBones" value="false"/>
                                                 <Property type="Resource" name="m_meshResource" flags="Resource">
@@ -1459,6 +1557,8 @@
                                                 <Property type="BitMask" name="m_batchMask" BitCount="1" Value="0x0000000000000001"/>
                                             </Object>
                                             <Object class="RigidBodyComponent">
+                                                <Property type="String" name="m_name" flags="NotVisible" value="RigidBodyComponent #23"/>
+                                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
                                                 <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
                                                 <Property type="ObjectPtr" name="m_bodyDesc" flags="Flatten">
                                                     <Object class="RigidBodyDesc">
@@ -1493,6 +1593,8 @@
                                         <Property type="Float4x4" name="m_local" Ix="0.00034508505" Iy="0.99999982" Iz="0" Iw="0" Jx="-0.99999982" Jy="0.00034508505" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="16.501728" Ty="4.9993072" Tz="0.5" Tw="1"/>
                                         <Property type="ObjectPtrVector" name="m_components">
                                             <Object class="MeshComponent">
+                                                <Property type="String" name="m_name" flags="NotVisible" value="MeshComponent #24"/>
+                                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
                                                 <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
                                                 <Property type="Bool" name="m_displayBones" value="false"/>
                                                 <Property type="Resource" name="m_meshResource" flags="Resource">
@@ -1518,6 +1620,8 @@
                                                 <Property type="BitMask" name="m_batchMask" BitCount="1" Value="0x0000000000000001"/>
                                             </Object>
                                             <Object class="RigidBodyComponent">
+                                                <Property type="String" name="m_name" flags="NotVisible" value="RigidBodyComponent #24"/>
+                                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
                                                 <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
                                                 <Property type="ObjectPtr" name="m_bodyDesc" flags="Flatten">
                                                     <Object class="RigidBodyDesc">
@@ -1552,6 +1656,8 @@
                                         <Property type="Float4x4" name="m_local" Ix="0.00083330669" Iy="0.99999964" Iz="2.5833941e-08" Iw="0" Jx="-0.99999964" Jy="0.00083318749" Jz="-3.1061667e-11" Jw="0" Kx="7.9500425e-12" Ky="-5.5636285e-08" Kz="1.0000001" Kw="0" Tx="16.498278" Ty="-5.0006919" Tz="0.5" Tw="1"/>
                                         <Property type="ObjectPtrVector" name="m_components">
                                             <Object class="MeshComponent">
+                                                <Property type="String" name="m_name" flags="NotVisible" value="MeshComponent #25"/>
+                                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
                                                 <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
                                                 <Property type="Bool" name="m_displayBones" value="false"/>
                                                 <Property type="Resource" name="m_meshResource" flags="Resource">
@@ -1577,6 +1683,8 @@
                                                 <Property type="BitMask" name="m_batchMask" BitCount="1" Value="0x0000000000000001"/>
                                             </Object>
                                             <Object class="RigidBodyComponent">
+                                                <Property type="String" name="m_name" flags="NotVisible" value="RigidBodyComponent #25"/>
+                                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
                                                 <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
                                                 <Property type="ObjectPtr" name="m_bodyDesc" flags="Flatten">
                                                     <Object class="RigidBodyDesc">
@@ -1621,6 +1729,8 @@
                                         <Property type="Float4x4" name="m_local" Ix="0.17189518" Iy="-0.77839214" Iz="-0.60378516" Iw="0" Jx="0.87428403" Jy="0.40298221" Jz="-0.27061421" Jw="0" Kx="0.45407343" Ky="-0.48130935" Kz="0.74977136" Kw="0" Tx="3.0335252e-06" Ty="-3.0356202e-06" Tz="16" Tw="1"/>
                                         <Property type="ObjectPtrVector" name="m_components">
                                             <Object class="LightComponent">
+                                                <Property type="String" name="m_name" flags="NotVisible" value="LightComponent #0"/>
+                                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
                                                 <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
                                                 <Property type="EnumU8" name="m_lightType" value="Directional"/>
                                                 <Property type="ObjectPtr" name="m_lightDesc" flags="Flatten">
@@ -1649,6 +1759,8 @@
                                         <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="-2" Ty="-0.5" Tz="1.5" Tw="1"/>
                                         <Property type="ObjectPtrVector" name="m_components">
                                             <Object class="LightComponent">
+                                                <Property type="String" name="m_name" flags="NotVisible" value="LightComponent #1"/>
+                                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
                                                 <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value=""/>
                                                 <Property type="EnumU8" name="m_lightType" value="Omni"/>
                                                 <Property type="ObjectPtr" name="m_lightDesc" flags="Flatten">
@@ -1679,6 +1791,8 @@
                                         <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="0" Ty="-0.5" Tz="1.5" Tw="1"/>
                                         <Property type="ObjectPtrVector" name="m_components">
                                             <Object class="LightComponent">
+                                                <Property type="String" name="m_name" flags="NotVisible" value="LightComponent #2"/>
+                                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
                                                 <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value=""/>
                                                 <Property type="EnumU8" name="m_lightType" value="Omni"/>
                                                 <Property type="ObjectPtr" name="m_lightDesc" flags="Flatten">
@@ -1709,6 +1823,8 @@
                                         <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="2" Ty="-0.5" Tz="1.5" Tw="1"/>
                                         <Property type="ObjectPtrVector" name="m_components">
                                             <Object class="LightComponent">
+                                                <Property type="String" name="m_name" flags="NotVisible" value="LightComponent #3"/>
+                                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
                                                 <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value=""/>
                                                 <Property type="EnumU8" name="m_lightType" value="Omni"/>
                                                 <Property type="ObjectPtr" name="m_lightDesc" flags="Flatten">
@@ -1745,7 +1861,7 @@
                         <Property type="ObjectPtrVector" name="m_children" flags="Debug">
                             <Object class="PrefabGameObject">
                                 <Property type="String" name="m_name" value="Pablo"/>
-                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value="Opened"/>
+                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value="Opened|Prefab"/>
                                 <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
                                 <Property type="Float4" name="m_color" flags="Color" x="1" y="1" z="1" w="1"/>
                                 <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="-1.5" Ty="0" Tz="0" Tw="1"/>
@@ -1761,7 +1877,7 @@
                             </Object>
                             <Object class="PrefabGameObject">
                                 <Property type="String" name="m_name" value="Romeo"/>
-                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value="Opened"/>
+                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value="Opened|Prefab"/>
                                 <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
                                 <Property type="Float4" name="m_color" flags="Color" x="1" y="1" z="1" w="1"/>
                                 <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="1.5" Ty="0" Tz="0" Tw="1"/>
@@ -1777,7 +1893,7 @@
                             </Object>
                             <Object class="PrefabGameObject">
                                 <Property type="String" name="m_name" value="Benualdo"/>
-                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value="Opened"/>
+                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value="Opened|Prefab"/>
                                 <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
                                 <Property type="Float4" name="m_color" flags="Color" x="1" y="1" z="1" w="1"/>
                                 <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="0" Ty="0" Tz="0" Tw="1"/>
@@ -1795,7 +1911,7 @@
                     </Object>
                     <Object class="GameObject">
                         <Property type="String" name="m_name" value="Enemies"/>
-                        <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
+                        <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value="Opened"/>
                         <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
                         <Property type="Float4" name="m_color" flags="Color" x="1" y="1" z="1" w="1"/>
                         <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="0" Ty="0" Tz="0" Tw="1"/>
@@ -1803,7 +1919,7 @@
                         <Property type="ObjectPtrVector" name="m_children" flags="Debug">
                             <Object class="PrefabGameObject">
                                 <Property type="String" name="m_name" value="Robert"/>
-                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value="Opened"/>
+                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value="Opened|Prefab"/>
                                 <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
                                 <Property type="Float4" name="m_color" flags="Color" x="1" y="1" z="1" w="1"/>
                                 <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="-1.5" Ty="5" Tz="0" Tw="1"/>
@@ -1819,7 +1935,7 @@
                             </Object>
                             <Object class="PrefabGameObject">
                                 <Property type="String" name="m_name" value="Marcel"/>
-                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value="Opened"/>
+                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value="Opened|Prefab"/>
                                 <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
                                 <Property type="Float4" name="m_color" flags="Color" x="1" y="1" z="1" w="1"/>
                                 <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="1.5" Ty="5" Tz="0" Tw="1"/>
@@ -1835,7 +1951,7 @@
                             </Object>
                             <Object class="PrefabGameObject">
                                 <Property type="String" name="m_name" value="Jean-Philippe"/>
-                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value="Opened"/>
+                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value="Opened|Prefab"/>
                                 <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
                                 <Property type="Float4" name="m_color" flags="Color" x="1" y="1" z="1" w="1"/>
                                 <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="-4.5" Ty="5" Tz="0" Tw="1"/>
@@ -1851,7 +1967,7 @@
                             </Object>
                             <Object class="PrefabGameObject">
                                 <Property type="String" name="m_name" value="Jean-Marie"/>
-                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value="Opened"/>
+                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value="Opened|Prefab"/>
                                 <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
                                 <Property type="Float4" name="m_color" flags="Color" x="1" y="1" z="1" w="1"/>
                                 <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="4.5" Ty="5" Tz="0" Tw="1"/>
@@ -1877,7 +1993,7 @@
                         <Property type="ObjectPtrVector" name="m_children" flags="Debug">
                             <Object class="PrefabGameObject">
                                 <Property type="String" name="m_name" value="Justin"/>
-                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
+                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value="Prefab"/>
                                 <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
                                 <Property type="Float4" name="m_color" flags="Color" x="1" y="1" z="1" w="1"/>
                                 <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="-4" Ty="0" Tz="0" Tw="1"/>
