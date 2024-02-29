@@ -89,27 +89,34 @@ namespace vg::renderer
                             IGameObject * go = dynamic_cast<IGameObject *>(parent);
                             if (nullptr != go)
                             {
+                                bool autoSelectParentPrefab = false;
                                 auto * parentPrefab = go->GetParentPrefab();
                                 if (parentPrefab)
                                 {
-                                    go = parentPrefab;
+                                    bool prefabSelected = selection->IsSelectedObject(parentPrefab);
 
+                                    if (!prefabSelected)
+                                    {
+                                        go = parentPrefab;
+                                        autoSelectParentPrefab = true;
+                                    }
+                                }
+
+                                if (autoSelectParentPrefab)
+                                {
                                     if (_showTooltip)
-                                        //_tooltipMsg = fmt::sprintf("Prefab \"%s\"", go->getName());
                                         _tooltipMsg = fmt::sprintf("%s %s", editor::style::icon::Prefab, go->getName());
                                 }
                                 else
                                 {
                                     if (_showTooltip)
-                                        //_tooltipMsg = fmt::sprintf("GameObject \"%s\"", go->getName());
+                                    {
                                         _tooltipMsg = fmt::sprintf("%s %s", editor::style::icon::GameObject, go->getName());
-                                }
 
-                                if (_showTooltip)
-                                {
-                                    string subObjectName = component->GetSubObjectName((uint)id.y);
-                                    if (!subObjectName.empty())
-                                        _tooltipMsg += fmt::sprintf(", %s", subObjectName);
+                                        string subObjectName = component->GetSubObjectName((uint)id.y);
+                                        if (!subObjectName.empty())
+                                            _tooltipMsg += fmt::sprintf(", %s", subObjectName);
+                                    }
                                 }
 
                                 if (_showTooltip)
@@ -138,7 +145,27 @@ namespace vg::renderer
                 }
             }
 
-            if (!isValidPicking)
+            // ensure top-level selected objects are expanded
+            if (isValidPicking)
+            {
+                const auto selectedObject = selection->GetSelectedObjects();
+                const auto topSelectedObjects = selection->RemoveChildGameObjectsWithParents(selectedObject);
+                for (uint i = 0; i < topSelectedObjects.size(); ++i)
+                {
+                    auto * obj = dynamic_cast<IGameObject *>(topSelectedObjects[i]);
+                    if (obj)
+                    {
+                        // Open all parents but not the object itself
+                        obj = dynamic_cast<IGameObject *>(obj->getParent());
+                        while (nullptr != obj)
+                        {
+                            obj->SetObjectFlags(ObjectFlags::Opened, true);
+                            obj = dynamic_cast<IGameObject *>(obj->getParent());
+                        }
+                    }
+                }
+            }
+            else
             {
                 if (input->IsMouseButtonJustPressed(MouseButton::Left))
                 {

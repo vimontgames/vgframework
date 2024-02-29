@@ -181,7 +181,8 @@ namespace vg::editor
             open = ImGui::TreeNodeEx(gameObjectLabel.c_str(), flags | ImGuiTreeNodeFlags_SpanAvailWidth | ImGuiTreeNodeFlags_SpanFullWidth);
         }
 
-        if (open != isOpen)
+        // Do not automatically open Leaf nodes when children are added
+        if (0 == (flags & ImGuiTreeNodeFlags_Leaf) && open != isOpen)
             _gameObject->SetObjectFlags(ObjectFlags::Opened, open);
 
         if (isPrefab)
