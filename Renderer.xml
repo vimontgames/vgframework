@@ -3,7 +3,7 @@
         <Property type="String" name="m_name" flags="NotVisible" value="Renderer Options"/>
         <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
         <Property type="Bool" name="m_toolMode" value="false"/>
-        <Property type="Bool" name="m_rayTracing" flags="SameLine" value="true"/>
+        <Property type="Bool" name="m_rayTracing" flags="SameLine" value="false"/>
         <Property type="Bool" name="m_postProcess" flags="SameLine" value="true"/>
         <Property type="EnumU8" name="m_lightingMode" value="Deferred"/>
         <Property type="EnumU32" name="m_debugDisplayMode" value="None"/>
