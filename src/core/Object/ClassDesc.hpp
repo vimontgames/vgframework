@@ -315,6 +315,18 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
+    ClassDesc::Priority ClassDesc::GetPriority() const
+    {
+        return priority;
+    }
+    
+    //--------------------------------------------------------------------------------------
+    void ClassDesc::SetPriority(Priority _priority)
+    {
+        priority = _priority;
+    }
+
+    //--------------------------------------------------------------------------------------
     uint ClassDesc::GetPropertyCount() const
     {
         return (uint)properties.size();

@@ -63,10 +63,12 @@ namespace vg::core
         const char *                        GetCategory                 () const final override;
         const char *                        GetDescription              () const final override;
         const char *                        GetIcon                     () const final override;
+        Priority                            GetPriority                 () const final override;
 
         void                                SetCategory                 (const char * _category) final override;
         void                                SetDescription              (const char * _description) final override;
         void                                SetIcon                     (const char * _icon) final override;
+        void                                SetPriority                 (Priority _priority) final override;
 
         uint                                GetPropertyCount            () const final override;
         const IProperty *                   GetPropertyByIndex          (uint _index) const final override;
@@ -88,11 +90,12 @@ namespace vg::core
         const char *                        icon                        = nullptr;
         IClassDesc::Flags                   flags                       = IClassDesc::Flags::None;
         u32                                 sizeOf                      = 0;
+        Priority                            priority                    = 0;
         IClassDesc::Func                    createFunc                  = nullptr;
         IClassDesc::SingletonFunc           createSingletonFunc         = nullptr;
         IClassDesc::ResizeVectorFunc        resizeVectorFunc            = nullptr;
-        vector<Property>                    properties;
 
+        vector<Property>                    properties;
         mutable u32                         count = 0;
 
     private:

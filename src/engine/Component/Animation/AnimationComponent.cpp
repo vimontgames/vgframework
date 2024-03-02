@@ -14,7 +14,7 @@ using namespace vg::renderer;
 
 namespace vg::engine
 {
-    VG_REGISTER_COMPONENT_CLASS(AnimationComponent, "Animation", "Rendering", "List of animations to use with a skinned Mesh component", editor::style::icon::Animation);
+    VG_REGISTER_COMPONENT_CLASS(AnimationComponent, "Animation", "Rendering", "List of animations to use with a skinned Mesh component", editor::style::icon::Animation, 0);
 
     //--------------------------------------------------------------------------------------
     bool AnimationComponent::registerProperties(IClassDesc & _desc)

@@ -12,7 +12,7 @@ using namespace vg::core;
 
 namespace vg::engine
 {
-    VG_REGISTER_COMPONENT_CLASS(RigidBodyComponent, "RigidBody", "Physics", "Rigid body to interact with physics world", editor::style::icon::RigidBody);
+    VG_REGISTER_COMPONENT_CLASS(RigidBodyComponent, "RigidBody", "Physics", "Rigid body to interact with physics world", editor::style::icon::RigidBody, 0);
 
     //--------------------------------------------------------------------------------------
     bool RigidBodyComponent::registerProperties(core::IClassDesc & _desc)

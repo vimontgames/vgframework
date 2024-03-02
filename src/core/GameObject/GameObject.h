@@ -68,6 +68,8 @@ namespace vg::core
         VG_INLINE UpdateFlags                               getUpdateFlags          () const;
         VG_INLINE void                                      setUpdateFlags          (UpdateFlags _flags, bool _enabled);
 
+        void                                                sortComponents          ();
+
     private:
         UpdateFlags                                         m_update = (UpdateFlags)0x0;
         vector<Component *>                                 m_components;

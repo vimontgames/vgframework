@@ -14,7 +14,7 @@ using namespace vg::core;
 
 namespace vg::engine
 {
-    VG_REGISTER_COMPONENT_CLASS(LightComponent, "Light", "Rendering", "Light component to light up scene", editor::style::icon::Light);
+    VG_REGISTER_COMPONENT_CLASS(LightComponent, "Light", "Rendering", "Light component to light up scene", editor::style::icon::Light, 0);
 
     //--------------------------------------------------------------------------------------
     bool LightComponent::registerProperties(IClassDesc & _desc)

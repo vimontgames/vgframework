@@ -10,7 +10,7 @@
 using namespace vg::core;
 using namespace vg::engine;
 
-VG_REGISTER_COMPONENT_CLASS(EnemyBehaviour, "Enemy", "Game", "Player Behaviour", vg::editor::style::icon::Script);
+VG_REGISTER_COMPONENT_CLASS(EnemyBehaviour, "Enemy", "Game", "Player Behaviour", vg::editor::style::icon::Script, -2);
 
 //--------------------------------------------------------------------------------------
 EnemyBehaviour::EnemyBehaviour(const string & _name, IObject * _parent) :

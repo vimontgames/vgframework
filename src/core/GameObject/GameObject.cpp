@@ -63,6 +63,19 @@ namespace vg::core
     {
         super::OnLoad();
         recomputeUpdateFlags();
+        sortComponents();
+    }
+
+    //--------------------------------------------------------------------------------------
+    // Sort component by priority defined in their ClassDesc
+    //--------------------------------------------------------------------------------------
+    void GameObject::sortComponents()
+    {
+        sort(m_components.begin(), m_components.end(), [](Component * a, Component * b)
+        {
+            return a->GetClassDesc()->GetPriority() < b->GetClassDesc()->GetPriority();
+        }
+        );
     }
 
     //--------------------------------------------------------------------------------------
@@ -299,6 +312,7 @@ namespace vg::core
 
             _component->setParent(this); 
             recomputeUpdateFlags();
+            sortComponents();
         }
     }
 
