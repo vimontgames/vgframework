@@ -31,7 +31,7 @@ namespace vg::gfx
         using super = VG_GFXAPI::GraphicPipelineState;
 
     public:
-        const char * getClassName() const final { return "GraphicPipelineState"; }
+        const char * GetClassName() const final { return "GraphicPipelineState"; }
 
         GraphicPipelineState(const GraphicPipelineStateKey & _key);
         ~GraphicPipelineState();

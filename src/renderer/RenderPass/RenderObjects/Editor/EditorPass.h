@@ -8,7 +8,7 @@ namespace vg::renderer
     class EditorPass : public RenderObjectsPass
     {
     public:
-        const char * getClassName() const final { return "EditorPass"; }
+        const char * GetClassName() const final { return "EditorPass"; }
 
         EditorPass();
         ~EditorPass();

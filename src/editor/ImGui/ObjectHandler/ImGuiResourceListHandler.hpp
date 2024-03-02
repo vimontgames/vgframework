@@ -16,7 +16,7 @@ namespace vg::editor
         void displayResourceList(IObject * _object, const core::string & _label, const core::string & _vectorPropName)
         {
             const auto * factory = Kernel::getFactory();
-            const auto * classDesc = factory->getClassDescriptor(_object->getClassName());
+            const auto * classDesc = factory->getClassDescriptor(_object->GetClassName());
             auto list = dynamic_cast<engine::IResourceList *>(_object);
             auto availableWidth = ImGui::GetContentRegionAvail().x;
 

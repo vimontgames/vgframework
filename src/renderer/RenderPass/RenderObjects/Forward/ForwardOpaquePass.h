@@ -8,7 +8,7 @@ namespace vg::renderer
     class ForwardOpaquePass : public RenderObjectsPass
     {
     public:
-        const char * getClassName() const final { return "ForwardOpaquePass"; }
+        const char * GetClassName() const final { return "ForwardOpaquePass"; }
 
         ForwardOpaquePass();
         ~ForwardOpaquePass();

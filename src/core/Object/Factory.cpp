@@ -15,6 +15,8 @@ using namespace tinyxml2;
 
 namespace vg::core
 {
+    static const uint classDescMaxCount = 1024;
+
     //--------------------------------------------------------------------------------------
     Factory::Factory()
     {
@@ -27,15 +29,16 @@ namespace vg::core
 
         // TODO : make proper API to register deprecated property names names for each class
         m_oldPropertyNames.insert(std::pair("m_world", "m_local"));
+
+        // Resizing m_classes would change class descriptor addresses
+        m_classes.reserve(classDescMaxCount);
     }
 
     //--------------------------------------------------------------------------------------
     Factory::~Factory()
     {
         for (auto val : m_initValues)
-        {
             VG_SAFE_DELETE(val.second);
-        }
         m_initValues.clear();
     }
 
@@ -54,6 +57,8 @@ namespace vg::core
                 return nullptr; 
             }
         }   
+
+        VG_ASSERT(m_classes.size() < classDescMaxCount);
 
         ClassDesc classDesc;
         classDesc.name = _className;
@@ -135,7 +140,7 @@ namespace vg::core
             if (_name.length())
                 obj->setName(_name);
             else
-                obj->setName((string)obj->getClassName() + " #" + to_string(index));
+                obj->setName((string)obj->GetClassName() + " #" + to_string(index));
 
             return obj;
         }
@@ -202,7 +207,7 @@ namespace vg::core
     //--------------------------------------------------------------------------------------
     IObject * Factory::Instanciate(const core::IObject * _object, IObject * _parent)
     {
-        const auto className = _object->getClassName();
+        const auto className = _object->GetClassName();
         
         IObject * newObj = createObject(className, _object->getName(), _parent);
         VG_ASSERT(nullptr != newObj);
@@ -236,8 +241,8 @@ namespace vg::core
     bool Factory::CopyProperties(const core::IObject * _srcObj, core::IObject * _dstObj)
     {
         // Copy all properties from this to new GameObject
-        const auto srcClassName = _srcObj->getClassName();
-        const auto dstClassName = _dstObj->getClassName();
+        const auto srcClassName = _srcObj->GetClassName();
+        const auto dstClassName = _dstObj->GetClassName();
         VG_ASSERT(dstClassName == srcClassName);
 
         const auto * classDesc = Kernel::getFactory()->getClassDescriptor(srcClassName);
@@ -358,7 +363,7 @@ namespace vg::core
                     for (uint i = 0; i < count; ++i)
                     {
                         IObject * srcChild = (*srcVec)[i];
-                        IObject * newChild = createObject(srcChild->getClassName(), srcChild->getName(), _dstObj);
+                        IObject * newChild = createObject(srcChild->GetClassName(), srcChild->getName(), _dstObj);
                         CopyProperties((IObject *)srcChild, newChild);
                         newChild->setParent(_dstObj);
                         dstVec->push_back(newChild);
@@ -384,7 +389,7 @@ namespace vg::core
 
                     if (srcCount > 0)
                     {
-                        const char * elemClassName = prop->GetPropertyResourceVectorElement(_srcObj, 0)->getClassName();
+                        const char * elemClassName = prop->GetPropertyResourceVectorElement(_srcObj, 0)->GetClassName();
                         const IClassDesc * elemClassDesc = getClassDescriptor(elemClassName);
                         VG_ASSERT(elemClassDesc);
                         if (elemClassDesc)
@@ -453,7 +458,7 @@ namespace vg::core
     //--------------------------------------------------------------------------------------
     bool Factory::serializeToMemory(const IObject * _object, io::Buffer & _buffer)
     {
-        const char * className = _object->getClassName();
+        const char * className = _object->GetClassName();
         const auto * classDesc = getClassDescriptor(className);
 
         for (uint p = 0; p < classDesc->GetPropertyCount(); ++p)
@@ -512,7 +517,7 @@ namespace vg::core
     //--------------------------------------------------------------------------------------
     bool Factory::serializeFromMemory(IObject * _object, io::Buffer & _buffer)
     {
-        const char * className = _object->getClassName();
+        const char * className = _object->GetClassName();
         const auto * classDesc = getClassDescriptor(className);
 
         for (uint p = 0; p < classDesc->GetPropertyCount(); ++p)
@@ -564,7 +569,7 @@ namespace vg::core
                     bool changed = false;
                     VG_VERIFY(_buffer.restore(dst, size, changed));
                     //if (changed)
-                    //    VG_INFO("[Factory] Property (%s) '%s' from %s \"%s\" has been restored", asString(type).c_str(), name, _object->getClassName(), _object->getName().c_str());
+                    //    VG_INFO("[Factory] Property (%s) '%s' from %s \"%s\" has been restored", asString(type).c_str(), name, _object->GetClassName(), _object->getName().c_str());
                 }
             }
         }
@@ -1257,7 +1262,7 @@ namespace vg::core
     {
         auto * parent = nullptr != _parent ? _parent : _xmlDoc.RootElement();
 
-        const char * className = _object->getClassName();
+        const char * className = _object->GetClassName();
 
         if (auto instance = dynamic_cast<const IInstance *>(_object))
         {

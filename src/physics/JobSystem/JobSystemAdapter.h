@@ -16,7 +16,7 @@ namespace vg::physics
                                 JobSystemAdapter    (core::uint _maxPhysicsBarriers);
                                 ~JobSystemAdapter   ();
 
-        const char *            getClassName        () const { return "JobSystemAdapter"; }
+        const char *            GetClassName        () const { return "JobSystemAdapter"; }
 
         int                     GetMaxConcurrency   () const final override;
         JPH::JobHandle          CreateJob           (const char * _name, JPH::ColorArg _color, const JobFunction & _jobFunction, JPH::uint32 _numDependencies = 0)  final override;

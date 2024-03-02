@@ -11,7 +11,7 @@ namespace vg::renderer
     class ComputeSkinningPass : public ComputePass
     {
     public:
-        const char * getClassName() const final { return "ComputeSkinningPass"; }
+        const char * GetClassName() const final { return "ComputeSkinningPass"; }
 
         ComputeSkinningPass();
         ~ComputeSkinningPass();

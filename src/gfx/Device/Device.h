@@ -123,7 +123,7 @@ namespace vg::gfx
 		using super = VG_GFXAPI::Device;
 
 	public:
-        const char *        getClassName        () const final { return "Device"; }
+        const char *        GetClassName        () const final { return "Device"; }
 
 		void		        init			    (const DeviceParams & _params);
 		void		        deinit			    ();

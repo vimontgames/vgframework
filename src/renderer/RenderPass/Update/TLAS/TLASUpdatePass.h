@@ -13,7 +13,7 @@ namespace vg::renderer
     class TLASUpdatePass : public UpdatePass
     {
     public:
-        const char * getClassName() const final { return "TLASUpdatePass"; }
+        const char * GetClassName() const final { return "TLASUpdatePass"; }
 
         TLASUpdatePass();
         ~TLASUpdatePass();

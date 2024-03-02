@@ -56,7 +56,7 @@ namespace vg::engine
 
         const Time &                            GetTime             () const final override;
 
-        const char *                            getClassName        () const final { return "Engine"; }
+        const char *                            GetClassName        () const final { return "Engine"; }
         bool                                    RegisterClasses     () override;
         bool                                    UnregisterClasses   ();
         static bool                             registerProperties  (core::IClassDesc & _desc);

@@ -7,7 +7,7 @@ namespace vg::renderer
     class ComputeDeferredLightingPass : public ComputePass
     {
     public:
-        const char * getClassName() const final { return "ComputeDeferredLightingPass"; }
+        const char * GetClassName() const final { return "ComputeDeferredLightingPass"; }
 
         ComputeDeferredLightingPass();
         ~ComputeDeferredLightingPass();

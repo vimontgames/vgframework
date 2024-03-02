@@ -30,7 +30,7 @@ namespace vg::gfx
         using super = VG_GFXAPI::RootSignature;
 
     public:
-        const char * getClassName() const final { return "RootSignature"; }
+        const char * GetClassName() const final { return "RootSignature"; }
 
         RootSignature(const RootSignatureDesc & _desc);
         ~RootSignature();

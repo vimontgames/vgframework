@@ -165,7 +165,7 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
-    const char * Property::getClassName() const
+    const char * Property::GetClassName() const
     {
         return className;
     }

@@ -13,7 +13,7 @@ namespace vg::renderer
     class InstanceDataUpdatePass : public UpdatePass
     {
     public:
-        const char * getClassName() const final { return "InstanceDataUpdatePass"; }
+        const char * GetClassName() const final { return "InstanceDataUpdatePass"; }
 
         InstanceDataUpdatePass();
         ~InstanceDataUpdatePass();

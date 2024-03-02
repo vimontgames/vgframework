@@ -21,7 +21,7 @@ namespace vg::editor
             auto * go = dynamic_cast<core::IGameObject*>(_object);
 
             const auto * factory = Kernel::getFactory();
-            const auto * classDesc = factory->getClassDescriptor(go->getClassName());
+            const auto * classDesc = factory->getClassDescriptor(go->GetClassName());
 
             // Sort top-level properties to display components at the end
             const char * curClassName = nullptr;
@@ -72,9 +72,9 @@ namespace vg::editor
                 
                     if (strcmp(prop->getName(), "m_components"))
                     {
-                        if (curClassName != prop->getClassName())
+                        if (curClassName != prop->GetClassName())
                         {
-                            curClassName = prop->getClassName();
+                            curClassName = prop->GetClassName();
                             visible = true;
                         }
                 

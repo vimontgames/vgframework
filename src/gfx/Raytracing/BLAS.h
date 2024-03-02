@@ -38,7 +38,7 @@ namespace vg::gfx
     {
     public:
         using super = VG_GFXAPI::BLAS;
-        const char * getClassName() const final { return "BLAS"; }
+        const char * GetClassName() const final { return "BLAS"; }
 
         BLAS(BLASUpdateType _blasUpdateType, BLASVariantKey _key);
         ~BLAS();

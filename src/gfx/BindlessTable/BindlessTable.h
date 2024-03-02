@@ -70,7 +70,7 @@ namespace vg::gfx
         using super = VG_GFXAPI::BindlessTable;
 
     public:
-        const char * getClassName() const final { return "BindlessTable"; }
+        const char * GetClassName() const final { return "BindlessTable"; }
 
         BindlessTable();
         ~BindlessTable();

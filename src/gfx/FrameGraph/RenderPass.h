@@ -45,7 +45,7 @@ namespace vg::gfx
 		using super = VG_GFXAPI::RenderPass;
 
 	public:
-        const char * getClassName() const final { return "RenderPass"; }
+        const char * GetClassName() const final { return "RenderPass"; }
 
 		RenderPass(RenderPassType _renderPassType, const RenderPassKey & _key);
 		~RenderPass();

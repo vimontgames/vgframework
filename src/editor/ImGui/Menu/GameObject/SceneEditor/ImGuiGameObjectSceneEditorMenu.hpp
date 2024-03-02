@@ -237,7 +237,7 @@ namespace vg::editor
             }
             else
             { 
-                msg = "Are you sure you want to delete " + (string)gameObject->getClassName() + " \"" + gameObject->getName() + "\"?";
+                msg = "Are you sure you want to delete " + (string)gameObject->GetClassName() + " \"" + gameObject->getName() + "\"?";
             }
             ImGui::MessageBox(MessageBoxType::YesNo, "Delete GameObject", msg.c_str(), deleteGameObject);
         }

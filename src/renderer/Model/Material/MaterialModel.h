@@ -37,7 +37,7 @@ namespace vg
 
         public:
 
-            const char *                getClassName            () const = 0;
+            const char *                GetClassName            () const = 0;
 
             static bool                 registerProperties      (core::IClassDesc & _desc);
 

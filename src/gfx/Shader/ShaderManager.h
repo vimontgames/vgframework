@@ -13,7 +13,7 @@ namespace vg::gfx
     class ShaderManager : public IShaderManager, public core::Singleton<ShaderManager>
     {
     public:
-        const char * getClassName() const final { return "ShaderManager"; }
+        const char * GetClassName() const final { return "ShaderManager"; }
 
         ShaderManager(const core::string & _shaderRootPath);
         ~ShaderManager();

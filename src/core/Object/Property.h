@@ -22,7 +22,7 @@ namespace vg::core
 
         const char *                    getInterface                    () const final override;
         const char *                    getName                         () const final override;
-        const char *                    getClassName                    () const final override;
+        const char *                    GetClassName                    () const final override;
         const char *                    getDefaultFolder                () const final override;
         Type                            getType                         () const final override;
         uint_ptr                        getOffset                       () const final override;

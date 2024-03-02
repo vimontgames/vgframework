@@ -30,7 +30,7 @@ namespace vg::gfx
 		using super = VG_GFXAPI::SubPass;
 
 	public:
-        const char * getClassName() const final { return "SubPass"; }
+        const char * GetClassName() const final { return "SubPass"; }
 
 		SubPass(/*const vector<AttachmentInfo> & _resourceTransitions*/);
 		~SubPass();

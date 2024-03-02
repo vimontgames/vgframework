@@ -140,7 +140,7 @@ namespace vg::core
     //--------------------------------------------------------------------------------------
     void Resource::unload(const core::string & _file)
     {
-        //VG_INFO("[Resource] Unload %s \"%s\"", getClassName(), _file.c_str());
+        //VG_INFO("[Resource] Unload %s \"%s\"", GetClassName(), _file.c_str());
     }
 
     //--------------------------------------------------------------------------------------

@@ -13,7 +13,7 @@ namespace vg::renderer
     class GPUDebugUpdatePass : public UpdatePass
     {
     public:
-        const char * getClassName() const final { return "GPUDebugUpdatePass"; }
+        const char * GetClassName() const final { return "GPUDebugUpdatePass"; }
 
         GPUDebugUpdatePass();
         ~GPUDebugUpdatePass();

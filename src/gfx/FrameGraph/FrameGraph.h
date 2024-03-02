@@ -55,7 +55,7 @@ namespace vg::gfx
             core::vector<FrameGraphResourceTransitionDesc>  m_resourceTransitions;
         };
 
-        const char * getClassName() const final { return "FrameGraph"; }
+        const char * GetClassName() const final { return "FrameGraph"; }
 
 		FrameGraph();
 		~FrameGraph();

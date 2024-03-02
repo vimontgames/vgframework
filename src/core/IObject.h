@@ -20,9 +20,10 @@ namespace vg::core
 	{
 	public:
         static const char *                 getStaticClassName  () { return "IObject"; }
-        virtual const char *                getClassName        () const = 0;
+        virtual const char *                GetClassName        () const = 0;
 
-        virtual const IClassDesc *          getClassDesc        () const = 0;
+        virtual void                        SetClassDesc        (const IClassDesc * _classDesc) = 0;
+        virtual const IClassDesc *          GetClassDesc        () const = 0;
 
 										    IObject		        () = default;
 		virtual							    ~IObject	        () = default;

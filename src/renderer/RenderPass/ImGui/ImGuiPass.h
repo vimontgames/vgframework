@@ -16,7 +16,7 @@ namespace vg::renderer
     class ImGuiPass : public gfx::UserPass
     {
     public:
-        const char * getClassName() const final { return "ImGuiPass"; }
+        const char * GetClassName() const final { return "ImGuiPass"; }
 
         ImGuiPass();
         ~ImGuiPass();

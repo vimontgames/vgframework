@@ -28,7 +28,7 @@ namespace vg::gfx
 		using super = VG_GFXAPI::CommandPool;
 
 	public:
-        const char * getClassName() const final { return "CommandPool"; }
+        const char * GetClassName() const final { return "CommandPool"; }
 
 		CommandPool(core::uint _frame, core::uint _index);
 		~CommandPool();

@@ -7,6 +7,9 @@ namespace vg::core
 {
     struct ClassDesc final : public IClassDesc
     {
+        ClassDesc();
+        ~ClassDesc();
+
         bool                                IsRegisteredProperty        (const char * _propertyName) final override;
 
         void                                RegisterPropertyLayout      (const char * _className, IProperty::LayoutElementType _layoutElementType, const char * _label, bool * _offset, IProperty::Flags _flags = IProperty::Flags::None) final override;

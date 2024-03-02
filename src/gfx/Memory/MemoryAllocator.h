@@ -24,7 +24,7 @@ namespace vg::gfx
         using super = VG_GFXAPI::MemoryAllocator;
 
     public:
-        const char * getClassName() const final { return "MemoryAllocator"; }
+        const char * GetClassName() const final { return "MemoryAllocator"; }
 
         MemoryAllocator();
         ~MemoryAllocator();

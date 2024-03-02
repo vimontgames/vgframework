@@ -104,7 +104,7 @@ namespace vg::core
 
         virtual const char *                    getInterface                    () const = 0;
         virtual const char *                    getName                         () const = 0;
-        virtual const char *                    getClassName                    () const = 0;
+        virtual const char *                    GetClassName                    () const = 0;
         virtual const char *                    getDisplayName                  () const = 0;
         virtual const char *                    getDefaultFolder                () const = 0;
         virtual Type                            getType                         () const = 0;

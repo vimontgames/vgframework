@@ -8,7 +8,7 @@ namespace vg::renderer
     class BackgroundPass : public Render2DPass
     {
     public:
-        const char * getClassName() const final { return "BackgroundPass"; }
+        const char * GetClassName() const final { return "BackgroundPass"; }
 
         BackgroundPass();
         ~BackgroundPass();

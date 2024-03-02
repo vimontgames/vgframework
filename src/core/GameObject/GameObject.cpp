@@ -170,7 +170,7 @@ namespace vg::core
                 Component* component = m_components[i];
                 if (asBool(ComponentFlags::Enabled & component->getComponentFlags()) && asBool(UpdateFlags::FixedUpdate & component->getUpdateFlags()))
                 {
-                    VG_PROFILE_CPU(component->getClassName());
+                    VG_PROFILE_CPU(component->GetClassName());
                     component->FixedUpdate(_dt);
                 }
             }
@@ -198,7 +198,7 @@ namespace vg::core
                 Component* component = m_components[i];
                 if (asBool(ComponentFlags::Enabled & component->getComponentFlags()) && asBool(UpdateFlags::Update & component->getUpdateFlags()))
                 {
-                    VG_PROFILE_CPU(component->getClassName());
+                    VG_PROFILE_CPU(component->GetClassName());
                     component->Update(_dt);
                 }
             }
@@ -226,7 +226,7 @@ namespace vg::core
                 Component* component = m_components[i];
                 if (asBool(ComponentFlags::Enabled & component->getComponentFlags()) && asBool(UpdateFlags::LateUpdate & component->getUpdateFlags()))
                 {
-                    VG_PROFILE_CPU(component->getClassName());
+                    VG_PROFILE_CPU(component->GetClassName());
                     component->LateUpdate(_dt);
                 }
             }
@@ -317,13 +317,13 @@ namespace vg::core
             auto * component = components[i];
             if (nullptr != component)
             {
-                if (!strcmp(component->getClassName(), _className))
+                if (!strcmp(component->GetClassName(), _className))
                 {
                     return component;
                 }
                 else 
                 {
-                    const auto * classDesc = Kernel::getFactory()->getClassDescriptor(component->getClassName());
+                    const auto * classDesc = Kernel::getFactory()->getClassDescriptor(component->GetClassName());
                     if (nullptr != classDesc)
                     {
                         const char * interfaceName = classDesc->GetParentClassName();

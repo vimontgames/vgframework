@@ -40,7 +40,7 @@ namespace vg::renderer
 								                Renderer			        (const core::string & _name, core::IObject * _parent);
 								                ~Renderer			        ();
 
-        const char *                            getClassName                () const final { return "Renderer"; }
+        const char *                            GetClassName                () const final { return "Renderer"; }
         bool                                    RegisterClasses             () override;
         bool                                    UnregisterClasses           ();
         static bool                             registerProperties          (core::IClassDesc & _desc);

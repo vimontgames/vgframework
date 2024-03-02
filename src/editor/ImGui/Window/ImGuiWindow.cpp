@@ -122,7 +122,7 @@ namespace vg::editor
     //--------------------------------------------------------------------------------------
     string ImGuiWindow::getButtonLabel(string _baseName, IObject * _object)
     {
-        return _baseName + "##" + _object->getClassName() + "##" + to_string((u64)&_object); // TODO: Object GUID?
+        return _baseName + "##" + _object->GetClassName() + "##" + to_string((u64)&_object); // TODO: Object GUID?
     }
 
     //--------------------------------------------------------------------------------------
@@ -283,7 +283,7 @@ namespace vg::editor
     //--------------------------------------------------------------------------------------
     void ImGuiWindow::displayObject(core::IObject * _object, ObjectContext & _context)
     {
-        const char * className = _object->getClassName();
+        const char * className = _object->GetClassName();
 
         const auto * factory = Kernel::getFactory();
         const auto * classDesc = factory->getClassDescriptor(className);
@@ -331,7 +331,7 @@ namespace vg::editor
 
         auto treeNodeFlags = ImGuiTreeNodeFlags_OpenOnArrow;
 
-        const bool isComponent = nullptr != _object && _object->getClassDesc() && asBool(IClassDesc::Flags::Component & _object->getClassDesc()->GetFlags());
+        const bool isComponent = nullptr != _object && _object->GetClassDesc() && asBool(IClassDesc::Flags::Component & _object->GetClassDesc()->GetFlags());
         if (isComponent)
         {
             displayObject(_object);
@@ -412,7 +412,7 @@ namespace vg::editor
         if (asBool(IProperty::Flags::Optional & flags))
         {
             // check previous property is bool
-            const IClassDesc * classDesc = _object->getClassDesc();
+            const IClassDesc * classDesc = _object->GetClassDesc();
             optionalProp = classDesc->GetPreviousProperty(_prop->getName());
             if (optionalProp)
             {
@@ -1041,8 +1041,8 @@ namespace vg::editor
                                 if (i == 0)
                                     dragAndDropInterline(pComponent, style::draganddrop::BeforeNode);
                                 
-                                auto * classDesc = pComponent->getClassDesc();
-                                string componentShortName = fmt::sprintf("%s %s", classDesc->GetIcon(), classDesc->GetClassDisplayName()); // pComponent->getClassName();
+                                auto * classDesc = pComponent->GetClassDesc();
+                                string componentShortName = fmt::sprintf("%s %s", classDesc->GetIcon(), classDesc->GetClassDisplayName()); // pComponent->GetClassName();
 
                                 // Remove "Component" at the end of class name if present
                                 {
@@ -1253,7 +1253,7 @@ namespace vg::editor
 
                         if (nullptr != pObject)
                         {
-                            auto classDesc = pObject->getClassDesc();
+                            auto classDesc = pObject->GetClassDesc();
                             VG_ASSERT(classDesc);
                             if (classDesc && asBool(IClassDesc::Flags::Component & classDesc->GetFlags()))
                                 treeNodeFlags |= ImGuiTreeNodeFlags_Leaf;
@@ -1401,7 +1401,7 @@ namespace vg::editor
     //--------------------------------------------------------------------------------------
     bool ImGuiWindow::displayResource(core::IResource * _resource, const core::IProperty * _prop, core::uint _index)
     {
-        const char * className = _resource->getClassName();
+        const char * className = _resource->GetClassName();
         const auto * factory = Kernel::getFactory();
         const auto * classDesc = factory->getClassDescriptor(className);
 
@@ -1598,7 +1598,7 @@ namespace vg::editor
         if (resourceObject)
         {
             bool anyVisibleProperty = false;
-            auto * objectClassDesc = factory->getClassDescriptor(resourceObject->getClassName());
+            auto * objectClassDesc = factory->getClassDescriptor(resourceObject->GetClassName());
 
             for (uint i = 0; i < objectClassDesc->GetPropertyCount(); ++i)
             {
@@ -1611,7 +1611,7 @@ namespace vg::editor
                 }
             }
 
-            if (!strcmp(_resource->getClassName(), "PrefabResource"))
+            if (!strcmp(_resource->GetClassName(), "PrefabResource"))
                 anyVisibleProperty = false;
 
             if (anyVisibleProperty)
@@ -1662,7 +1662,7 @@ namespace vg::editor
     //--------------------------------------------------------------------------------------
     string ImGuiWindow::getDefaultFolder(const IResource * _resource)
     {
-        return getDefaultFolder(_resource->getClassName());
+        return getDefaultFolder(_resource->GetClassName());
     }
 
     //--------------------------------------------------------------------------------------

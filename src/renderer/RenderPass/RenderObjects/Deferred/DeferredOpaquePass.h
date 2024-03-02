@@ -8,7 +8,7 @@ namespace vg::renderer
     class DeferredOpaquePass : public RenderObjectsPass
     {
     public:
-        const char * getClassName() const final { return "DeferredOpaquePass"; }
+        const char * GetClassName() const final { return "DeferredOpaquePass"; }
 
         DeferredOpaquePass();
         ~DeferredOpaquePass();

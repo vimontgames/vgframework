@@ -30,7 +30,7 @@ namespace vg::physics
                                             ~Physics                    ();
 
 		IPlugin::Version				    GetVersion	                () const final override;
-        const char *						getClassName		        () const final override { return "Physics"; }
+        const char *						GetClassName		        () const final override { return "Physics"; }
 
         bool                                RegisterClasses		        () final override;
         bool                                UnregisterClasses	        () final override;

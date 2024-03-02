@@ -7,7 +7,7 @@ namespace vg::renderer
     class ComputePostProcessPass : public ComputePass
     {
     public:
-        const char * getClassName() const final { return "ComputePostProcessPass"; }
+        const char * GetClassName() const final { return "ComputePostProcessPass"; }
 
         ComputePostProcessPass();
         ~ComputePostProcessPass();

@@ -13,7 +13,7 @@ namespace vg::renderer
     {
         using super = core::Object;
 
-        const char * getClassName() const final { return "Batch"; }
+        const char * GetClassName() const final { return "Batch"; }
 
         static bool registerClass(core::IFactory & _factory);
         static bool registerProperties(core::IClassDesc & _desc);

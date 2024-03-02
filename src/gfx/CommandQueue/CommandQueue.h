@@ -28,7 +28,7 @@ namespace vg::gfx
 		using super = VG_GFXAPI::CommandQueue;
 
 	public:
-        const char * getClassName() const final { return "CommandQueue"; }
+        const char * GetClassName() const final { return "CommandQueue"; }
 
 		CommandQueue(CommandQueueType _type);
 		~CommandQueue();

@@ -342,7 +342,7 @@ namespace vg::editor
             for (i64 i = components.size() - 1; i >= 0; --i)
             {
                 const auto* component = components[i];
-                const auto* componentClassDesc = component->getClassDesc();
+                const auto* componentClassDesc = component->GetClassDesc();
                 auto icon = componentClassDesc->GetIcon();
                 bool enabled = asBool(ComponentFlags::Enabled & component->GetComponentFlags());
                 string tooltip = fmt::sprintf("%s", componentClassDesc->GetDescription());

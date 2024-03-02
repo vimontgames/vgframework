@@ -30,7 +30,7 @@ namespace vg::physics
     //--------------------------------------------------------------------------------------
     void PhysicsOptions::OnLoad()
     {
-        if (auto gravityProp = getClassDesc()->GetPropertyByName("m_gravity"))
+        if (auto gravityProp = GetClassDesc()->GetPropertyByName("m_gravity"))
             applyGravity(*gravityProp->GetPropertyFloat3(this));
     }
 

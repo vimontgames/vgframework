@@ -25,7 +25,7 @@ namespace vg::editor
                         {
                             matModel->m_shader = model->GetClassDisplayName();
                             IFactory * factory = Kernel::getFactory();
-                            const auto * prop = _object->getClassDesc()->GetPropertyByName("m_shader");
+                            const auto * prop = _object->GetClassDesc()->GetPropertyByName("m_shader");
                             if (nullptr != prop)
                                 _object->OnPropertyChanged(_object, *prop);
                         }

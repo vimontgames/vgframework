@@ -13,7 +13,7 @@ namespace vg::renderer
     class BLASUpdatePass : public UpdatePass
     {
     public:
-        const char * getClassName() const final { return "RTASUpdatePass"; }
+        const char * GetClassName() const final { return "RTASUpdatePass"; }
 
         BLASUpdatePass();
         ~BLASUpdatePass();

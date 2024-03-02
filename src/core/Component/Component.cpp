@@ -30,19 +30,19 @@ namespace vg::core
     //--------------------------------------------------------------------------------------
     void Component::FixedUpdate(float _dt)
     {
-        VG_ASSERT(false, "Component '%s' does not implement 'FixedUpdate'", getClassName());
+        VG_ASSERT(false, "Component '%s' does not implement 'FixedUpdate'", GetClassName());
     }
 
     //--------------------------------------------------------------------------------------
     void Component::Update(float _dt) 
     {
-        VG_ASSERT(false, "Component '%s' does not implement 'Update'", getClassName());
+        VG_ASSERT(false, "Component '%s' does not implement 'Update'", GetClassName());
     }
 
     //--------------------------------------------------------------------------------------
     void Component::LateUpdate(float _dt) 
     {
-        VG_ASSERT(false, "Component '%s' does not implement 'LateUpdate'", getClassName());
+        VG_ASSERT(false, "Component '%s' does not implement 'LateUpdate'", GetClassName());
     }
 
     //--------------------------------------------------------------------------------------

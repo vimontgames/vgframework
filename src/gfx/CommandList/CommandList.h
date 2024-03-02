@@ -88,7 +88,7 @@ namespace vg::gfx
 		using super = VG_GFXAPI::CommandList;
 
 	public:
-        const char *                    getClassName                () const final { return "CommandList"; }
+        const char *                    GetClassName                () const final { return "CommandList"; }
 
 		                                CommandList                 (gfx::CommandListType _type, gfx::CommandPool * _cmdPool, core::uint _frame, core::uint _index);
 		                                ~CommandList                ();

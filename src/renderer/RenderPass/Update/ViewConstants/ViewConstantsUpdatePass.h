@@ -13,7 +13,7 @@ namespace vg::renderer
     class ViewConstantsUpdatePass : public UpdatePass
     {
     public:
-        const char * getClassName() const final { return "ViewConstantsUpdatePass"; }
+        const char * GetClassName() const final { return "ViewConstantsUpdatePass"; }
 
         ViewConstantsUpdatePass();
         ~ViewConstantsUpdatePass();
