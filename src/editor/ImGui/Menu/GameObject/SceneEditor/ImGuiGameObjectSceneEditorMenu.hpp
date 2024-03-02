@@ -349,6 +349,7 @@ namespace vg::editor
                             break;
 
                             case MenuOption::AddChildPrefab:
+                                gameObject->SetObjectFlags(ObjectFlags::Opened, true);
                                 gameObject->AddChild(newPrefabObject);
                                 break;
                         }  
@@ -395,6 +396,7 @@ namespace vg::editor
                         break;
 
                         case MenuOption::AddChildGameObject:
+                            gameObject->SetObjectFlags(ObjectFlags::Opened, true);
                             gameObject->AddChild(newGameObject);
                             break;
 
