@@ -97,7 +97,7 @@ void CharacterBehaviour::FixedUpdate(float _dt)
 //--------------------------------------------------------------------------------------
 void CharacterBehaviour::Update(float _dt)
 {
-    auto* go = GetGameObject();
+    auto * go = GetGameObject();
     auto world = go->getGlobalMatrix();
     if (world[3].z < -32.0f)
     {

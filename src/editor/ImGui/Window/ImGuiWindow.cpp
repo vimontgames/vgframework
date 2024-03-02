@@ -632,6 +632,24 @@ namespace vg::editor
                 };
                 break;
 
+                case IProperty::Type::Int8:
+                {
+                    VG_ASSERT(!isEnumArray, "Display of EnumArray property not implemented for type '%s'", asString(type).c_str());
+
+                    i8 * pU8 = (i8 *)(uint_ptr(_object) + offset);
+
+                    i32 temp = (u8)*pU8;
+
+                    if (asBool(IProperty::Flags::HasRange & flags))
+                        changed |= ImGui::SliderInt(label.c_str(), &temp, max((int)-128, (int)_prop->getRange().x), min((int)127, (int)_prop->getRange().y), "%d", imguiInputTextflags);
+                    else
+                        changed |= ImGui::InputInt(label.c_str(), &temp, 1, 16, imguiInputTextflags);
+
+                    if (changed)
+                        *pU8 = (u8)temp;
+                };
+                break;
+
                 case IProperty::Type::Uint16:
                 {
                     VG_ASSERT(!isEnumArray, "Display of EnumArray property not implemented for type '%s'", asString(type).c_str());
@@ -647,6 +665,37 @@ namespace vg::editor
 
                     if (changed)
                         *pU16 = (u16)temp;
+                };
+                break;
+
+                case IProperty::Type::Int16:
+                {
+                    VG_ASSERT(!isEnumArray, "Display of EnumArray property not implemented for type '%s'", asString(type).c_str());
+
+                    i16 * pU16 = (i16 *)(uint_ptr(_object) + offset);
+
+                    i32 temp = (u16)*pU16;
+
+                    if (asBool(IProperty::Flags::HasRange & flags))
+                        changed |= ImGui::SliderInt(label.c_str(), &temp, max((int)-32768, (int)_prop->getRange().x), min((int)32767, (int)_prop->getRange().y), "%d", imguiInputTextflags);
+                    else
+                        changed |= ImGui::InputInt(label.c_str(), &temp, 1, 16, imguiInputTextflags);
+
+                    if (changed)
+                        *pU16 = (u16)temp;
+                };
+                break;
+
+                case IProperty::Type::Int32:
+                {
+                    VG_ASSERT(!isEnumArray, "Display of EnumArray property not implemented for type '%s'", asString(type).c_str());
+
+                    i32 * pU32 = (i32 *)(uint_ptr(_object) + offset);
+
+                    if (asBool(IProperty::Flags::HasRange & flags))
+                        changed |= ImGui::SliderInt(label.c_str(), pU32, max((int)-2147483648, (int)_prop->getRange().x), min(+2147483647, (int)_prop->getRange().y), "%d", imguiInputTextflags);
+                    else
+                        changed |= ImGui::InputInt(label.c_str(), pU32, 1, 16, imguiInputTextflags);
                 };
                 break;
 

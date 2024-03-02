@@ -13,7 +13,7 @@ using namespace vg::core;
 
 namespace vg::engine
 {
-    VG_REGISTER_COMPONENT_CLASS(FreeCamBehaviour, "Free Camera Behaviour", "Rendering", "Keyboard/Mouse First-Person Camera behaviour", editor::style::icon::Script);
+    VG_REGISTER_COMPONENT_CLASS(FreeCamBehaviour, "Free Camera", "Rendering", "Keyboard/Mouse First-Person Camera behaviour", editor::style::icon::Script);
 
     //--------------------------------------------------------------------------------------
     bool FreeCamBehaviour::registerProperties(IClassDesc& _desc)

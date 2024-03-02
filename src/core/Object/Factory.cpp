@@ -1214,6 +1214,26 @@ namespace vg::core
                                             VG_ASSERT(!isEnumArray, "EnumArray serialization from XML not implemented for type '%s'", asString(type).c_str());
                                             serializeIntegerPropertyFromXML<u64>(_object, prop, xmlPropElem);
                                             break;
+
+                                        case IProperty::Type::Int8:
+                                            VG_ASSERT(!isEnumArray, "EnumArray serialization from XML not implemented for type '%s'", asString(type).c_str());
+                                            serializeIntegerPropertyFromXML<i8>(_object, prop, xmlPropElem);
+                                            break;
+
+                                        case IProperty::Type::Int16:
+                                            VG_ASSERT(!isEnumArray, "EnumArray serialization from XML not implemented for type '%s'", asString(type).c_str());
+                                            serializeIntegerPropertyFromXML<i16>(_object, prop, xmlPropElem);
+                                            break;
+
+                                        case IProperty::Type::Int32:
+                                            VG_ASSERT(!isEnumArray, "EnumArray serialization from XML not implemented for type '%s'", asString(type).c_str());
+                                            serializeIntegerPropertyFromXML<i32>(_object, prop, xmlPropElem);
+                                            break;
+
+                                        case IProperty::Type::Int64:
+                                            VG_ASSERT(!isEnumArray, "EnumArray serialization from XML not implemented for type '%s'", asString(type).c_str());
+                                            serializeIntegerPropertyFromXML<i64>(_object, prop, xmlPropElem);
+                                            break;
                                     }
                                 }
                                 else
@@ -1304,6 +1324,26 @@ namespace vg::core
                     xmlPropElem->SetAttribute("Value", pBitMask->toString(true).c_str());
                 }
                 break;
+
+                case IProperty::Type::Int8:
+                    VG_ASSERT(!isEnumArray, "EnumArray serialization to XML not implemented for type '%s'", asString(type).c_str());
+                    serializeIntegerPropertyToXML<i8>(_object, prop, xmlPropElem);
+                    break;
+
+                case IProperty::Type::Int16:
+                    VG_ASSERT(!isEnumArray, "EnumArray serialization to XML not implemented for type '%s'", asString(type).c_str());
+                    serializeIntegerPropertyToXML<i16>(_object, prop, xmlPropElem);
+                    break;
+
+                case IProperty::Type::Int32:
+                    VG_ASSERT(!isEnumArray, "EnumArray serialization to XML not implemented for type '%s'", asString(type).c_str());
+                    serializeIntegerPropertyToXML<i32>(_object, prop, xmlPropElem);
+                    break;
+
+                case IProperty::Type::Int64:
+                    VG_ASSERT(!isEnumArray, "EnumArray serialization to XML not implemented for type '%s'", asString(type).c_str());
+                    serializeIntegerPropertyToXML<i64>(_object, prop, xmlPropElem);
+                    break;
 
                 case IProperty::Type::Uint8:
                     VG_ASSERT(!isEnumArray, "EnumArray serialization to XML not implemented for type '%s'", asString(type).c_str());
