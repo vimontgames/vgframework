@@ -32,6 +32,7 @@ protected:
     CharacterState      m_state = CharacterState::Idle;
     float               m_currentSpeed = 0.0f;
     float               m_currentRotation = 0.0f;
+    vg::core::float2    m_velocitySmoothdamp = vg::core::float2(0, 0);
 
     vg::core::float3    m_startPos = (vg::core::float3)0.0f;
     vg::core::uint      m_anim[vg::core::enumCount<CharacterState>()];

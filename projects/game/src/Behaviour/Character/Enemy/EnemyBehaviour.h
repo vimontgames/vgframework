@@ -16,5 +16,8 @@ public:
     void                Update(float _dt) override;
 
 private:
-
+    vg::core::float3    m_targetPosNew = vg::core::float3(0, 0, 0);
+    vg::core::float3    m_targetPosSmooth = vg::core::float3(0, 0, 0);
+    bool                m_targetAcquired = false;
+    vg::core::float3    m_targetPosSmoothdamp = vg::core::float3(0, 0, 0);
 };

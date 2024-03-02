@@ -24,34 +24,20 @@ namespace vg::editor
             {
                 if (mainWorld)
                 {
+                    bool fixedDT = mainWorld->IsUsingFixedDeltaTime();
+                    if (ImGui::Checkbox("Fixed", &fixedDT))
+                        mainWorld->SetUseFixedDeltaTime(fixedDT);
+
                     float timeScale = mainWorld->GetTimeScale(true);  // TODO: time should be per world or global, but match playing/paused!
+                  
+                    if (ImGui::SliderFloat("TimeScale", &timeScale, 0.0f, 10.0, "%.3f", ImGuiSliderFlags_None))
+                        mainWorld->SetTimeScale(timeScale);
 
-                    ImGui::Columns(2, "mycolumns2", false);  // 2-ways, no border
-                    {
-                        const bool bold = timeScale != 1.0f;
+                    ImGui::SameLine();
 
-                        if (bold)
-                            ImGui::PushStyle(Style::Bold);
-                        
-                        ImGui::Text("TimeScale");
-                        
-                        if (bold)
-                            ImGui::PopStyle();
-                    }
-                    ImGui::NextColumn();
-                    {
-                        if (ImGui::SliderFloat("###TimeScale", &timeScale, 0.0f, 10.0, "%.3f", ImGuiSliderFlags_None))
-                            mainWorld->SetTimeScale(timeScale);
-
-                        ImGui::SameLine();
-                        ImGui::Spacing();
-                        ImGui::SameLine();
-
-                        if (TooltipButton(style::icon::Reload, timeScale != 1.0f, true, "Reset", style::button::SizeSmall))
-                            mainWorld->SetTimeScale(1.0);
-                    }
-                    ImGui::Columns(1);
-
+                    if (TooltipButton(style::icon::Reload, timeScale != 1.0f, true, "Reset", style::button::SizeSmall))
+                        mainWorld->SetTimeScale(1.0);                 
+              
                     ImGui::Separator();
 
                     ImGui::Columns(2, "mycolumns2", false);  // 2-ways, no border

@@ -24,6 +24,7 @@ namespace vg::engine
         IWorld(_name, _parent),
         m_isPlaying(false),
         m_isPaused(false),
+        m_isFixedDT(false),
         m_timeScale(1.0f)
     {
         for (uint j = 0; j < enumCount<BaseSceneType>(); ++j)
@@ -298,5 +299,17 @@ namespace vg::engine
                     root->OnStop();
             }
         }
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool World::IsUsingFixedDeltaTime() const
+    {
+        return m_isFixedDT;
+    }
+
+    //--------------------------------------------------------------------------------------
+    void World::SetUseFixedDeltaTime(bool _fixedDeltaTime)
+    {
+        m_isFixedDT = _fixedDeltaTime;
     }
 }

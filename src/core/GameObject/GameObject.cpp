@@ -169,7 +169,10 @@ namespace vg::core
             {
                 Component* component = m_components[i];
                 if (asBool(ComponentFlags::Enabled & component->getComponentFlags()) && asBool(UpdateFlags::FixedUpdate & component->getUpdateFlags()))
+                {
+                    VG_PROFILE_CPU(component->getClassName());
                     component->FixedUpdate(_dt);
+                }
             }
 
             const auto& children = getChildren();
@@ -194,7 +197,10 @@ namespace vg::core
             {
                 Component* component = m_components[i];
                 if (asBool(ComponentFlags::Enabled & component->getComponentFlags()) && asBool(UpdateFlags::Update & component->getUpdateFlags()))
+                {
+                    VG_PROFILE_CPU(component->getClassName());
                     component->Update(_dt);
+                }
             }
 
             const auto& children = getChildren();
@@ -219,7 +225,10 @@ namespace vg::core
             {
                 Component* component = m_components[i];
                 if (asBool(ComponentFlags::Enabled & component->getComponentFlags()) && asBool(UpdateFlags::LateUpdate & component->getUpdateFlags()))
+                {
+                    VG_PROFILE_CPU(component->getClassName());
                     component->LateUpdate(_dt);
+                }
             }
 
             const auto& children = getChildren();

@@ -29,10 +29,13 @@ namespace vg::engine
         core::uint              GetAnimationIndex   (const core::string & _name) const final override;
         core::uint              GetAnimationCount   () const final override;
 
+        bool                    PlayAnimation       (core::uint _index, float _blendTime, bool _loop) final override;
+
     private:
         MeshComponent *         getMeshComponent    () const;
 
     private:
+        core::uint              m_currentIndex = -1;
         AnimationResourceList   m_animations;
     };
 }

@@ -35,6 +35,7 @@ namespace vg::engine
         bool                                    PlayOnce                () final override;
 
         bool                                    Stop                    () final override;
+        float                                   GetWeight               () const final override;
 
         VG_INLINE const renderer::IAnimation *  getAnimation            () const { return (renderer::IAnimation *)m_object; }
         VG_INLINE renderer::IAnimation *        getAnimation            () { return (renderer::IAnimation *)m_object; }
@@ -48,6 +49,8 @@ namespace vg::engine
         void                                    setWeight               (float _weight);
 
         renderer::IMeshInstance *               getMeshInstance         ();
+        VG_INLINE void                          setPlay                 (bool _play) { m_play = _play;; }
+        VG_INLINE void                          setLoop                 (bool _loop) { m_loop = _loop; }
 
     private:
         static bool			                    playAnim                (IObject * _object);

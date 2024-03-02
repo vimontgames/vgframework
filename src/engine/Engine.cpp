@@ -588,7 +588,12 @@ namespace vg::engine
 
         auto * mainWorld = GetMainWorld();
         if (mainWorld && mainWorld->IsPlaying())
-            m_time.m_scaledDeltaTime = m_time.m_realDeltaTime * mainWorld->GetTimeScale();
+        {
+            if (mainWorld->IsUsingFixedDeltaTime())
+                m_time.m_scaledDeltaTime = 1.0f / 144.0f;   // TODO: use real freq or custom?
+            else
+                m_time.m_scaledDeltaTime = m_time.m_realDeltaTime * mainWorld->GetTimeScale();
+        }
         else
             m_time.m_scaledDeltaTime = 0.0f;
 
@@ -625,15 +630,27 @@ namespace vg::engine
 
         m_resourceManager->updateLoading();
 
-        const float mainWorldDeltaTime = m_time.m_scaledDeltaTime;
-        const float realDeltaTime = m_time.m_realDeltaTime;;
+        const float scaledDeltaTime = m_time.m_scaledDeltaTime;
+        const float realDeltaTime = m_time.m_realDeltaTime;
+
+        auto getWorldDeltaTime = [=](IWorld * _world)
+        {
+            if (_world->IsPrefabWorld())
+            {
+                return realDeltaTime;
+            }
+            else
+            {
+                return scaledDeltaTime;
+            }
+        };
 
         // FixedUpdate all GameObjects and components
         {
             VG_PROFILE_CPU("FixedUpdate");
             for (IWorld * world : GetWorlds())
             {
-                const float dt = world->IsPrefabWorld() ? realDeltaTime : mainWorldDeltaTime;
+                const float dt = getWorldDeltaTime(world);
 
                 for (uint i = 0; i < world->GetSceneCount(BaseSceneType::Scene); ++i)
                 {
@@ -646,14 +663,14 @@ namespace vg::engine
         }
 
         // This will use all available threads for physics
-        m_physics->RunOneFrame(mainWorldDeltaTime);
+        m_physics->RunOneFrame(scaledDeltaTime);
 
         // Update
         {
             VG_PROFILE_CPU("Update");
             for (IWorld * world : GetWorlds())
             {
-                const float dt = world->IsPrefabWorld() ? realDeltaTime : mainWorldDeltaTime;
+                const float dt = getWorldDeltaTime(world);
 
                 for (uint i = 0; i < world->GetSceneCount(BaseSceneType::Scene); ++i)
                 {
@@ -677,7 +694,7 @@ namespace vg::engine
             VG_PROFILE_CPU("LateUpdate");
             for (IWorld * world : GetWorlds())
             {
-                const float dt = world->IsPrefabWorld() ? realDeltaTime : mainWorldDeltaTime;
+                const float dt = getWorldDeltaTime(world);
 
                 for (uint i = 0; i < world->GetSceneCount(BaseSceneType::Scene); ++i)
                 {

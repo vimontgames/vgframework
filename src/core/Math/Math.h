@@ -68,6 +68,12 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
+    template <typename T> T inline saturate(T _value)
+    {
+        return clamp(_value, 0.0f, 1.0f);
+    }
+
+    //--------------------------------------------------------------------------------------
     template <typename T> inline bool within(T _value, T _min, T _max)
     {
         return _value >= _min && _value <= _max;

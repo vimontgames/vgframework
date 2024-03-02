@@ -32,7 +32,11 @@ bool EnemyBehaviour::registerProperties(IClassDesc & _desc)
 
     registerPropertyGroupBegin(EnemyBehaviour, "Enemy");
     {
-
+        registerPropertyEx(EnemyBehaviour, m_targetPosNew, "TargetPosNew", IProperty::Flags::NotSaved);
+        registerPropertyEx(EnemyBehaviour, m_targetPosSmooth, "TargetPosSmooth", IProperty::Flags::NotSaved);
+        
+        registerPropertyEx(EnemyBehaviour, m_currentSpeed, "CurrentSpeed", IProperty::Flags::NotSaved);
+        registerPropertyEx(EnemyBehaviour, m_currentRotation, "CurrentRotation", IProperty::Flags::NotSaved);
     }
     registerPropertyGroupEnd(EnemyBehaviour);
 
@@ -102,26 +106,48 @@ void EnemyBehaviour::FixedUpdate(float _dt)
 
             bool isClose = closestPlayerInfo.distance < 4.0f;
 
-            dbgDraw->AddLine(world, pos, closestPlayerInfo.position, m_isActive ? 0xFF0000FF : 0xFF00FF00);
+            //dbgDraw->AddLine(world, pos, closestPlayerInfo.position, m_isActive ? 0xFF0000FF : 0xFF00FF00);
 
-            float3 dir = normalize(closestPlayerInfo.position - pos);
-
-            m_currentSpeed = m_walkSpeed; // TODO : smooth
-
-            translation.xy += dir.xy * float2(1, 1) * m_currentSpeed;
-            m_currentRotation = radiansToDegrees(atan2((float)dir.x, (float)-dir.y));
+            float3 dir = (float3)0.0f;
 
             if (isClose)
             {
-                if (any(abs(translation.xy) > 0.0f))
+                m_isActive = true;
+
+                if (!m_targetAcquired)
                 {
-                    if (m_currentSpeed >= (m_walkSpeed + m_runSpeed) * 0.5f)
-                        m_state = CharacterState::Running;
-                    else
-                        m_state = CharacterState::Walking;
+                    m_targetAcquired = true;
+                    m_targetPosSmooth = pos;
                 }
 
-                m_isActive = true;
+                m_targetPosNew = closestPlayerInfo.position;
+                m_targetPosSmooth = smoothdamp(m_targetPosSmooth, m_targetPosNew, m_targetPosSmoothdamp, 0.1f, _dt);
+
+                dbgDraw->AddLine(world, pos, m_targetPosSmooth, 0xFFFFFFFF);
+                dbgDraw->AddLine(world, pos, m_targetPosNew, 0xFF0000FF);
+            }
+            else
+            {
+                m_state = CharacterState::Idle;
+                m_targetAcquired = false;
+            }            
+
+            m_currentSpeed = m_walkSpeed; // TODO : smooth
+            
+            if (m_targetAcquired)
+            {
+                dir = normalize(m_targetPosSmooth - pos);
+                translation.xy = dir.xy * m_currentSpeed;
+            }
+
+            if (any(abs(translation.xy) > 0.0f))
+            {
+                if (m_currentSpeed >= (m_walkSpeed + m_runSpeed) * 0.5f)
+                    m_state = CharacterState::Running;
+                else
+                    m_state = CharacterState::Walking;
+
+                m_currentRotation = radiansToDegrees(atan2((float)dir.x, (float)-dir.y));
             }
 
             vg::engine::ICharacterControllerComponent * charaController = GetGameObject()->GetComponentByType<vg::engine::ICharacterControllerComponent>();
@@ -131,17 +157,13 @@ void EnemyBehaviour::FixedUpdate(float _dt)
                 float3 currentVelocity = charaController->GetVelocity();
                 float3 targetVelocity = translation.xyz;
                 float3 updatedVelocity;
-                updatedVelocity.xy = 0.75f * currentVelocity.xy + 0.25f * targetVelocity.xy;
+                updatedVelocity.xy = smoothdamp(currentVelocity.xy, targetVelocity.xy, m_velocitySmoothdamp, 0.01f, _dt);
                 updatedVelocity.z = currentVelocity.z;
-
-                //if (abs((float)currentVelocity.z) <= 0.0001f && m_state == CharacterState::Jumping)
-                //    m_state = CharacterState::Idle;
-                //
-                //if (jump)
-                //    updatedVelocity += float3(0, 0, running ? m_runJumpSpeed : m_jumpSpeed);
 
                 charaController->SetVelocity(updatedVelocity);
                 charaController->SetRotation(quaternion::rotation_z(degreesToRadians(m_currentRotation)));
+
+                dbgDraw->AddLine(world, pos, pos + normalize(updatedVelocity), 0xFF00FF00);
             }
         }
 

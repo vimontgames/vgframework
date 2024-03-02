@@ -6,6 +6,8 @@
 #include "renderer/IMeshInstance.h"
 #include "renderer/IAnimation.h"
 #include "editor/Editor_Consts.h"
+#include "core/Math/Math.h"
+#include "core/IWorld.h"
 
 using namespace vg::core;
 using namespace vg::renderer;
@@ -42,6 +44,55 @@ namespace vg::engine
     void AnimationComponent::Update(float _dt)
     {
         auto & animResources = m_animations.getAnimationResources();
+
+        const auto * world = GetGameObject()->GetWorld();
+        if (world->IsPlaying() && !world->IsPaused())
+        {
+            if (-1 != m_currentIndex)
+            {
+                auto & currentAnim = animResources[m_currentIndex];
+                float currentWeight = currentAnim.getWeight();
+
+                float amount = _dt * 8.0f;
+
+                if (currentWeight < 1.0f)
+                {
+                    for (uint i = 0; i < animResources.size(); ++i)
+                    {
+                        auto & anim = animResources[i];
+
+                        if (i == m_currentIndex)
+                        {
+                            float weight = anim.getWeight();
+                            weight = saturate(weight + amount);
+                            anim.setWeight(weight);
+                        }
+                        else
+                        {
+                            float weight = anim.getWeight();
+                            weight = saturate(weight - amount);
+                            anim.setWeight(weight);
+                        }
+                    }
+                }
+
+                float sum2 = 0.0f;
+                for (uint i = 0; i < animResources.size(); ++i)
+                {
+                    auto & anim = animResources[i];
+                    sum2 += anim.getWeight();
+                }
+                VG_ASSERT(sum2 > 0.0f);
+
+                for (uint i = 0; i < animResources.size(); ++i)
+                {
+                    auto & anim = animResources[i];
+                    float weight = anim.getWeight();
+                    anim.setWeight(weight / sum2);
+                }
+            }
+        }
+
         for (uint i = 0; i < animResources.size(); ++i)
         {
             AnimationResource & animRes = animResources[i];
@@ -139,5 +190,27 @@ namespace vg::engine
     core::uint AnimationComponent::GetAnimationCount() const
     {
         return (uint)m_animations.getAnimationResources().size();
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool AnimationComponent::PlayAnimation(core::uint _index, float _blendTime, bool _loop)
+    {
+        auto & anims = m_animations.getAnimationResources();
+
+        if (_index != m_currentIndex)
+        {
+            auto & anim = anims[_index];
+
+            if (!anim.isPlaying())
+            {
+                anim.setTime(0.0f);
+                anim.setPlay(true);
+                anim.setLoop(_loop);
+            }
+            
+            m_currentIndex = _index;
+        }
+
+        return false;
     }
 }
