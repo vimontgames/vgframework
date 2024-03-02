@@ -5,7 +5,7 @@
 #include <filesystem>
 #include "Buffer.h"
 #include "core/string/string.h"
-#include "dirent/include/dirent.h"
+#include "ImGuiFileDialog/dirent/dirent.h"
 
 using namespace std;
 

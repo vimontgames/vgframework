@@ -10,7 +10,6 @@
 #include "engine/IWorldResource.h"
 #include "editor/ImGui/Extensions/ImGuizmo/ImGuizmoAdapter.h"
 #include "editor/Options/EditorOptions.h"
-#include "ImGui-Addons/FileBrowser/ImGuiFileBrowser.h"
 
 #if !VG_ENABLE_INLINE
 #include "Editor.inl"
@@ -38,6 +37,7 @@
 #include "editor/ImGui/Toolbar/Main/ImGuiMainToolbar.h"
 #include "editor/ImGui/Window/View/PrefabView/ImGuiPrefabView.h"
 #include "editor/ImGui/Window/Statistics/ImGuiStatistics.h"
+#include "ImGuiFileDialog/ImGuiFileDialog.h"
 
 using namespace vg::core;
 using namespace vg::editor;
@@ -565,7 +565,8 @@ namespace vg::editor
         string saveFilePopupName = "Save World";
         string saveAsFilePopupName = "Save World As";
 
-        auto & fileBrowser = ImGuiWindow::getFileBrowser();
+        auto * fileDialog = ImGuiFileDialog::Instance();
+
         string ext = ImGuiWindow::getFileBrowserExt(worldRes);
 
         const auto worldFolder = ImGuiWindow::getDefaultFolder("WorldResource");
@@ -573,18 +574,34 @@ namespace vg::editor
 
         if (createNewWorld)
         {
-            fileBrowser.setFolder(worldFolder);
-            ImGui::OpenPopup(newWorldPopupName.c_str());
+            IGFD::FileDialogConfig config; 
+            config.path = worldFolder;
+            //config.fileName = "New World";
+            config.countSelectionMax = 1;
+            config.flags = ImGuiFileDialogFlags_Modal;
+
+            fileDialog->OpenDialog(newWorldPopupName, newWorldPopupName, ext.c_str(), config);
+            ImGui::SetNextWindowPos(ImGui::GetMainViewport()->GetCenter(), ImGuiCond_Appearing, ImVec2(0.5f, 0.5f));
         }
         else if (loadWorld)
         {
-            fileBrowser.setFolder(worldFolder);
-            ImGui::OpenPopup(openFilePopupName.c_str());
+            IGFD::FileDialogConfig config;
+            config.path = worldFolder;
+            config.countSelectionMax = 1;
+            config.flags = ImGuiFileDialogFlags_Modal;
+
+            fileDialog->OpenDialog(openFilePopupName, openFilePopupName, ext.c_str(), config);
+            ImGui::SetNextWindowPos(ImGui::GetMainViewport()->GetCenter(), ImGuiCond_Appearing, ImVec2(0.5f, 0.5f));
         }
         else if (saveWorldAs)
         {
-            fileBrowser.setFolder(worldFolder);
-            ImGui::OpenPopup(saveAsFilePopupName.c_str());
+            IGFD::FileDialogConfig config;
+            config.path = worldFolder;
+            config.countSelectionMax = 1;
+            config.flags = ImGuiFileDialogFlags_Modal;
+
+            fileDialog->OpenDialog(saveAsFilePopupName, saveAsFilePopupName, ext.c_str(), config);
+            ImGui::SetNextWindowPos(ImGui::GetMainViewport()->GetCenter(), ImGuiCond_Appearing, ImVec2(0.5f, 0.5f));
         }
         else if (saveWorld)
         {
@@ -604,32 +621,54 @@ namespace vg::editor
                 m_imGuiWindows[i]->DrawGUI();
             }
         }
-
-        // Create new file
-        if (fileBrowser.showFileDialog(newWorldPopupName.c_str(), imgui_addons::ImGuiFileBrowser::DialogMode::SAVE, style::dialog::Size, ext.c_str()))
+        
+        // Create new ".world" file
+        if (fileDialog->Display(newWorldPopupName, ImGuiWindowFlags_NoCollapse, style::dialog::Size))
         {
-            // Close all prefab views when creating new world
-            auto prefabViews = getWindows<ImGuiPrefabView>();
-            for (auto * prefabView : prefabViews)
-                prefabView->m_isVisible = false;
+            if (fileDialog->IsOk())
+            {                 
+                // Close all prefab views when creating new world
+                auto prefabViews = getWindows<ImGuiPrefabView>();
+                for (auto * prefabView : prefabViews)
+                    prefabView->m_isVisible = false;
+                
+                engine->CreateWorld(io::addExtensionIfNotPresent(fileDialog->GetFilePathName(), ext));
+            }
 
-            engine->CreateWorld(io::addExtensionIfNotPresent(fileBrowser.selected_path, ".world"));
+            ImGuiFileDialog::Instance()->Close();
         }
 
         // Open existing file
-        if (fileBrowser.showFileDialog(openFilePopupName.c_str(), imgui_addons::ImGuiFileBrowser::DialogMode::OPEN, style::dialog::Size, ext.c_str()))
+        if (fileDialog->Display(openFilePopupName, ImGuiWindowFlags_NoCollapse, style::dialog::Size))
         {
-            // Close all prefab views when loading new world
-            auto prefabViews = getWindows<ImGuiPrefabView>();
-            for (auto * prefabView : prefabViews)
-                prefabView->m_isVisible = false;
+            if (fileDialog->IsOk())
+            {
+                // Close all prefab views when loading new world
+                auto prefabViews = getWindows<ImGuiPrefabView>();
+                for (auto * prefabView : prefabViews)
+                    prefabView->m_isVisible = false;
 
-            engine->LoadWorld(fileBrowser.selected_path);
+                engine->LoadWorld(fileDialog->GetFilePathName());
+            }
+
+            ImGuiFileDialog::Instance()->Close();
         }
 
         // Save as 
-        if (fileBrowser.showFileDialog(saveAsFilePopupName.c_str(), imgui_addons::ImGuiFileBrowser::DialogMode::SAVE, style::dialog::Size, ext.c_str()))
-            engine->SaveWorldAs(io::addExtensionIfNotPresent(fileBrowser.selected_path, ".world"));
+        if (fileDialog->Display(saveAsFilePopupName, ImGuiWindowFlags_NoCollapse, style::dialog::Size))
+        {
+            if (fileDialog->IsOk())
+            {
+                // Close all prefab views when loading new world
+                auto prefabViews = getWindows<ImGuiPrefabView>();
+                for (auto * prefabView : prefabViews)
+                    prefabView->m_isVisible = false;
+
+                engine->SaveWorldAs(fileDialog->GetFilePathName());
+            }
+
+            ImGuiFileDialog::Instance()->Close();
+        }            
 
         if (showImGuiDemo)
             ImGui::ShowDemoWindow(&showImGuiDemo);

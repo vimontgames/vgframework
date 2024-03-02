@@ -79,7 +79,6 @@ namespace vg::editor
         static bool                             displayFloat4x4     (core::IObject * _object, const core::IProperty * _prop);
         static bool                             displayU32          (const core::string & _label, core::u32 * _pU32);
 
-        static imgui_addons::ImGuiFileBrowser & getFileBrowser      ();
         static core::string                     getFileBrowserExt   (const core::IResource * _resource);
         static core::string                     getDefaultFolder    (const core::IResource * _resource);
         static core::string                     getDefaultFolder    (const core::string & _resourceTypeName);

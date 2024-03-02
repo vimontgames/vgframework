@@ -1,5 +1,4 @@
 # Dirent
-
 Dirent is a C/C++ programming interface that allows programmers to retrieve
 information about files and directories under Linux/UNIX.  This project
 provides Linux compatible Dirent interface for Microsoft Windows.
@@ -46,9 +45,7 @@ Program  | Purpose
 ls       | List files in a directory, e.g. ls "c:\Program Files"
 find     | Find files in subdirectories, e.g. find "c:\Program Files\CMake"
 updatedb | Build database of files in a drive, e.g. updatedb c:\
-locate   | Locate a file from database, e.g. locate notepad
-scandir  | Demonstrate scandir() function
-cat      | Print a text file to screen
+locate   | Locate a file from database, e.g. locate notepad.exe
 
 To build the example programs, first install [CMake](https://cmake.org/).
 Then, with CMake installed, open command prompt and create a temporary
@@ -81,15 +78,6 @@ find .
 updatedb c:\
 locate cmd.exe
 ```
-
-You can omit generation of test and example programs by appending option
-`-DDIRENT_BUILD_TESTS=OFF` to the CMake command line.
-
-
-# Contributing
-
-We love to receive contributions from you.  See the
-[CONTRIBUTING](CONTRIBUTING.md) file for details.
 
 
 # Copying

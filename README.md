@@ -28,6 +28,8 @@ Its renderer only uses modern graphics APIs like DirectX12 and Vulkan (I would a
 
 ## 0.27 "Let it snow"
 Can now create **Prefabs** to instanciate in Levels
+Animation blend helper functions
+Use ImGuiFileDialog instead of ImGuiFileBrowser
 
 ![Screenshot](doc/img/0.27.png)
 
@@ -189,27 +191,28 @@ The SDKs are not included with the sources. You need to install them.
 
 The external libraries are included with the sources for convenience.
 
-| Name                       | Version       | URL                                                                       | Licence
-| -------------------------- | ------------- | ------------------------------------------------------------------------- | ------- 
-| D3D12 Memory Allocator     |               | https://github.com/GPUOpen-LibrariesAndSDKs/D3D12MemoryAllocator          | MIT    
-| Dear ImGui                 |               | https://github.com/ocornut/imgui/commits/docking                          | MIT    
-| DirectXShaderCompiler      | August 2023   | https://github.com/microsoft/DirectXShaderCompiler/releases/tag/v1.7.2308 | MIT    
-| Dirent                     |               | https://github.com/tronkko/dirent                                         | MIT    
-| Font-Awesome               | 6.x           | https://github.com/FortAwesome/Font-Awesome/tree/6.x                      | MIT    
-| fmt                        | 10.1.1        | https://github.com/fmtlib/fmt/releases/tag/10.1.1                         | MIT    
-| hlslpp                     | 3.4           | https://github.com/redorav/hlslpp/releases/tag/3.4                        | MIT    
-| IconFontCppHeaders         |               | https://github.com/juliettef/IconFontCppHeaders                           | MIT    
-| ImGui-Addons               |               | https://github.com/gallickgunner/ImGui-Addons                             | MIT    
-| ImGuizmo                   | 1.83          | https://github.com/CedricGuillemet/ImGuizmo/releases/tag/1.83             | MIT    
-| JoltPhysics                | 4.0.1         | https://github.com/jrouwe/JoltPhysics/releases/tag/v4.0.1                 | MIT    
-| magic_enum                 | 0.9.4         | https://github.com/Neargye/magic_enum                                     | MIT    
-| optick (*)                 | 1.3.1         | https://github.com/bombomby/optick                                        | MIT    
-| px_sched                   |               | https://github.com/pplux/px                                               | MIT    
-| stb                        |               | https://github.com/nothings/stb                                           | MIT    
-| tinyXML2                   | 10.0.0        | https://github.com/leethomason/tinyxml2/releases/tag/10.0.0               | zlib    
-| UFBX                       |               | https://github.com/ufbx/ufbx                                              | MIT    
-| Vulkan Memory Allocator    | 3.0.1         | https://github.com/GPUOpen-LibrariesAndSDKs/VulkanMemoryAllocator         | MIT    
-| WinPixEventRuntime         | 1.0.231030001 | https://www.nuget.org/packages/WinPixEventRuntime                         | MIT    
+| Name                       | Version       | URL                                                                       
+| -------------------------- | ------------- | ------------------------------------------------------------------------- 
+| D3D12 Memory Allocator     |               | https://github.com/GPUOpen-LibrariesAndSDKs/D3D12MemoryAllocator          
+| Dear ImGui                 |               | https://github.com/ocornut/imgui/commits/docking                          
+| DirectXShaderCompiler      | August 2023   | https://github.com/microsoft/DirectXShaderCompiler/releases/tag/v1.7.2308 
+| Dirent                     | 1.23.2        | https://github.com/tronkko/dirent                                         
+| Font-Awesome               | 6.x           | https://github.com/FortAwesome/Font-Awesome/tree/6.x                      
+| fmt                        | 10.1.1        | https://github.com/fmtlib/fmt/releases/tag/10.1.1                         
+| hlslpp                     | 3.4           | https://github.com/redorav/hlslpp/releases/tag/3.4                        
+| IconFontCppHeaders         |               | https://github.com/juliettef/IconFontCppHeaders                           
+| ImGui-Addons               |               | https://github.com/gallickgunner/ImGui-Addons                             
+| ImGuiFileDialog            | 0.6.7         | https://github.com/aiekick/ImGuiFileDialog
+| ImGuizmo                   | 1.83          | https://github.com/CedricGuillemet/ImGuizmo/releases/tag/1.83             
+| JoltPhysics                | 4.0.1         | https://github.com/jrouwe/JoltPhysics/releases/tag/v4.0.1                 
+| magic_enum                 | 0.9.4         | https://github.com/Neargye/magic_enum                                     
+| optick (*)                 | 1.3.1         | https://github.com/bombomby/optick                                        
+| px_sched                   |               | https://github.com/pplux/px                                               
+| stb                        |               | https://github.com/nothings/stb                                           
+| tinyXML2                   | 10.0.0        | https://github.com/leethomason/tinyxml2/releases/tag/10.0.0               
+| UFBX                       |               | https://github.com/ufbx/ufbx                                              
+| Vulkan Memory Allocator    | 3.0.1         | https://github.com/GPUOpen-LibrariesAndSDKs/VulkanMemoryAllocator         
+| WinPixEventRuntime         | 1.0.231030001 | https://www.nuget.org/packages/WinPixEventRuntime                         
 
 (*) *You can download the binaries for optick 1.3.1 from https://github.com/bombomby/optick/releases/tag/1.3.1.0*
 

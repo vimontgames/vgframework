@@ -2,7 +2,7 @@
 #include "editor/ImGui/ImGui.h"
 #include "engine/IWorldResource.h"
 #include "core/IGameObject.h"
-#include "ImGui-Addons/FileBrowser/ImGuiFileBrowser.h"
+#include "ImGuiFileDialog/ImGuiFileDialog.h"
 #include "renderer/IImGuiAdapter.h"
 
 namespace vg::editor
@@ -434,7 +434,7 @@ namespace vg::editor
             {
                 const auto* factory = Kernel::getFactory();
                 engine::IEngine* engine = (engine::IEngine*)factory->getSingleton("Engine");
-                auto& fileBrowser = ImGuiWindow::getFileBrowser();
+                auto * fileDialog = ImGuiFileDialog::Instance();
 
                 engine::IWorldResource* worldRes = engine->GetWorldResource();
                 IWorld* world = worldRes ? worldRes->GetWorld() : nullptr;
@@ -442,6 +442,7 @@ namespace vg::editor
                 if (world)
                 {
                     bool openPopup = false;
+                    bool openFileDialog = false;
 
                     if (ImGui::BeginPopupContextWindow())
                     {
@@ -457,23 +458,33 @@ namespace vg::editor
                     if (newScene)
                     {
                         m_selected = MenuOption::AddScene;
-                        openPopup = true;
+                        openFileDialog = true;
                         m_popup = typeInfo.newLabel;
-                        fileBrowser.setFolder(io::getRootDirectory() + "/" + typeInfo.dataFolder);
                     }
 
                     if (loadScene)
                     {
                         m_selected = MenuOption::LoadScene;
-                        openPopup = true;
+                        openFileDialog = true;
                         m_popup = typeInfo.loadLabel;
-                        fileBrowser.setFolder(io::getRootDirectory() + "/" + typeInfo.dataFolder);
                     }
 
                     if (openPopup)
                     {
                         ImGui::OpenPopup(m_popup.c_str());
                         openPopup = false;
+                    }
+                    else if (openFileDialog)
+                    {
+                        IGFD::FileDialogConfig config;
+                        config.path = io::getRootDirectory() + "/" + typeInfo.dataFolder;
+                        config.countSelectionMax = 1;
+                        config.flags = ImGuiFileDialogFlags_Modal;
+
+                        fileDialog->OpenDialog(m_popup, m_popup, typeInfo.fileExt.c_str(), config);
+                        ImGui::SetNextWindowPos(ImGui::GetMainViewport()->GetCenter(), ImGuiCond_Appearing, ImVec2(0.5f, 0.5f));
+
+                        openFileDialog = false;
                     }
 
                     string ext = ImGuiWindow::getFileBrowserExt(worldRes);
@@ -482,19 +493,23 @@ namespace vg::editor
                     {
                     case MenuOption::AddScene:
                     {
-                        if (fileBrowser.showFileDialog(m_popup, imgui_addons::ImGuiFileBrowser::DialogMode::SAVE, style::dialog::Size, typeInfo.fileExt.c_str()))
+                        if (fileDialog->Display(m_popup, ImGuiWindowFlags_NoCollapse, style::dialog::Size))
                         {
-                            const string path = io::addExtensionIfNotPresent(fileBrowser.selected_path, typeInfo.fileExt.c_str());
-                            worldRes->CreateSceneResource(path, _sceneType);
+                            if (fileDialog->IsOk())
+                                worldRes->CreateSceneResource(fileDialog->GetFilePathName(), _sceneType);
+
+                            ImGuiFileDialog::Instance()->Close();
                         }
                     }
                     break;
 
                     case MenuOption::LoadScene:
-                        if (fileBrowser.showFileDialog(m_popup, imgui_addons::ImGuiFileBrowser::DialogMode::OPEN, style::dialog::Size, typeInfo.fileExt.c_str()))
+                        if (fileDialog->Display(m_popup, ImGuiWindowFlags_NoCollapse, style::dialog::Size))
                         {
-                            const string path = fileBrowser.selected_path;
-                            worldRes->LoadSceneResource(path, _sceneType);
+                            if (fileDialog->IsOk())
+                                worldRes->LoadSceneResource(fileDialog->GetFilePathName(), _sceneType);
+
+                            ImGuiFileDialog::Instance()->Close();
                         }
                         break;
                     }

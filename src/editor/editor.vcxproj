@@ -12,7 +12,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Editor.cpp" />
-    <ClCompile Include="ImGui\Extensions\FileBrowser\ImGuiFileBrowser.cpp" />
+    <ClCompile Include="ImGui\Extensions\FileDialog\ImGuiFileDialog.cpp" />
     <ClCompile Include="ImGui\Extensions\ImGuiExtensions.cpp" />
     <ClCompile Include="ImGui\Extensions\ImGuizmo\ImGuizmoAdapter.cpp" />
     <ClCompile Include="ImGui\ImGui.cpp" />

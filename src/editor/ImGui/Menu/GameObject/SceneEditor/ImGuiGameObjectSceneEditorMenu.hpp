@@ -8,7 +8,7 @@
 #include "editor/ImGui/Extensions/imGuiExtensions.h"
 #include "editor/Editor.h"
 #include "core/IBaseScene.h"
-#include "ImGui-Addons/FileBrowser/ImGuiFileBrowser.h"
+#include "ImGuiFileDialog/ImGuiFileDialog.h"
 #include "core/File/File.h"
 #include "engine/IWorldResource.h"
 
@@ -259,7 +259,9 @@ namespace vg::editor
                 case MenuOption::AddChildPrefab:
                 case MenuOption::AddPrefab:
                 {
-                    auto & fileBrowser = ImGuiWindow::getFileBrowser();
+                    auto * fileDialog = ImGuiFileDialog::Instance();
+                    const string ext = ".prefab";
+
                     static char prefabPath[1024] = { '\0' };
                     bool pickPrefabFile = false;
                     bool addPrefab = false;
@@ -309,21 +311,29 @@ namespace vg::editor
 
                     if (pickPrefabFile)
                     {
-                        const auto defaultFolder = ImGuiWindow::getDefaultFolder("Prefabs");
-                        fileBrowser.setFolder(defaultFolder);
-                        ImGui::OpenPopup("Select Prefab");
+                        IGFD::FileDialogConfig config;
+                        config.path = ImGuiWindow::getDefaultFolder("Prefabs");
+                        //config.fileName = "New Prefab";
+                        config.countSelectionMax = 1;
+                        config.flags = ImGuiFileDialogFlags_Modal;
+
+                        fileDialog->OpenDialog("Select Prefab", "Select Prefab", ext.c_str(), config);
+                        ImGui::SetNextWindowPos(ImGui::GetMainViewport()->GetCenter(), ImGuiCond_Appearing, ImVec2(0.5f, 0.5f));
                     }
-
-                    const string ext = ".prefab";
-
-                    if (fileBrowser.showFileDialog("Select Prefab", imgui_addons::ImGuiFileBrowser::DialogMode::OPEN, style::dialog::Size, ext))
+                    
+                    if (fileDialog->Display("Select Prefab", ImGuiWindowFlags_NoCollapse, style::dialog::Size))
                     {
-                        const string newFile = io::getRelativePath(fileBrowser.selected_path);
+                        if (fileDialog->IsOk())
+                        {
+                            const string newFile = io::getRelativePath(fileDialog->GetFilePathName());
 
-                        if (strcmp(prefabPath, newFile.c_str()))
-                            strcpy(prefabPath, newFile.c_str());
+                            if (strcmp(prefabPath, newFile.c_str()))
+                                strcpy(prefabPath, newFile.c_str());
 
-                        ImGui::OpenPopup(m_popup.c_str());
+                            ImGui::OpenPopup(m_popup.c_str());
+                        }
+
+                        ImGuiFileDialog::Instance()->Close();
                     }
 
                     if (addPrefab)

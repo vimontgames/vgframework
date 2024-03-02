@@ -2,7 +2,6 @@
 #include "editor/ImGui/ImGui.h"
 #include "engine/IWorldResource.h"
 #include "core/IGameObject.h"
-#include "ImGui-Addons/FileBrowser/ImGuiFileBrowser.h"
 #include "renderer/IImGuiAdapter.h"
 
 namespace vg::editor
