@@ -87,7 +87,8 @@ namespace vg::renderer
         if (editor)
         {
             editor::GUIContext guiContext;
-            guiContext.ptr = ImGui::GetCurrentContext();
+            guiContext.imgui = ImGui::GetCurrentContext();
+            guiContext.filedialog = ImGuiFileDialog::Instance();
             editor->DrawGUI(guiContext);
         }
 

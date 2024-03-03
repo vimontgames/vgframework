@@ -339,7 +339,10 @@ namespace vg::core::io
         const auto cwd = getRootDirectory();
 
         const auto beginOffset = path.find(cwd);
-        if (string::npos != beginOffset)
+
+        if (path == cwd)
+            path = "";
+        else if (string::npos != beginOffset)
             path = path.substr(cwd.length()+1, path.length() - cwd.length()-1);
 
         return path;

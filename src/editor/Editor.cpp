@@ -16,6 +16,7 @@
 #endif
 
 #include "editor/ImGui/Extensions/imguiExtensions.h"
+#include "editor/imgui/Extensions/FileDialog/ImGuiFileDialog.h"
 #include "editor/ImGui/Window/FPS/ImGuiFPS.h"
 #include "editor/ImGui/Window/Plugin/ImGuiPlugin.h"
 #include "editor/ImGui/Window/Platform/ImGuiPlatform.h"
@@ -293,8 +294,9 @@ namespace vg::editor
 	{
         VG_PROFILE_CPU("DrawGUI");
 
-        auto * imGuiContext = (ImGuiContext*)_context.ptr;
+        auto * imGuiContext = (ImGuiContext*)_context.imgui;
         ImGui::SetCurrentContext(imGuiContext);
+        ImGuiFileDialog::Instance((ImGuiFileDialog *)_context.filedialog);
 
         ImGuiViewport * viewport = ImGui::GetMainViewport();
         ImGui::SetNextWindowPos(viewport->WorkPos, ImGuiCond_Appearing, ImVec2(0.0f, 0.0f));
@@ -565,8 +567,6 @@ namespace vg::editor
         string saveFilePopupName = "Save World";
         string saveAsFilePopupName = "Save World As";
 
-        auto * fileDialog = ImGuiFileDialog::Instance();
-
         string ext = ImGuiWindow::getFileBrowserExt(worldRes);
 
         const auto worldFolder = ImGuiWindow::getDefaultFolder("WorldResource");
@@ -574,34 +574,15 @@ namespace vg::editor
 
         if (createNewWorld)
         {
-            IGFD::FileDialogConfig config; 
-            config.path = worldFolder;
-            //config.fileName = "New World";
-            config.countSelectionMax = 1;
-            config.flags = ImGuiFileDialogFlags_Modal;
-
-            fileDialog->OpenDialog(newWorldPopupName, newWorldPopupName, ext.c_str(), config);
-            ImGui::SetNextWindowPos(ImGui::GetMainViewport()->GetCenter(), ImGuiCond_Appearing, ImVec2(0.5f, 0.5f));
+            OpenFileDialog(newWorldPopupName, ext, worldFolder);
         }
         else if (loadWorld)
         {
-            IGFD::FileDialogConfig config;
-            config.path = worldFolder;
-            config.countSelectionMax = 1;
-            config.flags = ImGuiFileDialogFlags_Modal;
-
-            fileDialog->OpenDialog(openFilePopupName, openFilePopupName, ext.c_str(), config);
-            ImGui::SetNextWindowPos(ImGui::GetMainViewport()->GetCenter(), ImGuiCond_Appearing, ImVec2(0.5f, 0.5f));
+            OpenFileDialog(openFilePopupName, ext, worldFolder);
         }
         else if (saveWorldAs)
         {
-            IGFD::FileDialogConfig config;
-            config.path = worldFolder;
-            config.countSelectionMax = 1;
-            config.flags = ImGuiFileDialogFlags_Modal;
-
-            fileDialog->OpenDialog(saveAsFilePopupName, saveAsFilePopupName, ext.c_str(), config);
-            ImGui::SetNextWindowPos(ImGui::GetMainViewport()->GetCenter(), ImGuiCond_Appearing, ImVec2(0.5f, 0.5f));
+            SaveFileDialog(saveAsFilePopupName, ext, worldFolder);
         }
         else if (saveWorld)
         {
@@ -623,51 +604,51 @@ namespace vg::editor
         }
         
         // Create new ".world" file
-        if (fileDialog->Display(newWorldPopupName, ImGuiWindowFlags_NoCollapse, style::dialog::Size))
+        if (DisplayFileDialog(newWorldPopupName))
         {
-            if (fileDialog->IsOk())
+            if (ImGui::IsFileDialogOK())
             {                 
                 // Close all prefab views when creating new world
                 auto prefabViews = getWindows<ImGuiPrefabView>();
                 for (auto * prefabView : prefabViews)
                     prefabView->m_isVisible = false;
                 
-                engine->CreateWorld(io::addExtensionIfNotPresent(fileDialog->GetFilePathName(), ext));
+                engine->CreateWorld(io::addExtensionIfNotPresent(GetFileDialogSelectedFile(), ext));
             }
 
-            ImGuiFileDialog::Instance()->Close();
+            ImGui::CloseFileDialog();
         }
 
         // Open existing file
-        if (fileDialog->Display(openFilePopupName, ImGuiWindowFlags_NoCollapse, style::dialog::Size))
+        if (DisplayFileDialog(openFilePopupName))
         {
-            if (fileDialog->IsOk())
+            if (ImGui::IsFileDialogOK())
             {
                 // Close all prefab views when loading new world
                 auto prefabViews = getWindows<ImGuiPrefabView>();
                 for (auto * prefabView : prefabViews)
                     prefabView->m_isVisible = false;
 
-                engine->LoadWorld(fileDialog->GetFilePathName());
+                engine->LoadWorld(GetFileDialogSelectedFile());
             }
 
-            ImGuiFileDialog::Instance()->Close();
+            ImGui::CloseFileDialog();
         }
 
         // Save as 
-        if (fileDialog->Display(saveAsFilePopupName, ImGuiWindowFlags_NoCollapse, style::dialog::Size))
+        if (DisplayFileDialog(saveAsFilePopupName))
         {
-            if (fileDialog->IsOk())
+            if (ImGui::IsFileDialogOK())
             {
                 // Close all prefab views when loading new world
                 auto prefabViews = getWindows<ImGuiPrefabView>();
                 for (auto * prefabView : prefabViews)
                     prefabView->m_isVisible = false;
 
-                engine->SaveWorldAs(fileDialog->GetFilePathName());
+                engine->SaveWorldAs(GetFileDialogSelectedFile());
             }
 
-            ImGuiFileDialog::Instance()->Close();
+            ImGui::CloseFileDialog();
         }            
 
         if (showImGuiDemo)

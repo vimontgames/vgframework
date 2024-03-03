@@ -6,6 +6,7 @@
 #include "engine/IEngine.h"
 #include "editor/ImGui/Window/ImGuiWindow.h"
 #include "editor/ImGui/Extensions/imGuiExtensions.h"
+#include "editor/imgui/Extensions/FileDialog/ImGuiFileDialog.h"
 #include "editor/Editor.h"
 #include "core/IBaseScene.h"
 #include "ImGuiFileDialog/ImGuiFileDialog.h"
@@ -259,7 +260,6 @@ namespace vg::editor
                 case MenuOption::AddChildPrefab:
                 case MenuOption::AddPrefab:
                 {
-                    auto * fileDialog = ImGuiFileDialog::Instance();
                     const string ext = ".prefab";
 
                     static char prefabPath[1024] = { '\0' };
@@ -309,23 +309,18 @@ namespace vg::editor
                         ImGui::EndPopup();
                     }
 
+                    const string selectPrefabString = "Select Prefab";
+
                     if (pickPrefabFile)
                     {
-                        IGFD::FileDialogConfig config;
-                        config.path = ImGuiWindow::getDefaultFolder("Prefabs");
-                        //config.fileName = "New Prefab";
-                        config.countSelectionMax = 1;
-                        config.flags = ImGuiFileDialogFlags_Modal;
-
-                        fileDialog->OpenDialog("Select Prefab", "Select Prefab", ext.c_str(), config);
-                        ImGui::SetNextWindowPos(ImGui::GetMainViewport()->GetCenter(), ImGuiCond_Appearing, ImVec2(0.5f, 0.5f));
+                        ImGui::OpenFileDialog(selectPrefabString, ext, ImGuiWindow::getDefaultFolder("Prefabs"));
                     }
                     
-                    if (fileDialog->Display("Select Prefab", ImGuiWindowFlags_NoCollapse, style::dialog::Size))
+                    if (ImGui::DisplayFileDialog(selectPrefabString))
                     {
-                        if (fileDialog->IsOk())
+                        if (ImGui::IsFileDialogOK())
                         {
-                            const string newFile = io::getRelativePath(fileDialog->GetFilePathName());
+                            const string newFile = io::getRelativePath(ImGui::GetFileDialogSelectedFile());
 
                             if (strcmp(prefabPath, newFile.c_str()))
                                 strcpy(prefabPath, newFile.c_str());
@@ -333,7 +328,7 @@ namespace vg::editor
                             ImGui::OpenPopup(m_popup.c_str());
                         }
 
-                        ImGuiFileDialog::Instance()->Close();
+                        ImGui::CloseFileDialog();
                     }
 
                     if (addPrefab)

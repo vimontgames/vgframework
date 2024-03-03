@@ -5,6 +5,8 @@
 #include "editor/Editor.h"
 #include "renderer/IRenderer.h"
 #include "renderer/IImGuiAdapter.h"
+#include "ImGuiFileDialog/ImGuiFileDialog.h"
+#include "core/File/File.h"
 
 using namespace vg::core;
 using namespace vg::editor;

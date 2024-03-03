@@ -8,7 +8,8 @@ namespace vg
     {
         struct GUIContext
         {
-            void * ptr = nullptr;
+            void * imgui = nullptr;
+            void * filedialog = nullptr;
         };
 
         class IEditorOptions;

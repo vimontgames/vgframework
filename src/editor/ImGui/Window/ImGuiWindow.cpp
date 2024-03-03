@@ -19,6 +19,7 @@
 #include "editor/ImGui/ImGui.h"
 #include "editor/Editor_Consts.h"
 #include "editor/imgui/Extensions/imGuiExtensions.h"
+#include "editor/imgui/Extensions/FileDialog/ImGuiFileDialog.h"
 
 #include "ImGuiWindow.h"
 
@@ -841,26 +842,19 @@ namespace vg::editor
                         ImGui::SameLine();
                         ImGui::SetCursorPosX(x - 4);
 
-                        auto * fileDialog = ImGuiFileDialog::Instance();
-
                         if (isFolder)
                         {
+                            const string selectFolderString = "Select Folder";
                             if (ImGui::Button(style::icon::Folder, style::button::SizeSmall))
                             {
-                                IGFD::FileDialogConfig config;
-                                config.path = fmt::sprintf("%s/projects", io::getRootDirectory());
-                                config.countSelectionMax = 1;
-                                config.flags = ImGuiFileDialogFlags_Modal;
-
-                                fileDialog->OpenDialog("Select Folder", "Select Folder", nullptr, config);
-                                ImGui::SetNextWindowPos(ImGui::GetMainViewport()->GetCenter(), ImGuiCond_Appearing, ImVec2(0.5f, 0.5f));
+                                ImGui::SelectFolderDialog(selectFolderString);
                             }
 
-                            if (fileDialog->Display("Select Folder", ImGuiWindowFlags_NoCollapse, style::dialog::Size))
+                            if (ImGui::DisplayFileDialog(selectFolderString))
                             {
-                                if (fileDialog->IsOk())
+                                if (ImGui::IsFileDialogOK())
                                 {
-                                    const string newFolder = io::getRelativePath(fileDialog->GetCurrentPath());
+                                    const string newFolder = io::getRelativePath(ImGui::GetFileDialogSelectedPath());
 
                                     if (newFolder != *pString)
                                     {
@@ -869,27 +863,30 @@ namespace vg::editor
                                     }
                                 }
 
-                                ImGuiFileDialog::Instance()->Close();
+                                ImGui::CloseFileDialog();
                             }
                         }
                         else if (isFile)
                         {
+                            const string selectFileString = "Select File";
+
                             if (ImGui::Button(style::icon::File, style::button::SizeSmall))
                             {
-                                IGFD::FileDialogConfig config;
-                                config.path = fmt::sprintf("%s/%s", io::getRootDirectory().c_str(), _prop->getDefaultFolder());
-                                config.countSelectionMax = 1;
-                                config.flags = ImGuiFileDialogFlags_Modal;
+                                const auto defaultFolder = _prop->getDefaultFolder();
 
-                                fileDialog->OpenDialog("Select File", "Select File", "*.*", config);
-                                ImGui::SetNextWindowPos(ImGui::GetMainViewport()->GetCenter(), ImGuiCond_Appearing, ImVec2(0.5f, 0.5f));
+                                // TODO: other extensions deduced from default folder?
+                                string ext = ".*";
+                                if (strstr(defaultFolder, "World"))
+                                    ext = ".world";
+
+                                ImGui::OpenFileDialog(selectFileString, ext, defaultFolder);
                             }
 
-                            if (fileDialog->Display("Select File", ImGuiWindowFlags_NoCollapse, style::dialog::Size))
+                            if (ImGui::DisplayFileDialog(selectFileString))
                             {
-                                if (fileDialog->IsOk())
+                                if (ImGui::IsFileDialogOK())
                                 {
-                                    const string newFile = io::getRelativePath(fileDialog->GetFilePathName());
+                                    const string newFile = io::getRelativePath(ImGui::GetFileDialogSelectedFile());
 
                                     if (newFile != *pString)
                                     {
@@ -898,7 +895,7 @@ namespace vg::editor
                                     }                                    
                                 }
 
-                                ImGuiFileDialog::Instance()->Close();
+                                ImGui::CloseFileDialog();
                             }
                         }
                     }
@@ -1549,48 +1546,28 @@ namespace vg::editor
             ImGui::EndPopup();
         }
 
-        auto * fileDialog = ImGuiFileDialog::Instance();
-
         // build extension list
         string ext = getFileBrowserExt(_resource);
 
         if (createNewFile)
         {
-            IGFD::FileDialogConfig config;
-            config.path = getDefaultFolder(_resource);
-            config.countSelectionMax = 1;
-            config.flags = ImGuiFileDialogFlags_Modal;
-
-            fileDialog->OpenDialog(newFileButtonName, newFileButtonName, ext.c_str(), config);
-            ImGui::SetNextWindowPos(ImGui::GetMainViewport()->GetCenter(), ImGuiCond_Appearing, ImVec2(0.5f, 0.5f));
+            ImGui::OpenFileDialog(newFileButtonName, ext, getDefaultFolder(_resource));
         }
         else if (openExistingFile)
         {
-            IGFD::FileDialogConfig config;
-            config.path = getDefaultFolder(_resource);
-            config.countSelectionMax = 1;
-            config.flags = ImGuiFileDialogFlags_Modal;
-
-            fileDialog->OpenDialog(openFileButtonName, openFileButtonName, ext.c_str(), config);
-            ImGui::SetNextWindowPos(ImGui::GetMainViewport()->GetCenter(), ImGuiCond_Appearing, ImVec2(0.5f, 0.5f));
+            ImGui::OpenFileDialog(openFileButtonName, ext, getDefaultFolder(_resource));
         }
         else if (saveAsFile)
         {
-            IGFD::FileDialogConfig config;
-            config.path = getDefaultFolder(_resource);
-            config.countSelectionMax = 1;
-            config.flags = ImGuiFileDialogFlags_Modal;
-
-            fileDialog->OpenDialog(saveAsFileButtonName, saveAsFileButtonName, ext.c_str(), config);
-            ImGui::SetNextWindowPos(ImGui::GetMainViewport()->GetCenter(), ImGuiCond_Appearing, ImVec2(0.5f, 0.5f));
+            ImGui::SaveFileDialog(openFileButtonName, ext, getDefaultFolder(_resource));
         }
 
         // Create new file
-        if (fileDialog->Display(newFileButtonName, ImGuiWindowFlags_NoCollapse, style::dialog::Size))
+        if (ImGui::DisplayFileDialog(newFileButtonName))
         {
-            if (fileDialog->IsOk())
+            if (ImGui::IsFileDialogOK())
             {
-                const string newFilePath = io::addExtensionIfNotPresent(fileDialog->GetFilePathName(), _resource->getExtensions());
+                const string newFilePath = io::addExtensionIfNotPresent(ImGui::GetFileDialogSelectedFile(), _resource->getExtensions());
                 if (_resource->CreateFile(newFilePath))
                 {
                     _resource->SetResourcePath(newFilePath);
@@ -1598,15 +1575,15 @@ namespace vg::editor
                 }
             }
 
-            ImGuiFileDialog::Instance()->Close();
+            ImGui::CloseFileDialog();
         }
 
         // Open existing file
-        if (fileDialog->Display(openFileButtonName, ImGuiWindowFlags_NoCollapse, style::dialog::Size))
+        if (ImGui::DisplayFileDialog(openFileButtonName))
         {
-            if (fileDialog->IsOk())
+            if (ImGui::IsFileDialogOK())
             {
-                const string newFilePath = fileDialog->GetFilePathName();
+                const string newFilePath = ImGui::GetFileDialogSelectedFile();
                 if (_resource->GetResourcePath() != newFilePath)
                 {
                     _resource->SetResourcePath(newFilePath);
@@ -1614,15 +1591,15 @@ namespace vg::editor
                 }
             }
 
-            ImGuiFileDialog::Instance()->Close();
+            ImGui::CloseFileDialog();
         }
 
         // Save existing file
-        if (fileDialog->Display(saveAsFileButtonName, ImGuiWindowFlags_NoCollapse, style::dialog::Size))
+        if (ImGui::DisplayFileDialog(saveAsFileButtonName))
         {
-            if (fileDialog->IsOk())
+            if (ImGui::IsFileDialogOK())
             {
-                const string newFilePath = io::addExtensionIfNotPresent(fileDialog->GetFilePathName(), _resource->getExtensions());
+                const string newFilePath = io::addExtensionIfNotPresent(ImGui::GetFileDialogSelectedFile(), _resource->getExtensions());
                 if (_resource->SaveFile(newFilePath))
                 {
                     _resource->SetResourcePath(newFilePath);
@@ -1630,7 +1607,7 @@ namespace vg::editor
                 }
             }
 
-            ImGuiFileDialog::Instance()->Close();
+            ImGui::CloseFileDialog();
         }
 
         // Display all properties of the resource object

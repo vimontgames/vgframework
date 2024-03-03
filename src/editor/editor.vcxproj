@@ -29,10 +29,12 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\extern\ImGuiFileDialog\ImGuiFileDialogConfig.h" />
     <ClInclude Include="Editor.h" />
     <ClInclude Include="Editor_Consts.h" />
     <ClInclude Include="IEditor.h" />
     <ClInclude Include="IEditorOptions.h" />
+    <ClInclude Include="ImGui\Extensions\FileDialog\ImGuiFileDialog.h" />
     <ClInclude Include="ImGui\Extensions\imGuiExtensions.h" />
     <ClInclude Include="ImGui\Extensions\ImGuizmo\ImGuizmoAdapter.h" />
     <ClInclude Include="ImGui\ImGui.h" />

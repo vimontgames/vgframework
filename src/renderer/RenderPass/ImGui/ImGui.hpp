@@ -19,4 +19,6 @@
 #include "imgui/backends/imgui_impl_vulkan.cpp"
 #endif
 
+#include "editor/ImGui/Extensions/FileDialog/ImGuiFileDialog.cpp"
+
 #pragma pop_macro("new")

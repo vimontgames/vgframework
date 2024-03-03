@@ -157,10 +157,10 @@ SOFTWARE.
 // for lets you define your button widget
 // if you have like me a special bi-color button
 #ifndef IMGUI_PATH_BUTTON
-#define IMGUI_PATH_BUTTON ImGui::Button
+#define IMGUI_PATH_BUTTON ImGui::FileDialogPathButton
 #endif  // IMGUI_PATH_BUTTON
 #ifndef IMGUI_BUTTON
-#define IMGUI_BUTTON ImGui::Button
+#define IMGUI_BUTTON ImGui::FileDialogButton
 #endif  // IMGUI_BUTTON
 ///////////////////////////////
 // locales
@@ -794,7 +794,7 @@ public:
 bool IGFD::Utils::ImSplitter(bool split_vertically, float thickness, float* size1, float* size2, float min_size1, float min_size2, float splitter_long_axis_size) {
     using namespace ImGui;
     ImGuiContext& g     = *GImGui;
-    ImGuiWindow* window = g.CurrentWindow;
+    ::ImGuiWindow* window = g.CurrentWindow;
     ImGuiID id          = window->GetID("##Splitter");
     ImRect bb;
     bb.Min = window->DC.CursorPos + (split_vertically ? ImVec2(*size1, 0.0f) : ImVec2(0.0f, *size1));

@@ -200,8 +200,7 @@ The external libraries are included with the sources for convenience.
 | Font-Awesome               | 6.x           | https://github.com/FortAwesome/Font-Awesome/tree/6.x                      
 | fmt                        | 10.1.1        | https://github.com/fmtlib/fmt/releases/tag/10.1.1                         
 | hlslpp                     | 3.4           | https://github.com/redorav/hlslpp/releases/tag/3.4                        
-| IconFontCppHeaders         |               | https://github.com/juliettef/IconFontCppHeaders                           
-| ImGui-Addons               |               | https://github.com/gallickgunner/ImGui-Addons                             
+| IconFontCppHeaders         |               | https://github.com/juliettef/IconFontCppHeaders                                                     
 | ImGuiFileDialog            | 0.6.7         | https://github.com/aiekick/ImGuiFileDialog
 | ImGuizmo                   | 1.83          | https://github.com/CedricGuillemet/ImGuizmo/releases/tag/1.83             
 | JoltPhysics                | 4.0.1         | https://github.com/jrouwe/JoltPhysics/releases/tag/v4.0.1                 

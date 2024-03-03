@@ -434,7 +434,6 @@ namespace vg::editor
             {
                 const auto* factory = Kernel::getFactory();
                 engine::IEngine* engine = (engine::IEngine*)factory->getSingleton("Engine");
-                auto * fileDialog = ImGuiFileDialog::Instance();
 
                 engine::IWorldResource* worldRes = engine->GetWorldResource();
                 IWorld* world = worldRes ? worldRes->GetWorld() : nullptr;
@@ -476,14 +475,7 @@ namespace vg::editor
                     }
                     else if (openFileDialog)
                     {
-                        IGFD::FileDialogConfig config;
-                        config.path = io::getRootDirectory() + "/" + typeInfo.dataFolder;
-                        config.countSelectionMax = 1;
-                        config.flags = ImGuiFileDialogFlags_Modal;
-
-                        fileDialog->OpenDialog(m_popup, m_popup, typeInfo.fileExt.c_str(), config);
-                        ImGui::SetNextWindowPos(ImGui::GetMainViewport()->GetCenter(), ImGuiCond_Appearing, ImVec2(0.5f, 0.5f));
-
+                        ImGui::OpenFileDialog(m_popup, typeInfo.fileExt, typeInfo.dataFolder);
                         openFileDialog = false;
                     }
 
@@ -493,23 +485,23 @@ namespace vg::editor
                     {
                     case MenuOption::AddScene:
                     {
-                        if (fileDialog->Display(m_popup, ImGuiWindowFlags_NoCollapse, style::dialog::Size))
+                        if (ImGui::DisplayFileDialog(m_popup))
                         {
-                            if (fileDialog->IsOk())
-                                worldRes->CreateSceneResource(fileDialog->GetFilePathName(), _sceneType);
+                            if (ImGui::IsFileDialogOK())
+                                worldRes->CreateSceneResource(ImGui::GetFileDialogSelectedFile(), _sceneType);
 
-                            ImGuiFileDialog::Instance()->Close();
+                            ImGui::CloseFileDialog();
                         }
                     }
                     break;
 
                     case MenuOption::LoadScene:
-                        if (fileDialog->Display(m_popup, ImGuiWindowFlags_NoCollapse, style::dialog::Size))
+                        if (ImGui::DisplayFileDialog(m_popup))
                         {
-                            if (fileDialog->IsOk())
-                                worldRes->LoadSceneResource(fileDialog->GetFilePathName(), _sceneType);
+                            if (ImGui::IsFileDialogOK())
+                                worldRes->LoadSceneResource(ImGui::GetFileDialogSelectedFile(), _sceneType);
 
-                            ImGuiFileDialog::Instance()->Close();
+                            ImGui::CloseFileDialog();
                         }
                         break;
                     }

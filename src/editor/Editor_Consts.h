@@ -52,6 +52,7 @@ namespace vg::editor
             inline static const char * Checked              = ICON_FA_SQUARE_CHECK;
             inline static const char * Console              = ICON_FA_TABLE_LIST;
             inline static const char * Clock                = ICON_FA_CLOCK;
+            inline static const char * Edit                 = ICON_FA_PEN_TO_SQUARE;
             inline static const char * Editor               = ICON_FA_SCREWDRIVER_WRENCH;
             inline static const char * EditorView           = ICON_FA_DESKTOP;
             inline static const char * Engine               = ICON_FA_GEAR;
@@ -59,6 +60,7 @@ namespace vg::editor
             inline static const char * File                 = ICON_FA_FILE;
             inline static const char * FPS                  = ICON_FA_STOPWATCH;
             inline static const char * Folder               = ICON_FA_FOLDER_OPEN;
+            inline static const char * NewFolder            = ICON_FA_FOLDER_PLUS;
             inline static const char * GameView             = ICON_FA_DISPLAY;
             inline static const char * GameObject           = ICON_FA_SITEMAP;// ICON_FA_PERSON;
             inline static const char * Info                 = ICON_FA_CIRCLE_INFO;

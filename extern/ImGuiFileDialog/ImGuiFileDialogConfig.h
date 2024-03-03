@@ -1,5 +1,8 @@
 #pragma once
 
+#include "editor/Editor_Consts.h"
+#include "editor/ImGui/Extensions/FileDialog/ImGuiFileDialog.h"
+
 // uncomment and modify defines under for customize ImGuiFileDialog
 
 // uncomment if you need to use your FileSystem Interface
@@ -18,7 +21,7 @@
 // the spacing between button path's can be customized.
 // if disabled the spacing is defined by the imgui theme
 // define the space between path buttons
-// #define CUSTOM_PATH_SPACING 2
+//#define CUSTOM_PATH_SPACING 0
 
 // #define USE_THUMBNAILS
 // the thumbnail generation use the stb_image and stb_resize lib who need to define the implementation
@@ -50,8 +53,8 @@
 // #define IGFD_KEY_BACKSPACE ImGuiKey_Backspace
 
 // by ex you can quit the dialog by pressing the key excape
-// #define USE_DIALOG_EXIT_WITH_KEY
-// #define IGFD_EXIT_KEY ImGuiKey_Escape
+#define USE_DIALOG_EXIT_WITH_KEY
+#define IGFD_EXIT_KEY ImGuiKey_Escape
 
 // widget
 // begin combo widget
@@ -68,10 +71,10 @@
 // #define IMGUI_BUTTON ImGui::Button
 
 // locales string
-// #define createDirButtonString "+"
-// #define resetButtonString "R"
+#define createDirButtonString   vg::editor::style::icon::NewFolder
+#define resetButtonString       ICON_FA_ROTATE_RIGHT //vg::editor::style::icon::Reload
 // #define drivesButtonString "Drives"
-// #define editPathButtonString "E"
+#define editPathButtonString    vg::editor::style::icon::Edit
 // #define searchString "Search"
 // #define dirEntryString "[DIR] "
 // #define linkEntryString "[LINK] "
@@ -90,11 +93,11 @@
 
 // Validation buttons
 // #define okButtonString " OK"
-// #define okButtonWidth 0.0f
+#define okButtonWidth vg::editor::style::button::SizeMedium.x
 // #define cancelButtonString " Cancel"
-// #define cancelButtonWidth 0.0f
+#define cancelButtonWidth vg::editor::style::button::SizeMedium.x
 // alignement [0:1], 0.0 is left, 0.5 middle, 1.0 right, and other ratios
-// #define okCancelButtonAlignement 0.0f
+#define okCancelButtonAlignement 0.5f
 // #define invertOkAndCancelButtons 0
 
 // DateTimeFormat

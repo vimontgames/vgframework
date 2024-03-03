@@ -259,6 +259,12 @@
     <ClInclude Include="ImGui\Window\Time\ImGuiTime.hpp">
       <Filter>ImGui\Window\Time</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\extern\ImGuiFileDialog\ImGuiFileDialogConfig.h">
+      <Filter>ImGui\Extensions\FileDialog\Config</Filter>
+    </ClInclude>
+    <ClInclude Include="ImGui\Extensions\FileDialog\ImGuiFileDialog.h">
+      <Filter>ImGui\Extensions\FileDialog</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Editor.def" />
@@ -399,6 +405,9 @@
     </Filter>
     <Filter Include="ImGui\Extensions\FileDialog">
       <UniqueIdentifier>{6158fb09-5680-4a6e-9924-4bbb3d1da354}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ImGui\Extensions\FileDialog\Config">
+      <UniqueIdentifier>{e908ec9f-09ea-411c-a565-e66cd68163c3}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

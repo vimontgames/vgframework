@@ -10,4 +10,6 @@
 #include "imgui/imgui_tables.cpp"
 #include "imgui/imgui_widgets.cpp"
 
+#include "ImGuiFileDialog/ImGuiFileDialog.cpp"
+
 #pragma pop_macro("new")
