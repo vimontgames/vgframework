@@ -1,5 +1,11 @@
 #pragma once
 
+#ifdef __cplusplus
+#define VG_CHECK_ALIGN(var, align)	VG_ASSERT(0 == (uint_ptr(&var) & (align-1)), "%s should be aligned to %u bytes", #var, align)
+#else
+#define VG_CHECK_ALIGN(var, align)
+#endif
+
 static float lightEps = 0.01f;
 
 struct LightsConstantsHeader
@@ -13,6 +19,7 @@ struct LightsConstantsHeader
 	#endif
 
 	uint4		m_counters;
+	uint4		_pad;
 
 	void		setDirectionalCount			(uint _count)		{ m_counters.x = _count; }
 	uint		getDirectionalCount			()					{ return m_counters.x; }
@@ -30,10 +37,13 @@ struct OmniLightConstants
 	float4		m_position;
 	float4x4	m_shadowMatrix;
 	uint4		m_shadow; 
-	uint4		_pad;
+	float4		m_ambient;
 
 	void		setColor					(float3 _color)		{ m_color.rgb = _color; }
 	float3		getColor					()					{ return m_color.rgb;}
+
+	void		setAmbient					(float3 _ambient)	{ m_ambient.rgb = _ambient; }
+	float3		getAmbient					()					{ return m_ambient.rgb;}
 	
 	void		setPosition					(float3 _position)	{ m_position.xyz = _position;}
 	float3		getPosition					()					{ return m_position.xyz; }
@@ -44,7 +54,7 @@ struct OmniLightConstants
 	void		setShadowMapTextureHandle	(uint _shadowMap)	{ m_shadow.x = packUint16low(m_shadow.x, _shadowMap); }
 	uint		getShadowMapTextureHandle	()					{ return unpackUint16low(m_shadow.x); }
 
-	void		setShadowMatrix				(float4x4 _matrix)	{ m_shadowMatrix = _matrix; }
+	void		setShadowMatrix				(float4x4 _matrix)	{ VG_CHECK_ALIGN(m_shadowMatrix, 32); m_shadowMatrix = _matrix; }
 	float4x4	getShadowMatrix				()					{ return m_shadowMatrix; }
 
 	void		setShadowBias				(float _bias)		{ m_shadow.y = asuint((float1)_bias); }
@@ -60,10 +70,13 @@ struct DirectionalLightConstants
 	float4		m_direction;
 	float4x4	m_shadowMatrix;
 	uint4		m_shadow; 
-	uint4		_pad;
+	float4		m_ambient;
 
 	void		setColor					(float3 _color)		{ m_color.rgb = _color; }
 	float3		getColor					()					{ return m_color.rgb;}
+
+	void		setAmbient					(float3 _ambient)	{ m_ambient.rgb = _ambient; }
+	float3		getAmbient					()					{ return m_ambient.rgb;}
 	
 	void		setDirection				(float3 _direction)	{ m_direction.xyz = _direction; }
 	float3		getDirection				()					{ return m_direction.xyz; }
@@ -71,7 +84,7 @@ struct DirectionalLightConstants
 	void		setShadowMapTextureHandle	(uint _shadowMap)	{ m_shadow.x = packUint16low(m_shadow.x, _shadowMap); }
 	uint		getShadowMapTextureHandle	()					{ return unpackUint16low(m_shadow.x); }
 
-	void		setShadowMatrix				(float4x4 _matrix)	{ m_shadowMatrix = _matrix; }
+	void		setShadowMatrix				(float4x4 _matrix)	{ VG_CHECK_ALIGN(m_shadowMatrix, 32); m_shadowMatrix = _matrix; }
 	float4x4	getShadowMatrix				()					{ return m_shadowMatrix; }
 
 	void		setShadowBias				(float _bias)		{ m_shadow.y = asuint((float1)_bias); }

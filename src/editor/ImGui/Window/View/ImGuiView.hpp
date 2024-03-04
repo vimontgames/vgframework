@@ -435,9 +435,9 @@ namespace vg::editor
 
             bool activeGizmo = false;
 
-            if (m_view && m_view->IsActive())
+            if (m_view)
             {
-                if (!drawGizmo())
+                if (!drawGizmo() && m_view->IsActive())
                 {
                     // Update picking if not currently manipulating gizmos
                     auto * renderer = Editor::get()->getRenderer();

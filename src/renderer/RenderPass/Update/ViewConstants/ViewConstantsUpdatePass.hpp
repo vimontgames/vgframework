@@ -118,8 +118,6 @@ namespace vg::renderer
         uint omniCount = (uint)omnis.size();
         uint spotCount = 0;// (uint)spots.size();
 
-        const uint mapSize = sizeof(LightsConstantsHeader) + directionalCount * sizeof(DirectionalLightConstants) + omniCount * sizeof(OmniLightConstants);
-
         // Add default light if needed
         bool useDefaultLight = true;
         for (uint i = 0; i < enumCount<LightType>(); ++i)
@@ -132,13 +130,16 @@ namespace vg::renderer
                 break;
             }
         }
+        const auto actualDirectionalCount = useDefaultLight ? 1 : directionalCount;
+
+        const uint mapSize = sizeof(LightsConstantsHeader) + actualDirectionalCount * sizeof(DirectionalLightConstants) + omniCount * sizeof(OmniLightConstants);
 
         uint offset = 0;
         u8 * data = (u8*)_cmdList->map(s_LightsConstantsBuffer, mapSize).data;
         {
             auto * header = (LightsConstantsHeader*)data;
 
-            header->setDirectionalCount(useDefaultLight ? 1 : directionalCount);
+            header->setDirectionalCount(actualDirectionalCount);
             header->setOmniCount(omniCount);
             header->setSpotCount(spotCount);
 
@@ -148,8 +149,9 @@ namespace vg::renderer
             {
                 DirectionalLightConstants * constants = (DirectionalLightConstants *)(data + offset);
 
-                constants->setColor(float3(1,1,1));
-                constants->setDirection(normalize(float3(1,1,1)));
+                constants->setColor(float3(0.95f, 0.95f, 0.95f));
+                constants->setAmbient(float3(0.05f, 0.05f, 0.05f));
+                constants->setDirection(normalize(float3(1,-1,1)));
                 constants->setShadowBias(0);
                 constants->setShadowInstensity(0);
                 constants->setShadowMapTextureHandle(0);
@@ -166,6 +168,7 @@ namespace vg::renderer
                 DirectionalLightConstants * constants = (DirectionalLightConstants *)(data + offset);
 
                 constants->setColor(directional->getColor().rgb * directional->getIntensity());
+                constants->setAmbient(directional->getAmbient().rgb * directional->getIntensity());
                 constants->setDirection(directional->getGlobalMatrix()[2].xyz);
                 constants->setShadowBias(directional->m_shadowBias);
                 constants->setShadowInstensity(directional->m_shadowIntensity);
@@ -195,6 +198,7 @@ namespace vg::renderer
                 OmniLightConstants * constants = (OmniLightConstants *)(data + offset);
 
                 constants->setColor(omni->getColor().rgb * omni->getIntensity());
+                constants->setAmbient(omni->getAmbient().rgb * omni->getIntensity());
                 constants->setPosition(omni->getGlobalMatrix()[3].xyz);
                 constants->setRadius(omni->getMaxRadius());
                 constants->setShadowBias(omni->m_shadowBias);
