@@ -89,7 +89,7 @@ namespace vg::editor
                     m_popup = "Add GameObject";
                     m_popupObject = _object;
                     openPopup = true;
-                    ImGui::OpenPopup("Add");
+                    ImGui::OpenPopup("Add GameObject");
                 }
                 ImGui::EndDisabled();
 
@@ -212,7 +212,7 @@ namespace vg::editor
                     m_popup = "Add Prefab";
                     m_popupObject = _object;
                     openPopup = true;
-                    ImGui::OpenPopup("Add");
+                    ImGui::OpenPopup("Add Prefab");
                 }
                 ImGui::EndDisabled();
 
@@ -233,6 +233,21 @@ namespace vg::editor
 
                 if (ImGui::IsItemHovered())
                     ImGui::SetTooltip("Add Prefab from file as child of the selected GameObject");
+
+                // ReplaceByPrefab
+                ImGui::BeginDisabled(isRoot || isPrefab || isPrefabChild);
+                if (ImGui::MenuItem("Replace"))
+                {
+                    m_selected = MenuOption::ReplaceByPrefab;
+                    m_popup = "Replace by Prefab";
+                    m_popupObject = _object;
+                    openPopup = true;
+                    ImGui::OpenPopup("Replace by Prefab");
+                }
+                ImGui::EndDisabled();
+
+                if (ImGui::IsItemHovered())
+                    ImGui::SetTooltip("Replace selected GameObject with Prefab");
 
                 ImGui::EndMenu();
             }
@@ -364,6 +379,7 @@ namespace vg::editor
                 case MenuOption::AddChildPrefab:
                 case MenuOption::AddPrefab:
                 case MenuOption::CreatePrefab:
+                case MenuOption::ReplaceByPrefab:
                 {
                     const string ext = ".prefab";
 
@@ -452,6 +468,21 @@ namespace vg::editor
                             default:
                                 VG_ASSERT_ENUM_NOT_IMPLEMENTED(selected);
                                 break;
+
+                            case MenuOption::ReplaceByPrefab:
+                            {
+                                prefabRes->SetResourcePath(prefabPath);
+                                auto parent = dynamic_cast<IGameObject *>(gameObject->getParent());
+                                VG_ASSERT(parent);
+                                if (parent)
+                                {
+                                    const auto index = parent->GetChildIndex(gameObject);
+                                    parent->AddChild(newPrefabObject, index+1);
+                                    parent->RemoveChild(gameObject);
+                                    status = Status::Removed;
+                                }
+                            }
+                            break;
 
                             case MenuOption::AddPrefab:
                             {

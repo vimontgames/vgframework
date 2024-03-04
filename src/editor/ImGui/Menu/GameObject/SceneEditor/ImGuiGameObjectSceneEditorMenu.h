@@ -20,11 +20,12 @@ namespace vg::editor
             AddChildGameObject,
             AddParentGameObject,
 
+            EditPrefab,
             CreatePrefab,
             UnpackPrefab,
-            EditPrefab,
             AddPrefab,
             AddChildPrefab,
+            ReplaceByPrefab,
 
             Delete,
             Rename

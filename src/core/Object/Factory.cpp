@@ -330,6 +330,18 @@ namespace vg::core
                     *prop->GetPropertyUint64(_dstObj) = *prop->GetPropertyUint64(_srcObj);
                     break;
 
+                case IProperty::Type::Uint2:
+                    memcpy(prop->GetPropertyUintN(_dstObj, 2), prop->GetPropertyUintN(_srcObj, 2), sizeof(uint) * 2);
+                    break;
+
+                case IProperty::Type::Uint3:
+                    memcpy(prop->GetPropertyUintN(_dstObj, 3), prop->GetPropertyUintN(_srcObj, 3), sizeof(uint) * 3);
+                    break;
+
+                case IProperty::Type::Uint4:
+                    memcpy(prop->GetPropertyUintN(_dstObj, 4), prop->GetPropertyUintN(_srcObj, 4), sizeof(uint) * 4);
+                    break;
+
                 case IProperty::Type::String:
                     *prop->GetPropertyString(_dstObj) = *prop->GetPropertyString(_srcObj);
                     break;
