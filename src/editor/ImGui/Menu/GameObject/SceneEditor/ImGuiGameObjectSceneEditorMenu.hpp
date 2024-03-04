@@ -4,6 +4,7 @@
 #include "core/ISelection.h"
 #include "core/IInput.h"
 #include "engine/IEngine.h"
+#include "engine/IResourceManager.h"
 #include "editor/ImGui/Window/ImGuiWindow.h"
 #include "editor/ImGui/Extensions/imGuiExtensions.h"
 #include "editor/imgui/Extensions/FileDialog/ImGuiFileDialog.h"
@@ -20,6 +21,8 @@ namespace vg::editor
     //--------------------------------------------------------------------------------------
     ImGuiMenu::Status ImGuiGameObjectSceneEditorMenu::Display(core::IObject * _object)
     {
+        auto engine = ImGuiWindow::getEngine();
+
         auto status = Status::None;
         IGameObject * gameObject = dynamic_cast<IGameObject*>(_object);
         VG_ASSERT(nullptr != gameObject);
@@ -28,6 +31,7 @@ namespace vg::editor
         bool doDelete = false;
         bool doRename = false;
         bool doDuplicate = false;
+        bool doUnpack = false;
 
         ISelection * selection = Editor::get()->getSelection();
 
@@ -77,6 +81,7 @@ namespace vg::editor
             //ImGui::BeginDisabled((isRoot || isPrefabChild) && isPrefabOrPartOfPrefab);
             if (ImGui::BeginMenu("GameObjects"))
             {
+                //AddGameObject
                 ImGui::BeginDisabled(isRoot || isPrefabChild);
                 if (ImGui::MenuItem("Add"))
                 {
@@ -88,6 +93,10 @@ namespace vg::editor
                 }
                 ImGui::EndDisabled();
 
+                if (ImGui::IsItemHovered())
+                    ImGui::SetTooltip("Add new GameObject at the same level as the selected GameObject");
+
+                // AddChildGameObject
                 ImGui::BeginDisabled(isPrefabOrPartOfPrefab);
                 if (ImGui::MenuItem("Add Child"))
                 {
@@ -99,6 +108,10 @@ namespace vg::editor
                 }
                 ImGui::EndDisabled();
 
+                if (ImGui::IsItemHovered())
+                    ImGui::SetTooltip("Add new GameObject as child of the selected GameObject");
+
+                // AddParentGameObject
                 ImGui::BeginDisabled(isPrefabOrPartOfPrefab);
                 if (ImGui::MenuItem("Add Parent"))
                 {
@@ -110,6 +123,9 @@ namespace vg::editor
                 }
                 ImGui::EndDisabled();
 
+                if(ImGui::IsItemHovered())
+                    ImGui::SetTooltip("Add new GameObject as parent of the selected GameObject");
+
                 ImGui::EndMenu();
             }
             //ImGui::EndDisabled();
@@ -119,11 +135,10 @@ namespace vg::editor
             //ImGui::BeginDisabled(isPrefab && (isRoot || isPrefabChild) && isPrefabOrPartOfPrefab);
             if (ImGui::BeginMenu("Prefabs"))
             {
+                // EditPrefab
                 ImGui::BeginDisabled(!isPrefab && !isPrefabChild);
-
                 if (ImGui::MenuItem("Edit"))
                 {
-                    auto engine = ImGuiWindow::getEngine();
                     auto worldRes = engine->GetWorldResource();
                     VG_ASSERT(worldRes);
 
@@ -136,7 +151,7 @@ namespace vg::editor
                         auto scene = VG_SAFE_STATIC_CAST(IBaseScene, prefabGameObject->GetPrefabResource()->getObject());
 
                         IResource * sceneRes = worldRes->FindSceneResource(scene, BaseSceneType::Prefab);
-                        
+
                         if (!sceneRes)
                         {
                             const string path = prefabGameObject->GetPrefabResource()->GetResourcePath();
@@ -153,8 +168,43 @@ namespace vg::editor
                 }
                 ImGui::EndDisabled();
 
+                if (ImGui::IsItemHovered())
+                    ImGui::SetTooltip("Edit selected Prefab in a separate view");
+
                 ImGui::Separator();
 
+                // CreatePrefab
+                ImGui::BeginDisabled(isPrefab || isPrefabChild);
+                if (ImGui::MenuItem("Create"))
+                {
+                    m_selected = MenuOption::CreatePrefab;
+                    m_popup = "Create Prefab";
+                    m_popupObject = _object;
+                    openPopup = true;
+                    ImGui::OpenPopup("Create Prefab");
+                }
+                ImGui::EndDisabled();
+
+                if (ImGui::IsItemHovered())
+                    ImGui::SetTooltip("Create a new Prefab file from existing GameObject");
+
+                // UnpackPrefab
+                ImGui::BeginDisabled(!isPrefab && !isPrefabChild);
+                if (ImGui::MenuItem("Unpack"))
+                {
+                    m_selected = MenuOption::UnpackPrefab;
+                    m_popup = "Unpack Prefab";
+                    m_popupObject = _object;
+                    doUnpack = true;
+                }
+                ImGui::EndDisabled();
+
+                if (ImGui::IsItemHovered())
+                    ImGui::SetTooltip("Unpack Prefab into regular GameObject");
+
+                ImGui::Separator();
+
+                // AddPrefab
                 ImGui::BeginDisabled(isRoot || isPrefabChild);
                 if (ImGui::MenuItem("Add"))
                 {
@@ -166,6 +216,10 @@ namespace vg::editor
                 }
                 ImGui::EndDisabled();
 
+                if (ImGui::IsItemHovered())
+                    ImGui::SetTooltip("Add Prefab from file at the same level as the selected GameObject");
+
+                // AddChildPrefab
                 ImGui::BeginDisabled(isPrefabOrPartOfPrefab);
                 if (ImGui::MenuItem("Add Child"))
                 {
@@ -176,6 +230,9 @@ namespace vg::editor
                     ImGui::OpenPopup("Add Child Prefab");
                 }
                 ImGui::EndDisabled();
+
+                if (ImGui::IsItemHovered())
+                    ImGui::SetTooltip("Add Prefab from file as child of the selected GameObject");
 
                 ImGui::EndMenu();
             }
@@ -190,12 +247,18 @@ namespace vg::editor
             }
             ImGui::EndDisabled();
 
+            if (ImGui::IsItemHovered())
+                ImGui::SetTooltip("Rename selected GameObject");
+
             ImGui::BeginDisabled(!canDuplicate);
             {
                 if (ImGui::MenuItem("Duplicate", "Ctrl-D"))
                     doDuplicate = true;
             }
             ImGui::EndDisabled();
+
+            if (ImGui::IsItemHovered())
+                ImGui::SetTooltip("Create a copy of selected GameObject");
 
             ImGui::Separator();
 
@@ -206,12 +269,56 @@ namespace vg::editor
             }
             ImGui::EndDisabled();
 
+            if (ImGui::IsItemHovered())
+                ImGui::SetTooltip("Delete selected GameObject");
+
             ImGui::EndPopup();            
         }
 
         if (doDuplicate)
         {
             Editor::get()->getSelection()->DuplicateGameObjects(gameObjectsToDelete);
+        }
+
+        if (doUnpack)
+        {
+            IGameObject * parentPrefabGO = gameObject->GetParentPrefab();
+            IGameObject * prefabGO;
+            if (parentPrefabGO)
+                prefabGO = parentPrefabGO;
+            else
+                prefabGO = gameObject;
+
+            if (nullptr != prefabGO)
+            {
+                VG_ASSERT(prefabGO->IsPrefab());
+
+                ImGui::OnMsgBoxClickedFunc unpackPrefab = [=]() mutable
+                {
+                    auto * prefabRes = prefabGO->GetPrefabResource();
+                    IGameObject * prefabParent = VG_SAFE_STATIC_CAST(IGameObject, prefabGO->getParent());
+                    
+                    auto srcChildren = prefabGO->GetChildren();
+
+                    if (srcChildren.size() > 0)
+                    {
+                        IGameObject * root = srcChildren[0];
+                        VG_SAFE_INCREASE_REFCOUNT(root);
+                        root->setParent(nullptr);
+                        root->setName(prefabGO->getName());
+                        root->SetLocalMatrix(prefabGO->GetLocalMatrix());
+                        prefabParent->AddChild(root);
+                        VG_SAFE_RELEASE(root);
+                    }
+                    prefabGO->RemoveAllChildren();
+                    prefabParent->RemoveChild(prefabGO);
+
+                    return true;
+                };
+
+                string msg = fmt::sprintf("Are you sure you want to unpack Prefab instance \"%s\" of \"%s\"?", prefabGO->getName(), prefabGO->GetPrefabResource()->GetResourcePath());
+                ImGui::MessageBox(MessageBoxType::YesNo, "Unpack Prefab", msg.c_str(), unpackPrefab);
+            }
         }
 
         if (doDelete)
@@ -233,13 +340,9 @@ namespace vg::editor
 
             string msg;
             if (gameObjectsToDelete.size() > 1)
-            {
                 msg = "Are you sure you want to delete " + to_string(gameObjectsToDelete.size()) + " GameObjects and their children?";
-            }
             else
-            { 
                 msg = "Are you sure you want to delete " + (string)gameObject->GetClassName() + " \"" + gameObject->getName() + "\"?";
-            }
             ImGui::MessageBox(MessageBoxType::YesNo, "Delete GameObject", msg.c_str(), deleteGameObject);
         }
 
@@ -249,6 +352,7 @@ namespace vg::editor
         if (openPopup)
         {
             ImGui::OpenPopup(m_popup.c_str());
+            ImGui::SetNextWindowPos(ImGui::GetMainViewport()->GetCenter(), ImGuiCond_Appearing, ImVec2(0.5f, 0.5f));
             openPopup = false;
         }
         
@@ -259,12 +363,16 @@ namespace vg::editor
             {
                 case MenuOption::AddChildPrefab:
                 case MenuOption::AddPrefab:
+                case MenuOption::CreatePrefab:
                 {
                     const string ext = ".prefab";
 
                     static char prefabPath[1024] = { '\0' };
                     bool pickPrefabFile = false;
                     bool addPrefab = false;
+
+                    if (selected == CreatePrefab && prefabPath[0] == '\0')
+                        sprintf_s(prefabPath, "%s/%s.prefab", io::getRelativePath(ImGuiWindow::getDefaultFolder("Prefabs")).c_str(), _object->getName().c_str());
 
                     if (ImGui::BeginPopupModal(m_popup.c_str(), nullptr, ImGuiWindowFlags_AlwaysAutoResize))
                     {
@@ -337,7 +445,7 @@ namespace vg::editor
 
                         auto newName = io::getFileNameWithoutExt(prefabPath);
                         IGameObject * newPrefabObject = (IGameObject *)CreateFactoryObject(PrefabGameObject, newName.c_str(), gameObject);
-                        newPrefabObject->GetPrefabResource()->SetResourcePath(prefabPath);
+                        auto * prefabRes = newPrefabObject->GetPrefabResource();
 
                         switch (selected)
                         {
@@ -347,16 +455,49 @@ namespace vg::editor
 
                             case MenuOption::AddPrefab:
                             {
+                                prefabRes->SetResourcePath(prefabPath);
                                 auto parent = dynamic_cast<IGameObject *>(gameObject->getParent());
+                                VG_ASSERT(parent);
                                 if (parent)
                                     parent->AddChild(newPrefabObject);
                             }
                             break;
 
                             case MenuOption::AddChildPrefab:
+                            {
+                                prefabRes->SetResourcePath(prefabPath);
                                 gameObject->SetObjectFlags(ObjectFlags::Opened, true);
                                 gameObject->AddChild(newPrefabObject);
-                                break;
+                            }
+                            break;
+
+                            case MenuOption::CreatePrefab:
+                            {
+                                auto parent = dynamic_cast<IGameObject *>(gameObject->getParent());
+                                VG_ASSERT(parent);
+                                if (parent)
+                                {
+                                    VG_SAFE_INCREASE_REFCOUNT(gameObject);
+                                    uint index = parent->GetChildIndex(gameObject);
+                                    parent->RemoveChild(gameObject);
+                                    newPrefabObject->SetLocalMatrix(gameObject->GetLocalMatrix());
+                                    gameObject->SetLocalMatrix(float4x4::identity());
+
+                                    parent->SetObjectFlags(ObjectFlags::Opened, true);
+                                    parent->AddChild(newPrefabObject, index);
+
+                                    prefabRes->CreateFile(prefabPath, gameObject);
+                                    VG_SAFE_RELEASE(gameObject); 
+
+                                    prefabRes->ClearResourcePath();
+                                    prefabRes->SetResourcePath(prefabPath);
+                                    //engine->GetResourceManager()->Reimport(prefabRes);
+
+                                    prefabPath[0] = '\0';
+                                    status = Status::Removed;
+                                }
+                            }
+                            break;
                         }  
 
                         VG_SAFE_RELEASE(newPrefabObject);

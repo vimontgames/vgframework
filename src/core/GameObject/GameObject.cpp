@@ -401,6 +401,23 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
+    core::uint GameObject::RemoveAllChildren(bool _recomputeFlags)
+    {
+        if (m_children.size() > 0)
+        {
+            const auto count = m_children.size();
+            for (uint i = 0; i < count; ++i)
+                VG_SAFE_RELEASE(m_children[i]);
+            m_children.clear();
+
+            if (_recomputeFlags)
+                recomputeUpdateFlags();
+            return (core::uint)count;
+        }
+        return 0;
+    }
+
+    //--------------------------------------------------------------------------------------
     core::uint GameObject::GetChildIndex(const IGameObject * _child) const
     {
         uint childIndex = -1;

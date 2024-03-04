@@ -67,7 +67,7 @@ namespace vg::engine
 	//--------------------------------------------------------------------------------------
 	// a .scene file is an XML file that serializes a Scene Object
 	//--------------------------------------------------------------------------------------
-	bool SceneResource::CreateFile(const core::string & _path)
+	bool SceneResource::CreateFile(const core::string & _path, IObject * _data)
 	{
 		const auto * factory = Kernel::getFactory();
 

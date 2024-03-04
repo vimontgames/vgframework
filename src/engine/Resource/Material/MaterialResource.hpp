@@ -100,7 +100,7 @@ namespace vg::engine
     //--------------------------------------------------------------------------------------
     // a .mat file is an XML file that serializes a MaterialResourceData Object
     //--------------------------------------------------------------------------------------
-    bool MaterialResource::CreateFile(const core::string & _path)
+    bool MaterialResource::CreateFile(const core::string & _path, core::IObject * _data)
     {
         const auto * factory = Kernel::getFactory();
 

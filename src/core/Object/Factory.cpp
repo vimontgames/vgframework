@@ -5,7 +5,6 @@
 #include "core/XML/XML.h"
 #include "core/Timer/Timer.h"
 #include "core/Kernel.h"
-#include "engine/IResourceManager.h"
 #include "core/File/File.h"
 #include "core/File/Buffer.h"
 #include "core/Misc/BitMask.h"

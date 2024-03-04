@@ -68,9 +68,9 @@ namespace vg::engine
     //--------------------------------------------------------------------------------------
     // a .scene file is an XML file that serializes a Scene Object
     //--------------------------------------------------------------------------------------
-    bool PrefabResource::CreateFile(const core::string& _path)
+    bool PrefabResource::CreateFile(const core::string& _path, core::IObject * _data)
     {
-        const auto* factory = Kernel::getFactory();
+        const auto * factory = Kernel::getFactory();
 
         if (PrefabScene * prefabScene = VG_SAFE_STATIC_CAST(PrefabScene, factory->createObject("PrefabScene")))
         {
@@ -78,9 +78,18 @@ namespace vg::engine
             prefabScene->setName(io::getFileNameWithoutExt(_path));
 
             // Add default root node to scene
-            GameObject* root = (GameObject*)CreateFactoryObject(GameObject, "Root", this);
-            prefabScene->SetRoot(root);
-            root->release();
+            if (_data)
+            {
+                IGameObject * root = VG_SAFE_STATIC_CAST(IGameObject, _data);
+                root->setName("Root");
+                prefabScene->SetRoot(root);
+            }
+            else
+            {
+                auto root = (GameObject *)CreateFactoryObject(GameObject, "Root", this);
+                prefabScene->SetRoot(root);
+                root->release();
+            }
 
             factory->saveToXML(prefabScene, _path);
             VG_SAFE_RELEASE(prefabScene);

@@ -47,6 +47,7 @@ namespace vg::core
 
         void                                                AddChild                (IGameObject * _gameObject, core::uint _index = -1) final override;
         bool                                                RemoveChild             (IGameObject * _gameObject, bool _recomputeFlags = true) final override;
+        core::uint                                          RemoveAllChildren       (bool _recomputeFlags = true) final override;
         const vector<IGameObject*> &                        GetChildren             () const override;
         bool                                                IsRoot                  () const final override;
         bool                                                HasAncestor             (const IGameObject * _ancestor) const final override;

@@ -234,7 +234,9 @@ namespace vg::engine
             if (nullptr != parentGameObject)
             {
                 IGameObject * newGO = (IGameObject *)go->Instanciate();
-                parentGameObject->AddChild(newGO);
+                const auto index = parentGameObject->GetChildIndex(go);
+                newGO->setName(newGO->getName() + " (Copy)");
+                parentGameObject->AddChild(newGO, index+1);
                 newGameObjects.push_back(newGO);
                 VG_SAFE_RELEASE(newGO);
             }

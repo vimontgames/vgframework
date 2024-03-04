@@ -4,6 +4,8 @@
 
 namespace vg::core
 {
+    class IObject;
+
     //--------------------------------------------------------------------------------------
     // An IResource is an object that will from an external file with dependencies, e.g. a TextureResource will be used to reference a Texture in a MaterialResource used to reference a MaterialModel
     //--------------------------------------------------------------------------------------
@@ -16,7 +18,7 @@ namespace vg::core
         IResource(const IResource & _other) : Object(_other) { }
         virtual ~IResource() = default;
 
-        virtual bool                    CreateFile              (const string & _path) = 0;
+        virtual bool                    CreateFile              (const string & _path, IObject * _data = nullptr) = 0;
         virtual bool                    SaveFile                (const string & _path) const = 0;
 
         virtual void                    setup                   (IObject * _owner, const string & _path, UserData _userData = 0x0) = 0;

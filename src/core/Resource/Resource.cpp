@@ -49,7 +49,7 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
-    bool Resource::CreateFile(const string & _path)
+    bool Resource::CreateFile(const string & _path, IObject * _data)
     {
         VG_ASSERT_NOT_IMPLEMENTED();
         return false;

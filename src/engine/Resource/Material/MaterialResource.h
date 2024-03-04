@@ -25,7 +25,7 @@ namespace vg::engine
         bool                                cook                            (const core::string & _file) const final override;
         core::IObject *                     load                            (const core::string & _path) final override;
 
-        bool                                CreateFile                      (const core::string & _path);
+        bool                                CreateFile                      (const core::string & _path, core::IObject * _data) final override;
         bool                                SaveFile                        (const core::string & _path) const override;
 
         bool                                CanCreateFile                   () const final override { return true; };
