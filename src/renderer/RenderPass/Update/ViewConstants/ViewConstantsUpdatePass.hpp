@@ -101,7 +101,7 @@ namespace vg::renderer
         if (_renderPassContext.m_view->IsLit())
             updateLightsConstants(_renderPassContext, _cmdList);
     }
-
+    
     //--------------------------------------------------------------------------------------
     void ViewConstantsUpdatePass::updateLightsConstants(const gfx::RenderPassContext & _renderPassContext, gfx::CommandList * _cmdList)
     {
@@ -136,6 +136,7 @@ namespace vg::renderer
 
         uint offset = 0;
         u8 * data = (u8*)_cmdList->map(s_LightsConstantsBuffer, mapSize).data;
+        VG_ASSERT_IS_ALIGNED(data, 32);
         {
             auto * header = (LightsConstantsHeader*)data;
 

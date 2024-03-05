@@ -26,6 +26,7 @@ namespace vg
         //--------------------------------------------------------------------------------------
         core::u8 * UploadBuffer::map(core::size_t _size, core::size_t _aligment)
         {
+            _aligment = max(_aligment, (size_t)32);
             return RingBuffer::map(_size, _aligment);
         }
 
