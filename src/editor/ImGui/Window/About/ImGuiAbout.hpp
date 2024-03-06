@@ -95,7 +95,7 @@ namespace vg::editor
                 { "IconFontCppHeaders",     "90da802",          "https://github.com/juliettef/IconFontCppHeaders" },
                 { "ImGuiFileDialog",        "0.6.7",            "https://github.com/aiekick/ImGuiFileDialog" },
                 { "ImGuizmo",               "1.83",             "https://github.com/CedricGuillemet/ImGuizmo/releases/tag/1.83" },
-                { "JoltPhysics",            "4.0.1",            "https://github.com/jrouwe/JoltPhysics/releases/tag/v4.0.1" },
+                { "JoltPhysics",            "4.0.2",            "https://github.com/jrouwe/JoltPhysics/releases/tag/v4.0.2" },
                 { "magic_enum",             "0.9.4",            "https://github.com/Neargye/magic_enum/releases/tag/v0.9.4" },
                 { "optick",                 "1.3.1",            "https://github.com/bombomby/optick" },
                 { "px_sched",               "",                 "https://github.com/pplux/px" },
