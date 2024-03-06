@@ -33,6 +33,7 @@ namespace vg::editor
         core::uint                  GetViewIndex        () const { return m_index; }
 
         void                        focus               (core::IGameObject * _gameObject);
+        void                        focus               (const core::vector<core::IGameObject * > & _gameObjects);
 
     protected:
         bool                        drawGizmo           ();

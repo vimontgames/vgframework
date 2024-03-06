@@ -676,42 +676,74 @@ namespace vg::editor
     //--------------------------------------------------------------------------------------
     void Editor::focus(core::IGameObject * _gameObject)
     {
-        IWorld * world = _gameObject->GetWorld();
+        core::vector<core::IGameObject *> gameObjects;
+        gameObjects.push_back(_gameObject);
+        focus(gameObjects);
+    }
 
-        auto imGuiViews = getWindows<ImGuiView>();
-
-        auto * scene = _gameObject->GetScene();
-        const auto sceneType = scene->GetSceneType();
-
-        for (ImGuiView * view : imGuiViews)
+    //--------------------------------------------------------------------------------------
+    void Editor::focus(const core::vector<core::IGameObject *> &_gameObjects)
+    {
+        if (_gameObjects.size() > 0)
         {
-            switch (sceneType)
+            IWorld * world = _gameObjects[0]->GetWorld();
+            auto * scene = _gameObjects[0]->GetScene();
+
+            for (uint i = 1; i < _gameObjects.size(); ++i)
             {
-            default:
+                VG_ASSERT(_gameObjects[i]->GetWorld() == world);
+                VG_ASSERT(_gameObjects[i]->GetScene() == scene);
+            }
+
+            const auto sceneType = scene->GetSceneType();
+
+            auto imGuiViews = getWindows<ImGuiView>();
+
+            for (ImGuiView * view : imGuiViews)
+            {
+                switch (sceneType)
+                {
+                default:
+                    break;
+
+                case BaseSceneType::Scene:
+                {
+                    if (view->GetViewTarget() == gfx::ViewTarget::Editor && view->GetViewIndex() == 0)
+                        view->focus(_gameObjects);
+                }
                 break;
 
-            case BaseSceneType::Scene:
-            {
-                if (view->GetViewTarget() == gfx::ViewTarget::Editor && view->GetViewIndex() == 0)
+                case BaseSceneType::Prefab:
                 {
-                    // default editor view
-                    VG_INFO("[Editor] Focus GameObject \"%s\" in View \"%s\"", _gameObject->getName().c_str(), view->getName().c_str());
-                    view->focus(_gameObject);
+                    if (world == view->GetWorld())
+                        view->focus(_gameObjects);
                 }
-            }
-            break;
-
-            case BaseSceneType::Prefab:
-            {
-                if (world == view->GetWorld())
-                {
-                    // default editor view
-                    VG_INFO("[Editor] Focus GameObject \"%s\" in View \"%s\"", _gameObject->getName().c_str(), view->getName().c_str());
-                    view->focus(_gameObject);
+                break;
                 }
-            }
-            break;
             }
         }
+    }
+
+    //--------------------------------------------------------------------------------------
+    void Editor::deleteGameObjects(core::vector<IGameObject *> & _gameObjects)
+    {
+        ImGui::OnMsgBoxClickedFunc deleteGameObject = [=]() mutable
+            {
+                for (uint i = 0; i < _gameObjects.size(); ++i)
+                {
+                    IGameObject * gameObjectToDelete = _gameObjects[i];
+                    IGameObject * parentGameObject = dynamic_cast<IGameObject *>(gameObjectToDelete->getParent());
+                    if (nullptr != parentGameObject)
+                        parentGameObject->RemoveChild(gameObjectToDelete);
+                }
+                return true;
+            };
+
+        string msg;
+        if (_gameObjects.size() > 1)
+            msg = "Are you sure you want to delete " + to_string(_gameObjects.size()) + " GameObjects and their children?";
+        else
+            msg = "Are you sure you want to delete " + (string)_gameObjects[0]->GetClassName() + " \"" + _gameObjects[0]->getName() + "\"?";
+        ImGui::MessageBox(MessageBoxType::YesNo, "Delete GameObject", msg.c_str(), deleteGameObject);
     }
 }

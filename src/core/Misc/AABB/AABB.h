@@ -17,8 +17,11 @@ namespace vg::core
 
         AABB(const AABB & _other, const core::float4x4 & _world);
 
+        void reset();
         VG_INLINE void grow(const core::float3 & _point);
         VG_INLINE void grow(const core::AABB & _aabb);
+
+        bool isFinite() const;
         VG_INLINE core::float3 center() const;
         VG_INLINE float radius() const;
 

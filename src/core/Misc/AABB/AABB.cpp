@@ -1,5 +1,6 @@
 #include "core/Precomp.h"
 #include "AABB.h"
+#include "core/Math/Math.h"
 
 #if !VG_ENABLE_INLINE
 #include "AABB.inl"
@@ -7,6 +8,19 @@
 
 namespace vg::core
 {
+    //--------------------------------------------------------------------------------------
+    void AABB::reset()
+    {
+        m_min = float3(MAX_FLOAT, MAX_FLOAT, MAX_FLOAT);
+        m_max = float3(-MAX_FLOAT, -MAX_FLOAT, -MAX_FLOAT);
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool AABB::isFinite() const
+    {
+        return all(m_min != MAX_FLOAT) && all(m_max != MIN_FLOAT);
+    }
+
     //--------------------------------------------------------------------------------------
     // Matrix used to draw AABB using a signed unit cube between {-1,-1,-1} and {+1,+1,+1}
     //--------------------------------------------------------------------------------------

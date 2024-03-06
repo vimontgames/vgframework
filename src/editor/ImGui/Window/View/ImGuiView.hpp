@@ -261,6 +261,23 @@ namespace vg::editor
         if (m_target == gfx::ViewTarget::Editor)
             updateEditorCamera(getEngine()->GetTime().m_realDeltaTime);
 
+        // Update
+        {
+            auto * editor = Editor::get();
+            auto * selection = editor->getSelection();
+            auto selectedObjects = selection->GetSelectedObjects();
+            auto topLevelGameObjects = selection->RemoveChildGameObjectsWithParents(selectedObjects);
+
+            if (ImGui::IsKeyPressed(ImGuiKey_F) && topLevelGameObjects.size() > 0)
+            {
+                editor->focus(topLevelGameObjects);
+            }
+            else if (ImGui::IsKeyPressed(ImGuiKey_Delete) && topLevelGameObjects.size() > 0)
+            {
+                editor->deleteGameObjects(topLevelGameObjects);
+            }
+        }
+
         auto * renderer = Editor::get()->getRenderer();
 
         ImGuiStyle & style = ImGui::GetStyle();
@@ -633,23 +650,41 @@ namespace vg::editor
     //--------------------------------------------------------------------------------------
     void ImGuiView::focus(IGameObject * _gameObject)
     {
-        if (_gameObject)
+        core::vector<core::IGameObject * > array;
+        array.push_back(_gameObject);
+        focus(array);
+    }
+
+    //--------------------------------------------------------------------------------------
+    void ImGuiView::focus(const core::vector<core::IGameObject * > & _gameObjects)
+    {
+        if (_gameObjects.size() > 0)
         {
-            const auto world = _gameObject->getGlobalMatrix();
-            float3 offset = normalize(m_editorCam.m_matrix[2].xyz);
-
+            const float3 offset = normalize(m_editorCam.m_matrix[2].xyz);
             core::AABB aabb;
-            if (_gameObject->TryGetAABB(aabb))
-            {
-                float4 center = float4(aabb.center(), 1.0f);
-                float3 worldPos = mul(center, world).xyz;
+            aabb.reset();
 
-                m_editorCam.m_matrix[3].xyz = worldPos + offset * aabb.radius() * 3.1417f;
-            }
-            else
+            for (uint i = 0; i < _gameObjects.size(); ++i)
             {
-                m_editorCam.m_matrix[3].xyz = world[3].xyz + offset;
-            }     
+                const IGameObject * gameObject = _gameObjects[i];
+                const auto world = gameObject->getGlobalMatrix();
+
+                core::AABB gameObjectAABB;
+                if (gameObject->TryGetAABB(gameObjectAABB))
+                {
+                    gameObjectAABB = AABB::transform(gameObjectAABB, world);
+                    aabb.grow(gameObjectAABB);
+                }     
+                else
+                {
+                    aabb.grow(world[3].xyz);
+                }
+            }      
+
+            VG_ASSERT(aabb.isFinite());
+            
+            float3 center = aabb.center();
+            m_editorCam.m_matrix[3].xyz = center + offset * aabb.radius() * 3.1417f;
 
             ImGui::SetWindowFocus(GetTitle().c_str());
         }

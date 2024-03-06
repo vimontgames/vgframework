@@ -45,7 +45,8 @@ namespace vg::editor
         if (!isRoot && !selection->IsSelectedObject(gameObject))
             selectedObjects.push_back(gameObject);
 
-        vector<IGameObject *> gameObjectsToDelete = Editor::get()->getSelection()->RemoveChildGameObjectsWithParents(selectedObjects);
+        auto * editor = Editor::get();
+        vector<IGameObject *> topLevelGameObjects = editor->getSelection()->RemoveChildGameObjectsWithParents(selectedObjects);
 
         const bool isPrefab = gameObject->IsPrefab();
         const bool isPrefabChild = gameObject->GetParentPrefab();
@@ -54,7 +55,7 @@ namespace vg::editor
         // Root GameObject cannot be deleted
         const bool canAddChildGameObject = !isPrefabOrPartOfPrefab;
         const bool canAddChildPrefab = !isPrefabOrPartOfPrefab;
-        const bool canDelete = gameObjectsToDelete.size() > 0 && !isRoot;
+        const bool canDelete = topLevelGameObjects.size() > 0 && !isRoot;
         const bool canRename = true; // !isRoot;
         const bool canDuplicate = !isRoot;
 
@@ -65,11 +66,11 @@ namespace vg::editor
                 // What if the Menu is closed? This code should run in Editor/Toolmode 3D View update instead
                 if (!ImGui::IsAnyItemActive())
                 {
-                    if (ImGui::IsKeyPressed(ImGuiKey_F))
+                    /*if (ImGui::IsKeyPressed(ImGuiKey_F))
                         doFocus = true;
                     else if (ImGui::IsKeyPressed(ImGuiKey_Delete) && canDelete)
                         doDelete = true;
-                    else if (canRename && ImGui::IsKeyPressed(ImGuiKey_F2) && canRename)
+                    else */if (canRename && ImGui::IsKeyPressed(ImGuiKey_F2) && canRename)
                         doRename = true;
                     else if (ImGui::IsKeyPressed(ImGuiKey_D) && ImGui::IsKeyDown(ImGuiKey_LeftCtrl) && canDuplicate)
                         doDuplicate = true;
@@ -168,7 +169,7 @@ namespace vg::editor
                         sceneRes = worldRes->FindSceneResource(scene, BaseSceneType::Prefab);
                         VG_ASSERT(sceneRes);
                         if (sceneRes)
-                            Editor::get()->openPrefabView(sceneRes);
+                            editor->openPrefabView(sceneRes);
                     }
                 }
                 ImGui::EndDisabled();
@@ -283,10 +284,7 @@ namespace vg::editor
             ImGui::Separator();
 
             if (ImGui::MenuItem("Focus", "F"))
-            {
-                auto editor = Editor::get();
                 editor->focus(gameObject);
-            }
 
             if (ImGui::IsItemHovered())
                 ImGui::SetTooltip("Focus GameObject in Editor View");
@@ -305,9 +303,7 @@ namespace vg::editor
         }
 
         if (doDuplicate)
-        {
-            Editor::get()->getSelection()->DuplicateGameObjects(gameObjectsToDelete);
-        }
+            editor->getSelection()->DuplicateGameObjects(topLevelGameObjects);
 
         if (doUnpack)
         {
@@ -351,33 +347,12 @@ namespace vg::editor
         }
 
         if (doFocus)
-        {
-            Editor::get()->focus(gameObject);
-        }
+            editor->focus(gameObject);
 
         if (doDelete)
         {
-            ImGui::OnMsgBoxClickedFunc deleteGameObject = [=]() mutable
-            {
-                for (uint i = 0; i < gameObjectsToDelete.size(); ++i)
-                {
-                    IGameObject * gameObjectToDelete = gameObjectsToDelete[i];
-                    IGameObject * parentGameObject = dynamic_cast<IGameObject *>(gameObjectToDelete->getParent());
-                    if (nullptr != parentGameObject)
-                    {
-                        parentGameObject->RemoveChild(gameObjectToDelete);
-                        status = Status::Removed;
-                    }
-                }
-                return true;
-            };
-
-            string msg;
-            if (gameObjectsToDelete.size() > 1)
-                msg = "Are you sure you want to delete " + to_string(gameObjectsToDelete.size()) + " GameObjects and their children?";
-            else
-                msg = "Are you sure you want to delete " + (string)gameObject->GetClassName() + " \"" + gameObject->getName() + "\"?";
-            ImGui::MessageBox(MessageBoxType::YesNo, "Delete GameObject", msg.c_str(), deleteGameObject);
+            editor->deleteGameObjects(topLevelGameObjects);
+            status = Status::Removed;
         }
 
         if (doRename)

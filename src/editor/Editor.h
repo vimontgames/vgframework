@@ -66,6 +66,8 @@ namespace vg
 
 			void								openPrefabView		(const core::IResource * _prefabRes);
 			void								focus				(core::IGameObject * _gameObject);
+			void								focus				(const core::vector<core::IGameObject *> & _gameObjects);
+			void								deleteGameObjects	(core::vector<core::IGameObject*> & _gameObjects);
 
 		private:
 			core::vector<ImGuiWindow *>			m_imGuiWindows;
