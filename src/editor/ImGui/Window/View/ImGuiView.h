@@ -32,6 +32,8 @@ namespace vg::editor
         const gfx::ViewTarget &     GetViewTarget       () const { return m_target;}
         core::uint                  GetViewIndex        () const { return m_index; }
 
+        void                        setWindowFocus      ();
+
         void                        focus               (core::IGameObject * _gameObject);
         void                        focus               (const core::vector<core::IGameObject * > & _gameObjects);
 

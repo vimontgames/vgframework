@@ -659,6 +659,7 @@ namespace vg::editor
     void Editor::openPrefabView(const core::IResource * _prefabRes)
     {
         // Create or show window
+        auto * editor = Editor::get();
         auto * prefabView = getWindow<ImGuiPrefabView>(io::getFileNameWithoutExt(_prefabRes->GetResourcePath()));
 
         if (prefabView)
@@ -667,10 +668,13 @@ namespace vg::editor
         }
         else
         {
-            auto prefabView = new ImGuiPrefabView(_prefabRes);
+            prefabView = new ImGuiPrefabView(_prefabRes);
             prefabView->setName(io::getFileNameWithoutExt(_prefabRes->GetResourcePath()));
-            Editor::get()->m_imGuiWindows.push_back(prefabView);
+            editor->m_imGuiWindows.push_back(prefabView);
         }
+
+        if (prefabView)
+            prefabView->setWindowFocus();
     }
 
     //--------------------------------------------------------------------------------------

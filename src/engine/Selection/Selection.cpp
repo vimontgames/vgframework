@@ -222,6 +222,11 @@ namespace vg::engine
         return gameObjectsWithoutChildrenWithParents;
     }
 
+    static bool ends_with(const core::string & str, const core::string & suffix)
+    {
+        return str.size() >= suffix.size() && str.compare(str.size() - suffix.size(), suffix.size(), suffix) == 0;
+    }
+
     //--------------------------------------------------------------------------------------
     core::vector<core::IGameObject *> Selection::DuplicateGameObjects(const core::vector<core::IGameObject *> & _selectedGameObjects)
     {
@@ -235,7 +240,9 @@ namespace vg::engine
             {
                 IGameObject * newGO = (IGameObject *)go->Instanciate();
                 const auto index = parentGameObject->GetChildIndex(go);
-                newGO->setName(newGO->getName() + " (Copy)");
+                const string copySuffix = "(Copy)";
+                if (!ends_with(newGO->getName(), copySuffix))
+                    newGO->setName(newGO->getName() + " " + copySuffix);
                 parentGameObject->AddChild(newGO, index+1);
                 newGameObjects.push_back(newGO);
                 VG_SAFE_RELEASE(newGO);

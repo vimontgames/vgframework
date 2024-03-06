@@ -268,13 +268,16 @@ namespace vg::editor
             auto selectedObjects = selection->GetSelectedObjects();
             auto topLevelGameObjects = selection->RemoveChildGameObjectsWithParents(selectedObjects);
 
-            if (ImGui::IsKeyPressed(ImGuiKey_F) && topLevelGameObjects.size() > 0)
+            if (!ImGui::IsAnyItemActive())
             {
-                editor->focus(topLevelGameObjects);
-            }
-            else if (ImGui::IsKeyPressed(ImGuiKey_Delete) && topLevelGameObjects.size() > 0)
-            {
-                editor->deleteGameObjects(topLevelGameObjects);
+                if (ImGui::IsKeyPressed(ImGuiKey_F) && topLevelGameObjects.size() > 0)
+                {
+                    editor->focus(topLevelGameObjects);
+                }
+                else if (ImGui::IsKeyPressed(ImGuiKey_Delete) && topLevelGameObjects.size() > 0)
+                {
+                    editor->deleteGameObjects(topLevelGameObjects);
+                }
             }
         }
 
@@ -686,7 +689,13 @@ namespace vg::editor
             float3 center = aabb.center();
             m_editorCam.m_matrix[3].xyz = center + offset * aabb.radius() * 3.1417f;
 
-            ImGui::SetWindowFocus(GetTitle().c_str());
+            setWindowFocus();
         }
+    }
+
+    //--------------------------------------------------------------------------------------
+    void ImGuiView::setWindowFocus()
+    {
+        ImGui::SetWindowFocus(GetTitle().c_str());
     }
 }

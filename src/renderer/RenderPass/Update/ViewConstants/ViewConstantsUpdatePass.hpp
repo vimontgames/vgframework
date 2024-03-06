@@ -152,7 +152,7 @@ namespace vg::renderer
 
                 constants->setColor(float3(0.95f, 0.95f, 0.95f));
                 constants->setAmbient(float3(0.05f, 0.05f, 0.05f));
-                constants->setDirection(normalize(float3(1,-1,1)));
+                constants->setDirection(normalize(float3(0.5f,-0.75f,1)));
                 constants->setShadowBias(0);
                 constants->setShadowInstensity(0);
                 constants->setShadowMapTextureHandle(0);

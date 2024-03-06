@@ -255,7 +255,7 @@ namespace vg::engine
         else
         {
             if (!_newPath.empty())
-                VG_WARNING("[Resource] Could not find file \"%s\"", _newPath.c_str());
+                VG_ERROR("[Resource] Could not find file \"%s\"", _newPath.c_str());
         }
     }
 

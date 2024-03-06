@@ -203,6 +203,9 @@ namespace vg::core::io
     string getFileName(const string & _file)
     {
         auto found = _file.find_last_of('/');
+        if (string::npos == found)
+            found = _file.find_last_of('\\');
+
         if (string::npos != found)
         {
             string name = _file.substr(found+1);
