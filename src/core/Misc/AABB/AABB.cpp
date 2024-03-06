@@ -1,10 +1,11 @@
+#include "core/Precomp.h"
 #include "AABB.h"
 
 #if !VG_ENABLE_INLINE
 #include "AABB.inl"
 #endif
 
-namespace vg::renderer
+namespace vg::core
 {
     //--------------------------------------------------------------------------------------
     // Matrix used to draw AABB using a signed unit cube between {-1,-1,-1} and {+1,+1,+1}
@@ -29,17 +30,27 @@ namespace vg::renderer
     //--------------------------------------------------------------------------------------
     AABB::AABB(const AABB & _other, const float4x4 & _world)
     {
+        *this = transform(_other, _world);
+    }
+
+    //--------------------------------------------------------------------------------------
+    AABB AABB::transform(const AABB & _other, const core::float4x4 & _world)
+    {
+        AABB aabb;
+
         float4 p000 = mul(float4(_other.m_min.xyz, 1.0f), _world);
-        float4 p001 = mul(float4(_other.m_min.xy, _other.m_max.z , 1.0f), _world);
-        float4 p010 = mul(float4(_other.m_min.x,  _other.m_max.y, _other.m_min.z, 1.0f), _world);
-        float4 p011 = mul(float4(_other.m_min.x,  _other.m_max.yz, 1.0f), _world);
-        float4 p100 = mul(float4(_other.m_max.x,  _other.m_min.yz, 1.0f), _world);
-        float4 p101 = mul(float4(_other.m_max.x,  _other.m_min.y, _other.m_max.z, 1.0f), _world);
+        float4 p001 = mul(float4(_other.m_min.xy, _other.m_max.z, 1.0f), _world);
+        float4 p010 = mul(float4(_other.m_min.x, _other.m_max.y, _other.m_min.z, 1.0f), _world);
+        float4 p011 = mul(float4(_other.m_min.x, _other.m_max.yz, 1.0f), _world);
+        float4 p100 = mul(float4(_other.m_max.x, _other.m_min.yz, 1.0f), _world);
+        float4 p101 = mul(float4(_other.m_max.x, _other.m_min.y, _other.m_max.z, 1.0f), _world);
         float4 p110 = mul(float4(_other.m_max.xy, _other.m_min.z, 1.0f), _world);
         float4 p111 = mul(float4(_other.m_max.xyz, 1.0f), _world);
 
-        m_min = min(min(min(p000, p001), min(p010, p011)), min(min(p100, p101), min(p110, p111))).xyz;
-        m_max = max(max(max(p000, p001), max(p010, p011)), max(max(p100, p101), max(p110, p111))).xyz;
+        aabb.m_min = min(min(min(p000, p001), min(p010, p011)), min(min(p100, p101), min(p110, p111))).xyz;
+        aabb.m_max = max(max(max(p000, p001), max(p010, p011)), max(max(p100, p101), max(p110, p111))).xyz;
+
+        return aabb;
     }
 
     //--------------------------------------------------------------------------------------

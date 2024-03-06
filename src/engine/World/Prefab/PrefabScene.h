@@ -11,5 +11,7 @@ namespace vg::engine
 
         PrefabScene(const core::string & _name, core::IObject * _parent);
         ~PrefabScene();
+
+        core::BaseSceneType   GetSceneType() const final override { return core::BaseSceneType::Prefab; }
     };
 }

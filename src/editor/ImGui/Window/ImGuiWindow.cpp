@@ -9,7 +9,8 @@
 #include "core/IGameObject.h"
 #include "core/IComponent.h"
 #include "core/ISelection.h"
-#include "core/Misc/BitMask.h"
+#include "core/Misc/BitMask/BitMask.h"
+#include "core/Misc/AABB/AABB.h"
 
 #include "renderer/IRenderer.h"
 

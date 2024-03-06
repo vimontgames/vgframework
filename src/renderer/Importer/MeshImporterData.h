@@ -1,9 +1,9 @@
 #pragma once
 
-#include "core/Math/Math.h"
 #include "MaterialImporterData.h"
+#include "core/Math/Math.h"
+#include "core/Misc/AABB/AABB.h"
 #include "renderer/Geometry/Batch/Batch.h"
-#include "renderer/Geometry/AABB/AABB.h"
 #include "renderer/Geometry/Vertex/VertexFormat.h"
 
 namespace vg::renderer
@@ -37,7 +37,7 @@ namespace vg::renderer
         bool save(const core::string & _file) const;
 
         core::string                        name;
-        AABB                                aabb;
+        core::AABB                          aabb;
         core::vector<Batch>                 batches;
         core::vector<core::u32>             indices;
         core::vector<MeshImporterVertex>    vertices;

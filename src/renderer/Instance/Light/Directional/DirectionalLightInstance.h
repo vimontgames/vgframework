@@ -22,7 +22,7 @@ namespace vg::renderer
         DirectionalLightInstance(const DirectionalLightDesc * _directionalLightDesc);
         ~DirectionalLightInstance();
 
-        bool            GetAABB(AABB & _aabb) const final override;
+        bool            TryGetAABB(AABB & _aabb) const final override;
         bool            Cull(CullingResult * _cullingResult, View * _view) final override;
         void            Draw(const RenderContext & _renderContext, gfx::CommandList * _cmdList) const final override;
 

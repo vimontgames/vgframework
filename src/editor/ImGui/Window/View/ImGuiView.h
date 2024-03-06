@@ -18,6 +18,7 @@ namespace vg::editor
 
         void                        updateEditorCamera  (float _dt);
 
+        core::string                GetTitle            () const override;
         void                        DrawGUI             () final override;
 
         virtual bool                ShowToolbar         () { return false; }
@@ -27,6 +28,11 @@ namespace vg::editor
         virtual core::IWorld*       GetWorld            () const;;
         virtual void                OnCloseWindow       ();
         virtual bool                UpdateScene         () { return true; };
+
+        const gfx::ViewTarget &     GetViewTarget       () const { return m_target;}
+        core::uint                  GetViewIndex        () const { return m_index; }
+
+        void                        focus               (core::IGameObject * _gameObject);
 
     protected:
         bool                        drawGizmo           ();

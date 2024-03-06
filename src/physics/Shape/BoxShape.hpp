@@ -15,6 +15,13 @@ namespace vg::physics
     }
 
     //--------------------------------------------------------------------------------------
+    bool BoxShapeDesc::TryGetAABB(AABB & _aabb) const
+    {
+        _aabb = AABB(-m_size.xyz * 0.5f + m_offset, m_size.xyz * 0.5f + m_offset);
+        return true;
+    }
+
+    //--------------------------------------------------------------------------------------
     VG_REGISTER_OBJECT_CLASS(BoxShape, "Box Shape");
     //--------------------------------------------------------------------------------------
     bool BoxShape::registerProperties(core::IClassDesc & _desc)

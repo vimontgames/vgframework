@@ -8,6 +8,7 @@ namespace vg::physics
     public:
         VG_CLASS_DECL_PASSTHROUGH(BoxShapeDesc, ShapeDesc);
         ShapeType GetShapeType() const final override { return ShapeType::Box; }
+        bool TryGetAABB(core::AABB & _aabb) const final override;
         core::float3 m_size = core::float3(1, 1, 1);
     };
 

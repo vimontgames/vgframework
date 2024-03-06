@@ -7,7 +7,8 @@
 #include "engine/IResourceManager.h"
 #include "editor/ImGui/Window/ImGuiWindow.h"
 #include "editor/ImGui/Extensions/imGuiExtensions.h"
-#include "editor/imgui/Extensions/FileDialog/ImGuiFileDialog.h"
+#include "editor/ImGui/Extensions/FileDialog/ImGuiFileDialog.h"
+#include "editor/ImGui/Window/View/ImGuiView.h"
 #include "editor/Editor.h"
 #include "core/IBaseScene.h"
 #include "ImGuiFileDialog/ImGuiFileDialog.h"
@@ -29,6 +30,7 @@ namespace vg::editor
 
         bool openPopup = false;
         bool doDelete = false;
+        bool doFocus = false;
         bool doRename = false;
         bool doDuplicate = false;
         bool doUnpack = false;
@@ -60,9 +62,12 @@ namespace vg::editor
         {
             if (selection->IsSelectedObject(gameObject)) 
             {
+                // What if the Menu is closed? This code should run in Editor/Toolmode 3D View update instead
                 if (!ImGui::IsAnyItemActive())
                 {
-                    if (ImGui::IsKeyPressed(ImGuiKey_Delete) && canDelete)
+                    if (ImGui::IsKeyPressed(ImGuiKey_F))
+                        doFocus = true;
+                    else if (ImGui::IsKeyPressed(ImGuiKey_Delete) && canDelete)
                         doDelete = true;
                     else if (canRename && ImGui::IsKeyPressed(ImGuiKey_F2) && canRename)
                         doRename = true;
@@ -277,6 +282,15 @@ namespace vg::editor
 
             ImGui::Separator();
 
+            if (ImGui::MenuItem("Focus", "F"))
+            {
+                auto editor = Editor::get();
+                editor->focus(gameObject);
+            }
+
+            if (ImGui::IsItemHovered())
+                ImGui::SetTooltip("Focus GameObject in Editor View");
+
             ImGui::BeginDisabled(!canDelete);
             {
                 if (ImGui::MenuItem("Delete", "Del"))
@@ -334,6 +348,11 @@ namespace vg::editor
                 string msg = fmt::sprintf("Are you sure you want to unpack Prefab instance \"%s\" of \"%s\"?", prefabGO->getName(), prefabGO->GetPrefabResource()->GetResourcePath());
                 ImGui::MessageBox(MessageBoxType::YesNo, "Unpack Prefab", msg.c_str(), unpackPrefab);
             }
+        }
+
+        if (doFocus)
+        {
+            Editor::get()->focus(gameObject);
         }
 
         if (doDelete)

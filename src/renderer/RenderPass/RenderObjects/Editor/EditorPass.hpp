@@ -96,7 +96,7 @@ namespace vg::renderer
                         continue;
 
                     AABB aabb;
-                    if (instance->GetAABB(aabb))
+                    if (instance->TryGetAABB(aabb))
                         dbgDraw->drawAABB(_cmdList, aabb, instance->getGlobalMatrix());
                 }
             }

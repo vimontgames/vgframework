@@ -672,4 +672,46 @@ namespace vg::editor
             Editor::get()->m_imGuiWindows.push_back(prefabView);
         }
     }
+
+    //--------------------------------------------------------------------------------------
+    void Editor::focus(core::IGameObject * _gameObject)
+    {
+        IWorld * world = _gameObject->GetWorld();
+
+        auto imGuiViews = getWindows<ImGuiView>();
+
+        auto * scene = _gameObject->GetScene();
+        const auto sceneType = scene->GetSceneType();
+
+        for (ImGuiView * view : imGuiViews)
+        {
+            switch (sceneType)
+            {
+            default:
+                break;
+
+            case BaseSceneType::Scene:
+            {
+                if (view->GetViewTarget() == gfx::ViewTarget::Editor && view->GetViewIndex() == 0)
+                {
+                    // default editor view
+                    VG_INFO("[Editor] Focus GameObject \"%s\" in View \"%s\"", _gameObject->getName().c_str(), view->getName().c_str());
+                    view->focus(_gameObject);
+                }
+            }
+            break;
+
+            case BaseSceneType::Prefab:
+            {
+                if (world == view->GetWorld())
+                {
+                    // default editor view
+                    VG_INFO("[Editor] Focus GameObject \"%s\" in View \"%s\"", _gameObject->getName().c_str(), view->getName().c_str());
+                    view->focus(_gameObject);
+                }
+            }
+            break;
+            }
+        }
+    }
 }

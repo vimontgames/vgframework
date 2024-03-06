@@ -1,6 +1,6 @@
 #include "ClassDesc.h"
 #include "core/IResource.h"
-#include "core/Misc/BitMask.h"
+#include "core/Misc/BitMask/BitMask.h"
 
 namespace vg::core
 {

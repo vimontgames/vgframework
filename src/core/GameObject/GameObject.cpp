@@ -1,12 +1,14 @@
 #include "core/Precomp.h"
 #include "GameObject.h"
-#include "core/Kernel.h"
-#include "core/Component/Component.h"
-#include "core/Object/AutoRegisterClass.h"  
 #include "core/ISelection.h"
 #include "core/IProfiler.h"
-#include "renderer/IGraphicInstance.h"
 #include "core/IBaseScene.h"
+#include "core/Kernel.h"
+#include "core/Component/Component.h"
+#include "core/Misc/AABB/AABB.h"
+#include "core/Object/AutoRegisterClass.h"  
+
+#include "renderer/IGraphicInstance.h"
 
 #if !VG_ENABLE_INLINE
 #include "GameObject.inl"
@@ -437,6 +439,39 @@ namespace vg::core
     const vector<IGameObject*> & GameObject::GetChildren() const
     {
         return (const vector<IGameObject*> &)getChildren();
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool GameObject::TryGetAABB(core::AABB & _aabb) const
+    {
+        AABB gameObjectAABB(float3(-0.01f, -0.01f, -0.01f), float3(-0.01f, -0.01f, -0.01f));
+
+        const auto & components = getComponents();
+        for (uint i = 0; i < components.size(); ++i)
+        {
+            auto * component = components[i];
+
+            AABB componentAABB;
+            if (component->TryGetAABB(componentAABB))
+                gameObjectAABB.grow(componentAABB);
+        }
+
+        const auto & children = getChildren();
+        for (uint i = 0; i < children.size(); ++i)
+        {
+            auto * child = children[i];
+
+            AABB childAABB;
+            if (child->TryGetAABB(childAABB))
+            {
+                float4x4 toParentMatrix = mul(child->getGlobalMatrix(), inverse(GetGlobalMatrix()));
+                auto localSpaceChildAABB = AABB::transform(childAABB, toParentMatrix);
+                gameObjectAABB.grow(localSpaceChildAABB);
+            }
+        }
+
+        _aabb = gameObjectAABB;
+        return true;
     }
 
     //--------------------------------------------------------------------------------------

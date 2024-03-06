@@ -153,4 +153,16 @@ namespace vg::engine
         if (m_light)
             m_light->SetInstanceFlags(InstanceFlags::Enabled, asBool(ComponentFlags::Enabled & GetComponentFlags()));
     }
+
+    //--------------------------------------------------------------------------------------
+    bool LightComponent::TryGetAABB(core::AABB & _aabb) const
+    {
+        if (m_light)
+        {
+            if (m_light->TryGetAABB(_aabb))
+                return true;
+        }
+
+        return false;
+    }
 }

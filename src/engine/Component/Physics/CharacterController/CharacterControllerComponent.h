@@ -28,6 +28,7 @@ namespace vg::engine
         void                        OnStop              () final override;
 
         void                        OnPropertyChanged   (core::IObject * _object, const core::IProperty & _prop, bool _notifyParent) final override;
+        bool                        TryGetAABB          (core::AABB & _aabb) const final override;
 
     private:
         static physics::IPhysics *  getPhysics          ();

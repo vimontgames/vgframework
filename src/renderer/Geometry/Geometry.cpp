@@ -9,7 +9,6 @@
 #endif
 
 #include "Batch/Batch.hpp"
-#include "AABB/AABB.hpp"
 #include "Mesh/MeshGeometry.hpp"
 
 namespace vg::renderer

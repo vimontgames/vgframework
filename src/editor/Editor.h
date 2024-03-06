@@ -10,6 +10,7 @@ namespace vg
 		class IFactory;
 		class ISelection;
 		class IBaseScene;
+		class IGameObject;
 	}
 
 	namespace engine
@@ -31,17 +32,17 @@ namespace vg
 		public:
 			using super = IEditor;
 
-			IPlugin::Version				    GetVersion			() const final override;
+            Editor(const core::string & _name, core::IObject * _parent);
+            ~Editor();
 
-												Editor				(const core::string & _name, core::IObject * _parent);
-												~Editor				();
+			IPlugin::Version				    GetVersion() const final override;
 
 			bool								RegisterClasses		() final override;
 			bool								UnregisterClasses	() final override;
 
-			#ifdef _WIN32
+#ifdef _WIN32
 			LRESULT CALLBACK                    WndProc				(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) final override;
-			#endif
+#endif
 
 			void							    Init				(const core::Singletons & _singletons) final override;
 			void							    Deinit				() final override;
@@ -52,18 +53,21 @@ namespace vg
 
 			IEditorOptions *					GetOptions			() const final override;
 
+			const core::vector<ImGuiWindow *> & GetWindows			() const { return m_imGuiWindows; }
+
 			template <class T> T *				getWindow			(const core::string _name = {}) const;
 			template <class T> core::vector<T*>	getWindows			(const core::string _name = {}) const;
 			void								destroyWindow		(ImGuiWindow * _window);
 
 			core::IFactory *					getFactory			() const;
 			core::ISelection *					getSelection		() const;
-            engine::IEngine *					getEngine			() const;
-            renderer::IRenderer *				getRenderer			() const;
+			engine::IEngine *					getEngine			() const;
+			renderer::IRenderer *				getRenderer			() const;
 
 			void								openPrefabView		(const core::IResource * _prefabRes);
+			void								focus				(core::IGameObject * _gameObject);
 
-		//private:
+		private:
 			core::vector<ImGuiWindow *>			m_imGuiWindows;
 			core::vector<ImGuiWindow *>			m_imGuiWindowsToDestroy;
 		};

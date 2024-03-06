@@ -8,6 +8,7 @@ namespace vg::physics
     public:
         VG_CLASS_DECL_PASSTHROUGH(CapsuleShapeDesc, ShapeDesc);
         ShapeType GetShapeType() const final override { return ShapeType::Capsule; }
+        bool TryGetAABB(core::AABB & _aabb) const final override;
 
         float m_radius = 1.0f;
         float m_height = 1.0f;

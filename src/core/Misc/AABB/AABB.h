@@ -2,7 +2,7 @@
 
 #include "core/File/Buffer.h"
 
-namespace vg::renderer
+namespace vg::core
 {
     class AABB 
     {
@@ -18,6 +18,11 @@ namespace vg::renderer
         AABB(const AABB & _other, const core::float4x4 & _world);
 
         VG_INLINE void grow(const core::float3 & _point);
+        VG_INLINE void grow(const core::AABB & _aabb);
+        VG_INLINE core::float3 center() const;
+        VG_INLINE float radius() const;
+
+        static AABB transform(const AABB & _other, const core::float4x4 & _world);
 
         core::float4x4 getLocalSpaceUnitCubeMatrix() const;
 

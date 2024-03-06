@@ -14,6 +14,13 @@ namespace vg::physics
     }
 
     //--------------------------------------------------------------------------------------
+    bool CapsuleShapeDesc::TryGetAABB(AABB & _aabb) const
+    {
+        _aabb = AABB(-float3(m_height * 0.5f, m_height * 0.5f, m_height * 0.5f) + m_offset, float3(m_height * 0.5f, m_height * 0.5f, m_height * 0.5f) + m_offset);
+        return true;
+    }
+
+    //--------------------------------------------------------------------------------------
     VG_REGISTER_OBJECT_CLASS(CapsuleShape, "Capsule Shape");
     //--------------------------------------------------------------------------------------
     bool CapsuleShape::registerProperties(core::IClassDesc & _desc)

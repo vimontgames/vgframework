@@ -61,7 +61,7 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    bool DirectionalLightInstance::GetAABB(AABB & _aabb) const
+    bool DirectionalLightInstance::TryGetAABB(AABB & _aabb) const
     {
         // Directional light has no bounding volume
         return false;

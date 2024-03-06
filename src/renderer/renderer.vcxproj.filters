@@ -54,9 +54,6 @@
     <None Include="View\View.inl">
       <Filter>View</Filter>
     </None>
-    <None Include="Geometry\AABB\AABB.inl">
-      <Filter>Geometry\AABB</Filter>
-    </None>
     <None Include="Geometry\Geometry.inl">
       <Filter>Geometry</Filter>
     </None>
@@ -162,12 +159,6 @@
     </ClInclude>
     <ClInclude Include="Job\Culling\ViewCullingJob.hpp">
       <Filter>Job\Culling</Filter>
-    </ClInclude>
-    <ClInclude Include="Geometry\AABB\AABB.h">
-      <Filter>Geometry\AABB</Filter>
-    </ClInclude>
-    <ClInclude Include="Geometry\AABB\AABB.hpp">
-      <Filter>Geometry\AABB</Filter>
     </ClInclude>
     <ClInclude Include="Geometry\Batch\Batch.hpp">
       <Filter>Geometry\Batch</Filter>
@@ -475,9 +466,6 @@
     </Filter>
     <Filter Include="Geometry\Batch">
       <UniqueIdentifier>{6b86f4e5-1632-4b0b-9554-b76cea833b36}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Geometry\AABB">
-      <UniqueIdentifier>{a49bddf0-e594-41e9-9f02-df4bae0dacec}</UniqueIdentifier>
     </Filter>
     <Filter Include="Pass\RenderObjects">
       <UniqueIdentifier>{e653d575-dd5e-4f59-bf96-906fa4b40edd}</UniqueIdentifier>

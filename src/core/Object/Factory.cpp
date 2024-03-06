@@ -7,7 +7,7 @@
 #include "core/Kernel.h"
 #include "core/File/File.h"
 #include "core/File/Buffer.h"
-#include "core/Misc/BitMask.h"
+#include "core/Misc/BitMask/BitMask.h"
 #include "core/IInstance.h"
 
 using namespace tinyxml2;

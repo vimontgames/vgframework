@@ -3,7 +3,7 @@
 #include "core/Component/Component.h"
 #include "engine/Resource/Mesh/MeshResource.h"
 #include "MaterialResourceList.h"
-#include "core/Misc/BitMask.h"
+#include "core/Misc/BitMask/BitMask.h"
 
 namespace vg::renderer
 {
@@ -32,6 +32,8 @@ namespace vg::engine
         
         void                                onResourceLoaded    (core::IResource * _resource) override;
         void                                onResourceUnloaded  (core::IResource * _resource) override;
+
+        bool                                TryGetAABB          (core::AABB & _aabb) const final override;
 
         VG_INLINE MeshResource &            getMeshResource     ();
         VG_INLINE renderer::IMeshInstance * getMeshInstance     () const;

@@ -45,7 +45,6 @@
   <ItemGroup>
     <None Include="Animation\SkeletalAnimation.inl" />
     <None Include="Animation\Skeleton.inl" />
-    <None Include="Geometry\AABB\AABB.inl" />
     <None Include="Geometry\Geometry.inl" />
     <None Include="Geometry\Mesh\MeshGeometry.inl" />
     <None Include="Instance\GraphicInstance.inl" />
@@ -61,8 +60,6 @@
     <ClInclude Include="Animation\SkeletalAnimation.hpp" />
     <ClInclude Include="Animation\Skeleton.hpp" />
     <ClInclude Include="DebugDraw\DebugDraw.h" />
-    <ClInclude Include="Geometry\AABB\AABB.h" />
-    <ClInclude Include="Geometry\AABB\AABB.hpp" />
     <ClInclude Include="Geometry\Batch\Batch.h" />
     <ClInclude Include="Geometry\Batch\Batch.hpp" />
     <ClInclude Include="Geometry\Geometry.h" />

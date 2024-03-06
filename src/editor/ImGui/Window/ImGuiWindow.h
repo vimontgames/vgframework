@@ -57,6 +57,7 @@ namespace vg::editor
                                                 ImGuiWindow         (const core::string & _icon, const core::string & _path, const core::string & _name, Flags _flags);
         virtual                                 ~ImGuiWindow        () {}
 
+        virtual core::string                    GetTitle            () const { VG_ASSERT_NOT_IMPLEMENTED(); return ""; } //= 0;
         virtual void                            DrawGUI             () = 0;
 
         bool                                    isVisible           () const;

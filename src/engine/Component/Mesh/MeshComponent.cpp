@@ -257,4 +257,16 @@ namespace vg::engine
             }
         }
     }
+
+    //--------------------------------------------------------------------------------------
+    bool MeshComponent::TryGetAABB(core::AABB & _aabb) const
+    {
+        if (m_meshInstance)
+        {
+            if (m_meshInstance->TryGetAABB(_aabb))
+                return true;
+        }
+
+        return false;
+    }
 }

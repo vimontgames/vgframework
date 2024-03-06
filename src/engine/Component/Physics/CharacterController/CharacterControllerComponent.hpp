@@ -241,4 +241,16 @@ namespace vg::engine
         if (m_character)
             return m_character->SetRotation(_rotation);
     }
+
+    //--------------------------------------------------------------------------------------
+    bool CharacterControllerComponent::TryGetAABB(core::AABB & _aabb) const
+    {
+        if (m_shapeDesc)
+        {
+            if (m_shapeDesc->TryGetAABB(_aabb))
+                return true;
+        }
+
+        return false;
+    }
 }

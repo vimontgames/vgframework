@@ -290,4 +290,16 @@ namespace vg::engine
     {
 
     }
+
+    //--------------------------------------------------------------------------------------
+    bool RigidBodyComponent::TryGetAABB(core::AABB & _aabb) const
+    {
+        if (m_shapeDesc)
+        {
+            if (m_shapeDesc->TryGetAABB(_aabb))
+                return true;
+        }
+
+        return false;
+    }
 }

@@ -8,6 +8,7 @@ namespace vg::physics
     public:
         VG_CLASS_DECL_PASSTHROUGH(SphereShapeDesc, ShapeDesc);
         ShapeType GetShapeType() const final override { return ShapeType::Sphere; }
+        bool TryGetAABB(core::AABB & _aabb) const final override;
         float m_radius = 1.0f;
     };
 

@@ -65,7 +65,7 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    bool MeshInstance::GetAABB(AABB & _aabb) const
+    bool MeshInstance::TryGetAABB(core::AABB & _aabb) const
     {
         if (auto * model = getMeshModel(Lod::Lod0))
         {
@@ -85,7 +85,7 @@ namespace vg::renderer
 
         if (nullptr != meshModel)
         {
-            const AABB & aabb = meshModel->getGeometry()->getAABB();
+            const core::AABB & aabb = meshModel->getGeometry()->getAABB();
 
             bool visible = _view->getCameraFrustum().intersects(aabb, getGlobalMatrix()) != FrustumTest::Outside || asBool(IInstance::RuntimeFlags::NoCulling & getRuntimeFlags());
 

@@ -238,6 +238,21 @@ namespace vg::editor
     }
 
     //--------------------------------------------------------------------------------------
+    core::string ImGuiView::GetTitle() const
+    {
+        string title;
+
+        const string & name = getIconizedName();
+
+        if (any(m_size > 0) && m_view && m_view->IsVisible())
+            title = fmt::sprintf("%s %ux%u###%s", name, (uint)m_size.x, (uint)m_size.y, name);
+        else
+            title = fmt::sprintf("%s###%s", name, name);
+
+        return title;
+    }
+
+    //--------------------------------------------------------------------------------------
     void ImGuiView::DrawGUI()
     {
         float padding = 1;
@@ -264,13 +279,7 @@ namespace vg::editor
         // Using "###" to display a changing title but keep a static identifier "AnimatedTitle"
         // https://skia.googlesource.com/external/github.com/ocornut/imgui/+/refs/tags/v1.73/imgui_demo.cpp
 
-        const string & name = getIconizedName();
-        string title;
-        
-        if (any(m_size > 0) && m_view && m_view->IsVisible())
-            title = fmt::sprintf("%s %ux%u###%s", name, (uint)m_size.x, (uint)m_size.y, name);
-        else
-            title = fmt::sprintf("%s###%s", name, name);
+        string title = GetTitle();        
 
         if (m_closeNextFrame)
         {
@@ -619,5 +628,30 @@ namespace vg::editor
         }
 
         return false;
+    }
+
+    //--------------------------------------------------------------------------------------
+    void ImGuiView::focus(IGameObject * _gameObject)
+    {
+        if (_gameObject)
+        {
+            const auto world = _gameObject->getGlobalMatrix();
+            float3 offset = normalize(m_editorCam.m_matrix[2].xyz);
+
+            core::AABB aabb;
+            if (_gameObject->TryGetAABB(aabb))
+            {
+                float4 center = float4(aabb.center(), 1.0f);
+                float3 worldPos = mul(center, world).xyz;
+
+                m_editorCam.m_matrix[3].xyz = worldPos + offset * aabb.radius() * 3.1417f;
+            }
+            else
+            {
+                m_editorCam.m_matrix[3].xyz = world[3].xyz + offset;
+            }     
+
+            ImGui::SetWindowFocus(GetTitle().c_str());
+        }
     }
 }

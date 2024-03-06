@@ -2,6 +2,7 @@
 #include "Shape.h"
 
 #include "core/Math/Math.h"
+#include "core/Misc/AABB/AABB.h"
 #include "renderer/IDebugDraw.h"
 #include "physics/Physics.h"
 

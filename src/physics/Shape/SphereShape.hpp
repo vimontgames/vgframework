@@ -1,11 +1,13 @@
 #include "SphereShape.h"
 
+using namespace vg::core;
+
 namespace vg::physics
 {
     //--------------------------------------------------------------------------------------
     VG_REGISTER_OBJECT_CLASS(SphereShapeDesc, "Sphere Shape Settings");
     //--------------------------------------------------------------------------------------
-    bool SphereShapeDesc::registerProperties(core::IClassDesc & _desc)
+    bool SphereShapeDesc::registerProperties(IClassDesc & _desc)
     {
         super::registerProperties(_desc);
         registerProperty(SphereShapeDesc, m_radius, "Radius");
@@ -13,9 +15,16 @@ namespace vg::physics
     }
 
     //--------------------------------------------------------------------------------------
+    bool SphereShapeDesc::TryGetAABB(AABB & _aabb) const
+    {
+        _aabb = AABB(float3(-m_radius, -m_radius, -m_radius) + m_offset, float3(+m_radius, +m_radius, +m_radius) + m_offset);
+        return true;
+    }
+
+    //--------------------------------------------------------------------------------------
     VG_REGISTER_OBJECT_CLASS(SphereShape, "Sphere Shape");
     //--------------------------------------------------------------------------------------
-    bool SphereShape::registerProperties(core::IClassDesc & _desc)
+    bool SphereShape::registerProperties(IClassDesc & _desc)
     {
         super::registerProperties(_desc);
         return true;

@@ -53,6 +53,8 @@ namespace vg::core
         bool                                                HasAncestor             (const IGameObject * _ancestor) const final override;
         core::uint                                          GetChildIndex           (const IGameObject * _child) const final override;
 
+        bool                                                TryGetAABB              (core::AABB & _aabb) const override;
+
         void                                                OnPropertyChanged       (core::IObject * _object, const core::IProperty & _prop, bool _notifyParent) override;
 
         void                                                addComponent            (Component * _component, core::uint _index = -1);

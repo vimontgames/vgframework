@@ -498,7 +498,7 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    void DebugDraw::drawAABB(CommandList * _cmdList, const AABB & _aabb, const float4x4 & _world) const
+    void DebugDraw::drawAABB(CommandList * _cmdList, const core::AABB & _aabb, const float4x4 & _world) const
     {
         RasterizerState rs(FillMode::Wireframe, CullMode::None);
         _cmdList->setRasterizerState(rs);
