@@ -31,6 +31,8 @@ namespace vg::engine
 
         bool                    PlayAnimation       (core::uint _index, float _blendTime, bool _loop) final override;
 
+        void                    bindAnimations      ();
+
     private:
         MeshComponent *         getMeshComponent    () const;
 

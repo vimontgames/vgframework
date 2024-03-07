@@ -141,6 +141,22 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
+    void AnimationComponent::bindAnimations()
+    {
+        MeshComponent * meshComponent = getMeshComponent();
+        if (meshComponent)
+        {
+            auto & animResources = m_animations.getAnimationResources();
+            for (uint i = 0; i < animResources.size(); ++i)
+            {
+                AnimationResource & animRes = animResources[i];
+                if (renderer::ISkeletalAnimation * anim = (renderer::ISkeletalAnimation *)animRes.getObject())
+                    meshComponent->getMeshInstance()->AddAnimation(anim);
+            }
+        }
+    }
+
+    //--------------------------------------------------------------------------------------
     void AnimationComponent::onResourceLoaded(IResource * _resource)
     {
         MeshComponent * meshComponent = getMeshComponent();

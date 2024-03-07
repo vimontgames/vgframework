@@ -11,6 +11,7 @@
 #include "core/Scheduler/Scheduler.h"
 #include "engine/Job/Animation/AnimationJob.h"
 #include "engine/Job/Animation/DrawSkeletonJob.h"
+#include "engine/Component/Animation/AnimationComponent.h"
 
 #include "MaterialResourceList.hpp"
 
@@ -206,6 +207,11 @@ namespace vg::engine
                 m_meshInstance->setName(getGameObject()->getName().c_str());
                 m_registered = true;
             }
+
+            // In case Animations were loaded before Mesh we need to rebind them
+            if (auto * animComponent = GetGameObject()->GetComponentByType<AnimationComponent>())
+                animComponent->bindAnimations();
+
         }
         else if (auto matRes = dynamic_cast<MaterialResource *>(_resource))
         {
