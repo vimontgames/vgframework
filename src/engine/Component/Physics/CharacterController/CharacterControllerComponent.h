@@ -48,5 +48,7 @@ namespace vg::engine
 
         // debug
         physics::GroundState         m_groundState  = (physics::GroundState)-1;
+        vg::core::u8                 m_delayState[core::enumCount<physics::GroundState>()];
+        vg::core::u8                 m_delayStateCounter[core::enumCount<physics::GroundState>()];
     };
 }

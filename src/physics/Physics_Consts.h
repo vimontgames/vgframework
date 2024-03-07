@@ -85,9 +85,9 @@ namespace vg::physics
 
     enum class GroundState : core::u8
     {
-        Grounded,           // Character is on the ground 
-        BlockedOnSlope,     // Character is on a slope that is too steep and can't climb
-        TouchingButFalling, // Character is touching an object, but is not supported and should fall
-        InTheAir,           // Character is in the air not touching anything.
+        Grounded,   // Character is on the ground 
+        Blocked,    // Character is on a slope that is too steep and can't climb
+        Touching,   // Character is touching an object, but is not supported and should fall
+        InAir,      // Character is in the air not touching anything.
     };
 }

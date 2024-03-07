@@ -184,13 +184,13 @@ namespace vg::physics
                 return GroundState::Grounded;
 
             case JPH::CharacterBase::EGroundState::OnSteepGround:
-                return GroundState::BlockedOnSlope;
+                return GroundState::Blocked;
 
             case JPH::CharacterBase::EGroundState::NotSupported:
-                return GroundState::TouchingButFalling;
+                return GroundState::Touching;
 
             case JPH::CharacterBase::EGroundState::InAir:
-                return GroundState::InTheAir;
+                return GroundState::InAir;
         }
     }
 }

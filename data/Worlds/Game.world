@@ -12,9 +12,15 @@
             <Object class="SceneResource">
                 <Property type="String" name="m_name" flags="NotVisible" value=""/>
                 <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
-                <Property type="String" name="m_resourcePath" flags="Debug" value="data/Scenes/Soccer.scene"/>
+                <Property type="String" name="m_resourcePath" flags="Debug" value="data/Scenes/TestLD.scene"/>
             </Object>
         </Property>
-        <Property type="ResourcePtrVector" name="m_prefabsResources" flags="Resource"/>
+        <Property type="ResourcePtrVector" name="m_prefabsResources" flags="Resource">
+            <Object class="PrefabResource">
+                <Property type="String" name="m_name" flags="NotVisible" value="Floor_Grass_4x4"/>
+                <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
+                <Property type="String" name="m_resourcePath" flags="Debug" value="data/Prefabs/LD/Floor_Grass_4x4.prefab"/>
+            </Object>
+        </Property>
     </Object>
 </Root>

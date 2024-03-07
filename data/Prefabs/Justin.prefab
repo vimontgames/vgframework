@@ -18,26 +18,50 @@
                         <Property type="Float4" name="m_color" flags="Color" x="1" y="1" z="1" w="1"/>
                         <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="0" Ty="0" Tz="0" Tw="1"/>
                         <Property type="ObjectPtrVector" name="m_components">
-                            <Object class="MeshComponent">
+                            <Object class="PlayerBehaviour">
+                                <Property type="String" name="m_name" flags="NotVisible" value="PlayerBehaviour #3"/>
+                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
                                 <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
-                                <Property type="Bool" name="m_displayBones" value="false"/>
-                                <Property type="Resource" name="m_meshResource" flags="Resource">
-                                    <Object class="MeshResource">
-                                        <Property type="String" name="m_name" flags="NotVisible" value="New MeshComponent"/>
+                                <Property type="Float" name="m_walkSpeed" value="1.75"/>
+                                <Property type="Float" name="m_runSpeed" value="4"/>
+                                <Property type="Float" name="m_jumpSpeed" value="4"/>
+                                <Property type="Float" name="m_runJumpSpeed" value="5"/>
+                                <Property type="EnumU8" name="m_controllerType" value="Joypad"/>
+                                <Property type="Uint8" name="m_controllerIndex" value="0"/>
+                            </Object>
+                            <Object class="CharacterControllerComponent">
+                                <Property type="String" name="m_name" flags="NotVisible" value="CharacterControllerComponent #3"/>
+                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value="Opened"/>
+                                <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
+                                <Property type="EnumU8" name="m_characterType" flags="ReadOnly" value="Rigid"/>
+                                <Property type="ObjectPtr" name="m_characterDesc" flags="Flatten">
+                                    <Object class="RigidCharacterDesc">
+                                        <Property type="String" name="m_name" flags="NotVisible" value="RigidCharacterDesc #21"/>
                                         <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
-                                        <Property type="String" name="m_resourcePath" flags="Debug" value="data/Meshes/Justin/Justin_TP1.fbx"/>
+                                        <Property type="Float" name="m_mass" value="75"/>
+                                        <Property type="Float" name="m_friction" flags="HasRange" value="0.5"/>
+                                        <Property type="Float" name="m_maxSlopeAngle" flags="HasRange" value="45"/>
                                     </Object>
                                 </Property>
-                                <Property type="Object" name="m_meshMaterials" flags="Flatten">
-                                    <Object class="MaterialResourceList">
-                                        <Property type="String" name="m_name" flags="NotVisible" value="New MeshComponent"/>
+                                <Property type="ObjectPtr" name="m_shapeDesc" flags="Flatten">
+                                    <Object class="CapsuleShapeDesc">
+                                        <Property type="String" name="m_name" flags="NotVisible" value="CapsuleShapeDesc #10"/>
                                         <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
-                                        <Property type="ResourceVector" name="m_materialResources" flags="Resource"/>
+                                        <Property type="Float3" name="m_offset" x="0" y="0" z="0.85000002"/>
+                                        <Property type="Float" name="m_radius" value="0.25"/>
+                                        <Property type="Float" name="m_height" value="1.7"/>
                                     </Object>
                                 </Property>
-                                <Property type="BitMask" name="m_batchMask" BitCount="11" Value="0x00000000000003EB"/>
+                                <Property type="Uint8" name="m_delayState" flags="EnumArray|Flatten">
+                                    <Value name="Grounded" value="0"/>
+                                    <Value name="Blocked" value="0"/>
+                                    <Value name="Touching" value="0"/>
+                                    <Value name="InAir" value="8"/>
+                                </Property>
                             </Object>
                             <Object class="AnimationComponent">
+                                <Property type="String" name="m_name" flags="NotVisible" value="AnimationComponent #3"/>
+                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
                                 <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
                                 <Property type="Object" name="m_animations">
                                     <Object class="AnimationResourceList">
@@ -80,36 +104,26 @@
                                     </Object>
                                 </Property>
                             </Object>
-                            <Object class="CharacterControllerComponent">
+                            <Object class="MeshComponent">
+                                <Property type="String" name="m_name" flags="NotVisible" value="MeshComponent #35"/>
+                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
                                 <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
-                                <Property type="EnumU8" name="m_characterType" flags="ReadOnly" value="Rigid"/>
-                                <Property type="ObjectPtr" name="m_characterDesc" flags="Flatten">
-                                    <Object class="RigidCharacterDesc">
-                                        <Property type="String" name="m_name" flags="NotVisible" value="RigidCharacterDesc #10"/>
+                                <Property type="Bool" name="m_displayBones" value="false"/>
+                                <Property type="Resource" name="m_meshResource" flags="Resource">
+                                    <Object class="MeshResource">
+                                        <Property type="String" name="m_name" flags="NotVisible" value="New MeshComponent"/>
                                         <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
-                                        <Property type="Float" name="m_mass" value="75"/>
-                                        <Property type="Float" name="m_friction" flags="HasRange" value="0.5"/>
-                                        <Property type="Float" name="m_maxSlopeAngle" flags="HasRange" value="45"/>
+                                        <Property type="String" name="m_resourcePath" flags="Debug" value="data/Meshes/Justin/Justin_TP1.fbx"/>
                                     </Object>
                                 </Property>
-                                <Property type="ObjectPtr" name="m_shapeDesc" flags="Flatten">
-                                    <Object class="CapsuleShapeDesc">
-                                        <Property type="String" name="m_name" flags="NotVisible" value="CapsuleShapeDesc #10"/>
+                                <Property type="Object" name="m_meshMaterials" flags="Flatten">
+                                    <Object class="MaterialResourceList">
+                                        <Property type="String" name="m_name" flags="NotVisible" value="New MeshComponent"/>
                                         <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
-                                        <Property type="Float3" name="m_offset" x="0" y="0" z="0.85000002"/>
-                                        <Property type="Float" name="m_radius" value="0.25"/>
-                                        <Property type="Float" name="m_height" value="1.7"/>
+                                        <Property type="ResourceVector" name="m_materialResources" flags="Resource"/>
                                     </Object>
                                 </Property>
-                            </Object>
-                            <Object class="PlayerBehaviour">
-                                <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
-                                <Property type="Float" name="m_walkSpeed" value="1.75"/>
-                                <Property type="Float" name="m_runSpeed" value="4"/>
-                                <Property type="Float" name="m_jumpSpeed" value="4"/>
-                                <Property type="Float" name="m_runJumpSpeed" value="5"/>
-                                <Property type="EnumU8" name="m_controllerType" value="Joypad"/>
-                                <Property type="Uint8" name="m_controllerIndex" value="0"/>
+                                <Property type="BitMask" name="m_batchMask" BitCount="11" Value="0x00000000000003EB"/>
                             </Object>
                         </Property>
                         <Property type="ObjectPtrVector" name="m_children" flags="Debug"/>

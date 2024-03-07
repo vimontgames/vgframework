@@ -39,7 +39,7 @@ namespace vg::physics
 
         #pragma push_macro("new")
         #undef new
-        auto shape = new JPH::BoxShape(halfSize);
+        auto shape = new JPH::BoxShape(halfSize, 0.01f);
         #pragma pop_macro("new")
 
         #pragma push_macro("new")

@@ -126,7 +126,7 @@ void PlayerBehaviour::FixedUpdate(float _dt)
                     jump = true;
             }
 
-            if (charaController && vg::physics::GroundState::InTheAir == charaController->GetGroundState())
+            if (charaController && vg::physics::GroundState::InAir == charaController->GetGroundState())
             {
                 m_state = CharacterState::Jumping;
 
@@ -134,8 +134,8 @@ void PlayerBehaviour::FixedUpdate(float _dt)
                 {
                     if (anim->IsFinished())
                         m_state = CharacterState::Idle;
-                }
-            }
+                }                    
+            }    
 
             if (charaController)
             {

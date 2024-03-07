@@ -446,6 +446,7 @@ namespace vg::editor
 
         const bool flatten = asBool(IProperty::Flags::Flatten & flags);
         const bool isEnumArray = asBool(IProperty::Flags::EnumArray & flags);
+        const auto enumArrayTreeNodeFlags = /*ImGuiTreeNodeFlags_OpenOnArrow |*/ ImGuiTreeNodeFlags_DefaultOpen;
 
         //ImGui::BeginDisabled(readOnly);
         {
@@ -611,19 +612,38 @@ namespace vg::editor
 
                 case IProperty::Type::Uint8:
                 {
-                    VG_ASSERT(!isEnumArray, "Display of EnumArray property not implemented for type '%s'", asString(type).c_str());
-
-                    i8 * pU8 = (i8 *)(uint_ptr(_object) + offset);
-
-                    i32 temp = (u8)*pU8;
-
-                    if (asBool(IProperty::Flags::HasRange & flags))
-                        changed |= ImGui::SliderInt(label.c_str(), &temp, max((int)0, (int)_prop->getRange().x), min((int)255, (int)_prop->getRange().y), "%d", imguiInputTextflags);
+                    if (isEnumArray)
+                    {
+                        char temp[1024];
+                        sprintf_s(temp, "%s (%u)", label.c_str(), _prop->getEnumCount());
+                        if (ImGui::TreeNodeEx(temp, enumArrayTreeNodeFlags))
+                        {
+                            for (uint e = 0; e < _prop->getEnumCount(); ++e)
+                            {
+                                const string enumLabel = ImGui::getObjectLabel(_prop->getEnumName(e), _prop + e);
+                                u8 * pU8 = _prop->GetPropertyUint8(_object, e);
+                                i32 temp = (u8)*pU8;
+                                if (asBool(IProperty::Flags::HasRange & flags))
+                                    changed |= ImGui::SliderInt(enumLabel.c_str(), &temp, max((int)0, (int)_prop->getRange().x), min((int)255, (int)_prop->getRange().y), "%d", imguiInputTextflags);
+                                else
+                                    changed |= ImGui::InputInt(enumLabel.c_str(), &temp, 1, 16, imguiInputTextflags);
+                                if (changed)
+                                    *pU8 = (u8)temp;
+                            }
+                            ImGui::TreePop();
+                        }
+                    }
                     else
-                        changed |= ImGui::InputInt(label.c_str(), &temp, 1, 16, imguiInputTextflags);
-
-                    if (changed)
-                        *pU8 = (u8)temp;
+                    {
+                        u8 * pU8 = _prop->GetPropertyUint8(_object); 
+                        i32 temp = (u8)*pU8;
+                        if (asBool(IProperty::Flags::HasRange & flags))
+                            changed |= ImGui::SliderInt(label.c_str(), &temp, max((int)0, (int)_prop->getRange().x), min((int)255, (int)_prop->getRange().y), "%d", imguiInputTextflags);
+                        else
+                            changed |= ImGui::InputInt(label.c_str(), &temp, 1, 16, imguiInputTextflags);
+                        if (changed)
+                            *pU8 = (u8)temp;
+                    }                    
                 };
                 break;
 
@@ -776,7 +796,7 @@ namespace vg::editor
                     {
                         char temp[1024];
                         sprintf_s(temp, "%s (%u)", label.c_str(), _prop->getEnumCount());
-                        if (ImGui::TreeNodeEx(temp, ImGuiTreeNodeFlags_OpenOnArrow))
+                        if (ImGui::TreeNodeEx(temp, enumArrayTreeNodeFlags))
                         {
                             for (uint e = 0; e < _prop->getEnumCount(); ++e)
                             {
@@ -1226,25 +1246,19 @@ namespace vg::editor
                     bool ref = (type == IProperty::Type::ObjectPtr);
                     IObject * pObject = ref ? *_prop->GetPropertyObjectPtr(_object) : _prop->GetPropertyObject(_object);
 
-                    string treeNodeName;
-                    auto treeNodeFlags = ImGuiTreeNodeFlags_OpenOnArrow;
-
-                    //if (pObject)
-                    //    treeNodeName = pObject->getName();
-                    //else
-                    treeNodeName = displayName;
+                    string treeNodeName = displayName;
 
                     if (isEnumArray)
                     {
                         char label[1024];
                         sprintf_s(label, "%s (%u)", displayName, _prop->getEnumCount());
-                        if (ImGui::TreeNodeEx(label, treeNodeFlags))
+                        if (ImGui::TreeNodeEx(label, enumArrayTreeNodeFlags))
                         {
                             for (uint e = 0; e < _prop->getEnumCount(); ++e)
                             {
                                 pObject = ref ? *_prop->GetPropertyObjectPtr(_object, e) : _prop->GetPropertyObject(_object, e);
 
-                                if (ImGui::TreeNodeEx(_prop->getEnumName(e), treeNodeFlags | ImGuiTreeNodeFlags_DefaultOpen))
+                                if (ImGui::TreeNodeEx(_prop->getEnumName(e), ImGuiTreeNodeFlags_DefaultOpen))
                                 {
                                     if (nullptr != pObject)
                                         displayObject(pObject);
@@ -1258,6 +1272,8 @@ namespace vg::editor
                     else
                     {
                         ImGui::PushStyleColor(ImGuiCol_Text, ImGui::GetColorU32(ImGuiCol_Text));
+
+                        auto treeNodeFlags = ImGuiTreeNodeFlags_DefaultOpen;
 
                         if (nullptr != pObject)
                         {
@@ -1331,13 +1347,13 @@ namespace vg::editor
                     {
                         char label[1024];
                         sprintf_s(label, "%s (%u)", displayName, _prop->getEnumCount());
-                        if (ImGui::TreeNodeEx(label, ImGuiTreeNodeFlags_OpenOnArrow))
+                        if (ImGui::TreeNodeEx(label, enumArrayTreeNodeFlags))
                         {
                             for (uint e = 0; e < _prop->getEnumCount(); ++e)
                             {
                                 auto pResource = ref ? *_prop->GetPropertyResourcePtr(_object, e) : _prop->GetPropertyResource(_object, e);
 
-                                if (ImGui::TreeNodeEx(_prop->getEnumName(e), ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_DefaultOpen))
+                                if (ImGui::TreeNodeEx(_prop->getEnumName(e), /*ImGuiTreeNodeFlags_OpenOnArrow |*/ ImGuiTreeNodeFlags_DefaultOpen))
                                 {
                                     if (nullptr != pResource)
                                     {
@@ -1777,10 +1793,10 @@ namespace vg::editor
         const auto displayName = _prop->getDisplayName();
         auto pFloat4x4 = _prop->GetPropertyFloat4x4(_object);
         ImGui::PushID(_prop);
-        changed |= ImGui::InputFloat4(fmt::sprintf("%s.I", displayName).c_str(), (float*)pFloat4x4 + 0, "%.2f", ImGuiInputTextFlags_EnterReturnsTrue);
-        changed |= ImGui::InputFloat4(fmt::sprintf("%s.J", displayName).c_str(), (float*)pFloat4x4 + 4, "%.2f", ImGuiInputTextFlags_EnterReturnsTrue);
-        changed |= ImGui::InputFloat4(fmt::sprintf("%s.K", displayName).c_str(), (float*)pFloat4x4 + 8, "%.2f", ImGuiInputTextFlags_EnterReturnsTrue);
-        changed |= ImGui::InputFloat4(fmt::sprintf("%s.T", displayName).c_str(), (float*)pFloat4x4 + 12, "%.2f", ImGuiInputTextFlags_EnterReturnsTrue);
+        changed |= ImGui::InputFloat4(fmt::sprintf("%s.I", displayName).c_str(), (float *)pFloat4x4 + 0, "%.3f", ImGuiInputTextFlags_EnterReturnsTrue);
+        changed |= ImGui::InputFloat4(fmt::sprintf("%s.J", displayName).c_str(), (float *)pFloat4x4 + 4, "%.3f", ImGuiInputTextFlags_EnterReturnsTrue);
+        changed |= ImGui::InputFloat4(fmt::sprintf("%s.K", displayName).c_str(), (float *)pFloat4x4 + 8, "%.3f", ImGuiInputTextFlags_EnterReturnsTrue);
+        changed |= ImGui::InputFloat4(fmt::sprintf("%s.T", displayName).c_str(), (float*)pFloat4x4 + 12, "%.3f", ImGuiInputTextFlags_EnterReturnsTrue);
         ImGui::PopID();
         return changed;
     }
