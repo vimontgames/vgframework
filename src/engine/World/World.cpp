@@ -159,6 +159,7 @@ namespace vg::engine
             if (m_activeScene[typeIndex] == _scene)
                 SetActiveScene(nullptr, _sceneType);
 
+            _scene->setParent(nullptr);
             _scene->release();
         }
         return false;
