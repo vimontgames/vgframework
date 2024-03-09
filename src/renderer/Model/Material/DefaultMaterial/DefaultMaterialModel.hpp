@@ -31,6 +31,8 @@ namespace vg::renderer
     //--------------------------------------------------------------------------------------
     void DefaultMaterialModel::FillGPUMaterialData(GPUMaterialData * _data) const
     {
+        _data->setTiling(m_tiling);
+
         _data->setAlbedoTextureHandle(m_albedoMap ? m_albedoMap->getTextureHandle() : RESERVEDSLOT_TEXSRV_DEFAULT_ALBEDO);
         _data->setAlbedoColor(m_albedoColor);
 
@@ -172,5 +174,12 @@ namespace vg::renderer
             m_roughness = _value;
         else if (_name == "Metalness")
             m_metalness = _value;
+    }
+
+    //--------------------------------------------------------------------------------------
+    void DefaultMaterialModel::SetFloat2(const core::string & _name, core::float2 _value)
+    {
+        if (_name == "Tiling")
+            m_tiling = _value;
     }
 }

@@ -16,6 +16,7 @@ namespace vg::renderer
         void            SetColor        (const core::string & _name, core::float4 _value) final override;
         void            SetTexture      (const core::string & _name, gfx::ITexture * _value) final override;
         void            SetFloat        (const core::string & _name, float _value) final override;
+        void            SetFloat2       (const core::string & _name, core::float2 _value) final override;
 
         void            FillGPUMaterialData  (GPUMaterialData * _data) const final override;
 
@@ -25,6 +26,8 @@ namespace vg::renderer
         void            assignTexture   (gfx::Texture ** _texture, gfx::Texture * _value);
 
     private:
+        core::float2    m_tiling            = core::float2(1,1);
+
         gfx::Texture *  m_albedoMap         = nullptr;
         core::float4    m_albedoColor       = core::float4(1,1,1,1);
 

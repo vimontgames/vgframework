@@ -17,6 +17,7 @@ struct GPUMaterialData
         setOcclusion(1.0f);
         setRoughness(0.25f);
         setMetalness(0.0f);
+        setTiling(float2(1.0f, 1.0f));
     }   
     #endif 
 
@@ -25,6 +26,7 @@ struct GPUMaterialData
     uint4 textures; 
     float4 albedoColor;
     float4 data;
+    float4 tiling;
 
     void    setAlbedoTextureHandle  (uint _value)   { textures.x = packUint16low(textures.x, _value); }
     uint    getAlbedoTextureHandle  ()              { return unpackUint16low(textures.x); }
@@ -49,6 +51,9 @@ struct GPUMaterialData
     
     void    setMetalness            (float _value)  { data.z = _value; }
     float   getMetalness            ()              { return data.z; }
+
+    void    setTiling               (float2 _value) { tiling.xy = _value; }
+    float2  getTiling               ()              { return tiling.xy; }
 };
 
 struct GPUInstanceData
