@@ -83,7 +83,9 @@ namespace vg::editor
             {
                 IInput * input = Kernel::getInput();
                 
-                const bool alt = input->IsKeyPressed(Key::LALT);
+                const bool ctrl = input->IsKeyPressed(Key::LCONTROL) || input->IsKeyPressed(Key::RCONTROL);
+                const bool alt = input->IsKeyPressed(Key::LALT) || input->IsKeyPressed(Key::RALT);
+                const bool shift = input->IsKeyPressed(Key::LSHIFT) || input->IsKeyPressed(Key::RSHIFT);
 
                 if (alt)
                 {
@@ -97,7 +99,7 @@ namespace vg::editor
                 
                 const int3 delta = input->GetMouseDelta();
 
-                if (input->IsKeyPressed(Key::LSHIFT))
+                if (shift)
                     moveSpeed *= 16.0f;
 
                 if (input->IsMouseButtonPressed(MouseButton::Middle))
@@ -146,7 +148,7 @@ namespace vg::editor
                 }
 
                 // zoom
-                if (delta.z != 0)
+                if (!ctrl && delta.z != 0)
                 {
                     //VG_DEBUGPRINT("[EditorCam] Zoom %i\n", (int)delta.z);
                     T.xyz = T.xyz - (float)(delta.z) * zoomSpeed * zoomDir;
@@ -154,7 +156,7 @@ namespace vg::editor
                 else
                 {
                     // zoom using keyboard
-                    if (!input->IsKeyPressed(Key::LCONTROL))
+                    if (!ctrl)
                     {
                         if (input->IsKeyPressed(Key::W))
                             T -= moveSpeed * K;
@@ -307,16 +309,31 @@ namespace vg::editor
             m_closeNextFrame = false;
         }
 
+        const bool active = m_view && m_view->IsActive();
+        if (active)
+            ImGui::PushStyleColor(ImGuiCol_WindowBg, ImGui::GetStyleColorVec4(ImGuiCol_TabActive));
+
         if (ImGui::Begin(title.c_str(), &m_isVisible, ImGuiWindowFlags_NoFocusOnAppearing | ImGuiWindowFlags_NoNavInputs))
         {
+            // Menu
+            if (ShowTitlebarMenu())
+            {
+                ImGui::PopStyleVar();
+                DrawTitlebarMenu();
+                ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(padding, padding));
+            }
+
             // Toolbar
             bool hasToolbar = ShowToolbar();
             float posY = ImGui::GetCursorPosY();
             if (hasToolbar)
             {
-                ImGui::Spacing();
                 ImGui::PopStyleVar();
+                ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(0, 0));
+
                 DrawToolbar();
+                ImGui::PopStyleVar();
+
                 ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(padding, padding));
             }
             float toolbarHeight = ImGui::GetCursorPosY() - posY;
@@ -335,8 +352,6 @@ namespace vg::editor
             m_size.y = (uint)max(0, (int)m_size.y- (int)toolbarHeight);
 
             m_size.xy = max(m_size.xy, uint2(1, 1));
-
-            bool draw = true;
 
             if (!m_view)
             {
@@ -377,7 +392,6 @@ namespace vg::editor
                     renderer->AddView(m_view);
                     m_view->setName(getName());
                 }
-                draw = false;
             }  
 
             if (!UpdateScene())
@@ -402,19 +416,28 @@ namespace vg::editor
 
                 // Tell the Renderer we resized stuff to clean up no more used buffers
                 renderer->SetResized();
-
-                draw = false;
             }
 
             // Set mouse offset
             ImVec2 mouseOffset = ImGui::GetCursorScreenPos();
             m_view->SetMouseOffset(uint2(mouseOffset.x, mouseOffset.y));
 
+            auto pos = ImGui::GetCursorPos();
             if (texture)
             {
                 auto * imGuiAdapter = renderer->GetImGuiAdapter();
                 ImTextureID texID = imGuiAdapter->GetTextureID(texture);
-                ImGui::Image(texID, ImVec2((float)m_size.x, (float)m_size.y));
+
+                auto * window = ImGui::FindWindowByName(title.c_str());
+
+                ImGuiDockNode * node = window->DockNode;
+                const bool is_drag_docking = GImGui->MovingWindow == window;
+                const float alpha = is_drag_docking ? 0.5f : 1.0f;
+
+                ImGui::Image(texID, ImVec2((float)m_size.x, (float)m_size.y), ImVec2(0,0), ImVec2(1,1), ImVec4(1,1,1, alpha));
+
+                if (ShowContextMenu())
+                    DrawContextMenu();              
 
                 if (ImGui::IsWindowFocused())
                     m_view->SetActive(true);
@@ -422,7 +445,7 @@ namespace vg::editor
                     m_view->SetActive(false);
 
                 imGuiAdapter->ReleaseTextureID(texID);
-            }
+            }   
 
             const auto options = EditorOptions::get();
             bool debugCulling = options->IsDebugCulling();
@@ -503,6 +526,10 @@ namespace vg::editor
                 m_view->SetVisible(false);
             }
         }
+
+
+        if (active)
+            ImGui::PopStyleColor();
 
         ImGui::PopStyleColor();
         ImGui::PopStyleVar();

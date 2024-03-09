@@ -86,8 +86,9 @@ namespace vg
             virtual bool                                SaveWorld           () = 0;
             virtual bool                                SaveWorldAs         (const core::string & _filename) = 0;
             virtual bool                                LoadWorld           (const core::string & _filename) = 0;
-
             virtual IWorldResource *                    GetWorldResource    () = 0;
+
+            virtual bool                                SaveScene           (core::IResource * _sceneRes) = 0;
 
             virtual IEngineOptions *                    GetOptions          () = 0;
 	    };

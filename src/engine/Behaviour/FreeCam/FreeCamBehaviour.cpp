@@ -82,16 +82,12 @@ namespace vg::engine
         float4 K = world[2];
         float4 T = world[3];
 
-        if (update)
+        IInput * input = Kernel::getInput();
+        if (update && input->IsKeyPressed(Key::LSHIFT))
         {
-            IInput * input = Kernel::getInput();
-
             float mouseSpeedX = m_rotSpeed * 0.001f * PI;
             float mouseSpeedY = m_rotSpeed * 0.001f * PI;
-            float moveSpeed = m_moveSpeed * _dt;
-
-            if (input->IsKeyPressed(Key::LSHIFT))
-                moveSpeed *= 16.0f;
+            float moveSpeed = m_moveSpeed * _dt * 8.0f;
 
             if (input->IsMouseButtonPressed(MouseButton::Middle))
             {

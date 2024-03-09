@@ -11,5 +11,11 @@ namespace vg::editor
 
         ImGuiGameView(core::uint _index);
         ~ImGuiGameView();
+
+        bool    ShowToolbar         () const final override;
+        void    DrawToolbar         () final override;
+
+        bool    ShowTitlebarMenu    () const final override { return true; };
+        void    DrawTitlebarMenu    () final override;
     };
 }

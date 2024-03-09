@@ -21,8 +21,14 @@ namespace vg::editor
         core::string                GetTitle            () const override;
         void                        DrawGUI             () final override;
 
-        virtual bool                ShowToolbar         () { return false; }
+        virtual bool                ShowToolbar         () const { return false; }
         virtual void                DrawToolbar         () {};
+
+        virtual bool                ShowContextMenu     () const { return false; }
+        virtual ImGuiMenu::Status   DrawContextMenu     () { return ImGuiMenu::Status::None; };
+
+        virtual bool                ShowTitlebarMenu    () const { return false;};
+        virtual void                DrawTitlebarMenu    () {};
 
         virtual gfx::IView::Flags   GetViewFlags        () const; 
         virtual core::IWorld*       GetWorld            () const;;

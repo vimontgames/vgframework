@@ -27,9 +27,10 @@ Its renderer only uses modern graphics APIs like DirectX12 and Vulkan (I would a
 # changelog
 
 ## 0.27 "Let it snow"
-Can now create **Prefabs** to instanciate in Levels
-Animation blend helper functions
-Use ImGuiFileDialog instead of ImGuiFileBrowser
+Can now create **Prefabs** to instanciate in Levels\
+Animation blend helper functions\
+Use ImGuiFileDialog instead of ImGuiFileBrowser\
+3D View Titlebar menu
 
 ![Screenshot](doc/img/0.27.png)
 
@@ -144,23 +145,29 @@ First run might take a few seconds because files are cooking.
 
 ## keyboard shortcuts
 
-| Key			| Description	 												
-| ------------- | ------------------------------------------------------------- 
-| F1			| Start/stop profiler capture	
-| F2			| Rename selected Object
-| F6			| Hot reload shaders
-| F7			| Hot reload resources				
-| F5			| Enter Play mode
-| Shift-F5		| Restart Play mode
-| PAUSE			| Pause/resume Play mode
-| F11			| Maximize Game view (fullscreen)
-| ESCAPE		| Exit Play mode and go back to Editor mode
-| DELETE		| Delete selected objects
-| Ctrl-D		| Duplicate selected objects (*)
-| Ctrl-Q		| Quit application
-| Ctrl-T		| Translation gizmo
-| Ctrl-R		| Rotation gizmo
-| Ctrl-S		| Scale gizmo
+| Key			   | Description	 												
+| ---------------- | ------------------------------------------------------------- 
+| F                | Focus Selection
+| A                | Toggle snap
+| UP               | Move editor camera forward
+| LEFT             | Move editor camere left
+| DOWN             | Move editor camera backward
+| RIGHT            | Move editor camere right
+| F1               | Start/stop profiler capture	
+| F2               | Rename selected Object
+| F6               | Hot reload shaders
+| F7               | Hot reload resources				
+| F5               | Enter Play mode
+| Shift-F5         | Restart Play mode
+| PAUSE            | Pause/resume Play mode
+| F11              | Maximize Game view (fullscreen)
+| ESCAPE           | Exit Play mode and go back to Editor mode
+| DELETE           | Delete selected objects
+| Ctrl+Mouse Wheel | Toggle Translation/Rotation/Scale gizmo
+| Ctrl+D           | Duplicate selected objects (*)
+| Ctrl+S           | Save
+| Ctrl+U           | Save Prefab & Update
+| Ctrl+Q           | Quit application
 
 (*) You can also keep shift pressed while moving objects to duplicate
 

@@ -5,7 +5,7 @@ namespace vg::editor
     //--------------------------------------------------------------------------------------
     ImGuiPrefabView::ImGuiPrefabView(const core::IResource * _prefabRes) :
         ImGuiView(style::icon::Prefab, "View/Prefabs", "Prefabs", ImGuiWindow::StartVisible, gfx::ViewTarget::Editor),
-        m_prefabRes(_prefabRes)
+        m_prefabRes((core::IResource*)_prefabRes)
     {
         IFactory * factory = Kernel::getFactory();
         m_prefabWorld = (IWorld *)factory->createObject("World", _prefabRes->GetResourcePath());
@@ -19,18 +19,124 @@ namespace vg::editor
     }
 
     //--------------------------------------------------------------------------------------
-    bool ImGuiPrefabView::ShowToolbar()
+    bool ImGuiPrefabView::ShowToolbar() const
     { 
-        return false; 
+        return false;
     }
 
     //--------------------------------------------------------------------------------------
     void ImGuiPrefabView::DrawToolbar()
     {
-        //if (ImGui::TooltipButton(fmt::sprintf("%s", editor::style::icon::Save).c_str(), true, true, "Save Prefab", style::button::SizeSmall))
-        //{
-        //
-        //}
+        const auto * factory = Kernel::getFactory();
+        auto engine = Editor::get()->getEngine();
+
+        IBaseScene * scene = nullptr;
+        if (m_prefabRes)
+            scene = VG_SAFE_STATIC_CAST(IBaseScene, m_prefabRes->getObject());
+
+        ImGui::BeginDisabled(!scene || !scene->hasFile());
+        if (ImGui::TooltipButton(fmt::sprintf("%s", editor::style::icon::Save).c_str(), true, true, "Save Prefab", style::button::SizeSmall))
+        {
+            if (scene && scene->hasFile())
+            {
+                const string & filePath = scene->getFile();
+                factory->saveToXML(scene, filePath);
+            }
+        }
+        
+        ImGui::SameLine();
+
+        if (ImGui::TooltipButton(fmt::sprintf("%s", editor::style::icon::Apply).c_str(), true, true, "Save & Update Prefab", style::button::SizeSmall))
+        {
+            if (scene && scene->hasFile())
+            {
+                const string & filePath = scene->getFile();
+                factory->saveToXML(scene, filePath);
+                auto rm = engine->GetResourceManager();
+                rm->Reimport(m_prefabRes);
+            }
+        }
+
+        ImGui::EndDisabled();
+    }
+
+    //--------------------------------------------------------------------------------------
+    ImGuiMenu::Status ImGuiPrefabView::DrawContextMenu()
+    {
+        return ImGuiMenu::Status::None;
+    }    
+
+    //--------------------------------------------------------------------------------------
+    void ImGuiPrefabView::DrawTitlebarMenu()
+    {
+        if (nullptr == m_prefabRes)
+            return;
+        
+        IBaseScene * scene = VG_SAFE_STATIC_CAST(IBaseScene, m_prefabRes->getObject());
+        
+        // scene can be null during hot-reload
+        if (nullptr == scene)
+            return;
+        
+        const auto * factory = Kernel::getFactory();
+        auto engine = Editor::get()->getEngine();
+
+        bool save = false;
+        bool update = false;
+
+        if (ImGui::BeginPopupContextItem("ImGuiPrefabViewTitlebarMenu"))
+        {
+            ImGui::PushStyle(Style::Bold);
+            ImGui::Text(fmt::sprintf("Prefab", style::icon::Prefab).c_str());
+            ImGui::PopStyle();
+            ImGui::Spacing();
+
+            ImGui::BeginDisabled(!scene->hasFile());
+            if (ImGui::MenuItem(fmt::sprintf("%s Save", style::icon::Save).c_str(), "Ctrl-S"))
+                save = true;
+            ImGui::EndDisabled();
+
+            ImGui::BeginDisabled(!scene->hasFile());
+            if (ImGui::MenuItem(fmt::sprintf("%s Save & Update", style::icon::Apply).c_str(), "Ctrl-U"))
+            {
+                save = true;
+                update = true;
+            }
+            ImGui::EndDisabled();
+
+            ImGui::EndPopup();
+        }
+
+        if (!ImGui::IsAnyItemActive())
+        {
+            const bool isCtrlPressed = ImGui::IsKeyDown(ImGuiKey_LeftCtrl) || ImGui::IsKeyDown(ImGuiKey_RightCtrl);
+
+            if (isCtrlPressed && ImGui::IsKeyPressed(ImGuiKey_S))
+            {
+                save = true;
+            }
+
+            if (isCtrlPressed && ImGui::IsKeyPressed(ImGuiKey_U))
+            {
+                save = true;
+                update = true;
+            }
+        }
+
+        if (save)
+        {
+            if (scene->hasFile())
+            {
+                const string & filePath = scene->getFile();
+                factory->saveToXML(scene, filePath);
+            }
+        }
+
+        if (update)
+        {
+            auto rm = engine->GetResourceManager();
+            rm->Reimport(m_prefabRes);
+        }
     }
 
     //--------------------------------------------------------------------------------------

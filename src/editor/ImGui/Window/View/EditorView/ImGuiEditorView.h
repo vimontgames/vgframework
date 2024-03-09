@@ -11,5 +11,11 @@ namespace vg::editor
 
         ImGuiEditorView(core::uint _index);
         ~ImGuiEditorView(); 
+
+        bool ShowToolbar() const final override;
+        void DrawToolbar() final override;
+
+        bool ShowTitlebarMenu() const final { return true; }
+        void DrawTitlebarMenu() final override;
     };
 }

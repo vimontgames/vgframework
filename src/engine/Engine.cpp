@@ -504,6 +504,22 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
+    bool Engine::SaveScene(core::IResource * _sceneRes)
+    {
+        IBaseScene * scene = VG_SAFE_STATIC_CAST(IBaseScene, _sceneRes->getObject());
+        if (nullptr != scene)
+        {
+            if (scene->hasFile())
+            {
+                IFactory * factory = Kernel::getFactory();
+                factory->saveToXML(scene, scene->getFile());
+                return true;
+            }
+        }
+        return false;        
+    }
+
+    //--------------------------------------------------------------------------------------
     IEngineOptions * Engine::GetOptions()
     {
         return EngineOptions::get();

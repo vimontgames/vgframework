@@ -101,8 +101,9 @@ namespace vg::engine
         bool                                    SaveWorld           () final override;
         bool                                    SaveWorldAs         (const core::string & _filename) final override;
         bool                                    LoadWorld           (const core::string & _filename) final override;
-
         IWorldResource *                        GetWorldResource    () final override;
+
+        bool                                    SaveScene           (core::IResource * _sceneRes) final override;
 
         IEngineOptions *                        GetOptions          () final override;
 

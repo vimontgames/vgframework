@@ -47,6 +47,7 @@ namespace vg::editor
         {
             inline static const char * About                = ICON_FA_CIRCLE_QUESTION;
             inline static const char * Animation            = ICON_FA_PERSON_RUNNING;
+            inline static const char * Apply                = ICON_FA_BOLT;
             inline static const char * Camera               = ICON_FA_VIDEO;
             inline static const char * CharacterController  = ICON_FA_CAPSULES;
             inline static const char * Checked              = ICON_FA_SQUARE_CHECK;

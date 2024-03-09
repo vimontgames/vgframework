@@ -26,7 +26,10 @@ namespace vg::editor
         auto status = Status::None;
         core::IResource * sceneRes = VG_SAFE_STATIC_CAST(core::IResource, _object);
         IBaseScene * scene = VG_SAFE_STATIC_CAST(IBaseScene, sceneRes->getObject());
-        VG_ASSERT(nullptr != scene);
+        
+        // scene can be null during hot-reload
+        if (nullptr == scene)
+            return ImGuiMenu::Status::Failure;
 
         const auto * factory = Kernel::getFactory();
         auto engine = Editor::get()->getEngine();
@@ -39,7 +42,7 @@ namespace vg::editor
         bool save = false;
         bool update = false;
 
-        if (ImGui::BeginPopupContextItem())
+        if (ImGui::BeginPopupContextItem("ImGuiSceneMenu"))
         {
             if (m_sceneType == BaseSceneType::Prefab)
             {
@@ -90,9 +93,8 @@ namespace vg::editor
 
         if (save)
         {
-            string filePath = scene->hasFile() ? scene->getFile() : typeInfo.dataFolder + scene->getName() + typeInfo.fileExt;
-            factory->saveToXML(scene, filePath);
-            status = Status::Saved;
+            if (engine->SaveScene(sceneRes))
+                status = Status::Saved;
         }
 
         if (update)

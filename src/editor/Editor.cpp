@@ -4,6 +4,7 @@
 #include "core/IResource.h"
 #include "core/IGameObject.h"
 #include "core/File/File.h"
+#include "core/Timer/Timer.h"
 #include "renderer/IRenderer.h"
 #include "renderer/IImGuiAdapter.h"
 #include "engine/IEngine.h"
@@ -166,6 +167,8 @@ namespace vg::editor
         // Get existing Singletons
         Kernel::setSingletons(_singletons);
 
+        Timer::init();
+
         RegisterClasses();
 
         auto options = new EditorOptions("Editor Options", this);
@@ -248,16 +251,33 @@ namespace vg::editor
         const bool shift = input->IsKeyPressed(Key::LSHIFT) || input->IsKeyPressed(Key::RSHIFT);
         const bool ctrl = input->IsKeyPressed(Key::LCONTROL) || input->IsKeyPressed(Key::RCONTROL);
 
-        if (ctrl && !shift)
+        //if (!ctrl && !shift)
+        //{
+        //    if (input->IsKeyJustPressed(Key::T))
+        //        options->setGizmoType(GizmoType::Translate);
+        //    else if (input->IsKeyJustPressed(Key::R))
+        //        options->setGizmoType(GizmoType::Rotate);
+        //    else if (input->IsKeyJustPressed(Key::S))
+        //        options->setGizmoType(GizmoType::Scale);
+        //    else if (input->IsKeyJustPressed(Key::A))
+        //        options->setSnap(options->getSnap());
+        //}
+
+        auto wheel = input->GetMouseDelta().z;
+        if (ctrl && wheel != 0)
         {
-            if (input->IsKeyJustPressed(Key::T))
-                options->setGizmoType(GizmoType::Translate);
-            else if (input->IsKeyJustPressed(Key::R))
-                options->setGizmoType(GizmoType::Rotate);
-            else if (input->IsKeyJustPressed(Key::S))
-                options->setGizmoType(GizmoType::Scale);
-            else if (input->IsKeyJustPressed(Key::A))
-                options->setSnap(options->getSnap());
+            static core::Timer::Tick lastGizmoChangedTick = core::Timer::getTick();
+            auto delay = Timer::getEnlapsedTime(lastGizmoChangedTick, Timer::getTick());
+
+            if (delay > 100.0f) // 0.1 sec
+            {
+                if (wheel > 0)
+                    options->setNextGizmo();
+                else if (wheel < 0)
+                    options->setPreviousGizmo();
+
+                lastGizmoChangedTick = core::Timer::getTick();
+            }
         }
 
         // Update Editor views cameras
