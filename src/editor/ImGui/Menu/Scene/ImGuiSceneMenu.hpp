@@ -42,7 +42,7 @@ namespace vg::editor
         bool save = false;
         bool update = false;
 
-        if (ImGui::BeginPopupContextItem("ImGuiSceneMenu"))
+        if (ImGui::BeginPopupContextItem(ImGui::getObjectLabel("ImGuiSceneMenu", _object).c_str()))
         {
             if (m_sceneType == BaseSceneType::Prefab)
             {
