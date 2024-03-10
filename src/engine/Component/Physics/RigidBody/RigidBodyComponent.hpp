@@ -221,6 +221,16 @@ namespace vg::engine
     //--------------------------------------------------------------------------------------
     bool RigidBodyComponent::createBody()
     {
+        if (IWorld * world = GetGameObject()->GetWorld())
+        {
+            if (!world->IsPlaying())
+                return false;
+        }
+        else
+        {
+            return false;
+        }
+
         VG_SAFE_RELEASE(m_body);
         VG_ASSERT(m_bodyDesc && m_shape);
         if (m_bodyDesc && m_shape)
