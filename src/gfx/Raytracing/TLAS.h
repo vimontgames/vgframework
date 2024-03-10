@@ -31,7 +31,7 @@ namespace vg::gfx
     {
     public:
         using super = VG_GFXAPI::TLAS;
-        const char * getClassName() const final { return "TLAS"; }
+        const char * GetClassName() const final { return "TLAS"; }
 
         gfx::Buffer *               getBuffer       () const { return m_resultBuffer; }
         const BindlessTLASHandle &  getHandle       () const;

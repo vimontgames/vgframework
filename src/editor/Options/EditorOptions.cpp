@@ -98,6 +98,26 @@ namespace vg::editor
     }  
 
     //--------------------------------------------------------------------------------------
+    void EditorOptions::setNextGizmo()
+    {
+        const auto count = enumCount<GizmoType>();
+        if ((int)m_gizmo.m_type + 1 == count)
+            m_gizmo.m_type = (GizmoType)0;
+        else
+            m_gizmo.m_type = (GizmoType)((int)m_gizmo.m_type+1);
+    }
+
+    //--------------------------------------------------------------------------------------
+    void EditorOptions::setPreviousGizmo()
+    {
+        const auto count = enumCount<GizmoType>();
+        if ((int)m_gizmo.m_type == 0)
+            m_gizmo.m_type = (GizmoType)(count-1);
+        else
+            m_gizmo.m_type = (GizmoType)((int)m_gizmo.m_type - 1);
+    }
+
+    //--------------------------------------------------------------------------------------
     bool EditorOptions::setSnap(bool _enable)
     {
         switch (m_gizmo.m_type)

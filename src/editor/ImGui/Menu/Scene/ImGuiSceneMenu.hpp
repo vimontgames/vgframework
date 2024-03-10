@@ -4,7 +4,7 @@
 #include "core/File/File.h"
 #include "engine/IWorldResource.h"
 #include "editor/ImGui/Window/ImGuiWindow.h"
-#include "ImGui-Addons/FileBrowser/ImGuiFileBrowser.h"
+#include "ImGuiFileDialog/ImGuiFileDialog.h"
 #include "editor/ImGui/Window/SceneList/ImGuiSceneList.h"
 #include "editor/ImGui/Window/View/PrefabView/ImGuiPrefabView.h"
 #include "engine/IResourceManager.h"
@@ -26,24 +26,27 @@ namespace vg::editor
         auto status = Status::None;
         core::IResource * sceneRes = VG_SAFE_STATIC_CAST(core::IResource, _object);
         IBaseScene * scene = VG_SAFE_STATIC_CAST(IBaseScene, sceneRes->getObject());
-        VG_ASSERT(nullptr != scene);
+        
+        // scene can be null during hot-reload
+        if (nullptr == scene)
+            return ImGuiMenu::Status::Failure;
 
         const auto * factory = Kernel::getFactory();
-        auto & fileBrowser = ImGuiWindow::getFileBrowser();
         auto engine = Editor::get()->getEngine();
 
         const auto & typeInfo = ImGuiSceneList::getGameObjectTreeTypeInfo(m_sceneType);
 
         bool openPopup = false;
+        bool openFileDialog = false, saveFileDialog = false;
 
         bool save = false;
         bool update = false;
 
-        if (ImGui::BeginPopupContextItem())
+        if (ImGui::BeginPopupContextItem(ImGui::getObjectLabel("ImGuiSceneMenu", _object).c_str()))
         {
             if (m_sceneType == BaseSceneType::Prefab)
             {
-                if (ImGui::MenuItem("Open 3D View", nullptr, false))
+                if (ImGui::MenuItem("Edit", nullptr, false))
                     Editor::get()->openPrefabView(sceneRes);
 
                 ImGui::Separator();
@@ -55,10 +58,9 @@ namespace vg::editor
             if (ImGui::MenuItem("Save As"))
             {
                 m_selected = MenuOption::Save;
-                fileBrowser.setFolder(io::getRootDirectory() + "/" + typeInfo.dataFolder);
-                fileBrowser.setFilename(scene->getName() + typeInfo.fileExt);
                 m_popup = fmt::sprintf("Save %s As ...", asString(m_sceneType));
-                openPopup = true;
+
+                saveFileDialog = true;
             }
 
             if (m_sceneType == BaseSceneType::Prefab)
@@ -83,7 +85,7 @@ namespace vg::editor
             {
                 m_selected = MenuOption::Close;
                 openPopup = true;
-                m_popup = ImGui::getObjectLabel("Remove", _object);
+                m_popup = "Remove";
                 m_popupObject = scene;
             }
             ImGui::EndPopup();
@@ -91,9 +93,8 @@ namespace vg::editor
 
         if (save)
         {
-            string filePath = scene->hasFile() ? scene->getFile() : typeInfo.dataFolder + scene->getName() + typeInfo.fileExt;
-            factory->saveToXML(scene, filePath);
-            status = Status::Saved;
+            if (engine->SaveScene(sceneRes))
+                status = Status::Saved;
         }
 
         if (update)
@@ -107,16 +108,31 @@ namespace vg::editor
             ImGui::OpenPopup(m_popup.c_str());
             openPopup = false;
         }
-
+        else if (openFileDialog)
+        { 
+            ImGui::OpenFileDialog(m_popup, typeInfo.fileExt.c_str(), typeInfo.dataFolder);
+            openFileDialog = false;
+        }
+        else if (saveFileDialog)
+        {
+            ImGui::OpenFileDialog(m_popup, typeInfo.fileExt.c_str(), typeInfo.dataFolder);
+            saveFileDialog = false;
+        }
+        
         switch (m_selected)
         {
             case MenuOption::Save:
-            if (fileBrowser.showFileDialog(m_popup.c_str(), imgui_addons::ImGuiFileBrowser::DialogMode::SAVE, style::dialog::Size, typeInfo.fileExt.c_str()))
+            if (ImGui::DisplayFileDialog(m_popup))
             {
-                string newFilePath = io::addExtensionIfNotPresent(fileBrowser.selected_path, typeInfo.fileExt.c_str());
-                scene->setName(io::getFileNameWithoutExt(newFilePath));
-                factory->saveToXML(scene, newFilePath);
-                status = Status::Saved;
+                if (ImGui::IsFileDialogOK())
+                {
+                    string newFilePath = io::addExtensionIfNotPresent(ImGui::GetFileDialogSelectedFile(), typeInfo.fileExt.c_str());
+                    scene->setName(io::getFileNameWithoutExt(newFilePath));
+                    factory->saveToXML(scene, newFilePath);
+                    status = Status::Saved;
+                }
+
+                ImGui::CloseFileDialog();
             }
             break;
 

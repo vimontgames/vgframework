@@ -4,7 +4,7 @@
 
 #define VG_CLASS_SUPER_CLASSNAME(name, parent)		using super = parent;																\
 													static const char * getStaticClassName  () { return #name; }						\
-													const char * getClassName() const override { return name::getStaticClassName(); }	
+													const char * GetClassName() const override { return name::getStaticClassName(); }	
 
 // Common class functions with default implementation for registerClass/registerProperty
 #define VG_CLASS_PROPERTIES_IMPL(name, parent)		static bool registerProperties(vg::core::IClassDesc & _desc) { super::registerProperties(_desc); return true; }	
@@ -39,7 +39,8 @@ namespace vg::core
 	public:
 		VG_CLASS_DECL(Object, IObject);
 
-        const IClassDesc *          getClassDesc        () const final;
+		void                        SetClassDesc		(const IClassDesc * _classDesc) final override;
+        const IClassDesc *          GetClassDesc        () const final override;
 
 								    Object		        (const string & _name, IObject * _parent = nullptr);
 									Object				(const Object & _other);
@@ -88,6 +89,7 @@ namespace vg::core
         atomic<u32>				    m_refCount;
 		ObjectFlags					m_objectFlags = (ObjectFlags)0x0;
         Object *					m_parent = nullptr;
+		mutable const IClassDesc *	m_classDesc = nullptr;
 		string					    m_name;
         string                      m_file;
 	};

@@ -1,7 +1,7 @@
 #pragma once
 
 #include "core/Object/Object.h"
-#include "AABB/AABB.h"
+#include "core/Misc/AABB/AABB.h"
 
 namespace vg::renderer
 {
@@ -16,11 +16,11 @@ namespace vg::renderer
     
         }
 
-        VG_INLINE void setAABB(const AABB & _aabb);
-        VG_INLINE const AABB & getAABB() const;
+        VG_INLINE void setAABB(const core::AABB & _aabb);
+        VG_INLINE const core::AABB & getAABB() const;
 
     private:
-        AABB m_aabb;
+        core::AABB m_aabb;
     };
 }
 

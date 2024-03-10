@@ -8,12 +8,12 @@ namespace vg::renderer
     class BackgroundPass : public Render2DPass
     {
     public:
-        const char * getClassName() const final { return "BackgroundPass"; }
+        const char * GetClassName() const final { return "BackgroundPass"; }
 
         BackgroundPass();
         ~BackgroundPass();
 
-        void Setup(const gfx::RenderPassContext & _renderContext, float _dt) override;
+        void Setup(const gfx::RenderPassContext & _renderContext) override;
         void Render(const gfx::RenderPassContext & _renderContext, gfx::CommandList * _cmdList) const override;
 
     private:

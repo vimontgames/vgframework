@@ -11,6 +11,7 @@
 #include "core/Scheduler/Scheduler.h"
 #include "engine/Job/Animation/AnimationJob.h"
 #include "engine/Job/Animation/DrawSkeletonJob.h"
+#include "engine/Component/Animation/AnimationComponent.h"
 
 #include "MaterialResourceList.hpp"
 
@@ -23,7 +24,7 @@ using namespace vg::renderer;
 
 namespace vg::engine
 {
-    VG_REGISTER_COMPONENT_CLASS(MeshComponent, "Mesh", "Rendering", "Mesh model for 3D rendering", editor::style::icon::Mesh)
+    VG_REGISTER_COMPONENT_CLASS(MeshComponent, "Mesh", "Rendering", "Mesh model for 3D rendering", editor::style::icon::Mesh, 1)
 
     //--------------------------------------------------------------------------------------
     bool MeshComponent::registerProperties(IClassDesc & _desc)
@@ -126,6 +127,15 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
+    const core::string MeshComponent::GetSubObjectName(core::uint _subObjectIndex) const
+    {
+        if (nullptr != m_meshInstance)
+            return m_meshInstance->GetBatchName(_subObjectIndex);
+
+        return "";
+    };
+
+    //--------------------------------------------------------------------------------------
     void MeshComponent::OnPropertyChanged(IObject * _object, const IProperty & _prop, bool _notifyParent)
     {
         if (!strcmp(_prop.getName(), "m_batchMask"))
@@ -180,6 +190,7 @@ namespace vg::engine
             IMeshModel * meshModel = m_meshResource.getMeshModel();
             m_meshInstance->SetModel(Lod::Lod0, meshModel);
             m_batchMask.setBitCount(meshModel->GetBatchCount(), true);
+            m_batchMask.setNames(meshModel->GetBatchNames());
             m_meshInstance->SetBatchMask(m_batchMask);
 
             if (false == m_registered)
@@ -196,6 +207,11 @@ namespace vg::engine
                 m_meshInstance->setName(getGameObject()->getName().c_str());
                 m_registered = true;
             }
+
+            // In case Animations were loaded before Mesh we need to rebind them
+            if (auto * animComponent = GetGameObject()->GetComponentByType<AnimationComponent>())
+                animComponent->bindAnimations();
+
         }
         else if (auto matRes = dynamic_cast<MaterialResource *>(_resource))
         {
@@ -246,5 +262,17 @@ namespace vg::engine
                 }
             }
         }
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool MeshComponent::TryGetAABB(core::AABB & _aabb) const
+    {
+        if (m_meshInstance)
+        {
+            if (m_meshInstance->TryGetAABB(_aabb))
+                return true;
+        }
+
+        return false;
     }
 }

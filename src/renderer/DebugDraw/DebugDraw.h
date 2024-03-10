@@ -7,6 +7,11 @@
 #include "gfx/RootSignature/RootSignature_consts.h"
 #include "gfx/Shader/ShaderKey.h"
 
+namespace vg::core
+{
+    class AABB;
+}
+
 namespace vg::gfx
 {
     class CommandList;
@@ -16,7 +21,6 @@ namespace vg::gfx
 namespace vg::renderer
 {
     class MeshGeometry;
-    class AABB;
     class View;
 
     //--------------------------------------------------------------------------------------
@@ -45,7 +49,7 @@ namespace vg::renderer
         void        update                  (const View * _view, gfx::CommandList * _cmdList);
         void        render                  (const View * _view, gfx::CommandList * _cmdList);
 
-        void        drawAABB                (gfx::CommandList * _cmdList, const AABB & _aabb, const core::float4x4 & _world) const;
+        void        drawAABB                (gfx::CommandList * _cmdList, const core::AABB & _aabb, const core::float4x4 & _world) const;
         void        drawGrid                (gfx::CommandList * _cmdList) const; 
         void        drawAxis                (gfx::CommandList * _cmdList) const;
 

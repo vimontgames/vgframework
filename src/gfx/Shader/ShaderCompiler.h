@@ -30,7 +30,7 @@ namespace vg::gfx
         using super = dxc::ShaderCompiler;
 
     public:
-        const char * getClassName() const final { return "ShaderCompiler"; }
+        const char * GetClassName() const final { return "ShaderCompiler"; }
 
         ShaderCompiler();
         ~ShaderCompiler();

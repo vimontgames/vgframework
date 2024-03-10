@@ -31,6 +31,9 @@ namespace vg::core
             SceneNode       = 0x0000000000000080,
             Plugin          = 0x0000000000000100
         };
+
+        using Priority = core::i16;
+
         virtual                             ~IClassDesc  () {}
 
         virtual bool                        IsRegisteredProperty        (const char * _propertyName) = 0;
@@ -38,6 +41,9 @@ namespace vg::core
         virtual void                        RegisterPropertyLayout      (const char * _className, IProperty::LayoutElementType _layoutElementType, const char * _label, bool * _offset, IProperty::Flags _flags = IProperty::Flags::None) = 0;
 
         virtual void                        RegisterProperty            (const char * _className, const char * _propertyName, bool * _offset, const char * _displayName, IProperty::Flags _flags) = 0;
+        virtual void                        RegisterProperty            (const char * _className, const char * _propertyName, i8 * _offset, const char * _displayName, IProperty::Flags _flags) = 0;
+        virtual void                        RegisterProperty            (const char * _className, const char * _propertyName, i16 * _offset, const char * _displayName, IProperty::Flags _flags) = 0;
+        virtual void                        RegisterProperty            (const char * _className, const char * _propertyName, i32 * _offset, const char * _displayName, IProperty::Flags _flags) = 0;
         virtual void                        RegisterProperty            (const char * _className, const char * _propertyName, u8 * _offset, const char * _displayName, IProperty::Flags _flags) = 0;
         virtual void                        RegisterProperty            (const char * _className, const char * _propertyName, u16 * _offset, const char * _displayName, IProperty::Flags _flags) = 0;
         virtual void                        RegisterProperty            (const char * _className, const char * _propertyName, u32 * _offset, const char * _displayName, IProperty::Flags _flags) = 0;
@@ -74,6 +80,7 @@ namespace vg::core
         virtual void                        RegisterEnum                (const char * _className, const char * _propertyName, u32 * _offset, const char * _displayName, uint _enumCount, const char * _enumNames, const u32 * _enumValues, IProperty::Flags _flags) = 0;
         virtual void                        RegisterEnum                (const char * _className, const char * _propertyName, u64 * _offset, const char * _displayName, uint _enumCount, const char * _enumNames, const u64 * _enumValues, IProperty::Flags _flags) = 0;
 
+        virtual void                        RegisterEnumArray           (const char * _className, const char * _propertyName, core::u8 * _offset, const char * _displayName, uint _enumCount, uint _elementSize, const char * _enumNames, const void * _enumValues, IProperty::Flags _flags, uint _enumSizeOf) = 0;
         virtual void                        RegisterEnumArray           (const char * _className, const char * _propertyName, float4 * _offset, const char * _displayName, uint _enumCount, uint _elementSize, const char * _enumNames, const void * _enumValues, IProperty::Flags _flags, uint _enumSizeOf) = 0;
         virtual void                        RegisterEnumArray           (const char * _className, const char * _propertyName, IResource * _offset, const char * _displayName, uint _enumCount, uint _elementSize, const char * _enumNames, const void * _enumValues, IProperty::Flags _flags, uint _enumSizeOf) = 0;
         virtual void                        RegisterEnumArray           (const char * _className, const char * _propertyName, IObject * _offset, const char * _displayName, uint _enumCount, uint _elementSize, const char * _enumNames, const void * _enumValues, IProperty::Flags _flags, uint _enumSizeOf) = 0;
@@ -83,15 +90,17 @@ namespace vg::core
         virtual void *                      ResizeVector                (core::IObject * _parent, core::uint _offset, core::uint _count, core::uint & _elementSize) const = 0;
 
         virtual const char *                GetClassName                () const = 0;
-        virtual const char *                GetParentClassName            () const = 0;
+        virtual const char *                GetParentClassName          () const = 0;
         virtual const char *                GetClassDisplayName         () const = 0;    
         virtual const char *                GetCategory                 () const = 0;
         virtual const char *                GetDescription              () const = 0;
         virtual const char *                GetIcon                     () const = 0;
+        virtual Priority                    GetPriority                 () const = 0;
 
         virtual void                        SetCategory                 (const char * _category) = 0;
         virtual void                        SetDescription              (const char * _description) = 0;
         virtual void                        SetIcon                     (const char * _icon) = 0;
+        virtual void                        SetPriority                 (Priority _priority) = 0;
 
         virtual uint                        GetPropertyCount            () const = 0;
         virtual const IProperty *           GetPropertyByIndex          (uint _index) const = 0;

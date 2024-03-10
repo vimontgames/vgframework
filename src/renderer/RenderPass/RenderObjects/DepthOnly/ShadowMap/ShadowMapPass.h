@@ -8,11 +8,11 @@ namespace vg::renderer
     class ShadowMapPass final : public DepthOnlyPass
     {
     public:
-        const char * getClassName() const final { return "ShadowMapPass"; }
+        const char * GetClassName() const final { return "ShadowMapPass"; }
 
         ShadowMapPass();
         ~ShadowMapPass();
 
-        void Setup(const gfx::RenderPassContext & _renderPassContext, float _dt) final override;
+        void Setup(const gfx::RenderPassContext & _renderPassContext) final override;
     };
 }

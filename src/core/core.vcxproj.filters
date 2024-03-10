@@ -70,6 +70,12 @@
     <Filter Include="Misc">
       <UniqueIdentifier>{3b40ac56-fb20-485c-9d2c-78abb38b3525}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Misc\AABB">
+      <UniqueIdentifier>{3193b6a5-daa7-4b5e-995e-43c2564704c6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Misc\BitMask">
+      <UniqueIdentifier>{230c6fac-1d63-4a82-9345-cfe400becf3e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Math\Math.h">
@@ -217,8 +223,11 @@
     <ClInclude Include="Memory\NewDelete.h">
       <Filter>Memory</Filter>
     </ClInclude>
-    <ClInclude Include="Misc\BitMask.h">
-      <Filter>Misc</Filter>
+    <ClInclude Include="Misc\BitMask\BitMask.h">
+      <Filter>Misc\BitMask</Filter>
+    </ClInclude>
+    <ClInclude Include="Misc\AABB\AABB.h">
+      <Filter>Misc\AABB</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -284,8 +293,11 @@
     <ClCompile Include="Memory\MemoryAllocator.cpp">
       <Filter>Memory</Filter>
     </ClCompile>
-    <ClCompile Include="Misc\BitMask.cpp">
-      <Filter>Misc</Filter>
+    <ClCompile Include="Misc\BitMask\BitMask.cpp">
+      <Filter>Misc\BitMask</Filter>
+    </ClCompile>
+    <ClCompile Include="Misc\AABB\AABB.cpp">
+      <Filter>Misc\AABB</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -301,11 +313,14 @@
     <None Include="GameObject\GameObject.inl">
       <Filter>GameObject</Filter>
     </None>
-    <None Include="Misc\BitMask.inl">
-      <Filter>Misc</Filter>
-    </None>
     <None Include="Object\Object.inl">
       <Filter>Object</Filter>
+    </None>
+    <None Include="Misc\BitMask\BitMask.inl">
+      <Filter>Misc\BitMask</Filter>
+    </None>
+    <None Include="Misc\AABB\AABB.inl">
+      <Filter>Misc\AABB</Filter>
     </None>
   </ItemGroup>
 </Project>

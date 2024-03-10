@@ -17,7 +17,7 @@ namespace vg::core
                                     Resource            (const Resource & _other);
                                     ~Resource           ();
 
-        bool                        CreateFile          (const string & _path) override;
+        bool                        CreateFile          (const string & _path, IObject * _data) override;
         bool                        SaveFile            (const string & _path) const override;
 
         void                        setup               (IObject * _owner, const string & _path, UserData _userData = 0x0) final;

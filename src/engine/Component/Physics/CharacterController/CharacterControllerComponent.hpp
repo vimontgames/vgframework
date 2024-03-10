@@ -1,5 +1,6 @@
 #include "CharacterControllerComponent.h"
 #include "core/IGameObject.h"
+#include "core/Math/Math.h"
 #include "engine/Engine.h"
 #include "physics/IPhysicsOptions.h"
 #include "physics/IShape.h"
@@ -10,7 +11,7 @@ using namespace vg::core;
 
 namespace vg::engine
 {
-    VG_REGISTER_COMPONENT_CLASS(CharacterControllerComponent, "Character Controller", "Physics", "Cheap and accurate collisions between the character and dynamic bodies.", editor::style::icon::CharacterController);
+    VG_REGISTER_COMPONENT_CLASS(CharacterControllerComponent, "Character Controller", "Physics", "Cheap and accurate collisions between the character and dynamic bodies.", editor::style::icon::CharacterController, -1);
 
     //--------------------------------------------------------------------------------------
     bool CharacterControllerComponent::registerProperties(core::IClassDesc & _desc)
@@ -20,6 +21,7 @@ namespace vg::engine
         registerPropertyEnumEx(CharacterControllerComponent, physics::CharacterType, m_characterType, "Type", IProperty::Flags::ReadOnly);
         registerPropertyObjectPtrEx(CharacterControllerComponent, m_characterDesc, "Character", IProperty::Flags::Flatten);
         registerPropertyObjectPtrEx(CharacterControllerComponent, m_shapeDesc, "Shape", IProperty::Flags::Flatten);
+        registerPropertyEnumArrayEx(CharacterControllerComponent, u8, physics::GroundState, m_delayState, "GroundState Delay", IProperty::Flags::Flatten);
 
         registerPropertyGroupBegin(CharacterControllerComponent, "Debug");
         registerPropertyEnumEx(CharacterControllerComponent, physics::GroundState, m_groundState, "State", IProperty::Flags::NotSaved);
@@ -32,6 +34,12 @@ namespace vg::engine
     CharacterControllerComponent::CharacterControllerComponent(const core::string & _name, IObject * _parent) :
         super(_name, _parent)
     {
+        for (uint i = 0; i < core::enumCount<physics::GroundState>(); ++i)
+        {
+            m_delayState[i] = 0;
+            m_delayStateCounter[i] = -1;
+        }
+
         if (m_shapeDesc == nullptr)
             createShapeDesc();
 
@@ -204,7 +212,37 @@ namespace vg::engine
             if (world->IsPlaying() && !world->IsPaused())
             {
                 m_character->Update();
-                m_groundState = m_character->GetGroundState();
+
+                auto newGroundState = m_character->GetGroundState();
+
+                if (m_groundState != newGroundState)
+                {
+                    const auto index = asInteger(newGroundState);
+                    const auto delay = m_delayState[index];
+                    if (0 != delay)
+                    {
+                        auto & counter = m_delayStateCounter[index];
+
+                        if (0xFF == counter)
+                        {
+                            counter = 0;
+                        }
+                        else
+                        {
+                            counter = min(++counter, delay);
+                        }
+
+                        if (counter >= delay)
+                        {
+                            m_groundState = newGroundState;
+                            counter = -1;
+                        }
+                    }
+                    else
+                    {
+                        m_groundState = newGroundState;
+                    }
+                }
 
                 float4x4 matrix = m_character->GetMatrix();
                 go->setGlobalMatrix(matrix);
@@ -240,5 +278,17 @@ namespace vg::engine
     {
         if (m_character)
             return m_character->SetRotation(_rotation);
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool CharacterControllerComponent::TryGetAABB(core::AABB & _aabb) const
+    {
+        if (m_shapeDesc)
+        {
+            if (m_shapeDesc->TryGetAABB(_aabb))
+                return true;
+        }
+
+        return false;
     }
 }

@@ -15,6 +15,13 @@ namespace vg::physics
     }
 
     //--------------------------------------------------------------------------------------
+    bool BoxShapeDesc::TryGetAABB(AABB & _aabb) const
+    {
+        _aabb = AABB(-m_size.xyz * 0.5f + m_offset, m_size.xyz * 0.5f + m_offset);
+        return true;
+    }
+
+    //--------------------------------------------------------------------------------------
     VG_REGISTER_OBJECT_CLASS(BoxShape, "Box Shape");
     //--------------------------------------------------------------------------------------
     bool BoxShape::registerProperties(core::IClassDesc & _desc)
@@ -32,7 +39,7 @@ namespace vg::physics
 
         #pragma push_macro("new")
         #undef new
-        auto shape = new JPH::BoxShape(halfSize);
+        auto shape = new JPH::BoxShape(halfSize, 0.01f);
         #pragma pop_macro("new")
 
         #pragma push_macro("new")

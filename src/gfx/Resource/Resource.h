@@ -49,6 +49,6 @@ namespace vg::gfx
     class Resource : public VG_GFXAPI::Resource
     {
     public:
-        const char * getClassName() const final { return "Resource"; }
+        const char * GetClassName() const final { return "Resource"; }
     };
 }

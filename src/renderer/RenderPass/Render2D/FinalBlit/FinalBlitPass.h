@@ -10,12 +10,12 @@ namespace vg::renderer
     class FinalBlitPass : public Render2DPass
     {
     public:
-        const char * getClassName() const final { return "FinalBlitPass"; }
+        const char * GetClassName() const final { return "FinalBlitPass"; }
 
         FinalBlitPass();
         ~FinalBlitPass();
 
-        void Setup(const gfx::RenderPassContext & _renderContext, float _dt) override;
+        void Setup(const gfx::RenderPassContext & _renderContext) override;
         void Render(const gfx::RenderPassContext & _renderContext, gfx::CommandList * _cmdList) const override;
 
     private:

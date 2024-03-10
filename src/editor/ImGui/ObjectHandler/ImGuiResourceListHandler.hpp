@@ -16,7 +16,7 @@ namespace vg::editor
         void displayResourceList(IObject * _object, const core::string & _label, const core::string & _vectorPropName)
         {
             const auto * factory = Kernel::getFactory();
-            const auto * classDesc = factory->getClassDescriptor(_object->getClassName());
+            const auto * classDesc = factory->getClassDescriptor(_object->GetClassName());
             auto list = dynamic_cast<engine::IResourceList *>(_object);
             auto availableWidth = ImGui::GetContentRegionAvail().x;
 
@@ -30,7 +30,7 @@ namespace vg::editor
 
             ImVec2 collapsingHeaderPos = ImGui::GetCursorPos();
 
-            string label = fmt::sprintf("%ss (%u)", _label.c_str(), resourceCount);
+            string label = fmt::sprintf("%s[%u])", _label.c_str(), resourceCount);
 
             //ImGui::BeginTable(ImGui::getObjectLabel(label.c_str(), _object).c_str(), 1, ImGuiTableFlags_BordersOuter | ImGuiTableFlags_BordersInner);
 

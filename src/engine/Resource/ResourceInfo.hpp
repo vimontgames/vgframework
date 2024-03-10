@@ -33,7 +33,7 @@ namespace vg::engine
     const core::string ResourceInfo::GetResourceType() const
     {
         VG_ASSERT(m_clients.size() > 0);
-        return m_clients[0]->getClassName();
+        return m_clients[0]->GetClassName();
     }
 
     //--------------------------------------------------------------------------------------

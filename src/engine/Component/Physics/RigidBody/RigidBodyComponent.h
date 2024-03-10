@@ -34,6 +34,8 @@ namespace vg::engine
         void                        onResourceLoaded(core::IResource * _resource) final override;
         void                        onResourceUnloaded(core::IResource * _resource) final override;
 
+        bool                        TryGetAABB(core::AABB & _aabb) const final override;
+
     private:
         bool                        updateFlagsFromGameObject();
 

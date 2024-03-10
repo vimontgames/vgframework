@@ -13,6 +13,9 @@ namespace vg::renderer
     {
         super::registerProperties(_desc);
 
+        setPropertyFlag(Batch, m_name, IProperty::Flags::NotVisible, false);
+        setPropertyFlag(Batch, m_name, IProperty::Flags::Debug, true);
+
         registerPropertyEx(Batch, count, "Count", IProperty::Flags::ReadOnly);
         registerPropertyEx(Batch, offset, "Offset", IProperty::Flags::ReadOnly);
 
@@ -43,6 +46,9 @@ namespace vg::renderer
     //--------------------------------------------------------------------------------------
     bool Batch::read(io::Buffer & _buffer)
     {
+        string name;
+        _buffer.read(&name);
+        setName(name);
         _buffer.read(&offset);
         _buffer.read(&count);
 
@@ -52,6 +58,7 @@ namespace vg::renderer
     //--------------------------------------------------------------------------------------
     bool Batch::write(io::Buffer & _buffer) const
     {
+        _buffer.write(getName());
         _buffer.write(offset);
         _buffer.write(count);
 

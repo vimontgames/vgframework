@@ -2,7 +2,7 @@
 #include "editor/ImGui/ImGui.h"
 #include "engine/IWorldResource.h"
 #include "core/IGameObject.h"
-#include "ImGui-Addons/FileBrowser/ImGuiFileBrowser.h"
+#include "ImGuiFileDialog/ImGuiFileDialog.h"
 #include "renderer/IImGuiAdapter.h"
 
 namespace vg::editor
@@ -116,7 +116,7 @@ namespace vg::editor
             flags |= ImGuiTreeNodeFlags_Selected;
         }
 
-        ImVec4 textColor = ImGui::GetStyleColorVec4(ImGuiCol_Text);
+        ImVec4 textColor = m_originalTextColor;
 
         if (_gameObject == m_dragAndDropNodeTarget)
         {
@@ -181,7 +181,11 @@ namespace vg::editor
             open = ImGui::TreeNodeEx(gameObjectLabel.c_str(), flags | ImGuiTreeNodeFlags_SpanAvailWidth | ImGuiTreeNodeFlags_SpanFullWidth);
         }
 
-        if (open != isOpen)
+        if (IsMouseDoubleClicked(ImGuiMouseButton_Left) && IsItemHovered())
+            Editor::get()->focus(_gameObject);
+
+        // Do not automatically open Leaf nodes when children are added
+        if (0 == (flags & ImGuiTreeNodeFlags_Leaf) && open != isOpen)
             _gameObject->SetObjectFlags(ObjectFlags::Opened, open);
 
         if (isPrefab)
@@ -234,26 +238,32 @@ namespace vg::editor
         if (!startDragDrop)
             updateSelection(_gameObject);
 
-        m_gameObjectMenu.Display(_gameObject);
+        ImGui::PushStyleColor(ImGuiCol_Text, m_originalTextColor);
+        {
+            if (ImGuiGameObjectSceneEditorMenu::Status::Removed == m_gameObjectMenu.Display(_gameObject))
+                _gameObject = nullptr;
+        }
+        ImGui::PopStyleColor();
 
         if (ImGui::BeginDragDropSource(ImGuiDragDropFlags_AcceptNoDrawDefaultRect | ImGuiDragDropFlags_SourceNoHoldToOpenOthers))
         {
             //VG_INFO("BeginDragDropSource");
-
+        
             //if (!(src_flags & ImGuiDragDropFlags_SourceNoPreviewTooltip))
             //    ImGui::Text("Moving \"%s\"", _gameObject->getName().c_str());
             ImGui::SetDragDropPayload("GameObject", &_gameObject, sizeof(IGameObject*));
             ImGui::EndDragDropSource();
         }
-
+        
         // Invisible selectable for interline
+        if (_gameObject)
         {
             ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(0, 0));
             {
                 ImGui::SetCursorPosY(ImGui::GetCursorPosY() - style::draganddrop::interlineSize.y - 1);
                 string beforeGO = fmt::sprintf("###after %s", _gameObject->getName().c_str());
                 ImGui::InvisibleButton(beforeGO.c_str(), style::draganddrop::interlineSize);
-
+        
                 // debug
                 //ImDrawList * draw_list = ImGui::GetWindowDrawList();
                 //float x0 = ImGui::GetCursorScreenPos().x;
@@ -265,7 +275,7 @@ namespace vg::editor
             ImGui::PopStyleVar(1);
             ImGui::SetCursorPosY(ImGui::GetCursorPosY() - 3);
         }
-
+        
         // "after" interline receiving drag'n drop
         if (ImGui::BeginDragDropTarget())
         {
@@ -276,19 +286,19 @@ namespace vg::editor
             {
                 IGameObject* from = *(IGameObject**)payload->Data;
                 IGameObject* to = _gameObject;
-
+        
                 //VG_INFO("Moving from \"%s\" to after \"%s\"", from->getName().c_str(), to->getName().c_str());
-
+        
                 ImDrawList* draw_list = ImGui::GetWindowDrawList();
                 float x0 = ImGui::GetCursorScreenPos().x;
                 float y0 = ImGui::GetCursorScreenPos().y - style::draganddrop::interlineSize.y / 2;
                 float x1 = x0 + 1024;
                 float y1 = y0 + style::draganddrop::interlineSize.y / 2;
-
+        
                 const auto interlineColor = ImGui::GetStyleColorVec4(ImGuiCol_SeparatorActive);
                 u32 intColor = GetColorU32(interlineColor);
                 draw_list->AddRectFilled(ImVec2(x0, y0), ImVec2(x1, y1), intColor);
-
+        
                 if (payload->Delivery)
                 {
                     doDragDrop(from, to, style::draganddrop::Type::AfterNode);
@@ -296,48 +306,48 @@ namespace vg::editor
                 }
                 else
                     m_dragAndDropInterlineTarget = to;
-
+        
                 m_dragAndDropNodeTarget = nullptr;
             }
-
+        
             ImGui::EndDragDropTarget();
         }
-
+        
         // icons
-        const auto& components = _gameObject->GetComponents();
-        //if (components.size() > 0)
+        if (_gameObject)
         {
+            const auto & components = _gameObject->GetComponents();
             auto bakePos = ImGui::GetCursorPos();
             ImGui::SameLine();
 
             auto drawIcon = [=](const char * icon, bool enabled, float & totalSize, float availableWidth, ImVec2 pos, string tooltip)
-            {
-                auto size = ImGui::CalcTextSize(icon).x;
-                totalSize += size + ImGui::GetStyle().FramePadding.x;
+                {
+                    auto size = ImGui::CalcTextSize(icon).x;
+                    totalSize += size + ImGui::GetStyle().FramePadding.x;
 
-                ImVec4 textColor = ImGui::GetStyleColorVec4(ImGuiCol_Text);
+                    ImVec4 textColor = ImGui::GetStyleColorVec4(ImGuiCol_Text);
 
-                if (enabled)
-                    textColor.w *= 1;
-                else
-                    textColor.w *= disabledAlpha;
+                    if (enabled)
+                        textColor.w *= 1;
+                    else
+                        textColor.w *= disabledAlpha;
 
-                ImGui::SetCursorPosX(availableWidth - totalSize);
-                ImGui::SetCursorPosY(pos.y);
-                ImGui::PushStyleColor(ImGuiCol_Text, textColor);
-                ImGui::Text(icon);
+                    ImGui::SetCursorPosX(availableWidth - totalSize);
+                    ImGui::SetCursorPosY(pos.y);
+                    ImGui::PushStyleColor(ImGuiCol_Text, textColor);
+                    ImGui::Text(icon);
 
-                if (ImGui::IsItemHovered(ImGuiHoveredFlags_AllowWhenDisabled))
-                    ImGui::SetTooltip(tooltip.c_str());
+                    if (ImGui::IsItemHovered(ImGuiHoveredFlags_AllowWhenDisabled))
+                        ImGui::SetTooltip(tooltip.c_str());
 
-                ImGui::PopStyleColor();
-            };
+                    ImGui::PopStyleColor();
+                };
 
             float totalSize = 0;
             for (i64 i = components.size() - 1; i >= 0; --i)
             {
-                const auto* component = components[i];
-                const auto* componentClassDesc = component->getClassDesc();
+                const auto * component = components[i];
+                const auto * componentClassDesc = component->GetClassDesc();
                 auto icon = componentClassDesc->GetIcon();
                 bool enabled = asBool(ComponentFlags::Enabled & component->GetComponentFlags());
                 string tooltip = fmt::sprintf("%s", componentClassDesc->GetDescription());
@@ -404,6 +414,8 @@ namespace vg::editor
         const string sceneTypeName = asString(_sceneType);
         const auto typeInfo = getGameObjectTreeTypeInfo(_sceneType);
 
+        m_originalTextColor = ImGui::GetStyleColorVec4(ImGuiCol_Text);
+
         ImGui::PushID(sceneTypeName.c_str());
 
         auto worldRes = getEngine()->GetWorldResource();
@@ -427,7 +439,6 @@ namespace vg::editor
             {
                 const auto* factory = Kernel::getFactory();
                 engine::IEngine* engine = (engine::IEngine*)factory->getSingleton("Engine");
-                auto& fileBrowser = ImGuiWindow::getFileBrowser();
 
                 engine::IWorldResource* worldRes = engine->GetWorldResource();
                 IWorld* world = worldRes ? worldRes->GetWorld() : nullptr;
@@ -435,6 +446,7 @@ namespace vg::editor
                 if (world)
                 {
                     bool openPopup = false;
+                    bool openFileDialog = false;
 
                     if (ImGui::BeginPopupContextWindow())
                     {
@@ -450,23 +462,26 @@ namespace vg::editor
                     if (newScene)
                     {
                         m_selected = MenuOption::AddScene;
-                        openPopup = true;
+                        openFileDialog = true;
                         m_popup = typeInfo.newLabel;
-                        fileBrowser.setFolder(io::getRootDirectory() + "/" + typeInfo.dataFolder);
                     }
 
                     if (loadScene)
                     {
                         m_selected = MenuOption::LoadScene;
-                        openPopup = true;
+                        openFileDialog = true;
                         m_popup = typeInfo.loadLabel;
-                        fileBrowser.setFolder(io::getRootDirectory() + "/" + typeInfo.dataFolder);
                     }
 
                     if (openPopup)
                     {
                         ImGui::OpenPopup(m_popup.c_str());
                         openPopup = false;
+                    }
+                    else if (openFileDialog)
+                    {
+                        ImGui::OpenFileDialog(m_popup, typeInfo.fileExt, typeInfo.dataFolder);
+                        openFileDialog = false;
                     }
 
                     string ext = ImGuiWindow::getFileBrowserExt(worldRes);
@@ -475,19 +490,23 @@ namespace vg::editor
                     {
                     case MenuOption::AddScene:
                     {
-                        if (fileBrowser.showFileDialog(m_popup, imgui_addons::ImGuiFileBrowser::DialogMode::SAVE, style::dialog::Size, typeInfo.fileExt.c_str()))
+                        if (ImGui::DisplayFileDialog(m_popup))
                         {
-                            const string path = io::addExtensionIfNotPresent(fileBrowser.selected_path, typeInfo.fileExt.c_str());
-                            worldRes->CreateSceneResource(path, _sceneType);
+                            if (ImGui::IsFileDialogOK())
+                                worldRes->CreateSceneResource(ImGui::GetFileDialogSelectedFile(), _sceneType);
+
+                            ImGui::CloseFileDialog();
                         }
                     }
                     break;
 
                     case MenuOption::LoadScene:
-                        if (fileBrowser.showFileDialog(m_popup, imgui_addons::ImGuiFileBrowser::DialogMode::OPEN, style::dialog::Size, typeInfo.fileExt.c_str()))
+                        if (ImGui::DisplayFileDialog(m_popup))
                         {
-                            const string path = fileBrowser.selected_path;
-                            worldRes->LoadSceneResource(path, _sceneType);
+                            if (ImGui::IsFileDialogOK())
+                                worldRes->LoadSceneResource(ImGui::GetFileDialogSelectedFile(), _sceneType);
+
+                            ImGui::CloseFileDialog();
                         }
                         break;
                     }

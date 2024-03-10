@@ -200,27 +200,27 @@ namespace vg::gfx
     }
 
     //--------------------------------------------------------------------------------------
-    void FrameGraph::setupNode(UserPassInfoNode & _node, float _dt)
+    void FrameGraph::setupNode(UserPassInfoNode & _node)
     {
         VG_PROFILE_CPU(_node.m_name.c_str());
 
         for (auto & child : _node.m_children)
-            setupNode(child, _dt);
+            setupNode(child);
 
         if (_node.m_userPass)
         {
             _node.m_userPass->m_userPass->reset();
-            _node.m_userPass->m_userPass->Setup(_node.m_userPass->m_renderContext, _dt);
+            _node.m_userPass->m_userPass->Setup(_node.m_userPass->m_renderContext);
         }
     }
 
 	//--------------------------------------------------------------------------------------
-	void FrameGraph::setup(float _dt)
+	void FrameGraph::setup()
 	{
         VG_PROFILE_CPU("setup");
 
         for (UserPassInfoNode & node : m_userPassInfoTree.m_children)
-            setupNode(node, _dt);
+            setupNode(node);
 	}  
 
     //--------------------------------------------------------------------------------------

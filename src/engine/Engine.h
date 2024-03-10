@@ -56,7 +56,7 @@ namespace vg::engine
 
         const Time &                            GetTime             () const final override;
 
-        const char *                            getClassName        () const final { return "Engine"; }
+        const char *                            GetClassName        () const final { return "Engine"; }
         bool                                    RegisterClasses     () override;
         bool                                    UnregisterClasses   ();
         static bool                             registerProperties  (core::IClassDesc & _desc);
@@ -87,6 +87,7 @@ namespace vg::engine
         const core::vector<core::IWorld *> &    GetWorlds           () const final override;
 
 		void							        RunOneFrame	        () final override;
+        void                                    FlushLoading        () final override;
 
         core::uint2                             getScreenSize       () const final;
 
@@ -100,8 +101,9 @@ namespace vg::engine
         bool                                    SaveWorld           () final override;
         bool                                    SaveWorldAs         (const core::string & _filename) final override;
         bool                                    LoadWorld           (const core::string & _filename) final override;
-
         IWorldResource *                        GetWorldResource    () final override;
+
+        bool                                    SaveScene           (core::IResource * _sceneRes) final override;
 
         IEngineOptions *                        GetOptions          () final override;
 

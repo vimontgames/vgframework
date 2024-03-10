@@ -23,7 +23,9 @@ namespace vg::engine
     World::World(const string & _name, IObject * _parent) :
         IWorld(_name, _parent),
         m_isPlaying(false),
-        m_isPaused(false)
+        m_isPaused(false),
+        m_isFixedDT(false),
+        m_timeScale(1.0f)
     {
         for (uint j = 0; j < enumCount<BaseSceneType>(); ++j)
             m_activeScene[j] = nullptr;
@@ -89,6 +91,12 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
+    bool World::IsPrefabWorld() const
+    {
+        return asBool(ObjectFlags::Prefab & getObjectFlags());
+    }
+
+    //--------------------------------------------------------------------------------------
     bool World::SetActiveScene(IBaseScene * _scene, BaseSceneType _sceneType)
     {
         const auto typeIndex = asInteger(_sceneType);
@@ -151,6 +159,7 @@ namespace vg::engine
             if (m_activeScene[typeIndex] == _scene)
                 SetActiveScene(nullptr, _sceneType);
 
+            _scene->setParent(nullptr);
             _scene->release();
         }
         return false;
@@ -194,6 +203,18 @@ namespace vg::engine
     bool World::IsPaused() const
     {
         return isPaused();
+    }
+
+    //--------------------------------------------------------------------------------------
+    void World::SetTimeScale(float _timeScale)
+    {
+        setTimeScale(_timeScale);
+    }
+
+    //--------------------------------------------------------------------------------------
+    float World::GetTimeScale(bool _ignorePause) const
+    {
+        return getTimeScale(_ignorePause);
     }
 
     //--------------------------------------------------------------------------------------
@@ -279,5 +300,17 @@ namespace vg::engine
                     root->OnStop();
             }
         }
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool World::IsUsingFixedDeltaTime() const
+    {
+        return m_isFixedDT;
+    }
+
+    //--------------------------------------------------------------------------------------
+    void World::SetUseFixedDeltaTime(bool _fixedDeltaTime)
+    {
+        m_isFixedDT = _fixedDeltaTime;
     }
 }

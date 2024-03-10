@@ -10,7 +10,7 @@ namespace vg::editor
     //--------------------------------------------------------------------------------------
     bool ImGuiObjectHandler::display(core::IObject * _object)
     {
-        auto handler = Find(_object->getClassName());
+        auto handler = Find(_object->GetClassName());
         if (nullptr != handler)
         {
             handler->displayObject(_object);

@@ -126,12 +126,23 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
-    const IClassDesc * Object::getClassDesc() const
+    void  Object::SetClassDesc(const IClassDesc * _classDesc)
     {
-        const auto * factory = Kernel::getFactory();
-        if (factory)
-            return factory->getClassDescriptor(getClassName());
-        return nullptr;
+        VG_ASSERT(nullptr == m_classDesc);
+        m_classDesc = _classDesc;
+    }
+
+    //--------------------------------------------------------------------------------------
+    const IClassDesc * Object::GetClassDesc() const
+    {
+        if (!m_classDesc)
+        {
+            const auto * factory = Kernel::getFactory();
+            if (factory)
+                m_classDesc = factory->getClassDescriptor(GetClassName());
+        }
+        VG_ASSERT(m_classDesc);
+        return m_classDesc;
     }
 
 	//--------------------------------------------------------------------------------------

@@ -1,13 +1,17 @@
 #pragma once
 
 #include "renderer/IGraphicInstance.h"
-#include "core/Misc/BitMask.h"
+#include "core/Misc/BitMask/BitMask.h"
+
+namespace vg::core
+{
+    class AABB;
+}
 
 namespace vg::renderer
 {
     class MaterialModel;
     class View;
-    class AABB;
 
     struct Frustum;
     struct CullingResult;
@@ -50,7 +54,7 @@ namespace vg::renderer
         VG_INLINE core::uint                            getGPUInstanceDataOffset    () const;
         VG_INLINE const core::BitMask &                 getBatchMask                () const;
 
-        virtual bool                                    GetAABB                     (AABB & _aabb) const = 0;
+        //virtual bool                                    TryGetAABB                  (core::AABB & _aabb) const = 0;
         virtual bool                                    Cull                        (CullingResult * _cullingResult, View * _view) = 0;
         virtual void                                    OnMaterialChanged           (core::uint _index) {}
         virtual bool                                    OnUpdateRayTracing          (gfx::CommandList * _cmdList, View * _view, core::uint _index) = 0;

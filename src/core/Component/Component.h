@@ -27,6 +27,10 @@ namespace vg::core
         UpdateFlags                 GetUpdateFlags          () const final override;
         void                        SetUpdateFlags          (UpdateFlags _flags, bool _enabled = true) final override;
 
+        bool                        TryGetAABB              (AABB & _aabb) const { return false; }
+
+        const core::string          GetSubObjectName        (core::uint _subObjectIndex) const override;
+
         VG_INLINE ComponentFlags    getComponentFlags       () const;
         VG_INLINE void              setComponentFlags       (ComponentFlags _flags, bool _enabled);
 

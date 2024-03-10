@@ -8,8 +8,9 @@
 #include "gfx/BindlessTable/BindlessTable.h"
 #include "gfx/Device/Device.h"
 #include "editor/Editor_Consts.h"
-
+#include "ImGuiFileDialog/ImGuiFileDialog.cpp"
 #include "IconFont/IconsFontAwesome6.h"
+#include "editor/Editor_Consts.h"
 
 using namespace vg::core;
 using namespace vg::gfx;
@@ -649,5 +650,17 @@ namespace vg::renderer
             m_warningColor = ImVec4(0.5f, 0.4f, 0.0f, 1.0f);
             m_errorColor = ImVec4(0.6f, 0.0f, 0.0f, 1.0f);
         }
+
+        // TODO : DLL context!
+        const auto textColor = ImGui::GetStyleColorVec4(ImGuiCol_Text);
+        ImGuiFileDialog * fileDialog = ImGuiFileDialog::Instance();
+
+        fileDialog->SetFileStyle(IGFD_FileStyleByExtention, ".world", textColor, editor::style::icon::World);
+        fileDialog->SetFileStyle(IGFD_FileStyleByExtention, ".scene", textColor, editor::style::icon::Scene);
+        fileDialog->SetFileStyle(IGFD_FileStyleByExtention, ".prefab", textColor, editor::style::icon::Prefab);
+        fileDialog->SetFileStyle(IGFD_FileStyleByExtention, ".fbx", textColor, editor::style::icon::Mesh);
+
+        fileDialog->SetFileStyle(IGFD_FileStyleByTypeDir, "", textColor, editor::style::icon::Folder);
+        fileDialog->SetFileStyle(IGFD_FileStyleByTypeFile, "", textColor, editor::style::icon::File);
     }
 }

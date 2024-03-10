@@ -14,7 +14,7 @@ namespace vg::engine
 
         const core::vector<core::string>    getExtensions               () const final;
         core::IObject*                      load                        (const core::string & _path) final override;
-        bool                                CreateFile                  (const core::string & _path);
+        bool                                CreateFile                  (const core::string & _path, core::IObject * _data = nullptr) override;
         bool                                SaveFile                    (const core::string & _path) const override;
 
     private:

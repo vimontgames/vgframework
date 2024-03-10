@@ -1,15 +1,15 @@
 #include "Frustum.h"
-#include "renderer/Geometry/AABB/AABB.h"
+#include "core/Misc/AABB/AABB.h"
 
 namespace vg::renderer
 {
     //--------------------------------------------------------------------------------------
     // Local AABB x world vs. Frustum
     //--------------------------------------------------------------------------------------
-    FrustumTest Frustum::intersects(const AABB & _aabb, const core::float4x4 & _world) const
+    FrustumTest Frustum::intersects(const core::AABB & _aabb, const core::float4x4 & _world) const
     {
         FrustumTest result = FrustumTest::Inside;
-        AABB worldAABB(_aabb, _world);
+        core::AABB worldAABB(_aabb, _world);
 
         for (uint i = 0; i < countof(planes); ++i)
         {

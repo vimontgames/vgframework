@@ -214,6 +214,7 @@ namespace vg::editor
                                 IComponent * comp = (IComponent *)Kernel::getFactory()->createObject(m_selectedClass->GetClassName(), "New " + (string)m_selectedClass->GetClassName(), _object);
                                 if (comp)
                                 {
+                                    comp->SetObjectFlags(ObjectFlags::Opened, true);
                                     gameObject->AddComponent(comp);
                                     comp->release();
                                     status = Status::Success;

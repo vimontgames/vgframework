@@ -39,6 +39,7 @@ namespace vg::core
 
                 // Types that support enumArray
                 case Type::Resource:
+                case Type::Uint8:
                 case Type::Float4:
                     if (asBool(IProperty::Flags::EnumArray & _flags))
                     {
@@ -165,7 +166,7 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
-    const char * Property::getClassName() const
+    const char * Property::GetClassName() const
     {
         return className;
     }
@@ -253,11 +254,11 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
-    core::u8 * Property::GetPropertyUint8(const IObject * _object) const
+    core::u8 * Property::GetPropertyUint8(const IObject * _object, uint _index) const
     {
         VG_ASSERT(nullptr != _object);
         VG_ASSERT(Type::Uint8 == getType() || Type::EnumU8 == getType() || Type::EnumFlagsU8 == getType());
-        return (u8*)(uint_ptr(_object) + offset);
+        return (u8*)(uint_ptr(_object) + offset + _index * sizeof(u8));
     }
 
     //--------------------------------------------------------------------------------------

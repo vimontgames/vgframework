@@ -28,6 +28,7 @@ namespace vg::engine
         void                        OnStop              () final override;
 
         void                        OnPropertyChanged   (core::IObject * _object, const core::IProperty & _prop, bool _notifyParent) final override;
+        bool                        TryGetAABB          (core::AABB & _aabb) const final override;
 
     private:
         static physics::IPhysics *  getPhysics          ();
@@ -47,5 +48,7 @@ namespace vg::engine
 
         // debug
         physics::GroundState         m_groundState  = (physics::GroundState)-1;
+        vg::core::u8                 m_delayState[core::enumCount<physics::GroundState>()];
+        vg::core::u8                 m_delayStateCounter[core::enumCount<physics::GroundState>()];
     };
 }

@@ -25,7 +25,7 @@ namespace vg::renderer
         OmniLightInstance(const OmniLightDesc * _omniLightDesc);
         ~OmniLightInstance();
 
-        bool            GetAABB             (AABB & _aabb) const final override;
+        bool            TryGetAABB          (core::AABB & _aabb) const final override;
         bool            Cull                (CullingResult * _cullingResult, View * _view) final override;
         void            Draw                (const RenderContext & _renderContext, gfx::CommandList * _cmdList) const final override;
 

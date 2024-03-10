@@ -224,10 +224,10 @@ namespace vg::engine
             {
                 ResourceInfo & loaded = *it->second;
 
-                VG_ASSERT(loaded.GetResourceType() == _resource->getClassName(), "[Resource] Resource \"%s\" is already loaded as a '%s' resource and cannot also be loaded as a `%s`' resource", _newPath.c_str(), loaded.GetResourceType().c_str(), _resource->getClassName());
+                VG_ASSERT(loaded.GetResourceType() == _resource->GetClassName(), "[Resource] Resource \"%s\" is already loaded as a '%s' resource and cannot also be loaded as a `%s`' resource", _newPath.c_str(), loaded.GetResourceType().c_str(), _resource->GetClassName());
                 
                 // TODO : make resource type part of the hash and cooked name to that we e.g. can have a 'MeshResource' and an 'AnimationResource' from the same FBX file?
-                if (loaded.GetResourceType() == _resource->getClassName())
+                if (loaded.GetResourceType() == _resource->GetClassName())
                 {
                     // Add to client list
                     loaded.m_clients.push_back(_resource);
@@ -255,7 +255,7 @@ namespace vg::engine
         else
         {
             if (!_newPath.empty())
-                VG_WARNING("[Resource] Could not find file \"%s\"", _newPath.c_str());
+                VG_ERROR("[Resource] Could not find file \"%s\"", _newPath.c_str());
         }
     }
 

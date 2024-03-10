@@ -12,7 +12,7 @@ using namespace vg::core;
 
 namespace vg::engine
 {
-    VG_REGISTER_COMPONENT_CLASS(RigidBodyComponent, "RigidBody", "Physics", "Rigid body to interact with physics world", editor::style::icon::RigidBody);
+    VG_REGISTER_COMPONENT_CLASS(RigidBodyComponent, "RigidBody", "Physics", "Rigid body to interact with physics world", editor::style::icon::RigidBody, 0);
 
     //--------------------------------------------------------------------------------------
     bool RigidBodyComponent::registerProperties(core::IClassDesc & _desc)
@@ -289,5 +289,17 @@ namespace vg::engine
     void RigidBodyComponent::onResourceUnloaded(core::IResource * _resource)
     {
 
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool RigidBodyComponent::TryGetAABB(core::AABB & _aabb) const
+    {
+        if (m_shapeDesc)
+        {
+            if (m_shapeDesc->TryGetAABB(_aabb))
+                return true;
+        }
+
+        return false;
     }
 }

@@ -5,7 +5,7 @@ namespace vg::physics
     class PhysicsJob : public vg::core::Job
     {
     public:
-        const char * getClassName() const final { return "PhysicsJob"; }
+        const char * GetClassName() const final { return "PhysicsJob"; }
 
         PhysicsJob(JobSystemAdapter::Job * _jphJob);
         ~PhysicsJob();

@@ -83,7 +83,9 @@ namespace vg::editor
             {
                 IInput * input = Kernel::getInput();
                 
-                const bool alt = input->IsKeyPressed(Key::LALT);
+                const bool ctrl = input->IsKeyPressed(Key::LCONTROL) || input->IsKeyPressed(Key::RCONTROL);
+                const bool alt = input->IsKeyPressed(Key::LALT) || input->IsKeyPressed(Key::RALT);
+                const bool shift = input->IsKeyPressed(Key::LSHIFT) || input->IsKeyPressed(Key::RSHIFT);
 
                 if (alt)
                 {
@@ -97,7 +99,7 @@ namespace vg::editor
                 
                 const int3 delta = input->GetMouseDelta();
 
-                if (input->IsKeyPressed(Key::LSHIFT))
+                if (shift)
                     moveSpeed *= 16.0f;
 
                 if (input->IsMouseButtonPressed(MouseButton::Middle))
@@ -146,7 +148,7 @@ namespace vg::editor
                 }
 
                 // zoom
-                if (delta.z != 0)
+                if (!ctrl && delta.z != 0)
                 {
                     //VG_DEBUGPRINT("[EditorCam] Zoom %i\n", (int)delta.z);
                     T.xyz = T.xyz - (float)(delta.z) * zoomSpeed * zoomDir;
@@ -154,7 +156,7 @@ namespace vg::editor
                 else
                 {
                     // zoom using keyboard
-                    if (!input->IsKeyPressed(Key::LCONTROL))
+                    if (!ctrl)
                     {
                         if (input->IsKeyPressed(Key::W))
                             T -= moveSpeed * K;
@@ -238,13 +240,48 @@ namespace vg::editor
     }
 
     //--------------------------------------------------------------------------------------
+    core::string ImGuiView::GetTitle() const
+    {
+        string title;
+
+        const string & name = getIconizedName();
+
+        if (any(m_size > 0) && m_view && m_view->IsVisible())
+            title = fmt::sprintf("%s %ux%u###%s", name, (uint)m_size.x, (uint)m_size.y, name);
+        else
+            title = fmt::sprintf("%s###%s", name, name);
+
+        return title;
+    }
+
+    //--------------------------------------------------------------------------------------
     void ImGuiView::DrawGUI()
     {
         float padding = 1;
 
         // TODO : update editor camera *BEFORE* render?
         if (m_target == gfx::ViewTarget::Editor)
-            updateEditorCamera(getEngine()->GetTime().m_dt);
+            updateEditorCamera(getEngine()->GetTime().m_realDeltaTime);
+
+        // Update
+        {
+            auto * editor = Editor::get();
+            auto * selection = editor->getSelection();
+            auto selectedObjects = selection->GetSelectedObjects();
+            auto topLevelGameObjects = selection->RemoveChildGameObjectsWithParents(selectedObjects);
+
+            if (!ImGui::IsAnyItemActive())
+            {
+                if (ImGui::IsKeyPressed(ImGuiKey_F) && topLevelGameObjects.size() > 0)
+                {
+                    editor->focus(topLevelGameObjects);
+                }
+                else if (ImGui::IsKeyPressed(ImGuiKey_Delete) && topLevelGameObjects.size() > 0)
+                {
+                    editor->deleteGameObjects(topLevelGameObjects);
+                }
+            }
+        }
 
         auto * renderer = Editor::get()->getRenderer();
 
@@ -264,13 +301,7 @@ namespace vg::editor
         // Using "###" to display a changing title but keep a static identifier "AnimatedTitle"
         // https://skia.googlesource.com/external/github.com/ocornut/imgui/+/refs/tags/v1.73/imgui_demo.cpp
 
-        const string & name = getIconizedName();
-        string title;
-        
-        if (any(m_size > 0) && m_view && m_view->IsVisible())
-            title = fmt::sprintf("%s %ux%u###%s", name, (uint)m_size.x, (uint)m_size.y, name);
-        else
-            title = fmt::sprintf("%s###%s", name, name);
+        string title = GetTitle();        
 
         if (m_closeNextFrame)
         {
@@ -278,16 +309,31 @@ namespace vg::editor
             m_closeNextFrame = false;
         }
 
+        const bool active = m_view && m_view->IsActive();
+        if (active)
+            ImGui::PushStyleColor(ImGuiCol_WindowBg, ImGui::GetStyleColorVec4(ImGuiCol_TabActive));
+
         if (ImGui::Begin(title.c_str(), &m_isVisible, ImGuiWindowFlags_NoFocusOnAppearing | ImGuiWindowFlags_NoNavInputs))
         {
+            // Menu
+            if (ShowTitlebarMenu())
+            {
+                ImGui::PopStyleVar();
+                DrawTitlebarMenu();
+                ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(padding, padding));
+            }
+
             // Toolbar
             bool hasToolbar = ShowToolbar();
             float posY = ImGui::GetCursorPosY();
             if (hasToolbar)
             {
-                ImGui::Spacing();
                 ImGui::PopStyleVar();
+                ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(0, 0));
+
                 DrawToolbar();
+                ImGui::PopStyleVar();
+
                 ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(padding, padding));
             }
             float toolbarHeight = ImGui::GetCursorPosY() - posY;
@@ -306,8 +352,6 @@ namespace vg::editor
             m_size.y = (uint)max(0, (int)m_size.y- (int)toolbarHeight);
 
             m_size.xy = max(m_size.xy, uint2(1, 1));
-
-            bool draw = true;
 
             if (!m_view)
             {
@@ -348,7 +392,6 @@ namespace vg::editor
                     renderer->AddView(m_view);
                     m_view->setName(getName());
                 }
-                draw = false;
             }  
 
             if (!UpdateScene())
@@ -373,19 +416,28 @@ namespace vg::editor
 
                 // Tell the Renderer we resized stuff to clean up no more used buffers
                 renderer->SetResized();
-
-                draw = false;
             }
 
             // Set mouse offset
             ImVec2 mouseOffset = ImGui::GetCursorScreenPos();
             m_view->SetMouseOffset(uint2(mouseOffset.x, mouseOffset.y));
 
+            auto pos = ImGui::GetCursorPos();
             if (texture)
             {
                 auto * imGuiAdapter = renderer->GetImGuiAdapter();
                 ImTextureID texID = imGuiAdapter->GetTextureID(texture);
-                ImGui::Image(texID, ImVec2((float)m_size.x, (float)m_size.y));
+
+                auto * window = ImGui::FindWindowByName(title.c_str());
+
+                ImGuiDockNode * node = window->DockNode;
+                const bool is_drag_docking = GImGui->MovingWindow == window;
+                const float alpha = is_drag_docking ? 0.5f : 1.0f;
+
+                ImGui::Image(texID, ImVec2((float)m_size.x, (float)m_size.y), ImVec2(0,0), ImVec2(1,1), ImVec4(1,1,1, alpha));
+
+                if (ShowContextMenu())
+                    DrawContextMenu();              
 
                 if (ImGui::IsWindowFocused())
                     m_view->SetActive(true);
@@ -393,7 +445,7 @@ namespace vg::editor
                     m_view->SetActive(false);
 
                 imGuiAdapter->ReleaseTextureID(texID);
-            }
+            }   
 
             const auto options = EditorOptions::get();
             bool debugCulling = options->IsDebugCulling();
@@ -435,9 +487,9 @@ namespace vg::editor
 
             bool activeGizmo = false;
 
-            if (m_view && m_view->IsActive())
+            if (m_view)
             {
-                if (!drawGizmo())
+                if (!drawGizmo() && m_view->IsActive())
                 {
                     // Update picking if not currently manipulating gizmos
                     auto * renderer = Editor::get()->getRenderer();
@@ -474,6 +526,10 @@ namespace vg::editor
                 m_view->SetVisible(false);
             }
         }
+
+
+        if (active)
+            ImGui::PopStyleColor();
 
         ImGui::PopStyleColor();
         ImGui::PopStyleVar();
@@ -619,5 +675,54 @@ namespace vg::editor
         }
 
         return false;
+    }
+
+    //--------------------------------------------------------------------------------------
+    void ImGuiView::focus(IGameObject * _gameObject)
+    {
+        core::vector<core::IGameObject * > array;
+        array.push_back(_gameObject);
+        focus(array);
+    }
+
+    //--------------------------------------------------------------------------------------
+    void ImGuiView::focus(const core::vector<core::IGameObject * > & _gameObjects)
+    {
+        if (_gameObjects.size() > 0)
+        {
+            const float3 offset = normalize(m_editorCam.m_matrix[2].xyz);
+            core::AABB aabb;
+            aabb.reset();
+
+            for (uint i = 0; i < _gameObjects.size(); ++i)
+            {
+                const IGameObject * gameObject = _gameObjects[i];
+                const auto world = gameObject->getGlobalMatrix();
+
+                core::AABB gameObjectAABB;
+                if (gameObject->TryGetAABB(gameObjectAABB))
+                {
+                    gameObjectAABB = AABB::transform(gameObjectAABB, world);
+                    aabb.grow(gameObjectAABB);
+                }     
+                else
+                {
+                    aabb.grow(world[3].xyz);
+                }
+            }      
+
+            VG_ASSERT(aabb.isFinite());
+            
+            float3 center = aabb.center();
+            m_editorCam.m_matrix[3].xyz = center + offset * aabb.radius() * 3.1417f;
+
+            setWindowFocus();
+        }
+    }
+
+    //--------------------------------------------------------------------------------------
+    void ImGuiView::setWindowFocus()
+    {
+        ImGui::SetWindowFocus(GetTitle().c_str());
     }
 }

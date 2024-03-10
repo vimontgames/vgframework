@@ -65,7 +65,7 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    bool MeshInstance::GetAABB(AABB & _aabb) const
+    bool MeshInstance::TryGetAABB(core::AABB & _aabb) const
     {
         if (auto * model = getMeshModel(Lod::Lod0))
         {
@@ -85,7 +85,7 @@ namespace vg::renderer
 
         if (nullptr != meshModel)
         {
-            const AABB & aabb = meshModel->getGeometry()->getAABB();
+            const core::AABB & aabb = meshModel->getGeometry()->getAABB();
 
             bool visible = _view->getCameraFrustum().intersects(aabb, getGlobalMatrix()) != FrustumTest::Outside || asBool(IInstance::RuntimeFlags::NoCulling & getRuntimeFlags());
 
@@ -223,7 +223,8 @@ namespace vg::renderer
     //--------------------------------------------------------------------------------------
     void MeshInstance::OnMaterialChanged(core::uint _index)
     {
-        updateInstanceBLAS();
+        if (Model * model = getModel(Lod::Lod0))
+            updateInstanceBLAS();
     }
 
     //--------------------------------------------------------------------------------------
@@ -598,6 +599,21 @@ namespace vg::renderer
             }
         }
         return false;
+    }
+
+    //--------------------------------------------------------------------------------------
+    core::string MeshInstance::GetBatchName(core::uint _batchIndex) const
+    {
+        if (const MeshModel * model = VG_SAFE_STATIC_CAST(MeshModel, getModel(Lod::Lod0)))
+        {
+            if (auto * geo = model->getGeometry())
+            {
+                const auto & batches = geo->batches();
+                if (_batchIndex < batches.size())
+                    return batches[_batchIndex].getName();
+            }
+        }
+        return "";
     }
 
     //--------------------------------------------------------------------------------------

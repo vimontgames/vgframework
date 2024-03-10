@@ -9,6 +9,7 @@
 #include "gfx/IView.h"
 #include "Shaders/system/toolmode.hlsl.h"
 #include "renderer/IMeshInstance.h"
+#include "editor/Editor_Consts.h" // should not include Editor from here
 
 using namespace vg::core;
 
@@ -88,25 +89,38 @@ namespace vg::renderer
                             IGameObject * go = dynamic_cast<IGameObject *>(parent);
                             if (nullptr != go)
                             {
+                                bool autoSelectParentPrefab = false;
                                 auto * parentPrefab = go->GetParentPrefab();
                                 if (parentPrefab)
                                 {
-                                    go = parentPrefab;
+                                    bool prefabSelected = selection->IsSelectedObject(parentPrefab);
 
+                                    if (!prefabSelected)
+                                    {
+                                        go = parentPrefab;
+                                        autoSelectParentPrefab = true;
+                                    }
+                                }
+
+                                if (autoSelectParentPrefab)
+                                {
                                     if (_showTooltip)
-                                        _tooltipMsg = fmt::sprintf("Prefab \"%s\"", go->getName());
+                                        _tooltipMsg = fmt::sprintf("%s %s", editor::style::icon::Prefab, go->getName());
                                 }
                                 else
                                 {
                                     if (_showTooltip)
                                     {
-                                        //char temp[256];
-                                        //sprintf_s(temp, "GameObject \"%s\"\n%s \"%s\" (ID %u)\nSubID = %u\nCounter = %u\nWorldPos = (%.2f, %.2f, %.2f) Depth = %f", go->getName().c_str(), component->getClassName(), component->getName().c_str(), (uint)id.x, (uint)id.y, _view->GetPickingRequestedHitCount(), (float)pos.x, (float)pos.y, (float)pos.z, (float)pos.w);
-                                        _tooltipMsg = fmt::sprintf("GameObject \"%s\"", go->getName());
+                                        _tooltipMsg = fmt::sprintf("%s %s", editor::style::icon::GameObject, go->getName());
+
+                                        string subObjectName = component->GetSubObjectName((uint)id.y);
+                                        if (!subObjectName.empty())
+                                            _tooltipMsg += fmt::sprintf(", %s", subObjectName);
                                     }
                                 }
 
-                                _tooltipDbg = fmt::sprintf("\n%s \"%s\" (ID %u)\nSubID = %u\nCounter = %u\nWorldPos = (%.2f, %.2f, %.2f) Depth = %f", component->getClassName(), component->getName().c_str(), (uint)id.x, (uint)id.y, _view->GetPickingRequestedHitCount(), (float)pos.x, (float)pos.y, (float)pos.z, (float)pos.w);
+                                if (_showTooltip)
+                                    _tooltipDbg = fmt::sprintf("\n\n%s \"%s\" (ID %u, %u)\nCounter = %u\nWorldPos = (%.2f, %.2f, %.2f) Depth = %f", component->GetClassName(), component->getName().c_str(), (uint)id.x, (uint)id.y, _view->GetPickingRequestedHitCount(), (float)pos.x, (float)pos.y, (float)pos.z, (float)pos.w);
 
                                 if (input->IsMouseButtonJustPressed(MouseButton::Left))
                                 {
@@ -131,7 +145,27 @@ namespace vg::renderer
                 }
             }
 
-            if (!isValidPicking)
+            // ensure top-level selected objects are expanded
+            if (isValidPicking)
+            {
+                const auto selectedObject = selection->GetSelectedObjects();
+                const auto topSelectedObjects = selection->RemoveChildGameObjectsWithParents(selectedObject);
+                for (uint i = 0; i < topSelectedObjects.size(); ++i)
+                {
+                    auto * obj = dynamic_cast<IGameObject *>(topSelectedObjects[i]);
+                    if (obj)
+                    {
+                        // Open all parents but not the object itself
+                        obj = dynamic_cast<IGameObject *>(obj->getParent());
+                        while (nullptr != obj)
+                        {
+                            obj->SetObjectFlags(ObjectFlags::Opened, true);
+                            obj = dynamic_cast<IGameObject *>(obj->getParent());
+                        }
+                    }
+                }
+            }
+            else
             {
                 if (input->IsMouseButtonJustPressed(MouseButton::Left))
                 {

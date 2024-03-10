@@ -30,19 +30,19 @@ namespace vg::core
     //--------------------------------------------------------------------------------------
     void Component::FixedUpdate(float _dt)
     {
-        VG_ASSERT(false, "Component '%s' does not implement 'FixedUpdate'", getClassName());
+        VG_ASSERT(false, "Component '%s' does not implement 'FixedUpdate'", GetClassName());
     }
 
     //--------------------------------------------------------------------------------------
     void Component::Update(float _dt) 
     {
-        VG_ASSERT(false, "Component '%s' does not implement 'Update'", getClassName());
+        VG_ASSERT(false, "Component '%s' does not implement 'Update'", GetClassName());
     }
 
     //--------------------------------------------------------------------------------------
     void Component::LateUpdate(float _dt) 
     {
-        VG_ASSERT(false, "Component '%s' does not implement 'LateUpdate'", getClassName());
+        VG_ASSERT(false, "Component '%s' does not implement 'LateUpdate'", GetClassName());
     }
 
     //--------------------------------------------------------------------------------------
@@ -60,6 +60,8 @@ namespace vg::core
     //--------------------------------------------------------------------------------------
     bool Component::registerProperties(IClassDesc & _desc)
     {
+        super::registerProperties(_desc);
+
         registerPropertyEnumBitfield(Component, ComponentFlags, m_flags, "Flags");
 
         return true;
@@ -88,4 +90,11 @@ namespace vg::core
     {
         setUpdateFlags(_flags, _enabled);
     }
+
+    //--------------------------------------------------------------------------------------
+    const core::string Component::GetSubObjectName(core::uint _subObjectIndex) const 
+    { 
+        VG_ASSERT_NOT_IMPLEMENTED(); 
+        return ""; 
+    };
 }

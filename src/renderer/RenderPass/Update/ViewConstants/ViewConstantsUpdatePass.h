@@ -13,12 +13,12 @@ namespace vg::renderer
     class ViewConstantsUpdatePass : public UpdatePass
     {
     public:
-        const char * getClassName() const final { return "ViewConstantsUpdatePass"; }
+        const char * GetClassName() const final { return "ViewConstantsUpdatePass"; }
 
         ViewConstantsUpdatePass();
         ~ViewConstantsUpdatePass();
 
-        void	Setup(const gfx::RenderPassContext & _renderPassContext, float _dt) final override;
+        void	Setup(const gfx::RenderPassContext & _renderPassContext) final override;
         void	BeforeRender(const gfx::RenderPassContext & _renderPassContext, gfx::CommandList * _cmdList) final override;
 
     protected:

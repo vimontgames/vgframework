@@ -14,7 +14,7 @@ using namespace vg::core;
 
 namespace vg::engine
 {
-    VG_REGISTER_COMPONENT_CLASS(LightComponent, "Light", "Rendering", "Light component to light up scene", editor::style::icon::Light);
+    VG_REGISTER_COMPONENT_CLASS(LightComponent, "Light", "Rendering", "Light component to light up scene", editor::style::icon::Light, 0);
 
     //--------------------------------------------------------------------------------------
     bool LightComponent::registerProperties(IClassDesc & _desc)
@@ -152,5 +152,17 @@ namespace vg::engine
 
         if (m_light)
             m_light->SetInstanceFlags(InstanceFlags::Enabled, asBool(ComponentFlags::Enabled & GetComponentFlags()));
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool LightComponent::TryGetAABB(core::AABB & _aabb) const
+    {
+        if (m_light)
+        {
+            if (m_light->TryGetAABB(_aabb))
+                return true;
+        }
+
+        return false;
     }
 }

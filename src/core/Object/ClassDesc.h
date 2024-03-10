@@ -7,11 +7,17 @@ namespace vg::core
 {
     struct ClassDesc final : public IClassDesc
     {
+        ClassDesc();
+        ~ClassDesc();
+
         bool                                IsRegisteredProperty        (const char * _propertyName) final override;
 
         void                                RegisterPropertyLayout      (const char * _className, IProperty::LayoutElementType _layoutElementType, const char * _label, bool * _offset, IProperty::Flags _flags = IProperty::Flags::None) final override;
 
         void                                RegisterProperty            (const char * _className, const char * _propertyName, bool * _offset, const char * _displayName, IProperty::Flags _flags) final override;
+        void                                RegisterProperty            (const char * _className, const char * _propertyName, core::i8 * _offset, const char * _displayName, IProperty::Flags _flags) final override;
+        void                                RegisterProperty            (const char * _className, const char * _propertyName, core::i16 * _offset, const char * _displayName, IProperty::Flags _flags) final override;
+        void                                RegisterProperty            (const char * _className, const char * _propertyName, core::i32 * _offset, const char * _displayName, IProperty::Flags _flags) final override;
         void                                RegisterProperty            (const char * _className, const char * _propertyName, core::u8 * _offset, const char * _displayName, IProperty::Flags _flags) final override;
         void                                RegisterProperty            (const char * _className, const char * _propertyName, core::u16 * _offset, const char * _displayName, IProperty::Flags _flags) final override;
         void                                RegisterProperty            (const char * _className, const char * _propertyName, core::u32 * _offset, const char * _displayName, IProperty::Flags _flags) final override;
@@ -43,6 +49,7 @@ namespace vg::core
         void								RegisterEnum                (const char * _className, const char * _propertyName, core::u32 * _offset, const char * _displayName, u32 _enumCount, const char * _enumNames, const u32 * _enumValues, IProperty::Flags _flags) final override;
         void								RegisterEnum                (const char * _className, const char * _propertyName, core::u64 * _offset, const char * _displayName, u32 _enumCount, const char * _enumNames, const u64 * _enumValues, IProperty::Flags _flags) final override;
 
+        void                                RegisterEnumArray           (const char * _className, const char * _propertyName, core::u8 * _offset, const char * _displayName, uint _enumCount, uint _elementSize, const char * _enumNames, const void * _enumValues, IProperty::Flags _flags, uint _enumSizeOf) final override;
         void                                RegisterEnumArray           (const char * _className, const char * _propertyName, core::float4 * _offset, const char * _displayName, uint _enumCount, uint _elementSize, const char * _enumNames, const void * _enumValues, IProperty::Flags _flags, uint _enumSizeOf) final override;
         void                                RegisterEnumArray           (const char * _className, const char * _propertyName, IResource * _offset, const char * _displayName, uint _enumCount, uint _elementSize, const char * _enumNames, const void * _enumValues, IProperty::Flags _flags, uint _enumSizeOf) final override;
         void                                RegisterEnumArray           (const char * _className, const char * _propertyName, IObject * _offset, const char * _displayName, uint _enumCount, uint _elementSize, const char * _enumNames, const void * _enumValues, IProperty::Flags _flags, uint _enumSizeOf) final override;
@@ -57,10 +64,12 @@ namespace vg::core
         const char *                        GetCategory                 () const final override;
         const char *                        GetDescription              () const final override;
         const char *                        GetIcon                     () const final override;
+        Priority                            GetPriority                 () const final override;
 
         void                                SetCategory                 (const char * _category) final override;
         void                                SetDescription              (const char * _description) final override;
         void                                SetIcon                     (const char * _icon) final override;
+        void                                SetPriority                 (Priority _priority) final override;
 
         uint                                GetPropertyCount            () const final override;
         const IProperty *                   GetPropertyByIndex          (uint _index) const final override;
@@ -82,11 +91,12 @@ namespace vg::core
         const char *                        icon                        = nullptr;
         IClassDesc::Flags                   flags                       = IClassDesc::Flags::None;
         u32                                 sizeOf                      = 0;
+        Priority                            priority                    = 0;
         IClassDesc::Func                    createFunc                  = nullptr;
         IClassDesc::SingletonFunc           createSingletonFunc         = nullptr;
         IClassDesc::ResizeVectorFunc        resizeVectorFunc            = nullptr;
-        vector<Property>                    properties;
 
+        vector<Property>                    properties;
         mutable u32                         count = 0;
 
     private:

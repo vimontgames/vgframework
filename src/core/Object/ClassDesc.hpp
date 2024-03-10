@@ -1,9 +1,21 @@
 #include "ClassDesc.h"
 #include "core/IResource.h"
-#include "core/Misc/BitMask.h"
+#include "core/Misc/BitMask/BitMask.h"
 
 namespace vg::core
 {
+    //--------------------------------------------------------------------------------------
+    ClassDesc::ClassDesc()
+    {
+
+    }
+
+    //--------------------------------------------------------------------------------------
+    ClassDesc::~ClassDesc()
+    {
+
+    }
+
     //--------------------------------------------------------------------------------------
     u32 ClassDesc::GetNextIndex() const
     {
@@ -99,12 +111,6 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
-    void ClassDesc::RegisterProperty(const char * _className, const char * _propertyName, core::u32 * _offset, const char * _displayName, IProperty::Flags _flags)
-    {
-        registerClassMemberT(_className, _propertyName, _offset, _displayName, _flags);
-    }
-
-    //--------------------------------------------------------------------------------------
     void ClassDesc::RegisterProperty(const char * _className, const char * _propertyName, core::uint2 * _offset, const char * _displayName, IProperty::Flags _flags)
     {
         registerClassMemberT(_className, _propertyName, _offset, _displayName, _flags);
@@ -123,6 +129,24 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
+    void ClassDesc::RegisterProperty(const char * _className, const char * _propertyName, core::i8 * _offset, const char * _displayName, IProperty::Flags _flags)
+    {
+        registerClassMemberT(_className, _propertyName, _offset, _displayName, _flags);
+    }
+
+    //--------------------------------------------------------------------------------------
+    void ClassDesc::RegisterProperty(const char * _className, const char * _propertyName, core::i16 * _offset, const char * _displayName, IProperty::Flags _flags)
+    {
+        registerClassMemberT(_className, _propertyName, _offset, _displayName, _flags);
+    }
+
+    //--------------------------------------------------------------------------------------
+    void ClassDesc::RegisterProperty(const char * _className, const char * _propertyName, core::i32 * _offset, const char * _displayName, IProperty::Flags _flags)
+    {
+        registerClassMemberT(_className, _propertyName, _offset, _displayName, _flags);
+    }
+
+    //--------------------------------------------------------------------------------------
     void ClassDesc::RegisterProperty(const char * _className, const char * _propertyName, core::u8 * _offset, const char * _displayName, IProperty::Flags _flags)
     {
         registerClassMemberT(_className, _propertyName, _offset, _displayName, _flags);
@@ -130,6 +154,12 @@ namespace vg::core
 
     //--------------------------------------------------------------------------------------
     void ClassDesc::RegisterProperty(const char * _className, const char * _propertyName, core::u16 * _offset, const char * _displayName, IProperty::Flags _flags)
+    {
+        registerClassMemberT(_className, _propertyName, _offset, _displayName, _flags);
+    }
+
+    //--------------------------------------------------------------------------------------
+    void ClassDesc::RegisterProperty(const char * _className, const char * _propertyName, core::u32 * _offset, const char * _displayName, IProperty::Flags _flags)
     {
         registerClassMemberT(_className, _propertyName, _offset, _displayName, _flags);
     }
@@ -285,6 +315,18 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
+    ClassDesc::Priority ClassDesc::GetPriority() const
+    {
+        return priority;
+    }
+    
+    //--------------------------------------------------------------------------------------
+    void ClassDesc::SetPriority(Priority _priority)
+    {
+        priority = _priority;
+    }
+
+    //--------------------------------------------------------------------------------------
     uint ClassDesc::GetPropertyCount() const
     {
         return (uint)properties.size();
@@ -322,13 +364,17 @@ namespace vg::core
 
     template <typename T> struct TypeToEnum;
     template <> struct TypeToEnum<bool> { static constexpr auto value = IProperty::Type::Bool; };
+    template <> struct TypeToEnum<core::i8> { static constexpr auto value = IProperty::Type::Int8; };
+    template <> struct TypeToEnum<core::i16> { static constexpr auto value = IProperty::Type::Int16; };
+    template <> struct TypeToEnum<core::i32> { static constexpr auto value = IProperty::Type::Int32; };
+    template <> struct TypeToEnum<core::i64> { static constexpr auto value = IProperty::Type::Int64; };
     template <> struct TypeToEnum<core::u8> { static constexpr auto value = IProperty::Type::Uint8; };
     template <> struct TypeToEnum<core::u16> { static constexpr auto value = IProperty::Type::Uint16; };
     template <> struct TypeToEnum<core::u32> { static constexpr auto value = IProperty::Type::Uint32; };
+    template <> struct TypeToEnum<core::u64> { static constexpr auto value = IProperty::Type::Uint64; };
     template <> struct TypeToEnum<core::uint2> { static constexpr auto value = IProperty::Type::Uint2; };
     template <> struct TypeToEnum<core::uint3> { static constexpr auto value = IProperty::Type::Uint3; };
     template <> struct TypeToEnum<core::uint4> { static constexpr auto value = IProperty::Type::Uint4; };
-    template <> struct TypeToEnum<core::u64> { static constexpr auto value = IProperty::Type::Uint64; };
     template <> struct TypeToEnum<float> { static constexpr auto value = IProperty::Type::Float; };
     template <> struct TypeToEnum<core::float2> { static constexpr auto value = IProperty::Type::Float2; };
     template <> struct TypeToEnum<core::float3> { static constexpr auto value = IProperty::Type::Float3; };
@@ -368,6 +414,12 @@ namespace vg::core
         //    VG_ASSERT(type == IProperty::Type::Object);
 
         properties.emplace_back(_className, _propertyName, type, (uint_ptr)_offset, _elementSize, _displayName, IProperty::Flags::EnumArray | _flags, _enumCount, _enumNames, _enumValues, _enumSizeOf);
+    }
+
+    //--------------------------------------------------------------------------------------
+    void ClassDesc::RegisterEnumArray(const char * _className, const char * _propertyName, core::u8 * _offset, const char * _displayName, uint _enumCount, uint _elementSize, const char * _enumNames, const void * _enumValues, IProperty::Flags _flags, uint _enumSizeOf)
+    {
+        registerEnumArrayT(_className, _propertyName, _offset, _displayName, _enumCount, _elementSize, _enumNames, _enumValues, _flags, _enumSizeOf);
     }
 
     //--------------------------------------------------------------------------------------

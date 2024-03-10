@@ -51,8 +51,12 @@ namespace vg::editor
         void                    OnPropertyChanged       (IObject * _object, const core::IProperty & _prop, bool _notifyParent) final override;
 
         bool                    setGizmoType            (GizmoType _gizmoType);
+        void                    setNextGizmo            ();
+        void                    setPreviousGizmo        ();
+
         bool                    setSnap                 (bool _enable);
         bool                    getSnap                 () const;
+
 
         const GizmoOptions &    getGizmoOptions         () const { return m_gizmo; }
         GizmoOptions &          getGizmoOptions         () { return m_gizmo; }

@@ -8,11 +8,11 @@ namespace vg::renderer
     class DepthPrePass final : public DepthOnlyPass
     {
     public:
-        const char * getClassName() const final { return "DepthPrepass"; }
+        const char * GetClassName() const final { return "DepthPrepass"; }
 
         DepthPrePass();
         ~DepthPrePass();
 
-        void Setup(const gfx::RenderPassContext & _renderPassContext, float _dt) final override;
+        void Setup(const gfx::RenderPassContext & _renderPassContext) final override;
     };
 }

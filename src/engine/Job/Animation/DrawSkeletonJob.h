@@ -8,7 +8,7 @@ namespace vg::engine
     class DrawSkeletonJob : public core::Job
     {
     public:
-        const char * getClassName() const final { return "DrawSkeletonJob"; }
+        const char * GetClassName() const final { return "DrawSkeletonJob"; }
 
         DrawSkeletonJob(MeshComponent * _meshComponent);
         void run() override;

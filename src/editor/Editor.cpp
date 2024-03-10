@@ -4,19 +4,20 @@
 #include "core/IResource.h"
 #include "core/IGameObject.h"
 #include "core/File/File.h"
+#include "core/Timer/Timer.h"
 #include "renderer/IRenderer.h"
 #include "renderer/IImGuiAdapter.h"
 #include "engine/IEngine.h"
 #include "engine/IWorldResource.h"
 #include "editor/ImGui/Extensions/ImGuizmo/ImGuizmoAdapter.h"
 #include "editor/Options/EditorOptions.h"
-#include "ImGui-Addons/FileBrowser/ImGuiFileBrowser.h"
 
 #if !VG_ENABLE_INLINE
 #include "Editor.inl"
 #endif
 
 #include "editor/ImGui/Extensions/imguiExtensions.h"
+#include "editor/imgui/Extensions/FileDialog/ImGuiFileDialog.h"
 #include "editor/ImGui/Window/FPS/ImGuiFPS.h"
 #include "editor/ImGui/Window/Plugin/ImGuiPlugin.h"
 #include "editor/ImGui/Window/Platform/ImGuiPlatform.h"
@@ -34,9 +35,11 @@
 #include "editor/ImGui/Window/View/GameView/ImGuiGameView.h"
 #include "editor/ImGui/Window/Console/ImGuiConsole.h"
 #include "editor/ImGui/Window/Input/ImGuiInput.h"
+#include "editor/ImGui/Window/Time/ImGuiTime.h"
 #include "editor/ImGui/Toolbar/Main/ImGuiMainToolbar.h"
 #include "editor/ImGui/Window/View/PrefabView/ImGuiPrefabView.h"
 #include "editor/ImGui/Window/Statistics/ImGuiStatistics.h"
+#include "ImGuiFileDialog/ImGuiFileDialog.h"
 
 using namespace vg::core;
 using namespace vg::editor;
@@ -107,6 +110,8 @@ namespace vg::editor
         m_imGuiWindows.push_back(new ImGuiInput());
         m_imGuiWindows.push_back(new ImGuiAbout());  
         m_imGuiWindows.push_back(new ImGuiStatistics());
+        m_imGuiWindows.push_back(new ImGuiTime());
+
         // Add ImGui toolbars
         m_imGuiWindows.push_back(new ImGuiMainToolbar("Main Toolbar", ImGuiWindow::StartVisible));
 
@@ -161,6 +166,8 @@ namespace vg::editor
 	{
         // Get existing Singletons
         Kernel::setSingletons(_singletons);
+
+        Timer::init();
 
         RegisterClasses();
 
@@ -244,16 +251,33 @@ namespace vg::editor
         const bool shift = input->IsKeyPressed(Key::LSHIFT) || input->IsKeyPressed(Key::RSHIFT);
         const bool ctrl = input->IsKeyPressed(Key::LCONTROL) || input->IsKeyPressed(Key::RCONTROL);
 
-        if (ctrl && !shift)
+        //if (!ctrl && !shift)
+        //{
+        //    if (input->IsKeyJustPressed(Key::T))
+        //        options->setGizmoType(GizmoType::Translate);
+        //    else if (input->IsKeyJustPressed(Key::R))
+        //        options->setGizmoType(GizmoType::Rotate);
+        //    else if (input->IsKeyJustPressed(Key::S))
+        //        options->setGizmoType(GizmoType::Scale);
+        //    else if (input->IsKeyJustPressed(Key::A))
+        //        options->setSnap(options->getSnap());
+        //}
+
+        auto wheel = input->GetMouseDelta().z;
+        if (ctrl && wheel != 0)
         {
-            if (input->IsKeyJustPressed(Key::T))
-                options->setGizmoType(GizmoType::Translate);
-            else if (input->IsKeyJustPressed(Key::R))
-                options->setGizmoType(GizmoType::Rotate);
-            else if (input->IsKeyJustPressed(Key::S))
-                options->setGizmoType(GizmoType::Scale);
-            else if (input->IsKeyJustPressed(Key::A))
-                options->setSnap(options->getSnap());
+            static core::Timer::Tick lastGizmoChangedTick = core::Timer::getTick();
+            auto delay = Timer::getEnlapsedTime(lastGizmoChangedTick, Timer::getTick());
+
+            if (delay > 100.0f) // 0.1 sec
+            {
+                if (wheel > 0)
+                    options->setNextGizmo();
+                else if (wheel < 0)
+                    options->setPreviousGizmo();
+
+                lastGizmoChangedTick = core::Timer::getTick();
+            }
         }
 
         // Update Editor views cameras
@@ -290,8 +314,9 @@ namespace vg::editor
 	{
         VG_PROFILE_CPU("DrawGUI");
 
-        auto * imGuiContext = (ImGuiContext*)_context.ptr;
+        auto * imGuiContext = (ImGuiContext*)_context.imgui;
         ImGui::SetCurrentContext(imGuiContext);
+        ImGuiFileDialog::Instance((ImGuiFileDialog *)_context.filedialog);
 
         ImGuiViewport * viewport = ImGui::GetMainViewport();
         ImGui::SetNextWindowPos(viewport->WorkPos, ImGuiCond_Appearing, ImVec2(0.0f, 0.0f));
@@ -562,7 +587,6 @@ namespace vg::editor
         string saveFilePopupName = "Save World";
         string saveAsFilePopupName = "Save World As";
 
-        auto & fileBrowser = ImGuiWindow::getFileBrowser();
         string ext = ImGuiWindow::getFileBrowserExt(worldRes);
 
         const auto worldFolder = ImGuiWindow::getDefaultFolder("WorldResource");
@@ -570,18 +594,15 @@ namespace vg::editor
 
         if (createNewWorld)
         {
-            fileBrowser.setFolder(worldFolder);
-            ImGui::OpenPopup(newWorldPopupName.c_str());
+            OpenFileDialog(newWorldPopupName, ext, worldFolder);
         }
         else if (loadWorld)
         {
-            fileBrowser.setFolder(worldFolder);
-            ImGui::OpenPopup(openFilePopupName.c_str());
+            OpenFileDialog(openFilePopupName, ext, worldFolder);
         }
         else if (saveWorldAs)
         {
-            fileBrowser.setFolder(worldFolder);
-            ImGui::OpenPopup(saveAsFilePopupName.c_str());
+            SaveFileDialog(saveAsFilePopupName, ext, worldFolder);
         }
         else if (saveWorld)
         {
@@ -601,32 +622,54 @@ namespace vg::editor
                 m_imGuiWindows[i]->DrawGUI();
             }
         }
-
-        // Create new file
-        if (fileBrowser.showFileDialog(newWorldPopupName.c_str(), imgui_addons::ImGuiFileBrowser::DialogMode::SAVE, style::dialog::Size, ext.c_str()))
+        
+        // Create new ".world" file
+        if (DisplayFileDialog(newWorldPopupName))
         {
-            // Close all prefab views when creating new world
-            auto prefabViews = getWindows<ImGuiPrefabView>();
-            for (auto * prefabView : prefabViews)
-                prefabView->m_isVisible = false;
+            if (ImGui::IsFileDialogOK())
+            {                 
+                // Close all prefab views when creating new world
+                auto prefabViews = getWindows<ImGuiPrefabView>();
+                for (auto * prefabView : prefabViews)
+                    prefabView->m_isVisible = false;
+                
+                engine->CreateWorld(io::addExtensionIfNotPresent(GetFileDialogSelectedFile(), ext));
+            }
 
-            engine->CreateWorld(io::addExtensionIfNotPresent(fileBrowser.selected_path, ".world"));
+            ImGui::CloseFileDialog();
         }
 
         // Open existing file
-        if (fileBrowser.showFileDialog(openFilePopupName.c_str(), imgui_addons::ImGuiFileBrowser::DialogMode::OPEN, style::dialog::Size, ext.c_str()))
+        if (DisplayFileDialog(openFilePopupName))
         {
-            // Close all prefab views when loading new world
-            auto prefabViews = getWindows<ImGuiPrefabView>();
-            for (auto * prefabView : prefabViews)
-                prefabView->m_isVisible = false;
+            if (ImGui::IsFileDialogOK())
+            {
+                // Close all prefab views when loading new world
+                auto prefabViews = getWindows<ImGuiPrefabView>();
+                for (auto * prefabView : prefabViews)
+                    prefabView->m_isVisible = false;
 
-            engine->LoadWorld(fileBrowser.selected_path);
+                engine->LoadWorld(GetFileDialogSelectedFile());
+            }
+
+            ImGui::CloseFileDialog();
         }
 
         // Save as 
-        if (fileBrowser.showFileDialog(saveAsFilePopupName.c_str(), imgui_addons::ImGuiFileBrowser::DialogMode::SAVE, style::dialog::Size, ext.c_str()))
-            engine->SaveWorldAs(io::addExtensionIfNotPresent(fileBrowser.selected_path, ".world"));
+        if (DisplayFileDialog(saveAsFilePopupName))
+        {
+            if (ImGui::IsFileDialogOK())
+            {
+                // Close all prefab views when loading new world
+                auto prefabViews = getWindows<ImGuiPrefabView>();
+                for (auto * prefabView : prefabViews)
+                    prefabView->m_isVisible = false;
+
+                engine->SaveWorldAs(GetFileDialogSelectedFile());
+            }
+
+            ImGui::CloseFileDialog();
+        }            
 
         if (showImGuiDemo)
             ImGui::ShowDemoWindow(&showImGuiDemo);
@@ -636,6 +679,7 @@ namespace vg::editor
     void Editor::openPrefabView(const core::IResource * _prefabRes)
     {
         // Create or show window
+        auto * editor = Editor::get();
         auto * prefabView = getWindow<ImGuiPrefabView>(io::getFileNameWithoutExt(_prefabRes->GetResourcePath()));
 
         if (prefabView)
@@ -644,9 +688,86 @@ namespace vg::editor
         }
         else
         {
-            auto prefabView = new ImGuiPrefabView(_prefabRes);
+            prefabView = new ImGuiPrefabView(_prefabRes);
             prefabView->setName(io::getFileNameWithoutExt(_prefabRes->GetResourcePath()));
-            Editor::get()->m_imGuiWindows.push_back(prefabView);
+            editor->m_imGuiWindows.push_back(prefabView);
         }
+
+        if (prefabView)
+            prefabView->setWindowFocus();
+    }
+
+    //--------------------------------------------------------------------------------------
+    void Editor::focus(core::IGameObject * _gameObject)
+    {
+        core::vector<core::IGameObject *> gameObjects;
+        gameObjects.push_back(_gameObject);
+        focus(gameObjects);
+    }
+
+    //--------------------------------------------------------------------------------------
+    void Editor::focus(const core::vector<core::IGameObject *> &_gameObjects)
+    {
+        if (_gameObjects.size() > 0)
+        {
+            IWorld * world = _gameObjects[0]->GetWorld();
+            auto * scene = _gameObjects[0]->GetScene();
+
+            for (uint i = 1; i < _gameObjects.size(); ++i)
+            {
+                VG_ASSERT(_gameObjects[i]->GetWorld() == world);
+                VG_ASSERT(_gameObjects[i]->GetScene() == scene);
+            }
+
+            const auto sceneType = scene->GetSceneType();
+
+            auto imGuiViews = getWindows<ImGuiView>();
+
+            for (ImGuiView * view : imGuiViews)
+            {
+                switch (sceneType)
+                {
+                default:
+                    break;
+
+                case BaseSceneType::Scene:
+                {
+                    if (view->GetViewTarget() == gfx::ViewTarget::Editor && view->GetViewIndex() == 0)
+                        view->focus(_gameObjects);
+                }
+                break;
+
+                case BaseSceneType::Prefab:
+                {
+                    if (world == view->GetWorld())
+                        view->focus(_gameObjects);
+                }
+                break;
+                }
+            }
+        }
+    }
+
+    //--------------------------------------------------------------------------------------
+    void Editor::deleteGameObjects(core::vector<IGameObject *> & _gameObjects)
+    {
+        ImGui::OnMsgBoxClickedFunc deleteGameObject = [=]() mutable
+            {
+                for (uint i = 0; i < _gameObjects.size(); ++i)
+                {
+                    IGameObject * gameObjectToDelete = _gameObjects[i];
+                    IGameObject * parentGameObject = dynamic_cast<IGameObject *>(gameObjectToDelete->getParent());
+                    if (nullptr != parentGameObject)
+                        parentGameObject->RemoveChild(gameObjectToDelete);
+                }
+                return true;
+            };
+
+        string msg;
+        if (_gameObjects.size() > 1)
+            msg = "Are you sure you want to delete " + to_string(_gameObjects.size()) + " GameObjects and their children?";
+        else
+            msg = "Are you sure you want to delete " + (string)_gameObjects[0]->GetClassName() + " \"" + _gameObjects[0]->getName() + "\"?";
+        ImGui::MessageBox(MessageBoxType::YesNo, "Delete GameObject", msg.c_str(), deleteGameObject);
     }
 }

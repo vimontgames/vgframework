@@ -62,7 +62,7 @@ namespace vg::editor
                                 return true;
                             };
 
-                        string msg = fmt::sprintf("Are you sure you want to delete %s component from \"%s\"?", component->getClassName(), component->getParent()->getName());
+                        string msg = fmt::sprintf("Are you sure you want to delete %s component from \"%s\"?", component->GetClassName(), component->getParent()->getName());
                         ImGui::MessageBox(MessageBoxType::YesNo, "Delete Component", msg.c_str(), deleteComponent);
 
                         ImGui::EndPopup();

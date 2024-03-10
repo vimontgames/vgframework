@@ -4,6 +4,7 @@
 #include "renderer/Importer/SceneImporterData.h"
 #include "core/File/File.h"
 #include "ufbx/ufbx.c"
+#include "core/string/string.h"
 
 using namespace vg::core;
 
@@ -339,6 +340,7 @@ namespace vg::renderer
             }
 
             Batch batch;
+                  batch.setName(UFbxMeshMat->material ? UFbxMeshMat->material->name.data : fmt::sprintf("Material %u", i).c_str());
                   batch.count = batchIndexCount;
                   batch.offset = startIndex;
             batches.push_back(batch);

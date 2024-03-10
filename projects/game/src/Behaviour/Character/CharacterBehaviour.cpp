@@ -84,30 +84,8 @@ void CharacterBehaviour::OnStop()
 //--------------------------------------------------------------------------------------
 void CharacterBehaviour::PlayAnim(CharacterState _state, bool _loop)
 {
-    IAnimationComponent* animationComponent = GetGameObject()->GetComponentByType<IAnimationComponent>();
-
-    for (uint i = 0; i < vg::core::countof(m_anim); ++i)
-    {
-        if (_state != i)
-        {
-            if (IAnimationResource* anim = animationComponent->GetAnimation(m_anim[i]))
-            {
-                if (anim->IsPlaying())
-                    anim->Stop();
-            }
-        }
-    }
-
-    if (IAnimationResource* anim = animationComponent->GetAnimation(m_anim[_state]))
-    {
-        if (anim && !anim->IsPlaying())
-        {
-            if (_loop)
-                anim->PlayLoop();
-            else
-                anim->PlayOnce();
-        }
-    }
+    if (IAnimationComponent * animationComponent = GetGameObject()->GetComponentByType<IAnimationComponent>())
+        animationComponent->PlayAnimation(m_anim[_state], _loop, 1.0f);
 }
 
 //--------------------------------------------------------------------------------------
@@ -119,7 +97,7 @@ void CharacterBehaviour::FixedUpdate(float _dt)
 //--------------------------------------------------------------------------------------
 void CharacterBehaviour::Update(float _dt)
 {
-    auto* go = GetGameObject();
+    auto * go = GetGameObject();
     auto world = go->getGlobalMatrix();
     if (world[3].z < -32.0f)
     {

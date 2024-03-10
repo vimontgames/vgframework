@@ -6,6 +6,7 @@
 namespace vg::core
 {
     class IWorld;
+    class AABB;
 }
 
 namespace vg::physics
@@ -15,6 +16,7 @@ namespace vg::physics
     public:
         VG_CLASS_DECL_ABSTRACT(IShapeDesc, core::Object)
         virtual ShapeType GetShapeType() const = 0;
+        virtual bool TryGetAABB(core::AABB & _aabb) const = 0;
     };
 
     class IShape : public core::Object

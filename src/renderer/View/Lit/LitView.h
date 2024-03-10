@@ -21,7 +21,7 @@ namespace vg::renderer
     public:
         using super = View;
 
-        const char *                    getClassName        () const final override { return "ForwardView"; }
+        const char *                    GetClassName        () const final override { return "ForwardView"; }
 
                                         LitView             (const gfx::CreateViewParams & _params);
                                         ~LitView            ();

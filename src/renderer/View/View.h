@@ -37,7 +37,7 @@ namespace vg::renderer
     {
     public:
 
-        const char *                        getClassName                () const override { return "View"; }
+        const char *                        GetClassName                () const override { return "View"; }
 
                                             View                        (const gfx::CreateViewParams & _params);
                                             ~View                       ();

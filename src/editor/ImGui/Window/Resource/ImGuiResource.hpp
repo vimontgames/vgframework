@@ -106,7 +106,7 @@ namespace vg::editor
                                             IObject * material = nullptr;
                                             while (parent)
                                             {
-                                                if ((string)parent->getClassName() == "MaterialResourceData")
+                                                if ((string)parent->GetClassName() == "MaterialResourceData")
                                                 {
                                                     material = parent;
                                                     break;
@@ -163,7 +163,7 @@ namespace vg::editor
                                                 bool openResGameObject = ImGui::TreeNodeEx(clientLabel, ImGuiTreeNodeFlags_Leaf);
 
                                                 if (ImGui::IsItemHovered())
-                                                    ImGui::SetTooltip(component->getClassName());
+                                                    ImGui::SetTooltip(component->GetClassName());
 
                                                 if (openResGameObject)
                                                 {

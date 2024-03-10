@@ -42,6 +42,7 @@ namespace vg::renderer
 
 
         registerPropertyEx(LightDesc, m_color, "Color", IProperty::Flags::Color | IProperty::Flags::HDR);
+        registerPropertyEx(LightDesc, m_ambient, "Ambient", IProperty::Flags::Color | IProperty::Flags::HDR);
         registerProperty(LightDesc, m_intensity, "Intensity");
 
         return true;
@@ -55,6 +56,8 @@ namespace vg::renderer
     bool LightInstance::registerProperties(core::IClassDesc & _desc)
     {
         super::registerProperties(_desc);
+
+
 
         return true;
     }
@@ -71,6 +74,7 @@ namespace vg::renderer
         m_shadowIntensity = m_shadow ? _lightDesc->m_shadowIntensity : 0.0f;
 
         setColor(_lightDesc->m_color);
+        SetAmbient(_lightDesc->m_ambient);
         m_intensity = _lightDesc->m_intensity;
     }
 
@@ -78,6 +82,18 @@ namespace vg::renderer
     LightInstance::~LightInstance()
     {
         
+    }
+
+    //--------------------------------------------------------------------------------------
+    void LightInstance::SetAmbient(const float3 & _ambient)
+    {
+        setAmbient(_ambient);
+    }
+
+    //--------------------------------------------------------------------------------------
+    const core::float3 & LightInstance::GetAmbient() const
+    {
+        return getAmbient();
     }
 
     //--------------------------------------------------------------------------------------

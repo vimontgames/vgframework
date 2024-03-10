@@ -144,6 +144,9 @@ namespace vg::renderer
                 VG_ASSERT(!instance->IsSkinned());
                 auto * blas = instance->getInstanceBLAS();
                 MeshModel * meshModel = (MeshModel*)instance->getMeshModel(Lod::Lod0);
+                VG_ASSERT(nullptr != meshModel);
+                if (nullptr == meshModel)
+                    return;
 
                 // Create BLAS collection if it does not exist yet or it's key changed
                 gfx::BLASVariantKey key = instance->computeBLASVariantKey();

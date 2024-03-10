@@ -41,7 +41,7 @@ namespace vg::gfx
         using super = VG_GFXAPI::Buffer;
 
     public:
-        const char * getClassName() const final { return "Buffer"; }
+        const char * GetClassName() const final { return "Buffer"; }
 
         Buffer(const BufferDesc & _bufDesc, const core::string & _name, const void * _initData = nullptr, ReservedSlot _reservedSlot = ReservedSlot::None);
         ~Buffer();

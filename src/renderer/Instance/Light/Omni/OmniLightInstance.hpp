@@ -61,7 +61,7 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    bool OmniLightInstance::GetAABB(AABB & _aabb) const
+    bool OmniLightInstance::TryGetAABB(core::AABB & _aabb) const
     {
         float radius = getMaxRadius();
         _aabb = AABB(-radius, +radius);

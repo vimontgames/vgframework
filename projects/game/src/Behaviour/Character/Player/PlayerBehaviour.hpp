@@ -9,7 +9,7 @@
 using namespace vg::core;
 using namespace vg::engine;
 
-VG_REGISTER_COMPONENT_CLASS(PlayerBehaviour, "Player", "Game", "Player Behaviour", vg::editor::style::icon::Script); 
+VG_REGISTER_COMPONENT_CLASS(PlayerBehaviour, "Player", "Game", "Player Behaviour", vg::editor::style::icon::Script, -2); 
 
 //--------------------------------------------------------------------------------------
 PlayerBehaviour::PlayerBehaviour(const string & _name, IObject * _parent) :
@@ -126,7 +126,7 @@ void PlayerBehaviour::FixedUpdate(float _dt)
                     jump = true;
             }
 
-            if (charaController && vg::physics::GroundState::InTheAir == charaController->GetGroundState())
+            if (charaController && vg::physics::GroundState::InAir == charaController->GetGroundState())
             {
                 m_state = CharacterState::Jumping;
 
@@ -134,8 +134,8 @@ void PlayerBehaviour::FixedUpdate(float _dt)
                 {
                     if (anim->IsFinished())
                         m_state = CharacterState::Idle;
-                }
-            }
+                }                    
+            }    
 
             if (charaController)
             {

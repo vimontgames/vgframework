@@ -106,7 +106,7 @@ namespace vg::core
 #endif
 
 #define VG_ASSERT_ENUM_NOT_IMPLEMENTED(value) VG_ASSERT(false, "case %s: is not implemented", vg::core::asString(value).c_str());
-#define VG_ASSERT_NOT_IMPLEMENTED() VG_ASSERT(false, "Function %s not implemented for class '%s'", __func__, getClassName())
+#define VG_ASSERT_NOT_IMPLEMENTED() VG_ASSERT(false, "Function %s not implemented for class '%s'", __func__, GetClassName())
 
 #define VG_STATIC_ASSERT(condition, message) static_assert(condition, message)
 #define VG_STATIC_ASSERT_NOT_IMPLEMENTED() VG_STATIC_ASSERT(false, "Function is not implemented")
@@ -128,6 +128,9 @@ namespace vg::core
 #else
 	#define VG_SAFE_STATIC_CAST(type, ptr) ((type*)ptr)
 #endif
+
+#define VG_ASSERT_IS_ALIGNED(address, alignment) VG_ASSERT(0 == (uint_ptr(address) & (alignment-1)), "%s (0x%016X) is not aligned to %u bytes", #address, address, alignment)
+
 
 #define VG_SAFE_FREE(p)	 { if (p) { free((void*)(p)); (p) = nullptr;} }
 #define VG_SAFE_DELETE(p)  { if (p) { delete (p); (p) = nullptr;} }

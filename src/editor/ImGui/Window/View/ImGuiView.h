@@ -13,33 +13,48 @@ namespace vg::editor
     class ImGuiView : public ImGuiWindow
     {
     public:
-                                    ImGuiView           (const char * _icon, const core::string & _path, const core::string & _name, Flags _flags, gfx::ViewTarget _target, core::uint _index = -1);
-                                    ~ImGuiView          ();
+                                        ImGuiView           (const char * _icon, const core::string & _path, const core::string & _name, Flags _flags, gfx::ViewTarget _target, core::uint _index = -1);
+                                        ~ImGuiView          ();
 
-        void                        updateEditorCamera  (float _dt);
+        void                            updateEditorCamera  (float _dt);
 
-        void                        DrawGUI             () final override;
+        core::string                    GetTitle            () const override;
+        void                            DrawGUI             () final override;
 
-        virtual bool                ShowToolbar         () { return false; }
-        virtual void                DrawToolbar         () {};
+        virtual bool                    ShowToolbar         () const { return false; }
+        virtual void                    DrawToolbar         () {};
 
-        virtual gfx::IView::Flags   GetViewFlags        () const; 
-        virtual core::IWorld*       GetWorld            () const;;
-        virtual void                OnCloseWindow       ();
-        virtual bool                UpdateScene         () { return true; };
+        virtual bool                    ShowContextMenu     () const { return false; }
+        virtual ImGuiMenu::Status       DrawContextMenu     () { return ImGuiMenu::Status::None; };
+
+        virtual bool                    ShowTitlebarMenu    () const { return false;};
+        virtual void                    DrawTitlebarMenu    () {};
+
+        virtual gfx::IView::Flags       GetViewFlags        () const; 
+        virtual core::IWorld*           GetWorld            () const;;
+        virtual void                    OnCloseWindow       ();
+        virtual bool                    UpdateScene         () { return true; };
+
+        const gfx::ViewTarget &         GetViewTarget       () const { return m_target;}
+        core::uint                      GetViewIndex        () const { return m_index; }
+
+        void                            setWindowFocus      ();
+
+        void                            focus               (core::IGameObject * _gameObject);
+        void                            focus               (const core::vector<core::IGameObject * > & _gameObjects);
 
     protected:
-        bool                        drawGizmo           ();
-        void                        updatePicking       (bool & _showTooltip, core::string & _tooltipMsg);
+        bool                            drawGizmo           ();
+        void                            updatePicking       (bool & _showTooltip, core::string & _tooltipMsg);
 
-    private:
-        gfx::ViewTarget             m_target            = gfx::ViewTarget::Game;
-        core::uint                  m_index             = -1;
-        core::uint2                 m_size              = core::uint2(0, 0);
-        gfx::IView *                m_view              = nullptr;
-        gfx::ITexture *             m_texture           = nullptr;
-        bool                        m_manipulating      = false;
-        bool                        m_closeNextFrame    = false;
+    protected:
+        gfx::ViewTarget                 m_target            = gfx::ViewTarget::Game;
+        core::uint                      m_index             = -1;
+        core::uint2                     m_size              = core::uint2(0, 0);
+        gfx::IView *                    m_view              = nullptr;
+        gfx::ITexture *                 m_texture           = nullptr;
+        bool                            m_manipulating      = false;
+        bool                            m_closeNextFrame    = false;
 
         struct EditorCamera
         {

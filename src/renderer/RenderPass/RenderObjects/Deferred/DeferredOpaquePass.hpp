@@ -24,7 +24,7 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    void DeferredOpaquePass::Setup(const gfx::RenderPassContext & _renderContext, float _dt)
+    void DeferredOpaquePass::Setup(const gfx::RenderPassContext & _renderContext)
     {
         auto size = _renderContext.m_view->GetSize();
 

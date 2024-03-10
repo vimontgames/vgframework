@@ -504,6 +504,22 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
+    bool Engine::SaveScene(core::IResource * _sceneRes)
+    {
+        IBaseScene * scene = VG_SAFE_STATIC_CAST(IBaseScene, _sceneRes->getObject());
+        if (nullptr != scene)
+        {
+            if (scene->hasFile())
+            {
+                IFactory * factory = Kernel::getFactory();
+                factory->saveToXML(scene, scene->getFile());
+                return true;
+            }
+        }
+        return false;        
+    }
+
+    //--------------------------------------------------------------------------------------
     IEngineOptions * Engine::GetOptions()
     {
         return EngineOptions::get();
@@ -584,7 +600,19 @@ namespace vg::engine
         static Timer::Tick previous = 0;
         Timer::Tick current = Timer::getTick();
         if (previous != 0)
-            m_time.m_dt = (float)(Timer::getEnlapsedTime(previous, current) * 0.001f); // use _dt in seconds for computations, not milliseconds
+            m_time.m_realDeltaTime = (float)(Timer::getEnlapsedTime(previous, current) * 0.001f); // use _dt in seconds for computations, not milliseconds
+
+        auto * mainWorld = GetMainWorld();
+        if (mainWorld && mainWorld->IsPlaying())
+        {
+            if (mainWorld->IsUsingFixedDeltaTime())
+                m_time.m_scaledDeltaTime = 1.0f / 144.0f;   // TODO: use real freq or custom?
+            else
+                m_time.m_scaledDeltaTime = m_time.m_realDeltaTime * mainWorld->GetTimeScale();
+        }
+        else
+            m_time.m_scaledDeltaTime = 0.0f;
+
         previous = current;
     }
 
@@ -596,6 +624,12 @@ namespace vg::engine
     }
 
     static bool g_RunningOneFrame = false;
+
+    //--------------------------------------------------------------------------------------
+    void Engine::FlushLoading()
+    {
+        m_resourceManager->updateLoading();
+    }
 
 	//--------------------------------------------------------------------------------------
 	void Engine::RunOneFrame()
@@ -612,13 +646,28 @@ namespace vg::engine
 
         m_resourceManager->updateLoading();
 
-        float dt = m_time.m_dt;
+        const float scaledDeltaTime = m_time.m_scaledDeltaTime;
+        const float realDeltaTime = m_time.m_realDeltaTime;
+
+        auto getWorldDeltaTime = [=](IWorld * _world)
+        {
+            if (_world->IsPrefabWorld())
+            {
+                return realDeltaTime;
+            }
+            else
+            {
+                return scaledDeltaTime;
+            }
+        };
 
         // FixedUpdate all GameObjects and components
         {
             VG_PROFILE_CPU("FixedUpdate");
             for (IWorld * world : GetWorlds())
             {
+                const float dt = getWorldDeltaTime(world);
+
                 for (uint i = 0; i < world->GetSceneCount(BaseSceneType::Scene); ++i)
                 {
                     const Scene * scene = (Scene *)world->GetScene(i, BaseSceneType::Scene);
@@ -630,13 +679,15 @@ namespace vg::engine
         }
 
         // This will use all available threads for physics
-        m_physics->RunOneFrame(m_time.m_dt);
+        m_physics->RunOneFrame(scaledDeltaTime);
 
         // Update
         {
             VG_PROFILE_CPU("Update");
             for (IWorld * world : GetWorlds())
             {
+                const float dt = getWorldDeltaTime(world);
+
                 for (uint i = 0; i < world->GetSceneCount(BaseSceneType::Scene); ++i)
                 {
                     const Scene * scene = (Scene *)world->GetScene(i, BaseSceneType::Scene);
@@ -659,6 +710,8 @@ namespace vg::engine
             VG_PROFILE_CPU("LateUpdate");
             for (IWorld * world : GetWorlds())
             {
+                const float dt = getWorldDeltaTime(world);
+
                 for (uint i = 0; i < world->GetSceneCount(BaseSceneType::Scene); ++i)
                 {
                     const Scene * scene = (Scene *)world->GetScene(i, BaseSceneType::Scene);
@@ -670,10 +723,10 @@ namespace vg::engine
         }
 
         if (m_editor)
-            m_editor->RunOneFrame(m_time.m_dt);
+            m_editor->RunOneFrame(-1);
 
-        // This will use all available threads for culling then rendering scene (TODO)
-        m_renderer->runOneFrame(m_time.m_dt);
+        // This will use all available threads for culling then rendering scene
+        m_renderer->runOneFrame();
 
         g_RunningOneFrame = false;
 	}

@@ -16,12 +16,12 @@ namespace vg::renderer
     class ImGuiPass : public gfx::UserPass
     {
     public:
-        const char * getClassName() const final { return "ImGuiPass"; }
+        const char * GetClassName() const final { return "ImGuiPass"; }
 
         ImGuiPass();
         ~ImGuiPass();
 
-        void Setup(const gfx::RenderPassContext & _renderContext, float _dt) override;
+        void Setup(const gfx::RenderPassContext & _renderContext) override;
         void Render(const gfx::RenderPassContext & _renderContext, gfx::CommandList * _cmdList) const override;
 
     private:

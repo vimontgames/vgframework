@@ -22,21 +22,22 @@ namespace vg::renderer
     public:
         VG_CLASS_DECL(MeshModel, IMeshModel);
 
-                                MeshModel               (const core::string & _name, core::IObject * _parent);
-                                ~MeshModel              ();
+                                    MeshModel               (const core::string & _name, core::IObject * _parent);
+                                    ~MeshModel              ();
 
-        core::uint              GetBatchCount           () const final override;
+        core::uint                  GetBatchCount           () const final override;
+        core::vector<core::string>  GetBatchNames           () const final override;
 
-        void                    setGeometry             (MeshGeometry * _geometry);
-        const MeshGeometry *    getGeometry             () const;
+        void                        setGeometry             (MeshGeometry * _geometry);
+        const MeshGeometry *        getGeometry             () const;
 
-        void                    setSkeleton             (Skeleton * _skeleton);
-        const Skeleton *        getSkeleton             () const;
+        void                        setSkeleton             (Skeleton * _skeleton);
+        const Skeleton *            getSkeleton             () const;
 
-        void                    clearBLASes             ();
-        gfx::BLASMap &          getBLASMap              () { return m_BLASMap; }
+        void                        clearBLASes             ();
+        gfx::BLASMap &              getBLASMap              () { return m_BLASMap; }
 
-        static MeshModel *      createFromImporterData  (const MeshImporterData & _data);
+        static MeshModel *          createFromImporterData  (const MeshImporterData & _data);
 
     private:
         template <VertexFormat F> static gfx::Buffer * createVertexBufferFromImporterData(const MeshImporterData & _data);

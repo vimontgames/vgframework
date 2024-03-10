@@ -145,6 +145,8 @@ PS_Output PS_Forward(VS_Output _input)
     // Material entries are only present once material is loaded, if matIndex is above limit then use the default material
     GPUMaterialData materialData = instanceDataHeader.getGPUMaterialData(instanceDataOffset, rootConstants3D.getMatID());
 
+    uv0 *= materialData.getTiling();
+
     float4 albedo = getAlbedo(materialData, uv0, _input.col, flags);
     float3 normal = getNormal(materialData, uv0, flags).xyz;
     float4 pbr = getPBR(materialData, uv0);
@@ -260,6 +262,8 @@ PS_OutputDeferred PS_Deferred(VS_Output _input)
 
     // Material entries are only present once material is loaded, if matIndex is above limit then use the default material
     GPUMaterialData materialData = instanceDataHeader.getGPUMaterialData(instanceDataOffset, rootConstants3D.getMatID());
+
+    uv0 *= materialData.getTiling();
 
     float4 albedo = getAlbedo(materialData, uv0, _input.col, flags);
     float3 normal = getNormal(materialData, uv0, flags).xyz;

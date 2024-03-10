@@ -23,7 +23,7 @@ namespace vg::editor
 
             ImGui::Separator();   
 
-            ImGui::BeginChild(ImGui::getObjectLabel("ChildWindow", this).c_str());
+            ImGui::BeginChild(ImGui::getObjectLabel("ChildWindow", this).c_str()); 
             {
             }
             ImGui::EndChild();

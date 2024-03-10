@@ -27,7 +27,7 @@ namespace vg::core
     class TestJob : public Job
     {
     public:
-        const char * getClassName() const final { return "TestJob"; }
+        const char * GetClassName() const final { return "TestJob"; }
 
         TestJob(const string & _name, IObject * _parent) :
             Job(_name, _parent)
@@ -53,7 +53,7 @@ namespace vg::core
     class RegisterWorkerThreadJob : public Job
     {
     public:
-        const char * getClassName() const final { return "RegisterWorkerThreadJob"; }
+        const char * GetClassName() const final { return "RegisterWorkerThreadJob"; }
 
         RegisterWorkerThreadJob(const string & _name, IObject * _parent = nullptr) :
             Job(_name, _parent)

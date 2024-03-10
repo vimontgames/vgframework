@@ -21,9 +21,6 @@
     <ClCompile Include="ImGui\PropertyHandler\ImGuiPropertyHandler.cpp">
       <Filter>ImGui\PropertyHandler</Filter>
     </ClCompile>
-    <ClCompile Include="ImGui\Extensions\FileBrowser\ImGuiFileBrowser.cpp">
-      <Filter>ImGui\Extensions\FileBrowser</Filter>
-    </ClCompile>
     <ClCompile Include="ImGui\ImGui.cpp">
       <Filter>ImGui</Filter>
     </ClCompile>
@@ -35,6 +32,9 @@
     </ClCompile>
     <ClCompile Include="ImGui\Window\Options\ImGuiOptionsWindow.cpp">
       <Filter>ImGui\Window\Options</Filter>
+    </ClCompile>
+    <ClCompile Include="ImGui\Extensions\FileDialog\ImGuiFileDialog.cpp">
+      <Filter>ImGui\Extensions\FileDialog</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -253,6 +253,18 @@
     <ClInclude Include="ImGui\Window\Statistics\ImGuiStatistics.hpp">
       <Filter>ImGui\Window\Statistics</Filter>
     </ClInclude>
+    <ClInclude Include="ImGui\Window\Time\ImGuiTime.h">
+      <Filter>ImGui\Window\Time</Filter>
+    </ClInclude>
+    <ClInclude Include="ImGui\Window\Time\ImGuiTime.hpp">
+      <Filter>ImGui\Window\Time</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\extern\ImGuiFileDialog\ImGuiFileDialogConfig.h">
+      <Filter>ImGui\Extensions\FileDialog\Config</Filter>
+    </ClInclude>
+    <ClInclude Include="ImGui\Extensions\FileDialog\ImGuiFileDialog.h">
+      <Filter>ImGui\Extensions\FileDialog</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Editor.def" />
@@ -328,9 +340,6 @@
     <Filter Include="ImGui\PropertyHandler">
       <UniqueIdentifier>{69ca5e28-65aa-4917-8853-ad680abc06d9}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ImGui\Extensions\FileBrowser">
-      <UniqueIdentifier>{5be4fd12-5a28-4ce3-826b-68cf46493571}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ImGui\Window\Plugin">
       <UniqueIdentifier>{855e2d63-7d8e-45c9-af65-6961b2818e72}</UniqueIdentifier>
     </Filter>
@@ -390,6 +399,15 @@
     </Filter>
     <Filter Include="ImGui\Window\Statistics">
       <UniqueIdentifier>{55b89530-6d77-4e66-b7ad-1b3df8e9b4fb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ImGui\Window\Time">
+      <UniqueIdentifier>{bc4a57f3-a1b3-4642-a04f-5088d69f56d0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ImGui\Extensions\FileDialog">
+      <UniqueIdentifier>{6158fb09-5680-4a6e-9924-4bbb3d1da354}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ImGui\Extensions\FileDialog\Config">
+      <UniqueIdentifier>{e908ec9f-09ea-411c-a565-e66cd68163c3}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

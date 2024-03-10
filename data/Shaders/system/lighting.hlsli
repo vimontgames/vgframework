@@ -137,8 +137,8 @@ LightingResult computeDirectLighting(ViewConstants _viewConstants, float3 _eyePo
 	float3 F0 = lerp(Fdielectric, _albedo, metalness);
 
 	ByteAddressBuffer lights = getBuffer(RESERVEDSLOT_BUFSRV_LIGHTSCONSTANTS);
-	LightsConstantsHeader lightsHeader;
-    uint offset = lightsHeader.Load(lights);	
+	LightsConstantsHeader lightsHeader = lights.Load<LightsConstantsHeader>(0);
+    uint offset = sizeof(LightsConstantsHeader);	
 
 	#ifdef _RAYTRACING
 	RaytracingAccelerationStructure tlas = getTLAS(_viewConstants.getTLASHandle());
@@ -259,59 +259,65 @@ LightingResult computeDirectLighting(ViewConstants _viewConstants, float3 _eyePo
 			//output.diffuse = cosLi;
 			output.addLightContribution(Lo, cosLo, cosLi, Lr, F0, Li, Lradiance * shadow, _worldNormal, roughness, metalness);
 		}
+
+		// cheap ambient
+		output.diffuse += directional.getAmbient();
 	}	
 
 	for(uint i=0; i < lightsHeader.getOmniCount(); ++i)
 	{
-		OmniLightConstants omni = lights.Load<OmniLightConstants>(offset + i * sizeof(OmniLightConstants));
+		OmniLightConstants omni = lights.Load<OmniLightConstants>(offset + i * sizeof(OmniLightConstants)); 
 
 		float3 lightDir = omni.getPosition() - _worldPos.xyz;
 		float dist = length(lightDir);
 
 		float att = getRangeAttenuation(dist, omni.getRadius());
 
-		if (att <= lightEps)
-			continue;
-
-		float3 color = omni.getColor();
-		float3 Li = normalize(lightDir);
-		float cosLi = max(0.0f, dot(_worldNormal, Li));
-
-		if (cosLi > 0.0f)
+		if (att > lightEps)
 		{
-			float3 Lradiance = att * color;
-			float shadow = 1.0f;
-			float si = omni.getShadowInstensity();
+			float3 color = omni.getColor();
+			float3 Li = normalize(lightDir);
+			float cosLi = max(0.0f, dot(_worldNormal, Li));
 
-			if (si > 0.0f)
+			if (cosLi > 0.0f)
 			{
-				#ifdef _RAYTRACING
-				RayDesc ray;
-				ray.Origin    = _worldPos;
-				ray.Direction = lightDir;
-				ray.TMin      = 0.0325f;
-				ray.TMax      = 10;
+				float3 Lradiance = att * color;
+				float shadow = 1.0f;
+				float si = omni.getShadowInstensity();
 
-				RayQuery<RAY_FLAG_FORCE_OPAQUE> query;
-				query.TraceRayInline(tlas, 0, 0xff, ray);
-				query.Proceed();
-
-				#ifdef _TOOLMODE
-				rayCount++;
-				#endif
-
-				switch(query.CommittedStatus())
+				if (si > 0.0f)
 				{
-					case COMMITTED_TRIANGLE_HIT:
-						shadow = 0;     
-						break;
-				}
-				#endif // _RAYTRACING
+					#ifdef _RAYTRACING
+					RayDesc ray;
+					ray.Origin    = _worldPos;
+					ray.Direction = lightDir;
+					ray.TMin      = 0.0325f;
+					ray.TMax      = 10;
 
-				shadow = 1.0f - ((1.0f-shadow) * si);
+					RayQuery<RAY_FLAG_FORCE_OPAQUE> query;
+					query.TraceRayInline(tlas, 0, 0xff, ray);
+					query.Proceed();
+
+					#ifdef _TOOLMODE
+					rayCount++;
+					#endif
+
+					switch(query.CommittedStatus())
+					{
+						case COMMITTED_TRIANGLE_HIT:
+							shadow = 0;     
+							break;
+					}
+					#endif // _RAYTRACING
+
+					shadow = 1.0f - ((1.0f-shadow) * si);
+				}
+
+				output.addLightContribution(Lo, cosLo, cosLi, Lr, F0, Li, Lradiance * shadow, _worldNormal, roughness, metalness);
 			}
 
-			output.addLightContribution(Lo, cosLo, cosLi, Lr, F0, Li, Lradiance * shadow, _worldNormal, roughness, metalness);
+			// cheap ambient
+			output.diffuse += att * omni.getAmbient();
 		}
     }	
 

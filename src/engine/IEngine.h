@@ -37,7 +37,8 @@ namespace vg
 
         struct Time
         {
-            float m_dt = 0.0f;
+            float m_realDeltaTime = 0.0f;
+            float m_scaledDeltaTime = 0.0f;
         };
 
 	    class IEngine : public core::IPlugin
@@ -73,6 +74,7 @@ namespace vg
             #endif                                      
                                                         
 		    virtual void						        RunOneFrame	        () = 0;
+            virtual void                                FlushLoading        () = 0;
 
             virtual editor::IEditor *                   GetEditor           () const = 0;
 		    virtual renderer::IRenderer *	            GetRenderer	        () const = 0;
@@ -84,8 +86,9 @@ namespace vg
             virtual bool                                SaveWorld           () = 0;
             virtual bool                                SaveWorldAs         (const core::string & _filename) = 0;
             virtual bool                                LoadWorld           (const core::string & _filename) = 0;
-
             virtual IWorldResource *                    GetWorldResource    () = 0;
+
+            virtual bool                                SaveScene           (core::IResource * _sceneRes) = 0;
 
             virtual IEngineOptions *                    GetOptions          () = 0;
 	    };

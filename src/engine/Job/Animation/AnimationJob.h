@@ -8,7 +8,7 @@ namespace vg::engine
     class AnimationJob : public core::Job
     {
     public:
-        const char * getClassName() const final { return "UpdateSkeletonJob"; }
+        const char * GetClassName() const final { return "UpdateSkeletonJob"; }
 
         AnimationJob(MeshComponent * _meshComponent, bool _debugDrawBones);
         void run() override;

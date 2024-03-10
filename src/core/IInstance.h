@@ -5,6 +5,7 @@
 namespace vg::core
 {
     class IModel;
+    class AABB;
 
     enum class Lod : core::u8
     {
@@ -52,5 +53,7 @@ namespace vg::core
 
         virtual RuntimeFlags        GetRuntimeFlags     () const = 0;
         virtual void                SetRuntimeFlags     (RuntimeFlags _flags, bool _enabled) = 0;
+
+        virtual bool                TryGetAABB          (AABB & _aabb) const = 0;
     };
 }

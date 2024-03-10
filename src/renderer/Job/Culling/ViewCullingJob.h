@@ -90,7 +90,7 @@ namespace vg::renderer
     class ViewCullingJob : public core::Job
     {
     public:
-        const char * getClassName() const final { return "ViewCullingJob"; }
+        const char * GetClassName() const final { return "ViewCullingJob"; }
 
         ViewCullingJob(const core::string & _name, core::IObject * _parent, ViewCullingJobOutput * const _output, SharedCullingJobOutput * const _sharedOutput);
         void run() override;

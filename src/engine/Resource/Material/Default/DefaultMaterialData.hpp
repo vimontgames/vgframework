@@ -9,6 +9,9 @@ namespace vg::engine
     {
         super::registerProperties(_desc);
 
+        registerProperty(DefaultMaterialData, m_tiling, "Tiling");
+        setPropertyRange(DefaultMaterialData, m_tiling, float2(0, 16));
+
         registerPropertyResource(DefaultMaterialData, m_albedoMap, "Albedo Map");
         registerPropertyEx(DefaultMaterialData, m_albedoColor, "Albedo Color", IProperty::Flags::Color);
 
@@ -50,6 +53,7 @@ namespace vg::engine
 
         material->SetSurfaceType(m_surfaceType);
         
+        material->SetFloat2("Tiling", m_tiling);
         material->SetColor("AlbedoColor", m_albedoColor);
         material->SetFloat("NormalStrength", m_normalStrength);
         material->SetFloat("Occlusion", m_occlusion);
@@ -74,6 +78,8 @@ namespace vg::engine
             material->SetFloat("Roughness", m_roughness);
         else if (!strcmp(_prop.getName(), "m_metalness"))
             material->SetFloat("Metalness", m_metalness);
+        else if (!strcmp(_prop.getName(), "m_tiling"))
+            material->SetFloat2("Tiling", m_tiling);
 
         super::OnPropertyChanged(_object, _prop, _notifyParent);
     }

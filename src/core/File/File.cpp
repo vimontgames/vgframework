@@ -5,7 +5,7 @@
 #include <filesystem>
 #include "Buffer.h"
 #include "core/string/string.h"
-#include "dirent/include/dirent.h"
+#include "ImGuiFileDialog/dirent/dirent.h"
 
 using namespace std;
 
@@ -203,6 +203,9 @@ namespace vg::core::io
     string getFileName(const string & _file)
     {
         auto found = _file.find_last_of('/');
+        if (string::npos == found)
+            found = _file.find_last_of('\\');
+
         if (string::npos != found)
         {
             string name = _file.substr(found+1);
@@ -339,7 +342,10 @@ namespace vg::core::io
         const auto cwd = getRootDirectory();
 
         const auto beginOffset = path.find(cwd);
-        if (string::npos != beginOffset)
+
+        if (path == cwd)
+            path = "";
+        else if (string::npos != beginOffset)
             path = path.substr(cwd.length()+1, path.length() - cwd.length()-1);
 
         return path;

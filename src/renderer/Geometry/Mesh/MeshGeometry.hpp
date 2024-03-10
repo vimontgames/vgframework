@@ -101,15 +101,14 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    core::u32 MeshGeometry::addBatch(core::u32 _count, core::u32 _offset)
+    core::u32 MeshGeometry::addBatch(const core::string & _name, core::u32 _count, core::u32 _offset)
     {
         const core::u32 count = (core::u32)m_batches.size();
 
-        Batch batch;
-              batch.count = _count;
-              batch.offset = _offset;
-
-        m_batches.push_back(batch);
+        Batch & batch = m_batches.push_empty();
+        batch.setName(_name);
+        batch.count = _count;
+        batch.offset = _offset;
 
         return count;
     }

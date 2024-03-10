@@ -29,7 +29,7 @@ namespace vg::gfx
         using super = VG_GFXAPI::ComputePipelineState;
 
     public:
-        const char * getClassName() const final { return "ComputePipelineState"; }
+        const char * GetClassName() const final { return "ComputePipelineState"; }
 
         ComputePipelineState(const ComputePipelineStateKey & _computeKey);
         ~ComputePipelineState();

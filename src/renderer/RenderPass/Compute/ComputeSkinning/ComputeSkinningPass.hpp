@@ -39,7 +39,7 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    void ComputeSkinningPass::Setup(const gfx::RenderPassContext & _renderPassContext, float _dt)
+    void ComputeSkinningPass::Setup(const gfx::RenderPassContext & _renderPassContext)
     {
         auto * device = Device::get();
 

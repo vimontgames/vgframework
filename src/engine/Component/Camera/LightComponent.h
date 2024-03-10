@@ -23,6 +23,7 @@ namespace vg::engine
         void                        Update              (float _dt) override;
         void                        OnPropertyChanged   (core::IObject * _object, const core::IProperty & _prop, bool _notifyParent);
         void                        SetComponentFlags   (core::ComponentFlags _flags, bool _enabled = true) final override;
+        bool                        TryGetAABB          (core::AABB & _aabb) const final override;
 
     protected:
         bool                        createLightDesc     ();

@@ -168,6 +168,12 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
+    float AnimationResource::GetWeight() const
+    {
+        return m_weight;
+    }
+
+    //--------------------------------------------------------------------------------------
     void AnimationResource::OnStop()
     {
         super::OnStop();

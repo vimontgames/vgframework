@@ -12,5 +12,6 @@ namespace vg::engine
         Scene(const core::string & _name, core::IObject * _parent);
         ~Scene();
 
+        core::BaseSceneType   GetSceneType() const final override { return core::BaseSceneType::Scene; }
     };
 }

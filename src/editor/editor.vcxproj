@@ -12,7 +12,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Editor.cpp" />
-    <ClCompile Include="ImGui\Extensions\FileBrowser\ImGuiFileBrowser.cpp" />
+    <ClCompile Include="ImGui\Extensions\FileDialog\ImGuiFileDialog.cpp" />
     <ClCompile Include="ImGui\Extensions\ImGuiExtensions.cpp" />
     <ClCompile Include="ImGui\Extensions\ImGuizmo\ImGuizmoAdapter.cpp" />
     <ClCompile Include="ImGui\ImGui.cpp" />
@@ -29,10 +29,12 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\extern\ImGuiFileDialog\ImGuiFileDialogConfig.h" />
     <ClInclude Include="Editor.h" />
     <ClInclude Include="Editor_Consts.h" />
     <ClInclude Include="IEditor.h" />
     <ClInclude Include="IEditorOptions.h" />
+    <ClInclude Include="ImGui\Extensions\FileDialog\ImGuiFileDialog.h" />
     <ClInclude Include="ImGui\Extensions\imGuiExtensions.h" />
     <ClInclude Include="ImGui\Extensions\ImGuizmo\ImGuizmoAdapter.h" />
     <ClInclude Include="ImGui\ImGui.h" />
@@ -94,6 +96,8 @@
     <ClInclude Include="ImGui\Window\Shader\ImGuiShader.hpp" />
     <ClInclude Include="ImGui\Window\Statistics\ImGuiStatistics.h" />
     <ClInclude Include="ImGui\Window\Statistics\ImGuiStatistics.hpp" />
+    <ClInclude Include="ImGui\Window\Time\ImGuiTime.h" />
+    <ClInclude Include="ImGui\Window\Time\ImGuiTime.hpp" />
     <ClInclude Include="ImGui\Window\View\EditorView\ImGuiEditorView.h" />
     <ClInclude Include="ImGui\Window\View\EditorView\ImGuiEditorView.hpp" />
     <ClInclude Include="ImGui\Window\View\GameView\ImGuiGameView.h" />

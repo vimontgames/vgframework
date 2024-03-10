@@ -1,12 +1,14 @@
 #include "core/Precomp.h"
 #include "GameObject.h"
-#include "core/Kernel.h"
-#include "core/Component/Component.h"
-#include "core/Object/AutoRegisterClass.h"  
 #include "core/ISelection.h"
 #include "core/IProfiler.h"
-#include "renderer/IGraphicInstance.h"
 #include "core/IBaseScene.h"
+#include "core/Kernel.h"
+#include "core/Component/Component.h"
+#include "core/Misc/AABB/AABB.h"
+#include "core/Object/AutoRegisterClass.h"  
+
+#include "renderer/IGraphicInstance.h"
 
 #if !VG_ENABLE_INLINE
 #include "GameObject.inl"
@@ -63,6 +65,19 @@ namespace vg::core
     {
         super::OnLoad();
         recomputeUpdateFlags();
+        sortComponents();
+    }
+
+    //--------------------------------------------------------------------------------------
+    // Sort component by priority defined in their ClassDesc
+    //--------------------------------------------------------------------------------------
+    void GameObject::sortComponents()
+    {
+        sort(m_components.begin(), m_components.end(), [](Component * a, Component * b)
+        {
+            return a->GetClassDesc()->GetPriority() < b->GetClassDesc()->GetPriority();
+        }
+        );
     }
 
     //--------------------------------------------------------------------------------------
@@ -132,6 +147,7 @@ namespace vg::core
     //--------------------------------------------------------------------------------------
     bool GameObject::IsPrefab() const
     {
+        VG_ASSERT(!asBool(ObjectFlags::Prefab & getObjectFlags()));
         return false;
     }
 
@@ -168,7 +184,10 @@ namespace vg::core
             {
                 Component* component = m_components[i];
                 if (asBool(ComponentFlags::Enabled & component->getComponentFlags()) && asBool(UpdateFlags::FixedUpdate & component->getUpdateFlags()))
+                {
+                    VG_PROFILE_CPU(component->GetClassName());
                     component->FixedUpdate(_dt);
+                }
             }
 
             const auto& children = getChildren();
@@ -193,7 +212,10 @@ namespace vg::core
             {
                 Component* component = m_components[i];
                 if (asBool(ComponentFlags::Enabled & component->getComponentFlags()) && asBool(UpdateFlags::Update & component->getUpdateFlags()))
+                {
+                    VG_PROFILE_CPU(component->GetClassName());
                     component->Update(_dt);
+                }
             }
 
             const auto& children = getChildren();
@@ -218,7 +240,10 @@ namespace vg::core
             {
                 Component* component = m_components[i];
                 if (asBool(ComponentFlags::Enabled & component->getComponentFlags()) && asBool(UpdateFlags::LateUpdate & component->getUpdateFlags()))
+                {
+                    VG_PROFILE_CPU(component->GetClassName());
                     component->LateUpdate(_dt);
+                }
             }
 
             const auto& children = getChildren();
@@ -289,6 +314,7 @@ namespace vg::core
 
             _component->setParent(this); 
             recomputeUpdateFlags();
+            sortComponents();
         }
     }
 
@@ -307,13 +333,13 @@ namespace vg::core
             auto * component = components[i];
             if (nullptr != component)
             {
-                if (!strcmp(component->getClassName(), _className))
+                if (!strcmp(component->GetClassName(), _className))
                 {
                     return component;
                 }
                 else 
                 {
-                    const auto * classDesc = Kernel::getFactory()->getClassDescriptor(component->getClassName());
+                    const auto * classDesc = Kernel::getFactory()->getClassDescriptor(component->GetClassName());
                     if (nullptr != classDesc)
                     {
                         const char * interfaceName = classDesc->GetParentClassName();
@@ -377,6 +403,23 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
+    core::uint GameObject::RemoveAllChildren(bool _recomputeFlags)
+    {
+        if (m_children.size() > 0)
+        {
+            const auto count = m_children.size();
+            for (uint i = 0; i < count; ++i)
+                VG_SAFE_RELEASE(m_children[i]);
+            m_children.clear();
+
+            if (_recomputeFlags)
+                recomputeUpdateFlags();
+            return (core::uint)count;
+        }
+        return 0;
+    }
+
+    //--------------------------------------------------------------------------------------
     core::uint GameObject::GetChildIndex(const IGameObject * _child) const
     {
         uint childIndex = -1;
@@ -396,6 +439,39 @@ namespace vg::core
     const vector<IGameObject*> & GameObject::GetChildren() const
     {
         return (const vector<IGameObject*> &)getChildren();
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool GameObject::TryGetAABB(core::AABB & _aabb) const
+    {
+        AABB gameObjectAABB(float3(-0.01f, -0.01f, -0.01f), float3(-0.01f, -0.01f, -0.01f));
+
+        const auto & components = getComponents();
+        for (uint i = 0; i < components.size(); ++i)
+        {
+            auto * component = components[i];
+
+            AABB componentAABB;
+            if (component->TryGetAABB(componentAABB))
+                gameObjectAABB.grow(componentAABB);
+        }
+
+        const auto & children = getChildren();
+        for (uint i = 0; i < children.size(); ++i)
+        {
+            auto * child = children[i];
+
+            AABB childAABB;
+            if (child->TryGetAABB(childAABB))
+            {
+                float4x4 toParentMatrix = mul(child->getGlobalMatrix(), inverse(GetGlobalMatrix()));
+                auto localSpaceChildAABB = AABB::transform(childAABB, toParentMatrix);
+                gameObjectAABB.grow(localSpaceChildAABB);
+            }
+        }
+
+        _aabb = gameObjectAABB;
+        return true;
     }
 
     //--------------------------------------------------------------------------------------

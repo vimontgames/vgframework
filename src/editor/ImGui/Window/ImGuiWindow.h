@@ -57,6 +57,7 @@ namespace vg::editor
                                                 ImGuiWindow         (const core::string & _icon, const core::string & _path, const core::string & _name, Flags _flags);
         virtual                                 ~ImGuiWindow        () {}
 
+        virtual core::string                    GetTitle            () const { VG_ASSERT_NOT_IMPLEMENTED(); return ""; } //= 0;
         virtual void                            DrawGUI             () = 0;
 
         bool                                    isVisible           () const;
@@ -79,7 +80,6 @@ namespace vg::editor
         static bool                             displayFloat4x4     (core::IObject * _object, const core::IProperty * _prop);
         static bool                             displayU32          (const core::string & _label, core::u32 * _pU32);
 
-        static imgui_addons::ImGuiFileBrowser & getFileBrowser      ();
         static core::string                     getFileBrowserExt   (const core::IResource * _resource);
         static core::string                     getDefaultFolder    (const core::IResource * _resource);
         static core::string                     getDefaultFolder    (const core::string & _resourceTypeName);

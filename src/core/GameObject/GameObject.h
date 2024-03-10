@@ -47,10 +47,13 @@ namespace vg::core
 
         void                                                AddChild                (IGameObject * _gameObject, core::uint _index = -1) final override;
         bool                                                RemoveChild             (IGameObject * _gameObject, bool _recomputeFlags = true) final override;
+        core::uint                                          RemoveAllChildren       (bool _recomputeFlags = true) final override;
         const vector<IGameObject*> &                        GetChildren             () const override;
         bool                                                IsRoot                  () const final override;
         bool                                                HasAncestor             (const IGameObject * _ancestor) const final override;
         core::uint                                          GetChildIndex           (const IGameObject * _child) const final override;
+
+        bool                                                TryGetAABB              (core::AABB & _aabb) const override;
 
         void                                                OnPropertyChanged       (core::IObject * _object, const core::IProperty & _prop, bool _notifyParent) override;
 
@@ -67,6 +70,8 @@ namespace vg::core
 
         VG_INLINE UpdateFlags                               getUpdateFlags          () const;
         VG_INLINE void                                      setUpdateFlags          (UpdateFlags _flags, bool _enabled);
+
+        void                                                sortComponents          ();
 
     private:
         UpdateFlags                                         m_update = (UpdateFlags)0x0;

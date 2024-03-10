@@ -104,7 +104,7 @@ namespace vg::core
 
         virtual const char *                    getInterface                    () const = 0;
         virtual const char *                    getName                         () const = 0;
-        virtual const char *                    getClassName                    () const = 0;
+        virtual const char *                    GetClassName                    () const = 0;
         virtual const char *                    getDisplayName                  () const = 0;
         virtual const char *                    getDefaultFolder                () const = 0;
         virtual Type                            getType                         () const = 0;
@@ -123,7 +123,7 @@ namespace vg::core
         virtual i32 *                           GetPropertyInt32                (const IObject * _object) const = 0;
         virtual i64 *                           GetPropertyInt64                (const IObject * _object) const = 0;
 
-        virtual u8 *                            GetPropertyUint8                (const IObject * _object) const = 0;
+        virtual u8 *                            GetPropertyUint8                (const IObject * _object, uint _index = 0) const = 0;
         virtual u16 *                           GetPropertyUint16               (const IObject * _object) const = 0;
         virtual u32 *                           GetPropertyUint32               (const IObject * _object) const = 0;
         virtual u32 *                           GetPropertyUintN                (const IObject * _object, uint _componentCount, uint _index = 0) const = 0;
@@ -226,7 +226,8 @@ namespace vg::core
 #define registerPropertyEnumBitfield(className, enumClassName, propertyName, displayName)                   registerPropertyEnumEx(className, enumClassName, propertyName, displayName, vg::core::IProperty::Flags::Bitfield)
 
 // Register property for fixed-size array using enum as index
-#define registerPropertyEnumArray(className, elementType, enumClassName, propertyName, displayName, flags)  _desc.RegisterEnumArray(#className, #propertyName, (elementType*)(&((className*)(nullptr))->propertyName[0]), displayName, vg::core::EnumHelper<enumClassName>::getStaticCount(), sizeof(elementType), vg::core::EnumHelper<enumClassName>::getStaticNames().c_str(), (void*)vg::core::EnumHelper<enumClassName>::getStaticValues().data(), flags, vg::core::EnumHelper<enumClassName>::getSizeOfUnderlyingType());
+#define registerPropertyEnumArrayEx(className, elementType, enumClassName, propertyName, displayName, flags) _desc.RegisterEnumArray(#className, #propertyName, (elementType*)(&((className*)(nullptr))->propertyName[0]), displayName, vg::core::EnumHelper<enumClassName>::getStaticCount(), sizeof(elementType), vg::core::EnumHelper<enumClassName>::getStaticNames().c_str(), (void*)vg::core::EnumHelper<enumClassName>::getStaticValues().data(), flags, vg::core::EnumHelper<enumClassName>::getSizeOfUnderlyingType());
+#define registerPropertyEnumArray(className, elementType, enumClassName, propertyName, displayName)         registerPropertyEnumArrayEx(className, elementType, enumClassName, propertyName, displayName, vg::core::IProperty::Flags::None);
 
 // Helper for "optional" property (bool + property)
 #define registerOptionalProperty(className, boolpropertyname, propertyName, displayName)	                registerPropertyEx(className, boolpropertyname, displayName, IProperty::Flags::NotVisible); \

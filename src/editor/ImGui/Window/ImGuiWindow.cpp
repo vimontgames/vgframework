@@ -9,7 +9,8 @@
 #include "core/IGameObject.h"
 #include "core/IComponent.h"
 #include "core/ISelection.h"
-#include "core/Misc/BitMask.h"
+#include "core/Misc/BitMask/BitMask.h"
+#include "core/Misc/AABB/AABB.h"
 
 #include "renderer/IRenderer.h"
 
@@ -19,6 +20,7 @@
 #include "editor/ImGui/ImGui.h"
 #include "editor/Editor_Consts.h"
 #include "editor/imgui/Extensions/imGuiExtensions.h"
+#include "editor/imgui/Extensions/FileDialog/ImGuiFileDialog.h"
 
 #include "ImGuiWindow.h"
 
@@ -36,6 +38,7 @@ using namespace ImGui;
 #include "editor/ImGui/Window/Platform/ImGuiPlatform.hpp"
 #include "editor/ImGui/Window/About/ImGuiAbout.hpp"
 #include "editor/ImGui/Window/Input/ImGuiInput.hpp"
+#include "editor/ImGui/Window/Time/ImGuiTime.hpp"
 #include "editor/ImGui/Window/Inspector/ImGuiInspector.hpp"
 #include "editor/ImGui/Window/Shader/ImGuiShader.hpp"
 #include "editor/ImGui/Window/SceneList/ImGuiSceneList.hpp"
@@ -56,13 +59,6 @@ using namespace ImGui;
 
 namespace vg::editor
 {
-    //--------------------------------------------------------------------------------------
-    imgui_addons::ImGuiFileBrowser & ImGuiWindow::getFileBrowser()
-    {
-        static imgui_addons::ImGuiFileBrowser g_imguiFileBrower;
-        return g_imguiFileBrower;
-    }
-
     //--------------------------------------------------------------------------------------
     core::string ImGuiWindow::getFileBrowserExt(const core::IResource * _resource)
     {
@@ -121,7 +117,7 @@ namespace vg::editor
     //--------------------------------------------------------------------------------------
     string ImGuiWindow::getButtonLabel(string _baseName, IObject * _object)
     {
-        return _baseName + "##" + _object->getClassName() + "##" + to_string((u64)&_object); // TODO: Object GUID?
+        return _baseName + "##" + _object->GetClassName() + "##" + to_string((u64)&_object); // TODO: Object GUID?
     }
 
     //--------------------------------------------------------------------------------------
@@ -282,7 +278,7 @@ namespace vg::editor
     //--------------------------------------------------------------------------------------
     void ImGuiWindow::displayObject(core::IObject * _object, ObjectContext & _context)
     {
-        const char * className = _object->getClassName();
+        const char * className = _object->GetClassName();
 
         const auto * factory = Kernel::getFactory();
         const auto * classDesc = factory->getClassDescriptor(className);
@@ -324,13 +320,13 @@ namespace vg::editor
         if (_name)
             treeNodeName = "[" + string(_name) + "]";
         else if (_object)
-            treeNodeName = _object->getName();
+            treeNodeName = fmt::sprintf("[%u] %s", _index, _object->getName());
         else
             treeNodeName = "[" + to_string(_index) + "]";
 
         auto treeNodeFlags = ImGuiTreeNodeFlags_OpenOnArrow;
 
-        const bool isComponent = nullptr != _object && _object->getClassDesc() && asBool(IClassDesc::Flags::Component & _object->getClassDesc()->GetFlags());
+        const bool isComponent = nullptr != _object && _object->GetClassDesc() && asBool(IClassDesc::Flags::Component & _object->GetClassDesc()->GetFlags());
         if (isComponent)
         {
             displayObject(_object);
@@ -411,7 +407,7 @@ namespace vg::editor
         if (asBool(IProperty::Flags::Optional & flags))
         {
             // check previous property is bool
-            const IClassDesc * classDesc = _object->getClassDesc();
+            const IClassDesc * classDesc = _object->GetClassDesc();
             optionalProp = classDesc->GetPreviousProperty(_prop->getName());
             if (optionalProp)
             {
@@ -450,6 +446,7 @@ namespace vg::editor
 
         const bool flatten = asBool(IProperty::Flags::Flatten & flags);
         const bool isEnumArray = asBool(IProperty::Flags::EnumArray & flags);
+        const auto enumArrayTreeNodeFlags = /*ImGuiTreeNodeFlags_OpenOnArrow |*/ ImGuiTreeNodeFlags_DefaultOpen;
 
         //ImGui::BeginDisabled(readOnly);
         {
@@ -541,10 +538,17 @@ namespace vg::editor
                     if (ImGui::BeginCombo(enumLabel.c_str(), preview.c_str(), ImGuiComboFlags_HeightLarge))
                     {
                         const auto bitCount = pBitMask->getBitCount();
+                        const auto names = pBitMask->getNames();
+
                         for (uint i = 0; i < bitCount; ++i)
                         {
                             bool value = pBitMask->getBitValue(i);
-                            const string bitName = fmt::sprintf("Bit %u", i);
+                            string bitName;
+                            
+                            if (i < names.size() && !names[i].empty())
+                                bitName = fmt::sprintf("[%u] %s", i, names[i]);
+                            else 
+                                bitName = fmt::sprintf("Bit %u", i);
                             
                             if (ImGui::Checkbox(bitName.c_str(), &value))
                             {
@@ -608,6 +612,43 @@ namespace vg::editor
 
                 case IProperty::Type::Uint8:
                 {
+                    if (isEnumArray)
+                    {
+                        char temp[1024];
+                        sprintf_s(temp, "%s (%u)", label.c_str(), _prop->getEnumCount());
+                        if (ImGui::TreeNodeEx(temp, enumArrayTreeNodeFlags))
+                        {
+                            for (uint e = 0; e < _prop->getEnumCount(); ++e)
+                            {
+                                const string enumLabel = ImGui::getObjectLabel(_prop->getEnumName(e), _prop + e);
+                                u8 * pU8 = _prop->GetPropertyUint8(_object, e);
+                                i32 temp = (u8)*pU8;
+                                if (asBool(IProperty::Flags::HasRange & flags))
+                                    changed |= ImGui::SliderInt(enumLabel.c_str(), &temp, max((int)0, (int)_prop->getRange().x), min((int)255, (int)_prop->getRange().y), "%d", imguiInputTextflags);
+                                else
+                                    changed |= ImGui::InputInt(enumLabel.c_str(), &temp, 1, 16, imguiInputTextflags);
+                                if (changed)
+                                    *pU8 = (u8)temp;
+                            }
+                            ImGui::TreePop();
+                        }
+                    }
+                    else
+                    {
+                        u8 * pU8 = _prop->GetPropertyUint8(_object); 
+                        i32 temp = (u8)*pU8;
+                        if (asBool(IProperty::Flags::HasRange & flags))
+                            changed |= ImGui::SliderInt(label.c_str(), &temp, max((int)0, (int)_prop->getRange().x), min((int)255, (int)_prop->getRange().y), "%d", imguiInputTextflags);
+                        else
+                            changed |= ImGui::InputInt(label.c_str(), &temp, 1, 16, imguiInputTextflags);
+                        if (changed)
+                            *pU8 = (u8)temp;
+                    }                    
+                };
+                break;
+
+                case IProperty::Type::Int8:
+                {
                     VG_ASSERT(!isEnumArray, "Display of EnumArray property not implemented for type '%s'", asString(type).c_str());
 
                     i8 * pU8 = (i8 *)(uint_ptr(_object) + offset);
@@ -615,7 +656,7 @@ namespace vg::editor
                     i32 temp = (u8)*pU8;
 
                     if (asBool(IProperty::Flags::HasRange & flags))
-                        changed |= ImGui::SliderInt(label.c_str(), &temp, max((int)0, (int)_prop->getRange().x), min((int)255, (int)_prop->getRange().y), "%d", imguiInputTextflags);
+                        changed |= ImGui::SliderInt(label.c_str(), &temp, max((int)-128, (int)_prop->getRange().x), min((int)127, (int)_prop->getRange().y), "%d", imguiInputTextflags);
                     else
                         changed |= ImGui::InputInt(label.c_str(), &temp, 1, 16, imguiInputTextflags);
 
@@ -639,6 +680,37 @@ namespace vg::editor
 
                     if (changed)
                         *pU16 = (u16)temp;
+                };
+                break;
+
+                case IProperty::Type::Int16:
+                {
+                    VG_ASSERT(!isEnumArray, "Display of EnumArray property not implemented for type '%s'", asString(type).c_str());
+
+                    i16 * pU16 = (i16 *)(uint_ptr(_object) + offset);
+
+                    i32 temp = (u16)*pU16;
+
+                    if (asBool(IProperty::Flags::HasRange & flags))
+                        changed |= ImGui::SliderInt(label.c_str(), &temp, max((int)-32768, (int)_prop->getRange().x), min((int)32767, (int)_prop->getRange().y), "%d", imguiInputTextflags);
+                    else
+                        changed |= ImGui::InputInt(label.c_str(), &temp, 1, 16, imguiInputTextflags);
+
+                    if (changed)
+                        *pU16 = (u16)temp;
+                };
+                break;
+
+                case IProperty::Type::Int32:
+                {
+                    VG_ASSERT(!isEnumArray, "Display of EnumArray property not implemented for type '%s'", asString(type).c_str());
+
+                    i32 * pU32 = (i32 *)(uint_ptr(_object) + offset);
+
+                    if (asBool(IProperty::Flags::HasRange & flags))
+                        changed |= ImGui::SliderInt(label.c_str(), pU32, max((int)-2147483648, (int)_prop->getRange().x), min(+2147483647, (int)_prop->getRange().y), "%d", imguiInputTextflags);
+                    else
+                        changed |= ImGui::InputInt(label.c_str(), pU32, 1, 16, imguiInputTextflags);
                 };
                 break;
 
@@ -724,7 +796,7 @@ namespace vg::editor
                     {
                         char temp[1024];
                         sprintf_s(temp, "%s (%u)", label.c_str(), _prop->getEnumCount());
-                        if (ImGui::TreeNodeEx(temp, ImGuiTreeNodeFlags_OpenOnArrow))
+                        if (ImGui::TreeNodeEx(temp, enumArrayTreeNodeFlags))
                         {
                             for (uint e = 0; e < _prop->getEnumCount(); ++e)
                             {
@@ -791,47 +863,60 @@ namespace vg::editor
                         ImGui::SameLine();
                         ImGui::SetCursorPosX(x - 4);
 
-                        auto & fileBrowser = getFileBrowser();
-                        const auto defaultFolder = ImGuiWindow::getDefaultFolder("WorldResource");
-
                         if (isFolder)
                         {
+                            const string selectFolderString = "Select Folder";
                             if (ImGui::Button(style::icon::Folder, style::button::SizeSmall))
                             {
-                                fileBrowser.setFolder(defaultFolder);
-                                ImGui::OpenPopup("Select folder");
+                                ImGui::SelectFolderDialog(selectFolderString);
                             }
 
-                            if (fileBrowser.showFileDialog("Select folder", imgui_addons::ImGuiFileBrowser::DialogMode::SELECT, style::dialog::Size))
+                            if (ImGui::DisplayFileDialog(selectFolderString))
                             {
-                                const string newFolder = io::getRelativePath(fileBrowser.selected_path);
-
-                                if (newFolder != *pString)
+                                if (ImGui::IsFileDialogOK())
                                 {
-                                    *pString = newFolder;
-                                    changed = true;
+                                    const string newFolder = io::getRelativePath(ImGui::GetFileDialogSelectedPath());
+
+                                    if (newFolder != *pString)
+                                    {
+                                        *pString = newFolder;
+                                        changed = true;
+                                    }
                                 }
+
+                                ImGui::CloseFileDialog();
                             }
                         }
                         else if (isFile)
                         {
+                            const string selectFileString = "Select File";
+
                             if (ImGui::Button(style::icon::File, style::button::SizeSmall))
                             {
-                                fileBrowser.setFolder(fmt::sprintf("%s/%s", io::getRootDirectory().c_str(),  _prop->getDefaultFolder()));
-                                ImGui::OpenPopup("Select file");
+                                const auto defaultFolder = _prop->getDefaultFolder();
+
+                                // TODO: other extensions deduced from default folder?
+                                string ext = ".*";
+                                if (strstr(defaultFolder, "World"))
+                                    ext = ".world";
+
+                                ImGui::OpenFileDialog(selectFileString, ext, defaultFolder);
                             }
 
-                            string ext = ".world";
-
-                            if (fileBrowser.showFileDialog("Select file", imgui_addons::ImGuiFileBrowser::DialogMode::OPEN, style::dialog::Size, ext))
+                            if (ImGui::DisplayFileDialog(selectFileString))
                             {
-                                const string newFile = io::getRelativePath(fileBrowser.selected_path);
-
-                                if (newFile != *pString)
+                                if (ImGui::IsFileDialogOK())
                                 {
-                                    *pString = newFile;
-                                    changed = true;
+                                    const string newFile = io::getRelativePath(ImGui::GetFileDialogSelectedFile());
+
+                                    if (newFile != *pString)
+                                    {
+                                        *pString = newFile;
+                                        changed = true;
+                                    }                                    
                                 }
+
+                                ImGui::CloseFileDialog();
                             }
                         }
                     }
@@ -863,7 +948,7 @@ namespace vg::editor
                     const size_t count = _prop->GetPropertyObjectVectorCount(_object);
                     const byte * data = _prop->GetPropertyObjectVectorData(_object);
 
-                    string treeNodeName = (string)displayName + " (" + to_string(count) + ")";
+                    string treeNodeName = fmt::sprintf("%s[%u]", displayName, count); 
 
                     auto treeNodeFlags = ImGuiTreeNodeFlags_OpenOnArrow;
 
@@ -886,7 +971,7 @@ namespace vg::editor
                     auto * vec = _prop->GetPropertyObjectPtrVector(_object);
                     const uint count = vec->count();
 
-                    string treeNodeName = (string)displayName + " (" + to_string(count) + ")";
+                    string treeNodeName = fmt::sprintf("%s[%u]", displayName, count);
 
                     auto treeNodeFlags = ImGuiTreeNodeFlags_OpenOnArrow;
 
@@ -984,8 +1069,8 @@ namespace vg::editor
                                 if (i == 0)
                                     dragAndDropInterline(pComponent, style::draganddrop::BeforeNode);
                                 
-                                auto * classDesc = pComponent->getClassDesc();
-                                string componentShortName = fmt::sprintf("%s %s", classDesc->GetIcon(), classDesc->GetClassDisplayName()); // pComponent->getClassName();
+                                auto * classDesc = pComponent->GetClassDesc();
+                                string componentShortName = fmt::sprintf("%s %s", classDesc->GetIcon(), classDesc->GetClassDisplayName()); // pComponent->GetClassName();
 
                                 // Remove "Component" at the end of class name if present
                                 {
@@ -1007,7 +1092,14 @@ namespace vg::editor
 
                                 ImVec2 collapsingHeaderPos = ImGui::GetCursorPos();
 
+                                const bool isOpen = asBool(ObjectFlags::Opened & pComponent->GetObjectFlags());
+                                ImGui::SetNextItemOpen(isOpen);
+
                                 const bool open = ImGui::CollapsingHeader(ImGui::getObjectLabel("", componentShortName, pComponent).c_str(), nullptr, ImGuiTreeNodeFlags_InvisibleArrow | ImGuiTreeNodeFlags_AllowItemOverlap);
+
+                                // Save Open/Close state
+                                if (open != isOpen)
+                                    pComponent->SetObjectFlags(ObjectFlags::Opened, open);
 
                                 if (ImGui::BeginDragDropSource(ImGuiDragDropFlags_AcceptNoDrawDefaultRect | ImGuiDragDropFlags_SourceNoHoldToOpenOthers))
                                 {
@@ -1154,25 +1246,19 @@ namespace vg::editor
                     bool ref = (type == IProperty::Type::ObjectPtr);
                     IObject * pObject = ref ? *_prop->GetPropertyObjectPtr(_object) : _prop->GetPropertyObject(_object);
 
-                    string treeNodeName;
-                    auto treeNodeFlags = ImGuiTreeNodeFlags_OpenOnArrow;
-
-                    //if (pObject)
-                    //    treeNodeName = pObject->getName();
-                    //else
-                    treeNodeName = displayName;
+                    string treeNodeName = displayName;
 
                     if (isEnumArray)
                     {
                         char label[1024];
                         sprintf_s(label, "%s (%u)", displayName, _prop->getEnumCount());
-                        if (ImGui::TreeNodeEx(label, treeNodeFlags))
+                        if (ImGui::TreeNodeEx(label, enumArrayTreeNodeFlags))
                         {
                             for (uint e = 0; e < _prop->getEnumCount(); ++e)
                             {
                                 pObject = ref ? *_prop->GetPropertyObjectPtr(_object, e) : _prop->GetPropertyObject(_object, e);
 
-                                if (ImGui::TreeNodeEx(_prop->getEnumName(e), treeNodeFlags | ImGuiTreeNodeFlags_DefaultOpen))
+                                if (ImGui::TreeNodeEx(_prop->getEnumName(e), ImGuiTreeNodeFlags_DefaultOpen))
                                 {
                                     if (nullptr != pObject)
                                         displayObject(pObject);
@@ -1187,9 +1273,11 @@ namespace vg::editor
                     {
                         ImGui::PushStyleColor(ImGuiCol_Text, ImGui::GetColorU32(ImGuiCol_Text));
 
+                        auto treeNodeFlags = ImGuiTreeNodeFlags_DefaultOpen;
+
                         if (nullptr != pObject)
                         {
-                            auto classDesc = pObject->getClassDesc();
+                            auto classDesc = pObject->GetClassDesc();
                             VG_ASSERT(classDesc);
                             if (classDesc && asBool(IClassDesc::Flags::Component & classDesc->GetFlags()))
                                 treeNodeFlags |= ImGuiTreeNodeFlags_Leaf;
@@ -1259,13 +1347,13 @@ namespace vg::editor
                     {
                         char label[1024];
                         sprintf_s(label, "%s (%u)", displayName, _prop->getEnumCount());
-                        if (ImGui::TreeNodeEx(label, ImGuiTreeNodeFlags_OpenOnArrow))
+                        if (ImGui::TreeNodeEx(label, enumArrayTreeNodeFlags))
                         {
                             for (uint e = 0; e < _prop->getEnumCount(); ++e)
                             {
                                 auto pResource = ref ? *_prop->GetPropertyResourcePtr(_object, e) : _prop->GetPropertyResource(_object, e);
 
-                                if (ImGui::TreeNodeEx(_prop->getEnumName(e), ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_DefaultOpen))
+                                if (ImGui::TreeNodeEx(_prop->getEnumName(e), /*ImGuiTreeNodeFlags_OpenOnArrow |*/ ImGuiTreeNodeFlags_DefaultOpen))
                                 {
                                     if (nullptr != pResource)
                                     {
@@ -1337,7 +1425,7 @@ namespace vg::editor
     //--------------------------------------------------------------------------------------
     bool ImGuiWindow::displayResource(core::IResource * _resource, const core::IProperty * _prop, core::uint _index)
     {
-        const char * className = _resource->getClassName();
+        const char * className = _resource->GetClassName();
         const auto * factory = Kernel::getFactory();
         const auto * classDesc = factory->getClassDescriptor(className);
 
@@ -1475,58 +1563,68 @@ namespace vg::editor
             ImGui::EndPopup();
         }
 
-        auto & fileBrowser = getFileBrowser();
-
-        if (createNewFile)
-        {
-            fileBrowser.setFolder(getDefaultFolder(_resource));
-            ImGui::OpenPopup(newFileButtonName.c_str());
-        }
-        else if (openExistingFile)
-        {
-            fileBrowser.setFolder(getDefaultFolder(_resource));
-            ImGui::OpenPopup(openFileButtonName.c_str());
-        }
-        else if (saveAsFile)
-        {
-            fileBrowser.setFolder(getDefaultFolder(_resource));
-            ImGui::OpenPopup(saveAsFileButtonName.c_str());
-        }
-
         // build extension list
         string ext = getFileBrowserExt(_resource);
 
-        // Create new file
-        if (fileBrowser.showFileDialog(newFileButtonName.c_str(), imgui_addons::ImGuiFileBrowser::DialogMode::SAVE, style::dialog::Size, ext.c_str())) 
+        if (createNewFile)
         {
-            const string newFilePath = io::addExtensionIfNotPresent(fileBrowser.selected_path, _resource->getExtensions());
-            if (_resource->CreateFile(newFilePath))
+            ImGui::OpenFileDialog(newFileButtonName, ext, getDefaultFolder(_resource));
+        }
+        else if (openExistingFile)
+        {
+            ImGui::OpenFileDialog(openFileButtonName, ext, getDefaultFolder(_resource));
+        }
+        else if (saveAsFile)
+        {
+            ImGui::SaveFileDialog(saveAsFileButtonName, ext, getDefaultFolder(_resource));
+        }
+
+        // Create new file
+        if (ImGui::DisplayFileDialog(newFileButtonName))
+        {
+            if (ImGui::IsFileDialogOK())
             {
-                _resource->SetResourcePath(newFilePath);
-                changed = true;
+                const string newFilePath = io::addExtensionIfNotPresent(ImGui::GetFileDialogSelectedFile(), _resource->getExtensions());
+                if (_resource->CreateFile(newFilePath))
+                {
+                    _resource->SetResourcePath(newFilePath);
+                    changed = true;
+                }
             }
+
+            ImGui::CloseFileDialog();
         }
 
         // Open existing file
-        if (fileBrowser.showFileDialog(openFileButtonName.c_str(), imgui_addons::ImGuiFileBrowser::DialogMode::OPEN, style::dialog::Size, ext.c_str()))
+        if (ImGui::DisplayFileDialog(openFileButtonName))
         {
-            const string newFilePath = fileBrowser.selected_path;
-            if (_resource->GetResourcePath() != newFilePath)
+            if (ImGui::IsFileDialogOK())
             {
-                _resource->SetResourcePath(newFilePath);
-                changed = true;
+                const string newFilePath = ImGui::GetFileDialogSelectedFile();
+                if (_resource->GetResourcePath() != newFilePath)
+                {
+                    _resource->SetResourcePath(newFilePath);
+                    changed = true;
+                }
             }
+
+            ImGui::CloseFileDialog();
         }
 
         // Save existing file
-        if (fileBrowser.showFileDialog(saveAsFileButtonName.c_str(), imgui_addons::ImGuiFileBrowser::DialogMode::SAVE, style::dialog::Size, ext.c_str()))
+        if (ImGui::DisplayFileDialog(saveAsFileButtonName))
         {
-            const string newFilePath = io::addExtensionIfNotPresent(fileBrowser.selected_path, _resource->getExtensions());
-            if (_resource->SaveFile(newFilePath))
+            if (ImGui::IsFileDialogOK())
             {
-                _resource->SetResourcePath(newFilePath);
-                changed = true;
+                const string newFilePath = io::addExtensionIfNotPresent(ImGui::GetFileDialogSelectedFile(), _resource->getExtensions());
+                if (_resource->SaveFile(newFilePath))
+                {
+                    _resource->SetResourcePath(newFilePath);
+                    changed = true;
+                }
             }
+
+            ImGui::CloseFileDialog();
         }
 
         // Display all properties of the resource object
@@ -1534,7 +1632,7 @@ namespace vg::editor
         if (resourceObject)
         {
             bool anyVisibleProperty = false;
-            auto * objectClassDesc = factory->getClassDescriptor(resourceObject->getClassName());
+            auto * objectClassDesc = factory->getClassDescriptor(resourceObject->GetClassName());
 
             for (uint i = 0; i < objectClassDesc->GetPropertyCount(); ++i)
             {
@@ -1547,7 +1645,7 @@ namespace vg::editor
                 }
             }
 
-            if (!strcmp(_resource->getClassName(), "PrefabResource"))
+            if (!strcmp(_resource->GetClassName(), "PrefabResource"))
                 anyVisibleProperty = false;
 
             if (anyVisibleProperty)
@@ -1598,7 +1696,7 @@ namespace vg::editor
     //--------------------------------------------------------------------------------------
     string ImGuiWindow::getDefaultFolder(const IResource * _resource)
     {
-        return getDefaultFolder(_resource->getClassName());
+        return getDefaultFolder(_resource->GetClassName());
     }
 
     //--------------------------------------------------------------------------------------
@@ -1695,10 +1793,10 @@ namespace vg::editor
         const auto displayName = _prop->getDisplayName();
         auto pFloat4x4 = _prop->GetPropertyFloat4x4(_object);
         ImGui::PushID(_prop);
-        changed |= ImGui::InputFloat4(fmt::sprintf("%s.I", displayName).c_str(), (float*)pFloat4x4 + 0, "%.2f", ImGuiInputTextFlags_EnterReturnsTrue);
-        changed |= ImGui::InputFloat4(fmt::sprintf("%s.J", displayName).c_str(), (float*)pFloat4x4 + 4, "%.2f", ImGuiInputTextFlags_EnterReturnsTrue);
-        changed |= ImGui::InputFloat4(fmt::sprintf("%s.K", displayName).c_str(), (float*)pFloat4x4 + 8, "%.2f", ImGuiInputTextFlags_EnterReturnsTrue);
-        changed |= ImGui::InputFloat4(fmt::sprintf("%s.T", displayName).c_str(), (float*)pFloat4x4 + 12, "%.2f", ImGuiInputTextFlags_EnterReturnsTrue);
+        changed |= ImGui::InputFloat4(fmt::sprintf("%s.I", displayName).c_str(), (float *)pFloat4x4 + 0, "%.3f", ImGuiInputTextFlags_EnterReturnsTrue);
+        changed |= ImGui::InputFloat4(fmt::sprintf("%s.J", displayName).c_str(), (float *)pFloat4x4 + 4, "%.3f", ImGuiInputTextFlags_EnterReturnsTrue);
+        changed |= ImGui::InputFloat4(fmt::sprintf("%s.K", displayName).c_str(), (float *)pFloat4x4 + 8, "%.3f", ImGuiInputTextFlags_EnterReturnsTrue);
+        changed |= ImGui::InputFloat4(fmt::sprintf("%s.T", displayName).c_str(), (float*)pFloat4x4 + 12, "%.3f", ImGuiInputTextFlags_EnterReturnsTrue);
         ImGui::PopID();
         return changed;
     }
