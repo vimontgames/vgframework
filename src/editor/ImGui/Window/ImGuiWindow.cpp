@@ -1576,7 +1576,7 @@ namespace vg::editor
         }
         else if (saveAsFile)
         {
-            ImGui::SaveFileDialog(openFileButtonName, ext, getDefaultFolder(_resource));
+            ImGui::SaveFileDialog(saveAsFileButtonName, ext, getDefaultFolder(_resource));
         }
 
         // Create new file

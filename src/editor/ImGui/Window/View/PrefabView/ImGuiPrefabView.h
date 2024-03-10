@@ -18,22 +18,24 @@ namespace vg::editor
         ImGuiPrefabView(const core::IResource * _prefabRes);
         ~ImGuiPrefabView();
 
-        bool                    ShowToolbar         () const final override;
-        void                    DrawToolbar         () final override;
+        bool                        ShowToolbar         () const final override;
+        void                        DrawToolbar         () final override;
 
-        bool                    ShowTitlebarMenu    () const final override { return true; };
-        void                    DrawTitlebarMenu    () final override;
+        bool                        ShowTitlebarMenu    () const final override { return true; };
+        void                        DrawTitlebarMenu    () final override;
         
-        bool                    ShowContextMenu     () const final override { return false;}
-        ImGuiMenu::Status       DrawContextMenu     () final override;
+        bool                        ShowContextMenu     () const final override { return false;}
+        ImGuiMenu::Status           DrawContextMenu     () final override;
 
-        gfx::IView::Flags       GetViewFlags        () const final override;
-        core::IWorld *          GetWorld            () const final override;
-        void                    OnCloseWindow       () final override;
-        bool                    UpdateScene         () final override;
+        gfx::IView::Flags           GetViewFlags        () const final override;
+        core::IWorld *              GetWorld            () const final override;
+        void                        OnCloseWindow       () final override;
+        bool                        UpdateScene         () final override;
+
+        VG_INLINE core::IResource * getPrefabRes        () const { return m_prefabRes;}
 
     private:
-        core::IResource *       m_prefabRes = nullptr;
-        core::IWorld *          m_prefabWorld = nullptr;
+        core::IResource *           m_prefabRes         = nullptr;
+        core::IWorld *              m_prefabWorld       = nullptr;
     };
 }

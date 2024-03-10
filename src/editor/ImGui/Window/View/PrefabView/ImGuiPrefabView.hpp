@@ -10,6 +10,7 @@ namespace vg::editor
         IFactory * factory = Kernel::getFactory();
         m_prefabWorld = (IWorld *)factory->createObject("World", _prefabRes->GetResourcePath());
         m_prefabWorld->SetObjectFlags(ObjectFlags::Prefab, true);
+        VG_SAFE_INCREASE_REFCOUNT(m_prefabRes);
     }
 
     //--------------------------------------------------------------------------------------
@@ -69,7 +70,7 @@ namespace vg::editor
     //--------------------------------------------------------------------------------------
     void ImGuiPrefabView::DrawTitlebarMenu()
     {
-        if (nullptr == m_prefabRes)
+        if (nullptr == m_prefabRes || nullptr == m_prefabWorld)
             return;
         
         IBaseScene * scene = VG_SAFE_STATIC_CAST(IBaseScene, m_prefabRes->getObject());
@@ -219,7 +220,11 @@ namespace vg::editor
             selection->SetSelectedObjects(selected);
         }
 
+        if (m_view)
+            m_view->SetWorld(nullptr);
+
         Editor::get()->destroyWindow(this);
         VG_SAFE_RELEASE(m_prefabWorld);
+        VG_SAFE_RELEASE(m_prefabRes);
     }
 }

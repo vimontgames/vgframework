@@ -85,7 +85,7 @@ namespace vg::editor
             {
                 m_selected = MenuOption::Close;
                 openPopup = true;
-                m_popup = ImGui::getObjectLabel("Remove", _object);
+                m_popup = "Remove";
                 m_popupObject = scene;
             }
             ImGui::EndPopup();
