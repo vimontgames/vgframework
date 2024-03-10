@@ -29,7 +29,7 @@ namespace vg::core
         IModel *                    GetModel            (Lod _lod) const override;
 
         InstanceFlags               GetInstanceFlags    () const final override;
-        void                        SetInstanceFlags    (InstanceFlags _flags, bool _enabled) final override;
+        void                        SetInstanceFlags    (InstanceFlags _flags, bool _enabled) override;
 
         RuntimeFlags                GetRuntimeFlags     () const final override;
         void                        SetRuntimeFlags     (RuntimeFlags _flags, bool _enabled) final override;
@@ -52,6 +52,9 @@ namespace vg::core
 
         VG_INLINE RuntimeFlags      getRuntimeFlags     () const;
         VG_INLINE void              setRuntimeFlags     (RuntimeFlags _flags, bool _enabled);
+
+        VG_INLINE bool              isEnabled           () const;
+        VG_INLINE bool              isStatic            () const;
       
     private:
         InstanceFlags               m_flags;

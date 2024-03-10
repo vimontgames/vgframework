@@ -113,17 +113,17 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
-    void AnimationComponent::OnPlay()
+    void AnimationComponent::OnEnable()
     {
-        super::OnPlay();
-        m_animations.OnPlay();
+        super::OnEnable();
+        m_animations.OnEnable();
     }
 
     //--------------------------------------------------------------------------------------
-    void AnimationComponent::OnStop()
+    void AnimationComponent::OnDisable()
     {
-        m_animations.OnStop();
-        super::OnStop();
+        m_animations.OnDisable();
+        super::OnDisable();
     }
 
     //--------------------------------------------------------------------------------------

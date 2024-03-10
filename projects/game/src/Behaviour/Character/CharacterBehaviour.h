@@ -10,8 +10,8 @@ public:
     CharacterBehaviour(const vg::core::string& _name, vg::core::IObject* _parent);
     ~CharacterBehaviour();
 
-    void                OnPlay() override;
-    void                OnStop() override;
+    void                OnEnable() override;
+    void                OnDisable() override;
 
     void                FixedUpdate(float _dt) override;
     void                Update(float _dt) override;

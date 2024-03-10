@@ -53,9 +53,9 @@ bool CharacterBehaviour::registerProperties(IClassDesc& _desc)
 }
 
 //--------------------------------------------------------------------------------------
-void CharacterBehaviour::OnPlay()
+void CharacterBehaviour::OnEnable()
 {
-    super::OnPlay();
+    super::OnEnable();
 
     for (uint i = 0; i < vg::core::countof(m_anim); ++i)
         m_anim[i] = -1;
@@ -70,15 +70,13 @@ void CharacterBehaviour::OnPlay()
         m_anim[CharacterState::Jumping] = animationComponent->GetAnimationIndex("Jump");
     }
 
-    m_startPos = GetGameObject()->getGlobalMatrix()[3].xyz;
-
-    
+    m_startPos = GetGameObject()->getGlobalMatrix()[3].xyz;    
 }
 
 //--------------------------------------------------------------------------------------
-void CharacterBehaviour::OnStop()
+void CharacterBehaviour::OnDisable()
 {
-    super::OnStop();
+    super::OnDisable();
 }
 
 //--------------------------------------------------------------------------------------

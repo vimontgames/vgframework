@@ -40,17 +40,17 @@ bool PlayerBehaviour::registerProperties(IClassDesc & _desc)
 }
 
 //--------------------------------------------------------------------------------------
-void PlayerBehaviour::OnPlay() 
+void PlayerBehaviour::OnEnable()
 {
-    super::OnPlay();
+    super::OnEnable();
     Game::get()->addCharacter(CharacterType::Player, this);
 }
 
 //--------------------------------------------------------------------------------------
-void PlayerBehaviour::OnStop()
+void PlayerBehaviour::OnDisable()
 {
     Game::get()->removeCharacter(CharacterType::Player, this);
-    super::OnStop();
+    super::OnDisable();
 }
 
 //--------------------------------------------------------------------------------------

@@ -258,7 +258,10 @@ namespace vg::engine
             {
                 IObject * root = scene->GetRoot();
                 if (nullptr != root)
+                {
                     root->OnPlay();
+                    root->OnEnable();
+                }
             }
         }
 
@@ -297,7 +300,10 @@ namespace vg::engine
             {
                 IObject * root = scene->GetRoot();
                 if (nullptr != root)
+                {
+                    root->OnDisable();
                     root->OnStop();
+                }
             }
         }
     }

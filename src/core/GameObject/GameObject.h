@@ -21,7 +21,12 @@ namespace vg::core
         void                                                OnPlay                  () override;
         void                                                OnStop                  () override;
 
+        void                                                OnEnable                () override;
+        void                                                OnDisable               () override;
+
         void                                                setParent               (IObject * _parent) final override;
+
+        void                                                SetInstanceFlags        (InstanceFlags _flags, bool _enabled) final override;
 
         UpdateFlags                                         GetUpdateFlags          () const final override;
         void                                                SetUpdateFlags          (UpdateFlags _flags, bool _enabled) final override;

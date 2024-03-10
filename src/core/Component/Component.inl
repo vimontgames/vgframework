@@ -1,6 +1,12 @@
 namespace vg::core
 {
     //--------------------------------------------------------------------------------------
+    VG_INLINE bool Component::isEnabled() const
+    {
+        return asBool(ComponentFlags::Enabled & getComponentFlags());
+    }
+
+    //--------------------------------------------------------------------------------------
     VG_INLINE ComponentFlags Component::getComponentFlags() const
     {
         return m_flags;

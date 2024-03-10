@@ -34,9 +34,9 @@ bool GameCameraBehaviour::registerProperties(IClassDesc & _desc)
 }
 
 //--------------------------------------------------------------------------------------
-void GameCameraBehaviour::OnPlay()
+void GameCameraBehaviour::OnEnable()
 {
-    super::OnPlay();
+    super::OnEnable();
     m_offset = getGameObject()->getGlobalMatrix()[3].xyz;
 }
 

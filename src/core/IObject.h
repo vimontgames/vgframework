@@ -38,6 +38,9 @@ namespace vg::core
         virtual void                        OnPlay              () = 0;
         virtual void                        OnStop              () = 0;
 
+        virtual void                        OnEnable            () = 0;
+        virtual void                        OnDisable           () = 0;
+
         virtual void                        setParent           (IObject * _parent) = 0;
         virtual IObject *                   getParent           () const = 0;
 

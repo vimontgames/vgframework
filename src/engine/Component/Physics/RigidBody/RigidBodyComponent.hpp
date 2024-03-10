@@ -92,7 +92,7 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
-    void RigidBodyComponent::OnPlay()
+    void RigidBodyComponent::OnEnable()
     {
         if (!m_body)
             createBody();
@@ -101,23 +101,23 @@ namespace vg::engine
             m_body->Activate(GetGameObject()->GetGlobalMatrix());
 
         if (m_shapeDesc)
-            m_shapeDesc->OnPlay();
+            m_shapeDesc->OnEnable();
 
         if (m_bodyDesc)
-            m_bodyDesc->OnPlay();
+            m_bodyDesc->OnEnable();
 
-        super::OnPlay();
+        super::OnEnable();
     }
 
     //--------------------------------------------------------------------------------------
-    void RigidBodyComponent::OnStop()
+    void RigidBodyComponent::OnDisable()
     {
-        super::OnStop();
+        super::OnDisable();
 
         VG_SAFE_RELEASE(m_body);
 
         if (m_shapeDesc)
-            m_shapeDesc->OnStop();
+            m_shapeDesc->OnDisable();
 
         if (m_bodyDesc)
             m_bodyDesc->OnStop();

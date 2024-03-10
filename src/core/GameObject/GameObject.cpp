@@ -85,9 +85,6 @@ namespace vg::core
     {
         super::OnPlay();
 
-        for (uint i = 0; i < m_components.size(); ++i)
-            m_components[i]->OnPlay();
-
         for (uint i = 0; i < m_children.size(); ++i)
             m_children[i]->OnPlay();
     }
@@ -98,10 +95,38 @@ namespace vg::core
         for (uint i = 0; i < m_children.size(); ++i)
             m_children[i]->OnStop();
 
-        for (uint i = 0; i < m_components.size(); ++i)
-            m_components[i]->OnStop();
-
         super::OnStop();
+    }
+
+    //--------------------------------------------------------------------------------------
+    void GameObject::OnEnable()
+    {
+        if (isEnabled())
+        {
+            super::OnEnable();
+
+            for (uint i = 0; i < m_components.size(); ++i)
+            {
+                auto * component = m_components[i];
+                if (component->isEnabled())
+                    component->OnEnable();
+            }
+
+            for (uint i = 0; i < m_children.size(); ++i)
+                m_children[i]->OnEnable();
+        }
+    }
+
+    //--------------------------------------------------------------------------------------
+    void GameObject::OnDisable()
+    {
+        for (uint i = 0; i < m_children.size(); ++i)
+            m_children[i]->OnDisable();
+
+        for (uint i = 0; i < m_components.size(); ++i)
+            m_components[i]->OnDisable();
+
+        super::OnDisable();
     }
 
     //--------------------------------------------------------------------------------------
@@ -109,6 +134,20 @@ namespace vg::core
     {
         super::setParent(_parent);
         recomputeUpdateFlags();
+    }
+
+    //--------------------------------------------------------------------------------------
+    void GameObject::SetInstanceFlags(InstanceFlags _flags, bool _enabled)
+    {
+        super::SetInstanceFlags(_flags, _enabled);
+
+        if (asBool(_flags & InstanceFlags::Enabled))
+        {
+            if (_enabled)
+                OnEnable();
+            else
+                OnDisable();
+        }
     }
 
     //--------------------------------------------------------------------------------------

@@ -39,6 +39,8 @@ namespace vg::core
 
         VG_INLINE GameObject *      getGameObject           () const;
 
+        VG_INLINE bool              isEnabled               () const;
+
     private:
         ComponentFlags              m_flags;
         UpdateFlags                 m_update;

@@ -124,7 +124,7 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
-    void CharacterControllerComponent::OnPlay()
+    void CharacterControllerComponent::OnEnable()
     {
         if (!m_character)
             createCharacter();
@@ -133,26 +133,26 @@ namespace vg::engine
             m_character->Activate(GetGameObject()->GetGlobalMatrix());
 
         if (m_shapeDesc)
-            m_shapeDesc->OnPlay();
+            m_shapeDesc->OnEnable();
 
         if (m_characterDesc)
-            m_characterDesc->OnPlay();
+            m_characterDesc->OnEnable();
 
-        super::OnPlay();
+        super::OnEnable();
     }
 
     //--------------------------------------------------------------------------------------
-    void CharacterControllerComponent::OnStop()
+    void CharacterControllerComponent::OnDisable()
     {
-        super::OnStop();
+        super::OnDisable();
 
         VG_SAFE_RELEASE(m_character);
 
         if (m_shapeDesc)
-            m_shapeDesc->OnStop();
+            m_shapeDesc->OnDisable();
 
         if (m_characterDesc)
-            m_characterDesc->OnStop();
+            m_characterDesc->OnDisable();
 
         if (m_character)
             m_character->Deactivate(GetGameObject()->GetGlobalMatrix());

@@ -52,6 +52,16 @@ namespace vg::engine
         material->setParent((IObject*)this);
 
         material->SetSurfaceType(m_surfaceType);
+
+        const IClassDesc * classDesc = material->GetClassDesc();
+
+        const auto propCount = classDesc->GetPropertyCount();
+        for (uint i = 0; i < propCount; ++i)
+        {
+            const auto prop = classDesc->GetPropertyByIndex(i);
+
+            VG_DEBUGPRINT("%u %s\n", i, prop->getName());
+        }
         
         material->SetFloat2("Tiling", m_tiling);
         material->SetColor("AlbedoColor", m_albedoColor);

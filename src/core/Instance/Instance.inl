@@ -1,6 +1,18 @@
 namespace vg::core
 {
     //--------------------------------------------------------------------------------------
+    VG_INLINE bool Instance::isEnabled() const
+    {
+        return asBool(InstanceFlags::Enabled & getInstanceFlags());
+    }
+
+    //--------------------------------------------------------------------------------------
+    VG_INLINE bool Instance::isStatic() const
+    {
+        return asBool(InstanceFlags::Static & getInstanceFlags());
+    }
+
+    //--------------------------------------------------------------------------------------
     VG_INLINE void Instance::setLocalMatrix(const float4x4 & _local)
     {
         m_local = _local;

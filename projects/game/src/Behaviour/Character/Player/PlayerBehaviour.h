@@ -9,8 +9,8 @@ public:
     PlayerBehaviour     (const vg::core::string & _name, vg::core::IObject * _parent);
     ~PlayerBehaviour    ();
 
-    void                OnPlay              () final override;
-    void                OnStop              () final override;
+    void                OnEnable            () final override;
+    void                OnDisable           () final override;
 
     void                FixedUpdate         (float _dt) override;
     void                Update              (float _dt) override;

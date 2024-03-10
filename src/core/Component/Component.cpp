@@ -77,6 +77,14 @@ namespace vg::core
     void Component::SetComponentFlags(ComponentFlags _flags, bool _enabled)
     {
         setComponentFlags(_flags, _enabled);
+
+        if (asBool(ComponentFlags::Enabled & _flags))
+        {
+            if (_enabled)
+                OnPlay();
+            else
+                OnStop();   // should be "OnDisable" because we don't want to restore properties! Also should be handled in "OnPropertyChange"!
+        }
     }
 
     //--------------------------------------------------------------------------------------

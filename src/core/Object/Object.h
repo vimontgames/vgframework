@@ -57,6 +57,9 @@ namespace vg::core
         void                        OnPlay				() override;
         void                        OnStop				() override;
 
+		void                        OnEnable			() override;
+		void                        OnDisable			() override;
+
         void                        setParent           (IObject * _parent) override;
         IObject *                   getParent           () const final override;
 

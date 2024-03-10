@@ -89,7 +89,19 @@ namespace vg::core
     {
         auto * factory = Kernel::getFactory();
         if (factory)
-            factory->RestoreProperties(this);
+            factory->RestoreProperties(this);        
+    }
+
+    //--------------------------------------------------------------------------------------
+    void Object::OnEnable()
+    {
+
+    }
+
+    //--------------------------------------------------------------------------------------
+    void Object::OnDisable()
+    {
+
     }
 
     //--------------------------------------------------------------------------------------

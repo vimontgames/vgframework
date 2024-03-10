@@ -31,19 +31,19 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
-    void AnimationResourceList::OnPlay()
+    void AnimationResourceList::OnEnable()
     {
-        super::OnPlay();
+        super::OnEnable();
         for (uint i = 0; i < m_animationResources.size(); ++i)
-            m_animationResources[i].OnPlay();
+            m_animationResources[i].OnEnable();
     }
 
     //--------------------------------------------------------------------------------------
-    void AnimationResourceList::OnStop()
+    void AnimationResourceList::OnDisable()
     {
         for (uint i = 0; i < m_animationResources.size(); ++i)
-            m_animationResources[i].OnStop();
-        super::OnStop();
+            m_animationResources[i].OnDisable();
+        super::OnDisable();
     }
 
     //--------------------------------------------------------------------------------------
