@@ -17,6 +17,7 @@ namespace vg::editor
     ImGuiPrefabView::~ImGuiPrefabView()
     {
         VG_SAFE_RELEASE(m_prefabWorld);
+        VG_SAFE_RELEASE(m_prefabRes);
     }
 
     //--------------------------------------------------------------------------------------
