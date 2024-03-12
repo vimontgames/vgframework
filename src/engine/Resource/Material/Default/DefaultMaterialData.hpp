@@ -9,6 +9,8 @@ namespace vg::engine
     {
         super::registerProperties(_desc);
 
+        registerPropertyEnum(DefaultMaterialData, UVSource, m_UVSource, "UV Source");
+
         registerProperty(DefaultMaterialData, m_tiling, "Tiling");
         setPropertyRange(DefaultMaterialData, m_tiling, float2(0, 16));
 
@@ -19,7 +21,7 @@ namespace vg::engine
         registerProperty(DefaultMaterialData, m_normalStrength, "Normal Strength");
         setPropertyRange(DefaultMaterialData, m_normalStrength, float2(0.0f, 1.0f));
 
-        registerPropertyResource(DefaultMaterialData, m_pbr, "PBR Map");
+        registerPropertyResource(DefaultMaterialData, m_pbrMap, "PBR Map");
         registerProperty(DefaultMaterialData, m_occlusion, "Occlusion");
         setPropertyRange(DefaultMaterialData, m_occlusion, float2(0.0f, 1.0f));
         registerProperty(DefaultMaterialData, m_roughness, "Roughness");
@@ -36,6 +38,7 @@ namespace vg::engine
     {
         m_albedoMap.setParent(this);
         m_normalMap.setParent(this);
+        m_pbrMap.setParent(this);
     }
 
     //--------------------------------------------------------------------------------------
@@ -49,74 +52,25 @@ namespace vg::engine
     {
         IFactory * factory = Kernel::getFactory();
         auto * material = (renderer::IMaterialModel*)factory->createObject("DefaultMaterialModel", "Default");
-        material->setParent((IObject*)this);
 
-        material->SetSurfaceType(m_surfaceType);
-
-        const IClassDesc * classDesc = material->GetClassDesc();
-
-        const auto propCount = classDesc->GetPropertyCount();
-        for (uint i = 0; i < propCount; ++i)
+        // This is generic code that could go to parent class and be shared by all material types in the future
         {
-            const auto prop = classDesc->GetPropertyByIndex(i);
+            material->SetSurfaceType(m_surfaceType);
 
-            VG_DEBUGPRINT("%u %s\n", i, prop->getName());
+            const IClassDesc * srcClassDesc = GetClassDesc();
+            const IClassDesc * dstClassDesc = material->GetClassDesc();
+
+            for (uint i = 0; i < srcClassDesc->GetPropertyCount(); ++i)
+            {
+                const auto & srcProp = srcClassDesc->GetPropertyByIndex(i);
+                if (auto * dstProp = dstClassDesc->GetPropertyByName(srcProp->getName()))
+                {
+                    if (factory->CanCopyProperty(srcProp, dstProp))
+                        factory->CopyProperty(srcProp, this, dstProp, material);
+                }
+            }
         }
         
-        material->SetFloat2("Tiling", m_tiling);
-        material->SetColor("AlbedoColor", m_albedoColor);
-        material->SetFloat("NormalStrength", m_normalStrength);
-        material->SetFloat("Occlusion", m_occlusion);
-        material->SetFloat("Roughness", m_roughness);
-        material->SetFloat("Metalness", m_metalness);
-        
         return material;
-    }
-
-    //--------------------------------------------------------------------------------------
-    void DefaultMaterialData::OnPropertyChanged(IObject * _object, const IProperty & _prop, bool _notifyParent)
-    {
-        auto material = getMaterialModel();
-
-        if (!strcmp(_prop.getName(), "m_albedoColor"))
-            material->SetColor("AlbedoColor", m_albedoColor);
-        else if (!strcmp(_prop.getName(), "m_normalStrength"))
-            material->SetFloat("NormalStrength", m_normalStrength);
-        else if (!strcmp(_prop.getName(), "m_occlusion"))
-            material->SetFloat("Occlusion", m_occlusion);
-        else if (!strcmp(_prop.getName(), "m_roughness"))
-            material->SetFloat("Roughness", m_roughness);
-        else if (!strcmp(_prop.getName(), "m_metalness"))
-            material->SetFloat("Metalness", m_metalness);
-        else if (!strcmp(_prop.getName(), "m_tiling"))
-            material->SetFloat2("Tiling", m_tiling);
-
-        super::OnPropertyChanged(_object, _prop, _notifyParent);
-    }
-
-    //--------------------------------------------------------------------------------------
-    void DefaultMaterialData::onResourceLoaded(core::IResource * _resource)
-    {
-        auto material = getMaterialModel();
-
-        if (_resource == &m_albedoMap)
-            material->SetTexture("AlbedoMap", (gfx::ITexture *)_resource->getObject());
-        else if (_resource == &m_normalMap)
-            material->SetTexture("NormalMap", (gfx::ITexture *)_resource->getObject());
-        else if (_resource == &m_pbr)
-            material->SetTexture("PBRMap", (gfx::ITexture *)_resource->getObject());
-    }
-
-    //--------------------------------------------------------------------------------------
-    void DefaultMaterialData::onResourceUnloaded(core::IResource * _resource)
-    {
-        auto material = getMaterialModel();
-
-        if (_resource == &m_albedoMap)
-            material->SetTexture("AlbedoMap", nullptr);
-        else if (_resource == &m_normalMap)
-            material->SetTexture("NormalMap", nullptr);
-        else if (_resource == &m_pbr)
-            material->SetTexture("PBRMap", nullptr);
-    }
+    }   
 }

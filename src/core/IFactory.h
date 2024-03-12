@@ -39,6 +39,8 @@ namespace vg::core
         virtual bool                        SaveProperties              (core::IObject * _object) = 0; 
         virtual bool                        RestoreProperties           (core::IObject * _object) = 0;
         virtual bool                        CopyProperties              (const core::IObject * _srcObj, core::IObject * _dstObj) = 0;
+        virtual bool                        CanCopyProperty             (const core::IProperty * _srcProp, const core::IProperty * _dstProp) const = 0;
+        virtual bool                        CopyProperty                (const core::IProperty * _srcProp, const core::IObject * _srcObj, const core::IProperty * _dstProp, core::IObject * _dstObj) = 0;
         virtual IObject *                   Instanciate                 (const core::IObject * _object, IObject * _parent = nullptr) = 0;
 
         virtual bool                        IsA                         (const char * _class, const char * _other) const = 0;

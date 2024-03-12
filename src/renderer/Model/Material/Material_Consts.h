@@ -1,6 +1,7 @@
 #pragma once
 
 #include "gfx/Raytracing/RayTracing_consts.h"
+#include "shaders/system/material_consts.hlsli"
 
 namespace vg::renderer
 {

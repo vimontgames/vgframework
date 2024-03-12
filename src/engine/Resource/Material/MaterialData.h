@@ -1,6 +1,7 @@
 #pragma once
 
 #include "core/Object/Object.h"
+#include "renderer/Model/Material/Material_Consts.h"
 
 namespace vg::gfx
 {
@@ -27,10 +28,14 @@ namespace vg::engine
 
         virtual renderer::IMaterialModel *  CreateRendererMaterialModel () const = 0;
 
-        void                                OnPropertyChanged(IObject * _object, const IProperty & _prop, bool _notifyParent) override;
+        void                                OnPropertyChanged           (core::IObject * _object, const core::IProperty & _prop, bool _notifyParent) override;
+
+        void                                onResourceLoaded            (core::IResource * _resource) override;
+        void                                onResourceUnloaded          (core::IResource * _resource) override;
 
     protected:
-        renderer::IMaterialModel *          getMaterialModel() const;
+        renderer::IMaterialModel *          getMaterialModel            () const;
+        const core::IProperty *             findTextureResourceProperty (core::IResource * _resource) const;
 
     protected:
         gfx::SurfaceType                    m_surfaceType;

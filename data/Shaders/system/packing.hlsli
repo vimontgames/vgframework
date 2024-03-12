@@ -3,6 +3,46 @@
 
 #include "types.hlsli"
 
+inline uint packR8(uint _packed, uint _value)
+{
+    return (_packed & 0xFFFFFF00) | _value; 
+}
+
+inline uint unpackR8(uint _packed)
+{
+    return 0x000000FF & _packed;
+}
+
+inline uint packG8(uint _packed, uint _value)
+{
+    return (_packed & 0xFFFF00FF) | (_value<<8); 
+}
+
+inline uint unpackG8(uint _packed)
+{
+    return (0x0000FF00 & _packed) >> 8;
+}
+
+inline uint packB8(uint _packed, uint _value)
+{
+    return (_packed & 0xFF00FFFF) | (_value<<16); 
+}
+
+inline uint unpackB8(uint _packed)
+{
+    return (0x00FF0000 & _packed) >> 16;
+}
+
+inline uint packA8(uint _packed, uint _value)
+{
+    return (_packed & 0x00FFFFFF) | (_value<<24); 
+}
+
+inline uint unpackA8(uint _packed)
+{
+    return (0xFF000000 & _packed) >> 24; // 0xFF000000 mask is unnecessary, will the compiler remove it?
+}
+
 inline uint packRGBA8(const float4 _color)
 {
     uint r = clamp(uint(_color.r * 255.5f), uint(0), uint(255));

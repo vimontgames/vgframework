@@ -478,4 +478,112 @@ namespace vg::core
         checkPropertyType(Type::Callback);
         return (IProperty::Callback)offset;
     }
+
+    //--------------------------------------------------------------------------------------
+    bool Property::IsResourceProperty() const
+    {
+        switch (type)
+        {
+            default:
+            VG_ASSERT_ENUM_NOT_IMPLEMENTED(type);
+            break;
+
+            case Type::Undefined:
+            case Type::Bool:
+            case Type::Int8:
+            case Type::Int16:
+            case Type::Int32:
+            case Type::Int64:
+            case Type::Uint8:
+            case Type::Uint16:
+            case Type::Uint32:
+            case Type::Uint2:
+            case Type::Uint3:
+            case Type::Uint4:
+            case Type::Uint64:
+            case Type::Float:
+            case Type::Float2:
+            case Type::Float3:
+            case Type::Float4:
+            case Type::Float4x4:
+            case Type::String:
+            case Type::EnumU8:
+            case Type::EnumU16:
+            case Type::EnumU32:
+            case Type::EnumU64:
+            case Type::EnumFlagsU8:
+            case Type::EnumFlagsU16:
+            case Type::EnumFlagsU32:
+            case Type::EnumFlagsU64:
+            case Type::BitMask:
+            case Type::Callback:
+            case Type::LayoutElement:
+            case Type::Object:
+            case Type::ObjectPtr:
+            case Type::ObjectPtrVector:
+            case Type::ObjectPtrDictionary:
+            case Type::ObjectVector:
+                return false;
+
+            case Type::Resource:
+            case Type::ResourcePtr:
+            case Type::ResourcePtrVector:
+            case Type::ResourceVector:
+                return true;
+            }
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool Property::IsObjectProperty() const
+    {
+        switch (type)
+        {
+            default:
+                VG_ASSERT_ENUM_NOT_IMPLEMENTED(type);
+                break;
+
+            case Type::Undefined:
+            case Type::Bool:
+            case Type::Int8:
+            case Type::Int16:
+            case Type::Int32:
+            case Type::Int64:
+            case Type::Uint8:
+            case Type::Uint16:
+            case Type::Uint32:
+            case Type::Uint2:
+            case Type::Uint3:
+            case Type::Uint4:
+            case Type::Uint64:
+            case Type::Float:
+            case Type::Float2:
+            case Type::Float3:
+            case Type::Float4:
+            case Type::Float4x4:
+            case Type::String:
+            case Type::EnumU8:
+            case Type::EnumU16:
+            case Type::EnumU32:
+            case Type::EnumU64:
+            case Type::EnumFlagsU8:
+            case Type::EnumFlagsU16:
+            case Type::EnumFlagsU32:
+            case Type::EnumFlagsU64:
+            case Type::BitMask:
+            case Type::Callback:
+            case Type::LayoutElement:
+                return false;
+
+            case Type::Object:
+            case Type::ObjectPtr:
+            case Type::ObjectPtrVector:
+            case Type::ObjectPtrDictionary:
+            case Type::ObjectVector:
+            case Type::Resource:
+            case Type::ResourcePtr:
+            case Type::ResourcePtrVector:
+            case Type::ResourceVector:
+                return true;
+        }
+    }
 }

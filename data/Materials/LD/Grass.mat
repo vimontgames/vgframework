@@ -14,7 +14,8 @@
                 <Property type="String" name="m_name" flags="NotVisible" value="Default"/>
                 <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
                 <Property type="EnumU8" name="m_surfaceType" value="Opaque"/>
-                <Property type="Float2" name="m_tiling" flags="HasRange" x="4" y="4"/>
+                <Property type="EnumU32" name="m_UVSource" value="PlanarZ"/>
+                <Property type="Float2" name="m_tiling" flags="HasRange" x="1" y="1"/>
                 <Property type="Resource" name="m_albedoMap" flags="Resource">
                     <Object class="TextureResource">
                         <Property type="String" name="m_name" flags="NotVisible" value=""/>
@@ -31,7 +32,7 @@
                     </Object>
                 </Property>
                 <Property type="Float" name="m_normalStrength" flags="HasRange" value="1"/>
-                <Property type="Resource" name="m_pbr" flags="Resource">
+                <Property type="Resource" name="m_pbrMap" flags="Resource">
                     <Object class="TextureResource">
                         <Property type="String" name="m_name" flags="NotVisible" value=""/>
                         <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>

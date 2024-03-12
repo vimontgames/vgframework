@@ -88,6 +88,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "system", "system", "{34ABDE
 		data\Shaders\system\lighting.hlsli = data\Shaders\system\lighting.hlsli
 		data\Shaders\system\lightsBuffer.hlsli = data\Shaders\system\lightsBuffer.hlsli
 		data\Shaders\system\packing.hlsli = data\Shaders\system\packing.hlsli
+		data\Shaders\system\material_consts.hlsli = data\Shaders\system\material_consts.hlsli
 		data\Shaders\system\picking.hlsl = data\Shaders\system\picking.hlsl
 		data\Shaders\system\picking.hlsli = data\Shaders\system\picking.hlsli
 		data\Shaders\system\quad.hlsli = data\Shaders\system\quad.hlsli
@@ -153,6 +154,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "workflows", "workflows", "{
 		.github\workflows\Debug_PC_Vulkan.yml = .github\workflows\Debug_PC_Vulkan.yml
 		.github\workflows\Release_PC_DirectX12.yml = .github\workflows\Release_PC_DirectX12.yml
 		.github\workflows\Release_PC_Vulkan.yml = .github\workflows\Release_PC_Vulkan.yml
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{D0B49AF3-70DB-42E7-AF6D-45C0620C439A}"
+	ProjectSection(SolutionItems) = preProject
+		TODO.txt = TODO.txt
 	EndProjectSection
 EndProject
 Global

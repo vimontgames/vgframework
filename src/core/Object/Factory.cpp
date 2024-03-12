@@ -254,231 +254,271 @@ namespace vg::core
         for (uint i = 0; i < propCount; ++i)
         {
             const IProperty * prop = classDesc->GetPropertyByIndex(i);
-            const IProperty::Type propType = prop->getType();
             const IProperty::Flags propFlags = prop->getFlags();
 
             if (asBool(IProperty::Flags::NotSaved & propFlags))
                 continue;
 
-            const bool isEnumArray = asBool(IProperty::Flags::EnumArray & prop->getFlags());
-            const auto type = prop->getType();
-
-            switch (propType)
-            {
-                case IProperty::Type::Undefined:
-                    VG_ASSERT_ENUM_NOT_IMPLEMENTED(propType);
-                    break;
-
-                case IProperty::Type::Bool:
-                    VG_ASSERT(!isEnumArray, "EnumArray CopyProperties serialization not implemented for type '%s'", asString(type).c_str());
-                    *prop->GetPropertyBool(_dstObj) = *prop->GetPropertyBool(_srcObj);
-                    break;
-
-                case IProperty::Type::Int8:
-                    VG_ASSERT(!isEnumArray, "EnumArray CopyProperties serialization not implemented for type '%s'", asString(type).c_str());
-                    *prop->GetPropertyInt8(_dstObj) = *prop->GetPropertyInt8(_srcObj);
-                    break;
-
-                case IProperty::Type::Int16:
-                    VG_ASSERT(!isEnumArray, "EnumArray CopyProperties serialization not implemented for type '%s'", asString(type).c_str());
-                    *prop->GetPropertyInt16(_dstObj) = *prop->GetPropertyInt16(_srcObj);
-                    break;
-
-                case IProperty::Type::Int32:
-                    VG_ASSERT(!isEnumArray, "EnumArray CopyProperties serialization not implemented for type '%s'", asString(type).c_str());
-                    *prop->GetPropertyInt32(_dstObj) = *prop->GetPropertyInt32(_srcObj);
-                    break;
-
-                case IProperty::Type::Int64:
-                    VG_ASSERT(!isEnumArray, "EnumArray CopyProperties serialization not implemented for type '%s'", asString(type).c_str());
-                    *prop->GetPropertyInt64(_dstObj) = *prop->GetPropertyInt64(_srcObj);
-                    break;
-
-                case IProperty::Type::Uint8:
-                    if (isEnumArray)
-                        memcpy(prop->GetPropertyUint8(_dstObj), prop->GetPropertyUint8(_srcObj), prop->getSizeOf() * prop->getEnumCount());
-                    else
-                        *prop->GetPropertyUint8(_dstObj) = *prop->GetPropertyUint8(_srcObj);
-                    break;
-
-                case IProperty::Type::EnumU8:
-                case IProperty::Type::EnumFlagsU8:
-                    VG_ASSERT(!isEnumArray, "EnumArray CopyProperties serialization not implemented for type '%s'", asString(type).c_str());
-                    *prop->GetPropertyUint8(_dstObj) = *prop->GetPropertyUint8(_srcObj);
-                    break;
-
-                case IProperty::Type::Uint16:
-                case IProperty::Type::EnumU16:
-                case IProperty::Type::EnumFlagsU16:
-                    VG_ASSERT(!isEnumArray, "EnumArray CopyProperties serialization not implemented for type '%s'", asString(type).c_str());
-                    *prop->GetPropertyUint16(_dstObj) = *prop->GetPropertyUint16(_srcObj);
-                    break;
-
-                case IProperty::Type::Uint32:
-                case IProperty::Type::EnumU32:
-                case IProperty::Type::EnumFlagsU32:
-                    VG_ASSERT(!isEnumArray, "EnumArray CopyProperties serialization not implemented for type '%s'", asString(type).c_str());
-                    *prop->GetPropertyUint32(_dstObj) = *prop->GetPropertyUint32(_srcObj);
-                    break;
-
-                case IProperty::Type::Float:
-                    VG_ASSERT(!isEnumArray, "EnumArray CopyProperties serialization not implemented for type '%s'", asString(type).c_str());
-                    *prop->GetPropertyFloat(_dstObj) = *prop->GetPropertyFloat(_srcObj);
-                    break;
-
-                case IProperty::Type::Float2:
-                    VG_ASSERT(!isEnumArray, "EnumArray CopyProperties serialization not implemented for type '%s'", asString(type).c_str());
-                    *prop->GetPropertyFloat2(_dstObj) = *prop->GetPropertyFloat2(_srcObj);
-                    break;
-
-                case IProperty::Type::Float3:
-                    VG_ASSERT(!isEnumArray, "EnumArray CopyProperties serialization not implemented for type '%s'", asString(type).c_str());
-                    *prop->GetPropertyFloat3(_dstObj) = *prop->GetPropertyFloat3(_srcObj);
-                    break;
-
-                case IProperty::Type::Float4:
-                    VG_ASSERT(!isEnumArray, "EnumArray CopyProperties serialization not implemented for type '%s'", asString(type).c_str());
-                    *prop->GetPropertyFloat4(_dstObj) = *prop->GetPropertyFloat4(_srcObj);
-                    break;
-
-                case IProperty::Type::Float4x4:
-                    VG_ASSERT(!isEnumArray, "EnumArray CopyProperties serialization not implemented for type '%s'", asString(type).c_str());
-                    *prop->GetPropertyFloat4x4(_dstObj) = *prop->GetPropertyFloat4x4(_srcObj);
-                    break;
-
-                case IProperty::Type::Uint64:
-                case IProperty::Type::EnumU64:
-                case IProperty::Type::EnumFlagsU64:
-                    VG_ASSERT(!isEnumArray, "EnumArray CopyProperties serialization not implemented for type '%s'", asString(type).c_str());
-                    *prop->GetPropertyUint64(_dstObj) = *prop->GetPropertyUint64(_srcObj);
-                    break;
-
-                case IProperty::Type::Uint2:
-                    VG_ASSERT(!isEnumArray, "EnumArray CopyProperties serialization not implemented for type '%s'", asString(type).c_str());
-                    memcpy(prop->GetPropertyUintN(_dstObj, 2), prop->GetPropertyUintN(_srcObj, 2), sizeof(uint) * 2);
-                    break;
-
-                case IProperty::Type::Uint3:
-                    VG_ASSERT(!isEnumArray, "EnumArray CopyProperties serialization not implemented for type '%s'", asString(type).c_str());
-                    memcpy(prop->GetPropertyUintN(_dstObj, 3), prop->GetPropertyUintN(_srcObj, 3), sizeof(uint) * 3);
-                    break;
-
-                case IProperty::Type::Uint4:
-                    VG_ASSERT(!isEnumArray, "EnumArray CopyProperties serialization not implemented for type '%s'", asString(type).c_str());
-                    memcpy(prop->GetPropertyUintN(_dstObj, 4), prop->GetPropertyUintN(_srcObj, 4), sizeof(uint) * 4);
-                    break;
-
-                case IProperty::Type::String:
-                    VG_ASSERT(!isEnumArray, "EnumArray CopyProperties serialization not implemented for type '%s'", asString(type).c_str());
-                    *prop->GetPropertyString(_dstObj) = *prop->GetPropertyString(_srcObj);
-                    break;
-
-                case IProperty::Type::Object:
-                {
-                    VG_ASSERT(!isEnumArray, "EnumArray CopyProperties serialization not implemented for type '%s'", asString(type).c_str());
-                    IObject * srcObj = prop->GetPropertyObject(_srcObj);
-                    IObject * dstObj = prop->GetPropertyObject(_dstObj);
-                    CopyProperties(srcObj, dstObj);
-                }
-                break;
-
-                case IProperty::Type::ObjectPtr:
-                {
-                    VG_ASSERT(!isEnumArray, "EnumArray CopyProperties serialization not implemented for type '%s'", asString(type).c_str());
-                    IObject ** srcObj = prop->GetPropertyObjectPtr(_srcObj);
-                    IObject ** dstObj = prop->GetPropertyObjectPtr(_dstObj);
-                    CopyProperties(*srcObj, *dstObj);
-                }
-                break;
-
-                case IProperty::Type::ObjectPtrVector:
-                {
-                    VG_ASSERT(!isEnumArray, "EnumArray CopyProperties serialization not implemented for type '%s'", asString(type).c_str());
-                    const vector<IObject *> * srcVec = prop->GetPropertyObjectPtrVector(_srcObj);
-                    const auto count = srcVec->size();
-
-                    vector<IObject *> * dstVec = prop->GetPropertyObjectPtrVector(_dstObj);
-                    VG_ASSERT(dstVec->size() == 0);
-                    dstVec->reserve(count);
-
-                    for (uint i = 0; i < count; ++i)
-                    {
-                        IObject * srcChild = (*srcVec)[i];
-                        IObject * newChild = createObject(srcChild->GetClassName(), srcChild->getName(), _dstObj);
-                        CopyProperties((IObject *)srcChild, newChild);
-                        newChild->setParent(_dstObj);
-                        dstVec->push_back(newChild);
-                    }
-                }
-                break;   
-
-                case IProperty::Type::Resource:
-                {
-                    VG_ASSERT(!isEnumArray, "EnumArray CopyProperties serialization not implemented for type '%s'", asString(type).c_str());
-                    IResource * srcRes = prop->GetPropertyResource(_srcObj);
-                    IResource * dstRes = prop->GetPropertyResource(_dstObj);
-                    CopyProperties(srcRes, dstRes);
-
-                    dstRes->setParent(_dstObj);
-                    dstRes->onResourcePathChanged("", dstRes->GetResourcePath());
-                }
-                break;
-
-                case IProperty::Type::ResourceVector:
-                {
-                    VG_ASSERT(!isEnumArray, "EnumArray CopyProperties serialization not implemented for type '%s'", asString(type).c_str());
-                    const size_t srcCount = prop->GetPropertyResourceVectorCount(_srcObj);
-                    const byte * srcData = prop->GetPropertyResourceVectorData(_srcObj);
-
-                    if (srcCount > 0)
-                    {
-                        const char * elemClassName = prop->GetPropertyResourceVectorElement(_srcObj, 0)->GetClassName();
-                        const IClassDesc * elemClassDesc = getClassDescriptor(elemClassName);
-                        VG_ASSERT(elemClassDesc);
-                        if (elemClassDesc)
-                        {
-                            uint elementSize;
-                            void * data = elemClassDesc->ResizeVector(_dstObj, (uint)prop->getOffset(), (uint)srcCount, elementSize);
-
-                            for (uint i = 0; i < srcCount; ++i)
-                            {
-                                IResource * srcRes = prop->GetPropertyResourceVectorElement(_srcObj, i);
-                                IResource * dstRes = prop->GetPropertyResourceVectorElement(_dstObj, i);
-                                CopyProperties(srcRes, dstRes);
-
-                                dstRes->setParent(_dstObj);
-                                dstRes->onResourcePathChanged("", dstRes->GetResourcePath());
-                            }
-                        }                        
-                    }
-                }
-                break;
-
-                case IProperty::Type::BitMask:
-                {
-                    VG_ASSERT(!isEnumArray, "EnumArray CopyProperties serialization not implemented for type '%s'", asString(type).c_str());
-                    auto * srcBitMask = prop->GetPropertyBitMask(_srcObj);
-                    auto * dstBitMask = prop->GetPropertyBitMask(_dstObj);
-                    *dstBitMask = *srcBitMask;
-                }
-                break;
-
-                case IProperty::Type::Callback:
-                case IProperty::Type::LayoutElement:
-                    // Nothing to do
-                    break;
-
-                default:
-                case IProperty::Type::ResourcePtr:
-                case IProperty::Type::ResourcePtrVector:
-                case IProperty::Type::ObjectPtrDictionary:
-                case IProperty::Type::ObjectVector:
-                    VG_ASSERT_ENUM_NOT_IMPLEMENTED(propType);
-                    break;
-            }
-
-            _dstObj->OnPropertyChanged(_dstObj, *prop);
+            CopyProperty(prop, _srcObj, prop, _dstObj);            
         }
+
+        return true;
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool Factory::CanCopyProperty(const core::IProperty * _srcProp, const core::IProperty * _dstProp) const
+    {
+        const IProperty::Type srcPropType = _srcProp->getType();
+        const IProperty::Type dstPropType = _dstProp->getType();
+
+        if (srcPropType != dstPropType)
+            return false;
+
+        const bool srcIsEnumArray = asBool(IProperty::Flags::EnumArray & _srcProp->getFlags());
+        const bool dstIsEnumArray = asBool(IProperty::Flags::EnumArray & _dstProp->getFlags());
+
+        if (srcIsEnumArray != dstIsEnumArray)
+            return false;
+
+        return true;
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool Factory::CopyProperty(const core::IProperty * _srcProp, const core::IObject * _srcObj, const core::IProperty * _dstProp, core::IObject * _dstObj)
+    {
+        const IProperty::Type srcPropType = _srcProp->getType();
+        const IProperty::Type dstPropType = _dstProp->getType();
+
+        if (srcPropType != dstPropType)
+        {
+            VG_WARNING("[Factory] Property \"%s::%s\" have type '%s' but Property \"%s::%s\" have different type '%s'", _srcObj->GetClassName(), _srcProp->getName(), asString(srcPropType).c_str(), _dstObj->GetClassName(), _dstProp->getName(), asString(dstPropType).c_str());
+            return false;
+        }
+
+        const bool srcIsEnumArray = asBool(IProperty::Flags::EnumArray & _srcProp->getFlags());
+        const bool dstIsEnumArray = asBool(IProperty::Flags::EnumArray & _dstProp->getFlags());
+
+        if (srcIsEnumArray != dstIsEnumArray)
+        {
+            VG_WARNING("[Factory] Property \"%s::%s\" have enum count of %u but Property \"%s::%s\" have different enum sizes of %u", _srcObj->GetClassName(), _srcProp->getName(), _srcProp->getEnumCount(), _dstObj->GetClassName(), _dstProp->getName(), _dstProp->getEnumCount());
+            return false;
+        }
+
+        switch (srcPropType)
+        {
+        case IProperty::Type::Undefined:
+            VG_ASSERT_ENUM_NOT_IMPLEMENTED(srcPropType);
+            return false;
+
+        case IProperty::Type::Bool:
+            VG_ASSERT(!srcIsEnumArray, "EnumArray CopyProperties serialization not implemented for type '%s'", asString(srcPropType).c_str());
+            *_dstProp->GetPropertyBool(_dstObj) = *_srcProp->GetPropertyBool(_srcObj);
+            break;
+
+        case IProperty::Type::Int8:
+            VG_ASSERT(!srcIsEnumArray, "EnumArray CopyProperties serialization not implemented for type '%s'", asString(srcPropType).c_str());
+            *_dstProp->GetPropertyInt8(_dstObj) = *_srcProp->GetPropertyInt8(_srcObj);
+            break;
+
+        case IProperty::Type::Int16:
+            VG_ASSERT(!srcIsEnumArray, "EnumArray CopyProperties serialization not implemented for type '%s'", asString(srcPropType).c_str());
+            *_dstProp->GetPropertyInt16(_dstObj) = *_srcProp->GetPropertyInt16(_srcObj);
+            break;
+
+        case IProperty::Type::Int32:
+            VG_ASSERT(!srcIsEnumArray, "EnumArray CopyProperties serialization not implemented for type '%s'", asString(srcPropType).c_str());
+            *_dstProp->GetPropertyInt32(_dstObj) = *_srcProp->GetPropertyInt32(_srcObj);
+            break;
+
+        case IProperty::Type::Int64:
+            VG_ASSERT(!srcIsEnumArray, "EnumArray CopyProperties serialization not implemented for type '%s'", asString(srcPropType).c_str());
+            *_dstProp->GetPropertyInt64(_dstObj) = *_srcProp->GetPropertyInt64(_srcObj);
+            break;
+
+        case IProperty::Type::Uint8:
+            if (srcIsEnumArray)
+                memcpy(_dstProp->GetPropertyUint8(_dstObj), _srcProp->GetPropertyUint8(_srcObj), _srcProp->getSizeOf() * _srcProp->getEnumCount());
+            else
+                *_dstProp->GetPropertyUint8(_dstObj) = *_srcProp->GetPropertyUint8(_srcObj);
+            break;
+
+        case IProperty::Type::EnumU8:
+        case IProperty::Type::EnumFlagsU8:
+            VG_ASSERT(!srcIsEnumArray, "EnumArray CopyProperties serialization not implemented for type '%s'", asString(srcPropType).c_str());
+            *_dstProp->GetPropertyUint8(_dstObj) = *_srcProp->GetPropertyUint8(_srcObj);
+            break;
+
+        case IProperty::Type::Uint16:
+        case IProperty::Type::EnumU16:
+        case IProperty::Type::EnumFlagsU16:
+            VG_ASSERT(!srcIsEnumArray, "EnumArray CopyProperties serialization not implemented for type '%s'", asString(srcPropType).c_str());
+            *_dstProp->GetPropertyUint16(_dstObj) = *_srcProp->GetPropertyUint16(_srcObj);
+            break;
+
+        case IProperty::Type::Uint32:
+        case IProperty::Type::EnumU32:
+        case IProperty::Type::EnumFlagsU32:
+            VG_ASSERT(!srcIsEnumArray, "EnumArray CopyProperties serialization not implemented for type '%s'", asString(srcPropType).c_str());
+            *_dstProp->GetPropertyUint32(_dstObj) = *_srcProp->GetPropertyUint32(_srcObj);
+            break;
+
+        case IProperty::Type::Float:
+            VG_ASSERT(!srcIsEnumArray, "EnumArray CopyProperties serialization not implemented for type '%s'", asString(srcPropType).c_str());
+            *_dstProp->GetPropertyFloat(_dstObj) = *_srcProp->GetPropertyFloat(_srcObj);
+            break;
+
+        case IProperty::Type::Float2:
+            VG_ASSERT(!srcIsEnumArray, "EnumArray CopyProperties serialization not implemented for type '%s'", asString(srcPropType).c_str());
+            *_dstProp->GetPropertyFloat2(_dstObj) = *_srcProp->GetPropertyFloat2(_srcObj);
+            break;
+
+        case IProperty::Type::Float3:
+            VG_ASSERT(!srcIsEnumArray, "EnumArray CopyProperties serialization not implemented for type '%s'", asString(srcPropType).c_str());
+            *_dstProp->GetPropertyFloat3(_dstObj) = *_srcProp->GetPropertyFloat3(_srcObj);
+            break;
+
+        case IProperty::Type::Float4:
+            VG_ASSERT(!srcIsEnumArray, "EnumArray CopyProperties serialization not implemented for type '%s'", asString(srcPropType).c_str());
+            *_dstProp->GetPropertyFloat4(_dstObj) = *_srcProp->GetPropertyFloat4(_srcObj);
+            break;
+
+        case IProperty::Type::Float4x4:
+            VG_ASSERT(!srcIsEnumArray, "EnumArray CopyProperties serialization not implemented for type '%s'", asString(srcPropType).c_str());
+            *_dstProp->GetPropertyFloat4x4(_dstObj) = *_srcProp->GetPropertyFloat4x4(_srcObj);
+            break;
+
+        case IProperty::Type::Uint64:
+        case IProperty::Type::EnumU64:
+        case IProperty::Type::EnumFlagsU64:
+            VG_ASSERT(!srcIsEnumArray, "EnumArray CopyProperties serialization not implemented for type '%s'", asString(srcPropType).c_str());
+            *_dstProp->GetPropertyUint64(_dstObj) = *_srcProp->GetPropertyUint64(_srcObj);
+            break;
+
+        case IProperty::Type::Uint2:
+            VG_ASSERT(!srcIsEnumArray, "EnumArray CopyProperties serialization not implemented for type '%s'", asString(srcPropType).c_str());
+            memcpy(_dstProp->GetPropertyUintN(_dstObj, 2), _srcProp->GetPropertyUintN(_srcObj, 2), sizeof(uint) * 2);
+            break;
+
+        case IProperty::Type::Uint3:
+            VG_ASSERT(!srcIsEnumArray, "EnumArray CopyProperties serialization not implemented for type '%s'", asString(srcPropType).c_str());
+            memcpy(_dstProp->GetPropertyUintN(_dstObj, 3), _srcProp->GetPropertyUintN(_srcObj, 3), sizeof(uint) * 3);
+            break;
+
+        case IProperty::Type::Uint4:
+            VG_ASSERT(!srcIsEnumArray, "EnumArray CopyProperties serialization not implemented for type '%s'", asString(srcPropType).c_str());
+            memcpy(_dstProp->GetPropertyUintN(_dstObj, 4), _srcProp->GetPropertyUintN(_srcObj, 4), sizeof(uint) * 4);
+            break;
+
+        case IProperty::Type::String:
+            VG_ASSERT(!srcIsEnumArray, "EnumArray CopyProperties serialization not implemented for type '%s'", asString(srcPropType).c_str());
+            *_dstProp->GetPropertyString(_dstObj) = *_srcProp->GetPropertyString(_srcObj);
+            break;
+
+        case IProperty::Type::Object:
+        {
+            VG_ASSERT(!srcIsEnumArray, "EnumArray CopyProperties serialization not implemented for type '%s'", asString(srcPropType).c_str());
+            IObject * srcObj = _srcProp->GetPropertyObject(_srcObj);
+            IObject * dstObj = _dstProp->GetPropertyObject(_dstObj);
+            CopyProperties(srcObj, dstObj);
+        }
+        break;
+
+        case IProperty::Type::ObjectPtr:
+        {
+            VG_ASSERT(!srcIsEnumArray, "EnumArray CopyProperties serialization not implemented for type '%s'", asString(srcPropType).c_str());
+            IObject ** srcObj = _srcProp->GetPropertyObjectPtr(_srcObj);
+            IObject ** dstObj = _dstProp->GetPropertyObjectPtr(_dstObj);
+            CopyProperties(*srcObj, *dstObj);
+        }
+        break;
+
+        case IProperty::Type::ObjectPtrVector:
+        {
+            VG_ASSERT(!srcIsEnumArray, "EnumArray CopyProperties serialization not implemented for type '%s'", asString(srcPropType).c_str());
+            const vector<IObject *> * srcVec = _srcProp->GetPropertyObjectPtrVector(_srcObj);
+            const auto count = srcVec->size();
+
+            vector<IObject *> * dstVec = _dstProp->GetPropertyObjectPtrVector(_dstObj);
+            VG_ASSERT(dstVec->size() == 0);
+            dstVec->reserve(count);
+
+            for (uint i = 0; i < count; ++i)
+            {
+                IObject * srcChild = (*srcVec)[i];
+                IObject * newChild = createObject(srcChild->GetClassName(), srcChild->getName(), _dstObj);
+                CopyProperties((IObject *)srcChild, newChild);
+                newChild->setParent(_dstObj);
+                dstVec->push_back(newChild);
+            }
+        }
+        break;
+
+        case IProperty::Type::Resource:
+        {
+            VG_ASSERT(!srcIsEnumArray, "EnumArray CopyProperties serialization not implemented for type '%s'", asString(srcPropType).c_str());
+            IResource * srcRes = _srcProp->GetPropertyResource(_srcObj);
+            IResource * dstRes = _dstProp->GetPropertyResource(_dstObj);
+            CopyProperties(srcRes, dstRes);
+
+            dstRes->setParent(_dstObj);
+            dstRes->onResourcePathChanged("", dstRes->GetResourcePath());
+        }
+        break;
+
+        case IProperty::Type::ResourceVector:
+        {
+            VG_ASSERT(!srcIsEnumArray, "EnumArray CopyProperties serialization not implemented for type '%s'", asString(srcPropType).c_str());
+            const size_t srcCount = _srcProp->GetPropertyResourceVectorCount(_srcObj);
+            const byte * srcData = _srcProp->GetPropertyResourceVectorData(_srcObj);
+
+            if (srcCount > 0)
+            {
+                const char * elemClassName = _srcProp->GetPropertyResourceVectorElement(_srcObj, 0)->GetClassName();
+                const IClassDesc * elemClassDesc = getClassDescriptor(elemClassName);
+                VG_ASSERT(elemClassDesc);
+                if (elemClassDesc)
+                {
+                    uint elementSize;
+                    void * data = elemClassDesc->ResizeVector(_dstObj, (uint)_srcProp->getOffset(), (uint)srcCount, elementSize);
+
+                    for (uint i = 0; i < srcCount; ++i)
+                    {
+                        IResource * srcRes = _srcProp->GetPropertyResourceVectorElement(_srcObj, i);
+                        IResource * dstRes = _dstProp->GetPropertyResourceVectorElement(_dstObj, i);
+                        CopyProperties(srcRes, dstRes);
+
+                        dstRes->setParent(_dstObj);
+                        dstRes->onResourcePathChanged("", dstRes->GetResourcePath());
+                    }
+                }
+            }
+        }
+        break;
+
+        case IProperty::Type::BitMask:
+        {
+            VG_ASSERT(!srcIsEnumArray, "EnumArray CopyProperties serialization not implemented for type '%s'", asString(srcPropType).c_str());
+            auto * srcBitMask = _srcProp->GetPropertyBitMask(_srcObj);
+            auto * dstBitMask = _dstProp->GetPropertyBitMask(_dstObj);
+            *dstBitMask = *srcBitMask;
+        }
+        break;
+
+        case IProperty::Type::Callback:
+        case IProperty::Type::LayoutElement:
+            // Nothing to do
+            break;
+
+        default:
+        case IProperty::Type::ResourcePtr:
+        case IProperty::Type::ResourcePtrVector:
+        case IProperty::Type::ObjectPtrDictionary:
+        case IProperty::Type::ObjectVector:
+            VG_ASSERT_ENUM_NOT_IMPLEMENTED(srcPropType);
+            return false;
+        }
+
+        _dstObj->OnPropertyChanged(_dstObj, *_dstProp);
 
         return true;
     }

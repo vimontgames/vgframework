@@ -12,6 +12,26 @@ namespace vg::renderer
     //--------------------------------------------------------------------------------------
     bool DefaultMaterialModel::registerProperties(core::IClassDesc & _desc)
     {
+        registerPropertyEnumEx(DefaultMaterialModel, UVSource, m_UVSource, "UV Source", IProperty::Flags::NotSaved);
+
+        registerPropertyEx(DefaultMaterialModel, m_tiling, "Tiling", IProperty::Flags::NotSaved);
+        setPropertyRange(DefaultMaterialModel, m_tiling, float2(0, 16));
+
+        registerPropertyObjectEx(DefaultMaterialModel, m_albedoMap, "Albedo Map", IProperty::Flags::NotSaved);
+        registerPropertyEx(DefaultMaterialModel, m_albedoColor, "Albedo Color", IProperty::Flags::Color);
+
+        registerPropertyObjectEx(DefaultMaterialModel, m_normalMap, "Normal Map", IProperty::Flags::NotSaved);
+        registerPropertyEx(DefaultMaterialModel, m_normalStrength, "Normal Strength", IProperty::Flags::NotSaved);
+        setPropertyRange(DefaultMaterialModel, m_normalStrength, float2(0.0f, 1.0f));
+
+        registerPropertyObjectEx(DefaultMaterialModel, m_pbrMap, "PBR Map", IProperty::Flags::NotSaved);
+        registerPropertyEx(DefaultMaterialModel, m_occlusion, "Occlusion", IProperty::Flags::NotSaved);
+        setPropertyRange(DefaultMaterialModel, m_occlusion, float2(0.0f, 1.0f));
+        registerPropertyEx(DefaultMaterialModel, m_roughness, "Roughness", IProperty::Flags::NotSaved);
+        setPropertyRange(DefaultMaterialModel, m_roughness, float2(0.0f, 1.0f));
+        registerPropertyEx(DefaultMaterialModel, m_metalness, "Metalness", IProperty::Flags::NotSaved);
+        setPropertyRange(DefaultMaterialModel, m_metalness, float2(0.0f, 1.0f));
+
         return super::registerProperties(_desc);
     }
 
@@ -31,12 +51,13 @@ namespace vg::renderer
     //--------------------------------------------------------------------------------------
     void DefaultMaterialModel::FillGPUMaterialData(GPUMaterialData * _data) const
     {
+        _data->setUVSource(m_UVSource);
         _data->setTiling(m_tiling);
 
         _data->setAlbedoTextureHandle(m_albedoMap ? m_albedoMap->getTextureHandle() : RESERVEDSLOT_TEXSRV_DEFAULT_ALBEDO);
         _data->setAlbedoColor(m_albedoColor);
 
-        _data->setNormalTextureHandle(m_normaMap ? m_normaMap->getTextureHandle() : RESERVEDSLOT_TEXSRV_DEFAULT_NORMAL);
+        _data->setNormalTextureHandle(m_normalMap ? m_normalMap->getTextureHandle() : RESERVEDSLOT_TEXSRV_DEFAULT_NORMAL);
         _data->setNormalStrength(m_normalStrength);
 
         _data->setPBRTextureHandle(m_pbrMap ? m_pbrMap->getTextureHandle() : RESERVEDSLOT_TEXSRV_DEFAULT_PBR);
@@ -144,11 +165,11 @@ namespace vg::renderer
     //--------------------------------------------------------------------------------------
     void DefaultMaterialModel::SetTexture(const core::string & _name, gfx::ITexture * _value)
     {
-        if (_name == "AlbedoMap")
+        if (_name == "m_albedoMap")
             assignTexture((gfx::Texture**)&m_albedoMap, (gfx::Texture *)_value);
-        else if (_name == "NormalMap")
-            assignTexture((gfx::Texture**)&m_normaMap, (gfx::Texture *)_value);
-        else if (_name == "PBRMap")
+        else if (_name == "m_normalMap")
+            assignTexture((gfx::Texture**)&m_normalMap, (gfx::Texture *)_value);
+        else if (_name == "m_pbrMap")
             assignTexture((gfx::Texture **)&m_pbrMap, (gfx::Texture *)_value);
     }
 

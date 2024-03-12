@@ -29,7 +29,7 @@ namespace vg::renderer
     {
         super::registerProperties(_desc);
 
-        registerPropertyEnumBitfield(MaterialModel, SurfaceType, m_surfaceType, "Surface Type");
+        registerPropertyEnum(MaterialModel, SurfaceType, m_surfaceType, "Surface Type");
         //registerPropertyEnumArray(MaterialModel, core::float4, MaterialColorType, m_colors, "Colors", IProperty::Flags::Color | IProperty::Flags::NotSaved);
         //registerPropertyEnumArray(MaterialModel, core::IObject*, MaterialTextureType, m_textures, "Textures", IProperty::Flags::None | IProperty::Flags::NotSaved);
 

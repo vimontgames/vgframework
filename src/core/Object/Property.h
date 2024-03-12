@@ -76,6 +76,9 @@ namespace vg::core
 
         IProperty::LayoutElementType    GetLayoutElementType            () const final override;
 
+        bool                            IsResourceProperty              () const final override;
+        bool                            IsObjectProperty                () const final override;
+
     protected:
         template <typename T> void      initEnum                        (uint _enumCount, const char * _enumNames, const void * _enumValues);
         void                            checkPropertyType               (Type _type) const;

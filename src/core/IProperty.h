@@ -158,6 +158,9 @@ namespace vg::core
 
         virtual IProperty::LayoutElementType    GetLayoutElementType            () const = 0;
 
+        virtual bool                            IsResourceProperty              () const = 0;
+        virtual bool                            IsObjectProperty                () const = 0;
+
         template <typename E> inline E *        GetPropertyEnum                 (const IObject * _object) const { return (E *)GetPropertyUnderlyingType<std::underlying_type_t<E>>(_object); }
 
     private:

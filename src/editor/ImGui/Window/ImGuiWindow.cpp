@@ -747,7 +747,7 @@ namespace vg::editor
                     float * pFloat = _prop->GetPropertyFloat(_object);
 
                     if (asBool(IProperty::Flags::HasRange & flags))
-                        changed |= ImGui::SliderFloat(label.c_str(), pFloat, _prop->getRange().x, _prop->getRange().y);
+                        changed |= ImGui::SliderFloat(label.c_str(), pFloat, _prop->getRange().x, _prop->getRange().y, "%.2f");
                     else
                         changed |= ImGui::InputFloat(label.c_str(), pFloat, 0.1f, 1.0f, "%.3f", imguiInputTextflags);
                 };
@@ -760,7 +760,7 @@ namespace vg::editor
                     float * pFloat2 = (float *)_prop->GetPropertyFloat2(_object);
 
                     if (asBool(IProperty::Flags::HasRange & flags))
-                        changed |= ImGui::SliderFloat2(label.c_str(), pFloat2, _prop->getRange().x, _prop->getRange().y);
+                        changed |= ImGui::SliderFloat2(label.c_str(), pFloat2, _prop->getRange().x, _prop->getRange().y, "%.2f");
                     else
                         changed |= ImGui::InputFloat2(label.c_str(), pFloat2, "%.3f", imguiInputTextflags);
                 };
