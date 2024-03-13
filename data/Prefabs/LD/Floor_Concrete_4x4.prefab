@@ -1,6 +1,6 @@
 <Root>
     <Object class="PrefabScene">
-        <Property type="String" name="m_name" flags="NotVisible" value="Floor_Grass_4x4"/>
+        <Property type="String" name="m_name" flags="NotVisible" value="Floor_Concrete_Building_Horizontal_4x4"/>
         <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
         <Property type="ObjectPtr" name="m_root">
             <Object class="GameObject">
@@ -16,7 +16,7 @@
                         <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
                         <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled|Static"/>
                         <Property type="Float4" name="m_color" flags="Color" x="1" y="1" z="1" w="1"/>
-                        <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="0" Ty="0" Tz="-0.125" Tw="1"/>
+                        <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="2" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="0" Ty="0" Tz="0" Tw="1"/>
                         <Property type="ObjectPtrVector" name="m_components">
                             <Object class="RigidBodyComponent">
                                 <Property type="String" name="m_name" flags="NotVisible" value="New RigidBodyComponent"/>
@@ -39,8 +39,8 @@
                                     <Object class="BoxShapeDesc">
                                         <Property type="String" name="m_name" flags="NotVisible" value="BoxShapeDesc #47"/>
                                         <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
-                                        <Property type="Float3" name="m_offset" x="0" y="0" z="0"/>
-                                        <Property type="Float3" name="m_size" x="4" y="4" z="0.25"/>
+                                        <Property type="Float3" name="m_offset" x="0" y="0" z="0.050000001"/>
+                                        <Property type="Float3" name="m_size" x="4" y="4" z="0.1"/>
                                     </Object>
                                 </Property>
                             </Object>
@@ -53,7 +53,7 @@
                                     <Object class="MeshResource">
                                         <Property type="String" name="m_name" flags="NotVisible" value="New MeshComponent"/>
                                         <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
-                                        <Property type="String" name="m_resourcePath" flags="Debug" value="data/Meshes/LD/Floor_4x4.fbx"/>
+                                        <Property type="String" name="m_resourcePath" flags="Debug" value="data/Meshes/LD/Sidewalk.fbx"/>
                                     </Object>
                                 </Property>
                                 <Property type="Object" name="m_meshMaterials" flags="Flatten">
@@ -64,7 +64,7 @@
                                             <Object class="MaterialResource">
                                                 <Property type="String" name="m_name" value=""/>
                                                 <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
-                                                <Property type="String" name="m_resourcePath" flags="Debug" value="data/Materials/LD/Grass.mat"/>
+                                                <Property type="String" name="m_resourcePath" flags="Debug" value="data/Materials/LD/Concrete.mat"/>
                                             </Object>
                                         </Property>
                                     </Object>

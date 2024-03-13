@@ -65,6 +65,9 @@ namespace vg::engine
 
         auto * world = go->GetWorld();
 
+        if (!world)
+            return;
+
         if (physics::MotionType::Static != m_bodyDesc->GetMotion())
         {
             if (world->IsPlaying() && !world->IsPaused())
