@@ -486,7 +486,7 @@ namespace vg::core
         {
             default:
             VG_ASSERT_ENUM_NOT_IMPLEMENTED(type);
-            break;
+            return false;
 
             case Type::Undefined:
             case Type::Bool:
@@ -540,7 +540,7 @@ namespace vg::core
         {
             default:
                 VG_ASSERT_ENUM_NOT_IMPLEMENTED(type);
-                break;
+                return false;
 
             case Type::Undefined:
             case Type::Bool:

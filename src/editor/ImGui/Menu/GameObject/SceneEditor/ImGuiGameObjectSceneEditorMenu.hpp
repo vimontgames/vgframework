@@ -525,6 +525,8 @@ namespace vg::editor
                             break;
                         }  
 
+                        selection->SetSelectedObject(newPrefabObject);
+
                         VG_SAFE_RELEASE(newPrefabObject);
                     }
                 }
@@ -593,6 +595,7 @@ namespace vg::editor
                             break;
                         }
 
+                        selection->SetSelectedObject(newGameObject);
                         newGameObject->Release();
                         ImGui::CloseCurrentPopup();
                         nameTmp[0] = '\0';
