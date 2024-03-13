@@ -47,6 +47,16 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
+    inline float4x4 getMatrixWithoutScale(const float4x4 _matrix)
+    {
+        float4x4 matrix = _matrix;
+        matrix[0].xyz = matrix[0].xyz / length(_matrix[0].xyz);
+        matrix[1].xyz = matrix[1].xyz / length(_matrix[1].xyz);
+        matrix[2].xyz = matrix[2].xyz / length(_matrix[2].xyz);
+        return matrix;
+    }
+
+    //--------------------------------------------------------------------------------------
     float3x3 extractRotation(const float4x4 & _matrix);
 
 	//--------------------------------------------------------------------------------------
