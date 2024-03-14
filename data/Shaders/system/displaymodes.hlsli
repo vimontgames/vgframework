@@ -22,6 +22,7 @@ class DisplayMode : uint
     Forward_UV1,
     Forward_Albedo,
     Forward_PSNormal,
+    Forward_WorldNormal,
     Forward_WorldPos,
     Forward_ScreenPos,
 

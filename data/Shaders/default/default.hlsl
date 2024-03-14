@@ -112,6 +112,18 @@ float4 getPBR(GPUMaterialData _materialData, float2 _uv)
 }
 
 //--------------------------------------------------------------------------------------
+// TODO: move to HLSL math header?
+//--------------------------------------------------------------------------------------
+float4x4 getMatrixWithoutScale(float4x4 _matrix)
+{
+    float4x4 matrix = _matrix;
+    matrix[0].xyz = matrix[0].xyz / length(_matrix[0].xyz);
+    matrix[1].xyz = matrix[1].xyz / length(_matrix[1].xyz);
+    matrix[2].xyz = matrix[2].xyz / length(_matrix[2].xyz);
+    return matrix;
+}
+
+//--------------------------------------------------------------------------------------
 float3 getWorldNormal(float3 _normal, float3 _vertexTangent, float3 _vertexBinormal, float3 _vertexNormal, float4x4 _world)
 {
     float3 T = normalize(_vertexTangent);
@@ -119,7 +131,7 @@ float3 getWorldNormal(float3 _normal, float3 _vertexTangent, float3 _vertexBinor
     float3 N = normalize(_vertexNormal);
 
     float3 worldNormal = normalize(T * _normal.x + B * _normal.y + N * _normal.z);
-           worldNormal = mul(float4(worldNormal.xyz, 0.0f), _world).xyz;
+           worldNormal = mul(float4(worldNormal.xyz, 0.0f), getMatrixWithoutScale(_world)).xyz;
 
     return worldNormal;
 }
@@ -197,7 +209,7 @@ PS_Output PS_Forward(VS_Output _input)
     
     #if _TOOLMODE && !_ZONLY
 
-    output.color0 = forwardDebugDisplay(output.color0, viewConstants.getDisplayMode(), rootConstants3D.getMatID(), _input.tan.xyz, _input.bin.xyz, _input.nrm.xyz, _input.col, uv0, uv1, screenPos.xy, worldPos.xyz, albedo.rgb, normal.xyz);
+    output.color0 = forwardDebugDisplay(output.color0, viewConstants.getDisplayMode(), rootConstants3D.getMatID(), _input.tan.xyz, _input.bin.xyz, _input.nrm.xyz, _input.col, uv0, uv1, screenPos.xy, worldPos.xyz, albedo.rgb, normal.xyz, worldNormal.xyz);
     
     if (RootConstantsFlags::Wireframe & rootConstants3D.getFlags())
         output.color0 = float4(0,1,0,1);
@@ -314,7 +326,7 @@ PS_OutputDeferred PS_Deferred(VS_Output _input)
 
     #if _TOOLMODE && !_ZONLY
     // If any 'Forward' debug display mode is enabled then its result is stored into the 'Albedo' buffer
-    output.albedo = forwardDebugDisplay(output.albedo, viewConstants.getDisplayMode(), rootConstants3D.getMatID(), _input.tan.xyz, _input.bin.xyz, _input.nrm.xyz, _input.col, uv0, uv1, screenPos.xy, worldPos.xyz, albedo.rgb, normal.xyz);
+    output.albedo = forwardDebugDisplay(output.albedo, viewConstants.getDisplayMode(), rootConstants3D.getMatID(), _input.tan.xyz, _input.bin.xyz, _input.nrm.xyz, _input.col, uv0, uv1, screenPos.xy, worldPos.xyz, albedo.rgb, normal.xyz, worldNormal.xyz);
 
     // Picking
     uint toolmodeRWBufferID = viewConstants.getToolmodeRWBufferID();

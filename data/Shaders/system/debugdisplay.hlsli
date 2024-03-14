@@ -27,7 +27,7 @@ float3 getMatIDColor(uint _matID)
     return 0;
 }
 
-float4 forwardDebugDisplay(float4 _color, DisplayMode _mode, uint _matID, float3 _tan, float3 _bin, float3 _nrm, float4 _col, float2 _uv0, float2 _uv1, float2 _screenPos, float3 _worldPos, float3 _albedo, float3 _normal)
+float4 forwardDebugDisplay(float4 _color, DisplayMode _mode, uint _matID, float3 _tan, float3 _bin, float3 _nrm, float4 _col, float2 _uv0, float2 _uv1, float2 _screenPos, float3 _worldPos, float3 _albedo, float3 _normal, float3 _worldNormal)
 {
     switch (_mode)
     {
@@ -61,6 +61,9 @@ float4 forwardDebugDisplay(float4 _color, DisplayMode _mode, uint _matID, float3
         
         case DisplayMode::Forward_PSNormal:
             return sRGBA2Linear(float4(_normal.xyz * 0.5 + 0.5, 1));
+
+        case DisplayMode::Forward_WorldNormal:
+            return sRGBA2Linear(float4(_worldNormal.xyz * 0.5 + 0.5, 1));
 
         case DisplayMode::Forward_WorldPos:
             return sRGBA2Linear(float4(frac(_worldPos.xyz), 1));
