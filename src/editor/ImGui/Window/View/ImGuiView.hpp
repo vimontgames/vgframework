@@ -1,9 +1,9 @@
 #include "ImguiView.h"
+#include "core/IInput.h"
 #include "gfx/ITexture.h"
 #include "renderer/IImGuiAdapter.h"
 #include "renderer/IPicking.h"
-#include "gfx/ITexture.h"
-#include "core/IInput.h"
+#include "engine/ISnapComponent.h"
 #include "editor/Options/EditorOptions.h"
 #include "editor/ImGui/Extensions/ImGuizmo/ImGuizmoAdapter.h"
 
@@ -542,6 +542,33 @@ namespace vg::editor
     }
 
     //--------------------------------------------------------------------------------------
+    void findMaximumSnap(const vector<IObject *> & _objects, float3 & _translationSnap, float & _rotationSnapInDegrees, float & _scaleSnap)
+    {
+        for (uint i = 0; i < _objects.size(); ++i)
+        {
+            const IGameObject * go = dynamic_cast<const IGameObject*>(_objects[i]);
+
+            if (const auto * snap = go->GetComponentByType<engine::ISnapComponent>())
+            {
+                float3 trans;
+                if (snap->TryGetSnapTranslate(trans))
+                    _translationSnap = max(_translationSnap, trans);
+
+                float rot;
+                if (snap->TryGetSnapRotate(rot))
+                    _rotationSnapInDegrees = max(_rotationSnapInDegrees, rot);
+
+                float scale;
+                if (snap->TryGetSnapScale(scale))
+                    _scaleSnap = max(_scaleSnap, scale);
+            }
+
+            const auto children = (const vector<IObject *> &)go->GetChildren();
+            findMaximumSnap(children, _translationSnap, _rotationSnapInDegrees, _scaleSnap);
+        }
+    }
+
+    //--------------------------------------------------------------------------------------
     // Returns 'true' if any gizmo is manipulated (and thus we shoudn't update picking selection
     //--------------------------------------------------------------------------------------
     bool ImGuiView::drawGizmo()
@@ -566,6 +593,12 @@ namespace vg::editor
 
             const float * snap = nullptr;
 
+            float3 translationSnap = gizmoOptions.m_translationSnap;
+            float rotationSnapInDegrees = gizmoOptions.m_rotationSnapInDegrees;
+            float scaleSnap = gizmoOptions.m_scaleSnap;
+
+            findMaximumSnap(selectedObjects, translationSnap, rotationSnapInDegrees, scaleSnap);
+
             ImGuizmo::OPERATION imGuizmoOperation;
             switch (gizmoOptions.m_type)
             {
@@ -575,13 +608,13 @@ namespace vg::editor
                 case GizmoType::Translate:
                     imGuizmoOperation = ImGuizmo::TRANSLATE;
                     if (gizmoOptions.m_snapTranslate)
-                        snap = (float*) &gizmoOptions.m_translationSnap;
+                        snap = (float*)&translationSnap;
                     break;
 
                 case GizmoType::Rotate:
                     imGuizmoOperation = ImGuizmo::ROTATE;
                     if (gizmoOptions.m_snapRotate)
-                        snap = &gizmoOptions.m_rotationSnapInDegrees;
+                        snap = &rotationSnapInDegrees;
                     break;
 
                 case GizmoType::Scale:

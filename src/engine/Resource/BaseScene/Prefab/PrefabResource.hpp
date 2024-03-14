@@ -70,7 +70,7 @@ namespace vg::engine
     //--------------------------------------------------------------------------------------
     bool PrefabResource::CreateFile(const core::string& _path, core::IObject * _data)
     {
-        const auto * factory = Kernel::getFactory();
+        auto * factory = Kernel::getFactory();
 
         if (PrefabScene * prefabScene = VG_SAFE_STATIC_CAST(PrefabScene, factory->createObject("PrefabScene")))
         {
@@ -78,18 +78,21 @@ namespace vg::engine
             prefabScene->setName(io::getFileNameWithoutExt(_path));
 
             // Add default root node to scene
+            auto root = (GameObject *)CreateFactoryObject(GameObject, "Root", this);
+            prefabScene->SetRoot(root);
+
+            // Add child if provided
             if (_data)
             {
-                IGameObject * root = VG_SAFE_STATIC_CAST(IGameObject, _data);
-                root->setName("Root");
-                prefabScene->SetRoot(root);
+                IGameObject * srcGO = VG_SAFE_STATIC_CAST(IGameObject, _data);
+                //IGameObject * newGameObject = (IGameObject *)factory->createObject("GameObject");
+                //factory->CopyProperties(srcGO, newGameObject);
+
+                root->AddChild(srcGO);
+                //VG_SAFE_RELEASE(newGameObject);
             }
-            else
-            {
-                auto root = (GameObject *)CreateFactoryObject(GameObject, "Root", this);
-                prefabScene->SetRoot(root);
-                root->release();
-            }
+
+            VG_SAFE_RELEASE(root);
 
             factory->saveToXML(prefabScene, _path);
             VG_SAFE_RELEASE(prefabScene);

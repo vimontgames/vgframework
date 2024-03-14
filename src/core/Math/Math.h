@@ -47,7 +47,7 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
-    inline float4x4 getMatrixWithoutScale(const float4x4 _matrix)
+    inline float4x4 getMatrixWithoutScale(const float4x4 & _matrix)
     {
         float4x4 matrix = _matrix;
         matrix[0].xyz = matrix[0].xyz / length(_matrix[0].xyz);
