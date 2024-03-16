@@ -74,7 +74,7 @@
                                         <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value="Prefab"/>
                                         <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
                                         <Property type="Float4" name="m_color" flags="Color" x="1" y="1" z="1" w="1"/>
-                                        <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="0.99999928" Kw="0" Tx="-3" Ty="0" Tz="0" Tw="1"/>
+                                        <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="-3" Ty="0" Tz="0" Tw="1"/>
                                         <Property type="ObjectPtrVector" name="m_components"/>
                                         <Property type="ObjectPtrVector" name="m_children" flags="Debug"/>
                                         <Property type="Resource" name="m_prefabResource" flags="Resource">
@@ -170,7 +170,7 @@
                                         <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value="Prefab"/>
                                         <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
                                         <Property type="Float4" name="m_color" flags="Color" x="1" y="1" z="1" w="1"/>
-                                        <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="0.99999893" Kw="0" Tx="-3" Ty="3" Tz="0" Tw="1"/>
+                                        <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="-3" Ty="3" Tz="0" Tw="1"/>
                                         <Property type="ObjectPtrVector" name="m_components"/>
                                         <Property type="ObjectPtrVector" name="m_children" flags="Debug"/>
                                         <Property type="Resource" name="m_prefabResource" flags="Resource">
@@ -186,7 +186,7 @@
                                         <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value="Prefab"/>
                                         <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
                                         <Property type="Float4" name="m_color" flags="Color" x="1" y="1" z="1" w="1"/>
-                                        <Property type="Float4x4" name="m_local" Ix="1" Iy="0.00014301421" Iz="0" Iw="0" Jx="-0.00014301421" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="0.99999726" Kw="0" Tx="-3" Ty="6" Tz="0" Tw="1"/>
+                                        <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="-3" Ty="6" Tz="0" Tw="1"/>
                                         <Property type="ObjectPtrVector" name="m_components"/>
                                         <Property type="ObjectPtrVector" name="m_children" flags="Debug"/>
                                         <Property type="Resource" name="m_prefabResource" flags="Resource">
@@ -202,7 +202,7 @@
                                         <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value="Prefab"/>
                                         <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
                                         <Property type="Float4" name="m_color" flags="Color" x="1" y="1" z="1" w="1"/>
-                                        <Property type="Float4x4" name="m_local" Ix="0.99999994" Iy="0.00034526698" Iz="0" Iw="0" Jx="0" Jy="0.99999994" Jz="0" Jw="0" Kx="0" Ky="0" Kz="0.99999976" Kw="0" Tx="-3" Ty="-3" Tz="0" Tw="1"/>
+                                        <Property type="Float4x4" name="m_local" Ix="0.99999994" Iy="0" Iz="0" Iw="0" Jx="0" Jy="0.99999994" Jz="0" Jw="0" Kx="0" Ky="0" Kz="0.99999976" Kw="0" Tx="-3" Ty="-3" Tz="0" Tw="1"/>
                                         <Property type="ObjectPtrVector" name="m_components"/>
                                         <Property type="ObjectPtrVector" name="m_children" flags="Debug"/>
                                         <Property type="Resource" name="m_prefabResource" flags="Resource">
@@ -298,7 +298,7 @@
                                         <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value="Opened|Prefab"/>
                                         <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
                                         <Property type="Float4" name="m_color" flags="Color" x="1" y="1" z="1" w="1"/>
-                                        <Property type="Float4x4" name="m_local" Ix="0.99999714" Iy="0" Iz="0" Iw="0" Jx="0" Jy="0.99999714" Jz="0" Jw="0" Kx="0" Ky="0" Kz="0.9999966" Kw="0" Tx="-3" Ty="6" Tz="0" Tw="1"/>
+                                        <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="-3" Ty="6" Tz="0" Tw="1"/>
                                         <Property type="ObjectPtrVector" name="m_components"/>
                                         <Property type="ObjectPtrVector" name="m_children" flags="Debug"/>
                                         <Property type="Resource" name="m_prefabResource" flags="Resource">

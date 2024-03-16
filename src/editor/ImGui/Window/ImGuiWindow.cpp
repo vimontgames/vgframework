@@ -59,6 +59,8 @@ using namespace ImGui;
 
 namespace vg::editor
 {
+    const char * g_editFloatFormat = "%g";
+
     //--------------------------------------------------------------------------------------
     core::string ImGuiWindow::getFileBrowserExt(const core::IResource * _resource)
     {
@@ -747,9 +749,9 @@ namespace vg::editor
                     float * pFloat = _prop->GetPropertyFloat(_object);
 
                     if (asBool(IProperty::Flags::HasRange & flags))
-                        changed |= ImGui::SliderFloat(label.c_str(), pFloat, _prop->getRange().x, _prop->getRange().y, "%.2f");
+                        changed |= ImGui::SliderFloat(label.c_str(), pFloat, _prop->getRange().x, _prop->getRange().y, g_editFloatFormat);
                     else
-                        changed |= ImGui::InputFloat(label.c_str(), pFloat, 0.1f, 1.0f, "%.3f", imguiInputTextflags);
+                        changed |= ImGui::InputFloat(label.c_str(), pFloat, 0.1f, 1.0f, g_editFloatFormat, imguiInputTextflags);
                 };
                 break;
 
@@ -760,9 +762,9 @@ namespace vg::editor
                     float * pFloat2 = (float *)_prop->GetPropertyFloat2(_object);
 
                     if (asBool(IProperty::Flags::HasRange & flags))
-                        changed |= ImGui::SliderFloat2(label.c_str(), pFloat2, _prop->getRange().x, _prop->getRange().y, "%.2f");
+                        changed |= ImGui::SliderFloat2(label.c_str(), pFloat2, _prop->getRange().x, _prop->getRange().y, g_editFloatFormat);
                     else
-                        changed |= ImGui::InputFloat2(label.c_str(), pFloat2, "%.3f", imguiInputTextflags);
+                        changed |= ImGui::InputFloat2(label.c_str(), pFloat2, g_editFloatFormat, imguiInputTextflags);
                 };
                 break;
 
@@ -783,7 +785,7 @@ namespace vg::editor
                     }
                     else
                     {
-                        changed |= ImGui::InputFloat3(label.c_str(), pFloat4, "%.3f", imguiInputTextflags);
+                        changed |= ImGui::InputFloat3(label.c_str(), pFloat4, g_editFloatFormat, imguiInputTextflags);
                     }
                 };
                 break;
@@ -803,7 +805,7 @@ namespace vg::editor
                                 if (asBool(IProperty::Flags::Color & flags))
                                     changed |= ImGui::ColorEdit4(_prop->getEnumName(e), pFloat4 + e * 4);
                                 else
-                                    changed |= ImGui::InputFloat4(_prop->getEnumName(e), pFloat4 + e * 4, "%.3f", imguiInputTextflags);
+                                    changed |= ImGui::InputFloat4(_prop->getEnumName(e), pFloat4 + e * 4, g_editFloatFormat, imguiInputTextflags);
                             }
                             ImGui::TreePop();
                         }
@@ -821,7 +823,7 @@ namespace vg::editor
                         }
                         else
                         {
-                            changed |= ImGui::InputFloat4(label.c_str(), pFloat4, "%.3f", imguiInputTextflags);
+                            changed |= ImGui::InputFloat4(label.c_str(), pFloat4, g_editFloatFormat, imguiInputTextflags);
                         }
                     }
                 };
@@ -1793,10 +1795,10 @@ namespace vg::editor
         const auto displayName = _prop->getDisplayName();
         auto pFloat4x4 = _prop->GetPropertyFloat4x4(_object);
         ImGui::PushID(_prop);
-        changed |= ImGui::InputFloat4(fmt::sprintf("%s.I", displayName).c_str(), (float *)pFloat4x4 + 0, "%.3f", ImGuiInputTextFlags_EnterReturnsTrue);
-        changed |= ImGui::InputFloat4(fmt::sprintf("%s.J", displayName).c_str(), (float *)pFloat4x4 + 4, "%.3f", ImGuiInputTextFlags_EnterReturnsTrue);
-        changed |= ImGui::InputFloat4(fmt::sprintf("%s.K", displayName).c_str(), (float *)pFloat4x4 + 8, "%.3f", ImGuiInputTextFlags_EnterReturnsTrue);
-        changed |= ImGui::InputFloat4(fmt::sprintf("%s.T", displayName).c_str(), (float*)pFloat4x4 + 12, "%.3f", ImGuiInputTextFlags_EnterReturnsTrue);
+        changed |= ImGui::InputFloat4(fmt::sprintf("%s.I", displayName).c_str(), (float *)pFloat4x4 + 0, g_editFloatFormat, ImGuiInputTextFlags_EnterReturnsTrue);
+        changed |= ImGui::InputFloat4(fmt::sprintf("%s.J", displayName).c_str(), (float *)pFloat4x4 + 4, g_editFloatFormat, ImGuiInputTextFlags_EnterReturnsTrue);
+        changed |= ImGui::InputFloat4(fmt::sprintf("%s.K", displayName).c_str(), (float *)pFloat4x4 + 8, g_editFloatFormat, ImGuiInputTextFlags_EnterReturnsTrue);
+        changed |= ImGui::InputFloat4(fmt::sprintf("%s.T", displayName).c_str(), (float*)pFloat4x4 + 12, g_editFloatFormat, ImGuiInputTextFlags_EnterReturnsTrue);
         ImGui::PopID();
         return changed;
     }

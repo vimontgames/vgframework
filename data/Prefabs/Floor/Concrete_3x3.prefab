@@ -16,7 +16,7 @@
                         <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
                         <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled|Static"/>
                         <Property type="Float4" name="m_color" flags="Color" x="1" y="1" z="1" w="1"/>
-                        <Property type="Float4x4" name="m_local" Ix="3" Iy="0" Iz="1.1920929e-07" Iw="0" Jx="1.4210855e-14" Jy="3" Jz="0" Jw="0" Kx="0" Ky="2.2351742e-08" Kz="0.125" Kw="0" Tx="0" Ty="0" Tz="0.125" Tw="1"/>
+                        <Property type="Float4x4" name="m_local" Ix="3" Iy="0" Iz="0" Iw="0" Jx="0" Jy="3" Jz="0" Jw="0" Kx="0" Ky="0" Kz="0.125" Kw="0" Tx="0" Ty="0" Tz="0.125" Tw="1"/>
                         <Property type="ObjectPtrVector" name="m_components">
                             <Object class="RigidBodyComponent">
                                 <Property type="String" name="m_name" flags="NotVisible" value="New RigidBodyComponent"/>
