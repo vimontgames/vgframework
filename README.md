@@ -27,11 +27,11 @@ Its renderer only uses modern graphics APIs like DirectX12 and Vulkan (I would a
 # changelog
 
 ## 0.28 
-Reverse Z-Buffer
-Fix rounding issues
-Custom Snap component
-Fix physics debug scale
-Editor fixes related to Prefabs
+Reverse Z-Buffer\
+Fix rounding issues\
+Custom Snap component\
+Fix physics debug scale\
+Editor fixes related to Prefabs\
 Planar projection
 
 ## 0.27 
