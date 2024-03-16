@@ -87,8 +87,8 @@ namespace vg::gfx::dx12
                             depthStencilDesc.StencilBeginningAccess.Type = D3D12_RENDER_PASS_BEGINNING_ACCESS_TYPE_DISCARD;
                         }
 
-                        depthStencilDesc.DepthBeginningAccess.Clear.ClearValue.DepthStencil = { 1.0f,0 };
-                        depthStencilDesc.StencilBeginningAccess.Clear.ClearValue.DepthStencil = { 1.0f,0 };
+                        depthStencilDesc.DepthBeginningAccess.Clear.ClearValue.DepthStencil = { defaultOptimizedClearDepth, defaultOptimizedClearStencil };
+                        depthStencilDesc.StencilBeginningAccess.Clear.ClearValue.DepthStencil = { defaultOptimizedClearDepth, defaultOptimizedClearStencil };
                     }
 
                     depthStencilDesc.DepthEndingAccess.Type = D3D12_RENDER_PASS_ENDING_ACCESS_TYPE_PRESERVE;

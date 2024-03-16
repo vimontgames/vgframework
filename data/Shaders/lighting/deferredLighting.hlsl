@@ -4,6 +4,7 @@
 #include "system/view.hlsli"
 #include "system/lighting.hlsli"
 
+
 [numthreads(DEFERRED_LIGHTING_THREADGROUP_SIZE_X, DEFERRED_LIGHTING_THREADGROUP_SIZE_Y, 1)]
 void CS_DeferredLighting(int2 dispatchThreadID : SV_DispatchThreadID)
 {   
@@ -20,6 +21,10 @@ void CS_DeferredLighting(int2 dispatchThreadID : SV_DispatchThreadID)
         int3 address = int3(dispatchThreadID.xy, 0);
 
         float depth = getTexture2D(deferredLightingConstants.getDepth()).Load(address).r;
+
+        #if VG_GFX_REVERSE_DEPTH
+        depth = 1.0f - depth;
+        #endif
 
         if (depth >= 1.0f)
             return;

@@ -1,5 +1,7 @@
 #pragma once
 
+#include "shaders/system/shared_consts.hlsli"
+
 namespace vg::gfx
 {
 	enum class CommandListType : core::u8
@@ -29,7 +31,13 @@ namespace vg::gfx
     constexpr core::uint max_constant_buffers = 1;
 
     const core::float4 defaultOptimizedClearColor = (core::float4)0.0f;
+
+    #if VG_GFX_REVERSE_DEPTH
+    const float        defaultOptimizedClearDepth = 0.0f;
+    #else 
     const float        defaultOptimizedClearDepth = 1.0f;
+    #endif
+
     const core::u8     defaultOptimizedClearStencil = 0x00;
 
     #ifdef VG_DX12

@@ -405,8 +405,14 @@ namespace vg::gfx::vulkan
         vp.y = (float)_viewport.y + _viewport.w;
         vp.width = (float)_viewport.z;
         vp.height = -(float)_viewport.w;
+
+        #if VG_GFX_REVERSE_DEPTH
+        vp.minDepth = 1.0f;
+        vp.maxDepth = 0.0f;
+        #else
         vp.minDepth = 0.0f;
         vp.maxDepth = 1.0f;
+        #endif
 
         vkCmdSetViewport(m_vkCommandBuffer, 0, 1, &vp);
     }

@@ -12,6 +12,8 @@
 
 using namespace vg::core;
 
+#include "shaders/system/shared_consts.hlsli"
+
 #include "FrameGraphResource.hpp"
 #include "RenderPass.hpp"
 #include "SubPass.hpp"

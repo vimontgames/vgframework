@@ -16,6 +16,17 @@ namespace vg::gfx::dx12
                 return D3D12_COMPARISON_FUNC_EQUAL;
             case ComparisonFunc::NotEqual:
                 return D3D12_COMPARISON_FUNC_NOT_EQUAL;
+
+            #if VG_GFX_REVERSE_DEPTH
+            case ComparisonFunc::Less:
+                return D3D12_COMPARISON_FUNC_GREATER ;
+            case ComparisonFunc::LessEqual:
+                return D3D12_COMPARISON_FUNC_GREATER_EQUAL;
+            case ComparisonFunc::Greater:
+                return D3D12_COMPARISON_FUNC_LESS;
+            case ComparisonFunc::GreaterEqual:
+                return D3D12_COMPARISON_FUNC_LESS_EQUAL ;
+            #else
             case ComparisonFunc::Less:
                 return D3D12_COMPARISON_FUNC_LESS;
             case ComparisonFunc::LessEqual:
@@ -24,6 +35,7 @@ namespace vg::gfx::dx12
                 return D3D12_COMPARISON_FUNC_GREATER;
             case ComparisonFunc::GreaterEqual:
                 return D3D12_COMPARISON_FUNC_GREATER_EQUAL;
+            #endif
         }
     }
 

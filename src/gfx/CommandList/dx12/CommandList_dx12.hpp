@@ -385,8 +385,15 @@ namespace vg::gfx::dx12
                        d3d12viewport.TopLeftY = (float)_viewport.y;
                        d3d12viewport.Width = (float)_viewport.z;
                        d3d12viewport.Height = (float)_viewport.w;
-                       d3d12viewport.MinDepth = 0.0f;
-                       d3d12viewport.MaxDepth = 1.0f;
+
+        #if VG_GFX_REVERSE_DEPTH
+        d3d12viewport.MinDepth = 1.0f;
+        d3d12viewport.MaxDepth = 0.0f;
+        #else
+
+        d3d12viewport.MinDepth = 0.0f;
+        d3d12viewport.MaxDepth = 1.0f;
+        #endif
 
         m_d3d12graphicsCmdList->RSSetViewports(1, &d3d12viewport);
     }

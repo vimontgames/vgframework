@@ -16,9 +16,21 @@ namespace vg::gfx::dx12
         desc.MaxAnisotropy = 1;
         desc.MipLODBias = 0;
         desc.MinLOD = 0;
-        desc.MaxLOD = D3D12_FLOAT32_MAX;
+        desc.MaxLOD = D3D12_FLOAT32_MAX;        
 
-        desc.ComparisonFunc = samplerState.filter == Filter::DepthCmp ? D3D12_COMPARISON_FUNC_LESS_EQUAL : D3D12_COMPARISON_FUNC_NEVER;
+        if (samplerState.filter == Filter::DepthCmp)
+        {
+            #if VG_GFX_REVERSE_DEPTH
+            desc.ComparisonFunc = D3D12_COMPARISON_FUNC_GREATER_EQUAL;
+            #else
+            desc.ComparisonFunc = D3D12_COMPARISON_FUNC_LESS_EQUAL;
+            #endif
+        }
+        else
+        {
+            desc.ComparisonFunc = D3D12_COMPARISON_FUNC_NEVER;
+        }
+        
         desc.BorderColor = D3D12_STATIC_BORDER_COLOR_OPAQUE_BLACK;
 
         desc.ShaderRegister = (uint)_sampler;

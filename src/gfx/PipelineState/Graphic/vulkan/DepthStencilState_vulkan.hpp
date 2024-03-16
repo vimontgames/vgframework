@@ -20,6 +20,17 @@ namespace vg::gfx::vulkan
                 return VK_COMPARE_OP_EQUAL;
             case ComparisonFunc::NotEqual:
                 return VK_COMPARE_OP_NOT_EQUAL;
+
+            #if VG_GFX_REVERSE_DEPTH
+            case ComparisonFunc::Less:
+                return VK_COMPARE_OP_GREATER;
+            case ComparisonFunc::LessEqual:
+                return VK_COMPARE_OP_GREATER_OR_EQUAL;
+            case ComparisonFunc::Greater:
+                return VK_COMPARE_OP_LESS;
+            case ComparisonFunc::GreaterEqual:
+                return VK_COMPARE_OP_LESS_OR_EQUAL;
+            #else
             case ComparisonFunc::Less:
                 return VK_COMPARE_OP_LESS;
             case ComparisonFunc::LessEqual:
@@ -28,6 +39,7 @@ namespace vg::gfx::vulkan
                 return VK_COMPARE_OP_GREATER;
             case ComparisonFunc::GreaterEqual:
                 return VK_COMPARE_OP_GREATER_OR_EQUAL;
+            #endif
         }
     }
 

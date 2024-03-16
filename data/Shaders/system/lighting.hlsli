@@ -1,6 +1,7 @@
 #pragma once
 
-#include "Shaders/system/lightsBuffer.hlsli"
+#include "shaders/system/lightsBuffer.hlsli"
+#include "shaders/system/shared_consts.hlsli"
 
 float3 heatmapGradient(float x, float _green, float _yellow, float _red)
 {
@@ -113,6 +114,36 @@ float getRangeAttenuation(float _dist, float _maxRange)
 	// inverse square dist 
 	return 1.0f / ( _dist * _dist );
 #endif
+}
+
+float SampleDirectionalShadowMap(Texture2D _shadowMap, float3 _shadowUV, float _bias)
+{
+	float shadow = 0;
+
+	#if VG_GFX_REVERSE_DEPTH
+	float depth = 1.0f - (_shadowUV.z-_bias);	
+	#else
+	float depth = _shadowUV.z-_bias;	
+	#endif
+
+	#if 0
+	shadow = _shadowMap.SampleCmpLevelZero(shadowcmp, _shadowUV.xy,  depth, int2(0,0)).x;
+	#else
+	// PCF9
+	shadow += _shadowMap.SampleCmpLevelZero(shadowcmp, _shadowUV.xy, depth, int2(0,-1)).x;	
+	shadow += _shadowMap.SampleCmpLevelZero(shadowcmp, _shadowUV.xy, depth, int2(1,-1)).x;	
+	shadow += _shadowMap.SampleCmpLevelZero(shadowcmp, _shadowUV.xy, depth, int2(2,-1)).x;	
+	shadow += _shadowMap.SampleCmpLevelZero(shadowcmp, _shadowUV.xy, depth, int2(0,0)).x;	
+	shadow += _shadowMap.SampleCmpLevelZero(shadowcmp, _shadowUV.xy, depth, int2(1,0)).x;	
+	shadow += _shadowMap.SampleCmpLevelZero(shadowcmp, _shadowUV.xy, depth, int2(2,0)).x;	
+	shadow += _shadowMap.SampleCmpLevelZero(shadowcmp, _shadowUV.xy, depth, int2(0,+1)).x;	
+	shadow += _shadowMap.SampleCmpLevelZero(shadowcmp, _shadowUV.xy, depth, int2(1,+1)).x;	
+	shadow += _shadowMap.SampleCmpLevelZero(shadowcmp, _shadowUV.xy, depth, int2(2,+1)).x;
+	shadow /= 9.0f;	
+	shadow = smoothstep(0.0,1.0,shadow);				
+	#endif
+
+	return shadow;
 }
 
 //--------------------------------------------------------------------------------------
@@ -232,24 +263,7 @@ LightingResult computeDirectLighting(ViewConstants _viewConstants, float3 _eyePo
 				
 					Texture2D shadowMap = getTexture2D(directional.getShadowMapTextureHandle());
 					float bias = directional.getShadowBias();
-			
-					#if 0
-					shadow = shadowMap.SampleCmpLevelZero(shadowcmp, shadowUV.xy, shadowUV.z - bias, int2(0,0)).x;
-					#else
-					// PCF9
-					shadow = 0;
-					shadow += shadowMap.SampleCmpLevelZero(shadowcmp, shadowUV.xy, shadowUV.z - bias, int2(0,-1)).x;	
-					shadow += shadowMap.SampleCmpLevelZero(shadowcmp, shadowUV.xy, shadowUV.z - bias, int2(1,-1)).x;	
-					shadow += shadowMap.SampleCmpLevelZero(shadowcmp, shadowUV.xy, shadowUV.z - bias, int2(2,-1)).x;	
-					shadow += shadowMap.SampleCmpLevelZero(shadowcmp, shadowUV.xy, shadowUV.z - bias, int2(0,0)).x;	
-					shadow += shadowMap.SampleCmpLevelZero(shadowcmp, shadowUV.xy, shadowUV.z - bias, int2(1,0)).x;	
-					shadow += shadowMap.SampleCmpLevelZero(shadowcmp, shadowUV.xy, shadowUV.z - bias, int2(2,0)).x;	
-					shadow += shadowMap.SampleCmpLevelZero(shadowcmp, shadowUV.xy, shadowUV.z - bias, int2(0,+1)).x;	
-					shadow += shadowMap.SampleCmpLevelZero(shadowcmp, shadowUV.xy, shadowUV.z - bias, int2(1,+1)).x;	
-					shadow += shadowMap.SampleCmpLevelZero(shadowcmp, shadowUV.xy, shadowUV.z - bias, int2(2,+1)).x;
-					shadow /= 9.0f;	
-					shadow = smoothstep(0.0,1.0,shadow);				
-					#endif
+					shadow = SampleDirectionalShadowMap(shadowMap, shadowUV, bias);
 				}
 				#endif		
 

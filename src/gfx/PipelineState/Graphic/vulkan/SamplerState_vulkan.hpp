@@ -20,7 +20,12 @@ namespace vg::gfx::vulkan
                             if (samplerState.filter == Filter::DepthCmp)
                             {
                                 samplerCreateInfo.compareEnable = VK_TRUE;
+
+                                #if VG_GFX_REVERSE_DEPTH
+                                samplerCreateInfo.compareOp = VK_COMPARE_OP_GREATER_OR_EQUAL;
+                                #else
                                 samplerCreateInfo.compareOp = VK_COMPARE_OP_LESS_OR_EQUAL;
+                                #endif
                             }
                             else
                             {
