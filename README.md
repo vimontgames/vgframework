@@ -26,7 +26,15 @@ Its renderer only uses modern graphics APIs like DirectX12 and Vulkan (I would a
 
 # changelog
 
-## 0.27 "Let it snow"
+## 0.28 
+Reverse Z-Buffer
+Fix rounding issues
+Custom Snap component
+Fix physics debug scale
+Editor fixes related to Prefabs
+Planar projection
+
+## 0.27 
 Can now create **Prefabs** to instanciate in Levels\
 Animation blend helper functions\
 Use ImGuiFileDialog instead of ImGuiFileBrowser\
@@ -34,7 +42,7 @@ Use ImGuiFileDialog instead of ImGuiFileBrowser\
 
 ![Screenshot](doc/img/0.27.png)
 
-## 0.26 "Yellow Zombie"
+## 0.26 
 Editor Camera V0\
 Improve window resize + fix rare crash when maximizing window\
 Forbid deleting or adding siblings to root node\
@@ -43,14 +51,14 @@ Update WinPixEventRuntime 1.0.231030001
 
 ![Screenshot](doc/img/0.26.png)
 
-## 0.25 "Freaky Clown"
+## 0.25 
 Fix an issue with **CountLeadingZeroes** that could return a different result depending on CPU used\
 Jolt no more uses **AVX2** to allow running on older hardware\
 VGFramework requires **AVX1** available on any AMD/Intel CPU since 2011 (Bulldozer/Sandy Bridge)\
 Patch shader files in memory to support GPU DebugInfo/Warning/Error/Assert\
 Fix non-triangulated mesh import
 
-## 0.24 "Kasper"
+## 0.24 
 New darker ImGui style\
 Read instance color and texture from GPUInstanceData and GPUMaterialData\
 Improve BLAS management\
