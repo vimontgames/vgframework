@@ -134,44 +134,71 @@ namespace vg::gfx
     // Fix the warning or error line number so that visual studio opens correct file when double-clicked
     // 
     // before : 
-    // D:/GitHub/vimontgames/vgframework/data/shaders/lighting/deferredLighting.hlsl:40:1: error: use of undeclared identifier 'caca'
+    // data/shaders/lighting/deferredLighting.hlsl:40:1: error: use of undeclared identifier 'caca'
     // 
     // after : 
     // D:/GitHub/vimontgames/vgframework/data/shaders/lighting/deferredLighting.hlsl(40): error: use of undeclared identifier 'caca'
     //--------------------------------------------------------------------------------------
     core::string ShaderManager::fixFileLine(const core::string & _filename, const core::string & _warningAndErrorString)
     {
-        auto it = _warningAndErrorString.find(_filename);
+        const auto root = core::io::getRootDirectory();
+        auto lines = getLines(_warningAndErrorString);
 
-        //"Error compiling shader:\n" + core::io::getRootDirectory() + "/" +
-        
-        if (string::npos != it)
+        string result;
+        for (uint i = 0; i < lines.size(); ++i)
         {
-            string before = _warningAndErrorString.substr(0, it);
-
-            auto beginLineNum = it + 1 + _filename.length();
-            auto endLineNum = _warningAndErrorString.find(":", beginLineNum + 1);
-
-            auto lineNum = _warningAndErrorString.substr(beginLineNum, endLineNum - beginLineNum);
-            auto line = stoi(lineNum);
-
-            string after = _warningAndErrorString.substr(it + _filename.length());
-
-            // skip 3 occurences of ':'
-            int count = 0;
-            auto skip = after.find(':');
-            if (string::npos != skip)
+            string line = lines[i];
+            if (line.length() > 0)
             {
-                skip = after.find(':', skip + 1);
-                if (string::npos != skip)
-                    skip = after.find(':', skip + 1);
-                if (string::npos != skip)
-                    after = after.substr(skip + 1);
-            }
+                size_t pos = 0;
+                bool first = true;
+                while ((pos = line.find(':', pos)) != std::string::npos)
+                {
+                    if (pos < line.size())
+                    {
+                        if (std::isdigit(line[pos + 1]))
+                        {
+                            size_t endPos = line.find_first_not_of("0123456789", pos + 1);
+                            std::string lineNumber = line.substr(pos + 1, endPos - pos - 1);
 
-            return fmt::sprintf("%s%s(%u):%s", before, _filename, line, after);
+                            if (first)
+                                line.replace(pos, endPos - pos, "(" + lineNumber + ")");
+                            else
+                                line.replace(pos, endPos - pos, "");
+
+                            first = false;
+                        }
+                        else
+                        {
+                            line.replace(pos, 1, "");
+                        }
+                    }
+                    pos += 1; 
+                }
+
+                string folder = "data";
+                if (line._Starts_with(folder))
+                    line.replace(0, folder.length(), root + "/" + folder);
+
+                string shad = "shaders";
+                string sys = "system";
+
+                auto syspos = line.find(sys);
+                if (string::npos != syspos)
+                {
+                    auto shadpos = line.find(shad);
+
+                    if (syspos != shadpos + shad.length() + 1)
+                    {
+                        line.replace(shadpos + shad.length(), syspos - (shadpos + shad.length()) - 1, "");
+                    }
+                }
+
+                result += line + "\n";
+            }
         }
-        return _warningAndErrorString;
+
+        return result;
     }
 
     //--------------------------------------------------------------------------------------
@@ -198,17 +225,17 @@ namespace vg::gfx
             warningAndErrors = fixFileLine(_file, warningAndErrors);
 
             if (!shader)
-                VG_ERROR("[Shader] %s", warningAndErrors.c_str());
+                VG_ERROR("[Shader] Error compiling %s Shader \"%s\" \n%s", asString(_stage).c_str(), _entryPoint.c_str(), warningAndErrors.c_str());
             else
             {
                 m_warningCount++;
-                VG_WARNING("[Shader] %s", warningAndErrors.c_str());
+                VG_WARNING("[Shader] Warning compiling %s Shader \"%s\" \n%s", asString(_stage).c_str(), _entryPoint.c_str(), warningAndErrors.c_str());
             }
         }
 
         if (shader) 
         {
-            string msg = fmt::sprintf("[Shader] Compiled %s Shader \"%s\"", asString(_stage).c_str(), _entryPoint.c_str());
+            string msg = fmt::sprintf("[Shader] Successfully compiled %s Shader \"%s\"", asString(_stage).c_str(), _entryPoint.c_str());
 
             if (_macros.size() > 0)
             {

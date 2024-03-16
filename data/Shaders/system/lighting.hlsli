@@ -258,12 +258,10 @@ LightingResult computeDirectLighting(ViewConstants _viewConstants, float3 _eyePo
 					   shadowUV.y = 1-shadowUV.y;
 		
 				if (all(shadowUV.xy == saturate(shadowUV.xy) ))
-				{
-					//output.diffuse = float3(frac(shadowUV.xy),0);
-				
+				{			
 					Texture2D shadowMap = getTexture2D(directional.getShadowMapTextureHandle());
 					float bias = directional.getShadowBias();
-					shadow = SampleDirectionalShadowMap(shadowMap, shadowUV, bias);
+					shadow = SampleDirectionalShadowMap(shadowMap, shadowUV.xyz, bias);
 				}
 				#endif		
 

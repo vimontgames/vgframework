@@ -44,4 +44,31 @@ namespace vg::core
         WideCharToMultiByte(CP_ACP, 0, _string.c_str(), slength, &r[0], len, 0, 0);
         return r;
     }
+
+    //--------------------------------------------------------------------------------------
+    // get lines from string
+    //--------------------------------------------------------------------------------------
+    vector<string> getLines(const string & _string)
+    {
+        vector<string> lines;
+        size_t startPos = 0;
+        size_t endPos;
+
+        while ((endPos = _string.find('\n', startPos)) != std::string::npos)
+        {
+            std::string line = _string.substr(startPos, endPos - startPos);
+            lines.push_back(line);
+
+            startPos = endPos + 1;
+        }
+
+        // last line
+        if (startPos < _string.length())
+        {
+            std::string lastLine = _string.substr(startPos);
+            lines.push_back(lastLine);
+        }
+
+        return lines;
+    }
 }

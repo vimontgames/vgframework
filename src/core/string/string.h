@@ -11,6 +11,8 @@ namespace vg::core
     core::wstring wstring_convert(const core::string & _string);
     core::string string_convert(const core::wstring & _string);
 
+    core::vector<core::string> getLines(const core::string & _string);
+
     // Forward namespace ::fmt to core::fmt in case we change fmt implementation
     namespace fmt = ::fmt;
 }

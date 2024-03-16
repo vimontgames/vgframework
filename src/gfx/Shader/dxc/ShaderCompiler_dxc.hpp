@@ -296,13 +296,15 @@ namespace vg::gfx::dxc
             VG_VERIFY_SUCCEEDED(dxcCompileResult->GetErrorBuffer(&dxcWarningAndErrors));
 
             const char * warningAndErrorBuffer = (const char*)dxcWarningAndErrors->GetBufferPointer();
+            string warningAndErrors; 
+            if (nullptr != warningAndErrorBuffer) 
+                warningAndErrors = warningAndErrorBuffer;
 
             VG_ASSERT(core::io::getRootDirectory() == core::io::getCurrentWorkingDirectory());
 
             if (hrCompilation < 0)
             {
-                const string message = string(warningAndErrorBuffer);
-                _warningAndErrors += message;
+                _warningAndErrors += warningAndErrors;
 
                 VG_SAFE_RELEASE(dxcSource);
                 VG_SAFE_RELEASE(dxcCompileResult);
@@ -312,10 +314,19 @@ namespace vg::gfx::dxc
             }
             else
             {
-                if (nullptr != warningAndErrorBuffer)
+                if (!warningAndErrors.empty()) 
                 {
-                    const string message = "Warning compiling shader:\n" + core::io::getRootDirectory() + "/" + string(warningAndErrorBuffer);
-                    _warningAndErrors += message;
+                    //if (warningAndErrors._Starts_with("In file included from"))
+                    //{
+                    //    auto endOfLoc = warningAndErrors.find(":\n");
+                    //    string loc = warningAndErrors.substr(0, endOfLoc);
+                    //    warningAndErrors = warningAndErrors.substr(endOfLoc + strlen(":\n"));
+                    //}
+                    //
+                    //const string message = "Warning compiling shader:\n" + core::io::getRootDirectory() + "/" + warningAndErrors;
+                    //_warningAndErrors += message;
+
+                    _warningAndErrors += warningAndErrors;
                 }
             }
 
