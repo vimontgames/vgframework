@@ -408,6 +408,12 @@
     <ClInclude Include="RenderPass\Update\GPUDebug\GPUDebugUpdatePass.hpp">
       <Filter>Pass\Update\GPUDebug</Filter>
     </ClInclude>
+    <ClInclude Include="View\ViewGUI.h">
+      <Filter>View</Filter>
+    </ClInclude>
+    <ClInclude Include="View\ViewGUI.hpp">
+      <Filter>View</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Pass">
@@ -418,9 +424,6 @@
     </Filter>
     <Filter Include="Entity">
       <UniqueIdentifier>{d51c33b1-f56b-441e-af2d-c0d132eb331b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Component">
-      <UniqueIdentifier>{43d704ee-f697-448d-9531-b792ec4c07fa}</UniqueIdentifier>
     </Filter>
     <Filter Include="Geometry">
       <UniqueIdentifier>{2a67905f-716e-4686-adce-696ea6fe64ed}</UniqueIdentifier>

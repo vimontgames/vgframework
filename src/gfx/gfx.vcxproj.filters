@@ -627,6 +627,7 @@
     <ClInclude Include="Device\vulkan\Extension\Device\KHR_Multiview.h">
       <Filter>Device\vulkan\Extension\Device</Filter>
     </ClInclude>
+    <ClInclude Include="IViewGUI.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Device">

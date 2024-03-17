@@ -1,5 +1,6 @@
 #include "FinalBlitPass.h"
 #include "shaders/system/rootConstants2D.hlsli"
+#include "renderer/View/ViewGUI.h"
 
 namespace vg::renderer
 {
@@ -77,5 +78,12 @@ namespace vg::renderer
 
         _cmdList->setGraphicRootConstants(0, (u32*)&root2D, RootConstants2DCount);
         _cmdList->draw(4);
+
+        // Render game UI to backbuffer
+        if (Renderer::get()->IsFullscreen())
+        {
+            if (auto * viewGUI = VG_SAFE_STATIC_CAST(ViewGUI, _renderPassContext.m_view->GetViewGUI()))
+                viewGUI->RenderFullscreen();
+        }
     }
 }

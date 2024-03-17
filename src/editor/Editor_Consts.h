@@ -59,6 +59,7 @@ namespace vg::editor
             inline static const char * Engine               = ICON_FA_GEAR;
             inline static const char * Error                = ICON_FA_BUG;
             inline static const char * File                 = ICON_FA_FILE;
+            inline static const char * Font                 = ICON_FA_FONT;
             inline static const char * FPS                  = ICON_FA_STOPWATCH;
             inline static const char * Folder               = ICON_FA_FOLDER_OPEN;
             inline static const char * NewFolder            = ICON_FA_FOLDER_PLUS;
@@ -67,6 +68,7 @@ namespace vg::editor
             inline static const char * Info                 = ICON_FA_CIRCLE_INFO;
             inline static const char * Input                = ICON_FA_GAMEPAD;
             inline static const char * Inspector            = ICON_FA_MAGNIFYING_GLASS;
+            inline static const char * Image                = ICON_FA_IMAGE;
             inline static const char * Light                = ICON_FA_LIGHTBULB;
             inline static const char * Maximize             = ICON_FA_MAXIMIZE;
             inline static const char * Mesh                 = ICON_FA_CUBE;

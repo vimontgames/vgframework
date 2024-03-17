@@ -171,6 +171,8 @@ namespace vg::renderer
         return true;
     }
 
+    core::WinHandle g_winHandle = nullptr;
+
 	//--------------------------------------------------------------------------------------
 	void Renderer::init(const RendererCreationParams & _params, core::Singletons & _singletons)
 	{
@@ -190,6 +192,7 @@ namespace vg::renderer
 
         // UI
         m_imgui = new ImGuiAdapter(_params.device.window, m_device);
+        g_winHandle = _params.device.window;
 
         registerShaders();
 
@@ -364,7 +367,7 @@ namespace vg::renderer
 
 		m_device.beginFrame();
 		{
-            if (!m_fullscreen)
+            //if (!m_fullscreen)
                 m_imgui->beginFrame();
 
             //--------------------------------------------------------------------------------------
@@ -421,7 +424,7 @@ namespace vg::renderer
                     }
                 }
 
-                if (!m_fullscreen)
+                //if (!m_fullscreen)
                     m_frameGraph.addUserPass(mainViewRenderPassContext, m_imguiPass, "ImGui");
 
                 m_frameGraph.setup();
@@ -594,6 +597,25 @@ namespace vg::renderer
             return views[_viewID.index];
         else
             return nullptr;
+    }
+
+    //--------------------------------------------------------------------------------------
+    gfx::IView * Renderer::GetView(gfx::ViewTarget _target, core::IWorld * _world) const
+    {
+        VG_ASSERT(_world);
+        if (nullptr == _world)
+            return nullptr;
+
+        const auto & views = GetViews(_target);
+        for (uint i = 0; i < views.size(); ++i)
+        {
+            if (const auto * view = views[i])
+            {
+                if (view->GetWorld() == _world)
+                    return (gfx::IView *)view;
+            }
+        }
+        return nullptr;
     }
     
     //--------------------------------------------------------------------------------------

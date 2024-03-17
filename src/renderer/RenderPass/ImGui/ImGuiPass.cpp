@@ -54,6 +54,9 @@ namespace vg::renderer
             if (gfx::ViewTarget::Backbuffer == target)
                 continue;
 
+            if (renderer->IsFullscreen())
+                continue;
+
             const auto & views = renderer->GetViews(target);
             for (uint i = 0; i < views.size(); ++i)
             {
@@ -62,6 +65,12 @@ namespace vg::renderer
                 {
                     if (!view->IsVisible())
                         continue;
+
+                    //if (renderer->IsFullscreen()) // TODO: should be done in View::IsVisible?
+                    //{
+                    //    if (gfx::ViewTarget::Editor == target)
+                    //        continue;
+                    //}
 
                     ITexture * dest = view->GetRenderTarget();
                     if(dest)
@@ -89,7 +98,9 @@ namespace vg::renderer
             editor::GUIContext guiContext;
             guiContext.imgui = ImGui::GetCurrentContext();
             guiContext.filedialog = ImGuiFileDialog::Instance();
-            editor->DrawGUI(guiContext);
+
+            if (!Renderer::get()->IsFullscreen())
+                editor->DrawGUI(guiContext);
         }
 
         Renderer::get()->getImGuiAdapter()->render(_cmdList);

@@ -45,6 +45,9 @@
     <ClCompile Include="Component\Editor\Snap\SnapComponent.cpp">
       <Filter>Component\Editor</Filter>
     </ClCompile>
+    <ClCompile Include="Component\UI\UIComponent.cpp">
+      <Filter>Component\UI</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Engine.def" />
@@ -260,6 +263,21 @@
       <Filter>Component\Editor</Filter>
     </ClInclude>
     <ClInclude Include="ISnapComponent.h" />
+    <ClInclude Include="Component\UI\UITextComponent.h">
+      <Filter>Component\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="Component\UI\UITextComponent.hpp">
+      <Filter>Component\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="Component\UI\UIComponent.h">
+      <Filter>Component\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="Component\UI\UIImageComponent.h">
+      <Filter>Component\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="Component\UI\UIImageComponent.hpp">
+      <Filter>Component\UI</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Input">
@@ -354,6 +372,9 @@
     </Filter>
     <Filter Include="Component\Editor">
       <UniqueIdentifier>{e48cf8ba-a281-4999-9d46-b175be8be19b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Component\UI">
+      <UniqueIdentifier>{3edf446b-6c3c-4ab5-a3ff-f3565b69fd12}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

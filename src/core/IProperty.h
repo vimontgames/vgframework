@@ -233,8 +233,10 @@ namespace vg::core
 #define registerPropertyEnumArray(className, elementType, enumClassName, propertyName, displayName)         registerPropertyEnumArrayEx(className, elementType, enumClassName, propertyName, displayName, vg::core::IProperty::Flags::None);
 
 // Helper for "optional" property (bool + property)
-#define registerOptionalProperty(className, boolpropertyname, propertyName, displayName)	                registerPropertyEx(className, boolpropertyname, displayName, IProperty::Flags::NotVisible); \
-                                                                                                            registerPropertyEx(className, propertyName, displayName, IProperty::Flags::Optional);
+#define registerOptionalPropertyEx(className, boolpropertyname, propertyName, displayName, flags)  	        registerPropertyEx(className, boolpropertyname, displayName, IProperty::Flags::NotVisible); \
+                                                                                                            registerPropertyEx(className, propertyName, displayName, IProperty::Flags::Optional | flags);
+
+#define registerOptionalProperty(className, boolpropertyname, propertyName, displayName)	                registerOptionalPropertyEx(className, boolpropertyname, propertyName, displayName, vg::core::IProperty::Flags::None)
 
 #define registerOptionalPropertyEnumBitfield(className, boolpropertyname, enumClassName, propertyName, displayName)     registerPropertyEx(className, boolpropertyname, displayName, IProperty::Flags::NotVisible); \
                                                                                                                         registerPropertyEnumEx(className, enumClassName, propertyName, displayName, vg::core::IProperty::Flags::Bitfield | vg::core::IProperty::Flags::Optional) 

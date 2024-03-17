@@ -64,6 +64,7 @@ namespace vg
             virtual gfx::ViewID                         AddView                 (gfx::IView * _view) = 0;
             virtual void                                RemoveView              (gfx::ViewID _viewID) = 0;
             virtual gfx::IView *                        GetView                 (gfx::ViewID _viewID) const = 0;
+            virtual gfx::IView *                        GetView                 (gfx::ViewTarget _target, core::IWorld * _world) const = 0;
             virtual const core::vector<gfx::IView *>    GetViews                (gfx::ViewTarget _target) const = 0;
 
             virtual void                                SetResized              () = 0;

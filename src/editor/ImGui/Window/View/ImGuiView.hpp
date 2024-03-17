@@ -1,6 +1,7 @@
 #include "ImguiView.h"
 #include "core/IInput.h"
 #include "gfx/ITexture.h"
+#include "gfx/IViewGUI.h"
 #include "renderer/IImGuiAdapter.h"
 #include "renderer/IPicking.h"
 #include "engine/ISnapComponent.h"
@@ -446,6 +447,12 @@ namespace vg::editor
 
                 imGuiAdapter->ReleaseTextureID(texID);
             }   
+
+            if (auto * viewGUI = m_view->GetViewGUI())
+            {
+                ImGui::SetCursorPos(ImVec2(0, titleBarHeight + toolbarHeight));
+                viewGUI->RenderWindowed();
+            }
 
             const auto options = EditorOptions::get();
             bool debugCulling = options->IsDebugCulling();

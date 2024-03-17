@@ -8,6 +8,7 @@
 #include "renderer/Renderer.h"
 #include "renderer/Job/Culling/ViewCullingJob.h"
 #include "renderer/RenderPass/Update/ViewConstants/ViewConstantsUpdatePass.h"
+#include "renderer/View/ViewGUI.h"
 
 #if !VG_ENABLE_INLINE
 #include "View.inl"
@@ -16,6 +17,7 @@
 #include "Lit/LitView.hpp"
 #include "Shadow/ShadowView.hpp"
 #include "Frustum.hpp"
+#include "ViewGUI.hpp"
 
 using namespace vg::core;
 using namespace vg::gfx;
@@ -43,11 +45,15 @@ namespace vg::renderer
         m_viewConstantsUpdatePass = new ViewConstantsUpdatePass();
 
         memset(&m_rawPickingData, 0x0, sizeof(m_rawPickingData));
+
+        if (m_viewID.target == ViewTarget::Game)
+            m_viewGUI = new ViewGUI();
     }
 
     //--------------------------------------------------------------------------------------
     View::~View()
     {
+        VG_SAFE_DELETE(m_viewGUI);
         VG_SAFE_RELEASE(m_renderTarget);
         VG_SAFE_RELEASE(m_cullingJob);
         VG_SAFE_RELEASE(m_viewConstantsUpdatePass);
@@ -555,5 +561,11 @@ namespace vg::renderer
         }
 
         return shadowMaps;
+    }
+
+    //--------------------------------------------------------------------------------------
+    gfx::IViewGUI * View::GetViewGUI() const
+    {
+        return VG_SAFE_STATIC_CAST(gfx::IViewGUI, m_viewGUI);
     }
 }

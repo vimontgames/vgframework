@@ -18,6 +18,7 @@
     <ClCompile Include="Component\Editor\Snap\SnapComponent.cpp" />
     <ClCompile Include="Component\Mesh\MeshComponent.cpp" />
     <ClCompile Include="Component\Physics\PhysicsComponents.cpp" />
+    <ClCompile Include="Component\UI\UIComponent.cpp" />
     <ClCompile Include="Engine.cpp" />
     <ClCompile Include="EngineOptions.cpp" />
     <ClCompile Include="Input\Input.cpp" />
@@ -29,6 +30,11 @@
     <ClCompile Include="Resource\Resource.cpp" />
     <ClCompile Include="Selection\Selection.cpp" />
     <ClInclude Include="Component\Editor\Snap\SnapComponent.h" />
+    <ClInclude Include="Component\UI\UIComponent.h" />
+    <ClInclude Include="Component\UI\UIImageComponent.h" />
+    <ClInclude Include="Component\UI\UIImageComponent.hpp" />
+    <ClInclude Include="Component\UI\UITextComponent.h" />
+    <ClInclude Include="Component\UI\UITextComponent.hpp" />
     <ClInclude Include="GameObject\Prefab\PrefabGameObject.h" />
     <ClCompile Include="GameObject\Prefab\PrefabGameObject.cpp" />
     <ClInclude Include="ISnapComponent.h" />

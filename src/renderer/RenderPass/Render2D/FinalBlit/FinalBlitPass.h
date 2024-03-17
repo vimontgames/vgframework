@@ -1,5 +1,4 @@
 #pragma once
-
 #include "Renderer/RenderPass/Render2D/Render2DPass.h"
 
 namespace vg::renderer
@@ -19,7 +18,7 @@ namespace vg::renderer
         void Render(const gfx::RenderPassContext & _renderContext, gfx::CommandList * _cmdList) const override;
 
     private:
-        gfx::RootSignatureHandle         m_postProcessRootSignature;
-        gfx::ShaderKey                   m_postProcessShaderKey;
+        gfx::RootSignatureHandle        m_postProcessRootSignature;
+        gfx::ShaderKey                  m_postProcessShaderKey;
     };
 }

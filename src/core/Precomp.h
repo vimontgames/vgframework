@@ -138,7 +138,7 @@ namespace vg::core
 
 #define VG_SAFE_INCREASE_REFCOUNT(p) { if (p) { p->addRef(); }}
 
-#define VG_SAFE_RELEASE_ASYNC(p) { auto * factory = vg::core::Kernel::getFactory(); if (factory) factory->ReleaseAsync(p); else (p)->Release(); }
+#define VG_SAFE_RELEASE_ASYNC(p) { auto * factory = vg::core::Kernel::getFactory(); if (factory) factory->ReleaseAsync(p); else (p)->Release(); p = nullptr; }
 
 #define VG_RESTRICT __restrict
 

@@ -14,6 +14,7 @@ namespace vg::core
 namespace vg::gfx
 {
     class ITexture;
+    class IViewGUI;
     class UserPass;
 
     enum class ViewTarget : core::u8
@@ -153,5 +154,7 @@ namespace vg::gfx
         virtual const PickingHit &      GetPickingClosestHit        () const = 0;
 
         virtual ViewCullingStats        GetViewCullingStats         () const = 0;
+
+        virtual IViewGUI *              GetViewGUI                  () const = 0;
     };
 }
