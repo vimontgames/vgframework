@@ -47,7 +47,7 @@ namespace vg::renderer
         memset(&m_rawPickingData, 0x0, sizeof(m_rawPickingData));
 
         if (m_viewID.target == ViewTarget::Game)
-            m_viewGUI = new ViewGUI();
+            m_viewGUI = new ViewGUI(this);
     }
 
     //--------------------------------------------------------------------------------------
@@ -486,13 +486,20 @@ namespace vg::renderer
         // Sort hits by depth stored in pos.w
         sort(m_pickingHits.begin(), m_pickingHits.end(), [](PickingHit & a, PickingHit & b)
         {
-            if (a.m_pos.w < b.m_pos.w)
-                return true;
-            else
-                return false;
+            #if VG_GFX_REVERSE_DEPTH
+            return (a.m_pos.w > b.m_pos.w);
+            #else
+            return (a.m_pos.w < b.m_pos.w);
+            #endif
         }
         );
      }
+
+    //--------------------------------------------------------------------------------------
+    void View::AddPickingHit(const PickingHit & _hit)
+    {
+        m_pickingHits.insert(m_pickingHits.begin(), _hit);
+    }
 
     //--------------------------------------------------------------------------------------
     const PickingHit & View::GetPickingClosestHit() const

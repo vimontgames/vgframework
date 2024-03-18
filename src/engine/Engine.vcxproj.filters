@@ -64,6 +64,9 @@
     <None Include="World\World.inl">
       <Filter>World</Filter>
     </None>
+    <None Include="Component\UI\UIComponent.inl">
+      <Filter>Component\UI</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="IEngine.h" />

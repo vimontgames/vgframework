@@ -43,9 +43,7 @@ namespace vg::engine
             if (gfx::IView * view = renderer->GetView(gfx::ViewTarget::Game, world))
             {
                 if (auto * gui = view->GetViewGUI())
-                {
-                    gui->AddText(getRect(), getDepth(), m_text, getColor());
-                }
+                    gui->AddText(m_pickingID, getMatrix(), getColor(), m_horizontal, m_vertical, m_text);
             }
         }
     }

@@ -97,6 +97,7 @@ namespace vg::renderer
         virtual core::uint                  GetPickingHitCount          () const override;
         virtual core::uint                  GetPickingRequestedHitCount () const override;
         const PickingHit &                  GetPickingClosestHit        () const override;
+        void                                AddPickingHit               (const PickingHit & _hit) override;
 
         gfx::ViewCullingStats               GetViewCullingStats         () const final override;
 

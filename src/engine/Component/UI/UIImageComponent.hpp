@@ -64,9 +64,7 @@ namespace vg::engine
             if (gfx::IView * view = renderer->GetView(gfx::ViewTarget::Game, world))
             {
                 if (auto * gui = view->GetViewGUI())
-                {
-                    gui->AddImage(getRect(), getDepth(), m_texture, getColor());
-                }
+                    gui->AddImage(m_pickingID, getMatrix(), getColor(), m_horizontal, m_vertical, m_texture);
             }
         }
     }

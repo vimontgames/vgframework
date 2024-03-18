@@ -152,6 +152,7 @@ namespace vg::gfx
         virtual core::uint              GetPickingHitCount          () const = 0;
         virtual core::uint              GetPickingRequestedHitCount () const = 0;
         virtual const PickingHit &      GetPickingClosestHit        () const = 0;
+        virtual void                    AddPickingHit               (const PickingHit & _hit) = 0;
 
         virtual ViewCullingStats        GetViewCullingStats         () const = 0;
 
