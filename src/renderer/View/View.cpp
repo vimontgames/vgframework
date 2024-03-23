@@ -498,7 +498,8 @@ namespace vg::renderer
     //--------------------------------------------------------------------------------------
     void View::AddPickingHit(const PickingHit & _hit)
     {
-        m_pickingHits.insert(m_pickingHits.begin(), _hit);
+        if (isToolmode())
+            m_pickingHits.insert(m_pickingHits.begin(), _hit);
     }
 
     //--------------------------------------------------------------------------------------

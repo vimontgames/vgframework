@@ -58,6 +58,8 @@ namespace vg::core
         bool                                                HasAncestor             (const IGameObject * _ancestor) const final override;
         core::uint                                          GetChildIndex           (const IGameObject * _child) const final override;
 
+        bool                                                IsEnabledInHierarchy    () const final override;
+
         bool                                                TryGetAABB              (core::AABB & _aabb) const override;
 
         void                                                OnPropertyChanged       (core::IObject * _object, const core::IProperty & _prop, bool _notifyParent) override;
@@ -76,7 +78,7 @@ namespace vg::core
         VG_INLINE UpdateFlags                               getUpdateFlags          () const;
         VG_INLINE void                                      setUpdateFlags          (UpdateFlags _flags, bool _enabled);
 
-        void                                                sortComponents          ();
+        void                                                sortComponents          ();      
 
     private:
         UpdateFlags                                         m_update = (UpdateFlags)0x0;

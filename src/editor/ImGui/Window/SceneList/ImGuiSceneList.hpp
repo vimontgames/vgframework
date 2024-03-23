@@ -83,7 +83,7 @@ namespace vg::editor
         if (_count)
             (*_count)++;
 
-        const bool disabled = !asBool(InstanceFlags::Enabled & _gameObject->GetInstanceFlags());
+        const bool disabled = !_gameObject->IsEnabledInHierarchy();// !asBool(InstanceFlags::Enabled & _gameObject->GetInstanceFlags());
 
         bool open = false;
         auto availableWidth = ImGui::GetContentRegionMax().x;

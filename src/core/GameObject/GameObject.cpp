@@ -25,9 +25,8 @@ namespace vg::core
 
         // Hide GameObject name
         setPropertyFlag(GameObject, m_name, IProperty::Flags::NotVisible, false);
-
         registerPropertyObjectPtrVector(GameObject, m_components, "Components");
-        registerPropertyObjectPtrVectorEx(GameObject, m_children, "Children", IProperty::Flags::Debug);
+        registerPropertyObjectPtrVectorEx(GameObject, m_children, "Children", IProperty::Flags::NotVisible);
 
         return true;
     }
@@ -478,6 +477,21 @@ namespace vg::core
     const vector<IGameObject*> & GameObject::GetChildren() const
     {
         return (const vector<IGameObject*> &)getChildren();
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool GameObject::IsEnabledInHierarchy() const
+    {
+        const Instance * instance = this;
+
+        while (instance)
+        {
+            if (!asBool(instance->GetInstanceFlags()))
+                return false;
+            instance = dynamic_cast<Instance *>(instance->getParent());
+        }
+
+        return true;      
     }
 
     //--------------------------------------------------------------------------------------
