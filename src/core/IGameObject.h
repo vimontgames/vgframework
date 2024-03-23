@@ -31,6 +31,8 @@ namespace vg::core
         virtual bool                            HasAncestor         (const IGameObject * _ancestor) const = 0;
         virtual core::uint                      GetChildIndex       (const IGameObject * _child) const = 0;
 
+        virtual bool                            IsEnabledInHierarchy() const = 0;
+
         virtual void                            AddComponent        (IComponent * _component, core::uint _index = -1) = 0;
         virtual IComponent *                    AddComponent        (const char * _className, const core::string & _name) = 0;
         virtual bool                            RemoveComponent     (IComponent * _component) = 0;
