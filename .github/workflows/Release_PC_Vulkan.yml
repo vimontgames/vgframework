@@ -47,6 +47,11 @@ jobs:
         vulkan-components: Vulkan-Headers, Vulkan-Loader
         vulkan-use-cache: true
 
+    - name: Find MSBuild
+      id: msbuild
+      run: |
+        echo "::set-output name=path::$(vswhere -version [17.8,18.0) -latest -products * -requires Microsoft.Component.MSBuild -property installationPath)\\MSBuild\\Current\\Bin\\MSBuild.exe"
+
     - name: Build
       working-directory: ${{env.GITHUB_WORKSPACE}}
       # Add additional options to the MSBuild command line here (like platform or verbosity level).
