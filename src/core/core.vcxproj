@@ -26,6 +26,8 @@
     <ClInclude Include="GameObject\GameObject.h" />
     <ClInclude Include="IBehaviour.h" />
     <ClInclude Include="IComponent.h" />
+    <ClInclude Include="IDynamicPropertyList.h" />
+    <ClInclude Include="IDynamicProperty.h" />
     <ClInclude Include="IGameObject.h" />
     <ClInclude Include="IInput.h" />
     <ClInclude Include="IInstance.h" />
@@ -57,6 +59,12 @@
     <ClInclude Include="Object\AutoRegisterClass.hpp" />
     <ClInclude Include="Object\ClassDesc.h" />
     <ClInclude Include="Object\ClassDesc.hpp" />
+    <ClInclude Include="Object\DynamicProperties\DynamicProperty.h" />
+    <ClInclude Include="Object\DynamicProperties\DynamicProperty.hpp" />
+    <ClInclude Include="Object\DynamicProperties\DynamicPropertyList.h" />
+    <ClInclude Include="Object\DynamicProperties\DynamicPropertyList.hpp" />
+    <ClInclude Include="Object\DynamicProperties\DynamicPropertyType\DynamicPropertyString.h" />
+    <ClInclude Include="Object\DynamicProperties\DynamicPropertyType\DynamicPropertyString.hpp" />
     <ClInclude Include="Object\EnumHelper.h" />
     <ClInclude Include="Object\Property.h" />
     <ClInclude Include="Object\Property.hpp" />
@@ -91,6 +99,7 @@
     <ClCompile Include="Memory\MemoryAllocator.cpp" />
     <ClCompile Include="Misc\BitMask\BitMask.cpp" />
     <ClCompile Include="Model\Model.cpp" />
+    <ClCompile Include="Object\DynamicProperties\DynamicProperties.cpp" />
     <ClCompile Include="Object\Factory.cpp" />
     <ClCompile Include="Object\Object.cpp" />
     <ClCompile Include="Options\Options.cpp" />

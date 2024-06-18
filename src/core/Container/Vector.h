@@ -28,6 +28,15 @@ namespace vg::core
         }
 
         //--------------------------------------------------------------------------------------
+        T & find(const typename T & element) const
+        {
+            if (auto it = std::find(this->begin(), this->end(), element) != this->end())
+                return *it;
+            else
+                return nullptr;
+        }
+
+        //--------------------------------------------------------------------------------------
         bool remove(const typename T & element)
         {
             auto end = std::remove_if(this->begin(), this->end(), [=](auto s) { return s == element; });

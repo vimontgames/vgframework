@@ -91,6 +91,22 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
+    Property::Property(const Property & _other)
+    {
+        name = _other.name;
+        className = _other.className;
+        displayName = _other.displayName;
+        defaultFolder = _other.defaultFolder;
+        interfaceType = _other.interfaceType;
+        type = _other.type;
+        offset = _other.offset;
+        sizeOf = _other.sizeOf;
+        flags = _other.flags;
+        range = _other.range;
+        enums = _other.enums;
+    }
+
+    //--------------------------------------------------------------------------------------
     Property::~Property()
     {
         
@@ -133,6 +149,12 @@ namespace vg::core
     void Property::setFlags(Flags _flagsToSet, Flags _flagsToRemove)
     {
         flags = (Flags)((std::underlying_type<Flags>::type(flags) & ~std::underlying_type<Flags>::type(_flagsToRemove)) | (std::underlying_type<Flags>::type(_flagsToSet)));
+    }
+
+    //--------------------------------------------------------------------------------------
+    void Property::setOffset(uint_ptr _offset)
+    {
+        offset = _offset;
     }
 
     //--------------------------------------------------------------------------------------

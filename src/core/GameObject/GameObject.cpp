@@ -63,8 +63,27 @@ namespace vg::core
     void GameObject::OnLoad()
     {
         super::OnLoad();
+        FixMissingUID();
         recomputeUpdateFlags();
         sortComponents();
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool GameObject::FixMissingUID()
+    {
+        bool anyUIDCreated = super::FixMissingUID();
+
+        for (uint i = 0; i < m_components.size(); ++i)
+        {
+            auto * component = m_components[i];
+            if (nullptr != component)
+            {
+                if (component->FixMissingUID())
+                    anyUIDCreated = true;
+            }
+        }
+
+        return anyUIDCreated;
     }
 
     //--------------------------------------------------------------------------------------
@@ -204,7 +223,41 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
+    IDynamicPropertyList * GameObject::GetDynamicPropertyList(const IObject * _object) const
+    {
+        VG_ASSERT(IsPrefab());
+        return nullptr;
+    }
+
+    //--------------------------------------------------------------------------------------
+    IDynamicPropertyList * GameObject::CreateDynamicPropertyList(const IObject * _object)
+    {
+        VG_ASSERT(IsPrefab());
+        return nullptr;
+    }
+
+    //--------------------------------------------------------------------------------------
     IResource * GameObject::GetPrefabResource() const
+    {
+        VG_ASSERT(IsPrefab());
+        return nullptr;
+    }
+
+    //--------------------------------------------------------------------------------------
+    IDynamicProperty * GameObject::GetDynamicProperty(const IObject * _object, const IProperty * _prop) const
+    {
+        VG_ASSERT(IsPrefab());
+        return nullptr;
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool GameObject::CanOverrideProperty(const core::IObject * _object, const core::IProperty * _prop) const
+    {
+        return false;
+    }
+
+    //--------------------------------------------------------------------------------------
+    IDynamicProperty * GameObject::CreateDynamicProperty(const core::IObject * _object, const core::IProperty * _prop)
     {
         VG_ASSERT(IsPrefab());
         return nullptr;

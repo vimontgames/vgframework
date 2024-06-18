@@ -4,6 +4,7 @@
 #include "core/IGameObject.h"
 #include "core/IFactory.h"
 #include "core/IClassDesc.h"
+#include "core/Kernel.h"
 #include "core/Object/EnumHelper.h"
 
 #if !VG_ENABLE_INLINE
@@ -24,7 +25,9 @@ namespace vg::core
     //--------------------------------------------------------------------------------------
     Component::~Component()
     {
-        
+        // TODO create only if could not read serialized value
+        //const auto * factory = Kernel::getFactory();
+        //m_guid = factory->CreateNewComponentGUID(this);
     }
 
     //--------------------------------------------------------------------------------------
@@ -61,7 +64,7 @@ namespace vg::core
     bool Component::registerProperties(IClassDesc & _desc)
     {
         super::registerProperties(_desc);
-
+      
         registerPropertyEnumBitfield(Component, ComponentFlags, m_flags, "Flags");
 
         return true;

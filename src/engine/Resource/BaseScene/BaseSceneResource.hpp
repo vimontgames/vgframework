@@ -55,4 +55,15 @@ namespace vg::engine
 
         return false;
     }
+
+    //--------------------------------------------------------------------------------------
+    // Assign new UID to GameObjects if they don't yet have one
+    //--------------------------------------------------------------------------------------
+    //void BaseSceneResource::fixMissingUIDs(IGameObject * _gameObject)
+    //{
+    //    IFactory * factory = Kernel::getFactory();
+    //
+    //    if (!_gameObject->HasValidUID())
+    //        _gameObject->SetUID(factory->CreateNewUID(_gameObject));
+    //}
 }

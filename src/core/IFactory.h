@@ -13,6 +13,10 @@ namespace vg::core
     class IObject;
     class IClassDesc;
     class IResource;
+    class IGameObject;
+    class IComponent;
+
+    using UID = core::u32;
 
     class IFactory
     {
@@ -44,6 +48,9 @@ namespace vg::core
         virtual IObject *                   Instanciate                 (const core::IObject * _object, IObject * _parent = nullptr) = 0;
 
         virtual bool                        IsA                         (const char * _class, const char * _other) const = 0;
+
+        virtual UID                         CreateNewUID                (IObject * _object) = 0;
+        virtual void                        ReleaseUID                  (UID _uid) = 0;
     };  
 }
 

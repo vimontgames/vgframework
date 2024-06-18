@@ -2,6 +2,9 @@
 #include "PrefabGameObject.h"
 #include "engine/World/Prefab/PrefabScene.h"
 
+#include "core/Object/DynamicProperties/DynamicPropertyList.h"
+#include "core/Object/DynamicProperties/DynamicPropertyType/DynamicPropertyString.h"
+
 using namespace vg::core;
 
 namespace vg::engine
@@ -14,6 +17,7 @@ namespace vg::engine
         super::registerProperties(_desc);
 
         registerPropertyResource(PrefabGameObject, m_prefabResource, "File");
+        registerPropertyObjectPtrVector(PrefabGameObject, m_gameObjects, "GameObjects");
         
         return true;
     }
@@ -29,7 +33,9 @@ namespace vg::engine
     //--------------------------------------------------------------------------------------
     PrefabGameObject::~PrefabGameObject()
     {
-      
+        for (uint i = 0; i < m_gameObjects.size(); ++i)
+            VG_SAFE_RELEASE(m_gameObjects[i]);
+        m_gameObjects.clear();
     }
 
     //--------------------------------------------------------------------------------------
@@ -43,6 +49,129 @@ namespace vg::engine
     {
         VG_ASSERT(IsPrefab());
         return (core::IResource *) &m_prefabResource;
+    }
+
+    //--------------------------------------------------------------------------------------
+    core::IDynamicPropertyList * PrefabGameObject::GetDynamicPropertyList(const core::IObject * _object) const
+    {
+        return getDynamicPropertyList(_object);
+    }
+
+    //--------------------------------------------------------------------------------------
+    core::IDynamicPropertyList * PrefabGameObject::CreateDynamicPropertyList(const core::IObject * _object)
+    {
+        return createDynamicPropertyList(_object);
+    }
+
+    //--------------------------------------------------------------------------------------
+    core::IDynamicProperty * PrefabGameObject::GetDynamicProperty(const core::IObject * _object, const core::IProperty * _prop) const
+    {
+        return getDynamicProperty(_object, _prop);
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool PrefabGameObject::CanOverrideProperty(const core::IObject * _object, const core::IProperty * _prop) const
+    {
+        return canOverrideProperty(_object, _prop);
+    }
+
+    //--------------------------------------------------------------------------------------
+    core::IDynamicProperty * PrefabGameObject::CreateDynamicProperty(const IObject * _object, const IProperty * _prop)
+    {
+        return createDynamicProperty(_object, _prop);
+    }
+
+    //--------------------------------------------------------------------------------------
+    core::DynamicPropertyList * PrefabGameObject::getDynamicPropertyList(const core::IObject * _object) const
+    {
+        const auto uid = _object->GetUID();
+        for (uint i = 0; i < m_gameObjects.size(); ++i)
+        {
+            auto * propList = m_gameObjects[i];
+            if (propList->GetUID() == uid)
+                return propList;
+        }
+        return nullptr;
+    }
+
+    //--------------------------------------------------------------------------------------
+    core::DynamicPropertyList * PrefabGameObject::createDynamicPropertyList(const core::IObject * _object)
+    {
+        VG_ASSERT(nullptr == GetDynamicPropertyList(_object));
+
+        auto *& newPropList = m_gameObjects.push_empty();
+
+        // TODO : dedicated ctor?
+        newPropList = new DynamicPropertyList(_object->getName(), nullptr);
+        newPropList->SetUID(_object->GetUID());
+        newPropList->setName(_object->getName());
+        
+        return newPropList;
+    }
+
+    //--------------------------------------------------------------------------------------
+    core::DynamicProperty * PrefabGameObject::getDynamicProperty(const core::IObject * _object, const core::IProperty * _prop) const
+    {
+        if (auto * propList = getDynamicPropertyList(_object))
+        {
+            for (uint i = 0; i < propList->m_properties.size(); ++i)
+            {
+                auto & prop = propList->m_properties[i];
+                if (prop->getName() == _prop->getName())
+                    return prop;
+            }
+        }
+
+        return nullptr;
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool PrefabGameObject::canOverrideProperty(const core::IObject * _object, const core::IProperty * _prop) const
+    {
+        switch (_prop->getType())
+        {
+            default:
+                return false;
+
+            case IProperty::Type::String:
+                return true;
+        }
+    }
+
+    //--------------------------------------------------------------------------------------
+    core::DynamicProperty * PrefabGameObject::createDynamicProperty(const core::IObject * _object, const core::IProperty * _prop)
+    {
+        if (auto * dynProp = getDynamicProperty(_object, _prop))
+            return dynProp;
+
+        VG_ASSERT(canOverrideProperty(_object, _prop));
+
+        DynamicPropertyList * propList = getDynamicPropertyList(_object);
+        if (nullptr == propList)
+            propList = createDynamicPropertyList(_object);
+
+        if (nullptr != propList)
+        {
+            if (auto * dynProp = getDynamicProperty(_object, _prop))
+                return dynProp;
+           
+            auto & newDynProp = propList->m_properties.push_empty();
+
+            switch (_prop->getType())
+            {
+                default:
+                    VG_ASSERT_ENUM_NOT_IMPLEMENTED(_prop->getType());
+                    return nullptr;
+
+                case IProperty::Type::String:
+                    newDynProp = new DynamicPropertyString(_object, _prop);
+                    break;
+            }
+
+            return newDynProp;
+        }
+
+        return nullptr;
     }
 
     //--------------------------------------------------------------------------------------

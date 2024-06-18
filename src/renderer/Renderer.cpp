@@ -159,8 +159,7 @@ namespace vg::renderer
     //--------------------------------------------------------------------------------------
     bool Renderer::UnregisterClasses()
     {
-        IFactory * factory = Kernel::getFactory();
-        return AutoRegisterClassInfo::unregisterClasses(*factory);
+        return AutoRegisterClassInfo::unregisterClasses();
     }
 
     //--------------------------------------------------------------------------------------

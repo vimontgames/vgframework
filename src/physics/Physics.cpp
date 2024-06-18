@@ -73,8 +73,7 @@ namespace vg::physics
     //--------------------------------------------------------------------------------------
     bool Physics::UnregisterClasses()
     {
-        IFactory * factory = Kernel::getFactory();
-        return AutoRegisterClassInfo::unregisterClasses(*factory);
+        return AutoRegisterClassInfo::unregisterClasses();
     }
 
     //--------------------------------------------------------------------------------------

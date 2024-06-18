@@ -16,6 +16,8 @@ namespace vg::core
         Prefab          = 0x00000008    // Object (e.g. World or GameObject) is a prefab
     };
 
+    using UID = core::u32;
+
 	class IObject
 	{
 	public:
@@ -27,6 +29,11 @@ namespace vg::core
 
 										    IObject		        () = default;
 		virtual							    ~IObject	        () = default;
+
+        virtual bool                        FixMissingUID       () = 0;
+        virtual bool                        HasValidUID         () const = 0;
+        virtual UID                         GetUID              () const = 0;
+        virtual void						SetUID              (UID _uid) = 0;
 
         virtual ObjectFlags                 GetObjectFlags      () const = 0;
         virtual void                        SetObjectFlags      (ObjectFlags _flags, bool _enabled) = 0;

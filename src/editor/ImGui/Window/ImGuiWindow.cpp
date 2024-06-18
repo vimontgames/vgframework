@@ -9,8 +9,11 @@
 #include "core/IGameObject.h"
 #include "core/IComponent.h"
 #include "core/ISelection.h"
+#include "core/IDynamicProperty.h"
+#include "core/IDynamicPropertyList.h"
 #include "core/Misc/BitMask/BitMask.h"
 #include "core/Misc/AABB/AABB.h"
+#include "core/Object/DynamicProperties/DynamicPropertyType/DynamicPropertyString.h"
 
 #include "renderer/IRenderer.h"
 
@@ -377,6 +380,39 @@ namespace vg::editor
         //if (ImGuiPropertyHandler::display(_prop, _object))
         //    return; 
 
+        IGameObject * go = dynamic_cast<IGameObject *>(_object);
+        IGameObject * prefab = nullptr;
+
+        // Property is from an instanced Prefab (cannot be edited directly)
+        bool isPrefabInstance = false;
+
+        // Prefab has overrides
+        bool isPrefabOverride = false;
+
+        // Property can be override for this Prefab Instance
+        bool canPrefabOverride = false;
+
+        if (go)
+        {
+            prefab = go->GetParentPrefab();
+            isPrefabInstance = nullptr != prefab;
+
+            if (nullptr != prefab)
+            {
+                canPrefabOverride = prefab->CanOverrideProperty(_object, _prop);
+
+                if (auto * propList = prefab->GetDynamicPropertyList(_object))
+                {
+                    if (auto * propOverride = propList->GetProperty(_prop))
+                    {
+                        _object = (IObject*)propOverride;
+                        _prop = propOverride->GetProperty();
+                        isPrefabOverride = true;
+                    }
+                }
+            }
+        }
+
         const auto type = _prop->getType();
         const auto name = _prop->getName();
         const auto displayName = _prop->getDisplayName();
@@ -402,6 +438,8 @@ namespace vg::editor
 
         if (asBool(IProperty::Flags::SameLine & flags))
             ImGui::SameLine();
+
+        const bool hexa = asBool(IProperty::Flags::Hexadecimal & flags);
 
         bool optional = false, optionalChanged = false;
         IProperty * optionalProp = nullptr;
@@ -440,15 +478,29 @@ namespace vg::editor
 
         bool changed = false;
 
-        const bool readOnly = asBool(IProperty::Flags::ReadOnly & flags);
+        const bool readOnly = asBool(IProperty::Flags::ReadOnly & flags) || (isPrefabInstance && !isPrefabOverride && !canPrefabOverride);
 
         ImGuiInputTextFlags imguiInputTextflags = ImGuiInputTextFlags_EnterReturnsTrue;
         if (readOnly)
             imguiInputTextflags = ImGuiInputTextFlags_ReadOnly;
 
+        ImGuiInputTextFlags imguiNumberTextInputFlag = imguiInputTextflags;
+        if (hexa)
+            imguiNumberTextInputFlag |= ImGuiInputTextFlags_CharsHexadecimal;
+        //else
+        //    imguiNumberTextInputFlag |= ImGuiInputTextFlags_CharsDecimal;
+
         const bool flatten = asBool(IProperty::Flags::Flatten & flags);
         const bool isEnumArray = asBool(IProperty::Flags::EnumArray & flags);
         const auto enumArrayTreeNodeFlags = /*ImGuiTreeNodeFlags_OpenOnArrow |*/ ImGuiTreeNodeFlags_DefaultOpen;
+
+        if (isPrefabInstance)
+        {
+            if (isPrefabOverride)
+                ImGui::PushStyleColor(ImGuiCol_Text, ImGui::GetStyleColorVec4(ImGuiCol_HeaderActive));
+            else
+                ImGui::PushStyleColor(ImGuiCol_Text, ImGui::GetStyleColorVec4(ImGuiCol_TextDisabled));
+        }
 
         //ImGui::BeginDisabled(readOnly);
         {
@@ -722,10 +774,29 @@ namespace vg::editor
 
                     i32 * pU32 = (i32 *)(uint_ptr(_object) + offset);
 
+                    const u32 smallStep = 1;
+                    const u32 bigStep = 100;
+                    const uint2 range = uint2(max(0, _prop->getRange().x), (u32)_prop->getRange().y);
+
                     if (asBool(IProperty::Flags::HasRange & flags))
-                        changed |= ImGui::SliderInt(label.c_str(), pU32, max(0, (int)_prop->getRange().x), (int)_prop->getRange().y, "%d", imguiInputTextflags);
+                        changed |= ImGui::SliderScalar(label.c_str(), ImGuiDataType_U32, pU32, &range.x, &range.y, hexa ? "%08X" : "%d", imguiNumberTextInputFlag);
                     else
-                        changed |= ImGui::InputInt(label.c_str(), pU32, 1, 16, imguiInputTextflags);
+                        changed |= ImGui::InputScalar(label.c_str(), ImGuiDataType_U32, pU32, &smallStep, &bigStep, hexa ? "%08X" : "%d", imguiNumberTextInputFlag);
+                };
+                break;
+
+                case IProperty::Type::Uint64:
+                {
+                    VG_ASSERT(!isEnumArray, "Display of EnumArray property not implemented for type '%s'", asString(type).c_str());
+
+                    u64 * pu64 = _prop->GetPropertyUint64(_object);
+                    u64 minRange = (u64)_prop->getRange().x;
+                    u64 maxRange = (u64)_prop->getRange().y;
+
+                    if (asBool(IProperty::Flags::HasRange & flags))
+                        changed |= ImGui::SliderScalar(label.c_str(), ImGuiDataType_U64, pu64, &minRange, &maxRange, nullptr, imguiInputTextflags);
+                    else
+                        changed |= ImGui::InputScalar(label.c_str(), ImGuiDataType_U64, pu64, nullptr, nullptr, nullptr, imguiInputTextflags);
                 };
                 break;
 
@@ -840,7 +911,7 @@ namespace vg::editor
                 {
                     VG_ASSERT(!isEnumArray, "Display of EnumArray property not implemented for type '%s'", asString(type).c_str());
 
-                    bool selectPath = false;
+                    bool selectPath = false; 
 
                     string * pString = _prop->GetPropertyString(_object);
                     char buffer[1024];
@@ -926,7 +997,22 @@ namespace vg::editor
                     {
                         sprintf_s(buffer, pString->c_str());
                         if (ImGui::InputText(label.c_str(), buffer, countof(buffer), imguiInputTextflags))
-                            *pString = buffer;
+                        {
+                            if (*pString != buffer)
+                            {
+                                if (isPrefabInstance && !isPrefabOverride)
+                                {
+                                    // Create if needed
+                                    if (auto * dynProp = prefab->CreateDynamicProperty(_object, _prop))
+                                        ((core::DynamicPropertyString *)dynProp)->m_value = buffer;
+                                }
+                                else
+                                {
+                                    // Save in property
+                                    *pString = buffer;
+                                }
+                            }
+                        }
                     }                    
                 }
                 break;
@@ -1395,6 +1481,9 @@ namespace vg::editor
                     ImGui::EndDisabled();
             }
         }
+
+        if (isPrefabInstance)
+            ImGui::PopStyleColor();
     }
 
     //--------------------------------------------------------------------------------------

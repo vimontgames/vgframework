@@ -68,8 +68,7 @@ bool Game::RegisterClasses()
 //--------------------------------------------------------------------------------------
 bool Game::UnregisterClasses()
 {
-    IFactory * factory = Kernel::getFactory();
-    return AutoRegisterClassInfo::unregisterClasses(*factory);
+    return AutoRegisterClassInfo::unregisterClasses();
 }
 
 //--------------------------------------------------------------------------------------

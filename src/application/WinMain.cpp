@@ -5,6 +5,7 @@
 #include "core/Logger/Logger.h"
 #include "core/Kernel.h"
 #include "core/File/File.h"
+#include "core/Object/AutoRegisterClass.h"
 
 #include "engine/IEngine.h"
 #include "engine/IEngineOptions.h"
@@ -162,7 +163,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 {
 	#ifdef _CRTDBG_MAP_ALLOC
 	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
-	//_crtBreakAlloc = 6828;
+	//_crtBreakAlloc = 159;
 	#endif
 
 	// Save Startup root directory
@@ -262,6 +263,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
     VG_SAFE_DELETE(app);
     g_engine->deinit();
     VG_SAFE_RELEASE(g_engine);
+
+    core::AutoRegisterClassInfo::unregisterClasses();
 
 	return 0;
 }

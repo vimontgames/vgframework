@@ -95,12 +95,14 @@ namespace vg::core
             Optional        = 0x0000000000002000,   // Previous property must be a bool, and if 'false' then this value won't be editable
             HDR             = 0x0000000000004000,   // HDR value for color
             NotVisible      = 0x0000000000008000,   // A property that is not visible
+            Hexadecimal     = 0x0000000000010000,   // Display value using hexadecimal
         };
 
         virtual void                            setInterface                    (const char * _interface) = 0;
         virtual void                            setRange                        (float2 _range) = 0;
         virtual void                            setDefaultFolder                (const char * _path) = 0;
         virtual void                            setFlags                        (Flags _flagsToSet, Flags _flagsToRemove = Flags::None) = 0;
+        virtual void                            setOffset                       (uint_ptr _offset) = 0;
 
         virtual const char *                    getInterface                    () const = 0;
         virtual const char *                    getName                         () const = 0;

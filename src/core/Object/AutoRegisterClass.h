@@ -59,7 +59,7 @@ namespace vg::core
         static bool push(const AutoRegisterClassInfo & _info);
 
         static bool registerClasses(IFactory & _factory);
-        static bool unregisterClasses(IFactory & _factory);
+        static bool unregisterClasses();
 
         inline static core::vector<AutoRegisterClassInfo> * s_autoRegisterInfos = nullptr;  // use "construct-on-1st-use" idiom to avoid static initialization fiasco
     };

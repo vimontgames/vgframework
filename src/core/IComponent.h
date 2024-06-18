@@ -8,7 +8,7 @@ namespace vg::core
     class IGameObject;
     class AABB;
 
-     enum class ComponentFlags : u32
+    enum class ComponentFlags : u32
     {
         Enabled     = 0x00000001,
         NoCulling   = 0x00000002
@@ -19,9 +19,9 @@ namespace vg::core
     public:
         VG_CLASS_DECL_ABSTRACT(IComponent, core::Object);
 
-        virtual void               FixedUpdate         (float _dt) = 0;
-        virtual void               Update              (float _dt) = 0;
-        virtual void               LateUpdate          (float _dt) = 0;
+        virtual void                FixedUpdate         (float _dt) = 0;
+        virtual void                Update              (float _dt) = 0;
+        virtual void                LateUpdate          (float _dt) = 0;
 
         virtual const IGameObject * GetGameObject       () const = 0;
         virtual IGameObject *       GetGameObject       () = 0;

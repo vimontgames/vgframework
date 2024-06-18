@@ -205,8 +205,7 @@ namespace vg::engine
     //--------------------------------------------------------------------------------------
     bool Engine::UnregisterClasses()
     {
-        IFactory * factory = Kernel::getFactory();
-        return AutoRegisterClassInfo::unregisterClasses(*factory);
+        return AutoRegisterClassInfo::unregisterClasses();
     }
 
     //--------------------------------------------------------------------------------------

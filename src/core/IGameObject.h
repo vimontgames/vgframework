@@ -13,6 +13,8 @@ namespace vg::core
     class IComponent;
     class IBaseScene;
     class IWorld;
+    class IDynamicPropertyList;
+    class IDynamicProperty;
 
     class IGameObject : public Instance
     {
@@ -23,35 +25,42 @@ namespace vg::core
 
         }
 
-        virtual void                            AddChild            (IGameObject * _gameObject, core::uint _index = -1) = 0;
-        virtual bool                            RemoveChild         (IGameObject * _gameObject, bool _recomputeFlags = true) = 0;
-        virtual core::uint                      RemoveAllChildren   (bool _recomputeFlags = true) = 0;
-        virtual const vector<IGameObject*> &    GetChildren         () const = 0;
-        virtual bool                            IsRoot              () const = 0;
-        virtual bool                            HasAncestor         (const IGameObject * _ancestor) const = 0;
-        virtual core::uint                      GetChildIndex       (const IGameObject * _child) const = 0;
+        virtual void                            AddChild                        (IGameObject * _gameObject, core::uint _index = -1) = 0;
+        virtual bool                            RemoveChild                     (IGameObject * _gameObject, bool _recomputeFlags = true) = 0;
+        virtual core::uint                      RemoveAllChildren               (bool _recomputeFlags = true) = 0;
+        virtual const vector<IGameObject*> &    GetChildren                     () const = 0;
+        virtual bool                            IsRoot                          () const = 0;
+        virtual bool                            HasAncestor                     (const IGameObject * _ancestor) const = 0;
+        virtual core::uint                      GetChildIndex                   (const IGameObject * _child) const = 0;
 
-        virtual bool                            IsEnabledInHierarchy() const = 0;
+        virtual bool                            IsEnabledInHierarchy            () const = 0;
 
-        virtual void                            AddComponent        (IComponent * _component, core::uint _index = -1) = 0;
-        virtual IComponent *                    AddComponent        (const char * _className, const core::string & _name) = 0;
-        virtual bool                            RemoveComponent     (IComponent * _component) = 0;
-        virtual const vector<IComponent *> &    GetComponents       () const = 0;
-        virtual IComponent *                    GetComponentByType  (const char * _className) const = 0;
-        virtual core::uint                      GetComponentIndex   (const IComponent * _component) const = 0;
+        virtual void                            AddComponent                    (IComponent * _component, core::uint _index = -1) = 0;
+        virtual IComponent *                    AddComponent                    (const char * _className, const core::string & _name) = 0;
+        virtual bool                            RemoveComponent                 (IComponent * _component) = 0;
+        virtual const vector<IComponent *> &    GetComponents                   () const = 0;
+        virtual IComponent *                    GetComponentByType              (const char * _className) const = 0;
+        virtual core::uint                      GetComponentIndex               (const IComponent * _component) const = 0;
 
-        virtual UpdateFlags                     GetUpdateFlags      () const = 0;
-        virtual void                            SetUpdateFlags      (UpdateFlags _flags, bool _enabled) = 0;
+        virtual UpdateFlags                     GetUpdateFlags                  () const = 0;
+        virtual void                            SetUpdateFlags                  (UpdateFlags _flags, bool _enabled) = 0;
 
-        virtual IBaseScene *                    GetScene            () const = 0;
-        virtual IWorld *                        GetWorld            () const = 0;
+        virtual IBaseScene *                    GetScene                        () const = 0;
+        virtual IWorld *                        GetWorld                        () const = 0;
         
-        virtual bool                            IsPrefab            () const = 0;
-        virtual IGameObject *                   GetParentPrefab     () const = 0;
-        virtual IResource *                     GetPrefabResource   () const = 0;
+        virtual bool                            IsPrefab                        () const = 0;
+        virtual IGameObject *                   GetParentPrefab                 () const = 0;
+        virtual IResource *                     GetPrefabResource               () const = 0;
 
-        template <class T> T *                  AddComponentByType  (const core::string & _name);
-        template <class T> T *                  GetComponentByType  () const;
+        virtual IDynamicPropertyList *          GetDynamicPropertyList          (const IObject * _object) const = 0;
+        virtual IDynamicPropertyList *          CreateDynamicPropertyList       (const IObject * _object) = 0;
+
+        virtual IDynamicProperty *              GetDynamicProperty              (const IObject * _object, const IProperty * _prop) const = 0;
+        virtual bool                            CanOverrideProperty             (const core::IObject * _object, const core::IProperty * _prop) const = 0;
+        virtual IDynamicProperty *              CreateDynamicProperty           (const IObject * _object, const IProperty * _prop) = 0;
+
+        template <class T> T *                  AddComponentByType              (const core::string & _name);
+        template <class T> T *                  GetComponentByType              () const;
     };
 
     //--------------------------------------------------------------------------------------

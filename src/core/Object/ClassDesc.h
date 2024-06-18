@@ -15,12 +15,14 @@ namespace vg::core
         void                                RegisterPropertyLayout      (const char * _className, IProperty::LayoutElementType _layoutElementType, const char * _label, bool * _offset, IProperty::Flags _flags = IProperty::Flags::None) final override;
 
         void                                RegisterProperty            (const char * _className, const char * _propertyName, bool * _offset, const char * _displayName, IProperty::Flags _flags) final override;
-        void                                RegisterProperty            (const char * _className, const char * _propertyName, core::i8 * _offset, const char * _displayName, IProperty::Flags _flags) final override;
-        void                                RegisterProperty            (const char * _className, const char * _propertyName, core::i16 * _offset, const char * _displayName, IProperty::Flags _flags) final override;
-        void                                RegisterProperty            (const char * _className, const char * _propertyName, core::i32 * _offset, const char * _displayName, IProperty::Flags _flags) final override;
-        void                                RegisterProperty            (const char * _className, const char * _propertyName, core::u8 * _offset, const char * _displayName, IProperty::Flags _flags) final override;
-        void                                RegisterProperty            (const char * _className, const char * _propertyName, core::u16 * _offset, const char * _displayName, IProperty::Flags _flags) final override;
-        void                                RegisterProperty            (const char * _className, const char * _propertyName, core::u32 * _offset, const char * _displayName, IProperty::Flags _flags) final override;
+        void                                RegisterProperty            (const char * _className, const char * _propertyName, i8 * _offset, const char * _displayName, IProperty::Flags _flags) final override;
+        void                                RegisterProperty            (const char * _className, const char * _propertyName, i16 * _offset, const char * _displayName, IProperty::Flags _flags) final override;
+        void                                RegisterProperty            (const char * _className, const char * _propertyName, i32 * _offset, const char * _displayName, IProperty::Flags _flags) final override;
+        void                                RegisterProperty            (const char * _className, const char * _propertyName, i64 * _offset, const char * _displayName, IProperty::Flags _flags) final override;
+        void                                RegisterProperty            (const char * _className, const char * _propertyName, u8 * _offset, const char * _displayName, IProperty::Flags _flags) final override;
+        void                                RegisterProperty            (const char * _className, const char * _propertyName, u16 * _offset, const char * _displayName, IProperty::Flags _flags) final override;
+        void                                RegisterProperty            (const char * _className, const char * _propertyName, u32 * _offset, const char * _displayName, IProperty::Flags _flags) final override;
+        void                                RegisterProperty            (const char * _className, const char * _propertyName, u64 * _offset, const char * _displayName, IProperty::Flags _flags) final override;
         void                                RegisterProperty            (const char * _className, const char * _propertyName, uint2 * _offset, const char * _displayName, IProperty::Flags _flags) final override;
         void                                RegisterProperty            (const char * _className, const char * _propertyName, uint3 * _offset, const char * _displayName, IProperty::Flags _flags) final override;
         void                                RegisterProperty            (const char * _className, const char * _propertyName, uint4 * _offset, const char * _displayName, IProperty::Flags _flags) final override;

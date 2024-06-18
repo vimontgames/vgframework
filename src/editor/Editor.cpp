@@ -150,8 +150,7 @@ namespace vg::editor
     //--------------------------------------------------------------------------------------
     bool Editor::UnregisterClasses()
     {
-        IFactory * factory = Kernel::getFactory();
-        return AutoRegisterClassInfo::unregisterClasses(*factory);
+        return AutoRegisterClassInfo::unregisterClasses();
     }
 
     //--------------------------------------------------------------------------------------

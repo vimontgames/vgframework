@@ -16,6 +16,7 @@ namespace vg::core
     //--------------------------------------------------------------------------------------
     bool Object::registerProperties(IClassDesc & _desc)
     {
+        registerPropertyEx(Object, m_uid, "UID", IProperty::Flags::Debug | IProperty::Flags::Hexadecimal);
         registerPropertyEx(Object, m_name, "Name", IProperty::Flags::NotVisible);
         registerPropertyEnumBitfieldEx(Object, ObjectFlags,m_objectFlags, "Object Flags", IProperty::Flags::Debug);
 
@@ -51,6 +52,41 @@ namespace vg::core
 	{
 
 	}
+
+    //--------------------------------------------------------------------------------------
+    bool Object::FixMissingUID()
+    {
+        if (!HasValidUID())
+        {
+            IFactory * factory = Kernel::getFactory();
+            SetUID(factory->CreateNewUID(this));
+            return true;
+        }
+
+        return false;
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool Object::HasValidUID() const
+    {
+        return (UID)0 != m_uid;
+    }
+
+    //--------------------------------------------------------------------------------------
+    UID Object::GetUID() const
+    {
+        VG_ASSERT((UID)0 != m_uid);
+        return m_uid;
+    }
+
+    //--------------------------------------------------------------------------------------
+    void Object::SetUID(UID _uid)
+    {
+        IFactory * factory = Kernel::getFactory();
+        if (m_uid)
+            factory->ReleaseUID(m_uid);
+        m_uid = _uid;
+    }
 
     //--------------------------------------------------------------------------------------
     ObjectFlags Object::GetObjectFlags() const 

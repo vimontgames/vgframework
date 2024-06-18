@@ -58,7 +58,10 @@ namespace vg::engine
 		{
 			scene->setParent(this);
 			if (factory->loadFromXML(scene, _path))
+			{
+				//fixMissingUIDs(scene->GetRoot());
 				return scene;
+			}
 		}
 
 		return nullptr;

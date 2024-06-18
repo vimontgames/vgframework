@@ -76,6 +76,12 @@
     <Filter Include="Misc\BitMask">
       <UniqueIdentifier>{230c6fac-1d63-4a82-9345-cfe400becf3e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Object\DynamicProperties">
+      <UniqueIdentifier>{e59f4d7e-ae42-4f05-a6c0-49b50c3db088}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Object\DynamicProperties\DynamicPropertyType">
+      <UniqueIdentifier>{3c024c23-b3ff-4bb8-8206-4e3d942a082a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Math\Math.h">
@@ -229,6 +235,26 @@
     <ClInclude Include="Misc\AABB\AABB.h">
       <Filter>Misc\AABB</Filter>
     </ClInclude>
+    <ClInclude Include="IDynamicProperty.h" />
+    <ClInclude Include="IDynamicPropertyList.h" />
+    <ClInclude Include="Object\DynamicProperties\DynamicProperty.h">
+      <Filter>Object\DynamicProperties</Filter>
+    </ClInclude>
+    <ClInclude Include="Object\DynamicProperties\DynamicProperty.hpp">
+      <Filter>Object\DynamicProperties</Filter>
+    </ClInclude>
+    <ClInclude Include="Object\DynamicProperties\DynamicPropertyList.h">
+      <Filter>Object\DynamicProperties</Filter>
+    </ClInclude>
+    <ClInclude Include="Object\DynamicProperties\DynamicPropertyList.hpp">
+      <Filter>Object\DynamicProperties</Filter>
+    </ClInclude>
+    <ClInclude Include="Object\DynamicProperties\DynamicPropertyType\DynamicPropertyString.h">
+      <Filter>Object\DynamicProperties\DynamicPropertyType</Filter>
+    </ClInclude>
+    <ClInclude Include="Object\DynamicProperties\DynamicPropertyType\DynamicPropertyString.hpp">
+      <Filter>Object\DynamicProperties\DynamicPropertyType</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Math\Math.cpp">
@@ -298,6 +324,9 @@
     </ClCompile>
     <ClCompile Include="Misc\AABB\AABB.cpp">
       <Filter>Misc\AABB</Filter>
+    </ClCompile>
+    <ClCompile Include="Object\DynamicProperties\DynamicProperties.cpp">
+      <Filter>Object\DynamicProperties</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

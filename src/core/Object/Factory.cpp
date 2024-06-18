@@ -10,6 +10,8 @@
 #include "core/Misc/BitMask/BitMask.h"
 #include "core/IInstance.h"
 
+#include <random>
+
 using namespace tinyxml2;
 
 namespace vg::core
@@ -234,6 +236,44 @@ namespace vg::core
         }
 
         return false;
+    }
+
+    //--------------------------------------------------------------------------------------
+    template <typename T> T Random(T _min, T _max)
+    {
+        std::random_device rd;
+        std::mt19937 gen(rd());
+        std::uniform_int_distribution<T> randomDist(_min, _max);
+        return randomDist(gen);
+    }
+
+    //--------------------------------------------------------------------------------------
+    UID Factory::CreateNewUID(IObject * _object)
+    {
+        UID newUID;
+        do 
+        {
+            newUID = Random<u32>(0x00000001, 0xFFFFFFFF);
+            auto it = m_uidObjectHash.find(newUID);
+            if (m_uidObjectHash.end() == it)
+            {
+                m_uidObjectHash.insert(std::pair(newUID, _object));
+                return newUID;
+            }
+
+        } while (42);
+    }
+
+    //--------------------------------------------------------------------------------------
+    void Factory::ReleaseUID(UID _uid)
+    {
+        if (_uid)
+        {
+            auto it = m_uidObjectHash.find(_uid);
+            VG_ASSERT(m_uidObjectHash.end() != it);
+            if (m_uidObjectHash.end() != it)
+                m_uidObjectHash.erase(it);
+        }
     }
 
     //--------------------------------------------------------------------------------------
@@ -1593,20 +1633,20 @@ namespace vg::core
                 }
                 break;
 
-                //case IProperty::Type::ObjectVector:
-                //{
-                //    VG_ASSERT(!isEnumArray, "EnumArray serialization to XML not implemented for type '%s'", asString(type).c_str());
-                //    const uint sizeOf = prop->getSizeOf();
-                //    const size_t count = prop->GetPropertyObjectVectorCount(_object);
-                //    const byte * data = prop->GetPropertyObjectVectorData(_object);
-                //
-                //    for (uint i = 0; i < count; ++i)
-                //    {
-                //        IObject * pObject = (IObject *)(data + sizeOf * i);
-                //        serializeToXML((const IObject *)(pObject), _xmlDoc, xmlPropElem);
-                //    }
-                //}
-                //break;
+                case IProperty::Type::ObjectVector:
+                {
+                    VG_ASSERT(!isEnumArray, "EnumArray serialization to XML not implemented for type '%s'", asString(type).c_str());
+                    const uint sizeOf = prop->getSizeOf();
+                    const size_t count = prop->GetPropertyObjectVectorCount(_object);
+                    const byte * data = prop->GetPropertyObjectVectorData(_object);
+
+                    for (uint i = 0; i < count; ++i)
+                    {
+                        IObject * pObject = (IObject *)(data + sizeOf * i);
+                        serializeToXML((const IObject *)(pObject), _xmlDoc, xmlPropElem);
+                    }
+                }
+                break;
 
                 case IProperty::Type::ResourcePtrVector:
                 {

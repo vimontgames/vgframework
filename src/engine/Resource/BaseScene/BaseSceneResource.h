@@ -12,11 +12,14 @@ namespace vg::engine
         BaseSceneResource(const core::string & _name = "", IObject * _parent = nullptr);
         ~BaseSceneResource();
 
-        void                                onResourcePathChanged(const core::string & _oldPath, const core::string & _newPath) final;
+        void                                onResourcePathChanged   (const core::string & _oldPath, const core::string & _newPath) final;
 
-        bool                                cook(const core::string & _file) const final override;
+        bool                                cook                    (const core::string & _file) const override;
 
-        bool                                CanCreateFile() const final override { return true; };
-        bool                                CanSaveFile() const final override { return true; };
+        bool                                CanCreateFile           () const final override { return true; };
+        bool                                CanSaveFile             () const final override { return true; };
+
+    protected:
+        //void                                fixMissingUIDs          (core::IGameObject * _gameObject);
     };
 }

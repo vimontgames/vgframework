@@ -13,12 +13,15 @@ namespace vg::core
     class Property final : public IProperty
     {
     public:
-                                        Property                        (const char * _class, const char * _name, Type _type, uint_ptr _offset, core::u32 _sizeOf, const char * _prettyName, Flags _flags, uint _enumCount = 0, const char * _enumNames = nullptr, const void * _enumValues = nullptr, uint _enumSizeOf = -1);
+                                        Property                        (const char * _class = "", const char * _name = "", Type _type = Type::Undefined, uint_ptr _offset = 0, core::u32 _sizeOf = 0, const char * _prettyName = "", Flags _flags = (Flags)0x0, uint _enumCount = 0, const char * _enumNames = nullptr, const void * _enumValues = nullptr, uint _enumSizeOf = -1);
+                                        Property                        (const Property & _other);
                                         ~Property                       ();
+
         void                            setInterface                    (const char * _interface) final override;
         void                            setRange                        (float2 _range) final override;
         void                            setDefaultFolder                (const char * _path) final override;
-        void                            setFlags                        (Flags _flagsToSet, Flags _flagsToRemove = Flags::None) final;
+        void                            setFlags                        (Flags _flagsToSet, Flags _flagsToRemove = Flags::None) final override;
+        void                            setOffset                       (uint_ptr _offset) final override;
 
         const char *                    getInterface                    () const final override;
         const char *                    getName                         () const final override;

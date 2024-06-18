@@ -6,8 +6,10 @@ namespace vg::core
     bool AutoRegisterClassInfo::push(const AutoRegisterClassInfo & _info)
     {
         if (!s_autoRegisterInfos)
+        {
             s_autoRegisterInfos = new vector<AutoRegisterClassInfo>();
-
+            //VG_DEBUGPRINT("New AutoRegisterClassInfo 0x%16p\n", s_autoRegisterInfos);
+        }
         s_autoRegisterInfos->push_back(_info);
 
         return true;
@@ -32,10 +34,11 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
-    bool AutoRegisterClassInfo::unregisterClasses(IFactory & _factory)
+    bool AutoRegisterClassInfo::unregisterClasses()
     {
         if (s_autoRegisterInfos)
         {
+            //VG_DEBUGPRINT("Delete AutoRegisterClassInfo 0x%16p\n", s_autoRegisterInfos);
             VG_SAFE_DELETE(s_autoRegisterInfos);
             return true;
         }
