@@ -13,6 +13,9 @@ namespace vg::core
         DynamicPropertyString(const core::IObject * _object, const core::IProperty * _prop);
         ~DynamicPropertyString();
 
+        bool Set(IObject * _object, IProperty * _prop) final override;
+
+    //private:
         string m_value;
     };
 }

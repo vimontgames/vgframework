@@ -14,6 +14,7 @@
 #include "core/Misc/BitMask/BitMask.h"
 #include "core/Misc/AABB/AABB.h"
 #include "core/Object/DynamicProperties/DynamicPropertyType/DynamicPropertyString.h"
+#include "core/Object/DynamicProperties/DynamicPropertyType/DynamicPropertyFloat4.h"
 
 #include "renderer/IRenderer.h"
 
@@ -392,6 +393,9 @@ namespace vg::editor
         // Property can be override for this Prefab Instance
         bool canPrefabOverride = false;
 
+        // The dynamic property override if any
+        const IDynamicProperty * propOverride = nullptr;
+
         if (go)
         {
             prefab = go->GetParentPrefab();
@@ -403,7 +407,7 @@ namespace vg::editor
 
                 if (auto * propList = prefab->GetDynamicPropertyList(_object))
                 {
-                    if (auto * propOverride = propList->GetProperty(_prop))
+                    if (propOverride = propList->GetProperty(_prop))
                     {
                         _object = (IObject*)propOverride;
                         _prop = propOverride->GetProperty();
@@ -890,7 +894,30 @@ namespace vg::editor
                             if (asBool(IProperty::Flags::HDR & flags))
                                 colorEditFlags |= ImGuiColorEditFlags_HDR | ImGuiColorEditFlags_Float;
 
-                            changed |= ImGui::ColorEdit4(label.c_str(), pFloat4, colorEditFlags);
+                            float temp[4];
+                            for (uint i = 0; i < 4; ++i)
+                                temp[i] = pFloat4[i];
+
+                            if (ImGui::ColorEdit4(label.c_str(), (float*)&temp, colorEditFlags))
+                            {
+                                if (temp[0] != pFloat4[0] || temp[1] != pFloat4[1] || temp[2] != pFloat4[2] || temp[3] != pFloat4[3])
+                                {
+                                    if (isPrefabInstance && !isPrefabOverride)
+                                    {
+                                        // Create if needed
+                                        if (propOverride = prefab->CreateDynamicProperty(_object, _prop))
+                                            ((core::DynamicPropertyFloat4 *)propOverride)->m_value = float4(temp[0], temp[1], temp[2], temp[3]);
+                                    }
+                                    else
+                                    {
+                                        // Save in property
+                                        for (uint i = 0; i < 4; ++i)
+                                            pFloat4[i] = temp[i];
+                                    }
+                                }
+
+                                changed = true;
+                            }
                         }
                         else
                         {
@@ -903,7 +930,7 @@ namespace vg::editor
                 case IProperty::Type::Float4x4:
                 {
                     VG_ASSERT(!isEnumArray, "Display of EnumArray property not implemented for type '%s'", asString(type).c_str());
-                    changed |= displayFloat4x4(_object, _prop);
+                    changed |= displayFloat4x4(_object, _prop); 
                 }
                 break;
 
@@ -1003,14 +1030,16 @@ namespace vg::editor
                                 if (isPrefabInstance && !isPrefabOverride)
                                 {
                                     // Create if needed
-                                    if (auto * dynProp = prefab->CreateDynamicProperty(_object, _prop))
-                                        ((core::DynamicPropertyString *)dynProp)->m_value = buffer;
+                                    if (propOverride = prefab->CreateDynamicProperty(_object, _prop))
+                                        ((core::DynamicPropertyString *)propOverride)->m_value = buffer;
                                 }
                                 else
                                 {
                                     // Save in property
                                     *pString = buffer;
                                 }
+
+                                changed = true;
                             }
                         }
                     }                    
@@ -1469,7 +1498,16 @@ namespace vg::editor
             _object->OnPropertyChanged(_object, *optionalProp);
 
         if (changed)
+        {
             _object->OnPropertyChanged(_object, *_prop);
+        
+            if (prefab && propOverride != nullptr)
+            {
+                auto & children = prefab->GetChildren();
+                for (uint i = 0; i < children.size(); ++i)
+                    prefab->OverrideGameObjectProperties(children[i], propOverride->GetProperty());
+            }
+        }
 
         if (optional)
         {

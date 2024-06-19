@@ -39,8 +39,6 @@ namespace vg::core
             auto & prop = m_properties[i];
             if (prop->getName() == _prop->getName())
             {
-                //memcpy(&prop->m_prop, _prop, sizeof(Property));
-
                 prop->m_prop = *(Property*)_prop;
                 prop->m_prop.setOffset(offsetof(DynamicPropertyString, m_value));
                 return prop;

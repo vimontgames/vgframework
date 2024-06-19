@@ -18,6 +18,12 @@ namespace vg::core
             return (IProperty*) &m_prop;
         }
 
+        bool Set(IObject * _object, IProperty * _prop) override
+        {
+            VG_ASSERT_NOT_IMPLEMENTED();
+            return false;
+        }
+
         //core::string m_name;
         Property m_prop = nullptr;
     };

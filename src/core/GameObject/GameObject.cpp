@@ -264,6 +264,12 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
+    void GameObject::OverrideGameObjectProperties(IGameObject * _gameObject, const IProperty * _prop)
+    {
+        VG_ASSERT(IsPrefab());
+    }
+
+    //--------------------------------------------------------------------------------------
     void GameObject::FixedUpdate(float _dt)
     {
         if (asBool(InstanceFlags::Enabled & getInstanceFlags()))

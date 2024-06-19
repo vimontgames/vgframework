@@ -4,6 +4,7 @@
 
 #include "core/Object/DynamicProperties/DynamicPropertyList.h"
 #include "core/Object/DynamicProperties/DynamicPropertyType/DynamicPropertyString.h"
+#include "core/Object/DynamicProperties/DynamicPropertyType/DynamicPropertyFloat4.h"
 
 using namespace vg::core;
 
@@ -128,13 +129,36 @@ namespace vg::engine
     //--------------------------------------------------------------------------------------
     bool PrefabGameObject::canOverrideProperty(const core::IObject * _object, const core::IProperty * _prop) const
     {
+        const auto flags = _prop->getFlags();
+
+        const bool isFolder = asBool(IProperty::Flags::IsFolder & flags);
+        const bool isFile = asBool(IProperty::Flags::IsFile & flags);
+
+        const bool isEnumArray = asBool(IProperty::Flags::EnumArray & flags);
+        const bool isColor = asBool(IProperty::Flags::Color & flags);
+
         switch (_prop->getType())
         {
             default:
                 return false;
 
             case IProperty::Type::String:
+            {
+                if (isFile || isFolder)
+                    return false;
+
                 return true;
+            }
+            break;
+
+            case IProperty::Type::Float4:
+            {
+                if (isEnumArray || !isColor)
+                    return false;
+
+                return true;
+            }
+            break;
         }
     }
 
@@ -166,6 +190,10 @@ namespace vg::engine
                 case IProperty::Type::String:
                     newDynProp = new DynamicPropertyString(_object, _prop);
                     break;
+
+                case IProperty::Type::Float4:
+                    newDynProp = new DynamicPropertyFloat4(_object, _prop);
+                    break;
             }
 
             return newDynProp;
@@ -191,11 +219,50 @@ namespace vg::engine
                     instance->SetObjectFlags(ObjectFlags::NotSerialized, true);
                     instance->setParent(this);
 
+                    OverrideGameObjectProperties((GameObject*)instance);
+
                     AddChild(instance);
                     VG_SAFE_RELEASE(instance);
                 }
             }
         }
+    }
+
+    //--------------------------------------------------------------------------------------
+    void PrefabGameObject::OverrideGameObjectProperties(IGameObject * _gameObject, const IProperty * _prop)
+    {
+        DynamicPropertyList * propList = nullptr;
+        const auto uid = _gameObject->GetUID();
+        for (uint i = 0; i < m_gameObjects.size(); ++i)
+        {
+            auto & props = m_gameObjects[i];
+            if (props->GetUID() == uid)
+            {
+                propList = props;
+                break;
+            }
+        }
+
+        if (propList)
+        {
+            VG_INFO("[Prefab] Override %u properties for GameObject \"%s\" in Prefab \"%s\"", propList->m_properties.size(), _gameObject->getName().c_str(), getName().c_str());
+            auto * classDesc = _gameObject->GetClassDesc();
+
+            for (uint i = 0; i < propList->m_properties.size(); ++i)
+            {
+                auto & overrideProp = propList->m_properties[i];
+
+                if (nullptr == _prop || _prop == overrideProp->GetProperty())
+                {
+                    if (IProperty * origProp = classDesc->GetPropertyByName(overrideProp->getName().c_str()))
+                        overrideProp->Set(_gameObject, origProp);
+                }
+            }
+        }
+
+        auto & children = _gameObject->GetChildren();
+        for (uint i = 0; i < children.size(); ++i)
+            OverrideGameObjectProperties(children[i], _prop);
     }
 
     //--------------------------------------------------------------------------------------

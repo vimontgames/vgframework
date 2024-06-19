@@ -46,6 +46,7 @@ namespace vg::core
         IDynamicProperty *                              GetDynamicProperty          (const IObject * _object, const IProperty * _prop) const override;
         bool                                            CanOverrideProperty         (const core::IObject * _object, const core::IProperty * _prop) const override;
         IDynamicProperty *                              CreateDynamicProperty       (const core::IObject * _object, const core::IProperty * _prop) override;
+        void                                            OverrideGameObjectProperties(IGameObject * _gameObject, const IProperty * _prop = nullptr) override;
 
         void                                            FixedUpdate                 (float _dt);
         void                                            Update                      (float _dt);
