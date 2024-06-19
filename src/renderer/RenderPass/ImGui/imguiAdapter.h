@@ -39,8 +39,8 @@ namespace vg
             bool                IsKeyboardFocused           () const final override;
             bool                IsMouseFocused              () const final override;
 
-            ImTextureID         GetTextureID                (const gfx::ITexture * _texture) const final override;
-            void                ReleaseTextureID            (ImTextureID _texID) final override;
+            ImTextureID         GetTextureID                (const gfx::ITexture * _texture) final override;
+            void                ReleaseTextureID            (const gfx::ITexture * _texture) final override;
 
             void                beginFrame                  ();
             void                render                      (gfx::CommandList * _cmdList);
@@ -49,8 +49,8 @@ namespace vg
             ImFont *            GetFont                     (ImGui::Font _font, ImGui::Style _style = ImGui::Style::Regular) const override;
 
         protected:
-            ImTextureID         getTextureID                (gfx::Texture * _tex) const;
-            void                releaseTextureID            (ImTextureID _texID);
+            ImTextureID         getTextureID                (const gfx::Texture * _texture);
+            void                releaseTextureID            (const gfx::Texture * _texture);
 
             void                resetGUITheme               ();
 
@@ -71,8 +71,20 @@ namespace vg
             VkDescriptorPool                    m_vkImguiDescriptorPool;
             VkRenderPass                        m_vkImguiRenderPass;
             VkSampler                           m_vkSampler;
-            core::vector<VkDescriptorSet>       m_tempDescriptorSets[2];
             #endif
+
+            struct DescriptorSetsFrameData
+            {
+                struct AllocData
+                {
+                    core::u32       m_refCount  = 0;
+                    ImTextureID     m_id        = nullptr;
+                };
+
+                core::map<const gfx::Texture*, AllocData>  m_descriptorSetAllocs;
+            };
+
+            DescriptorSetsFrameData             m_descriptorSetsFrameData[2];
 
             ImVec4                              m_rowColorEven;
             ImVec4                              m_rowColorOdd;

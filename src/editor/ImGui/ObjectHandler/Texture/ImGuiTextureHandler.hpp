@@ -35,7 +35,7 @@ namespace vg::editor
                     }
                     ImGui::PopItemWidth();
                 }
-                imGuiAdapter->ReleaseTextureID(texID);
+                imGuiAdapter->ReleaseTextureID(tex);
             }
         }
     };

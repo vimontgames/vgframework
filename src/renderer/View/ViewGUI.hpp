@@ -166,6 +166,8 @@ namespace vg::renderer
                                 hit.m_pos = float4(pos, 1);
                                 m_view->AddPickingHit(hit);
                             }
+
+                            imGuiAdapter->ReleaseTextureID(elem.m_texture);
                         }
                     }
                     break;

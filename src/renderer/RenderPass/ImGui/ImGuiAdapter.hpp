@@ -262,15 +262,15 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    ImTextureID ImGuiAdapter::GetTextureID(const gfx::ITexture * _texture) const
+    ImTextureID ImGuiAdapter::GetTextureID(const gfx::ITexture * _texture)
     {
         return getTextureID((Texture *)_texture);
     }
 
     //--------------------------------------------------------------------------------------
-    void ImGuiAdapter::ReleaseTextureID(ImTextureID _texID)
+    void ImGuiAdapter::ReleaseTextureID(const gfx::ITexture * _texture)
     {
-        releaseTextureID(_texID);
+        releaseTextureID((Texture *)_texture);
     }
 
     //--------------------------------------------------------------------------------------
@@ -306,16 +306,23 @@ namespace vg::renderer
             firstFrame = false;
         }
 
-        // Release user descriptors
-        for (uint i = 0; i < m_tempDescriptorSets[1].count(); ++i)
-        {
-            auto texId = m_tempDescriptorSets[1][i];
-            ImGui_ImplVulkan_RemoveTexture(texId);
-        }
-        m_tempDescriptorSets[1].clear();
-        m_tempDescriptorSets[1] = std::move(m_tempDescriptorSets[0]);
-
         #endif
+
+        // Release user descriptors
+        DescriptorSetsFrameData & descriptorSetsFrameData = m_descriptorSetsFrameData[1];
+
+        for (const auto & data : descriptorSetsFrameData.m_descriptorSetAllocs)
+        {
+            VG_ASSERT(data.second.m_refCount == 0, "ImTextureID %u from Texture \"%s\" still has a RefCount of %u and was not released", data.second.m_id, data.first->getName().c_str(), data.second.m_refCount);
+
+            #ifdef VG_VULKAN
+            if (0 == data.second.m_refCount)
+                ImGui_ImplVulkan_RemoveTexture((VkDescriptorSet)data.second.m_id);
+            #endif
+        }
+
+        descriptorSetsFrameData.m_descriptorSetAllocs.clear();
+        m_descriptorSetsFrameData[1] = std::move(m_descriptorSetsFrameData[0]);
 
         #ifdef _WIN32
         ImGui_ImplWin32_NewFrame();
@@ -346,29 +353,48 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    ImTextureID ImGuiAdapter::getTextureID(Texture * _tex) const
+    ImTextureID ImGuiAdapter::getTextureID(const gfx::Texture * _texture)
     {
         auto device = gfx::Device::get();
 
-        #ifdef VG_DX12
-        gfx::BindlessTable * bindlessTable = device->getBindlessTable();
-        return (ImTextureID)bindlessTable->getd3d12GPUDescriptorHandle(_tex->getTextureHandle()).ptr;
-        #elif defined(VG_VULKAN)
-        // In case of crash increase size of VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER in ImguiAdapter::vulkanInit()
-        VkDescriptorSet texID = ImGui_ImplVulkan_AddTexture(m_vkSampler, _tex->getVulkanImageView(), VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL);
-        return texID;
-        #endif
+        ImTextureID id;
+
+        auto & descriptorSetsFrameData = m_descriptorSetsFrameData[0];
+        auto it = descriptorSetsFrameData.m_descriptorSetAllocs.find(_texture);
+
+        if (descriptorSetsFrameData.m_descriptorSetAllocs.end() == it)
+        {
+            #ifdef VG_DX12
+            gfx::BindlessTable * bindlessTable = device->getBindlessTable();
+            id = (ImTextureID)bindlessTable->getd3d12GPUDescriptorHandle(_texture->getTextureHandle()).ptr;
+            #elif defined(VG_VULKAN)
+            // In case of crash increase size of VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER in ImguiAdapter::vulkanInit()
+            id = ImGui_ImplVulkan_AddTexture(m_vkSampler, _texture->getVulkanImageView(), VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL);
+            #endif
+
+            DescriptorSetsFrameData::AllocData allocData;
+            allocData.m_id = id;
+
+            descriptorSetsFrameData.m_descriptorSetAllocs.insert(std::pair(_texture, allocData));
+            it = descriptorSetsFrameData.m_descriptorSetAllocs.find(_texture);
+        }
+        
+        it->second.m_refCount++;
+
+        return it->second.m_id;
     }
 
     //--------------------------------------------------------------------------------------
-    void ImGuiAdapter::releaseTextureID(ImTextureID _texID)
+    void ImGuiAdapter::releaseTextureID(const gfx::Texture * _texture)
     {
-        #ifdef VG_DX12
-        // Nothing to do
-        #elif defined(VG_VULKAN)
-        m_tempDescriptorSets[0].push_back((VkDescriptorSet)_texID);
-        VG_ASSERT(m_tempDescriptorSets[0].count() <= max_imguitex_displayed_per_frame);
-        #endif
+        auto & descriptorSetsFrameData = m_descriptorSetsFrameData[0];
+
+        auto it = descriptorSetsFrameData.m_descriptorSetAllocs.find(_texture);
+        VG_ASSERT(descriptorSetsFrameData.m_descriptorSetAllocs.end() != it);
+
+        it->second.m_refCount--;
+
+        VG_ASSERT(descriptorSetsFrameData.m_descriptorSetAllocs.size() <= max_imguitex_displayed_per_frame);
     }
 
     //--------------------------------------------------------------------------------------

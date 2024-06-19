@@ -445,7 +445,7 @@ namespace vg::editor
                 else
                     m_view->SetActive(false);
 
-                imGuiAdapter->ReleaseTextureID(texID);
+                imGuiAdapter->ReleaseTextureID(texture);
             }   
 
             if (auto * viewGUI = m_view->GetViewGUI())

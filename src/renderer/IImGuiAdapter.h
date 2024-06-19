@@ -55,8 +55,8 @@ namespace vg
             virtual bool            IsKeyboardFocused       () const = 0;
             virtual bool            IsMouseFocused          () const = 0;
 
-            virtual ImTextureID     GetTextureID            (const gfx::ITexture * _texture) const = 0;
-            virtual void            ReleaseTextureID        (ImTextureID _texID) = 0;
+            virtual ImTextureID     GetTextureID            (const gfx::ITexture * _texture) = 0;
+            virtual void            ReleaseTextureID        (const gfx::ITexture * _texture) = 0;
 
             virtual void            AddBeginFrameCallback   (BeginFrameCallback _func) = 0;
             virtual ImFont *        GetFont                 (ImGui::Font _font, ImGui::Style _style = ImGui::Style::Regular) const = 0;
