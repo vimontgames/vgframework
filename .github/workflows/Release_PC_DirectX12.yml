@@ -40,11 +40,6 @@ jobs:
       working-directory: ${{env.GITHUB_WORKSPACE}}
       run: nuget restore ${{env.SOLUTION_FILE_PATH}}
 
-    - name: Find MSBuild
-      id: msbuild
-      run: |
-        echo "::set-output name=path::$(vswhere -version [17.8,18.0) -latest -products * -requires Microsoft.Component.MSBuild -property installationPath)\\MSBuild\\Current\\Bin\\MSBuild.exe"
-
     - name: Build
       working-directory: ${{env.GITHUB_WORKSPACE}}
       # Add additional options to the MSBuild command line here (like platform or verbosity level).
