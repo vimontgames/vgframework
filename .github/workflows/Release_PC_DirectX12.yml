@@ -41,7 +41,7 @@ jobs:
       run: nuget restore ${{env.SOLUTION_FILE_PATH}}
 
     - name: VSWhere MSBuild
-      run: vswhere -version [17.8,18.0) -latest -requires Microsoft.Component.MSBuild -find MSBuild\**\Bin\MSBuild.exe
+      run: vswhere -version [17.8,18.0] -latest -requires Microsoft.Component.MSBuild -find MSBuild\**\Bin\MSBuild.exe
 
     - name: Build
       working-directory: ${{env.GITHUB_WORKSPACE}}
