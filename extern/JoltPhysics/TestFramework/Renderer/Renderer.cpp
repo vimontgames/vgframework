@@ -404,6 +404,8 @@ void Renderer::Initialize()
 
 void Renderer::OnWindowResize()
 {
+	JPH_ASSERT(!mInFrame);
+
 	// Wait for the previous frame to be rendered
 	WaitForGpu();
 
@@ -438,19 +440,13 @@ void Renderer::OnWindowResize()
 	CreateDepthBuffer();
 }
 
-/// Construct a perspective matrix
-static inline Mat44 sPerspective(float inFovY, float inAspect, float inNear, float inFar)
-{
-    float height = 1.0f / Tan(0.5f * inFovY);
-    float width = height / inAspect;
-    float range = inFar / (inNear - inFar);
-
-    return Mat44(Vec4(width, 0.0f, 0.0f, 0.0f), Vec4(0.0f, height, 0.0f, 0.0f), Vec4(0.0f, 0.0f, range, -1.0f), Vec4(0.0f, 0.0f, range * inNear, 0.0f));
-}
-
 void Renderer::BeginFrame(const CameraState &inCamera, float inWorldScale)
 {
 	JPH_PROFILE_FUNCTION();
+
+	// Mark that we're in the frame
+	JPH_ASSERT(!mInFrame);
+	mInFrame = true;
 
 	// Store state
 	mCameraState = inCamera;
@@ -506,13 +502,13 @@ void Renderer::BeginFrame(const CameraState &inCamera, float inWorldScale)
 	VertexShaderConstantBuffer *vs = mVertexShaderConstantBufferProjection[mFrameIndex]->Map<VertexShaderConstantBuffer>();
 
 	// Camera projection and view
-	vs->mProjection = sPerspective(camera_fovy, camera_aspect, camera_near, camera_far);
+	vs->mProjection = Mat44::sPerspective(camera_fovy, camera_aspect, camera_near, camera_far);
 	Vec3 cam_pos = Vec3(inCamera.mPos - mBaseOffset);
 	Vec3 tgt = cam_pos + inCamera.mForward;
 	vs->mView = Mat44::sLookAt(cam_pos, tgt, inCamera.mUp);
 
 	// Light projection and view
-	vs->mLightProjection = sPerspective(light_fov, 1.0f, light_near, light_far);
+	vs->mLightProjection = Mat44::sPerspective(light_fov, 1.0f, light_near, light_far);
 	vs->mLightView = Mat44::sLookAt(light_pos, light_tgt, light_up);
 
 	mVertexShaderConstantBufferProjection[mFrameIndex]->Unmap();
@@ -552,6 +548,10 @@ void Renderer::BeginFrame(const CameraState &inCamera, float inWorldScale)
 void Renderer::EndFrame()
 {
 	JPH_PROFILE_FUNCTION();
+
+	// Mark that we're no longer in the frame
+	JPH_ASSERT(mInFrame);
+	mInFrame = false;
 
 	// Indicate that the back buffer will now be used to present.
 	D3D12_RESOURCE_BARRIER barrier;
@@ -601,11 +601,15 @@ void Renderer::EndFrame()
 
 void Renderer::SetProjectionMode()
 {
+	JPH_ASSERT(mInFrame);
+
 	mVertexShaderConstantBufferProjection[mFrameIndex]->Bind(0);
 }
 
 void Renderer::SetOrthoMode()
 {
+	JPH_ASSERT(mInFrame);
+
 	mVertexShaderConstantBufferOrtho[mFrameIndex]->Bind(0);
 }
 
@@ -621,6 +625,8 @@ Ref<Texture> Renderer::CreateRenderTarget(int inWidth, int inHeight)
 
 void Renderer::SetRenderTarget(Texture *inRenderTarget)
 {
+	JPH_ASSERT(mInFrame);
+
 	// Unset the previous render target
 	if (mRenderTargetTexture != nullptr)
 		mRenderTargetTexture->SetAsRenderTarget(false);

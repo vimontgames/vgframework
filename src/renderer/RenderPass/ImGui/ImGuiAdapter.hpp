@@ -310,9 +310,7 @@ namespace vg::renderer
         for (uint i = 0; i < m_tempDescriptorSets[1].count(); ++i)
         {
             auto texId = m_tempDescriptorSets[1][i];
-            ImGui_ImplVulkan_Data * bd = ImGui_ImplVulkan_GetBackendData();
-            ImGui_ImplVulkan_InitInfo * v = &bd->VulkanInitInfo;
-            vkFreeDescriptorSets(device->getVulkanDevice(), v->DescriptorPool, 1, &texId);
+            ImGui_ImplVulkan_RemoveTexture(texId);
         }
         m_tempDescriptorSets[1].clear();
         m_tempDescriptorSets[1] = std::move(m_tempDescriptorSets[0]);

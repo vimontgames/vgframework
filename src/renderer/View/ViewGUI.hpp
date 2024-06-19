@@ -72,7 +72,7 @@ namespace vg::renderer
         {
             float2 pos = ImVec2ToFloat2(GImGui->CurrentWindow->Pos) + windowOffset;
             float2 size = ImVec2ToFloat2(ImGui::GetWindowContentRegionMax() - ImGui::GetWindowContentRegionMin());
-            ImGui::GetForegroundDrawList()->AddRect(float2ToImVec2(pos), float2ToImVec2(pos+size), 0xFF0000FF);
+            //ImGui::GetForegroundDrawList()->AddRect(float2ToImVec2(pos), float2ToImVec2(pos+size), 0xFF0000FF);
 
             for (uint i = 0; i < m_uiElements.size(); ++i)
             {
