@@ -605,6 +605,17 @@ namespace vg::core
                 case IProperty::Type::Callback:
                     break;
 
+                case IProperty::Type::ObjectPtrVector:
+                {
+                    if (strcmp(prop->getName(), "m_children"))
+                    {
+                        auto * vector = prop->GetPropertyObjectPtrVector(_object);
+                        for (uint i = 0; i < vector->size(); ++i)
+                            SaveProperties((*vector)[i]);
+                    }
+                }
+                break;
+
                 case IProperty::Type::Bool:
                 case IProperty::Type::Int8:
                 case IProperty::Type::Int16:
@@ -681,6 +692,17 @@ namespace vg::core
 
                 case IProperty::Type::Callback:
                     break;
+
+                case IProperty::Type::ObjectPtrVector:
+                {
+                    if (strcmp(prop->getName(), "m_children"))
+                    {
+                        auto * vector = prop->GetPropertyObjectPtrVector(_object);
+                        for (uint i = 0; i < vector->size(); ++i)
+                            RestoreProperties((*vector)[i]);
+                    }
+                }
+                break;
 
                 case IProperty::Type::Bool:
                 case IProperty::Type::Int8:

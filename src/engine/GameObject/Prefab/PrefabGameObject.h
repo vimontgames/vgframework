@@ -32,10 +32,8 @@ namespace vg::engine
 
         void                                                OnLoad                      () override;
 
-        //void                                              OnPlay                      () override;
-        //void                                              OnStop                      () override;
-
-        //const core::vector<core::IGameObject *> &         GetChildren                 () const override;
+        void                                                OnPlay                      () override;
+        void                                                OnStop                      () override;
 
         core::IDynamicPropertyList *                        GetDynamicPropertyList      (const core::IObject * _object) const override;
         core::IDynamicPropertyList *                        CreateDynamicPropertyList   (const core::IObject * _object) override;
@@ -52,8 +50,6 @@ namespace vg::engine
         core::DynamicProperty *                             getDynamicProperty          (const core::IObject * _object, const core::IProperty * _prop) const;
         bool                                                canOverrideProperty         (const core::IObject * _object, const core::IProperty * _prop) const;
         core::DynamicProperty *                             createDynamicProperty       (const core::IObject * _object, const core::IProperty * _prop);
-
-       
 
     private:
         PrefabResource                                      m_prefabResource;

@@ -1,5 +1,6 @@
 <Root>
     <Object class="EditorOptions">
+        <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="0"/>
         <Property type="String" name="m_name" flags="NotVisible" value="Editor Options"/>
         <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
         <Property type="EnumU8" name="m_theme" value="VimontGames_Dark"/>
@@ -11,6 +12,6 @@
         <Property type="Float" name="m_gizmo.m_rotationSnapInDegrees" flags="Optional" value="22.5"/>
         <Property type="Bool" name="m_gizmo.m_snapScale" flags="NotVisible" value="true"/>
         <Property type="Float" name="m_gizmo.m_scaleSnap" flags="Optional" value="0.5"/>
-        <Property type="EnumFlagsU64" name="m_debugFlags" flags="Bitfield" value="Inspector|Properties"/>
+        <Property type="EnumFlagsU64" name="m_debugFlags" flags="Bitfield" value=""/>
     </Object>
 </Root>
