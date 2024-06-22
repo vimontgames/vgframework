@@ -91,7 +91,14 @@ namespace vg::engine
     void RigidBodyComponent::OnLoad()
     {
         createShape();
+        
+        if (m_shapeDesc)
+            m_shapeDesc->FixMissingUID();
+
         createBody();
+
+        if (m_bodyDesc)
+            m_bodyDesc->FixMissingUID();
     }
 
     //--------------------------------------------------------------------------------------

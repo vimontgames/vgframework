@@ -76,6 +76,7 @@ namespace vg::engine
         IFactory * factory = Kernel::getFactory();
         VG_SAFE_RELEASE(m_shapeDesc);
         m_shapeDesc = (physics::IShapeDesc *)factory->createObject("CapsuleShapeDesc", "", this);
+        m_shapeDesc->setParent(this);
 
         return nullptr != m_shapeDesc;
     }
@@ -97,6 +98,7 @@ namespace vg::engine
         VG_SAFE_RELEASE(m_characterDesc);
 
         m_characterDesc = (physics::ICharacterDesc *)factory->createObject("RigidCharacterDesc", "", this);
+        m_characterDesc->setParent(this);
         
         return nullptr != m_characterDesc;
     }

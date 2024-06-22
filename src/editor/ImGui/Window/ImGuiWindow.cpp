@@ -15,6 +15,7 @@
 #include "core/Misc/AABB/AABB.h"
 #include "core/Object/DynamicProperties/DynamicPropertyType/DynamicPropertyString.h"
 #include "core/Object/DynamicProperties/DynamicPropertyType/DynamicPropertyFloat4.h"
+#include "core/Object/DynamicProperties/DynamicPropertyType/DynamicPropertyFloat.h"
 
 #include "renderer/IRenderer.h"
 
@@ -381,7 +382,24 @@ namespace vg::editor
         //if (ImGuiPropertyHandler::display(_prop, _object))
         //    return; 
 
-        IGameObject * go = dynamic_cast<IGameObject *>(_object);
+        IGameObject * gameobject = nullptr;
+        IComponent * component = nullptr;
+
+        // Find parent GameObject and Component if any
+        {
+            IObject * object = _object;
+            while (object)
+            {
+                if (!gameobject)
+                    gameobject = dynamic_cast<IGameObject *>(object);
+
+                if (!component)
+                    component = dynamic_cast<IComponent *>(object);
+
+                object = object->getParent();
+            }
+        }
+
         IGameObject * prefab = nullptr;
 
         // Property is from an instanced Prefab (cannot be edited directly)
@@ -396,9 +414,9 @@ namespace vg::editor
         // The dynamic property override if any
         const IDynamicProperty * propOverride = nullptr;
 
-        if (go)
+        if (gameobject)
         {
-            prefab = go->GetParentPrefab();
+            prefab = gameobject->GetParentPrefab();
             isPrefabInstance = nullptr != prefab;
 
             if (nullptr != prefab)
@@ -822,11 +840,30 @@ namespace vg::editor
                     VG_ASSERT(!isEnumArray, "Display of EnumArray property not implemented for type '%s'", asString(type).c_str());
 
                     float * pFloat = _prop->GetPropertyFloat(_object);
+                    float temp = *pFloat;
 
                     if (asBool(IProperty::Flags::HasRange & flags))
-                        changed |= ImGui::SliderFloat(label.c_str(), pFloat, _prop->getRange().x, _prop->getRange().y, g_editFloatFormat);
+                    {
+                        if (ImGui::SliderFloat(label.c_str(), &temp, _prop->getRange().x, _prop->getRange().y, g_editFloatFormat))
+                            changed = true;
+                    }
                     else
-                        changed |= ImGui::InputFloat(label.c_str(), pFloat, 0.1f, 1.0f, g_editFloatFormat, imguiInputTextflags);
+                    {
+                        if (ImGui::InputFloat(label.c_str(), &temp, 0.1f, 1.0f, g_editFloatFormat, imguiInputTextflags))
+                            changed = true;                        
+                    }
+
+                    if (changed && !readOnly)
+                    {
+                        if (isPrefabInstance && !isPrefabOverride)
+                        {
+                            if (propOverride = prefab->CreateDynamicProperty(_object, _prop))
+                                ((core::DynamicPropertyFloat *)propOverride)->m_value = temp;
+                        }
+
+                        *pFloat = temp;
+                        changed = true;
+                    }
                 };
                 break;
 
@@ -1499,13 +1536,15 @@ namespace vg::editor
 
         if (changed)
         {
-            _object->OnPropertyChanged(_object, *_prop);
-        
             if (prefab && propOverride != nullptr)
             {
                 auto & children = prefab->GetChildren();
                 for (uint i = 0; i < children.size(); ++i)
                     prefab->OverrideGameObjectProperties(children[i], propOverride->GetProperty());
+            }
+            else
+            {
+                _object->OnPropertyChanged(_object, *_prop);
             }
         }
 

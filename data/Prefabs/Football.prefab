@@ -28,7 +28,7 @@
                                 <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
                                 <Property type="ObjectPtr" name="m_bodyDesc" flags="Flatten">
                                     <Object class="RigidBodyDesc">
-                                        <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="0"/>
+                                        <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="1236576143"/>
                                         <Property type="String" name="m_name" flags="NotVisible" value="RigidBodyDesc #4"/>
                                         <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
                                         <Property type="EnumU16" name="m_layer" flags="ReadOnly" value="Moving"/>
@@ -42,7 +42,7 @@
                                 </Property>
                                 <Property type="ObjectPtr" name="m_shapeDesc" flags="Flatten">
                                     <Object class="SphereShapeDesc">
-                                        <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="0"/>
+                                        <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="2758178555"/>
                                         <Property type="String" name="m_name" flags="NotVisible" value="SphereShapeDesc #0"/>
                                         <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
                                         <Property type="Float3" name="m_offset" x="0" y="0" z="0"/>

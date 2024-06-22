@@ -62,36 +62,40 @@ namespace vg::engine
         VG_PROFILE_CPU("Input");
 
         const auto & engine = Engine::get();
-        const auto & renderer = engine->GetRenderer();
-        const auto & imGuiAdapter = renderer->GetImGuiAdapter();
-
-        bool anyViewActive = false;
-
-        for (uint j = 0; j < enumCount<gfx::ViewTarget>(); ++j)
-        {
-            const auto & views = renderer->GetViews((gfx::ViewTarget)j);
-            for (uint i = 0; i < views.size(); ++i)
-            {
-                const auto * view = views[i];
-                if (view && view->IsActive())
-                {
-                    anyViewActive = true;
-                    break;
-                }
-            }
-        }
-
         auto * mainWorld = engine->GetMainWorld();
 
-        if (imGuiAdapter->IsKeyboardFocused() && !anyViewActive && mainWorld && !mainWorld->IsPlaying())
-            EnableInput(InputType::Keyboard, false);
-        else
-            EnableInput(InputType::Keyboard, true);
+        const auto & renderer = engine->GetRenderer();
 
-        if (imGuiAdapter->IsMouseFocused() && !anyViewActive && mainWorld && !mainWorld->IsPlaying())
-            EnableInput(InputType::Mouse, false);
-        else
-            EnableInput(InputType::Mouse, true);
+        if (renderer)
+        {
+            const auto & imGuiAdapter = renderer->GetImGuiAdapter();
+
+            bool anyViewActive = false;
+
+            for (uint j = 0; j < enumCount<gfx::ViewTarget>(); ++j)
+            {
+                const auto & views = renderer->GetViews((gfx::ViewTarget)j);
+                for (uint i = 0; i < views.size(); ++i)
+                {
+                    const auto * view = views[i];
+                    if (view && view->IsActive())
+                    {
+                        anyViewActive = true;
+                        break;
+                    }
+                }
+            }            
+
+            if (imGuiAdapter->IsKeyboardFocused() && !anyViewActive && mainWorld && !mainWorld->IsPlaying())
+                EnableInput(InputType::Keyboard, false);
+            else
+                EnableInput(InputType::Keyboard, true);
+
+            if (imGuiAdapter->IsMouseFocused() && !anyViewActive && mainWorld && !mainWorld->IsPlaying())
+                EnableInput(InputType::Mouse, false);
+            else
+                EnableInput(InputType::Mouse, true);
+        }
 
         if (mainWorld && mainWorld->IsPlaying())
             EnableInput(InputType::Joypad, true);

@@ -261,6 +261,12 @@
     <ClInclude Include="Object\DynamicProperties\DynamicPropertyType\DynamicPropertyFloat4.hpp">
       <Filter>Object\DynamicProperties\DynamicPropertyType</Filter>
     </ClInclude>
+    <ClInclude Include="Object\DynamicProperties\DynamicPropertyType\DynamicPropertyFloat.h">
+      <Filter>Object\DynamicProperties\DynamicPropertyType</Filter>
+    </ClInclude>
+    <ClInclude Include="Object\DynamicProperties\DynamicPropertyType\DynamicPropertyFloat.hpp">
+      <Filter>Object\DynamicProperties\DynamicPropertyType</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Math\Math.cpp">

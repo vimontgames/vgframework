@@ -678,7 +678,8 @@ namespace vg::engine
         }
 
         // This will use all available threads for physics
-        m_physics->RunOneFrame(scaledDeltaTime);
+        if (m_physics)
+            m_physics->RunOneFrame(scaledDeltaTime);
 
         // Update
         {
@@ -725,7 +726,8 @@ namespace vg::engine
             m_editor->RunOneFrame(-1);
 
         // This will use all available threads for culling then rendering scene
-        m_renderer->runOneFrame();
+        if (m_renderer)
+            m_renderer->runOneFrame();
 
         g_RunningOneFrame = false;
 	}

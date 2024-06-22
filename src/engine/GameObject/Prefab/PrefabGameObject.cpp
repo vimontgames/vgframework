@@ -5,6 +5,7 @@
 #include "core/Object/DynamicProperties/DynamicPropertyList.h"
 #include "core/Object/DynamicProperties/DynamicPropertyType/DynamicPropertyString.h"
 #include "core/Object/DynamicProperties/DynamicPropertyType/DynamicPropertyFloat4.h"
+#include "core/Object/DynamicProperties/DynamicPropertyType/DynamicPropertyFloat.h"
 
 using namespace vg::core;
 
@@ -86,11 +87,14 @@ namespace vg::engine
     core::DynamicPropertyList * PrefabGameObject::getDynamicPropertyList(const core::IObject * _object) const
     {
         const auto uid = _object->GetUID();
-        for (uint i = 0; i < m_gameObjects.size(); ++i)
+        if (uid)
         {
-            auto * propList = m_gameObjects[i];
-            if (propList->GetUID() == uid)
-                return propList;
+            for (uint i = 0; i < m_gameObjects.size(); ++i)
+            {
+                auto * propList = m_gameObjects[i];
+                if (propList->GetUID() == uid)
+                    return propList;
+            }
         }
         return nullptr;
     }
@@ -159,6 +163,15 @@ namespace vg::engine
                 return true;
             }
             break;
+
+            case IProperty::Type::Float:
+            {
+                if (isEnumArray)
+                    return false;
+
+                return true;
+            }
+            break;
         }
     }
 
@@ -193,6 +206,10 @@ namespace vg::engine
 
                 case IProperty::Type::Float4:
                     newDynProp = new DynamicPropertyFloat4(_object, _prop);
+                    break;
+
+                case IProperty::Type::Float:
+                    newDynProp = new DynamicPropertyFloat(_object, _prop);
                     break;
             }
 
@@ -229,40 +246,104 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
-    void PrefabGameObject::OverrideGameObjectProperties(IGameObject * _gameObject, const IProperty * _prop)
+    Object * find(Object * _object, UID _uid)
     {
-        DynamicPropertyList * propList = nullptr;
-        const auto uid = _gameObject->GetUID();
-        for (uint i = 0; i < m_gameObjects.size(); ++i)
+        VG_ASSERT(_uid);
+        if (_uid)
         {
-            auto & props = m_gameObjects[i];
-            if (props->GetUID() == uid)
+            auto objUID = _object->GetUID();
+            if (objUID == _uid)
             {
-                propList = props;
-                break;
+                return _object;
             }
-        }
-
-        if (propList)
-        {
-            VG_INFO("[Prefab] Override %u properties for GameObject \"%s\" in Prefab \"%s\"", propList->m_properties.size(), _gameObject->getName().c_str(), getName().c_str());
-            auto * classDesc = _gameObject->GetClassDesc();
-
-            for (uint i = 0; i < propList->m_properties.size(); ++i)
+            else
             {
-                auto & overrideProp = propList->m_properties[i];
-
-                if (nullptr == _prop || _prop == overrideProp->GetProperty())
+                const auto * classDesc = _object->GetClassDesc();
+                if (classDesc)
                 {
-                    if (IProperty * origProp = classDesc->GetPropertyByName(overrideProp->getName().c_str()))
-                        overrideProp->Set(_gameObject, origProp);
+                    const auto propCount = classDesc->GetPropertyCount();
+                    for (uint i = 0; i < propCount; ++i)
+                    {
+                        const auto * prop = classDesc->GetPropertyByIndex(i);
+                        const auto propType = prop->getType();
+
+                        switch (propType)
+                        {
+                            default:
+                                break;
+
+                            case IProperty::Type::ObjectPtrVector:
+                            {
+                                const auto vec = prop->GetPropertyObjectPtrVector(_object);
+                                for (uint j = 0; j < vec->size(); ++j)
+                                {
+                                    Object * obj = (Object*)(*vec)[j];
+
+                                    if (auto * found = find(obj, _uid))
+                                        return found;
+                                }
+                            }
+                            break;
+
+                            case IProperty::Type::ObjectPtr:
+                            {
+                                Object ** obj = (Object **)prop->GetPropertyObjectPtr(_object);
+                                if (nullptr != *obj)
+                                {
+                                    if (auto * found = find(*obj, _uid))
+                                        return found;
+                                }
+                            }
+                            break;
+                        }
+                    }                    
                 }
             }
         }
 
-        auto & children = _gameObject->GetChildren();
-        for (uint i = 0; i < children.size(); ++i)
-            OverrideGameObjectProperties(children[i], _prop);
+        return nullptr;
+    }
+
+    //--------------------------------------------------------------------------------------
+    void PrefabGameObject::OverrideGameObjectProperties(IGameObject * _gameObject, const IProperty * _prop)
+    {        
+        for (uint i = 0; i < m_gameObjects.size(); ++i)
+        {
+            auto & propList = m_gameObjects[i];
+
+            //VG_INFO("[Prefab] Override %u properties for GameObject \"%s\" in Prefab \"%s\"", propList->m_properties.size(), _gameObject->getName().c_str(), getName().c_str());
+            
+            if (auto * obj = find(_gameObject, propList->GetUID()))
+            {
+                auto * classDesc = obj->GetClassDesc();
+
+                //VG_INFO("[Prefab] Could find GUID 0x%08X in GameObject \"%s\"", propList->GetUID(), _gameObject->getName().c_str());
+
+                for (uint i = 0; i < propList->m_properties.size(); ++i)
+                {
+                    auto & overrideProp = propList->m_properties[i];
+
+                    bool found = true;
+
+                    if (nullptr == _prop || _prop == overrideProp->GetProperty())
+                    {
+                        if (IProperty * origProp = classDesc->GetPropertyByName(overrideProp->getName().c_str()))
+                        {
+                            overrideProp->Set(obj, origProp);
+                            obj->OnPropertyChanged(obj, *origProp, true);
+                            found = true;
+                        }
+                    }
+
+                    if (!found)
+                        VG_WARNING("[Prefab] Could not find property \"%s\" in Object \"%s\"", overrideProp->getName().c_str(), _gameObject->getName().c_str());
+                }
+            }
+            else
+            {
+                VG_WARNING("[Prefab] Could not find GUID 0x%08X under GameObject \"%s\"", propList->GetUID(), _gameObject->getName().c_str());
+            }
+        }
     }
 
     //--------------------------------------------------------------------------------------

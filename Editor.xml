@@ -12,6 +12,6 @@
         <Property type="Float" name="m_gizmo.m_rotationSnapInDegrees" flags="Optional" value="22.5"/>
         <Property type="Bool" name="m_gizmo.m_snapScale" flags="NotVisible" value="true"/>
         <Property type="Float" name="m_gizmo.m_scaleSnap" flags="Optional" value="0.5"/>
-        <Property type="EnumFlagsU64" name="m_debugFlags" flags="Bitfield" value=""/>
+        <Property type="EnumFlagsU64" name="m_debugFlags" flags="Bitfield" value="Properties"/>
     </Object>
 </Root>
