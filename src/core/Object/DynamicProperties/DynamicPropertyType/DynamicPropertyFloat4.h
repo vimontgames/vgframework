@@ -4,18 +4,14 @@
 
 namespace vg::core
 {
-    class DynamicPropertyFloat4 : public DynamicProperty
+    class DynamicPropertyFloat4 : public DynamicPropertyT<core::float4>
     {
     public:
         VG_CLASS_DECL(DynamicPropertyFloat4, DynamicProperty);
 
         DynamicPropertyFloat4(const core::string & _name = "", core::IObject * _parent = nullptr);
-        DynamicPropertyFloat4(const core::IObject * _object, const core::IProperty * _prop);
         ~DynamicPropertyFloat4();
 
-        bool Set(IObject * _object, IProperty * _prop) final override;
-
-    //private:
-        core::float4 m_value;
+        core::float4 * GetPropertyPtr(const IObject * _object, const IProperty * _prop) const final override;
     };
 }

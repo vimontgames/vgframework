@@ -13,18 +13,96 @@ namespace vg::core
         DynamicProperty(const core::string & _name = "", core::IObject * _parent = nullptr);
         ~DynamicProperty();
 
+        void Enable(bool _enable) final override
+        {
+            m_enable = _enable;
+        }
+
+        bool IsEnable() const
+        {
+            return m_enable;
+        }
+
         IProperty * GetProperty() const final override
         {
             return (IProperty*) &m_prop;
         }
 
-        bool Set(IObject * _object, IProperty * _prop) override
+        virtual void CopyProperty(const IProperty * _prop) = 0;
+
+    protected:
+        bool        m_enable = true;
+        Property    m_prop = nullptr;
+    };
+
+    template <typename T> class DynamicPropertyT : public DynamicProperty
+    {
+    public:
+        DynamicPropertyT(const core::string & _name = "", core::IObject * _parent = nullptr)
         {
-            VG_ASSERT_NOT_IMPLEMENTED();
+            setName(_name);
+        }
+
+        ~DynamicPropertyT()
+        {
+
+        }
+
+        void SetValue(T _value)
+        {
+            m_value = _value;
+        }
+
+        virtual T * GetPropertyPtr(const IObject * _object, const IProperty * _prop) const = 0;
+
+        bool ApplyOverride(IObject * _object, const IProperty * _prop) final override
+        {
+            if (T * value = GetPropertyPtr(_object, _prop))
+            {
+                *value = m_value;
+                return true;
+            }
             return false;
         }
 
-        //core::string m_name;
-        Property m_prop = nullptr;
+        bool BackupOriginalValue(const IObject * _object, const IProperty * _prop) final override
+        {
+            if (T * value = GetPropertyPtr(_object, _prop))
+            {
+                m_original = *value;
+                return true;
+            }
+            return false;
+        }
+
+        bool RestoreOriginalValue(IObject * _object, const IProperty * _prop) final override
+        {
+            if (T * value = GetPropertyPtr(_object, _prop))
+            {
+                *value = m_original;
+                return true;
+            }
+            return false;
+        }
+
+        bool SetOverrideInitValue(const IObject * _object, const IProperty * _prop) final override
+        {
+            if (T * value = GetPropertyPtr(_object, _prop))
+            {
+                m_value = *value;
+                return true;
+            }
+            return false;
+        }
+
+        void CopyProperty(const IProperty * _prop) override
+        {
+            m_prop = *(Property *)_prop;
+            m_prop.setOffset(offsetof(DynamicPropertyT, m_value));
+        }
+
+    protected:
+        T m_value;
+        T m_original;
     };
 }

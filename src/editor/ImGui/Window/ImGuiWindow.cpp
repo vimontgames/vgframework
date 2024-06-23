@@ -377,6 +377,11 @@ namespace vg::editor
         VG_ASSERT(nullptr != _prop);
 
         const auto * factory = Kernel::getFactory();
+        const auto cursorPosY = GetCursorPosY();
+        const auto availableWidth = GetContentRegionAvail().x;
+
+        auto * _originalObject = _object;
+        auto * _originalProp = _prop;
 
         // TODO: Custom property edit
         //if (ImGuiPropertyHandler::display(_prop, _object))
@@ -412,7 +417,7 @@ namespace vg::editor
         bool canPrefabOverride = false;
 
         // The dynamic property override if any
-        const IDynamicProperty * propOverride = nullptr;
+        IDynamicProperty * propOverride = nullptr;
 
         if (gameobject)
         {
@@ -425,15 +430,25 @@ namespace vg::editor
 
                 if (auto * propList = prefab->GetDynamicPropertyList(_object))
                 {
-                    if (propOverride = propList->GetProperty(_prop))
+                    if (propOverride = (IDynamicProperty*)propList->GetProperty(_prop))
                     {
-                        _object = (IObject*)propOverride;
-                        _prop = propOverride->GetProperty();
-                        isPrefabOverride = true;
+                        if (propOverride->IsEnable())
+                        {
+                            _object = (IObject *)propOverride;
+                            _prop = propOverride->GetProperty();
+                            isPrefabOverride = true;
+                        }
                     }
                 }
             }
         }
+
+        //bool override = isPrefabOverride;
+        //if (isPrefabInstance)
+        //{
+        //    ImGui::Checkbox("", &override);
+        //    ImGui::SameLine();
+        //}
 
         const auto type = _prop->getType();
         const auto name = _prop->getName();
@@ -516,13 +531,16 @@ namespace vg::editor
         const bool isEnumArray = asBool(IProperty::Flags::EnumArray & flags);
         const auto enumArrayTreeNodeFlags = /*ImGuiTreeNodeFlags_OpenOnArrow |*/ ImGuiTreeNodeFlags_DefaultOpen;
 
-        if (isPrefabInstance)
-        {
-            if (isPrefabOverride)
-                ImGui::PushStyleColor(ImGuiCol_Text, ImGui::GetStyleColorVec4(ImGuiCol_HeaderActive));
-            else
-                ImGui::PushStyleColor(ImGuiCol_Text, ImGui::GetStyleColorVec4(ImGuiCol_TextDisabled));
-        }
+        //if (isPrefabInstance)
+        //{
+        //    if (isPrefabOverride)
+        //        ImGui::PushStyleColor(ImGuiCol_Text, ImGui::GetStyleColorVec4(ImGuiCol_HeaderActive));
+        //    else
+        //        ImGui::PushStyleColor(ImGuiCol_Text, ImGui::GetStyleColorVec4(ImGuiCol_TextDisabled));
+        //}
+
+        if (readOnly)
+            ImGui::PushStyleColor(ImGuiCol_Text, ImGui::GetStyleColorVec4(ImGuiCol_TextDisabled));
 
         //ImGui::BeginDisabled(readOnly);
         {
@@ -858,7 +876,7 @@ namespace vg::editor
                         if (isPrefabInstance && !isPrefabOverride)
                         {
                             if (propOverride = prefab->CreateDynamicProperty(_object, _prop))
-                                ((core::DynamicPropertyFloat *)propOverride)->m_value = temp;
+                                ((core::DynamicPropertyFloat *)propOverride)->SetValue(temp);
                         }
 
                         *pFloat = temp;
@@ -924,41 +942,46 @@ namespace vg::editor
                     }
                     else
                     {
+                        float temp[4];
+                        for (uint i = 0; i < 4; ++i)
+                            temp[i] = pFloat4[i];
+
                         if (asBool(IProperty::Flags::Color & flags))
                         {
                             ImGuiColorEditFlags colorEditFlags = 0;
 
                             if (asBool(IProperty::Flags::HDR & flags))
-                                colorEditFlags |= ImGuiColorEditFlags_HDR | ImGuiColorEditFlags_Float;
-
-                            float temp[4];
-                            for (uint i = 0; i < 4; ++i)
-                                temp[i] = pFloat4[i];
+                                colorEditFlags |= ImGuiColorEditFlags_HDR | ImGuiColorEditFlags_Float;                            
 
                             if (ImGui::ColorEdit4(label.c_str(), (float*)&temp, colorEditFlags))
                             {
                                 if (temp[0] != pFloat4[0] || temp[1] != pFloat4[1] || temp[2] != pFloat4[2] || temp[3] != pFloat4[3])
-                                {
-                                    if (isPrefabInstance && !isPrefabOverride)
-                                    {
-                                        // Create if needed
-                                        if (propOverride = prefab->CreateDynamicProperty(_object, _prop))
-                                            ((core::DynamicPropertyFloat4 *)propOverride)->m_value = float4(temp[0], temp[1], temp[2], temp[3]);
-                                    }
-                                    else
-                                    {
-                                        // Save in property
-                                        for (uint i = 0; i < 4; ++i)
-                                            pFloat4[i] = temp[i];
-                                    }
-                                }
-
-                                changed = true;
+                                    changed = true;
                             }
                         }
                         else
                         {
-                            changed |= ImGui::InputFloat4(label.c_str(), pFloat4, g_editFloatFormat, imguiInputTextflags);
+                            if (ImGui::InputFloat4(label.c_str(), pFloat4, g_editFloatFormat, imguiInputTextflags))
+                            {
+                                if (temp[0] != pFloat4[0] || temp[1] != pFloat4[1] || temp[2] != pFloat4[2] || temp[3] != pFloat4[3])
+                                    changed = true;
+                            }
+                        }
+
+                        if (changed)
+                        {
+                            if (isPrefabInstance && !isPrefabOverride)
+                            {
+                                // Create if needed
+                                if (propOverride = prefab->CreateDynamicProperty(_object, _prop))
+                                    ((core::DynamicPropertyFloat4 *)propOverride)->SetValue(float4(temp[0], temp[1], temp[2], temp[3]));
+                            }
+                            else
+                            {
+                                // Save in property
+                                for (uint i = 0; i < 4; ++i)
+                                    pFloat4[i] = temp[i];
+                            }
                         }
                     }
                 };
@@ -1068,7 +1091,7 @@ namespace vg::editor
                                 {
                                     // Create if needed
                                     if (propOverride = prefab->CreateDynamicProperty(_object, _prop))
-                                        ((core::DynamicPropertyString *)propOverride)->m_value = buffer;
+                                        ((core::DynamicPropertyString *)propOverride)->SetValue(buffer);
                                 }
                                 else
                                 {
@@ -1540,7 +1563,7 @@ namespace vg::editor
             {
                 auto & children = prefab->GetChildren();
                 for (uint i = 0; i < children.size(); ++i)
-                    prefab->OverrideGameObjectProperties(children[i], propOverride->GetProperty());
+                    prefab->OverrideGameObjectProperties(children[i], propOverride);
             }
             else
             {
@@ -1559,7 +1582,42 @@ namespace vg::editor
             }
         }
 
-        if (isPrefabInstance)
+        if (isPrefabInstance && canPrefabOverride)
+        {
+            const auto saveCurY = ImGui::GetCursorPosY();
+            auto deltaY = max(saveCurY - cursorPosY, style::button::SizeSmall.y);
+
+            ImGui::SameLine();
+            ImGui::SetCursorPosX(availableWidth - style::button::SizeSmall.x);
+            ImGui::SetCursorPosY(cursorPosY);
+
+            bool checked = isPrefabOverride && propOverride->IsEnable();
+            //ImGui::BeginDisabled(!canPrefabOverride);
+            if (ImGui::Checkbox(getObjectLabel("", "Override", _prop).c_str(), &checked))
+            {
+                if (checked)
+                    prefab->ToggleOverride(_originalObject, _originalProp, true);
+                else
+                    prefab->ToggleOverride(_originalObject, _originalProp, false);
+            }
+            //ImGui::EndDisabled();
+            ImGui::SetCursorPosY(cursorPosY + deltaY);
+
+            if (ImGui::IsItemHovered())
+            {
+                if (isPrefabOverride)
+                    ImGui::SetTooltip("Property \"%s\" is overridden", _prop->getName());
+                else if (canPrefabOverride)
+                    ImGui::SetTooltip("Property \"%s\" can be overriden", _prop->getName());
+                else
+                    ImGui::SetTooltip("Property \"%s\" cannot be overriden", _prop->getName());
+            }
+        }
+
+        //if (isPrefabInstance)
+        //    ImGui::PopStyleColor();
+
+        if (readOnly)
             ImGui::PopStyleColor();
     }
 
@@ -1961,10 +2019,15 @@ namespace vg::editor
         const auto displayName = _prop->getDisplayName();
         auto pFloat4x4 = _prop->GetPropertyFloat4x4(_object);
         ImGui::PushID(_prop);
-        changed |= ImGui::InputFloat4(fmt::sprintf("%s.I", displayName).c_str(), (float *)pFloat4x4 + 0, g_editFloatFormat, ImGuiInputTextFlags_EnterReturnsTrue);
-        changed |= ImGui::InputFloat4(fmt::sprintf("%s.J", displayName).c_str(), (float *)pFloat4x4 + 4, g_editFloatFormat, ImGuiInputTextFlags_EnterReturnsTrue);
-        changed |= ImGui::InputFloat4(fmt::sprintf("%s.K", displayName).c_str(), (float *)pFloat4x4 + 8, g_editFloatFormat, ImGuiInputTextFlags_EnterReturnsTrue);
-        changed |= ImGui::InputFloat4(fmt::sprintf("%s.T", displayName).c_str(), (float*)pFloat4x4 + 12, g_editFloatFormat, ImGuiInputTextFlags_EnterReturnsTrue);
+        if (ImGui::TreeNode(getObjectLabel(displayName, _prop).c_str()))
+        {
+            changed |= ImGui::InputFloat4("I", (float *)pFloat4x4 + 0, g_editFloatFormat, ImGuiInputTextFlags_EnterReturnsTrue);
+            changed |= ImGui::InputFloat4("J", (float *)pFloat4x4 + 4, g_editFloatFormat, ImGuiInputTextFlags_EnterReturnsTrue);
+            changed |= ImGui::InputFloat4("K", (float *)pFloat4x4 + 8, g_editFloatFormat, ImGuiInputTextFlags_EnterReturnsTrue);
+            changed |= ImGui::InputFloat4("T", (float *)pFloat4x4 + 12, g_editFloatFormat, ImGuiInputTextFlags_EnterReturnsTrue);
+
+            ImGui::TreePop();
+        }
         ImGui::PopID();
         return changed;
     }

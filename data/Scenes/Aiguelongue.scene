@@ -494,7 +494,22 @@
                                                         <Property type="String" name="m_resourcePath" flags="NotVisible" value="data/Prefabs/Football.prefab"/>
                                                     </Object>
                                                 </Property>
-                                                <Property type="ObjectPtrVector" name="m_gameObjects"/>
+                                                <Property type="ObjectPtrVector" name="m_gameObjects">
+                                                    <Object class="DynamicPropertyList">
+                                                        <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="2981549120"/>
+                                                        <Property type="String" name="m_name" flags="NotVisible" value="Football"/>
+                                                        <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
+                                                        <Property type="ObjectPtrVector" name="m_properties">
+                                                            <Object class="DynamicPropertyFloat4">
+                                                                <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="0"/>
+                                                                <Property type="String" name="m_name" value="m_color"/>
+                                                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
+                                                                <Property type="Bool" name="m_enable" value="true"/>
+                                                                <Property type="Float4" name="m_value" x="0.19769795" y="0.65271968" z="0.051889867" w="1"/>
+                                                            </Object>
+                                                        </Property>
+                                                    </Object>
+                                                </Property>
                                             </Object>
                                             <Object class="PrefabGameObject">
                                                 <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="3388222930"/>
@@ -513,7 +528,22 @@
                                                         <Property type="String" name="m_resourcePath" flags="NotVisible" value="data/Prefabs/Football.prefab"/>
                                                     </Object>
                                                 </Property>
-                                                <Property type="ObjectPtrVector" name="m_gameObjects"/>
+                                                <Property type="ObjectPtrVector" name="m_gameObjects">
+                                                    <Object class="DynamicPropertyList">
+                                                        <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="2981549120"/>
+                                                        <Property type="String" name="m_name" flags="NotVisible" value="Football"/>
+                                                        <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
+                                                        <Property type="ObjectPtrVector" name="m_properties">
+                                                            <Object class="DynamicPropertyFloat4">
+                                                                <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="0"/>
+                                                                <Property type="String" name="m_name" value="m_color"/>
+                                                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
+                                                                <Property type="Bool" name="m_enable" value="false"/>
+                                                                <Property type="Float4" name="m_value" x="0.75477666" y="0.75732219" z="0.14892946" w="1"/>
+                                                            </Object>
+                                                        </Property>
+                                                    </Object>
+                                                </Property>
                                             </Object>
                                             <Object class="PrefabGameObject">
                                                 <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="1836471952"/>
@@ -532,7 +562,22 @@
                                                         <Property type="String" name="m_resourcePath" flags="NotVisible" value="data/Prefabs/Football.prefab"/>
                                                     </Object>
                                                 </Property>
-                                                <Property type="ObjectPtrVector" name="m_gameObjects"/>
+                                                <Property type="ObjectPtrVector" name="m_gameObjects">
+                                                    <Object class="DynamicPropertyList">
+                                                        <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="2981549120"/>
+                                                        <Property type="String" name="m_name" flags="NotVisible" value="Football"/>
+                                                        <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
+                                                        <Property type="ObjectPtrVector" name="m_properties">
+                                                            <Object class="DynamicPropertyFloat4">
+                                                                <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="0"/>
+                                                                <Property type="String" name="m_name" value="m_color"/>
+                                                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
+                                                                <Property type="Bool" name="m_enable" value="true"/>
+                                                                <Property type="Float4" name="m_value" x="0.040790629" y="0.18930985" z="0.97489542" w="1"/>
+                                                            </Object>
+                                                        </Property>
+                                                    </Object>
+                                                </Property>
                                             </Object>
                                         </Property>
                                     </Object>

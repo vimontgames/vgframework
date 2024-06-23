@@ -2,12 +2,11 @@
 
 namespace vg::core
 {
-    VG_REGISTER_OBJECT_CLASS(DynamicProperty, "DynamicProperty");
-
     //--------------------------------------------------------------------------------------
     bool DynamicProperty::registerProperties(IClassDesc & _desc)
     {
-        super::registerProperties(_desc);    
+        super::registerProperties(_desc);  
+        registerProperty(DynamicProperty, m_enable, "Enable");
         return true;
     }
     

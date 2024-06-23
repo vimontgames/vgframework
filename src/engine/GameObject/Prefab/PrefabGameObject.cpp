@@ -201,17 +201,20 @@ namespace vg::engine
                     return nullptr;
 
                 case IProperty::Type::String:
-                    newDynProp = new DynamicPropertyString(_object, _prop);
+                    newDynProp = new DynamicPropertyString(_prop->getName());
                     break;
 
                 case IProperty::Type::Float4:
-                    newDynProp = new DynamicPropertyFloat4(_object, _prop);
+                    newDynProp = new DynamicPropertyFloat4(_prop->getName());
                     break;
 
                 case IProperty::Type::Float:
-                    newDynProp = new DynamicPropertyFloat(_object, _prop);
+                    newDynProp = new DynamicPropertyFloat(_prop->getName());
                     break;
             }
+
+            newDynProp->BackupOriginalValue(_object, _prop);
+            newDynProp->SetOverrideInitValue(_object, _prop);
 
             return newDynProp;
         }
@@ -236,7 +239,7 @@ namespace vg::engine
                     instance->SetObjectFlags(ObjectFlags::NotSerialized, true);
                     instance->setParent(this);
 
-                    OverrideGameObjectProperties((GameObject*)instance);
+                    OverrideGameObjectProperties((GameObject*)instance, nullptr);
 
                     AddChild(instance);
                     VG_SAFE_RELEASE(instance);
@@ -305,7 +308,7 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
-    void PrefabGameObject::OverrideGameObjectProperties(IGameObject * _gameObject, const IProperty * _prop)
+    void PrefabGameObject::OverrideGameObjectProperties(IGameObject * _gameObject, const IDynamicProperty * _dynProp)
     {        
         for (uint i = 0; i < m_gameObjects.size(); ++i)
         {
@@ -325,11 +328,18 @@ namespace vg::engine
 
                     bool found = true;
 
-                    if (nullptr == _prop || _prop == overrideProp->GetProperty())
+                    if (nullptr == _dynProp || _dynProp->GetProperty() == overrideProp->GetProperty())
                     {
                         if (IProperty * origProp = classDesc->GetPropertyByName(overrideProp->getName().c_str()))
                         {
-                            overrideProp->Set(obj, origProp);
+                            if (_dynProp == nullptr)
+                                overrideProp->BackupOriginalValue(obj, origProp);
+
+                            if (overrideProp->IsEnable())
+                                overrideProp->ApplyOverride(obj, origProp);
+                            else
+                                overrideProp->RestoreOriginalValue(obj, origProp);  
+
                             obj->OnPropertyChanged(obj, *origProp, true);
                             found = true;
                         }
@@ -343,6 +353,42 @@ namespace vg::engine
             {
                 VG_WARNING("[Prefab] Could not find GUID 0x%08X under GameObject \"%s\"", propList->GetUID(), _gameObject->getName().c_str());
             }
+        }
+    }
+
+    //--------------------------------------------------------------------------------------
+    // _override = true => Enable property override, Set to Override value
+    // _override = false => Disable property override, Reset to original value
+    //--------------------------------------------------------------------------------------
+    bool PrefabGameObject::ToggleOverride(const IObject * _object, const IProperty * _prop, bool _override)
+    {
+        if (_override)
+        {
+            if (auto * propOverride = CreateDynamicProperty(_object, _prop))
+            {
+                propOverride->Enable(true);
+
+                auto & children = GetChildren();
+                for (uint i = 0; i < children.size(); ++i)
+                    OverrideGameObjectProperties(children[i], propOverride);
+                return true;
+            }
+
+            return false;
+        }
+        else
+        {
+            if (auto * propOverride = GetDynamicProperty(_object, _prop))
+            {
+                propOverride->Enable(false);
+
+                auto & children = GetChildren();
+                for (uint i = 0; i < children.size(); ++i)
+                    OverrideGameObjectProperties(children[i], propOverride);
+                return true;
+            }
+
+            return false;
         }
     }
 

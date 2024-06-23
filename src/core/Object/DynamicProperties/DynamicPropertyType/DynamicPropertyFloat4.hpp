@@ -16,15 +16,10 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
-    DynamicPropertyFloat4::DynamicPropertyFloat4(const core::string & _name, core::IObject * _parent)
+    DynamicPropertyFloat4::DynamicPropertyFloat4(const core::string & _name, core::IObject * _parent) :
+        DynamicPropertyT<float4>(_name, _parent)
     {
 
-    }
-
-    //--------------------------------------------------------------------------------------
-    DynamicPropertyFloat4::DynamicPropertyFloat4(const core::IObject * _object, const core::IProperty * _prop)
-    {
-        setName(_prop->getName());
     }
 
     //--------------------------------------------------------------------------------------
@@ -34,13 +29,8 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
-    bool DynamicPropertyFloat4::Set(IObject * _object, IProperty * _prop)
+    core::float4 * DynamicPropertyFloat4::GetPropertyPtr(const IObject * _object, const IProperty * _prop) const
     {
-        if (float4 * value = _prop->GetPropertyFloat4(_object))
-        {
-            *value = m_value;
-            return true;
-        }
-        return false;
+        return _prop->GetPropertyFloat4(_object);
     }
 }

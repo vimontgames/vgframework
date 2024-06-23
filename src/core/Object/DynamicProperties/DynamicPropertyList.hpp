@@ -39,8 +39,7 @@ namespace vg::core
             auto & prop = m_properties[i];
             if (prop->getName() == _prop->getName())
             {
-                prop->m_prop = *(Property*)_prop;
-                prop->m_prop.setOffset(offsetof(DynamicPropertyString, m_value));
+                prop->CopyProperty(_prop);
                 return prop;
             }
         }

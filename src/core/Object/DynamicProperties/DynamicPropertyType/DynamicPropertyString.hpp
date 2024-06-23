@@ -16,15 +16,10 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
-    DynamicPropertyString::DynamicPropertyString(const core::string & _name, core::IObject * _parent)
+    DynamicPropertyString::DynamicPropertyString(const core::string & _name, core::IObject * _parent) :
+        DynamicPropertyT<string>(_name, _parent)
     {
 
-    }
-
-    //--------------------------------------------------------------------------------------
-    DynamicPropertyString::DynamicPropertyString(const core::IObject * _object, const core::IProperty * _prop)
-    {
-        setName(_prop->getName());
     }
 
     //--------------------------------------------------------------------------------------
@@ -34,13 +29,9 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
-    bool DynamicPropertyString::Set(IObject * _object, IProperty * _prop)
+    // Apply override to current value
+    string * DynamicPropertyString::GetPropertyPtr(const IObject * _object, const IProperty * _prop) const
     {
-        if (string * value = _prop->GetPropertyString(_object))
-        {
-            *value = m_value;
-            return true;
-        }
-        return false;
+        return _prop->GetPropertyString(_object);
     }
 }

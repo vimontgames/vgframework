@@ -56,11 +56,12 @@ namespace vg::core
         virtual IDynamicPropertyList *          CreateDynamicPropertyList       (const IObject * _object) = 0;
 
         virtual IDynamicProperty *              GetDynamicProperty              (const IObject * _object, const IProperty * _prop) const = 0;
-        virtual bool                            CanOverrideProperty             (const core::IObject * _object, const core::IProperty * _prop) const = 0;
+        virtual bool                            CanOverrideProperty             (const IObject * _object, const IProperty * _prop) const = 0;
         virtual IDynamicProperty *              CreateDynamicProperty           (const IObject * _object, const IProperty * _prop) = 0;
-        virtual void                            OverrideGameObjectProperties    (IGameObject * _gameObject, const IProperty * _prop = nullptr) = 0;
+        virtual void                            OverrideGameObjectProperties    (IGameObject * _gameObject, const IDynamicProperty * _dynProp) = 0;
+        virtual bool                            ToggleOverride                  (const IObject * _object, const IProperty * _prop, bool _override) = 0;
 
-        template <class T> T *                  AddComponentByType              (const core::string & _name);
+        template <class T> T *                  AddComponentByType              (const string & _name);
         template <class T> T *                  GetComponentByType              () const;
     };
 

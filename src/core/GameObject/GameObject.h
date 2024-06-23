@@ -44,23 +44,24 @@ namespace vg::core
         IDynamicPropertyList *                          CreateDynamicPropertyList   (const IObject * _object) override;
 
         IDynamicProperty *                              GetDynamicProperty          (const IObject * _object, const IProperty * _prop) const override;
-        bool                                            CanOverrideProperty         (const core::IObject * _object, const core::IProperty * _prop) const override;
-        IDynamicProperty *                              CreateDynamicProperty       (const core::IObject * _object, const core::IProperty * _prop) override;
-        void                                            OverrideGameObjectProperties(IGameObject * _gameObject, const IProperty * _prop = nullptr) override;
+        bool                                            CanOverrideProperty         (const IObject * _object, const IProperty * _prop) const override;
+        IDynamicProperty *                              CreateDynamicProperty       (const IObject * _object, const IProperty * _prop) override;
+        void                                            OverrideGameObjectProperties(IGameObject * _gameObject, const IDynamicProperty * _dynProp) override;
+        bool                                            ToggleOverride              (const IObject * _object, const IProperty * _prop, bool _override) override;
 
         void                                            FixedUpdate                 (float _dt);
         void                                            Update                      (float _dt);
         void                                            LateUpdate                  (float _dt);
 
-        void                                            AddComponent                (IComponent * _component, core::uint _index = -1) final override;
-        IComponent *                                    AddComponent                (const char * _className, const core::string & _name) final override;
+        void                                            AddComponent                (IComponent * _component, uint _index = -1) final override;
+        IComponent *                                    AddComponent                (const char * _className, const string & _name) final override;
         bool                                            RemoveComponent             (IComponent * _component) final override;
         const vector<IComponent *> &                    GetComponents               () const final override;
         core::uint                                      GetComponentIndex           (const IComponent * _component) const;
 
         IComponent *                                    GetComponentByType          (const char * _className) const final override;
 
-        void                                            AddChild                    (IGameObject * _gameObject, core::uint _index = -1) final override;
+        void                                            AddChild                    (IGameObject * _gameObject, uint _index = -1) final override;
         bool                                            RemoveChild                 (IGameObject * _gameObject, bool _recomputeFlags = true) final override;
         core::uint                                      RemoveAllChildren           (bool _recomputeFlags = true) final override;
         const vector<IGameObject*> &                    GetChildren                 () const override;
@@ -70,11 +71,11 @@ namespace vg::core
 
         bool                                            IsEnabledInHierarchy        () const final override;
 
-        bool                                            TryGetAABB                  (core::AABB & _aabb) const override;
+        bool                                            TryGetAABB                  (AABB & _aabb) const override;
 
-        void                                            OnPropertyChanged           (core::IObject * _object, const core::IProperty & _prop, bool _notifyParent) override;
+        void                                            OnPropertyChanged           (IObject * _object, const IProperty & _prop, bool _notifyParent) override;
 
-        void                                            addComponent                (Component * _component, core::uint _index = -1);
+        void                                            addComponent                (Component * _component, uint _index = -1);
         const vector<Component*> &                      getComponents               () const;
 
         void                                            addGraphicInstance          (renderer::IGraphicInstance * _graphicInstance);

@@ -225,28 +225,28 @@ namespace vg::core
     //--------------------------------------------------------------------------------------
     IDynamicPropertyList * GameObject::GetDynamicPropertyList(const IObject * _object) const
     {
-        VG_ASSERT(IsPrefab());
+        VG_ASSERT_NOT_IMPLEMENTED();
         return nullptr;
     }
 
     //--------------------------------------------------------------------------------------
     IDynamicPropertyList * GameObject::CreateDynamicPropertyList(const IObject * _object)
     {
-        VG_ASSERT(IsPrefab());
+        VG_ASSERT_NOT_IMPLEMENTED();
         return nullptr;
     }
 
     //--------------------------------------------------------------------------------------
     IResource * GameObject::GetPrefabResource() const
     {
-        VG_ASSERT(IsPrefab());
+        VG_ASSERT_NOT_IMPLEMENTED();
         return nullptr;
     }
 
     //--------------------------------------------------------------------------------------
     IDynamicProperty * GameObject::GetDynamicProperty(const IObject * _object, const IProperty * _prop) const
     {
-        VG_ASSERT(IsPrefab());
+        VG_ASSERT_NOT_IMPLEMENTED();
         return nullptr;
     }
 
@@ -259,14 +259,21 @@ namespace vg::core
     //--------------------------------------------------------------------------------------
     IDynamicProperty * GameObject::CreateDynamicProperty(const core::IObject * _object, const core::IProperty * _prop)
     {
-        VG_ASSERT(IsPrefab());
+        VG_ASSERT_NOT_IMPLEMENTED();
         return nullptr;
     }
 
     //--------------------------------------------------------------------------------------
-    void GameObject::OverrideGameObjectProperties(IGameObject * _gameObject, const IProperty * _prop)
+    void GameObject::OverrideGameObjectProperties(IGameObject * _gameObject, const IDynamicProperty * _dynProp)
     {
-        VG_ASSERT(IsPrefab());
+        VG_ASSERT_NOT_IMPLEMENTED();
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool GameObject::ToggleOverride(const IObject * _object, const IProperty * _prop, bool _override)
+    {
+        VG_ASSERT_NOT_IMPLEMENTED();
+        return false;
     }
 
     //--------------------------------------------------------------------------------------
