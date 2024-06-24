@@ -39,20 +39,14 @@ namespace vg::engine
     void UIImageComponent::onResourceLoaded(IResource * _resource)
     {
         if (_resource == &m_image)
-        {
             m_texture = VG_SAFE_STATIC_CAST(gfx::ITexture,_resource->getObject());
-            VG_SAFE_INCREASE_REFCOUNT(m_texture);
-        }
     }
 
     //--------------------------------------------------------------------------------------
     void UIImageComponent::onResourceUnloaded(IResource * _resource)
     {
         if (_resource == &m_image)
-        {
-            VG_SAFE_RELEASE_ASYNC(m_texture);
             m_texture = nullptr;
-        }
     }
 
     //--------------------------------------------------------------------------------------
