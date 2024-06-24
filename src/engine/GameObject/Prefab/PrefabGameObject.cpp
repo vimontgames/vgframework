@@ -137,10 +137,18 @@ namespace vg::engine
         const bool isEnumArray = asBool(IProperty::Flags::EnumArray & flags);
         const bool isColor = asBool(IProperty::Flags::Color & flags);
 
+        const bool optional = asBool(IProperty::Flags::Optional & flags); // TODO: temp
+
         switch (_prop->getType())
         {
             default:
                 return false;
+
+            case IProperty::Type::Bool:
+            {
+                return true;
+            }
+            break;
 
             case IProperty::Type::String:
             {
@@ -205,6 +213,10 @@ namespace vg::engine
                     VG_ASSERT_ENUM_NOT_IMPLEMENTED(_prop->getType());
                     return nullptr;
 
+                    case IProperty::Type::Bool:
+                    newDynProp = new DynamicPropertyBool(_prop->getName());
+                    break;
+
                 case IProperty::Type::String:
                     newDynProp = new DynamicPropertyString(_prop->getName());
                     break;
@@ -263,6 +275,9 @@ namespace vg::engine
         VG_ASSERT(_uid);
         if (_uid)
         {
+            if (!_object->HasValidUID())
+                return nullptr;
+
             auto objUID = _object->GetUID();
             if (objUID == _uid)
             {

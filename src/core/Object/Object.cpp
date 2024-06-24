@@ -75,7 +75,7 @@ namespace vg::core
     //--------------------------------------------------------------------------------------
     UID Object::GetUID() const
     {
-        VG_ASSERT((UID)0 != m_uid);
+        VG_ASSERT((UID)0 != m_uid, "Object \"%s\" has no UID", getName().c_str());
         return m_uid;
     }
 

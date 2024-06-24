@@ -657,7 +657,25 @@ namespace vg::editor
                 {
                     VG_ASSERT(!isEnumArray, "Display of EnumArray property not implemented for type '%s'", asString(type).c_str());
                     bool * pBool = _prop->GetPropertyBool(_object);
-                    changed |= ImGui::Checkbox(label.c_str(), pBool);
+                    bool temp = *pBool;
+
+                    if (ImGui::Checkbox(label.c_str(), &temp))
+                    {
+                        if (temp != *pBool)
+                        {
+                            if (!readOnly)
+                            {
+                                if (isPrefabInstance && !isPrefabOverride)
+                                {
+                                    if (propOverride = prefab->CreateDynamicProperty(_object, _prop))
+                                        ((core::DynamicPropertyBool *)propOverride)->SetValue(temp);
+                                }
+
+                                *pBool = temp;
+                                changed = true;
+                            }
+                        }
+                    }
                 };
                 break;
 
