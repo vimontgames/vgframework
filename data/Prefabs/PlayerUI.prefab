@@ -1,0 +1,64 @@
+<Root>
+    <Object class="PrefabScene">
+        <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="2303387586"/>
+        <Property type="String" name="m_name" flags="NotVisible" value="PlayerUI"/>
+        <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
+        <Property type="ObjectPtr" name="m_root">
+            <Object class="GameObject">
+                <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="1280674218"/>
+                <Property type="String" name="m_name" value="Root"/>
+                <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
+                <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
+                <Property type="Float4" name="m_color" flags="Color" x="1" y="1" z="1" w="1"/>
+                <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="0" Ty="0" Tz="0" Tw="1"/>
+                <Property type="ObjectPtrVector" name="m_components"/>
+                <Property type="ObjectPtrVector" name="m_children" flags="NotVisible">
+                    <Object class="GameObject">
+                        <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="3427742693"/>
+                        <Property type="String" name="m_name" value="PlayerUI"/>
+                        <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
+                        <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
+                        <Property type="Float4" name="m_color" flags="Color" x="1" y="1" z="1" w="1"/>
+                        <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="0" Ty="0" Tz="0" Tw="1"/>
+                        <Property type="ObjectPtrVector" name="m_components">
+                            <Object class="UIImageComponent">
+                                <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="1247048370"/>
+                                <Property type="String" name="m_name" flags="NotVisible" value="New UIImageComponent"/>
+                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value="Opened"/>
+                                <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
+                                <Property type="Bool" name="m_useColor" flags="NotVisible" value="false"/>
+                                <Property type="Float4" name="m_color" flags="Color|Optional" x="1" y="1" z="1" w="1"/>
+                                <Property type="EnumU8" name="m_horizontal" value="Left"/>
+                                <Property type="EnumU8" name="m_vertical" value="Top"/>
+                                <Property type="Bool" name="m_useOffset" flags="NotVisible" value="true"/>
+                                <Property type="Float3" name="m_offset" flags="Optional" x="16" y="16" z="0"/>
+                                <Property type="Resource" name="m_image" flags="Resource">
+                                    <Object class="TextureResource">
+                                        <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="154568883"/>
+                                        <Property type="String" name="m_name" flags="NotVisible" value=""/>
+                                        <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
+                                        <Property type="String" name="m_resourcePath" flags="NotVisible" value="data/Textures/QuestionBox.psd"/>
+                                    </Object>
+                                </Property>
+                            </Object>
+                            <Object class="UITextComponent">
+                                <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="431654339"/>
+                                <Property type="String" name="m_name" flags="NotVisible" value="New UITextComponent"/>
+                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value="Opened"/>
+                                <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
+                                <Property type="Bool" name="m_useColor" flags="NotVisible" value="false"/>
+                                <Property type="Float4" name="m_color" flags="Color|Optional" x="1" y="1" z="1" w="1"/>
+                                <Property type="EnumU8" name="m_horizontal" value="Left"/>
+                                <Property type="EnumU8" name="m_vertical" value="Top"/>
+                                <Property type="Bool" name="m_useOffset" flags="NotVisible" value="true"/>
+                                <Property type="Float3" name="m_offset" flags="Optional" x="48" y="16" z="0"/>
+                                <Property type="String" name="m_text" value="Player"/>
+                            </Object>
+                        </Property>
+                        <Property type="ObjectPtrVector" name="m_children" flags="NotVisible"/>
+                    </Object>
+                </Property>
+            </Object>
+        </Property>
+    </Object>
+</Root>

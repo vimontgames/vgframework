@@ -10,7 +10,6 @@ namespace vg::core
         VG_CLASS_DECL(DynamicPropertyFloat4, DynamicProperty);
 
         DynamicPropertyFloat4(const core::string & _name = "", core::IObject * _parent = nullptr);
-        ~DynamicPropertyFloat4();
 
         core::float4 * GetPropertyPtr(const IObject * _object, const IProperty * _prop) const final override;
     };

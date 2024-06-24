@@ -23,12 +23,6 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
-    DynamicPropertyFloat4::~DynamicPropertyFloat4()
-    {
-
-    }
-
-    //--------------------------------------------------------------------------------------
     core::float4 * DynamicPropertyFloat4::GetPropertyPtr(const IObject * _object, const IProperty * _prop) const
     {
         return _prop->GetPropertyFloat4(_object);

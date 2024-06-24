@@ -23,12 +23,6 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
-    DynamicPropertyFloat::~DynamicPropertyFloat()
-    {
-
-    }
-
-    //--------------------------------------------------------------------------------------
     float * DynamicPropertyFloat::GetPropertyPtr(const IObject * _object, const IProperty * _prop) const
     {
         return _prop->GetPropertyFloat(_object);

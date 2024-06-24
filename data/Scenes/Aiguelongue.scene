@@ -1,6 +1,6 @@
 <Root>
     <Object class="Scene">
-        <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="0"/>
+        <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="289447141"/>
         <Property type="String" name="m_name" flags="NotVisible" value="Aiguelongue"/>
         <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
         <Property type="ObjectPtr" name="m_root">
@@ -55,7 +55,7 @@
                                 <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="3033332029"/>
                                 <Property type="String" name="m_name" value="Test UI"/>
                                 <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
-                                <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
+                                <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value=""/>
                                 <Property type="Float4" name="m_color" flags="Color" x="1" y="1" z="1" w="1"/>
                                 <Property type="Float4x4" name="m_local" Ix="0.40000001" Iy="0" Iz="0" Iw="0" Jx="0" Jy="0.40000001" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="0" Ty="0" Tz="0" Tw="1"/>
                                 <Property type="ObjectPtrVector" name="m_components">
@@ -85,7 +85,7 @@
                                         <Property type="Float3" name="m_offset" flags="Optional" x="46" y="56" z="0"/>
                                         <Property type="Resource" name="m_image" flags="Resource">
                                             <Object class="TextureResource">
-                                                <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="0"/>
+                                                <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="2905616535"/>
                                                 <Property type="String" name="m_name" flags="NotVisible" value=""/>
                                                 <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
                                                 <Property type="String" name="m_resourcePath" flags="NotVisible" value="data/Textures/vgframework.tga"/>
@@ -126,7 +126,7 @@
                                         <Property type="ObjectPtrVector" name="m_children" flags="NotVisible"/>
                                         <Property type="Resource" name="m_prefabResource" flags="Resource">
                                             <Object class="PrefabResource">
-                                                <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="0"/>
+                                                <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="1091294889"/>
                                                 <Property type="String" name="m_name" flags="NotVisible" value=""/>
                                                 <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
                                                 <Property type="String" name="m_resourcePath" flags="NotVisible" value="data/Prefabs/Floor/Grass_3x3.prefab"/>
@@ -145,7 +145,7 @@
                                         <Property type="ObjectPtrVector" name="m_children" flags="NotVisible"/>
                                         <Property type="Resource" name="m_prefabResource" flags="Resource">
                                             <Object class="PrefabResource">
-                                                <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="0"/>
+                                                <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="2816956271"/>
                                                 <Property type="String" name="m_name" flags="NotVisible" value=""/>
                                                 <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
                                                 <Property type="String" name="m_resourcePath" flags="NotVisible" value="data/Prefabs/Floor/Grass_3x3.prefab"/>
@@ -164,7 +164,7 @@
                                         <Property type="ObjectPtrVector" name="m_children" flags="NotVisible"/>
                                         <Property type="Resource" name="m_prefabResource" flags="Resource">
                                             <Object class="PrefabResource">
-                                                <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="0"/>
+                                                <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="3873328099"/>
                                                 <Property type="String" name="m_name" flags="NotVisible" value=""/>
                                                 <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
                                                 <Property type="String" name="m_resourcePath" flags="NotVisible" value="data/Prefabs/Floor/Grass_3x3.prefab"/>
@@ -183,7 +183,7 @@
                                         <Property type="ObjectPtrVector" name="m_children" flags="NotVisible"/>
                                         <Property type="Resource" name="m_prefabResource" flags="Resource">
                                             <Object class="PrefabResource">
-                                                <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="0"/>
+                                                <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="606688899"/>
                                                 <Property type="String" name="m_name" flags="NotVisible" value=""/>
                                                 <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
                                                 <Property type="String" name="m_resourcePath" flags="NotVisible" value="data/Prefabs/Floor/Grass_3x3.prefab"/>
@@ -202,7 +202,7 @@
                                         <Property type="ObjectPtrVector" name="m_children" flags="NotVisible"/>
                                         <Property type="Resource" name="m_prefabResource" flags="Resource">
                                             <Object class="PrefabResource">
-                                                <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="0"/>
+                                                <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="2227934477"/>
                                                 <Property type="String" name="m_name" flags="NotVisible" value=""/>
                                                 <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
                                                 <Property type="String" name="m_resourcePath" flags="NotVisible" value="data/Prefabs/Floor/Grass_3x3.prefab"/>
@@ -221,7 +221,7 @@
                                         <Property type="ObjectPtrVector" name="m_children" flags="NotVisible"/>
                                         <Property type="Resource" name="m_prefabResource" flags="Resource">
                                             <Object class="PrefabResource">
-                                                <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="0"/>
+                                                <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="648936433"/>
                                                 <Property type="String" name="m_name" flags="NotVisible" value=""/>
                                                 <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
                                                 <Property type="String" name="m_resourcePath" flags="NotVisible" value="data/Prefabs/Floor/Grass_3x3.prefab"/>
@@ -240,7 +240,7 @@
                                         <Property type="ObjectPtrVector" name="m_children" flags="NotVisible"/>
                                         <Property type="Resource" name="m_prefabResource" flags="Resource">
                                             <Object class="PrefabResource">
-                                                <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="0"/>
+                                                <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="2578502293"/>
                                                 <Property type="String" name="m_name" flags="NotVisible" value=""/>
                                                 <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
                                                 <Property type="String" name="m_resourcePath" flags="NotVisible" value="data/Prefabs/Floor/Grass_3x3.prefab"/>
@@ -259,7 +259,7 @@
                                         <Property type="ObjectPtrVector" name="m_children" flags="NotVisible"/>
                                         <Property type="Resource" name="m_prefabResource" flags="Resource">
                                             <Object class="PrefabResource">
-                                                <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="0"/>
+                                                <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="2649223047"/>
                                                 <Property type="String" name="m_name" flags="NotVisible" value=""/>
                                                 <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
                                                 <Property type="String" name="m_resourcePath" flags="NotVisible" value="data/Prefabs/Floor/Grass_3x3.prefab"/>
@@ -278,7 +278,7 @@
                                         <Property type="ObjectPtrVector" name="m_children" flags="NotVisible"/>
                                         <Property type="Resource" name="m_prefabResource" flags="Resource">
                                             <Object class="PrefabResource">
-                                                <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="0"/>
+                                                <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="1613893731"/>
                                                 <Property type="String" name="m_name" flags="NotVisible" value=""/>
                                                 <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
                                                 <Property type="String" name="m_resourcePath" flags="NotVisible" value="data/Prefabs/Floor/Grass_3x3.prefab"/>
@@ -297,7 +297,7 @@
                                         <Property type="ObjectPtrVector" name="m_children" flags="NotVisible"/>
                                         <Property type="Resource" name="m_prefabResource" flags="Resource">
                                             <Object class="PrefabResource">
-                                                <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="0"/>
+                                                <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="2345123363"/>
                                                 <Property type="String" name="m_name" flags="NotVisible" value=""/>
                                                 <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
                                                 <Property type="String" name="m_resourcePath" flags="NotVisible" value="data/Prefabs/Floor/Grass_3x3.prefab"/>
@@ -316,7 +316,7 @@
                                         <Property type="ObjectPtrVector" name="m_children" flags="NotVisible"/>
                                         <Property type="Resource" name="m_prefabResource" flags="Resource">
                                             <Object class="PrefabResource">
-                                                <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="0"/>
+                                                <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="652334418"/>
                                                 <Property type="String" name="m_name" flags="NotVisible" value=""/>
                                                 <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
                                                 <Property type="String" name="m_resourcePath" flags="NotVisible" value="data/Prefabs/Floor/Grass_3x3.prefab"/>
@@ -335,7 +335,7 @@
                                         <Property type="ObjectPtrVector" name="m_children" flags="NotVisible"/>
                                         <Property type="Resource" name="m_prefabResource" flags="Resource">
                                             <Object class="PrefabResource">
-                                                <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="0"/>
+                                                <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="2876387703"/>
                                                 <Property type="String" name="m_name" flags="NotVisible" value=""/>
                                                 <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
                                                 <Property type="String" name="m_resourcePath" flags="NotVisible" value="data/Prefabs/Floor/Grass_3x3.prefab"/>
@@ -354,7 +354,7 @@
                                         <Property type="ObjectPtrVector" name="m_children" flags="NotVisible"/>
                                         <Property type="Resource" name="m_prefabResource" flags="Resource">
                                             <Object class="PrefabResource">
-                                                <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="0"/>
+                                                <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="479251516"/>
                                                 <Property type="String" name="m_name" flags="NotVisible" value=""/>
                                                 <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
                                                 <Property type="String" name="m_resourcePath" flags="NotVisible" value="data/Prefabs/Floor/Concrete_3x3.prefab"/>
@@ -373,7 +373,7 @@
                                         <Property type="ObjectPtrVector" name="m_children" flags="NotVisible"/>
                                         <Property type="Resource" name="m_prefabResource" flags="Resource">
                                             <Object class="PrefabResource">
-                                                <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="0"/>
+                                                <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="1198975185"/>
                                                 <Property type="String" name="m_name" flags="NotVisible" value=""/>
                                                 <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
                                                 <Property type="String" name="m_resourcePath" flags="NotVisible" value="data/Prefabs/Floor/Concrete_3x3.prefab"/>
@@ -392,7 +392,7 @@
                                         <Property type="ObjectPtrVector" name="m_children" flags="NotVisible"/>
                                         <Property type="Resource" name="m_prefabResource" flags="Resource">
                                             <Object class="PrefabResource">
-                                                <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="0"/>
+                                                <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="4156204900"/>
                                                 <Property type="String" name="m_name" flags="NotVisible" value=""/>
                                                 <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
                                                 <Property type="String" name="m_resourcePath" flags="NotVisible" value="data/Prefabs/Floor/Concrete_3x3.prefab"/>
@@ -411,7 +411,7 @@
                                         <Property type="ObjectPtrVector" name="m_children" flags="NotVisible"/>
                                         <Property type="Resource" name="m_prefabResource" flags="Resource">
                                             <Object class="PrefabResource">
-                                                <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="0"/>
+                                                <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="556040705"/>
                                                 <Property type="String" name="m_name" flags="NotVisible" value=""/>
                                                 <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
                                                 <Property type="String" name="m_resourcePath" flags="NotVisible" value="data/Prefabs/Floor/Concrete_Horizontal_3x3.prefab"/>
@@ -430,7 +430,7 @@
                                         <Property type="ObjectPtrVector" name="m_children" flags="NotVisible"/>
                                         <Property type="Resource" name="m_prefabResource" flags="Resource">
                                             <Object class="PrefabResource">
-                                                <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="0"/>
+                                                <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="3098235780"/>
                                                 <Property type="String" name="m_name" flags="NotVisible" value=""/>
                                                 <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
                                                 <Property type="String" name="m_resourcePath" flags="NotVisible" value="data/Prefabs/Floor/Concrete_Horizontal_3x3.prefab"/>
@@ -449,7 +449,7 @@
                                         <Property type="ObjectPtrVector" name="m_children" flags="NotVisible"/>
                                         <Property type="Resource" name="m_prefabResource" flags="Resource">
                                             <Object class="PrefabResource">
-                                                <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="0"/>
+                                                <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="620678097"/>
                                                 <Property type="String" name="m_name" flags="NotVisible" value=""/>
                                                 <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
                                                 <Property type="String" name="m_resourcePath" flags="NotVisible" value="data/Prefabs/Floor/Concrete_Horizontal_3x3.prefab"/>
@@ -488,7 +488,7 @@
                                                 <Property type="ObjectPtrVector" name="m_children" flags="NotVisible"/>
                                                 <Property type="Resource" name="m_prefabResource" flags="Resource">
                                                     <Object class="PrefabResource">
-                                                        <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="0"/>
+                                                        <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="31221567"/>
                                                         <Property type="String" name="m_name" flags="NotVisible" value=""/>
                                                         <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
                                                         <Property type="String" name="m_resourcePath" flags="NotVisible" value="data/Prefabs/Football.prefab"/>
@@ -501,7 +501,7 @@
                                                         <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
                                                         <Property type="ObjectPtrVector" name="m_properties">
                                                             <Object class="DynamicPropertyFloat4">
-                                                                <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="0"/>
+                                                                <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="1742092871"/>
                                                                 <Property type="String" name="m_name" value="m_color"/>
                                                                 <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
                                                                 <Property type="Bool" name="m_enable" value="true"/>
@@ -522,7 +522,7 @@
                                                 <Property type="ObjectPtrVector" name="m_children" flags="NotVisible"/>
                                                 <Property type="Resource" name="m_prefabResource" flags="Resource">
                                                     <Object class="PrefabResource">
-                                                        <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="0"/>
+                                                        <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="232705646"/>
                                                         <Property type="String" name="m_name" flags="NotVisible" value=""/>
                                                         <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
                                                         <Property type="String" name="m_resourcePath" flags="NotVisible" value="data/Prefabs/Football.prefab"/>
@@ -535,7 +535,7 @@
                                                         <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
                                                         <Property type="ObjectPtrVector" name="m_properties">
                                                             <Object class="DynamicPropertyFloat4">
-                                                                <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="0"/>
+                                                                <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="1363437398"/>
                                                                 <Property type="String" name="m_name" value="m_color"/>
                                                                 <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
                                                                 <Property type="Bool" name="m_enable" value="false"/>
@@ -556,7 +556,7 @@
                                                 <Property type="ObjectPtrVector" name="m_children" flags="NotVisible"/>
                                                 <Property type="Resource" name="m_prefabResource" flags="Resource">
                                                     <Object class="PrefabResource">
-                                                        <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="0"/>
+                                                        <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="1554770006"/>
                                                         <Property type="String" name="m_name" flags="NotVisible" value=""/>
                                                         <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
                                                         <Property type="String" name="m_resourcePath" flags="NotVisible" value="data/Prefabs/Football.prefab"/>
@@ -569,7 +569,7 @@
                                                         <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
                                                         <Property type="ObjectPtrVector" name="m_properties">
                                                             <Object class="DynamicPropertyFloat4">
-                                                                <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="0"/>
+                                                                <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="2277691088"/>
                                                                 <Property type="String" name="m_name" value="m_color"/>
                                                                 <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
                                                                 <Property type="Bool" name="m_enable" value="true"/>
@@ -601,7 +601,7 @@
                                                 <Property type="ObjectPtrVector" name="m_children" flags="NotVisible"/>
                                                 <Property type="Resource" name="m_prefabResource" flags="Resource">
                                                     <Object class="PrefabResource">
-                                                        <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="0"/>
+                                                        <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="3580502909"/>
                                                         <Property type="String" name="m_name" flags="NotVisible" value=""/>
                                                         <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
                                                         <Property type="String" name="m_resourcePath" flags="NotVisible" value="data/Prefabs/Cone.prefab"/>
@@ -620,7 +620,7 @@
                                                 <Property type="ObjectPtrVector" name="m_children" flags="NotVisible"/>
                                                 <Property type="Resource" name="m_prefabResource" flags="Resource">
                                                     <Object class="PrefabResource">
-                                                        <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="0"/>
+                                                        <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="2832083528"/>
                                                         <Property type="String" name="m_name" flags="NotVisible" value=""/>
                                                         <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
                                                         <Property type="String" name="m_resourcePath" flags="NotVisible" value="data/Prefabs/Cone.prefab"/>
@@ -639,7 +639,7 @@
                                                 <Property type="ObjectPtrVector" name="m_children" flags="NotVisible"/>
                                                 <Property type="Resource" name="m_prefabResource" flags="Resource">
                                                     <Object class="PrefabResource">
-                                                        <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="0"/>
+                                                        <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="1489573386"/>
                                                         <Property type="String" name="m_name" flags="NotVisible" value=""/>
                                                         <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
                                                         <Property type="String" name="m_resourcePath" flags="NotVisible" value="data/Prefabs/Cone.prefab"/>
@@ -658,7 +658,7 @@
                                                 <Property type="ObjectPtrVector" name="m_children" flags="NotVisible"/>
                                                 <Property type="Resource" name="m_prefabResource" flags="Resource">
                                                     <Object class="PrefabResource">
-                                                        <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="0"/>
+                                                        <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="3984797101"/>
                                                         <Property type="String" name="m_name" flags="NotVisible" value=""/>
                                                         <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
                                                         <Property type="String" name="m_resourcePath" flags="NotVisible" value="data/Prefabs/Cone.prefab"/>
@@ -677,7 +677,7 @@
                                                 <Property type="ObjectPtrVector" name="m_children" flags="NotVisible"/>
                                                 <Property type="Resource" name="m_prefabResource" flags="Resource">
                                                     <Object class="PrefabResource">
-                                                        <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="0"/>
+                                                        <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="741838945"/>
                                                         <Property type="String" name="m_name" flags="NotVisible" value=""/>
                                                         <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
                                                         <Property type="String" name="m_resourcePath" flags="NotVisible" value="data/Prefabs/Cone.prefab"/>
@@ -696,7 +696,7 @@
                                                 <Property type="ObjectPtrVector" name="m_children" flags="NotVisible"/>
                                                 <Property type="Resource" name="m_prefabResource" flags="Resource">
                                                     <Object class="PrefabResource">
-                                                        <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="0"/>
+                                                        <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="1872296882"/>
                                                         <Property type="String" name="m_name" flags="NotVisible" value=""/>
                                                         <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
                                                         <Property type="String" name="m_resourcePath" flags="NotVisible" value="data/Prefabs/Cone.prefab"/>
@@ -733,7 +733,7 @@
                                                 <Property type="EnumU8" name="m_lightType" value="Directional"/>
                                                 <Property type="ObjectPtr" name="m_lightDesc" flags="Flatten">
                                                     <Object class="DirectionalLightDesc">
-                                                        <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="0"/>
+                                                        <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="4007917555"/>
                                                         <Property type="String" name="m_name" flags="NotVisible" value="DirectionalLightDesc #1"/>
                                                         <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
                                                         <Property type="Bool" name="m_shadow" value="true"/>
@@ -767,7 +767,7 @@
                                                 <Property type="EnumU8" name="m_lightType" value="Omni"/>
                                                 <Property type="ObjectPtr" name="m_lightDesc" flags="Flatten">
                                                     <Object class="OmniLightDesc">
-                                                        <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="0"/>
+                                                        <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="791011984"/>
                                                         <Property type="String" name="m_name" flags="NotVisible" value="OmniLightDesc #0"/>
                                                         <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
                                                         <Property type="Bool" name="m_shadow" value="false"/>
@@ -803,7 +803,7 @@
                                                 <Property type="EnumU8" name="m_lightType" value="Omni"/>
                                                 <Property type="ObjectPtr" name="m_lightDesc" flags="Flatten">
                                                     <Object class="OmniLightDesc">
-                                                        <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="0"/>
+                                                        <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="465852775"/>
                                                         <Property type="String" name="m_name" flags="NotVisible" value="OmniLightDesc #0"/>
                                                         <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
                                                         <Property type="Bool" name="m_shadow" value="false"/>
@@ -839,7 +839,7 @@
                                                 <Property type="EnumU8" name="m_lightType" value="Omni"/>
                                                 <Property type="ObjectPtr" name="m_lightDesc" flags="Flatten">
                                                     <Object class="OmniLightDesc">
-                                                        <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="0"/>
+                                                        <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="88073129"/>
                                                         <Property type="String" name="m_name" flags="NotVisible" value="OmniLightDesc #0"/>
                                                         <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
                                                         <Property type="Bool" name="m_shadow" value="false"/>
@@ -883,7 +883,7 @@
                                 <Property type="ObjectPtrVector" name="m_children" flags="NotVisible"/>
                                 <Property type="Resource" name="m_prefabResource" flags="Resource">
                                     <Object class="PrefabResource">
-                                        <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="0"/>
+                                        <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="3976863083"/>
                                         <Property type="String" name="m_name" flags="NotVisible" value=""/>
                                         <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
                                         <Property type="String" name="m_resourcePath" flags="NotVisible" value="data/Prefabs/Pablo.prefab"/>
@@ -902,7 +902,7 @@
                                 <Property type="ObjectPtrVector" name="m_children" flags="NotVisible"/>
                                 <Property type="Resource" name="m_prefabResource" flags="Resource">
                                     <Object class="PrefabResource">
-                                        <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="0"/>
+                                        <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="1964811524"/>
                                         <Property type="String" name="m_name" flags="NotVisible" value=""/>
                                         <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
                                         <Property type="String" name="m_resourcePath" flags="NotVisible" value="data/Prefabs/Romeo.prefab"/>
@@ -921,7 +921,7 @@
                                 <Property type="ObjectPtrVector" name="m_children" flags="NotVisible"/>
                                 <Property type="Resource" name="m_prefabResource" flags="Resource">
                                     <Object class="PrefabResource">
-                                        <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="0"/>
+                                        <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="3253803701"/>
                                         <Property type="String" name="m_name" flags="NotVisible" value=""/>
                                         <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
                                         <Property type="String" name="m_resourcePath" flags="NotVisible" value="data/Prefabs/Benualdo.prefab"/>
@@ -940,7 +940,7 @@
                                 <Property type="ObjectPtrVector" name="m_children" flags="NotVisible"/>
                                 <Property type="Resource" name="m_prefabResource" flags="Resource">
                                     <Object class="PrefabResource">
-                                        <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="0"/>
+                                        <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="3969748134"/>
                                         <Property type="String" name="m_name" flags="NotVisible" value=""/>
                                         <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
                                         <Property type="String" name="m_resourcePath" flags="NotVisible" value="data/Prefabs/Justin.prefab"/>
@@ -970,7 +970,7 @@
                                 <Property type="ObjectPtrVector" name="m_children" flags="NotVisible"/>
                                 <Property type="Resource" name="m_prefabResource" flags="Resource">
                                     <Object class="PrefabResource">
-                                        <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="0"/>
+                                        <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="2010269170"/>
                                         <Property type="String" name="m_name" flags="NotVisible" value=""/>
                                         <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
                                         <Property type="String" name="m_resourcePath" flags="NotVisible" value="data/Prefabs/GJ.prefab"/>

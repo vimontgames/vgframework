@@ -15,8 +15,6 @@ namespace vg::core
 
         const IDynamicProperty * GetProperty(const IProperty * _prop) const override;
 
-        //core::UID                       m_uid = (core::UID)0;
-        //core::string                    m_name;
         core::vector<DynamicProperty*>  m_properties;
     };
 }

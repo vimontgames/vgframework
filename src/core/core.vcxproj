@@ -59,12 +59,15 @@
     <ClInclude Include="Object\AutoRegisterClass.hpp" />
     <ClInclude Include="Object\ClassDesc.h" />
     <ClInclude Include="Object\ClassDesc.hpp" />
+    <ClInclude Include="Object\DynamicProperties\DynamicProperties.h" />
     <ClInclude Include="Object\DynamicProperties\DynamicProperty.h" />
     <ClInclude Include="Object\DynamicProperties\DynamicProperty.hpp" />
     <ClInclude Include="Object\DynamicProperties\DynamicPropertyList.h" />
     <ClInclude Include="Object\DynamicProperties\DynamicPropertyList.hpp" />
     <ClInclude Include="Object\DynamicProperties\DynamicPropertyType\DynamicPropertyFloat.h" />
     <ClInclude Include="Object\DynamicProperties\DynamicPropertyType\DynamicPropertyFloat.hpp" />
+    <ClInclude Include="Object\DynamicProperties\DynamicPropertyType\DynamicPropertyFloat3.h" />
+    <ClInclude Include="Object\DynamicProperties\DynamicPropertyType\DynamicPropertyFloat3.hpp" />
     <ClInclude Include="Object\DynamicProperties\DynamicPropertyType\DynamicPropertyFloat4.h" />
     <ClInclude Include="Object\DynamicProperties\DynamicPropertyType\DynamicPropertyFloat4.hpp" />
     <ClInclude Include="Object\DynamicProperties\DynamicPropertyType\DynamicPropertyString.h" />

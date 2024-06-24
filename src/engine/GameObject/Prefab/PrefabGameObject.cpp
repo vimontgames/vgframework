@@ -1,11 +1,7 @@
 #include "engine/Precomp.h"
 #include "PrefabGameObject.h"
 #include "engine/World/Prefab/PrefabScene.h"
-
-#include "core/Object/DynamicProperties/DynamicPropertyList.h"
-#include "core/Object/DynamicProperties/DynamicPropertyType/DynamicPropertyString.h"
-#include "core/Object/DynamicProperties/DynamicPropertyType/DynamicPropertyFloat4.h"
-#include "core/Object/DynamicProperties/DynamicPropertyType/DynamicPropertyFloat.h"
+#include "core/Object/DynamicProperties/DynamicProperties.h"
 
 using namespace vg::core;
 
@@ -155,9 +151,18 @@ namespace vg::engine
             }
             break;
 
+            case IProperty::Type::Float3:
+            {
+                if (isEnumArray)
+                    return false;
+
+                return true;
+            }
+            break;
+
             case IProperty::Type::Float4:
             {
-                if (isEnumArray || !isColor)
+                if (isEnumArray)
                     return false;
 
                 return true;
@@ -204,13 +209,17 @@ namespace vg::engine
                     newDynProp = new DynamicPropertyString(_prop->getName());
                     break;
 
-                case IProperty::Type::Float4:
-                    newDynProp = new DynamicPropertyFloat4(_prop->getName());
-                    break;
-
                 case IProperty::Type::Float:
                     newDynProp = new DynamicPropertyFloat(_prop->getName());
                     break;
+
+                case IProperty::Type::Float3:
+                    newDynProp = new DynamicPropertyFloat3(_prop->getName());
+                    break;
+
+                case IProperty::Type::Float4:
+                    newDynProp = new DynamicPropertyFloat4(_prop->getName());
+                    break;    
             }
 
             newDynProp->BackupOriginalValue(_object, _prop);
