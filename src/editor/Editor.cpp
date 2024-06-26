@@ -630,7 +630,7 @@ namespace vg::editor
                 // Close all prefab views when creating new world
                 auto prefabViews = getWindows<ImGuiPrefabView>();
                 for (auto * prefabView : prefabViews)
-                    prefabView->m_isVisible = false;
+                    prefabView->setVisible(false);
                 
                 engine->CreateWorld(io::addExtensionIfNotPresent(GetFileDialogSelectedFile(), ext));
             }
@@ -646,7 +646,7 @@ namespace vg::editor
                 // Close all prefab views when loading new world
                 auto prefabViews = getWindows<ImGuiPrefabView>();
                 for (auto * prefabView : prefabViews)
-                    prefabView->m_isVisible = false;
+                    prefabView->setVisible(false);
 
                 engine->LoadWorld(GetFileDialogSelectedFile());
             }
@@ -662,7 +662,7 @@ namespace vg::editor
                 // Close all prefab views when loading new world
                 auto prefabViews = getWindows<ImGuiPrefabView>();
                 for (auto * prefabView : prefabViews)
-                    prefabView->m_isVisible = false;
+                    prefabView->setVisible(false);
 
                 engine->SaveWorldAs(GetFileDialogSelectedFile());
             }

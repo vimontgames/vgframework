@@ -9,4 +9,5 @@
 #include "DynamicPropertyType/DynamicPropertyFloat.hpp"
 #include "DynamicPropertyType/DynamicPropertyFloat3.hpp"
 #include "DynamicPropertyType/DynamicPropertyFloat4.hpp"
+#include "DynamicPropertyType/DynamicPropertyU8.hpp"
 #include "DynamicPropertyList.hpp"

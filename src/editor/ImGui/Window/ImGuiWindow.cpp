@@ -156,7 +156,7 @@ namespace vg::editor
     };
 
     //--------------------------------------------------------------------------------------
-    template <typename T> bool ImGuiWindow::displayEnum(core::IObject * _object, const core::IProperty * _prop)
+    template <typename T> bool ImGuiWindow::displayEnum(core::IObject * _object, const core::IProperty * _prop, Context & _context)
     {
         const auto displayName = _prop->getDisplayName();
         const auto offset = _prop->getOffset();
@@ -167,6 +167,7 @@ namespace vg::editor
 
         T * pEnum = (T*)(uint_ptr(_object) + offset);
         int enumVal = (int)*pEnum;
+        T temp = *pEnum;
 
         string preview = "<Invalid>";
         for (uint e = 0; e < _prop->getEnumCount(); ++e)
@@ -188,22 +189,55 @@ namespace vg::editor
         bool changed = false;
 
         string enumLabel = ImGui::getObjectLabel(_prop->getDisplayName(), _prop);
-        if (ImGui::BeginCombo(enumLabel.c_str(), preview.c_str(), ImGuiComboFlags_HeightLarge))
+        if (ImGui::BeginCombo(getPropertyLabel(enumLabel).c_str(), preview.c_str(), ImGuiComboFlags_HeightLarge))
         {
             for (uint e = 0; e < _prop->getEnumCount(); ++e)
             {
                 const string enumName = _prop->getEnumName(e);
-                changed |= displayEnumRecur(enumName, e, pEnum, readonly);
+                if (displayEnumRecur(enumName, e, &temp, readonly))
+                {
+                    if (!_context.readOnly)
+                    {
+                        if (_context.isPrefabInstance && !_context.isPrefabOverride)
+                        {
+                            if (_context.propOverride = _context.prefab->CreateDynamicProperty(_object, _prop))
+                            {
+                                const auto type = _prop->getType();
+                                switch (type)
+                                {
+                                    default:
+                                        VG_ASSERT_ENUM_NOT_IMPLEMENTED(type);
+                                        break;
+
+                                    case IProperty::Type::EnumU8:
+                                        ((core::DynamicPropertyU8 *)_context.propOverride)->SetValue((u8)temp);
+                                        break;
+                                }
+                                
+                                _context.propOverride->Enable(true);
+                                if (_context.optionalPropOverride)
+                                    _context.optionalPropOverride->Enable(true);
+                            }
+                        }
+
+                        *pEnum = temp;
+                        changed = true;
+                    }
+
+                    changed = true;
+                }
             }
             ImGui::EndCombo();
         }
+
+        drawPropertyLabel(_prop->getDisplayName(), _context);
 
         ImGui::EndDisabled();
         return changed;
     }
 
     //--------------------------------------------------------------------------------------
-    template <typename T> bool ImGuiWindow::displayEnumFlags(core::IObject * _object, const core::IProperty * _prop)
+    template <typename T> bool ImGuiWindow::displayEnumFlags(core::IObject * _object, const core::IProperty * _prop, Context & _context)
     {
         const auto displayName = _prop->getDisplayName();
         const auto offset = _prop->getOffset();
@@ -237,7 +271,7 @@ namespace vg::editor
             preview = "<None>";
 
         string enumLabel = ImGui::getObjectLabel(_prop->getDisplayName(), _prop);
-        if (ImGui::BeginCombo(enumLabel.c_str(), preview.c_str(), ImGuiComboFlags_None))
+        if (ImGui::BeginCombo(getPropertyLabel(enumLabel).c_str(), preview.c_str(), ImGuiComboFlags_None))
         {
             for (uint e = 0; e < _prop->getEnumCount(); ++e)
             {
@@ -260,6 +294,8 @@ namespace vg::editor
             if (changed)
                 *pEnum = enumVal;
         }
+
+        drawPropertyLabel(_prop->getDisplayName(), _context);
 
         ImGui::EndDisabled();
         return changed;
@@ -358,13 +394,65 @@ namespace vg::editor
     }
 
     //--------------------------------------------------------------------------------------
-    bool isPropertyVisible(IProperty::Flags _flags)
+    bool ImGuiWindow::isPropertyVisible(IProperty::Flags _flags)
     {
         const bool invisible = asBool(IProperty::Flags::NotVisible & _flags);
         const bool debug = asBool(IProperty::Flags::Debug & _flags);
         const bool showDebug = EditorOptions::get()->IsDebugPropertyVisible();
 
         return !invisible && (!debug || showDebug);
+    }
+
+    //--------------------------------------------------------------------------------------
+    string ImGuiWindow::getPropertyLabel(const string & _label)
+    {
+        return fmt::sprintf("##%s", _label);
+    }
+
+    //--------------------------------------------------------------------------------------
+    ImVec4 ImGuiWindow::getPropertyColor(const Context & _context)
+    {
+        ImGui::SameLine();
+
+        if (_context.isPrefabInstance)
+        {
+            if (_context.isPrefabOverride)
+                return ImGui::GetStyleColorVec4(ImGuiCol_HeaderActive);
+            else if (_context.canPrefabOverride)
+                return ImGui::GetStyleColorVec4(ImGuiCol_Text);
+            else
+                return ImGui::GetStyleColorVec4(ImGuiCol_TextDisabled);
+        }
+        else
+        {
+            if (_context.readOnly)
+                return ImGui::GetStyleColorVec4(ImGuiCol_TextDisabled);
+            else
+                return ImGui::GetStyleColorVec4(ImGuiCol_Text);
+        }
+    };
+
+    //--------------------------------------------------------------------------------------
+    void ImGuiWindow::drawPropertyLabel(const char * _label, const Context & _context)
+    {
+        ImGui::SameLine();
+        ImGui::TextColored(getPropertyColor(_context), _label);
+    };
+
+    //--------------------------------------------------------------------------------------
+    // Find parent GameObject and Component if any
+    //--------------------------------------------------------------------------------------
+    IGameObject * findParentGameObject(const core::IObject * _object)
+    {
+        const IObject * object = _object;
+        while (object)
+        {
+            if (auto * gameobject = dynamic_cast<const IGameObject *>(object))
+                return (IGameObject*)gameobject;
+
+            object = object->getParent();
+        }
+        return nullptr;
     }
 
     //--------------------------------------------------------------------------------------
@@ -383,58 +471,35 @@ namespace vg::editor
         //if (ImGuiPropertyHandler::display(_prop, _object))
         //    return; 
 
-        IGameObject * gameobject = nullptr;
-        IComponent * component = nullptr;
+        IGameObject * gameobject = findParentGameObject(_object);
 
-        // Find parent GameObject and Component if any
-        {
-            IObject * object = _object;
-            while (object)
-            {
-                if (!gameobject)
-                    gameobject = dynamic_cast<IGameObject *>(object);
-
-                if (!component)
-                    component = dynamic_cast<IComponent *>(object);
-
-                object = object->getParent();
-            }
-        }
-
-        IGameObject * prefab = nullptr;
-
-        // Property is from an instanced Prefab (cannot be edited directly)
-        bool isPrefabInstance = false;
-
-        // Prefab has overrides
-        bool isPrefabOverride = false;
-
-        // Property can be override for this Prefab Instance
-        bool canPrefabOverride = false;
-
-        // The dynamic property override if any
-        IDynamicProperty * propOverride = nullptr;
+        Context context;
+        context.isPrefabInstance = false;   // Property is from an instanced Prefab (cannot be edited directly)
+        context.isPrefabOverride = false;   // Prefab has overrides
+        context.canPrefabOverride = false;  // Property can be override for this Prefab Instance
+        context.prefab = nullptr;           // Original Prefab
+        context.propOverride = nullptr;     // The dynamic property override if any
 
         if (gameobject)
         {
-            prefab = gameobject->GetParentPrefab();
-            isPrefabInstance = nullptr != prefab;
+            context.prefab = gameobject->GetParentPrefab();
+            context.isPrefabInstance = nullptr != context.prefab;
 
-            if (nullptr != prefab)
+            if (nullptr != context.prefab)
             {
-                canPrefabOverride = prefab->CanOverrideProperty(_object, _prop);
+                context.canPrefabOverride = context.prefab->CanOverrideProperty(_object, _prop);
 
-                if (canPrefabOverride)
+                if (context.canPrefabOverride)
                 {
-                    if (auto * propList = prefab->GetDynamicPropertyList(_object))
+                    if (auto * propList = context.prefab->GetDynamicPropertyList(_object))
                     {
-                        if (propOverride = (IDynamicProperty *)propList->GetProperty(_prop))
+                        if (context.propOverride = (IDynamicProperty *)propList->GetProperty(_prop))
                         {
-                            if (propOverride->IsEnable())
+                            if (context.propOverride->IsEnable())
                             {
-                                _object = (IObject *)propOverride;
-                                _prop = propOverride->GetProperty();
-                                isPrefabOverride = true;
+                                _object = (IObject *)context.propOverride;
+                                _prop = context.propOverride->GetProperty();
+                                context.isPrefabOverride = true;
                             }
                         }
                     }
@@ -471,26 +536,66 @@ namespace vg::editor
         const bool hexa = asBool(IProperty::Flags::Hexadecimal & flags);
 
         bool optional = false, optionalChanged = false;
-        IProperty * optionalProp = nullptr;
+
+        context.optionalObject = nullptr;
+        context.optionalProp = nullptr;
+        context.optionalPropOverride = nullptr;
 
         if (asBool(IProperty::Flags::Optional & flags))
         {
             // check previous property is bool
-            const IClassDesc * classDesc = _object->GetClassDesc();
-            optionalProp = classDesc->GetPreviousProperty(_prop->getName());
-            if (optionalProp)
+            const IClassDesc * classDesc = _originalObject->GetClassDesc();
+            context.optionalObject = _originalObject;
+            auto * previousProp = classDesc->GetPreviousProperty(_originalProp->getName());
+            context.optionalProp = previousProp;
+
+            if (context.isPrefabInstance /* && canPrefabOverride*/)
             {
-                VG_ASSERT(asBool(IProperty::Flags::NotVisible & optionalProp->getFlags()) || _prop->getType() == IProperty::Type::LayoutElement, "[Factory] Property used for optional variable \"%s\" should be %s", _prop->getName(), asString(IProperty::Flags::NotVisible).c_str());
-                
-                if (optionalProp->getType() == IProperty::Type::Bool)
+                // Use override if it already exists but do not create it yet
+                if (context.optionalPropOverride = context.prefab->GetDynamicProperty(_originalObject, previousProp))
                 {
-                    bool * b = optionalProp->GetPropertyBool(_object);
+                    context.optionalObject = (IObject *)context.optionalPropOverride;
+                    context.optionalProp = context.optionalPropOverride->GetProperty();
+                }
+            }
+
+            if (context.optionalProp)
+            {
+                VG_ASSERT(asBool(IProperty::Flags::NotVisible & context.optionalProp->getFlags()) || _prop->getType() == IProperty::Type::LayoutElement, "[Factory] Property used for optional variable \"%s\" should be %s", _prop->getName(), asString(IProperty::Flags::NotVisible).c_str());
+                
+                if (context.optionalProp->getType() == IProperty::Type::Bool)
+                {
+                    bool * b = context.optionalProp->GetPropertyBool(context.optionalObject);
+                    bool temp = *b;
 
                     if (_prop->getType() != IProperty::Type::LayoutElement)
                     {
-
-                        if (ImGui::Checkbox(ImGui::getObjectLabel("", optionalProp).c_str(), b))
+                        if (ImGui::Checkbox(ImGui::getObjectLabel("", context.optionalProp).c_str(), &temp))
+                        {
                             optionalChanged = true;
+
+                            if (context.isPrefabInstance /* && canPrefabOverride*/)
+                            {
+                                // Create prop override for bool 
+                                const IClassDesc * classDesc = _originalObject->GetClassDesc();
+                                IProperty * originalOptionalProp = classDesc->GetPreviousProperty(_originalProp->getName());
+                            
+                                // Create if needed
+                                if (context.optionalPropOverride = context.prefab->CreateDynamicProperty(_originalObject, originalOptionalProp))
+                                {
+                                    context.optionalObject = (IObject *)context.optionalPropOverride;
+                                    context.optionalProp = context.optionalPropOverride->GetProperty();
+                            
+                                    ((core::DynamicPropertyBool *)context.optionalPropOverride)->SetValue(temp);
+                                    context.optionalPropOverride->Enable(true);
+                            
+                                    if (context.propOverride)
+                                        context.propOverride->Enable(true);
+                                }
+                            }
+
+                            *b = temp;
+                        }
                         ImGui::SameLine();
 
                         auto availableWidth = GetContentRegionAvail().x;
@@ -507,10 +612,10 @@ namespace vg::editor
 
         bool changed = false;
 
-        const bool readOnly = asBool(IProperty::Flags::ReadOnly & flags) || (isPrefabInstance && !isPrefabOverride && !canPrefabOverride);
+        context.readOnly = asBool(IProperty::Flags::ReadOnly & flags) || (context.isPrefabInstance && !context.isPrefabOverride && !context.canPrefabOverride);
 
         ImGuiInputTextFlags imguiInputTextflags = ImGuiInputTextFlags_EnterReturnsTrue;
-        if (readOnly)
+        if (context.readOnly)
             imguiInputTextflags = ImGuiInputTextFlags_ReadOnly;
 
         ImGuiInputTextFlags imguiNumberTextInputFlag = imguiInputTextflags;
@@ -531,8 +636,10 @@ namespace vg::editor
         //        ImGui::PushStyleColor(ImGuiCol_Text, ImGui::GetStyleColorVec4(ImGuiCol_TextDisabled));
         //}
 
-        if (readOnly)
-            ImGui::PushStyleColor(ImGuiCol_Text, ImGui::GetStyleColorVec4(ImGuiCol_TextDisabled));
+        ///*if (isPrefabOverride)
+        //    ImGui::PushStyleColor(ImGuiCol_Text, ImGui::GetStyleColorVec4(ImGuiCol_HeaderActive));
+        //else*/ if (readOnly)
+        //    ImGui::PushStyleColor(ImGuiCol_Text, ImGui::GetStyleColorVec4(ImGuiCol_TextDisabled));
 
         //ImGui::BeginDisabled(readOnly);
         {
@@ -638,7 +745,7 @@ namespace vg::editor
                             
                             if (ImGui::Checkbox(bitName.c_str(), &value))
                             {
-                                if (!readOnly)
+                                if (!context.readOnly)
                                 {
                                     if (value)
                                         pBitMask->setBitValue(i, true);
@@ -663,12 +770,17 @@ namespace vg::editor
                     {
                         if (temp != *pBool)
                         {
-                            if (!readOnly)
+                            if (!context.readOnly)
                             {
-                                if (isPrefabInstance && !isPrefabOverride)
+                                if (context.isPrefabInstance && !context.isPrefabOverride)
                                 {
-                                    if (propOverride = prefab->CreateDynamicProperty(_object, _prop))
-                                        ((core::DynamicPropertyBool *)propOverride)->SetValue(temp);
+                                    if (context.propOverride = context.prefab->CreateDynamicProperty(_object, _prop))
+                                    {
+                                        ((core::DynamicPropertyBool *)context.propOverride)->SetValue(temp);
+                                        context.propOverride->Enable(true);
+                                        if (context.optionalPropOverride)
+                                            context.optionalPropOverride->Enable(true);
+                                    }
                                 }
 
                                 *pBool = temp;
@@ -681,37 +793,37 @@ namespace vg::editor
 
                 case IProperty::Type::EnumU8:
                     VG_ASSERT(!isEnumArray, "Display of EnumArray property not implemented for type '%s'", asString(type).c_str());
-                    changed |= displayEnum<u8>(_object, _prop);
+                    changed |= displayEnum<u8>(_object, _prop, context);
                     break;
 
                 case IProperty::Type::EnumU16:
                     VG_ASSERT(!isEnumArray, "Display of EnumArray property not implemented for type '%s'", asString(type).c_str());
-                    changed |= displayEnum<u16>(_object, _prop);
+                    changed |= displayEnum<u16>(_object, _prop, context);
                     break;
 
                 case IProperty::Type::EnumU32:
                     VG_ASSERT(!isEnumArray, "Display of EnumArray property not implemented for type '%s'", asString(type).c_str());
-                    changed |= displayEnum<u32>(_object, _prop);
+                    changed |= displayEnum<u32>(_object, _prop, context);
                     break;
 
                 case IProperty::Type::EnumFlagsU8:
                     VG_ASSERT(!isEnumArray, "Display of EnumArray property not implemented for type '%s'", asString(type).c_str());
-                    changed |= displayEnumFlags<u8>(_object, _prop);
+                    changed |= displayEnumFlags<u8>(_object, _prop, context);
                     break;
 
                 case IProperty::Type::EnumFlagsU16:
                     VG_ASSERT(!isEnumArray, "Display of EnumArray property not implemented for type '%s'", asString(type).c_str());
-                    changed |= displayEnumFlags<u16>(_object, _prop);
+                    changed |= displayEnumFlags<u16>(_object, _prop, context);
                     break;
 
                 case IProperty::Type::EnumFlagsU32:
                     VG_ASSERT(!isEnumArray, "Display of EnumArray property not implemented for type '%s'", asString(type).c_str());
-                    changed |= displayEnumFlags<u32>(_object, _prop);
+                    changed |= displayEnumFlags<u32>(_object, _prop, context);
                     break;
 
                 case IProperty::Type::EnumFlagsU64:
                     VG_ASSERT(!isEnumArray, "Display of EnumArray property not implemented for type '%s'", asString(type).c_str());
-                    changed |= displayEnumFlags<u64>(_object, _prop);
+                    changed |= displayEnumFlags<u64>(_object, _prop, context);
                     break;
 
                 case IProperty::Type::Uint8:
@@ -881,12 +993,17 @@ namespace vg::editor
                             changed = true;                        
                     }
 
-                    if (changed && !readOnly)
+                    if (changed && !context.readOnly)
                     {
-                        if (isPrefabInstance && !isPrefabOverride)
+                        if (context.isPrefabInstance && !context.isPrefabOverride)
                         {
-                            if (propOverride = prefab->CreateDynamicProperty(_object, _prop))
-                                ((core::DynamicPropertyFloat *)propOverride)->SetValue(temp);
+                            if (context.propOverride = context.prefab->CreateDynamicProperty(_object, _prop))
+                            {
+                                ((core::DynamicPropertyFloat *)context.propOverride)->SetValue(temp);
+                                context.propOverride->Enable(true);
+                                if (context.optionalPropOverride)
+                                    context.optionalPropOverride->Enable(true);
+                            }
                         }
 
                         *pFloat = temp;
@@ -925,7 +1042,7 @@ namespace vg::editor
                         if (asBool(IProperty::Flags::HDR & flags))
                             colorEditFlags |= ImGuiColorEditFlags_HDR | ImGuiColorEditFlags_Float;
 
-                        if (ImGui::ColorEdit3(label.c_str(), (float *) &temp, colorEditFlags))
+                        if (ImGui::ColorEdit3(getPropertyLabel(label).c_str(), (float *) &temp, colorEditFlags))
                         {
                             if (temp[0] != pFloat3[0] || temp[1] != pFloat3[1] || temp[2] != pFloat3[2])
                                 changed = true;
@@ -933,20 +1050,27 @@ namespace vg::editor
                     }
                     else
                     {
-                        if (ImGui::InputFloat3(label.c_str(), (float *) &temp, g_editFloatFormat, imguiInputTextflags))
+                        if (ImGui::InputFloat3(getPropertyLabel(label).c_str(), (float *) &temp, g_editFloatFormat, imguiInputTextflags))
                         {
                             if (temp[0] != pFloat3[0] || temp[1] != pFloat3[1] || temp[2] != pFloat3[2])
                                 changed = true;
                         }
                     }
 
+                    drawPropertyLabel(displayName, context);
+
                     if (changed)
                     {
-                        if (isPrefabInstance && !isPrefabOverride)
+                        if (context.isPrefabInstance && !context.isPrefabOverride)
                         {
                             // Save in override
-                            if (propOverride = prefab->CreateDynamicProperty(_object, _prop))
-                                ((core::DynamicPropertyFloat3 *)propOverride)->SetValue(float3(temp[0], temp[1], temp[2]));
+                            if (context.propOverride = context.prefab->CreateDynamicProperty(_object, _prop))
+                            {
+                                ((core::DynamicPropertyFloat3 *)context.propOverride)->SetValue(float3(temp[0], temp[1], temp[2]));
+                                context.propOverride->Enable(true);
+                                if (context.optionalPropOverride)
+                                    context.optionalPropOverride->Enable(true);
+                            }
                         }
                         else
                         {
@@ -989,9 +1113,9 @@ namespace vg::editor
                             ImGuiColorEditFlags colorEditFlags = 0;
 
                             if (asBool(IProperty::Flags::HDR & flags))
-                                colorEditFlags |= ImGuiColorEditFlags_HDR | ImGuiColorEditFlags_Float;                            
+                                colorEditFlags |= ImGuiColorEditFlags_HDR | ImGuiColorEditFlags_Float;                              
 
-                            if (ImGui::ColorEdit4(label.c_str(), (float*)&temp, colorEditFlags))
+                            if (ImGui::ColorEdit4(getPropertyLabel(label).c_str(), (float *)&temp, colorEditFlags))
                             {
                                 if (temp[0] != pFloat4[0] || temp[1] != pFloat4[1] || temp[2] != pFloat4[2] || temp[3] != pFloat4[3])
                                     changed = true;
@@ -999,20 +1123,27 @@ namespace vg::editor
                         }
                         else
                         {
-                            if (ImGui::InputFloat4(label.c_str(), pFloat4, g_editFloatFormat, imguiInputTextflags))
+                            if (ImGui::InputFloat4(getPropertyLabel(label).c_str(), pFloat4, g_editFloatFormat, imguiInputTextflags))
                             {
                                 if (temp[0] != pFloat4[0] || temp[1] != pFloat4[1] || temp[2] != pFloat4[2] || temp[3] != pFloat4[3])
                                     changed = true;
                             }
                         }
 
+                        drawPropertyLabel(displayName, context);
+
                         if (changed)
                         {
-                            if (isPrefabInstance && !isPrefabOverride)
+                            if (context.isPrefabInstance && !context.isPrefabOverride)
                             {
                                 // Create if needed
-                                if (propOverride = prefab->CreateDynamicProperty(_object, _prop))
-                                    ((core::DynamicPropertyFloat4 *)propOverride)->SetValue(float4(temp[0], temp[1], temp[2], temp[3]));
+                                if (context.propOverride = context.prefab->CreateDynamicProperty(_object, _prop))
+                                {
+                                    ((core::DynamicPropertyFloat4 *)context.propOverride)->SetValue(float4(temp[0], temp[1], temp[2], temp[3]));
+                                    context.propOverride->Enable(true);
+                                    if (context.optionalPropOverride)
+                                        context.optionalPropOverride->Enable(true);
+                                }
                             }
                             else
                             {
@@ -1121,15 +1252,20 @@ namespace vg::editor
                     else
                     {
                         sprintf_s(buffer, pString->c_str());
-                        if (ImGui::InputText(label.c_str(), buffer, countof(buffer), imguiInputTextflags))
+                        if (ImGui::InputText(getPropertyLabel(label).c_str(), buffer, countof(buffer), imguiInputTextflags))
                         {
                             if (*pString != buffer)
                             {
-                                if (isPrefabInstance && !isPrefabOverride)
+                                if (context.isPrefabInstance && !context.isPrefabOverride)
                                 {
                                     // Create if needed
-                                    if (propOverride = prefab->CreateDynamicProperty(_object, _prop))
-                                        ((core::DynamicPropertyString *)propOverride)->SetValue(buffer);
+                                    if (context.propOverride = context.prefab->CreateDynamicProperty(_object, _prop))
+                                    {
+                                        ((core::DynamicPropertyString *)context.propOverride)->SetValue(buffer);
+                                        context.propOverride->Enable(true);
+                                        if (context.optionalPropOverride)
+                                            context.optionalPropOverride->Enable(true);
+                                    }
                                 }
                                 else
                                 {
@@ -1140,6 +1276,8 @@ namespace vg::editor
                                 changed = true;
                             }
                         }
+
+                        drawPropertyLabel(displayName, context);
                     }                    
                 }
                 break;
@@ -1592,16 +1730,30 @@ namespace vg::editor
         }
         //ImGui::EndDisabled();
 
+        //ImGui::SameLine();
+        //ImGui::Text(label.c_str());
+
         if (optionalChanged)
-            _object->OnPropertyChanged(_object, *optionalProp);
+        {
+            if (context.prefab && context.optionalPropOverride != nullptr)
+            {
+                auto & children = context.prefab->GetChildren();
+                for (uint i = 0; i < children.size(); ++i)
+                    context.prefab->OverrideGameObjectProperties(children[i], context.optionalPropOverride);
+            }
+            else
+            {
+                _object->OnPropertyChanged(context.optionalObject, *context.optionalProp);
+            }
+        }
 
         if (changed)
         {
-            if (prefab && propOverride != nullptr)
+            if (context.prefab && context.propOverride != nullptr)
             {
-                auto & children = prefab->GetChildren();
+                auto & children = context.prefab->GetChildren();
                 for (uint i = 0; i < children.size(); ++i)
-                    prefab->OverrideGameObjectProperties(children[i], propOverride);
+                    context.prefab->OverrideGameObjectProperties(children[i], context.propOverride);
             }
             else
             {
@@ -1614,13 +1766,13 @@ namespace vg::editor
             if (_prop->getType() != IProperty::Type::LayoutElement)
             {
                 ImGui::PopItemWidth();
-                bool * b = optionalProp->GetPropertyBool(_object);
+                bool * b = context.optionalProp->GetPropertyBool(context.optionalObject);
                 if (!*b)
                     ImGui::EndDisabled();
             }
         }
 
-        if (isPrefabInstance && canPrefabOverride)
+        if (context.isPrefabInstance && context.canPrefabOverride)
         {
             const auto saveCurY = ImGui::GetCursorPosY();
             auto deltaY = max(saveCurY - cursorPosY, style::button::SizeSmall.y);
@@ -1629,23 +1781,26 @@ namespace vg::editor
             ImGui::SetCursorPosX(availableWidth - style::button::SizeSmall.x);
             ImGui::SetCursorPosY(cursorPosY);
 
-            bool checked = isPrefabOverride && propOverride->IsEnable();
+            bool checked = context.isPrefabOverride && context.propOverride->IsEnable();
             //ImGui::BeginDisabled(!canPrefabOverride);
             if (ImGui::Checkbox(getObjectLabel("", "Override", _prop).c_str(), &checked))
             {
                 if (checked)
-                    prefab->ToggleOverride(_originalObject, _originalProp, true);
+                    context.prefab->ToggleOverride(_originalObject, _originalProp, true);
                 else
-                    prefab->ToggleOverride(_originalObject, _originalProp, false);
+                    context.prefab->ToggleOverride(_originalObject, _originalProp, false);
+
+                if (context.optionalPropOverride)
+                    context.optionalPropOverride->Enable(checked);
             }
             //ImGui::EndDisabled();
             ImGui::SetCursorPosY(cursorPosY + deltaY);
 
             if (ImGui::IsItemHovered())
             {
-                if (isPrefabOverride)
+                if (context.isPrefabOverride)
                     ImGui::SetTooltip("Property \"%s\" is overridden", _prop->getName());
-                else if (canPrefabOverride)
+                else if (context.canPrefabOverride)
                     ImGui::SetTooltip("Property \"%s\" can be overriden", _prop->getName());
                 else
                     ImGui::SetTooltip("Property \"%s\" cannot be overriden", _prop->getName());
@@ -1655,8 +1810,8 @@ namespace vg::editor
         //if (isPrefabInstance)
         //    ImGui::PopStyleColor();
 
-        if (readOnly)
-            ImGui::PopStyleColor();
+        //if (readOnly /* || isPrefabOverride*/)
+        //    ImGui::PopStyleColor();
     }
 
     //--------------------------------------------------------------------------------------
@@ -1749,7 +1904,15 @@ namespace vg::editor
         ImGui::SameLine();
         auto x = ImGui::GetCursorPosX();
         ImGui::SetCursorPosX(x + buttonWidth);
-        ImGui::Text(_prop->getDisplayName());
+
+        const auto flags = _prop->getFlags();
+        const bool readonly = asBool(IProperty::Flags::ReadOnly & flags);
+
+        if (readonly)
+            ImGui::TextColored(ImGui::GetStyleColorVec4(ImGuiCol_TextDisabled), _prop->getDisplayName());
+        else
+            ImGui::Text(_prop->getDisplayName());
+
         auto x2 = ImGui::GetCursorPosX();
         ImGui::SameLine();
         string buttonLabel = (string)style::icon::File;// +(string)" " + (string)_prop->getDisplayName();

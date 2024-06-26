@@ -54,6 +54,6 @@ namespace vg::engine
 
     private:
         PrefabResource                                      m_prefabResource;
-        core::vector<core::DynamicPropertyList *>           m_gameObjects;
+        core::vector<core::DynamicPropertyList *>           m_dynamicProperties;
     };
 }

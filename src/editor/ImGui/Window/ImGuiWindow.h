@@ -12,6 +12,7 @@ namespace imgui_addons
 namespace vg::core
 {
     class ISelection;
+    class IDynamicProperty;
 }
 
 namespace vg::engine
@@ -96,12 +97,35 @@ namespace vg::editor
 
         static void                             displayArrayObject  (core::IObject * _object, core::uint _index, const char * _name);
 
-        template <typename T> static bool       displayEnum         (core::IObject * _object, const core::IProperty * _prop);
-        template <typename T> static bool       displayEnumFlags    (core::IObject * _object, const core::IProperty * _prop);
+        struct Context
+        {
+            bool                        readOnly                = false;
+            bool                        isPrefabInstance        = false;
+            bool                        isPrefabOverride        = false;
+            bool                        canPrefabOverride       = false;
+
+            //core::IObject *           object                  = nullptr;
+            //core::IProperty *         prop                    = nullptr;
+            core::IGameObject *         prefab                  = nullptr;
+            core::IDynamicProperty *    propOverride            = nullptr;
+
+            core::IObject *             optionalObject          = nullptr;
+            core::IProperty *           optionalProp            = nullptr;
+            core::IDynamicProperty *    optionalPropOverride    = nullptr;        
+        };
+
+        template <typename T> static bool       displayEnum         (core::IObject * _object, const core::IProperty * _prop, Context & _context);
+        template <typename T> static bool       displayEnumFlags    (core::IObject * _object, const core::IProperty * _prop, Context & _context);
 
         static core::string                     getButtonLabel      (core::string _baseName, core::IObject * _object);
 
-    //protected:
+    private:
+        static bool                             isPropertyVisible   (core::IProperty::Flags _flags);
+        static core::string                     getPropertyLabel    (const core::string & _label);
+        static ImVec4                           getPropertyColor    (const Context & _context);
+        static void                             drawPropertyLabel   (const char * _label, const Context & _context);
+
+    protected:
         core::string                            m_icon;
         core::string                            m_path;
         Flags                                   m_flags;

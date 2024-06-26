@@ -16,6 +16,6 @@ namespace vg::engine
     //--------------------------------------------------------------------------------------
     VG_INLINE core::float4 UIComponent::getColor() const
     {
-        return m_color;
+        return m_useColor ? m_color : core::float4(1,1,1,1);
     }
 }

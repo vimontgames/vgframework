@@ -282,6 +282,12 @@
     <ClInclude Include="Object\DynamicProperties\DynamicPropertyType\DynamicPropertyBool.hpp">
       <Filter>Object\DynamicProperties\DynamicPropertyType</Filter>
     </ClInclude>
+    <ClInclude Include="Object\DynamicProperties\DynamicPropertyType\DynamicPropertyU8.h">
+      <Filter>Object\DynamicProperties\DynamicPropertyType</Filter>
+    </ClInclude>
+    <ClInclude Include="Object\DynamicProperties\DynamicPropertyType\DynamicPropertyU8.hpp">
+      <Filter>Object\DynamicProperties\DynamicPropertyType</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Math\Math.cpp">

@@ -15,7 +15,7 @@ namespace vg::engine
         super::registerProperties(_desc);
 
         registerPropertyResource(PrefabGameObject, m_prefabResource, "File");
-        registerPropertyObjectPtrVector(PrefabGameObject, m_gameObjects, "GameObjects");
+        registerPropertyObjectPtrVectorEx(PrefabGameObject, m_dynamicProperties, "Dynamic Properties", IProperty::Flags::Debug);
         
         return true;
     }
@@ -31,9 +31,9 @@ namespace vg::engine
     //--------------------------------------------------------------------------------------
     PrefabGameObject::~PrefabGameObject()
     {
-        for (uint i = 0; i < m_gameObjects.size(); ++i)
-            VG_SAFE_RELEASE(m_gameObjects[i]);
-        m_gameObjects.clear();
+        for (uint i = 0; i < m_dynamicProperties.size(); ++i)
+            VG_SAFE_RELEASE(m_dynamicProperties[i]);
+        m_dynamicProperties.clear();
     }
 
     //--------------------------------------------------------------------------------------
@@ -85,9 +85,9 @@ namespace vg::engine
         const auto uid = _object->GetUID();
         if (uid)
         {
-            for (uint i = 0; i < m_gameObjects.size(); ++i)
+            for (uint i = 0; i < m_dynamicProperties.size(); ++i)
             {
-                auto * propList = m_gameObjects[i];
+                auto * propList = m_dynamicProperties[i];
                 if (propList->GetUID() == uid)
                     return propList;
             }
@@ -100,7 +100,7 @@ namespace vg::engine
     {
         VG_ASSERT(nullptr == GetDynamicPropertyList(_object));
 
-        auto *& newPropList = m_gameObjects.push_empty();
+        auto *& newPropList = m_dynamicProperties.push_empty();
 
         // TODO : dedicated ctor?
         newPropList = new DynamicPropertyList(_object->getName(), nullptr);
@@ -155,6 +155,12 @@ namespace vg::engine
                 if (isFile || isFolder)
                     return false;
 
+                return true;
+            }
+            break;
+
+            case IProperty::Type::EnumU8:
+            {
                 return true;
             }
             break;
@@ -231,8 +237,17 @@ namespace vg::engine
 
                 case IProperty::Type::Float4:
                     newDynProp = new DynamicPropertyFloat4(_prop->getName());
-                    break;    
+                    break;   
+
+                case IProperty::Type::Uint8:
+                case IProperty::Type::EnumU8:
+                case IProperty::Type::EnumFlagsU8:
+                    newDynProp = new DynamicPropertyU8(_prop->getName());
+                    break;
             }
+
+            // update (TODO: make proper method!)
+            VG_VERIFY(propList->GetProperty(_prop));
 
             newDynProp->BackupOriginalValue(_object, _prop);
             newDynProp->SetOverrideInitValue(_object, _prop);
@@ -334,9 +349,9 @@ namespace vg::engine
     //--------------------------------------------------------------------------------------
     void PrefabGameObject::OverrideGameObjectProperties(IGameObject * _gameObject, const IDynamicProperty * _dynProp)
     {        
-        for (uint i = 0; i < m_gameObjects.size(); ++i)
+        for (uint i = 0; i < m_dynamicProperties.size(); ++i)
         {
-            auto & propList = m_gameObjects[i];
+            auto & propList = m_dynamicProperties[i];
 
             //VG_INFO("[Prefab] Override %u properties for GameObject \"%s\" in Prefab \"%s\"", propList->m_properties.size(), _gameObject->getName().c_str(), getName().c_str());
             

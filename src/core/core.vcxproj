@@ -66,6 +66,8 @@
     <ClInclude Include="Object\DynamicProperties\DynamicPropertyList.hpp" />
     <ClInclude Include="Object\DynamicProperties\DynamicPropertyType\DynamicPropertyBool.h" />
     <ClInclude Include="Object\DynamicProperties\DynamicPropertyType\DynamicPropertyBool.hpp" />
+    <ClInclude Include="Object\DynamicProperties\DynamicPropertyType\DynamicPropertyU8.h" />
+    <ClInclude Include="Object\DynamicProperties\DynamicPropertyType\DynamicPropertyU8.hpp" />
     <ClInclude Include="Object\DynamicProperties\DynamicPropertyType\DynamicPropertyFloat.h" />
     <ClInclude Include="Object\DynamicProperties\DynamicPropertyType\DynamicPropertyFloat.hpp" />
     <ClInclude Include="Object\DynamicProperties\DynamicPropertyType\DynamicPropertyFloat3.h" />
