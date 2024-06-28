@@ -106,7 +106,7 @@ namespace vg::renderer
                         break;
 
                     case VerticalAligment::Top:
-                        pos.x = 0.0f;
+                        pos.y = 0.0f;
                         break;
 
                     case VerticalAligment::Center:

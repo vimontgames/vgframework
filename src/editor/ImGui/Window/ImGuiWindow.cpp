@@ -123,6 +123,33 @@ namespace vg::editor
         return _baseName + "##" + _object->GetClassName() + "##" + to_string((u64)&_object); // TODO: Object GUID?
     }
 
+    template <typename T> struct TypeToDynamicPropertyTypeEnum;
+    template <> struct TypeToDynamicPropertyTypeEnum<bool> { using type = core::DynamicPropertyBool; };
+    template <> struct TypeToDynamicPropertyTypeEnum<core::u8> { using type = core::DynamicPropertyU8; };
+    template <> struct TypeToDynamicPropertyTypeEnum<core::u16> { using type = core::DynamicPropertyU16; };
+    template <> struct TypeToDynamicPropertyTypeEnum<core::u32> { using type = core::DynamicPropertyU32; };
+
+    //--------------------------------------------------------------------------------------
+    template <typename T> bool storeProperty(T * _out, T _value, IObject * _object, const IProperty * _prop, Context & _context)
+    {
+        if (!_context.readOnly && *_out != _value)
+        {
+            if (_context.isPrefabInstance && !_context.isPrefabOverride)
+            {
+                if (_context.propOverride = _context.prefab->CreateDynamicProperty(_object, _prop))
+                {
+                    ((typename TypeToDynamicPropertyTypeEnum<T>::type *)_context.propOverride)->SetValue(_value);
+                    _context.propOverride->Enable(true);
+                    if (_context.optionalPropOverride)
+                        _context.optionalPropOverride->Enable(true);
+                }
+            }
+            *_out = _value;
+            return true;
+        }
+        return false;
+    }
+
     //--------------------------------------------------------------------------------------
     template <typename T> bool displayEnumRecur(string _enumName, uint _e, T * _pEnum, bool _readonly)
     {
@@ -196,35 +223,8 @@ namespace vg::editor
                 const string enumName = _prop->getEnumName(e);
                 if (displayEnumRecur(enumName, e, &temp, readonly))
                 {
-                    if (!_context.readOnly)
-                    {
-                        if (_context.isPrefabInstance && !_context.isPrefabOverride)
-                        {
-                            if (_context.propOverride = _context.prefab->CreateDynamicProperty(_object, _prop))
-                            {
-                                const auto type = _prop->getType();
-                                switch (type)
-                                {
-                                    default:
-                                        VG_ASSERT_ENUM_NOT_IMPLEMENTED(type);
-                                        break;
-
-                                    case IProperty::Type::EnumU8:
-                                        ((core::DynamicPropertyU8 *)_context.propOverride)->SetValue((u8)temp);
-                                        break;
-                                }
-                                
-                                _context.propOverride->Enable(true);
-                                if (_context.optionalPropOverride)
-                                    _context.optionalPropOverride->Enable(true);
-                            }
-                        }
-
-                        *pEnum = temp;
+                    if (storeProperty<T>((T *)pEnum, temp, _object, _prop, _context))
                         changed = true;
-                    }
-
-                    changed = true;
                 }
             }
             ImGui::EndCombo();
@@ -414,6 +414,10 @@ namespace vg::editor
     {
         ImGui::SameLine();
 
+        static bool test = false;
+        if (test)
+            return ImGui::GetStyleColorVec4(ImGuiCol_Button);
+
         if (_context.isPrefabInstance)
         {
             if (_context.isPrefabOverride)
@@ -435,8 +439,18 @@ namespace vg::editor
     //--------------------------------------------------------------------------------------
     void ImGuiWindow::drawPropertyLabel(const char * _label, const Context & _context)
     {
+        auto x = ImGui::GetCursorPosX();
+
         ImGui::SameLine();
-        ImGui::TextColored(getPropertyColor(_context), _label);
+
+        ImGui::PushStyleColor(ImGuiCol_Text, getPropertyColor(_context));
+
+        // ugly workaround
+        if (x>100)
+            ImGui::SetCursorPosX(x);
+
+        ImGui::Text(_label);
+        ImGui::PopStyleColor();
     };
 
     //--------------------------------------------------------------------------------------
@@ -456,13 +470,14 @@ namespace vg::editor
     }
 
     //--------------------------------------------------------------------------------------
-    void ImGuiWindow::displayProperty(core::IObject * _object, const IProperty * _prop, ObjectContext & _context)
+    void ImGuiWindow::displayProperty(core::IObject * _object, const IProperty * _prop, ObjectContext & _objectContext)
     {
         VG_ASSERT(nullptr != _prop);
 
         const auto * factory = Kernel::getFactory();
         const auto cursorPosY = GetCursorPosY();
         const auto availableWidth = GetContentRegionAvail().x;
+        ImGui::PushItemWidth(availableWidth - style::label::PixelWidth);
 
         auto * _originalObject = _object;
         auto * _originalProp = _prop;
@@ -514,9 +529,9 @@ namespace vg::editor
         const auto offset = _prop->getOffset();
         const auto flags = _prop->getFlags();
 
-        if (_context.treeNodes.size() > 0)
+        if (_objectContext.treeNodes.size() > 0)
         {
-            auto nodeInfo = _context.treeNodes[_context.treeNodes.size() - 1];
+            auto nodeInfo = _objectContext.treeNodes[_objectContext.treeNodes.size() - 1];
             if (!nodeInfo.treeNodeOpen)
             {
                 if (IProperty::Type::LayoutElement != type)
@@ -524,7 +539,7 @@ namespace vg::editor
             }
         }
 
-        if (_context.hide && (type != IProperty::Type::LayoutElement || !(asBool(flags & IProperty::Flags::Optional))))
+        if (_objectContext.hide && (type != IProperty::Type::LayoutElement || !(asBool(flags & IProperty::Flags::Optional))))
             return;
 
         if (!isPropertyVisible(flags))
@@ -673,16 +688,16 @@ namespace vg::editor
                             }
                             else
                             {
-                                if (_context.treeNodes.size() > 0 || dynamic_cast<IComponent *>(_object) || dynamic_cast<IComponent *>(_object->getParent()))
+                                if (_objectContext.treeNodes.size() > 0 || dynamic_cast<IComponent *>(_object) || dynamic_cast<IComponent *>(_object->getParent()))
                                 {
-                                    TreeNodeStackInfo & newInfo = _context.treeNodes.push_empty();
+                                    TreeNodeStackInfo & newInfo = _objectContext.treeNodes.push_empty();
 
                                     newInfo.treeNodeOpen = ImGui::TreeNodeEx(ImGui::getObjectLabel(_prop->getDisplayName(), _prop).c_str(), ImGuiTreeNodeFlags_DefaultOpen);
                                     newInfo.treeNodeIsCollapsingHeader = false;
                                 }
                                 else
                                 {
-                                    TreeNodeStackInfo & newInfo = _context.treeNodes.push_empty();
+                                    TreeNodeStackInfo & newInfo = _objectContext.treeNodes.push_empty();
 
                                     newInfo.treeNodeOpen = ImGui::CollapsingHeader(ImGui::getObjectLabel(_prop->getDisplayName(), _prop).c_str(), ImGuiTreeNodeFlags_DefaultOpen);
                                     newInfo.treeNodeIsCollapsingHeader = true;
@@ -695,15 +710,13 @@ namespace vg::editor
                         {
                             if (asBool(IProperty::Flags::Optional & flags))
                             {
-                                //_context.hide = false;
                                 ImGui::EndDisabled();
-                                //ImGui::Spacing();
                             }
                             else
                             {
-                                if (_context.treeNodes.size() > 0)
+                                if (_objectContext.treeNodes.size() > 0)
                                 {
-                                    auto & nodeInfo = _context.treeNodes[_context.treeNodes.size() - 1];
+                                    auto & nodeInfo = _objectContext.treeNodes[_objectContext.treeNodes.size() - 1];
 
                                     if (nodeInfo.treeNodeOpen)
                                     {
@@ -711,7 +724,7 @@ namespace vg::editor
                                             ImGui::TreePop();
                                     }
 
-                                    _context.treeNodes.erase(_context.treeNodes.begin() + _context.treeNodes.size() - 1);
+                                    _objectContext.treeNodes.erase(_objectContext.treeNodes.begin() + _objectContext.treeNodes.size() - 1);
                                 }
                             }
                         }
@@ -766,28 +779,12 @@ namespace vg::editor
                     bool * pBool = _prop->GetPropertyBool(_object);
                     bool temp = *pBool;
 
-                    if (ImGui::Checkbox(label.c_str(), &temp))
+                    if (ImGui::Checkbox(getPropertyLabel(label).c_str(), &temp))
                     {
-                        if (temp != *pBool)
-                        {
-                            if (!context.readOnly)
-                            {
-                                if (context.isPrefabInstance && !context.isPrefabOverride)
-                                {
-                                    if (context.propOverride = context.prefab->CreateDynamicProperty(_object, _prop))
-                                    {
-                                        ((core::DynamicPropertyBool *)context.propOverride)->SetValue(temp);
-                                        context.propOverride->Enable(true);
-                                        if (context.optionalPropOverride)
-                                            context.optionalPropOverride->Enable(true);
-                                    }
-                                }
-
-                                *pBool = temp;
-                                changed = true;
-                            }
-                        }
+                        if (storeProperty<bool>(pBool, temp, _object, _prop, context))
+                            changed = true;
                     }
+                    drawPropertyLabel(_prop->getDisplayName(), context);
                 };
                 break;
 
@@ -851,15 +848,37 @@ namespace vg::editor
                     }
                     else
                     {
-                        u8 * pU8 = _prop->GetPropertyUint8(_object); 
+                        u8 * pU8 = _prop->GetPropertyUint8(_object);
                         i32 temp = (u8)*pU8;
+                        bool edited = false;
                         if (asBool(IProperty::Flags::HasRange & flags))
-                            changed |= ImGui::SliderInt(label.c_str(), &temp, max((int)0, (int)_prop->getRange().x), min((int)255, (int)_prop->getRange().y), "%d", imguiInputTextflags);
+                        {
+                            if (ImGui::SliderInt(getPropertyLabel(label).c_str(), &temp, max((int)0, (int)_prop->getRange().x), min((int)255, (int)_prop->getRange().y), "%d", imguiInputTextflags))
+                                edited = true;
+                        }
                         else
-                            changed |= ImGui::InputInt(label.c_str(), &temp, 1, 16, imguiInputTextflags);
-                        if (changed)
+                        {
+                            if (ImGui::InputInt(getPropertyLabel(label).c_str(), &temp, 1, 16, imguiInputTextflags))
+                                edited = true;
+                        }
+
+                        drawPropertyLabel(_prop->getDisplayName(), context);
+
+                        if (edited && !context.readOnly)
+                        {
+                            if (context.isPrefabInstance && !context.isPrefabOverride)
+                            {
+                                if (context.propOverride = context.prefab->CreateDynamicProperty(_object, _prop))
+                                {
+                                    ((core::DynamicPropertyU8 *)context.propOverride)->SetValue(temp);
+                                    context.propOverride->Enable(true);
+                                    if (context.optionalPropOverride)
+                                        context.optionalPropOverride->Enable(true);
+                                }
+                            }
                             *pU8 = (u8)temp;
-                    }                    
+                        }
+                    }
                 };
                 break;
 
@@ -886,16 +905,39 @@ namespace vg::editor
                     VG_ASSERT(!isEnumArray, "Display of EnumArray property not implemented for type '%s'", asString(type).c_str());
 
                     i16 * pU16 = (i16 *)(uint_ptr(_object) + offset);
-
                     i32 temp = (u16)*pU16;
 
+                    bool edited = false;
                     if (asBool(IProperty::Flags::HasRange & flags))
-                        changed |= ImGui::SliderInt(label.c_str(), &temp, max((int)0, (int)_prop->getRange().x), min((int)65535, (int)_prop->getRange().y), "%d", imguiInputTextflags);
+                    {
+                        if (ImGui::SliderInt(getPropertyLabel(label).c_str(), &temp, max((int)0, (int)_prop->getRange().x), min((int)65535, (int)_prop->getRange().y), "%d", imguiInputTextflags))
+                            edited = true;
+                    }
                     else
-                        changed |= ImGui::InputInt(label.c_str(), &temp, 1, 16, imguiInputTextflags);
+                    {
+                        if (ImGui::InputInt(getPropertyLabel(label).c_str(), &temp, 1, 16, imguiInputTextflags))
+                            edited = true;
+                    }
 
-                    if (changed)
-                        *pU16 = (u16)temp;
+                    drawPropertyLabel(_prop->getDisplayName(), context);
+
+                    if (edited)
+                        storeProperty<u16>((u16*)pU16, (u16)temp, _object, _prop, context);
+
+                    //if (edited && !context.readOnly)
+                    //{
+                    //    if (context.isPrefabInstance && !context.isPrefabOverride)
+                    //    {
+                    //        if (context.propOverride = context.prefab->CreateDynamicProperty(_object, _prop))
+                    //        {
+                    //            ((core::DynamicPropertyU16 *)context.propOverride)->SetValue(temp);
+                    //            context.propOverride->Enable(true);
+                    //            if (context.optionalPropOverride)
+                    //                context.optionalPropOverride->Enable(true);
+                    //        }
+                    //    }
+                    //    *pU16 = (u16)temp;
+                    //}
                 };
                 break;
 
@@ -938,10 +980,11 @@ namespace vg::editor
 
                     const u32 smallStep = 1;
                     const u32 bigStep = 100;
-                    const uint2 range = uint2(max(0, _prop->getRange().x), (u32)_prop->getRange().y);
+                    u32 minRange = (u32)max(0, _prop->getRange().x);
+                    u32 maxRange = (u32)_prop->getRange().y;
 
                     if (asBool(IProperty::Flags::HasRange & flags))
-                        changed |= ImGui::SliderScalar(label.c_str(), ImGuiDataType_U32, pU32, &range.x, &range.y, hexa ? "%08X" : "%d", imguiNumberTextInputFlag);
+                        changed |= ImGui::SliderScalar(label.c_str(), ImGuiDataType_U32, pU32, &minRange, &maxRange, hexa ? "%08X" : "%d", imguiNumberTextInputFlag);
                     else
                         changed |= ImGui::InputScalar(label.c_str(), ImGuiDataType_U32, pU32, &smallStep, &bigStep, hexa ? "%08X" : "%d", imguiNumberTextInputFlag);
                 };
@@ -984,14 +1027,16 @@ namespace vg::editor
 
                     if (asBool(IProperty::Flags::HasRange & flags))
                     {
-                        if (ImGui::SliderFloat(label.c_str(), &temp, _prop->getRange().x, _prop->getRange().y, g_editFloatFormat))
+                        if (ImGui::SliderFloat(getPropertyLabel(label).c_str(), &temp, _prop->getRange().x, _prop->getRange().y, g_editFloatFormat))
                             changed = true;
                     }
                     else
                     {
-                        if (ImGui::InputFloat(label.c_str(), &temp, 0.1f, 1.0f, g_editFloatFormat, imguiInputTextflags))
+                        if (ImGui::InputFloat(getPropertyLabel(label).c_str(), &temp, 0.1f, 1.0f, g_editFloatFormat, imguiInputTextflags))
                             changed = true;                        
                     }
+
+                    drawPropertyLabel(_prop->getDisplayName(), context);
 
                     if (changed && !context.readOnly)
                     {
@@ -1059,7 +1104,7 @@ namespace vg::editor
 
                     drawPropertyLabel(displayName, context);
 
-                    if (changed)
+                    if (changed && !context.readOnly)
                     {
                         if (context.isPrefabInstance && !context.isPrefabOverride)
                         {
@@ -1132,7 +1177,7 @@ namespace vg::editor
 
                         drawPropertyLabel(displayName, context);
 
-                        if (changed)
+                        if (changed && !context.readOnly)
                         {
                             if (context.isPrefabInstance && !context.isPrefabOverride)
                             {
@@ -1681,7 +1726,7 @@ namespace vg::editor
                             if (ImGui::TreeNodeEx(name.c_str(), ImGuiTreeNodeFlags_DefaultOpen))
                             {
                                 ImGui::Indent();
-                                displayResource(pResource, _prop);
+                                displayResource(pResource, _prop, 0, context);
                                 ImGui::Unindent();
                                 ImGui::TreePop();
                             }
@@ -1709,9 +1754,7 @@ namespace vg::editor
                                 if (ImGui::TreeNodeEx(_prop->getEnumName(e), /*ImGuiTreeNodeFlags_OpenOnArrow |*/ ImGuiTreeNodeFlags_DefaultOpen))
                                 {
                                     if (nullptr != pResource)
-                                    {
-                                        changed |= displayResource(pResource, _prop, e);
-                                    }
+                                        changed |= displayResource(pResource, _prop, e, context);
 
                                     ImGui::TreePop();
                                 }
@@ -1722,7 +1765,7 @@ namespace vg::editor
                     else
                     {
                         IResource * pResource = ref ? *_prop->GetPropertyResourcePtr(_object) : _prop->GetPropertyResource(_object);
-                        changed |= displayResource(pResource, _prop);
+                        changed |= displayResource(pResource, _prop, 0, context);
                     }
                 }
                 break;
@@ -1772,17 +1815,23 @@ namespace vg::editor
             }
         }
 
-        if (context.isPrefabInstance && context.canPrefabOverride)
+        if (context.isPrefabInstance && context.canPrefabOverride && !context.readOnly)
         {
             const auto saveCurY = ImGui::GetCursorPosY();
             auto deltaY = max(saveCurY - cursorPosY, style::button::SizeSmall.y);
 
+            ImGuiContext & g = *GImGui;
+            auto * window = g.CurrentWindow;
+
+            auto availableWidth2 = window->ContentSize.x - window->WindowPadding.x - (window->ScrollbarY ? ImGui::GetStyle().ScrollbarSize : 0);
+            availableWidth2 = max(availableWidth, availableWidth2);
+
             ImGui::SameLine();
-            ImGui::SetCursorPosX(availableWidth - style::button::SizeSmall.x);
+            ImGui::SetCursorPosX(availableWidth2 - style::button::SizeSmall.x);
             ImGui::SetCursorPosY(cursorPosY);
 
             bool checked = context.isPrefabOverride && context.propOverride->IsEnable();
-            //ImGui::BeginDisabled(!canPrefabOverride);
+            //ImGui::BeginDisabled(context.);
             if (ImGui::Checkbox(getObjectLabel("", "Override", _prop).c_str(), &checked))
             {
                 if (checked)
@@ -1842,7 +1891,7 @@ namespace vg::editor
     // Display Resource Object
     // Display Resource properties 1st, then path and referenced object properties 2nd
     //--------------------------------------------------------------------------------------
-    bool ImGuiWindow::displayResource(core::IResource * _resource, const core::IProperty * _prop, core::uint _index)
+    bool ImGuiWindow::displayResource(core::IResource * _resource, const core::IProperty * _prop, core::uint _index, Context & _context)
     {
         const char * className = _resource->GetClassName();
         const auto * factory = Kernel::getFactory();
@@ -1890,7 +1939,7 @@ namespace vg::editor
         string saveAsFileButtonName = getButtonLabel("Save As", _resource);
 
         string editFile = getButtonLabel("Edit", _resource);
-        string openFolder = getButtonLabel("Open Folder", _resource);
+        string openFolder = getButtonLabel("Open Containing Folder", _resource);
 
         string clearFileButtonName = getButtonLabel("Remove", _resource);
         string reimportFileButtonName = getButtonLabel("Reimport", _resource);
@@ -1905,19 +1954,17 @@ namespace vg::editor
         auto x = ImGui::GetCursorPosX();
         ImGui::SetCursorPosX(x + buttonWidth);
 
-        const auto flags = _prop->getFlags();
-        const bool readonly = asBool(IProperty::Flags::ReadOnly & flags);
-
-        if (readonly)
-            ImGui::TextColored(ImGui::GetStyleColorVec4(ImGuiCol_TextDisabled), _prop->getDisplayName());
-        else
-            ImGui::Text(_prop->getDisplayName());
+        drawPropertyLabel(_prop->getDisplayName(), _context);
 
         auto x2 = ImGui::GetCursorPosX();
         ImGui::SameLine();
         string buttonLabel = (string)style::icon::File;// +(string)" " + (string)_prop->getDisplayName();
      
-        ImGui::SetCursorPosX(x-4);
+        ImGui::SetCursorPosX(x-4);        
+
+        if (_context.readOnly)
+            ImGui::BeginDisabled();
+
         if (ImGui::Button(buttonLabel.c_str(), style::button::SizeSmall))
         {
             //openExistingFile = true;
@@ -1989,6 +2036,9 @@ namespace vg::editor
 
             ImGui::EndPopup();
         }
+
+        if (_context.readOnly)
+            ImGui::EndDisabled();
 
         // build extension list
         string ext = getFileBrowserExt(_resource);
@@ -2087,6 +2137,7 @@ namespace vg::editor
             }
         }
         ImGui::PopID();
+        ImGui::PopItemWidth();
 
         return changed;
     }

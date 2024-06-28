@@ -2,7 +2,7 @@
 
 namespace vg::core
 {
-    VG_REGISTER_OBJECT_CLASS(DynamicPropertyU8, "DynamicPropertyEnum");
+    VG_REGISTER_OBJECT_CLASS(DynamicPropertyU8, "DynamicPropertyU8");
 
     //--------------------------------------------------------------------------------------
     bool DynamicPropertyU8::registerProperties(IClassDesc & _desc)

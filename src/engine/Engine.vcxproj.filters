@@ -48,6 +48,9 @@
     <ClCompile Include="Component\UI\UIComponent.cpp">
       <Filter>Component\UI</Filter>
     </ClCompile>
+    <ClCompile Include="Component\Debug\TestComponent.cpp">
+      <Filter>Component\Debug</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Engine.def" />
@@ -281,6 +284,9 @@
     <ClInclude Include="Component\UI\UIImageComponent.hpp">
       <Filter>Component\UI</Filter>
     </ClInclude>
+    <ClInclude Include="Component\Debug\TestComponent.h">
+      <Filter>Component\Debug</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Input">
@@ -378,6 +384,9 @@
     </Filter>
     <Filter Include="Component\UI">
       <UniqueIdentifier>{3edf446b-6c3c-4ab5-a3ff-f3565b69fd12}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Component\Debug">
+      <UniqueIdentifier>{01236c8d-6efe-456e-92b9-d923acf60499}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

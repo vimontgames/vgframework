@@ -40,8 +40,26 @@ namespace vg::editor
 
     struct ObjectContext
     {
+        float availableWidth = 0.0f;
         core::vector<TreeNodeStackInfo> treeNodes;
         bool hide = false;
+    };
+
+    struct Context
+    {
+        bool                        readOnly                = false;
+        bool                        isPrefabInstance        = false;
+        bool                        isPrefabOverride        = false;
+        bool                        canPrefabOverride       = false;
+
+        //core::IObject *           object                  = nullptr;
+        //core::IProperty *         prop                    = nullptr;
+        core::IGameObject *         prefab                  = nullptr;
+        core::IDynamicProperty *    propOverride            = nullptr;
+
+        core::IObject *             optionalObject          = nullptr;
+        core::IProperty *           optionalProp            = nullptr;
+        core::IDynamicProperty *    optionalPropOverride    = nullptr;        
     };
 
     class ImGuiWindow : public core::Object
@@ -74,9 +92,9 @@ namespace vg::editor
         static void                             displayObject       (core::IObject * _object, ObjectContext & _context);
 
         static void                             displayProperty     (core::IObject * _object, const core::IProperty * _prop);
-        static void                             displayProperty     (core::IObject * _object, const core::IProperty * _prop, ObjectContext & _context);
+        static void                             displayProperty     (core::IObject * _object, const core::IProperty * _prop, ObjectContext & _objectContext);
 
-        static bool                             displayResource     (core::IResource * _resource, const core::IProperty * _prop, core::uint _index = 0);
+        static bool                             displayResource     (core::IResource * _resource, const core::IProperty * _prop, core::uint _index, Context & _context);
 
         static bool                             displayFloat4x4     (core::IObject * _object, const core::IProperty * _prop);
         static bool                             displayU32          (const core::string & _label, core::u32 * _pU32);
@@ -96,23 +114,6 @@ namespace vg::editor
         static bool                             updateSelection     (core::IObject * _object);
 
         static void                             displayArrayObject  (core::IObject * _object, core::uint _index, const char * _name);
-
-        struct Context
-        {
-            bool                        readOnly                = false;
-            bool                        isPrefabInstance        = false;
-            bool                        isPrefabOverride        = false;
-            bool                        canPrefabOverride       = false;
-
-            //core::IObject *           object                  = nullptr;
-            //core::IProperty *         prop                    = nullptr;
-            core::IGameObject *         prefab                  = nullptr;
-            core::IDynamicProperty *    propOverride            = nullptr;
-
-            core::IObject *             optionalObject          = nullptr;
-            core::IProperty *           optionalProp            = nullptr;
-            core::IDynamicProperty *    optionalPropOverride    = nullptr;        
-        };
 
         template <typename T> static bool       displayEnum         (core::IObject * _object, const core::IProperty * _prop, Context & _context);
         template <typename T> static bool       displayEnumFlags    (core::IObject * _object, const core::IProperty * _prop, Context & _context);

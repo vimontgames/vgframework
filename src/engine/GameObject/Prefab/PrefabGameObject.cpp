@@ -159,7 +159,17 @@ namespace vg::engine
             }
             break;
 
+            case IProperty::Type::Uint8:
             case IProperty::Type::EnumU8:
+            case IProperty::Type::EnumFlagsU8:
+            {
+                return true;
+            }
+            break;
+
+            case IProperty::Type::Uint16:
+            case IProperty::Type::EnumU16:
+            case IProperty::Type::EnumFlagsU16:
             {
                 return true;
             }
@@ -243,6 +253,12 @@ namespace vg::engine
                 case IProperty::Type::EnumU8:
                 case IProperty::Type::EnumFlagsU8:
                     newDynProp = new DynamicPropertyU8(_prop->getName());
+                    break;
+
+                case IProperty::Type::Uint16:
+                case IProperty::Type::EnumU16:
+                case IProperty::Type::EnumFlagsU16:
+                    newDynProp = new DynamicPropertyU16(_prop->getName());
                     break;
             }
 

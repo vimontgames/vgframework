@@ -10,4 +10,6 @@
 #include "DynamicPropertyType/DynamicPropertyFloat3.hpp"
 #include "DynamicPropertyType/DynamicPropertyFloat4.hpp"
 #include "DynamicPropertyType/DynamicPropertyU8.hpp"
+#include "DynamicPropertyType/DynamicPropertyU16.hpp"
+#include "DynamicPropertyType/DynamicPropertyU32.hpp"
 #include "DynamicPropertyList.hpp"

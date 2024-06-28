@@ -15,6 +15,8 @@ namespace vg::editor
         //--------------------------------------------------------------------------------------
         void displayResourceList(IObject * _object, const core::string & _label, const core::string & _vectorPropName)
         {
+            Context context;
+
             const auto * factory = Kernel::getFactory();
             const auto * classDesc = factory->getClassDescriptor(_object->GetClassName());
             auto list = dynamic_cast<engine::IResourceList *>(_object);
@@ -89,7 +91,7 @@ namespace vg::editor
 
                             if (ImGui::TreeNodeEx(itemLabel.c_str(), ImGuiTreeNodeFlags_None))
                             {
-                                ImGuiWindow::displayResource(obj, prop, i);
+                                ImGuiWindow::displayResource(obj, prop, i, context);
                                 ImGui::TreePop();
                             }
 
