@@ -46,7 +46,7 @@ namespace vg::renderer
 
         memset(&m_rawPickingData, 0x0, sizeof(m_rawPickingData));
 
-        if (m_viewID.target == ViewTarget::Game)
+        //if (m_viewID.target == ViewTarget::Game)
             m_viewGUI = new ViewGUI(this);
     }
 

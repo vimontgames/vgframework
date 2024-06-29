@@ -37,14 +37,7 @@ namespace vg::engine
     //--------------------------------------------------------------------------------------
     void UITextComponent::Update(float _dt)
     {
-        if (IWorld * world = GetGameObject()->GetWorld())
-        {
-            auto * renderer = Engine::get()->GetRenderer();
-            if (gfx::IView * view = renderer->GetView(gfx::ViewTarget::Game, world))
-            {
-                if (auto * gui = view->GetViewGUI())
-                    gui->AddText(m_pickingID, getMatrix(), getColor(), m_horizontal, m_vertical, m_text);
-            }
-        }
+        if (auto * gui = getView())
+            gui->AddText(m_pickingID, getMatrix(), getColor(), m_horizontal, m_vertical, m_text);
     }
 }

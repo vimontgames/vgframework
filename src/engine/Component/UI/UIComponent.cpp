@@ -1,6 +1,7 @@
 #include "engine/Precomp.h"
 #include "UIComponent.h"
 #include "renderer/IPicking.h"
+#include "gfx/IViewGUI.h"
 
 #if !VG_ENABLE_INLINE
 #include "UIComponent.inl"
@@ -46,5 +47,20 @@ namespace vg::engine
     {
         auto * picking = Engine::get()->GetRenderer()->GetPicking();
         picking->ReleasePickingID(m_pickingID);
+    }
+
+    //--------------------------------------------------------------------------------------
+    gfx::IViewGUI * UIComponent::getView() const
+    {
+        if (IWorld * world = GetGameObject()->GetWorld())
+        {
+            auto * renderer = Engine::get()->GetRenderer();
+            if (gfx::IView * view = renderer->GetView(gfx::ViewTarget::Game, world))
+                return view->GetViewGUI();
+            else if (gfx::IView * view = renderer->GetView(gfx::ViewTarget::Editor, world))
+                return view->GetViewGUI();
+        }
+
+        return nullptr;
     }
 }

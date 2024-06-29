@@ -6,6 +6,8 @@ namespace vg::gfx
 {
     enum class HorizontalAligment : core::u8;
     enum class VerticalAligment : core::u8;
+
+    class IViewGUI;
 }
 
 namespace vg::renderer
@@ -25,6 +27,8 @@ namespace vg::engine
 
         VG_INLINE core::float4x4 getMatrix() const; 
         VG_INLINE core::float4 getColor() const;
+
+        gfx::IViewGUI * getView() const;
 
     protected:
         renderer::PickingID     m_pickingID;
