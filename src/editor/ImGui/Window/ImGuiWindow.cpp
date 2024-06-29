@@ -125,14 +125,46 @@ namespace vg::editor
 
     template <typename T> struct TypeToDynamicPropertyTypeEnum;
     template <> struct TypeToDynamicPropertyTypeEnum<bool> { using type = core::DynamicPropertyBool; };
+
+    template <> struct TypeToDynamicPropertyTypeEnum<float> { using type = core::DynamicPropertyFloat; };
+    template <> struct TypeToDynamicPropertyTypeEnum<float2> { using type = core::DynamicPropertyFloat2; };
+    template <> struct TypeToDynamicPropertyTypeEnum<float3> { using type = core::DynamicPropertyFloat3; };
+    template <> struct TypeToDynamicPropertyTypeEnum<float4> { using type = core::DynamicPropertyFloat4; };
+
     template <> struct TypeToDynamicPropertyTypeEnum<core::u8> { using type = core::DynamicPropertyU8; };
     template <> struct TypeToDynamicPropertyTypeEnum<core::u16> { using type = core::DynamicPropertyU16; };
     template <> struct TypeToDynamicPropertyTypeEnum<core::u32> { using type = core::DynamicPropertyU32; };
+    template <> struct TypeToDynamicPropertyTypeEnum<core::u64> { using type = core::DynamicPropertyU64; };
+
+    template <> struct TypeToDynamicPropertyTypeEnum<core::i8> { using type = core::DynamicPropertyI8; };
+    template <> struct TypeToDynamicPropertyTypeEnum<core::i16> { using type = core::DynamicPropertyI16; };
+    template <> struct TypeToDynamicPropertyTypeEnum<core::i32> { using type = core::DynamicPropertyI32; };
+    template <> struct TypeToDynamicPropertyTypeEnum<core::i64> { using type = core::DynamicPropertyI64; };
+
+    template <typename T> bool equals(T a, T b)
+    {
+        return a == b;
+    }
+
+    template <> bool equals(core::float2 a, core::float2 b)
+    {
+        return all(a == b);
+    }
+
+    template <> bool equals(core::float3 a, core::float3 b)
+    {
+        return all(a == b);
+    }
+
+    template <> bool equals(core::float4 a, core::float4 b)
+    {
+        return all(a == b);
+    }
 
     //--------------------------------------------------------------------------------------
     template <typename T> bool storeProperty(T * _out, T _value, IObject * _object, const IProperty * _prop, Context & _context)
     {
-        if (!_context.readOnly && *_out != _value)
+        if (!_context.readOnly && !equals(*_out,_value))
         {
             if (_context.isPrefabInstance && !_context.isPrefabOverride)
             {
@@ -851,6 +883,7 @@ namespace vg::editor
                         u8 * pU8 = _prop->GetPropertyUint8(_object);
                         i32 temp = (u8)*pU8;
                         bool edited = false;
+
                         if (asBool(IProperty::Flags::HasRange & flags))
                         {
                             if (ImGui::SliderInt(getPropertyLabel(label).c_str(), &temp, max((int)0, (int)_prop->getRange().x), min((int)255, (int)_prop->getRange().y), "%d", imguiInputTextflags))
@@ -864,19 +897,10 @@ namespace vg::editor
 
                         drawPropertyLabel(_prop->getDisplayName(), context);
 
-                        if (edited && !context.readOnly)
+                        if (edited)
                         {
-                            if (context.isPrefabInstance && !context.isPrefabOverride)
-                            {
-                                if (context.propOverride = context.prefab->CreateDynamicProperty(_object, _prop))
-                                {
-                                    ((core::DynamicPropertyU8 *)context.propOverride)->SetValue(temp);
-                                    context.propOverride->Enable(true);
-                                    if (context.optionalPropOverride)
-                                        context.optionalPropOverride->Enable(true);
-                                }
-                            }
-                            *pU8 = (u8)temp;
+                            if (storeProperty<u8>(pU8, temp, _object, _prop, context))
+                                changed = true;
                         }
                     }
                 };
@@ -886,17 +910,22 @@ namespace vg::editor
                 {
                     VG_ASSERT(!isEnumArray, "Display of EnumArray property not implemented for type '%s'", asString(type).c_str());
 
-                    i8 * pU8 = (i8 *)(uint_ptr(_object) + offset);
-
-                    i32 temp = (u8)*pU8;
+                    i8 * pI8 = (i8 *)(uint_ptr(_object) + offset);
+                    i32 temp = (u8)*pI8;
+                    bool edited = false;
 
                     if (asBool(IProperty::Flags::HasRange & flags))
-                        changed |= ImGui::SliderInt(label.c_str(), &temp, max((int)-128, (int)_prop->getRange().x), min((int)127, (int)_prop->getRange().y), "%d", imguiInputTextflags);
+                        edited = ImGui::SliderInt(getPropertyLabel(label).c_str(), &temp, max((int)-128, (int)_prop->getRange().x), min((int)127, (int)_prop->getRange().y), "%d", imguiInputTextflags);
                     else
-                        changed |= ImGui::InputInt(label.c_str(), &temp, 1, 16, imguiInputTextflags);
+                        edited = ImGui::InputInt(getPropertyLabel(label).c_str(), &temp, 1, 16, imguiInputTextflags);
 
-                    if (changed)
-                        *pU8 = (u8)temp;
+                    drawPropertyLabel(_prop->getDisplayName(), context);
+
+                    if (edited)
+                    {
+                        if (storeProperty<i8>(pI8, temp, _object, _prop, context))
+                            changed = true;
+                    }
                 };
                 break;
 
@@ -922,22 +951,10 @@ namespace vg::editor
                     drawPropertyLabel(_prop->getDisplayName(), context);
 
                     if (edited)
-                        storeProperty<u16>((u16*)pU16, (u16)temp, _object, _prop, context);
-
-                    //if (edited && !context.readOnly)
-                    //{
-                    //    if (context.isPrefabInstance && !context.isPrefabOverride)
-                    //    {
-                    //        if (context.propOverride = context.prefab->CreateDynamicProperty(_object, _prop))
-                    //        {
-                    //            ((core::DynamicPropertyU16 *)context.propOverride)->SetValue(temp);
-                    //            context.propOverride->Enable(true);
-                    //            if (context.optionalPropOverride)
-                    //                context.optionalPropOverride->Enable(true);
-                    //        }
-                    //    }
-                    //    *pU16 = (u16)temp;
-                    //}
+                    {
+                        if (storeProperty<u16>((u16 *)pU16, (u16)temp, _object, _prop, context))
+                            changed = true;
+                    }
                 };
                 break;
 
@@ -945,17 +962,22 @@ namespace vg::editor
                 {
                     VG_ASSERT(!isEnumArray, "Display of EnumArray property not implemented for type '%s'", asString(type).c_str());
 
-                    i16 * pU16 = (i16 *)(uint_ptr(_object) + offset);
-
-                    i32 temp = (u16)*pU16;
+                    i16 * pI16 = (i16 *)(uint_ptr(_object) + offset);
+                    i32 temp = (i16)*pI16;
+                    bool edited = false;
 
                     if (asBool(IProperty::Flags::HasRange & flags))
-                        changed |= ImGui::SliderInt(label.c_str(), &temp, max((int)-32768, (int)_prop->getRange().x), min((int)32767, (int)_prop->getRange().y), "%d", imguiInputTextflags);
+                        edited = ImGui::SliderInt(getPropertyLabel(label).c_str(), &temp, max((int)-32768, (int)_prop->getRange().x), min((int)32767, (int)_prop->getRange().y), "%d", imguiInputTextflags);
                     else
-                        changed |= ImGui::InputInt(label.c_str(), &temp, 1, 16, imguiInputTextflags);
+                        edited = ImGui::InputInt(getPropertyLabel(label).c_str(), &temp, 1, 16, imguiInputTextflags);
 
-                    if (changed)
-                        *pU16 = (u16)temp;
+                    drawPropertyLabel(_prop->getDisplayName(), context);
+
+                    if (edited)
+                    {
+                        if (storeProperty<i16>((i16 *)pI16, (i16)temp, _object, _prop, context))
+                            changed = true;
+                    }
                 };
                 break;
 
@@ -963,12 +985,47 @@ namespace vg::editor
                 {
                     VG_ASSERT(!isEnumArray, "Display of EnumArray property not implemented for type '%s'", asString(type).c_str());
 
-                    i32 * pU32 = (i32 *)(uint_ptr(_object) + offset);
+                    i32 * pI32 = _prop->GetPropertyInt32(_object);
+                    i32 temp = *pI32;
+                    bool edited = false;
 
                     if (asBool(IProperty::Flags::HasRange & flags))
-                        changed |= ImGui::SliderInt(label.c_str(), pU32, max((int)-2147483648, (int)_prop->getRange().x), min(+2147483647, (int)_prop->getRange().y), "%d", imguiInputTextflags);
+                        edited = ImGui::SliderInt(getPropertyLabel(label).c_str(), &temp, max((int)-2147483648, (int)_prop->getRange().x), min(+2147483647, (int)_prop->getRange().y), "%d", imguiInputTextflags);
                     else
-                        changed |= ImGui::InputInt(label.c_str(), pU32, 1, 16, imguiInputTextflags);
+                        edited = ImGui::InputInt(getPropertyLabel(label).c_str(), &temp, 1, 16, imguiInputTextflags);
+
+                    drawPropertyLabel(_prop->getDisplayName(), context);
+
+                    if (edited)
+                    {
+                        if (storeProperty<i32>((i32 *)pI32, (i32)temp, _object, _prop, context))
+                            changed = true;
+                    }
+                };
+                break;
+
+                case IProperty::Type::Int64:
+                {
+                    VG_ASSERT(!isEnumArray, "Display of EnumArray property not implemented for type '%s'", asString(type).c_str());
+
+                    i64 * pI64 = _prop->GetPropertyInt64(_object);
+                    i64 temp = *pI64;
+                    i64 minRange = (u64)_prop->getRange().x;
+                    i64 maxRange = (u64)_prop->getRange().y;
+                    bool edited = false;
+
+                    if (asBool(IProperty::Flags::HasRange & flags))
+                        edited = ImGui::SliderScalar(getPropertyLabel(label).c_str(), ImGuiDataType_S64, &temp, &minRange, &maxRange, nullptr, imguiInputTextflags);
+                    else
+                        edited = ImGui::InputScalar(getPropertyLabel(label).c_str(), ImGuiDataType_S64, &temp, nullptr, nullptr, nullptr, imguiInputTextflags);
+
+                    drawPropertyLabel(_prop->getDisplayName(), context);
+
+                    if (edited)
+                    {
+                        if (storeProperty(pI64, temp, _object, _prop, context))
+                            changed = true;
+                    }
                 };
                 break;
 
@@ -976,17 +1033,27 @@ namespace vg::editor
                 {
                     VG_ASSERT(!isEnumArray, "Display of EnumArray property not implemented for type '%s'", asString(type).c_str());
 
-                    i32 * pU32 = (i32 *)(uint_ptr(_object) + offset);
+                    u32 * pU32 = _prop->GetPropertyUint32(_object);
+                    u32 temp = *pU32;
 
                     const u32 smallStep = 1;
                     const u32 bigStep = 100;
                     u32 minRange = (u32)max(0, _prop->getRange().x);
                     u32 maxRange = (u32)_prop->getRange().y;
+                    bool edited = false;
 
                     if (asBool(IProperty::Flags::HasRange & flags))
-                        changed |= ImGui::SliderScalar(label.c_str(), ImGuiDataType_U32, pU32, &minRange, &maxRange, hexa ? "%08X" : "%d", imguiNumberTextInputFlag);
+                        edited = ImGui::SliderScalar(getPropertyLabel(label).c_str(), ImGuiDataType_U32, &temp, &minRange, &maxRange, hexa ? "%08X" : "%d", imguiNumberTextInputFlag);
                     else
-                        changed |= ImGui::InputScalar(label.c_str(), ImGuiDataType_U32, pU32, &smallStep, &bigStep, hexa ? "%08X" : "%d", imguiNumberTextInputFlag);
+                        edited = ImGui::InputScalar(getPropertyLabel(label).c_str(), ImGuiDataType_U32, &temp, &smallStep, &bigStep, hexa ? "%08X" : "%d", imguiNumberTextInputFlag);
+
+                    drawPropertyLabel(_prop->getDisplayName(), context);
+
+                    if (edited)
+                    {
+                        if (storeProperty<u32>(pU32, temp, _object, _prop, context))
+                            changed = true;
+                    }
                 };
                 break;
 
@@ -994,14 +1061,24 @@ namespace vg::editor
                 {
                     VG_ASSERT(!isEnumArray, "Display of EnumArray property not implemented for type '%s'", asString(type).c_str());
 
-                    u64 * pu64 = _prop->GetPropertyUint64(_object);
+                    u64 * pU64 = _prop->GetPropertyUint64(_object);
+                    u64 temp = *pU64;
                     u64 minRange = (u64)_prop->getRange().x;
                     u64 maxRange = (u64)_prop->getRange().y;
+                    bool edited = false;
 
                     if (asBool(IProperty::Flags::HasRange & flags))
-                        changed |= ImGui::SliderScalar(label.c_str(), ImGuiDataType_U64, pu64, &minRange, &maxRange, nullptr, imguiInputTextflags);
+                        edited = ImGui::SliderScalar(getPropertyLabel(label).c_str(), ImGuiDataType_U64, &temp, &minRange, &maxRange, nullptr, imguiInputTextflags);
                     else
-                        changed |= ImGui::InputScalar(label.c_str(), ImGuiDataType_U64, pu64, nullptr, nullptr, nullptr, imguiInputTextflags);
+                        edited = ImGui::InputScalar(getPropertyLabel(label).c_str(), ImGuiDataType_U64, &temp, nullptr, nullptr, nullptr, imguiInputTextflags);
+
+                    drawPropertyLabel(_prop->getDisplayName(), context);
+
+                    if (edited)
+                    {
+                        if (storeProperty(pU64, temp, _object, _prop, context))
+                            changed = true;
+                    }
                 };
                 break;
 
@@ -1024,35 +1101,25 @@ namespace vg::editor
 
                     float * pFloat = _prop->GetPropertyFloat(_object);
                     float temp = *pFloat;
+                    bool edited = false;
 
                     if (asBool(IProperty::Flags::HasRange & flags))
                     {
                         if (ImGui::SliderFloat(getPropertyLabel(label).c_str(), &temp, _prop->getRange().x, _prop->getRange().y, g_editFloatFormat))
-                            changed = true;
+                            edited = true;
                     }
                     else
                     {
                         if (ImGui::InputFloat(getPropertyLabel(label).c_str(), &temp, 0.1f, 1.0f, g_editFloatFormat, imguiInputTextflags))
-                            changed = true;                        
+                            edited = true;
                     }
 
                     drawPropertyLabel(_prop->getDisplayName(), context);
 
-                    if (changed && !context.readOnly)
+                    if (changed)
                     {
-                        if (context.isPrefabInstance && !context.isPrefabOverride)
-                        {
-                            if (context.propOverride = context.prefab->CreateDynamicProperty(_object, _prop))
-                            {
-                                ((core::DynamicPropertyFloat *)context.propOverride)->SetValue(temp);
-                                context.propOverride->Enable(true);
-                                if (context.optionalPropOverride)
-                                    context.optionalPropOverride->Enable(true);
-                            }
-                        }
-
-                        *pFloat = temp;
-                        changed = true;
+                        if (storeProperty(pFloat, temp, _object, _prop, context))
+                            changed = true;
                     }
                 };
                 break;
@@ -1063,10 +1130,24 @@ namespace vg::editor
 
                     float * pFloat2 = (float *)_prop->GetPropertyFloat2(_object);
 
+                    float temp[2];
+                    for (uint i = 0; i < 2; ++i)
+                        temp[i] = pFloat2[i];
+
+                    bool edited = false;
+
                     if (asBool(IProperty::Flags::HasRange & flags))
-                        changed |= ImGui::SliderFloat2(label.c_str(), pFloat2, _prop->getRange().x, _prop->getRange().y, g_editFloatFormat);
+                        edited = ImGui::SliderFloat2(getPropertyLabel(label).c_str(), (float *)&temp, _prop->getRange().x, _prop->getRange().y, g_editFloatFormat);
                     else
-                        changed |= ImGui::InputFloat2(label.c_str(), pFloat2, g_editFloatFormat, imguiInputTextflags);
+                        edited = ImGui::InputFloat2(getPropertyLabel(label).c_str(), (float *)&temp, g_editFloatFormat, imguiInputTextflags);
+
+                    drawPropertyLabel(displayName, context);
+
+                    if (edited)
+                    {
+                        if (storeProperty((float2 *)pFloat2, float2(temp[0], temp[1]), _object, _prop, context))
+                            changed = true;
+                    }
                 };
                 break;
 
@@ -1080,6 +1161,8 @@ namespace vg::editor
                     for (uint i = 0; i < 3; ++i)
                         temp[i] = pFloat3[i];
 
+                    bool edited = false;
+
                     if (asBool(IProperty::Flags::Color & flags))
                     {
                         ImGuiColorEditFlags colorEditFlags = 0;
@@ -1088,41 +1171,20 @@ namespace vg::editor
                             colorEditFlags |= ImGuiColorEditFlags_HDR | ImGuiColorEditFlags_Float;
 
                         if (ImGui::ColorEdit3(getPropertyLabel(label).c_str(), (float *) &temp, colorEditFlags))
-                        {
-                            if (temp[0] != pFloat3[0] || temp[1] != pFloat3[1] || temp[2] != pFloat3[2])
-                                changed = true;
-                        }
+                            edited = true;
                     }
                     else
                     {
                         if (ImGui::InputFloat3(getPropertyLabel(label).c_str(), (float *) &temp, g_editFloatFormat, imguiInputTextflags))
-                        {
-                            if (temp[0] != pFloat3[0] || temp[1] != pFloat3[1] || temp[2] != pFloat3[2])
-                                changed = true;
-                        }
+                            edited = true;
                     }
 
                     drawPropertyLabel(displayName, context);
 
-                    if (changed && !context.readOnly)
+                    if (edited)
                     {
-                        if (context.isPrefabInstance && !context.isPrefabOverride)
-                        {
-                            // Save in override
-                            if (context.propOverride = context.prefab->CreateDynamicProperty(_object, _prop))
-                            {
-                                ((core::DynamicPropertyFloat3 *)context.propOverride)->SetValue(float3(temp[0], temp[1], temp[2]));
-                                context.propOverride->Enable(true);
-                                if (context.optionalPropOverride)
-                                    context.optionalPropOverride->Enable(true);
-                            }
-                        }
-                        else
-                        {
-                            // Save in property
-                            for (uint i = 0; i < 3; ++i)
-                                pFloat3[i] = temp[i];
-                        }
+                        if (storeProperty<float3>((float3*)pFloat3, float3(temp[0], temp[1], temp[2]), _object, _prop, context))
+                            changed = true;
                     }
                 };
                 break;
@@ -1153,6 +1215,8 @@ namespace vg::editor
                         for (uint i = 0; i < 4; ++i)
                             temp[i] = pFloat4[i];
 
+                        bool edited = false;
+
                         if (asBool(IProperty::Flags::Color & flags))
                         {
                             ImGuiColorEditFlags colorEditFlags = 0;
@@ -1161,41 +1225,20 @@ namespace vg::editor
                                 colorEditFlags |= ImGuiColorEditFlags_HDR | ImGuiColorEditFlags_Float;                              
 
                             if (ImGui::ColorEdit4(getPropertyLabel(label).c_str(), (float *)&temp, colorEditFlags))
-                            {
-                                if (temp[0] != pFloat4[0] || temp[1] != pFloat4[1] || temp[2] != pFloat4[2] || temp[3] != pFloat4[3])
-                                    changed = true;
-                            }
+                                edited = true;
                         }
                         else
                         {
-                            if (ImGui::InputFloat4(getPropertyLabel(label).c_str(), pFloat4, g_editFloatFormat, imguiInputTextflags))
-                            {
-                                if (temp[0] != pFloat4[0] || temp[1] != pFloat4[1] || temp[2] != pFloat4[2] || temp[3] != pFloat4[3])
-                                    changed = true;
-                            }
+                            if (ImGui::InputFloat4(getPropertyLabel(label).c_str(), (float *)&temp, g_editFloatFormat, imguiInputTextflags))
+                                edited = true;
                         }
 
                         drawPropertyLabel(displayName, context);
 
-                        if (changed && !context.readOnly)
+                        if (edited)
                         {
-                            if (context.isPrefabInstance && !context.isPrefabOverride)
-                            {
-                                // Create if needed
-                                if (context.propOverride = context.prefab->CreateDynamicProperty(_object, _prop))
-                                {
-                                    ((core::DynamicPropertyFloat4 *)context.propOverride)->SetValue(float4(temp[0], temp[1], temp[2], temp[3]));
-                                    context.propOverride->Enable(true);
-                                    if (context.optionalPropOverride)
-                                        context.optionalPropOverride->Enable(true);
-                                }
-                            }
-                            else
-                            {
-                                // Save in property
-                                for (uint i = 0; i < 4; ++i)
-                                    pFloat4[i] = temp[i];
-                            }
+                            if (storeProperty((core::float4*)pFloat4, float4(temp[0], temp[1], temp[2], temp[3]), _object, _prop, context))
+                                changed = true;
                         }
                     }
                 };
@@ -1823,7 +1866,7 @@ namespace vg::editor
             ImGuiContext & g = *GImGui;
             auto * window = g.CurrentWindow;
 
-            auto availableWidth2 = window->ContentSize.x - window->WindowPadding.x - (window->ScrollbarY ? ImGui::GetStyle().ScrollbarSize : 0);
+            auto availableWidth2 = window->Size.x - window->WindowPadding.x - (window->ScrollbarY ? ImGui::GetStyle().ScrollbarSize : 0);
             availableWidth2 = max(availableWidth, availableWidth2);
 
             ImGui::SameLine();

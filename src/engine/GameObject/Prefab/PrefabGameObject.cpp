@@ -163,6 +163,9 @@ namespace vg::engine
             case IProperty::Type::EnumU8:
             case IProperty::Type::EnumFlagsU8:
             {
+                if (isEnumArray)
+                    return false;
+
                 return true;
             }
             break;
@@ -171,6 +174,76 @@ namespace vg::engine
             case IProperty::Type::EnumU16:
             case IProperty::Type::EnumFlagsU16:
             {
+                if (isEnumArray)
+                    return false;
+
+                return true;
+            }
+            break;
+
+            case IProperty::Type::Uint32:
+            case IProperty::Type::EnumU32:
+            case IProperty::Type::EnumFlagsU32:
+            {
+                if (isEnumArray)
+                    return false;
+
+                return true;
+            }
+            break;
+
+            case IProperty::Type::Uint64:
+            case IProperty::Type::EnumU64:
+            case IProperty::Type::EnumFlagsU64:
+            {
+                if (isEnumArray)
+                    return false;
+
+                return true;
+            }
+            break;
+
+            case IProperty::Type::Int8:
+            {
+                if (isEnumArray)
+                    return false;
+
+                return true;
+            }
+            break;
+
+            case IProperty::Type::Int16:
+            {
+                if (isEnumArray)
+                    return false;
+
+                return true;
+            }
+            break;
+
+            case IProperty::Type::Int32:
+            {
+                if (isEnumArray)
+                    return false;
+
+                return true;
+            }
+            break;
+
+            case IProperty::Type::Int64:
+            {
+                if (isEnumArray)
+                    return false;
+
+                return true;
+            }
+            break;
+
+            case IProperty::Type::Float2:
+            {
+                if (isEnumArray)
+                    return false;
+
                 return true;
             }
             break;
@@ -241,6 +314,10 @@ namespace vg::engine
                     newDynProp = new DynamicPropertyFloat(_prop->getName());
                     break;
 
+                case IProperty::Type::Float2:
+                    newDynProp = new DynamicPropertyFloat2(_prop->getName());
+                    break;
+
                 case IProperty::Type::Float3:
                     newDynProp = new DynamicPropertyFloat3(_prop->getName());
                     break;
@@ -259,6 +336,24 @@ namespace vg::engine
                 case IProperty::Type::EnumU16:
                 case IProperty::Type::EnumFlagsU16:
                     newDynProp = new DynamicPropertyU16(_prop->getName());
+                    break;
+
+                case IProperty::Type::Uint32:
+                case IProperty::Type::EnumU32:
+                case IProperty::Type::EnumFlagsU32:
+                    newDynProp = new DynamicPropertyU32(_prop->getName());
+                    break;
+
+                case IProperty::Type::Int8:
+                    newDynProp = new DynamicPropertyI8(_prop->getName());
+                    break;
+
+                case IProperty::Type::Int16:
+                    newDynProp = new DynamicPropertyI16(_prop->getName());
+                    break;
+
+                case IProperty::Type::Int32:
+                    newDynProp = new DynamicPropertyI32(_prop->getName());
                     break;
             }
 

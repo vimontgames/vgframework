@@ -300,6 +300,42 @@
     <ClInclude Include="Object\DynamicProperties\DynamicPropertyType\DynamicPropertyU32.hpp">
       <Filter>Object\DynamicProperties\DynamicPropertyType</Filter>
     </ClInclude>
+    <ClInclude Include="Object\DynamicProperties\DynamicPropertyType\DynamicPropertyI8.h">
+      <Filter>Object\DynamicProperties\DynamicPropertyType</Filter>
+    </ClInclude>
+    <ClInclude Include="Object\DynamicProperties\DynamicPropertyType\DynamicPropertyI8.hpp">
+      <Filter>Object\DynamicProperties\DynamicPropertyType</Filter>
+    </ClInclude>
+    <ClInclude Include="Object\DynamicProperties\DynamicPropertyType\DynamicPropertyI16.h">
+      <Filter>Object\DynamicProperties\DynamicPropertyType</Filter>
+    </ClInclude>
+    <ClInclude Include="Object\DynamicProperties\DynamicPropertyType\DynamicPropertyI16.hpp">
+      <Filter>Object\DynamicProperties\DynamicPropertyType</Filter>
+    </ClInclude>
+    <ClInclude Include="Object\DynamicProperties\DynamicPropertyType\DynamicPropertyI32.h">
+      <Filter>Object\DynamicProperties\DynamicPropertyType</Filter>
+    </ClInclude>
+    <ClInclude Include="Object\DynamicProperties\DynamicPropertyType\DynamicPropertyI32.hpp">
+      <Filter>Object\DynamicProperties\DynamicPropertyType</Filter>
+    </ClInclude>
+    <ClInclude Include="Object\DynamicProperties\DynamicPropertyType\DynamicPropertyI64.h">
+      <Filter>Object\DynamicProperties\DynamicPropertyType</Filter>
+    </ClInclude>
+    <ClInclude Include="Object\DynamicProperties\DynamicPropertyType\DynamicPropertyI64.hpp">
+      <Filter>Object\DynamicProperties\DynamicPropertyType</Filter>
+    </ClInclude>
+    <ClInclude Include="Object\DynamicProperties\DynamicPropertyType\DynamicPropertyU64.h">
+      <Filter>Object\DynamicProperties\DynamicPropertyType</Filter>
+    </ClInclude>
+    <ClInclude Include="Object\DynamicProperties\DynamicPropertyType\DynamicPropertyU64.hpp">
+      <Filter>Object\DynamicProperties\DynamicPropertyType</Filter>
+    </ClInclude>
+    <ClInclude Include="Object\DynamicProperties\DynamicPropertyType\DynamicPropertyFloat2.h">
+      <Filter>Object\DynamicProperties\DynamicPropertyType</Filter>
+    </ClInclude>
+    <ClInclude Include="Object\DynamicProperties\DynamicPropertyType\DynamicPropertyFloat2.hpp">
+      <Filter>Object\DynamicProperties\DynamicPropertyType</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Math\Math.cpp">

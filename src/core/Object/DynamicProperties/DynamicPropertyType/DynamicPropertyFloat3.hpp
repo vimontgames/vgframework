@@ -9,7 +9,7 @@ namespace vg::core
     {
         super::registerProperties(_desc);
 
-        setPropertyFlag(GameObject, m_name, IProperty::Flags::NotVisible, false);
+        setPropertyFlag(DynamicPropertyFloat3, m_name, IProperty::Flags::NotVisible, false);
         registerProperty(DynamicPropertyFloat3, m_value, "Value");
 
         return true;
