@@ -524,13 +524,13 @@ namespace vg::editor
         IGameObject * gameobject = findParentGameObject(_object);
 
         Context context;
-        context.originalObject = _object;
-        context.originalProp = _prop;
-        context.isPrefabInstance = false;   // Property is from an instanced Prefab (cannot be edited directly)
-        context.isPrefabOverride = false;   // Prefab has overrides
-        context.canPrefabOverride = false;  // Property can be override for this Prefab Instance
-        context.prefab = nullptr;           // Original Prefab
-        context.propOverride = nullptr;     // The dynamic property override if any
+        context.originalObject      = _object;
+        context.originalProp        = _prop;
+        context.isPrefabInstance    = false;   // Property is from an instanced Prefab (cannot be edited directly)
+        context.isPrefabOverride    = false;   // Prefab has overrides
+        context.canPrefabOverride   = false;  // Property can be override for this Prefab Instance
+        context.prefab              = nullptr;           // Original Prefab
+        context.propOverride        = nullptr;     // The dynamic property override if any
 
         if (gameobject)
         {

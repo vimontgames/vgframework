@@ -52,13 +52,13 @@ namespace vg::editor
         bool                        isPrefabOverride        = false;
         bool                        canPrefabOverride       = false;
 
-        //core::IObject *           object                  = nullptr;
-        //core::IProperty *         prop                    = nullptr;
+        core::IObject *             originalObject          = nullptr;
+        const core::IProperty *     originalProp            = nullptr;
         core::IGameObject *         prefab                  = nullptr;
         core::IDynamicProperty *    propOverride            = nullptr;
 
         core::IObject *             optionalObject          = nullptr;
-        core::IProperty *           optionalProp            = nullptr;
+        const core::IProperty *     optionalProp            = nullptr;
         core::IDynamicProperty *    optionalPropOverride    = nullptr;        
     };
 
@@ -96,8 +96,7 @@ namespace vg::editor
 
         static bool                             displayResource     (core::IResource * _resource, const core::IProperty * _prop, core::uint _index, Context & _context);
 
-        static bool                             displayFloat4x4     (core::IObject * _object, const core::IProperty * _prop);
-        static bool                             displayU32          (const core::string & _label, core::u32 * _pU32);
+        static bool                             displayFloat4x4     (core::IObject * _object, const core::IProperty * _prop, Context & _context);
 
         static core::string                     getFileBrowserExt   (const core::IResource * _resource);
         static core::string                     getDefaultFolder    (const core::IResource * _resource);
