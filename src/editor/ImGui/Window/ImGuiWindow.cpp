@@ -287,7 +287,7 @@ namespace vg::editor
         T * pEnum = (T*)(uint_ptr(_object) + offset);
         int enumVal = (int)*pEnum;
 
-        bool changed = false;
+        bool edited = false, changed = false;
         string preview;
 
         bool first = true, found = false;
@@ -324,13 +324,19 @@ namespace vg::editor
                         else
                             enumVal &= ~(1 << e);
                     }
-                    changed = true;
+                    edited = true;
                 }
             }
             ImGui::EndCombo();
 
-            if (changed)
-                *pEnum = enumVal;
+            if (edited)
+            {
+                if (storeProperty<T>((T *)pEnum, enumVal, _object, _prop, _context))
+                {
+                    *pEnum = enumVal;
+                    changed = true;
+                }
+            }
         }
 
         drawPropertyLabel(_prop->getDisplayName(), _context);
