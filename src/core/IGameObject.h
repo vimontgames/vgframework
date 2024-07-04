@@ -39,7 +39,7 @@ namespace vg::core
         virtual IComponent *                    AddComponent                    (const char * _className, const core::string & _name) = 0;
         virtual bool                            RemoveComponent                 (IComponent * _component) = 0;
         virtual const vector<IComponent *> &    GetComponents                   () const = 0;
-        virtual IComponent *                    GetComponentByType              (const char * _className) const = 0;
+        virtual IComponent *                    GetComponentByType              (const char * _className, bool _searchInParent = false) const = 0;
         virtual core::uint                      GetComponentIndex               (const IComponent * _component) const = 0;
 
         virtual UpdateFlags                     GetUpdateFlags                  () const = 0;
@@ -62,13 +62,13 @@ namespace vg::core
         virtual bool                            ToggleOverride                  (const IObject * _object, const IProperty * _prop, bool _override) = 0;
 
         template <class T> T *                  AddComponentByType              (const string & _name);
-        template <class T> T *                  GetComponentByType              () const;
+        template <class T> T *                  GetComponentByType              (bool _searchInParent = false) const;
     };
 
     //--------------------------------------------------------------------------------------
-    template <class T> T * IGameObject::GetComponentByType() const
+    template <class T> T * IGameObject::GetComponentByType(bool _searchInParent) const
     {
-        return static_cast<T *>(GetComponentByType(T::getStaticClassName()));
+        return static_cast<T *>(GetComponentByType(T::getStaticClassName(), _searchInParent));
     }
 
     //--------------------------------------------------------------------------------------

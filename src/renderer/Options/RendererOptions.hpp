@@ -28,6 +28,7 @@ namespace vg::renderer
         {
             registerProperty(RendererOptions, m_wireframe, "Wireframe");
             registerPropertyEx(RendererOptions, m_aabb, "Bounding Box", IProperty::Flags::SameLine);
+            registerPropertyEx(RendererOptions, m_debugUI, "Debug UI", IProperty::Flags::SameLine);
 
             registerPropertyEnum(RendererOptions, gfx::VSync, m_VSync, "VSync");
             registerPropertyEx(RendererOptions, m_backgroundColor, "Background", IProperty::Flags::Color);

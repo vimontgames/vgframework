@@ -74,10 +74,28 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
+    bool ClassDesc::pushProperty(const Property & _prop)
+    {
+        for (auto & prop : properties)
+        {
+            const bool isAlreadyUsed = _prop.getName()[0] != '\0' && !strcmp(_prop.getName(), prop.getName());
+
+            if (isAlreadyUsed)
+            {
+                VG_ASSERT(!isAlreadyUsed, "[Factory] Property \"%s\" from \"%s\" is already declared in \"%s\"", _prop.getName(), _prop.GetClassName(), prop.GetClassName());
+                return false;
+            }
+        }
+
+        properties.push_back(_prop);
+        return true;
+    }
+
+    //--------------------------------------------------------------------------------------
     void ClassDesc::RegisterPropertyLayout(const char * _className, IProperty::LayoutElementType _layoutElementType, const char * _label, bool * _offset, IProperty::Flags _flags)
     {
         Property prop = Property(_className, _label, IProperty::Type::LayoutElement, (uint_ptr)_offset, (uint)_layoutElementType, _label, _flags);
-        properties.push_back(prop);
+        pushProperty(prop);
     }
 
     //--------------------------------------------------------------------------------------
@@ -221,19 +239,19 @@ namespace vg::core
     //--------------------------------------------------------------------------------------
     void ClassDesc::RegisterProperty(const char * _className, const char * _propertyName, IProperty::Callback _funcPtr, const char * _displayName, IProperty::Flags _flags)
     {
-        properties.emplace_back(_className, _propertyName, IProperty::Type::Callback, (uint_ptr)_funcPtr, (u32)sizeof(void*), _displayName, _flags);
+        pushProperty({ _className, _propertyName, IProperty::Type::Callback, (uint_ptr)_funcPtr, (u32)sizeof(void *), _displayName, _flags });
     }
 
     //--------------------------------------------------------------------------------------
     void ClassDesc::RegisterProperty(const char * _className, const char * _propertyName, core::u32 _sizeOf, void * _offset, const char * _displayName, IProperty::Flags _flags)
     {
-        properties.emplace_back(_className, _propertyName, asBool(_flags & IProperty::Flags::Resource) ? IProperty::Type::ResourceVector : IProperty::Type::ObjectVector, (uint_ptr)_offset, _sizeOf, _displayName, _flags);
+        pushProperty({ _className, _propertyName, asBool(_flags & IProperty::Flags::Resource) ? IProperty::Type::ResourceVector : IProperty::Type::ObjectVector, (uint_ptr)_offset, _sizeOf, _displayName, _flags });
     }
 
     //--------------------------------------------------------------------------------------
     void ClassDesc::RegisterProperty(const char * _className, const char * _propertyName, vector<IObject*>* _offset, const char * _elemType, const char * _displayName, IProperty::Flags _flags)
     {
-        properties.emplace_back(_className, _propertyName, asBool(_flags & IProperty::Flags::Resource) ? IProperty::Type::ResourcePtrVector : IProperty::Type::ObjectPtrVector, (uint_ptr)_offset, (u32)sizeof(vector<IObject *>), _displayName, _flags);
+        pushProperty({ _className, _propertyName, asBool(_flags & IProperty::Flags::Resource) ? IProperty::Type::ResourcePtrVector : IProperty::Type::ObjectPtrVector, (uint_ptr)_offset, (u32)sizeof(vector<IObject *>), _displayName, _flags });
         auto & prop = properties.back();
         prop.setInterface(_elemType);
     }
@@ -248,28 +266,28 @@ namespace vg::core
     void ClassDesc::RegisterEnum(const char * _className, const char * _propertyName, core::u8 * _offset, const char * _displayName, uint _enumCount, const char * _enumNames, const u8 * _enumValues, IProperty::Flags _flags)
     {
         const bool bitfield = asBool(IProperty::Flags::Bitfield & _flags);
-        properties.emplace_back(_className, _propertyName, bitfield ? IProperty::Type::EnumFlagsU8 : IProperty::Type::EnumU8, (uint_ptr)_offset, (u32)sizeof(u8), _displayName, _flags, _enumCount, _enumNames, _enumValues);
+        pushProperty({ _className, _propertyName, bitfield ? IProperty::Type::EnumFlagsU8 : IProperty::Type::EnumU8, (uint_ptr)_offset, (u32)sizeof(u8), _displayName, _flags, _enumCount, _enumNames, _enumValues });
     }
 
     //--------------------------------------------------------------------------------------
     void ClassDesc::RegisterEnum(const char * _className, const char * _propertyName, core::u16 * _offset, const char * _displayName, uint _enumCount, const char * _enumNames, const u16 * _enumValues, IProperty::Flags _flags)
     {
         const bool bitfield = asBool(IProperty::Flags::Bitfield & _flags);
-        properties.emplace_back(_className, _propertyName, bitfield ? IProperty::Type::EnumFlagsU16 : IProperty::Type::EnumU16, (uint_ptr)_offset, (u32)sizeof(u16), _displayName, _flags, _enumCount, _enumNames, _enumValues);
+        pushProperty({ _className, _propertyName, bitfield ? IProperty::Type::EnumFlagsU16 : IProperty::Type::EnumU16, (uint_ptr)_offset, (u32)sizeof(u16), _displayName, _flags, _enumCount, _enumNames, _enumValues });
     }
 
     //--------------------------------------------------------------------------------------
     void ClassDesc::RegisterEnum(const char * _className, const char * _propertyName, core::u32 * _offset, const char * _displayName, uint _enumCount, const char * _enumNames, const u32 * _enumValues, IProperty::Flags _flags)
     {
         const bool bitfield = asBool(IProperty::Flags::Bitfield & _flags);
-        properties.emplace_back(_className, _propertyName, bitfield ? IProperty::Type::EnumFlagsU32 : IProperty::Type::EnumU32, (uint_ptr)_offset, (u32)sizeof(u32), _displayName, _flags, _enumCount, _enumNames, _enumValues);
+        pushProperty({ _className, _propertyName, bitfield ? IProperty::Type::EnumFlagsU32 : IProperty::Type::EnumU32, (uint_ptr)_offset, (u32)sizeof(u32), _displayName, _flags, _enumCount, _enumNames, _enumValues });
     }
 
     //--------------------------------------------------------------------------------------
     void ClassDesc::RegisterEnum(const char * _className, const char * _propertyName, core::u64 * _offset, const char * _displayName, uint _enumCount, const char * _enumNames, const u64 * _enumValues, IProperty::Flags _flags)
     {
         const bool bitfield = asBool(IProperty::Flags::Bitfield & _flags);
-        properties.emplace_back(_className, _propertyName, bitfield ? IProperty::Type::EnumFlagsU64 : IProperty::Type::EnumU64, (uint_ptr)_offset, (u32)sizeof(u64), _displayName, _flags, _enumCount, _enumNames, _enumValues);
+        pushProperty({ _className, _propertyName, bitfield ? IProperty::Type::EnumFlagsU64 : IProperty::Type::EnumU64, (uint_ptr)_offset, (u32)sizeof(u64), _displayName, _flags, _enumCount, _enumNames, _enumValues });
     }
 
     //--------------------------------------------------------------------------------------
@@ -411,7 +429,7 @@ namespace vg::core
         const u32 offset = (u32)(_offset);
 #pragma warning( pop )
 
-        properties.emplace_back(_className, _propertyName, TypeToEnum<T>::value, offset, (u32)sizeof(T), _displayName, _flags);
+        pushProperty({ _className, _propertyName, TypeToEnum<T>::value, offset, (u32)sizeof(T), _displayName, _flags });
     }
 
     //--------------------------------------------------------------------------------------
@@ -425,7 +443,7 @@ namespace vg::core
         //else
         //    VG_ASSERT(type == IProperty::Type::Object);
 
-        properties.emplace_back(_className, _propertyName, type, (uint_ptr)_offset, _elementSize, _displayName, IProperty::Flags::EnumArray | _flags, _enumCount, _enumNames, _enumValues, _enumSizeOf);
+        pushProperty({ _className, _propertyName, type, (uint_ptr)_offset, _elementSize, _displayName, IProperty::Flags::EnumArray | _flags, _enumCount, _enumNames, _enumValues, _enumSizeOf });
     }
 
     //--------------------------------------------------------------------------------------

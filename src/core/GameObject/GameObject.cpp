@@ -429,7 +429,7 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
-    IComponent * GameObject::GetComponentByType(const char * _className) const
+    IComponent * GameObject::GetComponentByType(const char * _className, bool _searchInParent) const
     {
         const auto & components = getComponents();
         for (uint i = 0; i < components.size(); ++i)
@@ -458,6 +458,13 @@ namespace vg::core
                 }
             }
         }
+
+        if (_searchInParent)
+        {
+            if (auto * parent = dynamic_cast<IGameObject *>(getParent()))
+                return parent->GetComponentByType(_className, _searchInParent);
+        }
+
         return nullptr;
     }
 

@@ -1,6 +1,7 @@
 #include "ViewGUI.h"
 #include "renderer/RenderPass/ImGui/ImGui.h"
 #include "renderer/IImGuiAdapter.h"
+#include "Shaders/system/packing.hlsli"
 
 namespace vg::renderer
 {
@@ -18,15 +19,21 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    void ViewGUI::AddText(renderer::PickingID _pickingID, const core::float4x4 & _matrix, core::float4 _color, HorizontalAligment _alignX, VerticalAligment _alignY, const core::string & _text)
+    void ViewGUI::AddCanvas(const gfx::UICanvas * _canvas, const UIItem & _desc)
     {
-        m_uiElements.push_back(UIElement(_pickingID, _matrix, _color, _alignX, _alignY, _text));
+        m_uiElements.push_back(UIElement(_canvas, _desc));
     }
 
     //--------------------------------------------------------------------------------------
-    void ViewGUI::AddImage(renderer::PickingID _pickingID, const core::float4x4 & _matrix, core::float4 _color, HorizontalAligment _alignX, VerticalAligment _alignY, const gfx::ITexture * _texture)
+    void ViewGUI::AddText(const gfx::UICanvas * _canvas, const UIItem & _desc, const core::string & _text)
     {
-        m_uiElements.push_back(UIElement(_pickingID, _matrix, _color, _alignX, _alignY, _texture));
+        m_uiElements.push_back(UIElement(_canvas, _desc, _text));
+    }
+
+    //--------------------------------------------------------------------------------------
+    void ViewGUI::AddImage(const gfx::UICanvas * _canvas, const UIItem & _desc, const gfx::ITexture * _texture)
+    {
+        m_uiElements.push_back(UIElement(_canvas, _desc, _texture));
     }
 
     //--------------------------------------------------------------------------------------
@@ -59,120 +66,341 @@ namespace vg::renderer
     {
         sort(m_uiElements.begin(), m_uiElements.end(), [](UIElement & a, UIElement & b)
         {
-            return a.m_matrix[3].z > b.m_matrix[3].z;
+            return a.m_item.m_matrix[3].z > b.m_item.m_matrix[3].z;
         }
         );
 
         auto * imGuiAdapter = Renderer::get()->GetImGuiAdapter();
-
+        const RendererOptions * options = RendererOptions::get();
+        const bool debugUI = options->isDebugUIEnabled();
         float2 windowOffset = ImVec2ToFloat2(ImGui::GetCursorPos());
 
         ImGui::PushStyleColor(ImGuiCol_ChildBg, ImVec4(0, 0, 0, 0));
         //ImGui::BeginChild("ViewGUIFrame");
         {
-            float2 pos = ImVec2ToFloat2(GImGui->CurrentWindow->Pos) + windowOffset;
-            float2 size = ImVec2ToFloat2(ImGui::GetWindowContentRegionMax() - ImGui::GetWindowContentRegionMin());
-            //ImGui::GetForegroundDrawList()->AddRect(float2ToImVec2(pos), float2ToImVec2(pos+size), 0xFF0000FF);
-
             for (uint i = 0; i < m_uiElements.size(); ++i)
             {
                 const auto elem = m_uiElements[i];
 
-                float3 pos = (float3)0.0f;
+                float2 screenSizeInPixels = ImVec2ToFloat2(ImGui::GetWindowContentRegionMax() - ImGui::GetWindowContentRegionMin());
 
-                switch (elem.m_alignX)
+                UICanvas canvas;
+                if (elem.m_canvas)
                 {
-                    default:
-                        VG_ASSERT_ENUM_NOT_IMPLEMENTED(elem.m_alignX);
-                        break;
-
-                    case HorizontalAligment::Left:
-                        pos.x = 0;
-                        break;
-
-                    case HorizontalAligment::Center:
-                        pos.x = size.x * 0.5f;
-                        break;
-
-                    case HorizontalAligment::Right:
-                        pos.x = size.x;
-                        break;
+                    canvas = *elem.m_canvas;
+                }
+                else
+                {
+                    // Default canvas
+                    canvas.m_size = screenSizeInPixels;
+                    canvas.m_alignX = HorizontalAligment::Center;
+                    canvas.m_alignY = VerticalAligment::Center;
                 }
 
-                switch (elem.m_alignY)
+                // Compute Canvas Rect
+                float2 canvasSizeInPixel = (float2)canvas.m_size;
+                if (asBool(canvas.m_flags & UIItemFlags::AutoResize))
+                {
+                    canvasSizeInPixel = (float2)canvas.m_size * screenSizeInPixels / (float2)canvas.m_resolution;
+                }                
+
+                float2 winOffset = ImVec2ToFloat2(GImGui->CurrentWindow->Pos) + windowOffset;
+                float2 offset = canvas.m_matrix[3].xy + float2(1, 1);
+
+                // Align canvas
+                switch (canvas.m_alignX)
                 {
                     default:
-                        VG_ASSERT_ENUM_NOT_IMPLEMENTED(elem.m_alignY);
+                        VG_ASSERT_ENUM_NOT_IMPLEMENTED(canvas.m_alignX);
+                        break;
+                
+                    case HorizontalAligment::Left:
+                        offset.x += 0;
+                        break;
+                
+                    case HorizontalAligment::Center:
+                        offset.x += screenSizeInPixels.x * 0.5f - canvasSizeInPixel.x * 0.5f;
+                        break;
+                
+                    case HorizontalAligment::Right:
+                        offset.x += screenSizeInPixels.x * (1.0f - (float)canvas.m_size.x * 0.01f);
+                        break;
+                }
+                
+                switch (canvas.m_alignY)
+                {
+                    default:
+                        VG_ASSERT_ENUM_NOT_IMPLEMENTED(canvas.m_alignX);
                         break;
 
                     case VerticalAligment::Top:
-                        pos.y = 0.0f;
+                        offset.y += 0;
                         break;
 
                     case VerticalAligment::Center:
-                        pos.y = size.y * 0.5f;
+                        offset.y += screenSizeInPixels.y * 0.5f - canvasSizeInPixel.y * 0.5f;
                         break;
 
                     case VerticalAligment::Bottom:
-                        pos.y = size.y;
+                        offset.y += screenSizeInPixels.y * (1.0f - (float)canvas.m_size.y * 0.01f);
                         break;
                 }
 
-                pos += elem.m_matrix[3].xyz;
+                float2 canvasRect[2] =
+                {
+                    offset,
+                    offset + canvasSizeInPixel
+                };
+
+                if (debugUI)
+                    ImGui::GetForegroundDrawList()->AddRect(float2ToImVec2(winOffset+canvasRect[0]), float2ToImVec2(winOffset+canvasRect[1]), packRGBA8(canvas.m_color));
+
+                float2 elemSize = float2(0,0);
+                float2 elemPos = offset + elem.m_item.m_matrix[3].xy;
 
                 switch (elem.m_type)
                 {
-                    default:VG_ASSERT_ENUM_NOT_IMPLEMENTED(elem.m_type);
+                    case UIElementType::Image:
+                        if (elem.m_texture)
+                            elemSize = float2(elem.m_texture->GetWidth(), elem.m_texture->GetHeight()) * float2(elem.m_item.m_matrix[0].x, elem.m_item.m_matrix[1].y);
                         break;
 
                     case UIElementType::Text:
-                    {
-                        const auto textSize = ImVec2ToFloat2(ImGui::CalcTextSize(elem.m_text.c_str()));
-                        pos.xy -= textSize / 2.0f;
-                        //pos.y = size.y - pos.y - 1;
+                        elemSize = ImVec2ToFloat2(ImGui::CalcTextSize(elem.m_text.c_str()));
+                        break;
+                }
 
-                        ImGui::SetCursorPos(float2ToImVec2(pos.xy + windowOffset));
-                        ImGui::TextColored(float4ToImVec4(elem.m_color.rgba), elem.m_text.c_str());
+                switch (elem.m_item.m_alignX)
+                {
+                    default:
+                        VG_ASSERT_ENUM_NOT_IMPLEMENTED(elem.m_item.m_alignX);
+                        break;
 
-                        if (ImGui::IsItemHovered())
-                        {
-                            PickingHit hit;
-                            hit.m_id = elem.m_pickingID;
-                            hit.m_pos = float4(pos, 1);
-                            m_view->AddPickingHit(hit);
-                        }
-                    }
-                    break;
+                    case HorizontalAligment::Left:
+                        elemPos.x += 0;
+                        break;
 
+                    case HorizontalAligment::Center:
+                        elemPos.x += canvasSizeInPixel.x * 0.5f - elemSize.x * 0.5f;
+                        break;
+
+                    case HorizontalAligment::Right:
+                        elemPos.x += canvasSizeInPixel.x - elemSize.x;
+                        break;
+                }
+
+                switch (elem.m_item.m_alignY)
+                {
+                    default:
+                        VG_ASSERT_ENUM_NOT_IMPLEMENTED(elem.m_item.m_alignY);
+                        break;
+
+                    case VerticalAligment::Top:
+                        elemPos.y += 0;
+                        break;
+
+                    case VerticalAligment::Center:
+                        elemPos.y += canvasSizeInPixel.y * 0.5f - elemSize.y * 0.5f;
+                        break;
+
+                    case VerticalAligment::Bottom:
+                        elemPos.y += canvasSizeInPixel.y - elemSize.y;
+                        break;
+                }
+
+                float2 elemRect[2] =
+                {
+                    elemPos,
+                    elemPos + elemSize
+                };
+
+                switch (elem.m_type)
+                {
                     case UIElementType::Image:
                     {
                         if (elem.m_texture)
                         {
-                            float2 texSize = float2(elem.m_texture->GetWidth(), elem.m_texture->GetHeight());
-                            texSize.x *= elem.m_matrix[0].x;
-                            texSize.y *= elem.m_matrix[1].y;
-                            pos.xy -= texSize / 2.0f;
-                            //pos.y = size.y - pos.y - 1;
-
-                            ImGui::SetCursorPos(float2ToImVec2(pos.xy + windowOffset));
+                            ImGui::SetCursorPos(float2ToImVec2(elemPos.xy - elemSize * 0.5f + windowOffset));
                             ImTextureID texID = imGuiAdapter->GetTextureID(elem.m_texture);
 
-                            ImGui::Image(texID, float2ToImVec2(texSize), ImVec2(0, 0), ImVec2(1, 1), float4ToImVec4(elem.m_color));
+                            ImGui::Image(texID, float2ToImVec2(elemSize), ImVec2(0, 0), ImVec2(1, 1), float4ToImVec4(elem.m_item.m_color));
 
                             if (ImGui::IsItemHovered())
                             {
                                 PickingHit hit;
-                                hit.m_id = elem.m_pickingID;
-                                hit.m_pos = float4(pos, 1);
+                                hit.m_id = elem.m_item.m_pickingID;
+                                hit.m_pos = float4(elemPos.xy, 0, 1);
                                 m_view->AddPickingHit(hit);
                             }
 
                             imGuiAdapter->ReleaseTextureID(elem.m_texture);
                         }
+                        break;
                     }
-                    break;
+
+                    case UIElementType::Text:
+                    {
+                        ImGui::SetCursorPos(float2ToImVec2(elemPos.xy + windowOffset - elemSize.xy * 0.5f));
+                        ImGui::TextColored(float4ToImVec4(elem.m_item.m_color), elem.m_text.c_str());
+                        
+                        if (ImGui::IsItemHovered())
+                        {
+                            PickingHit hit;
+                            hit.m_id = elem.m_item.m_pickingID;
+                            hit.m_pos = float4(elemPos.xy, 0, 1);
+                            m_view->AddPickingHit(hit);
+                        }
+                    }
+                }
+
+                if (debugUI)
+                {
+                    switch (elem.m_type)
+                    {
+                    case UIElementType::Image:
+                    case UIElementType::Text:
+                        ImGui::GetForegroundDrawList()->AddRect(float2ToImVec2(winOffset + elemRect[0] - elemSize * 0.5f), float2ToImVec2(winOffset + elemRect[1] - elemSize * 0.5f), packRGBA8(elem.m_item.m_color*0.5f));
+                        break;
+                    }
                 }
             }
+
+            //float2 center = ImVec2ToFloat2(GImGui->CurrentWindow->Pos) + windowOffset;
+            //float2 canvasSizeInPixels = ImVec2ToFloat2(ImGui::GetWindowContentRegionMax() - ImGui::GetWindowContentRegionMin());
+            //ImGui::GetForegroundDrawList()->AddRect(float2ToImVec2(pos), float2ToImVec2(pos+size), 0xFF0000FF);
+
+            //for (uint i = 0; i < m_uiElements.size(); ++i)
+            //{
+            //    const auto elem = m_uiElements[i];
+            //
+            //    float2 elemSize = float2(0, 0);
+            //    float2 offset = windowOffset;
+            //
+            //    switch (elem.m_type)
+            //    {
+            //        default:
+            //            canvasSizeInPixels = elem.m_canvas.m_size;
+            //            break;
+            //
+            //        case UIElementType::Canvas:
+            //            elemSize = canvasSizeInPixels * elem.m_canvas.m_size * 0.01f;
+            //            offset += ImVec2ToFloat2(ImGui::GetCurrentWindow()->Pos);
+            //            break;
+            //
+            //        case UIElementType::Image:
+            //            canvasSizeInPixels = elem.m_canvas.m_size;
+            //            elemSize = float2(elem.m_texture->GetWidth(), elem.m_texture->GetHeight());
+            //            break;
+            //
+            //        case UIElementType::Text:
+            //            canvasSizeInPixels = elem.m_canvas.m_size;
+            //            elemSize = ImVec2ToFloat2(ImGui::CalcTextSize(elem.m_text.c_str()));
+            //            break;
+            //    }
+            //
+            //    
+            //    float2 topLeft = offset - elemSize * 0.5f + float2(1, 1);
+            //    float2 bottomRight = offset + elemSize * 0.5f + float2(1, 1);
+            //
+            //    float3 pos = (float3)0.0f;
+            //
+            //    switch (elem.m_alignX)
+            //    {
+            //        default:
+            //            VG_ASSERT_ENUM_NOT_IMPLEMENTED(elem.m_alignX);
+            //            break;
+            //
+            //        case HorizontalAligment::Left:
+            //            pos.x = 0 + elemSize.x * 0.5f;
+            //            break;
+            //
+            //        case HorizontalAligment::Center:
+            //            pos.x = canvasSizeInPixels.x * 0.5f;
+            //            break;
+            //
+            //        case HorizontalAligment::Right:
+            //            pos.x = canvasSizeInPixels.x - elemSize.x * 0.5f;
+            //            break;
+            //    }
+            //
+            //    switch (elem.m_alignY)
+            //    {
+            //        default:
+            //            VG_ASSERT_ENUM_NOT_IMPLEMENTED(elem.m_alignY);
+            //            break;
+            //
+            //        case VerticalAligment::Top:
+            //            pos.y = 0.0f + elemSize.y * 0.5f;
+            //            break;
+            //
+            //        case VerticalAligment::Center:
+            //            pos.y = canvasSizeInPixels.y * 0.5f;
+            //            break;
+            //
+            //        case VerticalAligment::Bottom:
+            //            pos.y = canvasSizeInPixels.y - elemSize.y * 0.5f;
+            //            break;
+            //    }
+            //
+            //    pos += elem.m_matrix[3].xyz;
+            //
+            //    switch (elem.m_type)
+            //    {
+            //        default:VG_ASSERT_ENUM_NOT_IMPLEMENTED(elem.m_type);
+            //            break;
+            //
+            //        case UIElementType::Canvas:
+            //        {
+            //            //ImGui::SetCursorPos(float2ToImVec2(pos.xy + windowOffset));
+            //            ImGui::GetForegroundDrawList()->AddRect(float2ToImVec2(topLeft + pos.xy), float2ToImVec2(bottomRight + pos.xy), 0xFF00FFFF);
+            //        }
+            //        break;
+            //
+            //        case UIElementType::Text:
+            //        {
+            //            pos.xy -= elemSize / 2.0f;
+            //
+            //            ImGui::SetCursorPos(float2ToImVec2(pos.xy + windowOffset));
+            //            ImGui::TextColored(float4ToImVec4(elem.m_color.rgba), elem.m_text.c_str());
+            //
+            //            if (ImGui::IsItemHovered())
+            //            {
+            //                PickingHit hit;
+            //                hit.m_id = elem.m_pickingID;
+            //                hit.m_pos = float4(pos, 1);
+            //                m_view->AddPickingHit(hit);
+            //            }
+            //        }
+            //        break;
+            //
+            //        case UIElementType::Image:
+            //        {
+            //            if (elem.m_texture)
+            //            {
+            //                //texSize.x *= elem.m_matrix[0].x;
+            //                //texSize.y *= elem.m_matrix[1].y;
+            //                pos.xy -= elemSize / 2.0f;
+            //                //pos.y = size.y - pos.y - 1;
+            //
+            //                ImGui::SetCursorPos(float2ToImVec2(pos.xy + windowOffset));
+            //                ImTextureID texID = imGuiAdapter->GetTextureID(elem.m_texture);
+            //
+            //                ImGui::Image(texID, float2ToImVec2(elemSize), ImVec2(0, 0), ImVec2(1, 1), float4ToImVec4(elem.m_color));
+            //
+            //                if (ImGui::IsItemHovered())
+            //                {
+            //                    PickingHit hit;
+            //                    hit.m_id = elem.m_pickingID;
+            //                    hit.m_pos = float4(pos, 1);
+            //                    m_view->AddPickingHit(hit);
+            //                }
+            //
+            //                imGuiAdapter->ReleaseTextureID(elem.m_texture);
+            //            }
+            //        }
+            //        break;
+            //    }
+            //}
         }
         //ImGui::EndChild();
         ImGui::PopStyleColor();

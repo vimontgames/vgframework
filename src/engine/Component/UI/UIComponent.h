@@ -6,8 +6,10 @@ namespace vg::gfx
 {
     enum class HorizontalAligment : core::u8;
     enum class VerticalAligment : core::u8;
+    enum class UIItemFlags : core::u32;
 
     class IViewGUI;
+    struct UICanvas;
 }
 
 namespace vg::renderer
@@ -25,21 +27,28 @@ namespace vg::engine
         UIComponent(const core::string & _name, core::IObject * _parent);
         ~UIComponent();
 
-        VG_INLINE core::float4x4 getMatrix() const; 
-        VG_INLINE core::float4 getColor() const;
+        VG_INLINE core::float3      getOffset   () const;
+        VG_INLINE core::float4x4    getMatrix   () const; 
+        VG_INLINE core::float4      getColor    () const;
 
-        gfx::IViewGUI * getView() const;
+        gfx::IViewGUI *             getViewGUI  () const;
+        const gfx::UICanvas *       getCanvas   () const;
 
     protected:
-        renderer::PickingID     m_pickingID;
-        gfx::HorizontalAligment m_horizontal;
-        gfx::VerticalAligment   m_vertical;
+        renderer::PickingID         m_pickingID;
 
-        bool                    m_useOffset;
-        core::float3            m_offset;
+        gfx::UIItemFlags            m_UIFlags = (gfx::UIItemFlags)0x0;
 
-        bool                    m_useColor;
-        core::float4            m_color;
+        gfx::HorizontalAligment     m_horizontal;
+        gfx::VerticalAligment       m_vertical;
+
+        core::uint2                 m_size = core::uint2(128, 128);
+
+        bool                        m_useOffset;
+        core::float3                m_offset;
+
+        bool                        m_useColor;
+        core::float4                m_color;
     };
 }
 

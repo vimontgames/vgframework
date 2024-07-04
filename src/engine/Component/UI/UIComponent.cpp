@@ -7,6 +7,7 @@
 #include "UIComponent.inl"
 #endif
 
+#include "UICanvasComponent.hpp"
 #include "UITextComponent.hpp"
 #include "UIImageComponent.hpp"
 
@@ -18,11 +19,18 @@ namespace vg::engine
     bool UIComponent::registerProperties(IClassDesc & _desc)
     {
         super::registerProperties(_desc);
-
-        registerOptionalPropertyEx(UIComponent, m_useColor, m_color, "Color", IProperty::Flags::Color);
+        
         registerPropertyEnum(UIComponent, gfx::HorizontalAligment, m_horizontal, "Horizontal");
         registerPropertyEnum(UIComponent, gfx::VerticalAligment, m_vertical, "Vertical");
+
+        registerPropertyEnumBitfield(UIComponent, gfx::UIItemFlags, m_UIFlags, "UI Flags");
+
+        registerProperty(UIComponent, m_size, "Size");
+        setPropertyRange(UIComponent, m_size, float2(0, 3840));      
+
         registerOptionalProperty(UIComponent, m_useOffset, m_offset, "Offset");
+
+        registerOptionalPropertyEx(UIComponent, m_useColor, m_color, "Color", IProperty::Flags::Color);
 
         return true;
     }
@@ -50,7 +58,7 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
-    gfx::IViewGUI * UIComponent::getView() const
+    gfx::IViewGUI * UIComponent::getViewGUI() const
     {
         if (IWorld * world = GetGameObject()->GetWorld())
         {
@@ -61,6 +69,14 @@ namespace vg::engine
                 return view->GetViewGUI();
         }
 
+        return nullptr;
+    }
+
+    //--------------------------------------------------------------------------------------
+    const gfx::UICanvas * UIComponent::getCanvas() const
+    {
+        if (auto * canvas = GetGameObject()->GetComponentByType<UICanvasComponent>(true))
+            return &canvas->getGfxCanvas();
         return nullptr;
     }
 }

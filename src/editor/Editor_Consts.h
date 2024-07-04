@@ -49,6 +49,7 @@ namespace vg::editor
             inline static const char * Animation            = ICON_FA_PERSON_RUNNING;
             inline static const char * Apply                = ICON_FA_BOLT;
             inline static const char * Camera               = ICON_FA_VIDEO;
+            inline static const char * Canvas               = ICON_FA_CROP_SIMPLE;
             inline static const char * CharacterController  = ICON_FA_CAPSULES;
             inline static const char * Checked              = ICON_FA_SQUARE_CHECK;
             inline static const char * Console              = ICON_FA_TABLE_LIST;

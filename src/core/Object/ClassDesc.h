@@ -85,6 +85,8 @@ namespace vg::core
         u32                                 GetSizeOf                   () const final override;
         u32                                 GetNextIndex                () const final override;
 
+        bool                                pushProperty                (const Property & _prop);
+
         const char *                        name                        = nullptr;
         const char *                        parentClassName             = nullptr;
         const char *                        displayName                 = nullptr;

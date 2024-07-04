@@ -362,7 +362,9 @@ namespace vg::renderer
 
         VG_PROFILE_CPU("Renderer");
 
-        const RendererOptions * options = RendererOptions::get();
+        const RendererOptions * options = RendererOptions::get(false);
+        if (!options)
+            return;
 
 		m_device.beginFrame();
 		{

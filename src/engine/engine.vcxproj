@@ -32,6 +32,8 @@
     <ClCompile Include="Selection\Selection.cpp" />
     <ClInclude Include="Component\Debug\TestComponent.h" />
     <ClInclude Include="Component\Editor\Snap\SnapComponent.h" />
+    <ClInclude Include="Component\UI\UICanvasComponent.h" />
+    <ClInclude Include="Component\UI\UICanvasComponent.hpp" />
     <ClInclude Include="Component\UI\UIComponent.h" />
     <ClInclude Include="Component\UI\UIImageComponent.h" />
     <ClInclude Include="Component\UI\UIImageComponent.hpp" />

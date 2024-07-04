@@ -59,7 +59,7 @@ namespace vg::engine
     //--------------------------------------------------------------------------------------
     void UIImageComponent::Update(float _dt)
     {
-        if (auto * gui = getView())
-            gui->AddImage(m_pickingID, getMatrix(), getColor(), m_horizontal, m_vertical, m_texture);
+        if (auto * gui = getViewGUI())
+            gui->AddImage(getCanvas(), gfx::UIItem(m_pickingID, getMatrix(), m_size, m_horizontal, m_vertical, getColor(), m_UIFlags), m_texture);
     }
 }

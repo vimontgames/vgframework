@@ -193,11 +193,12 @@ namespace vg::engine
     {
         core::IFactory * factory = Kernel::getFactory();
 
-        // Register classes to auto-register the "Engine" module
-        AutoRegisterClassInfo::registerClasses(*factory);
-
+        // Register engine *BEFORE* registering classes so as to be able to display asserts related to properties
         if (core::IClassDesc * desc = factory->registerPlugin(Engine, "Engine"))
             registerProperties(*desc);
+
+        // Register classes to auto-register the "Engine" module
+        AutoRegisterClassInfo::registerClasses(*factory);
 
         return true;
     }

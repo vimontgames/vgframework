@@ -8,7 +8,8 @@ namespace vg::renderer
 
     enum class UIElementType : core::u8
     {
-        Text = 0,
+        Canvas = 0,
+        Text,
         Image
     };
 
@@ -18,8 +19,9 @@ namespace vg::renderer
         ViewGUI(gfx::IView * _view);
         ~ViewGUI();
 
-        void    AddText             (renderer::PickingID _pickingID, const core::float4x4 & _matrix, core::float4 _color, gfx::HorizontalAligment _alignX, gfx::VerticalAligment _alignY, const core::string & _text) final override;
-        void    AddImage            (renderer::PickingID _pickingID, const core::float4x4 & _matrix, core::float4 _color, gfx::HorizontalAligment _alignX, gfx::VerticalAligment _alignY, const gfx::ITexture * _texture) final override;
+        void    AddCanvas           (const gfx::UICanvas * _canvas, const gfx::UIItem & _desc) final override;
+        void    AddText             (const gfx::UICanvas * _canvas, const gfx::UIItem & _desc, const core::string & _text) final override;
+        void    AddImage            (const gfx::UICanvas * _canvas, const gfx::UIItem & _desc, const gfx::ITexture * _texture) final override;
 
         void    RenderFullscreen    () final override;
         void    RenderWindowed      () final override;
@@ -30,37 +32,47 @@ namespace vg::renderer
     private:
         struct UIElement
         {
-            UIElement(PickingID _pickingID, const core::float4x4 & _matrix, core::float4 _color, gfx::HorizontalAligment _alignX, gfx::VerticalAligment _alignY, const core::string & _text) :
-                m_pickingID(_pickingID),
+            UIElement(const gfx::UICanvas * _canvas, const gfx::UIItem & _elemDesc) :
+                m_type(UIElementType::Canvas),
+                m_canvas(_canvas),
+                m_item(_elemDesc)
+            {
+
+            }
+
+            UIElement(const gfx::UICanvas * _canvas, const gfx::UIItem & _elemDesc, const core::string & _text) :
                 m_type(UIElementType::Text),
-                m_matrix(_matrix),
-                m_color(_color),
-                m_alignX(_alignX),
-                m_alignY(_alignY),
+                m_canvas(_canvas),
+                m_item(_elemDesc),
                 m_text(_text)
             {
 
             }
 
-            UIElement(PickingID _pickingID, const core::float4x4 & _matrix, core::float4 _color, gfx::HorizontalAligment _alignX, gfx::VerticalAligment _alignY, const gfx::ITexture * _texture) :
-                m_pickingID(_pickingID),
+            UIElement(const gfx::UICanvas * _canvas, const gfx::UIItem & _elemDesc, const gfx::ITexture * _texture) :
                 m_type(UIElementType::Image),
-                m_matrix(_matrix),
-                m_color(_color),
-                m_alignX(_alignX),
-                m_alignY(_alignY),
-                m_texture(_texture)
+                m_canvas(_canvas),
+                m_item(_elemDesc),
+                m_texture((gfx::ITexture *)_texture)
             {
 
             }
-            PickingID               m_pickingID = (PickingID)0;
+
+            const UIElement & operator =(const UIElement & _other)
+            {
+                m_canvas = _other.m_canvas; 
+                m_item = _other.m_item;
+                m_type = _other.m_type;
+                m_text = _other.m_text;
+                m_texture = _other.m_texture;
+                return *this;
+            }
+
+            const gfx::UICanvas *         m_canvas = nullptr;
             UIElementType           m_type = (UIElementType)-1;
-            core::float4x4          m_matrix;
-            core::float4            m_color;
-            gfx::HorizontalAligment m_alignX = gfx::HorizontalAligment::Center;
-            gfx::VerticalAligment   m_alignY = gfx::VerticalAligment::Center;
+            gfx::UIItem             m_item;            
             core::string            m_text;
-            const gfx::ITexture *   m_texture = nullptr;
+            gfx::ITexture *         m_texture = nullptr;
         };
 
         gfx::IView * m_view = nullptr;

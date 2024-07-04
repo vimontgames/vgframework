@@ -130,6 +130,7 @@ namespace vg::editor
     template <> struct TypeToDynamicPropertyTypeEnum<float2> { using type = core::DynamicPropertyFloat2; };
     template <> struct TypeToDynamicPropertyTypeEnum<float3> { using type = core::DynamicPropertyFloat3; };
     template <> struct TypeToDynamicPropertyTypeEnum<float4> { using type = core::DynamicPropertyFloat4; };
+    template <> struct TypeToDynamicPropertyTypeEnum<float4x4> { using type = core::DynamicPropertyFloat4x4; };
 
     template <> struct TypeToDynamicPropertyTypeEnum<core::u8> { using type = core::DynamicPropertyU8; };
     template <> struct TypeToDynamicPropertyTypeEnum<core::u16> { using type = core::DynamicPropertyU16; };
@@ -157,6 +158,11 @@ namespace vg::editor
     }
 
     template <> bool equals(core::float4 a, core::float4 b)
+    {
+        return all(a == b);
+    }
+
+    template <> bool equals(core::float4x4 a, core::float4x4 b)
     {
         return all(a == b);
     }
@@ -511,9 +517,6 @@ namespace vg::editor
         const auto availableWidth = GetContentRegionAvail().x;
         ImGui::PushItemWidth(availableWidth - style::label::PixelWidth);
 
-        auto * _originalObject = _object;
-        auto * _originalProp = _prop;
-
         // TODO: Custom property edit
         //if (ImGuiPropertyHandler::display(_prop, _object))
         //    return; 
@@ -521,6 +524,8 @@ namespace vg::editor
         IGameObject * gameobject = findParentGameObject(_object);
 
         Context context;
+        context.originalObject = _object;
+        context.originalProp = _prop;
         context.isPrefabInstance = false;   // Property is from an instanced Prefab (cannot be edited directly)
         context.isPrefabOverride = false;   // Prefab has overrides
         context.canPrefabOverride = false;  // Property can be override for this Prefab Instance
@@ -591,15 +596,15 @@ namespace vg::editor
         if (asBool(IProperty::Flags::Optional & flags))
         {
             // check previous property is bool
-            const IClassDesc * classDesc = _originalObject->GetClassDesc();
-            context.optionalObject = _originalObject;
-            auto * previousProp = classDesc->GetPreviousProperty(_originalProp->getName());
+            const IClassDesc * classDesc = context.originalObject->GetClassDesc();
+            context.optionalObject = context.originalObject;
+            auto * previousProp = classDesc->GetPreviousProperty(context.originalProp->getName());
             context.optionalProp = previousProp;
 
             if (context.isPrefabInstance /* && canPrefabOverride*/)
             {
                 // Use override if it already exists but do not create it yet
-                if (context.optionalPropOverride = context.prefab->GetDynamicProperty(_originalObject, previousProp))
+                if (context.optionalPropOverride = context.prefab->GetDynamicProperty(context.originalObject, previousProp))
                 {
                     context.optionalObject = (IObject *)context.optionalPropOverride;
                     context.optionalProp = context.optionalPropOverride->GetProperty();
@@ -624,11 +629,11 @@ namespace vg::editor
                             if (context.isPrefabInstance /* && canPrefabOverride*/)
                             {
                                 // Create prop override for bool 
-                                const IClassDesc * classDesc = _originalObject->GetClassDesc();
-                                IProperty * originalOptionalProp = classDesc->GetPreviousProperty(_originalProp->getName());
+                                const IClassDesc * classDesc = context.originalObject->GetClassDesc();
+                                IProperty * originalOptionalProp = classDesc->GetPreviousProperty(context.originalProp->getName());
                             
                                 // Create if needed
-                                if (context.optionalPropOverride = context.prefab->CreateDynamicProperty(_originalObject, originalOptionalProp))
+                                if (context.optionalPropOverride = context.prefab->CreateDynamicProperty(context.originalObject, originalOptionalProp))
                                 {
                                     context.optionalObject = (IObject *)context.optionalPropOverride;
                                     context.optionalProp = context.optionalPropOverride->GetProperty();
@@ -1247,7 +1252,7 @@ namespace vg::editor
                 case IProperty::Type::Float4x4:
                 {
                     VG_ASSERT(!isEnumArray, "Display of EnumArray property not implemented for type '%s'", asString(type).c_str());
-                    changed |= displayFloat4x4(_object, _prop); 
+                    changed |= displayFloat4x4(_object, _prop, context); 
                 }
                 break;
 
@@ -1878,9 +1883,9 @@ namespace vg::editor
             if (ImGui::Checkbox(getObjectLabel("", "Override", _prop).c_str(), &checked))
             {
                 if (checked)
-                    context.prefab->ToggleOverride(_originalObject, _originalProp, true);
+                    context.prefab->ToggleOverride(context.originalObject, context.originalProp, true);
                 else
-                    context.prefab->ToggleOverride(_originalObject, _originalProp, false);
+                    context.prefab->ToggleOverride(context.originalObject, context.originalProp, false);
 
                 if (context.optionalPropOverride)
                     context.optionalPropOverride->Enable(checked);
@@ -2307,23 +2312,43 @@ namespace vg::editor
     }
 
     //--------------------------------------------------------------------------------------
-    bool ImGuiWindow::displayFloat4x4(core::IObject * _object, const core::IProperty * _prop)
+    bool ImGuiWindow::displayFloat4x4(core::IObject * _object, const core::IProperty * _prop, Context & _context)
     {
         bool changed = false;
 
         const auto displayName = _prop->getDisplayName();
-        auto pFloat4x4 = _prop->GetPropertyFloat4x4(_object);
-        ImGui::PushID(_prop);
-        if (ImGui::TreeNode(getObjectLabel(displayName, _prop).c_str()))
+        float4x4 * pFloat4x4 = _prop->GetPropertyFloat4x4(_object);
+        float * pFloat = (float *)pFloat4x4;
+
+        float temp[16];
+        for (uint i = 0; i < countof(temp); ++i)
+            temp[i] = pFloat[i];
+
+        if (ImGui::TreeNode(getObjectLabel(displayName, _context.originalProp).c_str()))
         {
-            changed |= ImGui::InputFloat4("I", (float *)pFloat4x4 + 0, g_editFloatFormat, ImGuiInputTextFlags_EnterReturnsTrue);
-            changed |= ImGui::InputFloat4("J", (float *)pFloat4x4 + 4, g_editFloatFormat, ImGuiInputTextFlags_EnterReturnsTrue);
-            changed |= ImGui::InputFloat4("K", (float *)pFloat4x4 + 8, g_editFloatFormat, ImGuiInputTextFlags_EnterReturnsTrue);
-            changed |= ImGui::InputFloat4("T", (float *)pFloat4x4 + 12, g_editFloatFormat, ImGuiInputTextFlags_EnterReturnsTrue);
+            bool edited = false;
+
+            edited |= ImGui::InputFloat4(getPropertyLabel("I").c_str(), (float *)&temp[0], g_editFloatFormat, ImGuiInputTextFlags_EnterReturnsTrue);
+            drawPropertyLabel("I", _context);
+
+            edited |= ImGui::InputFloat4(getPropertyLabel("J").c_str(), (float *)&temp[4], g_editFloatFormat, ImGuiInputTextFlags_EnterReturnsTrue);
+            drawPropertyLabel("J", _context);
+
+            edited |= ImGui::InputFloat4(getPropertyLabel("K").c_str(), (float *)&temp[8], g_editFloatFormat, ImGuiInputTextFlags_EnterReturnsTrue);
+            drawPropertyLabel("K", _context);
+
+            edited |= ImGui::InputFloat4(getPropertyLabel("T").c_str(), (float *)&temp[12], g_editFloatFormat, ImGuiInputTextFlags_EnterReturnsTrue);
+            drawPropertyLabel("T", _context);
+
+            if (edited)
+            {
+                if (storeProperty(pFloat4x4, float4x4(temp[0], temp[1], temp[2], temp[3], temp[4], temp[5], temp[6], temp[7], temp[8], temp[9], temp[10], temp[11], temp[12], temp[13], temp[14], temp[15]), _object, _prop, _context))
+                    changed = true;
+            }
 
             ImGui::TreePop();
         }
-        ImGui::PopID();
+
         return changed;
     }
 

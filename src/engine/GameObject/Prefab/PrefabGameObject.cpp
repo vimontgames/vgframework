@@ -239,6 +239,15 @@ namespace vg::engine
             }
             break;
 
+            case IProperty::Type::Float:
+            {
+                if (isEnumArray)
+                    return false;
+
+                return true;
+            }
+            break;
+
             case IProperty::Type::Float2:
             {
                 if (isEnumArray)
@@ -266,7 +275,7 @@ namespace vg::engine
             }
             break;
 
-            case IProperty::Type::Float:
+            case IProperty::Type::Float4x4:
             {
                 if (isEnumArray)
                     return false;
@@ -274,6 +283,7 @@ namespace vg::engine
                 return true;
             }
             break;
+           
         }
     }
 
@@ -324,7 +334,11 @@ namespace vg::engine
 
                 case IProperty::Type::Float4:
                     newDynProp = new DynamicPropertyFloat4(_prop->getName());
-                    break;   
+                    break;  
+
+                case IProperty::Type::Float4x4:
+                    newDynProp = new DynamicPropertyFloat4x4(_prop->getName());
+                    break;
 
                 case IProperty::Type::Uint8:
                 case IProperty::Type::EnumU8:

@@ -59,7 +59,7 @@ namespace vg::core
         const vector<IComponent *> &                    GetComponents               () const final override;
         core::uint                                      GetComponentIndex           (const IComponent * _component) const;
 
-        IComponent *                                    GetComponentByType          (const char * _className) const final override;
+        IComponent *                                    GetComponentByType          (const char * _className, bool _searchInParent = false) const final override;
 
         void                                            AddChild                    (IGameObject * _gameObject, uint _index = -1) final override;
         bool                                            RemoveChild                 (IGameObject * _gameObject, bool _recomputeFlags = true) final override;

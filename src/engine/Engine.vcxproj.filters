@@ -287,6 +287,12 @@
     <ClInclude Include="Component\Debug\TestComponent.h">
       <Filter>Component\Debug</Filter>
     </ClInclude>
+    <ClInclude Include="Component\UI\UICanvasComponent.h">
+      <Filter>Component\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="Component\UI\UICanvasComponent.hpp">
+      <Filter>Component\UI</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Input">

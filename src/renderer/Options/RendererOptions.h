@@ -46,6 +46,7 @@ namespace vg::renderer
 
         bool				    isAABBEnabled               () const { return m_aabb; }
         bool				    isWireframeEnabled          () const { return m_wireframe; }
+        bool				    isDebugUIEnabled            () const { return m_debugUI; }
 
         bool                    isZPrepassEnabled           () const { return core::asBool(RenderPassFlags::ZPrepass & m_renderPassFlags); }
         bool				    isOpaqueEnabled			    () const { return core::asBool(RenderPassFlags::Opaque & m_renderPassFlags); }
@@ -74,6 +75,7 @@ namespace vg::renderer
         bool                    m_aabb                      = false;
         bool                    m_vsync                     = true;
         bool				    m_wireframe                 = false;
+        bool                    m_debugUI                   = false;
         bool                    m_postProcess               = true;
         bool                    m_rayTracing                = false;
         gfx::VSync              m_VSync                     = gfx::VSync::VBL_1;

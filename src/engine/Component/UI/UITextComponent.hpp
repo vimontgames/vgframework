@@ -37,7 +37,7 @@ namespace vg::engine
     //--------------------------------------------------------------------------------------
     void UITextComponent::Update(float _dt)
     {
-        if (auto * gui = getView())
-            gui->AddText(m_pickingID, getMatrix(), getColor(), m_horizontal, m_vertical, m_text);
+        if (auto * gui = getViewGUI())
+            gui->AddText(getCanvas(), gfx::UIItem(m_pickingID, getMatrix(), m_size, m_horizontal, m_vertical, getColor(), m_UIFlags), m_text);
     }
 }
