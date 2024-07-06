@@ -282,7 +282,7 @@ namespace vg::core
         // Copy all properties from this to new GameObject
         const auto srcClassName = _srcObj->GetClassName();
         const auto dstClassName = _dstObj->GetClassName();
-        VG_ASSERT(dstClassName == srcClassName);
+        VG_ASSERT(dstClassName == srcClassName, "[Factory] Cannot assign object of type \"%s\" to another object of type \"%s\"", srcClassName, dstClassName);
 
         const auto * classDesc = Kernel::getFactory()->getClassDescriptor(srcClassName);
 

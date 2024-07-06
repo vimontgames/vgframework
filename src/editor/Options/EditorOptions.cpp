@@ -74,15 +74,16 @@ namespace vg::editor
     }
 
     //--------------------------------------------------------------------------------------
-    void EditorOptions::OnPropertyChanged(IObject * _object, const core::IProperty & _prop, bool _notifyParent)
+    void EditorOptions::SetPropertyValue(const IProperty & _prop, void * _previousValue, void * _newValue)
     {
-        const char * name = _prop.getName();
-
-        if (!strcmp(name, "m_theme"))
+        if (&m_theme == _previousValue)
         {
             auto imGuiAdapter = Editor::get()->getRenderer()->GetImGuiAdapter();
-            imGuiAdapter->SetGUITheme(m_theme);
+            auto theme = *(ImGui::Theme *)_newValue;
+            imGuiAdapter->SetGUITheme(theme);
         }
+
+        super::SetPropertyValue(_prop, _previousValue, _newValue);
     }
 
     //--------------------------------------------------------------------------------------

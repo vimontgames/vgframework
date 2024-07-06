@@ -86,12 +86,6 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
-    void TestComponent::OnPropertyChanged(core::IObject * _object, const core::IProperty & _prop, bool _notifyParent)
-    {
-        super::OnPropertyChanged(_object, _prop, _notifyParent);
-    }
-
-    //--------------------------------------------------------------------------------------
     void TestComponent::Update(float _dt)
     {
         //super::Update(_dt);

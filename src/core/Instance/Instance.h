@@ -16,6 +16,8 @@ namespace vg::core
 
         static bool                 registerProperties  (IClassDesc & _desc);
 
+        void                        SetPropertyValue    (const IProperty & _prop, void * _previousValue, void * _newValue) override;
+
         void                        SetLocalMatrix      (const float4x4 & _local) final override;
         const float4x4 &            GetLocalMatrix      () const final override;
 

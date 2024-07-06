@@ -13,7 +13,6 @@ namespace vg::engine
         ~TestComponent();
 
         void            Update              (float _dt) final override;
-        void            OnPropertyChanged   (core::IObject * _object, const core::IProperty & _prop, bool _notifyParent);
 
     protected:
         core::u8        m_u8 = 0;

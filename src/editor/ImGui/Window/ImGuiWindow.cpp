@@ -178,11 +178,34 @@ namespace vg::editor
                 {
                     ((typename TypeToDynamicPropertyTypeEnum<T>::type *)_context.propOverride)->SetValue(_value);
                     _context.propOverride->Enable(true);
+
                     if (_context.optionalPropOverride)
                         _context.optionalPropOverride->Enable(true);
+
+                    _object = (IObject *)_context.propOverride;
+                    _context.isPrefabOverride = true;
+
+                    return true;
+                } 
+                else
+                {
+                    VG_ASSERT(false, "[Factory] Could not create DynamicProperty \"%s\" for class \"%s\"", _prop->getName(), _object->GetClassName());
+
+                    return false;
                 }
             }
-            *_out = _value;
+            
+            if (_context.isPrefabOverride)
+            {
+                VG_ASSERT(_context.originalObject != _object);
+                *_out = _value;
+            }
+            else
+            {
+                VG_ASSERT(_context.originalObject == _object);
+                _object->SetPropertyValue(*_prop, _out, &_value);
+            }
+
             return true;
         }
         return false;
@@ -670,6 +693,16 @@ namespace vg::editor
 
         bool changed = false;
 
+        // create temp property to store previous value
+        //void * previousValue = nullptr;
+        //Property previousPropValue = *(Property*)_prop;
+        //switch (_prop->getType())
+        //{
+        //case IProperty::Type::Bool:
+        //    previousValue = malloc(_prop->getSizeOf());
+        //    break;
+        //}
+
         context.readOnly = asBool(IProperty::Flags::ReadOnly & flags) || (context.isPrefabInstance && !context.isPrefabOverride && !context.canPrefabOverride);
 
         ImGuiInputTextFlags imguiInputTextflags = ImGuiInputTextFlags_EnterReturnsTrue;
@@ -1127,7 +1160,7 @@ namespace vg::editor
 
                     drawPropertyLabel(_prop->getDisplayName(), context);
 
-                    if (changed)
+                    if (edited)
                     {
                         if (storeProperty(pFloat, temp, _object, _prop, context))
                             changed = true;
@@ -1868,6 +1901,8 @@ namespace vg::editor
                     ImGui::EndDisabled();
             }
         }
+
+        //VG_SAFE_DELETE(previousValue);
 
         if (context.isPrefabInstance && context.canPrefabOverride && !context.readOnly)
         {

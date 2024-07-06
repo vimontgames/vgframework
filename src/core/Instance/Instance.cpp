@@ -32,6 +32,8 @@ namespace vg::core
         super::registerProperties(_desc);
 
         registerPropertyEnumBitfield(Instance, InstanceFlags, m_flags, "Flags");
+        //registerPropertyChangeCallback(Instance, m_flags);
+
         registerPropertyEx(Instance, m_color, "Color", IProperty::Flags::Color);
         registerProperty(Instance, m_local, "Transform");
         //registerPropertyObjectPtrVectorEx(Instance, m_models, "Models", IProperty::Flags::ReadOnly | IProperty::Flags::NotSaved | IProperty::Flags::NotVisible);
@@ -81,9 +83,36 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
-    void Instance::SetInstanceFlags(InstanceFlags flags, bool _enabled)
+    void Instance::SetPropertyValue(const IProperty & _prop, void * _previousValue, void * _newValue)
     {
-        setInstanceFlags(flags, _enabled);
+        if (&m_flags == _previousValue)
+        {
+            auto newFlags = *(InstanceFlags *)_newValue;
+
+            if ((InstanceFlags::Enabled & m_flags) != (InstanceFlags::Enabled & newFlags))
+            {
+                if (asBool(InstanceFlags::Enabled & newFlags))
+                    OnEnable();
+                else
+                    OnDisable();
+            }
+        }
+
+        super::SetPropertyValue(_prop, _previousValue, _newValue);
+    }
+
+    //--------------------------------------------------------------------------------------
+    void Instance::SetInstanceFlags(InstanceFlags _flags, bool _enabled)
+    {
+        setInstanceFlags(_flags, _enabled);
+
+        if (asBool(_flags & InstanceFlags::Enabled))
+        {
+            if (_enabled)
+                OnEnable();
+            else
+                OnDisable();
+        }
     }
 
     //--------------------------------------------------------------------------------------

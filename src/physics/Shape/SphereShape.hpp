@@ -11,6 +11,8 @@ namespace vg::physics
     {
         super::registerProperties(_desc);
         registerProperty(SphereShapeDesc, m_radius, "Radius");
+        setPropertyRange(SphereShapeDesc, m_radius, float2(0.01f, 100.0f));
+
         return true;
     }
 

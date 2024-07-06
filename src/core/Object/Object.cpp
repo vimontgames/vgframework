@@ -160,6 +160,98 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
+    void Object::SetPropertyValue(const IProperty & _prop, void * _previousValue, void * _newValue)
+    {
+        const auto propType = _prop.getType();
+        switch (propType)
+        {
+            default:
+                VG_ASSERT_ENUM_NOT_IMPLEMENTED(propType);
+                break;
+
+            case IProperty::Type::Bool:
+                *(bool *)_previousValue = *(bool *)_newValue;
+                break;
+
+            case IProperty::Type::Int8:
+                *(i8 *)_previousValue = *(i8 *)_newValue;
+                break;
+
+            case IProperty::Type::Int16:
+                *(i16 *)_previousValue = *(i16 *)_newValue;
+                break;
+
+            case IProperty::Type::Int32:
+                *(i32 *)_previousValue = *(i32 *)_newValue;
+                break;
+
+            case IProperty::Type::Int64:
+                *(i64 *)_previousValue = *(i64 *)_newValue;
+                break;
+
+            case IProperty::Type::Uint8:
+            case IProperty::Type::EnumU8:
+            case IProperty::Type::EnumFlagsU8:
+                *(u8 *)_previousValue = *(u8 *)_newValue;
+                break;
+
+            case IProperty::Type::Uint16:
+            case IProperty::Type::EnumU16:
+            case IProperty::Type::EnumFlagsU16:
+                *(u16 *)_previousValue = *(u16 *)_newValue;
+                break;
+
+            case IProperty::Type::Uint32:
+            case IProperty::Type::EnumU32:
+            case IProperty::Type::EnumFlagsU32:
+                *(u32 *)_previousValue = *(u32 *)_newValue;
+                break;
+
+            case IProperty::Type::Uint2:
+                *(uint2 *)_previousValue = *(uint2 *)_newValue;
+                break;
+
+            case IProperty::Type::Uint3:
+                *(uint3 *)_previousValue = *(uint3 *)_newValue;
+                break;
+
+            case IProperty::Type::Uint4:
+                *(uint4 *)_previousValue = *(uint4 *)_newValue;
+                break;
+
+            case IProperty::Type::Uint64:
+            case IProperty::Type::EnumU64:
+            case IProperty::Type::EnumFlagsU64:
+                *(u64 *)_previousValue = *(u64 *)_newValue;
+                break;
+
+            case IProperty::Type::Float:
+                *(float *)_previousValue = *(float *)_newValue;
+                break;
+
+            case IProperty::Type::Float2:
+                *(float2 *)_previousValue = *(float2 *)_newValue;
+                break;
+
+            case IProperty::Type::Float3:
+                *(float3 *)_previousValue = *(float3 *)_newValue;
+                break;
+
+            case IProperty::Type::Float4:
+                *(float4 *)_previousValue = *(float4 *)_newValue;
+                break;
+
+            case IProperty::Type::Float4x4:
+                *(float4x4 *)_previousValue = *(float4x4 *)_newValue;
+                break;
+
+            case IProperty::Type::String:
+                *(string *)_previousValue = *(string *)_newValue;
+                break;
+        }
+    }
+
+    //--------------------------------------------------------------------------------------
     void Object::onResourceLoaded(IResource * _resource)
     {
         if (nullptr != m_parent)

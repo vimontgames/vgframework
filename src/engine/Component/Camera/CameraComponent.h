@@ -33,8 +33,6 @@ namespace vg::engine
         VG_INLINE float                         getNear             () const;
         VG_INLINE float                         getFar              () const;
 
-        void                                    OnPropertyChanged   (core::IObject * _object, const core::IProperty & _prop, bool _notifyParent);
-
     protected:
         gfx::ViewTarget                         m_target = gfx::ViewTarget::Game;
         core::u8                                m_index = 0;

@@ -158,14 +158,6 @@ namespace vg::core
     void GameObject::SetInstanceFlags(InstanceFlags _flags, bool _enabled)
     {
         super::SetInstanceFlags(_flags, _enabled);
-
-        if (asBool(_flags & InstanceFlags::Enabled))
-        {
-            if (_enabled)
-                OnEnable();
-            else
-                OnDisable();
-        }
     }
 
     //--------------------------------------------------------------------------------------

@@ -410,6 +410,10 @@ namespace vg::renderer
 
         switch (_theme)
         {
+            default:
+                VG_ASSERT_ENUM_NOT_IMPLEMENTED(_theme);
+                break;
+
             case ImGui::Theme::ImGui_Classic:
                 setGUITheme_ImGui_Classic();
                 break;

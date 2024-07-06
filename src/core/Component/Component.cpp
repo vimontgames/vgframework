@@ -108,4 +108,23 @@ namespace vg::core
         VG_ASSERT_NOT_IMPLEMENTED(); 
         return ""; 
     };
+
+    //--------------------------------------------------------------------------------------
+    void Component::SetPropertyValue(const IProperty & _prop, void * _previousValue, void * _newValue)
+    {
+        if (&m_flags == _previousValue)
+        {
+            auto newFlags = *(ComponentFlags *)_newValue;
+
+            if ((ComponentFlags::Enabled & m_flags) != (ComponentFlags::Enabled & newFlags))
+            {
+                if (asBool(ComponentFlags::Enabled & newFlags))
+                    OnEnable();
+                else
+                    OnDisable();
+            }
+        }
+
+        super::SetPropertyValue(_prop, _previousValue, _newValue);
+    }
 }

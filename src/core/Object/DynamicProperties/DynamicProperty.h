@@ -59,7 +59,8 @@ namespace vg::core
         {
             if (T * value = GetPropertyPtr(_object, _prop))
             {
-                *value = m_value;
+                _object->SetPropertyValue(*_prop, value, &m_value);
+                //*value = m_value;
                 return true;
             }
             return false;
@@ -79,7 +80,8 @@ namespace vg::core
         {
             if (T * value = GetPropertyPtr(_object, _prop))
             {
-                *value = m_original;
+                _object->SetPropertyValue(*_prop, value, &m_original);
+                //*value = m_original;
                 return true;
             }
             return false;

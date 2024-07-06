@@ -48,7 +48,7 @@ namespace vg::editor
 
         EditorOptions(const core::string & _name, core::IObject * _parent = nullptr);
 
-        void                    OnPropertyChanged       (IObject * _object, const core::IProperty & _prop, bool _notifyParent) final override;
+        void                    SetPropertyValue        (const core::IProperty & _prop, void * _previousValue, void * _newValue) final override;
 
         bool                    setGizmoType            (GizmoType _gizmoType);
         void                    setNextGizmo            ();
