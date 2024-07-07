@@ -172,7 +172,9 @@ namespace vg::engine
         const uint sceneCount = m_scenes[typeIndex].count();
         for (uint i = 0; i < sceneCount; ++i)
         {
-            VG_SAFE_RELEASE(m_scenes[typeIndex][i]);
+            auto & scene = m_scenes[typeIndex][i];
+            scene->setParent(nullptr);
+            VG_SAFE_RELEASE(scene);
         }
         m_scenes[typeIndex].clear();
         SetActiveScene(nullptr, _sceneType);

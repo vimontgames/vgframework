@@ -210,13 +210,8 @@ namespace vg::editor
             for (uint i = 0; i < selObjs.size(); ++i)
             {
                 auto * obj = dynamic_cast<IGameObject*>(selObjs[i]);
-                if (obj && obj->GetWorld() == m_prefabWorld)
-                {
-                }
-                else
-                {
+                if (nullptr == obj || obj->GetWorld() != m_prefabWorld)
                     selected.push_back(obj);
-                }
             }
             selection->SetSelectedObjects(selected);
         }
@@ -225,6 +220,7 @@ namespace vg::editor
             m_view->SetWorld(nullptr);
 
         Editor::get()->destroyWindow(this);
+        m_prefabWorld->RemoveAllScenes(BaseSceneType::Scene);
         VG_SAFE_RELEASE(m_prefabWorld);
         VG_SAFE_RELEASE(m_prefabRes);
     }

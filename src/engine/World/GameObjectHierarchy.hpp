@@ -77,9 +77,6 @@ namespace vg::engine
             if (auto world = dynamic_cast<IWorld *>(parent))
                 return world;
 
-            //if (auto worldRes = dynamic_cast<WorldResourceData *>(parent))
-            //    return ((WorldResourceData *)parent)->getWorld();
-
             parent = parent->getParent();
         }
 

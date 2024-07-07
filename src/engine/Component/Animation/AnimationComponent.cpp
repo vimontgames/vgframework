@@ -127,13 +127,6 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
-    void AnimationComponent::OnPropertyChanged(IObject * _object, const IProperty & _prop, bool _notifyParent)
-    {
-        // [...]
-        super::OnPropertyChanged(_object, _prop, _notifyParent);
-    }
-
-    //--------------------------------------------------------------------------------------
     MeshComponent * AnimationComponent::getMeshComponent() const
     {
         MeshComponent * meshComponent = GetGameObject()->GetComponentByType<MeshComponent>();

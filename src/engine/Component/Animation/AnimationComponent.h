@@ -20,8 +20,6 @@ namespace vg::engine
         void                    OnEnable            () final override;
         void                    OnDisable           () final override;
 
-        void                    OnPropertyChanged   (IObject * _object, const core::IProperty & _prop, bool _notifyParent) final override;
-
         void                    onResourceLoaded    (core::IResource * _resource) final override;
         void                    onResourceUnloaded  (core::IResource * _resource) final override;
 
