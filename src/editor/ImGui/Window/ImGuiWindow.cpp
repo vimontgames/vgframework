@@ -137,35 +137,23 @@ namespace vg::editor
     template <> struct TypeToDynamicPropertyTypeEnum<core::u32> { using type = core::DynamicPropertyU32; };
     template <> struct TypeToDynamicPropertyTypeEnum<core::u64> { using type = core::DynamicPropertyU64; };
 
+    template <> struct TypeToDynamicPropertyTypeEnum<core::uint2> { using type = core::DynamicPropertyUInt2; };
+
     template <> struct TypeToDynamicPropertyTypeEnum<core::i8> { using type = core::DynamicPropertyI8; };
     template <> struct TypeToDynamicPropertyTypeEnum<core::i16> { using type = core::DynamicPropertyI16; };
     template <> struct TypeToDynamicPropertyTypeEnum<core::i32> { using type = core::DynamicPropertyI32; };
     template <> struct TypeToDynamicPropertyTypeEnum<core::i64> { using type = core::DynamicPropertyI64; };
 
-    template <typename T> bool equals(T a, T b)
-    {
-        return a == b;
-    }
+    template <typename T> bool equals(T a, T b)                 {  return a == b; }
 
-    template <> bool equals(core::float2 a, core::float2 b)
-    {
-        return all(a == b);
-    }
+    template <> bool equals(core::uint2 a, core::uint2 b) { return all(a == b); }
+    template <> bool equals(core::uint3 a, core::uint3 b) { return all(a == b); }
+    template <> bool equals(core::uint4 a, core::uint4 b) { return all(a == b); }
 
-    template <> bool equals(core::float3 a, core::float3 b)
-    {
-        return all(a == b);
-    }
-
-    template <> bool equals(core::float4 a, core::float4 b)
-    {
-        return all(a == b);
-    }
-
-    template <> bool equals(core::float4x4 a, core::float4x4 b)
-    {
-        return all(a == b);
-    }
+    template <> bool equals(core::float2 a, core::float2 b)     { return all(a == b); }
+    template <> bool equals(core::float3 a, core::float3 b)     { return all(a == b); }
+    template <> bool equals(core::float4 a, core::float4 b)     { return all(a == b); }
+    template <> bool equals(core::float4x4 a, core::float4x4 b) { return all(a == b); }
 
     //--------------------------------------------------------------------------------------
     template <typename T> bool storeProperty(T * _out, T _value, IObject * _object, const IProperty * _prop, Context & _context)
@@ -1130,12 +1118,29 @@ namespace vg::editor
                 {
                     VG_ASSERT(!isEnumArray, "Display of EnumArray property not implemented for type '%s'", asString(type).c_str());
 
-                    i32 * pU32 = (i32 *)(uint_ptr(_object) + offset);
+                    u32 * pU32 = (u32*)_prop->GetPropertyUintN(_object, 2);
+                    
+                    u32 temp[2];
+                    for (uint i = 0; i < 2; ++i)
+                        temp[i] = pU32[i];
+
+                    u32 minRange = (u32)_prop->getRange().x;
+                    u32 maxRange = (u32)_prop->getRange().y;
+
+                    bool edited = false;
 
                     if (asBool(IProperty::Flags::HasRange & flags))
-                        changed |= ImGui::SliderInt2(label.c_str(), pU32, max(0, (int)_prop->getRange().x), (int)_prop->getRange().y, "%d", imguiInputTextflags);
+                        edited = ImGui::SliderScalarN(getPropertyLabel(label).c_str(), ImGuiDataType_U32, &temp, 2, &minRange, &maxRange, "%u", imguiInputTextflags);
                     else
-                        changed |= ImGui::InputInt2(label.c_str(), pU32, imguiInputTextflags);
+                        edited = ImGui::InputScalarN(getPropertyLabel(label).c_str(), ImGuiDataType_U32, &temp, 2, &minRange, &maxRange, "%u", imguiInputTextflags);
+
+                    drawPropertyLabel(_prop->getDisplayName(), context);
+
+                    if (edited)
+                    {
+                        if (storeProperty((uint2*)pU32, uint2(temp[0], temp[1]), _object, _prop, context))
+                            changed = true;
+                    }
                 };
                 break;
 

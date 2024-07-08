@@ -10,6 +10,7 @@
 #include "core/Object/DynamicProperties/DynamicPropertyType/DynamicPropertyU8.h"
 #include "core/Object/DynamicProperties/DynamicPropertyType/DynamicPropertyU16.h"
 #include "core/Object/DynamicProperties/DynamicPropertyType/DynamicPropertyU32.h"
+#include "core/Object/DynamicProperties/DynamicPropertyType/DynamicPropertyUInt2.h"
 #include "core/Object/DynamicProperties/DynamicPropertyType/DynamicPropertyU64.h"
 #include "core/Object/DynamicProperties/DynamicPropertyType/DynamicPropertyI8.h"
 #include "core/Object/DynamicProperties/DynamicPropertyType/DynamicPropertyI16.h"

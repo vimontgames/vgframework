@@ -9,7 +9,6 @@ namespace vg::core
     {
         super::registerProperties(_desc);
 
-        setPropertyFlag(DynamicPropertyString, m_name, IProperty::Flags::NotVisible, false);
         registerProperty(DynamicPropertyString, m_value, "Value");
 
         return true;
@@ -29,7 +28,6 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
-    // Apply override to current value
     string * DynamicPropertyString::GetPropertyPtr(const IObject * _object, const IProperty * _prop) const
     {
         return _prop->GetPropertyString(_object);

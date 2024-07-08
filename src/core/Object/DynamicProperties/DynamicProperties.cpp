@@ -14,6 +14,7 @@
 #include "DynamicPropertyType/DynamicPropertyU8.hpp"
 #include "DynamicPropertyType/DynamicPropertyU16.hpp"
 #include "DynamicPropertyType/DynamicPropertyU32.hpp"
+#include "DynamicPropertyType/DynamicPropertyUInt2.hpp"
 #include "DynamicPropertyType/DynamicPropertyI8.hpp"
 #include "DynamicPropertyType/DynamicPropertyI16.hpp"
 #include "DynamicPropertyType/DynamicPropertyI32.hpp"

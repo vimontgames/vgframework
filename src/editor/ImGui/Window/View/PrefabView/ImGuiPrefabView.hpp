@@ -185,9 +185,7 @@ namespace vg::editor
         auto scene = VG_SAFE_STATIC_CAST(IBaseScene, m_prefabRes->getObject());
 
         if (cur == nullptr || nullptr == scene)
-        {
             m_prefabWorld->RemoveAllScenes(BaseSceneType::Scene);
-        }
         
         if (cur != scene)
         {

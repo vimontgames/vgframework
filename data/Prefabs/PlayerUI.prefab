@@ -28,7 +28,7 @@
                                 <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
                                 <Property type="EnumU8" name="m_horizontal" value="Left"/>
                                 <Property type="EnumU8" name="m_vertical" value="Top"/>
-                                <Property type="EnumFlagsU32" name="m_UIFlags" flags="Bitfield" value=""/>
+                                <Property type="EnumFlagsU32" name="m_UIFlags" flags="Bitfield" value="AutoResize"/>
                                 <Property type="Uint2" name="m_size" flags="HasRange" x="128" y="128"/>
                                 <Property type="Bool" name="m_useOffset" flags="NotVisible" value="true"/>
                                 <Property type="Float3" name="m_offset" flags="Optional" x="16" y="16" z="0"/>
@@ -50,10 +50,10 @@
                                 <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
                                 <Property type="EnumU8" name="m_horizontal" value="Left"/>
                                 <Property type="EnumU8" name="m_vertical" value="Top"/>
-                                <Property type="EnumFlagsU32" name="m_UIFlags" flags="Bitfield" value=""/>
+                                <Property type="EnumFlagsU32" name="m_UIFlags" flags="Bitfield" value="AutoResize"/>
                                 <Property type="Uint2" name="m_size" flags="HasRange" x="128" y="128"/>
                                 <Property type="Bool" name="m_useOffset" flags="NotVisible" value="true"/>
-                                <Property type="Float3" name="m_offset" flags="Optional" x="48" y="16" z="0"/>
+                                <Property type="Float3" name="m_offset" flags="Optional" x="28" y="16" z="0"/>
                                 <Property type="Bool" name="m_useColor" flags="NotVisible" value="false"/>
                                 <Property type="Float4" name="m_color" flags="Color|Optional" x="1" y="1" z="1" w="1"/>
                                 <Property type="String" name="m_text" value="Player"/>

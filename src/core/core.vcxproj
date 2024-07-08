@@ -94,6 +94,8 @@
     <ClInclude Include="Object\DynamicProperties\DynamicPropertyType\DynamicPropertyFloat4.hpp" />
     <ClInclude Include="Object\DynamicProperties\DynamicPropertyType\DynamicPropertyString.h" />
     <ClInclude Include="Object\DynamicProperties\DynamicPropertyType\DynamicPropertyString.hpp" />
+    <ClInclude Include="Object\DynamicProperties\DynamicPropertyType\DynamicPropertyUInt2.h" />
+    <ClInclude Include="Object\DynamicProperties\DynamicPropertyType\DynamicPropertyUInt2.hpp" />
     <ClInclude Include="Object\EnumHelper.h" />
     <ClInclude Include="Object\Property.h" />
     <ClInclude Include="Object\Property.hpp" />

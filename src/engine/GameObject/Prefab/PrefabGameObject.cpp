@@ -192,6 +192,15 @@ namespace vg::engine
             }
             break;
 
+            case IProperty::Type::Uint2:
+            {
+                if (isEnumArray)
+                    return false;
+
+                return true;
+            }
+            break;
+
             case IProperty::Type::Uint64:
             case IProperty::Type::EnumU64:
             case IProperty::Type::EnumFlagsU64:
@@ -356,6 +365,10 @@ namespace vg::engine
                 case IProperty::Type::EnumU32:
                 case IProperty::Type::EnumFlagsU32:
                     newDynProp = new DynamicPropertyU32(_prop->getName());
+                    break;
+
+                case IProperty::Type::Uint2:
+                    newDynProp = new DynamicPropertyUInt2(_prop->getName());
                     break;
 
                 case IProperty::Type::Int8:

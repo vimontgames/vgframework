@@ -49,7 +49,7 @@ namespace vg::gfx
 
         renderer::PickingID     m_pickingID     = (renderer::PickingID)0;
         core::float4x4          m_matrix        = core::float4x4::identity();
-        core::uint2             m_size          = core::uint2(128, 128);
+        core::uint2             m_size          = core::uint2(16, 16);
         HorizontalAligment      m_alignX        = HorizontalAligment::Left;
         VerticalAligment        m_alignY        = VerticalAligment::Top;
         core::float4            m_color         = core::float4(1,1,1,1);
@@ -62,7 +62,7 @@ namespace vg::gfx
         {
         }
 
-        core::uint2             m_resolution = core::uint2(1280, 720);
+        core::uint2 m_resolution = core::uint2(1280, 720);
     };
 
     class IViewGUI

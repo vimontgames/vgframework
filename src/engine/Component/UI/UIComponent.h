@@ -42,7 +42,7 @@ namespace vg::engine
         gfx::HorizontalAligment     m_horizontal;
         gfx::VerticalAligment       m_vertical;
 
-        core::uint2                 m_size = core::uint2(128, 128);
+        core::uint2                 m_size = core::uint2(16, 16);
 
         bool                        m_useOffset;
         core::float3                m_offset;

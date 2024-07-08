@@ -9,7 +9,6 @@ namespace vg::core
     {
         super::registerProperties(_desc);
 
-        setPropertyFlag(DynamicPropertyI16, m_name, IProperty::Flags::NotVisible, false);
         registerProperty(DynamicPropertyI16, m_value, "Value");
 
         return true;
