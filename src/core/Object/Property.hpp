@@ -316,6 +316,14 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
+    ObjectHandle * Property::GetPropertyObjectHandle(const IObject * _object) const
+    {
+        VG_ASSERT(nullptr != _object);
+        checkPropertyType(Type::ObjectHandle);
+        return (ObjectHandle *)(uint_ptr(_object) + offset);
+    }
+
+    //--------------------------------------------------------------------------------------
     float * Property::GetPropertyFloat(const IObject * _object) const
     {
         VG_ASSERT(nullptr != _object);

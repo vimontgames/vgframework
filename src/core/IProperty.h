@@ -9,6 +9,7 @@ namespace vg::core
     class IObject;
     class IResource;
     class BitMask;
+    class ObjectHandle;
 
     class IProperty
     {
@@ -50,19 +51,17 @@ namespace vg::core
             ResourcePtr,
             ResourcePtrVector,
             Object,                 // Embedded IObject
+            ObjectHandle,           // For objects referencing other objects dynamically using UID
             ObjectPtr,              // Pointer to IObject
             ObjectPtrVector,        // Vector of pointers to IObject
             ObjectPtrDictionary,    // Dictionary of pointers to IObject,
 
-            // sizeof(element) is unknown ('registerResizeVectorFunc' must be registered for serialization)
-            ObjectVector,
-            ResourceVector,
-
-            // No data, only (IObject*) callback
-            Callback,
-
-            // Cosmetic-only properties (doesn't change serialized data)
-            LayoutElement,
+            ObjectVector,           // sizeof(element) is unknown ('registerResizeVectorFunc' must be registered for serialization)
+            ResourceVector,         // sizeof(element) is unknown ('registerResizeVectorFunc' must be registered for serialization)
+            
+            Callback,               // No data, only (IObject*) callback
+            
+            LayoutElement,          // Cosmetic-only properties (doesn't change serialized data)
         };
 
         enum class LayoutElementType
@@ -132,6 +131,7 @@ namespace vg::core
         virtual u64 *                           GetPropertyUint64               (const IObject * _object) const = 0;
 
         virtual BitMask *                       GetPropertyBitMask              (const IObject * _object) const = 0;
+        virtual ObjectHandle *                  GetPropertyObjectHandle         (const IObject * _object) const = 0;
 
         virtual float *                         GetPropertyFloat                (const IObject * _object) const = 0;
         virtual float2 *                        GetPropertyFloat2               (const IObject * _object) const = 0;

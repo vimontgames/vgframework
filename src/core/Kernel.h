@@ -35,7 +35,7 @@ namespace vg::core
         static IInput * getInput();
 
         static void setFactory(IFactory * _factory);
-        static IFactory * getFactory();
+        static IFactory * getFactory(bool _mustExist = true);
 
         static void setSelection(ISelection * _selection);
         static ISelection * getSelection(bool _mustExist = true);
@@ -105,9 +105,9 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
-    inline IFactory * Kernel::getFactory()
+    inline IFactory * Kernel::getFactory(bool _mustExist)
     {
-        VG_ASSERT(s_singletons.factory, "IFactory interface is not specified for this executable or dynamic library.");
+        VG_ASSERT(!_mustExist || s_singletons.factory, "IFactory interface is not specified for this executable or dynamic library.");
         return s_singletons.factory;
     }
 

@@ -51,6 +51,7 @@ namespace vg::core
         u64 *                           GetPropertyUint64               (const IObject * _object) const final override;
 
         BitMask *                       GetPropertyBitMask              (const IObject * _object) const final override;
+        ObjectHandle *                  GetPropertyObjectHandle         (const IObject * _object) const final override;
 
         float *                         GetPropertyFloat                (const IObject * _object) const final override;
         float2 *                        GetPropertyFloat2               (const IObject * _object) const final override;

@@ -78,6 +78,8 @@
     <ClInclude Include="Object\DynamicProperties\DynamicPropertyType\DynamicPropertyI64.hpp" />
     <ClInclude Include="Object\DynamicProperties\DynamicPropertyType\DynamicPropertyI8.h" />
     <ClInclude Include="Object\DynamicProperties\DynamicPropertyType\DynamicPropertyI8.hpp" />
+    <ClInclude Include="Object\DynamicProperties\DynamicPropertyType\DynamicPropertyObjectHandle.h" />
+    <ClInclude Include="Object\DynamicProperties\DynamicPropertyType\DynamicPropertyObjectHandle.hpp" />
     <ClInclude Include="Object\DynamicProperties\DynamicPropertyType\DynamicPropertyU16.h" />
     <ClInclude Include="Object\DynamicProperties\DynamicPropertyType\DynamicPropertyU16.hpp" />
     <ClInclude Include="Object\DynamicProperties\DynamicPropertyType\DynamicPropertyU32.h" />
@@ -97,6 +99,8 @@
     <ClInclude Include="Object\DynamicProperties\DynamicPropertyType\DynamicPropertyUInt2.h" />
     <ClInclude Include="Object\DynamicProperties\DynamicPropertyType\DynamicPropertyUInt2.hpp" />
     <ClInclude Include="Object\EnumHelper.h" />
+    <ClInclude Include="Object\ObjectHandle.h" />
+    <ClInclude Include="Object\ObjectHandle.hpp" />
     <ClInclude Include="Object\Property.h" />
     <ClInclude Include="Object\Property.hpp" />
     <ClInclude Include="Object\Object.h" />

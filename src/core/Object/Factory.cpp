@@ -9,6 +9,7 @@
 #include "core/File/Buffer.h"
 #include "core/Misc/BitMask/BitMask.h"
 #include "core/IInstance.h"
+#include "core/Object/ObjectHandle.h"
 
 #include <random>
 
@@ -548,6 +549,14 @@ namespace vg::core
         case IProperty::Type::LayoutElement:
             // Nothing to do
             break;
+
+        case IProperty::Type::ObjectHandle:
+        {
+            auto * srcHandle = _srcProp->GetPropertyObjectHandle(_srcObj);
+            auto * dstHandle = _dstProp->GetPropertyObjectHandle(_dstObj);
+            *dstHandle = *srcHandle;
+        }
+        break;
 
         default:
         case IProperty::Type::ResourcePtr:

@@ -7,7 +7,7 @@ using namespace vg::core;
 
 namespace vg::engine
 {
-    VG_REGISTER_OBJECT_CLASS_EX(PrefabGameObject, "PrefabGameObject", IClassDesc::Flags::GameObject);
+    VG_REGISTER_OBJECT_CLASS_EX(PrefabGameObject, "PrefabGameObject", IClassDesc::Flags::GameObject | IClassDesc::Flags::UID);
 
     //--------------------------------------------------------------------------------------
     bool PrefabGameObject::registerProperties(IClassDesc & _desc)
@@ -292,7 +292,12 @@ namespace vg::engine
                 return true;
             }
             break;
-           
+
+            case IProperty::Type::ObjectHandle:
+            {
+                return true;
+            }
+            break;           
         }
     }
 
@@ -321,7 +326,11 @@ namespace vg::engine
                     VG_ASSERT_ENUM_NOT_IMPLEMENTED(_prop->getType());
                     return nullptr;
 
-                    case IProperty::Type::Bool:
+                case IProperty::Type::ObjectHandle:
+                    newDynProp = new DynamicPropertyObjectHandle(_prop->getName());
+                    break;
+
+                case IProperty::Type::Bool:
                     newDynProp = new DynamicPropertyBool(_prop->getName());
                     break;
 

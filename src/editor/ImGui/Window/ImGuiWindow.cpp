@@ -12,6 +12,7 @@
 #include "core/Misc/BitMask/BitMask.h"
 #include "core/Misc/AABB/AABB.h"
 #include "core/Object/DynamicProperties/DynamicProperties.h"
+#include "core/Object/ObjectHandle.h"
 
 #include "renderer/IRenderer.h"
 
@@ -52,7 +53,7 @@ using namespace ImGui;
 #include "editor/ImGui/Window/View/GameView/ImGuiGameView.hpp"
 #include "editor/ImGui/Window/Console/ImGuiConsole.hpp"
 #include "editor/ImGui/Window/Statistics/ImGuiStatistics.hpp"
-
+#include "editor/ImGui/Menu/ObjectHandle/ObjectHandleMenu.h"
 #include "editor/ImGui/ObjectHandler/ImGuiObjectHandler.h"
 #include "editor/ImGui/Menu/Inspector/Component/ImGuiComponentInspectorMenu.h"
 
@@ -143,6 +144,9 @@ namespace vg::editor
     template <> struct TypeToDynamicPropertyTypeEnum<core::i16> { using type = core::DynamicPropertyI16; };
     template <> struct TypeToDynamicPropertyTypeEnum<core::i32> { using type = core::DynamicPropertyI32; };
     template <> struct TypeToDynamicPropertyTypeEnum<core::i64> { using type = core::DynamicPropertyI64; };
+
+    template <> struct TypeToDynamicPropertyTypeEnum<string> { using type = core::DynamicPropertyString; };
+    template <> struct TypeToDynamicPropertyTypeEnum<ObjectHandle> { using type = core::DynamicPropertyU32; };
 
     template <typename T> bool equals(T a, T b)                 {  return a == b; }
 
@@ -1300,6 +1304,58 @@ namespace vg::editor
                 }
                 break;
 
+                case IProperty::Type::ObjectHandle:
+                {
+                    ObjectHandle * pObjHandle = _prop->GetPropertyObjectHandle(_object);
+
+                    bool edited = false;
+
+                    //sprintf_s(buffer, "0x%016X", );
+                    //if (ImGui::InputText(getPropertyLabel(label).c_str(), buffer, countof(buffer), imguiInputTextflags))
+                    //    edited = true;
+
+                    UID temp = 0;
+                    IObject * obj = nullptr;
+
+                    if (pObjHandle)
+                    {
+                        temp = pObjHandle->getUID();
+                        obj = pObjHandle->getObject();
+                    }
+
+                    //if (ImGui::InputScalar(getPropertyLabel(label).c_str(), ImGuiDataType_U32, &temp, nullptr, nullptr, "%08X", imguiNumberTextInputFlag))
+                    //    edited = true;
+
+                    char buffer[1024];
+                    sprintf_s(buffer, "%s (0x%08X)", obj ? obj->getName().c_str() : "(null)", temp);
+
+                    const float buttonWidth = style::button::SizeSmall.x;
+
+                    auto availableWidth = GetContentRegionAvail().x;
+                    ImGui::PushItemWidth(availableWidth - style::label::PixelWidth - buttonWidth);
+                    ImGui::InputText(getPropertyLabel(label).c_str(), buffer, countof(buffer), imguiInputTextflags | ImGuiInputTextFlags_ReadOnly);
+                    ImGui::PopItemWidth();
+
+                    ImGui::SameLine();
+                    if (ImGui::Button(style::icon::GameObject, style::button::SizeSmall))
+                    {
+                        
+                    }
+
+                    static ImGuiObjectHandleMenu s_pickObjectHandlemenu;
+                    if (s_pickObjectHandlemenu.SelectUID(&temp))
+                        edited = true;
+
+                    drawPropertyLabel(displayName, context);
+
+                    if (edited)
+                    {
+                        if (storeProperty((UID*)pObjHandle->getUIDPtr(), (UID)temp, _object, _prop, context))
+                            changed = true;
+                    }
+                }
+                break;
+
                 case IProperty::Type::String:
                 {
                     VG_ASSERT(!isEnumArray, "Display of EnumArray property not implemented for type '%s'", asString(type).c_str());
@@ -1388,33 +1444,19 @@ namespace vg::editor
                     }
                     else
                     {
+                        bool edited = false;
+
                         sprintf_s(buffer, pString->c_str());
                         if (ImGui::InputText(getPropertyLabel(label).c_str(), buffer, countof(buffer), imguiInputTextflags))
-                        {
-                            if (*pString != buffer)
-                            {
-                                if (context.isPrefabInstance && !context.isPrefabOverride)
-                                {
-                                    // Create if needed
-                                    if (context.propOverride = context.prefab->CreateDynamicProperty(_object, _prop))
-                                    {
-                                        ((core::DynamicPropertyString *)context.propOverride)->SetValue(buffer);
-                                        context.propOverride->Enable(true);
-                                        if (context.optionalPropOverride)
-                                            context.optionalPropOverride->Enable(true);
-                                    }
-                                }
-                                else
-                                {
-                                    // Save in property
-                                    *pString = buffer;
-                                }
-
-                                changed = true;
-                            }
-                        }
+                            edited = true;
 
                         drawPropertyLabel(displayName, context);
+
+                        if (edited)
+                        {
+                            if (storeProperty(pString, (string)buffer, _object, _prop, context))
+                                changed = true;
+                        }                        
                     }                    
                 }
                 break;

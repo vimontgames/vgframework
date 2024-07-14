@@ -16,4 +16,5 @@
 #include "core/Object/DynamicProperties/DynamicPropertyType/DynamicPropertyI16.h"
 #include "core/Object/DynamicProperties/DynamicPropertyType/DynamicPropertyI32.h"
 #include "core/Object/DynamicProperties/DynamicPropertyType/DynamicPropertyI64.h"
+#include "core/Object/DynamicProperties/DynamicPropertyType/DynamicPropertyObjectHandle.h"
 #include "core/Object/DynamicProperties/DynamicPropertyList.h"

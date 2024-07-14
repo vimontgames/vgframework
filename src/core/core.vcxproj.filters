@@ -348,6 +348,18 @@
     <ClInclude Include="Object\DynamicProperties\DynamicPropertyType\DynamicPropertyUInt2.hpp">
       <Filter>Object\DynamicProperties\DynamicPropertyType</Filter>
     </ClInclude>
+    <ClInclude Include="Object\ObjectHandle.hpp">
+      <Filter>Object</Filter>
+    </ClInclude>
+    <ClInclude Include="Object\ObjectHandle.h">
+      <Filter>Object</Filter>
+    </ClInclude>
+    <ClInclude Include="Object\DynamicProperties\DynamicPropertyType\DynamicPropertyObjectHandle.h">
+      <Filter>Object\DynamicProperties\DynamicPropertyType</Filter>
+    </ClInclude>
+    <ClInclude Include="Object\DynamicProperties\DynamicPropertyType\DynamicPropertyObjectHandle.hpp">
+      <Filter>Object\DynamicProperties\DynamicPropertyType</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Math\Math.cpp">

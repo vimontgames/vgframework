@@ -265,6 +265,12 @@
     <ClInclude Include="ImGui\Extensions\FileDialog\ImGuiFileDialog.h">
       <Filter>ImGui\Extensions\FileDialog</Filter>
     </ClInclude>
+    <ClInclude Include="ImGui\Menu\ObjectHandle\ObjectHandleMenu.h">
+      <Filter>ImGui\Menu\ObjectHandle</Filter>
+    </ClInclude>
+    <ClInclude Include="ImGui\Menu\ObjectHandle\ObjectHandleMenu.hpp">
+      <Filter>ImGui\Menu\ObjectHandle</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Editor.def" />
@@ -408,6 +414,9 @@
     </Filter>
     <Filter Include="ImGui\Extensions\FileDialog\Config">
       <UniqueIdentifier>{e908ec9f-09ea-411c-a565-e66cd68163c3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ImGui\Menu\ObjectHandle">
+      <UniqueIdentifier>{56071f0d-1c14-4ae5-8346-d5210971fcdb}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

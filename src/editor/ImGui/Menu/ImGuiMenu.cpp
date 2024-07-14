@@ -4,3 +4,4 @@
 #include "editor/ImGui/Menu/Scene/ImGuiSceneMenu.hpp"
 #include "editor/ImGui/Menu/Inspector/GameObject/ImGuiGameObjectInspectorMenu.hpp"
 #include "editor/ImGui/Menu/Inspector/Component/ImGuiComponentInspectorMenu.hpp"
+#include "editor/ImGui/Menu/ObjectHandle/ObjectHandleMenu.hpp"

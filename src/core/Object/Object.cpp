@@ -10,6 +10,7 @@
 #include "Property.hpp"
 #include "ClassDesc.hpp"
 #include "AutoRegisterClass.hpp"
+#include "ObjectHandle.hpp"
 
 namespace vg::core
 {
@@ -167,6 +168,10 @@ namespace vg::core
         {
             default:
                 VG_ASSERT_ENUM_NOT_IMPLEMENTED(propType);
+                break;
+
+            case IProperty::Type::ObjectHandle:
+                *(ObjectHandle *)_previousValue = *(ObjectHandle *)_newValue;
                 break;
 
             case IProperty::Type::Bool:
