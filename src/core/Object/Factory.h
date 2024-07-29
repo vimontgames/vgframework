@@ -42,8 +42,10 @@ namespace vg::core
 
         bool                                        IsA                             (const char * _class, const char * _other) const final override;
 
-        UID                                         CreateNewUID                   (IObject * _object) final override;
-        void                                        ReleaseUID                     (UID _uid) final override;
+        UID                                         RegisterUID                     (IObject * _object) final override;
+        void                                        ReleaseUID                      (IObject * _object, UID & _uid) final override;
+        const UIDObjectHash &                       GetUIDObjects                   () const final override;
+        IObject *                                   FindByUID                       (UID _uid) final override;
 
     protected:
         bool                                        serializeFromXML                (IObject * _object, const XMLElem * _xmlElem) const;
@@ -65,6 +67,8 @@ namespace vg::core
 
          template <typename T> static string        getEnumFlagsPropertyAsString    (T _value, const IProperty * _prop);
 
+         UID                                        getNewUID                       (IObject * _object);
+
     private:
         core::vector<ClassDesc>                     m_classes;
         core::dictionary<IProperty::Type>           m_oldTypeNames;
@@ -73,6 +77,7 @@ namespace vg::core
         vector<IObject*>                            m_objectsToRelease[2];
         u8                                          m_objectsToReleaseTableIndex = 0;
         core::unordered_map<IObject *, io::Buffer*> m_initValues;
-        core::unordered_map<UID, IObject *>         m_uidObjectHash;
+        UIDObjectHash                               m_uidObjectHash;
+        mutex                                       m_uidObjectHashMutex;
     };    
 }

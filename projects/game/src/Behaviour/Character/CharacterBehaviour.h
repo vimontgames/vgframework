@@ -24,6 +24,10 @@ protected:
 protected:
     bool                m_isActive = false;
 
+    vg::core::uint      m_life = 1;
+    float               m_hp = 100.0f;
+    vg::core::uint      m_score = 0;
+
     float               m_walkSpeed = 1.5f;
     float               m_runSpeed = 3.0f;
     float               m_jumpSpeed = 3.0f;

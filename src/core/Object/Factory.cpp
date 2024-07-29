@@ -249,32 +249,100 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
-    UID Factory::CreateNewUID(IObject * _object)
+    UID Factory::RegisterUID(IObject * _object)
     {
-        UID newUID;
-        do 
+        lock_guard<mutex> lock(m_uidObjectHashMutex);
+
+        auto uid = _object->GetUID(false);
+
+        if (uid)
         {
-            newUID = Random<u32>(0x00000001, 0xFFFFFFFF);
-            auto it = m_uidObjectHash.find(newUID);
+            // Object has a valid UID, let's check if it's already in the table
+            auto it = m_uidObjectHash.find(uid);
+            if (m_uidObjectHash.end() != it)
+            {
+                // If it's already in the table for the same object then it's OK
+                if (it->second == _object)
+                {
+                    //VG_INFO("[Factory] Already registered UID 0x%08X for object \"%s\"", uid, _object->getName().c_str());
+                    return uid;
+                }
+                else
+                {
+                    // If it's already in the table but for another object then we must give it a new UID
+                    VG_WARNING("[Factory] (%s) \"%s\" has the same UID 0x%08X than (%s) \"%s\"", _object->GetClassDesc()->GetClassName(), _object->getName().c_str(), uid, it->second->GetClassDesc()->GetClassName(), it->second->getName().c_str());
+                    return getNewUID(_object);
+                }
+            }
+            else
+            {
+                // Object has UID but is not yet in table so add it
+                //VG_INFO("[Factory] Registered UID 0x%08X for object \"%s\"", uid, _object->getName().c_str());
+                m_uidObjectHash.insert(std::pair(uid, _object));
+                return uid;
+            }
+        }
+        else
+        {
+            return getNewUID(_object);
+        }
+    }
+
+    //--------------------------------------------------------------------------------------
+    UID Factory::getNewUID(IObject * _object)
+    {
+        do
+        {
+            UID uid = Random<u32>(0x00000001, 0xFFFFFFFF);
+            auto it = m_uidObjectHash.find(uid);
             if (m_uidObjectHash.end() == it)
             {
-                m_uidObjectHash.insert(std::pair(newUID, _object));
-                return newUID;
+                //VG_INFO("[Factory] Registered new UID 0x%08X for object \"%s\"", uid, _object->getName().c_str());
+                m_uidObjectHash.insert(std::pair(uid, _object));
+                return uid;
             }
 
         } while (42);
     }
 
     //--------------------------------------------------------------------------------------
-    void Factory::ReleaseUID(UID _uid)
+    void Factory::ReleaseUID(IObject * _object, UID & _uid)
     {
+        lock_guard<mutex> lock(m_uidObjectHashMutex);
+
         if (_uid)
         {
             auto it = m_uidObjectHash.find(_uid);
-            VG_ASSERT(m_uidObjectHash.end() != it);
+                
             if (m_uidObjectHash.end() != it)
-                m_uidObjectHash.erase(it);
+            {
+                if (it->second == _object)
+                    m_uidObjectHash.erase(it);
+            }
+            _uid = 0;
         }
+    }
+
+    //--------------------------------------------------------------------------------------
+    IObject * Factory::FindByUID(UID _uid)
+    {
+        lock_guard<mutex> lock(m_uidObjectHashMutex);
+
+        if (_uid)
+        {
+            auto it = m_uidObjectHash.find(_uid);
+
+            if (m_uidObjectHash.end() != it)
+                return it->second;
+        }
+
+        return nullptr;
+    }
+
+    //--------------------------------------------------------------------------------------
+    const Factory::UIDObjectHash & Factory::GetUIDObjects() const
+    {
+        return m_uidObjectHash;
     }
 
     //--------------------------------------------------------------------------------------
@@ -342,6 +410,20 @@ namespace vg::core
         if (srcIsEnumArray != dstIsEnumArray)
         {
             VG_WARNING("[Factory] Property \"%s::%s\" have enum count of %u but Property \"%s::%s\" have different enum sizes of %u", _srcObj->GetClassName(), _srcProp->getName(), _srcProp->getEnumCount(), _dstObj->GetClassName(), _dstProp->getName(), _dstProp->getEnumCount());
+            return false;
+        }
+
+        if (!strcmp(_srcProp->getName(), "m_uid"))
+        {
+            if (_srcObj->HasValidUID())
+            {
+                _dstObj->SetOriginalUID(_srcObj->GetUID());
+                _dstObj->RegisterUID();
+            }
+            return true;
+        }
+        else if(!strcmp(_srcProp->getName(), "m_originalUID"))
+        {
             return false;
         }
 
@@ -663,6 +745,13 @@ namespace vg::core
                 }
                 break;
 
+                case IProperty::Type::ObjectHandle:
+                {
+                    const void * src = (void *)(uint_ptr(_object) + offset);
+                    VG_VERIFY(_buffer.write(src, size));
+                }
+                break;
+
                 case IProperty::Type::String:
                 {
                     const string * s = prop->GetPropertyString(_object);
@@ -748,6 +837,14 @@ namespace vg::core
                     {
                         VG_VERIFY(_buffer.restore(dst, size, changed));
                     }
+                }
+                break;
+
+                case IProperty::Type::ObjectHandle:
+                {
+                    void * dst = (void *)(uint_ptr(_object) + offset);
+                    bool changed = false;
+                    VG_VERIFY(_buffer.restore(dst, size, changed));
                 }
                 break;
 
@@ -1433,6 +1530,19 @@ namespace vg::core
                                             serializeIntegerPropertyFromXML<u32>(_object, prop, xmlPropElem);
                                             break;
 
+                                        case IProperty::Type::ObjectHandle:
+                                        {
+                                            VG_ASSERT(!isEnumArray, "EnumArray serialization from XML not implemented for type '%s'", asString(type).c_str());
+                                            serializeIntegerPropertyFromXML<u32>(_object, prop, xmlPropElem);
+                                            const XMLAttribute * xmlValue = xmlPropElem->FindAttribute("value");
+                                            if (nullptr != xmlValue)
+                                            {
+                                                ObjectHandle * objHandle = prop->GetPropertyObjectHandle(_object);
+                                                objHandle->setUID(xmlValue->UnsignedValue());
+                                            }
+                                        }
+                                        break;
+
                                         case IProperty::Type::Uint64:
                                             VG_ASSERT(!isEnumArray, "EnumArray serialization from XML not implemented for type '%s'", asString(type).c_str());
                                             serializeIntegerPropertyFromXML<u64>(_object, prop, xmlPropElem);
@@ -1603,6 +1713,14 @@ namespace vg::core
                     VG_ASSERT(!isEnumArray, "EnumArray serialization to XML not implemented for type '%s'", asString(type).c_str());
                     serializeIntegerPropertyToXML<u64>(_object, prop, xmlPropElem);
                     break;
+
+                case IProperty::Type::ObjectHandle:
+                {
+                    VG_ASSERT(!isEnumArray, "EnumArray serialization to XML not implemented for type '%s'", asString(type).c_str());
+                    const ObjectHandle * objHandle = prop->GetPropertyObjectHandle(_object);
+                    xmlPropElem->SetAttribute("value", objHandle->getUID());
+                }
+                break;
 
                 case IProperty::Type::Resource:
                 case IProperty::Type::ResourcePtr:
@@ -1890,6 +2008,48 @@ namespace vg::core
         return true;
     }
 
+    template <typename T> T GetValue(const XMLAttribute * xmlValue);
+
+    template <> i8 GetValue<i8>(const XMLAttribute * xmlValue)
+    {
+        return xmlValue->IntValue(); // CharValue
+    }
+
+    template <> u8 GetValue<u8>(const XMLAttribute * xmlValue)
+    {
+        return xmlValue->UnsignedValue(); // UnsignedCharValue
+    }
+
+    template <> i16 GetValue<i16>(const XMLAttribute * xmlValue)
+    {
+        return xmlValue->IntValue(); // ShortValue
+    }
+
+    template <> u16 GetValue<u16>(const XMLAttribute * xmlValue)
+    {
+        return xmlValue->UnsignedValue(); // UnsignedShortValue
+    }
+
+    template <> u32 GetValue<u32>(const XMLAttribute * xmlValue)
+    {
+        return xmlValue->UnsignedValue();
+    }
+
+    template <> i32 GetValue<i32>(const XMLAttribute * xmlValue)
+    {
+        return xmlValue->IntValue();
+    }
+    
+    template <> u64 GetValue<u64>(const XMLAttribute * xmlValue)
+    {
+        return xmlValue->Unsigned64Value();
+    }
+
+    template <> i64 GetValue<i64>(const XMLAttribute * xmlValue)
+    {
+        return xmlValue->Int64Value();
+    }
+
     //--------------------------------------------------------------------------------------
     template <typename T> void Factory::serializeIntegerPropertyFromXML(IObject * _object, const IProperty * _prop, const XMLElem * _xmlElem, core::uint _index) const
     {
@@ -1897,7 +2057,7 @@ namespace vg::core
         if (nullptr != xmlValue)
         {
             T * p = (T *)(uint_ptr(_object) + _prop->getOffset() + _index * _prop->getSizeOf());
-            *p = (T)xmlValue->Int64Value();
+            *p = GetValue<T>(xmlValue);
         }
     }
 

@@ -36,6 +36,6 @@ namespace vg::core
     IObject * ObjectHandle::getObject() const
     {
         auto * factory = Kernel::getFactory();
-        return nullptr; // factory->FindByUID(m_uid);
+        return factory->FindByUID(m_uid);
     }
 }

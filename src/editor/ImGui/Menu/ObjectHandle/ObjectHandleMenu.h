@@ -17,6 +17,6 @@ namespace vg::editor
             Clear
         };
 
-        bool SelectUID(core::UID * _uid);
+        bool SelectUID(core::UID * _uid, IGameObject * _gameobject);
     };
 }

@@ -32,6 +32,7 @@ namespace vg::core
         virtual bool                            IsRoot                          () const = 0;
         virtual bool                            HasAncestor                     (const IGameObject * _ancestor) const = 0;
         virtual core::uint                      GetChildIndex                   (const IGameObject * _child) const = 0;
+        virtual IGameObject *                   GetChildGameObject              (const string & _name) const = 0;
 
         virtual bool                            IsEnabledInHierarchy            () const = 0;
 
@@ -39,7 +40,7 @@ namespace vg::core
         virtual IComponent *                    AddComponent                    (const char * _className, const core::string & _name) = 0;
         virtual bool                            RemoveComponent                 (IComponent * _component) = 0;
         virtual const vector<IComponent *> &    GetComponents                   () const = 0;
-        virtual IComponent *                    GetComponentByType              (const char * _className, bool _searchInParent = false) const = 0;
+        virtual IComponent *                    GetComponentByType              (const char * _className, bool _searchInParent = false, bool _searchInChildren = false) const = 0;
         virtual core::uint                      GetComponentIndex               (const IComponent * _component) const = 0;
 
         virtual UpdateFlags                     GetUpdateFlags                  () const = 0;
@@ -62,18 +63,33 @@ namespace vg::core
         virtual bool                            ToggleOverride                  (const IObject * _object, const IProperty * _prop, bool _override) = 0;
 
         template <class T> T *                  AddComponentByType              (const string & _name);
-        template <class T> T *                  GetComponentByType              (bool _searchInParent = false) const;
-    };
+        template <class T> T *                  GetComponentByType              () const;
 
-    //--------------------------------------------------------------------------------------
-    template <class T> T * IGameObject::GetComponentByType(bool _searchInParent) const
-    {
-        return static_cast<T *>(GetComponentByType(T::getStaticClassName(), _searchInParent));
-    }
+        template <class T> T *                  GetComponentInParents           () const;
+        template <class T> T *                  GetComponentInChildren          () const;
+    };
 
     //--------------------------------------------------------------------------------------
     template <class T> T * IGameObject::AddComponentByType(const core::string & _name)
     {
         return static_cast<T *>(AddComponent(T::getStaticClassName(), _name));
+    }
+
+    //--------------------------------------------------------------------------------------
+    template <class T> T * IGameObject::GetComponentByType() const
+    {
+        return static_cast<T *>(GetComponentByType(T::getStaticClassName(), false, false));
+    }
+
+    //--------------------------------------------------------------------------------------
+    template <class T> T * IGameObject::GetComponentInParents() const
+    {
+        return static_cast<T *>(GetComponentByType(T::getStaticClassName(), true, false));
+    }
+
+    //--------------------------------------------------------------------------------------
+    template <class T> T * IGameObject::GetComponentInChildren() const
+    {
+        return static_cast<T *>(GetComponentByType(T::getStaticClassName(), false, true));
     }
 }

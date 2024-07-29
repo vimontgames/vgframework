@@ -342,6 +342,9 @@ namespace vg::engine
         _singletons.selection = m_selection;
         Kernel::setSelection(_singletons.selection);
 
+        // Register Engine classes earlier so as to be able to display early error messages
+        RegisterClasses();
+
         // Load Renderer DLL
 		m_renderer = Plugin::create<renderer::IRenderer>("renderer", api);
 		m_renderer->init(_params.renderer, _singletons);
@@ -358,8 +361,6 @@ namespace vg::engine
         m_physics->Init(_params.physics, _singletons);
 
         m_resourceManager = new ResourceManager("Resource Manager", this);
-
-        RegisterClasses();
 
         // Load engine options
         EngineOptions * engineOptions = new EngineOptions("EngineOptions", this);  

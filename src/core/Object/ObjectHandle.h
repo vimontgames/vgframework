@@ -17,6 +17,11 @@ namespace vg::core
 
         IObject *   getObject   () const;
 
+        template <typename T> T* get() const
+        {
+            return dynamic_cast<T *>(getObject());
+        }
+
     private:
         core::UID   m_uid = (UID)0;
     };

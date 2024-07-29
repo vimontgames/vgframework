@@ -42,6 +42,7 @@
     <ClInclude Include="GameObject\Prefab\PrefabGameObject.h" />
     <ClCompile Include="GameObject\Prefab\PrefabGameObject.cpp" />
     <ClInclude Include="ISnapComponent.h" />
+    <ClInclude Include="IUITextComponent.h" />
     <ClInclude Include="Resource\BaseScene\BaseSceneResource.h" />
     <ClInclude Include="Resource\BaseScene\BaseSceneResource.hpp" />
     <ClInclude Include="Resource\BaseScene\Prefab\PrefabResource.h" />

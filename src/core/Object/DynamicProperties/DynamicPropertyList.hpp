@@ -32,6 +32,12 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
+    bool DynamicPropertyList::RegisterUID()
+    {
+        return false;
+    }
+
+    //--------------------------------------------------------------------------------------
     const IDynamicProperty * DynamicPropertyList::GetProperty(const IProperty * _prop) const
     {
         for (uint i = 0; i < m_properties.size(); ++i)

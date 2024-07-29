@@ -293,6 +293,7 @@
     <ClInclude Include="Component\UI\UICanvasComponent.hpp">
       <Filter>Component\UI</Filter>
     </ClInclude>
+    <ClInclude Include="IUITextComponent.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Input">

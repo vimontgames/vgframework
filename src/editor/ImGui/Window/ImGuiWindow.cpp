@@ -547,14 +547,16 @@ namespace vg::editor
         Context context;
         context.originalObject      = _object;
         context.originalProp        = _prop;
-        context.isPrefabInstance    = false;   // Property is from an instanced Prefab (cannot be edited directly)
-        context.isPrefabOverride    = false;   // Prefab has overrides
-        context.canPrefabOverride   = false;  // Property can be override for this Prefab Instance
-        context.prefab              = nullptr;           // Original Prefab
-        context.propOverride        = nullptr;     // The dynamic property override if any
+        context.isPrefabInstance    = false;    // Property is from an instanced Prefab (cannot be edited directly)
+        context.isPrefabOverride    = false;    // Prefab has overrides
+        context.canPrefabOverride   = false;    // Property can be override for this Prefab Instance
+        context.prefab              = nullptr;  // Original Prefab
+        context.propOverride        = nullptr;  // The dynamic property override if any
 
         if (gameobject)
         {
+            //const bool isPrefabScene = gameobject->GetScene()->GetSceneType() == BaseSceneType::Prefab;
+            
             context.prefab = gameobject->GetParentPrefab();
             context.isPrefabInstance = nullptr != context.prefab;
 
@@ -1343,7 +1345,7 @@ namespace vg::editor
                     }
 
                     static ImGuiObjectHandleMenu s_pickObjectHandlemenu;
-                    if (s_pickObjectHandlemenu.SelectUID(&temp))
+                    if (s_pickObjectHandlemenu.SelectUID(&temp, gameobject))
                         edited = true;
 
                     drawPropertyLabel(displayName, context);

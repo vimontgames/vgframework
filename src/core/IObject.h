@@ -30,10 +30,14 @@ namespace vg::core
 										    IObject		        () = default;
 		virtual							    ~IObject	        () = default;
 
-        virtual bool                        FixMissingUID       () = 0;
+        virtual bool                        RegisterUID         () = 0;
         virtual bool                        HasValidUID         () const = 0;
-        virtual UID                         GetUID              () const = 0;
+
+        virtual UID                         GetUID              (bool _mustBeValid = true) const = 0;
         virtual void						SetUID              (UID _uid) = 0;
+
+        virtual UID                         GetOriginalUID      (bool _mustBeValid = true) const = 0;
+        virtual void						SetOriginalUID      (UID _uid) = 0;
 
         virtual ObjectFlags                 GetObjectFlags      () const = 0;
         virtual void                        SetObjectFlags      (ObjectFlags _flags, bool _enabled) = 0;
@@ -59,6 +63,7 @@ namespace vg::core
 
 		virtual void					    setName		        (const string & _name) = 0;
 		virtual const string &			    getName		        () const = 0;
+        virtual const string                GetFullName         () const = 0;
 
         virtual bool                        hasFile             () const = 0;
         virtual void					    setFile             (const string & _file) = 0;

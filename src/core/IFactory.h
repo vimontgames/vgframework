@@ -49,8 +49,12 @@ namespace vg::core
 
         virtual bool                        IsA                         (const char * _class, const char * _other) const = 0;
 
-        virtual UID                         CreateNewUID                (IObject * _object) = 0;
-        virtual void                        ReleaseUID                  (UID _uid) = 0;
+        using UIDObjectHash = core::unordered_map<UID, IObject *>;
+
+        virtual UID                         RegisterUID                 (IObject * _object) = 0;
+        virtual void                        ReleaseUID                  (IObject * _object, UID & _uid) = 0;
+        virtual const UIDObjectHash &       GetUIDObjects               () const = 0;
+        virtual IObject *                   FindByUID                   (UID _uid) = 0;
     };  
 }
 

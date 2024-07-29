@@ -13,6 +13,7 @@ namespace vg::core
         DynamicPropertyList(const core::string & _name, core::IObject * _parent);
         ~DynamicPropertyList();
 
+        bool RegisterUID();
         const IDynamicProperty * GetProperty(const IProperty * _prop) const override;
 
         core::vector<DynamicProperty*>  m_properties;

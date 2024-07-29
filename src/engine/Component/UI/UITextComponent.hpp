@@ -32,7 +32,13 @@ namespace vg::engine
     UITextComponent::~UITextComponent()
     {
 
-    }    
+    }   
+
+    //--------------------------------------------------------------------------------------
+    void UITextComponent::SetText(const core::string & _text)
+    {
+        m_text = _text;
+    }
 
     //--------------------------------------------------------------------------------------
     void UITextComponent::Update(float _dt)

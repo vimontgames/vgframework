@@ -28,6 +28,8 @@ namespace vg::core
             return (IProperty*) &m_prop;
         }
 
+        bool RegisterUID();
+
         virtual void CopyProperty(const IProperty * _prop) = 0;
 
     protected:
@@ -67,7 +69,6 @@ namespace vg::core
             if (T * value = GetPropertyPtr(_object, _prop))
             {
                 _object->SetPropertyValue(*_prop, value, &m_value);
-                //*value = m_value;
                 return true;
             }
             return false;

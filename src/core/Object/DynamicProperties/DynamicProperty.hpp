@@ -21,4 +21,11 @@ namespace vg::core
     {
     
     }
+
+    //--------------------------------------------------------------------------------------
+    bool DynamicProperty::RegisterUID()
+    {
+        return false;
+    }
+
 }

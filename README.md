@@ -26,6 +26,14 @@ Its renderer only uses modern graphics APIs like DirectX12 and Vulkan (I would a
 
 # changelog
 
+## 0.29 
+Override Prefab properties\
+Fix editor crash closing Prefab view\
+Components can reference other GameObjects using UID\
+UICanvasComponent, UITextComponent, andUIImageComponent\
+Update JoltPhysics to 5.0.0\
+Update Visual Studio 17.10.3
+
 ## 0.28 
 Reverse Z-Buffer\
 Fix rounding issues\

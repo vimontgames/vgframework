@@ -453,6 +453,9 @@ namespace vg::renderer
     //--------------------------------------------------------------------------------------
     void Renderer::cullViews()
     {
+        if (!m_sharedCullingJobOutput)
+            return;
+
         m_sharedCullingJobOutput->clear();
 
         core::Scheduler * jobScheduler = (core::Scheduler *)Kernel::getScheduler();

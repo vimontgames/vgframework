@@ -16,7 +16,7 @@ namespace vg::core
                                                         GameObject                  (const core::string & _name, IObject * _parent);
         virtual                                         ~GameObject                 ();
 
-        bool                                            FixMissingUID               () override;
+        bool                                            RegisterUID               () override;
 
         void                                            OnLoad                      () override;
 
@@ -59,7 +59,7 @@ namespace vg::core
         const vector<IComponent *> &                    GetComponents               () const final override;
         core::uint                                      GetComponentIndex           (const IComponent * _component) const;
 
-        IComponent *                                    GetComponentByType          (const char * _className, bool _searchInParent = false) const final override;
+        IComponent *                                    GetComponentByType          (const char * _className, bool _searchInParent = false, bool _searchInChildren = false) const final override;
 
         void                                            AddChild                    (IGameObject * _gameObject, uint _index = -1) final override;
         bool                                            RemoveChild                 (IGameObject * _gameObject, bool _recomputeFlags = true) final override;
@@ -68,6 +68,7 @@ namespace vg::core
         bool                                            IsRoot                      () const final override;
         bool                                            HasAncestor                 (const IGameObject * _ancestor) const final override;
         core::uint                                      GetChildIndex               (const IGameObject * _child) const final override;
+        IGameObject *                                   GetChildGameObject          (const string & _name) const final override;
 
         bool                                            IsEnabledInHierarchy        () const final override;
 

@@ -94,15 +94,17 @@ namespace vg::engine
     //--------------------------------------------------------------------------------------
     bool CharacterControllerComponent::createCharacterDesc()
     {
-        IFactory * factory = Kernel::getFactory();
-        VG_SAFE_RELEASE(m_characterDesc);
-
-        m_characterDesc = (physics::ICharacterDesc *)factory->createObject("RigidCharacterDesc", "", this);
-        
-        if (m_characterDesc)
+        if (nullptr == m_characterDesc)
         {
-            m_characterDesc->setParent(this);
-            m_characterDesc->FixMissingUID();
+            IFactory * factory = Kernel::getFactory();
+
+            m_characterDesc = (physics::ICharacterDesc *)factory->createObject("RigidCharacterDesc", "", this);
+
+            if (m_characterDesc)
+            {
+                m_characterDesc->setParent(this);
+                m_characterDesc->RegisterUID();
+            }
         }
         
         return nullptr != m_characterDesc;
@@ -128,13 +130,13 @@ namespace vg::engine
             createShape();
 
         if (m_shapeDesc)
-            m_shapeDesc->FixMissingUID();
+            m_shapeDesc->RegisterUID();
 
         if (m_shape)
             createCharacter();
 
         if (m_shape)
-            m_shape->FixMissingUID();
+            m_shape->RegisterUID();
     }
 
     //--------------------------------------------------------------------------------------

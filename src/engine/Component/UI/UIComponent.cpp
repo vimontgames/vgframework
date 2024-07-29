@@ -75,7 +75,7 @@ namespace vg::engine
     //--------------------------------------------------------------------------------------
     const gfx::UICanvas * UIComponent::getCanvas() const
     {
-        if (auto * canvas = GetGameObject()->GetComponentByType<UICanvasComponent>(true))
+        if (auto * canvas = GetGameObject()->GetComponentInParents<UICanvasComponent>())
             return &canvas->getGfxCanvas();
         return nullptr;
     }

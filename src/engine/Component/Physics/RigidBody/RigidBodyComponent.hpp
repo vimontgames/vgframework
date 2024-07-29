@@ -93,12 +93,12 @@ namespace vg::engine
         createShape();
         
         if (m_shapeDesc)
-            m_shapeDesc->FixMissingUID();
+            m_shapeDesc->RegisterUID();
 
         createBody();
 
         if (m_bodyDesc)
-            m_bodyDesc->FixMissingUID();
+            m_bodyDesc->RegisterUID();
     }
 
     //--------------------------------------------------------------------------------------
@@ -174,10 +174,19 @@ namespace vg::engine
     //--------------------------------------------------------------------------------------
     bool RigidBodyComponent::createBodyDesc()
     {
-        IFactory * factory = Kernel::getFactory();
-        VG_SAFE_RELEASE(m_bodyDesc);
+        if (nullptr == m_bodyDesc)
+        {
+            IFactory * factory = Kernel::getFactory();
+            VG_SAFE_RELEASE(m_bodyDesc);
 
-        m_bodyDesc = (physics::IBodyDesc *)factory->createObject("RigidBodyDesc", "", this);
+            m_bodyDesc = (physics::IBodyDesc *)factory->createObject("RigidBodyDesc", "", this);
+
+            if (m_bodyDesc)
+            {
+                m_bodyDesc->setParent(this);
+                m_bodyDesc->RegisterUID();
+            }
+        }
 
         return nullptr != m_bodyDesc;
     }
@@ -186,6 +195,15 @@ namespace vg::engine
     bool RigidBodyComponent::createShapeDesc()
     {
         IFactory * factory = Kernel::getFactory();
+
+        //UID previousUID = 0;
+        UID previousOriginalUID = 0;
+        if (nullptr != m_shapeDesc)
+        {
+            //previousUID = m_shapeDesc->GetUID(false);
+            previousOriginalUID = m_shapeDesc->GetOriginalUID(false);
+        }
+
         VG_SAFE_RELEASE(m_shapeDesc);
 
         VG_ASSERT(m_bodyDesc);
@@ -207,6 +225,17 @@ namespace vg::engine
             case physics::ShapeType::Capsule:
                 m_shapeDesc = (physics::IShapeDesc *)factory->createObject("CapsuleShapeDesc", "", this);
                 break;
+        }
+
+        if (m_shapeDesc)
+        {
+            //if (previousUID)
+            //    m_shapeDesc->SetUID(previousUID);
+            //
+            //m_shapeDesc->RegisterUID();
+
+            if (previousOriginalUID)
+                m_shapeDesc->SetOriginalUID(previousOriginalUID);
         }
 
         return nullptr != m_shapeDesc;

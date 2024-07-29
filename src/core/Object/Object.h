@@ -47,10 +47,14 @@ namespace vg::core
 								    Object		        ();
 								    ~Object		        ();
 
-		bool						FixMissingUID		();
+		bool						RegisterUID			();
 		bool                        HasValidUID			() const final override;
-		UID							GetUID				() const final override;
+
+		UID							GetUID				(bool _mustBeValid = true) const final override;
 		void						SetUID				(UID _uid) override;
+
+       UID							GetOriginalUID		(bool _mustBeValid = true) const final override;
+       void							SetOriginalUID		(UID _uid) final override;
                                 
 		ObjectFlags                 GetObjectFlags		() const final override;
 		void                        SetObjectFlags		(ObjectFlags _flags, bool _enabled) final override;
@@ -76,6 +80,7 @@ namespace vg::core
 
 		void					    setName		        (const string & _name) override;
 		const string &			    getName		        () const override;
+		const string 				GetFullName			() const override;
 
         bool                        hasFile             () const override;
         void					    setFile             (const string & _file) override;
@@ -97,6 +102,7 @@ namespace vg::core
 	private:
         atomic<u32>				    m_refCount;
 		UID							m_uid = (UID)0;
+		UID							m_originalUID = (UID)0;
 		ObjectFlags					m_objectFlags = (ObjectFlags)0x0;
         Object *					m_parent = nullptr;
 		mutable const IClassDesc *	m_classDesc = nullptr;

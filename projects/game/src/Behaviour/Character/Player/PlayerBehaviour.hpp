@@ -2,9 +2,11 @@
 #include "PlayerBehaviour.h"
 #include "Game.h"
 #include "engine/ICharacterControllerComponent.h"
+#include "engine/IUITextComponent.h"
 #include "editor/Editor_Consts.h"
 #include "core/GameObject/GameObject.h"
 #include "core/IWorld.h"
+#include "core/string/string.h"
 
 using namespace vg::core;
 using namespace vg::engine;
@@ -16,6 +18,9 @@ PlayerBehaviour::PlayerBehaviour(const string & _name, IObject * _parent) :
     super(_name, _parent)
 {
     SetUpdateFlags(UpdateFlags::FixedUpdate | UpdateFlags::Update);
+
+    m_life = 3;
+    m_hp = 100.0f;
 }
 
 //--------------------------------------------------------------------------------------
@@ -33,6 +38,7 @@ bool PlayerBehaviour::registerProperties(IClassDesc & _desc)
     {
         registerPropertyEnum(PlayerBehaviour, vg::core::InputType, m_controllerType, "Input");
         registerProperty(PlayerBehaviour, m_controllerIndex, "Index");
+        registerProperty(PlayerBehaviour, m_UI, "UI");
     }
     registerPropertyGroupEnd(PlayerBehaviour);
     
@@ -165,13 +171,35 @@ void PlayerBehaviour::FixedUpdate(float _dt)
 //--------------------------------------------------------------------------------------
 void PlayerBehaviour::Update(float _dt)
 {
-    auto * go = GetGameObject();
-    auto world = go->getGlobalMatrix();
-    if (world[3].z < -32.0f)
+    super::Update(_dt);
+
+    // TODO: pass world->IsPlaying and world->IsPaused as 'Update' parameters, or World directly?
+    auto * world = GetGameObject()->GetWorld();
+
+    if (world->IsPlaying() && !world->IsPaused())
     {
-        if (auto * charaController = go->GetComponentByType<vg::engine::ICharacterControllerComponent>())
+        // Update UI
         {
-            charaController->SetPosition(m_startPos + float3(0, 0, 16));
+            if (IGameObject * uiGO = m_UI.get<IGameObject>())
+            {
+                if (IGameObject * lifeGO = uiGO->GetChildGameObject("Life"))
+                {
+                    if (IUITextComponent * lifeComp = lifeGO->GetComponentByType<IUITextComponent>())
+                        lifeComp->SetText(fmt::sprintf("Life  %u", m_life));
+                }
+
+                if (IGameObject * hpGO = uiGO->GetChildGameObject("HP"))
+                {
+                    if (IUITextComponent * textComp = hpGO->GetComponentByType<IUITextComponent>())
+                        textComp->SetText(fmt::sprintf("HP    %.0f%%", m_hp));
+                }
+
+                if (IGameObject * scoreGO = uiGO->GetChildGameObject("Score"))
+                {
+                    if (IUITextComponent * scoreComp = scoreGO->GetComponentByType<IUITextComponent>())
+                        scoreComp->SetText(fmt::sprintf("Score %.0f", m_hp));
+                }
+            }
         }
     }
 }

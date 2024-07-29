@@ -82,7 +82,7 @@ namespace vg::engine
     //--------------------------------------------------------------------------------------
     core::DynamicPropertyList * PrefabGameObject::getDynamicPropertyList(const core::IObject * _object) const
     {
-        const auto uid = _object->GetUID();
+        const auto uid = _object->GetOriginalUID();
         if (uid)
         {
             for (uint i = 0; i < m_dynamicProperties.size(); ++i)
@@ -104,7 +104,7 @@ namespace vg::engine
 
         // TODO : dedicated ctor?
         newPropList = new DynamicPropertyList(_object->getName(), nullptr);
-        newPropList->SetUID(_object->GetUID());
+        newPropList->SetUID(_object->GetOriginalUID());
         newPropList->setName(_object->getName());
         
         return newPropList;
@@ -440,7 +440,7 @@ namespace vg::engine
             if (!_object->HasValidUID())
                 return nullptr;
 
-            auto objUID = _object->GetUID();
+            auto objUID = _object->GetOriginalUID(false);
             if (objUID == _uid)
             {
                 return _object;

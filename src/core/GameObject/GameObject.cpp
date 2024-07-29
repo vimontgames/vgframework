@@ -63,22 +63,22 @@ namespace vg::core
     void GameObject::OnLoad()
     {
         super::OnLoad();
-        FixMissingUID();
+        RegisterUID();
         recomputeUpdateFlags();
         sortComponents();
     }
 
     //--------------------------------------------------------------------------------------
-    bool GameObject::FixMissingUID()
+    bool GameObject::RegisterUID()
     {
-        bool anyUIDCreated = super::FixMissingUID();
+        bool anyUIDCreated = super::RegisterUID();
 
         for (uint i = 0; i < m_components.size(); ++i)
         {
             auto * component = m_components[i];
             if (nullptr != component)
             {
-                if (component->FixMissingUID())
+                if (component->RegisterUID())
                     anyUIDCreated = true;
             }
         }
@@ -203,13 +203,28 @@ namespace vg::core
     //--------------------------------------------------------------------------------------
     IGameObject * GameObject::GetParentPrefab() const
     {
+        //if (auto * parentScene = dynamic_cast<core::IBaseScene *>(getParent()))
+        //{
+        //    if (parentScene->GetSceneType() == BaseSceneType::Prefab)
+        //        return parentScene->GetRoot();
+        //}
+
         IGameObject * parent = dynamic_cast<IGameObject *>(getParent());
         while (nullptr != parent)
         {
             if (parent->IsPrefab())
                 return parent;
 
-            parent = dynamic_cast<IGameObject*>(parent->getParent());
+            //if (auto * parentScene = dynamic_cast<core::IBaseScene *>(parent->getParent()))
+            //{
+            //    if (parentScene->GetSceneType() == BaseSceneType::Prefab)
+            //        return parentScene->GetRoot();
+            //}
+            
+            if (auto * parentGO = dynamic_cast<IGameObject *>(parent->getParent()))
+                parent = parentGO;
+            else
+                parent = nullptr;
         }
         return nullptr;
     }
@@ -421,7 +436,23 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
-    IComponent * GameObject::GetComponentByType(const char * _className, bool _searchInParent) const
+    IGameObject * GameObject::GetChildGameObject(const string & _name) const 
+    {
+        if (getName() == _name)
+            return (IGameObject*)this;
+
+        const auto & children = getChildren();
+        for (uint i = 0; i < children.size(); ++i)
+        {
+            if (auto * child = children[i]->GetChildGameObject(_name))
+                return child;
+        }
+
+        return nullptr;
+    }
+
+    //--------------------------------------------------------------------------------------
+    IComponent * GameObject::GetComponentByType(const char * _className, bool _searchInParent, bool _searchInChildren) const
     {
         const auto & components = getComponents();
         for (uint i = 0; i < components.size(); ++i)
@@ -451,10 +482,19 @@ namespace vg::core
             }
         }
 
-        if (_searchInParent)
+        if (_searchInChildren)
+        {
+            auto & children = getChildren();
+            for (uint i = 0; i < children.count(); ++i)
+            {
+                if (IComponent * component = children[i]->GetComponentByType(_className, _searchInParent, _searchInChildren))
+                    return component;
+            }
+        }
+        else if (_searchInParent)
         {
             if (auto * parent = dynamic_cast<IGameObject *>(getParent()))
-                return parent->GetComponentByType(_className, _searchInParent);
+                return parent->GetComponentByType(_className, _searchInParent, _searchInChildren);
         }
 
         return nullptr;
