@@ -19,4 +19,5 @@
 #include "DynamicPropertyType/DynamicPropertyI16.hpp"
 #include "DynamicPropertyType/DynamicPropertyI32.hpp"
 #include "DynamicPropertyType/DynamicPropertyObjectHandle.hpp"
+#include "DynamicPropertyType/DynamicPropertyResource.hpp"
 #include "DynamicPropertyList.hpp"

@@ -107,8 +107,11 @@ void CharacterBehaviour::Update(float _dt)
         {
             m_life--;
 
-            if (auto * charaController = go->GetComponentByType<vg::engine::ICharacterControllerComponent>())
-                charaController->SetPosition(m_startPos + float3(0, 0, 16));
+            if (m_life > 0)
+            {
+                if (auto * charaController = go->GetComponentByType<vg::engine::ICharacterControllerComponent>())
+                    charaController->SetPosition(m_startPos + float3(0, 0, 16));
+            }
         }
     }
 }

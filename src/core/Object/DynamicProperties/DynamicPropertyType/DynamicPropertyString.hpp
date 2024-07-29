@@ -22,12 +22,6 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
-    DynamicPropertyString::~DynamicPropertyString()
-    {
-
-    }
-
-    //--------------------------------------------------------------------------------------
     string * DynamicPropertyString::GetPropertyPtr(const IObject * _object, const IProperty * _prop) const
     {
         return _prop->GetPropertyString(_object);

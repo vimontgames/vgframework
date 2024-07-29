@@ -50,6 +50,16 @@ namespace vg::core
             }
         }
 
+        //for (uint i = 0; i < m_properties.size(); ++i)
+        //{
+        //    const auto & prop = m_properties[i];
+        //
+        //    if (prop->getType() == IProperty::Type::Resource)
+        //    {
+        //
+        //    }
+        //}
+
         return nullptr;
     }
 }

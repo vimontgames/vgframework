@@ -10,7 +10,6 @@ namespace vg::core
         VG_CLASS_DECL(DynamicPropertyString, DynamicProperty);
 
         DynamicPropertyString(const core::string & _name = "", core::IObject * _parent = nullptr);
-        ~DynamicPropertyString();
 
         string * GetPropertyPtr(const IObject * _object, const IProperty * _prop) const final override;
     };

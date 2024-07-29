@@ -297,13 +297,26 @@ namespace vg::engine
             {
                 return true;
             }
-            break;           
+            break;       
+
+            case IProperty::Type::Resource:
+            {
+                return true;
+            }
+            break;
         }
     }
 
     //--------------------------------------------------------------------------------------
     core::DynamicProperty * PrefabGameObject::createDynamicProperty(const core::IObject * _object, const core::IProperty * _prop)
     {
+        //if (_prop->getType() == IProperty::Type::Resource)
+        //{
+        //    _object = _prop->GetPropertyResource(_object);
+        //    auto classDesc = _object->GetClassDesc();
+        //    _prop = classDesc->GetPropertyByName("m_resourcePath");
+        //}
+
         if (auto * dynProp = getDynamicProperty(_object, _prop))
             return dynProp;
 
@@ -328,6 +341,10 @@ namespace vg::engine
 
                 case IProperty::Type::ObjectHandle:
                     newDynProp = new DynamicPropertyObjectHandle(_prop->getName());
+                    break;
+
+                case IProperty::Type::Resource:
+                    newDynProp = new DynamicPropertyResource(_prop->getName());
                     break;
 
                 case IProperty::Type::Bool:

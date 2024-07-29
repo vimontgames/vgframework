@@ -2,6 +2,7 @@
 #include "Object.h"
 #include "core/Kernel.h"
 #include "core/File/File.h"
+#include "core/Resource/Resource.h"
 
 #if !VG_ENABLE_INLINE
 #include "Object.inl"
@@ -198,6 +199,10 @@ namespace vg::core
             default:
                 VG_ASSERT_ENUM_NOT_IMPLEMENTED(propType);
                 break;
+
+        case IProperty::Type::Resource:
+            ((Resource *)_previousValue)->SetResourcePath(((Resource *)_newValue)->GetResourcePath());
+            break;
 
             case IProperty::Type::ObjectHandle:
                 *(ObjectHandle *)_previousValue = *(ObjectHandle *)_newValue;

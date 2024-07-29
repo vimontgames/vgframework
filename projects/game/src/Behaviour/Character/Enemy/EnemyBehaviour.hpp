@@ -190,13 +190,5 @@ void EnemyBehaviour::FixedUpdate(float _dt)
 //--------------------------------------------------------------------------------------
 void EnemyBehaviour::Update(float _dt)
 {
-    auto * go = GetGameObject();
-    auto world = go->getGlobalMatrix();
-    if (world[3].z < -32.0f)
-    {
-        if (auto * charaController = go->GetComponentByType<vg::engine::ICharacterControllerComponent>())
-        {
-            charaController->SetPosition(m_startPos + float3(0, 0, 16));
-        }
-    }
+    super::Update(_dt);
 }

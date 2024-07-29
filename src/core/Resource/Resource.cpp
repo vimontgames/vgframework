@@ -6,11 +6,7 @@
 
 namespace vg::core
 {
-    //--------------------------------------------------------------------------------------
-    bool Resource::registerClass(IFactory & _factory)
-    {
-        return false;
-    }
+    VG_REGISTER_OBJECT_CLASS(Resource, "Resource");
 
     //--------------------------------------------------------------------------------------
     bool Resource::registerProperties(IClassDesc & _desc)
@@ -40,6 +36,17 @@ namespace vg::core
         m_resourcePath = _other.m_resourcePath;
         m_object = _other.m_object;
         m_userData = _other.m_userData;
+    }
+
+    //--------------------------------------------------------------------------------------
+    Resource & Resource::operator=(const vg::core::Resource & _from)
+    {
+        setName(_from.getName());
+
+        setParent(_from.getParent());
+        SetResourcePath(_from.GetResourcePath());
+        
+        return *this;
     }
 
     //--------------------------------------------------------------------------------------

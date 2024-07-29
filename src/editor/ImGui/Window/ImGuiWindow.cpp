@@ -67,18 +67,43 @@ namespace vg::editor
     core::string ImGuiWindow::getFileBrowserExt(const core::IResource * _resource)
     {
         VG_ASSERT(_resource);
-        string ext = "";
-        bool first = true;
+        
         const auto & extensions = _resource->getExtensions();
-        for (uint e = 0; e < extensions.size(); ++e)
+        string ext;
+
+        if (extensions.size() == 0)
         {
-            if (!first)
-                ext += ",";
-            ext += extensions[e];
-            first = false;
+            ext = "All files (*.*){.*}";
         }
-        if (ext == "")
-            ext = "*.*";
+        else
+        {
+            ext = fmt::sprintf("%s files (", _resource->GetClassDesc()->GetClassDisplayName());
+
+            bool first = true;
+            
+            for (uint e = 0; e < extensions.size(); ++e)
+            {
+                if (!first)
+                    ext += ",";
+                ext += "*";
+                ext += extensions[e];
+                first = false;
+            }
+
+            ext += "){";
+
+            first = true;
+            const auto & extensions = _resource->getExtensions();
+            for (uint e = 0; e < extensions.size(); ++e)
+            {
+                if (!first)
+                    ext += ",";
+                ext += extensions[e];
+                first = false;
+            }
+
+            ext += "}";
+        }
         return ext;
     }
 
@@ -1422,7 +1447,7 @@ namespace vg::editor
                                 // TODO: other extensions deduced from default folder?
                                 string ext = ".*";
                                 if (strstr(defaultFolder, "World"))
-                                    ext = ".world";
+                                    ext = "World files (*.world){.world}";
 
                                 ImGui::OpenFileDialog(selectFileString, ext, defaultFolder);
                             }
@@ -1900,7 +1925,7 @@ namespace vg::editor
                     }
                     else
                     {
-                        IResource * pResource = ref ? *_prop->GetPropertyResourcePtr(_object) : _prop->GetPropertyResource(_object);
+                        IResource * pResource = ref ? *context.originalProp->GetPropertyResourcePtr(context.originalObject) : context.originalProp->GetPropertyResource(context.originalObject);
                         changed |= displayResource(pResource, _prop, 0, context);
                     }
                 }
@@ -2056,7 +2081,10 @@ namespace vg::editor
 
         bool changed = false;
 
-        const string resPath = _resource->GetResourcePath();
+        string resPath = _resource->GetResourcePath();
+
+        if (_context.propOverride && _context.propOverride->IsEnable())
+            resPath = ((DynamicPropertyResource *)_context.propOverride)->m_value;
 
         char buffer[1024];
         sprintf_s(buffer, resPath.c_str());
@@ -2064,10 +2092,22 @@ namespace vg::editor
 
         const float buttonWidth = style::button::SizeSmall.x;
 
+        auto storePath = [=](const char * _resPath)
+        {
+            string relativePath = io::getRelativePath((string)_resPath);
+            if (_context.propOverride)
+            {
+                ((DynamicPropertyResource *)_context.propOverride)->m_value = relativePath;
+                _context.propOverride->Enable(true);
+            }
+            _resource->SetResourcePath(relativePath);
+        };
+
         auto availableWidth = GetContentRegionAvail().x;
         ImGui::PushItemWidth(availableWidth - style::label::PixelWidth - buttonWidth);
         if (ImGui::InputText(label.c_str(), buffer, countof(buffer), ImGuiInputTextFlags_EnterReturnsTrue))
-            _resource->SetResourcePath(buffer);
+            storePath(buffer);
+
         ImGui::PopItemWidth();
 
         string newFileButtonName = getButtonLabel("New", _resource);
@@ -2093,6 +2133,13 @@ namespace vg::editor
         ImGui::SetCursorPosX(x + buttonWidth);
 
         drawPropertyLabel(_prop->getDisplayName(), _context);
+
+        // TODO: make GameObject part of Context?
+        IGameObject * gameobject = findParentGameObject(_resource);
+        if (gameobject)
+        {
+            //if (_context.isPrefabInstance)
+        }
 
         auto x2 = ImGui::GetCursorPosX();
         ImGui::SameLine();
@@ -2131,8 +2178,6 @@ namespace vg::editor
 
                 if (ImGui::MenuItem(openFolder.c_str()))
                 {
-                    //string cmd = fmt::sprintf("Explorer.exe /select,\"%s/%s\"", io::getRootDirectory(), resPath);
-                    //system(cmd.c_str());
                     string path = fmt::sprintf("%s/%s", io::getRootDirectory(), resPath);
                     BrowseToFile(path.c_str());
                 }
@@ -2202,7 +2247,7 @@ namespace vg::editor
                 const string newFilePath = io::addExtensionIfNotPresent(ImGui::GetFileDialogSelectedFile(), _resource->getExtensions());
                 if (_resource->CreateFile(newFilePath))
                 {
-                    _resource->SetResourcePath(newFilePath);
+                    storePath(newFilePath.c_str());
                     changed = true;
                 }
             }
@@ -2218,7 +2263,7 @@ namespace vg::editor
                 const string newFilePath = ImGui::GetFileDialogSelectedFile();
                 if (_resource->GetResourcePath() != newFilePath)
                 {
-                    _resource->SetResourcePath(newFilePath);
+                    storePath(newFilePath.c_str());
                     changed = true;
                 }
             }

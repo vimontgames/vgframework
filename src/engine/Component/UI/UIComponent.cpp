@@ -26,7 +26,7 @@ namespace vg::engine
         registerPropertyEnumBitfield(UIComponent, gfx::UIItemFlags, m_UIFlags, "UI Flags");
 
         registerProperty(UIComponent, m_size, "Size");
-        setPropertyRange(UIComponent, m_size, float2(0, 3840));      
+        //setPropertyRange(UIComponent, m_size, float2(0, 3840));      
 
         registerOptionalProperty(UIComponent, m_useOffset, m_offset, "Offset");
 
