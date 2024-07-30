@@ -16,13 +16,17 @@ namespace ImGui
     //--------------------------------------------------------------------------------------
     bool IconBegin(const char * icon, const char * name, bool * p_open, ImGuiWindowFlags flags)
     {
-        return Begin(IconWithText(icon, name).c_str(), p_open, flags);
+        char temp[1024];
+        sprintf(temp, "%s %s", icon, name);
+        return Begin(temp, p_open, flags);
     }
 
     //--------------------------------------------------------------------------------------
-    bool IconMenuItem(const char* icon, const char* label, const char* shortcut, bool selected, bool enabled)
+    bool IconMenuItem(const char * icon, const char * label, const char* shortcut, bool selected, bool enabled)
     {
-        return MenuItem(IconWithText(icon, label).c_str(), shortcut, selected, enabled);
+        char temp[1024];
+        sprintf(temp, "%s %s", icon, label);
+        return MenuItem(temp, shortcut, selected, enabled);
     }
 
     //--------------------------------------------------------------------------------------

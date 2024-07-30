@@ -217,14 +217,14 @@ namespace vg::editor
                             break;
                     }
   
-                    string fullmsg;
+                    char fullmsg[2048];
                     
                     if (item.count > 1)
-                        fullmsg = fmt::sprintf("[%s] %s (x%u)", item.category, item.message, item.count);
+                        sprintf(fullmsg, "[%s] %s (x%u)", item.category.c_str(), item.message.c_str(), item.count);
                     else
-                        fullmsg = fmt::sprintf("[%s] %s", item.category, item.message);
+                        sprintf(fullmsg, "[%s] %s", item.category.c_str(), item.message.c_str());
 
-                    if (!m_filter.PassFilter(fullmsg.c_str()))
+                    if (!m_filter.PassFilter(fullmsg))
                         continue;
 
                     ImVec4 color;
@@ -245,7 +245,7 @@ namespace vg::editor
 
                     if (has_color)
                         ImGui::PushStyleColor(ImGuiCol_Text, color);
-                    ImGui::TextUnformatted(fullmsg.c_str());
+                    ImGui::TextUnformatted(fullmsg);
                     if (has_color)
                         ImGui::PopStyleColor();
                 }

@@ -177,8 +177,9 @@ namespace vg::editor
         }
         else
         {
-            string gameObjectLabel = fmt::sprintf("%s###%p", _gameObject->getName(), (void*)_gameObject);
-            open = ImGui::TreeNodeEx(gameObjectLabel.c_str(), flags | ImGuiTreeNodeFlags_SpanAvailWidth | ImGuiTreeNodeFlags_SpanFullWidth);
+            char gameObjectLabel[1024];
+            sprintf(gameObjectLabel, "%s###%p", _gameObject->getName().c_str(), (void *)_gameObject);
+            open = ImGui::TreeNodeEx(gameObjectLabel, flags | ImGuiTreeNodeFlags_SpanAvailWidth | ImGuiTreeNodeFlags_SpanFullWidth);
         }
 
         if (IsMouseDoubleClicked(ImGuiMouseButton_Left) && IsItemHovered())
