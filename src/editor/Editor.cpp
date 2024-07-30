@@ -166,6 +166,10 @@ namespace vg::editor
         // Get existing Singletons
         Kernel::setSingletons(_singletons);
 
+        // Cache ptr to IEngine and IRenderer as Editor is going to need them very often ...
+        m_engine = findEngine();
+        m_renderer = findRenderer();
+
         Timer::init();
 
         RegisterClasses();
@@ -228,13 +232,13 @@ namespace vg::editor
     }
 
     //--------------------------------------------------------------------------------------
-    vg::engine::IEngine * Editor::getEngine() const
+    vg::engine::IEngine * Editor::findEngine() const
     {
         return (vg::engine::IEngine *)getFactory()->getSingleton("Engine");
     }
 
     //--------------------------------------------------------------------------------------
-    vg::renderer::IRenderer * Editor::getRenderer() const
+    vg::renderer::IRenderer * Editor::findRenderer() const
     {
         return (vg::renderer::IRenderer *)getFactory()->getSingleton("Renderer");
     }

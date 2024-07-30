@@ -40,9 +40,9 @@ namespace vg
 			bool								RegisterClasses		() final override;
 			bool								UnregisterClasses	() final override;
 
-#ifdef _WIN32
+			#ifdef _WIN32
 			LRESULT CALLBACK                    WndProc				(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) final override;
-#endif
+			#endif
 
 			void							    Init				(const core::Singletons & _singletons) final override;
 			void							    Deinit				() final override;
@@ -61,8 +61,12 @@ namespace vg
 
 			core::IFactory *					getFactory			() const;
 			core::ISelection *					getSelection		() const;
-			engine::IEngine *					getEngine			() const;
-			renderer::IRenderer *				getRenderer			() const;
+
+			engine::IEngine *					findEngine			() const;
+			renderer::IRenderer *				findRenderer		() const;
+
+            VG_INLINE engine::IEngine *			getEngine			() const { return m_engine; }
+            VG_INLINE renderer::IRenderer *		getRenderer			() const { return m_renderer; }
 
 			void								openPrefabView		(const core::IResource * _prefabRes);
 			void								focus				(core::IGameObject * _gameObject);
@@ -72,6 +76,9 @@ namespace vg
 		private:
 			core::vector<ImGuiWindow *>			m_imGuiWindows;
 			core::vector<ImGuiWindow *>			m_imGuiWindowsToDestroy;
+
+			vg::engine::IEngine *				m_engine			= nullptr;
+			vg::renderer::IRenderer *			m_renderer			= nullptr;
 		};
 	}
 }
