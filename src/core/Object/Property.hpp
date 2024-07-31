@@ -357,6 +357,15 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
+    i32 * Property::GetPropertyIntN(const IObject * _object, uint _componentCount, uint _index) const
+    {
+        VG_ASSERT(nullptr != _object);
+        VG_ASSERT(Type::Int2 == getType() || Type::Int3 == getType() || Type::Int4 == getType());
+        VG_ASSERT(0 == _index || asBool(Flags::EnumArray & flags));
+        return (i32 *)(uint_ptr(_object) + offset + _index * sizeof(float) * _componentCount);
+    }
+
+    //--------------------------------------------------------------------------------------
     u32 * Property::GetPropertyUintN(const IObject * _object, uint _componentCount, uint _index) const
     {
         VG_ASSERT(nullptr != _object);

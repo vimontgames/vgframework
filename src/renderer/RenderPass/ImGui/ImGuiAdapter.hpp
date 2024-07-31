@@ -54,6 +54,7 @@ namespace vg::renderer
 
         io.ConfigFlags |= /*ImGuiConfigFlags_NavEnableKeyboard |*/ ImGuiConfigFlags_DockingEnable;
         io.ConfigDockingTransparentPayload = true;
+        //io.ConfigDragClickToInputText = true;
 
         for (uint j = 0; j < enumCount<ImGui::Font>(); ++j)
         {

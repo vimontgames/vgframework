@@ -96,7 +96,7 @@ namespace vg::editor
 
         static bool                             displayResource     (core::IResource * _resource, const core::IProperty * _prop, core::uint _index, Context & _context);
 
-        static bool                             displayFloat4x4     (core::IObject * _object, const core::IProperty * _prop, Context & _context);
+        static bool                             editFloat4x4        (core::IObject * _object, const core::IProperty * _prop, Context & _context);
 
         static core::string                     getFileBrowserExt   (const core::IResource * _resource);
         static core::string                     getDefaultFolder    (const core::IResource * _resource);
@@ -106,6 +106,8 @@ namespace vg::editor
         static core::ISelection *               getSelection        ();
 
     //protected:
+        static float                            getDragSpeedFloat   (const core::IProperty * _prop);
+        static float                            getDragSpeedInt     (const core::IProperty * _prop);
         static void                             underLine           (const ImColor & _color);
         static void                             textURL             (const char * _text, const char * _url);
 
@@ -119,11 +121,10 @@ namespace vg::editor
 
         static core::string                     getButtonLabel      (core::string _baseName, core::IObject * _object);
 
-    private:
         static bool                             isPropertyVisible   (core::IProperty::Flags _flags);
-        static core::string                     getPropertyLabel    (const core::string & _label);
+        static core::string                     getPropertyLabel    (const core::string & _label, core::uint _index = 0);
         static ImVec4                           getPropertyColor    (const Context & _context);
-        static void                             drawPropertyLabel   (const char * _label, const Context & _context);
+        static void                             drawPropertyLabel   (const char * _label, const Context & _context);    
 
     protected:
         core::string                            m_icon;

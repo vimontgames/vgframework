@@ -54,6 +54,9 @@ namespace vg::core
         virtual void                        RegisterProperty            (const char * _className, const char * _propertyName, uint2 * _offset, const char * _displayName, IProperty::Flags _flags) = 0;
         virtual void                        RegisterProperty            (const char * _className, const char * _propertyName, uint3 * _offset, const char * _displayName, IProperty::Flags _flags) = 0;
         virtual void                        RegisterProperty            (const char * _className, const char * _propertyName, uint4 * _offset, const char * _displayName, IProperty::Flags _flags) = 0;
+        virtual void                        RegisterProperty            (const char * _className, const char * _propertyName, int2 * _offset, const char * _displayName, IProperty::Flags _flags) = 0;
+        virtual void                        RegisterProperty            (const char * _className, const char * _propertyName, int3 * _offset, const char * _displayName, IProperty::Flags _flags) = 0;
+        virtual void                        RegisterProperty            (const char * _className, const char * _propertyName, int4 * _offset, const char * _displayName, IProperty::Flags _flags) = 0;
         virtual void                        RegisterProperty            (const char * _className, const char * _propertyName, float * _offset, const char * _displayName, IProperty::Flags _flags) = 0;
         virtual void                        RegisterProperty            (const char * _className, const char * _propertyName, float2 * _offset, const char * _displayName, IProperty::Flags _flags) = 0; 
         virtual void                        RegisterProperty            (const char * _className, const char * _propertyName, float3 * _offset, const char * _displayName, IProperty::Flags _flags) = 0;

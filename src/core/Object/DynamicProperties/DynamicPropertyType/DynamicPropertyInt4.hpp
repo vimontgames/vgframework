@@ -1,0 +1,29 @@
+#include "DynamicPropertyInt4.h"
+
+namespace vg::core
+{
+    VG_REGISTER_OBJECT_CLASS(DynamicPropertyInt4, "DynamicPropertyInt4");
+
+    //--------------------------------------------------------------------------------------
+    bool DynamicPropertyInt4::registerProperties(IClassDesc & _desc)
+    {
+        super::registerProperties(_desc);
+
+        registerProperty(DynamicPropertyInt4, m_value, "Value");
+
+        return true;
+    }
+
+    //--------------------------------------------------------------------------------------
+    DynamicPropertyInt4::DynamicPropertyInt4(const core::string & _name, core::IObject * _parent) :
+        DynamicPropertyT<int4>(_name, _parent)
+    {
+
+    }
+
+    //--------------------------------------------------------------------------------------
+    core::int4 * DynamicPropertyInt4::GetPropertyPtr(const IObject * _object, const IProperty * _prop) const
+    {
+        return (core::int4 *)_prop->GetPropertyIntN(_object, 4);
+    }
+}

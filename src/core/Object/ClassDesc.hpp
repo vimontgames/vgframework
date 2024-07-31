@@ -148,6 +148,24 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
+    void ClassDesc::RegisterProperty(const char * _className, const char * _propertyName, core::int2 * _offset, const char * _displayName, IProperty::Flags _flags)
+    {
+        registerClassMemberT(_className, _propertyName, _offset, _displayName, _flags);
+    }
+
+    //--------------------------------------------------------------------------------------
+    void ClassDesc::RegisterProperty(const char * _className, const char * _propertyName, core::int3 * _offset, const char * _displayName, IProperty::Flags _flags)
+    {
+        registerClassMemberT(_className, _propertyName, _offset, _displayName, _flags);
+    }
+
+    //--------------------------------------------------------------------------------------
+    void ClassDesc::RegisterProperty(const char * _className, const char * _propertyName, core::int4 * _offset, const char * _displayName, IProperty::Flags _flags)
+    {
+        registerClassMemberT(_className, _propertyName, _offset, _displayName, _flags);
+    }
+
+    //--------------------------------------------------------------------------------------
     void ClassDesc::RegisterProperty(const char * _className, const char * _propertyName, core::i8 * _offset, const char * _displayName, IProperty::Flags _flags)
     {
         registerClassMemberT(_className, _propertyName, _offset, _displayName, _flags);
@@ -412,6 +430,9 @@ namespace vg::core
     template <> struct TypeToEnum<core::uint2> { static constexpr auto value = IProperty::Type::Uint2; };
     template <> struct TypeToEnum<core::uint3> { static constexpr auto value = IProperty::Type::Uint3; };
     template <> struct TypeToEnum<core::uint4> { static constexpr auto value = IProperty::Type::Uint4; };
+    template <> struct TypeToEnum<core::int2> { static constexpr auto value = IProperty::Type::Int2; };
+    template <> struct TypeToEnum<core::int3> { static constexpr auto value = IProperty::Type::Int3; };
+    template <> struct TypeToEnum<core::int4> { static constexpr auto value = IProperty::Type::Int4; };
     template <> struct TypeToEnum<float> { static constexpr auto value = IProperty::Type::Float; };
     template <> struct TypeToEnum<core::float2> { static constexpr auto value = IProperty::Type::Float2; };
     template <> struct TypeToEnum<core::float3> { static constexpr auto value = IProperty::Type::Float3; };

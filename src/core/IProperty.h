@@ -31,6 +31,9 @@ namespace vg::core
             Uint2,
             Uint3,
             Uint4,
+            Int2,
+            Int3,
+            Int4,
             Uint64,
             Float,
             Float2,
@@ -123,13 +126,15 @@ namespace vg::core
         virtual i16 *                           GetPropertyInt16                (const IObject * _object) const = 0;
         virtual i32 *                           GetPropertyInt32                (const IObject * _object) const = 0;
         virtual i64 *                           GetPropertyInt64                (const IObject * _object) const = 0;
-
+        
         virtual u8 *                            GetPropertyUint8                (const IObject * _object, uint _index = 0) const = 0;
         virtual u16 *                           GetPropertyUint16               (const IObject * _object) const = 0;
         virtual u32 *                           GetPropertyUint32               (const IObject * _object) const = 0;
-        virtual u32 *                           GetPropertyUintN                (const IObject * _object, uint _componentCount, uint _index = 0) const = 0;
         virtual u64 *                           GetPropertyUint64               (const IObject * _object) const = 0;
-
+        
+        virtual i32 *                           GetPropertyIntN                 (const IObject * _object, uint _componentCount, uint _index = 0) const = 0;
+        virtual u32 *                           GetPropertyUintN                (const IObject * _object, uint _componentCount, uint _index = 0) const = 0;
+        
         virtual BitMask *                       GetPropertyBitMask              (const IObject * _object) const = 0;
         virtual ObjectHandle *                  GetPropertyObjectHandle         (const IObject * _object) const = 0;
 

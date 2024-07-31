@@ -193,6 +193,11 @@ namespace vg::engine
             break;
 
             case IProperty::Type::Uint2:
+            case IProperty::Type::Uint3:
+            case IProperty::Type::Uint4:
+            case IProperty::Type::Int2:
+            case IProperty::Type::Int3:
+            case IProperty::Type::Int4:
             {
                 if (isEnumArray)
                     return false;
@@ -395,6 +400,26 @@ namespace vg::engine
 
                 case IProperty::Type::Uint2:
                     newDynProp = new DynamicPropertyUInt2(_prop->getName());
+                    break;
+
+                case IProperty::Type::Uint3:
+                    newDynProp = new DynamicPropertyUInt3(_prop->getName());
+                    break;
+
+                case IProperty::Type::Uint4:
+                    newDynProp = new DynamicPropertyUInt4(_prop->getName());
+                    break;
+
+                case IProperty::Type::Int2:
+                    newDynProp = new DynamicPropertyInt2(_prop->getName());
+                    break;
+
+                case IProperty::Type::Int3:
+                    newDynProp = new DynamicPropertyInt3(_prop->getName());
+                    break;
+
+                case IProperty::Type::Int4:
+                    newDynProp = new DynamicPropertyInt4(_prop->getName());
                     break;
 
                 case IProperty::Type::Int8:

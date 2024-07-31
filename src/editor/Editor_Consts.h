@@ -30,6 +30,18 @@ namespace vg::editor
             inline static const core::uint TextLength = 14;
         }
 
+        namespace range
+        {
+            inline static const float minFloat = FLT_MIN;
+            inline static const float maxFloat = FLT_MAX;
+           
+            inline static const core::u32 minUInt = 0;
+            inline static const core::u32 maxUInt = UINT_MAX;
+            
+            inline static const core::i32 minInt = INT_MIN;
+            inline static const core::i32 maxInt = INT_MAX;
+        }
+
         namespace draganddrop
         {
             inline static const ImVec2 interlineSize = ImVec2(256.0f, 8.0f);

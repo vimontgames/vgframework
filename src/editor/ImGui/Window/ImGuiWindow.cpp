@@ -13,6 +13,7 @@
 #include "core/Misc/AABB/AABB.h"
 #include "core/Object/DynamicProperties/DynamicProperties.h"
 #include "core/Object/ObjectHandle.h"
+#include "core/Types/Traits.h"
 
 #include "renderer/IRenderer.h"
 
@@ -61,7 +62,9 @@ using namespace ImGui;
 
 namespace vg::editor
 {
-    const char * g_editFloatFormat = "%g";
+    const char * g_editFloatFormat = "%.2f";
+    const char * g_editUIntFormat = "%u";
+    const char * g_editIntFormat = "%i";
 
     //--------------------------------------------------------------------------------------
     core::string ImGuiWindow::getFileBrowserExt(const core::IResource * _resource)
@@ -164,6 +167,12 @@ namespace vg::editor
     template <> struct TypeToDynamicPropertyTypeEnum<core::u64> { using type = core::DynamicPropertyU64; };
 
     template <> struct TypeToDynamicPropertyTypeEnum<core::uint2> { using type = core::DynamicPropertyUInt2; };
+    template <> struct TypeToDynamicPropertyTypeEnum<core::uint3> { using type = core::DynamicPropertyUInt3; };
+    template <> struct TypeToDynamicPropertyTypeEnum<core::uint4> { using type = core::DynamicPropertyUInt4; };
+
+    template <> struct TypeToDynamicPropertyTypeEnum<core::int2> { using type = core::DynamicPropertyInt2; };
+    template <> struct TypeToDynamicPropertyTypeEnum<core::int3> { using type = core::DynamicPropertyInt3; };
+    template <> struct TypeToDynamicPropertyTypeEnum<core::int4> { using type = core::DynamicPropertyInt4; };
 
     template <> struct TypeToDynamicPropertyTypeEnum<core::i8> { using type = core::DynamicPropertyI8; };
     template <> struct TypeToDynamicPropertyTypeEnum<core::i16> { using type = core::DynamicPropertyI16; };
@@ -178,6 +187,10 @@ namespace vg::editor
     template <> bool equals(core::uint2 a, core::uint2 b) { return all(a == b); }
     template <> bool equals(core::uint3 a, core::uint3 b) { return all(a == b); }
     template <> bool equals(core::uint4 a, core::uint4 b) { return all(a == b); }
+
+    template <> bool equals(core::int2 a, core::int2 b) { return all(a == b); }
+    template <> bool equals(core::int3 a, core::int3 b) { return all(a == b); }
+    template <> bool equals(core::int4 a, core::int4 b) { return all(a == b); }
 
     template <> bool equals(core::float2 a, core::float2 b)     { return all(a == b); }
     template <> bool equals(core::float3 a, core::float3 b)     { return all(a == b); }
@@ -225,6 +238,53 @@ namespace vg::editor
 
             return true;
         }
+        return false;
+    }    
+
+    template <typename T> struct ImGuiDataTypeInfo;
+    template <> struct ImGuiDataTypeInfo<u8> { static const ImGuiDataType_ type = ImGuiDataType_U8; };
+    template <> struct ImGuiDataTypeInfo<u16> { static const ImGuiDataType_ type = ImGuiDataType_U16; };
+    template <> struct ImGuiDataTypeInfo<u32> { static const ImGuiDataType_ type = ImGuiDataType_U32; };
+    template <> struct ImGuiDataTypeInfo<u64> { static const ImGuiDataType_ type = ImGuiDataType_U64; };
+
+    template <> struct ImGuiDataTypeInfo<i8> { static const ImGuiDataType_ type = ImGuiDataType_S8; };
+    template <> struct ImGuiDataTypeInfo<i16> { static const ImGuiDataType_ type = ImGuiDataType_S16; };
+    template <> struct ImGuiDataTypeInfo<i32> { static const ImGuiDataType_ type = ImGuiDataType_S32; };
+    template <> struct ImGuiDataTypeInfo<i64> { static const ImGuiDataType_ type = ImGuiDataType_S64; };
+
+    template <> struct ImGuiDataTypeInfo<float> { static const ImGuiDataType_ type = ImGuiDataType_Float; };
+
+    template <typename T> bool editScalarProperty(Context & _context, const string & _label, IObject * _object, const IProperty * _prop, typename vectorTraits<T>::type * _ptr)
+    {
+        constexpr auto count = vectorTraits<T>::count;
+        using S = typename vectorTraits<T>::type;
+
+        S temp[count];
+        for (int i = 0; i < count; ++i)
+            temp[i] = _ptr[i];
+
+        const S minRange = (S)_prop->getRange().x;
+        const S maxRange = (S)_prop->getRange().y;
+
+        bool edited = false;
+
+        const auto dragSpeed = scalarTraits<S>::is_integer ? ImGuiWindow::getDragSpeedInt(_prop) : ImGuiWindow::getDragSpeedFloat(_prop);
+        const auto editFormat = scalarTraits<S>::is_integer ? (scalarTraits<S>::is_signed ? g_editIntFormat : g_editUIntFormat ) : g_editFloatFormat;
+        const auto flags = _prop->getFlags();
+
+        if (asBool(IProperty::Flags::HasRange & flags))
+            edited = ImGui::DragScalarN(ImGuiWindow::getPropertyLabel(_label).c_str(), ImGuiDataTypeInfo<S>::type, &temp, count, dragSpeed, &minRange, &maxRange, editFormat);
+        else                                                                                                     
+            edited = ImGui::DragScalarN(ImGuiWindow::getPropertyLabel(_label).c_str(), ImGuiDataTypeInfo<S>::type, &temp, count, dragSpeed, nullptr, nullptr, editFormat);
+
+        ImGuiWindow::drawPropertyLabel(_prop->getDisplayName(), _context);
+
+        if (edited)
+        {
+            if (storeProperty((T *)_ptr, vectorTraits<T>::makeVector(temp), _object, _prop, _context))
+                return true;
+        }
+
         return false;
     }
 
@@ -488,9 +548,9 @@ namespace vg::editor
     }
 
     //--------------------------------------------------------------------------------------
-    string ImGuiWindow::getPropertyLabel(const string & _label)
+    string ImGuiWindow::getPropertyLabel(const string & _label, core::uint _index)
     {
-        return fmt::sprintf("##%s", _label);
+        return fmt::sprintf("##%s%u", _label, _index);
     }
 
     //--------------------------------------------------------------------------------------
@@ -554,6 +614,24 @@ namespace vg::editor
     }
 
     //--------------------------------------------------------------------------------------
+    float ImGuiWindow::getDragSpeedFloat(const IProperty * _prop) 
+    {
+        //if (asBool(IProperty::Flags::HasRange & _prop->getFlags()))
+        //    return (_prop->getRange().y - _prop->getRange().x) / 1000.0f;
+        //else
+            return 0.05f;
+    }
+
+    //--------------------------------------------------------------------------------------
+    float ImGuiWindow::getDragSpeedInt(const IProperty * _prop)
+    {
+        //if (asBool(IProperty::Flags::HasRange & _prop->getFlags()))
+        //    return (_prop->getRange().y - _prop->getRange().x) / 1000.0f;
+        //else
+            return 1.0f;
+    }
+
+    //--------------------------------------------------------------------------------------
     void ImGuiWindow::displayProperty(core::IObject * _object, const IProperty * _prop, ObjectContext & _objectContext)
     {
         VG_ASSERT(nullptr != _prop);
@@ -610,7 +688,7 @@ namespace vg::editor
         const auto type = _prop->getType();
         const auto name = _prop->getName();
         const auto displayName = _prop->getDisplayName();
-        const auto label = ImGui::getObjectLabel(displayName, _prop);
+        const auto label = ImGui::getObjectLabel(displayName, context.originalProp);
         const auto offset = _prop->getOffset();
         const auto flags = _prop->getFlags();
 
@@ -943,28 +1021,7 @@ namespace vg::editor
                     }
                     else
                     {
-                        u8 * pU8 = _prop->GetPropertyUint8(_object);
-                        i32 temp = (u8)*pU8;
-                        bool edited = false;
-
-                        if (asBool(IProperty::Flags::HasRange & flags))
-                        {
-                            if (ImGui::SliderInt(getPropertyLabel(label).c_str(), &temp, max((int)0, (int)_prop->getRange().x), min((int)255, (int)_prop->getRange().y), "%d", imguiInputTextflags))
-                                edited = true;
-                        }
-                        else
-                        {
-                            if (ImGui::InputInt(getPropertyLabel(label).c_str(), &temp, 1, 16, imguiInputTextflags))
-                                edited = true;
-                        }
-
-                        drawPropertyLabel(_prop->getDisplayName(), context);
-
-                        if (edited)
-                        {
-                            if (storeProperty<u8>(pU8, temp, _object, _prop, context))
-                                changed = true;
-                        }
+                        changed = editScalarProperty<u8>(context, label, _object, _prop, _prop->GetPropertyUint8(_object));
                     }
                 };
                 break;
@@ -972,300 +1029,112 @@ namespace vg::editor
                 case IProperty::Type::Int8:
                 {
                     VG_ASSERT(!isEnumArray, "Display of EnumArray property not implemented for type '%s'", asString(type).c_str());
-
-                    i8 * pI8 = (i8 *)(uint_ptr(_object) + offset);
-                    i32 temp = (u8)*pI8;
-                    bool edited = false;
-
-                    if (asBool(IProperty::Flags::HasRange & flags))
-                        edited = ImGui::SliderInt(getPropertyLabel(label).c_str(), &temp, max((int)-128, (int)_prop->getRange().x), min((int)127, (int)_prop->getRange().y), "%d", imguiInputTextflags);
-                    else
-                        edited = ImGui::InputInt(getPropertyLabel(label).c_str(), &temp, 1, 16, imguiInputTextflags);
-
-                    drawPropertyLabel(_prop->getDisplayName(), context);
-
-                    if (edited)
-                    {
-                        if (storeProperty<i8>(pI8, temp, _object, _prop, context))
-                            changed = true;
-                    }
+                    changed = editScalarProperty<i8>(context, label, _object, _prop, _prop->GetPropertyInt8(_object));
                 };
                 break;
 
                 case IProperty::Type::Uint16:
                 {
                     VG_ASSERT(!isEnumArray, "Display of EnumArray property not implemented for type '%s'", asString(type).c_str());
-
-                    i16 * pU16 = (i16 *)(uint_ptr(_object) + offset);
-                    i32 temp = (u16)*pU16;
-
-                    bool edited = false;
-                    if (asBool(IProperty::Flags::HasRange & flags))
-                    {
-                        if (ImGui::SliderInt(getPropertyLabel(label).c_str(), &temp, max((int)0, (int)_prop->getRange().x), min((int)65535, (int)_prop->getRange().y), "%d", imguiInputTextflags))
-                            edited = true;
-                    }
-                    else
-                    {
-                        if (ImGui::InputInt(getPropertyLabel(label).c_str(), &temp, 1, 16, imguiInputTextflags))
-                            edited = true;
-                    }
-
-                    drawPropertyLabel(_prop->getDisplayName(), context);
-
-                    if (edited)
-                    {
-                        if (storeProperty<u16>((u16 *)pU16, (u16)temp, _object, _prop, context))
-                            changed = true;
-                    }
+                    changed = editScalarProperty<u16>(context, label, _object, _prop, _prop->GetPropertyUint16(_object));
                 };
                 break;
 
                 case IProperty::Type::Int16:
                 {
                     VG_ASSERT(!isEnumArray, "Display of EnumArray property not implemented for type '%s'", asString(type).c_str());
-
-                    i16 * pI16 = (i16 *)(uint_ptr(_object) + offset);
-                    i32 temp = (i16)*pI16;
-                    bool edited = false;
-
-                    if (asBool(IProperty::Flags::HasRange & flags))
-                        edited = ImGui::SliderInt(getPropertyLabel(label).c_str(), &temp, max((int)-32768, (int)_prop->getRange().x), min((int)32767, (int)_prop->getRange().y), "%d", imguiInputTextflags);
-                    else
-                        edited = ImGui::InputInt(getPropertyLabel(label).c_str(), &temp, 1, 16, imguiInputTextflags);
-
-                    drawPropertyLabel(_prop->getDisplayName(), context);
-
-                    if (edited)
-                    {
-                        if (storeProperty<i16>((i16 *)pI16, (i16)temp, _object, _prop, context))
-                            changed = true;
-                    }
+                    changed = editScalarProperty<i16>(context, label, _object, _prop, _prop->GetPropertyInt16(_object));
                 };
                 break;
 
                 case IProperty::Type::Int32:
                 {
                     VG_ASSERT(!isEnumArray, "Display of EnumArray property not implemented for type '%s'", asString(type).c_str());
-
-                    i32 * pI32 = _prop->GetPropertyInt32(_object);
-                    i32 temp = *pI32;
-                    bool edited = false;
-
-                    if (asBool(IProperty::Flags::HasRange & flags))
-                        edited = ImGui::SliderInt(getPropertyLabel(label).c_str(), &temp, max((int)-2147483648, (int)_prop->getRange().x), min(+2147483647, (int)_prop->getRange().y), "%d", imguiInputTextflags);
-                    else
-                        edited = ImGui::InputInt(getPropertyLabel(label).c_str(), &temp, 1, 16, imguiInputTextflags);
-
-                    drawPropertyLabel(_prop->getDisplayName(), context);
-
-                    if (edited)
-                    {
-                        if (storeProperty<i32>((i32 *)pI32, (i32)temp, _object, _prop, context))
-                            changed = true;
-                    }
+                    changed = editScalarProperty<i32>(context, label, _object, _prop, _prop->GetPropertyInt32(_object));
                 };
                 break;
 
                 case IProperty::Type::Int64:
                 {
                     VG_ASSERT(!isEnumArray, "Display of EnumArray property not implemented for type '%s'", asString(type).c_str());
+                    changed = editScalarProperty<i64>(context, label, _object, _prop, _prop->GetPropertyInt64(_object));
+                };
+                break;
 
-                    i64 * pI64 = _prop->GetPropertyInt64(_object);
-                    i64 temp = *pI64;
-                    i64 minRange = (u64)_prop->getRange().x;
-                    i64 maxRange = (u64)_prop->getRange().y;
-                    bool edited = false;
+                case IProperty::Type::Int2:
+                {
+                    VG_ASSERT(!isEnumArray, "Display of EnumArray property not implemented for type '%s'", asString(type).c_str());
+                    changed = editScalarProperty<int2>(context, label, _object, _prop, _prop->GetPropertyIntN(_object, 2));
+                };
+                break;
 
-                    if (asBool(IProperty::Flags::HasRange & flags))
-                        edited = ImGui::SliderScalar(getPropertyLabel(label).c_str(), ImGuiDataType_S64, &temp, &minRange, &maxRange, nullptr, imguiInputTextflags);
-                    else
-                        edited = ImGui::InputScalar(getPropertyLabel(label).c_str(), ImGuiDataType_S64, &temp, nullptr, nullptr, nullptr, imguiInputTextflags);
+                case IProperty::Type::Int3:
+                {
+                    VG_ASSERT(!isEnumArray, "Display of EnumArray property not implemented for type '%s'", asString(type).c_str());
+                    changed = editScalarProperty<int3>(context, label, _object, _prop, _prop->GetPropertyIntN(_object, 3));
+                };
+                break;
 
-                    drawPropertyLabel(_prop->getDisplayName(), context);
-
-                    if (edited)
-                    {
-                        if (storeProperty(pI64, temp, _object, _prop, context))
-                            changed = true;
-                    }
+                case IProperty::Type::Int4:
+                {
+                    VG_ASSERT(!isEnumArray, "Display of EnumArray property not implemented for type '%s'", asString(type).c_str());
+                    changed = editScalarProperty<int4>(context, label, _object, _prop, _prop->GetPropertyIntN(_object, 4));
                 };
                 break;
 
                 case IProperty::Type::Uint32:
                 {
                     VG_ASSERT(!isEnumArray, "Display of EnumArray property not implemented for type '%s'", asString(type).c_str());
-
-                    u32 * pU32 = _prop->GetPropertyUint32(_object);
-                    u32 temp = *pU32;
-
-                    const u32 smallStep = 1;
-                    const u32 bigStep = 100;
-                    u32 minRange = (u32)max(0, _prop->getRange().x);
-                    u32 maxRange = (u32)_prop->getRange().y;
-                    bool edited = false;
-
-                    if (asBool(IProperty::Flags::HasRange & flags))
-                        edited = ImGui::SliderScalar(getPropertyLabel(label).c_str(), ImGuiDataType_U32, &temp, &minRange, &maxRange, hexa ? "%08X" : "%d", imguiNumberTextInputFlag);
-                    else
-                        edited = ImGui::InputScalar(getPropertyLabel(label).c_str(), ImGuiDataType_U32, &temp, &smallStep, &bigStep, hexa ? "%08X" : "%d", imguiNumberTextInputFlag);
-
-                    drawPropertyLabel(_prop->getDisplayName(), context);
-
-                    if (edited)
-                    {
-                        if (storeProperty<u32>(pU32, temp, _object, _prop, context))
-                            changed = true;
-                    }
+                    changed = editScalarProperty<u32>(context, label, _object, _prop, _prop->GetPropertyUint32(_object));
                 };
                 break;
 
                 case IProperty::Type::Uint64:
                 {
                     VG_ASSERT(!isEnumArray, "Display of EnumArray property not implemented for type '%s'", asString(type).c_str());
-
-                    u64 * pU64 = _prop->GetPropertyUint64(_object);
-                    u64 temp = *pU64;
-                    u64 minRange = (u64)_prop->getRange().x;
-                    u64 maxRange = (u64)_prop->getRange().y;
-                    bool edited = false;
-
-                    if (asBool(IProperty::Flags::HasRange & flags))
-                        edited = ImGui::SliderScalar(getPropertyLabel(label).c_str(), ImGuiDataType_U64, &temp, &minRange, &maxRange, nullptr, imguiInputTextflags);
-                    else
-                        edited = ImGui::InputScalar(getPropertyLabel(label).c_str(), ImGuiDataType_U64, &temp, nullptr, nullptr, nullptr, imguiInputTextflags);
-
-                    drawPropertyLabel(_prop->getDisplayName(), context);
-
-                    if (edited)
-                    {
-                        if (storeProperty(pU64, temp, _object, _prop, context))
-                            changed = true;
-                    }
+                    changed = editScalarProperty<u64>(context, label, _object, _prop, _prop->GetPropertyUint64(_object));
                 };
                 break;
 
                 case IProperty::Type::Uint2:
                 {
                     VG_ASSERT(!isEnumArray, "Display of EnumArray property not implemented for type '%s'", asString(type).c_str());
+                    changed = editScalarProperty<uint2>(context, label, _object, _prop, _prop->GetPropertyUintN(_object, 2));
+                };
+                break;
 
-                    u32 * pU32 = (u32*)_prop->GetPropertyUintN(_object, 2);
-                    
-                    u32 temp[2];
-                    for (uint i = 0; i < 2; ++i)
-                        temp[i] = pU32[i];
+                case IProperty::Type::Uint3:
+                {
+                    VG_ASSERT(!isEnumArray, "Display of EnumArray property not implemented for type '%s'", asString(type).c_str());
+                    changed = editScalarProperty<uint3>(context, label, _object, _prop, _prop->GetPropertyUintN(_object, 3));
+                };
+                break;
 
-                    u32 minRange = (u32)_prop->getRange().x;
-                    u32 maxRange = (u32)_prop->getRange().y;
-
-                    bool edited = false;
-
-                    if (asBool(IProperty::Flags::HasRange & flags))
-                        edited = ImGui::SliderScalarN(getPropertyLabel(label).c_str(), ImGuiDataType_U32, &temp, 2, &minRange, &maxRange, "%u", imguiInputTextflags);
-                    else
-                        edited = ImGui::InputScalarN(getPropertyLabel(label).c_str(), ImGuiDataType_U32, &temp, 2, &minRange, &maxRange, "%u", imguiInputTextflags);
-
-                    drawPropertyLabel(_prop->getDisplayName(), context);
-
-                    if (edited)
-                    {
-                        if (storeProperty((uint2*)pU32, uint2(temp[0], temp[1]), _object, _prop, context))
-                            changed = true;
-                    }
+                case IProperty::Type::Uint4:
+                {
+                    VG_ASSERT(!isEnumArray, "Display of EnumArray property not implemented for type '%s'", asString(type).c_str());
+                    changed = editScalarProperty<uint4>(context, label, _object, _prop, _prop->GetPropertyUintN(_object, 4));
                 };
                 break;
 
                 case IProperty::Type::Float:
                 {
                     VG_ASSERT(!isEnumArray, "Display of EnumArray property not implemented for type '%s'", asString(type).c_str());
-
-                    float * pFloat = _prop->GetPropertyFloat(_object);
-                    float temp = *pFloat;
-                    bool edited = false;
-
-                    if (asBool(IProperty::Flags::HasRange & flags))
-                    {
-                        if (ImGui::SliderFloat(getPropertyLabel(label).c_str(), &temp, _prop->getRange().x, _prop->getRange().y, g_editFloatFormat))
-                            edited = true;
-                    }
-                    else
-                    {
-                        if (ImGui::InputFloat(getPropertyLabel(label).c_str(), &temp, 0.1f, 1.0f, g_editFloatFormat, imguiInputTextflags))
-                            edited = true;
-                    }
-
-                    drawPropertyLabel(_prop->getDisplayName(), context);
-
-                    if (edited)
-                    {
-                        if (storeProperty(pFloat, temp, _object, _prop, context))
-                            changed = true;
-                    }
+                    changed = editScalarProperty<float>(context, label, _object, _prop, _prop->GetPropertyFloat(_object));
                 };
                 break;
 
                 case IProperty::Type::Float2:
                 {
                     VG_ASSERT(!isEnumArray, "Display of EnumArray property not implemented for type '%s'", asString(type).c_str());
-
-                    float * pFloat2 = (float *)_prop->GetPropertyFloat2(_object);
-
-                    float temp[2];
-                    for (uint i = 0; i < 2; ++i)
-                        temp[i] = pFloat2[i];
-
-                    bool edited = false;
-
-                    if (asBool(IProperty::Flags::HasRange & flags))
-                        edited = ImGui::SliderFloat2(getPropertyLabel(label).c_str(), (float *)&temp, _prop->getRange().x, _prop->getRange().y, g_editFloatFormat);
-                    else
-                        edited = ImGui::InputFloat2(getPropertyLabel(label).c_str(), (float *)&temp, g_editFloatFormat, imguiInputTextflags);
-
-                    drawPropertyLabel(displayName, context);
-
-                    if (edited)
-                    {
-                        if (storeProperty((float2 *)pFloat2, float2(temp[0], temp[1]), _object, _prop, context))
-                            changed = true;
-                    }
+                    changed = editScalarProperty<float2>(context, label, _object, _prop, _prop->GetPropertyFloatN(_object, 2));
                 };
                 break;
 
                 case IProperty::Type::Float3:
                 {
                     VG_ASSERT(!isEnumArray, "Display of EnumArray property not implemented for type '%s'", asString(type).c_str());
-
-                    float * pFloat3 = (float *)_prop->GetPropertyFloat3(_object);
-
-                    float temp[3];
-                    for (uint i = 0; i < 3; ++i)
-                        temp[i] = pFloat3[i];
-
-                    bool edited = false;
-
-                    if (asBool(IProperty::Flags::Color & flags))
-                    {
-                        ImGuiColorEditFlags colorEditFlags = 0;
-
-                        if (asBool(IProperty::Flags::HDR & flags))
-                            colorEditFlags |= ImGuiColorEditFlags_HDR | ImGuiColorEditFlags_Float;
-
-                        if (ImGui::ColorEdit3(getPropertyLabel(label).c_str(), (float *) &temp, colorEditFlags))
-                            edited = true;
-                    }
-                    else
-                    {
-                        if (ImGui::InputFloat3(getPropertyLabel(label).c_str(), (float *) &temp, g_editFloatFormat, imguiInputTextflags))
-                            edited = true;
-                    }
-
-                    drawPropertyLabel(displayName, context);
-
-                    if (edited)
-                    {
-                        if (storeProperty<float3>((float3*)pFloat3, float3(temp[0], temp[1], temp[2]), _object, _prop, context))
-                            changed = true;
-                    }
+                    changed = editScalarProperty<float3>(context, label, _object, _prop, _prop->GetPropertyFloatN(_object, 3));
                 };
                 break;
 
@@ -1291,35 +1160,7 @@ namespace vg::editor
                     }
                     else
                     {
-                        float temp[4];
-                        for (uint i = 0; i < 4; ++i)
-                            temp[i] = pFloat4[i];
-
-                        bool edited = false;
-
-                        if (asBool(IProperty::Flags::Color & flags))
-                        {
-                            ImGuiColorEditFlags colorEditFlags = 0;
-
-                            if (asBool(IProperty::Flags::HDR & flags))
-                                colorEditFlags |= ImGuiColorEditFlags_HDR | ImGuiColorEditFlags_Float;                              
-
-                            if (ImGui::ColorEdit4(getPropertyLabel(label).c_str(), (float *)&temp, colorEditFlags))
-                                edited = true;
-                        }
-                        else
-                        {
-                            if (ImGui::InputFloat4(getPropertyLabel(label).c_str(), (float *)&temp, g_editFloatFormat, imguiInputTextflags))
-                                edited = true;
-                        }
-
-                        drawPropertyLabel(displayName, context);
-
-                        if (edited)
-                        {
-                            if (storeProperty((core::float4*)pFloat4, float4(temp[0], temp[1], temp[2], temp[3]), _object, _prop, context))
-                                changed = true;
-                        }
+                        changed = editScalarProperty<float3>(context, label, _object, _prop, _prop->GetPropertyFloatN(_object, 3));
                     }
                 };
                 break;
@@ -1327,7 +1168,7 @@ namespace vg::editor
                 case IProperty::Type::Float4x4:
                 {
                     VG_ASSERT(!isEnumArray, "Display of EnumArray property not implemented for type '%s'", asString(type).c_str());
-                    changed |= displayFloat4x4(_object, _prop, context); 
+                    changed |= editFloat4x4(_object, _prop, context); 
                 }
                 break;
 
@@ -2447,7 +2288,7 @@ namespace vg::editor
     }
 
     //--------------------------------------------------------------------------------------
-    bool ImGuiWindow::displayFloat4x4(core::IObject * _object, const core::IProperty * _prop, Context & _context)
+    bool ImGuiWindow::editFloat4x4(core::IObject * _object, const core::IProperty * _prop, Context & _context)
     {
         bool changed = false;
 
@@ -2463,16 +2304,16 @@ namespace vg::editor
         {
             bool edited = false;
 
-            edited |= ImGui::InputFloat4(getPropertyLabel("I").c_str(), (float *)&temp[0], g_editFloatFormat, ImGuiInputTextFlags_EnterReturnsTrue);
+            edited |= ImGui::DragFloat4(getPropertyLabel("I").c_str(), (float *)&temp[0], getDragSpeedFloat(_prop), style::range::minFloat, style::range::maxFloat, g_editFloatFormat);
             drawPropertyLabel("I", _context);
 
-            edited |= ImGui::InputFloat4(getPropertyLabel("J").c_str(), (float *)&temp[4], g_editFloatFormat, ImGuiInputTextFlags_EnterReturnsTrue);
+            edited |= ImGui::DragFloat4(getPropertyLabel("J").c_str(), (float *)&temp[4], getDragSpeedFloat(_prop), style::range::minFloat, style::range::maxFloat, g_editFloatFormat);
             drawPropertyLabel("J", _context);
 
-            edited |= ImGui::InputFloat4(getPropertyLabel("K").c_str(), (float *)&temp[8], g_editFloatFormat, ImGuiInputTextFlags_EnterReturnsTrue);
+            edited |= ImGui::DragFloat4(getPropertyLabel("K").c_str(), (float *)&temp[8], getDragSpeedFloat(_prop), style::range::minFloat, style::range::maxFloat, g_editFloatFormat);
             drawPropertyLabel("K", _context);
 
-            edited |= ImGui::InputFloat4(getPropertyLabel("T").c_str(), (float *)&temp[12], g_editFloatFormat, ImGuiInputTextFlags_EnterReturnsTrue);
+            edited |= ImGui::DragFloat4(getPropertyLabel("T").c_str(), (float *)&temp[12], getDragSpeedFloat(_prop), style::range::minFloat, style::range::maxFloat, g_editFloatFormat);
             drawPropertyLabel("T", _context);
 
             if (edited)

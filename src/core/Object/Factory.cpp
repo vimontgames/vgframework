@@ -532,6 +532,21 @@ namespace vg::core
             memcpy(_dstProp->GetPropertyUintN(_dstObj, 4), _srcProp->GetPropertyUintN(_srcObj, 4), sizeof(uint) * 4);
             break;
 
+        case IProperty::Type::Int2:
+            VG_ASSERT(!srcIsEnumArray, "EnumArray CopyProperties serialization not implemented for type '%s'", asString(srcPropType).c_str());
+            memcpy(_dstProp->GetPropertyIntN(_dstObj, 2), _srcProp->GetPropertyIntN(_srcObj, 2), sizeof(int) * 2);
+            break;
+
+        case IProperty::Type::Int3:
+            VG_ASSERT(!srcIsEnumArray, "EnumArray CopyProperties serialization not implemented for type '%s'", asString(srcPropType).c_str());
+            memcpy(_dstProp->GetPropertyIntN(_dstObj, 3), _srcProp->GetPropertyIntN(_srcObj, 3), sizeof(int) * 3);
+            break;
+
+        case IProperty::Type::Int4:
+            VG_ASSERT(!srcIsEnumArray, "EnumArray CopyProperties serialization not implemented for type '%s'", asString(srcPropType).c_str());
+            memcpy(_dstProp->GetPropertyIntN(_dstObj, 4), _srcProp->GetPropertyIntN(_srcObj, 4), sizeof(int) * 4);
+            break;
+
         case IProperty::Type::String:
             VG_ASSERT(!srcIsEnumArray, "EnumArray CopyProperties serialization not implemented for type '%s'", asString(srcPropType).c_str());
             *_dstProp->GetPropertyString(_dstObj) = *_srcProp->GetPropertyString(_srcObj);

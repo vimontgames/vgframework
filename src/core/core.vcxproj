@@ -78,6 +78,12 @@
     <ClInclude Include="Object\DynamicProperties\DynamicPropertyType\DynamicPropertyI64.hpp" />
     <ClInclude Include="Object\DynamicProperties\DynamicPropertyType\DynamicPropertyI8.h" />
     <ClInclude Include="Object\DynamicProperties\DynamicPropertyType\DynamicPropertyI8.hpp" />
+    <ClInclude Include="Object\DynamicProperties\DynamicPropertyType\DynamicPropertyInt2.h" />
+    <ClInclude Include="Object\DynamicProperties\DynamicPropertyType\DynamicPropertyInt2.hpp" />
+    <ClInclude Include="Object\DynamicProperties\DynamicPropertyType\DynamicPropertyInt3.h" />
+    <ClInclude Include="Object\DynamicProperties\DynamicPropertyType\DynamicPropertyInt3.hpp" />
+    <ClInclude Include="Object\DynamicProperties\DynamicPropertyType\DynamicPropertyInt4.h" />
+    <ClInclude Include="Object\DynamicProperties\DynamicPropertyType\DynamicPropertyInt4.hpp" />
     <ClInclude Include="Object\DynamicProperties\DynamicPropertyType\DynamicPropertyObjectHandle.h" />
     <ClInclude Include="Object\DynamicProperties\DynamicPropertyType\DynamicPropertyObjectHandle.hpp" />
     <ClInclude Include="Object\DynamicProperties\DynamicPropertyType\DynamicPropertyResource.h" />
@@ -100,6 +106,10 @@
     <ClInclude Include="Object\DynamicProperties\DynamicPropertyType\DynamicPropertyString.hpp" />
     <ClInclude Include="Object\DynamicProperties\DynamicPropertyType\DynamicPropertyUInt2.h" />
     <ClInclude Include="Object\DynamicProperties\DynamicPropertyType\DynamicPropertyUInt2.hpp" />
+    <ClInclude Include="Object\DynamicProperties\DynamicPropertyType\DynamicPropertyUInt3.h" />
+    <ClInclude Include="Object\DynamicProperties\DynamicPropertyType\DynamicPropertyUInt3.hpp" />
+    <ClInclude Include="Object\DynamicProperties\DynamicPropertyType\DynamicPropertyUInt4.h" />
+    <ClInclude Include="Object\DynamicProperties\DynamicPropertyType\DynamicPropertyUInt4.hpp" />
     <ClInclude Include="Object\EnumHelper.h" />
     <ClInclude Include="Object\ObjectHandle.h" />
     <ClInclude Include="Object\ObjectHandle.hpp" />
@@ -121,6 +131,7 @@
     <ClInclude Include="string\string.h" />
     <ClInclude Include="Timer\Timer.h" />
     <ClInclude Include="Types\Types.h" />
+    <ClInclude Include="Types\Traits.h" />
     <ClInclude Include="XML\XML.h" />
   </ItemGroup>
   <ItemGroup>
