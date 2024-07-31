@@ -2,6 +2,8 @@
 #include "Selection.h"
 #include "renderer/IGraphicInstance.h"
 #include "core/GameObject/GameObject.h"
+#include "core/Math/Math.h"
+#include "core/string/string.h"
 
 using namespace vg::core;
 
@@ -228,6 +230,48 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
+    uint extractIndex(const string & _text)
+    {
+        uint index = 0;
+
+        size_t underscorePos = _text.rfind("_");
+        if (underscorePos != string::npos && underscorePos != _text.length() - 1)
+        {
+            bool allDigits = true;
+            for (size_t i = underscorePos + 1; i < _text.length(); ++i)
+            {
+                if (isdigit(_text[i]))
+                {
+                    int number = _text[i] - '0';
+                    index = index * 10 + number;
+                }
+                else
+                {
+                    return -1;
+                }
+            }
+        }
+
+        return index;
+    }
+
+    //--------------------------------------------------------------------------------------
+    string extractBaseName(const string & _text)
+    {
+        string name = _text;
+
+        uint number = extractIndex(name);
+
+        if (-1 != number)
+        {
+            size_t underscorePos = name.rfind("_");
+            name = name.substr(0, underscorePos);
+        }
+
+        return name;
+    }
+
+    //--------------------------------------------------------------------------------------
     core::vector<core::IGameObject *> Selection::DuplicateGameObjects(const core::vector<core::IGameObject *> & _selectedGameObjects)
     {
         core::vector<core::IGameObject *> newGameObjects;
@@ -239,10 +283,55 @@ namespace vg::engine
             if (nullptr != parentGameObject)
             {
                 IGameObject * newGO = (IGameObject *)go->Instanciate();
-                const auto index = parentGameObject->GetChildIndex(go);
-                const string copySuffix = "(Copy)";
-                if (!ends_with(newGO->getName(), copySuffix))
-                    newGO->setName(newGO->getName() + " " + copySuffix);
+                auto index = parentGameObject->GetChildIndex(go);
+
+                // Get unique name and sort
+                {
+                    string name = newGO->getName();
+                    uint number = extractIndex(name);
+
+                    const auto children = parentGameObject->GetChildren();
+                    uint highestChildIndex = 0;
+                    for (uint j = 0; j < children.size(); ++j)
+                    {
+                        auto child = children[j];
+                        string childName = child->getName();
+                        uint childIndex = extractIndex(childName);
+                        if (-1 != childIndex)
+                        {
+                            if (extractBaseName(childName) == extractBaseName(name))
+                                highestChildIndex = max(highestChildIndex, childIndex);
+                        }
+                    }
+
+                    if (-1 == number)
+                    {
+                        name = fmt::sprintf("%s_%.2u", name, highestChildIndex + 1);
+                        newGO->setName(name);
+                    }
+                    else
+                    {
+                        name = extractBaseName(name);
+                        name = fmt::sprintf("%s_%.2u", name, highestChildIndex + 1);
+                        newGO->setName(name);
+                    }
+
+                    for (uint j = 0; j < children.size(); ++j)
+                    {
+                        auto child = children[j];
+                        string childName = child->getName();
+                        uint childIndex = extractIndex(childName);
+                        if (-1 != childIndex)
+                        {
+                            if (extractBaseName(childName) == extractBaseName(name))
+                            {
+                                if (childIndex == highestChildIndex)
+                                    index = j;
+                            }
+                        }
+                    }
+                }
+
                 parentGameObject->AddChild(newGO, index+1);
                 newGameObjects.push_back(newGO);
                 VG_SAFE_RELEASE(newGO);
