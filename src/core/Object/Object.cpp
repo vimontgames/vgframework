@@ -370,6 +370,27 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
+    const string Object::GetGameObjectName() const
+    {
+        string name = getName();
+        const IObject * obj = this;
+        while (obj)
+        {
+            // TODO: each class should override GetFullName and stop when != Scene or GameObject
+            if (!strcmp("GameObject", obj->GetClassDesc()->GetClassName()))
+            {
+                name = obj->getName() + ">" + name;
+                return name;
+            }
+            else
+            {
+                obj = obj->getParent();
+            }
+        }
+        return name;
+    }
+
+    //--------------------------------------------------------------------------------------
     bool Object::hasFile() const
     {
         return !m_file.empty();

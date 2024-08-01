@@ -1,11 +1,13 @@
 <Root>
     <Object class="PrefabScene">
-        <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="0"/>
+        <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="3431826779"/>
+        <Property type="Uint32" name="m_originalUID" flags="Debug|Hexadecimal" value="0"/>
         <Property type="String" name="m_name" flags="NotVisible" value="TestComponent"/>
         <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
         <Property type="ObjectPtr" name="m_root">
             <Object class="GameObject">
-                <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="0"/>
+                <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="1278204727"/>
+                <Property type="Uint32" name="m_originalUID" flags="Debug|Hexadecimal" value="0"/>
                 <Property type="String" name="m_name" value="Root"/>
                 <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
                 <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
@@ -15,6 +17,7 @@
                 <Property type="ObjectPtrVector" name="m_children" flags="NotVisible">
                     <Object class="GameObject">
                         <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="170172077"/>
+                        <Property type="Uint32" name="m_originalUID" flags="Debug|Hexadecimal" value="0"/>
                         <Property type="String" name="m_name" value="TestComponent"/>
                         <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
                         <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
@@ -23,11 +26,28 @@
                         <Property type="ObjectPtrVector" name="m_components">
                             <Object class="TestComponent">
                                 <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="692298986"/>
+                                <Property type="Uint32" name="m_originalUID" flags="Debug|Hexadecimal" value="0"/>
                                 <Property type="String" name="m_name" flags="NotVisible" value="New TestComponent"/>
                                 <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value="Opened"/>
                                 <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
                                 <Property type="Uint8" name="m_u8" value="0"/>
-                                <Property type="Uint8" name="m_u8_range" value="0"/>
+                                <Property type="Uint16" name="m_u16" value="0"/>
+                                <Property type="Uint32" name="m_u32" value="0"/>
+                                <Property type="Uint64" name="m_u64" value="0"/>
+                                <Property type="Int8" name="m_i8" value="0"/>
+                                <Property type="Int16" name="m_i16" value="0"/>
+                                <Property type="Int32" name="m_i32" value="0"/>
+                                <Property type="Int64" name="m_i64" value="0"/>
+                                <Property type="Float" name="m_float" value="0"/>
+                                <Property type="Float2" name="m_float2" x="1" y="2"/>
+                                <Property type="Uint2" name="m_uint2" x="1" y="2"/>
+                                <Property type="Int2" name="m_int2" x="1" y="2"/>
+                                <Property type="Float3" name="m_float3" x="1" y="2" z="3"/>
+                                <Property type="Uint3" name="m_uint3" x="1" y="2" z="3"/>
+                                <Property type="Int3" name="m_int3" x="1" y="2" z="3"/>
+                                <Property type="Float4" name="m_float4" x="1" y="2" z="3" w="4"/>
+                                <Property type="Uint4" name="m_uint4" x="1" y="2" z="3" w="4"/>
+                                <Property type="Int4" name="m_int4" x="1" y="2" z="3" w="4"/>
                             </Object>
                         </Property>
                         <Property type="ObjectPtrVector" name="m_children" flags="NotVisible"/>

@@ -574,12 +574,12 @@ namespace vg::engine
                     }
 
                     if (!found)
-                        VG_WARNING("[Prefab] Could not find property \"%s\" in Object \"%s\"", overrideProp->getName().c_str(), _gameObject->getName().c_str());
+                        VG_WARNING("[Prefab] Could not find property \"%s\" in Prefab \"%s\"", overrideProp->getName().c_str(), m_prefabResource.GetResourcePath().c_str());
                 }
             }
             else
             {
-                VG_WARNING("[Prefab] Could not find GUID 0x%08X under GameObject \"%s\"", propList->GetUID(), _gameObject->getName().c_str());
+                VG_WARNING("[Prefab] Could not find GUID 0x%08X in Prefab \"%s\"", propList->GetUID(), m_prefabResource.GetResourcePath().c_str());
             }
         }
     }

@@ -330,7 +330,7 @@ namespace vg::engine
             const auto startCook = Timer::getTick();
             if (needCook)
             {
-                VG_WARNING("[Resource] File \"%s\" needs cook", path.c_str());
+                VG_INFO("[Resource] File \"%s\" needs cook", path.c_str());
 
                 // HACK: use 1st client to cook
                 bool isFileCooked = clients[0]->cook(path);

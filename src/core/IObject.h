@@ -64,6 +64,7 @@ namespace vg::core
 		virtual void					    setName		        (const string & _name) = 0;
 		virtual const string &			    getName		        () const = 0;
         virtual const string                GetFullName         () const = 0;
+        virtual const string                GetGameObjectName   () const = 0;
 
         virtual bool                        hasFile             () const = 0;
         virtual void					    setFile             (const string & _file) = 0;

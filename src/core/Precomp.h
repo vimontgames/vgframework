@@ -185,9 +185,14 @@ namespace vg
 		template <typename E> inline constexpr auto enumValues()		                { return magic_enum::enum_values<E>(); }   
 		template <typename E> inline constexpr auto isEnumValue(E e)	                { return magic_enum::enum_contains(e); }
 		
-        template <typename E> inline constexpr auto operator&(E lhs, E rhs)             { return static_cast<E>(static_cast<magic_enum::underlying_type_t<E>>(lhs) & static_cast<magic_enum::underlying_type_t<E>>(rhs)); }
-        template <typename E> inline constexpr auto operator|(E lhs, E rhs)             { return static_cast<E>(static_cast<magic_enum::underlying_type_t<E>>(lhs) | static_cast<magic_enum::underlying_type_t<E>>(rhs)); }
-        template <typename E> inline constexpr auto operator|=(E& lhs, E rhs)           { return lhs = lhs | rhs; }
+        template <typename E> inline constexpr auto operator &(E lhs, E rhs)            { return static_cast<E>(static_cast<magic_enum::underlying_type_t<E>>(lhs) & static_cast<magic_enum::underlying_type_t<E>>(rhs)); }
+        template <typename E> inline constexpr auto operator |(E lhs, E rhs)            { return static_cast<E>(static_cast<magic_enum::underlying_type_t<E>>(lhs) | static_cast<magic_enum::underlying_type_t<E>>(rhs)); }
+		template <typename E> inline constexpr auto operator ^(E lhs, E rhs)			{ return static_cast<E>(static_cast<magic_enum::underlying_type_t<E>>(lhs) ^ static_cast<magic_enum::underlying_type_t<E>>(rhs)); }
+        template <typename E> inline constexpr auto operator ~(E lhs)					{ return static_cast<E>(~static_cast<magic_enum::underlying_type_t<E>>(lhs)); }
+
+		template <typename E> inline constexpr auto operator &=(E& lhs, E rhs)          { return lhs = lhs & rhs; }
+		template <typename E> inline constexpr auto operator |=(E & lhs, E rhs)			{ return lhs = lhs | rhs; }
+		template <typename E> inline constexpr auto operator ^=(E & lhs, E rhs)			{ return lhs = lhs ^ rhs; }
 
         template <typename E> inline constexpr auto asString(E e)                       { auto name = (std::string)magic_enum::enum_name(e); if (name.empty()) { name = (std::string)magic_enum::enum_flags_name(e); } VG_ASSERT(!name.empty(), "Could not retrieve %s enum name for value '%u'", ((std::string)(magic_enum::enum_type_name<E>())).c_str(), magic_enum::enum_integer(e)); return name; }
         template <typename E> inline constexpr auto asInteger(E e)                      { return magic_enum::enum_integer(e); }

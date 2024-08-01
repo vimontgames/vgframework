@@ -85,6 +85,7 @@ namespace vg::engine
         if (nullptr != object)
         {
             object->setParent(this);
+            object->setName(io::getFileName(_path));
 
             if (factory->loadFromXML(object, _path))
             {

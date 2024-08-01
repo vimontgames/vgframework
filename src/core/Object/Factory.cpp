@@ -139,10 +139,13 @@ namespace vg::core
 
             const auto index = desc->GetNextIndex();
 
-            if (_name.length())
-                obj->setName(_name);
-            else
-                obj->setName((string)obj->GetClassName() + " #" + to_string(index));
+            if (obj->getName().length() == 0)
+            {
+                if (_name.length())
+                    obj->setName(_name);
+                else
+                    obj->setName((string)obj->GetClassName() + " #" + to_string(index));
+            }
 
             return obj;
         }
@@ -892,14 +895,17 @@ namespace vg::core
 
             case IProperty::Type::Float2:
             case IProperty::Type::Uint2:
+            case IProperty::Type::Int2:
                 return 2;
 
             case IProperty::Type::Float3:
             case IProperty::Type::Uint3:
+            case IProperty::Type::Int3:
                 return 3;
 
             case IProperty::Type::Float4:
             case IProperty::Type::Uint4:
+            case IProperty::Type::Int4:
                 return 4;
         }
     }
@@ -997,7 +1003,7 @@ namespace vg::core
                                 auto it = m_oldTypeNames.find(typeName);
                                 if (m_oldTypeNames.end() != it)
                                 {
-                                    VG_WARNING("[Factory] Deprecated type \"%s\" for property \"%s\" replaced by \"%s\"", typeName, name, asString(it->second).c_str());
+                                    VG_WARNING("[Factory] Deprecated type \"%s\" for property \"%s\" replaced by \"%s\" in \"%s\"", typeName, name, asString(it->second).c_str(), _object->GetGameObjectName().c_str());
                                     type = it->second;
                                 }
                             }
@@ -1009,15 +1015,15 @@ namespace vg::core
                                 auto it = m_oldPropertyNames.find(name);
                                 if (m_oldPropertyNames.end() != it)
                                 {
-                                    VG_WARNING("[Factory] Deprecated name for property \"%s\" replaced by \"%s\"", name, it->second.c_str());
+                                    VG_WARNING("[Factory] Deprecated name for property \"%s\" replaced by \"%s\" in \"%s\"", name, it->second.c_str(), _object->GetGameObjectName().c_str());
                                     name = it->second.c_str();
                                     prop = classDesc->GetPropertyByName(name);
                                 }
+                                VG_WARNING("[Factory] Class \"%s\" has no property \"%s\" of type '%s' in \"%s\"", className, name, typeName, _object->GetGameObjectName().c_str());
                             }
-
-                            if (nullptr == prop)
+                            else if (asBool(IProperty::Flags::NotSaved & prop->getFlags()))
                             {
-                                VG_WARNING("[Factory] Class \"%s\" has no property \"%s\" of type '%s'", className, name, typeName);
+
                             }
                             else
                             {
@@ -1434,6 +1440,57 @@ namespace vg::core
                                             {
                                                 u32 * pUint = prop->GetPropertyUintN(_object, componentCount);
                                                 serializeUintNFromXML(pUint, xmlPropElem, componentCount);
+                                            }
+                                        }
+                                        break;
+
+                                        case IProperty::Type::Int2:
+                                        case IProperty::Type::Int3:
+                                        case IProperty::Type::Int4:
+                                        {                     
+                                            auto serializeIntNFromXML = [](i32 * _value, const XMLElement * _xmlElement, uint _componentCount)
+                                            {
+                                                i32 * pInt = (i32 *)_value;
+                                                const char * values[] = { "x", "y", "z", "w" };
+                                                for (uint i = 0; i < _componentCount; ++i)
+                                                {
+                                                    const XMLAttribute * xmlValue = _xmlElement->FindAttribute(values[i]);
+                                                    if (nullptr != xmlValue)
+                                                        pInt[i] = xmlValue->IntValue();
+                                                }
+                                            };
+
+                                            const auto componentCount = getComponentCount(type);
+
+                                            if (isEnumArray)
+                                            {
+                                                const XMLElement * xmlPropElemValue = xmlPropElem->FirstChildElement("Value");
+                                                if (nullptr != xmlPropElemValue)
+                                                {
+                                                    do
+                                                    {
+                                                        const XMLAttribute * xmlValueName = xmlPropElemValue->FindAttribute("name");
+                                                        if (nullptr != xmlValueName)
+                                                        {
+                                                            for (uint i = 0; i < prop->getEnumCount(); ++i)
+                                                            {
+                                                                if (!strcmp(xmlValueName->Value(), prop->getEnumName(i)))
+                                                                {
+                                                                    i32 * pInt = prop->GetPropertyIntN(_object, componentCount, i);
+                                                                    serializeIntNFromXML(pInt, xmlPropElemValue, componentCount);
+                                                                    break;
+                                                                }
+                                                            }
+                                                        }
+
+                                                        xmlPropElemValue = xmlPropElemValue->NextSiblingElement("Value");
+                                                    } while (nullptr != xmlPropElemValue);
+                                                }
+                                            }
+                                            else
+                                            {
+                                                i32 * pInt = prop->GetPropertyIntN(_object, componentCount);
+                                                serializeIntNFromXML(pInt, xmlPropElem, componentCount);
                                             }
                                         }
                                         break;
@@ -1899,6 +1956,53 @@ namespace vg::core
                     {
                         const u32 * value = prop->GetPropertyUintN(_object, componentCount);
                         serializeUintNToXML(xmlPropElem, value, componentCount);
+                    }
+                }
+                break;
+
+                case IProperty::Type::Int2:
+                case IProperty::Type::Int3:
+                case IProperty::Type::Int4:
+                {
+                    auto serializeIntNToXML = [](XMLElement * _xmlElement, const int * pInt, uint _componentCount)
+                        {
+                            _xmlElement->SetAttribute("x", pInt[0]);
+                            if (_componentCount > 1)
+                            {
+                                _xmlElement->SetAttribute("y", pInt[1]);
+                                if (_componentCount > 2)
+                                {
+                                    _xmlElement->SetAttribute("z", pInt[2]);
+
+                                    if (_componentCount > 3)
+                                    {
+                                        _xmlElement->SetAttribute("w", pInt[3]);
+                                    }
+                                }
+                            }
+                        };
+
+                    const uint componentCount = getComponentCount(type);
+
+                    if (isEnumArray)
+                    {
+                        const uint count = prop->getEnumCount();
+                        for (uint i = 0; i < count; ++i)
+                        {
+                            XMLElement * xmlPropElemChild = _xmlDoc.NewElement("Value");
+                            {
+                                auto enumValueName = prop->getEnumName(i);
+                                xmlPropElemChild->SetAttribute("name", enumValueName);
+                                const i32 * value = prop->GetPropertyIntN(_object, componentCount, i);
+                                serializeIntNToXML(xmlPropElemChild, value, componentCount);
+                            }
+                            xmlPropElem->InsertEndChild(xmlPropElemChild);
+                        }
+                    }
+                    else
+                    {
+                        const i32 * value = prop->GetPropertyIntN(_object, componentCount);
+                        serializeIntNToXML(xmlPropElem, value, componentCount);
                     }
                 }
                 break;

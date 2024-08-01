@@ -81,6 +81,7 @@ namespace vg::core
 		void					    setName		        (const string & _name) override;
 		const string &			    getName		        () const override;
 		const string 				GetFullName			() const override;
+		const string                GetGameObjectName	() const override;
 
         bool                        hasFile             () const override;
         void					    setFile             (const string & _file) override;
