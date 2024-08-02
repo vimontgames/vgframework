@@ -2,7 +2,7 @@
 #include "ContactListener.h"
 #include "core/IGameObject.h"
 #include "physics/PhysicsWorld.h"
-#include "D:\GitHub\vimontgames\vgframework\extern\JoltPhysics\Jolt\Physics\Body\Body.h"
+#include "Jolt/Physics/Body/Body.h"
 
 namespace vg::physics
 {
