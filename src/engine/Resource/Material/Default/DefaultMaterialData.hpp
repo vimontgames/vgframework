@@ -55,8 +55,6 @@ namespace vg::engine
 
         // This is generic code that could go to parent class and be shared by all material types in the future
         {
-            material->SetSurfaceType(m_surfaceType);
-
             const IClassDesc * srcClassDesc = GetClassDesc();
             const IClassDesc * dstClassDesc = material->GetClassDesc();
 

@@ -6,6 +6,7 @@
 namespace vg::gfx
 {
     enum class SurfaceType : core::u8;
+    enum class CullMode : core::u8;
 }
 
 namespace vg::renderer
@@ -39,5 +40,6 @@ namespace vg::engine
 
     protected:
         gfx::SurfaceType                    m_surfaceType;
+        gfx::CullMode                       m_cullMode;
     };
 }

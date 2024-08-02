@@ -103,6 +103,7 @@
     <ClInclude Include="PipelineState\Graphic\GraphicPipelineState_consts.h" />
     <ClInclude Include="PipelineState\Graphic\RasterizerState.h" />
     <ClInclude Include="PipelineState\Graphic\RasterizerState.hpp" />
+    <ClInclude Include="PipelineState\Graphic\RasterizerState_consts.h" />
     <ClInclude Include="PipelineState\Graphic\SamplerState.h" />
     <ClInclude Include="PipelineState\Graphic\SamplerState.hpp" />
     <ClInclude Include="PipelineState\Graphic\SamplerState_consts.h" />

@@ -1,40 +1,9 @@
 #pragma once
 
+#include "RasterizerState_consts.h"
+
 namespace vg::gfx
 {
-    enum class FillMode : core::u32
-    {
-        Solid = 0,
-        Wireframe
-    };
-
-    enum class CullMode : core::u32
-    {
-        None = 0,
-        Back,
-        Front
-    };
-
-    enum class Orientation : core::u32
-    {
-        ClockWise = 0,
-        CounterClockWise
-    };
-
-    enum class DepthClip : core::u32
-    {
-        Enable = 1,
-        Disable
-    };
-
-    enum class DepthBias : core::u32
-    {
-        None,
-        Small,
-        Medium,
-        Big
-    };
-
     namespace base
     {
         class RasterizerState

@@ -51,11 +51,18 @@
                 <Property type="String" name="m_resourcePath" flags="NotVisible" value="data/Prefabs/PlayerUI.prefab"/>
             </Object>
             <Object class="PrefabResource">
-                <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="0"/>
+                <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="563652896"/>
                 <Property type="Uint32" name="m_originalUID" flags="Debug|Hexadecimal" value="0"/>
                 <Property type="String" name="m_name" flags="NotVisible" value=""/>
                 <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
                 <Property type="String" name="m_resourcePath" flags="NotVisible" value="data/Prefabs/GJ.prefab"/>
+            </Object>
+            <Object class="PrefabResource">
+                <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="3169814511"/>
+                <Property type="Uint32" name="m_originalUID" flags="Debug|Hexadecimal" value="0"/>
+                <Property type="String" name="m_name" flags="NotVisible" value=""/>
+                <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
+                <Property type="String" name="m_resourcePath" flags="NotVisible" value="data/Prefabs/Goal.prefab"/>
             </Object>
         </Property>
     </Object>

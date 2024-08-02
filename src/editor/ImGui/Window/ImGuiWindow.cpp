@@ -149,7 +149,7 @@ namespace vg::editor
     //--------------------------------------------------------------------------------------
     string ImGuiWindow::getButtonLabel(string _baseName, IObject * _object)
     {
-        return _baseName + "##" + _object->GetClassName() + "##" + to_string((u64)&_object); // TODO: Object GUID?
+        return fmt::sprintf("%s##%s_0x%016X", _baseName, _object->GetClassName(), (u64)_object);
     }
 
     template <typename T> struct TypeToDynamicPropertyTypeEnum;
@@ -272,10 +272,33 @@ namespace vg::editor
         const auto editFormat = scalarTraits<S>::is_integer ? (scalarTraits<S>::is_signed ? g_editIntFormat : g_editUIntFormat ) : g_editFloatFormat;
         const auto flags = _prop->getFlags();
 
-        if (asBool(IProperty::Flags::HasRange & flags))
-            edited = ImGui::DragScalarN(ImGuiWindow::getPropertyLabel(_label).c_str(), ImGuiDataTypeInfo<S>::type, &temp, count, dragSpeed, &minRange, &maxRange, editFormat);
-        else                                                                                                     
-            edited = ImGui::DragScalarN(ImGuiWindow::getPropertyLabel(_label).c_str(), ImGuiDataTypeInfo<S>::type, &temp, count, dragSpeed, nullptr, nullptr, editFormat);
+        VG_ASSERT(!asBool(IProperty::Flags::Color & flags) || (count == 3 || count == 4));
+
+        if (asBool(IProperty::Flags::Color & flags) && (count == 3 || count == 4))
+        {
+            ImGuiColorEditFlags colorEditFlags = 0;
+
+            if (asBool(IProperty::Flags::HDR & flags))
+                colorEditFlags |= ImGuiColorEditFlags_HDR | ImGuiColorEditFlags_Float;
+
+            switch (count)
+            {
+            case 3:
+                edited = ImGui::ColorEdit3(ImGuiWindow::getPropertyLabel(_label).c_str(), (float *)&temp, colorEditFlags);
+                break;
+
+            case 4:
+                edited = ImGui::ColorEdit4(ImGuiWindow::getPropertyLabel(_label).c_str(), (float *)&temp, colorEditFlags);
+                break;
+            }
+        }
+        else
+        {
+            if (asBool(IProperty::Flags::HasRange & flags))
+                edited = ImGui::DragScalarN(ImGuiWindow::getPropertyLabel(_label).c_str(), ImGuiDataTypeInfo<S>::type, &temp, count, dragSpeed, &minRange, &maxRange, editFormat);
+            else
+                edited = ImGui::DragScalarN(ImGuiWindow::getPropertyLabel(_label).c_str(), ImGuiDataTypeInfo<S>::type, &temp, count, dragSpeed, nullptr, nullptr, editFormat);
+        }
 
         ImGuiWindow::drawPropertyLabel(_prop->getDisplayName(), _context);
 
@@ -1930,6 +1953,9 @@ namespace vg::editor
         const auto * factory = Kernel::getFactory();
         const auto * classDesc = factory->getClassDescriptor(className);
 
+        ImGui::PushID(_resource);
+        ImGui::PushID(_prop);
+
         // Display all properties of the resource component
         {
             auto availableWidth = GetContentRegionAvail().x;
@@ -1997,7 +2023,6 @@ namespace vg::editor
         bool saveAsFile = false;
         bool saveFile = false;
 
-        ImGui::PushID(_resource);
         ImGui::SameLine();
         auto x = ImGui::GetCursorPosX();
         ImGui::SetCursorPosX(x + buttonWidth);
@@ -2013,20 +2038,19 @@ namespace vg::editor
 
         auto x2 = ImGui::GetCursorPosX();
         ImGui::SameLine();
-        string buttonLabel = (string)style::icon::File;// +(string)" " + (string)_prop->getDisplayName();
      
         ImGui::SetCursorPosX(x-4);        
 
         if (_context.readOnly)
             ImGui::BeginDisabled();
 
-        if (ImGui::Button(buttonLabel.c_str(), style::button::SizeSmall))
+        if (ImGui::Button(getObjectLabel((string)style::icon::File, _context.originalProp).c_str(), style::button::SizeSmall))
         {
             //openExistingFile = true;
         }
         //ImGui::SetCursorPosX(x+24);
         
-        if (ImGui::BeginPopupContextItem(nullptr, ImGuiPopupFlags_MouseButtonLeft))
+        if (ImGui::BeginPopupContextItem(getObjectLabel("PopContextMenu", _context.originalProp).c_str(), ImGuiPopupFlags_MouseButtonLeft))
         {
             if (_resource->CanCreateFile())
             {
@@ -2189,8 +2213,10 @@ namespace vg::editor
                 }
             }
         }
-        ImGui::PopID();
         ImGui::PopItemWidth();
+
+        ImGui::PopID(); // _resource;
+        ImGui::PopID(); // _prop;
 
         return changed;
     }

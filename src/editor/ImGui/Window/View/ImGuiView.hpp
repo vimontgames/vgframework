@@ -88,6 +88,20 @@ namespace vg::editor
                 const bool alt = input->IsKeyPressed(Key::LALT) || input->IsKeyPressed(Key::RALT);
                 const bool shift = input->IsKeyPressed(Key::LSHIFT) || input->IsKeyPressed(Key::RSHIFT);
 
+                if (!ctrl && !shift)
+                {
+                    auto options = EditorOptions::get();
+
+                    if (input->IsKeyJustPressed(Key::T))
+                        options->setGizmoType(GizmoType::Translate);
+                    else if (input->IsKeyJustPressed(Key::R))
+                        options->setGizmoType(GizmoType::Rotate);
+                    else if (input->IsKeyJustPressed(Key::S))
+                        options->setGizmoType(GizmoType::Scale);
+                    else if (input->IsKeyJustPressed(Key::A))
+                        options->setSnap(options->getSnap());
+                }
+
                 if (alt)
                 {
                     if (m_view->GetPickingHitCount() > 0)

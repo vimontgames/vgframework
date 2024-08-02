@@ -16,6 +16,8 @@ namespace vg
         class CommandList;
         class Texture;
         class Buffer;
+
+        enum class CullMode : core::u8;
     }
 
     namespace renderer
@@ -52,6 +54,7 @@ namespace vg
 
         protected:
             gfx::SurfaceType            m_surfaceType;
+            gfx::CullMode               m_cullMode;
             gfx::RootSignatureHandle    m_rootSignature;
             gfx::ShaderKey              m_shaderKey[core::enumCount<ShaderPass>()];
         };

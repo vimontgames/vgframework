@@ -1,4 +1,5 @@
 #include "MaterialData.h"
+#include "gfx/PipelineState/Graphic/RasterizerState_consts.h"
 
 using namespace vg::core;
 
@@ -10,7 +11,8 @@ namespace vg::engine
         super::registerProperties(_desc);
 
         setPropertyFlag(MaterialData, m_name, IProperty::Flags::NotVisible | IProperty::Flags::NotSaved, true);
-        registerPropertyEnum(MaterialData, gfx::SurfaceType, m_surfaceType, "Surface Type");
+        registerPropertyEnum(MaterialData, gfx::SurfaceType, m_surfaceType, "Surface");
+        registerPropertyEnum(MaterialData, gfx::CullMode, m_cullMode, "Cull");
         
         return true;
     }
@@ -18,7 +20,8 @@ namespace vg::engine
     //--------------------------------------------------------------------------------------
     MaterialData::MaterialData(const core::string & _name, IObject * _parent) :
         super(_name, _parent),
-        m_surfaceType(gfx::SurfaceType::Opaque)
+        m_surfaceType(gfx::SurfaceType::Opaque),
+        m_cullMode(gfx::CullMode::Back)
     {
         setName(_parent->getName());
     }

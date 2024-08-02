@@ -139,7 +139,26 @@ namespace vg::renderer
                     key.setFlags(gfx::DefaultHLSLDesc::Toolmode, false);
             }
             break;
-        }        
+        }       
+
+        gfx::CullMode cullMode;
+        switch (m_cullMode)
+        {
+            default:
+                VG_ASSERT_ENUM_NOT_IMPLEMENTED(m_cullMode);
+                break;
+            case CullMode::None:
+                cullMode = CullMode::None;
+                break;
+            case CullMode::Back:
+                cullMode = CullMode::Back;
+                break;
+            case CullMode::Front:
+                cullMode = CullMode::Front;
+                break;
+
+        }
+        rs = RasterizerState(FillMode::Solid, cullMode);
 
         _cmdList->setRasterizerState(rs);
 

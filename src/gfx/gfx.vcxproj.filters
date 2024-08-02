@@ -628,6 +628,9 @@
       <Filter>Device\vulkan\Extension\Device</Filter>
     </ClInclude>
     <ClInclude Include="IViewGUI.h" />
+    <ClInclude Include="PipelineState\Graphic\RasterizerState_consts.h">
+      <Filter>PipelineState\Graphic</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Device">

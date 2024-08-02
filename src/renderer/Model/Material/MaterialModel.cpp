@@ -30,8 +30,7 @@ namespace vg::renderer
         super::registerProperties(_desc);
 
         registerPropertyEnum(MaterialModel, SurfaceType, m_surfaceType, "Surface Type");
-        //registerPropertyEnumArray(MaterialModel, core::float4, MaterialColorType, m_colors, "Colors", IProperty::Flags::Color | IProperty::Flags::NotSaved);
-        //registerPropertyEnumArray(MaterialModel, core::IObject*, MaterialTextureType, m_textures, "Textures", IProperty::Flags::None | IProperty::Flags::NotSaved);
+        registerPropertyEnum(MaterialModel, CullMode, m_cullMode, "Cull");
 
         return true;
     }
@@ -39,7 +38,8 @@ namespace vg::renderer
     //--------------------------------------------------------------------------------------
     MaterialModel::MaterialModel(const core::string & _name, core::IObject * _parent) :
         super(_name, _parent),
-        m_surfaceType(SurfaceType::Opaque)
+        m_surfaceType(SurfaceType::Opaque),
+        m_cullMode(CullMode::Back)
     {
         auto * device = Device::get();
 

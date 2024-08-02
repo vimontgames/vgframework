@@ -1,0 +1,83 @@
+<Root>
+    <Object class="PrefabScene">
+        <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="795241250"/>
+        <Property type="Uint32" name="m_originalUID" flags="Debug|Hexadecimal" value="0"/>
+        <Property type="String" name="m_name" flags="NotVisible" value="Goal"/>
+        <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
+        <Property type="ObjectPtr" name="m_root">
+            <Object class="GameObject">
+                <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="1839838156"/>
+                <Property type="Uint32" name="m_originalUID" flags="Debug|Hexadecimal" value="0"/>
+                <Property type="String" name="m_name" value="Root"/>
+                <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value="Opened"/>
+                <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
+                <Property type="Float4" name="m_color" flags="Color" x="1" y="1" z="1" w="1"/>
+                <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="0" Ty="0" Tz="0" Tw="1"/>
+                <Property type="ObjectPtrVector" name="m_components"/>
+                <Property type="ObjectPtrVector" name="m_children" flags="NotVisible">
+                    <Object class="GameObject">
+                        <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="571785592"/>
+                        <Property type="Uint32" name="m_originalUID" flags="Debug|Hexadecimal" value="0"/>
+                        <Property type="String" name="m_name" value="Goal"/>
+                        <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
+                        <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
+                        <Property type="Float4" name="m_color" flags="Color" x="1" y="1" z="1" w="1"/>
+                        <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="0" Ty="0" Tz="0" Tw="1"/>
+                        <Property type="ObjectPtrVector" name="m_components">
+                            <Object class="MeshComponent">
+                                <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="4081237354"/>
+                                <Property type="Uint32" name="m_originalUID" flags="Debug|Hexadecimal" value="0"/>
+                                <Property type="String" name="m_name" flags="NotVisible" value="New MeshComponent"/>
+                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value="Opened"/>
+                                <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
+                                <Property type="Bool" name="m_displayBones" value="false"/>
+                                <Property type="Resource" name="m_meshResource" flags="Resource">
+                                    <Object class="MeshResource">
+                                        <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="3824092623"/>
+                                        <Property type="Uint32" name="m_originalUID" flags="Debug|Hexadecimal" value="0"/>
+                                        <Property type="String" name="m_name" flags="NotVisible" value="New MeshComponent"/>
+                                        <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
+                                        <Property type="String" name="m_resourcePath" flags="NotVisible" value="data/Meshes/Soccer/Goal.fbx"/>
+                                    </Object>
+                                </Property>
+                                <Property type="Object" name="m_meshMaterials" flags="Flatten">
+                                    <Object class="MaterialResourceList">
+                                        <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="39513929"/>
+                                        <Property type="Uint32" name="m_originalUID" flags="Debug|Hexadecimal" value="0"/>
+                                        <Property type="String" name="m_name" flags="NotVisible" value="New MeshComponent"/>
+                                        <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
+                                        <Property type="ResourceVector" name="m_materialResources" flags="Resource">
+                                            <Object class="MaterialResource">
+                                                <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="310547642"/>
+                                                <Property type="Uint32" name="m_originalUID" flags="Debug|Hexadecimal" value="0"/>
+                                                <Property type="String" name="m_name" value="Metal"/>
+                                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
+                                                <Property type="String" name="m_resourcePath" flags="NotVisible" value="data/Materials/Soccer/Goal_Metal.mat"/>
+                                            </Object>
+                                            <Object class="MaterialResource">
+                                                <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="1661725119"/>
+                                                <Property type="Uint32" name="m_originalUID" flags="Debug|Hexadecimal" value="0"/>
+                                                <Property type="String" name="m_name" value=""/>
+                                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
+                                                <Property type="String" name="m_resourcePath" flags="NotVisible" value="data/Materials/Soccer/Goal_Net.mat"/>
+                                            </Object>
+                                            <Object class="MaterialResource">
+                                                <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="637573670"/>
+                                                <Property type="Uint32" name="m_originalUID" flags="Debug|Hexadecimal" value="0"/>
+                                                <Property type="String" name="m_name" value="Frame"/>
+                                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
+                                                <Property type="String" name="m_resourcePath" flags="NotVisible" value="data/Materials/Soccer/Goal_Frame.mat"/>
+                                            </Object>
+                                        </Property>
+                                    </Object>
+                                </Property>
+                                <Property type="BitMask" name="m_batchMask" BitCount="3" Value="0x0000000000000007"/>
+                            </Object>
+                        </Property>
+                        <Property type="ObjectPtrVector" name="m_children" flags="NotVisible"/>
+                    </Object>
+                </Property>
+            </Object>
+        </Property>
+    </Object>
+</Root>

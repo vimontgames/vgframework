@@ -163,7 +163,7 @@ namespace vg::engine
                 }
             }
         }
-        else if (!strcmp(_prop.getName(), "m_surfaceType"))
+        else if (!strcmp(_prop.getName(), "m_surfaceType") || !strcmp(_prop.getName(), "m_cullMode"))
         {
             MaterialResourceData * matResData = dynamic_cast<MaterialResourceData *>(_object->getParent());
             VG_ASSERT(matResData);
