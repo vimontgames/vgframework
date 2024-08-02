@@ -14,7 +14,8 @@ namespace JPH
 
 namespace vg::physics
 {
-    //--------------------------------------------------------------------------------------
+    class ContactListener;
+
     class PhysicsWorld : public core::IPhysicsWorld
     {
     public:
@@ -41,6 +42,6 @@ namespace vg::physics
     private:
         const vg::core::IWorld *    m_world = nullptr;
         JPH::PhysicsSystem *        m_physicsSystem = nullptr;
-
+        ContactListener *           m_contactListener = nullptr;
     };
 }

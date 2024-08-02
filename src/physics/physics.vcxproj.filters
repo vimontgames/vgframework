@@ -21,6 +21,9 @@
     <ClCompile Include="Character\Character.cpp">
       <Filter>Character</Filter>
     </ClCompile>
+    <ClCompile Include="Contact\ContactListener.cpp">
+      <Filter>Contact</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Physics.def" />
@@ -107,6 +110,9 @@
     </ClInclude>
     <ClInclude Include="PhysicsWorld.h" />
     <ClInclude Include="PhysicsWorld.hpp" />
+    <ClInclude Include="Contact\ContactListener.h">
+      <Filter>Contact</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="JobSystem">
@@ -126,6 +132,9 @@
     </Filter>
     <Filter Include="Character">
       <UniqueIdentifier>{356ba3bb-8356-4aa2-985c-5749801e959b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Contact">
+      <UniqueIdentifier>{0e71a81a-ebd5-4857-9c3c-b2cfa940aa26}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

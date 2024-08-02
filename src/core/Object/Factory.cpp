@@ -1022,7 +1022,7 @@ namespace vg::core
                                 auto it = m_oldTypeNames.find(typeName);
                                 if (m_oldTypeNames.end() != it)
                                 {
-                                    VG_WARNING("[Factory] Deprecated type \"%s\" for property \"%s\" replaced by \"%s\" in \"%s\"", typeName, name, asString(it->second).c_str(), _object->GetGameObjectName().c_str());
+                                    VG_WARNING("[Factory] Deprecated type \"%s\" for property \"%s\" replaced by \"%s\" in \"%s\"", typeName, name, asString(it->second).c_str(), _object->GetShortName().c_str());
                                     type = it->second;
                                 }
                             }
@@ -1034,11 +1034,11 @@ namespace vg::core
                                 auto it = m_oldPropertyNames.find(name);
                                 if (m_oldPropertyNames.end() != it)
                                 {
-                                    VG_WARNING("[Factory] Deprecated name for property \"%s\" replaced by \"%s\" in \"%s\"", name, it->second.c_str(), _object->GetGameObjectName().c_str());
+                                    VG_WARNING("[Factory] Deprecated name for property \"%s\" replaced by \"%s\" in \"%s\"", name, it->second.c_str(), _object->GetShortName().c_str());
                                     name = it->second.c_str();
                                     prop = classDesc->GetPropertyByName(name);
                                 }
-                                VG_WARNING("[Factory] Class \"%s\" has no property \"%s\" of type '%s' in \"%s\"", className, name, typeName, _object->GetGameObjectName().c_str());
+                                VG_WARNING("[Factory] Class \"%s\" has no property \"%s\" of type '%s' in \"%s\"", className, name, typeName, _object->GetShortName().c_str());
                             }
                             else if (asBool(IProperty::Flags::NotSaved & prop->getFlags()))
                             {

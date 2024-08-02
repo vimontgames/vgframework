@@ -69,14 +69,21 @@ namespace vg::engine
         if (nullptr == world)
             return;        
 
-        if (physics::MotionType::Static != m_bodyDesc->GetMotion() && !m_bodyDesc->IsTrigger())
+        if (physics::MotionType::Static != m_bodyDesc->GetMotion())
         {
             if (world->IsPlaying() && !world->IsPaused())
             {
                 if (m_body)
                 {
-                    auto matrix = m_body->GetMatrix();
-                    go->setGlobalMatrix(matrix);
+                    if (m_bodyDesc->IsTrigger())
+                    {
+                        m_body->SetMatrix(go->getGlobalMatrix());
+                    }
+                    else
+                    {
+                        auto matrix = m_body->GetMatrix();
+                        go->setGlobalMatrix(matrix);
+                    }
                 }
             }
         }
@@ -317,7 +324,7 @@ namespace vg::engine
                 m_bodyDesc->SetMass(m_shape->GetMass());
 
             if (auto * world = GetGameObject()->GetWorld())
-                m_body = getPhysics()->CreateBody(world->GetPhysicsWorld(), m_bodyDesc, m_shape, GetGameObject()->GetGlobalMatrix());
+                m_body = getPhysics()->CreateBody(world->GetPhysicsWorld(), m_bodyDesc, m_shape, GetGameObject()->GetGlobalMatrix(), GetGameObject()->getName() + "_PhysicsBody", this);
         }
         return nullptr != m_body;
     }

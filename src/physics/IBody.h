@@ -36,5 +36,6 @@ namespace vg::physics
         virtual void Deactivate(const core::float4x4 & _world) = 0;
 
         virtual core::float4x4 GetMatrix() const = 0;
+        virtual void SetMatrix(core::float4x4 _world) = 0;
     };
 }

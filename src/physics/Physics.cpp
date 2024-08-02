@@ -290,7 +290,7 @@ namespace vg::physics
     }
 
     //--------------------------------------------------------------------------------------
-    IBody * Physics::CreateBody(core::IPhysicsWorld * _physicsWorld, const IBodyDesc * _bodyDesc, IShape * _shape, const core::float4x4 & _matrix)
+    IBody * Physics::CreateBody(core::IPhysicsWorld * _physicsWorld, const IBodyDesc * _bodyDesc, IShape * _shape, const core::float4x4 & _matrix, const core::string & _name, core::IObject * _parent)
     {
         VG_ASSERT(_physicsWorld);
 
@@ -302,12 +302,12 @@ namespace vg::physics
                 return nullptr;
 
             case BodyType::Rigid:
-                return new physics::Body((PhysicsWorld*)_physicsWorld, (PhysicsBodyDesc *)_bodyDesc, (Shape*)_shape, _matrix);
+                return new physics::Body((PhysicsWorld*)_physicsWorld, (PhysicsBodyDesc *)_bodyDesc, (Shape*)_shape, _matrix, _name, _parent);
         }
     }
 
     //--------------------------------------------------------------------------------------
-    ICharacter * Physics::CreateCharacter(core::IPhysicsWorld * _world, const ICharacterDesc * _characterDesc, IShape * _shape, const core::float4x4 & _matrix)
+    ICharacter * Physics::CreateCharacter(core::IPhysicsWorld * _world, const ICharacterDesc * _characterDesc, IShape * _shape, const core::float4x4 & _matrix, const core::string & _name, core::IObject * _parent)
     {
         VG_ASSERT(_world);
 
@@ -319,7 +319,7 @@ namespace vg::physics
                 return nullptr;
 
             case CharacterType::Rigid:
-                return new physics::RigidCharacter((PhysicsWorld*)_world, (RigidCharacterDesc *)_characterDesc, (Shape *)_shape, _matrix);
+                return new physics::RigidCharacter((PhysicsWorld*)_world, (RigidCharacterDesc *)_characterDesc, (Shape *)_shape, _matrix, _name, _parent);
         }
     }
 

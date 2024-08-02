@@ -22,8 +22,8 @@ namespace vg::physics
     }
 
     //--------------------------------------------------------------------------------------
-    Character::Character(PhysicsWorld * _physicsWorld, const CharacterDesc * _characterDesc, Shape * _shape, const core::float4x4 & _matrix) :
-        super(),
+    Character::Character(PhysicsWorld * _physicsWorld, const CharacterDesc * _characterDesc, Shape * _shape, const core::float4x4 & _matrix, const core::string & _name, core::IObject * _parent) :
+        super(_name, _parent),
         m_physicsWorld(_physicsWorld),
         m_shape(_shape),
         m_characterDesc(_characterDesc)
@@ -47,8 +47,8 @@ namespace vg::physics
     }
 
     //--------------------------------------------------------------------------------------
-    RigidCharacter::RigidCharacter(PhysicsWorld * _physicsWorld, const RigidCharacterDesc * _rigidCharacterDesc, Shape * _shape, const core::float4x4 & _matrix) :
-        super(_physicsWorld, (CharacterDesc*)_rigidCharacterDesc, _shape, _matrix)
+    RigidCharacter::RigidCharacter(PhysicsWorld * _physicsWorld, const RigidCharacterDesc * _rigidCharacterDesc, Shape * _shape, const core::float4x4 & _matrix, const core::string & _name, core::IObject * _parent) :
+        super(_physicsWorld, (CharacterDesc*)_rigidCharacterDesc, _shape, _matrix, _name, _parent)
     {
         JPH::Shape * joltShape = _shape->getJoltShape();
         VG_ASSERT(joltShape);
@@ -72,7 +72,7 @@ namespace vg::physics
 
         #pragma push_macro("new")
         #undef new
-        m_character = new JPH::Character(&settings, getJoltVec3(_matrix[3].xyz), getJoltQuaternion(quat), 0, getPhysicsWorld()->getPhysicsSystem());
+        m_character = new JPH::Character(&settings, getJoltVec3(_matrix[3].xyz), getJoltQuaternion(quat), (u64)_parent, getPhysicsWorld()->getPhysicsSystem());
         #pragma pop_macro("new")
 
         m_character->AddRef();

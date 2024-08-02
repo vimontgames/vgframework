@@ -26,7 +26,7 @@ namespace vg::physics
         VG_CLASS_DECL(Character, ICharacter);
         VG_CLASS_CTOR_HEADER_IMPL(Character, ICharacter);
 
-        Character(PhysicsWorld * _physicsWorld, const CharacterDesc * _characterDesc, Shape * _shape, const core::float4x4 & _matrix);
+        Character(PhysicsWorld * _physicsWorld, const CharacterDesc * _characterDesc, Shape * _shape, const core::float4x4 & _matrix, const core::string & _name, core::IObject * _parent);
         ~Character();
 
         void                    Activate        (const core::float4x4 & _world) = 0;
@@ -49,7 +49,7 @@ namespace vg::physics
         VG_CLASS_DECL(RigidCharacter, Character);
         VG_CLASS_CTOR_HEADER_IMPL(RigidCharacter, Character);
 
-        RigidCharacter(PhysicsWorld * _physicsWorld, const RigidCharacterDesc * _rigidCharacterDesc, Shape * _shape, const core::float4x4 & _matrix);
+        RigidCharacter(PhysicsWorld * _physicsWorld, const RigidCharacterDesc * _rigidCharacterDesc, Shape * _shape, const core::float4x4 & _matrix, const core::string & _name, core::IObject * _parent);
         ~RigidCharacter();
 
         void                    Activate        (const core::float4x4 & _world) final override;

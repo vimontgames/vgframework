@@ -7,6 +7,7 @@ namespace vg::core
     class IClassDesc;
     class IProperty;
     class IResource;
+    class IGameObject;
 
     enum class ObjectFlags : u32
     {
@@ -54,6 +55,7 @@ namespace vg::core
 
         virtual void                        setParent           (IObject * _parent) = 0;
         virtual IObject *                   getParent           () const = 0;
+        virtual IGameObject *               GetParentGameObject () const = 0;
 
         virtual void                        OnPropertyChanged   (IObject * _object, const IProperty & _prop, bool _notifyParent = true) = 0;
         virtual void						SetPropertyValue    (const IProperty & _prop, void * _previousValue, void * _newValue) = 0;
@@ -64,7 +66,7 @@ namespace vg::core
 		virtual void					    setName		        (const string & _name) = 0;
 		virtual const string &			    getName		        () const = 0;
         virtual const string                GetFullName         () const = 0;
-        virtual const string                GetGameObjectName   () const = 0;
+        virtual const string                GetShortName        () const = 0;
 
         virtual bool                        hasFile             () const = 0;
         virtual void					    setFile             (const string & _file) = 0;

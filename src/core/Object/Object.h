@@ -71,6 +71,7 @@ namespace vg::core
 
         void                        setParent           (IObject * _parent) override;
         IObject *                   getParent           () const final override;
+		IGameObject *				GetParentGameObject	() const final override;
 
         void                        OnPropertyChanged   (IObject * _object, const IProperty & _prop, bool _notifyParent) override;
 		void						SetPropertyValue	(const IProperty & _prop, void * _previousValue, void * _newValue) override;
@@ -81,7 +82,7 @@ namespace vg::core
 		void					    setName		        (const string & _name) override;
 		const string &			    getName		        () const override;
 		const string 				GetFullName			() const override;
-		const string                GetGameObjectName	() const override;
+		const string                GetShortName		() const override;
 
         bool                        hasFile             () const override;
         void					    setFile             (const string & _file) override;

@@ -370,7 +370,20 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
-    const string Object::GetGameObjectName() const
+    IGameObject * Object::GetParentGameObject() const
+    {
+        const IObject * obj = this;
+        while (obj)
+        {
+            if (!strcmp("GameObject", obj->GetClassDesc()->GetClassName()))
+                return (IGameObject*)obj;
+            obj = obj->getParent();
+        }
+        return nullptr;
+    }
+
+    //--------------------------------------------------------------------------------------
+    const string Object::GetShortName() const
     {
         string name = getName();
         const IObject * obj = this;

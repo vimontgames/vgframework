@@ -23,8 +23,8 @@ namespace vg::physics
     }
 
     //--------------------------------------------------------------------------------------
-    Body::Body(PhysicsWorld * _physicsWorld, const PhysicsBodyDesc * _bodyDesc, Shape * _shape, const core::float4x4 & _matrix) :
-        super(),
+    Body::Body(PhysicsWorld * _physicsWorld, const PhysicsBodyDesc * _bodyDesc, Shape * _shape, const core::float4x4 & _matrix, const core::string & _name, core::IObject * _parent) :
+        super(_name, _parent),
         m_physicsWorld(_physicsWorld),
         m_shape(_shape),
         m_bodyDesc(_bodyDesc)
@@ -38,6 +38,8 @@ namespace vg::physics
         
         JPH::BodyCreationSettings bodySettings(joltShape, getJoltVec3(_matrix[3].xyz), getJoltQuaternion(quat), getJoltMotionType(_bodyDesc->m_motion), getJoltObjectLayer(_bodyDesc->m_layer));
         
+        bodySettings.mUserData = (u64)_parent;
+
         if (_bodyDesc->IsTrigger())
         {
             bodySettings.mIsSensor = true;
@@ -103,5 +105,13 @@ namespace vg::physics
         world[3].xyz = fromJoltVec3(position);
 
         return world;
+    }
+
+    //--------------------------------------------------------------------------------------
+    void Body::SetMatrix(core::float4x4 _world)
+    {
+        float3x3 rot = extractRotation(_world);
+        quaternion quat = quaternion(rot);
+        m_physicsWorld->getBodyInterface().SetPositionAndRotation(m_bodyID, getJoltVec3(_world[3].xyz), getJoltQuaternion(quat), JPH::EActivation::Activate);
     }
 }

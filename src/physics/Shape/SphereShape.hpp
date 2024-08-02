@@ -39,7 +39,8 @@ namespace vg::physics
     {
         #pragma push_macro("new")
         #undef new
-        auto shape = new JPH::SphereShape(m_radius);
+        const float eps = 0.0001f;
+        auto shape = new JPH::SphereShape(max(abs(m_radius), eps));
         #pragma pop_macro("new")
 
         #pragma push_macro("new")
