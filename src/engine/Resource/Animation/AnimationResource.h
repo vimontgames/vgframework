@@ -26,6 +26,9 @@ namespace vg::engine
 
         void                                    OnPropertyChanged       (core::IObject * _object, const core::IProperty & _prop, bool _notifyParent) override;
 
+        void                                    OnEnable                () final override;
+        void                                    OnDisable               () final override;
+
         void                                    OnStop                  () override;
 
         bool                                    IsPlaying               () const final override;
@@ -53,6 +56,8 @@ namespace vg::engine
         VG_INLINE void                          setLoop                 (bool _loop) { m_loop = _loop; }
 
     private:
+        void                                    reset                   ();
+
         static bool			                    playAnim                (IObject * _object);
         static bool			                    stopAnim                (IObject * _object);
 
