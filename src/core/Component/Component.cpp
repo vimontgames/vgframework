@@ -84,9 +84,9 @@ namespace vg::core
         if (asBool(ComponentFlags::Enabled & _flags))
         {
             if (_enabled)
-                OnPlay();
+                OnEnable();
             else
-                OnStop();   // should be "OnDisable" because we don't want to restore properties! Also should be handled in "OnPropertyChange"!
+                OnDisable();  
         }
     }
 
