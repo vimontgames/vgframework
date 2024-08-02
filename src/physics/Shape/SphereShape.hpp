@@ -56,6 +56,6 @@ namespace vg::physics
     {
         core::float4x4 matrix = mul(m_transform, getMatrixWithoutScale(_matrix));
         const float radius = m_radius;
-        getDebugDraw()->AddWireframeSphere(_world, radius, 0xFF0000FF, matrix);
+        getDebugDraw()->AddWireframeSphere(_world, radius, m_color, matrix);
     }
 }

@@ -14,8 +14,7 @@ namespace JPH
 
 namespace vg::physics
 {
-    class BodyDesc;
-    class RigidBodyDesc;
+    class PhysicsBodyDesc;
     class Shape;
     class PhysicsWorld;
 
@@ -25,7 +24,7 @@ namespace vg::physics
         VG_CLASS_DECL(Body, IBody);
         VG_CLASS_CTOR_HEADER_IMPL(Body, IBody);
 
-        Body(PhysicsWorld * _physicsWorld, const BodyDesc * _bodyDesc, Shape * _shape, const core::float4x4 & _matrix);
+        Body(PhysicsWorld * _physicsWorld, const PhysicsBodyDesc * _bodyDesc, Shape * _shape, const core::float4x4 & _matrix);
         ~Body();
 
         void Activate(const core::float4x4 & _world) final override;
@@ -39,17 +38,7 @@ namespace vg::physics
     private:
         const PhysicsWorld *    m_physicsWorld = nullptr;
         const Shape *           m_shape = nullptr;
-        const BodyDesc *        m_bodyDesc = nullptr;
+        const PhysicsBodyDesc *        m_bodyDesc = nullptr;
         JPH::BodyID             m_bodyID;
     };  
-
-    class RigidBody : public Body
-    {
-    public:
-        VG_CLASS_DECL(RigidBody, Body);
-        VG_CLASS_CTOR_HEADER_IMPL(RigidBody, Body);
-        
-        RigidBody(PhysicsWorld * _physicsWorld, const RigidBodyDesc * _bodyDesc, Shape * _shape, const core::float4x4 & _matrix);
-        ~RigidBody();
-    };
 }

@@ -50,7 +50,7 @@ namespace vg::physics
     }
 
     //--------------------------------------------------------------------------------------
-    bool PhysicsOptions::IsRigidBodyVisible(ShapeType _shape) const
+    bool PhysicsOptions::IsBodyVisible(ShapeType _shape) const
     {
         return m_showRigidBodies && asBool(ShapeTypeFlags(1 << (u32)_shape) & m_showRigidBodiesMask);
     }

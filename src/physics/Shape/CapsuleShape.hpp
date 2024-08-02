@@ -64,6 +64,6 @@ namespace vg::physics
     void CapsuleShape::Draw(const core::IWorld * _world, const core::float4x4 & _matrix)
     {
         float4x4 matrix = mul(m_transform, getMatrixWithoutScale(_matrix));
-        getDebugDraw()->AddCapsule(_world, m_radius, m_height, 0xFF0000FF, matrix);
+        getDebugDraw()->AddCapsule(_world, m_radius, m_height, m_color, matrix);
     }
 }

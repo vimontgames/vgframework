@@ -83,6 +83,7 @@ namespace vg::editor
             inline static const char * Inspector            = ICON_FA_MAGNIFYING_GLASS;
             inline static const char * Image                = ICON_FA_IMAGE;
             inline static const char * Light                = ICON_FA_LIGHTBULB;
+            inline static const char * Link                 = ICON_FA_LINK;
             inline static const char * Maximize             = ICON_FA_MAXIMIZE;
             inline static const char * Mesh                 = ICON_FA_CUBE;
             inline static const char * Minimize             = ICON_FA_MINIMIZE;
@@ -100,7 +101,7 @@ namespace vg::editor
             inline static const char * Renderer             = ICON_FA_DISPLAY;
             inline static const char * Resource             = ICON_FA_DATABASE;
             inline static const char * Restart              = ICON_FA_CLOCK_ROTATE_LEFT;
-            inline static const char * RigidBody            = ICON_FA_CUBES_STACKED;
+            inline static const char * PhysicsBody            = ICON_FA_CUBES_STACKED;
             inline static const char * Rotate               = ICON_FA_ROTATE;
             inline static const char * Load                 = ICON_FA_FILE_EXPORT;
             inline static const char * Save                 = ICON_FA_FLOPPY_DISK;

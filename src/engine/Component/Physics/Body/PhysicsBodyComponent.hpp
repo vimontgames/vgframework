@@ -1,4 +1,4 @@
-#include "RigidBodyComponent.h"
+#include "PhysicsBodyComponent.h"
 #include "core/IGameObject.h"
 #include "core/IWorld.h"
 #include "engine/Engine.h"
@@ -12,21 +12,22 @@ using namespace vg::core;
 
 namespace vg::engine
 {
-    VG_REGISTER_COMPONENT_CLASS(RigidBodyComponent, "RigidBody", "Physics", "Rigid body to interact with physics world", editor::style::icon::RigidBody, 0);
+    VG_REGISTER_COMPONENT_CLASS(PhysicsBodyComponent, "Physics Body", "Physics", "A physics body to interact with physics world", editor::style::icon::PhysicsBody, 0);
 
     //--------------------------------------------------------------------------------------
-    bool RigidBodyComponent::registerProperties(core::IClassDesc & _desc)
+    bool PhysicsBodyComponent::registerProperties(core::IClassDesc & _desc)
     {
         super::registerProperties(_desc);
 
-        registerPropertyObjectPtrEx(RigidBodyComponent, m_bodyDesc, "Body", IProperty::Flags::Flatten);
-        registerPropertyObjectPtrEx(RigidBodyComponent, m_shapeDesc, "Shape", IProperty::Flags::Flatten);
+        //registerPropertyEnumEx(PhysicsBodyComponent, physics::BodyType, m_bodyType, "Type", IProperty::Flags::ReadOnly);
+        registerPropertyObjectPtrEx(PhysicsBodyComponent, m_bodyDesc, "Body", IProperty::Flags::Flatten);
+        registerPropertyObjectPtrEx(PhysicsBodyComponent, m_shapeDesc, "Shape", IProperty::Flags::Flatten);
 
         return true;
     }
 
     //--------------------------------------------------------------------------------------
-    RigidBodyComponent::RigidBodyComponent(const core::string & _name, IObject * _parent) :
+    PhysicsBodyComponent::PhysicsBodyComponent(const core::string & _name, IObject * _parent) :
         super(_name, _parent)
     {
         if (_parent)
@@ -49,7 +50,7 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
-    RigidBodyComponent::~RigidBodyComponent()
+    PhysicsBodyComponent::~PhysicsBodyComponent()
     {
         VG_SAFE_RELEASE(m_body);
         VG_SAFE_RELEASE(m_shape);
@@ -58,17 +59,17 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
-    void RigidBodyComponent::Update(float _dt)
+    void PhysicsBodyComponent::Update(float _dt)
     {
-        const auto * engine = Engine::get();
-        IGameObject * go = GetGameObject();
-
-        auto * world = go->GetWorld();
-
-        if (!world)
+        if (nullptr == m_bodyDesc)
             return;
+        
+        IGameObject * go = GetGameObject(); 
+        auto * world = go->GetWorld();
+        if (nullptr == world)
+            return;        
 
-        if (physics::MotionType::Static != m_bodyDesc->GetMotion())
+        if (physics::MotionType::Static != m_bodyDesc->GetMotion() && !m_bodyDesc->IsTrigger())
         {
             if (world->IsPlaying() && !world->IsPaused())
             {
@@ -80,7 +81,8 @@ namespace vg::engine
             }
         }
 
-        if (engine->getPhysicsOptions()->IsRigidBodyVisible(m_shape->GetShapeType()))
+        const auto * engine = Engine::get();
+        if (engine->getPhysicsOptions()->IsBodyVisible(m_shape->GetShapeType()))
         {
             if (m_shape)
                 m_shape->Draw(world, go->getGlobalMatrix());
@@ -88,7 +90,7 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
-    void RigidBodyComponent::OnLoad()
+    void PhysicsBodyComponent::OnLoad()
     {
         createShape();
         
@@ -102,7 +104,7 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
-    void RigidBodyComponent::OnEnable()
+    void PhysicsBodyComponent::OnEnable()
     {
         if (!m_body)
             createBody();
@@ -120,7 +122,7 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
-    void RigidBodyComponent::OnDisable()
+    void PhysicsBodyComponent::OnDisable()
     {
         super::OnDisable();
 
@@ -137,16 +139,28 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
-    void RigidBodyComponent::OnPropertyChanged(IObject * _object, const core::IProperty & _prop, bool _notifyParent)
+    void PhysicsBodyComponent::OnPropertyChanged(IObject * _object, const core::IProperty & _prop, bool _notifyParent)
     {
-        if (!strcmp(_prop.getName(), "m_flags"))
+        if (!strcmp(_prop.getName(), "m_trigger"))
+        {
+            createBody();
+            createShape();
+        }
+        else if (!strcmp(_prop.getName(), "m_bodyType"))
+        {
+            createBodyDesc();
+            createBody();
+            createShapeDesc();
+            createShape();
+        }
+        else if (!strcmp(_prop.getName(), "m_flags"))
         {
             auto * go = dynamic_cast<IGameObject *>(_object);
             if (go)
             {
                 VG_ASSERT(go == GetGameObject());
                 if (updateFlagsFromGameObject())
-                    VG_INFO("[RigidBody] Updated RigidBody because GameObject flags changed");
+                    VG_INFO("[PhysicsBody] Updated flags because GameObject flags changed");
             }
         }
         else if (!strcmp(_prop.getName(), "m_shapeType"))
@@ -172,19 +186,25 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
-    bool RigidBodyComponent::createBodyDesc()
+    bool PhysicsBodyComponent::createBodyDesc()
     {
-        if (nullptr == m_bodyDesc)
+        if (nullptr == m_bodyDesc /* || m_bodyType != m_bodyDesc->GetBodyType()*/)
         {
+            UID originalUID = 0;
+            if (m_bodyDesc)
+                originalUID = m_bodyDesc->GetOriginalUID(false);
+
             IFactory * factory = Kernel::getFactory();
             VG_SAFE_RELEASE(m_bodyDesc);
 
-            m_bodyDesc = (physics::IBodyDesc *)factory->createObject("RigidBodyDesc", "", this);
+            m_bodyDesc = (physics::IBodyDesc *)factory->createObject("PhysicsBodyDesc", "", this);
 
             if (m_bodyDesc)
             {
                 m_bodyDesc->setParent(this);
                 m_bodyDesc->RegisterUID();
+                if (originalUID)
+                    m_bodyDesc->SetOriginalUID(originalUID);
             }
         }
 
@@ -192,7 +212,7 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
-    bool RigidBodyComponent::createShapeDesc()
+    bool PhysicsBodyComponent::createShapeDesc()
     {
         IFactory * factory = Kernel::getFactory();
 
@@ -207,9 +227,11 @@ namespace vg::engine
         VG_SAFE_RELEASE(m_shapeDesc);
 
         VG_ASSERT(m_bodyDesc);
-        const physics::ShapeType shapeType = m_bodyDesc->GetShapeType();
-        switch (shapeType)
+        if (m_bodyDesc)
         {
+            const physics::ShapeType shapeType = m_bodyDesc->GetShapeType();
+            switch (shapeType)
+            {
             default:
                 VG_ASSERT_ENUM_NOT_IMPLEMENTED(shapeType);
                 break;
@@ -225,6 +247,7 @@ namespace vg::engine
             case physics::ShapeType::Capsule:
                 m_shapeDesc = (physics::IShapeDesc *)factory->createObject("CapsuleShapeDesc", "", this);
                 break;
+            }
         }
 
         if (m_shapeDesc)
@@ -242,23 +265,39 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
-    physics::IPhysics * RigidBodyComponent::getPhysics()
+    physics::IPhysics * PhysicsBodyComponent::getPhysics()
     {
         return Engine::get()->GetPhysics();
     }
 
     //--------------------------------------------------------------------------------------
-    bool RigidBodyComponent::createShape()
+    bool PhysicsBodyComponent::createShape()
     {
         VG_SAFE_RELEASE(m_shape);
         VG_ASSERT(m_shapeDesc);
         if (m_shapeDesc)
             m_shape = getPhysics()->CreateShape(m_shapeDesc);
+
+        if (m_shape)
+        {
+            if (m_bodyDesc->IsTrigger())
+            {
+                m_shape->SetColor(0xFF7F00FF);
+            }
+            else
+            {
+                if (m_bodyDesc->GetMotion() == physics::MotionType::Dynamic)
+                    m_shape->SetColor(0xFF0000FF);
+                else
+                    m_shape->SetColor(0xFF00FFFF);
+            }
+        }
+
         return nullptr != m_shape;
     }
 
     //--------------------------------------------------------------------------------------
-    bool RigidBodyComponent::createBody()
+    bool PhysicsBodyComponent::createBody()
     {
         if (IWorld * world = GetGameObject()->GetWorld())
         {
@@ -288,7 +327,7 @@ namespace vg::engine
     // Updates the layer and motion flags according to Static/Dynamic GameObject
     // It will recreate the physics body if needed.
     //--------------------------------------------------------------------------------------
-    bool RigidBodyComponent::updateFlagsFromGameObject()
+    bool PhysicsBodyComponent::updateFlagsFromGameObject()
     {
         IGameObject * go = GetGameObject();
         VG_ASSERT(go);
@@ -329,19 +368,19 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
-    void RigidBodyComponent::onResourceLoaded(core::IResource * _resource)
+    void PhysicsBodyComponent::onResourceLoaded(core::IResource * _resource)
     {
 
     }
 
     //--------------------------------------------------------------------------------------
-    void RigidBodyComponent::onResourceUnloaded(core::IResource * _resource)
+    void PhysicsBodyComponent::onResourceUnloaded(core::IResource * _resource)
     {
 
     }
 
     //--------------------------------------------------------------------------------------
-    bool RigidBodyComponent::TryGetAABB(core::AABB & _aabb) const
+    bool PhysicsBodyComponent::TryGetAABB(core::AABB & _aabb) const
     {
         if (m_shapeDesc)
         {

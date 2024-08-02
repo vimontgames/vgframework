@@ -13,12 +13,13 @@
   <ItemGroup>
     <ClCompile Include="Behaviour\FreeCam\FreeCamBehaviour.cpp" />
     <ClCompile Include="Component\Animation\AnimationComponent.cpp" />
+    <ClCompile Include="Component\Animation\AttachToNodeComponent.cpp" />
     <ClCompile Include="Component\Camera\CameraComponent.cpp" />
     <ClCompile Include="Component\Camera\LightComponent.cpp" />
     <ClCompile Include="Component\Debug\TestComponent.cpp" />
     <ClCompile Include="Component\Editor\Snap\SnapComponent.cpp" />
     <ClCompile Include="Component\Mesh\MeshComponent.cpp" />
-    <ClCompile Include="Component\Physics\PhysicsComponents.cpp" />
+    <ClCompile Include="Component\Physics\PhysicsComponent.cpp" />
     <ClCompile Include="Component\UI\UIComponent.cpp" />
     <ClCompile Include="Engine.cpp" />
     <ClCompile Include="EngineOptions.cpp" />
@@ -30,8 +31,12 @@
     </ClCompile>
     <ClCompile Include="Resource\Resource.cpp" />
     <ClCompile Include="Selection\Selection.cpp" />
+    <ClInclude Include="Component\Animation\AttachToNodeComponent.h" />
     <ClInclude Include="Component\Debug\TestComponent.h" />
     <ClInclude Include="Component\Editor\Snap\SnapComponent.h" />
+    <ClInclude Include="Component\Physics\Body\PhysicsBodyComponent.h" />
+    <ClInclude Include="Component\Physics\Body\PhysicsBodyComponent.hpp" />
+    <ClInclude Include="Component\Physics\PhysicsComponent.h" />
     <ClInclude Include="Component\UI\UICanvasComponent.h" />
     <ClInclude Include="Component\UI\UICanvasComponent.hpp" />
     <ClInclude Include="Component\UI\UIComponent.h" />
@@ -73,8 +78,6 @@
     <ClInclude Include="Component\Mesh\MeshComponent.h" />
     <ClInclude Include="Component\Physics\CharacterController\CharacterControllerComponent.h" />
     <ClInclude Include="Component\Physics\CharacterController\CharacterControllerComponent.hpp" />
-    <ClInclude Include="Component\Physics\RigidBody\RigidBodyComponent.h" />
-    <ClInclude Include="Component\Physics\RigidBody\RigidBodyComponent.hpp" />
     <ClInclude Include="Engine.h" />
     <ClInclude Include="EngineOptions.h" />
     <ClInclude Include="Engine_Consts.h" />
@@ -88,7 +91,7 @@
     <ClInclude Include="Input\win32\Input_win32.h" />
     <ClInclude Include="Input\win32\Input_win32.hpp" />
     <ClInclude Include="IResourceManager.h" />
-    <ClInclude Include="IRigidBodyComponent.h" />
+    <ClInclude Include="IPhysicsBodyComponent.h" />
     <ClInclude Include="ISelection.h" />
     <ClInclude Include="IWorldResource.h" />
     <ClInclude Include="Job\Animation\AnimationJob.h" />

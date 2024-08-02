@@ -56,6 +56,6 @@ namespace vg::physics
     {
         float4x4 matrix = mul(m_transform, getMatrixWithoutScale(_matrix));
         const float3 halfSize = m_size * 0.5f;
-        getDebugDraw()->AddWireframeBox(_world, -halfSize, halfSize, 0xFF0000FF, matrix);
+        getDebugDraw()->AddWireframeBox(_world, -halfSize, halfSize, m_color, matrix);
     }
 }

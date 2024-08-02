@@ -1,3 +1,4 @@
 #include "engine/Precomp.h"
-#include "RigidBody/RigidBodyComponent.hpp"
+#include "PhysicsComponent.h"
+#include "Body/PhysicsBodyComponent.hpp"
 #include "CharacterController/CharacterControllerComponent.hpp"

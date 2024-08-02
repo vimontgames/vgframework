@@ -43,11 +43,14 @@ namespace vg::physics
 
         JPH::Shape * getJoltShape() const { return m_shape; }
 
+        void SetColor(core::u32 _color) final override { m_color = _color; }
+
     protected:
         renderer::IDebugDraw * getDebugDraw() const;
 
     protected:
-        core::float4x4 m_transform = core::float4x4::identity();
-        JPH::Shape * m_shape = nullptr;
+        core::u32       m_color = 0xFFFFFFFF;
+        core::float4x4  m_transform = core::float4x4::identity();
+        JPH::Shape *    m_shape = nullptr;
     };   
 }

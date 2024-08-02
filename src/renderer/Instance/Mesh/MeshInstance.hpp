@@ -38,6 +38,8 @@ namespace vg::renderer
     {
         super::registerProperties(_desc);
 
+        registerPropertyObjectPtrEx(MeshInstance, m_instanceSkeleton, "Skeleton", IProperty::Flags::NotSaved);
+
         return true;
     }
 
@@ -629,6 +631,12 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
+    const ISkeleton * MeshInstance::GetSkeleton() const
+    {
+        return m_instanceSkeleton;
+    }
+
+    //--------------------------------------------------------------------------------------
     bool MeshInstance::DrawSkeleton(const core::IWorld * _world) const
     {
         VG_PROFILE_CPU("Skeleton Draw");
@@ -653,14 +661,25 @@ namespace vg::renderer
                 // YUp skeleton displayed as ZUp
                 float4x4 boneMatrix = mul(transpose(node.node_to_world), matrix);
 
+                const u32 selectedColor = 0xFF00FF00;
+                const u32 unselectedColor = 0x7FFFFFFF;
+
+                u32 color = unselectedColor;
                 float3 boxSize = float3(0.01f, 0.01f, 0.01f);
-                dbgDraw->AddWireframeBox(_world, -boxSize, boxSize, 0xFF00FF00, boneMatrix);
+
+                if (asBool(NodeFlags::Selected & node.flags))
+                {
+                    color = selectedColor;
+                    boxSize *= 1.5f;
+                }
+
+                dbgDraw->AddWireframeBox(_world, -boxSize, boxSize, color, boneMatrix);
 
                 if (-1 != node.parent_index)
                 {
                     const MeshImporterNode & parentNode = nodes[node.parent_index];
                     float4x4 parentBoneMatrix = mul(transpose(parentNode.node_to_world), matrix);
-                    dbgDraw->AddLine(_world, boneMatrix[3].xyz, parentBoneMatrix[3].xyz, 0xFF00FF00);
+                    dbgDraw->AddLine(_world, boneMatrix[3].xyz, parentBoneMatrix[3].xyz, unselectedColor);
                 }
             }
 

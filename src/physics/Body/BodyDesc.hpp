@@ -4,33 +4,28 @@ using namespace vg::core;
 
 namespace vg::physics
 {
+    VG_REGISTER_OBJECT_CLASS(PhysicsBodyDesc, "Body Settings");
+
     //--------------------------------------------------------------------------------------
-    bool BodyDesc::registerProperties(IClassDesc & _desc)
+    bool PhysicsBodyDesc::registerProperties(IClassDesc & _desc)
     {
         super::registerProperties(_desc);
 
-        registerPropertyEnumEx(BodyDesc, ObjectLayer, m_layer, "Layer", IProperty::Flags::ReadOnly);
-        registerPropertyEnumEx(BodyDesc, MotionType, m_motion, "Motion", IProperty::Flags::ReadOnly);
+        registerProperty(PhysicsBodyDesc, m_trigger, "Trigger");
+        registerPropertyEx(PhysicsBodyDesc, m_softBody, "SoftBody", IProperty::Flags::SameLine);
 
-        registerOptionalProperty(RigidBodyDesc, m_overrideMass, m_mass, "Mass");
+        registerPropertyEnumEx(PhysicsBodyDesc, ObjectLayer, m_layer, "Layer", IProperty::Flags::ReadOnly);
+        registerPropertyEnumEx(PhysicsBodyDesc, MotionType, m_motion, "Motion", IProperty::Flags::ReadOnly);
 
-        registerProperty(BodyDesc, m_friction, "Friction");
-        setPropertyRange(BodyDesc, m_friction, float2(0, 1));
+        registerOptionalProperty(PhysicsBodyDesc, m_overrideMass, m_mass, "Mass");
 
-        registerProperty(BodyDesc, m_restitution, "Restitution");
-        setPropertyRange(BodyDesc, m_restitution, float2(0, 1));
+        registerProperty(PhysicsBodyDesc, m_friction, "Friction");
+        setPropertyRange(PhysicsBodyDesc, m_friction, float2(0, 1));
+
+        registerProperty(PhysicsBodyDesc, m_restitution, "Restitution");
+        setPropertyRange(PhysicsBodyDesc, m_restitution, float2(0, 1));
      
-        registerPropertyEnum(RigidBodyDesc, ShapeType, m_shapeType, "Shape");
-
-        return true;
-    }
-
-    //--------------------------------------------------------------------------------------
-    VG_REGISTER_OBJECT_CLASS(RigidBodyDesc, "RigidBody Settings");
-    //--------------------------------------------------------------------------------------
-    bool RigidBodyDesc::registerProperties(IClassDesc & _desc)
-    {
-        super::registerProperties(_desc);
+        registerPropertyEnum(PhysicsBodyDesc, ShapeType, m_shapeType, "Shape");
 
         return true;
     }

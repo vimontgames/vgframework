@@ -23,18 +23,55 @@ namespace vg::renderer
     {
         return (uint)m_nodes.size();
     }
+    
     //--------------------------------------------------------------------------------------
-    const core::string Skeleton::GetNodeName(uint _index) const
+    const core::string Skeleton::GetNodeName(NodeIndex _index) const
     {
         VG_ASSERT(_index < m_nodes.size());
         return m_nodes[_index].name;
     }
 
     //--------------------------------------------------------------------------------------
-    core::i16 Skeleton::GetParentIndex(core::uint _index) const 
+    const core::float4x4 & Skeleton::GetNodeWorldMatrix(NodeIndex _index) const
+    {
+        VG_ASSERT(_index < m_nodes.size());
+        return m_nodes[_index].node_to_world;
+    }
+
+    //--------------------------------------------------------------------------------------
+    core::i16 Skeleton::GetParentIndex(NodeIndex _index) const
     {
         VG_ASSERT(_index < m_nodes.size());
         return m_nodes[_index].parent_index;
+    }
+
+    //--------------------------------------------------------------------------------------
+    void Skeleton::SelectNode(NodeIndex _index, bool _selected)
+    {
+        VG_ASSERT(_index < m_nodes.size());
+        if (_selected)
+            m_nodes[_index].flags |= NodeFlags::Selected;
+        else
+            m_nodes[_index].flags &= ~NodeFlags::Selected;
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool Skeleton::IsNodeSelected(NodeIndex _index) const
+    {
+        VG_ASSERT(_index < m_nodes.size());
+        return asBool(NodeFlags::Selected & m_nodes[_index].flags);
+    }
+
+    //--------------------------------------------------------------------------------------
+    NodeIndex Skeleton::FindNodeIndex(const core::string & _name) const
+    {
+        for (uint i = 0; i < m_nodes.size(); ++i)
+        {
+            const auto & node = m_nodes[i];
+            if (node.name == _name)
+                return i;
+        }
+        return -1;
     }
 
     //--------------------------------------------------------------------------------------

@@ -11,8 +11,12 @@ namespace vg::renderer
         VG_CLASS_DECL_PASSTHROUGH(Skeleton, ISkeleton)
 
         core::uint                                          GetNodeCount        () const final override;
-        const core::string                                  GetNodeName         (core::uint _index) const final override;
-        core::i16                                           GetParentIndex      (core::uint _index) const final override;
+        const core::string                                  GetNodeName         (NodeIndex _index) const final override;
+        const core::float4x4 &                              GetNodeWorldMatrix  (NodeIndex _index) const final override;
+        NodeIndex                                           GetParentIndex      (NodeIndex _index) const final override;
+        void                                                SelectNode          (NodeIndex _index, bool _selected) final override;
+        bool                                                IsNodeSelected      (NodeIndex _index) const final override;
+        NodeIndex                                           FindNodeIndex       (const core::string & _name) const final override;
 
         void                                                setNodes            (const core::vector<MeshImporterNode> & _nodes);
         void                                                setBoneIndices      (const core::vector<core::u32> & _bonesIndices);

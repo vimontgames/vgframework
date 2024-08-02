@@ -49,6 +49,7 @@ namespace vg::physics
         IShape *                            CreateShape                 (const IShapeDesc * _shapeDesc) final override;
         IBody *                             CreateBody                  (core::IPhysicsWorld * _physicsWorld, const IBodyDesc * _bodyDesc, IShape * _shape, const core::float4x4 & _matrix) final override;
         ICharacter *                        CreateCharacter             (core::IPhysicsWorld * _physicsWorld, const ICharacterDesc * _characterDesc, IShape * _shape, const core::float4x4 & _matrix) final override;
+        void                                RemoveBody                  (core::IPhysicsWorld * _physicsWorld, IBody * _body) final override;
 
         engine::IEngine *                   getEngine                   () const;
         renderer::IDebugDraw *              getDebugDraw                () const;

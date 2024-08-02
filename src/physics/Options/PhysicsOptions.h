@@ -17,7 +17,7 @@ namespace vg::physics
         static bool			    load(core::IObject * _object);
         static bool			    save(core::IObject * _object);
 
-        bool                    IsRigidBodyVisible(ShapeType _shape)  const final override;
+        bool                    IsBodyVisible(ShapeType _shape)  const final override;
 
     protected:
         void                    applyGravity(const core::float3 & _gravity);

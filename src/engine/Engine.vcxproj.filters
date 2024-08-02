@@ -24,7 +24,7 @@
     <ClCompile Include="Component\Animation\AnimationComponent.cpp">
       <Filter>Component\Animation</Filter>
     </ClCompile>
-    <ClCompile Include="Component\Physics\PhysicsComponents.cpp">
+    <ClCompile Include="Component\Physics\PhysicsComponent.cpp">
       <Filter>Component\Physics</Filter>
     </ClCompile>
     <ClCompile Include="World\World.cpp">
@@ -50,6 +50,9 @@
     </ClCompile>
     <ClCompile Include="Component\Debug\TestComponent.cpp">
       <Filter>Component\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="Component\Animation\AttachToNodeComponent.cpp">
+      <Filter>Component\Animation</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -177,19 +180,13 @@
     </ClInclude>
     <ClInclude Include="IAnimationComponent.h" />
     <ClInclude Include="IAnimationResource.h" />
-    <ClInclude Include="Component\Physics\RigidBody\RigidBodyComponent.h">
-      <Filter>Component\Physics\RigidBody</Filter>
-    </ClInclude>
-    <ClInclude Include="IRigidBodyComponent.h" />
+    <ClInclude Include="IPhysicsBodyComponent.h" />
     <ClInclude Include="ICharacterControllerComponent.h" />
     <ClInclude Include="Component\Physics\CharacterController\CharacterControllerComponent.h">
       <Filter>Component\Physics\CharacterController</Filter>
     </ClInclude>
     <ClInclude Include="Component\Physics\CharacterController\CharacterControllerComponent.hpp">
       <Filter>Component\Physics\CharacterController</Filter>
-    </ClInclude>
-    <ClInclude Include="Component\Physics\RigidBody\RigidBodyComponent.hpp">
-      <Filter>Component\Physics\RigidBody</Filter>
     </ClInclude>
     <ClInclude Include="World\World.h">
       <Filter>World</Filter>
@@ -294,6 +291,18 @@
       <Filter>Component\UI</Filter>
     </ClInclude>
     <ClInclude Include="IUITextComponent.h" />
+    <ClInclude Include="Component\Animation\AttachToNodeComponent.h">
+      <Filter>Component\Animation</Filter>
+    </ClInclude>
+    <ClInclude Include="Component\Physics\Body\PhysicsBodyComponent.h">
+      <Filter>Component\Physics\Body</Filter>
+    </ClInclude>
+    <ClInclude Include="Component\Physics\Body\PhysicsBodyComponent.hpp">
+      <Filter>Component\Physics\Body</Filter>
+    </ClInclude>
+    <ClInclude Include="Component\Physics\PhysicsComponent.h">
+      <Filter>Component\Physics</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Input">
@@ -340,9 +349,6 @@
     </Filter>
     <Filter Include="Component\Physics">
       <UniqueIdentifier>{310b5b18-9c40-4819-b116-112472efe86d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Component\Physics\RigidBody">
-      <UniqueIdentifier>{61de2590-e67a-4974-a0de-4af80c4026c6}</UniqueIdentifier>
     </Filter>
     <Filter Include="Component\Physics\CharacterController">
       <UniqueIdentifier>{e5e6bcb2-d143-43db-a667-1b67eb4eebff}</UniqueIdentifier>
@@ -394,6 +400,9 @@
     </Filter>
     <Filter Include="Component\Debug">
       <UniqueIdentifier>{01236c8d-6efe-456e-92b9-d923acf60499}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Component\Physics\Body">
+      <UniqueIdentifier>{ba03511c-b8ea-4ddc-8a57-8295edeeb759}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

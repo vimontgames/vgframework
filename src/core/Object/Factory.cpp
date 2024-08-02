@@ -32,8 +32,24 @@ namespace vg::core
         // TODO : make proper API to register deprecated property names names for each class
         m_oldPropertyNames.insert(std::pair("m_world", "m_local"));
 
+        // TODO: make proper API blah
+        m_oldClassNames.insert(std::pair("RigidBodyComponent", "PhysicsBodyComponent"));
+        m_oldClassNames.insert(std::pair("RigidBodyDesc", "PhysicsBodyDesc"));
+
         // Resizing m_classes would change class descriptor addresses
         m_classes.reserve(classDescMaxCount);
+    }
+
+    //--------------------------------------------------------------------------------------
+    const char * Factory::fixDeprecatedClassName(const char * _className) const
+    {
+        auto it = m_oldClassNames.find(_className);
+        if (m_oldClassNames.end() != it)
+        {
+            VG_WARNING("[Factory] Deprecated class name \"%s\" replaced by \"%s\"", it->first.c_str(), it->second);
+            return it->second;
+        }
+        return _className;
     }
 
     //--------------------------------------------------------------------------------------
@@ -415,6 +431,9 @@ namespace vg::core
             VG_WARNING("[Factory] Property \"%s::%s\" have enum count of %u but Property \"%s::%s\" have different enum sizes of %u", _srcObj->GetClassName(), _srcProp->getName(), _srcProp->getEnumCount(), _dstObj->GetClassName(), _dstProp->getName(), _dstProp->getEnumCount());
             return false;
         }
+
+        if (asBool(_srcProp->getFlags() & IProperty::Flags::NotSaved))
+            return false;
 
         if (!strcmp(_srcProp->getName(), "m_uid"))
         {
@@ -983,7 +1002,7 @@ namespace vg::core
             const XMLAttribute * xmlClassAttr = xmlObject->FindAttribute("class");
             if (nullptr != xmlClassAttr)
             {
-                const char * className = xmlClassAttr->Value();
+                const char * className = fixDeprecatedClassName(xmlClassAttr->Value());
                 const auto * classDesc = getClassDescriptor(className);
                 if (nullptr != classDesc)
                 {
@@ -1292,7 +1311,7 @@ namespace vg::core
                                                 const XMLAttribute* xmlClassAttrRef = xmlObjectRef->FindAttribute("class");
                                                 if (nullptr != xmlClassAttrRef)
                                                 {
-                                                    const char* classNameRef = xmlClassAttrRef->Value();
+                                                    const char* classNameRef = fixDeprecatedClassName(xmlClassAttrRef->Value());
                                                     const auto* classDescRef = getClassDescriptor(classNameRef);
                                                     if (nullptr != classDescRef)
                                                     {
@@ -1327,7 +1346,7 @@ namespace vg::core
                                                         const XMLAttribute* xmlClassAttrRef = xmlObjectRef->FindAttribute("class");
                                                         if (nullptr != xmlClassAttrRef)
                                                         {
-                                                            const char* classNameRef = xmlClassAttrRef->Value();
+                                                            const char* classNameRef = fixDeprecatedClassName(xmlClassAttrRef->Value());
                                                             const auto* classDescRef = getClassDescriptor(classNameRef);
                                                             if (nullptr != classDescRef)
                                                             {

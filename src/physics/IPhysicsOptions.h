@@ -9,6 +9,6 @@ namespace vg::physics
     public:
         VG_CLASS_DECL_ABSTRACT(IPhysicsOptions, core::Options);
 
-        virtual bool    IsRigidBodyVisible(ShapeType _shape) const = 0;
+        virtual bool    IsBodyVisible(ShapeType _shape) const = 0;
     };
 }

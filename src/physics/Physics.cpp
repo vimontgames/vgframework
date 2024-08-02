@@ -302,7 +302,7 @@ namespace vg::physics
                 return nullptr;
 
             case BodyType::Rigid:
-                return new physics::RigidBody((PhysicsWorld*)_physicsWorld, (RigidBodyDesc *)_bodyDesc, (Shape*)_shape, _matrix);
+                return new physics::Body((PhysicsWorld*)_physicsWorld, (PhysicsBodyDesc *)_bodyDesc, (Shape*)_shape, _matrix);
         }
     }
 
@@ -321,5 +321,11 @@ namespace vg::physics
             case CharacterType::Rigid:
                 return new physics::RigidCharacter((PhysicsWorld*)_world, (RigidCharacterDesc *)_characterDesc, (Shape *)_shape, _matrix);
         }
+    }
+
+    //--------------------------------------------------------------------------------------
+    void Physics::RemoveBody(core::IPhysicsWorld * _physicsWorld, IBody * _body)
+    {
+        //_body->getph
     }
 }

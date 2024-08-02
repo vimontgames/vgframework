@@ -69,10 +69,13 @@ namespace vg::core
 
          UID                                        getNewUID                       (IObject * _object);
 
+         const char *                               fixDeprecatedClassName          (const char * _className) const;
+
     private:
         core::vector<ClassDesc>                     m_classes;
         core::dictionary<IProperty::Type>           m_oldTypeNames;
         core::dictionary<string>                    m_oldPropertyNames;
+        core::dictionary<const char *>              m_oldClassNames;
         mutex                                       m_objectsToReleaseMutex;
         vector<IObject*>                            m_objectsToRelease[2];
         u8                                          m_objectsToReleaseTableIndex = 0;

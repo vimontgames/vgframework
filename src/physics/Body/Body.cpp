@@ -12,6 +12,8 @@ using namespace vg::core;
 
 namespace vg::physics
 {
+    VG_REGISTER_OBJECT_CLASS(Body, "Body");
+
     //--------------------------------------------------------------------------------------
     bool Body::registerProperties(IClassDesc & _desc)
     {
@@ -21,7 +23,7 @@ namespace vg::physics
     }
 
     //--------------------------------------------------------------------------------------
-    Body::Body(PhysicsWorld * _physicsWorld, const BodyDesc * _bodyDesc, Shape * _shape, const core::float4x4 & _matrix) :
+    Body::Body(PhysicsWorld * _physicsWorld, const PhysicsBodyDesc * _bodyDesc, Shape * _shape, const core::float4x4 & _matrix) :
         super(),
         m_physicsWorld(_physicsWorld),
         m_shape(_shape),
@@ -36,7 +38,15 @@ namespace vg::physics
         
         JPH::BodyCreationSettings bodySettings(joltShape, getJoltVec3(_matrix[3].xyz), getJoltQuaternion(quat), getJoltMotionType(_bodyDesc->m_motion), getJoltObjectLayer(_bodyDesc->m_layer));
         
-        if (_bodyDesc->m_overrideMass)
+        if (_bodyDesc->IsTrigger())
+        {
+            bodySettings.mIsSensor = true;
+            bodySettings.mGravityFactor = 0;
+            //bodySettings.mOverrideMassProperties = JPH::EOverrideMassProperties::MassAndInertiaProvided;
+            //bodySettings.mMassPropertiesOverride.mMass = 0.0f;
+            //bodySettings.mMassPropertiesOverride.mInertia = 0.0f;
+        }
+        else if (_bodyDesc->m_overrideMass)
         {
             bodySettings.mOverrideMassProperties = JPH::EOverrideMassProperties::CalculateInertia;
             bodySettings.mMassPropertiesOverride.mMass = _bodyDesc->m_mass;
@@ -93,27 +103,5 @@ namespace vg::physics
         world[3].xyz = fromJoltVec3(position);
 
         return world;
-    }
-
-    VG_REGISTER_OBJECT_CLASS(RigidBody, "RigidBody");
-
-    //--------------------------------------------------------------------------------------
-    bool RigidBody::registerProperties(IClassDesc & _desc)
-    {
-        super::registerProperties(_desc);
-        return true;
-    }
-
-    //--------------------------------------------------------------------------------------
-    RigidBody::RigidBody(PhysicsWorld * _physicsWorld, const RigidBodyDesc * _bodyDesc, Shape * _shape, const core::float4x4 & _matrix) :
-       super(_physicsWorld, _bodyDesc, _shape, _matrix)
-    {
-
-    }
-
-    //--------------------------------------------------------------------------------------
-    RigidBody::~RigidBody()
-    {
-
     }
 }

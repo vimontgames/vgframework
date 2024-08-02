@@ -11,6 +11,7 @@
 #include "core/Scheduler/Scheduler.h"
 #include "engine/Job/Animation/AnimationJob.h"
 #include "engine/Job/Animation/DrawSkeletonJob.h"
+#include "engine/Job/Animation/DrawSkeletonJob.h"
 #include "engine/Component/Animation/AnimationComponent.h"
 
 #include "MaterialResourceList.hpp"
@@ -33,6 +34,7 @@ namespace vg::engine
 
         registerProperty(MeshComponent, m_displayBones, "Display Bones");
         registerPropertyResource(MeshComponent, m_meshResource, "Mesh");
+        registerPropertyObjectPtrEx(MeshComponent, m_meshInstance, "MeshInstance", IProperty::Flags::NotSaved | IProperty::Flags::Flatten);
         registerPropertyObjectEx(MeshComponent, m_meshMaterials, "Materials", IProperty::Flags::Flatten);
         registerProperty(MeshComponent, m_batchMask, "Batch Mask");
         

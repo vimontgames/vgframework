@@ -22,7 +22,6 @@ namespace vg::renderer
         super::registerProperties(_desc);
 
         registerPropertyObjectPtrEx(MeshModel, m_geometry, "Geometry", IProperty::Flags::NotSaved);
-        registerPropertyObjectPtrEx(MeshModel, m_skeleton, "Skeleton", IProperty::Flags::NotSaved);
         
         return true;
     }

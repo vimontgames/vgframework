@@ -1,6 +1,7 @@
 #pragma once
 
 #include "renderer/ISkeleton.h"
+#include "editor/ImGui/Extensions/imGuiExtensions.h"
 
 using namespace vg::core;
 using namespace vg::renderer;
@@ -16,7 +17,7 @@ namespace vg::editor
             auto availableWidth = ImGui::GetContentRegionAvail().x;
             ImGui::PushItemWidth(availableWidth - style::label::PixelWidth);
 
-            const ISkeleton * skeleton = dynamic_cast<ISkeleton *>(_object);
+            ISkeleton * skeleton = dynamic_cast<ISkeleton *>(_object);
             VG_ASSERT(skeleton);
             if (skeleton)
             {
@@ -38,28 +39,53 @@ namespace vg::editor
                     for (uint i = 0; i < nodeCount; ++i)
                     {
                         const string nodeName = skeleton->GetNodeName(i);
-                        //const float4x4 nodeToParentMatrix =  
 
                         char nodeLabel[256];
                         const char * sub = strstr(nodeName.c_str(), "mixamorig:");
+
+                        ImGui::PushID(i);
+
+                        ImVec2 collapsingHeaderPos = ImGui::GetCursorPos();
 
                         if (sub)
                             sprintf_s(nodeLabel, "[%u] %s", i, nodeName.c_str() + strlen("mixamorig:"));
                         else
                             sprintf_s(nodeLabel, "[%u] %s", i, nodeName.c_str());
+                    
+                        bool isNodeSelected = skeleton->IsNodeSelected(i);
+                        //ImGui::CollapsingHeaderLabel(collapsingHeaderPos, nodeLabel, isNodeSelected);
+                        //
+                        //if (ImGui::CollapsingHeaderCheckbox(collapsingHeaderPos, isNodeSelected, skeleton, style::icon::Checked, style::icon::Unchecked, fmt::sprintf("%s", isNodeSelected ? "Disable Node" : "Enable Node").c_str()))
+                        //{
+                        //    //pComponent->SetComponentFlags(ComponentFlags::Enabled, !isComponentEnabled);
+                        //    //changed = true;
+                        //}
 
                         if (ImGui::TreeNode(nodeLabel))
                         {
+                            if (ImGui::BeginPopupContextItem("node_context_menu"))
+                            {
+                                if (ImGui::MenuItem("Copy node name to clipboard"))
+                                    ImGui::SetClipboardText(nodeName.c_str());
+
+                                ImGui::EndPopup();
+                            }
+
+                            bool b = skeleton->IsNodeSelected(i);
+                            if (ImGui::Checkbox("Selected", &b))
+                                skeleton->SelectNode(i, b);
+
                             ImGui::BeginDisabled(true);
                             {
                                 int parent = skeleton->GetParentIndex(i);
                                 ImGui::InputInt("ParentIndex", &parent);
-                                //ImGuiWindow::displayFloat4x4("Bone", (core::float4x4 *)&node.node_to_parent);
                             }
                             ImGui::EndDisabled();
 
                             ImGui::TreePop();
                         }
+
+                        ImGui::PopID();
                     }
 
                     ImGui::TreePop();

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "engine/IRigidBodyComponent.h"
+#include "engine/IPhysicsBodyComponent.h"
 #include "physics/Physics_Consts.h"
 
 namespace vg::physics
@@ -14,13 +14,13 @@ namespace vg::physics
 
 namespace vg::engine
 {
-    class RigidBodyComponent final : public IRigidBodyComponent
+    class PhysicsBodyComponent final : public IPhysicsBodyComponent
     {
     public:
-        VG_CLASS_DECL(RigidBodyComponent, IRigidBodyComponent);
+        VG_CLASS_DECL(PhysicsBodyComponent, IPhysicsBodyComponent);
 
-        RigidBodyComponent(const core::string & _name, IObject * _parent);
-        ~RigidBodyComponent();
+        PhysicsBodyComponent(const core::string & _name, IObject * _parent);
+        ~PhysicsBodyComponent();
 
         void                        Update(float _dt) final override;
 
@@ -48,6 +48,7 @@ namespace vg::engine
         static physics::IPhysics *  getPhysics();
 
     private:
+        //physics::BodyType           m_bodyType  = physics::BodyType::Rigid;
         physics::IBodyDesc *        m_bodyDesc  = nullptr;
         physics::IBody *            m_body      = nullptr;
         physics::IShapeDesc *       m_shapeDesc = nullptr;  

@@ -656,7 +656,7 @@ namespace vg::editor
         context.prefab              = nullptr;  // Original Prefab
         context.propOverride        = nullptr;  // The dynamic property override if any
 
-        if (gameobject)
+        if (gameobject && _object->GetUID(false))
         {
             //const bool isPrefabScene = gameobject->GetScene()->GetSceneType() == BaseSceneType::Prefab;
             
@@ -1830,33 +1830,62 @@ namespace vg::editor
             auto availableWidth2 = window->Size.x - window->WindowPadding.x - (window->ScrollbarY ? ImGui::GetStyle().ScrollbarSize : 0);
             availableWidth2 = max(availableWidth, availableWidth2);
 
-            ImGui::SameLine();
-            ImGui::SetCursorPosX(availableWidth2 - style::button::SizeSmall.x);
-            ImGui::SetCursorPosY(cursorPosY);
+            //ImGui::SameLine();
+            //ImGui::SetCursorPosX(availableWidth2 - style::button::SizeSmall.x);
+            //ImGui::SetCursorPosY(cursorPosY);
+            //
+            //bool checked = context.isPrefabOverride && context.propOverride->IsEnable();
+            ////ImGui::BeginDisabled(context.);
+            //if (ImGui::Checkbox(getObjectLabel("", "Override", _prop).c_str(), &checked))
+            //{
+            //    if (checked)
+            //        context.prefab->ToggleOverride(context.originalObject, context.originalProp, true);
+            //    else
+            //        context.prefab->ToggleOverride(context.originalObject, context.originalProp, false);
+            //
+            //    if (context.optionalPropOverride)
+            //        context.optionalPropOverride->Enable(checked);
+            //}
+            ////ImGui::EndDisabled();
+            //ImGui::SetCursorPosY(cursorPosY + deltaY);
 
-            bool checked = context.isPrefabOverride && context.propOverride->IsEnable();
-            //ImGui::BeginDisabled(context.);
-            if (ImGui::Checkbox(getObjectLabel("", "Override", _prop).c_str(), &checked))
+            //if (ImGui::IsItemHovered())
+            //{
+            //    if (context.isPrefabOverride)
+            //        ImGui::SetTooltip("Property \"%s\" is overridden", _prop->getName());
+            //    else if (context.canPrefabOverride)
+            //        ImGui::SetTooltip("Property \"%s\" can be overriden", _prop->getName());
+            //    else
+            //        ImGui::SetTooltip("Property \"%s\" cannot be overriden", _prop->getName());
+            //}
+
+            if (ImGui::BeginPopupContextItem(getObjectLabel("Menu", "Override", _prop).c_str()))
             {
-                if (checked)
-                    context.prefab->ToggleOverride(context.originalObject, context.originalProp, true);
-                else
+                ImGui::BeginDisabled(!context.canPrefabOverride);
+
+                bool overriden = context.isPrefabOverride;
+                bool notOverriden = !overriden;
+                //if (ImGui::MenuItem(overriden ? "Use original value" : "Use override value"))
+                //{
+                //    context.prefab->ToggleOverride(context.originalObject, context.originalProp, !overriden);
+                //    //if (overriden)
+                //    //    context.prefab->ToggleOverride(context.originalObject, context.originalProp, true);
+                //    //else
+                //    //    context.prefab->ToggleOverride(context.originalObject, context.originalProp, false);
+                //}
+
+                ImGui::MenuItem("Prefab override", nullptr, false, false);
+                ImGui::Separator();
+
+                if (ImGui::MenuItem("Use original value", nullptr, &notOverriden))
                     context.prefab->ToggleOverride(context.originalObject, context.originalProp, false);
 
-                if (context.optionalPropOverride)
-                    context.optionalPropOverride->Enable(checked);
-            }
-            //ImGui::EndDisabled();
-            ImGui::SetCursorPosY(cursorPosY + deltaY);
+                if (ImGui::MenuItem("Use override value", nullptr, &overriden))
+                    context.prefab->ToggleOverride(context.originalObject, context.originalProp, true);
 
-            if (ImGui::IsItemHovered())
-            {
-                if (context.isPrefabOverride)
-                    ImGui::SetTooltip("Property \"%s\" is overridden", _prop->getName());
-                else if (context.canPrefabOverride)
-                    ImGui::SetTooltip("Property \"%s\" can be overriden", _prop->getName());
-                else
-                    ImGui::SetTooltip("Property \"%s\" cannot be overriden", _prop->getName());
+                ImGui::EndDisabled();
+
+                ImGui::EndPopup();
             }
         }
 

@@ -88,6 +88,10 @@ namespace vg::engine
         VG_ASSERT(m_shapeDesc);
         if (m_shapeDesc)
             m_shape = getPhysics()->CreateShape(m_shapeDesc);
+
+        if (m_shape)
+            m_shape->SetColor(0xFFAFAFAF);
+
         return nullptr != m_shape;
     }
 
@@ -202,7 +206,7 @@ namespace vg::engine
         const auto * engine = Engine::get();
         IGameObject * go = GetGameObject();
 
-        if (engine->getPhysicsOptions()->IsRigidBodyVisible(m_shape->GetShapeType()))
+        if (engine->getPhysicsOptions()->IsBodyVisible(m_shape->GetShapeType()))
         {
             if (m_shape)
                 m_shape->Draw(go->GetWorld(), go->getGlobalMatrix());

@@ -34,6 +34,8 @@ UICanvasComponent, UITextComponent, andUIImageComponent\
 Update JoltPhysics to 5.0.0\
 Update Visual Studio 17.10.3
 
+![Screenshot](doc/img/0.29.jpg)
+
 ## 0.28 
 Reverse Z-Buffer\
 Fix rounding issues\
