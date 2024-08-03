@@ -16,10 +16,15 @@ namespace vg::renderer
         super::registerProperties(_desc);
 
         registerProperty(RendererOptions, m_toolMode, "Toolmode");
+
         registerPropertyEx(RendererOptions, m_rayTracing, "RayTracing", IProperty::Flags::SameLine);
+        setPropertyDescription(LightDesc, m_rayTracing, "Enable Ray-Tracing features");
+
         registerPropertyEx(RendererOptions, m_postProcess, "PostProcess", IProperty::Flags::SameLine);
+        setPropertyDescription(RendererOptions, m_postProcess, "Enable Post-Process features");
 
         registerPropertyEnum(RendererOptions, LightingMode, m_lightingMode, "Lighting");
+        setPropertyDescription(LightDesc, m_lightingMode, "Lighting monde will affect how lights are computed.\nIn \"Forward\" mode lighting is computed on the fly in pixel shader\nIn \"Defered\" mode lighting is computed in screen-space");
 
         registerPropertyEnum(RendererOptions, DisplayMode, m_debugDisplayMode, "Debug");
         registerPropertyEnumBitfield(RendererOptions, DisplayFlags, m_displayFlags, "Flags");
@@ -27,11 +32,19 @@ namespace vg::renderer
         registerPropertyGroupBegin(RendererOptions, "Advanced");
         {
             registerProperty(RendererOptions, m_wireframe, "Wireframe");
+
             registerPropertyEx(RendererOptions, m_aabb, "Bounding Box", IProperty::Flags::SameLine);
+            setPropertyDescription(LightDesc, m_aabb, "Show Bounding Boxes");
+
             registerPropertyEx(RendererOptions, m_debugUI, "Debug UI", IProperty::Flags::SameLine);
+            setPropertyDescription(LightDesc, m_debugUI, "Show UI debug");
 
             registerPropertyEnum(RendererOptions, gfx::VSync, m_VSync, "VSync");
+            setPropertyDescription(LightDesc, m_VSync, "Sync display frequency with monitor refresh rate");
+
             registerPropertyEx(RendererOptions, m_backgroundColor, "Background", IProperty::Flags::Color);
+            setPropertyDescription(LightDesc, m_backgroundColor, "Scene background color");
+
             registerPropertyEnumBitfield(RendererOptions, RenderPassFlags, m_renderPassFlags, "Passes");
         }
         registerPropertyGroupEnd(RendererOptions);

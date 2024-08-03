@@ -17,7 +17,10 @@ namespace vg::renderer
         setPropertyFlag(Batch, m_name, IProperty::Flags::Debug, true);
 
         registerPropertyEx(Batch, count, "Count", IProperty::Flags::ReadOnly);
+        setPropertyDescription(Batch, count, "Index or vertex count");
+
         registerPropertyEx(Batch, offset, "Offset", IProperty::Flags::ReadOnly);
+        setPropertyDescription(Batch, offset, "Start index or start vertex");
 
         return true;
     }

@@ -13,8 +13,10 @@ namespace vg::engine
         super::registerProperties(_desc);
 
         registerPropertyEx(EngineOptions, m_projectPath, "Project", IProperty::Flags::IsFolder);
+        setPropertyDescription(EngineOptions, m_projectPath, "Project root folder is used to load game library");
 
         registerPropertyEx(EngineOptions, m_startWorld, "World", IProperty::Flags::IsFile);
+        setPropertyDescription(EngineOptions, m_startWorld, "Default world to load at startup");
         setPropertyDefaultFolder(EngineOptions, m_startWorld, "data/Worlds")
 
         registerProperty(EngineOptions, m_animationJobs, "Animation Jobs");

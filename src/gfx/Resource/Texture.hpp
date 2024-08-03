@@ -136,7 +136,10 @@ namespace vg::gfx
         registerPropertyEnumEx(Texture, PixelFormat, m_texDesc.format, "Format", IProperty::Flags::ReadOnly);
         
         registerPropertyEx(Texture, m_texDesc.width, "Width", IProperty::Flags::ReadOnly);
+        setPropertyDescription(Texture, m_texDesc.width, "Texture width");
+
         registerPropertyEx(Texture, m_texDesc.height, "Height", IProperty::Flags::ReadOnly);
+        setPropertyDescription(Texture, m_texDesc.height, "Texture height");
 
         return true;
     }

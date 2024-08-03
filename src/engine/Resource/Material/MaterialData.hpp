@@ -11,8 +11,12 @@ namespace vg::engine
         super::registerProperties(_desc);
 
         setPropertyFlag(MaterialData, m_name, IProperty::Flags::NotVisible | IProperty::Flags::NotSaved, true);
+
         registerPropertyEnum(MaterialData, gfx::SurfaceType, m_surfaceType, "Surface");
+        setPropertyDescription(MaterialData, m_surfaceType, "Surface type determines how the material deal with alpha transparency");
+
         registerPropertyEnum(MaterialData, gfx::CullMode, m_cullMode, "Cull");
+        setPropertyDescription(MaterialData, m_cullMode, "Change culling to hide backfaces, frontfaces, or none");
         
         return true;
     }

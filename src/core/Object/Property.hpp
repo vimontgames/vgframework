@@ -98,6 +98,7 @@ namespace vg::core
         displayName = _other.displayName;
         defaultFolder = _other.defaultFolder;
         interfaceType = _other.interfaceType;
+        description = _other.description;
         type = _other.type;
         offset = _other.offset;
         sizeOf = _other.sizeOf;

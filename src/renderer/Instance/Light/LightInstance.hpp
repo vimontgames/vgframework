@@ -40,10 +40,14 @@ namespace vg::renderer
         }
         registerPropertyOptionalGroupEnd(LightDesc);
 
-
         registerPropertyEx(LightDesc, m_color, "Color", IProperty::Flags::Color | IProperty::Flags::HDR);
-        registerPropertyEx(LightDesc, m_ambient, "Ambient", IProperty::Flags::Color | IProperty::Flags::HDR);
+        setPropertyDescription(LightDesc, m_color, "Direct Light color");
+
         registerProperty(LightDesc, m_intensity, "Intensity");
+        setPropertyDescription(LightDesc, m_intensity, "Direct Light intensity multiplier");
+
+        registerPropertyEx(LightDesc, m_ambient, "Ambient", IProperty::Flags::Color | IProperty::Flags::HDR);
+        setPropertyDescription(LightDesc, m_ambient, "Ambient Light color");
 
         return true;
     }

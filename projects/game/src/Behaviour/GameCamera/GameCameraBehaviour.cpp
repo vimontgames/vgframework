@@ -46,17 +46,25 @@ void GameCameraBehaviour::OnEnable()
 //--------------------------------------------------------------------------------------
 void GameCameraBehaviour::Update(float _dt)
 {
-    const auto players = Game::get()->getCharacters(CharacterType::Player);    
-    
-    if (players.size() > 0)
+    const auto players = Game::get()->getCharacters(CharacterType::Player); 
+
+    vg::core::vector<CharacterBehaviour *> activePlayers;
+    for (uint i = 0; i < players.size(); ++i)
     {
-        auto matrix = getGameObject()->getGlobalMatrix();
+        auto * player = players[i];
+        if (player->isActive())
+            activePlayers.push_back(player);
+    }
+    
+    if (activePlayers.size() > 0)
+    {
+        auto matrix = getGameObject()->getGlobalMatrix();         
 
         float3 avgPos = (float3)0.0f;
-        for (uint i = 0; i < players.size(); ++i)
-            avgPos.xyz += players[i]->getGameObject()->getGlobalMatrix()[3].xyz;
+        for (uint i = 0; i < activePlayers.size(); ++i)
+            avgPos.xyz += activePlayers[i]->getGameObject()->getGlobalMatrix()[3].xyz;
 
-        m_target.xy = avgPos.xy / (float)players.size() + m_offset.xy;
+        m_target.xy = avgPos.xy / (float)activePlayers.size() + m_offset.xy;
 
         matrix[3].xy = smoothdamp(matrix[3].xy, m_target.xy, (float2&)m_targetVelocity.xy, m_delay, _dt);
 

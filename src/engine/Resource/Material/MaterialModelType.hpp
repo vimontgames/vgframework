@@ -12,6 +12,7 @@ namespace vg::engine
         super::registerProperties(_desc);
 
         registerProperty(MaterialModelType, m_shader, "Shader");
+        setPropertyDescription(MaterialModelType, m_shader, "The shader this material will use");
 
         return true;
     }
