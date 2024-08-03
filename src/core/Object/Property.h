@@ -22,11 +22,13 @@ namespace vg::core
         void                            setDefaultFolder                (const char * _path) final override;
         void                            setFlags                        (Flags _flagsToSet, Flags _flagsToRemove = Flags::None) final override;
         void                            setOffset                       (uint_ptr _offset) final override;
+        void                            SetDescription                  (const char * _description) final override;
 
         const char *                    getInterface                    () const final override;
         const char *                    getName                         () const final override;
         const char *                    GetClassName                    () const final override;
         const char *                    getDefaultFolder                () const final override;
+        const char *                    GetDescription                  () const final override;
         Type                            getType                         () const final override;
         uint_ptr                        getOffset                       () const final override;
 		core::u32		                getSizeOf		                () const final override;
@@ -95,6 +97,7 @@ namespace vg::core
         const char *                    displayName     = nullptr;
         const char *                    defaultFolder   = nullptr;
         const char *                    interfaceType   = nullptr;
+        const char *                    description     = nullptr;
         Type		                    type			= Type::Undefined;
         uint_ptr	                    offset			= (uint_ptr)-1;
 		core::u32	                    sizeOf			= 0x0;

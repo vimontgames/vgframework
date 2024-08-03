@@ -90,8 +90,8 @@ namespace vg::core
             Radio           = 0x0000000000000040,   // Part of a radio button group
             Debug           = 0x0000000000000080,   // A debug property that is hidden by default
             Bitfield        = 0x0000000000000100,   // Value displayed as hex, enum as flags
-            Resource        = 0x0000000000000200,
-            NotSaved        = 0x0000000000000400,
+            Resource        = 0x0000000000000200,   // Property is a Resource
+            NotSaved        = 0x0000000000000400,   // Property is not saved nor loaded
             EnumArray       = 0x0000000000000800,   // Property is fixed-size C array with element count the size of the enum
             Flatten         = 0x0000000000001000,   // Do not open TreeNode to display object of this type
             Optional        = 0x0000000000002000,   // Previous property must be a bool, and if 'false' then this value won't be editable
@@ -105,12 +105,14 @@ namespace vg::core
         virtual void                            setDefaultFolder                (const char * _path) = 0;
         virtual void                            setFlags                        (Flags _flagsToSet, Flags _flagsToRemove = Flags::None) = 0;
         virtual void                            setOffset                       (uint_ptr _offset) = 0;
+        virtual void                            SetDescription                  (const char * _description) = 0;
 
         virtual const char *                    getInterface                    () const = 0;
         virtual const char *                    getName                         () const = 0;
         virtual const char *                    GetClassName                    () const = 0;
         virtual const char *                    getDisplayName                  () const = 0;
         virtual const char *                    getDefaultFolder                () const = 0;
+        virtual const char *                    GetDescription                  () const = 0;
         virtual Type                            getType                         () const = 0;
         virtual Flags                           getFlags                        () const = 0;
         virtual uint_ptr                        getOffset                       () const = 0;
@@ -254,6 +256,7 @@ namespace vg::core
 #define setPropertyFlag(className, propertyName, flags, value)												_desc.GetPropertyByName(#propertyName)->setFlags(value ? flags : (vg::core::IProperty::Flags)0, value ? (vg::core::IProperty::Flags)0 : flags);
 #define setPropertyRange(className, propertyName, range)												    _desc.GetPropertyByName(#propertyName)->setRange(range);
 #define setPropertyDefaultFolder(className, propertyName, defaultFolder)									_desc.GetPropertyByName(#propertyName)->setDefaultFolder(defaultFolder);
+#define setPropertyDescription(className, propertyName, description)                                        _desc.GetPropertyByName(#propertyName)->SetDescription(description);
 
 //--------------------------------------------------------------------------------------
 // Misc

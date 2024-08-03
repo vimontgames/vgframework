@@ -22,7 +22,7 @@
                         <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value="Opened"/>
                         <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
                         <Property type="Float4" name="m_color" flags="Color" x="1" y="1" z="1" w="1"/>
-                        <Property type="Float4x4" name="m_local" Ix="0.99999994" Iy="-0.00037621649" Iz="0.00015561881" Iw="0" Jx="0.00024372329" Jy="0.85935485" Jz="0.51137912" Jw="0" Kx="-0.00032612117" Ky="-0.51137912" Kz="0.85935485" Kw="0" Tx="0" Ty="-11.734671" Tz="15" Tw="1"/>
+                        <Property type="Float4x4" name="m_local" Ix="0.99999994" Iy="-0.00037621649" Iz="0.00015561881" Iw="0" Jx="0.00024372329" Jy="0.85935485" Jz="0.51137912" Jw="0" Kx="-0.00032612117" Ky="-0.51137912" Kz="0.85935485" Kw="0" Tx="0" Ty="-7.7346706" Tz="10.5" Tw="1"/>
                         <Property type="ObjectPtrVector" name="m_components">
                             <Object class="GameCameraBehaviour">
                                 <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="1740531556"/>

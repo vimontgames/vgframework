@@ -158,6 +158,18 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
+    void Property::SetDescription(const char * _description)
+    {
+        description = _description;
+    }
+
+    //--------------------------------------------------------------------------------------
+    const char * Property::GetDescription() const
+    {
+        return description;
+    }
+
+    //--------------------------------------------------------------------------------------
     u32 Property::getEnumCount() const
     {
         return enums.count();

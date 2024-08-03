@@ -28,7 +28,8 @@ bool GameCameraBehaviour::registerProperties(IClassDesc & _desc)
 {
     super::registerProperties(_desc);
 
-    registerProperty(GameCameraBehaviour, m_speed, "Speed");
+    registerProperty(GameCameraBehaviour, m_delay, "Delay");
+    setPropertyDescription(GameCameraBehaviour, m_delay, "Time to smooth camera position (s)");
 
     return true;
 }
@@ -57,7 +58,7 @@ void GameCameraBehaviour::Update(float _dt)
 
         m_target.xy = avgPos.xy / (float)players.size() + m_offset.xy;
 
-        matrix[3].xy = smoothdamp(matrix[3].xy, m_target.xy, (float2&)m_targetVelocity.xy, m_speed, _dt);
+        matrix[3].xy = smoothdamp(matrix[3].xy, m_target.xy, (float2&)m_targetVelocity.xy, m_delay, _dt);
 
         getGameObject()->setGlobalMatrix(matrix);
     }

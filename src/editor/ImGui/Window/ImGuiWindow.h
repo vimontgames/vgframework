@@ -124,7 +124,8 @@ namespace vg::editor
         static bool                             isPropertyVisible   (core::IProperty::Flags _flags);
         static core::string                     getPropertyLabel    (const core::string & _label, core::uint _index = 0);
         static ImVec4                           getPropertyColor    (const Context & _context);
-        static void                             drawPropertyLabel   (const char * _label, const Context & _context);    
+        static void                             drawPropertyLabel   (const Context & _context, const core::IProperty * _prop);
+        static void                             drawPropertyLabel   (const Context & _context, const char * _label, const char * _tooltip);
 
     protected:
         core::string                            m_icon;

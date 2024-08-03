@@ -300,7 +300,7 @@ namespace vg::editor
                 edited = ImGui::DragScalarN(ImGuiWindow::getPropertyLabel(_label).c_str(), ImGuiDataTypeInfo<S>::type, &temp, count, dragSpeed, nullptr, nullptr, editFormat);
         }
 
-        ImGuiWindow::drawPropertyLabel(_prop->getDisplayName(), _context);
+        ImGuiWindow::drawPropertyLabel(_context, _prop);
 
         if (edited)
         {
@@ -391,7 +391,7 @@ namespace vg::editor
             ImGui::EndCombo();
         }
 
-        drawPropertyLabel(_prop->getDisplayName(), _context);
+        drawPropertyLabel(_context, _prop);
 
         ImGui::EndDisabled();
         return changed;
@@ -462,7 +462,7 @@ namespace vg::editor
             }
         }
 
-        drawPropertyLabel(_prop->getDisplayName(), _context);
+        drawPropertyLabel(_context, _prop);
 
         ImGui::EndDisabled();
         return changed;
@@ -604,7 +604,13 @@ namespace vg::editor
     };
 
     //--------------------------------------------------------------------------------------
-    void ImGuiWindow::drawPropertyLabel(const char * _label, const Context & _context)
+    void ImGuiWindow::drawPropertyLabel(const Context & _context, const core::IProperty * _prop)
+    {
+        drawPropertyLabel(_context, _prop->getDisplayName(), _prop->GetDescription());
+    }
+
+    //--------------------------------------------------------------------------------------
+    void ImGuiWindow::drawPropertyLabel(const Context & _context, const char * _label, const char * _tooltip)
     {
         auto x = ImGui::GetCursorPosX();
 
@@ -617,6 +623,10 @@ namespace vg::editor
             ImGui::SetCursorPosX(x);
 
         ImGui::Text(_label);
+
+        if (_tooltip && ImGui::IsItemHovered())
+            ImGui::SetTooltip(_tooltip);
+
         ImGui::PopStyleColor();
     };
 
@@ -980,7 +990,7 @@ namespace vg::editor
                         if (storeProperty<bool>(pBool, temp, _object, _prop, context))
                             changed = true;
                     }
-                    drawPropertyLabel(_prop->getDisplayName(), context);
+                    drawPropertyLabel(context, _prop);
                 };
                 break;
 
@@ -1237,7 +1247,7 @@ namespace vg::editor
                     if (s_pickObjectHandlemenu.SelectUID(&temp, gameobject))
                         edited = true;
 
-                    drawPropertyLabel(displayName, context);
+                    drawPropertyLabel(context, _prop);
 
                     if (edited)
                     {
@@ -1341,7 +1351,7 @@ namespace vg::editor
                         if (ImGui::InputText(getPropertyLabel(label).c_str(), buffer, countof(buffer), imguiInputTextflags))
                             edited = true;
 
-                        drawPropertyLabel(displayName, context);
+                        drawPropertyLabel(context, _prop);
 
                         if (edited)
                         {
@@ -2027,7 +2037,7 @@ namespace vg::editor
         auto x = ImGui::GetCursorPosX();
         ImGui::SetCursorPosX(x + buttonWidth);
 
-        drawPropertyLabel(_prop->getDisplayName(), _context);
+        drawPropertyLabel(_context, _prop);
 
         // TODO: make GameObject part of Context?
         IGameObject * gameobject = findParentGameObject(_resource);
@@ -2360,16 +2370,16 @@ namespace vg::editor
             bool edited = false;
 
             edited |= ImGui::DragFloat4(getPropertyLabel("I").c_str(), (float *)&temp[0], getDragSpeedFloat(_prop), style::range::minFloat, style::range::maxFloat, g_editFloatFormat);
-            drawPropertyLabel("I", _context);
+            drawPropertyLabel(_context, "I", "Represents the x-axis in the transformed space");
 
             edited |= ImGui::DragFloat4(getPropertyLabel("J").c_str(), (float *)&temp[4], getDragSpeedFloat(_prop), style::range::minFloat, style::range::maxFloat, g_editFloatFormat);
-            drawPropertyLabel("J", _context);
+            drawPropertyLabel(_context, "J", "Represents the y-axis in the transformed space");
 
             edited |= ImGui::DragFloat4(getPropertyLabel("K").c_str(), (float *)&temp[8], getDragSpeedFloat(_prop), style::range::minFloat, style::range::maxFloat, g_editFloatFormat);
-            drawPropertyLabel("K", _context);
+            drawPropertyLabel(_context, "K", "Represents the z-axis in the transformed space");
 
             edited |= ImGui::DragFloat4(getPropertyLabel("T").c_str(), (float *)&temp[12], getDragSpeedFloat(_prop), style::range::minFloat, style::range::maxFloat, g_editFloatFormat);
-            drawPropertyLabel("T", _context);
+            drawPropertyLabel(_context, "T", "Represents the translation component");
 
             if (edited)
             {
