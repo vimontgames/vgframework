@@ -185,7 +185,7 @@ First run might take a few seconds because files are cooking.
 | Ctrl+D           | Duplicate selected objects (*)
 | Ctrl+S           | Save
 | Ctrl+U           | Save Prefab & Update
-| Ctrl+Q           | Quit application
+| Ctrl+Shift-Q     | Quit application
 
 (*) You can also keep shift pressed while moving objects to duplicate
 

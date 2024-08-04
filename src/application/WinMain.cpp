@@ -62,10 +62,10 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		case WM_KEYDOWN:
 			switch (LOWORD(wParam))
 			{
-				// Ctrl-Q
+				// Ctrl-Shift-Q
 				case 'Q':
 				{
-					if (GetKeyState(VK_CONTROL) & 0x8000)
+					if ((GetKeyState(VK_CONTROL) & 0x8000) && (GetKeyState(VK_SHIFT) & 0x8000))
 						SendMessage(g_hWnd, WM_DESTROY, 0, 0);
 				}
 				break;

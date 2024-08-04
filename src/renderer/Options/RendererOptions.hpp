@@ -16,6 +16,7 @@ namespace vg::renderer
         super::registerProperties(_desc);
 
         registerProperty(RendererOptions, m_toolMode, "Toolmode");
+        setPropertyDescription(LightDesc, m_toolMode, "Enable Toolmode in Game views");
 
         registerPropertyEx(RendererOptions, m_rayTracing, "RayTracing", IProperty::Flags::SameLine);
         setPropertyDescription(LightDesc, m_rayTracing, "Enable Ray-Tracing features");
