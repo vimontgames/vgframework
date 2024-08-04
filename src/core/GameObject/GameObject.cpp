@@ -452,6 +452,45 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
+    vector<IComponent *> GameObject::GetComponentsByType(const char * _className, bool _searchInParent, bool _searchInChildren) const
+    {
+        if (_searchInParent || _searchInChildren)
+            VG_ASSERT_NOT_IMPLEMENTED();
+
+        vector<IComponent *> found;
+
+        const auto & components = getComponents();
+        for (uint i = 0; i < components.size(); ++i)
+        {
+            auto * component = components[i];
+            if (nullptr != component)
+            {
+                if (!strcmp(component->GetClassName(), _className))
+                {
+                    found.push_back(component);
+                }
+                else
+                {
+                    const auto * classDesc = Kernel::getFactory()->getClassDescriptor(component->GetClassName());
+                    if (nullptr != classDesc)
+                    {
+                        const char * interfaceName = classDesc->GetParentClassName();
+                        if (nullptr != interfaceName)
+                        {
+                            if (!strcmp(interfaceName, _className))
+                            {
+                                found.push_back(component);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        return found;
+    }
+
+    //--------------------------------------------------------------------------------------
     IComponent * GameObject::GetComponentByType(const char * _className, bool _searchInParent, bool _searchInChildren) const
     {
         const auto & components = getComponents();

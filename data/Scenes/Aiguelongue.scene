@@ -30,7 +30,7 @@
                                 <Property type="String" name="m_name" flags="NotVisible" value="GameCameraBehaviour #0"/>
                                 <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
                                 <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
-                                <Property type="Float" name="m_speed" value="0.25"/>
+                                <Property type="Float" name="m_delay" value="0.1"/>
                             </Object>
                             <Object class="CameraComponent">
                                 <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="1553686324"/>
@@ -1529,8 +1529,8 @@
                                                         <Property type="Uint2" name="m_shadowResolution" x="2048" y="2048"/>
                                                         <Property type="Float" name="m_shadowIntensity" flags="HasRange" value="0.63"/>
                                                         <Property type="Float4" name="m_color" flags="Color|HDR" x="0.94999999" y="0.94999999" z="0.89999998" w="0.412"/>
-                                                        <Property type="Float3" name="m_ambient" flags="Color|HDR" x="0.050000001" y="0.050000001" z="0.1"/>
                                                         <Property type="Float" name="m_intensity" value="1"/>
+                                                        <Property type="Float3" name="m_ambient" flags="Color|HDR" x="0.050000001" y="0.050000001" z="0.1"/>
                                                     </Object>
                                                 </Property>
                                             </Object>
@@ -1566,8 +1566,8 @@
                                                         <Property type="Uint2" name="m_shadowResolution" x="1024" y="1024"/>
                                                         <Property type="Float" name="m_shadowIntensity" flags="HasRange" value="1"/>
                                                         <Property type="Float4" name="m_color" flags="Color|HDR" x="1" y="0" z="0" w="1"/>
-                                                        <Property type="Float3" name="m_ambient" flags="Color|HDR" x="0" y="0" z="0"/>
                                                         <Property type="Float" name="m_intensity" value="1"/>
+                                                        <Property type="Float3" name="m_ambient" flags="Color|HDR" x="0" y="0" z="0"/>
                                                         <Property type="Bool" name="m_useMaxRadius" flags="NotVisible" value="true"/>
                                                         <Property type="Float" name="m_maxRadius" flags="Optional" value="5"/>
                                                     </Object>
@@ -1605,8 +1605,8 @@
                                                         <Property type="Uint2" name="m_shadowResolution" x="1024" y="1024"/>
                                                         <Property type="Float" name="m_shadowIntensity" flags="HasRange" value="1"/>
                                                         <Property type="Float4" name="m_color" flags="Color|HDR" x="0.56504822" y="1" z="0.37065637" w="1"/>
-                                                        <Property type="Float3" name="m_ambient" flags="Color|HDR" x="0" y="0" z="0"/>
                                                         <Property type="Float" name="m_intensity" value="1"/>
+                                                        <Property type="Float3" name="m_ambient" flags="Color|HDR" x="0" y="0" z="0"/>
                                                         <Property type="Bool" name="m_useMaxRadius" flags="NotVisible" value="true"/>
                                                         <Property type="Float" name="m_maxRadius" flags="Optional" value="5"/>
                                                     </Object>
@@ -1644,8 +1644,8 @@
                                                         <Property type="Uint2" name="m_shadowResolution" x="1024" y="1024"/>
                                                         <Property type="Float" name="m_shadowIntensity" flags="HasRange" value="1"/>
                                                         <Property type="Float4" name="m_color" flags="Color|HDR" x="0.39768338" y="0.42093897" z="1" w="1"/>
-                                                        <Property type="Float3" name="m_ambient" flags="Color|HDR" x="0" y="0" z="0"/>
                                                         <Property type="Float" name="m_intensity" value="1"/>
+                                                        <Property type="Float3" name="m_ambient" flags="Color|HDR" x="0" y="0" z="0"/>
                                                         <Property type="Bool" name="m_useMaxRadius" flags="NotVisible" value="true"/>
                                                         <Property type="Float" name="m_maxRadius" flags="Optional" value="5"/>
                                                     </Object>
@@ -1938,7 +1938,7 @@
                         <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="2277101686"/>
                         <Property type="Uint32" name="m_originalUID" flags="Debug|Hexadecimal" value="0"/>
                         <Property type="String" name="m_name" value="Players"/>
-                        <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
+                        <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value="Opened"/>
                         <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
                         <Property type="Float4" name="m_color" flags="Color" x="1" y="1" z="1" w="1"/>
                         <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="0" Ty="0" Tz="0" Tw="1"/>
@@ -1951,7 +1951,7 @@
                                 <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value="Opened|Prefab"/>
                                 <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
                                 <Property type="Float4" name="m_color" flags="Color" x="1" y="1" z="1" w="1"/>
-                                <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="-2" Ty="0" Tz="0.5" Tw="1"/>
+                                <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="-2" Ty="4.5" Tz="0.5" Tw="1"/>
                                 <Property type="ObjectPtrVector" name="m_components"/>
                                 <Property type="ObjectPtrVector" name="m_children" flags="NotVisible"/>
                                 <Property type="Resource" name="m_prefabResource" flags="Resource">
@@ -2021,7 +2021,7 @@
                                 <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value="Opened|Prefab"/>
                                 <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
                                 <Property type="Float4" name="m_color" flags="Color" x="1" y="1" z="1" w="1"/>
-                                <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="0" Ty="0" Tz="0.5" Tw="1"/>
+                                <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="0" Ty="4.5" Tz="0.5" Tw="1"/>
                                 <Property type="ObjectPtrVector" name="m_components"/>
                                 <Property type="ObjectPtrVector" name="m_children" flags="NotVisible"/>
                                 <Property type="Resource" name="m_prefabResource" flags="Resource">
@@ -2075,7 +2075,7 @@
                                 <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value="Opened|Prefab"/>
                                 <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
                                 <Property type="Float4" name="m_color" flags="Color" x="1" y="1" z="1" w="1"/>
-                                <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="2" Ty="0" Tz="0.5" Tw="1"/>
+                                <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="2" Ty="4.5" Tz="0.5" Tw="1"/>
                                 <Property type="ObjectPtrVector" name="m_components"/>
                                 <Property type="ObjectPtrVector" name="m_children" flags="NotVisible"/>
                                 <Property type="Resource" name="m_prefabResource" flags="Resource">

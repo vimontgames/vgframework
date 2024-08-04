@@ -503,6 +503,7 @@ namespace vg::editor
         ImGui::PushItemWidth(availableWidth - style::label::PixelWidth);
 
         // TODO: Custom Object edit
+        ImGui::PushID(_object);
         if (!ImGuiObjectHandler::display(_object, _objectContext))
         {
             const char * classDisplayName = classDesc->GetClassDisplayName();
@@ -513,6 +514,7 @@ namespace vg::editor
                 ImGuiWindow::displayProperty(_object, prop, _objectContext);
             }
         }
+        ImGui::PopID();
 
         ImGui::PopItemWidth();
     }

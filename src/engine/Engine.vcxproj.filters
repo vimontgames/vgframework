@@ -303,6 +303,13 @@
     <ClInclude Include="Component\Physics\PhysicsComponent.h">
       <Filter>Component\Physics</Filter>
     </ClInclude>
+    <ClInclude Include="Component\Physics\Shape\PhysicsShapeComponent.h">
+      <Filter>Component\Physics\Shape</Filter>
+    </ClInclude>
+    <ClInclude Include="Component\Physics\Shape\PhysicsShapeComponent.hpp">
+      <Filter>Component\Physics\Shape</Filter>
+    </ClInclude>
+    <ClInclude Include="IPhysicsShapeComponent.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Input">
@@ -403,6 +410,9 @@
     </Filter>
     <Filter Include="Component\Physics\Body">
       <UniqueIdentifier>{ba03511c-b8ea-4ddc-8a57-8295edeeb759}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Component\Physics\Shape">
+      <UniqueIdentifier>{31ce39f0-2442-43e0-bf60-5659e8c56899}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

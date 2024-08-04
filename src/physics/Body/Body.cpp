@@ -26,34 +26,66 @@ namespace vg::physics
     Body::Body(PhysicsWorld * _physicsWorld, const PhysicsBodyDesc * _bodyDesc, Shape * _shape, const core::float4x4 & _matrix, const core::string & _name, core::IObject * _parent) :
         super(_name, _parent),
         m_physicsWorld(_physicsWorld),
-        m_shape(_shape),
         m_bodyDesc(_bodyDesc)
     {
         JPH::Shape * joltShape = _shape->getJoltShape();
         VG_ASSERT(joltShape);
-        
+
+        // Create body from shape directly
+        createBodyFromJoltShape(_physicsWorld, _bodyDesc, joltShape, _matrix, _name, _parent);
+    }
+
+    //--------------------------------------------------------------------------------------
+    Body::Body(PhysicsWorld * _physicsWorld, const PhysicsBodyDesc * _bodyDesc, const core::vector<Shape *> & _shapes, const core::float4x4 & _matrix, const core::string & _name, core::IObject * _parent) :
+        super(_name, _parent),
+        m_physicsWorld(_physicsWorld),
+        m_bodyDesc(_bodyDesc)
+    {
+        if (_shapes.size() > 0)
+        {
+            // Create body from a compound shape
+            JPH::StaticCompoundShapeSettings compoundShapeSettings;
+
+            for (uint i = 0; i < _shapes.size(); ++i)
+                compoundShapeSettings.AddShape(getJoltVec3(float3(0, 0, 0)), getJoltQuaternion(quaternion::identity()), _shapes[i]->getJoltShape());
+
+            JPH::Ref<JPH::Shape> compoundShape = compoundShapeSettings.Create().Get();
+
+            createBodyFromJoltShape(_physicsWorld, _bodyDesc, compoundShape, _matrix, _name, _parent);
+        }
+        else if (_shapes.size() == 1)
+        {
+            // Create body from shape directly if there's only one shape
+            JPH::Shape * joltShape = _shapes[0]->getJoltShape();
+            VG_ASSERT(joltShape);
+
+            // Create body from shape directly
+            createBodyFromJoltShape(_physicsWorld, _bodyDesc, joltShape, _matrix, _name, _parent);
+        }
+    }
+
+    //--------------------------------------------------------------------------------------
+    void Body::createBodyFromJoltShape(PhysicsWorld * _physicsWorld, const PhysicsBodyDesc * _bodyDesc, JPH::Shape * _joltShape, const core::float4x4 & _matrix, const core::string & _name, core::IObject * _parent)
+    {
         // Get quaternion from matrix rotation part
         float3x3 rot = extractRotation(_matrix);
-        quaternion quat = quaternion(rot); 
-        
-        JPH::BodyCreationSettings bodySettings(joltShape, getJoltVec3(_matrix[3].xyz), getJoltQuaternion(quat), getJoltMotionType(_bodyDesc->m_motion), getJoltObjectLayer(_bodyDesc->m_layer));
-        
+        quaternion quat = quaternion(rot);
+
+        JPH::BodyCreationSettings bodySettings(_joltShape, getJoltVec3(_matrix[3].xyz), getJoltQuaternion(quat), getJoltMotionType(_bodyDesc->m_motion), getJoltObjectLayer(_bodyDesc->m_layer));
+
         bodySettings.mUserData = (u64)_parent;
 
         if (_bodyDesc->IsTrigger())
         {
             bodySettings.mIsSensor = true;
             bodySettings.mGravityFactor = 0;
-            //bodySettings.mOverrideMassProperties = JPH::EOverrideMassProperties::MassAndInertiaProvided;
-            //bodySettings.mMassPropertiesOverride.mMass = 0.0f;
-            //bodySettings.mMassPropertiesOverride.mInertia = 0.0f;
         }
         else if (_bodyDesc->m_overrideMass)
         {
             bodySettings.mOverrideMassProperties = JPH::EOverrideMassProperties::CalculateInertia;
             bodySettings.mMassPropertiesOverride.mMass = _bodyDesc->m_mass;
         }
-        
+
         m_bodyID = m_physicsWorld->getBodyInterface().CreateAndAddBody(bodySettings, JPH::EActivation::DontActivate);
 
         m_physicsWorld->getBodyInterface().SetFriction(m_bodyID, _bodyDesc->m_friction);

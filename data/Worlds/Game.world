@@ -30,13 +30,6 @@
                 <Property type="String" name="m_resourcePath" flags="NotVisible" value="data/Prefabs/Floor/Concrete_3x3.prefab"/>
             </Object>
             <Object class="PrefabResource">
-                <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="152701814"/>
-                <Property type="Uint32" name="m_originalUID" flags="Debug|Hexadecimal" value="0"/>
-                <Property type="String" name="m_name" flags="NotVisible" value=""/>
-                <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
-                <Property type="String" name="m_resourcePath" flags="NotVisible" value="data/Prefabs/Floor/Concrete_Horizontal_3x3.prefab"/>
-            </Object>
-            <Object class="PrefabResource">
                 <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="2423313165"/>
                 <Property type="Uint32" name="m_originalUID" flags="Debug|Hexadecimal" value="0"/>
                 <Property type="String" name="m_name" flags="NotVisible" value=""/>
@@ -63,6 +56,13 @@
                 <Property type="String" name="m_name" flags="NotVisible" value=""/>
                 <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
                 <Property type="String" name="m_resourcePath" flags="NotVisible" value="data/Prefabs/Goal.prefab"/>
+            </Object>
+            <Object class="PrefabResource">
+                <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="0"/>
+                <Property type="Uint32" name="m_originalUID" flags="Debug|Hexadecimal" value="0"/>
+                <Property type="String" name="m_name" flags="NotVisible" value=""/>
+                <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
+                <Property type="String" name="m_resourcePath" flags="NotVisible" value="data/Prefabs/Football.prefab"/>
             </Object>
         </Property>
     </Object>

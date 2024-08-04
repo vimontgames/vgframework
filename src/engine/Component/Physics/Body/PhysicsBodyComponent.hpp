@@ -1,6 +1,8 @@
 #include "PhysicsBodyComponent.h"
+#include "engine/Component/Physics/Shape/PhysicsShapeComponent.h"
 #include "core/IGameObject.h"
 #include "core/IWorld.h"
+#include "core/Misc/AABB/AABB.h"
 #include "engine/Engine.h"
 #include "physics/IPhysicsOptions.h"
 #include "physics/IShape.h"
@@ -19,9 +21,7 @@ namespace vg::engine
     {
         super::registerProperties(_desc);
 
-        //registerPropertyEnumEx(PhysicsBodyComponent, physics::BodyType, m_bodyType, "Type", IProperty::Flags::ReadOnly);
         registerPropertyObjectPtrEx(PhysicsBodyComponent, m_bodyDesc, "Body", IProperty::Flags::Flatten);
-        registerPropertyObjectPtrEx(PhysicsBodyComponent, m_shapeDesc, "Shape", IProperty::Flags::Flatten);
 
         return true;
     }
@@ -35,14 +35,8 @@ namespace vg::engine
             if (m_bodyDesc == nullptr)
                 createBodyDesc();
 
-            if (m_shapeDesc == nullptr)
-                createShapeDesc();
-
             if (getGameObject())
                 updateFlagsFromGameObject();
-
-            if (m_shape == nullptr)
-                createShape();
 
             if (m_body == nullptr)
                 createBody();
@@ -53,9 +47,7 @@ namespace vg::engine
     PhysicsBodyComponent::~PhysicsBodyComponent()
     {
         VG_SAFE_RELEASE(m_body);
-        VG_SAFE_RELEASE(m_shape);
         VG_SAFE_RELEASE(m_bodyDesc);
-        VG_SAFE_RELEASE(m_shapeDesc);
     }
 
     //--------------------------------------------------------------------------------------
@@ -87,23 +79,11 @@ namespace vg::engine
                 }
             }
         }
-
-        const auto * engine = Engine::get();
-        if (engine->getPhysicsOptions()->IsBodyVisible(m_shape->GetShapeType()))
-        {
-            if (m_shape)
-                m_shape->Draw(world, go->getGlobalMatrix());
-        }
     }
 
     //--------------------------------------------------------------------------------------
     void PhysicsBodyComponent::OnLoad()
     {
-        createShape();
-        
-        if (m_shapeDesc)
-            m_shapeDesc->RegisterUID();
-
         createBody();
 
         if (m_bodyDesc)
@@ -119,9 +99,6 @@ namespace vg::engine
         if (m_body)
             m_body->Activate(GetGameObject()->GetGlobalMatrix());
 
-        if (m_shapeDesc)
-            m_shapeDesc->OnEnable();
-
         if (m_bodyDesc)
             m_bodyDesc->OnEnable();
 
@@ -134,9 +111,6 @@ namespace vg::engine
         super::OnDisable();
 
         VG_SAFE_RELEASE(m_body);
-
-        if (m_shapeDesc)
-            m_shapeDesc->OnDisable();
 
         if (m_bodyDesc)
             m_bodyDesc->OnStop();
@@ -151,14 +125,6 @@ namespace vg::engine
         if (!strcmp(_prop.getName(), "m_trigger"))
         {
             createBody();
-            createShape();
-        }
-        else if (!strcmp(_prop.getName(), "m_bodyType"))
-        {
-            createBodyDesc();
-            createBody();
-            createShapeDesc();
-            createShape();
         }
         else if (!strcmp(_prop.getName(), "m_flags"))
         {
@@ -169,20 +135,6 @@ namespace vg::engine
                 if (updateFlagsFromGameObject())
                     VG_INFO("[PhysicsBody] Updated flags because GameObject flags changed");
             }
-        }
-        else if (!strcmp(_prop.getName(), "m_shapeType"))
-        {
-            if (nullptr == m_shapeDesc || m_bodyDesc->GetShapeType() != m_shapeDesc->GetShapeType())
-            {
-                createShapeDesc();
-                createShape();
-                createBody();
-            }
-        }
-        else if (_object == m_shapeDesc)
-        {
-            createShape();
-            createBody();
         }
         else if (_object == m_bodyDesc)
         {
@@ -219,113 +171,49 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
-    bool PhysicsBodyComponent::createShapeDesc()
-    {
-        IFactory * factory = Kernel::getFactory();
-
-        //UID previousUID = 0;
-        UID previousOriginalUID = 0;
-        if (nullptr != m_shapeDesc)
-        {
-            //previousUID = m_shapeDesc->GetUID(false);
-            previousOriginalUID = m_shapeDesc->GetOriginalUID(false);
-        }
-
-        VG_SAFE_RELEASE(m_shapeDesc);
-
-        VG_ASSERT(m_bodyDesc);
-        if (m_bodyDesc)
-        {
-            const physics::ShapeType shapeType = m_bodyDesc->GetShapeType();
-            switch (shapeType)
-            {
-            default:
-                VG_ASSERT_ENUM_NOT_IMPLEMENTED(shapeType);
-                break;
-
-            case physics::ShapeType::Sphere:
-                m_shapeDesc = (physics::IShapeDesc *)factory->createObject("SphereShapeDesc", "", this);
-                break;
-
-            case physics::ShapeType::Box:
-                m_shapeDesc = (physics::IShapeDesc *)factory->createObject("BoxShapeDesc", "", this);
-                break;
-
-            case physics::ShapeType::Capsule:
-                m_shapeDesc = (physics::IShapeDesc *)factory->createObject("CapsuleShapeDesc", "", this);
-                break;
-            }
-        }
-
-        if (m_shapeDesc)
-        {
-            //if (previousUID)
-            //    m_shapeDesc->SetUID(previousUID);
-            //
-            //m_shapeDesc->RegisterUID();
-
-            if (previousOriginalUID)
-                m_shapeDesc->SetOriginalUID(previousOriginalUID);
-        }
-
-        return nullptr != m_shapeDesc;
-    }
-
-    //--------------------------------------------------------------------------------------
     physics::IPhysics * PhysicsBodyComponent::getPhysics()
     {
         return Engine::get()->GetPhysics();
     }
 
     //--------------------------------------------------------------------------------------
-    bool PhysicsBodyComponent::createShape()
+    bool PhysicsBodyComponent::createBody()
     {
-        VG_SAFE_RELEASE(m_shape);
-        VG_ASSERT(m_shapeDesc);
-        if (m_shapeDesc)
-            m_shape = getPhysics()->CreateShape(m_shapeDesc);
+        IWorld * world = GetGameObject()->GetWorld();
 
-        if (m_shape)
+        if (nullptr == world || false == world->IsPlaying())
+            return false;
+ 
+        VG_SAFE_RELEASE(m_body);
+
+        const auto shapes = GetGameObject()->GetComponentsByType<PhysicsShapeComponent>();
+        vector<physics::IShape *> physicsShapes;
+        float totalMass = 0.0f;
+        for (uint i = 0; i < shapes.size(); ++i)
         {
-            if (m_bodyDesc->IsTrigger())
+            auto & shape = shapes[i];
+            if (shape->isEnabled())
             {
-                m_shape->SetColor(0xFF7F00FF);
-            }
-            else
-            {
-                if (m_bodyDesc->GetMotion() == physics::MotionType::Dynamic)
-                    m_shape->SetColor(0xFF0000FF);
-                else
-                    m_shape->SetColor(0xFF00FFFF);
+                if (physics::IShape * physicsShape = shape->getPhysicsShape())
+                {
+                    physicsShapes.push_back(physicsShape);
+                    totalMass += physicsShape->GetMass();
+                }
             }
         }
 
-        return nullptr != m_shape;
-    }
-
-    //--------------------------------------------------------------------------------------
-    bool PhysicsBodyComponent::createBody()
-    {
-        if (IWorld * world = GetGameObject()->GetWorld())
+        if (physicsShapes.size() > 0)
         {
-            if (!world->IsPlaying())
-                return false;
+            m_bodyDesc->SetMass(totalMass);
+            m_body = getPhysics()->CreateBody(world->GetPhysicsWorld(), m_bodyDesc, physicsShapes, GetGameObject()->GetGlobalMatrix(), GetGameObject()->getName() + "_PhysicsBody", this);
         }
         else
         {
-            return false;
+            VG_WARNING("[Physics] PhysicsBodyComponent in GameObject \"%s\" has no PhysicsShapeComponent", GetGameObject()->getName().c_str());
         }
 
-        VG_SAFE_RELEASE(m_body);
-        VG_ASSERT(m_bodyDesc && m_shape);
-        if (m_bodyDesc && m_shape)
-        {
-            if (!m_bodyDesc->IsMassOverriden())
-                m_bodyDesc->SetMass(m_shape->GetMass());
+        updateShapesColor();
 
-            if (auto * world = GetGameObject()->GetWorld())
-                m_body = getPhysics()->CreateBody(world->GetPhysicsWorld(), m_bodyDesc, m_shape, GetGameObject()->GetGlobalMatrix(), GetGameObject()->getName() + "_PhysicsBody", this);
-        }
         return nullptr != m_body;
     }
 
@@ -375,26 +263,66 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
-    void PhysicsBodyComponent::onResourceLoaded(core::IResource * _resource)
+    // Shape has been update, need to rebuild physics body
+    //--------------------------------------------------------------------------------------
+    void PhysicsBodyComponent::onShapeUpdated()
     {
-
+        createBody();
     }
 
     //--------------------------------------------------------------------------------------
-    void PhysicsBodyComponent::onResourceUnloaded(core::IResource * _resource)
+    core::u32 PhysicsBodyComponent::getShapesColor() const
     {
+        if (m_bodyDesc->IsTrigger())
+        {
+            return 0xFF7F00FF;
+        }
+        else
+        {
+            if (m_bodyDesc->GetMotion() == physics::MotionType::Dynamic)
+                return 0xFF0000FF;
+            else
+                return 0xFF00FFFF; 
+        }
+    }
 
+    //--------------------------------------------------------------------------------------
+    void PhysicsBodyComponent::updateShapesColor()
+    {
+        const auto & shapes = getShapes();
+        for (uint i = 0; i < shapes.size(); ++i)
+        {
+            if (auto * shape = shapes[i])
+            {
+                if (auto * physicsShape = shape->getPhysicsShape())
+                    physicsShape->SetColor(getShapesColor());
+            }
+        }
+    }
+
+    //--------------------------------------------------------------------------------------
+    vector<PhysicsShapeComponent *> PhysicsBodyComponent::getShapes() const
+    {
+        return GetGameObject()->GetComponentsByType<PhysicsShapeComponent>();
     }
 
     //--------------------------------------------------------------------------------------
     bool PhysicsBodyComponent::TryGetAABB(core::AABB & _aabb) const
     {
-        if (m_shapeDesc)
+        bool found = false;
+        AABB compAABB;
+
+        const auto & shapes = getShapes();
+        for (uint i = 0; i < shapes.size(); ++i)
         {
-            if (m_shapeDesc->TryGetAABB(_aabb))
-                return true;
+            AABB shapeAABB;
+            if (shapes[i]->TryGetAABB(shapeAABB))
+            {
+                compAABB.grow(shapeAABB);
+                found = true;
+            }
         }
 
-        return false;
+        return found;
     }
 }

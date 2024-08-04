@@ -24,8 +24,6 @@ namespace vg::physics
 
         registerProperty(PhysicsBodyDesc, m_restitution, "Restitution");
         setPropertyRange(PhysicsBodyDesc, m_restitution, float2(0, 1));
-     
-        registerPropertyEnum(PhysicsBodyDesc, ShapeType, m_shapeType, "Shape");
 
         return true;
     }

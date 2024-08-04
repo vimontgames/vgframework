@@ -101,7 +101,8 @@ namespace vg::editor
             inline static const char * Renderer             = ICON_FA_DISPLAY;
             inline static const char * Resource             = ICON_FA_DATABASE;
             inline static const char * Restart              = ICON_FA_CLOCK_ROTATE_LEFT;
-            inline static const char * PhysicsBody            = ICON_FA_CUBES_STACKED;
+            inline static const char * PhysicsBody          = ICON_FA_CUBES_STACKED;
+            inline static const char * PhysicsShape         = ICON_FA_SHAPES;
             inline static const char * Rotate               = ICON_FA_ROTATE;
             inline static const char * Load                 = ICON_FA_FILE_EXPORT;
             inline static const char * Save                 = ICON_FA_FLOPPY_DISK;

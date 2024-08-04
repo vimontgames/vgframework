@@ -17,6 +17,12 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
+    template <typename T> T inline signnz(T _value)
+    {
+        return (_value >= T(0)) ? T(+1) : T(-1);
+    }
+
+    //--------------------------------------------------------------------------------------
     inline float degreesToRadians(float _degrees)
     {
         return _degrees * (PI / 180.0f);

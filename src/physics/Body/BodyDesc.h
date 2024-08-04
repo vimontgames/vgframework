@@ -13,7 +13,6 @@ namespace vg::physics
         bool                IsSoftBody      () const final override { return m_softBody;}
 
         BodyType            GetBodyType     () const final override { return BodyType::Rigid;  /*core::asBool(PhysicsBodyFlags::SoftBody & m_bodyFlags) ? BodyType::Soft : BodyType::Rigid;*/ }
-        ShapeType           GetShapeType    () const final override { return m_shapeType; }
 
         ObjectLayer         GetLayer        () const final override { return m_layer; }
         void                SetLayer        (ObjectLayer _layer) final override { m_layer = _layer; }
@@ -30,7 +29,6 @@ namespace vg::physics
         bool                m_softBody      = false;
         ObjectLayer         m_layer         = ObjectLayer::NonMoving;
         MotionType          m_motion        = MotionType::Static;
-        ShapeType           m_shapeType     = ShapeType::Box;
         bool                m_overrideMass  = false;
         float               m_mass          = 0.0f;
         float               m_friction      = 0.5f;

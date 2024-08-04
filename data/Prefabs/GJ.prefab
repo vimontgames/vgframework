@@ -197,17 +197,6 @@
                                                 <Property type="Float" name="m_mass" flags="Optional" value="0"/>
                                                 <Property type="Float" name="m_friction" flags="HasRange" value="0.5"/>
                                                 <Property type="Float" name="m_restitution" flags="HasRange" value="0"/>
-                                                <Property type="EnumU8" name="m_shapeType" value="Sphere"/>
-                                            </Object>
-                                        </Property>
-                                        <Property type="ObjectPtr" name="m_shapeDesc" flags="Flatten">
-                                            <Object class="SphereShapeDesc">
-                                                <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="3914778610"/>
-                                                <Property type="Uint32" name="m_originalUID" flags="Debug|Hexadecimal" value="0"/>
-                                                <Property type="String" name="m_name" flags="NotVisible" value="SphereShapeDesc #4"/>
-                                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
-                                                <Property type="Float3" name="m_offset" x="0" y="0" z="0"/>
-                                                <Property type="Float" name="m_radius" flags="HasRange" value="0.2"/>
                                             </Object>
                                         </Property>
                                     </Object>
@@ -251,17 +240,6 @@
                                                 <Property type="Float" name="m_mass" flags="Optional" value="0"/>
                                                 <Property type="Float" name="m_friction" flags="HasRange" value="0.5"/>
                                                 <Property type="Float" name="m_restitution" flags="HasRange" value="0"/>
-                                                <Property type="EnumU8" name="m_shapeType" value="Sphere"/>
-                                            </Object>
-                                        </Property>
-                                        <Property type="ObjectPtr" name="m_shapeDesc" flags="Flatten">
-                                            <Object class="SphereShapeDesc">
-                                                <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="1460782485"/>
-                                                <Property type="Uint32" name="m_originalUID" flags="Debug|Hexadecimal" value="3914778610"/>
-                                                <Property type="String" name="m_name" flags="NotVisible" value="SphereShapeDesc #4"/>
-                                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
-                                                <Property type="Float3" name="m_offset" x="0" y="0" z="0"/>
-                                                <Property type="Float" name="m_radius" flags="HasRange" value="0.2"/>
                                             </Object>
                                         </Property>
                                     </Object>

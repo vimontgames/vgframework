@@ -290,6 +290,23 @@ namespace vg::physics
     }
 
     //--------------------------------------------------------------------------------------
+    IBody * Physics::CreateBody(core::IPhysicsWorld * _physicsWorld, const IBodyDesc * _bodyDesc, const core::vector<IShape *> & _shapes, const core::float4x4 & _matrix, const core::string & _name, core::IObject * _parent)
+    {
+        VG_ASSERT(_physicsWorld);
+
+        const BodyType bodyType = _bodyDesc->GetBodyType();
+        switch (bodyType)
+        {
+            default:
+                VG_ASSERT_ENUM_NOT_IMPLEMENTED(bodyType);
+                return nullptr;
+
+            case BodyType::Rigid:
+                return new physics::Body((PhysicsWorld *)_physicsWorld, (PhysicsBodyDesc *)_bodyDesc, (core::vector<Shape *> &)_shapes, _matrix, _name, _parent);
+        }
+    }
+
+    //--------------------------------------------------------------------------------------
     IBody * Physics::CreateBody(core::IPhysicsWorld * _physicsWorld, const IBodyDesc * _bodyDesc, IShape * _shape, const core::float4x4 & _matrix, const core::string & _name, core::IObject * _parent)
     {
         VG_ASSERT(_physicsWorld);
@@ -304,6 +321,13 @@ namespace vg::physics
             case BodyType::Rigid:
                 return new physics::Body((PhysicsWorld*)_physicsWorld, (PhysicsBodyDesc *)_bodyDesc, (Shape*)_shape, _matrix, _name, _parent);
         }
+    }
+
+    //--------------------------------------------------------------------------------------
+    ICharacter * Physics::CreateCharacter(core::IPhysicsWorld * _physicsWorld, const ICharacterDesc * _characterDesc, const core::vector<IShape *> & _shapes, const core::float4x4 & _matrix, const core::string & _name, core::IObject * _parent)
+    {
+        VG_ASSERT_NOT_IMPLEMENTED();
+        return nullptr;
     }
 
     //--------------------------------------------------------------------------------------

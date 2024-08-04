@@ -37,6 +37,8 @@
     <ClInclude Include="Component\Physics\Body\PhysicsBodyComponent.h" />
     <ClInclude Include="Component\Physics\Body\PhysicsBodyComponent.hpp" />
     <ClInclude Include="Component\Physics\PhysicsComponent.h" />
+    <ClInclude Include="Component\Physics\Shape\PhysicsShapeComponent.h" />
+    <ClInclude Include="Component\Physics\Shape\PhysicsShapeComponent.hpp" />
     <ClInclude Include="Component\UI\UICanvasComponent.h" />
     <ClInclude Include="Component\UI\UICanvasComponent.hpp" />
     <ClInclude Include="Component\UI\UIComponent.h" />
@@ -46,6 +48,7 @@
     <ClInclude Include="Component\UI\UITextComponent.hpp" />
     <ClInclude Include="GameObject\Prefab\PrefabGameObject.h" />
     <ClCompile Include="GameObject\Prefab\PrefabGameObject.cpp" />
+    <ClInclude Include="IPhysicsShapeComponent.h" />
     <ClInclude Include="ISnapComponent.h" />
     <ClInclude Include="IUITextComponent.h" />
     <ClInclude Include="Resource\BaseScene\BaseSceneResource.h" />

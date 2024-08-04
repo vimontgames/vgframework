@@ -6,14 +6,14 @@
 namespace vg::physics
 {
     class IPhysics;
-    class IShape;
-    class IShapeDesc;
     class IBody;
     class IBodyDesc;
 }
 
 namespace vg::engine
 {
+    class PhysicsShapeComponent;
+
     class PhysicsBodyComponent final : public IPhysicsBodyComponent
     {
     public:
@@ -22,36 +22,29 @@ namespace vg::engine
         PhysicsBodyComponent(const core::string & _name, IObject * _parent);
         ~PhysicsBodyComponent();
 
-        void                        Update(float _dt) final override;
+        void                                    Update              (float _dt) final override;
+        void                                    OnLoad              () final override;
+        void                                    OnEnable            () final override;
+        void                                    OnDisable           () final override;
+        void                                    OnPropertyChanged   (core::IObject * _object, const core::IProperty & _prop, bool _notifyParent) final override;
+        bool                                    TryGetAABB          (core::AABB & _aabb) const final override;
+        core::u32                               getShapesColor      () const;
 
-        void                        OnLoad() final override;
-
-        void                        OnEnable() final override;
-        void                        OnDisable() final override;
-
-        void                        OnPropertyChanged(core::IObject * _object, const core::IProperty & _prop, bool _notifyParent) final override;
-
-        void                        onResourceLoaded(core::IResource * _resource) final override;
-        void                        onResourceUnloaded(core::IResource * _resource) final override;
-
-        bool                        TryGetAABB(core::AABB & _aabb) const final override;
+        void                                    onShapeUpdated      ();
+        void                                    updateShapesColor   ();
 
     private:
-        bool                        updateFlagsFromGameObject();
+        bool                                    updateFlagsFromGameObject();
 
-        bool                        createBodyDesc();
-        bool                        createBody();
+        core::vector<PhysicsShapeComponent *>   getShapes() const;
 
-        bool                        createShapeDesc();
-        bool                        createShape();
+        bool                                    createBodyDesc();
+        bool                                    createBody();
 
-        static physics::IPhysics *  getPhysics();
+        static physics::IPhysics *              getPhysics();
 
     private:
-        //physics::BodyType           m_bodyType  = physics::BodyType::Rigid;
         physics::IBodyDesc *        m_bodyDesc  = nullptr;
         physics::IBody *            m_body      = nullptr;
-        physics::IShapeDesc *       m_shapeDesc = nullptr;  
-        physics::IShape *           m_shape     = nullptr;
     };
 }

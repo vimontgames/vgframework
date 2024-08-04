@@ -367,6 +367,9 @@ namespace vg::core
     //--------------------------------------------------------------------------------------
     bool Factory::CopyProperties(const core::IObject * _srcObj, core::IObject * _dstObj)
     {
+        if (_srcObj == nullptr || _dstObj == nullptr)
+            return false;
+
         // Copy all properties from this to new GameObject
         const auto srcClassName = _srcObj->GetClassName();
         const auto dstClassName = _dstObj->GetClassName();

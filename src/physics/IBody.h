@@ -14,7 +14,6 @@ namespace vg::physics
         virtual bool                IsSoftBody      () const = 0;
 
         virtual BodyType            GetBodyType     () const = 0;
-        virtual ShapeType           GetShapeType    () const = 0;
 
         virtual ObjectLayer         GetLayer        () const = 0;
         virtual void                SetLayer        (ObjectLayer _layer) = 0;
