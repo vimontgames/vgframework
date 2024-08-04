@@ -41,6 +41,7 @@ namespace vg::core
 
 		void                        SetClassDesc		(const IClassDesc * _classDesc) final override;
         const IClassDesc *          GetClassDesc        () const final override;
+		bool                        IsRegisteredClass	() const final override;
 
 								    Object		        (const string & _name, IObject * _parent = nullptr);
 									Object				(const Object & _other);

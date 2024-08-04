@@ -10,13 +10,19 @@ namespace vg::editor
     {
     public:
         //--------------------------------------------------------------------------------------
-        void displayObject(IObject * _object) final
+        void displayObject(IObject * _object, ObjectContext & _objectContext) final
         {
             if (auto * matModel = dynamic_cast<engine::MaterialModelType *>(_object))
             {
                 auto models = getMaterialModels();
 
-                if (ImGui::BeginCombo("Shader", matModel->m_shader.c_str(), ImGuiComboFlags_HeightLarge))
+                IFactory * factory = Kernel::getFactory();
+                const auto * prop = _object->GetClassDesc()->GetPropertyByName("m_shader");
+                VG_ASSERT(prop);
+                if (nullptr == prop)
+                    return;
+
+                if (ImGui::BeginCombo(ImGuiWindow::getPropertyLabel("Shader").c_str(), matModel->m_shader.c_str(), ImGuiComboFlags_HeightLarge))
                 {
                     for (uint i = 0; i < models.size(); ++i)
                     {
@@ -24,14 +30,14 @@ namespace vg::editor
                         if (ImGui::Selectable(model->GetClassDisplayName()))
                         {
                             matModel->m_shader = model->GetClassDisplayName();
-                            IFactory * factory = Kernel::getFactory();
-                            const auto * prop = _object->GetClassDesc()->GetPropertyByName("m_shader");
-                            if (nullptr != prop)
-                                _object->OnPropertyChanged(_object, *prop);
+                            _object->OnPropertyChanged(_object, *prop);
                         }
                     }
                     ImGui::EndCombo();
                 }
+
+                PropertyContext propContext(_object, prop);
+                ImGuiWindow::drawPropertyLabel(propContext, prop);
             }
         }
 

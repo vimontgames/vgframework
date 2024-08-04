@@ -34,8 +34,8 @@ namespace vg::editor
 
                 ImGui::BeginChild(ImGui::getObjectLabel("ChildWindow", this).c_str());
                 {
-                    ObjectContext context;
-                    displayObject(options, context);
+                    ObjectContext objectContext;
+                    displayObject(options, objectContext);
                 }
                 ImGui::EndChild();
             }

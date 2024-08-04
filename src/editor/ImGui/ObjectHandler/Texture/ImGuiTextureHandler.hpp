@@ -13,7 +13,7 @@ namespace vg::editor
     {
     public:
         //--------------------------------------------------------------------------------------
-        void displayObject(IObject * _object) final
+        void displayObject(IObject * _object, ObjectContext & _objectContext) final
         {
             // Texture preview
             auto * tex = dynamic_cast<gfx::ITexture*>(_object);

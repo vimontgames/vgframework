@@ -324,6 +324,18 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
+    bool Object::IsRegisteredClass() const
+    {
+        if (!m_classDesc)
+        {
+            const auto * factory = Kernel::getFactory();
+            if (factory)
+                return factory->isRegisteredClass(GetClassName());
+        }
+        return true;
+    }
+
+    //--------------------------------------------------------------------------------------
     const IClassDesc * Object::GetClassDesc() const
     {
         if (!m_classDesc)
@@ -375,8 +387,12 @@ namespace vg::core
         const IObject * obj = this;
         while (obj)
         {
-            if (!strcmp("GameObject", obj->GetClassDesc()->GetClassName()))
-                return (IGameObject*)obj;
+            if (obj->IsRegisteredClass())
+            { 
+                if (!strcmp("GameObject", obj->GetClassDesc()->GetClassName()))
+                    return (IGameObject*)obj;
+            }
+
             obj = obj->getParent();
         }
         return nullptr;
@@ -390,15 +406,16 @@ namespace vg::core
         while (obj)
         {
             // TODO: each class should override GetFullName and stop when != Scene or GameObject
-            if (!strcmp("GameObject", obj->GetClassDesc()->GetClassName()))
+            if (obj->IsRegisteredClass())
             {
-                name = obj->getName() + ">" + name;
-                return name;
+                if (!strcmp("GameObject", obj->GetClassDesc()->GetClassName()))
+                {
+                    name = obj->getName() + ">" + name;
+                    return name;
+                }
             }
-            else
-            {
-                obj = obj->getParent();
-            }
+
+            obj = obj->getParent();
         }
         return name;
     }

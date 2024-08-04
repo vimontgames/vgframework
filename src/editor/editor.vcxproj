@@ -68,6 +68,8 @@
     <ClInclude Include="ImGui\Window\Console\ImGuiConsole.hpp" />
     <ClInclude Include="ImGui\Window\FPS\ImGuiFPS.h" />
     <ClInclude Include="ImGui\Window\FPS\ImGuiFPS.hpp" />
+    <ClInclude Include="ImGui\Window\ImGuiObjectPropertyContext.h" />
+    <ClInclude Include="ImGui\Window\ImGuiObjectPropertyContext.hpp" />
     <ClInclude Include="ImGui\Window\ImGuiWindow.h" />
     <ClInclude Include="ImGui\Window\Input\ImGuiInput.h" />
     <ClInclude Include="ImGui\Window\Input\ImGuiInput.hpp" />

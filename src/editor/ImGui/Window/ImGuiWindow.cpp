@@ -36,6 +36,7 @@ using namespace vg::gfx;
 using namespace ImGui;
 
 #include "editor/Editor.h"
+#include "editor/ImGui/Window/ImGuiObjectPropertyContext.hpp"
 #include "editor/ImGui/Window/FPS/ImGuiFPS.hpp"
 #include "editor/ImGui/Window/Plugin/ImGuiPlugin.hpp"
 #include "editor/ImGui/Window/Platform/ImGuiPlatform.hpp"
@@ -198,22 +199,22 @@ namespace vg::editor
     template <> bool equals(core::float4x4 a, core::float4x4 b) { return all(a == b); }
 
     //--------------------------------------------------------------------------------------
-    template <typename T> bool storeProperty(T * _out, T _value, IObject * _object, const IProperty * _prop, Context & _context)
+    template <typename T> bool storeProperty(T * _out, T _value, IObject * _object, const IProperty * _prop, PropertyContext & _propContext)
     {
-        if (!_context.readOnly && !equals(*_out,_value))
+        if (!_propContext.m_readOnly && !equals(*_out,_value))
         {
-            if (_context.isPrefabInstance && !_context.isPrefabOverride)
+            if (_propContext.m_isPrefabInstance && !_propContext.m_isPrefabOverride)
             {
-                if (_context.propOverride = _context.prefab->CreateDynamicProperty(_object, _prop))
+                if (_propContext.m_propOverride = _propContext.m_prefab->CreateDynamicProperty(_object, _prop))
                 {
-                    ((typename TypeToDynamicPropertyTypeEnum<T>::type *)_context.propOverride)->SetValue(_value);
-                    _context.propOverride->Enable(true);
+                    ((typename TypeToDynamicPropertyTypeEnum<T>::type *)_propContext.m_propOverride)->SetValue(_value);
+                    _propContext.m_propOverride->Enable(true);
 
-                    if (_context.optionalPropOverride)
-                        _context.optionalPropOverride->Enable(true);
+                    if (_propContext.m_optionalPropOverride)
+                        _propContext.m_optionalPropOverride->Enable(true);
 
-                    _object = (IObject *)_context.propOverride;
-                    _context.isPrefabOverride = true;
+                    _object = (IObject *)_propContext.m_propOverride;
+                    _propContext.m_isPrefabOverride = true;
 
                     return true;
                 } 
@@ -225,14 +226,14 @@ namespace vg::editor
                 }
             }
             
-            if (_context.isPrefabOverride)
+            if (_propContext.m_isPrefabOverride)
             {
-                VG_ASSERT(_context.originalObject != _object);
+                VG_ASSERT(_propContext.m_originalObject != _object);
                 *_out = _value;
             }
             else
             {
-                VG_ASSERT(_context.originalObject == _object);
+                VG_ASSERT(_propContext.m_originalObject == _object);
                 _object->SetPropertyValue(*_prop, _out, &_value);
             }
 
@@ -254,7 +255,7 @@ namespace vg::editor
 
     template <> struct ImGuiDataTypeInfo<float> { static const ImGuiDataType_ type = ImGuiDataType_Float; };
 
-    template <typename T> bool editScalarProperty(Context & _context, const string & _label, IObject * _object, const IProperty * _prop, typename vectorTraits<T>::type * _ptr)
+    template <typename T> bool editScalarProperty(PropertyContext & _propContext, const string & _label, IObject * _object, const IProperty * _prop, typename vectorTraits<T>::type * _ptr)
     {
         constexpr auto count = vectorTraits<T>::count;
         using S = typename vectorTraits<T>::type;
@@ -300,11 +301,11 @@ namespace vg::editor
                 edited = ImGui::DragScalarN(ImGuiWindow::getPropertyLabel(_label).c_str(), ImGuiDataTypeInfo<S>::type, &temp, count, dragSpeed, nullptr, nullptr, editFormat);
         }
 
-        ImGuiWindow::drawPropertyLabel(_context, _prop);
+        ImGuiWindow::drawPropertyLabel(_propContext, _prop);
 
         if (edited)
         {
-            if (storeProperty((T *)_ptr, vectorTraits<T>::makeVector(temp), _object, _prop, _context))
+            if (storeProperty((T *)_ptr, vectorTraits<T>::makeVector(temp), _object, _prop, _propContext))
                 return true;
         }
 
@@ -344,7 +345,7 @@ namespace vg::editor
     };
 
     //--------------------------------------------------------------------------------------
-    template <typename T> bool ImGuiWindow::displayEnum(core::IObject * _object, const core::IProperty * _prop, Context & _context)
+    template <typename T> bool ImGuiWindow::displayEnum(core::IObject * _object, const core::IProperty * _prop, PropertyContext & _propContext)
     {
         const auto displayName = _prop->getDisplayName();
         const auto offset = _prop->getOffset();
@@ -384,21 +385,21 @@ namespace vg::editor
                 const string enumName = _prop->getEnumName(e);
                 if (displayEnumRecur(enumName, e, &temp, readonly))
                 {
-                    if (storeProperty<T>((T *)pEnum, temp, _object, _prop, _context))
+                    if (storeProperty<T>((T *)pEnum, temp, _object, _prop, _propContext))
                         changed = true;
                 }
             }
             ImGui::EndCombo();
         }
 
-        drawPropertyLabel(_context, _prop);
+        drawPropertyLabel(_propContext, _prop);
 
         ImGui::EndDisabled();
         return changed;
     }
 
     //--------------------------------------------------------------------------------------
-    template <typename T> bool ImGuiWindow::displayEnumFlags(core::IObject * _object, const core::IProperty * _prop, Context & _context)
+    template <typename T> bool ImGuiWindow::displayEnumFlags(core::IObject * _object, const core::IProperty * _prop, PropertyContext & _propContext)
     {
         const auto displayName = _prop->getDisplayName();
         const auto offset = _prop->getOffset();
@@ -454,7 +455,7 @@ namespace vg::editor
 
             if (edited)
             {
-                if (storeProperty<T>((T *)pEnum, enumVal, _object, _prop, _context))
+                if (storeProperty<T>((T *)pEnum, enumVal, _object, _prop, _propContext))
                 {
                     *pEnum = enumVal;
                     changed = true;
@@ -462,7 +463,7 @@ namespace vg::editor
             }
         }
 
-        drawPropertyLabel(_context, _prop);
+        drawPropertyLabel(_propContext, _prop);
 
         ImGui::EndDisabled();
         return changed;
@@ -471,18 +472,18 @@ namespace vg::editor
     //--------------------------------------------------------------------------------------
     void ImGuiWindow::displayObject(core::IObject * _object)
     {
-        ObjectContext context;
-        displayObject(_object, context);
+        ObjectContext objectContext;
+        displayObject(_object, objectContext);
     }
     //--------------------------------------------------------------------------------------
     void ImGuiWindow::displayProperty(core::IObject * _object, const core::IProperty * _prop)
     {
-        ObjectContext context;
-        displayProperty(_object, _prop, context);
+        ObjectContext objectContext;
+        displayProperty(_object, _prop, objectContext);
     }
 
     //--------------------------------------------------------------------------------------
-    void ImGuiWindow::displayObject(core::IObject * _object, ObjectContext & _context)
+    void ImGuiWindow::displayObject(core::IObject * _object, ObjectContext & _objectContext)
     {
         const char * className = _object->GetClassName();
 
@@ -492,9 +493,9 @@ namespace vg::editor
         if (!classDesc)
             return;
 
-        if (_context.treeNodes.size() > 0)
+        if (_objectContext.m_treeNodes.size() > 0)
         {
-            auto & nodeInfo = _context.treeNodes[_context.treeNodes.size() - 1];
+            auto & nodeInfo = _objectContext.m_treeNodes[_objectContext.m_treeNodes.size() - 1];
             if (!nodeInfo.treeNodeOpen)
                 return;
         }
@@ -502,14 +503,14 @@ namespace vg::editor
         ImGui::PushItemWidth(availableWidth - style::label::PixelWidth);
 
         // TODO: Custom Object edit
-        if (!ImGuiObjectHandler::display(_object))
+        if (!ImGuiObjectHandler::display(_object, _objectContext))
         {
             const char * classDisplayName = classDesc->GetClassDisplayName();
         
             for (uint i = 0; i < classDesc->GetPropertyCount(); ++i)
             {
                 const IProperty * prop = classDesc->GetPropertyByIndex(i);
-                ImGuiWindow::displayProperty(_object, prop, _context);
+                ImGuiWindow::displayProperty(_object, prop, _objectContext);
             }
         }
 
@@ -577,26 +578,22 @@ namespace vg::editor
     }
 
     //--------------------------------------------------------------------------------------
-    ImVec4 ImGuiWindow::getPropertyColor(const Context & _context)
+    ImVec4 ImGuiWindow::getPropertyColor(const PropertyContext & _propContext)
     {
         ImGui::SameLine();
 
-        static bool test = false;
-        if (test)
-            return ImGui::GetStyleColorVec4(ImGuiCol_Button);
-
-        if (_context.isPrefabInstance)
+        if (_propContext.m_isPrefabInstance)
         {
-            if (_context.isPrefabOverride)
+            if (_propContext.m_isPrefabOverride)
                 return ImGui::GetStyleColorVec4(ImGuiCol_HeaderActive);
-            else if (_context.canPrefabOverride)
+            else if (_propContext.m_canPrefabOverride)
                 return ImGui::GetStyleColorVec4(ImGuiCol_Text);
             else
                 return ImGui::GetStyleColorVec4(ImGuiCol_TextDisabled);
         }
         else
         {
-            if (_context.readOnly)
+            if (_propContext.m_readOnly)
                 return ImGui::GetStyleColorVec4(ImGuiCol_TextDisabled);
             else
                 return ImGui::GetStyleColorVec4(ImGuiCol_Text);
@@ -604,19 +601,19 @@ namespace vg::editor
     };
 
     //--------------------------------------------------------------------------------------
-    void ImGuiWindow::drawPropertyLabel(const Context & _context, const core::IProperty * _prop)
+    void ImGuiWindow::drawPropertyLabel(const PropertyContext & _propContext, const core::IProperty * _prop)
     {
-        drawPropertyLabel(_context, _prop->getDisplayName(), _prop->GetDescription());
+        drawPropertyLabel(_propContext, _prop->getDisplayName(), _prop->GetDescription());
     }
 
     //--------------------------------------------------------------------------------------
-    void ImGuiWindow::drawPropertyLabel(const Context & _context, const char * _label, const char * _tooltip)
+    void ImGuiWindow::drawPropertyLabel(const PropertyContext & _propContext, const char * _label, const char * _tooltip)
     {
         auto x = ImGui::GetCursorPosX();
 
         ImGui::SameLine();
 
-        ImGui::PushStyleColor(ImGuiCol_Text, getPropertyColor(_context));
+        ImGui::PushStyleColor(ImGuiCol_Text, getPropertyColor(_propContext));
 
         // ugly workaround
         if (x>100)
@@ -629,22 +626,6 @@ namespace vg::editor
 
         ImGui::PopStyleColor();
     };
-
-    //--------------------------------------------------------------------------------------
-    // Find parent GameObject and Component if any
-    //--------------------------------------------------------------------------------------
-    IGameObject * findParentGameObject(const core::IObject * _object)
-    {
-        const IObject * object = _object;
-        while (object)
-        {
-            if (auto * gameobject = dynamic_cast<const IGameObject *>(object))
-                return (IGameObject*)gameobject;
-
-            object = object->getParent();
-        }
-        return nullptr;
-    }
 
     //--------------------------------------------------------------------------------------
     float ImGuiWindow::getDragSpeedFloat(const IProperty * _prop) 
@@ -678,56 +659,18 @@ namespace vg::editor
         //if (ImGuiPropertyHandler::display(_prop, _object))
         //    return; 
 
-        IGameObject * gameobject = findParentGameObject(_object);
-
-        Context context;
-        context.originalObject      = _object;
-        context.originalProp        = _prop;
-        context.isPrefabInstance    = false;    // Property is from an instanced Prefab (cannot be edited directly)
-        context.isPrefabOverride    = false;    // Prefab has overrides
-        context.canPrefabOverride   = false;    // Property can be override for this Prefab Instance
-        context.prefab              = nullptr;  // Original Prefab
-        context.propOverride        = nullptr;  // The dynamic property override if any
-
-        if (gameobject && _object->GetUID(false))
-        {
-            //const bool isPrefabScene = gameobject->GetScene()->GetSceneType() == BaseSceneType::Prefab;
-            
-            context.prefab = gameobject->GetParentPrefab();
-            context.isPrefabInstance = nullptr != context.prefab;
-
-            if (nullptr != context.prefab)
-            {
-                context.canPrefabOverride = context.prefab->CanOverrideProperty(_object, _prop);
-
-                if (context.canPrefabOverride)
-                {
-                    if (auto * propList = context.prefab->GetDynamicPropertyList(_object))
-                    {
-                        if (context.propOverride = (IDynamicProperty *)propList->GetProperty(_prop))
-                        {
-                            if (context.propOverride->IsEnable())
-                            {
-                                _object = (IObject *)context.propOverride;
-                                _prop = context.propOverride->GetProperty();
-                                context.isPrefabOverride = true;
-                            }
-                        }
-                    }
-                }
-            }
-        }
+        PropertyContext propContext(_object, _prop);        
 
         const auto type = _prop->getType();
         const auto name = _prop->getName();
         const auto displayName = _prop->getDisplayName();
-        const auto label = ImGui::getObjectLabel(displayName, context.originalProp);
+        const auto label = ImGui::getObjectLabel(displayName, propContext.m_originalProp);
         const auto offset = _prop->getOffset();
         const auto flags = _prop->getFlags();
 
-        if (_objectContext.treeNodes.size() > 0)
+        if (_objectContext.m_treeNodes.size() > 0)
         {
-            auto nodeInfo = _objectContext.treeNodes[_objectContext.treeNodes.size() - 1];
+            auto nodeInfo = _objectContext.m_treeNodes[_objectContext.m_treeNodes.size() - 1];
             if (!nodeInfo.treeNodeOpen)
             {
                 if (IProperty::Type::LayoutElement != type)
@@ -735,7 +678,7 @@ namespace vg::editor
             }
         }
 
-        if (_objectContext.hide && (type != IProperty::Type::LayoutElement || !(asBool(flags & IProperty::Flags::Optional))))
+        if (_objectContext.m_hide && (type != IProperty::Type::LayoutElement || !(asBool(flags & IProperty::Flags::Optional))))
             return;
 
         if (!isPropertyVisible(flags))
@@ -748,60 +691,60 @@ namespace vg::editor
 
         bool optional = false, optionalChanged = false;
 
-        context.optionalObject = nullptr;
-        context.optionalProp = nullptr;
-        context.optionalPropOverride = nullptr;
+        propContext.m_optionalObject = nullptr;
+        propContext.m_optionalProp = nullptr;
+        propContext.m_optionalPropOverride = nullptr;
 
         if (asBool(IProperty::Flags::Optional & flags))
         {
             // check previous property is bool
-            const IClassDesc * classDesc = context.originalObject->GetClassDesc();
-            context.optionalObject = context.originalObject;
-            auto * previousProp = classDesc->GetPreviousProperty(context.originalProp->getName());
-            context.optionalProp = previousProp;
+            const IClassDesc * classDesc = propContext.m_originalObject->GetClassDesc();
+            propContext.m_optionalObject = propContext.m_originalObject;
+            auto * previousProp = classDesc->GetPreviousProperty(propContext.m_originalProp->getName());
+            propContext.m_optionalProp = previousProp;
 
-            if (context.isPrefabInstance /* && canPrefabOverride*/)
+            if (propContext.m_isPrefabInstance)
             {
                 // Use override if it already exists but do not create it yet
-                if (context.optionalPropOverride = context.prefab->GetDynamicProperty(context.originalObject, previousProp))
+                if (propContext.m_optionalPropOverride = propContext.m_prefab->GetDynamicProperty(propContext.m_originalObject, previousProp))
                 {
-                    context.optionalObject = (IObject *)context.optionalPropOverride;
-                    context.optionalProp = context.optionalPropOverride->GetProperty();
+                    propContext.m_optionalObject = (IObject *)propContext.m_optionalPropOverride;
+                    propContext.m_optionalProp = propContext.m_optionalPropOverride->GetProperty();
                 }
             }
 
-            if (context.optionalProp)
+            if (propContext.m_optionalProp)
             {
-                VG_ASSERT(asBool(IProperty::Flags::NotVisible & context.optionalProp->getFlags()) || _prop->getType() == IProperty::Type::LayoutElement, "[Factory] Property used for optional variable \"%s\" should be %s", _prop->getName(), asString(IProperty::Flags::NotVisible).c_str());
+                VG_ASSERT(asBool(IProperty::Flags::NotVisible & propContext.m_optionalProp->getFlags()) || _prop->getType() == IProperty::Type::LayoutElement, "[Factory] Property used for optional variable \"%s\" should be %s", _prop->getName(), asString(IProperty::Flags::NotVisible).c_str());
                 
-                if (context.optionalProp->getType() == IProperty::Type::Bool)
+                if (propContext.m_optionalProp->getType() == IProperty::Type::Bool)
                 {
-                    bool * b = context.optionalProp->GetPropertyBool(context.optionalObject);
+                    bool * b = propContext.m_optionalProp->GetPropertyBool(propContext.m_optionalObject);
                     bool temp = *b;
 
                     if (_prop->getType() != IProperty::Type::LayoutElement)
                     {
-                        if (ImGui::Checkbox(ImGui::getObjectLabel("", context.optionalProp).c_str(), &temp))
+                        if (ImGui::Checkbox(ImGui::getObjectLabel("", propContext.m_optionalProp).c_str(), &temp))
                         {
                             optionalChanged = true;
 
-                            if (context.isPrefabInstance /* && canPrefabOverride*/)
+                            if (propContext.m_isPrefabInstance )
                             {
                                 // Create prop override for bool 
-                                const IClassDesc * classDesc = context.originalObject->GetClassDesc();
-                                IProperty * originalOptionalProp = classDesc->GetPreviousProperty(context.originalProp->getName());
+                                const IClassDesc * classDesc = propContext.m_originalObject->GetClassDesc();
+                                IProperty * originalOptionalProp = classDesc->GetPreviousProperty(propContext.m_originalProp->getName());
                             
                                 // Create if needed
-                                if (context.optionalPropOverride = context.prefab->CreateDynamicProperty(context.originalObject, originalOptionalProp))
+                                if (propContext.m_optionalPropOverride = propContext.m_prefab->CreateDynamicProperty(propContext.m_originalObject, originalOptionalProp))
                                 {
-                                    context.optionalObject = (IObject *)context.optionalPropOverride;
-                                    context.optionalProp = context.optionalPropOverride->GetProperty();
+                                    propContext.m_optionalObject = (IObject *)propContext.m_optionalPropOverride;
+                                    propContext.m_optionalProp = propContext.m_optionalPropOverride->GetProperty();
                             
-                                    ((core::DynamicPropertyBool *)context.optionalPropOverride)->SetValue(temp);
-                                    context.optionalPropOverride->Enable(true);
+                                    ((core::DynamicPropertyBool *)propContext.m_optionalPropOverride)->SetValue(temp);
+                                    propContext.m_optionalPropOverride->Enable(true);
                             
-                                    if (context.propOverride)
-                                        context.propOverride->Enable(true);
+                                    if (propContext.m_propOverride)
+                                        propContext.m_propOverride->Enable(true);
                                 }
                             }
 
@@ -823,44 +766,19 @@ namespace vg::editor
 
         bool changed = false;
 
-        // create temp property to store previous value
-        //void * previousValue = nullptr;
-        //Property previousPropValue = *(Property*)_prop;
-        //switch (_prop->getType())
-        //{
-        //case IProperty::Type::Bool:
-        //    previousValue = malloc(_prop->getSizeOf());
-        //    break;
-        //}
-
-        context.readOnly = asBool(IProperty::Flags::ReadOnly & flags) || (context.isPrefabInstance && !context.isPrefabOverride && !context.canPrefabOverride);
+        propContext.m_readOnly = asBool(IProperty::Flags::ReadOnly & flags) || (propContext.m_isPrefabInstance && !propContext.m_isPrefabOverride && !propContext.m_canPrefabOverride);
 
         ImGuiInputTextFlags imguiInputTextflags = ImGuiInputTextFlags_EnterReturnsTrue;
-        if (context.readOnly)
+        if (propContext.m_readOnly)
             imguiInputTextflags = ImGuiInputTextFlags_ReadOnly;
 
         ImGuiInputTextFlags imguiNumberTextInputFlag = imguiInputTextflags;
         if (hexa)
             imguiNumberTextInputFlag |= ImGuiInputTextFlags_CharsHexadecimal;
-        //else
-        //    imguiNumberTextInputFlag |= ImGuiInputTextFlags_CharsDecimal;
 
         const bool flatten = asBool(IProperty::Flags::Flatten & flags);
         const bool isEnumArray = asBool(IProperty::Flags::EnumArray & flags);
-        const auto enumArrayTreeNodeFlags = /*ImGuiTreeNodeFlags_OpenOnArrow |*/ ImGuiTreeNodeFlags_DefaultOpen;
-
-        //if (isPrefabInstance)
-        //{
-        //    if (isPrefabOverride)
-        //        ImGui::PushStyleColor(ImGuiCol_Text, ImGui::GetStyleColorVec4(ImGuiCol_HeaderActive));
-        //    else
-        //        ImGui::PushStyleColor(ImGuiCol_Text, ImGui::GetStyleColorVec4(ImGuiCol_TextDisabled));
-        //}
-
-        ///*if (isPrefabOverride)
-        //    ImGui::PushStyleColor(ImGuiCol_Text, ImGui::GetStyleColorVec4(ImGuiCol_HeaderActive));
-        //else*/ if (readOnly)
-        //    ImGui::PushStyleColor(ImGuiCol_Text, ImGui::GetStyleColorVec4(ImGuiCol_TextDisabled));
+        const auto enumArrayTreeNodeFlags = ImGuiTreeNodeFlags_DefaultOpen;
 
         //ImGui::BeginDisabled(readOnly);
         {
@@ -894,16 +812,16 @@ namespace vg::editor
                             }
                             else
                             {
-                                if (_objectContext.treeNodes.size() > 0 || dynamic_cast<IComponent *>(_object) || dynamic_cast<IComponent *>(_object->getParent()))
+                                if (_objectContext.m_treeNodes.size() > 0 || dynamic_cast<IComponent *>(_object) || dynamic_cast<IComponent *>(_object->getParent()))
                                 {
-                                    TreeNodeStackInfo & newInfo = _objectContext.treeNodes.push_empty();
+                                    auto & newInfo = _objectContext.m_treeNodes.push_empty();
 
                                     newInfo.treeNodeOpen = ImGui::TreeNodeEx(ImGui::getObjectLabel(_prop->getDisplayName(), _prop).c_str(), ImGuiTreeNodeFlags_DefaultOpen);
                                     newInfo.treeNodeIsCollapsingHeader = false;
                                 }
                                 else
                                 {
-                                    TreeNodeStackInfo & newInfo = _objectContext.treeNodes.push_empty();
+                                    auto & newInfo = _objectContext.m_treeNodes.push_empty();
 
                                     newInfo.treeNodeOpen = ImGui::CollapsingHeader(ImGui::getObjectLabel(_prop->getDisplayName(), _prop).c_str(), ImGuiTreeNodeFlags_DefaultOpen);
                                     newInfo.treeNodeIsCollapsingHeader = true;
@@ -920,9 +838,9 @@ namespace vg::editor
                             }
                             else
                             {
-                                if (_objectContext.treeNodes.size() > 0)
+                                if (_objectContext.m_treeNodes.size() > 0)
                                 {
-                                    auto & nodeInfo = _objectContext.treeNodes[_objectContext.treeNodes.size() - 1];
+                                    auto & nodeInfo = _objectContext.m_treeNodes[_objectContext.m_treeNodes.size() - 1];
 
                                     if (nodeInfo.treeNodeOpen)
                                     {
@@ -930,7 +848,7 @@ namespace vg::editor
                                             ImGui::TreePop();
                                     }
 
-                                    _objectContext.treeNodes.erase(_objectContext.treeNodes.begin() + _objectContext.treeNodes.size() - 1);
+                                    _objectContext.m_treeNodes.erase(_objectContext.m_treeNodes.begin() + _objectContext.m_treeNodes.size() - 1);
                                 }
                             }
                         }
@@ -964,7 +882,7 @@ namespace vg::editor
                             
                             if (ImGui::Checkbox(bitName.c_str(), &value))
                             {
-                                if (!context.readOnly)
+                                if (!propContext.m_readOnly)
                                 {
                                     if (value)
                                         pBitMask->setBitValue(i, true);
@@ -987,46 +905,46 @@ namespace vg::editor
 
                     if (ImGui::Checkbox(getPropertyLabel(label).c_str(), &temp))
                     {
-                        if (storeProperty<bool>(pBool, temp, _object, _prop, context))
+                        if (storeProperty<bool>(pBool, temp, _object, _prop, propContext))
                             changed = true;
                     }
-                    drawPropertyLabel(context, _prop);
+                    drawPropertyLabel(propContext, _prop);
                 };
                 break;
 
                 case IProperty::Type::EnumU8:
                     VG_ASSERT(!isEnumArray, "Display of EnumArray property not implemented for type '%s'", asString(type).c_str());
-                    changed |= displayEnum<u8>(_object, _prop, context);
+                    changed |= displayEnum<u8>(_object, _prop, propContext);
                     break;
 
                 case IProperty::Type::EnumU16:
                     VG_ASSERT(!isEnumArray, "Display of EnumArray property not implemented for type '%s'", asString(type).c_str());
-                    changed |= displayEnum<u16>(_object, _prop, context);
+                    changed |= displayEnum<u16>(_object, _prop, propContext);
                     break;
 
                 case IProperty::Type::EnumU32:
                     VG_ASSERT(!isEnumArray, "Display of EnumArray property not implemented for type '%s'", asString(type).c_str());
-                    changed |= displayEnum<u32>(_object, _prop, context);
+                    changed |= displayEnum<u32>(_object, _prop, propContext);
                     break;
 
                 case IProperty::Type::EnumFlagsU8:
                     VG_ASSERT(!isEnumArray, "Display of EnumArray property not implemented for type '%s'", asString(type).c_str());
-                    changed |= displayEnumFlags<u8>(_object, _prop, context);
+                    changed |= displayEnumFlags<u8>(_object, _prop, propContext);
                     break;
 
                 case IProperty::Type::EnumFlagsU16:
                     VG_ASSERT(!isEnumArray, "Display of EnumArray property not implemented for type '%s'", asString(type).c_str());
-                    changed |= displayEnumFlags<u16>(_object, _prop, context);
+                    changed |= displayEnumFlags<u16>(_object, _prop, propContext);
                     break;
 
                 case IProperty::Type::EnumFlagsU32:
                     VG_ASSERT(!isEnumArray, "Display of EnumArray property not implemented for type '%s'", asString(type).c_str());
-                    changed |= displayEnumFlags<u32>(_object, _prop, context);
+                    changed |= displayEnumFlags<u32>(_object, _prop, propContext);
                     break;
 
                 case IProperty::Type::EnumFlagsU64:
                     VG_ASSERT(!isEnumArray, "Display of EnumArray property not implemented for type '%s'", asString(type).c_str());
-                    changed |= displayEnumFlags<u64>(_object, _prop, context);
+                    changed |= displayEnumFlags<u64>(_object, _prop, propContext);
                     break;
 
                 case IProperty::Type::Uint8:
@@ -1054,7 +972,7 @@ namespace vg::editor
                     }
                     else
                     {
-                        changed = editScalarProperty<u8>(context, label, _object, _prop, _prop->GetPropertyUint8(_object));
+                        changed = editScalarProperty<u8>(propContext, label, _object, _prop, _prop->GetPropertyUint8(_object));
                     }
                 };
                 break;
@@ -1062,112 +980,112 @@ namespace vg::editor
                 case IProperty::Type::Int8:
                 {
                     VG_ASSERT(!isEnumArray, "Display of EnumArray property not implemented for type '%s'", asString(type).c_str());
-                    changed = editScalarProperty<i8>(context, label, _object, _prop, _prop->GetPropertyInt8(_object));
+                    changed = editScalarProperty<i8>(propContext, label, _object, _prop, _prop->GetPropertyInt8(_object));
                 };
                 break;
 
                 case IProperty::Type::Uint16:
                 {
                     VG_ASSERT(!isEnumArray, "Display of EnumArray property not implemented for type '%s'", asString(type).c_str());
-                    changed = editScalarProperty<u16>(context, label, _object, _prop, _prop->GetPropertyUint16(_object));
+                    changed = editScalarProperty<u16>(propContext, label, _object, _prop, _prop->GetPropertyUint16(_object));
                 };
                 break;
 
                 case IProperty::Type::Int16:
                 {
                     VG_ASSERT(!isEnumArray, "Display of EnumArray property not implemented for type '%s'", asString(type).c_str());
-                    changed = editScalarProperty<i16>(context, label, _object, _prop, _prop->GetPropertyInt16(_object));
+                    changed = editScalarProperty<i16>(propContext, label, _object, _prop, _prop->GetPropertyInt16(_object));
                 };
                 break;
 
                 case IProperty::Type::Int32:
                 {
                     VG_ASSERT(!isEnumArray, "Display of EnumArray property not implemented for type '%s'", asString(type).c_str());
-                    changed = editScalarProperty<i32>(context, label, _object, _prop, _prop->GetPropertyInt32(_object));
+                    changed = editScalarProperty<i32>(propContext, label, _object, _prop, _prop->GetPropertyInt32(_object));
                 };
                 break;
 
                 case IProperty::Type::Int64:
                 {
                     VG_ASSERT(!isEnumArray, "Display of EnumArray property not implemented for type '%s'", asString(type).c_str());
-                    changed = editScalarProperty<i64>(context, label, _object, _prop, _prop->GetPropertyInt64(_object));
+                    changed = editScalarProperty<i64>(propContext, label, _object, _prop, _prop->GetPropertyInt64(_object));
                 };
                 break;
 
                 case IProperty::Type::Int2:
                 {
                     VG_ASSERT(!isEnumArray, "Display of EnumArray property not implemented for type '%s'", asString(type).c_str());
-                    changed = editScalarProperty<int2>(context, label, _object, _prop, _prop->GetPropertyIntN(_object, 2));
+                    changed = editScalarProperty<int2>(propContext, label, _object, _prop, _prop->GetPropertyIntN(_object, 2));
                 };
                 break;
 
                 case IProperty::Type::Int3:
                 {
                     VG_ASSERT(!isEnumArray, "Display of EnumArray property not implemented for type '%s'", asString(type).c_str());
-                    changed = editScalarProperty<int3>(context, label, _object, _prop, _prop->GetPropertyIntN(_object, 3));
+                    changed = editScalarProperty<int3>(propContext, label, _object, _prop, _prop->GetPropertyIntN(_object, 3));
                 };
                 break;
 
                 case IProperty::Type::Int4:
                 {
                     VG_ASSERT(!isEnumArray, "Display of EnumArray property not implemented for type '%s'", asString(type).c_str());
-                    changed = editScalarProperty<int4>(context, label, _object, _prop, _prop->GetPropertyIntN(_object, 4));
+                    changed = editScalarProperty<int4>(propContext, label, _object, _prop, _prop->GetPropertyIntN(_object, 4));
                 };
                 break;
 
                 case IProperty::Type::Uint32:
                 {
                     VG_ASSERT(!isEnumArray, "Display of EnumArray property not implemented for type '%s'", asString(type).c_str());
-                    changed = editScalarProperty<u32>(context, label, _object, _prop, _prop->GetPropertyUint32(_object));
+                    changed = editScalarProperty<u32>(propContext, label, _object, _prop, _prop->GetPropertyUint32(_object));
                 };
                 break;
 
                 case IProperty::Type::Uint64:
                 {
                     VG_ASSERT(!isEnumArray, "Display of EnumArray property not implemented for type '%s'", asString(type).c_str());
-                    changed = editScalarProperty<u64>(context, label, _object, _prop, _prop->GetPropertyUint64(_object));
+                    changed = editScalarProperty<u64>(propContext, label, _object, _prop, _prop->GetPropertyUint64(_object));
                 };
                 break;
 
                 case IProperty::Type::Uint2:
                 {
                     VG_ASSERT(!isEnumArray, "Display of EnumArray property not implemented for type '%s'", asString(type).c_str());
-                    changed = editScalarProperty<uint2>(context, label, _object, _prop, _prop->GetPropertyUintN(_object, 2));
+                    changed = editScalarProperty<uint2>(propContext, label, _object, _prop, _prop->GetPropertyUintN(_object, 2));
                 };
                 break;
 
                 case IProperty::Type::Uint3:
                 {
                     VG_ASSERT(!isEnumArray, "Display of EnumArray property not implemented for type '%s'", asString(type).c_str());
-                    changed = editScalarProperty<uint3>(context, label, _object, _prop, _prop->GetPropertyUintN(_object, 3));
+                    changed = editScalarProperty<uint3>(propContext, label, _object, _prop, _prop->GetPropertyUintN(_object, 3));
                 };
                 break;
 
                 case IProperty::Type::Uint4:
                 {
                     VG_ASSERT(!isEnumArray, "Display of EnumArray property not implemented for type '%s'", asString(type).c_str());
-                    changed = editScalarProperty<uint4>(context, label, _object, _prop, _prop->GetPropertyUintN(_object, 4));
+                    changed = editScalarProperty<uint4>(propContext, label, _object, _prop, _prop->GetPropertyUintN(_object, 4));
                 };
                 break;
 
                 case IProperty::Type::Float:
                 {
                     VG_ASSERT(!isEnumArray, "Display of EnumArray property not implemented for type '%s'", asString(type).c_str());
-                    changed = editScalarProperty<float>(context, label, _object, _prop, _prop->GetPropertyFloat(_object));
+                    changed = editScalarProperty<float>(propContext, label, _object, _prop, _prop->GetPropertyFloat(_object));
                 };
                 break;
 
                 case IProperty::Type::Float2:
                 {
                     VG_ASSERT(!isEnumArray, "Display of EnumArray property not implemented for type '%s'", asString(type).c_str());
-                    changed = editScalarProperty<float2>(context, label, _object, _prop, _prop->GetPropertyFloatN(_object, 2));
+                    changed = editScalarProperty<float2>(propContext, label, _object, _prop, _prop->GetPropertyFloatN(_object, 2));
                 };
                 break;
 
                 case IProperty::Type::Float3:
                 {
                     VG_ASSERT(!isEnumArray, "Display of EnumArray property not implemented for type '%s'", asString(type).c_str());
-                    changed = editScalarProperty<float3>(context, label, _object, _prop, _prop->GetPropertyFloatN(_object, 3));
+                    changed = editScalarProperty<float3>(propContext, label, _object, _prop, _prop->GetPropertyFloatN(_object, 3));
                 };
                 break;
 
@@ -1193,7 +1111,7 @@ namespace vg::editor
                     }
                     else
                     {
-                        changed = editScalarProperty<float3>(context, label, _object, _prop, _prop->GetPropertyFloatN(_object, 3));
+                        changed = editScalarProperty<float3>(propContext, label, _object, _prop, _prop->GetPropertyFloatN(_object, 3));
                     }
                 };
                 break;
@@ -1201,7 +1119,7 @@ namespace vg::editor
                 case IProperty::Type::Float4x4:
                 {
                     VG_ASSERT(!isEnumArray, "Display of EnumArray property not implemented for type '%s'", asString(type).c_str());
-                    changed |= editFloat4x4(_object, _prop, context); 
+                    changed |= editFloat4x4(_object, _prop, propContext); 
                 }
                 break;
 
@@ -1244,14 +1162,14 @@ namespace vg::editor
                     }
 
                     static ImGuiObjectHandleMenu s_pickObjectHandlemenu;
-                    if (s_pickObjectHandlemenu.SelectUID(&temp, gameobject))
+                    if (s_pickObjectHandlemenu.SelectUID(&temp, propContext.m_gameobject))
                         edited = true;
 
-                    drawPropertyLabel(context, _prop);
+                    drawPropertyLabel(propContext, _prop);
 
                     if (edited)
                     {
-                        if (storeProperty((UID*)pObjHandle->getUIDPtr(), (UID)temp, _object, _prop, context))
+                        if (storeProperty((UID*)pObjHandle->getUIDPtr(), (UID)temp, _object, _prop, propContext))
                             changed = true;
                     }
                 }
@@ -1351,11 +1269,11 @@ namespace vg::editor
                         if (ImGui::InputText(getPropertyLabel(label).c_str(), buffer, countof(buffer), imguiInputTextflags))
                             edited = true;
 
-                        drawPropertyLabel(context, _prop);
+                        drawPropertyLabel(propContext, _prop);
 
                         if (edited)
                         {
-                            if (storeProperty(pString, (string)buffer, _object, _prop, context))
+                            if (storeProperty(pString, (string)buffer, _object, _prop, propContext))
                                 changed = true;
                         }                        
                     }                    
@@ -1761,7 +1679,7 @@ namespace vg::editor
                             if (ImGui::TreeNodeEx(name.c_str(), ImGuiTreeNodeFlags_DefaultOpen))
                             {
                                 ImGui::Indent();
-                                displayResource(pResource, _prop, 0, context);
+                                displayResource(pResource, _prop, 0, propContext);
                                 ImGui::Unindent();
                                 ImGui::TreePop();
                             }
@@ -1789,7 +1707,7 @@ namespace vg::editor
                                 if (ImGui::TreeNodeEx(_prop->getEnumName(e), /*ImGuiTreeNodeFlags_OpenOnArrow |*/ ImGuiTreeNodeFlags_DefaultOpen))
                                 {
                                     if (nullptr != pResource)
-                                        changed |= displayResource(pResource, _prop, e, context);
+                                        changed |= displayResource(pResource, _prop, e, propContext);
 
                                     ImGui::TreePop();
                                 }
@@ -1799,8 +1717,8 @@ namespace vg::editor
                     }
                     else
                     {
-                        IResource * pResource = ref ? *context.originalProp->GetPropertyResourcePtr(context.originalObject) : context.originalProp->GetPropertyResource(context.originalObject);
-                        changed |= displayResource(pResource, _prop, 0, context);
+                        IResource * pResource = ref ? *propContext.m_originalProp->GetPropertyResourcePtr(propContext.m_originalObject) : propContext.m_originalProp->GetPropertyResource(propContext.m_originalObject);
+                        changed |= displayResource(pResource, _prop, 0, propContext);
                     }
                 }
                 break;
@@ -1813,25 +1731,25 @@ namespace vg::editor
 
         if (optionalChanged)
         {
-            if (context.prefab && context.optionalPropOverride != nullptr)
+            if (propContext.m_prefab && propContext.m_optionalPropOverride != nullptr)
             {
-                auto & children = context.prefab->GetChildren();
+                auto & children = propContext.m_prefab->GetChildren();
                 for (uint i = 0; i < children.size(); ++i)
-                    context.prefab->OverrideGameObjectProperties(children[i], context.optionalPropOverride);
+                    propContext.m_prefab->OverrideGameObjectProperties(children[i], propContext.m_optionalPropOverride);
             }
             else
             {
-                _object->OnPropertyChanged(context.optionalObject, *context.optionalProp);
+                _object->OnPropertyChanged(propContext.m_optionalObject, *propContext.m_optionalProp);
             }
         }
 
         if (changed)
         {
-            if (context.prefab && context.propOverride != nullptr)
+            if (propContext.m_prefab && propContext.m_propOverride != nullptr)
             {
-                auto & children = context.prefab->GetChildren();
+                auto & children = propContext.m_prefab->GetChildren();
                 for (uint i = 0; i < children.size(); ++i)
-                    context.prefab->OverrideGameObjectProperties(children[i], context.propOverride);
+                    propContext.m_prefab->OverrideGameObjectProperties(children[i], propContext.m_propOverride);
             }
             else
             {
@@ -1844,7 +1762,7 @@ namespace vg::editor
             if (_prop->getType() != IProperty::Type::LayoutElement)
             {
                 ImGui::PopItemWidth();
-                bool * b = context.optionalProp->GetPropertyBool(context.optionalObject);
+                bool * b = propContext.m_optionalProp->GetPropertyBool(propContext.m_optionalObject);
                 if (!*b)
                     ImGui::EndDisabled();
             }
@@ -1852,7 +1770,7 @@ namespace vg::editor
 
         //VG_SAFE_DELETE(previousValue);
 
-        if (context.isPrefabInstance && context.canPrefabOverride && !context.readOnly)
+        if (propContext.m_isPrefabInstance && propContext.m_canPrefabOverride && !propContext.m_readOnly)
         {
             const auto saveCurY = ImGui::GetCursorPosY();
             auto deltaY = max(saveCurY - cursorPosY, style::button::SizeSmall.y);
@@ -1894,9 +1812,9 @@ namespace vg::editor
 
             if (ImGui::BeginPopupContextItem(getObjectLabel("Menu", "Override", _prop).c_str()))
             {
-                ImGui::BeginDisabled(!context.canPrefabOverride);
+                ImGui::BeginDisabled(!propContext.m_canPrefabOverride);
 
-                bool overriden = context.isPrefabOverride;
+                bool overriden = propContext.m_isPrefabOverride;
                 bool notOverriden = !overriden;
                 //if (ImGui::MenuItem(overriden ? "Use original value" : "Use override value"))
                 //{
@@ -1911,10 +1829,10 @@ namespace vg::editor
                 ImGui::Separator();
 
                 if (ImGui::MenuItem("Use original value", nullptr, &notOverriden))
-                    context.prefab->ToggleOverride(context.originalObject, context.originalProp, false);
+                    propContext.m_prefab->ToggleOverride(propContext.m_originalObject, propContext.m_originalProp, false);
 
                 if (ImGui::MenuItem("Use override value", nullptr, &overriden))
-                    context.prefab->ToggleOverride(context.originalObject, context.originalProp, true);
+                    propContext.m_prefab->ToggleOverride(propContext.m_originalObject, propContext.m_originalProp, true);
 
                 ImGui::EndDisabled();
 
@@ -1957,7 +1875,7 @@ namespace vg::editor
     // Display Resource Object
     // Display Resource properties 1st, then path and referenced object properties 2nd
     //--------------------------------------------------------------------------------------
-    bool ImGuiWindow::displayResource(core::IResource * _resource, const core::IProperty * _prop, core::uint _index, Context & _context)
+    bool ImGuiWindow::displayResource(core::IResource * _resource, const core::IProperty * _prop, core::uint _index, PropertyContext & _propContext)
     {
         const char * className = _resource->GetClassName();
         const auto * factory = Kernel::getFactory();
@@ -1966,12 +1884,14 @@ namespace vg::editor
         ImGui::PushID(_resource);
         ImGui::PushID(_prop);
 
+        ObjectContext objectContext;
+
         // Display all properties of the resource component
         {
             auto availableWidth = GetContentRegionAvail().x;
             ImGui::PushItemWidth(availableWidth - style::label::PixelWidth);
 
-            if (!ImGuiObjectHandler::display(_resource))
+            if (!ImGuiObjectHandler::display(_resource, objectContext))
             {
                 const char * classDisplayName = classDesc->GetClassDisplayName();
 
@@ -1989,8 +1909,8 @@ namespace vg::editor
 
         string resPath = _resource->GetResourcePath();
 
-        if (_context.propOverride && _context.propOverride->IsEnable())
-            resPath = ((DynamicPropertyResource *)_context.propOverride)->m_value;
+        if (_propContext.m_propOverride && _propContext.m_propOverride->IsEnable())
+            resPath = ((DynamicPropertyResource *)_propContext.m_propOverride)->m_value;
 
         char buffer[1024];
         sprintf_s(buffer, resPath.c_str());
@@ -2001,10 +1921,10 @@ namespace vg::editor
         auto storePath = [=](const char * _resPath)
         {
             string relativePath = io::getRelativePath((string)_resPath);
-            if (_context.propOverride)
+            if (_propContext.m_propOverride)
             {
-                ((DynamicPropertyResource *)_context.propOverride)->m_value = relativePath;
-                _context.propOverride->Enable(true);
+                ((DynamicPropertyResource *)_propContext.m_propOverride)->m_value = relativePath;
+                _propContext.m_propOverride->Enable(true);
             }
             _resource->SetResourcePath(relativePath);
         };
@@ -2037,30 +1957,23 @@ namespace vg::editor
         auto x = ImGui::GetCursorPosX();
         ImGui::SetCursorPosX(x + buttonWidth);
 
-        drawPropertyLabel(_context, _prop);
-
-        // TODO: make GameObject part of Context?
-        IGameObject * gameobject = findParentGameObject(_resource);
-        if (gameobject)
-        {
-            //if (_context.isPrefabInstance)
-        }
+        drawPropertyLabel(_propContext, _prop);
 
         auto x2 = ImGui::GetCursorPosX();
         ImGui::SameLine();
      
         ImGui::SetCursorPosX(x-4);        
 
-        if (_context.readOnly)
+        if (_propContext.m_readOnly)
             ImGui::BeginDisabled();
 
-        if (ImGui::Button(getObjectLabel((string)style::icon::File, _context.originalProp).c_str(), style::button::SizeSmall))
+        if (ImGui::Button(getObjectLabel((string)style::icon::File, _propContext.m_originalProp).c_str(), style::button::SizeSmall))
         {
             //openExistingFile = true;
         }
         //ImGui::SetCursorPosX(x+24);
         
-        if (ImGui::BeginPopupContextItem(getObjectLabel("PopContextMenu", _context.originalProp).c_str(), ImGuiPopupFlags_MouseButtonLeft))
+        if (ImGui::BeginPopupContextItem(getObjectLabel("PopContextMenu", _propContext.m_originalProp).c_str(), ImGuiPopupFlags_MouseButtonLeft))
         {
             if (_resource->CanCreateFile())
             {
@@ -2124,7 +2037,7 @@ namespace vg::editor
             ImGui::EndPopup();
         }
 
-        if (_context.readOnly)
+        if (_propContext.m_readOnly)
             ImGui::EndDisabled();
 
         // build extension list
@@ -2353,7 +2266,7 @@ namespace vg::editor
     }
 
     //--------------------------------------------------------------------------------------
-    bool ImGuiWindow::editFloat4x4(core::IObject * _object, const core::IProperty * _prop, Context & _context)
+    bool ImGuiWindow::editFloat4x4(core::IObject * _object, const core::IProperty * _prop, PropertyContext & _propContext)
     {
         bool changed = false;
 
@@ -2365,25 +2278,25 @@ namespace vg::editor
         for (uint i = 0; i < countof(temp); ++i)
             temp[i] = pFloat[i];
 
-        if (ImGui::TreeNode(getObjectLabel(displayName, _context.originalProp).c_str()))
+        if (ImGui::TreeNode(getObjectLabel(displayName, _propContext.m_originalProp).c_str()))
         {
             bool edited = false;
 
             edited |= ImGui::DragFloat4(getPropertyLabel("I").c_str(), (float *)&temp[0], getDragSpeedFloat(_prop), style::range::minFloat, style::range::maxFloat, g_editFloatFormat);
-            drawPropertyLabel(_context, "I", "Represents the x-axis in the transformed space");
+            drawPropertyLabel(_propContext, "I", "Represents the x-axis in the transformed space");
 
             edited |= ImGui::DragFloat4(getPropertyLabel("J").c_str(), (float *)&temp[4], getDragSpeedFloat(_prop), style::range::minFloat, style::range::maxFloat, g_editFloatFormat);
-            drawPropertyLabel(_context, "J", "Represents the y-axis in the transformed space");
+            drawPropertyLabel(_propContext, "J", "Represents the y-axis in the transformed space");
 
             edited |= ImGui::DragFloat4(getPropertyLabel("K").c_str(), (float *)&temp[8], getDragSpeedFloat(_prop), style::range::minFloat, style::range::maxFloat, g_editFloatFormat);
-            drawPropertyLabel(_context, "K", "Represents the z-axis in the transformed space");
+            drawPropertyLabel(_propContext, "K", "Represents the z-axis in the transformed space");
 
             edited |= ImGui::DragFloat4(getPropertyLabel("T").c_str(), (float *)&temp[12], getDragSpeedFloat(_prop), style::range::minFloat, style::range::maxFloat, g_editFloatFormat);
-            drawPropertyLabel(_context, "T", "Represents the translation component");
+            drawPropertyLabel(_propContext, "T", "Represents the translation component");
 
             if (edited)
             {
-                if (storeProperty(pFloat4x4, float4x4(temp[0], temp[1], temp[2], temp[3], temp[4], temp[5], temp[6], temp[7], temp[8], temp[9], temp[10], temp[11], temp[12], temp[13], temp[14], temp[15]), _object, _prop, _context))
+                if (storeProperty(pFloat4x4, float4x4(temp[0], temp[1], temp[2], temp[3], temp[4], temp[5], temp[6], temp[7], temp[8], temp[9], temp[10], temp[11], temp[12], temp[13], temp[14], temp[15]), _object, _prop, _propContext))
                     changed = true;
             }
 

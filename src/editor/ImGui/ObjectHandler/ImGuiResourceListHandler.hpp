@@ -10,13 +10,11 @@ namespace vg::editor
     class ImGuiResourceListHandler : public ImGuiObjectHandler
     {
     public:
-        void displayObject(IObject * _object) = 0;
+        void displayObject(IObject * _object, ObjectContext & _objectContext) = 0;
 
         //--------------------------------------------------------------------------------------
         void displayResourceList(IObject * _object, const core::string & _label, const core::string & _vectorPropName)
         {
-            Context context;
-
             const auto * factory = Kernel::getFactory();
             const auto * classDesc = factory->getClassDescriptor(_object->GetClassName());
             auto list = dynamic_cast<engine::IResourceList *>(_object);
@@ -79,6 +77,8 @@ namespace vg::editor
 
                     if (!strcmp(prop->getName(), _vectorPropName.c_str()))
                     {
+                        PropertyContext propContext(_object, prop);
+
                         resourceCount = prop->GetPropertyResourceVectorCount(_object);
 
                         for (uint i = 0; i < resourceCount; ++i)
@@ -91,7 +91,7 @@ namespace vg::editor
 
                             if (ImGui::TreeNodeEx(itemLabel.c_str(), ImGuiTreeNodeFlags_None))
                             {
-                                ImGuiWindow::displayResource(obj, prop, i, context);
+                                ImGuiWindow::displayResource(obj, prop, i, propContext);
                                 ImGui::TreePop();
                             }
 

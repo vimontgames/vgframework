@@ -271,6 +271,12 @@
     <ClInclude Include="ImGui\Menu\ObjectHandle\ObjectHandleMenu.hpp">
       <Filter>ImGui\Menu\ObjectHandle</Filter>
     </ClInclude>
+    <ClInclude Include="ImGui\Window\ImGuiObjectPropertyContext.h">
+      <Filter>ImGui\Window</Filter>
+    </ClInclude>
+    <ClInclude Include="ImGui\Window\ImGuiObjectPropertyContext.hpp">
+      <Filter>ImGui\Window</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Editor.def" />

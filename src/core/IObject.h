@@ -27,6 +27,7 @@ namespace vg::core
 
         virtual void                        SetClassDesc        (const IClassDesc * _classDesc) = 0;
         virtual const IClassDesc *          GetClassDesc        () const = 0;
+        virtual bool                        IsRegisteredClass   () const= 0;
 
 										    IObject		        () = default;
 		virtual							    ~IObject	        () = default;

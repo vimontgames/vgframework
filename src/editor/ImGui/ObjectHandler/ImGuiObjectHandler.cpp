@@ -8,12 +8,12 @@ namespace vg::editor
     core::vector<ImGuiObjectHandler::HandlerInfo> ImGuiObjectHandler::s_ImGuiHandlers;
 
     //--------------------------------------------------------------------------------------
-    bool ImGuiObjectHandler::display(core::IObject * _object)
+    bool ImGuiObjectHandler::display(core::IObject * _object, ObjectContext & _objectContext)
     {
         auto handler = Find(_object->GetClassName());
         if (nullptr != handler)
         {
-            handler->displayObject(_object);
+            handler->displayObject(_object, _objectContext);
             return true;
         }
         return false;

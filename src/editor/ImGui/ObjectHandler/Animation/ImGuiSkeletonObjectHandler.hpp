@@ -12,7 +12,7 @@ namespace vg::editor
     {
     public:
         //--------------------------------------------------------------------------------------
-        void displayObject(IObject * _object) final
+        void displayObject(IObject * _object, ObjectContext & _objectContext) final
         {
             auto availableWidth = ImGui::GetContentRegionAvail().x;
             ImGui::PushItemWidth(availableWidth - style::label::PixelWidth);

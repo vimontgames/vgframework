@@ -16,7 +16,7 @@ namespace vg::editor
     {
     public:
         //--------------------------------------------------------------------------------------
-        void displayObject(IObject * _object) final
+        void displayObject(IObject * _object, ObjectContext & _objectContext) final
         {
             auto * go = dynamic_cast<core::IGameObject*>(_object);
 
