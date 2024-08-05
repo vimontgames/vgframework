@@ -86,7 +86,7 @@ namespace vg::core
             IsFolder        = 0x0000000000000004,   // String is a folder
             IsFile          = 0x0000000000000008,   // String is a folder
             HasRange        = 0x0000000000000010,   // Property has [min..max] range
-            SameLine        = 0x0000000000000020,   // Do no end line after this property
+            SingleLine      = 0x0000000000000020,   // This property and the following ones will be displayed on the same line to save space
             Radio           = 0x0000000000000040,   // Part of a radio button group
             Debug           = 0x0000000000000080,   // A debug property that is hidden by default
             Bitfield        = 0x0000000000000100,   // Value displayed as hex, enum as flags
@@ -254,10 +254,10 @@ namespace vg::core
 //--------------------------------------------------------------------------------------
 // Modify existing class properties macros
 //--------------------------------------------------------------------------------------
-#define setPropertyFlag(className, propertyName, flags, value)												_desc.GetPropertyByName(#propertyName)->setFlags(value ? flags : (vg::core::IProperty::Flags)0, value ? (vg::core::IProperty::Flags)0 : flags);
-#define setPropertyRange(className, propertyName, range)												    _desc.GetPropertyByName(#propertyName)->setRange(range);
-#define setPropertyDefaultFolder(className, propertyName, defaultFolder)									_desc.GetPropertyByName(#propertyName)->setDefaultFolder(defaultFolder);
-#define setPropertyDescription(className, propertyName, description)                                        _desc.GetPropertyByName(#propertyName)->SetDescription(description);
+#define setPropertyFlag(className, propertyName, flags, value)												{ if (auto * prop = _desc.GetPropertyByName(#propertyName)) { prop->setFlags(value ? flags : (vg::core::IProperty::Flags)0, value ? (vg::core::IProperty::Flags)0 : flags); } else { VG_WARNING("[Factory] Could not set \"Flags\" for property \"%s\" in class \"%s\"", #propertyName, #className); } }
+#define setPropertyRange(className, propertyName, range)												    { if (auto * prop = _desc.GetPropertyByName(#propertyName)) { prop->setRange(range);                                                                                        } else { VG_WARNING("[Factory] Could not set \"Range\" for property \"%s\" in class \"%s\"", #propertyName, #className); } }
+#define setPropertyDefaultFolder(className, propertyName, defaultFolder)									{ if (auto * prop = _desc.GetPropertyByName(#propertyName)) { prop->setDefaultFolder(defaultFolder);                                                                        } else { VG_WARNING("[Factory] Could not set \"Default Folder\" for property \"%s\" in class \"%s\"", #propertyName, #className); } }
+#define setPropertyDescription(className, propertyName, description)                                        { if (auto * prop = _desc.GetPropertyByName(#propertyName)) { prop->SetDescription(description);                                                                            } else { VG_WARNING("[Factory] Could not set \"Description\" for property \"%s\" in class \"%s\"", #propertyName, #className); } }
 
 //--------------------------------------------------------------------------------------
 // Misc

@@ -10,9 +10,11 @@ namespace vg::physics
         super::registerProperties(_desc);
         registerProperty(CapsuleShapeDesc, m_radius, "Radius");
         setPropertyRange(CapsuleShapeDesc, m_radius, float2(0.01f, 100.0f));
+        setPropertyDescription(CapsuleShapeDesc, m_radius, "Capsule radius");
 
         registerProperty(CapsuleShapeDesc, m_height, "Height");
         setPropertyRange(CapsuleShapeDesc, m_height, float2(0.01f, 100.0f));
+        setPropertyDescription(CapsuleShapeDesc, m_height, "Capsule height");
 
         return true;
     }

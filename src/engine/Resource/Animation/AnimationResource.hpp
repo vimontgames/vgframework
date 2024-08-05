@@ -28,11 +28,11 @@ namespace vg::engine
     {
         super::registerProperties(_desc);
 
-        registerPropertyCallback(AnimationResource, playAnim, "Play");
-        registerPropertyCallbackEx(AnimationResource, stopAnim, "Stop", IProperty::Flags::SameLine);
+        registerPropertyCallbackEx(AnimationResource, playAnim, "Play", IProperty::Flags::SingleLine);
+        registerPropertyCallbackEx(AnimationResource, stopAnim, "Stop", IProperty::Flags::SingleLine);
 
         registerProperty(AnimationResource, m_play, "Play");
-        registerPropertyEx(AnimationResource, m_loop, "Loop", IProperty::Flags::SameLine);
+        registerPropertyEx(AnimationResource, m_loop, "Loop", IProperty::Flags::SingleLine);
 
         setPropertyFlag(AnimationResource, m_name, IProperty::Flags::NotVisible, false);
 

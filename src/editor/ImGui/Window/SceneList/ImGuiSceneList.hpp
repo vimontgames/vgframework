@@ -351,9 +351,7 @@ namespace vg::editor
                 const auto * componentClassDesc = component->GetClassDesc();
                 auto icon = componentClassDesc->GetIcon();
                 bool enabled = asBool(ComponentFlags::Enabled & component->GetComponentFlags());
-                string tooltip = fmt::sprintf("%s", componentClassDesc->GetDescription());
-
-                drawIcon(icon, enabled, totalSize, availableWidth, pos, tooltip);
+                drawIcon(icon, enabled, totalSize, availableWidth, pos, componentClassDesc->GetDescription());
             }
 
             if (isPrefab)

@@ -25,9 +25,7 @@ namespace vg::core
     //--------------------------------------------------------------------------------------
     Component::~Component()
     {
-        // TODO create only if could not read serialized value
-        //const auto * factory = Kernel::getFactory();
-        //m_guid = factory->CreateNewComponentGUID(this);
+ 
     }
 
     //--------------------------------------------------------------------------------------
@@ -66,6 +64,7 @@ namespace vg::core
         super::registerProperties(_desc);
       
         registerPropertyEnumBitfield(Component, ComponentFlags, m_flags, "Flags");
+        setPropertyDescription(Component, m_flags, "Component flags");
 
         return true;
     }

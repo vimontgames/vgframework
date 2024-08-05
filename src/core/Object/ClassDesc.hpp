@@ -36,7 +36,7 @@ namespace vg::core
         if (-1 != index)
             return (IProperty*)&properties[index];
         
-        VG_ASSERT("[Factory] Property \"%s\" not found in class '%s'", _propertyName, GetClassName());
+        VG_WARNING("[Factory] Property \"%s\" not found in class '%s'", _propertyName, GetClassName());
         return nullptr;
     }
 

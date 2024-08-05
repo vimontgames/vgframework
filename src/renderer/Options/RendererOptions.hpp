@@ -15,13 +15,13 @@ namespace vg::renderer
     {
         super::registerProperties(_desc);
 
-        registerProperty(RendererOptions, m_toolMode, "Toolmode");
+        registerPropertyEx(RendererOptions, m_toolMode, "Toolmode", IProperty::Flags::SingleLine);
         setPropertyDescription(LightDesc, m_toolMode, "Enable Toolmode in Game views");
 
-        registerPropertyEx(RendererOptions, m_rayTracing, "RayTracing", IProperty::Flags::SameLine);
+        registerPropertyEx(RendererOptions, m_rayTracing, "RayTracing", IProperty::Flags::SingleLine);
         setPropertyDescription(LightDesc, m_rayTracing, "Enable Ray-Tracing features");
 
-        registerPropertyEx(RendererOptions, m_postProcess, "PostProcess", IProperty::Flags::SameLine);
+        registerPropertyEx(RendererOptions, m_postProcess, "PostProcess", IProperty::Flags::SingleLine);
         setPropertyDescription(RendererOptions, m_postProcess, "Enable Post-Process features");
 
         registerPropertyEnum(RendererOptions, LightingMode, m_lightingMode, "Lighting");
@@ -32,12 +32,13 @@ namespace vg::renderer
 
         registerPropertyGroupBegin(RendererOptions, "Advanced");
         {
-            registerProperty(RendererOptions, m_wireframe, "Wireframe");
+            registerPropertyEx(RendererOptions, m_wireframe, "Wireframe", IProperty::Flags::SingleLine);
+            setPropertyDescription(LightDesc, m_wireframe, "Show Wireframe");
 
-            registerPropertyEx(RendererOptions, m_aabb, "Bounding Box", IProperty::Flags::SameLine);
+            registerPropertyEx(RendererOptions, m_aabb, "Bounding Box", IProperty::Flags::SingleLine);
             setPropertyDescription(LightDesc, m_aabb, "Show Bounding Boxes");
 
-            registerPropertyEx(RendererOptions, m_debugUI, "Debug UI", IProperty::Flags::SameLine);
+            registerPropertyEx(RendererOptions, m_debugUI, "Debug UI", IProperty::Flags::SingleLine);
             setPropertyDescription(LightDesc, m_debugUI, "Show UI debug");
 
             registerPropertyEnum(RendererOptions, gfx::VSync, m_VSync, "VSync");

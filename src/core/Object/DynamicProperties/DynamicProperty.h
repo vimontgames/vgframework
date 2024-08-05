@@ -2,6 +2,7 @@
 
 #include "core/IDynamicProperty.h"
 #include "core/Object/Property.h"
+#include "core/Kernel.h"
 
 namespace vg::core
 {

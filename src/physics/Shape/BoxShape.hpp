@@ -10,7 +10,10 @@ namespace vg::physics
     bool BoxShapeDesc::registerProperties(IClassDesc & _desc)
     {
         super::registerProperties(_desc);
+
         registerProperty(BoxShapeDesc, m_size, "Size");
+        setPropertyDescription(BoxShapeDesc, m_size, "Box size");
+
         return true;
     }
 

@@ -702,8 +702,12 @@ namespace vg::editor
 
         if (!isPropertyVisible(flags))
             return;
-
-        if (asBool(IProperty::Flags::SameLine & flags))
+        
+        const IClassDesc * classDesc = propContext.m_originalObject->GetClassDesc();
+        auto * previousProp = classDesc->GetPreviousProperty(propContext.m_originalProp->getName());
+        const bool singleLine = asBool(IProperty::Flags::SingleLine & flags);
+        // Render property next to the previous one
+        if (singleLine && (previousProp && asBool(IProperty::Flags::SingleLine & previousProp->getFlags())))
             ImGui::SameLine();
 
         const bool hexa = asBool(IProperty::Flags::Hexadecimal & flags);
@@ -717,9 +721,8 @@ namespace vg::editor
         if (asBool(IProperty::Flags::Optional & flags))
         {
             // check previous property is bool
-            const IClassDesc * classDesc = propContext.m_originalObject->GetClassDesc();
+            
             propContext.m_optionalObject = propContext.m_originalObject;
-            auto * previousProp = classDesc->GetPreviousProperty(propContext.m_originalProp->getName());
             propContext.m_optionalProp = previousProp;
 
             if (propContext.m_isPrefabInstance)
@@ -922,7 +925,21 @@ namespace vg::editor
                     bool * pBool = _prop->GetPropertyBool(_object);
                     bool temp = *pBool;
 
-                    if (ImGui::Checkbox(getPropertyLabel(label).c_str(), &temp))
+                    bool edited;
+
+                    if (singleLine)
+                    {
+                        // Several checkboxes in the same line
+                        edited = ImGui::Checkbox(getPropertyLabel(label).c_str(), &temp);
+                    }
+                    else
+                    {
+                        // The only checkbox in the line => align right
+                        ImGui::SetCursorPosX(GetContentRegionAvail().x - style::label::PixelWidth - ImGui::GetFrameHeight() + ImGui::GetStyle().ItemSpacing.y);
+                        edited = ImGui::Checkbox(getPropertyLabel(label).c_str(), &temp);
+                    }
+
+                    if (edited)
                     {
                         if (storeProperty<bool>(pBool, temp, _object, _prop, propContext))
                             changed = true;

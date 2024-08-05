@@ -10,8 +10,10 @@ namespace vg::physics
     bool SphereShapeDesc::registerProperties(IClassDesc & _desc)
     {
         super::registerProperties(_desc);
+
         registerProperty(SphereShapeDesc, m_radius, "Radius");
         setPropertyRange(SphereShapeDesc, m_radius, float2(0.01f, 100.0f));
+        setPropertyDescription(SphereShapeDesc, m_radius, "Sphere radius");
 
         return true;
     }

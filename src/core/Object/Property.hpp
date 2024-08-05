@@ -65,7 +65,7 @@ namespace vg::core
                     }
                     else
                     {
-                        VG_ASSERT(false, "[Property] EnumArray not implemented for type \"%s\"", _type);
+                        VG_ASSERT(false, "[Factory] EnumArray not implemented for type \"%s\"", _type);
                     }
                     break;
             }

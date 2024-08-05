@@ -23,7 +23,7 @@ namespace vg::physics
         setPropertyDescription(ShapeDesc, m_rotation, "Euler ZYX rotation angles");
 
         registerProperty(ShapeDesc, m_offset, "Offset");
-        setPropertyDescription(ShapeDesc, m_rotation, "Translation offset");
+        setPropertyDescription(ShapeDesc, m_offset, "Translation offset");
 
         return true;
     }
