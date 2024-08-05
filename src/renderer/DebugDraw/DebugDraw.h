@@ -41,7 +41,9 @@ namespace vg::renderer
         void        AddWireframeSphere      (const core::IWorld * _world, float _radius, core::u32 _color, const core::float4x4 _matrix = core::float4x4::identity()) final override;
         void        AddHemisphere           (const core::IWorld * _world, float _radius, core::u32 _color, const core::float4x4 _matrix = core::float4x4::identity()) final override;
         void        AddCylinder             (const core::IWorld * _world, float _radius, float _height, core::u32 _color, const core::float4x4 _matrix = core::float4x4::identity()) final override;
+        void        AddTaperedCylinder      (const core::IWorld * _world, float _topRadius, float _bottomRadius, float _height, core::u32 _color, const core::float4x4 _matrix = core::float4x4::identity()) final override;
         void        AddCapsule              (const core::IWorld * _world, float _radius, float _height, core::u32 _color, const core::float4x4 _matrix = core::float4x4::identity()) final override;
+        void        AddTaperedCapsule       (const core::IWorld * _world, float _topRadius, float _bottomRadius, float _height, core::u32 _color, const core::float4x4 _matrix = core::float4x4::identity()) final override;
 
         void        endFrame                ();
         void        reset                   ();
@@ -70,11 +72,20 @@ namespace vg::renderer
          
         struct DebugDrawInstanceData
         {
-            core::float4x4 world;
-            core::u32 color;
+            core::float4x4  world;
+            core::u32       color;
+
+            float getTaper() const { return 1.0f; }
         };
 
-        void        drawDebugModelInstances (gfx::CommandList * _cmdList, const MeshGeometry * _geometry, const core::vector<DebugDrawInstanceData> & _instances);
+        struct DebugDrawInstanceDataCylinder : public DebugDrawInstanceData
+        {
+            float           taper;      // Top/Bottom ratio
+
+            float getTaper() const { return taper; }
+        };
+
+        template <typename T> void      drawDebugModelInstances (gfx::CommandList * _cmdList, const MeshGeometry * _geometry, const core::vector<T> & _instances);
 
     private:
         gfx::RootSignatureHandle        m_debugDrawSignatureHandle;
@@ -98,7 +109,7 @@ namespace vg::renderer
 
         using DebugDrawIcoSphereData = DebugDrawInstanceData;
         using DebugDrawHemiSphereData = DebugDrawInstanceData;
-        using DebugDrawCylinderData = DebugDrawInstanceData;
+        using DebugDrawCylinderData = DebugDrawInstanceDataCylinder;
 
         struct WorldData : public core::IDebugDrawData
         {

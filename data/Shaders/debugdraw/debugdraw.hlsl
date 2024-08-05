@@ -27,6 +27,9 @@ VS_Output VS_DebugDraw(uint _vertexID : VertexID)
     
     output.col = vert.getColor() * debugDrawRootConstants3D.getColor();
     float3 modelPos = vert.getPos();
+
+    modelPos.xy *= lerp(1, debugDrawRootConstants3D.getTaper(), modelPos.z*0.5f+0.5f);
+
     float3 worldPos = mul(float4(modelPos.xyz, 1.0f), debugDrawRootConstants3D.getWorldMatrix()).xyz;
     float4 viewPos = mul(float4(worldPos.xyz, 1.0f), view);
 

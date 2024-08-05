@@ -284,6 +284,9 @@ namespace vg::physics
                     shape = new CapsuleShape(*(const CapsuleShapeDesc *)_shapeDesc);
                     break;
             }
+
+            if (shape)
+                VG_ASSERT(shape->GetShapeType() == shapeType);
         }
         return shape;
     }

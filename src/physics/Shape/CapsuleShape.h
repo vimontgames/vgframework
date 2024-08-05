@@ -10,7 +10,10 @@ namespace vg::physics
         ShapeType GetShapeType() const final override { return ShapeType::Capsule; }
         bool TryGetAABB(core::AABB & _aabb) const final override;
 
-        float m_radius = 1.0f;
+        bool m_tapered = false;
+
+        float m_bottomRadius = 0.25f;
+        float m_topRadius = 0.25f;
         float m_height = 1.0f;
     };
 
@@ -23,7 +26,8 @@ namespace vg::physics
         ShapeType GetShapeType() const final override { return ShapeType::Capsule; }
         void Draw(const core::IWorld * _world, const core::float4x4 & _matrix) final override;
 
-        float m_radius = 0.0f;
-        float m_height = 0.0f;
+        float m_bottomRadius = 0.25f;
+        float m_topRadius = 0.25f;
+        float m_height = 1.0f;
     };
 }

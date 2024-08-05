@@ -10,13 +10,15 @@ struct DebugDrawRootConstants3D
     uint        stream0;        // unused (16) | stream0 address (16)
     uint        stream0Offset;  // stream0 offset (might need more than 16 bits because of skinning)
     uint        misc;           // unused (16) | format (8) | unused (8)
+    float       taper;          // Top/Bottom ratio for tapered shapes
 
     #ifdef __cplusplus
     DebugDrawRootConstants3D() :
         world(float4x4::identity()),
         color(float4(1,1,1,1)),
         stream0(0x0000FFFF),
-        stream0Offset(0)
+        stream0Offset(0),
+        taper(1.0f)
     {
 
     }
@@ -40,6 +42,16 @@ struct DebugDrawRootConstants3D
     float4 getColor()
     {
         return color;
+    }
+
+    void setTaper(float _taper)
+    {
+       taper = _taper;
+    }
+    
+    float getTaper()
+    {
+        return taper;
     }
 
     void setBufferHandle(uint _stream0, uint _offset = 0)

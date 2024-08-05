@@ -135,6 +135,8 @@ namespace vg::engine
 
             if (m_shapeDesc)
             {
+                VG_ASSERT(m_shapeDesc->GetShapeType() == m_shapeType);
+
                 if (previousOriginalUID)
                     m_shapeDesc->SetOriginalUID(previousOriginalUID);
             }

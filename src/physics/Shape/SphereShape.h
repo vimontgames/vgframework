@@ -9,7 +9,7 @@ namespace vg::physics
         VG_CLASS_DECL_PASSTHROUGH(SphereShapeDesc, ShapeDesc);
         ShapeType GetShapeType() const final override { return ShapeType::Sphere; }
         bool TryGetAABB(core::AABB & _aabb) const final override;
-        float m_radius = 1.0f;
+        float m_radius = 0.5f;
     };
 
     class SphereShape : public Shape
@@ -20,6 +20,6 @@ namespace vg::physics
         SphereShape(const SphereShapeDesc & _desc);
         ShapeType GetShapeType() const final override { return ShapeType::Sphere; }
         void Draw(const core::IWorld * _world, const core::float4x4 & _matrix) final override;
-        float m_radius = 0.0f;
+        float m_radius = 0.5f;
     };
 }

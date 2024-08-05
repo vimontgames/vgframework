@@ -67,7 +67,7 @@ namespace vg::physics
         // TODO : compute bounding "radius" from other primitives than capsule?
         CapsuleShape * capsuleShape = dynamic_cast<CapsuleShape *>(_shape);
         VG_ASSERT(capsuleShape);
-        settings.mSupportingVolume = JPH::Plane(getJoltVec3(float3(0, 0, 1)), -capsuleShape->m_radius); // Accept contacts that touch the lower sphere of the capsule
+        settings.mSupportingVolume = JPH::Plane(getJoltVec3(float3(0, 0, 1)), -capsuleShape->m_bottomRadius); // Accept contacts that touch the lower sphere of the capsule
 
         #pragma push_macro("new")
         #undef new

@@ -680,6 +680,28 @@ namespace vg::renderer
 
         cylinder.world = mul(scale, _matrix);
         cylinder.color = _color;
+        cylinder.taper = 1.0f;
+    }
+
+    //--------------------------------------------------------------------------------------
+    void DebugDraw::AddTaperedCylinder(const core::IWorld * _world, float _topRadius, float _bottomRadius, float _height, core::u32 _color, const core::float4x4 _matrix)
+    {
+        DebugDrawCylinderData & cylinder = getWorldData(_world)->m_cylinders.push_empty();
+
+        float radius = _bottomRadius;
+        float3 s = float3(radius, radius, _height * 0.5f);
+
+        const float4x4 scale = float4x4
+        (
+            s.x,   0,   0, 0,
+              0, s.y,   0, 0,
+              0,   0, s.z, 0,
+              0,   0,   0, 1 
+        );
+
+        cylinder.world = mul(scale, _matrix);
+        cylinder.color = _color;
+        cylinder.taper = _topRadius / _bottomRadius;
     }
 
     //--------------------------------------------------------------------------------------
@@ -697,6 +719,23 @@ namespace vg::renderer
         bottomHemi[2].xyz *= -1.0f;
         bottomHemi[3].xyz = float3(0, 0, -0.5f * offset);
         AddHemisphere(_world, _radius, _color, mul(bottomHemi, _matrix));
+    }
+
+    //--------------------------------------------------------------------------------------
+    void DebugDraw::AddTaperedCapsule(const core::IWorld * _world, float _topRadius, float _bottomRadius, float _height, core::u32 _color, const core::float4x4 _matrix)
+    {
+        float offset = max(0.0f, _height - (_topRadius + _bottomRadius));
+
+        float4x4 topHemi = float4x4::identity();
+        topHemi[3].xyz = float3(0, 0, 0.5f * offset);
+        AddHemisphere(_world, _topRadius, _color, mul(topHemi, _matrix));
+
+        AddTaperedCylinder(_world, _topRadius, _bottomRadius, offset, _color, _matrix);
+
+        float4x4 bottomHemi = float4x4::identity();
+        bottomHemi[2].xyz *= -1.0f;
+        bottomHemi[3].xyz = float3(0, 0, -0.5f * offset);
+        AddHemisphere(_world, _bottomRadius, _color, mul(bottomHemi, _matrix));
     }
 
     //--------------------------------------------------------------------------------------
@@ -725,37 +764,6 @@ namespace vg::renderer
                 worldData->m_cylinders.clear();
             }
         }
-
-        //set<IWorld *> worlds;
-        //for (uint j = 0; j < core::enumCount<gfx::ViewTarget>(); ++j)
-        //{
-        //    auto target = (gfx::ViewTarget)j;
-        //    auto & views = renderer->GetViews(target);
-        //    for (uint i = 0; i < views.count(); ++i)
-        //    {
-        //        auto * view = views[i];
-        //        if (view->IsVisible())
-        //        {
-        //            if (auto * world = view->GetWorld())
-        //                worlds.insert(world);
-        //        }
-        //    }
-        //}
-        //
-        //for (auto * world : worlds)
-        //{
-        //    auto * worldData = (WorldData *)world->GetDebugDrawData();
-        //
-        //    if (worldData)
-        //    {
-        //        worldData->m_lines.clear();
-        //        worldData->m_icoSpheres.clear();
-        //        worldData->m_hemiSpheres.clear();
-        //        worldData->m_cylinders.clear();
-        //    }
-        //}
-
-
     }
 
     //--------------------------------------------------------------------------------------
@@ -825,34 +833,6 @@ namespace vg::renderer
                         lineCount++;
                     }
                 }
-
-                //for (uint i = 0; i < m_wireframeBoxes.size(); ++i)
-                //{
-                //    VG_ASSERT(offset + 12 * sizeof(DebugDrawVertex) < m_debugDrawVBSize);
-                //    
-                //    if (offset + 12 * sizeof(DebugDrawVertex) < m_debugDrawVBSize)
-                //    {
-                //        const auto & box = m_wireframeBoxes[i];
-                //    
-                //        DebugDrawVertex * v0 = ((DebugDrawVertex *)(dbgDrawData + offset));
-                //        float3 pos0 = float3(box.minPos.x, box.minPos.y, box.minPos.z);
-                //        memcpy(v0->pos, &pos0, sizeof(float) * 3);
-                //        v0->color = box.color;
-                //        offset += sizeof(DebugDrawVertex);
-                //    
-                //        DebugDrawVertex * v1 = ((DebugDrawVertex *)(dbgDrawData + offset));
-                //        float3 pos1 = float3(box.maxPos.x, box.minPos.y, box.minPos.z);
-                //        memcpy(v1->pos, &pos1, sizeof(float) * 3);
-                //        v1->color = box.color;
-                //        offset += sizeof(DebugDrawVertex);
-                //    
-                //        DebugDrawVertex * v2 = ((DebugDrawVertex *)(dbgDrawData + offset));
-                //        float3 pos2 = float3(box.minPos.x, box.minPos.y, box.minPos.z);
-                //        memcpy(v1->pos, &pos1, sizeof(float) * 3);
-                //        v1->color = box.color;
-                //        offset += sizeof(DebugDrawVertex);
-                //    }
-                //}
             }
             _cmdList->unmap(drawData.m_debugDrawVB);
         }
@@ -946,7 +926,7 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    void DebugDraw::drawDebugModelInstances(gfx::CommandList * _cmdList, const MeshGeometry * _geometry, const core::vector<DebugDrawInstanceData> & _instances)
+    template <typename T> void DebugDraw::drawDebugModelInstances(gfx::CommandList * _cmdList, const MeshGeometry * _geometry, const core::vector<T> & _instances)
     {
         VG_PROFILE_GPU("DebugDrawSpheres");
 
@@ -975,11 +955,12 @@ namespace vg::renderer
 
             for (uint i = 0; i < _instances.size(); ++i)
             {
-                const DebugDrawIcoSphereData & sphere = _instances[i];
-                float4 color = unpackRGBA8(sphere.color) * transparentColor;
+                const T & instance = _instances[i];
+                float4 color = unpackRGBA8(instance.color) * transparentColor;
 
-                debugDraw3D.setWorldMatrix(transpose(sphere.world));
+                debugDraw3D.setWorldMatrix(transpose(instance.world));
                 debugDraw3D.setColor(color);
+                debugDraw3D.setTaper(instance.getTaper());
                 _cmdList->setGraphicRootConstants(0, (u32 *)&debugDraw3D, DebugDrawRootConstants3DCount);
                 _cmdList->drawIndexed(indexCount);
             }
@@ -995,11 +976,12 @@ namespace vg::renderer
 
             for (uint i = 0; i < _instances.size(); ++i)
             {
-                const DebugDrawIcoSphereData & sphere = _instances[i];
-                float4 color = unpackRGBA8(sphere.color) * opaqueColor;
+                const T & instance = _instances[i];
+                float4 color = unpackRGBA8(instance.color) * opaqueColor;
 
-                debugDraw3D.setWorldMatrix(transpose(sphere.world));
+                debugDraw3D.setWorldMatrix(transpose(instance.world));
                 debugDraw3D.setColor(color);
+                debugDraw3D.setTaper(instance.getTaper());
                 _cmdList->setGraphicRootConstants(0, (u32 *)&debugDraw3D, DebugDrawRootConstants3DCount);
                 _cmdList->drawIndexed(indexCount);
             }

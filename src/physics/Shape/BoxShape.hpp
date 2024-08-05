@@ -40,18 +40,18 @@ namespace vg::physics
     {
         JPH::Vec3 halfSize = JPH::Vec3(m_size.x * 0.5f, m_size.y * 0.5f, m_size.z * 0.5f);
 
-        if (abs(halfSize.GetX()) < 0.01f)
-            halfSize.SetX(signnz(halfSize.GetX()) * 0.01f);
+        if (abs(halfSize.GetX()) < shapeEps)
+            halfSize.SetX(signnz(halfSize.GetX()) * shapeEps);
 
-        if (abs(halfSize.GetY()) < 0.01f)
-            halfSize.SetY(signnz(halfSize.GetY()) * 0.01f);
+        if (abs(halfSize.GetY()) < shapeEps)
+            halfSize.SetY(signnz(halfSize.GetY()) * shapeEps);
 
-        if (abs(halfSize.GetZ()) < 0.01f)
-            halfSize.SetZ(signnz(halfSize.GetZ()) * 0.01f);
+        if (abs(halfSize.GetZ()) < shapeEps)
+            halfSize.SetZ(signnz(halfSize.GetZ()) * shapeEps);
 
         #pragma push_macro("new")
         #undef new
-        auto shape = new JPH::BoxShape(halfSize, 0.01f);
+        auto shape = new JPH::BoxShape(halfSize, shapeEps);
         #pragma pop_macro("new")
 
         #pragma push_macro("new")

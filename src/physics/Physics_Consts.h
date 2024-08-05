@@ -17,6 +17,9 @@ namespace vg::physics
         core::uint maxPhysicsBarriers = 8;
     };
 
+    // Minimum dimension for physics shape
+    const float shapeEps = 0.0001f;
+
     // Layer that objects can be in, determines which other objects it can collide with
     // Typically you at least want to have 1 layer for moving bodies and 1 layer for static bodies, but you can have more
     // layers if you want. E.g. you could have a layer for high detail collision (which is not used by the physics simulation
@@ -50,7 +53,6 @@ namespace vg::physics
         Sphere = 0,
         Box,
         Capsule,
-        //TaperedCapsule,
         //Cylinder,
         //ConvexHull,
         //Compound,
@@ -63,7 +65,6 @@ namespace vg::physics
         Sphere          = 1 << (core::u32)ShapeType::Sphere,
         Box             = 1 << (core::u32)ShapeType::Box,
         Capsule         = 1 << (core::u32)ShapeType::Capsule,
-        //TaperedCapsule  = 1 << (core::u32)ShapeType::TaperedCapsule,
         //Cylinder        = 1 << (core::u32)ShapeType::Cylinder,
         //ConvexHull      = 1 << (core::u32)ShapeType::ConvexHull,
         //Compound        = 1 << (core::u32)ShapeType::Compound,
