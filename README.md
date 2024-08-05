@@ -26,6 +26,21 @@ Its renderer only uses modern graphics APIs like DirectX12 and Vulkan (I would a
 
 # changelog
 
+## 0.30 
+
+### Physics
+Split "Rigid Body" component into separate "Body" and "Shape" components\
+Physics shapes now support rotation\
+Added 2 new shapes: TaperedCapsule and Cylinder
+
+### Animation
+AttachToNode component to link object matrix to animation node\
+Reset animation state when engine stops
+
+### Misc
+MaxDT and moved timing settings to engine options\
+Expose CullMode in materials
+
 ## 0.29 
 Override Prefab properties\
 Fix editor crash closing Prefab view\
