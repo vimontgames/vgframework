@@ -18,8 +18,34 @@ namespace vg::physics
     bool ShapeDesc::registerProperties(IClassDesc & _desc)
     {
         super::registerProperties(_desc);
+
+        registerPropertyEx(ShapeDesc, m_rotation, "Rotate", IProperty::Flags::EulerAngle);
+        setPropertyDescription(ShapeDesc, m_rotation, "Euler ZYX rotation angles");
+
         registerProperty(ShapeDesc, m_offset, "Offset");
+        setPropertyDescription(ShapeDesc, m_rotation, "Translation offset");
+
         return true;
+    }
+
+    //--------------------------------------------------------------------------------------
+    core::float3 ShapeDesc::getTranslation() const
+    {
+        return m_offset;
+    }
+
+    //--------------------------------------------------------------------------------------
+    core::quaternion ShapeDesc::getRotation() const
+    {
+        return quaternion::rotation_euler_zxy(m_rotation * (float3)(PI/180.0f));
+    }
+
+    //--------------------------------------------------------------------------------------
+    core::float4x4 ShapeDesc::getMatrix() const
+    {
+        float4x4 m = float4x4(getRotation());
+        m[3].xyz = getTranslation();
+        return m;
     }
 
     //--------------------------------------------------------------------------------------

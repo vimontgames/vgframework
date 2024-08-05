@@ -30,13 +30,14 @@
 #include "Jolt/Physics/Character/Character.h"
 #include "Jolt/Physics/Body/BodyID.h"
 #include "Jolt/Core/JobSystemWithBarrier.h"
-#include <Jolt/RegisterTypes.h>
-#include <Jolt/Core/Factory.h>
+#include "Jolt/RegisterTypes.h"
+#include "Jolt/Core/Factory.h"
 #include <Jolt/Physics/Body/BodyManager.h>
 #include "Jolt/Physics/Collision/Shape/StaticCompoundShape.h"
 #include "Jolt/Physics/Collision/Shape/RotatedTranslatedShape.h"
 #include "Jolt/Physics/Collision/Shape/BoxShape.h"
 #include "Jolt/Physics/Collision/Shape/SphereShape.h"
 #include "Jolt/Physics/Collision/Shape/CapsuleShape.h"
+#include "Physics/Helper.h"
 
 #pragma pop_macro("new")

@@ -1,7 +1,6 @@
 #include "physics/Precomp.h"
 #include "Body.h"
 #include "physics/Physics.h"
-#include "physics/Helper.h"
 #include "physics/Shape/Shape.h"
 #include "core/Math/Math.h"
 #include "physics/PhysicsWorld.h"

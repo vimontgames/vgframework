@@ -305,6 +305,18 @@ namespace vg::editor
 
         if (edited)
         {
+            if (asBool(IProperty::Flags::EulerAngle & flags))
+            {
+                for (uint i = 0; i < count; ++i)
+                {
+                    S & val = temp[i];
+                    while (val < -180)
+                        val += 180;
+                    while (val > 180)
+                        val -= 180;
+                }
+            }
+
             if (storeProperty((T *)_ptr, vectorTraits<T>::makeVector(temp), _object, _prop, _propContext))
                 return true;
         }
@@ -632,6 +644,11 @@ namespace vg::editor
     //--------------------------------------------------------------------------------------
     float ImGuiWindow::getDragSpeedFloat(const IProperty * _prop) 
     {
+        const auto flags = _prop->getFlags();
+
+        if (asBool(IProperty::Flags::EulerAngle & flags))
+            return 5.0f;
+
         //if (asBool(IProperty::Flags::HasRange & _prop->getFlags()))
         //    return (_prop->getRange().y - _prop->getRange().x) / 1000.0f;
         //else

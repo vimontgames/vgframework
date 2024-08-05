@@ -53,10 +53,10 @@ namespace vg::physics
 
         #pragma push_macro("new")
         #undef new
-        m_shape = new JPH::RotatedTranslatedShape(JPH::Vec3(_desc.m_offset.x, _desc.m_offset.y, _desc.m_offset.z), JPH::Quat::sRotation(JPH::Vec3(1, 0, 0), PI / 2.0f), shape);
+        m_shape = new JPH::RotatedTranslatedShape(getJoltVec3(_desc.getTranslation()), getJoltQuaternion(_desc.getRotation()) * JPH::Quat::sRotation(JPH::Vec3(1, 0, 0), PI / 2.0f), shape);
         #pragma pop_macro("new")
 
-        m_transform[3].xyz = _desc.m_offset;
+        m_transform = _desc.getMatrix();
         m_shape->AddRef();
     }
 

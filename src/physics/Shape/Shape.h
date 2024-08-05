@@ -19,12 +19,17 @@ namespace vg::physics
     public:
         VG_CLASS_DECL_PASSTHROUGH(ShapeDesc, IShapeDesc);
 
-        virtual ShapeType GetShapeType() const = 0;
+        virtual ShapeType       GetShapeType    () const = 0;
+
+        core::float3            getTranslation  () const;
+        core::quaternion        getRotation     () const;
+        core::float4x4          getMatrix       () const;
 
     protected:
-        renderer::IDebugDraw * getDebugDraw() const;
+        renderer::IDebugDraw *  getDebugDraw    () const;
 
     public:
+        core::float3 m_rotation = core::float3(0,0,0);
         core::float3 m_offset = core::float3(0, 0, 0);
     };
 

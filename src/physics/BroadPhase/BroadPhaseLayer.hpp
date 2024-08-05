@@ -1,5 +1,4 @@
 #include "BroadPhaseLayer.h"
-#include "physics/Helper.h"
 
 namespace vg::physics
 {

@@ -4,7 +4,6 @@
 #include "Shape/SphereShape.h"
 #include "Shape/BoxShape.h"
 #include "Shape/CapsuleShape.h"
-#include "Helper.h"
 #include "Body/Body.h"
 #include "Character/Character.h"
 #include "Options/PhysicsOptions.h"

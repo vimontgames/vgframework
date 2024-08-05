@@ -98,6 +98,7 @@ namespace vg::core
             HDR             = 0x0000000000004000,   // HDR value for color
             NotVisible      = 0x0000000000008000,   // A property that is not visible
             Hexadecimal     = 0x0000000000010000,   // Display value using hexadecimal
+            EulerAngle      = 0x0000000000020000,   // Edited value is Euler angle
         };
 
         virtual void                            setInterface                    (const char * _interface) = 0;
