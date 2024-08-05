@@ -41,6 +41,8 @@ Reset animation state when engine stops
 MaxDT and moved timing settings to engine options\
 Expose CullMode in materials
 
+![Screenshot](doc/img/0.30.jpg)
+
 ## 0.29 
 Override Prefab properties\
 Fix editor crash closing Prefab view\
@@ -48,8 +50,6 @@ Components can reference other GameObjects using UID\
 UICanvasComponent, UITextComponent, andUIImageComponent\
 Update JoltPhysics to 5.0.0\
 Update Visual Studio 17.10.3
-
-![Screenshot](doc/img/0.29.jpg)
 
 ## 0.28 
 Reverse Z-Buffer\
@@ -74,8 +74,6 @@ Forbid deleting or adding siblings to root node\
 Better leak tracking with __FILE__ and __LINE__ + Fix rare memory leak in animation loading\
 Update WinPixEventRuntime 1.0.231030001
 
-![Screenshot](doc/img/0.26.png)
-
 ## 0.25 
 Fix an issue with **CountLeadingZeroes** that could return a different result depending on CPU used\
 Jolt no more uses **AVX2** to allow running on older hardware\
@@ -89,8 +87,6 @@ Read instance color and texture from GPUInstanceData and GPUMaterialData\
 Improve BLAS management\
 Transparent pass\
 Lock-free multithreaded debug display
-
-![Screenshot](doc/img/0.24.png)
 
 ## 0.23
 Directional and spot lights with Raytraced (hard) shadows
