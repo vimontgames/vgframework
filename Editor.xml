@@ -1,6 +1,7 @@
 <Root>
     <Object class="EditorOptions">
-        <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="0"/>
+        <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="3465924071"/>
+        <Property type="Uint32" name="m_originalUID" flags="Debug|Hexadecimal" value="0"/>
         <Property type="String" name="m_name" flags="NotVisible" value="Editor Options"/>
         <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
         <Property type="EnumU8" name="m_theme" value="VimontGames_Dark"/>

@@ -53,6 +53,7 @@ namespace vg::core
 
 		UID							GetUID				(bool _mustBeValid = true) const final override;
 		void						SetUID				(UID _uid) override;
+		bool						CanCopyUID			() const override { return false; }
 
        UID							GetOriginalUID		(bool _mustBeValid = true) const final override;
        void							SetOriginalUID		(UID _uid) final override;

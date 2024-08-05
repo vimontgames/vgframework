@@ -36,7 +36,8 @@ namespace vg::core
         virtual bool                        HasValidUID         () const = 0;
 
         virtual UID                         GetUID              (bool _mustBeValid = true) const = 0;
-        virtual void						SetUID              (UID _uid) = 0;
+        virtual void                        SetUID              (UID _uid) = 0;
+        virtual bool                        CanCopyUID          () const = 0;
 
         virtual UID                         GetOriginalUID      (bool _mustBeValid = true) const = 0;
         virtual void						SetOriginalUID      (UID _uid) = 0;

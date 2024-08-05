@@ -9,18 +9,16 @@ namespace vg::core
     {
         super::registerProperties(_desc);
 
-        //registerProperty(DynamicPropertyList, m_uid, "UID");
-        //registerProperty(DynamicPropertyList, m_name, "Name");
-
         registerPropertyObjectPtrVector(DynamicPropertyList, m_properties, "Properties");
 
         return true;
     }
 
     //--------------------------------------------------------------------------------------
-    DynamicPropertyList::DynamicPropertyList(const core::string & _name, core::IObject * _parent)
+    DynamicPropertyList::DynamicPropertyList(const core::string & _name, core::IObject * _parent) :
+        super(_name, _parent)
     {
-
+        
     }
 
     //--------------------------------------------------------------------------------------
@@ -49,16 +47,6 @@ namespace vg::core
                 return prop;
             }
         }
-
-        //for (uint i = 0; i < m_properties.size(); ++i)
-        //{
-        //    const auto & prop = m_properties[i];
-        //
-        //    if (prop->getType() == IProperty::Type::Resource)
-        //    {
-        //
-        //    }
-        //}
 
         return nullptr;
     }

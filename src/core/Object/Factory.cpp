@@ -441,17 +441,29 @@ namespace vg::core
 
         if (!strcmp(_srcProp->getName(), "m_uid"))
         {
+            // In case of DynamicPropertyList the UID must be copied (TODO: use explicit member for different usage?)
+            const bool canCopyUID = _srcObj->CanCopyUID();
+
             if (_srcObj->HasValidUID())
             {
-                _dstObj->SetOriginalUID(_srcObj->GetUID());
-                _dstObj->RegisterUID();
+                if (!canCopyUID)
+                {
+                    if (_srcObj->GetOriginalUID(false)) // equivalent to HasValidOriginalUID
+                        _dstObj->SetOriginalUID(_srcObj->GetOriginalUID());
+                    else
+                        _dstObj->SetOriginalUID(_srcObj->GetUID());
+
+                    _dstObj->RegisterUID();
+                }
             }
-            return true;
+
+            if (!canCopyUID)
+                return true;
         }
         else if(!strcmp(_srcProp->getName(), "m_originalUID"))
         {
             return false;
-        }
+        } 
 
         switch (srcPropType)
         {

@@ -105,6 +105,7 @@ namespace vg::engine
         // TODO : dedicated ctor?
         newPropList = new DynamicPropertyList(_object->getName(), nullptr);
         newPropList->SetUID(_object->GetOriginalUID());
+        newPropList->SetOriginalUID(0x0);
         newPropList->setName(_object->getName());
         
         return newPropList;
