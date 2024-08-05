@@ -53,9 +53,8 @@ namespace vg::physics
         Sphere = 0,
         Box,
         Capsule,
-        //Cylinder,
+        Cylinder,
         //ConvexHull,
-        //Compound,
         //TriangleMesh,
         //HeightField
     };
@@ -65,9 +64,8 @@ namespace vg::physics
         Sphere          = 1 << (core::u32)ShapeType::Sphere,
         Box             = 1 << (core::u32)ShapeType::Box,
         Capsule         = 1 << (core::u32)ShapeType::Capsule,
-        //Cylinder        = 1 << (core::u32)ShapeType::Cylinder,
+        Cylinder        = 1 << (core::u32)ShapeType::Cylinder,
         //ConvexHull      = 1 << (core::u32)ShapeType::ConvexHull,
-        //Compound        = 1 << (core::u32)ShapeType::Compound,
         //TriangleMesh    = 1 << (core::u32)ShapeType::TriangleMesh,
         //HeightField     = 1 << (core::u32)ShapeType::HeightField
     };

@@ -131,6 +131,10 @@ namespace vg::engine
                 case physics::ShapeType::Capsule:
                     m_shapeDesc = (physics::IShapeDesc *)factory->createObject("CapsuleShapeDesc", "", this);
                     break;
+
+                case physics::ShapeType::Cylinder:
+                    m_shapeDesc = (physics::IShapeDesc *)factory->createObject("CylinderShapeDesc", "", this);
+                    break;
             }
 
             if (m_shapeDesc)

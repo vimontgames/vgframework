@@ -4,6 +4,7 @@
 #include "Shape/SphereShape.h"
 #include "Shape/BoxShape.h"
 #include "Shape/CapsuleShape.h"
+#include "Shape/CylinderShape.h"
 #include "Body/Body.h"
 #include "Character/Character.h"
 #include "Options/PhysicsOptions.h"
@@ -282,6 +283,10 @@ namespace vg::physics
 
                 case ShapeType::Capsule:
                     shape = new CapsuleShape(*(const CapsuleShapeDesc *)_shapeDesc);
+                    break;
+
+                case ShapeType::Cylinder:
+                    shape = new CylinderShape(*(const CylinderShapeDesc *)_shapeDesc);
                     break;
             }
 

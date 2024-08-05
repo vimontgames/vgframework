@@ -9,6 +9,7 @@
 #include "SphereShape.hpp"
 #include "BoxShape.hpp"
 #include "CapsuleShape.hpp"
+#include "CylinderShape.hpp"
 
 namespace vg::physics
 {

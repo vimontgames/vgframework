@@ -39,6 +39,7 @@
 #include "Jolt/Physics/Collision/Shape/SphereShape.h"
 #include "Jolt/Physics/Collision/Shape/CapsuleShape.h"
 #include "Jolt/Physics/Collision/Shape/TaperedCapsuleShape.h"
+#include "Jolt/Physics/Collision/Shape/CylinderShape.h"
 #include "Physics/Helper.h"
 
 #pragma pop_macro("new")

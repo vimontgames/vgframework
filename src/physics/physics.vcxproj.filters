@@ -113,6 +113,12 @@
     <ClInclude Include="Contact\ContactListener.h">
       <Filter>Contact</Filter>
     </ClInclude>
+    <ClInclude Include="Shape\CylinderShape.h">
+      <Filter>Shape</Filter>
+    </ClInclude>
+    <ClInclude Include="Shape\CylinderShape.hpp">
+      <Filter>Shape</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="JobSystem">
