@@ -56,7 +56,7 @@ namespace vg::physics
         #undef new
         if (_desc.m_tapered && m_topRadius != m_bottomRadius)
         {
-            if (max(m_topRadius, m_bottomRadius) >= 2.0f * height + min(m_topRadius, m_bottomRadius))
+            if (max(m_topRadius, m_bottomRadius) >= height + min(m_topRadius, m_bottomRadius))
             {
                 // One sphere embedded in other sphere, using sphere shape instead
                 shape = new JPH::SphereShape(max(shapeEps, max(m_topRadius, m_bottomRadius)));
