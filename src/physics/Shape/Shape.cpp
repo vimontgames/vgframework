@@ -11,6 +11,8 @@
 #include "CapsuleShape.hpp"
 #include "CylinderShape.hpp"
 
+using namespace vg::core;
+
 namespace vg::physics
 {
     //--------------------------------------------------------------------------------------
@@ -30,15 +32,25 @@ namespace vg::physics
     }
 
     //--------------------------------------------------------------------------------------
-    core::float3 ShapeDesc::getTranslation() const
+    float3 ShapeDesc::getTranslation() const
     {
         return m_offset;
     }
 
     //--------------------------------------------------------------------------------------
-    core::quaternion ShapeDesc::getRotation() const
+    quaternion ShapeDesc::getRotation() const
     {
-        return quaternion::rotation_euler_zxy(m_rotation * (float3)(PI/180.0f));
+        quaternion quat;
+
+        quat = quaternion::rotation_euler_zxy(m_rotation * (float3)(PI / 180.0f));
+
+        const float4 eps = (float4)0.0001f;
+
+        quat.xyzw = select(abs(quat.xyzw - 0) <= eps, (float4) 0, quat.xyzw);
+        quat.xyzw = select(abs(quat.xyzw - 1) <= eps, (float4)+1, quat.xyzw);
+        quat.xyzw = select(abs(quat.xyzw + 1) <= eps, (float4)-1, quat.xyzw);
+
+        return quat;
     }
 
     //--------------------------------------------------------------------------------------

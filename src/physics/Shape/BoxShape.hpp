@@ -12,6 +12,7 @@ namespace vg::physics
         super::registerProperties(_desc);
 
         registerProperty(BoxShapeDesc, m_size, "Size");
+        setPropertyRange(BoxShapeDesc, m_size, float2(0, 100));
         setPropertyDescription(BoxShapeDesc, m_size, "Box size");
 
         return true;
