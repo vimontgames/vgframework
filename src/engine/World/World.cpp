@@ -23,9 +23,7 @@ namespace vg::engine
     World::World(const string & _name, IObject * _parent) :
         IWorld(_name, _parent),
         m_isPlaying(false),
-        m_isPaused(false),
-        m_isFixedDT(false),
-        m_timeScale(1.0f)
+        m_isPaused(false)
     {
         for (uint j = 0; j < enumCount<BaseSceneType>(); ++j)
             m_activeScene[j] = nullptr;
@@ -208,18 +206,6 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
-    void World::SetTimeScale(float _timeScale)
-    {
-        setTimeScale(_timeScale);
-    }
-
-    //--------------------------------------------------------------------------------------
-    float World::GetTimeScale(bool _ignorePause) const
-    {
-        return getTimeScale(_ignorePause);
-    }
-
-    //--------------------------------------------------------------------------------------
     void World::Play()
     {
         play();
@@ -308,17 +294,5 @@ namespace vg::engine
                 }
             }
         }
-    }
-
-    //--------------------------------------------------------------------------------------
-    bool World::IsUsingFixedDeltaTime() const
-    {
-        return m_isFixedDT;
-    }
-
-    //--------------------------------------------------------------------------------------
-    void World::SetUseFixedDeltaTime(bool _fixedDeltaTime)
-    {
-        m_isFixedDT = _fixedDeltaTime;
     }
 }

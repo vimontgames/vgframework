@@ -12,6 +12,7 @@
 #include "core/Scheduler/Scheduler.h"
 #include "core/Object/Factory.h"
 #include "core/GameObject/GameObject.h"
+#include "core/Math/Math.h"
 
 #include "gfx/IView.h"
 #include "gfx/IDevice.h"
@@ -603,18 +604,42 @@ namespace vg::engine
         if (previous != 0)
             m_time.m_realDeltaTime = (float)(Timer::getEnlapsedTime(previous, current) * 0.001f); // use _dt in seconds for computations, not milliseconds
 
-        auto * mainWorld = GetMainWorld();
-        if (mainWorld && mainWorld->IsPlaying())
-        {
-            if (mainWorld->IsUsingFixedDeltaTime())
-                m_time.m_scaledDeltaTime = 1.0f / 144.0f;   // TODO: use real freq or custom?
-            else
-                m_time.m_scaledDeltaTime = m_time.m_realDeltaTime * mainWorld->GetTimeScale();
-        }
-        else
-            m_time.m_scaledDeltaTime = 0.0f;
+        auto * engineOptions = GetOptions();
 
-        previous = current;
+        if (auto * mainWorld = GetMainWorld())
+        {
+            if (mainWorld->IsPlaying())
+            {
+                float fixedDT;
+                if (engineOptions->TryGetFixedDT(fixedDT))
+                {
+                    m_time.m_scaledDeltaTime = fixedDT / 1000.0f;
+                }
+                else
+                {
+                    if (mainWorld->IsPaused())
+                    {
+                        m_time.m_scaledDeltaTime = 0.0f;
+                    }
+                    else
+                    {
+                        float timescale = 1.0f;
+                        if (engineOptions->TryGetTimeScale(timescale))
+                            m_time.m_scaledDeltaTime = m_time.m_realDeltaTime * timescale;
+                        else
+                            m_time.m_scaledDeltaTime = m_time.m_realDeltaTime;
+                    }
+                }
+            }
+            else
+                m_time.m_scaledDeltaTime = 0.0f;
+
+            float maxDT;
+            if (engineOptions->TryGetMaxDT(maxDT))
+                m_time.m_scaledDeltaTime = min(m_time.m_scaledDeltaTime, maxDT / 1000.0f);
+
+            previous = current;
+        }
     }
 
     //--------------------------------------------------------------------------------------

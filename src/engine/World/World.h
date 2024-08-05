@@ -20,15 +20,11 @@ namespace vg::engine
 
         bool                                IsPlaying               () const final override;
         bool                                IsPaused                () const final override;
-        void                                SetTimeScale            (float _timeScale) final override;
-        float                               GetTimeScale            (bool _ignorePause = false) const final override;
+
         void                                Play                    () final override;
         void                                Stop                    () final override;
         void                                Pause                   () final override;
         void                                Resume                  () final override;
-
-        bool                                IsUsingFixedDeltaTime   () const final override;
-        void                                SetUseFixedDeltaTime    (bool _fixedDeltaTime) final override;
 
         bool                                SetActiveScene          (core::IBaseScene * _scene, core::BaseSceneType _sceneType) final override;
         core::IBaseScene *                  GetActiveScene          (core::BaseSceneType _sceneType) const final override;
@@ -64,8 +60,7 @@ namespace vg::engine
     private:
         bool                                m_isPlaying     : 1;
         bool                                m_isPaused      : 1;
-        bool                                m_isFixedDT     : 1;
-        float                               m_timeScale;
+
         core::IBaseScene *                  m_activeScene[core::enumCount<core::BaseSceneType>()];
         core::vector<core::IBaseScene *>    m_scenes[core::enumCount<core::BaseSceneType>()];
         core::IDebugDrawData *              m_debugDrawData = nullptr;

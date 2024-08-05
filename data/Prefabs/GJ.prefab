@@ -62,8 +62,11 @@
                                         <Property type="Uint32" name="m_originalUID" flags="Debug|Hexadecimal" value="0"/>
                                         <Property type="String" name="m_name" flags="NotVisible" value="CapsuleShapeDesc #8"/>
                                         <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
+                                        <Property type="Float3" name="m_rotation" flags="EulerAngle" x="0" y="0" z="0"/>
                                         <Property type="Float3" name="m_offset" x="0" y="0" z="0.875"/>
-                                        <Property type="Float" name="m_radius" flags="HasRange" value="0.5"/>
+                                        <Property type="Bool" name="m_tapered" flags="NotVisible" value="false"/>
+                                        <Property type="Float" name="m_topRadius" flags="HasRange|Optional" value="0.25"/>
+                                        <Property type="Float" name="m_bottomRadius" flags="HasRange" value="0.5"/>
                                         <Property type="Float" name="m_height" flags="HasRange" value="1.75"/>
                                     </Object>
                                 </Property>
@@ -94,7 +97,7 @@
                                                 <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
                                                 <Property type="String" name="m_resourcePath" flags="NotVisible" value="data/Animations/J_G/JG_Idle_1.fbx"/>
                                                 <Property type="Bool" name="m_play" value="false"/>
-                                                <Property type="Bool" name="m_loop" flags="SameLine" value="true"/>
+                                                <Property type="Bool" name="m_loop" flags="SingleLine" value="true"/>
                                                 <Property type="Float" name="m_speed" flags="HasRange" value="1"/>
                                             </Object>
                                             <Object class="AnimationResource">
@@ -104,7 +107,7 @@
                                                 <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
                                                 <Property type="String" name="m_resourcePath" flags="NotVisible" value="data/Animations/J_G/JG_Walking.fbx"/>
                                                 <Property type="Bool" name="m_play" value="false"/>
-                                                <Property type="Bool" name="m_loop" flags="SameLine" value="false"/>
+                                                <Property type="Bool" name="m_loop" flags="SingleLine" value="false"/>
                                                 <Property type="Float" name="m_speed" flags="HasRange" value="1"/>
                                             </Object>
                                             <Object class="AnimationResource">
@@ -114,7 +117,7 @@
                                                 <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
                                                 <Property type="String" name="m_resourcePath" flags="NotVisible" value="data/Animations/J_G/JG_Run_1.fbx"/>
                                                 <Property type="Bool" name="m_play" value="false"/>
-                                                <Property type="Bool" name="m_loop" flags="SameLine" value="false"/>
+                                                <Property type="Bool" name="m_loop" flags="SingleLine" value="false"/>
                                                 <Property type="Float" name="m_speed" flags="HasRange" value="1"/>
                                             </Object>
                                             <Object class="AnimationResource">
@@ -124,7 +127,7 @@
                                                 <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
                                                 <Property type="String" name="m_resourcePath" flags="NotVisible" value="data/Animations/J_G/JG_Jump.fbx"/>
                                                 <Property type="Bool" name="m_play" value="false"/>
-                                                <Property type="Bool" name="m_loop" flags="SameLine" value="false"/>
+                                                <Property type="Bool" name="m_loop" flags="SingleLine" value="false"/>
                                                 <Property type="Float" name="m_speed" flags="HasRange" value="0"/>
                                             </Object>
                                         </Property>
@@ -190,13 +193,32 @@
                                                 <Property type="String" name="m_name" flags="NotVisible" value="RigidBodyDesc #38"/>
                                                 <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
                                                 <Property type="Bool" name="m_trigger" value="true"/>
-                                                <Property type="Bool" name="m_softBody" flags="SameLine" value="false"/>
+                                                <Property type="Bool" name="m_softBody" value="false"/>
                                                 <Property type="EnumU16" name="m_layer" flags="ReadOnly" value="Moving"/>
                                                 <Property type="EnumU8" name="m_motion" flags="ReadOnly" value="Dynamic"/>
                                                 <Property type="Bool" name="m_overrideMass" flags="NotVisible" value="false"/>
                                                 <Property type="Float" name="m_mass" flags="Optional" value="0"/>
                                                 <Property type="Float" name="m_friction" flags="HasRange" value="0.5"/>
                                                 <Property type="Float" name="m_restitution" flags="HasRange" value="0"/>
+                                            </Object>
+                                        </Property>
+                                    </Object>
+                                    <Object class="PhysicsShapeComponent">
+                                        <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="0"/>
+                                        <Property type="Uint32" name="m_originalUID" flags="Debug|Hexadecimal" value="0"/>
+                                        <Property type="String" name="m_name" flags="NotVisible" value="New PhysicsShapeComponent"/>
+                                        <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value="Opened"/>
+                                        <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
+                                        <Property type="EnumU8" name="m_shapeType" value="Sphere"/>
+                                        <Property type="ObjectPtr" name="m_shapeDesc" flags="Flatten">
+                                            <Object class="SphereShapeDesc">
+                                                <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="0"/>
+                                                <Property type="Uint32" name="m_originalUID" flags="Debug|Hexadecimal" value="0"/>
+                                                <Property type="String" name="m_name" flags="NotVisible" value="SphereShapeDesc #2"/>
+                                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
+                                                <Property type="Float3" name="m_rotation" flags="EulerAngle" x="0" y="0" z="0"/>
+                                                <Property type="Float3" name="m_offset" x="0" y="0" z="0"/>
+                                                <Property type="Float" name="m_radius" flags="HasRange" value="0.2"/>
                                             </Object>
                                         </Property>
                                     </Object>
@@ -233,13 +255,32 @@
                                                 <Property type="String" name="m_name" flags="NotVisible" value="RigidBodyDesc #38"/>
                                                 <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
                                                 <Property type="Bool" name="m_trigger" value="true"/>
-                                                <Property type="Bool" name="m_softBody" flags="SameLine" value="false"/>
+                                                <Property type="Bool" name="m_softBody" value="false"/>
                                                 <Property type="EnumU16" name="m_layer" flags="ReadOnly" value="Moving"/>
                                                 <Property type="EnumU8" name="m_motion" flags="ReadOnly" value="Dynamic"/>
                                                 <Property type="Bool" name="m_overrideMass" flags="NotVisible" value="false"/>
                                                 <Property type="Float" name="m_mass" flags="Optional" value="0"/>
                                                 <Property type="Float" name="m_friction" flags="HasRange" value="0.5"/>
                                                 <Property type="Float" name="m_restitution" flags="HasRange" value="0"/>
+                                            </Object>
+                                        </Property>
+                                    </Object>
+                                    <Object class="PhysicsShapeComponent">
+                                        <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="0"/>
+                                        <Property type="Uint32" name="m_originalUID" flags="Debug|Hexadecimal" value="0"/>
+                                        <Property type="String" name="m_name" flags="NotVisible" value="New PhysicsShapeComponent"/>
+                                        <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value="Opened"/>
+                                        <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
+                                        <Property type="EnumU8" name="m_shapeType" value="Sphere"/>
+                                        <Property type="ObjectPtr" name="m_shapeDesc" flags="Flatten">
+                                            <Object class="SphereShapeDesc">
+                                                <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="0"/>
+                                                <Property type="Uint32" name="m_originalUID" flags="Debug|Hexadecimal" value="0"/>
+                                                <Property type="String" name="m_name" flags="NotVisible" value="SphereShapeDesc #3"/>
+                                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
+                                                <Property type="Float3" name="m_rotation" flags="EulerAngle" x="0" y="0" z="0"/>
+                                                <Property type="Float3" name="m_offset" x="0" y="0" z="0"/>
+                                                <Property type="Float" name="m_radius" flags="HasRange" value="0.2"/>
                                             </Object>
                                         </Property>
                                     </Object>

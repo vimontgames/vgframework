@@ -37,13 +37,54 @@
                                         <Property type="String" name="m_name" flags="NotVisible" value="RigidBodyDesc #8"/>
                                         <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
                                         <Property type="Bool" name="m_trigger" value="false"/>
-                                        <Property type="Bool" name="m_softBody" flags="SameLine" value="false"/>
+                                        <Property type="Bool" name="m_softBody" value="false"/>
                                         <Property type="EnumU16" name="m_layer" flags="ReadOnly" value="Moving"/>
                                         <Property type="EnumU8" name="m_motion" flags="ReadOnly" value="Dynamic"/>
                                         <Property type="Bool" name="m_overrideMass" flags="NotVisible" value="true"/>
                                         <Property type="Float" name="m_mass" flags="Optional" value="10"/>
                                         <Property type="Float" name="m_friction" flags="HasRange" value="0.69999999"/>
                                         <Property type="Float" name="m_restitution" flags="HasRange" value="0.30000001"/>
+                                    </Object>
+                                </Property>
+                            </Object>
+                            <Object class="PhysicsShapeComponent">
+                                <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="1714221937"/>
+                                <Property type="Uint32" name="m_originalUID" flags="Debug|Hexadecimal" value="0"/>
+                                <Property type="String" name="m_name" flags="NotVisible" value="New PhysicsShapeComponent"/>
+                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value="Opened"/>
+                                <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value=""/>
+                                <Property type="EnumU8" name="m_shapeType" value="Capsule"/>
+                                <Property type="ObjectPtr" name="m_shapeDesc" flags="Flatten">
+                                    <Object class="CapsuleShapeDesc">
+                                        <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="2314895532"/>
+                                        <Property type="Uint32" name="m_originalUID" flags="Debug|Hexadecimal" value="0"/>
+                                        <Property type="String" name="m_name" flags="NotVisible" value="CapsuleShapeDesc #12"/>
+                                        <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
+                                        <Property type="Float3" name="m_rotation" flags="EulerAngle" x="0" y="0" z="0"/>
+                                        <Property type="Float3" name="m_offset" x="0" y="0" z="0.32499999"/>
+                                        <Property type="Bool" name="m_tapered" flags="NotVisible" value="true"/>
+                                        <Property type="Float" name="m_topRadius" flags="HasRange|Optional" value="0.029999999"/>
+                                        <Property type="Float" name="m_bottomRadius" flags="HasRange" value="0.1"/>
+                                        <Property type="Float" name="m_height" flags="HasRange" value="0.44999999"/>
+                                    </Object>
+                                </Property>
+                            </Object>
+                            <Object class="PhysicsShapeComponent">
+                                <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="3197665244"/>
+                                <Property type="Uint32" name="m_originalUID" flags="Debug|Hexadecimal" value="0"/>
+                                <Property type="String" name="m_name" flags="NotVisible" value="New PhysicsShapeComponent"/>
+                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value="Opened"/>
+                                <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
+                                <Property type="EnumU8" name="m_shapeType" value="Box"/>
+                                <Property type="ObjectPtr" name="m_shapeDesc" flags="Flatten">
+                                    <Object class="BoxShapeDesc">
+                                        <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="2931033800"/>
+                                        <Property type="Uint32" name="m_originalUID" flags="Debug|Hexadecimal" value="0"/>
+                                        <Property type="String" name="m_name" flags="NotVisible" value="BoxShapeDesc #78"/>
+                                        <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
+                                        <Property type="Float3" name="m_rotation" flags="EulerAngle" x="0" y="0" z="0"/>
+                                        <Property type="Float3" name="m_offset" x="0" y="0" z="0.25"/>
+                                        <Property type="Float3" name="m_size" x="0.40000001" y="0.40000001" z="0.5"/>
                                     </Object>
                                 </Property>
                             </Object>

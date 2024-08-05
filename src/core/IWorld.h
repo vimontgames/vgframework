@@ -35,15 +35,11 @@ namespace vg::core
 
         virtual bool                IsPlaying               () const = 0;
         virtual bool                IsPaused                () const = 0;
-        virtual void                SetTimeScale            (float _timeScale) = 0;
-        virtual float               GetTimeScale            (bool _ignorePause = false) const = 0;
+
         virtual void                Play                    () = 0;
         virtual void                Stop                    () = 0;
         virtual void                Pause                   () = 0;
         virtual void                Resume                  () = 0;
-
-        virtual bool                IsUsingFixedDeltaTime   () const = 0;
-        virtual void                SetUseFixedDeltaTime    (bool _fixedDeltaTime) = 0;
 
         virtual bool                SetActiveScene          (IBaseScene * _scene, BaseSceneType _sceneType) = 0;
         virtual core::IBaseScene *  GetActiveScene          (BaseSceneType _sceneType) const = 0;
