@@ -935,7 +935,7 @@ namespace vg::editor
                     else
                     {
                         // The only checkbox in the line => align right
-                        ImGui::SetCursorPosX(GetContentRegionAvail().x - style::label::PixelWidth - ImGui::GetFrameHeight() + ImGui::GetStyle().ItemSpacing.y);
+                        ImGui::SetCursorPosX(availableWidth - style::label::PixelWidth - ImGui::GetFrameHeight() + ImGui::GetStyle().ItemSpacing.y + GetTreeNodeToLabelSpacing());
                         edited = ImGui::Checkbox(getPropertyLabel(label).c_str(), &temp);
                     }
 
