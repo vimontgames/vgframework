@@ -8,6 +8,7 @@
 #include "Body/Body.h"
 #include "Character/Character.h"
 #include "Options/PhysicsOptions.h"
+#include "World/PhysicsWorld.h"
 #include "core/Math/Math.h"
 #include "core/Timer/Timer.h"
 
@@ -19,14 +20,12 @@
 #include "Physics.inl"
 #endif
 
-#include "PhysicsWorld.hpp"
-
 using namespace vg::core;
 using namespace vg::physics;
 using namespace JPH;
 
 #define VG_PHYSICS_VERSION_MAJOR 0
-#define VG_PHYSICS_VERSION_MINOR 0
+#define VG_PHYSICS_VERSION_MINOR 3
 
 //--------------------------------------------------------------------------------------
 IPhysics * CreateNew()
@@ -215,14 +214,7 @@ namespace vg::physics
         const auto * engine = getEngine();
        
         for (auto * physicsWorld : m_physicsWorlds)
-        {
-            auto * world = physicsWorld->getWorld();
-            if (world->IsPlaying() && !world->IsPaused())
-            {
-                auto * physicsSystem = physicsWorld->getPhysicsSystem();
-                physicsSystem->Update((float)(_dt), 1, &m_tempAllocator, m_jobSystem);
-            }
-        }
+            physicsWorld->Update(_dt, m_tempAllocator, m_jobSystem);
 	}
 
     //--------------------------------------------------------------------------------------

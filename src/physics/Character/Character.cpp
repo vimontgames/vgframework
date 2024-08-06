@@ -4,7 +4,7 @@
 #include "core/Math/Math.h"
 #include "physics/Shape/CapsuleShape.h"
 #include "physics/Physics.h"
-#include "physics/PhysicsWorld.h"
+#include "physics/World/PhysicsWorld.h"
 
 #include "CharacterDesc.hpp"
 

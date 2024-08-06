@@ -1,7 +1,7 @@
 #include "physics/Precomp.h"
 #include "ContactListener.h"
 #include "core/IGameObject.h"
-#include "physics/PhysicsWorld.h"
+#include "physics/World/PhysicsWorld.h"
 #include "Jolt/Physics/Body/Body.h"
 
 namespace vg::physics

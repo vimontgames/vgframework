@@ -3,7 +3,7 @@
 #include "physics/Physics.h"
 #include "physics/Shape/Shape.h"
 #include "core/Math/Math.h"
-#include "physics/PhysicsWorld.h"
+#include "physics/World/PhysicsWorld.h"
 
 #include "physics/Body/BodyDesc.hpp"
 
